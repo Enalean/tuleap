@@ -38,22 +38,16 @@ export default class ReadingTrackersController {
         this.reading_mode_trackers       = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-reading-mode-trackers');
         this.reading_mode_trackers_empty = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-reading-mode-trackers-empty');
         this.reading_mode_fields         = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-reading-mode-fields');
+    }
 
-        this.listenChangeMode();
+    init() {
         this.listenReportLoaded();
     }
 
-    listenChangeMode() {
-        const watcher = (property_name, old_value, new_value) => {
-            if (
-                new_value
-                && this.backend_cross_tracker_report.loaded === true
-            ) {
-                this.updateTrackersReading();
-            }
-        };
-
-        watch(this.report_mode, 'reading_mode', watcher);
+    switchToReadingMode() {
+        if (this.backend_cross_tracker_report.loaded === true) {
+            this.updateTrackersReading();
+        }
     }
 
     listenReportLoaded() {

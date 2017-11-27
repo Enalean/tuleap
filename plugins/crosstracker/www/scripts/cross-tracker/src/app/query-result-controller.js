@@ -17,30 +17,53 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import moment from 'moment';
-import { render } from 'mustache';
-import query_result_rows_template from './query-result-rows.mustache';
+import moment                               from 'moment';
+import { render }                           from 'mustache';
+import query_result_rows_template           from './query-result-rows.mustache';
 import { getReportContent, getQueryResult } from './rest-querier.js';
 
 export default class QueryResultController {
     constructor(
         widget_content,
         backend_cross_tracker_report,
+        writing_cross_tracker_report,
+        report_saved_state,
         user,
         error_displayer,
         gettext_provider
     ) {
         this.widget_content               = widget_content;
         this.backend_cross_tracker_report = backend_cross_tracker_report;
+        this.writing_cross_tracker_report = writing_cross_tracker_report;
+        this.report_saved_state           = report_saved_state;
         this.localized_date_format        = user.getUserPreferredDateFormat();
         this.error_displayer              = error_displayer;
         this.gettext_provider             = gettext_provider;
 
-        this.table_element = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-search-results');
-        this.table_results = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-search-artifacts');
-        this.table_footer  = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-search-footer');
+        this.table_element    = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-search-results');
+        this.table_results    = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-search-artifacts');
+        this.load_more_button = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-search-load-button');
 
-        this.loadReportContent();
+        this.current_offset = 0;
+        this.limit          = 30;
+    }
+
+    init() {
+        this.loadFirstBatchOfArtifacts();
+        this.initLoadMoreButton();
+    }
+
+    initLoadMoreButton() {
+        this.load_more_button.addEventListener('click', () => {
+            this.loadABatchOfArtifacts();
+        });
+    }
+
+    loadFirstBatchOfArtifacts() {
+        this.clearResultRows();
+        this.showLoadMoreButton();
+        this.current_offset = 0;
+        this.loadABatchOfArtifacts();
     }
 
     displayArtifacts(artifacts) {
@@ -49,13 +72,13 @@ export default class QueryResultController {
     }
 
     clearResultRows() {
-        [...this.table_results.children].forEach((child) => child.remove());
+        [...this.table_results.children].forEach(child => child.remove());
     }
 
     showLoadingState() {
         this.table_element.classList.add('cross-tracker-loading');
         this.table_element.classList.remove('cross-tracker-empty');
-        this.table_footer.classList.add('cross-tracker-hide');
+        this.load_more_button.classList.add('cross-tracker-hide');
     }
 
     hideLoadingState() {
@@ -64,16 +87,23 @@ export default class QueryResultController {
 
     showEmptyState() {
         this.table_element.classList.add('cross-tracker-empty');
-        this.table_footer.classList.add('cross-tracker-hide');
+        this.load_more_button.classList.add('cross-tracker-hide');
     }
 
     hideEmptyState() {
         this.table_element.classList.remove('cross-tracker-empty');
-        this.table_footer.classList.remove('cross-tracker-hide');
+        this.load_more_button.classList.remove('cross-tracker-hide');
+    }
+
+    showLoadMoreButton() {
+        this.load_more_button.classList.remove('cross-tracker-hide');
+    }
+
+    hideLoadMoreButton() {
+        this.load_more_button.classList.add('cross-tracker-hide');
     }
 
     updateArtifacts(artifacts) {
-        this.clearResultRows();
         this.displayArtifacts({ artifacts });
         if (artifacts.length > 0) {
             this.hideEmptyState();
@@ -82,12 +112,33 @@ export default class QueryResultController {
         }
     }
 
-    async loadReportContent() {
+    getArtifactsFromReportOrUnsavedQuery() {
+        if (this.report_saved_state.isReportSaved()) {
+            return getReportContent(
+                this.backend_cross_tracker_report.report_id,
+                this.limit,
+                this.current_offset
+            );
+        }
+
+        return getQueryResult(
+            this.backend_cross_tracker_report.report_id,
+            this.writing_cross_tracker_report.getTrackerIds(),
+            this.limit,
+            this.current_offset
+        );
+    }
+
+    async loadABatchOfArtifacts() {
         try {
             this.showLoadingState();
-            const artifacts           = await getReportContent(this.backend_cross_tracker_report.report_id);
-            const formatted_artifacts = this.formatArtifacts(artifacts);
+            const { artifacts, total } = await this.getArtifactsFromReportOrUnsavedQuery();
+            const formatted_artifacts  = this.formatArtifacts(artifacts);
             this.updateArtifacts(formatted_artifacts);
+            this.current_offset += this.limit;
+            if (this.current_offset > total) {
+                this.hideLoadMoreButton();
+            }
         } catch (error) {
             this.error_displayer.displayError(this.gettext_provider.gettext('Error while fetching the query result'));
             throw error;
@@ -97,27 +148,10 @@ export default class QueryResultController {
     }
 
     formatArtifacts(artifacts) {
-        return artifacts.map((artifact) => {
-           artifact.formatted_last_update_date = moment(artifact.last_update_date).format(this.localized_date_format);
+        return artifacts.map(artifact => {
+            artifact.formatted_last_update_date = moment(artifact.last_update_date).format(this.localized_date_format);
 
-           return artifact;
+            return artifact;
         });
-    }
-
-    async updateQueryResults(artifact_ids) {
-        try {
-            this.showLoadingState();
-            const artifacts = await getQueryResult(
-                this.backend_cross_tracker_report.report_id,
-                artifact_ids
-            );
-            const formatted_artifacts = this.formatArtifacts(artifacts);
-            this.updateArtifacts(formatted_artifacts);
-        } catch(error) {
-            this.error_displayer.displayError(this.gettext_provider.gettext('Error while fetching the query result'));
-            throw error;
-        } finally {
-            this.hideLoadingState();
-        }
     }
 }

@@ -6,7 +6,18 @@ var BabelPresetEnv        = require('babel-preset-env');
 
 var assets_dir_path = path.resolve(__dirname, '../assets');
 
-module.exports = {
+var babel_options = {
+    presets: [
+        ["babel-preset-env", {
+            targets: {
+                ie: 11
+            },
+            modules: false
+        }]
+    ]
+};
+
+var webpack_config = {
     entry : {
         'cross-tracker': './cross-tracker/src/app/index.js',
     },
@@ -25,16 +36,7 @@ module.exports = {
                 use: [
                     {
                         loader: 'babel-loader',
-                        options: {
-                            presets: [
-                                [BabelPresetEnv, {
-                                    targets: {
-                                        ie: 11
-                                    },
-                                    modules: false
-                                }]
-                            ]
-                        }
+                        options: babel_options
                     }
                 ]
             },
@@ -57,8 +59,17 @@ module.exports = {
             merge: true,
             writeToDisk: true
         }),
-        new webpack.optimize.ModuleConcatenationPlugin(),
         // This ensure we only load moment's fr locale. Otherwise, every single locale is included !
         new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /fr/)
     ]
 };
+
+if (process.env.NODE_ENV === 'production') {
+    webpack_config.plugins = webpack_config.plugins.concat([
+        new webpack.optimize.ModuleConcatenationPlugin()
+    ]);
+} else if (process.env.NODE_ENV === 'watch') {
+    webpack_config.devtool = 'eval';
+}
+
+module.exports = webpack_config;

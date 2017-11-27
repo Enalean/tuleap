@@ -42,7 +42,6 @@ class ProjectCrossTrackerSearchPresenter
     public $submitted_by_label;
     public $assigned_to_label;
     public $artifacts_empty;
-    public $limited_results_label;
 
     public function __construct($report_id, \PFUser $user)
     {
@@ -64,9 +63,6 @@ class ProjectCrossTrackerSearchPresenter
         $this->submitted_by_label    = dgettext('tuleap-crosstracker', 'Submitted by');
         $this->assigned_to_label     = dgettext('tuleap-crosstracker', 'Assigned to');
         $this->artifacts_empty       = dgettext('tuleap-crosstracker', 'No matching artifacts found');
-        $this->limited_results_label = dgettext(
-            'tuleap-crosstracker',
-            'Only the first 30 results are shown'
-        );
+        $this->load_more_label       = dgettext('tuleap-crosstracker', 'Load more');
     }
 }

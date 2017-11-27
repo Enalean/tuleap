@@ -17,18 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { watch } from 'wrist';
 import { updateReport, getReport } from '../rest-querier.js';
 
 export default class ReadingModeController {
     constructor(
         widget_content,
         report_mode,
+        report_saved_state,
         backend_cross_tracker_report,
         writing_cross_tracker_report,
         reading_cross_tracker_report,
         reading_trackers_controller,
-        query_resut_controller,
+        query_result_controller,
         user,
         widget_loader_displayer,
         success_displayer,
@@ -37,11 +37,13 @@ export default class ReadingModeController {
     ) {
         this.widget_content               = widget_content;
         this.report_mode                  = report_mode;
+        this.report_saved_state           = report_saved_state;
         this.backend_cross_tracker_report = backend_cross_tracker_report;
         this.writing_cross_tracker_report = writing_cross_tracker_report;
         this.reading_cross_tracker_report = reading_cross_tracker_report;
         this.reading_trackers_controller  = reading_trackers_controller;
-        this.query_result_controller      = query_resut_controller;
+        this.query_result_controller      = query_result_controller;
+        this.user                         = user;
         this.widget_loader_displayer      = widget_loader_displayer;
         this.success_displayer            = success_displayer;
         this.error_displayer              = error_displayer;
@@ -53,15 +55,16 @@ export default class ReadingModeController {
         this.reading_mode_actions        = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-reading-mode-actions');
         this.reading_mode_save_report    = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-reading-mode-actions-save');
         this.reading_mode_cancel_report  = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-reading-mode-actions-cancel');
+    }
 
+    init() {
         this.loadBackendReport().then(() => {
-            if (user.isAnonymous()) {
+            if (this.user.isAnonymous()) {
                 this.disableEditMode();
                 return;
             }
             this.listenSaveReport();
             this.listenEditClick();
-            this.listenChangeMode();
             this.listenCancelReport();
         });
     }
@@ -73,23 +76,17 @@ export default class ReadingModeController {
         });
     }
 
-    listenChangeMode() {
-        const watcher = (property_name, old_value, new_value) => {
-            if (new_value) {
-                if (this.backend_cross_tracker_report.isDifferentFromReadingReport(this.reading_cross_tracker_report)) {
-                    this.showReportActions();
-                } else {
-                    this.hideReportActions();
-                }
-            }
-        };
-
-        watch(this.report_mode, 'reading_mode', watcher);
+    switchToReadingMode() {
+        if (! this.report_saved_state.isReportSaved()) {
+            this.showReportActions();
+        } else {
+            this.hideReportActions();
+        }
     }
 
     listenSaveReport() {
         this.reading_mode_save_report.addEventListener('click', () => {
-            this.updateReport();
+            this.saveReport();
         });
     }
 
@@ -99,11 +96,12 @@ export default class ReadingModeController {
             this.reading_cross_tracker_report.duplicateFromReport(this.backend_cross_tracker_report);
 
             this.reading_trackers_controller.updateTrackersReading();
-            this.query_result_controller.loadReportContent();
+            this.report_saved_state.switchToSavedState();
+            this.query_result_controller.loadFirstBatchOfArtifacts();
         });
     }
 
-    async updateReport() {
+    async saveReport() {
         this.backend_cross_tracker_report.loaded = false;
         this.showSaveReportLoading();
         try {
@@ -117,6 +115,7 @@ export default class ReadingModeController {
             this.success_displayer.displaySuccess(this.gettext_provider.gettext('Report has been successfully saved'));
             this.hideReportActions();
             this.backend_cross_tracker_report.loaded = true;
+            this.report_saved_state.switchToSavedState();
         } catch (error) {
             this.error_displayer.displayError(this.gettext_provider.gettext('Error while updating the cross tracker report'));
             throw error;

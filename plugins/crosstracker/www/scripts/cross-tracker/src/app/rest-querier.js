@@ -19,8 +19,6 @@
 
 import { get, put, recursiveGet } from 'tlp';
 
-const MAXIMUM_NUMBER_OF_ARTIFACTS_DISPLAYED = 30;
-
 export {
     getReport,
     getReportContent,
@@ -28,34 +26,38 @@ export {
     updateReport,
     getSortedProjectsIAmMemberOf,
     getTrackersOfProject
-}
+};
 
 async function getReport(report_id) {
     const response = await get('/api/v1/cross_tracker_reports/' + report_id);
     return await response.json();
 }
 
-async function getReportContent(report_id) {
+async function getReportContent(report_id, limit, offset) {
     const response = await get('/api/v1/cross_tracker_reports/' + report_id + '/content', {
         params: {
-            limit: MAXIMUM_NUMBER_OF_ARTIFACTS_DISPLAYED
+            limit,
+            offset
         }
     });
+    const total         = response.headers.get('X-PAGINATION-SIZE');
     const { artifacts } = await response.json();
 
-    return artifacts;
+    return { artifacts, total };
 }
 
-async function getQueryResult(report_id, trackers_id) {
+async function getQueryResult(report_id, trackers_id, limit, offset) {
     const response = await get('/api/v1/cross_tracker_reports/' + report_id + '/content', {
         params: {
-            limit: MAXIMUM_NUMBER_OF_ARTIFACTS_DISPLAYED,
+            limit,
+            offset,
             query: JSON.stringify({ trackers_id })
         }
     });
+    const total         = response.headers.get('X-PAGINATION-SIZE');
     const { artifacts } = await response.json();
 
-    return artifacts;
+    return { artifacts, total };
 }
 
 async function updateReport(report_id, trackers_id) {
@@ -72,7 +74,7 @@ async function getSortedProjectsIAmMemberOf() {
     const json = await recursiveGet('/api/v1/projects/', {
         params: {
             limit: 50,
-            query: JSON.stringify({'is_member_of': true})
+            query: JSON.stringify({ is_member_of: true })
         }
     });
 
