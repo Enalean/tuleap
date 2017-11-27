@@ -68,4 +68,19 @@ class CrossTrackerReport
     {
         return $this->trackers;
     }
+
+    /**
+     * @return \Tracker_FormElement_Field[]
+     */
+    public function getSearchFields()
+    {
+        $fields = array();
+        foreach ($this->getTrackers() as $tracker) {
+            $field = $tracker->getStatusField();
+            if ($field !== null) {
+                $fields[$field->getId()] = $field;
+            }
+        }
+        return array_values($fields);
+    }
 }

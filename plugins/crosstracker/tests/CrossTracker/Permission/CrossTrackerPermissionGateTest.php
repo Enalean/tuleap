@@ -30,9 +30,12 @@ class CrossTrackerPermissionGateTest extends \TuleapTestCase
         $tracker = mock('Tracker');
         $project = mock('Project');
         stub($tracker)->userCanView()->returns(true);
+        $search_field = mock('Tracker_FormElement_Field_List');
+        stub($search_field)->userCanRead()->returns(true);
         $report  = mock('\\Tuleap\\CrossTracker\\CrossTrackerReport');
         stub($report)->getProjects()->returns(array($project));
         stub($report)->getTrackers()->returns(array($tracker));
+        stub($report)->getSearchFields()->returns(array($search_field));
 
         $url_verification = mock('URLVerification');
         $permission_gate  = new CrossTrackerPermissionGate($url_verification);
@@ -70,6 +73,27 @@ class CrossTrackerPermissionGateTest extends \TuleapTestCase
         $url_verification = mock('URLVerification');
         $permission_gate = new CrossTrackerPermissionGate($url_verification);
         $this->expectException('Tuleap\\CrossTracker\\Permission\\CrossTrackerUnauthorizedTrackerException');
+        $permission_gate->check($user, $report);
+    }
+
+    public function itBlocksUserThatCannotAccessToSearchFields()
+    {
+        $user    = mock('PFUser');
+        $tracker = mock('Tracker');
+        $project = mock('Project');
+        stub($tracker)->userCanView()->returns(true);
+        $search_field1 = mock('Tracker_FormElement_Field_List');
+        stub($search_field1)->userCanRead()->returns(true);
+        $search_field2 = mock('Tracker_FormElement_Field_List');
+        stub($search_field2)->userCanRead()->returns(false);
+        $report  = mock('\\Tuleap\\CrossTracker\\CrossTrackerReport');
+        stub($report)->getProjects()->returns(array($project));
+        stub($report)->getTrackers()->returns(array($tracker));
+        stub($report)->getSearchFields()->returns(array($search_field1, $search_field2));
+
+        $url_verification = mock('URLVerification');
+        $permission_gate  = new CrossTrackerPermissionGate($url_verification);
+        $this->expectException('Tuleap\\CrossTracker\\Permission\\CrossTrackerUnauthorizedSearchFieldException');
         $permission_gate->check($user, $report);
     }
 }

@@ -41,6 +41,7 @@ class CrossTrackerPermissionGate
     {
         $this->checkProjectsAuthorization($user, $report->getProjects());
         $this->checkTrackersAuthorization($user, $report->getTrackers());
+        $this->checkSearchFieldsAuthorization($user, $report->getSearchFields());
     }
 
     /**
@@ -67,6 +68,16 @@ class CrossTrackerPermissionGate
         foreach ($trackers as $tracker) {
             if (! $tracker->userCanView($user)) {
                 throw new CrossTrackerUnauthorizedTrackerException();
+            }
+        }
+    }
+
+    private function checkSearchFieldsAuthorization(\PFUser $user, array $search_fields)
+    {
+        /** @var \Tracker_FormElement_Field $search_field */
+        foreach ($search_fields as $search_field) {
+            if (! $search_field->userCanRead($user)) {
+                throw new CrossTrackerUnauthorizedSearchFieldException();
             }
         }
     }
