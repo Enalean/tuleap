@@ -69,23 +69,13 @@ class CrossTrackerTestNonRegressionTrackerTest extends RestBase
 
     public function testItDoesNotAddTrackersUserCantView()
     {
+        $this->setExpectedException('Guzzle\Http\Exception\ClientErrorResponseException');
         $params   = array(
             "trackers_id" => array($this->epic_tracker_id, $this->kanban_tracker_id)
         );
         $response = $this->getResponseForNonProjectMember($this->client->put('cross_tracker_reports/1', null, $params));
 
-        $this->assertEquals($response->getStatusCode(), 201);
-
-        $expected_cross_tracker = array(
-            "id"       => 1,
-            "uri"      => "cross_tracker_reports/1",
-            "trackers" => null
-        );
-
-        $this->assertEquals(
-            $response->json(),
-            $expected_cross_tracker
-        );
+        $this->assertEquals($response->getStatusCode(), 403);
     }
 
     public function itThrowsAnExceptionWhenAQueryIsDefinedAndTrackersIdAreNotAnArray()

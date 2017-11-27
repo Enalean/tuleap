@@ -51,3 +51,6 @@ msgstr ""
 
 msgid "Tracker"
 msgstr ""
+
+msgid "You cannot access all trackers of the search"
+msgstr ""

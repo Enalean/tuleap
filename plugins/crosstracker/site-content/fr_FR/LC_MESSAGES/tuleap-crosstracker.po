@@ -65,3 +65,6 @@ msgstr "Auteur"
 
 msgid "Tracker"
 msgstr "Outil de suivi"
+
+msgid "You cannot access all trackers of the search"
+msgstr "Vous ne pouvez pas accéder à tous les outils de suivi de cette recherche"

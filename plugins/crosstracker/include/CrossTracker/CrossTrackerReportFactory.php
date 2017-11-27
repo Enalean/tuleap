@@ -20,7 +20,6 @@
 
 namespace Tuleap\CrossTracker;
 
-use PFUser;
 use TrackerFactory;
 
 class CrossTrackerReportFactory
@@ -40,7 +39,7 @@ class CrossTrackerReportFactory
         $this->tracker_factory = $tracker_factory;
     }
 
-    public function getById($id, PFUser $user)
+    public function getById($id)
     {
         $report_row = $this->report_dao->searchReportById($id);
         if (! $report_row) {
@@ -51,7 +50,7 @@ class CrossTrackerReportFactory
         $tracker_rows    = $this->report_dao->searchReportTrackersById($id);
         foreach ($tracker_rows as $row) {
             $tracker = $this->tracker_factory->getTrackerById($row['tracker_id']);
-            if ($tracker && $tracker->userCanView($user->getId())) {
+            if ($tracker !== null) {
                 $report_trackers[] = $tracker;
             }
         }

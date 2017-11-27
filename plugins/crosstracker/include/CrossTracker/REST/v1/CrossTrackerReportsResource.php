@@ -24,6 +24,8 @@ use Luracast\Restler\RestException;
 use PFUser;
 use ProjectManager;
 use TrackerFactory;
+use Tuleap\CrossTracker\Permission\CrossTrackerPermissionGate;
+use Tuleap\CrossTracker\Permission\CrossTrackerUnauthorizedException;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\JsonDecoder;
@@ -45,10 +47,6 @@ class CrossTrackerReportsResource extends AuthenticatedResource
      * @var QueryParameterParser
      */
     private $query_parser;
-    /**
-     * @var JsonDecoder
-     */
-    private $json_decoder;
     /**
      * @var ProjectManager
      */
@@ -73,10 +71,13 @@ class CrossTrackerReportsResource extends AuthenticatedResource
      * @var UserManager
      */
     private $user_manager;
+    /**
+     * @var CrossTrackerPermissionGate
+     */
+    private $cross_tracker_permission_gate;
 
     public function __construct()
     {
-        $this->json_decoder   = new JsonDecoder();
         $this->project_manager = ProjectManager::instance();
         $this->user_manager    = UserManager::instance();
         $this->report_factory  = new CrossTrackerReportFactory(
@@ -90,6 +91,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
             new CrossTrackerArtifactReportDao(),
             \Tracker_ArtifactFactory::instance()
         );
+        $this->cross_tracker_permission_gate  = new CrossTrackerPermissionGate();
 
         $this->query_parser = new QueryParameterParser(new JsonDecoder());
     }
@@ -286,17 +288,23 @@ class CrossTrackerReportsResource extends AuthenticatedResource
             $project = $this->project_manager->getProject($widget['project_id']);
             ProjectAuthorization::userCanAccessProject($user, $project, new URLVerification());
         }
+
+        try {
+            $this->cross_tracker_permission_gate->check($user, $report);
+        } catch (CrossTrackerUnauthorizedException $ex) {
+            throw new RestException(403, $ex->getMessage());
+        }
     }
 
     /**
      * @param $id
      *
-     * @return \Tuleap\Tracker\CrossTracker\CrossTrackerReport
+     * @return CrossTrackerReport
      */
     private function getReport($id)
     {
+        $report       = $this->report_factory->getById($id);
         $current_user = $this->user_manager->getCurrentUser();
-        $report       = $this->report_factory->getById($id, $current_user);
         $this->checkUserIsAllowedToSeeReport($current_user, $report);
 
         return $report;
