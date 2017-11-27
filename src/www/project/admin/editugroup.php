@@ -24,6 +24,7 @@ use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Project\Admin\ProjectUGroup\BindingController;
 use Tuleap\Project\Admin\ProjectUGroup\BindingPresenterBuilder;
 use Tuleap\Project\Admin\ProjectUGroup\DetailsController;
+use Tuleap\Project\Admin\ProjectUGroup\DynamicUGroupMembersUpdater;
 use Tuleap\Project\Admin\ProjectUGroup\EditBindingUGroupEventLauncher;
 use Tuleap\Project\Admin\ProjectUGroup\IndexController;
 use Tuleap\Project\Admin\ProjectUGroup\MembersController;
@@ -53,7 +54,11 @@ $binding_controller  = new BindingController(
     $edit_event_launcher
 );
 $user_manager        = UserManager::instance();
-$members_controller  = new MembersController($request, $user_manager, new UserPermissionsDao(), $ugroup_binding);
+$members_controller  = new MembersController(
+    $request,
+    $user_manager,
+    new DynamicUGroupMembersUpdater(new UserPermissionsDao(), $ugroup_binding)
+);
 $index_controller    = new IndexController(
     new ProjectUGroupPresenterBuilder(
         PermissionsManager::instance(),

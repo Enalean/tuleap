@@ -22,12 +22,9 @@
 namespace Tuleap\Project\Admin\ProjectUGroup;
 
 use Codendi_Request;
-use EventManager;
 use Feedback;
 use Project;
 use ProjectUGroup;
-use Tuleap\Project\UserPermissionsDao;
-use UGroupBinding;
 use UserManager;
 
 class MembersController
@@ -41,24 +38,18 @@ class MembersController
      */
     private $user_manager;
     /**
-     * @var UserPermissionsDao
+     * @var DynamicUGroupMembersUpdater
      */
-    private $user_permissions_dao;
-    /**
-     * @var UGroupBinding
-     */
-    private $ugroup_binding;
+    private $dynamic_ugroup_members_updater;
 
     public function __construct(
         Codendi_Request $request,
         UserManager $user_manager,
-        UserPermissionsDao $user_permissions_dao,
-        UGroupBinding $ugroup_binding
+        DynamicUGroupMembersUpdater $dynamic_ugroup_members_updater
     ) {
-        $this->request              = $request;
-        $this->user_manager         = $user_manager;
-        $this->user_permissions_dao = $user_permissions_dao;
-        $this->ugroup_binding       = $ugroup_binding;
+        $this->request                        = $request;
+        $this->user_manager                   = $user_manager;
+        $this->dynamic_ugroup_members_updater = $dynamic_ugroup_members_updater;
     }
 
     public function editMembers(Project $project, ProjectUGroup $ugroup)
@@ -91,17 +82,7 @@ class MembersController
             return;
         }
 
-        if ((int) $ugroup->getId() !== ProjectUGroup::PROJECT_ADMIN) {
-            return;
-        }
-
-        if (! $user->isMember($project->getID())) {
-            account_add_user_to_group($project->getID(), $user->getUserName());
-            $this->ugroup_binding->reloadUgroupBindingInProject($project);
-        }
-
-        $this->user_permissions_dao->addUserAsProjectAdmin($project->getID(), $user->getId());
-        EventManager::instance()->processEvent(new UserBecomesProjectAdmin($project, $user));
+        $this->dynamic_ugroup_members_updater->addUser($project, $ugroup, $user);
     }
 
     /**
@@ -129,11 +110,6 @@ class MembersController
             return;
         }
 
-        if ((int) $ugroup->getId() !== ProjectUGroup::PROJECT_ADMIN) {
-            return;
-        }
-
-        $this->user_permissions_dao->removeUserFromProjectAdmin($project->getID(), $user->getId());
-        EventManager::instance()->processEvent(new UserIsNoLongerProjectAdmin($project, $user));
+        $this->dynamic_ugroup_members_updater->removeUser($project, $ugroup, $user);
     }
 }
