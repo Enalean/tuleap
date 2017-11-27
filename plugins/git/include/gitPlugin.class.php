@@ -1073,7 +1073,7 @@ class GitPlugin extends Plugin {
         }
     }
     function permissions_for_ugroup($params) {
-        if (!$params['results']) {
+        if (!$params['results'] || !$params['not_existing']) {
             if (in_array($params['permission_type'], array('PLUGIN_GIT_READ', 'PLUGIN_GIT_WRITE', 'PLUGIN_GIT_WPLUS'))) {
                 $repository = new GitRepository();
                 $repository->setId($params['object_id']);
@@ -1081,7 +1081,7 @@ class GitPlugin extends Plugin {
                     $repository->load();
                     $params['results']  = $repository->getName();
                 } catch (Exception $e) {
-                    // do nothing
+                    $params['not_existing'] = true;
                 }
             }
         }

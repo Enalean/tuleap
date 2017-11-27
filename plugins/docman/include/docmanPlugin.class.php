@@ -230,7 +230,7 @@ class DocmanPlugin extends Plugin
         }
     }
     function permissions_for_ugroup($params) {
-        if (!$params['results']) {
+        if (!$params['results'] || !$params['not_existing']) {
             if (in_array($params['permission_type'], array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE', 'PLUGIN_DOCMAN_ADMIN'))) {
                 require_once('Docman_ItemFactory.class.php');
                 $if = new Docman_ItemFactory();
@@ -244,6 +244,8 @@ class DocmanPlugin extends Plugin
                             , $item->getTitle()
                         )
                     );
+                } else {
+                    $params['not_existing'] = true;
                 }
             }
         }

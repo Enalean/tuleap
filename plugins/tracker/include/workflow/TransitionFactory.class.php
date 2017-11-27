@@ -96,7 +96,7 @@ class TransitionFactory {
     *
     * @param int transition_id The transition_id
     *
-    * @return Transition
+    * @return Transition|null
     */
     public function getTransition($transition_id) {
         $dao = $this->getDao();
