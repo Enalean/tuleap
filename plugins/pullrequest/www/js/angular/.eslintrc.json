@@ -7,7 +7,7 @@
         "eslint:recommended"
     ],
     "parserOptions": {
-        "ecmaVersion": 5
+        "ecmaVersion": 2017
     },
     "env": {
         "browser": true,

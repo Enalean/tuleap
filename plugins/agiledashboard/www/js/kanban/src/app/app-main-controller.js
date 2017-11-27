@@ -1,7 +1,7 @@
 export default MainCtrl;
 
 MainCtrl.$inject = [
-    '$scope',
+    '$element',
     'gettextCatalog',
     'SharedPropertiesService',
     'amMoment',
@@ -10,43 +10,46 @@ MainCtrl.$inject = [
 ];
 
 function MainCtrl(
-    $scope,
+    $element,
     gettextCatalog,
     SharedPropertiesService,
     amMoment,
     UUIDGeneratorService,
     FilterTrackerReportService
 ) {
-    $scope.init = init;
+    this.$onInit = init;
 
-    function init(
-        kanban,
-        dashboard_dropdown,
-        filters_tracker_report,
-        user_id,
-        user_is_admin,
-        widget_id,
-        lang,
-        project_id,
-        view_mode,
-        nodejs_server,
-        kanban_url
-    ) {
-        const uuid = UUIDGeneratorService.generateUUID();
+    function init() {
+        const kanban_init_data = $element[0].querySelector('.kanban-init-data').dataset;
 
-        FilterTrackerReportService.setFiltersTrackerReport(Object.values(filters_tracker_report));
+        const user_id = kanban_init_data.userId;
         SharedPropertiesService.setUserId(user_id);
-        SharedPropertiesService.setKanban(kanban);
-        SharedPropertiesService.setDashboardDropdown(dashboard_dropdown);
+        const kanban_representation = JSON.parse(kanban_init_data.kanban);
+        SharedPropertiesService.setKanban(kanban_representation);
+        const dashboard_dropdown_representation = JSON.parse(kanban_init_data.dashboardDropdown);
+        SharedPropertiesService.setDashboardDropdown(dashboard_dropdown_representation);
+        const user_is_admin = Boolean(JSON.parse(kanban_init_data.userIsAdmin));
         SharedPropertiesService.setUserIsAdmin(user_is_admin);
+        const widget_id = JSON.parse(kanban_init_data.widgetId);
         SharedPropertiesService.setWidgetId(widget_id);
+        const project_id = kanban_init_data.projectId;
         SharedPropertiesService.setProjectId(project_id);
+        const view_mode = kanban_init_data.viewMode;
         SharedPropertiesService.setViewMode(view_mode);
+        const kanban_url = kanban_init_data.kanbanUrl;
         SharedPropertiesService.setKanbanUrl(kanban_url);
-        gettextCatalog.setCurrentLanguage(lang);
-        amMoment.changeLocale(lang);
+
+        const filters_tracker_report = Object.values(JSON.parse(kanban_init_data.filtersTrackerReport));
+        FilterTrackerReportService.setFiltersTrackerReport(filters_tracker_report);
+
+        const language = kanban_init_data.language;
+        gettextCatalog.setCurrentLanguage(language);
+        amMoment.changeLocale(language);
+
+        const uuid = UUIDGeneratorService.generateUUID();
         SharedPropertiesService.setUUID(uuid);
         SharedPropertiesService.setNodeServerVersion("1.1.0");
+        const nodejs_server = kanban_init_data.nodejsServer;
         SharedPropertiesService.setNodeServerAddress(nodejs_server);
     }
 }

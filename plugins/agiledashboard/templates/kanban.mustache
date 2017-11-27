@@ -1,19 +1,19 @@
 <div
     ng-app="kanban"
     ng-controller="MainCtrl"
-    ng-init="init(
-        {{ kanban_representation }},
-        {{ dashboard_dropdown_representation }},
-        {{ filters_tracker_report }},
-        {{ user_id }},
-        {{ user_is_kanban_admin }},
-        {{ widget_id }},
-        '{{ language }}',
-        {{ project_id }},
-        '{{ view_mode }}',
-        '{{ nodejs_server }}',
-        '{{ kanban_url }}'
-    )"
 >
+    <div class="kanban-init-data" ng-non-bindable
+         data-user-id="{{ user_id }}"
+         data-kanban="{{ kanban_representation }}"
+         data-dashboard-dropdown="{{ dashboard_dropdown_representation }}"
+         data-user-is-admin="{{ user_is_kanban_admin }}"
+         data-widget-id="{{ widget_id }}"
+         data-project-id="{{ project_id }}"
+         data-view-mode="{{ view_mode }}"
+         data-kanban-url="{{ kanban_url }}"
+         data-filters-tracker-report="{{ filters_tracker_report }}"
+         data-language="{{ language }}"
+         data-nodejs-server="{{ nodejs_server }}"
+    ></div>
     <ui-view class="kanban {{# user_is_kanban_admin }} kanban-admin {{/ user_is_kanban_admin }}"></ui-view>
 </div>
