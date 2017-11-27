@@ -44,20 +44,10 @@ class UGroupListPresenterBuilder
         $templates      = $this->getUGroupsThatCanBeUsedAsTemplate($static_ugroups);
 
         $ugroups = array();
-
-        $ugroup = $this->ugroup_manager->getUGroup(
-            $project,
-            ProjectUGroup::PROJECT_ADMIN
-        );
-
-        $ugroups[] = array(
-            'id'             => $ugroup->getId(),
-            'name'           => $ugroup->getTranslatedName(),
-            'description'    => $ugroup->getTranslatedDescription(),
-            'nb_members'     => $ugroup->countStaticOrDynamicMembers($project->getID()),
-            'can_be_deleted' => false
-        );
-
+        $this->injectDynamicUGroup($project, ProjectUGroup::PROJECT_ADMIN, $ugroups);
+        if ($project->usesWiki()) {
+            $this->injectDynamicUGroup($project, ProjectUGroup::WIKI_ADMIN, $ugroups);
+        }
 
         foreach ($static_ugroups as $ugroup) {
             $ugroups[] = array(
@@ -107,5 +97,17 @@ class UGroupListPresenterBuilder
         }
 
         return $ugroups;
+    }
+
+    private function injectDynamicUGroup(Project $project, $ugroup_id, &$ugroups)
+    {
+        $ugroup    = $this->ugroup_manager->getUGroup($project, $ugroup_id);
+        $ugroups[] = array(
+            'id'             => $ugroup->getId(),
+            'name'           => $ugroup->getTranslatedName(),
+            'description'    => $ugroup->getTranslatedDescription(),
+            'nb_members'     => $ugroup->countStaticOrDynamicMembers($project->getID()),
+            'can_be_deleted' => false
+        );
     }
 }

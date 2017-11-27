@@ -32,7 +32,9 @@ use Tuleap\Mediawiki\Maintenance\CleanUnusedDao;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
 use Tuleap\project\Admin\Navigation\NavigationDropdownQuickLinksCollector;
 use Tuleap\Project\Admin\ProjectUGroup\UserBecomesProjectAdmin;
+use Tuleap\Project\Admin\ProjectUGroup\UserBecomesWikiAdmin;
 use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerProjectAdmin;
+use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerWikiAdmin;
 
 require_once 'common/plugin/Plugin.class.php';
 require_once 'constants.php';
@@ -102,6 +104,8 @@ class MediaWikiPlugin extends Plugin {
             $this->addHook(NavigationDropdownQuickLinksCollector::NAME);
             $this->addHook(UserBecomesProjectAdmin::NAME);
             $this->addHook(UserIsNoLongerProjectAdmin::NAME);
+            $this->addHook(UserBecomesWikiAdmin::NAME);
+            $this->addHook(UserIsNoLongerWikiAdmin::NAME);
 
             /**
              * HACK
@@ -459,6 +463,26 @@ class MediaWikiPlugin extends Plugin {
     }
 
     public function userBecomesProjectAdmin(UserBecomesProjectAdmin $event)
+    {
+        $this->updateUserGroupMapping(
+            array(
+                'user_id'  => $event->getUser()->getId(),
+                'group_id' => $event->getProject()->getID(),
+            )
+        );
+    }
+
+    public function userIsNoLongerWikiAdmin(UserIsNoLongerWikiAdmin $event)
+    {
+        $this->updateUserGroupMapping(
+            array(
+                'user_id'  => $event->getUser()->getId(),
+                'group_id' => $event->getProject()->getID(),
+            )
+        );
+    }
+
+    public function userBecomesWikiAdmin(UserBecomesWikiAdmin $event)
     {
         $this->updateUserGroupMapping(
             array(

@@ -106,7 +106,6 @@ class TestDataBuilder {
     const DYNAMIC_UGROUP_FILE_MANAGER_ID           = 11;
     const DYNAMIC_UGROUP_FILE_MANAGER_LABEL        = 'file_manager_admins';
     const DYNAMIC_UGROUP_WIKI_ADMIN_ID             = 14;
-    const DYNAMIC_UGROUP_WIKI_ADMIN_LABEL          = 'wiki_admins';
 
     /** @var ProjectManager */
     protected $project_manager;

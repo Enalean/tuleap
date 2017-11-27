@@ -20,7 +20,44 @@
 
 namespace Tuleap\Project\Admin\ProjectUGroup;
 
-class UserIsNoLongerProjectAdmin extends UserAndProjectUGroupRelationshipEvent
+use PFUser;
+use Project;
+use Tuleap\Event\Dispatchable;
+
+abstract class UserAndProjectUGroupRelationshipEvent implements Dispatchable
 {
-    const NAME = 'userIsNoLongerProjectAdmin';
+    /**
+     * @var Project
+     */
+    private $project;
+    /**
+     * @var PFUser
+     */
+    private $user;
+
+    /**
+     * @param Project $project
+     * @param PFUser $user
+     */
+    public function __construct(Project $project, PFUser $user)
+    {
+        $this->project = $project;
+        $this->user = $user;
+    }
+
+    /**
+     * @return Project
+     */
+    public function getProject()
+    {
+        return $this->project;
+    }
+
+    /**
+     * @return PFUser
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
 }

@@ -24,6 +24,9 @@ use DataAccessObject;
 
 class UserPermissionsDao extends DataAccessObject
 {
+    private static $PROJECT_ADMIN_FLAG = 'A';
+    private static $WIKI_ADMIN_FLAG    = 2;
+
     public function __construct()
     {
         parent::__construct();
@@ -35,9 +38,10 @@ class UserPermissionsDao extends DataAccessObject
     {
         $project_id = $this->da->escapeInt($project_id);
         $user_id    = $this->da->escapeInt($user_id);
+        $admin_flag = $this->da->quoteSmart(self::$PROJECT_ADMIN_FLAG);
 
         $sql = "UPDATE user_group
-                SET admin_flags = 'A'
+                SET admin_flags = $admin_flag
                 WHERE group_id = $project_id
                   AND user_id = $user_id";
 
@@ -51,6 +55,33 @@ class UserPermissionsDao extends DataAccessObject
 
         $sql = "UPDATE user_group
                 SET admin_flags = ''
+                WHERE group_id = $project_id
+                  AND user_id = $user_id";
+
+        return $this->update($sql);
+    }
+
+    public function addUserAsWikiAdmin($project_id, $user_id)
+    {
+        $project_id = $this->da->escapeInt($project_id);
+        $user_id    = $this->da->escapeInt($user_id);
+        $admin_flag = $this->da->escapeInt(self::$WIKI_ADMIN_FLAG);
+
+        $sql = "UPDATE user_group
+                SET wiki_flags = $admin_flag
+                WHERE group_id = $project_id
+                  AND user_id = $user_id";
+
+        return $this->update($sql);
+    }
+
+    public function removeUserFromWikiAdmin($project_id, $user_id)
+    {
+        $project_id = $this->da->escapeInt($project_id);
+        $user_id    = $this->da->escapeInt($user_id);
+
+        $sql = "UPDATE user_group
+                SET wiki_flags = 0
                 WHERE group_id = $project_id
                   AND user_id = $user_id";
 
