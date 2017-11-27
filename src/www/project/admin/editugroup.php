@@ -84,6 +84,7 @@ $router = new UGroupRouter(
     $binding_controller,
     $members_controller,
     $index_controller,
-    $details_controller
+    $details_controller,
+    $user_manager
 );
 $router->process();

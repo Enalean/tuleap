@@ -26,6 +26,7 @@ use CSRFSynchronizerToken;
 use EventManager;
 use FRSReleaseFactory;
 use PermissionsManager;
+use PFUser;
 use ProjectUGroup;
 
 class ProjectUGroupPresenterBuilder
@@ -71,13 +72,13 @@ class ProjectUGroupPresenterBuilder
         $this->members_builder      = $members_builder;
     }
 
-    public function build(ProjectUGroup $ugroup, CSRFSynchronizerToken $csrf)
+    public function build(ProjectUGroup $ugroup, CSRFSynchronizerToken $csrf, PFUser $user)
     {
         $permissions = $this->getFormattedPermissions($ugroup);
         $binding = $this->binding_builder->build($ugroup, $csrf);
         $members = $this->members_builder->build($ugroup);
 
-        return new ProjectUGroupPresenter($ugroup, $permissions, $binding, $members, $csrf);
+        return new ProjectUGroupPresenter($ugroup, $permissions, $binding, $members, $csrf, $user);
     }
 
     /**

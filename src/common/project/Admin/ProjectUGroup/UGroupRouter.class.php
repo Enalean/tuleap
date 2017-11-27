@@ -29,6 +29,7 @@ use CSRFSynchronizerToken;
 use EventManager;
 use Project;
 use ProjectUGroup;
+use UserManager;
 use UGroupManager;
 
 class UGroupRouter
@@ -61,6 +62,10 @@ class UGroupRouter
      * @var EditBindingUGroupEventLauncher
      */
     private $edit_event_launcher;
+    /**
+     * @var UserManager
+     */
+    private $user_manager;
 
     public function __construct(
         UGroupManager $ugroup_manager,
@@ -69,7 +74,8 @@ class UGroupRouter
         BindingController $binding_controller,
         MembersController $members_controller,
         IndexController $index_controller,
-        DetailsController $details_controller
+        DetailsController $details_controller,
+        UserManager $user_manager
     ) {
         $this->ugroup_manager      = $ugroup_manager;
         $this->request             = $request;
@@ -78,6 +84,7 @@ class UGroupRouter
         $this->index_controller    = $index_controller;
         $this->details_controller  = $details_controller;
         $this->edit_event_launcher = $edit_event_launcher;
+        $this->user_manager        = $user_manager;
     }
 
     public function process()
@@ -111,7 +118,7 @@ class UGroupRouter
                 if ($event->hasBeenHandled()) {
                     $this->redirect($ugroup);
                 } else {
-                    $this->index_controller->display($ugroup, $csrf);
+                    $this->index_controller->display($ugroup, $csrf, $this->user_manager->getCurrentUser());
                 }
         }
     }

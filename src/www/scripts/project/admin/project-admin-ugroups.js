@@ -17,10 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { modal as createModal, filterInlineTable } from 'tlp';
+import {filterInlineTable, modal as createModal} from 'tlp';
+import { sanitize }                              from 'dompurify';
+import Gettext                                   from 'node-gettext';
+import french_translations                       from '../po/fr.po';
 
 document.addEventListener('DOMContentLoaded', () => {
     initModals();
+    initModalAddDynamicUserToUGroup();
     initGroupsFilter();
     initBindingDependencies();
 });
@@ -40,6 +44,40 @@ function initModals() {
 
         button.addEventListener('click', () => {
             modal.show();
+        });
+    }
+}
+
+function initModalAddDynamicUserToUGroup() {
+    const buttons = document.querySelectorAll(`.project-admin-add-dynamic-modal`);
+
+    const gettext_provider = new Gettext();
+    gettext_provider.addTranslations('fr_FR', 'tuleap-core', french_translations);
+    gettext_provider.setLocale(document.getElementById('project-admin-user-groups-member-list-container').dataset.locale);
+    gettext_provider.setTextDomain('tuleap-core');
+
+    for (const button of buttons) {
+        const modal = createModal(document.getElementById(button.dataset.targetModalId));
+
+        button.addEventListener('click', () => {
+            var selected_user = sanitize(document.getElementById('project-admin-members-add-user-select').value);
+
+            if (selected_user === "") {
+                return;
+            }
+
+            modal.show();
+
+            var ugroup_name   = sanitize(document.getElementById('user-group').value);
+
+            var confirmation_message = sprintf(
+                gettext_provider.gettext('You are about to add <b>%s</b> in <b>%s</b> users group.'),
+                selected_user,
+                ugroup_name
+            );
+
+            document.getElementById('add-user-to-ugroup').value                                  = selected_user;
+            document.getElementById('add-user-to-dynamic-ugroup-confirmation-message').innerHTML = confirmation_message;
         });
     }
 }

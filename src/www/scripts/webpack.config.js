@@ -141,7 +141,17 @@ var webpack_config_for_project_admin = {
         tlp: 'tlp'
     },
     module: {
-        rules: [babel_rule]
+        rules: [
+            babel_rule,
+            {
+                test: /\.po$/,
+                exclude: /node_modules/,
+                use: [
+                    { loader: 'json-loader' },
+                    { loader: 'po-gettext-loader' }
+                ]
+            }
+        ]
     },
     plugins: [
         new WebpackAssetsManifest({

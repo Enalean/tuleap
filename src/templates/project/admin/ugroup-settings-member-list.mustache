@@ -9,27 +9,42 @@
             <section class="tlp-pane-section">
                 <div class="tlp-table-actions">
                     {{# can_be_updated }}
-                        <form action="?group_id={{ project_id }}&ugroup_id={{ id }}&func=edit&pane=settings&perform=addUser"
-                              method="post"
-                              class="project-admin-members-form"
-                        >
+                        {{^ is_dynamic_group }}
+                            <form action="?group_id={{ project_id }}&ugroup_id={{ id }}&func=edit&pane=settings&perform=addUser"
+                                  method="post"
+                                  class="project-admin-members-form"
+                            >
+                        {{/ is_dynamic_group }}
                             {{# csrf_token }}
                                 {{> csrf_token_input }}
                             {{/ csrf_token }}
                             <div class="tlp-form-element tlp-form-element-append">
                                 <select
-                                        name="add_user_name"
-                                        id="project-admin-members-add-user-select"
-                                        class="tlp-select tlp-select-adjusted"
-                                        size="50"
-                                        data-placeholder="{{# gettext }}User name{{/ gettext }}"
+                                    name="add_user_name"
+                                    id="project-admin-members-add-user-select"
+                                    class="tlp-select tlp-select-adjusted"
+                                    size="50"
+                                    data-placeholder="{{# gettext }}User name{{/ gettext }}"
                                 ></select>
-                                <button class="tlp-append tlp-button-primary">
+                                <button
+                                    class="tlp-append tlp-button-primary {{# is_dynamic_group }}project-admin-add-dynamic-modal{{/ is_dynamic_group }}"
+                                    id="add-members-to-ugroup"
+                                    {{# is_dynamic_group }}
+                                        data-is-dynamic-group="{{ is_dynamic_group }}"
+                                        data-target-modal-id="add-user-to-dynamic-ugroup"
+                                    {{/ is_dynamic_group }}
+                                >
                                     <i class="fa fa-plus tlp-button-icon"></i> {{# gettext }}Add member{{/ gettext }}
                                 </button>
+                                {{# is_dynamic_group}}
+                                    {{> ugroup-add-project-administrator-modal }}
+                                {{/ is_dynamic_group }}
                             </div>
                             <input type="hidden" name="action" value="edit_ugroup_members">
-                        </form>
+                            <input type="hidden" name="user-group" id="user-group" value="{{ name }}">
+                        {{^ is_dynamic_group }}
+                            </form>
+                        {{/ is_dynamic_group }}
                     {{/ can_be_updated }}
                     <div class="tlp-table-actions-spacer"></div>
                     <div class="tlp-form-element tlp-table-actions-element">
