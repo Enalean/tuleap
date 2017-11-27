@@ -372,7 +372,7 @@ msgid "Name"
 msgstr "Nom"
 
 msgid "Name or description"
-msgstr "Nom or description"
+msgstr "Nom ou description"
 
 msgid "Name, type..."
 msgstr "Nom, type …"
