@@ -510,7 +510,6 @@ project_admin_userperms	user_name	User name
 project_admin_userperms	cvs_write	CVS Write
 project_admin_userperms	bug_track	Bug Tracking
 project_admin_userperms	forums	Forums
-project_admin_userperms	wiki	Wiki
 project_admin_userperms	news	News
 project_admin_userperms	svn	SVN
 project_admin_userperms	task_man	Task Manager
