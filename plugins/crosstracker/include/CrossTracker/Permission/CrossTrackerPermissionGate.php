@@ -25,11 +25,37 @@ use Tuleap\CrossTracker\CrossTrackerReport;
 class CrossTrackerPermissionGate
 {
     /**
+     * @var \URLVerification
+     */
+    private $url_verification;
+
+    public function __construct(\URLVerification $url_verification)
+    {
+        $this->url_verification = $url_verification;
+    }
+
+    /**
      * @throws CrossTrackerUnauthorizedException
      */
     public function check(\PFUser $user, CrossTrackerReport $report)
     {
+        $this->checkProjectsAuthorization($user, $report->getProjects());
         $this->checkTrackersAuthorization($user, $report->getTrackers());
+    }
+
+    /**
+     * @throws CrossTrackerUnauthorizedProjectException
+     */
+    private function checkProjectsAuthorization(\PFUser $user, array $projects)
+    {
+        /** @var \Project $project */
+        foreach ($projects as $project) {
+            try {
+                $this->url_verification->userCanAccessProject($user, $project);
+            } catch (\Project_AccessException $ex) {
+                throw new CrossTrackerUnauthorizedProjectException();
+            }
+        }
     }
 
     /**

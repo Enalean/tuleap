@@ -91,7 +91,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
             new CrossTrackerArtifactReportDao(),
             \Tracker_ArtifactFactory::instance()
         );
-        $this->cross_tracker_permission_gate  = new CrossTrackerPermissionGate();
+        $this->cross_tracker_permission_gate  = new CrossTrackerPermissionGate(new URLVerification());
 
         $this->query_parser = new QueryParameterParser(new JsonDecoder());
     }

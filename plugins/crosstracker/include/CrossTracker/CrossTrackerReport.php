@@ -49,6 +49,19 @@ class CrossTrackerReport
     }
 
     /**
+     * @return \Project[]
+     */
+    public function getProjects()
+    {
+        $projects = array();
+        foreach ($this->getTrackers() as $tracker) {
+            $project = $tracker->getProject();
+            $projects[$project->getID()] = $project;
+        }
+        return array_values($projects);
+    }
+
+    /**
      * @return Tracker[]
      */
     public function getTrackers()
