@@ -31,6 +31,8 @@ use Tuleap\Mediawiki\Maintenance\CleanUnused;
 use Tuleap\Mediawiki\Maintenance\CleanUnusedDao;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
 use Tuleap\project\Admin\Navigation\NavigationDropdownQuickLinksCollector;
+use Tuleap\Project\Admin\ProjectUGroup\UserBecomesProjectAdmin;
+use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerProjectAdmin;
 
 require_once 'common/plugin/Plugin.class.php';
 require_once 'constants.php';
@@ -98,6 +100,8 @@ class MediaWikiPlugin extends Plugin {
             $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
             $this->addHook(User_ForgeUserGroupPermissionsFactory::GET_PERMISSION_DELEGATION);
             $this->addHook(NavigationDropdownQuickLinksCollector::NAME);
+            $this->addHook(UserBecomesProjectAdmin::NAME);
+            $this->addHook(UserIsNoLongerProjectAdmin::NAME);
 
             /**
              * HACK
@@ -442,6 +446,26 @@ class MediaWikiPlugin extends Plugin {
 
     public function project_admin_ugroup_remove_user($params) {
         $this->updateUserGroupMapping($params);
+    }
+
+    public function userIsNoLongerProjectAdmin(UserIsNoLongerProjectAdmin $event)
+    {
+        $this->updateUserGroupMapping(
+            array(
+                'user_id'  => $event->getUser()->getId(),
+                'group_id' => $event->getProject()->getID(),
+            )
+        );
+    }
+
+    public function userBecomesProjectAdmin(UserBecomesProjectAdmin $event)
+    {
+        $this->updateUserGroupMapping(
+            array(
+                'user_id'  => $event->getUser()->getId(),
+                'group_id' => $event->getProject()->getID(),
+            )
+        );
     }
 
     public function project_admin_change_user_permissions($params) {
