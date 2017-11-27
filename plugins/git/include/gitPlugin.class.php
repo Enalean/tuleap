@@ -192,7 +192,6 @@ class GitPlugin extends Plugin {
         $this->addHook('project_admin_ugroup_add_user');
         $this->addHook('project_admin_remove_user');
         $this->addHook('project_admin_ugroup_remove_user');
-        $this->addHook('project_admin_change_user_permissions');
         $this->addHook('project_admin_ugroup_deletion');
         $this->addHook('project_admin_remove_user_from_project_ugroups');
         $this->addHook('project_admin_ugroup_creation');
@@ -1345,16 +1344,6 @@ class GitPlugin extends Plugin {
                 'ugroup_id' => ProjectUGroup::PROJECT_ADMIN
             )
         );
-    }
-
-    public function project_admin_change_user_permissions($params) {
-        if ($params['user_permissions']['admin_flags'] == 'A') {
-            $params['ugroup_id'] = ProjectUGroup::PROJECT_ADMIN;
-            $this->project_admin_ugroup_add_user($params);
-        } else {
-            $params['ugroup_id'] = ProjectUGroup::PROJECT_ADMIN;
-            $this->project_admin_ugroup_remove_user($params);
-        }
     }
 
     public function project_admin_ugroup_deletion($params) {

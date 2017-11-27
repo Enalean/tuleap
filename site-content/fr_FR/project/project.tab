@@ -501,11 +501,9 @@ project_admin_ugroup_utils	ug_upd_empty	Ce groupe d'utilisateurs est devenu vide
 project_admin_userperms	invalid_g	Groupe invalide
 project_admin_userperms	group_not_exist	Cet utilisateur n'existe pas.
 project_admin_userperms	unable_load_p	Impossible de charger l'objet projet
-project_admin_userperms	cannot_remove_admin_stat	Impossible d'enlever le statut Administrateur : le projet a besoin d'au moins un administrateur !
 project_admin_userperms	perm_fail_for	Erreur de permissions pour $1
 project_admin_userperms	perm_upd	Permissions mises à jour
 project_admin_userperms	user_name	Nom d'utilisateur
-project_admin_userperms	proj_admin	Admin projet
 project_admin_userperms	cvs_write	Ecriture CVS
 project_admin_userperms	bug_track	Suivi de bugs
 project_admin_userperms	forums	Forums
