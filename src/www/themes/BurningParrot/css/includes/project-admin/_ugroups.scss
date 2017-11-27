@@ -36,7 +36,16 @@
     }
 }
 
-.project-admin-ugroup-binding-project-info-header {
+.project-admin-ugroup-binding-clones-ugroup {
+    width: 100%;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.project-admin-ugroup-binding-clones-project {
+    white-space: nowrap;
+
     > .tuleap-svg-project-small {
         margin: 0 3px 0 0;
         fill: $tlp-theme-color;
@@ -67,6 +76,38 @@
     word-break: break-all;
 }
 
+.projectadmin-userlist-result-name-avatar {
+    margin: 0 $tlp-half-spacing 0 0;
+}
+
+.user-group-binding-link,
+.remove-user-from-group-modal-text,
+.remove-binding-modal-text,
+.project-admin-delete-user-group-modal-content {
+    word-wrap: break-word;
+}
+
+.user-group-binding-link {
+    // Wrap even if we are child of a flex element:
+    // https://css-tricks.com/flexbox-truncated-text/
+    min-width: 0;
+}
+
+.project-admin-ugroups-list-table-ugroup-nb-members {
+    width: 20%;
+}
+
+.project-admin-ugroups-list-table-ugroup-description {
+    width: 30%;
+}
+
+.project-admin-ugroups-list-table-ugroup-name {
+    width: 50%;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 @media screen and (max-width: 1200px) {
     .project-admin-user-groups-container {
         flex-direction: column;
@@ -80,24 +121,4 @@
         order: 2;
         margin: 0;
     }
-}
-
-.projectadmin-userlist-result-name-avatar {
-    margin: 0 $tlp-half-spacing 0 0;
-}
-
-.project-admin-user-group-title,
-.remove-binding-modal-text,
-.remove-user-from-group-modal-text,
-.user-group-project-name-table {
-    word-break: break-all;
-}
-
-.user-group-binding-link {
-    max-width: 200px;
-    word-break: break-all;
-}
-
-.user-group-project-name-user-group-table {
-    word-break: keep-all;
 }
