@@ -276,7 +276,7 @@ msgid "Filled"
 msgstr "Rempli"
 
 msgid "Filter by name"
-msgstr "Filtrer par nom d'utilisateur"
+msgstr "Filtrer par nom"
 
 msgid "Forums"
 msgstr "Forums"
