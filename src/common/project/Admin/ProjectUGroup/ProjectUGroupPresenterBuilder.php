@@ -142,15 +142,20 @@ class ProjectUGroupPresenterBuilder
                 } else if ($row['permission_type'] == 'TRACKER_ARTIFACT_ACCESS') {
                     $content = $this->html_purifier->purify($objname, CODENDI_PURIFIER_BASIC);
                 } else {
-                    $results = false;
+                    $results      = false;
+                    $not_existing = false;
                     $this->event_manager->processEvent('permissions_for_ugroup', array(
                         'permission_type' => $row['permission_type'],
                         'object_id' => $row['object_id'],
                         'objname' => $objname,
                         'group_id' => $ugroup->getProjectId(),
                         'ugroup_id' => $ugroup->getId(),
-                        'results' => &$results
+                        'results' => &$results,
+                        'not_existing' => &$not_existing
                     ));
+                    if ($not_existing) {
+                        continue;
+                    }
                     if ($results) {
                         $content = $results;
                     } else {

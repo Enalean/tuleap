@@ -539,7 +539,7 @@ class trackerPlugin extends Plugin {
     }
 
     function permissions_for_ugroup($params) {
-        if (!$params['results']) {
+        if (!$params['results'] || !$params['not_existing']) {
 
             $group_id = $params['group_id'];
             $hp = Codendi_HTMLPurifier::instance();
@@ -565,6 +565,10 @@ class trackerPlugin extends Plugin {
 
                 } else if ($params['permission_type'] == 'PLUGIN_TRACKER_WORKFLOW_TRANSITION') {
                     $transition = TransitionFactory::instance()->getTransition($atid);
+                    if ($transition === null) {
+                        $params['not_existing'] = true;
+                        return;
+                    }
                     $tracker_id = $transition->getWorkflow()->getTrackerId();
                     $edit_transition = $transition->getFieldValueFrom().'_'.$transition->getFieldValueTo();
                     $params['results'] = '<a href="'.TRACKER_BASE_URL.'/?'. http_build_query(
