@@ -2,14 +2,16 @@ export default DiagramRestService;
 
 DiagramRestService.$inject = [
     '$http',
-    'SharedPropertiesService'
+    'SharedPropertiesService',
+    'FilterTrackerReportService',
 ];
 
 function DiagramRestService(
     $http,
-    SharedPropertiesService
+    SharedPropertiesService,
+    FilterTrackerReportService,
 ) {
-    var self = this;
+    const self = this;
 
     self.getCumulativeFlowDiagram = getCumulativeFlowDiagram;
 
@@ -19,23 +21,31 @@ function DiagramRestService(
         end_date,
         interval_between_point
     ) {
-        var TIMEOUT_IN_MILLISECONDS = 20000;
+        const TIMEOUT_IN_MILLISECONDS = 20000;
 
-        var promise = $http.get('/api/v1/kanban/' + kanban_id + '/cumulative_flow', {
+        let query_params = {
+            start_date,
+            end_date,
+            interval_between_point
+        };
+
+        augmentQueryParamsWithFilterTrackerReport(query_params);
+
+        return $http.get('/api/v1/kanban/' + kanban_id + '/cumulative_flow', {
             headers: {
                 'X-Client-UUID': SharedPropertiesService.getUUID()
             },
-            params: {
-                start_date            : start_date,
-                end_date              : end_date,
-                interval_between_point: interval_between_point
-            },
+            params : query_params,
             timeout: TIMEOUT_IN_MILLISECONDS
         })
-        .then(function(response) {
-            return response.data;
-        });
+        .then(({ data }) => data);
+    }
 
-        return promise;
+    function augmentQueryParamsWithFilterTrackerReport(query_params) {
+        const selected_filter_tracker_report_id = FilterTrackerReportService.getSelectedFilterTrackerReportId();
+
+        if (selected_filter_tracker_report_id) {
+            query_params.query = { tracker_report_id: selected_filter_tracker_report_id };
+        }
     }
 }
