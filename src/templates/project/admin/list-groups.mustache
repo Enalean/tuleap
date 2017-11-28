@@ -44,9 +44,17 @@
                         </tr>
                         {{# ugroups }}
                             <tr>
-                                <td class="tlp-table-cell-filterable">{{ name }}</td>
-                                <td class="tlp-table-cell-filterable">{{ description }}</td>
-                                <td class="tlp-table-cell-numeric">{{ nb_members }}</td>
+                                <td class="tlp-table-cell-filterable project-admin-ugroups-list-table-ugroup-name"
+                                    title="{{ name }}"
+                                >
+                                    {{ name }}
+                                </td>
+                                <td class="tlp-table-cell-filterable project-admin-ugroups-list-table-ugroup-description">
+                                    {{ description }}
+                                </td>
+                                <td class="tlp-table-cell-numeric project-admin-ugroups-list-table-ugroup-nb-members">
+                                    {{ nb_members }}
+                                </td>
                                 <td class="tlp-table-cell-actions">
                                     <a class="tlp-table-cell-actions-button
                                         tlp-button-small
