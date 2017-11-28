@@ -93,9 +93,18 @@
                                             tlp-button-small
                                             tlp-button-danger
                                             tlp-button-outline
+                                            {{^ can_be_deleted }}
+                                                tlp-tooltip
+                                                tlp-tooltip-left
+                                            {{/ can_be_deleted }}
                                             project-admin-remove-user-from-group"
                                             data-target-modal-id="project-admin-remove-user-from-group-modal-{{ user_id }}"
-                                            {{^ can_be_deleted }} disabled {{/ can_be_deleted }}
+                                            {{^ can_be_deleted }}
+                                                disabled
+                                                data-tlp-tooltip="{{# gettext }}
+                                                    The last project administrator cannot be removed.
+                                                {{/ gettext }}"
+                                            {{/ can_be_deleted }}
                                         >
                                             <i class="fa fa-trash-o tlp-button-icon"></i> {{# gettext }}Delete{{/ gettext }}
                                         </button>

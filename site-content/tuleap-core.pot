@@ -557,6 +557,9 @@ msgid ""
 "The given parent project does not exist or you are not its administrator."
 msgstr ""
 
+msgid "The last project administrator cannot be removed."
+msgstr ""
+
 msgid "The name is missing for creating a dashboard."
 msgstr ""
 
@@ -617,6 +620,9 @@ msgid ""
 msgstr ""
 
 msgid "This group does not have any members yet."
+msgstr ""
+
+msgid "This is a system group, you cannot delete it."
 msgstr ""
 
 msgid "This label is used in the project"
