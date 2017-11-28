@@ -96,7 +96,7 @@ executeCommandAndExitIfStderrNotEmpty("find $core_src -name '*.php' \
     | sed '/^msgctxt/d' \
     > $template");
 
-info("[core] Gerenating .pot file for .mustache files");
+info("[core] Generating .pot file for .mustache files");
 $mustache_template = "$basedir/site-content/tuleap-core.mustache.pot";
 $gettext_in_mustache_extractor->extract(
     'tuleap-core',
@@ -111,6 +111,43 @@ unlink($mustache_template);
 info("[core] Merging .pot file into .po files");
 $site_content = escapeshellarg("$basedir/site-content");
 exec("find $site_content -name 'tuleap-core.po' -exec msgmerge --update \"{}\" $template \;");
+
+info("[core][js] Generating default .pot file");
+foreach (glob("$basedir/src/www/scripts/*", GLOB_ONLYDIR) as $path) {
+    $manifest = "$path/build-manifest.json";
+    if (!is_file($manifest)) {
+        continue;
+    }
+
+    $json = json_decode(file_get_contents($manifest), true);
+    if (isset($json['gettext-js']) && is_array($json['gettext-js'])) {
+        foreach ($json['gettext-js'] as $component => $gettext) {
+            info("[core][js][$component] Generating default .pot file");
+            $src      = escapeshellarg("$path/${gettext['src']}");
+            $po       = escapeshellarg("$path/${gettext['po']}");
+            $template = escapeshellarg("$path/${gettext['po']}/template.pot");
+            executeCommandAndExitIfStderrNotEmpty("find $src \
+                        \( -name '*.js'  \) \
+                    | xargs xgettext \
+                        --language=JavaScript \
+                        --default-domain=core \
+                        --from-code=UTF-8 \
+                        --no-location \
+                        --sort-output \
+                        --omit-header \
+                        -o - \
+                    | sed '/^msgctxt/d' \
+                    > $template");
+
+            info("[core][js][$component] Merging .pot file into .po files");
+            exec("find $po -name '*.po' -exec msgmerge --update \"{}\" $template \;");
+        }
+    }
+
+    info("[core][js] Merging $component .pot file into .po files");
+    exec("find $path -name '*.po' -exec msgmerge --update \"{}\" $template \;");
+}
+
 
 foreach (glob("$basedir/plugins/*", GLOB_ONLYDIR) as $path) {
     $translated_plugin = basename($path);
@@ -154,7 +191,7 @@ foreach (glob("$basedir/plugins/*", GLOB_ONLYDIR) as $path) {
         | sed '/^msgctxt/d' \
         > $plural");
 
-    info("[$translated_plugin] Gerenating .pot file for .mustache files");
+    info("[$translated_plugin] Generating .pot file for .mustache files");
     $gettext_in_mustache_extractor->extract(
         "tuleap-$translated_plugin",
         "$path/templates",

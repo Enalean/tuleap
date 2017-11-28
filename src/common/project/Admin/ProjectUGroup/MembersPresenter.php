@@ -29,11 +29,13 @@ class MembersPresenter
     public $members;
     public $has_members;
     public $can_be_updated;
+    public $is_dynamic_group;
 
-    public function __construct(array $members, $can_be_updated)
+    public function __construct(array $members, $can_be_updated, $is_dynamic_group)
     {
-        $this->has_members    = count($members) > 0;
-        $this->can_be_updated = $can_be_updated;
-        $this->members        = $members;
+        $this->has_members      = count($members) > 0;
+        $this->can_be_updated   = $can_be_updated;
+        $this->members          = $members;
+        $this->is_dynamic_group = $is_dynamic_group;
     }
 }

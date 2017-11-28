@@ -50,6 +50,9 @@ msgstr ""
 msgid "Add widget"
 msgstr ""
 
+msgid "Adding a non-project member"
+msgstr ""
+
 msgid "Agile Dashboard"
 msgstr ""
 
@@ -561,6 +564,9 @@ msgid "The name is missing for editing the dashboard."
 msgstr ""
 
 msgid "The requested dashboard does not exist."
+msgstr ""
+
+msgid "The user will automatically be added as project member."
 msgstr ""
 
 msgid "The widget has been added successfully"

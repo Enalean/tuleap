@@ -66,6 +66,9 @@ msgstr "Ajouter un lien à un groupe"
 msgid "Add widget"
 msgstr "Ajouter un widget"
 
+msgid "Adding a non-project member"
+msgstr "Ajouter un utilisateur non membre du projet"
+
 msgid "Agile Dashboard"
 msgstr "Agile Dashboard"
 
@@ -593,6 +596,9 @@ msgstr "Il manque le nom pour éditer le tableau de bord."
 
 msgid "The requested dashboard does not exist."
 msgstr "Le tableau de bord demandé n’existe pas."
+
+msgid "The user will automatically be added as project member."
+msgstr "L'utilisateur sera ajouté automatiquement aux membres du projet."
 
 msgid "The widget has been added successfully"
 msgstr "Le widget a correctement été ajouté"

@@ -1,0 +1,34 @@
+<form method="POST"
+      action="?group_id={{ project_id }}&ugroup_id={{ id }}&func=edit&pane=settings&perform=addUser"
+      class="tlp-modal"
+      role="dialog"
+      id="add-user-to-dynamic-ugroup"
+      aria-labelledby="add-user-to-dynamic-ugroup-title"
+>
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="add-user-to-dynamic-ugroup-title">
+            <i class="fa fa-plus tlp-modal-title-icon"></i>
+            {{# gettext }}Adding a non-project member{{/ gettext }}
+        </h1>
+        <div class="tlp-modal-close" data-dismiss="modal" aria-label="{{# gettext }}Close{{/ gettext }}">
+            &times;
+        </div>
+    </div>
+    <div class="tlp-modal-body">
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
+        <input type="hidden" name="action" value="edit_ugroup_members">
+        <input type="hidden" name="add_user_name" id="add-user-to-ugroup">
+        <p id="add-user-to-dynamic-ugroup-confirmation-message"></p>
+        <p>{{# gettext }}The user will automatically be added as project member.{{/ gettext }}</p>
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="reset" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
+            {{# gettext }}Cancel{{/ gettext }}
+        </button>
+        <button type="submit" class="tlp-button-primary tlp-modal-action user-group-modal-button">
+            <i class="fa fa-plus tlp-button-icon"></i> {{# gettext }}Add member{{/ gettext }}
+        </button>
+    </div>
+</form>

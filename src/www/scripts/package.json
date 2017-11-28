@@ -12,6 +12,7 @@
     "lodash": "^4.17.4",
     "moment": "^2.18.1",
     "mustache": "^2.3.0",
+    "node-gettext": "^2.0.0",
     "phptomoment": "0.0.2",
     "promise-polyfill": "^6.0.2",
     "sprintf-js": "^1.1.1",
@@ -22,6 +23,8 @@
     "babel-loader": "^7.1.2",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.5.2",
+    "json-loader": "^0.5.7",
+    "po-gettext-loader": "^0.1.1",
     "webpack": "^3.5.5",
     "webpack-assets-manifest": "^1.0.0"
   },

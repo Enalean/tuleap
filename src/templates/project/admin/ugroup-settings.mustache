@@ -12,7 +12,11 @@
                 {{> ugroup-settings-binding }}
             </div>
         {{/ is_static_ugroup }}
-        <div class="project-admin-user-groups-member-list-container">
+        <div
+                class="project-admin-user-groups-member-list-container"
+                data-locale="{{ locale }}"
+                id="project-admin-user-groups-member-list-container"
+        >
             {{> ugroup-settings-member-list }}
         </div>
     </div>

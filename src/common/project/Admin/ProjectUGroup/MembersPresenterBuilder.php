@@ -51,9 +51,10 @@ class MembersPresenterBuilder
             array('ugroup_id' => $ugroup->getId(), 'allowed' => &$can_be_updated)
         );
 
-        $members = $this->getFormattedProjectMembers($ugroup);
+        $members          = $this->getFormattedProjectMembers($ugroup);
+        $is_dynamic_group = (int) $ugroup->getId() === ProjectUGroup::PROJECT_ADMIN;
 
-        return new MembersPresenter($members, $can_be_updated);
+        return new MembersPresenter($members, $can_be_updated, $is_dynamic_group);
     }
 
     private function getFormattedProjectMembers(ProjectUGroup $ugroup)

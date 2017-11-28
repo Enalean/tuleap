@@ -22,6 +22,7 @@ namespace Tuleap\Project\Admin\ProjectUGroup;
 
 use CSRFSynchronizerToken;
 use ForgeConfig;
+use PFUser;
 use ProjectUGroup;
 use TemplateRendererFactory;
 use Tuleap\Layout\IncludeAssets;
@@ -53,9 +54,9 @@ class IndexController
         $this->presenter_builder    = $presenter_builder;
     }
 
-    public function display(ProjectUGroup $ugroup, CSRFSynchronizerToken $csrf)
+    public function display(ProjectUGroup $ugroup, CSRFSynchronizerToken $csrf, PFUser $user)
     {
-        $presenter = $this->presenter_builder->build($ugroup, $csrf);
+        $presenter = $this->presenter_builder->build($ugroup, $csrf, $user);
 
         $this->displayHeader($ugroup);
         TemplateRendererFactory::build()

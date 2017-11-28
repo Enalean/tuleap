@@ -1,0 +1,3 @@
+#, javascript-format
+msgid "You are about to add <b>%s</b> in <b>%s</b> users group."
+msgstr "Vous êtes sur le point d'ajouter <b>%s</b> dans le groupe utilisateur <b>%s</b>."
