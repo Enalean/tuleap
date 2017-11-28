@@ -69,9 +69,13 @@ msgstr "Outil de suivi"
 msgid "You cannot access all projects of the search"
 msgstr "Vous ne pouvez pas accéder à tous les projets de cette recherche"
 
+msgid "You cannot access all the columns displayed in this search"
+msgstr "Vous ne pouvez pas accéder à toutes les colonnes affichées dans cette recherche"
+
 msgid "You cannot access all the fields used to filter the search"
 msgstr ""
-"Vous ne pouvez pas accéder à tous les champs utilisés pour filtrer cette recherche"
+"Vous ne pouvez pas accéder à tous les champs utilisés pour filtrer cette "
+"recherche"
 
 msgid "You cannot access all trackers of the search"
 msgstr ""
