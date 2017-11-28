@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -560,6 +560,7 @@ class FRSFile {
      * @returns string HTML content for file tooltip
      */
     function getReferenceTooltip() {
+        $html_purifier = Codendi_HTMLPurifier::instance();
         $tooltip = '';
         $rf = new FRSReleaseFactory();
         $pf = new FRSPackageFactory();
@@ -570,19 +571,19 @@ class FRSFile {
         $tooltip .= '<table>';
         $tooltip .= ' <tr>';
         $tooltip .= '  <td><strong>' . $GLOBALS['Language']->getText('file_admin_editreleases', 'filename') . ':</strong></td>';
-        $tooltip .= '  <td>'.basename($this->getFileName()).'</td>';
+        $tooltip .= '  <td>'.$html_purifier->purify(basename($this->getFileName())).'</td>';
         $tooltip .= ' </tr>';
         $tooltip .= ' <tr>';
         $tooltip .= '  <td><strong>' . $GLOBALS['Language']->getText('file_ref_tooltip', 'package_release') . ':</strong></td>';
-        $tooltip .= '  <td>'.$package->getName().' / '.$release->getName().'</td>';
+        $tooltip .= '  <td>'.$html_purifier->purify($package->getName().' / '.$release->getName()).'</td>';
         $tooltip .= ' </tr>';
         $tooltip .= ' <tr>';
         $tooltip .= '  <td><strong>' . $GLOBALS['Language']->getText('file_showfiles', 'date') . ':</strong></td>';
-        $tooltip .= '  <td>'.format_date($GLOBALS['Language']->getText('system', 'datefmt_short'), $release->getReleaseDate()).'</td>';
+        $tooltip .= '  <td>'.$html_purifier->purify(format_date($GLOBALS['Language']->getText('system', 'datefmt_short'), $release->getReleaseDate())).'</td>';
         $tooltip .= ' </tr>';
         $tooltip .= ' <tr>';
         $tooltip .= '  <td><strong>' . $GLOBALS['Language']->getText('file_showfiles', 'size') . ':</strong></td>';
-        $tooltip .= '  <td>'.$this->getDisplayFileSize().'</td>';
+        $tooltip .= '  <td>'.$html_purifier->purify($this->getDisplayFileSize()).'</td>';
         $tooltip .= ' </tr>';
         $tooltip .= '</table>';
         return $tooltip;

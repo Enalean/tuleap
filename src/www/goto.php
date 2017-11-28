@@ -89,6 +89,7 @@ if ($ref) {
 }
 
 if ($request->isAjax()) {
+    $html_purifier = Codendi_HTMLPurifier::instance();
     switch($ref->getServiceShortName()) {
         case 'tracker':
             $user_id = UserManager::instance()->getCurrentUser()->getId();
@@ -125,11 +126,11 @@ if ($request->isAjax()) {
                             $field_html = new ArtifactFieldHtml($field);
                             
                             if ($field->getName() == 'submitted_by') {
-                                $value = $uh->getDisplayNameFromUserId($field_value);
+                                $value = $html_purifier->purify($uh->getDisplayNameFromUserId($field_value));
                                 
                                 $open_date = $art_field_fact->getFieldFromName($field_name);
                                 if ($field->userCanRead($group_id, $atid)) {
-                                    $value .= ', '. util_time_ago_in_words($ah->getValue('open_date'));
+                                    $value .= $html_purifier->purify(', '. util_time_ago_in_words($ah->getValue('open_date')));
                                 }
                             } else {
                                 $value = $field_html->display($at->getID(),$field_value,false,false,true);
@@ -158,11 +159,11 @@ if ($request->isAjax()) {
             echo '<table>';
             echo ' <tr>';
             echo '  <td><strong>' . $GLOBALS['Language']->getText('svn_utils','date') . ':</strong></td>';
-            echo '  <td>' . $date . '</td>';
+            echo '  <td>' . $html_purifier->purify($date) . '</td>';
             echo ' </tr>';
             echo ' <tr>';
             echo '  <td><strong>' . $GLOBALS['Language']->getText('svn_browse_revision','log_message') . ':</strong></td>';
-            echo '  <td>' . $list_log . '</td>';
+            echo '  <td>' . $html_purifier->purify($list_log) . '</td>';
             echo ' </tr>';
             echo '</table>';
             break;
@@ -178,11 +179,11 @@ if ($request->isAjax()) {
                 echo '<table>';
                 echo ' <tr>';
                 echo '  <td><strong>' . $GLOBALS['Language']->getText('cvs_commit_utils','date') . ':</strong></td>';
-                echo '  <td>' . $date . '</td>';
+                echo '  <td>' . $html_purifier->purify($date) . '</td>';
                 echo ' </tr>';
                 echo ' <tr>';
                 echo '  <td><strong>' . $GLOBALS['Language']->getText('cvs_browse_commit','log_message') . ':</strong></td>';
-                echo '  <td>' . $list_log . '</td>';
+                echo '  <td>' . $html_purifier->purify($list_log) . '</td>';
                 echo ' </tr>';
                 echo '</table>';
             }

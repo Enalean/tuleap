@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -308,6 +308,7 @@ class FRSRelease {
      * @returns string HTML content for release tooltip
      */
     function getReferenceTooltip() {
+        $html_purifier = Codendi_HTMLPurifier::instance();
         $tooltip = '';
         $package_id = $this->getPackageID();
         $pf = new FRSPackageFactory();
@@ -315,15 +316,15 @@ class FRSRelease {
         $tooltip .= '<table>';
         $tooltip .= ' <tr>';
         $tooltip .= '  <td><strong>' . $GLOBALS['Language']->getText('file_admin_editreleases', 'release_name') . ':</strong></td>';
-        $tooltip .= '  <td>'.$this->getName().'</td>';
+        $tooltip .= '  <td>'.$html_purifier->purify($this->getName()).'</td>';
         $tooltip .= ' </tr>';
         $tooltip .= ' <tr>';
         $tooltip .= '  <td><strong>' . $GLOBALS['Language']->getText('file_admin_editpackages', 'p_name') . ':</strong></td>';
-        $tooltip .= '  <td>'.$package->getName().'</td>';
+        $tooltip .= '  <td>'.$html_purifier->purify($package->getName()).'</td>';
         $tooltip .= ' </tr>';
         $tooltip .= ' <tr>';
         $tooltip .= '  <td><strong>' . $GLOBALS['Language']->getText('file_showfiles', 'date') . ':</strong></td>';
-        $tooltip .= '  <td>'.format_date($GLOBALS['Language']->getText('system', 'datefmt_short'), $this->getReleaseDate()).'</td>';
+        $tooltip .= '  <td>'.$html_purifier->purify(format_date($GLOBALS['Language']->getText('system', 'datefmt_short'), $this->getReleaseDate())).'</td>';
         $tooltip .= ' </tr>';
         $tooltip .= '</table>';
         return $tooltip;

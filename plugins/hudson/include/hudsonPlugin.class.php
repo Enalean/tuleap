@@ -228,6 +228,7 @@ class hudsonPlugin extends Plugin
         require_once('HudsonJob.class.php');
         require_once('HudsonBuild.class.php');
         require_once('hudson_Widget_JobLastBuilds.class.php');
+        $html_purifier = Codendi_HTMLPurifier::instance();
 
         $ref = $params['reference'];
         switch ($ref->getNature()) {
@@ -251,8 +252,8 @@ class hudsonPlugin extends Plugin
                     $row         = $dar->current();
                     $http_client = new Http_Client();
                     $build       = new HudsonBuild($row['job_url'] . '/' . $build_id . '/', $http_client);
-                    echo '<strong>' . $GLOBALS['Language']->getText('plugin_hudson', 'build_time') . '</strong> ' . $build->getBuildTime() . '<br />';
-                    echo '<strong>' . $GLOBALS['Language']->getText('plugin_hudson', 'status') . '</strong> ' . $build->getResult();
+                    echo '<strong>' . $GLOBALS['Language']->getText('plugin_hudson', 'build_time') . '</strong> ' . $html_purifier->purify($build->getBuildTime()) . '<br />';
+                    echo '<strong>' . $GLOBALS['Language']->getText('plugin_hudson', 'status') . '</strong> ' . $html_purifier->purify($build->getResult());
                 } else {
                     echo '<span class="error">'.$GLOBALS['Language']->getText('plugin_hudson','error_object_not_found').'</span>';
                 }
@@ -273,7 +274,7 @@ class hudsonPlugin extends Plugin
                         $html .= '<table>';
                         $html .= ' <tr>';
                         $html .= '  <td colspan="2">';
-                        $html .= '   <img src="'.$job->getStatusIcon().'" width="10" height="10" /> '.$job->getName().':';
+                        $html .= '   <img src="'.$job->getStatusIcon().'" width="10" height="10" /> '.$html_purifier->purify($job->getName()).':';
                         $html .= '  </td>';
                         $html .= ' </tr>';
                         $html .= ' <tr>';
