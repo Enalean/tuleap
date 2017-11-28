@@ -55,5 +55,8 @@ msgstr ""
 msgid "You cannot access all projects of the search"
 msgstr ""
 
+msgid "You cannot access all the fields used to filter the search"
+msgstr ""
+
 msgid "You cannot access all trackers of the search"
 msgstr ""
