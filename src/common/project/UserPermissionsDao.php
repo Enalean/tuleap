@@ -24,8 +24,8 @@ use DataAccessObject;
 
 class UserPermissionsDao extends DataAccessObject
 {
-    private static $PROJECT_ADMIN_FLAG = 'A';
-    private static $WIKI_ADMIN_FLAG    = 2;
+    const PROJECT_ADMIN_FLAG = 'A';
+    const WIKI_ADMIN_FLAG    = '2';
 
     public function __construct()
     {
@@ -38,7 +38,7 @@ class UserPermissionsDao extends DataAccessObject
     {
         $project_id = $this->da->escapeInt($project_id);
         $user_id    = $this->da->escapeInt($user_id);
-        $admin_flag = $this->da->quoteSmart(self::$PROJECT_ADMIN_FLAG);
+        $admin_flag = $this->da->quoteSmart(self::PROJECT_ADMIN_FLAG);
 
         $sql = "UPDATE user_group
                 SET admin_flags = $admin_flag
@@ -65,7 +65,7 @@ class UserPermissionsDao extends DataAccessObject
     {
         $project_id = $this->da->escapeInt($project_id);
         $user_id    = $this->da->escapeInt($user_id);
-        $admin_flag = $this->da->escapeInt(self::$WIKI_ADMIN_FLAG);
+        $admin_flag = $this->da->escapeInt(self::WIKI_ADMIN_FLAG);
 
         $sql = "UPDATE user_group
                 SET wiki_flags = $admin_flag

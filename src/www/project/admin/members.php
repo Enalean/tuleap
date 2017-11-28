@@ -98,7 +98,8 @@ $member_controller = new ProjectMembersController(
     $user_helper,
     $ugroup_binding,
     $user_remover,
-    $event_manager
+    $event_manager,
+    $ugroup_manager
 );
 
 $action_whitelist = new Valid_WhiteList(

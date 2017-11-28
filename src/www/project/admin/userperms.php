@@ -199,16 +199,6 @@ $res = db_query($sql);
 $row = db_fetch_array($res);
 $num_total_rows = $row['nb'];
 
-$sql = "SELECT ugroup_user.user_id AS user_id, ugroup.ugroup_id AS ugroup_id, ugroup.name AS name
-FROM ugroup, ugroup_user
-WHERE ugroup.group_id = ". db_ei($group_id) ."
-  AND ugroup_user.ugroup_id = ugroup.ugroup_id";
-$res_ugrp = db_query($sql);
-$ugroups = array();
-while($row = db_fetch_array($res_ugrp)) {
-    $ugroups[$row['user_id']][] = $row;
-}
-
 project_admin_header(
     array(
         'title'=>$Language->getText('project_admin_utils','user_perms'),
@@ -290,8 +280,6 @@ if ( $project->usesTracker()&&$at_arr ) {
 	}
 }
 
-$head .= '<th>'.$Language->getText('project_admin_userperms','member_ug').'</th>';
-
 $head .= '</tr></thead><tbody>';
 
 echo $head;
@@ -370,22 +358,6 @@ echo $head;
                 userperms_add_cell($user_name, $cell);
             }
         }
-
-        print '<TD>';
-        if (isset($ugroups[$row_dev['user_id']])) {
-            $is_first=true;
-            foreach($ugroups[$row_dev['user_id']] as $row) {
-                if (!$is_first) {
-                    print ', ';
-                }
-                print '<a href="/project/admin/editugroup.php?group_id='.$group_id.'&ugroup_id='.$row['ugroup_id'].'">'.
-                    $row['name'].'</a>';
-                $is_first = false;
-            }
-        } else {
-            print '-';
-        }
-        print '</TD>';
 
         print '</TR>';
         if ($i % 10 == 0) {

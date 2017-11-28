@@ -29,12 +29,15 @@ use EventManager;
 use ForgeConfig;
 use HTTPRequest;
 use Project;
+use ProjectUGroup;
 use TemplateRendererFactory;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
+use Tuleap\Project\Admin\ProjectUGroup\MinimalUGroupPresenter;
+use Tuleap\Project\UserPermissionsDao;
 use Tuleap\Project\UserRemover;
-use Tuleap\REST\UserManager;
 use UGroupBinding;
+use UGroupManager;
 use UserHelper;
 
 class ProjectMembersController
@@ -67,6 +70,10 @@ class ProjectMembersController
      * @var EventManager
      */
     private $event_manager;
+    /**
+     * @var UGroupManager
+     */
+    private $ugroup_manager;
 
     public function __construct(
         ProjectMembersDAO     $members_dao,
@@ -74,7 +81,8 @@ class ProjectMembersController
         UserHelper            $user_helper,
         UGroupBinding         $user_group_bindings,
         UserRemover           $user_remover,
-        EventManager          $event_manager
+        EventManager          $event_manager,
+        UGroupManager         $ugroup_manager
     ) {
         $this->members_dao         = $members_dao;
         $this->csrf_token          = $csrf_token;
@@ -82,6 +90,7 @@ class ProjectMembersController
         $this->user_group_bindings = $user_group_bindings;
         $this->user_remover        = $user_remover;
         $this->event_manager       = $event_manager;
+        $this->ugroup_manager      = $ugroup_manager;
     }
 
     public function display(HTTPRequest $request)
@@ -153,14 +162,16 @@ class ProjectMembersController
 
     private function getFormattedProjectMembers(HTTPRequest $request)
     {
-        $database_results = $this->members_dao->searchProjectMembers($request->getProject()->getID());
+        $project          = $request->getProject();
+        $database_results = $this->members_dao->searchProjectMembers($project->getID());
 
         $project_members = array();
 
         foreach ($database_results as $member) {
-            $member['profile_page_url']  = "/users/" . urlencode($member['user_name']) .  "/";
-            $member['is_project_admin']  = $member['admin_flags'] === 'A';
-            $member['username_display']  = $this->user_helper->getDisplayName(
+            $member['ugroups']          = $this->getUGroupsPresenters($project, $member);
+            $member['profile_page_url'] = "/users/" . urlencode($member['user_name']) .  "/";
+            $member['is_project_admin'] = $member['admin_flags'] === UserPermissionsDao::PROJECT_ADMIN_FLAG;
+            $member['username_display'] = $this->user_helper->getDisplayName(
                 $member['user_name'],
                 $member['realname']
             );
@@ -169,5 +180,35 @@ class ProjectMembersController
         }
 
         return $project_members;
+    }
+
+    private function getUGroupsPresenters(Project $project, array $member)
+    {
+        $ugroups = array();
+
+        if ($member['admin_flags'] === UserPermissionsDao::PROJECT_ADMIN_FLAG) {
+            $ugroups[] = new MinimalUGroupPresenter(
+                $this->ugroup_manager->getUGroup($project, ProjectUGroup::PROJECT_ADMIN)
+            );
+        }
+
+        if ($member['wiki_flags'] === UserPermissionsDao::WIKI_ADMIN_FLAG) {
+            $ugroups[] = new MinimalUGroupPresenter(
+                $this->ugroup_manager->getUGroup($project, ProjectUGroup::WIKI_ADMIN)
+            );
+        }
+
+        if (! $member['ugroups_ids']) {
+            return $ugroups;
+        }
+
+        $ugroups_ids = explode(',', $member['ugroups_ids']);
+        foreach ($ugroups_ids as $ugroup_id) {
+            $ugroups[] = new MinimalUGroupPresenter(
+                $this->ugroup_manager->getUGroup($project, $ugroup_id)
+            );
+        }
+
+        return $ugroups;
     }
 }
