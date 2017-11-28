@@ -45,7 +45,10 @@ if ($request->exist('wsdl')) {
     $server = new TuleapSOAPServer($uri.'/?wsdl',
                              array('cache_wsdl' => WSDL_CACHE_NONE));
     $server->setClass($serviceClass, $soap_request_validator, $svn_repository_listing);
+    $xml_security = new XML_Security();
+    $xml_security->enableExternalLoadOfEntities();
     $server->handle();
+    $xml_security->disableExternalLoadOfEntities();
 }
 
 ?>

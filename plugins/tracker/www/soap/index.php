@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011. All Rights Reserved.
+ * Copyright (c) Enalean, 2011-2017. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -73,7 +73,10 @@ if ($request->exist('wsdl')) {
         new Tracker_FileInfoFactory(new Tracker_FileInfoDao, $formelement_factory, $artifact_factory),
         new TrackerManager()
     );
+    $xml_security = new XML_Security();
+    $xml_security->enableExternalLoadOfEntities();
     $server->handle();
+    $xml_security->disableExternalLoadOfEntities();
 }
 
 ?>

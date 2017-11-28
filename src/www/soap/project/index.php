@@ -143,5 +143,8 @@ if ($request->exist('wsdl')) {
         $service_usage_manager,
         $forge_ugroup_permissions_manager
     );
+    $xml_security = new XML_Security();
+    $xml_security->enableExternalLoadOfEntities();
     $server->handle();
+    $xml_security->disableExternalLoadOfEntities();
 }
