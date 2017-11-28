@@ -149,7 +149,12 @@ export default class ReadingModeController {
             this.backend_cross_tracker_report.loaded = true;
         } catch (error) {
             this.reading_trackers_controller.setDisabled();
-            this.error_displayer.displayError(this.gettext_provider.gettext('Error while fetching the cross tracker report'));
+            const error_details = await error.response.json();
+            if (error.response.status === 403 && 'i18n_error_message' in error_details.error) {
+                this.error_displayer.displayError(error_details.error.i18n_error_message);
+            } else {
+                this.error_displayer.displayError(this.gettext_provider.gettext('Error while fetching the cross tracker report'));
+            }
             throw error;
         } finally {
             this.widget_loader_displayer.hide();
