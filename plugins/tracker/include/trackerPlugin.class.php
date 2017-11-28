@@ -554,6 +554,10 @@ class trackerPlugin extends Plugin {
 
                 } else if (strpos($params['permission_type'], 'PLUGIN_TRACKER_FIELD') === 0) {
                     $field = Tracker_FormElementFactory::instance()->getFormElementById($atid);
+                    if ($field === null) {
+                        $params['not_existing'] = true;
+                        return;
+                    }
                     $tracker_id = $field->getTrackerId();
 
                     $params['results'] = $GLOBALS['Language']->getText('project_admin_editugroup','tracker')
