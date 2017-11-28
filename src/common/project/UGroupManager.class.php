@@ -82,7 +82,9 @@ class UGroupManager {
             $project_id = 100;
         }
 
+
         $row = $this->getDao()->searchByGroupIdAndUGroupId($project_id, $ugroup_id)->getRow();
+
         if ($row) {
             return $this->instanciateGroupForProject($project, $row);
         }

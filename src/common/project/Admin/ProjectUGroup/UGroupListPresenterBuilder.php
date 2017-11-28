@@ -49,6 +49,10 @@ class UGroupListPresenterBuilder
             $this->injectDynamicUGroup($project, ProjectUGroup::WIKI_ADMIN, $ugroups);
         }
 
+        if ($project->usesForum()) {
+            $this->injectDynamicUGroup($project, ProjectUGroup::FORUM_ADMIN, $ugroups);
+        }
+
         $can_be_deleted = true;
         foreach ($static_ugroups as $ugroup) {
             $ugroups[] = new UGroupPresenter($project, $ugroup, $can_be_deleted);

@@ -52,7 +52,7 @@ class MembersPresenterBuilder
         );
 
         $members          = $this->getFormattedProjectMembers($ugroup);
-        $is_dynamic_group = (int) $ugroup->getId() === ProjectUGroup::PROJECT_ADMIN;
+        $is_dynamic_group = ! $ugroup->isStatic();
 
         return new MembersPresenter($members, $can_be_updated, $is_dynamic_group);
     }

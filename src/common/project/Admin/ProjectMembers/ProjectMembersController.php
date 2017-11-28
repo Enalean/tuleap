@@ -200,6 +200,12 @@ class ProjectMembersController
             );
         }
 
+        if ($member['forum_flags'] === UserPermissionsDao::FORUM_ADMIN_FLAG) {
+            $ugroups[] = new MinimalUGroupPresenter(
+                $this->ugroup_manager->getUGroup($project, ProjectUGroup::FORUM_ADMIN)
+            );
+        }
+
         if (! $member['ugroups_ids']) {
             return $ugroups;
         }
