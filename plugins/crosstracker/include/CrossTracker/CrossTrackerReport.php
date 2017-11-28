@@ -72,6 +72,25 @@ class CrossTrackerReport
     /**
      * @return \Tracker_FormElement_Field[]
      */
+    public function getColumnFields()
+    {
+        $fields = array();
+        foreach ($this->getTrackers() as $tracker) {
+            $title_field       = $tracker->getTitleField();
+            $status_field      = $tracker->getStatusField();
+            $assigned_to_field = $tracker->getContributorField();
+            foreach (array($title_field, $status_field, $assigned_to_field) as $field) {
+                if ($field !== null) {
+                    $fields[$field->getId()] = $field;
+                }
+            }
+        }
+        return array_values($fields);
+    }
+
+    /**
+     * @return \Tracker_FormElement_Field[]
+     */
     public function getSearchFields()
     {
         $fields = array();

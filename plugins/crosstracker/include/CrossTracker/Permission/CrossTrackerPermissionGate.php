@@ -41,6 +41,7 @@ class CrossTrackerPermissionGate
     {
         $this->checkProjectsAuthorization($user, $report->getProjects());
         $this->checkTrackersAuthorization($user, $report->getTrackers());
+        $this->checkColumnFieldsAuthorization($user, $report->getColumnFields());
         $this->checkSearchFieldsAuthorization($user, $report->getSearchFields());
     }
 
@@ -72,12 +73,22 @@ class CrossTrackerPermissionGate
         }
     }
 
+    private function checkColumnFieldsAuthorization($user, array $column_fields)
+    {
+        $this->checkFieldsAuthorization($user, $column_fields, new CrossTrackerUnauthorizedColumnFieldException());
+    }
+
     private function checkSearchFieldsAuthorization(\PFUser $user, array $search_fields)
     {
-        /** @var \Tracker_FormElement_Field $search_field */
-        foreach ($search_fields as $search_field) {
-            if (! $search_field->userCanRead($user)) {
-                throw new CrossTrackerUnauthorizedSearchFieldException();
+        $this->checkFieldsAuthorization($user, $search_fields, new CrossTrackerUnauthorizedSearchFieldException());
+    }
+
+    private function checkFieldsAuthorization(\PFUser $user, array $fields, CrossTrackerUnauthorizedException $exception_to_throw)
+    {
+        /** @var \Tracker_FormElement_Field $field */
+        foreach ($fields as $field) {
+            if (! $field->userCanRead($user)) {
+                throw $exception_to_throw;
             }
         }
     }
