@@ -28,6 +28,7 @@ require_once 'constants.php';
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\LDAP\LinkModalContentPresenter;
 use Tuleap\LDAP\NonUniqueUidRetriever;
+use Tuleap\Project\Admin\ProjectMembers\MembersEditProcessAction;
 use Tuleap\Project\Admin\ProjectMembers\ProjectMembersAdditionalModalCollectionPresenter;
 use Tuleap\LDAP\Project\UGroup\Binding\AdditionalModalPresenterBuilder;
 use Tuleap\Project\Admin\ProjectUGroup\BindingAdditionalModalPresenterCollection;
@@ -148,6 +149,7 @@ class LdapPlugin extends Plugin {
         $this->addHook('ugroup_duplication');
         $this->addHook(BindingAdditionalModalPresenterCollection::NAME);
         $this->addHook(UGroupEditProcessAction::NAME);
+        $this->addHook(MembersEditProcessAction::NAME);
 
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
@@ -795,8 +797,10 @@ class LdapPlugin extends Plugin {
 
             if ($ldapGroup) {
                 $groupName = $ldapGroup->getCommonName();
+                $is_linked = true;
             } else {
                 $groupName = '';
+                $is_linked = false;
             }
 
             $synchro_checked = $projectMembersManager->isProjectBindingSynchronized($project_id);
@@ -812,26 +816,18 @@ class LdapPlugin extends Plugin {
             $modal_content = $mustache_renderer->renderToString(
                 'project-members-ldap-link-modal',
                 new LinkModalContentPresenter(
-                    $this->getPluginPath().'/admin.php?group_id='. urlencode($project_id),
                     $groupName,
+                    $collector->getProject(),
                     $bind_checked,
-                    $synchro_checked
+                    $synchro_checked,
+                    $is_linked,
+                    $collector->getCSRF()
                 )
             );
 
-            $collector->addModalButton(
-                Codendi_HTMLPurifier::instance()->purify(
-                    $modal_button,
-                    CODENDI_PURIFIER_DISABLED
-                )
-            );
+            $collector->addModalButton($modal_button);
 
-            $collector->addModalContent(
-                Codendi_HTMLPurifier::instance()->purify(
-                    $modal_content,
-                    CODENDI_PURIFIER_DISABLED
-                )
-            );
+            $collector->addModalContent($modal_content);
         }
     }
 
@@ -1287,5 +1283,32 @@ class LdapPlugin extends Plugin {
         }
 
         return $bind_option;
+    }
+
+    public function membersEditProcessAction(MembersEditProcessAction $event)
+    {
+        $request = $event->getRequest();
+        $csrf    = $event->getCSRF();
+
+        $ldap_group_manager = $this->getLdapProjectGroupManager();
+
+        $ldap_group_manager->setId($event->getProject()->getID());
+        $ldap_group_manager->setGroupName($request->get('ldap_group'));
+
+        switch($request->get('action')) {
+            case 'ldap_add_binding':
+                $csrf->check();
+                $event->setHasBeenHandledToTrue();
+                $ldap_group_manager->bindWithLdap(
+                    $this->getBindOption($request),
+                    $this->getSynchro($request)
+                );
+                break;
+            case 'ldap_remove_binding':
+                $csrf->check();
+                $event->setHasBeenHandledToTrue();
+                $ldap_group_manager->unbindFromBindLdap();
+                break;
+        }
     }
 }

@@ -101,17 +101,10 @@ $member_controller = new ProjectMembersController(
     $event_manager
 );
 
-$action_whitelist = new Valid_WhiteList(
-    'action',
-    array(
-        'add-user',
-        'remove-user'
-    )
-);
-
 $router = new ProjectMembersRouter(
     $member_controller,
-    $action_whitelist
+    $csrf_token,
+    $event_manager
 );
 
 $router->route($request);

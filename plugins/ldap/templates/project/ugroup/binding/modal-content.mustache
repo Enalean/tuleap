@@ -85,7 +85,12 @@
 
         <div class="tlp-form-element">
             <label class="tlp-label tlp-checkbox">
-                <input type="checkbox" name="synchronize" value="1" {{# is_synchronized }}checked{{/ is_synchronized }}>
+                <input type="checkbox"
+                       name="synchronize"
+                       id="project-admin-ugroup-binding-ldap-group-synchronize"
+                       value="1"
+                       {{# is_synchronized }}checked{{/ is_synchronized }}
+                >
                 {{# dgettext }}tuleap-ldap | Synchronize daily{{/ dgettext }}
             </label>
             <p class="tlp-text-info">

@@ -24,22 +24,37 @@
 
 namespace Tuleap\LDAP;
 
+use CSRFSynchronizerToken;
+use Project;
+use Tuleap\User\UserGroup\NameTranslator;
+
 class LinkModalContentPresenter
 {
-    public $form_action;
     public $ldap_group_name;
+    public $project_id;
     public $is_preserved_members_checked;
     public $is_synchro_daily_checked;
+    /**
+     * @var CSRFSynchronizerToken
+     */
+    public $csrf_token;
+    public $is_linked;
+    public $display_name;
 
     public function __construct(
-        $form_action,
         $ldap_group_name,
+        Project $project,
         $is_preserved_members_checked,
-        $is_synchro_daily_checked
+        $is_synchro_daily_checked,
+        $is_linked,
+        CSRFSynchronizerToken $csrf_token
     ) {
-        $this->form_action                  = $form_action;
         $this->ldap_group_name              = $ldap_group_name;
+        $this->project_id                   = $project->getID();
         $this->is_preserved_members_checked = $is_preserved_members_checked;
         $this->is_synchro_daily_checked     = $is_synchro_daily_checked;
+        $this->is_linked                    = $is_linked;
+        $this->csrf_token                   = $csrf_token;
+        $this->display_name                 = NameTranslator::getUserGroupDisplayName(NameTranslator::PROJECT_MEMBERS);
     }
 }

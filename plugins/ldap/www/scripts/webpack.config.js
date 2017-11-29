@@ -30,8 +30,8 @@ var assets_dir_path = path.resolve(__dirname, '../assets');
 
 module.exports = {
     entry : {
-        'project-admin-members': './project-admin-members.js',
-        'project-admin-ugroups': './project-admin-ugroups/project-admin-ugroups.js'
+        'project-admin-members': './project-admin/project-admin-members.js',
+        'project-admin-ugroups': './project-admin/project-admin-ugroups.js'
     },
     output: {
         path    : assets_dir_path,

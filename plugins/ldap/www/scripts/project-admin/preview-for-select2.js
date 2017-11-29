@@ -21,48 +21,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Gettext from 'node-gettext';
-import french_translations from './po/fr.po';
+import Gettext                             from 'node-gettext';
+import { render }                          from 'mustache';
+import { sprintf }                         from 'sprintf-js';
+import preview_template                    from './preview.mustache';
+import french_translations                 from './po/fr.po';
 import { autocomplete_groups_for_select2 } from '../autocomplete-for-select2.js';
-import { render } from 'mustache';
-import preview_template from './preview.mustache';
-import { sprintf } from 'sprintf-js';
-import { get, modal as createModal } from 'tlp';
 
-document.addEventListener('DOMContentLoaded', () => {
-    initModal();
-    initLdapGroupsAutocompleter();
-});
+export {
+    initLdapBindingPreview
+};
 
-function initModal() {
-    const button = document.getElementById('project-admin-ugroup-add-ldap-binding');
-
-    if (! button) {
-        return;
-    }
-
-    const modal = createModal(document.getElementById(button.dataset.targetModalId));
-
-    button.addEventListener('click', () => {
-        modal.show();
-    });
-}
-
-function initLdapGroupsAutocompleter() {
-    const select   = document.getElementById('project-admin-ugroup-binding-ldap-group');
-    if (! select) {
-        return;
-    }
-    const preserve    = document.getElementById('project-admin-ugroup-binding-ldap-group-preserve');
-    const button      = document.getElementById('project-admin-ugroup-ldap-binding-modal-link-button');
-    const preview     = document.getElementById('project-admin-ugroup-ldap-binding-modal-preview');
-    const ugroup_id   = select.dataset.ugroupId;
-    const ugroup_name = select.dataset.ugroupName;
+function initLdapBindingPreview(options, callback) {
+    const {
+        preserve,
+        button,
+        preview,
+        display_name,
+        select
+    } = options;
 
     const gettext_provider = new Gettext();
-    gettext_provider.addTranslations('fr_FR', 'ldap-ugroups', french_translations);
+    gettext_provider.addTranslations('fr_FR', 'ldap-bindings', french_translations);
     gettext_provider.setLocale(select.dataset.locale);
-    gettext_provider.setTextDomain('ldap-ugroups');
+    gettext_provider.setTextDomain('ldap-bindings');
 
     const select2 = autocomplete_groups_for_select2(select, {
         allowClear: true
@@ -75,6 +57,7 @@ function initLdapGroupsAutocompleter() {
         button.disabled = true;
 
         const chosen_ldap_group = select.value;
+
         if (! chosen_ldap_group) {
             preview.classList.remove('shown');
             return;
@@ -84,27 +67,16 @@ function initLdapGroupsAutocompleter() {
         preview.classList.add('shown');
         preview.classList.add('loading');
 
-        const { users_to_add, users_to_remove, nb_not_impacted } = await getUsersToConfirm(chosen_ldap_group, ugroup_id);
+        const { users_to_add, users_to_remove, nb_not_impacted } = await callback(chosen_ldap_group);
         preview.classList.remove('loading');
 
         const rendered_preview = render(
             preview_template,
-            getPresenter(users_to_add, users_to_remove, ugroup_name, chosen_ldap_group, nb_not_impacted)
+            getPresenter(users_to_add, users_to_remove, display_name, chosen_ldap_group, nb_not_impacted)
         );
         preview.insertAdjacentHTML('beforeEnd', rendered_preview);
 
         button.disabled = false;
-    }
-
-    async function getUsersToConfirm(chosen_ldap_group, ugroup_id) {
-        const url = '/plugins/ldap/bind_ugroup_confirm.php'
-            + '?bind_with_group=' + encodeURIComponent(chosen_ldap_group)
-            + '&ugroup_id=' + encodeURIComponent(ugroup_id)
-            + '&preserve_members=' + (preserve.checked ? 1 : 0);
-
-        const response = await get(url);
-
-        return await response.json();
     }
 
     function removeAllChildren(element) {
