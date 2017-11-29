@@ -26,6 +26,8 @@ require_once 'autoload.php';
 require_once 'constants.php';
 
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\LDAP\Exception\IdentifierTypeNotFoundException;
+use Tuleap\LDAP\Exception\IdentifierTypeNotRecognizedException;
 use Tuleap\LDAP\LinkModalContentPresenter;
 use Tuleap\LDAP\NonUniqueUidRetriever;
 use Tuleap\Project\Admin\ProjectMembers\MembersEditProcessAction;
@@ -288,9 +290,22 @@ class LdapPlugin extends Plugin {
             $sync = LDAP_UserSync::instance();
             foreach($lri as $lr) {
                 if ($lr->exist() && $lr->valid()) {
+                    try {
+                        $tuleap_user = $this->getLdapUserManager()->getUserByIdentifier("ldapuid:" . $lr->getLogin());
+
+                        if ($tuleap_user) {
+                            $tuleap_user_id = $tuleap_user->getId();
+                        }
+                    } catch (IdentifierTypeNotFoundException $e) {
+                        $tuleap_user_id = null;
+                    } catch (IdentifierTypeNotRecognizedException $e) {
+                        $tuleap_user_id = null;
+                    }
+
                     $params['userList'][] = array(
                         'display_name' => $sync->getCommonName($lr).' ('.$lr->getLogin().')',
                         'login'        => $lr->getLogin(),
+                        'user_id'      => $tuleap_user_id,
                         'has_avatar'   => false
                     );
                 }
@@ -413,21 +428,6 @@ class LdapPlugin extends Plugin {
     }
 
     /**
-     * Get a User object from an LDAP iterator
-     *
-     * @param LDAPResultIterator $lri An LDAP result iterator
-     *
-     * @return PFUser
-     */
-    protected function getUserFromLdapIterator($lri) {
-        if($lri && count($lri) === 1) {
-            $ldapUm = $this->getLdapUserManager();
-            return $ldapUm->getUserFromLdap($lri->current());
-        }
-        return null;
-    }
-
-    /**
      * Hook
      * Params:
      *  IN  $params['ident']
@@ -449,41 +449,23 @@ class LdapPlugin extends Plugin {
                 // (uid, email, common name)
                 $lri  = $ldap->searchUser($params['ident']);
             }
-            $params['user'] = $this->getUserFromLdapIterator($lri);
+            $params['user'] = $this->getLdapUserManager()->getUserFromLdapIterator($lri);
         }
     }
 
-    /**
-     * $params['identifier'] IN
-     * $params['user'] OUT
-     * $params['tokenFound'] OUT
-     *
-     * @param unknown_type $params
-     */
-    function user_manager_get_user_by_identifier($params) {
+    public function user_manager_get_user_by_identifier($params)
+    {
         if ($this->isLdapAuthType() && $this->isLDAPUserManagementEnabled()) {
-            // identifier = type:value
-            $separatorPosition = strpos($params['identifier'], ':');
-            $type = strtolower(substr($params['identifier'], 0, $separatorPosition));
-            $value = strtolower(substr($params['identifier'], $separatorPosition + 1));
+            try {
+                $tuleap_user = $this->getLdapUserManager()->getUserByIdentifier($params['identifier']);
 
-            $ldap = $this->getLdap();
-            $lri = null;
-            switch ($type) {
-                case 'ldapid':
-                    $params['tokenFound'] = true;
-                    $lri = $ldap->searchEdUid($value);
-                    break;
-                case 'ldapdn':
-                    $params['tokenFound'] = true;
-                    $lri = $ldap->searchDn($value);
-                    break;
-                case 'ldapuid':
-                    $params['tokenFound'] = true;
-                    $lri = $ldap->searchLogin($value);
-                    break;
+                $params['tokenFound'] = true;
+                $params['user']       = $tuleap_user;
+            } catch (IdentifierTypeNotFoundException $e) {
+                // Do nothing
+            } catch (IdentifierTypeNotRecognizedException $e) {
+                // Do nothing
             }
-            $params['user'] = $this->getUserFromLdapIterator($lri);
         }
     }
 

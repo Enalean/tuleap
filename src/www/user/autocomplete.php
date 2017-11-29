@@ -64,25 +64,31 @@ $evParams = array('searchToken'     => $userName,
                   'json_format'     => $json_format,
                   'userList'        => &$userList,
                   'has_more'        => &$has_more,
-                  'pluginAnswered'  => &$pluginAnswered);
+                  'pluginAnswered'  => &$pluginAnswered
+);
+
 $em = EventManager::instance();
 $em->processEvent("ajax_search_user", $evParams);
 
-// If no plugin answered, search in DB.
-if(!$pluginAnswered) {
+if (count($userList) < $limit) {
     // search user dao
-    $userDao = new UserDao(CodendiDataAccess::instance());
-    $dar = $userDao->searchUserNameLike($userName, $limit);
+    $userDao   = new UserDao(CodendiDataAccess::instance());
+    $sql_limit = (int) ($limit - count($userList));
+
+    $dar = $userDao->searchUserNameLike($userName, $sql_limit);
     while($dar->valid()) {
         $row = $dar->current();
         $userList[] = array(
             'display_name' => $row['realname']." (".$row['user_name'].")",
             'login'        => $row['user_name'],
-            'has_avatar'   => $row['has_avatar']
+            'has_avatar'   => $row['has_avatar'],
+            'user_id'      => $row['user_id'],
         );
+
         $dar->next();
     }
-    $has_more = $userDao->foundRows() > $limit;
+
+    $has_more = $has_more || ($userDao->foundRows() > $limit);
 }
 
 //
@@ -127,18 +133,28 @@ if ($json_format) {
         }
     }
 
-    foreach ($userList as $user) {
+    $users_already_seen = array();
+    foreach ($userList as $user_info) {
+        $user_id = $user_info['user_id'];
+        if ($user_id && in_array($user_id, $users_already_seen)) {
+            continue;
+        }
+        $users_already_seen[] = $user_id;
+
+        $display_name   = $user_info['display_name'];
+        $login          = $user_info['login'];
+
         $json_entries[] = array(
             'type'       => 'user',
-            'id'         => $user['display_name'],
-            'text'       => $user['display_name'],
-            'avatar_url' => '/users/' . $user['login'] . '/avatar.png',
-            'has_avatar' => (bool)$user['has_avatar']
+            'id'         => $display_name,
+            'text'       => $display_name,
+            'avatar_url' => '/users/' . urlencode($login) . '/avatar.png',
+            'has_avatar' => (bool)$user_info['has_avatar']
         );
     }
 
     $output = array(
-        'results' => $json_entries,
+        'results' => array_values($json_entries),
         'pagination' => array(
             'more' => $has_more
         )

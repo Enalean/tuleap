@@ -393,7 +393,7 @@ class UserDao extends DataAccessObject {
     {
         $name = $this->getDa()->quoteLikeValueSurround($name);
 
-        $sql = "SELECT SQL_CALC_FOUND_ROWS realname, user_name, has_avatar".
+        $sql = "SELECT SQL_CALC_FOUND_ROWS user_id, realname, user_name, has_avatar".
             " FROM user".
             " WHERE (realname LIKE $name".
             " OR user_name LIKE $name)".
