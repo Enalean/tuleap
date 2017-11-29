@@ -63,13 +63,11 @@ if ($request->exist('submit')) {
     while ($row_dev = db_fetch_array($res_dev)) {
 
         if($request ->exist("update_user_$row_dev[user_id]")){
-            $forum_flags= "forums_user_$row_dev[user_id]";
             $file_flags = "file_user_$row_dev[user_id]";
             $svn_flags  = "svn_user_$row_dev[user_id]";
             $news_flags = "news_user_$row_dev[user_id]";
 
             $flags = array(
-                'forum_flags',
                 'file_flags',
                 'news_flags',
                 'svn_flags'
@@ -155,7 +153,6 @@ $sql['select'] = "SELECT SQL_CALC_FOUND_ROWS user.user_name AS user_name,
                   user.realname AS realname,
                   user.user_id AS user_id,
                   user_group.bug_flags,
-                  user_group.forum_flags,
                   user_group.project_flags,
                   user_group.patch_flags,
                   user_group.file_flags,
@@ -254,10 +251,7 @@ if ($project->usesSVN()) {
     $should_display_submit_button = true;
     $head .= '<th>'.$Language->getText('project_admin_userperms','svn').'</th>';
 }
-if ($project->usesForum()) {
-    $should_display_submit_button = true;
-    $head .= '<th>'.$Language->getText('project_admin_userperms','forums').'</th>';
-}
+
 if ($project->usesNews()) {
     $should_display_submit_button = true;
     $head .= '<th>'.$Language->getText('project_admin_userperms','news').'</th>';
@@ -297,16 +291,6 @@ echo $head;
             $cell .= '<TD><SELECT name="svn_user_'.$row_dev['user_id'].'">';
             $cell .= '<OPTION value="0"'.(($row_dev['svn_flags']==0)?" selected":"").'>'.$Language->getText('global','none');
             $cell .= '<OPTION value="2"'.(($row_dev['svn_flags']==2)?" selected":"").'>'.$Language->getText('project_admin_index','admin');
-            $cell .= '</SELECT></TD>';
-            echo $cell;
-        }
-
-        // forums
-        if ($project->usesForum()) {
-            $cell = '';
-            $cell .= '<TD><SELECT name="forums_user_'.$row_dev['user_id'].'">';
-            $cell .= '<OPTION value="0"'.(($row_dev['forum_flags']==0)?" selected":"").'>'.$Language->getText('global','none');
-            $cell .= '<OPTION value="2"'.(($row_dev['forum_flags']==2)?" selected":"").'>'.$Language->getText('project_admin_userperms','moderator');
             $cell .= '</SELECT></TD>';
             echo $cell;
         }
