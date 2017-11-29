@@ -78,8 +78,10 @@ function html_get_timezone_popup($selected = 0) {
  */
 function html_get_language_popup ($Language,$title='language_id',$selected='xzxzxz') {
     $hp   = Codendi_HTMLPurifier::instance();
+    $language_factory = new BaseLanguageFactory();
+
     $html = '<select name="'. $hp->purify($title) .'">';
-    foreach($GLOBALS['Language']->getLanguages() as $code => $lang) {
+    foreach($language_factory->getAvailableLanguages() as $code => $lang) {
         $select = ($selected == $code) ? 'selected="selected"' : '';
         $html .= '<option value="'.  $hp->purify($code, CODENDI_PURIFIER_CONVERT_HTML)  .'" '. $select .'>';
         $html .= $hp->purify($lang, CODENDI_PURIFIER_CONVERT_HTML);

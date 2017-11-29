@@ -65,34 +65,6 @@ class BaseLanguage {
     }
 
     /**
-     * "compile" all available language definitions.
-     */
-    function compileAllLanguageFiles() {
-        foreach($this->allLanguages as $code) {
-            $this->compileLanguage($code);
-        }
-    }
-
-    /**
-     * Load all generated php files to verify if the syntax is correct.
-     */
-    function testLanguageFiles() {
-        if(is_dir($this->getCacheDirectory())) {
-            $fd = opendir($this->getCacheDirectory());
-            // Browse all generated php files
-            while(false !== ($file = readdir($fd))) {
-                if(is_file($this->getCacheDirectory().DIRECTORY_SEPARATOR.$file)
-                   && preg_match('/\.php$/', $file)) {
-                    echo "Test $file\n";
-                    include($this->getCacheDirectory().DIRECTORY_SEPARATOR.$file);
-                    unset($this->text_array);
-                }
-            }
-            closedir($fd);
-        }
-    }
-
-    /**
      * "compile" string definitions for one language.
      */
     function compileLanguage($lang) {
@@ -216,22 +188,17 @@ class BaseLanguage {
      */
     function dumpLanguageFile($lang, $text_array) {
         // Create language cache directory if needed
-        if (!file_exists($this->getCacheDirectory())) {
+        if (! is_dir($this->getCacheDirectory())) {
             // This directory must be world reachable, but writable only by the web-server
             mkdir($this->getCacheDirectory(), 0755);
         }
-        $fd = @fopen($this->getCacheDirectory().DIRECTORY_SEPARATOR.$lang.'.php', 'w');
-        if($fd !== false) {
-            fwrite($fd, '<?php'."\n");
-            foreach($text_array as $key1 => $level2) {
-                foreach($level2 as $key2 => $value) {
-                    $str = str_replace("'", "\'", $value);
-                    fwrite($fd, '$this->text_array[\''.$key1.'\'][\''.$key2.'\'] = \''.$str.'\';'."\n");
-                }
-            }
-            fwrite($fd, '?>');
-            fclose($fd);
+        $fh = fopen($this->getCacheDirectory().DIRECTORY_SEPARATOR.$lang.'.bin', 'wb');
+        if (flock($fh, LOCK_EX)) {
+            fwrite($fh, serialize($text_array));
+            fflush($fh);
+            flock($fh, LOCK_UN);
         }
+        fclose($fh);
     }
 
     function loadLanguageFile($fname) {
@@ -283,15 +250,57 @@ class BaseLanguage {
         if($this->lang != $lang) {
             $this->lang = $lang;
             setlocale (LC_TIME, $lang);
-            $langFile = $this->getCacheDirectory().DIRECTORY_SEPARATOR.$this->lang.'.php';
-            if(file_exists($langFile)) {
-                include($langFile);
-            } else {
-                // If language is supported, the compiled file should exists, try
-                // to create it
-                $this->text_array = $this->compileLanguage($lang);
+            $this->loadFromSerialized($lang) || $this->loadFromPHP($lang) || $this->loadFromTabs($lang);
+        }
+    }
+
+    /**
+     * Load strings from previously serialized form
+     *
+     * As we cannot lock file for deletion, check as much as possible that we are unserializing stuff from a valid
+     * file.
+     *
+     * @param string $lang
+     * @return bool
+     */
+    private function loadFromSerialized($lang)
+    {
+        $strings_are_loaded = false;
+        $filepath = $this->getCacheDirectory().DIRECTORY_SEPARATOR.$lang.'.bin';
+        if (is_file($filepath)) {
+            $filesize = filesize($filepath);
+            if ($filesize > 0) {
+                $fh = fopen($filepath, 'rb');
+                if (flock($fh, LOCK_SH)) {
+                    $content = fread($fh, $filesize);
+                    if (strlen($content) === $filesize) {
+                        $strings = unserialize($content);
+                        if ($strings !== false) {
+                            $this->text_array = $strings;
+                            $strings_are_loaded = true;
+                        }
+                    }
+                    flock($fh, LOCK_UN);
+                }
+                fclose($fh);
             }
         }
+        return $strings_are_loaded;
+    }
+
+    private function loadFromPHP($lang)
+    {
+        $filepath = $this->getCacheDirectory().DIRECTORY_SEPARATOR.$lang.'.php';
+        if (is_file($filepath)) {
+            include($filepath);
+            return true;
+        }
+        return false;
+    }
+
+    private function loadFromTabs($lang)
+    {
+        $this->text_array = $this->compileLanguage($lang);
     }
 
     function getText($pagename, $category, $args="") {
@@ -504,6 +513,9 @@ class BaseLanguage {
 
     public function invalidateCache() {
         foreach(glob($this->getCacheDirectory().DIRECTORY_SEPARATOR.'*.php') as $file) {
+            unlink($file);
+        }
+        foreach(glob($this->getCacheDirectory().DIRECTORY_SEPARATOR.'*.bin') as $file) {
             unlink($file);
         }
     }

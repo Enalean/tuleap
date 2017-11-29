@@ -219,9 +219,8 @@ class BaseLanguageTest extends BaseLanguage_BaseTest {
     function testDumpLanguageFile() {
         $l = new BaseLanguage('en_US', 'en_US');
         $l->dumpLanguageFile('my_lang', array('module' => array('key' => 'value')));
-        $this->assertEqual("<?php\n\$this->text_array['module']['key'] = 'value';\n?>",
-            file_get_contents($this->cache_dir .'/lang/my_lang.php')
-        );
+        $stuff = unserialize(file_get_contents($this->cache_dir .'/lang/my_lang.bin'));
+        $this->assertEqual('value', $stuff['module']['key']);
     }
 }
 

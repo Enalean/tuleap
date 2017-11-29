@@ -113,7 +113,8 @@ foreach ($themes as $theme) {
 }
 
 $languages_html = array();
-foreach($GLOBALS['Language']->getLanguages() as $code => $lang) {
+$language_factory = new BaseLanguageFactory();
+foreach($language_factory->getAvailableLanguages() as $code => $lang) {
     $languages_html[] = array(
         'lang'        => $lang,
         'code'        => $code,
