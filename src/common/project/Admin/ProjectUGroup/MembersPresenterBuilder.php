@@ -62,7 +62,7 @@ class MembersPresenterBuilder
         $ugroup_members = array();
 
         $members        = $ugroup->getMembers();
-        $can_be_deleted = $ugroup->isStatic() || count($members) > 1;
+        $can_be_deleted = (int) $ugroup->getId() !== ProjectUGroup::PROJECT_ADMIN || count($members) > 1;
 
         foreach ($members as $key => $member) {
             $ugroup_members[$key]['profile_page_url'] = "/users/" . urlencode($member->getUserName()) . "/";

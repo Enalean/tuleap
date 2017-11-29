@@ -20,7 +20,7 @@
 
 namespace Tuleap\Project\Admin\ProjectUGroup;
 
-class UserBecomesProjectAdmin extends UserAndProjectAdminRelationshipEvent
+class UserBecomesProjectAdmin extends UserAndProjectUGroupRelationshipEvent
 {
     const NAME = 'userBecomesProjectAdmin';
 }

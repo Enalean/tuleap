@@ -30,6 +30,7 @@ class NameTranslator
     const PROJECT_ADMINS             = 'ugroup_project_admins_name_key';
     const REGISTERED                 = 'ugroup_registered_users_name_key';
     const PROJECT_MEMBERS            = 'ugroup_project_members_name_key';
+    const WIKI_ADMINS                = 'ugroup_wiki_admin_name_key';
     const CONFIG_REGISTERED_LABEL    = 'ugroup_registered_label';
     const CONFIG_AUTHENTICATED_LABEL = 'ugroup_authenticated_label';
 
@@ -67,6 +68,8 @@ class NameTranslator
                 return $GLOBALS['Language']->getText('project_ugroup', 'ugroup_project_members');
             case self::PROJECT_ADMINS:
                 return $GLOBALS['Language']->getText('project_ugroup', 'ugroup_project_admins');
+            case self::WIKI_ADMINS:
+                return $GLOBALS['Language']->getText('project_ugroup', 'ugroup_wiki_admins');
             default:
                 return util_translate_name_ugroup($name);
         }

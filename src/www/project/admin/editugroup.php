@@ -57,7 +57,8 @@ $user_manager        = UserManager::instance();
 $members_controller  = new MembersController(
     $request,
     $user_manager,
-    new DynamicUGroupMembersUpdater(new UserPermissionsDao(), $ugroup_binding)
+    new DynamicUGroupMembersUpdater(new UserPermissionsDao(), $ugroup_binding, $event_manager)
+
 );
 $index_controller    = new IndexController(
     new ProjectUGroupPresenterBuilder(

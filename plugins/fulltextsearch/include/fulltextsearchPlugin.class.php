@@ -21,6 +21,7 @@
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerProjectAdmin;
+use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerWikiAdmin;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 
 require_once 'common/plugin/Plugin.class.php';
@@ -137,12 +138,12 @@ class fulltextsearchPlugin extends Plugin {
         $this->addHook('project_admin_ugroup_add_user', 'eventChangeProjectUgroupsMembers');
 
         $this->addHook('project_admin_remove_user', 'project_admin_remove_user');
-        $this->addHook('project_admin_change_user_permissions', 'project_admin_change_user_permissions');
 
         $this->addHook(BurningParrotCompatiblePageEvent::NAME);
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
         $this->addHook(UserIsNoLongerProjectAdmin::NAME);
+        $this->addHook(UserIsNoLongerWikiAdmin::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -813,21 +814,9 @@ class fulltextsearchPlugin extends Plugin {
         $this->reindexForServicesUsingUgroup(ProjectUGroup::PROJECT_ADMIN, $event->getProject()->getID());
     }
 
-    public function project_admin_change_user_permissions($params) {
-        $project_id = $params['group_id'];
-
-        if ($this->hasAMemberOfWikiAdminsBeenRemoved($params)) {
-            $ugroup_id = ProjectUGroup::WIKI_ADMIN;
-            $this->reindexForWikiServiceUsingUgroup($ugroup_id, $project_id);
-        }
-    }
-
-    private function hasAMemberOfWikiAdminsBeenRemoved(array $params) {
-        if (! isset($params['user_permissions']['wiki_flags'])) {
-            return false;
-        }
-
-        return $params['user_permissions']['wiki_flags'] === '0' && $params['previous_permissions']['wiki_flags'] === '2';
+    public function userIsNoLongerWikiAdmin(UserIsNoLongerWikiAdmin $event)
+    {
+        $this->reindexForServicesUsingUgroup(ProjectUGroup::WIKI_ADMIN, $event->getProject()->getID());
     }
 
     public function project_admin_remove_user($params) {
