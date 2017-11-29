@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -38,26 +38,30 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 /**
  * Wrapper for Tracker Report related REST methods
  */
-class ReportsResource extends AuthenticatedResource {
-
+class ReportsResource extends AuthenticatedResource
+{
     const MAX_LIMIT      = 50;
     const DEFAULT_LIMIT  = 10;
     const DEFAULT_OFFSET = 0;
     const DEFAULT_VALUES = '';
     const ALL_VALUES     = 'all';
 
-    /** @var Tracker_ArtifactFactory */
-    private $artifact_factory;
-
     /** @var Tracker_REST_Artifact_ArtifactRepresentationBuilder */
     private $builder;
 
-    public function __construct() {
-        $this->artifact_factory = Tracker_ArtifactFactory::instance();
-        $this->builder          = new Tracker_REST_Artifact_ArtifactRepresentationBuilder(
+    /** @var ReportArtifactFactory */
+    private $report_artifact_factory;
+
+    public function __construct()
+    {
+        $artifact_factory = Tracker_ArtifactFactory::instance();
+        $this->builder    = new Tracker_REST_Artifact_ArtifactRepresentationBuilder(
             Tracker_FormElementFactory::instance(),
-            $this->artifact_factory,
+            $artifact_factory,
             new NatureDao()
+        );
+        $this->report_artifact_factory = new ReportArtifactFactory(
+            $artifact_factory
         );
     }
 
@@ -146,25 +150,20 @@ class ReportsResource extends AuthenticatedResource {
         $user   = UserManager::instance()->getCurrentUser();
         $report = $this->getReportById($user, $id);
 
-        $matching_ids = $report->getMatchingIds();
-        if (! $matching_ids['id']) {
-            return array();
-        }
+        $artifact_collection = $this->report_artifact_factory->getArtifactsMatchingReport(
+            $report,
+            $limit,
+            $offset
+        );
 
-        $matching_artifact_ids = explode(',', $matching_ids['id']);
-        $nb_matching           = count($matching_artifact_ids);
-        $slice_matching_ids    = array_slice($matching_artifact_ids, $offset, $limit);
-        $artifact_factory      = Tracker_ArtifactFactory::instance();
-
-        $artifacts = $artifact_factory->getArtifactsByArtifactIdList($slice_matching_ids);
         $with_all_field_values = $values == self::ALL_VALUES;
 
         Header::allowOptionsGet();
-        Header::sendPaginationHeaders($limit, $offset, $nb_matching, self::MAX_LIMIT);
+        Header::sendPaginationHeaders($limit, $offset, $artifact_collection->getTotalSize(), self::MAX_LIMIT);
 
         return $this->getListOfArtifactRepresentation(
             $user,
-            $artifacts,
+            $artifact_collection->getArtifacts(),
             $with_all_field_values
         );
     }
