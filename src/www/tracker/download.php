@@ -57,6 +57,9 @@ if (db_numrows($result)>0) {
                 
                     $attachment_path = ArtifactFile::getPathOnFilesystem($a, $id);
                     if (is_file($attachment_path)) {
+                        if (ob_get_level()) {
+                            ob_end_clean();
+                        }
                         readfile($attachment_path);
                     } else {
                         echo db_result($result,0,'bin_data');

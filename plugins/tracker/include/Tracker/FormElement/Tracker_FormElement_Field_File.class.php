@@ -555,6 +555,9 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
                 header('Content-Length: '.$http->purify($fileinfo->getFilesize()));
                 header('Content-Disposition: attachment; filename="'.$http->purify($fileinfo->getFilename()).'"');
                 header('Content-Description: '. $http->purify($fileinfo->getDescription()));
+                if (ob_get_level()) {
+                    ob_end_clean();
+                }
                 readfile($fileinfo->getPath());
             }
         }
