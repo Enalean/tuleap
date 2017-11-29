@@ -144,15 +144,29 @@ class Tracker_ArtifactFactory {
      * 
      * @param array $artifact_ids
      * 
-     * @return array of Tracker_Artifact
+     * @return Tracker_Artifact[]
      */
-    public function getArtifactsByArtifactIdList(array $artifact_ids) {
-        $artifacts = array();
+    public function getArtifactsByArtifactIdList(array $artifact_ids)
+    {
+        $artifact_ids            = array_unique($artifact_ids);
+        $artifacts               = array();
+        $not_cached_artifact_ids = array();
+
         foreach ($artifact_ids as $artifact_id) {
-            if ($artifact = $this->getArtifactById($artifact_id)) {
-                $artifacts[$artifact_id] = $artifact;
+            if (isset($this->artifacts[$artifact_id])) {
+                $artifacts[] = $this->artifacts[$artifact_id];
+            } else {
+                $not_cached_artifact_ids[] = $artifact_id;
             }
         }
+
+        $rows = $this->getDao()->searchByIds($not_cached_artifact_ids);
+        foreach ($rows as $row) {
+            $artifact                            = $this->getInstanceFromRow($row);
+            $this->artifacts[$artifact->getId()] = $artifact;
+            $artifacts[]                         = $artifact;
+        }
+
         return $artifacts;
     }
     
