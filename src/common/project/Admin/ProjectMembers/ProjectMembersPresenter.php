@@ -41,16 +41,19 @@ class ProjectMembersPresenter
      * @var ProjectMembersAdditionalModalCollectionPresenter
      */
     public $additional_modals;
+    public $user_locale;
 
     public function __construct(
         array $project_members_list,
         CSRFSynchronizerToken $csrf_token,
         Project $project,
-        ProjectMembersAdditionalModalCollectionPresenter $additional_modals
+        ProjectMembersAdditionalModalCollectionPresenter $additional_modals,
+        $user_locale
     ) {
         $this->project_members_list = $project_members_list;
         $this->csrf_token           = $csrf_token;
         $this->project_id           = $project->getID();
         $this->additional_modals    = $additional_modals;
+        $this->user_locale          = $user_locale;
     }
 }

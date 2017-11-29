@@ -1,0 +1,39 @@
+<table class="tlp-table" id="project-admin-import-members-list-preview">
+    <thead>
+    <tr>
+        <th>{{ table_header_name }}</th>
+        <th>{{ table_header_email }}</th>
+    </tr>
+    </thead>
+    <tbody>
+        {{# import_warnings }}
+            <tr class="project-admin-members-import-warning">
+                <td colspan="2" class="project-admin-members-import-warning-line">
+                    <i class="fa fa-warning project-admin-members-import-warning-icon"></i> {{ warning }}
+                </td>
+            </tr>
+        {{/ import_warnings }}
+        {{# parsed_users }}
+            <tr>
+                <td>
+                    <div class="tlp-avatar projectadmin-userlist-result-name-avatar">
+                        {{# has_avatar }}
+                            <img src="/users/{{ user_name }}/avatar.png" />
+                        {{/ has_avatar }}
+                    </div>
+                    <a href="{{ profile_page_url }}">{{ username_display }}</a>
+                </td>
+                <td>
+                    {{ email }}
+                </td>
+            </tr>
+        {{/ parsed_users }}
+        {{^ parsed_users }}
+            <tr>
+                <td colspan="2" class="tlp-table-cell-empty">
+                    {{ empty_preview }}
+                </td>
+            </tr>
+        {{/ parsed_users }}
+    </tbody>
+</table>

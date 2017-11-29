@@ -25,6 +25,7 @@
     "babel-preset-env": "^1.5.2",
     "json-loader": "^0.5.7",
     "po-gettext-loader": "^0.1.1",
+    "raw-loader": "^0.5.1",
     "webpack": "^3.5.5",
     "webpack-assets-manifest": "^1.0.0"
   },

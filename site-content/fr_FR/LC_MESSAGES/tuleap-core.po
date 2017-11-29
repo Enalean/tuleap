@@ -30,6 +30,10 @@ msgid_plural "%d members"
 msgstr[0] "%d membre"
 msgstr[1] "%d membres"
 
+#, php-format
+msgid "%s has multiple corresponding users."
+msgstr "%s a plusieurs utilisateurs associés."
+
 msgid "A project cannot be its own parent."
 msgstr "Un projet ne peut être son propre parent."
 
@@ -311,6 +315,9 @@ msgstr "Page d'accueil"
 msgid "Image"
 msgstr "Image"
 
+msgid "Import"
+msgstr "Importer"
+
 msgid "Import members"
 msgstr "Importer des membres"
 
@@ -346,9 +353,6 @@ msgstr "Liens"
 
 msgid "Lists"
 msgstr "Listes"
-
-msgid "Load users"
-msgstr "Importer les utilisateurs"
 
 msgid "Meaningful description of the group"
 msgstr "Description du groupe"
@@ -451,12 +455,18 @@ msgstr ""
 "Veuillez éviter les espaces et les signes de ponctuation dans les noms de "
 "groupe."
 
+msgid "Please choose a valid text file"
+msgstr "Veuillez choisir un fichier texte valide"
+
 msgid ""
 "Please make sure the users who will be imported are already registered and "
 "have an active account."
 msgstr ""
 "Veuillez vous assurer que les utilisateurs qui seront importés sont déjà "
 "enregistrés et possèdent un compte actif."
+
+msgid "Please select a file to upload"
+msgstr "Veuillez sélectionner un fichier à téléverser"
 
 msgid "Please, enter a http:// or https:// link"
 msgstr "Veuillez utiliser un lien http:// ou https://"
@@ -742,6 +752,10 @@ msgstr "Mis à jour avec succès"
 msgid "Upload text file"
 msgstr "Téléverser un fichier texte"
 
+#, php-format
+msgid "User '%s' does not exist"
+msgstr "L'utilisateur '%s' n’existe pas"
+
 msgid "User Permissions"
 msgstr "Permissions utilisateurs"
 
@@ -895,6 +909,9 @@ msgid ""
 msgstr ""
 "Vous devez fournir un fichier simple, contenant pour chaque ligne l'adresse "
 "email ou le nom de l'utilisateur à importer."
+
+msgid "You should provide a file in entry."
+msgstr "Vous devez fournir un fichier en entrée."
 
 msgid ""
 "You're about to remove <b>{{ username_display }}</b> from this project. "

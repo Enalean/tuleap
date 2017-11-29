@@ -54,3 +54,26 @@
 .projectadmin-userlist-result-ugroup-separator:last-child {
     display: none;
 }
+
+#project-admin-import-members-list-preview {
+    > tbody {
+        > .project-admin-members-import-warning {
+            > .project-admin-members-import-warning-line {
+                background: transparentize($tlp-ui-warning, .9);
+                color: darken($tlp-ui-warning, 10%);
+
+                > .project-admin-members-import-warning-icon {
+                    margin: 0 5px 0 0;
+                }
+            }
+        }
+    }
+}
+
+#project-admin-members-upload-file-form-element {
+    margin-bottom: $tlp-spacing;
+}
+
+.file-input-error {
+    color: $tlp-ui-danger;
+}

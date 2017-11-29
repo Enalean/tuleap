@@ -27,11 +27,13 @@ import {
 } from 'tlp';
 
 import { autocomplete_users_for_select2 } from '../../tuleap/autocomplete-for-select2.js';
+import { initImportMembersPreview }       from  './members-import/project-admin-members-import';
 
 document.addEventListener('DOMContentLoaded', () => {
     initProjectMembersSelect2();
     initMembersFilter();
     initModals();
+    initImportMembersPreview();
 });
 
 function initModals() {

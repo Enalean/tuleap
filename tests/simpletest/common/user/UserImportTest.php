@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,30 +17,52 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+namespace Tuleap\user;
+
+use PFUser;
+use Project;
+use TuleapTestCase;
+use UserHelper;
+use UserImport;
+use UserManager;
+
 require_once 'common/autoload.php';
+require_once('common/user/UserImportCollection.php');
 
 class UserImportTest extends TuleapTestCase
 {
+    private $user_email_filename;
+    private $user_filename;
     /**
-     *
      * @var UserImport
      */
     private $user_import;
+
+    /**
+     * @var UserHelper
+     */
+    private $user_helper;
+
+    /**
+     * @var UserManager
+     */
+    private $user_manager;
+
+    /**
+     * @var Project
+     */
+    private $project;
 
     public function setUp()
     {
         parent::setUp();
 
-        $project_id                = 128;
-        $this->user_import         = new UserImport($project_id);
+        $this->user_helper         = mock('UserHelper');
+        $this->project             = aMockProject()->withId(110)->build();
         $this->user_manager        = mock('UserManager');
         $this->user_filename       = __DIR__.'/_fixtures/user_import.txt';
         $this->user_email_filename = __DIR__.'/_fixtures/user_email_import.txt';
-        $this->user                = mock('PFUser');
-        stub($this->user)->isActive()->returns(true);
-        stub($this->user)->isMember($project_id)->returns(false);
-        stub($this->user)->getId()->returns(102);
-        UserManager::setInstance($this->user_manager);
+        $this->user_import         = new UserImport($this->project->getID(), $this->user_manager, $this->user_helper);
     }
 
     public function tearDown()
@@ -52,42 +74,95 @@ class UserImportTest extends TuleapTestCase
 
     public function itImportsUserByUserName()
     {
-        $parsed_users = array();
-        stub($this->user_manager)->findUser('zurg')->returns($this->user);
+        $user = $this->getUser(102);
 
-        $parsed = $this->user_import->parse($this->user_filename, $parsed_users);
+        stub($this->user_manager)->findUser('zurg')->returns($user);
 
-        $this->assertTrue($parsed);
+        $user_collection = $this->user_import->parse($this->user_filename);
+
+        $expected_user = array(
+            'has_avatar'       => 'false',
+            'user_name'        => 'zurg',
+            'email'            => 'zurg@example.com',
+            'profile_page_url' => '/users/zurg/',
+            'username_display' => 'getDisplayName'
+        );
+
+        $this->assertEqual($user_collection->getFormattedUsers(), array($expected_user));
+        $this->assertEqual($user_collection->getWarningsMultipleUsers(), null);
+        $this->assertEqual($user_collection->getWarningsInvalidUsers(), null);
     }
 
     public function itImportsUserByEmail()
     {
-        $parsed_users = array();
-        stub($this->user_manager)->getAllUsersByEmail('zurg@example.com')->returns(array($this->user));
+        $user = $this->getUser(102);
 
-        $parsed = $this->user_import->parse($this->user_email_filename, $parsed_users);
+        stub($this->user_manager)->getAllUsersByEmail('zurg@example.com')->returns(array($user));
 
-        $this->assertTrue($parsed);
+        $user_collection = $this->user_import->parse($this->user_email_filename);
+
+        $expected_user = array(
+            'has_avatar'       => 'false',
+            'user_name'        => 'zurg',
+            'email'            => 'zurg@example.com',
+            'profile_page_url' => '/users/zurg/',
+            'username_display' => 'getDisplayName'
+        );
+
+        $this->assertEqual($user_collection->getFormattedUsers(), array($expected_user));
+        $this->assertEqual($user_collection->getWarningsMultipleUsers(), null);
+        $this->assertEqual($user_collection->getWarningsInvalidUsers(), null);
     }
 
     public function itDoesNotImportUserByEmailIfEmailLinkedToMultipleUsers()
     {
-        $parsed_users = array();
-        $user2        = mock('PFUser');
-        stub($this->user_manager)->getAllUsersByEmail('zurg@example.com')->returns(array($this->user, $user2));
+        $user  = $this->getUser(102);
+        $user2 = $this->getUser(103);
 
-        $parsed = $this->user_import->parse($this->user_email_filename, $parsed_users);
+        stub($this->user_manager)->getAllUsersByEmail('zurg@example.com')->returns(array($user, $user2));
 
-        $this->assertFalse($parsed);
+        $user_collection = $this->user_import->parse($this->user_email_filename);
+
+        $this->assertEqual($user_collection->getFormattedUsers(), null);
+        $this->assertEqual(
+            $user_collection->getWarningsMultipleUsers(),
+            array(
+                array('warning' => 'zurg@example.com has multiple corresponding users.')
+            )
+        );
+        $this->assertEqual($user_collection->getWarningsInvalidUsers(), null);
     }
 
     public function itDoesNotImportUserIfUserNameDoesNotExist()
     {
-        $parsed_users = array();
         stub($this->user_manager)->findUser('zurg')->returns(null);
 
-        $parsed = $this->user_import->parse($this->user_filename, $parsed_users);
+        $user_collection = $this->user_import->parse($this->user_filename);
 
-        $this->assertFalse($parsed);
+        $this->assertEqual($user_collection->getFormattedUsers(), null);
+        $this->assertEqual($user_collection->getWarningsMultipleUsers(), null);
+        $this->assertEqual(
+            $user_collection->getWarningsInvalidUsers(),
+            array(
+                array('warning' => "User 'zurg' does not exist")
+            )
+        );
+    }
+
+    /**
+     * @return PFUser
+     */
+    private function getUser($id)
+    {
+        $user = mock('PFUser');
+        stub($user)->isActive()->returns(true);
+        stub($user)->isMember($this->project->getID())->returns(false);
+        stub($user)->getEmail()->returns('zurg@example.com');
+        stub($user)->getUserName()->returns('zurg');
+        stub($user)->hasAvatar()->returns('false');
+        stub($user)->getId()->returns($id);
+        stub($this->user_helper)->getDisplayName()->returns('getDisplayName');
+
+        return $user;
     }
 }

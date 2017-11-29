@@ -1,3 +1,32 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Thomas Gorka <thomas.gorka@enalean.com>\n"
+"Language-Team: \n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.0.3\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "Name"
+msgstr "Nom"
+
+msgid "Please select a file to upload"
+msgstr "Veuillez sélectionner un fichier à téléverser"
+
+msgid "There isn't any new user to import"
+msgstr "Il n'y a aucun nouvel utilisateur à importer"
+
 #, javascript-format
 msgid "You are about to add <b>%s</b> in <b>%s</b> users group."
-msgstr "Vous êtes sur le point d'ajouter <b>%s</b> dans le groupe utilisateur <b>%s</b>."
+msgstr ""
+"Vous êtes sur le point d'ajouter <b>%s</b> dans le groupe utilisateur <b>%s</"
+"b>."

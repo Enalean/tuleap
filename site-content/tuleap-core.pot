@@ -14,6 +14,10 @@ msgid_plural "%d members"
 msgstr[0] ""
 msgstr[1] ""
 
+#, php-format
+msgid "%s has multiple corresponding users."
+msgstr ""
+
 msgid "A project cannot be its own parent."
 msgstr ""
 
@@ -287,6 +291,9 @@ msgstr ""
 msgid "Image"
 msgstr ""
 
+msgid "Import"
+msgstr ""
+
 msgid "Import members"
 msgstr ""
 
@@ -321,9 +328,6 @@ msgid "Links"
 msgstr ""
 
 msgid "Lists"
-msgstr ""
-
-msgid "Load users"
 msgstr ""
 
 msgid "Meaningful description of the group"
@@ -425,9 +429,15 @@ msgstr ""
 msgid "Please avoid spaces and punctuation in users groups name."
 msgstr ""
 
+msgid "Please choose a valid text file"
+msgstr ""
+
 msgid ""
 "Please make sure the users who will be imported are already registered and "
 "have an active account."
+msgstr ""
+
+msgid "Please select a file to upload"
 msgstr ""
 
 msgid "Please, enter a http:// or https:// link"
@@ -697,6 +707,10 @@ msgstr ""
 msgid "Upload text file"
 msgstr ""
 
+#, php-format
+msgid "User '%s' does not exist"
+msgstr ""
+
 msgid "User Permissions"
 msgstr ""
 
@@ -820,6 +834,9 @@ msgstr ""
 msgid ""
 "You need to provide a simple file, containing in each line the email address "
 "or the username of the user."
+msgstr ""
+
+msgid "You should provide a file in entry."
 msgstr ""
 
 msgid ""

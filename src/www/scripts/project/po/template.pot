@@ -1,3 +1,15 @@
+msgid "Email"
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
+msgid "Please select a file to upload"
+msgstr ""
+
+msgid "There isn't any new user to import"
+msgstr ""
+
 #, javascript-format
 msgid "You are about to add <b>%s</b> in <b>%s</b> users group."
 msgstr ""
