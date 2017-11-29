@@ -507,7 +507,6 @@ project_admin_userperms	user_name	Nom d'utilisateur
 project_admin_userperms	cvs_write	Ecriture CVS
 project_admin_userperms	bug_track	Suivi de bugs
 project_admin_userperms	forums	Forums
-project_admin_userperms	wiki	Wiki
 project_admin_userperms	news	Annonces
 project_admin_userperms	svn	SVN
 project_admin_userperms	task_man	Suivi de tâches
