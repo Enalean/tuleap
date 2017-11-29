@@ -430,8 +430,6 @@ done
 # Remove old scripts: not used and add unneeded perl depedencies to the package
 %{__rm} -f $RPM_BUILD_ROOT/%{APP_DIR}/src/utils/DocmanUploader.pl
 %{__rm} -f $RPM_BUILD_ROOT/%{APP_DIR}/src/utils/DocmanLegacyDownloader.pl
-# Hard-coded perl include that breaks packging
-%{__rm} -f $RPM_BUILD_ROOT/%{APP_DIR}/plugins/forumml/bin/ml_arch_2_DB.pl
 # No need of template
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/template
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tests
@@ -535,6 +533,7 @@ done
 #
 ## plugin forumml
 #%{__install} -d $RPM_BUILD_ROOT/%{_localstatedir}/run/forumml
+#%{__install} plugins/forumml/etc/sudoers.d/tuleap_plugin_forumml $RPM_BUILD_ROOT%{_sysconfdir}/sudoers.d/tuleap_plugin_forumml
 #
 ## plugin-git
 #%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitroot
@@ -1016,6 +1015,7 @@ fi
 %{APP_DIR}/plugins/forumml
 #%attr(06755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/mail_2_DB.pl
 #%attr(00750,%{APP_USER},%{APP_USER}) %{_localstatedir}/run/forumml
+#%attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_plugin_forumml
 
 %files plugin-git
 %defattr(-,root,root,-)

@@ -1,0 +1,3 @@
+Defaults:nobody !requiretty
+Defaults:nobody !env_reset
+mailman ALL= (codendiadm) SETENV: NOPASSWD: /usr/share/tuleap/plugins/forumml/bin/mail2dbng.php*
