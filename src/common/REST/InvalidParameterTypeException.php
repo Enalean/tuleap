@@ -22,8 +22,4 @@ namespace Tuleap\REST;
 
 class InvalidParameterTypeException extends QueryParameterException
 {
-    public function __construct($parameter_name)
-    {
-        parent::__construct("$parameter_name must be an array of int");
-    }
 }
