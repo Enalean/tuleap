@@ -61,8 +61,8 @@ class MembersPresenterBuilder
     {
         $ugroup_members = array();
 
-        $members        = $ugroup->getMembers();
-        $can_be_deleted = (int) $ugroup->getId() !== ProjectUGroup::PROJECT_ADMIN || count($members) > 1;
+        $members                   = $ugroup->getMembers();
+        $is_the_last_project_admin = (int) $ugroup->getId() === ProjectUGroup::PROJECT_ADMIN && count($members) === 1;
 
         foreach ($members as $key => $member) {
             $ugroup_members[$key]['profile_page_url'] = "/users/" . urlencode($member->getUserName()) . "/";
@@ -72,10 +72,17 @@ class MembersPresenterBuilder
                 $member->getRealName()
             );
 
-            $ugroup_members[$key]['has_avatar']     = $member->hasAvatar();
-            $ugroup_members[$key]['user_name']      = $member->getUserName();
-            $ugroup_members[$key]['user_id']        = $member->getId();
-            $ugroup_members[$key]['can_be_deleted'] = $can_be_deleted;
+            $is_news_admin = false;
+            if ((int) $ugroup->getId() === ProjectUGroup::NEWS_WRITER
+                && $member->isMember($ugroup->getProjectId(), "N2")) {
+                $is_news_admin = true;
+            }
+
+            $ugroup_members[$key]['has_avatar']                = $member->hasAvatar();
+            $ugroup_members[$key]['user_name']                 = $member->getUserName();
+            $ugroup_members[$key]['user_id']                   = $member->getId();
+            $ugroup_members[$key]['is_the_last_project_admin'] = $is_the_last_project_admin;
+            $ugroup_members[$key]['is_news_admin']             = $is_news_admin;
         }
 
         return $ugroup_members;

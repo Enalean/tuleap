@@ -55,6 +55,7 @@ class UGroupListPresenterBuilder
 
         if ($project->usesNews()) {
             $this->injectDynamicUGroup($project, ProjectUGroup::NEWS_WRITER, $ugroups);
+            $this->injectDynamicUGroup($project, ProjectUGroup::NEWS_ADMIN, $ugroups);
         }
 
         $can_be_deleted = true;

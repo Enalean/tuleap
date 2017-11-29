@@ -836,6 +836,8 @@ project_ugroup	ugroup_forum_admin_name_key	forum_moderator
 project_ugroup	ugroup_forum_admin_desc_key	Forum moderators
 project_ugroup	ugroup_news_writer_name_key	News writers
 project_ugroup	ugroup_news_writer_desc_key	News writers
+project_ugroup	ugroup_news_admin_name_key	News administrators
+project_ugroup	ugroup_news_admin_desc_key	News administrators
 project_ugroup	ugroup_tracker_admins_name_key	tracker_admins
 #project_ugroup	ugroup_tracker_techs_name_key	tracker_techs
 project_ugroup	ugroup_all_users	All Users
@@ -852,6 +854,7 @@ project_ugroup	ugroup_document_admins	Document manager administrators
 project_ugroup	ugroup_wiki_admins	Wiki administrators
 project_ugroup	ugroup_forum_admins	Forum moderators
 project_ugroup	ugroup_news_writers	News writers
+project_ugroup	ugroup_news_admins	News administrators
 
 # Script: /www/project/Project.class.php
 #

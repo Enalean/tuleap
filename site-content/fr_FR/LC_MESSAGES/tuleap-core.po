@@ -396,9 +396,6 @@ msgstr "Nb membres"
 msgid "News"
 msgstr "Annonces"
 
-msgid "News writers"
-msgstr "Rédacteur d'annonces"
-
 msgid "No children projects"
 msgstr "Aucun projet enfant"
 
@@ -915,6 +912,13 @@ msgstr ""
 
 msgid "You should provide a file in entry."
 msgstr "Vous devez fournir un fichier en entrée."
+
+msgid ""
+"You should remove user from news administrators before being able to remove "
+"him from writers."
+msgstr ""
+"Vous devez supprimer l'utilisateur des administrateurs d'annonces avant de "
+"pouvoir l'enlever des rédacteurs"
 
 msgid ""
 "You're about to remove <b>{{ username_display }}</b> from this project. "
