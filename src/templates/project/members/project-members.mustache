@@ -53,6 +53,7 @@
                     <thead>
                         <tr>
                             <th>{{# gettext }}Name{{/ gettext }}</th>
+                            <th>{{# gettext }}Members of user groups{{/gettext}}</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -71,6 +72,16 @@
                                         {{/ has_avatar }}
                                     </div>
                                     <a href="{{ profile_page_url }}">{{ username_display }}</a>
+                                </td>
+                                <td>
+                                    {{# ugroups }}
+                                        <a href="/project/admin/editugroup.php?group_id={{ project_id }}&ugroup_id={{ id }}"
+                                            {{# description }}
+                                                class="tlp-tooltip tlp-tooltip-bottom"
+                                                data-tlp-tooltip="{{ description }}"
+                                            {{/ description }}
+                                        >{{ name }}</a><span class="projectadmin-userlist-result-ugroup-separator">, </span>
+                                    {{/ ugroups }}
                                 </td>
                                 <td class="tlp-table-cell-actions">
                                     {{# is_generic }}

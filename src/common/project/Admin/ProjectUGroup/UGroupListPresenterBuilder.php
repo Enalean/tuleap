@@ -49,14 +49,9 @@ class UGroupListPresenterBuilder
             $this->injectDynamicUGroup($project, ProjectUGroup::WIKI_ADMIN, $ugroups);
         }
 
+        $can_be_deleted = true;
         foreach ($static_ugroups as $ugroup) {
-            $ugroups[] = array(
-                'id'             => $ugroup->getId(),
-                'name'           => $ugroup->getTranslatedName(),
-                'description'    => $ugroup->getTranslatedDescription(),
-                'nb_members'     => $ugroup->countStaticOrDynamicMembers($project->getID()),
-                'can_be_deleted' => true
-            );
+            $ugroups[] = new UGroupPresenter($project, $ugroup, $can_be_deleted);
         }
 
         return new UGroupListPresenter($project, $ugroups, $templates, $csrf);
@@ -101,13 +96,8 @@ class UGroupListPresenterBuilder
 
     private function injectDynamicUGroup(Project $project, $ugroup_id, &$ugroups)
     {
-        $ugroup    = $this->ugroup_manager->getUGroup($project, $ugroup_id);
-        $ugroups[] = array(
-            'id'             => $ugroup->getId(),
-            'name'           => $ugroup->getTranslatedName(),
-            'description'    => $ugroup->getTranslatedDescription(),
-            'nb_members'     => $ugroup->countStaticOrDynamicMembers($project->getID()),
-            'can_be_deleted' => false
-        );
+        $ugroup         = $this->ugroup_manager->getUGroup($project, $ugroup_id);
+        $can_be_deleted = false;
+        $ugroups[]      = new UGroupPresenter($project, $ugroup, $can_be_deleted);
     }
 }

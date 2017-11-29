@@ -518,7 +518,6 @@ project_admin_userperms	supp_man	Support Manager
 project_admin_userperms	doc_man	Doc. Manager
 project_admin_userperms	file_man	File Manager
 project_admin_userperms	tracker	Tracker: $1
-project_admin_userperms	member_ug	Member of user groups:
 project_admin_userperms	no_users_found	No corresponding project members found
 project_admin_userperms	tech_only	Tech Only
 project_admin_userperms	admin_only	Admin Only

@@ -365,6 +365,9 @@ msgstr "Suppression de membre"
 msgid "Members"
 msgstr "Membres"
 
+msgid "Members of user groups"
+msgstr "Membre des groupes"
+
 msgid "Missing Information. PLEASE fill in all required information."
 msgstr "Information manquante. Veuillez saisir les informations demandées."
 

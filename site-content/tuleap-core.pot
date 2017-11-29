@@ -341,6 +341,9 @@ msgstr ""
 msgid "Members"
 msgstr ""
 
+msgid "Members of user groups"
+msgstr ""
+
 msgid "Missing Information. PLEASE fill in all required information."
 msgstr ""
 
