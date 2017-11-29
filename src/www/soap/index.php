@@ -31,7 +31,7 @@ $event_manager = EventManager::instance();
 
 try {
 
-    $server = new TuleapSOAPServer($uri.'/soap/codendi.wsdl.php?wsdl',array('trace' => 1, 'soap_version' => SOAP_1_1));
+    $server = new TuleapSOAPServer($uri.'/soap/codendi.wsdl.php?wsdl',array('trace' => 1));
 
     require_once('utils_soap.php');
     require_once('common/session.php');
@@ -54,7 +54,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         error_log('SOAP Request :');
         error_log($HTTP_RAW_POST_DATA);
     }
-    $server -> handle();
+    $xml_security = new XML_Security();
+    $xml_security->enableExternalLoadOfEntities();
+    $server->handle();
+    $xml_security->disableExternalLoadOfEntities();
 } else {
     require_once 'common/templating/mustache/MustacheRenderer.class.php';
     site_header(array('title' => "SOAP API"));

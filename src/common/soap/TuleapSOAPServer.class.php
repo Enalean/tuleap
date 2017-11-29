@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,12 @@
 
 class TuleapSOAPServer extends SoapServer {
 
-    public function __construct($wsdl, array $options = null) {
+    public function __construct($wsdl, array $options = null)
+    {
+        if ($options === null) {
+            $options = array();
+        }
+        $options['soap_version'] = SOAP_1_2;
         $xml_security = new XML_Security();
         $xml_security->enableExternalLoadOfEntities();
         parent::__construct($wsdl, $options);
