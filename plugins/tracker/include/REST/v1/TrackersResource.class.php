@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,34 +20,34 @@
 
 namespace Tuleap\Tracker\REST\v1;
 
-use \Tuleap\REST\ProjectAuthorization;
+use Luracast\Restler\RestException;
+use PermissionsManager;
+use PFUser;
+use Tracker;
+use Tracker_Artifact_PossibleParentsRetriever;
+use Tracker_ArtifactFactory;
+use Tracker_FormElementFactory;
+use Tracker_Report;
+use Tracker_Report_InvalidRESTCriterionException as InvalidCriteriaException;
+use Tracker_Report_REST;
+use Tracker_ReportDao;
+use Tracker_ReportFactory;
+use Tracker_REST_Artifact_ArtifactRepresentationBuilder;
+use Tracker_REST_TrackerRestBuilder;
+use Tracker_URLVerification;
+use TrackerFactory;
 use Tuleap\REST\AuthenticatedResource;
-use \Tuleap\REST\Exceptions\LimitOutOfBoundsException;
-use \Luracast\Restler\RestException;
-use \Tracker_REST_TrackerRestBuilder;
-use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
-use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
-use Tuleap\Tracker\Report\Query\Advanced\LimitSizeIsExceededException;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
-use \Tuleap\Tracker\REST\ReportRepresentation;
-use \Tracker_FormElementFactory;
-use \Tracker;
-use \TrackerFactory;
-use \Tracker_ArtifactFactory;
-use \Tracker_ReportFactory;
-use \UserManager;
-use \Tuleap\REST\Header;
-use \Tracker_Report;
-use \Tracker_URLVerification;
-use \Tracker_REST_Artifact_ArtifactRepresentationBuilder;
-use \PFUser;
-use \Tracker_Report_REST;
-use \PermissionsManager;
-use \Tracker_ReportDao;
-use \Tracker_Report_InvalidRESTCriterionException as InvalidCriteriaException;
-use \Tracker_Artifact_PossibleParentsRetriever;
-use \Tuleap\Tracker\REST\Artifact\ParentArtifactReference;
+use Tuleap\REST\Exceptions\LimitOutOfBoundsException;
+use Tuleap\REST\Header;
+use Tuleap\REST\ProjectAuthorization;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
+use Tuleap\Tracker\Report\Query\Advanced\LimitSizeIsExceededException;
+use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
+use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
+use Tuleap\Tracker\REST\Artifact\ParentArtifactReference;
+use Tuleap\Tracker\REST\ReportRepresentation;
+use UserManager;
 
 /**
  * Wrapper for Tracker related REST methods
@@ -82,6 +82,9 @@ class TrackersResource extends AuthenticatedResource {
     /** @var Tracker_ArtifactFactory */
     private $tracker_artifact_factory;
 
+    /** @var  ReportArtifactFactory */
+    private $report_artifact_factory;
+
     public function __construct() {
         $this->user_manager             = UserManager::instance();
         $this->formelement_factory      = Tracker_FormElementFactory::instance();
@@ -89,6 +92,9 @@ class TrackersResource extends AuthenticatedResource {
         $this->permission_manager       = PermissionsManager::instance();
         $this->tracker_factory          = TrackerFactory::instance();
         $this->tracker_artifact_factory = Tracker_ArtifactFactory::instance();
+        $this->report_artifact_factory  = new ReportArtifactFactory(
+            $this->tracker_artifact_factory
+        );
     }
 
 
@@ -316,19 +322,9 @@ class TrackersResource extends AuthenticatedResource {
 
     private function getArtifactsMatching(Tracker_Report_REST $report, $offset, $limit)
     {
-        $matching_ids = $report->getMatchingIds();
-
-        if (! $matching_ids['id']) {
-            return array();
-        }
-
-        $matching_artifact_ids = explode(',', $matching_ids['id']);
-        $slice_matching_ids    = array_slice($matching_artifact_ids, $offset, $limit);
-
-        Header::sendPaginationHeaders($limit, $offset, count($matching_artifact_ids), self::MAX_LIMIT);
-
-        $artifacts = $this->tracker_artifact_factory->getArtifactsByArtifactIdList($slice_matching_ids);
-        return array_filter($artifacts);
+        $artifact_collection = $this->report_artifact_factory->getArtifactsMatchingReport($report, $limit, $offset);
+        Header::sendPaginationHeaders($limit, $offset, $artifact_collection->getTotalSize(), self::MAX_LIMIT);
+        return $artifact_collection->getArtifacts();
     }
 
     private function validateExpertQuery(Tracker_Report_REST $report)

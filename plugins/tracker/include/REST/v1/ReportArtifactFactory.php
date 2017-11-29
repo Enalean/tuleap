@@ -50,6 +50,22 @@ class ReportArtifactFactory
         return $this->getPaginatedArtifactCollection($limit, $offset, $matching_ids);
     }
 
+    /**
+     * @param Tracker_Report $report
+     * @param int $limit
+     * @param int $offset
+     * @return ArtifactMatchingReportCollection
+     */
+    public function getArtifactsMatchingReport(
+        Tracker_Report $report,
+        $limit,
+        $offset
+    ) {
+        $matching_ids = $report->getMatchingIds();
+
+        return $this->getPaginatedArtifactCollection($limit, $offset, $matching_ids);
+    }
+
     private function getPaginatedArtifactCollection($limit, $offset, $matching_ids)
     {
         if (! $matching_ids['id']) {
