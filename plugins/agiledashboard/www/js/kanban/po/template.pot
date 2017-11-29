@@ -237,3 +237,11 @@ msgstr ""
 #: src/app/reports-modal/reports-modal.tpl.html
 msgid "{{ reports_modal.kanban_label }} reports"
 msgstr ""
+
+#: src/app/kanban-filtered-updated-alert/kanban-filtered-updated-alert.tpl.html
+msgid "A card has been updated by another user. As your kanban is filtered you can't see modifications."
+msgstr ""
+
+#: src/app/kanban-filtered-updated-alert/kanban-filtered-updated-alert.tpl.html
+msgid "Please reload your page."
+msgstr ""

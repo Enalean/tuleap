@@ -61,6 +61,10 @@ $kanban-column-footer-height: 50px;
     flex: 0 0 auto;
     flex-wrap: wrap;
     align-items: center;
+    padding: $tlp-spacing 0;
+}
+
+.kanban-alerts-header {
     padding: $tlp-spacing;
 }
 

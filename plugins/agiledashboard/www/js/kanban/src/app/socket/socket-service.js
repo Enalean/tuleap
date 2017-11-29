@@ -13,7 +13,8 @@ SocketService.$inject = [
     'ColumnCollectionService',
     'DroppedService',
     'SharedPropertiesService',
-    'JWTService'
+    'JWTService',
+    'KanbanFilteredUpdatedAlertService'
 ];
 
 function SocketService(
@@ -27,7 +28,8 @@ function SocketService(
     ColumnCollectionService,
     DroppedService,
     SharedPropertiesService,
-    JWTService
+    JWTService,
+    KanbanFilteredUpdatedAlertService
 ) {
     var self = this;
 
@@ -35,16 +37,17 @@ function SocketService(
         checkDisconnect         : {
             disconnect: false
         },
-        listenTokenExpired      : listenTokenExpired,
-        listenNodeJSServer      : listenNodeJSServer,
-        listenKanbanItemCreate  : listenKanbanItemCreate,
-        listenKanbanItemMove    : listenKanbanItemMove,
-        listenKanbanItemEdit    : listenKanbanItemEdit,
-        listenKanbanColumnCreate: listenKanbanColumnCreate,
-        listenKanbanColumnMove  : listenKanbanColumnMove,
-        listenKanbanColumnEdit  : listenKanbanColumnEdit,
-        listenKanbanColumnDelete: listenKanbanColumnDelete,
-        listenKanban            : listenKanban
+        listenTokenExpired        : listenTokenExpired,
+        listenNodeJSServer        : listenNodeJSServer,
+        listenKanbanFilteredUpdate: listenKanbanFilteredUpdate,
+        listenKanbanItemCreate    : listenKanbanItemCreate,
+        listenKanbanItemMove      : listenKanbanItemMove,
+        listenKanbanItemEdit      : listenKanbanItemEdit,
+        listenKanbanColumnCreate  : listenKanbanColumnCreate,
+        listenKanbanColumnMove    : listenKanbanColumnMove,
+        listenKanbanColumnEdit    : listenKanbanColumnEdit,
+        listenKanbanColumnDelete  : listenKanbanColumnDelete,
+        listenKanban              : listenKanban
     });
 
     function listenTokenExpired() {
@@ -114,6 +117,20 @@ function SocketService(
             locker.put('token-expired-date', JWTService.getTokenExpiredDate(data.token));
             refreshToken();
             listenTokenExpired();
+        });
+    }
+
+    function listenKanbanFilteredUpdate() {
+        SocketFactory.on('kanban_item:create', () => {
+            KanbanFilteredUpdatedAlertService.setCardHasBeenUpdated();
+        });
+
+        SocketFactory.on('kanban_item:update', () => {
+            KanbanFilteredUpdatedAlertService.setCardHasBeenUpdated();
+        });
+
+        SocketFactory.on('kanban_item:move', () => {
+            KanbanFilteredUpdatedAlertService.setCardHasBeenUpdated();
         });
     }
 
