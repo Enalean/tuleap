@@ -309,7 +309,7 @@ class UGroup_DynamicGroupTest extends TuleapTestCase {
         $this->assertEqual(ProjectUGroup::getAddFlagForUGroupId(ProjectUGroup::FORUM_ADMIN),                   "forum_flags = 2");
         $this->assertEqual(ProjectUGroup::getAddFlagForUGroupId(ProjectUGroup::SVN_ADMIN),                     "svn_flags = 2");
         $this->assertEqual(ProjectUGroup::getAddFlagForUGroupId(ProjectUGroup::NEWS_ADMIN),                    "news_flags = 2");
-        $this->assertEqual(ProjectUGroup::getAddFlagForUGroupId(ProjectUGroup::NEWS_EDITOR),                   "news_flags = 1");
+        $this->assertEqual(ProjectUGroup::getAddFlagForUGroupId(ProjectUGroup::NEWS_WRITER), "news_flags = 1");
     }
     
     function itConvertDynamicGroupIdToCorrespondingDatabaseFieldUpdateForRemove() {
@@ -318,7 +318,7 @@ class UGroup_DynamicGroupTest extends TuleapTestCase {
         $this->assertEqual(ProjectUGroup::getRemoveFlagForUGroupId(ProjectUGroup::FORUM_ADMIN),                   "forum_flags = 0");
         $this->assertEqual(ProjectUGroup::getRemoveFlagForUGroupId(ProjectUGroup::SVN_ADMIN),                     "svn_flags = 0");
         $this->assertEqual(ProjectUGroup::getRemoveFlagForUGroupId(ProjectUGroup::NEWS_ADMIN),                    "news_flags = 0");
-        $this->assertEqual(ProjectUGroup::getRemoveFlagForUGroupId(ProjectUGroup::NEWS_EDITOR),                   "news_flags = 0");
+        $this->assertEqual(ProjectUGroup::getRemoveFlagForUGroupId(ProjectUGroup::NEWS_WRITER), "news_flags = 0");
     }
 }
 

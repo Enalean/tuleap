@@ -27,6 +27,7 @@ class UserPermissionsDao extends DataAccessObject
     const PROJECT_ADMIN_FLAG = 'A';
     const WIKI_ADMIN_FLAG    = '2';
     const FORUM_ADMIN_FLAG   = '2';
+    const NEWS_WRITER_FLAG   = '1';
 
     public function __construct()
     {
@@ -110,6 +111,33 @@ class UserPermissionsDao extends DataAccessObject
 
         $sql = "UPDATE user_group
                 SET forum_flags = 0
+                WHERE group_id = $project_id
+                  AND user_id = $user_id";
+
+        return $this->update($sql);
+    }
+
+    public function addUserAsNewsEditor($project_id, $user_id)
+    {
+        $project_id = $this->da->escapeInt($project_id);
+        $user_id    = $this->da->escapeInt($user_id);
+        $news_flag = $this->da->escapeInt(self::NEWS_WRITER_FLAG);
+
+        $sql = "UPDATE user_group
+                SET news_flags = $news_flag
+                WHERE group_id = $project_id
+                  AND user_id = $user_id";
+
+        return $this->update($sql);
+    }
+
+    public function removeUserFromNewsEditor($project_id, $user_id)
+    {
+        $project_id = $this->da->escapeInt($project_id);
+        $user_id    = $this->da->escapeInt($user_id);
+
+        $sql = "UPDATE user_group
+                SET news_flags = 0
                 WHERE group_id = $project_id
                   AND user_id = $user_id";
 

@@ -214,6 +214,12 @@ class ProjectMembersController
             );
         }
 
+        if ($member['news_flags'] === UserPermissionsDao::NEWS_WRITER_FLAG && $project->usesNews()) {
+            $ugroups[] = new MinimalUGroupPresenter(
+                $this->ugroup_manager->getUGroup($project, ProjectUGroup::NEWS_WRITER)
+            );
+        }
+
         if (! $member['ugroups_ids']) {
             return $ugroups;
         }
