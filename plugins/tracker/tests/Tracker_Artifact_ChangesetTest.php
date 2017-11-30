@@ -32,7 +32,8 @@ Mock::generatePartial(
         'getTracker',
         'getComment',
         'getMailGatewayConfig',
-        'isNotificationAssignedToEnabled'
+        'isNotificationAssignedToEnabled',
+        'getMailSender',
     )
 );
 
@@ -168,104 +169,43 @@ class Tracker_Artifact_ChangesetTest extends TuleapTestCase {
     }
 
     function testNotify() {
-        $defs = array(
-            array(
-                'has_changed'              => 1,
-                'isNotificationsSupported' => 1,
-                'hasNotifications'         => 0,
-                'recipients'               => array(),
-            ),
-            array(
-                'has_changed'              => 0,
-                'isNotificationsSupported' => 1,
-                'hasNotifications'         => 1,
-                'recipients'               => array('a_user'),
-            ),
-            array(
-                'has_changed'              => 0,
-                'isNotificationsSupported' => 1,
-                'hasNotifications'         => 0,
-                'recipients'               => array('should_not_appear'),
-            ),
-            array(
-                'has_changed'              => 0,
-                'isNotificationsSupported' => 0,
-                'hasNotifications'         => 1,
-                'recipients'               => array('should_not_appear_(not_supported)'),
-            ),
-            array(
-                'has_changed'              => 0,
-                'isNotificationsSupported' => 1,
-                'hasNotifications'         => 1,
-                'recipients'               => array('multiple_users', 'email@example.com'),
-            ),
-        );
-
         $fact     = new MockTracker_FormElementFactory();
-        $dar      = new MockDataAccessResult();
         $dao      = new MockTracker_Artifact_Changeset_ValueDao();
         $artifact = new MockTracker_Artifact();
         $tracker  = new MockTracker();
         $um       = new MockUserManager();
         $comment  = new MockTracker_Artifact_Changeset_Comment();
 
-        $i = 0;
-        // try DRY in unit tests also... build mocks automatically
-        foreach ($defs as $d) {
-            $id = $i + 1;
-            $changeset_value_id = 1000 + $id;
-            $dar->setReturnValueAt($i++, 'current', array(
-                'changeset_id' => 66,
-                'field_id'     => $id,
-                'id'           => $changeset_value_id,
-                'has_changed'  => $d['has_changed'],
-            ));
-            $f = new MockTracker_FormElement_Field_Selectbox();
-            $fact->setReturnReference('getFieldById', $f, array($id));
-            $f->setReturnValue('getId', $id);
-            $f->setReturnValue('getLabel', ('field_'.$id));
-            $f->setReturnValue('isNotificationsSupported', $d['isNotificationsSupported']);
-            $f->setReturnValue('hasNotifications', $d['hasNotifications']);
-            $f->setReturnValue('getRecipients', $d['recipients']);
-
-            $p = new MockTracker_Artifact_ChangesetValue_List();
-            $c = new MockTracker_Artifact_ChangesetValue_List();
-            $c->setReturnValue('hasChanged', $d['has_changed']);
-            $c->setReturnValue('diff', 'has changed', array($p));
-            $f->setReturnReference('getChangesetValue', $c, array('*', $changeset_value_id, $d['has_changed']));
-            unset($f);
-        }
-        $dar->setReturnValue('valid', true);
-        $dar->setReturnValueAt($i, 'valid', false);
-        $dao->setReturnReference('searchById', $dar);
-
         $artifact->setReturnReference('getTracker', $tracker);
-        $artifact->setReturnValue('getCommentators', array('comment1', 'comment2'));
         $artifact->setReturnValue('getId', 666);
 
         $tracker->setReturnValue('getItemName', 'story');
         $tracker->setReturnValue('isNotificationStopped', false);
-        $tracker->setReturnValue('getRecipients', array(
+
+        stub($this->recipients_manager)->getRecipients()->returns(
             array(
-                'recipients'        => array(
-                    'global1',
-                    'global2',
-                ),
-                'on_updates'        => false,
-                'check_permissions' => true,
-            ),
-            array(
-                'recipients'        => array(
-                    'dont_check_perms',
-                    'global3',
-                    'email@example.com',
-                ),
-                'on_updates'        => true,
-                'check_permissions' => false,
-            ),
-        ));
+                'a_user' => true,
+                'multiple_users' => true,
+                'email@example.com' => true,
+                'dont_check_perms' => true,
+                'global3' => true,
+                'comment1' => true,
+                'comment2' => true,
+            )
+        );
+        $language = mock('BaseLanguage');
+        stub($this->recipients_manager)->getUserFromRecipientName('a_user')->returns(aUser()->withEmail('a_user')->withLanguage($language)->build());
+        stub($this->recipients_manager)->getUserFromRecipientName('multiple_users')->returns(aUser()->withEmail('multiple_users')->withLanguage($language)->build());
+        stub($this->recipients_manager)->getUserFromRecipientName('email@example.com')->returns(aUser()->withEmail('email@example.com')->withLanguage($language)->build());
+        stub($this->recipients_manager)->getUserFromRecipientName('dont_check_perms')->returns(aUser()->withEmail('dont_check_perms')->withLanguage($language)->build());
+        stub($this->recipients_manager)->getUserFromRecipientName('global3')->returns(aUser()->withEmail('global3')->withLanguage($language)->build());
+        stub($this->recipients_manager)->getUserFromRecipientName('comment1')->returns(aUser()->withEmail('comment1')->withLanguage($language)->build());
+        stub($this->recipients_manager)->getUserFromRecipientName('comment2')->returns(aUser()->withEmail('comment2')->withLanguage($language)->build());
+
 
         $config = mock('Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig');
+
+        $mail_sender = mock('Tuleap\Tracker\Artifact\Changeset\Notification\MailSender');
 
         $current_changeset = partial_mock(
             'Tracker_Artifact_Changeset',
@@ -274,13 +214,15 @@ class Tracker_Artifact_ChangesetTest extends TuleapTestCase {
                 'getValueDao',
                 'getFormElementFactory',
                 'getArtifact',
-                'sendNotification',
                 'getUserManager',
                 'getTracker',
                 'getComment',
                 'getMailGatewayConfig',
                 'isNotificationAssignedToEnabled',
                 'getLogger',
+                'getMailSender',
+                'getRecipientsManager',
+                'getUserHelper'
             )
         );
         $current_changeset->setReturnValue('getId', 66);
@@ -293,36 +235,29 @@ class Tracker_Artifact_ChangesetTest extends TuleapTestCase {
         $current_changeset->setReturnReference('getComment', $comment);
         $current_changeset->setReturnReference('getMailGatewayConfig', $config);
         $current_changeset->setReturnReference('getLogger', mock('Logger'));
+        $current_changeset->setReturnReference('getRecipientsManager', $this->recipients_manager);
+        $current_changeset->setReturnReference('getMailSender', $mail_sender);
+        $current_changeset->setReturnReference('getUserHelper', mock('UserHelper'));
 
-        $expected_body = <<<BODY
-story #666
-<http://{$GLOBALS['sys_default_domain']}/tracker/?aid=666>
-
-BODY;
-        $current_changeset->expect(
-            'sendNotification',
+        expect($mail_sender)->send(
+            '*',
             array(
-                //the recipients
-                array(
-                    'a_user',
-                    'multiple_users',
-                    'email@example.com',
-                    'dont_check_perms',
-                    'global3',
-                    'comment1',
-                    'comment2',
-                ),
+                'a_user',
+                'multiple_users',
+                'email@example.com',
+                'dont_check_perms',
+                'global3',
+                'comment1',
+                'comment2',
+            ),
+            array(), // headers
+            '*', //from
+            '[story #666] ', //subject
+            '*',
+            '*',
+            '*'
+        )->once();
 
-                //the headers
-                array(),
-
-                //the subject
-                '[story #666]',
-
-                //the body
-                $expected_body
-            )
-        );
         $current_changeset->notify();
     }
 
@@ -332,7 +267,7 @@ BODY;
         $tracker->setReturnValue('isNotificationStopped', true);
         $changeset->setReturnReference('getTracker', $tracker);
         $changeset->expectNever('getFormElementFactory');
-        $changeset->expectNever('sendNotification');
+        $changeset->expectNever('getMailSender');
         $changeset->notify();
     }
 

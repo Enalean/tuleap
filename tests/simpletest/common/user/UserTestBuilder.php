@@ -36,6 +36,7 @@ function anAnonymousUser() {
 
 class UserTestBuilder {
     private $params = array('language_id' => 'en_US');
+    private $language;
 
     function withUserName($name) {
         $this->params['user_name'] = $name;
@@ -94,9 +95,16 @@ class UserTestBuilder {
         return $this;
     }
 
+    function withLanguage(BaseLanguage $language) {
+        $this->language = $language;
+        return $this;
+    }
+
     function build() {
-        return new PFUser($this->params);
+        $user = new PFUser($this->params);
+        if ($this->language !== null) {
+            $user->setLanguage($this->language);
+        }
+        return $user;
     }
 }
-
-?>
