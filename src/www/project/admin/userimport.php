@@ -46,12 +46,6 @@ if (!file_exists($user_filename) || !is_readable($user_filename)) {
 
 $user_collection = $import->parse($user_filename);
 
-if ($request->get('action') === "import") {
-    $result = $import->updateDB($user_collection->getUsers());
-
-    return $GLOBALS['Response']->redirect('members.php?group_id=' . urlencode($request->get('project_id')));
-}
-
 $GLOBALS['Response']->sendJSON(
     array(
         'users'                  => $user_collection->getFormattedUsers(),
