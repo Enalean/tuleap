@@ -62,7 +62,7 @@ use Tracker_Workflow_GlobalRulesViolationException;
 use Tracker_Workflow_Transition_InvalidConditionForTransitionException;
 use TrackerFactory;
 use Tuleap\AgileDashboard\Kanban\ColumnIdentifier;
-use Tuleap\AgileDashboard\Kanban\TrackerReportFilter\ReportFilterFromWhereBuilder;
+use Tuleap\AgileDashboard\Kanban\TrackerReport\ReportFilterFromWhereBuilder;
 use Tuleap\AgileDashboard\KanbanCumulativeFlowDiagramDao;
 use Tuleap\AgileDashboard\KanbanRightsPresenter;
 use Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram\DiagramRepresentationBuilder;

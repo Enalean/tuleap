@@ -39,8 +39,8 @@ function MainCtrl(
         const kanban_url = kanban_init_data.kanbanUrl;
         SharedPropertiesService.setKanbanUrl(kanban_url);
 
-        const filters_tracker_report = Object.values(JSON.parse(kanban_init_data.filtersTrackerReport));
-        FilterTrackerReportService.setFiltersTrackerReport(filters_tracker_report);
+        const tracker_reports = Object.values(JSON.parse(kanban_init_data.trackerReports));
+        FilterTrackerReportService.initTrackerReports(tracker_reports);
 
         const language = kanban_init_data.language;
         gettextCatalog.setCurrentLanguage(language);

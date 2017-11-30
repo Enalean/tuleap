@@ -1,5 +1,5 @@
 import kanban_module from '../app.js';
-import angular from 'angular';
+import angular       from 'angular';
 import 'angular-mocks';
 
 describe("FilterTrackerReportController -", () => {
@@ -7,17 +7,17 @@ describe("FilterTrackerReportController -", () => {
         $window,
         FilterTrackerReportService;
 
-    beforeEach(function() {
+    beforeEach(() => {
         angular.mock.module(kanban_module, ($provide) => {
             $provide.value('$window', {
                 location: {
-                    href    : 'https://tuleap-web.tuleap-aio-dev.docker/plugins/agiledashboard/?group_id=126&action=showKanban&id=19&tracker_report_id=305#!/kanban',
-                    search  : '?group_id=126&action=showKanban&id=19&tracker_report_id=305'
+                    href  : 'https://tuleap-web.tuleap-aio-dev.docker/plugins/agiledashboard/?group_id=126&action=showKanban&id=19&tracker_report_id=305#!/kanban',
+                    search: '?group_id=126&action=showKanban&id=19&tracker_report_id=305'
                 }
             });
         });
 
-        var $controller;
+        let $controller;
 
         angular.mock.inject(function(
             _$controller_,
@@ -29,21 +29,24 @@ describe("FilterTrackerReportController -", () => {
             FilterTrackerReportService = _FilterTrackerReportService_;
         });
 
-        FilterTrackerReportService.filters_tracker_report = [
+        FilterTrackerReportService.initTrackerReports([
             {
-                id              : 305,
-                description     : 'The system default artifact report',
-                name            : 'Default',
-                parent_report_id: '293'
-            },
-            {
-                id              : 306,
-                description     : 'The system personal artifact report',
-                name            : 'Personal',
-                parent_report_id: '296',
-                selected        : true
+                id         : 305,
+                description: 'The system default artifact report',
+                name       : 'Default',
+                selectable : true
+            }, {
+                id         : 306,
+                description: 'Custom Assigned to me report',
+                name       : 'Assigned to me',
+                selectable : true,
+                selected   : true
+            }, {
+                id         : 307,
+                description: 'bracherer joshi',
+                name       : 'Zoned'
             }
-        ];
+        ]);
 
         FilterTrackerReportController = $controller('FilterTrackerReportController', {
             $window: $window,
@@ -53,22 +56,6 @@ describe("FilterTrackerReportController -", () => {
 
     describe("init() -", () => {
         it("when the controller is created, then the selected filter tracker report will be retrieved", function() {
-            expect(FilterTrackerReportController.filters_collection).toEqual([
-                {
-                    id              : 305,
-                    description     : 'The system default artifact report',
-                    name            : 'Default',
-                    parent_report_id: '293'
-                },
-                {
-                    id              : 306,
-                    description     : 'The system personal artifact report',
-                    name            : 'Personal',
-                    parent_report_id: '296',
-                    selected        : true
-                }
-            ]);
-
             expect(FilterTrackerReportController.selected_item).toEqual('306');
         });
     });

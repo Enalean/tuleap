@@ -1,9 +1,8 @@
-import _ from 'lodash';
-
 export default KanbanService;
 
 KanbanService.$inject = [
     'Restangular',
+    '$http',
     '$q',
     '$window',
     'gettextCatalog',
@@ -14,6 +13,7 @@ KanbanService.$inject = [
 
 function KanbanService(
     Restangular,
+    $http,
     $q,
     $window,
     gettextCatalog,
@@ -21,39 +21,39 @@ function KanbanService(
     RestErrorService,
     FilterTrackerReportService
 ) {
-    _.extend(Restangular.configuration.defaultHeaders, {
+    Object.assign(Restangular.configuration.defaultHeaders, {
         'X-Client-UUID': SharedPropertiesService.getUUID()
     });
 
     return {
-        getKanban           : getKanban,
-        getBacklog          : getBacklog,
-        getArchiveSize      : getArchiveSize,
-        getBacklogSize      : getBacklogSize,
-        getColumnContentSize: getColumnContentSize,
-        getArchive          : getArchive,
-        getItems            : getItems,
-        collapseColumn      : collapseColumn,
-        expandColumn        : expandColumn,
-        reorderColumn       : reorderColumn,
-        reorderBacklog      : reorderBacklog,
-        reorderArchive      : reorderArchive,
-        expandBacklog       : expandBacklog,
-        collapseBacklog     : collapseBacklog,
-        expandArchive       : expandArchive,
-        collapseArchive     : collapseArchive,
-        moveInBacklog       : moveInBacklog,
-        moveInArchive       : moveInArchive,
-        moveInColumn        : moveInColumn,
-        updateKanbanLabel   : updateKanbanLabel,
-        deleteKanban        : deleteKanban,
-        addColumn           : addColumn,
-        reorderColumns      : reorderColumns,
-        removeColumn        : removeColumn,
-        editColumn          : editColumn,
-        updateKanbanName    : updateKanbanName,
-        removeKanban        : removeKanban
-
+        getKanban,
+        getBacklog,
+        getArchiveSize,
+        getBacklogSize,
+        getColumnContentSize,
+        getArchive,
+        getItems,
+        collapseColumn,
+        expandColumn,
+        reorderColumn,
+        reorderBacklog,
+        reorderArchive,
+        expandBacklog,
+        collapseBacklog,
+        expandArchive,
+        collapseArchive,
+        moveInBacklog,
+        moveInArchive,
+        moveInColumn,
+        updateKanbanLabel,
+        deleteKanban,
+        addColumn,
+        reorderColumns,
+        removeColumn,
+        editColumn,
+        updateKanbanName,
+        removeKanban,
+        updateSelectableReports,
     };
 
     function getKanban(id) {
@@ -391,5 +391,11 @@ function KanbanService(
         if (selected_filter_tracker_report_id) {
             query_params['query'] = { tracker_report_id: selected_filter_tracker_report_id };
         }
+    }
+
+    function updateSelectableReports(kanban_id, selectable_report_ids) {
+        return $http.put('/api/v1/kanban/' + kanban_id + '/tracker_reports', {
+            tracker_report_ids: selectable_report_ids
+        });
     }
 }

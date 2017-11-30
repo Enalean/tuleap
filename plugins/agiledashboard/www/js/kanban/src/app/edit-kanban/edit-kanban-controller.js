@@ -1,5 +1,5 @@
 import { element } from 'angular';
-import { map } from 'lodash';
+import { map }     from 'lodash';
 
 export default EditKanbanCtrl;
 
@@ -9,6 +9,8 @@ EditKanbanCtrl.$inject = [
     'ColumnCollectionService',
     'SharedPropertiesService',
     'RestErrorService',
+    'FilterTrackerReportService',
+    'gettextCatalog',
     'modal_instance',
     'rebuild_scrollbars'
 ];
@@ -19,10 +21,12 @@ function EditKanbanCtrl(
     ColumnCollectionService,
     SharedPropertiesService,
     RestErrorService,
+    FilterTrackerReportService,
+    gettextCatalog,
     modal_instance,
     rebuild_scrollbars
 ) {
-    var self = this;
+    const self = this;
     self.kanban             = SharedPropertiesService.getKanban();
     self.saving             = false;
     self.saved              = false;
@@ -36,30 +40,44 @@ function EditKanbanCtrl(
     self.title_tracker_link = "<a class='edit-kanban-title-tracker-link' href='/plugins/tracker/?tracker=" + self.kanban.tracker.id + "'>" + self.kanban.tracker.label + "</a>";
     self.info_tracker_link  = "<a href='/plugins/tracker/?tracker=" + self.kanban.tracker.id + "'>" + self.kanban.tracker.label + "</a>";
     self.old_kanban_label   = self.kanban.label;
+    self.select2_options    = {
+        placeholder: gettextCatalog.getString('Select tracker reports'),
+        allowClear : true
+    };
+    self.tracker_reports    = [];
+    self.selectable_reports = [];
 
-    self.$onInit                     = init;
-    self.initModalValues             = initModalValues;
-    self.initDragular                = initDragular;
-    self.initListenModal             = initListenModal;
-    self.dragularOptionsForEditModal = dragularOptionsForEditModal;
-    self.processing                  = processing;
-    self.deleteKanban                = deleteKanban;
-    self.cancelDeleteKanban          = cancelDeleteKanban;
-    self.saveModifications           = saveModifications;
-    self.addColumn                   = addColumn;
-    self.cancelAddColumn             = cancelAddColumn;
-    self.removeColumn                = removeColumn;
-    self.cancelRemoveColumn          = cancelRemoveColumn;
-    self.turnColumnToEditMode        = turnColumnToEditMode;
-    self.cancelEditColumn            = cancelEditColumn;
-    self.editColumn                  = editColumn;
-    self.columnsCanBeManaged         = columnsCanBeManaged;
-    self.updateWidgetTitle           = updateWidgetTitle;
+
+    Object.assign(self, {
+        $onInit: init,
+        initModalValues,
+        initDragular,
+        initListenModal,
+        dragularOptionsForEditModal,
+        processing,
+        deleteKanban,
+        cancelDeleteKanban,
+        saveModifications,
+        addColumn,
+        cancelAddColumn,
+        removeColumn,
+        cancelRemoveColumn,
+        turnColumnToEditMode,
+        cancelEditColumn,
+        editColumn,
+        columnsCanBeManaged,
+        updateWidgetTitle,
+        saveReports,
+    });
 
     function init() {
         self.initModalValues();
         self.initDragular();
         self.initListenModal();
+        self.tracker_reports       = FilterTrackerReportService.getTrackerReports();
+        self.selectable_report_ids = FilterTrackerReportService
+            .getSelectableReports()
+            .map(({ id }) => id);
     }
 
     function updateKanbanName(label) {
@@ -85,6 +103,19 @@ function EditKanbanCtrl(
                 $scope.$apply();
             }
         });
+    }
+
+    function saveReports() {
+        self.saving = true;
+        KanbanService.updateSelectableReports(self.kanban.id, self.selectable_report_ids)
+            .then(() => {
+                self.saving = false;
+                self.saved  = true;
+                FilterTrackerReportService.changeSelectableReports(self.selectable_report_ids);
+            }, (response) => {
+                modal_instance.tlp_modal.hide();
+                RestErrorService.reload(response);
+            });
     }
 
     function dragularOptionsForEditModal() {
