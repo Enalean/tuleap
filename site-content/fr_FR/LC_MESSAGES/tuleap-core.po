@@ -444,6 +444,9 @@ msgstr "Permission"
 msgid "Permission Request"
 msgstr "Demande de permission"
 
+msgid "Permissions for deprecated services"
+msgstr "Permissions pour les services dépréciés"
+
 msgid "Platform administration"
 msgstr "Administration de la plateforme"
 
@@ -755,9 +758,6 @@ msgstr "Téléverser un fichier texte"
 #, php-format
 msgid "User '%s' does not exist"
 msgstr "L'utilisateur '%s' n’existe pas"
-
-msgid "User Permissions"
-msgstr "Permissions utilisateurs"
 
 msgid "User avatar"
 msgstr "Avatar de l'utilisateur"

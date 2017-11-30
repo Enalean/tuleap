@@ -420,6 +420,9 @@ msgstr ""
 msgid "Permission Request"
 msgstr ""
 
+msgid "Permissions for deprecated services"
+msgstr ""
+
 msgid "Platform administration"
 msgstr ""
 
@@ -709,9 +712,6 @@ msgstr ""
 
 #, php-format
 msgid "User '%s' does not exist"
-msgstr ""
-
-msgid "User Permissions"
 msgstr ""
 
 msgid "User avatar"
