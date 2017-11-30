@@ -23,11 +23,8 @@ namespace Tuleap\AgileDashboard\Kanban\RealTime;
 use BackendLogger;
 use PFUser;
 use Tracker_Artifact;
-use Tracker_Permission_PermissionsSerializer;
 use Tuleap\AgileDashboard\RealTime\RealTimeArtifactMessageException;
 use Tuleap\AgileDashboard\RealTime\RealTimeArtifactMessageSender;
-use Tuleap\AgileDashboard\REST\v1\Kanban\ItemRepresentationBuilder;
-use Tuleap\RealTime\NodeJSClient;
 
 class KanbanArtifactMessageSender
 {
@@ -35,10 +32,6 @@ class KanbanArtifactMessageSender
     const EVENT_NAME_ARTIFACT_UPDATED = 'kanban_item:update';
     const EVENT_NAME_ARTIFACT_MOVED   = 'kanban_item:move';
 
-    /**
-     * @var ItemRepresentationBuilder
-     */
-    private $item_representation_builder;
     /**
      * @var KanbanArtifactMessageBuilder
      */
@@ -54,52 +47,33 @@ class KanbanArtifactMessageSender
 
     public function __construct(
         RealTimeArtifactMessageSender $artifact_message_sender,
-        ItemRepresentationBuilder $item_representation_builder,
         KanbanArtifactMessageBuilder $kanban_artifact_message_builder,
         BackendLogger $backend_logger
     ) {
         $this->artifact_message_sender         = $artifact_message_sender;
-        $this->item_representation_builder     = $item_representation_builder;
         $this->kanban_artifact_message_builder = $kanban_artifact_message_builder;
         $this->backend_logger                  = $backend_logger;
     }
 
     public function sendMessageArtifactCreated(PFUser $user, Tracker_Artifact $artifact, $kanban_id)
     {
-        $item = $this->item_representation_builder->buildItemRepresentation($artifact);
-
-        $item->card_fields[] = $artifact->getTracker()->getTitleField();
-        $item->card_fields[] = $artifact->getTracker()->getStatusField();
-
-        $data = array(
-            'artifact' => $item
-        );
-
-        $this->artifact_message_sender->sendMessage(
-            $user,
-            $artifact,
-            $data,
-            self::EVENT_NAME_ARTIFACT_CREATED,
-            $kanban_id
-        );
+        $this->sendMessageArtifact($user, $artifact, self::EVENT_NAME_ARTIFACT_CREATED, $kanban_id);
     }
 
     public function sendMessageArtifactUpdated(PFUser $user, Tracker_Artifact $artifact, $kanban_id)
     {
-        $item = $this->item_representation_builder->buildItemRepresentation($artifact);
+        $this->sendMessageArtifact($user, $artifact, self::EVENT_NAME_ARTIFACT_UPDATED, $kanban_id);
+    }
 
-        $item->card_fields[] = $artifact->getTracker()->getTitleField();
-        $item->card_fields[] = $artifact->getTracker()->getStatusField();
-
-        $data = array(
-            'artifact' => $item
-        );
+    public function sendMessageArtifact(PFUser $user, Tracker_Artifact $artifact, $event_name, $kanban_id)
+    {
+        $data = (array) $this->kanban_artifact_message_builder->buildArtifactUpdated($artifact);
 
         $this->artifact_message_sender->sendMessage(
             $user,
             $artifact,
             $data,
-            self::EVENT_NAME_ARTIFACT_UPDATED,
+            $event_name,
             $kanban_id
         );
     }

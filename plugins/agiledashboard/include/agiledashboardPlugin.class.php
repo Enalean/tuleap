@@ -1224,14 +1224,6 @@ class AgileDashboardPlugin extends Plugin {
     private function getKanbanArtifactMessageSender()
     {
         $kanban_item_dao                   = new AgileDashboard_KanbanItemDao();
-        $item_representation_builder       = new ItemRepresentationBuilder(
-            new AgileDashboard_KanbanItemManager(
-                $kanban_item_dao
-            ),
-            new TimeInfoFactory(
-                $kanban_item_dao
-            )
-        );
         $permissions_serializer            = new Tracker_Permission_PermissionsSerializer(
             new Tracker_Permission_PermissionRetrieveAssignee(UserManager::instance())
         );
@@ -1253,7 +1245,6 @@ class AgileDashboardPlugin extends Plugin {
 
         return new KanbanArtifactMessageSender(
             $realtime_artifact_message_sender,
-            $item_representation_builder,
             $realtime_artifact_message_builder,
             $backend_logger
         );
