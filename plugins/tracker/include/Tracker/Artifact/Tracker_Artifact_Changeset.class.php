@@ -24,6 +24,7 @@ use Tuleap\Mail\MailLogger;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\Artifact\Changeset\Notification\RecipientsManager;
+use Tuleap\Tracker\Artifact\Changeset\Notification\MailSender;
 
 require_once('utils.php');
 
@@ -782,6 +783,11 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
         );
     }
 
+    protected function getMailSender()
+    {
+        return new MailSender();
+    }
+
     /**
      * notify people
      *
@@ -815,7 +821,8 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
             // 3. Send the notification
             foreach ($messages as $message) {
                 $logger->debug('Notify '.implode(', ', $message['recipients']));
-                $this->sendNotification(
+                $this->getMailSender()->send(
+                    $this,
                     $message['recipients'],
                     $message['headers'],
                     $message['from'],
@@ -978,90 +985,6 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
         $message['subject']  = $subject;
 
         return $message;
-
-    }
-
-    /**
-     * Send a notification
-     *
-     * @param array  $recipients the list of recipients
-     * @param array  $headers    the additional headers
-     * @param string $from       the mail of the sender
-     * @param string $subject    the subject of the message
-     * @param string $htmlBody   the html content of the message
-     * @param string $txtBody    the text content of the message
-     * @param string $message_id the id of the message
-     *
-     * @return void
-     */
-    protected function sendNotification($recipients, $headers, $from, $subject, $htmlBody, $txtBody, $message_id) {
-        $hp                = Codendi_HTMLPurifier::instance();
-        $breadcrumbs       = array();
-        $tracker           = $this->getTracker();
-        $project           = $tracker->getProject();
-        $artifactId        = $this->getArtifact()->getID();
-        $project_unix_name = $project->getUnixName(true);
-        $tracker_name      = $tracker->getItemName();
-        $mail_enhancer     = new MailEnhancer();
-
-        if($message_id) {
-            $mail_enhancer->setMessageId($message_id);
-        }
-
-        $breadcrumbs[] = '<a href="'. get_server_url() .'/projects/'. $project_unix_name .'" />'. $project->getPublicName() .'</a>';
-        $breadcrumbs[] = '<a href="'. get_server_url() .'/plugins/tracker/?tracker='. (int)$tracker->getId() .'" />'. $hp->purify($this->getTracker()->getName()) .'</a>';
-        $breadcrumbs[] = '<a href="'. get_server_url().'/plugins/tracker/?aid='.(int)$artifactId.'" />'. $hp->purify($this->getTracker()->getName().' #'.$artifactId) .'</a>';
-
-        $mail_enhancer->addPropertiesToLookAndFeel('breadcrumbs', $breadcrumbs);
-        $mail_enhancer->addPropertiesToLookAndFeel('unsubscribe_link', $this->getUnsubscribeLink());
-        $mail_enhancer->addPropertiesToLookAndFeel('title', $hp->purify($subject));
-        $mail_enhancer->addHeader("X-Codendi-Project",     $project->getUnixName());
-        $mail_enhancer->addHeader("X-Codendi-Tracker",     $tracker_name);
-        $mail_enhancer->addHeader("X-Codendi-Artifact-ID", $this->artifact->getId());
-        $mail_enhancer->addHeader('From', $from);
-
-        foreach($headers as $header) {
-            $mail_enhancer->addHeader($header['name'], $header['value']);
-        }
-
-        if ($htmlBody) {
-            $htmlBody .= $this->getHTMLBodyFilter($project_unix_name, $tracker_name);
-        }
-
-        $txtBody .= $this->getTextBodyFilter($project_unix_name, $tracker_name);
-
-        $mail_notification_builder = new MailNotificationBuilder(
-            new MailBuilder(
-                TemplateRendererFactory::build(),
-                new MailFilter(UserManager::instance(), new URLVerification(), new MailLogger())
-            )
-        );
-        $mail_notification_builder->buildAndSendEmail(
-            $project,
-            $recipients,
-            $subject,
-            $htmlBody,
-            $txtBody,
-            get_server_url().$this->getUri(),
-            trackerPlugin::TRUNCATED_SERVICE_NAME,
-            $mail_enhancer
-        );
-    }
-
-    private function getTextBodyFilter($project_name, $tracker_name) {
-        $project_filter = '=PROJECT='.$project_name;
-        $tracker_filter = '=TRACKER='.$tracker_name;
-
-        return PHP_EOL . $project_filter . PHP_EOL . $tracker_filter . PHP_EOL;
-    }
-
-    private function getHTMLBodyFilter($project_name, $tracker_name) {
-        $filter  = '<div style="display: none !important;">';
-        $filter .= '=PROJECT=' . $project_name . '<br>';
-        $filter .= '=TRACKER=' . $tracker_name . '<br>';
-        $filter .= '</div>';
-
-        return $filter;
     }
 
     /**
@@ -1236,17 +1159,6 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
                 $GLOBALS['Language']->getText('tracker_include_artifact','mail_answer_now') .
             '</a>
         </span>';
-    }
-
-    /**
-     * @return string html call to action button to include in an html mail
-     */
-    private function getUnsubscribeLink() {
-        $link = get_server_url().'/plugins/tracker/?aid='.(int)$this->getArtifact()->getId().'&func=manage-subscription';
-
-        return '<a href="'. $link .'" target="_blank" rel="noreferrer">' .
-            $GLOBALS['Language']->getText('plugin_tracker_artifact','mail_unsubscribe') .
-        '</a>';
     }
 
     /**
