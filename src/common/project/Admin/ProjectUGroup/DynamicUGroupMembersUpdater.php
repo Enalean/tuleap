@@ -26,6 +26,7 @@ use Project;
 use ProjectUGroup;
 use Tuleap\Project\UserPermissionsDao;
 use UGroupBinding;
+use UGroupUserDao;
 
 class DynamicUGroupMembersUpdater
 {
@@ -61,6 +62,9 @@ class DynamicUGroupMembersUpdater
             case ProjectUGroup::WIKI_ADMIN:
                 $this->addWikiAdministrator($project, $user);
                 break;
+            case ProjectUGroup::FORUM_ADMIN:
+                $this->addForumAdministrator($project, $user);
+                break;
         }
     }
 
@@ -72,6 +76,9 @@ class DynamicUGroupMembersUpdater
                 break;
             case ProjectUGroup::WIKI_ADMIN:
                 $this->removeWikiAdministrator($project, $user);
+                break;
+            case ProjectUGroup::FORUM_ADMIN:
+                $this->removeForumAdministrator($project, $user);
                 break;
         }
     }
@@ -110,5 +117,18 @@ class DynamicUGroupMembersUpdater
             account_add_user_to_group($project->getID(), $user->getUserName());
             $this->ugroup_binding->reloadUgroupBindingInProject($project);
         }
+    }
+
+    private function addForumAdministrator(Project $project, PFUser $user)
+    {
+        $this->ensureUserIsProjectMember($project, $user);
+        $this->user_permissions_dao->addUserAsForumAdmin($project->getID(), $user->getId());
+        $this->event_manager->processEvent(new UserBecomesForumAdmin($project, $user));
+    }
+
+    private function removeForumAdministrator(Project $project, PFUser $user)
+    {
+        $this->user_permissions_dao->removeUserFromForumAdmin($project->getID(), $user->getId());
+        $this->event_manager->processEvent(new UserIsNoLongerForumAdmin($project, $user));
     }
 }

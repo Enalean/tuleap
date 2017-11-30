@@ -31,8 +31,10 @@ use Tuleap\Mediawiki\Maintenance\CleanUnused;
 use Tuleap\Mediawiki\Maintenance\CleanUnusedDao;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
 use Tuleap\project\Admin\Navigation\NavigationDropdownQuickLinksCollector;
+use Tuleap\Project\Admin\ProjectUGroup\UserBecomesForumAdmin;
 use Tuleap\Project\Admin\ProjectUGroup\UserBecomesProjectAdmin;
 use Tuleap\Project\Admin\ProjectUGroup\UserBecomesWikiAdmin;
+use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerForumAdmin;
 use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerProjectAdmin;
 use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerWikiAdmin;
 
@@ -106,6 +108,8 @@ class MediaWikiPlugin extends Plugin {
             $this->addHook(UserIsNoLongerProjectAdmin::NAME);
             $this->addHook(UserBecomesWikiAdmin::NAME);
             $this->addHook(UserIsNoLongerWikiAdmin::NAME);
+            $this->addHook(UserBecomesForumAdmin::NAME);
+            $this->addHook(UserIsNoLongerForumAdmin::NAME);
 
             /**
              * HACK
@@ -483,6 +487,26 @@ class MediaWikiPlugin extends Plugin {
     }
 
     public function userBecomesWikiAdmin(UserBecomesWikiAdmin $event)
+    {
+        $this->updateUserGroupMapping(
+            array(
+                'user_id'  => $event->getUser()->getId(),
+                'group_id' => $event->getProject()->getID(),
+            )
+        );
+    }
+
+    public function userIsNoLongerForumAdmin(UserIsNoLongerForumAdmin $event)
+    {
+        $this->updateUserGroupMapping(
+            array(
+                'user_id'  => $event->getUser()->getId(),
+                'group_id' => $event->getProject()->getID(),
+            )
+        );
+    }
+
+    public function userBecomesForumAdmin(UserBecomesForumAdmin $event)
     {
         $this->updateUserGroupMapping(
             array(

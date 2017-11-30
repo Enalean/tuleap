@@ -328,10 +328,8 @@ INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (4, "ugroup_p
 INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (5, "ugroup_authenticated_users_name_key", "ugroup_authenticated_users_desc_key", 100);
 INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (11, "ugroup_file_manager_admin_name_key", "ugroup_file_manager_admin_desc_key", 100);
 INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (14, "ugroup_wiki_admin_name_key", "ugroup_wiki_admin_desc_key", 100);
+INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (16, "ugroup_forum_admin_name_key", "ugroup_forum_admin_desc_key", 100);
 
--- Not used yet
--- INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (17, "forum_moderator", "Forum Moderators", 100);
---
 
 
 

@@ -337,7 +337,16 @@ function ugroup_db_get_dynamic_members(
     } else if ($ugroup_id==$GLOBALS['UGROUP_TRACKER_ADMIN']) {
         // Tracker admins
         return "(SELECT user.user_id, ".$sqlname.", user.user_name FROM artifact_perm ap, user WHERE (user.user_id = ap.user_id) and group_artifact_id=$atid AND perm_level in (2,3) AND " . $user_status . "  ORDER BY ".$sqlorder.")";
-    } 
+    } else if ((int) $ugroup_id === ProjectUGroup::FORUM_ADMIN) {
+        // Forum admins
+        return "(SELECT user.user_id, $sqlname, user.user_name
+                    FROM user, user_group ug
+                    WHERE user.user_id = ug.user_id
+                    AND ug.group_id = $group_id
+                    AND forum_flags = '2'
+                    AND " . $user_status . "
+                    $having_keyword ORDER BY " . $sqlorder . " )";
+    }
 }
 
 /**

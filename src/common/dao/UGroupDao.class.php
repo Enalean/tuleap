@@ -86,7 +86,7 @@ class UGroupDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    function searchByGroupIdAndUGroupId($group_id, $ugroup_id) {
+    public function searchByGroupIdAndUGroupId($group_id, $ugroup_id) {
         $group_id  = $this->da->escapeInt($group_id);
         $ugroup_id = $this->da->escapeInt($ugroup_id);
         $sql = "SELECT * 
