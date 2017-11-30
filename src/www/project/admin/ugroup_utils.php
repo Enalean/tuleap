@@ -346,6 +346,15 @@ function ugroup_db_get_dynamic_members(
                     AND forum_flags = '2'
                     AND " . $user_status . "
                     $having_keyword ORDER BY " . $sqlorder . " )";
+    } else if ((int) $ugroup_id === ProjectUGroup::NEWS_WRITER) {
+        // News writer
+        return "(SELECT user.user_id, $sqlname, user.user_name
+                    FROM user, user_group ug
+                    WHERE user.user_id = ug.user_id
+                    AND ug.group_id = $group_id
+                    AND ug.news_flags = '1'
+                    AND " . $user_status . "
+                    $having_keyword ORDER BY " . $sqlorder . " )";
     }
 }
 

@@ -41,6 +41,7 @@ class ProjectMembersDAO extends DataAccessObject
                     user_group.admin_flags,
                     user_group.wiki_flags,
                     user_group.forum_flags,
+                    user_group.news_flags,
                     user.has_avatar,
                     IF(generic_user.group_id, 1, 0) AS is_generic,
                     GROUP_CONCAT(ugroup_user.ugroup_id) AS ugroups_ids

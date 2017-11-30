@@ -37,7 +37,7 @@ class ProjectUGroup implements User_UGroup {
     const TRACKER_ADMIN      = 15;
     const FORUM_ADMIN        = 16;
     const NEWS_ADMIN         = 17;
-    const NEWS_EDITOR        = 18;
+    const NEWS_WRITER        = 18;
     const SVN_ADMIN          = 19;
 
     const DYNAMIC_UPPER_BOUNDARY = 100;
@@ -50,7 +50,7 @@ class ProjectUGroup implements User_UGroup {
         self::TRACKER_ADMIN,
         self::FORUM_ADMIN,
         self::NEWS_ADMIN,
-        self::NEWS_EDITOR,
+        self::NEWS_WRITER,
         self::SVN_ADMIN,
     );
 
@@ -75,7 +75,7 @@ class ProjectUGroup implements User_UGroup {
         self::TRACKER_ADMIN      => 'tracker_admins',
         self::FORUM_ADMIN        => 'forum_admins',
         self::NEWS_ADMIN         => 'news_admins',
-        self::NEWS_EDITOR        => 'news_editors',
+        self::NEWS_WRITER        => 'news_editors',
         self::SVN_ADMIN          => 'svn_admins',
     );
 
@@ -460,7 +460,7 @@ class ProjectUGroup implements User_UGroup {
                 return 'forum_flags = 2';
             case self::NEWS_ADMIN:
                 return 'news_flags = 2';
-            case self::NEWS_EDITOR:
+            case self::NEWS_WRITER:
                  return 'news_flags = 1';
             default:
                 throw new UGroup_Invalid_Exception();
@@ -543,7 +543,7 @@ class ProjectUGroup implements User_UGroup {
             case self::FORUM_ADMIN:
                 return 'forum_flags = 0';
             case self::NEWS_ADMIN:
-            case self::NEWS_EDITOR:
+            case self::NEWS_WRITER:
                  return 'news_flags = 0';
             default:
                 throw new UGroup_Invalid_Exception();

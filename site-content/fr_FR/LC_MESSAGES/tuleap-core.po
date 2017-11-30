@@ -396,6 +396,9 @@ msgstr "Nb membres"
 msgid "News"
 msgstr "Annonces"
 
+msgid "News writers"
+msgstr "Rédacteur d'annonces"
+
 msgid "No children projects"
 msgstr "Aucun projet enfant"
 

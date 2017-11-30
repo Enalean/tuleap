@@ -65,6 +65,9 @@ class DynamicUGroupMembersUpdater
             case ProjectUGroup::FORUM_ADMIN:
                 $this->addForumAdministrator($project, $user);
                 break;
+            case ProjectUGroup::NEWS_WRITER:
+                $this->addNewsEditor($project, $user);
+                break;
         }
     }
 
@@ -79,6 +82,9 @@ class DynamicUGroupMembersUpdater
                 break;
             case ProjectUGroup::FORUM_ADMIN:
                 $this->removeForumAdministrator($project, $user);
+                break;
+            case ProjectUGroup::NEWS_WRITER:
+                $this->removeNewsEditor($project, $user);
                 break;
         }
     }
@@ -130,5 +136,18 @@ class DynamicUGroupMembersUpdater
     {
         $this->user_permissions_dao->removeUserFromForumAdmin($project->getID(), $user->getId());
         $this->event_manager->processEvent(new UserIsNoLongerForumAdmin($project, $user));
+    }
+
+    private function addNewsEditor(Project $project, PFUser $user)
+    {
+        $this->ensureUserIsProjectMember($project, $user);
+        $this->user_permissions_dao->addUserAsNewsEditor($project->getID(), $user->getId());
+        $this->event_manager->processEvent(new UserBecomesNewsWriter($project, $user));
+    }
+
+    private function removeNewsEditor(Project $project, PFUser $user)
+    {
+        $this->user_permissions_dao->removeUserFromNewsEditor($project->getID(), $user->getId());
+        $this->event_manager->processEvent(new UserIsNoLongerNewsWriter($project, $user));
     }
 }

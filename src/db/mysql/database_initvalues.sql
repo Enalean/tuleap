@@ -329,6 +329,7 @@ INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (5, "ugroup_a
 INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (11, "ugroup_file_manager_admin_name_key", "ugroup_file_manager_admin_desc_key", 100);
 INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (14, "ugroup_wiki_admin_name_key", "ugroup_wiki_admin_desc_key", 100);
 INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (16, "ugroup_forum_admin_name_key", "ugroup_forum_admin_desc_key", 100);
+INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (18, "ugroup_news_writer_name_key", "ugroup_news_writer_desc_key", 100);
 
 
 
