@@ -21,9 +21,6 @@ msgstr ""
 msgid "If you choose to synchronize with a group from the directory, it will:"
 msgstr ""
 
-msgid "Link LDAP"
-msgstr ""
-
 msgid "Link with Enterprise Directory Group"
 msgstr ""
 
@@ -42,6 +39,9 @@ msgid ""
 "                      the 'Preserve members' option."
 msgstr ""
 
+msgid "Set directory group binding"
+msgstr ""
+
 msgid "Synchronize"
 msgstr ""
 
@@ -49,4 +49,8 @@ msgid "Synchronize daily"
 msgstr ""
 
 msgid "Unlink group and directory"
+msgstr ""
+
+#, php-format
+msgid "Update directory group binding (%s)"
 msgstr ""

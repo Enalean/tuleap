@@ -103,11 +103,17 @@ class AdditionalModalPresenterBuilder
 
     private function getTitle(LDAPResult $ldap_group = null)
     {
-        $title = $GLOBALS['Language']->getText('plugin_ldap', 'ugroup_list_add_set_binding');
+        $title = dgettext('tuleap-ldap', "Set directory group binding");
 
         if ($ldap_group !== null) {
             $name  = $ldap_group->getCommonName();
-            $title = $GLOBALS['Language']->getText('plugin_ldap', 'ugroup_list_add_upd_binding', $name);
+            $title = sprintf(
+                dgettext(
+                    'tuleap-ldap',
+                    "Update directory group binding (%s)"
+                ),
+                $name
+            );
         }
 
         return $title;
