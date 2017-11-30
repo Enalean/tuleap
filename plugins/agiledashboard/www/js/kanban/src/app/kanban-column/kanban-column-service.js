@@ -20,11 +20,11 @@ function KanbanColumnService(
 ) {
     var self = this;
     _.extend(self, {
-        addItem             : addItem,
-        updateItemContent   : updateItemContent,
-        filterItems         : filterItems,
-        moveItem            : moveItem,
-        findAndMoveItem     : findAndMoveItem
+        addItem,
+        updateItemContent,
+        filterItems,
+        moveItem,
+        findItemAndReorderItems
     });
 
     function moveItem(
@@ -41,13 +41,12 @@ function KanbanColumnService(
         addItem(item, destination_column, compared_to);
     }
 
-    function findAndMoveItem(
-        id,
-        source_column,
-        destination_column,
-        compared_to
-    ) {
+    function findItem(id, source_column) {
         var promised_item = findItemInColumnById(id, source_column);
+
+        if (! promised_item && source_column.is_open) {
+            return;
+        }
 
         if (! promised_item) {
             promised_item = KanbanItemRestService.getItem(id).then(function(item) {
@@ -59,6 +58,16 @@ function KanbanColumnService(
                 return item;
             });
         }
+        return promised_item;
+    }
+
+    function findItemAndReorderItems(
+        id,
+        source_column,
+        destination_column,
+        ordered_destination_column_items_ids
+    ) {
+        const promised_item = findItem(id, source_column);
 
         $q.when(promised_item).then(function(item) {
             if (! item) {
@@ -71,8 +80,10 @@ function KanbanColumnService(
                 item,
                 source_column,
                 destination_column,
-                compared_to
+                null
             );
+
+            reorderItemsByItemsIds(ordered_destination_column_items_ids, destination_column);
 
             if (destination_column.is_open) {
                 self.filterItems(destination_column);
@@ -168,6 +179,17 @@ function KanbanColumnService(
         } else {
             collection.push(item);
         }
+    }
+
+    function reorderItemsByItemsIds(ordered_destination_column_items_ids, column) {
+        const content = [];
+        ordered_destination_column_items_ids.forEach((item_id) => {
+            const item = column.content.find((item) => (item.id === item_id));
+            if (item) {
+                content.push(item);
+            }
+        });
+        column.content = content;
     }
 
     function filterItems(column) {

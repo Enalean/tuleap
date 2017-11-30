@@ -474,17 +474,15 @@ describe("KanbanColumnService -", function() {
         });
     });
 
-    describe("findAndMoveItem()", function() {
-        it("Given an item id, a source column and a destination column, when I move an item from an column not loaded, then the item is recovered and moved", function() {
-            var item = {
+    describe("findItemAndReorderItems()", function() {
+        it("Given an item id, a source column and a destination column, when I move an item from a column not loaded, then the item REST route is called", function() {
+            const item = {
                 id: 50
             };
-            KanbanItemRestService.getItem.and.returnValue($q.when(item));
-
-            var source_column = {
+            const source_column = {
                 content: []
             };
-            var destination_column = {
+            const destination_column = {
                 content: [
                     { id: 46 },
                     { id: 37 },
@@ -494,10 +492,13 @@ describe("KanbanColumnService -", function() {
                 fully_loaded: false,
                 filtered_content: []
             };
+
+            KanbanItemRestService.getItem.and.returnValue($q.when(item));
+
             spyOn(KanbanColumnService, "moveItem");
             spyOn(KanbanColumnService, "filterItems");
 
-            KanbanColumnService.findAndMoveItem(50, source_column, destination_column, null);
+            KanbanColumnService.findItemAndReorderItems(50, source_column, destination_column, [46, 50, 37, 62]);
             $rootScope.$apply();
 
             expect(KanbanItemRestService.getItem).toHaveBeenCalledWith(50);
@@ -507,14 +508,14 @@ describe("KanbanColumnService -", function() {
             expect(destination_column.filtered_content).not.toBe(destination_column.content);
         });
 
-        it("Given an item id, a source column and a destination column, when I move an item from an column loaded, then the item is moved", function() {
-            var item = {
+        it("Given an item id, a source column and a destination column, when I move an item from a column loaded, then the item REST route is not called", function() {
+            const item = {
                 id: 50
             };
-            var source_column = {
+            const source_column = {
                 content: [item]
             };
-            var destination_column = {
+            const destination_column = {
                 content: [
                     { id: 46 },
                     { id: 37 },
@@ -531,13 +532,73 @@ describe("KanbanColumnService -", function() {
             spyOn(KanbanColumnService, "moveItem");
             spyOn(KanbanColumnService, "filterItems");
 
-            KanbanColumnService.findAndMoveItem(50, source_column, destination_column, null);
+            KanbanColumnService.findItemAndReorderItems(50, source_column, destination_column, [46, 50, 37, 62]);
             $rootScope.$apply();
 
             expect(KanbanColumnService.moveItem).toHaveBeenCalledWith(item, source_column, destination_column, null);
             expect(KanbanColumnService.filterItems).toHaveBeenCalledWith(destination_column);
             expect(KanbanItemRestService.getItem).not.toHaveBeenCalled();
             expect(destination_column.filtered_content).toEqual(destination_column.content);
+        });
+
+        it("Given an item id, a source column and a destination column, when I move an item from a column not loaded, then the item is added to the new", function() {
+            const item = {
+                id: 50
+            };
+            const source_column = {
+                content: [],
+                fully_loaded: false
+            };
+            const destination_column = {
+                content: [
+                    { id: 46 },
+                    { id: 37 },
+                    { id: 62 }
+                ],
+                is_open: true,
+                fully_loaded: true,
+                filtered_content: [
+                    { id: 46 },
+                    { id: 37 },
+                    { id: 62 }
+                ]
+            };
+
+            KanbanItemRestService.getItem.and.returnValue($q.when(item));
+
+            KanbanColumnService.findItemAndReorderItems(50, source_column, destination_column, [46, 50, 37, 62]);
+            $rootScope.$apply();
+            expect(source_column.content).toEqual([]);
+            expect(destination_column.content.map(item => item.id)).toEqual([46, 50, 37, 62]);
+        });
+
+        it("Given an item id, a source column and a destination column, when I move an item from a column loaded, then the item is removed from old column and added to the new", function() {
+            const item = {
+                id: 50
+            };
+            const source_column = {
+                content: [item],
+                fully_loaded: true
+            };
+            const destination_column = {
+                content: [
+                    { id: 46 },
+                    { id: 37 },
+                    { id: 62 }
+                ],
+                is_open: true,
+                fully_loaded: true,
+                filtered_content: [
+                    { id: 46 },
+                    { id: 37 },
+                    { id: 62 }
+                ]
+            };
+
+            KanbanColumnService.findItemAndReorderItems(50, source_column, destination_column, [46, 50, 37, 62]);
+            $rootScope.$apply();
+            expect(source_column.content).toEqual([]);
+            expect(destination_column.content.map(item => item.id)).toEqual([46, 50, 37, 62]);
         });
     });
 });

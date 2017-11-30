@@ -20,11 +20,13 @@
 
 namespace Tuleap\AgileDashboard\REST\v1;
 
+use EventManager;
 use Tuleap\REST\v1\OrderRepresentationBase;
 use Luracast\Restler\RestException;
 use Tracker_ArtifactFactory;
 use Tracker_Artifact_PriorityManager;
 use PFUser;
+use Tuleap\Tracker\Artifact\Event\ArtifactsReordered;
 use Tuleap\Tracker\REST\v1\ArtifactLinkUpdater;
 
 class ResourcesPatcher {
@@ -43,11 +45,21 @@ class ResourcesPatcher {
      * @var ArtifactLinkUpdater
      */
     private $artifactlink_updater;
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
 
-    public function __construct(ArtifactLinkUpdater $artifactlink_updater, Tracker_ArtifactFactory $artifact_factory, Tracker_Artifact_PriorityManager $priority_manager) {
+    public function __construct(
+        ArtifactLinkUpdater $artifactlink_updater,
+        Tracker_ArtifactFactory $artifact_factory,
+        Tracker_Artifact_PriorityManager $priority_manager,
+        EventManager $event_manager
+    ) {
         $this->artifactlink_updater = $artifactlink_updater;
         $this->artifact_factory     = $artifact_factory;
         $this->priority_manager     = $priority_manager;
+        $this->event_manager        = $event_manager;
         $this->priority_manager->enableExceptionsOnError();
     }
 
@@ -69,6 +81,8 @@ class ResourcesPatcher {
         } else {
             $this->priority_manager->moveListOfArtifactsAfter($order->ids, $order->compared_to, $context, $project_id);
         }
+
+        $this->event_manager->processEvent(new ArtifactsReordered($order->ids));
     }
 
     public function removeArtifactFromSource(PFUser $user, array $add)

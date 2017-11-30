@@ -20,11 +20,11 @@
 
 namespace Tuleap\AgileDashboard\RealTime;
 
+use BackendLogger;
 use PFUser;
 use Tracker_Artifact;
 use Tracker_Permission_PermissionsSerializer;
 use Tuleap\AgileDashboard\KanbanArtifactRightsPresenter;
-use Tuleap\AgileDashboard\REST\v1\Kanban\ItemRepresentationBuilder;
 use Tuleap\RealTime\MessageDataPresenter;
 use Tuleap\RealTime\NodeJSClient;
 
@@ -33,44 +33,38 @@ class RealTimeArtifactMessageSender
     const HTTP_CLIENT_UUID = 'HTTP_X_CLIENT_UUID';
 
     /** @var  NodeJSClient */
-    private $node_js_client;
+    protected $node_js_client;
     /**
      * @var Tracker_Permission_PermissionsSerializer
      */
-    private $permissions_serializer;
-
+    protected $permissions_serializer;
     /**
-     * @var ItemRepresentationBuilder
+     * @var BackendLogger
      */
-    private $item_representation_builder;
+    protected $backend_logger;
 
     public function __construct(
         NodeJSClient $node_js_client,
-        Tracker_Permission_PermissionsSerializer $permissions_serializer,
-        ItemRepresentationBuilder $item_representation_builder
+        Tracker_Permission_PermissionsSerializer $permissions_serializer
     ) {
-        $this->node_js_client              = $node_js_client;
-        $this->permissions_serializer      = $permissions_serializer;
-        $this->item_representation_builder = $item_representation_builder;
+        $this->node_js_client         = $node_js_client;
+        $this->permissions_serializer = $permissions_serializer;
     }
 
-    public function sendMessageArtifactCreated(PFUser $user, Tracker_Artifact $artifact, $kanban_id)
-    {
-        $item = $this->item_representation_builder->buildItemRepresentation($artifact);
-
-        $item->card_fields[] = $artifact->getTracker()->getTitleField();
-        $item->card_fields[] = $artifact->getTracker()->getStatusField();
-
-        $data    = array(
-            'artifact' => $item
-        );
+    public function sendMessage(
+        PFUser $user,
+        Tracker_Artifact $artifact,
+        array $data,
+        $event_name,
+        $room_id
+    ) {
         $rights  = new KanbanArtifactRightsPresenter($artifact, $this->permissions_serializer);
         $message = new MessageDataPresenter(
             $user->getId(),
             isset($_SERVER[self::HTTP_CLIENT_UUID]) ? $_SERVER[self::HTTP_CLIENT_UUID] : null,
-            $kanban_id,
+            $room_id,
             $rights,
-            'kanban_item:create',
+            $event_name,
             $data
         );
 

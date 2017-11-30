@@ -80,7 +80,8 @@ class BacklogItemResource extends AuthenticatedResource {
         $this->resources_patcher    = new ResourcesPatcher(
             $this->artifactlink_updater,
             $this->artifact_factory,
-            $priority_manager
+            $priority_manager,
+            \EventManager::instance()
         );
     }
 
