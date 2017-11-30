@@ -262,3 +262,11 @@ msgstr "Votre kanban est filtré, il n'y a pas de mise à jour des cartes en tem
 #: src/app/filter/filter.tpl.html
 msgid "Your kanban is filtered, there is no update of WIP."
 msgstr "Votre kanban est filtré, il n'y a pas de mise à jour du WIP."
+
+#: src/app/kanban-filtered-updated-alert/kanban-filtered-updated-alert.tpl.html
+msgid "A card has been updated by another user. As your kanban is filtered you can't see modifications."
+msgstr "Une carte a été modifiée par un autre utilisateur. Comme votre kanban est filtré, vous ne pouvez pas voir les modifications."
+
+#: src/app/kanban-filtered-updated-alert/kanban-filtered-updated-alert.tpl.html
+msgid "Please reload your page."
+msgstr "Veuillez recharger votre page."

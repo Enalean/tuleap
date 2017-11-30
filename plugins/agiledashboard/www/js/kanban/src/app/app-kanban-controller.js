@@ -110,11 +110,13 @@ function KanbanCtrl(
         loadBacklog(limit, offset);
         loadArchive(limit, offset);
         SocketService.listenNodeJSServer().then(function() {
-            if (! FilterTrackerReportService.isFiltersTrackerReportSelected()) {
+            if (FilterTrackerReportService.isFiltersTrackerReportSelected()) {
+                SocketService.listenKanbanFilteredUpdate();
+            } else {
                 SocketService.listenKanbanItemCreate();
                 SocketService.listenKanbanItemEdit();
+                SocketService.listenKanbanItemMove();
             }
-            SocketService.listenKanbanItemMove();
             SocketService.listenKanbanColumnCreate();
             SocketService.listenKanbanColumnMove();
             SocketService.listenKanbanColumnEdit();
@@ -322,17 +324,6 @@ function KanbanCtrl(
             controller  : ReportsModalController,
             controllerAs: 'reports_modal'
         });
-    }
-
-    function reloadIfSomethingIsWrong(reason) {
-        if (reason && reason.status) {
-            // the modal's controller dismissed the dialog
-            // due to an error in PATCH response and it's passed to us
-            // the failing request as a reason so that we can display
-            // the error details in the error modal.
-            // For more details, see https://angular-ui.github.io/bootstrap/#/modal
-            reload(reason);
-        }
     }
 
     function loadColumns() {
