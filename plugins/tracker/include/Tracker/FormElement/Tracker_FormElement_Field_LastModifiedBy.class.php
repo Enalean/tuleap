@@ -112,8 +112,10 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
         return '';
     }
 
-    public function getFullRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset) {
-        $value = new Tracker_FormElement_Field_List_Bind_UsersValue($changeset->getSubmittedBy());
+    public function getFullRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset)
+    {
+        $last_modified_by = $changeset->getArtifact()->getLastModifiedBy();
+        $value            = new Tracker_FormElement_Field_List_Bind_UsersValue($last_modified_by);
         if ($changeset->getArtifact()->wasLastModifiedByAnonymous()) {
             $submitted_by_value = $value->getFullRESTValueForAnonymous($changeset);
         } else {
