@@ -31,11 +31,14 @@ use Tuleap\Mediawiki\Maintenance\CleanUnused;
 use Tuleap\Mediawiki\Maintenance\CleanUnusedDao;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
 use Tuleap\project\Admin\Navigation\NavigationDropdownQuickLinksCollector;
+use Tuleap\Project\Admin\ProjectUGroup\UserAndProjectUGroupRelationshipEvent;
 use Tuleap\Project\Admin\ProjectUGroup\UserBecomesForumAdmin;
+use Tuleap\Project\Admin\ProjectUGroup\UserBecomesNewsAdministrator;
 use Tuleap\Project\Admin\ProjectUGroup\UserBecomesNewsWriter;
 use Tuleap\Project\Admin\ProjectUGroup\UserBecomesProjectAdmin;
 use Tuleap\Project\Admin\ProjectUGroup\UserBecomesWikiAdmin;
 use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerForumAdmin;
+use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerNewsAdministrator;
 use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerNewsWriter;
 use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerProjectAdmin;
 use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerWikiAdmin;
@@ -106,14 +109,16 @@ class MediaWikiPlugin extends Plugin {
             $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
             $this->addHook(User_ForgeUserGroupPermissionsFactory::GET_PERMISSION_DELEGATION);
             $this->addHook(NavigationDropdownQuickLinksCollector::NAME);
-            $this->addHook(UserBecomesProjectAdmin::NAME);
-            $this->addHook(UserIsNoLongerProjectAdmin::NAME);
-            $this->addHook(UserBecomesWikiAdmin::NAME);
-            $this->addHook(UserIsNoLongerWikiAdmin::NAME);
-            $this->addHook(UserBecomesForumAdmin::NAME);
-            $this->addHook(UserIsNoLongerForumAdmin::NAME);
-            $this->addHook(UserBecomesNewsWriter::NAME);
-            $this->addHook(UserIsNoLongerNewsWriter::NAME);
+            $this->addHook(UserBecomesProjectAdmin::NAME, 'updateUserGroupMappingFromUserAndProjectUGroupRelationshipEvent');
+            $this->addHook(UserIsNoLongerProjectAdmin::NAME, 'updateUserGroupMappingFromUserAndProjectUGroupRelationshipEvent');
+            $this->addHook(UserBecomesWikiAdmin::NAME, 'updateUserGroupMappingFromUserAndProjectUGroupRelationshipEvent');
+            $this->addHook(UserIsNoLongerWikiAdmin::NAME, 'updateUserGroupMappingFromUserAndProjectUGroupRelationshipEvent');
+            $this->addHook(UserBecomesForumAdmin::NAME, 'updateUserGroupMappingFromUserAndProjectUGroupRelationshipEvent');
+            $this->addHook(UserIsNoLongerForumAdmin::NAME, 'updateUserGroupMappingFromUserAndProjectUGroupRelationshipEvent');
+            $this->addHook(UserBecomesNewsWriter::NAME, 'updateUserGroupMappingFromUserAndProjectUGroupRelationshipEvent');
+            $this->addHook(UserIsNoLongerNewsWriter::NAME, 'updateUserGroupMappingFromUserAndProjectUGroupRelationshipEvent');
+            $this->addHook(UserBecomesNewsAdministrator::NAME, 'updateUserGroupMappingFromUserAndProjectUGroupRelationshipEvent');
+            $this->addHook(UserIsNoLongerNewsAdministrator::NAME, 'updateUserGroupMappingFromUserAndProjectUGroupRelationshipEvent');
 
             /**
              * HACK
@@ -460,77 +465,7 @@ class MediaWikiPlugin extends Plugin {
         $this->updateUserGroupMapping($params);
     }
 
-    public function userIsNoLongerProjectAdmin(UserIsNoLongerProjectAdmin $event)
-    {
-        $this->updateUserGroupMapping(
-            array(
-                'user_id'  => $event->getUser()->getId(),
-                'group_id' => $event->getProject()->getID(),
-            )
-        );
-    }
-
-    public function userBecomesProjectAdmin(UserBecomesProjectAdmin $event)
-    {
-        $this->updateUserGroupMapping(
-            array(
-                'user_id'  => $event->getUser()->getId(),
-                'group_id' => $event->getProject()->getID(),
-            )
-        );
-    }
-
-    public function userIsNoLongerWikiAdmin(UserIsNoLongerWikiAdmin $event)
-    {
-        $this->updateUserGroupMapping(
-            array(
-                'user_id'  => $event->getUser()->getId(),
-                'group_id' => $event->getProject()->getID(),
-            )
-        );
-    }
-
-    public function userBecomesWikiAdmin(UserBecomesWikiAdmin $event)
-    {
-        $this->updateUserGroupMapping(
-            array(
-                'user_id'  => $event->getUser()->getId(),
-                'group_id' => $event->getProject()->getID(),
-            )
-        );
-    }
-
-    public function userIsNoLongerForumAdmin(UserIsNoLongerForumAdmin $event)
-    {
-        $this->updateUserGroupMapping(
-            array(
-                'user_id'  => $event->getUser()->getId(),
-                'group_id' => $event->getProject()->getID(),
-            )
-        );
-    }
-
-    public function userBecomesForumAdmin(UserBecomesForumAdmin $event)
-    {
-        $this->updateUserGroupMapping(
-            array(
-                'user_id'  => $event->getUser()->getId(),
-                'group_id' => $event->getProject()->getID(),
-            )
-        );
-    }
-
-    public function userBecomesNewsWriter(UserBecomesNewsWriter $event)
-    {
-        $this->updateUserGroupMapping(
-            array(
-                'user_id'  => $event->getUser()->getId(),
-                'group_id' => $event->getProject()->getID(),
-            )
-        );
-    }
-
-    public function userIsNoLongerNewsWriter(UserIsNoLongerNewsWriter $event)
+    public function updateUserGroupMappingFromUserAndProjectUGroupRelationshipEvent(UserAndProjectUGroupRelationshipEvent $event)
     {
         $this->updateUserGroupMapping(
             array(
