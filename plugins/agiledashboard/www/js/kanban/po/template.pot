@@ -4,6 +4,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Project-Id-Version: \n"
 
+#: src/app/kanban-filtered-updated-alert/kanban-filtered-updated-alert.tpl.html
+msgid "A card has been updated by another user. As your kanban is filtered you can't see modifications."
+msgstr ""
+
 #: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Add"
 msgstr ""
@@ -93,10 +97,6 @@ msgstr ""
 msgid "Expand/collapse the card"
 msgstr ""
 
-#: src/app/kanban.tpl.html
-msgid "Filter..."
-msgstr ""
-
 #: src/app/filter-tracker-report/filter-tracker-report.tpl.html
 msgid "Filters:"
 msgstr ""
@@ -178,6 +178,10 @@ msgstr ""
 msgid "Oh snap!"
 msgstr ""
 
+#: src/app/kanban-filtered-updated-alert/kanban-filtered-updated-alert.tpl.html
+msgid "Please reload your page."
+msgstr ""
+
 #: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Remove"
 msgstr ""
@@ -234,14 +238,10 @@ msgstr ""
 msgid "Your kanban is filtered, there is no update of cards in real time or WIP."
 msgstr ""
 
+#: src/app/kanban.tpl.html
+msgid "id, title, ..."
+msgstr ""
+
 #: src/app/reports-modal/reports-modal.tpl.html
 msgid "{{ reports_modal.kanban_label }} reports"
-msgstr ""
-
-#: src/app/kanban-filtered-updated-alert/kanban-filtered-updated-alert.tpl.html
-msgid "A card has been updated by another user. As your kanban is filtered you can't see modifications."
-msgstr ""
-
-#: src/app/kanban-filtered-updated-alert/kanban-filtered-updated-alert.tpl.html
-msgid "Please reload your page."
 msgstr ""
