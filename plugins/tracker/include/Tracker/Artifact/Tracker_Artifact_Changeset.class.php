@@ -23,10 +23,8 @@ use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
+use Tuleap\Tracker\Artifact\Changeset\Notification\RecipientsManager;
 
-require_once('common/date/DateHelper.class.php');
-require_once('common/mail/MailManager.class.php');
-require_once('common/language/BaseLanguageFactory.class.php');
 require_once('utils.php');
 
 class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
@@ -776,6 +774,14 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
         return $config_notification_assignedto->isAssignedToSubjectEnabled($this->getTracker());
     }
 
+    protected function getRecipientsManager()
+    {
+        return new RecipientsManager(
+            $this->getFormElementFactory(),
+            $this->getUserManager()
+        );
+    }
+
     /**
      * notify people
      *
@@ -793,7 +799,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
             $is_update = ! $this->getArtifact()->isFirstChangeset($this);
 
             // 1. Get the recipients list
-            $recipients = $this->getRecipients($is_update);
+            $recipients = $this->getRecipientsManager()->getRecipients($this, $is_update);
             $logger->debug('Recipients '.implode(', ', array_keys($recipients)));
 
             // 2. Compute the body of the message + headers
@@ -836,7 +842,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
     public function buildOneMessageForMultipleRecipients(array $recipients, $is_update) {
         $messages = array();
         foreach ($recipients as $recipient => $check_perms) {
-            $user = $this->getUserFromRecipientName($recipient);
+            $user = $this->getRecipientsManager()->getUserFromRecipientName($recipient);
 
             if ($user) {
                 $ignore_perms = !$check_perms;
@@ -867,7 +873,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
         $anonymous_mail = 0;
 
         foreach ($recipients as $recipient => $check_perms) {
-            $user = $this->getUserFromRecipientName($recipient);
+            $user = $this->getRecipientsManager()->getUserFromRecipientName($recipient);
 
             if (! $user->isAnonymous()) {
                 $headers    = array_filter(array($this->getCustomReplyToHeader()));
@@ -973,33 +979,6 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
 
         return $message;
 
-    }
-
-    protected function getUserFromRecipientName($recipient_name) {
-        $um   = $this->getUserManager();
-        $user = null;
-        if ( strpos($recipient_name, '@') !== false ) {
-            //check for registered
-            $user = $um->getUserByEmail($recipient_name);
-
-            //user does not exist (not registered/mailing list) then it is considered as an anonymous
-            if ( ! $user ) {
-                // don't call $um->getUserAnonymous() as it will always return the same instance
-                // we don't want to override previous emails
-                // So create new anonymous instance by hand
-                $user = $um->getUserInstanceFromRow(
-                    array(
-                        'user_id' => 0,
-                        'email'   => $recipient_name,
-                    )
-                );
-            }
-        } else {
-            //is a login
-            $user = $um->getUserByUserName($recipient_name);
-        }
-
-        return $user;
     }
 
     /**
@@ -1120,97 +1099,6 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
         }
 
         return $filter;
-    }
-
-    public function removeRecipientsThatMayReceiveAnEmptyNotification(array &$recipients) {
-        if ($this->getComment() && ! $this->getComment()->hasEmptyBody()) {
-            return;
-        }
-
-        foreach ($recipients as $recipient => $check_perms) {
-            if ( ! $check_perms) {
-                continue;
-            }
-
-            $user = $this->getUserFromRecipientName($recipient);
-            if ( ! $user || ! $this->userCanReadAtLeastOneChangedField($user)) {
-                unset($recipients[$recipient]);
-            }
-        }
-    }
-
-    public function removeRecipientsThatHaveUnsubscribedArtifactNotification(array &$recipients) {
-        $unsubscribers = $this->getArtifact()->getUnsubscribersIds();
-
-        foreach ($recipients as $recipient => $check_perms) {
-            $user = $this->getUserFromRecipientName($recipient);
-
-            if (! $user || in_array($user->getId(), $unsubscribers)) {
-                unset($recipients[$recipient]);
-            }
-        }
-    }
-
-    private function userCanReadAtLeastOneChangedField(PFUser $user) {
-        $factory = $this->getFormElementFactory();
-
-        foreach ($this->getValues() as $field_id => $current_changeset_value) {
-            $field = $factory->getFieldById($field_id);
-            $field_is_readable = $field && $field->userCanRead($user);
-            $field_has_changed = $current_changeset_value && $current_changeset_value->hasChanged();
-            if ($field_is_readable && $field_has_changed) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Get the recipients for notification
-     *
-     * @param bool $is_update It is an update, not a new artifact
-     *
-     * @return array of [$recipient => $checkPermissions] where $recipient is a usenrame or an email and $checkPermissions is bool.
-     */
-    public function getRecipients($is_update) {
-        $factory = $this->getFormElementFactory();
-
-        // 0 Is update
-        $is_update = ! $this->getArtifact()->isFirstChangeset($this);
-
-        // 1 Get from the fields
-        $recipients = array();
-        $this->forceFetchAllValues();
-        foreach ($this->getValues() as $field_id => $current_changeset_value) {
-            if ($field = $factory->getFieldById($field_id)) {
-                if ($field->isNotificationsSupported() && $field->hasNotifications() && ($r = $field->getRecipients($current_changeset_value))) {
-                    $recipients = array_merge($recipients, $r);
-                }
-            }
-        }
-        // 2 Get from the commentators
-        $recipients = array_merge($recipients, $this->getArtifact()->getCommentators());
-        $recipients = array_values(array_unique($recipients));
-
-
-        //now force check perms for all this people
-        $tablo = array();
-        foreach($recipients as $r) {
-            $tablo[$r] = true;
-        }
-
-        // 3 Get from the global notif
-        foreach ($this->getArtifact()->getTracker()->getRecipients() as $r) {
-            if ( $r['on_updates'] == 1 || !$is_update ) {
-                foreach($r['recipients'] as $recipient) {
-                    $tablo[$recipient] = $r['check_permissions'];
-                }
-            }
-        }
-        $this->removeRecipientsThatMayReceiveAnEmptyNotification($tablo);
-        $this->removeRecipientsThatHaveUnsubscribedArtifactNotification($tablo);
-
-        return $tablo;
     }
 
     /**
