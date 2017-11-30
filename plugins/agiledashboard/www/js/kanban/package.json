@@ -6,7 +6,6 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "@uirouter/angularjs": "^1.0.5",
     "angular": "^1.6.5",
     "angular-gettext": "^2.3.10",
     "angular-jwt": "0.1.8",
