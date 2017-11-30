@@ -63,7 +63,7 @@ class DashboardWidgetPresenter
             $this->purified_custom_title = $widget->getPurifiedCustomTitle();
         }
 
-        $this->is_editable    = strlen($widget->getPreferences($this->widget_id)) !== 0;
+        $this->is_editable    = $widget->hasPreferences($this->widget_id);
         $this->has_rss        = $widget->hasRss();
         $this->rss_url        = (string) $widget->getRssUrl($widget->owner_id, $widget->owner_type);
         $this->icon           = $widget->getIcon();

@@ -63,6 +63,11 @@ abstract class HudsonJobWidget extends HudsonWidget {
         return $this->buildPreferencesForm($select_id);
     }
 
+    public function hasPreferences($widget_id)
+    {
+        return true;
+    }
+
     public function getInstallPreferences()
     {
         $select_id = 'widget-job-id';

@@ -51,6 +51,11 @@ class Widget_ImageViewer extends Widget {
             alt="' . $hp->purify($this->getTitle()) . '" /></div>';
     }
 
+    public function hasPreferences($widget_id)
+    {
+        return true;
+    }
+
     public function getPreferences($widget_id)
     {
         $purifier = Codendi_HTMLPurifier::instance();
