@@ -773,36 +773,41 @@ class LdapPlugin extends Plugin {
     function projectAdminMembersAdditionalModal(ProjectMembersAdditionalModalCollectionPresenter $collector)
     {
         if ($this->isLDAPGroupsUsageEnabled()) {
-            $projectMembersManager = $this->getLdapProjectGroupManager();
-            $project_id            = $collector->getProject()->getID();
-            $ldapGroup             = $projectMembersManager->getLdapGroupByGroupId($project_id);
+            $project_members_manager = $this->getLdapProjectGroupManager();
+            $project_id              = $collector->getProject()->getID();
+            $ldap_group              = $project_members_manager->getLdapGroupByGroupId($project_id);
 
-            if ($ldapGroup) {
-                $groupName = $ldapGroup->getCommonName();
-                $is_linked = true;
+            if ($ldap_group) {
+                $group_name = $ldap_group->getCommonName();
+                $is_linked  = true;
             } else {
-                $groupName = '';
-                $is_linked = false;
+                $group_name = '';
+                $is_linked  = false;
             }
 
-            $synchro_checked = $projectMembersManager->isProjectBindingSynchronized($project_id);
-            $bind_checked    = $projectMembersManager->doesProjectBindingKeepUsers($project_id);
+            $synchro_checked = $project_members_manager->isProjectBindingSynchronized($project_id);
+            $bind_checked    = $project_members_manager->doesProjectBindingKeepUsers($project_id);
 
             $mustache_renderer = TemplateRendererFactory::build()->getRenderer(LDAP_TEMPLATE_DIR);
 
+            $action_label = ($ldap_group)
+                ? sprintf(dgettext('tuleap-ldap', "Update directory group binding (%s)"), $group_name)
+                : dgettext('tuleap-ldap', "Set directory group binding");
+
             $modal_button = $mustache_renderer->renderToString(
                 'project-members-ldap-link-modal-button',
-                array()
+                array('label' => $action_label)
             );
 
             $modal_content = $mustache_renderer->renderToString(
                 'project-members-ldap-link-modal',
                 new LinkModalContentPresenter(
-                    $groupName,
+                    $group_name,
                     $collector->getProject(),
                     $bind_checked,
                     $synchro_checked,
                     $is_linked,
+                    $action_label,
                     $collector->getCSRF()
                 )
             );
