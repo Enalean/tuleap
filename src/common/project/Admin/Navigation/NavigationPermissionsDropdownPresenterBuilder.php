@@ -33,18 +33,24 @@ class NavigationPermissionsDropdownPresenterBuilder
 
     public function build(Project $project, $current_pane_shortname)
     {
-        $permission_links = array(
-            new NavigationDropdownItemPresenter(
-                _('User Permissions'),
-                '/project/admin/userperms.php?' . http_build_query(array(
-                    'group_id' => $project->getID()
-                ))
-            ),
-            new NavigationDropdownItemPresenter(
-                _('Permission Request'),
-                '/project/admin/permission_request.php?' . http_build_query(array(
+        $permission_links = array();
+        if ($project->usesTracker() || $project->usesSVN()) {
+            $permission_links[] = new NavigationDropdownItemPresenter(
+                _('Permissions for deprecated services'),
+                '/project/admin/userperms.php?' . http_build_query(
+                    array(
+                        'group_id' => $project->getID()
+                    )
+                )
+            );
+        }
+
+        $permission_links[] = new NavigationDropdownItemPresenter(
+            _('Permission Request'),
+            '/project/admin/permission_request.php?' . http_build_query(
+                array(
                     'group_id' => $project->getID(),
-                ))
+                )
             )
         );
 
