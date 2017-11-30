@@ -6,8 +6,11 @@
     <form method="POST"
           enctype="multipart/form-data"
           id="project-admin-user-import-form"
-          action="userimport.php"
+          action=""
     >
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="modal-import-users-label">
                 <i class="fa fa-upload tlp-modal-title-icon"></i > {{# gettext }}Import members{{/ gettext }}

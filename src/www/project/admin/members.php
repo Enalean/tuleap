@@ -91,6 +91,11 @@ $user_remover        = new UserRemover(
 $member_dao  = new ProjectMembersDAO();
 $csrf_token  = new CSRFSynchronizerToken('/project/admin/members.php?group_id=' . urlencode($group_id));
 $user_helper = new UserHelper();
+$user_importer = new UserImport(
+    $group_id,
+    $user_manager,
+    $user_helper
+);
 
 $member_controller = new ProjectMembersController(
     $member_dao,
@@ -99,7 +104,8 @@ $member_controller = new ProjectMembersController(
     $ugroup_binding,
     $user_remover,
     $event_manager,
-    $ugroup_manager
+    $ugroup_manager,
+    $user_importer
 );
 
 $router = new ProjectMembersRouter(

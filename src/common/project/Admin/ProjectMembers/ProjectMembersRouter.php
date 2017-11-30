@@ -65,6 +65,11 @@ class ProjectMembersRouter
                 $this->members_controller->removeUserFromProject($request);
                 $this->redirect($request);
                 break;
+            case 'import':
+                $this->csrf_token->check();
+                $this->members_controller->importMembers();
+                $this->redirect($request);
+                break;
             default:
                 $event = new MembersEditProcessAction(
                     $request,

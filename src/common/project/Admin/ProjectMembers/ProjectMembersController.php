@@ -26,6 +26,7 @@ namespace Tuleap\Project\Admin\ProjectMembers;
 
 use CSRFSynchronizerToken;
 use EventManager;
+use Feedback;
 use ForgeConfig;
 use HTTPRequest;
 use Project;
@@ -39,6 +40,7 @@ use Tuleap\Project\UserRemover;
 use UGroupBinding;
 use UGroupManager;
 use UserHelper;
+use UserImport;
 
 class ProjectMembersController
 {
@@ -74,6 +76,10 @@ class ProjectMembersController
      * @var UGroupManager
      */
     private $ugroup_manager;
+    /**
+     * @var UserImport
+     */
+    private $user_importer;
 
     public function __construct(
         ProjectMembersDAO     $members_dao,
@@ -82,7 +88,8 @@ class ProjectMembersController
         UGroupBinding         $user_group_bindings,
         UserRemover           $user_remover,
         EventManager          $event_manager,
-        UGroupManager         $ugroup_manager
+        UGroupManager         $ugroup_manager,
+        UserImport            $user_importer
     ) {
         $this->members_dao         = $members_dao;
         $this->csrf_token          = $csrf_token;
@@ -91,6 +98,7 @@ class ProjectMembersController
         $this->user_remover        = $user_remover;
         $this->event_manager       = $event_manager;
         $this->ugroup_manager      = $ugroup_manager;
+        $this->user_importer       = $user_importer;
     }
 
     public function display(HTTPRequest $request)
@@ -212,5 +220,19 @@ class ProjectMembersController
         }
 
         return $ugroups;
+    }
+
+    public function importMembers()
+    {
+        $import_file = $_FILES['user_filename']['tmp_name'];
+
+        if (! file_exists($import_file) || ! is_readable($import_file)) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, _('You should provide a file in entry.'));
+            return;
+        }
+
+        $user_collection = $this->user_importer->parse($import_file);
+
+        $this->user_importer->updateDB($user_collection->getUsers());
     }
 }
