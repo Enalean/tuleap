@@ -202,13 +202,13 @@ class ProjectMembersController
             );
         }
 
-        if ($member['wiki_flags'] === UserPermissionsDao::WIKI_ADMIN_FLAG) {
+        if ($member['wiki_flags'] === UserPermissionsDao::WIKI_ADMIN_FLAG && $project->usesWiki()) {
             $ugroups[] = new MinimalUGroupPresenter(
                 $this->ugroup_manager->getUGroup($project, ProjectUGroup::WIKI_ADMIN)
             );
         }
 
-        if ($member['forum_flags'] === UserPermissionsDao::FORUM_ADMIN_FLAG) {
+        if ($member['forum_flags'] === UserPermissionsDao::FORUM_ADMIN_FLAG && $project->usesForum()) {
             $ugroups[] = new MinimalUGroupPresenter(
                 $this->ugroup_manager->getUGroup($project, ProjectUGroup::FORUM_ADMIN)
             );
