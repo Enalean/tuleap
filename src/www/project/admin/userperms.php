@@ -250,9 +250,6 @@ $should_display_submit_button = false;
 
 $head .= '<th>'.$Language->getText('project_admin_userperms','user_name').'</th>';
 
-if ($project->usesCVS()) {
-    $head .= '<th>'.$Language->getText('project_admin_userperms','cvs_write').'</th>';
-}
 if ($project->usesSVN()) {
     $should_display_submit_button = true;
     $head .= '<th>'.$Language->getText('project_admin_userperms','svn').'</th>';
@@ -294,9 +291,6 @@ echo $head;
         print '<TR class="'. util_get_alt_row_color($i) .'">';
         $user_name = $hp->purify($uh->getDisplayName($row_dev['user_name'], $row_dev['realname']), CODENDI_PURIFIER_CONVERT_HTML);
         echo '<td><input type="hidden" name="update_user_'. urlencode($row_dev['user_id']) .'">'. $user_name .'</td>';
-        if ($project->usesCVS()) {
-            echo '<TD>'.$Language->getText('global','yes').'</TD>';
-        }
      // svn
         if ($project->usesSVN()) {
             $cell = '';

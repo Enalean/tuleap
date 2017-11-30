@@ -507,7 +507,6 @@ project_admin_userperms	unable_load_p	Unable to load project object
 project_admin_userperms	perm_fail_for	Permissions Failed For $1
 project_admin_userperms	perm_upd	Permissions Updated
 project_admin_userperms	user_name	User name
-project_admin_userperms	cvs_write	CVS Write
 project_admin_userperms	bug_track	Bug Tracking
 project_admin_userperms	forums	Forums
 project_admin_userperms	news	News
