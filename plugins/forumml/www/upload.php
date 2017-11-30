@@ -73,6 +73,9 @@ if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed()) {
             header("Pragma: no-cache");
             header("Cache-Control: must-revalidate, post-check=0, pre-check=0, public");
             header("Expires: 0");
+            if (ob_get_level()) {
+                ob_end_clean();
+            }
             readfile($attch['file_path']);
             exit;
         } else {
