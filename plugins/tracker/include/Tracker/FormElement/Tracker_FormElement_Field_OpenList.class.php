@@ -127,7 +127,13 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         if (isset($submitted_values[$this->id])) {
             return $this->fetchOpenList($this->toObj($submitted_values[$this->id]));
         }
-        return $this->fetchOpenList();
+        return $this->fetchOpenList($this->getDefaultValues());
+    }
+
+    private function getDefaultValues()
+    {
+        $default_values_ids = array_keys($this->getBind()->getDefaultValues());
+        return $this->getBind()->getBindValuesForIds($default_values_ids);
     }
 
      /**
@@ -239,10 +245,10 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
      * Display the html field in the admin ui
      * @return string html
      */
-    protected function fetchAdminFormElement() {
-        $no_values = array();
+    protected function fetchAdminFormElement()
+    {
         $has_name  = false;
-        return $this->fetchOpenList($no_values, $has_name);
+        return $this->fetchOpenList($this->getDefaultValues(), $has_name);
     }
 
     /**
