@@ -66,7 +66,8 @@ class Tracker_Artifact_ChangesetTest extends TuleapTestCase {
         ForgeConfig::store();
         $GLOBALS['sys_default_domain'] = 'localhost';
         ForgeConfig::set('sys_https_host', '');
-        $this->recipient_factory       = mock('Tracker_Artifact_MailGateway_RecipientFactory');
+        $this->recipient_factory  = mock('Tracker_Artifact_MailGateway_RecipientFactory');
+        $this->recipients_manager = mock('Tuleap\Tracker\Artifact\Changeset\Notification\RecipientsManager');
     }
 
     public function tearDown()
@@ -354,7 +355,8 @@ BODY;
         $user->setReturnValue('getLanguage', $userLanguage);
 
         $changeset = $this->buildChangeSet($user);
-        stub($changeset)->getUserFromRecipientName('user01')->returns($user);
+
+        stub($this->recipients_manager)->getUserFromRecipientName('user01')->returns($user);
 
         $config = stub('Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig')->isTokenBasedEmailgatewayEnabled()->returns(true);
         stub($changeset)->getMailGatewayConfig()->returns($config);
@@ -385,9 +387,9 @@ BODY;
         stub($user3)->getId()->returns(104);
 
         $changeset = $this->buildChangeSet($user1);
-        stub($changeset)->getUserFromRecipientName('user01')->returns($user1);
-        stub($changeset)->getUserFromRecipientName('user02')->returns($user2);
-        stub($changeset)->getUserFromRecipientName('user03')->returns($user3);
+        stub($this->recipients_manager)->getUserFromRecipientName('user01')->returns($user1);
+        stub($this->recipients_manager)->getUserFromRecipientName('user02')->returns($user2);
+        stub($this->recipients_manager)->getUserFromRecipientName('user03')->returns($user3);
 
         $config = stub('Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig')->isTokenBasedEmailgatewayEnabled()->returns(true);
         stub($changeset)->getMailGatewayConfig()->returns($config);
@@ -436,7 +438,8 @@ BODY;
                 'getUserFromRecipientName',
                 'getRecipientFactory',
                 'getMailGatewayConfig',
-                'isNotificationAssignedToEnabled'
+                'isNotificationAssignedToEnabled',
+                'getRecipientsManager',
             )
         );
         $changeset->setReturnValue('getUserHelper', $uh);
@@ -445,6 +448,7 @@ BODY;
         $changeset->setReturnValue('getLanguageFactory', $languageFactory);
         $changeset->setReturnValue('getRecipientFactory', $this->recipient_factory);
         $changeset->setReturnValue('isNotificationAssignedToEnabled', false);
+        $changeset->setReturnValue('getRecipientsManager', $this->recipients_manager);
 
         return $changeset;
     }
@@ -462,92 +466,6 @@ BODY;
         $this->assertPattern('%Quelle est la couleur <b> du <i> <s> cheval blanc%', $result);
         $this->assertPattern('%Summary%', $result);
 
-    }
-
-    public function itCleansUserFromRecipientsWhenUserCantReadAtLeastOneChangedField() {
-        $field1             = new MockTracker_FormElement_Field_Date();
-        $value1_previous    = new MockTracker_Artifact_ChangesetValue_Date();
-        $value1_current     = new MockTracker_Artifact_ChangesetValue_Date();
-        $dao                = new MockTracker_Artifact_Changeset_ValueDao();
-        $dar                = new MockDataAccessResult();
-        $fact               = new MockTracker_FormElementFactory();
-        $artifact           = new MockTracker_Artifact();
-        $previous_changeset = new MockTracker_Artifact_Changeset();
-        $um                 = new MockUserManager();
-        $comment            = new MockTracker_Artifact_Changeset_Comment();
-
-        $current_changeset = new Tracker_Artifact_ChangesetTestVersion();
-
-        $previous_changeset->setReturnValue('getId', 65);
-        $previous_changeset->setReturnReference('getValue', $value1_previous, array($field1));
-        $previous_changeset->setReturnReference('getUserManager', $um);
-
-        $artifact->setReturnReference('getPreviousChangeset', $previous_changeset, array(66));
-
-        $dar->setReturnValueAt(0, 'current', array('changeset_id' => 66, 'field_id' => 1, 'id' => 11, 'has_changed' => 1));
-        $dar->setReturnValue('valid', true);
-        $dar->setReturnValueAt(2, 'valid', false);
-        $dao->setReturnReference('searchById', $dar);
-
-        $fact->setReturnReference('getFieldById', $field1, array(1));
-
-        $field1->setReturnValue('getId', 1);
-        $field1->setReturnValue('getLabel', 'field1');
-        $field1->setReturnValue('userCanRead', false);
-        $field1->setReturnReference('getChangesetValue', $value1_current, array('*', 11, 1));
-
-        $value1_previous->expectNever('hasChanged');
-        $value1_current->setReturnValue('hasChanged', true);
-        $value1_current->setReturnValue('diff', 'has changed', array($value1_previous, '*'));
-
-        $comment->setReturnValue('hasEmptyBody', true);
-
-        $current_changeset->setReturnValue('getId', 66);
-        $current_changeset->setReturnReference('getValueDao', $dao);
-        $current_changeset->setReturnReference('getFormElementFactory', $fact);
-        $current_changeset->setReturnReference('getArtifact', $artifact);
-        $current_changeset->setReturnReference('getUserManager', $um);
-        $current_changeset->setReturnReference('getComment', $comment);
-
-        $recipients = array("recipient1" => true, "recipient2" => true, "recipient3" => true);
-
-        $user1 = stub('PFUser')->getUserName()->returns('recipient1');
-        $user2 = stub('PFUser')->getUserName()->returns('recipient2');
-        $user3 = stub('PFUser')->getUserName()->returns('recipient3');
-
-        $um->setReturnReference('getUserByUserName', $user1);
-        $um->setReturnReference('getUserByUserName', $user2);
-        $um->setReturnReference('getUserByUserName', $user3);
-
-        $current_changeset->removeRecipientsThatMayReceiveAnEmptyNotification($recipients);
-        $this->assertEqual($recipients, array());
-    }
-
-    public function itCleansUserFromRecipientsWhenUserHasUnsubscribedFromArtifact() {
-        $artifact          = mock('Tracker_Artifact');
-        $current_changeset = new Tracker_Artifact_ChangesetTestVersion();
-        $um                = new MockUserManager();
-        $current_changeset->setReturnReference('getUserManager', $um);
-        $current_changeset->setReturnReference('getArtifact', $artifact);
-        $recipients   = array("recipient1" => true, "recipient2" => true, "recipient3" => true);
-
-        $user1 = stub('PFUser')->getUserName()->returns('recipient1');
-        $user2 = stub('PFUser')->getUserName()->returns('recipient2');
-        $user3 = stub('PFUser')->getUserName()->returns('recipient3');
-
-        $um->setReturnReference('getUserByUserName', $user1);
-        $um->setReturnReference('getUserByUserName', $user2);
-        $um->setReturnReference('getUserByUserName', $user3);
-
-        $user1->setReturnValue('getId', 101);
-        $user2->setReturnValue('getId', 102);
-        $user3->setReturnValue('getId', 103);
-
-        $unsubscribers = array(101, 102, 103);
-        $artifact->setReturnValue('getUnsubscribersIds', $unsubscribers);
-
-        $current_changeset->removeRecipientsThatHaveUnsubscribedArtifactNotification($recipients);
-        $this->assertEqual($recipients, array());
     }
 }
 
