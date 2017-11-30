@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "39166b5bc72710f3d4c9f91a89828560",
+    "content-hash": "9228786d7deca42c9637442aa0ef7bc3",
     "packages": [
         {
             "name": "ezyang/htmlpurifier",
@@ -105,12 +105,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Enalean/mustache.php.git",
-                "reference": "6a5504e5de474406058590d8360fb272031cdf9a"
+                "reference": "56063842fd40b31be98e3e2f1523142c843a1504"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Enalean/mustache.php/zipball/6a5504e5de474406058590d8360fb272031cdf9a",
-                "reference": "6a5504e5de474406058590d8360fb272031cdf9a",
+                "url": "https://api.github.com/repos/Enalean/mustache.php/zipball/56063842fd40b31be98e3e2f1523142c843a1504",
+                "reference": "56063842fd40b31be98e3e2f1523142c843a1504",
                 "shasum": ""
             },
             "require": {
@@ -145,20 +145,20 @@
             "support": {
                 "source": "https://github.com/Enalean/mustache.php/tree/feature/strict-variables"
             },
-            "time": "2017-08-25T14:00:21+00:00"
+            "time": "2017-09-22T21:10:03+00:00"
         },
         {
             "name": "paragonie/random_compat",
-            "version": "v2.0.10",
+            "version": "v2.0.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/random_compat.git",
-                "reference": "634bae8e911eefa89c1abfbf1b66da679ac8f54d"
+                "reference": "5da4d3c796c275c55f057af5a643ae297d96b4d8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/634bae8e911eefa89c1abfbf1b66da679ac8f54d",
-                "reference": "634bae8e911eefa89c1abfbf1b66da679ac8f54d",
+                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/5da4d3c796c275c55f057af5a643ae297d96b4d8",
+                "reference": "5da4d3c796c275c55f057af5a643ae297d96b4d8",
                 "shasum": ""
             },
             "require": {
@@ -193,20 +193,20 @@
                 "pseudorandom",
                 "random"
             ],
-            "time": "2017-03-13T16:27:32+00:00"
+            "time": "2017-09-27T21:40:39+00:00"
         },
         {
             "name": "paragonie/sodium_compat",
-            "version": "v1.3.1",
+            "version": "v1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/sodium_compat.git",
-                "reference": "6b3a59ef127445564a00e261eb1e960b6292f494"
+                "reference": "9bfa05311d1851db0bbc2ad453c7083b9996b5b4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/sodium_compat/zipball/6b3a59ef127445564a00e261eb1e960b6292f494",
-                "reference": "6b3a59ef127445564a00e261eb1e960b6292f494",
+                "url": "https://api.github.com/repos/paragonie/sodium_compat/zipball/9bfa05311d1851db0bbc2ad453c7083b9996b5b4",
+                "reference": "9bfa05311d1851db0bbc2ad453c7083b9996b5b4",
                 "shasum": ""
             },
             "require": {
@@ -217,7 +217,8 @@
                 "phpunit/phpunit": "^3|^4|^5"
             },
             "suggest": {
-                "ext-libsodium": "Better performance, password hashing (Argon2i), secure memory management (memzero), and better security."
+                "ext-libsodium": "PHP < 7.0: Better performance, password hashing (Argon2i), secure memory management (memzero), and better security.",
+                "ext-sodium": "PHP >= 7.0: Better performance, password hashing (Argon2i), secure memory management (memzero), and better security."
             },
             "type": "library",
             "autoload": {
@@ -274,7 +275,7 @@
                 "secret-key cryptography",
                 "side-channel resistant"
             ],
-            "time": "2017-09-29T21:27:52+00:00"
+            "time": "2017-11-28T15:55:13+00:00"
         }
     ],
     "packages-dev": [],
