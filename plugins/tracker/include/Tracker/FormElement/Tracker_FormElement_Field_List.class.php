@@ -843,7 +843,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
                     $is_selected = isset($selected_values[$id]);
                 }
                 if ($this->userCanMakeTransition($transition_id)) {
-                    if (!$value->isHidden()) {
+                    if (! $value->isHidden() || $value === $from) {
                         $html .= $this->fetchFieldValue($value, $name, $is_selected);
                     }
                 }
