@@ -504,7 +504,6 @@ project_admin_userperms	unable_load_p	Impossible de charger l'objet projet
 project_admin_userperms	perm_fail_for	Erreur de permissions pour $1
 project_admin_userperms	perm_upd	Permissions mises à jour
 project_admin_userperms	user_name	Nom d'utilisateur
-project_admin_userperms	cvs_write	Ecriture CVS
 project_admin_userperms	bug_track	Suivi de bugs
 project_admin_userperms	forums	Forums
 project_admin_userperms	news	Annonces
