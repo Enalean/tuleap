@@ -608,7 +608,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements
      *
      * @param Tracker_Artifact_ChangesetValue_List $changeset_value The changeset
      *
-     * @return array
+     * @return string[]
      */
     public function getRecipients(Tracker_Artifact_ChangesetValue_List $changeset_value) {
         return array();

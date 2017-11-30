@@ -1293,7 +1293,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      *
      * @param Tracker_Artifact_ChangesetValue $changeset_value The changeset
      *
-     * @return array
+     * @return string[]
      */
     public function getRecipients(Tracker_Artifact_ChangesetValue $changeset_value) {
         return $this->getBind()->getRecipients($changeset_value);

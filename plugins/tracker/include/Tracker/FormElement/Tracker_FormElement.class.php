@@ -1021,7 +1021,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      *
      * @param Tracker_Artifact_ChangesetValue $changeset_value The changeset
      *
-     * @return array
+     * @return string[]
      */
     public function getRecipients(Tracker_Artifact_ChangesetValue $changeset_value) {
         return array();

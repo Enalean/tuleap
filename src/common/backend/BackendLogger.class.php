@@ -27,6 +27,17 @@ class BackendLogger implements Logger {
         $this->filepath = empty($filename) ? ForgeConfig::get('codendi_log').'/'.self::FILENAME : $filename;
     }
 
+    /**
+     * @return Logger
+     */
+    public static function getDefaultLogger()
+    {
+        return new TruncateLevelLogger(
+            new BackendLogger(),
+            ForgeConfig::get('sys_logger_level')
+        );
+    }
+
     public function getFilepath() {
         return $this->filepath;
     }
