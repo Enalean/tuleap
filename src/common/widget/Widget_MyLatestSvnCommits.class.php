@@ -126,6 +126,11 @@ class Widget_MyLatestSvnCommits extends Widget {
         return $html;
     }
 
+    public function hasPreferences($widget_id)
+    {
+        return true;
+    }
+
     public function getPreferences($widget_id)
     {
         $purifier = Codendi_HTMLPurifier::instance();

@@ -60,6 +60,11 @@ class hudson_Widget_ProjectJobsOverview extends HudsonOverviewWidget
         return $GLOBALS['Language']->getText('plugin_hudson', 'widget_description_jobsoverview');
     }
 
+    public function hasPreferences($widget_id)
+    {
+        return false;
+    }
+
     public function getContent() {
         $purifier = Codendi_HTMLPurifier::instance();
         $jobs     = $this->getJobsByGroup($this->group_id);

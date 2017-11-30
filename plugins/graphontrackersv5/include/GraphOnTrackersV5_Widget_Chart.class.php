@@ -60,6 +60,11 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget {
         return false;
     }
 
+    public function hasPreferences($widget_id)
+    {
+        return true;
+    }
+
     public function getPreferences($widget_id)
     {
         $purifier = Codendi_HTMLPurifier::instance();

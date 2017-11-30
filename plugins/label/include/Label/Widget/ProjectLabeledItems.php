@@ -127,6 +127,11 @@ class ProjectLabeledItems extends Widget
         );
     }
 
+    public function hasPreferences($widget_id)
+    {
+        return true;
+    }
+
     public function getPreferences($widget_id)
     {
         $selected_labels = $this->getProjectSelectedLabelsPresenter();

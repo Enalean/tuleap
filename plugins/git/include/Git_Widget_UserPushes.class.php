@@ -188,6 +188,11 @@ class Git_Widget_UserPushes extends Widget {
         return true;
     }
 
+    public function hasPreferences($widget_id)
+    {
+        return true;
+    }
+
     public function getPreferences($widget_id)
     {
         $purifier = Codendi_HTMLPurifier::instance();

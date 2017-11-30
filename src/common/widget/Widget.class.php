@@ -73,6 +73,11 @@ use Tuleap\Dashboard\User\UserDashboardController;
         return '';
     }
 
+    public function hasPreferences($widget_id)
+    {
+        return false;
+    }
+
     public function getPreferences($widget_id)
     {
         return '';

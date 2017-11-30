@@ -98,6 +98,11 @@ class Docman_Widget_Embedded extends Widget /* implements Visitor */ {
         return true;
     }
 
+    public function hasPreferences($widget_id)
+    {
+        return true;
+    }
+
     public function getPreferences($widget_id)
     {
         $purifier = Codendi_HTMLPurifier::instance();
