@@ -63,13 +63,9 @@ if ($request->exist('submit')) {
     while ($row_dev = db_fetch_array($res_dev)) {
 
         if($request ->exist("update_user_$row_dev[user_id]")){
-            $file_flags = "file_user_$row_dev[user_id]";
             $svn_flags  = "svn_user_$row_dev[user_id]";
-            $news_flags = "news_user_$row_dev[user_id]";
 
             $flags = array(
-                'file_flags',
-                'news_flags',
                 'svn_flags'
             );
 
@@ -157,8 +153,8 @@ $sql['select'] = "SELECT SQL_CALC_FOUND_ROWS user.user_name AS user_name,
                   user_group.patch_flags,
                   user_group.file_flags,
                   user_group.support_flags,
-                  user_group.svn_flags,
-                  user_group.news_flags";
+                  user_group.svn_flags";
+
 $sql['from']  = " FROM user,user_group ";
 $sql['where'] = " WHERE user.user_id = user_group.user_id
                     AND user_group.group_id = ". db_ei($group_id);
@@ -252,11 +248,6 @@ if ($project->usesSVN()) {
     $head .= '<th>'.$Language->getText('project_admin_userperms','svn').'</th>';
 }
 
-if ($project->usesNews()) {
-    $should_display_submit_button = true;
-    $head .= '<th>'.$Language->getText('project_admin_userperms','news').'</th>';
-}
-
 if ( $project->usesTracker()&&$at_arr ) {
     $should_display_submit_button = true;
 	for ($j = 0; $j < count($at_arr); $j++) {
@@ -291,17 +282,6 @@ echo $head;
             $cell .= '<TD><SELECT name="svn_user_'.$row_dev['user_id'].'">';
             $cell .= '<OPTION value="0"'.(($row_dev['svn_flags']==0)?" selected":"").'>'.$Language->getText('global','none');
             $cell .= '<OPTION value="2"'.(($row_dev['svn_flags']==2)?" selected":"").'>'.$Language->getText('project_admin_index','admin');
-            $cell .= '</SELECT></TD>';
-            echo $cell;
-        }
-
-        // News
-        if ($project->usesNews()) {
-            $cell = '';
-            $cell .= '<TD><SELECT name="news_user_'.$row_dev['user_id'].'">';
-            $cell .= '<OPTION value="0"'.(($row_dev['news_flags']==0)?" selected":"").'>'.$Language->getText('project_admin_userperms','read_perms');
-            $cell .= '<OPTION value="1"'.(($row_dev['news_flags']==1)?" selected":"").'>'.$Language->getText('project_admin_userperms','write_perms');
-            $cell .= '<OPTION value="2"'.(($row_dev['news_flags']==2)?" selected":"").'>'.$Language->getText('project_admin_index','admin');
             $cell .= '</SELECT></TD>';
             echo $cell;
         }
