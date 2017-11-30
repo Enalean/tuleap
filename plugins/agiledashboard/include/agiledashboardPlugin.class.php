@@ -25,6 +25,8 @@ use Tuleap\AgileDashboard\RealTime\RealTimeArtifactMessageController;
 use Tuleap\AgileDashboard\RealTime\RealTimeArtifactMessageSender;
 use Tuleap\AgileDashboard\REST\v1\Kanban\ItemRepresentationBuilder;
 use Tuleap\AgileDashboard\REST\v1\Kanban\TimeInfoFactory;
+use Tuleap\AgileDashboard\REST\v1\Kanban\TrackerReport\TrackerReportDao;
+use Tuleap\AgileDashboard\REST\v1\Kanban\TrackerReport\TrackerReportUpdater;
 use Tuleap\AgileDashboard\Semantic\Dao\SemanticDoneDao;
 use Tuleap\AgileDashboard\Semantic\SemanticDone;
 use Tuleap\BurningParrotCompatiblePageEvent;
@@ -46,6 +48,7 @@ use Tuleap\Request\CurrentPage;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 use Tuleap\Tracker\Artifact\Event\ArtifactsReordered;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\CanValueBeHiddenStatementsCollection;
+use Tuleap\Tracker\Report\Event\TrackerReportDeleted;
 use Tuleap\Tracker\Semantic\SemanticStatusCanBeDeleted;
 use Tuleap\Tracker\Semantic\SemanticStatusGetDisabledValues;
 
@@ -131,6 +134,7 @@ class AgileDashboardPlugin extends Plugin {
             $this->addHook(ArtifactCreated::NAME);
             $this->addHook(ArtifactsReordered::NAME);
             $this->addHook(TRACKER_EVENT_ARTIFACT_POST_UPDATE);
+            $this->addHook(TrackerReportDeleted::NAME);
         }
 
         if (defined('CARDWALL_BASE_URL')) {
@@ -1297,5 +1301,13 @@ class AgileDashboardPlugin extends Plugin {
                 RealTimeArtifactMessageController::EVENT_NAME_ARTIFACT_REORDERED
             );
         }
+    }
+
+    public function trackerReportDeleted(TrackerReportDeleted $event)
+    {
+        $report  = $event->getReport();
+        $updater = new TrackerReportUpdater(new TrackerReportDao());
+
+        $updater->deleteAllForReport($report);
     }
 }

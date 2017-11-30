@@ -515,6 +515,62 @@ class KanbanTest extends TestBase {
     /**
      * @depends testPOSTKanbanItemsInUnknowColmun
      */
+    public function testOPTIONSTrackerReports()
+    {
+        $response = $this->getResponse($this->client->options('kanban/'. REST_TestDataBuilder::KANBAN_ID .'/tracker_reports'));
+        $this->assertEquals(array('OPTIONS', 'PUT'), $response->getHeader('Allow')->normalize()->toArray());
+    }
+
+    public function testPUTTrackerReports()
+    {
+        $url = 'kanban/'. REST_TestDataBuilder::KANBAN_ID .'/tracker_reports';
+
+        $response = $this->getResponse($this->client->put(
+            $url,
+            null,
+            json_encode(array(
+                "tracker_report_ids" => array($this->tracker_report_id)
+            ))
+        ));
+
+        $this->assertEquals($response->getStatusCode(), 200);
+    }
+
+    public function testPUTTrackerReportsWithEmptyArray()
+    {
+        $url = 'kanban/'. REST_TestDataBuilder::KANBAN_ID .'/tracker_reports';
+
+        $response = $this->getResponse($this->client->put(
+            $url,
+            null,
+            json_encode(array(
+                "tracker_report_ids" => array()
+            ))
+        ));
+
+        $this->assertEquals($response->getStatusCode(), 200);
+    }
+
+    /**
+     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
+     * @depends testPUTTrackerReportsWithEmptyArray
+     */
+    public function testPUTTrackerReportsThrowsExceptionOnReportThatDoesNotExist()
+    {
+        $url = 'kanban/'. REST_TestDataBuilder::KANBAN_ID .'/tracker_reports';
+
+        $response = $this->getResponse($this->client->put(
+            $url,
+            null,
+            json_encode(array(
+                "tracker_report_ids" => array(-1)
+            ))
+        ));
+    }
+
+    /**
+     * @depends testPUTTrackerReportsThrowsExceptionOnReportThatDoesNotExist
+     */
     public function testDELETEKanban() {
         $response = $this->getResponse($this->client->delete('kanban/'. REST_TestDataBuilder::KANBAN_ID));
 

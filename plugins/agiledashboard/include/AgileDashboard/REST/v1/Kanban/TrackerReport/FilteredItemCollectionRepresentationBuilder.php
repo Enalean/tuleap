@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard\REST\v1\Kanban\TrackerReportFilter;
+namespace Tuleap\AgileDashboard\REST\v1\Kanban\TrackerReport;
 
 use PFUser;
 use Tracker_Report;
