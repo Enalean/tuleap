@@ -77,3 +77,9 @@
 .file-input-error {
     color: $tlp-ui-danger;
 }
+
+#import-members-spinner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

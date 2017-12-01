@@ -26,6 +26,7 @@ import { render }              from 'mustache';
 import Gettext                 from 'node-gettext';
 import french_translations     from '../../po/fr.po';
 import import_preview_template from './project-admin-member-import-preview.mustache';
+import import_spinner          from './members-import-spinner.mustache';
 
 const gettext_provider = new Gettext();
 
@@ -108,14 +109,18 @@ function isFileValid() {
 }
 
 async function uploadFile() {
-    if (! isFileValid()) {
-        const preview_section = document.getElementById('modal-import-users-preview');
-        showFileFormatError();
+    const preview_section = document.getElementById('modal-import-users-preview');
 
-        removeAllChildren(preview_section);
+    removeAllChildren(preview_section);
+
+    if (! isFileValid()) {
+        showFileFormatError();
+        disableImportButton();
 
         return;
     }
+
+    startSpinner(preview_section);
 
     hideFileFormatError();
 
@@ -159,4 +164,13 @@ function renderImportPreview(import_result) {
 
 function removeAllChildren(element) {
     [...element.children].forEach(child => child.remove());
+}
+
+function startSpinner(element) {
+    element.insertAdjacentHTML(
+        'afterbegin',
+        render(import_spinner, {
+            loading: gettext_provider.gettext("Preview loading...")
+        })
+    );
 }

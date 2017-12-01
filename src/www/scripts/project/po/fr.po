@@ -22,6 +22,9 @@ msgstr "Nom"
 msgid "Please select a file to upload"
 msgstr "Veuillez sélectionner un fichier à téléverser"
 
+msgid "Preview loading..."
+msgstr "Chargement de l'aperçu..."
+
 msgid "There isn't any new user to import"
 msgstr "Il n'y a aucun nouvel utilisateur à importer"
 
