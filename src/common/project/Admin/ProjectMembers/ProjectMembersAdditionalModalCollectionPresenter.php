@@ -37,17 +37,23 @@ class ProjectMembersAdditionalModalCollectionPresenter implements Dispatchable
      * @var Project
      */
     private $project;
+    private $csrf_token;
 
     public $modals_buttons = array();
     public $modals_content = array();
-    private $csrf_token;
+    /**
+     * @var
+     */
+    private $user_locale;
 
     public function __construct(
         Project $project,
-        CSRFSynchronizerToken $csrf_token
+        CSRFSynchronizerToken $csrf_token,
+        $user_locale
     ) {
-        $this->project    = $project;
-        $this->csrf_token = $csrf_token;
+        $this->project     = $project;
+        $this->csrf_token  = $csrf_token;
+        $this->user_locale = $user_locale;
     }
 
     public function getProject()
@@ -74,5 +80,10 @@ class ProjectMembersAdditionalModalCollectionPresenter implements Dispatchable
     public function getCSRF()
     {
         return $this->csrf_token;
+    }
+
+    public function getCurrentLocale()
+    {
+        return $this->user_locale;
     }
 }

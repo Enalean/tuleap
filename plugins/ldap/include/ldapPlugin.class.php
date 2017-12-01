@@ -808,6 +808,7 @@ class LdapPlugin extends Plugin {
                     $synchro_checked,
                     $is_linked,
                     $action_label,
+                    $collector->getCurrentLocale(),
                     $collector->getCSRF()
                 )
             );

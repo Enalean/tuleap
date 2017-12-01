@@ -41,6 +41,7 @@ class LinkModalContentPresenter
     public $is_linked;
     public $display_name;
     public $action_label;
+    public $locale;
 
     public function __construct(
         $ldap_group_name,
@@ -49,6 +50,7 @@ class LinkModalContentPresenter
         $is_synchro_daily_checked,
         $is_linked,
         $action_label,
+        $locale,
         CSRFSynchronizerToken $csrf_token
     ) {
         $this->ldap_group_name              = $ldap_group_name;
@@ -59,5 +61,6 @@ class LinkModalContentPresenter
         $this->csrf_token                   = $csrf_token;
         $this->display_name                 = NameTranslator::getUserGroupDisplayName(NameTranslator::PROJECT_MEMBERS);
         $this->action_label                 = $action_label;
+        $this->locale                       = $locale;
     }
 }
