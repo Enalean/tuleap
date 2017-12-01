@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2011 — 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 — 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -139,10 +139,11 @@ class SystemEventManager {
         //$event = constant(strtoupper($event));
         switch ($event) {
         case Event::SYSTEM_CHECK:
-            // TODO: check that there is no already existing system_check job?
-            $this->createEvent(SystemEvent::TYPE_SYSTEM_CHECK,
-                               '',
-                               SystemEvent::PRIORITY_LOW);
+            if (! $this->areThereMultipleEventsQueuedMatchingFirstParameter(Event::SYSTEM_CHECK, $params)) {
+                $this->createEvent(SystemEvent::TYPE_SYSTEM_CHECK,
+                    '',
+                    SystemEvent::PRIORITY_LOW);
+            }
             break;
         case Event::EDIT_SSH_KEYS:
             $this->createEvent(SystemEvent::TYPE_EDIT_SSH_KEYS,
