@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -98,4 +98,18 @@ $restler->addAPIClass('Explorer');
 
 $restler->addAuthenticationClass('\\Tuleap\\REST\\TokenAuthentication');
 $restler->addAuthenticationClass('\\Tuleap\\REST\\BasicAuthentication');
+
+$restler->onComplete(function() use ($restler) {
+    if ($restler->exception === null || $restler->responseCode !== 500) {
+        return;
+    }
+
+    $initial_exception = $restler->exception->getPrevious();
+    if ($initial_exception === null) {
+        return;
+    }
+    $logger = new \Tuleap\REST\RESTLogger();
+    $logger->error('Unhandled exception', $initial_exception);
+});
+
 $restler->handle();
