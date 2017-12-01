@@ -95,10 +95,19 @@
                                     {{/ is_generic }}
                                     <button type="submit"
                                             data-target-modal-id="project-admin-members-remove-{{ user_id }}"
-                                            class="tlp-table-cell-actions-button tlp-button-danger tlp-button-small tlp-button-outline project-members-delete-button"
+                                            class="tlp-table-cell-actions-button
+                                                   tlp-button-danger
+                                                   tlp-button-small
+                                                   tlp-button-outline
+                                                   {{# is_project_admin }}
+                                                       tlp-tooltip
+                                                       tlp-tooltip-left
+                                                   {{/ is_project_admin }}
+                                                   project-members-delete-button
+                                            "
                                             {{# is_project_admin }}
                                                 disabled
-                                                title="{{# gettext }}Project admins can't be removed from project. To do so, remove the admin flag in user permissions first.{{/ gettext }}"
+                                                data-tlp-tooltip="{{# gettext }}Project admins can't be removed from project. You must remove them from Project administrators group first.{{/ gettext }}"
                                             {{/ is_project_admin }}
                                     >
                                         <i class="fa fa-trash-o tlp-button-icon"></i>
