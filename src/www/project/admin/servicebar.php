@@ -124,8 +124,8 @@ if (user_is_super_user()) {
     $is_superuser=true;
 }
 
-$is_used = $request->getValidated('is_used', 'uint', false);
-$func    = $request->getValidated('func', 'string', '');
+$is_used           = $request->getValidated('is_used', 'uint', false);
+$func              = $request->getValidated('func', 'string', '');
 
 if ($func=='delete') {
     $service_id = $request->getValidated('service_id', 'uint', 0);
@@ -168,6 +168,12 @@ if (($func=='do_create')||($func=='do_update')) {
     $link        = $request->getValidated('link', 'localuri', '');
     $rank        = $request->getValidated('rank', 'int', 500);
     $is_active   = $request->getValidated('is_active', 'uint', 0);
+
+    $is_system_service = false;
+    if ($request->exist('short_name') && trim($short_name) != '') {
+        $is_system_service = true;
+    }
+
     // Sanity check
     if (!$label) {
         exit_error($Language->getText('global','error'),$Language->getText('project_admin_servicebar','label_missed'));
@@ -282,7 +288,6 @@ if ($func=='do_create') {
 }
 
 if ($func=='do_update') {
-
     $redirect_url = '/project/admin/servicebar.php?' . http_build_query(array(
         'group_id' => $group_id
     ));
@@ -308,16 +313,19 @@ if ($func=='do_update') {
 
     }
 
-    if (isset($short_name)) {
+    $update_usage = '';
+    if ($is_system_service) {
         $updatable = $service_manager->checkServiceCanBeUpdated($project, $short_name, $is_used);
 
         if (! $updatable) {
             $GLOBALS['Response']->redirect($redirect_url);
         }
+    } else {
+        $update_usage = ', is_used = '.db_ei($is_used);
     }
 
     $sql = "UPDATE service SET label='".db_es($label)."', description='".db_es($description)."', link='".db_es($link)."' ". $admin_statement .
-        ", rank='".db_ei($rank)."' $set_server_id, is_in_iframe=$is_in_iframe WHERE service_id=".db_ei($service_id);
+        ", rank='".db_ei($rank)."' $set_server_id, is_in_iframe=$is_in_iframe $update_usage WHERE service_id=".db_ei($service_id);
     $result=db_query($sql);
 
     if (!$result) {
@@ -327,8 +335,7 @@ if ($func=='do_update') {
     }
     $pm->clear($group_id);
 
-    // If this is a global service (i.e. with a shortname)...
-    if (isset($short_name)) {
+    if ($is_system_service) {
         $service_manager->toggleServiceUsage($project, $short_name, $is_used);
     }
 
