@@ -372,9 +372,6 @@ msgstr ""
 msgid "News"
 msgstr ""
 
-msgid "News writers"
-msgstr ""
-
 msgid "No children projects"
 msgstr ""
 
@@ -515,6 +512,9 @@ msgid "Remove"
 msgstr ""
 
 msgid "Remove from project"
+msgstr ""
+
+msgid "Remove from users group"
 msgstr ""
 
 msgid "Remove group member"
