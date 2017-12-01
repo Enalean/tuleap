@@ -43,27 +43,27 @@ function filterInlineTable(filter) {
     function filterTable() {
         let nb_displayed;
 
-        const body_margin = parseInt(document.body.style.marginBottom, 10),
-            search        = filter.value.toUpperCase(),
-            has_section   = target_table.querySelector(".tlp-table-cell-section");
+        const search    = filter.value.toUpperCase(),
+            has_section = target_table.querySelector(".tlp-table-cell-section");
 
         if (has_section) {
-            nb_displayed = toggleLinesWithSections(body_margin, search);
+            nb_displayed = toggleLinesWithSections(search);
         } else {
-            nb_displayed = toggleLinesWithoutSections(body_margin, search);
+            nb_displayed = toggleLinesWithoutSections(search);
         }
 
         toggleEmptyState(nb_displayed);
     }
 
-    function toggleLinesWithSections(body_margin, search) {
+    function toggleLinesWithSections(search) {
         const tbodies = target_table.querySelectorAll('tbody');
 
         let nb_total_displayed = 0,
             current_section,
             should_force_current_section_to_be_displayed;
 
-        [].forEach.call(tbodies, function (tbody) {
+
+        for (const tbody of tbodies) {
             const is_section = tbody.querySelector('.tlp-table-cell-section');
 
             if (is_section) {
@@ -75,19 +75,18 @@ function filterInlineTable(filter) {
                     tbody,
                     should_force_current_section_to_be_displayed,
                     search,
-                    body_margin,
                     current_section
                 );
             }
-        });
+        }
 
         return nb_total_displayed;
     }
 
-    function toggleLinesWithoutSections(body_margin, search) {
+    function toggleLinesWithoutSections(search) {
         const lines = target_table.querySelectorAll("tbody > tr:not(.tlp-table-empty-filter)");
 
-        return toggleLines(lines, body_margin, search);
+        return toggleLines(lines, search);
     }
 
     function toggleEmptyState(nb_displayed) {
@@ -103,10 +102,10 @@ function filterInlineTable(filter) {
     }
 }
 
-function toggleLineInSection(tbody, should_force_current_section_to_be_displayed, search, body_margin, current_section) {
-    const lines              = tbody.querySelectorAll("tr:not(.tlp-table-empty-filter)"),
-          search_term        = should_force_current_section_to_be_displayed ? reset_search_term : search,
-          nb_lines_displayed = toggleLines(lines, body_margin, search_term);
+function toggleLineInSection(tbody, should_force_current_section_to_be_displayed, search, current_section) {
+    const lines            = tbody.querySelectorAll("tr:not(.tlp-table-empty-filter)"),
+        search_term        = should_force_current_section_to_be_displayed ? reset_search_term : search,
+        nb_lines_displayed = toggleLines(lines, search_term);
 
     if (current_section) {
         if (nb_lines_displayed > 0) {
@@ -137,31 +136,24 @@ function toggleSection(current_section, search) {
 }
 
 /** @return int Number of lines that are displayed */
-function toggleLines(lines, body_margin, search) {
+function toggleLines(lines, search) {
     let last_line_displayed = null,
         nb_displayed = lines.length;
 
-    [].forEach.call(lines, function (line) {
-        let should_be_displayed = shouldTheLineBeDisplayed(line, search),
-            was_hidden          = line.classList.contains('tlp-table-row-hidden');
+    for (const line of lines) {
+        const should_be_displayed = shouldTheLineBeDisplayed(line, search);
 
         line.classList.remove('tlp-table-last-row');
 
         if (should_be_displayed) {
             line.classList.remove('tlp-table-row-hidden');
 
-            if (was_hidden) {
-                body_margin -= line.offsetHeight;
-            }
-
             last_line_displayed = line;
         } else {
-            body_margin += line.offsetHeight;
             line.classList.add('tlp-table-row-hidden');
             nb_displayed --;
         }
-        document.body.style.marginBottom = body_margin + "px";
-    });
+    }
 
     if (last_line_displayed) {
         last_line_displayed.classList.add('tlp-table-last-row');
@@ -175,10 +167,9 @@ function shouldTheLineBeDisplayed(line, search) {
 
     const filterable_cells = line.querySelectorAll(".tlp-table-cell-filterable");
 
-    for (let i = 0, n = filterable_cells.length; i < n; i ++) {
-        const cell_content = filterable_cells[i].textContent.toUpperCase();
-
-        if (cell_content.indexOf(search) !== - 1) {
+    for (const cell of filterable_cells) {
+        const cell_content = cell.textContent.toUpperCase();
+        if (cell_content.indexOf(search) !== -1) {
             should_be_displayed = true;
             break;
         }
@@ -192,12 +183,12 @@ function getTargetTable(filter) {
 
     target_table_id = filter.dataset.targetTableId;
     if (! target_table_id) {
-        throw "Filter input does not have data-target-table-id attribute";
+        throw new Error("Filter input does not have data-target-table-id attribute");
     }
 
     target_table = document.getElementById(target_table_id);
     if (! target_table) {
-        throw "Filter input attribute references an unknown table \"" + target_table_id + '"';
+        throw new Error("Filter input attribute references an unknown table \"" + target_table_id + '"');
     }
 
     return target_table;
