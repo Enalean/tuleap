@@ -544,6 +544,9 @@ msgstr "Retirer"
 msgid "Remove from project"
 msgstr "Retirer du projet"
 
+msgid "Remove from users group"
+msgstr "Supprimer du groupe"
+
 msgid "Remove group member"
 msgstr "Supprimer un membre du groupe"
 

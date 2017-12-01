@@ -514,6 +514,9 @@ msgstr ""
 msgid "Remove from project"
 msgstr ""
 
+msgid "Remove from users group"
+msgstr ""
+
 msgid "Remove group member"
 msgstr ""
 
