@@ -685,6 +685,15 @@ class ProjectTest extends ProjectBase
                 'short_name' => 'forum_admins'
             ),
             6 => array(
+                'id'         => $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_NEWS_ADMIN_ID,
+                'uri'        => 'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_NEWS_ADMIN_ID,
+                'label'      => 'News administrators',
+                'users_uri'  => 'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_NEWS_ADMIN_ID . '/users',
+                'key'        => 'ugroup_news_admin_name_key',
+                'short_name' => 'news_admins'
+
+            ),
+            7 => array(
                 'id'         => $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_NEWS_WRITER_ID,
                 'uri'        => 'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_NEWS_WRITER_ID,
                 'label'      => 'News writers',
@@ -692,7 +701,7 @@ class ProjectTest extends ProjectBase
                 'key'        => 'ugroup_news_writer_name_key',
                 'short_name' => 'news_editors'
             ),
-            7 => array(
+            8 => array(
                 'id' => (string) REST_TestDataBuilder::STATIC_UGROUP_1_ID,
                 'uri' => 'user_groups/'.REST_TestDataBuilder::STATIC_UGROUP_1_ID,
                 'label' => REST_TestDataBuilder::STATIC_UGROUP_1_LABEL,
@@ -700,7 +709,7 @@ class ProjectTest extends ProjectBase
                 'key' => REST_TestDataBuilder::STATIC_UGROUP_1_LABEL,
                 'short_name' => 'static_ugroup_1'
             ),
-            8 => array(
+            9 => array(
                 'id' => (string) REST_TestDataBuilder::STATIC_UGROUP_2_ID,
                 'uri' => 'user_groups/'.REST_TestDataBuilder::STATIC_UGROUP_2_ID,
                 'label' => REST_TestDataBuilder::STATIC_UGROUP_2_LABEL,
@@ -708,7 +717,7 @@ class ProjectTest extends ProjectBase
                 'key' => REST_TestDataBuilder::STATIC_UGROUP_2_LABEL,
                 'short_name' => 'static_ugroup_2'
             ),
-            9 => array(
+            10 => array(
                 'id' => (string) REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID,
                 'uri' => 'user_groups/'.REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID,
                 'label' => REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_LABEL,

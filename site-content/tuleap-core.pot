@@ -372,9 +372,6 @@ msgstr ""
 msgid "News"
 msgstr ""
 
-msgid "News writers"
-msgstr ""
-
 msgid "No children projects"
 msgstr ""
 
@@ -840,6 +837,11 @@ msgid ""
 msgstr ""
 
 msgid "You should provide a file in entry."
+msgstr ""
+
+msgid ""
+"You should remove user from news administrators before being able to remove "
+"him from writers."
 msgstr ""
 
 msgid ""

@@ -26,7 +26,6 @@ use Project;
 use ProjectUGroup;
 use Tuleap\Project\UserPermissionsDao;
 use UGroupBinding;
-use UGroupUserDao;
 
 class DynamicUGroupMembersUpdater
 {
@@ -68,6 +67,9 @@ class DynamicUGroupMembersUpdater
             case ProjectUGroup::NEWS_WRITER:
                 $this->addNewsEditor($project, $user);
                 break;
+            case ProjectUGroup::NEWS_ADMIN:
+                $this->addNewsAdministrator($project, $user);
+                break;
         }
     }
 
@@ -85,6 +87,9 @@ class DynamicUGroupMembersUpdater
                 break;
             case ProjectUGroup::NEWS_WRITER:
                 $this->removeNewsEditor($project, $user);
+                break;
+            case ProjectUGroup::NEWS_ADMIN:
+                $this->removeNewsAdministrator($project, $user);
                 break;
         }
     }
@@ -149,5 +154,18 @@ class DynamicUGroupMembersUpdater
     {
         $this->user_permissions_dao->removeUserFromNewsEditor($project->getID(), $user->getId());
         $this->event_manager->processEvent(new UserIsNoLongerNewsWriter($project, $user));
+    }
+
+    private function addNewsAdministrator(Project $project, PFUser $user)
+    {
+        $this->ensureUserIsProjectMember($project, $user);
+        $this->user_permissions_dao->addUserAsNewsAdmin($project->getID(), $user->getId());
+        $this->event_manager->processEvent(new UserBecomesNewsAdministrator($project, $user));
+    }
+
+    private function removeNewsAdministrator(Project $project, PFUser $user)
+    {
+        $this->user_permissions_dao->removeUserFromNewsAdmin($project->getID(), $user->getId());
+        $this->event_manager->processEvent(new UserIsNoLongerNewsAdministrator($project, $user));
     }
 }

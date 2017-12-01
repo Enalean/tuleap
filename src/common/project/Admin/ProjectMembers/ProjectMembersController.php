@@ -218,9 +218,17 @@ class ProjectMembersController
             );
         }
 
-        if ($member['news_flags'] === UserPermissionsDao::NEWS_WRITER_FLAG && $project->usesNews()) {
+        if (in_array($member['news_flags'], array(UserPermissionsDao::NEWS_WRITER_FLAG, UserPermissionsDao::NEWS_ADMIN_FLAG))
+            && $project->usesNews()
+        ) {
             $ugroups[] = new MinimalUGroupPresenter(
                 $this->ugroup_manager->getUGroup($project, ProjectUGroup::NEWS_WRITER)
+            );
+        }
+
+        if ($member['news_flags'] === UserPermissionsDao::NEWS_ADMIN_FLAG && $project->usesNews()) {
+            $ugroups[] = new MinimalUGroupPresenter(
+                $this->ugroup_manager->getUGroup($project, ProjectUGroup::NEWS_ADMIN)
             );
         }
 

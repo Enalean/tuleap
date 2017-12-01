@@ -96,18 +96,24 @@
                                             tlp-button-small
                                             tlp-button-danger
                                             tlp-button-outline
-                                            {{^ can_be_deleted }}
+                                            {{# is_the_last_project_admin }}
                                                 tlp-tooltip
                                                 tlp-tooltip-left
-                                            {{/ can_be_deleted }}
+                                            {{/ is_the_last_project_admin }}
+                                            {{# is_news_admin }}
+                                                tlp-tooltip
+                                                tlp-tooltip-left
+                                            {{/ is_news_admin }}
                                             project-admin-remove-user-from-group"
                                             data-target-modal-id="project-admin-remove-user-from-group-modal-{{ user_id }}"
-                                            {{^ can_be_deleted }}
+                                            {{# is_the_last_project_admin }}
                                                 disabled
-                                                data-tlp-tooltip="{{# gettext }}
-                                                    The last project administrator cannot be removed.
-                                                {{/ gettext }}"
-                                            {{/ can_be_deleted }}
+                                                data-tlp-tooltip="{{# gettext }} The last project administrator cannot be removed.{{/ gettext }}"
+                                            {{/ is_the_last_project_admin }}
+                                            {{# is_news_admin }}
+                                                disabled
+                                                data-tlp-tooltip="{{# gettext }} You should remove user from news administrators before being able to remove him from writers.{{/ gettext }}"
+                                            {{/ is_news_admin }}
                                         >
                                             <i class="fa fa-trash-o tlp-button-icon"></i> {{# gettext }}Delete{{/ gettext }}
                                         </button>
