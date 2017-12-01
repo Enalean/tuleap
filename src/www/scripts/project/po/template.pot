@@ -7,6 +7,9 @@ msgstr ""
 msgid "Please select a file to upload"
 msgstr ""
 
+msgid "Preview loading..."
+msgstr ""
+
 msgid "There isn't any new user to import"
 msgstr ""
 
