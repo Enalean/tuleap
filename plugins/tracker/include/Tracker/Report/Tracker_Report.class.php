@@ -24,6 +24,7 @@ use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
+use Tuleap\Tracker\Report\Event\trackerReportDeleted;
 use Tuleap\Tracker\Report\ExpertModePresenter;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parser;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
@@ -1536,7 +1537,10 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         $this->report_session->cleanNamespace();
 
         //Delete me
-        return Tracker_ReportFactory::instance()->delete($this->id);
+        Tracker_ReportFactory::instance()->delete($this->id);
+
+        $event = new TrackerReportDeleted($this);
+        EventManager::instance()->processEvent($event);
     }
 
     public function duplicate($from_report, $formElement_mapping) {

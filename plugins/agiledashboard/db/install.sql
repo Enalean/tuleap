@@ -87,6 +87,14 @@ CREATE TABLE plugin_agiledashboard_semantic_done (
   INDEX semantic_done_tracker_idx(tracker_id)
 ) ENGINE=InnoDB;
 
+DROP TABLE IF EXISTS plugin_agiledashboard_kanban_tracker_reports;
+CREATE TABLE plugin_agiledashboard_kanban_tracker_reports (
+  kanban_id INT(11) NOT NULL,
+  report_id INT(11) NOT NULL,
+  PRIMARY KEY(kanban_id, report_id),
+  INDEX kanban_tracker_reports_report_idx(report_id)
+) ENGINE=InnoDB;
+
 -- Enable service for project 100
 INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank) 
        VALUES      ( 100, 'plugin_agiledashboard:service_lbl_key', 'plugin_agiledashboard:service_desc_key', 'plugin_agiledashboard', '/plugins/agiledashboard/?group_id=$group_id', 1, 0, 'system', 152);

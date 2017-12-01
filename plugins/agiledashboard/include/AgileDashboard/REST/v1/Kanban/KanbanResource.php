@@ -32,6 +32,7 @@ use AgileDashboard_KanbanItemManager;
 use AgileDashboard_KanbanNotFoundException;
 use AgileDashboard_KanbanUserPreferences;
 use AgileDashboard_PermissionsManager;
+use AgileDashboard_UserNotAdminException;
 use AgileDashboardStatisticsAggregator;
 use DateTime;
 use EventManager;
@@ -54,6 +55,7 @@ use Tracker_FormElementFactory;
 use Tracker_NoChangeException;
 use Tracker_Permission_PermissionRetrieveAssignee;
 use Tracker_Permission_PermissionsSerializer;
+use Tracker_Report;
 use Tracker_ReportFactory;
 use Tracker_Semantic_Status;
 use Tracker_Workflow_GlobalRulesViolationException;
@@ -66,8 +68,10 @@ use Tuleap\AgileDashboard\KanbanRightsPresenter;
 use Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram\DiagramRepresentationBuilder;
 use Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram\OrderedColumnRepresentationsBuilder;
 use Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram\TooManyPointsException;
-use Tuleap\AgileDashboard\REST\v1\Kanban\TrackerReportFilter\FilteredDiagramRepresentationBuilder;
-use Tuleap\AgileDashboard\REST\v1\Kanban\TrackerReportFilter\FilteredItemCollectionRepresentationBuilder;
+use Tuleap\AgileDashboard\REST\v1\Kanban\TrackerReport\FilteredDiagramRepresentationBuilder;
+use Tuleap\AgileDashboard\REST\v1\Kanban\TrackerReport\FilteredItemCollectionRepresentationBuilder;
+use Tuleap\AgileDashboard\REST\v1\Kanban\TrackerReport\TrackerReportDao;
+use Tuleap\AgileDashboard\REST\v1\Kanban\TrackerReport\TrackerReportUpdater;
 use Tuleap\AgileDashboard\REST\v1\OrderRepresentation;
 use Tuleap\AgileDashboard\REST\v1\OrderValidator;
 use Tuleap\AgileDashboard\REST\v1\ResourcesPatcher;
@@ -78,7 +82,6 @@ use Tuleap\REST\Header;
 use Tuleap\REST\JsonDecoder;
 use Tuleap\REST\QueryParameterException;
 use Tuleap\REST\QueryParameterParser;
-use Tuleap\Tracker\Artifact\Event\ArtifactsReordered;
 use Tuleap\Tracker\Artifact\Exception\FieldValidationException;
 use Tuleap\Tracker\REST\v1\ArtifactLinkUpdater;
 use Tuleap\Tracker\REST\v1\ReportArtifactFactory;
@@ -150,6 +153,11 @@ class KanbanResource extends AuthenticatedResource
     private $diagram_builder;
     /** @var FilteredDiagramRepresentationBuilder */
     private $filtered_diagram_builder;
+
+    /**
+     * @var TrackerReportUpdater
+     */
+    private $tracker_report_updater;
 
     public function __construct()
     {
@@ -257,6 +265,8 @@ class KanbanResource extends AuthenticatedResource
             $cumulative_flow_diagram_dao,
             $ordered_column_representation_builder
         );
+
+        $this->tracker_report_updater = new TrackerReportUpdater(new TrackerReportDao());
     }
 
     /**
@@ -1390,15 +1400,83 @@ class KanbanResource extends AuthenticatedResource
         return $this->tracker_factory->getTrackerById($kanban->getTrackerId())->getGroupId();
     }
 
+    /**
+     * @return Tracker_Report
+     */
     private function getReport(PFUser $user, AgileDashboard_Kanban $kanban, $tracker_report_id)
     {
         $report = $this->report_factory->getReportById($tracker_report_id, $user->getId(), false);
+
         if ($report === null) {
             throw new RestException(404, "The report was not found");
         }
         if ($report->getTracker()->getId() !== $kanban->getTrackerId()) {
             throw new RestException(400, "The provided report does not belong to the kanban tracker");
         }
+        if (! $report->isPublic()) {
+            throw new RestException(400, "Personnal tracker reports cannot be used");
+        }
+
         return $report;
+    }
+
+    /**
+     * @url OPTIONS {id}/tracker_reports
+     */
+    public function optionsTrackerReports($id)
+    {
+        Header::allowOptionsPut();
+    }
+
+    /**
+     * Add list of report available for filters
+     *
+     * <pre>
+     * /!\ Kanban REST routes are under construction and subject to changes /!\
+     * </pre>
+     *
+     * <p>The route adds the ability to select tracker reports that could be used to filter a Kanban.</p>
+     * <br>
+     *
+     * <p>To add one or more reports to a Kanban, please use the following format:
+     * <pre>{"tracker_report_ids": [1,2,3]}</pre>
+     * </p>
+     *
+     * <p>To remove all the selected reports, please use an empty array:
+     * <pre>{"tracker_report_ids": []}</pre>
+     * </p>
+     *
+     * @url PUT {id}/tracker_reports
+     *
+     * @param int   $id                  Id of the kanban
+     * @param array $tracker_report_ids  List of selected report ids {@from body} {@type int}
+     *
+     * @throws 400
+     * @throws 403
+     * @throws 404
+     * @throws 500
+     */
+    protected function putTrackerReports($id, array $tracker_report_ids)
+    {
+        $this->checkAccess();
+
+        $this->optionsTrackerReports($id);
+
+        $current_user = $this->getCurrentUser();
+        $kanban_id    = $id;
+        $kanban       = $this->getKanban($current_user, $kanban_id);
+
+        foreach ($tracker_report_ids as $report_id) {
+            $this->getReport($current_user, $kanban, $report_id);
+        }
+
+        try {
+            $this->kanban_actions_checker->checkUserCanAdministrate($current_user, $kanban);
+            $this->tracker_report_updater->save($kanban, $tracker_report_ids);
+        } catch (AgileDashboard_UserNotAdminException $exception) {
+            throw new RestException(403, "You can't administrate this Kanban");
+        } catch (Exception $exception) {
+            throw new RestException(500, "An error occured while saving reports for Kanban");
+        }
     }
 }

@@ -20,17 +20,21 @@
 
 namespace Tuleap\AgileDashboard\REST;
 
+use REST_TestDataBuilder;
 use RestBase;
 
 class TestBase extends RestBase
 {
     protected $kanban_artifact_ids = array();
+    protected $tracker_report_id   = null;
 
     public function setUp()
     {
         parent::setUp();
 
         $this->getKanbanArtifactIds();
+
+        $this->tracker_report_id = $this->getTrackerReportId();
     }
 
     private function getKanbanArtifactIds()
@@ -39,5 +43,27 @@ class TestBase extends RestBase
             $this->kanban_tracker_id,
             $this->kanban_artifact_ids
         );
+    }
+
+    private function getTrackerReportId()
+    {
+        if ($this->tracker_report_id !== null) {
+            return $this->tracker_report_id;
+        }
+
+        $offset = 0;
+        $limit  = 1;
+        $query  = http_build_query(
+            array('limit' => $limit, 'offset' => $offset)
+        );
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->setup_client->get("trackers/$this->kanban_tracker_id/tracker_reports?$query")
+        );
+
+        $reports = $response->json();
+
+        return $reports[0]['id'];
     }
 }
