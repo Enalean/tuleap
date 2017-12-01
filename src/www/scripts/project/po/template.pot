@@ -16,3 +16,9 @@ msgstr ""
 #, javascript-format
 msgid "You are about to add <b>%s</b> in <b>%s</b> users group."
 msgstr ""
+
+#, javascript-format
+msgid ""
+"You're about to remove <b>%s</b> from this project. Please confirm your "
+"action."
+msgstr ""

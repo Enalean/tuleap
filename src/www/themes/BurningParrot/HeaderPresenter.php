@@ -20,6 +20,7 @@
 
 namespace Tuleap\Theme\BurningParrot;
 
+use PFUser;
 use ThemeVariantColor;
 use Tuleap\Layout\SidebarPresenter;
 use Tuleap\Theme\BurningParrot\Navbar\Presenter as NavbarPresenter;
@@ -90,6 +91,7 @@ class HeaderPresenter
     public $has_breadcrumbs;
 
     public function __construct(
+        PFUser $user,
         $title,
         $imgroot,
         NavbarPresenter $navbar_presenter,
@@ -105,6 +107,7 @@ class HeaderPresenter
         array $breadcrumbs,
         $motd
     ) {
+        $this->user_locale                           = $user->getLocale();
         $this->title                                 = html_entity_decode($title);
         $this->imgroot                               = $imgroot;
         $this->navbar_presenter                      = $navbar_presenter;

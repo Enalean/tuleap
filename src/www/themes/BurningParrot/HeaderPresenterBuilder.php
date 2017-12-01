@@ -91,6 +91,7 @@ class HeaderPresenterBuilder
         $color = $this->getMainColor();
 
         return new HeaderPresenter(
+            $this->current_user,
             $this->getPageTitle(),
             $this->imgroot,
             $this->navbar_presenter_builder->build(
