@@ -26,6 +26,9 @@ class GettextHelper
     const NGETTEXT  = 'ngettext';
     const DGETTEXT  = 'dgettext';
     const DNGETTEXT = 'dngettext';
+
+    private static $gettext_cache = array();
+
     /**
      * @var GettextSectionContentTransformer
      */
@@ -38,12 +41,16 @@ class GettextHelper
 
     public function gettext($text)
     {
-        $parts  = $this->splitTextInParts($text);
-        $string = $this->shift($text, $parts);
+        $translated_formatted_text = $this->getGettextValueFromCache($text);
+        if ($translated_formatted_text === null) {
+            $parts                     = $this->splitTextInParts($text);
+            $string                    = $this->shift($text, $parts);
 
-        $translated_text = gettext($string);
-
-        return $this->getFormattedText($translated_text, $parts);
+            $translated_text           = gettext($string);
+            $translated_formatted_text = $this->getFormattedText($translated_text, $parts);
+            $this->cacheGettextValue($text, $translated_formatted_text);
+        }
+        return $translated_formatted_text;
     }
 
     public function ngettext($text, \Mustache_LambdaHelper $helper)
@@ -60,13 +67,18 @@ class GettextHelper
 
     public function dgettext($text)
     {
-        $parts  = $this->splitTextInParts($text);
-        $domain = $this->shift($text, $parts);
-        $string = $this->shift($text, $parts);
+        $translated_formatted_text = $this->getGettextValueFromCache($text);
+        if ($translated_formatted_text === null) {
+            $parts  = $this->splitTextInParts($text);
+            $domain = $this->shift($text, $parts);
+            $string = $this->shift($text, $parts);
 
-        $translated_text = dgettext($domain, $string);
+            $translated_text           = dgettext($domain, $string);
+            $translated_formatted_text = $this->getFormattedText($translated_text, $parts);
+            $this->cacheGettextValue($text, $translated_formatted_text);
+        }
 
-        return $this->getFormattedText($translated_text, $parts);
+        return $translated_formatted_text;
     }
 
     public function dngettext($text, \Mustache_LambdaHelper $helper)
@@ -110,5 +122,21 @@ class GettextHelper
         }
 
         return vsprintf($translated_text, $args);
+    }
+
+    /**
+     * @return string|null
+     */
+    private function getGettextValueFromCache($text)
+    {
+        if (isset(self::$gettext_cache[$text])) {
+            return self::$gettext_cache[$text];
+        }
+        return null;
+    }
+
+    private function cacheGettextValue($text, $value)
+    {
+        self::$gettext_cache[$text] = $value;
     }
 }
