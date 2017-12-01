@@ -18,3 +18,10 @@
     rotate 4
     create 640 root root
 }
+
+/var/log/%PROJECT_NAME%/rest_api_log {
+    missingok
+    weekly
+    rotate 4
+    create 640 %APP_USER% %APP_USER%
+}
