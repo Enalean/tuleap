@@ -23,6 +23,8 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDisabler;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneEnabler;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
+use Tuleap\AgileDashboard\REST\v1\Kanban\TrackerReport\TrackerReportDao;
+use Tuleap\AgileDashboard\REST\v1\Kanban\TrackerReport\TrackerReportUpdater;
 use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
 use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
 use Tuleap\FRS\UploadedLinksDao;
@@ -226,7 +228,10 @@ class AgileDashboard_Controller extends MVC2_PluginController {
                     $this->request->getProject(),
                     $this->kanban_manager,
                     $this->tracker_factory,
-                    TrackerXmlImport::build(new XMLImportHelper(UserManager::instance()))
+                    TrackerXmlImport::build(new XMLImportHelper(UserManager::instance())),
+                    $this->kanban_factory,
+                    new TrackerReportUpdater(new TrackerReportDao()),
+                    Tracker_ReportFactory::instance()
                 )
             );
         } else {

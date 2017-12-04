@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_FirstKanbanCreator {
+use Tuleap\AgileDashboard\REST\v1\Kanban\TrackerReport\TrackerReportUpdater;
+
+class AgileDashboard_FirstKanbanCreator
+{
+    const ASSIGNED_TO_ME_REPORT = "Assigned to me";
 
     /** @var Project */
     private $project;
@@ -38,11 +42,29 @@ class AgileDashboard_FirstKanbanCreator {
     /** var string */
     private $tracker_itemname;
 
+    /**
+     * @var TrackerReportUpdater
+     */
+    private $tracker_report_updater;
+
+    /**
+     * @var AgileDashboard_KanbanFactory
+     */
+    private $kanban_factory;
+
+    /**
+     * @var Tracker_ReportFactory
+     */
+    private $report_factory;
+
     public function __construct(
         Project $project,
         AgileDashboard_KanbanManager $kanban_manager,
         TrackerFactory $tracker_factory,
-        TrackerXmlImport $xml_import
+        TrackerXmlImport $xml_import,
+        AgileDashboard_KanbanFactory $kanban_factory,
+        TrackerReportUpdater $tracker_report_updater,
+        Tracker_ReportFactory $report_factory
     ) {
         $this->project          = $project;
         $this->kanban_manager   = $kanban_manager;
@@ -50,9 +72,13 @@ class AgileDashboard_FirstKanbanCreator {
         $this->xml_import       = $xml_import;
         $this->template_path    = AGILEDASHBOARD_RESOURCE_DIR .'/Tracker_kanbantask.xml';
         $this->tracker_itemname = $this->xml_import->getTrackerItemNameFromXMLFile($this->template_path);
+        $this->tracker_report_updater = $tracker_report_updater;
+        $this->kanban_factory = $kanban_factory;
+        $this->report_factory = $report_factory;
     }
 
-    public function createFirstKanban() {
+    public function createFirstKanban(PFUser $user)
+    {
         if (! $this->isFirstKanbanNeeded()) {
             return;
         }
@@ -79,6 +105,9 @@ class AgileDashboard_FirstKanbanCreator {
             $this->warn($GLOBALS['Language']->getText('plugin_agiledashboard_first_kanban', 'internal_error'));
             return;
         }
+
+        $kanban = $this->kanban_factory->getKanban($user, $kanban_id);
+        $this->addAssignedToMeReport($tracker, $kanban);
 
         $GLOBALS['Response']->addFeedback(
             Feedback::INFO,
@@ -125,5 +154,21 @@ class AgileDashboard_FirstKanbanCreator {
         );
 
         return $is_tracker_already_created;
+    }
+
+    private function addAssignedToMeReport(Tracker $tracker, AgileDashboard_Kanban $kanban)
+    {
+        $reports = $this->report_factory->getReportsByTrackerId(
+            $tracker->getId(),
+            null
+        );
+
+        foreach ($reports as $tracker_report) {
+            if ($tracker_report->isPublic() && $tracker_report->getName() === self::ASSIGNED_TO_ME_REPORT) {
+                $this->tracker_report_updater->save($kanban, array((int) $tracker_report->getId()));
+
+                return;
+            }
+        }
     }
 }

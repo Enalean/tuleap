@@ -65,7 +65,7 @@ class AgileDashboardKanbanConfigurationUpdater {
         );
 
         if ($kanban_is_activated) {
-            $this->first_kanban_creator->createFirstKanban();
+            $this->first_kanban_creator->createFirstKanban($this->request->getCurrentUser());
         }
 
         $this->response->kanbanConfigurationUpdated();
