@@ -1,15 +1,15 @@
 import kanban_module from './app.js';
-import angular from 'angular';
+import angular       from 'angular';
 import 'angular-mocks';
 
-describe("KanbanService -", function() {
+describe("KanbanService -", () => {
     var $httpBackend,
         KanbanService,
         RestErrorService;
 
-    beforeEach(function() {
-        angular.mock.module(kanban_module, function($provide) {
-            $provide.decorator('RestErrorService', function($delegate) {
+    beforeEach(() => {
+        angular.mock.module(kanban_module, ($provide) => {
+            $provide.decorator('RestErrorService', ($delegate) => {
                 spyOn($delegate, "reload");
 
                 return $delegate;
@@ -433,6 +433,22 @@ describe("KanbanService -", function() {
                     message: 'Unauthorized'
                 }
             }));
+        });
+    });
+
+    describe("updateSelectableReports() -", () => {
+        it("Given a kanban id and an array of report ids, then a resolved promise will be returned", () => {
+            const kanban_id             = 59;
+            const selectable_report_ids = [61, 21];
+
+            $httpBackend.expectPUT('/api/v1/kanban/' + kanban_id + '/tracker_reports', {
+                tracker_report_ids: selectable_report_ids
+            }).respond(200);
+
+            const promise = KanbanService.updateSelectableReports(kanban_id, selectable_report_ids);
+            $httpBackend.flush();
+
+            expect(promise).toBeResolved();
         });
     });
 });

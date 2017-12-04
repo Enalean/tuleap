@@ -191,6 +191,24 @@
             </div>
         </div>
 
+        <h2 class="tlp-modal-subtitle edit-modal-section-header"><i class="fa fa-fw fa-filter"></i> <span translate>Tracker report filters</span></h2>
+        <div class="edit-kanban-tracker-reports">
+            <div class="tlp-form-element">
+                <select
+                    multiple
+                    ng-model="edit_modal.selectable_report_ids"
+                    ng-options="report.id as report.name for report in ::edit_modal.tracker_reports"
+                    class="tlp-select"
+                    tlp-select2="::edit_modal.select2_options"
+                    style="width: 100%;"
+                ></select>
+                <p class="tlp-text-info" translate>Select which tracker reports can be used to filter this kanban.</p>
+            </div>
+            <button class="tlp-button-primary" ng-click="::edit_modal.saveReports()">
+                <i class="tlp-button-icon fa fa-save"></i> <span translate>Save the selected reports</span>
+            </button>
+        </div>
+
         <h2 class="tlp-modal-subtitle edit-modal-section-header"><i class="fa fa-fw fa-warning"></i> <span translate>Danger zone</span></h2>
         <div class="danger-zone">
             <p class="edit-modal-text" translate>The deletion of a Kanban is irreversible. Please be certain before doing it.</p>

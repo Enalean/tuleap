@@ -89,9 +89,9 @@
         > .edit-kanban-column-label {
             max-width: 200px;
             padding: 4px 0 4px 22px;
+            overflow: hidden;
             background: url('../images/drag.png') no-repeat 5px 8px;
             text-overflow: ellipsis;
-            overflow: hidden;
         }
 
         &:hover {
@@ -117,4 +117,9 @@
 
 .edit-kanban-column-settings {
     display: flex;
+}
+
+.edit-kanban-tracker-reports {
+    margin: 0 0 $tlp-double-spacing;
+
 }

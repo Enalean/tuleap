@@ -87,4 +87,15 @@ class TrackerReportDao extends DataAccessObject
 
         return $this->update($sql);
     }
+
+    public function searchReportIdsForKanban($kanban_id)
+    {
+        $kanban_id = $this->da->escapeInt($kanban_id);
+
+        $sql = "SELECT report_id as id
+                FROM plugin_agiledashboard_kanban_tracker_reports
+                WHERE kanban_id = $kanban_id";
+
+        return $this->retrieveIds($sql);
+    }
 }

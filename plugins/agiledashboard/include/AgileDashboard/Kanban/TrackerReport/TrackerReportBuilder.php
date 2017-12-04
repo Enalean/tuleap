@@ -18,13 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard;
+namespace Tuleap\AgileDashboard\Kanban\TrackerReport;
 
 use AgileDashboard_Kanban;
-use PFUser;
 use Tracker_ReportFactory;
+use Tuleap\AgileDashboard\REST\v1\Kanban\TrackerReport\TrackerReportDao;
 
-class KanbanFiltersTrackerReportBuilder
+class TrackerReportBuilder
 {
     /**
      * @var Tracker_ReportFactory
@@ -34,33 +34,39 @@ class KanbanFiltersTrackerReportBuilder
      * @var AgileDashboard_Kanban
      */
     private $kanban;
-    /**
-     * @var PFUser
-     */
-    private $user;
+
+    /** @var TrackerReportDao */
+    private $tracker_report_dao;
 
     public function __construct(
-        PFUser $user,
         Tracker_ReportFactory $tracker_report_factory,
-        AgileDashboard_Kanban $kanban
+        AgileDashboard_Kanban $kanban,
+        TrackerReportDao $tracker_report_dao
     ) {
         $this->tracker_report_factory = $tracker_report_factory;
         $this->kanban                 = $kanban;
-        $this->user                   = $user;
+        $this->tracker_report_dao     = $tracker_report_dao;
     }
 
     public function build($selected_tracker_report_id)
     {
+        $selectable_report_ids  = $this->tracker_report_dao->searchReportIdsForKanban($this->kanban->getId());
         $filters_tracker_report = array();
-        $reports                = $this->tracker_report_factory->getReportsByTrackerId($this->kanban->getTrackerId(), $this->user->getId());
+        $reports                = $this->tracker_report_factory->getReportsByTrackerId($this->kanban->getTrackerId(), null);
         foreach ($reports as $report) {
             $filter_tracker_report = array(
-                'id'   => $report->getId(),
+                'id'   => (int) $report->getId(),
                 'name' => $report->getName()
             );
+
+            if (in_array($report->getId(), $selectable_report_ids)) {
+                $filter_tracker_report['selectable'] = true;
+            }
+
             if ($report->getId() === $selected_tracker_report_id) {
                 $filter_tracker_report['selected'] = true;
             }
+
             $filters_tracker_report[] = $filter_tracker_report;
         }
         return $filters_tracker_report;

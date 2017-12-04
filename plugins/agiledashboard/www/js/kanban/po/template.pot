@@ -190,6 +190,18 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
+#: src/app/edit-kanban/edit-kanban.tpl.html
+msgid "Save the selected reports"
+msgstr ""
+
+#: src/app/edit-kanban/edit-kanban-controller.js
+msgid "Select tracker reports"
+msgstr ""
+
+#: src/app/edit-kanban/edit-kanban.tpl.html
+msgid "Select which tracker reports can be used to filter this kanban."
+msgstr ""
+
 #: src/app/error-modal/error.tpl.html
 msgid "Show details"
 msgstr ""
@@ -216,6 +228,10 @@ msgstr ""
 
 #: src/app/kanban.tpl.html
 msgid "Toggle this column"
+msgstr ""
+
+#: src/app/edit-kanban/edit-kanban.tpl.html
+msgid "Tracker report filters"
 msgstr ""
 
 #: src/app/socket/socket-disconnect.tpl.html

@@ -7,34 +7,35 @@ FilterTrackerReportService.$inject = [
 function FilterTrackerReportService(
     SharedPropertiesService
 ) {
-    let self = this;
+    const self = this;
 
     Object.assign(self, {
-        filters_tracker_report: undefined,
-        setFiltersTrackerReport,
-        getFiltersTrackerReport,
+        tracker_reports   : [],
+        selectable_reports: [],
+
         getSelectedFilterTrackerReportId,
         isFiltersTrackerReportSelected,
+        changeSelectableReports,
         areCardsAndWIPUpdated,
         isWIPUpdated,
         areNotCardsAndWIPUpdated,
-        isNotWIPUpdated
+        isNotWIPUpdated,
+        initTrackerReports,
+        getTrackerReports() { return self.tracker_reports; },
+        getSelectableReports() { return self.selectable_reports; },
     });
 
-    function setFiltersTrackerReport(filters_tracker_report) {
-        self.filters_tracker_report = filters_tracker_report;
-    }
-
-    function getFiltersTrackerReport() {
-        return self.filters_tracker_report;
+    function initTrackerReports(tracker_reports) {
+        self.tracker_reports    = tracker_reports;
+        self.selectable_reports = self.tracker_reports.filter(report => report.selectable);
     }
 
     function getSelectedFilterTrackerReportId() {
-        if (! self.filters_tracker_report) {
+        if (self.selectable_reports.length === 0) {
             return 0;
         }
 
-        const selected_filter_tracker_report = self.filters_tracker_report.find(filter => filter.selected);
+        const selected_filter_tracker_report = self.selectable_reports.find(report => report.selected);
 
         if (selected_filter_tracker_report) {
             return parseInt(selected_filter_tracker_report.id, 10);
@@ -44,10 +45,14 @@ function FilterTrackerReportService(
     }
 
     function isFiltersTrackerReportSelected() {
-        if (! self.filters_tracker_report) {
+        if (self.selectable_reports.length === 0) {
             return false;
         }
-        return self.filters_tracker_report.some(filter => filter.selected);
+        return self.selectable_reports.some(report => report.selected);
+    }
+
+    function changeSelectableReports(report_ids) {
+        self.selectable_reports = self.tracker_reports.filter(({ id }) => report_ids.includes(id));
     }
 
     function areCardsAndWIPUpdated() {

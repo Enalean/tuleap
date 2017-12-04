@@ -23,7 +23,7 @@ namespace Tuleap\AgileDashboard\REST\v1\Kanban\TrackerReport;
 use PFUser;
 use Tracker_Report;
 use Tuleap\AgileDashboard\Kanban\ColumnIdentifier;
-use Tuleap\AgileDashboard\Kanban\TrackerReportFilter\ReportFilterFromWhereBuilder;
+use Tuleap\AgileDashboard\Kanban\TrackerReport\ReportFilterFromWhereBuilder;
 use Tuleap\AgileDashboard\REST\v1\Kanban\ItemCollectionRepresentation;
 use Tuleap\AgileDashboard\REST\v1\Kanban\KanbanItemRepresentation;
 use Tuleap\AgileDashboard\REST\v1\Kanban\TimeInfoFactory;

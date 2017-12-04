@@ -12,11 +12,13 @@ function FilterTrackerReportController(
     const self = this;
 
     Object.assign(self, {
-        filters_collection: FilterTrackerReportService.getFiltersTrackerReport(),
-        selected_item: '' + FilterTrackerReportService.getSelectedFilterTrackerReportId(),
+        selected_item: FilterTrackerReportService.getSelectedFilterTrackerReportId().toString(),
+
         changeFilter,
+        displaySelectbox,
         displayCardsAndWIPNotUpdated,
-        displayWIPNotUpdated
+        displayWIPNotUpdated,
+        getSelectableReports: FilterTrackerReportService.getSelectableReports
     });
 
     function changeFilter() {
@@ -24,7 +26,7 @@ function FilterTrackerReportController(
         let search_params = params.split('&');
         let index         = search_params.findIndex((search_param) => { return search_param.split('=')[0] === 'tracker_report_id'; });
 
-        index = index < 0 ? search_params.length: index;
+        index = index < 0 ? search_params.length : index;
 
         if (parseInt(self.selected_item, 10)) {
             search_params[index] = 'tracker_report_id=' + self.selected_item;
@@ -32,6 +34,10 @@ function FilterTrackerReportController(
             search_params.splice(index, 1);
         }
         $window.location.search = '?' + search_params.join('&');
+    }
+
+    function displaySelectbox() {
+        return (self.getSelectableReports().length > 0);
     }
 
     function displayCardsAndWIPNotUpdated() {
