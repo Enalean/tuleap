@@ -33,14 +33,21 @@ export default (element, options) => new Modal(element, options);
 
 class Modal {
     constructor(element, options = { keyboard: true }) {
-        let { keyboard = true } = options;
-        this.body_element       = document.body;
-        this.element            = element;
-        this.is_shown           = false;
-        this.keyboard           = keyboard;
+        const {
+            keyboard        = true,
+            destroy_on_hide = false
+        } = options;
+        this.body_element = document.body;
+        this.element      = element;
+        this.is_shown     = false;
+        this.options      = {
+            keyboard,
+            destroy_on_hide
+        };
         this.shown_event        = new CustomEvent(EVENT_TLP_MODAL_SHOWN, {detail: { target: this.element}});
         this.hidden_event       = new CustomEvent(EVENT_TLP_MODAL_HIDDEN, {detail: { target: this.element}});
         this.event_listeners    = [];
+        this.eventHandler       = new ModalEventHandler(this);
         this.listenCloseEvents();
     }
 
@@ -66,6 +73,10 @@ class Modal {
         reflowElement(this.element);
 
         this.removeBackdrop();
+        if (this.options.destroy_on_hide) {
+            this.destroy();
+        }
+
         setTimeout(() => {
             this.element.classList.remove(CLASS_TLP_MODAL_DISPLAY);
             this.is_shown = false;
@@ -96,27 +107,22 @@ class Modal {
     }
 
     listenCloseEvents() {
-        this.close_elements.forEach((close_element) => {
-            close_element.addEventListener('click', () => {
-                this.hide();
-            });
+        this.close_elements.forEach(close_element => {
+            close_element.addEventListener('click', this.eventHandler);
         });
 
-        if (this.keyboard) {
-            document.addEventListener('keyup', (event) => {
-                if (event.keyCode !== ESCAPE_CODE) {
-                    return;
-                }
+        if (this.options.keyboard) {
+            document.addEventListener('keyup', this.eventHandler);
+        }
+    }
 
-                let tag_name = event.target.tagName.toUpperCase();
-                if (tag_name === 'INPUT' || tag_name === 'SELECT' || tag_name === 'TEXTAREA') {
-                    return;
-                }
+    destroy() {
+        this.close_elements.forEach(close_element => {
+            close_element.removeEventListener('click', this.eventHandler);
+        });
 
-                if (this.is_shown) {
-                    this.hide();
-                }
-            });
+        if (this.options.keyboard) {
+            document.removeEventListener('keyup', this.eventHandler);
         }
     }
 
@@ -155,4 +161,37 @@ class Modal {
 
 function reflowElement(element) {
     element.offsetHeight;
+}
+
+class ModalEventHandler {
+    constructor(modal) {
+        this.modal = modal;
+    }
+
+    handleEvent(event) {
+        if (event.type === 'click') {
+            this.closeElementCallback();
+        } else if (event.type === 'keyup') {
+            this.keyupCallback(event);
+        }
+    }
+
+    closeElementCallback() {
+        this.modal.hide();
+    }
+
+    keyupCallback(event) {
+        if (event.keyCode !== ESCAPE_CODE) {
+            return;
+        }
+
+        let tag_name = event.target.tagName.toUpperCase();
+        if (tag_name === 'INPUT' || tag_name === 'SELECT' || tag_name === 'TEXTAREA') {
+            return;
+        }
+
+        if (this.modal.is_shown) {
+            this.modal.hide();
+        }
+    }
 }

@@ -2,15 +2,11 @@
       action="/project/admin/editugroup.php?group_id={{ project_id }}&ugroup_id={{ id }}"
       class="tlp-modal tlp-modal-danger"
       role="dialog"
-      id="project-admin-remove-user-from-group-modal-{{ user_id }}"
-      aria-labelledby="project-admin-remove-user-from-group-modal-title-{{ user_id }}"
+      id="project-admin-remove-user-from-group-modal"
+      aria-labelledby="project-admin-remove-user-from-group-modal-title"
 >
-    <input type="hidden" name="remove_user" value="{{ user_id }}">
-    {{# csrf_token }}
-        {{> csrf_token_input }}
-    {{/ csrf_token }}
     <div class="tlp-modal-header">
-        <h1 class="tlp-modal-title" id="project-admin-remove-user-from-group-modal-title-{{ user_id }}">
+        <h1 class="tlp-modal-title" id="project-admin-remove-user-from-group-modal-title">
             <i class="fa fa-trash-o tlp-modal-title-icon"></i>
             {{# gettext }}Remove group member{{/ gettext }}
         </h1>
@@ -19,12 +15,12 @@
         </div>
     </div>
     <div class="tlp-modal-body remove-user-from-group-modal-text">
+        <input type="hidden" name="remove_user" id="project-admin-remove-user-from-group-modal-user-id">
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
         <input type="hidden" name="action" value="edit_ugroup_members" />
-        {{# gettext }}
-            You are about to remove <b>%s</b> from <b>%s</b>. Please, confirm your action.
-            | {{ user_name }}
-            | {{ name }}
-        {{/ gettext }}
+        <p id="project-admin-remove-user-from-group-modal-description"></p>
     </div>
     <div class="tlp-modal-footer">
         <button type="reset" class="tlp-button-danger tlp-button-outline tlp-modal-action" data-dismiss="modal">
