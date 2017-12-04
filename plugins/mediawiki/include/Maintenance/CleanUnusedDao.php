@@ -26,6 +26,7 @@ use MediawikiDao;
 use Logger;
 use WrapperLogger;
 use Log_NoopLogger;
+use ForgeConfig;
 
 class CleanUnusedDao extends DataAccessObject
 {
@@ -219,10 +220,10 @@ class CleanUnusedDao extends DataAccessObject
 
     public function getAllMediawikiBasesNotReferenced()
     {
-        $db_prefix = $this->da->quoteLikeValueSuffix(MediawikiDao::DEDICATED_DATABASE_PREFIX);
+        $db_name   = ForgeConfig::get('sys_dbname');
         $sql = "SELECT SCHEMA_NAME AS 'name'
                 FROM INFORMATION_SCHEMA.SCHEMATA
-                  LEFT JOIN tuleap.plugin_mediawiki_database db ON (db.database_name = SCHEMA_NAME)
+                  LEFT JOIN $db_name.plugin_mediawiki_database db ON (db.database_name = SCHEMA_NAME)
                 WHERE SCHEMA_NAME LIKE 'plugin_mediawiki_%'
                   AND db.project_id IS NULL";
         return $this->retrieve($sql);
