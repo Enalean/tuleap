@@ -1,24 +1,28 @@
 <?php
 /**
+ * Copyright Enalean (c) 2017. All rights reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Enalean SAS. All other trademarks or names are properties of their respective
+ * owners.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('include/DataAccessObject.class.php');
 require_once('www/project/admin/ugroup_utils.php');
 
 /**
@@ -38,11 +42,14 @@ class UGroupUserDao extends DataAccessObject {
     */
     function searchUserByStaticUGroupId($ugroup_id) {
         $ugroup_id = $this->da->escapeInt($ugroup_id);
-        $sql = "SELECT * 
+        $sql_order = UserHelper::instance()->getDisplayNameSQLOrder();
+
+        $sql = "SELECT *
                 FROM ugroup_user INNER JOIN user USING(user_id) 
                 WHERE ugroup_id = $ugroup_id
                 AND user.status IN ('A', 'R')
-                ORDER BY user_name";
+                ORDER BY $sql_order";
+
         return $this->retrieve($sql);
     }
 
