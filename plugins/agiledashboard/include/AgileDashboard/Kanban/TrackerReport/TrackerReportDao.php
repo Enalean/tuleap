@@ -1,6 +1,10 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright Enalean (c) 2017. All rights reserved.
+ *
+ * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Enalean SAS. All other trademarks or names are properties of their respective
+ * owners.
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard\REST\v1\Kanban\TrackerReport;
+namespace Tuleap\AgileDashboard\Kanban\TrackerReport;
 
 use DataAccess;
 use DataAccessObject;
