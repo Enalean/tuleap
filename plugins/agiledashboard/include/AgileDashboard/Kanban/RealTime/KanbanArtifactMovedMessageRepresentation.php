@@ -20,11 +20,6 @@
 
 namespace Tuleap\AgileDashboard\Kanban\RealTime;
 
-use AgileDashboard_KanbanItemDao;
-use Tracker_Artifact;
-use Tracker_Semantic_Status;
-use Tuleap\AgileDashboard\Kanban\ColumnIdentifier;
-
 class KanbanArtifactMovedMessageRepresentation
 {
     /**

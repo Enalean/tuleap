@@ -26,7 +26,6 @@ use Tracker_Artifact_ChangesetFactory;
 use Tracker_Semantic_Status;
 use Tuleap\AgileDashboard\Kanban\ColumnIdentifier;
 use Tuleap\AgileDashboard\RealTime\RealTimeArtifactMessageException;
-use Tuleap\AgileDashboard\Widget\Kanban;
 
 class KanbanArtifactMessageBuilder
 {
@@ -43,6 +42,17 @@ class KanbanArtifactMessageBuilder
     {
         $this->kanban_item_dao   = $kanban_item_dao;
         $this->changeset_factory = $changeset_factory;
+    }
+
+    /**
+     * @param Tracker_Artifact $artifact
+     * @return KanbanArtifactUpdatedMessageRepresentation
+     */
+    public function buildArtifactUpdated(Tracker_Artifact $artifact)
+    {
+        return new KanbanArtifactUpdatedMessageRepresentation(
+            $artifact->getId()
+        );
     }
 
     /**

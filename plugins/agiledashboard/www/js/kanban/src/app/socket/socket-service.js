@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 export default SocketService;
 
 SocketService.$inject = [
@@ -14,7 +12,8 @@ SocketService.$inject = [
     'DroppedService',
     'SharedPropertiesService',
     'JWTService',
-    'KanbanFilteredUpdatedAlertService'
+    'KanbanFilteredUpdatedAlertService',
+    'KanbanItemRestService'
 ];
 
 function SocketService(
@@ -29,25 +28,26 @@ function SocketService(
     DroppedService,
     SharedPropertiesService,
     JWTService,
-    KanbanFilteredUpdatedAlertService
+    KanbanFilteredUpdatedAlertService,
+    KanbanItemRestService
 ) {
-    var self = this;
+    const self = this;
 
-    _.extend(self, {
+    Object.assign(self, {
         checkDisconnect         : {
             disconnect: false
         },
-        listenTokenExpired        : listenTokenExpired,
-        listenNodeJSServer        : listenNodeJSServer,
-        listenKanbanFilteredUpdate: listenKanbanFilteredUpdate,
-        listenKanbanItemCreate    : listenKanbanItemCreate,
-        listenKanbanItemMove      : listenKanbanItemMove,
-        listenKanbanItemEdit      : listenKanbanItemEdit,
-        listenKanbanColumnCreate  : listenKanbanColumnCreate,
-        listenKanbanColumnMove    : listenKanbanColumnMove,
-        listenKanbanColumnEdit    : listenKanbanColumnEdit,
-        listenKanbanColumnDelete  : listenKanbanColumnDelete,
-        listenKanban              : listenKanban
+        listenTokenExpired,
+        listenNodeJSServer,
+        listenKanbanFilteredUpdate,
+        listenKanbanItemCreate,
+        listenKanbanItemMove,
+        listenKanbanItemEdit,
+        listenKanbanColumnCreate,
+        listenKanbanColumnMove,
+        listenKanbanColumnEdit,
+        listenKanbanColumnDelete,
+        listenKanban
     });
 
     function listenTokenExpired() {
@@ -56,7 +56,7 @@ function SocketService(
         if (timeout < 0) {
             requestJWTToRefreshToken();
         } else {
-            $timeout(function () {
+            $timeout(() => {
                 requestJWTToRefreshToken();
             }, timeout);
         }
@@ -66,7 +66,7 @@ function SocketService(
         if (SharedPropertiesService.getNodeServerAddress()) {
             listenToDisconnect();
             listenToError();
-            return JWTService.getJWT().then(function (data) {
+            return JWTService.getJWT().then((data) => {
                 locker.put('token', data.token);
                 locker.put('token-expired-date', JWTService.getTokenExpiredDate(data.token));
                 return subscribe();
@@ -95,15 +95,15 @@ function SocketService(
     }
 
     function listenToDisconnect() {
-        SocketFactory.on('disconnect', function() {
+        SocketFactory.on('disconnect', () => {
             self.checkDisconnect.disconnect = true;
         });
     }
 
     function listenToError() {
-        SocketFactory.on('error-jwt', function(error) {
+        SocketFactory.on('error-jwt', (error) => {
             if(error === 'JWTExpired') {
-                JWTService.getJWT().then(function (data) {
+                JWTService.getJWT().then((data) => {
                     locker.put('token', data.token);
                     subscribe();
                 });
@@ -112,7 +112,7 @@ function SocketService(
     }
 
     function requestJWTToRefreshToken() {
-        JWTService.getJWT().then(function (data) {
+        JWTService.getJWT().then((data) => {
             locker.put('token', data.token);
             locker.put('token-expired-date', JWTService.getTokenExpiredDate(data.token));
             refreshToken();
@@ -138,43 +138,26 @@ function SocketService(
         /**
          * Data received looks like:
          * {
-         *   artifact: {
-         *          id: 79584,
-         *          item_name: 'kanbantask',
-         *          label: 'Documentation API',
-         *          color: 'inca_silver',
-         *          card_fields: [
-         *              {
-         *                  field_id: 15261,
-         *                  type: 'msb',
-         *                  label: 'Assigned to',
-         *                  values: [Object],
-         *                  bind_value_ids: [Object]
-         *              }
-         *          ],
-         *          timeinfo: {
-         *                      kanban: null,
-         *                      archive: null
-         *                    },
-         *          in_column: 'backlog'
-         *    }
-         *  }
-         *
+         *   artifact_id: 321
+         * }
          */
-        SocketFactory.on('kanban_item:create', function(data) {
-            _.extend(data.artifact, {
-                updating    : false,
-                is_collapsed: SharedPropertiesService.doesUserPrefersCompactCards()
+        SocketFactory.on('kanban_item:create', ({ artifact_id }) => {
+            KanbanItemRestService.getItem(artifact_id).then((new_item) => {
+                if (! new_item) {
+                    return;
+                }
+
+                Object.assign(new_item, {
+                    updating    : false,
+                    is_collapsed: SharedPropertiesService.doesUserPrefersCompactCards()
+                });
+
+                const column    = ColumnCollectionService.getColumn(new_item.in_column),
+                    compared_to = DroppedService.getComparedToBeLastItemOfColumn(column);
+
+                KanbanColumnService.addItem(new_item, column, compared_to);
+                KanbanColumnService.filterItems(column);
             });
-
-            var column      = ColumnCollectionService.getColumn(data.artifact.in_column),
-                compared_to = DroppedService.getComparedToBeLastItemOfColumn(column);
-
-            KanbanColumnService.addItem(
-                data.artifact,
-                column,
-                compared_to
-            );
         });
     }
 
@@ -189,7 +172,7 @@ function SocketService(
          *  }
          *
          */
-        SocketFactory.on('kanban_item:move', function(data) {
+        SocketFactory.on('kanban_item:move', (data) => {
             const source_column    = ColumnCollectionService.getColumn(data.from_column),
                 destination_column = ColumnCollectionService.getColumn(data.in_column);
 
@@ -205,46 +188,30 @@ function SocketService(
         /**
          * Data received looks like:
          * {
-         *   artifact: {
-         *          id: 79584,
-         *          item_name: 'kanbantask',
-         *          label: 'Documentation API',
-         *          color: 'inca_silver',
-         *          card_fields: [
-         *              {
-         *                  field_id: 15261,
-         *                  type: 'msb',
-         *                  label: 'Assigned to',
-         *                  values: [Object],
-         *                  bind_value_ids: [Object]
-         *              }
-         *          ],
-         *          timeinfo: {
-         *                      kanban: null,
-         *                      archive: null
-         *                    },
-         *          in_column: 'backlog'
-         *    }
+         *   artifact: 321
          *  }
          */
-        SocketFactory.on('kanban_item:update', function(data) {
-            var item               = ColumnCollectionService.findItemById(data.artifact.id),
-                destination_column = ColumnCollectionService.getColumn(data.artifact.in_column);
+        SocketFactory.on('kanban_item:update', ({ artifact_id }) => {
+            const item = ColumnCollectionService.findItemById(artifact_id);
 
             if (! item) {
                 return;
             }
 
-            _.extend(data.artifact, {
-                updating    : false,
-                is_collapsed: item ? item.is_collapsed : SharedPropertiesService.doesUserPrefersCompactCards()
+            KanbanItemRestService.getItem(artifact_id).then((new_item) => {
+                if (! new_item) {
+                    return;
+                }
+
+                Object.assign(new_item, {
+                    updating    : false,
+                    is_collapsed: item.is_collapsed
+                });
+
+                const destination_column = ColumnCollectionService.getColumn(new_item.in_column);
+                KanbanColumnService.updateItemContent(item, new_item);
+                KanbanColumnService.filterItems(destination_column);
             });
-
-            if (item) {
-                KanbanColumnService.updateItemContent(item, data.artifact);
-            }
-
-            KanbanColumnService.filterItems(destination_column);
         });
     }
 
@@ -265,7 +232,7 @@ function SocketService(
          *      ...
          * }
          */
-        SocketFactory.on('kanban_column:create', function (data) {
+        SocketFactory.on('kanban_column:create', (data) => {
             ColumnCollectionService.addColumn(data);
         });
     }
@@ -275,7 +242,7 @@ function SocketService(
          * Data received looks like:
          * [15333, 15334, 15335, 15338]
          */
-        SocketFactory.on('kanban_column:move', function (data) {
+        SocketFactory.on('kanban_column:move', (data) => {
             ColumnCollectionService.reorderColumns(data);
         });
     }
@@ -289,7 +256,7 @@ function SocketService(
          *      wip_limit: 0
          * }
          */
-        SocketFactory.on('kanban_column:edit', function (data) {
+        SocketFactory.on('kanban_column:edit', (data) => {
             var column = ColumnCollectionService.getColumn(data.id);
 
             if(column) {
@@ -304,7 +271,7 @@ function SocketService(
         /**
          * Data received looks like: 15233
          */
-        SocketFactory.on('kanban_column:delete', function (data) {
+        SocketFactory.on('kanban_column:delete', (data) => {
             ColumnCollectionService.removeColumn(data);
         });
     }
@@ -313,14 +280,14 @@ function SocketService(
         /**
          * Data received looks like: "New Kanban Name"
          */
-        SocketFactory.on('kanban:edit', function (data) {
+        SocketFactory.on('kanban:edit', (data) => {
             KanbanService.updateKanbanName(data);
         });
 
         /**
          * No data received
          */
-        SocketFactory.on('kanban:delete', function () {
+        SocketFactory.on('kanban:delete', () => {
             KanbanService.removeKanban();
         });
     }
