@@ -26,10 +26,21 @@ import {
     filterInlineTable
 } from 'tlp';
 
+import { escaper }                        from '../../tuleap/escaper.js';
+import { sanitize }                       from 'dompurify';
+import Gettext                            from 'node-gettext';
+import french_translations                from '../po/fr.po';
+import { sprintf }                        from 'sprintf-js';
 import { autocomplete_users_for_select2 } from '../../tuleap/autocomplete-for-select2.js';
 import { initImportMembersPreview }       from  './members-import/project-admin-members-import';
 
+const gettext_provider = new Gettext();
+
 document.addEventListener('DOMContentLoaded', () => {
+    gettext_provider.addTranslations('fr_FR', 'project-admin', french_translations);
+    gettext_provider.setTextDomain('project-admin');
+    gettext_provider.setLocale(document.body.dataset.userLocale);
+
     initProjectMembersSelect2();
     initMembersFilter();
     initModals();
@@ -37,18 +48,36 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function initModals() {
-    const buttons = document.querySelectorAll(`
-        #project-admin-members-modal-import-users-button,
-        .project-members-delete-button
-    `);
+    document.addEventListener('click', (event) => {
+        const button = event.target;
+        if (button.id === 'project-admin-members-modal-import-users-button'
+            || button.classList.contains('project-members-delete-button')
+        ) {
+            const modal = createModal(document.getElementById(button.dataset.targetModalId));
 
-    for (const button of buttons) {
-        const modal = createModal(document.getElementById(button.dataset.targetModalId));
-
-        button.addEventListener('click', () => {
+            if (button.classList.contains('project-members-delete-button')) {
+                updateDeleteModalContent(button);
+            }
             modal.show();
-        });
-    }
+        }
+    });
+}
+
+function updateDeleteModalContent(button) {
+    document.getElementById('project-admin-members-confirm-member-removal-modal-user-id').value = button.dataset.userId;
+    updateDeleteModalDescription(button);
+}
+
+function updateDeleteModalDescription(button) {
+    const modal_description = document.getElementById('project-admin-members-confirm-member-removal-modal-description');
+
+    modal_description.innerText = '';
+    modal_description.insertAdjacentHTML('afterBegin', sanitize(
+        sprintf(
+            gettext_provider.gettext("You're about to remove <b>%s</b> from this project. Please confirm your action."),
+            escaper.html(button.dataset.name)
+        )
+    ));
 }
 
 function initProjectMembersSelect2()

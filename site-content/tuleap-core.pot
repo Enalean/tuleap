@@ -847,11 +847,6 @@ msgid ""
 "him from writers."
 msgstr ""
 
-msgid ""
-"You're about to remove <b>{{ username_display }}</b> from this project. "
-"Please confirm your action."
-msgstr ""
-
 msgid "Your history is empty"
 msgstr ""
 

@@ -19,6 +19,7 @@
                                 id="project-admin-members-add-user-select"
                                 class="tlp-select tlp-select-adjusted"
                                 size="50"
+                                required
                                 data-placeholder="{{# gettext }}Member name{{/ gettext }}"
                             ></select>
                             <button class="tlp-append tlp-button-primary">
@@ -94,7 +95,9 @@
                                         </a>
                                     {{/ is_generic }}
                                     <button type="submit"
-                                            data-target-modal-id="project-admin-members-remove-{{ user_id }}"
+                                            data-target-modal-id="project-admin-members-remove"
+                                            data-user-id="{{ user_id }}"
+                                            data-name="{{ username_display }}"
                                             class="tlp-table-cell-actions-button
                                                    tlp-button-danger
                                                    tlp-button-small
@@ -113,7 +116,6 @@
                                         <i class="fa fa-trash-o tlp-button-icon"></i>
                                         {{# gettext }}Remove from project{{/ gettext }}
                                     </button>
-                                    {{> project-members-delete-modal }}
                                 </td>
                             </tr>
                         {{/ project_members_list }}
@@ -123,6 +125,8 @@
         </div>
     </section>
 </div>
+
+{{> project-members-delete-modal }}
 
 {{> modal-import-members }}
 

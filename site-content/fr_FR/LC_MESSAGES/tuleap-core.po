@@ -923,13 +923,6 @@ msgstr ""
 "Vous devez supprimer l'utilisateur des administrateurs d'annonces avant de "
 "pouvoir l'enlever des rédacteurs"
 
-msgid ""
-"You're about to remove <b>{{ username_display }}</b> from this project. "
-"Please confirm your action."
-msgstr ""
-"Vous êtes sur le point de retirer <b>{{ username_display }}</b> de ce "
-"projet. Veuillez confirmer votre action."
-
 msgid "Your history is empty"
 msgstr "Votre historique est vide"
 
