@@ -15,6 +15,17 @@
                         <h3 class="tlp-pane-title">{{ public_information_label }}</h3>
                     </div>
                     <section class="tlp-pane-section">
+                        <div class="project-admin-details-public-info-meta">
+                            <div class="tlp-property project-admin-details-public-info-meta-type">
+                                <label class="tlp-label">{{ project_type_label }}</label>
+                                <p>{{ project_type }}</p>
+                            </div>
+
+                            <div class="tlp-property">
+                                <label class="tlp-label">{{ template_project_label }}</label>
+                                <p><a href="{{ template_project_url }}">{{ template_project_name }}</a></p>
+                            </div>
+                        </div>
                         <div class="tlp-form-element">
                             <label for="form_group_name" class="tlp-label">
                                 {{ project_name_label }} <i class="fa fa-asterisk"></i>
@@ -74,16 +85,6 @@
                                 <p class="tlp-text-info">{{{ purified_field_description }}}</p>
                             </div>
                         {{/ description_fields_representation }}
-
-                        <div class="tlp-property">
-                            <label class="tlp-label">{{ project_type_label }}</label>
-                            <p>{{ project_type }}</p>
-                        </div>
-
-                        <div class="tlp-property">
-                            <label class="tlp-label">{{ template_project_label }}</label>
-                            <a href="{{ template_project_url }}">{{ template_project_name }}</a>
-                        </div>
 
                         {{# are_project_categories_used }}
                             <div class="tlp-property">
