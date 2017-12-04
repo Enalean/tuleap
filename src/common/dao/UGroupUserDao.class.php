@@ -135,7 +135,7 @@ class UGroupUserDao extends DataAccessObject {
      * @return DataAccessResult
      */
     public function searchUserByDynamicUGroupId($ugroupId, $groupId) {
-        $sql = ugroup_db_get_dynamic_members($ugroupId, false, $groupId);
+        $sql = ugroup_db_get_dynamic_members($ugroupId, false, $groupId, true);
         if (! $sql) {
             return new DataAccessResultEmpty();
         }
