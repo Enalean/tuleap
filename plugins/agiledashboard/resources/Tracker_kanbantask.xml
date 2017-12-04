@@ -178,7 +178,7 @@
         </renderer>
       </renderers>
     </report>
-    <report is_default="0">
+    <report is_default="1">
       <name>Default</name>
       <description>The system default artifact report</description>
       <criterias/>
