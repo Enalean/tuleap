@@ -25,6 +25,7 @@
 namespace Tuleap\Project\Admin\ProjectMembers;
 
 use DataAccessObject;
+use UserHelper;
 
 class ProjectMembersDAO extends DataAccessObject
 {
@@ -32,6 +33,7 @@ class ProjectMembersDAO extends DataAccessObject
     {
 
         $escaped_project_id = $this->da->escapeInt($project_id);
+        $sql_order          = UserHelper::instance()->getDisplayNameSQLOrder();
 
         $sql = "SELECT
                     user.realname,
@@ -66,7 +68,7 @@ class ProjectMembersDAO extends DataAccessObject
                         ON (user.user_id = ugroup_user.user_id)
                 WHERE user_group.group_id = $escaped_project_id
                 GROUP BY user.user_id
-                ORDER BY user.realname";
+                ORDER BY $sql_order";
 
         return $this->retrieve($sql);
     }
