@@ -27,7 +27,7 @@
                                     data-placeholder="{{# gettext }}User name{{/ gettext }}"
                                 ></select>
                                 <button
-                                        class="tlp-append tlp-button-primary"
+                                    class="tlp-append tlp-button-primary"
                                     {{# is_dynamic_group }}
                                         id="project-admin-add-dynamic-modal"
                                         data-is-dynamic-group="{{ is_dynamic_group }}"
@@ -39,14 +39,13 @@
                                     <i class="fa fa-plus tlp-button-icon" id="project-administration-add-dynamic-ugroup-icon"></i> {{# gettext }}
                                     Add member{{/ gettext }}
                                 </button>
-                                {{# is_dynamic_group}}
-                                    {{> ugroup-add-project-administrator-modal }}
-                                {{/ is_dynamic_group }}
                             </div>
-                            <input type="hidden" name="action" value="edit_ugroup_members">
-                            <input type="hidden" name="user-group" id="user-group" value="{{ name }}">
                         {{^ is_dynamic_group }}
+                            <input type="hidden" name="action" value="edit_ugroup_members">
                             </form>
+                        {{/ is_dynamic_group }}
+                        {{# is_dynamic_group}}
+                            {{> ugroup-add-project-administrator-modal }}
                         {{/ is_dynamic_group }}
                     {{/ can_be_updated }}
                     <div class="tlp-table-actions-spacer"></div>
