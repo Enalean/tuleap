@@ -18,6 +18,7 @@
         {{# csrf_token }}
             {{> csrf_token_input }}
         {{/ csrf_token }}
+        <input type="hidden" name="user-group" id="user-group" value="{{ name }}">
         <input type="hidden" name="action" value="edit_ugroup_members">
         <input type="hidden" name="add_user_name" id="add-user-to-ugroup">
         <p id="add-user-to-dynamic-ugroup-confirmation-message"></p>
