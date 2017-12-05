@@ -27,12 +27,12 @@ function KanbanService(
 
     return {
         getKanban,
+        getArchive,
         getBacklog,
+        getItems,
         getArchiveSize,
         getBacklogSize,
         getColumnContentSize,
-        getArchive,
-        getItems,
         collapseColumn,
         expandColumn,
         reorderColumn,
@@ -95,11 +95,14 @@ function KanbanService(
     }
 
     function getBacklogSize(kanban_id) {
+        let query_params = {};
+        augmentQueryParamsWithFilterTrackerReport(query_params);
+
         return Restangular
             .one('kanban', kanban_id)
             .one('backlog')
-            .head()
-            .then(function(response) {
+            .head(query_params)
+            .then(response => {
                 var headers = response.headers();
                 return parseInt(headers['x-pagination-size'], 10);
             });
@@ -131,11 +134,14 @@ function KanbanService(
     }
 
     function getArchiveSize(kanban_id) {
+        let query_params = {};
+        augmentQueryParamsWithFilterTrackerReport(query_params);
+
         return Restangular
             .one('kanban', kanban_id)
             .one('archive')
-            .head()
-            .then(function(response) {
+            .head(query_params)
+            .then(response => {
                 var headers = response.headers();
                 return parseInt(headers['x-pagination-size'], 10);
             });
@@ -168,13 +174,16 @@ function KanbanService(
     }
 
     function getColumnContentSize(kanban_id, column_id) {
+        let query_params = {
+            column_id
+        };
+        augmentQueryParamsWithFilterTrackerReport(query_params);
+
         return Restangular
             .one('kanban', kanban_id)
             .one('items')
-            .head({
-                column_id: column_id
-            })
-            .then(function(response) {
+            .head(query_params)
+            .then(response => {
                 var headers = response.headers();
                 return parseInt(headers['x-pagination-size'], 10);
             });
@@ -389,7 +398,7 @@ function KanbanService(
         const selected_filter_tracker_report_id = FilterTrackerReportService.getSelectedFilterTrackerReportId();
 
         if (selected_filter_tracker_report_id) {
-            query_params['query'] = { tracker_report_id: selected_filter_tracker_report_id };
+            query_params.query = { tracker_report_id: selected_filter_tracker_report_id };
         }
     }
 
