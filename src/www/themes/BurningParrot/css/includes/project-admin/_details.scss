@@ -33,6 +33,16 @@
     margin: 0 $tlp-spacing $tlp-spacing 0;
 }
 
+.project-admin-details-public-info-meta {
+    display: flex;
+    margin: 0 0 $tlp-spacing;
+}
+
+.project-admin-details-public-info-meta-type {
+    margin: 0 $tlp-double-spacing 0 0;
+    white-space: nowrap;
+}
+
 .project-admin-details-right-container {
     display: flex;
     flex: 1 1 auto;
