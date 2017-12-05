@@ -51,11 +51,11 @@ export default class WritingModeController {
     }
 
     listenSearch() {
-        this.writing_mode_search.addEventListener('click', () => {
-            this.reading_cross_tracker_report.duplicateFromReport(this.writing_cross_tracker_report);
+        this.writing_mode_search.addEventListener('click', async () => {
             this.report_saved_state.switchToUnsavedState();
+            await this.query_result_controller.loadFirstBatchOfArtifacts();
+            this.reading_cross_tracker_report.duplicateFromReport(this.writing_cross_tracker_report);
             this.changeMode();
-            this.query_result_controller.loadFirstBatchOfArtifacts();
         });
     }
 

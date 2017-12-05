@@ -63,7 +63,7 @@ export default class QueryResultController {
         this.clearResultRows();
         this.showLoadMoreButton();
         this.current_offset = 0;
-        this.loadABatchOfArtifacts();
+        return this.loadABatchOfArtifacts();
     }
 
     displayArtifacts(artifacts) {
@@ -140,7 +140,12 @@ export default class QueryResultController {
                 this.hideLoadMoreButton();
             }
         } catch (error) {
-            this.error_displayer.displayError(this.gettext_provider.gettext('Error while fetching the query result'));
+            const error_details = await error.response.json();
+            if (error.response.status === 403 && 'i18n_error_message' in error_details.error) {
+                this.error_displayer.displayError(error_details.error.i18n_error_message);
+            } else {
+                this.error_displayer.displayError(this.gettext_provider.gettext('Error while fetching the query result'));
+            }
             throw error;
         } finally {
             this.hideLoadingState();
