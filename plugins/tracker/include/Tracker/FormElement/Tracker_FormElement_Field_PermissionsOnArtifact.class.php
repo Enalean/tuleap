@@ -449,13 +449,9 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      * @return string
      */
 
-    public function getQueryFrom() {
-        $R1 = 'R1_'. $this->id;
-        $R2 = 'R2_'. $this->id;
-
-        return "LEFT JOIN ( tracker_changeset_value AS $R1
-                    INNER JOIN tracker_changeset_value_permissionsonartifact AS $R2 ON ($R2.changeset_value_id = $R1.id)
-                ) ON ($R1.changeset_id = c.id AND $R1.field_id = ". $this->id ." )";
+    public function getQueryFrom()
+    {
+        return '';
 
     }
 
@@ -464,9 +460,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      * @see getQueryFrom
      */
     public function getQuerySelect() {
-        $R2 = 'R2_'. $this->id;
-
-        return "$R2.ugroup_id AS `" . $this->name . "`";
+        return '';
     }
 
     /**

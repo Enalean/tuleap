@@ -58,26 +58,11 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
     }
 
     public function getQuerySelect() {
-        $R1 = 'R1_'. $this->id;
-        $R2 = 'R2_'. $this->id;
-        return "$R2.fileinfo_id AS `". $this->name ."`";
+        return '';
     }
 
     public function getQueryFrom() {
-        $R1 = 'R1_'. $this->id;
-        $R2 = 'R2_'. $this->id;
-
-        return "LEFT JOIN ( tracker_changeset_value AS $R1
-                    INNER JOIN tracker_changeset_value_file AS $R2 ON ($R2.changeset_value_id = $R1.id)
-                ) ON ($R1.changeset_id = c.id AND $R1.field_id = ". $this->id ." )";
-    }
-    /**
-     * Get the "group by" statement to retrieve field values
-     */
-    public function getQueryGroupby() {
-        $R1 = 'R1_'. $this->id;
-        $R2 = 'R2_'. $this->id;
-        return "$R2.fileinfo_id";
+        return '';
     }
 
     protected function getCriteriaDao() {
