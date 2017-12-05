@@ -231,14 +231,6 @@ echo '<TABLE class="table">';
 $head = '<thead><tr>';
 $i = 0;
 
-function userperms_add_header($header) {
-    global $i, $head, $Language;
-    if ($i++ % 10 == 0) {
-        $head .= '<th>'.$Language->getText('project_admin_userperms','user_name').'</th>';
-    }
-    $head .= $header;
-}
-
 $should_display_submit_button = false;
 
 $head .= '<th>'.$Language->getText('project_admin_userperms','user_name').'</th>';
@@ -251,7 +243,7 @@ if ($project->usesSVN()) {
 if ( $project->usesTracker()&&$at_arr ) {
     $should_display_submit_button = true;
 	for ($j = 0; $j < count($at_arr); $j++) {
-        userperms_add_header('<th>'.$Language->getText('project_admin_userperms','tracker',$at_arr[$j]->getName()).'</th>');
+        $head .= '<th>' . $at_arr[$j]->getName() . '</th>';
 	}
 }
 
@@ -260,13 +252,6 @@ $head .= '</tr></thead><tbody>';
 echo $head;
 
     $i=0;
-    function userperms_add_cell($user_name, $cell) {
-        global $k;
-        if ($k++ % 10 == 0) {
-            echo '<td>'. $user_name .'</td>';
-        }
-        echo $cell;
-    }
 
     $uh = new UserHelper();
     $hp = Codendi_HTMLPurifier::instance();
@@ -297,7 +282,7 @@ echo $head;
                 $cell .= '<OPTION value="0"'.(($perm==0)?" selected":"").'>'.$Language->getText('global','none');
                 $cell .= '<OPTION value="3"'.(($perm==3 || $perm==2)?" selected":"").'>'.$Language->getText('project_admin_userperms','admin');
                 $cell .= '</SELECT></TD>';
-                userperms_add_cell($user_name, $cell);
+                echo $cell;
             }
         }
 
