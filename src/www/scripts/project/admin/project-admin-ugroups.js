@@ -17,16 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {filterInlineTable, get, modal as createModal} from 'tlp';
-import {sanitize} from 'dompurify';
-import Gettext from 'node-gettext';
+import { filterInlineTable, get, modal as createModal } from 'tlp';
+import { sanitize }        from 'dompurify';
+import Gettext             from 'node-gettext';
+import { sprintf }         from 'sprintf-js';
 import french_translations from '../po/fr.po';
+import { escaper }         from '../../tuleap/escaper.js';
 
 const gettext_provider = new Gettext();
 
 document.addEventListener('DOMContentLoaded', () => {
-
-
     const member_list_container = document.getElementById('project-admin-user-groups-member-list-container');
     if (member_list_container) {
         gettext_provider.addTranslations('fr_FR', 'project-admin', french_translations);
@@ -41,22 +41,50 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function initModals() {
-    const buttons = document.querySelectorAll(`
-        #project-admin-ugroup-add-binding,
-        #project-admin-ugroup-show-permissions-modal,
-        #project-admin-ugroups-modal,
-        #project-admin-delete-binding,
-        .project-admin-delete-ugroups-modal,
-        .project-admin-remove-user-from-group
-    `);
+    document.addEventListener('click', (event) => {
+        const button = event.target;
+        const allowed_ids = [
+            'project-admin-ugroup-add-binding',
+            'project-admin-ugroup-show-permissions-modal',
+            'project-admin-ugroups-modal',
+            'project-admin-delete-binding'
+        ];
+        const is_button_id_allowed = allowed_ids.includes(button.id);
+        const allowed_classes      = [
+            'project-admin-delete-ugroups-modal',
+            'project-admin-remove-user-from-group'
+        ];
+        const is_button_classlist_contain_allowed_class = allowed_classes.some(
+            classname => button.classList.contains(classname)
+        );
 
-    for (const button of buttons) {
-        const modal = createModal(document.getElementById(button.dataset.targetModalId));
+        if (is_button_id_allowed || is_button_classlist_contain_allowed_class) {
+            const modal = createModal(document.getElementById(button.dataset.targetModalId), { destroy_on_hide: true });
 
-        button.addEventListener('click', () => {
+            if (button.classList.contains('project-admin-remove-user-from-group')) {
+                updateDeleteModalContent(button);
+            }
             modal.show();
-        });
-    }
+        }
+    });
+}
+
+function updateDeleteModalContent(button) {
+    document.getElementById('project-admin-remove-user-from-group-modal-user-id').value = button.dataset.userId;
+    updateDeleteModalDescription(button);
+}
+
+function updateDeleteModalDescription(button) {
+    const modal_description = document.getElementById('project-admin-remove-user-from-group-modal-description');
+
+    modal_description.innerText = '';
+    modal_description.insertAdjacentHTML('afterBegin', sanitize(
+        sprintf(
+            gettext_provider.gettext("You are about to remove <b>%s</b> from <b>%s</b>. Please, confirm your action."),
+            escaper.html(button.dataset.userName),
+            escaper.html(button.dataset.ugroupName)
+        )
+    ));
 }
 
 async function initModalAddDynamicUserToUGroup() {

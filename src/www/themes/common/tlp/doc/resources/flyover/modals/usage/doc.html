@@ -5,7 +5,6 @@
     <li>Buttons that have <code class="code-inline">data-dismiss="modal"</code> attribute in the modal
         will close it.</li>
     <li>Click on the backdrop or on the escape key will also close the modal.</li>
-    <li>You can remove closing modal on the escape key pressed: <code class="code-inline">var the_modal = tlp.modal('element-id', {keyboard: false} );</code></li>
     <li>You must explicitly call the modal in javascript: <code class="code-inline">var the_modal = tlp.modal('element-id');</code>.
         This will return a <code class="code-inline">Modal</code> instance. You can then call
         <code class="code-inline">show()</code>,
@@ -14,4 +13,17 @@
     </li>
     <li>On the <code class="code-inline">the_modal.show()</code> method an event <code class="code-inline">tlp-modal-shown</code> is dispatched.</li>
     <li>On the <code class="code-inline">the_modal.hide()</code> method an event <code class="code-inline">tlp-modal-hidden</code> is dispatched.</li>
+</ul>
+
+<h4>Arguments:</h4>
+<ul>
+    <li>{ Element id } id</li>
+    <li>(Optional) { Object } options. Contains: <ul>
+        <li>{ Boolean } keyboard, defaults to true
+            <p>When true, enables closing the modal when pressing the <keycode>ESC</keycode> key.</p>
+        </li>
+        <li>{ Boolean } destroy_on_hide, defaults to false
+            <p>When true, destroys the event listeners when hiding the modal. Useful when for example you create new modals on a button click.</p>
+        </li>
+    </ul></li>
 </ul>
