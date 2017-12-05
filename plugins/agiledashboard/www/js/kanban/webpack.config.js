@@ -2,10 +2,49 @@
 var path                  = require('path');
 var webpack               = require('webpack');
 var WebpackAssetsManifest = require('webpack-assets-manifest');
-var BabelPresetEnv        = require('babel-preset-env');
+var babel_preset_env      = require('babel-preset-env');
+var babel_plugin_istanbul = require('babel-plugin-istanbul');
 
 var manifest_data   = Object.create(null);
 var assets_dir_path = path.resolve(__dirname, './dist');
+
+var babel_preset_env_ie_config = [babel_preset_env, {
+    targets: {
+        ie: 11
+    },
+    modules: false
+}];
+
+var babel_preset_env_chrome_config = [babel_preset_env, {
+    targets: {
+        browsers: ['last 2 Chrome versions']
+    },
+    modules: false,
+    useBuiltIns: true,
+    shippedProposals: true
+}];
+
+var babel_options   = {
+    env: {
+        watch: {
+            presets: [babel_preset_env_ie_config]
+        },
+        production: {
+            presets: [babel_preset_env_ie_config]
+        },
+        test: {
+            presets: [babel_preset_env_chrome_config]
+        },
+        coverage: {
+            presets: [babel_preset_env_chrome_config],
+            plugins: [
+                [babel_plugin_istanbul.default, {
+                    exclude: ['**/*.spec.js']
+                }]
+            ]
+        }
+    }
+};
 
 var webpack_config_for_kanban = {
     entry : {
@@ -36,26 +75,11 @@ var webpack_config_for_kanban = {
         rules: [
             {
                 test: /\.js$/,
-                exclude: [
-                    /node_modules/,
-                    /vendor/
-                ],
+                exclude: /node_modules/,
                 use: [
                     {
                         loader: 'babel-loader',
-                        options: {
-                            presets: [
-                                [
-                                    BabelPresetEnv,
-                                    {
-                                        targets: {
-                                            ie: 11
-                                        },
-                                        modules: false
-                                    }
-                                ]
-                            ]
-                        }
+                        options: babel_options
                     }
                 ]
             }, {
