@@ -166,11 +166,15 @@ class CrossTrackerReportsResource extends AuthenticatedResource
         Header::allowOptionsGet();
 
         try {
-            $current_user = $this->user_manager->getCurrentUser();
-            $report       = $this->getReport($id);
+            $current_user    = $this->user_manager->getCurrentUser();
+            $report          = $this->getReport($id);
+            $trackers        = $this->getTrackersFromRoute($query, $report);
+            $expected_report = new CrossTrackerReport($report->getId(), $trackers);
+
+            $this->checkUserIsAllowedToSeeReport($current_user, $expected_report);
 
             $artifacts = $this->cross_tracker_artifact_factory->getArtifactsFromGivenTrackers(
-                $this->getTrackersFromRoute($query, $report),
+                $expected_report->getTrackers(),
                 $current_user,
                 $limit,
                 $offset
@@ -215,12 +219,15 @@ class CrossTrackerReportsResource extends AuthenticatedResource
     {
         $this->sendAllowHeaders();
 
+        $current_user = $this->user_manager->getCurrentUser();
         try {
-            $this->getReport($id);
-            $trackers = $this->cross_tracker_extractor->extractTrackers($trackers_id);
-            $this->cross_tracker_dao->updateReport($id, $trackers);
+            $report          = $this->getReport($id);
+            $trackers        = $this->cross_tracker_extractor->extractTrackers($trackers_id);
+            $expected_report = new CrossTrackerReport($report->getId(), $trackers);
 
-            $report = $this->getReport($id);
+            $this->checkUserIsAllowedToSeeReport($current_user, $expected_report);
+
+            $this->cross_tracker_dao->updateReport($id, $trackers);
         } catch (CrossTrackerReportNotFoundException $exception) {
             throw new RestException(404, "Report $id not found");
         } catch (TrackerNotFoundException $exception) {
@@ -229,7 +236,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
             throw new RestException(400, $exception->getMessage());
         }
 
-        return $this->getReportRepresentation($report);
+        return $this->getReportRepresentation($expected_report);
     }
 
     private function sendAllowHeaders()
