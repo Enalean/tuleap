@@ -1,9 +1,10 @@
 import './edit-kanban/edit-kanban.tpl.html';
 import './error-modal/error.tpl.html';
 import './reports-modal/reports-modal.tpl.html';
-import EditKanbanController from './edit-kanban/edit-kanban-controller.js';
+import EditKanbanController   from './edit-kanban/edit-kanban-controller.js';
 import ReportsModalController from './reports-modal/reports-modal-controller.js';
-import _ from 'lodash';
+import _                      from 'lodash';
+import angular                from 'angular';
 
 export default KanbanCtrl;
 
@@ -52,11 +53,7 @@ function KanbanCtrl(
         kanban  = SharedPropertiesService.getKanban(),
         user_id = SharedPropertiesService.getUserId();
 
-    self.kanban  = kanban;
-    self.board   = {
-        columns: kanban.columns
-    };
-    self.backlog = _.extend(kanban.backlog, {
+    self.backlog = Object.assign(kanban.backlog, {
         id                     : 'backlog',
         content                : [],
         nb_items_at_kanban_init: 0,
@@ -64,7 +61,7 @@ function KanbanCtrl(
         loading_items          : true,
         fully_loaded           : false
     });
-    self.archive = _.extend(kanban.archive, {
+    self.archive = Object.assign(kanban.archive, {
         id                     : 'archive',
         content                : [],
         nb_items_at_kanban_init: 0,
@@ -73,35 +70,42 @@ function KanbanCtrl(
         fully_loaded           : false
     });
 
-    self.user_prefers_collapsed_cards = true;
-    self.$onInit                      = init;
-    self.isColumnWipReached           = isColumnWipReached;
-    self.setWipLimitForColumn         = setWipLimitForColumn;
-    self.userIsAdmin                  = userIsAdmin;
-    self.getTimeInfo                  = getTimeInfo;
-    self.getTimeInfoInArchive         = getTimeInfoInArchive;
-    self.createItemInPlace            = createItemInPlace;
-    self.createItemInPlaceInBacklog   = createItemInPlaceInBacklog;
-    self.editKanban                   = editKanban;
-    self.showEditbutton               = showEditbutton;
-    self.expandColumn                 = expandColumn;
-    self.toggleColumn                 = toggleColumn;
-    self.expandBacklog                = expandBacklog;
-    self.toggleBacklog                = toggleBacklog;
-    self.expandArchive                = expandArchive;
-    self.toggleArchive                = toggleArchive;
-    self.setIsCollapsed               = setIsCollapsed;
-    self.filter                       = KanbanFilterValue;
-    self.filterCards                  = filterCards;
-    self.loading_modal                = NewTuleapArtifactModalService.loading;
-    self.showEditModal                = showEditModal;
-    self.moveItemAtTheEnd             = moveItemAtTheEnd;
-    self.saveCardsViewMode            = saveCardsViewMode;
-    self.moveKanbanItemToTop          = moveKanbanItemToTop;
-    self.moveKanbanItemToBottom       = moveKanbanItemToBottom;
-    self.openReportModal              = openReportModal;
-    self.addKanbanToMyDashboard       = addKanbanToMyDashboard;
-    self.reflowKustomScrollBars       = reflowKustomScrollBars;
+    Object.assign(self, {
+        kanban,
+        board: {
+            columns: kanban.columns
+        },
+        user_prefers_collapsed_cards: true,
+        $onInit: init,
+        isColumnWipReached,
+        userIsAdmin,
+        getTimeInfo,
+        getTimeInfoInArchive,
+        createItemInPlace,
+        createItemInPlaceInBacklog,
+        editKanban,
+        showEditbutton,
+        expandColumn,
+        toggleColumn,
+        expandBacklog,
+        toggleBacklog,
+        expandArchive,
+        toggleArchive,
+        setIsCollapsed,
+        KanbanFilterValue,
+        filterCards,
+        NewTuleapArtifactModalService,
+        showEditModal,
+        moveItemAtTheEnd,
+        saveCardsViewMode,
+        moveKanbanItemToTop,
+        moveKanbanItemToBottom,
+        openReportModal,
+        addKanbanToMyDashboard,
+        reflowKustomScrollBars,
+        displayCardsAndWIPNotUpdated: FilterTrackerReportService.areNotCardsAndWIPUpdated,
+        displayWIPNotUpdated        : FilterTrackerReportService.isNotWIPUpdated,
+    });
 
     function init() {
         initViewMode();
@@ -432,17 +436,6 @@ function KanbanCtrl(
         return (FilterTrackerReportService.areCardsAndWIPUpdated()
             || FilterTrackerReportService.isWIPUpdated())
         && (column.limit && column.limit < column.content.length);
-    }
-
-    function setWipLimitForColumn(column) {
-        column.saving_wip = true;
-        return KanbanService.editColumn(kanban.id, column).then(function (data) {
-                column.limit = column.limit_input;
-                column.wip_in_edit = false;
-                column.saving_wip = false;
-            },
-            reload
-        );
     }
 
     function userIsAdmin() {

@@ -1,0 +1,31 @@
+<div ng-if="wip_header.column.is_open" class="kanban-column-header-wip">
+    <span
+        ng-if="wip_header.isColumnLoaded()"
+        class="kanban-column-header-wip-count"
+        ng-class="{ loading: wip_header.column.loading_items }"
+    >{{ wip_header.column.content.length }}</span>
+    <span
+        ng-if="! wip_header.isColumnLoaded()"
+        class="kanban-column-header-wip-count"
+    >{{ wip_header.column.nb_items_at_kanban_init }}</span>
+    <div class="tlp-dropdown" ng-if="wip_header.isWipBadgeShown()">
+        <span class="kanban-column-header-wip-limit"
+              ng-class="{
+                  'infinity': ! wip_header.column.limit,
+                  'editable': wip_header.isUserAdmin(),
+                  'tlp-badge-outline': ! wip_header.column.limit,
+                  'tlp-badge-primary': ! wip_header.isColumnWipReached(),
+                  'tlp-badge-warning': wip_header.isColumnWipReached()
+              }"
+              id="kanban-column-header-wip-limit-{{ wip_header.column.id }}"
+        >
+            <span class="kanban-column-header-wip-limit-infinite" ng-show="! wip_header.column.limit">∞</span>
+            <span ng-show="wip_header.column.limit">
+                <i class="fa fa-chevron-left kanban-column-header-wip-limit-chevron"></i>{{ wip_header.column.limit }}
+            </span>
+        </span>
+        <div ng-if="wip_header.isUserAdmin()" class="tlp-dropdown-menu tlp-dropdown-menu-right" role="menu">
+            <wip-popover column="wip_header.column" set-wip-limit="wip_header.setWipLimit()"></wip-popover>
+        </div>
+    </div>
+</div>
