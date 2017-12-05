@@ -67,7 +67,7 @@
                         </tr>
                         {{# project_members_list }}
                             <tr>
-                                <td class="tlp-table-cell-filterable">
+                                <td class="tlp-table-cell-filterable project-admin-members-username-column">
                                     <div class="tlp-avatar projectadmin-userlist-result-name-avatar">
                                         {{# has_avatar }}
                                             <img src="/users/{{ user_name }}/avatar.png" />
@@ -75,7 +75,7 @@
                                     </div>
                                     <a href="{{ profile_page_url }}">{{ username_display }}</a>
                                 </td>
-                                <td>
+                                <td class="project-admin-members-ugroups">
                                     {{# ugroups }}
                                         <a href="/project/admin/editugroup.php?group_id={{ project_id }}&ugroup_id={{ id }}"
                                             {{# description }}
