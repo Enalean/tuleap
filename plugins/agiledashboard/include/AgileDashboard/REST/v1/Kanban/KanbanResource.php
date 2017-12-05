@@ -70,8 +70,8 @@ use Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram\OrderedColumnRepr
 use Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram\TooManyPointsException;
 use Tuleap\AgileDashboard\REST\v1\Kanban\TrackerReport\FilteredDiagramRepresentationBuilder;
 use Tuleap\AgileDashboard\REST\v1\Kanban\TrackerReport\FilteredItemCollectionRepresentationBuilder;
-use Tuleap\AgileDashboard\REST\v1\Kanban\TrackerReport\TrackerReportDao;
-use Tuleap\AgileDashboard\REST\v1\Kanban\TrackerReport\TrackerReportUpdater;
+use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportDao;
+use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportUpdater;
 use Tuleap\AgileDashboard\REST\v1\OrderRepresentation;
 use Tuleap\AgileDashboard\REST\v1\OrderValidator;
 use Tuleap\AgileDashboard\REST\v1\ResourcesPatcher;

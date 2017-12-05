@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\AgileDashboard\REST\v1\Kanban\TrackerReport\TrackerReportUpdater;
+use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportUpdater;
 
 class AgileDashboard_FirstKanbanCreator
 {

@@ -22,7 +22,7 @@ namespace Tuleap\AgileDashboard\Kanban\TrackerReport;
 
 use AgileDashboard_Kanban;
 use Tracker_ReportFactory;
-use Tuleap\AgileDashboard\REST\v1\Kanban\TrackerReport\TrackerReportDao;
+use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportDao;
 
 class TrackerReportBuilder
 {

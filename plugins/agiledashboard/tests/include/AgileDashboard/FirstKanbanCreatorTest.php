@@ -46,7 +46,7 @@ class FirstKanbanCreatorTest extends TuleapTestCase
         $this->kanban_manager  = mock('AgileDashboard_KanbanManager');
         $this->kanban_factory  = mock('AgileDashboard_KanbanFactory');
         $this->xml_import      = mock('TrackerXmlImport');
-        $this->report_updater  = mock('Tuleap\AgileDashboard\REST\v1\Kanban\TrackerReport\TrackerReportUpdater');
+        $this->report_updater  = mock('Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportUpdater');
         $this->report_factory  = mock('Tracker_ReportFactory');
         $this->kanban_creator  = new AgileDashboard_FirstKanbanCreator(
             $project,
