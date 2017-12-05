@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,7 +21,10 @@
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature;
 
-class NatureDeletor {
+use Exception;
+
+class NatureDeletor
+{
 
     /** @var NatureDao */
     private $dao;
@@ -29,7 +32,8 @@ class NatureDeletor {
     /** @var NatureValidator */
     private $validator;
 
-    public function __construct(NatureDao $dao, NatureValidator $validator) {
+    public function __construct(NatureDao $dao, NatureValidator $validator)
+    {
         $this->dao       = $dao;
         $this->validator = $validator;
     }
@@ -37,11 +41,17 @@ class NatureDeletor {
     /**
      * @throws UnableToDeleteNatureException
      */
-    public function delete($shortname) {
+    public function delete($shortname)
+    {
         $this->validator->checkIsNotOrHasNotBeenUsed($shortname);
 
-        if (! $this->dao->delete($shortname)) {
-            throw new UnableToDeleteNatureException($GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'db_error'));
+        try{
+            $this->dao->delete($shortname);
+        } catch (Exception $exception) {
+            throw new UnableToDeleteNatureException($GLOBALS['Language']->getText(
+                'plugin_tracker_artifact_links_natures',
+                'db_error')
+            );
         }
     }
 }
