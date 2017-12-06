@@ -22,6 +22,7 @@ require_once "account.php";
 
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\UploadedLinksUpdater;
+use Tuleap\Project\Admin\ProjectUGroup\CannotCreateUGroupException;
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\Project\UserRemover;
 use Tuleap\Project\XML\Import\ArchiveInterface;
@@ -306,11 +307,15 @@ class ProjectXMLImporter {
 
                 if(empty($ugroup)) {
                     $this->logger->debug("Creating empty ugroup " . $ugroup_def['name']);
-                    $new_ugroup_id = $this->ugroup_manager->createEmptyUgroup(
-                        $project->getID(),
-                        $ugroup_def['name'],
-                        $ugroup_def['description']
-                    );
+                    try {
+                        $new_ugroup_id = $this->ugroup_manager->createEmptyUgroup(
+                            $project->getID(),
+                            $ugroup_def['name'],
+                            $ugroup_def['description']
+                        );
+                    } catch (CannotCreateUGroupException $e) {
+                        $this->logger->error($e->getMessage());
+                    }
                     $ugroup = $this->ugroup_manager->getById($new_ugroup_id);
                 }
 

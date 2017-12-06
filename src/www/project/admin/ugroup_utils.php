@@ -12,6 +12,8 @@
 //
 // Define various functions for user group management
 //
+use Tuleap\Project\Admin\ProjectUGroup\CannotCreateUGroupException;
+
 require_once 'utils.php';
 require_once 'project_admin_utils.php';
 
@@ -407,20 +409,19 @@ function ugroup_get_all_dynamic_members($group_id, $atid=0) {
  */
 function ugroup_create($group_id, $ugroup_name, $ugroup_description, $group_templates) {
     global $Language;
-    $purifier = Codendi_HTMLPurifier::instance();
 
     // Sanity check
-    if (!$ugroup_name) { 
-        exit_error($Language->getText('global','error'),$Language->getText('project_admin_ugroup_utils','ug_name_missed'));
+    if (!$ugroup_name) {
+        throw new CannotCreateUGroupException(_('The group name is missing'));
     }
     if (! preg_match("/^[a-zA-Z0-9_\-]+$/i",$ugroup_name)) {
-        exit_error($Language->getText('global','error'),$Language->getText('project_admin_ugroup_utils','invalid_ug_name', $purifier->purify($ugroup_name)));
+        throw new CannotCreateUGroupException(sprintf(_('Invalid group name: %s. Please use only alphanumerical characters.'), $ugroup_name));
     }
     // Check that there is no ugroup with the same name in this project
     $sql = "SELECT * FROM ugroup WHERE name='".db_es($ugroup_name)."' AND group_id='".db_ei($group_id)."'";
     $result=db_query($sql);
     if (db_numrows($result)>0) {
-        exit_error($Language->getText('global','error'),$Language->getText('project_admin_ugroup_utils','ug__exist', $purifier->purify($ugroup_name)));
+        throw new CannotCreateUGroupException(_('User group already exists in this project. Please choose another name.'));
     }
     
     
@@ -429,7 +430,7 @@ function ugroup_create($group_id, $ugroup_name, $ugroup_description, $group_temp
     $result=db_query($sql);
 
     if (!$result) {
-        exit_error($Language->getText('global','error'),$Language->getText('project_admin_ugroup_utils','cant_create_ug',db_error()));
+        throw new CannotCreateUGroupException(_('An error occurred when saving user group.'));
     } else {
         $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_ugroup_utils','ug_create_success'));
     }
@@ -437,17 +438,16 @@ function ugroup_create($group_id, $ugroup_name, $ugroup_description, $group_temp
     $sql="SELECT ugroup_id FROM ugroup WHERE group_id=".db_ei($group_id)." AND name='".db_es($ugroup_name)."'";
     $result = db_query($sql);
     if (!$result) {
-        exit_error($Language->getText('global','error'),$Language->getText('project_admin_ugroup_utils','ug_created_but_no_id',db_error()));
+        throw new CannotCreateUGroupException(_('User group created but cannot get Id.'));
     }
     $ugroup_id = db_result($result,0,0);
     if (!$ugroup_id) {
-        exit_error($Language->getText('global','error'),$Language->getText('project_admin_ugroup_utils','ug_created_but_no_id',db_error()));
+        throw new CannotCreateUGroupException(_('User group created but cannot get Id.'));
     }
 
     //
     // Now populate new group if a 'template' was selected
     //
-    $query=0;
 
     if ($group_templates == "cx_empty") {
         // Do nothing, the group should be empty
@@ -482,7 +482,7 @@ function ugroup_create($group_id, $ugroup_name, $ugroup_description, $group_temp
     }
     
     // raise an event for ugroup creation
-    $em =& EventManager::instance();
+    $em = EventManager::instance();
     $em->processEvent('project_admin_ugroup_creation', array(
         'group_id'  => $group_id,
         'ugroup_id' => $ugroup_id
@@ -501,14 +501,14 @@ function ugroup_update($group_id, $ugroup_id, $ugroup_name, $ugroup_description)
     $purifier = Codendi_HTMLPurifier::instance();
 
     // Sanity check
-    if (!$ugroup_name) { 
-        exit_error($Language->getText('global','error'),$Language->getText('project_admin_ugroup_utils','ug_name_missed'));
+    if (!$ugroup_name) {
+        throw new CannotCreateUGroupException(_('The group name is missing'));
     }
     if (! preg_match("/^[a-zA-Z0-9_\-]+$/i",$ugroup_name)) {
-        exit_error($Language->getText('global','error'),$Language->getText('project_admin_ugroup_utils','invalid_ug_name', $purifier->purify($ugroup_name)));
+        throw new CannotCreateUGroupException(sprintf(_('Invalid group name: %s. Please use only alphanumerical characters.'), $ugroup_name));
     }
     if (!$ugroup_id) {
-        exit_error($Language->getText('global','error'),$Language->getText('project_admin_editugroup','ug_id_missed'));
+        throw new CannotCreateUGroupException(_('The group id is missing'));
     }
     // Retrieve ugroup old name before updating
     $sql = "SELECT name FROM ugroup WHERE group_id='".db_ei($group_id)."' AND ugroup_id ='".db_ei($ugroup_id)."'";
@@ -522,7 +522,7 @@ function ugroup_update($group_id, $ugroup_id, $ugroup_name, $ugroup_description)
     $sql = "SELECT * FROM ugroup WHERE name='".db_es($ugroup_name)."' AND group_id='".db_ei($group_id)."' AND ugroup_id!='".db_ei($ugroup_id)."'";
     $result=db_query($sql);
     if (db_numrows($result)>0) {
-        exit_error($Language->getText('global','error'),$Language->getText('project_admin_ugroup_utils','ug__exist', $purifier->purify($ugroup_name)));
+        throw new CannotCreateUGroupException(_('User group already exists in this project. Please choose another name.'));
     }
 
     // Update
@@ -530,7 +530,7 @@ function ugroup_update($group_id, $ugroup_id, $ugroup_name, $ugroup_description)
     $result=db_query($sql);
 
     if (!$result) {
-        exit_error($Language->getText('global','error'),$Language->getText('project_admin_ugroup_utils','cant_update_ug',db_error()));
+        throw new CannotCreateUGroupException(_('Cannot update users group.'));
     }
 
     // Search for all members of this ugroup

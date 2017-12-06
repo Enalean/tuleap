@@ -19,6 +19,12 @@ msgstr ""
 
 #, javascript-format
 msgid ""
+"You are about to remove <b>%s</b> from <b>%s</b>. Please, confirm your "
+"action."
+msgstr ""
+
+#, javascript-format
+msgid ""
 "You're about to remove <b>%s</b> from this project. Please confirm your "
 "action."
 msgstr ""

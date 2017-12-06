@@ -90,6 +90,9 @@ msgid ""
 msgstr ""
 "Une erreur est survenue, un lien n'est pas valide. Merci de recommencer."
 
+msgid "An error occurred when saving user group."
+msgstr "Une erreur est survenue lors de la sauvegarde du groupe utilisateur."
+
 msgid "An error occurred while clearing the content of your history"
 msgstr "Une erreur est survenue lors de la suppression de votre historique"
 
@@ -148,6 +151,9 @@ msgstr "Impossible de réduire le widget."
 
 msgid "Cannot update the requested dashboard."
 msgstr "Impossible d'éditer le tableau de bord demandé."
+
+msgid "Cannot update users group."
+msgstr "Impossible de mettre à jour le groupe utilisateur"
 
 msgid "Categories"
 msgstr "Catégories"
@@ -326,6 +332,10 @@ msgstr "Création de la structure initiale"
 
 msgid "Instant messaging"
 msgstr "Messagerie Instantanée"
+
+#, php-format
+msgid "Invalid group name: %s. Please use only alphanumerical characters."
+msgstr "Le nom du groupe %s est invalide. Merci de forunier uniquement des caractères alphanumériques."
 
 msgid "Is used?"
 msgstr "Utilisé ?"
@@ -607,6 +617,12 @@ msgid ""
 msgstr ""
 "Le projet parent n'existe pas ou alors vous n'en êtes pas administrateur."
 
+msgid "The group id is missing"
+msgstr "L'identifiant du groupe utilisateur est requis"
+
+msgid "The group name is missing"
+msgstr "Le nom du groupe utilisateur est requis"
+
 msgid "The last project administrator cannot be removed."
 msgstr ""
 "Il n'est pas possible de supprimer le dernier administrateur du projet."
@@ -768,6 +784,14 @@ msgstr "Avatar de l'utilisateur"
 msgid "User group"
 msgstr "Groupe d'utilisateurs"
 
+msgid "User group already exists in this project. Please choose another name."
+msgstr ""
+"Le groupe utilisateur existe déjà dans ce projet. Merci de choisir un autre "
+"nom."
+
+msgid "User group created but cannot get Id."
+msgstr "Groupe utilisateur crée, mais impossible de retrouver son Id"
+
 msgid "User group permissions"
 msgstr "Permissions du groupe"
 
@@ -854,13 +878,6 @@ msgid ""
 msgstr ""
 "Vous êtes sur le point de supprimer le widget \"%s\". Cette action est "
 "irréversible. Merci de confirmer cette suppression."
-
-msgid ""
-"You are about to remove <b>%s</b> from <b>%s</b>. Please, confirm your "
-"action."
-msgstr ""
-"Vous êtes sur le point de supprimer <b>%s</b> de <b>%s</b>. Merci de "
-"confirmer votre action."
 
 msgid "You can import users into your project by specifying a text file."
 msgstr ""

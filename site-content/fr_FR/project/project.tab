@@ -474,16 +474,11 @@ project_admin_ugroup	permission_request	Demande de permission
 #-----------------------------------------------
 # Script: SF/www/project/admin/ugroup_utils.php
 #
-project_admin_ugroup_utils	ug__exist	Le groupe d'utilisateurs '$1' existe déjà pour ce projet. Veuillez choisir un autre nom.
-project_admin_ugroup_utils	cant_create_ug	ERREUR - Impossible de créer le groupe d'utilisateurs&nbsp;: $1
 project_admin_ugroup_utils	ug_create_success	Le groupe d'utilisateurs a été créé avec succès
-project_admin_ugroup_utils	ug_created_but_no_id	ERREUR - Le groupe d'utilisateurs a été créé mais impossible d'obtenir l'ID&nbsp;:
 project_admin_ugroup_utils	no_g_template	Aucun modèle de groupe sélectionné
 project_admin_ugroup_utils	cant_insert_u_in_g	ERREUR - Impossible d'insérer l'utilisateur $1 dans le groupe $2 : $3
 project_admin_ugroup_utils	user_already_exist	Utilisateur déja existant
 project_admin_ugroup_utils	u_added	$1 ajouté
-project_admin_ugroup_utils	ug_name_missed	Le nom de groupe est manquant. Veuillez cliquer sur le bouton "Retour" de votre navigateur et remplir ce champ.
-project_admin_ugroup_utils	invalid_ug_name	Nom de groupe invalidenbsp;: $1. Veuillez n'utiliser que des caractères alphanumériques. Cliquer sur le bouton "Retour" de votre navigateur et modifier ce champ.
 project_admin_ugroup_utils	cant_update_ug	ERREUR - Impossible de mettre à jour le groupe d'utilisateurs&nbsp;: $1
 project_admin_ugroup_utils	cant_reset_ug	ERREUR - Impossible de réinitialiser le groupe d'utilisateurs $1 : $2
 project_admin_ugroup_utils	ug_upd_success	Groupe d'utilisateurs $1 mis à jour avec succès ($2 membres)

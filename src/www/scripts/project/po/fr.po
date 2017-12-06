@@ -34,6 +34,14 @@ msgstr ""
 "Vous êtes sur le point d'ajouter <b>%s</b> dans le groupe utilisateur <b>%s</"
 "b>."
 
+#, fuzzy, javascript-format
+msgid ""
+"You are about to remove <b>%s</b> from <b>%s</b>. Please, confirm your "
+"action."
+msgstr ""
+"Vous êtes sur le point de retirer <b>%s</b> de ce projet. Veuillez confirmer "
+"votre action."
+
 #, javascript-format
 msgid ""
 "You're about to remove <b>%s</b> from this project. Please confirm your "
