@@ -64,20 +64,10 @@ if ($request->exist('submit')) {
 
         if($request ->exist("update_user_$row_dev[user_id]")){
             $svn_flags  = "svn_user_$row_dev[user_id]";
-
-            $flags = array(
-                'svn_flags'
-            );
-
-            $update_statements = array();
-            foreach ($flags as $flag) {
-                if ($request->exist($$flag)) {
-                    $update_statements[] = "$flag = '". db_es($request->get($$flag)) ."'";
-                }
-            }
             $res = true;
-            if ($update_statements) {
-                $sql = "UPDATE user_group SET " . implode(', ', $update_statements);
+            if ($request->exist($svn_flags)) {
+
+                $sql = "UPDATE user_group SET svn_flags = '". db_es($request->get($svn_flags)) ."'";
                 $sql .= " WHERE user_id='$row_dev[user_id]' AND group_id='$group_id'";
 
                 $res = db_query($sql);
@@ -88,14 +78,13 @@ if ($request->exist('submit')) {
                 for ($j = 0; $j < count($at_arr); $j++) {
                     $atid = $at_arr[$j]->getID();
                     $perm_level = "tracker_user_$row_dev[user_id]_$atid";
-                     //echo "Tracker ".$at_arr[$j]->getName()."(".$at_arr[$j]->getID()."): ".$perm_level."=".$$perm_level."<br>";
                     if ( $at_arr[$j]->existUser($row_dev['user_id']) ) {
-                        if ( !$at_arr[$j]->updateUser($row_dev['user_id'],$$perm_level) ) {
+                        if ( !$at_arr[$j]->updateUser($row_dev['user_id'],$request->get($perm_level)) ) {
                             echo $at_arr[$j]->getErrorMessage();
                             $tracker_error = true;
                         }
                     } else {
-                        if ( !$at_arr[$j]->addUser($row_dev['user_id'],$$perm_level) ) {
+                        if ( !$at_arr[$j]->addUser($row_dev['user_id'],$request->get($perm_level)) ) {
                             $tracker_error = true;
                         }
                     }
@@ -109,18 +98,10 @@ if ($request->exist('submit')) {
             }
 
             // Raise an event
-            $em =& EventManager::instance();
-            $user_permissions = array();
-            foreach ($flags as $flag) {
-                if (isset($$$flag)) {
-                    $user_permissions[$flag] = $$$flag;
-                }
-            }
+            $em = EventManager::instance();
             $em->processEvent('project_admin_change_user_permissions', array(
                 'group_id' => $group_id,
                 'user_id' => $row_dev['user_id'],
-                'user_permissions' => $user_permissions,
-                'previous_permissions' => $row_dev,
             ));
         }
 	}
