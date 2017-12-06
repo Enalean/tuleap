@@ -698,7 +698,11 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         $breadcrumbs = array();
         $html        = '';
         $trackers    = $this->getTrackerFactory()->getTrackersByGroupId($project->group_id);
-        $toolbar     = $this->getGlobalAdminController($project)->getToolbar($project);
+
+        $toolbar = array();
+        if ($user->isAdmin($project->getID())) {
+            $toolbar = $this->getGlobalAdminController($project)->getToolbar($project);
+        }
 
         if (HTTPRequest::instance()->isAjax()) {
             $http_content = '';
