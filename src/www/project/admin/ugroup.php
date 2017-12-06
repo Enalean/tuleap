@@ -21,6 +21,7 @@
 
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
+use Tuleap\Project\Admin\ProjectUGroup\CannotCreateUGroupException;
 use Tuleap\Project\Admin\ProjectUGroup\UGroupListPresenterBuilder;
 use Tuleap\User\UserGroup\NameTranslator;
 
@@ -53,11 +54,15 @@ if ($request->existAndNonEmpty('func')) {
             $desc     = $request->getValidated('ugroup_description', 'String', '');
             $template = $request->getValidated('group_templates', 'String', '');
 
-            $ugroup_id = ugroup_create($group_id, $name, $desc, $template);
-            $GLOBALS['Response']->redirect(
-                '/project/admin/editugroup.php?group_id=' . urlencode($group_id) .
-                '&ugroup_id=' . urlencode( $ugroup_id)
-            );
+            try {
+                $ugroup_id = ugroup_create($group_id, $name, $desc, $template);
+                $GLOBALS['Response']->redirect(
+                    '/project/admin/editugroup.php?group_id=' . urlencode($group_id) .
+                    '&ugroup_id=' . urlencode( $ugroup_id)
+                );
+            } catch (CannotCreateUGroupException $exception) {
+                $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
+            }
             break;
     }
     $GLOBALS['Response']->redirect('/project/admin/ugroup.php?group_id='. urlencode($group_id));

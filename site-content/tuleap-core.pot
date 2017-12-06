@@ -71,6 +71,9 @@ msgid ""
 "An error occurred in form submission, a link is not valid. Please retry."
 msgstr ""
 
+msgid "An error occurred when saving user group."
+msgstr ""
+
 msgid "An error occurred while clearing the content of your history"
 msgstr ""
 
@@ -125,6 +128,9 @@ msgid "Cannot minimize the widget."
 msgstr ""
 
 msgid "Cannot update the requested dashboard."
+msgstr ""
+
+msgid "Cannot update users group."
 msgstr ""
 
 msgid "Categories"
@@ -301,6 +307,10 @@ msgid "Initial layout creation"
 msgstr ""
 
 msgid "Instant messaging"
+msgstr ""
+
+#, php-format
+msgid "Invalid group name: %s. Please use only alphanumerical characters."
 msgstr ""
 
 msgid "Is used?"
@@ -576,6 +586,12 @@ msgid ""
 "The given parent project does not exist or you are not its administrator."
 msgstr ""
 
+msgid "The group id is missing"
+msgstr ""
+
+msgid "The group name is missing"
+msgstr ""
+
 msgid "The last project administrator cannot be removed."
 msgstr ""
 
@@ -723,6 +739,12 @@ msgstr ""
 msgid "User group"
 msgstr ""
 
+msgid "User group already exists in this project. Please choose another name."
+msgstr ""
+
+msgid "User group created but cannot get Id."
+msgstr ""
+
 msgid "User group permissions"
 msgstr ""
 
@@ -794,11 +816,6 @@ msgstr ""
 msgid ""
 "You are about to delete the widget \"%s\".\n"
 "                This action is irreversible. Please confirm this deletion."
-msgstr ""
-
-msgid ""
-"You are about to remove <b>%s</b> from <b>%s</b>. Please, confirm your "
-"action."
 msgstr ""
 
 msgid "You can import users into your project by specifying a text file."
