@@ -609,7 +609,10 @@ function ugroup_add_user_to_ugroup($group_id, $ugroup_id, $user_id) {
                 'user_id' => $user_id));
         }
     } else {
-        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_admin_ugroup_utils', 'cant_insert_u_in_g', array($user_id, $ugroup_id, $GLOBALS['Language']->getText('project_admin_ugroup_utils', 'user_already_exist'))));
+        $GLOBALS['Response']->addFeedback(
+            Feedback::ERROR,
+            $GLOBALS['Language']->getText('include_account', 'user_already_member')
+        );
     }
 }
 
