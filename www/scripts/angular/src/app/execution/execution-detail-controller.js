@@ -44,7 +44,6 @@ function ExecutionDetailCtrl(
     $scope.fail                        = fail;
     $scope.block                       = block;
     $scope.notrun                      = notrun;
-    $scope.sanitizeHtml                = sanitizeHtml;
     $scope.getStatusLabel              = getStatusLabel;
     $scope.linkMenuIsVisible           = issue_config.permissions.create && issue_config.permissions.link;
     $scope.canCreateIssue              = issue_config.permissions.create;
@@ -224,14 +223,6 @@ function ExecutionDetailCtrl(
 
     function isCurrentExecutionLoaded() {
         return typeof ExecutionService.executions[execution_id] !== 'undefined';
-    }
-
-    function sanitizeHtml(html) {
-        if (html) {
-            return $sce.trustAsHtml(html);
-        }
-
-        return null;
     }
 
     function pass(execution) {
