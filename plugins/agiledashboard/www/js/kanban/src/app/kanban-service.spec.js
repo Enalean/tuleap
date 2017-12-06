@@ -3,30 +3,121 @@ import angular       from 'angular';
 import 'angular-mocks';
 
 describe("KanbanService -", () => {
-    var $httpBackend,
+    let $httpBackend,
         KanbanService,
-        RestErrorService;
+        RestErrorService,
+        FilterTrackerReportService;
 
     beforeEach(() => {
-        angular.mock.module(kanban_module, ($provide) => {
-            $provide.decorator('RestErrorService', ($delegate) => {
-                spyOn($delegate, "reload");
-
-                return $delegate;
-            });
-        });
+        angular.mock.module(kanban_module);
 
         angular.mock.inject(function(
             _$httpBackend_,
             _KanbanService_,
-            _RestErrorService_
+            _RestErrorService_,
+            _FilterTrackerReportService_,
         ) {
-            $httpBackend     = _$httpBackend_;
-            KanbanService    = _KanbanService_;
-            RestErrorService = _RestErrorService_;
+            $httpBackend               = _$httpBackend_;
+            KanbanService              = _KanbanService_;
+            RestErrorService           = _RestErrorService_;
+            FilterTrackerReportService = _FilterTrackerReportService_;
         });
 
+        spyOn(RestErrorService, "reload");
+        spyOn(FilterTrackerReportService, "getSelectedFilterTrackerReportId");
+
         installPromiseMatchers();
+    });
+
+    afterEach(() => {
+        $httpBackend.verifyNoOutstandingExpectation();
+        $httpBackend.verifyNoOutstandingRequest();
+    });
+
+    describe("getBacklogSize() -", () => {
+        it("Given a kanban id, then a promise will be resolved with the total number of items of the backlog", () => {
+            const kanban_id   = 40;
+            const column_size = 27;
+            $httpBackend.expectHEAD('/api/v1/kanban/' + kanban_id + '/backlog').respond(200, '', {
+                'X-PAGINATION-SIZE': column_size
+            });
+
+            const promise = KanbanService.getBacklogSize(kanban_id);
+            expect(promise).toBeResolvedWith(column_size);
+        });
+
+        it("Given a kanban id, when my kanban is filtered, then the filtering report will be added to the query", () => {
+            const tracker_report_id = 37;
+            FilterTrackerReportService.getSelectedFilterTrackerReportId.and.returnValue(tracker_report_id);
+            const kanban_id     = 40;
+            const column_size   = 3;
+            const encoded_query = encodeURI(JSON.stringify({ tracker_report_id }));
+            $httpBackend.expectHEAD('/api/v1/kanban/' + kanban_id + '/backlog?query=' + encoded_query)
+                .respond(200, '', {
+                    'X-PAGINATION-SIZE': column_size
+                });
+
+            const promise = KanbanService.getBacklogSize(kanban_id);
+            expect(promise).toBeResolvedWith(column_size);
+        });
+    });
+
+    describe("getArchiveSize() -", () => {
+        it("Given a kanban id, then a promise will be resolved with the total number of items of the archive", () => {
+            const kanban_id   = 7;
+            const column_size = 17;
+            $httpBackend.expectHEAD('/api/v1/kanban/' + kanban_id + '/archive').respond(200, '', {
+                'X-PAGINATION-SIZE': column_size
+            });
+
+            const promise = KanbanService.getArchiveSize(kanban_id);
+            expect(promise).toBeResolvedWith(column_size);
+        });
+
+        it("Given a kanban id, when my kanban is filtered, then the filtering report will be added to the query", () => {
+            const tracker_report_id = 88;
+            FilterTrackerReportService.getSelectedFilterTrackerReportId.and.returnValue(tracker_report_id);
+            const kanban_id     = 99;
+            const column_size   = 8;
+            const encoded_query = encodeURI(JSON.stringify({ tracker_report_id }));
+            $httpBackend.expectHEAD('/api/v1/kanban/' + kanban_id + '/archive?query=' + encoded_query)
+                .respond(200, '', {
+                    'X-PAGINATION-SIZE': column_size
+                });
+
+            const promise = KanbanService.getArchiveSize(kanban_id);
+            expect(promise).toBeResolvedWith(column_size);
+        });
+    });
+
+    describe("getColumnContentSize() -", () => {
+        it("Given a kanban id and a column id, then a promise will be resolved with the total number of items of the column", () => {
+            const kanban_id   = 6;
+            const column_id   = 68;
+            const column_size = 36;
+            $httpBackend.expectHEAD('/api/v1/kanban/' + kanban_id + '/items?column_id=' + column_id).respond(200, '', {
+                'X-PAGINATION-SIZE': column_size
+            });
+
+            const promise = KanbanService.getColumnContentSize(kanban_id, column_id);
+            expect(promise).toBeResolvedWith(column_size);
+        });
+
+        it("Given a kanban id, when my kanban is filtered, then the filtering report will be added to the query", () => {
+            const tracker_report_id = 65;
+            FilterTrackerReportService.getSelectedFilterTrackerReportId.and.returnValue(tracker_report_id);
+            const kanban_id     = 99;
+            const column_id     = 68;
+            const column_size   = 49;
+            const encoded_query = encodeURI(JSON.stringify({ tracker_report_id }));
+            $httpBackend.expectHEAD('/api/v1/kanban/' + kanban_id + '/items?column_id=' + column_id + '&query=' + encoded_query)
+                .respond(200, '', {
+                    'X-PAGINATION-SIZE': column_size
+                });
+
+            const promise = KanbanService.getColumnContentSize(kanban_id, column_id);
+            expect(promise).toBeResolvedWith(column_size);
+        });
     });
 
     describe("reorderColumn() -", function() {

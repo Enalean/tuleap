@@ -56,25 +56,40 @@ $kanban-column-footer-height: 50px;
     height: calc(100vh - (#{$navbar-height} * 2));
 }
 
+kanban-filtered-updated-alert > .tlp-alert-warning:last-child {
+    margin: $tlp-spacing;
+}
+
 .kanban-header {
     display: flex;
     flex: 0 0 auto;
     flex-wrap: wrap;
+    align-items: baseline;
+    padding: $tlp-spacing $tlp-spacing $tlp-half-spacing;
+}
+
+.kanban-header-title {
+    margin: 0 $tlp-spacing 0 0;
+}
+
+.kanban-header-config {
+    display: flex;
+    flex: 1 1 auto;
+    margin: $tlp-half-spacing 0 0;
+}
+
+.kanban-header-report-button {
+    margin: 0 0 0 $tlp-half-spacing;
+}
+
+.kanban-header-compact-toggler-label {
+    display: flex;
     align-items: center;
-    padding: $tlp-spacing 0;
-}
-
-.kanban-alerts-header {
-    padding: $tlp-spacing;
-}
-
-.kanban-header-edit-button {
-    margin: 0 $tlp-half-spacing 0 0;
 }
 
 .kanban-header-spacer {
     flex: 10 1 auto;
-    margin: $tlp-spacing;
+    margin: 0 $tlp-spacing;
 }
 
 .kanban-header-filter-edit-buttons-spacer {
@@ -82,14 +97,15 @@ $kanban-column-footer-height: 50px;
     margin: $tlp-half-spacing;
 }
 
-.kanban-header-view-button {
-    margin: 0 $tlp-half-spacing 0 0;
-}
-
 .kanban-header-search {
     flex: 0 1 auto;
     width: 150px;
+    margin: 0 0 0 $tlp-half-spacing;
     background: $tlp-ui-white;
+}
+
+.kanban-filtered-info {
+    padding: 0 $tlp-spacing $tlp-half-spacing;
 }
 
 .kanban-board {
@@ -187,7 +203,7 @@ $kanban-column-footer-height: 50px;
             border-bottom-color: $tlp-ui-warning;
 
             > .kanban-column-header-label,
-            > .kanban-column-header-wip > .kanban-column-header-wip-count,
+            > column-wip-header > .kanban-column-header-wip > .kanban-column-header-wip-count,
             > .kanban-column-header-wip-warning,
             > .kanban-column-header-toggle,
             > .kanban-column-label {
@@ -497,15 +513,4 @@ add-in-place {
 
 .kanban-header-url {
     margin: 0 $tlp-double-spacing 0 0;
-}
-
-.kanban-header-config {
-    display: flex;
-    flex: 1 1 auto;
-    margin: 0 0 0 $tlp-half-spacing;
-}
-
-.kanban-header-compact-toggler-label {
-    display: flex;
-    align-items: center;
 }

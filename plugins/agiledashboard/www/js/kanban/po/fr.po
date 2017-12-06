@@ -277,11 +277,11 @@ msgstr ""
 msgid "You have reached the work in progress limit for this column!"
 msgstr "Vous avez atteint la limite du nombre de carte de cette colonne !"
 
-#: src/app/filter-tracker-report/filter-tracker-report.tpl.html
+#: src/app/kanban.tpl.html
 msgid "Your kanban is filtered, there is no update of WIP."
 msgstr "Votre kanban est filtré, il n'y a pas de mise à jour du WIP."
 
-#: src/app/filter-tracker-report/filter-tracker-report.tpl.html
+#: src/app/kanban.tpl.html
 msgid ""
 "Your kanban is filtered, there is no update of cards in real time or WIP."
 msgstr ""

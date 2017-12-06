@@ -48,6 +48,7 @@ import TuleapStripTagsFilter               from './strip-tags/strip-tags-filter.
 import WipPopoverDirective                 from './wip-popover/wip-popover-directive.js';
 import KanbanColumnController              from './kanban-column/kanban-column-controller.js';
 import KanbanDirective                     from './kanban-directive.js';
+import ColumnWipHeaderDirective            from './kanban-column/column-wip-header/column-wip-header-directive.js';
 
 export default angular.module('kanban', [
     'angular-locker',
@@ -93,6 +94,7 @@ export default angular.module('kanban', [
 .directive('wipPopover', WipPopoverDirective)
 .directive('goToKanban', GoToKanbanDirective)
 .directive('kanbanFilteredUpdatedAlert', KanbanFilteredUpdatedAlertDirective)
+.directive('columnWipHeader', ColumnWipHeaderDirective)
 .value('KanbanFilterValue', KanbanFilterValue)
 .filter('InPropertiesFilter', InPropertiesFilter)
 .filter('tuleapStripTags', TuleapStripTagsFilter)

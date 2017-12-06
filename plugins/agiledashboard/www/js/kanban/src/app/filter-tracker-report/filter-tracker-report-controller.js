@@ -16,8 +16,6 @@ function FilterTrackerReportController(
 
         changeFilter,
         displaySelectbox,
-        displayCardsAndWIPNotUpdated,
-        displayWIPNotUpdated,
         getSelectableReports: FilterTrackerReportService.getSelectableReports
     });
 
@@ -38,14 +36,5 @@ function FilterTrackerReportController(
 
     function displaySelectbox() {
         return (self.getSelectableReports().length > 0);
-    }
-
-    function displayCardsAndWIPNotUpdated() {
-        return FilterTrackerReportService.areNotCardsAndWIPUpdated();
-    }
-
-    function displayWIPNotUpdated() {
-        return ! FilterTrackerReportService.areNotCardsAndWIPUpdated() &&
-            FilterTrackerReportService.isNotWIPUpdated();
     }
 }
