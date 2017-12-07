@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "9228786d7deca42c9637442aa0ef7bc3",
+    "content-hash": "e25d5bcb32c78ab1e13708969ad70bb1",
     "packages": [
         {
             "name": "ezyang/htmlpurifier",
@@ -100,17 +100,86 @@
             "time": "2017-06-27T22:17:23+00:00"
         },
         {
+            "name": "luracast/restler",
+            "version": "3.0.0-RC6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Enalean/Restler.git",
+                "reference": "9ca6dadb5f17e6dedccc3087957c8e2e25bd6cf8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Enalean/Restler/zipball/9ca6dadb5f17e6dedccc3087957c8e2e25bd6cf8",
+                "reference": "9ca6dadb5f17e6dedccc3087957c8e2e25bd6cf8",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "conflict": {
+                "restler/framework": "3.*"
+            },
+            "require-dev": {
+                "behat/behat": "2.5.*@stable",
+                "bshaffer/oauth2-server-php": "v1.0",
+                "guzzlehttp/guzzle": "3.8.1"
+            },
+            "suggest": {
+                "behat/behat": "Behaviour driven development testing framework (see require-dev for details)",
+                "bshaffer/oauth2-server-php": "If you want to use OAuth2 for authentication",
+                "guzzle/guzzle": "RESTful api HTTP client framework (see require-dev for details)",
+                "illuminate/view": "If you want to use laravel blade templates with Html format",
+                "mustache/mustache": "If you want to use mustache/handlebar templates with Html format",
+                "rodneyrehm/plist": "If you need Apple plist binary/xml format",
+                "symfony/yaml": "If you need YAML format",
+                "twig/twig": "If you want to use twig templates with Html format",
+                "zendframework/zendamf": "If you need AMF format"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "v3": "v3.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Luracast\\Restler": "vendor/"
+                }
+            },
+            "license": [
+                "LGPL-2.1"
+            ],
+            "authors": [
+                {
+                    "name": "Luracast",
+                    "email": "arul@luracast.com"
+                }
+            ],
+            "description": "Restler is a simple and effective multi-format Web API Server framework written in PHP. Just deal with your business logic in php, Restler will take care of the REST!",
+            "homepage": "http://luracast.com/products/restler/",
+            "keywords": [
+                "REST",
+                "api",
+                "framework",
+                "server"
+            ],
+            "support": {
+                "source": "https://github.com/Enalean/Restler/tree/3.0.0-RC6"
+            },
+            "time": "2017-12-05T08:49:39+00:00"
+        },
+        {
             "name": "mustache/mustache",
             "version": "dev-feature/strict-variables",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Enalean/mustache.php.git",
-                "reference": "56063842fd40b31be98e3e2f1523142c843a1504"
+                "reference": "8d966dcf10b25c76eb4e80a7c69bb4e3d7c44041"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Enalean/mustache.php/zipball/56063842fd40b31be98e3e2f1523142c843a1504",
-                "reference": "56063842fd40b31be98e3e2f1523142c843a1504",
+                "url": "https://api.github.com/repos/Enalean/mustache.php/zipball/8d966dcf10b25c76eb4e80a7c69bb4e3d7c44041",
+                "reference": "8d966dcf10b25c76eb4e80a7c69bb4e3d7c44041",
                 "shasum": ""
             },
             "require": {
@@ -145,7 +214,7 @@
             "support": {
                 "source": "https://github.com/Enalean/mustache.php/tree/feature/strict-variables"
             },
-            "time": "2017-09-22T21:10:03+00:00"
+            "time": "2017-12-08T15:59:09+00:00"
         },
         {
             "name": "paragonie/random_compat",
@@ -282,7 +351,8 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "mustache/mustache": 20
+        "mustache/mustache": 20,
+        "luracast/restler": 5
     },
     "prefer-stable": false,
     "prefer-lowest": false,

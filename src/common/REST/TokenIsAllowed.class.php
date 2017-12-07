@@ -19,7 +19,7 @@
 
 namespace Tuleap\REST;
 
-use \Luracast\Restler\RestException;
+use \Luracast\Restler\InvalidAuthCredentials;
 
 use Rest_Exception_InvalidTokenException;
 use User_LoginException;
@@ -43,9 +43,9 @@ class TokenIsAllowed {
                 return true;
             }
         } catch (User_LoginException $exception) {
-            throw new RestException(403, $exception->getMessage());
+            throw new InvalidAuthCredentials(403, $exception->getMessage());
         } catch (Rest_Exception_InvalidTokenException $exception) {
-            throw new RestException(401, $exception->getMessage());
+            throw new InvalidAuthCredentials(401, $exception->getMessage());
         }
 
         return false;

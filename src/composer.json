@@ -3,6 +3,10 @@
     {
       "type": "vcs",
       "url": "https://github.com/Enalean/mustache.php.git"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/Enalean/Restler.git"
     }
   ],
   "require": {
@@ -10,7 +14,8 @@
     "mustache/mustache": "dev-feature/strict-variables",
     "ezyang/htmlpurifier": "^4.9.3",
     "firebase/php-jwt": "^5.0.0",
-    "paragonie/sodium_compat": "^1.4"
+    "paragonie/sodium_compat": "^1.4",
+    "Luracast/Restler": "3.0.0-RC6"
   },
   "config": {
     "platform": {

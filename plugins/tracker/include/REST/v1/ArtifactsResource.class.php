@@ -61,7 +61,7 @@ class ArtifactsResource extends AuthenticatedResource {
     const VALUES_FORMAT_COLLECTION = 'collection';
     const VALUES_FORMAT_BY_FIELD   = 'by_field';
     const VALUES_FORMAT_ALL        = 'all';
-    const VALUES_DEFAULT           = '';
+    const VALUES_DEFAULT           = null;
 
     const EMPTY_TYPE = '';
 

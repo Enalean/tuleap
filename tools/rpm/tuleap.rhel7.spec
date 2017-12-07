@@ -380,7 +380,7 @@ Summary: Web API Explorer
 Group: Development/Tools
 Version: 1.0
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
-#Requires: %{php_base}-restler
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
 %description api-explorer
 Web API Explorer for Restler. Based on Swagger UI, it dynamically generates beautiful documentation.
 
@@ -616,9 +616,6 @@ done
 #%{__ln_s} %{APP_LOG_DIR} $RPM_BUILD_ROOT/%{OLD_APP_LOG_DIR}
 #%{__ln_s} /etc/rc.d/init.d/%{APP_NAME} $RPM_BUILD_ROOT/etc/rc.d/init.d/codendi
 #%{__ln_s} /etc/%{APP_NAME} $RPM_BUILD_ROOT/etc/%{OLD_APP_NAME}
-#
-## Symlink for the API Explorer
-#%{__ln_s} /usr/share/restler/vendor/Luracast/Restler/explorer/ $RPM_BUILD_ROOT/%{APP_DIR}/src/www/api/explorer
 #
 ##
 ## On package install

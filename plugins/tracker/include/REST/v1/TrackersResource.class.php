@@ -57,7 +57,7 @@ class TrackersResource extends AuthenticatedResource {
     const MAX_LIMIT            = 1000;
     const DEFAULT_LIMIT        = 100;
     const DEFAULT_OFFSET       = 0;
-    const DEFAULT_VALUES       = '';
+    const DEFAULT_VALUES       = null;
     const ALL_VALUES           = 'all';
     const DEFAULT_CRITERIA     = '';
     const ORDER_ASC            = 'asc';
