@@ -33,7 +33,7 @@
                     </span>
                 </div>
                 <div class="current-test-header-comment" ng-if="execution.previous_result.result">
-                    <div ng-bind-html="sanitizeHtml(execution.previous_result.result)"></div>
+                    <div ng-bind-html="execution.previous_result.result"></div>
                 </div>
             </div>
 
@@ -103,7 +103,7 @@
 
         <section class="tlp-pane-section current-test-content">
             <h2>Steps</h2>
-            <div ng-bind-html="sanitizeHtml(execution.definition.description)"></div>
+            <div ng-bind-html="execution.definition.description"></div>
         </section>
 
         <section class="tlp-pane-section current-test-footer">
