@@ -102,6 +102,12 @@ $sys_ldap_grp_uid       = 'sAMAccountName';
 //group identifier (for ActiveDirectory servers)
 $sys_ldap_grp_member    = 'member';
 
+//group objectclass (for ActiveDirectory servers)
+$sys_ldap_grp_oc    = 'group';
+
+//user objectclass (for ActiveDirectory servers)
+$sys_ldap_user_oc    = 'person';
+
 // Threshold for users to be suspended
 // On beyond of this value expressed in percentage no users will be suspended
 $sys_ldap_threshold_users_suspension = '';

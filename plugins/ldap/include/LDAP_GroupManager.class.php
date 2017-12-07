@@ -2,6 +2,7 @@
 /**
  * Copyright (c) STMicroelectronics, 2008. All Rights Reserved.
  * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) cjt Systemsoftware AG, 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -264,40 +265,87 @@ abstract class LDAP_GroupManager
     /**
      * Get EdUid of people member of the given LDAP group.
      *
-     * @param String $groupDn LDAP group dn
-     * 
+     * @param String $groupDn
+     *            LDAP group dn
+     *
      * @return Array
      */
-    public function getLdapGroupMembers($groupDn) 
+    public function getLdapGroupMembers($groupDn)
     {
-        $ldapIds  = array();
-        $ldap     = $this->getLdap();
+        $ldapIds = array();
+        $ldap = $this->getLdap();
         $groupDef = $ldap->searchGroupMembers($groupDn);
-        if ($groupDef && $groupDef->count() == 1) {
-            $ldapGroup   = $groupDef->current();
-            $baseGroupDn = strtolower($ldap->getLDAPParam('grp_dn'));
-            foreach ($ldapGroup->getGroupMembers() as $memberDn) {
-                $memberDn = strtolower($memberDn);
-                if (strpos($memberDn, $baseGroupDn) !== false) {
-                    $ids = $this->getLdapGroupMembers($memberDn);
-                    $ldapIds = array_merge($ldapIds, $ids);
-                } else {
-                    // Assume it's a user definition
-                    $attrs = array($ldap->getLDAPParam('eduid'),
-                    $ldap->getLDAPParam('cn'),
-                    $ldap->getLDAPParam('uid'),
-                    $ldap->getLDAPParam('mail'));
-                    $ldapUserResI = $ldap->searchDn($memberDn, $attrs);
-                    if ($ldapUserResI && $ldapUserResI->count() == 1) {
-                        $lr = $ldapUserResI->current();
-                        $ldapIds[$lr->getEdUid()] = $lr;
+        // check if new parameters are set to switch between old and new implementation
+        $groupOc = $ldap->getLDAPParam('grp_oc');
+        $userOc = $ldap->getLDAPParam('user_oc');
+        if (isset($groupOc, $userOc)) {
+            // new function with support for nested groups etc.
+            $ocArray = array();
+            if ($groupDef) {
+                foreach ($groupDef as $groupEntry) {
+                    // distinguish users and groups via their objectclass
+                    foreach ($groupEntry->getGroupMembers() as $memberDn) {
+                        $ocRi = $ldap->searchDn($memberDn, array(
+                            'objectClass'
+                        ));
+                        $ocArray = $ocRi->get(0)->getAll('objectclass');
+                        $ocArray = array_map('strtolower', $ocArray);
+                        if ($ocArray) {
+                            if (in_array(strtolower($groupOc), $ocArray)) {
+                                // group = get member recursiv
+                                $ids = $this->getLdapGroupMembers($memberDn);
+                                $ldapIds = array_merge($ldapIds, $ids);
+                            } elseif (in_array(strtolower($userOc), $ocArray)) {
+                                // user = get data
+                                $attrs = array(
+                                    $ldap->getLDAPParam('eduid'),
+                                    $ldap->getLDAPParam('cn'),
+                                    $ldap->getLDAPParam('uid'),
+                                    $ldap->getLDAPParam('mail')
+                                );
+                                $ldapUserResI = $ldap->searchDn($memberDn, $attrs);
+                                if ($ldapUserResI && $ldapUserResI->count() == 1) {
+                                    $lr = $ldapUserResI->current();
+                                    $ldapIds[$lr->getEdUid()] = $lr;
+                                }
+                            } else {
+                                // no group or user nothing yet todo - maybe error treatment in future
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            // old function - without nested groups etc.
+            if ($groupDef && $groupDef->count() == 1) {
+                $ldapGroup = $groupDef->current();
+                $baseGroupDn = strtolower($ldap->getLDAPParam('grp_dn'));
+                foreach ($ldapGroup->getGroupMembers() as $memberDn) {
+                    $memberDn = strtolower($memberDn);
+                    if (strpos($memberDn, $baseGroupDn) !== false) {
+                        $ids = $this->getLdapGroupMembers($memberDn);
+                        $ldapIds = array_merge($ldapIds, $ids);
+                    } else {
+                        // Assume it's a user definition
+                        $attrs = array(
+                            $ldap->getLDAPParam('eduid'),
+                            $ldap->getLDAPParam('cn'),
+                            $ldap->getLDAPParam('uid'),
+                            $ldap->getLDAPParam('mail')
+                        );
+                        $ldapUserResI = $ldap->searchDn($memberDn, $attrs);
+                        if ($ldapUserResI && $ldapUserResI->count() == 1) {
+                            $lr = $ldapUserResI->current();
+                            $ldapIds[$lr->getEdUid()] = $lr;
+                        }
                     }
                 }
             }
         }
         return $ldapIds;
     }
-
+    
+    
     /**
      * Get the Codendi user id of the people in given LDAP group
      * 
