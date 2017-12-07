@@ -290,7 +290,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     /**
      * Return the tracker of this formElement
      *
-     * @return Tracker
+     * @return Tracker|null
      */
     public function getTracker() {
         if (!$this->tracker) {

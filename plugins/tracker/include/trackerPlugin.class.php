@@ -512,7 +512,11 @@ class trackerPlugin extends Plugin {
                 } else if ($type == 'field') {
                     $ret = (string)$object_id;
                     if ($field = Tracker_FormElementFactory::instance()->getFormElementById($object_id)) {
-                        $ret = $field->getLabel() .' ('. $field->getTracker()->getName() .')';
+                        $ret     = $field->getLabel();
+                        $tracker = $field->getTracker();
+                        if ($tracker !== null) {
+                            $ret .= ' ('. $tracker->getName() .')';
+                        }
                     }
                     $params['object_name'] =  $ret;
                 } else if ($type == 'artifact') {
