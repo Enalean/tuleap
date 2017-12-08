@@ -23,10 +23,8 @@ describe("Module Scores", function() {
     describe("update()", function() {
         it("Given user id with new information, when I verify and update then user information are changed", function() {
             var data = {
-                artifact: {
-                    id: 40,
-                    status: 'blocked'
-                },
+                artifact_id: 40,
+                status: 'blocked',
                 previous_status: 'blocked',
                 previous_user: {
                     id: 102
@@ -60,10 +58,8 @@ describe("Module Scores", function() {
 
         it("Given user id and new status of an execution equal to 'notrun', when I verify and update then there are no changements", function() {
             var data = {
-                artifact: {
-                    id: 40,
-                    status: 'notrun'
-                },
+                artifact_id: 40,
+                status: 'notrun',
                 previous_status: 'blocked',
                 previous_user: {
                     id: 102
@@ -96,10 +92,8 @@ describe("Module Scores", function() {
 
         it("Given user id and new status of an execution equal to previous status, when I change the status then there are no changements", function() {
             var data = {
-                artifact: {
-                    id: 40,
-                    status: 'blocked'
-                },
+                artifact_id: 40,
+                status: 'blocked',
                 previous_status: 'blocked',
                 previous_user: {
                     id: 102
@@ -132,10 +126,8 @@ describe("Module Scores", function() {
 
         it("Given user id and new status of an execution not equal to previous status, when I change the status from notrun to passed then the score is updated", function() {
             var data = {
-                artifact: {
-                    id: 40,
-                    status: 'passed'
-                },
+                artifact_id: 40,
+                status: 'passed',
                 previous_status: 'notrun',
                 previous_user: {
                     id: 102
@@ -168,10 +160,8 @@ describe("Module Scores", function() {
 
         it("Given user id and new status of an execution not equal to previous status, when I change the status from notrun to failed then the score is updated", function() {
             var data = {
-                artifact: {
-                    id: 40,
-                    status: 'failed'
-                },
+                artifact_id: 40,
+                status: 'failed',
                 previous_status: 'notrun',
                 previous_user: {
                     id: 102
@@ -204,10 +194,8 @@ describe("Module Scores", function() {
 
         it("Given user id, new status of an execution and a previous submitter id, when I change the status test from failed to notrun then the score is updated for the previous user", function() {
             var data = {
-                artifact: {
-                    id: 40,
-                    status: 'notrun'
-                },
+                artifact_id: 40,
+                status: 'notrun',
                 previous_status: 'failed',
                 previous_user: {
                     id: 102
@@ -249,10 +237,8 @@ describe("Module Scores", function() {
 
         it("Given user id, new status of an execution and a previous submitter id, when I change the status test from passed to blocked then the score is updated for the previous user", function() {
             var data = {
-                artifact: {
-                    id: 40,
-                    status: 'blocked'
-                },
+                artifact_id: 40,
+                status: 'blocked',
                 previous_status: 'passed',
                 previous_user: {
                     id: 102
@@ -294,10 +280,8 @@ describe("Module Scores", function() {
 
         it("Given user id, new status of an execution and a previous submitter id, when I change the status test from failed to blocked then the score is updated for the previous user", function() {
             var data = {
-                artifact: {
-                    id: 40,
-                    status: 'blocked'
-                },
+                artifact_id: 40,
+                status: 'blocked',
                 previous_status: 'failed',
                 previous_user: {
                     id: 102
@@ -339,10 +323,8 @@ describe("Module Scores", function() {
 
         it("Given user id, new status of an execution and a previous submitter id, when I change the status test from failed to passed then the score is updated for the user", function() {
             var data = {
-                artifact: {
-                    id: 40,
-                    status: 'passed'
-                },
+                artifact_id: 40,
+                status: 'passed',
                 previous_status: 'failed',
                 previous_user: {
                     id: 102
@@ -375,10 +357,8 @@ describe("Module Scores", function() {
 
         it("Given user id, new status of an execution and a previous submitter id, when I change the status test from passed to notrun then the score is updated for the previous user", function() {
             var data = {
-                artifact: {
-                    id: 40,
-                    status: 'notrun'
-                },
+                artifact_id: 40,
+                status: 'notrun',
                 previous_status: 'passed',
                 previous_user: {
                     id: 102
@@ -420,10 +400,8 @@ describe("Module Scores", function() {
 
         it("Given user id, new status of an execution and a previous submitter id, when I change the status test from blocked to notrun then the score isn't updated", function() {
             var data = {
-                artifact: {
-                    id: 40,
-                    status: 'notrun'
-                },
+                artifact_id: 40,
+                status: 'notrun',
                 previous_status: 'blocked',
                 previous_user: {
                     id: 102

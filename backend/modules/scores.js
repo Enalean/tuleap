@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -146,7 +146,7 @@ define([
          * @param data     (Object)
          */
         self.update = function(user, room_id, data) {
-            var status          = data.artifact.status;
+            var status          = data.status;
             var previous_status = data.previous_status;
             var previous_user   = data.previous_user;
             var delta_for_current_user  = score_map_previous_status_to_status_for_current_user[previous_status][status];

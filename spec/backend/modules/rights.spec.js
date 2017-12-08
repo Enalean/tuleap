@@ -145,49 +145,4 @@ describe("Module Rights", function() {
             expect(rights.userCanReceiveData(165, userRights)).toEqual(true);
         });
     });
-
-    describe("filterMessageByRights()", function() {
-        it("Given user id and user rights object for a message with an artifact, when I filterMessageByRights with field rights restricted then we transform message content corresponding to the user rights", function () {
-            var userRights = {
-                field: {
-                    '352': ['@ug_105']
-                }
-            };
-            var data = {
-                artifact: {
-                    label: '1',
-                    card_fields: [
-                        {
-                            field_id: 352,
-                            label: 'Summary'
-                        }
-                    ]
-                }
-            };
-            expect(rights.filterMessageByRights(165, userRights, data.artifact)).toEqual({
-                label: null,
-                card_fields: []
-            });
-        });
-
-        it("Given user id and user rights object for a message with an artifact, when I filterMessageByRights with field rights not restricted then we don't transform message", function () {
-            var userRights = {
-                field: {
-                    '352': ['@site_active']
-                }
-            };
-            var data = {
-                artifact: {
-                    label: '1',
-                    card_fields: [
-                        {
-                            field_id: 352,
-                            label: 'Summary'
-                        }
-                    ]
-                }
-            };
-            expect(rights.filterMessageByRights(165, userRights, data.artifact)).toEqual(data.artifact);
-        });
-    });
 });

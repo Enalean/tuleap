@@ -146,12 +146,8 @@ describe("Module Rooms", function() {
                     artifact: ['@arealtime_project_admin']
                 },
                 data: {
-                    artifact: {
-                        id: 39,
-                        uri: 'testmanagement_executions/39',
-                        results: '',
-                        status: 'passed'
-                    },
+                    artifact_id: 39,
+                    status: 'passed',
                     previous_status: 'failed',
                     previous_user: {
                         id: user_id
@@ -163,12 +159,8 @@ describe("Module Rooms", function() {
             };
 
             var expect_data = {
-                artifact: {
-                    id: 39,
-                    uri: 'testmanagement_executions/39',
-                    results: '',
-                    status: 'passed'
-                },
+                artifact_id: 39,
+                status: 'passed',
                 previous_status: 'failed',
                 previous_user: {
                     id: user_id,
