@@ -23,7 +23,11 @@ function CampaignService(
     };
 
     function getCampaign(campaign_id) {
-        return rest.one('testmanagement_campaigns', campaign_id).get().$object;
+        return rest.one('testmanagement_campaigns', campaign_id)
+            .get()
+            .then((response) => {
+                return response.data;
+            });
     }
 
     function getCampaigns(project_id, milestone_id, campaign_status, limit, offset) {

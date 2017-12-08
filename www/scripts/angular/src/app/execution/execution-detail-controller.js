@@ -109,7 +109,7 @@ function ExecutionDetailCtrl(
                 })
                 .then((artifact) => {
                     artifact.tracker.color_name = SharedPropertiesService.getIssueTrackerConfig().xref_color;
-                    return ExecutionService.addArtifactLink($scope.execution, artifact);
+                    return ExecutionService.addArtifactLink($scope.execution.id, artifact);
                 }, () => {
                     ExecutionService.displayErrorMessage(
                         $scope.execution,
@@ -145,7 +145,7 @@ function ExecutionDetailCtrl(
         function callback(artifact) {
             $scope.linkedIssueId           = artifact.id;
             $scope.linkedIssueAlertVisible = true;
-            ExecutionService.addArtifactLink($scope.execution, artifact);
+            ExecutionService.addArtifactLink($scope.execution.id, artifact);
         }
 
         return TlpModalService.open({

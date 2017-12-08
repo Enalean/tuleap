@@ -8,15 +8,11 @@ CampaignEditCtrl.$inject = [
     '$scope',
     '$q',
     '$state',
-    '$filter',
-    '$timeout',
     'SharedPropertiesService',
     'CampaignService',
     'DefinitionService',
     'ExecutionService',
-    'ExecutionRestService',
     'NewTuleapArtifactModalService',
-    'CampaignEditConstants',
     'editCampaignCallback'
 ];
 
@@ -25,15 +21,11 @@ function CampaignEditCtrl(
     $scope,
     $q,
     $state,
-    $filter,
-    $timeout,
     SharedPropertiesService,
     CampaignService,
     DefinitionService,
     ExecutionService,
-    ExecutionRestService,
     NewTuleapArtifactModalService,
-    CampaignEditConstants,
     editCampaignCallback
 ) {
     var project_id,
@@ -61,18 +53,20 @@ function CampaignEditCtrl(
 
         SharedPropertiesService.setCampaignId(campaign_id);
 
-        $scope.campaign = CampaignService.getCampaign(campaign_id);
-        $scope.filters.search   = '';
+        CampaignService.getCampaign(campaign_id).then((campaign) => {
+            $scope.campaign       = campaign;
+            $scope.filters.search = '';
 
-        loadTestReports();
+            loadTestReports();
 
-        $q.all([
-            loadDefinitions(),
-            loadExecutions()
-        ]).then(function(results) {
-            var definitions = results[0],
-                executions = results[1];
-            $scope.tests_list = buildInitialTestsList(definitions, executions);
+            $q.all([
+                loadDefinitions(),
+                loadExecutions()
+            ]).then(function(results) {
+                var definitions = results[0],
+                    executions = results[1];
+                $scope.tests_list = buildInitialTestsList(definitions, executions);
+            });
         });
     };
 
@@ -257,20 +251,16 @@ function CampaignEditCtrl(
     function editCampaign(campaign) {
         $scope.submitting_changes = true;
 
-        var definition_ids = _.map(addedTests(), function(test) { return test.definition.id; });
-        var execution_ids = _.map(removedTests(), function(test) { return test.execution.id; });
+        const definition_ids = _.map(addedTests(), (test) => { return test.definition.id; });
+        const execution_ids  = _.map(removedTests(), (test) => { return test.execution.id; });
 
-        var campaign_update   = CampaignService
-            .patchCampaign(campaign.id, campaign.label);
-        var executions_update = CampaignService
-            .patchExecutions(campaign.id, definition_ids, execution_ids);
-
-        $q.all([campaign_update, executions_update]).then(function(responses) {
+        CampaignService.patchExecutions(campaign.id, definition_ids, execution_ids).then(() => {
+            return CampaignService.patchCampaign(campaign.id, campaign.label);
+        }).then(response => {
             $scope.submitting_changes = false;
 
             if (editCampaignCallback) {
-                var campaign = responses[0];
-                editCampaignCallback(campaign);
+                editCampaignCallback(response);
             }
 
             modal_instance.tlp_modal.hide();
