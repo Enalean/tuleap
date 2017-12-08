@@ -1,3 +1,9 @@
+msgid "Artifact"
+msgstr ""
+
+msgid "Assigned to"
+msgstr ""
+
 msgid "Error while fetching the cross tracker report"
 msgstr ""
 
@@ -13,10 +19,25 @@ msgstr ""
 msgid "Error while updating the cross tracker report"
 msgstr ""
 
+msgid "Last update date"
+msgstr ""
+
+msgid "Load more"
+msgstr ""
+
+msgid "No matching artifacts found"
+msgstr ""
+
 msgid "Please choose..."
 msgstr ""
 
 msgid "Report has been successfully saved"
+msgstr ""
+
+msgid "Status"
+msgstr ""
+
+msgid "Submitted by"
 msgstr ""
 
 msgid "Tracker selection is limited to 10 trackers"

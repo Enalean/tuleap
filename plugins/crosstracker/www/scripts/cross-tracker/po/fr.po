@@ -13,6 +13,12 @@ msgstr ""
 "X-Generator: Poedit 2.0.3\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid "Artifact"
+msgstr "Artéfact"
+
+msgid "Assigned to"
+msgstr "Assigné à"
+
 msgid "Error while fetching the cross tracker report"
 msgstr "Erreur à la récupération du rapport multi outil de suivi"
 
@@ -28,11 +34,26 @@ msgstr "Erreur à la récupération du résultat de la requête"
 msgid "Error while updating the cross tracker report"
 msgstr "Erreur lors de la mise à jour du rapport multi outil de suivi"
 
+msgid "Last update date"
+msgstr "Mis à jour le"
+
+msgid "Load more"
+msgstr "Voir plus"
+
+msgid "No matching artifacts found"
+msgstr "Aucun artefact correspondant trouvé"
+
 msgid "Please choose..."
 msgstr "Veuillez choisir..."
 
 msgid "Report has been successfully saved"
 msgstr "Rapport enregistré avec succès"
+
+msgid "Status"
+msgstr "État"
+
+msgid "Submitted by"
+msgstr "Auteur"
 
 msgid "Tracker selection is limited to 10 trackers"
 msgstr "Vous ne pouvez pas sélectionner plus de 10 outils de suivi"

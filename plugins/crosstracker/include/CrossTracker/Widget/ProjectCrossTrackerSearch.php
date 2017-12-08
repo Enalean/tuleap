@@ -69,7 +69,7 @@ class ProjectCrossTrackerSearch extends Widget
 
     public function getTitle()
     {
-        return dgettext('tuleap-crosstracker', 'Cross tracker search');
+        return dgettext('tuleap-crosstracker', 'Cross trackers search');
     }
 
     public function getCategory()
