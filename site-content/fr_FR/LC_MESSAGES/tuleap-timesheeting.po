@@ -12,14 +12,11 @@ msgstr "Ajouter"
 msgid "Date"
 msgstr "Date"
 
+msgid "Displays your timesheeting in the whole platform."
+msgstr "Afficher vos timesheetings de toute la plateforme."
+
 msgid "Enable timesheeting for tracker"
 msgstr "Activer le timesheeting pour ce tracker"
-
-msgid "Steps"
-msgstr "Étapes"
-
-msgid "Submit"
-msgstr "Valider"
 
 msgid "Permissions"
 msgstr "Permissions"
@@ -27,11 +24,17 @@ msgstr "Permissions"
 msgid "Permissions successfully saved."
 msgstr "Les permissions ont été enregistrées avec succès."
 
+msgid "Personal Timesheeting"
+msgstr "Timesheeting personnel"
+
 msgid "Read"
 msgstr "Lecture"
 
 msgid "Save modifications"
 msgstr "Sauvegarder les modifications"
+
+msgid "Steps"
+msgstr "Étapes"
 
 msgid "The request is not valid."
 msgstr "La requête n'est pas valide."

@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\Timesheeting\Admin\AdminController;
 use Tuleap\Timesheeting\Admin\AdminDao;
 use Tuleap\Timesheeting\Admin\TimesheetingEnabler;
@@ -27,6 +28,7 @@ use Tuleap\Timesheeting\Admin\TimesheetingUgroupSaver;
 use Tuleap\Timesheeting\Fieldset\FieldsetPresenter;
 use Tuleap\Timesheeting\TimesheetingPluginInfo;
 use Tuleap\Timesheeting\Router;
+use Tuleap\Timesheeting\Widget\UserWidget;
 use Tuleap\Tracker\Artifact\Event\GetAdditionalContent;
 
 require_once 'autoload.php';
@@ -47,6 +49,8 @@ class timesheetingPlugin extends Plugin
         $this->addHook('cssfile');
         $this->addHook('permission_get_name');
         $this->addHook('project_admin_ugroup_deletion');
+        $this->addHook('widget_instance');
+        $this->addHook('widgets');
 
         if (defined('TRACKER_BASE_URL')) {
             $this->addHook(TRACKER_EVENT_FETCH_ADMIN_BUTTONS);
@@ -171,5 +175,21 @@ class timesheetingPlugin extends Plugin
 
         $dao = new TimesheetingUgroupDao();
         $dao->deleteByUgroupId($ugroup->getId());
+    }
+
+    public function widgets(array $params)
+    {
+        switch ($params['owner_type']) {
+            case UserDashboardController::LEGACY_DASHBOARD_TYPE:
+                $params['codendi_widgets'][] = UserWidget::NAME;
+                break;
+        }
+    }
+
+    public function widgetInstance(array $params)
+    {
+        if ($params['widget'] === UserWidget::NAME) {
+            $params['instance'] = new UserWidget();
+        }
     }
 }

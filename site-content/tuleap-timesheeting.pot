@@ -7,13 +7,10 @@ msgstr ""
 msgid "Date"
 msgstr ""
 
+msgid "Displays your timesheeting in the whole platform."
+msgstr ""
+
 msgid "Enable timesheeting for tracker"
-msgstr ""
-
-msgid "Steps"
-msgstr ""
-
-msgid "Submit"
 msgstr ""
 
 msgid "Permissions"
@@ -22,10 +19,16 @@ msgstr ""
 msgid "Permissions successfully saved."
 msgstr ""
 
+msgid "Personal Timesheeting"
+msgstr ""
+
 msgid "Read"
 msgstr ""
 
 msgid "Save modifications"
+msgstr ""
+
+msgid "Steps"
 msgstr ""
 
 msgid "The request is not valid."
