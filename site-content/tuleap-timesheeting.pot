@@ -16,6 +16,15 @@ msgstr ""
 msgid "Submit"
 msgstr ""
 
+msgid "Permissions"
+msgstr ""
+
+msgid "Read"
+msgstr ""
+
+msgid "Save modifications"
+msgstr ""
+
 msgid "The request is not valid."
 msgstr ""
 
@@ -35,4 +44,7 @@ msgid "Timesheeting is disabled for tracker."
 msgstr ""
 
 msgid "Timesheeting is enabled for tracker."
+msgstr ""
+
+msgid "Write"
 msgstr ""

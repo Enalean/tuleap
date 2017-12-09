@@ -16,10 +16,31 @@
  * You should have received a copy of the GNU General Public License
  */
 
+
 .timesheeting-from {
     padding: 20px 20px 0;
 }
 
 .timesheeting-add-button {
     margin: 0 0 10px;
+}
+
+.timesheeting-empty {
+    height: 100px;
+    color: #BBB;
+    font-style: italic;
+    text-align: center;
+    vertical-align: middle;
+}
+
+#timesheeting-admin-form {
+    padding: 20px 0 0;
+}
+
+#timesheeting-admin-rights {
+    width: inherit;
+}
+
+#timesheeting-admin-enable {
+    margin: 0 0 20px;
 }

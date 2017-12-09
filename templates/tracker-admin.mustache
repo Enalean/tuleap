@@ -1,15 +1,62 @@
-<form action="{{ form_url }}" method="POST">
+<h1>{{# dgettext }} tuleap-timesheeting | Timesheeting {{/ dgettext }}</h1>
+
+<form action="{{ form_url }}" id="timesheeting-admin-form" method="POST">
     {{# csrf_token }}
         {{> csrf_token_input }}
     {{/ csrf_token }}
 
-    <label class="checkbox" for="enable_timesheeting">
-        <input type="checkbox"
-               id="enable_timesheeting"
-               name="enable_timesheeting"
-               {{# is_timesheeting_enabled }} checked="checked" {{/ is_timesheeting_enabled }}
-        /> {{ enable_title }}
-    </label>
+    <div id="timesheeting-admin-enable">
+        <label class="checkbox" for="enable_timesheeting">
+            <input type="checkbox"
+                   id="enable_timesheeting"
+                   name="enable_timesheeting"
+                {{# is_timesheeting_enabled }} checked="checked" {{/ is_timesheeting_enabled }}
+            /> {{# dgettext }} tuleap-timesheeting | Enable timesheeting for tracker {{/ dgettext }}
+        </label>
+    </div>
 
-    <button type="submit" class="btn btn-primary">{{ submit_label }}</button>
+    {{# is_timesheeting_enabled }}
+        <h3>{{# dgettext }} tuleap-timesheeting | Permissions {{/ dgettext }}</h3>
+
+        <table class="table" id="timesheeting-admin-rights">
+            <thead>
+                <tr>
+                    <th>{{# dgettext }} tuleap-timesheeting | Read {{/ dgettext }}</th>
+                    <th>{{# dgettext }} tuleap-timesheeting | Write {{/ dgettext }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <select
+                                title="{{# dgettext }} tuleap-timesheeting | Read {{/ dgettext }}"
+                                multiple="multiple"
+                                name="read_ugroups[]"
+                                size="8"
+                                disabled
+                        >
+                            {{# read_ugroups }}
+                                <option value="{{ value }}">{{ label }}</option>
+                            {{/ read_ugroups }}
+                        </select>
+                    </td>
+                    <td>
+                        <select
+                                title="{{# dgettext }} tuleap-timesheeting | Write {{/ dgettext }}"
+                                multiple="multiple"
+                                name="write_ugroups[]"
+                                size="8"
+                                disabled
+                        >
+                            {{# write_ugroups }}
+                                <option value="{{ value }}">{{ label }}</option>
+                            {{/ write_ugroups }}
+                        </select>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    {{/ is_timesheeting_enabled }}
+
+    <button type="submit" class="btn btn-primary"><i class="icon-save"></i> {{# dgettext }} tuleap-timesheeting | Save modifications {{/ dgettext }}</button>
 </form>

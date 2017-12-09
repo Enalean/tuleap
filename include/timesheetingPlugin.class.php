@@ -111,7 +111,8 @@ class timesheetingPlugin extends Plugin
             new AdminController(
                 new TrackerManager(),
                 new TimesheetingEnabler(new AdminDao()),
-                new CSRFSynchronizerToken($tracker->getAdministrationUrl())
+                new CSRFSynchronizerToken($tracker->getAdministrationUrl()),
+                new User_ForgeUserGroupFactory(new UserGroupDao())
             )
         );
 

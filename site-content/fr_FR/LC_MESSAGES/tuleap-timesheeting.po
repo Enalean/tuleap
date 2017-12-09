@@ -21,6 +21,15 @@ msgstr "Étapes"
 msgid "Submit"
 msgstr "Valider"
 
+msgid "Permissions"
+msgstr "Permissions"
+
+msgid "Read"
+msgstr "Lecture"
+
+msgid "Save modifications"
+msgstr "Sauvegarder les modifications"
+
 msgid "The request is not valid."
 msgstr "La requête n'est pas valide."
 
@@ -41,3 +50,6 @@ msgstr "Le timesheeting est désactivé pour ce tracker."
 
 msgid "Timesheeting is enabled for tracker."
 msgstr "Le timesheeting est activé pour ce tracker."
+
+msgid "Write"
+msgstr "Écriture"

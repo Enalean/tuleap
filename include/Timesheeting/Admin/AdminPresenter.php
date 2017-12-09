@@ -28,11 +28,6 @@ class AdminPresenter
     /**
      * @var string
      */
-    public $enable_title;
-
-    /**
-     * @var string
-     */
     public $form_url;
 
     /**
@@ -41,15 +36,23 @@ class AdminPresenter
     public $is_timesheeting_enabled;
 
     /**
-     * @var string
+     * @var array
      */
-    public $submit_label;
+    public $read_ugroups;
 
-    public function __construct(Tracker $tracker, CSRFSynchronizerToken $csrf_token, $is_timesheeting_enabled)
-    {
-        $this->enable_title            = dgettext('tuleap-timesheeting', 'Enable timesheeting for tracker');
+    /**
+     * @var array
+     */
+    public $write_ugroups;
+
+    public function __construct(
+        Tracker $tracker,
+        CSRFSynchronizerToken $csrf_token,
+        $is_timesheeting_enabled,
+        array $read_ugroups,
+        array $write_ugroups
+    ) {
         $this->is_timesheeting_enabled = $is_timesheeting_enabled;
-        $this->submit_label            = dgettext('tuleap-timesheeting', 'Submit');
         $this->form_url                = TIMESHEETING_BASE_URL . '/?' . http_build_query(array(
                 'tracker' => $tracker->getId(),
                 'action'  => 'edit-timesheeting'
@@ -57,5 +60,7 @@ class AdminPresenter
 
         $this->csrf_token = $csrf_token;
 
+        $this->read_ugroups  = $read_ugroups;
+        $this->write_ugroups = $write_ugroups;
     }
 }

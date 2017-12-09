@@ -23,9 +23,11 @@ namespace Tuleap\Timesheeting\Admin;
 use Codendi_Request;
 use CSRFSynchronizerToken;
 use Feedback;
+use Project;
 use TemplateRendererFactory;
 use Tracker;
 use TrackerManager;
+use User_ForgeUserGroupFactory;
 
 class AdminController
 {
@@ -39,23 +41,39 @@ class AdminController
      */
     private $enabler;
 
+    /**
+     * @var CSRFSynchronizerToken
+     */
+    private $csrf;
+
+    /**
+     * @var User_ForgeUserGroupFactory
+     */
+    private $user_group_factory;
+
     public function __construct(
         TrackerManager $tracker_manager,
         TimesheetingEnabler $enabler,
-        CSRFSynchronizerToken $csrf
+        CSRFSynchronizerToken $csrf,
+        User_ForgeUserGroupFactory $user_group_factory
     ) {
-        $this->tracker_manager = $tracker_manager;
-        $this->enabler         = $enabler;
-        $this->csrf            = $csrf;
+        $this->tracker_manager    = $tracker_manager;
+        $this->enabler            = $enabler;
+        $this->csrf               = $csrf;
+        $this->user_group_factory = $user_group_factory;
     }
 
     public function displayAdminForm(Tracker $tracker)
     {
+        $ugroups = $this->getUGroups($tracker->getProject());
+
         $renderer  = TemplateRendererFactory::build()->getRenderer(TIMESHEETING_TEMPLATE_DIR);
         $presenter = new AdminPresenter(
             $tracker,
             $this->csrf,
-            $this->enabler->isTimesheetingEnabledForTracker($tracker)
+            $this->enabler->isTimesheetingEnabledForTracker($tracker),
+            $ugroups,
+            $ugroups
         );
 
         $tracker->displayAdminItemHeader(
@@ -69,6 +87,21 @@ class AdminController
         );
 
         $tracker->displayFooter($this->tracker_manager);
+    }
+
+    private function getUGroups(Project $project)
+    {
+        $user_groups  = $this->user_group_factory->getProjectUGroupsWithAdministratorAndMembers($project);
+        $read_ugroups = array();
+
+        foreach ($user_groups as $ugroup) {
+            $read_ugroups[] = array(
+                'label'    => $ugroup->getName(),
+                'value'    => $ugroup->getId(),
+            );
+        }
+
+        return $read_ugroups;
     }
 
     public function editTimesheetingAdminSettings(Tracker $tracker, Codendi_Request $request)
