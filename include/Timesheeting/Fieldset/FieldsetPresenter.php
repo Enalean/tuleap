@@ -23,13 +23,4 @@ namespace Tuleap\Timesheeting\Fieldset;
 class FieldsetPresenter
 {
 
-    /**
-     * @var string
-     */
-    public $empty_content;
-
-    public function __construct()
-    {
-        $this->empty_content = dgettext('tuleap-timesheeting', 'There is nothing here ... for now ...');
-    }
 }

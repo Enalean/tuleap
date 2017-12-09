@@ -6,8 +6,17 @@ msgstr ""
 "Accès refusé. Vous n'avez pas les droits suffisants pour effectuer cette "
 "action."
 
+msgid "Add"
+msgstr "Ajouter"
+
+msgid "Date"
+msgstr "Date"
+
 msgid "Enable timesheeting for tracker"
 msgstr "Activer le timesheeting pour ce tracker"
+
+msgid "Steps"
+msgstr "Étapes"
 
 msgid "Submit"
 msgstr "Valider"
@@ -17,6 +26,9 @@ msgstr "La requête n'est pas valide."
 
 msgid "There is nothing here ... for now ..."
 msgstr "Cet espace est vide ... pour le moment ..."
+
+msgid "Time"
+msgstr "Temps"
 
 msgid "Timesheeting"
 msgstr "Timesheeting"

@@ -6,7 +6,25 @@
             </tr>
         </table>
     </legend>
-    <div class="tracker_artifact_fieldset_content">
-        <p class="timesheeting-empty">{{ empty_content }}</p>
+    <div class="tracker_artifact_fieldset_content timesheeting-from">
+        <button type="button" class="btn btn-primary timesheeting-add-button">
+            <i class="icon-plus"></i> {{# dgettext }} tuleap-timesheeting | Add {{/ dgettext }}
+        </button>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>{{# dgettext }} tuleap-timesheeting | Steps {{/ dgettext }}</th>
+                    <th>{{# dgettext }} tuleap-timesheeting | Time {{/ dgettext }}</th>
+                    <th>{{# dgettext }} tuleap-timesheeting | Date {{/ dgettext }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="table-cell-empty" colspan="3">
+                        {{# dgettext }} tuleap-timesheeting | There is nothing here ... for now ... {{/ dgettext }}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </fieldset>

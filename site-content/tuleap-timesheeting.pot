@@ -1,7 +1,16 @@
 msgid "Access denied. You don't have permissions to perform this action."
 msgstr ""
 
+msgid "Add"
+msgstr ""
+
+msgid "Date"
+msgstr ""
+
 msgid "Enable timesheeting for tracker"
+msgstr ""
+
+msgid "Steps"
 msgstr ""
 
 msgid "Submit"
@@ -11,6 +20,9 @@ msgid "The request is not valid."
 msgstr ""
 
 msgid "There is nothing here ... for now ..."
+msgstr ""
+
+msgid "Time"
 msgstr ""
 
 msgid "Timesheeting"
