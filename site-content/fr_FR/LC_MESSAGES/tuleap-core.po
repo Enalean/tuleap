@@ -190,6 +190,9 @@ msgstr "Impossible d'accèder au fichier de contrôle d'accès du dépôt SVN"
 msgid "Could not update hooks of the SVN repository"
 msgstr "Impossible de mettre à jour les hooks du dépôt SVN"
 
+msgid "Create a new service"
+msgstr "Créer un nouveau service"
+
 msgid "Create from"
 msgstr "Créer à partir de"
 
@@ -236,6 +239,9 @@ msgstr "Supprimer le tableau de bord"
 msgid "Delete parent"
 msgstr "Supprimer le parent"
 
+msgid "Delete service"
+msgstr "Supprimer le service"
+
 msgid "Delete users group"
 msgstr "Supprimer un groupe utilisateurs"
 
@@ -280,6 +286,9 @@ msgstr "Urgent"
 
 msgid "Empty group"
 msgstr "Groupe vide"
+
+msgid "Enabled?"
+msgstr "Activé?"
 
 msgid "Escape from input/textarea, close dropdown or modal"
 msgstr "Sort d'un champ de texte, ferme les listes déroulantes et les modales"
@@ -332,6 +341,9 @@ msgstr "Importer"
 msgid "Import members"
 msgstr "Importer des membres"
 
+msgid "Inherited?"
+msgstr "Hérité?"
+
 msgid "Initial layout creation"
 msgstr "Création de la structure initiale"
 
@@ -341,11 +353,14 @@ msgstr "Messagerie Instantanée"
 #, php-format
 msgid "Invalid group name: %s. Please use only alphanumerical characters."
 msgstr ""
-"Le nom du groupe %s est invalide. Merci de forunier uniquement des "
-"caractères alphanumériques."
+"Le nom du groupe %s est invalide. Merci d'utiliser uniquement des caractères "
+"alphanumériques."
 
 msgid "Is used?"
 msgstr "Utilisé ?"
+
+msgid "Label"
+msgstr "Label"
 
 msgid "Label has been added."
 msgstr "Le label a été ajouté."
@@ -568,6 +583,9 @@ msgstr "Informations publiques"
 msgid "RSS"
 msgstr "RSS"
 
+msgid "Rank"
+msgstr "Rang"
+
 msgid "Recently"
 msgstr "Récemment"
 
@@ -595,11 +613,17 @@ msgstr "Sauvegarder les permissions déléguées"
 msgid "Save information"
 msgstr "Enregistrer les informations"
 
+msgid "Scope"
+msgstr "Portée"
+
 msgid "See permissions"
 msgstr "Voir les permissions"
 
 msgid "Service permissions"
 msgstr "Permissions des services"
+
+msgid "Services"
+msgstr "Services"
 
 msgid "Short description"
 msgstr "Description courte"
@@ -726,6 +750,9 @@ msgstr "Ce groupe n'a pas encore de membres."
 msgid "This is a system group, you cannot delete it."
 msgstr "Ceci est un groupe système, vous ne pouvez pas le supprimer."
 
+msgid "This is a system service, you cannot delete it."
+msgstr "Ceci est un service système, vous ne pouvez pas le supprimer."
+
 msgid "This label is used in the project"
 msgstr "Ce label est utilisé dans le projet"
 
@@ -766,6 +793,9 @@ msgstr[0] ""
 msgstr[1] ""
 "Ce groupe est la source de %d autres groupes que vous ne pouvez pas "
 "administrer."
+
+msgid "This will remove this service from all projects."
+msgstr "Ceci supprimera ce service de tous les projets."
 
 msgid "Title"
 msgstr "Titre"
@@ -896,6 +926,12 @@ msgid ""
 msgstr ""
 "Vous êtes sur le point de supprimer le tableau de bord \"%s\". Cette action "
 "est irréversible. Merci de confirmez cette suppression."
+
+msgid ""
+"You are about to delete the service <b>%s</b>. Please, confirm your action."
+msgstr ""
+"Vous êtes sur le point de supprimer le service <b>%s</b>. Merci de confirmer "
+"votre action."
 
 #, php-format
 msgid ""

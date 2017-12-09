@@ -87,4 +87,24 @@ class ServiceDao extends DataAccessObject {
                 AND group_id = $project_id";
         return $this->update($sql);
     }
+
+    public function delete($project_id, $id)
+    {
+        $project_id = $this->da->escapeInt($project_id);
+        $id         = $this->da->escapeInt($id);
+
+        $sql = "DELETE FROM service
+                WHERE group_id = $project_id AND service_id = $id";
+
+        return $this->update($sql) && $this->da->affectedRows() > 0;
+    }
+
+    public function deleteFromAllProjects($short_name)
+    {
+        $short_name = $this->da->quoteSmart($short_name);
+
+        $sql = "DELETE FROM service WHERE short_name = $short_name";
+
+        return $this->update($sql) && $this->da->affectedRows() > 0;
+    }
 }

@@ -5,7 +5,7 @@
 #-----------------------------------------------
 # Script: SF/www/project/admin/editgroupinfo.php
 #
-project_admin_editgroupinfo	upd_fail	La mise à jour a échoué ou aucune donnée n'a été modifiée ! $1
+project_admin_editgroupinfo	upd_fail	La mise à jour a échouée ou aucune donnée n'a été modifiée !
 project_admin_editgroupinfo	changed_public_info	Information publique modifiée
 project_admin_editgroupinfo	editing_g_info	Modification des informations du projet
 project_admin_editgroupinfo	long_desc	Description longue&nbsp;:
@@ -435,10 +435,10 @@ project_admin_servicebar	warning_del_s	*********** AVERTISSEMENT ***********\nVo
 project_admin_servicebar	del_s	Détruire ce service ?
 project_admin_servicebar	del	DETRUIRE
 project_admin_servicebar	s_id_not_given	ECHEC&nbsp;: L'ID du service n'est pas spécifié
-project_admin_servicebar	s_del	Service Détruit
+project_admin_servicebar	s_del	Service supprimé
 project_admin_servicebar	cant_delete_s_from_p	- Impossible détruire le service dans les projets&nbsp;: le nom court est manquant
-project_admin_servicebar	del_fail	- ECHEC DE LA DESTRUCTION ! $1
-project_admin_servicebar	s_del_from_p	- Service détruit dans $1 projets
+project_admin_servicebar	del_fail	Une erreur est survenue lors de la suppression du service de tous les projets.
+project_admin_servicebar	s_del_from_p	Service supprimé de tous les projets
 project_admin_servicebar	label_missed	Le label est manquant, veuillez cliquer sur le bouton "Retour" de votre navigateur et remplissez ce champ
 project_admin_servicebar	link_missed	Le lien est manquant, veuillez cliquer sur le bouton "Retour" de votre navigateur et remplissez ce champ
 project_admin_servicebar	rank_missed	Le rang est manquant, veuillez cliquer sur le bouton "Retour" de votre navigateur et remplissez ce champ

@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
@@ -17,8 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import '../../labels/project-admin/project-admin-labels.js';
-import './project-admin.js';
-import './project-admin-ugroups.js';
-import './project-admin-members.js';
-import './services.js';
+namespace Tuleap\Project\Service;
+
+use CSRFSynchronizerToken;
+use Project;
+
+class ServicesPresenter
+{
+    public $services;
+    public $csrf;
+    public $project_id;
+    public $is_default_template;
+
+    public function __construct(Project $project, CSRFSynchronizerToken $csrf, array $services)
+    {
+        $this->services            = $services;
+        $this->csrf                = $csrf;
+        $this->project_id          = $project->getID();
+        $this->is_default_template = (int)$project->getID() === Project::ADMIN_PROJECT_ID;
+    }
+}

@@ -5,7 +5,7 @@
 #-----------------------------------------------
 # Script: SF/www/project/admin/editgroupinfo.php
 #
-project_admin_editgroupinfo	upd_fail	Update failed or no data changed! $1
+project_admin_editgroupinfo	upd_fail	Update failed or no data changed!
 project_admin_editgroupinfo	changed_public_info	Changed Public Info
 project_admin_editgroupinfo	editing_g_info	Editing Group Info
 project_admin_editgroupinfo	long_desc	Long Description:
@@ -440,8 +440,8 @@ project_admin_servicebar	del	DELETE
 project_admin_servicebar	s_id_not_given	FAILED: Service Id was not specified
 project_admin_servicebar	s_del	Service Deleted
 project_admin_servicebar	cant_delete_s_from_p	- Cannot delete service from all projects: service shortname is missing
-project_admin_servicebar	del_fail	- DELETE FAILED! $1
-project_admin_servicebar	s_del_from_p	- Service Deleted from $1 projects
+project_admin_servicebar	del_fail	An error occurred while deleting the service from all projects
+project_admin_servicebar	s_del_from_p	Service deleted from all projects
 project_admin_servicebar	label_missed	The label is missing, please press the "Back" button and complete this information
 project_admin_servicebar	link_missed	The link is missing, please press the "Back" button and complete this information
 project_admin_servicebar	rank_missed	The rank is missing, please press the "Back" button and complete this information

@@ -166,6 +166,9 @@ msgstr ""
 msgid "Could not update hooks of the SVN repository"
 msgstr ""
 
+msgid "Create a new service"
+msgstr ""
+
 msgid "Create from"
 msgstr ""
 
@@ -212,6 +215,9 @@ msgstr ""
 msgid "Delete parent"
 msgstr ""
 
+msgid "Delete service"
+msgstr ""
+
 msgid "Delete users group"
 msgstr ""
 
@@ -253,6 +259,9 @@ msgid "Emergency"
 msgstr ""
 
 msgid "Empty group"
+msgstr ""
+
+msgid "Enabled?"
 msgstr ""
 
 msgid "Escape from input/textarea, close dropdown or modal"
@@ -306,6 +315,9 @@ msgstr ""
 msgid "Import members"
 msgstr ""
 
+msgid "Inherited?"
+msgstr ""
+
 msgid "Initial layout creation"
 msgstr ""
 
@@ -317,6 +329,9 @@ msgid "Invalid group name: %s. Please use only alphanumerical characters."
 msgstr ""
 
 msgid "Is used?"
+msgstr ""
+
+msgid "Label"
 msgstr ""
 
 msgid "Label has been added."
@@ -533,6 +548,9 @@ msgstr ""
 msgid "RSS"
 msgstr ""
 
+msgid "Rank"
+msgstr ""
+
 msgid "Recently"
 msgstr ""
 
@@ -560,10 +578,16 @@ msgstr ""
 msgid "Save information"
 msgstr ""
 
+msgid "Scope"
+msgstr ""
+
 msgid "See permissions"
 msgstr ""
 
 msgid "Service permissions"
+msgstr ""
+
+msgid "Services"
 msgstr ""
 
 msgid "Short description"
@@ -681,6 +705,9 @@ msgstr ""
 msgid "This is a system group, you cannot delete it."
 msgstr ""
 
+msgid "This is a system service, you cannot delete it."
+msgstr ""
+
 msgid "This label is used in the project"
 msgstr ""
 
@@ -716,6 +743,9 @@ msgid_plural ""
 "to administrate."
 msgstr[0] ""
 msgstr[1] ""
+
+msgid "This will remove this service from all projects."
+msgstr ""
 
 msgid "Title"
 msgstr ""
@@ -831,6 +861,10 @@ msgstr ""
 msgid ""
 "You are about to delete the dashboard \"%s\".\n"
 "                This action is irreversible. Please confirm this deletion."
+msgstr ""
+
+msgid ""
+"You are about to delete the service <b>%s</b>. Please, confirm your action."
 msgstr ""
 
 #, php-format

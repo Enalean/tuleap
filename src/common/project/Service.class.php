@@ -35,6 +35,8 @@ class Service {
     const WIKI      = 'wiki';
     const TRACKERV3 = 'tracker';
 
+    const SCOPE_SYSTEM = 'system';
+
     public $data;
     
     /**
@@ -196,7 +198,34 @@ class Service {
         return false;
     }
 
-    public function getInternationalizedName() {
-        return $GLOBALS['Language']->getText('project_admin_editservice', $this->getLabel());
+    public function getInternationalizedName()
+    {
+        $label      = $this->getLabel();
+        $short_name = $this->getShortName();
+
+        return $this->getInternationalizedText($label, "service_{$short_name}_lbl_key");
+    }
+
+    public function getInternationalizedDescription()
+    {
+        $description = $this->getDescription();
+        $short_name  = $this->getShortName();
+
+        return $this->getInternationalizedText($description, "service_{$short_name}_desc_key");
+    }
+
+    private function getInternationalizedText($text, $key)
+    {
+        if ($text === $key) {
+            return $GLOBALS['Language']->getText('project_admin_editservice', $key);
+        }
+
+        if (preg_match('/(.*):(.*)/', $text, $matches)) {
+            if ($GLOBALS['Language']->hasText($matches[1], $matches[2])) {
+                $text = $GLOBALS['Language']->getText($matches[1], $matches[2]);
+            }
+        }
+
+        return $text;
     }
 }
