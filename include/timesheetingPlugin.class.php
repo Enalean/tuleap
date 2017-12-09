@@ -21,6 +21,9 @@
 use Tuleap\Timesheeting\Admin\AdminController;
 use Tuleap\Timesheeting\Admin\AdminDao;
 use Tuleap\Timesheeting\Admin\TimesheetingEnabler;
+use Tuleap\Timesheeting\Admin\TimesheetingUgroupDao;
+use Tuleap\Timesheeting\Admin\TimesheetingUgroupRetriever;
+use Tuleap\Timesheeting\Admin\TimesheetingUgroupSaver;
 use Tuleap\Timesheeting\Fieldset\FieldsetPresenter;
 use Tuleap\Timesheeting\TimesheetingPluginInfo;
 use Tuleap\Timesheeting\Router;
@@ -42,6 +45,8 @@ class timesheetingPlugin extends Plugin
     public function getHooksAndCallbacks()
     {
         $this->addHook('cssfile');
+        $this->addHook('permission_get_name');
+        $this->addHook('project_admin_ugroup_deletion');
 
         if (defined('TRACKER_BASE_URL')) {
             $this->addHook(TRACKER_EVENT_FETCH_ADMIN_BUTTONS);
@@ -107,12 +112,17 @@ class timesheetingPlugin extends Plugin
             $this->redirectToTuleapHomepage();
         }
 
+        $timesheeting_ugroup_dao = new TimesheetingUgroupDao();
+
         $router = new Router(
             new AdminController(
                 new TrackerManager(),
                 new TimesheetingEnabler(new AdminDao()),
                 new CSRFSynchronizerToken($tracker->getAdministrationUrl()),
-                new User_ForgeUserGroupFactory(new UserGroupDao())
+                new User_ForgeUserGroupFactory(new UserGroupDao()),
+                new PermissionsNormalizer(),
+                new TimesheetingUgroupSaver($timesheeting_ugroup_dao),
+                new TimesheetingUgroupRetriever($timesheeting_ugroup_dao)
             )
         );
 
@@ -140,5 +150,26 @@ class timesheetingPlugin extends Plugin
         );
 
         $event->setContent($content);
+    }
+
+    public function permission_get_name(array $params)
+    {
+        if (! $params['name']) {
+            switch($params['permission_type']) {
+                case AdminController::WRITE_ACCESS:
+                    $params['name'] = dgettext('tuleap-timesheeting', 'Write');
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    public function project_admin_ugroup_deletion(array $params)
+    {
+        $ugroup = $params['ugroup'];
+
+        $dao = new TimesheetingUgroupDao();
+        $dao->deleteByUgroupId($ugroup->getId());
     }
 }

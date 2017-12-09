@@ -36,7 +36,7 @@
                                 disabled
                         >
                             {{# read_ugroups }}
-                                <option value="{{ value }}">{{ label }}</option>
+                                <option value="{{ value }}" {{# selected }} selected {{/ selected }}>{{ label }}</option>
                             {{/ read_ugroups }}
                         </select>
                     </td>
@@ -46,10 +46,9 @@
                                 multiple="multiple"
                                 name="write_ugroups[]"
                                 size="8"
-                                disabled
                         >
                             {{# write_ugroups }}
-                                <option value="{{ value }}">{{ label }}</option>
+                                <option value="{{ value }}" {{# selected }} selected {{/ selected }}>{{ label }}</option>
                             {{/ write_ugroups }}
                         </select>
                     </td>

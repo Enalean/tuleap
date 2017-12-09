@@ -19,6 +19,9 @@ msgstr ""
 msgid "Permissions"
 msgstr ""
 
+msgid "Permissions successfully saved."
+msgstr ""
+
 msgid "Read"
 msgstr ""
 
