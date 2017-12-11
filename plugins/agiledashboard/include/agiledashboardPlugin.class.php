@@ -671,12 +671,8 @@ class AgileDashboardPlugin extends Plugin {
         $effort_semantic = AgileDashBoard_Semantic_InitialEffort::load($tracker);
         $semantics->add($effort_semantic->getShortName(), $effort_semantic);
 
-        /**
-         * The feature is hidden to end-user.
-         * Uncomment the following lines to display the form in the Web UI
-         */
-        //$done_semantic = SemanticDone::load($tracker);
-        //$semantics->add($done_semantic->getShortName(), $done_semantic);
+        $done_semantic = SemanticDone::load($tracker);
+        $semantics->add($done_semantic->getShortName(), $done_semantic);
     }
 
     /**
