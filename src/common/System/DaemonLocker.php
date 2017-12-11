@@ -53,4 +53,10 @@ class DaemonLocker
         }
         file_put_contents($this->pid_file, getmypid());
     }
+
+    public function cleanExit()
+    {
+        unlink($this->pid_file);
+        exit(0);
+    }
 }
