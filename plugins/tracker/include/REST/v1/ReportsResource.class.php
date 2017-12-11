@@ -43,7 +43,7 @@ class ReportsResource extends AuthenticatedResource
     const MAX_LIMIT      = 50;
     const DEFAULT_LIMIT  = 10;
     const DEFAULT_OFFSET = 0;
-    const DEFAULT_VALUES = '';
+    const DEFAULT_VALUES = null;
     const ALL_VALUES     = 'all';
 
     /** @var Tracker_REST_Artifact_ArtifactRepresentationBuilder */

@@ -21,11 +21,10 @@ define('IS_SCRIPT', true);
 
 require_once 'pre.php';
 require_once 'www/project/admin/permissions.php';
-require_once '/usr/share/restler/vendor/restler.php';
 
 use Tuleap\REST\GateKeeper;
 use Luracast\Restler\Restler;
-use Luracast\Restler\Explorer;
+use Luracast\Restler\Explorer\v2\Explorer;
 use Luracast\Restler\Defaults;
 use Luracast\Restler\Format\JsonFormat;
 

@@ -20,7 +20,7 @@
 namespace Tuleap\REST;
 
 use \Luracast\Restler\iAuthenticate;
-use \Luracast\Restler\RestException;
+use \Luracast\Restler\InvalidAuthCredentials;
 
 class BasicAuthentication implements iAuthenticate {
 
@@ -32,7 +32,7 @@ class BasicAuthentication implements iAuthenticate {
                 return true;
             }
 
-            throw new RestException(401, 'Basic Authentication Required');
+            throw new InvalidAuthCredentials(401, 'Basic Authentication Required');
         }
     }
 
