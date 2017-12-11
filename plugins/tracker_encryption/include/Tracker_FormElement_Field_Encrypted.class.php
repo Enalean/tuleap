@@ -18,10 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 use Tuleap\TrackerEncryption\ChangesetValue;
 use Tuleap\TrackerEncryption\Dao\ValueDao;
 
-class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field
+class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field implements TrackerFormElementExternalField
 {
 
     /**
@@ -376,5 +377,10 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field
     public function hasChanges(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $old_value, $new_value)
     {
         return $old_value->getValue() !== $new_value;
+    }
+
+    public function getFormAdminVisitor(Tracker_FormElement_Field $element, array $used_element)
+    {
+        return new Tracker_FormElement_View_Admin_Field($element, $used_element);
     }
 }

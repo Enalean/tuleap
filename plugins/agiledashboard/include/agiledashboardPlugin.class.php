@@ -20,33 +20,35 @@
 
 use Tuleap\AgileDashboard\Kanban\RealTime\KanbanArtifactMessageBuilder;
 use Tuleap\AgileDashboard\Kanban\RealTime\KanbanArtifactMessageSender;
-use Tuleap\AgileDashboard\KanbanJavascriptDependenciesProvider;
-use Tuleap\AgileDashboard\RealTime\RealTimeArtifactMessageController;
-use Tuleap\AgileDashboard\RealTime\RealTimeArtifactMessageSender;
-use Tuleap\AgileDashboard\REST\v1\Kanban\ItemRepresentationBuilder;
-use Tuleap\AgileDashboard\REST\v1\Kanban\TimeInfoFactory;
 use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportDao;
 use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportUpdater;
+use Tuleap\AgileDashboard\KanbanJavascriptDependenciesProvider;
+use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
+use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
+use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
+use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
+use Tuleap\AgileDashboard\RealTime\RealTimeArtifactMessageController;
+use Tuleap\AgileDashboard\RealTime\RealTimeArtifactMessageSender;
 use Tuleap\AgileDashboard\Semantic\Dao\SemanticDoneDao;
 use Tuleap\AgileDashboard\Semantic\SemanticDone;
-use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\AgileDashboard\Widget\MyKanban;
 use Tuleap\AgileDashboard\Widget\ProjectKanban;
 use Tuleap\AgileDashboard\Widget\WidgetKanbanCreator;
 use Tuleap\AgileDashboard\Widget\WidgetKanbanDao;
 use Tuleap\AgileDashboard\Widget\WidgetKanbanDeletor;
 use Tuleap\AgileDashboard\Widget\WidgetKanbanRetriever;
+use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\User\UserDashboardController;
-use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
-use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\RealTime\NodeJSClient;
 use Tuleap\Request\CurrentPage;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 use Tuleap\Tracker\Artifact\Event\ArtifactsReordered;
+use Tuleap\Tracker\FormElement\BurnupLogger;
+use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
+use Tuleap\Tracker\FormElement\ChartMessageFetcher;
+use Tuleap\Tracker\FormElement\FetchConfigurationWarnings;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\CanValueBeHiddenStatementsCollection;
 use Tuleap\Tracker\Report\Event\TrackerReportDeleted;
 use Tuleap\Tracker\Semantic\SemanticStatusCanBeDeleted;
@@ -135,6 +137,7 @@ class AgileDashboardPlugin extends Plugin {
             $this->addHook(ArtifactsReordered::NAME);
             $this->addHook(TRACKER_EVENT_ARTIFACT_POST_UPDATE);
             $this->addHook(TrackerReportDeleted::NAME);
+            $this->addHook(Tracker_FormElementFactory::GET_CLASSNAMES);
         }
 
         if (defined('CARDWALL_BASE_URL')) {
@@ -147,6 +150,11 @@ class AgileDashboardPlugin extends Plugin {
         }
 
         return parent::getHooksAndCallbacks();
+    }
+
+    public function tracker_formelement_get_classnames($params)
+    {
+        $params['dynamic']['burnup'] = "Tuleap\AgileDashboard\FormElement\Burnup";
     }
 
     /**

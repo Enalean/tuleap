@@ -1,6 +1,6 @@
 <?php
-/*
- * Copyright (c) Enalean SAS, 2016. All Rights Reserved.
+/**
+ * Copyright (c) Enalean SAS, 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -46,6 +46,7 @@ use Tracker_FormElement_Field_Text;
 use Tracker_FormElement_Field;
 use Tracker_Artifact_Changeset;
 use Codendi_HTMLPurifier;
+use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 
 /**
  * I am responsible of building the replacement string for a given field to be rendered in ValueFormatter
@@ -213,7 +214,7 @@ class ReplaceValueVisitor implements Tracker_FormElement_FieldVisitor
         throw new UnsupportedFieldException();
     }
 
-    public function visitExternalField(Tracker_FormElement_Field $field)
+    public function visitExternalField(TrackerFormElementExternalField $element)
     {
         throw new UnsupportedFieldException();
     }

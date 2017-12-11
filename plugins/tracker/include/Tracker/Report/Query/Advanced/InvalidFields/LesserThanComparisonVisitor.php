@@ -43,6 +43,7 @@ use Tracker_FormElement_Field_SubmittedBy;
 use Tracker_FormElement_Field_SubmittedOn;
 use Tracker_FormElement_Field_Text;
 use Tracker_FormElement_FieldVisitor;
+use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFormatValidator;
@@ -188,8 +189,8 @@ class LesserThanComparisonVisitor implements Tracker_FormElement_FieldVisitor, I
         throw new FieldIsNotSupportedAtAllException($field);
     }
 
-    public function visitExternalField(Tracker_FormElement_Field $field)
+    public function visitExternalField(TrackerFormElementExternalField $element)
     {
-        throw new FieldIsNotSupportedAtAllException($field);
+        throw new FieldIsNotSupportedAtAllException($element);
     }
 }

@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
+
 /**
  * I visit ChangesetValue objects
  *
@@ -47,5 +49,5 @@ interface Tracker_FormElement_FieldVisitor {
     public function visitLastUpdateDate(Tracker_FormElement_Field_LastUpdateDate $field);
     public function visitSubmittedOn(Tracker_FormElement_Field_SubmittedOn $field);
     public function visitComputed(Tracker_FormElement_Field_Computed $field);
-    public function visitExternalField(Tracker_FormElement_Field $element);
+    public function visitExternalField(TrackerFormElementExternalField $element);
 }

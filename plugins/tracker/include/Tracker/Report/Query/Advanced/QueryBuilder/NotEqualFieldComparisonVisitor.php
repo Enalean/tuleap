@@ -45,6 +45,7 @@ use Tracker_FormElement_Field_SubmittedBy;
 use Tracker_FormElement_Field_SubmittedOn;
 use Tracker_FormElement_Field_Text;
 use Tracker_FormElement_FieldVisitor;
+use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 use Tuleap\Tracker\Report\Query\Advanced\CollectionOfListValuesExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\FieldFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
@@ -235,7 +236,7 @@ class NotEqualFieldComparisonVisitor implements
         return null;
     }
 
-    public function visitExternalField(Tracker_FormElement_Field $field)
+    public function visitExternalField(TrackerFormElementExternalField $element)
     {
         return null;
     }

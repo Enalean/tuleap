@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\FormElement\BurndownConfigurationFieldRetriever;
+use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
 
 require_once('bootstrap.php');
 
@@ -302,7 +302,7 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
     protected $duration;
 
     /**
-     * @var Tuleap\Tracker\FormElement\BurndownConfigurationFieldRetriever
+     * @var Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever
      */
     private $field_retriever;
 
@@ -361,7 +361,7 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         stub($this->sprint_tracker)->hasFormElementWithNameAndType('duration', array('int', 'float', 'computed'))->returns(true);
         stub($this->sprint_tracker)->hasFormElementWithNameAndType('remaining_effort', array('int', 'float', 'computed'))->returns(true);
 
-        $this->field_retriever = new BurndownConfigurationFieldRetriever(
+        $this->field_retriever = new ChartConfigurationFieldRetriever(
             mock('Tracker_FormElementFactory'),
             mock('Logger')
         );

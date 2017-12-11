@@ -21,11 +21,11 @@
 namespace Tuleap\Tracker\FormElement;
 
 use Codendi_HTMLPurifier;
+use EventManager;
 use Tracker;
-use Tracker_FormElement_Field_Burndown;
 use Tracker_HierarchyFactory;
 
-class BurndownMessageFetcher
+class ChartMessageFetcher
 {
     /**
      * @var Tracker_HierarchyFactory
@@ -35,35 +35,75 @@ class BurndownMessageFetcher
      * @var BurndownConfigurationValueChecker
      */
     private $configuration_field_retriever;
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
 
     public function __construct(
         Tracker_HierarchyFactory $hierarchy_factory,
-        BurndownConfigurationFieldRetriever $configuration_field_retriever
+        ChartConfigurationFieldRetriever $configuration_field_retriever,
+        EventManager $event_manager
     ) {
         $this->hierarchy_factory             = $hierarchy_factory;
         $this->configuration_field_retriever = $configuration_field_retriever;
+        $this->event_manager                 = $event_manager;
     }
 
     /**
-     * @return String
+     * @param Tracker $tracker
+     *
+     * @return string
      */
-    public function fetchWarnings(Tracker $tracker)
+    public function fetchWarnings(Tracker $tracker, ChartFieldUsage $usage)
     {
-        $warnings = '';
-        $warnings .= $this->fetchMissingFieldWarning(
-            $tracker,
-            Tracker_FormElement_Field_Burndown::START_DATE_FIELD_NAME,
-            'date'
-        );
-        $warnings .= $this->fetchMissingFieldWarning(
-            $tracker,
-            Tracker_FormElement_Field_Burndown::DURATION_FIELD_NAME,
-            'int'
-        );
-        $warnings .= $this->fetchMissingRemainingEffortWarning($tracker);
+        $warnings = array();
+        if ($usage->getUseStartDate()) {
+            $warning_message = $this->fetchMissingFieldWarning(
+                $tracker,
+                ChartConfigurationFieldRetriever::START_DATE_FIELD_NAME,
+                'date'
+            );
+            if ($warning_message !== null) {
+                $warnings[] = $warning_message;
+            }
+        }
 
-        if ($warnings) {
-            return '<ul class="feedback_warning">' . $warnings . '</ul>';
+        if ($usage->getUseDuration()) {
+            $warning_message = $this->fetchMissingFieldWarning(
+                $tracker,
+                ChartConfigurationFieldRetriever::DURATION_FIELD_NAME,
+                'int'
+            );
+            if ($warning_message !== null) {
+                $warnings[] = $warning_message;
+            }
+        }
+
+        if ($usage->getUseCapacity()) {
+            $warning_message = $this->fetchMissingFieldWarning(
+                $tracker,
+                ChartConfigurationFieldRetriever::CAPACITY_FIELD_NAME,
+                array('int', 'computed')
+            );
+            if ($warning_message !== null) {
+                $warnings[] = $warning_message;
+            }
+        }
+
+        if ($usage->getIsUnderConstruction()) {
+            $warnings[] = "<li>" . dgettext('tuleap-tracker', 'Field is under construction') . "</li>";
+        }
+
+        if ($usage->getUseRemainingEffort()) {
+            $warning_message = $this->fetchMissingRemainingEffortWarning($tracker);
+            if ($warning_message !== null) {
+                $warnings[] = $warning_message;
+            }
+        }
+
+        if (count($warnings) > 0) {
+            return '<ul class="feedback_warning">' . implode('', $warnings) . '</ul>';
         }
 
         return '';
@@ -72,7 +112,7 @@ class BurndownMessageFetcher
     /**
      * @return String
      */
-    private function fetchMissingFieldWarning(Tracker $tracker, $name, $type)
+    public function fetchMissingFieldWarning(Tracker $tracker, $name, $type)
     {
         if (! $tracker->hasFormElementWithNameAndType($name, $type)) {
             $key     = "burndown_missing_${name}_warning";
@@ -80,8 +120,6 @@ class BurndownMessageFetcher
 
             return '<li>' . $warning . '</li>';
         }
-
-        return '';
     }
 
     /**

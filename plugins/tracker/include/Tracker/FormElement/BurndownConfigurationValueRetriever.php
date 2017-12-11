@@ -28,7 +28,7 @@ use Tracker_FormElement_Field_BurndownException;
 class BurndownConfigurationValueRetriever
 {
     /**
-     * @var BurndownConfigurationFieldRetriever
+     * @var ChartConfigurationFieldRetriever
      */
     private $configuration_field_retriever;
     /**
@@ -36,7 +36,7 @@ class BurndownConfigurationValueRetriever
      */
     private $logger;
 
-    public function __construct(BurndownConfigurationFieldRetriever $configuration_field_retriever, Logger $logger)
+    public function __construct(ChartConfigurationFieldRetriever $configuration_field_retriever, Logger $logger)
     {
         $this->configuration_field_retriever = $configuration_field_retriever;
         $this->logger                        = $logger;

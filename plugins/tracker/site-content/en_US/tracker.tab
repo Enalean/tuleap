@@ -1559,8 +1559,8 @@ plugin_tracker_widget_myartifacts	no_artifacts	You don't have any </br> artifact
 plugin_tracker	must_have_artifact_link_field	The artifact doesn't have an artifact link field or you have not the permission to modify it, please reconfigure your tracker
 plugin_tracker	burndown_missing_start_date_warning	The tracker doesn't have a "start_date" Date field or you don't have the permission to access it.
 plugin_tracker	burndown_missing_duration_warning	The tracker doesn't have a "duration" Integer field or you don't have the permission to access it.
-plugin_tracker	burndown_missing_capacity_warning	The tracker doesn't have a "capacity" Integer field or you don't have the permission to access it.
-plugin_tracker	burndown_missing_remaining_effort_warning	Some child trackers doesn't have a "remaining_effort" Integer or Float field:
+plugin_tracker	burndown_missing_capacity_warning	The tracker doesn't have a "capacity" Integer or Float or Computed field or you don't have the permission to access it.
+plugin_tracker	burndown_missing_remaining_effort_warning	Some child trackers don't have a "remaining_effort" Integer or Float or Computed field:
 plugin_tracker	burndown_empty_start_date_warning	"start date" field is empty or invalid
 plugin_tracker	burndown_empty_duration_warning	"duration" field is empty or invalid
 plugin_tracker	burndown_duration_too_short	"duration" must be greater than 1 to display burndown graph.

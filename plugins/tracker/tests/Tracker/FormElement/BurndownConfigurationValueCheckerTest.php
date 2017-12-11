@@ -62,7 +62,7 @@ class BurndownConfigurationValueCheckerTest extends \TuleapTestCase
     private $start_date_field;
 
     /**
-     * @var BurndownConfigurationFieldRetriever
+     * @var ChartConfigurationFieldRetriever
      */
     private $configuration_field_retriever;
 
@@ -78,7 +78,7 @@ class BurndownConfigurationValueCheckerTest extends \TuleapTestCase
 
     public function setUp()
     {
-        $this->configuration_field_retriever  = mock('Tuleap\Tracker\FormElement\BurndownConfigurationFieldRetriever');
+        $this->configuration_field_retriever  = mock('Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever');
         $this->configuration_value_retriever  = mock('Tuleap\Tracker\FormElement\BurndownConfigurationValueRetriever');
         $this->burndown_configuration_checker = new BurndownConfigurationValueChecker(
             $this->configuration_field_retriever,
