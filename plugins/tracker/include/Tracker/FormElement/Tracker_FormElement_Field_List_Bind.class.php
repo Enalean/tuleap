@@ -444,9 +444,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements
 
         $default = $this->extractDefaultValues($params);
 
-        if (count($default) > 0) {
-            $this->getDefaultValueDao()->save($this->field->getId(), $default);
-        }
+        $this->getDefaultValueDao()->save($this->field->getId(), $default);
 
         if (!$no_redirect) {
             $GLOBALS['Response']->redirect('?'. http_build_query(array(
