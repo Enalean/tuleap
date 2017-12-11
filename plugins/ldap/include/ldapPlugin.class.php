@@ -38,6 +38,7 @@ use Tuleap\Project\Admin\ProjectUGroup\UGroupEditProcessAction;
 use Tuleap\User\Admin\UserDetailsPresenter;
 use Tuleap\Project\UserRemover;
 use Tuleap\Project\UserRemoverDao;
+use Tuleap\User\UserRetrieverByLoginNameEvent;
 
 class LdapPlugin extends Plugin {
     /**
@@ -83,6 +84,7 @@ class LdapPlugin extends Plugin {
         // User finder
         $this->addHook('user_manager_find_user', 'user_manager_find_user', false);
         $this->addHook('user_manager_get_user_by_identifier', 'user_manager_get_user_by_identifier', false);
+        $this->addHook(UserRetrieverByLoginNameEvent::NAME);
 
         // User Home
         $this->addHook('user_home_pi_entry', 'personalInformationEntry', false);
@@ -466,6 +468,15 @@ class LdapPlugin extends Plugin {
             } catch (IdentifierTypeNotRecognizedException $e) {
                 // Do nothing
             }
+        }
+    }
+
+    public function getUserByLoginName(UserRetrieverByLoginNameEvent $event)
+    {
+        if ($this->isLdapAuthType() && $this->isLDAPUserManagementEnabled()) {
+            $lri  = $this->getLdap()->searchLogin($event->getLoginName());
+            $user = $this->getLdapUserManager()->getUserFromLdapIterator($lri);
+            $event->setUser($user);
         }
     }
 

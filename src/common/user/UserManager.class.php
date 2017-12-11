@@ -24,6 +24,7 @@ use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\User\InvalidSessionException;
 use Tuleap\User\SessionManager;
 use Tuleap\User\SessionNotCreatedException;
+use Tuleap\User\UserRetrieverByLoginNameEvent;
 use Tuleap\Widget\WidgetFactory;
 
 class UserManager {
@@ -231,6 +232,25 @@ class UserManager {
         }
 
         return $user;
+    }
+
+    /**
+     * Get a user by the string identifier this user uses
+     * to log in.
+     *
+     * @return PFUser|null
+     */
+    public function getUserByLoginName($login_name)
+    {
+        $user_retriever_by_login_name_event = new UserRetrieverByLoginNameEvent($login_name);
+
+        $this->_getEventManager()->processEvent($user_retriever_by_login_name_event);
+
+        if ($user_retriever_by_login_name_event->getUser() !== null) {
+            return $user_retriever_by_login_name_event->getUser();
+        }
+
+        return $this->getUserByUserName($login_name);
     }
 
 /**

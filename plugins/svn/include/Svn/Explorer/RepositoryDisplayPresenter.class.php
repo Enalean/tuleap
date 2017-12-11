@@ -43,7 +43,7 @@ class RepositoryDisplayPresenter
         $username
     ) {
         $this->repository            = $repository;
-        $this->help_command          = "svn checkout --username " . $username . " " . $this->repository->getSvnUrl();
+        $this->help_command          = "svn checkout --username " . escapeshellarg($username) . " " . $this->repository->getSvnUrl();
         $this->viewvc_html           = $viewvc_html;
         $this->is_user_admin         = $permissions_manager->isAdmin($request->getProject(), $request->getCurrentUser());
         $this->is_repository_created = $repository->isRepositoryCreated();
