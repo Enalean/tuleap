@@ -140,9 +140,9 @@ $sql['from']  = " FROM user,user_group ";
 $sql['where'] = " WHERE user.user_id = user_group.user_id
                     AND user_group.group_id = ". db_ei($group_id);
 
-if ($request->exist('search') && $request->get('search') != null) {
+if ($pattern) {
     $uh = UserHelper::instance();
-    $sql['filter'] = $uh->getUserFilter($search);
+    $sql['filter'] = $uh->getUserFilter($pattern);
 } else {
     $sql['filter'] = '';
 
