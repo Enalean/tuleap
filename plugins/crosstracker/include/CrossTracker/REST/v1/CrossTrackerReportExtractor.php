@@ -47,13 +47,13 @@ class CrossTrackerReportExtractor
         }
 
         if (count($invalid_tracker) > 0) {
-            throw new TrackerNotFoundException('One tracker ore more are not found: ' . implode(',', $invalid_tracker));
+            throw new TrackerNotFoundException('One tracker or more are not found: ' . implode(',', $invalid_tracker));
         }
 
         $duplicates = array_diff_key($list, array_unique($list));
         if (count($duplicates) > 0) {
             throw new TrackerDuplicateException(
-                'One tracker or more is diplicated in list: ' . implode(',', $duplicates)
+                'One tracker or more is duplicated in list: ' . implode(',', $duplicates)
             );
         }
 

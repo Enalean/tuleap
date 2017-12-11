@@ -47,11 +47,12 @@ async function getReportContent(report_id, limit, offset) {
 }
 
 async function getQueryResult(report_id, trackers_id, limit, offset) {
+    const expert_query = '';
     const response = await get('/api/v1/cross_tracker_reports/' + report_id + '/content', {
         params: {
             limit,
             offset,
-            query: JSON.stringify({ trackers_id })
+            query: JSON.stringify({ trackers_id, expert_query })
         }
     });
     const total         = response.headers.get('X-PAGINATION-SIZE');

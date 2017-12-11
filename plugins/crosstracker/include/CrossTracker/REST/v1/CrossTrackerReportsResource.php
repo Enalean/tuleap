@@ -138,21 +138,24 @@ class CrossTrackerReportsResource extends AuthenticatedResource
     /**
      * Get cross artifacts linked to tracker report
      *
-     * /!\ route under construction
+     * <pre>/!\ route under construction</pre>
      * Get open artifacts linked to given trackers.
      * <br>
      * <br>
      * ?query is optional. When filled, it is a json object:
      * <ul>
-     *   <li>With a property "trackers_id" to search artifacts presents in given trackers.
-     *     Example: <pre>{"trackers_id": [1,2,3]}</pre>
+     *   <li>With a property "trackers_id" to search artifacts presents in given trackers.</li>
+     *   <li>With a property "expert_query" to customize the search.
+     *     Example: <pre>{"trackers_id": [1,2,3],"expert_query": "@title = 'Critical'"}</pre>
      *   </li>
      * </ul>
      * @url GET {id}/content
      * @access hybrid
      *
      * @param int    $id Id of the report
-     * @param string $query With a property "trackers_id" to search artifacts presents in given trackers. {@required false}
+     * @param string $query
+     *                      With a property "trackers_id" to search artifacts presents in given trackers.
+     *                      With a property "expert_query" to customize the search. {@required false}
      * @param int    $limit Number of elements displayed per page {@from path}{@min 1}{@max 50}
      * @param int    $offset Position of the first element to display {@from path}{@min 0}
      *
@@ -169,7 +172,8 @@ class CrossTrackerReportsResource extends AuthenticatedResource
             $current_user    = $this->user_manager->getCurrentUser();
             $report          = $this->getReport($id);
             $trackers        = $this->getTrackersFromRoute($query, $report);
-            $expected_report = new CrossTrackerReport($report->getId(), $trackers);
+            $expert_query    = $this->getExpertQueryFromRoute($query, $report);
+            $expected_report = new CrossTrackerReport($report->getId(), $expert_query, $trackers);
 
             $this->checkUserIsAllowedToSeeReport($current_user, $expected_report);
 
@@ -223,7 +227,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
         try {
             $report          = $this->getReport($id);
             $trackers        = $this->cross_tracker_extractor->extractTrackers($trackers_id);
-            $expected_report = new CrossTrackerReport($report->getId(), $trackers);
+            $expected_report = new CrossTrackerReport($report->getId(), $report->getExpertQuery(), $trackers);
 
             $this->checkUserIsAllowedToSeeReport($current_user, $expected_report);
 
@@ -282,6 +286,20 @@ class CrossTrackerReportsResource extends AuthenticatedResource
         }
 
         return $this->cross_tracker_extractor->extractTrackers($trackers_id);
+    }
+
+    private function getExpertQueryFromRoute($query_parameter, CrossTrackerReport $report)
+    {
+        $query_parameter = trim($query_parameter);
+        if (empty($query_parameter)) {
+            return $report->getExpertQuery();
+        }
+
+        try {
+            return $this->query_parser->getString($query_parameter, 'expert_query');
+        } catch (QueryParameterException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        }
     }
 
     private function checkUserIsAllowedToSeeReport(PFUser $user, CrossTrackerReport $report)

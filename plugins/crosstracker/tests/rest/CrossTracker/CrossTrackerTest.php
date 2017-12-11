@@ -41,9 +41,10 @@ class CrossTrackerTest extends RestBase
         $this->assertEquals($response->getStatusCode(), 200);
 
         $expected_cross_tracker = array(
-            "id"       => 1,
-            "uri"      => "cross_tracker_reports/1",
-            "trackers" => array(
+            "id"           => 1,
+            "uri"          => "cross_tracker_reports/1",
+            "expert_query" => "",
+            "trackers"     => array(
                 array(
                     "id"      => $this->kanban_tracker_id,
                     "uri"     => "trackers/" . $this->kanban_tracker_id,
@@ -73,9 +74,10 @@ class CrossTrackerTest extends RestBase
         $this->assertEquals($response->getStatusCode(), 201);
 
         $expected_cross_tracker = array(
-            "id"       => 1,
-            "uri"      => "cross_tracker_reports/1",
-            "trackers" => array(
+            "id"           => 1,
+            "uri"          => "cross_tracker_reports/1",
+            "expert_query" => "",
+            "trackers"     => array(
                 array(
                     "id"    => $this->epic_tracker_id,
                     "uri"   => "trackers/" . $this->epic_tracker_id,
@@ -118,7 +120,8 @@ class CrossTrackerTest extends RestBase
     {
         $query    = json_encode(
             array(
-                "trackers_id" => array(1)
+                "trackers_id"  => array(1),
+                "expert_query" => ""
             )
         );
         $response = $this->getResponse(

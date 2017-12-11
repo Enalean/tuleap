@@ -45,6 +45,7 @@ class CrossTrackerReportFactory
         if (! $report_row) {
             throw new CrossTrackerReportNotFoundException();
         }
+        $expert_query = $report_row['expert_query'];
 
         $report_trackers = array();
         $tracker_rows    = $this->report_dao->searchReportTrackersById($id);
@@ -55,6 +56,6 @@ class CrossTrackerReportFactory
             }
         }
 
-        return new CrossTrackerReport($id, $report_trackers);
+        return new CrossTrackerReport($id, $expert_query, $report_trackers);
     }
 }
