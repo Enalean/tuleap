@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,13 +21,18 @@
 namespace Tuleap\Tracker\REST\v1;
 
 use Tracker;
+use Tuleap\REST\JsonDecoder;
 use \Tuleap\REST\ProjectAuthorization;
 use \Tuleap\REST\Header;
 use Tuleap\REST\AuthenticatedResource;
 use \Luracast\Restler\RestException;
 use \Tracker_ArtifactFactory;
 use \Tracker_Artifact;
+use Tuleap\REST\QueryParameterException;
+use Tuleap\REST\QueryParameterParser;
 use Tuleap\Tracker\Exception\SemanticTitleNotDefinedException;
+use Tuleap\Tracker\REST\Artifact\ArtifactBatchQueryConverter;
+use Tuleap\Tracker\REST\Artifact\MalformedArtifactBatchQueryConverterException;
 use Tuleap\Tracker\REST\Artifact\MovedArtifactValueBuilder;
 use \UserManager;
 use \PFUser;
@@ -52,11 +57,12 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tracker_Artifact_Attachment_AlreadyLinkedToAnotherArtifactException;
 
 class ArtifactsResource extends AuthenticatedResource {
-    const MAX_LIMIT      = 50;
-    const DEFAULT_LIMIT  = 10;
-    const DEFAULT_OFFSET = 0;
-    const ORDER_ASC      = 'asc';
-    const ORDER_DESC     = 'desc';
+    const MAX_LIMIT          = 50;
+    const DEFAULT_LIMIT      = 10;
+    const DEFAULT_OFFSET     = 0;
+    const MAX_ARTIFACT_BATCH = 100;
+    const ORDER_ASC          = 'asc';
+    const ORDER_DESC         = 'desc';
 
     const VALUES_FORMAT_COLLECTION = 'collection';
     const VALUES_FORMAT_BY_FIELD   = 'by_field';
@@ -91,6 +97,59 @@ class ArtifactsResource extends AuthenticatedResource {
             new NatureDao()
         );
         $this->moved_value_builder = new MovedArtifactValueBuilder();
+    }
+
+    /**
+     * Get artifacts
+     *
+     *
+     * <p>
+     * $query parameter expects following format <code>{"id":[x,y,z]}</code> where x, y and z are artifact ID.
+     * No more than 100 artifacts can be requested at once.
+     * </p>
+     *
+     *
+     * @url GET
+     * @access hybrid
+     *
+     * @param string $query JSON object of search criteria properties {@from query}
+     * @param int    $limit     Number of elements displayed per page {@from path}{@min 1}{@max 100}
+     * @param int    $offset    Position of the first element to display {@from path}{@min 0}
+     *
+     * @return array
+     */
+    public function getArtifacts($query, $limit = self::MAX_ARTIFACT_BATCH,  $offset = self::DEFAULT_OFFSET)
+    {
+        $this->checkAccess();
+
+        $this->options();
+
+        $query_parameter_parser = new QueryParameterParser(new JsonDecoder());
+
+        try {
+            $requested_artifact_ids = $query_parameter_parser->getArrayOfInt($query, 'id');
+        } catch (QueryParameterException $ex) {
+            throw new RestException(400, $ex->getMessage());
+        }
+        if (count($requested_artifact_ids) > 100) {
+            throw new RestException(403, 'No more than '. self::MAX_ARTIFACT_BATCH .' artifacts can be requested at once.');
+        }
+
+        $user                     = UserManager::instance()->getCurrentUser();
+        $artifact_representations = array();
+
+        $artifacts = $this->artifact_factory->getArtifactsByArtifactIdList(
+            array_slice($requested_artifact_ids, $offset, $limit)
+        );
+        foreach ($artifacts as $artifact) {
+            if ($artifact->userCanView($user)) {
+                $artifact_representations[] = $this->builder->getArtifactRepresentationWithFieldValuesInBothFormat($user, $artifact);
+            }
+        }
+
+        Header::sendPaginationHeaders($limit, $offset, count($requested_artifact_ids), self::MAX_ARTIFACT_BATCH);
+
+        return array(self::VALUES_FORMAT_COLLECTION => $artifact_representations);
     }
 
     /**
@@ -376,7 +435,7 @@ class ArtifactsResource extends AuthenticatedResource {
      * @url OPTIONS
      */
     public function options() {
-        Header::allowOptionsPost();
+        Header::allowOptionsGetPost();
     }
 
     /**

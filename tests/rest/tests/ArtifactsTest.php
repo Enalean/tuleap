@@ -34,7 +34,7 @@ class ArtifactsTest extends ArtifactBase
 
     public function testOptionsArtifacts() {
         $response = $this->getResponse($this->client->options('artifacts'));
-        $this->assertEquals(array('OPTIONS', 'POST'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(array('OPTIONS', 'GET', 'POST'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testPostArtifact() {
@@ -326,6 +326,33 @@ class ArtifactsTest extends ArtifactBase
                     throw new Exception('You need to update this test for the field: '.print_r($field, true));
             }
         }
+    }
+
+    /**
+     * @depends testPostArtifact
+     */
+    public function testGetArtifacts()
+    {
+        $do_not_exist_artifact_id = 999999999999999999;
+        $existing_artifact_ids    = array_merge($this->level_one_artifact_ids, $this->level_two_artifact_ids);
+        $wanted_artifacts_ids     = $existing_artifact_ids;
+        $wanted_artifacts_ids[]   = $do_not_exist_artifact_id;
+
+        $query     = json_encode(array('id' => $wanted_artifacts_ids));
+        $response  = $this->getResponse($this->client->get('artifacts?query=' . urlencode($query)));
+        $artifacts = $response->json();
+
+        $this->assertCount(count($existing_artifact_ids), $artifacts['collection']);
+    }
+
+    public function testGetTooManyArtifacts()
+    {
+        $too_many_artifacts_id = array_fill(0, 10000, 1);
+        $query                 = json_encode(array('id' => $too_many_artifacts_id));
+
+        $this->setExpectedException('Guzzle\Http\Exception\ClientErrorResponseException');
+        $response = $this->getResponse($this->client->get('artifacts?query=' . urlencode($query)));
+        $this->assertEquals($response->getStatusCode(), 403);
     }
 
 

@@ -38,6 +38,15 @@ class Tracker_ArtifactDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    public function searchByIds(array $ids)
+    {
+        $ids = $this->da->escapeIntImplode($ids);
+
+        $sql = "SELECT * FROM tracker_artifact WHERE id IN ($ids)";
+
+        return $this->retrieve($sql);
+    }
+
     public function searchByTrackerId($tracker_id) {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $sql = "SELECT A.*, CVT.value AS title, CVT.body_format AS title_format
