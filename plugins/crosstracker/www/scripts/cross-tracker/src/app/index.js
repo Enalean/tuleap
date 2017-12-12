@@ -40,9 +40,12 @@ import ReportMode                      from './report-mode.js';
 import BackendCrossTrackerReport       from './backend-cross-tracker-report.js';
 import ReportSavedState                from './report-saved-state.js';
 import ArtifactTableRenderer           from './ArtifactTableRenderer.vue';
+import QueryEditor                     from './writing-mode/QueryEditor.vue';
 
 document.addEventListener('DOMContentLoaded', function () {
     const widget_cross_tracker_elements = document.getElementsByClassName('dashboard-widget-content-cross-tracker');
+
+    const VueQueryEditor = Vue.extend(QueryEditor);
 
     for (const widget_element of widget_cross_tracker_elements) {
         const report_id                 = widget_element.dataset.reportId;
@@ -74,6 +77,13 @@ document.addEventListener('DOMContentLoaded', function () {
             el        : table_element,
             components: { ArtifactTableRenderer }
         }).$mount();
+
+        const query_editor_element = widget_element.querySelector('.cross-tracker-query-editor');
+        new VueQueryEditor({
+            propsData: {
+                writingCrossTrackerReport: writing_cross_tracker_report
+            }
+        }).$mount(query_editor_element);
 
         const query_result_controller = new QueryResultController(
             widget_element,

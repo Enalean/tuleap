@@ -124,6 +124,7 @@ export default class QueryResultController {
         return getQueryResult(
             this.backend_cross_tracker_report.report_id,
             this.writing_cross_tracker_report.getTrackerIds(),
+            this.writing_cross_tracker_report.expert_query,
             this.limit,
             this.current_offset
         );

@@ -199,7 +199,7 @@
 }
 
 .dashboard-widget-content-cross-tracker-form-trackers-selected {
-    margin: 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-half-spacing;
 }
 
 .dashboard-widget-content-cross-tracker-writing-mode-actions {
@@ -248,4 +248,19 @@
 
 .dashboard-widget-content-cross-tracker-link-to-tracker-badge {
     margin: 0 5px 0 0;
+}
+
+.cross-tracker-expert-content {
+    display: flex;
+    margin: 0 0 $tlp-spacing;
+}
+
+.cross-tracker-expert-content-query {
+    flex: 1 1 auto;
+    margin: 0 25px 0 0;
+}
+
+.cross-tracker-expert-content-query-textarea {
+    width: 100%;
+    height: 100px;
 }

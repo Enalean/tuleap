@@ -23,6 +23,7 @@ export default class WritingCrossTrackerReport {
     constructor() {
         this.trackers          = new Map();
         this.number_of_tracker = 0;
+        this.expert_query      = '';
     }
 
     addTracker(project, tracker) {
