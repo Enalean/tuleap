@@ -129,7 +129,7 @@ class TrackerXmlExport
     }
 
     public function exportToXml(
-        $group_id,
+        Project $project,
         SimpleXMLElement $xml_content,
         PFUser $user
     ) {
@@ -138,8 +138,8 @@ class TrackerXmlExport
 
         $xml_trackers = $xml_content->addChild('trackers');
 
-        $this->addUsedNature($xml_content, $group_id);
-        foreach ($this->tracker_factory->getTrackersByGroupId($group_id) as $tracker) {
+        $this->addUsedNature($xml_content, $project);
+        foreach ($this->tracker_factory->getTrackersByGroupId($project->getID()) as $tracker) {
             if ($tracker->isActive()) {
                 $exported_trackers[] = $tracker;
                 $this->exportTracker($xml_trackers, $tracker, $xml_field_mapping);
