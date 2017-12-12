@@ -913,7 +913,7 @@ class trackerPlugin extends Plugin {
         $archive = new NoArchive();
 
         $this->getTrackerXmlExport($user_xml_exporter, $can_bypass_threshold)
-            ->exportToXml($params['project']->getID(), $params['into_xml'], $user);
+            ->exportToXml($params['project'], $params['into_xml'], $user);
     }
 
     /**
