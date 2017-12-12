@@ -142,7 +142,7 @@ export default class QueryResultController {
             }
         } catch (error) {
             const error_details = await error.response.json();
-            if (error.response.status === 403 && 'i18n_error_message' in error_details.error) {
+            if ('i18n_error_message' in error_details.error) {
                 this.error_displayer.displayError(error_details.error.i18n_error_message);
             } else {
                 this.error_displayer.displayError(this.gettext_provider.gettext('Error while fetching the query result'));

@@ -18,23 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Tracker\Report\Query\Advanced;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\TitleSemantic;
 
-use Exception;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldException;
 
-class SearchablesAreInvalidException extends Exception
+class TitleToNowComparisonException extends InvalidFieldException
 {
-    private $error_messages;
-
-    public function __construct(array $error_messages)
+    public function __construct()
     {
-        parent::__construct(implode("\n", $error_messages));
-
-        $this->error_messages = $error_messages;
-    }
-
-    public function getErrorMessages()
-    {
-        return $this->error_messages;
+        $message = sprintf(
+            dgettext("tuleap-crosstracker", "@title cannot be compared to NOW().")
+        );
+        parent::__construct($message);
     }
 }

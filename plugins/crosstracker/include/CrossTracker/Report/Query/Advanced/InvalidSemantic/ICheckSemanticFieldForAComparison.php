@@ -18,23 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Tracker\Report\Query\Advanced;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic;
 
-use Exception;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 
-class SearchablesAreInvalidException extends Exception
+interface ICheckSemanticFieldForAComparison
 {
-    private $error_messages;
-
-    public function __construct(array $error_messages)
-    {
-        parent::__construct(implode("\n", $error_messages));
-
-        $this->error_messages = $error_messages;
-    }
-
-    public function getErrorMessages()
-    {
-        return $this->error_messages;
-    }
+    public function checkSemanticMetadataIsValid(Comparison $comparison);
 }

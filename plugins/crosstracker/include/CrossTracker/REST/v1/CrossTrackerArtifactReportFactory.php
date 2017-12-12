@@ -24,6 +24,8 @@ namespace Tuleap\CrossTracker\REST\v1;
 use PFUser;
 use Tracker;
 use Tuleap\CrossTracker\CrossTrackerArtifactReportDao;
+use Tuleap\CrossTracker\CrossTrackerReport;
+use Tuleap\CrossTracker\Report\Query\Advanced\ExpertQueryValidator;
 
 class CrossTrackerArtifactReportFactory
 {
@@ -36,12 +38,45 @@ class CrossTrackerArtifactReportFactory
      */
     private $artifact_factory;
 
+    /** @var ExpertQueryValidator */
+    private $expert_query_validator;
+
     public function __construct(
         CrossTrackerArtifactReportDao $artifact_report_dao,
-        \Tracker_ArtifactFactory $artifact_factory
+        \Tracker_ArtifactFactory $artifact_factory,
+        ExpertQueryValidator $expert_query_validator
     ) {
-        $this->artifact_report_dao = $artifact_report_dao;
-        $this->artifact_factory    = $artifact_factory;
+        $this->artifact_report_dao    = $artifact_report_dao;
+        $this->artifact_factory       = $artifact_factory;
+        $this->expert_query_validator = $expert_query_validator;
+    }
+
+    /**
+     * @param CrossTrackerReport $report
+     * @param PFUser $current_user
+     * @param int $limit
+     * @param int $offset
+     *
+     * @return PaginatedCollectionOfCrossTrackerArtifacts
+     */
+    public function getArtifactsMatchingReport(
+        CrossTrackerReport $report,
+        PFUser $current_user,
+        $limit,
+        $offset
+    ) {
+        if ($report->getExpertQuery() === "") {
+            return $this->getArtifactsFromGivenTrackers(
+                $report->getTrackers(),
+                $current_user,
+                $limit,
+                $offset
+            );
+        } else {
+            return $this->getArtifactsMatchingExpertQuery(
+                $report
+            );
+        }
     }
 
     /**
@@ -52,7 +87,7 @@ class CrossTrackerArtifactReportFactory
      *
      * @return PaginatedCollectionOfCrossTrackerArtifacts
      */
-    public function getArtifactsFromGivenTrackers(array $trackers, PFUser $current_user, $limit, $offset)
+    private function getArtifactsFromGivenTrackers(array $trackers, PFUser $current_user, $limit, $offset)
     {
         $artifacts = array();
 
@@ -74,6 +109,20 @@ class CrossTrackerArtifactReportFactory
         }
 
         return new PaginatedCollectionOfCrossTrackerArtifacts($artifacts, $total_size);
+    }
+
+    /**
+     * @param CrossTrackerReport $report
+     *
+     * @return PaginatedCollectionOfCrossTrackerArtifacts
+     *
+     */
+    private function getArtifactsMatchingExpertQuery(
+        CrossTrackerReport $report
+    ) {
+        $this->expert_query_validator->validateExpertQuery($report);
+
+        return new PaginatedCollectionOfCrossTrackerArtifacts(array(), 0);
     }
 
     private function getTrackersId(array $trackers)
