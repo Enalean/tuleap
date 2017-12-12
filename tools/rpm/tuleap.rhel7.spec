@@ -46,6 +46,9 @@ Requires: rh-php56-php-fpm
 # Unit file
 Requires: systemd
 
+# It's embedded in Tuleap thanks to composer.
+Obsoletes: php-amqplib-amqplib
+
 %description
 Tuleap is a web based application that address all the aspects of product development.
 
