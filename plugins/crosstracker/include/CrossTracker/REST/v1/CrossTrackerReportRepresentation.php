@@ -38,6 +38,9 @@ class CrossTrackerReportRepresentation
      */
     public $uri;
 
+    /** @var string */
+    public $expert_query;
+
     /**
      * @var array {@type Tuleap\Tracker\REST\TrackerReference}
      */
@@ -45,7 +48,8 @@ class CrossTrackerReportRepresentation
 
     public function build(CrossTrackerReport $report)
     {
-        $this->id = JsonCast::toInt($report->getId());
+        $this->id           = JsonCast::toInt($report->getId());
+        $this->expert_query = $report->getExpertQuery();
 
         foreach ($report->getTrackers() as $tracker) {
             $tracker_reference = new TrackerReference();

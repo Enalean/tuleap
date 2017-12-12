@@ -29,15 +29,19 @@ class CrossTrackerReport
      */
     private $id;
 
+    /** @var string */
+    private $expert_query;
+
     /**
      * @var Tracker[]
      */
     private $trackers;
 
-    public function __construct($id, array $trackers)
+    public function __construct($id, $expert_query, array $trackers)
     {
-        $this->id       = $id;
-        $this->trackers = $trackers;
+        $this->id           = $id;
+        $this->expert_query = $expert_query;
+        $this->trackers     = $trackers;
     }
 
     /**
@@ -46,6 +50,12 @@ class CrossTrackerReport
     public function getId()
     {
         return $this->id;
+    }
+
+    /** @return string */
+    public function getExpertQuery()
+    {
+        return $this->expert_query;
     }
 
     /**
