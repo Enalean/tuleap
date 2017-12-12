@@ -9,7 +9,6 @@ import '../po/fr.po';
 import fields           from './tuleap-artifact-modal-fields/fields.js';
 import model            from './model/model.js';
 import quota_display    from './quota-display/quota-display.js';
-import rest             from './rest/rest.js';
 import tuleap_highlight from './tuleap-highlight/highlight.js';
 import angular_tlp      from 'angular-tlp';
 
@@ -27,7 +26,6 @@ angular.module('tuleap.artifact-modal', [
     model,
     ngSanitize,
     quota_display,
-    rest,
     tuleap_highlight
 ])
 .controller('TuleapArtifactModalController', ArtifactModalController)

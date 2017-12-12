@@ -1,5 +1,14 @@
 import _                    from 'lodash';
 import { isInCreationMode } from './modal-creation-mode-state.js';
+import {
+    hasError,
+    getErrorMessage
+} from './rest/rest-error-state.js';
+import {
+    createArtifact,
+    editArtifact,
+    getFollowupsComments
+} from './rest/rest-service.js';
 
 export default ArtifactModalController;
 
@@ -11,7 +20,6 @@ ArtifactModalController.$inject = [
     'modal_instance',
     'modal_model',
     'displayItemCallback',
-    'TuleapArtifactModalRestService',
     'TuleapArtifactModalValidateService',
     'TuleapArtifactModalLoading',
     'TuleapArtifactModalFieldDependenciesService',
@@ -26,7 +34,6 @@ function ArtifactModalController(
     modal_instance,
     modal_model,
     displayItemCallback,
-    TuleapArtifactModalRestService,
     TuleapArtifactModalValidateService,
     TuleapArtifactModalLoading,
     TuleapArtifactModalFieldDependenciesService,
@@ -54,11 +61,11 @@ function ArtifactModalController(
         },
         formatColor,
         getDropdownAttribute,
-        getError() { return TuleapArtifactModalRestService.error; },
+        getRestErrorMessage: getErrorMessage,
+        hasRestError       : hasError,
         initCkeditorConfig,
         isDisabled,
         isFollowupCommentFormDisplayed,
-        isLoading() { return TuleapArtifactModalRestService.is_loading; },
         isNewParentAlertShown,
         isThereAtLeastOneFileField,
         setupTooltips,
@@ -143,7 +150,7 @@ function ArtifactModalController(
     }
 
     function fetchFollowupsComments(artifact_id, limit, offset, order) {
-        return TuleapArtifactModalRestService.getFollowupsComments(artifact_id, limit, offset, order).then(function(data) {
+        return $q.when(getFollowupsComments(artifact_id, limit, offset, order)).then(function(data) {
             self.followups_comments.content = self.followups_comments.content.concat(data.results);
 
             if (offset + limit < data.total) {
@@ -163,12 +170,12 @@ function ArtifactModalController(
 
             var promise;
             if (isInCreationMode()) {
-                promise = TuleapArtifactModalRestService.createArtifact(modal_model.tracker_id, validated_values);
+                promise = createArtifact(modal_model.tracker_id, validated_values);
             } else {
-                promise = TuleapArtifactModalRestService.editArtifact(modal_model.artifact_id, validated_values, self.followup_comment);
+                promise = editArtifact(modal_model.artifact_id, validated_values, self.followup_comment);
             }
 
-            return promise;
+            return $q.when(promise);
         }).then(function(new_artifact) {
             modal_instance.tlp_modal.hide();
 

@@ -134,13 +134,7 @@ $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: rpmprep node composer mo
 				-name ".gitmodules" -o\
 				-name "node_modules" -o\
 				-path "*/.DS_Store" -o\
-				-path $(PKG_NAME)-$(version)/src/www/themes/common/tlp/doc -o\
-				-path $(PKG_NAME)-$(version)/src/www/themes/common/tlp/gulpfile.js -o\
-				-path $(PKG_NAME)-$(version)/src/www/themes/common/tlp/node_modules -o\
-				-path $(PKG_NAME)-$(version)/src/www/themes/common/tlp/package.json -o\
-				-path $(PKG_NAME)-$(version)/src/www/themes/common/tlp/README.md -o\
-				-path $(PKG_NAME)-$(version)/src/www/themes/common/tlp/src -o\
-				-path $(PKG_NAME)-$(version)/src/www/themes/common/tlp/angular-tlp -o\
+				-path $(PKG_NAME)-$(version)/src/www/themes/common/tlp -o\
 				-path $(PKG_NAME)-$(version)/plugins/tests -o\
 				-path $(PKG_NAME)-$(version)/plugins/pullrequest/www/js/angular -o\
 				-path $(PKG_NAME)-$(version)/plugins/frs/www/js/angular -o\
@@ -148,6 +142,7 @@ $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: rpmprep node composer mo
 				-path $(PKG_NAME)-$(version)/plugins/agiledashboard/www/js/kanban \)\
 				-prune -o -print \
 			&& \
+			find $(PKG_NAME)-$(version)/src/www/themes/common/tlp/dist; \
 			find $(PKG_NAME)-$(version)/plugins/pullrequest/www/js/angular/bin; \
 			find $(PKG_NAME)-$(version)/plugins/frs/www/js/angular/bin; \
 			find $(PKG_NAME)-$(version)/plugins/agiledashboard/www/js/planning-v2/dist; \

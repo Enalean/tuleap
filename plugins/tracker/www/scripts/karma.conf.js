@@ -16,7 +16,6 @@ module.exports = function(config) {
         // list of files / patterns to load in the browser
         files: [
             'node_modules/jasmine-promise-matchers/dist/jasmine-promise-matchers.js',
-            'angular-artifact-modal/src/tlp-mock.spec.js',
             'angular-artifact-modal/src/index.spec.js'
         ],
 

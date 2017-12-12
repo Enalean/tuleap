@@ -1,59 +1,36 @@
-import rest_module from './rest.js';
-import angular     from 'angular';
-import tlp         from 'tlp';
-import 'angular-mocks';
+import {
+    tlp,
+    mockFetchSuccess,
+    mockFetchError
+} from 'tlp-mocks';
+import * as RestService from './rest-service.js';
+import {
+    rewire$setError,
+    restore as restoreErrorState
+} from './rest-error-state.js';
 
-describe("TuleapArtifactModalRestService", () => {
-    let $q,
-        RestService;
+describe("rest-service", () => {
+    let setError;
 
     beforeEach(() => {
-        angular.mock.module(rest_module);
-
-        angular.mock.inject(function(
-            _$q_,
-            _TuleapArtifactModalRestService_
-        ) {
-            $q          = _$q_;
-            RestService = _TuleapArtifactModalRestService_;
-        });
-
-        spyOn(tlp, "recursiveGet");
-        spyOn(tlp, "get");
-        spyOn(tlp, "post");
-        spyOn(tlp, "put");
-        spyOn(tlp, "options");
-
-        installPromiseMatchers();
+        setError = jasmine.createSpy("setError");
+        rewire$setError(setError);
     });
 
-    function mockFetchSuccess(spy_function, { headers, return_json } = {}) {
-        spy_function.and.returnValue($q.when({
-            headers,
-            json: () => $q.when(return_json)
-        }));
-    }
+    afterEach(() => {
+        restoreErrorState();
+    });
 
-    function mockFetchError(spy_function, { status, statusText, error_json } = {}) {
-        spy_function.and.returnValue($q.reject({
-            response: {
-                status,
-                statusText,
-                json: () => $q.when(error_json)
-            }
-        }));
-    }
-
-    it("getTracker() - Given a tracker id, when I get the tracker, then a promise will be resolved with the tracker", () => {
+    it("getTracker() - Given a tracker id, when I get the tracker, then a promise will be resolved with the tracker", async () => {
         const return_json = {
             id   : 84,
             label: "Functionize recklessly"
         };
         mockFetchSuccess(tlp.get, { return_json });
 
-        const promise = RestService.getTracker(84);
+        const tracker = await RestService.getTracker(84);
 
-        expect(promise).toBeResolvedWith({
+        expect(tracker).toEqual({
             id   : 84,
             label: "Functionize recklessly"
         });
@@ -62,7 +39,7 @@ describe("TuleapArtifactModalRestService", () => {
         });
     });
 
-    it("getArtifact() - Given an artifact id, when I get the artifact, then a promise will be resolved with an artifact object", (done) => {
+    it("getArtifact() - Given an artifact id, when I get the artifact, then a promise will be resolved with an artifact object", async () => {
         const return_json = {
             id    : 792,
             values: [
@@ -79,15 +56,13 @@ describe("TuleapArtifactModalRestService", () => {
         };
         mockFetchSuccess(tlp.get, { return_json });
 
-        const promise = RestService.getArtifact(792).then(artifact => {
-            expect(artifact).toEqual(return_json);
-            done();
-        });
-        expect(promise).toBeResolved();
+        const artifact = await RestService.getArtifact(792);
+
+        expect(artifact).toEqual(return_json);
         expect(tlp.get).toHaveBeenCalledWith('/api/v1/artifacts/792');
     });
 
-    it("getArtifactFieldValues() - given an artifact id, when I get the artifact's field values, then a promise will be resolved with a map of field values indexed by their field id", () => {
+    it("getArtifactFieldValues() - given an artifact id, when I get the artifact's field values, then a promise will be resolved with a map of field values indexed by their field id", async () => {
         const return_json = {
             id    : 40,
             values: [
@@ -105,9 +80,9 @@ describe("TuleapArtifactModalRestService", () => {
         };
         mockFetchSuccess(tlp.get, { return_json });
 
-        const promise = RestService.getArtifactFieldValues(40);
+        const values = await RestService.getArtifactFieldValues(40);
 
-        expect(promise).toBeResolvedWith({
+        expect(values).toEqual({
             866: {
                 field_id: 866,
                 label   : "unpredisposed",
@@ -123,7 +98,7 @@ describe("TuleapArtifactModalRestService", () => {
     });
 
     describe("getAllOpenParentArtifacts() -", () => {
-        it("Given the id of a child tracker, when I get all the open parents for this tracker, then a promise will be resolved with the artifacts", () => {
+        it("Given the id of a child tracker, when I get all the open parents for this tracker, then a promise will be resolved with the artifacts", async () => {
             const tracker_id = 49;
             const limit      = 30;
             const offset     = 0;
@@ -133,9 +108,9 @@ describe("TuleapArtifactModalRestService", () => {
             ];
             tlp.recursiveGet.and.returnValue(artifacts);
 
-            const promise = RestService.getAllOpenParentArtifacts(tracker_id, limit, offset);
+            const values = await RestService.getAllOpenParentArtifacts(tracker_id, limit, offset);
 
-            expect(promise).toBeResolvedWith(artifacts);
+            expect(values).toEqual(artifacts);
             expect(tlp.recursiveGet).toHaveBeenCalledWith('/api/v1/trackers/49/parent_artifacts', {
                 params: {
                     limit,
@@ -144,7 +119,7 @@ describe("TuleapArtifactModalRestService", () => {
             });
         });
 
-        it("When there is a REST error, then it will be shown", () => {
+        it("When there is a REST error, then it will be shown", async () => {
             const tracker_id = 12;
             const limit      = 30;
             const offset     = 0;
@@ -156,25 +131,24 @@ describe("TuleapArtifactModalRestService", () => {
 
             mockFetchError(tlp.recursiveGet, { error_json });
 
-            const promise = RestService.getAllOpenParentArtifacts(tracker_id, limit, offset);
-
-            expect(promise).toBeRejected();
-            expect(RestService.error.error_message).toEqual('No you cannot');
+            await RestService.getAllOpenParentArtifacts(tracker_id, limit, offset).then(
+                () => Promise.reject(new Error("Promise should be rejected")),
+                () => {
+                    expect(setError).toHaveBeenCalledWith('No you cannot');
+                });
         });
     });
 
     describe("searchUsers() -", () => {
-        it("Given a query, when I search for a username containing the query, then a promise will be resolved with an array of user representations", () => {
+        it("Given a query, when I search for a username containing the query, then a promise will be resolved with an array of user representations", async () => {
             const return_json = [
                 { id: 629, label: "Blue" },
                 { id: 593, label: "Blurred" }
             ];
             mockFetchSuccess(tlp.get, { return_json });
 
-            const promise = RestService.searchUsers("Blu");
+            const { results: [first_user, second_user] } = await RestService.searchUsers("Blu");
 
-            expect(promise).toBeResolved();
-            const [first_user, second_user] = promise.$$state.value;
             expect(first_user).toEqual({ id: 629, label: "Blue" });
             expect(second_user).toEqual({ id: 593, label: "Blurred" });
             expect(tlp.get).toHaveBeenCalledWith('/api/v1/users', {
@@ -184,7 +158,7 @@ describe("TuleapArtifactModalRestService", () => {
     });
 
     describe("createArtifact() -", () => {
-        it("Given a tracker id and an array of fields containing their id and selected values, when I create an artifact, then the field values will be sent using the artifact creation REST route and a promise will be resolved with the new artifact's id", () => {
+        it("Given a tracker id and an array of fields containing their id and selected values, when I create an artifact, then the field values will be sent using the artifact creation REST route and a promise will be resolved with the new artifact's id", async () => {
             const return_json = {
                 id     : 286,
                 tracker: {
@@ -198,9 +172,10 @@ describe("TuleapArtifactModalRestService", () => {
             ];
             mockFetchSuccess(tlp.post, { return_json });
 
-            const promise = RestService.createArtifact(3, field_values);
+            const { id } = await RestService.createArtifact(3, field_values);
 
-            expect(promise).toBeResolvedWith({ id: 286 });
+            expect(id).toEqual(286);
+
             expect(tlp.post).toHaveBeenCalledWith('/api/v1/artifacts', {
                 headers: {
                     'content-type': 'application/json'
@@ -214,7 +189,7 @@ describe("TuleapArtifactModalRestService", () => {
             });
         });
 
-        it("When I create an artifact and the server responds an error with data, then the service's error will be set with the data's code and message and a promise will be rejected", () => {
+        it("When I create an artifact and the server responds an error with data, then the service's error will be set with the data's code and message and a promise will be rejected", async () => {
             const error_json = {
                 error: {
                     code   : 400,
@@ -223,27 +198,29 @@ describe("TuleapArtifactModalRestService", () => {
             };
             mockFetchError(tlp.post, { error_json });
 
-            const promise = RestService.createArtifact();
-
-            expect(promise).toBeRejected();
-            expect(RestService.error.error_message).toEqual("Bad Request: error: Le champ I want to (i_want_to) est obligatoire.");
+            await RestService.createArtifact().then(
+                () => Promise.reject(new Error("Promise should be rejected")),
+                () => {
+                    expect(setError).toHaveBeenCalledWith("Bad Request: error: Le champ I want to (i_want_to) est obligatoire.");
+                });
         });
 
-        it("Given the server didn't respond, when I create an artifact, then the service's error will be set with the HTTP error code and message and a promise will be rejected", () => {
+        it("Given the server didn't respond, when I create an artifact, then the service's error will be set with the HTTP error code and message and a promise will be rejected", async () => {
             mockFetchError(tlp.post, {
                 status    : 404,
                 statusText: 'Not Found'
             });
 
-            const promise = RestService.createArtifact();
-
-            expect(promise).toBeRejected();
-            expect(RestService.error.error_message).toEqual("404 Not Found");
+            await RestService.createArtifact().then(
+                () => Promise.reject(new Error("Promise should be rejected")),
+                () => {
+                    expect(setError).toHaveBeenCalledWith("404 Not Found");
+                });
         });
     });
 
     describe("getFollowupsComments() -", () => {
-        it("Given an artifact id, a limit, an offset and an order, when I get the artifact's followup comments, then a promise will be resolved with an object containing the comments in a 'results' property and the total number of comments in a 'total' property", () => {
+        it("Given an artifact id, a limit, an offset and an order, when I get the artifact's followup comments, then a promise will be resolved with an object containing the comments in a 'results' property and the total number of comments in a 'total' property", async () => {
             const return_json = [
                 {
                     id          : 629,
@@ -269,10 +246,7 @@ describe("TuleapArtifactModalRestService", () => {
                 return_json
             });
 
-            const promise = RestService.getFollowupsComments(148, 66, 23, 'desc');
-
-            expect(promise).toBeResolved();
-            const followup_comments = promise.$$state.value;
+            const followup_comments = await RestService.getFollowupsComments(148, 66, 23, 'desc');
 
             expect(followup_comments.total).toEqual(74);
             expect(followup_comments.results[0]).toEqual(first_response);
@@ -289,7 +263,7 @@ describe("TuleapArtifactModalRestService", () => {
     });
 
     describe("uploadTemporaryFile() -", () => {
-        it("Given a file object with a filename, a filetype and a chunks array and given a description, when I upload a new temporary file, then a promise will be resolved with the new temporary file's id", () => {
+        it("Given a file object with a filename, a filetype and a chunks array and given a description, when I upload a new temporary file, then a promise will be resolved with the new temporary file's id", async () => {
             mockFetchSuccess(tlp.post, { return_json: { id: 4 } });
 
             const file_to_upload = {
@@ -301,9 +275,9 @@ describe("TuleapArtifactModalRestService", () => {
             };
             const description = "bullboat metrosteresis classicality";
 
-            const promise = RestService.uploadTemporaryFile(file_to_upload, description);
+            const file_upload = await RestService.uploadTemporaryFile(file_to_upload, description);
 
-            expect(promise).toBeResolvedWith(4);
+            expect(file_upload).toEqual(4);
             expect(tlp.post).toHaveBeenCalledWith('/api/v1/artifact_temporary_files',
                 {
                     headers: {
@@ -315,17 +289,17 @@ describe("TuleapArtifactModalRestService", () => {
                         content    : "FwnCeTwZcgBOiH",
                         description: "bullboat metrosteresis classicality"
                     })
-                });
+                }
+            );
         });
     });
 
     describe("uploadAdditionalChunk() -", () => {
-        it("Given a temporary file id, a chunk and a chunk offset, when I upload an additional chunk to be appended to a temporary file, then a promise will be resolved", () => {
+        it("Given a temporary file id, a chunk and a chunk offset, when I upload an additional chunk to be appended to a temporary file, then a promise will be resolved", async () => {
             mockFetchSuccess(tlp.put);
 
-            const promise = RestService.uploadAdditionalChunk(9, "rmNcNnltd", 4);
+            await RestService.uploadAdditionalChunk(9, "rmNcNnltd", 4);
 
-            expect(promise).toBeResolved();
             expect(tlp.put).toHaveBeenCalledWith('/api/v1/artifact_temporary_files/9',
                 JSON.stringify({
                     content: "rmNcNnltd",
@@ -335,16 +309,16 @@ describe("TuleapArtifactModalRestService", () => {
     });
 
     describe("getUserPreference() -", () => {
-        it(" Given a key, when I search for a preference, then a promise will be resolved with an object of user preference representation", () => {
+        it(" Given a key, when I search for a preference, then a promise will be resolved with an object of user preference representation", async () => {
             const return_json = {
                 key  : 'tracker_comment_invertorder_93',
                 value: '1'
             };
             mockFetchSuccess(tlp.get, { return_json });
 
-            const promise = RestService.getUserPreference(102, 'tracker_comment_invertorder_93');
+            const result = await RestService.getUserPreference(102, 'tracker_comment_invertorder_93');
 
-            expect(promise).toBeResolvedWith(return_json);
+            expect(result).toEqual(return_json);
             expect(tlp.get).toHaveBeenCalledWith('/api/v1/users/102/preferences', {
                 cache : 'force-cache',
                 params: {
@@ -355,7 +329,7 @@ describe("TuleapArtifactModalRestService", () => {
     });
 
     describe("editArtifact() -", () => {
-        it("Given an artifact id and an array of fields containing their id and selected value, when I edit an artifact, then the field values will be sent using the edit REST route and a promise will be resolved with the edited artifact's id", () => {
+        it("Given an artifact id and an array of fields containing their id and selected value, when I edit an artifact, then the field values will be sent using the edit REST route and a promise will be resolved with the edited artifact's id", async () => {
             const followup_comment = {
                 value : '',
                 format: 'text'
@@ -371,9 +345,9 @@ describe("TuleapArtifactModalRestService", () => {
                 }
             });
 
-            const promise = RestService.editArtifact(8354, field_values, followup_comment);
+            const artifact_edition = await RestService.editArtifact(8354, field_values, followup_comment);
 
-            expect(promise).toBeResolvedWith({
+            expect(artifact_edition).toEqual({
                 id: 8354
             });
             expect(tlp.put).toHaveBeenCalledWith('/api/v1/artifacts/8354', {
@@ -387,7 +361,7 @@ describe("TuleapArtifactModalRestService", () => {
             });
         });
 
-        it("Given an artifact id and an array of fields containing their id and selected value, when I edit an artifact with a comment, then the field values will be sent using the edit REST route and a promise will be resolved with the edited artifact's id", () => {
+        it("Given an artifact id and an array of fields containing their id and selected value, when I edit an artifact with a comment, then the field values will be sent using the edit REST route and a promise will be resolved with the edited artifact's id", async () => {
             const followup_comment = {
                 value: 'This is <b>my</b> comment',
                 format: 'html'
@@ -403,23 +377,24 @@ describe("TuleapArtifactModalRestService", () => {
                 }
             });
 
-            const promise = RestService.editArtifact(8354, field_values, followup_comment);
+            const artifact_edition = await RestService.editArtifact(8354, field_values, followup_comment);
 
-            expect(promise).toBeResolvedWith({
+            expect(artifact_edition).toEqual({
                 id: 8354
             });
         });
 
-        it("Given the server didn't respond, when I edit an artifact, then the service's error will be set with the HTTP error code and message and a promise will be rejected", () => {
+        it("Given the server didn't respond, when I edit an artifact, then the service's error will be set with the HTTP error code and message and a promise will be rejected", async () => {
             mockFetchError(tlp.put, {
                 status    : 404,
                 statusText: 'Not Found'
             });
 
-            const promise = RestService.editArtifact(6144);
-
-            expect(promise).toBeRejected();
-            expect(RestService.error.error_message).toEqual("404 Not Found");
+            await RestService.editArtifact(6144).then(
+                () => Promise.reject(new Error("Promise should be rejected")),
+                () => {
+                    expect(setError).toHaveBeenCalledWith("404 Not Found");
+                });
         });
     });
 
@@ -437,9 +412,10 @@ describe("TuleapArtifactModalRestService", () => {
                 }
             });
 
-            const promise = RestService.getFileUploadRules();
+            const rules = await RestService.getFileUploadRules();
 
-            expect(promise).toBeResolvedWith({
+            expect(tlp.options).toHaveBeenCalledWith('/api/v1/artifact_temporary_files');
+            expect(rules).toEqual({
                 disk_quota    : 2229535,
                 disk_usage    : 596878,
                 max_chunk_size: 732798
@@ -449,16 +425,16 @@ describe("TuleapArtifactModalRestService", () => {
     });
 
     describe("getFirstReverseIsChildLink() -", () => {
-        it("Given an artifact id, then an array containing the first reverse _is_child linked artifact will be returned", () => {
+        it("Given an artifact id, then an array containing the first reverse _is_child linked artifact will be returned", async () => {
             const artifact_id = 20;
             const collection  = [{ id: 46 }];
             mockFetchSuccess(tlp.get, {
                 return_json: { collection }
             });
 
-            const promise = RestService.getFirstReverseIsChildLink(artifact_id);
+            const result = await RestService.getFirstReverseIsChildLink(artifact_id);
 
-            expect(promise).toBeResolvedWith(collection);
+            expect(result).toEqual(collection);
             expect(tlp.get).toHaveBeenCalledWith('/api/v1/artifacts/20/linked_artifacts', {
                 params: {
                     direction: 'reverse',
@@ -469,19 +445,19 @@ describe("TuleapArtifactModalRestService", () => {
             });
         });
 
-        it("Given an artifact id and given there weren't any linked _is_child artifacts, then an empty array will be returned", () => {
+        it("Given an artifact id and given there weren't any linked _is_child artifacts, then an empty array will be returned", async () => {
             const artifact_id = 78;
             const collection  = [];
             mockFetchSuccess(tlp.get, {
                 return_json: { collection }
             });
 
-            const promise = RestService.getFirstReverseIsChildLink(artifact_id);
+            const result = await RestService.getFirstReverseIsChildLink(artifact_id);
 
-            expect(promise).toBeResolvedWith([]);
+            expect(result).toEqual([]);
         });
 
-        it("When there is a REST error, then it will be shown", () => {
+        it("When there is a REST error, then it will be shown", async () => {
             const artifact_id = 9;
             const error_json  = {
                 error: {
@@ -490,10 +466,11 @@ describe("TuleapArtifactModalRestService", () => {
             };
             mockFetchError(tlp.get, { error_json });
 
-            const promise = RestService.getFirstReverseIsChildLink(artifact_id);
-
-            expect(promise).toBeRejected();
-            expect(RestService.error.error_message).toEqual('Invalid artifact id');
+            await RestService.getFirstReverseIsChildLink(artifact_id).then(
+                () => Promise.reject(new Error('Promise should be rejected')),
+                () => {
+                    expect(setError).toHaveBeenCalledWith('Invalid artifact id');
+                });
         });
     });
 });

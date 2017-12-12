@@ -1,34 +1,36 @@
 import open_list_field_module from './open-list-field.js';
-import angular from 'angular';
+import angular                from 'angular';
 import 'angular-mocks';
 
 import BaseUsersOpenListController from './users-open-list-field-controller.js';
-import tlp from 'tlp';
+import tlp                         from 'tlp';
+import {
+    rewire$searchUsers,
+    restore
+} from '../../rest/rest-service.js';
 
-describe("UsersOpenListFieldController", function() {
-    var $q,
+describe("UsersOpenListFieldController", () => {
+    let $q,
         $element,
         $scope,
         $rootScope,
         $compile,
         $compileSecondStep,
         UsersOpenListFieldController,
-        TuleapArtifactModalRestService;
+        searchUsers;
 
-    beforeEach(function() {
+    beforeEach(() => {
         angular.mock.module(open_list_field_module);
 
         var $controller;
         angular.mock.inject(function(
             _$controller_,
             _$q_,
-            _$rootScope_,
-            _TuleapArtifactModalRestService_
+            _$rootScope_
         ) {
             $controller                    = _$controller_;
             $q                             = _$q_;
             $rootScope                     = _$rootScope_;
-            TuleapArtifactModalRestService = _TuleapArtifactModalRestService_;
 
             $scope = $rootScope.$new();
         });
@@ -37,14 +39,14 @@ describe("UsersOpenListFieldController", function() {
 
         $compileSecondStep = jasmine.createSpy('$compileSecondStep').and.returnValue('compiled template');
         $compile           = jasmine.createSpy('$compile').and.returnValue($compileSecondStep);
-        spyOn(TuleapArtifactModalRestService, 'searchUsers');
+        searchUsers        = jasmine.createSpy("searchUsers");
+        rewire$searchUsers(searchUsers);
 
         UsersOpenListFieldController = $controller(BaseUsersOpenListController, {
-            $element                      : $element,
-            $scope                        : $scope,
-            $rootScope                    : $rootScope,
-            $compile                      : $compile,
-            TuleapArtifactModalRestService: TuleapArtifactModalRestService
+            $element,
+            $scope,
+            $rootScope,
+            $compile
         });
 
         UsersOpenListFieldController.field = {
@@ -56,6 +58,10 @@ describe("UsersOpenListFieldController", function() {
                 bind_value_objects: []
             }
         };
+    });
+
+    afterEach(() => {
+        restore();
     });
 
     describe("init() -", function() {

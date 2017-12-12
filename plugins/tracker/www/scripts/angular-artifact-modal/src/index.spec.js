@@ -1,4 +1,5 @@
 import 'babel-polyfill';
+import 'tlp-mocks';
 import './field-dependencies-service.spec.js';
 import './model/field-values-service.spec.js';
 import './model/form-tree-builder-service.spec.js';

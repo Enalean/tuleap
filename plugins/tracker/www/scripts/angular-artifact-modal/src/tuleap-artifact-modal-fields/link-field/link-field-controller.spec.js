@@ -10,13 +10,18 @@ import {
     rewire$isInCreationMode,
     restore as restoreCreation
 } from '../../modal-creation-mode-state.js';
+import {
+    rewire$getArtifact,
+    rewire$getAllOpenParentArtifacts,
+    rewire$getFirstReverseIsChildLink,
+    restore as restoreRest
+} from '../../rest/rest-service.js';
 
 describe("LinkFieldController -", () => {
     let $controller,
         $q,
         $rootScope,
         LinkFieldController,
-        TuleapArtifactModalRestService,
         canChooseArtifactsParent,
         isInCreationMode;
 
@@ -26,12 +31,10 @@ describe("LinkFieldController -", () => {
             _$controller_,
             _$q_,
             _$rootScope_,
-            _TuleapArtifactModalRestService_,
         ) {
             $controller                    = _$controller_;
             $q                             = _$q_;
             $rootScope                     = _$rootScope_;
-            TuleapArtifactModalRestService = _TuleapArtifactModalRestService_;
         });
 
         canChooseArtifactsParent = jasmine.createSpy("canChooseArtifactsParent");
@@ -40,15 +43,14 @@ describe("LinkFieldController -", () => {
         isInCreationMode = jasmine.createSpy("isInCreationMode").and.returnValue(true);
         rewire$isInCreationMode(isInCreationMode);
 
-        LinkFieldController = $controller(BaseController, {
-            TuleapArtifactModalRestService
-        });
+        LinkFieldController = $controller(BaseController);
         installPromiseMatchers();
     });
 
     afterEach(() => {
         restoreLinkService();
         restoreCreation();
+        restoreRest();
     });
 
     describe("init() -", () => {
@@ -73,13 +75,14 @@ describe("LinkFieldController -", () => {
             canChooseArtifactsParent.and.returnValue(false);
             isInCreationMode.and.returnValue(true);
             const artifact = { id: parent_artifact_id, title: 'Julietta' };
-            spyOn(TuleapArtifactModalRestService, "getArtifact").and.returnValue($q.when(artifact));
+            const getArtifact = jasmine.createSpy("getArtifact").and.returnValue($q.when(artifact));
+            rewire$getArtifact(getArtifact);
 
             LinkFieldController.init();
             $rootScope.$apply();
 
             expect(LinkFieldController.parent_artifact).toEqual(artifact);
-            expect(TuleapArtifactModalRestService.getArtifact).toHaveBeenCalledWith(parent_artifact_id);
+            expect(getArtifact).toHaveBeenCalledWith(parent_artifact_id);
             expect(LinkFieldController.loadParentArtifactsTitle).not.toHaveBeenCalled();
         });
 
@@ -184,26 +187,28 @@ describe("LinkFieldController -", () => {
     });
 
     describe("hasArtifactAlreadyAParent() -", () => {
+        let getFirstReverseIsChildLink;
         beforeEach(() => {
-            spyOn(TuleapArtifactModalRestService, "getFirstReverseIsChildLink");
+            getFirstReverseIsChildLink = jasmine.createSpy("getFirstReverseIsChildLink");
+            rewire$getFirstReverseIsChildLink(getFirstReverseIsChildLink);
         });
 
         it("it will return the first linked reverse _is_child artifact", () => {
             LinkFieldController.artifact_id = 82;
             const parent_artifact           = { id: 45 };
-            TuleapArtifactModalRestService.getFirstReverseIsChildLink.and.returnValue($q.when([parent_artifact]));
+            getFirstReverseIsChildLink.and.returnValue($q.when([parent_artifact]));
 
             const promise = LinkFieldController.hasArtifactAlreadyAParent();
             expect(LinkFieldController.is_loading).toBe(true);
 
             expect(promise).toBeResolvedWith(parent_artifact);
-            expect(TuleapArtifactModalRestService.getFirstReverseIsChildLink).toHaveBeenCalledWith(82);
+            expect(getFirstReverseIsChildLink).toHaveBeenCalledWith(82);
             expect(LinkFieldController.is_loading).toBe(false);
         });
 
         it("Given there wasn't any linked reverse _is_child artifact, then it will return null", () => {
             LinkFieldController.artifact_id = 34;
-            TuleapArtifactModalRestService.getFirstReverseIsChildLink.and.returnValue($q.when([]));
+            getFirstReverseIsChildLink.and.returnValue($q.when([]));
 
             const promise = LinkFieldController.hasArtifactAlreadyAParent();
 
@@ -233,7 +238,8 @@ describe("LinkFieldController -", () => {
                     }
                 }
             ];
-            spyOn(TuleapArtifactModalRestService, "getAllOpenParentArtifacts").and.returnValue($q.when(collection));
+            const getAllOpenParentArtifacts = jasmine.createSpy("getAllOpenParentArtifacts").and.returnValue($q.when(collection));
+            rewire$getAllOpenParentArtifacts(getAllOpenParentArtifacts);
 
             const promise = LinkFieldController.loadParentArtifactsTitle();
             expect(LinkFieldController.is_loading).toBe(true);

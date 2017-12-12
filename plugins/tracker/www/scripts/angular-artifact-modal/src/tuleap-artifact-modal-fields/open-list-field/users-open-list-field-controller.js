@@ -6,9 +6,9 @@ import {
 import {
     has,
     remove,
-    find,
-    findIndex
+    find
 } from 'lodash';
+import { searchUsers } from '../../rest/rest-service.js';
 
 export default OpenListFieldController;
 
@@ -16,27 +16,26 @@ OpenListFieldController.$inject = [
     '$element',
     '$compile',
     '$rootScope',
-    '$templateCache',
-    'TuleapArtifactModalRestService'
+    '$templateCache'
 ];
 
 function OpenListFieldController(
     $element,
     $compile,
     $rootScope,
-    $templateCache,
-    TuleapArtifactModalRestService
+    $templateCache
 ) {
-    var self = this;
-    self.init                        = init;
-    self.handleUsersValueSelection   = handleUsersValueSelection;
-    self.handleUsersValueUnselection = handleUsersValueUnselection;
-    self.newAnonymousUser            = newAnonymousUser;
-    self.searchUsers                 = searchUsers;
-    self.templateUserResult          = templateUserResult;
-    self.templateUserSelection       = templateUserSelection;
-    self.isRequiredAndEmpty          = isRequiredAndEmpty;
-    self.getFieldValue               = getFieldValue;
+    const self = this;
+    Object.assign(self, {
+        init,
+        handleUsersValueSelection,
+        handleUsersValueUnselection,
+        newAnonymousUser,
+        templateUserResult,
+        templateUserSelection,
+        isRequiredAndEmpty,
+        getFieldValue
+    });
 
     self.init();
 
@@ -54,7 +53,7 @@ function OpenListFieldController(
             createTag         : self.newAnonymousUser,
             ajax              : {
                 transport: function (params, success, failure) {
-                    return self.searchUsers(params.data.term).then(function(response) {
+                    return searchUsers(params.data.term).then(function(response) {
                         success(response);
                     }, function(error) {
                         failure(error);
@@ -106,12 +105,6 @@ function OpenListFieldController(
                 return result.id === value_object.id.toString();
             }
             return result.text === value_object.email;
-        });
-    }
-
-    function searchUsers(query) {
-        return TuleapArtifactModalRestService.searchUsers(query).then(function(data) {
-            return { results: data };
         });
     }
 
