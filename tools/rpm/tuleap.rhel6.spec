@@ -87,6 +87,8 @@ Requires(post): policycoreutils-python
 # Bind utils
 Requires: bind-utils
 
+Obsoletes: %{php_base}-restler
+
 %description
 Tuleap is a web based application that address all the aspects of product development.
 
