@@ -1177,7 +1177,7 @@ fi
 
 %files api-explorer
 %defattr(-,root,root,-)
-#%{APP_DIR}/src/www/api/explorer
+%{APP_DIR}/src/www/api/explorer
 
 #
 # Themes
