@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,6 +24,7 @@ namespace Tuleap\HudsonGit\Hook;
 use Tuleap\HudsonGit\PollingResponseFactory;
 use Http_Client;
 use Http_ClientException;
+use Tuleap\Jenkins\JenkinsCSRFCrumbRetriever;
 
 class JenkinsClient
 {
@@ -39,25 +40,36 @@ class JenkinsClient
      * @var Http_Client
      */
     private $http_curl_client;
+    /**
+     * @var JenkinsCSRFCrumbRetriever
+     */
+    private $csrf_crumb_retriever;
 
     /**
      * @param Http_Client $http_curl_client Any instance of Http_Client
      */
-    public function __construct(Http_Client $http_curl_client, PollingResponseFactory $response_factory)
-    {
-        $this->http_curl_client = $http_curl_client;
-        $this->response_factory = $response_factory;
+    public function __construct(
+        Http_Client $http_curl_client,
+        PollingResponseFactory $response_factory,
+        JenkinsCSRFCrumbRetriever $csrf_crumb_retriever
+    ) {
+        $this->http_curl_client     = $http_curl_client;
+        $this->response_factory     = $response_factory;
+        $this->csrf_crumb_retriever = $csrf_crumb_retriever;
     }
 
     public function pushGitNotifications($server_url, $repository_url)
     {
+        $csrf_crumb_header = $this->csrf_crumb_retriever->getCSRFCrumbHeader($server_url);
+
         $push_url = $server_url . self::$NOTIFY_URL . '?url=' . urlencode($repository_url);
 
         $options  = array(
             CURLOPT_SSL_VERIFYPEER  => true,
             CURLOPT_POST            => true,
             CURLOPT_HEADER          => true,
-            CURLOPT_URL             => $push_url
+            CURLOPT_URL             => $push_url,
+            CURLOPT_HTTPHEADER      => array($csrf_crumb_header)
         );
 
         $this->http_curl_client->addOptions($options);

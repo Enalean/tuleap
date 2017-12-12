@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -29,8 +29,10 @@ class Jenkins_ClientTest extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->http_client = mock('Http_Client');
-        $this->jenkins_client = new Jenkins_Client($this->http_client);
+        $this->http_client            = mock('Http_Client');
+        $jenkins_csrf_crumb_retriever = mock('Tuleap\\Jenkins\\JenkinsCSRFCrumbRetriever');
+        stub($jenkins_csrf_crumb_retriever)->getCSRFCrumbHeader()->returns('');
+        $this->jenkins_client = new Jenkins_Client($this->http_client, $jenkins_csrf_crumb_retriever);
     }
 
     public function testLaunchJobBuildThrowsAnExceptionOnFailedRequest()
@@ -55,6 +57,7 @@ class Jenkins_ClientTest extends TuleapTestCase
             CURLOPT_URL             => $job_url . '/build',
             CURLOPT_SSL_VERIFYPEER  => true,
             CURLOPT_POST            => true,
+            CURLOPT_HTTPHEADER      => array(''),
             CURLOPT_POSTFIELDS      => 'json='. $json_params,
         );
 
@@ -72,6 +75,7 @@ class Jenkins_ClientTest extends TuleapTestCase
             CURLOPT_URL             => $job_url . '/build?token=thou+shall+not+pass',
             CURLOPT_SSL_VERIFYPEER  => true,
             CURLOPT_POST            => true,
+            CURLOPT_HTTPHEADER      => array('')
         );
 
         stub($this->http_client)->addOptions($expected_options)->once();
@@ -88,6 +92,7 @@ class Jenkins_ClientTest extends TuleapTestCase
             CURLOPT_URL             => $job_url,
             CURLOPT_SSL_VERIFYPEER  => true,
             CURLOPT_POST            => true,
+            CURLOPT_HTTPHEADER      => array('')
         );
 
         stub($this->http_client)->doRequest()->once();
@@ -104,6 +109,7 @@ class Jenkins_ClientTest extends TuleapTestCase
             CURLOPT_URL             => $job_url.'&token=thou+shall+not+pass',
             CURLOPT_SSL_VERIFYPEER  => true,
             CURLOPT_POST            => true,
+            CURLOPT_HTTPHEADER      => array('')
         );
 
         stub($this->http_client)->doRequest()->once();

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,8 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
+use Tuleap\Jenkins\JenkinsCSRFCrumbRetriever;
 
 require_once 'common/Http/Client.class.php';
 require_once 'ClientUnableToLaunchBuildException.class.php';
@@ -38,13 +40,18 @@ class Jenkins_Client {
      * @var String
      */
     private $token = null;
+    /**
+     * @var JenkinsCSRFCrumbRetriever
+     */
+    private $csrf_crumb_retriever;
 
     /**
      * @param Http_Client $http_curl_client Any instance of Http_Client
      */
-    public function __construct(Http_Client $http_curl_client)
+    public function __construct(Http_Client $http_curl_client, JenkinsCSRFCrumbRetriever $csrf_crumb_retriever)
     {
-        $this->http_curl_client = $http_curl_client;
+        $this->http_curl_client     = $http_curl_client;
+        $this->csrf_crumb_retriever = $csrf_crumb_retriever;
     }
 
     /**
@@ -60,17 +67,18 @@ class Jenkins_Client {
     }
 
     /**
-     * @param string $job_url
-     * @param array $parameters
-     *
-     * @throws Tracker_Exception
+     * @throws Jenkins_ClientUnableToLaunchBuildException
      */
     public function launchJobBuild($job_url, array $build_parameters = array())
     {
+        $server_url        = $this->getServerUrl($job_url);
+        $csrf_crumb_header = $this->csrf_crumb_retriever->getCSRFCrumbHeader($server_url);
+
         $options = array(
             CURLOPT_URL             => $this->getBuildUrl($job_url),
             CURLOPT_SSL_VERIFYPEER  => true,
             CURLOPT_POST            => true,
+            CURLOPT_HTTPHEADER      => array($csrf_crumb_header)
         );
         
         if (count($build_parameters) > 0) {
@@ -98,6 +106,19 @@ class Jenkins_Client {
             $params = $separator.$params;
         }
         return $job_url . $params;
+    }
+
+    /**
+     * @return string
+     * @throws Jenkins_ClientUnableToLaunchBuildException
+     */
+    private function getServerUrl($job_url)
+    {
+        $server_url = mb_strstr($job_url, '/job', true);
+        if ($server_url === false) {
+            throw new Jenkins_ClientUnableToLaunchBuildException("Job URL $job_url does not seem to be a valid job URL");
+        }
+        return $server_url;
     }
 
     private function getTokenUrlParameter() {
