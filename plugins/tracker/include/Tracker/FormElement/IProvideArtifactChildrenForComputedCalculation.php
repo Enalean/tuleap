@@ -20,38 +20,13 @@
 
 namespace Tuleap\Tracker\FormElement;
 
-use Tracker_FormElement_Field_ComputedDao;
-
-class ComputedFieldCalculator implements IProvideArtifactChildrenForComputedCalculation
+interface IProvideArtifactChildrenForComputedCalculation
 {
-    /**
-     * @var Tracker_FormElement_Field_ComputedDao
-     */
-    private $dao;
-
-    public function __construct(
-        Tracker_FormElement_Field_ComputedDao $dao
-    ) {
-        $this->dao                 = $dao;
-    }
-
     public function fetchChildrenAndManualValuesOfArtifacts(
         array $artifact_ids_to_fetch,
         $timestamp,
         $stop_on_manual_value,
         $target_field_name,
         $computed_field_id
-    ) {
-        $dar = $this->dao->getComputedFieldValues(
-            $artifact_ids_to_fetch,
-            $target_field_name,
-            $computed_field_id,
-            $stop_on_manual_value
-        );
-
-        return array(
-            'children'   => $dar,
-            'manual_sum' => null
-        );
-    }
+    );
 }
