@@ -1,27 +1,19 @@
-import _ from 'lodash';
-
 import {
     get,
-    recursiveGet
+    recursiveGet,
+    put,
+    post,
+    options
 } from 'tlp';
 
 export default RestService;
 
-RestService.$inject = [
-    '$q',
-    'Restangular'
-];
+RestService.$inject = ['$q'];
 
-function RestService(
-    $q,
-    Restangular
-) {
-    var rest = Restangular.withConfig(function(RestangularConfigurer) {
-        RestangularConfigurer.setFullResponse(true);
-        RestangularConfigurer.setBaseUrl('/api/v1');
-        RestangularConfigurer.addResponseInterceptor(responseInterceptor);
-        RestangularConfigurer.setErrorInterceptor(errorInterceptor);
-    });
+function RestService($q) {
+    const headers = {
+        "content-type": "application/json"
+    };
 
     const self = this;
     Object.assign(self, {
@@ -46,32 +38,32 @@ function RestService(
     });
 
     function getTracker(tracker_id) {
-        return rest.one('trackers', tracker_id)
-            .withHttpConfig({
-                cache: true
-            }).get().then(function(response) {
-                return response.data;
-            });
+        return $q.when(get(`/api/v1/trackers/${ tracker_id }`, {
+            cache: 'force-cache'
+        })).then(responseHandler, errorHandler);
     }
 
     function getArtifact(artifact_id) {
-        return rest.one('artifacts', artifact_id)
-            .get().then(function(response) {
-                return response.data;
-            });
+        return $q.when(get(`/api/v1/artifacts/${ artifact_id }`))
+            .then(responseHandler, errorHandler);
     }
 
     function getArtifactFieldValues(artifact_id) {
-        return self.getArtifact(artifact_id)
-            .then(function(artifact) {
-                var artifact_values = (artifact && artifact.values) ? artifact.values : [];
-                var indexed_values  = _.indexBy(artifact_values, function(val) {
-                    return val.field_id;
-                });
-                indexed_values.title = artifact.title;
+        return getArtifact(artifact_id).then(artifact => {
+            const {
+                values = []
+            } = artifact;
 
-                return indexed_values;
-            });
+            const indexed_values = {};
+
+            for (const value of values) {
+                indexed_values[value.field_id] = value;
+            }
+
+            indexed_values.title  = artifact.title;
+
+            return indexed_values;
+        });
     }
 
     function getAllOpenParentArtifacts(tracker_id, limit, offset) {
@@ -88,103 +80,108 @@ function RestService(
     }
 
     function createArtifact(tracker_id, field_values) {
-        var promise = rest.service('artifacts').post({
-            tracker : {
-                id : tracker_id
+        const body  = JSON.stringify({
+            tracker: {
+                id: tracker_id
             },
-            values  : field_values
-        }).then(function(response) {
-            return { id: response.data.id };
+            values: field_values
         });
-        return promise;
+
+        return $q.when(post('/api/v1/artifacts', {
+            headers,
+            body
+        })).then(response => {
+            return responseHandler(response).then(({ id }) => { return { id }; });
+        }, errorHandler);
     }
 
     function editArtifact(artifact_id, field_values, followup_comment) {
-        return rest.one('artifacts', artifact_id).customPUT({
+        const body  = JSON.stringify({
             values : field_values,
             comment: followup_comment
-        }).then(function() {
-            return { id: artifact_id };
         });
+
+        return $q.when(put(`/api/v1/artifacts/${ artifact_id }`, {
+            headers,
+            body
+        })).then(() => {
+            return { id: artifact_id };
+        }, errorHandler);
     }
 
     function searchUsers(query) {
-        return rest.all('users').getList({
-            query: query
-        }).then(function(response) {
-            return response.data;
-        });
+        return $q.when(get('/api/v1/users', {
+            params: { query }
+        })).then(responseHandler, errorHandler);
     }
 
     function getFollowupsComments(artifact_id, limit, offset, order) {
-        return rest
-            .one('artifacts', artifact_id)
-            .all('changesets')
-            .getList({
-                fields : 'comments',
-                limit  : limit,
-                offset : offset,
-                order  : order
-            }).then(function(response) {
-                var result = {
-                    results: response.data,
-                    total  : response.headers('X-PAGINATION-SIZE')
+        return $q.when(get(`/api/v1/artifacts/${ artifact_id }/changesets`, {
+            params: {
+                fields: 'comments',
+                limit,
+                offset,
+                order
+            }
+        })).then(response => {
+            return responseHandler(response).then(followup_comments => {
+                return {
+                    results: followup_comments,
+                    total  : response.headers.get('X-PAGINATION-SIZE')
                 };
-
-                return result;
             });
+        }, errorHandler);
     }
 
     function uploadTemporaryFile(file_to_upload, description) {
-        return rest
-            .service('artifact_temporary_files')
-            .post({
-                name: file_to_upload.filename,
-                mimetype: file_to_upload.filetype,
-                content: file_to_upload.chunks[0],
-                description: description
-            }).then(function(response) {
-                return response.data.id;
-            });
+        const body  = JSON.stringify({
+            name    : file_to_upload.filename,
+            mimetype: file_to_upload.filetype,
+            content : file_to_upload.chunks[0],
+            description
+        });
+
+        return $q.when(post('/api/v1/artifact_temporary_files', {
+            headers,
+            body
+        })).then(response => {
+            return responseHandler(response).then(({ id }) => id);
+        }, errorHandler);
     }
 
     function uploadAdditionalChunk(temporary_file_id, chunk, chunk_offset) {
-        return rest
-            .one('artifact_temporary_files', temporary_file_id)
-            .customPUT({
-                content: chunk,
-                offset: chunk_offset
-            });
+        const params = JSON.stringify({
+            content: chunk,
+            offset : chunk_offset
+        });
+
+        return $q.when(put(`/api/v1/artifact_temporary_files/${ temporary_file_id }`, params))
+            .then(responseHandler, errorHandler);
     }
 
     function getUserPreference(user_id, preference_key) {
-        return rest
-            .one('users', user_id)
-            .withHttpConfig({
-                cache: true
-            })
-            .customGET('preferences', {
-                key: preference_key
-            }).then(function(response) {
-                return response.data;
-            });
+        const params = {
+            key: preference_key
+        };
+
+        return $q.when(get(`/api/v1/users/${ user_id }/preferences`, {
+            cache: 'force-cache',
+            params
+        })).then(responseHandler, errorHandler);
     }
 
     function getFileUploadRules() {
-        return rest
-            .one('artifact_temporary_files')
-            .options()
-            .then(function(response) {
-                var disk_quota     = parseInt(response.headers('X-QUOTA'), 10);
-                var disk_usage     = parseInt(response.headers('X-DISK-USAGE'), 10);
-                var max_chunk_size = parseInt(response.headers('X-UPLOAD-MAX-FILE-CHUNKSIZE'), 10);
+        return $q.when(options('/api/v1/artifact_temporary_files')).then(response => {
+            const disk_quota     = parseInt(response.headers.get('X-QUOTA'), 10);
+            const disk_usage     = parseInt(response.headers.get('X-DISK-USAGE'), 10);
+            const max_chunk_size = parseInt(response.headers.get('X-UPLOAD-MAX-FILE-CHUNKSIZE'), 10);
 
-                return {
-                    disk_quota    : disk_quota,
-                    disk_usage    : disk_usage,
-                    max_chunk_size: max_chunk_size
-                };
-            });
+            return {
+                disk_quota,
+                disk_usage,
+                max_chunk_size
+            };
+        });
     }
 
     function getFirstReverseIsChildLink(artifact_id) {
@@ -203,34 +200,20 @@ function RestService(
         }, errorHandler);
     }
 
+    function responseHandler(response) {
+        self.error.is_error = false;
+        return $q.when(response.json());
+    }
+
     function errorHandler(error) {
         self.error.is_error = true;
         return $q.when(error.response.json()).then(error_json => {
-            if (error_json.error && error_json.error.message) {
+            if (error_json !== undefined && error_json.error && error_json.error.message) {
                 self.error.error_message = error_json.error.message;
             } else {
                 self.error.error_message = error.response.status + ' ' + error.response.statusText;
             }
             return $q.reject();
         });
-    }
-
-    function responseInterceptor(data) {
-        self.error.is_error = false;
-        return data;
-    }
-
-    function errorInterceptor(response) {
-        var error_message;
-        if (response.data && response.data.error) {
-            error_message = response.data.error.message;
-        } else {
-            error_message = response.status + ' ' + response.statusText;
-        }
-        self.error = {
-            is_error      : true,
-            error_message : error_message
-        };
-        return true;
     }
 }

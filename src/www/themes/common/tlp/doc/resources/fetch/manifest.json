@@ -6,6 +6,7 @@
         "patch",
         "put",
         "post",
-        "recursive-get"
+        "recursive-get",
+        "options"
     ]
 }
