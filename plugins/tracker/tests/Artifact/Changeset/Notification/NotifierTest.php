@@ -106,7 +106,8 @@ class NotifierTest extends \TuleapTestCase
             $this->recipient_factory,
             $user_helper,
             $this->recipients_manager,
-            $this->mail_sender
+            $this->mail_sender,
+            mock('\Tuleap\Tracker\Artifact\Changeset\Notification\NotifierDao')
         );
     }
 

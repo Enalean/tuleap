@@ -22,5 +22,5 @@
 
 require_once 'pre.php';
 
-$updater = new  \Tuleap\Tracker\Artifact\Changeset\AsynchronousNotifier();
+$updater = new  \Tuleap\Tracker\Artifact\Changeset\Notification\AsynchronousNotifier();
 $updater->main();
