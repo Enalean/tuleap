@@ -46,8 +46,7 @@ async function getReportContent(report_id, limit, offset) {
     return { artifacts, total };
 }
 
-async function getQueryResult(report_id, trackers_id, limit, offset) {
-    const expert_query = '';
+async function getQueryResult(report_id, trackers_id, expert_query, limit, offset) {
     const response = await get('/api/v1/cross_tracker_reports/' + report_id + '/content', {
         params: {
             limit,

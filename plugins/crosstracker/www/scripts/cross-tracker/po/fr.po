@@ -13,6 +13,9 @@ msgstr ""
 "X-Generator: Poedit 2.0.3\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid "Allowed fields"
+msgstr "Champs autorisés"
+
 msgid "Artifact"
 msgstr "Artéfact"
 
@@ -34,6 +37,9 @@ msgstr "Erreur à la récupération du résultat de la requête"
 msgid "Error while updating the cross tracker report"
 msgstr "Erreur lors de la mise à jour du rapport multi outil de suivi"
 
+msgid "Example: @title = 'value'"
+msgstr "Exemple : @title = 'valeur'"
+
 msgid "Last update date"
 msgstr "Mis à jour le"
 
@@ -46,6 +52,9 @@ msgstr "Aucun artefact correspondant trouvé"
 msgid "Please choose..."
 msgstr "Veuillez choisir..."
 
+msgid "Query"
+msgstr "Requête"
+
 msgid "Report has been successfully saved"
 msgstr "Rapport enregistré avec succès"
 
@@ -54,6 +63,16 @@ msgstr "État"
 
 msgid "Submitted by"
 msgstr "Auteur"
+
+msgid ""
+"The query edition is under construction. The value you submit is not yet "
+"taken into account"
+msgstr ""
+"L'édition de la requête est en cours de construction. La valeur de ce champ "
+"ne sera pas encore prise en compte."
+
+msgid "Title (Semantic)"
+msgstr "Titre (Sémantique)"
 
 msgid "Tracker selection is limited to 10 trackers"
 msgstr "Vous ne pouvez pas sélectionner plus de 10 outils de suivi"

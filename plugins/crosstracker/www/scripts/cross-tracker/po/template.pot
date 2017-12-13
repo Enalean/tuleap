@@ -1,3 +1,6 @@
+msgid "Allowed fields"
+msgstr ""
+
 msgid "Artifact"
 msgstr ""
 
@@ -19,6 +22,9 @@ msgstr ""
 msgid "Error while updating the cross tracker report"
 msgstr ""
 
+msgid "Example: @title = 'value'"
+msgstr ""
+
 msgid "Last update date"
 msgstr ""
 
@@ -31,6 +37,9 @@ msgstr ""
 msgid "Please choose..."
 msgstr ""
 
+msgid "Query"
+msgstr ""
+
 msgid "Report has been successfully saved"
 msgstr ""
 
@@ -38,6 +47,14 @@ msgid "Status"
 msgstr ""
 
 msgid "Submitted by"
+msgstr ""
+
+msgid ""
+"The query edition is under construction. The value you submit is not yet "
+"taken into account"
+msgstr ""
+
+msgid "Title (Semantic)"
 msgstr ""
 
 msgid "Tracker selection is limited to 10 trackers"
