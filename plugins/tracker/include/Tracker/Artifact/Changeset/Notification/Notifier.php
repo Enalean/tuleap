@@ -27,8 +27,6 @@ use Tracker;
 use Tracker_FormElementFactory;
 use Tracker_Artifact_Changeset;
 use UserManager;
-use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
-use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use ConfigNotificationAssignedTo;
 use ConfigNotificationAssignedToDao;
 use ForgeConfig;
@@ -42,6 +40,10 @@ use DateHelper;
 use UserHelper;
 use Codendi_HTMLPurifier;
 use Codendi_Mail_Interface;
+use Tuleap\Queue\Factory;
+use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
+use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
+use Tuleap\Tracker\Artifact\Changeset\AsynchronousNotifier;
 
 class Notifier
 {
@@ -116,6 +118,51 @@ class Notifier
     }
 
     public function notify(Tracker_Artifact_Changeset $changeset)
+    {
+        if ($this->useAsyncEmails($changeset)) {
+            $this->queueNotification($changeset);
+        } else {
+            $this->processNotify($changeset);
+        }
+    }
+
+    private function useAsyncEmails(Tracker_Artifact_Changeset $changeset)
+    {
+        $async_emails = ForgeConfig::get('sys_async_emails');
+        switch ($async_emails) {
+            case 'all':
+                return true;
+            case false:
+                return false;
+            default:
+                $project_ids = array_map(
+                    function ($val) {
+                        return (int) trim($val);
+                    },
+                    explode(',', $async_emails)
+                );
+                if (in_array($changeset->getTracker()->getProject()->getID(), $project_ids)) {
+                    return true;
+                }
+        }
+        return false;
+    }
+
+    private function queueNotification(Tracker_Artifact_Changeset $changeset)
+    {
+        $queue = Factory::getPersistentQueue($this->logger, AsynchronousNotifier::QUEUE_PREFIX);
+        $queue->pushSinglePersistentMessage(
+            AsynchronousNotifier::TOPIC,
+            json_encode(
+                array(
+                    'artifact_id'  => (int) $changeset->getArtifact()->getId(),
+                    'changeset_id' => (int) $changeset->getId()
+                )
+            )
+        );
+    }
+
+    public function processNotify(Tracker_Artifact_Changeset $changeset)
     {
         $tracker = $changeset->getTracker();
         if (! $tracker->isNotificationStopped()) {

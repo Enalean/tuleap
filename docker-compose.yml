@@ -45,9 +45,17 @@ services:
     volumes:
     - graphite-data:/opt/graphite/storage
 
+  rabbitmq:
+    image: rabbitmq:3.6
+    env_file:
+      - .env
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+
 volumes:
   tuleap-data:
   ldap-data:
   gerrit-data:
   db-data:
   graphite-data:
+  rabbitmq-data:

@@ -514,6 +514,9 @@ done
 %{__install} -d $RPM_BUILD_ROOT/%{APP_LOG_DIR}
 #%{__install} -d $RPM_BUILD_ROOT/%{APP_LOG_DIR}/cvslog
 
+# Run dir
+%{__install} -d $RPM_BUILD_ROOT/%{_localstatedir}/run/tuleap
+
 # Core subversion mod_perl
 %{__install} -d $RPM_BUILD_ROOT/%{perl_vendorlib}/Apache
 %{__install} src/utils/svn/Tuleap.pm $RPM_BUILD_ROOT/%{perl_vendorlib}/Apache
@@ -976,6 +979,9 @@ fi
 # Log dir
 %attr(755,%{APP_USER},%{APP_USER}) %dir %{APP_LOG_DIR}
 #%attr(775,%{APP_USER},%{APP_USER}) %dir %{APP_LOG_DIR}/cvslog
+
+# Run dir
+%attr(00755,%{APP_USER},%{APP_USER}) %dir %{_localstatedir}/run/tuleap
 
 %attr(00644,root,root) %{_unitdir}/tuleap.service
 %attr(00644,root,root) %{_unitdir}/tuleap-php-fpm.service

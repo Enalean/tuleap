@@ -502,7 +502,7 @@ $sys_rest_api_over_http = 0;
 // When you setup a reverse proxy in front of Tuleap (for SSL termination or
 // load balancer for instance, you should set there the IP address of the proxy
 //
-// /!\ SECURITY WARINING /!\
+// /!\ SECURITY WARNING /!\
 //
 // When enabled, Tuleap will trust following HTTP headers:
 // - X_FORWARDED_FOR
@@ -528,3 +528,15 @@ $sys_mail_secure_mode = 0;
 // This is useful for intra-application https call (like SOAP) starting PHP 5.6
 // Should be toggled to 1 in dev only otherwise it means that your server is exposed to security vulnerabilities
 $sys_use_unsecure_ssl_certificate = 0;
+
+// Allow backend processing of emails
+// /!\ WARNING /!\
+// Only enable this if you have
+// - RabbitMQ configured (see /usr/share/tuleap/src/etc/rabbitmq.inc.dist)
+// - Notify worker enabled
+// Otherwise you will loose email notifications.
+//
+// Possible values:
+// - 'all' => all projects will use async emails
+// - "X, Y, Z" => ids of projects that use async emails (progressive deployment)
+// $sys_async_emails = 0;
