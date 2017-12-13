@@ -86,6 +86,9 @@ class ProjectUGroupPresenterBuilder
      */
     private function getFormattedPermissions(ProjectUGroup $ugroup)
     {
+        if (! $ugroup->isStatic()) {
+            return array();
+        }
         $data      = array();
         $dar       = $this->permissions_manager->searchByUgroupId($ugroup->getId());
         $row_count = 0;
