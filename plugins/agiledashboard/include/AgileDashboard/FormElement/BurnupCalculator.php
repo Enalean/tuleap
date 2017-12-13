@@ -49,18 +49,8 @@ class BurnupCalculator implements IProvideArtifactChildrenForComputedCalculation
         $target_field_name,
         $computed_field_id
     ) {
-        $manual_sum = null;
-
-        $dar = $this->burnup_dao->getBurnupComputedValue($artifact_ids_to_fetch);
-
-        $this->logger->info('Reading tree for ' . implode(',', $artifact_ids_to_fetch));
-        $this->logger->info('artifact with Done status');
-
-        foreach ($dar as $row) {
-            if ($row['done_value'] !== null) {
-                $this->logger->info($row['parent_id']);
-            }
-        }
+        $burnup_dao = new BurnupDao();
+        $dar        = $burnup_dao->getBurnupComputedValue($artifact_ids_to_fetch);
 
         return array(
             'children'   => $dar,
