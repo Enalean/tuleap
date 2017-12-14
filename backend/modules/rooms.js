@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2015-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -184,7 +184,7 @@ define([
             }
 
             if (MessageContentVerifier.isExecutionDeleted(message)) {
-                self.executions_collection[room_id].remove(message.data.artifact.id);
+                self.executions_collection[room_id].remove(message.data.artifact_id);
             } else if (MessageContentVerifier.hasPresencesOnExecutions(message.data)) {
                 message.data = self.executions_collection[room_id].update(message.data.presence);
                 self.scores.addScoreByUserIdAndRoomId(message.data.user, room_id);
@@ -225,10 +225,6 @@ define([
             _.filter(room, function (socket) {
                 return (self.rights.userCanReceiveData(socket.username, rights_user));
             }).forEach(function (socket) {
-                if (MessageContentVerifier.hasCardFields(data)) {
-                    data.artifact = self.rights.filterMessageByRights(socket.username, rights_user, data.artifact);
-                }
-
                 socket.emit(message.cmd, data);
             });
         };
@@ -267,10 +263,6 @@ define([
                 return (socket.id !== socket_sender.id
                 && self.rights.userCanReceiveData(socket.username, rights_user));
             }).forEach(function (socket) {
-                if (MessageContentVerifier.hasCardFields(data)) {
-                    data.artifact = self.rights.filterMessageByRights(socket.username, rights_user, data.artifact);
-                }
-
                 socket_sender.to(socket.id).emit(message.cmd, data);
             });
         }

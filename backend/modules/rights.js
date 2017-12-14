@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2015-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -123,41 +123,6 @@ define([
                 && _.has(user_rights, 'tracker')
                 && _.has(user_rights, 'artifact')
                 && user_rights.tracker.length > 0;
-        };
-
-        /**
-         * @access public
-         *
-         * Function to filter artifact
-         * looking field artifact rights
-         * for each user
-         *
-         * @param user_id      (int)   : user id who will receive message
-         * @param user_rights  (Object): rights for a message
-         * @param artifact     (Object): artifact in message to filter
-         * @returns {Object}
-         */
-        self.filterMessageByRights = function(user_id, user_rights, artifact) {
-            var new_fields = [];
-            if (user_rights.field) {
-                _.forEach(artifact.card_fields, function (field) {
-                    var field_id = field.field_id ? field.field_id : field.id;
-                    if (hasUserRightsExist(self.ugroups_collection[user_id], user_rights.field[field_id])) {
-                        new_fields.push(field);
-                    }
-                });
-            }
-
-            var doesNotFilterLabel = _.some(new_fields, function(field) {
-                return field.label === 'Summary';
-            });
-
-            if (! doesNotFilterLabel) {
-                artifact.label = null;
-            }
-
-            artifact.card_fields = new_fields;
-            return artifact;
         };
 
         /**

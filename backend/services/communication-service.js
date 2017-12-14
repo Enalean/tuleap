@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,7 +27,7 @@ define([
     _
 ) {
     var CommunicationService = function (rooms, jwt) {
-        var PROTOCOL_VERSION = '1.1.0';
+        var PROTOCOL_VERSION = '2.0.0';
         var self             = this;
 
         self.jwt   = jwt;

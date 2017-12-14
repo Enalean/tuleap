@@ -26,20 +26,6 @@ define([
 ], function (
     _
 ) {
-
-    /**
-     * @access public
-     *
-     * Function to verify if content message sent
-     * has an artifact with fields
-     *
-     * @param data (Object)
-     * @returns {boolean}
-     */
-    function hasCardFields(data) {
-        return _.has(data, 'artifact.card_fields');
-    }
-
     /**
      * @access public
      *
@@ -67,7 +53,7 @@ define([
      */
     function isExecutionDeleted(message) {
         return message.cmd === 'testmanagement_execution:delete'
-            && _.has(message.data, 'artifact.id');
+            && _.has(message.data, 'artifact_id');
     }
 
     /**
@@ -80,14 +66,13 @@ define([
      * @returns {boolean}
      */
     function hasChangeStatusOnExecutions(data) {
-        return _.has(data, 'artifact.status')
+        return _.has(data, 'status')
             && _.has(data, 'previous_status')
             && _.has(data, 'user')
             && _.has(data, 'previous_user');
     }
 
     return {
-        hasCardFields              : hasCardFields,
         hasPresencesOnExecutions   : hasPresencesOnExecutions,
         isExecutionDeleted         : isExecutionDeleted,
         hasChangeStatusOnExecutions: hasChangeStatusOnExecutions
