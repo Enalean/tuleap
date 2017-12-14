@@ -1555,10 +1555,10 @@ plugin_tracker_widget_myartifacts	description	Affiche la liste des artefacts par
 plugin_tracker_widget_myartifacts	no_artifacts	Vous n'avez pas </br> encore d'artefacts
 
 plugin_tracker	must_have_artifact_link_field	L'artefact n'a pas de champ de type lien vers artefact ou alors vous n'avez pas la permission de le modifier, merci de reconfigurer l'outil de suivi
-plugin_tracker	burndown_missing_start_date_warning	L'outil de suivi n'a pas de champ "start_date" de type Date ou bien vous n'avez pas la permission d'y acceder.
-plugin_tracker	burndown_missing_duration_warning	L'outil de suivi n'a pas de champ "duration" de type Entier ou bien vous n'avez pas la permission d'y acceder.
-plugin_tracker	burndown_missing_capacity_warning	L'outil de suivi n'a pas de champ "capacité" de type Entier ou bien vous n'avez pas la permission d'y acceder.
-plugin_tracker	burndown_missing_remaining_effort_warning	Des outils de suivi enfants n'ont pas de champ "remaining_effort" de type Entier ou Flottant :
+plugin_tracker	burndown_missing_start_date_warning	L'outil de suivi n'a pas de champ "start_date" de type Date ou bien vous n'avez pas la permission d'y accéder.
+plugin_tracker	burndown_missing_duration_warning	L'outil de suivi n'a pas de champ "duration" de type Entier ou bien vous n'avez pas la permission d'y accéder.
+plugin_tracker	burndown_missing_capacity_warning	L'outil de suivi n'a pas de champ "capacity" de type Entier, Flottant ou Calculé ou bien vous n'avez pas la permission d'y accéder.
+plugin_tracker	burndown_missing_remaining_effort_warning	Des outils de suivi enfants n'ont pas de champ "remaining_effort" de type Entier, Flottant ou Calculé:
 plugin_tracker	burndown_empty_start_date_warning	Le champ "start date" est vide ou invalide
 plugin_tracker	burndown_empty_duration_warning	Le champ "duration" est vide ou invalide
 plugin_tracker	burndown_duration_too_short	Le champ "duration" doit être suppérieur à 1 pour pouvoir afficher correctement le graphique.
@@ -1568,7 +1568,7 @@ plugin_tracker	unable_to_render_the_chart	Impossible de construire le graphique
 plugin_tracker	burndown_generate	Reconstruire le cache
 plugin_tracker	burndown_cancel	Annuler
 plugin_tracker	force_cache_generation_info	Voulez-vous vraiment reconstruire le cache du burdown dans son intégralité? La reconstruction du cache entrainera une indisponibilité du champ durant quelques minutes.
-plugin_tracker	burndown_permission_denied	Vous n'avez pas la permission d'acceder ce champ.
+plugin_tracker	burndown_permission_denied	Vous n'avez pas la permission d'accéder à ce champ.
 plugin_tracker	burndown_cache_generating	Le burndown est en cours de calcul. Il sera disponible dans quelques minutes.
 plugin_tracker	unsufficient_permissions_for_ranking	Vous n'êtes pas autorisé à prioriser sur ce planning. Vos changements n'ont pas été pris en compte. Veuillez recharger la page.
 

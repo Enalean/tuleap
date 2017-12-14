@@ -17,6 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 use Tuleap\Tracker\FormElement\View\Admin\Field\Computed;
 
 /**
@@ -129,7 +130,6 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
         $this->element      = $element;
         $this->adminElement = new Tracker_FormElement_View_Admin_Field_Burndown($element, $this->allUsedElements);
     }
-    
     public function visitLastUpdateDate(Tracker_FormElement_Field_LastUpdateDate $element) {
         $this->element      = $element;
         $this->adminElement = new Tracker_FormElement_View_Admin_Field_LastUpdateDate($element, $this->allUsedElements);
@@ -205,9 +205,10 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
         $this->adminElement = new Tracker_FormElement_View_Admin_Priority($element, $this->allUsedElements);
     }
 
-    public function visitExternalField(Tracker_FormElement_Field $element)
+    public function visitExternalField(TrackerFormElementExternalField $element)
     {
-        $this->visitField($element);
+        $this->element      = $element;
+        $this->adminElement = $element->getFormAdminVisitor($element, $this->allUsedElements);
     }
 
     /**

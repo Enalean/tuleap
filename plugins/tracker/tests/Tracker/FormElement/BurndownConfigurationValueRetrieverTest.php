@@ -57,7 +57,7 @@ class BurndownConfigurationValueRetrieverTest extends TuleapTestCase
     private $start_date_value;
 
     /**
-     * @var BurndownConfigurationFieldRetriever
+     * @var ChartConfigurationFieldRetriever
      */
     private $configuration_value_retriever;
 
@@ -90,7 +90,7 @@ class BurndownConfigurationValueRetrieverTest extends TuleapTestCase
     {
         parent::setUp();
 
-        $this->field_retriever = mock('Tuleap\Tracker\FormElement\BurndownConfigurationFieldRetriever');
+        $this->field_retriever = mock('Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever');
         $this->tracker         = mock('Tracker');
         $this->artifact_sprint = mock('Tracker_Artifact');
         $this->user            = mock('PFUser');

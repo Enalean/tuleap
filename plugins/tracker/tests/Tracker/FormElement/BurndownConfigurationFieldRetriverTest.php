@@ -38,7 +38,7 @@ class BurndownConfigurationFieldRetriverTest extends TuleapTestCase
     private $tracker;
 
     /**
-     * @var BurndownConfigurationFieldRetriever
+     * @var ChartConfigurationFieldRetriever
      */
     private $configuration_retriever;
 
@@ -88,7 +88,7 @@ class BurndownConfigurationFieldRetriverTest extends TuleapTestCase
         $this->field_capacity         = mock('Tracker_FormElement_Field_Integer');
         $this->field_remaining_effort = mock('Tracker_FormElement_Field_Integer');
 
-        $this->configuration_retriever = new BurndownConfigurationFieldRetriever(
+        $this->configuration_retriever = new ChartConfigurationFieldRetriever(
             $this->form_element_field_factoy,
             mock('Logger')
         );

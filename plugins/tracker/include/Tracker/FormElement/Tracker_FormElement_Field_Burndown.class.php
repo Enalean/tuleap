@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,11 +20,12 @@
 
 use Tuleap\TimezoneRetriever;
 use Tuleap\Tracker\FormElement\BurndownCacheIsCurrentlyCalculatedException;
-use Tuleap\Tracker\FormElement\BurndownConfigurationValueRetriever;
 use Tuleap\Tracker\FormElement\BurndownConfigurationValueChecker;
+use Tuleap\Tracker\FormElement\BurndownConfigurationValueRetriever;
 use Tuleap\Tracker\FormElement\BurndownLogger;
-use Tuleap\Tracker\FormElement\BurndownConfigurationFieldRetriever;
-use Tuleap\Tracker\FormElement\BurndownMessageFetcher;
+use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
+use Tuleap\Tracker\FormElement\ChartFieldUsage;
+use Tuleap\Tracker\FormElement\ChartMessageFetcher;
 use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_GENERATE;
 
 require_once 'common/chart/ErrorChart.class.php';
@@ -577,11 +578,15 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      * Display the html field in the admin ui
      * @return string html
      */
-    public function fetchAdminFormElement() {
-        $html  = '';
-        $html .= $this->getBurndownMessageFetcher()->fetchWarnings($this->getTracker());
-        $html .= '<img src="'. TRACKER_BASE_URL .'/images/fake-burndown-admin.png" />';
-        $html .= '<a class="btn burndown-button-generate" disabled="disabled">'.$GLOBALS['Language']->getText('plugin_tracker', 'burndown_generate').'</a>';
+    public function fetchAdminFormElement()
+    {
+        $html = '';
+        $html .= $this->getBurndownMessageFetcher()->fetchWarnings($this->getTracker(), $this->getChartFieldUsage());
+        $html .= '<img src="' . TRACKER_BASE_URL . '/images/fake-burndown-admin.png" />';
+        $html .= '<a class="btn burndown-button-generate" disabled="disabled">' .
+            $GLOBALS['Language']->getText('plugin_tracker', 'burndown_generate') .
+            '</a>';
+
         return $html;
     }
 
@@ -758,11 +763,11 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     }
 
     /**
-     * @return BurndownConfigurationFieldRetriever
+     * @return ChartConfigurationFieldRetriever
      */
     protected function getBurdownConfigurationFieldRetriever()
     {
-        return new BurndownConfigurationFieldRetriever($this->getFormElementFactory(), $this->getLogger());
+        return new ChartConfigurationFieldRetriever($this->getFormElementFactory(), $this->getLogger());
     }
 
     /**
@@ -788,6 +793,29 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
 
     private function getBurndownMessageFetcher()
     {
-        return new BurndownMessageFetcher($this->getHierarchyFactory(), $this->getBurdownConfigurationFieldRetriever());
+        return new ChartMessageFetcher(
+            $this->getHierarchyFactory(),
+            $this->getBurdownConfigurationFieldRetriever(),
+            EventManager::instance()
+        );
+    }
+
+    private function getChartFieldUsage()
+    {
+        $use_start_date        = true;
+        $use_duration          = true;
+        $use_capacity          = false;
+        $use_hierarchy         = true;
+        $use_remaining_effort  = true;
+        $is_under_construction = false;
+
+        return new ChartFieldUsage(
+            $use_start_date,
+            $use_duration,
+            $use_capacity,
+            $use_hierarchy,
+            $use_remaining_effort,
+            $is_under_construction
+        );
     }
 }

@@ -31,6 +31,9 @@ msgid ""
 "value selected for this semantic."
 msgstr ""
 
+msgid "Burnup Chart"
+msgstr ""
+
 msgid "Define the closed status that are considered Done"
 msgstr ""
 

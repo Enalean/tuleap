@@ -20,17 +20,19 @@
 
 namespace Tuleap\Tracker\FormElement;
 
+use EventManager;
+
 require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
-class BurndownMessageFetcherTest extends \TuleapTestCase
+class ChartMessageFetcherTest extends \TuleapTestCase
 {
     /**
-     * @var Tracker
+     * @var \Tracker
      */
     private $tracker;
 
     /**
-     * @var BurndownMessageFetcher
+     * @var ChartMessageFetcher
      */
     private $message_fetcher;
 
@@ -39,41 +41,46 @@ class BurndownMessageFetcherTest extends \TuleapTestCase
         parent::setUp();
 
         $hierarchy_factory     = mock('Tracker_HierarchyFactory');
-        $this->message_fetcher = new BurndownMessageFetcher(
+        $this->message_fetcher = new ChartMessageFetcher(
             $hierarchy_factory,
-            mock('Tuleap\Tracker\FormElement\BurndownConfigurationFieldRetriever')
+            mock('Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever'),
+            mock('EventManager')
         );
         stub($hierarchy_factory)->getChildren()->returns(array());
 
         $this->tracker = aMockTracker()->build();
     }
 
-    public function itDisplaysAWarningWhenThereAreNoStartDateField()
+    public function itDisplaysWarningsWhenFieldsAreMissingInChartConfiguration()
     {
+        $chart_configuration = new ChartFieldUsage(true, true, false, false, false, false);
         stub($this->tracker)->hasFormElementWithNameAndType('start_date', 'date')->returns(false);
-
-        $expected_warning = '<ul class="feedback_warning"><li>' .
-            $GLOBALS['Language']->getText('plugin_tracker', 'burndown_missing_start_date_warning') .
-            '</li><li></li></ul>';
-
-        $this->assertEqual(
-            $expected_warning,
-            $this->message_fetcher->fetchWarnings($this->tracker)
-        );
-    }
-
-    public function itDisplaysAMessageWhenThereAreNoDurationField()
-    {
-        stub($this->tracker)->hasFormElementWithNameAndType('start_date', 'date')->returns(true);
         stub($this->tracker)->hasFormElementWithNameAndType('duration', 'int')->returns(false);
 
         $expected_warning = '<ul class="feedback_warning"><li>' .
+            $GLOBALS['Language']->getText('plugin_tracker', 'burndown_missing_start_date_warning') .
+            '</li><li>' .
             $GLOBALS['Language']->getText('plugin_tracker', 'burndown_missing_duration_warning') .
             '</li></ul>';
 
         $this->assertEqual(
             $expected_warning,
-            $this->message_fetcher->fetchWarnings($this->tracker)
+            $this->message_fetcher->fetchWarnings($this->tracker, $chart_configuration)
+        );
+    }
+
+    public function itDoesnotDisplayAnyErrorsWhenNoFieldsAreMissingInChartConfiguration()
+    {
+        $chart_configuration = new ChartFieldUsage(true, true, false, false, false, false);
+
+        stub($this->tracker)->hasFormElementWithNameAndType('start_date', 'date')->returns(true);
+        stub($this->tracker)->hasFormElementWithNameAndType('duration', 'int')->returns(true);
+
+        $expected_warning = '';
+
+        $this->assertEqual(
+            $expected_warning,
+            $this->message_fetcher->fetchWarnings($this->tracker, $chart_configuration)
         );
     }
 }

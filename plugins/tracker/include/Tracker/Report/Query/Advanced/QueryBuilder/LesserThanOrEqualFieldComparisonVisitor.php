@@ -43,6 +43,7 @@ use Tracker_FormElement_Field_SubmittedBy;
 use Tracker_FormElement_Field_SubmittedOn;
 use Tracker_FormElement_Field_Text;
 use Tracker_FormElement_FieldVisitor;
+use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 use Tuleap\Tracker\Report\Query\Advanced\FieldFromWhereBuilder;
 
 class LesserThanOrEqualFieldComparisonVisitor implements Tracker_FormElement_FieldVisitor, FieldComparisonVisitor
@@ -182,7 +183,7 @@ class LesserThanOrEqualFieldComparisonVisitor implements Tracker_FormElement_Fie
         return null;
     }
 
-    public function visitExternalField(Tracker_FormElement_Field $field)
+    public function visitExternalField(TrackerFormElementExternalField $element)
     {
         return null;
     }

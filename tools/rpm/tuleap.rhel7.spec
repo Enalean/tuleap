@@ -583,6 +583,11 @@ done
 #%{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_tracker
 #%{__install} plugins/tracker/etc/sudoers.d/tuleap-plugin-tracker $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_plugin_tracker
 #
+# Plugin agiledashboard
+#%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/agiledashboard
+#%{__install} plugins/agiledashboard/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_agiledashboard
+#%{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_agiledashboard
+#
 ## Plugin mediawiki
 #%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki
 #%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki/master
@@ -1115,6 +1120,8 @@ fi
 %files plugin-agiledashboard
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/agiledashboard
+#%attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_agiledashboard
+#%config(noreplace) /etc/logrotate.d/%{APP_NAME}_agiledashboard
 
 %files plugin-fulltextsearch
 %defattr(-,root,root,-)

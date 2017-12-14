@@ -43,6 +43,7 @@ use Tracker_FormElement_Field_SubmittedBy;
 use Tracker_FormElement_Field_SubmittedOn;
 use Tracker_FormElement_Field_Text;
 use Tracker_FormElement_FieldVisitor;
+use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\CollectionOfDateValuesExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFieldChecker;
@@ -188,8 +189,8 @@ class BetweenComparisonVisitor implements Tracker_FormElement_FieldVisitor, IPro
         throw new FieldIsNotSupportedAtAllException($field);
     }
 
-    public function visitExternalField(Tracker_FormElement_Field $field)
+    public function visitExternalField(TrackerFormElementExternalField $element)
     {
-        throw new FieldIsNotSupportedAtAllException($field);
+        throw new FieldIsNotSupportedAtAllException($element);
     }
 }

@@ -28,7 +28,7 @@ use Tracker_FormElement_Field_BurndownException;
 use Tracker_FormElement_InvalidFieldException;
 use Tracker_FormElementFactory;
 
-class BurndownConfigurationFieldRetriever
+class ChartConfigurationFieldRetriever
 {
     const REMAINING_EFFORT_FIELD_NAME = 'remaining_effort';
     const DURATION_FIELD_NAME         = 'duration';

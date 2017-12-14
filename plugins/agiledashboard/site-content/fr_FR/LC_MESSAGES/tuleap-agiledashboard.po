@@ -51,9 +51,12 @@ msgstr ""
 "Les artéfacts ne peuvent être considérés comme <strong>fini</strong> car il "
 "n'y aucune valeur selectionnée pour cette sémantique."
 
+msgid "Burnup Chart"
+msgstr "Diagramme Burn-Up"
+
 msgid "Define the closed status that are considered Done"
 msgstr ""
-"Définisser les valeurs fermées de la sémantique statut considérées comme "
+"Définissez les valeurs fermées de la sémantique statut considérées comme "
 "finies"
 
 msgid ""
