@@ -1,3 +1,23 @@
+#, php-format
+msgid "@title cannot be compared to MYSELF()."
+msgstr ""
+
+#, php-format
+msgid "@title cannot be compared to NOW()."
+msgstr ""
+
+#, php-format
+msgid "@title cannot be compared to a date."
+msgstr ""
+
+#, php-format
+msgid "@title cannot be compared to the float value '%s'."
+msgstr ""
+
+#, php-format
+msgid "@title cannot be compared to the int value '%s'."
+msgstr ""
+
 msgid "Add"
 msgstr ""
 
@@ -5,6 +25,9 @@ msgid "Cancel"
 msgstr ""
 
 msgid "Cross trackers search"
+msgstr ""
+
+msgid "Error while parsing the query"
 msgstr ""
 
 msgid "No trackers selected"
@@ -25,8 +48,24 @@ msgstr ""
 msgid "Search into multiple trackers and multiple projects."
 msgstr ""
 
+#, php-format
+msgid ""
+"The %s comparison is not supported for cross-tracker search. Please refer to "
+"the documentation for the allowed comparisons."
+msgstr ""
+
 msgid "Tracker"
 msgstr ""
+
+#, php-format
+msgid ""
+"We cannot search on '%s', we don't know what it refers to. Please refer to "
+"the documentation for the allowed comparisons."
+msgid_plural ""
+"We cannot search on '%s', we don't know what they refer to. Please refer to "
+"the documentation for the allowed comparisons."
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "You cannot access all projects of the search"
 msgstr ""

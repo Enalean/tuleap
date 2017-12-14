@@ -12,6 +12,26 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.0.3\n"
 
+#, php-format
+msgid "@title cannot be compared to MYSELF()."
+msgstr "@title ne peut pas être comparé à MYSELF()."
+
+#, php-format
+msgid "@title cannot be compared to NOW()."
+msgstr "@title ne peut pas être comparé à NOW()."
+
+#, php-format
+msgid "@title cannot be compared to a date."
+msgstr "@title ne peut pas être comparé à une date."
+
+#, php-format
+msgid "@title cannot be compared to the float value '%s'."
+msgstr "@title ne peut pas être comparé à la valeur flottante '%s'."
+
+#, php-format
+msgid "@title cannot be compared to the int value '%s'."
+msgstr "@title ne peut pas être comparé à la valeur entière '%s'."
+
 msgid "Add"
 msgstr "Ajouter"
 
@@ -20,6 +40,9 @@ msgstr "Annuler"
 
 msgid "Cross trackers search"
 msgstr "Recherche multi trackers"
+
+msgid "Error while parsing the query"
+msgstr "Erreur pendant l'analyse de la requête"
 
 msgid "No trackers selected"
 msgstr "Aucun outils de suivi sélectionné"
@@ -39,8 +62,32 @@ msgstr "Permet la recherche d'artefacts à travers plusieurs outils de suivi"
 msgid "Search into multiple trackers and multiple projects."
 msgstr "Rechercher dans plusieurs outils de suivi et plusieurs projets."
 
+#, php-format
+msgid ""
+"The %s comparison is not supported for cross-tracker search. Please refer to "
+"the documentation for the allowed comparisons."
+msgstr ""
+"La comparaison %s n'est pas supportée pour la recherche multi trackers. "
+"Merci de vous référer à la documentation pour les comparaisons autorisées."
+
 msgid "Tracker"
 msgstr "Outil de suivi"
+
+#, php-format
+msgid ""
+"We cannot search on '%s', we don't know what it refers to. Please refer to "
+"the documentation for the allowed comparisons."
+msgid_plural ""
+"We cannot search on '%s', we don't know what they refer to. Please refer to "
+"the documentation for the allowed comparisons."
+msgstr[0] ""
+"Nous ne pouvons pas rechercher dans '%s', nous ne savons pas à quoi cela "
+"fait référence. Merci de vous référer à la documentation pour les "
+"comparaisons autorisées."
+msgstr[1] ""
+"Nous ne pouvons pas rechercher dans '%s', nous ne savons pas à quoi cela "
+"fait référence. Merci de vous référer à la documentation pour les "
+"comparaisons autorisées."
 
 msgid "You cannot access all projects of the search"
 msgstr "Vous ne pouvez pas accéder à tous les projets de cette recherche"

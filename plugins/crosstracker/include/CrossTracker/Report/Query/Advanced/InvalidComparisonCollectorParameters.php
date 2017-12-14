@@ -18,23 +18,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Tracker\Report\Query\Advanced;
+namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
-use Exception;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\VisitorParameters;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollection;
 
-class SearchablesAreInvalidException extends Exception
+class InvalidComparisonCollectorParameters implements VisitorParameters
 {
-    private $error_messages;
+    /** @var InvalidSearchablesCollection */
+    private $invalid_searchables_collection;
 
-    public function __construct(array $error_messages)
+    public function __construct(InvalidSearchablesCollection $invalid_searchables_collection)
     {
-        parent::__construct(implode("\n", $error_messages));
-
-        $this->error_messages = $error_messages;
+        $this->invalid_searchables_collection = $invalid_searchables_collection;
     }
 
-    public function getErrorMessages()
+    /** @return InvalidSearchablesCollection */
+    public function getInvalidSearchablesCollection()
     {
-        return $this->error_messages;
+        return $this->invalid_searchables_collection;
     }
 }

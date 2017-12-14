@@ -24,19 +24,31 @@ use Luracast\Restler\RestException;
 use PFUser;
 use ProjectManager;
 use TrackerFactory;
+use Tuleap\CrossTracker\CrossTrackerArtifactReportDao;
+use Tuleap\CrossTracker\CrossTrackerReport;
+use Tuleap\CrossTracker\CrossTrackerReportDao;
+use Tuleap\CrossTracker\CrossTrackerReportFactory;
+use Tuleap\CrossTracker\CrossTrackerReportNotFoundException;
 use Tuleap\CrossTracker\Permission\CrossTrackerPermissionGate;
 use Tuleap\CrossTracker\Permission\CrossTrackerUnauthorizedException;
+use Tuleap\CrossTracker\Report\Query\Advanced\ExpertQueryValidator;
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidComparisonCollectorVisitor;
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\TitleSemantic\EqualComparisonChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\JsonDecoder;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\QueryParameterException;
 use Tuleap\REST\QueryParameterParser;
-use Tuleap\CrossTracker\CrossTrackerArtifactReportDao;
-use Tuleap\CrossTracker\CrossTrackerReport;
-use Tuleap\CrossTracker\CrossTrackerReportDao;
-use Tuleap\CrossTracker\CrossTrackerReportFactory;
-use Tuleap\CrossTracker\CrossTrackerReportNotFoundException;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parser;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
+use Tuleap\Tracker\Report\Query\Advanced\LimitSizeIsExceededException;
+use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
+use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
+use Tuleap\Tracker\Report\Query\Advanced\SizeValidatorVisitor;
+use Tuleap\Tracker\Report\TrackerReportConfig;
+use Tuleap\Tracker\Report\TrackerReportConfigDao;
 use URLVerification;
 use UserManager;
 
@@ -87,9 +99,24 @@ class CrossTrackerReportsResource extends AuthenticatedResource
 
         $this->cross_tracker_dao              = new CrossTrackerReportDao();
         $this->cross_tracker_extractor        = new CrossTrackerReportExtractor(TrackerFactory::instance());
+
+        $report_config = new TrackerReportConfig(
+            new TrackerReportConfigDao()
+        );
+
+        $validator = new ExpertQueryValidator(
+            new Parser(),
+            new SizeValidatorVisitor($report_config->getExpertQueryLimit()),
+            new InvalidComparisonCollectorVisitor(
+                new InvalidSearchableCollectorVisitor(),
+                new EqualComparisonChecker()
+            )
+        );
+
         $this->cross_tracker_artifact_factory = new CrossTrackerArtifactReportFactory(
             new CrossTrackerArtifactReportDao(),
-            \Tracker_ArtifactFactory::instance()
+            \Tracker_ArtifactFactory::instance(),
+            $validator
         );
         $this->cross_tracker_permission_gate  = new CrossTrackerPermissionGate(new URLVerification());
 
@@ -177,8 +204,8 @@ class CrossTrackerReportsResource extends AuthenticatedResource
 
             $this->checkUserIsAllowedToSeeReport($current_user, $expected_report);
 
-            $artifacts = $this->cross_tracker_artifact_factory->getArtifactsFromGivenTrackers(
-                $expected_report->getTrackers(),
+            $artifacts = $this->cross_tracker_artifact_factory->getArtifactsMatchingReport(
+                $expected_report,
                 $current_user,
                 $limit,
                 $offset
@@ -189,6 +216,25 @@ class CrossTrackerReportsResource extends AuthenticatedResource
             throw new RestException(400, $exception->getMessage());
         } catch (TrackerDuplicateException $exception) {
             throw new RestException(400, $exception->getMessage());
+        } catch (SyntaxError $exception) {
+            throw new RestException(
+                400,
+                null,
+                array('i18n_error_message' => dgettext("tuleap-crosstracker", "Error while parsing the query"))
+            );
+        } catch (LimitSizeIsExceededException $exception) {
+            throw new RestException(
+                400,
+                null,
+                array('i18n_error_message' => dgettext(
+                    "tuleap-tracker",
+                    "The query is considered too complex to be executed by the server. Please simplify it (e.g remove comparisons) to continue."
+                ))
+            );
+        } catch (SearchablesDoNotExistException $exception) {
+            throw new RestException(400, null, array('i18n_error_message' => $exception->getMessage()));
+        } catch (SearchablesAreInvalidException $exception) {
+            throw new RestException(400, null, array('i18n_error_message' => $exception->getMessage()));
         }
 
         $this->sendPaginationHeaders($limit, $offset, $artifacts->getTotalSize());
