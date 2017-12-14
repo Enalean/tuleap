@@ -26,6 +26,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\Report\Event\trackerReportDeleted;
 use Tuleap\Tracker\Report\ExpertModePresenter;
+use Tuleap\Tracker\Report\Query\Advanced\ExpertQueryValidator;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parser;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitable;
@@ -35,6 +36,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollection;
 use Tuleap\Tracker\Report\Query\Advanced\LimitSizeIsExceededException;
+use Tuleap\Tracker\Report\Query\Advanced\ParserCacheProxy;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilderVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
@@ -79,17 +81,13 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
     public $criteria;
     public $report_session;
     /**
-     * @var Parser
+     * @var ParserCacheProxy
      */
     private $parser;
     /**
      * @var InvalidComparisonCollectorVisitor
      */
     private $collector;
-    /**
-     * @var Visitable
-     */
-    private $parsed_expert_query;
     /**
      * @var QueryBuilderVisitor
      */
@@ -138,28 +136,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         $this->updated_by          = $updated_by;
         $this->updated_at          = $updated_at;
 
-        $this->parser    = new Parser();
-        $this->collector = new InvalidComparisonCollectorVisitor(
-            new InvalidFields\EqualComparisonVisitor(),
-            new InvalidFields\NotEqualComparisonVisitor(),
-            new InvalidFields\LesserThanComparisonVisitor(),
-            new InvalidFields\GreaterThanComparisonVisitor(),
-            new InvalidFields\LesserThanOrEqualComparisonVisitor(),
-            new InvalidFields\GreaterThanOrEqualComparisonVisitor(),
-            new InvalidFields\BetweenComparisonVisitor(),
-            new InvalidFields\InComparisonVisitor(),
-            new InvalidFields\NotInComparisonVisitor(),
-            new InvalidMetadata\EqualComparisonChecker(),
-            new InvalidMetadata\NotEqualComparisonChecker(),
-            new InvalidMetadata\LesserThanComparisonChecker(),
-            new InvalidMetadata\GreaterThanComparisonChecker(),
-            new InvalidMetadata\LesserThanOrEqualComparisonChecker(),
-            new InvalidMetadata\GreaterThanOrEqualComparisonChecker(),
-            new InvalidMetadata\BetweenComparisonChecker(),
-            new InvalidMetadata\InComparisonChecker(),
-            new InvalidMetadata\NotInComparisonChecker(),
-            new InvalidSearchableCollectorVisitor($this->getFormElementFactory())
-        );
+        $this->parser    = new ParserCacheProxy(new Parser());
+
         $this->query_builder  = new QueryBuilderVisitor(
             new QueryBuilder\EqualFieldComparisonVisitor(),
             new QueryBuilder\NotEqualFieldComparisonVisitor(),
@@ -1667,30 +1645,12 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
 
     public function validateExpertQuery()
     {
-        $parsed_query = $this->parseExpertQuery();
-        $this->getSizeValidator()->checkSizeOfTree($parsed_query);
-
-        $invalid_searchables_collection = $this->getInvalidSearchablesInExpertQuery($parsed_query);
-
-        $nonexistent_searchables    = $invalid_searchables_collection->getNonexistentSearchables();
-        $nb_nonexistent_searchables = count($nonexistent_searchables);
-        if ($nb_nonexistent_searchables > 0) {
-            $message = sprintf(
-                dngettext(
-                    'tuleap-tracker',
-                    "The field '%s' doesn't exist",
-                    "The fields '%s' don't exist",
-                    $nb_nonexistent_searchables
-                ),
-                implode("', '", $nonexistent_searchables)
-            );
-            throw new SearchablesDoNotExistException($message);
-        }
-
-        $invalid_searchable_errors = $invalid_searchables_collection->getInvalidSearchableErrors();
-        if ($invalid_searchable_errors) {
-            throw new SearchablesAreInvalidException($invalid_searchable_errors);
-        }
+        $validator = new ExpertQueryValidator(
+            $this->parser,
+            $this->getSizeValidator(),
+            $this->getCollector()
+        );
+        $validator->validateExpertQuery($this->expert_query);
     }
 
     private function fetchUpdateRendererForm(Tracker_Report_Renderer $renderer) {
@@ -1768,15 +1728,6 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         return $add_renderer;
     }
 
-    private function parseExpertQuery()
-    {
-        if (! isset($this->parsed_expert_query)) {
-            $this->parsed_expert_query = $this->parser->parse($this->expert_query);
-        }
-
-        return $this->parsed_expert_query;
-    }
-
     private function getMatchingIdsFromCriteria($request, $use_data_from_db)
     {
         if (!$this->matching_ids) {
@@ -1831,7 +1782,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         }
 
         try {
-            $expression = $this->parseExpertQuery();
+            $expression = $this->parser->parse($this->expert_query);
 
             if ($this->canExecuteExpertQuery($expression)) {
                 $from_where = $this->query_builder->buildFromWhere($expression, $this->getTracker());
@@ -1933,12 +1884,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
     private function getInvalidSearchablesInExpertQuery($parsed_query)
     {
         $invalid_searchables_collection = new InvalidSearchablesCollection();
-        $this->collector->collectErrors(
-            $parsed_query,
-            $this->getCurrentUser(),
-            $this->getTracker(),
-            $invalid_searchables_collection
-        );
+        $this->getCollector()->collectErrors($parsed_query, $invalid_searchables_collection);
 
         return $invalid_searchables_collection;
     }
@@ -1950,5 +1896,35 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         unset($this->additional_from_where);
 
         return $matching_ids;
+    }
+
+    private function getCollector()
+    {
+        if (! isset($this->collector)) {
+            $this->collector = new InvalidComparisonCollectorVisitor(
+                new InvalidFields\EqualComparisonVisitor(),
+                new InvalidFields\NotEqualComparisonVisitor(),
+                new InvalidFields\LesserThanComparisonVisitor(),
+                new InvalidFields\GreaterThanComparisonVisitor(),
+                new InvalidFields\LesserThanOrEqualComparisonVisitor(),
+                new InvalidFields\GreaterThanOrEqualComparisonVisitor(),
+                new InvalidFields\BetweenComparisonVisitor(),
+                new InvalidFields\InComparisonVisitor(),
+                new InvalidFields\NotInComparisonVisitor(),
+                new InvalidMetadata\EqualComparisonChecker(),
+                new InvalidMetadata\NotEqualComparisonChecker(),
+                new InvalidMetadata\LesserThanComparisonChecker(),
+                new InvalidMetadata\GreaterThanComparisonChecker(),
+                new InvalidMetadata\LesserThanOrEqualComparisonChecker(),
+                new InvalidMetadata\GreaterThanOrEqualComparisonChecker(),
+                new InvalidMetadata\BetweenComparisonChecker(),
+                new InvalidMetadata\InComparisonChecker(),
+                new InvalidMetadata\NotInComparisonChecker(),
+                new InvalidSearchableCollectorVisitor($this->getFormElementFactory(), $this->getTracker(),
+                    $this->getCurrentUser())
+            );
+        }
+
+        return $this->collector;
     }
 }

@@ -149,7 +149,7 @@ class TQLTest extends RestBase
 
             $body = $response->json();
             $this->assertContains(
-                "The field 'test' doesn't exist",
+                "We cannot search on 'test', we don't know what it refers to",
                 $body['error']['message']
             );
 

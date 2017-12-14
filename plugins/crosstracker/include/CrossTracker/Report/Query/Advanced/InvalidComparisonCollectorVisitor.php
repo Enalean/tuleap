@@ -38,10 +38,11 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitable;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitor;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\ICheckMetadataForAComparison;
+use Tuleap\Tracker\Report\Query\Advanced\ICollectErrorsForInvalidComparisons;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollection;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidComparisonCollectorParameters;
 
-class InvalidComparisonCollectorVisitor implements Visitor
+class InvalidComparisonCollectorVisitor implements Visitor, ICollectErrorsForInvalidComparisons
 {
     /** @var InvalidSearchableCollectorVisitor */
     private $invalid_searchable_collector_visitor;

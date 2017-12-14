@@ -31,7 +31,6 @@ use Tuleap\CrossTracker\CrossTrackerReportFactory;
 use Tuleap\CrossTracker\CrossTrackerReportNotFoundException;
 use Tuleap\CrossTracker\Permission\CrossTrackerPermissionGate;
 use Tuleap\CrossTracker\Permission\CrossTrackerUnauthorizedException;
-use Tuleap\CrossTracker\Report\Query\Advanced\ExpertQueryValidator;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidComparisonCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\TitleSemantic\EqualComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
@@ -45,9 +44,11 @@ use Tuleap\REST\JsonDecoder;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\QueryParameterException;
 use Tuleap\REST\QueryParameterParser;
+use Tuleap\Tracker\Report\Query\Advanced\ExpertQueryValidator;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parser;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
 use Tuleap\Tracker\Report\Query\Advanced\LimitSizeIsExceededException;
+use Tuleap\Tracker\Report\Query\Advanced\ParserCacheProxy;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
 use Tuleap\Tracker\Report\Query\Advanced\SizeValidatorVisitor;
@@ -108,7 +109,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
             new TrackerReportConfigDao()
         );
 
-        $parser = new Parser();
+        $parser = new ParserCacheProxy(new Parser());
 
         $validator = new ExpertQueryValidator(
             $parser,

@@ -90,8 +90,6 @@ class InvalidSearchablesCollectorVisitorTest extends TuleapTestCase
 
         $this->invalid_searchables_collection = new InvalidSearchablesCollection();
         $this->parameters                     = new InvalidComparisonCollectorParameters(
-            $this->user,
-            $this->tracker,
             $this->invalid_searchables_collection
         );
 
@@ -114,7 +112,7 @@ class InvalidSearchablesCollectorVisitorTest extends TuleapTestCase
             new BetweenComparisonChecker(),
             new InComparisonChecker(),
             new NotInComparisonChecker(),
-            new InvalidSearchableCollectorVisitor($this->formelement_factory)
+            new InvalidSearchableCollectorVisitor($this->formelement_factory, $this->tracker, $this->user)
         );
     }
 
@@ -226,7 +224,7 @@ class InvalidSearchablesCollectorVisitorTest extends TuleapTestCase
 
         $expr = new EqualComparison(new Field('field'), new SimpleValueWrapper('value'));
 
-        $this->collector->collectErrors($expr, $this->user, $this->tracker, $this->invalid_searchables_collection);
+        $this->collector->collectErrors($expr, $this->invalid_searchables_collection);
 
         $this->assertEqual($this->invalid_searchables_collection->getNonexistentSearchables(), array('field'));
         $this->assertEqual($this->invalid_searchables_collection->getInvalidSearchableErrors(), array());
@@ -236,7 +234,7 @@ class InvalidSearchablesCollectorVisitorTest extends TuleapTestCase
     {
         $expr = new EqualComparison(new Metadata('summary'), new SimpleValueWrapper('value'));
 
-        $this->collector->collectErrors($expr, $this->user, $this->tracker, $this->invalid_searchables_collection);
+        $this->collector->collectErrors($expr, $this->invalid_searchables_collection);
 
         $this->assertEqual($this->invalid_searchables_collection->getNonexistentSearchables(), array('@summary'));
         $this->assertEqual($this->invalid_searchables_collection->getInvalidSearchableErrors(), array());
@@ -250,7 +248,7 @@ class InvalidSearchablesCollectorVisitorTest extends TuleapTestCase
 
         $expr = new EqualComparison(new Field('field'), new SimpleValueWrapper('value'));
 
-        $this->collector->collectErrors($expr, $this->user, $this->tracker, $this->invalid_searchables_collection);
+        $this->collector->collectErrors($expr, $this->invalid_searchables_collection);
 
         $this->assertEqual($this->invalid_searchables_collection->getNonexistentSearchables(), array());
 
@@ -266,7 +264,7 @@ class InvalidSearchablesCollectorVisitorTest extends TuleapTestCase
 
         $expr = new EqualComparison(new Field('field'), new SimpleValueWrapper(20));
 
-        $this->collector->collectErrors($expr, $this->user, $this->tracker, $this->invalid_searchables_collection);
+        $this->collector->collectErrors($expr, $this->invalid_searchables_collection);
 
         $this->assertEqual($this->invalid_searchables_collection->getNonexistentSearchables(), array());
 
@@ -282,7 +280,7 @@ class InvalidSearchablesCollectorVisitorTest extends TuleapTestCase
 
         $expr = new EqualComparison(new Field('field'), new SimpleValueWrapper('2017-01-17'));
 
-        $this->collector->collectErrors($expr, $this->user, $this->tracker, $this->invalid_searchables_collection);
+        $this->collector->collectErrors($expr, $this->invalid_searchables_collection);
 
         $this->assertEqual($this->invalid_searchables_collection->getNonexistentSearchables(), array());
 
@@ -298,7 +296,7 @@ class InvalidSearchablesCollectorVisitorTest extends TuleapTestCase
 
         $expr = new EqualComparison(new Field('field'), new SimpleValueWrapper('planned'));
 
-        $this->collector->collectErrors($expr, $this->user, $this->tracker, $this->invalid_searchables_collection);
+        $this->collector->collectErrors($expr, $this->invalid_searchables_collection);
 
         $this->assertEqual($this->invalid_searchables_collection->getNonexistentSearchables(), array());
 
@@ -314,7 +312,7 @@ class InvalidSearchablesCollectorVisitorTest extends TuleapTestCase
 
         $expr = new LesserThanComparison(new Field('field'), new SimpleValueWrapper('value'));
 
-        $this->collector->collectErrors($expr, $this->user, $this->tracker, $this->invalid_searchables_collection);
+        $this->collector->collectErrors($expr, $this->invalid_searchables_collection);
 
         $this->assertEqual($this->invalid_searchables_collection->getNonexistentSearchables(), array());
 
@@ -330,7 +328,7 @@ class InvalidSearchablesCollectorVisitorTest extends TuleapTestCase
 
         $expr = new GreaterThanComparison(new Field('field'), new SimpleValueWrapper('value'));
 
-        $this->collector->collectErrors($expr, $this->user, $this->tracker, $this->invalid_searchables_collection);
+        $this->collector->collectErrors($expr, $this->invalid_searchables_collection);
 
         $this->assertEqual($this->invalid_searchables_collection->getNonexistentSearchables(), array());
 
@@ -346,7 +344,7 @@ class InvalidSearchablesCollectorVisitorTest extends TuleapTestCase
 
         $expr = new LesserThanOrEqualComparison(new Field('field'), new SimpleValueWrapper('value'));
 
-        $this->collector->collectErrors($expr, $this->user, $this->tracker, $this->invalid_searchables_collection);
+        $this->collector->collectErrors($expr, $this->invalid_searchables_collection);
 
         $this->assertEqual($this->invalid_searchables_collection->getNonexistentSearchables(), array());
 
@@ -362,7 +360,7 @@ class InvalidSearchablesCollectorVisitorTest extends TuleapTestCase
 
         $expr = new GreaterThanOrEqualComparison(new Field('field'), new SimpleValueWrapper('value'));
 
-        $this->collector->collectErrors($expr, $this->user, $this->tracker, $this->invalid_searchables_collection);
+        $this->collector->collectErrors($expr, $this->invalid_searchables_collection);
 
         $this->assertEqual($this->invalid_searchables_collection->getNonexistentSearchables(), array());
 
@@ -384,7 +382,7 @@ class InvalidSearchablesCollectorVisitorTest extends TuleapTestCase
             )
         );
 
-        $this->collector->collectErrors($expr, $this->user, $this->tracker, $this->invalid_searchables_collection);
+        $this->collector->collectErrors($expr, $this->invalid_searchables_collection);
 
         $this->assertEqual($this->invalid_searchables_collection->getNonexistentSearchables(), array());
 
@@ -408,7 +406,7 @@ class InvalidSearchablesCollectorVisitorTest extends TuleapTestCase
             )
         );
 
-        $this->collector->collectErrors($expr, $this->user, $this->tracker, $this->invalid_searchables_collection);
+        $this->collector->collectErrors($expr, $this->invalid_searchables_collection);
 
         $this->assertEqual($this->invalid_searchables_collection->getNonexistentSearchables(), array());
 
@@ -432,7 +430,7 @@ class InvalidSearchablesCollectorVisitorTest extends TuleapTestCase
             )
         );
 
-        $this->collector->collectErrors($expr, $this->user, $this->tracker, $this->invalid_searchables_collection);
+        $this->collector->collectErrors($expr, $this->invalid_searchables_collection);
 
         $this->assertEqual($this->invalid_searchables_collection->getNonexistentSearchables(), array());
 
