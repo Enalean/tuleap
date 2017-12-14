@@ -92,9 +92,7 @@ function KanbanCtrl(
         expandArchive,
         toggleArchive,
         setIsCollapsed,
-        KanbanFilterValue,
         filterCards,
-        NewTuleapArtifactModalService,
         showEditModal,
         moveItemAtTheEnd,
         saveCardsViewMode,
@@ -105,6 +103,8 @@ function KanbanCtrl(
         reflowKustomScrollBars,
         displayCardsAndWIPNotUpdated: FilterTrackerReportService.areNotCardsAndWIPUpdated,
         displayWIPNotUpdated        : FilterTrackerReportService.isNotWIPUpdated,
+        filter                      : KanbanFilterValue,
+        loading_modal               : NewTuleapArtifactModalService.loading,
     });
 
     function init() {
