@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -328,22 +328,8 @@ class Git_GitoliteDriver {
     public function fork($repo, $old_ns, $new_ns) {
         $source = unixPathJoin(array($this->getRepositoriesPath(), $old_ns, $repo)) .'.git';
         $target = unixPathJoin(array($this->getRepositoriesPath(), $new_ns, $repo)) .'.git';
-        if (!is_dir($target)) {
-            $asGroupGitolite = 'sg - gitolite -c ';
-            $cmd = 'umask 0007; '.$asGroupGitolite.' "git clone --bare '. $source .' '. $target.'"';
-            $clone_result = $this->executeShellCommand($cmd);
 
-            $copyHooks  = 'cd '.$this->getRepositoriesPath().'; ';
-            $copyHooks .= $asGroupGitolite.' "cp -f '.$source.'/hooks/* '.$target.'/hooks/"';
-            $this->executeShellCommand($copyHooks);
-
-            $saveNamespace = 'cd '.$this->getRepositoriesPath().'; ';
-            $saveNamespace .= $asGroupGitolite.' "echo -n '.$new_ns.' > '.$target.'/tuleap_namespace"';
-            $this->executeShellCommand($saveNamespace);
-
-            return $clone_result;
-        }
-        return false;
+        $this->executeShellCommand('sudo -u gitolite /usr/share/tuleap/plugins/git/bin/gl-clone-bundle.sh ' . escapeshellarg($source) . ' ' . escapeshellarg($target));
     }
 
     protected function executeShellCommand($cmd) {
