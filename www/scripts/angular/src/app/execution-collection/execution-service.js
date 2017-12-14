@@ -26,7 +26,9 @@ function ExecutionService(
         addPresenceCampaign,
         updateCampaign,
         addTestExecution,
+        addTestExecutionWithoutUpdateCampaignStatus,
         removeTestExecution,
+        removeTestExecutionWithoutUpdateCampaignStatus,
         updateTestExecution,
         updatePresenceOnCampaign,
         removeAllPresencesOnCampaign,
@@ -73,8 +75,8 @@ function ExecutionService(
                     return ! _.some(self.executions, { id: execution.id });
                 });
 
-                _.forEach(executions_to_remove, removeTestExecution);
-                _.forEach(executions_to_add, addTestExecution);
+                _.forEach(executions_to_remove, removeTestExecutionWithoutUpdateCampaignStatus);
+                _.forEach(executions_to_add, addTestExecutionWithoutUpdateCampaignStatus);
             });
     }
 
@@ -163,13 +165,27 @@ function ExecutionService(
         self.campaign.total++;
     }
 
+    function addTestExecutionWithoutUpdateCampaignStatus(execution) {
+        var executions = [execution];
+
+        groupExecutionsByCategory(self.campaign_id, executions);
+    }
+
     function removeTestExecution(execution_to_remove) {
-        _.forEach(self.executions_by_categories_by_campaigns[self.campaign_id], function(category) {
-            _.remove(category.executions, { id: execution_to_remove.id });
-        });
-        delete self.executions[execution_to_remove.id];
+        removeTestExecutionByCategories(execution_to_remove.id);
         self.campaign['nb_of_' + execution_to_remove.status]--;
         self.campaign.total--;
+    }
+
+    function removeTestExecutionWithoutUpdateCampaignStatus(execution_to_remove) {
+        removeTestExecutionByCategories(execution_to_remove.id);
+    }
+
+    function removeTestExecutionByCategories(execution_to_remove_id) {
+        for (const category of Object.values(self.executions_by_categories_by_campaigns[self.campaign_id])) {
+            _.remove(category.executions, { id: execution_to_remove_id });
+        }
+        delete self.executions[execution_to_remove_id];
     }
 
     function updateTestExecution(execution_updated) {
@@ -302,7 +318,7 @@ function ExecutionService(
         return _.flatten(executions);
     }
 
-    function addArtifactLink({ id: execution_id }, artifact_link) {
+    function addArtifactLink(execution_id, artifact_link) {
         if (! _.has(self.executions, execution_id)) {
             return;
         }

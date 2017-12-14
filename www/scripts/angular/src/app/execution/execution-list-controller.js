@@ -149,19 +149,20 @@ function ExecutionListCtrl(
         SharedPropertiesService.setCampaignId($scope.campaign_id);
 
         loadExecutions();
+        CampaignService.getCampaign($scope.campaign_id).then((campaign) => {
+            $scope.campaign             = campaign;
+            $scope.search               = '';
+            $scope.loading              = loading;
+            $scope.status               = {
+                passed:  false,
+                failed:  false,
+                blocked: false,
+                notrun:  false
+            };
+            $scope.presences_on_campaign  = ExecutionService.presences_on_campaign;
 
-        $scope.campaign             = CampaignService.getCampaign($scope.campaign_id);
-        $scope.search               = '';
-        $scope.loading              = loading;
-        $scope.status               = {
-            passed:  false,
-            failed:  false,
-            blocked: false,
-            notrun:  false
-        };
-        $scope.presences_on_campaign  = ExecutionService.presences_on_campaign;
-
-        ExecutionService.updateCampaign($scope.campaign);
+            ExecutionService.updateCampaign($scope.campaign);
+        });
     }
 
     function loadExecutions() {

@@ -47,8 +47,6 @@ use Tracker_Artifact_ChangesetValue_Text;
 use Tuleap\RealTime\NodeJSClient;
 use Tracker_Permission_PermissionsSerializer;
 use Tracker_Permission_PermissionRetrieveAssignee;
-use Tuleap\RealTime\MessageDataPresenter;
-use Tuleap\TestManagement\ArtifactRightsPresenter;
 use Tuleap\TestManagement\ConfigConformanceValidator;
 use Tuleap\TestManagement\Config;
 use Tuleap\TestManagement\Dao;
@@ -56,10 +54,9 @@ use Tuleap\User\REST\UserRepresentation;
 
 class ExecutionsResource
 {
-    const FIELD_RESULTS      = 'results';
-    const FIELD_STATUS       = 'status';
-    const FIELD_TIME         = 'time';
-    const HTTP_CLIENT_UUID   = 'HTTP_X_CLIENT_UUID';
+    const FIELD_RESULTS = 'results';
+    const FIELD_STATUS  = 'status';
+    const FIELD_TIME    = 'time';
 
     /** @var Config */
     private $config;
@@ -132,8 +129,7 @@ class ExecutionsResource
         $this->realtime_message_sender = new RealTimeMessageSender(
             $this->node_js_client,
             $this->permissions_serializer,
-            $this->testmanagement_artifact_factory,
-            $this->execution_representation_builder
+            $this->testmanagement_artifact_factory
         );
     }
 
@@ -156,6 +152,33 @@ class ExecutionsResource
      */
     public function optionsIssues() {
         Header::allowOptionsPatch();
+    }
+
+    /**
+     * @url OPTIONS {id}
+     */
+    public function optionsId($id) {
+        Header::allowOptionsGet();
+    }
+
+    /**
+     * Get execution
+     *
+     * Get testing execution by its id
+     *
+     * @url GET {id}
+     *
+     * @param int $id Id of the execution
+     *
+     * @return ExecutionRepresentation
+     */
+    protected function getId($id) {
+        $this->optionsId($id);
+
+        $user     = $this->user_manager->getCurrentUser();
+        $artifact = $this->artifact_factory->getArtifactByIdUserCanView($user, $id);
+
+        return $this->execution_representation_builder->getExecutionRepresentation($user, $artifact);
     }
 
     /**
@@ -251,28 +274,8 @@ class ExecutionsResource
 
         $execution_representation = $this->execution_representation_builder->getExecutionRepresentation($user, $artifact);
 
-        if(isset($_SERVER[self::HTTP_CLIENT_UUID]) && $_SERVER[self::HTTP_CLIENT_UUID]) {
-            $user_representation = new UserRepresentation();
-            $user_representation->build($user);
-            $data = array(
-                'artifact'        => $execution_representation,
-                'previous_status' => $previous_status,
-                'user'            => $user_representation,
-                'previous_user'   => $previous_user
-            );
-            $rights   = new ArtifactRightsPresenter($artifact, $this->permissions_serializer);
-            $campaign = $this->testmanagement_artifact_factory->getCampaignForExecution($artifact);
-            $message  = new MessageDataPresenter(
-                $user->getId(),
-                $_SERVER[self::HTTP_CLIENT_UUID],
-                'testmanagement_' . $campaign->getId(),
-                $rights,
-                'testmanagement_execution:update',
-                $data
-            );
-
-            $this->node_js_client->sendMessage($message);
-        }
+        $campaign = $this->testmanagement_artifact_factory->getCampaignForExecution($artifact);
+        $this->realtime_message_sender->sendExecutionUpdated($user, $campaign, $artifact, $status, $previous_status, $previous_user);
 
         $this->sendAllowHeadersForExecutionPut($artifact);
 
@@ -298,30 +301,8 @@ class ExecutionsResource
             throw new RestException(404);
         }
 
-        if(isset($_SERVER[self::HTTP_CLIENT_UUID]) && $_SERVER[self::HTTP_CLIENT_UUID]) {
-            $user_representation = new UserRepresentation();
-            $user_representation->build($user);
-            $data = array(
-                'presence' => array(
-                    'execution_id' => $id,
-                    'uuid'         => $uuid,
-                    'remove_from'  => $remove_from,
-                    'user'         => $user_representation
-                )
-            );
-            $rights   = new ArtifactRightsPresenter($artifact, $this->permissions_serializer);
-            $campaign = $this->testmanagement_artifact_factory->getCampaignForExecution($artifact);
-            $message  = new MessageDataPresenter(
-                $user->getId(),
-                $_SERVER[self::HTTP_CLIENT_UUID],
-                'testmanagement_' . $campaign->getId(),
-                $rights,
-                'testmanagement_user:presence',
-                $data
-            );
-
-            $this->node_js_client->sendMessage($message);
-        }
+        $campaign = $this->testmanagement_artifact_factory->getCampaignForExecution($artifact);
+        $this->realtime_message_sender->sendPresences($campaign, $artifact, $user, $uuid, $remove_from);
 
         $this->optionsPresences();
     }
@@ -359,8 +340,10 @@ class ExecutionsResource
             throw new RestException(400, 'Could not link the issue artifact to the test execution');
         }
 
+        $campaign = $this->testmanagement_artifact_factory->getCampaignForExecution($execution_artifact);
         $this->realtime_message_sender->sendArtifactLinkAdded(
             $user,
+            $campaign,
             $execution_artifact,
             $issue_artifact
         );

@@ -330,6 +330,50 @@ describe ('ExecutionService - ', () => {
         });
     });
 
+    describe("addTestExecutionWithoutUpdateCampaignStatus() -", function() {
+        it("Given that campaign, when I add an execution, then it's added with values and campaign with correct numbers", function () {
+            var campaign = {
+                id: "6",
+                label: "Release 1",
+                status: "Open",
+                nb_of_passed: 0,
+                nb_of_failed: 0,
+                nb_of_notrun: 0,
+                nb_of_blocked: 0,
+                total: 0
+            };
+
+            var categories = {};
+
+            var execution = {
+                id: 4,
+                status: "notrun",
+                definition: {
+                    category: "Svn"
+                }
+            };
+
+            var executions_by_categories_by_campaigns = {
+                6: categories
+            };
+
+            ExecutionService.campaign_id                           = 6;
+            ExecutionService.campaign                              = campaign;
+            ExecutionService.categories                            = categories;
+            ExecutionService.executions_by_categories_by_campaigns = executions_by_categories_by_campaigns;
+            ExecutionService.addTestExecutionWithoutUpdateCampaignStatus(execution);
+            expect(ExecutionService.executions[4]).toEqual({
+                id: 4,
+                status: "notrun",
+                definition: {
+                    category: "Svn"
+                }
+            });
+            expect(ExecutionService.campaign.nb_of_notrun).toEqual(0);
+            expect(ExecutionService.campaign.total).toEqual(0);
+        });
+    });
+
     describe("updateTestExecution() -", function() {
         it("Given that campaign, when I update an execution, then it's updated with new values and campaign with correct numbers", function () {
             var campaign = {
@@ -457,6 +501,53 @@ describe ('ExecutionService - ', () => {
             expect(ExecutionService.executions_by_categories_by_campaigns[6].Svn.executions[4]).toEqual(undefined);
             expect(ExecutionService.campaign.nb_of_notrun).toEqual(0);
             expect(ExecutionService.campaign.total).toEqual(0);
+        });
+    });
+
+    describe("removeTestExecutionWithoutUpdateCampaignStatus() -", function() {
+        it("Given that campaign, when I remove an execution, then it's removed from executions and categories and campaign numbers are updated", function () {
+            var campaign = {
+                id: "6",
+                label: "Release 1",
+                status: "Open",
+                nb_of_passed: 0,
+                nb_of_failed: 0,
+                nb_of_notrun: 1,
+                nb_of_blocked: 0,
+                total: 1
+            };
+
+            var execution = {
+                id: 4,
+                status: "notrun",
+                definition: {
+                    category: "Svn"
+                }
+            };
+
+            var categories = {
+                Svn: {
+                    label: "Svn",
+                    executions: [execution]
+                }
+            };
+
+            var executions_by_categories_by_campaigns = {
+                6: categories
+            };
+
+            ExecutionService.campaign_id                           = 6;
+            ExecutionService.campaign                              = campaign;
+            ExecutionService.categories                            = categories;
+            ExecutionService.executions_by_categories_by_campaigns = executions_by_categories_by_campaigns;
+            ExecutionService.executions = { 4: execution };
+
+            ExecutionService.removeTestExecutionWithoutUpdateCampaignStatus(execution);
+
+            expect(ExecutionService.executions[4]).toEqual(undefined);
+            expect(ExecutionService.executions_by_categories_by_campaigns[6].Svn.executions[4]).toEqual(undefined);
+            expect(ExecutionService.campaign.nb_of_notrun).toEqual(1);
+            expect(ExecutionService.campaign.total).toEqual(1);
         });
     });
 
@@ -1000,7 +1091,7 @@ describe ('ExecutionService - ', () => {
     });
 
     describe("addArtifactLink", () => {
-        it("Given an execution and an artifact to link to it, then the artifact will be added to the execution's linked_bugs", () => {
+        it("Given an execution id and an artifact to link to it, then the artifact will be added to the execution's linked_bugs", () => {
             let execution = {
                 id: 74,
                 linked_bugs: [
@@ -1010,7 +1101,7 @@ describe ('ExecutionService - ', () => {
             const artifact_to_link = { id: 88, title: 'paragraphically' };
             ExecutionService.executions[74] = execution;
 
-            ExecutionService.addArtifactLink(execution, artifact_to_link);
+            ExecutionService.addArtifactLink(execution.id, artifact_to_link);
 
             expect(execution.linked_bugs).toEqual([
                 { id: 38, title: 'thanan' },

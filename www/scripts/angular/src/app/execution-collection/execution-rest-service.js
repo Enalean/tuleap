@@ -28,7 +28,8 @@ function ExecutionRestService(
         getArtifactById,
         linkIssue,
         linkIssueWithoutComment,
-        getLinkedArtifacts
+        getLinkedArtifacts,
+        getExecution
     });
 
     function setRestangularConfig(RestangularConfigurer) {
@@ -146,6 +147,12 @@ function ExecutionRestService(
                 collection: response.data.collection,
                 total: Number.parseInt(response.headers('X-PAGINATION-SIZE'), 10)
             };
+        });
+    }
+
+    function getExecution(execution_id) {
+        return $http.get(`/api/v1/testmanagement_executions/${execution_id}`).then((response) => {
+            return response.data;
         });
     }
 }

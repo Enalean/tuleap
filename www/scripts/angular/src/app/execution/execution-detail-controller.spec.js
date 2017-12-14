@@ -97,7 +97,7 @@ describe("ExecutionDetailController -", () => {
             expect($scope.linkedIssueId).toBe(artifact.id);
             expect($scope.linkedIssueAlertVisible).toBe(true);
             expect(artifact.tracker.color_name).toBe('acid-green');
-            expect(ExecutionService.addArtifactLink).toHaveBeenCalledWith($scope.execution, artifact);
+            expect(ExecutionService.addArtifactLink).toHaveBeenCalledWith($scope.execution.id, artifact);
         });
     });
 
@@ -119,7 +119,7 @@ describe("ExecutionDetailController -", () => {
             expect(TlpModalService.open).toHaveBeenCalled();
             expect($scope.linkedIssueId).toBe(artifact.id);
             expect($scope.linkedIssueAlertVisible).toBe(true);
-            expect(ExecutionService.addArtifactLink).toHaveBeenCalledWith($scope.execution, artifact);
+            expect(ExecutionService.addArtifactLink).toHaveBeenCalledWith($scope.execution.id, artifact);
         });
     });
 });

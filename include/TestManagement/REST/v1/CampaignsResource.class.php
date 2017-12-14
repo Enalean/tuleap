@@ -35,7 +35,6 @@ use Tuleap\TestManagement\LabelFieldNotFoundException;
 use Tracker_Permission_PermissionRetrieveAssignee;
 use Tracker_Permission_PermissionsSerializer;
 use Tracker_URLVerification;
-use Tuleap\RealTime\MessageDataPresenter;
 use Tuleap\RealTime\NodeJSClient;
 use Tuleap\REST\Header;
 use Luracast\Restler\RestException;
@@ -43,11 +42,10 @@ use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use ProjectManager;
 use Tuleap\TestManagement\MilestoneItemsArtifactFactory;
-use Tuleap\User\REST\UserRepresentation;
+use Tuleap\TestManagement\RealTime\RealTimeMessageSender;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\TestManagement\ArtifactDao;
 use Tuleap\TestManagement\ArtifactFactory;
-use Tuleap\TestManagement\ArtifactRightsPresenter;
 use UserManager;
 use PFUser;
 use Tuleap\TestManagement\ConfigConformanceValidator;
@@ -66,8 +64,7 @@ use Tuleap\Tracker\REST\v1\ArtifactLinkUpdater;
 
 class CampaignsResource {
 
-    const MAX_LIMIT        = 50;
-    const HTTP_CLIENT_UUID = 'HTTP_X_CLIENT_UUID';
+    const MAX_LIMIT = 50;
 
     /** @var Config */
     private $config;
@@ -105,10 +102,8 @@ class CampaignsResource {
     /** @var ArtifactLinkUpdater */
     private $artifactlink_updater;
 
-    /** @var NodeJSClient */
-    private $node_js_client;
-    /** @var Tracker_Permission_PermissionsSerializer */
-    private $permissions_serializer;
+    /** @var RealTimeMessageSender  */
+    private $realtime_message_sender;
 
     public function __construct() {
         $this->project_manager                = ProjectManager::instance();
@@ -213,9 +208,15 @@ class CampaignsResource {
 
         $this->artifactlink_updater = new ArtifactLinkUpdater($priority_manager);
 
-        $this->node_js_client         = new NodeJSClient();
-        $this->permissions_serializer = new Tracker_Permission_PermissionsSerializer(
+        $node_js_client         = new NodeJSClient();
+        $permissions_serializer = new Tracker_Permission_PermissionsSerializer(
             new Tracker_Permission_PermissionRetrieveAssignee(UserManager::instance())
+        );
+
+        $this->realtime_message_sender = new RealTimeMessageSender(
+            $node_js_client,
+            $permissions_serializer,
+            $this->testmanagement_artifact_factory
         );
     }
 
@@ -329,48 +330,12 @@ class CampaignsResource {
             \Tracker_FormElement_Field_ArtifactLink::NO_NATURE
         );
 
-        if (isset($_SERVER[self::HTTP_CLIENT_UUID]) && $_SERVER[self::HTTP_CLIENT_UUID]) {
-            foreach($executions_to_remove as $execution) {
-                $user_representation = new UserRepresentation();
-                $user_representation->build($user);
-                $data = array(
-                    'artifact' => $this->execution_representation_builder->getExecutionRepresentation($user, $execution),
-                    'user'     => $user_representation,
-                );
+        foreach($executions_to_remove as $execution) {
+            $this->realtime_message_sender->sendExecutionDeleted($user, $campaign, $execution);
+        }
 
-                $rights  = new ArtifactRightsPresenter($execution, $this->permissions_serializer);
-                $message = new MessageDataPresenter(
-                    $user->getId(),
-                    $_SERVER[self::HTTP_CLIENT_UUID],
-                    'testmanagement_' . $campaign->getId(),
-                    $rights,
-                    'testmanagement_execution:delete',
-                    $data
-                );
-
-                $this->node_js_client->sendMessage($message);
-            }
-
-            foreach ($executions_to_add as $execution) {
-                $user_representation = new UserRepresentation();
-                $user_representation->build($user);
-                $data = array(
-                    'artifact' => $this->execution_representation_builder->getExecutionRepresentation($user, $execution),
-                    'user'     => $user_representation,
-                );
-
-                $rights  = new ArtifactRightsPresenter($execution, $this->permissions_serializer);
-                $message = new MessageDataPresenter(
-                    $user->getId(),
-                    $_SERVER[self::HTTP_CLIENT_UUID],
-                    'testmanagement_' . $campaign->getId(),
-                    $rights,
-                    'testmanagement_execution:create',
-                    $data
-                );
-
-                $this->node_js_client->sendMessage($message);
-            }
+        foreach ($executions_to_add as $execution) {
+            $this->realtime_message_sender->sendExecutionCreated($user, $campaign, $execution);
         }
 
         $this->sendAllowHeadersForExecutionsList($campaign);
@@ -471,25 +436,7 @@ class CampaignsResource {
             throw new RestException(500, $exception->getMessage());
         }
 
-        if (isset($_SERVER[self::HTTP_CLIENT_UUID]) && $_SERVER[self::HTTP_CLIENT_UUID]) {
-            $user_representation = new UserRepresentation();
-            $user_representation->build($user);
-            $data = array(
-                'artifact' => $campaign_representation,
-                'user'     => $user_representation,
-            );
-            $rights  = new ArtifactRightsPresenter($campaign, $this->permissions_serializer);
-            $message = new MessageDataPresenter(
-                $user->getId(),
-                $_SERVER[self::HTTP_CLIENT_UUID],
-                'testmanagement_' . $campaign->getId(),
-                $rights,
-                'testmanagement_campaign:update',
-                $data
-            );
-
-            $this->node_js_client->sendMessage($message);
-        }
+        $this->realtime_message_sender->sendCampaignUpdated($user, $campaign);
 
         $this->sendAllowHeadersForCampaign($campaign);
 
@@ -508,20 +455,6 @@ class CampaignsResource {
         }
 
         return $campaign;
-    }
-
-    private function sortByCategoryAndId(array &$execution_representations) {
-        usort($execution_representations, function ($a, $b) {
-            $def_a = $a->definition;
-            $def_b = $b->definition;
-
-            $category_cmp = strnatcasecmp($def_a->category, $def_b->category);
-            if ($category_cmp !== 0) {
-                return $category_cmp;
-            }
-
-            return strcmp($def_a->id, $def_b->id);
-        });
     }
 
     private function isACampaign($campaign) {
