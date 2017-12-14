@@ -567,7 +567,8 @@ CREATE TABLE group_desc_value (
   group_id INT( 11 ) NOT NULL ,
   group_desc_id INT( 11 ) NOT NULL ,
   value text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
-  PRIMARY KEY (desc_value_id)
+  PRIMARY KEY (desc_value_id),
+  INDEX idx (group_id)
 );
 
 CREATE TABLE mail_group_list (
