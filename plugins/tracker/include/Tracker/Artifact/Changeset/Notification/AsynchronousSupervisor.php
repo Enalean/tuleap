@@ -30,6 +30,8 @@ class AsynchronousSupervisor
 {
     const ACCEPTABLE_PROCESS_DELAY = 120;
 
+    const ONE_WEEK_IN_SECONDS = 604800;
+
     /**
      * @var NotifierDao
      */
@@ -48,12 +50,23 @@ class AsynchronousSupervisor
     public function runSystemCheck()
     {
         if (ForgeConfig::get('sys_async_emails') !== false) {
-            $last_end_date = $this->dao->getLastEndDate();
-            $nb_pending_notifications = $this->dao->searchPendingNotificationsAfter($last_end_date + self::ACCEPTABLE_PROCESS_DELAY);
-            if ($nb_pending_notifications > 0) {
-                $this->logger->warn("There are ".$nb_pending_notifications." notifications pending, you should check '/usr/share/tuleap/plugins/tracker/bin/notify.php' and it's log file to ensure it's still running.");
-            }
+            $this->warnWhenToMuchDelay();
+            $this->purgeOldLogs();
         }
+    }
+
+    private function warnWhenToMuchDelay()
+    {
+        $last_end_date = $this->dao->getLastEndDate();
+        $nb_pending_notifications = $this->dao->searchPendingNotificationsAfter($last_end_date + self::ACCEPTABLE_PROCESS_DELAY);
+        if ($nb_pending_notifications > 0) {
+            $this->logger->warn("There are ".$nb_pending_notifications." notifications pending, you should check '/usr/share/tuleap/plugins/tracker/bin/notify.php' and it's log file to ensure it's still running.");
+        }
+    }
+
+    private function purgeOldLogs()
+    {
+        $this->dao->deleteLogsOlderThan(self::ONE_WEEK_IN_SECONDS);
     }
 
     public function runNotify()

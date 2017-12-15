@@ -70,4 +70,11 @@ class NotifierDao extends DataAccessObject
         $row = $this->retrieveFirstRow($sql);
         return (int) $row['nb'];
     }
+
+    public function deleteLogsOlderThan($delay)
+    {
+        $delay = (int) $delay;
+        $sql = "DELETE FROM tracker_email_notification_log WHERE end_date IS NOT NULL AND end_date < UNIX_TIMESTAMP() - $delay";
+        $this->update($sql);
+    }
 }
