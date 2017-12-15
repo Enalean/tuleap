@@ -169,12 +169,8 @@ class PostCommit
      */
     private function getCommitter(CommitInfo $commit_info)
     {
-        $user_name = $commit_info->getUser();
-        if (ForgeConfig::get('sys_auth_type') === ForgeConfig::AUTH_TYPE_LDAP) {
-            $user = $this->user_manager->findUser($user_name);
-        } else {
-            $user = $this->user_manager->getUserByUserName($user_name);
-        }
+        $user_name  = $commit_info->getUser();
+        $user       = $this->user_manager->getUserByLoginName($user_name);
 
         if ($user === null) {
             throw new CannotFindSVNCommitInfoException(dgettext('tuleap-svn', 'Cannot find committer information'));
