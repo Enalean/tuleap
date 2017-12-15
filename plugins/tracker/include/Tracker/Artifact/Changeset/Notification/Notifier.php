@@ -41,6 +41,7 @@ use UserHelper;
 use Codendi_HTMLPurifier;
 use Codendi_Mail_Interface;
 use Tuleap\Queue\Factory;
+use Exception;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 
@@ -173,17 +174,23 @@ class Notifier
 
     private function queueNotification(Tracker_Artifact_Changeset $changeset)
     {
-        $this->notifier_dao->addNewNotification($changeset->getId());
-        $queue = Factory::getPersistentQueue($this->logger, AsynchronousNotifier::QUEUE_PREFIX);
-        $queue->pushSinglePersistentMessage(
-            AsynchronousNotifier::TOPIC,
-            json_encode(
-                array(
-                    'artifact_id'  => (int) $changeset->getArtifact()->getId(),
-                    'changeset_id' => (int) $changeset->getId()
+        try {
+            $this->notifier_dao->addNewNotification($changeset->getId());
+            $queue = Factory::getPersistentQueue($this->logger, AsynchronousNotifier::QUEUE_PREFIX);
+            $queue->pushSinglePersistentMessage(
+                AsynchronousNotifier::TOPIC,
+                json_encode(
+                    array(
+                        'artifact_id'  => (int) $changeset->getArtifact()->getId(),
+                        'changeset_id' => (int) $changeset->getId()
+                    )
                 )
-            )
-        );
+            );
+        } catch (Exception $exception) {
+            $this->logger->error("Unable to queue notification for {$changeset->getId()}, fallback to online notif");
+            $this->processNotify($changeset);
+            $this->notifier_dao->addEndDate($changeset->getId());
+        }
     }
 
     private function processNotify(Tracker_Artifact_Changeset $changeset)

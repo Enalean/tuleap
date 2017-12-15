@@ -20,9 +20,25 @@
 
 namespace Tuleap\Cron;
 
+use Logger;
 use Tuleap\Event\Dispatchable;
 
 class EventCronJobEveryMinute implements Dispatchable
 {
     const NAME = 'cron_job_every_minute';
+
+    /**
+     * @var Logger
+     */
+    private $logger;
+
+    public function __construct(Logger $logger)
+    {
+        $this->logger = $logger;
+    }
+
+    public function getLogger()
+    {
+        return $this->logger;
+    }
 }

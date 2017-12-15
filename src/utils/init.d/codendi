@@ -89,6 +89,9 @@ stop()
     fi
     echo -n "Shutting down $prog: "
     RemoveCron
+    if [ -f /var/run/tuleap/tracker_notify.pid ]; then
+        kill $(cat /var/run/tuleap/tracker_notify.pid)
+    fi
     echo "[OK]"
     RETVAL=$?
     return $RETVAL

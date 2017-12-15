@@ -22,7 +22,9 @@
 namespace Tuleap\Tracker\Artifact\Changeset\Notification;
 
 use Logger;
+use WrapperLogger;
 use ForgeConfig;
+use System_Command;
 
 class AsynchronousSupervisor
 {
@@ -32,20 +34,48 @@ class AsynchronousSupervisor
      * @var NotifierDao
      */
     private $dao;
+    /**
+     * @var Logger
+     */
+    private $logger;
 
-    public function __construct(NotifierDao $dao)
+    public function __construct(Logger $logger, NotifierDao $dao)
     {
-        $this->dao = $dao;
+        $this->logger = new WrapperLogger($logger, __CLASS__);
+        $this->dao    = $dao;
     }
 
-    public function runSystemCheck(Logger $logger)
+    public function runSystemCheck()
     {
         if (ForgeConfig::get('sys_async_emails') !== false) {
             $last_end_date = $this->dao->getLastEndDate();
             $nb_pending_notifications = $this->dao->searchPendingNotificationsAfter($last_end_date + self::ACCEPTABLE_PROCESS_DELAY);
             if ($nb_pending_notifications > 0) {
-                $logger->warn("There are ".$nb_pending_notifications." notifications pending, you should check '/usr/share/tuleap/plugins/tracker/bin/notify.php' and it's log file to ensure it's still running.");
+                $this->logger->warn("There are ".$nb_pending_notifications." notifications pending, you should check '/usr/share/tuleap/plugins/tracker/bin/notify.php' and it's log file to ensure it's still running.");
             }
+        }
+    }
+
+    public function runNotify()
+    {
+        $this->logger->debug("Check if backend notifier is running");
+        if (ForgeConfig::get('sys_async_emails') !== false && ! $this->isRunning()) {
+            $this->logger->info("Start backend notifier");
+            try {
+                $command = new System_Command();
+                $command->exec('/usr/share/tuleap/plugins/tracker/bin/notify.php >/dev/null 2>/dev/null &');
+            } catch (\Exception $exception) {
+                $this->logger->error("Unable to launch backend notifier: ".$exception->getMessage());
+            }
+        }
+    }
+
+    private function isRunning()
+    {
+        if (file_exists(AsynchronousNotifier::PID_FILE_PATH)) {
+            $pid = (int) trim(file_get_contents(AsynchronousNotifier::PID_FILE_PATH));
+            $ret = posix_kill($pid, SIG_DFL);
+            return $ret === true;
         }
     }
 }

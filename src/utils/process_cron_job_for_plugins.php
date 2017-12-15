@@ -22,6 +22,6 @@ use Tuleap\Cron\EventCronJobEveryMinute;
 
 require_once 'pre.php';
 
-$event = new EventCronJobEveryMinute();
+$event = new EventCronJobEveryMinute(BackendLogger::getDefaultLogger());
 
 EventManager::instance()->processEvent($event);
