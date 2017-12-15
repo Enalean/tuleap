@@ -4,6 +4,7 @@ var webpack                     = require('webpack');
 var WebpackAssetsManifest       = require('webpack-assets-manifest');
 var BabelPresetEnv              = require('babel-preset-env');
 var BabelPluginObjectRestSpread = require('babel-plugin-transform-object-rest-spread');
+var polyfills_for_fetch         = require('../../../tools/utils/ie11-polyfill-names.js').polyfills_for_fetch;
 
 var manifest_data   = Object.create(null);
 var assets_dir_path = path.resolve(__dirname, '../assets');
@@ -51,6 +52,7 @@ var webpack_config_for_dashboards = {
         new WebpackAssetsManifest({
             output: 'manifest.json',
             assets: manifest_data,
+            merge : true,
         }),
         new webpack.optimize.CommonsChunkPlugin({
             name: 'dashboard'
@@ -60,55 +62,58 @@ var webpack_config_for_dashboards = {
     ]
 };
 
-var webpack_config_for_navbar_history = {
+var webpack_config_for_flaming_parrot_code = {
     entry: {
-        'navbar-history'              : './navbar-history/index-burningparrot.js',
-        'navbar-history-flamingparrot': [
-            'regenerator-runtime/runtime', // for async/await
-            'whatwg-fetch',
-            './navbar-history/index-flamingparrot.js'
-        ]
+        'flamingparrot-with-polyfills': polyfills_for_fetch.concat([
+            './FlamingParrot/index.js'
+        ]),
     },
     output: {
         path: assets_dir_path,
         filename: '[name]-[chunkhash].js'
     },
+    externals: {
+        'jquery': 'jQuery',
+        'tuleap': 'tuleap'
+    },
     resolve: {
         alias: {
+            // keymaster-sequence isn't on npm
+            'keymaster-sequence': path.resolve(__dirname, './FlamingParrot/keymaster-sequence/keymaster.sequence.min.js'),
             // navbar-history-flamingparrot needs this because TLP is not included in FlamingParrot
             // We use tlp.get() and tlp.put(). This means we need polyfills for fetch() and Promise
             'tlp-fetch': path.resolve(__dirname, '../themes/common/tlp/src/js/fetch-wrapper.js')
         }
     },
-    externals: {
-        tlp   : 'tlp'
-    },
     module: {
-        rules: [babel_rule]
+        rules: [
+            babel_rule,
+            {
+                test: /keymaster\.sequence\.min\.js$/,
+                use : 'imports-loader?key=keymaster'
+            }
+        ]
     },
     plugins: [
         new WebpackAssetsManifest({
             output: 'manifest.json',
             assets: manifest_data,
+            merge : true,
         })
     ]
 };
 
 var webpack_config_for_labels = {
     entry: {
-        'labels-box': [
-            'regenerator-runtime/runtime', // for async/await
-            'whatwg-fetch',
-            './labels/labels-box.js'
-        ]
-    },
-    externals: {
-        jquery: 'jQuery'
+        'labels-box': './labels/labels-box.js'
     },
     output: {
         path: assets_dir_path,
         filename: '[name]-[chunkhash].js',
         library: 'LabelsBox'
+    },
+    externals: {
+        jquery: 'jQuery'
     },
     resolve: {
         alias: {
@@ -123,15 +128,17 @@ var webpack_config_for_labels = {
     plugins: [
         new WebpackAssetsManifest({
             output: 'manifest.json',
-            assets: manifest_data
+            assets: manifest_data,
+            merge : true,
         })
     ]
 };
 
-var webpack_config_for_project_admin = {
+var webpack_config_for_buring_parrot_code = {
     entry: {
-        'project-admin'         : './project/admin/index.js',
-        'project-admin-ugroups' : './project/admin//project-admin-ugroups.js',
+        'navbar-history'       : './navbar-history/index-burningparrot.js',
+        'project-admin'        : './project/admin/index.js',
+        'project-admin-ugroups': './project/admin//project-admin-ugroups.js',
     },
     output: {
         path: assets_dir_path,
@@ -161,7 +168,7 @@ var webpack_config_for_project_admin = {
         new WebpackAssetsManifest({
             output: 'manifest.json',
             assets: manifest_data,
-            merge: true,
+            merge : true,
             writeToDisk: true
         })
     ]
@@ -169,10 +176,10 @@ var webpack_config_for_project_admin = {
 
 if (process.env.NODE_ENV === 'production') {
     const optimized_configs = [
-        webpack_config_for_navbar_history,
         webpack_config_for_dashboards,
         webpack_config_for_labels,
-        webpack_config_for_project_admin
+        webpack_config_for_flaming_parrot_code,
+        webpack_config_for_buring_parrot_code
     ];
     optimized_configs.forEach(function (config) {
         return config.plugins = config.plugins.concat([
@@ -182,8 +189,8 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 module.exports = [
-    webpack_config_for_navbar_history,
     webpack_config_for_dashboards,
     webpack_config_for_labels,
-    webpack_config_for_project_admin,
+    webpack_config_for_flaming_parrot_code,
+    webpack_config_for_buring_parrot_code,
 ];

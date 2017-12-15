@@ -4,21 +4,32 @@ var webpack                     = require('webpack');
 var WebpackAssetsManifest       = require('webpack-assets-manifest');
 var BabelPresetEnv              = require('babel-preset-env');
 var BabelPluginObjectRestSpread = require('babel-plugin-transform-object-rest-spread');
+var polyfills_for_fetch         = require('../../../../../tools/utils/ie11-polyfill-names.js').polyfills_for_fetch;
 
-module.exports = {
+var babel_options = {
+    presets: [
+        ["babel-preset-env", {
+            targets: {
+                ie: 11
+            },
+            modules: false
+        }],
+    ],
+    plugins: [
+        BabelPluginObjectRestSpread
+    ]
+};
+
+var webpack_config = {
     entry : {
-        'en_US.min': [
-            'babel-polyfill',
+        'en_US.min': polyfills_for_fetch.concat([
             'dom4',
-            'whatwg-fetch',
             './src/index.en_US.js'
-        ],
-        'fr_FR.min': [
-            'babel-polyfill',
+        ]),
+        'fr_FR.min': polyfills_for_fetch.concat([
             'dom4',
-            'whatwg-fetch',
             './src/index.fr_FR.js'
-        ]
+        ])
     },
     output: {
         path    : path.resolve(__dirname, 'dist/'),
@@ -39,19 +50,7 @@ module.exports = {
                 use: [
                     {
                         loader: 'babel-loader',
-                        options: {
-                            presets: [
-                                [BabelPresetEnv, {
-                                    targets: {
-                                        ie: 11
-                                    },
-                                    modules: false
-                                }]
-                            ],
-                            plugins: [
-                                BabelPluginObjectRestSpread
-                            ]
-                        }
+                        options: babel_options
                     }
                 ]
             }
@@ -68,7 +67,14 @@ module.exports = {
                     value: value
                 }
             }
-        }),
-        new webpack.optimize.ModuleConcatenationPlugin()
+        })
     ]
 };
+
+if (process.env.NODE_ENV === 'production') {
+    webpack_config.plugins = webpack_config.plugins.concat([
+        new webpack.optimize.ModuleConcatenationPlugin()
+    ]);
+}
+
+module.exports = webpack_config;

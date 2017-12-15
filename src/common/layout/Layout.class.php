@@ -215,6 +215,9 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         return $this;
     }
 
+    protected function includeJavascriptPolyfills() {
+    }
+
     /**
      * @return PFUser
      */
@@ -455,7 +458,8 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
      * @see includeJavascriptFile
      * @see includeJavascriptSnippet
      */
-    public function displayJavascriptElements($params) {
+    public function displayJavascriptElements($params)
+    {
         if ($this->shouldIncludeFatCombined($params)) {
             echo $this->include_asset->getHTMLSnippet('tuleap.js');
         } else {
@@ -477,6 +481,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         if (ForgeConfig::get('DEBUG_MODE') && (ForgeConfig::get('DEBUG_DISPLAY_FOR_ALL') || user_ismember(1, 'A')) ) {
             echo '<script type="text/javascript" src="/scripts/codendi/debug_reserved_names.js"></script>'."\n";
         }
+        $this->includeJavascriptPolyfills();
 
         $em = EventManager::instance();
         $em->processEvent("javascript_file", null);

@@ -107,9 +107,6 @@ class FlamingParrot_Theme extends Layout {
            $title = $params['title'] .' - '. $title;
         }
 
-        $this->includeJavascriptFile($this->include_asset->getFileURL('flamingparrot.js'));
-        $this->includeFooterJavascriptFile($this->include_asset->getFileURL('navbar-history-flamingparrot.js'));
-
         $this->render('header', new FlamingParrot_HeaderPresenter(
             $title,
             $this->imgroot
@@ -451,5 +448,10 @@ class FlamingParrot_Theme extends Layout {
         );
 
         return $user_actions;
+    }
+
+    protected function includeJavascriptPolyfills()
+    {
+        echo $this->include_asset->getHTMLSnippet('flamingparrot-with-polyfills.js');
     }
 }
