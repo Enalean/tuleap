@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,8 +26,8 @@ use SystemEvent;
 use TimePeriodWithoutWeekEnd;
 use Tracker_FormElement_Field_BurndownDao;
 use Tracker_FormElement_Field_ComputedDaoCache;
-use Tuleap\Tracker\FormElement\BurndownCalculator;
 use Tuleap\Tracker\FormElement\BurndownCacheDateRetriever;
+use Tuleap\Tracker\FormElement\FieldCalculator;
 
 class SystemEvent_BURNDOWN_GENERATE extends SystemEvent
 {
@@ -44,9 +44,9 @@ class SystemEvent_BURNDOWN_GENERATE extends SystemEvent
     private $logger;
 
     /**
-     * @var  BurndownCalculator
+     * @var  FieldCalculator
      */
-    private $burndown_calculator;
+    private $field_calculator;
 
     /**
      * @var Tracker_FormElement_Field_ComputedDaoCache
@@ -72,16 +72,16 @@ class SystemEvent_BURNDOWN_GENERATE extends SystemEvent
 
     public function injectDependencies(
         Tracker_FormElement_Field_BurndownDao $burndown_dao,
-        BurndownCalculator $burndown_calculator,
+        FieldCalculator $field_calculator,
         Tracker_FormElement_Field_ComputedDaoCache $cache_dao,
         BackendLogger $logger,
         BurndownCacheDateRetriever $date_retriever
     ) {
-        $this->burndown_dao        = $burndown_dao;
-        $this->logger              = $logger;
-        $this->burndown_calculator = $burndown_calculator;
-        $this->cache_dao           = $cache_dao;
-        $this->date_retriever      = $date_retriever;
+        $this->burndown_dao     = $burndown_dao;
+        $this->logger           = $logger;
+        $this->field_calculator = $field_calculator;
+        $this->cache_dao        = $cache_dao;
+        $this->date_retriever   = $date_retriever;
     }
 
     public function process()
@@ -112,9 +112,12 @@ class SystemEvent_BURNDOWN_GENERATE extends SystemEvent
             foreach ($this->date_retriever->getWorkedDaysToCacheForPeriod($burndown, $yesterday) as $worked_day) {
                 $this->logger->debug("Day " . date("Y-m-d H:i:s", $worked_day));
 
-                $value = $this->burndown_calculator->calculateBurndownValueAtTimestamp(
-                    $burndown_informations,
-                    $worked_day
+                $value = $this->field_calculator->calculate(
+                    array($burndown_informations['id']),
+                    $worked_day,
+                    true,
+                    'remaining_effort',
+                    $burndown_informations['remaining_effort_field_id']
                 );
 
                 $this->logger->debug("Caching value $value for artifact #" . $burndown_informations['id']);

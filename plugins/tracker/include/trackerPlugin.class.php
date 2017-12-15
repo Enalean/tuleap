@@ -40,6 +40,7 @@ use Tuleap\Tracker\FormElement\BurndownCalculator;
 use Tuleap\Tracker\FormElement\ComputedFieldCalculator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
+use Tuleap\Tracker\FormElement\FieldCalculator;
 use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_DAILY;
 use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_GENERATE;
 use Tuleap\Tracker\Import\Spotter;
@@ -312,7 +313,7 @@ class trackerPlugin extends Plugin {
                 $params['class']        = 'Tuleap\\Tracker\\FormElement\\SystemEvent\\' . SystemEvent_BURNDOWN_DAILY::NAME;
                 $params['dependencies'] = array(
                     new Tracker_FormElement_Field_BurndownDao(),
-                    new BurndownCalculator(new ComputedFieldCalculator(new Tracker_FormElement_Field_ComputedDao())),
+                    new FieldCalculator(new BurndownCalculator(new Tracker_FormElement_Field_ComputedDao())),
                     new Tracker_FormElement_Field_ComputedDaoCache(new Tracker_FormElement_Field_ComputedDao()),
                     new BackendLogger(),
                     new BurndownCacheDateRetriever()
@@ -322,7 +323,7 @@ class trackerPlugin extends Plugin {
                 $params['class']        = 'Tuleap\\Tracker\\FormElement\\SystemEvent\\' . SystemEvent_BURNDOWN_GENERATE::NAME;
                 $params['dependencies'] = array(
                     new Tracker_FormElement_Field_BurndownDao(),
-                    new BurndownCalculator(new ComputedFieldCalculator(new Tracker_FormElement_Field_ComputedDao())),
+                    new FieldCalculator(new BurndownCalculator(new Tracker_FormElement_Field_ComputedDao())),
                     new Tracker_FormElement_Field_ComputedDaoCache(new Tracker_FormElement_Field_ComputedDao()),
                     new BackendLogger(),
                     new BurndownCacheDateRetriever()

@@ -34,6 +34,7 @@ use Tuleap\Tracker\FormElement\BurnupLogger;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
 use Tuleap\Tracker\FormElement\ChartFieldUsage;
 use Tuleap\Tracker\FormElement\ChartMessageFetcher;
+use Tuleap\Tracker\FormElement\FieldCalculator;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 
 class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Field_ReadOnly, TrackerFormElementExternalField
@@ -115,6 +116,17 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
         Tracker_Artifact $artifact,
         Tracker_Artifact_ChangesetValue $value = null
     ) {
+        $stop_on_manual_value = true;
+
+        $this->getFieldCalculator()->calculate(
+            array($artifact->getId()),
+            null,
+            $stop_on_manual_value,
+            null,
+            null
+        );
+
+        return "<div class='feedback_warning'>" . dgettext('tuleap-agiledashboard', "Field under implementation") . "</div>";
     }
 
     public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value, $report)
@@ -292,5 +304,21 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
             $use_remaining_effort,
             $is_under_construction
         );
+    }
+
+    /**
+     * @return BurnupCalculator
+     */
+    private function getBurnupCalculator()
+    {
+        return new BurnupCalculator(new BurnupDao(), new BurnupLogger());
+    }
+
+    /**
+     * @return FieldCalculator
+     */
+    private function getFieldCalculator()
+    {
+        return new FieldCalculator($this->getBurnupCalculator());
     }
 }

@@ -17,6 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Tracker\FormElement\ComputedFieldCalculator;
+use Tuleap\Tracker\FormElement\FieldCalculator;
+
 require_once('bootstrap.php');
 
 class Tracker_FormElement_Field_Computed_StorableValue extends TuleapTestCase
@@ -380,6 +384,9 @@ class Tracker_FormElement_Field_Compute_FastComputeTest extends TuleapTestCase
     private $user;
     private $field;
     private $formelement_factory;
+    /**
+     * @var Tracker_FormElement_Field_ComputedDao
+     */
     private $dao;
     private $artifact_factory;
 
@@ -397,7 +404,8 @@ class Tracker_FormElement_Field_Compute_FastComputeTest extends TuleapTestCase
                 'getName',
                 'getId',
                 'getValueDao',
-                'getStandardCalculationMode'
+                'getStandardCalculationMode',
+                'getCalculator'
             )
         );
         stub($this->field)->getName()->returns('effort');
@@ -405,6 +413,7 @@ class Tracker_FormElement_Field_Compute_FastComputeTest extends TuleapTestCase
         stub($this->field)->getDao()->returns($this->dao);
         stub($this->field)->getValueDao()->returns($this->manual_dao);
         stub($this->field)->getId()->returns(23);
+        stub($this->field)->getCalculator()->returns(new FieldCalculator(new ComputedFieldCalculator($this->dao)));
 
         $this->artifact_factory = mock('Tracker_ArtifactFactory');
         Tracker_ArtifactFactory::setInstance($this->artifact_factory);

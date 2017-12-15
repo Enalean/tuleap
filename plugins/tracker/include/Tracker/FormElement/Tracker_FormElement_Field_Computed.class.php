@@ -21,6 +21,7 @@
 use Tuleap\Tracker\Artifact\ChangesetValueComputed;
 use Tuleap\Tracker\DAO\ComputedDao;
 use Tuleap\Tracker\FormElement\ComputedFieldCalculator;
+use Tuleap\Tracker\FormElement\FieldCalculator;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldComputedValueFullRepresentation;
 
 class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
@@ -111,7 +112,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         Tracker_Artifact $artifact,
         $timestamp = null
     ) {
-        return $this->getCalculator()->calculateForComputedFields(
+        return $this->getCalculator()->calculate(
             array($artifact->getId()),
             $timestamp,
             true,
@@ -177,7 +178,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
 
     public function getStopAtManualSetFieldMode(array $artifact_ids)
     {
-        return $this->getCalculator()->calculateForComputedFields(
+        return $this->getCalculator()->calculate(
             $artifact_ids,
             null,
             false,
@@ -193,7 +194,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
 
     public function getStandardCalculationMode(array $artifact_ids)
     {
-        return $this->getCalculator()->calculateForComputedFields(
+        return $this->getCalculator()->calculate(
             $artifact_ids,
             null,
             true,
@@ -269,9 +270,14 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     {
     }
 
-    private function getCalculator()
+    /**
+     * for testing purpose
+     *
+     * @return FieldCalculator
+     */
+    protected function getCalculator()
     {
-        return new ComputedFieldCalculator($this->getDao());
+        return new FieldCalculator(new ComputedFieldCalculator(new Tracker_FormElement_Field_ComputedDao()));
     }
 
 

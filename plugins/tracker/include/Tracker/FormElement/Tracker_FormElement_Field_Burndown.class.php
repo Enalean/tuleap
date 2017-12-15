@@ -32,17 +32,13 @@ require_once 'common/chart/ErrorChart.class.php';
 require_once 'common/date/TimePeriodWithWeekEnd.class.php';
 require_once 'common/date/TimePeriodWithoutWeekEnd.class.php';
 
-class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field implements Tracker_FormElement_Field_ReadOnly {
+class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field implements Tracker_FormElement_Field_ReadOnly
+{
 
     /**
      * Request parameter to display burndown image
      */
     const FUNC_SHOW_BURNDOWN          = 'show_burndown';
-
-    const REMAINING_EFFORT_FIELD_NAME = 'remaining_effort';
-    const DURATION_FIELD_NAME         = 'duration';
-    const START_DATE_FIELD_NAME       = 'start_date';
-    const CAPACITY_FIELD_NAME         = 'capacity';
 
     /**
      * @var Tracker_HierarchyFactory

@@ -18,21 +18,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Tracker\FormElement;
+namespace Tuleap\AgileDashboard\FormElement;
 
-use Tracker_FormElement_Field_ComputedDao;
+use Logger;
+use Tuleap\Tracker\FormElement\IProvideArtifactChildrenForComputedCalculation;
 
-class ComputedFieldCalculator implements IProvideArtifactChildrenForComputedCalculation
+class BurnupCalculator implements IProvideArtifactChildrenForComputedCalculation
 {
     /**
-     * @var Tracker_FormElement_Field_ComputedDao
+     * @var BurnupDao
      */
-    private $dao;
+    private $burnup_dao;
+    /**
+     * @var Logger
+     */
+    private $logger;
 
     public function __construct(
-        Tracker_FormElement_Field_ComputedDao $dao
+        BurnupDao $burnup_dao,
+        Logger $logger
     ) {
-        $this->dao                 = $dao;
+        $this->burnup_dao = $burnup_dao;
+        $this->logger     = $logger;
     }
 
     public function fetchChildrenAndManualValuesOfArtifacts(
@@ -42,12 +49,18 @@ class ComputedFieldCalculator implements IProvideArtifactChildrenForComputedCalc
         $target_field_name,
         $computed_field_id
     ) {
-        $dar = $this->dao->getComputedFieldValues(
-            $artifact_ids_to_fetch,
-            $target_field_name,
-            $computed_field_id,
-            $stop_on_manual_value
-        );
+        $manual_sum = null;
+
+        $dar = $this->burnup_dao->getBurnupComputedValue($artifact_ids_to_fetch);
+
+        $this->logger->info('Reading tree for ' . implode(',', $artifact_ids_to_fetch));
+        $this->logger->info('artifact with Done status');
+
+        foreach ($dar as $row) {
+            if ($row['done_value'] !== null) {
+                $this->logger->info($row['parent_id']);
+            }
+        }
 
         return array(
             'children'   => $dar,
