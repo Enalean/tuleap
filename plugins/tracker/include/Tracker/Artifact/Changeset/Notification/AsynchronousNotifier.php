@@ -19,7 +19,7 @@
  *
  */
 
-namespace Tuleap\Tracker\Artifact\Changeset;
+namespace Tuleap\Tracker\Artifact\Changeset\Notification;
 
 use Tracker_ArtifactFactory;
 use Logger;
@@ -31,7 +31,6 @@ use ForgeConfig;
 use Exception;
 use Tuleap\Queue\Factory;
 use Tuleap\System\DaemonLocker;
-use Tuleap\Tracker\Artifact\Changeset\Notification\Notifier;
 
 class AsynchronousNotifier
 {
@@ -106,7 +105,7 @@ class AsynchronousNotifier
                 $artifact = Tracker_ArtifactFactory::instance()->getArtifactById($message['artifact_id']);
                 $changeset = $artifact->getChangeset($message['changeset_id']);
 
-                $notifier->processNotify($changeset);
+                $notifier->processAsyncNotify($changeset);
                 $message_counter++;
 
                 $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);

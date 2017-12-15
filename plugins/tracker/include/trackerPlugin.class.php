@@ -208,6 +208,11 @@ class trackerPlugin extends Plugin {
         );
 
         $file_manager->purgeOldTemporaryFiles();
+
+        $async_supervisor = new \Tuleap\Tracker\Artifact\Changeset\Notification\AsynchronousSupervisor(
+            new \Tuleap\Tracker\Artifact\Changeset\Notification\NotifierDao()
+        );
+        $async_supervisor->runSystemCheck($params['logger']);
     }
 
     /**

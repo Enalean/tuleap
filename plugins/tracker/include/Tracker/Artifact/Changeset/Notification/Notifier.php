@@ -43,7 +43,6 @@ use Codendi_Mail_Interface;
 use Tuleap\Queue\Factory;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
-use Tuleap\Tracker\Artifact\Changeset\AsynchronousNotifier;
 
 class Notifier
 {
@@ -78,6 +77,10 @@ class Notifier
      * @var MailSender
      */
     private $mail_sender;
+    /**
+     * @var NotifierDao
+     */
+    private $notifier_dao;
 
     public function __construct(
         Logger $logger,
@@ -86,7 +89,8 @@ class Notifier
         Tracker_Artifact_MailGateway_RecipientFactory $recipient_factory,
         UserHelper $user_helper,
         RecipientsManager $recipients_manager,
-        MailSender $mail_sender
+        MailSender $mail_sender,
+        NotifierDao $notifier_dao
     ) {
         $this->logger                          = new WrapperLogger($logger, __CLASS__);
         $this->mail_gateway_config             = $mail_gateway_config;
@@ -95,6 +99,7 @@ class Notifier
         $this->user_helper                     = $user_helper;
         $this->recipients_manager              = $recipients_manager;
         $this->mail_sender                     = $mail_sender;
+        $this->notifier_dao                    = $notifier_dao;
     }
 
     public static function build(Logger $logger)
@@ -113,10 +118,16 @@ class Notifier
                 Tracker_FormElementFactory::instance(),
                 UserManager::instance()
             ),
-            new MailSender()
+            new MailSender(),
+            new NotifierDao()
         );
     }
 
+    /**
+     * Manage notification for a changeset
+     *
+     * @param Tracker_Artifact_Changeset $changeset
+     */
     public function notify(Tracker_Artifact_Changeset $changeset)
     {
         if ($this->useAsyncEmails($changeset)) {
@@ -124,6 +135,18 @@ class Notifier
         } else {
             $this->processNotify($changeset);
         }
+    }
+
+    /**
+     * Process notification when executed in background (should not be called by front-end)
+     *
+     * @param Tracker_Artifact_Changeset $changeset
+     */
+    public function processAsyncNotify(Tracker_Artifact_Changeset $changeset)
+    {
+        $this->notifier_dao->addStartDate($changeset->getId());
+        $this->processNotify($changeset);
+        $this->notifier_dao->addEndDate($changeset->getId());
     }
 
     private function useAsyncEmails(Tracker_Artifact_Changeset $changeset)
@@ -150,6 +173,7 @@ class Notifier
 
     private function queueNotification(Tracker_Artifact_Changeset $changeset)
     {
+        $this->notifier_dao->addNewNotification($changeset->getId());
         $queue = Factory::getPersistentQueue($this->logger, AsynchronousNotifier::QUEUE_PREFIX);
         $queue->pushSinglePersistentMessage(
             AsynchronousNotifier::TOPIC,
@@ -162,7 +186,7 @@ class Notifier
         );
     }
 
-    public function processNotify(Tracker_Artifact_Changeset $changeset)
+    private function processNotify(Tracker_Artifact_Changeset $changeset)
     {
         $tracker = $changeset->getTracker();
         if (! $tracker->isNotificationStopped()) {

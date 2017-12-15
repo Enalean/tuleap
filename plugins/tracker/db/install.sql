@@ -829,6 +829,15 @@ CREATE TABLE plugin_tracker_projects_unused_artifactlink_types (
     INDEX idx_artifactlink_types_unused_project_id(project_id)
 ) ENGINE=InnoDB;
 
+DROP TABLE IF EXISTS tracker_email_notification_log;
+CREATE TABLE IF NOT EXISTS tracker_email_notification_log (
+    changeset_id INT(11) NOT NULL PRIMARY KEY,
+    create_date int(11) NOT NULL,
+    start_date int(11) NULL,
+    end_date int(11) NULL,
+    INDEX idx_end_date( end_date )
+) ENGINE=InnoDB;
+
 -- Enable service for project 100
 INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank)
        VALUES      ( 100, 'plugin_tracker:service_lbl_key', 'plugin_tracker:service_desc_key', 'plugin_tracker', '/plugins/tracker/?group_id=$group_id', 1, 1, 'system', 151);
