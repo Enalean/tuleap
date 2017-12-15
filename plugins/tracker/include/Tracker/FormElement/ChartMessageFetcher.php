@@ -35,19 +35,13 @@ class ChartMessageFetcher
      * @var BurndownConfigurationValueChecker
      */
     private $configuration_field_retriever;
-    /**
-     * @var EventManager
-     */
-    private $event_manager;
 
     public function __construct(
         Tracker_HierarchyFactory $hierarchy_factory,
-        ChartConfigurationFieldRetriever $configuration_field_retriever,
-        EventManager $event_manager
+        ChartConfigurationFieldRetriever $configuration_field_retriever
     ) {
         $this->hierarchy_factory             = $hierarchy_factory;
         $this->configuration_field_retriever = $configuration_field_retriever;
-        $this->event_manager                 = $event_manager;
     }
 
     /**

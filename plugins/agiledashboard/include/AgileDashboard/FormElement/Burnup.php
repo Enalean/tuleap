@@ -91,8 +91,7 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
     {
         return new ChartMessageFetcher(
             Tracker_HierarchyFactory::instance(),
-            $this->getConfigurationFieldRetriever(),
-            EventManager::instance()
+            $this->getConfigurationFieldRetriever()
         );
     }
 
