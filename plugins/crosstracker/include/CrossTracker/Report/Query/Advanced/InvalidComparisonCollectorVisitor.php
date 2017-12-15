@@ -21,7 +21,7 @@
 namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\ICheckSemanticFieldForAComparison;
-use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\TitleSemantic\EqualComparisonChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\TitleSemantic\ComparisonChecker;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenComparison;
@@ -47,15 +47,15 @@ class InvalidComparisonCollectorVisitor implements Visitor, ICollectErrorsForInv
     /** @var InvalidSearchableCollectorVisitor */
     private $invalid_searchable_collector_visitor;
 
-    /** @var EqualComparisonChecker */
-    private $semantic_equal_comparison_checker;
+    /** @var ComparisonChecker */
+    private $semantic_title_comparison_checker;
 
     public function __construct(
         InvalidSearchableCollectorVisitor $invalid_searchable_collector_visitor,
-        EqualComparisonChecker $semantic_equal_comparison_checker
+        ComparisonChecker $semantic_title_comparison_checker
     ) {
         $this->invalid_searchable_collector_visitor = $invalid_searchable_collector_visitor;
-        $this->semantic_equal_comparison_checker    = $semantic_equal_comparison_checker;
+        $this->semantic_title_comparison_checker    = $semantic_title_comparison_checker;
     }
 
     public function collectErrors(
@@ -69,14 +69,18 @@ class InvalidComparisonCollectorVisitor implements Visitor, ICollectErrorsForInv
     {
         $this->visitComparison(
             $comparison,
-            $this->semantic_equal_comparison_checker,
+            $this->semantic_title_comparison_checker,
             $parameters
         );
     }
 
     public function visitNotEqualComparison(NotEqualComparison $comparison, InvalidComparisonCollectorParameters $parameters)
     {
-        $this->addUnsupportedComparisonError($parameters, "!=");
+        $this->visitComparison(
+            $comparison,
+            $this->semantic_title_comparison_checker,
+            $parameters
+        );
     }
 
     public function visitLesserThanComparison(LesserThanComparison $comparison, InvalidComparisonCollectorParameters $parameters)

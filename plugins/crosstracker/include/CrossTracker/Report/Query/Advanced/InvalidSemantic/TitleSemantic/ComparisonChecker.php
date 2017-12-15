@@ -34,10 +34,8 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 
-class EqualComparisonChecker implements ICheckSemanticFieldForAComparison, ValueWrapperVisitor
+class ComparisonChecker implements ICheckSemanticFieldForAComparison, ValueWrapperVisitor
 {
-    const OPERATOR = '=';
-
     public function checkSemanticMetadataIsValid(Comparison $comparison)
     {
         $value = $comparison->getValueWrapper()->accept($this, new MetadataValueWrapperParameters());
