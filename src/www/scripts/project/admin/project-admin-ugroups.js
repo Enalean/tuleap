@@ -129,9 +129,9 @@ function openConfirmationModal(selected_user) {
 async function initModalOrSendForm(identifier) {
     const button     = document.getElementById('project-admin-add-dynamic-modal');
     const project_id = button.dataset.projectId;
-    const ugroup_id  = button.dataset.ugroupId;
 
-    const ugroup_identifier = project_id + '_' + ugroup_id;
+    const members_ugroup_id = 3;
+    const ugroup_identifier = project_id + '_' + members_ugroup_id;
 
     const response = await get('/api/v1/user_groups/' + ugroup_identifier + '/users', {
         params: {
