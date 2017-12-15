@@ -25,10 +25,10 @@ use PFUser;
 use Tracker;
 use Tuleap\CrossTracker\CrossTrackerArtifactReportDao;
 use Tuleap\CrossTracker\CrossTrackerReport;
-use Tuleap\CrossTracker\Report\Query\Advanced\ExpertQueryValidator;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\CrossTrackerExpertQueryReportDao;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilderVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parser;
+use Tuleap\Tracker\Report\Query\Advanced\ExpertQueryValidator;
+use Tuleap\Tracker\Report\Query\Advanced\ParserCacheProxy;
 
 class CrossTrackerArtifactReportFactory
 {
@@ -40,7 +40,7 @@ class CrossTrackerArtifactReportFactory
     private $expert_query_validator;
     /** @var QueryBuilderVisitor */
     private $query_builder;
-    /** @var Parser */
+    /** @var ParserCacheProxy */
     private $parser;
     /** @var CrossTrackerExpertQueryReportDao */
     private $expert_query_dao;
@@ -50,7 +50,7 @@ class CrossTrackerArtifactReportFactory
         \Tracker_ArtifactFactory $artifact_factory,
         ExpertQueryValidator $expert_query_validator,
         QueryBuilderVisitor $query_builder,
-        Parser $parser,
+        ParserCacheProxy $parser,
         CrossTrackerExpertQueryReportDao $expert_query_dao
     ) {
         $this->artifact_report_dao    = $artifact_report_dao;
@@ -127,8 +127,9 @@ class CrossTrackerArtifactReportFactory
         $limit,
         $offset
     ) {
-        $this->expert_query_validator->validateExpertQuery($report);
-        $parsed_expert_query   = $this->parser->parse($report->getExpertQuery());
+        $expert_query = $report->getExpertQuery();
+        $this->expert_query_validator->validateExpertQuery($expert_query);
+        $parsed_expert_query   = $this->parser->parse($expert_query);
         $additional_from_where = $this->query_builder->buildFromWhere($parsed_expert_query);
         $trackers_id           = $this->getTrackersId($report->getTrackers());
         $results               = $this->expert_query_dao->searchArtifactsMatchingQuery(

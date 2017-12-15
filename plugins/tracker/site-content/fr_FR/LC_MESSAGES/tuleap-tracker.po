@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.3\n"
+"X-Generator: Poedit 1.8.7.1\n"
 
 #, php-format
 msgid "%s has been created"
@@ -93,7 +93,7 @@ msgstr "Éditer"
 msgid "Error during parsing expert query"
 msgstr "Erreur pendant l'analyse de la requête experte"
 
-msgid "Field under implementation"
+msgid "Field is under construction"
 msgstr "Le champ est en cours de développement"
 
 #, php-format
@@ -144,24 +144,23 @@ msgstr ""
 
 #, php-format
 msgid "The @comment metadata cannot be compared to MYSELF()."
-msgstr "Le champ @comment '%s' ne peut pas être comparé à MYSELF()."
+msgstr "Le champ @comment ne peut pas être comparé à MYSELF()."
 
 #, php-format
 msgid "The @comment metadata cannot be compared to NOW()."
-msgstr "Le champ @comment '%s' ne peut pas être comparé à NOW()."
+msgstr "Le champ @comment ne peut pas être comparé à NOW()."
 
 #, php-format
 msgid "The @comment metadata cannot be compared to a date."
-msgstr "Le champ @comment '%s' ne peut pas être comparé à une date."
+msgstr "Le champ @comment ne peut pas être comparé à une date."
 
 #, php-format
 msgid "The @comment metadata cannot be compared to the float value '%s'."
-msgstr ""
-"Le champ @comment '%s' ne peut pas être comparé à la valeur flottante '%s'."
+msgstr "Le champ @comment ne peut pas être comparé à la valeur flottante '%s'."
 
 #, php-format
 msgid "The @comment metadata cannot be compared to the int value '%s'."
-msgstr "Le champ @comment '%s' ne peut pas être comparé à la chaîne '%s'."
+msgstr "Le champ @comment ne peut pas être comparé à la chaîne '%s'."
 
 #, php-format
 msgid "The artifact link type \"%s\" cannot be disabled"
@@ -229,12 +228,6 @@ msgstr ""
 #, php-format
 msgid "The date field '%s' cannot be compared to the string value '%s'."
 msgstr "Le champ date '%s' ne peut pas être comparé à la chaîne '%s'."
-
-#, php-format
-msgid "The field '%s' doesn't exist"
-msgid_plural "The fields '%s' don't exist"
-msgstr[0] "Le champ '%s' n'existe pas"
-msgstr[1] "Les champs '%s' n'existent pas"
 
 #, php-format
 msgid "The field '%s' is not supported for the operator %s."
@@ -431,6 +424,22 @@ msgstr "Utilisateur, groupe, email"
 
 msgid "Wait a minute..."
 msgstr "Attendez une minute..."
+
+#, php-format
+msgid ""
+"We cannot search on '%s', we don't know what it refers to. Please refer to "
+"the documentation for the allowed comparisons."
+msgid_plural ""
+"We cannot search on '%s', we don't know what they refer to. Please refer to "
+"the documentation for the allowed comparisons."
+msgstr[0] ""
+"Nous ne pouvons pas rechercher dans '%s', nous ne savons pas à quoi cela "
+"fait référence. Merci de vous référer à la documentation pour les "
+"comparaisons autorisées."
+msgstr[1] ""
+"Nous ne pouvons pas rechercher dans '%s', nous ne savons pas à quoi cela "
+"fait référence. Merci de vous référer à la documentation pour les "
+"comparaisons autorisées."
 
 msgid "You are about to remove the notification. Please confirm your action."
 msgstr ""

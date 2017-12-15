@@ -72,7 +72,7 @@ msgstr ""
 msgid "Error during parsing expert query"
 msgstr ""
 
-msgid "Field under implementation"
+msgid "Field is under construction"
 msgstr ""
 
 #, php-format
@@ -191,12 +191,6 @@ msgstr ""
 #, php-format
 msgid "The date field '%s' cannot be compared to the string value '%s'."
 msgstr ""
-
-#, php-format
-msgid "The field '%s' doesn't exist"
-msgid_plural "The fields '%s' don't exist"
-msgstr[0] ""
-msgstr[1] ""
 
 #, php-format
 msgid "The field '%s' is not supported for the operator %s."
@@ -362,6 +356,16 @@ msgstr ""
 
 msgid "Wait a minute..."
 msgstr ""
+
+#, php-format
+msgid ""
+"We cannot search on '%s', we don't know what it refers to. Please refer to "
+"the documentation for the allowed comparisons."
+msgid_plural ""
+"We cannot search on '%s', we don't know what they refer to. Please refer to "
+"the documentation for the allowed comparisons."
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "You are about to remove the notification. Please confirm your action."
 msgstr ""

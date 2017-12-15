@@ -40,7 +40,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitable;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
 
-class InvalidComparisonCollectorVisitor implements Visitor
+class InvalidComparisonCollectorVisitor implements Visitor, ICollectErrorsForInvalidComparisons
 {
     /**
      * @var InvalidFields\EqualComparisonVisitor
@@ -165,11 +165,9 @@ class InvalidComparisonCollectorVisitor implements Visitor
 
     public function collectErrors(
         Visitable $parsed_query,
-        PFUser $user,
-        Tracker $tracker,
         InvalidSearchablesCollection $invalid_searchables_collection
     ) {
-        $parsed_query->accept($this, new InvalidComparisonCollectorParameters($user, $tracker, $invalid_searchables_collection));
+        $parsed_query->accept($this, new InvalidComparisonCollectorParameters($invalid_searchables_collection));
     }
 
     public function visitEqualComparison(EqualComparison $comparison, InvalidComparisonCollectorParameters $parameters)

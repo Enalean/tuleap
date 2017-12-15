@@ -20,6 +20,8 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced;
 
+use PFUser;
+use Tracker;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
@@ -35,10 +37,20 @@ class InvalidSearchableCollectorVisitor implements Visitor
      * @var Tracker_FormElementFactory
      */
     private $form_element_factory;
+    /**
+     * @var Tracker
+     */
+    private $tracker;
+    /**
+     * @var PFUser
+     */
+    private $user;
 
-    public function __construct(Tracker_FormElementFactory $form_element_factory)
+    public function __construct(Tracker_FormElementFactory $form_element_factory, Tracker $tracker, PFUser $user)
     {
         $this->form_element_factory = $form_element_factory;
+        $this->tracker              = $tracker;
+        $this->user                 = $user;
     }
 
     public function visitField(
@@ -46,9 +58,9 @@ class InvalidSearchableCollectorVisitor implements Visitor
         InvalidSearchableCollectorParameters $parameters
     ) {
         $field = $this->form_element_factory->getUsedFormElementFieldByNameForUser(
-            $parameters->getInvalidSearchablesCollectorParameters()->getTracker()->getId(),
+            $this->tracker->getId(),
             $searchable_field->getName(),
-            $parameters->getInvalidSearchablesCollectorParameters()->getUser()
+            $this->user
         );
 
         if (! $field) {

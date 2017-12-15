@@ -2,6 +2,8 @@
 /**
  * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
+ * This file is a part of Tuleap.
+ *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -13,31 +15,41 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace Tuleap\Tracker\Report\Query\Advanced;
 
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\VisitorParameters;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parser;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitable;
 
-class InvalidComparisonCollectorParameters implements VisitorParameters
+class ParserCacheProxy
 {
     /**
-     * @var InvalidSearchablesCollection
+     * @var Visitable[]
      */
-    private $invalid_searchables_collection;
+    private $cache;
+    /**
+     * @var Parser
+     */
+    private $parser;
 
-    public function __construct(InvalidSearchablesCollection $invalid_searchables_collection)
+    public function __construct(Parser $parser)
     {
-        $this->invalid_searchables_collection = $invalid_searchables_collection;
+        $this->parser = $parser;
+        $this->cache  = array();
     }
 
     /**
-     * @return InvalidSearchablesCollection
+     * @param string $query
+     * @return Visitable
      */
-    public function getInvalidSearchablesCollection()
+    public function parse($query)
     {
-        return $this->invalid_searchables_collection;
+        if (! isset($this->cache[$query])) {
+            $this->cache[$query] = $this->parser->parse($query);
+        }
+
+        return $this->cache[$query];
     }
 }
