@@ -35,6 +35,10 @@ use Tuleap\CrossTracker\Report\Query\Advanced\ExpertQueryValidator;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidComparisonCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\TitleSemantic\EqualComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\CrossTrackerExpertQueryReportDao;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\SearchableVisitor;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\SemanticEqualComparisonFromWhereBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilderVisitor;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\JsonDecoder;
@@ -104,8 +108,10 @@ class CrossTrackerReportsResource extends AuthenticatedResource
             new TrackerReportConfigDao()
         );
 
+        $parser = new Parser();
+
         $validator = new ExpertQueryValidator(
-            new Parser(),
+            $parser,
             new SizeValidatorVisitor($report_config->getExpertQueryLimit()),
             new InvalidComparisonCollectorVisitor(
                 new InvalidSearchableCollectorVisitor(),
@@ -113,10 +119,18 @@ class CrossTrackerReportsResource extends AuthenticatedResource
             )
         );
 
+        $query_builder_visitor = new QueryBuilderVisitor(
+            new SearchableVisitor(),
+            new SemanticEqualComparisonFromWhereBuilder()
+        );
+
         $this->cross_tracker_artifact_factory = new CrossTrackerArtifactReportFactory(
             new CrossTrackerArtifactReportDao(),
             \Tracker_ArtifactFactory::instance(),
-            $validator
+            $validator,
+            $query_builder_visitor,
+            $parser,
+            new CrossTrackerExpertQueryReportDao()
         );
         $this->cross_tracker_permission_gate  = new CrossTrackerPermissionGate(new URLVerification());
 
