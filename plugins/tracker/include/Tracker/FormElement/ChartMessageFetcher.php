@@ -106,7 +106,7 @@ class ChartMessageFetcher
             return '<ul class="feedback_warning">' . implode('', $warnings) . '</ul>';
         }
 
-        return '';
+        return null;
     }
 
     /**
@@ -120,6 +120,8 @@ class ChartMessageFetcher
 
             return '<li>' . $warning . '</li>';
         }
+
+        return null;
     }
 
     /**
@@ -135,7 +137,7 @@ class ChartMessageFetcher
             return "<li>$warning $tracker_links.</li>";
         }
 
-        return '';
+        return null;
     }
 
     /**
