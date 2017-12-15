@@ -81,7 +81,7 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
         $field_usage = $this->getChartFieldUsage();
 
         $html = $this->getChartMessageFetcher()->fetchWarnings($this->getTracker(), $field_usage);
-        $html .= '<img src="' . TRACKER_BASE_URL . '/images/fake-burndown-admin.png" />';
+        $html .= '<img src="' . AGILEDASHBOARD_BASE_URL . '/images/fake-burnup-admin.png" />';
 
         return $html;
     }
