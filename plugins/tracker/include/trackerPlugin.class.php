@@ -17,6 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Cron\EventCronJobEveryMinute;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\User\AtUserCreationDefaultWidgetsCreator;
@@ -58,6 +59,8 @@ use Tuleap\Tracker\ProjectDeletionEvent;
 use Tuleap\Tracker\Service\ServiceActivator;
 use Tuleap\User\History\HistoryRetriever;
 use Tuleap\Widget\Event\GetPublicAreas;
+use Tuleap\Tracker\Artifact\Changeset\Notification\AsynchronousSupervisor;
+use Tuleap\Tracker\Artifact\Changeset\Notification\NotifierDao;
 
 require_once('common/plugin/Plugin.class.php');
 require_once 'constants.php';
@@ -151,6 +154,8 @@ class trackerPlugin extends Plugin {
 
         $this->addHook(ProjectCreator::PROJECT_CREATION_REMOVE_LEGACY_SERVICES);
         $this->addHook(ProjectRegistrationActivateService::NAME);
+
+        $this->addHook(EventCronJobEveryMinute::NAME);
     }
 
     public function getHooksAndCallbacks() {
@@ -209,10 +214,15 @@ class trackerPlugin extends Plugin {
 
         $file_manager->purgeOldTemporaryFiles();
 
-        $async_supervisor = new \Tuleap\Tracker\Artifact\Changeset\Notification\AsynchronousSupervisor(
-            new \Tuleap\Tracker\Artifact\Changeset\Notification\NotifierDao()
+        $this->getAsynchronousSupervisor($params['logger'])->runSystemCheck();
+    }
+
+    private function getAsynchronousSupervisor(Logger $logger)
+    {
+        return new AsynchronousSupervisor(
+            $logger,
+            new NotifierDao()
         );
-        $async_supervisor->runSystemCheck($params['logger']);
     }
 
     /**
@@ -1528,5 +1538,10 @@ class trackerPlugin extends Plugin {
     private function isInTrackerGlobalAdmin()
     {
         return strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL . '/?func=global-admin') === 0;
+    }
+
+    public function cron_job_every_minute(EventCronJobEveryMinute $event)
+    {
+        $this->getAsynchronousSupervisor($event->getLogger())->runNotify();
     }
 }

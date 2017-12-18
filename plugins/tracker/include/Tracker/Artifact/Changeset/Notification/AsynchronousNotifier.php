@@ -40,9 +40,10 @@ class AsynchronousNotifier
 
     const TOPIC = 'tuleap.tracker.artifact';
 
-    private $log_file_path = '/var/log/tuleap/tuleap_tracker_notify_log';
+    const PID_FILE_PATH = '/var/run/tuleap/tracker_notify.pid';
 
-    private $pid_file_path = '/var/run/tuleap/tracker_notify.pid';
+    const LOG_FILE_PATH = '/var/log/tuleap/tuleap_tracker_notify_log';
+
     /**
      * @var Logger
      */
@@ -58,7 +59,7 @@ class AsynchronousNotifier
         $this->makesAllWarningsFatal();
         $this->setLogger(
             new TruncateLevelLogger(
-                new BackendLogger($this->log_file_path),
+                new BackendLogger(self::LOG_FILE_PATH),
                 ForgeConfig::get('sys_logger_level')
             )
         );
@@ -71,7 +72,7 @@ class AsynchronousNotifier
             $this->showHelp($options);
             $this->configureLogger($options);
 
-            $this->locker = new DaemonLocker($this->pid_file_path);
+            $this->locker = new DaemonLocker(self::PID_FILE_PATH);
             $this->locker->isRunning();
 
             $this->logger->info("Start service");
@@ -119,6 +120,7 @@ class AsynchronousNotifier
                 $logger->error("Caught exception ".get_class($e).": ".$e->getMessage());
             }
         });
+        $this->logger->info("No messages to process, is RabbitMQ configured and running ?");
     }
 
     private function configureLogger(array $options)
@@ -128,7 +130,7 @@ class AsynchronousNotifier
                 new BrokerLogger(
                     array(
                         new Log_ConsoleLogger(),
-                        new BackendLogger($this->log_file_path),
+                        new BackendLogger(self::LOG_FILE_PATH),
                     )
                 )
             );
@@ -137,6 +139,8 @@ class AsynchronousNotifier
 
     private function showHelp($options)
     {
+        $pid_file_path = self::PID_FILE_PATH;
+        $log_file_path = self::LOG_FILE_PATH;
         if (isset($options['h']) || isset($options['help'])) {
             echo <<<"EOT"
 Usage: /usr/share/tuleap/plugins/tracker/bin/notify.php [-v] [-h] [--help]
@@ -147,8 +151,8 @@ DESCRIPTION
     This fetches artifact updates stored by front-end in RabbitMQ, formats and sends emails to recipients.
     It will process 1000 messages before exiting to avoid memleak by PHP engine.
 
-    Logs are available in {$this->log_file_path}
-    On start pid is registered in {$this->pid_file_path}
+    Logs are available in {$log_file_path}
+    On start pid is registered in {$pid_file_path}
 
 OPTIONS
     -v          Turn logging verbose (logger level to debug) and print on stdout
@@ -203,7 +207,7 @@ EOT;
                 case \SIGINT:
                     // some stuff before stop consumer e.g. delete lock etc
                     if ($this->locker !== null) {
-                        unlink($this->pid_file_path);
+                        unlink(self::PID_FILE_PATH);
                     }
                     $logger->info("Received stop signal, aborting");
                     pcntl_signal($signal, SIG_DFL); // restore handler
