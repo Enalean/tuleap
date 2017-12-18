@@ -81,6 +81,7 @@
     ],
     "components": [
         "plugins/tracker/",
-        "plugins/tracker/grammar/"
+        "plugins/tracker/grammar/",
+        "plugins/tracker/www/scripts/angular-artifact-modal"
     ]
 }

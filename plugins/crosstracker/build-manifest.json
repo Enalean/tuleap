@@ -1,5 +1,6 @@
 {
     "name": "crosstracker",
+    "dependencies": ["tracker"],
     "themes": {
         "BurningParrot": {
             "files": [

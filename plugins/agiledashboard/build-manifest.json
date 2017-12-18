@@ -1,5 +1,6 @@
 {
     "name": "agiledashboard",
+    "dependencies": ["tracker"],
     "themes": {
         "default": {
             "files": [
@@ -52,5 +53,8 @@
         "www/js/planning-view.js",
         "www/js/ContentFilter.js",
         "www/js/home.js"
+    ],
+    "components": [
+        "plugins/agiledashboard/www/js/kanban"
     ]
 }

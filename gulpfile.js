@@ -195,20 +195,12 @@ var fat_combined_files = [
     bower_app_paths = [
         'plugins/agiledashboard/www/js/planning-v2/',
     ],
-    artifact_modal_path = [
-        'plugins/tracker/www/scripts/angular-artifact-modal/'
-    ],
-    angular_app_paths = [
-        'plugins/agiledashboard/www/js/kanban/'
-    ],
     asset_dir = 'www/assets';
 
 tuleap.declare_plugin_tasks(asset_dir);
 component_builder.installAndBuildNpmComponents(components_paths, 'components-core', ['clean-js-core']);
-component_builder.installAndBuildNpmComponents(artifact_modal_path, 'artifact-modal');
 component_builder.installAndBuildBowerComponents(bower_app_paths, 'bower-apps');
-component_builder.installAndBuildNpmComponents(angular_app_paths, 'angular-apps', ['artifact-modal']);
-var base_dir = '.'
+var base_dir = '.';
 sass_builder.cleanAndBuildSass('sass-core-common', base_dir, common_scss);
 sass_builder.cleanAndBuildSass('sass-core-select2', base_dir, select2_scss);
 sass_builder.cleanAndBuildSass('sass-core-themes', base_dir, core_scss);
@@ -285,7 +277,7 @@ gulp.task('watch', function() {
 
 gulp.task('core', ['js-core', 'sass-core']);
 
-gulp.task('build', ['components-core', 'bower-apps', 'angular-apps'], function(callback) {
+gulp.task('build', ['components-core', 'bower-apps'], function(callback) {
     runSequence('core', 'plugins', callback);
 });
 
