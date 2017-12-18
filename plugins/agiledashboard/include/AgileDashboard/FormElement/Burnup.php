@@ -20,6 +20,7 @@
 
 namespace Tuleap\AgileDashboard\FormElement;
 
+use Codendi_HTMLPurifier;
 use EventManager;
 use PFUser;
 use SimpleXMLElement;
@@ -47,11 +48,6 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
     public function getFormAdminVisitor(Tracker_FormElement_Field $element, array $used_element)
     {
         return new ViewAdminBurnupField($element, $used_element);
-    }
-
-    public function userCanRead(PFUser $user = null)
-    {
-        return false;
     }
 
     public function afterCreate($formElement_data = array())
@@ -117,7 +113,7 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
     ) {
         $stop_on_manual_value = true;
 
-        $this->getFieldCalculator()->calculate(
+        $value = $this->getFieldCalculator()->calculate(
             array($artifact->getId()),
             null,
             $stop_on_manual_value,
@@ -125,7 +121,11 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
             null
         );
 
-        return "<div class='feedback_warning'>" . dgettext('tuleap-agiledashboard', "Field under implementation") . "</div>";
+        $purifier = Codendi_HTMLPurifier::instance();
+
+        return $purifier->purify($value) . "<br/><div class='feedback_warning'>" .
+            dgettext('tuleap-agiledashboard', "Field under implementation") .
+            "</div>";
     }
 
     public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value, $report)
