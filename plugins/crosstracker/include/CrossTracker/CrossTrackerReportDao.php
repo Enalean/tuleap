@@ -63,11 +63,7 @@ class CrossTrackerReportDao extends DataAccessObject
         return $this->updateAndGetLastId($sql);
     }
 
-    /**
-     * @param int $report_id
-     * @param \Tracker[] $trackers
-     */
-    public function updateReport($report_id, array $trackers)
+    public function updateReport($report_id, array $trackers, $expert_query)
     {
         $this->da->startTransaction();
 
@@ -78,6 +74,7 @@ class CrossTrackerReportDao extends DataAccessObject
             $this->update($sql);
 
             $this->addTrackersToReport($trackers, $report_id);
+            $this->updateExpertQuery($report_id, $expert_query);
         } catch (DataAccessQueryException $e) {
             $this->rollBack();
 
@@ -87,6 +84,15 @@ class CrossTrackerReportDao extends DataAccessObject
         $this->da->commit();
     }
 
+    private function updateExpertQuery($report_id, $expert_query)
+    {
+        $expert_query = $this->da->quoteSmart($expert_query);
+
+        $sql = "REPLACE INTO plugin_crosstracker_report (id, expert_query)
+                VALUES ($report_id, $expert_query)";
+
+        return $this->update($sql);
+    }
 
     /**
      * @param array $trackers
