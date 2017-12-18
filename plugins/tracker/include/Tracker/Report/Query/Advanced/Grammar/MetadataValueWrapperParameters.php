@@ -22,4 +22,21 @@ namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
 class MetadataValueWrapperParameters implements ValueWrapperParameters
 {
+    /**
+     * @var Metadata
+     */
+    private $metadata;
+
+    public function __construct(Metadata $metadata)
+    {
+        $this->metadata = $metadata;
+    }
+
+    /**
+     * @return Metadata
+     */
+    public function getMetadata()
+    {
+        return $this->metadata;
+    }
 }

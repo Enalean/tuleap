@@ -20,8 +20,8 @@
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\ComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\ICheckSemanticFieldForAComparison;
-use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\TitleSemantic\ComparisonChecker;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenComparison;
@@ -39,8 +39,8 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitable;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitor;
 use Tuleap\Tracker\Report\Query\Advanced\ICollectErrorsForInvalidComparisons;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollection;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidComparisonCollectorParameters;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollection;
 
 class InvalidComparisonCollectorVisitor implements Visitor, ICollectErrorsForInvalidComparisons
 {

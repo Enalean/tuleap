@@ -47,7 +47,7 @@ class NotEqualComparisonChecker implements ICheckMetadataForAComparison, ValueWr
     public function checkMetaDataIsValid(Metadata $metadata, Comparison $comparison)
     {
         try {
-            $value = $comparison->getValueWrapper()->accept($this, new MetadataValueWrapperParameters());
+            $value = $comparison->getValueWrapper()->accept($this, new MetadataValueWrapperParameters($metadata));
         } catch (NowIsNotSupportedException $exception) {
             throw new CommentToNowComparisonException();
         } catch (MySelfIsNotSupportedException $exception) {

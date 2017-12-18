@@ -18,15 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Semantic\Title;
 
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Semantic;
 
-class MetadataInComparisonFromWhereBuilder implements MetadataComparisonFromWhereBuilder
+interface FromWhereBuilder extends Semantic\FromWhereBuilder
 {
-    public function getFromWhere(Metadata $metadata, Comparison $comparison)
-    {
-        throw new \RuntimeException("Metadata is not supported here");
-    }
 }

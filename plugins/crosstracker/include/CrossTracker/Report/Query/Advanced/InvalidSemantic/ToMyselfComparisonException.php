@@ -20,14 +20,15 @@
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic;
 
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldException;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
-class TitleToDateComparisonException extends InvalidFieldException
+class ToMyselfComparisonException extends InvalidSemanticComparisonException
 {
-    public function __construct()
+    public function __construct(Metadata $metadata)
     {
         $message = sprintf(
-            dgettext("tuleap-crosstracker", "@title cannot be compared to a date.")
+            dgettext("tuleap-crosstracker", "%s cannot be compared to MYSELF()."),
+            $metadata->getName()
         );
         parent::__construct($message);
     }

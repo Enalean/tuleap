@@ -20,16 +20,13 @@
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\InvalidSemanticComparisonException;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitor;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldException;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\InvalidMetadataForComparisonException;
 
 class InvalidSearchableCollectorVisitor implements Visitor
 {
-    const SUPPORTED_METADATA_NAME = '@title';
-
     public function visitField(
         Field $searchable_field,
         InvalidSearchableCollectorParameters $parameters
@@ -43,7 +40,7 @@ class InvalidSearchableCollectorVisitor implements Visitor
         Metadata $metadata,
         InvalidSearchableCollectorParameters $parameters
     ) {
-        if ($metadata->getName() !== self::SUPPORTED_METADATA_NAME) {
+        if (! in_array($metadata->getName(), AllowedMetadata::$NAMES, true)) {
             $parameters->getInvalidSearchablesCollectorParameters()->getInvalidSearchablesCollection()->addNonexistentSearchable(
                 $metadata->getName()
             );
@@ -52,12 +49,8 @@ class InvalidSearchableCollectorVisitor implements Visitor
         }
 
         try {
-            $parameters->getSemanticFieldChecker()->checkSemanticMetadataIsValid($parameters->getComparison());
-        } catch (InvalidMetadataForComparisonException $exception) {
-            $parameters->getInvalidSearchablesCollectorParameters()->getInvalidSearchablesCollection()->addInvalidSearchableError(
-                $exception->getMessage()
-            );
-        } catch (InvalidFieldException $exception) {
+            $parameters->getSemanticFieldChecker()->checkSemanticMetadataIsValid($metadata, $parameters->getComparison());
+        } catch (InvalidSemanticComparisonException $exception) {
             $parameters->getInvalidSearchablesCollectorParameters()->getInvalidSearchablesCollection()->addInvalidSearchableError(
                 $exception->getMessage()
             );

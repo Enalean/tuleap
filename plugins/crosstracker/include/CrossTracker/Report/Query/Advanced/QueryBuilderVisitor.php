@@ -22,8 +22,8 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\SearchableVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\SearchableVisitorParameters;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\SemanticEqualComparisonFromWhereBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\SemanticNotEqualComparisonFromWhereBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Semantic\EqualComparisonFromWhereBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Semantic\NotEqualComparisonFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenComparison;
@@ -44,17 +44,17 @@ use Tuleap\Tracker\Report\Query\FromWhere;
 
 class QueryBuilderVisitor implements Visitor
 {
-    /** @var SemanticEqualComparisonFromWhereBuilder */
+    /** @var EqualComparisonFromWhereBuilder */
     private $equal_comparison_from_where_builder;
     /** @var SearchableVisitor */
     private $searchable_visitor;
-    /** @var SemanticNotEqualComparisonFromWhereBuilder */
+    /** @var NotEqualComparisonFromWhereBuilder */
     private $not_equal_comparison_from_where_builder;
 
     public function __construct(
         SearchableVisitor $searchable_visitor,
-        SemanticEqualComparisonFromWhereBuilder $equal_comparison_from_where_builder,
-        SemanticNotEqualComparisonFromWhereBuilder $not_equal_comparison_from_where_builder
+        EqualComparisonFromWhereBuilder $equal_comparison_from_where_builder,
+        NotEqualComparisonFromWhereBuilder $not_equal_comparison_from_where_builder
     ) {
         $this->searchable_visitor                      = $searchable_visitor;
         $this->equal_comparison_from_where_builder     = $equal_comparison_from_where_builder;

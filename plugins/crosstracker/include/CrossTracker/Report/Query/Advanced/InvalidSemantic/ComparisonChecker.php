@@ -18,17 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\TitleSemantic;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic;
 
 use DateTime;
-use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\ICheckSemanticFieldForAComparison;
-use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\TitleToDateComparisonException;
 use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentUserValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\InValueWrapper;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\MetadataValueWrapperParameters;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
@@ -36,20 +35,25 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 
 class ComparisonChecker implements ICheckSemanticFieldForAComparison, ValueWrapperVisitor
 {
-    public function checkSemanticMetadataIsValid(Comparison $comparison)
+    /**
+     * @param Metadata $metadata
+     * @param Comparison $comparison
+     * @throws InvalidSemanticComparisonException
+     */
+    public function checkSemanticMetadataIsValid(Metadata $metadata, Comparison $comparison)
     {
-        $value = $comparison->getValueWrapper()->accept($this, new MetadataValueWrapperParameters());
+        $value = $comparison->getValueWrapper()->accept($this, new MetadataValueWrapperParameters($metadata));
 
         if (is_float($value + 0)) {
-            throw new TitleToFloatComparisonException($value);
+            throw new ToFloatComparisonException($metadata, $value);
         }
 
         if (is_numeric($value)) {
-            throw new TitleToIntComparisonException($value);
+            throw new ToIntComparisonException($metadata, $value);
         }
 
         if ($this->getDateTimeFromValue($value) !== false && $value !== '') {
-            throw new TitleToDateComparisonException();
+            throw new ToDateComparisonComparisonException($metadata);
         }
     }
 
@@ -57,7 +61,7 @@ class ComparisonChecker implements ICheckSemanticFieldForAComparison, ValueWrapp
         CurrentDateTimeValueWrapper $value_wrapper,
         ValueWrapperParameters $parameters
     ) {
-        throw new TitleToNowComparisonException();
+        throw new ToNowComparisonException($parameters->getMetadata());
     }
 
     public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
@@ -81,7 +85,7 @@ class ComparisonChecker implements ICheckSemanticFieldForAComparison, ValueWrapp
         CurrentUserValueWrapper $value_wrapper,
         ValueWrapperParameters $parameters
     ) {
-        throw new TitleToMyselfComparisonException();
+        throw new ToMyselfComparisonException($parameters->getMetadata());
     }
 
     private function getDateTimeFromValue($value)

@@ -20,13 +20,14 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 
-use Tuleap\Tracker\Report\Query\FromWhere;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
+use Tuleap\Tracker\Report\Query\FromWhere;
 
 interface MetadataComparisonFromWhereBuilder
 {
     /**
      * @return FromWhere
      */
-    public function getFromWhere(Comparison $comparison);
+    public function getFromWhere(Metadata $metadata, Comparison $comparison);
 }

@@ -18,15 +18,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic;
 
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
-class MetadataInComparisonFromWhereBuilder implements MetadataComparisonFromWhereBuilder
+class ToIntComparisonException extends InvalidSemanticComparisonException
 {
-    public function getFromWhere(Metadata $metadata, Comparison $comparison)
+    public function __construct(Metadata $metadata, $value)
     {
-        throw new \RuntimeException("Metadata is not supported here");
+        parent::__construct(
+            sprintf(
+                dgettext("tuleap-crosstracker", "%s cannot be compared to the int value '%s'."),
+                $metadata->getName(),
+                $value
+            )
+        );
     }
 }

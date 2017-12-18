@@ -18,19 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\TitleSemantic;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Semantic;
 
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldException;
-
-class TitleToIntComparisonException extends InvalidFieldException
+class EqualComparisonFromWhereBuilder extends ComparisonFromWhereBuilder
 {
-    public function __construct($value)
-    {
-        parent::__construct(
-            sprintf(
-                dgettext("tuleap-crosstracker", "@title cannot be compared to the int value '%s'."),
-                $value
-            )
-        );
-    }
 }

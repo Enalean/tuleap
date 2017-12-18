@@ -18,15 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic;
 
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
-class MetadataInComparisonFromWhereBuilder implements MetadataComparisonFromWhereBuilder
+class ToNowComparisonException extends InvalidSemanticComparisonException
 {
-    public function getFromWhere(Metadata $metadata, Comparison $comparison)
+    public function __construct(Metadata $metadata)
     {
-        throw new \RuntimeException("Metadata is not supported here");
+        $message = sprintf(
+            dgettext("tuleap-crosstracker", "%s cannot be compared to NOW()."),
+            $metadata->getName()
+        );
+        parent::__construct($message);
     }
 }

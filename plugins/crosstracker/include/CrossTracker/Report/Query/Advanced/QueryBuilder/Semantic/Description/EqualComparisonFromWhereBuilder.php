@@ -18,15 +18,33 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Semantic\Description;
 
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
+use Tuleap\Tracker\Report\Query\FromWhere;
 
-class MetadataInComparisonFromWhereBuilder implements MetadataComparisonFromWhereBuilder
+class EqualComparisonFromWhereBuilder extends DescriptionFromWhereBuilder
 {
     public function getFromWhere(Metadata $metadata, Comparison $comparison)
     {
-        throw new \RuntimeException("Metadata is not supported here");
+        $value = $comparison->getValueWrapper()->getValue();
+
+        if ($value === '') {
+            $matches_value = " = ''";
+        } else {
+            $matches_value = " LIKE " . $this->quoteLikeValueSurround($value);
+        }
+
+        $from  = $this->getFrom();
+        $where = "changeset_value_description.changeset_id IS NOT NULL
+            AND tracker_changeset_value_description.value $matches_value";
+
+        return new FromWhere($from, $where);
+    }
+
+    private function quoteLikeValueSurround($value)
+    {
+        return \CodendiDataAccess::instance()->quoteLikeValueSurround($value);
     }
 }

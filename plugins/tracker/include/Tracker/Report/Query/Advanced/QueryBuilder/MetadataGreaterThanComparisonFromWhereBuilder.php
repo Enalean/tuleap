@@ -21,10 +21,11 @@
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
 class MetadataGreaterThanComparisonFromWhereBuilder implements MetadataComparisonFromWhereBuilder
 {
-    public function getFromWhere(Comparison $comparison)
+    public function getFromWhere(Metadata $metadata, Comparison $comparison)
     {
         throw new \RuntimeException("Metadata is not supported here");
     }
