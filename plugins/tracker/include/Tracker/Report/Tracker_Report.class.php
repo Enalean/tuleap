@@ -29,7 +29,6 @@ use Tuleap\Tracker\Report\ExpertModePresenter;
 use Tuleap\Tracker\Report\Query\Advanced\ExpertQueryValidator;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parser;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitable;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidComparisonCollectorVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata;
@@ -42,7 +41,7 @@ use Tuleap\Tracker\Report\Query\Advanced\QueryBuilderVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
 use Tuleap\Tracker\Report\Query\Advanced\SizeValidatorVisitor;
-use Tuleap\Tracker\Report\Query\FromWhere;
+use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
 use Tuleap\Tracker\Report\TrackerReportConfig;
 use Tuleap\Tracker\Report\TrackerReportConfigDao;
 
@@ -92,7 +91,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
      * @var QueryBuilderVisitor
      */
     private $query_builder;
-    /** @var FromWhere */
+    /** @var IProvideFromAndWhereSQLFragments */
     private $additional_from_where;
 
     /**
@@ -1889,7 +1888,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         return $invalid_searchables_collection;
     }
 
-    public function getMatchingIdsWithAdditionalFromWhere(FromWhere $from_where)
+    public function getMatchingIdsWithAdditionalFromWhere(IProvideFromAndWhereSQLFragments $from_where)
     {
         $this->additional_from_where = $from_where;
         $matching_ids = $this->getMatchingIds();

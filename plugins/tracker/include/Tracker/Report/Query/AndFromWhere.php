@@ -19,18 +19,18 @@
 
 namespace Tuleap\Tracker\Report\Query;
 
-class AndFromWhere extends FromWhere
+class AndFromWhere implements IProvideFromAndWhereSQLFragments
 {
     /**
-     * @var FromWhere
+     * @var IProvideFromAndWhereSQLFragments
      */
     private $left;
     /**
-     * @var FromWhere
+     * @var IProvideFromAndWhereSQLFragments
      */
     private $right;
 
-    public function __construct(FromWhere $left, FromWhere $right)
+    public function __construct(IProvideFromAndWhereSQLFragments $left, IProvideFromAndWhereSQLFragments $right)
     {
         $this->left  = $left;
         $this->right = $right;

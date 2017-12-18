@@ -21,7 +21,6 @@ namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 
 use Tracker_FormElement_Field;
 use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
-use Tuleap\Tracker\Report\Query\FromWhere;
 use Tuleap\Tracker\Report\Query\Advanced\FieldFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
@@ -33,6 +32,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\MySelfIsNotSupportedException;
+use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
 
 class DateTimeFieldFromWhereBuilder implements FieldFromWhereBuilder, ValueWrapperVisitor
 {
@@ -55,7 +55,7 @@ class DateTimeFieldFromWhereBuilder implements FieldFromWhereBuilder, ValueWrapp
     }
 
     /**
-     * @return FromWhere
+     * @return IProvideFromAndWhereSQLFragments
      */
     public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field)
     {

@@ -21,10 +21,10 @@ namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\GreaterThanOrEqualCo
 
 use CodendiDataAccess;
 use Tracker_FormElement_Field;
-use Tuleap\Tracker\Report\Query\FromWhere;
 use Tuleap\Tracker\Report\Query\Advanced\FieldFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereComparisonFieldBuilder;
+use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
 
 class ForInteger implements FieldFromWhereBuilder
 {
@@ -39,7 +39,7 @@ class ForInteger implements FieldFromWhereBuilder
     }
 
     /**
-     * @return FromWhere
+     * @return IProvideFromAndWhereSQLFragments
      */
     public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field)
     {

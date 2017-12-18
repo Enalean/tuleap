@@ -22,13 +22,13 @@ namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\EqualComparison;
 use CodendiDataAccess;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List;
-use Tuleap\Tracker\Report\Query\FromWhere;
 use Tuleap\Tracker\Report\Query\Advanced\FieldFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereComparisonListFieldBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereEmptyComparisonListFieldBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\ListBindStaticFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\QueryListFieldPresenter;
+use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
 
 class ForListBindStatic implements FieldFromWhereBuilder, ListBindStaticFromWhereBuilder
 {
@@ -50,7 +50,7 @@ class ForListBindStatic implements FieldFromWhereBuilder, ListBindStaticFromWher
     }
 
     /**
-     * @return FromWhere
+     * @return IProvideFromAndWhereSQLFragments
      */
     public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field)
     {
@@ -66,7 +66,7 @@ class ForListBindStatic implements FieldFromWhereBuilder, ListBindStaticFromWher
     }
 
     /**
-     * @return FromWhere
+     * @return IProvideFromAndWhereSQLFragments
      */
     private function getFromWhereForNonEmptyCondition(QueryListFieldPresenter $query_presenter, $value)
     {
@@ -79,7 +79,7 @@ class ForListBindStatic implements FieldFromWhereBuilder, ListBindStaticFromWher
     }
 
     /**
-     * @return FromWhere
+     * @return IProvideFromAndWhereSQLFragments
      */
     private function getFromWhereForEmptyCondition(QueryListFieldPresenter $query_presenter)
     {

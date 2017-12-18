@@ -32,6 +32,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\MetadataValueWrapperParameters;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
+use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
 
 class MetadataEqualComparisonFromWhereBuilder implements MetadataComparisonFromWhereBuilder, ValueWrapperVisitor
 {
@@ -100,7 +101,7 @@ class MetadataEqualComparisonFromWhereBuilder implements MetadataComparisonFromW
      * @param Comparison $comparison
      * @param            $value
      *
-     * @return FromWhere
+     * @return IProvideFromAndWhereSQLFragments
      */
     protected function searchComment(Comparison $comparison, $value)
     {

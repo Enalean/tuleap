@@ -1,6 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,39 +15,20 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace Tuleap\Tracker\Report\Query;
 
-class FromWhere implements IProvideFromAndWhereSQLFragments
+interface IProvideFromAndWhereSQLFragments
 {
-    /** @var string */
-    private $from;
-
-    /** @var string */
-    private $where;
-
-    public function __construct($from, $where)
-    {
-        $this->from  = $from;
-        $this->where = $where;
-    }
+    /**
+     * @return string
+     */
+    public function getFrom();
 
     /**
      * @return string
      */
-    public function getFrom()
-    {
-        return $this->from;
-    }
-
-    /**
-     * @return string
-     */
-    public function getWhere()
-    {
-        return $this->where;
-    }
+    public function getWhere();
 }

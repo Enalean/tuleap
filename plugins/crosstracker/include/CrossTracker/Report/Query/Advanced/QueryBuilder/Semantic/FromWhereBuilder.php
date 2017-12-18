@@ -22,12 +22,12 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Semantic;
 
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
-use Tuleap\Tracker\Report\Query\FromWhere;
+use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
 
 interface FromWhereBuilder
 {
     /**
-     * @return FromWhere
+     * @return IProvideFromAndWhereSQLFragments
      */
     public function getFromWhere(Metadata $metadata, Comparison $comparison);
 }
