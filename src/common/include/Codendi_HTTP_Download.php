@@ -18,7 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'Codendi_File.class.php';
 require_once('lib/PHP_BigFile.class.php');
 
 if (file_exists("/usr/share/pear/HTTP/Download.php")) {
@@ -50,7 +49,7 @@ class Codendi_HTTP_Download extends HTTP_Download {
     function setFile($file, $send_404 = true)
     {
         $file = realpath($file);
-        if (!Codendi_File::isFile($file)) {
+        if (! is_file($file)) {
             if ($send_404) {
                 $this->HTTP->sendStatusCode(404);
             }
@@ -61,7 +60,7 @@ class Codendi_HTTP_Download extends HTTP_Download {
         }
         $this->setLastModified(filemtime($file));
         $this->file = PHP_BigFile::stream($file);
-        $this->size = Codendi_File::getSize($file);
+        $this->size = filesize($file);
         return true;
     }   
 
