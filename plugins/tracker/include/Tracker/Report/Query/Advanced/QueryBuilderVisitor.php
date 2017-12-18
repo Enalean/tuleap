@@ -55,7 +55,8 @@ use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotEqualFieldComparisonVis
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotInFieldComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\SearchableVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\SearchableVisitorParameter;
-use Tuleap\Tracker\Report\Query\FromWhere;
+use Tuleap\Tracker\Report\Query\AndFromWhere;
+use Tuleap\Tracker\Report\Query\OrFromWhere;
 
 class QueryBuilderVisitor implements Visitor
 {
@@ -345,10 +346,7 @@ class QueryBuilderVisitor implements Visitor
 
         $from_where_tail = $tail->accept($this, $parameters);
 
-        return new FromWhere(
-            $from_where_expression->getFrom() . ' ' . $from_where_tail->getFrom(),
-            $from_where_expression->getWhere() . ' AND ' . $from_where_tail->getWhere()
-        );
+        return new AndFromWhere($from_where_expression, $from_where_tail);
     }
 
     private function buildOrClause(QueryBuilderParameters $parameters, $tail, $from_where_expression)
@@ -359,9 +357,6 @@ class QueryBuilderVisitor implements Visitor
 
         $from_where_tail = $tail->accept($this, $parameters);
 
-        return new FromWhere(
-            $from_where_expression->getFrom() . ' ' . $from_where_tail->getFrom(),
-            '(' . $from_where_expression->getWhere() . ' OR ' . $from_where_tail->getWhere() . ')'
-        );
+        return new OrFromWhere($from_where_expression, $from_where_tail);
     }
 }
