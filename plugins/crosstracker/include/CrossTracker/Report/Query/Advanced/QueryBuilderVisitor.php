@@ -23,6 +23,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\SearchableVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\SearchableVisitorParameters;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\SemanticEqualComparisonFromWhereBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\SemanticNotEqualComparisonFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenComparison;
@@ -47,13 +48,17 @@ class QueryBuilderVisitor implements Visitor
     private $equal_comparison_from_where_builder;
     /** @var SearchableVisitor */
     private $searchable_visitor;
+    /** @var SemanticNotEqualComparisonFromWhereBuilder */
+    private $not_equal_comparison_from_where_builder;
 
     public function __construct(
         SearchableVisitor $searchable_visitor,
-        SemanticEqualComparisonFromWhereBuilder $equal_comparison_from_where_builder
+        SemanticEqualComparisonFromWhereBuilder $equal_comparison_from_where_builder,
+        SemanticNotEqualComparisonFromWhereBuilder $not_equal_comparison_from_where_builder
     ) {
-        $this->searchable_visitor                  = $searchable_visitor;
-        $this->equal_comparison_from_where_builder = $equal_comparison_from_where_builder;
+        $this->searchable_visitor                      = $searchable_visitor;
+        $this->equal_comparison_from_where_builder     = $equal_comparison_from_where_builder;
+        $this->not_equal_comparison_from_where_builder = $not_equal_comparison_from_where_builder;
     }
 
     public function buildFromWhere(Visitable $parsed_query)
@@ -74,6 +79,13 @@ class QueryBuilderVisitor implements Visitor
 
     public function visitNotEqualComparison(NotEqualComparison $comparison, NoVisitorParameters $parameters)
     {
+        return $comparison->getSearchable()->accept(
+            $this->searchable_visitor,
+            new SearchableVisitorParameters(
+                $comparison,
+                $this->not_equal_comparison_from_where_builder
+            )
+        );
     }
 
     public function visitLesserThanComparison(LesserThanComparison $comparison, NoVisitorParameters $parameters)
