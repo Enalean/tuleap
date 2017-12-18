@@ -18,17 +18,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\TitleSemantic;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic;
 
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldException;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
-class TitleToMyselfComparisonException extends InvalidFieldException
+class ToFloatComparisonException extends InvalidSemanticComparisonException
 {
-    public function __construct()
+    public function __construct(Metadata $metadata, $value)
     {
-        $message = sprintf(
-            dgettext("tuleap-crosstracker", "@title cannot be compared to MYSELF().")
+        parent::__construct(
+            sprintf(
+                dgettext("tuleap-crosstracker", "%s cannot be compared to the float value '%s'."),
+                $metadata->getName(),
+                $value
+            )
         );
-        parent::__construct($message);
     }
 }

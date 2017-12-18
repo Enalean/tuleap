@@ -60,6 +60,6 @@ class SearchableVisitor implements Visitor
 
     public function visitMetaData(Metadata $metadata, SearchableVisitorParameter $parameters)
     {
-        return $parameters->getMetadataComparisonFromWhereBuilder()->getFromWhere($parameters->getComparison());
+        return $parameters->getMetadataComparisonFromWhereBuilder()->getFromWhere($metadata, $parameters->getComparison());
     }
 }

@@ -18,15 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Semantic;
 
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
-use Tuleap\Tracker\Report\Query\FromWhere;
-
-interface SemanticComparisonFromWhereBuilder
+class NotEqualComparisonFromWhereBuilder extends ComparisonFromWhereBuilder
 {
-    /**
-     * @return FromWhere
-     */
-    public function getFromWhere(Comparison $comparison);
 }

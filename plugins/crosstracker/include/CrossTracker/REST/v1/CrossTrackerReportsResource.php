@@ -33,12 +33,14 @@ use Tuleap\CrossTracker\CrossTrackerReportNotFoundException;
 use Tuleap\CrossTracker\Permission\CrossTrackerPermissionGate;
 use Tuleap\CrossTracker\Permission\CrossTrackerUnauthorizedException;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidComparisonCollectorVisitor;
-use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\TitleSemantic\ComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\ComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\CrossTrackerExpertQueryReportDao;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\SearchableVisitor;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\SemanticEqualComparisonFromWhereBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\SemanticNotEqualComparisonFromWhereBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Semantic\Title;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Semantic\Description;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Semantic\EqualComparisonFromWhereBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Semantic\NotEqualComparisonFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilderVisitor;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
@@ -124,8 +126,14 @@ class CrossTrackerReportsResource extends AuthenticatedResource
 
         $query_builder_visitor = new QueryBuilderVisitor(
             new SearchableVisitor(),
-            new SemanticEqualComparisonFromWhereBuilder(),
-            new SemanticNotEqualComparisonFromWhereBuilder()
+            new EqualComparisonFromWhereBuilder(
+                new Title\EqualComparisonFromWhereBuilder(),
+                new Description\EqualComparisonFromWhereBuilder()
+            ),
+            new NotEqualComparisonFromWhereBuilder(
+                new Title\NotEqualComparisonFromWhereBuilder(),
+                new Description\NotEqualComparisonFromWhereBuilder()
+            )
         );
 
         $this->cross_tracker_artifact_factory = new CrossTrackerArtifactReportFactory(

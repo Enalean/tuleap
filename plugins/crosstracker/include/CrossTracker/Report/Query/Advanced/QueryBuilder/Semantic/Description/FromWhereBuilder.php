@@ -18,17 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\TitleSemantic;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Semantic\Description;
 
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldException;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Semantic;
 
-class TitleToNowComparisonException extends InvalidFieldException
+interface FromWhereBuilder extends Semantic\FromWhereBuilder
 {
-    public function __construct()
-    {
-        $message = sprintf(
-            dgettext("tuleap-crosstracker", "@title cannot be compared to NOW().")
-        );
-        parent::__construct($message);
-    }
 }

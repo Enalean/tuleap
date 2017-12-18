@@ -18,15 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic;
 
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
-
-class MetadataInComparisonFromWhereBuilder implements MetadataComparisonFromWhereBuilder
+class InvalidSemanticComparisonException extends \Exception
 {
-    public function getFromWhere(Metadata $metadata, Comparison $comparison)
-    {
-        throw new \RuntimeException("Metadata is not supported here");
-    }
 }

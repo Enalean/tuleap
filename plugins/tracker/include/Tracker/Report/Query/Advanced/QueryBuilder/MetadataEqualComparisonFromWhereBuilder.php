@@ -21,6 +21,7 @@
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 
 use CodendiDataAccess;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Report\Query\FromWhere;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
@@ -34,9 +35,9 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 
 class MetadataEqualComparisonFromWhereBuilder implements MetadataComparisonFromWhereBuilder, ValueWrapperVisitor
 {
-    public function getFromWhere(Comparison $comparison)
+    public function getFromWhere(Metadata $metadata, Comparison $comparison)
     {
-        $value = $comparison->getValueWrapper()->accept($this, new MetadataValueWrapperParameters());
+        $value = $comparison->getValueWrapper()->accept($this, new MetadataValueWrapperParameters($metadata));
 
         if ($value === '') {
             return $this->searchArtifactsWithoutComment($comparison);

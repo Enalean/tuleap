@@ -18,32 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Semantic;
 
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Report\Query\FromWhere;
 
-class SemanticEqualComparisonFromWhereBuilder implements SemanticComparisonFromWhereBuilder
+interface FromWhereBuilder
 {
-    public function getFromWhere(Comparison $comparison)
-    {
-        $value = $comparison->getValueWrapper()->getValue();
-
-        if ($value === '') {
-            $matches_value = " = ''";
-        } else {
-            $matches_value = " LIKE " . $this->quoteLikeValueSurround($value);
-        }
-
-        $from = "";
-        $where = "changeset_value_title.changeset_id IS NOT NULL
-            AND tracker_changeset_value_title.value $matches_value";
-
-        return new FromWhere($from, $where);
-    }
-
-    private function quoteLikeValueSurround($value)
-    {
-        return \CodendiDataAccess::instance()->quoteLikeValueSurround($value);
-    }
+    /**
+     * @return FromWhere
+     */
+    public function getFromWhere(Metadata $metadata, Comparison $comparison);
 }

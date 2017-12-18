@@ -21,8 +21,14 @@
 namespace Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic;
 
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
 interface ICheckSemanticFieldForAComparison
 {
-    public function checkSemanticMetadataIsValid(Comparison $comparison);
+    /**
+     * @param Metadata $metadata
+     * @param Comparison $comparison
+     * @throws InvalidSemanticComparisonException
+     */
+    public function checkSemanticMetadataIsValid(Metadata $metadata, Comparison $comparison);
 }

@@ -20,26 +20,26 @@
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder;
 
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Semantic\FromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\VisitorParameters;
-use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\MetadataComparisonFromWhereBuilder;
 
 class SearchableVisitorParameters implements VisitorParameters
 {
     /** @var Comparison */
     private $comparison;
-    /** @var SemanticComparisonFromWhereBuilder */
+    /** @var FromWhereBuilder */
     private $from_where_builder;
 
     public function __construct(
         Comparison $comparison,
-        SemanticComparisonFromWhereBuilder $from_where_builder
+        FromWhereBuilder $from_where_builder
     ) {
         $this->comparison               = $comparison;
         $this->from_where_builder       = $from_where_builder;
     }
 
-    /** @return SemanticComparisonFromWhereBuilder */
+    /** @return FromWhereBuilder */
     public function getFromWhereBuilder()
     {
         return $this->from_where_builder;
