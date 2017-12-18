@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once('common/dao/UGroupDao.class.php');
 
 /**
  * Manage values in changeset for date fields
@@ -139,12 +138,10 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
     /**
      * Returns diff between current perms and perms in param
      *
-     * @param Tracker_Artifact_ChangesetValue_PermissionsOnArtifact $changeset_value the changeset value to compare
-     * @param PFUser                          $user            The user or null
-     *
      * @return string The difference between another $changeset_value, false if no differneces
      */
-    public function diff($changeset_value, $format = 'html', PFUser $user = null) {
+    public function diff($changeset_value, $format = 'html', PFUser $user = null, $ignore_perms = false)
+    {
         $previous = $changeset_value->getPerms();
         $next = $this->getPerms();
         $changes = false;

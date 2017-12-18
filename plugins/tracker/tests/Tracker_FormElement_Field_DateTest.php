@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -507,7 +507,7 @@ class Tracker_FormElement_Field_DateTest extends TuleapTestCase {
         $user = mock('PFUser');
         $artifact = new MockTracker_Artifact();
         $date = new Tracker_FormElement_Field_DateTestVersion();
-        $this->assertEqual('-', $date->fetchMailArtifactValue($artifact, $user, null, null));
+        $this->assertEqual('-', $date->fetchMailArtifactValue($artifact, $user, false, null, null));
     }
 
     function testFieldDateShouldSendAMailWithAReadableDate_EnUS() {
@@ -527,8 +527,8 @@ class Tracker_FormElement_Field_DateTest extends TuleapTestCase {
         $value = new MockTracker_Artifact_ChangesetValue_Date();
         $value->setReturnValue('getTimestamp', 1322752769);
 
-        $this->assertEqual('2011-12-01', $date->fetchMailArtifactValue($artifact, $user, $value, 'text'));
-        $this->assertEqual('2011-12-01', $date->fetchMailArtifactValue($artifact, $user, $value, 'html'));
+        $this->assertEqual('2011-12-01', $date->fetchMailArtifactValue($artifact, $user, false, $value, 'text'));
+        $this->assertEqual('2011-12-01', $date->fetchMailArtifactValue($artifact, $user, false, $value, 'html'));
     }
 
     function testFieldDateShouldSendAMailWithAReadableDate_frFR() {
@@ -548,8 +548,8 @@ class Tracker_FormElement_Field_DateTest extends TuleapTestCase {
         $value = new MockTracker_Artifact_ChangesetValue_Date();
         $value->setReturnValue('getTimestamp', 1322752769);
 
-        $this->assertEqual('01/12/2011', $date->fetchMailArtifactValue($artifact, $user, $value, 'text'));
-        $this->assertEqual('01/12/2011', $date->fetchMailArtifactValue($artifact, $user, $value, 'html'));
+        $this->assertEqual('01/12/2011', $date->fetchMailArtifactValue($artifact, $user, false, $value, 'text'));
+        $this->assertEqual('01/12/2011', $date->fetchMailArtifactValue($artifact, $user, false, $value, 'html'));
     }
 
     function testFieldDateShouldSendEmptyMailWhenThereIsNoDateDefined() {
@@ -561,8 +561,8 @@ class Tracker_FormElement_Field_DateTest extends TuleapTestCase {
         $value = new MockTracker_Artifact_ChangesetValue_Date();
         $value->setReturnValue('getTimestamp', 0);
 
-        $this->assertEqual('-', $date->fetchMailArtifactValue($artifact, $user, $value, 'text'));
-        $this->assertEqual('-', $date->fetchMailArtifactValue($artifact, $user, $value, 'html'));
+        $this->assertEqual('-', $date->fetchMailArtifactValue($artifact, $user, false, $value, 'text'));
+        $this->assertEqual('-', $date->fetchMailArtifactValue($artifact, $user, false, $value, 'html'));
     }
 }
 

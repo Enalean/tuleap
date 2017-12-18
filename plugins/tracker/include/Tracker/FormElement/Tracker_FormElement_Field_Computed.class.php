@@ -431,6 +431,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
      *
      * @param Tracker_Artifact                $artifact         The artifact
      * @param PFUser                          $user             The user who will receive the email
+     * @param boolean                         $ignore_perms
      * @param Tracker_Artifact_ChangesetValue $value            The actual value of the field
      * @param string                          $format           output format
      *
@@ -439,6 +440,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     public function fetchMailArtifactValue(
         Tracker_Artifact $artifact,
         PFUser $user,
+        $ignore_perms,
         Tracker_Artifact_ChangesetValue $value = null,
         $format = 'text'
     ) {

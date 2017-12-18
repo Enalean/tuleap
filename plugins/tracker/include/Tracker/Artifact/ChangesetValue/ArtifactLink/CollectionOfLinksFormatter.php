@@ -31,12 +31,12 @@ class CollectionOfLinksFormatter
      *
      * @return string
      */
-    public function format(array $list_of_artifactlinkinfo, PFUser $user, $format)
+    public function format(array $list_of_artifactlinkinfo, PFUser $user, $format, $ignore_perms)
     {
         $formatted_links_user_can_see = array();
 
         foreach ($list_of_artifactlinkinfo as $link) {
-            if (! $link->userCanView($user)) {
+            if (! $link->userCanView($user) && ! $ignore_perms) {
                 continue;
             }
 

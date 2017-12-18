@@ -21,6 +21,8 @@
 
 use Tuleap\Tracker\Artifact\Changeset\Notification\Notifier;
 
+require_once('utils.php');
+
 class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
     const FIELDS_ALL      = 'all';
     const FIELDS_COMMENTS = 'comments';
@@ -642,7 +644,14 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
                 $artifact_id  = $this->getArtifact()->getId();
                 $changeset_id = $this->getId();
 
-                $diff = $current_changeset_value->mailDiff($previous_changeset_value, $format, $user, $artifact_id, $changeset_id);
+                $diff = $current_changeset_value->mailDiff(
+                    $previous_changeset_value,
+                    $artifact_id,
+                    $changeset_id,
+                    $ignore_perms,
+                    $format,
+                    $user
+                );
             } elseif ($for_modal) {
                 $diff = $current_changeset_value->modalDiff($previous_changeset_value, $format, $user);
             } else {

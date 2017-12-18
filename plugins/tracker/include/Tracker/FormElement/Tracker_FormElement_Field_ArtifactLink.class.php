@@ -1156,6 +1156,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
      *
      * @param Tracker_Artifact                $artifact         The artifact
      * @param PFUser                          $user             The user who will receive the email
+     * @param boolean                         $ignore_perms
      * @param Tracker_Artifact_ChangesetValue $value            The actual value of the field
      * @param array                           $submitted_values The value already submitted by the user
      *
@@ -1164,8 +1165,9 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     public function fetchMailArtifactValue(
         Tracker_Artifact $artifact,
         PFUser $user,
+        $ignore_perms,
         Tracker_Artifact_ChangesetValue $value = null,
-        $format='text'
+        $format = 'text'
     ) {
         if ( empty($value) || !$value->getValue()) {
             return '-';
@@ -1176,7 +1178,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
                 $artifactlink_infos = $value->getValue();
                 $url = array();
                 foreach ($artifactlink_infos as $artifactlink_info) {
-                    if ($artifactlink_info->userCanView($user)) {
+                    if ($ignore_perms || $artifactlink_info->userCanView($user)) {
                         $url[] = $artifactlink_info->getLink();
                     }
                 }
@@ -1185,7 +1187,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
                 $output = PHP_EOL;
                 $artifactlink_infos = $value->getValue();
                 foreach ($artifactlink_infos as $artifactlink_info) {
-                    if ($artifactlink_info->userCanView($user)) {
+                    if ($ignore_perms || $artifactlink_info->userCanView($user)) {
                         $output .= $artifactlink_info->getLabel();
                         $output .= PHP_EOL;
                     }

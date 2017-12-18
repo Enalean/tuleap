@@ -49,7 +49,7 @@ class RemovedLinkCollection implements ICollectChangeOfLinksBetweenTwoChangesets
     /**
      * @return string
      */
-    public function fetchFormatted(PFUser $user, $format)
+    public function fetchFormatted(PFUser $user, $format, $ignore_perms)
     {
         if (! $this->removed) {
             return '';
@@ -58,7 +58,7 @@ class RemovedLinkCollection implements ICollectChangeOfLinksBetweenTwoChangesets
         return $GLOBALS['Language']->getText(
             'plugin_tracker',
             'artlink_removed',
-            $this->formatter->format($this->removed, $user, $format)
+            $this->formatter->format($this->removed, $user, $format, $ignore_perms)
         );
     }
 }

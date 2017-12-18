@@ -196,12 +196,19 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
      *
      * @param Tracker_Artifact                $artifact         The artifact
      * @param PFUser                          $user             The user who will receive the email
+     * @param boolean                         $ignore_perms
      * @param Tracker_Artifact_ChangesetValue $value            The actual value of the field
      * @param string                          $format           output format
      *
      * @return string
      */
-    public function fetchMailArtifactValue(Tracker_Artifact $artifact, PFUser $user, Tracker_Artifact_ChangesetValue $value = null, $format='text') {
+    public function fetchMailArtifactValue(
+        Tracker_Artifact $artifact,
+        PFUser $user,
+        $ignore_perms,
+        Tracker_Artifact_ChangesetValue $value = null,
+        $format = 'text'
+    ) {
         if ( empty($value) || ! $value->getListValues()) {
             return '-';
         }

@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -207,20 +207,23 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
         return false;
     }
 
-    public function mailDiff($changeset_value, $format = 'html', PFUser $user = null, $artifact_id, $changeset_id)
-    {
+    public function mailDiff(
+        $changeset_value,
+        $artifact_id,
+        $changeset_id,
+        $ignore_perms,
+        $format = 'html',
+        PFUser $user = null
+    ) {
         return $this->formatDiff($changeset_value, $format, true);
     }
 
     /**
      * Returns a diff between this changeset value and the one passed in param
      *
-     * @param Tracker_Artifact_ChangesetValue_File $changeset_value the changeset value to compare
-     * @param PFUser                          $user            The user or null
-     *
      * @return string The difference between another $changeset_value, false if no differneces
      */
-    public function diff($changeset_value, $format = 'html', PFUser $user = null)
+    public function diff($changeset_value, $format = 'html', PFUser $user = null, $ignore_perms = false)
     {
         return $this->formatDiff($changeset_value, $format, false);
     }

@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once('common/include/Codendi_HTMLPurifier.class.php');
 require_once 'common/encoding/SupportedXmlCharEncoding.class.php';
 
 /**
@@ -134,12 +133,10 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
     /**
      * Get the diff between this changeset value and the one passed in param
      *
-     * @param Tracker_Artifact_ChangesetValue_Text $changeset_value the changeset value to compare
-     * @param PFUser                          $user            The user or null
-     *
      * @return string The difference between another $changeset_value, false if no differences
      */
-    public function diff($changeset_value, $format = 'html', PFUser $user = null) {
+    public function diff($changeset_value, $format = 'html', PFUser $user = null, $ignore_perms = false)
+    {
         $previous_text = $changeset_value->getText();
         $next_text     = $this->getText();
         if (strlen($previous_text) > self::$MAX_LENGTH_FOR_DIFF || strlen($next_text) > self::$MAX_LENGTH_FOR_DIFF) {
@@ -155,7 +152,14 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
         return $this->diff($changeset_value, 'modal', $user);
     }
 
-    public function mailDiff($changeset_value, $format = 'html', PFUser $user = null, $artifact_id, $changeset_id) {
+    public function mailDiff(
+        $changeset_value,
+        $artifact_id,
+        $changeset_id,
+        $ignore_perms,
+        $format = 'html',
+        PFUser $user = null
+    ) {
         $previous = explode(PHP_EOL, $changeset_value->getText());
         $next     = explode(PHP_EOL, $this->getText());
         $string   = '';

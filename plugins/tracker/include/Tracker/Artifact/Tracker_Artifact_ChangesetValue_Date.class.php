@@ -110,12 +110,10 @@ class Tracker_Artifact_ChangesetValue_Date extends Tracker_Artifact_ChangesetVal
     /**
      * Returns diff between current date and date in param
      *
-     * @param Tracker_Artifact_ChangesetValue_Date $changeset_value the changeset value to compare
-     * @param PFUser                          $user            The user or null
-     *
      * @return string The difference between another $changeset_value, false if no differneces
      */
-    public function diff($changeset_value, $format = 'html', PFUser $user = null) {
+    public function diff($changeset_value, $format = 'html', PFUser $user = null, $ignore_perms = false)
+    {
         $next_date     = $this->getDate();
         if ($changeset_value->getTimestamp() != 0) {
             $previous_date = $changeset_value->getDate();
