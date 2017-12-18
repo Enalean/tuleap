@@ -37,6 +37,16 @@ class UserPermissionsDao extends DataAccessObject
         $this->enableExceptionsOnError();
     }
 
+    public function isUserPartOfProjectMembers($project_id, $user_id)
+    {
+        $project_id = $this->da->escapeInt($project_id);
+        $user_id    = $this->da->escapeInt($user_id);
+
+        $sql = "SELECT NULL FROM user_group WHERE group_id = $project_id AND user_id = $user_id";
+
+        return count($this->retrieve($sql)) > 0;
+    }
+
     public function addUserAsProjectAdmin($project_id, $user_id)
     {
         $project_id = $this->da->escapeInt($project_id);
@@ -62,6 +72,20 @@ class UserPermissionsDao extends DataAccessObject
                   AND user_id = $user_id";
 
         return $this->update($sql);
+    }
+
+    public function isUserPartOfProjectAdmins($project_id, $user_id)
+    {
+        $project_id = $this->da->escapeInt($project_id);
+        $user_id    = $this->da->escapeInt($user_id);
+        $admin_flag = $this->da->quoteSmart(self::PROJECT_ADMIN_FLAG);
+
+
+        $sql = "SELECT NULL
+                FROM user_group
+                WHERE group_id = $project_id AND user_id = $user_id AND admin_flags = $admin_flag";
+
+        return count($this->retrieve($sql)) > 0;
     }
 
     public function addUserAsWikiAdmin($project_id, $user_id)
@@ -91,6 +115,20 @@ class UserPermissionsDao extends DataAccessObject
         return $this->update($sql);
     }
 
+    public function isUserPartOfWikiAdmins($project_id, $user_id)
+    {
+        $project_id = $this->da->escapeInt($project_id);
+        $user_id    = $this->da->escapeInt($user_id);
+        $admin_flag = $this->da->escapeInt(self::WIKI_ADMIN_FLAG);
+
+
+        $sql = "SELECT NULL
+                FROM user_group
+                WHERE group_id = $project_id AND user_id = $user_id AND wiki_flags = $admin_flag";
+
+        return count($this->retrieve($sql)) > 0;
+    }
+
     public function addUserAsForumAdmin($project_id, $user_id)
     {
         $project_id = $this->da->escapeInt($project_id);
@@ -118,11 +156,25 @@ class UserPermissionsDao extends DataAccessObject
         return $this->update($sql);
     }
 
+    public function isUserPartOfForumAdmins($project_id, $user_id)
+    {
+        $project_id = $this->da->escapeInt($project_id);
+        $user_id    = $this->da->escapeInt($user_id);
+        $admin_flag = $this->da->escapeInt(self::FORUM_ADMIN_FLAG);
+
+
+        $sql = "SELECT NULL
+                FROM user_group
+                WHERE group_id = $project_id AND user_id = $user_id AND forum_flags = $admin_flag";
+
+        return count($this->retrieve($sql)) > 0;
+    }
+
     public function addUserAsNewsEditor($project_id, $user_id)
     {
         $project_id = $this->da->escapeInt($project_id);
         $user_id    = $this->da->escapeInt($user_id);
-        $news_flag = $this->da->escapeInt(self::NEWS_WRITER_FLAG);
+        $news_flag  = $this->da->escapeInt(self::NEWS_WRITER_FLAG);
 
         $sql = "UPDATE user_group
                 SET news_flags = $news_flag
@@ -144,6 +196,21 @@ class UserPermissionsDao extends DataAccessObject
 
         return $this->update($sql);
     }
+
+    public function isUserPartOfNewsEditors($project_id, $user_id)
+    {
+        $project_id = $this->da->escapeInt($project_id);
+        $user_id    = $this->da->escapeInt($user_id);
+        $news_flag  = $this->da->escapeInt(self::NEWS_WRITER_FLAG);
+
+
+        $sql = "SELECT NULL
+                FROM user_group
+                WHERE group_id = $project_id AND user_id = $user_id AND news_flags = $news_flag";
+
+        return count($this->retrieve($sql)) > 0;
+    }
+
     public function addUserAsNewsAdmin($project_id, $user_id)
     {
         $project_id = $this->da->escapeInt($project_id);
@@ -170,5 +237,19 @@ class UserPermissionsDao extends DataAccessObject
                   AND user_id = $user_id";
 
         return $this->update($sql);
+    }
+
+    public function isUserPartOfNewsAdmins($project_id, $user_id)
+    {
+        $project_id = $this->da->escapeInt($project_id);
+        $user_id    = $this->da->escapeInt($user_id);
+        $news_flag  = $this->da->escapeInt(self::NEWS_ADMIN_FLAG);
+
+
+        $sql = "SELECT NULL
+                FROM user_group
+                WHERE group_id = $project_id AND user_id = $user_id AND news_flags = $news_flag";
+
+        return count($this->retrieve($sql)) > 0;
     }
 }

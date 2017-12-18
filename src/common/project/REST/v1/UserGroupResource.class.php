@@ -23,8 +23,10 @@ use Luracast\Restler\RestException;
 use PFUser;
 use ProjectManager;
 use ProjectUGroup;
+use Tuleap\Project\Admin\ProjectUGroup\UserIsUGroupMemberChecker;
 use Tuleap\Project\REST\UserGroupRepresentation;
 use Tuleap\Project\REST\UserGroupRetriever;
+use Tuleap\Project\UserPermissionsDao;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\JsonDecoder;
@@ -49,6 +51,10 @@ class UserGroupResource extends AuthenticatedResource {
     const LDAP_ID_ID  = 'ldap_id';
 
     /**
+     * @var UserIsUGroupMemberChecker
+     */
+    private $ugroup_member_checker;
+    /**
      * @var QueryParameterParser
      */
     private $query_parser;
@@ -68,11 +74,15 @@ class UserGroupResource extends AuthenticatedResource {
     private $project_manager;
 
     public function __construct() {
-        $this->ugroup_manager       = new UGroupManager();
-        $this->user_manager         = UserManager::instance();
-        $this->project_manager      = ProjectManager::instance();
-        $this->user_group_retriever = new UserGroupRetriever($this->ugroup_manager);
-        $this->query_parser         = new QueryParameterParser(new JsonDecoder());
+        $this->ugroup_manager        = new UGroupManager();
+        $this->user_manager          = UserManager::instance();
+        $this->project_manager       = ProjectManager::instance();
+        $this->user_group_retriever  = new UserGroupRetriever($this->ugroup_manager);
+        $this->query_parser          = new QueryParameterParser(new JsonDecoder());
+        $this->ugroup_member_checker = new UserIsUGroupMemberChecker(
+            new UserPermissionsDao(),
+            new \User_ForgeUserGroupUsersDao()
+        );
     }
 
     /**
@@ -466,7 +476,7 @@ class UserGroupResource extends AuthenticatedResource {
             throw new RestException(400, 'Unable to find user');
         }
 
-        if ($user->isMember($ugroup->getProjectId())) {
+        if ($this->ugroup_member_checker->isUserPartOfUgroupMembers($ugroup->getProject(), $ugroup, $user)) {
             return $this->getUserRepresentation($user);
         }
 

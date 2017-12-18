@@ -124,7 +124,7 @@ class DynamicUGroupMembersUpdater
 
     private function ensureUserIsProjectMember(Project $project, PFUser $user)
     {
-        if (! $user->isMember($project->getID())) {
+        if (! $this->user_permissions_dao->isUserPartOfProjectMembers($project->getID(), $user->getId())) {
             account_add_user_to_group($project->getID(), $user->getUserName());
             $this->ugroup_binding->reloadUgroupBindingInProject($project);
         }
