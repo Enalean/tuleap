@@ -67,7 +67,8 @@ class CrossTrackerTest extends RestBase
     public function testPut()
     {
         $params   = array(
-            "trackers_id" => array($this->epic_tracker_id)
+            "trackers_id"  => array($this->epic_tracker_id),
+            "expert_query" => ""
         );
         $response = $this->getResponse($this->client->put('cross_tracker_reports/1', null, $params));
 

@@ -20,6 +20,7 @@
 
 namespace Tuleap\CrossTracker\REST\v1;
 
+use Exception;
 use Luracast\Restler\RestException;
 use PFUser;
 use ProjectManager;
@@ -112,7 +113,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
 
         $parser = new ParserCacheProxy(new Parser());
 
-        $validator = new ExpertQueryValidator(
+        $this->validator = new ExpertQueryValidator(
             $parser,
             new SizeValidatorVisitor($report_config->getExpertQueryLimit()),
             new InvalidComparisonCollectorVisitor(
@@ -130,7 +131,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
         $this->cross_tracker_artifact_factory = new CrossTrackerArtifactReportFactory(
             new CrossTrackerArtifactReportDao(),
             \Tracker_ArtifactFactory::instance(),
-            $validator,
+            $this->validator,
             $query_builder_visitor,
             $parser,
             new CrossTrackerExpertQueryReportDao()
@@ -265,7 +266,8 @@ class CrossTrackerReportsResource extends AuthenticatedResource
      * <br>
      * <pre>
      * {<br>
-     *   &nbsp;"trackers_id": [1, 2, 3]<br>
+     *   &nbsp;"trackers_id": [1, 2, 3],<br>
+     *   &nbsp;"expert_query": ""<br>
      * }<br>
      * </pre>
      *
@@ -273,6 +275,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
      *
      * @param int $id Id of the report
      * @param array {@max 10}  $trackers_id  Tracker id to link to report
+     * @param string           $expert_query The TQL query saved with the report
      *
      * @status 201
      * @access hybrid
@@ -282,19 +285,21 @@ class CrossTrackerReportsResource extends AuthenticatedResource
      * @throws 400
      * @throws 404
      */
-    protected function put($id, array $trackers_id)
+    protected function put($id, array $trackers_id, $expert_query = "")
     {
         $this->sendAllowHeaders();
 
         $current_user = $this->user_manager->getCurrentUser();
         try {
+            $this->checkQueryIsValid($expert_query);
+
             $report          = $this->getReport($id);
             $trackers        = $this->cross_tracker_extractor->extractTrackers($trackers_id);
-            $expected_report = new CrossTrackerReport($report->getId(), $report->getExpertQuery(), $trackers);
+            $expected_report = new CrossTrackerReport($report->getId(), $expert_query, $trackers);
 
             $this->checkUserIsAllowedToSeeReport($current_user, $expected_report);
 
-            $this->cross_tracker_dao->updateReport($id, $trackers);
+            $this->cross_tracker_dao->updateReport($id, $trackers, $expert_query);
         } catch (CrossTrackerReportNotFoundException $exception) {
             throw new RestException(404, "Report $id not found");
         } catch (TrackerNotFoundException $exception) {
@@ -304,6 +309,27 @@ class CrossTrackerReportsResource extends AuthenticatedResource
         }
 
         return $this->getReportRepresentation($expected_report);
+    }
+
+    private function checkQueryIsValid($expert_query)
+    {
+        if ($expert_query === '') {
+            return;
+        }
+
+        try {
+            $this->validator->validateExpertQuery($expert_query);
+        } catch (SearchablesDoNotExistException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        } catch (SearchablesAreInvalidException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        } catch (SyntaxError $exception) {
+            throw new RestException(400, $exception->getMessage());
+        } catch (LimitSizeIsExceededException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        } catch (Exception $exception) {
+            throw new RestException(400, $exception->getMessage());
+        }
     }
 
     private function sendAllowHeaders()
