@@ -17,12 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-export {
-    TQL_simple_mode_definition,
-    TQL_autocomplete_keywords
-};
-
-const TQL_simple_mode_definition = {
+const TQL_mode_definition = {
     start: [
         {
             regex: /"(?:[^\\]|\\.)*?(?:"|$)/, // double quotes
@@ -45,7 +40,7 @@ const TQL_simple_mode_definition = {
             token: "keyword"
         },
         {
-            regex: /(?:now|between|in|not|myself|@comments)\b/i,
+            regex: /(?:now|between|in|not|myself)\b/i,
             token: "variable-2"
         },
         {
@@ -61,13 +56,27 @@ const TQL_simple_mode_definition = {
             regex: /[)]/,
             token: "operator",
             dedent: true
-        },
-        {
-            regex: /[a-zA-Z0-9_]+/,
-            token: "variable"
         }
     ]
 };
+
+const variable_definition = {
+    regex: /@?[a-zA-Z0-9_]+/,
+    token: "variable"
+};
+
+function buildModeDefinition({ additional_keywords = []}) {
+    if (additional_keywords.length > 0) {
+        const keywords_regex                 = additional_keywords.join('|');
+        const additional_keywords_definition = {
+            regex: new RegExp('(?:' + keywords_regex + ')\\b', 'i'),
+            token: 'variable-2'
+        };
+        TQL_mode_definition.start.push(additional_keywords_definition);
+    }
+    TQL_mode_definition.start.push(variable_definition);
+    return TQL_mode_definition;
+}
 
 const TQL_autocomplete_keywords = [
     'AND',
@@ -79,3 +88,8 @@ const TQL_autocomplete_keywords = [
     'MYSELF()',
     '@comments'
 ];
+
+export {
+    buildModeDefinition,
+    TQL_autocomplete_keywords
+};

@@ -13,6 +13,9 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
+msgid "Description"
+msgstr ""
+
 msgid "Error while fetching the cross tracker report"
 msgstr ""
 
@@ -67,16 +70,16 @@ msgstr ""
 msgid "Submitted by"
 msgstr ""
 
-msgid ""
-"The query edition is under construction. The value you submit is not yet "
-"taken into account"
-msgstr ""
-
-msgid "Title (Semantic)"
+msgid "Title"
 msgstr ""
 
 msgid "Tracker"
 msgstr ""
 
 msgid "Tracker selection is limited to 10 trackers"
+msgstr ""
+
+msgid ""
+"You can use: AND, OR, parenthesis. Autocomplete is activated with Ctrl + "
+"Space."
 msgstr ""

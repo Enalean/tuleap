@@ -33,6 +33,7 @@
     "po-gettext-loader": "^0.1.1",
     "raw-loader": "^0.5.1",
     "vue-loader": "^13.4.0",
+    "vue-loader-options-plugin": "^0.1.0",
     "vue-template-compiler": "^2.5.9",
     "webpack": "^3.8.1",
     "webpack-assets-manifest": "^1.0.0"

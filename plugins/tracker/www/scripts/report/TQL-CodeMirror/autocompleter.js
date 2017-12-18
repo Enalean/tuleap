@@ -24,12 +24,16 @@ export { getHint };
 function getHint(editor, options) {
     const cursor = editor.getCursor(), token  = editor.getTokenAt(cursor);
 
-    if (token.type === null || token.type === 'variable') {
-        return getFieldNamesHint(editor, options, cursor, token);
+    if (isAutocompletable(token)) {
+        return getAutocompletableHint(editor, options, cursor, token);
     }
 }
 
-function getFieldNamesHint(editor, options, cursor, token) {
+function isAutocompletable(token) {
+    return (token.type === null || token.type === 'variable');
+}
+
+function getAutocompletableHint(editor, options, cursor, token) {
     const start = getStartOfToken(editor);
     const end   = cursor.ch;
     const from  = CodeMirror.Pos(cursor.line, start);
