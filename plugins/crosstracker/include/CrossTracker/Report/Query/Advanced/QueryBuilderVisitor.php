@@ -40,7 +40,8 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitable;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitor;
-use Tuleap\Tracker\Report\Query\FromWhere;
+use Tuleap\Tracker\Report\Query\AndFromWhere;
+use Tuleap\Tracker\Report\Query\OrFromWhere;
 
 class QueryBuilderVisitor implements Visitor
 {
@@ -160,10 +161,7 @@ class QueryBuilderVisitor implements Visitor
 
         $from_where_tail = $tail->accept($this, $parameters);
 
-        return new FromWhere(
-            $from_where_expression->getFrom() . ' ' . $from_where_tail->getFrom(),
-            $from_where_expression->getWhere() . ' AND ' . $from_where_tail->getWhere()
-        );
+        return new AndFromWhere($from_where_expression, $from_where_tail);
     }
 
     private function buildOrClause(NoVisitorParameters $parameters, $tail, $from_where_expression)
@@ -174,9 +172,6 @@ class QueryBuilderVisitor implements Visitor
 
         $from_where_tail = $tail->accept($this, $parameters);
 
-        return new FromWhere(
-            $from_where_expression->getFrom() . ' ' . $from_where_tail->getFrom(),
-            '(' . $from_where_expression->getWhere() . ' OR ' . $from_where_tail->getWhere() . ')'
-        );
+        return new OrFromWhere($from_where_expression, $from_where_tail);
     }
 }

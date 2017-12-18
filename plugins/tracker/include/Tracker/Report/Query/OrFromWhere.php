@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,18 +19,21 @@
 
 namespace Tuleap\Tracker\Report\Query;
 
-class FromWhere
+class OrFromWhere extends FromWhere
 {
-    /** @var string */
-    private $from;
+    /**
+     * @var FromWhere
+     */
+    private $left;
+    /**
+     * @var FromWhere
+     */
+    private $right;
 
-    /** @var string */
-    private $where;
-
-    public function __construct($from, $where)
+    public function __construct(FromWhere $left, FromWhere $right)
     {
-        $this->from  = $from;
-        $this->where = $where;
+        $this->left  = $left;
+        $this->right = $right;
     }
 
     /**
@@ -38,7 +41,7 @@ class FromWhere
      */
     public function getFrom()
     {
-        return $this->from;
+        return $this->left->getFrom() . ' ' . $this->right->getFrom();
     }
 
     /**
@@ -46,6 +49,6 @@ class FromWhere
      */
     public function getWhere()
     {
-        return $this->where;
+        return '(' . $this->left->getWhere() . ' OR ' . $this->right->getWhere() . ')';
     }
 }
