@@ -21,9 +21,9 @@ namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 
 use Tracker_FormElement_Field;
 use Tuleap\Tracker\Report\Query\Advanced\CollectionOfListValuesExtractor;
-use Tuleap\Tracker\Report\Query\FromWhere;
 use Tuleap\Tracker\Report\Query\Advanced\FieldFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
+use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
 
 class ListReadOnlyFieldFromWhereBuilder implements FieldFromWhereBuilder
 {
@@ -53,7 +53,7 @@ class ListReadOnlyFieldFromWhereBuilder implements FieldFromWhereBuilder
     }
 
     /**
-     * @return FromWhere
+     * @return IProvideFromAndWhereSQLFragments
      */
     public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field)
     {

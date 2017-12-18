@@ -21,7 +21,7 @@
 namespace Tuleap\Tracker\REST\v1;
 
 use Tracker_Report;
-use Tuleap\Tracker\Report\Query\FromWhere;
+use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
 
 class ReportArtifactFactory
 {
@@ -34,14 +34,14 @@ class ReportArtifactFactory
 
     /**
      * @param Tracker_Report $report
-     * @param FromWhere $additional_from_where
+     * @param IProvideFromAndWhereSQLFragments $additional_from_where
      * @param int $limit
      * @param int $offset
      * @return ArtifactMatchingReportCollection
      */
     public function getArtifactsMatchingReportWithAdditionalFromWhere(
         Tracker_Report $report,
-        FromWhere $additional_from_where,
+        IProvideFromAndWhereSQLFragments $additional_from_where,
         $limit,
         $offset
     ) {

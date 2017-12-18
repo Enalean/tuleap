@@ -21,17 +21,17 @@
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder;
 
 use DataAccessObject;
-use Tuleap\Tracker\Report\Query\FromWhere;
+use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
 
 class CrossTrackerExpertQueryReportDao extends DataAccessObject
 {
     public function searchArtifactsMatchingQuery(
-        FromWhere $from_where,
+        IProvideFromAndWhereSQLFragments $from_where,
         array $tracker_ids,
         $limit,
         $offset
     ) {
-        $from = $from_where->getFrom();
+        $from  = $from_where->getFrom();
         $where = $from_where->getWhere();
 
         $tracker_ids = $this->da->escapeIntImplode($tracker_ids);

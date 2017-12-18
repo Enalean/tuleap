@@ -23,13 +23,13 @@ use CodendiDataAccess;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List;
 use Tuleap\Tracker\Report\Query\Advanced\CollectionOfListValuesExtractor;
-use Tuleap\Tracker\Report\Query\FromWhere;
 use Tuleap\Tracker\Report\Query\Advanced\FieldFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereEmptyNotEqualComparisonFieldBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereNotEqualComparisonListFieldBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\ListBindUsersFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\QueryListFieldPresenter;
+use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
 
 class ForListBindUsers implements FieldFromWhereBuilder, ListBindUsersFromWhereBuilder
 {
@@ -70,7 +70,7 @@ class ForListBindUsers implements FieldFromWhereBuilder, ListBindUsersFromWhereB
     }
 
     /**
-     * @return FromWhere
+     * @return IProvideFromAndWhereSQLFragments
      */
     private function getFromWhereForNonEmptyCondition(QueryListFieldPresenter $query_presenter, $value)
     {
@@ -84,7 +84,7 @@ class ForListBindUsers implements FieldFromWhereBuilder, ListBindUsersFromWhereB
     }
 
     /**
-     * @return FromWhere
+     * @return IProvideFromAndWhereSQLFragments
      */
     private function getFromWhereForEmptyCondition(QueryListFieldPresenter $query_presenter)
     {

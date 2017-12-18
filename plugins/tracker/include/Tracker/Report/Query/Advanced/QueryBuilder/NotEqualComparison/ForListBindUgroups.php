@@ -24,7 +24,6 @@ use CodendiDataAccess;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List;
 use Tuleap\Tracker\Report\Query\Advanced\CollectionOfListValuesExtractor;
-use Tuleap\Tracker\Report\Query\FromWhere;
 use Tuleap\Tracker\Report\Query\Advanced\FieldFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereEmptyNotEqualComparisonFieldBuilder;
@@ -32,6 +31,7 @@ use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereNotEqualCompariso
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\ListBindUgroupsFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\QueryListFieldPresenter;
 use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
+use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
 
 class ForListBindUgroups implements FieldFromWhereBuilder, ListBindUgroupsFromWhereBuilder
 {
@@ -92,7 +92,7 @@ class ForListBindUgroups implements FieldFromWhereBuilder, ListBindUgroupsFromWh
     }
 
     /**
-     * @return FromWhere
+     * @return IProvideFromAndWhereSQLFragments
      */
     private function getFromWhereForEmptyCondition(QueryListFieldPresenter $query_presenter)
     {

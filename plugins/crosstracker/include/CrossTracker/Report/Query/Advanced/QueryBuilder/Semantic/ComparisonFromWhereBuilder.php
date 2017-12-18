@@ -24,6 +24,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\AllowedMetadata;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Report\Query\FromWhere;
+use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
 
 abstract class ComparisonFromWhereBuilder implements FromWhereBuilder
 {
@@ -45,7 +46,7 @@ abstract class ComparisonFromWhereBuilder implements FromWhereBuilder
     }
 
     /**
-     * @return FromWhere
+     * @return IProvideFromAndWhereSQLFragments
      */
     public function getFromWhere(Metadata $metadata, Comparison $comparison)
     {
