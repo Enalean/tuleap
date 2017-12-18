@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011. All Rights Reserved.
+ * Copyright (c) Enalean, 2011-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -442,16 +442,16 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
         }
     }
 
-    public function forkOnFilesystem(GitRepository $old, GitRepository $new) {
+    public function forkOnFilesystem(GitRepository $old, GitRepository $new)
+    {
+
         $name = $old->getName();
         //TODO use $old->getRootPath() (good luck for Unit Tests!)
         $old_namespace = $old->getProject()->getUnixName() .'/'. $old->getNamespace();
         $new_namespace = $new->getProject()->getUnixName() .'/'. $new->getNamespace();
 
-        $forkSucceeded = $this->getDriver()->fork($name, $old_namespace, $new_namespace);
-        if ($forkSucceeded) {
-            $this->updateRepoConf($new);
-        }
+        $this->getDriver()->fork($name, $old_namespace, $new_namespace);
+        $this->updateRepoConf($new);
     }
 
 

@@ -7,12 +7,9 @@
 
 bundle_file_path="$1"
 destination="$2"
-description="$3"
 
 umask 0007
 mkdir -p "$destination"
 cd "$destination"
 git init --bare
 git fetch "$bundle_file_path" '+refs/*:refs/*'
-
-echo "$description" > "description"
