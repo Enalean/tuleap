@@ -95,6 +95,14 @@ CREATE TABLE plugin_agiledashboard_kanban_tracker_reports (
   INDEX kanban_tracker_reports_report_idx(report_id)
 ) ENGINE=InnoDB;
 
+CREATE TABLE plugin_agiledashboard_tracker_field_burnup_cache (
+  artifact_id  INT(11) NOT NULL,
+  timestamp    INT(11) NOT NULL,
+  total_effort FLOAT(10,4) NULL,
+  team_effort  FLOAT(10,4) NULL,
+  UNIQUE KEY time_at_field (artifact_id, timestamp)
+) ENGINE=InnoDB;
+
 -- Enable service for project 100
 INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank) 
        VALUES      ( 100, 'plugin_agiledashboard:service_lbl_key', 'plugin_agiledashboard:service_desc_key', 'plugin_agiledashboard', '/plugins/agiledashboard/?group_id=$group_id', 1, 0, 'system', 152);

@@ -307,11 +307,14 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
     }
 
     /**
-     * @return BurnupCalculator
+     * @return BurnupTeamEffortCalculator
      */
-    private function getBurnupCalculator()
+    private function getTeamEffortCalculator()
     {
-        return new BurnupCalculator(new BurnupDao(), new BurnupLogger());
+        return new BurnupTeamEffortCalculator(
+            new BurnupDao(),
+            new BurnupManualValuesAndChildrenListRetriever(new BurnupDao())
+        );
     }
 
     /**
@@ -319,6 +322,6 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
      */
     private function getFieldCalculator()
     {
-        return new FieldCalculator($this->getBurnupCalculator());
+        return new FieldCalculator($this->getTeamEffortCalculator());
     }
 }
