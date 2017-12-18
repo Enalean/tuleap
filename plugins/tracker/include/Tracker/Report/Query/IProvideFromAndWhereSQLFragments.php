@@ -23,9 +23,14 @@ namespace Tuleap\Tracker\Report\Query;
 interface IProvideFromAndWhereSQLFragments
 {
     /**
+     * @return string[]
+     */
+    public function getFromAsArray();
+
+    /**
      * @return string
      */
-    public function getFrom();
+    public function getFromAsString();
 
     /**
      * @return string

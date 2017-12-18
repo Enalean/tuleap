@@ -56,6 +56,6 @@ class ForTextTest extends TuleapTestCase
 
         $suffix = spl_object_hash($comparison);
 
-        $this->assertPattern("/tracker_changeset_value_text AS CVText_{$field_id}_{$suffix}/", $from_where->getFrom());
+        $this->assertPattern("/tracker_changeset_value_text AS CVText_{$field_id}_{$suffix}/", $from_where->getFromAsString());
     }
 }

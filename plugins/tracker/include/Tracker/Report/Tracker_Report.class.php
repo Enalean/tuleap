@@ -1786,7 +1786,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
             if ($this->canExecuteExpertQuery($expression)) {
                 $from_where = $this->query_builder->buildFromWhere($expression, $this->getTracker());
 
-                $additional_from  = array($from_where->getFrom());
+                $additional_from  = $from_where->getFromAsArray();
                 $additional_where = array($from_where->getWhere());
 
                 $this->matching_ids = $this->getMatchingIdsInDb(
@@ -1821,7 +1821,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         $contributor_field_id = $contributor_field ? $contributor_field->getId() : null;
 
         if (isset($this->additional_from_where)) {
-            $from[]  = $this->additional_from_where->getFrom();
+            $from[]  = $this->additional_from_where->getFromAsString();
             $where[] = $this->additional_from_where->getWhere();
         }
 

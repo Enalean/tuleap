@@ -37,11 +37,19 @@ class OrFromWhere implements IProvideFromAndWhereSQLFragments
     }
 
     /**
+     * @return string[]
+     */
+    public function getFromAsArray()
+    {
+        return array_merge($this->left->getFromAsArray(), $this->right->getFromAsArray());
+    }
+
+    /**
      * @return string
      */
-    public function getFrom()
+    public function getFromAsString()
     {
-        return $this->left->getFrom() . ' ' . $this->right->getFrom();
+        return $this->left->getFromAsString() .' '. $this->right->getFromAsString();
     }
 
     /**
