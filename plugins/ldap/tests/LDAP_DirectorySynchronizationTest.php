@@ -22,12 +22,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once __DIR__ . '/../include/constants.php';
-require_once dirname(__FILE__).'/../include/LDAP_DirectorySynchronization.class.php';
-require_once dirname(__FILE__).'/../include/LDAP_SyncReminderNotificationManager.class.php';
-require_once 'common/language/BaseLanguage.class.php';
-require_once 'common/user/UserManager.class.php';
-require_once dirname(__FILE__).'/../include/LDAP_CleanUpManager.class.php';
+require_once __DIR__ . '/bootstrap.php';
 
 // Needed because of bad type checking in SimpleTest
 Mock::generatePartial('LDAP', 'MockInhLDAP', array('search', 'getErrno', 'getLDAPParam'));
