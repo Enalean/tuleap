@@ -25,16 +25,20 @@ export default class BackendCrossTrackerReport {
         this.expert_query = '';
     }
 
-    initTrackers(trackers) {
-        this.clearTrackers();
-        for (const { id, label, project } of trackers) {
-            const tracker       = { id, label };
-            const light_project = { id: project.id, label: project.label };
-            this.trackers.set(id, {
-                project: light_project,
-                tracker
-            });
+    init(trackers, expert_query) {
+        if (trackers) {
+            this.clearTrackers();
+            for (const { id, label, project } of trackers) {
+                const tracker       = { id, label };
+                const light_project = { id: project.id, label: project.label };
+                this.trackers.set(id, {
+                    project: light_project,
+                    tracker
+                });
+            }
         }
+
+        this.expert_query = expert_query;
     }
 
     clearTrackers() {
