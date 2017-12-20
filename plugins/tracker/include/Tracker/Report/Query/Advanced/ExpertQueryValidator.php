@@ -37,13 +37,13 @@ class ExpertQueryValidator
 
     /**
      * @param string $expert_query
-     * @param InvalidSearchablesCollectionBuilder $invalid_searchables_collection_builder
+     * @param IBuildInvalidSearchablesCollection $invalid_searchables_collection_builder
      * @throws SearchablesAreInvalidException
      * @throws SearchablesDoNotExistException
      */
     public function validateExpertQuery(
         $expert_query,
-        InvalidSearchablesCollectionBuilder $invalid_searchables_collection_builder
+        IBuildInvalidSearchablesCollection $invalid_searchables_collection_builder
     ) {
         $parsed_expert_query = $this->parser->parse($expert_query);
         $this->size_validator->checkSizeOfTree($parsed_expert_query);

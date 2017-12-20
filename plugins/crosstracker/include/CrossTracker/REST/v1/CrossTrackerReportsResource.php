@@ -23,6 +23,8 @@ namespace Tuleap\CrossTracker\REST\v1;
 use Luracast\Restler\RestException;
 use PFUser;
 use ProjectManager;
+use Tracker_Semantic_DescriptionDao;
+use Tracker_Semantic_TitleDao;
 use TrackerFactory;
 use Tuleap\CrossTracker\CrossTrackerArtifactReportDao;
 use Tuleap\CrossTracker\CrossTrackerReport;
@@ -34,6 +36,7 @@ use Tuleap\CrossTracker\Permission\CrossTrackerUnauthorizedException;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidComparisonCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\ComparisonChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\SemanticUsageChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\CrossTrackerExpertQueryReportDao;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\SearchableVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Semantic\Title;
@@ -121,7 +124,9 @@ class CrossTrackerReportsResource extends AuthenticatedResource
 
         $collector = new InvalidComparisonCollectorVisitor(
             new InvalidSearchableCollectorVisitor(),
-            new ComparisonChecker()
+            new ComparisonChecker(
+                new SemanticUsageChecker(new Tracker_Semantic_TitleDao(), new Tracker_Semantic_DescriptionDao())
+            )
         );
 
         $query_builder_visitor = new QueryBuilderVisitor(

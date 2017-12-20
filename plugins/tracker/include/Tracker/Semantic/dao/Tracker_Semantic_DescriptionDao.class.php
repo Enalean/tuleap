@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -43,5 +43,21 @@ class Tracker_Semantic_DescriptionDao extends DataAccessObject {
         $sql = "DELETE FROM tracker_semantic_description WHERE tracker_id = $tracker_id";
 
         return $this->update($sql);
+    }
+
+    public function getNbOfTrackerWithoutSemanticDescriptionDefined($trackers_id)
+    {
+        $trackers_id = $this->da->escapeIntImplode($trackers_id);
+
+        $sql = "SELECT count(*) AS nb
+                FROM tracker
+                    LEFT JOIN tracker_semantic_description AS description
+                    ON (tracker.id = description.tracker_id)
+                WHERE tracker.id IN ($trackers_id)
+                    AND description.tracker_id IS NULL";
+
+        $row = $this->retrieveFirstRow($sql);
+
+        return $row['nb'];
     }
 }
