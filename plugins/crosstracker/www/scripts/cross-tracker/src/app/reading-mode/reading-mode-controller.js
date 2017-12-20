@@ -106,13 +106,15 @@ export default class ReadingModeController {
         this.showSaveReportLoading();
         try {
             this.backend_cross_tracker_report.duplicateFromReport(this.reading_cross_tracker_report);
-            const tracker_ids  = this.backend_cross_tracker_report.getTrackerIds();
-            const expert_query = this.backend_cross_tracker_report.getExpertQuery();
-            const { trackers } = await updateReport(this.backend_cross_tracker_report.report_id, tracker_ids, expert_query);
+            const tracker_ids      = this.backend_cross_tracker_report.getTrackerIds();
+            const new_expert_query = this.backend_cross_tracker_report.getExpertQuery();
+            const {
+                trackers,
+                expert_query
+            } = await updateReport(this.backend_cross_tracker_report.report_id, tracker_ids, new_expert_query );
+            this.backend_cross_tracker_report.init(trackers, expert_query);
+            this.initReports();
 
-            if (trackers) {
-                this.initTrackers(trackers);
-            }
             this.success_displayer.displaySuccess(this.gettext_provider.gettext('Report has been successfully saved'));
             this.hideReportActions();
             this.backend_cross_tracker_report.loaded = true;
