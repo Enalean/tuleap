@@ -20,42 +20,35 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced;
 
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
-
 class ExpertQueryValidator
 {
     /** @var ParserCacheProxy */
     private $parser;
     /** @var SizeValidatorVisitor */
     private $size_validator;
-    /** @var ICollectErrorsForInvalidComparisons */
-    private $invalid_comparison_collector;
 
     public function __construct(
         ParserCacheProxy $parser,
-        SizeValidatorVisitor $size_validator,
-        ICollectErrorsForInvalidComparisons $invalid_comparison_collector
+        SizeValidatorVisitor $size_validator
     ) {
-        $this->parser                       = $parser;
-        $this->size_validator               = $size_validator;
-        $this->invalid_comparison_collector = $invalid_comparison_collector;
+        $this->parser         = $parser;
+        $this->size_validator = $size_validator;
     }
 
     /**
      * @param string $expert_query
+     * @param InvalidSearchablesCollectionBuilder $invalid_searchables_collection_builder
      * @throws SearchablesAreInvalidException
      * @throws SearchablesDoNotExistException
-     * @throws LimitSizeIsExceededException
-     * @throws SyntaxError
-     * @throws \Exception
      */
-    public function validateExpertQuery($expert_query)
-    {
+    public function validateExpertQuery(
+        $expert_query,
+        InvalidSearchablesCollectionBuilder $invalid_searchables_collection_builder
+    ) {
         $parsed_expert_query = $this->parser->parse($expert_query);
         $this->size_validator->checkSizeOfTree($parsed_expert_query);
 
-        $invalid_searchables_collection = new InvalidSearchablesCollection();
-        $this->invalid_comparison_collector->collectErrors($parsed_expert_query, $invalid_searchables_collection);
+        $invalid_searchables_collection = $invalid_searchables_collection_builder->buildCollectionOfInvalidSearchables($parsed_expert_query);
 
         $nonexistent_searchables    = $invalid_searchables_collection->getNonexistentSearchables();
         $nb_nonexistent_searchables = count($nonexistent_searchables);

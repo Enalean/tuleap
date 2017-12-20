@@ -25,10 +25,14 @@ use PFUser;
 use Tracker;
 use Tuleap\CrossTracker\CrossTrackerArtifactReportDao;
 use Tuleap\CrossTracker\CrossTrackerReport;
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidComparisonCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\CrossTrackerExpertQueryReportDao;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilderVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\ExpertQueryValidator;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollectionBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\ParserCacheProxy;
+use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
+use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
 
 class CrossTrackerArtifactReportFactory
 {
@@ -44,6 +48,8 @@ class CrossTrackerArtifactReportFactory
     private $parser;
     /** @var CrossTrackerExpertQueryReportDao */
     private $expert_query_dao;
+    /** @var InvalidComparisonCollectorVisitor */
+    private $collector;
 
     public function __construct(
         CrossTrackerArtifactReportDao $artifact_report_dao,
@@ -51,7 +57,8 @@ class CrossTrackerArtifactReportFactory
         ExpertQueryValidator $expert_query_validator,
         QueryBuilderVisitor $query_builder,
         ParserCacheProxy $parser,
-        CrossTrackerExpertQueryReportDao $expert_query_dao
+        CrossTrackerExpertQueryReportDao $expert_query_dao,
+        InvalidComparisonCollectorVisitor $collector
     ) {
         $this->artifact_report_dao    = $artifact_report_dao;
         $this->artifact_factory       = $artifact_factory;
@@ -59,6 +66,7 @@ class CrossTrackerArtifactReportFactory
         $this->query_builder          = $query_builder;
         $this->parser                 = $parser;
         $this->expert_query_dao       = $expert_query_dao;
+        $this->collector              = $collector;
     }
 
     /**
@@ -68,6 +76,9 @@ class CrossTrackerArtifactReportFactory
      * @param int $offset
      *
      * @return PaginatedCollectionOfCrossTrackerArtifacts
+     *
+     * @throws SearchablesAreInvalidException
+     * @throws SearchablesDoNotExistException
      */
     public function getArtifactsMatchingReport(
         CrossTrackerReport $report,
@@ -120,6 +131,9 @@ class CrossTrackerArtifactReportFactory
      * @param int $offset
      *
      * @return PaginatedCollectionOfCrossTrackerArtifacts
+     *
+     * @throws SearchablesAreInvalidException
+     * @throws SearchablesDoNotExistException
      */
     private function getArtifactsMatchingExpertQuery(
         CrossTrackerReport $report,
@@ -128,7 +142,10 @@ class CrossTrackerArtifactReportFactory
         $offset
     ) {
         $expert_query = $report->getExpertQuery();
-        $this->expert_query_validator->validateExpertQuery($expert_query);
+        $this->expert_query_validator->validateExpertQuery(
+            $expert_query,
+            new InvalidSearchablesCollectionBuilder($this->collector)
+        );
         $parsed_expert_query   = $this->parser->parse($expert_query);
         $additional_from_where = $this->query_builder->buildFromWhere($parsed_expert_query);
         $trackers_id           = $this->getTrackersId($report->getTrackers());
