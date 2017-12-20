@@ -287,21 +287,16 @@ class LdapPlugin extends Plugin {
 
             $validEmail = isset($params['validEmail']) ? $params['validEmail'] : false;
 
-            $ldap = $this->getLdap();
-            $lri  = $ldap->searchUserAsYouType($params['searchToken'], $params['limit'], $validEmail);
-            $sync = LDAP_UserSync::instance();
+            $ldap         = $this->getLdap();
+            $lri          = $ldap->searchUserAsYouType($params['searchToken'], $params['limit'], $validEmail);
+            $user_manager = UserManager::instance();
+            $sync         = LDAP_UserSync::instance();
             foreach($lri as $lr) {
                 if ($lr->exist() && $lr->valid()) {
-                    try {
-                        $tuleap_user = $this->getLdapUserManager()->getUserByIdentifier("ldapuid:" . $lr->getLogin());
-
-                        if ($tuleap_user) {
-                            $tuleap_user_id = $tuleap_user->getId();
-                        }
-                    } catch (IdentifierTypeNotFoundException $e) {
-                        $tuleap_user_id = null;
-                    } catch (IdentifierTypeNotRecognizedException $e) {
-                        $tuleap_user_id = null;
+                    $tuleap_user_id = null;
+                    $tuleap_user    = $user_manager->getUserByLdapId($lr->getEdUid());
+                    if ($tuleap_user !== null) {
+                        $tuleap_user_id = $tuleap_user->getId();
                     }
 
                     $params['userList'][] = array(
