@@ -49,6 +49,7 @@ export default class WritingCrossTrackerReport {
     duplicateFromReport(report) {
         this.trackers = new Map(report.trackers);
         this.number_of_tracker = this.trackers.size;
+        this.expert_query = report.expert_query;
     }
 
     hasTrackerWithId(tracker_id) {

@@ -138,8 +138,7 @@ export default class ReadingModeController {
         this.reading_mode_actions.classList.add('cross-tracker-hide');
     }
 
-    initTrackers(trackers) {
-        this.backend_cross_tracker_report.initTrackers(trackers);
+    initReports() {
         this.reading_cross_tracker_report.duplicateFromReport(this.backend_cross_tracker_report);
         this.writing_cross_tracker_report.duplicateFromReport(this.reading_cross_tracker_report);
     }
@@ -148,10 +147,10 @@ export default class ReadingModeController {
         this.widget_loader_displayer.show();
         this.backend_cross_tracker_report.loaded = false;
         try {
-            const { trackers } = await getReport(this.backend_cross_tracker_report.report_id);
-            if (trackers) {
-                this.initTrackers(trackers);
-            }
+            const { trackers, expert_query } = await getReport(this.backend_cross_tracker_report.report_id);
+            this.backend_cross_tracker_report.init(trackers, expert_query);
+            this.initReports();
+
             this.backend_cross_tracker_report.loaded = true;
         } catch (error) {
             this.reading_trackers_controller.setDisabled();
