@@ -103,6 +103,11 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         return false;
     }
 
+    public function canBeUsedToSortReport()
+    {
+        return ! $this->isMultiple();
+    }
+
     /**
      * Get the "from" statement to allow search with this field
      * You can join on 'c' which is a pseudo table used to retrieve

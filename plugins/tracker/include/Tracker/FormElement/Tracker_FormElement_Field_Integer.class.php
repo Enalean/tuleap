@@ -76,6 +76,11 @@ class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeri
         return new Tracker_Report_Criteria_Int_ValueDao();
     }
 
+    public function canBeUsedToSortReport()
+    {
+        return true;
+    }
+
     public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report=null, $from_aid = null) {
         return $value;
     }

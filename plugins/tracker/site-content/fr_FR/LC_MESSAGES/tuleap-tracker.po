@@ -386,6 +386,13 @@ msgstr ""
 "La requête est estimée trop complexe pour être exécutée par le serveur. "
 "Veuillez la simplifier (ex: enlever des comparaisons) pour pouvoir continuer."
 
+msgid ""
+"The report was sorted against this column. This column can not be used to "
+"sort a report, the sort has been ignored. Please choose another column."
+msgstr ""
+"Le rapport a été trié sur cette colonne. Cette colonne ne permet cependant "
+"pas le tri. Le tri a donc été ignoré. Veuillez choisir une autre colonne."
+
 #, php-format
 msgid "The text field '%s' cannot be compared to MYSELF()."
 msgstr "Le champ texte '%s' ne peut pas être comparé à MYSELF()."

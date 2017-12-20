@@ -318,6 +318,11 @@ msgid ""
 "to continue."
 msgstr ""
 
+msgid ""
+"The report was sorted against this column. This column can not be used to "
+"sort a report, the sort has been ignored. Please choose another column."
+msgstr ""
+
 #, php-format
 msgid "The text field '%s' cannot be compared to MYSELF()."
 msgstr ""

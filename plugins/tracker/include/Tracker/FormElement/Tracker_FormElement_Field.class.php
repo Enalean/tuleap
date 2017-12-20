@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -1438,6 +1438,14 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
 
     public function canBeUsedAsReportCriterion() {
         return true;
+    }
+
+    /**
+     * @return bool
+     */
+    public function canBeUsedToSortReport()
+    {
+        return false;
     }
 
     /** @return bool */
