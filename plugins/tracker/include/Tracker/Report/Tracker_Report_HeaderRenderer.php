@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,8 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
+use Tuleap\Layout\IncludeAssets;
 
 class Tracker_Report_HeaderRenderer
 {
@@ -85,6 +87,8 @@ class Tracker_Report_HeaderRenderer
         $is_admin = $report->getTracker()->userIsAdmin($current_user);
         $warnings = $this->getMissingPublicReportWarning($reports, $is_admin);
 
+        $assets = new IncludeAssets(TRACKER_BASE_DIR . '/../www/assets', TRACKER_BASE_URL . '/assets');
+        $GLOBALS['HTML']->includeFooterJavascriptFile($assets->getFileURL('tracker-report-expert-mode.js'));
         $this->renderer->renderToPage(
             'header_in_report',
             new Tracker_Report_HeaderInReportPresenter(

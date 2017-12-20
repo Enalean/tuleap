@@ -1,0 +1,24 @@
+{
+  "author": "Enalean Team",
+  "name": "tuleap-tracker",
+  "version": "0.2.0",
+  "homepage": "https://www.enalean.com",
+  "description": "Tuleap Tracker plugin",
+  "license": "GPL-2.0",
+  "private": true,
+  "dependencies": {
+    "codemirror": "5.22.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "webpack": "^3.10.0",
+    "webpack-assets-manifest": "^1.0.0"
+  },
+  "scripts": {
+    "build": "NODE_ENV=production webpack --optimize-minimize --bail",
+    "watch": "NODE_ENV=watch webpack --watch"
+  }
+}

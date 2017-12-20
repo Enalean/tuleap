@@ -45,11 +45,6 @@
     },
     "javascript": [
         "www/scripts/TrackerReports.js",
-        "node_modules/codemirror/lib/codemirror.js",
-        "node_modules/codemirror/addon/mode/simple.js",
-        "node_modules/codemirror/addon/hint/show-hint.js",
-        "node_modules/codemirror/addon/display/placeholder.js",
-        "www/scripts/TrackerReportExpertMode.js",
         "www/scripts/TrackerEmailCopyPaste.js",
         "www/scripts/TrackerReportsSaveAsModal.js",
         "www/scripts/TrackerBinds.js",
@@ -80,8 +75,8 @@
         "www/scripts/tracker-admin-notifications-popover.js"
     ],
     "components": [
-        "plugins/tracker/",
         "plugins/tracker/grammar/",
+        "plugins/tracker/www/scripts/",
         "plugins/tracker/www/scripts/angular-artifact-modal"
     ]
 }
