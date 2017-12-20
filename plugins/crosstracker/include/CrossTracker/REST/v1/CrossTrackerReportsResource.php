@@ -51,6 +51,7 @@ use Tuleap\REST\QueryParameterParser;
 use Tuleap\Tracker\Report\Query\Advanced\ExpertQueryValidator;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parser;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollectionBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\LimitSizeIsExceededException;
 use Tuleap\Tracker\Report\Query\Advanced\ParserCacheProxy;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
@@ -96,6 +97,10 @@ class CrossTrackerReportsResource extends AuthenticatedResource
      * @var CrossTrackerPermissionGate
      */
     private $cross_tracker_permission_gate;
+    /** @var ExpertQueryValidator */
+    private $validator;
+    /** @var InvalidComparisonCollectorVisitor */
+    private $invalid_comparisons_collector;
 
     public function __construct()
     {
@@ -120,7 +125,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
             new SizeValidatorVisitor($report_config->getExpertQueryLimit())
         );
 
-        $collector = new InvalidComparisonCollectorVisitor(
+        $this->invalid_comparisons_collector = new InvalidComparisonCollectorVisitor(
             new InvalidSearchableCollectorVisitor(),
             new ComparisonChecker()
         );
@@ -144,7 +149,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
             $query_builder_visitor,
             $parser,
             new CrossTrackerExpertQueryReportDao(),
-            $collector
+            $this->invalid_comparisons_collector
         );
         $this->cross_tracker_permission_gate  = new CrossTrackerPermissionGate(new URLVerification());
 
@@ -328,7 +333,10 @@ class CrossTrackerReportsResource extends AuthenticatedResource
         }
 
         try {
-            $this->validator->validateExpertQuery($expert_query);
+            $this->validator->validateExpertQuery(
+                $expert_query,
+                new InvalidSearchablesCollectionBuilder($this->invalid_comparisons_collector)
+            );
         } catch (SearchablesDoNotExistException $exception) {
             throw new RestException(400, $exception->getMessage());
         } catch (SearchablesAreInvalidException $exception) {
