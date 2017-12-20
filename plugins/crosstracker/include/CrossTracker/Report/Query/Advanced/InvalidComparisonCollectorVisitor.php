@@ -48,14 +48,14 @@ class InvalidComparisonCollectorVisitor implements Visitor, ICollectErrorsForInv
     private $invalid_searchable_collector_visitor;
 
     /** @var ComparisonChecker */
-    private $semantic_title_comparison_checker;
+    private $semantic_comparison_checker;
 
     public function __construct(
         InvalidSearchableCollectorVisitor $invalid_searchable_collector_visitor,
-        ComparisonChecker $semantic_title_comparison_checker
+        ComparisonChecker $semantic_comparison_checker
     ) {
         $this->invalid_searchable_collector_visitor = $invalid_searchable_collector_visitor;
-        $this->semantic_title_comparison_checker    = $semantic_title_comparison_checker;
+        $this->semantic_comparison_checker          = $semantic_comparison_checker;
     }
 
     public function collectErrors(
@@ -69,7 +69,7 @@ class InvalidComparisonCollectorVisitor implements Visitor, ICollectErrorsForInv
     {
         $this->visitComparison(
             $comparison,
-            $this->semantic_title_comparison_checker,
+            $this->semantic_comparison_checker,
             $parameters
         );
     }
@@ -78,7 +78,7 @@ class InvalidComparisonCollectorVisitor implements Visitor, ICollectErrorsForInv
     {
         $this->visitComparison(
             $comparison,
-            $this->semantic_title_comparison_checker,
+            $this->semantic_comparison_checker,
             $parameters
         );
     }

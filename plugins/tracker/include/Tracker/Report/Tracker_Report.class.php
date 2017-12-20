@@ -34,6 +34,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollection;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollectionBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\LimitSizeIsExceededException;
 use Tuleap\Tracker\Report\Query\Advanced\ParserCacheProxy;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
@@ -1642,14 +1643,20 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         return $additional_criteria;
     }
 
+    /**
+     * @throws SearchablesAreInvalidException
+     * @throws SearchablesDoNotExistException
+     */
     public function validateExpertQuery()
     {
         $validator = new ExpertQueryValidator(
             $this->parser,
-            $this->getSizeValidator(),
-            $this->getCollector()
+            $this->getSizeValidator()
         );
-        $validator->validateExpertQuery($this->expert_query);
+        $validator->validateExpertQuery(
+            $this->expert_query,
+            new InvalidSearchablesCollectionBuilder($this->getCollector())
+        );
     }
 
     private function fetchUpdateRendererForm(Tracker_Report_Renderer $renderer) {

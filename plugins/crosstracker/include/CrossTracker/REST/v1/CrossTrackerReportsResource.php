@@ -117,11 +117,12 @@ class CrossTrackerReportsResource extends AuthenticatedResource
 
         $this->validator = new ExpertQueryValidator(
             $parser,
-            new SizeValidatorVisitor($report_config->getExpertQueryLimit()),
-            new InvalidComparisonCollectorVisitor(
-                new InvalidSearchableCollectorVisitor(),
-                new ComparisonChecker()
-            )
+            new SizeValidatorVisitor($report_config->getExpertQueryLimit())
+        );
+
+        $collector = new InvalidComparisonCollectorVisitor(
+            new InvalidSearchableCollectorVisitor(),
+            new ComparisonChecker()
         );
 
         $query_builder_visitor = new QueryBuilderVisitor(
@@ -142,7 +143,8 @@ class CrossTrackerReportsResource extends AuthenticatedResource
             $this->validator,
             $query_builder_visitor,
             $parser,
-            new CrossTrackerExpertQueryReportDao()
+            new CrossTrackerExpertQueryReportDao(),
+            $collector
         );
         $this->cross_tracker_permission_gate  = new CrossTrackerPermissionGate(new URLVerification());
 
