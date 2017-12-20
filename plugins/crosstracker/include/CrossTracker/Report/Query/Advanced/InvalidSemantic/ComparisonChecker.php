@@ -20,8 +20,6 @@
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic;
 
-use DateTime;
-use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
@@ -55,19 +53,7 @@ class ComparisonChecker implements ICheckSemanticFieldForAComparison, ValueWrapp
     {
         $this->semantic_usage_checker->checkSemanticIsUsedByAllTrackers($metadata, $trackers_id);
 
-        $value = $comparison->getValueWrapper()->accept($this, new MetadataValueWrapperParameters($metadata));
-
-        if (is_float($value + 0)) {
-            throw new ToFloatComparisonException($metadata, $value);
-        }
-
-        if (is_numeric($value)) {
-            throw new ToIntComparisonException($metadata, $value);
-        }
-
-        if ($this->getDateTimeFromValue($value) !== false && $value !== '') {
-            throw new ToDateComparisonComparisonException($metadata);
-        }
+        $comparison->getValueWrapper()->accept($this, new MetadataValueWrapperParameters($metadata));
     }
 
     public function visitCurrentDateTimeValueWrapper(
@@ -99,17 +85,5 @@ class ComparisonChecker implements ICheckSemanticFieldForAComparison, ValueWrapp
         ValueWrapperParameters $parameters
     ) {
         throw new ToMyselfComparisonException($parameters->getMetadata());
-    }
-
-    private function getDateTimeFromValue($value)
-    {
-        $date_value = DateTime::createFromFormat(DateFormat::DATETIME, $value);
-        if ($date_value !== false) {
-            return $date_value;
-        }
-
-        $date_value = DateTime::createFromFormat(DateFormat::DATE, $value);
-
-        return $date_value;
     }
 }

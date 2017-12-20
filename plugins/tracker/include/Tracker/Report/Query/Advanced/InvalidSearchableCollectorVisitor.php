@@ -27,6 +27,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldException;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\InvalidMetadataException;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\InvalidMetadataForComparisonException;
 
 class InvalidSearchableCollectorVisitor implements Visitor
@@ -98,7 +99,7 @@ class InvalidSearchableCollectorVisitor implements Visitor
             $parameters->getInvalidSearchablesCollectorParameters()->getInvalidSearchablesCollection()->addInvalidSearchableError(
                 $exception->getMessage()
             );
-        } catch (InvalidFieldException $exception) {
+        } catch (InvalidMetadataException $exception) {
             $parameters->getInvalidSearchablesCollectorParameters()->getInvalidSearchablesCollection()->addInvalidSearchableError(
                 $exception->getMessage()
             );
