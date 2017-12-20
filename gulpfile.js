@@ -248,7 +248,6 @@ gulp.task('watch', function() {
         fat_combined_files
             .concat(subset_combined_files)
             .concat(subset_combined_flamingparrot_files)
-            .concat(flaming_parrot_files)
             .concat(burning_parrot_files),
         ['js-core']
     );
