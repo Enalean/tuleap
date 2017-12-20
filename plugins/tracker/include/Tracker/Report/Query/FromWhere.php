@@ -34,9 +34,17 @@ class FromWhere implements IProvideFromAndWhereSQLFragments
     }
 
     /**
+     * @return string[]
+     */
+    public function getFromAsArray()
+    {
+        return array($this->from);
+    }
+
+    /**
      * @return string
      */
-    public function getFrom()
+    public function getFromAsString()
     {
         return $this->from;
     }

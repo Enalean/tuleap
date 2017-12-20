@@ -31,7 +31,7 @@ class CrossTrackerExpertQueryReportDao extends DataAccessObject
         $limit,
         $offset
     ) {
-        $from  = $from_where->getFrom();
+        $from  = implode(' ', array_unique($from_where->getFromAsArray()));
         $where = $from_where->getWhere();
 
         $tracker_ids = $this->da->escapeIntImplode($tracker_ids);

@@ -145,7 +145,7 @@ class QueryBuilderVisitorTest extends TuleapTestCase
 
         $result = $this->query_builder->visitAndExpression($and_expression, $this->parameters);
 
-        $this->assertEqual($result->getFrom(), "le_from le_from_tail");
+        $this->assertEqual($result->getFromAsString(), "le_from le_from_tail");
         $this->assertEqual($result->getWhere(), "le_where AND le_where_tail");
     }
 
@@ -178,7 +178,7 @@ class QueryBuilderVisitorTest extends TuleapTestCase
 
         $result = $this->query_builder->visitAndOperand($and_operand, $this->parameters);
 
-        $this->assertEqual($result->getFrom(), "le_from le_from_tail");
+        $this->assertEqual($result->getFromAsString(), "le_from le_from_tail");
         $this->assertEqual($result->getWhere(), "le_where AND le_where_tail");
     }
 
@@ -211,7 +211,7 @@ class QueryBuilderVisitorTest extends TuleapTestCase
 
         $result = $this->query_builder->visitOrOperand($or_operand, $this->parameters);
 
-        $this->assertEqual($result->getFrom(), "le_from le_from_tail");
+        $this->assertEqual($result->getFromAsString(), "le_from le_from_tail");
         $this->assertEqual($result->getWhere(), "(le_where OR le_where_tail)");
     }
 
@@ -244,7 +244,7 @@ class QueryBuilderVisitorTest extends TuleapTestCase
 
         $result = $this->query_builder->visitOrExpression($or_expression, $this->parameters);
 
-        $this->assertEqual($result->getFrom(), "le_from le_from_tail");
+        $this->assertEqual($result->getFromAsString(), "le_from le_from_tail");
         $this->assertEqual($result->getWhere(), "(le_where OR le_where_tail)");
     }
 
@@ -254,7 +254,7 @@ class QueryBuilderVisitorTest extends TuleapTestCase
 
         $result = $this->query_builder->visitEqualComparison($comparison, $this->parameters);
 
-        $this->assertPattern('/tracker_changeset_value_text/', $result->getFrom());
+        $this->assertPattern('/tracker_changeset_value_text/', $result->getFromAsString());
     }
 
     public function itRetrievesForIntegerFieldInEqualComparisonTheExpertFromAndWhereClausesOfTheField()
@@ -263,7 +263,7 @@ class QueryBuilderVisitorTest extends TuleapTestCase
 
         $result = $this->query_builder->visitEqualComparison($comparison, $this->parameters);
 
-        $this->assertPattern('/tracker_changeset_value_int/', $result->getFrom());
+        $this->assertPattern('/tracker_changeset_value_int/', $result->getFromAsString());
     }
 
     public function itRetrievesForFloatFieldInEqualComparisonTheExpertFromAndWhereClausesOfTheField()
@@ -272,7 +272,7 @@ class QueryBuilderVisitorTest extends TuleapTestCase
 
         $result = $this->query_builder->visitEqualComparison($comparison, $this->parameters);
 
-        $this->assertPattern('/tracker_changeset_value_float/', $result->getFrom());
+        $this->assertPattern('/tracker_changeset_value_float/', $result->getFromAsString());
     }
 
     public function itRetrievesForDateFieldInEqualComparisonTheExpertFromAndWhereClausesOfTheField()
@@ -281,7 +281,7 @@ class QueryBuilderVisitorTest extends TuleapTestCase
 
         $result = $this->query_builder->visitEqualComparison($comparison, $this->parameters);
 
-        $this->assertPattern('/tracker_changeset_value_date/', $result->getFrom());
+        $this->assertPattern('/tracker_changeset_value_date/', $result->getFromAsString());
     }
 
     public function itRetrievesForTextInNotEqualComparisonTheExpertFromAndWhereClausesOfTheField()
@@ -290,7 +290,7 @@ class QueryBuilderVisitorTest extends TuleapTestCase
 
         $result = $this->query_builder->visitNotEqualComparison($comparison, $this->parameters);
 
-        $this->assertPattern('/tracker_changeset_value_text/', $result->getFrom());
+        $this->assertPattern('/tracker_changeset_value_text/', $result->getFromAsString());
     }
 
     public function itRetrievesForIntegerFieldInNotEqualComparisonTheExpertFromAndWhereClausesOfTheField()
@@ -299,7 +299,7 @@ class QueryBuilderVisitorTest extends TuleapTestCase
 
         $result = $this->query_builder->visitNotEqualComparison($comparison, $this->parameters);
 
-        $this->assertPattern('/tracker_changeset_value_int/', $result->getFrom());
+        $this->assertPattern('/tracker_changeset_value_int/', $result->getFromAsString());
     }
 
     public function itRetrievesForFloatFieldInNotEqualComparisonTheExpertFromAndWhereClausesOfTheField()
@@ -308,7 +308,7 @@ class QueryBuilderVisitorTest extends TuleapTestCase
 
         $result = $this->query_builder->visitNotEqualComparison($comparison, $this->parameters);
 
-        $this->assertPattern('/tracker_changeset_value_float/', $result->getFrom());
+        $this->assertPattern('/tracker_changeset_value_float/', $result->getFromAsString());
     }
 
     public function itRetrievesForIntegerFieldInLesserThanComparisonTheExpertFromAndWhereClausesOfTheField()
@@ -317,7 +317,7 @@ class QueryBuilderVisitorTest extends TuleapTestCase
 
         $result = $this->query_builder->visitLesserThanComparison($comparison, $this->parameters);
 
-        $this->assertPattern('/tracker_changeset_value_int/', $result->getFrom());
+        $this->assertPattern('/tracker_changeset_value_int/', $result->getFromAsString());
     }
 
     public function itRetrievesForFloatFieldInLesserThanComparisonTheExpertFromAndWhereClausesOfTheField()
@@ -326,7 +326,7 @@ class QueryBuilderVisitorTest extends TuleapTestCase
 
         $result = $this->query_builder->visitLesserThanComparison($comparison, $this->parameters);
 
-        $this->assertPattern('/tracker_changeset_value_float/', $result->getFrom());
+        $this->assertPattern('/tracker_changeset_value_float/', $result->getFromAsString());
     }
 
     public function itRetrievesForIntegerFieldInGreaterThanComparisonTheExpertFromAndWhereClausesOfTheField()
@@ -335,7 +335,7 @@ class QueryBuilderVisitorTest extends TuleapTestCase
 
         $result = $this->query_builder->visitGreaterThanComparison($comparison, $this->parameters);
 
-        $this->assertPattern('/tracker_changeset_value_int/', $result->getFrom());
+        $this->assertPattern('/tracker_changeset_value_int/', $result->getFromAsString());
     }
 
     public function itRetrievesForFloatFieldInGreaterThanComparisonTheExpertFromAndWhereClausesOfTheField()
@@ -344,7 +344,7 @@ class QueryBuilderVisitorTest extends TuleapTestCase
 
         $result = $this->query_builder->visitGreaterThanComparison($comparison, $this->parameters);
 
-        $this->assertPattern('/tracker_changeset_value_float/', $result->getFrom());
+        $this->assertPattern('/tracker_changeset_value_float/', $result->getFromAsString());
     }
 
     public function itRetrievesForIntegerFieldInLesserThanOrEqualComparisonTheExpertFromAndWhereClausesOfTheField()
@@ -353,7 +353,7 @@ class QueryBuilderVisitorTest extends TuleapTestCase
 
         $result = $this->query_builder->visitLesserThanOrEqualComparison($comparison, $this->parameters);
 
-        $this->assertPattern('/tracker_changeset_value_int/', $result->getFrom());
+        $this->assertPattern('/tracker_changeset_value_int/', $result->getFromAsString());
     }
 
     public function itRetrievesForFloatFieldInLesserThanOrEqualComparisonTheExpertFromAndWhereClausesOfTheField()
@@ -362,7 +362,7 @@ class QueryBuilderVisitorTest extends TuleapTestCase
 
         $result = $this->query_builder->visitLesserThanOrEqualComparison($comparison, $this->parameters);
 
-        $this->assertPattern('/tracker_changeset_value_float/', $result->getFrom());
+        $this->assertPattern('/tracker_changeset_value_float/', $result->getFromAsString());
     }
 
     public function itRetrievesForIntegerFieldInGreaterThanOrEqualComparisonTheExpertFromAndWhereClausesOfTheField()
@@ -371,7 +371,7 @@ class QueryBuilderVisitorTest extends TuleapTestCase
 
         $result = $this->query_builder->visitGreaterThanOrEqualComparison($comparison, $this->parameters);
 
-        $this->assertPattern('/tracker_changeset_value_int/', $result->getFrom());
+        $this->assertPattern('/tracker_changeset_value_int/', $result->getFromAsString());
     }
 
     public function itRetrievesForFloatFieldInGreaterThanOrEqualComparisonTheExpertFromAndWhereClausesOfTheField()
@@ -380,7 +380,7 @@ class QueryBuilderVisitorTest extends TuleapTestCase
 
         $result = $this->query_builder->visitGreaterThanOrEqualComparison($comparison, $this->parameters);
 
-        $this->assertPattern('/tracker_changeset_value_float/', $result->getFrom());
+        $this->assertPattern('/tracker_changeset_value_float/', $result->getFromAsString());
     }
 
     public function itRetrievesForIntegerFieldInBetweenComparisonTheExpertFromAndWhereClausesOfTheField()
@@ -395,7 +395,7 @@ class QueryBuilderVisitorTest extends TuleapTestCase
 
         $result = $this->query_builder->visitBetweenComparison($comparison, $this->parameters);
 
-        $this->assertPattern('/tracker_changeset_value_int/', $result->getFrom());
+        $this->assertPattern('/tracker_changeset_value_int/', $result->getFromAsString());
     }
 
     public function itRetrievesForFloatFieldInBetweenComparisonTheExpertFromAndWhereClausesOfTheField()
@@ -410,6 +410,6 @@ class QueryBuilderVisitorTest extends TuleapTestCase
 
         $result = $this->query_builder->visitBetweenComparison($comparison, $this->parameters);
 
-        $this->assertPattern('/tracker_changeset_value_float/', $result->getFrom());
+        $this->assertPattern('/tracker_changeset_value_float/', $result->getFromAsString());
     }
 }
