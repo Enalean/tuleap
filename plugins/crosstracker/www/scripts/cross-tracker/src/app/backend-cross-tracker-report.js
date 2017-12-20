@@ -19,9 +19,10 @@
 
 export default class BackendCrossTrackerReport {
     constructor(report_id) {
-        this.loaded    = false;
-        this.report_id = report_id;
-        this.trackers  = new Map();
+        this.loaded       = false;
+        this.report_id    = report_id;
+        this.trackers     = new Map();
+        this.expert_query = '';
     }
 
     initTrackers(trackers) {
@@ -42,9 +43,14 @@ export default class BackendCrossTrackerReport {
 
     duplicateFromReport(report) {
         this.trackers = new Map(report.trackers);
+        this.expert_query = report.expert_query;
     }
 
     getTrackerIds() {
         return [...this.trackers.keys()];
+    }
+
+    getExpertQuery() {
+        return this.expert_query;
     }
 }
