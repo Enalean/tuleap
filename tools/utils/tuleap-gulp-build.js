@@ -13,6 +13,8 @@ var gulp        = require('gulp'),
 var component_builder = require('./component-builder.js');
 var sass_builder      = require('./sass-builder.js');
 
+runSequence.options.ignoreUndefinedTasks = true;
+
 function get_all_plugins_from_manifests() {
     var plugins_path = './plugins';
 
@@ -58,13 +60,19 @@ function declare_plugin_tasks(asset_dir) {
         components_tasks = [];
 
     get_all_plugins_from_manifests().forEach(function (plugin) {
-        var name = plugin['name'],
-            base_dir = path.join('plugins', name);
+        var name     = plugin.name;
+        var base_dir = path.join('plugins', name);
 
         var plugin_tasks        = [];
         var plugin_dependencies = [];
+        var plugin_component_task_name;
 
-        var task_name = '';
+        if ('dependencies' in plugin) {
+            plugin.dependencies.forEach(function (dependency_plugin) {
+                var dependency_plugin_task_name = 'build-plugin-' + dependency_plugin;
+                plugin_dependencies.push(dependency_plugin_task_name);
+            });
+        }
 
         var clean_js_task_name = 'clean-js-' + name;
         gulp.task(clean_js_task_name, function () {
@@ -72,19 +80,18 @@ function declare_plugin_tasks(asset_dir) {
         });
 
         if ('components' in plugin) {
-            task_name = 'components-' + name;
+            plugin_component_task_name = 'components-' + name;
 
             component_builder.installAndBuildNpmComponents(
-                plugin['components'],
-                task_name,
+                plugin.components,
+                plugin_component_task_name,
                 [clean_js_task_name]
             );
-            components_tasks.push(task_name);
-            plugin_dependencies.push(task_name);
+            components_tasks.push(plugin_component_task_name);
         }
 
         if ('javascript' in plugin) {
-            task_name = 'js-' + name;
+            var javascript_task_name = 'js-' + name;
 
             // If there are components, they already cleaned and added new stuff
             // in assets folder. We should not clean it twice.
@@ -93,27 +100,31 @@ function declare_plugin_tasks(asset_dir) {
                 js_dependencies.push(clean_js_task_name);
             }
 
-            gulp.task(task_name, js_dependencies, function () {
-                return concat_files_plugin(base_dir, name + '.js', plugin['javascript'], asset_dir);
+            gulp.task(javascript_task_name, js_dependencies, function () {
+                return concat_files_plugin(base_dir, name + '.js', plugin.javascript, asset_dir);
             });
 
-            plugin_tasks.push(task_name);
-            javascript_tasks.push(task_name);
+            plugin_tasks.push(javascript_task_name);
+            javascript_tasks.push(javascript_task_name);
         }
 
         if ('themes' in plugin) {
             sass_builder.lintSass('scss-lint-' + name, base_dir, plugin);
             scss_lint_tasks.push('scss-lint-' + name);
 
-            task_name = 'sass-' + name;
-            sass_builder.cleanAndBuildSass(task_name, base_dir, plugin);
+            var sass_task_name = 'sass-' + name;
+            sass_builder.cleanAndBuildSass(sass_task_name, base_dir, plugin);
 
-            plugin_tasks.push(task_name);
-            sass_tasks.push(task_name);
+            plugin_tasks.push(sass_task_name);
+            sass_tasks.push(sass_task_name);
         }
 
         gulp.task('build-plugin-' + name, plugin_dependencies, function(callback) {
-            runSequence(plugin_tasks, callback);
+            runSequence(
+                plugin_component_task_name,
+                plugin_tasks,
+                callback
+            );
         });
         all_plugins_tasks.push('build-plugin-' + name);
     });
