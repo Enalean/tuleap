@@ -107,7 +107,8 @@ export default class ReadingModeController {
         try {
             this.backend_cross_tracker_report.duplicateFromReport(this.reading_cross_tracker_report);
             const tracker_ids  = this.backend_cross_tracker_report.getTrackerIds();
-            const { trackers } = await updateReport(this.backend_cross_tracker_report.report_id, tracker_ids);
+            const expert_query = this.backend_cross_tracker_report.getExpertQuery();
+            const { trackers } = await updateReport(this.backend_cross_tracker_report.report_id, tracker_ids, expert_query);
 
             if (trackers) {
                 this.initTrackers(trackers);

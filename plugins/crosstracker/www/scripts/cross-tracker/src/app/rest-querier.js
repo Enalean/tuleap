@@ -60,12 +60,12 @@ async function getQueryResult(report_id, trackers_id, expert_query, limit, offse
     return { artifacts, total };
 }
 
-async function updateReport(report_id, trackers_id) {
+async function updateReport(report_id, trackers_id, expert_query) {
     const response = await put('/api/v1/cross_tracker_reports/' + report_id, {
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({ trackers_id })
+        body: JSON.stringify({ trackers_id, expert_query })
     });
     return await response.json();
 }
