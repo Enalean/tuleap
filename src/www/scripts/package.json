@@ -6,15 +6,16 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
+    "babel-polyfill": "^6.26.0",
     "dompurify": "^1.0.1",
     "dragula": "^3.7.2",
     "get-dataset": "^0.0.4",
+    "keymaster": "^1.6.2",
     "lodash": "^4.17.4",
     "moment": "^2.18.1",
     "mustache": "^2.3.0",
     "node-gettext": "^2.0.0",
     "phptomoment": "0.0.2",
-    "promise-polyfill": "^6.0.2",
     "sprintf-js": "^1.1.1",
     "whatwg-fetch": "^2.0.3"
   },
@@ -23,6 +24,7 @@
     "babel-loader": "^7.1.2",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.5.2",
+    "imports-loader": "^0.7.1",
     "json-loader": "^0.5.7",
     "po-gettext-loader": "^0.1.1",
     "raw-loader": "^0.5.1",
@@ -31,6 +33,6 @@
   },
   "scripts": {
     "build": "NODE_ENV=production webpack --optimize-minimize --bail",
-    "watch": "webpack --watch"
+    "watch": "NODE_ENV=watch webpack --watch"
   }
 }

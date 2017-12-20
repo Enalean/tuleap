@@ -1,7 +1,6 @@
-import '../polyphills/promise-polyfill.js';
 import { get, patch } from 'tlp-fetch';
-import { sanitize } from 'dompurify';
-import jQuery from 'jquery';
+import { sanitize }   from 'dompurify';
+import jQuery         from 'jquery';
 
 export async function create(container, labels_endpoint, available_labels_endpoint, is_update_allowed) {
     const existing_labels = await getRecursively(labels_endpoint, [], 0);

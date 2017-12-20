@@ -101,14 +101,6 @@ var fat_combined_files = [
         'src/www/scripts/tuleap/listFilter.js',
         'src/www/scripts/codendi/Tooltip.js'
     ],
-    flaming_parrot_files = [
-        'src/www/themes/FlamingParrot/js/navbar.js',
-        'src/www/themes/FlamingParrot/js/sidebar.js',
-        'src/www/themes/FlamingParrot/js/motd.js',
-        'src/www/themes/FlamingParrot/js/keymaster/keymaster.js',
-        'src/www/themes/FlamingParrot/js/keymaster-sequence/keymaster.sequence.min.js',
-        'src/www/themes/FlamingParrot/js/keyboard-navigation.js'
-    ],
     burning_parrot_files = [
         'src/www/scripts/tuleap/escaper.js',
         'src/www/themes/BurningParrot/vendor/smooth-scrollbar/smooth-scrollbar.min.js',
@@ -230,7 +222,6 @@ gulp.task('js-core', function() {
         tuleap                     : fat_combined_files,
         tuleap_subset              : subset_combined_files,
         tuleap_subset_flamingparrot: subset_combined_files.concat(subset_combined_flamingparrot_files),
-        flamingparrot              : flaming_parrot_files,
         burningparrot              : burning_parrot_files
     };
 
