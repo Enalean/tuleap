@@ -21,9 +21,7 @@
 namespace Tuleap\AgileDashboard\FormElement;
 
 use Codendi_HTMLPurifier;
-use EventManager;
 use PFUser;
-use SimpleXMLElement;
 use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue;
@@ -57,17 +55,6 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
     public function canBeUsedAsReportCriterion()
     {
         return false;
-    }
-
-    /**
-     * Export form element properties into a SimpleXMLElement
-     *
-     * @param SimpleXMLElement &$root The root element of the form element
-     *
-     * @return void
-     */
-    public function exportPropertiesToXML(&$root)
-    {
     }
 
     /**
