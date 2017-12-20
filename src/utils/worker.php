@@ -1,3 +1,4 @@
+#!/usr/share/tuleap/src/utils/php-launcher.sh
 <?php
 /**
  * Copyright (c) Enalean, 2017. All Rights Reserved.
@@ -19,21 +20,7 @@
  *
  */
 
-namespace Tuleap\Queue;
+require_once 'pre.php';
 
-use Logger;
-use ForgeConfig;
-
-class Factory
-{
-    /**
-     * @return PersistentQueue
-     */
-    public static function getPersistentQueue(Logger $logger, $queue_name)
-    {
-        if (class_exists('PhpAmqpLib\\Connection\\AMQPStreamConnection') && ForgeConfig::get('rabbitmq_server') !== false) {
-            return new RabbitMQ\PersistentQueue(new RabbitMQ\RabbitMQManager($logger), $queue_name);
-        }
-        return new Noop\PersistentQueue();
-    }
-}
+$worker = new \Tuleap\Queue\Worker();
+$worker->main();
