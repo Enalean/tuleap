@@ -29,6 +29,7 @@ use Tuleap\HudsonSvn\Job\Dao as JobDao;
 use Tuleap\HudsonSvn\Job\Manager;
 use Tuleap\HudsonSvn\Job\Factory;
 use Tuleap\HudsonSvn\Job\Launcher;
+use Tuleap\Jenkins\JenkinsCSRFCrumbRetriever;
 use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
 use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
 use Tuleap\Svn\Admin\Destructor;
@@ -213,10 +214,11 @@ class hudson_svnPlugin extends Plugin {
 
     public function process_post_commit($params)
     {
-        $launcher = new Launcher(
+        $jenkins_csrf_crumb_retriever = new JenkinsCSRFCrumbRetriever(new Http_Client());
+        $launcher                     = new Launcher(
             $this->getJobFactory(),
             new SvnBackendLogger(),
-            new Jenkins_Client(new Http_Client()),
+            new Jenkins_Client(new Http_Client(), $jenkins_csrf_crumb_retriever),
             new BuildParams()
         );
 

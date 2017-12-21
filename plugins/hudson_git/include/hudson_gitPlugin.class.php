@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -29,6 +29,7 @@ use Tuleap\HudsonGit\Job\JobDao;
 use Tuleap\HudsonGit\GitWebhooksSettingsEnhancer;
 use Tuleap\Git\GitViews\RepoManagement\Pane\Hooks;
 use Tuleap\HudsonGit\PollingResponseFactory;
+use Tuleap\Jenkins\JenkinsCSRFCrumbRetriever;
 
 class hudson_gitPlugin extends Plugin
 {
@@ -108,7 +109,8 @@ class hudson_gitPlugin extends Plugin
                 new Hook\HookDao(),
                 new Hook\JenkinsClient(
                     new Http_Client(),
-                    new PollingResponseFactory()
+                    new PollingResponseFactory(),
+                    new JenkinsCSRFCrumbRetriever(new Http_Client())
                 ),
                 $this->getLogger(),
                 new JobManager(new JobDao())

@@ -23,6 +23,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Jenkins\JenkinsCSRFCrumbRetriever;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
 
@@ -71,7 +72,8 @@ $post_receive = new Git_Hook_PostReceive(
     $user_manager,
     new Git_Ci_Launcher(
         new Jenkins_Client(
-            $http_client
+            $http_client,
+            new JenkinsCSRFCrumbRetriever(new Http_Client())
         ),
         new Git_Ci_Dao(),
         $logger

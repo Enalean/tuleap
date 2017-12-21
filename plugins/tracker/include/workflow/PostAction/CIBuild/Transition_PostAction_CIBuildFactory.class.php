@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Jenkins\JenkinsCSRFCrumbRetriever;
 
 require_once TRACKER_BASE_DIR .'/workflow/PostAction/PostActionSubFactory.class.php';
 
@@ -126,9 +128,10 @@ class Transition_PostAction_CIBuildFactory implements Transition_PostActionSubFa
       * @return Transition_PostAction
       */
     private function buildPostAction(Transition $transition, $row) {
-        $id      = (int)$row['id'];
-        $job_url = (string)$row['job_url'];
-        $ci_client = new Jenkins_Client(new Http_Client());
+        $id                           = (int)$row['id'];
+        $job_url                      = (string)$row['job_url'];
+        $jenkins_csrf_crumb_retriever = new JenkinsCSRFCrumbRetriever(new Http_Client());
+        $ci_client                    = new Jenkins_Client(new Http_Client(), $jenkins_csrf_crumb_retriever);
 
         return new Transition_PostAction_CIBuild($transition, $id, $job_url, $ci_client);
     }
@@ -145,5 +148,3 @@ class Transition_PostAction_CIBuildFactory implements Transition_PostActionSubFa
         return $this->dao->searchByTransitionId($transition->getId());
     }
 }
-
-?>
