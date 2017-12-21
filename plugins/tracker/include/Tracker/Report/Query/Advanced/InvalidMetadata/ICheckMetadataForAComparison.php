@@ -25,5 +25,11 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
 interface ICheckMetadataForAComparison
 {
+    /**
+     * @param Metadata $metadata
+     * @param Comparison $comparison
+     * @throws InvalidMetadataForComparisonException
+     * @throws InvalidMetadataException
+     */
     public function checkMetaDataIsValid(Metadata $metadata, Comparison $comparison);
 }
