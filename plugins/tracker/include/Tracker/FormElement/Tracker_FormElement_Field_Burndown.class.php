@@ -20,8 +20,9 @@
 
 use Tuleap\TimezoneRetriever;
 use Tuleap\Tracker\FormElement\BurndownCacheIsCurrentlyCalculatedException;
-use Tuleap\Tracker\FormElement\BurndownConfigurationValueChecker;
-use Tuleap\Tracker\FormElement\BurndownConfigurationValueRetriever;
+use Tuleap\Tracker\FormElement\ChartCachedDaysComparator;
+use Tuleap\Tracker\FormElement\ChartConfigurationValueChecker;
+use Tuleap\Tracker\FormElement\ChartConfigurationValueRetriever;
 use Tuleap\Tracker\FormElement\BurndownLogger;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
 use Tuleap\Tracker\FormElement\ChartFieldUsage;
@@ -213,7 +214,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
                         return false;
                     }
                     $this->fetchBurndownImage($artifact, $current_user);
-                } catch (Tracker_FormElement_Field_BurndownException $e) {
+                } catch (Tracker_FormElement_Chart_Field_Exception $e) {
                     $this->displayErrorImage($e->getMessage());
                 } catch (BurndownCacheIsCurrentlyCalculatedException $e) {
                     $this->displayErrorImage($GLOBALS['Language']->getText('plugin_tracker', 'burndown_cache_generating'));
@@ -229,7 +230,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      *
      * @param Tracker_Artifact $artifact
      *
-     * @throws Tracker_FormElement_Field_BurndownException
+     * @throws Tracker_FormElement_Chart_Field_Exception
      * @throws BurndownCacheIsCurrentlyCalculatedException
      */
     public function fetchBurndownImage(Tracker_Artifact $artifact, PFUser $user) {
@@ -242,7 +243,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
                 $this->getBurndown($burndown_data)->display();
             }
         } else {
-            throw new Tracker_FormElement_Field_BurndownException(
+            throw new Tracker_FormElement_Chart_Field_Exception(
                 $GLOBALS['Language']->getText('plugin_tracker', 'burndown_permission_denied')
             );
         }
@@ -266,14 +267,14 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         $artifact = $changeset->getArtifact();
 
         try{
-            $start_date = $this->getBurndownConfigurationValueRetriever()->getBurndownStartDate($artifact, $user);
-        } catch (Tracker_FormElement_Field_BurndownException $ex) {
+            $start_date = $this->getBurndownConfigurationValueRetriever()->getStartDate($artifact, $user);
+        } catch (Tracker_FormElement_Chart_Field_Exception $ex) {
             $start_date = null;
         }
 
         try{
-            $duration = $this->getBurndownConfigurationValueRetriever()->getBurndownDuration($artifact, $user);
-        } catch (Tracker_FormElement_Field_BurndownException $ex) {
+            $duration = $this->getBurndownConfigurationValueRetriever()->getDuration($artifact, $user);
+        } catch (Tracker_FormElement_Chart_Field_Exception $ex) {
             $duration = null;
         }
 
@@ -298,8 +299,8 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      * @return Tracker_Chart_Data_Burndown
      */
     private function buildBurndownData(PFUser $user, Tracker_Artifact $artifact) {
-        $start_date = $this->getBurndownConfigurationValueRetriever()->getBurndownStartDate($artifact, $user);
-        $duration   = $this->getBurndownConfigurationValueRetriever()->getBurndownDuration($artifact, $user);
+        $start_date = $this->getBurndownConfigurationValueRetriever()->getStartDate($artifact, $user);
+        $duration   = $this->getBurndownConfigurationValueRetriever()->getDuration($artifact, $user);
 
         return $this->getBurndownData(
             $artifact,
@@ -450,9 +451,6 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         Tracker_Artifact $artifact,
         PFUser $user
     ) {
-        $days   = $burndown_data->getTimePeriod()->getCountDayUntilDate($_SERVER['REQUEST_TIME']);
-        $logger = $this->getLogger();
-
         if ($this->getBurndownConfigurationValueChecker()->doesUserCanReadRemainingEffort($artifact, $user)
             && $this->getBurndownConfigurationValueChecker()->hasStartDate($artifact, $user)) {
             $cached_days = $this->getComputedDao()->getCachedDays(
@@ -460,37 +458,10 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
                 $this->getBurdownConfigurationFieldRetriever()->getBurndownRemainingEffortField($artifact, $user)->getId()
             );
 
-            if ($this->isTodayAWeekDayAndIsTodayBeforeTimePeriodEnd($burndown_data)) {
-                $logger->debug("Burndown period is current");
-                $logger->debug("Day cached: " . $cached_days['cached_days']);
-                $logger->debug("Period days: " . $days);
-                $logger->debug("Period days without last computed value: " . ($days - 1));
-                return $this->compareCachedDaysWhenLastDayIsAComputedValue((int) $cached_days['cached_days'], $days);
-            } else {
-                $logger->debug("Burndown period is in past");
-                $logger->debug("Day cached: " . $cached_days['cached_days']);
-                $logger->debug("Period days: " . $days);
-                return $this->compareCachedDaysWithPeriodDays((int) $cached_days['cached_days'], $days);
-            }
+            return $this->getCachedDaysComparator()->areDaysIdentical($burndown_data, $cached_days['cached_days']);
         }
 
         return true;
-    }
-
-    private function isTodayAWeekDayAndIsTodayBeforeTimePeriodEnd(Tracker_Chart_Data_Burndown $burndown_data)
-    {
-        return $burndown_data->getTimePeriod()->isTodayWithinTimePeriod()
-            && $burndown_data->getTimePeriod()->isNotWeekendDay($_SERVER['REQUEST_TIME']);
-    }
-
-    private function compareCachedDaysWhenLastDayIsAComputedValue($cache_days, $number_of_days_for_period)
-    {
-        return $cache_days === $number_of_days_for_period -1;
-    }
-
-    private function compareCachedDaysWithPeriodDays($cache_days, $number_of_days_for_period)
-    {
-        return $cache_days === $number_of_days_for_period;
     }
 
     private function addRemainingEffortData(
@@ -762,7 +733,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
                     $this->forceBurndownCacheGeneration($artifact->getId());
                 }
             }
-        } catch (Tracker_FormElement_Field_BurndownException $e) {
+        } catch (Tracker_FormElement_Chart_Field_Exception $e) {
         }
     }
 
@@ -775,21 +746,21 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     }
 
     /**
-     * @return BurndownConfigurationValueRetriever
+     * @return ChartConfigurationValueRetriever
      */
     private function getBurndownConfigurationValueRetriever()
     {
-        return new BurndownConfigurationValueRetriever(
+        return new ChartConfigurationValueRetriever(
             $this->getBurdownConfigurationFieldRetriever(), $this->getLogger()
         );
     }
 
     /**
-     * @return BurndownConfigurationValueChecker
+     * @return ChartConfigurationValueChecker
      */
     private function getBurndownConfigurationValueChecker()
     {
-        return new BurndownConfigurationValueChecker(
+        return new ChartConfigurationValueChecker(
             $this->getBurdownConfigurationFieldRetriever(),
             $this->getBurndownConfigurationValueRetriever()
         );
@@ -820,5 +791,13 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
             $use_remaining_effort,
             $is_under_construction
         );
+    }
+
+    /**
+     * @return ChartCachedDaysComparator
+     */
+    private function getCachedDaysComparator()
+    {
+        return new ChartCachedDaysComparator($this->getLogger());
     }
 }

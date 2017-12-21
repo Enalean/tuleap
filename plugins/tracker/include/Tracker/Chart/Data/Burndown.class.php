@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,12 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Chart\Data\IProvideChartData;
+
 require_once 'common/date/TimePeriod.class.php';
 
 /**
  * Storage data for Burndown display via JPgraph
  */
-class Tracker_Chart_Data_Burndown
+class Tracker_Chart_Data_Burndown implements IProvideChartData
 {
     /**
      * @var TimePeriod

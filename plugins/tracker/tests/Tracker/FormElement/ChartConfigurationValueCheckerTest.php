@@ -20,11 +20,11 @@
 
 namespace Tuleap\Tracker\FormElement;
 
-use Tracker_FormElement_Field_BurndownException;
+use Tracker_FormElement_Chart_Field_Exception;
 
 require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
-class BurndownConfigurationValueCheckerTest extends \TuleapTestCase
+class ChartConfigurationValueCheckerTest extends \TuleapTestCase
 {
     /**
      * @var \Tracker_FormElement_Field_Integer
@@ -67,20 +67,20 @@ class BurndownConfigurationValueCheckerTest extends \TuleapTestCase
     private $configuration_field_retriever;
 
     /**
-     * @var BurndownConfigurationValueRetriever
+     * @var ChartConfigurationValueRetriever
      */
     private $configuration_value_retriever;
 
     /**
-     * @var BurndownConfigurationValueChecker
+     * @var ChartConfigurationValueChecker
      */
-    private $burndown_configuration_checker;
+    private $chart_configuration_value_checker;
 
     public function setUp()
     {
-        $this->configuration_field_retriever  = mock('Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever');
-        $this->configuration_value_retriever  = mock('Tuleap\Tracker\FormElement\BurndownConfigurationValueRetriever');
-        $this->burndown_configuration_checker = new BurndownConfigurationValueChecker(
+        $this->configuration_field_retriever     = mock('Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever');
+        $this->configuration_value_retriever     = mock('Tuleap\Tracker\FormElement\ChartConfigurationValueRetriever');
+        $this->chart_configuration_value_checker = new ChartConfigurationValueChecker(
             $this->configuration_field_retriever,
             $this->configuration_value_retriever
         );
@@ -94,105 +94,105 @@ class BurndownConfigurationValueCheckerTest extends \TuleapTestCase
         $this->new_changeset        = mock('Tracker_Artifact_Changeset');
     }
 
-    public function itReturnsFalseWhenBurndownDontHaveAStartDateField()
+    public function itReturnsFalseWhenChartDontHaveAStartDateField()
     {
-        stub($this->configuration_field_retriever)->getBurndownStartDateField($this->artifact, $this->user)->throws(
-            new Tracker_FormElement_Field_BurndownException()
+        stub($this->configuration_field_retriever)->getStartDateField($this->artifact, $this->user)->throws(
+            new Tracker_FormElement_Chart_Field_Exception()
         );
 
-        $this->expectException('Tracker_FormElement_Field_BurndownException');
+        $this->expectException('Tracker_FormElement_Chart_Field_Exception');
 
         $this->assertFalse(
-            $this->burndown_configuration_checker->hasStartDate($this->artifact, $this->user)
+            $this->chart_configuration_value_checker->hasStartDate($this->artifact, $this->user)
         );
     }
 
     public function itReturnsFalseWhenStartDateFieldIsNeverDefined()
     {
-        stub($this->configuration_field_retriever)->getBurndownStartDateField($this->artifact, $this->user)->returns(
+        stub($this->configuration_field_retriever)->getStartDateField($this->artifact, $this->user)->returns(
             $this->start_date_field
         );
         stub($this->artifact)->getValue($this->start_date_field)->returns(null);
 
         $this->assertFalse(
-            $this->burndown_configuration_checker->hasStartDate($this->artifact, $this->user)
+            $this->chart_configuration_value_checker->hasStartDate($this->artifact, $this->user)
         );
     }
 
     public function itReturnsFalseWhenStartDateFieldIsEmpty()
     {
-        stub($this->configuration_field_retriever)->getBurndownStartDateField($this->artifact, $this->user)->returns(
+        stub($this->configuration_field_retriever)->getStartDateField($this->artifact, $this->user)->returns(
             $this->start_date_field
         );
         stub($this->artifact)->getValue($this->start_date_field)->returns($this->start_date_changeset);
         stub($this->start_date_changeset)->getTimestamp()->returns(null);
 
         $this->assertFalse(
-            $this->burndown_configuration_checker->hasStartDate($this->artifact, $this->user)
+            $this->chart_configuration_value_checker->hasStartDate($this->artifact, $this->user)
         );
     }
 
-    public function itReturnsTrueWhenBurndownHasAStartDateAndStartDateIsFiled()
+    public function itReturnsTrueWhenChartHasAStartDateAndStartDateIsFiled()
     {
-        stub($this->configuration_field_retriever)->getBurndownStartDateField($this->artifact, $this->user)->returns(
+        stub($this->configuration_field_retriever)->getStartDateField($this->artifact, $this->user)->returns(
             $this->start_date_field
         );
         stub($this->artifact)->getValue($this->start_date_field)->returns($this->start_date_changeset);
         stub($this->start_date_changeset)->getTimestamp()->returns(1488470204);
 
         $this->assertTrue(
-            $this->burndown_configuration_checker->hasStartDate($this->artifact, $this->user)
+            $this->chart_configuration_value_checker->hasStartDate($this->artifact, $this->user)
         );
     }
 
     public function itReturnsConfigurationIsNotCorrectlySetWhenStartDateFieldIsMissing()
     {
-        stub($this->configuration_value_retriever)->getBurndownDuration($this->artifact, $this->user)->returns(
+        stub($this->configuration_value_retriever)->getDuration($this->artifact, $this->user)->returns(
             $this->duration_changeset
         );
-        stub($this->configuration_value_retriever)->getBurndownStartDate($this->artifact, $this->user)->throws(
-            new Tracker_FormElement_Field_BurndownException()
+        stub($this->configuration_value_retriever)->getStartDate($this->artifact, $this->user)->throws(
+            new Tracker_FormElement_Chart_Field_Exception()
         );
 
         $this->assertFalse(
-            $this->burndown_configuration_checker->areBurndownFieldsCorrectlySet($this->artifact, $this->user)
+            $this->chart_configuration_value_checker->areBurndownFieldsCorrectlySet($this->artifact, $this->user)
         );
     }
 
     public function itReturnsConfigurationIsNotCorrectlySetWhenStarDurationFieldIsMissing()
     {
-        stub($this->configuration_value_retriever)->getBurndownDuration($this->artifact, $this->user)->throws(
-            new Tracker_FormElement_Field_BurndownException()
+        stub($this->configuration_value_retriever)->getDuration($this->artifact, $this->user)->throws(
+            new Tracker_FormElement_Chart_Field_Exception()
         );
-        stub($this->configuration_value_retriever)->getBurndownStartDate($this->artifact, $this->user)->returns(
+        stub($this->configuration_value_retriever)->getStartDate($this->artifact, $this->user)->returns(
             $this->start_date_field
         );
 
         $this->assertFalse(
-            $this->burndown_configuration_checker->areBurndownFieldsCorrectlySet($this->artifact, $this->user)
+            $this->chart_configuration_value_checker->areBurndownFieldsCorrectlySet($this->artifact, $this->user)
         );
     }
 
     public function itReturnsConfigurationIsCorrectlySetWhenBurndownHasAStartDateAndADuration()
     {
-        stub($this->configuration_value_retriever)->getBurndownDuration($this->artifact, $this->user)->returns(
+        stub($this->configuration_value_retriever)->getDuration($this->artifact, $this->user)->returns(
             $this->duration_changeset
         );
-        stub($this->configuration_value_retriever)->getBurndownStartDate($this->artifact, $this->user)->returns(
+        stub($this->configuration_value_retriever)->getStartDate($this->artifact, $this->user)->returns(
             $this->start_date_field
         );
 
         $this->assertTrue(
-            $this->burndown_configuration_checker->areBurndownFieldsCorrectlySet($this->artifact, $this->user)
+            $this->chart_configuration_value_checker->areBurndownFieldsCorrectlySet($this->artifact, $this->user)
         );
     }
 
     public function itReturnsFalseWhenStartDateAndDurationDontHaveChanged()
     {
-        stub($this->configuration_field_retriever)->getBurndownDurationField($this->artifact, $this->user)->returns(
+        stub($this->configuration_field_retriever)->getDurationField($this->artifact, $this->user)->returns(
             $this->duration_field
         );
-        stub($this->configuration_field_retriever)->getBurndownStartDateField($this->artifact, $this->user)->returns(
+        stub($this->configuration_field_retriever)->getStartDateField($this->artifact, $this->user)->returns(
             $this->start_date_field
         );
         stub($this->new_changeset)->getValue($this->start_date_field)->returns($this->start_date_changeset);
@@ -202,7 +202,7 @@ class BurndownConfigurationValueCheckerTest extends \TuleapTestCase
         stub($this->duration_changeset)->hasChanged()->returns(false);
 
         $this->assertFalse(
-            $this->burndown_configuration_checker->hasConfigurationChange(
+            $this->chart_configuration_value_checker->hasConfigurationChange(
                 $this->artifact,
                 $this->user,
                 $this->new_changeset
@@ -212,10 +212,10 @@ class BurndownConfigurationValueCheckerTest extends \TuleapTestCase
 
     public function itReturnsTrueWhenStartDateHaveChanged()
     {
-        stub($this->configuration_field_retriever)->getBurndownDurationField($this->artifact, $this->user)->returns(
+        stub($this->configuration_field_retriever)->getDurationField($this->artifact, $this->user)->returns(
             $this->duration_field
         );
-        stub($this->configuration_field_retriever)->getBurndownStartDateField($this->artifact, $this->user)->returns(
+        stub($this->configuration_field_retriever)->getStartDateField($this->artifact, $this->user)->returns(
             $this->start_date_field
         );
         stub($this->new_changeset)->getValue($this->start_date_field)->returns($this->start_date_changeset);
@@ -225,7 +225,7 @@ class BurndownConfigurationValueCheckerTest extends \TuleapTestCase
         stub($this->duration_changeset)->hasChanged()->returns(false);
 
         $this->assertTrue(
-            $this->burndown_configuration_checker->hasConfigurationChange(
+            $this->chart_configuration_value_checker->hasConfigurationChange(
                 $this->artifact,
                 $this->user,
                 $this->new_changeset
@@ -235,10 +235,10 @@ class BurndownConfigurationValueCheckerTest extends \TuleapTestCase
 
     public function itReturnsTrueWhenDurationHaveChanged()
     {
-        stub($this->configuration_field_retriever)->getBurndownDurationField($this->artifact, $this->user)->returns(
+        stub($this->configuration_field_retriever)->getDurationField($this->artifact, $this->user)->returns(
             $this->duration_field
         );
-        stub($this->configuration_field_retriever)->getBurndownStartDateField($this->artifact, $this->user)->returns(
+        stub($this->configuration_field_retriever)->getStartDateField($this->artifact, $this->user)->returns(
             $this->start_date_field
         );
         stub($this->new_changeset)->getValue($this->start_date_field)->returns($this->start_date_changeset);
@@ -248,7 +248,7 @@ class BurndownConfigurationValueCheckerTest extends \TuleapTestCase
         stub($this->duration_changeset)->hasChanged()->returns(true);
 
         $this->assertTrue(
-            $this->burndown_configuration_checker->hasConfigurationChange(
+            $this->chart_configuration_value_checker->hasConfigurationChange(
                 $this->artifact,
                 $this->user,
                 $this->new_changeset

@@ -338,4 +338,58 @@ class BurnupDao extends DataAccessObject
 
         return $this->retrieve($sql);
     }
+
+    public function getBurnupInformation($artifact_id)
+    {
+        $artifact_id = $this->da->escapeInt($artifact_id);
+
+        $sql = "SELECT
+                  tracker_artifact.id,
+                  SUM(tracker_changeset_value_date.value)      AS start_date,
+                  SUM(tracker_changeset_value_int.value)       AS duration,
+                  tracker_field_for_start_date.id              AS start_date_field_id,
+                  tracker_field_for_duration.id                AS duration_field_id,
+                  tracker_field_for_remaining_effort.id        AS remaining_effort_field_id,
+                  DATE_ADD(
+                    DATE_FORMAT(FROM_UNIXTIME(SUM(tracker_changeset_value_date.value)), '%Y-%m-%d 00:00:00'),
+                    INTERVAL SUM(tracker_changeset_value_int.value) +1 DAY
+                  ) AS end_date,
+                 UNIX_TIMESTAMP(DATE_ADD(
+                    (FROM_UNIXTIME(SUM(tracker_changeset_value_date.value))),
+                    INTERVAL SUM(tracker_changeset_value_int.value) +1 DAY
+                  )) AS timestamp_end_date
+            FROM tracker_field AS burndown_field
+            INNER JOIN tracker
+              ON tracker.id = burndown_field.tracker_id
+            INNER JOIN tracker_field AS tracker_field_for_start_date
+              ON tracker.id = tracker_field_for_start_date.tracker_id
+              AND tracker_field_for_start_date.name = 'start_date'
+            INNER JOIN tracker_field AS tracker_field_for_duration
+              ON tracker.id = tracker_field_for_duration.tracker_id
+              AND tracker_field_for_duration.name = 'duration'
+            INNER JOIN tracker_field AS tracker_field_for_remaining_effort
+              ON tracker.id = tracker_field_for_remaining_effort.tracker_id
+              AND tracker_field_for_remaining_effort.name = 'remaining_effort'
+            INNER JOIN tracker_artifact
+              ON tracker.id = tracker_artifact.tracker_id
+            INNER JOIN tracker_changeset
+              ON tracker_changeset.id = tracker_artifact.last_changeset_id
+            INNER JOIN tracker_changeset_value
+              ON tracker_changeset_value.changeset_id = tracker_changeset.id
+            LEFT JOIN tracker_changeset_value_date
+              ON tracker_changeset_value_date.changeset_value_id = tracker_changeset_value.id
+              AND tracker_field_for_start_date.id = tracker_changeset_value.field_id
+            LEFT JOIN tracker_changeset_value_int
+              ON tracker_changeset_value_int.changeset_value_id = tracker_changeset_value.id
+              AND tracker_field_for_duration.id = tracker_changeset_value.field_id
+            WHERE
+              burndown_field.formElement_type = 'burndown'
+              AND tracker_artifact.id = $artifact_id
+              AND burndown_field.use_it = 1
+            GROUP BY tracker_artifact.id, burndown_field.id
+            HAVING start_date IS NOT NULL
+            AND duration IS NOT NULL";
+
+        return $this->retrieveFirstRow($sql);
+    }
 }

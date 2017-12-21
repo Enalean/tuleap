@@ -25,22 +25,22 @@ use Tracker;
 use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field;
-use Tracker_FormElement_Field_BurndownException;
+use Tracker_FormElement_Chart_Field_Exception;
 
-class BurndownConfigurationValueChecker
+class ChartConfigurationValueChecker
 {
     /**
      * @var ChartConfigurationFieldRetriever
      */
     private $configuration_field_retriever;
     /**
-     * @var BurndownConfigurationValueRetriever
+     * @var ChartConfigurationValueRetriever
      */
     private $configuration_value_retriever;
 
     public function __construct(
         ChartConfigurationFieldRetriever $configuration_field_retriever,
-        BurndownConfigurationValueRetriever $configuration_value_retriever
+        ChartConfigurationValueRetriever $configuration_value_retriever
     ) {
         $this->configuration_field_retriever = $configuration_field_retriever;
         $this->configuration_value_retriever = $configuration_value_retriever;
@@ -48,7 +48,7 @@ class BurndownConfigurationValueChecker
 
     public function hasStartDate(Tracker_Artifact $artifact, PFUser $user)
     {
-        $start_date_field = $this->configuration_field_retriever->getBurndownStartDateField($artifact, $user);
+        $start_date_field = $this->configuration_field_retriever->getStartDateField($artifact, $user);
         $artifact_value   = $artifact->getValue($start_date_field);
 
         if ($artifact_value === null) {
@@ -70,9 +70,9 @@ class BurndownConfigurationValueChecker
     public function areBurndownFieldsCorrectlySet(Tracker_Artifact $artifact, PFUser $user)
     {
         try {
-            return $this->configuration_value_retriever->getBurndownDuration($artifact, $user) !== null
-                && $this->configuration_value_retriever->getBurndownStartDate($artifact, $user) !== null;
-        } catch (Tracker_FormElement_Field_BurndownException $e) {
+            return $this->configuration_value_retriever->getDuration($artifact, $user) !== null
+                && $this->configuration_value_retriever->getStartDate($artifact, $user) !== null;
+        } catch (Tracker_FormElement_Chart_Field_Exception $e) {
             return false;
         }
     }
@@ -82,8 +82,8 @@ class BurndownConfigurationValueChecker
         PFUser $user,
         Tracker_Artifact_Changeset $new_changeset
     ) {
-        $start_date_field = $this->configuration_field_retriever->getBurndownStartDateField($artifact, $user);
-        $duration_field   = $this->configuration_field_retriever->getBurndownDurationField($artifact, $user);
+        $start_date_field = $this->configuration_field_retriever->getStartDateField($artifact, $user);
+        $duration_field   = $this->configuration_field_retriever->getDurationField($artifact, $user);
 
         return $this->hasFieldChanged($new_changeset, $start_date_field)
             || $this->hasFieldChanged($new_changeset, $duration_field);

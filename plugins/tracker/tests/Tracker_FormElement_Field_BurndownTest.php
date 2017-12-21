@@ -233,7 +233,7 @@ class Tracker_FormElement_Field_Burndown_FieldCorrectlySetTest extends TuleapTes
         stub($this->burndown_field)->userHasPermission()->returns(false);
 
         $this->expectException(
-            new Tracker_FormElement_Field_BurndownException(
+            new Tracker_FormElement_Chart_Field_Exception(
                 $GLOBALS['Language']->getText('plugin_tracker', 'burndown_permission_denied')
             )
         );
@@ -252,7 +252,7 @@ class Tracker_FormElement_Field_Burndown_FieldCorrectlySetTest extends TuleapTes
         $this->getADurationField($duration);
 
         $this->expectException(
-            new Tracker_FormElement_Field_BurndownException(
+            new Tracker_FormElement_Chart_Field_Exception(
                 $GLOBALS['Language']->getText('plugin_tracker', 'burndown_empty_duration_warning')
             )
         );
@@ -272,7 +272,7 @@ class Tracker_FormElement_Field_Burndown_FieldCorrectlySetTest extends TuleapTes
         $this->getADurationField($duration);
 
         $this->expectException(
-            new Tracker_FormElement_Field_BurndownException(
+            new Tracker_FormElement_Chart_Field_Exception(
                 $GLOBALS['Language']->getText('plugin_tracker', 'burndown_duration_too_short')
             )
         );
@@ -448,7 +448,7 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
 
         $this->GivenFormElementFactoryHasOnlyDurationField();
 
-        $this->expectException(new Tracker_FormElement_Field_BurndownException(
+        $this->expectException(new Tracker_FormElement_Chart_Field_Exception(
             $GLOBALS['Language']->getText('plugin_tracker', 'burndown_missing_start_date_warning')
         ));
 
@@ -467,7 +467,7 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
 
         $this->GivenFormElementFactoryHasOnlyStartDateField();
 
-        $this->expectException(new Tracker_FormElement_Field_BurndownException(
+        $this->expectException(new Tracker_FormElement_Chart_Field_Exception(
             $GLOBALS['Language']->getText('plugin_tracker', 'burndown_missing_duration_warning')
         ));
 
@@ -484,7 +484,7 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         stub($sprint)->getValue($this->duration_field)->returns($this->duration_changeset_value);
         stub($sprint)->getTracker()->returns($this->sprint_tracker);
 
-        $this->expectException(new Tracker_FormElement_Field_BurndownException(
+        $this->expectException(new Tracker_FormElement_Chart_Field_Exception(
             $GLOBALS['Language']->getText('plugin_tracker', 'burndown_empty_start_date_warning')
         ));
 
@@ -501,7 +501,7 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         stub($sprint)->getValue($this->duration_field)->returns($duration_changeset_value);
         stub($sprint)->getTracker()->returns($this->sprint_tracker);
 
-        $this->expectException(new Tracker_FormElement_Field_BurndownException(
+        $this->expectException(new Tracker_FormElement_Chart_Field_Exception(
             $GLOBALS['Language']->getText('plugin_tracker', 'burndown_empty_duration_warning')
         ));
 
@@ -519,7 +519,7 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         stub($sprint)->getTracker()->returns($this->sprint_tracker);
 
         $this->expectException(
-            new Tracker_FormElement_Field_BurndownException(
+            new Tracker_FormElement_Chart_Field_Exception(
                 $GLOBALS['Language']->getText('plugin_tracker', 'burndown_duration_too_short')
             )
         );
@@ -531,7 +531,7 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         $this->field = TestHelper::getPartialMock('Tracker_FormElement_Field_Burndown', array('getBurndown', 'displayErrorImage', 'userCanRead'));
         stub($this->field)->userCanRead($this->current_user)->returns(false);
 
-        $this->expectException(new Tracker_FormElement_Field_BurndownException(
+        $this->expectException(new Tracker_FormElement_Chart_Field_Exception(
             $GLOBALS['Language']->getText('plugin_tracker', 'burndown_permission_denied')
         ));
 
@@ -825,57 +825,6 @@ class Tracker_FormElement_Field_Burndown_CacheGeneration extends TuleapTestCase 
         expect($this->event_manager)->createEvent()->never();
     }
 
-    public function itVerifiesCacheIsCompleteForBurndownWhenCacheDaysAreTheSameThanTimePeriodDays()
-    {
-        stub($this->form_element_factory)->getComputableFieldByNameForUser('*', 'remaining_effort', $this->current_user)->returns($this->field_computed);
-        stub($this->form_element_factory)->getUsedFieldByNameForUser('*', 'start_date', $this->current_user)->returns($this->start_date_field);
-
-        stub($this->sprint)->getTracker()->returns($this->tracker);
-        stub($this->computed_dao)->getCachedDays()->returns(array('cached_days' => 5));
-        stub($this->remaining_effort_field)->getId()->returns(10);
-        stub($this->field)->isCacheBurndownAlreadyAsked()->returns(false);
-
-        $this->field->getBurndownData($this->sprint, $this->current_user, $this->timestamp, $this->duration);
-
-        expect($this->event_manager)->createEvent()->never();
-    }
-
-    public function itVerifiesCacheIsCompleteForBurndownWhenCacheDaysAreNotTheSameThanTimePeriodDays()
-    {
-        stub($this->form_element_factory)->getDateFieldByNameForUser(
-            $this->tracker,
-            $this->current_user,
-            'start_date'
-        )->returns(
-            $this->start_date_field
-        );
-
-        stub($this->form_element_factory)->getNumericFieldByNameForUser(
-            $this->tracker,
-            $this->current_user,
-            'duration'
-        )->returns(
-            $this->duration_field
-        );
-
-        stub($this->form_element_factory)->getNumericFieldByNameForUser(
-            $this->tracker,
-            $this->current_user,
-            'remaining_effort'
-        )->returns(
-            $this->field_computed
-        );
-
-        stub($this->sprint)->getTracker()->returns($this->tracker);
-        stub($this->computed_dao)->getCachedDays()->returns(array('cached_days' => 60));
-        stub($this->remaining_effort_field)->getId()->returns(10);
-        stub($this->field)->isCacheBurndownAlreadyAsked()->returns(false);
-
-        $this->field->getBurndownData($this->sprint, $this->current_user, $this->timestamp, $this->duration);
-
-        expect($this->event_manager)->createEvent()->once();
-    }
-
     public function itVerifiesCacheIsCompleteForBurndownWhenStartDateIsEmpty()
     {
         stub($this->form_element_factory)->getDateFieldByNameForUser(
@@ -907,7 +856,7 @@ class Tracker_FormElement_Field_Burndown_CacheGeneration extends TuleapTestCase 
         stub($this->remaining_effort_field)->getId()->returns(10);
         stub($this->field)->isCacheBurndownAlreadyAsked()->returns(false);
 
-        $this->expectException('Tracker_FormElement_Field_BurndownException');
+        $this->expectException('Tracker_FormElement_Chart_Field_Exception');
         $this->field->getBurndownData($this->sprint, $this->current_user, $this->timestamp, $this->duration);
 
         expect($this->event_manager)->createEvent()->never();
