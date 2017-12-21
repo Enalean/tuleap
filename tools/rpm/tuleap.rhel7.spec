@@ -35,13 +35,11 @@ Packager: Manuel VACELET <manuel.vacelet@enalean.com>
 AutoReqProv: no
 
 # Php and web related stuff
-Requires: %{php_base}, %{php_base}-mysql, %{php_base}-xml, %{php_base}-mbstring, %{php_base}-gd, %{php_base}-soap, %{php_base}-pear, %{php_base}-intl
-Requires: %{php_base}-process  %{php_base}-opcache
+Requires: %{php_base}, %{php_base}-mysql, %{php_base}-xml, %{php_base}-mbstring, %{php_base}-gd, %{php_base}-soap, %{php_base}-pear, %{php_base}-intl, %{php_base}-process, %{php_base}-opcache, %{php_base}-fpm
 
 Requires: highlight
 
 Requires: php-ZendFramework2-Loader, php-ZendFramework2-Mail
-Requires: rh-php56-php-fpm
 
 # Unit file
 Requires: systemd
@@ -203,7 +201,7 @@ Summary: Tracker v5 for Tuleap
 Group: Development/Tools
 Version: @@PLUGIN_TRACKER_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
-#Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, libxslt, %{php_base}-imap
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, libxslt, %{php_base}-imap
 %description plugin-tracker
 New tracker generation for Tuleap.
 
@@ -504,11 +502,11 @@ done
 #%{__install} src/utils/cron.d/codendi-stop $RPM_BUILD_ROOT/etc/cron.d/%{APP_NAME}
 #
 ## Install logrotate.d script
-#%{__install} -d $RPM_BUILD_ROOT/%{_sysconfdir}/logrotate.d
+%{__install} -d $RPM_BUILD_ROOT/%{_sysconfdir}/logrotate.d
 # Replace default httpd logrotate by ours
-#%{__install} src/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_syslog
-#%{__perl} -pi -e "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_syslog
-#%{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_syslog
+%{__install} src/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_syslog
+%{__perl} -pi -e "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_syslog
+%{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_syslog
 
 # Cache dir
 %{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}
@@ -557,7 +555,7 @@ done
 #%{__install} plugins/git/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_git
 #%{__perl} -pi -e "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_git
 #%{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_git
-#%{__install} -d $RPM_BUILD_ROOT/etc/sudoers.d
+%{__install} -d $RPM_BUILD_ROOT/etc/sudoers.d
 #%{__install} plugins/git/etc/sudoers.d/gitolite-http $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_gitolite2_http
 #%{__install} plugins/git/etc/sudoers.d/tuleap-git-postreceive $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_git_postreceive
 #
@@ -580,11 +578,11 @@ done
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/svn_plugin
 
 # Plugin tracker
-#%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/tracker
-#%{__install} plugins/tracker/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_tracker
-#%{__perl} -pi -e "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_tracker
-#%{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_tracker
-#%{__install} plugins/tracker/etc/sudoers.d/tuleap-plugin-tracker $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_plugin_tracker
+%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/tracker
+%{__install} plugins/tracker/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_tracker
+%{__perl} -pi -e "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_tracker
+%{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_tracker
+%{__install} plugins/tracker/etc/sudoers.d/tuleap-plugin-tracker $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_plugin_tracker
 #
 # Plugin agiledashboard
 #%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/agiledashboard
@@ -838,14 +836,16 @@ fi
 %preun
 if [ $1 -eq 0 ]; then
     /usr/bin/systemctl stop tuleap.service &>/dev/null || :
+
     /usr/bin/systemctl disable \
         tuleap.service \
-        tuleap-php-fpm &>/dev/null || :
+        tuleap-php-fpm.service &>/dev/null || :
 fi
 
 %preun core-subversion
 if [ $1 -eq 0 ]; then
     /usr/bin/systemctl stop tuleap.service &>/dev/null || :
+
     /usr/bin/systemctl disable \
         tuleap-svn-updater.service \
         tuleap-svn-log-parser.service &>/dev/null || :
@@ -853,9 +853,6 @@ fi
 
 %postun
 /usr/bin/systemctl daemon-reload &>/dev/null || :
-if [ $1 -eq 1 ]; then
-    /usr/bin/systemctl restart tuleap.service &>/dev/null || :
-fi
 
 %postun core-subversion
 /usr/bin/systemctl daemon-reload &>/dev/null || :
@@ -973,7 +970,7 @@ fi
 #%attr(04755,root,root) %{APP_LIBBIN_DIR}/fileforge
 #%attr(00755,root,root) /etc/rc.d/init.d/%{APP_NAME}
 #%attr(00644,root,root) /etc/cron.d/%{APP_NAME}
-#%attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_syslog
+%attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_syslog
 %dir %attr(-,%{APP_USER},%{APP_USER}) %{APP_CACHE_DIR}
 #%dir /etc/httpd/conf.d/tuleap-plugins
 #%attr(04755,root,root) /etc/httpd/conf.d/tuleap-plugins/ckeditor.conf
@@ -1104,9 +1101,9 @@ fi
 %files plugin-tracker
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/tracker
-#%dir %{APP_DATA_DIR}/tracker
-#%attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_tracker
-#%attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_plugin_tracker
+%dir %{APP_DATA_DIR}/tracker
+%attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_tracker
+%attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_plugin_tracker
 
 %files plugin-graphontrackers
 %defattr(-,root,root,-)
