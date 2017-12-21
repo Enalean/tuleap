@@ -143,24 +143,12 @@ msgstr ""
 "utilisées par une autre sémantique."
 
 #, php-format
-msgid "The @comment metadata cannot be compared to MYSELF()."
-msgstr "Le champ @comment ne peut pas être comparé à MYSELF()."
+msgid "The @comments metadata cannot be compared to MYSELF()."
+msgstr "@comments ne peut pas être comparé à MYSELF()."
 
 #, php-format
-msgid "The @comment metadata cannot be compared to NOW()."
-msgstr "Le champ @comment ne peut pas être comparé à NOW()."
-
-#, php-format
-msgid "The @comment metadata cannot be compared to a date."
-msgstr "Le champ @comment ne peut pas être comparé à une date."
-
-#, php-format
-msgid "The @comment metadata cannot be compared to the float value '%s'."
-msgstr "Le champ @comment ne peut pas être comparé à la valeur flottante '%s'."
-
-#, php-format
-msgid "The @comment metadata cannot be compared to the int value '%s'."
-msgstr "Le champ @comment ne peut pas être comparé à la chaîne '%s'."
+msgid "The @comments metadata cannot be compared to NOW()."
+msgstr "@comments ne peut pas être comparé à NOW()."
 
 #, php-format
 msgid "The artifact link type \"%s\" cannot be disabled"

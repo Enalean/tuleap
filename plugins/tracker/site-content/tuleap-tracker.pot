@@ -118,23 +118,11 @@ msgid ""
 msgstr ""
 
 #, php-format
-msgid "The @comment metadata cannot be compared to MYSELF()."
+msgid "The @comments metadata cannot be compared to MYSELF()."
 msgstr ""
 
 #, php-format
-msgid "The @comment metadata cannot be compared to NOW()."
-msgstr ""
-
-#, php-format
-msgid "The @comment metadata cannot be compared to a date."
-msgstr ""
-
-#, php-format
-msgid "The @comment metadata cannot be compared to the float value '%s'."
-msgstr ""
-
-#, php-format
-msgid "The @comment metadata cannot be compared to the int value '%s'."
+msgid "The @comments metadata cannot be compared to NOW()."
 msgstr ""
 
 #, php-format
