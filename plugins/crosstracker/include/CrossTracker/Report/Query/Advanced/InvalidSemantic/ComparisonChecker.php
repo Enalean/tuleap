@@ -36,12 +36,25 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 class ComparisonChecker implements ICheckSemanticFieldForAComparison, ValueWrapperVisitor
 {
     /**
+     * @var SemanticUsageChecker
+     */
+    private $semantic_usage_checker;
+
+    public function __construct(SemanticUsageChecker $semantic_usage_checker)
+    {
+        $this->semantic_usage_checker = $semantic_usage_checker;
+    }
+
+    /**
      * @param Metadata $metadata
      * @param Comparison $comparison
+     * @param int[] $trackers_id
      * @throws InvalidSemanticComparisonException
      */
-    public function checkSemanticMetadataIsValid(Metadata $metadata, Comparison $comparison)
+    public function checkSemanticMetadataIsValid(Metadata $metadata, Comparison $comparison, array $trackers_id)
     {
+        $this->semantic_usage_checker->checkSemanticIsUsedByAllTrackers($metadata, $trackers_id);
+
         $value = $comparison->getValueWrapper()->accept($this, new MetadataValueWrapperParameters($metadata));
 
         if (is_float($value + 0)) {

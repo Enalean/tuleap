@@ -20,16 +20,22 @@
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic;
 
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
-
-interface ICheckSemanticFieldForAComparison
+class DescriptionIsMissingInAtLeastOneTrackerException extends InvalidSemanticComparisonException
 {
-    /**
-     * @param Metadata $metadata
-     * @param Comparison $comparison
-     * @param int[] $trackers_id
-     * @return
-     */
-    public function checkSemanticMetadataIsValid(Metadata $metadata, Comparison $comparison, array $trackers_id);
+    public function __construct($count)
+    {
+        parent::__construct(
+            sprintf(
+                dngettext(
+                    'tuleap-crosstracker',
+                    'One of the trackers involved in the query does not have the semantic description defined. Please refine
+                    your query or check the configuration of the trackers.',
+                    '%d of the trackers involved in the query do not have the semantic description defined. Please refine
+                    your query or check the configuration of the trackers.',
+                    $count
+                ),
+                $count
+            )
+        );
+    }
 }

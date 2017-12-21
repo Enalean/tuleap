@@ -40,8 +40,9 @@ class InvalidSearchableCollectorVisitor implements Visitor
         Metadata $metadata,
         InvalidSearchableCollectorParameters $parameters
     ) {
+        $invalid_searchables_collection = $parameters->getInvalidSearchablesCollectorParameters()->getInvalidSearchablesCollection();
         if (! in_array($metadata->getName(), AllowedMetadata::$NAMES, true)) {
-            $parameters->getInvalidSearchablesCollectorParameters()->getInvalidSearchablesCollection()->addNonexistentSearchable(
+            $invalid_searchables_collection->addNonexistentSearchable(
                 $metadata->getName()
             );
 
@@ -49,9 +50,13 @@ class InvalidSearchableCollectorVisitor implements Visitor
         }
 
         try {
-            $parameters->getSemanticFieldChecker()->checkSemanticMetadataIsValid($metadata, $parameters->getComparison());
+            $parameters->getSemanticFieldChecker()->checkSemanticMetadataIsValid(
+                $metadata,
+                $parameters->getComparison(),
+                $parameters->getInvalidSearchablesCollectorParameters()->getTrackersId()
+            );
         } catch (InvalidSemanticComparisonException $exception) {
-            $parameters->getInvalidSearchablesCollectorParameters()->getInvalidSearchablesCollection()->addInvalidSearchableError(
+            $invalid_searchables_collection->addInvalidSearchableError(
                 $exception->getMessage()
             );
         }

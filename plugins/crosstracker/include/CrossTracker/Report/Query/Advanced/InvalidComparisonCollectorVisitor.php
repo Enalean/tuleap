@@ -38,11 +38,9 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitable;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitor;
-use Tuleap\Tracker\Report\Query\Advanced\ICollectErrorsForInvalidComparisons;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidComparisonCollectorParameters;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollection;
 
-class InvalidComparisonCollectorVisitor implements Visitor, ICollectErrorsForInvalidComparisons
+class InvalidComparisonCollectorVisitor implements Visitor
 {
     /** @var InvalidSearchableCollectorVisitor */
     private $invalid_searchable_collector_visitor;
@@ -60,9 +58,10 @@ class InvalidComparisonCollectorVisitor implements Visitor, ICollectErrorsForInv
 
     public function collectErrors(
         Visitable $parsed_query,
-        InvalidSearchablesCollection $invalid_searchables_collection
+        InvalidSearchablesCollection $invalid_searchables_collection,
+        array $trackers_id
     ) {
-        $parsed_query->accept($this, new InvalidComparisonCollectorParameters($invalid_searchables_collection));
+        $parsed_query->accept($this, new InvalidComparisonCollectorParameters($invalid_searchables_collection, $trackers_id));
     }
 
     public function visitEqualComparison(EqualComparison $comparison, InvalidComparisonCollectorParameters $parameters)

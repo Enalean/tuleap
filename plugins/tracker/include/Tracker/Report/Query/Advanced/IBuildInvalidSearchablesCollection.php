@@ -22,10 +22,11 @@ namespace Tuleap\Tracker\Report\Query\Advanced;
 
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitable;
 
-interface ICollectErrorsForInvalidComparisons
+interface IBuildInvalidSearchablesCollection
 {
-    public function collectErrors(
-        Visitable $parsed_query,
-        InvalidSearchablesCollection $invalid_searchables_collection
-    );
+    /**
+     * @param Visitable $parsed_expert_query
+     * @return InvalidSearchablesCollection
+     */
+    public function buildCollectionOfInvalidSearchables(Visitable $parsed_expert_query);
 }

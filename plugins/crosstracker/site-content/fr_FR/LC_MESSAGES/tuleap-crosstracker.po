@@ -10,27 +10,27 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.3\n"
+"X-Generator: Poedit 1.8.7.1\n"
 
 #, php-format
-msgid "@title cannot be compared to MYSELF()."
-msgstr "@title ne peut pas être comparé à MYSELF()."
+msgid "%s cannot be compared to MYSELF()."
+msgstr "%s ne peut pas être comparé à MYSELF()."
 
 #, php-format
-msgid "@title cannot be compared to NOW()."
-msgstr "@title ne peut pas être comparé à NOW()."
+msgid "%s cannot be compared to NOW()."
+msgstr "%s ne peut pas être comparé à NOW()."
 
 #, php-format
-msgid "@title cannot be compared to a date."
-msgstr "@title ne peut pas être comparé à une date."
+msgid "%s cannot be compared to a date."
+msgstr "%s ne peut pas être comparé à une date."
 
 #, php-format
-msgid "@title cannot be compared to the float value '%s'."
-msgstr "@title ne peut pas être comparé à la valeur flottante '%s'."
+msgid "%s cannot be compared to the float value '%s'."
+msgstr "%s ne peut pas être comparé à la valeur flottante '%s'."
 
 #, php-format
-msgid "@title cannot be compared to the int value '%s'."
-msgstr "@title ne peut pas être comparé à la valeur entière '%s'."
+msgid "%s cannot be compared to the int value '%s'."
+msgstr "%s ne peut pas être comparé à la valeur entière '%s'."
 
 msgid "Add"
 msgstr "Ajouter"
@@ -46,6 +46,42 @@ msgstr "Erreur pendant l'analyse de la requête"
 
 msgid "No trackers selected"
 msgstr "Aucun outils de suivi sélectionné"
+
+#, php-format
+msgid ""
+"One of the trackers involved in the query does not have the semantic "
+"description defined. Please refine\n"
+"                    your query or check the configuration of the trackers."
+msgid_plural ""
+"%d of the trackers involved in the query do not have the semantic "
+"description defined. Please refine\n"
+"                    your query or check the configuration of the trackers."
+msgstr[0] ""
+"Un des outils de suivi utilisés pour la requête n'a pas de sémantique "
+"description définie. Merci de modifier votre requête ou de vérifier la "
+"configuration des outils de suivi."
+msgstr[1] ""
+"%s des outils de suivi utilisés pour la requête n'ont pas de sémantique "
+"description définie. Merci de modifier votre requête ou de vérifier la "
+"configuration des outils de suivi."
+
+#, php-format
+msgid ""
+"One of the trackers involved in the query does not have the semantic title "
+"defined. Please refine\n"
+"                    your query or check the configuration of the trackers."
+msgid_plural ""
+"%d of the trackers involved in the query do not have the semantic title "
+"defined. Please refine\n"
+"                    your query or check the configuration of the trackers."
+msgstr[0] ""
+"Un des outils de suivi utilisés pour la requête n'a pas de sémantique titre "
+"définie. Merci de modifier votre requête ou de vérifier la configuration des "
+"outils de suivi."
+msgstr[1] ""
+"%s des outils de suivi utilisés pour la requête n'ont pas de sémantique "
+"titre définie. Merci de modifier votre requête ou de vérifier la "
+"configuration des outils de suivi."
 
 msgid "Project"
 msgstr "Projet"

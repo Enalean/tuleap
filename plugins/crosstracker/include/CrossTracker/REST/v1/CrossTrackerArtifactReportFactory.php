@@ -26,10 +26,10 @@ use Tracker;
 use Tuleap\CrossTracker\CrossTrackerArtifactReportDao;
 use Tuleap\CrossTracker\CrossTrackerReport;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidComparisonCollectorVisitor;
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchablesCollectionBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\CrossTrackerExpertQueryReportDao;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilderVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\ExpertQueryValidator;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollectionBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\ParserCacheProxy;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
@@ -141,14 +141,14 @@ class CrossTrackerArtifactReportFactory
         $limit,
         $offset
     ) {
+        $trackers_id  = $this->getTrackersId($report->getTrackers());
         $expert_query = $report->getExpertQuery();
         $this->expert_query_validator->validateExpertQuery(
             $expert_query,
-            new InvalidSearchablesCollectionBuilder($this->collector)
+            new InvalidSearchablesCollectionBuilder($this->collector, $trackers_id)
         );
         $parsed_expert_query   = $this->parser->parse($expert_query);
         $additional_from_where = $this->query_builder->buildFromWhere($parsed_expert_query);
-        $trackers_id           = $this->getTrackersId($report->getTrackers());
         $results               = $this->expert_query_dao->searchArtifactsMatchingQuery(
             $additional_from_where,
             $trackers_id,
