@@ -947,10 +947,6 @@ msgstr "vérifier l'action actuelle"
 msgid "view the source of this page"
 msgstr "voir la source de cette page"
 
-#: ../lib/main.php:508
-msgid "access this wiki via SOAP"
-msgstr "accéder à ce wiki via SOAP"
-
 #: ../lib/main.php:509
 msgid "download a zip dump from this wiki"
 msgstr "télécharger une sauvegarde compressée de ce wiki"
@@ -1015,10 +1011,6 @@ msgstr "Vérifier l'action actuelle"
 #: ../lib/main.php:547
 msgid "Viewing the source of pages"
 msgstr "Visualisation de la source des pages"
-
-#: ../lib/main.php:549
-msgid "SOAP access"
-msgstr "Accès SOAP"
 
 #: ../lib/main.php:550
 msgid "Downloading zip dumps"

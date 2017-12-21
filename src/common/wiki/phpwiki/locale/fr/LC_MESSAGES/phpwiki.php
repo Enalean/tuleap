@@ -1516,8 +1516,6 @@ $locale["RichTablePlugin"] =
    "PluginBeauTableau";
 $locale["RssFeed"] =
    "RessourcesRss";
-$locale["SOAP access"] =
-   "Accès SOAP";
 $locale["SandBox"] =
    "BacÀSable";
 $locale["Save"] =
@@ -2096,8 +2094,6 @@ $locale["[purged]"] =
    "[purgé]";
 $locale["_WikiTranslation"] =
    "_WikiTranslation";
-$locale["access this wiki via SOAP"] =
-   "accéder à ce wiki via SOAP";
 $locale["add "] =
    "ajouter";
 $locale["always skip the HomePage."] =

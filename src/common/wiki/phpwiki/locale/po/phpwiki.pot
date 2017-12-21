@@ -907,10 +907,6 @@ msgstr ""
 msgid "view the source of this page"
 msgstr ""
 
-#: ../lib/main.php:508
-msgid "access this wiki via SOAP"
-msgstr ""
-
 #: ../lib/main.php:509
 msgid "download a zip dump from this wiki"
 msgstr ""
@@ -973,10 +969,6 @@ msgstr ""
 
 #: ../lib/main.php:547
 msgid "Viewing the source of pages"
-msgstr ""
-
-#: ../lib/main.php:549
-msgid "SOAP access"
 msgstr ""
 
 #: ../lib/main.php:550
