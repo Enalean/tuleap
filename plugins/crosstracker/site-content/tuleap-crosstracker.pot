@@ -6,18 +6,6 @@ msgstr ""
 msgid "%s cannot be compared to NOW()."
 msgstr ""
 
-#, php-format
-msgid "%s cannot be compared to a date."
-msgstr ""
-
-#, php-format
-msgid "%s cannot be compared to the float value '%s'."
-msgstr ""
-
-#, php-format
-msgid "%s cannot be compared to the int value '%s'."
-msgstr ""
-
 msgid "Add"
 msgstr ""
 

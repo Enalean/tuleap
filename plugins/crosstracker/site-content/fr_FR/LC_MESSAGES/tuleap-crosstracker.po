@@ -20,18 +20,6 @@ msgstr "%s ne peut pas être comparé à MYSELF()."
 msgid "%s cannot be compared to NOW()."
 msgstr "%s ne peut pas être comparé à NOW()."
 
-#, php-format
-msgid "%s cannot be compared to a date."
-msgstr "%s ne peut pas être comparé à une date."
-
-#, php-format
-msgid "%s cannot be compared to the float value '%s'."
-msgstr "%s ne peut pas être comparé à la valeur flottante '%s'."
-
-#, php-format
-msgid "%s cannot be compared to the int value '%s'."
-msgstr "%s ne peut pas être comparé à la valeur entière '%s'."
-
 msgid "Add"
 msgstr "Ajouter"
 
