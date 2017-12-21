@@ -10,8 +10,6 @@ var component_builder = require('./tools/utils/component-builder.js');
 var sass_builder      = require('./tools/utils/sass-builder.js');
 
 var fat_combined_files = [
-        'src/www/scripts/polyphills/json2.js',
-        'src/www/scripts/polyphills/storage.js',
         'src/www/scripts/prototype/prototype.js',
         'src/www/scripts/protocheck/protocheck.js',
         'src/www/scripts/scriptaculous/scriptaculous.js',
