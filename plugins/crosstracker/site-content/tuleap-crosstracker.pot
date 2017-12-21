@@ -60,9 +60,6 @@ msgstr[1] ""
 msgid "Project"
 msgstr ""
 
-msgid "Save report"
-msgstr ""
-
 msgid "Search"
 msgstr ""
 

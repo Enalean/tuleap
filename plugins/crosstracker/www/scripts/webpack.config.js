@@ -5,15 +5,44 @@ var WebpackAssetsManifest = require('webpack-assets-manifest');
 
 var assets_dir_path = path.resolve(__dirname, '../assets');
 
-var babel_options = {
-    presets: [
-        ["babel-preset-env", {
-            targets: {
-                ie: 11
-            },
-            modules: false
-        }]
-    ]
+var babel_preset_env_ie_config = ['babel-preset-env', {
+    targets: {
+        ie: 11
+    },
+    modules: false
+}];
+
+var babel_preset_env_chrome_config = ['babel-preset-env', {
+    targets: {
+        browsers: ['last 2 Chrome versions']
+    },
+    modules: false,
+    useBuiltIns: true,
+    shippedProposals: true
+}];
+
+var babel_options   = {
+    env: {
+        watch: {
+            presets: [babel_preset_env_ie_config]
+        },
+        production: {
+            presets: [babel_preset_env_ie_config]
+        },
+        test: {
+            presets: [babel_preset_env_chrome_config],
+            plugins: ['babel-plugin-rewire-exports']
+        },
+        coverage: {
+            presets: [babel_preset_env_chrome_config],
+            plugins: [
+                'babel-plugin-rewire-exports',
+                ['babel-plugin-istanbul', {
+                    exclude: ['**/*.spec.js']
+                }]
+            ]
+        }
+    }
 };
 
 var webpack_config = {
@@ -26,11 +55,6 @@ var webpack_config = {
     },
     externals: {
         tlp: 'tlp'
-    },
-    resolve: {
-        alias: {
-            'vue$': 'vue/dist/vue.esm.js'
-        }
     },
     module: {
         rules: [
@@ -51,7 +75,8 @@ var webpack_config = {
                         options: {
                             loaders: {
                                 js: 'babel-loader?' + JSON.stringify(babel_options)
-                            }
+                            },
+                            esModule: true
                         }
                     }
                 ]
@@ -82,10 +107,15 @@ var webpack_config = {
 
 if (process.env.NODE_ENV === 'production') {
     webpack_config.plugins = webpack_config.plugins.concat([
+        new webpack.DefinePlugin({
+            'process.env': {
+                NODE_ENV: '"production"'
+            }
+        }),
         new webpack.optimize.ModuleConcatenationPlugin()
     ]);
-} else if (process.env.NODE_ENV === 'watch') {
-    webpack_config.devtool = 'eval';
+} else if (process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'watch') {
+    webpack_config.devtool = 'cheap-eval-source-map';
 }
 
 module.exports = webpack_config;

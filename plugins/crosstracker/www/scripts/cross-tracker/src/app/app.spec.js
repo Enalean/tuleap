@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,11 +17,5 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Gettext             from 'node-gettext';
-import french_translations from '../../po/fr.po';
-
-const gettext_provider = new Gettext();
-gettext_provider.addTranslations('fr_FR', 'cross-tracker', french_translations);
-gettext_provider.setTextDomain('cross-tracker');
-
-export { gettext_provider };
+import 'babel-polyfill';
+import './reading-mode/ReadingMode.spec.js';

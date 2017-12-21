@@ -7,6 +7,9 @@ msgstr ""
 msgid "Assigned to"
 msgstr ""
 
+msgid "Cancel"
+msgstr ""
+
 msgid "Error while fetching the cross tracker report"
 msgstr ""
 
@@ -34,6 +37,9 @@ msgstr ""
 msgid "No matching artifacts found"
 msgstr ""
 
+msgid "No trackers selected"
+msgstr ""
+
 msgid "Please choose..."
 msgstr ""
 
@@ -41,6 +47,9 @@ msgid "Query"
 msgstr ""
 
 msgid "Report has been successfully saved"
+msgstr ""
+
+msgid "Save report"
 msgstr ""
 
 msgid "Status"

@@ -17,11 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Gettext             from 'node-gettext';
-import french_translations from '../../po/fr.po';
+export {
+    init,
+    isAnonymous
+};
 
-const gettext_provider = new Gettext();
-gettext_provider.addTranslations('fr_FR', 'cross-tracker', french_translations);
-gettext_provider.setTextDomain('cross-tracker');
+let user_is_anonymous;
 
-export { gettext_provider };
+function init(is_anonymous) {
+    user_is_anonymous = is_anonymous;
+}
+
+function isAnonymous() {
+    return user_is_anonymous;
+}

@@ -27,7 +27,6 @@ export default class ReadingModeController {
         backend_cross_tracker_report,
         writing_cross_tracker_report,
         reading_cross_tracker_report,
-        reading_trackers_controller,
         query_result_controller,
         user,
         widget_loader_displayer,
@@ -41,7 +40,6 @@ export default class ReadingModeController {
         this.backend_cross_tracker_report = backend_cross_tracker_report;
         this.writing_cross_tracker_report = writing_cross_tracker_report;
         this.reading_cross_tracker_report = reading_cross_tracker_report;
-        this.reading_trackers_controller  = reading_trackers_controller;
         this.query_result_controller      = query_result_controller;
         this.user                         = user;
         this.widget_loader_displayer      = widget_loader_displayer;
@@ -50,8 +48,6 @@ export default class ReadingModeController {
         this.gettext_provider             = gettext_provider;
 
         this.reading_mode                = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-reading-mode');
-        this.reading_mode_trackers_empty = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-reading-mode-trackers-empty');
-        this.reading_mode_fields         = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-reading-mode-fields');
         this.reading_mode_actions        = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-reading-mode-actions');
         this.reading_mode_save_report    = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-reading-mode-actions-save');
         this.reading_mode_cancel_report  = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-reading-mode-actions-cancel');
@@ -60,19 +56,11 @@ export default class ReadingModeController {
     init() {
         this.loadBackendReport().then(() => {
             if (this.user.isAnonymous()) {
-                this.disableEditMode();
+                this.disableSaveReport();
                 return;
             }
             this.listenSaveReport();
-            this.listenEditClick();
             this.listenCancelReport();
-        });
-    }
-
-    listenEditClick() {
-        this.reading_mode_fields.addEventListener('click', () => {
-            this.writing_cross_tracker_report.duplicateFromReport(this.reading_cross_tracker_report);
-            this.report_mode.switchToWritingMode();
         });
     }
 
@@ -95,7 +83,6 @@ export default class ReadingModeController {
             this.hideReportActions();
             this.reading_cross_tracker_report.duplicateFromReport(this.backend_cross_tracker_report);
 
-            this.reading_trackers_controller.updateTrackersReading();
             this.report_saved_state.switchToSavedState();
             this.query_result_controller.loadFirstBatchOfArtifacts();
         });
@@ -155,7 +142,6 @@ export default class ReadingModeController {
 
             this.backend_cross_tracker_report.loaded = true;
         } catch (error) {
-            this.reading_trackers_controller.setDisabled();
             const error_details = await error.response.json();
             if (error.response.status === 403 && 'i18n_error_message' in error_details.error) {
                 this.error_displayer.displayError(error_details.error.i18n_error_message);
@@ -170,11 +156,6 @@ export default class ReadingModeController {
 
     disableSaveReport() {
         this.reading_mode_save_report.disabled = true;
-    }
-
-    disableEditMode() {
-        this.disableSaveReport();
-        this.reading_mode_fields.classList.add('disabled');
     }
 
     showSaveReportLoading() {
