@@ -21,6 +21,7 @@ import moment                               from 'moment';
 import { render }                           from 'mustache';
 import query_result_rows_template           from './query-result-rows.mustache';
 import { getReportContent, getQueryResult } from './rest-querier.js';
+import { gettext_provider }                 from './gettext-provider.js';
 
 export default class QueryResultController {
     constructor(
@@ -29,8 +30,7 @@ export default class QueryResultController {
         writing_cross_tracker_report,
         report_saved_state,
         user,
-        error_displayer,
-        gettext_provider
+        error_displayer
     ) {
         this.widget_content               = widget_content;
         this.backend_cross_tracker_report = backend_cross_tracker_report;
@@ -38,17 +38,16 @@ export default class QueryResultController {
         this.report_saved_state           = report_saved_state;
         this.localized_date_format        = user.getUserPreferredDateFormat();
         this.error_displayer              = error_displayer;
-        this.gettext_provider             = gettext_provider;
-
-        this.table_element    = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-search-results');
-        this.table_results    = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-search-artifacts');
-        this.load_more_button = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-search-load-button');
 
         this.current_offset = 0;
         this.limit          = 30;
     }
 
     init() {
+        this.table_element    = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-search-results');
+        this.table_results    = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-search-artifacts');
+        this.load_more_button = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-search-load-button');
+
         this.loadFirstBatchOfArtifacts();
         this.initLoadMoreButton();
     }
@@ -145,7 +144,7 @@ export default class QueryResultController {
             if ('i18n_error_message' in error_details.error) {
                 this.error_displayer.displayError(error_details.error.i18n_error_message);
             } else {
-                this.error_displayer.displayError(this.gettext_provider.gettext('Error while fetching the query result'));
+                this.error_displayer.displayError(gettext_provider.gettext('Error while fetching the query result'));
             }
             throw error;
         } finally {

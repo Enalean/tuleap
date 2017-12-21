@@ -39,7 +39,9 @@
 
     export default {
         name: 'ArtifactTableRenderer',
-        props: [],
+        props: [
+            'queryResultController'
+        ],
         computed: {
             artifact_label: () =>  gettext_provider.gettext("Artifact"),
             status_label: () => gettext_provider.gettext("Status"),
@@ -48,6 +50,9 @@
             assigned_to_label: () => gettext_provider.gettext("Assigned to"),
             artifacts_empty: () => gettext_provider.gettext("No matching artifacts found"),
             load_more_label: () => gettext_provider.gettext("Load more"),
+        },
+        mounted() {
+            this.queryResultController.init();
         }
     };
 </script>)

@@ -1,3 +1,6 @@
+msgid "Add"
+msgstr ""
+
 msgid "Allowed fields"
 msgstr ""
 
@@ -43,6 +46,9 @@ msgstr ""
 msgid "Please choose..."
 msgstr ""
 
+msgid "Project"
+msgstr ""
+
 msgid "Query"
 msgstr ""
 
@@ -50,6 +56,9 @@ msgid "Report has been successfully saved"
 msgstr ""
 
 msgid "Save report"
+msgstr ""
+
+msgid "Search"
 msgstr ""
 
 msgid "Status"
@@ -64,6 +73,9 @@ msgid ""
 msgstr ""
 
 msgid "Title (Semantic)"
+msgstr ""
+
+msgid "Tracker"
 msgstr ""
 
 msgid "Tracker selection is limited to 10 trackers"

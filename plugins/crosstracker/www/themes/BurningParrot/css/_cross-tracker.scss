@@ -16,6 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+@import 'reading-mode';
+@import 'writing-mode';
 
 .dashboard-widget-content-crosstrackersearch {
     margin: 0;
@@ -33,7 +35,7 @@
             display: none;
         }
 
-        > .dashboard-widget-content-cross-tracker-reading-mode {
+        > .cross-tracker-reading-mode {
             display: none;
         }
     }
@@ -53,109 +55,6 @@
     &.shown {
         display: block;
     }
-}
-
-.dashboard-widget-content-cross-tracker-too-many-selected-error {
-    margin: $tlp-spacing 0;
-}
-
-.dashboard-widget-content-cross-tracker-form {
-    display: flex;
-
-    > :first-child {
-        margin-right: $tlp-spacing * 2;
-    }
-}
-
-.dashboard-widget-content-cross-tracker-form-projects-input,
-.dashboard-widget-content-cross-tracker-form-trackers-input {
-    min-width: 200px;
-}
-
-.dashboard-widget-content-cross-tracker-form-trackers-add {
-    > .cross-tracker-loader {
-        display: none;
-    }
-
-    &.cross-tracker-loading {
-        > .cross-tracker-loader {
-            display: inline-block;
-        }
-
-        > .cross-tracker-add-icon {
-            display: none;
-        }
-    }
-}
-
-.dashboard-widget-content-cross-tracker-selected-tracker {
-    margin: 0 10px 10px 0;
-    border: 0;
-    background: $tlp-theme-background-color;
-    color: $tlp-theme-color;
-
-    &:last-child {
-        margin: 0 0 10px;
-    }
-}
-
-.dashboard-widget-content-cross-tracker-please-choose-option {
-    color: $tlp-ui-dimmed;
-}
-
-.dashboard-widget-content-cross-tracker-project-icon {
-    margin: 0 3px 0 8px;
-    fill: $tlp-theme-color;
-}
-
-.dashboard-widget-content-cross-tracker-remove-tracker {
-    cursor: pointer;
-}
-
-.cross-tracker-reading-mode-fields {
-    display: flex;
-    flex-direction: column;
-    color: $tlp-theme-color;
-    font-size: 15px;
-
-    &:hover:not(.disabled) {
-        margin: 0;
-        background-color: transparentize($tlp-theme-color, .9);
-        cursor: pointer;
-    }
-}
-
-.cross-tracker-reading-mode-trackers-list {
-    display: flex;
-    flex-direction: row;
-    margin: $tlp-spacing;
-}
-
-.cross-tracker-reading-mode-trackers {
-    display: flex;
-}
-
-.cross-tracker-reading-mode-tracker {
-    display: flex;
-    flex-direction: column;
-    margin: 0 $tlp-spacing 0 0;
-}
-
-.cross-tracker-reading-mode-tracker-project-name {
-    margin: 7px 0 0;
-    color: $tlp-ui-dimmed;
-    font-size: 14px;
-    font-weight: 400;
-
-    > .cross-tracker-project-icon {
-        margin: 0 5px 0 0;
-        fill: $tlp-theme-color;
-    }
-}
-
-.cross-tracker-reading-mode-trackers-empty {
-    margin: 0 0 0 $tlp-spacing;
-    font-style: italic;
 }
 
 .dashboard-widget-content-cross-tracker-search {
@@ -204,43 +103,9 @@
     text-align: center;
 }
 
-.dashboard-widget-content-cross-tracker-form-trackers-selected {
-    margin: 0 0 $tlp-half-spacing;
-}
-
-.dashboard-widget-content-cross-tracker-writing-mode-actions {
-    display: flex;
-    justify-content: flex-end;
-}
-
-.dashboard-widget-content-cross-tracker-writing-mode-actions-cancel,
+.writing-mode-actions-cancel,
 .dashboard-widget-content-cross-tracker-reading-mode-actions-cancel {
     margin: 0 $tlp-half-spacing 0 0;
-}
-
-.dashboard-widget-content-cross-tracker-reading-mode-actions {
-    display: flex;
-    justify-content: flex-end;
-    margin: $tlp-half-spacing $tlp-spacing $tlp-spacing;
-}
-
-.dashboard-widget-content-cross-tracker-reading-mode-actions-save {
-    > .cross-tracker-loader {
-        display: none;
-    }
-
-    &.cross-tracker-loading >.cross-tracker-loader {
-        display: inline-block;
-    }
-}
-
-.dashboard-widget-content-cross-tracker-writing-mode {
-    margin: $tlp-spacing;
-}
-
-.reading-mode-disabled {
-    cursor: inherit;
-    pointer-events: none;
 }
 
 .cross-tracker-hide {
@@ -249,19 +114,4 @@
 
 .dashboard-widget-content-cross-tracker-link-to-tracker-badge {
     margin: 0 5px 0 0;
-}
-
-.cross-tracker-expert-content {
-    display: flex;
-    margin: 0 0 $tlp-spacing;
-}
-
-.cross-tracker-expert-content-query {
-    flex: 1 1 auto;
-    margin: 0 25px 0 0;
-}
-
-.cross-tracker-expert-content-query-textarea {
-    width: 100%;
-    height: 100px;
 }
