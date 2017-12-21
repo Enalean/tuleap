@@ -36,6 +36,7 @@ use Tuleap\CrossTracker\Permission\CrossTrackerPermissionGate;
 use Tuleap\CrossTracker\Permission\CrossTrackerUnauthorizedException;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidComparisonCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchablesCollectionBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\ComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\SemanticUsageChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\CrossTrackerExpertQueryReportDao;
@@ -54,7 +55,6 @@ use Tuleap\REST\QueryParameterParser;
 use Tuleap\Tracker\Report\Query\Advanced\ExpertQueryValidator;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parser;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollectionBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\LimitSizeIsExceededException;
 use Tuleap\Tracker\Report\Query\Advanced\ParserCacheProxy;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
@@ -311,7 +311,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
 
         $current_user = $this->user_manager->getCurrentUser();
         try {
-            $this->checkQueryIsValid($expert_query);
+            $this->checkQueryIsValid($trackers_id, $expert_query);
 
             $report          = $this->getReport($id);
             $trackers        = $this->cross_tracker_extractor->extractTrackers($trackers_id);
@@ -331,7 +331,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
         return $this->getReportRepresentation($expected_report);
     }
 
-    private function checkQueryIsValid($expert_query)
+    private function checkQueryIsValid(array $trackers_id, $expert_query)
     {
         if ($expert_query === '') {
             return;
@@ -340,7 +340,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
         try {
             $this->validator->validateExpertQuery(
                 $expert_query,
-                new InvalidSearchablesCollectionBuilder($this->invalid_comparisons_collector)
+                new InvalidSearchablesCollectionBuilder($this->invalid_comparisons_collector, $trackers_id)
             );
         } catch (SearchablesDoNotExistException $exception) {
             throw new RestException(400, $exception->getMessage());
