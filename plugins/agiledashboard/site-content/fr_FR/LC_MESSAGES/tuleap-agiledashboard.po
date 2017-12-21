@@ -75,6 +75,9 @@ msgstr "Les valeurs finies ont été supprimées avec succès."
 msgid "Done values successfully updated."
 msgstr "Les valeurs finies ont été mises à jour avec succès."
 
+msgid "Field under implementation"
+msgstr "Champ en cours d'implémentation"
+
 msgid "Go back to semantic overview"
 msgstr "Retour à l'administration de la sémantique"
 

@@ -51,6 +51,9 @@ msgstr ""
 msgid "Done values successfully updated."
 msgstr ""
 
+msgid "Field under implementation"
+msgstr ""
+
 msgid "Go back to semantic overview"
 msgstr ""
 
