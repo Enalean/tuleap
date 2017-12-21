@@ -942,6 +942,11 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return false;
     }
 
+    public function canBeUsedToSortReport()
+    {
+        return false;
+    }
+
     public function validateFieldWithPermissionsAndRequiredStatus(
         Tracker_Artifact $artifact,
         $submitted_value,

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2017. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -149,6 +149,11 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
             && count($criteria_dates) == 2
             && isset($criteria_dates[0]) && strtotime($criteria_dates[0])
             && isset($criteria_dates[1]) && strtotime($criteria_dates[1]);
+    }
+
+    public function canBeUsedToSortReport()
+    {
+        return true;
     }
 
     /**

@@ -118,6 +118,11 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
         return new Tracker_Report_Criteria_Text_ValueDao();
     }
 
+    public function canBeUsedToSortReport()
+    {
+        return true;
+    }
+
     public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report=null, $from_aid = null) {
         $artifact = Tracker_ArtifactFactory::instance()->getArtifactById($artifact_id);
         $format   = $this->getRightBodyFormat($artifact, $value);

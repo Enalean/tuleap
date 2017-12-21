@@ -71,6 +71,11 @@ class Tracker_FormElement_Field_Float extends Tracker_FormElement_Field_Numeric 
                 ) ON ($R1.changeset_id = c.id AND $R1.field_id = ". $this->id ." )";
     }
 
+    public function canBeUsedToSortReport()
+    {
+        return true;
+    }
+
     protected $pattern = '[+\-]?\d+(?:\.\d+)?(?:[eE][+\-]?\d+)?';
     protected function cast($value) {
         return (float)$value;

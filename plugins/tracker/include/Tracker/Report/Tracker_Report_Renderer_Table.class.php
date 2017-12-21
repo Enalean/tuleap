@@ -92,7 +92,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                 foreach ($sort as $field_id => $properties) {
                     if ($properties) {
                         if ($field = $ff->getFormElementById($field_id)) {
-                            if ($field->userCanRead()) {
+                            if ($field->canBeUsedToSortReport() && $field->userCanRead()) {
                                 $this->_sort[$field_id] = array(
                                        'renderer_id '=> $this->id,
                                        'field_id'    => $field_id,
@@ -111,7 +111,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                 $this->_sort = array();
                 foreach($this->getSortDao()->searchByRendererId($this->id) as $row) {
                     if ($field = $ff->getUsedFormElementById($row['field_id'])) {
-                        if ($field->userCanRead()) {
+                        if ($field->canBeUsedToSortReport() && $field->userCanRead()) {
                             $this->_sort[$row['field_id']] = $row;
                             $this->_sort[$row['field_id']]['field'] = $field;
                         }
@@ -902,7 +902,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                     }
 
                     $html .= '<td class="tracker_report_table_column_title">';
-                    if ( ! isset($column['artlink_nature']) && $this->canFieldBeUsedToSort($column['field'], $current_user)) {
+                    if ( ! isset($column['artlink_nature']) && $column['field']->canBeUsedToSortReport()) {
                         $html .= '<a href="'. $sort_url .'">';
                         $html .= $label;
                         $html .= '</a>';
@@ -913,9 +913,17 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
                     if (! isset($column['artlink_nature']) && isset($sort_columns[$key])) {
                         $html .= '<td class="tracker_report_table_column_caret">';
-                        $html .= '<a href="'. $sort_url .'">';
-                        $html .= $this->getSortIcon($sort_columns[$column['field']->getId()]['is_desc']);
-                        $html .= '</a>';
+                        if ($column['field']->canBeUsedToSortReport()) {
+                            $html .= '<a href="'. $sort_url .'">';
+                            $html .= $this->getSortIcon($sort_columns[$column['field']->getId()]['is_desc']);
+                            $html .= '</a>';
+                        } else {
+                            $warning_message = dgettext(
+                                'tuleap-tracker',
+                                'The report was sorted against this column. This column can not be used to sort a report, the sort has been ignored. Please choose another column.'
+                            );
+                            $html .= '<i class="icon-warning-sign" title="' . $warning_message . '"></i>';
+                        }
                         $html .= '</td>';
                     }
 
@@ -2337,16 +2345,6 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
     private function getSortIcon($is_desc) {
         return ' <i class="icon-caret-'. ( $is_desc ? 'down' : 'up' ) .'"></i>';
-    }
-
-    private function canFieldBeUsedToSort(Tracker_FormElement_Field $field, PFUser $current_user) {
-        $field = $this->getFieldFactory()->getComputedValueFieldByNameForUser(
-            $field->tracker_id,
-            $field->name,
-            $current_user
-        );
-
-        return $field === null;
     }
 
     public function getIcon() {

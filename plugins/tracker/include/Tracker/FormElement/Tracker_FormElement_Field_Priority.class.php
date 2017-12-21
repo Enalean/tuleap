@@ -98,7 +98,7 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
      */
     public function getQuerySelect()
     {
-        return '';
+        return "R_{$this->id}.rank AS `$this->name`";
     }
 
     /**
@@ -109,9 +109,8 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
      */
     public function getQueryFrom()
     {
-        return '';
+        return "INNER JOIN tracker_artifact_priority_rank AS R_{$this->id} ON a.id = R_{$this->id}.artifact_id";
     }
-
     /**
      * @return array the available aggreagate functions for this field. empty array if none or irrelevant.
      */

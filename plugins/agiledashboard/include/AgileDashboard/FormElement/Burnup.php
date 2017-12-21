@@ -57,6 +57,11 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
         return false;
     }
 
+    public function canBeUsedToSortReport()
+    {
+        return false;
+    }
+
     /**
      * @return string html
      */
