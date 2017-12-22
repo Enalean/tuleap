@@ -840,6 +840,29 @@
           </element>
         </zeroOrMore>
       </group>
+      <group>
+        <attribute name="type">
+          <value>done</value>
+        </attribute>
+        <element name="shortname">
+          <data type="string"/>
+        </element>
+        <element name="label">
+          <data type="string"/>
+        </element>
+        <element name="description">
+          <data type="string"/>
+        </element>
+        <element name="closed_values">
+          <zeroOrMore>
+            <element name="closed_value">
+              <attribute name="REF">
+                <data type="IDREF"/>
+              </attribute>
+            </element>
+          </zeroOrMore>
+        </element>
+      </group>
     </choice>
   </define>
   <define name="reportContent">

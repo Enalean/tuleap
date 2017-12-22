@@ -306,7 +306,7 @@ tracker =
                     attribute REF { xsd:IDREF }
                 }
             )
-         |
+        |
              (
                  attribute type { "description" },
                  element shortname {xsd:string},
@@ -316,7 +316,7 @@ tracker =
                      attribute REF { xsd:IDREF }
                  }
              )
-          |
+        |
             (
                 attribute type { "status" },
                 element shortname {xsd:string},
@@ -331,7 +331,7 @@ tracker =
                     }*
                 }
             )
-         |
+        |
             (
                 attribute type { "contributor" },
                 element shortname {xsd:string},
@@ -341,7 +341,7 @@ tracker =
                     attribute REF { xsd:IDREF }
                 }
             )
-         |
+        |
             (
                 attribute type { "tooltip" },
                 element field {
@@ -358,12 +358,24 @@ tracker =
                     attribute REF { xsd:IDREF }
                 }
             )
-         |
+        |
             (
                 attribute type { "plugin_cardwall_card_fields" },
                 element field {
                     attribute REF { xsd:IDREF }
                 }*
+            )
+        |
+            (
+                attribute type { "done" },
+                element shortname {xsd:string},
+                element label {xsd:string},
+                element description {xsd:string},
+                element closed_values {
+                    element closed_value {
+                        attribute REF { xsd:IDREF }
+                    }*
+                }
             )
         )
 
