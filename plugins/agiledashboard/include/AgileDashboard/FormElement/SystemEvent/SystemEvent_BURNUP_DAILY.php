@@ -23,6 +23,7 @@ namespace Tuleap\Agiledashboard\FormElement\SystemEvent;
 use BackendLogger;
 use SystemEvent;
 use TimePeriodWithoutWeekEnd;
+use Tuleap\Agiledashboard\FormElement\BurnupCacheDao;
 use Tuleap\Agiledashboard\FormElement\BurnupCacheDateRetriever;
 use Tuleap\AgileDashboard\FormElement\BurnupDao;
 use Tuleap\Tracker\FormElement\FieldCalculator;

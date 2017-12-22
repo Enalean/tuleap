@@ -24,10 +24,10 @@ use TuleapTestCase;
 
 require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
-class BurndownConfigurationValueRetrieverTest extends TuleapTestCase
+class ChartConfigurationValueRetrieverTest extends TuleapTestCase
 {
     /**
-     * @var BurndownConfigurationValueRetriever
+     * @var ChartConfigurationValueRetriever
      */
     private $field_retriever;
 
@@ -108,7 +108,7 @@ class BurndownConfigurationValueRetrieverTest extends TuleapTestCase
         $this->duration_value = mock('Tracker_Artifact_ChangesetValue_Integer');
         $this->duration       = 5;
 
-        $this->configuration_value_retriever = new BurndownConfigurationValueRetriever(
+        $this->configuration_value_retriever = new ChartConfigurationValueRetriever(
             $this->field_retriever,
             mock('Logger')
         );
@@ -116,7 +116,7 @@ class BurndownConfigurationValueRetrieverTest extends TuleapTestCase
 
     public function itReturnsTimestampWhenStartDateIsSet()
     {
-        stub($this->field_retriever)->getBurndownStartDateField($this->artifact_sprint, $this->user)->returns(
+        stub($this->field_retriever)->getStartDateField($this->artifact_sprint, $this->user)->returns(
             $this->start_date_field
         );
 
@@ -124,22 +124,22 @@ class BurndownConfigurationValueRetrieverTest extends TuleapTestCase
         stub($this->start_date_value)->getTimestamp()->returns($this->start_date);
 
         $this->assertEqual(
-            $this->configuration_value_retriever->getBurndownStartDate($this->artifact_sprint, $this->user),
+            $this->configuration_value_retriever->getStartDate($this->artifact_sprint, $this->user),
             $this->start_date
         );
     }
 
     public function itThrowsAnExceptionWhenStartDateIsEmpty()
     {
-        stub($this->field_retriever)->getBurndownStartDateField($this->artifact_sprint, $this->user)->returns(
+        stub($this->field_retriever)->getStartDateField($this->artifact_sprint, $this->user)->returns(
             $this->start_date_field
         );
 
         stub($this->artifact_sprint)->getValue($this->start_date_field)->returns($this->start_date_value);
         stub($this->start_date_value)->getTimestamp()->returns(null);
 
-        $this->expectException('Tracker_FormElement_Field_BurndownException');
-        $this->configuration_value_retriever->getBurndownStartDate($this->artifact_sprint, $this->user);
+        $this->expectException('Tracker_FormElement_Chart_Field_Exception');
+        $this->configuration_value_retriever->getStartDate($this->artifact_sprint, $this->user);
     }
 
     public function itReturnsZeroWhenCapacityIsEmpty()
@@ -174,7 +174,7 @@ class BurndownConfigurationValueRetrieverTest extends TuleapTestCase
 
     public function itReturnsValueWhenDurationIsSet()
     {
-        stub($this->field_retriever)->getBurndownDurationField($this->artifact_sprint, $this->user)->returns(
+        stub($this->field_retriever)->getDurationField($this->artifact_sprint, $this->user)->returns(
             $this->duration_field
         );
 
@@ -182,34 +182,34 @@ class BurndownConfigurationValueRetrieverTest extends TuleapTestCase
         stub($this->duration_value)->getValue()->returns($this->duration);
 
         $this->assertEqual(
-            $this->configuration_value_retriever->getBurndownDuration($this->artifact_sprint, $this->user),
+            $this->configuration_value_retriever->getDuration($this->artifact_sprint, $this->user),
             $this->duration
         );
     }
 
     public function itThrowsAnExceptionWhenDurationIsMinorThanZero()
     {
-        stub($this->field_retriever)->getBurndownDurationField($this->artifact_sprint, $this->user)->returns(
+        stub($this->field_retriever)->getDurationField($this->artifact_sprint, $this->user)->returns(
             $this->duration_field
         );
 
         stub($this->artifact_sprint)->getValue($this->duration_field)->returns($this->duration_value);
         stub($this->duration_value)->getValue()->returns(0);
 
-        $this->expectException('Tracker_FormElement_Field_BurndownException');
-        $this->configuration_value_retriever->getBurndownDuration($this->artifact_sprint, $this->user);
+        $this->expectException('Tracker_FormElement_Chart_Field_Exception');
+        $this->configuration_value_retriever->getDuration($this->artifact_sprint, $this->user);
     }
 
     public function itThrowsAnExceptionWhenDurationIsEqualToOne()
     {
-        stub($this->field_retriever)->getBurndownDurationField($this->artifact_sprint, $this->user)->returns(
+        stub($this->field_retriever)->getDurationField($this->artifact_sprint, $this->user)->returns(
             $this->duration_field
         );
 
         stub($this->artifact_sprint)->getValue($this->duration_field)->returns($this->duration_value);
         stub($this->duration_value)->getValue()->returns(1);
 
-        $this->expectException('Tracker_FormElement_Field_BurndownException');
-        $this->configuration_value_retriever->getBurndownDuration($this->artifact_sprint, $this->user);
+        $this->expectException('Tracker_FormElement_Chart_Field_Exception');
+        $this->configuration_value_retriever->getDuration($this->artifact_sprint, $this->user);
     }
 }

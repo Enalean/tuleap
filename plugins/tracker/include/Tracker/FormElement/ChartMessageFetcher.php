@@ -32,7 +32,7 @@ class ChartMessageFetcher
      */
     private $hierarchy_factory;
     /**
-     * @var BurndownConfigurationValueChecker
+     * @var ChartConfigurationValueChecker
      */
     private $configuration_field_retriever;
 

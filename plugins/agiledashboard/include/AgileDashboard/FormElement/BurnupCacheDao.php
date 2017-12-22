@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Agiledashboard\FormElement\SystemEvent;
+namespace Tuleap\Agiledashboard\FormElement;
 
 use DataAccessObject;
 
@@ -40,5 +40,25 @@ class BurnupCacheDao extends DataAccessObject
                     VALUES ($artifact_id, $timestamp, $total_effort, $team_effort)";
 
         return $this->update($sql);
+    }
+
+    public function deleteArtifactCacheValue($artifact_id)
+    {
+        $artifact_id = $this->da->escapeInt($artifact_id);
+
+        $sql = "DELETE FROM plugin_agiledashboard_tracker_field_burnup_cache
+                WHERE artifact_id = $artifact_id";
+
+        return $this->update($sql);
+    }
+
+    public function getCachedDays($artifact_id)
+    {
+        $artifact_id = $this->da->escapeInt($artifact_id);
+
+        $sql = "SELECT count(artifact_id) AS cached_days FROM plugin_agiledashboard_tracker_field_burnup_cache
+                WHERE artifact_id = $artifact_id";
+
+        return $this->retrieveFirstRow($sql);
     }
 }

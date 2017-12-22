@@ -24,7 +24,7 @@ use PFUser;
 use Tracker;
 use Tracker_Artifact;
 use Tracker_FormElement_Field;
-use Tracker_FormElement_Field_BurndownException;
+use Tracker_FormElement_Chart_Field_Exception;
 use Tracker_FormElement_InvalidFieldException;
 use Tracker_FormElementFactory;
 
@@ -63,7 +63,7 @@ class ChartConfigurationFieldRetriever
 
         if (! $field) {
             $this->logger->info("Tracker " . $tracker->getName() . " doesn't have a capacity field (or field is not properly set)");
-            throw new Tracker_FormElement_Field_BurndownException(
+            throw new Tracker_FormElement_Chart_Field_Exception(
                 $GLOBALS['Language']->getText('plugin_tracker', 'burndown_missing_capacity_warning')
             );
         }
@@ -76,7 +76,7 @@ class ChartConfigurationFieldRetriever
      * @param PFUser $user
      * @return Tracker_FormElement_Field
      */
-    public function getBurndownDurationField(Tracker_Artifact $artifact, PFUser $user)
+    public function getDurationField(Tracker_Artifact $artifact, PFUser $user)
     {
         $field = $this->form_element_field_factory->getNumericFieldByNameForUser(
             $artifact->getTracker(),
@@ -85,7 +85,7 @@ class ChartConfigurationFieldRetriever
         );
 
         if (! $field) {
-            throw new Tracker_FormElement_Field_BurndownException(
+            throw new Tracker_FormElement_Chart_Field_Exception(
                 $GLOBALS['Language']->getText('plugin_tracker', 'burndown_missing_duration_warning')
             );
         }
@@ -98,7 +98,7 @@ class ChartConfigurationFieldRetriever
      * @param PFUser $user
      * @return bool|Tracker_FormElement_Field
      */
-    public function getBurndownStartDateField(Tracker_Artifact $artifact, PFUser $user)
+    public function getStartDateField(Tracker_Artifact $artifact, PFUser $user)
     {
         $field = $this->form_element_field_factory->getDateFieldByNameForUser(
             $artifact->getTracker(),
@@ -107,7 +107,7 @@ class ChartConfigurationFieldRetriever
         );
 
         if (! $field) {
-            throw new Tracker_FormElement_Field_BurndownException(
+            throw new Tracker_FormElement_Chart_Field_Exception(
                 $GLOBALS['Language']->getText('plugin_tracker', 'burndown_missing_start_date_warning')
             );
         }
@@ -151,7 +151,7 @@ class ChartConfigurationFieldRetriever
             $this->getCapacityField($tracker);
 
             return true;
-        } catch (Tracker_FormElement_Field_BurndownException $e) {
+        } catch (Tracker_FormElement_Chart_Field_Exception $e) {
             return false;
         }
     }

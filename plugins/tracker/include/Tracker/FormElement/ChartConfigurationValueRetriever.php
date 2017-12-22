@@ -23,9 +23,9 @@ namespace Tuleap\Tracker\FormElement;
 use Logger;
 use PFUser;
 use Tracker_Artifact;
-use Tracker_FormElement_Field_BurndownException;
+use Tracker_FormElement_Chart_Field_Exception;
 
-class BurndownConfigurationValueRetriever
+class ChartConfigurationValueRetriever
 {
     /**
      * @var ChartConfigurationFieldRetriever
@@ -51,7 +51,7 @@ class BurndownConfigurationValueRetriever
     {
         try {
             $field = $this->configuration_field_retriever->getCapacityField($artifact->getTracker());
-        } catch (Tracker_FormElement_Field_BurndownException $e) {
+        } catch (Tracker_FormElement_Chart_Field_Exception $e) {
             $this->logger->info("Artifact " . $artifact->getId() . " no capacity retrieved");
 
             return null;
@@ -65,14 +65,14 @@ class BurndownConfigurationValueRetriever
     /**
      * @return Integer
      *
-     * @throws Tracker_FormElement_Field_BurndownException
+     * @throws Tracker_FormElement_Chart_Field_Exception
      */
-    public function getBurndownDuration(Tracker_Artifact $artifact, PFUser $user)
+    public function getDuration(Tracker_Artifact $artifact, PFUser $user)
     {
-        $field = $this->configuration_field_retriever->getBurndownDurationField($artifact, $user);
+        $field = $this->configuration_field_retriever->getDurationField($artifact, $user);
 
         if ($artifact->getValue($field) === null) {
-            throw new Tracker_FormElement_Field_BurndownException(
+            throw new Tracker_FormElement_Chart_Field_Exception(
                 $GLOBALS['Language']->getText('plugin_tracker', 'burndown_empty_duration_warning')
             );
         }
@@ -80,13 +80,13 @@ class BurndownConfigurationValueRetriever
         $duration = $artifact->getValue($field)->getValue();
 
         if ($duration <= 0) {
-            throw new Tracker_FormElement_Field_BurndownException(
+            throw new Tracker_FormElement_Chart_Field_Exception(
                 $GLOBALS['Language']->getText('plugin_tracker', 'burndown_empty_duration_warning')
             );
         }
 
         if ($duration === 1) {
-            throw new Tracker_FormElement_Field_BurndownException(
+            throw new Tracker_FormElement_Chart_Field_Exception(
                 $GLOBALS['Language']->getText('plugin_tracker', 'burndown_duration_too_short')
             );
         }
@@ -99,15 +99,15 @@ class BurndownConfigurationValueRetriever
      *
      * @return Integer
      *
-     * @throws Tracker_FormElement_Field_BurndownException
+     * @throws Tracker_FormElement_Chart_Field_Exception
      */
-    public function getBurndownStartDate(Tracker_Artifact $artifact, PFUser $user)
+    public function getStartDate(Tracker_Artifact $artifact, PFUser $user)
     {
-        $start_date_field = $this->configuration_field_retriever->getBurndownStartDateField($artifact, $user);
+        $start_date_field = $this->configuration_field_retriever->getStartDateField($artifact, $user);
         $timestamp        = $artifact->getValue($start_date_field)->getTimestamp();
 
         if (! $timestamp) {
-            throw new Tracker_FormElement_Field_BurndownException(
+            throw new Tracker_FormElement_Chart_Field_Exception(
                 $GLOBALS['Language']->getText('plugin_tracker', 'burndown_empty_start_date_warning')
             );
         }

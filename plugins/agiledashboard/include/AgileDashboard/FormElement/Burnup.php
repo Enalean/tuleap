@@ -22,19 +22,24 @@ namespace Tuleap\AgileDashboard\FormElement;
 
 use Codendi_HTMLPurifier;
 use PFUser;
+use SystemEventManager;
 use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue;
+use Tracker_FormElement_Chart_Field_Exception;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_ReadOnly;
 use Tracker_FormElement_FieldVisitor;
 use Tracker_HierarchyFactory;
-use Tuleap\Tracker\FormElement\BurnupLogger;
+use Tuleap\Tracker\FormElement\ChartCachedDaysComparator;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
+use Tuleap\Tracker\FormElement\ChartConfigurationValueChecker;
+use Tuleap\Tracker\FormElement\ChartConfigurationValueRetriever;
 use Tuleap\Tracker\FormElement\ChartFieldUsage;
 use Tuleap\Tracker\FormElement\ChartMessageFetcher;
 use Tuleap\Tracker\FormElement\FieldCalculator;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
+use UserManager;
 
 class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Field_ReadOnly, TrackerFormElementExternalField
 {
@@ -85,7 +90,7 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
 
     private function getConfigurationFieldRetriever()
     {
-        return new ChartConfigurationFieldRetriever($this->getFormElementFactory(), new BurnupLogger());
+        return new ChartConfigurationFieldRetriever($this->getFormElementFactory(), $this->getLogger());
     }
 
     public function fetchArtifactForOverlay(Tracker_Artifact $artifact, $submitted_values = array())
@@ -103,21 +108,39 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
         Tracker_Artifact $artifact,
         Tracker_Artifact_ChangesetValue $value = null
     ) {
-        $stop_on_manual_value = true;
+        try {
+            $user        = UserManager::instance()->getCurrentUser();
+            $burnup_data = $this->getBurnupDataBuilder()->buildBurnupData($artifact, $user);
 
-        $value = $this->getFieldCalculator()->calculate(
-            array($artifact->getId()),
-            null,
-            $stop_on_manual_value,
-            null,
-            null
-        );
+            if ($burnup_data->isBeingCalculated()) {
+                return "<div class='feedback_warning'>" .
+                    dgettext(
+                        'tuleap-agiledashboard',
+                        "Burnup is under calculation. It will be available in few minutes."
+                    ) .
+                    "</div>";
+            }
 
-        $purifier = Codendi_HTMLPurifier::instance();
+            $stop_on_manual_value = true;
 
-        return $purifier->purify($value) . "<br/><div class='feedback_warning'>" .
-            dgettext('tuleap-agiledashboard', "Field under implementation") .
-            "</div>";
+            $value = $this->getFieldCalculator()->calculate(
+                array($artifact->getId()),
+                null,
+                $stop_on_manual_value,
+                null,
+                null
+            );
+
+            $purifier = Codendi_HTMLPurifier::instance();
+
+            return $purifier->purify($value) . "<br/><div class='feedback_warning'>" .
+                dgettext('tuleap-agiledashboard', "Field under implementation") .
+                "</div>";
+        } catch (Tracker_FormElement_Chart_Field_Exception $e) {
+            return "<div class='feedback_warning'>" .
+                $e->getMessage() .
+                "</div>";
+        }
     }
 
     public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value, $report)
@@ -315,5 +338,46 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
     private function getFieldCalculator()
     {
         return new FieldCalculator($this->getTeamEffortCalculator());
+    }
+
+    /**
+     * @return BurnupDataBuilder
+     */
+    private function getBurnupDataBuilder()
+    {
+        return new BurnupDataBuilder(
+            $this->getLogger(),
+            new BurnupCacheChecker(
+                new BurnupCacheGenerator(
+                    SystemEventManager::instance()
+                ),
+                new ChartConfigurationValueChecker(
+                    $this->getConfigurationFieldRetriever(),
+                    $this->getConfigurationValueRetriever()
+                ),
+                new BurnupCacheDao(),
+                new ChartCachedDaysComparator($this->getLogger())
+            ),
+            $this->getConfigurationValueRetriever()
+        );
+    }
+
+    /**
+     * @return BurnupLogger
+     */
+    private function getLogger()
+    {
+        return new BurnupLogger();
+    }
+
+    /**
+     * @return ChartConfigurationValueRetriever
+     */
+    private function getConfigurationValueRetriever()
+    {
+        return new ChartConfigurationValueRetriever(
+            $this->getConfigurationFieldRetriever(),
+            $this->getLogger()
+        );
     }
 }

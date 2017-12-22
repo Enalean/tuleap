@@ -18,13 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Agiledashboard\FormElement\BurnupCacheDao;
 use Tuleap\Agiledashboard\FormElement\BurnupCacheDateRetriever;
 use Tuleap\AgileDashboard\FormElement\BurnupManualValuesAndChildrenListRetriever;
 use Tuleap\AgileDashboard\FormElement\BurnupTotalEffortCalculator;
 use Tuleap\AgileDashboard\FormElement\BurnupTeamEffortCalculator;
 use Tuleap\AgileDashboard\FormElement\BurnupDao;
-use Tuleap\Agiledashboard\FormElement\SystemEvent\BurnupCacheDao;
 use Tuleap\Agiledashboard\FormElement\SystemEvent\SystemEvent_BURNUP_DAILY;
+use Tuleap\AgileDashboard\FormElement\SystemEvent\SystemEvent_BURNUP_GENERATE;
 use Tuleap\AgileDashboard\Kanban\RealTime\KanbanArtifactMessageBuilder;
 use Tuleap\AgileDashboard\Kanban\RealTime\KanbanArtifactMessageSender;
 use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportDao;
@@ -1331,18 +1332,22 @@ class AgileDashboardPlugin extends Plugin {
                 $params['class']        = 'Tuleap\\Agiledashboard\\FormElement\\SystemEvent\\' . SystemEvent_BURNUP_DAILY::NAME;
                 $params['dependencies'] = array(
                     $this->getBurnupDao(),
-                    new FieldCalculator(
-                        new BurnupTotalEffortCalculator($this->getBurnupRetreiver())
-                    ),
-                    new FieldCalculator(
-                        new BurnupTeamEffortCalculator(
-                            $this->getBurnupDao(),
-                            $this->getBurnupRetreiver()
-                        )
-                    ),
+                    $this->getTotalEffortCalculator(),
+                    $this->getTeamEffortCalculator(),
                     new BurnupCacheDao(),
                     $this->getLogger(),
                     new BurnupCacheDateRetriever()
+                );
+                break;
+            case 'Tuleap\\Agiledashboard\\FormElement\\SystemEvent\\' . SystemEvent_BURNUP_GENERATE::NAME:
+                $params['class']        = 'Tuleap\\Agiledashboard\\FormElement\\SystemEvent\\' . SystemEvent_BURNUP_GENERATE::NAME;
+                $params['dependencies'] = array(
+                    new BurnupDao(),
+                    $this->getTotalEffortCalculator(),
+                    $this->getTeamEffortCalculator(),
+                    new BurnupCacheDao(),
+                    $this->getLogger(),
+                    new BurnupCacheDateRetriever
                 );
                 break;
             default:
@@ -1353,6 +1358,7 @@ class AgileDashboardPlugin extends Plugin {
     public function system_event_get_types_for_default_queue($params)
     {
         $params['types'][] = 'Tuleap\\Agiledashboard\\FormElement\\SystemEvent\\' . SystemEvent_BURNUP_DAILY::NAME;
+        $params['types'][] = 'Tuleap\\Agiledashboard\\FormElement\\SystemEvent\\' . SystemEvent_BURNUP_GENERATE::NAME;
     }
 
     /**
@@ -1377,6 +1383,29 @@ class AgileDashboardPlugin extends Plugin {
     private function getBurnupRetreiver()
     {
         return new BurnupManualValuesAndChildrenListRetriever($this->getBurnupDao());
+    }
+
+    /**
+     * @return FieldCalculator
+     */
+    private function getTotalEffortCalculator()
+    {
+        return new FieldCalculator(
+            new BurnupTotalEffortCalculator($this->getBurnupRetreiver())
+        );
+    }
+
+    /**
+     * @return FieldCalculator
+     */
+    private function getTeamEffortCalculator()
+    {
+        return new FieldCalculator(
+            new BurnupTeamEffortCalculator(
+                $this->getBurnupDao(),
+                $this->getBurnupRetreiver()
+            )
+        );
     }
 
 }
