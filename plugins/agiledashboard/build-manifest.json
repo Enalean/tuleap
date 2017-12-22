@@ -10,7 +10,8 @@
         },
         "FlamingParrot": {
             "files": [
-                "www/themes/FlamingParrot/css/style.scss"
+                "www/themes/FlamingParrot/css/style.scss",
+                "www/themes/FlamingParrot/css/burnup-chart.scss"
             ],
             "includes": [
                 "../../src/www/themes/FlamingParrot/css/utils"
@@ -54,7 +55,14 @@
         "www/js/ContentFilter.js",
         "www/js/home.js"
     ],
+    "gettext-js": {
+        "burnup-chart": {
+            "src": "www/js/burnup-chart/src",
+            "po": "www/js/burnup-chart/po"
+        }
+    },
     "components": [
-        "plugins/agiledashboard/www/js/kanban"
+        "plugins/agiledashboard/www/js/kanban",
+        "plugins/agiledashboard/www/js"
     ]
 }

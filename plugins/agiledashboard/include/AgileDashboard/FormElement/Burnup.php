@@ -40,6 +40,7 @@ use Tuleap\AgileDashboard\Semantic\Dao\SemanticDoneDao;
 use Tuleap\AgileDashboard\Semantic\SemanticDoneFactory;
 use Tuleap\AgileDashboard\Semantic\SemanticDoneValueChecker;
 use Tuleap\AgileDashboard\v1\Artifact\BurnupRepresentation;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Tracker\FormElement\ChartCachedDaysComparator;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueChecker;
@@ -132,49 +133,39 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
                     ) .
                     "</div>";
             }
-
-            $purifier = Codendi_HTMLPurifier::instance();
-
-            $artifact_value = "<br/><div class='feedback_warning'>" .
-                dgettext('tuleap-agiledashboard', "Field under implementation") .
-                "</div>";
-
-            $artifact_value .= '<table class="tracker_report_table table tlp-table">';
-            $artifact_value .= '<thead><tr><th></th><th>Team</th><th>Total</th></tr></thead><tbody>';
-            foreach ($burnup_data->getEfforts() as $timestamp => $burnup_effort) {
-                $artifact_value .= '<tr>';
-                $date           = new \DateTime("@$timestamp");
-                $artifact_value .= '<td>' . $purifier->purify($date->format('d-m-Y')) . '</td>';
-                $artifact_value .= '<td>' . $purifier->purify($burnup_effort->getTeamEffort()) . '</td>';
-                $artifact_value .= '<td>' . $purifier->purify($burnup_effort->getTotalEffort()) . '</td>';
-                $artifact_value .= '</tr>';
-            }
-            $artifact_value .= '</tbody></table>';
-
-            $artifact_value .= $this->fetchGenerationModal($burnup_data, $artifact);
-
-            return $artifact_value;
         } catch (Tracker_FormElement_Chart_Field_Exception $e) {
             return "<div class='feedback_warning'>" .
                 $e->getMessage() .
                 "</div>";
         }
-    }
 
-    /**
-     * @return string
-     */
-    private function fetchGenerationModal(BurnupData $burnup_data, Tracker_Artifact $artifact)
-    {
-        if ($burnup_data->isBeingCalculated() || ! $artifact->getTracker()->userIsAdmin($this->getCurrentUser())) {
-            return '';
-        }
+
+        $burnup_chart_include_assets = new IncludeAssets(
+            AGILEDASHBOARD_BASE_DIR . '/../www/assets',
+            AGILEDASHBOARD_BASE_URL . '/assets'
+        );
+        $GLOBALS['HTML']->includeFooterJavascriptFile($burnup_chart_include_assets->getFileURL('burnup-chart.js'));
+
+        $theme_include_assets = new IncludeAssets(
+            AGILEDASHBOARD_BASE_DIR . '/../www/themes/FlamingParrot/assets',
+            AGILEDASHBOARD_BASE_URL . '/themes/FlamingParrot/assets'
+        );
+
+        $capacity                  = $this->getConfigurationValueRetriever()->getCapacity($artifact, $user);
+        $burnup_representation     = new BurnupRepresentation($capacity, $burnup_data);
+        $css_file_url              = $theme_include_assets->getFileURL('burnup-chart.css');
+        $can_burnup_be_regenerated = $artifact->getTracker()->userIsAdmin($user);
+        $burnup_presenter          = new BurnupFieldPresenter(
+            $burnup_representation,
+            $artifact,
+            $can_burnup_be_regenerated,
+            $css_file_url,
+            $user->getLocale()
+        );
+
         $renderer = TemplateRendererFactory::build()->getRenderer(AGILEDASHBOARD_TEMPLATE_DIR);
 
-        return $renderer->renderToString(
-            'formelement/burnup-cache-generation-modal',
-            array('project_id' => $artifact->getTracker()->getGroupId(), 'artifact_id' => $artifact->getId())
-        );
+        return $renderer->renderToString('formelement/burnup-field', $burnup_presenter);
     }
 
     public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value, $report)
