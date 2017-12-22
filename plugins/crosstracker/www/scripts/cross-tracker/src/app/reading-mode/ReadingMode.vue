@@ -17,24 +17,18 @@
                 {{ save_report }}
             </button>
         </div>
-
-        <artifact-table-renderer
-            v-bind:query-result-controller="queryResultController"
-        ></artifact-table-renderer>
     </div>
 </template>)
 (<script>
-    import ArtifactTableRenderer  from '../ArtifactTableRenderer.vue';
     import TrackerListReadingMode from './TrackerListReadingMode.vue';
     import { gettext_provider }   from '../gettext-provider.js';
     import { isAnonymous }        from '../user-service.js';
 
     export default {
-        components: { ArtifactTableRenderer, TrackerListReadingMode } ,
+        components: { TrackerListReadingMode } ,
         props: [
             'backendCrossTrackerReport',
-            'readingCrossTrackerReport',
-            'queryResultController'
+            'readingCrossTrackerReport'
         ],
         data() {
             return {
