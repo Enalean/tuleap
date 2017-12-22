@@ -19,15 +19,10 @@
                 name="allowed-fields"
                 id="expert-query-allowed-fields"
                 multiple
+                v-on:click.prevent="insertSelectedField"
             >
-                <option
-                    value="@title"
-                    v-on:click.prevent="insertSelectedField"
-                >{{ title_semantic_label }}</option>
-                <option
-                    value="@description"
-                    v-on:click.prevent="insertSelectedField"
-                >{{ description_semantic_label }}</option>
+                <option value="@title">{{ title_semantic_label }}</option>
+                <option value="@description">{{ description_semantic_label }}</option>
             </select>
         </div>
     </div>

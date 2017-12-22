@@ -1334,7 +1334,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
                 }
             case 'store-expert-mode':
                 if (! $current_user->isAnonymous()) {
-                    if ($request->isAjax()) {
+                    if ($request->isPost()) {
                         $this->report_session->storeExpertMode();
                         $this->report_session->setHasChanged();
                         $this->is_in_expert_mode = true;
@@ -1343,7 +1343,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
                 break;
             case 'store-normal-mode':
                 if (! $current_user->isAnonymous()) {
-                    if ($request->isAjax()) {
+                    if ($request->isPost()) {
                         $this->report_session->storeNormalMode();
                         $this->report_session->setHasChanged();
                         $this->is_in_expert_mode = false;
