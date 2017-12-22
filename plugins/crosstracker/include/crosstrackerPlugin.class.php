@@ -23,6 +23,7 @@ use Tuleap\CrossTracker\REST\ResourcesInjector;
 use Tuleap\CrossTracker\Widget\ProjectCrossTrackerSearch;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\User\UserDashboardController;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\CurrentPage;
 use Tuleap\Tracker\ProjectDeletionEvent;
 
@@ -126,8 +127,12 @@ class crosstrackerPlugin extends Plugin
         $current_page = new CurrentPage();
 
         if ($current_page->isDashboard()) {
+            $theme_include_assets = new IncludeAssets(
+                CROSSTRACKER_BASE_DIR . '/www/themes/BurningParrot/assets',
+                $this->getThemePath() . '/assets'
+            );
             $variant = $params['variant'];
-            $params['stylesheets'][] = $this->getThemePath() .'/css/style-'. $variant->getName() .'.css';
+            $params['stylesheets'][] = $theme_include_assets->getFileURL('style-' . $variant->getName() . '.css');
         }
     }
 }
