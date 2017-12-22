@@ -22,7 +22,10 @@
         </div>
         <div class="dashboard-widget-content-cross-tracker-form-trackers-selected"></div>
         <query-editor
+            ref="query_editor"
+            v-if="is_report_loaded"
             v-bind:writing-cross-tracker-report="writingCrossTrackerReport"
+            v-on:triggerSearch="search"
         ></query-editor>
         <div class="writing-mode-actions">
             <button
@@ -44,7 +47,8 @@
         components: { QueryEditor },
         name: 'WritingMode',
         props: [
-            'writingCrossTrackerReport',
+            'backendCrossTrackerReport',
+            'writingCrossTrackerReport'
         ],
         computed: {
             project_label   : () => gettext_provider.gettext("Project"),
@@ -52,6 +56,9 @@
             search_label    : () => gettext_provider.gettext("Search"),
             cancel_label    : () => gettext_provider.gettext("Cancel"),
             add_button_label: () => gettext_provider.gettext("Add"),
+            is_report_loaded() {
+                return this.backendCrossTrackerReport.loaded;
+            },
         },
         methods: {
             cancel() {
@@ -59,6 +66,9 @@
             },
             search() {
                 this.$emit('switchToReadingMode', { saved_state: false });
+            },
+            refresh() {
+                this.$refs.query_editor.refresh();
             }
         }
     }

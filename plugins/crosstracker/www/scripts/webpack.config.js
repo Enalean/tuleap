@@ -1,7 +1,10 @@
 /* eslint-disable */
-var path                  = require('path');
-var webpack               = require('webpack');
-var WebpackAssetsManifest = require('webpack-assets-manifest');
+var path                     = require('path');
+var webpack                  = require('webpack');
+var WebpackAssetsManifest    = require('webpack-assets-manifest');
+var VueLoaderOptionsPlugin   = require('vue-loader-options-plugin');
+var BabelPluginRewireExports = require('babel-plugin-rewire-exports').default;
+var BabelPluginIstanbul      = require('babel-plugin-istanbul').default;
 
 var assets_dir_path = path.resolve(__dirname, '../assets');
 
@@ -31,13 +34,13 @@ var babel_options   = {
         },
         test: {
             presets: [babel_preset_env_chrome_config],
-            plugins: ['babel-plugin-rewire-exports']
+            plugins: [BabelPluginRewireExports]
         },
         coverage: {
             presets: [babel_preset_env_chrome_config],
             plugins: [
-                'babel-plugin-rewire-exports',
-                ['babel-plugin-istanbul', {
+                BabelPluginRewireExports,
+                [BabelPluginIstanbul, {
                     exclude: ['**/*.spec.js']
                 }]
             ]
@@ -55,6 +58,11 @@ var webpack_config = {
     },
     externals: {
         tlp: 'tlp'
+    },
+    resolve: {
+        alias: {
+            'plugin-tracker-TQL': path.resolve(__dirname, '../../../tracker/www/scripts/report/TQL-CodeMirror')
+        }
     },
     module: {
         rules: [
@@ -74,7 +82,7 @@ var webpack_config = {
                         loader: 'vue-loader',
                         options: {
                             loaders: {
-                                js: 'babel-loader?' + JSON.stringify(babel_options)
+                                js: 'babel-loader'
                             },
                             esModule: true
                         }
@@ -99,6 +107,9 @@ var webpack_config = {
             output: 'manifest.json',
             merge: true,
             writeToDisk: true
+        }),
+        new VueLoaderOptionsPlugin({
+            babel: babel_options
         }),
         // This ensure we only load moment's fr locale. Otherwise, every single locale is included !
         new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /fr/)

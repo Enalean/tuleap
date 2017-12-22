@@ -18,7 +18,8 @@
                 "www/themes/BurningParrot/css/style-red-condensed.scss"
             ],
             "includes": [
-                "../../src/www/themes/common/tlp/src/scss"
+                "../../src/www/themes/common/tlp/src/scss",
+                "../tracker/www/scripts/node_modules"
             ],
             "watched_includes": [
                 "www/themes/BurningParrot/css/**/_*.scss"

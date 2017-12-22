@@ -28,6 +28,9 @@ msgstr "Assigné à"
 msgid "Cancel"
 msgstr "Annuler"
 
+msgid "Description"
+msgstr "Description"
+
 msgid "Error while fetching the cross tracker report"
 msgstr "Erreur à la récupération du rapport multi outil de suivi"
 
@@ -82,18 +85,18 @@ msgstr "État"
 msgid "Submitted by"
 msgstr "Auteur"
 
-msgid ""
-"The query edition is under construction. The value you submit is not yet "
-"taken into account"
-msgstr ""
-"L'édition de la requête est en cours de construction. La valeur de ce champ "
-"ne sera pas encore prise en compte."
-
-msgid "Title (Semantic)"
-msgstr "Titre (Sémantique)"
+msgid "Title"
+msgstr "Titre"
 
 msgid "Tracker"
 msgstr "Outil de suivi"
 
 msgid "Tracker selection is limited to 10 trackers"
 msgstr "Vous ne pouvez pas sélectionner plus de 10 outils de suivi"
+
+msgid ""
+"You can use: AND, OR, parenthesis. Autocomplete is activated with Ctrl + "
+"Space."
+msgstr ""
+"Vous pouvez utiliser : AND, OR, parenthèses. Ctrl + Espace active "
+"l'autocomplétion."

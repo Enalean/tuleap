@@ -23,7 +23,8 @@ import { rewire$isAnonymous, restore } from './user-service.js';
 import BackendCrossTrackerReport       from './backend-cross-tracker-report.js';
 import ReadingCrossTrackerReport       from './reading-mode/reading-cross-tracker-report.js';
 import WritingCrossTrackerReport       from './writing-mode/writing-cross-tracker-report.js';
-import SavedState from './report-saved-state.js';
+import SavedState                      from './report-saved-state.js';
+import WritingMode                     from './writing-mode/WritingMode.vue';
 
 describe("CrossTrackerWidget", () => {
     let Widget,
@@ -88,6 +89,7 @@ describe("CrossTrackerWidget", () => {
         beforeEach(() => {
             isAnonymous = jasmine.createSpy("isAnonymous").and.returnValue(false);
             rewire$isAnonymous(isAnonymous);
+            spyOn(WritingMode.methods, "refresh");
         });
 
         afterEach(() => {
@@ -103,6 +105,7 @@ describe("CrossTrackerWidget", () => {
             expect(writingCrossTrackerReport.duplicateFromReport).toHaveBeenCalledWith(readingCrossTrackerReport);
             expect(successDisplayer.hideSuccess).toHaveBeenCalled();
             expect(errorDisplayer.hideError).toHaveBeenCalled();
+            expect(WritingMode.methods.refresh).toHaveBeenCalled();
         });
 
         it("Given I am browsing anonymously, when I try to switch to writing mode, then then nothing will happen", () => {
@@ -112,7 +115,6 @@ describe("CrossTrackerWidget", () => {
             vm.switchToWritingMode();
 
             expect(projectSelector.loadProjectsOnce).not.toHaveBeenCalled();
-            expect(writingCrossTrackerReport.duplicateFromReport).not.toHaveBeenCalled();
         });
     });
 

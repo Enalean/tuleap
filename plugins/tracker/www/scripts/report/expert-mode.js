@@ -21,7 +21,7 @@ import codendi    from 'codendi';
 import CodeMirror from 'codemirror';
 import { get }    from 'tlp-fetch';
 import {
-    TQL_simple_mode_definition,
+    buildModeDefinition,
     TQL_autocomplete_keywords
 } from './TQL-CodeMirror/configuration.js';
 import {
@@ -101,6 +101,7 @@ function initializeCodeMirror() {
         return;
     }
 
+    const TQL_simple_mode_definition = buildModeDefinition({ additional_keywords: ['@comments']});
     initializeTQLMode(TQL_simple_mode_definition);
     if (! tracker_report_expert_query.classList.contains('tracker-report-query-undisplayed')) {
         codeMirrorifyQueryArea();

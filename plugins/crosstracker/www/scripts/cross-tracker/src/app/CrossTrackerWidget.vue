@@ -9,7 +9,9 @@
             v-on:switchToWritingMode="switchToWritingMode"
         ></reading-mode>
         <writing-mode
+            ref="writing_mode"
             v-show="! reading_mode"
+            v-bind:backend-cross-tracker-report="backendCrossTrackerReport"
             v-bind:writing-cross-tracker-report="writingCrossTrackerReport"
             v-on:switchToReadingMode="switchToReadingMode"
         ></writing-mode>
@@ -58,6 +60,7 @@
                 this.writingCrossTrackerReport.duplicateFromReport(this.readingCrossTrackerReport);
                 this.hideFeedbacks();
                 this.reading_mode = false;
+                this.$refs.writing_mode.refresh();
             },
             switchToReadingMode({ saved_state }) {
                 this.hideFeedbacks();

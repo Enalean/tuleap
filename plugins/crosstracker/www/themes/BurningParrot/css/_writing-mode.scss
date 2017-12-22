@@ -51,12 +51,8 @@
     }
 }
 
-// TODO: outline with a css class
 .dashboard-widget-content-cross-tracker-selected-tracker {
     margin: 0 10px 10px 0;
-    border: 0;
-    background: $tlp-theme-background-color;
-    color: $tlp-theme-color;
 
     &:last-child {
         margin: 0 0 10px;
@@ -83,6 +79,10 @@
 .writing-mode-actions {
     display: flex;
     justify-content: center;
+}
+
+.writing-mode-actions-cancel {
+    margin: 0 $tlp-spacing 0 0;
 }
 
 .dashboard-widget-content-cross-tracker-too-many-selected-error {
