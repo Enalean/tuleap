@@ -49,15 +49,22 @@ class SemanticDone extends Tracker_Semantic
      */
     private $dao;
 
+    /**
+     * @var array
+     */
+    private $done_values;
+
     public function __construct(
         Tracker $tracker,
         Tracker_Semantic_Status $semantic_status,
-        SemanticDoneDao $dao
+        SemanticDoneDao $dao,
+        array $done_values
     ) {
         parent::__construct($tracker);
 
         $this->semantic_status = $semantic_status;
         $this->dao             = $dao;
+        $this->done_values     = $done_values;
     }
 
     /**
@@ -103,7 +110,7 @@ class SemanticDone extends Tracker_Semantic
         $selected_values         = array();
 
         if ($semantic_status_field) {
-            $selected_values = $this->getFormattedSelectedValues($semantic_status_field);
+            $selected_values = $this->getFormattedDoneValues();
         }
 
         $presenter = new SemanticDoneIntroPresenter($selected_values, $semantic_status_field);
@@ -171,38 +178,17 @@ class SemanticDone extends Tracker_Semantic
     /**
      * @return array
      */
-    private function getFormattedSelectedValues(Tracker_FormElement_Field $semantic_status_field)
+    private function getFormattedDoneValues()
     {
-        $selected_values = array();
+        $formatted_done_values = array();
 
-        foreach ($this->getSelectedValues($semantic_status_field) as $selected_value) {
-            $selected_values[] = array(
-                'label' => $selected_value->getLabel()
+        foreach ($this->done_values as $done_value) {
+            $formatted_done_values[] = array(
+                'label' => $done_value->getLabel()
             );
         }
 
-        return $selected_values;
-    }
-
-    /**
-     * @return array
-     */
-    private function getSelectedValues(Tracker_FormElement_Field $semantic_status_field)
-    {
-        $closed_values   = $this->getClosedValues($semantic_status_field);
-        $selected_values = array();
-
-        foreach ($this->dao->getSelectedValues($this->tracker->getId()) as $selected_value_row) {
-            $value_id = $selected_value_row['value_id'];
-
-            if (! array_key_exists($value_id, $closed_values)) {
-                continue;
-            }
-
-            $selected_values[$value_id] = $closed_values[$value_id];
-        }
-
-        return $selected_values;
+        return $formatted_done_values;
     }
 
     /**
@@ -210,14 +196,12 @@ class SemanticDone extends Tracker_Semantic
      */
     private function getFormattedClosedValues(Tracker_FormElement_Field $semantic_status_field)
     {
-        $selected_values        = $this->getSelectedValues($semantic_status_field);
         $formated_closed_values = array();
-
         foreach ($this->getClosedValues($semantic_status_field) as $value_id => $value) {
             $formated_closed_values[] = array(
                 'id'       => $value->getId(),
                 'label'    => $value->getLabel(),
-                'selected' => array_key_exists($value_id, $selected_values)
+                'selected' => array_key_exists($value_id, $this->done_values)
             );
         }
 
@@ -290,6 +274,8 @@ class SemanticDone extends Tracker_Semantic
         try {
             $this->dao->clearForTracker($tracker_id);
 
+            $this->setNewDoneValues(array());
+
             $GLOBALS['Response']->addFeedback(
                 Feedback::INFO,
                 dgettext('tuleap-agiledashboard', 'Done values successfully cleared.')
@@ -322,6 +308,9 @@ class SemanticDone extends Tracker_Semantic
 
         try {
             $this->dao->updateForTracker($tracker_id, $selected_values);
+
+            $this->setNewDoneValues($selected_values);
+
             $GLOBALS['Response']->addFeedback(
                 Feedback::INFO,
                 dgettext('tuleap-agiledashboard', 'Done values successfully updated.')
@@ -331,6 +320,23 @@ class SemanticDone extends Tracker_Semantic
                 Feedback::ERROR,
                 dgettext('tuleap-agiledashboard', 'An error occurred while updating done values.')
             );
+        }
+    }
+
+    private function setNewDoneValues(array $selected_values)
+    {
+        $this->done_values = array();
+
+        $field = $this->semantic_status->getField();
+
+        if ($selected_values === array() || ! $field) {
+            return;
+        }
+
+        foreach ($selected_values as $selected_value_id) {
+            $value = $field->getBind()->getValue($selected_value_id);
+
+            $this->done_values[$selected_value_id] = $value;
         }
     }
 
@@ -391,7 +397,21 @@ class SemanticDone extends Tracker_Semantic
         $semantic_status = Tracker_Semantic_Status::load($tracker);
         $dao             = new SemanticDoneDao();
 
-        self::$_instances[$tracker->getId()] = new SemanticDone($tracker, $semantic_status, $dao);
+        $semantic_status_field = $semantic_status->getField();
+        $done_values           = array();
+
+        if ($semantic_status_field) {
+            foreach ($dao->getSelectedValues($tracker->getId()) as $selected_value_row) {
+                $value_id = $selected_value_row['value_id'];
+                $value    = $semantic_status_field->getBind()->getValue($value_id);
+
+                if ($value && ! in_array($value_id, $semantic_status->getOpenValues()) && ! $value->isHidden()) {
+                    $done_values[$value_id] = $value;
+                }
+            }
+        }
+
+        self::$_instances[$tracker->getId()] = new SemanticDone($tracker, $semantic_status, $dao, $done_values);
 
         return self::$_instances[$tracker->getId()];
     }
