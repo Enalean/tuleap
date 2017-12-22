@@ -17,10 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { render } from 'mustache';
-import { watch } from 'wrist';
+import { render }                       from 'mustache';
+import { watch }                        from 'wrist';
 import { TooManyTrackersSelectedError } from "./writing-cross-tracker-report.js";
-import selected_tracker_template from './selected-tracker.mustache';
+import selected_tracker_template        from './selected-tracker.mustache';
+import { gettext_provider }             from '../gettext-provider.js';
 
 export default class TrackerSelectionController {
     constructor(
@@ -30,7 +31,6 @@ export default class TrackerSelectionController {
         backend_cross_tracker_report,
         tracker_selector,
         error_displayer,
-        gettext_provider
     ) {
         this.widget_content               = widget_content;
         this.tracker_selection            = tracker_selection;
@@ -38,11 +38,11 @@ export default class TrackerSelectionController {
         this.backend_cross_tracker_report = backend_cross_tracker_report;
         this.tracker_selector             = tracker_selector;
         this.error_displayer              = error_displayer;
-        this.gettext_provider             = gettext_provider;
-        this.form_trackers_selected       = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-form-trackers-selected');
-        this.add_tracker_button           = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-form-trackers-add');
-        this.writing_mode_cancel          = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-writing-mode-actions-cancel');
+    }
 
+    init() {
+        this.form_trackers_selected = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-form-trackers-selected');
+        this.add_tracker_button     = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-form-trackers-add');
 
         this.listenReportLoaded();
         this.setDisabled();
@@ -65,7 +65,7 @@ export default class TrackerSelectionController {
     }
 
     removeTrackersSelected() {
-        while(this.form_trackers_selected.hasChildNodes()) {
+        while (this.form_trackers_selected.hasChildNodes()) {
             this.form_trackers_selected.removeChild(this.form_trackers_selected.lastChild);
         }
     }
@@ -114,7 +114,7 @@ export default class TrackerSelectionController {
                 this.writing_cross_tracker_report.addTracker(selected_project, selected_tracker);
             } catch (error) {
                 if (error instanceof TooManyTrackersSelectedError) {
-                    this.error_displayer.displayError(this.gettext_provider.gettext('Tracker selection is limited to 10 trackers'));
+                    this.error_displayer.displayError(gettext_provider.gettext('Tracker selection is limited to 10 trackers'));
                 } else {
                     throw error;
                 }

@@ -19,7 +19,11 @@
 
 export default class TrackerSelectionLoaderDisplayer {
     constructor(widget_content) {
-        this.form_tracker_selector = widget_content.querySelector('.dashboard-widget-content-cross-tracker-form-trackers-add');
+        this.widget_content = widget_content;
+    }
+
+    init() {
+        this.form_tracker_selector = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-form-trackers-add');
     }
 
     show() {

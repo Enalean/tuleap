@@ -1,0 +1,90 @@
+/**
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+@import 'query-edition';
+
+.cross-tracker-writing-mode {
+    margin: $tlp-spacing;
+}
+
+.dashboard-widget-content-cross-tracker-form {
+    display: flex;
+
+    > :first-child {
+        margin-right: $tlp-double-spacing;
+    }
+}
+
+.dashboard-widget-content-cross-tracker-form-projects-input,
+.dashboard-widget-content-cross-tracker-form-trackers-input {
+    min-width: 200px;
+}
+
+.dashboard-widget-content-cross-tracker-form-trackers-add {
+    > .cross-tracker-loader {
+        display: none;
+    }
+
+    &.cross-tracker-loading {
+        > .cross-tracker-loader {
+            display: inline-block;
+        }
+
+        > .cross-tracker-add-icon {
+            display: none;
+        }
+    }
+}
+
+// TODO: outline with a css class
+.dashboard-widget-content-cross-tracker-selected-tracker {
+    margin: 0 10px 10px 0;
+    border: 0;
+    background: $tlp-theme-background-color;
+    color: $tlp-theme-color;
+
+    &:last-child {
+        margin: 0 0 10px;
+    }
+}
+
+.dashboard-widget-content-cross-tracker-please-choose-option {
+    color: $tlp-ui-dimmed;
+}
+
+.dashboard-widget-content-cross-tracker-project-icon {
+    margin: 0 3px 0 8px;
+    fill: $tlp-theme-color;
+}
+
+.dashboard-widget-content-cross-tracker-remove-tracker {
+    cursor: pointer;
+}
+
+.dashboard-widget-content-cross-tracker-form-trackers-selected {
+    margin: 0 0 $tlp-half-spacing;
+}
+
+.writing-mode-actions {
+    display: flex;
+    justify-content: center;
+}
+
+.dashboard-widget-content-cross-tracker-too-many-selected-error {
+    margin: $tlp-spacing 0;
+}

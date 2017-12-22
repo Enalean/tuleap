@@ -1,5 +1,5 @@
 (<template>
-    <div class="dashboard-widget-content-cross-tracker-reading-mode">
+    <div class="cross-tracker-reading-mode">
         <div class="cross-tracker-reading-mode-fields"
             v-bind:class="{'reading-mode-disabled': ! is_report_loaded, 'disabled' : is_user_anonymous}"
             v-on:click="switchToWritingMode"
@@ -8,7 +8,9 @@
                 v-bind:reading-cross-tracker-report="readingCrossTrackerReport"
             ></tracker-list-reading-mode>
         </div>
-        <div class="dashboard-widget-content-cross-tracker-reading-mode-actions cross-tracker-hide">
+        <div class="dashboard-widget-content-cross-tracker-reading-mode-actions"
+            v-bind:class="{'cross-tracker-hide': are_actions_hidden }"
+        >
             <button class="tlp-button-primary tlp-button-small tlp-button-outline dashboard-widget-content-cross-tracker-reading-mode-actions-cancel">{{ cancel }}</button>
             <button class="tlp-button-primary tlp-button-small dashboard-widget-content-cross-tracker-reading-mode-actions-save">
                 <span class="cross-tracker-loader"><i class="tlp-button-icon fa fa-spinner fa-spin"></i></span>
@@ -16,7 +18,9 @@
             </button>
         </div>
 
-        <artifact-table-renderer></artifact-table-renderer>
+        <artifact-table-renderer
+            v-bind:query-result-controller="queryResultController"
+        ></artifact-table-renderer>
     </div>
 </template>)
 (<script>
@@ -30,9 +34,13 @@
         props: [
             'backendCrossTrackerReport',
             'readingCrossTrackerReport',
-            'writingCrossTrackerReport',
-            'reportMode'
+            'queryResultController'
         ],
+        data() {
+            return {
+                are_actions_hidden: true
+            };
+        },
         computed: {
             save_report:() => gettext_provider.gettext("Save report"),
             cancel:()      => gettext_provider.gettext("Cancel"),
@@ -49,8 +57,13 @@
                     return;
                 }
 
-                this.writingCrossTrackerReport.duplicateFromReport(this.readingCrossTrackerReport);
-                this.reportMode.switchToWritingMode();
+                this.$emit('switchToWritingMode');
+            },
+            showActions() {
+                this.are_actions_hidden = false;
+            },
+            hideActions() {
+                this.are_actions_hidden = true;
             }
         },
     };

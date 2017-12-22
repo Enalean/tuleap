@@ -27,12 +27,6 @@ class ProjectCrossTrackerSearchPresenter
     public $locale;
     public $date_format;
     public $is_anonymous;
-    public $project_label;
-    public $tracker_label;
-    public $add_button_label;
-    public $cancel;
-    public $search;
-    public $trackers_empty;
 
     public function __construct($report_id, \PFUser $user)
     {
@@ -40,12 +34,5 @@ class ProjectCrossTrackerSearchPresenter
         $this->locale       = $user->getLocale();
         $this->date_format  = $GLOBALS['Language']->getText('system', 'datefmt_short');
         $this->is_anonymous = $user->isAnonymous() ? 'true' : 'false';
-
-        $this->project_label         = dgettext('tuleap-crosstracker', 'Project');
-        $this->tracker_label         = dgettext('tuleap-crosstracker', 'Tracker');
-        $this->add_button_label      = dgettext('tuleap-crosstracker', 'Add');
-        $this->cancel                = dgettext('tuleap-crosstracker', 'Cancel');
-        $this->search                = dgettext('tuleap-crosstracker', 'Search');
-        $this->trackers_empty        = dgettext('tuleap-crosstracker', 'No trackers selected');
     }
 }

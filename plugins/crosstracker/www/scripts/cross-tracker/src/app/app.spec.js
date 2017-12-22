@@ -18,4 +18,5 @@
  */
 
 import 'babel-polyfill';
+import './CrossTrackerWidget.spec.js';
 import './reading-mode/ReadingMode.spec.js';

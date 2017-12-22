@@ -18,58 +18,45 @@
  */
 
 import { updateReport, getReport } from '../rest-querier.js';
+import { isAnonymous }             from '../user-service.js';
+import { gettext_provider }        from '../gettext-provider.js';
 
 export default class ReadingModeController {
     constructor(
         widget_content,
-        report_mode,
         report_saved_state,
         backend_cross_tracker_report,
         writing_cross_tracker_report,
         reading_cross_tracker_report,
         query_result_controller,
-        user,
         widget_loader_displayer,
         success_displayer,
-        error_displayer,
-        gettext_provider
+        error_displayer
     ) {
         this.widget_content               = widget_content;
-        this.report_mode                  = report_mode;
         this.report_saved_state           = report_saved_state;
         this.backend_cross_tracker_report = backend_cross_tracker_report;
         this.writing_cross_tracker_report = writing_cross_tracker_report;
         this.reading_cross_tracker_report = reading_cross_tracker_report;
         this.query_result_controller      = query_result_controller;
-        this.user                         = user;
         this.widget_loader_displayer      = widget_loader_displayer;
         this.success_displayer            = success_displayer;
         this.error_displayer              = error_displayer;
-        this.gettext_provider             = gettext_provider;
-
-        this.reading_mode                = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-reading-mode');
-        this.reading_mode_actions        = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-reading-mode-actions');
-        this.reading_mode_save_report    = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-reading-mode-actions-save');
-        this.reading_mode_cancel_report  = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-reading-mode-actions-cancel');
     }
 
     init() {
+        this.reading_mode_actions       = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-reading-mode-actions');
+        this.reading_mode_save_report   = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-reading-mode-actions-save');
+        this.reading_mode_cancel_report = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-reading-mode-actions-cancel');
+
         this.loadBackendReport().then(() => {
-            if (this.user.isAnonymous()) {
+            if (isAnonymous()) {
                 this.disableSaveReport();
                 return;
             }
             this.listenSaveReport();
             this.listenCancelReport();
         });
-    }
-
-    switchToReadingMode() {
-        if (! this.report_saved_state.isReportSaved()) {
-            this.showReportActions();
-        } else {
-            this.hideReportActions();
-        }
     }
 
     listenSaveReport() {
@@ -102,7 +89,7 @@ export default class ReadingModeController {
             this.backend_cross_tracker_report.init(trackers, expert_query);
             this.initReports();
 
-            this.success_displayer.displaySuccess(this.gettext_provider.gettext('Report has been successfully saved'));
+            this.success_displayer.displaySuccess(gettext_provider.gettext('Report has been successfully saved'));
             this.hideReportActions();
             this.backend_cross_tracker_report.loaded = true;
             this.report_saved_state.switchToSavedState();
@@ -111,16 +98,12 @@ export default class ReadingModeController {
             if (error.response.status === 403 && 'i18n_error_message' in error_details.error) {
                 this.error_displayer.displayError(error_details.error.i18n_error_message);
             } else {
-                this.error_displayer.displayError(this.gettext_provider.gettext('Error while updating the cross tracker report'));
+                this.error_displayer.displayError(gettext_provider.gettext('Error while updating the cross tracker report'));
             }
             throw error;
         } finally {
             this.hideSaveReportLoading();
         }
-    }
-
-    showReportActions() {
-        this.reading_mode_actions.classList.remove('cross-tracker-hide');
     }
 
     hideReportActions() {
@@ -146,7 +129,7 @@ export default class ReadingModeController {
             if (error.response.status === 403 && 'i18n_error_message' in error_details.error) {
                 this.error_displayer.displayError(error_details.error.i18n_error_message);
             } else {
-                this.error_displayer.displayError(this.gettext_provider.gettext('Error while fetching the cross tracker report'));
+                this.error_displayer.displayError(gettext_provider.gettext('Error while fetching the cross tracker report'));
             }
             throw error;
         } finally {

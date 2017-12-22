@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.8.7.1\n"
+"X-Generator: Poedit 2.0.3\n"
 
 #, php-format
 msgid "%s cannot be compared to MYSELF()."
@@ -20,20 +20,11 @@ msgstr "%s ne peut pas être comparé à MYSELF()."
 msgid "%s cannot be compared to NOW()."
 msgstr "%s ne peut pas être comparé à NOW()."
 
-msgid "Add"
-msgstr "Ajouter"
-
-msgid "Cancel"
-msgstr "Annuler"
-
 msgid "Cross trackers search"
 msgstr "Recherche multi trackers"
 
 msgid "Error while parsing the query"
 msgstr "Erreur pendant l'analyse de la requête"
-
-msgid "No trackers selected"
-msgstr "Aucun outils de suivi sélectionné"
 
 #, php-format
 msgid ""
@@ -49,7 +40,7 @@ msgstr[0] ""
 "description définie. Merci de modifier votre requête ou de vérifier la "
 "configuration des outils de suivi."
 msgstr[1] ""
-"%s des outils de suivi utilisés pour la requête n'ont pas de sémantique "
+"%d des outils de suivi utilisés pour la requête n'ont pas de sémantique "
 "description définie. Merci de modifier votre requête ou de vérifier la "
 "configuration des outils de suivi."
 
@@ -67,15 +58,9 @@ msgstr[0] ""
 "définie. Merci de modifier votre requête ou de vérifier la configuration des "
 "outils de suivi."
 msgstr[1] ""
-"%s des outils de suivi utilisés pour la requête n'ont pas de sémantique "
+"%d des outils de suivi utilisés pour la requête n'ont pas de sémantique "
 "titre définie. Merci de modifier votre requête ou de vérifier la "
 "configuration des outils de suivi."
-
-msgid "Project"
-msgstr "Projet"
-
-msgid "Search"
-msgstr "Rechercher"
 
 msgid "Search artifacts that are in different trackers"
 msgstr "Permet la recherche d'artefacts à travers plusieurs outils de suivi"
@@ -90,9 +75,6 @@ msgid ""
 msgstr ""
 "La comparaison %s n'est pas supportée pour la recherche multi trackers. "
 "Merci de vous référer à la documentation pour les comparaisons autorisées."
-
-msgid "Tracker"
-msgstr "Outil de suivi"
 
 msgid "You cannot access all projects of the search"
 msgstr "Vous ne pouvez pas accéder à tous les projets de cette recherche"

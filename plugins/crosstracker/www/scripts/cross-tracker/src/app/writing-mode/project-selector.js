@@ -17,42 +17,34 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { render } from 'mustache';
-import { watch } from 'wrist';
-import project_option_template from './project-option.mustache';
+import { render }                       from 'mustache';
+import { watch }                        from 'wrist';
+import project_option_template          from './project-option.mustache';
 import { getSortedProjectsIAmMemberOf } from '../rest-querier.js';
+import { gettext_provider }             from '../gettext-provider.js';
 
 export default class ProjectSelector {
     constructor(
         widget_content,
         tracker_selection,
-        user,
         error_displayer,
-        tracker_selection_loader_displayer,
-        gettext_provider
+        tracker_selection_loader_displayer
     ) {
         this.widget_content    = widget_content;
         this.tracker_selection = tracker_selection;
         this.error_displayer   = error_displayer;
         this.loader_displayer  = tracker_selection_loader_displayer;
-        this.gettext_provider  = gettext_provider;
 
-        this.is_user_anonymous = user.isAnonymous();
-        this.form_projects     = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-form-projects');
-        this.projects_input    = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-form-projects-input');
         this.projects          = new Map();
         this.projects_loaded   = false;
     }
 
     init() {
+        this.form_projects  = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-form-projects');
+        this.projects_input = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-form-projects-input');
+
         this.listenSelectElementChange();
         this.setDisabled();
-    }
-
-    switchToWritingMode() {
-        if (! this.is_user_anonymous) {
-            this.loadProjectsOnce();
-        }
     }
 
     loadProjectsOnce() {
@@ -76,7 +68,7 @@ export default class ProjectSelector {
             this.setEnabled();
             this.tracker_selection.selected_project = projects_array[0];
         } catch (error) {
-            this.error_displayer.displayError(this.gettext_provider.gettext('Error while fetching the list of projects you are member of'));
+            this.error_displayer.displayError(gettext_provider.gettext('Error while fetching the list of projects you are member of'));
             throw error;
         } finally {
             this.loader_displayer.hide();
