@@ -18,7 +18,7 @@
  */
 
 
-.cross-tracker-reading-mode-fields {
+.reading-mode-report {
     display: flex;
     flex-direction: column;
     color: $tlp-theme-color;
@@ -29,6 +29,10 @@
         background-color: transparentize($tlp-theme-color, .9);
         cursor: pointer;
     }
+}
+
+.reading-mode-query {
+    margin: 0 $tlp-spacing $tlp-spacing;
 }
 
 .cross-tracker-reading-mode-trackers-list {
@@ -74,13 +78,8 @@
     }
 }
 
-.reading-mode-disabled {
-    cursor: inherit;
-    pointer-events: none;
-}
-
 .dashboard-widget-content-cross-tracker-reading-mode-actions {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     margin: $tlp-half-spacing $tlp-spacing $tlp-spacing;
 }
