@@ -18,6 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Agiledashboard\FormElement\BurnupCacheDateRetriever;
+use Tuleap\AgileDashboard\FormElement\BurnupManualValuesAndChildrenListRetriever;
+use Tuleap\AgileDashboard\FormElement\BurnupTotalEffortCalculator;
+use Tuleap\AgileDashboard\FormElement\BurnupTeamEffortCalculator;
+use Tuleap\AgileDashboard\FormElement\BurnupDao;
+use Tuleap\Agiledashboard\FormElement\SystemEvent\BurnupCacheDao;
+use Tuleap\Agiledashboard\FormElement\SystemEvent\SystemEvent_BURNUP_DAILY;
 use Tuleap\AgileDashboard\Kanban\RealTime\KanbanArtifactMessageBuilder;
 use Tuleap\AgileDashboard\Kanban\RealTime\KanbanArtifactMessageSender;
 use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportDao;
@@ -46,6 +53,7 @@ use Tuleap\Request\CurrentPage;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 use Tuleap\Tracker\Artifact\Event\ArtifactsReordered;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\CanValueBeHiddenStatementsCollection;
+use Tuleap\Tracker\FormElement\FieldCalculator;
 use Tuleap\Tracker\Report\Event\TrackerReportDeleted;
 use Tuleap\Tracker\Semantic\SemanticStatusCanBeDeleted;
 use Tuleap\Tracker\Semantic\SemanticStatusGetDisabledValues;
@@ -134,6 +142,9 @@ class AgileDashboardPlugin extends Plugin {
             $this->addHook(TRACKER_EVENT_ARTIFACT_POST_UPDATE);
             $this->addHook(TrackerReportDeleted::NAME);
             $this->addHook(Tracker_FormElementFactory::GET_CLASSNAMES);
+            $this->addHook(Event::GET_SYSTEM_EVENT_CLASS);
+            $this->addHook('codendi_daily_start');
+            $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
         }
 
         if (defined('CARDWALL_BASE_URL')) {
@@ -1301,4 +1312,71 @@ class AgileDashboardPlugin extends Plugin {
 
         $updater->deleteAllForReport($report);
     }
+
+    public function codendi_daily_start($params)
+    {
+        SystemEventManager::instance()->createEvent(
+            'Tuleap\\Agiledashboard\\FormElement\\SystemEvent\\' . SystemEvent_BURNUP_DAILY::NAME,
+            "",
+            SystemEvent::PRIORITY_MEDIUM,
+            SystemEvent::OWNER_APP
+        );
+    }
+
+
+    public function get_system_event_class($params)
+    {
+        switch ($params['type']) {
+            case 'Tuleap\\Agiledashboard\\FormElement\\SystemEvent\\' . SystemEvent_BURNUP_DAILY::NAME:
+                $params['class']        = 'Tuleap\\Agiledashboard\\FormElement\\SystemEvent\\' . SystemEvent_BURNUP_DAILY::NAME;
+                $params['dependencies'] = array(
+                    $this->getBurnupDao(),
+                    new FieldCalculator(
+                        new BurnupTotalEffortCalculator($this->getBurnupRetreiver())
+                    ),
+                    new FieldCalculator(
+                        new BurnupTeamEffortCalculator(
+                            $this->getBurnupDao(),
+                            $this->getBurnupRetreiver()
+                        )
+                    ),
+                    new BurnupCacheDao(),
+                    $this->getLogger(),
+                    new BurnupCacheDateRetriever()
+                );
+                break;
+            default:
+                break;
+        }
+    }
+
+    public function system_event_get_types_for_default_queue($params)
+    {
+        $params['types'][] = 'Tuleap\\Agiledashboard\\FormElement\\SystemEvent\\' . SystemEvent_BURNUP_DAILY::NAME;
+    }
+
+    /**
+     * @return BurnupDao
+     */
+    private function getBurnupDao()
+    {
+        return new BurnupDao();
+    }
+
+    /**
+     * @return BackendLogger
+     */
+    private function getLogger()
+    {
+        return new BackendLogger();
+    }
+
+    /**
+     * @return BurnupManualValuesAndChildrenListRetriever
+     */
+    private function getBurnupRetreiver()
+    {
+        return new BurnupManualValuesAndChildrenListRetriever($this->getBurnupDao());
+    }
+
 }
