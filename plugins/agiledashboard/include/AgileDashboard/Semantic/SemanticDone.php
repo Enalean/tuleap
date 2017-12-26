@@ -196,12 +196,14 @@ class SemanticDone extends Tracker_Semantic
      */
     private function getFormattedClosedValues(Tracker_FormElement_Field $semantic_status_field)
     {
+        $done_values_ids        = $this->getDoneValuesIds();
         $formated_closed_values = array();
+
         foreach ($this->getClosedValues($semantic_status_field) as $value_id => $value) {
             $formated_closed_values[] = array(
                 'id'       => $value->getId(),
                 'label'    => $value->getLabel(),
-                'selected' => array_key_exists($value_id, $this->done_values)
+                'selected' => in_array($value_id, $done_values_ids)
             );
         }
 
@@ -336,7 +338,9 @@ class SemanticDone extends Tracker_Semantic
         foreach ($selected_values as $selected_value_id) {
             $value = $field->getBind()->getValue($selected_value_id);
 
-            $this->done_values[$selected_value_id] = $value;
+            if ($value && ! $value->isHidden()) {
+                $this->done_values[$selected_value_id] = $value;
+            }
         }
     }
 
@@ -350,7 +354,25 @@ class SemanticDone extends Tracker_Semantic
      */
     public function exportToXml(SimpleXMLElement $root, $xmlMapping)
     {
-        return;
+        $status_field = $this->semantic_status->getField();
+
+        if (! $status_field) {
+            return;
+        }
+
+        if (in_array($status_field->getId(), $xmlMapping)) {
+            $child = $root->addChild('semantic');
+            $child->addAttribute('type', $this->getShortName());
+            $child->addChild('shortname', $this->getShortName());
+            $child->addChild('label', $this->getLabel());
+            $child->addChild('description', $this->getDescription());
+            $node_closed_values = $child->addChild('closed_values');
+            foreach ($this->done_values as $value) {
+                if ($ref = array_search($value->getId(), $xmlMapping['values'])) {
+                    $node_closed_values->addChild('closed_value')->addAttribute('REF', $ref);
+                }
+            }
+        }
     }
 
     /**
@@ -372,7 +394,30 @@ class SemanticDone extends Tracker_Semantic
      */
     public function save()
     {
-        return;
+        /* This method is called in the Tracker XML import context
+           We assume that all the needed checks are done before, so we can save
+           directly the values in the database.
+        */
+
+        $done_values_ids = $this->getDoneValuesIds();
+
+        return $this->dao->updateForTracker(
+            $this->tracker->getId(),
+            $done_values_ids
+        );
+    }
+
+    /**
+     * @return array
+     */
+    private function getDoneValuesIds()
+    {
+        $done_values_ids = array();
+        foreach ($this->done_values as $done_value) {
+            $done_values_ids[] = $done_value->getId();
+        }
+
+        return $done_values_ids;
     }
 
     protected static $_instances;
