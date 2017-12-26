@@ -707,10 +707,11 @@ class AgileDashboardPlugin extends Plugin {
      * @see Event::TRACKER_EVENT_SEMANTIC_FROM_XML
      */
     public function tracker_event_semantic_from_xml(&$parameters) {
-        $tracker    = $parameters['tracker'];
-        $xml        = $parameters['xml'];
-        $xmlMapping = $parameters['xml_mapping'];
-        $type       = $parameters['type'];
+        $tracker           = $parameters['tracker'];
+        $xml               = $parameters['xml'];
+        $full_semantic_xml = $parameters['full_semantic_xml'];
+        $xmlMapping        = $parameters['xml_mapping'];
+        $type              = $parameters['type'];
 
         if ($type == AgileDashBoard_Semantic_InitialEffort::NAME) {
             $parameters['semantic'] = $this->getSemanticInitialEffortFactory()->getInstanceFromXML($xml, $xmlMapping, $tracker);
@@ -718,7 +719,7 @@ class AgileDashboardPlugin extends Plugin {
 
         if ($type == SemanticDone::NAME) {
             $factory = new SemanticDoneFactory(new SemanticDoneDao(), new SemanticDoneValueChecker());
-            $parameters['semantic'] = $factory->getInstanceFromXML($xml, $xmlMapping, $tracker);
+            $parameters['semantic'] = $factory->getInstanceFromXML($xml, $full_semantic_xml, $xmlMapping, $tracker);
         }
     }
 

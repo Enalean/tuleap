@@ -408,6 +408,10 @@ class SemanticDone extends Tracker_Semantic
 
         $done_values_ids = $this->getDoneValuesIds();
 
+        if (count($done_values_ids) === 0) {
+            return true;
+        }
+
         return $this->dao->updateForTracker(
             $this->tracker->getId(),
             $done_values_ids

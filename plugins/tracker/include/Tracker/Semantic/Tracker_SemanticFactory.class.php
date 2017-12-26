@@ -44,13 +44,14 @@ class Tracker_SemanticFactory {
     /**
      * Creates a Tracker_Semantic Object
      *
-     * @param SimpleXMLElement $xml         containing the structure of the imported semantic
-     * @param array            &$xmlMapping containig the newly created formElements idexed by their XML IDs
-     * @param Tracker          $tracker     to which the semantic is attached
-     *
      * @return Tracker_Semantic The semantic object, or null if error
      */
-    public function getInstanceFromXML($xml, &$xmlMapping, $tracker) {
+    public function getInstanceFromXML(
+        SimpleXMLElement $xml,
+        SimpleXMLElement $full_semantic_xml,
+        array &$xmlMapping,
+        Tracker $tracker
+    ) {
         $semantic = null;
         $attributes = $xml->attributes();
         $type = $attributes['type'];
@@ -71,24 +72,30 @@ class Tracker_SemanticFactory {
                 $semantic = $this->getSemanticTooltipFactory()->getInstanceFromXML($xml, $xmlMapping, $tracker);
                 break;
             default:
-                $semantic = $this->getSemanticFromAnotherPlugin($xml, $xmlMapping, $tracker, $type);
+                $semantic = $this->getSemanticFromAnotherPlugin($xml, $full_semantic_xml, $xmlMapping, $tracker, $type);
                 break;
         }
 
         return $semantic;
     }
 
-    private function getSemanticFromAnotherPlugin(SimpleXMLElement $xml, array $xml_mapping, Tracker $tracker, $type) {
+    private function getSemanticFromAnotherPlugin(
+        SimpleXMLElement $xml,
+        SimpleXMLElement $full_semantic_xml,
+        array $xml_mapping,
+        Tracker $tracker, $type
+    ) {
         $semantic = null;
 
         EventManager::instance()->processEvent(
             TRACKER_EVENT_SEMANTIC_FROM_XML,
-            $m = array(
-                'xml'           => $xml,
-                'xml_mapping'   => $xml_mapping,
-                'tracker'       => $tracker,
-                'semantic'      => &$semantic,
-                'type'          => $type,
+            array(
+                'xml'               => $xml,
+                'full_semantic_xml' => $full_semantic_xml,
+                'xml_mapping'       => $xml_mapping,
+                'tracker'           => $tracker,
+                'semantic'          => &$semantic,
+                'type'              => $type,
             )
         );
 
@@ -134,7 +141,7 @@ class Tracker_SemanticFactory {
     /**
      * Returns an instance of Tracker_ContributorFactory
      *
-     * @return Tracker_ContributorFactory an instance of the factory
+     * @return Tracker_Semantic_ContributorFactory an instance of the factory
      */
     function getSemanticContributorFactory() {
         return Tracker_Semantic_ContributorFactory::instance();
