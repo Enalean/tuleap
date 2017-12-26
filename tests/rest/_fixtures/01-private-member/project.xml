@@ -289,6 +289,12 @@
                     <description>Define the title of an artifact</description>
                     <field REF="F8"/>
                 </semantic>
+            <semantic type="description">
+                <shortname>description</shortname>
+                <label>Description</label>
+                <description>Définir la description d'un artéfact</description>
+                <field REF="F9"/>
+            </semantic>
                 <semantic type="status">
                     <shortname>status</shortname>
                     <label>Status</label>
