@@ -412,7 +412,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         $server_burndown_data = new Tracker_Chart_Data_Burndown($time_period, $capacity);
 
         $this->addRemainingEffortData($server_burndown_data, $time_period, $artifact, $user);
-        if ($this->isCacheCompleteForBurndown($server_burndown_data, $artifact, $user) === false
+        if ($this->isCacheCompleteForBurndown($time_period, $artifact, $user) === false
             && $this->isCacheBurndownAlreadyAsked($artifact) === false
         ) {
             $this->forceBurndownCacheGeneration($artifact->getId());
@@ -447,7 +447,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     }
 
     private function isCacheCompleteForBurndown(
-        Tracker_Chart_Data_Burndown $burndown_data,
+        TimePeriodWithoutWeekEnd $time_period,
         Tracker_Artifact $artifact,
         PFUser $user
     ) {
@@ -458,7 +458,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
                 $this->getBurdownConfigurationFieldRetriever()->getBurndownRemainingEffortField($artifact, $user)->getId()
             );
 
-            return $this->getCachedDaysComparator()->areDaysIdentical($burndown_data, $cached_days['cached_days']);
+            return $this->getCachedDaysComparator()->isNumberOfCachedDaysExpected($time_period, $cached_days['cached_days']);
         }
 
         return true;

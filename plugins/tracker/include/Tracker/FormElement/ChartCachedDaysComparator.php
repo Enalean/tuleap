@@ -21,7 +21,7 @@
 namespace Tuleap\Tracker\FormElement;
 
 use Logger;
-use Tuleap\Tracker\Chart\Data\IProvideChartData;
+use TimePeriodWithoutWeekEnd;
 
 class ChartCachedDaysComparator
 {
@@ -35,30 +35,33 @@ class ChartCachedDaysComparator
         $this->logger = $logger;
     }
 
-    public function areDaysIdentical(IProvideChartData $chart_data, $number_of_cached_days)
+    /**
+     * @return bool
+     */
+    public function isNumberOfCachedDaysExpected(TimePeriodWithoutWeekEnd $time_period_without_week_end, $number_of_cached_days)
     {
-        $days = $chart_data->getTimePeriod()->getCountDayUntilDate($_SERVER['REQUEST_TIME']);
+        $days = $time_period_without_week_end->getCountDayUntilDate($_SERVER['REQUEST_TIME']);
 
-        if ($this->isTodayAWeekDayAndIsTodayBeforeTimePeriodEnd($chart_data)) {
+        if ($this->isTodayAWeekDayAndIsTodayBeforeTimePeriodEnd($time_period_without_week_end)) {
             $this->logger->debug("Period is current");
             $this->logger->debug("Day cached: " . $number_of_cached_days);
             $this->logger->debug("Period days: " . $days);
             $this->logger->debug("Period days without last computed value: " . ($days - 1));
 
             return $this->compareCachedDaysWhenLastDayIsAComputedValue((int) $number_of_cached_days, $days);
-        } else {
-            $this->logger->debug("Period is in past");
-            $this->logger->debug("Day cached: " . $number_of_cached_days);
-            $this->logger->debug("Period days: " . $days);
-
-            return $this->compareCachedDaysWithPeriodDays((int) $number_of_cached_days, $days);
         }
+
+        $this->logger->debug("Period is in past");
+        $this->logger->debug("Day cached: " . $number_of_cached_days);
+        $this->logger->debug("Period days: " . $days);
+
+        return $this->compareCachedDaysWithPeriodDays((int) $number_of_cached_days, $days);
     }
 
-    private function isTodayAWeekDayAndIsTodayBeforeTimePeriodEnd(IProvideChartData $chart_data)
+    private function isTodayAWeekDayAndIsTodayBeforeTimePeriodEnd(TimePeriodWithoutWeekEnd $time_period_without_week_end)
     {
-        return $chart_data->getTimePeriod()->isTodayWithinTimePeriod()
-            && $chart_data->getTimePeriod()->isNotWeekendDay($_SERVER['REQUEST_TIME']);
+        return $time_period_without_week_end->isTodayWithinTimePeriod()
+            && $time_period_without_week_end->isNotWeekendDay($_SERVER['REQUEST_TIME']);
     }
 
     private function compareCachedDaysWhenLastDayIsAComputedValue($cache_days, $number_of_days_for_period)

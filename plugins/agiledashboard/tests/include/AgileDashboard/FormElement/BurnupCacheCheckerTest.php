@@ -23,7 +23,7 @@ namespace Tuleap\Agiledashboard\FormElement;
 use Tuleap\Tracker\FormElement\ChartCachedDaysComparator;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueChecker;
 
-require_once dirname(__FILE__) . '/../../../bootstrap.php';
+require_once __DIR__ . '/../../../bootstrap.php';
 
 class BurnupCacheCheckerTest extends \TuleapTestCase
 {
@@ -44,9 +44,9 @@ class BurnupCacheCheckerTest extends \TuleapTestCase
      */
     private $artifact;
     /**
-     * @var BurnupData
+     * @var \TimePeriodWithoutWeekEnd
      */
-    private $burnup_data;
+    private $time_period;
     /**
      * @var BurnupCacheChecker
      */
@@ -60,11 +60,11 @@ class BurnupCacheCheckerTest extends \TuleapTestCase
     {
         parent::setUp();
 
-        $this->cache_generator            = mock('Tuleap\Agiledashboard\FormElement\BurnupCacheGenerator');
-        $this->chart_value_checker  = mock('Tuleap\Tracker\FormElement\ChartConfigurationValueChecker');
-        $burnup_cache_dao           = mock('Tuleap\Agiledashboard\FormElement\BurnupCacheDao');
-        $this->cache_days_comparator      = mock('Tuleap\Tracker\FormElement\ChartCachedDaysComparator');
-        $this->burnup_cache_Checker = new BurnupCacheChecker(
+        $this->cache_generator       = mock('Tuleap\Agiledashboard\FormElement\BurnupCacheGenerator');
+        $this->chart_value_checker   = mock('Tuleap\Tracker\FormElement\ChartConfigurationValueChecker');
+        $burnup_cache_dao            = mock('Tuleap\Agiledashboard\FormElement\BurnupCacheDao');
+        $this->cache_days_comparator = mock('Tuleap\Tracker\FormElement\ChartCachedDaysComparator');
+        $this->burnup_cache_Checker  = new BurnupCacheChecker(
             $this->cache_generator,
             $this->chart_value_checker,
             $burnup_cache_dao,
@@ -75,10 +75,7 @@ class BurnupCacheCheckerTest extends \TuleapTestCase
 
         $start_date        = new \DateTime();
         $duration          = 10;
-        $this->burnup_data = new BurnupData(
-            new \TimePeriodWithoutWeekEnd($start_date->getTimestamp(), $duration),
-            false
-        );
+        $this->time_period = new \TimePeriodWithoutWeekEnd($start_date->getTimestamp(), $duration);
 
         $this->user = aUser()->withId(101)->build();
     }
@@ -88,7 +85,7 @@ class BurnupCacheCheckerTest extends \TuleapTestCase
         stub($this->chart_value_checker)->hasStartDate()->returns(false);
 
         $this->assertFalse(
-            $this->burnup_cache_Checker->isBurnupUnderCalculation($this->artifact, $this->burnup_data, $this->user)
+            $this->burnup_cache_Checker->isBurnupUnderCalculation($this->artifact, $this->time_period, $this->user)
         );
     }
 
@@ -98,7 +95,7 @@ class BurnupCacheCheckerTest extends \TuleapTestCase
         stub($this->cache_generator)->isCacheBurnupAlreadyAsked($this->artifact)->returns(true);
 
         $this->assertTrue(
-            $this->burnup_cache_Checker->isBurnupUnderCalculation($this->artifact, $this->burnup_data, $this->user)
+            $this->burnup_cache_Checker->isBurnupUnderCalculation($this->artifact, $this->time_period, $this->user)
         );
     }
 
@@ -106,10 +103,10 @@ class BurnupCacheCheckerTest extends \TuleapTestCase
     {
         stub($this->chart_value_checker)->hasStartDate()->returns(true);
         stub($this->cache_generator)->isCacheBurnupAlreadyAsked($this->artifact)->returns(false);
-        stub($this->cache_days_comparator)->areDaysIdentical()->returns(false);
+        stub($this->cache_days_comparator)->isNumberOfCachedDaysExpected()->returns(false);
 
         $this->assertTrue(
-            $this->burnup_cache_Checker->isBurnupUnderCalculation($this->artifact, $this->burnup_data, $this->user)
+            $this->burnup_cache_Checker->isBurnupUnderCalculation($this->artifact, $this->time_period, $this->user)
         );
         expect($this->cache_generator)->forceBurnupCacheGeneration($this->artifact->getId())->once();
     }
@@ -118,10 +115,10 @@ class BurnupCacheCheckerTest extends \TuleapTestCase
     {
         stub($this->chart_value_checker)->hasStartDate()->returns(true);
         stub($this->cache_generator)->isCacheBurnupAlreadyAsked($this->artifact)->returns(false);
-        stub($this->cache_days_comparator)->areDaysIdentical()->returns(true);
+        stub($this->cache_days_comparator)->isNumberOfCachedDaysExpected()->returns(true);
 
         $this->assertFalse(
-            $this->burnup_cache_Checker->isBurnupUnderCalculation($this->artifact, $this->burnup_data, $this->user)
+            $this->burnup_cache_Checker->isBurnupUnderCalculation($this->artifact, $this->time_period, $this->user)
         );
         expect($this->cache_generator)->forceBurnupCacheGeneration($this->artifact->getId())->never();
     }

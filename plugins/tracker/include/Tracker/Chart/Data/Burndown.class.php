@@ -18,14 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\Chart\Data\IProvideChartData;
-
-require_once 'common/date/TimePeriod.class.php';
-
 /**
  * Storage data for Burndown display via JPgraph
  */
-class Tracker_Chart_Data_Burndown implements IProvideChartData
+class Tracker_Chart_Data_Burndown
 {
     /**
      * @var TimePeriod
@@ -37,7 +33,7 @@ class Tracker_Chart_Data_Burndown implements IProvideChartData
     private $capacity;
     private $is_under_calcul;
 
-    public function __construct(TimePeriod $time_period, $capacity = null, $is_under_calcul = false)
+    public function __construct(TimePeriodWithoutWeekEnd $time_period, $capacity = null, $is_under_calcul = false)
     {
         $this->time_period      = $time_period;
         $this->capacity         = $capacity;
