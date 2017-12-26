@@ -34,7 +34,7 @@ class BurnupCacheDateRetriever
     }
 
     /**
-     * @return DateTime[]
+     * @return int[]
      */
     public function getWorkedDaysToCacheForPeriod(TimePeriodWithoutWeekEnd $burnup_period, DateTime $yesterday)
     {
@@ -44,7 +44,7 @@ class BurnupCacheDateRetriever
         $day = array();
 
         while ($start_date <= $end_date && $start_date <= $yesterday) {
-            if ($burnup_period->isNotWeekendDay($start_date)) {
+            if ($burnup_period->isNotWeekendDay($start_date->getTimestamp())) {
                 $day[] = $start_date->getTimestamp();
             }
 
@@ -71,7 +71,7 @@ class BurnupCacheDateRetriever
         return $date;
     }
 
-    private function getLastDayToCache($burnup_period)
+    private function getLastDayToCache(TimePeriodWithoutWeekEnd $burnup_period)
     {
         $end_date = new DateTime();
         $end_date->setTimestamp($burnup_period->getEndDate());
