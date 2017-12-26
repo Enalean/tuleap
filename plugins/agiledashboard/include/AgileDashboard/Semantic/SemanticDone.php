@@ -54,10 +54,16 @@ class SemanticDone extends Tracker_Semantic
      */
     private $done_values;
 
+    /**
+     * @var SemanticDoneValueChecker
+     */
+    private $value_checker;
+
     public function __construct(
         Tracker $tracker,
         Tracker_Semantic_Status $semantic_status,
         SemanticDoneDao $dao,
+        SemanticDoneValueChecker $value_checker,
         array $done_values
     ) {
         parent::__construct($tracker);
@@ -65,6 +71,7 @@ class SemanticDone extends Tracker_Semantic
         $this->semantic_status = $semantic_status;
         $this->dao             = $dao;
         $this->done_values     = $done_values;
+        $this->value_checker   = $value_checker;
     }
 
     /**
@@ -338,7 +345,7 @@ class SemanticDone extends Tracker_Semantic
         foreach ($selected_values as $selected_value_id) {
             $value = $field->getBind()->getValue($selected_value_id);
 
-            if ($value && ! $value->isHidden()) {
+            if ($value && $this->value_checker->isValueADoneValue($value, $this->semantic_status)) {
                 $this->done_values[$selected_value_id] = $value;
             }
         }
@@ -444,19 +451,20 @@ class SemanticDone extends Tracker_Semantic
 
         $semantic_status_field = $semantic_status->getField();
         $done_values           = array();
+        $value_checker         = new SemanticDoneValueChecker();
 
         if ($semantic_status_field) {
             foreach ($dao->getSelectedValues($tracker->getId()) as $selected_value_row) {
                 $value_id = $selected_value_row['value_id'];
                 $value    = $semantic_status_field->getBind()->getValue($value_id);
 
-                if ($value && ! in_array($value_id, $semantic_status->getOpenValues()) && ! $value->isHidden()) {
+                if ($value && $value_checker->isValueADoneValue($value, $semantic_status)) {
                     $done_values[$value_id] = $value;
                 }
             }
         }
 
-        self::$_instances[$tracker->getId()] = new SemanticDone($tracker, $semantic_status, $dao, $done_values);
+        self::$_instances[$tracker->getId()] = new SemanticDone($tracker, $semantic_status, $dao, $value_checker, $done_values);
 
         return self::$_instances[$tracker->getId()];
     }
