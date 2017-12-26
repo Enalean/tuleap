@@ -31,10 +31,15 @@ class SemanticDoneFactory
      * @var SemanticDoneDao
      */
     private $dao;
+    /**
+     * @var SemanticDoneValueChecker
+     */
+    private $value_checker;
 
-    public function __construct(SemanticDoneDao $dao)
+    public function __construct(SemanticDoneDao $dao, SemanticDoneValueChecker $value_checker)
     {
-        $this->dao = $dao;
+        $this->dao           = $dao;
+        $this->value_checker = $value_checker;
     }
 
     /**
@@ -45,7 +50,7 @@ class SemanticDoneFactory
         $semantic_status = Tracker_Semantic_Status::load($tracker);
         $done_values     = $this->getDoneValues($xml, $xmlMapping);
 
-        return new SemanticDone($tracker, $semantic_status, $this->dao, $done_values);
+        return new SemanticDone($tracker, $semantic_status, $this->dao, $this->value_checker, $done_values);
     }
 
     /**

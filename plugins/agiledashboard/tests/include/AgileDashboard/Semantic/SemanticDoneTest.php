@@ -45,6 +45,7 @@ class SemanticDoneTest extends TuleapTestCase
         $this->tracker         = aMockTracker()->build();
         $this->semantic_status = mock('Tracker_Semantic_Status');
         $this->dao             = mock('Tuleap\AgileDashboard\Semantic\Dao\SemanticDoneDao');
+        $this->value_checker   = mock('Tuleap\AgileDashboard\Semantic\SemanticDoneValueChecker');
     }
 
     public function itExportsTheSemanticInXml()
@@ -78,6 +79,7 @@ class SemanticDoneTest extends TuleapTestCase
             $this->tracker,
             $this->semantic_status,
             $this->dao,
+            $this->value_checker,
             array(3 => $this->done_value)
         );
 
@@ -106,6 +108,7 @@ class SemanticDoneTest extends TuleapTestCase
             $this->tracker,
             $this->semantic_status,
             $this->dao,
+            $this->value_checker,
             array()
         );
 

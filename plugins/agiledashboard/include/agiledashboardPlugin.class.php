@@ -40,6 +40,7 @@ use Tuleap\AgileDashboard\RealTime\RealTimeArtifactMessageSender;
 use Tuleap\AgileDashboard\Semantic\Dao\SemanticDoneDao;
 use Tuleap\AgileDashboard\Semantic\SemanticDone;
 use Tuleap\AgileDashboard\Semantic\SemanticDoneFactory;
+use Tuleap\AgileDashboard\Semantic\SemanticDoneValueChecker;
 use Tuleap\AgileDashboard\Widget\MyKanban;
 use Tuleap\AgileDashboard\Widget\ProjectKanban;
 use Tuleap\AgileDashboard\Widget\WidgetKanbanCreator;
@@ -716,7 +717,7 @@ class AgileDashboardPlugin extends Plugin {
         }
 
         if ($type == SemanticDone::NAME) {
-            $factory = new SemanticDoneFactory(new SemanticDoneDao());
+            $factory = new SemanticDoneFactory(new SemanticDoneDao(), new SemanticDoneValueChecker());
             $parameters['semantic'] = $factory->getInstanceFromXML($xml, $xmlMapping, $tracker);
         }
     }
