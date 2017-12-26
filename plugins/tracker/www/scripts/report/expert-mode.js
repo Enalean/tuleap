@@ -19,7 +19,7 @@
 
 import codendi    from 'codendi';
 import CodeMirror from 'codemirror';
-import { get }    from 'tlp-fetch';
+import { post }    from 'tlp-fetch';
 import {
     buildModeDefinition,
     TQL_autocomplete_keywords
@@ -74,24 +74,22 @@ function initializeTrackerReportQuery() {
 }
 
 function initializeTrackerReportAllowedFields() {
-    const tracker_report_expert_allowed_fields = document.getElementsByClassName('tracker-report-expert-allowed-field');
+    const tracker_report_expert_allowed_fields = document.getElementById('allowed-fields');
     if (! tracker_report_expert_allowed_fields) {
         return;
     }
 
-    const allowedFieldClickedCallback = event => insertAllowedFieldInCodeMirror(event, query_rich_editor);
-
-    for (const field of tracker_report_expert_allowed_fields) {
-        field.addEventListener('click', allowedFieldClickedCallback);
-    }
+    tracker_report_expert_allowed_fields.addEventListener('click', (event) => insertAllowedFieldInCodeMirror(event, query_rich_editor));
 }
 
 async function sendRequestNewMode(mode) {
-    await get(location.href, {
-        params: {
-            func: mode
-        }
-    });
+    let url = location.href + '&func=' + mode;
+
+    if (location.search === "") {
+        url = location.href + '?func=' + mode;
+    }
+
+    await post(url);
     codendi.tracker.report.setHasChanged();
 }
 
