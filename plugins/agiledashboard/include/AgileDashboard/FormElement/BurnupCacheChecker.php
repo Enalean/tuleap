@@ -20,7 +20,7 @@
 
 namespace Tuleap\Agiledashboard\FormElement;
 
-use TimePeriod;
+use TimePeriodWithoutWeekEnd;
 use Tracker_Artifact;
 use Tuleap\Tracker\FormElement\ChartCachedDaysComparator;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueChecker;
@@ -56,11 +56,11 @@ class BurnupCacheChecker
         $this->cache_days_comparator = $cache_days_comparator;
     }
 
-    public function isBurnupUnderCalculation(Tracker_Artifact $artifact, BurnupData $burnup_data, \PFUser $user)
+    public function isBurnupUnderCalculation(Tracker_Artifact $artifact, TimePeriodWithoutWeekEnd $time_period, \PFUser $user)
     {
         $is_burnup_under_calculation = false;
 
-        if ($this->isCacheCompleteForBurnup($artifact, $burnup_data, $user) === false
+        if ($this->isCacheCompleteForBurnup($artifact, $time_period, $user) === false
             && $this->cache_generator->isCacheBurnupAlreadyAsked($artifact) === false
         ) {
             $this->cache_generator->forceBurnupCacheGeneration($artifact->getId());
@@ -74,7 +74,7 @@ class BurnupCacheChecker
 
     private function isCacheCompleteForBurnup(
         Tracker_Artifact $artifact,
-        BurnupData $burnup_data,
+        TimePeriodWithoutWeekEnd $time_period,
         \PFUser $user
     ) {
         if ($this->chart_value_checker->hasStartDate($artifact, $user)) {
@@ -82,7 +82,7 @@ class BurnupCacheChecker
                 $artifact->getId()
             );
 
-            return $this->cache_days_comparator->areDaysIdentical($burnup_data, $cached_days['cached_days']);
+            return $this->cache_days_comparator->isNumberOfCachedDaysExpected($time_period, $cached_days['cached_days']);
         }
 
         return true;

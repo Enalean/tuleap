@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,7 +19,6 @@
  */
 
 require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
-require_once 'common/date/TimePeriodWithWeekEnd.class.php';
 
 class Tracker_Chart_Data_BurndownTest extends TuleapTestCase {
     private $start_date;
@@ -28,11 +27,11 @@ class Tracker_Chart_Data_BurndownTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         $this->start_date  = mktime(0, 0, 0, 7, 4, 2011);
-        $this->time_period = new TimePeriodWithWeekEnd($this->start_date, 5);
+        $this->time_period = new TimePeriodWithoutWeekEnd($this->start_date, 5);
     }
 
     public function itAddsRemainingEffort() {
-        $time_period   = new TimePeriodWithWeekEnd($this->start_date, 2);
+        $time_period   = new TimePeriodWithoutWeekEnd($this->start_date, 2);
         $burndown_data = new Tracker_Chart_Data_Burndown($time_period);
         $burndown_data->addEffortAt(0, 14);
         $burndown_data->addEffortAt(1, 13);
@@ -147,7 +146,7 @@ class Tracker_Chart_Data_EmptyBurndownTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         $this->start_date  = mktime(0, 0, 0, 7, 4, 2011);
-        $this->time_period = new TimePeriodWithWeekEnd($this->start_date, 2);
+        $this->time_period = new TimePeriodWithoutWeekEnd($this->start_date, 2);
     }
     
     public function itHasNoRemainingEffort() {

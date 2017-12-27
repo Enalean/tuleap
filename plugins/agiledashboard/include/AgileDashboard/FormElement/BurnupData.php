@@ -20,39 +20,23 @@
 
 namespace Tuleap\AgileDashboard\FormElement;
 
-use TimePeriod;
-use Tuleap\Tracker\Chart\Data\IProvideChartData;
-
-class BurnupData implements IProvideChartData
+class BurnupData
 {
     /**
-     * @var TimePeriod
+     * @var bool
      */
-    private $time_period;
+    private $is_under_calculation;
 
-    private $is_under_calcul;
-
-    public function __construct(TimePeriod $time_period, $is_under_calcul)
+    public function __construct($is_under_calculation)
     {
-        $this->time_period     = $time_period;
-        $this->is_under_calcul = false;
-    }
-
-    public function setIsBeingCalculated($is_under_calcul)
-    {
-        $this->is_under_calcul = $is_under_calcul;
-    }
-
-    public function isBeingCalculated()
-    {
-        return $this->is_under_calcul;
+        $this->is_under_calculation = $is_under_calculation;
     }
 
     /**
-     * @return  TimePeriod
+     * @return bool
      */
-    public function getTimePeriod()
+    public function isBeingCalculated()
     {
-        return $this->time_period;
+        return $this->is_under_calculation;
     }
 }

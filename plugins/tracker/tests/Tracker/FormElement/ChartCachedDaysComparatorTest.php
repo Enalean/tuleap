@@ -21,7 +21,6 @@
 namespace Tuleap\Tracker\FormElement;
 
 use TimePeriodWithoutWeekEnd;
-use Tracker_Chart_Data_Burndown;
 use TuleapTestCase;
 
 require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
@@ -35,10 +34,9 @@ class ChartCachedDaysComparatorTest extends TuleapTestCase
         $duration              = 5;
 
         $time_period = new TimePeriodWithoutWeekEnd($start_date, $duration);
-        $chart_data  = new Tracker_Chart_Data_Burndown($time_period);
 
         $cache_days_comparator = new ChartCachedDaysComparator(mock('Logger'));
-        $this->assertTrue($cache_days_comparator->areDaysIdentical($chart_data, $number_of_cached_days));
+        $this->assertTrue($cache_days_comparator->isNumberOfCachedDaysExpected($time_period, $number_of_cached_days));
     }
 
     public function itVerifiesCacheIsCompleteForChartWhenCacheDaysAreNotTheSameThanTimePeriodDays()
@@ -48,9 +46,8 @@ class ChartCachedDaysComparatorTest extends TuleapTestCase
         $duration              = 15;
 
         $time_period = new TimePeriodWithoutWeekEnd($start_date, $duration);
-        $chart_data  = new Tracker_Chart_Data_Burndown($time_period);
 
         $cache_days_comparator = new ChartCachedDaysComparator(mock('Logger'));
-        $this->assertFalse($cache_days_comparator->areDaysIdentical($chart_data, $number_of_cached_days));
+        $this->assertFalse($cache_days_comparator->isNumberOfCachedDaysExpected($time_period, $number_of_cached_days));
     }
 }
