@@ -25,20 +25,14 @@ use Tuleap\Tracker\FormElement\IProvideArtifactChildrenForComputedCalculation;
 class BurnupTeamEffortCalculator implements IProvideArtifactChildrenForComputedCalculation
 {
     /**
-     * @var BurnupDao
-     */
-    private $burnup_dao;
-    /**
      * @var BurnupManualValuesAndChildrenListRetriever
      */
     private $burnup_calculator;
 
     public function __construct(
-        BurnupDao $burnup_dao,
         BurnupManualValuesAndChildrenListRetriever $burnup_calculator
     ) {
         $this->burnup_calculator = $burnup_calculator;
-        $this->burnup_dao        = $burnup_dao;
     }
 
     public function fetchChildrenAndManualValuesOfArtifacts(
@@ -48,19 +42,10 @@ class BurnupTeamEffortCalculator implements IProvideArtifactChildrenForComputedC
         $target_field_name,
         $computed_field_id
     ) {
-        if ($timestamp) {
-            return $this->burnup_calculator->getChildrenForBurnupWithComputedValuesAtGivenDate(
-                $artifact_ids_to_fetch,
-                $timestamp,
-                true
-            );
-        }
-
-        $dar = $this->burnup_dao->getBurnupComputedValue($artifact_ids_to_fetch);
-
-        return array(
-            'children'   => $dar,
-            'manual_sum' => null
+        return $this->burnup_calculator->getChildrenForBurnupWithComputedValuesAtGivenDate(
+            $artifact_ids_to_fetch,
+            $timestamp,
+            true
         );
     }
 }

@@ -1410,7 +1410,6 @@ class AgileDashboardPlugin extends Plugin {
     {
         return new FieldCalculator(
             new BurnupTeamEffortCalculator(
-                $this->getBurnupDao(),
                 $this->getBurnupRetreiver()
             )
         );

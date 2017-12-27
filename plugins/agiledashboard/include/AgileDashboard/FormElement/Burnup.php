@@ -332,7 +332,6 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
     {
         return new FieldCalculator(
             new BurnupTeamEffortCalculator(
-                new BurnupDao(),
                 new BurnupManualValuesAndChildrenListRetriever(new BurnupDao())
             )
         );
