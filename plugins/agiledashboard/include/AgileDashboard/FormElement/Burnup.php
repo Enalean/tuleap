@@ -121,21 +121,25 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
                     "</div>";
             }
 
-            $stop_on_manual_value = true;
-
-            $value = $this->getFieldCalculator()->calculate(
-                array($artifact->getId()),
-                null,
-                $stop_on_manual_value,
-                null,
-                null
-            );
-
             $purifier = Codendi_HTMLPurifier::instance();
 
-            return $purifier->purify($value) . "<br/><div class='feedback_warning'>" .
+            $artifact_value = "<br/><div class='feedback_warning'>" .
                 dgettext('tuleap-agiledashboard', "Field under implementation") .
                 "</div>";
+
+            $artifact_value .= '<table class="tracker_report_table table tlp-table">';
+            $artifact_value .= '<thead><tr><th></th><th>Team</th><th>Total</th></tr></thead><tbody>';
+            foreach ($burnup_data->getEfforts() as $timestamp => $burnup_effort) {
+                $artifact_value .= '<tr>';
+                $date = new \DateTime("@$timestamp");
+                $artifact_value .= '<td>' . $purifier->purify($date->format('d-m-Y')) . '</td>';
+                $artifact_value .= '<td>' . $purifier->purify($burnup_effort->getTeamEffort()) . '</td>';
+                $artifact_value .= '<td>' . $purifier->purify($burnup_effort->getTotalEffort()) . '</td>';
+                $artifact_value .= '</tr>';
+            }
+            $artifact_value .= '</tbody></table>';
+
+            return $artifact_value;
         } catch (Tracker_FormElement_Chart_Field_Exception $e) {
             return "<div class='feedback_warning'>" .
                 $e->getMessage() .
@@ -322,22 +326,28 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
     }
 
     /**
-     * @return BurnupTeamEffortCalculator
+     * @return FieldCalculator
      */
     private function getTeamEffortCalculator()
     {
-        return new BurnupTeamEffortCalculator(
-            new BurnupDao(),
-            new BurnupManualValuesAndChildrenListRetriever(new BurnupDao())
+        return new FieldCalculator(
+            new BurnupTeamEffortCalculator(
+                new BurnupDao(),
+                new BurnupManualValuesAndChildrenListRetriever(new BurnupDao())
+            )
         );
     }
 
     /**
      * @return FieldCalculator
      */
-    private function getFieldCalculator()
+    private function getTotalEffortCalculator()
     {
-        return new FieldCalculator($this->getTeamEffortCalculator());
+        return new FieldCalculator(
+            new BurnupTotalEffortCalculator(
+                new BurnupManualValuesAndChildrenListRetriever(new BurnupDao())
+            )
+        );
     }
 
     /**
@@ -345,6 +355,7 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
      */
     private function getBurnupDataBuilder()
     {
+        $burnup_cache_dao = new BurnupCacheDao;
         return new BurnupDataBuilder(
             $this->getLogger(),
             new BurnupCacheChecker(
@@ -355,10 +366,13 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
                     $this->getConfigurationFieldRetriever(),
                     $this->getConfigurationValueRetriever()
                 ),
-                new BurnupCacheDao(),
+                $burnup_cache_dao,
                 new ChartCachedDaysComparator($this->getLogger())
             ),
-            $this->getConfigurationValueRetriever()
+            $this->getConfigurationValueRetriever(),
+            $burnup_cache_dao,
+            $this->getTeamEffortCalculator(),
+            $this->getTotalEffortCalculator()
         );
     }
 
