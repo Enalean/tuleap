@@ -20,6 +20,7 @@
 
 namespace Tuleap\AgileDashboard\Semantic;
 
+use SimpleXMLElement;
 use Tracker_FormElement_Field_List_Value;
 use Tracker_Semantic_Status;
 
@@ -32,6 +33,38 @@ class SemanticDoneValueChecker
         Tracker_FormElement_Field_List_Value $value,
         Tracker_Semantic_Status $semantic_status
     ) {
-        return ! in_array($value->getId(), $semantic_status->getOpenValues()) && ! $value->isHidden();
+        return $this->isValueNotOpenAndVisible($value, $semantic_status->getOpenValues());
+    }
+
+    /**
+     * @return bool
+     */
+    public function isValueADoneValueInXMLImport(
+        Tracker_FormElement_Field_List_Value $value,
+        SimpleXMLElement $xml_semantic_status
+    ) {
+        return $this->isValueNotOpenAndVisible($value, $this->getOpenValuesFromXMLSemanticStatus($xml_semantic_status));
+    }
+
+    /**
+     * @return bool
+     */
+    private function isValueNotOpenAndVisible(Tracker_FormElement_Field_List_Value $value, array $open_values)
+    {
+        return ! in_array($value->getId(), $open_values) && ! $value->isHidden();
+    }
+
+    /**
+     * @return array
+     */
+    private function getOpenValuesFromXMLSemanticStatus(SimpleXMLElement $xml_semantic_status)
+    {
+        $open_values_from_xml = array();
+
+        foreach ($xml_semantic_status->open_values->open_value as $xml_open_value) {
+            $open_values_from_xml[] = (string) $xml_open_value['REF'];
+        }
+
+        return $open_values_from_xml;
     }
 }

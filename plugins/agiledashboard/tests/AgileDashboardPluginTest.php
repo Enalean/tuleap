@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,18 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__) .'/../include/agiledashboardPlugin.class.php';
-require_once 'common/include/Codendi_Request.class.php';
+require_once dirname(__FILE__) .'/bootstrap.php';
 
-class AgileDashboardPluginTest extends TuleapTestCase {
-
-}
-
-class AgileDashboardPluginTracker_event_semantic_from_xmlTest extends TuleapTestCase {
+class AgileDashboardPluginTracker_event_semantic_from_xmlTest extends TuleapTestCase
+{
 
     private $parameters;
 
-    public function setUp() {
+    public function setUp()
+    {
+        parent::setUp();
+
         $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
 <semantic type="initial_effort">
  <shortname>effort</shortname>
@@ -44,18 +43,20 @@ class AgileDashboardPluginTracker_event_semantic_from_xmlTest extends TuleapTest
         $type           = AgileDashBoard_Semantic_InitialEffort::NAME;
 
         $this->parameters = array(
-            'xml'           => $xml,
-            'xml_mapping'   => $xml_mapping,
-            'tracker'       => $tracker,
-            'semantic'      => &$semantic,
-            'type'          => $type,
+            'xml'               => $xml,
+            'full_semantic_xml' => $xml,
+            'xml_mapping'       => $xml_mapping,
+            'tracker'           => $tracker,
+            'semantic'          => &$semantic,
+            'type'              => $type,
         );
     }
 
     /**
      * Not exactly a unit test but, then again, we are testing a plugin!
      */
-    public function itCreatesSemantic() {
+    public function itCreatesSemantic()
+    {
         $effort_factory = partial_mock('AgileDashboard_Semantic_InitialEffortFactory', array());
 
         $plugin = partial_mock('AgileDashboardPlugin', array('getSemanticInitialEffortFactory'));
@@ -67,4 +68,3 @@ class AgileDashboardPluginTracker_event_semantic_from_xmlTest extends TuleapTest
         $this->assertIsA($this->parameters['semantic'], 'AgileDashBoard_Semantic_InitialEffort');
     }
 }
-?>

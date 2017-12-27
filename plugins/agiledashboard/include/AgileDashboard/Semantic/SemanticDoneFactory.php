@@ -45,10 +45,14 @@ class SemanticDoneFactory
     /**
      * @return SemanticDone
      */
-    public function getInstanceFromXML(SimpleXMLElement $xml, array &$xmlMapping, Tracker $tracker)
-    {
+    public function getInstanceFromXML(
+        SimpleXMLElement $xml,
+        SimpleXMLElement $full_semantic_xml,
+        array &$xmlMapping,
+        Tracker $tracker
+    ) {
         $semantic_status = Tracker_Semantic_Status::load($tracker);
-        $done_values     = $this->getDoneValues($xml, $xmlMapping);
+        $done_values     = $this->getDoneValues($xml, $full_semantic_xml, $xmlMapping);
 
         return new SemanticDone($tracker, $semantic_status, $this->dao, $this->value_checker, $done_values);
     }
@@ -56,18 +60,35 @@ class SemanticDoneFactory
     /**
      * @return array
      */
-    private function getDoneValues(SimpleXMLElement $xml, array $xmlMapping)
+    private function getDoneValues(SimpleXMLElement $xml, SimpleXMLElement $full_semantic_xml, array $xmlMapping)
     {
-        $done_values = array();
+        $done_values         = array();
+        $xml_semantic_status = $this->getSemanticDoneFromXML($full_semantic_xml);
+
+        if (! $xml_semantic_status) {
+            return $done_values;
+        }
+
         foreach ($xml->closed_values->closed_value as $xml_closed_value) {
             $ref   = (string) $xml_closed_value['REF'];
             $value = $xmlMapping[$ref];
 
-            if ($value && ! $value->isHidden()) {
+            if ($value && $this->value_checker->isValueADoneValueInXMLImport($value, $xml_semantic_status)) {
                 $done_values[] = $value;
             }
         }
 
         return $done_values;
+    }
+
+    private function getSemanticDoneFromXML(SimpleXMLElement $full_semantic_xml)
+    {
+        foreach ($full_semantic_xml->semantic as $xml_semantic) {
+            if ((string) $xml_semantic['type'] === Tracker_Semantic_Status::NAME) {
+                return $xml_semantic;
+            }
+        }
+
+        return null;
     }
 }

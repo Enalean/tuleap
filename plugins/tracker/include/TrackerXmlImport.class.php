@@ -638,7 +638,13 @@ class TrackerXmlImport
         // set semantics
         if (isset($xml->semantics)) {
             foreach ($xml->semantics->semantic as $xml_semantic) {
-                $semantic = $this->semantic_factory->getInstanceFromXML($xml_semantic, $this->xmlFieldsMapping, $tracker);
+                $semantic = $this->semantic_factory->getInstanceFromXML(
+                    $xml_semantic,
+                    $xml->semantics,
+                    $this->xmlFieldsMapping,
+                    $tracker
+                );
+
                 if ($semantic) {
                     $tracker->semantics[] = $semantic;
                 }

@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -46,24 +46,31 @@ Mock::generate('Tracker_TooltipFactory');
 
 Mock::generate('Tracker_Semantic_ContributorFactory');
 
-class Tracker_SemanticFactoryTest extends TuleapTestCase {
+class Tracker_SemanticFactoryTest extends TuleapTestCase
+{
 
+    /**
+     * @var XML_Security
+     */
     private $xml_security;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->xml_security = new XML_Security();
         $this->xml_security->enableExternalLoadOfEntities();
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         $this->xml_security->disableExternalLoadOfEntities();
 
         parent::tearDown();
     }
 
-    public function testGetInstanceFromXml() {
+    public function testGetInstanceFromXml()
+    {
         $xml_title       = simplexml_load_file(dirname(__FILE__) . '/_fixtures/ImportTrackerSemanticTitleTest.xml');
         $xml_status      = simplexml_load_file(dirname(__FILE__) . '/_fixtures/ImportTrackerSemanticStatusTest.xml');
         $xml_tooltip     = simplexml_load_file(dirname(__FILE__) . '/_fixtures/ImportTrackerSemanticTooltipTest.xml');
@@ -97,23 +104,19 @@ class Tracker_SemanticFactoryTest extends TuleapTestCase {
         );
         
         //Title
-        $title = $tsf->getInstanceFromXML($xml_title, $mapping, $tracker);
+        $title = $tsf->getInstanceFromXML($xml_title, $xml_title, $mapping, $tracker);
         $this->assertReference($title, $semantic_title);
         
         //Status
-        $status = $tsf->getInstanceFromXML($xml_status, $mapping, $tracker);
+        $status = $tsf->getInstanceFromXML($xml_status, $xml_status, $mapping, $tracker);
         $this->assertReference($status, $semantic_status);
         
         //Tooltip
-        $tooltip = $tsf->getInstanceFromXML($xml_tooltip, $mapping, $tracker);
+        $tooltip = $tsf->getInstanceFromXML($xml_tooltip, $xml_tooltip, $mapping, $tracker);
         $this->assertReference($tooltip, $semantic_tooltip);
         
         //Contributor
-        $contributor = $tsf->getInstanceFromXML($xml_contributor, $mapping, $tracker);
+        $contributor = $tsf->getInstanceFromXML($xml_contributor, $xml_contributor, $mapping, $tracker);
         $this->assertReference($contributor, $semantic_contributor);
-        
     }
-    
 }
-
-?>
