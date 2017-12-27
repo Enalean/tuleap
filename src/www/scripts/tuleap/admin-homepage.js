@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2015-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,14 +23,35 @@
         var selector = $('#admin-headline-select-language');
 
         bindSwitchStandardHomepage();
-        switchHeadline();
+        initCKEditor();
         selector.change(switchHeadline);
+
+        function initCKEditor() {
+            $('textarea[id^="admin-headline-"]').each(function() {
+                var textarea_id = $(this).attr('id');
+
+                CKEDITOR.replace(textarea_id, {
+                    toolbar: tuleap.ckeditor.toolbar
+                });
+
+                CKEDITOR.on('instanceReady', function() {
+                    switchHeadline();
+                });
+            });
+        }
 
         function switchHeadline() {
             var language_id = selector.val();
 
-            $('.admin-headline').hide();
-            $('#admin-headline-' + language_id).show().focus();
+            $('div[id^="cke_admin-headline-"]').each(function() {
+                var cke_instance = $(this);
+
+                if (cke_instance.attr('id') === "cke_admin-headline-" + language_id) {
+                    cke_instance.show().focus();
+                } else {
+                    cke_instance.hide();
+                }
+            });
         }
 
         function bindSwitchStandardHomepage() {

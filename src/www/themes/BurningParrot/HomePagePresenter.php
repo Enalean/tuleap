@@ -27,7 +27,7 @@ use User_LoginPresenter;
 
 class HomePagePresenter
 {
-    public $headline;
+    public $purified_headline;
     public $path_custom_logo;
     public $create_account_label;
     public $purified_welcome_message;
@@ -57,7 +57,6 @@ class HomePagePresenter
         $display_new_account_button,
         $login_url
     ) {
-        $this->headline                    = $headline;
         $this->is_custom_logo_used         = Admin_Homepage_LogoFinder::isCustomLogoUsed();
         $this->path_custom_logo            = Admin_Homepage_LogoFinder::getCurrentUrl();
         $this->user                        = $user;
@@ -71,6 +70,7 @@ class HomePagePresenter
         $welcome_message = $GLOBALS['Language']->getText('homepage', 'welcome_title');
 
         $this->purified_welcome_message = $purifier->purify($welcome_message, CODENDI_PURIFIER_LIGHT);
+        $this->purified_headline        = $purifier->purify($headline, CODENDI_PURIFIER_LIGHT);
 
         $this->create_account_label = $GLOBALS['Language']->getText('homepage', 'create_account');
         $this->welcome_back         = $GLOBALS['Language']->getText('homepage', 'welcome_back');
