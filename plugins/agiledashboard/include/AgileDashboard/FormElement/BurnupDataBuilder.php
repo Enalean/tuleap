@@ -140,7 +140,7 @@ class BurnupDataBuilder
 
         $team_effort = $this->team_effort_team_calculator->calculate(
             array($artifact->getId()),
-            null,
+            time(),
             $stop_on_manual_value,
             null,
             null
@@ -148,7 +148,7 @@ class BurnupDataBuilder
 
         $total_effort = $this->total_effort_team_calculator->calculate(
             array($artifact->getId()),
-            null,
+            time(),
             $stop_on_manual_value,
             null,
             null
