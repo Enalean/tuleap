@@ -100,7 +100,7 @@ class SystemEvent_BURNUP_DAILY extends SystemEvent
             return;
         }
 
-        foreach ($this->burnup_dao->getArtifactsWithBurnup() as $burnup) {
+        foreach ($this->burnup_dao->searchArtifactsWithBurnup() as $burnup) {
             $burnup_period = new TimePeriodWithoutWeekEnd($burnup['start_date'], $burnup['duration']);
 
             if ($burnup_period->getEndDate() >= $yesterday) {
