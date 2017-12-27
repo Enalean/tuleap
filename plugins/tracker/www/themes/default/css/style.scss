@@ -2553,17 +2553,17 @@ body.sidebar-expanded .artifact-submit-button, body.sidebar-expanded .hidden-art
         }
     }
 
+    .artifact-modal-artifact-link {
+        padding: 0 5px 0 0;
+        list-style-type: none;
+        font-size: 0.8em;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
     ul.tracker_artifact_links {
         margin: 0 0 0 5px;
-
-        li {
-            padding: 0 5px 0 0;
-            list-style-type: none;
-            font-size: 0.8em;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
     }
 
     ul.tracker_artifact_followups {

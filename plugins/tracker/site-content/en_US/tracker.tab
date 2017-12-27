@@ -1644,6 +1644,7 @@ plugin_tracker_modal_artifact	submit	Submit
 plugin_tracker_modal_artifact	cancel	Cancel
 plugin_tracker_modal_artifact	artifact_to_link_title	The artifact will be linked to $1
 plugin_tracker_modal_artifact	submit_error	The artifact cannot be created because there are several errors:
+plugin_tracker_modal_artifact	parent_artifact	Parent artifact:
 
 plugin_tracker	Description:	Description:
 plugin_tracker	copy_this_artifact	Copy this artifact
