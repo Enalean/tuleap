@@ -105,10 +105,10 @@ class BurnupDataBuilder
 
         $time_period          = new TimePeriodWithoutWeekEnd($start->getTimestamp(), $time_period->getDuration());
         $is_under_calculation = $this->cache_checker->isBurnupUnderCalculation($artifact, $time_period, $user);
-        $burnup_data          = new BurnupData($is_under_calculation);
+        $burnup_data          = new BurnupData($time_period, $is_under_calculation);
 
         if (! $is_under_calculation) {
-            $this->addEfforts($artifact, $burnup_data, $time_period);
+            $this->addEfforts($artifact, $burnup_data);
         }
 
         $this->logger->info("End calculating burnup " . $artifact->getId());
@@ -117,7 +117,7 @@ class BurnupDataBuilder
         return $burnup_data;
     }
 
-    private function addEfforts(Tracker_Artifact $artifact, BurnupData $burnup_data, TimePeriodWithoutWeekEnd $time_period)
+    private function addEfforts(Tracker_Artifact $artifact, BurnupData $burnup_data)
     {
         $cached_days_result = $this->burnup_cache_dao->searchCachedDaysValuesByArtifactId($artifact->getId());
         foreach ($cached_days_result as $cached_day) {
@@ -126,7 +126,7 @@ class BurnupDataBuilder
         }
 
         $now = time();
-        if ($time_period->getEndDate() > $now) {
+        if ($burnup_data->getTimePeriod()->getEndDate() > $now) {
             $burnup_data->addEffort($this->getCurrentEffort($artifact), $now);
         }
     }

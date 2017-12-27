@@ -23,6 +23,10 @@ namespace Tuleap\AgileDashboard\FormElement;
 class BurnupData
 {
     /**
+     * @var \TimePeriodWithoutWeekEnd
+     */
+    private $time_period;
+    /**
      * @var bool
      */
     private $is_under_calculation;
@@ -31,9 +35,18 @@ class BurnupData
      */
     private $efforts = array();
 
-    public function __construct($is_under_calculation)
+    public function __construct(\TimePeriodWithoutWeekEnd $time_period, $is_under_calculation)
     {
         $this->is_under_calculation = $is_under_calculation;
+        $this->time_period          = $time_period;
+    }
+
+    /**
+     * @return \TimePeriodWithoutWeekEnd
+     */
+    public function getTimePeriod()
+    {
+        return $this->time_period;
     }
 
     /**
