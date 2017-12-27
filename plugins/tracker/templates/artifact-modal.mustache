@@ -10,11 +10,16 @@
                 <h4 class="artifact-links-title">{{ artifact_links_title }}</h4>
             </div>
             <div class="tuleap-modal-side-panel-content-content modal-body">
+                {{# parent_artifact_presenter }}
+                    <p class="artifact-modal-artifact-link">
+                        {{ parent_artifact_label }} <a href="{{ uri }}">{{ xref }}</a>
+                    </p>
+                {{/ parent_artifact_presenter }}
                 <div class="alert alert-info">{{{ artifact_links_readonly }}}</div>
                 <ul class="tracker_artifact_links">
                 {{# artifact_links }}
-                    <li>
-                        <a href="/goto?key={{tracker_name}}&val={{artifact_id}}&group_id={{group_id}}" class="cross-reference">#{{artifact_id}} {{title}}</a>
+                    <li class="artifact-modal-artifact-link">
+                        <a href="/goto?key={{ tracker_name }}&val={{ artifact_id }}&group_id={{ group_id }}" class="cross-reference">#{{ artifact_id }} {{ title }}</a>
                     </li>
                 {{/ artifact_links }}
                 {{^ artifact_links }}

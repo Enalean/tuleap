@@ -103,4 +103,22 @@ class Tracker_Artifact_Presenter_EditArtifactInPlacePresenter {
         }
         return $value;
     }
+
+    public function parent_artifact_presenter()
+    {
+        $parent_artifact_presenter = array();
+        $parent_artifact           = $this->artifact->getParent($this->user);
+
+        if ($parent_artifact) {
+            $parent_artifact_presenter['xref'] = $parent_artifact->getXRef();
+            $parent_artifact_presenter['uri']  = $parent_artifact->getUri();
+        }
+
+        return $parent_artifact_presenter;
+    }
+
+    public function parent_artifact_label()
+    {
+        return $GLOBALS['Language']->getText('plugin_tracker_modal_artifact', 'parent_artifact');
+    }
 }
