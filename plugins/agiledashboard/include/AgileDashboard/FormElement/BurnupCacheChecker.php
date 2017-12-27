@@ -78,7 +78,7 @@ class BurnupCacheChecker
         \PFUser $user
     ) {
         if ($this->chart_value_checker->hasStartDate($artifact, $user)) {
-            $cached_days = $this->burnup_cache_dao->getCachedDays(
+            $cached_days = $this->burnup_cache_dao->getNumberOfCachedDays(
                 $artifact->getId()
             );
 

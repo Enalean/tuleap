@@ -20,40 +20,24 @@
 
 namespace Tuleap\AgileDashboard\FormElement;
 
-class BurnupData
+class BurnupEffort
 {
-    /**
-     * @var bool
-     */
-    private $is_under_calculation;
-    /**
-     * @var BurnupEffort[]
-     */
-    private $efforts = array();
+    private $team_effort;
+    private $total_effort;
 
-    public function __construct($is_under_calculation)
+    public function __construct($team_effort, $total_effort)
     {
-        $this->is_under_calculation = $is_under_calculation;
+        $this->team_effort = $team_effort;
+        $this->total_effort = $total_effort;
     }
 
-    /**
-     * @return bool
-     */
-    public function isBeingCalculated()
+    public function getTeamEffort()
     {
-        return $this->is_under_calculation;
+        return $this->team_effort;
     }
 
-    public function addEffort(BurnupEffort $effort, $timestamp)
+    public function getTotalEffort()
     {
-        $this->efforts[(int) $timestamp] = $effort;
-    }
-
-    /**
-     * @return BurnupEffort[]
-     */
-    public function getEfforts()
-    {
-        return $this->efforts;
+        return $this->total_effort;
     }
 }
