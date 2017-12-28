@@ -1423,13 +1423,14 @@ class Tracker_FormElementFactory {
         return $button;
     }
 
-    private function isFieldUniqueAndAlreadyUsed($klass, Tracker $tracker, $isUnique) {
+    private function isFieldUniqueAndAlreadyUsed($klass, Tracker $tracker, $isUnique)
+    {
         if ($isUnique === null) {
-            eval("\$isUnique = $klass::getFactoryUniqueField();");
+            $isUnique = $klass::getFactoryUniqueField();
         }
 
         if ($isUnique) {
-            $type = array_search($klass, $this->classnames);
+            $type = array_search($klass, array_merge($this->classnames, $this->special_classnames), true);
             $used = true;
             $elements = $this->getFormElementsByType($tracker, $type, $used);
             if ($elements) {
