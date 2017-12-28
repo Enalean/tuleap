@@ -137,8 +137,9 @@ function delete_equal_attachments(array $attachments) {
                 $row = db_fetch_array($res);
                 if (md5_file($attachment_path) === $row['md5']) {
                     db_query("UPDATE artifact_file SET bin_data = '' WHERE id = $attachment_id");
-                    if (db_error()) {
-                        error("An error occured while cleanning-up $attachment_id: ".@mysql_error());
+                    $db_error = db_error();
+                    if ($db_error) {
+                        error("An error occurred while cleaning-up $attachment_id: $db_error");
                     }
                 }
             }
