@@ -243,6 +243,11 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
         return dgettext('tuleap-agiledashboard', 'Burnup Chart');
     }
 
+    public static function getFactoryUniqueField()
+    {
+        return true;
+    }
+
     public function getQueryFrom()
     {
     }
