@@ -75,7 +75,7 @@ Requires: httpd, mod_ssl, openssl, nginx
 # Mysql Client
 Requires: mysql
 # libnss-mysql (system authentication based on MySQL)
-Requires: libnss-mysql, mod_auth_mysql, nss, nscd
+Requires: libnss-mysql, nss, nscd
 # Forgeupgrade
 Requires: forgeupgrade >= 1.2
 # MIME libs
