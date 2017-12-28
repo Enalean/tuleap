@@ -31,6 +31,7 @@ use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_ReadOnly;
 use Tracker_FormElement_FieldVisitor;
 use Tracker_HierarchyFactory;
+use Tuleap\AgileDashboard\v1\Artifact\BurnupRepresentation;
 use Tuleap\Tracker\FormElement\ChartCachedDaysComparator;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueChecker;
@@ -39,6 +40,7 @@ use Tuleap\Tracker\FormElement\ChartFieldUsage;
 use Tuleap\Tracker\FormElement\ChartMessageFetcher;
 use Tuleap\Tracker\FormElement\FieldCalculator;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
+use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueRepresentation;
 use UserManager;
 
 class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Field_ReadOnly, TrackerFormElementExternalField
@@ -251,6 +253,23 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
 
     public function getRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset)
     {
+        $artifact = $changeset->getArtifact();
+        try {
+            $burnup_data = $this->getBurnupDataBuilder()->buildBurnupData($artifact, $user);
+        } catch (Tracker_FormElement_Chart_Field_Exception $ex) {
+            $burnup_data = null;
+        }
+        $capacity = null;
+        if ($this->getConfigurationFieldRetriever()->doesCapacityFieldExist($artifact->getTracker())) {
+            $capacity = $this->getConfigurationValueRetriever()->getCapacity($artifact, $user);
+        }
+
+        $burnup_representation = new BurnupRepresentation($capacity, $burnup_data);
+
+        $field_representation  = new ArtifactFieldValueRepresentation();
+        $field_representation->build($this->getId(), $this->getLabel(), $burnup_representation);
+
+        return $field_representation;
     }
 
     public function getSoapAvailableValues()
