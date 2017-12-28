@@ -54,25 +54,14 @@ export default class ReadingModeController {
                 this.disableSaveReport();
                 return;
             }
-            this.listenSaveReport();
-            this.listenCancelReport();
         });
     }
 
-    listenSaveReport() {
-        this.reading_mode_save_report.addEventListener('click', () => {
-            this.saveReport();
-        });
-    }
+    cancelReport() {
+        this.reading_cross_tracker_report.duplicateFromReport(this.backend_cross_tracker_report);
 
-    listenCancelReport() {
-        this.reading_mode_cancel_report.addEventListener('click', () => {
-            this.hideReportActions();
-            this.reading_cross_tracker_report.duplicateFromReport(this.backend_cross_tracker_report);
-
-            this.report_saved_state.switchToSavedState();
-            this.query_result_controller.loadFirstBatchOfArtifacts();
-        });
+        this.report_saved_state.switchToSavedState();
+        this.query_result_controller.loadFirstBatchOfArtifacts();
     }
 
     async saveReport() {
@@ -90,7 +79,6 @@ export default class ReadingModeController {
             this.initReports();
 
             this.success_displayer.displaySuccess(gettext_provider.gettext('Report has been successfully saved'));
-            this.hideReportActions();
             this.backend_cross_tracker_report.loaded = true;
             this.report_saved_state.switchToSavedState();
         } catch (error) {
@@ -104,10 +92,6 @@ export default class ReadingModeController {
         } finally {
             this.hideSaveReportLoading();
         }
-    }
-
-    hideReportActions() {
-        this.reading_mode_actions.classList.add('cross-tracker-hide');
     }
 
     initReports() {

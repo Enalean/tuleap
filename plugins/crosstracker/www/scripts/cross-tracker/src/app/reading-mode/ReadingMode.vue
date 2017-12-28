@@ -14,10 +14,16 @@
         <div class="dashboard-widget-content-cross-tracker-reading-mode-actions"
             v-bind:class="{'cross-tracker-hide': are_actions_hidden }"
         >
-            <button class="tlp-button-primary tlp-button-outline dashboard-widget-content-cross-tracker-reading-mode-actions-cancel">{{ cancel }}</button>
-            <button class="tlp-button-primary dashboard-widget-content-cross-tracker-reading-mode-actions-save">
+            <button class="tlp-button-primary tlp-button-outline dashboard-widget-content-cross-tracker-reading-mode-actions-cancel"
+                    v-on:click="cancelReport"
+            >
+                {{ cancel }}
+            </button>
+            <button class="tlp-button-primary dashboard-widget-content-cross-tracker-reading-mode-actions-save"
+                    v-on:click="saveReport"
+            >
                 <span class="cross-tracker-loader"><i class="tlp-button-icon fa fa-spinner fa-spin"></i></span>
-                {{ save_report }}
+                {{ save }}
             </button>
         </div>
     </div>
@@ -31,7 +37,8 @@
         components: { TrackerListReadingMode } ,
         props: [
             'backendCrossTrackerReport',
-            'readingCrossTrackerReport'
+            'readingCrossTrackerReport',
+            'readingController'
         ],
         data() {
             return {
@@ -39,8 +46,8 @@
             };
         },
         computed: {
-            save_report:() => gettext_provider.gettext("Save report"),
-            cancel:()      => gettext_provider.gettext("Cancel"),
+            save:()   => gettext_provider.gettext("Save report"),
+            cancel:() => gettext_provider.gettext("Cancel"),
             is_switch_disabled() {
                 return (! this.backendCrossTrackerReport.loaded || this.is_user_anonymous);
             },
@@ -58,6 +65,14 @@
                 }
 
                 this.$emit('switchToWritingMode');
+            },
+            saveReport() {
+                this.readingController.saveReport();
+                this.hideActions();
+            },
+            cancelReport() {
+                this.readingController.cancelReport();
+                this.hideActions();
             },
             showActions() {
                 this.are_actions_hidden = false;
