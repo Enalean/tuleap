@@ -45,11 +45,14 @@ class BurnupCacheGenerator
         );
     }
 
-    public function forceBurnupCacheGeneration($artifact_id)
+    public function forceBurnupCacheGeneration(Tracker_Artifact $artifact)
     {
+        if ($this->isCacheBurnupAlreadyAsked($artifact)) {
+            return;
+        }
         $this->system_event_manager->createEvent(
             'Tuleap\\Agiledashboard\\FormElement\\SystemEvent\\' . SystemEvent_BURNUP_GENERATE::NAME,
-            $artifact_id,
+            $artifact->getId(),
             SystemEvent::PRIORITY_MEDIUM,
             SystemEvent::OWNER_APP
         );

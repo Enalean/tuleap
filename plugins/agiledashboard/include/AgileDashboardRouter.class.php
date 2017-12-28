@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Agiledashboard\FormElement\BurnupCacheGenerator;
+use Tuleap\AgileDashboard\FormElement\FormElementController;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
@@ -211,6 +213,9 @@ class AgileDashboardRouter {
                 );
                 $this->renderAction($this->buildController($request), 'showKanban', $request, array(), $header_options);
                 break;
+            case 'burnup-cache-generate':
+                $this->buildFormElementController()->forceBurnupCacheGeneration($request);
+                break;
             case 'index':
             default:
                 $header_options = array(
@@ -349,6 +354,17 @@ class AgileDashboardRouter {
             new AgileDashboard_PermissionsManager(),
             new ScrumForMonoMilestoneChecker( new ScrumForMonoMilestoneDao(), $this->planning_factory),
             EventManager::instance()
+        );
+    }
+
+    /**
+     * @return FormElementController
+     */
+    private function buildFormElementController()
+    {
+        return new FormElementController(
+            Tracker_ArtifactFactory::instance(),
+            new BurnupCacheGenerator(SystemEventManager::instance())
         );
     }
 

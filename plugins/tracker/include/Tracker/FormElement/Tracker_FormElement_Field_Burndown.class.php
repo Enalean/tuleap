@@ -149,7 +149,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
             && $this->getBurndownConfigurationValueChecker()->areBurndownFieldsCorrectlySet($artifact, $user)
             && ! strpos($_SERVER['REQUEST_URI'], 'from_agiledashboard')
         ) {
-            $html .= '<a class="btn burndown-button-generate" data-toggle="modal" href="#burndown-generate">' .
+            $html .= '<a class="btn chart-cache-button-generate" data-toggle="modal" href="#burndown-generate">' .
                 $GLOBALS['Language']->getText(
                     'plugin_tracker',
                     'burndown_generate'
@@ -558,7 +558,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         $html = '';
         $html .= $this->getBurndownMessageFetcher()->fetchWarnings($this->getTracker(), $this->getChartFieldUsage());
         $html .= '<img src="' . TRACKER_BASE_URL . '/images/fake-burndown-admin.png" />';
-        $html .= '<a class="btn burndown-button-generate" disabled="disabled">' .
+        $html .= '<a class="btn chart-cache-button-generate" disabled="disabled">' .
             $GLOBALS['Language']->getText('plugin_tracker', 'burndown_generate') .
             '</a>';
 

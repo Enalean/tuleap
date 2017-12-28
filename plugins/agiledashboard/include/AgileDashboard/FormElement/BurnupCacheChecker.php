@@ -61,9 +61,8 @@ class BurnupCacheChecker
         $is_burnup_under_calculation = false;
 
         if ($this->isCacheCompleteForBurnup($artifact, $time_period, $user) === false
-            && $this->cache_generator->isCacheBurnupAlreadyAsked($artifact) === false
         ) {
-            $this->cache_generator->forceBurnupCacheGeneration($artifact->getId());
+            $this->cache_generator->forceBurnupCacheGeneration($artifact);
             $is_burnup_under_calculation = true;
         } else if ($this->cache_generator->isCacheBurnupAlreadyAsked($artifact)) {
             $is_burnup_under_calculation = true;
