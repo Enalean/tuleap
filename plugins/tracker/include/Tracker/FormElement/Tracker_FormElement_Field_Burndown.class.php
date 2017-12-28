@@ -74,6 +74,11 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         return $GLOBALS['HTML']->getImagePath('ic/burndown--plus.png');
     }
 
+    public static function getFactoryUniqueField()
+    {
+        return true;
+    }
+
     /**
      * Returns the previously injected factory (e.g. in tests), or a new
      * instance (e.g. in production).
