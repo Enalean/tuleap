@@ -1,7 +1,6 @@
 <?php
-
 /**
- * Copyright (c) Enalean, 2012. All rights reserved
+ * Copyright (c) Enalean, 2012-2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -35,16 +34,18 @@ $bad_projects_with_mw_sql = "SELECT g.group_id, g.group_name
         SELECT project_id FROM plugin_mediawiki_database
     )";
 
-
-$projects = mysql_query($bad_projects_with_mw_sql);
-if (! $projects) {
-    echo mysql_error();
+$data_access_object = new DataAccessObject;
+$data_access_object->enableExceptionsOnError();
+try {
+    $projects = $data_access_object->retrieve($bad_projects_with_mw_sql);
+} catch (DataAccessQueryException $ex) {
+    echo $ex->getMessage();
+    exit(1);
 }
 
-while ($row = mysql_fetch_row($projects)) {
-    $id   = $row[0];
-    $name = $row[1];
+foreach ($projects as $project) {
+    $id   = $project['group_id'];
+    $name = $project['group_name'];
 
     echo "Unable to find mediawiki for project $name ($id)" . PHP_EOL;
 }
-?>
