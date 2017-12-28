@@ -64,6 +64,8 @@ class Admin_Homepage_Controller {
 
     public function index()
     {
+        $this->response->includeFooterJavascriptFile("/scripts/ckeditor-4.3.2/ckeditor.js");
+        $this->response->includeFooterJavascriptFile('/scripts/tuleap/tuleap-ckeditor-toolbar.js');
         $this->response->includeFooterJavascriptFile('/scripts/tuleap/admin-homepage.js');
 
         $title     = $GLOBALS['Language']->getText('admin_main', 'configure_homepage');
