@@ -54,6 +54,10 @@ msgstr ""
 msgid "Burnup Chart"
 msgstr "Diagramme Burn-Up"
 
+msgid "Burnup is under calculation. It will be available in few minutes."
+msgstr ""
+"Le burn-up est en cours de calcul. Il sera disponible dans quelques minutes."
+
 msgid "Define the closed status that are considered Done"
 msgstr ""
 "Définissez les valeurs fermées de la sémantique statut considérées comme "
@@ -66,6 +70,14 @@ msgstr ""
 "Affiche un tableau pour voir les tâches à faire, en cours, terminées etc. "
 "Veuillez aller sur un kanban pour l’ajouter."
 
+msgid ""
+"Do you really want to force burnup cache regeneration? The burnup will be "
+"unavailable for a few minutes if you do."
+msgstr ""
+"Voulez-vous vraiment reconstruire le cache du burn-up dans son intégralité ? "
+"La reconstruction du cache entraînera une indisponibilité du champ pendant "
+"quelques minutes."
+
 msgid "Done"
 msgstr "Fini"
 
@@ -77,6 +89,9 @@ msgstr "Les valeurs finies ont été mises à jour avec succès."
 
 msgid "Field under implementation"
 msgstr "Champ en cours d'implémentation"
+
+msgid "Force cache regeneration"
+msgstr "Reconstruire le cache"
 
 msgid "Go back to semantic overview"
 msgstr "Retour à l'administration de la sémantique"

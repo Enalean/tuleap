@@ -34,12 +34,20 @@ msgstr ""
 msgid "Burnup Chart"
 msgstr ""
 
+msgid "Burnup is under calculation. It will be available in few minutes."
+msgstr ""
+
 msgid "Define the closed status that are considered Done"
 msgstr ""
 
 msgid ""
 "Displays a board to see the tasks to do, in progress, done etc. Please go on "
 "a kanban to add it."
+msgstr ""
+
+msgid ""
+"Do you really want to force burnup cache regeneration? The burnup will be "
+"unavailable for a few minutes if you do."
 msgstr ""
 
 msgid "Done"
@@ -52,6 +60,9 @@ msgid "Done values successfully updated."
 msgstr ""
 
 msgid "Field under implementation"
+msgstr ""
+
+msgid "Force cache regeneration"
 msgstr ""
 
 msgid "Go back to semantic overview"

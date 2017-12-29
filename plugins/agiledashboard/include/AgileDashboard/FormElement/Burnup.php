@@ -23,6 +23,7 @@ namespace Tuleap\AgileDashboard\FormElement;
 use Codendi_HTMLPurifier;
 use PFUser;
 use SystemEventManager;
+use TemplateRendererFactory;
 use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue;
@@ -141,12 +142,29 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
             }
             $artifact_value .= '</tbody></table>';
 
+            $artifact_value .= $this->fetchGenerationModal($burnup_data, $artifact);
+
             return $artifact_value;
         } catch (Tracker_FormElement_Chart_Field_Exception $e) {
             return "<div class='feedback_warning'>" .
                 $e->getMessage() .
                 "</div>";
         }
+    }
+
+    /**
+     * @return string
+     */
+    private function fetchGenerationModal(BurnupData $burnup_data, Tracker_Artifact $artifact)
+    {
+        if ($burnup_data->isBeingCalculated() || ! $artifact->getTracker()->userIsAdmin($this->getCurrentUser())) {
+            return '';
+        }
+        $renderer = TemplateRendererFactory::build()->getRenderer(AGILEDASHBOARD_TEMPLATE_DIR);
+        return $renderer->renderToString(
+            'formelement/burnup-cache-generation-modal',
+            array('project_id' => $artifact->getTracker()->getGroupId(), 'artifact_id' => $artifact->getId())
+        );
     }
 
     public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value, $report)
