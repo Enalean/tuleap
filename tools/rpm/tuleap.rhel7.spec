@@ -40,7 +40,7 @@ Requires: %{php_base}-process  %{php_base}-opcache
 
 Requires: highlight
 
-Requires: php-ZendFramework2-Loader
+Requires: php-ZendFramework2-Loader, php-ZendFramework2-Mail
 Requires: rh-php56-php-fpm
 
 # Unit file

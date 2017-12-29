@@ -57,8 +57,7 @@ Requires: %{php_base}-password-compat
 
 Requires: %{php_base}-pecl-apc
 Requires: curl
-Requires: %{php_base}-zendframework
-Requires: php-ZendFramework2-Loader
+Requires: php-ZendFramework2-Loader, php-ZendFramework2-Mail
 Requires: %{php_base}-markdown
 Requires: tuleap-core-subversion
 

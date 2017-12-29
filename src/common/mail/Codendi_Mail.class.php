@@ -1,24 +1,27 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2013-2017. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2004-2011. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once('Codendi_Mail_Interface.class.php');
-require_once('Tuleap_Template_Mail.class.php');
+
+use Zend\Mail;
+use Zend\Mime\Message as MimeMessage;
+use Zend\Mime\Part as MimePart;
 
 /**
  * Class for sending an email using the zend lib.
@@ -38,9 +41,11 @@ class Codendi_Mail implements Codendi_Mail_Interface {
      * @const DO NOT use the common look and feel
      */
     const DISCARD_COMMON_LOOK_AND_FEEL = false;
-    
-    protected $mail;
-    protected $userDao;
+
+    /**
+     * @var Mail\Message
+     */
+    private $message;
 
     /**
      * @var Tuleap_Template_Mail 
@@ -53,33 +58,41 @@ class Codendi_Mail implements Codendi_Mail_Interface {
     private $recipient_list_builder;
 
     /**
-     * Constructor
+     * @var Mail\Transport\Sendmail
      */
-    function __construct() {
-        $this->mail                   = new Zend_Mail('UTF-8');
+    private $transport;
+
+    /**
+     * @var string
+     */
+    private $body_text = '';
+
+    /**
+     * @var string
+     */
+    private $body_html = '';
+
+    /**
+     * @var MimePart[]
+     */
+    private $attachments = array();
+
+    /**
+     * @var MimePart[]
+     */
+    private $inline_attachments = array();
+
+    public function __construct()
+    {
+        $this->message                = new Mail\Message();
+        $this->message->setEncoding('UTF-8');
         $this->recipient_list_builder = new Mail_RecipientListBuilder(UserManager::instance());
+        $this->transport              = new Mail\Transport\Sendmail();
     }
 
-    /**
-     * Return Zend_Mail object
-     *
-     * @return Zend_Mail object
-     */
-    function getMail() {
-        return $this->mail;
-    }
-
-    /**
-     * 
-     * Returns an instance of UserDao
-     * 
-     * @return UserDao
-     */
-    function getUserDao() {
-        if (!$this->userDao) {
-          $this->userDao = new UserDao(CodendiDataAccess::instance());
-        }
-        return $this->userDao;
+    public function setMessageId($message_id)
+    {
+        $this->message->setMessageId($message_id);
     }
 
     /**
@@ -128,46 +141,47 @@ class Codendi_Mail implements Codendi_Mail_Interface {
     /**
      * Return list of mail addresses separated by comma, from the headers, depending on the type
      *
-     * @param String $recipientType Allowed values are "To", "Cc" and "Bcc"
+     * @param String $recipient_type Allowed values are "To", "Cc" and "Bcc"
      *
      * @return String
      */
-    function _getRecipientsFromHeader($recipientType) {
+    private function getRecipientsFromHeader($recipient_type)
+    {
         $allowed = array('To', 'Cc', 'Bcc');
-        if (in_array($recipientType, $allowed)) {
-            $headers = $this->mail->getHeaders();
-            if (isset($headers[$recipientType])) {
-                unset ($headers[$recipientType]['append']);
-                return implode(', ', $headers[$recipientType]);
+        if (in_array($recipient_type, $allowed)) {
+            $headers = $this->message->getHeaders();
+            if ($headers->has('to')) {
+                $recipient_header = $headers->get($recipient_type);
+                $list_addresses   = $recipient_header->getAddressList();
+                $addresses = array();
+                foreach ($list_addresses as $address) {
+                    $addresses[] = $address->getEmail();
+                }
+                return implode(', ', $addresses);
             }
         }
+        return '';
     }
 
-    function setFrom($email) {
+    public function setFrom($email)
+    {
         list($email, $name) = $this->_cleanupMailFormat($email);
-
-        $this->mail->setFrom($email, $name);
+        $this->message->setFrom($email, $name);
     }
 
-    /**
-     * Return the sender of the mail
-     *
-     * @return String
-     */
-    function getFrom() {
-        return $this->mail->getFrom();
-    }
-
-    function clearFrom() {
-        $this->mail->clearFrom();
+    public function clearFrom()
+    {
+        $this->message->setFrom(array());
     }
     
-    function setSubject($subject) {
-        $this->mail->setSubject($subject);
+    public function setSubject($subject)
+    {
+        $this->message->setSubject($subject);
     }
 
-    function getSubject() {
-        return $this->mail->getSubject();
+    public function getSubject()
+    {
+        return $this->message->getSubject();
     }
 
     /**
@@ -175,17 +189,18 @@ class Codendi_Mail implements Codendi_Mail_Interface {
      * @param String  $to
      * @param Boolean $raw
      */
-    function setTo($to, $raw=false) {
+    public function setTo($to, $raw=false)
+    {
         list($to,) = $this->_cleanupMailFormat($to);
         if(!$raw) {
             $to = $this->validateCommaSeparatedListOfAddresses($to);
             if (!empty($to)) {
                 foreach ($to as $row) {
-                    $this->mail->addTo($row['email'], $row['real_name']);
+                    $this->message->addTo($row['email'], $row['real_name']);
                 }
             }
         } else {
-            $this->mail->addTo($to , '');
+            $this->message->addTo($to , '');
         }
     }
 
@@ -194,8 +209,9 @@ class Codendi_Mail implements Codendi_Mail_Interface {
      *
      * @return String
      */
-    function getTo() {
-        return $this->_getRecipientsFromHeader('To');
+    public function getTo()
+    {
+        return $this->getRecipientsFromHeader('To');
     }
     
     /**
@@ -203,16 +219,17 @@ class Codendi_Mail implements Codendi_Mail_Interface {
      * @param String  $bcc
      * @param Boolean $raw
      */
-    function setBcc($bcc, $raw=false) {
+    public function setBcc($bcc, $raw=false)
+    {
         if(!$raw) {
             $bcc = $this->validateCommaSeparatedListOfAddresses($bcc);
             if (!empty($bcc)) {
                 foreach ($bcc as $row) {
-                    $this->mail->addBcc($row['email'], $row['real_name']);
+                    $this->message->addBcc($row['email'], $row['real_name']);
                 }
             }
         } else {
-            $this->mail->addBcc($bcc , '');
+            $this->message->addBcc($bcc , '');
         }
     }
 
@@ -221,8 +238,9 @@ class Codendi_Mail implements Codendi_Mail_Interface {
      *
      * @return String
      */
-    function getBcc() {
-        return $this->_getRecipientsFromHeader('Bcc');
+    public function getBcc()
+    {
+        return $this->getRecipientsFromHeader('Bcc');
     }
 
     /**
@@ -230,16 +248,17 @@ class Codendi_Mail implements Codendi_Mail_Interface {
      * @param String  $cc
      * @param Boolean $raw
      */
-    function setCc($cc, $raw=false) {
+    public function setCc($cc, $raw=false)
+    {
         if(!$raw) {
             $cc = $this->validateCommaSeparatedListOfAddresses($cc);
             if (!empty($cc)) {
                 foreach ($cc as $row) {
-                    $this->mail->addCc($row['email'], $row['real_name']);
+                    $this->message->addCc($row['email'], $row['real_name']);
                 }
             }
         } else {
-            $this->mail->addCc($cc , '');
+            $this->message->addCc($cc, '');
         }
     }
 
@@ -249,14 +268,15 @@ class Codendi_Mail implements Codendi_Mail_Interface {
      * @return String
      */
     function getCc() {
-        return $this->_getRecipientsFromHeader('Cc');
+        return $this->getRecipientsFromHeader('Cc');
     }
 
     /**
      * @param String $message
      */
-    function setBodyText($message) {
-        $this->mail->setBodyText($message);
+    public function setBodyText($message)
+    {
+        $this->body_text = $message;
     }
 
     /**
@@ -264,8 +284,23 @@ class Codendi_Mail implements Codendi_Mail_Interface {
      * 
      * @return String
      */
-    function getBodyText($textOnly = true) {
-        return $this->mail->getBodyText($textOnly);
+    public function getBodyText()
+    {
+        return $this->body_text;
+    }
+
+    /**
+     * @return null|MimePart
+     */
+    private function getTextPart()
+    {
+        if ($this->body_text === '') {
+            return null;
+        }
+        $text_part       = new MimePart($this->body_text);
+        $text_part->type = 'text/plain';
+
+        return $text_part;
     }
         
     /**
@@ -304,13 +339,14 @@ class Codendi_Mail implements Codendi_Mail_Interface {
      *
      * @return void
      */
-    function setBodyHtml($message, $use_common_look_and_feel = self::USE_COMMON_LOOK_AND_FEEL) {
+    public function setBodyHtml($message, $use_common_look_and_feel = self::USE_COMMON_LOOK_AND_FEEL)
+    {
         if (self::USE_COMMON_LOOK_AND_FEEL == $use_common_look_and_feel) {
             $tpl = $this->getLookAndFeelTemplate();
             $tpl->set('body', $message);
             $message = $tpl->fetch();
         }
-        $this->getMail()->setBodyHtml($message);
+        $this->body_html = $message;
     }
 
     /**
@@ -318,8 +354,36 @@ class Codendi_Mail implements Codendi_Mail_Interface {
      * 
      * @return String
      */
-    function getBodyHtml($htmlOnly = true) {
-        return $this->mail->getBodyHtml($htmlOnly);
+    public function getBodyHtml()
+    {
+        return $this->body_html;
+    }
+
+    /**
+     * @return null|MimePart
+     */
+    private function getHtmlPart()
+    {
+        if ($this->body_html === '') {
+            return null;
+        }
+        $html_code_part       = new MimePart($this->body_html);
+        $html_code_part->type = 'text/html';
+
+        if (empty($this->inline_attachments)) {
+            return $html_code_part;
+        }
+
+        $html_message = new MimeMessage();
+        $html_message->addPart($html_code_part);
+        foreach($this->inline_attachments as $attachment) {
+            $html_message->addPart($attachment);
+        }
+        $html_part           = new MimePart($html_message->generateMessage());
+        $html_part->type     = Zend\Mime\Mime::MULTIPART_RELATED;
+        $html_part->boundary = $html_message->getMime()->boundary();
+
+        return $html_part;
     }
 
     /**
@@ -340,15 +404,16 @@ class Codendi_Mail implements Codendi_Mail_Interface {
 
     /**
      *
-     * @param Array of User $to
+     * @param array of User $to
      * 
-     * @return Array
+     * @return array
      */
-    function setToUser($to) {
+    public function setToUser($to)
+    {
         $arrayTo = $this->validateArrayOfUsers($to);
         $arrayToRealName = array();
         foreach ($arrayTo as $to) {
-            $this->mail->addTo($to['email'], $to['real_name']);
+            $this->message->addTo($to['email'], $to['real_name']);
             $arrayToRealName[] = $to['real_name'];
         }
         return $arrayToRealName;
@@ -358,13 +423,14 @@ class Codendi_Mail implements Codendi_Mail_Interface {
      *
      * @param array of User $bcc
      * 
-     * @return Array;
+     * @return array;
      */
-    function setBccUser($bcc) {
+    public function setBccUser($bcc)
+    {
         $arrayBcc = $this->validateArrayOfUsers($bcc);
         $arrayBccRealName = array();
         foreach ($arrayBcc as $user) {
-            $this->mail->addBcc($user['email'], $user['real_name']);
+            $this->message->addBcc($user['email'], $user['real_name']);
             $arrayBccRealName[] = $user['real_name'];
         }
         return $arrayBccRealName;
@@ -372,15 +438,16 @@ class Codendi_Mail implements Codendi_Mail_Interface {
 
     /**
      *
-     * @param Array $cc
+     * @param array $cc
      * 
-     * @return Array
+     * @return array
      */
-    function setCcUser($cc) {
+    public function setCcUser($cc)
+    {
         $arrayCc = $this->validateArrayOfUsers($cc);
         $arrayCcRealName = array();
         foreach ($arrayCc as $user) {
-            $this->mail->addCc($user['email'], $user['real_name']);
+            $this->message->addCc($user['email'], $user['real_name']);
             $arrayCcRealName[] = $user['real_name'];
         }
         return $arrayCcRealName;
@@ -391,48 +458,92 @@ class Codendi_Mail implements Codendi_Mail_Interface {
      * 
      * @return Boolean
      */
-    function send() {
+    public function send()
+    {
+        if ($this->getTo() === '') {
+            return false;
+        }
+
         $params = array('mail'   => $this,
-                        'header' => $this->mail->getHeaders());
+                        'header' => $this->message->getHeaders());
         $em = EventManager::instance();
         $em->processEvent('mail_sendmail', $params);
         $status = true;
+
+        $mime_message = new MimeMessage();
+        $mime_message->addPart($this->getBodyPart());
+        foreach($this->attachments as $attachment) {
+            $mime_message->addPart($attachment);
+        }
+        $this->message->setBody($mime_message);
         try {
-            $this->mail->send();
+            $this->transport->send($this->message);
         } catch (Exception $e) {
             $status = false;
             $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('global', 'mail_failed', ForgeConfig::get('sys_email_admin')), CODENDI_PURIFIER_DISABLED);
         }
-        $this->mail->clearRecipients();
+        $this->clearRecipients();
         return $status;
     }
+
+    private function getBodyPart()
+    {
+        $text_part = $this->getTextPart();
+        $html_part = $this->getHtmlPart();
+
+        if ($text_part === null && $html_part !== null) {
+            return $html_part;
+        }
+
+        $body_message = new MimeMessage();
+        if ($text_part !== null) {
+            $body_message->addPart($text_part);
+        }
+        if ($html_part !== null) {
+            $body_message->addPart($html_part);
+        }
+        $body_part           = new MimePart($body_message->generateMessage());
+        $body_part->type     = Zend\Mime\Mime::MULTIPART_ALTERNATIVE;
+        $body_part->boundary = $body_message->getMime()->boundary();
+
+        return $body_part;
+    }
+
+    private function clearRecipients()
+    {
+        $this->message->setTo(array());
+        $this->message->setCc(array());
+        $this->message->setBcc(array());
+    }
     
-    public function addAdditionalHeader($name, $value) {
-        $this->mail->addHeader($name, $value);
+    public function addAdditionalHeader($name, $value)
+    {
+        $header = new Mail\Header\GenericHeader($name, $value);
+        $this->message->getHeaders()->addHeader($header);
+
     }
 
-    public function addAttachment($data, $mime_type, $filename) {
-        $mime_part           = $this->getNewMimePart($data, $mime_type);
-        $mime_part->filename = $filename;
-        $mime_part->disposition = Zend_Mime::DISPOSITION_ATTACHMENT;
-
-        $this->getMail()->addAttachment($mime_part);
+    public function addAttachment($data, $mime_type, $filename)
+    {
+        $mime_part               = $this->getMimePartAttachment($data, $mime_type);
+        $mime_part->filename     = $filename;
+        $mime_part->disposition  = Zend\Mime\Mime::DISPOSITION_ATTACHMENT;
+        $this->attachments[]     = $mime_part;
     }
 
-    public function addInlineAttachment($data, $mime_type, $cid) {
-        $this->getMail()->setType(Zend_Mime::MULTIPART_RELATED);
-
-        $mime_part              = $this->getNewMimePart($data, $mime_type);
-        $mime_part->id          = $cid;
-        $mime_part->disposition = Zend_Mime::DISPOSITION_INLINE;
-
-        $this->getMail()->addAttachment($mime_part);
+    public function addInlineAttachment($data, $mime_type, $cid)
+    {
+        $mime_part                  = $this->getMimePartAttachment($data, $mime_type);
+        $mime_part->id              = $cid;
+        $mime_part->disposition     = Zend\Mime\Mime::DISPOSITION_INLINE;
+        $this->inline_attachments[] = $mime_part;
     }
 
-    private function getNewMimePart($data, $mime_type) {
-        $mime_part           = new Zend_Mime_Part($data);
+    private function getMimePartAttachment($data, $mime_type)
+    {
+        $mime_part           = new MimePart($data);
         $mime_part->type     = $mime_type;
-        $mime_part->encoding = Zend_Mime::ENCODING_BASE64;
+        $mime_part->encoding = Zend\Mime\Mime::ENCODING_BASE64;
 
         return $mime_part;
     }

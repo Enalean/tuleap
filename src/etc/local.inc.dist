@@ -412,9 +412,6 @@ $sys_enable_avatars = 1;
 //User's avatar path
 $sys_avatar_path = $sys_data_dir . '/user/avatar/';
 
-//Zend Framework 1 path
-$zend_path = '/usr/share/zend';
-
 // Allow to limit the number of SOAP call that might be critical for the platform.
 // As of today it only impact Project::addProject but it might evolve.
 $sys_nb_sensitive_soap_calls_per_hour = 10;

@@ -190,11 +190,6 @@ include_menu	add_project	New project
 include_menu	join_community	Join Tuleap Community
 #
 #-----------------------------------------------
-# Script: SF/www/include/pre.php
-#
-include_pre	zend_path_not_set	The path to the zend library is not defined.For more information contact your  \n<a href="mailto:$1">Site Administrator</a>.
-#
-#-----------------------------------------------
 # Script: SF/www/include/project.php
 #
 include_project	services_not_found	Services not found for this group

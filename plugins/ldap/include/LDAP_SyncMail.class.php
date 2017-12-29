@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2013-2017. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -84,8 +85,6 @@ class LDAP_SyncMail {
         } catch (InvalidArgumentException $e) {
             $this->logger->warn("LDAP daily synchro job has suspended this user ".$user->getRealName()." (".$user->getEmail().":".$e->getMessage());
             $notificationStatus = false;
-        } catch (Zend_Mail_Exception $e) {
-            $this->logger->error("LDAP daily synchro job has suspended this user ".$user->getRealName()." (".$user->getEmail()."), but faced an issue during project administrators notification :".$e->getMessage());
         }
         return $notificationStatus;
     }
