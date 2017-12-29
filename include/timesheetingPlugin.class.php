@@ -163,6 +163,9 @@ class timesheetingPlugin extends Plugin
                 case AdminController::WRITE_ACCESS:
                     $params['name'] = dgettext('tuleap-timesheeting', 'Write');
                     break;
+                case AdminController::READ_ACCESS:
+                    $params['name'] = dgettext('tuleap-timesheeting', 'Read');
+                    break;
                 default:
                     break;
             }

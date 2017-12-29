@@ -79,6 +79,51 @@ class TimesheetingUgroupDao extends DataAccessObject
         return $this->update($sql);
     }
 
+    public function saveReaders($tracker_id, array $ugroup_ids)
+    {
+        $this->startTransaction();
+
+        try {
+            $this->deleteReadersForTracker($tracker_id);
+            $this->addReadersForTracker($tracker_id, $ugroup_ids);
+
+            $this->commit();
+            return true;
+        } catch (Exception $exception) {
+            $this->rollBack();
+            return false;
+        }
+    }
+
+    private function deleteReadersForTracker($tracker_id)
+    {
+        $tracker_id = $this->da->escapeInt($tracker_id);
+
+        $sql = "DELETE FROM plugin_timesheeting_readers
+                WHERE tracker_id = $tracker_id";
+
+        return $this->update($sql);
+    }
+
+    private function addReadersForTracker($tracker_id, array $ugroup_ids)
+    {
+        $tracker_id = $this->da->escapeInt($tracker_id);
+
+        $values = array();
+        foreach ($ugroup_ids as $ugroup_id) {
+            $ugroup_id = $this->da->escapeInt($ugroup_id);
+
+            $values[] = "($tracker_id, $ugroup_id)";
+        }
+
+        $value_statement = implode(', ', $values);
+
+        $sql = "INSERT INTO plugin_timesheeting_readers (tracker_id, ugroup_id)
+                VALUES $value_statement";
+
+        return $this->update($sql);
+    }
+
     public function getWriters($tracker_id)
     {
         $tracker_id = $this->da->escapeInt($tracker_id);
@@ -90,11 +135,24 @@ class TimesheetingUgroupDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
+    public function getReaders($tracker_id)
+    {
+        $tracker_id = $this->da->escapeInt($tracker_id);
+
+        $sql = "SELECT ugroup_id
+                FROM plugin_timesheeting_readers
+                WHERE tracker_id = $tracker_id";
+
+        return $this->retrieve($sql);
+    }
+
     public function deleteByUgroupId($ugroup_id)
     {
         $ugroup_id = $this->da->escapeInt($ugroup_id);
 
-        $sql = "DELETE FROM plugin_timesheeting_writers
+        $sql = "DELETE plugin_timesheeting_writers, plugin_timesheeting_readers
+                FROM plugin_timesheeting_writers
+                  INNER JOIN plugin_timesheeting_readers USING (ugroup_id)
                 WHERE ugroup_id = $ugroup_id";
 
         return $this->update($sql);

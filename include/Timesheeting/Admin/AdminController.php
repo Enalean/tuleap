@@ -34,6 +34,7 @@ use User_ForgeUserGroupFactory;
 class AdminController
 {
     const WRITE_ACCESS = 'PLUGIN_TIMESHEETING_WRITE';
+    const READ_ACCESS  = 'PLUGIN_TIMESHEETING_READ';
 
     /**
      * @var TrackerManager
@@ -96,7 +97,7 @@ class AdminController
             $tracker,
             $this->csrf,
             $this->enabler->isTimesheetingEnabledForTracker($tracker),
-            $this->getUGroups($tracker),
+            $this->getReadersUGroupPresenters($tracker),
             $this->getWritersUGroupPresenters($tracker)
         );
 
@@ -113,16 +114,17 @@ class AdminController
         $tracker->displayFooter($this->tracker_manager);
     }
 
-    private function getUGroups(Tracker $tracker)
+    private function getReadersUGroupPresenters(Tracker $tracker)
     {
-        $user_groups  = $this->user_group_factory->getProjectUGroupsWithAdministratorAndMembers($tracker->getProject());
-        $read_ugroups = array();
+        $user_groups      = $this->user_group_factory->getProjectUGroupsWithAdministratorAndMembers($tracker->getProject());
+        $selected_ugroups = $this->timesheeting_ugroup_retriever->getReaderIdsForTracker($tracker);
 
+        $read_ugroups = array();
         foreach ($user_groups as $ugroup) {
             $read_ugroups[] = array(
                 'label'    => $ugroup->getName(),
                 'value'    => $ugroup->getId(),
-                'selected' => false
+                'selected' => in_array($ugroup->getId(), $selected_ugroups)
             );
         }
 
@@ -186,23 +188,47 @@ class AdminController
 
     private function saveUgroups(Tracker $tracker, Codendi_Request $request)
     {
-        $selected_write_ugroup = $request->get('write_ugroups');
-        if ($selected_write_ugroup) {
-            $override_collection = new PermissionsNormalizerOverrideCollection();
-            $normalized_ids = $this->permissions_normalizer->getNormalizedUGroupIds(
-                $tracker->getProject(),
-                $selected_write_ugroup,
-                $override_collection
-            );
+        $selected_write_ugroups = $request->get('write_ugroups');
+        if ($selected_write_ugroups) {
+            $this->saveWriters($tracker, $selected_write_ugroups);
+        }
 
-            if ($this->timesheeting_ugroup_saver->saveWriters($tracker, $normalized_ids)) {
-                $override_collection->emitFeedback(self::WRITE_ACCESS);
+        $selected_read_ugroups = $request->get('read_ugroups');
+        if ($selected_read_ugroups) {
+            $this->saveReaders($tracker, $selected_read_ugroups);
+        }
 
-                $GLOBALS['Response']->addFeedback(
-                    Feedback::INFO,
-                    dgettext('tuleap-timesheeting', 'Permissions successfully saved.')
-                );
-            }
+        $GLOBALS['Response']->addFeedback(
+            Feedback::INFO,
+            dgettext('tuleap-timesheeting', 'Permissions successfully saved.')
+        );
+    }
+
+    private function saveWriters(Tracker $tracker, $selected_write_ugroup)
+    {
+        $override_collection = new PermissionsNormalizerOverrideCollection();
+        $normalized_ids = $this->permissions_normalizer->getNormalizedUGroupIds(
+            $tracker->getProject(),
+            $selected_write_ugroup,
+            $override_collection
+        );
+
+        if ($this->timesheeting_ugroup_saver->saveWriters($tracker, $normalized_ids)) {
+            $override_collection->emitFeedback(self::WRITE_ACCESS);
+        }
+    }
+
+    private function saveReaders(Tracker $tracker, $selected_read_ugroup)
+    {
+        $override_collection = new PermissionsNormalizerOverrideCollection();
+        $normalized_ids = $this->permissions_normalizer->getNormalizedUGroupIds(
+            $tracker->getProject(),
+            $selected_read_ugroup,
+            $override_collection
+        );
+
+        if ($this->timesheeting_ugroup_saver->saveReaders($tracker, $normalized_ids)) {
+            $override_collection->emitFeedback(self::READ_ACCESS);
         }
     }
 }

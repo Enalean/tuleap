@@ -49,4 +49,19 @@ class TimesheetingUgroupRetriever
 
         return $ugroup_ids;
     }
+
+    /**
+     * @return array
+     */
+    public function getReaderIdsForTracker(Tracker $tracker)
+    {
+        $ugroup_rows = $this->dao->getReaders($tracker->getId());
+
+        $ugroup_ids = array();
+        foreach ($ugroup_rows as $ugroup_row) {
+            $ugroup_ids[] = $ugroup_row['ugroup_id'];
+        }
+
+        return $ugroup_ids;
+    }
 }

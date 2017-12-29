@@ -39,4 +39,9 @@ class TimesheetingUgroupSaver
     {
         return $this->dao->saveWriters($tracker->getId(), $ugroup_ids);
     }
+
+    public function saveReaders(Tracker $tracker, array $ugroup_ids)
+    {
+        return $this->dao->saveReaders($tracker->getId(), $ugroup_ids);
+    }
 }
