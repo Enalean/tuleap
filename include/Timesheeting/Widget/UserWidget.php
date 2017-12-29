@@ -20,6 +20,7 @@
 
 namespace Tuleap\Timesheeting\Widget;
 
+use TemplateRendererFactory;
 use Widget;
 
 class UserWidget extends Widget
@@ -54,5 +55,12 @@ class UserWidget extends Widget
     public function getCategory()
     {
         return 'plugin_timesheeting';
+    }
+
+    public function getContent()
+    {
+        $renderer = TemplateRendererFactory::build()->getRenderer(TIMESHEETING_TEMPLATE_DIR);
+
+        return $renderer->renderToString('widget', array());
     }
 }
