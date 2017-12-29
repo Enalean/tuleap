@@ -51,6 +51,7 @@ class timesheetingPlugin extends Plugin
         $this->addHook('project_admin_ugroup_deletion');
         $this->addHook('widget_instance');
         $this->addHook('widgets');
+        $this->addHook('fill_project_history_sub_events');
 
         if (defined('TRACKER_BASE_URL')) {
             $this->addHook(TRACKER_EVENT_FETCH_ADMIN_BUTTONS);
@@ -126,7 +127,8 @@ class timesheetingPlugin extends Plugin
                 new User_ForgeUserGroupFactory(new UserGroupDao()),
                 new PermissionsNormalizer(),
                 new TimesheetingUgroupSaver($timesheeting_ugroup_dao),
-                new TimesheetingUgroupRetriever($timesheeting_ugroup_dao)
+                new TimesheetingUgroupRetriever($timesheeting_ugroup_dao),
+                new ProjectHistoryDao()
             )
         );
 
@@ -207,5 +209,15 @@ class timesheetingPlugin extends Plugin
         if ($params['widget'] === UserWidget::NAME) {
             $params['instance'] = new UserWidget();
         }
+    }
+
+    public function fill_project_history_sub_events($params)
+    {
+        array_push(
+            $params['subEvents']['event_others'],
+            'timesheeting_enabled',
+            'timesheeting_disabled',
+            'timesheeting_permissions_updated'
+        );
     }
 }

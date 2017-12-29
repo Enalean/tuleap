@@ -26,6 +26,7 @@ use Feedback;
 use PermissionsNormalizer;
 use PermissionsNormalizerOverrideCollection;
 use Project;
+use ProjectHistoryDao;
 use TemplateRendererFactory;
 use Tracker;
 use TrackerManager;
@@ -71,6 +72,11 @@ class AdminController
      */
     private $timesheeting_ugroup_retriever;
 
+    /**
+     * @var ProjectHistoryDao
+     */
+    private $project_history_dao;
+
     public function __construct(
         TrackerManager $tracker_manager,
         TimesheetingEnabler $enabler,
@@ -78,7 +84,8 @@ class AdminController
         User_ForgeUserGroupFactory $user_group_factory,
         PermissionsNormalizer $permissions_normalizer,
         TimesheetingUgroupSaver $timesheeting_ugroup_saver,
-        TimesheetingUgroupRetriever $timesheeting_ugroup_retriever
+        TimesheetingUgroupRetriever $timesheeting_ugroup_retriever,
+        ProjectHistoryDao $project_history_dao
     ) {
         $this->tracker_manager               = $tracker_manager;
         $this->enabler                       = $enabler;
@@ -87,6 +94,7 @@ class AdminController
         $this->permissions_normalizer        = $permissions_normalizer;
         $this->timesheeting_ugroup_saver     = $timesheeting_ugroup_saver;
         $this->timesheeting_ugroup_retriever = $timesheeting_ugroup_retriever;
+        $this->project_history_dao           = $project_history_dao;
     }
 
     public function displayAdminForm(Tracker $tracker)
@@ -165,6 +173,12 @@ class AdminController
     {
         $this->enabler->enableTimesheetingForTracker($tracker);
 
+        $this->project_history_dao->groupAddHistory(
+            'timesheeting_enabled',
+            'Timesheeting enabled for tracker ' . $tracker->getName(),
+            $tracker->getGroupId()
+        );
+
         $GLOBALS['Response']->addFeedback(
             Feedback::INFO,
             dgettext('tuleap-timesheeting', 'Timesheeting is enabled for tracker.')
@@ -174,6 +188,12 @@ class AdminController
     private function disableTimesheeting(Tracker $tracker)
     {
         $this->enabler->disableTimesheetingForTracker($tracker);
+
+        $this->project_history_dao->groupAddHistory(
+            'timesheeting_disabled',
+            'Timesheeting disabled for tracker ' . $tracker->getName(),
+            $tracker->getGroupId()
+        );
 
         $GLOBALS['Response']->addFeedback(
             Feedback::INFO,
@@ -201,6 +221,12 @@ class AdminController
         } else {
             $this->timesheeting_ugroup_saver->deleteReaders($tracker);
         }
+
+        $this->project_history_dao->groupAddHistory(
+            'timesheeting_permissions_updated',
+            'Timesheeting permissions updated for tracker ' . $tracker->getName(),
+            $tracker->getGroupId()
+        );
 
         $GLOBALS['Response']->addFeedback(
             Feedback::INFO,
