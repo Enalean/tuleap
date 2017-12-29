@@ -592,8 +592,7 @@ setup_apache() {
     local httpdconfd="/etc/httpd/conf.d"
     local logrtd="/etc/logrotate.d"
     local filesconf=('httpd.conf' 'ssl.conf')
-    local filesconfd=('php.conf' 'subversion.conf' 'auth_mysql.conf'
-                      'tuleap-vhost.conf' 'tuleap-svnroot.conf')
+    local filesconfd=('php.conf' 'subversion.conf' 'tuleap-vhost.conf' 'tuleap-svnroot.conf')
 
     echo "Renaming existing Apache configuration files..."
     cd ${httpdconfd}
