@@ -191,11 +191,15 @@ class AdminController
         $selected_write_ugroups = $request->get('write_ugroups');
         if ($selected_write_ugroups) {
             $this->saveWriters($tracker, $selected_write_ugroups);
+        } else {
+            $this->timesheeting_ugroup_saver->deleteWriters($tracker);
         }
 
         $selected_read_ugroups = $request->get('read_ugroups');
         if ($selected_read_ugroups) {
             $this->saveReaders($tracker, $selected_read_ugroups);
+        } else {
+            $this->timesheeting_ugroup_saver->deleteReaders($tracker);
         }
 
         $GLOBALS['Response']->addFeedback(

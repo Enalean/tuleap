@@ -44,4 +44,14 @@ class TimesheetingUgroupSaver
     {
         return $this->dao->saveReaders($tracker->getId(), $ugroup_ids);
     }
+
+    public function deleteWriters(Tracker $tracker)
+    {
+        return $this->dao->deleteWritersForTracker($tracker->getId());
+    }
+
+    public function deleteReaders(Tracker $tracker)
+    {
+        return $this->dao->deleteReadersForTracker($tracker->getId());
+    }
 }

@@ -50,7 +50,7 @@ class TimesheetingUgroupDao extends DataAccessObject
         }
     }
 
-    private function deleteWritersForTracker($tracker_id)
+    public function deleteWritersForTracker($tracker_id)
     {
         $tracker_id = $this->da->escapeInt($tracker_id);
 
@@ -95,7 +95,7 @@ class TimesheetingUgroupDao extends DataAccessObject
         }
     }
 
-    private function deleteReadersForTracker($tracker_id)
+    public function deleteReadersForTracker($tracker_id)
     {
         $tracker_id = $this->da->escapeInt($tracker_id);
 
