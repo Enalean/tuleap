@@ -121,7 +121,7 @@ class timesheetingPlugin extends Plugin
         $router = new Router(
             new AdminController(
                 new TrackerManager(),
-                new TimesheetingEnabler(new AdminDao()),
+                $this->getTimesheetingEnabler(),
                 new CSRFSynchronizerToken($tracker->getAdministrationUrl()),
                 new User_ForgeUserGroupFactory(new UserGroupDao()),
                 new PermissionsNormalizer(),
@@ -145,6 +145,11 @@ class timesheetingPlugin extends Plugin
 
     public function tracker_view_get_additional_content(GetAdditionalContent $event)
     {
+        $tracker = $event->getArtifact()->getTracker();
+        if (! $this->getTimesheetingEnabler()->isTimesheetingEnabledForTracker($tracker)) {
+            return;
+        }
+
         $renderer  = TemplateRendererFactory::build()->getRenderer(TIMESHEETING_TEMPLATE_DIR);
         $presenter = new FieldsetPresenter();
 
@@ -154,6 +159,14 @@ class timesheetingPlugin extends Plugin
         );
 
         $event->setContent($content);
+    }
+
+    /**
+     * @return TimesheetingEnabler
+     */
+    private function getTimesheetingEnabler()
+    {
+        return new TimesheetingEnabler(new AdminDao());
     }
 
     public function permission_get_name(array $params)
