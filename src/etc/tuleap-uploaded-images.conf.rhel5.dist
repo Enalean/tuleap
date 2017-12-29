@@ -1,7 +1,0 @@
-Alias /images "/var/lib/codendi/images"
-<Directory "/var/lib/codendi/images">
-    Options None
-    AllowOverride None
-    Order allow,deny
-    Allow from all
-</Directory>
