@@ -126,7 +126,7 @@ class BurnupDataBuilder
         }
 
         $now = time();
-        if ($burnup_data->getTimePeriod()->getEndDate() > $now) {
+        if ($now >= $burnup_data->getTimePeriod()->getStartDate() && $now <= $burnup_data->getTimePeriod()->getEndDate()) {
             $burnup_data->addEffort($this->getCurrentEffort($artifact), $now);
         }
     }
