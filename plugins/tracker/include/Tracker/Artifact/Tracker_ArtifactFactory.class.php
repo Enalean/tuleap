@@ -160,6 +160,10 @@ class Tracker_ArtifactFactory {
             }
         }
 
+        if (empty($not_cached_artifact_ids)) {
+            return $artifacts;
+        }
+
         $rows = $this->getDao()->searchByIds($not_cached_artifact_ids);
         foreach ($rows as $row) {
             $artifact                            = $this->getInstanceFromRow($row);
