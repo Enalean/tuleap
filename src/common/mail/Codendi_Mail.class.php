@@ -92,7 +92,10 @@ class Codendi_Mail implements Codendi_Mail_Interface {
 
     public function setMessageId($message_id)
     {
-        $this->message->setMessageId($message_id);
+        $message_id_header = new Mail\Header\MessageId();
+        $message_id_header->setId($message_id);
+        $this->message->getHeaders()->removeHeader($message_id_header->getFieldName());
+        $this->message->getHeaders()->addHeader($message_id_header);
     }
 
     /**
