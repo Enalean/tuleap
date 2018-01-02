@@ -44,8 +44,6 @@ AutoReqProv: no
 
 Requires: vixie-cron >= 4.1-9, tmpwatch
 # Php and web related stuff
-Requires: %{php_base}, %{php_base}-mysql, %{php_base}-xml, %{php_base}-mbstring, %{php_base}-gd, %{php_base}-soap, %{php_base}-pear, gd, %{php_base}-intl
-Requires: %{php_base}-process
 Requires: rh-php56-php-mysqlnd, rh-php56-php-pdo, rh-php56-php-xml, rh-php56-php-mbstring, rh-php56-php-gd,
 Requires: rh-php56-php-soap, rh-php56-php-pear, rh-php56-php-intl, rh-php56-php-process, rh-php56-php-cli
 Requires: rh-php56-php-bcmath, rh-php56-php-fpm, rh-php56-php-opcache, rh-php56-php-pecl-jsonc
@@ -53,12 +51,10 @@ Requires: dejavu-lgc-sans-fonts, dejavu-lgc-sans-mono-fonts, dejavu-lgc-serif-fo
 
 Requires: jpgraph-%{PKG_NAME}
 Requires: ckeditor >= 4.3.2
-Requires: %{php_base}-password-compat
 
-Requires: %{php_base}-pecl-apc
 Requires: curl
 Requires: php-ZendFramework2-Loader, php-ZendFramework2-Mail
-Requires: %{php_base}-markdown
+Requires: php-markdown
 Requires: tuleap-core-subversion
 
 # PHPWiki
@@ -86,7 +82,7 @@ Requires(post): policycoreutils-python
 # Bind utils
 Requires: bind-utils
 
-Obsoletes: %{php_base}-restler, php-amqplib-amqplib
+Obsoletes: php-restler, php-amqplib-amqplib
 
 %description
 Tuleap is a web based application that address all the aspects of product development.
@@ -160,7 +156,7 @@ Summary: ForumML plugin for Tuleap
 Group: Development/Tools
 Version: @@PLUGIN_FORUMML_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, %{php_base}-pear-Mail-mimeDecode %{php_base}-pear-Mail-Mime %{php_base}-pear-Mail-Mbox %{php_base}-pear-Mail
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, php-pear-Mail-mimeDecode php-pear-Mail-Mime php-pear-Mail-Mbox php-pear-Mail
 Requires: tuleap-core-mailman
 Provides: tuleap-plugin-forumml = %{version}
 %description plugin-forumml
@@ -184,7 +180,7 @@ Group: Development/Tools
 Version: @@PLUGIN_GIT_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
 AutoReqProv: no
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, git > 1.7.4, %{php_base}-Smarty, %{php_base}-markdown, gitolite = 2.3.1, gitphp-tuleap >= 0.2.5-15
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, git > 1.7.4, php-Smarty, php-markdown, gitolite = 2.3.1, gitphp-tuleap >= 0.2.5-15
 Requires: geshi, php-guzzle-Guzzle, sudo
 Provides: tuleap-plugin-git = %{version}
 Conflicts: tuleap-plugin-git-gitolite3
@@ -199,7 +195,7 @@ Group: Development/Tools
 Version: @@PLUGIN_GIT_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
 AutoReqProv: no
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, rh-git29-git, %{php_base}-Smarty, %{php_base}-markdown, gitolite3, gitphp-tuleap >= 0.2.5-15
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, rh-git29-git, php-Smarty, php-markdown, gitolite3, gitphp-tuleap >= 0.2.5-15
 Requires: geshi, php-guzzle-Guzzle, sudo
 Provides: tuleap-plugin-git = %{version}
 Conflicts: tuleap-plugin-git
@@ -222,7 +218,7 @@ Summary: Tuleap plugin to manage LDAP integration
 Group: Development/Tools
 Version: @@PLUGIN_LDAP_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, %{php_base}-ldap, perl-LDAP, python-ldap, rh-php56-php-ldap
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, perl-LDAP, python-ldap, rh-php56-php-ldap
 Provides: tuleap-plugin-ldap = %{version}
 %description plugin-ldap
 LDAP Plugin for Tuleap. Provides LDAP information, LDAP
@@ -273,7 +269,7 @@ Group: Development/Tools
 Version: @@PLUGIN_WEBDAV_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
-Requires: %{php_base}-sabredav = 1.4.4
+Requires: php-sabredav = 1.4.4
 %description plugin-webdav
 Plugin to access to file releases & docman though WebDAV
 
@@ -283,7 +279,7 @@ Summary: Tracker v5 for Tuleap
 Group: Development/Tools
 Version: @@PLUGIN_TRACKER_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, libxslt, %{php_base}-imap, rh-php56-php-imap
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, libxslt, rh-php56-php-imap
 %description plugin-tracker
 New tracker generation for Tuleap.
 
@@ -333,7 +329,7 @@ Group: Development/Tools
 Version: @@PLUGIN_FULLTEXTSEARCH_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
-Requires: %{php_base}-elasticsearch
+Requires: php-elasticsearch
 %description plugin-fulltextsearch
 Allows documents of the docman to be searched in a full-text manner.
 
@@ -371,7 +367,7 @@ Group: Development/Tools
 Version: @@PLUGIN_OPENIDCONNECTCLIENT_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
-Requires: %{php_base}-openid-connect-client
+Requires: php-openid-connect-client
 %description plugin-openidconnectclient
 Connect to Tuleap using an OpenID Connect provider
 
@@ -381,7 +377,7 @@ Group: Development/Tools
 Version: @@PLUGIN_PROFTPD_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
-Requires: %{php_base}-pear-HTTP-Download >= 1.1.4-3
+Requires: php-pear-HTTP-Download >= 1.1.4-3
 %description plugin-proftpd
 Control and interfact with Proftpd as FTP server
 

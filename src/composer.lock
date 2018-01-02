@@ -4,8 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "e9adfe962bf00707ef0507d5b09af222",
-    "content-hash": "fd99022336a9c49fc6a1a4413546ed05",
+    "content-hash": "ca4b97e947387abb7e44041dd3ecff1b",
     "packages": [
         {
             "name": "ezyang/htmlpurifier",
@@ -52,7 +51,7 @@
             "keywords": [
                 "html"
             ],
-            "time": "2017-06-03 02:28:16"
+            "time": "2017-06-03T02:28:16+00:00"
         },
         {
             "name": "firebase/php-jwt",
@@ -98,7 +97,7 @@
             ],
             "description": "A simple library to encode and decode JSON Web Tokens (JWT) in PHP. Should conform to the current spec.",
             "homepage": "https://github.com/firebase/php-jwt",
-            "time": "2017-06-27 22:17:23"
+            "time": "2017-06-27T22:17:23+00:00"
         },
         {
             "name": "luracast/restler",
@@ -167,7 +166,7 @@
             "support": {
                 "source": "https://github.com/Enalean/Restler/tree/3.0.0-RC6"
             },
-            "time": "2017-12-05 08:49:39"
+            "time": "2017-12-05T08:49:39+00:00"
         },
         {
             "name": "mustache/mustache",
@@ -215,7 +214,7 @@
             "support": {
                 "source": "https://github.com/Enalean/mustache.php/tree/feature/strict-variables"
             },
-            "time": "2017-12-08 15:59:09"
+            "time": "2017-12-08T15:59:09+00:00"
         },
         {
             "name": "paragonie/random_compat",
@@ -263,20 +262,20 @@
                 "pseudorandom",
                 "random"
             ],
-            "time": "2017-09-27 21:40:39"
+            "time": "2017-09-27T21:40:39+00:00"
         },
         {
             "name": "paragonie/sodium_compat",
-            "version": "v1.4.0",
+            "version": "v1.5.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/sodium_compat.git",
-                "reference": "9bfa05311d1851db0bbc2ad453c7083b9996b5b4"
+                "reference": "bb652faf69416b56ecdb3f92a16fd49f7c2a1bf7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/sodium_compat/zipball/9bfa05311d1851db0bbc2ad453c7083b9996b5b4",
-                "reference": "9bfa05311d1851db0bbc2ad453c7083b9996b5b4",
+                "url": "https://api.github.com/repos/paragonie/sodium_compat/zipball/bb652faf69416b56ecdb3f92a16fd49f7c2a1bf7",
+                "reference": "bb652faf69416b56ecdb3f92a16fd49f7c2a1bf7",
                 "shasum": ""
             },
             "require": {
@@ -345,7 +344,7 @@
                 "secret-key cryptography",
                 "side-channel resistant"
             ],
-            "time": "2017-11-28 15:55:13"
+            "time": "2018-01-02T11:03:32+00:00"
         },
         {
             "name": "php-amqplib/php-amqplib",
@@ -415,7 +414,7 @@
                 "queue",
                 "rabbitmq"
             ],
-            "time": "2017-08-03 22:06:21"
+            "time": "2017-08-03T22:06:21+00:00"
         }
     ],
     "packages-dev": [],
@@ -430,7 +429,7 @@
     "platform": [],
     "platform-dev": [],
     "platform-overrides": {
-        "php": "5.3.3",
+        "php": "5.6.25",
         "ext-bcmath": "0",
         "ext-mbstring": "0"
     }

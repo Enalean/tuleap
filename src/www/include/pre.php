@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2017. All rights reserved
+ * Copyright (c) Enalean, 2011 - 2018. All rights reserved
  * Copyright 1999-2000 (c) The SourceForge Crew
  *
  * This file is a part of Tuleap.
@@ -23,8 +23,8 @@ use Tuleap\BurningParrotCompatiblePageDetector;
 use Tuleap\Request\CurrentPage;
 use Tuleap\TimezoneRetriever;
 
-if (version_compare(phpversion(), '5.3', '<') && version_compare(phpversion(), '7', '>=')) {
-    die('Tuleap must be run on a PHP 5.3 (or greater) engine.  PHP 7 is not yet supported.');
+if (version_compare(PHP_VERSION, '5.6', '<') && version_compare(PHP_VERSION, '7', '>=')) {
+    die('Tuleap must be run on a PHP 5.6 (or greater) engine.  PHP 7 is not yet supported.');
 }
 
 require_once('common/constants.php');

@@ -21,10 +21,6 @@ server {
         client_max_body_size 256M;
 
         include conf.d/tuleap.d/*.conf;
-
-        # Available here in case of emergency, uncomment the
-        # line below (and comment the line above)
-        #include conf.d/tuleap-apache.proxy;
 }
 
 server {
