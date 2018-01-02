@@ -32,6 +32,18 @@
                       release-time="2015-12-08T16:55:00">
                   <user format="username">rest_api_tester_1</user>
               </link>
+              <file
+                  src="data/authors.txt"
+                  md5sum="7865eaef28db1b906eaf1e4fa353796d"
+                  name="BooksAuthors.txt"
+                  release-time="2015-12-03T14:55:00"
+                  post-date="2015-12-03T16:46:00"
+                  arch="x86_64"
+                  filetype="text"
+              >
+                  <description>List of book authors</description>
+                  <user format="username">rest_api_tester_1</user>
+              </file>
           </release>
       </package>
   </frs>
