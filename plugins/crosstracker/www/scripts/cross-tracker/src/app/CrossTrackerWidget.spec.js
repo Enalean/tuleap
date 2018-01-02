@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,7 +24,6 @@ import BackendCrossTrackerReport       from './backend-cross-tracker-report.js';
 import ReadingCrossTrackerReport       from './reading-mode/reading-cross-tracker-report.js';
 import WritingCrossTrackerReport       from './writing-mode/writing-cross-tracker-report.js';
 import SavedState                      from './report-saved-state.js';
-import WritingMode                     from './writing-mode/WritingMode.vue';
 
 describe("CrossTrackerWidget", () => {
     let Widget,
@@ -36,11 +35,7 @@ describe("CrossTrackerWidget", () => {
         errorDisplayer,
         savedState,
         queryResultController,
-        projectSelector,
-        trackerSelectionController,
-        readingController,
-        trackerSelector,
-        trackerSelectionLoader;
+        readingController;
 
     beforeEach(() => {
         const report_id = 86;
@@ -53,11 +48,7 @@ describe("CrossTrackerWidget", () => {
         successDisplayer           = jasmine.createSpyObj("successDisplayer", ["hideSuccess"]);
         errorDisplayer             = jasmine.createSpyObj("errorDisplayer", ["hideError"]);
         queryResultController      = jasmine.createSpyObj("queryResultController", ["init", "loadFirstBatchOfArtifacts"]);
-        projectSelector            = jasmine.createSpyObj("projectSelector", ["init", "loadProjectsOnce"]);
-        trackerSelectionController = jasmine.createSpyObj("trackerSelectionController", ["init"]);
         readingController          = jasmine.createSpyObj("readingController", ["init"]);
-        trackerSelector            = jasmine.createSpyObj("trackerSelector", ["init"]);
-        trackerSelectionLoader     = jasmine.createSpyObj("trackerSelectionLoader", ["init"]);
 
         spyOn(writingCrossTrackerReport, "duplicateFromReport");
         spyOn(readingCrossTrackerReport, "duplicateFromReport");
@@ -73,11 +64,7 @@ describe("CrossTrackerWidget", () => {
                 errorDisplayer,
                 savedState,
                 queryResultController,
-                projectSelector,
-                trackerSelectionController,
                 readingController,
-                trackerSelector,
-                trackerSelectionLoader,
             }
         });
         vm.$mount();
@@ -89,32 +76,31 @@ describe("CrossTrackerWidget", () => {
         beforeEach(() => {
             isAnonymous = jasmine.createSpy("isAnonymous").and.returnValue(false);
             rewire$isAnonymous(isAnonymous);
-            spyOn(WritingMode.methods, "refresh");
         });
 
         afterEach(() => {
             restore();
         });
 
-        it("when I switch to the writing mode, then the list of projects will be loaded once and the writing report will be updated and the feedbacks hidden", () => {
+        it("when I switch to the writing mode, then the  writing report will be updated and the feedbacks hidden", () => {
             const vm = instantiateComponent();
 
             vm.switchToWritingMode();
 
-            expect(projectSelector.loadProjectsOnce).toHaveBeenCalled();
             expect(writingCrossTrackerReport.duplicateFromReport).toHaveBeenCalledWith(readingCrossTrackerReport);
             expect(successDisplayer.hideSuccess).toHaveBeenCalled();
             expect(errorDisplayer.hideError).toHaveBeenCalled();
-            expect(WritingMode.methods.refresh).toHaveBeenCalled();
+            expect(vm.reading_mode).toBe(false);
         });
 
-        it("Given I am browsing anonymously, when I try to switch to writing mode, then then nothing will happen", () => {
+        it("Given I am browsing anonymously, when I try to switch to writing mode, then nothing will happen", () => {
             isAnonymous.and.returnValue(true);
             const vm = instantiateComponent();
 
             vm.switchToWritingMode();
 
-            expect(projectSelector.loadProjectsOnce).not.toHaveBeenCalled();
+            expect(writingCrossTrackerReport.duplicateFromReport).not.toHaveBeenCalled();
+            expect(vm.reading_mode).toBe(true);
         });
     });
 
@@ -131,6 +117,7 @@ describe("CrossTrackerWidget", () => {
             expect(vm.$refs.reading_mode.hideActions).toHaveBeenCalled();
             expect(successDisplayer.hideSuccess).toHaveBeenCalled();
             expect(errorDisplayer.hideError).toHaveBeenCalled();
+            expect(vm.reading_mode).toBe(true);
         });
 
         it("When I switch to the reading mode with unsaved state, then a batch of artifacts will be loaded, the reading report will be updated, the reading action buttons shown and the feedbacks hidden", () => {
@@ -146,6 +133,7 @@ describe("CrossTrackerWidget", () => {
             expect(vm.$refs.reading_mode.showActions).toHaveBeenCalled();
             expect(successDisplayer.hideSuccess).toHaveBeenCalled();
             expect(errorDisplayer.hideError).toHaveBeenCalled();
+            expect(vm.reading_mode).toBe(true);
         });
     });
 });

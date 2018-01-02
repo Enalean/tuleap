@@ -1,29 +1,36 @@
+/**
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 (<template>
     <div class="cross-tracker-writing-mode">
-        <div class="dashboard-widget-content-cross-tracker-form">
-            <div class="dashboard-widget-content-cross-tracker-form-projects tlp-form-element">
-                <label class="tlp-label" for="project">{{ project_label }} <i class="fa fa-asterisk"></i></label>
-                <select class="dashboard-widget-content-cross-tracker-form-projects-input tlp-select" id="project" name="project">
-                </select>
-            </div>
-            <div class="dashboard-widget-content-cross-tracker-form-trackers tlp-form-element">
-                <label class="tlp-label" for="tracker">{{ tracker_label }} <i class="fa fa-asterisk"></i></label>
-                <div class="tlp-form-element tlp-form-element-append">
-                    <select class="dashboard-widget-content-cross-tracker-form-trackers-input tlp-select" id="tracker" name="tracker">
-                    </select>
-                    <button type="button"
-                            class="dashboard-widget-content-cross-tracker-form-trackers-add tlp-append tlp-append tlp-button-primary tlp-button-outline tlp-button"
-                    >
-                        <i class="cross-tracker-loader tlp-button-icon fa fa-spinner fa-spin"></i>
-                        <i class="cross-tracker-add-icon fa fa-plus tlp-button-icon"></i> {{ add_button_label }}
-                    </button>
-                </div>
-            </div>
-        </div>
-        <div class="dashboard-widget-content-cross-tracker-form-trackers-selected"></div>
+        <tracker-selection
+            ref="tracker_selection"
+            v-bind:error-displayer="errorDisplayer"
+            v-bind:selected-trackers="selected_trackers"
+            v-on:trackerAdded="addTrackerToSelection"
+        ></tracker-selection>
+        <tracker-list-writing-mode
+            v-bind:trackers="selected_trackers"
+            v-on:trackerRemoved="removeTrackerFromSelection"
+        ></tracker-list-writing-mode>
         <query-editor
             ref="query_editor"
-            v-if="is_report_loaded"
             v-bind:writing-cross-tracker-report="writingCrossTrackerReport"
             v-on:triggerSearch="search"
         ></query-editor>
@@ -40,25 +47,31 @@
     </div>
 </template>)
 (<script>
-    import { gettext_provider } from '../gettext-provider.js';
-    import QueryEditor          from './QueryEditor.vue';
+    import { gettext_provider }             from '../gettext-provider.js';
+    import QueryEditor                      from './QueryEditor.vue';
+    import TrackerSelection                 from './TrackerSelection.vue';
+    import TrackerListWritingMode           from './TrackerListWritingMode.vue';
+    import { TooManyTrackersSelectedError } from './writing-cross-tracker-report.js';
 
     export default {
-        components: { QueryEditor },
         name: 'WritingMode',
+        components: {
+            QueryEditor,
+            TrackerSelection,
+            TrackerListWritingMode
+        },
         props: [
-            'backendCrossTrackerReport',
-            'writingCrossTrackerReport'
+            'writingCrossTrackerReport',
+            'errorDisplayer'
         ],
+        data() {
+            return {
+                selected_trackers: []
+            };
+        },
         computed: {
-            project_label   : () => gettext_provider.gettext("Project"),
-            tracker_label   : () => gettext_provider.gettext("Tracker"),
-            search_label    : () => gettext_provider.gettext("Search"),
-            cancel_label    : () => gettext_provider.gettext("Cancel"),
-            add_button_label: () => gettext_provider.gettext("Add"),
-            is_report_loaded() {
-                return this.backendCrossTrackerReport.loaded;
-            },
+            search_label: () => gettext_provider.gettext("Search"),
+            cancel_label: () => gettext_provider.gettext("Cancel"),
         },
         methods: {
             cancel() {
@@ -67,9 +80,39 @@
             search() {
                 this.$emit('switchToReadingMode', { saved_state: false });
             },
-            refresh() {
-                this.$refs.query_editor.refresh();
-            }
+
+            addTrackerToSelection({ selected_project, selected_tracker }) {
+                try {
+                    this.writingCrossTrackerReport.addTracker(selected_project, selected_tracker);
+                    this.updateSelectedTrackers();
+                } catch (error) {
+                    if (error instanceof TooManyTrackersSelectedError) {
+                        this.errorDisplayer.displayError(gettext_provider.gettext('Tracker selection is limited to 10 trackers'));
+                    } else {
+                        throw error;
+                    }
+                }
+            },
+
+            removeTrackerFromSelection({ tracker_id }) {
+                this.writingCrossTrackerReport.removeTracker(tracker_id);
+                this.updateSelectedTrackers();
+                this.errorDisplayer.hideError();
+            },
+
+            updateSelectedTrackers() {
+                const trackers = [...this.writingCrossTrackerReport.getTrackers()];
+                this.selected_trackers = trackers.map(({ tracker, project }) => {
+                    return {
+                        tracker_id   : tracker.id,
+                        tracker_label: tracker.label,
+                        project_label: project.label
+                    };
+                });
+            },
+        },
+        mounted() {
+            this.updateSelectedTrackers();
         }
     }
 </script>)

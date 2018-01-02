@@ -52,23 +52,6 @@ describe("QueryEditor", () => {
         });
     });
 
-    describe("refresh()", () => {
-        it("When I refresh, then the code mirror instance is refreshed and its value is updated", () => {
-            jasmine.clock().install();
-            const vm = instantiateComponent();
-            spyOn(vm.code_mirror_instance, "refresh");
-            spyOn(vm.code_mirror_instance, "setValue");
-
-            vm.refresh();
-            jasmine.clock().tick(1);
-
-            expect(vm.code_mirror_instance.setValue).toHaveBeenCalledWith(writingCrossTrackerReport.expert_query);
-            expect(vm.code_mirror_instance.refresh).toHaveBeenCalled();
-
-            jasmine.clock().uninstall();
-        });
-    });
-
     describe("search()", () => {
         it("When I search, then an event will be emitted", () => {
             const vm = instantiateComponent();
