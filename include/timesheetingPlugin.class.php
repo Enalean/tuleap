@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,11 +25,12 @@ use Tuleap\Timesheeting\Admin\TimesheetingEnabler;
 use Tuleap\Timesheeting\Admin\TimesheetingUgroupDao;
 use Tuleap\Timesheeting\Admin\TimesheetingUgroupRetriever;
 use Tuleap\Timesheeting\Admin\TimesheetingUgroupSaver;
-use Tuleap\Timesheeting\Fieldset\FieldsetPresenter;
+use Tuleap\Timesheeting\ArtifactView\ArtifactView;
+use Tuleap\Timesheeting\ArtifactView\ArtifactViewPresenter;
+use Tuleap\Timesheeting\Permissions\PermissionsRetriever;
 use Tuleap\Timesheeting\TimesheetingPluginInfo;
 use Tuleap\Timesheeting\Router;
 use Tuleap\Timesheeting\Widget\UserWidget;
-use Tuleap\Tracker\Artifact\Event\GetAdditionalContent;
 
 require_once 'autoload.php';
 require_once 'constants.php';
@@ -55,7 +56,7 @@ class timesheetingPlugin extends Plugin
 
         if (defined('TRACKER_BASE_URL')) {
             $this->addHook(TRACKER_EVENT_FETCH_ADMIN_BUTTONS);
-            $this->addHook(GetAdditionalContent::NAME);
+            $this->addHook(Tracker_Artifact_EditRenderer::EVENT_ADD_VIEW_IN_COLLECTION);
         }
 
         return parent::getHooksAndCallbacks();
@@ -127,7 +128,7 @@ class timesheetingPlugin extends Plugin
                 new User_ForgeUserGroupFactory(new UserGroupDao()),
                 new PermissionsNormalizer(),
                 new TimesheetingUgroupSaver($timesheeting_ugroup_dao),
-                new TimesheetingUgroupRetriever($timesheeting_ugroup_dao),
+                $this->getTimesheetingUgroupRetriever(),
                 new ProjectHistoryDao()
             )
         );
@@ -145,22 +146,45 @@ class timesheetingPlugin extends Plugin
         $GLOBALS['Response']->redirect('/');
     }
 
-    public function tracker_view_get_additional_content(GetAdditionalContent $event)
+    /**
+     * @return TimesheetingUgroupRetriever
+     */
+    private function getTimesheetingUgroupRetriever()
     {
-        $tracker = $event->getArtifact()->getTracker();
+        return new TimesheetingUgroupRetriever(new TimesheetingUgroupDao());
+    }
+
+    /** @see Tracker_Artifact_EditRenderer::EVENT_ADD_VIEW_IN_COLLECTION */
+    public function tracker_artifact_editrenderer_add_view_in_collection(array $params)
+    {
+        $user       = $params['user'];
+        $request    = $params['request'];
+        $artifact   = $params['artifact'];
+        $collection = $params['collection'];
+
+        $tracker = $artifact->getTracker();
+        $project = $tracker->getProject();
+
+        if (! $this->isAllowed($project->getId())) {
+            return;
+        }
+
         if (! $this->getTimesheetingEnabler()->isTimesheetingEnabledForTracker($tracker)) {
             return;
         }
 
-        $renderer  = TemplateRendererFactory::build()->getRenderer(TIMESHEETING_TEMPLATE_DIR);
-        $presenter = new FieldsetPresenter();
+        $permissions_retriever = new PermissionsRetriever($this->getTimesheetingUgroupRetriever());
 
-        $content = $renderer->renderToString(
-            'fieldset',
-            $presenter
-        );
+        if (! $permissions_retriever->userCanAddTimeInTracker($user, $tracker) &&
+            ! $permissions_retriever->userCanSeeAggregatedTimesInTracker($user, $tracker)
+        ) {
+            return;
+        }
 
-        $event->setContent($content);
+        $presenter = new ArtifactViewPresenter();
+        $view      = new ArtifactView($artifact, $request, $user, $presenter);
+
+        $collection->add($view);
     }
 
     /**
