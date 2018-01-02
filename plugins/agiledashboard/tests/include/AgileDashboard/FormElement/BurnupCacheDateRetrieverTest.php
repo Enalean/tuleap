@@ -26,7 +26,7 @@ class BurnupCacheDateRetrieverTest extends \TuleapTestCase
 {
     public function itGetsDaysToCacheWhenPeriodIsOngoing()
     {
-        $start_date = \DateTime::createFromFormat('d-m-Y', '18-12-2017');
+        $start_date = \DateTime::createFromFormat('d-m-Y H:i', '18-12-2017 00:00');
         $yesterday  = \DateTime::createFromFormat('d-m-Y', '20-12-2017');
         $period     = new \TimePeriodWithoutWeekEnd($start_date->getTimestamp(), 5);
 
@@ -34,8 +34,8 @@ class BurnupCacheDateRetrieverTest extends \TuleapTestCase
         $days_to_cache        = $date_cache_retriever->getWorkedDaysToCacheForPeriod($period, $yesterday);
 
         $expected_days = array(
-            \DateTime::createFromFormat('d-m-Y H:i', '19-12-2017 00:00')->getTimestamp(),
-            \DateTime::createFromFormat('d-m-Y H:i', '20-12-2017 00:00')->getTimestamp()
+            \DateTime::createFromFormat('d-m-Y H:i:s', '18-12-2017 23:59:59')->getTimestamp(),
+            \DateTime::createFromFormat('d-m-Y H:i:s', '19-12-2017 23:59:59')->getTimestamp()
         );
 
         $this->assertEqual($days_to_cache, $expected_days);
@@ -43,7 +43,7 @@ class BurnupCacheDateRetrieverTest extends \TuleapTestCase
 
     public function itGetsDaysToCacheWhenPeriodHasEnded()
     {
-        $start_date = \DateTime::createFromFormat('d-m-Y', '18-12-2017');
+        $start_date = \DateTime::createFromFormat('d-m-Y H:i', '18-12-2017 00:00');
         $yesterday  = \DateTime::createFromFormat('d-m-Y', '26-12-2017');
         $period     = new \TimePeriodWithoutWeekEnd($start_date->getTimestamp(), 2);
 
@@ -51,9 +51,9 @@ class BurnupCacheDateRetrieverTest extends \TuleapTestCase
         $days_to_cache        = $date_cache_retriever->getWorkedDaysToCacheForPeriod($period, $yesterday);
 
         $expected_days = array(
-            \DateTime::createFromFormat('d-m-Y H:i', '19-12-2017 00:00')->getTimestamp(),
-            \DateTime::createFromFormat('d-m-Y H:i', '20-12-2017 00:00')->getTimestamp(),
-            \DateTime::createFromFormat('d-m-Y H:i', '21-12-2017 00:00')->getTimestamp()
+            \DateTime::createFromFormat('d-m-Y H:i:s', '18-12-2017 23:59:59')->getTimestamp(),
+            \DateTime::createFromFormat('d-m-Y H:i:s', '19-12-2017 23:59:59')->getTimestamp(),
+            \DateTime::createFromFormat('d-m-Y H:i:s', '20-12-2017 23:59:59')->getTimestamp()
         );
 
         $this->assertEqual($days_to_cache, $expected_days);
@@ -61,7 +61,7 @@ class BurnupCacheDateRetrieverTest extends \TuleapTestCase
 
     public function itGetsDayToCacheWhenPeriodHasNotYetStarted()
     {
-        $start_date = \DateTime::createFromFormat('d-m-Y', '26-12-2017');
+        $start_date = \DateTime::createFromFormat('d-m-Y H:i', '26-12-2017 00:00');
         $yesterday  = \DateTime::createFromFormat('d-m-Y', '20-12-2017');
         $period     = new \TimePeriodWithoutWeekEnd($start_date->getTimestamp(), 4);
 
@@ -75,7 +75,7 @@ class BurnupCacheDateRetrieverTest extends \TuleapTestCase
 
     public function itGetsDayToCacheWhenPeriodHasAWeekEnd()
     {
-        $start_date = \DateTime::createFromFormat('d-m-Y', '21-12-2017');
+        $start_date = \DateTime::createFromFormat('d-m-Y H:i', '21-12-2017 00:00');
         $yesterday  = \DateTime::createFromFormat('d-m-Y', '27-12-2017');
         $period     = new \TimePeriodWithoutWeekEnd($start_date->getTimestamp(), 5);
 
@@ -83,10 +83,10 @@ class BurnupCacheDateRetrieverTest extends \TuleapTestCase
         $days_to_cache        = $date_cache_retriever->getWorkedDaysToCacheForPeriod($period, $yesterday);
 
         $expected_days = array(
-            \DateTime::createFromFormat('d-m-Y H:i', '22-12-2017 00:00')->getTimestamp(),
-            \DateTime::createFromFormat('d-m-Y H:i', '25-12-2017 00:00')->getTimestamp(),
-            \DateTime::createFromFormat('d-m-Y H:i', '26-12-2017 00:00')->getTimestamp(),
-            \DateTime::createFromFormat('d-m-Y H:i', '27-12-2017 00:00')->getTimestamp()
+            \DateTime::createFromFormat('d-m-Y H:i:s', '21-12-2017 23:59:59')->getTimestamp(),
+            \DateTime::createFromFormat('d-m-Y H:i:s', '22-12-2017 23:59:59')->getTimestamp(),
+            \DateTime::createFromFormat('d-m-Y H:i:s', '25-12-2017 23:59:59')->getTimestamp(),
+            \DateTime::createFromFormat('d-m-Y H:i:s', '26-12-2017 23:59:59')->getTimestamp()
         );
 
         $this->assertEqual($days_to_cache, $expected_days);

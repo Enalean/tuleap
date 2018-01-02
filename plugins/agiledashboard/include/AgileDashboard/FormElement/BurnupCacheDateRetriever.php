@@ -43,7 +43,7 @@ class BurnupCacheDateRetriever
 
         $day = array();
 
-        while ($start_date <= $end_date && $start_date <= $yesterday) {
+        while ($start_date < $end_date && $start_date < $yesterday) {
             if ($burnup_period->isNotWeekendDay($start_date->getTimestamp())) {
                 $day[] = $start_date->getTimestamp();
             }
@@ -58,14 +58,13 @@ class BurnupCacheDateRetriever
     {
         $start_date = new DateTime();
         $start_date->setTimestamp($burnup_period->getStartDate());
-        $this->addOneDayToDateTime($start_date);
+        $start_date->setTime(23, 59, 59);
 
         return $start_date;
     }
 
     private function addOneDayToDateTime(DateTime $date)
     {
-        $date->setTime(0, 0, 0);
         $date->modify('+1 day');
 
         return $date;
