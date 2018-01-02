@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,3 +20,4 @@
 import 'babel-polyfill';
 import './CrossTrackerWidget.spec.js';
 import './reading-mode/ReadingMode.spec.js';
+import './writing-mode/QueryEditor.spec.js';
