@@ -5,6 +5,7 @@
             v-show="reading_mode"
             v-bind:backend-cross-tracker-report="backendCrossTrackerReport"
             v-bind:reading-cross-tracker-report="readingCrossTrackerReport"
+            v-bind:reading-controller="readingController"
             v-on:switchToWritingMode="switchToWritingMode"
         ></reading-mode>
         <writing-mode
