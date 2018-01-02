@@ -65,6 +65,7 @@
             },
             refresh() {
                 window.setTimeout(() => {
+                    this.code_mirror_instance.setValue(this.writingCrossTrackerReport.expert_query);
                     this.code_mirror_instance.refresh();
                 }, 0);
             },
