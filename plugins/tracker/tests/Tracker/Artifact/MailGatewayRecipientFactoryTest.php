@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -74,7 +74,7 @@ class Tracker_Artifact_MailGatewayRecipientFactoryTest extends TuleapTestCase {
     }
 
     public function itGeneratesAMailGatewayRecipientFromUserAndArtifact() {
-        $email = '<101-5a2a341193b34695885091bbf5f75d68-123-200@tuleap.example.com>';
+        $email = '101-5a2a341193b34695885091bbf5f75d68-123-200@tuleap.example.com';
         $recipient = $this->factory->getFromUserAndChangeset($this->user, $this->changeset);
 
         $this->assertEqual($recipient->getArtifact(), $this->artifact);
