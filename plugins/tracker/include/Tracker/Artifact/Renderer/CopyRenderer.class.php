@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright Enalean (c) 2014 - 2017. All rights reserved.
+ * Copyright Enalean (c) 2014 - 2018. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -42,14 +42,15 @@ class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer {
         );
     }
 
-    public function fetchFormContent(Codendi_Request $request, PFUser $current_user) {
+    public function fetchFormContent(Codendi_Request $request, PFUser $current_user)
+    {
         $html = '';
         $html .= $this->fetchLastChangesetId();
         $html .= $this->fetchFromArtifactId();
         $html .= parent::fetchFormContent($request, $current_user);
         $html .= $this->fetchSubmitButton($current_user);
 
-        return $html;
+        return $this->fetchArtifactForm($html);
     }
 
     protected function displayHeader() {

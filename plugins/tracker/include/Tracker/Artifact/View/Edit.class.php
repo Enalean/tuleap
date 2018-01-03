@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -37,8 +37,15 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
      */
     private $event_manager;
 
-    public function __construct(Tracker_Artifact $artifact, Codendi_Request $request, PFUser $user, Tracker_Artifact_ArtifactRenderer $renderer, EventManager $event_manager) {
+    public function __construct(
+        Tracker_Artifact $artifact,
+        Codendi_Request $request,
+        PFUser $user,
+        Tracker_Artifact_ArtifactRenderer $renderer,
+        EventManager $event_manager
+    ) {
         parent::__construct($artifact, $request, $user);
+
         $this->renderer      = $renderer;
         $this->event_manager = $event_manager;
     }
@@ -68,8 +75,11 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
         $html .= '<div class="tracker_artifact">';
         $html .= $this->fetchArtifactReferencesSidebar();
         $html .= $this->fetchExternalContent();
-        $html .= $this->renderer->fetchFields($this->artifact, $this->request->get('artifact'));
-        $html .= $this->fetchFollowUps($this->request->get('artifact_followup_comment'));
+
+        $html_form = $this->renderer->fetchFields($this->artifact, $this->request->get('artifact'));
+        $html_form .= $this->fetchFollowUps($this->request->get('artifact_followup_comment'));
+
+        $html .= $this->renderer->fetchArtifactForm($html_form);
         $html .= '</div>';
 
         return $html;
