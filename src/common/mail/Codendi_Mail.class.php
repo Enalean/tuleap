@@ -498,6 +498,10 @@ class Codendi_Mail implements Codendi_Mail_Interface {
             return $html_part;
         }
 
+        if ($text_part !== null && $html_part === null) {
+            return $text_part;
+        }
+
         $body_message = new MimeMessage();
         if ($text_part !== null) {
             $body_message->addPart($text_part);
