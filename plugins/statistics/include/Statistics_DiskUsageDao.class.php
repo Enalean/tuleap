@@ -148,7 +148,7 @@ class Statistics_DiskUsageDao extends DataAccessObject {
                 $groupBy = ', month';
                 break;
             case 'WEEK':
-                $select  = ', WEEK(date) as week';
+                $select  = ', WEEK(date, 3) as week';
                 $groupBy = ', week';
                 break;
             default:

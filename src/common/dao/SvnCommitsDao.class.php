@@ -34,7 +34,7 @@ class SvnCommitsDao extends DataAccessObject {
         $duration = $this->da->escapeInt($duration);
         $sql = "SELECT whoid, 
                         TO_DAYS(FROM_UNIXTIME(date)) - TO_DAYS(FROM_UNIXTIME(0)) as day, 
-                        WEEK(FROM_UNIXTIME(date)) as week, 
+                        WEEK(FROM_UNIXTIME(date), 3) as week,
                         count(id) AS nb_commits 
                 FROM $this->table_name
                 WHERE DATEDIFF(NOW(), FROM_UNIXTIME(date)) < $duration 
