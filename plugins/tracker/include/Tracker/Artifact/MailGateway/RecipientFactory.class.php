@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -120,14 +120,11 @@ class Tracker_Artifact_MailGateway_RecipientFactory {
         Tracker_Artifact $artifact,
         Tracker_Artifact_Changeset $changeset
     ) {
-        return
-            "<" .
-            $artifact->getId() . "-" .
+        return $artifact->getId() . "-" .
             $this->getHash($user, $artifact) . "-" .
             $user->getId() . "-" .
             $changeset->getId() .
-            "@" . $this->host .
-            ">";
+            "@" . $this->host;
     }
 
     private function getArtifact($artifact_id) {
