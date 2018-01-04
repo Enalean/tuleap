@@ -26,20 +26,17 @@ import {
 
 describe("WritingMode", () => {
     let Writing,
-        writingCrossTrackerReport,
-        errorDisplayer;
+        writingCrossTrackerReport;
 
     beforeEach(() => {
         Writing                   = Vue.extend(WritingMode);
         writingCrossTrackerReport = new WritingCrossTrackerReport();
-        errorDisplayer            = jasmine.createSpyObj("errorDisplayer", ["displayError", "hideError"]);
     });
 
     function instantiateComponent() {
         const vm = new Writing({
             propsData: {
-                writingCrossTrackerReport,
-                errorDisplayer,
+                writingCrossTrackerReport
             }
         });
         vm.$mount();
@@ -110,11 +107,12 @@ describe("WritingMode", () => {
             spyOn(writingCrossTrackerReport, "removeTracker").and.callThrough();
             const tracker = { tracker_id: 46 };
             const vm      = instantiateComponent();
+            spyOn(vm, "$emit");
 
             vm.removeTrackerFromSelection(tracker);
 
             expect(writingCrossTrackerReport.removeTracker).toHaveBeenCalledWith(46);
-            expect(errorDisplayer.hideError).toHaveBeenCalled();
+            expect(vm.$emit).toHaveBeenCalledWith('clearErrors');
             expect(vm.selected_trackers).toEqual([
                 {
                     tracker_id   : 61,
@@ -152,13 +150,14 @@ describe("WritingMode", () => {
             const vm = instantiateComponent();
             const selected_project = { id: 656, label: 'ergatogyne' };
             const selected_tracker = { id: 53, label: 'observingly' };
+            spyOn(vm, "$emit");
 
             vm.addTrackerToSelection({
                 selected_project,
                 selected_tracker
             });
 
-            expect(errorDisplayer.displayError).toHaveBeenCalled();
+            expect(vm.$emit).toHaveBeenCalledWith('error', jasmine.any(String));
         });
     });
 });

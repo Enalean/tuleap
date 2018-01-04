@@ -88,10 +88,6 @@ var webpack_config = {
                         }
                     }
                 ]
-            },
-            {
-                test: /\.mustache$/,
-                use: { loader: 'raw-loader' }
             }, {
                 test: /\.po$/,
                 exclude: /node_modules/,

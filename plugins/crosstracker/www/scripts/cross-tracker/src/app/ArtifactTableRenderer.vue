@@ -29,10 +29,10 @@
                     <th>{{ assigned_to_label }}</th>
                 </tr>
             </thead>
-            <tbody  v-if="is_loading === true">
-            <tr>
-                <td colspan="5"><div class="cross-tracker-loader"></div></td>
-            </tr>
+            <tbody v-if="is_loading === true">
+                <tr>
+                    <td colspan="5"><div class="cross-tracker-loader"></div></td>
+                </tr>
             </tbody>
             <tbody v-else-if="artifacts.length === 0">
                 <tr>
@@ -76,12 +76,13 @@
     export default {
         name: 'ArtifactTableRenderer',
         components: { ArtifactTableRow },
-        props: [
-            'savedState',
-            'reportId',
-            'writingCrossTrackerReport'
-        ],
-        data: function () {
+        props: {
+            isReportSaved: Boolean,
+            isReportInReadingMode: Boolean,
+            reportId: String,
+            writingCrossTrackerReport: Object
+        },
+        data() {
             return {
                 is_loading: true,
                 artifacts: [],
@@ -99,18 +100,38 @@
             assigned_to_label: ()  => gettext_provider.gettext("Assigned to"),
             artifacts_empty: ()    => gettext_provider.gettext("No matching artifacts found"),
             load_more_label: ()    => gettext_provider.gettext("Load more"),
+            report_state() {
+                // We just need to react to certain changes in this
+                return [this.isReportInReadingMode, this.isReportSaved];
+            },
+        },
+        watch: {
+            report_state() {
+                if (this.isReportInReadingMode === true) {
+                    this.refreshArtifactList();
+                }
+            }
         },
         mounted() {
             this.is_loading = true;
             this.loadArtifacts();
         },
         methods: {
-            loadMoreArtifacts: function () {
+            loadMoreArtifacts() {
                 this.is_loading_more = true;
                 this.loadArtifacts();
             },
 
-            loadArtifacts: async function () {
+            refreshArtifactList() {
+                this.artifacts              = [];
+                this.current_offset         = 0;
+                this.is_loading             = true;
+                this.is_load_more_displayed = false;
+
+                this.loadArtifacts();
+            },
+
+            async loadArtifacts() {
                 try {
                     const { artifacts, total } = await this.getArtifactsFromReportOrUnsavedQuery();
 
@@ -121,7 +142,7 @@
                     this.artifacts      = this.artifacts.concat(new_artifacts);
                 }  catch (error) {
                     this.is_load_more_displayed = false;
-                    this.$emit('error', error);
+                    this.$emit('restError', error);
                     throw error;
                 } finally {
                     this.is_loading      = false;
@@ -130,7 +151,7 @@
             },
 
             getArtifactsFromReportOrUnsavedQuery() {
-                if (this.savedState.isReportSaved()) {
+                if (this.isReportSaved === true) {
                     return getReportContent(
                         this.reportId,
                         this.limit,
@@ -153,15 +174,6 @@
 
                     return artifact;
                 });
-            },
-
-            refreshArtifactList() {
-                this.artifacts              = [];
-                this.current_offset         = 0;
-                this.is_loading             = true;
-                this.is_load_more_displayed = false;
-
-                this.loadArtifacts();
             }
         }
     };

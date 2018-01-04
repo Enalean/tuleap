@@ -35,7 +35,6 @@ describe("TrackerSelection", () => {
 
     beforeEach(() => {
         Selection        = Vue.extend(TrackerSelection);
-        errorDisplayer   = jasmine.createSpyObj("errorDisplayer", ["displayError"]);
         selectedTrackers = [];
     });
 
@@ -43,7 +42,6 @@ describe("TrackerSelection", () => {
         const vm = new Selection({
             propsData: {
                 selectedTrackers,
-                errorDisplayer,
             }
         });
         vm.$mount();
@@ -67,6 +65,7 @@ describe("TrackerSelection", () => {
         beforeEach(() => {
             getProjects = jasmine.createSpy('getSortedProjectsIAmMemberOf');
             rewire$getSortedProjectsIAmMemberOf(getProjects);
+            spyOn(TrackerSelection.methods, "loadTrackers");
         });
 
         afterEach(() => {
@@ -92,10 +91,12 @@ describe("TrackerSelection", () => {
         it("when there is a REST error, it will be displayed", () => {
             getProjects.and.returnValue(Promise.reject(500));
             const vm = instantiateComponent();
+            spyOn(vm, "$emit");
 
             vm.loadProjects().then(() => {
                 fail();
             }, () => {
+                expect(vm.$emit).toHaveBeenCalledWith('error', jasmine.any(String));
                 expect(errorDisplayer.displayError).toHaveBeenCalled();
                 expect(vm.is_loader_shown).toBe(false);
             });
@@ -140,11 +141,12 @@ describe("TrackerSelection", () => {
             getTrackers.and.returnValue(Promise.reject(500));
             const project_id = 34;
             const vm = instantiateComponent();
+            spyOn(vm, "$emit");
 
             vm.loadTrackers(project_id).then(() => {
                 fail();
             }, () => {
-                expect(errorDisplayer.displayError).toHaveBeenCalled();
+                expect(vm.$emit).toHaveBeenCalledWith('error', jasmine.any(String));
                 expect(vm.is_loader_shown).toBe(false);
             });
         });
@@ -152,6 +154,7 @@ describe("TrackerSelection", () => {
 
     describe("addTrackerToSelection()", () => {
         it("when I add a tracker, then an event will be emitted", () => {
+            spyOn(TrackerSelection.methods, "loadTrackers");
             const vm = instantiateComponent();
             const selected_project = { id: 972, label: 'unmortised' };
             const selected_tracker = { id: 97, label: 'acinus' };

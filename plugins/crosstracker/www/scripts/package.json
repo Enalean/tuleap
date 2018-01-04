@@ -8,7 +8,6 @@
   "dependencies": {
     "extendable-error": "^0.1.5",
     "moment": "^2.18.1",
-    "mustache": "^2.3.0",
     "node-gettext": "^2.0.0",
     "phptomoment": "0.0.2",
     "vue": "^2.5.9"
@@ -31,7 +30,6 @@
     "karma-junit-reporter": "^1.2.0",
     "karma-webpack": "^2.0.5",
     "po-gettext-loader": "^0.1.1",
-    "raw-loader": "^0.5.1",
     "vue-loader": "^13.4.0",
     "vue-loader-options-plugin": "^0.1.0",
     "vue-template-compiler": "^2.5.9",
