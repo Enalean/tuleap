@@ -48,7 +48,7 @@ class SOAPBase extends PHPUnit_Framework_TestCase {
         // Connecting to the soap's tracker client
         $this->soap_base = new SoapClient(
             $this->server_base_url,
-            array('cache_wsdl' => WSDL_CACHE_NONE)
+            array('cache_wsdl' => WSDL_CACHE_NONE, 'exceptions' => 1, 'trace' => 1)
         );
 
         // Connecting to the soap's tracker client
