@@ -25,9 +25,6 @@ msgstr ""
 msgid "Error while fetching the list of trackers of this project"
 msgstr ""
 
-msgid "Error while fetching the query result"
-msgstr ""
-
 msgid "Error while updating the cross tracker report"
 msgstr ""
 

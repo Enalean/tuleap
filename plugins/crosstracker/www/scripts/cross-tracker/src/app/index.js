@@ -22,10 +22,8 @@ import Vue from 'vue';
 import { gettext_provider }            from './gettext-provider.js';
 import { init as initUser }            from './user-service.js';
 import ReadingModeController           from './reading-mode/reading-mode-controller.js';
-import QueryResultController           from './query-result-controller.js';
 import ReadingCrossTrackerReport       from './reading-mode/reading-cross-tracker-report.js';
 import WritingCrossTrackerReport       from './writing-mode/writing-cross-tracker-report.js';
-import User                            from './user.js';
 import SuccessDisplayer                from './rest-success-displayer.js';
 import ErrorDisplayer                  from './rest-error-displayer.js';
 import WidgetLoaderDisplayer           from './widget-loader-displayer.js';
@@ -45,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const is_anonymous              = (widget_element.dataset.isAnonymous === 'true');
 
         gettext_provider.setLocale(locale);
-        initUser(is_anonymous);
+        initUser(is_anonymous, localized_php_date_format, locale);
 
         const report_saved_state           = new ReportSavedState();
         const backend_cross_tracker_report = new BackendCrossTrackerReport(report_id);
@@ -56,27 +54,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const error_displayer         = new ErrorDisplayer(widget_element);
         const widget_loader_displayer = new WidgetLoaderDisplayer(widget_element);
 
-        const user = new User(
-            locale,
-            localized_php_date_format
-        );
-
-        const query_result_controller = new QueryResultController(
-            widget_element,
-            backend_cross_tracker_report,
-            writing_cross_tracker_report,
-            report_saved_state,
-            user,
-            error_displayer
-        );
-
         const reading_controller = new ReadingModeController(
             widget_element,
             report_saved_state,
             backend_cross_tracker_report,
             writing_cross_tracker_report,
             reading_cross_tracker_report,
-            query_result_controller,
             widget_loader_displayer,
             success_displayer,
             error_displayer
@@ -91,8 +74,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 successDisplayer         : success_displayer,
                 errorDisplayer           : error_displayer,
                 savedState               : report_saved_state,
-                queryResultController    : query_result_controller,
                 readingController        : reading_controller,
+                reportId                 : report_id
             }
         }).$mount(vue_mount_point);
     }

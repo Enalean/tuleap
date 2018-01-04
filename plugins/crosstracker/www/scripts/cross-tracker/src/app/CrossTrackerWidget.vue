@@ -19,6 +19,9 @@
 
 (<template>
     <div>
+        <div class="tlp-alert-danger cross-tracker-report-error" v-if="has_error === true">
+            {{ error_message }}
+        </div>
         <reading-mode
             ref="reading_mode"
             v-show="reading_mode"
@@ -26,6 +29,7 @@
             v-bind:reading-cross-tracker-report="readingCrossTrackerReport"
             v-bind:reading-controller="readingController"
             v-on:switchToWritingMode="switchToWritingMode"
+            v-on:cancelled="reportCancelled"
         ></reading-mode>
         <writing-mode
             v-if="! reading_mode"
@@ -34,7 +38,11 @@
             v-on:switchToReadingMode="switchToReadingMode"
         ></writing-mode>
         <artifact-table-renderer
-            v-bind:query-result-controller="queryResultController"
+            ref="artifact_table"
+            v-bind:writing-cross-tracker-report="writingCrossTrackerReport"
+            v-bind:saved-state="savedState"
+            v-bind:report-id="reportId"
+            v-on:error="showRestError"
         ></artifact-table-renderer>
     </div>
 </template>)
@@ -55,18 +63,22 @@
             'successDisplayer',
             'errorDisplayer',
             'savedState',
-            'queryResultController',
             'readingController',
+            'reportId'
         ],
         data() {
             return {
-                reading_mode: true
+                reading_mode   : true,
+                error_message  : null
             };
         },
         computed: {
             is_user_anonymous() {
                 return isAnonymous();
-            }
+            },
+            has_error() {
+                return this.error_message !== null;
+            },
         },
         methods: {
             switchToWritingMode() {
@@ -78,6 +90,7 @@
                 this.hideFeedbacks();
                 this.reading_mode = false;
             },
+
             switchToReadingMode({ saved_state }) {
                 this.hideFeedbacks();
                 if (saved_state === true) {
@@ -86,17 +99,31 @@
                     this.$refs.reading_mode.hideActions();
                 } else {
                     this.savedState.switchToUnsavedState();
-                    this.queryResultController.loadFirstBatchOfArtifacts();
                     this.readingCrossTrackerReport.duplicateFromReport(this.writingCrossTrackerReport);
                     this.$refs.reading_mode.showActions();
                 }
 
+                this.$refs.artifact_table.refreshArtifactList();
                 this.reading_mode = true;
             },
+
             hideFeedbacks() {
                 this.successDisplayer.hideSuccess();
                 this.errorDisplayer.hideError();
-            }
+            },
+
+            async showRestError(rest_error) {
+                const error_details = await rest_error.response.json();
+                if ('i18n_error_message' in error_details.error) {
+                    this.error_message = error_details.error.i18n_error_message;
+                }
+            },
+
+            reportCancelled() {
+                this.hideFeedbacks();
+                this.switchToReadingMode({saved_state: true});
+            },
+
         },
         mounted() {
             this.readingController.init();

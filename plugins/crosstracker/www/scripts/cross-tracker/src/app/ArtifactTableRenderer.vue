@@ -1,6 +1,25 @@
+/**
+* Copyright (c) Enalean, 2018. All Rights Reserved.
+*
+* This file is a part of Tuleap.
+*
+* Tuleap is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+*
+* Tuleap is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+*/
+
 (<template>
-    <div class="dashboard-widget-content-cross-tracker-search">
-        <table class="tlp-table dashboard-widget-content-cross-tracker-search-results cross-tracker-empty">
+    <div class="cross-tracker-artifacts-table">
+        <table class="tlp-table">
             <thead>
                 <tr>
                     <th>{{ artifact_label }}</th>
@@ -10,49 +29,140 @@
                     <th>{{ assigned_to_label }}</th>
                 </tr>
             </thead>
-            <tbody class="dashboard-widget-content-cross-tracker-search-artifacts">
+            <tbody  v-if="is_loading === true">
+            <tr>
+                <td colspan="5"><div class="cross-tracker-loader"></div></td>
+            </tr>
             </tbody>
-            <tbody class="dashboard-widget-content-cross-tracker-search-empty">
+            <tbody v-else-if="artifacts.length === 0">
                 <tr>
                     <td colspan="5" class="tlp-table-cell-empty">
                         {{ artifacts_empty }}
                     </td>
                 </tr>
             </tbody>
-            <tbody class="dashboard-widget-content-cross-tracker-search-loading">
-                <tr>
-                    <td colspan="5" class="cross-tracker-loader"></td>
-                </tr>
+            <tbody v-else>
+                <artifact-table-row
+                    v-for="artifact of artifacts"
+                    v-bind:artifact="artifact"
+                    v-bind:key="artifact.id"
+                ></artifact-table-row>
             </tbody>
         </table>
         <div class="tlp-pagination">
             <button
-                    class="dashboard-widget-content-cross-tracker-search-load-button tlp-button-primary tlp-button-outline tlp-button-small"
+                    class="tlp-button-primary tlp-button-outline tlp-button-small"
                     type="button"
-            >{{ load_more_label }}</button>
+                    v-if="is_load_more_displayed === true"
+                    v-on:click="loadMoreArtifacts"
+                    v-bind:disabled="is_loading_more"
+            >
+                <i v-if="is_loading_more" class="tlp-button-icon fa fa-spinner fa-spin"></i>
+                {{ load_more_label }}
+            </button>
         </div>
     </div>
+
+
 </template>)
 
 (<script>
-    import { gettext_provider } from './gettext-provider.js';
+    import { gettext_provider }                 from './gettext-provider.js';
+    import ArtifactTableRow                     from './ArtifactTableRow.vue';
+    import { getReportContent, getQueryResult } from './rest-querier.js';
+    import moment                               from 'moment';
+    import { getUserPreferredDateFormat }       from './user-service.js';
 
     export default {
         name: 'ArtifactTableRenderer',
+        components: { ArtifactTableRow },
         props: [
-            'queryResultController'
+            'savedState',
+            'reportId',
+            'writingCrossTrackerReport'
         ],
+        data: function () {
+            return {
+                is_loading: true,
+                artifacts: [],
+                is_load_more_displayed:false,
+                is_loading_more: false,
+                current_offset: 0,
+                limit: 30
+            };
+        },
         computed: {
-            artifact_label: () =>  gettext_provider.gettext("Artifact"),
-            status_label: () => gettext_provider.gettext("Status"),
-            last_update_label: () => gettext_provider.gettext("Last update date"),
+            artifact_label: ()     => gettext_provider.gettext("Artifact"),
+            status_label: ()       => gettext_provider.gettext("Status"),
+            last_update_label: ()  => gettext_provider.gettext("Last update date"),
             submitted_by_label: () => gettext_provider.gettext("Submitted by"),
-            assigned_to_label: () => gettext_provider.gettext("Assigned to"),
-            artifacts_empty: () => gettext_provider.gettext("No matching artifacts found"),
-            load_more_label: () => gettext_provider.gettext("Load more"),
+            assigned_to_label: ()  => gettext_provider.gettext("Assigned to"),
+            artifacts_empty: ()    => gettext_provider.gettext("No matching artifacts found"),
+            load_more_label: ()    => gettext_provider.gettext("Load more"),
         },
         mounted() {
-            this.queryResultController.init();
+            this.is_loading = true;
+            this.loadArtifacts();
+        },
+        methods: {
+            loadMoreArtifacts: function () {
+                this.is_loading_more = true;
+                this.loadArtifacts();
+            },
+
+            loadArtifacts: async function () {
+                try {
+                    const { artifacts, total } = await this.getArtifactsFromReportOrUnsavedQuery();
+
+                    this.current_offset        += artifacts.length;
+                    this.is_load_more_displayed = this.current_offset < total;
+
+                    const new_artifacts = this.formatArtifacts(artifacts);
+                    this.artifacts      = this.artifacts.concat(new_artifacts);
+                }  catch (error) {
+                    this.is_load_more_displayed = false;
+                    this.$emit('error', error);
+                    throw error;
+                } finally {
+                    this.is_loading      = false;
+                    this.is_loading_more = false;
+                }
+            },
+
+            getArtifactsFromReportOrUnsavedQuery() {
+                if (this.savedState.isReportSaved()) {
+                    return getReportContent(
+                        this.reportId,
+                        this.limit,
+                        this.current_offset
+                    );
+                }
+
+                return getQueryResult(
+                    this.reportId,
+                    this.writingCrossTrackerReport.getTrackerIds(),
+                    this.writingCrossTrackerReport.expert_query,
+                    this.limit,
+                    this.current_offset
+                );
+            },
+
+            formatArtifacts(artifacts) {
+                return artifacts.map(artifact => {
+                    artifact.formatted_last_update_date = moment(artifact.last_update_date).format(getUserPreferredDateFormat());
+
+                    return artifact;
+                });
+            },
+
+            refreshArtifactList() {
+                this.artifacts              = [];
+                this.current_offset         = 0;
+                this.is_loading             = true;
+                this.is_load_more_displayed = false;
+
+                this.loadArtifacts();
+            }
         }
     };
 </script>)

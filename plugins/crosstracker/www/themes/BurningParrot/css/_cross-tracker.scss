@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,7 +27,7 @@
     margin: 0 0 $tlp-spacing;
 
     &.cross-tracker-loading {
-        > .dashboard-widget-content-cross-tracker-loader {
+        > .cross-tracker-loader {
             display: block;
         }
 
@@ -41,10 +41,13 @@
     }
 }
 
-.dashboard-widget-content-cross-tracker-loader {
-    display: none;
+.cross-tracker-loader {
     height: 100px;
     background: url('/themes/BurningParrot/images/spinner.gif') no-repeat center center;
+}
+
+.cross-tracker-loader-hidden {
+    display: none;
 }
 
 .dashboard-widget-content-cross-tracker-success,
@@ -57,50 +60,8 @@
     }
 }
 
-.dashboard-widget-content-cross-tracker-search {
+.cross-tracker-artifacts-table {
     margin: $tlp-spacing $tlp-spacing 0;
-}
-
-.dashboard-widget-content-cross-tracker-search-results {
-
-    > .dashboard-widget-content-cross-tracker-search-empty,
-    > .dashboard-widget-content-cross-tracker-search-loading {
-        display: none;
-    }
-
-    &.cross-tracker-empty {
-        > .dashboard-widget-content-cross-tracker-search-artifacts,
-        > .dashboard-widget-content-cross-tracker-search-loading {
-            display: none;
-        }
-
-        > .dashboard-widget-content-cross-tracker-search-empty {
-            display: table-row-group;
-        }
-    }
-
-    &.cross-tracker-loading {
-        > .dashboard-widget-content-cross-tracker-search-empty {
-            display: none;
-        }
-
-        .dashboard-widget-content-cross-tracker-search-loading {
-            display: table-row-group;
-
-            > tr > .cross-tracker-loader {
-                height: 75px;
-                background: url('/themes/BurningParrot/images/spinner.gif') no-repeat center center;
-            }
-        }
-    }
-}
-
-.dashboard-widget-content-cross-tracker-search-footer {
-    margin: $tlp-spacing 0 0;
-    color: $tlp-ui-dimmed;
-    font-size: 14px;
-    font-style: italic;
-    text-align: center;
 }
 
 .dashboard-widget-content-cross-tracker-reading-mode-actions-cancel {
@@ -111,6 +72,10 @@
     display: none;
 }
 
-.dashboard-widget-content-cross-tracker-link-to-tracker-badge {
+.link-to-tracker-badge {
     margin: 0 5px 0 0;
+}
+
+.cross-tracker-report-error {
+    margin: 0 $tlp-spacing;
 }
