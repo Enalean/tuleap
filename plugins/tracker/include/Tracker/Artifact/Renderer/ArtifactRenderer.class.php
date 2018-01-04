@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright Enalean (c) 2013-2014. All rights reserved.
+ * Copyright Enalean (c) 2013 - 2018. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -58,10 +58,8 @@ abstract class Tracker_Artifact_ArtifactRenderer {
         $this->enhanceRedirect($request);
 
         $this->displayHeader();
-        echo $this->fetchArtifactEditForm(
-            $this->redirect->toUrl(),
-            $this->fetchFormContent($request, $current_user)
-        );
+        echo $this->fetchFormContent($request, $current_user);
+        echo $this->fetchRulesAsJavascript();
         $this->displayFooter();
     }
 
@@ -139,14 +137,13 @@ abstract class Tracker_Artifact_ArtifactRenderer {
         return $html;
     }
 
-    private function fetchArtifactEditForm($url, $html) {
+    public function fetchArtifactForm($html)
+    {
         return '
-        <form action="'.$url.'" method="POST" enctype="multipart/form-data" class="artifact-form">
+        <form action="'.$this->redirect->toUrl().'" method="POST" enctype="multipart/form-data" class="artifact-form">
             '.$html.'
-        </form>
-        '.$this->fetchRulesAsJavascript();
+        </form>';
     }
-
 
     protected function fetchRulesAsJavascript() {
         return $this->tracker->displayRulesAsJavascript();
@@ -162,5 +159,3 @@ abstract class Tracker_Artifact_ArtifactRenderer {
         );
     }
 }
-
-?>

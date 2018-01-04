@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright Enalean (c) 2013. All rights reserved.
+ * Copyright Enalean (c) 2013 - 2018. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -24,12 +24,14 @@
 
 class Tracker_Artifact_EditOverlayRenderer extends Tracker_Artifact_EditAbstractRenderer {
 
-    protected function fetchFormContent(Codendi_Request $request, PFUser $current_user) {
+    protected function fetchFormContent(Codendi_Request $request, PFUser $current_user)
+    {
         $html  = parent::fetchFormContent($request, $current_user);
         $html .= $this->fetchFields($this->artifact, $request->get('artifact'));
         $html .= '<input type="hidden" name="from_overlay" value="1">';
         $html .= $this->fetchSubmitAndCancelButtons($current_user);
-        return $html;
+
+        return $this->fetchArtifactForm($html);
     }
 
     /**
