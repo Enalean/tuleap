@@ -1,9 +1,9 @@
 version: "2"
 
 services:
-  firefox:
+  chrome:
     container_name: ${BUILD_TAG}tuleap_runtests_firefox
-    image: selenium/standalone-firefox:3.4.0-francium
+    image: selenium/standalone-chrome:3.8.1-chlorine
     shm_size: 2g
     networks:
       - tuleap

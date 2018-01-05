@@ -1,6 +1,6 @@
 {
     "require": {
-        "lmc/steward": "^2.2"
+        "lmc/steward": "^2.3"
     },
     "autoload": {
         "psr-4": {
