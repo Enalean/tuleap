@@ -30,8 +30,8 @@ class JUnitXMLReporter extends SimpleReporter {
         $this->root->setAttribute('name', $test_name);
         $this->root->setAttribute('timestamp', date('c'));
         $this->root->setAttribute('hostname', 'localhost');
-        echo "<?xml version=\"1.0\"?>\n";
-        echo "<!-- starting test suite $test_name\n";
+        fwrite(STDOUT, "<?xml version=\"1.0\"?>\n");
+        fwrite(STDOUT,"<!-- starting test suite $test_name\n");
     }
     /**
      *    Paints the end of the test with a summary of
@@ -49,19 +49,19 @@ class JUnitXMLReporter extends SimpleReporter {
         $this->doc->formatOutput = true;
         $xml = $this->doc->saveXML();
         // Cut out XML declaration
-        echo preg_replace('/<\?[^>]*\?>/', "", $xml);
-        echo "\n";
+        fwrite(STDOUT, preg_replace('/<\?[^>]*\?>/', "", $xml));
+        fwrite(STDOUT, "\n");
     }
 
     function paintCaseStart($case) {
-        echo "- case start $case\n";
+        fwrite(STDOUT, "- case start $case\n");
         $this->currentCaseName = $case;
     }
     function paintCaseEnd($case) {
         // No output here
     }
     function paintMethodStart($test) {
-        echo "  - test start: $test\n";
+        fwrite(STDOUT,"  - test start: $test\n");
         $this->methodStart = microtime(true);
         $this->currCase = $this->doc->createElement('testcase');
     }

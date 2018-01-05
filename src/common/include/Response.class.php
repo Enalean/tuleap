@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -127,16 +127,6 @@ class Response {
         $dao        = $this->getFeedbackDao();
         $session_id = UserManager::instance()->getCurrentUser()->getSessionId();
         $dao->create($session_id, json_encode($this->_feedback->getLogs()));
-    }
-
-    function setCookie($name, $value, $expire = 0) {
-        $cookie_manager = new CookieManager();
-        $cookie_manager->setHTTPOnlyCookie($name, $value, $expire);
-    }
-
-    function removeCookie($name) {
-        $cookie_manager = new CookieManager();
-        $cookie_manager->removeCookie($name);
     }
 
     public function sendStatusCode($code) {

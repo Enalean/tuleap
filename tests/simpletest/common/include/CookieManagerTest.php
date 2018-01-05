@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,48 +18,74 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class CookieManagerTest extends TuleapTestCase {
-    /** @var CookieManager */
-    private $cookie_manager;
+class CookieManagerTest extends TuleapTestCase
+{
+    /**
+     * @var array
+     */
+    private $save_existing_headers;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
-        $this->cookie_manager = partial_mock('CookieManager', array('phpsetcookie'));
+        ForgeConfig::store();
+        ForgeConfig::set('sys_cookie_prefix', 'test');
+        $this->save_existing_headers = xdebug_get_headers();
+        header_remove();
     }
 
-    public function tearDown() {
-        unset($GLOBALS['sys_cookie_domain']);
-        unset($GLOBALS['sys_default_domain']);
+    public function tearDown()
+    {
         parent::tearDown();
+        header_remove();
+        foreach ($this->save_existing_headers as $header) {
+            header($header);
+        }
+        ForgeConfig::restore();
     }
 
-    public function itSetsTheCookieDomainWhenADomainName() {
-        $GLOBALS['sys_cookie_domain'] = 'example.com';
-        stub($this->cookie_manager)->phpsetcookie('*', '*', '*', '*', '.example.com', '*', '*')->once();
-        $this->cookie_manager->setHTTPOnlyCookie('bla', 'bla', 'bla');
+    public function itSetsCookieOnDomainWhenExplicitlyConfigured()
+    {
+        ForgeConfig::set('sys_cookie_domain', 'example.com');
+        $cookie_manager = new CookieManager();
+        $cookie_manager->setCookie('name', 'value');
+
+        $headers = xdebug_get_headers();
+
+        $this->assertEqual($headers[0], 'Set-Cookie: test_name=value; path=/; domain=.example.com; httponly; SameSite=Lax');
     }
 
-    public function itSetsTheCookieDomainWhenADomainNameWithoutTLD() {
-        $GLOBALS['sys_cookie_domain'] = 'gg32';
-        stub($this->cookie_manager)->phpsetcookie('*', '*', '*', '*', '', '*', '*')->once();
-        $this->cookie_manager->setHTTPOnlyCookie('bla', 'bla', 'bla');
+    public function itDoesNotSetDomainWhenConfiguredCookieDomainIsTheSameThanTheConfiguredHost()
+    {
+        ForgeConfig::set('sys_cookie_domain', 'example.com');
+        ForgeConfig::set('sys_https_host', 'example.com:8080');
+        $cookie_manager = new CookieManager();
+        $cookie_manager->setCookie('name', 'value');
+
+        $headers = xdebug_get_headers();
+
+        $this->assertEqual($headers[0], 'Set-Cookie: __Host-test_name=value; path=/; secure; httponly; SameSite=Lax');
     }
 
-    public function itSetTheCookieDomainWhenIPAdress() {
-        $GLOBALS['sys_cookie_domain'] = '127.0.0.1';
-        stub($this->cookie_manager)->phpsetcookie('*', '*', '*', '*', '', '*', '*')->once();
-        $this->cookie_manager->setHTTPOnlyCookie('bla', 'bla', 'bla');
+    public function itSetsSecurePrefixWheneverHTTPSIsAvailable()
+    {
+        ForgeConfig::set('sys_cookie_domain', '.example.com');
+        ForgeConfig::set('sys_https_host', 'https.example.com');
+        $cookie_manager = new CookieManager();
+        $cookie_manager->setCookie('name', 'value');
+
+        $headers = xdebug_get_headers();
+
+        $this->assertEqual($headers[0], 'Set-Cookie: __Secure-test_name=value; path=/; domain=.example.com; secure; httponly; SameSite=Lax');
     }
 
-    public function itSetsTheCookieDomainWhenADomainNameAndPort() {
-        $GLOBALS['sys_cookie_domain'] = 'example.com:8080';
-        stub($this->cookie_manager)->phpsetcookie('*', '*', '*', '*', '.example.com', '*', '*')->once();
-        $this->cookie_manager->setHTTPOnlyCookie('bla', 'bla', 'bla');
-    }
+    public function itRemovesCookies()
+    {
+        $cookie_manager = new CookieManager();
+        $cookie_manager->removeCookie('name');
 
-    public function itSetsCookieReadableByJavaScript() {
-        $GLOBALS['sys_cookie_domain'] = 'example.com';
-        stub($this->cookie_manager)->phpsetcookie('*', '*', '*', '*', '.example.com', '*', false)->once();
-        $this->cookie_manager->setGlobalCookie('bla', 'bla', 'bla');
+        $headers = xdebug_get_headers();
+
+        $this->assertEqual($headers[0], 'Set-Cookie: __Host-test_name=deleted; expires=Thu, 01-Jan-1970 00:00:01 GMT; Max-Age=0; path=/; httponly; SameSite=Lax');
     }
 }

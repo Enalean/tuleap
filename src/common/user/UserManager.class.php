@@ -549,7 +549,7 @@ class UserManager {
         $request            = HTTPRequest::instance();
         $session_identifier = $session_manager->createSession($user, $request, $request->getFromServer('REQUEST_TIME'));
 
-        $this->getCookieManager()->setHTTPOnlyCookie(
+        $this->getCookieManager()->setCookie(
             'session_hash',
             $session_identifier,
             $this->getExpireTimestamp($user)

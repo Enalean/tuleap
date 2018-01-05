@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -305,7 +305,7 @@ class ColorTextReporter extends SimpleReporter {
         if (! SimpleReporter::inCli()) {
             header('Content-type: text/plain');
         }
-        print "$test_name\n";
+        fwrite(STDOUT, "$test_name\n");
         flush();
     }
 

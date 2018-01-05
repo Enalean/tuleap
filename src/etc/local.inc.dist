@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) Enalean, 2011-2017. All rights reserved
+// Copyright (c) Enalean, 2011-2018. All rights reserved
 // Copyright (c) STMicroelectronics, 2009-2011. All rights reserved
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 //
@@ -83,7 +83,7 @@ $sys_https_host = '%sys_default_domain%';
 //   => cookie domain is "s1.example.com"
 //- you have 2 servers (s1.example.com & s2.example.com)
 //   => cookie domain should be "example.com" for SSO
-$sys_cookie_domain = '%sys_default_domain%';
+$sys_cookie_domain = '';
 
 // Machine that hosts the mailing lists (This could also be
 // the mail host if you have enough horsepower & bandwidth)
