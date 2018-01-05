@@ -52,7 +52,7 @@
 
 @keyframes shakeWidget {
     0% {
-        transform: rotate(-.3deg);
+        transform: rotate(-.2deg);
     }
 
     50% {
@@ -60,7 +60,7 @@
     }
 
     100% {
-        transform: rotate(.3deg);
+        transform: rotate(.2deg);
     }
 }
 
@@ -80,7 +80,10 @@
     &.shake-widgets {
         .dashboard-widget {
             animation: 100ms infinite alternate shakeWidget;
-            box-shadow: 0 3px 6px 0 rgba(0, 0, 0, .08);
+            border-right: 0;
+            border-bottom: 0;
+            border-left: 0;
+            box-shadow: 0 7px 30px 0 rgba(0, 0, 0, .2);
         }
     }
 
@@ -160,6 +163,102 @@
     }
 }
 
+/* scss-lint:disable QualifyingElement */
+body.gu-unselectable {
+    $placeholder-width: 3px;
+    $placeholder-height: 3px;
+    $placeholder-radius: 10px;
+
+    @keyframes columnWave {
+        0% {
+            height: $placeholder-height;
+            opacity: .5;
+            box-shadow: 0 0 0 0 transparentize($tlp-theme-color, .5);
+        }
+
+        50% {
+            height: $placeholder-height * 4;
+            opacity: 1;
+            box-shadow: 0 0 0 6px transparentize($tlp-theme-color, 1);
+        }
+
+        100% {
+            height: $placeholder-height;
+            opacity: .5;
+            box-shadow: 0 0 0 0 transparentize($tlp-theme-color, 1);
+        }
+    }
+
+    @keyframes rowWave {
+        0% {
+            width: $placeholder-width;
+            opacity: .5;
+            box-shadow: 0 0 0 0 transparentize($tlp-theme-color, .5);
+        }
+
+        50% {
+            width: $placeholder-width * 4;
+            opacity: 1;
+            box-shadow: 0 0 0 6px transparentize($tlp-theme-color, 1);
+        }
+
+        100% {
+            width: $placeholder-width;
+            opacity: .5;
+            box-shadow: 0 0 0 0 transparentize($tlp-theme-color, 1);
+        }
+    }
+
+    @mixin widget-placeholder($top, $bottom, $left, $direction) {
+        content: '';
+        position: absolute;
+        top: $top;
+        bottom: $bottom;
+        left: $left;
+        transform: translate(-50%, -50%);
+        border-radius: $placeholder-radius;
+        background: $tlp-theme-color;
+
+        @if $direction == 'column' {
+            width: $placeholder-height;
+            height: $placeholder-width;
+            animation: 1.5s ease-in-out infinite columnWave;
+
+        } @else {
+            width: $placeholder-width;
+            height: $placeholder-height;
+            animation: 1.5s ease-in-out infinite rowWave;
+        }
+    }
+
+    .dashboard-widgets-empty-line,
+    .dashboard-widgets-empty-column,
+    .dashboard-widgets-line,
+    .dashboard-widgets-column {
+        position: relative;
+    }
+
+    .dashboard-widgets-empty-line:empty::before {
+        @include widget-placeholder(50%, auto, 50%, 'row');
+    }
+
+    .dashboard-widgets-empty-column:empty::before {
+        @include widget-placeholder(50%, auto, 50%, 'column');
+    }
+
+    .dashboard-widgets-row:not(.one-column) .dashboard-widget:not(.gu-mirror):not(.gu-transit) {
+        position: relative;
+
+        &::after {
+            @include widget-placeholder(auto, -14px, 50%, 'row');
+        }
+
+        &:first-child::before {
+            @include widget-placeholder(-11px, auto, 50%, 'row');
+        }
+    }
+}
+
 .dashboard-dropdown-layout {
     margin: 0;
     padding: 0 $tlp-half-spacing $tlp-half-spacing;
@@ -187,6 +286,14 @@
     flex: 1 1 auto;
     width: 100%;
     transition: box-shadow 100ms;
+
+    &.gu-mirror {
+        border-right: 0;
+        border-bottom: 0;
+        border-left: 0;
+        opacity: 1;
+        box-shadow: 0 7px 30px 0 rgba(0, 0, 0, .2);
+    }
 }
 
 .dashboard-widget-minimized {
