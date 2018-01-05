@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tracker instantiate_for_new_projects="0">
   <name>Patches</name>
-  <item_name>patch</item_name>
+  <item_name>patches</item_name>
   <description>Patch Tracker</description>
   <cannedResponses/>
   <formElements>
