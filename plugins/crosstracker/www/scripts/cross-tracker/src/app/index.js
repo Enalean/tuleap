@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,11 +22,6 @@ import Vue from 'vue';
 import { gettext_provider }            from './gettext-provider.js';
 import { init as initUser }            from './user-service.js';
 import ReadingModeController           from './reading-mode/reading-mode-controller.js';
-import ProjectSelector                 from './writing-mode/project-selector.js';
-import TrackerSelector                 from './writing-mode/tracker-selector.js';
-import TrackerSelection                from './writing-mode/tracker-selection.js';
-import TrackerSelectionController      from './writing-mode/tracker-selection-controller.js';
-import TrackerSelectionLoaderDisplayer from './writing-mode/tracker-selection-loader-displayer.js';
 import QueryResultController           from './query-result-controller.js';
 import ReadingCrossTrackerReport       from './reading-mode/reading-cross-tracker-report.js';
 import WritingCrossTrackerReport       from './writing-mode/writing-cross-tracker-report.js';
@@ -52,16 +47,14 @@ document.addEventListener('DOMContentLoaded', () => {
         gettext_provider.setLocale(locale);
         initUser(is_anonymous);
 
-        const tracker_selection            = new TrackerSelection();
         const report_saved_state           = new ReportSavedState();
         const backend_cross_tracker_report = new BackendCrossTrackerReport(report_id);
         const reading_cross_tracker_report = new ReadingCrossTrackerReport();
         const writing_cross_tracker_report = new WritingCrossTrackerReport();
 
-        const success_displayer                  = new SuccessDisplayer(widget_element);
-        const error_displayer                    = new ErrorDisplayer(widget_element);
-        const widget_loader_displayer            = new WidgetLoaderDisplayer(widget_element);
-        const tracker_selection_loader_displayer = new TrackerSelectionLoaderDisplayer(widget_element);
+        const success_displayer       = new SuccessDisplayer(widget_element);
+        const error_displayer         = new ErrorDisplayer(widget_element);
+        const widget_loader_displayer = new WidgetLoaderDisplayer(widget_element);
 
         const user = new User(
             locale,
@@ -89,45 +82,17 @@ document.addEventListener('DOMContentLoaded', () => {
             error_displayer
         );
 
-        const project_selector = new ProjectSelector(
-            widget_element,
-            tracker_selection,
-            error_displayer,
-            tracker_selection_loader_displayer
-        );
-
-        const tracker_selector = new TrackerSelector(
-            widget_element,
-            tracker_selection,
-            writing_cross_tracker_report,
-            error_displayer,
-            tracker_selection_loader_displayer
-        );
-
-        const tracker_selection_controller = new TrackerSelectionController(
-            widget_element,
-            tracker_selection,
-            writing_cross_tracker_report,
-            backend_cross_tracker_report,
-            tracker_selector,
-            error_displayer
-        );
-
         const vue_mount_point = widget_element.querySelector('.vue-mount-point');
         new Widget({
             propsData: {
-                backendCrossTrackerReport : backend_cross_tracker_report,
-                readingCrossTrackerReport : reading_cross_tracker_report,
-                writingCrossTrackerReport : writing_cross_tracker_report,
-                successDisplayer          : success_displayer,
-                errorDisplayer            : error_displayer,
-                savedState                : report_saved_state,
-                queryResultController     : query_result_controller,
-                projectSelector           : project_selector,
-                trackerSelectionController: tracker_selection_controller,
-                readingController         : reading_controller,
-                trackerSelector           : tracker_selector,
-                trackerSelectionLoader    : tracker_selection_loader_displayer
+                backendCrossTrackerReport: backend_cross_tracker_report,
+                readingCrossTrackerReport: reading_cross_tracker_report,
+                writingCrossTrackerReport: writing_cross_tracker_report,
+                successDisplayer         : success_displayer,
+                errorDisplayer           : error_displayer,
+                savedState               : report_saved_state,
+                queryResultController    : query_result_controller,
+                readingController        : reading_controller,
             }
         }).$mount(vue_mount_point);
     }

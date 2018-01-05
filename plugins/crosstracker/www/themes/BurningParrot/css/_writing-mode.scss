@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,7 +22,7 @@
     margin: $tlp-spacing;
 }
 
-.dashboard-widget-content-cross-tracker-form {
+.cross-tracker-selector {
     display: flex;
 
     > :first-child {
@@ -30,28 +30,16 @@
     }
 }
 
-.dashboard-widget-content-cross-tracker-form-projects-input,
-.dashboard-widget-content-cross-tracker-form-trackers-input {
+.cross-tracker-selector-project-input,
+.cross-tracker-selector-tracker-input {
     min-width: 200px;
 }
 
-.dashboard-widget-content-cross-tracker-form-trackers-add {
-    > .cross-tracker-loader {
-        display: none;
-    }
-
-    &.cross-tracker-loading {
-        > .cross-tracker-loader {
-            display: inline-block;
-        }
-
-        > .cross-tracker-add-icon {
-            display: none;
-        }
-    }
+.cross-tracker-please-choose-option {
+    color: $tlp-ui-dimmed;
 }
 
-.dashboard-widget-content-cross-tracker-selected-tracker {
+.cross-tracker-selected-tracker {
     margin: 0 10px 10px 0;
 
     &:last-child {
@@ -59,20 +47,16 @@
     }
 }
 
-.dashboard-widget-content-cross-tracker-please-choose-option {
-    color: $tlp-ui-dimmed;
-}
-
-.dashboard-widget-content-cross-tracker-project-icon {
+.cross-tracker-project-icon {
     margin: 0 3px 0 8px;
     fill: $tlp-theme-color;
 }
 
-.dashboard-widget-content-cross-tracker-remove-tracker {
+.cross-tracker-remove-tracker {
     cursor: pointer;
 }
 
-.dashboard-widget-content-cross-tracker-form-trackers-selected {
+.cross-tracker-form-trackers-selected {
     margin: 0 0 $tlp-half-spacing;
 }
 
@@ -83,8 +67,4 @@
 
 .writing-mode-actions-cancel {
     margin: 0 $tlp-spacing 0 0;
-}
-
-.dashboard-widget-content-cross-tracker-too-many-selected-error {
-    margin: $tlp-spacing 0;
 }

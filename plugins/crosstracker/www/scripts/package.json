@@ -11,8 +11,7 @@
     "mustache": "^2.3.0",
     "node-gettext": "^2.0.0",
     "phptomoment": "0.0.2",
-    "vue": "^2.5.9",
-    "wrist": "0.0.3"
+    "vue": "^2.5.9"
   },
   "devDependencies": {
     "babel-core": "^6.25.0",
@@ -22,6 +21,7 @@
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "concurrently": "^3.5.0",
+    "http-server": "^0.10.0",
     "jasmine-core": "^2.8.0",
     "json-loader": "^0.5.7",
     "karma": "^1.7.1",

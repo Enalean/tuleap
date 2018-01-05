@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,20 +17,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export default class TrackerSelectionLoaderDisplayer {
-    constructor(widget_content) {
-        this.widget_content = widget_content;
+import {
+    getSortedProjectsIAmMemberOf as getProjects
+} from '../rest-querier.js';
+
+export {
+    getSortedProjectsIAmMemberOf
+};
+
+let cached_projects = [];
+
+async function getSortedProjectsIAmMemberOf() {
+    if (cached_projects.length > 0) {
+        return cached_projects;
     }
 
-    init() {
-        this.form_tracker_selector = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-form-trackers-add');
-    }
+    const sorted_projects = await getProjects();
+    cached_projects       = sorted_projects.map(({ id, label }) => {
+        return { id, label };
+    });
 
-    show() {
-        this.form_tracker_selector.classList.add('cross-tracker-loading');
-    }
-
-    hide() {
-        this.form_tracker_selector.classList.remove('cross-tracker-loading');
-    }
+    return cached_projects;
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,9 +21,8 @@ import ExtendableError from 'extendable-error';
 
 export default class WritingCrossTrackerReport {
     constructor() {
-        this.trackers          = new Map();
-        this.number_of_tracker = 0;
-        this.expert_query      = '';
+        this.trackers     = new Map();
+        this.expert_query = '';
     }
 
     addTracker(project, tracker) {
@@ -38,22 +37,15 @@ export default class WritingCrossTrackerReport {
             project,
             tracker
         });
-        this.number_of_tracker = this.trackers.size;
     }
 
     removeTracker(tracker_id) {
         this.trackers.delete(tracker_id);
-        this.number_of_tracker = this.trackers.size;
     }
 
     duplicateFromReport(report) {
-        this.trackers = new Map(report.trackers);
-        this.number_of_tracker = this.trackers.size;
+        this.trackers     = new Map(report.trackers);
         this.expert_query = report.expert_query;
-    }
-
-    hasTrackerWithId(tracker_id) {
-        return this.trackers.has(tracker_id);
     }
 
     getTrackerIds() {
