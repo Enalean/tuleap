@@ -1,8 +1,10 @@
 <fieldset class="tracker_artifact_fieldset">
     <div class="tracker_artifact_fieldset_content timesheeting-from">
-        <button type="button" class="btn btn-primary timesheeting-add-button">
-            <i class="icon-plus"></i> {{# dgettext }} tuleap-timesheeting | Add {{/ dgettext }}
-        </button>
+        {{# user_can_add_time }}
+            <a class="btn btn-primary timesheeting-add-button" href="#timesheeting-add-time-modal" data-toggle="modal">
+                <i class="icon-plus"></i> {{# dgettext }} tuleap-timesheeting | Add {{/ dgettext }}
+            </a>
+        {{/ user_can_add_time }}
         <table class="table">
             <thead>
                 <tr>
@@ -20,4 +22,8 @@
             </tbody>
         </table>
     </div>
+
+    {{# user_can_add_time }}
+        {{> timesheeting-add-modal }}
+    {{/ user_can_add_time }}
 </fieldset>

@@ -22,5 +22,13 @@ namespace Tuleap\Timesheeting\ArtifactView;
 
 class ArtifactViewPresenter
 {
+    /**
+     * @var boolean
+     */
+    public $user_can_add_time;
 
+    public function __construct($user_can_add_time)
+    {
+        $this->user_can_add_time = $user_can_add_time;
+    }
 }

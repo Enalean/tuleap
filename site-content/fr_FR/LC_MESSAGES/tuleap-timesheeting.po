@@ -9,6 +9,12 @@ msgstr ""
 msgid "Add"
 msgstr "Ajouter"
 
+msgid "Add a new time"
+msgstr "Ajouter un nouveau temps"
+
+msgid "Add time"
+msgstr "Ajouter un temps"
+
 msgid "Date"
 msgstr "Date"
 
@@ -32,6 +38,9 @@ msgstr "Lecture"
 
 msgid "Save modifications"
 msgstr "Sauvegarder les modifications"
+
+msgid "Step"
+msgstr "Étape"
 
 msgid "Steps"
 msgstr "Étapes"

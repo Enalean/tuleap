@@ -174,14 +174,15 @@ class timesheetingPlugin extends Plugin
         }
 
         $permissions_retriever = new PermissionsRetriever($this->getTimesheetingUgroupRetriever());
+        $user_can_add_time     = $permissions_retriever->userCanAddTimeInTracker($user, $tracker);
 
-        if (! $permissions_retriever->userCanAddTimeInTracker($user, $tracker) &&
+        if (!  $user_can_add_time &&
             ! $permissions_retriever->userCanSeeAggregatedTimesInTracker($user, $tracker)
         ) {
             return;
         }
 
-        $presenter = new ArtifactViewPresenter();
+        $presenter = new ArtifactViewPresenter($user_can_add_time);
         $view      = new ArtifactView($artifact, $request, $user, $presenter);
 
         $collection->add($view);
