@@ -25,10 +25,10 @@ use Tuleap\Timesheeting\Admin\TimesheetingEnabler;
 use Tuleap\Timesheeting\Admin\TimesheetingUgroupDao;
 use Tuleap\Timesheeting\Admin\TimesheetingUgroupRetriever;
 use Tuleap\Timesheeting\Admin\TimesheetingUgroupSaver;
-use Tuleap\Timesheeting\ArtifactView\ArtifactView;
 use Tuleap\Timesheeting\ArtifactView\ArtifactViewBuilder;
-use Tuleap\Timesheeting\ArtifactView\ArtifactViewPresenter;
 use Tuleap\Timesheeting\Permissions\PermissionsRetriever;
+use Tuleap\Timesheeting\Time\TimeDao;
+use Tuleap\Timesheeting\Time\TimeUpdater;
 use Tuleap\Timesheeting\TimesheetingPluginInfo;
 use Tuleap\Timesheeting\Router;
 use Tuleap\Timesheeting\Widget\UserWidget;
@@ -111,16 +111,18 @@ class timesheetingPlugin extends Plugin
 
     public function process(Codendi_Request $request)
     {
-        $tracker_factory = TrackerFactory::instance();
         $router = new Router(
-            $tracker_factory,
+            TrackerFactory::instance(),
             new TrackerManager(),
+            Tracker_ArtifactFactory::instance(),
             $this->getTimesheetingEnabler(),
             new User_ForgeUserGroupFactory(new UserGroupDao()),
             new PermissionsNormalizer(),
             new TimesheetingUgroupSaver(new TimesheetingUgroupDao()),
             $this->getTimesheetingUgroupRetriever(),
-            new ProjectHistoryDao()
+            new ProjectHistoryDao(),
+            $this->getPermissionsRetriever(),
+            new TimeUpdater(new TimeDao())
         );
 
         $router->route($request);
@@ -134,6 +136,14 @@ class timesheetingPlugin extends Plugin
         return new TimesheetingUgroupRetriever(new TimesheetingUgroupDao());
     }
 
+    /**
+     * @return PermissionsRetriever
+     */
+    private function getPermissionsRetriever()
+    {
+        return new PermissionsRetriever($this->getTimesheetingUgroupRetriever());
+    }
+
     /** @see Tracker_Artifact_EditRenderer::EVENT_ADD_VIEW_IN_COLLECTION */
     public function tracker_artifact_editrenderer_add_view_in_collection(array $params)
     {
@@ -141,7 +151,7 @@ class timesheetingPlugin extends Plugin
         $request    = $params['request'];
         $artifact   = $params['artifact'];
 
-        $permissions_retriever = new PermissionsRetriever($this->getTimesheetingUgroupRetriever());
+        $permissions_retriever = $this->getPermissionsRetriever();
         $builder               = new ArtifactViewBuilder($this, $this->getTimesheetingEnabler(), $permissions_retriever);
 
         $view = $builder->build($user, $request, $artifact);

@@ -48,11 +48,17 @@ msgstr "Étapes"
 msgid "The request is not valid."
 msgstr "La requête n'est pas valide."
 
+msgid "The time is missing"
+msgstr "Le temps est manquant"
+
 msgid "There is nothing here ... for now ..."
 msgstr "Cet espace est vide ... pour le moment ..."
 
 msgid "Time"
 msgstr "Temps"
+
+msgid "Time successfully added."
+msgstr "Temps ajouté avec succès."
 
 msgid "Timesheeting"
 msgstr "Timesheeting"
@@ -68,3 +74,6 @@ msgstr "Le timesheeting est activé pour ce tracker."
 
 msgid "Write"
 msgstr "Écriture"
+
+msgid "You are not allowed to add a time."
+msgstr "Vous n'êtes pas autorisé à ajouter un temps"

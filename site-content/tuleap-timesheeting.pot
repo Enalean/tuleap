@@ -43,10 +43,16 @@ msgstr ""
 msgid "The request is not valid."
 msgstr ""
 
+msgid "The time is missing"
+msgstr ""
+
 msgid "There is nothing here ... for now ..."
 msgstr ""
 
 msgid "Time"
+msgstr ""
+
+msgid "Time successfully added."
 msgstr ""
 
 msgid "Timesheeting"
@@ -62,4 +68,7 @@ msgid "Timesheeting is enabled for tracker."
 msgstr ""
 
 msgid "Write"
+msgstr ""
+
+msgid "You are not allowed to add a time."
 msgstr ""

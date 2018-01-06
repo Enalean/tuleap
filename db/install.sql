@@ -15,3 +15,12 @@ CREATE TABLE plugin_timesheeting_readers (
   PRIMARY KEY (tracker_id, ugroup_id),
   INDEX ugroup_idx (ugroup_id)
 ) ENGINE=InnoDB;
+
+CREATE TABLE plugin_timesheeting_times (
+  user_id INT(11) NOT NULL,
+  artifact_id INT(11) NOT NULL,
+  minutes SMALLINT(6) UNSIGNED NOT NULL,
+  step VARCHAR(255) NOT NULL,
+  day DATE NOT NULL,
+  PRIMARY KEY (user_id, artifact_id, day)
+) ENGINE=InnoDB;

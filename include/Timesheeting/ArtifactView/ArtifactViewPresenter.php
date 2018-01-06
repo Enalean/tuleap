@@ -20,15 +20,34 @@
 
 namespace Tuleap\Timesheeting\ArtifactView;
 
+use CSRFSynchronizerToken;
+use Tracker_Artifact;
+
 class ArtifactViewPresenter
 {
+    /**
+     * @var string
+     */
+    public $url;
+
+    /**
+     * @var CSRFSynchronizerToken
+     */
+    public $csrf_token;
+
     /**
      * @var boolean
      */
     public $user_can_add_time;
 
-    public function __construct($user_can_add_time)
+    public function __construct(Tracker_Artifact $artifact, CSRFSynchronizerToken $csrf, $user_can_add_time)
     {
+        $this->url = TIMESHEETING_BASE_URL . '/?' . http_build_query(array(
+            'artifact' => $artifact->getId(),
+            'action'   => 'add-time'
+        ));
+
+        $this->csrf_token        = $csrf;
         $this->user_can_add_time = $user_can_add_time;
     }
 }

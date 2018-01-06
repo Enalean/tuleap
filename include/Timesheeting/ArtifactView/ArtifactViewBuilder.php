@@ -21,6 +21,7 @@
 namespace Tuleap\Timesheeting\ArtifactView;
 
 use Codendi_Request;
+use CSRFSynchronizerToken;
 use PFUser;
 use timesheetingPlugin;
 use Tracker_Artifact;
@@ -76,7 +77,8 @@ class ArtifactViewBuilder
             return null;
         }
 
-        $presenter = new ArtifactViewPresenter($user_cann_add_time);
+        $csrf      = new CSRFSynchronizerToken($artifact->getUri());
+        $presenter = new ArtifactViewPresenter($artifact, $csrf, $user_cann_add_time);
 
         return new ArtifactView($artifact, $request, $user, $presenter);
     }
