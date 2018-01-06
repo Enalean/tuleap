@@ -26,6 +26,7 @@ use Tuleap\Timesheeting\Admin\TimesheetingUgroupDao;
 use Tuleap\Timesheeting\Admin\TimesheetingUgroupRetriever;
 use Tuleap\Timesheeting\Admin\TimesheetingUgroupSaver;
 use Tuleap\Timesheeting\ArtifactView\ArtifactView;
+use Tuleap\Timesheeting\ArtifactView\ArtifactViewBuilder;
 use Tuleap\Timesheeting\ArtifactView\ArtifactViewPresenter;
 use Tuleap\Timesheeting\Permissions\PermissionsRetriever;
 use Tuleap\Timesheeting\TimesheetingPluginInfo;
@@ -160,32 +161,16 @@ class timesheetingPlugin extends Plugin
         $user       = $params['user'];
         $request    = $params['request'];
         $artifact   = $params['artifact'];
-        $collection = $params['collection'];
-
-        $tracker = $artifact->getTracker();
-        $project = $tracker->getProject();
-
-        if (! $this->isAllowed($project->getId())) {
-            return;
-        }
-
-        if (! $this->getTimesheetingEnabler()->isTimesheetingEnabledForTracker($tracker)) {
-            return;
-        }
 
         $permissions_retriever = new PermissionsRetriever($this->getTimesheetingUgroupRetriever());
-        $user_can_add_time     = $permissions_retriever->userCanAddTimeInTracker($user, $tracker);
+        $builder               = new ArtifactViewBuilder($this, $this->getTimesheetingEnabler(), $permissions_retriever);
 
-        if (!  $user_can_add_time &&
-            ! $permissions_retriever->userCanSeeAggregatedTimesInTracker($user, $tracker)
-        ) {
-            return;
+        $view = $builder->build($user, $request, $artifact);
+
+        if ($view) {
+            $collection = $params['collection'];
+            $collection->add($view);
         }
-
-        $presenter = new ArtifactViewPresenter($user_can_add_time);
-        $view      = new ArtifactView($artifact, $request, $user, $presenter);
-
-        $collection->add($view);
     }
 
     /**
