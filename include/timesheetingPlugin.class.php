@@ -112,39 +112,18 @@ class timesheetingPlugin extends Plugin
     public function process(Codendi_Request $request)
     {
         $tracker_factory = TrackerFactory::instance();
-        $tracker_id      = $request->get('tracker');
-        $tracker         = $tracker_factory->getTrackerById($tracker_id);
-
-        if (! $tracker) {
-            $this->redirectToTuleapHomepage();
-        }
-
-        $timesheeting_ugroup_dao = new TimesheetingUgroupDao();
-
         $router = new Router(
-            new AdminController(
-                new TrackerManager(),
-                $this->getTimesheetingEnabler(),
-                new CSRFSynchronizerToken($tracker->getAdministrationUrl()),
-                new User_ForgeUserGroupFactory(new UserGroupDao()),
-                new PermissionsNormalizer(),
-                new TimesheetingUgroupSaver($timesheeting_ugroup_dao),
-                $this->getTimesheetingUgroupRetriever(),
-                new ProjectHistoryDao()
-            )
+            $tracker_factory,
+            new TrackerManager(),
+            $this->getTimesheetingEnabler(),
+            new User_ForgeUserGroupFactory(new UserGroupDao()),
+            new PermissionsNormalizer(),
+            new TimesheetingUgroupSaver(new TimesheetingUgroupDao()),
+            $this->getTimesheetingUgroupRetriever(),
+            new ProjectHistoryDao()
         );
 
-        $router->route($request, $tracker);
-    }
-
-    private function redirectToTuleapHomepage()
-    {
-        $GLOBALS['Response']->addFeedback(
-            Feedback::ERROR,
-            dgettext('tuleap-timesheeting', 'The request is not valid.')
-        );
-
-        $GLOBALS['Response']->redirect('/');
+        $router->route($request);
     }
 
     /**

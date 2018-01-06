@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,54 +21,145 @@
 namespace Tuleap\Timesheeting;
 
 use Codendi_Request;
+use CSRFSynchronizerToken;
 use Feedback;
+use PermissionsNormalizer;
+use PFUser;
+use ProjectHistoryDao;
 use Tracker;
 use TrackerFactory;
 use TrackerManager;
 use Tuleap\Timesheeting\Admin\AdminController;
 use Tuleap\Timesheeting\Admin\TimesheetingEnabler;
+use Tuleap\Timesheeting\Admin\TimesheetingUgroupDao;
+use Tuleap\Timesheeting\Admin\TimesheetingUgroupRetriever;
+use Tuleap\Timesheeting\Admin\TimesheetingUgroupSaver;
+use User_ForgeUserGroupFactory;
 
 class Router
 {
     /**
-     * @var AdminController
+     * @var TrackerFactory
      */
-    private $admin_controller;
+    private $tracker_factory;
 
-    public function __construct(AdminController $admin_controller)
-    {
-        $this->admin_controller = $admin_controller;
+    /**
+     * @var TrackerManager
+     */
+    private $tracker_manager;
+
+    /**
+     * @var TimesheetingEnabler
+     */
+    private $timesheeting_enabler;
+
+    /**
+     * @var User_ForgeUserGroupFactory
+     */
+    private $user_forge_user_group_factory;
+
+    /**
+     * @var PermissionsNormalizer
+     */
+    private $permissions_normalizer;
+
+    /**
+     * @var TimesheetingUgroupSaver
+     */
+    private $timesheeting_ugroup_saver;
+
+    /**
+     * @var TimesheetingUgroupRetriever
+     */
+    private $timesheeting_ugroup_retriever;
+
+    /**
+     * @var ProjectHistoryDao
+     */
+    private $project_history_dao;
+
+    public function __construct(
+        TrackerFactory $tracker_factory,
+        TrackerManager $tracker_manager,
+        TimesheetingEnabler $timesheeting_enabler,
+        User_ForgeUserGroupFactory $user_forge_user_group_factory,
+        PermissionsNormalizer $permissions_normalizer,
+        TimesheetingUgroupSaver $timesheeting_ugroup_saver,
+        TimesheetingUgroupRetriever $timesheeting_ugroup_retriever,
+        ProjectHistoryDao $project_history_dao
+    ) {
+        $this->tracker_factory               = $tracker_factory;
+        $this->tracker_manager               = $tracker_manager;
+        $this->timesheeting_enabler          = $timesheeting_enabler;
+        $this->user_forge_user_group_factory = $user_forge_user_group_factory;
+        $this->permissions_normalizer        = $permissions_normalizer;
+        $this->timesheeting_ugroup_saver     = $timesheeting_ugroup_saver;
+        $this->timesheeting_ugroup_retriever = $timesheeting_ugroup_retriever;
+        $this->project_history_dao           = $project_history_dao;
     }
 
-    public function route(Codendi_Request $request, Tracker $tracker)
+    public function route(Codendi_Request $request)
     {
         $user       = $request->getCurrentUser();
         $action     = $request->get('action');
-        $tracker_id = $tracker->getId();
 
         switch ($action) {
             case "admin-timesheeting":
-                if (! $tracker->userIsAdmin($user)) {
-                    $this->redirectToTrackerHomepage($tracker_id);
-                }
+                $tracker          = $this->getTrackerFromRequest($request);
+                $admin_controller = $this->getAdminController($user, $tracker);
 
-                $this->admin_controller->displayAdminForm($tracker);
+                $admin_controller->displayAdminForm($tracker);
 
                 break;
             case "edit-timesheeting":
-                if (! $tracker->userIsAdmin($user)) {
-                    $this->redirectToTrackerHomepage($tracker_id);
-                }
+                $tracker          = $this->getTrackerFromRequest($request);
+                $admin_controller = $this->getAdminController($user, $tracker);
 
-                $this->admin_controller->editTimesheetingAdminSettings($tracker, $request);
+                $admin_controller->editTimesheetingAdminSettings($tracker, $request);
 
-                $this->redirectToTimesheetingAdminPage($tracker_id);
+                $this->redirectToTimesheetingAdminPage($tracker);
                 break;
             default:
-                $this->redirectToTrackerAdminPage($tracker_id);
+                $this->redirectToTuleapHomepage();
 
                 break;
         }
+    }
+
+    /**
+     * @return Tracker
+     */
+    private function getTrackerFromRequest(Codendi_Request $request)
+    {
+        $tracker_id = $request->get('tracker');
+        $tracker    = $this->tracker_factory->getTrackerById($tracker_id);
+
+        if (! $tracker) {
+            $this->redirectToTuleapHomepage();
+        }
+
+        return $tracker;
+    }
+
+    /**
+     * @return AdminController
+     */
+    private function getAdminController(PFUser $user, Tracker $tracker)
+    {
+        if (! $tracker->userIsAdmin($user)) {
+            $this->redirectToTrackerHomepage($tracker->getId());
+        }
+
+        return new AdminController(
+            $this->tracker_manager,
+            $this->timesheeting_enabler,
+            new CSRFSynchronizerToken($tracker->getAdministrationUrl()),
+            $this->user_forge_user_group_factory,
+            $this->permissions_normalizer,
+            $this->timesheeting_ugroup_saver,
+            $this->timesheeting_ugroup_retriever,
+            $this->project_history_dao
+        );
     }
 
     private function redirectToTrackerHomepage($tracker_id)
@@ -85,24 +176,24 @@ class Router
         $GLOBALS['Response']->redirect($url);
     }
 
-    private function redirectToTrackerAdminPage(Tracker $tracker)
+    private function redirectToTimesheetingAdminPage(Tracker $tracker)
+    {
+        $url = TIMESHEETING_BASE_URL . '/?' . http_build_query(array(
+                'tracker' => $tracker->getId(),
+                'action' => 'admin-timesheeting'
+        ));
+
+        $GLOBALS['Response']->redirect($url);
+
+    }
+
+    private function redirectToTuleapHomepage()
     {
         $GLOBALS['Response']->addFeedback(
             Feedback::ERROR,
             dgettext('tuleap-timesheeting', 'The request is not valid.')
         );
 
-        $GLOBALS['Response']->redirect($tracker->getAdministrationUrl());
-    }
-
-    private function redirectToTimesheetingAdminPage($tracker_id)
-    {
-        $url = TIMESHEETING_BASE_URL . '/?' . http_build_query(array(
-                'tracker' => $tracker_id,
-                'action' => 'admin-timesheeting'
-        ));
-
-        $GLOBALS['Response']->redirect($url);
-
+        $GLOBALS['Response']->redirect('/');
     }
 }
