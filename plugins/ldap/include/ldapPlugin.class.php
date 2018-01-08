@@ -296,15 +296,20 @@ class LdapPlugin extends Plugin {
                     $tuleap_user_id = null;
                     $tuleap_user    = $user_manager->getUserByLdapId($lr->getEdUid());
                     if ($tuleap_user !== null) {
-                        $tuleap_user_id = $tuleap_user->getId();
+                        $params['userList'][] = array(
+                            'display_name' => $tuleap_user->getRealName().' ('.$tuleap_user->getUserName().')',
+                            'login'        => $tuleap_user->getUserName(),
+                            'user_id'      => $tuleap_user->getId(),
+                            'has_avatar'   => $tuleap_user->hasAvatar()
+                        );
+                    } else {
+                        $params['userList'][] = array(
+                            'display_name' => $sync->getCommonName($lr).' ('.$lr->getLogin().')',
+                            'login'        => $lr->getLogin(),
+                            'user_id'      => $tuleap_user_id,
+                            'has_avatar'   => false
+                        );
                     }
-
-                    $params['userList'][] = array(
-                        'display_name' => $sync->getCommonName($lr).' ('.$lr->getLogin().')',
-                        'login'        => $lr->getLogin(),
-                        'user_id'      => $tuleap_user_id,
-                        'has_avatar'   => false
-                    );
                 }
             }
             if($ldap->getErrno() == LDAP::ERR_SIZELIMIT) {

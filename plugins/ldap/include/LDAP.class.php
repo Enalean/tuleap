@@ -464,6 +464,11 @@ class LDAP {
             } else {
                 $attrs  = array($this->ldapParams['cn'], $this->ldapParams['uid']);
             }
+
+            if (! in_array($this->ldapParams['eduid'], $attrs)) {
+                $attrs[] = $this->ldapParams['eduid'];
+            }
+
             // We want types and values
             $attrsOnly = 0;
             // Catch errors to detect if there are more results available than
