@@ -42,6 +42,10 @@ class BurnupRepresentation
      */
     public $is_under_calculation = true;
     /**
+     * @var array {@type int} Number of day in week (Sunday as 0 and Saturday as 6)
+     */
+    public $opening_days;
+    /**
      * @var array {@type BurnupPointRepresentation}
      */
     public $points = array();
@@ -55,6 +59,7 @@ class BurnupRepresentation
         $this->start_date           = JsonCast::toDate($burnup_data->getTimePeriod()->getStartDate());
         $this->duration             = JsonCast::toInt($burnup_data->getTimePeriod()->getDuration());
         $this->is_under_calculation = JsonCast::toBoolean($burnup_data->isBeingCalculated());
+        $this->opening_days         = array(1, 2, 3, 4, 5);
         foreach ($burnup_data->getEfforts() as $timestamp => $burnup_effort) {
             $this->points[] = new BurnupPointRepresentation($burnup_effort, $timestamp);
         }
