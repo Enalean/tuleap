@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * Originally written by Mohamed CHAARI, 2006. STMicroelectronics.
  *
@@ -30,11 +30,20 @@ if (! user_isloggedin()) {
     return;
 }
 
-if (! $request->get('project_id')) {
+
+$project_id = $request->get('project_id');
+if (! $project_id) {
     exit_no_group();
 }
 
-session_require(array('group' => $request->get('project_id'), 'admin_flags' => 'A'));
+$membership_delegation_dao = new \Tuleap\Project\Admin\MembershipDelegationDao();
+$user                      = $request->getCurrentUser();
+if (! $user->isAdmin($project_id) && ! $membership_delegation_dao->doesUserHasMembershipDelegation($user->getId(), $project_id)) {
+    exit_error(
+        $Language->getText('include_session', 'insufficient_g_access'),
+        $Language->getText('include_session', 'no_perm_to_view')
+    );
+}
 
 $user_manager  = UserManager::instance();
 $import        = new UserImport($request->get('project_id'), $user_manager, new UserHelper());

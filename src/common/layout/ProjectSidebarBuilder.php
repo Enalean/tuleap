@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -28,6 +28,7 @@ use PermissionsOverrider_PermissionsOverriderManager;
 use PFUser;
 use Project;
 use ProjectManager;
+use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\Sanitizer\URISanitizer;
 
 class ProjectSidebarBuilder
@@ -52,19 +53,25 @@ class ProjectSidebarBuilder
      * @var URISanitizer
      */
     private $uri_sanitizer;
+    /**
+     * @var MembershipDelegationDao
+     */
+    private $membership_delegation_dao;
 
     public function __construct(
         EventManager $event_manager,
         ProjectManager $project_manager,
         PermissionsOverrider_PermissionsOverriderManager $permission_overrider,
         Codendi_HTMLPurifier $purifier,
-        URISanitizer $uri_sanitizer
+        URISanitizer $uri_sanitizer,
+        MembershipDelegationDao $membership_delegation_dao
     ) {
-        $this->event_manager        = $event_manager;
-        $this->project_manager      = $project_manager;
-        $this->permission_overrider = $permission_overrider;
-        $this->purifier             = $purifier;
-        $this->uri_sanitizer        = $uri_sanitizer;
+        $this->event_manager             = $event_manager;
+        $this->project_manager           = $project_manager;
+        $this->permission_overrider      = $permission_overrider;
+        $this->purifier                  = $purifier;
+        $this->uri_sanitizer             = $uri_sanitizer;
+        $this->membership_delegation_dao = $membership_delegation_dao;
     }
 
     /** @return array[] Array of sidebar entries */
@@ -148,11 +155,7 @@ class ProjectSidebarBuilder
         }
 
         if ((string)$short_name === "admin") {
-            if (! $user->isLoggedIn()) {
-                return false;
-            }
-
-            if (! $user->isSuperUser() && ! $user->isMember($project->getID(), 'A')) {
+            if (! $this->userCanSeeAdminService($project, $user)) {
                 return false;
             }
         }
@@ -223,5 +226,16 @@ class ProjectSidebarBuilder
         $label .= $this->purifier->purify($service_data['label']) . '</span>';
 
         return $label;
+    }
+
+    private function userCanSeeAdminService(Project $project, PFUser $user)
+    {
+        if (! $user->isLoggedIn()) {
+            return false;
+        }
+
+        return $user->isSuperUser()
+            || $user->isMember($project->getID(), 'A')
+            || $this->membership_delegation_dao->doesUserHasMembershipDelegation($user->getId(), $project->getID());
     }
 }

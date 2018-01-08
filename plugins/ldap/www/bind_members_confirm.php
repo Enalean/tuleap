@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2008. All Rights Reserved.
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2008
  *
@@ -42,7 +42,14 @@ if (! $request->valid($vGroupId)) {
 $groupId = $request->get('group_id');
 
 // Must be a project admin
-session_require(array('group' => $groupId, 'admin_flags' => 'A'));
+$membership_delegation_dao = new \Tuleap\Project\Admin\MembershipDelegationDao();
+$user                      = $request->getCurrentUser();
+if (! $user->isAdmin($groupId) && ! $membership_delegation_dao->doesUserHasMembershipDelegation($user->getId(), $groupId)) {
+    exit_error(
+        $Language->getText('include_session', 'insufficient_g_access'),
+        $Language->getText('include_session', 'no_perm_to_view')
+    );
+}
 
 // Ensure LDAP plugin is active
 $pluginManager = PluginManager::instance();
