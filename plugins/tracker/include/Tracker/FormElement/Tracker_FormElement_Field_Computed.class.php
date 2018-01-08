@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -399,29 +399,30 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
      *
      * @return string
      */
-    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null)
-    {
-        $purifier       = Codendi_HTMLPurifier::instance();
-        $computed_value = $this->getComputedValueWithNoStopOnManualValue($artifact);
+    public function fetchArtifactValueReadOnly(
+        Tracker_Artifact $artifact,
+        Tracker_Artifact_ChangesetValue $changeset_value = null
+    ) {
+        $value    = null;
+        $purifier = Codendi_HTMLPurifier::instance();
 
-        if ($value !== null) {
-            $value = $value->getValue();
+        if ($changeset_value && $changeset_value->isManualValue()) {
+            $value = $changeset_value->getValue();
         }
 
+        $computed_value = $this->getComputedValueWithNoStopOnManualValue($artifact);
         if ($computed_value === null) {
             $computed_value = $this->getFieldEmptyMessage();
         }
+
+
         $html_computed_value = '<span class="auto-computed">'. $purifier->purify($computed_value) .' (' .
             $GLOBALS['Language']->getText('plugin_tracker', 'autocomputed_field').')</span>';
 
-        if ($value === null) {
+        if ($changeset_value && ! $changeset_value->isManualValue()) {
             $value = $html_computed_value;
         }
 
-        return $this->fetchFieldReadOnly($value, $html_computed_value);
-    }
-
-    private function fetchFieldReadOnly($value, $html_computed_value) {
         return '<div class="auto-computed-label">'. $value. '</div>'.
             '<div class="back-to-autocompute">'.$html_computed_value.'</div>';
     }
@@ -444,9 +445,8 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         Tracker_Artifact_ChangesetValue $value = null,
         $format = 'text'
     ) {
-        $current_user = UserManager::instance()->getCurrentUser();
-        $changeset    = $artifact->getLastChangesetWithFieldValue($this);
-        $value        = $this->getValueForChangeset($changeset, $current_user);
+        $changeset = $artifact->getLastChangesetWithFieldValue($this);
+        $value     = $this->getComputedValue($user, $changeset->getArtifact(), $changeset->getSubmittedOn());
 
         return ($value !== null) ? $value : "-";
     }
@@ -461,7 +461,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     protected function fetchTooltipValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
         $current_user = UserManager::instance()->getCurrentUser();
         $changeset    = $artifact->getLastChangesetWithFieldValue($this);
-        $value        = $this->getValueForChangeset($changeset, $current_user);
+        $value        = $this->getComputedValue($current_user, $changeset->getArtifact(), $changeset->getSubmittedOn());
 
         return ($value !== null) ? $value : "-";
     }
@@ -472,7 +472,8 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         $artifact     = Tracker_ArtifactFactory::instance()->getArtifactById($artifact_id);
 
         $changeset = $this->getTrackerChangesetFactory()->getChangeset($artifact, $changeset_id);
-        return $this->getValueForChangeset($changeset, $current_user);
+
+        return $this->getComputedValue($current_user, $changeset->getArtifact(), $changeset->getSubmittedOn());
     }
 
     public function getSoapValue(PFUser $user, Tracker_Artifact_Changeset $changeset)
@@ -512,24 +513,13 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return $artifact_field_value_full_representation;
     }
 
-    private function getValueForChangeset(Tracker_Artifact_Changeset $artifact_changeset, PFUser $user)
-    {
-        $changeset = $artifact_changeset->getValue($this);
-        if ($changeset && $changeset->getNumeric() !== null) {
-            return $changeset->getNumeric();
-        } else {
-            $empty_array = array();
-            return $this->getComputedValue($user, $artifact_changeset->getArtifact(), null, $empty_array);
-        }
-    }
-
     /**
      * @return int|float|null
      */
     private function getManualValueForChangeset(Tracker_Artifact_Changeset $artifact_changeset)
     {
         $changeset_value = $artifact_changeset->getValue($this);
-        if ($changeset_value && $changeset_value->getNumeric() !== null) {
+        if ($changeset_value && $changeset_value->isManualValue()) {
             return $changeset_value->getNumeric();
         }
 
@@ -834,12 +824,27 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
 
     public function getChangesetValue($changeset, $value_id, $has_changed)
     {
-        $changeset_value = null;
-        if ($row = $this->getValueDao()->searchById($value_id, $this->id)->getRow()) {
-            $int_row_value   = $row['value'];
-            $changeset_value = new ChangesetValueComputed($value_id, $changeset, $this, $has_changed, $int_row_value);
+        $row = $this->getValueDao()->searchById($value_id, $this->id)->getRow();
+
+        if ($row && $row['value'] !== null) {
+            $is_manual_value = true;
+
+            return new ChangesetValueComputed(
+                $value_id,
+                $changeset,
+                $this,
+                $has_changed,
+                $row['value'],
+                $is_manual_value
+            );
         }
-        return $changeset_value;
+
+        $user  = $this->getCurrentUser();
+        $value = $this->getComputedValue($user, $changeset->getArtifact(), $changeset->getSubmittedOn());
+
+        $is_manual_value = false;
+
+        return new ChangesetValueComputed($value_id, $changeset, $this, $has_changed, $value, $is_manual_value);
     }
 
     private function getTrackerChangesetFactory()

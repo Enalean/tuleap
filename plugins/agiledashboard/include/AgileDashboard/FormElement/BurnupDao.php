@@ -257,4 +257,40 @@ class BurnupDao extends DataAccessObject
 
         return $this->retrieveFirstRow($sql);
     }
+
+    public function searchLinkedArtifactsAtGivenTimestamp($artifact_id, $timestamp)
+    {
+        $artifact_id = $this->da->escapeInt($artifact_id);
+        $timestamp   = $this->da->escapeInt($timestamp);
+
+        $sql = "SELECT linked_art.id AS id
+                FROM tracker_artifact AS parent_art
+                    INNER JOIN tracker ON parent_art.tracker_id = tracker.id
+                    INNER JOIN tracker_changeset AS changeset1 ON changeset1.artifact_id = parent_art.id
+                    LEFT JOIN  tracker_changeset AS changeset2
+                        ON (
+                            changeset2.artifact_id = parent_art.id
+                            AND changeset1.id < changeset2.id
+                            AND changeset2.submitted_on <= $timestamp
+                        )
+                    INNER JOIN tracker_field AS f
+                        ON (f.tracker_id = parent_art.tracker_id AND f.formElement_type = 'art_link' AND use_it = 1)
+                    INNER JOIN tracker_changeset_value AS cv
+                        ON (cv.changeset_id = changeset1.id AND cv.field_id = f.id)
+                    INNER JOIN tracker_changeset_value_artifactlink artlink
+                        ON (artlink.changeset_value_id = cv.id)
+                    INNER JOIN tracker_artifact AS linked_art
+                        ON (linked_art.id = artlink.artifact_id)
+                    INNER JOIN plugin_agiledashboard_planning
+                        ON plugin_agiledashboard_planning.planning_tracker_id = parent_art.tracker_id
+                    INNER JOIN plugin_agiledashboard_planning_backlog_tracker
+                        ON plugin_agiledashboard_planning_backlog_tracker.planning_id = plugin_agiledashboard_planning.id
+                        AND linked_art.tracker_id = plugin_agiledashboard_planning_backlog_tracker.tracker_id
+                WHERE parent_art.id = $artifact_id
+                    AND tracker.deletion_date IS NULL
+                    AND changeset2.id IS NULL
+                    AND changeset1.submitted_on <= $timestamp";
+
+        return $this->retrieve($sql);
+    }
 }

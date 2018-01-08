@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,13 +20,31 @@
 
 namespace Tuleap\Tracker\Artifact;
 
-use Tracker_Artifact_ChangesetValue_Float;
-use PFUser;
 use Codendi_HTMLPurifier;
+use PFUser;
+use Tracker_Artifact_Changeset;
+use Tracker_Artifact_ChangesetValue_Float;
 use Tracker_Artifact_ChangesetValueVisitor;
 
 class ChangesetValueComputed extends Tracker_Artifact_ChangesetValue_Float
 {
+    /**
+     * @var bool
+     */
+    private $is_manual_value;
+
+    public function __construct(
+        $id,
+        Tracker_Artifact_Changeset $changeset,
+        $field,
+        $has_changed,
+        $numeric,
+        $is_manual_value
+    ) {
+        parent::__construct($id, $changeset, $field, $has_changed, $numeric);
+
+        $this->is_manual_value = $is_manual_value;
+    }
 
     /**
      * @return mixed
@@ -51,32 +69,51 @@ class ChangesetValueComputed extends Tracker_Artifact_ChangesetValue_Float
         return $this->getValue();
     }
 
+    /**
+     * @param \Tracker_Artifact_ChangesetValue $changeset_value
+     * @param string                           $format
+     * @param PFUser|null                      $user
+     * @param bool                             $ignore_perms
+     *
+     * @return bool|string
+     */
     public function diff($changeset_value, $format = 'html', PFUser $user = null, $ignore_perms = false)
     {
         $previous_numeric = $changeset_value->getValue();
         $next_numeric     = $this->getValue();
 
-
         $purifier = Codendi_HTMLPurifier::instance();
-        if ($previous_numeric !== $next_numeric) {
-            if ($previous_numeric === null) {
-                return $GLOBALS['Language']->getText('plugin_tracker_artifact', 'changed_from')." ".
-                $GLOBALS['Language']->getText('plugin_tracker', 'autocomputed_field')." ".
-                $GLOBALS['Language']->getText('plugin_tracker_artifact', 'to') ." ".
-                $purifier->purify($next_numeric);
-            } elseif ($next_numeric === null) {
-                return $GLOBALS['Language']->getText('plugin_tracker_artifact', 'changed_from') ." ".
-                $purifier->purify($previous_numeric). " ".
-                $GLOBALS['Language']->getText('plugin_tracker_artifact', 'to') ." ".
-                $GLOBALS['Language']->getText('plugin_tracker', 'autocomputed_field');
-            } else {
-                return $GLOBALS['Language']->getText('plugin_tracker_artifact', 'changed_from').
-                    ' ' . $purifier->purify($previous_numeric) . ' ' .
-                    $GLOBALS['Language']->getText('plugin_tracker_artifact', 'to') . ' ' .
-                    $purifier->purify($next_numeric);
-            }
+        if ($changeset_value->isManualValue() === $this->isManualValue()
+            && $previous_numeric === $next_numeric
+        ) {
+            return false;
         }
 
-        return false;
+        if ($this->isManualValue() && $changeset_value->isManualValue()) {
+            return $GLOBALS['Language']->getText('plugin_tracker_artifact', 'changed_from') .
+                ' ' . $purifier->purify($previous_numeric) . ' ' .
+                $GLOBALS['Language']->getText('plugin_tracker_artifact', 'to') . ' ' .
+                $purifier->purify($next_numeric);
+        }
+
+        if ($this->isManualValue()) {
+            return $GLOBALS['Language']->getText('plugin_tracker_artifact', 'changed_from') . " " .
+                $GLOBALS['Language']->getText('plugin_tracker', 'autocomputed_field') . " " .
+                $GLOBALS['Language']->getText('plugin_tracker_artifact', 'to') . " " .
+                $purifier->purify($next_numeric);
+        }
+
+        return $GLOBALS['Language']->getText('plugin_tracker_artifact', 'changed_from') . " " .
+            $purifier->purify($previous_numeric) . " " .
+            $GLOBALS['Language']->getText('plugin_tracker_artifact', 'to') . " " .
+            $GLOBALS['Language']->getText('plugin_tracker', 'autocomputed_field');
+    }
+
+    /**
+     * @return bool
+     */
+    public function isManualValue()
+    {
+        return $this->is_manual_value;
     }
 }

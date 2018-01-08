@@ -61,7 +61,7 @@ class ChangesetValueComputedXMLExporterTest extends \TuleapTestCase
     public function itCreatesAComputedNode()
     {
         $exporter        = new ChangesetValueComputedXMLExporter();
-        $changeset_value = new ChangesetValueComputed(1, $this->changeset, $this->field, true, 1);
+        $changeset_value = new ChangesetValueComputed(1, $this->changeset, $this->field, true, 1, false);
 
         $exporter->export($this->artifact_xml, $this->changeset_value_xml, $this->artifact, $changeset_value);
 
@@ -73,7 +73,7 @@ class ChangesetValueComputedXMLExporterTest extends \TuleapTestCase
     public function itExportsAFieldInAutocomputeMode()
     {
         $exporter        = new ChangesetValueComputedXMLExporter();
-        $changeset_value = new ChangesetValueComputed(1, $this->changeset, $this->field, true, null);
+        $changeset_value = new ChangesetValueComputed(1, $this->changeset, $this->field, true, null, false);
 
         $exporter->export($this->artifact_xml, $this->changeset_value_xml, $this->artifact, $changeset_value);
 
@@ -85,7 +85,7 @@ class ChangesetValueComputedXMLExporterTest extends \TuleapTestCase
     public function itExportsFieldWithAManualValue()
     {
         $exporter        = new ChangesetValueComputedXMLExporter();
-        $changeset_value = new ChangesetValueComputed(1, $this->changeset, $this->field, true, 1.5);
+        $changeset_value = new ChangesetValueComputed(1, $this->changeset, $this->field, true, 1.5, true);
 
         $exporter->export($this->artifact_xml, $this->changeset_value_xml, $this->artifact, $changeset_value);
 
@@ -97,7 +97,7 @@ class ChangesetValueComputedXMLExporterTest extends \TuleapTestCase
     public function itExportsFieldWithAManualValueSetTo0()
     {
         $exporter        = new ChangesetValueComputedXMLExporter();
-        $changeset_value = new ChangesetValueComputed(1, $this->changeset, $this->field, true, 0);
+        $changeset_value = new ChangesetValueComputed(1, $this->changeset, $this->field, true, 0, true);
 
         $exporter->export($this->artifact_xml, $this->changeset_value_xml, $this->artifact, $changeset_value);
 
