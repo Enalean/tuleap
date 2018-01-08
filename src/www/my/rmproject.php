@@ -48,9 +48,16 @@ if (user_isloggedin()) {
     $user_remover->removeUserFromProject($group_id,$user_id, false);
 
 	/********* mail the changes so the admins know what happened *********/
-	$res_admin = db_query("SELECT user.user_id AS user_id, user.email AS email, user.user_name AS user_name FROM user,user_group "
-		. "WHERE user_group.user_id=user.user_id AND user_group.group_id=".db_ei($group_id)." AND "
-		. "user_group.admin_flags = 'A'");
+	$res_admin = db_query("SELECT user.user_id AS user_id, user.email AS email, user.user_name AS user_name FROM user,user_group
+		WHERE user_group.user_id=user.user_id AND user_group.group_id=".db_ei($group_id)." AND
+		user_group.admin_flags = 'A'
+		UNION
+		SELECT user.user_id AS user_id, user.email AS email, user.user_name AS user_name
+		FROM user
+		    INNER JOIN ugroup_user ON (user.user_id = ugroup_user.user_id)
+		    INNER JOIN ugroup ON (ugroup_user.ugroup_id = ugroup.ugroup_id AND ugroup.group_id = ".db_ei($group_id).")
+		    INNER JOIN project_membership_delegation AS delegation ON (ugroup_user.ugroup_id = delegation.ugroup_id)
+    ");
     $to = '';
 	while ($row_admin = db_fetch_array($res_admin)) {
 		$to .= "$row_admin[email],";
