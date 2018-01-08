@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,7 +23,9 @@ namespace Tuleap\Tracker\FormElement;
 use Codendi_HTMLPurifier;
 use EventManager;
 use Tracker;
+use Tracker_FormElement_Field;
 use Tracker_HierarchyFactory;
+use Tuleap\Tracker\FormElement\Event\MessageFetcherAdditionalWarnings;
 
 class ChartMessageFetcher
 {
@@ -36,12 +38,19 @@ class ChartMessageFetcher
      */
     private $configuration_field_retriever;
 
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
+
     public function __construct(
         Tracker_HierarchyFactory $hierarchy_factory,
-        ChartConfigurationFieldRetriever $configuration_field_retriever
+        ChartConfigurationFieldRetriever $configuration_field_retriever,
+        EventManager $event_manager
     ) {
         $this->hierarchy_factory             = $hierarchy_factory;
         $this->configuration_field_retriever = $configuration_field_retriever;
+        $this->event_manager                 = $event_manager;
     }
 
     /**
@@ -49,8 +58,10 @@ class ChartMessageFetcher
      *
      * @return string
      */
-    public function fetchWarnings(Tracker $tracker, ChartFieldUsage $usage)
+    public function fetchWarnings(Tracker_FormElement_Field $field, ChartFieldUsage $usage)
     {
+        $tracker = $field->getTracker();
+
         $warnings = array();
         if ($usage->getUseStartDate()) {
             $warning_message = $this->fetchMissingFieldWarning(
@@ -85,15 +96,20 @@ class ChartMessageFetcher
             }
         }
 
-        if ($usage->getIsUnderConstruction()) {
-            $warnings[] = "<li>" . dgettext('tuleap-tracker', 'Field is under construction') . "</li>";
-        }
-
         if ($usage->getUseRemainingEffort()) {
             $warning_message = $this->fetchMissingRemainingEffortWarning($tracker);
             if ($warning_message !== null) {
                 $warnings[] = $warning_message;
             }
+        }
+
+        $event = new MessageFetcherAdditionalWarnings($field);
+        $this->event_manager->processEvent($event);
+
+        $warnings = array_merge($warnings, $event->getWarnings());
+
+        if ($usage->getIsUnderConstruction()) {
+            $warnings[] = "<li>" . dgettext('tuleap-tracker', 'Field is under construction') . "</li>";
         }
 
         if (count($warnings) > 0) {

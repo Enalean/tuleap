@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,6 +21,7 @@
 namespace Tuleap\AgileDashboard\FormElement;
 
 use Codendi_HTMLPurifier;
+use EventManager;
 use PFUser;
 use SystemEventManager;
 use TemplateRendererFactory;
@@ -77,7 +78,7 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
     {
         $field_usage = $this->getChartFieldUsage();
 
-        $html = $this->getChartMessageFetcher()->fetchWarnings($this->getTracker(), $field_usage);
+        $html = $this->getChartMessageFetcher()->fetchWarnings($this, $field_usage);
         $html .= '<img src="' . AGILEDASHBOARD_BASE_URL . '/images/fake-burnup-admin.png" />';
 
         return $html;
@@ -87,7 +88,8 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
     {
         return new ChartMessageFetcher(
             Tracker_HierarchyFactory::instance(),
-            $this->getConfigurationFieldRetriever()
+            $this->getConfigurationFieldRetriever(),
+            EventManager::instance()
         );
     }
 
