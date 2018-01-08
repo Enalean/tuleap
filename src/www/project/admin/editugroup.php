@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,15 +20,18 @@
  */
 
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Project\Admin\ProjectUGroup\BindingController;
 use Tuleap\Project\Admin\ProjectUGroup\BindingPresenterBuilder;
+use Tuleap\Project\Admin\ProjectUGroup\DelegationController;
 use Tuleap\Project\Admin\ProjectUGroup\DetailsController;
 use Tuleap\Project\Admin\ProjectUGroup\DynamicUGroupMembersUpdater;
 use Tuleap\Project\Admin\ProjectUGroup\EditBindingUGroupEventLauncher;
 use Tuleap\Project\Admin\ProjectUGroup\IndexController;
 use Tuleap\Project\Admin\ProjectUGroup\MembersController;
 use Tuleap\Project\Admin\ProjectUGroup\MembersPresenterBuilder;
+use Tuleap\Project\Admin\ProjectUGroup\PermissionsDelegationPresenterBuilder;
 use Tuleap\Project\Admin\ProjectUGroup\ProjectUGroupPresenterBuilder;
 use Tuleap\Project\Admin\ProjectUGroup\UGroupRouter;
 use Tuleap\Project\UserPermissionsDao;
@@ -60,7 +63,10 @@ $members_controller  = new MembersController(
     new DynamicUGroupMembersUpdater(new UserPermissionsDao(), $ugroup_binding, $event_manager)
 
 );
-$index_controller    = new IndexController(
+
+$membership_delegation_dao = new MembershipDelegationDao();
+
+$index_controller = new IndexController(
     new ProjectUGroupPresenterBuilder(
         PermissionsManager::instance(),
         $event_manager,
@@ -71,12 +77,14 @@ $index_controller    = new IndexController(
             $user_manager,
             $event_manager
         ),
-        new MembersPresenterBuilder($event_manager, new UserHelper())
+        new MembersPresenterBuilder($event_manager, new UserHelper()),
+        new PermissionsDelegationPresenterBuilder($membership_delegation_dao)
     ),
     new IncludeAssets(ForgeConfig::get('tuleap_dir') . '/src/www/assets', '/assets'),
     new HeaderNavigationDisplayer()
 );
-$details_controller  = new DetailsController($request);
+
+$details_controller = new DetailsController($request);
 
 $router = new UGroupRouter(
     $ugroup_manager,
@@ -84,6 +92,7 @@ $router = new UGroupRouter(
     $edit_event_launcher,
     $binding_controller,
     $members_controller,
+    new DelegationController($membership_delegation_dao, new ProjectHistoryDao()),
     $index_controller,
     $details_controller,
     $user_manager

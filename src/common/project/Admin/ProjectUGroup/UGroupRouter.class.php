@@ -29,11 +29,15 @@ use CSRFSynchronizerToken;
 use EventManager;
 use Project;
 use ProjectUGroup;
-use UserManager;
 use UGroupManager;
+use UserManager;
 
 class UGroupRouter
 {
+    /**
+     * @var DelegationController
+     */
+    private $delegation_controller;
     /**
      * @var UGroupManager
      */
@@ -73,18 +77,20 @@ class UGroupRouter
         EditBindingUGroupEventLauncher $edit_event_launcher,
         BindingController $binding_controller,
         MembersController $members_controller,
+        DelegationController $delegation_controller,
         IndexController $index_controller,
         DetailsController $details_controller,
         UserManager $user_manager
     ) {
-        $this->ugroup_manager      = $ugroup_manager;
-        $this->request             = $request;
-        $this->binding_controller  = $binding_controller;
-        $this->members_controller  = $members_controller;
-        $this->index_controller    = $index_controller;
-        $this->details_controller  = $details_controller;
-        $this->edit_event_launcher = $edit_event_launcher;
-        $this->user_manager        = $user_manager;
+        $this->ugroup_manager        = $ugroup_manager;
+        $this->request               = $request;
+        $this->binding_controller    = $binding_controller;
+        $this->members_controller    = $members_controller;
+        $this->delegation_controller = $delegation_controller;
+        $this->index_controller      = $index_controller;
+        $this->details_controller    = $details_controller;
+        $this->edit_event_launcher   = $edit_event_launcher;
+        $this->user_manager          = $user_manager;
     }
 
     public function process()
@@ -112,6 +118,12 @@ class UGroupRouter
                 $csrf->check();
                 $this->details_controller->updateDetails($ugroup);
                 $this->redirect($ugroup);
+                break;
+            case 'update_permssions_delegation':
+                $csrf->check();
+                $this->delegation_controller->updateDelegation($ugroup, $this->request->get('permissions-delegation'));
+                $this->redirect($ugroup);
+                break;
             default:
                 $event = new UGroupEditProcessAction($this->request, $ugroup, $csrf, $this->edit_event_launcher);
                 EventManager::instance()->processEvent($event);

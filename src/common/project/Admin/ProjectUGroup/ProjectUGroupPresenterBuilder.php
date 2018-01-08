@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -55,13 +55,18 @@ class ProjectUGroupPresenterBuilder
      * @var BindingPresenterBuilder
      */
     private $binding_builder;
+    /**
+     * @var PermissionsDelegationPresenterBuilder
+     */
+    private $permissions_delegation_builder;
 
     public function __construct(
         PermissionsManager $permissions_manager,
         EventManager $event_manager,
         FRSReleaseFactory $release_factory,
         BindingPresenterBuilder $binding_builder,
-        MembersPresenterBuilder $members_builder
+        MembersPresenterBuilder $members_builder,
+        PermissionsDelegationPresenterBuilder $permissions_delegation_builder
     ) {
         $this->html_purifier = Codendi_HTMLPurifier::instance();
 
@@ -70,15 +75,18 @@ class ProjectUGroupPresenterBuilder
         $this->release_factory      = $release_factory;
         $this->binding_builder      = $binding_builder;
         $this->members_builder      = $members_builder;
+
+        $this->permissions_delegation_builder = $permissions_delegation_builder;
     }
 
     public function build(ProjectUGroup $ugroup, CSRFSynchronizerToken $csrf, PFUser $user)
     {
         $permissions = $this->getFormattedPermissions($ugroup);
-        $binding = $this->binding_builder->build($ugroup, $csrf);
-        $members = $this->members_builder->build($ugroup);
+        $binding     = $this->binding_builder->build($ugroup, $csrf);
+        $members     = $this->members_builder->build($ugroup);
+        $delegation  = $this->permissions_delegation_builder->build($ugroup);
 
-        return new ProjectUGroupPresenter($ugroup, $permissions, $binding, $members, $csrf, $user);
+        return new ProjectUGroupPresenter($ugroup, $permissions, $delegation, $binding, $members, $csrf, $user);
     }
 
     /**

@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.3\n"
+"X-Generator: Poedit 1.8.7.1\n"
 
 #, php-format
 msgid ""
@@ -111,6 +111,11 @@ msgstr "Une erreur est survenue lors de l'édition du label."
 
 msgid "An error occurred while trying to remove the label."
 msgstr "Une erreur est survenue lors de la suppression du label."
+
+msgid "An error occurred while trying to update permissions delegations."
+msgstr ""
+"Une erreur est survenue lors de la mise à jour des délégations de "
+"permissions."
 
 msgid "And more..."
 msgstr "Et plus ..."
@@ -335,7 +340,9 @@ msgstr "Messagerie Instantanée"
 
 #, php-format
 msgid "Invalid group name: %s. Please use only alphanumerical characters."
-msgstr "Le nom du groupe %s est invalide. Merci de forunier uniquement des caractères alphanumériques."
+msgstr ""
+"Le nom du groupe %s est invalide. Merci de forunier uniquement des "
+"caractères alphanumériques."
 
 msgid "Is used?"
 msgstr "Utilisé ?"
@@ -381,6 +388,9 @@ msgstr "Membres"
 
 msgid "Members of user groups"
 msgstr "Membre des groupes"
+
+msgid "Membership management"
+msgstr "Gestion des membres"
 
 msgid "Missing Information. PLEASE fill in all required information."
 msgstr "Information manquante. Veuillez saisir les informations demandées."
@@ -448,11 +458,21 @@ msgstr "Propriétaire"
 msgid "Parent project"
 msgstr "Projet parent"
 
+msgid "People in this group will be able to manage project members."
+msgstr ""
+"Les personnes dans ce groupe seront capables de gérer les membres du projet."
+
 msgid "Permission"
 msgstr "Permission"
 
 msgid "Permission Request"
 msgstr "Demande de permission"
+
+msgid "Permissions delegation"
+msgstr "Délégation des permissions"
+
+msgid "Permissions delegations have been successfully updated."
+msgstr "Les délégations de permissions ont été mises à jour."
 
 msgid "Permissions for deprecated services"
 msgstr "Permissions pour les services dépréciés"
@@ -565,6 +585,9 @@ msgstr "Ressource"
 
 msgid "SVN"
 msgstr "SVN"
+
+msgid "Save delegated permissions"
+msgstr "Sauvegarder les permissions déléguées"
 
 msgid "Save information"
 msgstr "Enregistrer les informations"
@@ -878,6 +901,13 @@ msgid ""
 msgstr ""
 "Vous êtes sur le point de supprimer le widget \"%s\". Cette action est "
 "irréversible. Merci de confirmer cette suppression."
+
+msgid ""
+"You can delegate to this group several permissions. All the members of this\n"
+"                        group will take advantage of these permissions."
+msgstr ""
+"Vous pouvez déléguer à ce groupe des permissions. Tous les membres de ce "
+"groupe  bénéficieront alors de ces permissions."
 
 msgid "You can import users into your project by specifying a text file."
 msgstr ""
