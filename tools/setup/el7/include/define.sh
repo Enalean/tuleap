@@ -1,0 +1,42 @@
+# declare binaries path
+declare -r awk="/usr/bin/awk"
+declare -r basename="/usr/bin/basename"
+declare -r cat="/usr/bin/cat"
+declare -r date="/usr/bin/date"
+declare -r dig="/usr/bin/dig"
+declare -r fold="/usr/bin/fold"
+declare -r getenforce="/usr/sbin/getenforce"
+declare -r getopt="/usr/bin/getopt"
+declare -r grep="/usr/bin/grep"
+declare -r gzip="/usr/bin/gzip"
+declare -r head="/usr/bin/head"
+declare -r hostnamectl="/usr/bin/hostnamectl"
+declare -r ipcalc="/usr/bin/ipcalc"
+declare -r mv="/usr/bin/mv"
+declare -r mysql="/opt/rh/rh-mysql57/root/usr/bin/mysql"
+declare -r mysqladmin="/opt/rh/rh-mysql57/root/usr/bin/mysqladmin"
+declare -r mysqldump="/opt/rh/rh-mysql57/root/usr/bin/mysqldump"
+declare -r printf="/usr/bin/printf"
+declare -r systemctl="/usr/bin/systemctl"
+declare -r tail="/usr/bin/tail"
+declare -r tr="/usr/bin/tr"
+
+# declare files
+declare -r password_file="/root/.tuleap_passwd"
+declare -r urandom="/dev/urandom"
+declare -r rh_release="/etc/redhat-release"
+declare -r script_name="$(${basename} ${0})"
+declare -r sefile="/etc/selinux/config"
+declare -r tuleap_log="/var/log/tuleap/tuleap_setup.log"
+
+# declare options
+declare -r my_opt="--batch --skip-column-names"
+declare -r project_admin="tuleap"
+declare -i mysql_port=3306
+
+assumeyes="false"
+db_exist="false"
+mysql_user="root"
+mysql_password="NULL"
+new_db="true"
+server_name="NULL"
