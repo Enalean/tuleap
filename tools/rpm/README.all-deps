@@ -1,3 +1,0 @@
-This package gather all dependencies of @@PKG_NAME@@.
-Will be useless as soon as the application is properly cut into smaller
-packages.
