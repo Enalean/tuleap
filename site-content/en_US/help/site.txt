@@ -7,11 +7,6 @@
             </h1>
         </div>
         <section class="tlp-pane-section">
-
-            <h2 class="tlp-pane-subtitle">Quick links</h2>
-                        <p>As a myTuleap client, Enalean provides support for each user. Support can be reached at <a href="mailto:sandra.echinard@enalean.com+mytuleap@enalean.com?subject='Support Requests From <?php echo $_SERVER['SERVER_NAME'];?>'">support+mytuleap@enalean.com</a>.</p>
-
-
             <h2 class="tlp-pane-subtitle">Access Tuleap documentation</h2>
 
             <p>If you have a question about Tuleap usage or are stumped by an issue, you should first take a look at the <a href="/doc/en/index.html">documentation</a>.</p>
