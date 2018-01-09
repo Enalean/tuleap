@@ -1,5 +1,5 @@
 /*
- * Copyright Enalean (c) 2017. All rights reserved.
+ * Copyright Enalean (c) 2017-2018. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -67,23 +67,32 @@ function initLdapBindingPreview(options, callback) {
         preview.classList.add('shown');
         preview.classList.add('loading');
 
-        const { users_to_add, users_to_remove, nb_not_impacted } = await callback(chosen_ldap_group);
+        let users_to_add, users_to_remove, nb_not_impacted, group_not_found;
+        try {
+            ({ users_to_add, users_to_remove, nb_not_impacted } = await callback(chosen_ldap_group));
+            group_not_found = false;
+        } catch(ex) {
+            users_to_add = users_to_remove = [];
+            nb_not_impacted = 0;
+            group_not_found = true;
+        }
+
         preview.classList.remove('loading');
 
         const rendered_preview = render(
             preview_template,
-            getPresenter(users_to_add, users_to_remove, display_name, chosen_ldap_group, nb_not_impacted)
+            getPresenter(users_to_add, users_to_remove, display_name, chosen_ldap_group, nb_not_impacted, group_not_found)
         );
         preview.insertAdjacentHTML('beforeEnd', rendered_preview);
 
-        button.disabled = false;
+        button.disabled = group_not_found;
     }
 
     function removeAllChildren(element) {
         [...element.children].forEach(child => child.remove());
     }
 
-    function getPresenter(users_to_add, users_to_remove, ugroup_name, chosen_ldap_group, nb_not_impacted) {
+    function getPresenter(users_to_add, users_to_remove, ugroup_name, chosen_ldap_group, nb_not_impacted, ldap_group_not_found) {
         const nb_to_add    = users_to_add.length;
         const nb_to_remove = users_to_remove.length;
 
@@ -91,8 +100,9 @@ function initLdapBindingPreview(options, callback) {
         const nb_to_add_text    = sprintf(gettext_provider.ngettext('%d user to add.', '%d users to add.', nb_to_add), nb_to_add);
         const nb_to_remove_text = sprintf(gettext_provider.ngettext('%d user to remove.', '%d users to remove.', nb_to_remove), nb_to_remove);
 
-        const nothing_to_do_text   = gettext_provider.gettext("There aren't any users to add nor to remove.");
-        const nb_not_impacted_text = sprintf(gettext_provider.ngettext('%d user not impacted.', '%d users not impacted.', nb_not_impacted), nb_not_impacted);
+        const nothing_to_do_text        = gettext_provider.gettext("There aren't any users to add nor to remove.");
+        const nb_not_impacted_text      = sprintf(gettext_provider.ngettext('%d user not impacted.', '%d users not impacted.', nb_not_impacted), nb_not_impacted);
+        const ldap_group_not_found_text = sprintf(gettext_provider.gettext('Directory group %s does not exist.'), chosen_ldap_group);
 
         return {
             title,
@@ -104,7 +114,9 @@ function initLdapBindingPreview(options, callback) {
             nb_not_impacted,
             nb_to_remove_text,
             nothing_to_do_text,
-            nb_not_impacted_text
+            nb_not_impacted_text,
+            ldap_group_not_found,
+            ldap_group_not_found_text
         };
     }
 }

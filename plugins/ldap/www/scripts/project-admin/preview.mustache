@@ -35,18 +35,26 @@
         </ul>
     </div>
 {{/ nb_to_remove }}
-{{# nb_not_impacted }}
-    <div class="tlp-alert-info">
-        {{ nb_not_impacted_text }}
-    </div>
-{{/ nb_not_impacted }}
 
-{{^ nb_to_add }}
-    {{^ nb_to_remove }}
-        {{^ nb_not_impacted }}
-            <div class="tlp-alert-info">
-                {{ nothing_to_do_text }}
-            </div>
-        {{/ nb_not_impacted }}
-    {{/ nb_to_remove }}
-{{/ nb_to_add}}
+{{# ldap_group_not_found }}
+    <div class="tlp-alert-warning">
+        {{ ldap_group_not_found_text }}
+    </div>
+{{/ ldap_group_not_found }}
+
+{{^ ldap_group_not_found }}
+    {{# nb_not_impacted }}
+        <div class="tlp-alert-info">
+            {{ nb_not_impacted_text }}
+        </div>
+    {{/ nb_not_impacted }}
+    {{^ nb_to_add }}
+        {{^ nb_to_remove }}
+            {{^ nb_not_impacted }}
+                <div class="tlp-alert-info">
+                    {{ nothing_to_do_text }}
+                </div>
+            {{/ nb_not_impacted }}
+        {{/ nb_to_remove }}
+    {{/ nb_to_add}}
+{{/ ldap_group_not_found }}

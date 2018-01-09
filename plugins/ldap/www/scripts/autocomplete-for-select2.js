@@ -1,5 +1,5 @@
 /**
- * Copyright Enalean (c) 2017. All rights reserved.
+ * Copyright Enalean (c) 2017 - 2018. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -32,6 +32,7 @@ function autocomplete_groups_for_select2(element, options) {
     const real_options = {
         placeholder: element.dataset.placeholder || '',
         minimumInputLength: 3,
+        tags: true,
         ajax: {
             url     : '/plugins/ldap/autocomplete.php',
             dataType: 'json',

@@ -35,5 +35,9 @@ msgstr[1] "%d utilisateurs à supprimer"
 msgid "Binding %s to directory group %s"
 msgstr "Lier %s au groupe de l'annuaire %s"
 
+#, javascript-format
+msgid "Directory group %s does not exist."
+msgstr "Le groupe de l'annuaire %s n'existe pas."
+
 msgid "There aren't any users to add nor to remove."
 msgstr "Il n'y a aucun utilisateur à enlever ou supprimer."

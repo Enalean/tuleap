@@ -20,5 +20,9 @@ msgstr[1] ""
 msgid "Binding %s to directory group %s"
 msgstr ""
 
+#, javascript-format
+msgid "Directory group %s does not exist."
+msgstr ""
+
 msgid "There aren't any users to add nor to remove."
 msgstr ""
