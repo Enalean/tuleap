@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -63,7 +63,9 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase {
             mock('PlanningPermissionsManager'),
             mock('AgileDashboard_HierarchyChecker'),
             $this->mono_milestone_checker,
-            $this->scrum_planning_filter
+            $this->scrum_planning_filter,
+            mock('TrackerFactory'),
+            mock('Tracker_FormElementFactory')
         );
 
 
@@ -179,7 +181,8 @@ class Planning_ControllerNewTest extends TuleapTestCase {
 
     private $available_backlog_trackers;
 
-    function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         ForgeConfig::store();
         ForgeConfig::set('codendi_dir', TRACKER_BASE_DIR .'/../../..');
@@ -207,7 +210,9 @@ class Planning_ControllerNewTest extends TuleapTestCase {
             mock('PlanningPermissionsManager'),
             $hierarchy_checker,
             $scrum_mono_milestone_checker,
-            new ScrumPlanningFilter($scrum_mono_milestone_checker, $this->planning_factory)
+            new ScrumPlanningFilter($scrum_mono_milestone_checker, $this->planning_factory),
+            mock('TrackerFactory'),
+            mock('Tracker_FormElementFactory')
         );
 
         $GLOBALS['Language'] = new MockBaseLanguage_Planning_ControllerNewTest();
@@ -353,7 +358,9 @@ class Planning_Controller_EditTest extends Planning_Controller_BaseTest {
                 mock('PlanningPermissionsManager'),
                 mock('AgileDashboard_HierarchyChecker'),
                 mock('Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker'),
-                $planning_filter
+                $planning_filter,
+                mock('TrackerFactory'),
+                mock('Tracker_FormElementFactory')
             )
         );
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,6 +26,8 @@ class BurnupDao extends DataAccessObject
 {
     public function searchArtifactsWithBurnup()
     {
+        $type = $this->da->quoteSmart(Burnup::TYPE);
+
         $sql = "SELECT
                   tracker_artifact.id,
                   SUM(tracker_changeset_value_date.value) AS start_date,
@@ -52,7 +54,7 @@ class BurnupDao extends DataAccessObject
               ON tracker_changeset_value_int.changeset_value_id = tracker_changeset_value.id
               AND tracker_field_for_duration.id = tracker_changeset_value.field_id
             WHERE
-              burnup_field.formElement_type = 'burnup'
+              burnup_field.formElement_type = $type
               AND burnup_field.use_it = 1
               GROUP BY tracker_artifact.id, burnup_field.id
               HAVING start_date IS NOT NULL
@@ -218,6 +220,7 @@ class BurnupDao extends DataAccessObject
     public function getBurnupInformation($artifact_id)
     {
         $artifact_id = $this->da->escapeInt($artifact_id);
+        $type        = $this->da->quoteSmart(Burnup::TYPE);
 
         $sql = "SELECT
                   tracker_artifact.id,
@@ -245,7 +248,7 @@ class BurnupDao extends DataAccessObject
               ON tracker_changeset_value_int.changeset_value_id = tracker_changeset_value.id
               AND tracker_field_for_duration.id = tracker_changeset_value.field_id
             WHERE
-              burnup_field.formElement_type = 'burnup'
+              burnup_field.formElement_type = $type
               AND burnup_field.use_it = 1
               AND tracker_artifact.id = $artifact_id
               GROUP BY tracker_artifact.id, burnup_field.id

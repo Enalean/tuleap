@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -339,7 +339,9 @@ class AgileDashboardRouter {
             $this->planning_permissions_manager,
             $this->hierarchy_checker,
             $this->scrum_mono_milestone_checker,
-            $this->planning_filter
+            $this->planning_filter,
+            TrackerFactory::instance(),
+            Tracker_FormElementFactory::instance()
         );
     }
 

@@ -107,6 +107,10 @@ msgid ""
 "for this tracker."
 msgstr ""
 
+#, php-format
+msgid "The tracker %s uses a Burnup field. Please check its configuration."
+msgstr ""
+
 msgid "There is no content <br> you can see"
 msgstr ""
 
