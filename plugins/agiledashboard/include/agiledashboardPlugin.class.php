@@ -721,9 +721,17 @@ class AgileDashboardPlugin extends Plugin {
         }
 
         if ($type == SemanticDone::NAME) {
-            $factory = new SemanticDoneFactory(new SemanticDoneDao(), new SemanticDoneValueChecker());
+            $factory = $this->getSemanticDoneFactory();
             $parameters['semantic'] = $factory->getInstanceFromXML($xml, $full_semantic_xml, $xmlMapping, $tracker);
         }
+    }
+
+    /**
+     * @return SemanticDoneFactory
+     */
+    private function getSemanticDoneFactory()
+    {
+        return new SemanticDoneFactory(new SemanticDoneDao(), new SemanticDoneValueChecker());
     }
 
     /**
@@ -1422,7 +1430,8 @@ class AgileDashboardPlugin extends Plugin {
     {
         $message_fetcher = new MessageFetcher(
             $this->getPlanningFactory(),
-            $this->getSemanticInitialEffortFactory()
+            $this->getSemanticInitialEffortFactory(),
+            $this->getSemanticDoneFactory()
         );
 
         $field = $event->getField();
