@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,6 +24,7 @@ use Tuleap\AgileDashboard\FormElement\BurnupManualValuesAndChildrenListRetriever
 use Tuleap\AgileDashboard\FormElement\BurnupTotalEffortCalculator;
 use Tuleap\AgileDashboard\FormElement\BurnupTeamEffortCalculator;
 use Tuleap\AgileDashboard\FormElement\BurnupDao;
+use Tuleap\AgileDashboard\FormElement\MessageFetcher;
 use Tuleap\Agiledashboard\FormElement\SystemEvent\SystemEvent_BURNUP_DAILY;
 use Tuleap\AgileDashboard\FormElement\SystemEvent\SystemEvent_BURNUP_GENERATE;
 use Tuleap\AgileDashboard\Kanban\RealTime\KanbanArtifactMessageBuilder;
@@ -55,6 +56,7 @@ use Tuleap\RealTime\NodeJSClient;
 use Tuleap\Request\CurrentPage;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 use Tuleap\Tracker\Artifact\Event\ArtifactsReordered;
+use Tuleap\Tracker\FormElement\Event\MessageFetcherAdditionalWarnings;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\CanValueBeHiddenStatementsCollection;
 use Tuleap\Tracker\FormElement\FieldCalculator;
 use Tuleap\Tracker\Report\Event\TrackerReportDeleted;
@@ -148,6 +150,7 @@ class AgileDashboardPlugin extends Plugin {
             $this->addHook(Event::GET_SYSTEM_EVENT_CLASS);
             $this->addHook('codendi_daily_start');
             $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
+            $this->addHook(MessageFetcherAdditionalWarnings::NAME);
         }
 
         if (defined('CARDWALL_BASE_URL')) {
@@ -1415,4 +1418,17 @@ class AgileDashboardPlugin extends Plugin {
         );
     }
 
+    public function getMessageFetcherAdditionalWarnings(MessageFetcherAdditionalWarnings $event)
+    {
+        $message_fetcher = new MessageFetcher(
+            $this->getPlanningFactory(),
+            $this->getSemanticInitialEffortFactory()
+        );
+
+        $field = $event->getField();
+
+        if (get_class($field) === 'Tuleap\AgileDashboard\FormElement\Burnup') {
+            $event->setWarnings($message_fetcher->getWarningsRelatedToPlanningConfiguration($field->getTracker()));
+        }
+    }
 }

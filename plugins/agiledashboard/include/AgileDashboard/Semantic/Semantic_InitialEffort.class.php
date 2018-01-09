@@ -230,10 +230,11 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic {
     }
 
     /**
-     * Load an instance of a Tracker_Semantic_InitialEffort
+     * Load an instance of a AgileDashBoard_Semantic_InitialEffort
      *
      * @param Tracker $tracker
-     * @return Tracker_Semantic_InitialEffort
+     *
+     * @return AgileDashBoard_Semantic_InitialEffort
      */
     public static function load(Tracker $tracker) {
         if (!isset(self::$_instances[$tracker->getId()])) {

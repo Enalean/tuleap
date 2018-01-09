@@ -77,6 +77,14 @@ msgstr ""
 msgid "Selected values are invalid because some are not closed values anymore."
 msgstr ""
 
+#, php-format
+msgid "Semantic done is not defined for tracker %s"
+msgstr ""
+
+#, php-format
+msgid "Semantic initial effort is not defined for tracker %s"
+msgstr ""
+
 msgid "Semantic status is not defined."
 msgstr ""
 
@@ -104,6 +112,9 @@ msgstr ""
 
 msgid ""
 "This semantic will be used in the <strong>AgileDashboard</strong> service."
+msgstr ""
+
+msgid "This tracker is not a planning tracker"
 msgstr ""
 
 msgid "Tracker semantic done"

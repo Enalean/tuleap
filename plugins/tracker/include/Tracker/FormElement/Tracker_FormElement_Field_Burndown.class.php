@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -561,7 +561,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     public function fetchAdminFormElement()
     {
         $html = '';
-        $html .= $this->getBurndownMessageFetcher()->fetchWarnings($this->getTracker(), $this->getChartFieldUsage());
+        $html .= $this->getBurndownMessageFetcher()->fetchWarnings($this, $this->getChartFieldUsage());
         $html .= '<img src="' . TRACKER_BASE_URL . '/images/fake-burndown-admin.png" />';
         $html .= '<a class="btn chart-cache-button-generate" disabled="disabled">' .
             $GLOBALS['Language']->getText('plugin_tracker', 'burndown_generate') .
@@ -775,7 +775,8 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     {
         return new ChartMessageFetcher(
             $this->getHierarchyFactory(),
-            $this->getBurdownConfigurationFieldRetriever()
+            $this->getBurdownConfigurationFieldRetriever(),
+            EventManager::instance()
         );
     }
 

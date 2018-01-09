@@ -431,13 +431,21 @@ class SemanticDone extends Tracker_Semantic
         return $done_values_ids;
     }
 
+    /**
+     * @return bool
+     */
+    public function isSemanticDefined()
+    {
+        return $this->semantic_status->getField() && count($this->getDoneValuesIds()) > 0;
+    }
+
     protected static $_instances;
     /**
-     * Load an instance of a Tracker_Semantic_Status
+     * Load an instance of a SemanticDone
      *
      * @param Tracker $tracker the tracker
      *
-     * @return Tracker_Semantic_Status
+     * @return SemanticDone
      */
     public static function load(Tracker $tracker)
     {

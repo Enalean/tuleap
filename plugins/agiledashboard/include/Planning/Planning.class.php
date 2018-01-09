@@ -163,7 +163,7 @@ class Planning {
     }
     
     /**
-     * @return Tracker
+     * @return Tracker[]
      */
     public function getBacklogTrackers() {
         return $this->backlog_trackers;

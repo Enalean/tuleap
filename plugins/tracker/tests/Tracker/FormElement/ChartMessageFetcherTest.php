@@ -1,6 +1,6 @@
 <?php
 /**
- *  Copyright (c) Enalean, 2017. All Rights Reserved.
+ *  Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  *  This file is a part of Tuleap.
  *
@@ -19,8 +19,6 @@
  */
 
 namespace Tuleap\Tracker\FormElement;
-
-use EventManager;
 
 require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
@@ -43,11 +41,13 @@ class ChartMessageFetcherTest extends \TuleapTestCase
         $hierarchy_factory     = mock('Tracker_HierarchyFactory');
         $this->message_fetcher = new ChartMessageFetcher(
             $hierarchy_factory,
-            mock('Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever')
+            mock('Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever'),
+            mock('EventManager')
         );
         stub($hierarchy_factory)->getChildren()->returns(array());
 
         $this->tracker = aMockTracker()->build();
+        $this->field   = aMockField()->withTracker($this->tracker)->build();
     }
 
     public function itDisplaysWarningsWhenFieldsAreMissingInChartConfiguration()
@@ -64,7 +64,7 @@ class ChartMessageFetcherTest extends \TuleapTestCase
 
         $this->assertEqual(
             $expected_warning,
-            $this->message_fetcher->fetchWarnings($this->tracker, $chart_configuration)
+            $this->message_fetcher->fetchWarnings($this->field, $chart_configuration)
         );
     }
 
@@ -79,7 +79,7 @@ class ChartMessageFetcherTest extends \TuleapTestCase
 
         $this->assertEqual(
             $expected_warning,
-            $this->message_fetcher->fetchWarnings($this->tracker, $chart_configuration)
+            $this->message_fetcher->fetchWarnings($this->field, $chart_configuration)
         );
     }
 }
