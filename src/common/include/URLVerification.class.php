@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
- * Copyright (c) Enalean, 2013-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Project\Admin\MembershipDelegationDao;
 
 /**
  * Check the URL validity (protocol, host name, query) regarding server constraints
@@ -619,6 +621,28 @@ class URLVerification {
     public function userCanAccessProjectAndIsProjectAdmin(PFUser $user, Project $project) {
         if ($this->userCanAccessProject($user, $project)) {
             if (! $user->isAdmin($project->getId())) {
+                throw new Project_AccessNotAdminException();
+            }
+            return true;
+        }
+    }
+
+    /**
+     * @param PFUser  $user
+     * @param Project $project
+     * @return boolean
+     *
+     * @throws Project_AccessProjectNotFoundException
+     * @throws Project_AccessDeletedException
+     * @throws Project_AccessRestrictedException
+     * @throws Project_AccessPrivateException
+     * @throws Project_AccessNotAdminException
+     */
+    public function userCanManageProjectMembership(PFUser $user, Project $project)
+    {
+        if ($this->userCanAccessProject($user, $project)) {
+            $dao = new MembershipDelegationDao();
+            if (! $user->isAdmin($project->getId()) && ! $dao->doesUserHasMembershipDelegation($user->getId(), $project->getID())) {
                 throw new Project_AccessNotAdminException();
             }
             return true;
