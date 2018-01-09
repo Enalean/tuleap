@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -30,6 +30,7 @@ use Project;
 use ProjectManager;
 use Response;
 use Toggler;
+use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\Sanitizer\URISanitizer;
 use UserManager;
 use Valid_FTPURI;
@@ -491,7 +492,8 @@ abstract class BaseLayout extends Response
             ProjectManager::instance(),
             PermissionsOverrider_PermissionsOverriderManager::instance(),
             Codendi_HTMLPurifier::instance(),
-            $this->uri_sanitizer
+            $this->uri_sanitizer,
+            new MembershipDelegationDao()
         );
 
         return $builder->getSidebar($this->getUser(), $params['toptab'], $project);

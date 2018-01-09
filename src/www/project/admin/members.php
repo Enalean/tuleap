@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
  * Copyright 1999-2000 (c) The SourceForge Crew
  * SourceForge: Breaking Down the Barriers to Open Source Development
  * http://sourceforge.net
@@ -58,7 +58,14 @@ if (! $project || ! is_object($project) || $project->isError()) {
 }
 
 //must be a project admin
-session_require(array('group' => $group_id, 'admin_flags' => 'A'));
+$membership_delegation_dao = new \Tuleap\Project\Admin\MembershipDelegationDao();
+$user                      = $request->getCurrentUser();
+if (! $user->isAdmin($group_id) && ! $membership_delegation_dao->doesUserHasMembershipDelegation($user->getId(), $group_id)) {
+    exit_error(
+        $Language->getText('include_session', 'insufficient_g_access'),
+        $Language->getText('include_session', 'no_perm_to_view')
+    );
+}
 
 //if the project isn't active, require you to be a member of the super-admin group
 if ($project->getStatus() != 'A') {

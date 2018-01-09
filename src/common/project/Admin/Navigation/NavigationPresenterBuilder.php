@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -46,9 +46,58 @@ class NavigationPresenterBuilder
     public function build(Project $project, HTTPRequest $request, $current_pane_shortname)
     {
         $project_id = $project->getID();
+        $user       = $request->getCurrentUser();
+
+        if ($user->isAdmin($project_id)) {
+            $entries = $this->buildEntriesForAdmin($project, $current_pane_shortname);
+        } else {
+            $entries = $this->buildEntriesForCastratedAdmin($project, $current_pane_shortname);
+        }
+
+        $this->presenter = new NavigationPresenter($entries, $project, $current_pane_shortname);
+
+        if ($user->isAdmin($project_id)) {
+            $this->addTrackerImportEntry($project);
+
+            EventManager::instance()->processEvent($this->presenter);
+        }
+
+        return $this->presenter;
+    }
+
+    private function addTrackerImportEntry(Project $project)
+    {
+        $service = $project->getService(Service::TRACKERV3);
+
+        if (! $service) {
+            return;
+        }
+
+        $this->presenter->addDropdownItem(
+            self::DATA_ENTRY_SHORTNAME,
+            new NavigationDropdownItemPresenter(
+                _('Trackers v3 import'),
+                '/tracker/import_admin.php?' . http_build_query(
+                    array(
+                        'group_id' => $project->getID(),
+                        'mode' => 'admin'
+                    )
+                )
+            )
+        );
+    }
+
+    /**
+     * @param Project $project
+     * @param $current_pane_shortname
+     * @param $project_id
+     * @return array
+     */
+    private function buildEntriesForAdmin(Project $project, $current_pane_shortname)
+    {
+        $project_id = $project->getID();
 
         $entries = array();
-
 
         $entries['details'] = new NavigationItemPresenter(
             _('details'),
@@ -56,12 +105,9 @@ class NavigationPresenterBuilder
             'details',
             $current_pane_shortname
         );
-        $entries['members'] = new NavigationItemPresenter(
-            _('Members'),
-            '/project/admin/members.php?' . http_build_query(array('group_id' => $project_id)),
-            'members',
-            $current_pane_shortname
-        );
+
+        $entries['members'] = $this->getMembersItemPresenter($project_id, $current_pane_shortname);
+
         $entries['groups'] = new NavigationItemPresenter(
             _('groups'),
             '/project/admin/ugroup.php?' . http_build_query(array('group_id' => $project_id)),
@@ -69,27 +115,30 @@ class NavigationPresenterBuilder
             $current_pane_shortname
         );
 
-        $entries[NavigationPermissionsDropdownPresenterBuilder::PERMISSIONS_ENTRY_SHORTNAME] = $this->permission_builder->build($project, $current_pane_shortname);
+        $entries[NavigationPermissionsDropdownPresenterBuilder::PERMISSIONS_ENTRY_SHORTNAME] = $this->permission_builder->build(
+            $project,
+            $current_pane_shortname
+        );
 
-        $entries['services'] = new NavigationItemPresenter(
+        $entries['services']                 = new NavigationItemPresenter(
             _('services'),
             '/project/admin/servicebar.php?' . http_build_query(array('group_id' => $project_id)),
             'services',
             $current_pane_shortname
         );
-        $entries['labels'] = new NavigationItemPresenter(
+        $entries['labels']                   = new NavigationItemPresenter(
             _('labels'),
             '/project/admin/labels.php?' . http_build_query(array('group_id' => $project_id)),
             'labels',
             $current_pane_shortname
         );
-        $entries['references'] = new NavigationItemPresenter(
+        $entries['references']               = new NavigationItemPresenter(
             _('references'),
             '/project/admin/reference.php?' . http_build_query(array('group_id' => $project_id)),
             'references',
             $current_pane_shortname
         );
-        $entries['categories'] = new NavigationItemPresenter(
+        $entries['categories']               = new NavigationItemPresenter(
             _('categories'),
             '/project/admin/group_trove.php?' . http_build_query(array('group_id' => $project_id)),
             'categories',
@@ -115,34 +164,28 @@ class NavigationPresenterBuilder
             )
         );
 
-        $this->presenter = new NavigationPresenter($entries, $project, $current_pane_shortname);
-
-        $this->addTrackerImportEntry($project);
-
-        EventManager::instance()->processEvent($this->presenter);
-
-        return $this->presenter;
+        return $entries;
     }
 
-    private function addTrackerImportEntry(Project $project)
+    private function buildEntriesForCastratedAdmin(Project $project, $current_pane_shortname)
     {
-        $service = $project->getService(Service::TRACKERV3);
+        return array(
+            'members' => $this->getMembersItemPresenter($project->getID(), $current_pane_shortname)
+        );
+    }
 
-        if (! $service) {
-            return;
-        }
-
-        $this->presenter->addDropdownItem(
-            self::DATA_ENTRY_SHORTNAME,
-            new NavigationDropdownItemPresenter(
-                _('Trackers v3 import'),
-                '/tracker/import_admin.php?' . http_build_query(
-                    array(
-                        'group_id' => $project->getID(),
-                        'mode' => 'admin'
-                    )
-                )
-            )
+    /**
+     * @param $project_id
+     * @param $current_pane_shortname
+     * @return NavigationItemPresenter
+     */
+    private function getMembersItemPresenter($project_id, $current_pane_shortname)
+    {
+        return new NavigationItemPresenter(
+            _('Members'),
+            '/project/admin/members.php?' . http_build_query(array('group_id' => $project_id)),
+            'members',
+            $current_pane_shortname
         );
     }
 }

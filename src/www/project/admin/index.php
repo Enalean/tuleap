@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  * Copyright 1999-2000 (c) The SourceForge Crew
  * SourceForge: Breaking Down the Barriers to Open Source Development
  * http://sourceforge.net
@@ -23,8 +23,16 @@
 
 require_once('pre.php');
 
+$membership_delegation_dao = new \Tuleap\Project\Admin\MembershipDelegationDao();
+
+$url  = '/project/admin/editgroupinfo.php?';
+$user = HTTPRequest::instance()->getCurrentUser();
+if (! $user->isAdmin($group_id) && $membership_delegation_dao->doesUserHasMembershipDelegation($user->getId(), $group_id)) {
+    $url  = '/project/admin/members.php?';
+}
+
 $GLOBALS['Response']->redirect(
-    '/project/admin/editgroupinfo.php?' .
+    $url .
     http_build_query(
         array(
             'group_id' => $request->getProject()->getid()

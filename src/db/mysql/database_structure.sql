@@ -1,6 +1,6 @@
 #
 # Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-# Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
+# Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
 #
 # This file is a part of Tuleap.
 #
@@ -1663,6 +1663,10 @@ CREATE TABLE project_label (
     INDEX project_idx(project_id)
 );
 
+DROP TABLE IF EXISTS project_membership_delegation;
+CREATE TABLE project_membership_delegation (
+    ugroup_id INT(11) NOT NULL PRIMARY KEY
+);
 #
 # EOF
 #
