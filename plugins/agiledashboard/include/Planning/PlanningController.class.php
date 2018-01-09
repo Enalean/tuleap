@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\FormElement\Burnup;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
 use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
@@ -36,11 +37,8 @@ use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Service\ServiceCreator;
 use Tuleap\Widget\WidgetFactory;
 
-require_once 'common/mvc2/PluginController.class.php';
-
 /**
  * Handles the HTTP actions related to a planning.
- *
  */
 class Planning_Controller extends MVC2_PluginController {
 
@@ -95,6 +93,16 @@ class Planning_Controller extends MVC2_PluginController {
      */
     private $scrum_planning_filter;
 
+    /**
+     * @var TrackerFactory
+     */
+    private $tracker_factory;
+
+    /**
+     * @var Tracker_FormElementFactory
+     */
+    private $tracker_form_element_factory;
+
     public function __construct(
         Codendi_Request $request,
         PlanningFactory $planning_factory,
@@ -110,7 +118,9 @@ class Planning_Controller extends MVC2_PluginController {
         PlanningPermissionsManager $planning_permissions_manager,
         AgileDashboard_HierarchyChecker $hierarchy_checker,
         ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker,
-        ScrumPlanningFilter $scrum_planning_filter
+        ScrumPlanningFilter $scrum_planning_filter,
+        TrackerFactory $tracker_factory,
+        Tracker_FormElementFactory $tracker_form_element_factory
     ) {
         parent::__construct('agiledashboard', $request);
 
@@ -129,6 +139,8 @@ class Planning_Controller extends MVC2_PluginController {
         $this->hierarchy_checker            = $hierarchy_checker;
         $this->scrum_mono_milestone_checker = $scrum_mono_milestone_checker;
         $this->scrum_planning_filter        = $scrum_planning_filter;
+        $this->tracker_factory              = $tracker_factory;
+        $this->tracker_form_element_factory = $tracker_form_element_factory;
     }
 
     public function index() {
@@ -616,18 +628,35 @@ class Planning_Controller extends MVC2_PluginController {
         $validator = new Planning_RequestValidator($this->planning_factory);
 
         if ($validator->isValid($this->request)) {
+            $planning_parameter = PlanningParameters::fromArray(
+                $this->request->get('planning')
+            );
+
             $this->planning_factory->updatePlanning(
                 $this->request->get('planning_id'),
                 $this->group_id,
-                PlanningParameters::fromArray(
-                    $this->request->get('planning')
-                )
+                $planning_parameter
             );
 
             $this->addFeedback(
                 Feedback::INFO,
                 dgettext('tuleap-agiledashboard', 'Planning succesfully updated.')
             );
+
+            $planning_tracker_id = $planning_parameter->planning_tracker_id;
+            $planning_tracker    = $this->tracker_factory->getTrackerById($planning_tracker_id);
+
+            $burnup_fields = $this->tracker_form_element_factory->getFormElementsByType($planning_tracker, Burnup::TYPE);
+
+            if ($burnup_fields && $burnup_fields[0]->isUsed()) {
+                $this->addFeedback(
+                    Feedback::WARN,
+                    sprintf(
+                        dgettext('tuleap-agiledashboard', 'The tracker %s uses a Burnup field. Please check its configuration.'),
+                        $planning_tracker->getName()
+                    )
+                );
+            }
         } else {
             $this->addFeedback('error', $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_all_fields_mandatory'));
         }
