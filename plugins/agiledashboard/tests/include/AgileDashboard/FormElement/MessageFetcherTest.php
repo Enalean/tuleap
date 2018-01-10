@@ -37,16 +37,69 @@ class MessageFetcherTest extends TuleapTestCase
 
         $this->planning_factory       = mock('PlanningFactory');
         $this->initial_effort_factory = mock('AgileDashboard_Semantic_InitialEffortFactory');
+        $this->semantic_done_factory  = mock('Tuleap\AgileDashboard\Semantic\SemanticDoneFactory');
 
-        $this->message_fetcher = new MessageFetcher($this->planning_factory, $this->initial_effort_factory);
+        $this->message_fetcher = new MessageFetcher(
+            $this->planning_factory,
+            $this->initial_effort_factory,
+            $this->semantic_done_factory
+        );
+
+        $this->tracker          = aMockTracker()->build();
+        $this->backlog_tracker  = aMockTracker()->build();
+        $this->field            = aMockField()->build();
+    }
+
+    public function itDoesNotAddWarningsIfAllIsWellConfigured()
+    {
+        $planning       = stub('Planning')->getBacklogTrackers()->returns(array($this->backlog_tracker));
+        $semantic_done  = stub('Tuleap\AgileDashboard\Semantic\SemanticDone')->isSemanticDefined()->returns(true);
+        $initial_effort = stub('AgileDashBoard_Semantic_InitialEffort')->getField()->returns($this->field);
+
+        stub($this->planning_factory)->getPlanningByPlanningTracker($this->tracker)->returns($planning);
+        stub($this->semantic_done_factory)->getInstanceByTracker($this->backlog_tracker)->returns($semantic_done);
+        stub($this->initial_effort_factory)->getByTracker($this->backlog_tracker)->returns($initial_effort);
+
+        $warnings = $this->message_fetcher->getWarningsRelatedToPlanningConfiguration($this->tracker);
+
+        $this->assertArrayEmpty($warnings);
     }
 
     public function itReturnsAWarningIfTrackerIsNotAPlanningTracker()
     {
-        $tracker = aMockTracker()->build();
-        stub($this->planning_factory)->getPlanningByPlanningTracker($tracker)->returns(null);
+        stub($this->planning_factory)->getPlanningByPlanningTracker($this->tracker)->returns(null);
 
-        $warnings = $this->message_fetcher->getWarningsRelatedToPlanningConfiguration($tracker);
+        $warnings = $this->message_fetcher->getWarningsRelatedToPlanningConfiguration($this->tracker);
+
+        $this->assertArrayNotEmpty($warnings);
+    }
+
+    public function itReturnsAWarningIfBacklogTrackerDoesNotHaveSemanticDone()
+    {
+        $planning       = stub('Planning')->getBacklogTrackers()->returns(array($this->backlog_tracker));
+        $semantic_done  = stub('Tuleap\AgileDashboard\Semantic\SemanticDone')->isSemanticDefined()->returns(false);
+        $initial_effort = stub('AgileDashBoard_Semantic_InitialEffort')->getField()->returns($this->field);
+
+        stub($this->planning_factory)->getPlanningByPlanningTracker($this->tracker)->returns($planning);
+        stub($this->semantic_done_factory)->getInstanceByTracker($this->backlog_tracker)->returns($semantic_done);
+        stub($this->initial_effort_factory)->getByTracker($this->backlog_tracker)->returns($initial_effort);
+
+        $warnings = $this->message_fetcher->getWarningsRelatedToPlanningConfiguration($this->tracker);
+
+        $this->assertArrayNotEmpty($warnings);
+    }
+
+    public function itReturnsAWarningIfBacklogTrackerDoesNotHaveSemanticInitialEffort()
+    {
+        $planning       = stub('Planning')->getBacklogTrackers()->returns(array($this->backlog_tracker));
+        $semantic_done  = stub('Tuleap\AgileDashboard\Semantic\SemanticDone')->isSemanticDefined()->returns(true);
+        $initial_effort = stub('AgileDashBoard_Semantic_InitialEffort')->getField()->returns(null);
+
+        stub($this->planning_factory)->getPlanningByPlanningTracker($this->tracker)->returns($planning);
+        stub($this->semantic_done_factory)->getInstanceByTracker($this->backlog_tracker)->returns($semantic_done);
+        stub($this->initial_effort_factory)->getByTracker($this->backlog_tracker)->returns($initial_effort);
+
+        $warnings = $this->message_fetcher->getWarningsRelatedToPlanningConfiguration($this->tracker);
 
         $this->assertArrayNotEmpty($warnings);
     }

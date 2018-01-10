@@ -24,6 +24,7 @@ use AgileDashboard_Semantic_InitialEffortFactory;
 use PlanningFactory;
 use Tracker;
 use Tuleap\AgileDashboard\Semantic\SemanticDone;
+use Tuleap\AgileDashboard\Semantic\SemanticDoneFactory;
 
 class MessageFetcher
 {
@@ -37,12 +38,19 @@ class MessageFetcher
      */
     private $initial_effort_factory;
 
+    /**
+     * @var SemanticDoneFactory
+     */
+    private $semantic_done_factory;
+
     public function __construct(
         PlanningFactory $planning_factory,
-        AgileDashboard_Semantic_InitialEffortFactory $initial_effort_factory
+        AgileDashboard_Semantic_InitialEffortFactory $initial_effort_factory,
+        SemanticDoneFactory $semantic_done_factory
     ) {
         $this->planning_factory       = $planning_factory;
         $this->initial_effort_factory = $initial_effort_factory;
+        $this->semantic_done_factory  = $semantic_done_factory;
     }
 
     /**
@@ -61,14 +69,14 @@ class MessageFetcher
         foreach ($planning->getBacklogTrackers() as $backlog_tracker) {
             $backlog_tracker_name = $backlog_tracker->getName();
 
-            $done_semantic = SemanticDone::load($backlog_tracker);
+            $done_semantic = $this->semantic_done_factory->getInstanceByTracker($backlog_tracker);
             if (! $done_semantic->isSemanticDefined()) {
                 $warnings[] = "<li>".
                     sprintf(dgettext('tuleap-agiledashboard', 'Semantic done is not defined for tracker %s'), $backlog_tracker_name).
                     "</li>";
             }
 
-            $initial_effort_semantic = $this->initial_effort_factory->getByTracker($tracker);
+            $initial_effort_semantic = $this->initial_effort_factory->getByTracker($backlog_tracker);
             if (! $initial_effort_semantic->getField()) {
                 $warnings[] = "<li>".
                     sprintf(dgettext('tuleap-agiledashboard', 'Semantic initial effort is not defined for tracker %s'), $backlog_tracker_name).

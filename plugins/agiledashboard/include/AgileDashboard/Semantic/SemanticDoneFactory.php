@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2017. All rights reserved.
+ * Copyright Enalean (c) 2017 - 2018. All rights reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -31,6 +31,7 @@ class SemanticDoneFactory
      * @var SemanticDoneDao
      */
     private $dao;
+
     /**
      * @var SemanticDoneValueChecker
      */
@@ -40,6 +41,14 @@ class SemanticDoneFactory
     {
         $this->dao           = $dao;
         $this->value_checker = $value_checker;
+    }
+
+    /**
+     * @return SemanticDone
+     */
+    public function getInstanceByTracker(Tracker $tracker)
+    {
+        return SemanticDone::load($tracker);
     }
 
     /**
