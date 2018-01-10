@@ -50,7 +50,7 @@ msgstr ""
 msgid "Empty"
 msgstr ""
 
-#: src/tuleap-artifact-modal.tpl.html
+#: src/tuleap-artifact-modal-fields/link-field/link-field.tpl.html
 msgid "Enter artifact ids separated by a comma"
 msgstr ""
 
@@ -94,7 +94,7 @@ msgstr ""
 msgid "Only comments are displayed"
 msgstr ""
 
-#: src/tuleap-artifact-modal.tpl.html
+#: src/tuleap-artifact-modal-fields/link-field/link-field.tpl.html
 msgid "Please choose a parent…"
 msgstr ""
 
@@ -124,7 +124,7 @@ msgstr ""
 msgid "Save changes"
 msgstr ""
 
-#: src/tuleap-artifact-modal.tpl.html
+#: src/tuleap-artifact-modal-fields/link-field/link-field.tpl.html
 msgid "Select parent"
 msgstr ""
 

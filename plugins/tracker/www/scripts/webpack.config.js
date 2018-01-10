@@ -4,6 +4,7 @@ const webpack                     = require('webpack');
 const WebpackAssetsManifest       = require('webpack-assets-manifest');
 const BabelPresetEnv              = require('babel-preset-env');
 const BabelPluginIstanbul         = require('babel-plugin-istanbul').default;
+const BabelPluginRewireExports    = require('babel-plugin-rewire-exports').default;
 const BabelPluginObjectRestSpread = require('babel-plugin-transform-object-rest-spread');
 
 const assets_dir_path = path.resolve(__dirname, '../assets');
@@ -36,12 +37,16 @@ const babel_options   = {
         },
         test: {
             presets: [babel_preset_env_chrome_config],
-            plugins: [BabelPluginObjectRestSpread]
+            plugins: [
+                BabelPluginObjectRestSpread,
+                BabelPluginRewireExports
+            ]
         },
         coverage: {
             presets: [babel_preset_env_chrome_config],
             plugins: [
                 BabelPluginObjectRestSpread,
+                BabelPluginRewireExports,
                 [BabelPluginIstanbul, {
                     exclude: ['**/*.spec.js']
                 }]
@@ -134,6 +139,10 @@ const webpack_config_for_artifact_modal = {
         // This ensure we only load moment's fr locale. Otherwise, every single locale is included !
         new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /fr/)
     ]
+}
+
+if (process.env.NODE_ENV === 'watch' || process.env.NODE_ENV === 'test') {
+    webpack_config_for_artifact_modal.devtool = 'cheap-module-eval-source-map';
 }
 
 if (process.env.NODE_ENV === 'production') {

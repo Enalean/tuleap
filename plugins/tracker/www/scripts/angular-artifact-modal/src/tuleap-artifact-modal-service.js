@@ -2,6 +2,10 @@ import './tuleap-artifact-modal.tpl.html';
 import TuleapArtifactModalController from './tuleap-artifact-modal-controller.js';
 
 import _ from 'lodash';
+import {
+    setCreationMode,
+    isInCreationMode
+} from './modal-creation-mode-state.js';
 
 export default ArtifactModalService;
 
@@ -10,7 +14,6 @@ ArtifactModalService.$inject = [
     'TlpModalService',
     'TuleapArtifactModalRestService',
     'TuleapArtifactModalLoading',
-    'TuleapArtifactModalParentService',
     'TuleapArtifactModalTrackerTransformerService',
     'TuleapArtifactModalFormTreeBuilderService',
     'TuleapArtifactFieldValuesService',
@@ -24,7 +27,6 @@ function ArtifactModalService(
     TlpModalService,
     TuleapArtifactModalRestService,
     TuleapArtifactModalLoading,
-    TuleapArtifactModalParentService,
     TuleapArtifactModalTrackerTransformerService,
     TuleapArtifactModalFormTreeBuilderService,
     TuleapArtifactFieldValuesService,
@@ -101,28 +103,27 @@ function ArtifactModalService(
     function initCreationModalModel(tracker_id, parent_artifact, prefill_values) {
         var modal_model = {};
 
-        modal_model.creation_mode = true;
-        modal_model.tracker_id    = tracker_id;
-        modal_model.parent        = parent_artifact;
-        modal_model.text_formats  = text_formats;
+        const creation_mode = true;
+        setCreationMode(creation_mode);
+        modal_model.tracker_id   = tracker_id;
+        modal_model.parent       = parent_artifact;
+        modal_model.text_formats = text_formats;
 
         var promise = TuleapArtifactModalRestService.getTracker(tracker_id).then(function(tracker) {
-            var transformed_tracker = TuleapArtifactModalTrackerTransformerService.transform(tracker, modal_model.creation_mode);
-            var parent_tracker      = transformed_tracker.parent;
+            var transformed_tracker = TuleapArtifactModalTrackerTransformerService.transform(tracker, creation_mode);
             modal_model.tracker     = transformed_tracker;
             modal_model.color       = transformed_tracker.color_name;
             modal_model.title       = transformed_tracker.label;
 
             var initial_values = mapPrefillsToFieldValues(prefill_values || [], modal_model.tracker.fields);
-            applyWorkflowTransitions(transformed_tracker, modal_model.creation_mode, {});
+            applyWorkflowTransitions(transformed_tracker, {});
             modal_model.values = TuleapArtifactFieldValuesService.getSelectedValues(initial_values, transformed_tracker);
             applyFieldDependencies(transformed_tracker, modal_model.values);
             modal_model.ordered_fields = TuleapArtifactModalFormTreeBuilderService.buildFormTree(transformed_tracker);
 
-            var parent_titles_promise     = loadParentArtifactsTitle(tracker_id, parent_tracker, parent_artifact, modal_model);
             var file_upload_rules_promise = updateFileUploadRules();
 
-            return $q.all([parent_titles_promise, file_upload_rules_promise]);
+            return file_upload_rules_promise;
         }).then(function() {
             return modal_model;
         });
@@ -133,15 +134,16 @@ function ArtifactModalService(
     function initEditionModalModel(user_id, tracker_id, artifact_id) {
         var modal_model = {};
 
-        modal_model.creation_mode = false;
-        modal_model.user_id       = user_id;
-        modal_model.tracker_id    = tracker_id;
-        modal_model.artifact_id   = artifact_id;
-        modal_model.text_formats  = text_formats;
+        const creation_mode = false;
+        setCreationMode(creation_mode);
+        modal_model.user_id      = user_id;
+        modal_model.tracker_id   = tracker_id;
+        modal_model.artifact_id  = artifact_id;
+        modal_model.text_formats = text_formats;
         var transformed_tracker;
 
         var promise = TuleapArtifactModalRestService.getTracker(tracker_id).then(function(tracker) {
-            transformed_tracker        = TuleapArtifactModalTrackerTransformerService.transform(tracker, modal_model.creation_mode);
+            transformed_tracker        = TuleapArtifactModalTrackerTransformerService.transform(tracker, creation_mode);
             modal_model.ordered_fields = transformed_tracker.ordered_fields;
             modal_model.color          = transformed_tracker.color_name;
 
@@ -160,7 +162,7 @@ function ArtifactModalService(
             var artifact_values = promises[0];
             var tracker_with_field_values = TuleapArtifactModalTrackerTransformerService.addFieldValuesToTracker(artifact_values, transformed_tracker);
 
-            applyWorkflowTransitions(tracker_with_field_values, modal_model.creation_mode, artifact_values);
+            applyWorkflowTransitions(tracker_with_field_values, artifact_values);
             modal_model.values = TuleapArtifactFieldValuesService.getSelectedValues(artifact_values, transformed_tracker);
             modal_model.title  = artifact_values.title;
             applyFieldDependencies(tracker_with_field_values, modal_model.values);
@@ -190,19 +192,6 @@ function ArtifactModalService(
             });
     }
 
-    function loadParentArtifactsTitle(tracker_id, parent_tracker, parent_artifact, modal_model) {
-        var promise;
-
-        if (TuleapArtifactModalParentService.canChooseArtifactsParent(parent_tracker, parent_artifact)) {
-            promise = TuleapArtifactModalRestService.getAllOpenParentArtifacts(tracker_id, 1000, 0)
-                .then(function(artifacts_data) {
-                    modal_model.parent_artifacts = artifacts_data;
-                });
-        }
-
-        return $q.when(promise);
-    }
-
     function getArtifactValues(artifact_id) {
         var promise;
         if (artifact_id) {
@@ -211,7 +200,7 @@ function ArtifactModalService(
         return $q.when(promise);
     }
 
-    function applyWorkflowTransitions(tracker, creation_mode, field_values) {
+    function applyWorkflowTransitions(tracker, field_values) {
         if (! hasWorkflowTransitions(tracker)) {
             return;
         }
@@ -223,7 +212,7 @@ function ArtifactModalService(
         }
 
         var source_value_id;
-        if (creation_mode) {
+        if (isInCreationMode()) {
             source_value_id = null;
         } else {
             source_value_id = field_values[workflow.field_id].bind_value_ids[0];

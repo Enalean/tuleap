@@ -1,5 +1,6 @@
 import rest_module from './rest.js';
-import angular from 'angular';
+import angular     from 'angular';
+import tlp         from 'tlp';
 import 'angular-mocks';
 
 describe("TuleapArtifactModalRestService", function() {
@@ -27,6 +28,7 @@ describe("TuleapArtifactModalRestService", function() {
         response = null;
 
         installPromiseMatchers();
+        spyOn(tlp, "recursiveGet");
     });
 
     afterEach(function() {
@@ -124,87 +126,49 @@ describe("TuleapArtifactModalRestService", function() {
         });
     });
 
-    describe("getOpenParentArtifacts() -", function() {
-        it("Given a parent tracker containing 2 artifacts and given the id of the child tracker, and given a limit of 2 and an offset of 0, when I get the open parent artifacts, then a promise will be resolved with the 2 artifacts and the X-PAGINATION-SIZE header as the total", function() {
-            var response = [
-                { id: 433, title: "Marshalsea" },
-                { id: 437, title: "scoggan" }
+    describe("getAllOpenParentArtifacts() -", () => {
+        it("Given the id of a child tracker, when I get all the open parents for this tracker, then a promise will be resolved with the artifacts", () => {
+            const tracker_id = 49;
+            const limit      = 30;
+            const offset     = 0;
+            const artifacts  = [
+                { id: 21, title: 'equationally' },
+                { id: 82, title: 'brachiator' }
             ];
-            mockBackend.expectGET('/api/v1/trackers/64/parent_artifacts?limit=2&offset=0').respond(
-                JSON.stringify(response),
-                {
-                    'X-PAGINATION-SIZE': 2
+            tlp.recursiveGet.and.returnValue(artifacts);
+
+            const promise = RestService.getAllOpenParentArtifacts(tracker_id, limit, offset);
+
+            expect(promise).toBeResolvedWith(artifacts);
+            expect(tlp.recursiveGet).toHaveBeenCalledWith('/api/v1/trackers/49/parent_artifacts', {
+                params: {
+                    limit,
+                    offset
                 }
-            );
-
-            var promise = RestService.getOpenParentArtifacts(64, 2, 0);
-            mockBackend.flush();
-
-            expect(promise).toBeResolved();
-            var data = promise.$$state.value;
-            expect(data.results[0]).toEqual(jasmine.objectContaining({ id: 433, title: "Marshalsea" }));
-            expect(data.results[1]).toEqual(jasmine.objectContaining({ id: 437, title: "scoggan" }));
-            expect(data.results.length).toBe(2);
-            expect(data.total).toEqual('2');
-        });
-    });
-
-    describe("getAllOpenParentArtifacts() -", function() {
-        it("Given a parent tracker containing 3 artifacts and given the id of the child tracker, and given a limit of 2 and an offset of 0, when I get all the open parent artifacts, then a promise will be resolved with the 3 artifacts", function() {
-            var first_response = [
-                { id: 798, title: "unbreath" },
-                { id: 204, title: "eightscore" }
-            ];
-            var second_response = [
-                { id: 45, title: "pseudocarp" }
-            ];
-            mockBackend.expectGET('/api/v1/trackers/91/parent_artifacts?limit=2&offset=0').respond(
-                JSON.stringify(first_response),
-                {
-                    'X-PAGINATION-SIZE': 3
-                }
-            );
-            mockBackend.expectGET('/api/v1/trackers/91/parent_artifacts?limit=2&offset=2').respond(
-                JSON.stringify(second_response),
-                {
-                    'X-PAGINATION-SIZE': 3
-                }
-            );
-
-            var promise = RestService.getAllOpenParentArtifacts(91, 2, 0);
-            mockBackend.flush();
-
-            expect(promise).toBeResolved();
-            var data = promise.$$state.value;
-            expect(data[0]).toEqual(jasmine.objectContaining({ id: 798, title: "unbreath" }));
-            expect(data[1]).toEqual(jasmine.objectContaining({ id: 204, title: "eightscore" }));
-            expect(data[2]).toEqual(jasmine.objectContaining({ id: 45, title: "pseudocarp" }));
+            });
         });
 
-        it("Given that the first request failed, when I get all the open parent artifacts, then a promise will be rejected", function() {
-            mockBackend.expectGET('/api/v1/trackers/15/parent_artifacts?limit=2&offset=0').respond(503);
+        it("When there is a REST error, then it will be shown", () => {
+            const tracker_id = 12;
+            const limit      = 30;
+            const offset     = 0;
+            tlp.recursiveGet.and.returnValue($q.reject({
+                response: {
+                    json() {
+                        return $q.resolve({
+                            error: {
+                                message: 'No you cannot'
+                            }
+                        });
+                    }
+                }
+            }));
 
-            var promise = RestService.getAllOpenParentArtifacts(15, 2, 0);
+            const promise = RestService.getAllOpenParentArtifacts(tracker_id, limit, offset);
 
             expect(promise).toBeRejected();
-        });
-
-        it("Given that the second request failed, when I get all the open parent artifacts, then a promise will be rejected", function() {
-            var response = [
-                { id: 284, title: "traitorship" },
-                { id: 983, title: "Pharian" }
-            ];
-            mockBackend.expectGET('/api/v1/trackers/55/parent_artifacts?limit=2&offset=0').respond(
-                JSON.stringify(response),
-                {
-                    'X-PAGINATION-SIZE': 3
-                }
-            );
-            mockBackend.expectGET('/api/v1/trackers/55/parent_artifacts?limit=2&offset=2').respond(503);
-
-            var promise = RestService.getAllOpenParentArtifacts(55, 2, 0);
-
-            expect(promise).toBeRejected();
+            expect(RestService.error.error_message).toEqual('No you cannot');
+            expect(RestService.error.is_error).toBe(true);
         });
     });
 

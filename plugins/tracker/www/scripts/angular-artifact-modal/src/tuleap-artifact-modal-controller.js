@@ -1,4 +1,5 @@
-import _ from 'lodash';
+import _                    from 'lodash';
+import { isInCreationMode } from './modal-creation-mode-state.js';
 
 export default ArtifactModalController;
 
@@ -13,7 +14,6 @@ ArtifactModalController.$inject = [
     'TuleapArtifactModalRestService',
     'TuleapArtifactModalValidateService',
     'TuleapArtifactModalLoading',
-    'TuleapArtifactModalParentService',
     'TuleapArtifactModalFieldDependenciesService',
     'TuleapArtifactModalFileUploadService'
 ];
@@ -29,7 +29,6 @@ function ArtifactModalController(
     TuleapArtifactModalRestService,
     TuleapArtifactModalValidateService,
     TuleapArtifactModalLoading,
-    TuleapArtifactModalParentService,
     TuleapArtifactModalFieldDependenciesService,
     TuleapArtifactModalFileUploadService
 ) {
@@ -38,11 +37,10 @@ function ArtifactModalController(
     _.extend(self, {
         artifact_id        : modal_model.artifact_id,
         color              : formatColor(modal_model.color),
-        creation_mode      : modal_model.creation_mode,
+        creation_mode      : isInCreationMode(),
         is_disk_usage_empty: true,
         ordered_fields     : modal_model.ordered_fields,
         parent             : modal_model.parent,
-        parent_artifacts   : modal_model.parent_artifacts,
         title              : (modal_model.title.content !== undefined) ? modal_model.title.content : modal_model.title,
         tracker            : modal_model.tracker,
         values             : modal_model.values,
@@ -53,7 +51,6 @@ function ArtifactModalController(
             invert_order    : (modal_model.invert_followups_comments_order) ? 'asc' : 'desc'
         },
         formatColor                   : formatColor,
-        formatParentArtifactTitle     : formatParentArtifactTitle,
         getDropdownAttribute          : getDropdownAttribute,
         getError                      : function() { return TuleapArtifactModalRestService.error; },
         isDisabled                    : isDisabled,
@@ -61,7 +58,6 @@ function ArtifactModalController(
         isLoading                     : function() { return TuleapArtifactModalRestService.is_loading; },
         isThereAtLeastOneFileField    : isThereAtLeastOneFileField,
         setupTooltips                 : setupTooltips,
-        showParentArtifactChoice      : showParentArtifactChoice,
         submit                        : submit,
         toggleFieldset                : toggleFieldset,
         initCkeditorConfig            : initCkeditorConfig,
@@ -96,7 +92,7 @@ function ArtifactModalController(
         TuleapArtifactModalLoading.loading = false;
         self.setupTooltips();
 
-        if (! self.creation_mode) {
+        if (! isInCreationMode()) {
             fetchFollowupsComments(
                 self.artifact_id,
                 50,
@@ -140,7 +136,7 @@ function ArtifactModalController(
     }
 
     function isFollowupCommentFormDisplayed() {
-        return ! self.creation_mode && user_id !== 0;
+        return ! isInCreationMode() && user_id !== 0;
     }
 
     function fetchFollowupsComments(artifact_id, limit, offset, order) {
@@ -160,10 +156,10 @@ function ArtifactModalController(
         TuleapArtifactModalLoading.loading = true;
 
         uploadAllFileFields().then(function() {
-            var validated_values = TuleapArtifactModalValidateService.validateArtifactFieldsValues(self.values, modal_model.creation_mode);
+            var validated_values = TuleapArtifactModalValidateService.validateArtifactFieldsValues(self.values, isInCreationMode());
 
             var promise;
-            if (modal_model.creation_mode) {
+            if (isInCreationMode()) {
                 promise = TuleapArtifactModalRestService.createArtifact(modal_model.tracker_id, validated_values);
             } else {
                 promise = TuleapArtifactModalRestService.editArtifact(modal_model.artifact_id, validated_values, self.followup_comment);
@@ -212,7 +208,7 @@ function ArtifactModalController(
     }
 
     function isDisabled(field) {
-        var necessary_permission = (self.creation_mode) ? 'create' : 'update';
+        var necessary_permission = (isInCreationMode()) ? 'create' : 'update';
         return ! _(field.permissions).contains(necessary_permission);
     }
 
@@ -222,26 +218,6 @@ function ArtifactModalController(
 
     function toggleFieldset(fieldset) {
         fieldset.collapsed = ! fieldset.collapsed;
-    }
-
-    function showParentArtifactChoice() {
-        var canChoose = TuleapArtifactModalParentService.canChooseArtifactsParent(
-            self.tracker.parent,
-            self.parent
-        );
-
-        return (
-            canChoose &&
-            Boolean(self.parent_artifacts) &&
-            self.parent_artifacts.length > 0
-        );
-    }
-
-    function formatParentArtifactTitle(artifact) {
-        var tracker_label   = getTrackerLabel(artifact);
-        var formatted_title = tracker_label + ' #' + artifact.id + ' - ' + artifact.title;
-
-        return formatted_title;
     }
 
     function formatColor(color) {
@@ -255,14 +231,6 @@ function ArtifactModalController(
             }
         });
         return color_formatted;
-    }
-
-    function getTrackerLabel(artifact) {
-        if (_.has(artifact, 'tracker') && _.has(artifact.tracker, 'label')) {
-            return artifact.tracker.label;
-        }
-
-        return '';
     }
 
     function setFieldDependenciesWatchers() {
