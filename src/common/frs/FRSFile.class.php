@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,6 @@
  */
 
 require_once('FRSReleaseFactory.class.php');
-require_once('common/include/Codendi_HTTP_Download.php');
 
 class FRSFile {
 
@@ -28,21 +27,6 @@ class FRSFile {
     const EVT_UPDATE  = 302;
     const EVT_DELETE  = 303;
     const EVT_RESTORE = 304;
-
-    /**
-     * This is an arbitrary chosen hard coded limit in order to avoid
-     * download of files that exceed the php memory_limit
-     * set to 196M using the standard download mechanism
-     * which places these files in the memory causing overflows.
-     * It will use php-pear-HTTP-download instead if it is installed
-     * on the system.
-     */
-    const HARD_CODED_150MB_MEMORY_LIMIT = 157286400;
-
-    /**
-     * A 8 kb buffer size
-     */
-    const PEAR_BUFFER_SIZE = 8192;
 
 	/**
      * @var int $file_id the ID of this FRSFile
@@ -497,18 +481,14 @@ class FRSFile {
      *  
      * @return boolean true if the user has permissions to download the file, false otherwise
      */
-    function download() {
+    public function download()
+    {
         $file_location = $this->getFileLocation();
-        if ($this->fileSizeExceedsMemoryLimit() && $this->phpPearHttpDownloadExtensionIsInstalled()) {
-            return !PEAR::isError(Codendi_HTTP_Download::staticSend(array(
-                'file'               => $this->getFileLocation(),
-                'cache'              => false,
-                'contentdisposition' => array(HTTP_DOWNLOAD_ATTACHMENT, basename($this->getFileName())),
-                'buffersize'         => self::PEAR_BUFFER_SIZE,
-                )
-            ));
-        } else { //old school to be removed in 4.2
-        $file_size = $this->getFileSize();
+        $file_size     = $this->getFileSize();
+
+        if (ob_get_level()) {
+            ob_end_clean();
+        }
 
         // Make sure this URL is not cached anywhere otherwise download
         // would be wrong
@@ -525,34 +505,11 @@ class FRSFile {
 
         //reset time limit for big files
         set_time_limit(0);
-        flush();
 
         // Now transfer the file to the client
+        $read_bytes = readfile($file_location);
 
-        // Check the 2 GB limit (2^31 -1)
-        if ($file_size > 2147483647) {
-            if ($fp=popen('/bin/cat "' . escapeshellarg($file_location) . '"',"rb")) {
-                $blocksize = (2 << 20); //2M chunks
-                while(!feof($fp)) {
-                    print(fread($fp, $blocksize));
-                }
-                flush();
-                pclose($fp);
-            } else return false;
-        } else if (readfile($file_location) == false) {
-            return false;
-        }
-            
-        return true;
-        }
-    }
-
-    private function fileSizeExceedsMemoryLimit() {
-        return $this->getFileSize() > self::HARD_CODED_150MB_MEMORY_LIMIT;
-    }
-
-    private function phpPearHttpDownloadExtensionIsInstalled() {
-        return class_exists('Codendi_HTTP_Download');
+        return $read_bytes !== false;
     }
     
     /**
