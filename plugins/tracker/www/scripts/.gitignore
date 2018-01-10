@@ -6,3 +6,5 @@ vendor/
 src/**/*.css
 !src/assets/*.css
 .sass-cache/
+test-results.xml
+coverage/

@@ -1,19 +1,6 @@
 /* eslint-disable */
-var webpack_config = require('./webpack.config.js');
-
-webpack_config.module.rules.push({
-    test: /\.js$/,
-    exclude: [
-        /node_modules/,
-        /\.spec\.js/,
-    ],
-    use: [
-        {
-            loader: 'istanbul-instrumenter-loader',
-            query : 'esModules=true'
-        }
-    ]
-});
+const webpack_config = require('./webpack.config.js')[1];
+const path           = require('path');
 
 // Karma configuration
 module.exports = function(config) {
@@ -27,17 +14,16 @@ module.exports = function(config) {
         frameworks: ['jasmine'],
 
         // list of files / patterns to load in the browser
-        // This is filled by gulp
         files: [
             'node_modules/jasmine-promise-matchers/dist/jasmine-promise-matchers.js',
-            'src/tlp-mock.spec.js',
-            'src/index.spec.js'
+            'angular-artifact-modal/src/tlp-mock.spec.js',
+            'angular-artifact-modal/src/index.spec.js'
         ],
 
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
-            'src/index.spec.js': ['webpack']
+            'angular-artifact-modal/src/index.spec.js': ['webpack']
         },
 
         // web server port
@@ -50,6 +36,9 @@ module.exports = function(config) {
         // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
         logLevel: config.LOG_INFO,
 
+        // enable / disable watching file and executing tests whenever any file changes
+        autoWatch: false,
+
         // start these browsers
         // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
         browsers: [process.platform !== 'linux' ? 'ChromeHeadless' : 'ChromiumHeadless'],
@@ -60,4 +49,33 @@ module.exports = function(config) {
             stats: 'errors-only'
         }
     });
+
+    if (process.env.NODE_ENV === 'test') {
+        config.set({
+            singleRun: true,
+            reporters: ['dots', 'junit'],
+            junitReporter: {
+                outputDir     : process.env.REPORT_OUTPUT_FOLDER || '',
+                outputFile    : 'test-results.xml',
+                useBrowserName: false
+            }
+        });
+    } else if (process.env.NODE_ENV === 'watch') {
+        process.env.BABEL_ENV = 'test';
+        config.set({
+            reporters: ['dots'],
+            autoWatch: true
+        });
+    } else if (process.env.NODE_ENV === 'coverage') {
+        config.set({
+            singleRun: true,
+            reporters: ['dots', 'coverage'],
+            coverageReporter: {
+                dir      : path.resolve(__dirname, './coverage'),
+                reporters: [
+                    { type: 'html'}
+                ]
+            }
+        })
+    }
 };
