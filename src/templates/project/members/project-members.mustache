@@ -55,13 +55,17 @@
                     <thead>
                         <tr>
                             <th>{{# gettext }}Name{{/ gettext }}</th>
-                            <th>{{# gettext }}Members of user groups{{/gettext}}</th>
+                            {{# can_see_ugroups }}
+                                <th>{{# gettext }}Members of user groups{{/gettext}}</th>
+                            {{/ can_see_ugroups }}
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr class="tlp-table-empty-filter">
-                            <td colspan="3" class="tlp-table-cell-empty">
+                            <td colspan="{{# can_see_ugroups }}3{{/ can_see_ugroups }}{{^ can_see_ugroups }}2{{/ can_see_ugroups }}"
+                                class="tlp-table-cell-empty"
+                            >
                                 {{# gettext }}There isn't any matching members{{/ gettext }}
                             </td>
                         </tr>
@@ -75,16 +79,18 @@
                                     </div>
                                     <a href="{{ profile_page_url }}">{{ username_display }}</a>
                                 </td>
-                                <td class="project-admin-members-ugroups">
-                                    {{# ugroups }}
-                                        <a href="/project/admin/editugroup.php?group_id={{ project_id }}&ugroup_id={{ id }}"
-                                            {{# description }}
-                                                class="tlp-tooltip tlp-tooltip-bottom"
-                                                data-tlp-tooltip="{{ description }}"
-                                            {{/ description }}
-                                        >{{ name }}</a><span class="projectadmin-userlist-result-ugroup-separator">, </span>
-                                    {{/ ugroups }}
-                                </td>
+                                {{# can_see_ugroups }}
+                                    <td class="project-admin-members-ugroups">
+                                        {{# ugroups }}
+                                            <a href="/project/admin/editugroup.php?group_id={{ project_id }}&ugroup_id={{ id }}"
+                                                {{# description }}
+                                                    class="tlp-tooltip tlp-tooltip-bottom"
+                                                    data-tlp-tooltip="{{ description }}"
+                                                {{/ description }}
+                                            >{{ name }}</a><span class="projectadmin-userlist-result-ugroup-separator">, </span>
+                                        {{/ ugroups }}
+                                    </td>
+                                {{/ can_see_ugroups }}
                                 <td class="tlp-table-cell-actions">
                                     {{# is_generic }}
                                         <a class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline"
