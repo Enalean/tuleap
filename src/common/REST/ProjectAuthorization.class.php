@@ -69,11 +69,25 @@ class ProjectAuthorization {
         }
     }
 
-    public static function userCanAccessProjectAndIsProjectAdmin(PFUser $user, Project $project) {
+    public static function userCanAccessProjectAndIsProjectAdmin(PFUser $user, Project $project)
+    {
         try {
             $url_verification = new URLVerification();
             $url_verification->userCanAccessProjectAndIsProjectAdmin($user, $project);
-            return true;
+        } catch (Project_AccessProjectNotFoundException $exception) {
+            throw new RestException(404);
+        } catch (Project_AccessNotAdminException $exception) {
+            throw new RestException(403, $exception->getMessage());
+        } catch (Project_AccessException $exception) {
+            throw new RestException(403, $exception->getMessage());
+        }
+    }
+
+    public static function userCanAccessProjectAndCanManageMembership(PFUser $user, Project $project)
+    {
+        try {
+            $url_verification = new URLVerification();
+            $url_verification->userCanManageProjectMembership($user, $project);
         } catch (Project_AccessProjectNotFoundException $exception) {
             throw new RestException(404);
         } catch (Project_AccessNotAdminException $exception) {

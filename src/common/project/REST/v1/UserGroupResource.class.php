@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -173,7 +173,7 @@ class UserGroupResource extends AuthenticatedResource {
         $user_group = $this->user_group_retriever->getExistingUserGroup($id);
         $this->checkGroupIsViewable($user_group->getId());
         $project_id = $user_group->getProjectId();
-        $this->userCanSeeUserGroupMembers($project_id);
+        $this->userCanSeeUserGroupMembers($user_group);
 
         $member_representations = array();
 
@@ -244,9 +244,7 @@ class UserGroupResource extends AuthenticatedResource {
 
         $user_group = $this->user_group_retriever->getExistingUserGroup($id);
         $this->checkUgroupValidity($user_group);
-
-        $project_id = $user_group->getProjectId();
-        $this->userCanSeeUserGroupMembers($project_id);
+        $this->userCanSeeUserGroupMembers($user_group);
 
         $this->checkKeysValidity($user_references);
 
@@ -417,12 +415,16 @@ class UserGroupResource extends AuthenticatedResource {
      *
      * @return boolean
      */
-    private function userCanSeeUserGroupMembers($project_id) {
-        $project      = $this->project_manager->getProject($project_id);
-        $user         = $this->user_manager->getCurrentUser();
-        ProjectAuthorization::userCanAccessProjectAndIsProjectAdmin($user, $project);
+    private function userCanSeeUserGroupMembers(ProjectUGroup $ugroup)
+    {
+        $project = $ugroup->getProject();
+        $user    = $this->user_manager->getCurrentUser();
 
-        return true;
+        if ((int) $ugroup->getId() === ProjectUGroup::PROJECT_MEMBERS) {
+            ProjectAuthorization::userCanAccessProjectAndCanManageMembership($user, $project);
+        } else {
+            ProjectAuthorization::userCanAccessProjectAndIsProjectAdmin($user, $project);
+        }
     }
 
     /**
