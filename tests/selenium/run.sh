@@ -41,6 +41,6 @@ is_server_ready
 su -c '/tuleap/tests/selenium/vendor/bin/steward run \
     -vvv \
     --logs-dir=/output \
-    --server-url http://firefox:4444 \
+    --server-url http://chrome:4444 \
     --capability="acceptInsecureCerts:true" \
-    staging firefox' -l runner
+    staging chrome' -l runner

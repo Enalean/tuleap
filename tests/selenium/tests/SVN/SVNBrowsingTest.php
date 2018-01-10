@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -65,8 +65,8 @@ class SVNBrowsingTest extends AbstractTestCase
         $this->assertViewVcLink('trunk');
     }
 
-    private function assertViewVcLink($text)
+    private function assertViewVcLink(string $text)
     {
-        $this->assertEquals(trim($this->findByLinkText($text)->getText()), $text);
+        $this->assertEquals(trim($this->findByPartialLinkText($text)->getText()), $text);
     }
 }
