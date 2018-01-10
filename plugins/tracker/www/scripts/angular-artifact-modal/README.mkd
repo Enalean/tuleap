@@ -14,8 +14,6 @@
             'angular': path.resolve(__dirname, './node_modules/angular/index.js'),
             // the path should point to angular-artifact-modal/index.js
             'angular-artifact-modal' : path.resolve(__dirname, '../../../../tracker/www/scripts/angular-artifact-modal/index.js'),
-            // Modal dependencies fix
-            'angular-bootstrap-datetimepicker': 'angular-bootstrap-datetimepicker/src/js/datetimepicker.js',
         }
     }
     ```
@@ -56,11 +54,11 @@ NewTuleapArtifactModalService.showEdition(
     user_id,
     tracker_id,
     artifact_id,
-    callback
+    callback,
+    prefill_values
 );
 ```
 
 `callback` will receive as first parameter `artifact_id`
-
 
 To show that the modal is loading, use `NewTuleapArtifactModalService.loading.loading`
