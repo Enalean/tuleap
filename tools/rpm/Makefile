@@ -65,7 +65,6 @@ ifeq ($(strip $(OS)),rhel6)
 DIST=
 SPEC_FILE=tuleap.rhel6.spec
 SRPMS=$(RPM_TMP)/SRPMS/$(PKG_NAME)-$(version)-$(RELEASE)$(DIST).src.rpm \
-	$(RPM_TMP)/SRPMS/$(PKG_NAME)-all-deps-$(version)-$(RELEASE)$(DIST).src.rpm \
 	$(RPM_TMP)/SRPMS/$(PKG_NAME)-all-$(version)-$(RELEASE)$(DIST).src.rpm
 else
 ifeq ($(strip $(OS)),rhel7)
