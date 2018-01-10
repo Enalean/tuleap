@@ -23,9 +23,10 @@ if [ -z "$SRC_DIR" ]; then
     exit 1;
 fi
 
-#docker image inspect tuleap-generated-files-builder > /dev/null 2>&1 || \
-#    echo 'You should build tuleap-generated-files-builder from the sources https://tuleap.net/plugins/git/tuleap/docker/tuleap-generated-files-builder' && \
-#    exit 1
+docker image inspect tuleap-generated-files-builder > /dev/null 2>&1 || \
+    echo 'You should build tuleap-generated-files-builder from the sources https://tuleap.net/plugins/git/tuleap/docker/tuleap-generated-files-builder' && \
+    exit 1
+
 
 clean_tuleap_sources="$(mktemp -d)/"
 
@@ -46,6 +47,6 @@ fi
 
 docker run -i --rm -v "$clean_tuleap_sources":/tuleap -v "$clean_tuleap_sources":/output tuleap-generated-files-builder
 
-docker run -i --name rpm-builder -v "$clean_tuleap_sources":/tuleap:ro buildrpmsc7 --os rhel7
+docker run -i --name rpm-builder -v "$clean_tuleap_sources":/tuleap:ro enalean/tuleap-buildrpms:centos6-without-srpms --os rhel6
 
-#docker run -it --rm --name rpm-installer --volumes-from rpm-builder enalean/tuleap-installrpms
+docker run -it --rm --name rpm-installer --volumes-from rpm-builder enalean/tuleap-installrpms
