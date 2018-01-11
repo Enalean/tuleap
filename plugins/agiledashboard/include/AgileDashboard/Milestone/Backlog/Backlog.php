@@ -23,8 +23,6 @@
  */
 
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
-use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
 
 /**
@@ -129,103 +127,9 @@ class AgileDashboard_Milestone_Backlog_Backlog
         return $this->backlogitem_trackers;
     }
 
-    public function getBacklogItemName()
-    {
-        $descendant_trackers_names = array();
-
-        foreach ($this->getDescendantTrackers() as $descendant_tracker) {
-            $descendant_trackers_names[] = $descendant_tracker->getName();
-        }
-
-        return implode(', ', $descendant_trackers_names);
-    }
-
     public function getMilestoneBacklogArtifactsTracker()
     {
         return $this->getDescendantTrackers();
-    }
-
-    private function getAddItemsToBacklogUrls(PFUser $user, Planning_Milestone $milestone, $redirect_to_self)
-    {
-        $submit_urls = array();
-
-        foreach ($this->getDescendantTrackers() as $descendant_tracker) {
-            if ($descendant_tracker->userCanSubmitArtifact($user)) {
-                $submit_urls[] = array(
-                    'tracker_type' => $descendant_tracker->getName(),
-                    'tracker_id'   => $descendant_tracker->getId(),
-                    'submit_url'   => $milestone->getArtifact()->getSubmitNewArtifactLinkedToMeUri($descendant_tracker).'&'.$redirect_to_self
-                );
-            }
-        }
-
-        return $submit_urls;
-    }
-
-    private function canUserPrioritizeBacklog(Planning_Milestone $milestone, PFUser $user)
-    {
-        $artifact_factory  = Tracker_ArtifactFactory::instance();
-        $planning_factory  = PlanningFactory::build();
-        $milestone_factory = new Planning_MilestoneFactory(
-            $planning_factory,
-            $artifact_factory,
-            Tracker_FormElementFactory::instance(),
-            TrackerFactory::instance(),
-            new AgileDashboard_Milestone_MilestoneStatusCounter(
-                $this->dao,
-                new Tracker_ArtifactDao(),
-                $artifact_factory
-            ),
-            new PlanningPermissionsManager(),
-            new AgileDashboard_Milestone_MilestoneDao(),
-            new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory)
-        );
-
-        return $milestone_factory->userCanChangePrioritiesInMilestone($milestone, $user);
-    }
-
-    public function getTrackersWithoutInitialEffort()
-    {
-        $trackers_without_initial_effort_defined = array();
-        foreach ($this->descendant_trackers as $descendant) {
-            if (! AgileDashBoard_Semantic_InitialEffort::load($descendant)->getField()) {
-                $trackers_without_initial_effort_defined[] = $descendant;
-            }
-        }
-
-        return $trackers_without_initial_effort_defined;
-    }
-
-    public function getPresenter(
-        PFUser $user,
-        Planning_Milestone $milestone,
-        AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection $todo,
-        AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection $done,
-        AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection $inconsistent_collection,
-        $redirect_to_self
-    ) {
-
-        return new AgileDashboard_Milestone_Pane_Content_ContentPresenter(
-            $todo,
-            $done,
-            $inconsistent_collection,
-            $this->getBacklogItemName(),
-            $this->getAddItemsToBacklogUrls($user, $milestone, $redirect_to_self),
-            $this->descendant_trackers,
-            $this->canUserPrioritizeBacklog($milestone, $user),
-            $this->getTrackersWithoutInitialEffort(),
-            $this->getSolveInconsistenciesUrl($milestone, $redirect_to_self),
-            $milestone->getArtifactId()
-        );
-    }
-
-    private function getSolveInconsistenciesUrl(Planning_Milestone $milestone, $redirect_to_self)
-    {
-        return  AGILEDASHBOARD_BASE_URL.
-                "/?group_id=".$milestone->getGroupId().
-                "&aid=".$milestone->getArtifactId().
-                "&action=solve-inconsistencies".
-                "&".$redirect_to_self;
     }
 
     /** @return AgileDashboard_Milestone_Backlog_DescendantItemsCollection */
