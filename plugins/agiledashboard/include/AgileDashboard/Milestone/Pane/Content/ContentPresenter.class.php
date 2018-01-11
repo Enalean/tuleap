@@ -33,16 +33,10 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
     private $inconsistent_collection;
 
     /** @var String */
-    protected $backlog_item_type;
+    private $backlog_item_type;
 
     /** @var String[] */
     private $trackers_without_initial_effort_field;
-
-    /** @var Tracker[] */
-    private $trackers = array();
-
-    /** @var String[] */
-    private $add_new_backlog_items_urls;
 
     /** @var Boolean */
     private $can_prioritize;
@@ -50,19 +44,14 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
     /** @var String */
     private $solve_inconsistencies_url;
 
-    /** @var int */
-    private $milestone_artifact_id;
-
     public function __construct(
         AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection $todo,
         AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection $done,
         AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection $inconsistent_collection,
-        $add_new_backlog_items_urls,
         $trackers,
         $can_prioritize,
         array $trackers_without_initial_effort_defined,
-        $solve_inconsistencies_url,
-        $milestone_artifact_id
+        $solve_inconsistencies_url
     ) {
         $this->todo_collection           = $todo;
         $this->done_collection           = $done;
@@ -71,9 +60,6 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
         foreach ($trackers_without_initial_effort_defined as $tracker) {
             $this->trackers_without_initial_effort_field[] = $tracker->getName();
         }
-        $this->milestone_artifact_id       = $milestone_artifact_id;
-        $this->add_new_backlog_items_urls  = $add_new_backlog_items_urls;
-        $this->trackers                    = $trackers;
         $this->can_prioritize              = $can_prioritize;
         $this->solve_inconsistencies_url   = $solve_inconsistencies_url;
     }
@@ -97,48 +83,12 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
         return $this->can_prioritize;
     }
 
-    public function can_add_backlog_item() {
-        return count($this->add_new_backlog_items_urls) > 0;
-    }
-
-    public function only_one_new_backlog_items_urls() {
-        return count($this->add_new_backlog_items_urls) == 1;
-    }
-
-    public function add_new_backlog_items_urls() {
-        return $this->add_new_backlog_items_urls;
-    }
-
-    public function trackers() {
-        return $this->trackers;
-    }
-
-    public function create_new_specific_item() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'create_new_specific_item', $this->add_new_backlog_items_urls[0]['tracker_type']);
-    }
-
-    public function create_new_item() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'create_new_item');
-    }
-
-    public function create_new_item_help() {
-        $trackers = array();
-        foreach($this->add_new_backlog_items_urls as $backlog_entry) {
-            array_push($trackers, $backlog_entry['tracker_type']);
-        }
-        return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'create_new_item_help', implode(', ', $trackers));
-    }
-
     public function solve_inconsistencies_button() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'solve_inconsistencies');
     }
 
     public function solve_inconsistencies_url() {
         return $this->solve_inconsistencies_url;
-    }
-
-    public function milestone_id() {
-        return (int) $this->milestone_artifact_id;
     }
 
     public function title() {
@@ -197,9 +147,6 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
         $key = 'open_items_title';
         if ($this->has_nothing()) {
             $key = 'open_items_title-not_yet';
-            if ($this->can_add_backlog_item()) {
-                $key = 'open_items_title-not_yet-can_add';
-            }
         } else if ($this->has_nothing_todo()) {
             $key = 'open_items_title-no_more';
         }
