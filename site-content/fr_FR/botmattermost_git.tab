@@ -8,6 +8,7 @@ plugin_botmattermost_git	alert_error_update_bot_notification	La mise à jour de 
 
 plugin_botmattermost_git	title	Notifications dans Mattermost
 plugin_botmattermost_git	description	Choisis un robot afin d'envoyer des notifications dans Mattermost lorsqu'un push à lieu dans ce dépot.
+plugin_botmattermost_git	description_create_bot	Si vous ne voyez pas de robot lié à votre projet/équipe Mattermost, veuillez contacter un administrateur.
 
 
 plugin_botmattermost_git	push_notification_text	a publié un nouveau commit sur

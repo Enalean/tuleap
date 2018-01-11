@@ -50,14 +50,17 @@ class Presenter
         $this->project_id    = $this->repository->getProjectId();
         $this->repository_id = $this->repository->getId();
         $this->has_bots      = ! empty($bots);
-        $this->title         = $GLOBALS['Language']->getText('plugin_botmattermost_git', 'title');
-        $this->description   = $GLOBALS['Language']->getText('plugin_botmattermost_git', 'description');
+
+        $this->title                  = $GLOBALS['Language']->getText('plugin_botmattermost_git', 'title');
+        $this->description            = $GLOBALS['Language']->getText('plugin_botmattermost_git', 'description');
+        $this->description_create_bot = $GLOBALS['Language']->getText('plugin_botmattermost_git', 'description_create_bot');
 
         $this->modal_add_title          = $GLOBALS['Language']->getText('plugin_botmattermost_git', 'modal_header_configure_notification');
         $this->modal_edit_title         = $GLOBALS['Language']->getText('plugin_botmattermost_git', 'modal_header_edit_configure_notification');
         $this->modal_delete_title       = $GLOBALS['Language']->getText('plugin_botmattermost_git', 'modal_header_delete_configure_notification');
         $this->modal_delete_content     = $GLOBALS['Language']->getText('plugin_botmattermost_git', 'modal_delete_content');
 
+        $this->label_bot_list                  = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_label_bot_list');
         $this->label_bot_name                  = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_label_bot_name');
         $this->label_avatar_url                = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_label_avatar_url');
         $this->label_channels_handles          = $GLOBALS['Language']->getText('plugin_botmattermost_git', 'configuration_label_channels_handles');
