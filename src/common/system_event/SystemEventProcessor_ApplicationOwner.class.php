@@ -30,7 +30,7 @@ class SystemEventProcessor_ApplicationOwner extends SystemEventProcessor {
     }
 
     protected function postEventsActions(array $executed_events_ids, $queue_name) {
-        $this->ensureWorkerIsRunning();
+        $this->ensureWorkersAreRunning();
         $params = array(
             'executed_events_ids'  => $executed_events_ids,
             'queue_name'           => $queue_name
@@ -42,27 +42,23 @@ class SystemEventProcessor_ApplicationOwner extends SystemEventProcessor {
         );
     }
 
-    private function ensureWorkerIsRunning()
+    private function ensureWorkersAreRunning()
     {
-        $this->logger->debug("Check if backend worker is running");
-        if (ForgeConfig::get('sys_async_emails') !== false && ! $this->isWorkerRunning()) {
-            $this->logger->info("Start backend notifier");
-            try {
-                $command = new System_Command();
-                $command->exec('/usr/share/tuleap/src/utils/worker.php >/dev/null 2>/dev/null &');
-            } catch (System_Command_CommandException $exception) {
-                $this->logger->error("Unable to launch backend worker: ".$exception->getMessage());
-            }
+        $this->logger->debug("Check if backend workers are running");
+        for($i = 0; $i < $this->getBackendWorkerCount(); $i++) {
+            \Tuleap\Queue\Worker::run($this->logger, $i);
         }
     }
 
-    private function isWorkerRunning()
+    private function getBackendWorkerCount()
     {
-        if (file_exists(\Tuleap\Queue\Worker::PID_FILE_PATH)) {
-            $pid = (int) trim(file_get_contents(\Tuleap\Queue\Worker::PID_FILE_PATH));
-            $ret = posix_kill($pid, SIG_DFL);
-            return $ret === true;
-        }
+       if (ForgeConfig::get('sys_nb_backend_workers') !== false) {
+           return abs((int) ForgeConfig::get('sys_nb_backend_workers'));
+       }
+       if (ForgeConfig::get('sys_async_emails') !== false) {
+           return 1;
+       }
+       return 0;
     }
 
     public function getProcessOwner() {
