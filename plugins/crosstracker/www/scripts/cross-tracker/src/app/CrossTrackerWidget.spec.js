@@ -34,7 +34,6 @@ describe("CrossTrackerWidget", () => {
         successDisplayer,
         errorDisplayer,
         savedState,
-        queryResultController,
         readingController;
 
     beforeEach(() => {
@@ -47,7 +46,6 @@ describe("CrossTrackerWidget", () => {
 
         successDisplayer           = jasmine.createSpyObj("successDisplayer", ["hideSuccess"]);
         errorDisplayer             = jasmine.createSpyObj("errorDisplayer", ["hideError"]);
-        queryResultController      = jasmine.createSpyObj("queryResultController", ["init", "loadFirstBatchOfArtifacts"]);
         readingController          = jasmine.createSpyObj("readingController", ["init"]);
 
         spyOn(writingCrossTrackerReport, "duplicateFromReport");
@@ -63,7 +61,6 @@ describe("CrossTrackerWidget", () => {
                 successDisplayer,
                 errorDisplayer,
                 savedState,
-                queryResultController,
                 readingController,
             }
         });
@@ -123,11 +120,12 @@ describe("CrossTrackerWidget", () => {
         it("When I switch to the reading mode with unsaved state, then a batch of artifacts will be loaded, the reading report will be updated, the reading action buttons shown and the feedbacks hidden", () => {
             const vm = instantiateComponent();
             spyOn(vm.$refs.reading_mode, "showActions");
+            spyOn(vm.$refs.artifact_table, "refreshArtifactList");
             spyOn(savedState, "switchToUnsavedState");
 
             vm.switchToReadingMode({ saved_state: false });
 
-            expect(queryResultController.loadFirstBatchOfArtifacts).toHaveBeenCalled();
+            expect(vm.$refs.artifact_table.refreshArtifactList).toHaveBeenCalled();
             expect(readingCrossTrackerReport.duplicateFromReport).toHaveBeenCalledWith(writingCrossTrackerReport);
             expect(savedState.switchToUnsavedState).toHaveBeenCalled();
             expect(vm.$refs.reading_mode.showActions).toHaveBeenCalled();

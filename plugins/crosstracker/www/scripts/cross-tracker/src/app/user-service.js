@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,17 +17,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import phptomoment from 'phptomoment';
+import moment      from 'moment';
+
 export {
     init,
-    isAnonymous
+    isAnonymous,
+    getUserPreferredDateFormat
 };
 
 let user_is_anonymous;
+let date_format;
 
-function init(is_anonymous) {
+function init(is_anonymous, localized_php_date_format, locale) {
     user_is_anonymous = is_anonymous;
+    date_format       = phptomoment(localized_php_date_format);
+    moment.locale(locale);
 }
 
 function isAnonymous() {
     return user_is_anonymous;
+}
+
+function getUserPreferredDateFormat() {
+    return date_format;
 }

@@ -22,7 +22,7 @@
             <button class="tlp-button-primary dashboard-widget-content-cross-tracker-reading-mode-actions-save"
                     v-on:click="saveReport"
             >
-                <span class="cross-tracker-loader"><i class="tlp-button-icon fa fa-spinner fa-spin"></i></span>
+                <span><i class="tlp-button-icon fa fa-spinner fa-spin"></i></span>
                 {{ save }}
             </button>
         </div>
@@ -71,8 +71,8 @@
                 this.hideActions();
             },
             cancelReport() {
-                this.readingController.cancelReport();
-                this.hideActions();
+                this.readingCrossTrackerReport.duplicateFromReport(this.backendCrossTrackerReport);
+                this.$emit('cancelled');
             },
             showActions() {
                 this.are_actions_hidden = false;

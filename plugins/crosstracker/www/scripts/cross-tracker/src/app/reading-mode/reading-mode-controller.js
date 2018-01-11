@@ -28,7 +28,6 @@ export default class ReadingModeController {
         backend_cross_tracker_report,
         writing_cross_tracker_report,
         reading_cross_tracker_report,
-        query_result_controller,
         widget_loader_displayer,
         success_displayer,
         error_displayer
@@ -38,30 +37,15 @@ export default class ReadingModeController {
         this.backend_cross_tracker_report = backend_cross_tracker_report;
         this.writing_cross_tracker_report = writing_cross_tracker_report;
         this.reading_cross_tracker_report = reading_cross_tracker_report;
-        this.query_result_controller      = query_result_controller;
         this.widget_loader_displayer      = widget_loader_displayer;
         this.success_displayer            = success_displayer;
         this.error_displayer              = error_displayer;
     }
 
     init() {
-        this.reading_mode_actions       = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-reading-mode-actions');
         this.reading_mode_save_report   = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-reading-mode-actions-save');
-        this.reading_mode_cancel_report = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-reading-mode-actions-cancel');
 
-        this.loadBackendReport().then(() => {
-            if (isAnonymous()) {
-                this.disableSaveReport();
-                return;
-            }
-        });
-    }
-
-    cancelReport() {
-        this.reading_cross_tracker_report.duplicateFromReport(this.backend_cross_tracker_report);
-
-        this.report_saved_state.switchToSavedState();
-        this.query_result_controller.loadFirstBatchOfArtifacts();
+        this.loadBackendReport();
     }
 
     async saveReport() {
@@ -119,10 +103,6 @@ export default class ReadingModeController {
         } finally {
             this.widget_loader_displayer.hide();
         }
-    }
-
-    disableSaveReport() {
-        this.reading_mode_save_report.disabled = true;
     }
 
     showSaveReportLoading() {
