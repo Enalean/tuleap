@@ -30,6 +30,7 @@ class SystemEventProcessor_ApplicationOwner extends SystemEventProcessor {
     }
 
     protected function postEventsActions(array $executed_events_ids, $queue_name) {
+        $this->ensureWorkerIsRunning();
         $params = array(
             'executed_events_ids'  => $executed_events_ids,
             'queue_name'           => $queue_name
@@ -39,7 +40,29 @@ class SystemEventProcessor_ApplicationOwner extends SystemEventProcessor {
             Event::POST_SYSTEM_EVENTS_ACTIONS,
             $params
         );
+    }
 
+    private function ensureWorkerIsRunning()
+    {
+        $this->logger->debug("Check if backend worker is running");
+        if (ForgeConfig::get('sys_async_emails') !== false && ! $this->isWorkerRunning()) {
+            $this->logger->info("Start backend notifier");
+            try {
+                $command = new System_Command();
+                $command->exec('/usr/share/tuleap/src/utils/worker.php >/dev/null 2>/dev/null &');
+            } catch (System_Command_CommandException $exception) {
+                $this->logger->error("Unable to launch backend worker: ".$exception->getMessage());
+            }
+        }
+    }
+
+    private function isWorkerRunning()
+    {
+        if (file_exists(\Tuleap\Queue\Worker::PID_FILE_PATH)) {
+            $pid = (int) trim(file_get_contents(\Tuleap\Queue\Worker::PID_FILE_PATH));
+            $ret = posix_kill($pid, SIG_DFL);
+            return $ret === true;
+        }
     }
 
     public function getProcessOwner() {

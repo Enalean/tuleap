@@ -60,35 +60,12 @@ class AsynchronousSupervisor
         $last_end_date = $this->dao->getLastEndDate();
         $nb_pending_notifications = $this->dao->searchPendingNotificationsAfter($last_end_date + self::ACCEPTABLE_PROCESS_DELAY);
         if ($nb_pending_notifications > 0) {
-            $this->logger->warn("There are ".$nb_pending_notifications." notifications pending, you should check '/usr/share/tuleap/plugins/tracker/bin/notify.php' and it's log file to ensure it's still running.");
+            $this->logger->warn("There are ".$nb_pending_notifications." notifications pending, you should check '/usr/share/tuleap/src/utils/worker.php' and it's log file to ensure it's still running.");
         }
     }
 
     private function purgeOldLogs()
     {
         $this->dao->deleteLogsOlderThan(self::ONE_WEEK_IN_SECONDS);
-    }
-
-    public function runNotify()
-    {
-        $this->logger->debug("Check if backend notifier is running");
-        if (ForgeConfig::get('sys_async_emails') !== false && ! $this->isRunning()) {
-            $this->logger->info("Start backend notifier");
-            try {
-                $command = new System_Command();
-                $command->exec('/usr/share/tuleap/plugins/tracker/bin/notify.php >/dev/null 2>/dev/null &');
-            } catch (\Exception $exception) {
-                $this->logger->error("Unable to launch backend notifier: ".$exception->getMessage());
-            }
-        }
-    }
-
-    private function isRunning()
-    {
-        if (file_exists(AsynchronousNotifier::PID_FILE_PATH)) {
-            $pid = (int) trim(file_get_contents(AsynchronousNotifier::PID_FILE_PATH));
-            $ret = posix_kill($pid, SIG_DFL);
-            return $ret === true;
-        }
     }
 }
