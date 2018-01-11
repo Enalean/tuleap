@@ -1,0 +1,37 @@
+<div class="tlp-form-element"
+    ng-class="{'tlp-form-element-disabled': link_field.isDisabled() }"
+>
+    <label class="tlp-label"
+        for="{{ ::('tracker_field_' + link_field.field.field_id) }}"
+    >
+        {{ ::link_field.field.label }}
+        <i ng-if="::link_field.field.required" class="fa fa-asterisk"></i>
+    </label>
+    <input type="text"
+        class="tlp-input"
+        placeholder="{{ 'Enter artifact ids separated by a comma' | translate }}"
+        id="{{ ::('tracker_field_' + field.field_id) }}"
+        ng-model="link_field.value_model.unformatted_links"
+        ng-disabled="::link_field.isDisabled(field)"
+    >
+</div>
+<i ng-if="link_field.is_loading" class="fa fa-spinner fa-spin"></i>
+<div class="tlp-form-element"
+    ng-class="{'tlp-form-element-disabled': link_field.isDisabled() }"
+    ng-if="link_field.showParentArtifactChoice()"
+>
+    <label class="tlp-label"
+        for="{{ ::('tracker_field_' + field.field_id + '_parent') }}"
+        translate
+    >Select parent</label>
+    <select class="tlp-select"
+        id="{{ ::('tracker_field_' + field.field_id + '_parent') }}"
+        ng-model="link_field.value_model.links[0].id"
+        ng-disabled="::link_field.isDisabled(field)"
+    >
+        <option value="" selected translate>Please choose a parent…</option>
+        <option ng-repeat="artifact in link_field.possible_parent_artifacts"
+            value="{{ artifact.id }}"
+        >{{ link_field.formatArtifact(artifact) }}</option>
+    </select>
+</div>

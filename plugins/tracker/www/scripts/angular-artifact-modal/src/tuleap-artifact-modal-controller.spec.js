@@ -1,11 +1,16 @@
 import artifact_modal_module from './tuleap-artifact-modal.js';
-import angular from 'angular';
+import angular               from 'angular';
 import 'angular-mocks';
 
 import BaseModalController from './tuleap-artifact-modal-controller.js';
 
-describe("TuleapArtifactModalController", function() {
-    var $scope,
+import {
+    rewire$isInCreationMode,
+    restore as restoreCreationMode
+} from './modal-creation-mode-state.js';
+
+describe("TuleapArtifactModalController", () => {
+    let $scope,
         $q,
         $controller,
         controller_params,
@@ -13,12 +18,13 @@ describe("TuleapArtifactModalController", function() {
         tlp_modal,
         TuleapArtifactModalRestService,
         TuleapArtifactModalValidateService,
-        TuleapArtifactModalParentService,
         TuleapArtifactModalFieldDependenciesService,
         TuleapArtifactModalLoading,
         TuleapArtifactModalFileUploadService,
-        mockCallback;
-    beforeEach(function() {
+        mockCallback,
+        isInCreationMode;
+
+    beforeEach(() => {
         angular.mock.module(artifact_modal_module, function($provide) {
             $provide.decorator('TuleapArtifactModalRestService', function($delegate, $q) {
                 spyOn($delegate, "createArtifact");
@@ -47,12 +53,6 @@ describe("TuleapArtifactModalController", function() {
                 return $delegate;
             });
 
-            $provide.decorator('TuleapArtifactModalParentService', function($delegate) {
-                spyOn($delegate, "canChooseArtifactsParent");
-
-                return $delegate;
-            });
-
             $provide.decorator('TuleapArtifactModalFileUploadService', function($delegate) {
                 spyOn($delegate, "uploadAllTemporaryFiles");
 
@@ -67,7 +67,6 @@ describe("TuleapArtifactModalController", function() {
             _$timeout_,
             _TuleapArtifactModalRestService_,
             _TuleapArtifactModalValidateService_,
-            _TuleapArtifactModalParentService_,
             _TuleapArtifactModalFieldDependenciesService_,
             _TuleapArtifactModalLoading_,
             _TuleapArtifactModalFileUploadService_
@@ -75,7 +74,6 @@ describe("TuleapArtifactModalController", function() {
             $q = _$q_;
             TuleapArtifactModalRestService              = _TuleapArtifactModalRestService_;
             TuleapArtifactModalValidateService          = _TuleapArtifactModalValidateService_;
-            TuleapArtifactModalParentService            = _TuleapArtifactModalParentService_;
             TuleapArtifactModalFieldDependenciesService = _TuleapArtifactModalFieldDependenciesService_;
             TuleapArtifactModalLoading                  = _TuleapArtifactModalLoading_;
             TuleapArtifactModalFileUploadService        = _TuleapArtifactModalFileUploadService_;
@@ -83,7 +81,7 @@ describe("TuleapArtifactModalController", function() {
             tlp_modal = jasmine.createSpyObj('tlp_modal', [
                 'hide'
             ]);
-            var modal_instance = {
+            const modal_instance = {
                 tlp_modal: tlp_modal
             };
 
@@ -100,15 +98,21 @@ describe("TuleapArtifactModalController", function() {
                     },
                     color: "inca_silver"
                 },
-                TuleapArtifactModalRestService             : TuleapArtifactModalRestService,
-                TuleapArtifactModalValidateService         : TuleapArtifactModalValidateService,
-                TuleapArtifactModalLoading                 : TuleapArtifactModalLoading,
-                TuleapArtifactModalParentService           : TuleapArtifactModalParentService,
-                TuleapArtifactModalFieldDependenciesService: TuleapArtifactModalFieldDependenciesService,
-                TuleapArtifactModalFileUploadService       : TuleapArtifactModalFileUploadService,
-                displayItemCallback                        : mockCallback
+                TuleapArtifactModalRestService,
+                TuleapArtifactModalValidateService,
+                TuleapArtifactModalLoading,
+                TuleapArtifactModalFieldDependenciesService,
+                TuleapArtifactModalFileUploadService,
+                displayItemCallback: mockCallback
             };
         });
+
+        isInCreationMode = jasmine.createSpy("isInCreationMode");
+        rewire$isInCreationMode(isInCreationMode);
+    });
+
+    afterEach(() => {
+        restoreCreationMode();
     });
 
     describe("init() -", function() {
@@ -176,18 +180,16 @@ describe("TuleapArtifactModalController", function() {
         });
     });
 
-    describe("submit() - Given a tracker id, field values, a callback function", function() {
-        beforeEach(function() {
-            TuleapArtifactModalValidateService.validateArtifactFieldsValues.and.callFake(function(values) {
-                return values;
-            });
+    describe("submit() - Given a tracker id, field values, a callback function", () => {
+        beforeEach(() => {
+            TuleapArtifactModalValidateService.validateArtifactFieldsValues.and.callFake(values => values);
         });
 
-        it("and no artifact_id, when I submit the modal to Tuleap, then the field values will be validated, the artifact will be created , the modal will be closed and the callback will be called", function() {
+        it("and no artifact_id, when I submit the modal to Tuleap, then the field values will be validated, the artifact will be created , the modal will be closed and the callback will be called", () => {
             TuleapArtifactModalRestService.createArtifact.and.returnValue($q.resolve({ id: 3042 }));
-            controller_params.modal_model.creation_mode = true;
-            controller_params.modal_model.tracker_id    = 39;
-            ArtifactModalController                     = $controller(BaseModalController, controller_params);
+            isInCreationMode.and.returnValue(true);
+            controller_params.modal_model.tracker_id = 39;
+            ArtifactModalController                  = $controller(BaseModalController, controller_params);
             var values = [
                 { field_id: 359, value: 907 },
                 { field_id: 613, bind_value_ids: [919]}
@@ -206,12 +208,12 @@ describe("TuleapArtifactModalController", function() {
             expect(mockCallback).toHaveBeenCalled();
         });
 
-        it("and an artifact_id to edit, when I submit the modal to Tuleap, then the field values will be validated, the artifact will be edited, the modal will be closed and the callback will be called", function() {
+        it("and an artifact_id to edit, when I submit the modal to Tuleap, then the field values will be validated, the artifact will be edited, the modal will be closed and the callback will be called", () => {
             var edit_request = $q.defer();
             TuleapArtifactModalRestService.editArtifact.and.returnValue(edit_request.promise);
-            controller_params.modal_model.creation_mode = false;
+            isInCreationMode.and.returnValue(false);
             controller_params.modal_model.artifact_id = 8155;
-            controller_params.modal_model.tracker_id = 186;
+            controller_params.modal_model.tracker_id  = 186;
             ArtifactModalController = $controller(BaseModalController, controller_params);
             var values = [
                 { field_id: 983, value: 741 },
@@ -429,138 +431,74 @@ describe("TuleapArtifactModalController", function() {
         });
     });
 
-    describe("", function() {
-        beforeEach(function() {
+    describe("", () => {
+        beforeEach(() => {
             ArtifactModalController = $controller(BaseModalController, controller_params);
         });
 
-        describe("showParentArtifactChoice() -", function() {
-            beforeEach(function() {
-                TuleapArtifactModalParentService.canChooseArtifactsParent.and.returnValue(true);
-                ArtifactModalController.tracker = {
-                    parent: {
-                        id: 64
-                    }
-                };
-                ArtifactModalController.parent = {
-                    id: 154
-                };
-                ArtifactModalController.parent_artifacts = [
-                    { id: 629 }
-                ];
-            });
-
-            it("Given that I can choose a parent artifact and given the list of possible parent artifacts wasn't empty, when I check if I show the parent artifact choice, then it will return true", function() {
-                var result = ArtifactModalController.showParentArtifactChoice();
-
-                expect(TuleapArtifactModalParentService.canChooseArtifactsParent).toHaveBeenCalledWith(
-                    { id: 64 },
-                    { id: 154 }
-                );
-                expect(result).toBeTruthy();
-            });
-
-            it("Given that the list of possible parent artifacts was empty, when I check if I show the parent artifact choice, then it will return false", function() {
-                ArtifactModalController.parent_artifacts = [];
-
-                var result = ArtifactModalController.showParentArtifactChoice();
-
-                expect(result).toBeFalsy();
-            });
-
-            it("Given that I cannot choose a parent artifact, when I check if I show the parent artifact choice, then it will return false", function() {
-                TuleapArtifactModalParentService.canChooseArtifactsParent.and.returnValue(false);
-
-                var result = ArtifactModalController.showParentArtifactChoice();
-
-                expect(result).toBeFalsy();
-            });
-        });
-
-        describe("formatParentArtifactTitle() -", function() {
-            it("Given a parent artifact, when I format the title of the artifact, then the tracker's label, the artifact's id and its title will be concatenated and returned", function() {
-                var artifact = {
-                    title: "forcipated",
-                    id: 747,
-                    uri: "artifacts/747",
-                    tracker: {
-                        id: 47,
-                        uri: "trackers/47",
-                        label: "flareboard"
-                    }
-                };
-
-                var result = ArtifactModalController.formatParentArtifactTitle(artifact);
-
-                expect(result).toEqual("flareboard #747 - forcipated");
-            });
-        });
-
-        describe("isDisabled() -", function() {
-            describe("Given that the modal was opened in creation mode", function() {
-                it("and given a field that had the 'create' permission, when I check if it is disabled, then it will return false", function() {
-                    ArtifactModalController.creation_mode = true;
-                    var field = {
+        describe("isDisabled() -", () => {
+            describe("Given that the modal was opened in creation mode", () => {
+                it("and given a field that had the 'create' permission, when I check if it is disabled, then it will return false", () => {
+                    isInCreationMode.and.returnValue(true);
+                    const field = {
                         permissions: ["read", "update", "create"]
                     };
 
-                    var result = ArtifactModalController.isDisabled(field);
+                    const result = ArtifactModalController.isDisabled(field);
 
                     expect(result).toBe(false);
                 });
 
                 it("and given a field that didn't have the 'create' permission, when I check if it is disabled then it will return true", function() {
-                    ArtifactModalController.creation_mode = true;
-                    var field = {
+                    isInCreationMode.and.returnValue(true);
+                    const field = {
                         permissions: ["read", "update"]
                     };
 
-                    var result = ArtifactModalController.isDisabled(field);
+                    const result = ArtifactModalController.isDisabled(field);
 
                     expect(result).toBe(true);
                 });
             });
 
-            describe("Given that the modal was opened in edition mode", function() {
-                it("and given a field that had the 'update' permission, when I check if it is disabled then it will return false", function() {
-                    ArtifactModalController.creation_mode = false;
-                    var field = {
+            describe("Given that the modal was opened in edition mode", () => {
+                it("and given a field that had the 'update' permission, when I check if it is disabled then it will return false", () => {
+                    isInCreationMode.and.returnValue(false);
+                    const field = {
                         permissions: ["read", "update", "create"]
                     };
 
-                    var result = ArtifactModalController.isDisabled(field);
+                    const result = ArtifactModalController.isDisabled(field);
 
                     expect(result).toBe(false);
                 });
 
-                it("and given a field that didn't have the 'update' permission, when I check if it is disabled then it will return true", function() {
-                    ArtifactModalController.creation_mode = false;
-                    var field = {
+                it("and given a field that didn't have the 'update' permission, when I check if it is disabled then it will return true", () => {
+                    isInCreationMode.and.returnValue(false);
+                    const field = {
                         permissions: ["read", "create"]
                     };
 
-                    var result = ArtifactModalController.isDisabled(field);
+                    const result = ArtifactModalController.isDisabled(field);
 
                     expect(result).toBe(true);
                 });
             });
         });
 
-        describe("formatColor() -", function() {
-            it("Given color with camel case, when I format then it will return a kebab case color", function() {
-                ArtifactModalController.creation_mode = true;
-                var color = "inca_silver";
+        describe("formatColor() -", () => {
+            it("Given color with camel case, when I format then it will return a kebab case color", () => {
+                const color = "inca_silver";
 
-                var result = ArtifactModalController.formatColor(color);
+                const result = ArtifactModalController.formatColor(color);
 
                 expect(result).toBe('inca-silver');
             });
 
-            it("Given color with several camel case, when I format then it will return a kebab case color", function() {
-                ArtifactModalController.creation_mode = true;
-                var color = "lake_placid_blue";
+            it("Given color with several camel case, when I format then it will return a kebab case color", () => {
+                const color = "lake_placid_blue";
 
-                var result = ArtifactModalController.formatColor(color);
+                const result = ArtifactModalController.formatColor(color);
 
                 expect(result).toBe('lake-placid-blue');
             });

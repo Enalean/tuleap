@@ -1,5 +1,9 @@
 import _ from 'lodash';
 
+import {
+    recursiveGet
+} from 'tlp';
+
 export default RestService;
 
 RestService.$inject = [
@@ -18,21 +22,20 @@ function RestService(
         RestangularConfigurer.setErrorInterceptor(errorInterceptor);
     });
 
-    var self = this;
-    _.extend(self, {
-        createArtifact           : createArtifact,
-        editArtifact             : editArtifact,
-        getAllOpenParentArtifacts: getAllOpenParentArtifacts,
-        getArtifact              : getArtifact,
-        getArtifactFieldValues   : getArtifactFieldValues,
-        getFileUploadRules       : getFileUploadRules,
-        getFollowupsComments     : getFollowupsComments,
-        getOpenParentArtifacts   : getOpenParentArtifacts,
-        getTracker               : getTracker,
-        getUserPreference        : getUserPreference,
-        searchUsers              : searchUsers,
-        uploadAdditionalChunk    : uploadAdditionalChunk,
-        uploadTemporaryFile      : uploadTemporaryFile,
+    const self = this;
+    Object.assign(self, {
+        createArtifact,
+        editArtifact,
+        getAllOpenParentArtifacts,
+        getArtifact,
+        getArtifactFieldValues,
+        getFileUploadRules,
+        getFollowupsComments,
+        getTracker,
+        getUserPreference,
+        searchUsers,
+        uploadAdditionalChunk,
+        uploadTemporaryFile,
 
         error: {
             is_error     : false,
@@ -69,42 +72,27 @@ function RestService(
             });
     }
 
-    function getOpenParentArtifacts(tracker_id, limit, offset) {
-        return rest.one('trackers', tracker_id)
-            .all('parent_artifacts')
-            .getList({
-                limit : limit,
-                offset: offset
-            }).then(function(response) {
-                var result = {
-                    results: response.data,
-                    total  : response.headers('X-PAGINATION-SIZE')
-                };
-
-                return result;
-            });
-    }
-
     function getAllOpenParentArtifacts(tracker_id, limit, offset) {
-        var deferred = $q.defer();
-
-        self.getOpenParentArtifacts(tracker_id, limit, offset)
-        .then(function(response) {
-            if (response.total <= offset + limit) {
-                deferred.resolve(response.results);
-            } else {
-                var promise = self.getAllOpenParentArtifacts(tracker_id, limit, offset + limit)
-                .then(function(sub_response) {
-                    return response.results.concat(sub_response);
-                });
-
-                deferred.resolve(promise);
+        const route = `/api/v1/trackers/${ tracker_id }/parent_artifacts`;
+        return $q.when(recursiveGet(route, {
+            params: {
+                limit,
+                offset
             }
-        }, function(error) {
-            deferred.reject(error);
+        })).then(parent_artifacts => {
+            self.error.is_error = false;
+            return parent_artifacts;
+        }, error => {
+            self.error.is_error = true;
+            return $q.when(error.response.json()).then(error_json => {
+                if (error_json.error && error_json.error.message) {
+                    self.error.error_message = error_json.error.message;
+                } else {
+                    self.error.error_message = error.response.status + ' ' + error.response.statusText;
+                }
+                return $q.reject();
+            });
         });
-
-        return deferred.promise;
     }
 
     function createArtifact(tracker_id, field_values) {

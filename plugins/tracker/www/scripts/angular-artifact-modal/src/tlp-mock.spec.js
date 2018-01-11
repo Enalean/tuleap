@@ -1,1 +1,3 @@
-window.tlp = {};
+window.tlp = {
+    recursiveGet: () => {}
+};

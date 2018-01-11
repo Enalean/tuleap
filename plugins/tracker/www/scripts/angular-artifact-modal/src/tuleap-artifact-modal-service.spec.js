@@ -1,18 +1,25 @@
 import artifact_modal_module from './tuleap-artifact-modal.js';
-import angular from 'angular';
+import angular               from 'angular';
 import 'angular-mocks';
 
-describe("NewTuleapArtifactModalService", function() {
-    var NewTuleapArtifactModalService,
+import {
+    rewire$setCreationMode,
+    rewire$isInCreationMode,
+    restore as restoreCreationMode
+} from './modal-creation-mode-state.js';
+
+describe("NewTuleapArtifactModalService", () => {
+    let NewTuleapArtifactModalService,
         $q,
         TuleapArtifactModalRestService,
         TuleapArtifactFieldValuesService,
-        TuleapArtifactModalParentService,
         TuleapArtifactModalTrackerTransformerService,
         TuleapArtifactModalFormTreeBuilderService,
-        TuleapArtifactModalWorkflowService;
+        TuleapArtifactModalWorkflowService,
+        setCreationMode,
+        isInCreationMode;
 
-    beforeEach(function() {
+    beforeEach(() => {
         angular.mock.module(artifact_modal_module, function($provide) {
             $provide.decorator('TuleapArtifactModalRestService', function($delegate) {
                 spyOn($delegate, "getArtifactFieldValues");
@@ -51,12 +58,6 @@ describe("NewTuleapArtifactModalService", function() {
                 return $delegate;
             });
 
-            $provide.decorator('TuleapArtifactModalParentService', function($delegate) {
-                spyOn($delegate, "canChooseArtifactsParent");
-
-                return $delegate;
-            });
-
             $provide.decorator('TuleapArtifactModalWorkflowService', function($delegate) {
                 spyOn($delegate, "enforceWorkflowTransitions");
 
@@ -70,7 +71,6 @@ describe("NewTuleapArtifactModalService", function() {
             _TuleapArtifactModalTrackerTransformerService_,
             _TuleapArtifactFieldValuesService_,
             _TuleapArtifactModalFormTreeBuilderService_,
-            _TuleapArtifactModalParentService_,
             _TuleapArtifactModalWorkflowService_,
             _NewTuleapArtifactModalService_
         ) {
@@ -79,28 +79,31 @@ describe("NewTuleapArtifactModalService", function() {
             TuleapArtifactModalTrackerTransformerService = _TuleapArtifactModalTrackerTransformerService_;
             TuleapArtifactFieldValuesService             = _TuleapArtifactFieldValuesService_;
             TuleapArtifactModalFormTreeBuilderService    = _TuleapArtifactModalFormTreeBuilderService_;
-            TuleapArtifactModalParentService             = _TuleapArtifactModalParentService_;
             TuleapArtifactModalWorkflowService           = _TuleapArtifactModalWorkflowService_;
             NewTuleapArtifactModalService                = _NewTuleapArtifactModalService_;
         });
 
         installPromiseMatchers();
+        setCreationMode = jasmine.createSpy("setCreationMode");
+        rewire$setCreationMode(setCreationMode);
+        isInCreationMode = jasmine.createSpy("isInCreationMode");
+        rewire$isInCreationMode(isInCreationMode);
     });
 
+    afterEach(() => {
+        restoreCreationMode();
+    });
 
-    describe("", function() {
-        var tracker_request,
+    describe("", () => {
+        let tracker_request,
             tracker,
-            parent_artifacts_request,
             file_upload_rules_request,
             file_upload_rules;
 
-        beforeEach(function() {
+        beforeEach(() => {
             tracker_request           = $q.defer();
-            parent_artifacts_request  = $q.defer();
             file_upload_rules_request = $q.defer();
             TuleapArtifactModalRestService.getTracker.and.returnValue(tracker_request.promise);
-            TuleapArtifactModalRestService.getAllOpenParentArtifacts.and.returnValue(parent_artifacts_request.promise);
             TuleapArtifactModalRestService.getFileUploadRules.and.returnValue(file_upload_rules_request.promise);
 
             file_upload_rules = {
@@ -110,17 +113,16 @@ describe("NewTuleapArtifactModalService", function() {
             };
         });
 
-        describe("initCreationModalModel() -", function() {
-            var tracker_id, parent_artifact;
+        describe("initCreationModalModel() -", () => {
+            let tracker_id, parent_artifact;
 
-            beforeEach(function() {
+            beforeEach(() => {
                 tracker_id      = 28;
                 parent_artifact = { id: 581 };
             });
 
 
             it("Given a tracker id and a parent artifact, when I create the modal's creation model, then the tracker's structure will be retrieved and a promise will be resolved with the modal's model object", function() {
-                TuleapArtifactModalParentService.canChooseArtifactsParent.and.returnValue(false);
                 tracker = {
                     id: tracker_id,
                     color_name: "importer",
@@ -128,7 +130,7 @@ describe("NewTuleapArtifactModalService", function() {
                     parent: null
                 };
 
-                var promise = NewTuleapArtifactModalService.initCreationModalModel(tracker_id, parent_artifact);
+                const promise = NewTuleapArtifactModalService.initCreationModalModel(tracker_id, parent_artifact);
                 tracker_request.resolve(tracker);
                 file_upload_rules_request.resolve(file_upload_rules);
 
@@ -139,8 +141,8 @@ describe("NewTuleapArtifactModalService", function() {
                 expect(TuleapArtifactFieldValuesService.getSelectedValues).toHaveBeenCalledWith({}, tracker);
                 expect(TuleapArtifactModalTrackerTransformerService.transform).toHaveBeenCalledWith(tracker, true);
                 expect(TuleapArtifactModalFormTreeBuilderService.buildFormTree).toHaveBeenCalledWith(tracker);
-                var model = promise.$$state.value;
-                expect(model.creation_mode).toBeTruthy();
+                const model = promise.$$state.value;
+                expect(setCreationMode).toHaveBeenCalledWith(true);
                 expect(model.tracker_id).toEqual(tracker_id);
                 expect(model.parent).toEqual(parent_artifact);
                 expect(model.tracker).toEqual(tracker);
@@ -156,50 +158,8 @@ describe("NewTuleapArtifactModalService", function() {
                 ]);
             });
 
-            it("Given a tracker id and given I can choose a parent artifact, when I create the modal's creation model, then all the possible parent artifacts for this tracker will be retrieved and added to the model and a promise will be resolved with the modal's model object", function() {
-                TuleapArtifactModalParentService.canChooseArtifactsParent.and.returnValue(true);
-                tracker = {
-                    id: tracker_id,
-                    parent: {
-                        id: 79
-                    }
-                };
-                var possible_parents = [
-                    { id: 933, title: "elastivity" },
-                    { id: 194, title: "unalleviably" }
-                ];
-                parent_artifact = { id: 770 };
-
-                var promise = NewTuleapArtifactModalService.initCreationModalModel(tracker_id, parent_artifact);
-                tracker_request.resolve(tracker);
-                parent_artifacts_request.resolve(possible_parents);
-                file_upload_rules_request.resolve(file_upload_rules);
-
-                expect(promise).toBeResolved();
-                expect(TuleapArtifactModalRestService.getAllOpenParentArtifacts).toHaveBeenCalledWith(tracker_id, 1000, 0);
-                var model = promise.$$state.value;
-                expect(model.parent_artifacts).toEqual(possible_parents);
-            });
-
-            it("Given that I could not get the list of possible parents, when I create the modal's creation model, then a promise will be rejected", function() {
-                TuleapArtifactModalParentService.canChooseArtifactsParent.and.returnValue(true);
-                tracker = {
-                    id: tracker_id,
-                    parent: {
-                        id: 14
-                    }
-                };
-
-                var promise = NewTuleapArtifactModalService.initCreationModalModel(tracker_id, parent_artifact);
-                tracker_request.resolve(tracker);
-                file_upload_rules_request.resolve(file_upload_rules);
-                parent_artifacts_request.reject();
-
-                expect(promise).toBeRejected();
-            });
-
-            it("Given that I could not get the tracker structure, when I create the modal's creation model, then a promise will be rejected", function() {
-                var promise = NewTuleapArtifactModalService.initCreationModalModel(tracker_id, parent_artifact);
+            it("Given that I could not get the tracker structure, when I create the modal's creation model, then a promise will be rejected", () => {
+                const promise = NewTuleapArtifactModalService.initCreationModalModel(tracker_id, parent_artifact);
                 tracker_request.reject();
 
                 expect(promise).toBeRejected();
@@ -212,6 +172,7 @@ describe("NewTuleapArtifactModalService", function() {
                     workflow_field = {
                         field_id: 189
                     };
+                    isInCreationMode.and.returnValue(true);
                 });
 
                 it("Given a tracker that had workflow transitions, when I create the modal's creation model, then the transitions will be enforced", function() {
@@ -382,7 +343,7 @@ describe("NewTuleapArtifactModalService", function() {
                     expect(model.tracker).toEqual(tracker);
                     expect(model.values).toBeDefined();
                     expect(model.ordered_fields).toBeDefined();
-                    expect(model.creation_mode).toBeFalsy();
+                    expect(setCreationMode).toHaveBeenCalledWith(false);
                     expect(model.title).toEqual("onomatomania");
                     expect(model.text_formats).toEqual([
                         { id: 'text', label: 'Text' },

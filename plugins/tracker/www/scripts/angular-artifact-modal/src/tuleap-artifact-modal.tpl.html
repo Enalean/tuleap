@@ -230,38 +230,14 @@
 </script>
 
 <script type="text/ng-template" id="field-art_link.tpl.html">
-<div class="tlp-form-element">
-    <label class="tlp-label"
-        for="{{ 'tracker_field_' + field.field_id }}"
-    >
-        {{ field.label }}
-        <i ng-if="field.required" class="fa fa-asterisk"></i>
-    </label>
-    <input type="text"
-        class="tlp-input"
-        ng-model="modal.values[field.field_id].unformatted_links"
-        placeholder="{{ 'Enter artifact ids separated by a comma' | translate }}"
-        id="{{ 'tracker_field_' + field.field_id }}"
-        ng-disabled="modal.isDisabled(field)"
-    >
-
-    <label ng-if="modal.showParentArtifactChoice()"
-        for="{{ 'tracker_field_' + field.field_id + '_parent' }}"
-        class="tlp-label"
-        translate
-    >
-        Select parent
-    </label>
-    <select ng-if="modal.showParentArtifactChoice()"
-        ng-model="modal.values[field.field_id].links[0].id"
-        id="{{ 'tracker_field_' + field.field_id + '_parent' }}"
-        class="tlp-select"
-        ng-disabled="modal.isDisabled(field)"
-    >
-        <option value="" selected translate>Please choose a parent…</option>
-        <option ng-repeat="artifact in modal.parent_artifacts" value="{{ artifact.id }}">{{ modal.formatParentArtifactTitle(artifact) }}</option>
-    </select>
-</div>
+<div
+    class="field"
+    tuleap-artifact-modal-link-field="field"
+    is-disabled="modal.isDisabled(field)"
+    value-model="modal.values[field.field_id]"
+    tracker="modal.tracker"
+    linked-artifact="modal.parent"
+></div>
 </script>
 
 <script type="text/ng-template" id="field-burndown.tpl.html">
