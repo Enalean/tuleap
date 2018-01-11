@@ -74,10 +74,19 @@ if (! $request->valid($vLdapGroup)) {
     exit;
 }
 
+/**
+ * @var $ldap_group_manager LDAP_GroupManager
+ */
 $ldap_group_manager = $ldapPlugin->getLdapProjectGroupManager();
 
 $ldap_group_manager->setId($groupId);
 $ldap_group_manager->setGroupName($request->get('ldap_group'));
+
+$group_dn = $ldap_group_manager->getGroupDn();
+if ($group_dn === false) {
+    $GLOBALS['Response']->sendStatusCode(404);
+    exit;
+}
 
 $user_manager = UserManager::instance();
 $user_helper  = UserHelper::instance();
