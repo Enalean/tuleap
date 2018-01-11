@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2017. All rights reserved.
+ * Copyright Enalean (c) 2018. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -41,10 +41,15 @@ class ProjectUGroupPresenter
     public $csrf_token;
     public $is_static_ugroup;
     public $locale;
+    /**
+     * @var PermissionsDelegationPresenter
+     */
+    public $permissions_delegation;
 
     public function __construct(
         ProjectUGroup $ugroup,
         array $permissions,
+        PermissionsDelegationPresenter $permissions_delegation,
         $binding,
         $members,
         CSRFSynchronizerToken $csrf_token,
@@ -61,5 +66,7 @@ class ProjectUGroupPresenter
         $this->csrf_token       = $csrf_token;
         $this->is_static_ugroup = $ugroup->isStatic();
         $this->locale           = $user->getLocale();
+
+        $this->permissions_delegation = $permissions_delegation;
     }
 }

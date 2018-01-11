@@ -48,4 +48,56 @@ class MembershipDelegationDao extends DataAccessObject
 
         return count($this->retrieve($sql)) > 0;
     }
+
+    public function hasMembershipManagement($ugroup_id)
+    {
+        $ugroup_id = $this->da->escapeInt($ugroup_id);
+
+        $sql = "SELECT NULL
+                FROM project_membership_delegation
+                WHERE ugroup_id = $ugroup_id";
+
+        return count($this->retrieve($sql)) > 0;
+    }
+
+    /**
+     * @param int $ugroup_id
+     * @param bool $has_membership_management
+     * @return bool true if data has been updated
+     * @throws \DataAccessQueryException
+     */
+    public function updateMembershipManagement($ugroup_id, $has_membership_management)
+    {
+        if ($has_membership_management) {
+            $this->addMembershipManagement($ugroup_id);
+        } else {
+            $this->removeMembershipManagement($ugroup_id);
+        }
+
+        return $this->da->affectedRows() > 0;
+    }
+
+    /**
+     * @throws \DataAccessQueryException
+     */
+    private function addMembershipManagement($ugroup_id)
+    {
+        $ugroup_id = $this->da->escapeInt($ugroup_id);
+
+        $sql = "INSERT IGNORE INTO project_membership_delegation (ugroup_id) VALUES ($ugroup_id)";
+
+        $this->update($sql);
+    }
+
+    /**
+     * @throws \DataAccessQueryException
+     */
+    private function removeMembershipManagement($ugroup_id)
+    {
+        $ugroup_id = $this->da->escapeInt($ugroup_id);
+
+        $sql = "DELETE FROM project_membership_delegation WHERE ugroup_id = $ugroup_id";
+
+        $this->update($sql);
+    }
 }

@@ -1,0 +1,45 @@
+{{# permissions_delegation }}
+    <section class="tlp-pane">
+        <form method="post" action="" class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">
+                    <i class="fa fa-lock tlp-pane-title-icon"></i>{{# gettext }}Permissions delegation{{/ gettext }}
+                </h1>
+            </div>
+            <section class="tlp-pane-section">
+                <input type="hidden" name="action" value="update_permssions_delegation">
+                <input type="hidden" name="group_id" value="{{ project_id }}">
+                <input type="hidden" name="ugroup_id" value="{{ id }}">
+                {{# csrf_token }}
+                    {{> csrf_token_input }}
+                {{/ csrf_token }}
+
+                <p>
+                    {{# gettext }}
+                        You can delegate to this group several permissions. All the members of this
+                        group will take advantage of these permissions.
+                    {{/ gettext }}
+                </p>
+
+                <div class="tlp-form-element">
+                    <label class="tlp-label tlp-checkbox">
+                        <input type="hidden" name="permissions-delegation[membership-management]" value="0">
+                        <input type="checkbox"
+                               name="permissions-delegation[membership-management]" value="1"
+                               {{# has_membership_management }}checked{{/ has_membership_management }}
+                        >
+                        {{# gettext }}Membership management{{/ gettext }}
+                    </label>
+                    <p class="tlp-text-info">
+                        {{# gettext }}People in this group will be able to manage project members.{{/ gettext }}
+                    </p>
+                </div>
+            </section>
+            <section class="tlp-pane-section tlp-pane-section-submit">
+                <button type="submit" class="tlp-button-primary">
+                    <i class="fa fa-save tlp-button-icon"></i> {{# gettext }}Save delegated permissions{{/ gettext }}
+                </button>
+            </section>
+        </form>
+    </section>
+{{/ permissions_delegation }}

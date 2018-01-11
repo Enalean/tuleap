@@ -92,6 +92,9 @@ msgstr ""
 msgid "An error occurred while trying to remove the label."
 msgstr ""
 
+msgid "An error occurred while trying to update permissions delegations."
+msgstr ""
+
 msgid "And more..."
 msgstr ""
 
@@ -358,6 +361,9 @@ msgstr ""
 msgid "Members of user groups"
 msgstr ""
 
+msgid "Membership management"
+msgstr ""
+
 msgid "Missing Information. PLEASE fill in all required information."
 msgstr ""
 
@@ -424,10 +430,19 @@ msgstr ""
 msgid "Parent project"
 msgstr ""
 
+msgid "People in this group will be able to manage project members."
+msgstr ""
+
 msgid "Permission"
 msgstr ""
 
 msgid "Permission Request"
+msgstr ""
+
+msgid "Permissions delegation"
+msgstr ""
+
+msgid "Permissions delegations have been successfully updated."
 msgstr ""
 
 msgid "Permissions for deprecated services"
@@ -534,6 +549,9 @@ msgid "Resource"
 msgstr ""
 
 msgid "SVN"
+msgstr ""
+
+msgid "Save delegated permissions"
 msgstr ""
 
 msgid "Save information"
@@ -816,6 +834,11 @@ msgstr ""
 msgid ""
 "You are about to delete the widget \"%s\".\n"
 "                This action is irreversible. Please confirm this deletion."
+msgstr ""
+
+msgid ""
+"You can delegate to this group several permissions. All the members of this\n"
+"                        group will take advantage of these permissions."
 msgstr ""
 
 msgid "You can import users into your project by specifying a text file."
