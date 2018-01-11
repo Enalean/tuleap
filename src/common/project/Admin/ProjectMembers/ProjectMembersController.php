@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2017. All rights reserved.
+ * Copyright Enalean (c) 2017 - 2018. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -29,6 +29,7 @@ use EventManager;
 use Feedback;
 use ForgeConfig;
 use HTTPRequest;
+use PFUser;
 use Project;
 use ProjectUGroup;
 use TemplateRendererFactory;
@@ -127,7 +128,8 @@ class ProjectMembersController
                 $this->csrf_token,
                 $project,
                 $additional_modals,
-                $user_locale
+                $user_locale,
+                $this->canUserSeeUGroups($request->getCurrentUser(), $project)
             )
         );
     }
@@ -258,5 +260,10 @@ class ProjectMembersController
         $user_collection = $this->user_importer->parse($import_file);
 
         $this->user_importer->updateDB($user_collection->getUsers());
+    }
+
+    private function canUserSeeUGroups(PFUser $user, Project $project)
+    {
+        return $user->isAdmin($project->getID());
     }
 }
