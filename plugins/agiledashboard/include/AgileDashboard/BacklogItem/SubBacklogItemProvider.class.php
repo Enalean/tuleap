@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -42,15 +42,15 @@ class AgileDashboard_BacklogItem_SubBacklogItemProvider {
     /** @var AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory */
     private $backlog_item_collection_factory;
 
-    /** @var AgileDashboard_Milestone_Backlog_BacklogStrategyFactory */
-    private $strategy_factory;
+    /** @var AgileDashboard_Milestone_Backlog_BacklogFactory */
+    private $backlog_factory;
 
     public function __construct(Tracker_ArtifactDao $dao,
-        AgileDashboard_Milestone_Backlog_BacklogStrategyFactory $strategy_factory,
+        AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory,
         AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory $backlog_item_collection_factory
     ) {
         $this->backlog_item_collection_factory = $backlog_item_collection_factory;
-        $this->strategy_factory                = $strategy_factory;
+        $this->backlog_factory                 = $backlog_factory;
         $this->dao                             = $dao;
     }
 
@@ -80,8 +80,8 @@ class AgileDashboard_BacklogItem_SubBacklogItemProvider {
     }
 
     private function getMatchingIdsForTopBacklog(Planning_VirtualTopMilestone $milestone, Tracker $backlog_tracker, PFUser $user) {
-        $strategy_unassigned = $this->strategy_factory->getSelfBacklogStrategy($milestone);
-        $backlog_items       = $this->backlog_item_collection_factory->getUnassignedOpenCollection($user, $milestone, $strategy_unassigned, false);
+        $backlog_unassigned = $this->backlog_factory->getSelfBacklog($milestone);
+        $backlog_items      = $this->backlog_item_collection_factory->getUnassignedOpenCollection($user, $milestone, $backlog_unassigned, false);
 
         foreach ($backlog_items as $backlog_item) {
             if ($backlog_item->getArtifact()->getTrackerId() == $backlog_tracker->getId()) {

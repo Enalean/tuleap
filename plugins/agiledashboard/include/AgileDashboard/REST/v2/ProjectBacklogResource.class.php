@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,7 +26,7 @@ use \Tracker_ArtifactFactory;
 use \Tracker_FormElementFactory;
 use \TrackerFactory;
 use \Planning_MilestoneFactory;
-use \AgileDashboard_Milestone_Backlog_BacklogStrategyFactory;
+use \AgileDashboard_Milestone_Backlog_BacklogFactory;
 use \AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
 use \AgileDashboard_Milestone_Backlog_BacklogItemBuilder;
 use \AgileDashboard_BacklogItemDao;
@@ -50,8 +50,8 @@ class ProjectBacklogResource {
     /** @var Planning_MilestoneFactory */
     private $milestone_factory;
 
-    /** @var AgileDashboard_Milestone_Backlog_BacklogStrategyFactory */
-    private $backlog_strategy_factory;
+    /** @var AgileDashboard_Milestone_Backlog_BacklogFactory */
+    private $backlog_factory;
 
     /** @var \AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory */
     private $backlog_item_collection_factory;
@@ -94,7 +94,7 @@ class ProjectBacklogResource {
             $scrum_mono_milestone_checker
         );
 
-        $this->backlog_strategy_factory = new AgileDashboard_Milestone_Backlog_BacklogStrategyFactory(
+        $this->backlog_factory = new AgileDashboard_Milestone_Backlog_BacklogFactory(
             new AgileDashboard_BacklogItemDao(),
             $tracker_artifact_factory,
             $this->planning_factory,
@@ -165,9 +165,9 @@ class ProjectBacklogResource {
 
     private function getBacklogItems(PFUser $user, Project $project) {
         $top_milestone       = $this->milestone_factory->getVirtualTopMilestone($user, $project);
-        $strategy_unassigned = $this->backlog_strategy_factory->getSelfBacklogStrategy($top_milestone);
+        $backlog_unassigned = $this->backlog_factory->getSelfBacklog($top_milestone);
 
-        return $this->backlog_item_collection_factory->getUnassignedOpenCollection($user, $top_milestone, $strategy_unassigned, false);
+        return $this->backlog_item_collection_factory->getUnassignedOpenCollection($user, $top_milestone, $backlog_unassigned, false);
     }
 
     private function sendPaginationHeaders($limit, $offset, $size) {

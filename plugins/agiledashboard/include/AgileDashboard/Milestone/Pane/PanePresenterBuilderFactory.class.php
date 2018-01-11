@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2013. All rights reserved.
+ * Copyright Enalean (c) 2013 - 2018. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -27,17 +27,17 @@
  */
 class AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory {
 
-    /** @var AgileDashboard_Milestone_Backlog_BacklogStrategyFactory */
-    private $strategy_factory;
+    /** @var AgileDashboard_Milestone_Backlog_BacklogFactory */
+    private $backlog_factory;
 
     /** @var AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory */
     private $row_collection_factory;
 
     public function __construct(
-        AgileDashboard_Milestone_Backlog_BacklogStrategyFactory $strategy_factory,
+        AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory,
         AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory $row_collection_factory
     ) {
-        $this->strategy_factory       = $strategy_factory;
+        $this->backlog_factory        = $backlog_factory;
         $this->row_collection_factory = $row_collection_factory;
     }
 
@@ -46,7 +46,7 @@ class AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory {
      */
     public function getContentPresenterBuilder() {
         return new AgileDashboard_Milestone_Pane_Content_ContentPresenterBuilder(
-            $this->strategy_factory,
+            $this->backlog_factory,
             $this->row_collection_factory
         );
     }

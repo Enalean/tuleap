@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -28,40 +28,40 @@ class AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder {
     /** @var AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory */
     private $backlog_item_collection_factory;
 
-    /** @var AgileDashboard_Milestone_Backlog_BacklogStrategyFactory */
-    private $backlog_strategy_factory;
+    /** @var AgileDashboard_Milestone_Backlog_BacklogFactory */
+    private $backlog_factory;
 
 
     public function __construct(
         BacklogItemRepresentationFactory $backlog_item_representation_factory,
         AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory $backlog_item_collection_factory,
-        AgileDashboard_Milestone_Backlog_BacklogStrategyFactory $backlog_strategy_factory
+        AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory
     ) {
         $this->backlog_item_representation_factory = $backlog_item_representation_factory;
         $this->backlog_item_collection_factory     = $backlog_item_collection_factory;
-        $this->backlog_strategy_factory            = $backlog_strategy_factory;
+        $this->backlog_factory                     = $backlog_factory;
     }
 
     /**
      * @return AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentations;
      */
     public function getPaginatedBacklogItemsRepresentationsForMilestone(PFUser $user, Planning_Milestone $milestone, $limit, $offset) {
-        $strategy = $this->backlog_strategy_factory->getBacklogStrategy($milestone, $limit, $offset);
+        $backlog = $this->backlog_factory->getBacklog($milestone, $limit, $offset);
 
-        return $this->getBacklogItemsRepresentations($user, $milestone, $strategy);
+        return $this->getBacklogItemsRepresentations($user, $milestone, $backlog);
     }
 
     /**
      * @return AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentations;
      */
     public function getPaginatedBacklogItemsRepresentationsForTopMilestone(PFUser $user, Planning_Milestone $top_milestone, $limit, $offset) {
-        $strategy = $this->backlog_strategy_factory->getSelfBacklogStrategy($top_milestone, $limit, $offset);
+        $backlog = $this->backlog_factory->getSelfBacklog($top_milestone, $limit, $offset);
 
-        return $this->getBacklogItemsRepresentations($user, $top_milestone, $strategy);
+        return $this->getBacklogItemsRepresentations($user, $top_milestone, $backlog);
     }
 
-    private function getBacklogItemsRepresentations(PFUser $user, Planning_Milestone $milestone, $strategy) {
-        $backlog_items                 = $this->getMilestoneBacklogItems($user, $milestone, $strategy);
+    private function getBacklogItemsRepresentations(PFUser $user, Planning_Milestone $milestone, $backlog) {
+        $backlog_items                 = $this->getMilestoneBacklogItems($user, $milestone, $backlog);
         $backlog_items_representations = array();
 
         foreach ($backlog_items as $backlog_item) {
@@ -71,8 +71,8 @@ class AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder {
         return new AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentations($backlog_items_representations, $backlog_items->getTotalAvaialableSize());
     }
 
-    private function getMilestoneBacklogItems(PFUser $user, $milestone, $strategy) {
-        return $this->backlog_item_collection_factory->getUnplannedOpenCollection($user, $milestone, $strategy, false);
+    private function getMilestoneBacklogItems(PFUser $user, $milestone, $backlog) {
+        return $this->backlog_item_collection_factory->getUnplannedOpenCollection($user, $milestone, $backlog, false);
     }
 
 }

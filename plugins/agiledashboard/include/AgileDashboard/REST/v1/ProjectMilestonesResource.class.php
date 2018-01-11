@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 – 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 – 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -36,7 +36,7 @@ use \Tuleap\REST\Header;
 use \AgileDashboard_Milestone_MilestoneStatusCounter;
 use \AgileDashboard_BacklogItemDao;
 use \Planning_Milestone;
-use \AgileDashboard_Milestone_Backlog_BacklogStrategyFactory;
+use \AgileDashboard_Milestone_Backlog_BacklogFactory;
 use \PlanningPermissionsManager;
 use AgileDashboard_Milestone_MilestoneRepresentationBuilder;
 use EventManager;
@@ -106,7 +106,7 @@ class ProjectMilestonesResource {
             new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $this->planning_factory)
         );
 
-        $backlog_strategy_factory = new AgileDashboard_Milestone_Backlog_BacklogStrategyFactory(
+        $backlog_factory = new AgileDashboard_Milestone_Backlog_BacklogFactory(
             new AgileDashboard_BacklogItemDao(),
             $this->tracker_artifact_factory,
             $this->planning_factory,
@@ -116,7 +116,7 @@ class ProjectMilestonesResource {
 
         $this->milestone_representation_builder = new AgileDashboard_Milestone_MilestoneRepresentationBuilder(
             $this->milestone_factory,
-            $backlog_strategy_factory,
+            $backlog_factory,
             EventManager::instance(),
             $scrum_mono_milestone_checker
         );
