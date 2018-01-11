@@ -30,6 +30,8 @@ class WorkerGetQueue implements Dispatchable
 {
     const NAME = 'workerGetQueue';
 
+    const MAX_MESSAGES = 1000;
+
     /**
      * @var Logger
      */
@@ -39,10 +41,13 @@ class WorkerGetQueue implements Dispatchable
      * @var AMQPChannel
      */
     private $channel;
+
     /**
      * @var DaemonLocker
      */
     private $locker;
+
+    private $message_counter = 0;
 
     public function __construct(Logger $logger, DaemonLocker $locker, AMQPChannel $channel)
     {
@@ -61,8 +66,13 @@ class WorkerGetQueue implements Dispatchable
         return $this->channel;
     }
 
-    public function getLocker()
+    public function incrementMessagesProcessed()
     {
-        return $this->locker;
+        $this->message_counter++;
+        $this->logger->info("Message processed [{$this->message_counter}/".self::MAX_MESSAGES."]");
+        if ($this->message_counter >= self::MAX_MESSAGES) {
+            $this->logger->info("Max messages reached, exiting...");
+            $this->locker->cleanExit();
+        }
     }
 }
