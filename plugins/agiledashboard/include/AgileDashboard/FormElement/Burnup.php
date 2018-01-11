@@ -36,6 +36,9 @@ use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_ReadOnly;
 use Tracker_FormElement_FieldVisitor;
 use Tracker_HierarchyFactory;
+use Tuleap\AgileDashboard\Semantic\Dao\SemanticDoneDao;
+use Tuleap\AgileDashboard\Semantic\SemanticDoneFactory;
+use Tuleap\AgileDashboard\Semantic\SemanticDoneValueChecker;
 use Tuleap\AgileDashboard\v1\Artifact\BurnupRepresentation;
 use Tuleap\Tracker\FormElement\ChartCachedDaysComparator;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
@@ -43,7 +46,6 @@ use Tuleap\Tracker\FormElement\ChartConfigurationValueChecker;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueRetriever;
 use Tuleap\Tracker\FormElement\ChartFieldUsage;
 use Tuleap\Tracker\FormElement\ChartMessageFetcher;
-use Tuleap\Tracker\FormElement\FieldCalculator;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueRepresentation;
 use UserManager;
@@ -376,18 +378,6 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
     }
 
     /**
-     * @return FieldCalculator
-     */
-    private function getTeamEffortCalculator()
-    {
-        return new FieldCalculator(
-            new BurnupTeamEffortCalculator(
-                new BurnupManualValuesAndChildrenListRetriever(new BurnupDao())
-            )
-        );
-    }
-
-    /**
      * @return BurnupDataBuilder
      */
     private function getBurnupDataBuilder()
@@ -409,7 +399,6 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
             ),
             $this->getConfigurationValueRetriever(),
             $burnup_cache_dao,
-            $this->getTeamEffortCalculator(),
             $this->getBurnupCalculator()
         );
     }
@@ -425,7 +414,8 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
             $changeset_factory,
             Tracker_ArtifactFactory::instance(),
             new BurnupDao(),
-            AgileDashboard_Semantic_InitialEffortFactory::instance()
+            AgileDashboard_Semantic_InitialEffortFactory::instance(),
+            new SemanticDoneFactory(new SemanticDoneDao(), new SemanticDoneValueChecker())
         );
     }
 

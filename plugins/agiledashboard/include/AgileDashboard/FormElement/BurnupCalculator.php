@@ -24,6 +24,8 @@ use AgileDashboard_Semantic_InitialEffortFactory;
 use Tracker_Artifact;
 use Tracker_Artifact_ChangesetFactory;
 use Tracker_ArtifactFactory;
+use Tuleap\AgileDashboard\Semantic\SemanticDone;
+use Tuleap\AgileDashboard\Semantic\SemanticDoneFactory;
 
 class BurnupCalculator
 {
@@ -43,20 +45,29 @@ class BurnupCalculator
      * @var AgileDashboard_Semantic_InitialEffortFactory
      */
     private $initial_effort_factory;
+    /**
+     * @var SemanticDoneFactory
+     */
+    private $semantic_done_factory;
 
 
     public function __construct(
         Tracker_Artifact_ChangesetFactory $changeset_factory,
         Tracker_ArtifactFactory $artifact_factory,
         BurnupDao $burnup_dao,
-        AgileDashboard_Semantic_InitialEffortFactory $initial_effort_factory
+        AgileDashboard_Semantic_InitialEffortFactory $initial_effort_factory,
+        SemanticDoneFactory $semantic_done_factory
     ) {
         $this->changeset_factory      = $changeset_factory;
         $this->burnup_dao             = $burnup_dao;
         $this->artifact_factory       = $artifact_factory;
         $this->initial_effort_factory = $initial_effort_factory;
+        $this->semantic_done_factory  = $semantic_done_factory;
     }
 
+    /**
+     * @return BurnupEffort
+     */
     public function getValue($artifact_id, $timestamp)
     {
         $backlog_items = $this->getPlanningLinkedArtifactAtTimestamp(
@@ -65,15 +76,19 @@ class BurnupCalculator
         );
 
         $total_effort = 0;
+        $team_effort  = 0;
         /**
          * @var $item \AgileDashboard_Milestone_Backlog_BacklogItem
          */
         foreach ($backlog_items as $item) {
             $artifact     = $this->artifact_factory->getArtifactById($item['id']);
-            $total_effort += $this->getEffort($artifact, $timestamp);
+
+            $effort        = $this->getEffort($artifact, $timestamp);
+            $total_effort += $effort->getTotalEffort();
+            $team_effort  += $effort->getTeamEffort();
         }
 
-        return $total_effort;
+        return new BurnupEffort($team_effort, $total_effort);
     }
 
     private function getPlanningLinkedArtifactAtTimestamp(
@@ -84,26 +99,32 @@ class BurnupCalculator
     }
 
     /**
-     * @return float
+     * @return BurnupEffort
      */
     private function getEffort(
         Tracker_Artifact $artifact,
         $timestamp
     ) {
         $semantic_initial_effort = $this->initial_effort_factory->getByTracker($artifact->getTracker());
+        $semantic_done           = $this->semantic_done_factory->getInstanceByTracker($artifact->getTracker());
+
         /**
          * @var $initial_effort_field \Tracker_FormElement_Field
          */
         $initial_effort_field = $semantic_initial_effort->getField();
 
-        $effort = 0;
+        $total_effort = 0;
+        $team_effort  = 0;
         if ($initial_effort_field) {
             $changeset = $this->changeset_factory->getChangesetAtTimestamp($artifact, $timestamp);
             if ($artifact->getValue($initial_effort_field, $changeset)) {
-                $effort = $artifact->getValue($initial_effort_field, $changeset)->getValue();
+                $total_effort = $artifact->getValue($initial_effort_field, $changeset)->getValue();
+            }
+            if ($changeset !== null && $semantic_done !== null && $semantic_done->isDone($changeset)) {
+                $team_effort = $total_effort;
             }
         }
 
-        return (float) $effort;
+        return new BurnupEffort((float) $team_effort, (float) $total_effort);
     }
 }

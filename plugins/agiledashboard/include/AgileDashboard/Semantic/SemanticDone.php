@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2017. All rights reserved.
+ * Copyright Enalean (c) 2017-2018. All rights reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -28,6 +28,7 @@ use PFUser;
 use SimpleXMLElement;
 use TemplateRendererFactory;
 use Tracker;
+use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field;
 use Tracker_Semantic;
 use Tracker_Semantic_Status;
@@ -437,6 +438,28 @@ class SemanticDone extends Tracker_Semantic
     public function isSemanticDefined()
     {
         return $this->semantic_status->getField() && count($this->getDoneValuesIds()) > 0;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDone(Tracker_Artifact_Changeset $changeset)
+    {
+        $field = $this->semantic_status->getField();
+        if ($field === null) {
+            return false;
+        }
+        $status_value = $changeset->getValue($field);
+        if ($status_value === null) {
+            return false;
+        }
+        $list_values = $status_value->getListValues();
+        foreach ($list_values as $list_value) {
+            if ($this->value_checker->isValueADoneValue($list_value, $this->semantic_status)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     protected static $_instances;

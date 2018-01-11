@@ -26,7 +26,6 @@ use TimePeriodWithoutWeekEnd;
 use Tracker_Artifact;
 use Tuleap\TimezoneRetriever;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueRetriever;
-use Tuleap\Tracker\FormElement\FieldCalculator;
 
 class BurnupDataBuilder
 {
@@ -48,11 +47,6 @@ class BurnupDataBuilder
      */
     private $burnup_cache_dao;
     /**
-     * @var FieldCalculator
-     */
-    private $team_effort_team_calculator;
-
-    /**
      * @var BurnupCalculator
      */
     private $burnup_calculator;
@@ -62,15 +56,13 @@ class BurnupDataBuilder
         BurnupCacheChecker $cache_checker,
         ChartConfigurationValueRetriever $field_retriever,
         BurnupCacheDao $burnup_cache_dao,
-        FieldCalculator $team_effort_team_calculator,
         BurnupCalculator $burnup_calculator
     ) {
-        $this->logger                      = $logger;
-        $this->cache_checker               = $cache_checker;
-        $this->field_retriever             = $field_retriever;
-        $this->burnup_cache_dao            = $burnup_cache_dao;
-        $this->team_effort_team_calculator = $team_effort_team_calculator;
-        $this->burnup_calculator           = $burnup_calculator;
+        $this->logger            = $logger;
+        $this->cache_checker     = $cache_checker;
+        $this->field_retriever   = $field_retriever;
+        $this->burnup_cache_dao  = $burnup_cache_dao;
+        $this->burnup_calculator = $burnup_calculator;
     }
 
     /**
@@ -128,27 +120,8 @@ class BurnupDataBuilder
 
         $now = time();
         if ($now >= $burnup_data->getTimePeriod()->getStartDate() && $now <= $burnup_data->getTimePeriod()->getEndDate()) {
-            $burnup_data->addEffort($this->getCurrentEffort($artifact, $now), $now);
+            $effort = $this->burnup_calculator->getValue($artifact->getId(), $now);
+            $burnup_data->addEffort($effort, $now);
         }
-    }
-
-    /**
-     * @return BurnupEffort
-     */
-    private function getCurrentEffort(Tracker_Artifact $artifact, $now)
-    {
-        $stop_on_manual_value = true;
-
-        $team_effort = $this->team_effort_team_calculator->calculate(
-            array($artifact->getId()),
-            $now,
-            $stop_on_manual_value,
-            null,
-            null
-        );
-
-        $total_effort = $this->burnup_calculator->getValue($artifact->getId(), $now);
-
-        return new BurnupEffort($team_effort, $total_effort);
     }
 }

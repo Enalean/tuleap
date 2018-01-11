@@ -27,7 +27,6 @@ use Tuleap\Agiledashboard\FormElement\BurnupCacheDao;
 use Tuleap\Agiledashboard\FormElement\BurnupCacheDateRetriever;
 use Tuleap\AgileDashboard\FormElement\BurnupCalculator;
 use Tuleap\AgileDashboard\FormElement\BurnupDao;
-use Tuleap\Tracker\FormElement\FieldCalculator;
 
 class SystemEvent_BURNUP_DAILY extends SystemEvent // @codingStandardsIgnoreLine
 {
@@ -49,11 +48,6 @@ class SystemEvent_BURNUP_DAILY extends SystemEvent // @codingStandardsIgnoreLine
     private $burnup_calculator;
 
     /**
-     * @var FieldCalculator
-     */
-    private $team_effort_calculator;
-
-    /**
      * @var BurnupCacheDao
      */
     private $cache_dao;
@@ -71,17 +65,15 @@ class SystemEvent_BURNUP_DAILY extends SystemEvent // @codingStandardsIgnoreLine
     public function injectDependencies(
         BurnupDao $burnup_dao,
         BurnupCalculator $burnup_calculator,
-        FieldCalculator $team_effort_calculator,
         BurnupCacheDao $cache_dao,
         BackendLogger $logger,
         BurnupCacheDateRetriever $date_retriever
     ) {
-        $this->burnup_dao             = $burnup_dao;
-        $this->logger                 = $logger;
-        $this->burnup_calculator      = $burnup_calculator;
-        $this->team_effort_calculator = $team_effort_calculator;
-        $this->cache_dao              = $cache_dao;
-        $this->date_retriever         = $date_retriever;
+        $this->burnup_dao        = $burnup_dao;
+        $this->logger            = $logger;
+        $this->burnup_calculator = $burnup_calculator;
+        $this->cache_dao         = $cache_dao;
+        $this->date_retriever    = $date_retriever;
     }
 
     public function process()
@@ -109,18 +101,9 @@ class SystemEvent_BURNUP_DAILY extends SystemEvent // @codingStandardsIgnoreLine
                     "Calculating burnup for artifact #" . $burnup['id'] . ' at ' . date('Y-m-d H:i:s', $yesterday)
                 );
 
-                $total_effort = $this->burnup_calculator->getValue(
-                    $burnup['id'],
-                    $yesterday
-                );
-
-                $team_effort = $this->team_effort_calculator->calculate(
-                    array($burnup['id']),
-                    $yesterday,
-                    true,
-                    null,
-                    null
-                );
+                $effort       = $this->burnup_calculator->getValue($burnup['id'], $yesterday);
+                $team_effort  = $effort->getTeamEffort();
+                $total_effort = $effort->getTotalEffort();
 
                 $this->logger->debug("Caching value $team_effort/$total_effort for artifact #" . $burnup['id']);
                 $this->cache_dao->saveCachedFieldValueAtTimestamp(

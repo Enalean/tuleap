@@ -28,7 +28,6 @@ use Tuleap\Agiledashboard\FormElement\BurnupCacheDao;
 use Tuleap\Agiledashboard\FormElement\BurnupCacheDateRetriever;
 use Tuleap\AgileDashboard\FormElement\BurnupCalculator;
 use Tuleap\AgileDashboard\FormElement\BurnupDao;
-use Tuleap\Tracker\FormElement\FieldCalculator;
 
 class SystemEvent_BURNUP_GENERATE extends SystemEvent // @codingStandardsIgnoreLine
 {
@@ -38,10 +37,6 @@ class SystemEvent_BURNUP_GENERATE extends SystemEvent // @codingStandardsIgnoreL
      * @var BurnupCalculator
      */
     public $burnup_calculator;
-    /**
-     * @var FieldCalculator
-     */
-    public $team_effort_calculator;
 
     /**
      * @var BurnupDao
@@ -66,17 +61,15 @@ class SystemEvent_BURNUP_GENERATE extends SystemEvent // @codingStandardsIgnoreL
     public function injectDependencies(
         BurnupDao $burnup_dao,
         BurnupCalculator $burnup_calculator,
-        FieldCalculator $team_effort_calculator,
         BurnupCacheDao $cache_dao,
         BackendLogger $logger,
         BurnupCacheDateRetriever $date_retriever
     ) {
-        $this->burnup_dao             = $burnup_dao;
-        $this->logger                 = $logger;
-        $this->burnup_calculator      = $burnup_calculator;
-        $this->team_effort_calculator = $team_effort_calculator;
-        $this->cache_dao              = $cache_dao;
-        $this->date_retriever         = $date_retriever;
+        $this->burnup_dao        = $burnup_dao;
+        $this->logger            = $logger;
+        $this->burnup_calculator = $burnup_calculator;
+        $this->cache_dao         = $cache_dao;
+        $this->date_retriever    = $date_retriever;
     }
 
     private function getArtifactIdFromParameters()
@@ -105,7 +98,7 @@ class SystemEvent_BURNUP_GENERATE extends SystemEvent // @codingStandardsIgnoreL
             return false;
         }
 
-        $burnup = new TimePeriodWithoutWeekEnd(
+        $burnup_period = new TimePeriodWithoutWeekEnd(
             $burnup_information['start_date'],
             $burnup_information['duration']
         );
@@ -117,21 +110,12 @@ class SystemEvent_BURNUP_GENERATE extends SystemEvent // @codingStandardsIgnoreL
             $burnup_information['id']
         );
 
-        foreach ($this->date_retriever->getWorkedDaysToCacheForPeriod($burnup, $yesterday) as $worked_day) {
+        foreach ($this->date_retriever->getWorkedDaysToCacheForPeriod($burnup_period, $yesterday) as $worked_day) {
             $this->logger->debug("Day " . date("Y-m-d H:i:s", $worked_day));
 
-            $total_effort = $this->burnup_calculator->getValue(
-                $burnup_information['id'],
-                $worked_day
-            );
-
-            $team_effort = $this->team_effort_calculator->calculate(
-                array($burnup_information['id']),
-                $worked_day,
-                true,
-                null,
-                null
-            );
+            $effort       = $this->burnup_calculator->getValue($burnup_information['id'], $worked_day);
+            $team_effort  = $effort->getTeamEffort();
+            $total_effort = $effort->getTotalEffort();
 
             $this->logger->debug("Caching value $team_effort/$total_effort for artifact #" . $burnup_information['id']);
             $this->cache_dao->saveCachedFieldValueAtTimestamp(
