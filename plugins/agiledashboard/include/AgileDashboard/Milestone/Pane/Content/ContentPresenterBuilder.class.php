@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2013. All rights reserved.
+ * Copyright Enalean (c) 2013 - 2018. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -22,35 +22,35 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_Milestone_Pane_Content_ContentPresenterBuilder {
-
-    /** @var AgileDashboard_Milestone_Backlog_BacklogStrategyFactory */
-    private $strategy_factory;
+class AgileDashboard_Milestone_Pane_Content_ContentPresenterBuilder
+{
+    /** @var AgileDashboard_Milestone_Backlog_BacklogFactory */
+    private $backlog_factory;
 
     /** @var AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory */
     private $collection_factory;
 
     public function __construct(
-        AgileDashboard_Milestone_Backlog_BacklogStrategyFactory $strategy_factory,
+        AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory,
         AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory $collection_factory
     ) {
-        $this->strategy_factory   = $strategy_factory;
+        $this->backlog_factory    = $backlog_factory;
         $this->collection_factory = $collection_factory;
     }
 
-    public function getMilestoneContentPresenter(PFUser $user, Planning_Milestone $milestone) {
-        $redirect_paremeter   = new Planning_MilestoneRedirectParameter();
-        $backlog_strategy     = $this->strategy_factory->getBacklogStrategy($milestone);
-        $redirect_to_self     = $redirect_paremeter->getPlanningRedirectToSelf($milestone, AgileDashboard_Milestone_Pane_Content_ContentPaneInfo::IDENTIFIER);
+    public function getMilestoneContentPresenter(PFUser $user, Planning_Milestone $milestone)
+    {
+        $redirect_paremeter = new Planning_MilestoneRedirectParameter();
+        $backlog            = $this->backlog_factory->getBacklog($milestone);
+        $redirect_to_self   = $redirect_paremeter->getPlanningRedirectToSelf($milestone, AgileDashboard_Milestone_Pane_Content_ContentPaneInfo::IDENTIFIER);
 
-        return $backlog_strategy->getPresenter(
+        return $backlog->getPresenter(
             $user,
             $milestone,
-            $this->collection_factory->getTodoCollection($user, $milestone, $backlog_strategy, $redirect_to_self),
-            $this->collection_factory->getDoneCollection($user, $milestone, $backlog_strategy, $redirect_to_self),
-            $this->collection_factory->getInconsistentCollection($user, $milestone, $backlog_strategy, $redirect_to_self),
+            $this->collection_factory->getTodoCollection($user, $milestone, $backlog, $redirect_to_self),
+            $this->collection_factory->getDoneCollection($user, $milestone, $backlog, $redirect_to_self),
+            $this->collection_factory->getInconsistentCollection($user, $milestone, $backlog, $redirect_to_self),
             $redirect_to_self
         );
     }
 }
-?>

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -36,7 +36,7 @@ use Tracker_FormElementFactory;
 use TrackerFactory;
 use Planning_MilestoneFactory;
 use AgileDashboard_BacklogItemDao;
-use AgileDashboard_Milestone_Backlog_BacklogStrategyFactory;
+use AgileDashboard_Milestone_Backlog_BacklogFactory;
 use AgileDashboard_Milestone_Backlog_BacklogItemBuilder;
 use AgileDashboard_Milestone_MilestoneStatusCounter;
 use Tracker_ArtifactDao;
@@ -85,8 +85,8 @@ class MilestoneResource extends AuthenticatedResource {
     /** @var ArtifactLinkUpdater */
     private $artifactlink_updater;
 
-    /** @var AgileDashboard_Milestone_Backlog_BacklogStrategyFactory */
-    private $backlog_strategy_factory;
+    /** @var AgileDashboard_Milestone_Backlog_BacklogFactory */
+    private $backlog_factory;
 
     /** @var Tracker_ArtifactFactory */
     private $tracker_artifact_factory;
@@ -134,7 +134,7 @@ class MilestoneResource extends AuthenticatedResource {
             $scrum_for_mono_milestone_checker
         );
 
-        $this->backlog_strategy_factory = new AgileDashboard_Milestone_Backlog_BacklogStrategyFactory(
+        $this->backlog_factory = new AgileDashboard_Milestone_Backlog_BacklogFactory(
             new AgileDashboard_BacklogItemDao(),
             $this->tracker_artifact_factory,
             $planning_factory,
@@ -155,7 +155,7 @@ class MilestoneResource extends AuthenticatedResource {
             $planning_factory,
             $this->tracker_artifact_factory,
             $tracker_form_element_factory,
-            $this->backlog_strategy_factory,
+            $this->backlog_factory,
             $this->milestone_factory,
             $this->backlog_item_collection_factory,
             $scrum_for_mono_milestone_checker
@@ -181,14 +181,14 @@ class MilestoneResource extends AuthenticatedResource {
 
         $this->milestone_representation_builder = new AgileDashboard_Milestone_MilestoneRepresentationBuilder(
             $this->milestone_factory,
-            $this->backlog_strategy_factory,
+            $this->backlog_factory,
             $this->event_manager,
             $scrum_for_mono_milestone_checker
         );
 
         $this->milestone_parent_linker = new MilestoneParentLinker(
             $this->milestone_factory,
-            $this->backlog_strategy_factory
+            $this->backlog_factory
         );
 
         $this->query_to_criterion_converter = new QueryToCriterionConverter();
@@ -469,8 +469,8 @@ class MilestoneResource extends AuthenticatedResource {
         $this->checkContentLimit($limit);
 
         $milestone                           = $this->getMilestoneById($this->getCurrentUser(), $id);
-        $strategy                            = $this->backlog_strategy_factory->getSelfBacklogStrategy($milestone, $limit, $offset);
-        $backlog_items                       = $this->getMilestoneContentItems($milestone, $strategy);
+        $backlog                             = $this->backlog_factory->getSelfBacklog($milestone, $limit, $offset);
+        $backlog_items                       = $this->getMilestoneContentItems($milestone, $backlog);
         $backlog_items_representations       = array();
         $backlog_item_representation_factory = new BacklogItemRepresentationFactory();
 
@@ -687,7 +687,7 @@ class MilestoneResource extends AuthenticatedResource {
         $paginated_backlog_item_representation_builder = new AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder(
             new BacklogItemRepresentationFactory(),
             $this->backlog_item_collection_factory,
-            $this->backlog_strategy_factory
+            $this->backlog_factory
         );
 
         $paginated_backlog_items_representations = $paginated_backlog_item_representation_builder->getPaginatedBacklogItemsRepresentationsForMilestone($user, $milestone, $limit, $offset);
@@ -895,7 +895,7 @@ class MilestoneResource extends AuthenticatedResource {
         $item_id  = $item->getArtifactId();
         $artifact = $this->getBacklogItemAsArtifact($user, $item_id);
 
-        $allowed_trackers = $this->backlog_strategy_factory->getBacklogStrategy($milestone)->getDescendantTrackers();
+        $allowed_trackers = $this->backlog_factory->getBacklog($milestone)->getDescendantTrackers();
         if (! $this->milestone_validator->canBacklogItemBeAddedToMilestone($artifact, $allowed_trackers)) {
             throw new RestException(400, "Item of type '".$artifact->getTracker()->getName(). "' cannot be added.");
         }
@@ -1025,11 +1025,11 @@ class MilestoneResource extends AuthenticatedResource {
         return UserManager::instance()->getCurrentUser();
     }
 
-    private function getMilestoneContentItems($milestone, $strategy) {
+    private function getMilestoneContentItems($milestone, $backlog) {
         return $this->backlog_item_collection_factory->getAllCollection(
             $this->getCurrentUser(),
             $milestone,
-            $strategy,
+            $backlog,
             ''
         );
     }

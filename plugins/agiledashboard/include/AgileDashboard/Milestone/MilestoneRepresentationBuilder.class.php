@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,8 +26,8 @@ class AgileDashboard_Milestone_MilestoneRepresentationBuilder {
     /** @var Planning_MilestoneFactory */
     private $milestone_factory;
 
-    /** @var AgileDashboard_Milestone_Backlog_BacklogStrategyFactory */
-    private $backlog_strategy_factory;
+    /** @var AgileDashboard_Milestone_Backlog_BacklogFactory */
+    private $backlog_factory;
 
     /** @var EventManager */
     private $event_manager;
@@ -39,12 +39,12 @@ class AgileDashboard_Milestone_MilestoneRepresentationBuilder {
 
     public function __construct(
         Planning_MilestoneFactory $milestone_factory,
-        AgileDashboard_Milestone_Backlog_BacklogStrategyFactory $backlog_strategy_factory,
+        AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory,
         EventManager $event_manager,
         ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker
     ) {
         $this->milestone_factory            = $milestone_factory;
-        $this->backlog_strategy_factory     = $backlog_strategy_factory;
+        $this->backlog_factory              = $backlog_factory;
         $this->event_manager                = $event_manager;
         $this->scrum_mono_milestone_checker = $scrum_mono_milestone_checker;
     }
@@ -129,6 +129,6 @@ class AgileDashboard_Milestone_MilestoneRepresentationBuilder {
     }
 
     private function getBacklogTrackers(Planning_Milestone $milestone) {
-        return $this->backlog_strategy_factory->getBacklogStrategy($milestone)->getDescendantTrackers();
+        return $this->backlog_factory->getBacklog($milestone)->getDescendantTrackers();
     }
 }

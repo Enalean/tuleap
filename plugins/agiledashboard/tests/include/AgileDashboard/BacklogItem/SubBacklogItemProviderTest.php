@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,7 +23,7 @@ require_once dirname(__FILE__).'/../../../bootstrap.php';
 
 class AgileDashboard_BacklogItem_SubBacklogItemProviderTest extends TuleapTestCase {
 
-    private $strategy_factory;
+    private $backlog_factory;
     private $backlog_item_collection_factory;
     private $user;
 
@@ -34,10 +34,10 @@ class AgileDashboard_BacklogItem_SubBacklogItemProviderTest extends TuleapTestCa
         $this->dao             = mock('Tracker_ArtifactDao');
 
         $this->user                            = aUser()->build();
-        $this->strategy_factory                = mock('AgileDashboard_Milestone_Backlog_BacklogStrategyFactory');
+        $this->backlog_factory                 = mock('AgileDashboard_Milestone_Backlog_BacklogFactory');
         $this->backlog_item_collection_factory = mock('AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory');
 
-        $this->provider = new AgileDashboard_BacklogItem_SubBacklogItemProvider($this->dao, $this->strategy_factory, $this->backlog_item_collection_factory);
+        $this->provider = new AgileDashboard_BacklogItem_SubBacklogItemProvider($this->dao, $this->backlog_factory, $this->backlog_item_collection_factory);
     }
 
     public function itReturnsTheMatchingIds() {

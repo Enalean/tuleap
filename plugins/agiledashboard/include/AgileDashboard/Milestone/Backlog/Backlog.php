@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2013 - 2017. All rights reserved.
+ * Copyright Enalean (c) 2013 - 2018. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -28,9 +28,10 @@ use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
 
 /**
- * I am the backlog of the first descendant of the current milestone
+ * I retrieve the content of the backlog
  */
-class AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy extends AgileDashboard_Milestone_Backlog_BacklogStrategy {
+class AgileDashboard_Milestone_Backlog_Backlog
+{
 
     /** @var AgileDashboard_BacklogItemDao */
     private $dao;
@@ -97,11 +98,13 @@ class AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy extends AgileDa
         $this->mono_milestone_items_finder = $mono_milestone_items_finder;
     }
 
-    public function getDescendantTrackers() {
+    public function getDescendantTrackers()
+    {
         return $this->descendant_trackers;
     }
 
-    public function getDescendantTrackerIds() {
+    public function getDescendantTrackerIds()
+    {
         $ids = array();
         foreach ($this->descendant_trackers as $tracker) {
             $ids[] = $tracker->getId();
@@ -110,20 +113,24 @@ class AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy extends AgileDa
         return $ids;
     }
 
-    public function getTotalContentSize() {
+    public function getTotalContentSize()
+    {
         return $this->content_size;
     }
 
-    public function getTotalBacklogSize() {
+    public function getTotalBacklogSize()
+    {
         return $this->backlog_size;
     }
 
     /** @return Tracker[] */
-    public function getItemTrackers() {
+    public function getItemTrackers()
+    {
         return $this->backlogitem_trackers;
     }
 
-    public function getBacklogItemName() {
+    public function getBacklogItemName()
+    {
         $descendant_trackers_names = array();
 
         foreach ($this->getDescendantTrackers() as $descendant_tracker) {
@@ -133,11 +140,13 @@ class AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy extends AgileDa
         return implode(', ', $descendant_trackers_names);
     }
 
-    public function getMilestoneBacklogArtifactsTracker() {
+    public function getMilestoneBacklogArtifactsTracker()
+    {
         return $this->getDescendantTrackers();
     }
 
-    private function getAddItemsToBacklogUrls(PFUser $user, Planning_Milestone $milestone, $redirect_to_self) {
+    private function getAddItemsToBacklogUrls(PFUser $user, Planning_Milestone $milestone, $redirect_to_self)
+    {
         $submit_urls = array();
 
         foreach ($this->getDescendantTrackers() as $descendant_tracker) {
@@ -153,7 +162,8 @@ class AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy extends AgileDa
         return $submit_urls;
     }
 
-    private function canUserPrioritizeBacklog(Planning_Milestone $milestone, PFUser $user) {
+    private function canUserPrioritizeBacklog(Planning_Milestone $milestone, PFUser $user)
+    {
         $artifact_factory  = Tracker_ArtifactFactory::instance();
         $planning_factory  = PlanningFactory::build();
         $milestone_factory = new Planning_MilestoneFactory(
@@ -174,7 +184,8 @@ class AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy extends AgileDa
         return $milestone_factory->userCanChangePrioritiesInMilestone($milestone, $user);
     }
 
-    public function getTrackersWithoutInitialEffort() {
+    public function getTrackersWithoutInitialEffort()
+    {
         $trackers_without_initial_effort_defined = array();
         foreach ($this->descendant_trackers as $descendant) {
             if (! AgileDashBoard_Semantic_InitialEffort::load($descendant)->getField()) {
@@ -191,9 +202,10 @@ class AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy extends AgileDa
         AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection $todo,
         AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection $done,
         AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection $inconsistent_collection,
-        $redirect_to_self) {
+        $redirect_to_self
+    ) {
 
-        return new AgileDashboard_Milestone_Pane_Content_ContentPresenterDescendant(
+        return new AgileDashboard_Milestone_Pane_Content_ContentPresenter(
             $todo,
             $done,
             $inconsistent_collection,
@@ -207,7 +219,8 @@ class AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy extends AgileDa
         );
     }
 
-    private function getSolveInconsistenciesUrl(Planning_Milestone $milestone, $redirect_to_self) {
+    private function getSolveInconsistenciesUrl(Planning_Milestone $milestone, $redirect_to_self)
+    {
         return  AGILEDASHBOARD_BASE_URL.
                 "/?group_id=".$milestone->getGroupId().
                 "&aid=".$milestone->getArtifactId().
@@ -216,7 +229,8 @@ class AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy extends AgileDa
     }
 
     /** @return AgileDashboard_Milestone_Backlog_DescendantItemsCollection */
-    public function getArtifacts(PFUser $user) {
+    public function getArtifacts(PFUser $user)
+    {
         if ($this->milestone instanceof Planning_VirtualTopMilestone) {
             if ($this->limit !== null || $this->offset !== null) {
                 $artifacts_collection = $this->items_finder->getAllTopMilestoneContentItemsWithLimitAndOffset($user, $this->limit, $this->offset);
@@ -235,7 +249,8 @@ class AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy extends AgileDa
     }
 
     /** @return AgileDashboard_Milestone_Backlog_DescendantItemsCollection */
-    public function getOpenUnplannedArtifacts(PFUser $user, $sub_milestone_ids) {
+    public function getOpenUnplannedArtifacts(PFUser $user, $sub_milestone_ids)
+    {
         if ($this->milestone instanceof Planning_VirtualTopMilestone) {
             if ($this->limit !== null || $this->offset !== null) {
                 if ($this->scrum_mono_milestone_checker->isMonoMilestoneEnabled($this->milestone->getProject()->getID()) === true) {

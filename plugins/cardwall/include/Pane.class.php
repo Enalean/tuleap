@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -226,7 +226,7 @@ class Cardwall_Pane extends AgileDashboard_Pane {
             $this->planning_factory
         );
 
-        $strategy_factory = new AgileDashboard_Milestone_Backlog_BacklogStrategyFactory(
+        $backlog_factory = new AgileDashboard_Milestone_Backlog_BacklogFactory(
             new AgileDashboard_BacklogItemDao(),
             $this->artifact_factory,
             $this->planning_factory,
@@ -237,7 +237,7 @@ class Cardwall_Pane extends AgileDashboard_Pane {
         return $backlog_item_collection_factory->getAllCollection(
             $this->user_manager->getCurrentUser(),
             $this->milestone,
-            $strategy_factory->getSelfBacklogStrategy($this->milestone),
+            $backlog_factory->getSelfBacklog($this->milestone),
             ''
         );
     }

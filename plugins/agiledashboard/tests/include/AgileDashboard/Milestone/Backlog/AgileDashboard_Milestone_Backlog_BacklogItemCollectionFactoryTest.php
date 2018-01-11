@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2013. All rights reserved.
+ * Copyright Enalean (c) 2013 - 2018. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -25,6 +25,7 @@
 require_once dirname(__FILE__).'/../../../../common.php';
 
 class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends TuleapTestCase {
+    private $backlog;
 
     /** @var AgileDashboard_BacklogItemDao */
     private $dao;
@@ -99,8 +100,8 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
         $backlog_items->push($this->story2);
         $backlog_items->push($this->story3);
 
-        $this->backlog_strategy = stub('AgileDashboard_Milestone_Backlog_BacklogStrategy')->getArtifacts($this->user)->returns($backlog_items);
-        stub($this->backlog_strategy)->getMilestoneBacklogArtifactsTracker()->returns(mock('Tracker'));
+        $this->backlog = stub('AgileDashboard_Milestone_Backlog_Backlog')->getArtifacts($this->user)->returns($backlog_items);
+        stub($this->backlog)->getMilestoneBacklogArtifactsTracker()->returns(mock('Tracker'));
 
         $this->redirect_to_self = 'whatever';
 
@@ -144,7 +145,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
         $content = $this->factory->getTodoCollection(
             $this->user,
             $this->milestone,
-            $this->backlog_strategy,
+            $this->backlog,
             $this->redirect_to_self
         );
 
@@ -159,7 +160,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
         $content = $this->factory->getDoneCollection(
             $this->user,
             $this->milestone,
-            $this->backlog_strategy,
+            $this->backlog,
             $this->redirect_to_self
         );
 
@@ -179,7 +180,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
         $content = $this->factory->getTodoCollection(
             $this->user,
             $this->milestone,
-            $this->backlog_strategy,
+            $this->backlog,
             $this->redirect_to_self
         );
 
@@ -199,7 +200,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
         $content = $this->factory->getTodoCollection(
             $this->user,
             $this->milestone,
-            $this->backlog_strategy,
+            $this->backlog,
             $this->redirect_to_self
         );
 
@@ -241,7 +242,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
 
         stub($this->artifact_factory)->getArtifactIdsLinkedToTrackers()->returns(array(12 => true));
 
-        $cleaned_collection = $factory->getUnassignedOpenCollection($this->user, $this->milestone, $this->backlog_strategy, $this->redirect_to_self);
+        $cleaned_collection = $factory->getUnassignedOpenCollection($this->user, $this->milestone, $this->backlog, $this->redirect_to_self);
         $this->assertEqual($cleaned_collection->count(), 2);
     }
 }

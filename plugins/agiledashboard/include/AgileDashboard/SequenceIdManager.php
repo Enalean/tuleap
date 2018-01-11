@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,18 +20,18 @@
 
 class AgileDashboard_SequenceIdManager {
 
-    /** @var AgileDashboard_Milestone_Backlog_BacklogStrategyFactory */
-    private $strategy_factory;
+    /** @var AgileDashboard_Milestone_Backlog_BacklogFactory */
+    private $backlog_factory;
 
     /** @var Array */
     private $backlog_item_ids;
 
     public function __construct(
-        AgileDashboard_Milestone_Backlog_BacklogStrategyFactory $strategy_factory,
+        AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory,
         AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory $backlog_item_collection_factory
     ) {
         $this->backlog_item_collection_factory = $backlog_item_collection_factory;
-        $this->strategy_factory                = $strategy_factory;
+        $this->backlog_factory                 = $backlog_factory;
         $this->backlog_item_ids                = array();
     }
 
@@ -57,8 +57,8 @@ class AgileDashboard_SequenceIdManager {
 
         if (! isset($this->backlog_item_ids[$milestone->getArtifactId()])) {
             $this->backlog_item_ids[$milestone->getArtifactId()] = array();
-            $strategy          = $this->strategy_factory->getBacklogStrategy($milestone);
-            $backlog_artifacts = $strategy->getArtifacts($user);
+            $backlog           = $this->backlog_factory->getBacklog($milestone);
+            $backlog_artifacts = $backlog->getArtifacts($user);
 
             $this->storeBacklogArtifacts($milestone->getArtifactId(), $backlog_artifacts);
         }
@@ -68,8 +68,8 @@ class AgileDashboard_SequenceIdManager {
         if (! isset($this->backlog_item_ids[(int) $milestone->getArtifactId()])) {
             $this->backlog_item_ids[(int) $milestone->getArtifactId()] = array();
 
-            $strategy_unassigned = $this->strategy_factory->getSelfBacklogStrategy($milestone);
-            $backlog_artifacts   = $this->backlog_item_collection_factory->getUnassignedOpenCollection($user, $milestone, $strategy_unassigned, false);
+            $backlog_unassigned = $this->backlog_factory->getSelfBacklog($milestone);
+            $backlog_artifacts  = $this->backlog_item_collection_factory->getUnassignedOpenCollection($user, $milestone, $backlog_unassigned, false);
 
             $this->storeTopBacklogArtifacts((int) $milestone->getArtifactId(), $backlog_artifacts);
         }

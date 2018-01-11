@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2013. All rights reserved.
+ * Copyright Enalean (c) 2013 - 2018. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -22,7 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-abstract class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
+class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
     /** @var AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection */
     private $todo_collection;
 
@@ -38,32 +38,98 @@ abstract class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
     /** @var String[] */
     private $trackers_without_initial_effort_field;
 
+    /** @var Tracker[] */
+    private $trackers = array();
+
+    /** @var String[] */
+    private $add_new_backlog_items_urls;
+
+    /** @var Boolean */
+    private $can_prioritize;
+
+    /** @var String */
+    private $solve_inconsistencies_url;
+
+    /** @var int */
+    private $milestone_artifact_id;
+
     public function __construct(
         AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection $todo,
         AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection $done,
         AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection $inconsistent_collection,
         $backlog_item_type,
-        array $trackers_without_initial_effort_field
+        $add_new_backlog_items_urls,
+        $trackers,
+        $can_prioritize,
+        array $trackers_without_initial_effort_defined,
+        $solve_inconsistencies_url,
+        $milestone_artifact_id
     ) {
         $this->todo_collection           = $todo;
         $this->done_collection           = $done;
         $this->inconsistent_collection   = $inconsistent_collection;
         $this->backlog_item_type         = $backlog_item_type;
-        foreach ($trackers_without_initial_effort_field as $tracker) {
+        foreach ($trackers_without_initial_effort_defined as $tracker) {
             $this->trackers_without_initial_effort_field[] = $tracker->getName();
         }
+        $this->milestone_artifact_id       = $milestone_artifact_id;
+        $this->add_new_backlog_items_urls  = $add_new_backlog_items_urls;
+        $this->trackers                    = $trackers;
+        $this->can_prioritize              = $can_prioritize;
+        $this->solve_inconsistencies_url   = $solve_inconsistencies_url;
     }
 
-    /**
-     * Return the template name that match the presenter
-     *
-     * @return String
-     */
-    abstract public function getTemplateName();
+    public function getTemplateName() {
+        return 'pane-content';
+    }
 
-    abstract public function can_prioritize();
+    public function can_prioritize() {
+        return $this->can_prioritize;
+    }
 
-    abstract public function can_add_backlog_item();
+    public function can_add_backlog_item() {
+        return count($this->add_new_backlog_items_urls) > 0;
+    }
+
+    public function only_one_new_backlog_items_urls() {
+        return count($this->add_new_backlog_items_urls) == 1;
+    }
+
+    public function add_new_backlog_items_urls() {
+        return $this->add_new_backlog_items_urls;
+    }
+
+    public function trackers() {
+        return $this->trackers;
+    }
+
+    public function create_new_specific_item() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'create_new_specific_item', $this->add_new_backlog_items_urls[0]['tracker_type']);
+    }
+
+    public function create_new_item() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'create_new_item');
+    }
+
+    public function create_new_item_help() {
+        $trackers = array();
+        foreach($this->add_new_backlog_items_urls as $backlog_entry) {
+            array_push($trackers, $backlog_entry['tracker_type']);
+        }
+        return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'create_new_item_help', implode(', ', $trackers));
+    }
+
+    public function solve_inconsistencies_button() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'solve_inconsistencies');
+    }
+
+    public function solve_inconsistencies_url() {
+        return $this->solve_inconsistencies_url;
+    }
+
+    public function milestone_id() {
+        return (int) $this->milestone_artifact_id;
+    }
 
     public function title() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'content_head_title');
@@ -163,5 +229,3 @@ abstract class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
         return $this->inconsistent_collection;
     }
 }
-
-?>

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -160,7 +160,7 @@ class AgileDashboardRouterBuilder {
 
     private function getPanePresenterBuilderFactory($milestone_factory) {
         return new AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory(
-            $this->getBacklogStrategyFactory(),
+            $this->getBacklogFactory(),
             $this->getBacklogItemPresenterCollectionFactory($milestone_factory)
         );
     }
@@ -269,7 +269,7 @@ class AgileDashboardRouterBuilder {
     private function getMilestoneRepresentationBuilder() {
         return new AgileDashboard_Milestone_MilestoneRepresentationBuilder(
             $this->getMilestoneFactory(),
-            $this->getBacklogStrategyFactory(),
+            $this->getBacklogFactory(),
             EventManager::instance(),
             $this->getMonoMileStoneChecker()
         );
@@ -279,7 +279,7 @@ class AgileDashboardRouterBuilder {
         return new AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder(
             new BacklogItemRepresentationFactory(),
             $this->getBacklogItemCollectionFactory(),
-            $this->getBacklogStrategyFactory()
+            $this->getBacklogFactory()
         );
     }
 
@@ -294,8 +294,8 @@ class AgileDashboardRouterBuilder {
         );
     }
 
-    private function getBacklogStrategyFactory() {
-        return new AgileDashboard_Milestone_Backlog_BacklogStrategyFactory(
+    private function getBacklogFactory() {
+        return new AgileDashboard_Milestone_Backlog_BacklogFactory(
             new AgileDashboard_BacklogItemDao(),
             $this->getArtifactFactory(),
             $this->getPlanningFactory(),

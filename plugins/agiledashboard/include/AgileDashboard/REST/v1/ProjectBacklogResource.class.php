@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,7 +27,7 @@ use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use TrackerFactory;
 use Planning_MilestoneFactory;
-use AgileDashboard_Milestone_Backlog_BacklogStrategyFactory;
+use AgileDashboard_Milestone_Backlog_BacklogFactory;
 use AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
 use AgileDashboard_Milestone_Backlog_BacklogItemBuilder;
 use AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider;
@@ -60,8 +60,8 @@ class ProjectBacklogResource {
     /** @var Planning_MilestoneFactory */
     private $milestone_factory;
 
-    /** @var AgileDashboard_Milestone_Backlog_BacklogStrategyFactory */
-    private $backlog_strategy_factory;
+    /** @var AgileDashboard_Milestone_Backlog_BacklogFactory */
+    private $backlog_factory;
 
     /** @var \AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory */
     private $backlog_item_collection_factory;
@@ -117,7 +117,7 @@ class ProjectBacklogResource {
             new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory)
         );
 
-        $this->backlog_strategy_factory = new AgileDashboard_Milestone_Backlog_BacklogStrategyFactory(
+        $this->backlog_factory = new AgileDashboard_Milestone_Backlog_BacklogFactory(
             new AgileDashboard_BacklogItemDao(),
             $tracker_artifact_factory,
             $this->planning_factory,
@@ -138,7 +138,7 @@ class ProjectBacklogResource {
             $this->planning_factory,
             $tracker_artifact_factory,
             $tracker_form_element_factory,
-            $this->backlog_strategy_factory,
+            $this->backlog_factory,
             $this->milestone_factory,
             $this->backlog_item_collection_factory,
             $scrum_mono_milestone_checker
@@ -163,7 +163,7 @@ class ProjectBacklogResource {
         $this->paginated_backlog_item_representation_builder = new AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder(
             new BacklogItemRepresentationFactory(),
             $this->backlog_item_collection_factory,
-            $this->backlog_strategy_factory
+            $this->backlog_factory
         );
     }
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -43,30 +43,30 @@ class MilestoneParentLinkerTest extends TuleapTestCase {
     private $user;
 
     /**
-     * @var AgileDashboard_Milestone_Backlog_BacklogStrategyFactory
+     * @var AgileDashboard_Milestone_Backlog_BacklogFactory
      */
-    private $backlog_strategy_factory;
+    private $backlog_factory;
 
     /**
-     * @var AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy
+     * @var AgileDashboard_Milestone_Backlog_Backlog
      */
-    private $strategy;
+    private $backlog;
 
     public function setUp() {
         parent::setUp();
 
-        $this->milestone_factory        = mock('Planning_MilestoneFactory');
-        $this->backlog_strategy_factory = mock('AgileDashboard_Milestone_Backlog_BacklogStrategyFactory');
-        $this->milestone_parent_linker  = new MilestoneParentLinker(
+        $this->milestone_factory       = mock('Planning_MilestoneFactory');
+        $this->backlog_factory         = mock('AgileDashboard_Milestone_Backlog_BacklogFactory');
+        $this->milestone_parent_linker = new MilestoneParentLinker(
             $this->milestone_factory,
-            $this->backlog_strategy_factory
+            $this->backlog_factory
         );
 
         $this->milestone = mock('Planning_Milestone');
         $this->user      = mock('PFUser');
-        $this->strategy  = mock('AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy');
+        $this->backlog   = mock('AgileDashboard_Milestone_Backlog_Backlog');
 
-        stub($this->backlog_strategy_factory)->getBacklogStrategy()->returns($this->strategy);
+        stub($this->backlog_factory)->getBacklog()->returns($this->backlog);
     }
 
     public function itDoesNothingIfTheMilestoneHasNoParent() {
@@ -90,7 +90,7 @@ class MilestoneParentLinkerTest extends TuleapTestCase {
         $parent_milestone          = stub('Planning_Milestone')->getArtifact()->returns($parent_milestone_artifact);
         $descendant_tracker        = aTracker()->withId(202)->build();
 
-        stub($this->strategy)->getDescendantTrackers()->returns(array($descendant_tracker));
+        stub($this->backlog)->getDescendantTrackers()->returns(array($descendant_tracker));
         stub($this->milestone)->getParent()->returns($parent_milestone);
 
         expect($parent_milestone_artifact)->linkArtifact()->never();
@@ -109,7 +109,7 @@ class MilestoneParentLinkerTest extends TuleapTestCase {
         $parent_linked_artifact    = stub('Tracker_Artifact')->getId()->returns(102);
         $descendant_tracker        = aTracker()->withId(201)->build();
 
-        stub($this->strategy)->getDescendantTrackers()->returns(array($descendant_tracker));
+        stub($this->backlog)->getDescendantTrackers()->returns(array($descendant_tracker));
         stub($artifact_added)->getParent()->returns($parent_linked_artifact);
         stub($parent_milestone_artifact)->getLinkedArtifacts($this->user)->returns(array($parent_linked_artifact));
         stub($this->milestone)->getParent()->returns($parent_milestone);
@@ -131,7 +131,7 @@ class MilestoneParentLinkerTest extends TuleapTestCase {
         $parent                    = stub('Tracker_Artifact')->getId()->returns(103);
         $descendant_tracker        = aTracker()->withId(201)->build();
 
-        stub($this->strategy)->getDescendantTrackers()->returns(array($descendant_tracker));
+        stub($this->backlog)->getDescendantTrackers()->returns(array($descendant_tracker));
 
         stub($added_artifact)->getId()->returns(101);
         stub($added_artifact)->getParent()->returns($parent);
@@ -156,7 +156,7 @@ class MilestoneParentLinkerTest extends TuleapTestCase {
 
         stub($added_artifact)->getId()->returns(101);
         stub($added_artifact)->getParent()->returns(null);
-        stub($this->strategy)->getDescendantTrackers()->returns(array($descendant_tracker));
+        stub($this->backlog)->getDescendantTrackers()->returns(array($descendant_tracker));
 
         stub($parent_milestone_artifact)->getLinkedArtifacts($this->user)->returns(array($parent_linked_artifact));
         stub($this->milestone)->getParent()->returns($parent_milestone);

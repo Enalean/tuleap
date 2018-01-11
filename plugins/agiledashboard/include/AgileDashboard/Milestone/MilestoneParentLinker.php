@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,9 +21,9 @@
 class MilestoneParentLinker {
 
     /**
-     * @var AgileDashboard_Milestone_Backlog_BacklogStrategyFactory
+     * @var AgileDashboard_Milestone_Backlog_BacklogFactory
      */
-    private $backlog_strategy_factory;
+    private $backlog_factory;
 
     /**
      * @var Planning_MilestoneFactory
@@ -32,10 +32,10 @@ class MilestoneParentLinker {
 
     public function __construct(
         Planning_MilestoneFactory $milestone_factory,
-        AgileDashboard_Milestone_Backlog_BacklogStrategyFactory $backlog_strategy_factory
+        AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory
     ) {
-        $this->milestone_factory        = $milestone_factory;
-        $this->backlog_strategy_factory = $backlog_strategy_factory;
+        $this->milestone_factory = $milestone_factory;
+        $this->backlog_factory   = $backlog_factory;
     }
 
     public function linkToMilestoneParent(Planning_Milestone $milestone, PFUser $user, Tracker_Artifact $artifact_added) {
@@ -64,7 +64,7 @@ class MilestoneParentLinker {
     }
 
     private function getBacklogTrackers(Planning_Milestone $milestone) {
-        return $this->backlog_strategy_factory->getBacklogStrategy($milestone)->getDescendantTrackers();
+        return $this->backlog_factory->getBacklog($milestone)->getDescendantTrackers();
     }
 
     /**

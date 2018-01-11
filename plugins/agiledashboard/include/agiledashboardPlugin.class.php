@@ -273,7 +273,7 @@ class AgileDashboardPlugin extends Plugin {
         $milestone          = $milestone_provider->getMilestone();
 
         if ($milestone) {
-            $provider = new AgileDashboard_BacklogItem_SubBacklogItemProvider(new Tracker_ArtifactDao(), $this->getBacklogStrategyFactory(), $this->getBacklogItemCollectionFactory());
+            $provider = new AgileDashboard_BacklogItem_SubBacklogItemProvider(new Tracker_ArtifactDao(), $this->getBacklogFactory(), $this->getBacklogItemCollectionFactory());
             $params['result'][]         = $provider->getMatchingIds($milestone, $backlog_tracker, $user);
             $params['search_performed'] = true;
         }
@@ -662,8 +662,8 @@ class AgileDashboardPlugin extends Plugin {
         return Tracker_HierarchyFactory::instance();
     }
 
-    private function getBacklogStrategyFactory() {
-        return new AgileDashboard_Milestone_Backlog_BacklogStrategyFactory(
+    private function getBacklogFactory() {
+        return new AgileDashboard_Milestone_Backlog_BacklogFactory(
             new AgileDashboard_BacklogItemDao(),
             $this->getArtifactFactory(),
             PlanningFactory::build(),
@@ -1047,7 +1047,7 @@ class AgileDashboardPlugin extends Plugin {
     private function getSequenceIdManager() {
         if (! $this->sequence_id_manager) {
             $this->sequence_id_manager = new AgileDashboard_SequenceIdManager(
-                    $this->getBacklogStrategyFactory(),
+                    $this->getBacklogFactory(),
                     $this->getBacklogItemCollectionFactory()
             );
         }
@@ -1174,14 +1174,14 @@ class AgileDashboardPlugin extends Plugin {
     public function testmanagementGetItemsFromMilestone(\Tuleap\TestManagement\Event\GetItemsFromMilestone $event)
     {
         $milestone_factory               = $this->getMilestoneFactory();
-        $backlog_strategy_factory        = $this->getBacklogStrategyFactory();
+        $backlog_factory                 = $this->getBacklogFactory();
         $backlog_item_collection_factory = $this->getBacklogItemCollectionFactory();
 
         $user          = $event->getUser();
         $milestone_id  = $event->getMilestoneId();
         $milestone     = $milestone_factory->getValidatedBareMilestoneByArtifactId($user, $milestone_id);
-        $strategy      = $backlog_strategy_factory->getSelfBacklogStrategy($milestone);
-        $backlog_items = $backlog_item_collection_factory->getAllCollection($user, $milestone, $strategy, '');
+        $backlog       = $backlog_factory->getSelfBacklog($milestone);
+        $backlog_items = $backlog_item_collection_factory->getAllCollection($user, $milestone, $backlog, '');
         $items_ids     = array();
 
         foreach ($backlog_items as $item) {
