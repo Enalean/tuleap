@@ -11,10 +11,3 @@
     rotate 4
     create 640 %APP_USER% %APP_USER%
 }
-
-/var/log/%PROJECT_NAME%/tuleap_tracker_notify_log {
-    missingok
-    weekly
-    rotate 4
-    create 640 %APP_USER% %APP_USER%
-}

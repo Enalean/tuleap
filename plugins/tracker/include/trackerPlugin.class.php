@@ -156,7 +156,6 @@ class trackerPlugin extends Plugin {
         $this->addHook(ProjectCreator::PROJECT_CREATION_REMOVE_LEGACY_SERVICES);
         $this->addHook(ProjectRegistrationActivateService::NAME);
 
-        $this->addHook(EventCronJobEveryMinute::NAME);
         $this->addHook(WorkerGetQueue::NAME);
     }
 
@@ -1542,14 +1541,9 @@ class trackerPlugin extends Plugin {
         return strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL . '/?func=global-admin') === 0;
     }
 
-    public function cron_job_every_minute(EventCronJobEveryMinute $event)
-    {
-        $this->getAsynchronousSupervisor($event->getLogger())->runNotify();
-    }
-
     public function workerGetQueue(WorkerGetQueue $event)
     {
-        $async_notifier = new \Tuleap\Tracker\Artifact\Changeset\Notification\AsynchronousNotifier($event->getLogger());
+        $async_notifier = new \Tuleap\Tracker\Artifact\Changeset\Notification\AsynchronousNotifier();
         $async_notifier->addListener($event);
     }
 }
