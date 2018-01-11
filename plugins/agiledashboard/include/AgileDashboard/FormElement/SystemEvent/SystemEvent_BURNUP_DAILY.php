@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,10 +25,11 @@ use SystemEvent;
 use TimePeriodWithoutWeekEnd;
 use Tuleap\Agiledashboard\FormElement\BurnupCacheDao;
 use Tuleap\Agiledashboard\FormElement\BurnupCacheDateRetriever;
+use Tuleap\AgileDashboard\FormElement\BurnupCalculator;
 use Tuleap\AgileDashboard\FormElement\BurnupDao;
 use Tuleap\Tracker\FormElement\FieldCalculator;
 
-class SystemEvent_BURNUP_DAILY extends SystemEvent
+class SystemEvent_BURNUP_DAILY extends SystemEvent // @codingStandardsIgnoreLine
 {
     const NAME = 'SystemEvent_BURNUP_DAILY';
 
@@ -43,9 +44,9 @@ class SystemEvent_BURNUP_DAILY extends SystemEvent
     private $logger;
 
     /**
-     * @var  FieldCalculator
+     * @var  BurnupCalculator
      */
-    private $total_effort_calculator;
+    private $burnup_calculator;
 
     /**
      * @var FieldCalculator
@@ -69,18 +70,18 @@ class SystemEvent_BURNUP_DAILY extends SystemEvent
 
     public function injectDependencies(
         BurnupDao $burnup_dao,
-        FieldCalculator $total_effort_calculator,
+        BurnupCalculator $burnup_calculator,
         FieldCalculator $team_effort_calculator,
         BurnupCacheDao $cache_dao,
         BackendLogger $logger,
         BurnupCacheDateRetriever $date_retriever
     ) {
-        $this->burnup_dao              = $burnup_dao;
-        $this->logger                  = $logger;
-        $this->total_effort_calculator = $total_effort_calculator;
-        $this->team_effort_calculator  = $team_effort_calculator;
-        $this->cache_dao               = $cache_dao;
-        $this->date_retriever          = $date_retriever;
+        $this->burnup_dao             = $burnup_dao;
+        $this->logger                 = $logger;
+        $this->burnup_calculator      = $burnup_calculator;
+        $this->team_effort_calculator = $team_effort_calculator;
+        $this->cache_dao              = $cache_dao;
+        $this->date_retriever         = $date_retriever;
     }
 
     public function process()
@@ -108,12 +109,9 @@ class SystemEvent_BURNUP_DAILY extends SystemEvent
                     "Calculating burnup for artifact #" . $burnup['id'] . ' at ' . date('Y-m-d H:i:s', $yesterday)
                 );
 
-                $total_effort = $this->total_effort_calculator->calculate(
-                    array($burnup['id']),
-                    $yesterday,
-                    true,
-                    null,
-                    null
+                $total_effort = $this->burnup_calculator->getValue(
+                    $burnup['id'],
+                    $yesterday
                 );
 
                 $team_effort = $this->team_effort_calculator->calculate(

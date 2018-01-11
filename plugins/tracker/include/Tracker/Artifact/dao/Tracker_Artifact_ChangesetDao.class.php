@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -153,6 +153,27 @@ class Tracker_Artifact_ChangesetDao extends DataAccessObject {
                 ORDER BY c_new.id ASC";
         return $this->retrieve($sql);
     }
-}
 
-?>
+    /**
+     * @see http://stackoverflow.com/questions/2111384/sql-join-selecting-the-last-records-in-a-one-to-many-relationship
+     */
+    public function searchChangesetByTimestamp($artifact_id, $timestamp)
+    {
+        $artifact_id  = $this->da->escapeInt($artifact_id);
+        $timestamp    = $this->da->escapeInt($timestamp);
+
+        $sql = "SELECT changeset1.*
+                    FROM tracker_changeset       AS changeset1
+                    LEFT JOIN  tracker_changeset AS changeset2
+                    ON (
+                        changeset2.artifact_id = $artifact_id
+                        AND changeset1.id < changeset2.id
+                        AND changeset2.submitted_on <= $timestamp
+                    )
+                    WHERE changeset2.id IS NULL
+                    AND changeset1.artifact_id = $artifact_id
+                    AND changeset1.submitted_on <= $timestamp";
+
+        return $this->retrieve($sql);
+    }
+}

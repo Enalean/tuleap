@@ -20,6 +20,7 @@
 
 namespace Tuleap\AgileDashboard\FormElement;
 
+use AgileDashboard_Semantic_InitialEffortFactory;
 use Codendi_HTMLPurifier;
 use EventManager;
 use PFUser;
@@ -27,7 +28,9 @@ use SystemEventManager;
 use TemplateRendererFactory;
 use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
+use Tracker_Artifact_ChangesetFactoryBuilder;
 use Tracker_Artifact_ChangesetValue;
+use Tracker_ArtifactFactory;
 use Tracker_FormElement_Chart_Field_Exception;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_ReadOnly;
@@ -138,7 +141,7 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
             $artifact_value .= '<thead><tr><th></th><th>Team</th><th>Total</th></tr></thead><tbody>';
             foreach ($burnup_data->getEfforts() as $timestamp => $burnup_effort) {
                 $artifact_value .= '<tr>';
-                $date = new \DateTime("@$timestamp");
+                $date           = new \DateTime("@$timestamp");
                 $artifact_value .= '<td>' . $purifier->purify($date->format('d-m-Y')) . '</td>';
                 $artifact_value .= '<td>' . $purifier->purify($burnup_effort->getTeamEffort()) . '</td>';
                 $artifact_value .= '<td>' . $purifier->purify($burnup_effort->getTotalEffort()) . '</td>';
@@ -165,6 +168,7 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
             return '';
         }
         $renderer = TemplateRendererFactory::build()->getRenderer(AGILEDASHBOARD_TEMPLATE_DIR);
+
         return $renderer->renderToString(
             'formelement/burnup-cache-generation-modal',
             array('project_id' => $artifact->getTracker()->getGroupId(), 'artifact_id' => $artifact->getId())
@@ -293,7 +297,7 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
 
         $burnup_representation = new BurnupRepresentation($capacity, $burnup_data);
 
-        $field_representation  = new ArtifactFieldValueRepresentation();
+        $field_representation = new ArtifactFieldValueRepresentation();
         $field_representation->build($this->getId(), $this->getLabel(), $burnup_representation);
 
         return $field_representation;
@@ -384,23 +388,12 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
     }
 
     /**
-     * @return FieldCalculator
-     */
-    private function getTotalEffortCalculator()
-    {
-        return new FieldCalculator(
-            new BurnupTotalEffortCalculator(
-                new BurnupManualValuesAndChildrenListRetriever(new BurnupDao())
-            )
-        );
-    }
-
-    /**
      * @return BurnupDataBuilder
      */
     private function getBurnupDataBuilder()
     {
         $burnup_cache_dao = new BurnupCacheDao;
+
         return new BurnupDataBuilder(
             $this->getLogger(),
             new BurnupCacheChecker(
@@ -417,7 +410,22 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
             $this->getConfigurationValueRetriever(),
             $burnup_cache_dao,
             $this->getTeamEffortCalculator(),
-            $this->getTotalEffortCalculator()
+            $this->getBurnupCalculator()
+        );
+    }
+
+    /**
+     * @return BurnupCalculator
+     */
+    private function getBurnupCalculator()
+    {
+        $changeset_factory = Tracker_Artifact_ChangesetFactoryBuilder::build();
+
+        return new BurnupCalculator(
+            $changeset_factory,
+            Tracker_ArtifactFactory::instance(),
+            new BurnupDao(),
+            AgileDashboard_Semantic_InitialEffortFactory::instance()
         );
     }
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -73,6 +73,19 @@ class Tracker_Artifact_ChangesetFactory {
         if ($row) {
             return $this->getChangesetFromRow($artifact, $row);
         }
+        return null;
+    }
+
+    /**
+     * @return null|Tracker_Artifact_Changeset
+     */
+    public function getChangesetAtTimestamp(Tracker_Artifact $artifact, $timestamp)
+    {
+        $row = $this->dao->searchChangesetByTimestamp($artifact->getId(), $timestamp)->getRow();
+        if ($row) {
+            return $this->getChangesetFromRow($artifact, $row);
+        }
+
         return null;
     }
 

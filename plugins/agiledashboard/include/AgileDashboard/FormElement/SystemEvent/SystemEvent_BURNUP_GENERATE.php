@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,17 +26,18 @@ use SystemEvent;
 use TimePeriodWithoutWeekEnd;
 use Tuleap\Agiledashboard\FormElement\BurnupCacheDao;
 use Tuleap\Agiledashboard\FormElement\BurnupCacheDateRetriever;
+use Tuleap\AgileDashboard\FormElement\BurnupCalculator;
 use Tuleap\AgileDashboard\FormElement\BurnupDao;
 use Tuleap\Tracker\FormElement\FieldCalculator;
 
-class SystemEvent_BURNUP_GENERATE extends SystemEvent
+class SystemEvent_BURNUP_GENERATE extends SystemEvent // @codingStandardsIgnoreLine
 {
     const NAME = 'SystemEvent_BURNUP_GENERATE';
 
     /**
-     * @var FieldCalculator
+     * @var BurnupCalculator
      */
-    public $total_effort_calculator;
+    public $burnup_calculator;
     /**
      * @var FieldCalculator
      */
@@ -64,18 +65,18 @@ class SystemEvent_BURNUP_GENERATE extends SystemEvent
 
     public function injectDependencies(
         BurnupDao $burnup_dao,
-        FieldCalculator $total_effort_calculator,
+        BurnupCalculator $burnup_calculator,
         FieldCalculator $team_effort_calculator,
         BurnupCacheDao $cache_dao,
         BackendLogger $logger,
         BurnupCacheDateRetriever $date_retriever
     ) {
-        $this->burnup_dao              = $burnup_dao;
-        $this->logger                  = $logger;
-        $this->total_effort_calculator = $total_effort_calculator;
-        $this->team_effort_calculator  = $team_effort_calculator;
-        $this->cache_dao               = $cache_dao;
-        $this->date_retriever          = $date_retriever;
+        $this->burnup_dao             = $burnup_dao;
+        $this->logger                 = $logger;
+        $this->burnup_calculator      = $burnup_calculator;
+        $this->team_effort_calculator = $team_effort_calculator;
+        $this->cache_dao              = $cache_dao;
+        $this->date_retriever         = $date_retriever;
     }
 
     private function getArtifactIdFromParameters()
@@ -119,12 +120,9 @@ class SystemEvent_BURNUP_GENERATE extends SystemEvent
         foreach ($this->date_retriever->getWorkedDaysToCacheForPeriod($burnup, $yesterday) as $worked_day) {
             $this->logger->debug("Day " . date("Y-m-d H:i:s", $worked_day));
 
-            $total_effort = $this->total_effort_calculator->calculate(
-                array($burnup_information['id']),
-                $worked_day,
-                true,
-                null,
-                null
+            $total_effort = $this->burnup_calculator->getValue(
+                $burnup_information['id'],
+                $worked_day
             );
 
             $team_effort = $this->team_effort_calculator->calculate(
