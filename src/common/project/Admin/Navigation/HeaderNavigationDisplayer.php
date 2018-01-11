@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2017. All rights reserved.
+ * Copyright Enalean (c) 2017 - 2018. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -24,6 +24,7 @@
 
 namespace Tuleap\Project\Admin\Navigation;
 
+use EventManager;
 use ForgeConfig;
 use HTTPRequest;
 use Project;
@@ -56,7 +57,8 @@ class HeaderNavigationDisplayer
         $request = HTTPRequest::instance();
 
         $builder  = new NavigationPresenterBuilder(
-            new NavigationPermissionsDropdownPresenterBuilder()
+            new NavigationPermissionsDropdownPresenterBuilder(),
+            EventManager::instance()
         );
         $renderer = \TemplateRendererFactory::build()->getRenderer($template_path);
 

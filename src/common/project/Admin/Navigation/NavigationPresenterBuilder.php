@@ -33,14 +33,23 @@ class NavigationPresenterBuilder
      * @var NavigationPresenter
      */
     private $presenter;
+
     /**
      * @var NavigationPermissionsDropdownPresenterBuilder
      */
     private $permission_builder;
 
-    public function __construct(NavigationPermissionsDropdownPresenterBuilder $permission_builder)
-    {
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
+
+    public function __construct(
+        NavigationPermissionsDropdownPresenterBuilder $permission_builder,
+        EventManager $event_manager
+    ) {
         $this->permission_builder = $permission_builder;
+        $this->event_manager      = $event_manager;
     }
 
     public function build(Project $project, HTTPRequest $request, $current_pane_shortname)
@@ -59,7 +68,7 @@ class NavigationPresenterBuilder
         if ($user->isAdmin($project_id)) {
             $this->addTrackerImportEntry($project);
 
-            EventManager::instance()->processEvent($this->presenter);
+            $this->event_manager->processEvent($this->presenter);
         }
 
         return $this->presenter;
