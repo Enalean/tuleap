@@ -19,9 +19,8 @@
  *
  */
 
-namespace Tuleap\Tracker\Artifact\Changeset\Notification;
+namespace Tuleap\Queue;
 
-use Tracker_ArtifactFactory;
 use Logger;
 use BackendLogger;
 use TruncateLevelLogger;
@@ -29,24 +28,15 @@ use BrokerLogger;
 use Log_ConsoleLogger;
 use ForgeConfig;
 use Exception;
-use Tuleap\Queue\Factory;
-use Tuleap\Queue\RabbitMQ\ExchangeToExchangeBindings;
+use EventManager;
+use Tuleap\Queue\RabbitMQ\RabbitMQManager;
 use Tuleap\System\DaemonLocker;
-use Tuleap\Queue\WorkerGetQueue;
 
-class AsynchronousNotifier
+class Worker
 {
-    const MAX_MESSAGES = 1000;
+    const PID_FILE_PATH = '/var/run/tuleap/worker.pid';
 
-    const QUEUE_ID     = 'update_notify-1';
-
-    const QUEUE_PREFIX = 'update';
-
-    const TOPIC = 'tuleap.tracker.artifact';
-
-    const PID_FILE_PATH = '/var/run/tuleap/tracker_notify.pid';
-
-    const LOG_FILE_PATH = '/var/log/tuleap/tuleap_tracker_notify_log';
+    const LOG_FILE_PATH = '/var/log/tuleap/worker_log';
 
     /**
      * @var Logger
@@ -58,19 +48,15 @@ class AsynchronousNotifier
      */
     private $locker;
 
-    public function __construct(Logger $logger = null)
+    public function __construct()
     {
-        if ($logger === null) {
-            $this->makesAllWarningsFatal();
-            $this->setLogger(
-                new TruncateLevelLogger(
-                    new BackendLogger(self::LOG_FILE_PATH),
-                    ForgeConfig::get('sys_logger_level')
-                )
-            );
-        } else {
-            $this->setLogger($logger);
-        }
+        $this->makesAllWarningsFatal();
+        $this->setLogger(
+            new TruncateLevelLogger(
+                new BackendLogger(self::LOG_FILE_PATH),
+                ForgeConfig::get('sys_logger_level')
+            )
+        );
     }
 
     public function main()
@@ -78,6 +64,7 @@ class AsynchronousNotifier
         try {
             $options = getopt('vh', array('help'));
             $this->showHelp($options);
+            $this->checkWhoIsRunning();
             $this->configureLogger($options);
 
             $this->locker = new DaemonLocker(self::PID_FILE_PATH);
@@ -96,45 +83,12 @@ class AsynchronousNotifier
     {
         $this->logger->info("Wait for messages");
 
-        $queue  = Factory::getPersistentQueue($this->logger, self::QUEUE_PREFIX);
-        $queue->listen(self::QUEUE_ID, self::TOPIC, $this->getCallback($this->logger, $this->locker));
+        $rabbitmq_manager = new RabbitMQManager($this->logger);
+        $channel = $rabbitmq_manager->connect();
+        $worker_queue_event = new WorkerGetQueue($this->logger, $this->locker, $channel);
+        EventManager::instance()->processEvent($worker_queue_event);
+        $rabbitmq_manager->wait();
         $this->logger->info("No messages to process, is RabbitMQ configured and running ?");
-    }
-
-    public function addListener(WorkerGetQueue $event)
-    {
-        $stuff_queue = new ExchangeToExchangeBindings($event->getChannel(), self::QUEUE_PREFIX);
-        $stuff_queue->addListener(self::QUEUE_ID, self::TOPIC, $this->getCallback($event->getLogger(), $event->getLocker()));
-    }
-
-    private function getCallback(Logger $logger, DaemonLocker $locker)
-    {
-        $notifier = Notifier::build($logger);
-
-        $message_counter = 0;
-
-        return function ($msg) use ($logger, &$message_counter, $notifier, $locker) {
-            try {
-                $logger->info("Received ".$msg->body);
-
-                $message = json_decode($msg->body, true);
-                $artifact = Tracker_ArtifactFactory::instance()->getArtifactById($message['artifact_id']);
-                $changeset = $artifact->getChangeset($message['changeset_id']);
-
-                $notifier->processAsyncNotify($changeset);
-                $message_counter++;
-
-                $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
-                $logger->info("Notification completed [$message_counter/".self::MAX_MESSAGES."]");
-
-                if ($message_counter >= self::MAX_MESSAGES) {
-                    $logger->info("Max messages reached, exiting...");
-                    $locker->cleanExit();
-                }
-            } catch (Exception $e) {
-                $logger->error("Caught exception ".get_class($e).": ".$e->getMessage());
-            }
-        };
     }
 
     private function configureLogger(array $options)
@@ -157,13 +111,11 @@ class AsynchronousNotifier
         $log_file_path = self::LOG_FILE_PATH;
         if (isset($options['h']) || isset($options['help'])) {
             echo <<<"EOT"
-Usage: /usr/share/tuleap/plugins/tracker/bin/notify.php [-v] [-h] [--help]
+Usage: /usr/share/tuleap/src/utils/worker.php [-v] [-h] [--help]
 
 DESCRIPTION
-    Handle tracker email notification job.
 
-    This fetches artifact updates stored by front-end in RabbitMQ, formats and sends emails to recipients.
-    It will process 1000 messages before exiting to avoid memleak by PHP engine.
+    Handle background jobs for Tuleap.
 
     Logs are available in {$log_file_path}
     On start pid is registered in {$pid_file_path}
@@ -238,5 +190,14 @@ EOT;
         pcntl_signal(\SIGINT, $pcntlHandler);
         pcntl_signal(\SIGUSR1, $pcntlHandler);
         pcntl_signal(\SIGHUP, $pcntlHandler);
+    }
+
+    private function checkWhoIsRunning()
+    {
+        $user = posix_getpwuid(posix_geteuid());
+        if ($user['name'] !== ForgeConfig::get('sys_http_user')) {
+            fwrite(STDERR, "This must be run by ".ForgeConfig::get('sys_http_user')."\n");
+            exit(255);
+        }
     }
 }

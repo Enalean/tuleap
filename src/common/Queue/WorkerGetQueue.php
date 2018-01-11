@@ -22,18 +22,47 @@
 namespace Tuleap\Queue;
 
 use Logger;
-use ForgeConfig;
+use Tuleap\Event\Dispatchable;
+use PhpAmqpLib\Channel\AMQPChannel;
+use Tuleap\System\DaemonLocker;
 
-class Factory
+class WorkerGetQueue implements Dispatchable
 {
+    const NAME = 'workerGetQueue';
+
     /**
-     * @return PersistentQueue
+     * @var Logger
      */
-    public static function getPersistentQueue(Logger $logger, $queue_name)
+    private $logger;
+
+    /**
+     * @var AMQPChannel
+     */
+    private $channel;
+    /**
+     * @var DaemonLocker
+     */
+    private $locker;
+
+    public function __construct(Logger $logger, DaemonLocker $locker, AMQPChannel $channel)
     {
-        if (class_exists('PhpAmqpLib\\Connection\\AMQPStreamConnection') && ForgeConfig::get('rabbitmq_server') !== false) {
-            return new RabbitMQ\PersistentQueue(new RabbitMQ\RabbitMQManager($logger), $queue_name);
-        }
-        return new Noop\PersistentQueue();
+        $this->logger  = $logger;
+        $this->locker  = $locker;
+        $this->channel = $channel;
+    }
+
+    public function getLogger()
+    {
+        return $this->logger;
+    }
+
+    public function getChannel()
+    {
+        return $this->channel;
+    }
+
+    public function getLocker()
+    {
+        return $this->locker;
     }
 }

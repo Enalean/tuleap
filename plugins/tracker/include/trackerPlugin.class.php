@@ -17,6 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Queue\WorkerGetQueue;
 use Tuleap\Cron\EventCronJobEveryMinute;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
@@ -156,6 +157,7 @@ class trackerPlugin extends Plugin {
         $this->addHook(ProjectRegistrationActivateService::NAME);
 
         $this->addHook(EventCronJobEveryMinute::NAME);
+        $this->addHook(WorkerGetQueue::NAME);
     }
 
     public function getHooksAndCallbacks() {
@@ -1543,5 +1545,11 @@ class trackerPlugin extends Plugin {
     public function cron_job_every_minute(EventCronJobEveryMinute $event)
     {
         $this->getAsynchronousSupervisor($event->getLogger())->runNotify();
+    }
+
+    public function workerGetQueue(WorkerGetQueue $event)
+    {
+        $async_notifier = new \Tuleap\Tracker\Artifact\Changeset\Notification\AsynchronousNotifier($event->getLogger());
+        $async_notifier->addListener($event);
     }
 }
