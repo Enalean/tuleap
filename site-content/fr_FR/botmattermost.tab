@@ -21,6 +21,7 @@ plugin_botmattermost	alert_error_has_no_message_content	Aucun contenu de message
 
 plugin_botmattermost	configuration_title	Configuration des robots Mattermost
 plugin_botmattermost	configuration_legend_bot	Configuration
+plugin_botmattermost	configuration_label_bot_list	Liste des robots :
 plugin_botmattermost	configuration_modal_edit_title	Éditer un robot
 plugin_botmattermost	configuration_modal_add_title	Ajouter un robot
 plugin_botmattermost	configuration_modal_delete_title	Supprimer un robot

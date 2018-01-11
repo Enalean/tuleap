@@ -21,6 +21,7 @@ plugin_botmattermost	alert_error_has_no_message_content	No message content to se
 
 plugin_botmattermost	configuration_title	Bot Mattermost configuration
 plugin_botmattermost	configuration_legend_bot	Bot Configuration
+plugin_botmattermost	configuration_label_bot_list	Bot list:
 plugin_botmattermost	configuration_modal_edit_title	Edit bot
 plugin_botmattermost	configuration_modal_add_title	Add bot
 plugin_botmattermost	configuration_modal_delete_title	Delete bot
