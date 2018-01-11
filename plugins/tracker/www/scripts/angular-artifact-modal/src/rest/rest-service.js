@@ -1,6 +1,7 @@
 import _ from 'lodash';
 
 import {
+    get,
     recursiveGet
 } from 'tlp';
 
@@ -36,6 +37,7 @@ function RestService(
         searchUsers,
         uploadAdditionalChunk,
         uploadTemporaryFile,
+        getFirstReverseIsChildLink,
 
         error: {
             is_error     : false,
@@ -82,17 +84,7 @@ function RestService(
         })).then(parent_artifacts => {
             self.error.is_error = false;
             return parent_artifacts;
-        }, error => {
-            self.error.is_error = true;
-            return $q.when(error.response.json()).then(error_json => {
-                if (error_json.error && error_json.error.message) {
-                    self.error.error_message = error_json.error.message;
-                } else {
-                    self.error.error_message = error.response.status + ' ' + error.response.statusText;
-                }
-                return $q.reject();
-            });
-        });
+        }, errorHandler);
     }
 
     function createArtifact(tracker_id, field_values) {
@@ -193,6 +185,34 @@ function RestService(
                     max_chunk_size: max_chunk_size
                 };
             });
+    }
+
+    function getFirstReverseIsChildLink(artifact_id) {
+        return $q.when(get(`/api/v1/artifacts/${ artifact_id }/linked_artifacts`, {
+            params: {
+                direction: 'reverse',
+                nature   : '_is_child',
+                limit    : 1,
+                offset   : 0
+            }
+        })).then(response => {
+            self.error.is_error = false;
+            return $q.when(response.json()).then(({ collection }) => {
+                return collection;
+            });
+        }, errorHandler);
+    }
+
+    function errorHandler(error) {
+        self.error.is_error = true;
+        return $q.when(error.response.json()).then(error_json => {
+            if (error_json.error && error_json.error.message) {
+                self.error.error_message = error_json.error.message;
+            } else {
+                self.error.error_message = error.response.status + ' ' + error.response.statusText;
+            }
+            return $q.reject();
+        });
     }
 
     function responseInterceptor(data) {

@@ -95,6 +95,10 @@ msgid "Only comments are displayed"
 msgstr ""
 
 #: src/tuleap-artifact-modal-fields/link-field/link-field.tpl.html
+msgid "Parent artifact"
+msgstr ""
+
+#: src/tuleap-artifact-modal-fields/link-field/link-field.tpl.html
 msgid "Please choose a parent…"
 msgstr ""
 

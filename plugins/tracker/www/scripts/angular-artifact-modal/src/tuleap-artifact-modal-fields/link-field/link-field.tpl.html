@@ -32,6 +32,15 @@
         <option value="" selected translate>Please choose a parent…</option>
         <option ng-repeat="artifact in link_field.possible_parent_artifacts"
             value="{{ artifact.id }}"
-        >{{ link_field.formatArtifact(artifact) }}</option>
+        >{{ artifact.formatted_ref }}</option>
     </select>
+</div>
+<div class="tlp-property"
+    ng-if="link_field.parent_artifact"
+>
+    <label class="tlp-label" translate>Parent artifact</label>
+    <a ng-href="{{ link_field.parent_artifact.html_url }}">
+        <span class="tlp-badge-outline tlp-badge-{{ link_field.parent_artifact.tracker.color_name }} tuleap-artifact-modal-link-badge"
+        >{{ link_field.parent_artifact.xref }}</span>{{ link_field.parent_artifact.title }}
+    </a>
 </div>
