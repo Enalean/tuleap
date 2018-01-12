@@ -3,14 +3,14 @@ import angular     from 'angular';
 import tlp         from 'tlp';
 import 'angular-mocks';
 
-describe("TuleapArtifactModalRestService", function() {
-    var mockBackend,
+describe("TuleapArtifactModalRestService", () => {
+    let mockBackend,
         $q,
         deferred,
         RestService,
         response;
 
-    beforeEach(function() {
+    beforeEach(() => {
         angular.mock.module(rest_module);
 
         angular.mock.inject(function(
@@ -29,9 +29,10 @@ describe("TuleapArtifactModalRestService", function() {
 
         installPromiseMatchers();
         spyOn(tlp, "recursiveGet");
+        spyOn(tlp, "get");
     });
 
-    afterEach(function() {
+    afterEach(() => {
         mockBackend.verifyNoOutstandingExpectation();
         mockBackend.verifyNoOutstandingRequest();
     });
@@ -414,6 +415,61 @@ describe("TuleapArtifactModalRestService", function() {
                 disk_usage    : 596878,
                 max_chunk_size: 732798
             });
+        });
+    });
+
+    describe("getFirstReverseIsChildLink() -", () => {
+        it("Given an artifact id, then an array containing the first reverse _is_child linked artifact will be returned", () => {
+            const artifact_id = 20;
+            const collection  = [{ id: 46 }];
+            tlp.get.and.returnValue({
+                json: () => $q.when({ collection })
+            });
+
+            const promise = RestService.getFirstReverseIsChildLink(artifact_id);
+
+            expect(promise).toBeResolvedWith(collection);
+            expect(tlp.get).toHaveBeenCalledWith('/api/v1/artifacts/20/linked_artifacts', {
+                params: {
+                    direction: 'reverse',
+                    nature   : '_is_child',
+                    limit    : 1,
+                    offset   : 0
+                }
+            });
+        });
+
+        it("Given an artifact id and given there weren't any linked _is_child artifacts, then an empty array will be returned", () => {
+            const artifact_id = 78;
+            const collection  = [];
+            tlp.get.and.returnValue({
+                json: () => $q.when({ collection })
+            });
+
+            const promise = RestService.getFirstReverseIsChildLink(artifact_id);
+
+            expect(promise).toBeResolvedWith([]);
+        });
+
+        it("When there is a REST error, then it will be shown", () => {
+            const artifact_id = 9;
+            tlp.get.and.returnValue($q.reject({
+                response: {
+                    json() {
+                        return {
+                            error: {
+                                message: 'Invalid artifact id'
+                            }
+                        };
+                    }
+                }
+            }));
+
+            const promise = RestService.getFirstReverseIsChildLink(artifact_id);
+
+            expect(promise).toBeRejected();
+            expect(RestService.error.is_error).toBe(true);
+            expect(RestService.error.error_message).toEqual('Invalid artifact id');
         });
     });
 });

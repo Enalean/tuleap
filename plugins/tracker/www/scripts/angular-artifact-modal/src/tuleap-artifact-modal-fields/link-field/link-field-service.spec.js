@@ -1,36 +1,7 @@
 import { canChooseArtifactsParent } from './link-field-service.js';
-import {
-    rewire$isInCreationMode,
-    restore
-} from '../../modal-creation-mode-state.js';
 
 describe("TuleapArtifactModalParentService -", () => {
-    let isInCreationMode;
-
-    beforeEach(() => {
-        isInCreationMode = jasmine.createSpy("isInCreationMode").and.returnValue(true);
-        rewire$isInCreationMode(isInCreationMode);
-    });
-
-    afterEach(() => {
-        restore();
-    });
-
     describe("canChooseArtifactsParent() -", () => {
-        it("Given that the modal was opened in edition mode, then it will return false", () => {
-            isInCreationMode.and.returnValue(false);
-            const tracker         = { id: 9, parent: { id: 32 } };
-            const linked_artifact = {
-                artifact: {
-                    tracker: { id: 24 }
-                }
-            };
-
-            const result = canChooseArtifactsParent(tracker, linked_artifact);
-
-            expect(result).toBe(false);
-        });
-
         it("Given no parent tracker, then it will return false", () => {
             const tracker         = { id: 82 };
             const linked_artifact = {

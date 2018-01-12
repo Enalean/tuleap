@@ -1,3 +1,4 @@
 window.tlp = {
+    get         : () => {},
     recursiveGet: () => {}
 };

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: AgileDashboard Planning\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-07-20 17:18+0200\n"
+"PO-Revision-Date: 2018-01-12 11:23+0100\n"
 "Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/test-188/language/"
 "fr/)\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.8.12\n"
+"X-Generator: Poedit 2.0.3\n"
 
 #: src/tuleap-artifact-modal-fields/computed-field/computed-field.tpl.html
 msgid "(auto-computed)"
@@ -62,7 +62,7 @@ msgstr "Modifié par"
 msgid "Empty"
 msgstr "Aucun(e)"
 
-#: src/tuleap-artifact-modal.tpl.html
+#: src/tuleap-artifact-modal-fields/link-field/link-field.tpl.html
 msgid "Enter artifact ids separated by a comma"
 msgstr "Entrer des ids d'artefacts séparés par une virgule"
 
@@ -110,7 +110,11 @@ msgstr "Aucun"
 msgid "Only comments are displayed"
 msgstr "Seuls les commentaires sont affichés"
 
-#: src/tuleap-artifact-modal.tpl.html
+#: src/tuleap-artifact-modal-fields/link-field/link-field.tpl.html
+msgid "Parent artifact"
+msgstr "Artéfact parent"
+
+#: src/tuleap-artifact-modal-fields/link-field/link-field.tpl.html
 msgid "Please choose a parent…"
 msgstr "Veuillez choisir un parent…"
 
@@ -141,7 +145,7 @@ msgstr ""
 msgid "Save changes"
 msgstr "Enregistrer les changements"
 
-#: src/tuleap-artifact-modal.tpl.html
+#: src/tuleap-artifact-modal-fields/link-field/link-field.tpl.html
 msgid "Select parent"
 msgstr "Sélectionner un parent"
 

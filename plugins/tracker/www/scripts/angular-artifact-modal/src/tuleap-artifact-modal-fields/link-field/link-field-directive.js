@@ -9,6 +9,7 @@ export default function linkFieldDirective() {
             field          : '=tuleapArtifactModalLinkField',
             isDisabled     : '&isDisabled',
             value_model    : '=valueModel',
+            artifact_id    : '=artifactId',
             tracker        : '=tracker',
             linked_artifact: '=linkedArtifact'
         },
