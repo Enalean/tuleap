@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
+// Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
 //
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
@@ -166,7 +166,8 @@ $expiry_date = 0;
                     if ($user === null) {
                         continue;
                     }
-                    if ($user->getStatus() !== PFUser::STATUS_PENDING) {
+                    if ($user->getStatus() !== PFUser::STATUS_PENDING && $user->getStatus() !== PFUser::STATUS_VALIDATED &&
+                        $user->getStatus() !== PFUser::STATUS_VALIDATED_RESTRICTED) {
                         continue;
                     }
 
