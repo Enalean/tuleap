@@ -118,8 +118,8 @@ class BurnupDataBuilder
             $burnup_data->addEffort($effort, $cached_day['timestamp']);
         }
 
-        $now = time();
-        if ($now >= $burnup_data->getTimePeriod()->getStartDate() && $now <= $burnup_data->getTimePeriod()->getEndDate()) {
+        if ($burnup_data->getTimePeriod()->isTodayWithinTimePeriod()) {
+            $now    = time();
             $effort = $this->burnup_calculator->getValue($artifact->getId(), $now);
             $burnup_data->addEffort($effort, $now);
         }
