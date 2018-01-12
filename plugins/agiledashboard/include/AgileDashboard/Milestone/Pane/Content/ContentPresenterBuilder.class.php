@@ -57,13 +57,15 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenterBuilder
         $descendant_trackers = $backlog->getDescendantTrackers();
 
         return new AgileDashboard_Milestone_Pane_Content_ContentPresenter(
+            $milestone,
             $this->collection_factory->getTodoCollection($user, $milestone, $backlog, $redirect_to_self),
             $this->collection_factory->getDoneCollection($user, $milestone, $backlog, $redirect_to_self),
             $this->collection_factory->getInconsistentCollection($user, $milestone, $backlog, $redirect_to_self),
             $descendant_trackers,
             $this->canUserPrioritizeBacklog($milestone, $user),
             $this->getTrackersWithoutInitialEffort($descendant_trackers),
-            $this->getSolveInconsistenciesUrl($milestone, $redirect_to_self)
+            $this->getSolveInconsistenciesUrl($milestone, $redirect_to_self),
+            $user
         );
     }
 
