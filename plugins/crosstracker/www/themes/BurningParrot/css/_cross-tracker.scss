@@ -25,20 +25,6 @@
 
 .dashboard-widget-content-cross-tracker {
     margin: 0 0 $tlp-spacing;
-
-    &.cross-tracker-loading {
-        > .cross-tracker-loader {
-            display: block;
-        }
-
-        > .dashboard-widget-content-cross-tracker-search {
-            display: none;
-        }
-
-        > .cross-tracker-reading-mode {
-            display: none;
-        }
-    }
 }
 
 .cross-tracker-loader {
@@ -46,36 +32,15 @@
     background: url('/themes/BurningParrot/images/spinner.gif') no-repeat center center;
 }
 
-.cross-tracker-loader-hidden {
-    display: none;
-}
-
-.dashboard-widget-content-cross-tracker-success,
-.dashboard-widget-content-cross-tracker-error {
-    display: none;
-    margin: $tlp-spacing;
-
-    &.shown {
-        display: block;
-    }
-}
-
 .cross-tracker-artifacts-table {
     margin: $tlp-spacing $tlp-spacing 0;
-}
-
-.dashboard-widget-content-cross-tracker-reading-mode-actions-cancel {
-    margin: 0 $tlp-spacing 0 0;
-}
-
-.cross-tracker-hide {
-    display: none;
 }
 
 .link-to-tracker-badge {
     margin: 0 5px 0 0;
 }
 
-.cross-tracker-report-error {
-    margin: 0 $tlp-spacing;
+.cross-tracker-report-error,
+.cross-tracker-report-success {
+    margin: $tlp-spacing;
 }

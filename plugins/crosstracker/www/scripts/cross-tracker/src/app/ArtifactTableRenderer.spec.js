@@ -20,28 +20,31 @@
 import Vue                                                from 'vue';
 import WritingCrossTrackerReport                          from './writing-mode/writing-cross-tracker-report.js';
 import ArtifactTableRenderer                              from './ArtifactTableRenderer.vue';
-import { rewire$isReportSaved, restore }                  from './report-saved-state.js';
-import { rewire$getReportContent, rewire$getQueryResult } from './rest-querier.js'
+import {
+    rewire$getReportContent,
+    rewire$getQueryResult,
+    restore
+} from './rest-querier.js';
 
 describe("ArtifactTableRenderer", () => {
     let Widget,
-        report_id,
+        reportId,
         writingCrossTrackerReport,
-        savedState;
+        isReportSaved;
 
     beforeEach(() => {
-        report_id                 = 86;
         Widget                    = Vue.extend(ArtifactTableRenderer);
         writingCrossTrackerReport = new WritingCrossTrackerReport();
-        savedState                = jasmine.createSpyObj("savedState", ["isReportSaved"]);
+        reportId                  = '86';
+        isReportSaved             = true;
     });
 
     function instantiateComponent() {
         const vm = new Widget({
             propsData: {
-                'savedState': savedState,
-                'report_id': report_id,
-                'writingCrossTrackerReport':writingCrossTrackerReport,
+                isReportSaved,
+                reportId,
+                writingCrossTrackerReport,
             }
         });
         vm.$mount();
@@ -50,14 +53,14 @@ describe("ArtifactTableRenderer", () => {
     }
 
     describe("loadArtifacts() -", () => {
-        let getResultReportContent, getQueryResultReport;
+        let getReport, getQuery;
 
         beforeEach(() => {
-            getResultReportContent = jasmine.createSpy('getReportContent');
-            rewire$getReportContent(getResultReportContent);
+            getReport = jasmine.createSpy('getReportContent');
+            rewire$getReportContent(getReport);
 
-            getQueryResultReport = jasmine.createSpy('getQueryResult');
-            rewire$getQueryResult(getQueryResultReport);
+            getQuery = jasmine.createSpy('getQueryResult');
+            rewire$getQueryResult(getQuery);
         });
 
         afterEach(() => {
@@ -65,37 +68,31 @@ describe("ArtifactTableRenderer", () => {
         });
 
         it("Given report is saved, it loads artifacts of report", () => {
+            isReportSaved = true;
             const vm = instantiateComponent();
-
-            savedState.isReportSaved.and.callFake(function() {
-                return true;
-            });
 
             vm.loadArtifacts();
 
-            expect(getResultReportContent).toHaveBeenCalled();
+            expect(getReport).toHaveBeenCalled();
         });
 
         it("Given report is not saved, it loads artifacts of current selected trackers", () => {
+            isReportSaved = false;
             const vm = instantiateComponent();
-
-            savedState.isReportSaved.and.callFake(function() {
-                return false;
-            });
 
             vm.loadArtifacts();
 
-            expect(getQueryResultReport).toHaveBeenCalled();
+            expect(getQuery).toHaveBeenCalled();
         });
 
         it("when there is a REST error, it will be displayed", () => {
-            getResultReportContent.and.returnValue(Promise.reject(500));
+            getReport.and.returnValue(Promise.reject(500));
             const vm = instantiateComponent();
 
             vm.loadArtifacts().then(() => {
                 fail();
             }, () => {
-                expect(vm.$emit).toHaveBeenCalledWith('error', 'Error while fetching the query result');
+                expect(vm.$emit).toHaveBeenCalledWith('restError', 'Error while fetching the query result');
             });
         });
     });

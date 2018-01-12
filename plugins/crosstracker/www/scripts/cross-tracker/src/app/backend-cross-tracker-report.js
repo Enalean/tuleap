@@ -18,9 +18,8 @@
  */
 
 export default class BackendCrossTrackerReport {
-    constructor(report_id) {
+    constructor() {
         this.loaded       = false;
-        this.report_id    = report_id;
         this.trackers     = new Map();
         this.expert_query = '';
     }

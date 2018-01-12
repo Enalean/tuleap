@@ -42,7 +42,6 @@ async function getReportContent(report_id, limit, offset) {
     });
     const total         = response.headers.get('X-PAGINATION-SIZE');
     const { artifacts } = await response.json();
-
     return { artifacts, total };
 }
 
@@ -71,7 +70,7 @@ async function updateReport(report_id, trackers_id, expert_query) {
 }
 
 async function getSortedProjectsIAmMemberOf() {
-    const json = await recursiveGet('/api/v1/projects/', {
+    const json = await recursiveGet('/api/v1/projects', {
         params: {
             limit: 50,
             query: JSON.stringify({ is_member_of: true })

@@ -18,10 +18,11 @@
  */
 
 import 'babel-polyfill';
+import './ArtifactTableRenderer.spec';
 import './CrossTrackerWidget.spec.js';
 import './reading-mode/ReadingMode.spec.js';
+import './rest-querier.spec.js';
 import './writing-mode/QueryEditor.spec.js';
 import './writing-mode/TrackerListWritingMode.spec.js';
 import './writing-mode/TrackerSelection.spec.js';
 import './writing-mode/WritingMode.spec.js';
-import './ArtifactTableRenderer.spec';

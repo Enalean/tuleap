@@ -20,17 +20,15 @@
 (<template>
     <div class="cross-tracker-writing-mode">
         <tracker-selection
-            ref="tracker_selection"
-            v-bind:error-displayer="errorDisplayer"
             v-bind:selected-trackers="selected_trackers"
             v-on:trackerAdded="addTrackerToSelection"
+            v-on:error="$emit('error', $event)"
         ></tracker-selection>
         <tracker-list-writing-mode
             v-bind:trackers="selected_trackers"
             v-on:trackerRemoved="removeTrackerFromSelection"
         ></tracker-list-writing-mode>
         <query-editor
-            ref="query_editor"
             v-bind:writing-cross-tracker-report="writingCrossTrackerReport"
             v-on:triggerSearch="search"
         ></query-editor>
@@ -62,7 +60,6 @@
         },
         props: [
             'writingCrossTrackerReport',
-            'errorDisplayer'
         ],
         data() {
             return {
@@ -72,6 +69,12 @@
         computed: {
             search_label: () => gettext_provider.gettext("Search"),
             cancel_label: () => gettext_provider.gettext("Cancel"),
+            project_label   : () => gettext_provider.gettext("Project"),
+            tracker_label   : () => gettext_provider.gettext("Tracker"),
+            search_label    : () => gettext_provider.gettext("Search"),
+            cancel_label    : () => gettext_provider.gettext("Cancel"),
+            add_button_label: () => gettext_provider.gettext("Add"),
+
         },
         methods: {
             cancel() {
@@ -87,7 +90,7 @@
                     this.updateSelectedTrackers();
                 } catch (error) {
                     if (error instanceof TooManyTrackersSelectedError) {
-                        this.errorDisplayer.displayError(gettext_provider.gettext('Tracker selection is limited to 10 trackers'));
+                        this.$emit('error', gettext_provider.gettext('Tracker selection is limited to 10 trackers'));
                     } else {
                         throw error;
                     }
@@ -97,7 +100,7 @@
             removeTrackerFromSelection({ tracker_id }) {
                 this.writingCrossTrackerReport.removeTracker(tracker_id);
                 this.updateSelectedTrackers();
-                this.errorDisplayer.hideError();
+                this.$emit('clearErrors');
             },
 
             updateSelectedTrackers() {

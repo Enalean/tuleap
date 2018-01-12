@@ -22,27 +22,37 @@
         <div class="tlp-alert-danger cross-tracker-report-error" v-if="has_error === true">
             {{ error_message }}
         </div>
+        <div class="tlp-alert-info cross-tracker-report-success" v-if="has_success_message">
+            {{ success_message }}
+        </div>
+        <div class="cross-tracker-loader" v-if="is_loading"></div>
         <reading-mode
             ref="reading_mode"
-            v-show="reading_mode"
+            v-if="is_reading_mode_shown"
             v-bind:backend-cross-tracker-report="backendCrossTrackerReport"
             v-bind:reading-cross-tracker-report="readingCrossTrackerReport"
-            v-bind:reading-controller="readingController"
+            v-bind:is-report-saved="is_saved"
+            v-bind:is-report-in-error="has_error"
+            v-bind:report-id="reportId"
             v-on:switchToWritingMode="switchToWritingMode"
+            v-on:saved="reportSaved"
             v-on:cancelled="reportCancelled"
+            v-on:restError="showRestError"
         ></reading-mode>
         <writing-mode
             v-if="! reading_mode"
             v-bind:writing-cross-tracker-report="writingCrossTrackerReport"
-            v-bind:error-displayer="errorDisplayer"
             v-on:switchToReadingMode="switchToReadingMode"
+            v-on:error="showError"
+            v-on:clearErrors="hideFeedbacks"
         ></writing-mode>
         <artifact-table-renderer
-            ref="artifact_table"
+            v-if="! is_loading"
             v-bind:writing-cross-tracker-report="writingCrossTrackerReport"
-            v-bind:saved-state="savedState"
+            v-bind:is-report-saved="is_saved"
+            v-bind:is-report-in-reading-mode="reading_mode"
             v-bind:report-id="reportId"
-            v-on:error="showRestError"
+            v-on:restError="showRestError"
         ></artifact-table-renderer>
     </div>
 </template>)
@@ -52,6 +62,7 @@
     import WritingMode           from './writing-mode/WritingMode.vue';
     import { gettext_provider }  from './gettext-provider.js';
     import { isAnonymous }       from './user-service.js';
+    import { getReport }         from './rest-querier.js';
 
     export default {
         components: { ArtifactTableRenderer, ReadingMode, WritingMode },
@@ -60,25 +71,33 @@
             'backendCrossTrackerReport',
             'readingCrossTrackerReport',
             'writingCrossTrackerReport',
-            'successDisplayer',
-            'errorDisplayer',
-            'savedState',
-            'readingController',
             'reportId'
         ],
         data() {
             return {
+                is_loading     : true,
                 reading_mode   : true,
-                error_message  : null
+                is_saved       : true,
+                error_message  : null,
+                success_message: null,
             };
         },
         computed: {
             is_user_anonymous() {
                 return isAnonymous();
             },
+            is_reading_mode_shown() {
+                return this.reading_mode === true && ! this.is_loading;
+            },
             has_error() {
                 return this.error_message !== null;
             },
+            has_success_message() {
+                return this.success_message !== null;
+            }
+        },
+        mounted() {
+            this.loadBackendReport();
         },
         methods: {
             switchToWritingMode() {
@@ -92,24 +111,54 @@
             },
 
             switchToReadingMode({ saved_state }) {
-                this.hideFeedbacks();
                 if (saved_state === true) {
                     this.writingCrossTrackerReport.duplicateFromReport(this.readingCrossTrackerReport);
-                    this.savedState.switchToSavedState();
-                    this.$refs.reading_mode.hideActions();
                 } else {
-                    this.savedState.switchToUnsavedState();
                     this.readingCrossTrackerReport.duplicateFromReport(this.writingCrossTrackerReport);
-                    this.$refs.reading_mode.showActions();
                 }
-
-                this.$refs.artifact_table.refreshArtifactList();
+                this.hideFeedbacks();
+                this.is_saved     = saved_state;
                 this.reading_mode = true;
             },
 
+            async loadBackendReport() {
+                this.is_loading = true;
+                try {
+                    const { trackers, expert_query } = await getReport(this.reportId);
+                    this.backendCrossTrackerReport.init(trackers, expert_query);
+                    this.initReports();
+                } catch (error) {
+                    this.showRestError(error);
+                    throw error;
+                } finally {
+                    this.is_loading = false;
+                }
+            },
+
+            initReports() {
+                this.readingCrossTrackerReport.duplicateFromReport(this.backendCrossTrackerReport);
+                this.writingCrossTrackerReport.duplicateFromReport(this.readingCrossTrackerReport);
+            },
+
             hideFeedbacks() {
-                this.successDisplayer.hideSuccess();
-                this.errorDisplayer.hideError();
+                this.error_message   = null;
+                this.success_message = null;
+            },
+
+            reportSaved() {
+                this.initReports();
+                this.hideFeedbacks();
+                this.is_saved = true;
+                this.success_message = gettext_provider.gettext('Report has been successfully saved');
+            },
+
+            reportCancelled() {
+                this.hideFeedbacks();
+                this.is_saved = true;
+            },
+
+            showError(error) {
+                this.error_message = error;
             },
 
             async showRestError(rest_error) {
@@ -117,16 +166,7 @@
                 if ('i18n_error_message' in error_details.error) {
                     this.error_message = error_details.error.i18n_error_message;
                 }
-            },
-
-            reportCancelled() {
-                this.hideFeedbacks();
-                this.switchToReadingMode({saved_state: true});
-            },
-
-        },
-        mounted() {
-            this.readingController.init();
+            }
         }
     };
 </script>)

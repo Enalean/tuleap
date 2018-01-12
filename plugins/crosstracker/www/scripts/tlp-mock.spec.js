@@ -1,1 +1,5 @@
-window.tlp = { get: function () {} };
+window.tlp = {
+    get         : () => {},
+    recursiveGet: () => {},
+    put         : () => {}
+};

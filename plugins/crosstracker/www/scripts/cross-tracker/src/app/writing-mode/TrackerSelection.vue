@@ -71,7 +71,6 @@
     export default {
         name: 'TrackerSelection',
         props: [
-            'errorDisplayer',
             'selectedTrackers'
         ],
         data() {
@@ -122,7 +121,7 @@
                     this.projects         = await getSortedProjectsIAmMemberOf();
                     this.selected_project = this.projects[0];
                 } catch (error) {
-                    this.errorDisplayer.displayError(gettext_provider.gettext('Error while fetching the list of projects you are member of'));
+                    this.$emit('error', gettext_provider.gettext('Error while fetching the list of projects you are member of'));
                     throw error;
                 } finally {
                     this.is_loader_shown = false;
@@ -134,7 +133,7 @@
                 try {
                     this.trackers = await getTrackersOfProject(project_id);
                 } catch (error) {
-                    this.errorDisplayer.displayError(gettext_provider.gettext('Error while fetching the list of trackers of this project'));
+                    this.$emit('error', gettext_provider.gettext('Error while fetching the list of trackers of this project'));
                     throw error;
                 } finally {
                     this.is_loader_shown = false;

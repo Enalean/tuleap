@@ -17,25 +17,34 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue                             from 'vue';
-import ReadingMode                     from './ReadingMode.vue';
-import { rewire$isAnonymous, restore } from '../user-service.js';
-import BackendCrossTrackerReport       from '../backend-cross-tracker-report.js';
-import ReadingCrossTrackerReport       from './reading-cross-tracker-report.js';
+import Vue         from 'vue';
+import ReadingMode from './ReadingMode.vue';
+import {
+    rewire$isAnonymous,
+    restore as restoreUser
+} from '../user-service.js';
+import BackendCrossTrackerReport from '../backend-cross-tracker-report.js';
+import ReadingCrossTrackerReport from './reading-cross-tracker-report.js';
+import {
+    rewire$updateReport,
+    restore as restoreRest
+} from '../rest-querier.js';
 
 describe('ReadingMode', () => {
     let ReadingModeElement,
         isAnonymous,
         backendCrossTrackerReport,
         readingCrossTrackerReport,
-        queryResultController;
+        reportId,
+        isReportInError,
+        updateReport;
 
     beforeEach(() => {
-        const report_id           = 26;
         ReadingModeElement        = Vue.extend(ReadingMode);
-        backendCrossTrackerReport = new BackendCrossTrackerReport(report_id);
+        backendCrossTrackerReport = new BackendCrossTrackerReport();
         readingCrossTrackerReport = new ReadingCrossTrackerReport();
-        queryResultController     = jasmine.createSpyObj("queryResultController", ["init"]);
+        reportId                  = '26';
+        isReportInError           = false;
     });
 
     function instantiateComponent() {
@@ -43,7 +52,8 @@ describe('ReadingMode', () => {
             propsData: {
                 backendCrossTrackerReport,
                 readingCrossTrackerReport,
-                queryResultController
+                isReportInError,
+                reportId,
             }
         });
         vm.$mount();
@@ -58,7 +68,7 @@ describe('ReadingMode', () => {
         });
 
         afterEach(() => {
-            restore();
+            restoreUser();
         });
 
         it('When I switch to the writing mode, then an event will be emitted', () => {
@@ -78,6 +88,74 @@ describe('ReadingMode', () => {
             vm.switchToWritingMode();
 
             expect(vm.$emit).not.toHaveBeenCalled();
+        });
+    });
+
+    describe("saveReport() -", () => {
+        beforeEach(() => {
+            updateReport = jasmine.createSpy("updateReport");
+            rewire$updateReport(updateReport);
+        });
+
+        afterEach(() => {
+            restoreRest();
+        });
+
+        it("When I save the report, the backend report will be updated and an event will be emitted", async () => {
+            spyOn(backendCrossTrackerReport, "init");
+            spyOn(backendCrossTrackerReport, "duplicateFromReport");
+            const trackers     = [{ id: 36 }, { id: 17 }];
+            const expert_query = '@description != ""';
+            updateReport.and.returnValue({
+                trackers,
+                expert_query
+            });
+            const vm = instantiateComponent();
+            spyOn(vm, "$emit");
+
+            const promise = vm.saveReport();
+            expect(vm.is_loading).toBe(true);
+
+            await promise;
+            expect(backendCrossTrackerReport.duplicateFromReport).toHaveBeenCalledWith(readingCrossTrackerReport);
+            expect(backendCrossTrackerReport.init).toHaveBeenCalledWith(trackers, expert_query);
+            expect(updateReport).toHaveBeenCalled();
+            expect(vm.$emit).toHaveBeenCalledWith('saved');
+            expect(vm.is_loading).toBe(false);
+        });
+
+        it("Given the report is in error, then nothing will happen", async () => {
+            isReportInError = true;
+            const vm = instantiateComponent();
+
+
+            await vm.saveReport();
+            expect(updateReport).not.toHaveBeenCalled();
+        });
+
+        it("When there is a REST error, an event will be emitted", () => {
+            updateReport.and.returnValue(Promise.reject(500));
+            const vm = instantiateComponent();
+            spyOn(vm, "$emit");
+
+            vm.saveReport().then(() => {
+                fail();
+            }, () => {
+                expect(vm.$emit).toHaveBeenCalledWith('restError', 500);
+            });
+        });
+    });
+
+    describe("cancelReport() -", () => {
+        it("when I click on 'Cancel', then the reading report will be reset and an event will be emitted", () => {
+            spyOn(readingCrossTrackerReport, "duplicateFromReport");
+            const vm = instantiateComponent();
+            spyOn(vm, "$emit");
+
+            vm.cancelReport();
+
+            expect(readingCrossTrackerReport.duplicateFromReport).toHaveBeenCalledWith(backendCrossTrackerReport);
+            expect(vm.$emit).toHaveBeenCalledWith('cancelled');
         });
     });
 });

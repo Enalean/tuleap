@@ -17,13 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue                             from 'vue';
-import CrossTrackerWidget              from './CrossTrackerWidget.vue';
-import { rewire$isAnonymous, restore } from './user-service.js';
-import BackendCrossTrackerReport       from './backend-cross-tracker-report.js';
-import ReadingCrossTrackerReport       from './reading-mode/reading-cross-tracker-report.js';
-import WritingCrossTrackerReport       from './writing-mode/writing-cross-tracker-report.js';
-import SavedState                      from './report-saved-state.js';
+import Vue                from 'vue';
+import CrossTrackerWidget from './CrossTrackerWidget.vue';
+import {
+    rewire$isAnonymous,
+    restore as restoreUser
+} from './user-service.js';
+import BackendCrossTrackerReport from './backend-cross-tracker-report.js';
+import ReadingCrossTrackerReport from './reading-mode/reading-cross-tracker-report.js';
+import WritingCrossTrackerReport from './writing-mode/writing-cross-tracker-report.js';
+import {
+    rewire$getReport,
+    restore as restoreRest
+} from './rest-querier.js';
 
 describe("CrossTrackerWidget", () => {
     let Widget,
@@ -31,22 +37,15 @@ describe("CrossTrackerWidget", () => {
         backendCrossTrackerReport,
         readingCrossTrackerReport,
         writingCrossTrackerReport,
-        successDisplayer,
-        errorDisplayer,
-        savedState,
-        readingController;
+        reportId,
+        getReport;
 
     beforeEach(() => {
-        const report_id = 86;
         Widget = Vue.extend(CrossTrackerWidget);
-        backendCrossTrackerReport = new BackendCrossTrackerReport(report_id);
+        backendCrossTrackerReport = new BackendCrossTrackerReport();
         readingCrossTrackerReport = new ReadingCrossTrackerReport();
         writingCrossTrackerReport = new WritingCrossTrackerReport();
-        savedState                = new SavedState();
-
-        successDisplayer           = jasmine.createSpyObj("successDisplayer", ["hideSuccess"]);
-        errorDisplayer             = jasmine.createSpyObj("errorDisplayer", ["hideError"]);
-        readingController          = jasmine.createSpyObj("readingController", ["init"]);
+        reportId = '86';
 
         spyOn(writingCrossTrackerReport, "duplicateFromReport");
         spyOn(readingCrossTrackerReport, "duplicateFromReport");
@@ -58,10 +57,7 @@ describe("CrossTrackerWidget", () => {
                 backendCrossTrackerReport,
                 readingCrossTrackerReport,
                 writingCrossTrackerReport,
-                successDisplayer,
-                errorDisplayer,
-                savedState,
-                readingController,
+                reportId,
             }
         });
         vm.$mount();
@@ -76,7 +72,7 @@ describe("CrossTrackerWidget", () => {
         });
 
         afterEach(() => {
-            restore();
+            restoreUser();
         });
 
         it("when I switch to the writing mode, then the  writing report will be updated and the feedbacks hidden", () => {
@@ -85,8 +81,8 @@ describe("CrossTrackerWidget", () => {
             vm.switchToWritingMode();
 
             expect(writingCrossTrackerReport.duplicateFromReport).toHaveBeenCalledWith(readingCrossTrackerReport);
-            expect(successDisplayer.hideSuccess).toHaveBeenCalled();
-            expect(errorDisplayer.hideError).toHaveBeenCalled();
+            expect(vm.error_message).toBe(null);
+            expect(vm.success_message).toBe(null);
             expect(vm.reading_mode).toBe(false);
         });
 
@@ -102,36 +98,106 @@ describe("CrossTrackerWidget", () => {
     });
 
     describe("switchToReadingMode() -", () => {
-        it("When I switch to the reading mode with saved state, then the writing report will be updated, the reading action buttons hidden and the feedbacks hidden", () => {
+        it("When I switch to the reading mode with saved state, then the writing report will be updated and the feedbacks hidden", () => {
             const vm = instantiateComponent();
-            spyOn(vm.$refs.reading_mode, "hideActions");
-            spyOn(savedState, "switchToSavedState");
 
             vm.switchToReadingMode({ saved_state: true });
 
             expect(writingCrossTrackerReport.duplicateFromReport).toHaveBeenCalledWith(readingCrossTrackerReport);
-            expect(savedState.switchToSavedState).toHaveBeenCalled();
-            expect(vm.$refs.reading_mode.hideActions).toHaveBeenCalled();
-            expect(successDisplayer.hideSuccess).toHaveBeenCalled();
-            expect(errorDisplayer.hideError).toHaveBeenCalled();
+            expect(vm.is_saved).toBe(true);
+            expect(vm.error_message).toBe(null);
+            expect(vm.success_message).toBe(null);
             expect(vm.reading_mode).toBe(true);
         });
 
-        it("When I switch to the reading mode with unsaved state, then a batch of artifacts will be loaded, the reading report will be updated, the reading action buttons shown and the feedbacks hidden", () => {
+        it("When I switch to the reading mode with unsaved state, then a batch of artifacts will be loaded, the reading report will be updated and the feedbacks hidden", () => {
             const vm = instantiateComponent();
-            spyOn(vm.$refs.reading_mode, "showActions");
-            spyOn(vm.$refs.artifact_table, "refreshArtifactList");
-            spyOn(savedState, "switchToUnsavedState");
 
             vm.switchToReadingMode({ saved_state: false });
 
-            expect(vm.$refs.artifact_table.refreshArtifactList).toHaveBeenCalled();
             expect(readingCrossTrackerReport.duplicateFromReport).toHaveBeenCalledWith(writingCrossTrackerReport);
-            expect(savedState.switchToUnsavedState).toHaveBeenCalled();
-            expect(vm.$refs.reading_mode.showActions).toHaveBeenCalled();
-            expect(successDisplayer.hideSuccess).toHaveBeenCalled();
-            expect(errorDisplayer.hideError).toHaveBeenCalled();
+            expect(vm.is_saved).toBe(false);
+            expect(vm.error_message).toBe(null);
+            expect(vm.success_message).toBe(null);
             expect(vm.reading_mode).toBe(true);
+        });
+    });
+
+    describe("loadBackendReport() -", () => {
+        beforeEach(() => {
+            getReport = jasmine.createSpy("getReport");
+            rewire$getReport(getReport);
+        });
+
+        afterEach(() => {
+            restoreRest();
+        });
+
+        it("When I load the report, then the reports will be initialized", async () => {
+            const trackers     = [{ id: 25 }, { id: 30 }];
+            const expert_query = '@title != ""';
+            getReport.and.returnValue({
+                trackers,
+                expert_query
+            });
+            spyOn(backendCrossTrackerReport, "init");
+            const vm = instantiateComponent();
+
+            const promise = vm.loadBackendReport();
+            expect(vm.is_loading).toBe(true);
+
+            await promise;
+
+            expect(vm.is_loading).toBe(false);
+            expect(backendCrossTrackerReport.init).toHaveBeenCalledWith(trackers, expert_query);
+            expect(readingCrossTrackerReport.duplicateFromReport).toHaveBeenCalledWith(backendCrossTrackerReport);
+            expect(writingCrossTrackerReport.duplicateFromReport).toHaveBeenCalledWith(readingCrossTrackerReport);
+        });
+
+        it("When there is a REST error, it will be shown", async () => {
+            const i18n_error_message = 'Error while parsing the query';
+            getReport.and.returnValue(Promise.reject({
+                response: {
+                    json() {
+                        return Promise.resolve({
+                            error: { i18n_error_message }
+                        });
+                    }
+                }
+            }));
+            const vm = instantiateComponent();
+
+            vm.loadBackendReport().then(() => {
+                fail();
+            }, () => {
+                expect(vm.error_message).toEqual(i18n_error_message);
+            });
+        });
+    });
+
+    describe("reportSaved() -", () => {
+        it("when the report is saved, then the feedbacks will be hidden and a success message will be shown", () => {
+            const vm = instantiateComponent();
+
+            vm.reportSaved();
+
+            expect(readingCrossTrackerReport.duplicateFromReport).toHaveBeenCalledWith(backendCrossTrackerReport);
+            expect(writingCrossTrackerReport.duplicateFromReport).toHaveBeenCalledWith(readingCrossTrackerReport);
+            expect(vm.error_message).toBe(null);
+            expect(vm.is_saved).toBe(true);
+            expect(vm.success_message).toEqual(jasmine.any(String));
+        });
+    });
+
+    describe("reportCancelled() -", () => {
+        it("when the 'Cancel' button is clicked in Reading mode, then the feedbacks will be hidden", () => {
+            const vm = instantiateComponent();
+
+            vm.reportCancelled();
+
+            expect(vm.error_message).toBe(null);
+            expect(vm.success_message).toBe(null);
+            expect(vm.is_saved).toBe(true);
         });
     });
 });

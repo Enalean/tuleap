@@ -17,7 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 .reading-mode-report {
     display: flex;
     flex-direction: column;
@@ -68,8 +67,12 @@
     font-style: italic;
 }
 
-.dashboard-widget-content-cross-tracker-reading-mode-actions {
+.reading-mode-actions {
     display: flex;
     justify-content: center;
     margin: $tlp-half-spacing $tlp-spacing $tlp-spacing;
+}
+
+.reading-mode-actions-cancel {
+    margin: 0 $tlp-spacing 0 0;
 }
