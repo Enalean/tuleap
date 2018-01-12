@@ -32,13 +32,19 @@ class AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory {
 
     /** @var AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory */
     private $row_collection_factory;
+    /**
+     * @var AgileDashboard_BacklogItemDao
+     */
+    private $item_dao;
 
     public function __construct(
         AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory,
-        AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory $row_collection_factory
+        AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory $row_collection_factory,
+        AgileDashboard_BacklogItemDao $item_dao
     ) {
         $this->backlog_factory        = $backlog_factory;
         $this->row_collection_factory = $row_collection_factory;
+        $this->item_dao               = $item_dao;
     }
 
     /**
@@ -47,7 +53,8 @@ class AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory {
     public function getContentPresenterBuilder() {
         return new AgileDashboard_Milestone_Pane_Content_ContentPresenterBuilder(
             $this->backlog_factory,
-            $this->row_collection_factory
+            $this->row_collection_factory,
+            $this->item_dao
         );
     }
 }

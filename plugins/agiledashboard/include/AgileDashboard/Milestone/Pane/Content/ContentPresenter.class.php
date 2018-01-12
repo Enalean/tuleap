@@ -57,7 +57,6 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
         AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection $todo,
         AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection $done,
         AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection $inconsistent_collection,
-        $backlog_item_type,
         $add_new_backlog_items_urls,
         $trackers,
         $can_prioritize,
@@ -68,7 +67,7 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
         $this->todo_collection           = $todo;
         $this->done_collection           = $done;
         $this->inconsistent_collection   = $inconsistent_collection;
-        $this->backlog_item_type         = $backlog_item_type;
+        $this->backlog_item_type         = $this->getTrackerNames($trackers);
         foreach ($trackers_without_initial_effort_defined as $tracker) {
             $this->trackers_without_initial_effort_field[] = $tracker->getName();
         }
@@ -77,6 +76,17 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
         $this->trackers                    = $trackers;
         $this->can_prioritize              = $can_prioritize;
         $this->solve_inconsistencies_url   = $solve_inconsistencies_url;
+    }
+
+    private function getTrackerNames($trackers)
+    {
+        $tracker_names = array();
+
+        foreach ($trackers as $tracker) {
+            $tracker_names[] = $tracker->getName();
+        }
+
+        return implode(', ', $tracker_names);
     }
 
     public function getTemplateName() {
