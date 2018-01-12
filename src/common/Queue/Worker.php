@@ -29,12 +29,14 @@ use Log_ConsoleLogger;
 use ForgeConfig;
 use Exception;
 use EventManager;
-use Tuleap\Queue\RabbitMQ\RabbitMQManager;
+use Tuleap\Queue\Factory;
 use Tuleap\System\DaemonLocker;
 use System_Command;
 
 class Worker
 {
+    const EVENT_QUEUE_NAME = 'app_user_events';
+
     const DEFAULT_PID_FILE_PATH = '/var/run/tuleap/worker.pid';
 
     const DEFAULT_LOG_FILE_PATH = '/var/log/tuleap/worker_log';
@@ -82,14 +84,18 @@ class Worker
 
     private function listen()
     {
-        $this->logger->info("Wait for messages");
+        $this->logger->info('Wait for messages');
 
-        $rabbitmq_manager = new RabbitMQManager($this->logger);
-        $channel = $rabbitmq_manager->connect();
-        $worker_queue_event = new WorkerGetQueue($this->logger, $this->locker, $channel);
-        EventManager::instance()->processEvent($worker_queue_event);
-        $rabbitmq_manager->wait();
-        $this->logger->info("No messages to process, is RabbitMQ configured and running ?");
+        $event_manager = EventManager::instance();
+
+        $queue = Factory::getPersistentQueue($this->logger, self::EVENT_QUEUE_NAME, Factory::REDIS);
+        $queue->listen($this->id, '*', function ($event) use ($event_manager) {
+            $this->logger->info('Got message: ' .$event);
+            $worker_queue_event = new WorkerEvent($this->logger, json_decode($event, true));
+            $event_manager->processEvent($worker_queue_event);
+        });
+        $this->logger->info('All message processed, exiting');
+        $this->locker->cleanExit();
     }
 
     private function configureRunner(array $options)
@@ -155,7 +161,6 @@ EOT;
     {
         $this->logger = $logger;
         $this->setErrorHandler();
-        $this->setSignalHandler();
     }
 
     private function setErrorHandler()
@@ -182,35 +187,6 @@ EOT;
     private function getCaughtErrorTypes()
     {
         return E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED & ~E_WARNING;
-    }
-
-    private function setSignalHandler()
-    {
-        $logger = $this->logger;
-        $pcntlHandler = function ($signal) use ($logger) {
-            switch ($signal) {
-                case \SIGTERM:
-                case \SIGUSR1:
-                case \SIGINT:
-                    // some stuff before stop consumer e.g. delete lock etc
-                    if ($this->locker !== null) {
-                        unlink($this->pid_file);
-                    }
-                    $logger->info("Received stop signal, aborting");
-                    pcntl_signal($signal, SIG_DFL); // restore handler
-                    posix_kill(posix_getpid(), $signal); // kill self with signal, see https://www.cons.org/cracauer/sigint.html
-                case \SIGHUP:
-                    // some stuff to restart consumer
-                    break;
-                default:
-                    // do nothing
-            }
-        };
-
-        pcntl_signal(\SIGTERM, $pcntlHandler);
-        pcntl_signal(\SIGINT, $pcntlHandler);
-        pcntl_signal(\SIGUSR1, $pcntlHandler);
-        pcntl_signal(\SIGHUP, $pcntlHandler);
     }
 
     private function checkWhoIsRunning()

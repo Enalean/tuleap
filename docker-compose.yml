@@ -52,6 +52,13 @@ services:
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq
 
+  redis:
+    image: redis:3.2
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes
+
+
 volumes:
   tuleap-data:
   ldap-data:
@@ -59,3 +66,4 @@ volumes:
   db-data:
   graphite-data:
   rabbitmq-data:
+  redis-data:

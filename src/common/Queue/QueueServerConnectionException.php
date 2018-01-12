@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,24 +21,7 @@
 
 namespace Tuleap\Queue;
 
-use Logger;
-use ForgeConfig;
-
-class Factory
+class QueueServerConnectionException extends \Exception
 {
-    const REDIS = 'redis';
 
-    /**
-     * @return PersistentQueue
-     */
-    public static function getPersistentQueue(Logger $logger, $queue_name, $favor = '')
-    {
-        if ($favor === self::REDIS) {
-            return new Redis\RedisPersistentQueue($logger, $queue_name);
-        }
-        if (ForgeConfig::get('rabbitmq_server') !== false) {
-            return new RabbitMQ\PersistentQueue(new RabbitMQ\RabbitMQManager($logger), $queue_name);
-        }
-        return new Noop\PersistentQueue();
-    }
 }

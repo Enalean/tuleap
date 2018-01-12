@@ -23,14 +23,10 @@ namespace Tuleap\Queue;
 
 use Logger;
 use Tuleap\Event\Dispatchable;
-use PhpAmqpLib\Channel\AMQPChannel;
-use Tuleap\System\DaemonLocker;
 
-class WorkerGetQueue implements Dispatchable
+class WorkerEvent implements Dispatchable
 {
-    const NAME = 'workerGetQueue';
-
-    const MAX_MESSAGES = 1000;
+    const NAME = 'workerEvent';
 
     /**
      * @var Logger
@@ -38,22 +34,20 @@ class WorkerGetQueue implements Dispatchable
     private $logger;
 
     /**
-     * @var AMQPChannel
+     * @var string
      */
-    private $channel;
+    private $event_name;
 
     /**
-     * @var DaemonLocker
+     * @var mixed
      */
-    private $locker;
+    private $payload;
 
-    private $message_counter = 0;
-
-    public function __construct(Logger $logger, DaemonLocker $locker, AMQPChannel $channel)
+    public function __construct(Logger $logger, array $event)
     {
-        $this->logger  = $logger;
-        $this->locker  = $locker;
-        $this->channel = $channel;
+        $this->logger     = $logger;
+        $this->event_name = $event['event_name'];
+        $this->payload    = $event['payload'];
     }
 
     public function getLogger()
@@ -61,18 +55,13 @@ class WorkerGetQueue implements Dispatchable
         return $this->logger;
     }
 
-    public function getChannel()
+    public function getEventName()
     {
-        return $this->channel;
+        return $this->event_name;
     }
 
-    public function incrementMessagesProcessed()
+    public function getPayload()
     {
-        $this->message_counter++;
-        $this->logger->info("Message processed [{$this->message_counter}/".self::MAX_MESSAGES."]");
-        if ($this->message_counter >= self::MAX_MESSAGES) {
-            $this->logger->info("Max messages reached, exiting...");
-            $this->locker->cleanExit();
-        }
+        return $this->payload;
     }
 }

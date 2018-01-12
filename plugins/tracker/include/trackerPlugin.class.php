@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Tuleap\Queue\WorkerGetQueue;
+use Tuleap\Queue\WorkerEvent;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\User\AtUserCreationDefaultWidgetsCreator;
@@ -154,7 +154,7 @@ class trackerPlugin extends Plugin {
         $this->addHook(ProjectCreator::PROJECT_CREATION_REMOVE_LEGACY_SERVICES);
         $this->addHook(ProjectRegistrationActivateService::NAME);
 
-        $this->addHook(WorkerGetQueue::NAME);
+        $this->addHook(WorkerEvent::NAME);
     }
 
     public function getHooksAndCallbacks() {
@@ -1508,7 +1508,7 @@ class trackerPlugin extends Plugin {
         return strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL . '/?func=global-admin') === 0;
     }
 
-    public function workerGetQueue(WorkerGetQueue $event)
+    public function workerEvent(WorkerEvent $event)
     {
         $async_notifier = new \Tuleap\Tracker\Artifact\Changeset\Notification\AsynchronousNotifier();
         $async_notifier->addListener($event);
