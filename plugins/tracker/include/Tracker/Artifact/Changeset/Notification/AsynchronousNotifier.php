@@ -23,35 +23,31 @@ namespace Tuleap\Tracker\Artifact\Changeset\Notification;
 
 use PhpAmqpLib\Message\AMQPMessage;
 use Tracker_ArtifactFactory;
-use Logger;
 use Exception;
 use Tuleap\Queue\RabbitMQ\ExchangeToExchangeBindings;
-use Tuleap\System\DaemonLocker;
 use Tuleap\Queue\WorkerGetQueue;
 
 class AsynchronousNotifier
 {
-    const MAX_MESSAGES = 1000;
-
     const QUEUE_ID     = 'update_notify-1';
 
     const QUEUE_PREFIX = 'update';
 
-    const TOPIC = 'tuleap.tracker.artifact';
+    const TOPIC        = 'tuleap.tracker.artifact';
 
     public function addListener(WorkerGetQueue $event)
     {
         $stuff_queue = new ExchangeToExchangeBindings($event->getChannel(), self::QUEUE_PREFIX);
-        $stuff_queue->addListener(self::QUEUE_ID, self::TOPIC, $this->getCallback($event->getLogger(), $event->getLocker()));
+        $stuff_queue->addListener(self::QUEUE_ID, self::TOPIC, $this->getCallback($event));
     }
 
-    private function getCallback(Logger $logger, DaemonLocker $locker)
+    private function getCallback(WorkerGetQueue $event)
     {
+        $logger = $event->getLogger();
+
         $notifier = Notifier::build($logger);
 
-        $message_counter = 0;
-
-        return function (AMQPMessage $msg) use ($logger, &$message_counter, $notifier, $locker) {
+        return function (AMQPMessage $msg) use ($logger, $notifier, $event) {
             try {
                 $logger->info("Received ".$msg->body);
 
@@ -60,15 +56,9 @@ class AsynchronousNotifier
                 $changeset = $artifact->getChangeset($message['changeset_id']);
 
                 $notifier->processAsyncNotify($changeset);
-                $message_counter++;
 
                 $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
-                $logger->info("Notification completed [$message_counter/".self::MAX_MESSAGES."]");
-
-                if ($message_counter >= self::MAX_MESSAGES) {
-                    $logger->info("Max messages reached, exiting...");
-                    $locker->cleanExit();
-                }
+                $event->incrementMessagesProcessed();
             } catch (Exception $e) {
                 $logger->error("Caught exception ".get_class($e).": ".$e->getMessage());
             }
