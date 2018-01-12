@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,7 +25,7 @@ use Tuleap\Widget\WidgetFactory;
 
 require_once __DIR__.'/../../lib/autoload.php';
 
-class REST_TestDataBuilder extends TestDataBuilder
+class REST_TestDataBuilder extends TestDataBuilder  // @codingStandardsIgnoreLine
 {
 
     const TEST_USER_4_ID          = 105;
@@ -219,7 +219,7 @@ class REST_TestDataBuilder extends TestDataBuilder
         return $this->getTrackerInProject($tracker_shortname, self::PROJECT_PRIVATE_MEMBER_SHORTNAME);
     }
 
-    private function getTrackerInProject($tracker_shortname, $project_shortname)
+    protected function getTrackerInProject($tracker_shortname, $project_shortname)
     {
         $project    = $this->project_manager->getProjectByUnixName($project_shortname);
         $project_id = $project->getID();
