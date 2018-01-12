@@ -24,16 +24,40 @@ use AgileDashboard_HierarchyChecker;
 use AgileDashboard_KanbanDao;
 use AgileDashboard_KanbanFactory;
 use AgileDashboard_KanbanManager;
+use BackendLogger;
+use BrokerLogger;
+use EventManager;
 use Exception;
+use ForgeConfig;
+use Log_ConsoleLogger;
 use PlanningFactory;
 use REST_TestDataBuilder;
-use TrackerFactory;
+use SystemEvent;
+use SystemEventManager;
+use SystemEventProcessor_Factory;
+use TruncateLevelLogger;
+use Tuleap\AgileDashboard\FormElement\SystemEvent\SystemEvent_BURNUP_GENERATE;
+use Tuleap\Project\SystemEventRunner;
 
 class DataBuilder extends REST_TestDataBuilder
 {
     const PROJECT_KANBAN_CUMULATIVE_FLOW_SHORTNAME = 'kanban-cumulative-flow';
     const KANBAN_CUMULATIVE_FLOW_NAME              = 'kanban_cumulative_flow_test';
+    const RELEASE_TRACKER_SHORTNAME                = 'rel';
+    const PROJECT_BURNUP_SHORTNAME                 = 'burnup';
     const KANBAN_CUMULATIVE_FLOW_ID                = 2;
+    /**
+     * @var SystemEventManager
+     */
+    private $system_event_manager;
+    /**
+     * @var SystemEventRunner
+     */
+    private $system_event_runner;
+    /**
+     * @var \Tracker_ArtifactFactory
+     */
+    private $tracker_artifact_factory;
 
     /**
      * @var AgileDashboard_KanbanManager
@@ -58,11 +82,26 @@ class DataBuilder extends REST_TestDataBuilder
             $this->tracker_factory,
             $hierarchy_checker
         );
+
+        $this->tracker_artifact_factory = \Tracker_ArtifactFactory::instance();
+        $this->system_event_manager     = SystemEventManager::instance();
+
+        $console    = new TruncateLevelLogger(new Log_ConsoleLogger(), ForgeConfig::get('sys_logger_level'));
+        $logger     = new BackendLogger();
+        $broker_log = new BrokerLogger(array($logger, $console));
+
+        $factory                   = new SystemEventProcessor_Factory(
+            $broker_log,
+            SystemEventManager::instance(),
+            EventManager::instance()
+        );
+        $this->system_event_runner = new SystemEventRunner($factory);
     }
 
     public function setUp()
     {
         $this->createKanbanCumulativeFlow();
+        $this->generateBurnupCache();
     }
 
     private function createKanbanCumulativeFlow()
@@ -85,5 +124,20 @@ class DataBuilder extends REST_TestDataBuilder
                 'The kanban used for the test of the cumulative flow is not the one expected. Please update the builder accordingly.'
             );
         }
+    }
+
+    private function generateBurnupCache()
+    {
+        $tracker = $this->getTrackerInProject(self::RELEASE_TRACKER_SHORTNAME, self::PROJECT_BURNUP_SHORTNAME);
+
+        $artifacts = $this->tracker_artifact_factory->getArtifactsByTrackerId($tracker->getId());
+        $this->system_event_manager->createEvent(
+            'Tuleap\\Agiledashboard\\FormElement\\SystemEvent\\' . SystemEvent_BURNUP_GENERATE::NAME,
+            reset($artifacts)->getId(),
+            SystemEvent::PRIORITY_MEDIUM,
+            SystemEvent::OWNER_APP
+        );
+
+        $this->system_event_runner->runSystemEvents();
     }
 }
