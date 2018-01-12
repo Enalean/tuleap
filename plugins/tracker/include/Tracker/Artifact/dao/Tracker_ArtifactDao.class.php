@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -374,8 +374,9 @@ class Tracker_ArtifactDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function quote_keyword($keyword) {
-        return $this->da->quoteSmart('%'. $keyword .'%');
+    public function quote_keyword($keyword)
+    {
+        return $this->da->quoteLikeValueSurround($keyword);
     }
 
     public function searchByKeywords($tracker_id, $keywords, $criteria, $offset, $limit) {

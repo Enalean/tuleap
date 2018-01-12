@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean 2017. All rights reserved
+ * Copyright (c) Enalean 2017-2018. All rights reserved
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -36,7 +36,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
                 $c = 'C_'. $this->id;
 
                 $da             = CodendiDataAccess::instance();
-                $criteria_value = $da->quoteSmart("%$criteria_value%");
+                $criteria_value = $da->quoteLikeValueSurround($criteria_value);
 
                 return " INNER JOIN tracker_changeset_value AS $a ON ($a.changeset_id = c.id AND $a.field_id = $this->id )
                          INNER JOIN tracker_changeset_value_file AS $b ON ($b.changeset_value_id = $a.id)

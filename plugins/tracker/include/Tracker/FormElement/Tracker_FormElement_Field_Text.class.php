@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -103,15 +103,11 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
             }
             $words = array();
             foreach($split as $w) {
-                $words[] = $field_name." LIKE ". $this->quote('%'.$w.'%');
+                $words[] = $field_name." LIKE ". $this->getCriteriaDao()->getDa()->quoteLikeValueSurround($w);
             }
             $expr = join(' AND ', $words);
         }
         return $expr;
-    }
-
-    protected function quote($value) {
-        return CodendiDataAccess::instance()->quoteSmart($value);
     }
 
     protected function getCriteriaDao() {
