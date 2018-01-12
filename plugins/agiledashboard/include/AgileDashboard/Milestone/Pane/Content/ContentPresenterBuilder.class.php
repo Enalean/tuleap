@@ -50,9 +50,9 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenterBuilder
 
     public function getMilestoneContentPresenter(PFUser $user, Planning_Milestone $milestone)
     {
-        $redirect_paremeter = new Planning_MilestoneRedirectParameter();
+        $redirect_parameter = new Planning_MilestoneRedirectParameter();
         $backlog            = $this->backlog_factory->getBacklog($milestone);
-        $redirect_to_self   = $redirect_paremeter->getPlanningRedirectToSelf($milestone, AgileDashboard_Milestone_Pane_Content_ContentPaneInfo::IDENTIFIER);
+        $redirect_to_self   = $redirect_parameter->getPlanningRedirectToSelf($milestone, AgileDashboard_Milestone_Pane_Content_ContentPaneInfo::IDENTIFIER);
 
         $descendant_trackers = $backlog->getDescendantTrackers();
 
@@ -60,12 +60,10 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenterBuilder
             $this->collection_factory->getTodoCollection($user, $milestone, $backlog, $redirect_to_self),
             $this->collection_factory->getDoneCollection($user, $milestone, $backlog, $redirect_to_self),
             $this->collection_factory->getInconsistentCollection($user, $milestone, $backlog, $redirect_to_self),
-            $this->getAddItemsToBacklogUrls($descendant_trackers, $user, $milestone, $redirect_to_self),
             $descendant_trackers,
             $this->canUserPrioritizeBacklog($milestone, $user),
             $this->getTrackersWithoutInitialEffort($descendant_trackers),
-            $this->getSolveInconsistenciesUrl($milestone, $redirect_to_self),
-            $milestone->getArtifactId()
+            $this->getSolveInconsistenciesUrl($milestone, $redirect_to_self)
         );
     }
 
@@ -98,23 +96,6 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenterBuilder
         );
 
         return $milestone_factory->userCanChangePrioritiesInMilestone($milestone, $user);
-    }
-
-    private function getAddItemsToBacklogUrls(array $descendant_trackers, PFUser $user, Planning_Milestone $milestone, $redirect_to_self)
-    {
-        $submit_urls = array();
-
-        foreach ($descendant_trackers as $descendant_tracker) {
-            if ($descendant_tracker->userCanSubmitArtifact($user)) {
-                $submit_urls[] = array(
-                    'tracker_type' => $descendant_tracker->getName(),
-                    'tracker_id'   => $descendant_tracker->getId(),
-                    'submit_url'   => $milestone->getArtifact()->getSubmitNewArtifactLinkedToMeUri($descendant_tracker).'&'.$redirect_to_self
-                );
-            }
-        }
-
-        return $submit_urls;
     }
 
     public function getTrackersWithoutInitialEffort(array $descendant_trackers)

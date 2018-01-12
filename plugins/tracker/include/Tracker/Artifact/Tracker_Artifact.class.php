@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright Enalean (c) 2011 - 2018. All rights reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright Enalean (c) 2011 - 2017. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -977,21 +977,6 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             'val'      => $this->getId(),
             'group_id' => $this->getTracker()->getGroupId(),
         )) .'">'. $this->getXRef() .'</a>';
-    }
-
-    /**
-     * Return the URL to use when you want to create a new artifact of $target_tracker type linked to current artifact
-     *
-     * @param Tracker $target_tracker
-     * @return String
-     */
-    public function getSubmitNewArtifactLinkedToMeUri(Tracker $target_tracker) {
-        return TRACKER_BASE_URL . '/?'.http_build_query(array(
-            'tracker'   => $target_tracker->getId(),
-            'func'      => 'new-artifact-link',
-            'id'        => $this->getId(),
-            'immediate' => 1,
-        ));
     }
 
     /**
