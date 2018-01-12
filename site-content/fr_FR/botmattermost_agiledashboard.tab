@@ -8,6 +8,7 @@ plugin_botmattermost_agiledashboard	alert_error_update_bot_notification	La mise 
 
 plugin_botmattermost_agiledashboard	admin_notification_title	Notifications dans Mattermost
 plugin_botmattermost_agiledashboard	admin_notification_description	Choisissez un robot afin d'envoyer le résumé du stand-up dans Mattermost.
+plugin_botmattermost_agiledashboard	admin_notification_description_create_bot	Si vous ne voyez pas de robot lié à votre projet/équipe Mattermost, veuillez contacter un administrateur.
 plugin_botmattermost_agiledashboard	admin_notification_label_send_time	Heure d'envoi du rapport
 plugin_botmattermost_agiledashboard	admin_notification_time_warning	L'heure renseignée doit être adaptée en fonction du fuseau horaire $1 du serveur
 

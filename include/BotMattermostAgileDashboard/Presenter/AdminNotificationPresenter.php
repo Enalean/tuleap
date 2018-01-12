@@ -70,8 +70,9 @@ class AdminNotificationPresenter
         $this->bot_assigned = $bot_assigned;
         $this->has_bots     = !empty($bots);
 
-        $this->title       = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'admin_notification_title');
-        $this->description = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'admin_notification_description');
+        $this->title                  = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'admin_notification_title');
+        $this->description            = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'admin_notification_description');
+        $this->description_create_bot = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'admin_notification_description_create_bot');
 
         $this->table_col_name     = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_table_col_name');
         $this->table_col_channels = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'admin_notification_table_col_channels');
@@ -87,6 +88,7 @@ class AdminNotificationPresenter
         $this->modal_delete_title   = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'modal_header_delete_configure_notification');
         $this->modal_delete_content = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'modal_delete_content');
 
+        $this->label_bot_list         = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_label_bot_list');
         $this->label_send_time        = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'admin_notification_label_send_time');
         $this->label_channels_handles = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'configuration_label_channels_handles');
         $this->input_channels_handles = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'configuration_input_channels_handles');

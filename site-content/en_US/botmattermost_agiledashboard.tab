@@ -8,6 +8,7 @@ plugin_botmattermost_agiledashboard	alert_error_update_bot_notification	Failed t
 
 plugin_botmattermost_agiledashboard	admin_notification_title	Notifications in Mattermost
 plugin_botmattermost_agiledashboard	admin_notification_description	Choose a bot to send a summary of the stand-up in Mattermost.
+plugin_botmattermost_agiledashboard	admin_notification_description_create_bot	If you don't see a Bot linked to your Mattermost project/team, please contact your administrator.
 plugin_botmattermost_agiledashboard	admin_notification_label_send_time	Stand-up summary report time
 plugin_botmattermost_agiledashboard	admin_notification_time_warning	The specified time must be adapted according to the server's time zone $1
 
