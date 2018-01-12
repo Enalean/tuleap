@@ -530,10 +530,18 @@ $sys_use_unsecure_ssl_certificate = 0;
 // /!\ WARNING /!\
 // Only enable this if you have
 // - RabbitMQ configured (see /usr/share/tuleap/src/etc/rabbitmq.inc.dist)
-// - Notify worker enabled
+// - Backend workers (below) is set to a positive value
 // Otherwise you will loose email notifications.
 //
 // Possible values:
 // - 'all' => all projects will use async emails
 // - "X, Y, Z" => ids of projects that use async emails (progressive deployment)
 // $sys_async_emails = 0;
+
+// Backend workers
+//
+// Number of backend workers to process background jobs.
+// To be adapted given your server workload.
+// 2 is a good starting value, you can increase it
+// RabbitMQ must be configured prior to set this.
+// $sys_nb_backend_workers = 0;

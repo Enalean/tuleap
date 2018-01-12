@@ -89,10 +89,10 @@ stop()
     fi
     echo -n "Shutting down $prog: "
     RemoveCron
-    if [ -f /var/run/tuleap/worker.pid ]; then
-        kill $(cat /var/run/tuleap/worker.pid)
-        rm -f /var/run/tuleap/worker.pid
-    fi
+    for pid_file in $(/bin/ls /var/run/tuleap/worker*.pid); do
+        kill $(cat $pid_file)
+        rm -f $pid_file
+    done
     echo "[OK]"
     RETVAL=$?
     return $RETVAL
