@@ -651,3 +651,27 @@ body.agiledashboard_kanban {
         margin-top: 10px;
     }
 }
+
+.agiledashboard-milestone-content {
+    display: flex;
+}
+
+.agiledashboard-milestone-content-items {
+    flex: 1 1 auto;
+}
+
+.agiledashboard-milestone-content-graphs {
+    flex: 0 0 auto;
+    margin: 0 0 0 20px;
+}
+
+
+@media screen and (max-width: 1200px) {
+    .agiledashboard-milestone-content {
+        flex-direction: column;
+    }
+
+    .agiledashboard-milestone-content-graphs {
+        margin: 20px 0 0;
+    }
+}

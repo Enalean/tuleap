@@ -1,14 +1,19 @@
-{{> pane-content-initial-effort-warning}}
+<div class="agiledashboard-milestone-content">
+    <div class="agiledashboard-milestone-content-items">
+        {{> pane-content-initial-effort-warning}}
 
-{{> pane-content-addcontent}}
+        {{> pane-content-addcontent}}
 
-{{> pane-content-openitems}}
+        {{> pane-content-openitems}}
 
-{{> pane-content-inconsistentitems}}
+        {{> pane-content-inconsistentitems}}
 
-{{> pane-content-closeditems}}
-
-{{# has_burndown }}
-    <h3>{{ burndown_label }}</h3>
-    <img src="{{ burndown_url }}" width="640" height="480">
-{{/ has_burndown }}
+        {{> pane-content-closeditems}}
+    </div>
+    {{# has_burndown }}
+        <div class="agiledashboard-milestone-content-graphs">
+            <h3>{{ burndown_label }}</h3>
+            <img src="{{ burndown_url }}" width="640" height="480">
+        </div>
+    {{/ has_burndown }}
+</div>
