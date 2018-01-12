@@ -57,14 +57,6 @@ class Worker
     {
         $this->log_file = self::DEFAULT_LOG_FILE_PATH;
         $this->pid_file = self::DEFAULT_PID_FILE_PATH;
-
-        $this->makesAllWarningsFatal();
-        $this->setLogger(
-            new TruncateLevelLogger(
-                new BackendLogger($this->log_file),
-                ForgeConfig::get('sys_logger_level')
-            )
-        );
     }
 
     public function main()
@@ -125,6 +117,13 @@ class Worker
                     )
                 )
             );
+        } else {
+            $this->setLogger(
+                new TruncateLevelLogger(
+                    new BackendLogger($this->log_file),
+                    ForgeConfig::get('sys_logger_level')
+                )
+            );
         }
     }
 
@@ -152,24 +151,14 @@ EOT;
         }
     }
 
-    private function makesAllWarningsFatal()
-    {
-        set_error_handler(
-            function ($errno, $errstr, $errfile, $errline) {
-                die("$errstr $errfile L$errline Errno $errno\n");
-            },
-            $this->getCaughtErrorTypes()
-        );
-    }
-
     private function setLogger(Logger $logger)
     {
         $this->logger = $logger;
-        $this->makesAllWarningsFatalLogger();
+        $this->setErrorHandler();
         $this->setSignalHandler();
     }
 
-    private function makesAllWarningsFatalLogger()
+    private function setErrorHandler()
     {
         $logger = $this->logger;
         set_error_handler(
@@ -181,9 +170,18 @@ EOT;
         );
     }
 
+    /**
+     * List Error types that are fatal
+     *
+     * Unfortunately, Tuleap code is not robust enough yet to make everything fatal.
+     * E_WARNING are needed because of mysql_query that returns are warning if mysql is gone. Without that we cannot
+     * silently re-execute the query
+     *
+     * @return int
+     */
     private function getCaughtErrorTypes()
     {
-        return E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED;
+        return E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED & ~E_WARNING;
     }
 
     private function setSignalHandler()
