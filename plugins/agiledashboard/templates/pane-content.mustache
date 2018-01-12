@@ -7,3 +7,8 @@
 {{> pane-content-inconsistentitems}}
 
 {{> pane-content-closeditems}}
+
+{{# has_burndown }}
+    <h3>{{ burndown_label }}</h3>
+    <img src="{{ burndown_url }}" width="640" height="480">
+{{/ has_burndown }}

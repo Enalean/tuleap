@@ -22,7 +22,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
+class AgileDashboard_Milestone_Pane_Content_ContentPresenter
+{
+    public $has_burndown;
+    public $burndown_label;
+    public $burndown_url;
+
     /** @var AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection */
     private $todo_collection;
 
@@ -45,13 +50,15 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
     private $solve_inconsistencies_url;
 
     public function __construct(
+        Planning_Milestone $milestone,
         AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection $todo,
         AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection $done,
         AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection $inconsistent_collection,
         $trackers,
         $can_prioritize,
         array $trackers_without_initial_effort_defined,
-        $solve_inconsistencies_url
+        $solve_inconsistencies_url,
+        PFUser $user
     ) {
         $this->todo_collection           = $todo;
         $this->done_collection           = $done;
@@ -62,6 +69,8 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
         }
         $this->can_prioritize              = $can_prioritize;
         $this->solve_inconsistencies_url   = $solve_inconsistencies_url;
+
+        $this->setBurndownAttributes($milestone, $user);
     }
 
     private function getTrackerNames($trackers)
@@ -184,5 +193,20 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
 
     public function inconsistent_collection() {
         return $this->inconsistent_collection;
+    }
+
+    private function setBurndownAttributes(Planning_Milestone $milestone, PFUser $user)
+    {
+        $this->has_burndown = false;
+
+        $artifact       = $milestone->getArtifact();
+        $burndown_field = $artifact->getABurndownField($user);
+        if (! $burndown_field) {
+            return;
+        }
+
+        $this->has_burndown   = true;
+        $this->burndown_label = $burndown_field->getLabel();
+        $this->burndown_url   = $burndown_field->getBurndownImageUrl($artifact);
     }
 }

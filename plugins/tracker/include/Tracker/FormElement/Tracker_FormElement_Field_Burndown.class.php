@@ -688,10 +688,16 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      *
      * @return String
      */
-    private function getBurndownImageUrl(Tracker_Artifact $artifact) {
-        $url_query = http_build_query(array('formElement' => $this->getId(),
-            'func'        => self::FUNC_SHOW_BURNDOWN,
-            'src_aid'     => $artifact->getId()));
+    public function getBurndownImageUrl(Tracker_Artifact $artifact)
+    {
+        $url_query = http_build_query(
+            array(
+                'formElement' => $this->getId(),
+                'func'        => self::FUNC_SHOW_BURNDOWN,
+                'src_aid'     => $artifact->getId()
+            )
+        );
+
         return TRACKER_BASE_URL .'/?'.$url_query;
     }
 
