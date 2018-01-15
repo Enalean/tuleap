@@ -62,10 +62,6 @@ msgid "All items have been loaded."
 msgstr "Tous les éléments ont été chargés."
 
 #: src/app/milestone/milestone.tpl.html
-msgid "Burndown"
-msgstr "Burndown"
-
-#: src/app/milestone/milestone.tpl.html
 msgid "Capacity:"
 msgstr "Capacité:"
 
@@ -80,10 +76,6 @@ msgstr "Les jalons fermés sont en dessous"
 #: src/app/backlog/backlog.tpl.html
 msgid "Compact view"
 msgstr "Vue compacte"
-
-#: src/app/milestone/milestone.tpl.html
-msgid "Content"
-msgstr "Contenu"
 
 #: src/app/backlog/backlog.tpl.html
 msgid "Detailed view"
@@ -178,20 +170,3 @@ msgstr "A planifier"
 #: src/app/backlog/backlog.tpl.html src/app/planning.tpl.html
 msgid "You are not allowed to rank on this planning"
 msgstr "Vous n'êtes pas autorisé à prioriser sur ce planning"
-
-#~ msgid "Add a {{ planning.backlog.accepted_types.content[0].label }}"
-#~ msgstr ""
-#~ "Ajouter un(e) {{ planning.backlog.accepted_types.content[0].label }}"
-
-#~ msgid ""
-#~ "{{ selected_bar_controller.selected_backlog_items.length }} item is "
-#~ "selected."
-#~ msgid_plural ""
-#~ "{{ selected_bar_controller.selected_backlog_items.length }} items are "
-#~ "selected."
-#~ msgstr[0] ""
-#~ "{{ selected_bar_controller.selected_backlog_items.length }} élément est "
-#~ "sélectionné."
-#~ msgstr[1] ""
-#~ "{{ selected_bar_controller.selected_backlog_items.length }} éléments sont "
-#~ "sélectionnés."

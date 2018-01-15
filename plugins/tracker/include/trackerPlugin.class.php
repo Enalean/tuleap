@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +18,6 @@
  */
 
 use Tuleap\Queue\WorkerGetQueue;
-use Tuleap\Cron\EventCronJobEveryMinute;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\User\AtUserCreationDefaultWidgetsCreator;
@@ -39,7 +38,6 @@ use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\ForgeUserGroupPermission\TrackerAdminAllProjects;
 use Tuleap\Tracker\FormElement\BurndownCacheDateRetriever;
 use Tuleap\Tracker\FormElement\BurndownCalculator;
-use Tuleap\Tracker\FormElement\ComputedFieldCalculator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\FormElement\FieldCalculator;
@@ -161,7 +159,6 @@ class trackerPlugin extends Plugin {
 
     public function getHooksAndCallbacks() {
         if (defined('AGILEDASHBOARD_BASE_DIR')) {
-            $this->addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE);
             $this->addHook(AGILEDASHBOARD_EXPORT_XML);
 
             // REST Milestones
@@ -380,36 +377,6 @@ class trackerPlugin extends Plugin {
             }
             $params['done'] = true;
         }
-    }
-
-    public function agiledashboard_event_additional_panes_on_milestone($params) {
-        $user      = $params['user'];
-        $milestone = $params['milestone'];
-        $pane_info = $this->getPaneInfo($milestone, $user);
-        if (! $pane_info) {
-            return;
-        }
-
-        if ($params['request']->get('pane') == Tracker_Artifact_Burndown_PaneInfo::IDENTIFIER) {
-            $pane_info->setActive(true);
-            $artifact = $milestone->getArtifact();
-            $params['active_pane'] = new Tracker_Artifact_Burndown_Pane(
-                    $pane_info,
-                    $artifact,
-                    $artifact->getABurndownField($user),
-                    $user
-            );
-        }
-        $params['panes'][] = $pane_info;
-    }
-
-    private function getPaneInfo($milestone, $user) {
-        $artifact = $milestone->getArtifact();
-        if (! $artifact->getABurndownField($user)) {
-            return;
-        }
-
-        return new Tracker_Artifact_Burndown_PaneInfo($milestone);
     }
 
     private function isLegacyTrackerV3StillUsed($legacy)

@@ -37,19 +37,14 @@
                     <i class="icon-edit"></i> <span translate>Edit</span>
                 </a>
             </li>
-            <li ng-if="! milestoneController.milestone.sub_milestone_type">
-                <a href="{{ planning.generateMilestoneLinkUrl(milestoneController.milestone, 'blcontent') }}" title="{{ 'Content' | translate }}">
-                    <i class="icon-list-ul"></i> <span translate>Content</span>
+            <li>
+                <a href="{{ planning.generateMilestoneLinkUrl(milestoneController.milestone, 'blcontent') }}" title="{{ 'Details' | translate }}">
+                    <i class="icon-bar-chart"></i> <span translate>Details</span>
                 </a>
             </li>
             <li ng-if="milestoneController.milestone.resources.milestones.accept.trackers.length > 0">
                 <a href="{{ planning.generateMilestoneLinkUrl(milestoneController.milestone, 'planning-v2') }}" title="{{ 'Planning' | translate }}">
                     <i class="icon-signin"></i> <span translate>Planning</span>
-                </a>
-            </li>
-            <li ng-if="milestoneController.milestone.resources.burndown">
-                <a href="{{ planning.generateMilestoneLinkUrl(milestoneController.milestone, 'burndown') }}" title="{{ 'Burndown' | translate }}">
-                    <i class="icon-bar-chart"></i> <span translate>Burndown</span>
                 </a>
             </li>
             <li ng-if="milestoneController.milestone.resources.cardwall">

@@ -34,10 +34,6 @@ msgid "All items have been loaded."
 msgstr ""
 
 #: src/app/milestone/milestone.tpl.html
-msgid "Burndown"
-msgstr ""
-
-#: src/app/milestone/milestone.tpl.html
 msgid "Capacity:"
 msgstr ""
 
@@ -53,12 +49,12 @@ msgstr ""
 msgid "Compact view"
 msgstr ""
 
-#: src/app/milestone/milestone.tpl.html
-msgid "Content"
-msgstr ""
-
 #: src/app/backlog/backlog.tpl.html
 msgid "Detailed view"
+msgstr ""
+
+#: src/app/milestone/milestone.tpl.html
+msgid "Details"
 msgstr ""
 
 #: src/app/milestone/milestone.tpl.html

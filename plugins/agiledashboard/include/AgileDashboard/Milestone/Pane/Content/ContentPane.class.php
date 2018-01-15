@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,10 +26,10 @@
  */
 class AgileDashboard_Milestone_Pane_Content_ContentPane extends AgileDashboard_Pane {
 
-    /** @var Tracker_Artifact_Burndown_PaneInfo */
+    /** @var AgileDashboard_Milestone_Pane_Content_ContentPaneInfo */
     private $info;
 
-    /** @var AgileDashboard_Milestone_Pane_ContentPresenter */
+    /** @var AgileDashboard_Milestone_Pane_Content_ContentPresenter */
     private $presenter;
 
     public function __construct(AgileDashboard_Milestone_Pane_Content_ContentPaneInfo $info, AgileDashboard_Milestone_Pane_Content_ContentPresenter $presenter) {
@@ -64,5 +64,3 @@ class AgileDashboard_Milestone_Pane_Content_ContentPane extends AgileDashboard_P
         return $renderer->renderToString($this->presenter->getTemplateName(), $this->presenter);
     }
 }
-
-?>
