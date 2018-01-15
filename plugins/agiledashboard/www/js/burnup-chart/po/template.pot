@@ -2,6 +2,9 @@
 msgid "%s - Team effort"
 msgstr ""
 
+msgid "Ideal burnup"
+msgstr ""
+
 msgid "MM/DD"
 msgstr ""
 

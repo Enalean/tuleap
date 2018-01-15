@@ -18,7 +18,7 @@
  */
 import moment                from 'moment';
 import { sprintf }           from 'sprintf-js';
-import { max }               from 'd3-array';
+import { max, extent }       from 'd3-array';
 import { line }              from 'd3-shape';
 import { select, selectAll } from 'd3-selection';
 import { gettext_provider }  from './gettext-provider.js';
@@ -100,6 +100,7 @@ function createBurnupChart({
     drawBurnupChart(chart_container);
 
     function drawBurnupChart() {
+        drawIdealLine();
         drawDataColumns();
         drawCurve('total');
         drawCurve('team');
@@ -229,5 +230,45 @@ function createBurnupChart({
         const last_column = moment(x_maximum, moment.ISO_8601);
 
         return last_column.isSame(point, 'day');
+    }
+
+    function drawIdealLine() {
+        const [
+            x_minimum,
+            x_maximum
+        ] = extent(x_scale.domain());
+
+        const final_total_effort = (last_day_data.total_effort) ? last_day_data.total_effort : burnup_data.capacity;
+
+        const coordinates = [
+            {
+                x_coordinate: x_scale(moment(x_minimum, moment.ISO_8601).toDate()),
+                y_coordinate: y_scale(0)
+            }, {
+                x_coordinate: x_scale(moment(x_maximum, moment.ISO_8601).toDate()),
+                y_coordinate: y_scale(final_total_effort)
+            }
+        ];
+
+        const ideal_line = svg_burnup.append('g')
+            .attr('class', 'ideal-line');
+
+        const ideal_line_generator = line()
+            .x(({ x_coordinate }) => x_coordinate)
+            .y(({ y_coordinate }) => y_coordinate);
+
+        ideal_line.selectAll('.chart-plot-ideal-burnup')
+            .data(coordinates)
+            .enter()
+                .append('circle')
+                .attr('class', 'chart-plot-ideal-burnup')
+                .attr('cx', ({ x_coordinate}) => x_coordinate)
+                .attr('cy', ({ y_coordinate}) => y_coordinate)
+                .attr('r', 4);
+
+        ideal_line.append('path')
+            .datum(coordinates)
+            .attr('class', 'chart-curve-ideal-line')
+            .attr('d', ideal_line_generator);
     }
 }
