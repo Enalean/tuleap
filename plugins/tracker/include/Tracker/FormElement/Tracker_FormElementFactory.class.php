@@ -708,22 +708,24 @@ class Tracker_FormElementFactory {
 
     /**
      * @param Tracker $tracker
-     * @return array of Tracker_FormElement_Field_Burndown
+     *
+     * @return Tracker_FormElement_Field_Burndown[]
      */
-    public function getUsedBurndownFields($tracker) {
+    public function getUsedBurndownFields($tracker)
+    {
         return $this->getUsedFormElementsByType($tracker, array('burndown'));
     }
 
     /**
-     * Return the first (and only one) ArtifactLink field (if any)
-     *
-     * @return Tracker_FormElement_Field_ArtifactLink
+     * @return Tracker_FormElement_Field_Burndown|null
      */
-    public function getABurndownField(PFUser $user, Tracker $tracker) {
+    public function getABurndownField(PFUser $user, Tracker $tracker)
+    {
         $burndown_fields = $this->getUsedBurndownFields($tracker);
         if (count($burndown_fields) > 0 && $burndown_fields[0]->userCanRead($user)) {
             return $burndown_fields[0];
         }
+
         return null;
     }
 

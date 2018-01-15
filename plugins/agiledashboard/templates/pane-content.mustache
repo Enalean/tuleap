@@ -6,10 +6,7 @@
 
         {{> pane-content-inconsistentitems}}
     </div>
-    {{# has_burndown }}
-        <div class="agiledashboard-milestone-content-graphs">
-            <h3>{{ burndown_label }}</h3>
-            <img src="{{ burndown_url }}" width="640" height="480">
-        </div>
-    {{/ has_burndown }}
+    {{# chart_presenter }}
+        {{> pane-content-charts }}
+    {{/ chart_presenter }}
 </div>

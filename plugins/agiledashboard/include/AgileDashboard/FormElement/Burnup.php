@@ -21,7 +21,6 @@
 namespace Tuleap\AgileDashboard\FormElement;
 
 use AgileDashboard_Semantic_InitialEffortFactory;
-use Codendi_HTMLPurifier;
 use EventManager;
 use PFUser;
 use SystemEventManager;
@@ -121,24 +120,31 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
         Tracker_Artifact $artifact,
         Tracker_Artifact_ChangesetValue $value = null
     ) {
+        $user                      = UserManager::instance()->getCurrentUser();
+        $can_burnup_be_regenerated = $artifact->getTracker()->userIsAdmin($user);
+        $burnup_presenter = $this->buildPresenter($artifact, $can_burnup_be_regenerated, $user);
+
+        $renderer = TemplateRendererFactory::build()->getRenderer(AGILEDASHBOARD_TEMPLATE_DIR);
+
+        return $renderer->renderToString('formelement/burnup-field', $burnup_presenter);
+    }
+
+    public function buildPresenter(Tracker_Artifact $artifact, $can_burnup_be_regenerated, PFUser $user)
+    {
+        $warning     = "";
+        $burnup_data = null;
         try {
-            $user        = UserManager::instance()->getCurrentUser();
             $burnup_data = $this->getBurnupDataBuilder()->buildBurnupData($artifact, $user);
 
             if ($burnup_data->isBeingCalculated()) {
-                return "<div class='feedback_warning'>" .
-                    dgettext(
-                        'tuleap-agiledashboard',
-                        "Burnup is under calculation. It will be available in few minutes."
-                    ) .
-                    "</div>";
+                $warning = dgettext(
+                    'tuleap-agiledashboard',
+                    "Burnup is under calculation. It will be available in few minutes."
+                );
             }
         } catch (Tracker_FormElement_Chart_Field_Exception $e) {
-            return "<div class='feedback_warning'>" .
-                $e->getMessage() .
-                "</div>";
+            $warning = $e->getMessage();
         }
-
 
         $burnup_chart_include_assets = new IncludeAssets(
             AGILEDASHBOARD_BASE_DIR . '/../www/assets',
@@ -154,18 +160,15 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
         $capacity                  = $this->getConfigurationValueRetriever()->getCapacity($artifact, $user);
         $burnup_representation     = new BurnupRepresentation($capacity, $burnup_data);
         $css_file_url              = $theme_include_assets->getFileURL('burnup-chart.css');
-        $can_burnup_be_regenerated = $artifact->getTracker()->userIsAdmin($user);
-        $burnup_presenter          = new BurnupFieldPresenter(
+
+        return new BurnupFieldPresenter(
             $burnup_representation,
             $artifact,
             $can_burnup_be_regenerated,
             $css_file_url,
-            $user->getLocale()
+            $user->getLocale(),
+            $warning
         );
-
-        $renderer = TemplateRendererFactory::build()->getRenderer(AGILEDASHBOARD_TEMPLATE_DIR);
-
-        return $renderer->renderToString('formelement/burnup-field', $burnup_presenter);
     }
 
     public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value, $report)
