@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,22 +27,6 @@ require_once 'common/dao/include/DataAccessObject.class.php';
  */
 class Tracker_Artifact_PriorityDao extends DataAccessObject
 {
-    /**
-     * Move an artifact before another one
-     *
-     * A -> B -> C -> D
-     *
-     * moveArtifactBefore(A, D) =>
-     * B -> C -> A -> D
-     *
-     * @return bool true if success
-     * @throws Tracker_Artifact_Exception_CannotRankWithMyself
-     */
-    public function moveArtifactBefore($artifact_id, $successor_id)
-    {
-        return $this->moveListOfArtifactsBefore(array($artifact_id), $successor_id);
-    }
-
     /**
      * Move an artifact after another one
      *

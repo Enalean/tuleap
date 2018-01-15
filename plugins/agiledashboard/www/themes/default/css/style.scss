@@ -494,19 +494,8 @@ body.agiledashboard_homepage .main .content {
     color: #8E8E8E;
 }
 
-.submilestone-element-rows > tbody > tr,
-.milestone-content-open-rows > tr {
+.submilestone-element-rows > tbody > tr {
     cursor: move;
-}
-
-.milestone-content-open-rows .ui-sortable-helper {
-    -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, .065);
-    -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, .065);
-    box-shadow: 0 1px 4px rgba(0, 0, 0, .065);
-}
-
-.milestone-content-open-rows .ui-sortable-helper > td {
-    border-bottom: 1px solid #dddddd;
 }
 
 .agiledashboard h2.dropdown-toggle {

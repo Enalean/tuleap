@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean SAS 2015. All rights reserved
+ * Copyright (c) Enalean SAS 2015 - 2018. All rights reserved
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -73,16 +73,6 @@ class Tracker_Artifact_PriorityManager {
 
     public function getGlobalRank($artifact_id) {
         return $this->priority_dao->getGlobalRank($artifact_id);
-    }
-
-    public function moveArtifactBeforeWithHistoryChangeLogging($artifact_id, $successor_id, $context_id, $project_id) {
-        $old_global_rank = $this->getGlobalRank($artifact_id);
-        $this->priority_dao->moveArtifactBefore($artifact_id, $successor_id);
-        $new_global_rank = $this->getGlobalRank($artifact_id);
-
-        if ($old_global_rank !== $new_global_rank) {
-            $this->logPriorityChange($artifact_id, $artifact_id, $successor_id, $context_id, $project_id, $old_global_rank);
-        }
     }
 
     public function moveArtifactAfter($artifact_id, $predecessor_id) {
