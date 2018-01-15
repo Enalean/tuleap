@@ -7,25 +7,22 @@ if [ -z "$MYSQL_DAEMON" ]; then
 fi
 
 if [ -z "$HTTPD_DAEMON" ]; then
-    HTTPD_DAEMON=httpd
+    HTTPD_DAEMON=httpd24-httpd
 fi
 
 setup_apache() {
     echo "Setup $HTTPD_DAEMON"
     case "$HTTPD_DAEMON" in
-	httpd24-httpd)
-	    CONF_DIR=/opt/rh/httpd24/root/etc/httpd
-	    TAG=httpd24
-	    setup_apache_service_for_httpd24
-	    ;;
 	nginx)
 	    type=nginx
 	    CONF_DIR=/etc/nginx/
 	    TAG=nginx
 	    ;;
 	*)
-	    CONF_DIR=/etc/httpd
-	    TAG=httpd22
+	    CONF_DIR=/opt/rh/httpd24/root/etc/httpd
+	    TAG=httpd24
+	    setup_apache_service_for_httpd24
+	    ;;
     esac
     if [ "$type" == "nginx" ]; then
 	cp /usr/share/tuleap/tests/rest/etc/rest-tests.$TAG.conf $CONF_DIR/nginx.conf
@@ -156,7 +153,7 @@ seed_data() {
     load_project /usr/share/tuleap/tests/rest/_fixtures/10-permissions-on-artifacts
 
     echo "Load initial data"
-    php -d include_path=/usr/share/tuleap/src/www/include:/usr/share/tuleap/src /usr/share/tuleap/tests/rest/bin/init_data.php
+    /opt/rh/rh-php56/root/usr/bin/php -d include_path=/usr/share/tuleap/src/www/include:/usr/share/tuleap/src /usr/share/tuleap/tests/rest/bin/init_data.php
 
     seed_plugin_data
 }
@@ -170,7 +167,7 @@ seed_plugin_data() {
     done
 
     echo "Load plugins initial data"
-    php -d include_path=/usr/share/tuleap/src/www/include:/usr/share/tuleap/src /usr/share/tuleap/tests/rest/bin/init_data_plugins.php
+    /opt/rh/rh-php56/root/usr/bin/php -d include_path=/usr/share/tuleap/src/www/include:/usr/share/tuleap/src /usr/share/tuleap/tests/rest/bin/init_data_plugins.php
 }
 
 setup_tuleap

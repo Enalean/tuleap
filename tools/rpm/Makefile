@@ -1,5 +1,4 @@
 RPM_TMP=$(HOME)/rpmbuild
-PHP_BASE=php
 BASE_DIR=$(shell cd ../..; pwd)
 SHELL=/bin/bash
 
@@ -59,7 +58,6 @@ RPMBUILD = rpmbuild --define "%_topdir $(RPM_TMP)" \
 	--define "%_tmppath %{_topdir}/TMP" \
 	--define "%_buildroot %{_tmppath}/%{name}-root" \
 	--define "%_sysconfdir /etc" \
-	--define "%php_base $(PHP_BASE)"
 
 ifeq ($(strip $(OS)),rhel6)
 DIST=
@@ -70,7 +68,6 @@ else
 ifeq ($(strip $(OS)),rhel7)
 SPEC_FILE=tuleap.rhel7.spec
 DIST=.el7
-PHP_BASE=rh-php56-php
 SRPMS=$(RPM_TMP)/SRPMS/$(PKG_NAME)-$(version)-$(RELEASE)$(DIST).src.rpm
 RPMBUILD += --define "%dist $(DIST)"
 else

@@ -43,7 +43,4 @@ $loader = new Zend\Loader\StandardAutoloader(
 );
 $loader->register();
 
-// Load PHP compatibility libraries
-require_once('common/include/compat/hash_equals.php');
-
 require_once('vendor/autoload.php');

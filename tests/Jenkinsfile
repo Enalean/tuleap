@@ -74,27 +74,7 @@ pipeline {
 
         stage('Tests') {
             steps {
-                parallel 'UT SimpleTest PHP 5.3': {
-                    sh """
-                    cid="\$(docker create -v \$WORKSPACE/sources:/tuleap:ro \$DOCKER_REGISTRY/enalean/tuleap-simpletest:c6-php53)"
-                    docker start --attach "\$cid" || true
-                    mkdir -p 'results/ut-simpletest-php-53'
-                    docker cp "\$cid":/output/unit_tests_report.xml results/ut-simpletest-php-53/
-                    docker rm -fv "\$cid"
-                    """
-                    junit 'results/ut-simpletest-php-53/unit_tests_report.xml'
-                },
-                'UT PHPUnit PHP 5.3': {
-                    sh """
-                    cid="\$(docker create -v \$WORKSPACE/sources:/tuleap:ro \$DOCKER_REGISTRY/enalean/tuleap-test-phpunit-c6-php53 --ci)"
-                    docker start --attach "\$cid" || true
-                    mkdir -p 'results/ut-phpunit-php-53'
-                    docker cp "\$cid":/output/phpunit_tests.xml results/ut-phpunit-php-53/
-                    docker rm -fv "\$cid"
-                    """
-                    junit 'results/ut-phpunit-php-53/phpunit_tests.xml'
-                },
-                'UT SimpleTest PHP 5.6': {
+                parallel 'UT SimpleTest PHP 5.6': {
                     sh """
                     cid="\$(docker create -v \$WORKSPACE/sources:/tuleap:ro \$DOCKER_REGISTRY/enalean/tuleap-simpletest:c6-php56)"
                     docker start --attach "\$cid" || true
@@ -121,13 +101,12 @@ pipeline {
                 'Karma Label plugin': { runKarmaTests('label', 'plugins/label/www/scripts') },
                 'Karma PullRequest plugin': { runKarmaTests('pullrequest', 'plugins/pullrequest/www/js/angular') },
                 'Karma CrossTracker plugin': { runKarmaTests('crosstracker', 'plugins/crosstracker/www/scripts') },
-                'REST CentOS 6 PHP 5.3 Apache 2.2 MySQL 5.1': { runRESTTests('c6-php53-httpd22-mysql51') },
                 'REST CentOS 6 PHP 5.6 Apache 2.4 MySQL 5.6': { runRESTTests('c6-php56-httpd24-mysql56') },
                 'SOAP': {
                     sh """
                     mkdir -p working_copy/api-soap
                     cp -R sources/* working_copy/api-soap/
-                    cid="\$(docker create -v \$WORKSPACE/working_copy/api-soap:/usr/share/tuleap \$DOCKER_REGISTRY/enalean/tuleap-test-soap:2)"
+                    cid="\$(docker create -v \$WORKSPACE/working_copy/api-soap:/usr/share/tuleap \$DOCKER_REGISTRY/enalean/tuleap-test-soap:3)"
                     docker start --attach "\$cid" || true
                     mkdir -p 'results/api-soap'
                     docker cp "\$cid":/output/soap_tests.xml results/api-soap/ || true

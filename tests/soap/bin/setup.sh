@@ -6,19 +6,12 @@ if [ -z "$MYSQL_DAEMON" ]; then
     MYSQL_DAEMON=mysqld
 fi
 
-if [ -z "$HTTPD_DAEMON" ]; then
-    HTTPD_DAEMON=httpd
-fi
-
 setup_apache() {
-    echo "Setup $HTTPD_DAEMON"
-
-    sed -i -e "s/User apache/User codendiadm/" \
-	    -e "s/Group apache/Group codendiadm/" /etc/httpd/conf/httpd.conf
-
-    cp /usr/share/tuleap/tests/soap/etc/soap-tests.conf /etc/httpd/conf.d/soap-tests.conf
-
-    service $HTTPD_DAEMON restart
+    echo "Setup httpd24-httpd"
+	sed -i -e "s/User apache/User codendiadm/" \
+	    -e "s/Group apache/Group codendiadm/" /opt/rh/httpd24/root/etc/httpd/conf/httpd.conf
+	cp /usr/share/tuleap/tests/soap/etc/soap-tests.conf /opt/rh/httpd24/root/etc/httpd/conf.d/soap-tests.conf
+    service httpd24-httpd restart
 }
 
 setup_tuleap() {
@@ -81,6 +74,16 @@ setup_database() {
     mysql -e "FLUSH PRIVILEGES;"
 }
 
+setup_fpm() {
+        echo "Setup FPM rh-php56-php-fpm"
+        sed -i -e "s/user = apache/user = codendiadm/" \
+            -e "s/group = apache/group = codendiadm/" \
+            /etc/opt/rh/rh-php56/php-fpm.d/www.conf
+        cat /usr/share/tuleap/src/etc/fpm.conf.dist >> /etc/opt/rh/rh-php56/php-fpm.d/www.conf
+        chown -R codendiadm:codendiadm /var/opt/rh/rh-php56/lib/php/session /var/opt/rh/rh-php56/lib/php/wsdlcache
+        service rh-php56-php-fpm restart
+}
+
 load_project() {
     base_dir=$1
 
@@ -96,12 +99,13 @@ seed_data() {
     load_project /usr/share/tuleap/tests/soap/_fixtures/01-project
 
     echo "Load initial data"
-    php -d include_path=/usr/share/tuleap/src/www/include:/usr/share/tuleap/src /usr/share/tuleap/tests/soap/bin/init_data.php
+    /opt/rh/rh-php56/root/usr/bin/php -d include_path=/usr/share/tuleap/src/www/include:/usr/share/tuleap/src /usr/share/tuleap/tests/soap/bin/init_data.php
 }
 
 
 
 setup_tuleap
+setup_fpm
 setup_apache
 setup_database
 seed_data

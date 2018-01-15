@@ -3,7 +3,7 @@ version: "2"
 services:
   web:
     container_name: tuleap-web
-    image: enalean/tuleap-aio-dev:nodb
+    image: enalean/tuleap-aio-dev:c6-php56-nginx
     volumes:
     - .:/usr/share/tuleap
     - ../tuleap-plugins:/usr/share/tuleap-plugins

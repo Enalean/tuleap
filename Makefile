@@ -37,7 +37,7 @@ AUTOLOAD_EXCLUDES=^tests|^template
 .DEFAULT_GOAL := help
 
 help:
-	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+	@grep -E '^[a-zA-Z0-9_-\ ]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 	@echo "(Other less used targets are available, open Makefile for details)"
 
 #
@@ -126,19 +126,13 @@ post-checkout: composer generate-mo dev-clear-cache dev-forgeupgrade ## Clear ca
 	npm install
 	npm run build
 	git clean -fd plugins/*/www/themes/FlamingParrot
-	@$(DOCKER) exec tuleap-web service httpd restart
+	@$(DOCKER) exec tuleap-web service rh-php56-php-fpm restart
 
 generate-po: ## Generate translatable strings
 	@tools/utils/generate-po.php `pwd`
 
 generate-mo: ## Compile tranlated strings into binary format
 	@tools/utils/generate-mo.sh `pwd`
-
-tests_php53:
-	$(DOCKER) run --rm=true -v $(CURDIR):/tuleap enalean/tuleap-test-ut-c6-php53
-
-tests_phpunit:
-	$(DOCKER) run -ti --rm=true -v $(CURDIR):/tuleap enalean/tuleap-test-phpunit-c6-php53
 
 tests_rest: ## Run all REST tests
 	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap --mount type=tmpfs,destination=/tmp enalean/tuleap-test-rest:c6-php56-httpd24-mysql56
@@ -191,20 +185,10 @@ dev-forgeupgrade: ## Run forgeupgrade in Docker Compose environment
 dev-clear-cache: ## Clear caches in Docker Compose environment
 	@$(DOCKER) exec tuleap-web /usr/share/tuleap/src/utils/tuleap --clear-caches
 
-start: ## Start Tuleap Web + LDAP + DB in Docker Compose environment
-	@echo "Start Tuleap Web + LDAP + DB"
-	@./tools/docker/migrate_to_volume.sh
-	@$(DOCKER_COMPOSE) up -d web
-	@echo -n "Your instance will be soon available: http://"
-	@grep VIRTUAL_HOST .env | cut -d= -f2
-	@echo "You might want to type 'make show-passwords' to see site default passwords"
-	@echo -n "tuleap-web ip address: "
-	@$(DOCKER) inspect -f '{{.NetworkSettings.Networks.tuleap_default.IPAddress}}' tuleap-web
-
-start-php56: ## Start Tuleap web with php56 & nginx
+start-php56 start: ## Start Tuleap web with php56 & nginx
 	@echo "Start Tuleap in PHP 5.6"
 	@./tools/docker/migrate_to_volume.sh
-	@$(DOCKER_COMPOSE) -f docker-compose-php56.yml up -d web
+	@$(DOCKER_COMPOSE) -f docker-compose.yml up -d web
 	@echo -n "tuleap-web ip address: "
 	@$(DOCKER) inspect -f '{{.NetworkSettings.Networks.tuleap_default.IPAddress}}' tuleap-web
 

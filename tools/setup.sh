@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright (c) Enalean, Tuleap 2011-2016
+# Copyright (c) Enalean, Tuleap 2011-2018
 # Copyright (c) STMicroelectronics, Codex 2009,2010
 # Copyright (c) Xerox Corporation, Codendi 2001-2009.
 #
@@ -55,7 +55,7 @@ MV='/bin/mv'
 MYSQL='/usr/bin/mysql'
 MYSQLSHOW='/usr/bin/mysqlshow'
 PERL='/usr/bin/perl'
-PHP='/usr/bin/php'
+PHP='/opt/rh/rh-php56/root/usr/bin/php'
 RM='/bin/rm'
 RPM='/bin/rpm'
 SERVICE='/sbin/service'
@@ -592,7 +592,7 @@ setup_apache() {
     local httpdconfd="/etc/httpd/conf.d"
     local logrtd="/etc/logrotate.d"
     local filesconf=('httpd.conf' 'ssl.conf')
-    local filesconfd=('php.conf' 'subversion.conf' 'tuleap-vhost.conf' 'tuleap-svnroot.conf')
+    local filesconfd=('subversion.conf' 'tuleap-vhost.conf' 'tuleap-svnroot.conf')
 
     echo "Renaming existing Apache configuration files..."
     cd ${httpdconfd}

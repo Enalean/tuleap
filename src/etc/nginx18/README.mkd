@@ -38,8 +38,6 @@ Then run
 
 The configuration is meant to be redeployable at anytime.
 
-Note: if you ever need to go back to apache mode, you can by editing `/etc/opt/rh/rh-nginx18/nginx/conf.d/tuleap.conf`
-and swaping the includes to "promote" `conf.d/tuleap-apache.proxy`
 
 Organisation
 ============

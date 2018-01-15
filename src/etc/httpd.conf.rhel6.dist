@@ -1017,30 +1017,3 @@ Include conf/ssl.conf
 Include conf.d/*.conf
 
 DocumentRoot "/usr/share/tuleap/src/www"
-
-<Directory "/usr/share/tuleap/src/www">
-    Options Includes FollowSymLinks MultiViews
-    AllowOverride All
-    AcceptPathInfo On
-    Order allow,deny
-    Allow from all
-    SetEnvIfNoCase Request_URI /file/download\.php no-gzip dont-vary
-</Directory>
-
-# Don't allow access to API for anyone.
-# Currently, the risk is low, so we only filter on UserAgent string (which can be easily forged)
-# For better security, you can filter on the server IP address
-SetEnvIf User-Agent ^Codendi let_me_in
-<Directory "/usr/share/tuleap/src/www/api/reference">
-    # API scrips do not end with ".php"
-    ForceType application/x-httpd-php
-    Order Deny,Allow
-    Deny from all
-    Allow from env=let_me_in
-</Directory>
-
-#
-# On the production server the local.inc file is in /etc/tuleap/conf/local.inc
-# because it contains sensitive data
-#
-SetEnv TULEAP_LOCAL_INC ""
