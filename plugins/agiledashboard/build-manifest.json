@@ -49,7 +49,6 @@
     },
     "javascript": [
         "www/js/display-angular-feedback.js",
-        "www/js/ContentFilter.js",
         "www/js/home.js"
     ],
     "components": [

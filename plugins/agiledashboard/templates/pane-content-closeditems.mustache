@@ -3,9 +3,6 @@
         <h3 class="closed-items-title">{{closed_items_title}}</h3>
         <p>{{closed_items_intro}}</p>
         <div class="row-fluid">
-            <input type="text" class="content-filter closed" placeholder="Backlog element…">
-        </div>
-        <div class="row-fluid">
             <div class="span10 agiledasboard-content-closed-items">
                 <table class="table">
                     <thead>
@@ -16,7 +13,7 @@
                             <th>{{parent}}</th>
                         </tr>
                     </thead>
-                    <tbody class="milestone-content-closed">
+                    <tbody>
                         {{#done_collection}}
                             <tr data-artifact-id="{{id}}">
                                 <td><a href="{{url}}" class="backlog-item-link" data-artifact-id="{{id}}">{{id}}</a></td>
