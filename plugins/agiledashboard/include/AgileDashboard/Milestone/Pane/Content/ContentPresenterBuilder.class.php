@@ -22,10 +22,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
-
-
 class AgileDashboard_Milestone_Pane_Content_ContentPresenterBuilder
 {
     /** @var AgileDashboard_Milestone_Backlog_BacklogFactory */
@@ -33,19 +29,13 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenterBuilder
 
     /** @var AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory */
     private $collection_factory;
-    /**
-     * @var AgileDashboard_BacklogItemDao
-     */
-    private $item_dao;
 
     public function __construct(
         AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory,
-        AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory $collection_factory,
-        AgileDashboard_BacklogItemDao $item_dao
+        AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory $collection_factory
     ) {
         $this->backlog_factory    = $backlog_factory;
         $this->collection_factory = $collection_factory;
-        $this->item_dao           = $item_dao;
     }
 
     public function getMilestoneContentPresenter(PFUser $user, Planning_Milestone $milestone)
@@ -62,7 +52,6 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenterBuilder
             $this->collection_factory->getDoneCollection($user, $milestone, $backlog, $redirect_to_self),
             $this->collection_factory->getInconsistentCollection($user, $milestone, $backlog, $redirect_to_self),
             $descendant_trackers,
-            $this->canUserPrioritizeBacklog($milestone, $user),
             $this->getTrackersWithoutInitialEffort($descendant_trackers),
             $this->getSolveInconsistenciesUrl($milestone, $redirect_to_self),
             $user
@@ -76,28 +65,6 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenterBuilder
             "&aid=".$milestone->getArtifactId().
             "&action=solve-inconsistencies".
             "&".$redirect_to_self;
-    }
-
-    private function canUserPrioritizeBacklog(Planning_Milestone $milestone, PFUser $user)
-    {
-        $artifact_factory  = Tracker_ArtifactFactory::instance();
-        $planning_factory  = PlanningFactory::build();
-        $milestone_factory = new Planning_MilestoneFactory(
-            $planning_factory,
-            $artifact_factory,
-            Tracker_FormElementFactory::instance(),
-            TrackerFactory::instance(),
-            new AgileDashboard_Milestone_MilestoneStatusCounter(
-                $this->item_dao,
-                new Tracker_ArtifactDao(),
-                $artifact_factory
-            ),
-            new PlanningPermissionsManager(),
-            new AgileDashboard_Milestone_MilestoneDao(),
-            new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory)
-        );
-
-        return $milestone_factory->userCanChangePrioritiesInMilestone($milestone, $user);
     }
 
     public function getTrackersWithoutInitialEffort(array $descendant_trackers)

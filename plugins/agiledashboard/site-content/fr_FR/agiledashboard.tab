@@ -103,13 +103,11 @@ plugin_agiledashboard_contentpane	closed_items_nothing_yet	Rien de fermé actuel
 plugin_agiledashboard_contentpane	open_items_title	$1 ouvert(e)s
 plugin_agiledashboard_contentpane	open_items_title-no_more	Il n'y a plus de $1 ouvertes, bravo !
 plugin_agiledashboard_contentpane	open_items_title-not_yet	Pas encore de $1
-plugin_agiledashboard_contentpane	open_items_intro	Voici les éléments qui sont ouverts. Vous pouvez les ordonner en les glissant-déposant.
-plugin_agiledashboard_contentpane	open_unplanned_items_intro	Voici les éléments qui sont ouverts et non encore plannifiés. Vous pouvez les ordonner en les glissant-déposant.
+plugin_agiledashboard_contentpane	open_items_intro	Voici les éléments qui sont ouverts.
 plugin_agiledashboard_contentpane	initial_effort_warning	La sémantique <em>Effort Estimé</em> pour le(s) Tracker(s) <em>$1</em> ne semble pas être définie !
 plugin_agiledashboard_contentpane	inconsistent_items_title	$1 inconsistent(e)s
 plugin_agiledashboard_contentpane	inconsistent_items_intro	Voici les éléments qui ont été créés directement à partir des sous-milestones. Vous ne pouvez pas changer leur priorité.
 plugin_agiledashboard_contentpane	solve_inconsistencies	Importer dans le backlog
-plugin_agiledashboard_contentpane	unsufficient_rights_for_ranking	Vous n'êtes pas autorisé à prioriser sur ce planning.
 
 
 plugin_agiledashboard_milestone_planning	help_intro	Cette section vous permet de faire votre planning de $1:

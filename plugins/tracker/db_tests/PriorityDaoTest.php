@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -57,7 +57,7 @@ class PriorityDaoTest extends TuleapDbTestCase {
 
     public function test42HasAnHigherPriorityThan1() {
         $this->setInitialOrder(1, 42);
-        $this->dao->moveArtifactBefore(42,1);
+        $this->dao->moveListOfArtifactsBefore(array(42),1);
         $this->assertOrder(42, 1);
     }
 
@@ -71,7 +71,7 @@ class PriorityDaoTest extends TuleapDbTestCase {
 
     public function test1HasAGreaterPriorityThan101() {
         $this->setInitialOrder(42, 1, 66, 123, 101);
-        $this->dao->moveArtifactBefore(1, 101);
+        $this->dao->moveListOfArtifactsBefore(array(1), 101);
         $this->assertOrder(42, 66, 123, 1, 101);
     }
 
@@ -83,7 +83,7 @@ class PriorityDaoTest extends TuleapDbTestCase {
 
     public function test42HasAnHigherPriorityThan101() {
         $this->setInitialOrder(66, 123, 1, 42, 101);
-        $this->dao->moveArtifactBefore(42, 101);
+        $this->dao->moveListOfArtifactsBefore(array(42), 101);
         $this->assertOrder(66, 123, 1, 42, 101);
     }
 

@@ -1,14 +1,5 @@
 {{#has_something}}
     {{#has_something_todo}}
-        {{^ can_prioritize }}
-            <div class="row-fluid">
-                <div class="span10">
-                    <ul class="feedback_warning">
-                        <li> {{ user_cannot_prioritize }} </li>
-                    </ul>
-                </div>
-            </div>
-        {{/ can_prioritize }}
         <h3>{{open_items_title}}</h3>
         <p>{{open_items_intro}}</p>
         <div class="row-fluid">
@@ -26,7 +17,7 @@
                             <th>{{parent}}</th>
                         </tr>
                     </thead>
-                    <tbody class="milestone-content-open {{#can_prioritize}}milestone-content-open-rows{{/can_prioritize}}">
+                    <tbody class="milestone-content-open">
                         {{#todo_collection}}
                             <tr data-artifact-id="{{id}}">
                                 <td><a href="{{url}}" class="backlog-item-link" data-artifact-id="{{id}}">{{id}}</a></td>

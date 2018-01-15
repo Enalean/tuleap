@@ -717,32 +717,6 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     $this->summonArtifactAssociators($request, $current_user, $linked_artifact_id);
                 }
                 break;
-            case 'higher-priority-than':
-                $target_id    = (int)$request->get('target-id');
-                $milestone_id = (int)$request->get('milestone-id');
-                $project_id   = $this->getProjectId();
-
-                $user_is_authorized = $this->userHasRankingPermissions($milestone_id);
-
-                if (! $this->userHasRankingPermissions($milestone_id)) {
-                    $this->sendUserDoesNotHavePermissionsErrorCode();
-                    break;
-                }
-
-                $this->getPriorityManager()->moveArtifactBeforeWithHistoryChangeLogging($this->getId(), $target_id, $milestone_id, $project_id);
-                break;
-            case 'lesser-priority-than':
-                $target_id    = (int)$request->get('target-id');
-                $milestone_id = (int)$request->get('milestone-id');
-                $project_id   = $this->getProjectId();
-
-                if (! $this->userHasRankingPermissions($milestone_id)) {
-                    $this->sendUserDoesNotHavePermissionsErrorCode();
-                    break;
-                }
-
-                $this->getPriorityManager()->moveArtifactAfterWithHistoryChangeLogging($this->getId(), $target_id, $milestone_id, $project_id);
-                break;
             case 'show-in-overlay':
                 $renderer = new Tracker_Artifact_EditOverlayRenderer($this, $this->getEventManager(), $this->getVisitRecorder());
                 $renderer->display($request, $current_user);

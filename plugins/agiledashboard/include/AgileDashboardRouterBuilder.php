@@ -161,8 +161,7 @@ class AgileDashboardRouterBuilder {
     private function getPanePresenterBuilderFactory($milestone_factory) {
         return new AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory(
             $this->getBacklogFactory(),
-            $this->getBacklogItemPresenterCollectionFactory($milestone_factory),
-            new AgileDashboard_BacklogItemDao()
+            $this->getBacklogItemPresenterCollectionFactory($milestone_factory)
         );
     }
 

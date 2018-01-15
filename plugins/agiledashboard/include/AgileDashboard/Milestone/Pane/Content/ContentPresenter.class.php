@@ -43,9 +43,6 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter
     /** @var String[] */
     private $trackers_without_initial_effort_field;
 
-    /** @var Boolean */
-    private $can_prioritize;
-
     /** @var String */
     private $solve_inconsistencies_url;
 
@@ -55,7 +52,6 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter
         AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection $done,
         AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection $inconsistent_collection,
         $trackers,
-        $can_prioritize,
         array $trackers_without_initial_effort_defined,
         $solve_inconsistencies_url,
         PFUser $user
@@ -67,7 +63,6 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter
         foreach ($trackers_without_initial_effort_defined as $tracker) {
             $this->trackers_without_initial_effort_field[] = $tracker->getName();
         }
-        $this->can_prioritize              = $can_prioritize;
         $this->solve_inconsistencies_url   = $solve_inconsistencies_url;
 
         $this->setBurndownAttributes($milestone, $user);
@@ -86,10 +81,6 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter
 
     public function getTemplateName() {
         return 'pane-content';
-    }
-
-    public function can_prioritize() {
-        return $this->can_prioritize;
     }
 
     public function solve_inconsistencies_button() {
@@ -165,10 +156,6 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter
 
     public function open_items_intro() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'open_items_intro', $this->backlog_item_type);
-    }
-
-    public function user_cannot_prioritize() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'unsufficient_rights_for_ranking');
     }
 
     public function initial_effort_not_defined() {

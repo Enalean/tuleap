@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -124,7 +124,7 @@ class PriorityDaoTestPerformances extends TuleapDbTestCase
             $row = $this->dao->retrieve("SELECT artifact_id FROM tracker_artifact_priority_rank WHERE rank = $new_rank")->getRow();
             $successor_id = $row['artifact_id'];
             $start = microtime(1);
-            $this->dao->moveArtifactBefore($artifact_id, $successor_id);
+            $this->dao->moveListOfArtifactsBefore(array($artifact_id), $successor_id);
             $end = microtime(1);
             $times[] = $end - $start;
         }
