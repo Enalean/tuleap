@@ -3,9 +3,6 @@
         <h3>{{open_items_title}}</h3>
         <p>{{open_items_intro}}</p>
         <div class="row-fluid">
-            <input type="text" class="content-filter open" placeholder="Backlog element…">
-        </div>
-        <div class="row-fluid">
             <div class="span10 agiledasboard-content-open-items">
                 <table class="table">
                     <thead>
@@ -17,7 +14,7 @@
                             <th>{{parent}}</th>
                         </tr>
                     </thead>
-                    <tbody class="milestone-content-open">
+                    <tbody>
                         {{#todo_collection}}
                             <tr data-artifact-id="{{id}}">
                                 <td><a href="{{url}}" class="backlog-item-link" data-artifact-id="{{id}}">{{id}}</a></td>
