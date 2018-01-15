@@ -405,31 +405,26 @@ describe("BacklogController - ", function() {
         });
     });
 
-    describe("showAddBacklogItemModal() -", function() {
-        var event, item_type, get_backlog_item_request;
-        beforeEach(function() {
-            get_backlog_item_request = $q.defer();
-            event                    = jasmine.createSpyObj("Click event", ["preventDefault"]);
-            BacklogItemService.getBacklogItem.and.returnValue(get_backlog_item_request.promise);
+    describe("showAddBacklogItemModal() -", () => {
+        let event, item_type;
+        beforeEach(() => {
+            event = jasmine.createSpyObj("Click event", ["preventDefault"]);
+            item_type = { id: 50};
         });
 
-        it("Given that we use the 'new' modal and given an event and an item_type object, when I show the new artifact modal, then the event's default action will be prevented and the NewTuleapArtifactModalService will be called with a callback", function() {
-            item_type = { id: 50 };
+        it("Given an event and an item_type object, when I show the new artifact modal, then the event's default action will be prevented and the NewTuleapArtifactModalService will be called with a callback", () => {
             SharedPropertiesService.getMilestone.and.returnValue(undefined);
 
             BacklogController.showAddBacklogItemModal(event, item_type);
 
             expect(event.preventDefault).toHaveBeenCalled();
-            expect(NewTuleapArtifactModalService.showCreation).toHaveBeenCalledWith(50, undefined, jasmine.any(Function));
+            expect(NewTuleapArtifactModalService.showCreation).toHaveBeenCalledWith(50, null, jasmine.any(Function));
         });
 
-        describe("callback -", function() {
-            var artifact, remove_add_reorder_request;
+        describe("callback -", () => {
+            let artifact;
             beforeEach(function() {
-                remove_add_reorder_request = $q.defer();
-                NewTuleapArtifactModalService.showCreation.and.callFake(function(a, b, callback) {
-                    callback(5202);
-                });
+                NewTuleapArtifactModalService.showCreation.and.callFake((a, b, callback) => callback(5202));
                 artifact = {
                     backlog_item: {
                         id: 5202
@@ -437,33 +432,32 @@ describe("BacklogController - ", function() {
                 };
             });
 
-            describe("Given an item id and given that we were in a project's context,", function() {
-                beforeEach(function() {
+            describe("Given an item id and given that we were in a project's context,", () => {
+                beforeEach(() => {
                     BacklogController.details = {
-                        rest_route_id: 80,
+                        rest_route_id  : 80,
                         rest_base_route: "projects"
                     };
 
                     spyOn(BacklogController, "isMilestoneContext").and.returnValue(false);
-                    ProjectService.removeAddReorderToBacklog.and.returnValue(remove_add_reorder_request.promise);
                 });
 
-                it("when the new artifact modal calls its callback, then the artifact will be prepended to the backlog using REST, it will be retrieved from the server, and the items and backlog_items collections will be updated", function() {
+                it("when the new artifact modal calls its callback, then the artifact will be prepended to the backlog using REST, it will be retrieved from the server, and the items and backlog_items collections will be updated", () => {
                     BacklogController.backlog_items.content = [
                         { id: 3894 }
                     ];
                     BacklogController.backlog_items.filtered_content = [
                         { id: 3894 }
                     ];
+                    BacklogItemService.getBacklogItem.and.returnValue($q.when(artifact));
+                    ProjectService.removeAddReorderToBacklog.and.returnValue($q.when());
 
                     BacklogController.showAddBacklogItemModal(event, item_type);
-                    get_backlog_item_request.resolve(artifact);
-                    remove_add_reorder_request.resolve();
                     $scope.$apply();
 
                     expect(ProjectService.removeAddReorderToBacklog).toHaveBeenCalledWith(undefined, 80, [5202], {
                         direction: "before",
-                        item_id: 3894
+                        item_id  : 3894
                     });
                     expect(BacklogItemService.getBacklogItem).toHaveBeenCalledWith(5202);
                     expect(BacklogController.all_backlog_items[5202]).toEqual({ id: 5202 });
@@ -477,16 +471,16 @@ describe("BacklogController - ", function() {
                     ]);
                 });
 
-                it("and given that the backlog was filtered, when the new artifact modal calls its callback, then the artifact will be prepended to the backlog's content but not its filtered content", function() {
+                it("and given that the backlog was filtered, when the new artifact modal calls its callback, then the artifact will be prepended to the backlog's content but not its filtered content", () => {
                     BacklogController.filter.terms = 'needle';
                     BacklogController.backlog_items.content = [
                         { id: 7453 }
                     ];
                     BacklogController.backlog_items.filtered_content = [];
+                    BacklogItemService.getBacklogItem.and.returnValue($q.when(artifact));
+                    ProjectService.removeAddReorderToBacklog.and.returnValue($q.when());
 
                     BacklogController.showAddBacklogItemModal(event, item_type);
-                    get_backlog_item_request.resolve(artifact);
-                    remove_add_reorder_request.resolve();
                     $scope.$apply();
 
                     expect(BacklogController.backlog_items.content).toEqual([
@@ -496,13 +490,12 @@ describe("BacklogController - ", function() {
                     expect(BacklogController.backlog_items.filtered_content).toEqual([]);
                 });
 
-                it("and given that the backlog_items collection was empty, when the new artifact modal calls its callback, then the artifact will be prepended to the backlog and prepended to the backlog_items collection", function() {
+                it("and given that the backlog_items collection was empty, when the new artifact modal calls its callback, then the artifact will be prepended to the backlog and prepended to the backlog_items collection", () => {
                     BacklogController.backlog_items.content = [];
-                    ProjectService.removeAddToBacklog.and.returnValue(remove_add_reorder_request.promise);
+                    BacklogItemService.getBacklogItem.and.returnValue($q.when(artifact));
+                    ProjectService.removeAddToBacklog.and.returnValue($q.when());
 
                     BacklogController.showAddBacklogItemModal(event, item_type);
-                    get_backlog_item_request.resolve(artifact);
-                    remove_add_reorder_request.resolve();
                     $scope.$apply();
 
                     expect(ProjectService.removeAddToBacklog).toHaveBeenCalledWith(undefined, 80, [5202]);
@@ -513,28 +506,27 @@ describe("BacklogController - ", function() {
                 });
             });
 
-            describe("Given an item id and given we were in a milestone's context", function() {
-                beforeEach(function() {
+            describe("Given an item id and given we were in a milestone's context", () => {
+                beforeEach(() => {
                     BacklogController.details = {
-                        rest_route_id: 26,
+                        rest_route_id  : 26,
                         rest_base_route: "milestones"
                     };
                 });
 
-                it(", when the new artifact modal calls its callback, then the artifact will be prepended to the backlog, it will be retrieved from the server, and the items and backlog_items collections will be updated", function() {
+                it(", when the new artifact modal calls its callback, then the artifact will be prepended to the backlog, it will be retrieved from the server, and the items and backlog_items collections will be updated", () => {
                     BacklogController.backlog_items.content = [
                         { id: 6240 }
                     ];
-                    MilestoneService.removeAddReorderToBacklog.and.returnValue(remove_add_reorder_request.promise);
+                    BacklogItemService.getBacklogItem.and.returnValue($q.when(artifact));
+                    MilestoneService.removeAddReorderToBacklog.and.returnValue($q.when());
 
                     BacklogController.showAddBacklogItemModal(event, item_type);
-                    get_backlog_item_request.resolve(artifact);
-                    remove_add_reorder_request.resolve();
                     $scope.$apply();
 
                     expect(MilestoneService.removeAddReorderToBacklog).toHaveBeenCalledWith(undefined, 26, [5202], {
                         direction: "before",
-                        item_id: 6240
+                        item_id  : 6240
                     });
                     expect(BacklogItemService.getBacklogItem).toHaveBeenCalledWith(5202);
                     expect(BacklogController.all_backlog_items[5202]).toEqual({ id: 5202 });
@@ -544,13 +536,12 @@ describe("BacklogController - ", function() {
                     ]);
                 });
 
-                it("and given that the scope's backlog_items was empty, when the new artifact modal calls its callback, then the artifact will be prepended to the backlog and prepended to the backlog_items collection", function() {
+                it("and given that the scope's backlog_items was empty, when the new artifact modal calls its callback, then the artifact will be prepended to the backlog and prepended to the backlog_items collection", () => {
                     BacklogController.backlog_items.content = [];
-                    MilestoneService.removeAddToBacklog.and.returnValue(remove_add_reorder_request.promise);
+                    BacklogItemService.getBacklogItem.and.returnValue($q.when(artifact));
+                    MilestoneService.removeAddToBacklog.and.returnValue($q.when());
 
                     BacklogController.showAddBacklogItemModal(event, item_type);
-                    get_backlog_item_request.resolve(artifact);
-                    remove_add_reorder_request.resolve();
                     $scope.$apply();
 
                     expect(MilestoneService.removeAddToBacklog).toHaveBeenCalledWith(undefined, 26, [5202]);

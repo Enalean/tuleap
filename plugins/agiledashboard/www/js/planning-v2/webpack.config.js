@@ -100,6 +100,8 @@ if (process.env.NODE_ENV === 'production') {
     webpack_config.plugins = webpack_config.plugins.concat([
         new webpack.optimize.ModuleConcatenationPlugin()
     ]);
+} else if (process.env.NODE_ENV === 'watch' || process.env.NODE_ENV === 'test') {
+    webpack_config.devtool = 'eval';
 }
 
 module.exports = webpack_config;

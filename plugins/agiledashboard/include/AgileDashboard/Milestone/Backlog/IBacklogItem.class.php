@@ -22,17 +22,21 @@
 /**
  * I am a Backlog Item
  */
-interface AgileDashboard_Milestone_Backlog_IBacklogItem {
+interface AgileDashboard_Milestone_Backlog_IBacklogItem
+{
+    public function setInitialEffort($value);
 
-    function setInitialEffort($value);
+    public function setStatus($status);
 
-    function setStatus($status);
+    public function setHasChildren($has_children);
 
-    function setHasChildren($has_children);
+    public function id();
 
-    function id();
+    public function hasChildren();
 
-    function hasChildren();
+    public function xRef();
 
-    function xRef();
+    public function getParent();
+
+    public function setParent(Tracker_Artifact $parent);
 }

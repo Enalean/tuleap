@@ -545,37 +545,23 @@ describe("PlanningController - ", function() {
         });
     });
 
-    describe("showAddSubmilestoneModal() -", function() {
-        var event, submilestone_type;
-        beforeEach(function() {
+    describe("showAddSubmilestoneModal() -", () => {
+        let event, submilestone_type;
+        beforeEach(() => {
             submilestone_type = { id: 82 };
             event = jasmine.createSpyObj("Click event", ["preventDefault"]);
-            NewTuleapArtifactModalService.showCreation.and.callFake(function(a, b, callback) {
-                callback(1668);
-            });
+            NewTuleapArtifactModalService.showCreation.and.callFake((a, b, callback) => callback(1668));
         });
 
-        it("Given any click event and a submilestone_type object, when I show the artifact modal, then the event's default action will be prevented and the NewTuleapArtifactModalService will be called with a callback", function() {
+        it("Given any click event and a submilestone_type object, then the event's default action will be prevented and the NewTuleapArtifactModalService will be called with a callback", () => {
             PlanningController.showAddSubmilestoneModal(event, submilestone_type);
 
-            expect(NewTuleapArtifactModalService.showCreation).toHaveBeenCalledWith(82, undefined, jasmine.any(Function));
+            expect(NewTuleapArtifactModalService.showCreation).toHaveBeenCalledWith(82, PlanningController.milestone_id, jasmine.any(Function));
         });
 
-        describe("callback -", function() {
-            var get_request;
-            beforeEach(function() {
-                get_request = $q.defer();
-                MilestoneService.getMilestone.and.returnValue(get_request.promise);
-            });
-
-            describe("Given that we were in a milestone context", function() {
-                var patch_request;
-                beforeEach(function() {
-                    patch_request = $q.defer();
-                    MilestoneService.patchSubMilestones.and.returnValue(patch_request.promise);
-                });
-
-                it(", when the artifact modal calls its callback, then the milestones collection will be updated", function() {
+        describe("callback -", () => {
+            describe("Given that we were in a milestone context", () => {
+                it(", when the artifact modal calls its callback, then the milestones collection will be updated", () => {
                     PlanningController.backlog.rest_route_id = 736;
                     PlanningController.milestones.content    = [
                         {
@@ -584,16 +570,16 @@ describe("PlanningController - ", function() {
                             semantic_status: "open"
                         }
                     ];
-
-                    PlanningController.showAddSubmilestoneModal(event, submilestone_type);
-                    patch_request.resolve();
-                    get_request.resolve({
+                    MilestoneService.patchSubMilestones.and.returnValue($q.when());
+                    MilestoneService.getMilestone.and.returnValue($q.when({
                         results: {
                             id             : 1668,
                             label          : "Sprint 2015-20",
                             semantic_status: "open"
                         }
-                    });
+                    }));
+
+                    PlanningController.showAddSubmilestoneModal(event, submilestone_type);
                     $scope.$apply();
 
                     expect(MilestoneService.patchSubMilestones).toHaveBeenCalledWith(736, [1668]);
@@ -613,31 +599,31 @@ describe("PlanningController - ", function() {
                 });
             });
 
-            it("Given that we were in a project context (Top Backlog), when the artifact modal calls its callback, then the MilestoneService will be called and the milestones collection will be updated", function() {
+            it("Given that we were in a project context (Top Backlog), when the artifact modal calls its callback, then the MilestoneService will be called and the milestones collection will be updated", () => {
                 spyOn(PlanningController, "isMilestoneContext").and.returnValue(false);
                 PlanningController.milestones.content = [
                     {
-                        id: 3118,
+                        id   : 3118,
                         label: "Sprint 2015-38"
                     }
                 ];
-
-                PlanningController.showAddSubmilestoneModal(event, submilestone_type);
-                get_request.resolve({
+                MilestoneService.getMilestone.and.returnValue($q.when({
                     results: {
-                        id: 1668,
+                        id   : 1668,
                         label: "Sprint 2015-20"
                     }
-                });
+                }));
+
+                PlanningController.showAddSubmilestoneModal(event, submilestone_type);
                 $scope.$apply();
 
                 expect(MilestoneService.getMilestone).toHaveBeenCalledWith(1668, jasmine.any(Object));
                 expect(PlanningController.milestones.content).toEqual([
                     {
-                        id: 1668,
+                        id   : 1668,
                         label: "Sprint 2015-20"
                     }, {
-                        id: 3118,
+                        id   : 3118,
                         label: "Sprint 2015-38"
                     }
                 ]);
@@ -645,16 +631,12 @@ describe("PlanningController - ", function() {
         });
     });
 
-    describe("showAddItemToSubMilestoneModal() -", function() {
-        var item_type, artifact, submilestone, get_backlog_item_request;
+    describe("showAddItemToSubMilestoneModal() -", () => {
+        let item_type, artifact, submilestone;
 
-        beforeEach(function() {
-            get_backlog_item_request = $q.defer();
+        beforeEach(() => {
             MilestoneService.updateInitialEffort.and.callThrough();
-            BacklogItemService.getBacklogItem.and.returnValue(get_backlog_item_request.promise);
-            NewTuleapArtifactModalService.showCreation.and.callFake(function(a, b, callback) {
-                callback(7488);
-            });
+            NewTuleapArtifactModalService.showCreation.and.callFake((a, b, callback) => callback(7488));
             artifact = {
                 backlog_item: {
                     id: 7488
@@ -662,41 +644,37 @@ describe("PlanningController - ", function() {
             };
         });
 
-        it("Given an item_type object and a milestone object, when I show the new artifact modal, then the NewTuleapArtifactModalService will be called with a callback", function() {
-            item_type = { id: 94 };
+        it("Given an item_type object and a milestone object, then the NewTuleapArtifactModalService will be called with a callback", () => {
+            item_type    = { id: 94 };
             submilestone = { id: 196 };
 
             PlanningController.showAddItemToSubMilestoneModal(item_type, submilestone);
 
-            expect(NewTuleapArtifactModalService.showCreation).toHaveBeenCalledWith(94, submilestone, jasmine.any(Function));
+            expect(NewTuleapArtifactModalService.showCreation).toHaveBeenCalledWith(94, null, jasmine.any(Function));
         });
 
-        describe("callback - Given a submilestone object and an item id,", function() {
-            var add_to_content_request;
-
-            beforeEach(function() {
-                add_to_content_request = $q.defer();
-                item_type              = { id: 413 };
+        describe("callback - Given a submilestone object and an item id,", () => {
+            beforeEach(() => {
+                item_type = { id: 413 };
                 submilestone = {
-                    id: 92,
+                    id     : 92,
                     content: []
                 };
             });
 
-            it("when the new artifact modal calls its callback, then the artifact will be prepended to the submilestone using the REST route and will be prepended to its content attribute", function() {
+            it("when the artifact modal calls its callback, then the artifact will be prepended to the submilestone using the REST route and will be prepended to its content attribute", () => {
                 submilestone.content = [
                     { id: 9402 }
                 ];
-                MilestoneService.addReorderToContent.and.returnValue(add_to_content_request.promise);
+                BacklogItemService.getBacklogItem.and.returnValue($q.when(artifact));
+                MilestoneService.addReorderToContent.and.returnValue($q.when());
 
                 PlanningController.showAddItemToSubMilestoneModal(item_type, submilestone);
-                get_backlog_item_request.resolve(artifact);
-                add_to_content_request.resolve();
                 $scope.$apply();
 
                 expect(MilestoneService.addReorderToContent).toHaveBeenCalledWith(92, [7488], {
                     direction: "before",
-                    item_id: 9402
+                    item_id  : 9402
                 });
                 expect(BacklogItemService.getBacklogItem).toHaveBeenCalledWith(7488);
                 expect(submilestone.content).toEqual([
@@ -705,12 +683,11 @@ describe("PlanningController - ", function() {
                 ]);
             });
 
-            it("and given that the submilestone's content was empty, when the new artifact modal calls its callback, then the artifact will be prepended to the submilestone using the REST route and will be prepended to its content attribute", function() {
-                MilestoneService.addToContent.and.returnValue(add_to_content_request.promise);
+            it("and given that the submilestone's content was empty, when the artifact modal calls its callback, then the artifact will be prepended to the submilestone using the REST route and will be prepended to its content attribute", () => {
+                BacklogItemService.getBacklogItem.and.returnValue($q.when(artifact));
+                MilestoneService.addToContent.and.returnValue($q.when());
 
                 PlanningController.showAddItemToSubMilestoneModal(item_type, submilestone);
-                get_backlog_item_request.resolve(artifact);
-                add_to_content_request.resolve();
                 $scope.$apply();
 
                 expect(MilestoneService.addToContent).toHaveBeenCalledWith(92, [7488]);

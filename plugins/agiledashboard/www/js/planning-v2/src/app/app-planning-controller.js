@@ -253,8 +253,7 @@ function PlanningController(
             return addSubmilestoneToSubmilestone(submilestone_id);
         }
 
-        var parent_item = (! _.isEmpty(self.current_milestone)) ? self.current_milestone : undefined;
-        NewTuleapArtifactModalService.showCreation(submilestone_type.id, parent_item, callback);
+        NewTuleapArtifactModalService.showCreation(submilestone_type.id, self.milestone_id, callback);
     }
 
     function addSubmilestoneToSubmilestone(submilestone_id) {
@@ -280,7 +279,7 @@ function PlanningController(
     }
 
     function showAddItemToSubMilestoneModal(item_type, parent_item) {
-        var compared_to;
+        let compared_to;
         if (! _.isEmpty(parent_item.content)) {
             compared_to = {
                 direction: "before",
@@ -289,21 +288,19 @@ function PlanningController(
         }
 
         function callback(item_id) {
-            var promise;
+            let promise;
             if (compared_to) {
                 promise = MilestoneService.addReorderToContent(parent_item.id, [item_id], compared_to);
             } else {
                 promise = MilestoneService.addToContent(parent_item.id, [item_id]);
             }
 
-            promise.then(function() {
+            return promise.then(() => {
                 return prependItemToSubmilestone(item_id, parent_item);
             });
-
-            return promise;
         }
 
-        NewTuleapArtifactModalService.showCreation(item_type.id, parent_item, callback);
+        NewTuleapArtifactModalService.showCreation(item_type.id, null, callback);
     }
 
     function prependItemToSubmilestone(child_item_id, parent_item) {
