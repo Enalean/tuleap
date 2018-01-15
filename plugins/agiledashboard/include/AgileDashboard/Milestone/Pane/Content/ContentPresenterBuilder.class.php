@@ -48,8 +48,7 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenterBuilder
 
         return new AgileDashboard_Milestone_Pane_Content_ContentPresenter(
             $milestone,
-            $this->collection_factory->getTodoCollection($user, $milestone, $backlog, $redirect_to_self),
-            $this->collection_factory->getDoneCollection($user, $milestone, $backlog, $redirect_to_self),
+            $this->collection_factory->getAllCollection($user, $milestone, $backlog, $redirect_to_self),
             $this->collection_factory->getInconsistentCollection($user, $milestone, $backlog, $redirect_to_self),
             $descendant_trackers,
             $this->getTrackersWithoutInitialEffort($descendant_trackers),

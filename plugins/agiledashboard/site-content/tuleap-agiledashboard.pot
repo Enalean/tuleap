@@ -88,6 +88,9 @@ msgstr ""
 msgid "Semantic status is not defined."
 msgstr ""
 
+msgid "Status"
+msgstr ""
+
 msgid "Submit"
 msgstr ""
 
@@ -112,6 +115,9 @@ msgid "The tracker %s uses a Burnup field. Please check its configuration."
 msgstr ""
 
 msgid "There is no content <br> you can see"
+msgstr ""
+
+msgid "There is no item yet"
 msgstr ""
 
 msgid ""

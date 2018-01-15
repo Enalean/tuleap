@@ -27,18 +27,16 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter
     public $has_burndown;
     public $burndown_label;
     public $burndown_url;
+    public $no_items_label;
 
     /** @var AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection */
-    private $todo_collection;
-
-    /** @var AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection */
-    private $done_collection;
+    public $items_collection;
 
     /** @var AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection */
     private $inconsistent_collection;
 
     /** @var String */
-    private $backlog_item_type;
+    public $backlog_item_type;
 
     /** @var String[] */
     private $trackers_without_initial_effort_field;
@@ -48,16 +46,14 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter
 
     public function __construct(
         Planning_Milestone $milestone,
-        AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection $todo,
-        AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection $done,
+        AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection $items,
         AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection $inconsistent_collection,
         $trackers,
         array $trackers_without_initial_effort_defined,
         $solve_inconsistencies_url,
         PFUser $user
     ) {
-        $this->todo_collection           = $todo;
-        $this->done_collection           = $done;
+        $this->items_collection          = $items;
         $this->inconsistent_collection   = $inconsistent_collection;
         $this->backlog_item_type         = $this->getTrackerNames($trackers);
         foreach ($trackers_without_initial_effort_defined as $tracker) {
@@ -66,6 +62,8 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter
         $this->solve_inconsistencies_url   = $solve_inconsistencies_url;
 
         $this->setBurndownAttributes($milestone, $user);
+
+        $this->no_items_label = dgettext('plugin-agiledashboard', 'There is no item yet');
     }
 
     private function getTrackerNames($trackers)
@@ -91,71 +89,24 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter
         return $this->solve_inconsistencies_url;
     }
 
-    public function title() {
+    public function item_title()
+    {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'content_head_title');
     }
 
-    public function points() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'content_head_points');
+    public function status_title()
+    {
+        return dgettext('plugin-agiledashboard', 'Status');
     }
 
-    public function type() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'content_head_type');
-    }
-
-    public function parent() {
+    public function parent_title()
+    {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'content_head_parent');
     }
 
-    public function todo_collection() {
-        return $this->todo_collection;
-    }
-
-    public function done_collection() {
-        return $this->done_collection;
-    }
-
-    public function has_something_todo() {
-        return $this->todo_collection->count() > 0;
-    }
-
-    public function has_something_done() {
-        return $this->done_collection->count() > 0;
-    }
-
-    public function has_something() {
-        return $this->has_something_todo() || $this->has_something_done();
-    }
-
-    public function has_nothing() {
-        return ! $this->has_something();
-    }
-
-    public function has_nothing_todo() {
-        return ! $this->has_something_todo();
-    }
-
-    public function closed_items_title() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'closed_items_title', $this->backlog_item_type);
-    }
-
-    public function closed_items_intro() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'closed_items_intro', $this->backlog_item_type);
-    }
-
-    public function open_items_title() {
-        $key = 'open_items_title';
-        if ($this->has_nothing()) {
-            $key = 'open_items_title-not_yet';
-        } else if ($this->has_nothing_todo()) {
-            $key = 'open_items_title-no_more';
-        }
-
-        return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', $key, $this->backlog_item_type);
-    }
-
-    public function open_items_intro() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'open_items_intro', $this->backlog_item_type);
+    public function has_something()
+    {
+        return $this->items_collection->count() > 0;
     }
 
     public function initial_effort_not_defined() {

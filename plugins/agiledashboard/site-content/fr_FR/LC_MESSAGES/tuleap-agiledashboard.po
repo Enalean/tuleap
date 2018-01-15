@@ -118,6 +118,9 @@ msgstr "La sémantique effort estimé n'est pas définie pour l'outil de suivi %
 msgid "Semantic status is not defined."
 msgstr "La sémantique status n'est pas définie."
 
+msgid "Status"
+msgstr "Statut"
+
 msgid "Submit"
 msgstr "Valider"
 
@@ -149,6 +152,9 @@ msgstr ""
 
 msgid "There is no content <br> you can see"
 msgstr "Il n’y a aucun élément <br> visible"
+
+msgid "There is no item yet"
+msgstr "Il n’y a aucun élément pour l'instant"
 
 msgid ""
 "This semantic will be used in the <strong>AgileDashboard</strong> service."

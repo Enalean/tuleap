@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2013. All rights reserved.
+ * Copyright Enalean (c) 2013 - 2018. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -66,7 +66,7 @@ class AgileDashboard_BacklogItemPresenter implements
         $this->redirect_to_self = $redirect_to_self;
         $this->artifact         = $artifact;
         $this->type             = $this->artifact->getTracker()->getName();
-        $this->color            = $this->artifact->getTracker()->getColor();
+        $this->color            = $this->artifact->getTracker()->getNormalizedColor();
     }
 
     public function setParent(Tracker_Artifact $parent) {
@@ -161,5 +161,10 @@ class AgileDashboard_BacklogItemPresenter implements
             return $this->artifact->hasChildren();
         }
         return $this->has_children;
+    }
+
+    public function xRef()
+    {
+        return $this->artifact->getXRef();
     }
 }

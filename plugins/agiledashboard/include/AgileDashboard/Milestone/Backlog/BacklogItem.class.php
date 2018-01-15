@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2013. All rights reserved.
+ * Copyright Enalean (c) 2013 - 2018. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -62,7 +62,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItem implements AgileDashboard_Mil
         $this->title      = $artifact->getTitle();
         $this->url        = $artifact->getUri();
         $this->artifact   = $artifact;
-        $this->color      = $this->artifact->getTracker()->getColor();
+        $this->color      = $this->artifact->getTracker()->getNormalizedColor();
         $this->type       = $this->artifact->getTracker()->getName();
         $this->short_type = $this->artifact->getTracker()->getItemName();
     }
@@ -139,5 +139,10 @@ class AgileDashboard_Milestone_Backlog_BacklogItem implements AgileDashboard_Mil
      */
     public function getArtifact() {
         return $this->artifact;
+    }
+
+    public function xRef()
+    {
+        return $this->artifact->getXRef();
     }
 }
