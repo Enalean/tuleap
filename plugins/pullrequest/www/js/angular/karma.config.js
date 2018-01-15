@@ -45,5 +45,6 @@ module.exports = {
      * the aesthetic advantage of not launching a browser every time you save.
      */
     browsers: [process.platform !== 'linux' ? 'ChromeHeadless' : 'ChromiumHeadless'],
+    browserNoActivityTimeout: 20000,
     logLevel: 'INFO'
 };
