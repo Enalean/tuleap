@@ -343,14 +343,19 @@ class AgileDashboardPlugin extends Plugin {
         );
     }
 
-    public function tracker_event_trackers_duplicated($params) {
+    public function tracker_event_trackers_duplicated($params)
+    {
         PlanningFactory::build()->duplicatePlannings(
             $params['group_id'],
             $params['tracker_mapping'],
             $params['ugroups_mapping']
         );
 
-        $this->getKanbanManager()->duplicateKanbans($params['tracker_mapping'], $params['field_mapping']);
+        $this->getKanbanManager()->duplicateKanbans(
+            $params['tracker_mapping'],
+            $params['field_mapping'],
+            $params['report_mapping']
+        );
     }
 
     public function tracker_event_redirect_after_artifact_creation_or_update($params) {

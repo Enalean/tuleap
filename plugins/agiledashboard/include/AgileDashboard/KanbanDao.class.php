@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,8 @@
 
 class AgileDashboard_KanbanDao extends DataAccessObject {
 
-    public function duplicateKanbans(array $tracker_mapping, array $field_mapping) {
+    public function duplicateKanbans(array $tracker_mapping, array $field_mapping, array $report_mapping)
+    {
         if (empty($tracker_mapping)) {
             return;
         }
@@ -35,7 +36,20 @@ class AgileDashboard_KanbanDao extends DataAccessObject {
             $old_kanban_id = $row['id'];
             $new_kanban_id = $this->create($row['name'], $tracker_mapping[$row['tracker_id']]);
             $this->duplicateColumns($old_kanban_id, $new_kanban_id, $field_mapping);
+            $this->duplicateReports($old_kanban_id, $new_kanban_id, $report_mapping);
         }
+    }
+
+    private function duplicateReports($old_kanban_id, $new_kanban_id, array $report_mapping)
+    {
+        array_walk($report_mapping, array($this, 'convertValueIdToWhenThenStatement'));
+        $new_report_id = "CASE report_id ". implode(' ', $report_mapping) ." END";
+
+        $sql = "INSERT INTO plugin_agiledashboard_kanban_tracker_reports (kanban_id, report_id)
+                SELECT $new_kanban_id, $new_report_id
+                FROM plugin_agiledashboard_kanban_tracker_reports
+                WHERE kanban_id = $old_kanban_id";
+        $this->update($sql);
     }
 
     private function duplicateColumns($old_kanban_id, $new_kanban_id, array $field_mapping) {

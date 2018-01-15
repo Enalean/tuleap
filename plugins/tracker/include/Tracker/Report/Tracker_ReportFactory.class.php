@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -148,14 +148,17 @@ class Tracker_ReportFactory {
             $user->getId()
         );
     }
-    
+
     public function duplicate($from_tracker_id, $to_tracker_id, $field_mapping) {
+        $report_mapping = array();
         foreach($this->getReportsByTrackerId($from_tracker_id, null) as $from_report) {
             $new_report = $this->duplicateReport($from_report, $to_tracker_id, $field_mapping, null);
-            //TODO: change the parent report
+            $report_mapping[$from_report->getId()] = $new_report->getId();
         }
+
+        return $report_mapping;
     }
-    
+
     /**
      * Duplicate a report. The new report will have $from_report as parent.
      *

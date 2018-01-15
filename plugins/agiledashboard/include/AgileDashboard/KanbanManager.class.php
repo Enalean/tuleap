@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -53,8 +53,9 @@ class AgileDashboard_KanbanManager {
         return $this->dao->create($kanban_name, $tracker_id);
     }
 
-    public function duplicateKanbans(array $tracker_mapping, array $field_mapping) {
-        $this->dao->duplicateKanbans($tracker_mapping, $field_mapping);
+    public function duplicateKanbans(array $tracker_mapping, array $field_mapping, array $report_mapping)
+    {
+        $this->dao->duplicateKanbans($tracker_mapping, $field_mapping, $report_mapping);
     }
 
     public function getTrackersWithKanbanUsage($project_id, PFUser $user)

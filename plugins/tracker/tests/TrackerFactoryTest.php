@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -220,7 +220,7 @@ class TrackerFactoryDuplicationTest extends TuleapTestCase {
 
         $t_new = stub('Tracker')->getId()->returns(555);
 
-        $this->tracker_factory->setReturnValue('create', array('tracker' => $t_new, 'field_mapping' => array())) ;
+        $this->tracker_factory->setReturnValue('create', array('tracker' => $t_new, 'field_mapping' => array(), 'report_mapping' => array())) ;
 
         $this->tracker_factory->expectOnce('create', array(999, 100, 1234, 'Bugs', 'Bug Tracker', 'bug', null));
 
@@ -248,10 +248,10 @@ class TrackerFactoryDuplicationTest extends TuleapTestCase {
         $to_project_id   = 999;
         $from_project_id = 100;
         $this->tracker_factory->setReturnValue('create',
-                                                array('tracker' => $t_new1, 'field_mapping' => $t_new1_field_mapping),
+                                                array('tracker' => $t_new1, 'field_mapping' => $t_new1_field_mapping, 'report_mapping' => array()),
                                                 array($to_project_id, $from_project_id, 123, '*', '*', '*', null));
         $this->tracker_factory->setReturnValue('create',
-                                                array('tracker' => $t_new2, 'field_mapping' => $t_new2_field_mapping),
+                                                array('tracker' => $t_new2, 'field_mapping' => $t_new2_field_mapping, 'report_mapping' => array()),
                                                 array($to_project_id, $from_project_id, 567, '*', '*', '*', null)) ;
 
         $this->formelement_factory->expectOnce('fixOriginalFieldIdsAfterDuplication', array($to_project_id, $from_project_id, $full_field_mapping));
@@ -290,7 +290,7 @@ class TrackerFactoryDuplicationTest extends TuleapTestCase {
 
         $t_new = stub('Tracker')->getId()->returns(555);
 
-        $this->tracker_factory->setReturnValue('create', array('tracker' => $t_new, 'field_mapping' => array())) ;
+        $this->tracker_factory->setReturnValue('create', array('tracker' => $t_new, 'field_mapping' => array(), 'report_mapping' => array())) ;
 
         $this->tracker_factory->expectOnce('create', array(999, 100, 1234, 'Bugs', 'Bug Tracker', 'bug', null));
 
