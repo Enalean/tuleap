@@ -16,16 +16,10 @@ msgstr ""
 msgid "Description"
 msgstr ""
 
-msgid "Error while fetching the cross tracker report"
-msgstr ""
-
 msgid "Error while fetching the list of projects you are member of"
 msgstr ""
 
 msgid "Error while fetching the list of trackers of this project"
-msgstr ""
-
-msgid "Error while updating the cross tracker report"
 msgstr ""
 
 msgid "Example: @title = 'value'"
