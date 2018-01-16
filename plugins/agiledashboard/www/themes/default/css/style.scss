@@ -326,97 +326,9 @@ body.agiledashboard_homepage .main .content {
     overflow: visible;
 }
 
-.agiledashboard .release_planner {
-    border: 1px solid lightgray;
-    padding: 0 0.5em;
-}
-
-.release_planner > .tracker_artifact_title {
-    margin-bottom: 0;
-    margin-top: 0.5em;
-}
-
-.release_planner > .help {
-    color: #999;
-    margin-top: 0;
-}
-
 .agiledashboard .cardwall-column-header:first-child {
     vertical-align: middle;
 }
-
-.agiledashboard .cards {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
-.agiledashboard .cards .cards {
-    margin-left: 2em;
-}
-
-.planning-item > .card,
-.planning-item > .card > .card-container {
-    background: #FFF;
-    -webkit-border-top-right-radius: 3px;
-    -webkit-border-bottom-right-radius: 3px;
-    -moz-border-radius-topright: 3px;
-    -moz-border-radius-bottomright: 3px;
-    border-top-right-radius: 3px;
-    border-bottom-right-radius: 3px;
-}
-
-.planning-item.planning-draggable > .card,
-.planning-item.planning-draggable > .card > .card-container {
-    font-style: normal;
-    background-color: #FFFFBB;
-}
-
-.milestone-content > ul.cards,
-.backlog-content > ul.cards {
-    min-height: 1.5em;
-}
-
-.backlog-content {
-    clear: both;
-    padding-top: 0.5em;
-}
-
-.release_planner {
-    background: white;
-}
-
-/* {{{ same as card-actions in tracker style.css */
-.backlog-actions a.dropdown-toggle {
-    font-size: 0.9em;
-    color: #7D7D7D;
-}
-
-.backlog-actions {
-    float: right;
-}
-
-.backlog-actions ul {
-    list-style: none;
-    padding: 0.25em 0.5em;
-}
-
-.backlog-actions .caret {
-    margin-top: 6px;
-    margin-left: 0;
-}
-
-.backlog-actions:hover .caret {
-    opacity: 0.7;
-    filter: alpha(opacity=70);
-}
-
-.backlog-actions .dropdown.open .dropdown-toggle {
-    color: #005580;
-    background: none;
-}
-
-/* }}} */
 
 .agiledashboard hr {
     border: 0px;
@@ -426,18 +338,6 @@ body.agiledashboard_homepage .main .content {
 .toggle-collapse {
     display: inline-block;
     width: .8em;
-}
-
-.planning_overcapacity,
-.planning_overcapacity .planning_remaining_effort,
-.submilestone-effort.planning_overcapacity {
-    font-weight: bold;
-    color: red;
-}
-
-.submilestone-effort.planning_balancedcapacity {
-    font-weight: bold;
-    color: green;
 }
 
 .release-date-info {
@@ -456,19 +356,19 @@ body.agiledashboard_homepage .main .content {
     white-space: nowrap;
 }
 
-#planning table td.milestone-element-title, #planning table td.submilestone-element-title,
-#blcontent table td.milestone-element-title, #blcontent table td.submilestone-element-title {
+#planning table td.milestone-element-title,
+#blcontent table td.milestone-element-title {
     width: 100%;
     white-space: normal;
 }
 
-#blcontent table td.milestone-element-parent, #blcontent table td.submilestone-element-parent {
+#blcontent table td.milestone-element-parent {
     min-width: 200px;
     max-width: 200px;
     white-space: normal;
 }
 
-#planning table td.milestone-element-parent, #planning table td.submilestone-element-parent {
+#planning table td.milestone-element-parent {
     min-width: 200px;
     max-width: 200px;
     white-space: normal;
@@ -494,10 +394,6 @@ body.agiledashboard_homepage .main .content {
     color: #8E8E8E;
 }
 
-.submilestone-element-rows > tbody > tr {
-    cursor: move;
-}
-
 .agiledashboard h2.dropdown-toggle {
     display: inline-block;
     cursor: pointer;
@@ -510,15 +406,6 @@ body.agiledashboard_homepage .main .content {
 
 .agiledasboard-content-open-items, .agiledasboard-content-inconsistent-items, .agiledasboard-content-closed-items {
     background: #FFFFFF;
-}
-
-@media screen and (max-width: 1400px) {
-    table.submilestone-element-rows {
-        font-size: 0.9em;
-        th:nth-child(5), td:nth-child(5) {
-            display: none;
-        }
-    }
 }
 
 .agiledashboard-admin-kanban {
