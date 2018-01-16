@@ -8,6 +8,37 @@ function FormTreeBuilderService() {
     var self = this;
     self.buildFormTree = buildFormTree;
 
+    const white_listed_field = [
+        "fieldset",
+        "column",
+        "linebreak",
+        "separator",
+        "staticrichtext",
+        "sb",
+        "msb",
+        "rb",
+        "cb",
+        "int",
+        "string",
+        "float",
+        "text",
+        "art_link",
+        "burndown",
+        "cross",
+        "aid",
+        "atid",
+        "priority",
+        "computed",
+        "subby",
+        "luby",
+        "subon",
+        "lud",
+        "file",
+        "perm",
+        "date",
+        "tbl"
+    ];
+
     function buildFormTree(tracker) {
         var ordered_fields = _(tracker.structure)
             .map(function(structure_field) {
@@ -23,6 +54,10 @@ function FormTreeBuilderService() {
         var complete_field = _(all_fields).find({ field_id: structure_field.id });
 
         if (complete_field === undefined) {
+            return false;
+        }
+
+        if (! white_listed_field.includes(complete_field.type)) {
             return false;
         }
 
