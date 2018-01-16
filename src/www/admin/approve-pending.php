@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2016 - 2018. All rights reserved
  * Copyright 1999-2000 (c) The SourceForge Crew
- * Copyright (c) Enalean, 2016 - 2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -58,11 +58,7 @@ if ($action == 'activate') {
         $project = $project_manager->getProject($group_id);
         $project_manager->activate($project);
     }
-    if ($special_access) {
-        $GLOBALS['Response']->redirect('/my/');
-    } else {
-        $GLOBALS['Response']->redirect('/admin/');
-    }
+    $GLOBALS['Response']->redirect('/admin/approve-pending.php');
 
 } else if ($action == 'delete') {
     $csrf_token->check();
@@ -72,11 +68,7 @@ if ($action == 'activate') {
     $project_manager->updateStatus($project, Project::STATUS_DELETED);
 
     $event_manager->processEvent('project_is_deleted', array('group_id' => $group_id));
-    if ($special_access) {
-        $GLOBALS['Response']->redirect('/my/');
-    } else {
-        $GLOBALS['Response']->redirect('/admin/');
-    }
+    $GLOBALS['Response']->redirect('/admin/approve-pending.php');
 }
 
 $fields_factory  = new DescriptionFieldsFactory(new DescriptionFieldsDao());
