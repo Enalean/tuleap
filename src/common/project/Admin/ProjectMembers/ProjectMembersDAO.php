@@ -25,15 +25,13 @@
 namespace Tuleap\Project\Admin\ProjectMembers;
 
 use DataAccessObject;
-use PFUser;
 use UserHelper;
 
 class ProjectMembersDAO extends DataAccessObject
 {
     public function searchProjectMembers($project_id)
     {
-        $status_active      = $this->da->quoteSmart(PFUser::STATUS_ACTIVE);
-        $status_restricted  = $this->da->quoteSmart(PFUser::STATUS_RESTRICTED);
+
         $escaped_project_id = $this->da->escapeInt($project_id);
         $sql_order          = UserHelper::instance()->getDisplayNameSQLOrder();
 
@@ -69,7 +67,6 @@ class ProjectMembersDAO extends DataAccessObject
                         )
                         ON (user.user_id = ugroup_user.user_id)
                 WHERE user_group.group_id = $escaped_project_id
-                AND user.status IN ($status_active, $status_restricted)
                 GROUP BY user.user_id
                 ORDER BY $sql_order";
 
