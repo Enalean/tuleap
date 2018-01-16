@@ -22,6 +22,7 @@
 namespace Tuleap\Tracker\Artifact\Changeset\Notification;
 
 use Logger;
+use Tuleap\Queue\Worker;
 use WrapperLogger;
 use Tracker;
 use Tracker_FormElementFactory;
@@ -176,15 +177,13 @@ class Notifier
     {
         try {
             $this->notifier_dao->addNewNotification($changeset->getId());
-            $queue = Factory::getPersistentQueue($this->logger, AsynchronousNotifier::QUEUE_PREFIX);
+            $queue = Factory::getPersistentQueue($this->logger, Worker::EVENT_QUEUE_NAME, Factory::REDIS);
             $queue->pushSinglePersistentMessage(
                 AsynchronousNotifier::TOPIC,
-                json_encode(
-                    array(
-                        'artifact_id'  => (int) $changeset->getArtifact()->getId(),
-                        'changeset_id' => (int) $changeset->getId()
-                    )
-                )
+                [
+                    'artifact_id'  => (int) $changeset->getArtifact()->getId(),
+                    'changeset_id' => (int) $changeset->getId(),
+                ]
             );
         } catch (Exception $exception) {
             $this->logger->error("Unable to queue notification for {$changeset->getId()}, fallback to online notif");

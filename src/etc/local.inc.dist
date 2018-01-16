@@ -157,6 +157,9 @@ $db_config_file = $sys_custom_dir . '/conf/database.inc';
 // Rabbitmq config file
 $rabbitmq_config_file = '/etc/tuleap/conf/rabbitmq.inc';
 
+// Redis config file
+$redis_config_file = '/etc/tuleap/conf/redis.inc';
+
 // Data Directory
 $sys_data_dir = '/var/lib/codendi';
 
