@@ -12,17 +12,15 @@
                     <thead>
                     <tr>
                         <th>Id</th>
-                        <th>{{type}}</th>
-                        <th>{{title}}</th>
-                        <th>{{parent}}</th>
+                        <th>{{ item_title }}</th>
+                        <th>{{ parent_title }}</th>
                     </tr>
                     </thead>
                     <tbody>
                     {{#inconsistent_collection}}
                         <tr data-artifact-id="{{id}}">
                             <td><a href="{{url}}" class="backlog-item-link" data-artifact-id="{{id}}">{{id}}</a></td>
-                            <td><span class="{{ color }} xref-in-title label">{{type}}</span></td>
-                            <td class="milestone-element-title">{{title}}</td>
+                            <td><span class="{{ color }} xref-in-title label">{{type}}</span> {{title}}</td>
                             <td class="milestone-element-parent"><a href="{{parent_url}}" class="backlog-item-link" data-artifact-id="{{parent_id}}">{{parent_title}}</a></td>
                         </tr>
                     {{/inconsistent_collection}}

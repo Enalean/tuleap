@@ -1,0 +1,35 @@
+<h3>{{ backlog_item_type }}</h3>
+<div class="row-fluid">
+    <div class="span10">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>{{ item_title }}</th>
+                <th>{{ status_title }}</th>
+                <th>{{ parent_title }}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{# has_something }}
+                {{# items_collection }}
+                    <tr data-artifact-id="{{ id }}">
+                        <td>
+                            <span class="planning-view-items-list-content-badge badge tlp-badge-outline tlp-badge-{{color}}">
+                                {{ xRef }}
+                            </span>
+                            <span class="history-item-content-description-info-title">{{ title }}</span>
+                        </td>
+                        <td>{{ status }}</td>
+                        <td class="milestone-element-parent">{{ parent_title }}</td>
+                    </tr>
+                {{/ items_collection }}
+            {{/ has_something }}
+            {{^ has_something }}
+                <tr>
+                    <td colspan="3" class="table-cell-empty">{{ no_items_label }}</td>
+                </tr>
+            {{/ has_something}}
+            </tbody>
+        </table>
+    </div>
+</div>
