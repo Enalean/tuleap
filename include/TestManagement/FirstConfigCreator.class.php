@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -71,7 +71,12 @@ class FirstConfigCreator
 
         foreach($template_tracker_ids as $tracker_itemname => $tracker_id) {
             if (! isset($tracker_mapping[$tracker_id])) {
-                $tracker = $this->createTrackerFromXML($project, $tracker_itemname);
+                $tracker = $this->getTracker($project, $tracker_itemname);
+
+                if (! $tracker) {
+                    return;
+                }
+
                 $project_tracker_ids[$tracker_itemname] = $tracker->getId();
             } else {
                 $project_tracker_ids[$tracker_itemname] = $tracker_mapping[$tracker_id];
@@ -102,26 +107,7 @@ class FirstConfigCreator
         }
 
         foreach($tracker_itemnames as $tracker_itemname) {
-            if ($this->isTrackerAlreadyCreated($project, $tracker_itemname)) {
-                $tracker = $this->tracker_factory->getTrackerByShortnameAndProjectId(
-                    $tracker_itemname,
-                    $project->getId()
-                );
-
-                if (! $tracker) {
-                    # Tracker using this shortname is from TrackerEngine v3
-                    $GLOBALS['Response']->addFeedback(
-                        Feedback::WARN,
-                        $GLOBALS['Language']->getText(
-                            'plugin_testmanagement_first_config',
-                            'tracker_engine_version_error',
-                            $tracker_itemname
-                        )
-                    );
-                }
-            } else {
-                $tracker = $this->createTrackerFromXML($project, $tracker_itemname);
-            }
+            $tracker = $this->getTracker($project, $tracker_itemname);
 
             if (! $tracker) {
                 $GLOBALS['Response']->redirect(TESTMANAGEMENT_BASE_URL . '/?group_id=' . urlencode($project->getID()));
@@ -139,6 +125,36 @@ class FirstConfigCreator
         );
 
         $this->success();
+    }
+
+    /**
+     * @return null|\Tracker
+     */
+    private function getTracker(Project $project, $tracker_itemname)
+    {
+        $tracker = null;
+        if ($this->isTrackerAlreadyCreated($project, $tracker_itemname)) {
+            $tracker = $this->tracker_factory->getTrackerByShortnameAndProjectId(
+                $tracker_itemname,
+                $project->getId()
+            );
+
+            if (! $tracker) {
+                # Tracker using this shortname is from TrackerEngine v3
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::WARN,
+                    $GLOBALS['Language']->getText(
+                        'plugin_testmanagement_first_config',
+                        'tracker_engine_version_error',
+                        $tracker_itemname
+                    )
+                );
+            }
+        } else {
+            $tracker = $this->createTrackerFromXML($project, $tracker_itemname);
+        }
+
+        return $tracker;
     }
 
     private function success()
