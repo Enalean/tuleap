@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2017. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -25,18 +25,24 @@ use Tuleap\REST\MilestoneBase;
 /**
  * @group MilestonesTest
  */
-class MilestoneBurndownTest extends MilestoneBase
+class MilestoneBurndownTest extends MilestoneBase // @codingStandardsIgnoreLine
 {
-    public function testOPTIONSBurndown() {
-        $response = $this->getResponse($this->client->options('milestones/'.$this->sprint_artifact_ids[1].'/burndown'));
+    public function testOPTIONSBurndown()
+    {
+        $response = $this->getResponse(
+            $this->client->options('milestones/' . $this->sprint_artifact_ids[1] . '/burndown')
+        );
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
-    public function testGetBurndown() {
-        $response = $this->getResponse($this->client->get('milestones/'.$this->sprint_artifact_ids[1].'/burndown'));
+    public function testGetBurndown()
+    {
+        $response = $this->getResponse($this->client->get('milestones/' . $this->sprint_artifact_ids[1] . '/burndown'));
         $burndown = $response->json();
+
         $this->assertEquals(10, $burndown['duration']);
         $this->assertEquals(29, $burndown['capacity']);
         $this->assertCount(0, $burndown['points']);
+        $this->assertCount(0, $burndown['points_with_date']);
     }
 }

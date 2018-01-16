@@ -480,33 +480,70 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
             return;
         }
 
-        $date = new DateTime();
-        $date->setTimestamp($time_period->getStartDate());
+        $date = $this->getFirstDayDate($time_period);
+        $now  = new DateTime();
 
-        $tonight = new DateTime();
-        $tonight->setTime(0, 0, 0);
+        if ($time_period->getStartDate() > $now->getTimestamp()) {
+            return;
+        }
 
         $offset_days = 0;
-
-        $artifact_list = array($artifact);
         while($offset_days <= $time_period->getDuration()) {
-            if ($date < $tonight) {
-                $remaining_effort = $field->getCachedValue(new Tracker_UserWithReadAllPermission($user), $artifact, $date->getTimestamp());
-                if ($remaining_effort !== false) {
-                    $burndown_data->addEffortAt($offset_days, $remaining_effort);
-                    $offset_days++;
-                }
-            }
-
-            if ($date >= $tonight) {
-                $remaining_effort =  $field->getComputedValue($user, $artifact, null, $artifact_list, true);
+            if ($date >= $now) {
+                $remaining_effort = $field->getComputedValue($user, $artifact, null);
                 $burndown_data->addEffortAt($offset_days, $remaining_effort);
+                $burndown_data->addEffortAtDateTime($this->getMidnightDate($date), $remaining_effort);
 
                 break;
             }
 
-            $date->modify('+1 day');
+            $remaining_effort = $field->getCachedValue(
+                new Tracker_UserWithReadAllPermission($user), $artifact, $date->getTimestamp()
+            );
+            if ($remaining_effort !== false) {
+                $date_midnight = $date;
+                $date_midnight->setTime(0, 0, 0);
+
+                $burndown_data->addEffortAt($offset_days, $remaining_effort);
+                $burndown_data->addEffortAtDateTime($this->getMidnightDate($date), $remaining_effort);
+                $offset_days++;
+            }
+
+            $date = $this->setTomorrow($date);
         }
+    }
+
+    /**
+     * @return DateTime
+     */
+    private function getFirstDayDate(TimePeriodWithoutWeekEnd $time_period)
+    {
+        $date = new DateTime();
+        $date->setTimestamp($time_period->getStartDate());
+        $date->setTime(23, 59, 59);
+
+        return $date;
+    }
+
+    /**
+     * @return DateTime
+     */
+    private function getMidnightDate(DateTime $date)
+    {
+        $date->setTime(0, 0, 0);
+
+        return $date;
+    }
+
+    /**
+     * @return DateTime
+     */
+    private function setTomorrow(DateTime $date)
+    {
+        $date->modify('+1 day');
+        $date->setTime(23, 59, 59);
+
+        return $date;
     }
 
     /**
