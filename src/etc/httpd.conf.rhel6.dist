@@ -1010,9 +1010,6 @@ BrowserMatch "^Dreamweaver-WebDAV-SCM1" redirect-carefully
 #    CustomLog logs/dummy-host.example.com-access_log common
 #</VirtualHost>
 
-# Include SSL related configuration
-Include conf/ssl.conf
-
 # Load plugins specific apache configuration
 Include conf.d/*.conf
 
