@@ -38,9 +38,6 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter
     /** @var String */
     public $backlog_item_type;
 
-    /** @var String[] */
-    private $trackers_without_initial_effort_field;
-
     /** @var String */
     private $solve_inconsistencies_url;
 
@@ -49,16 +46,12 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter
         AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection $items,
         AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection $inconsistent_collection,
         $trackers,
-        array $trackers_without_initial_effort_defined,
         $solve_inconsistencies_url,
         PFUser $user
     ) {
         $this->items_collection          = $items;
         $this->inconsistent_collection   = $inconsistent_collection;
         $this->backlog_item_type         = $this->getTrackerNames($trackers);
-        foreach ($trackers_without_initial_effort_defined as $tracker) {
-            $this->trackers_without_initial_effort_field[] = $tracker->getName();
-        }
         $this->solve_inconsistencies_url   = $solve_inconsistencies_url;
 
         $this->setBurndownAttributes($milestone, $user);
@@ -107,14 +100,6 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter
     public function has_something()
     {
         return $this->items_collection->count() > 0;
-    }
-
-    public function initial_effort_not_defined() {
-        return count($this->trackers_without_initial_effort_field) > 0;
-    }
-
-    public function initial_effort_warning() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'initial_effort_warning', implode(', ', $this->trackers_without_initial_effort_field));
     }
 
     public function inconsistent_items_title() {

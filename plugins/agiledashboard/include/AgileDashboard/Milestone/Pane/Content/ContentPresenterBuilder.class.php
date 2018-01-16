@@ -51,7 +51,6 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenterBuilder
             $this->collection_factory->getAllCollection($user, $milestone, $backlog, $redirect_to_self),
             $this->collection_factory->getInconsistentCollection($user, $milestone, $backlog, $redirect_to_self),
             $descendant_trackers,
-            $this->getTrackersWithoutInitialEffort($descendant_trackers),
             $this->getSolveInconsistenciesUrl($milestone, $redirect_to_self),
             $user
         );
@@ -64,17 +63,5 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenterBuilder
             "&aid=".$milestone->getArtifactId().
             "&action=solve-inconsistencies".
             "&".$redirect_to_self;
-    }
-
-    public function getTrackersWithoutInitialEffort(array $descendant_trackers)
-    {
-        $trackers_without_initial_effort_defined = array();
-        foreach ($descendant_trackers as $descendant) {
-            if (! AgileDashBoard_Semantic_InitialEffort::load($descendant)->getField()) {
-                $trackers_without_initial_effort_defined[] = $descendant;
-            }
-        }
-
-        return $trackers_without_initial_effort_defined;
     }
 }

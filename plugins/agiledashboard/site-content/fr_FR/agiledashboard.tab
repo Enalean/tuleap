@@ -97,7 +97,6 @@ plugin_agiledashboard	activate_scrum_v2	Activer Scrum V2
 plugin_agiledashboard_contentpane	lab	Ceci est une fonctionnalité expérimentale qui est sujette à évolution prochainement. N'hésitez pas à <a href="mailto:tuleap-devel@tuleap.net">nous contater pour nous transmettre vos impressions</a> et retours d'expérience afin d'améliorer la fonctionnalité, merci!
 plugin_agiledashboard_contentpane	closed_items_nothing_yet	Rien de fermé actuellement
 plugin_agiledashboard_contentpane	open_items_title	$1 ouvert(e)s
-plugin_agiledashboard_contentpane	initial_effort_warning	La sémantique <em>Effort Estimé</em> pour le(s) Tracker(s) <em>$1</em> ne semble pas être définie !
 plugin_agiledashboard_contentpane	inconsistent_items_title	$1 inconsistent(e)s
 plugin_agiledashboard_contentpane	inconsistent_items_intro	Voici les éléments qui ont été créés directement à partir des sous-milestones. Vous ne pouvez pas changer leur priorité.
 plugin_agiledashboard_contentpane	solve_inconsistencies	Importer dans le backlog
