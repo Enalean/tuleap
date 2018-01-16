@@ -45,6 +45,9 @@ document.addEventListener('DOMContentLoaded', () => {
         title  : gettext_provider.gettext('%s - Team effort'),
         bullets: [
             {
+                label: gettext_provider.gettext('Ideal burnup'),
+                classname: 'chart-plot-ideal-burnup'
+            }, {
                 label    : gettext_provider.gettext('Team effort'),
                 classname: 'chart-plot-team-effort'
             }, {

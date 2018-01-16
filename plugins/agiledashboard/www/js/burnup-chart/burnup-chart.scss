@@ -1,9 +1,10 @@
 $team-effort-color : #57b258;
 $total-effort-color: #bd2626;
 $text-color        : #767676;
+$line-color        : #dedede;
 
 .chart-y-axis > .tick > line {
-    stroke: #dedede;
+    stroke: $line-color;
 }
 
 .chart-text-grey,
@@ -74,4 +75,14 @@ $text-color        : #767676;
 
 .chart-tooltip-bubble {
     fill: #2f2f2f;
+}
+
+.chart-plot-ideal-burnup {
+    fill: $line-color;
+}
+
+.chart-curve-ideal-line {
+    stroke-width: 3px;
+    stroke: $line-color;
+    fill: transparent;
 }
