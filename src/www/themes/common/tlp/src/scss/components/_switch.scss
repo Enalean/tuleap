@@ -84,3 +84,8 @@ $tlp-switch-button-padding: 1px;
         color: $tlp-ui-success;
     }
 }
+
+.tlp-switch-checkbox:disabled + .tlp-switch-button {
+    opacity: .5;
+    cursor: not-allowed;
+}
