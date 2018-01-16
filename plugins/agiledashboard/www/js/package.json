@@ -1,0 +1,32 @@
+{
+  "name": "tuleap-agiledashboard",
+  "author": "Enalean Team",
+  "homepage": "https://www.enalean.com",
+  "license": "MIT",
+  "private": true,
+  "version": "1.0.0",
+  "dependencies": {
+    "d3-array": "^1.2.1",
+    "d3-axis": "^1.0.8",
+    "d3-scale": "^1.0.7",
+    "d3-selection": "^1.2.0",
+    "d3-shape": "^1.2.0",
+    "moment": "^2.19.4",
+    "node-gettext": "^2.0.0",
+    "sprintf-js": "^1.1.1"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "json-loader": "^0.5.7",
+    "po-gettext-loader": "^0.1.1",
+    "webpack": "^3.10.0",
+    "webpack-assets-manifest": "^1.0.0"
+  },
+  "scripts": {
+    "build": "webpack --optimize-minimize --bail",
+    "watch": "webpack --watch"
+  }
+}
