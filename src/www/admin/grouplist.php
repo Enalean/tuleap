@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  * Copyright 1999-2000 (c) The SourceForge Crew
  *
  * This file is a part of Tuleap.
@@ -85,7 +85,7 @@ if ($request->exist('status')) {
         $status_values = explode(',', $status_values);
     }
 } else {
-    $status_values = array(Project::STATUS_ACTIVE);
+    $status_values = array('ANY');
 }
 
 $dao_status_values = $status_values;

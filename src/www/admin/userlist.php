@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  * Copyright 1999-2000 (c) The SourceForge Crew
  *
  * This file is a part of Tuleap.
@@ -176,8 +176,6 @@ if ($request->exist('status_values')) {
     } else {
         $anySelect = "";
     }
-} else {
-    $status_values = array(PFUser::STATUS_ACTIVE, PFUser::STATUS_RESTRICTED);
 }
 
 if (! $group_id) {
