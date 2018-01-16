@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -470,7 +470,7 @@ class TrackerFactory {
                     }
                 }
                 // Duplicate Reports
-                Tracker_ReportFactory::instance()->duplicate($id_template, $id, $field_mapping);
+                $report_mapping = Tracker_ReportFactory::instance()->duplicate($id_template, $id, $field_mapping);
 
                 // Duplicate Semantics
                 Tracker_SemanticFactory::instance()->duplicate($id_template, $id, $field_mapping);
@@ -492,7 +492,11 @@ class TrackerFactory {
 
                 $this->postCreateActions($tracker);
 
-                return array('tracker' => $tracker, 'field_mapping' => $field_mapping);
+                return array(
+                    'tracker'        => $tracker,
+                    'field_mapping'  => $field_mapping,
+                    'report_mapping' => $report_mapping
+                );
             }
         }
         return false;
@@ -550,8 +554,8 @@ class TrackerFactory {
      * - the hierarchy
      * - the shared fields
      * - etc.
-     * 
-     * @param int $from_project_id 
+     *
+     * @param int $from_project_id
      * @param int $to_project_id
      * @param array $ugroup_mapping the ugroup mapping
      *
@@ -559,6 +563,7 @@ class TrackerFactory {
     public function duplicate($from_project_id, $to_project_id, $ugroup_mapping) {
         $tracker_mapping        = array();
         $field_mapping          = array();
+        $report_mapping         = array();
         $trackers_from_template = array();
 
         $tracker_ids_list         = array();
@@ -568,18 +573,19 @@ class TrackerFactory {
         foreach($this->getTrackersByGroupId($from_project_id) as $tracker) {
             if ($tracker->mustBeInstantiatedForNewProjects() || in_array($tracker->getId(), $tracker_ids_list)) {
                 $trackers_from_template[] = $tracker;
-                list($tracker_mapping, $field_mapping) = $this->duplicateTracker(
-                        $tracker_mapping, 
-                        $field_mapping, 
-                        $tracker, 
-                        $from_project_id, 
-                        $to_project_id, 
+                list($tracker_mapping, $field_mapping, $report_mapping) = $this->duplicateTracker(
+                        $tracker_mapping,
+                        $field_mapping,
+                        $report_mapping,
+                        $tracker,
+                        $from_project_id,
+                        $to_project_id,
                         $ugroup_mapping
                         );
                 /*
                  * @todo
                  * Unless there is some odd dependency on the last tracker meeting
-                 * the requirement of the if() condition then there should be a break here. 
+                 * the requirement of the if() condition then there should be a break here.
                  */
             }
         }
@@ -603,6 +609,7 @@ class TrackerFactory {
         EventManager::instance()->processEvent(TRACKER_EVENT_TRACKERS_DUPLICATED, array(
             'tracker_mapping'   => $tracker_mapping,
             'field_mapping'     => $field_mapping,
+            'report_mapping'    => $report_mapping,
             'group_id'          => $to_project_id,
             'ugroups_mapping'   => $ugroup_mapping,
             'source_project_id' => $from_project_id
@@ -629,18 +636,16 @@ class TrackerFactory {
         );
     }
 
-    /**
-     * 
-     * @param array $tracker_mapping
-     * @param array $field_mapping
-     * @param Tracker $tracker
-     * @param int $from_project_id
-     * @param int $to_project_id
-     * @param array $ugroup_mapping the ugroup mapping
-     * @return type
-     */
-    private function duplicateTracker($tracker_mapping, $field_mapping, $tracker, $from_project_id, $to_project_id, $ugroup_mapping) {
-        $tracker_and_field_mapping = $this->create($to_project_id,
+    private function duplicateTracker(
+        array $tracker_mapping,
+        array $field_mapping,
+        array $report_mapping,
+        Tracker $tracker,
+        $from_project_id,
+        $to_project_id,
+        $ugroup_mapping
+    ) {
+        $tracker_and_field_and_report_mapping = $this->create($to_project_id,
                 $from_project_id,
                 $tracker->getId(),
                 $tracker->getName(),
@@ -648,14 +653,15 @@ class TrackerFactory {
                 $tracker->getItemName(),
                 $ugroup_mapping);
 
-        if ($tracker_and_field_mapping) {
-            $tracker_mapping[$tracker->getId()] = $tracker_and_field_mapping['tracker']->getId();
-            $field_mapping = array_merge($field_mapping, $tracker_and_field_mapping['field_mapping']);
+        if ($tracker_and_field_and_report_mapping) {
+            $tracker_mapping[$tracker->getId()] = $tracker_and_field_and_report_mapping['tracker']->getId();
+            $field_mapping  = array_merge($field_mapping, $tracker_and_field_and_report_mapping['field_mapping']);
+            $report_mapping = $report_mapping + $tracker_and_field_and_report_mapping['report_mapping'];
         } else {
             $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_tracker_admin','tracker_not_duplicated', array($tracker->getName())));
         }
 
-        return array($tracker_mapping, $field_mapping);
+        return array($tracker_mapping, $field_mapping, $report_mapping);
     }
 
     /**
