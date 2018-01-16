@@ -20,7 +20,9 @@
                             <span class="history-item-content-description-info-title">{{ title }}</span>
                         </td>
                         <td>{{ status }}</td>
-                        <td class="milestone-element-parent">{{ parent_title }}</td>
+                        <td class="milestone-element-parent">
+                            <a href="{{ parent_url }}">{{ parent_title }}</a>
+                        </td>
                     </tr>
                 {{/ items_collection }}
             {{/ has_something }}
