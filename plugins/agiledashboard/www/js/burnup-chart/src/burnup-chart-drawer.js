@@ -51,12 +51,11 @@ function createBurnupChart({
         tooltip_font_size     : 12
     });
 
-    const max_total_effort   = max(burnup_data.points, ({ total_effort }) => total_effort),
-          x_axis_tick_values = getDaysToDisplay(burnup_data),
-          displayable_data   = getDisplayableData(burnup_data.points),
-          last_day_data      = getLastDayData(burnup_data.points),
-          total_effort       = max_total_effort || burnup_data.capacity;
-
+    const default_total_effort = 5,
+          x_axis_tick_values   = getDaysToDisplay(burnup_data),
+          displayable_data     = getDisplayableData(burnup_data.points),
+          last_day_data        = getLastDayData(burnup_data.points),
+          total_effort         = getTotalEffort(burnup_data);
 
     const properties = {
         ...chart_props,
@@ -254,21 +253,35 @@ function createBurnupChart({
             .attr('class', 'ideal-line');
 
         const ideal_line_generator = line()
-            .x(({ x_coordinate }) => x_coordinate)
-            .y(({ y_coordinate }) => y_coordinate);
+            .x(({x_coordinate}) => x_coordinate)
+            .y(({y_coordinate}) => y_coordinate);
 
         ideal_line.selectAll('.chart-plot-ideal-burnup')
             .data(coordinates)
             .enter()
-                .append('circle')
-                .attr('class', 'chart-plot-ideal-burnup')
-                .attr('cx', ({ x_coordinate}) => x_coordinate)
-                .attr('cy', ({ y_coordinate}) => y_coordinate)
-                .attr('r', 4);
+            .append('circle')
+            .attr('class', 'chart-plot-ideal-burnup')
+            .attr('cx', ({x_coordinate}) => x_coordinate)
+            .attr('cy', ({y_coordinate}) => y_coordinate)
+            .attr('r', 4);
 
         ideal_line.append('path')
             .datum(coordinates)
             .attr('class', 'chart-curve-ideal-line')
             .attr('d', ideal_line_generator);
+    }
+
+    function getTotalEffort({points, capacity}) {
+        const max_total_effort = max(points, ({ total_effort }) => total_effort);
+
+        if (max_total_effort) {
+            return max_total_effort;
+        }
+
+        if (capacity) {
+            return capacity;
+        }
+
+        return default_total_effort;
     }
 }
