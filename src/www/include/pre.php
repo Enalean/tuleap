@@ -23,7 +23,7 @@ use Tuleap\BurningParrotCompatiblePageDetector;
 use Tuleap\Request\CurrentPage;
 use Tuleap\TimezoneRetriever;
 
-if (version_compare(PHP_VERSION, '5.6', '<') && version_compare(PHP_VERSION, '7', '>=')) {
+if (version_compare(PHP_VERSION, '5.6', '<') || version_compare(PHP_VERSION, '7', '>=')) {
     die('Tuleap must be run on a PHP 5.6 (or greater) engine.  PHP 7 is not yet supported.');
 }
 
