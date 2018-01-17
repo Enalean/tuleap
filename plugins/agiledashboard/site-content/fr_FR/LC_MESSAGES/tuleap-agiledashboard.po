@@ -107,13 +107,12 @@ msgstr ""
 "Certaines valeurs sélectionnées sont invalides car elles ne sont plus "
 "considérées comme fermées."
 
-#, php-format
-msgid "Semantic done is not defined for tracker %s"
-msgstr "La sémantique done n'est pas définie pour l'outil de suivi %s"
+msgid "Semantic done is not defined for tracker <a href=\"%s\">%s</a>"
+msgstr "La sémantique done n'est pas définie pour l'outil de suivi <a href=\"%s\">%s</a>"
 
-#, php-format
-msgid "Semantic initial effort is not defined for tracker %s"
-msgstr "La sémantique effort estimé n'est pas définie pour l'outil de suivi %s"
+msgid ""
+"Semantic initial effort is not defined for tracker  <a href=\"%s\">%s</a>"
+msgstr "La sémantique effort estimé n'est pas définie pour l'outil de suivi <a href=\"%s\">%s</a>"
 
 msgid "Semantic status is not defined."
 msgstr "La sémantique status n'est pas définie."

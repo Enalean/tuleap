@@ -21,9 +21,9 @@
 namespace Tuleap\AgileDashboard\FormElement;
 
 use AgileDashboard_Semantic_InitialEffortFactory;
+use Codendi_HTMLPurifier;
 use PlanningFactory;
 use Tracker;
-use Tuleap\AgileDashboard\Semantic\SemanticDone;
 use Tuleap\AgileDashboard\Semantic\SemanticDoneFactory;
 
 class MessageFetcher
@@ -58,6 +58,7 @@ class MessageFetcher
      */
     public function getWarningsRelatedToPlanningConfiguration(Tracker $tracker)
     {
+        $purifier = Codendi_HTMLPurifier::instance();
         $warnings = array();
         $planning = $this->planning_factory->getPlanningByPlanningTracker($tracker);
 
@@ -71,15 +72,29 @@ class MessageFetcher
 
             $done_semantic = $this->semantic_done_factory->getInstanceByTracker($backlog_tracker);
             if (! $done_semantic->isSemanticDefined()) {
-                $warnings[] = "<li>".
-                    sprintf(dgettext('tuleap-agiledashboard', 'Semantic done is not defined for tracker %s'), $backlog_tracker_name).
+                $warnings[] = "<li>" .
+                    sprintf(
+                        dgettext(
+                            'tuleap-agiledashboard',
+                            'Semantic done is not defined for tracker <a href="%s">%s</a>'
+                        ),
+                        $purifier->purify($done_semantic->getUrl()),
+                        $purifier->purify($backlog_tracker_name)
+                    ) .
                     "</li>";
             }
 
             $initial_effort_semantic = $this->initial_effort_factory->getByTracker($backlog_tracker);
             if (! $initial_effort_semantic->getField()) {
-                $warnings[] = "<li>".
-                    sprintf(dgettext('tuleap-agiledashboard', 'Semantic initial effort is not defined for tracker %s'), $backlog_tracker_name).
+                $warnings[] = "<li>" .
+                    sprintf(
+                        dgettext(
+                            'tuleap-agiledashboard',
+                            'Semantic initial effort is not defined for tracker  <a href="%s">%s</a>'
+                        ),
+                        $purifier->purify($initial_effort_semantic->getUrl()),
+                        $purifier->purify($backlog_tracker_name)
+                    ) .
                     "</li>";
             }
         }

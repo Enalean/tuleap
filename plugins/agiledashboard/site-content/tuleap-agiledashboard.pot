@@ -78,11 +78,12 @@ msgid "Selected values are invalid because some are not closed values anymore."
 msgstr ""
 
 #, php-format
-msgid "Semantic done is not defined for tracker %s"
+msgid "Semantic done is not defined for tracker <a href=\"%s\">%s</a>"
 msgstr ""
 
 #, php-format
-msgid "Semantic initial effort is not defined for tracker %s"
+msgid ""
+"Semantic initial effort is not defined for tracker  <a href=\"%s\">%s</a>"
 msgstr ""
 
 msgid "Semantic status is not defined."
