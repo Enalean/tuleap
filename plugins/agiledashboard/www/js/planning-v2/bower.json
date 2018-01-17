@@ -2,7 +2,7 @@
   "name": "planning-v2",
   "version": "0.0.1",
   "dependencies": {
-    "artifact-modal": "https://tuleap.net/plugins/git/tuleap/artifact-modal.git#4956057b41d3dbc44835d2efb23412d123561df9"
+    "artifact-modal": "https://tuleap.net/plugins/git/tuleap/artifact-modal.git#fe57ee77774ff4aa8963e826328dc941f320787e"
   },
   "devDependencies": {
   },
