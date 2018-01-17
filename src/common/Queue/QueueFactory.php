@@ -24,17 +24,21 @@ namespace Tuleap\Queue;
 use Logger;
 use ForgeConfig;
 
-class Factory
+class QueueFactory
 {
     const REDIS = 'redis';
 
     /**
      * @return PersistentQueue
+     * @throws NoQueueSystemAvailableException
      */
     public static function getPersistentQueue(Logger $logger, $queue_name, $favor = '')
     {
         if ($favor === self::REDIS) {
-            return new Redis\RedisPersistentQueue($logger, $queue_name);
+            if (ForgeConfig::get('redis_server') !== false) {
+                return new Redis\RedisPersistentQueue($logger, $queue_name);
+            }
+            throw new NoQueueSystemAvailableException();
         }
         if (ForgeConfig::get('rabbitmq_server') !== false) {
             return new RabbitMQ\PersistentQueue(new RabbitMQ\RabbitMQManager($logger), $queue_name);

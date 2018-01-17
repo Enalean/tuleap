@@ -29,7 +29,7 @@ use Log_ConsoleLogger;
 use ForgeConfig;
 use Exception;
 use EventManager;
-use Tuleap\Queue\Factory;
+use Tuleap\Queue\QueueFactory;
 use Tuleap\System\DaemonLocker;
 use System_Command;
 
@@ -88,7 +88,7 @@ class Worker
 
         $event_manager = EventManager::instance();
 
-        $queue = Factory::getPersistentQueue($this->logger, self::EVENT_QUEUE_NAME, Factory::REDIS);
+        $queue = QueueFactory::getPersistentQueue($this->logger, self::EVENT_QUEUE_NAME, QueueFactory::REDIS);
         $queue->listen($this->id, '*', function ($event) use ($event_manager) {
             $this->logger->info('Got message: ' .$event);
             $worker_queue_event = new WorkerEvent($this->logger, json_decode($event, true));

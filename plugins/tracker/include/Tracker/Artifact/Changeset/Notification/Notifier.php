@@ -41,7 +41,7 @@ use DateHelper;
 use UserHelper;
 use Codendi_HTMLPurifier;
 use Codendi_Mail_Interface;
-use Tuleap\Queue\Factory;
+use Tuleap\Queue\QueueFactory;
 use Exception;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
@@ -177,7 +177,7 @@ class Notifier
     {
         try {
             $this->notifier_dao->addNewNotification($changeset->getId());
-            $queue = Factory::getPersistentQueue($this->logger, Worker::EVENT_QUEUE_NAME, Factory::REDIS);
+            $queue = QueueFactory::getPersistentQueue($this->logger, Worker::EVENT_QUEUE_NAME, QueueFactory::REDIS);
             $queue->pushSinglePersistentMessage(
                 AsynchronousNotifier::TOPIC,
                 [
