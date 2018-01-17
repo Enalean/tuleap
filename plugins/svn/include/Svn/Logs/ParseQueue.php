@@ -21,7 +21,7 @@
 
 namespace Tuleap\Svn\Logs;
 
-use Tuleap\Queue\Factory;
+use Tuleap\Queue\QueueFactory;
 use Tuleap\Httpd\PostRotateEvent;
 use Logger;
 use WrapperLogger;
@@ -42,7 +42,7 @@ class ParseQueue
     public function __construct(Logger $logger)
     {
         $this->logger = new WrapperLogger($logger, 'svn.log');
-        $this->queue  = Factory::getPersistentQueue($this->logger, PostRotateEvent::QUEUE_PREFIX);
+        $this->queue  = QueueFactory::getPersistentQueue($this->logger, PostRotateEvent::QUEUE_PREFIX);
     }
 
     public function listen()

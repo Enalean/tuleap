@@ -25,7 +25,7 @@ use Backend;
 use ForgeConfig;
 use System_Command;
 use Logger;
-use Tuleap\Queue\Factory;
+use Tuleap\Queue\QueueFactory;
 use WrapperLogger;
 use Exception;
 
@@ -47,7 +47,7 @@ class SvnrootUpdater
     public function __construct(Logger $logger)
     {
         $this->logger = new WrapperLogger($logger, 'svnroot_updater');
-        $this->queue  = Factory::getPersistentQueue($this->logger, self::QUEUE_PREFIX);
+        $this->queue  = QueueFactory::getPersistentQueue($this->logger, self::QUEUE_PREFIX);
     }
 
     public function push()

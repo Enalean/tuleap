@@ -21,7 +21,7 @@
 
 namespace Tuleap\Httpd;
 
-use Tuleap\Queue\Factory;
+use Tuleap\Queue\QueueFactory;
 use Logger;
 use WrapperLogger;
 
@@ -47,7 +47,7 @@ class PostRotateEvent
     public function __construct(Logger $logger)
     {
         $this->logger = new WrapperLogger($logger, 'httpd.postrotate');
-        $this->queue  = Factory::getPersistentQueue($this->logger, self::QUEUE_PREFIX);
+        $this->queue  = QueueFactory::getPersistentQueue($this->logger, self::QUEUE_PREFIX);
     }
 
     public function push($arg)
