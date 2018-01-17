@@ -51,7 +51,8 @@
                 "../../src/www/themes/common/tlp/src/scss",
                 "../../src/www/themes/BurningParrot/css/includes",
                 "../tracker/www/scripts",
-                "www/js/kanban/node_modules"
+                "www/js/kanban/node_modules",
+                "www/js/planning-v2/node_modules"
             ],
             "watched_includes": [
                 "www/themes/BurningParrot/css/**/_*.scss",
@@ -73,6 +74,7 @@
     },
     "components": [
         "plugins/agiledashboard/www/js/kanban",
+        "plugins/agiledashboard/www/js/planning-v2",
         "plugins/agiledashboard/www/js"
     ]
 }

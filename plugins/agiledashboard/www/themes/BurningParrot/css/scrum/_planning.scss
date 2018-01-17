@@ -1,0 +1,86 @@
+/**
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@import 'angular-artifact-modal/index';
+@import 'dragular/dist/dragular';
+@import 'animate.css/animate';
+@import 'global-variables';
+
+@import './planning/backlog';
+@import './planning/milestones';
+@import './planning/backlog-item';
+@import './planning/backlog-items-selected-bar';
+
+%loader {
+    height: 30px;
+    margin: $tlp-spacing 0 $tlp-half-spacing;
+    background: url('/themes/BurningParrot/images/spinner.gif') no-repeat center center;
+}
+
+planning {
+    display: flex;
+    flex-direction: column;
+}
+
+.planning-view {
+    display: flex;
+}
+
+.planning-backlog,
+.planning-planned {
+    flex: 1 1 50%;
+}
+
+.planning-divider {
+    flex: 0 0 auto;
+    min-width: 80px;
+    background: url('../images/planning-divider.png') no-repeat center 70px;
+}
+
+.planning-header {
+    display: flex;
+    flex: 0 0 auto;
+    margin: 0 0 $tlp-spacing;
+}
+
+.planning-header-title {
+    margin: 0;
+}
+
+.planned-header-add-button {
+    margin: 0 0 0 $tlp-spacing;
+}
+
+.planning-header-spacer {
+    flex: 1 1 auto;
+}
+
+.planning-header-toggler-label {
+    display: none;
+}
+
+@media screen and (min-width: 1920px) {
+    .planning-header-toggler-label {
+        display: initial;
+    }
+}
+
+.planning-warning {
+    text-align: center;
+}

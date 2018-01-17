@@ -25,8 +25,8 @@ require_once 'common/mvc2/PluginController.class.php';
 /**
  * Handles the HTTP actions related to a planning milestone.
  */
-class Planning_MilestoneController extends MVC2_PluginController {
-
+class Planning_MilestoneController extends MVC2_PluginController
+{
     /**
      * @var Planning_MilestoneFactory
      */
@@ -71,7 +71,8 @@ class Planning_MilestoneController extends MVC2_PluginController {
         $this->project = $project_manager->getProject($request->get('group_id'));
     }
 
-    public function show() {
+    public function show()
+    {
         $this->generateBareMilestone();
         $this->redirectToCorrectPane();
 
@@ -188,7 +189,10 @@ class Planning_MilestoneController extends MVC2_PluginController {
      */
     private function getTemplateName(AgileDashboard_Milestone_Pane_PresenterData $presenter_data)
     {
-        if ($presenter_data->getActivePane()->getIdentifier() === DetailsPaneInfo::IDENTIFIER) {
+        $current_pane_identifier = $presenter_data->getActivePane()->getIdentifier();
+        if ($current_pane_identifier === DetailsPaneInfo::IDENTIFIER ||
+            $current_pane_identifier === AgileDashboard_Milestone_Pane_Planning_PlanningV2PaneInfo::IDENTIFIER
+        ) {
             return 'show';
         }
 

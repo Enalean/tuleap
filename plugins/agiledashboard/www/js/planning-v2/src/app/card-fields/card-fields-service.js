@@ -104,7 +104,7 @@ function CardFieldsService(
 
         function getValueRenderedWithColor(value, filter_terms) {
             var rgb   = 'rgb(' + _.escape(value.color.r) + ', ' + _.escape(value.color.g) + ', ' + _.escape(value.color.b) + ')',
-                color = '<span class="color" style="background: ' + rgb + '"></span>';
+                color = '<span class="extra-card-field-color" style="background: ' + rgb + '"></span>';
 
             return color + highlight(_.escape(value.label), filter_terms);
         }
@@ -147,21 +147,21 @@ function CardFieldsService(
     }
 
     function getCardFieldUserValue(value, filter_terms) {
-        var avatar,
-            display_name,
+        let display_name,
             link;
 
         if (value.user_url === null) {
-            avatar       = '<div class="avatar"> </div> ';
             display_name = highlight(_.escape(value.display_name), filter_terms);
-            link         = avatar + display_name;
+            link         = `<div class="tlp-avatar-mini"> </div><span>${ display_name }</span>`;
         } else {
-            avatar       = '<div class="avatar"><img src="' + value.avatar_url + '" /></div> ';
             display_name = highlight(_.escape(value.display_name), filter_terms);
-            link         = '<a data-nodrag="true" href="' + value.user_url + '">' + avatar + display_name + '</a>';
+            link         = `<a data-nodrag="true" class="extra-card-field-user" href="${ value.user_url }">
+                                <div class="tlp-avatar-mini"><img src="${ value.avatar_url }" /></div>
+                                <span>${ display_name }</span>
+                            </a>`;
         }
 
-        return $sce.trustAsHtml('<div class="user">' + link + '</div>');
+        return $sce.trustAsHtml(link);
     }
 
     function isListBoundToAValueDifferentFromNone(values) {

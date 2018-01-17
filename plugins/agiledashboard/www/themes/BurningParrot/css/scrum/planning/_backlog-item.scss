@@ -1,0 +1,114 @@
+/**
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@import 'backlog-item-details';
+@import 'backlog-item-transit';
+
+%hide-moves-icons {
+    > .backlog-item-content-collapsed > .backlog-item-details-effort-container {
+        left: 0;
+    }
+
+    > .backlog-item-details-moves {
+        display: none;
+    }
+}
+
+.backlog-item {
+    display: flex;
+    flex-direction: column;
+    margin: 0 0 10px;
+
+    &.compact-view {
+        .extra-card-fields {
+            display: none;
+        }
+    }
+
+    // We must use the child combinator because backlog-item can have children backlog-items
+    &:first-child {
+        > .backlog-item-details > .backlog-item-details-moves > .backlog-item-details-move:first-child {
+            visibility: hidden;
+        }
+    }
+
+    &:last-child {
+        > .backlog-item-details:not(.moving-to) > .backlog-item-details-moves > .backlog-item-details-move:last-child {
+            visibility: hidden;
+        }
+    }
+
+    &:only-child:hover {
+        > .backlog-item-details {
+            @extend %hide-moves-icons;
+        }
+    }
+
+    &.child {
+        .backlog-item-details-effort-container {
+            display: none;
+        }
+
+        .backlog-item-details-parent {
+            position: relative;
+            left: -15px;
+        }
+    }
+}
+
+.backlog-item-children-loading {
+    @extend %loader;
+}
+
+.backlog-item-show-children {
+    width: 90%;
+    margin: 0 auto;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+    background: $tlp-ui-white;
+    box-shadow: inset 1px 0 0 #efefef,
+        inset -1px 0 0 #efefef,
+        inset 0 1px 0 rgba(242, 242, 242, .5),
+        inset 0 -1px 0 #e3e3e3,
+        0 1px 0 0 rgba(242, 242, 242, .5);
+}
+
+.backlog-item-children {
+    padding: $tlp-half-spacing;
+}
+
+.backlog-item-show-children-handle {
+    height: 8px;
+    transition: background-color .1s linear;
+    border: 1px solid #e3e3e3;
+    border-top: 0;
+    border-bottom-left-radius: 2px;
+    border-bottom-right-radius: 2px;
+    background: #eaeaea url('../images/grip-open.png') center center no-repeat;
+    cursor: pointer;
+
+    &.closed {
+        background-image: url('../images/grip-close.png');
+    }
+
+    &:hover {
+        transition: background-color .1s linear;
+        background-color: lighten(#eaeaea, 3%);
+    }
+}

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: AgileDashboard Planning\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2016-08-04 11:59+0100\n"
+"PO-Revision-Date: 2018-02-07 11:31+0100\n"
 "Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/test-188/language/"
 "fr/)\n"
@@ -14,23 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.5.4\n"
-
-#: src/app/card-fields/card-computed-field/card-computed-field.tpl.html
-msgid "(auto-computed)"
-msgstr "(calculé automatiquement)"
-
-#: src/app/backlog-item-selected/backlog-item-selected-bar.tpl.html
-msgid ""
-"{{ selected_bar_controller.nb_selected_backlog_items }} item is selected."
-msgid_plural ""
-"{{ selected_bar_controller.nb_selected_backlog_items }} items are selected."
-msgstr[0] ""
-"{{ selected_bar_controller.nb_selected_backlog_items }} élément est "
-"sélectionné."
-msgstr[1] ""
-"{{ selected_bar_controller.nb_selected_backlog_items }} éléments sont "
-"sélectionnés."
+"X-Generator: Poedit 2.0.3\n"
 
 #: src/app/planning.tpl.html
 msgid "A server error has occured. <b>You should refresh this page</b>."
@@ -49,21 +33,25 @@ msgstr "Ajouter un(e) {{ backlog.details.accepted_types.content[0].label }}"
 msgid "Add a {{ planning.backlog.submilestone_type.label }}"
 msgstr "Ajouter un(e) {{ planning.backlog.submilestone_type.label }}"
 
-#: src/app/milestone/milestone.tpl.html
-msgid "Add a new item"
-msgstr "Ajouter un nouvel élément"
-
 #: src/app/backlog/backlog.tpl.html
 msgid "Add an item"
 msgstr "Ajouter un élément"
+
+#: src/app/milestone/milestone.tpl.html
+msgid "Add item"
+msgstr "Ajouter élément"
 
 #: src/app/backlog/backlog.tpl.html
 msgid "All items have been loaded."
 msgstr "Tous les éléments ont été chargés."
 
 #: src/app/milestone/milestone.tpl.html
-msgid "Capacity:"
-msgstr "Capacité:"
+msgid "Capacity: N/A"
+msgstr "Capacité : N/A"
+
+#: src/app/milestone/milestone.tpl.html
+msgid "Capacity: {{ milestoneController.milestone.capacity }}"
+msgstr "Capacité : {{ milestoneController.milestone.capacity }}"
 
 #: src/app/milestone/milestone.tpl.html
 msgid "Cardwall"
@@ -89,10 +77,6 @@ msgstr "Éditer"
 msgid "Edit this item"
 msgstr "Éditer cet élément"
 
-#: src/app/card-fields/card-computed-field/card-computed-field.tpl.html
-msgid "Empty"
-msgstr "Aucun(e)"
-
 #: src/app/backlog/backlog.tpl.html
 msgid "Filter..."
 msgstr "Filtrer..."
@@ -106,8 +90,12 @@ msgid "Initial effort"
 msgstr "Effort estimé"
 
 #: src/app/milestone/milestone.tpl.html
-msgid "Initial effort:"
-msgstr "Effort estimé:"
+msgid "Initial effort: N/A"
+msgstr "Effort estimé : N/A"
+
+#: src/app/milestone/milestone.tpl.html
+msgid "Initial effort: {{ milestoneController.milestone.initialEffort }}"
+msgstr "Effort estimé : {{ milestoneController.milestone.initialEffort }}"
 
 #: src/app/planning.tpl.html
 msgid "Load closed milestones"
@@ -125,10 +113,6 @@ msgstr "Déplacer en bas"
 msgid "Move to top"
 msgstr "Déplacer en haut"
 
-#: src/app/milestone/milestone.tpl.html
-msgid "N/A"
-msgstr "N/A"
-
 #: src/app/backlog-item/backlog-item-details/backlog-item-details.tpl.html
 msgid "No initial effort defined"
 msgstr "Aucun effort n’a été estimé"
@@ -143,17 +127,11 @@ msgstr "Planification"
 
 #: src/app/backlog-item-selected/backlog-item-selected-bar.tpl.html
 msgid ""
-"Press <span class=\"label\">ESC</span> to cancel the selection, only "
-"siblings can be multi-selected."
+"Press <span class=\"tlp-badge-primary\">ESC</span> to cancel the selection, "
+"only siblings can be multi-selected."
 msgstr ""
-"Appuyez sur <span class=\"label\">Echap</span> pour annuler la sélection, "
-"seuls les éléments frères peuvent être multi-sélectionnés."
-
-#: src/app/backlog-item/backlog-item-details/backlog-item-details-controller.js
-msgid "pt"
-msgid_plural "pts"
-msgstr[0] "pt"
-msgstr[1] "pts"
+"Appuyez sur <span class=\\\"tlp-badge-primary\\\">Échap</span> pour annuler "
+"la sélection, seuls les éléments frères peuvent être multi-sélectionnés."
 
 #: src/app/planning.tpl.html
 msgid "Show closed backlog items"
@@ -174,3 +152,15 @@ msgstr "A planifier"
 #: src/app/backlog/backlog.tpl.html src/app/planning.tpl.html
 msgid "You are not allowed to rank on this planning"
 msgstr "Vous n'êtes pas autorisé à prioriser sur ce planning"
+
+#: src/app/backlog-item-selected/backlog-item-selected-bar.tpl.html
+msgid ""
+"{{ selected_bar_controller.nb_selected_backlog_items }} item is selected."
+msgid_plural ""
+"{{ selected_bar_controller.nb_selected_backlog_items }} items are selected."
+msgstr[0] ""
+"{{ selected_bar_controller.nb_selected_backlog_items }} élément est "
+"sélectionné."
+msgstr[1] ""
+"{{ selected_bar_controller.nb_selected_backlog_items }} éléments sont "
+"sélectionnés."

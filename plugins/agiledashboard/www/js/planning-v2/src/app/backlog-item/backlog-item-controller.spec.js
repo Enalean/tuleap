@@ -49,7 +49,7 @@ describe("BacklogItemController -", function() {
             $compile  = _$compile_;
             $document = _$document_;
 
-            var current_backlog_item = $('<backlog-item>').appendTo('body');
+            var current_backlog_item = affix('div.backlog-item');
             $element                 = angular.element(current_backlog_item);
 
             BacklogItemService = _BacklogItemService_;
@@ -87,10 +87,6 @@ describe("BacklogItemController -", function() {
                 BacklogItemSelectedService  : BacklogItemSelectedService
             });
         });
-    });
-
-    afterEach(function() {
-        $('<backlog-item>').remove();
     });
 
     describe("toggleChildrenDisplayed() -", function() {
@@ -179,12 +175,12 @@ describe("BacklogItemController -", function() {
             angular.element($dropped_item_element).data('item-id', dropped_item_ids);
             angular.element($dropped_item_element).data('type', 'trackerId24');
             dragularService.shared.item   = $dropped_item_element;
-            $source_element               = affix('ul.backlog-item-children');
+            $source_element               = affix('ul.backlog-item-children-list');
             angular.element($source_element).data('backlog-item-id', source_backlog_item_id);
             dragularService.shared.source = $source_element;
             spyOn($element, "addClass");
 
-            $target_list_element = $element.affix('ul.backlog-item-children');
+            $target_list_element = $element.affix('ul.backlog-item-children-list');
             $target_list_element = angular.element($target_list_element);
             $target_list_element.data('backlog-item-id', target_backlog_item_id);
 
@@ -268,7 +264,7 @@ describe("BacklogItemController -", function() {
                         ]
                     }
                 };
-                $source_element     = affix('ul.backlog-item-children');
+                $source_element     = affix('ul.backlog-item-children-list');
                 angular.element($source_element).data('backlog-item-id', source_backlog_item.id);
                 $source_element.append($dropped_item_element);
                 BacklogItemController.backlog_item = source_backlog_item;
@@ -300,8 +296,8 @@ describe("BacklogItemController -", function() {
 
             describe("and given the target element was a descendant of a backlog-item element that had a list of children", function() {
                 beforeEach(function() {
-                    $backlog_item_element        = $('<backlog-item>').appendTo('body');
-                    $target_list_element         = $backlog_item_element.affix('ul.backlog-item-children');
+                    $backlog_item_element        = affix('div.backlog-item');
+                    $target_list_element         = $backlog_item_element.affix('ul.backlog-item-children-list');
                     $target_list_element         = angular.element($target_list_element);
                     $target_list_element.data('backlog-item-id', target_backlog_item.id);
                     $target_element              = $backlog_item_element.affix('div');
@@ -309,10 +305,6 @@ describe("BacklogItemController -", function() {
                     target_scope.backlog_item    = target_backlog_item;
                     $compile($target_list_element)(target_scope);
                     dragularService.shared.extra = $target_element;
-                });
-
-                afterEach(function() {
-                    $('<backlog-item>').remove();
                 });
 
                 it("and given I can drop into the target element, when I cancel the drop of a child (e.g. a Task) over an item (e.g. a User Story), then the dropped element will be removed from the source element, the child will be removed from the source backlog item's model and prepended to the target backlog item's model, the target backlog item will be marked as having children, the child will be moved using DroppedService and both the source and target items will be refreshed", function() {
@@ -418,7 +410,7 @@ describe("BacklogItemController -", function() {
             source_backlog_item_id = 20;
             $dropped_item_element  = affix('li');
             angular.element($dropped_item_element).data('item-id', dropped_item_ids[0]);
-            $source_element = affix('ul.backlog-item-children');
+            $source_element = affix('ul.backlog-item-children-list');
             angular.element($source_element).data('backlog-item-id', source_backlog_item_id);
             initial_index = 0;
             target_index  = 0;
@@ -460,7 +452,7 @@ describe("BacklogItemController -", function() {
 
                 DroppedService.moveFromChildrenToChildren.and.returnValue(move_request.promise);
                 var target_backlog_item_id = 64;
-                $target_element = affix('ul.backlog-item-children');
+                $target_element = affix('ul.backlog-item-children-list');
                 angular.element($target_element).data('backlog-item-id', target_backlog_item_id);
                 source_model = [];
                 target_model = [

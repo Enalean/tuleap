@@ -17,13 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'scrum/overview';
-@import 'scrum/planning';
+import { dropdown } from "tlp";
 
-#agiledashboard-scrum-milestone-menu {
-    cursor: pointer;
-}
+document.addEventListener('DOMContentLoaded', () => {
+    const menu = document.getElementById('agiledashboard-scrum-milestone-menu');
+    if (! menu) {
+        return;
+    }
 
-#agiledashboard-scrum-milestone-menu-caret {
-    font-size: 20px;
-}
+    dropdown(menu);
+});

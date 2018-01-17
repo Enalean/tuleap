@@ -1,4 +1,5 @@
-import _ from 'lodash';
+import _            from 'lodash';
+import { dropdown } from 'tlp';
 
 export default PlanningController;
 
@@ -31,9 +32,9 @@ function PlanningController(
     BacklogItemSelectedService,
     EditItemService
 ) {
-    var self = this;
+    const self = this;
 
-    _.extend(self, {
+    Object.assign(self, {
         backlog             : BacklogService.backlog,
         items               : BacklogItemCollectionService.items,
         milestones          : MilestoneCollectionService.milestones,
@@ -43,26 +44,26 @@ function PlanningController(
         hide_closed_view_key: 'hide-closed-view',
         loading_modal       : NewTuleapArtifactModalService.loading,
 
-        canShowBacklogItem                    : canShowBacklogItem,
-        displayClosedMilestones               : displayClosedMilestones,
-        displayUserCantPrioritizeForMilestones: displayUserCantPrioritizeForMilestones,
-        generateMilestoneLinkUrl              : generateMilestoneLinkUrl,
-        getClosedMilestones                   : getClosedMilestones,
-        getOpenMilestones                     : getOpenMilestones,
-        init                                  : init,
-        isMilestoneContext                    : isMilestoneContext,
-        loadInitialMilestones                 : loadInitialMilestones,
-        refreshSubmilestone                   : refreshSubmilestone,
-        showAddItemToSubMilestoneModal        : showAddItemToSubMilestoneModal,
-        showAddSubmilestoneModal              : showAddSubmilestoneModal,
-        showEditModal                         : EditItemService.showEditModal,
-        showEditSubmilestoneModal             : showEditSubmilestoneModal,
-        switchClosedMilestoneItemsViewMode    : switchClosedMilestoneItemsViewMode,
-        switchViewMode                        : switchViewMode,
-        thereAreClosedMilestonesLoaded        : thereAreClosedMilestonesLoaded,
-        thereAreOpenMilestonesLoaded          : thereAreOpenMilestonesLoaded,
-        getRestError                          : RestErrorService.getError,
-        getNumberOfSelectedBacklogItem        : BacklogItemSelectedService.getNumberOfSelectedBacklogItem
+        getRestError                  : RestErrorService.getError,
+        getNumberOfSelectedBacklogItem: BacklogItemSelectedService.getNumberOfSelectedBacklogItem,
+        showEditModal                 : EditItemService.showEditModal,
+        canShowBacklogItem,
+        displayClosedMilestones,
+        displayUserCantPrioritizeForMilestones,
+        generateMilestoneLinkUrl,
+        getClosedMilestones,
+        getOpenMilestones,
+        init,
+        isMilestoneContext,
+        loadInitialMilestones,
+        refreshSubmilestone,
+        showAddItemToSubMilestoneModal,
+        showAddSubmilestoneModal,
+        showEditSubmilestoneModal,
+        switchClosedMilestoneItemsViewMode,
+        switchViewMode,
+        thereAreClosedMilestonesLoaded,
+        thereAreOpenMilestonesLoaded
     });
 
     self.init();

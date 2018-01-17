@@ -44,7 +44,7 @@ function BacklogItemSelect(
             var first_selected_item = BacklogItemSelectedService.getFirstSelectedItem();
 
             if (first_selected_item) {
-                var first_selected_item_element = angular.element('li[data-item-id="' + first_selected_item.id + '"]');
+                var first_selected_item_element = angular.element('div[data-item-id="' + first_selected_item.id + '"]');
 
                 return checkIfTwoElementsAreSiblings(first_selected_item_element, backlog_item_li);
             }

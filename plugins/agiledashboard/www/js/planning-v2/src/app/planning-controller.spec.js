@@ -1,7 +1,9 @@
 import angular from 'angular';
 import 'angular-mocks';
+import 'tlp-mocks';
 
 import planning_module from './app.js';
+import BaseController  from './planning-controller.js';
 
 describe("PlanningController - ", function() {
     var $scope,
@@ -134,17 +136,17 @@ describe("PlanningController - ", function() {
 
             BacklogItemSelectedService = _BacklogItemSelectedService_;
 
-            PlanningController = $controller('PlanningController', {
-                $filter                      : $filter,
-                $q                           : $q,
-                BacklogService               : BacklogService,
-                BacklogItemService           : BacklogItemService,
-                MilestoneService             : MilestoneService,
-                NewTuleapArtifactModalService: NewTuleapArtifactModalService,
-                SharedPropertiesService      : SharedPropertiesService,
-                UserPreferencesService       : UserPreferencesService,
-                BacklogItemCollectionService : BacklogItemCollectionService,
-                BacklogItemSelectedService   : BacklogItemSelectedService
+            PlanningController = $controller(BaseController, {
+                $filter,
+                $q,
+                BacklogService,
+                BacklogItemService,
+                MilestoneService,
+                NewTuleapArtifactModalService,
+                SharedPropertiesService,
+                UserPreferencesService,
+                BacklogItemCollectionService,
+                BacklogItemSelectedService
             });
         });
 

@@ -1,4 +1,5 @@
-import _ from 'lodash';
+import angular   from 'angular';
+import { pluck } from 'lodash';
 
 export default MilestoneController;
 
@@ -7,7 +8,6 @@ MilestoneController.$inject = [
     '$q',
     '$timeout',
     '$document',
-    '$filter',
     'dragularService',
     'BacklogService',
     'DroppedService',
@@ -20,28 +20,28 @@ function MilestoneController(
     $q,
     $timeout,
     $document,
-    $filter,
     dragularService,
     BacklogService,
     DroppedService,
     MilestoneCollectionService,
     BacklogItemSelectedService
 ) {
-    var self = this;
-    _.extend(self, {
+    const self = this;
+    Object.assign(self, {
+        canUserMoveCards,
+        dragularOptionsForMilestone,
+        init,
+        initDragularForMilestone,
+        isCollapsed,
+        isExpanded,
+        isMilestoneLoadedAndEmpty,
+        moveToBottom,
+        moveToTop,
+        reorderMilestoneContent,
+        toggleMilestone,
         milestone                      : $scope.milestone, // inherited from parent scope
         dragular_instance_for_milestone: undefined,
-        canUserMoveCards               : canUserMoveCards,
-        dragularOptionsForMilestone    : dragularOptionsForMilestone,
         get_content_promise            : $q.when(),
-        init                           : init,
-        initDragularForMilestone       : initDragularForMilestone,
-        isMilestoneLoadedAndEmpty      : isMilestoneLoadedAndEmpty,
-        moveToBottom                   : moveToBottom,
-        moveToTop                      : moveToTop,
-        toggleMilestone                : toggleMilestone,
-        reorderMilestoneContent        : reorderMilestoneContent,
-        getMilestoneBacklogItemClasses : getMilestoneBacklogItemClasses
     });
 
     self.init();
@@ -52,29 +52,26 @@ function MilestoneController(
         $scope.$on('dragulardrag', dragularDrag);
     }
 
-    function toggleMilestone($event) {
+    function toggleMilestone() {
         if (! self.milestone.alreadyLoaded && self.milestone.content.length === 0) {
             self.get_content_promise = self.milestone.getContent();
         }
 
-        var target                = $event.target;
-        var is_a_create_item_link = false;
-
-        if (target.classList) {
-            is_a_create_item_link = target.classList.contains('create-item-link');
-        } else {
-            is_a_create_item_link = angular.isDefined(target.parentNode.getElementsByClassName("create-item-link")[0]);
-        }
-
-        if (! is_a_create_item_link) {
-            self.milestone.collapsed = ! self.milestone.collapsed;
-        }
+        self.milestone.collapsed = ! self.milestone.collapsed;
 
         if (! self.dragular_instance_for_milestone) {
             $timeout(function() {
                 self.initDragularForMilestone();
             });
         }
+    }
+
+    function isCollapsed() {
+        return ! self.milestone.updating && self.milestone.collapsed;
+    }
+
+    function isExpanded() {
+        return ! self.milestone.updating && ! self.milestone.collapsed;
     }
 
     function isMilestoneLoadedAndEmpty() {
@@ -122,7 +119,7 @@ function MilestoneController(
     }
 
     function initDragularForMilestone() {
-        var milestone_element = angular.element('ul.submilestone[data-submilestone-id="' + self.milestone.id + '"]');
+        var milestone_element = angular.element('div.submilestone[data-submilestone-id="' + self.milestone.id + '"]');
 
         self.dragular_instance_for_milestone = dragularService(milestone_element, self.dragularOptionsForMilestone());
 
@@ -196,7 +193,7 @@ function MilestoneController(
 
         if (BacklogItemSelectedService.areThereMultipleSelectedBaklogItems()) {
             dropped_items    = BacklogItemSelectedService.getCompactedSelectedBacklogItem();
-            dropped_item_ids = _.pluck(dropped_items, 'id');
+            dropped_item_ids = pluck(dropped_items, 'id');
         }
 
         var compared_to = DroppedService.defineComparedTo(target_model, target_model[target_index], dropped_items);
@@ -255,7 +252,7 @@ function MilestoneController(
         MilestoneCollectionService.addOrReorderBacklogItemsInMilestoneContent(milestone_id, backlog_items, compared_to);
 
         return DroppedService.reorderSubmilestone(
-            _.pluck(backlog_items, 'id'),
+            pluck(backlog_items, 'id'),
             compared_to,
             milestone_id
         ).then(function() {
@@ -305,7 +302,7 @@ function MilestoneController(
         var accepted = target_container.data('accept').split('|'),
             type     = angular.element(element_to_drop).data('type');
 
-        return _(accepted).contains(type);
+        return accepted.includes(type);
     }
 
     function isItemDraggable(element_to_drag, container, handle_element) {
@@ -321,23 +318,5 @@ function MilestoneController(
     function ancestorCannotBeDragged(handle_element) {
         return (angular.element(handle_element)
             .closest('[data-nodrag="true"]').length > 0);
-    }
-
-    function getMilestoneBacklogItemClasses(backlog_item) {
-        var status_lowered = $filter('lowercase')(backlog_item.status),
-            classes        = {
-                updating   : backlog_item.updating,
-                selected   : backlog_item.selected,
-                multiple   : backlog_item.multiple,
-                hidden     : backlog_item.hidden,
-                shaking    : backlog_item.shaking,
-                undraggable: ! self.canUserMoveCards()
-            };
-
-        classes[backlog_item.color]                 = true;
-        classes[$scope.planning.current_view_class] = true;
-        classes[status_lowered]                     = true;
-
-        return classes;
     }
 }

@@ -1,7 +1,6 @@
 *.sw*
 *~
 node_modules/
-vendor/
 src/**/*.css
 !src/assets/*.css
 test-results.xml

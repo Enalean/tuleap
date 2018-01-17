@@ -25,7 +25,7 @@ const babel_options = {
 
 const webpack_config_for_overview = {
     entry : {
-        'overview': './overview.js'
+        'overview': './scrum-header.js'
     },
     output: {
         path    : build_dir_path,

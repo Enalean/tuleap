@@ -1,85 +1,127 @@
-<legend ng-click="milestoneController.toggleMilestone($event)">
-    {{ milestoneController.milestone.label }}
-    <div
-        ng-if="! milestoneController.milestone.collapsed && milestoneController.canUserMoveCards()"
-        class="btn-group dropdown do-animate"
+<div class="tlp-pane-container">
+    <div class="tlp-pane-header milestone-header"
+        ng-click="milestoneController.toggleMilestone()"
     >
-        <span class="dropdown-toggle btn btn-mini" id="dLabel" role="button" data-toggle="dropdown" data-target="#">
-            <i class="icon-plus"></i> <span translate>Add a new item</span>
-            <b class="caret"></b>
-        </span>
-        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-            <li ng-repeat="accepted_type in milestoneController.milestone.content_accepted_types.content">
-                <a href="#" class="create-item-link" ng-click="planning.showAddItemToSubMilestoneModal(accepted_type, milestoneController.milestone)">{{ accepted_type.label }}</a>
-            </li>
-        </ul>
-    </div>
-    <span class="label status {{ milestoneController.milestone.semantic_status }}">{{ milestoneController.milestone.status_value }}</span>
-    <span class="date" ng-if="milestoneController.milestone.start_date || milestoneController.milestone.end_date">
-        {{ milestoneController.milestone.start_date | amDateFormat:'ll' }} <i class="icon-long-arrow-right"></i>
-        {{ milestoneController.milestone.end_date | amDateFormat:'ll' }}
-    </span>
-    <div style="clear: both"></div>
-</legend>
+        <i class="tlp-pane-title-icon fa fa-fw"
+            ng-class="{
+                'fa-caret-right': milestoneController.isCollapsed(),
+                'fa-caret-down': milestoneController.isExpanded(),
+                'fa-spinner fa-spin': milestoneController.milestone.updating
+            }"
+        ></i>
+        <span class="tlp-pane-title milestone-header-label">{{ milestoneController.milestone.label }}</span>
 
-<div class="content" ng-show="! milestoneController.milestone.collapsed" ng-class="{ loading_content: milestoneController.milestone.loadingContent }">
-    <div class="info">
-        <span class="capacity" translate>Capacity:</span>
-        <span class="capacity-value" ng-if="milestoneController.milestone.capacity">{{ milestoneController.milestone.capacity }}</span>
-        <span class="capacity-value" ng-if="! milestoneController.milestone.capacity" translate>N/A</span>
-
-        <span class="initial-effort" translate>Initial effort:</span>
-        <span class="initial-effort-value" ng-if="milestoneController.milestone.initialEffort" ng-class="{ higher: milestoneController.milestone.initialEffort > milestoneController.milestone.capacity }">{{ milestoneController.milestone.initialEffort }}</span><span class="initial-effort-value non-applicable" ng-if="! milestoneController.milestone.initialEffort" translate>N/A</span>
-
-        <ul>
-            <li>
-                <a href="/plugins/tracker/?aid={{ milestoneController.milestone.id }}" ng-click="planning.showEditSubmilestoneModal($event, milestoneController.milestone)" title="{{ 'Edit' | translate }}">
-                    <i class="icon-edit"></i> <span translate>Edit</span>
-                </a>
-            </li>
-            <li>
-                <a href="{{ planning.generateMilestoneLinkUrl(milestoneController.milestone, 'details') }}" title="{{ 'Overview' | translate }}">
-                    <i class="icon-bar-chart"></i> <span translate>Overview</span>
-                </a>
-            </li>
-            <li ng-if="milestoneController.milestone.resources.milestones.accept.trackers.length > 0">
-                <a href="{{ planning.generateMilestoneLinkUrl(milestoneController.milestone, 'planning-v2') }}" title="{{ 'Planning' | translate }}">
-                    <i class="icon-signin"></i> <span translate>Planning</span>
-                </a>
-            </li>
-            <li ng-if="milestoneController.milestone.resources.cardwall">
-                <a href="{{ planning.generateMilestoneLinkUrl(milestoneController.milestone, 'cardwall') }}" title="{{ 'Cardwall' | translate }}">
-                    <i class="icon-table"></i> <span translate>Cardwall</span>
-                </a>
-            </li>
-        </ul>
-
-        <div style="clear: both"></div>
-    </div>
-
-    <ul class="backlog-items submilestone"
-        ng-class="{ 'empty-milestone': milestoneController.isMilestoneLoadedAndEmpty() }"
-        data-accept="{{ milestoneController.milestone.content_accepted_types.toString() }}"
-        data-submilestone-id="{{ milestoneController.milestone.id }}"
-        data-nodrop="{{ ! milestoneController.canUserMoveCards() }}"
-    >
-        <li ng-repeat="backlog_item in milestoneController.milestone.content"
-            class="backlog-item parent in-milestone"
-            data-accept="{{ backlog_item.accepted_types.toString() }}"
-            data-type="{{ backlog_item.trackerId }}"
-            ng-show="planning.canShowBacklogItem(backlog_item)"
-            ng-class="milestoneController.getMilestoneBacklogItemClasses(backlog_item)"
-            collapsed="true"
-            data-nodrag="{{ ! milestoneController.canUserMoveCards() }}"
-            data-item-id="{{ backlog_item.id }}"
-            backlog-item-index="$index"
-            backlog-item-select="backlog_item"
+        <div class="tlp-dropdown milestone-action-button"
+            ng-if="! milestoneController.milestone.collapsed && milestoneController.canUserMoveCards()"
         >
-            <backlog-item
-                ng-init="canUserMoveCards=milestoneController.canUserMoveCards;current_milestone=milestoneController.milestone"
-            ></backlog-item>
-        </li>
-    </ul>
+            <button type="button"
+                class="tlp-button-primary tlp-button-outline tlp-button-mini"
+                open-tlp-dropdown
+                ng-click="$event.stopPropagation()"
+            >
+                <i class="fa fa-plus tlp-button-icon"></i>
+                <span translate>Add item</span>
+                <i class="fa fa-caret-down tlp-button-icon-right"></i>
+            </button>
+            <div class="tlp-dropdown-menu" role="menu">
+                <a href="javascript:;"
+                    ng-repeat="accepted_type in milestoneController.milestone.content_accepted_types.content"
+                    ng-click="$event.stopPropagation(); planning.showAddItemToSubMilestoneModal(accepted_type, milestoneController.milestone)"
+                    class="tlp-dropdown-menu-item"
+                    role="menuitem"
+                >{{ accepted_type.label }}</a>
+            </div>
+        </div>
 
-    <div class="loading" ng-if="milestoneController.milestone.loadingContent"></div>
+        <div class="milestone-header-spacer"></div>
+
+        <span class="milestone-header-dates"
+            ng-if="milestoneController.milestone.start_date || milestoneController.milestone.end_date"
+        >
+            {{ milestoneController.milestone.start_date | amDateFormat:'ll' }}
+            <i class="fa fa-long-arrow-right"></i>
+            {{ milestoneController.milestone.end_date | amDateFormat:'ll' }}
+        </span>
+        <span class="tlp-badge-primary tlp-badge-outline milestone-header-status"
+            ng-class="{'tlp-badge-secondary': milestoneController.milestone.semantic_status === 'closed' }"
+        >{{ milestoneController.milestone.status_value }}</span>
+    </div>
+
+    <div class="milestone-info"
+        ng-if="! milestoneController.milestone.collapsed"
+    >
+        <span class="tlp-badge-secondary milestone-info-badge"
+            translate
+            ng-if="milestoneController.milestone.capacity"
+        >Capacity: {{ milestoneController.milestone.capacity }}</span>
+        <span class="tlp-badge-secondary milestone-info-badge"
+            translate
+            ng-if="! milestoneController.milestone.capacity"
+        >Capacity: N/A</span>
+
+        <span class="milestone-info-badge"
+            ng-if="milestoneController.milestone.initialEffort"
+            ng-class="{
+                'tlp-badge-warning': milestoneController.milestone.initialEffort > milestoneController.milestone.capacity,
+                'tlp-badge-secondary': milestoneController.milestone.initialEffort <= milestoneController.milestone.capacity,
+            }"
+            translate
+        >Initial effort: {{ milestoneController.milestone.initialEffort }}</span>
+        <span class="tlp-badge-secondary milestone-info-badge"
+            ng-if="! milestoneController.milestone.initialEffort"
+            translate
+        >Initial effort: N/A</span>
+
+        <div class="milestone-spacer"></div>
+
+        <a href="/plugins/tracker/?aid={{ milestoneController.milestone.id }}"
+            ng-click="planning.showEditSubmilestoneModal($event, milestoneController.milestone)"
+            title="{{::'Edit' | translate }}"
+            class="milestone-info-link"
+        ><i class="fa fa-edit"></i><span translate>Edit</span></a>
+
+        <a href="{{ planning.generateMilestoneLinkUrl(milestoneController.milestone, 'details') }}"
+            title="{{::'Overview' | translate }}"
+            class="milestone-info-link"
+        ><i class="fa fa-bar-chart"></i><span translate>Overview</span></a>
+
+        <a href="{{ planning.generateMilestoneLinkUrl(milestoneController.milestone, 'planning-v2') }}"
+            ng-if="milestoneController.milestone.resources.milestones.accept.trackers.length > 0"
+            title="{{::'Planning' | translate }}"
+            class="milestone-info-link"
+        ><i class="fa fa-sign-in"></i><span translate>Planning</span></a>
+
+        <a href="{{ planning.generateMilestoneLinkUrl(milestoneController.milestone, 'cardwall') }}"
+            ng-if="milestoneController.milestone.resources.cardwall"
+            title="{{::'Cardwall' | translate }}"
+            class="milestone-info-link"
+        ><i class="fa fa-table"></i><span translate>Cardwall</span></a>
+    </div>
+
+    <section class="tlp-pane-section"
+        ng-show="! milestoneController.milestone.collapsed"
+    >
+        <div class="milestone-backlog-items submilestone"
+            ng-class="{ 'empty-milestone': milestoneController.isMilestoneLoadedAndEmpty() }"
+            data-accept="{{ milestoneController.milestone.content_accepted_types.toString() }}"
+            data-submilestone-id="{{ milestoneController.milestone.id }}"
+            data-nodrop="{{ ! milestoneController.canUserMoveCards() }}"
+        >
+            <div ng-repeat="backlog_item in milestoneController.milestone.content"
+                class="backlog-item {{ planning.current_view_class }}"
+                data-accept="{{ backlog_item.accepted_types.toString() }}"
+                data-type="{{ backlog_item.trackerId }}"
+                ng-show="planning.canShowBacklogItem(backlog_item)"
+                collapsed="true"
+                data-nodrag="{{ ! milestoneController.canUserMoveCards() }}"
+                data-item-id="{{ backlog_item.id }}"
+                backlog-item-index="$index"
+                backlog-item-select="backlog_item"
+                backlog-item
+                ng-init="canUserMoveCards=milestoneController.canUserMoveCards;current_milestone=milestoneController.milestone"
+            ></div>
+        </div>
+
+        <div class="milestone-content-loading" ng-if="milestoneController.milestone.loadingContent"></div>
+    </section>
 </div>

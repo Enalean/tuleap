@@ -8,10 +8,6 @@ msgstr ""
 msgid "A server error has occured. <b>You should refresh this page</b>."
 msgstr ""
 
-#: src/app/milestone/milestone.tpl.html
-msgid "Add a new item"
-msgstr ""
-
 #: src/app/backlog-item/backlog-item-details/backlog-item-details.tpl.html
 #: src/app/backlog/backlog.tpl.html
 msgid "Add a {{ accepted_type.label }}"
@@ -29,12 +25,20 @@ msgstr ""
 msgid "Add an item"
 msgstr ""
 
+#: src/app/milestone/milestone.tpl.html
+msgid "Add item"
+msgstr ""
+
 #: src/app/backlog/backlog.tpl.html
 msgid "All items have been loaded."
 msgstr ""
 
 #: src/app/milestone/milestone.tpl.html
-msgid "Capacity:"
+msgid "Capacity: N/A"
+msgstr ""
+
+#: src/app/milestone/milestone.tpl.html
+msgid "Capacity: {{ milestoneController.milestone.capacity }}"
 msgstr ""
 
 #: src/app/milestone/milestone.tpl.html
@@ -74,7 +78,11 @@ msgid "Initial effort"
 msgstr ""
 
 #: src/app/milestone/milestone.tpl.html
-msgid "Initial effort:"
+msgid "Initial effort: N/A"
+msgstr ""
+
+#: src/app/milestone/milestone.tpl.html
+msgid "Initial effort: {{ milestoneController.milestone.initialEffort }}"
 msgstr ""
 
 #: src/app/planning.tpl.html
@@ -93,10 +101,6 @@ msgstr ""
 msgid "Move to top"
 msgstr ""
 
-#: src/app/milestone/milestone.tpl.html
-msgid "N/A"
-msgstr ""
-
 #: src/app/backlog-item/backlog-item-details/backlog-item-details.tpl.html
 msgid "No initial effort defined"
 msgstr ""
@@ -110,7 +114,7 @@ msgid "Planning"
 msgstr ""
 
 #: src/app/backlog-item-selected/backlog-item-selected-bar.tpl.html
-msgid "Press <span class=\"label\">ESC</span> to cancel the selection, only siblings can be multi-selected."
+msgid "Press <span class=\"tlp-badge-primary\">ESC</span> to cancel the selection, only siblings can be multi-selected."
 msgstr ""
 
 #: src/app/planning.tpl.html
@@ -133,12 +137,6 @@ msgstr ""
 #: src/app/planning.tpl.html
 msgid "You are not allowed to rank on this planning"
 msgstr ""
-
-#: src/app/backlog-item/backlog-item-details/backlog-item-details-controller.js
-msgid "pt"
-msgid_plural "pts"
-msgstr[0] ""
-msgstr[1] ""
 
 #: src/app/backlog-item-selected/backlog-item-selected-bar.tpl.html
 msgid "{{ selected_bar_controller.nb_selected_backlog_items }} item is selected."

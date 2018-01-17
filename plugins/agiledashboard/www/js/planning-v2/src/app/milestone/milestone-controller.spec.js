@@ -74,45 +74,31 @@ describe("MilestoneController -", function() {
         });
     });
 
-    describe("toggleMilestone() -", function() {
-        var event;
-
-        describe("Given an event with a target that was not a create-item-link and a milestone object", function() {
-            beforeEach(function() {
-                event = {
-                    target: {
-                        classList: {
-                            contains: function() {
-                                return false;
-                            }
-                        }
-                    }
-                };
-            });
-
-            it("that was already loaded and collapsed, when I toggle a milestone, then it will be un-collapsed", function() {
+    describe("toggleMilestone() -", () => {
+        describe("Given a milestone object", () => {
+            it("that was already loaded and collapsed, when I toggle a milestone, then it will be un-collapsed", () => {
                 MilestoneController.milestone = {
                     collapsed: true,
                     alreadyLoaded: true
                 };
 
-                MilestoneController.toggleMilestone(event);
+                MilestoneController.toggleMilestone();
 
                 expect(MilestoneController.milestone.collapsed).toBeFalsy();
             });
 
-            it("that was already loaded and was not collapsed, when I toggle a milestone, then it will be collapsed", function() {
+            it("that was already loaded and was not collapsed, when I toggle a milestone, then it will be collapsed", () => {
                 MilestoneController.milestone = {
                     collapsed: false,
                     alreadyLoaded: true
                 };
 
-                MilestoneController.toggleMilestone(event);
+                MilestoneController.toggleMilestone();
 
                 expect(MilestoneController.milestone.collapsed).toBeTruthy();
             });
 
-            it("that was not already loaded, when I toggle a milestone, then its content will be loaded", function() {
+            it("that was not already loaded, when I toggle a milestone, then its content will be loaded", () => {
                 MilestoneController.milestone = {
                     content: [],
                     getContent: jasmine.createSpy("getContent")
@@ -125,35 +111,10 @@ describe("MilestoneController -", function() {
                     total: 0
                 });
 
-                MilestoneController.toggleMilestone(event);
+                MilestoneController.toggleMilestone();
 
                 expect(MilestoneController.milestone.getContent).toHaveBeenCalled();
             });
-        });
-
-        it("Given an event with a create-item-link target and a collapsed milestone, when I toggle a milestone, then it will stay collapsed", function() {
-            event = {
-                target: {
-                    parentNode: {
-                        getElementsByClassName: function() {
-                            return [
-                                {
-                                    fakeElement: ''
-                                }
-                            ];
-                        }
-                    }
-                }
-            };
-
-            MilestoneController.milestone = {
-                collapsed: true,
-                alreadyLoaded: true
-            };
-
-            MilestoneController.toggleMilestone(event);
-
-            expect(MilestoneController.milestone.collapsed).toBeTruthy();
         });
     });
 

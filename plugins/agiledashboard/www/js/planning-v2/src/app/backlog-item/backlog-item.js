@@ -1,7 +1,8 @@
-import angular  from 'angular';
-import dragular from 'dragular';
+import angular                       from 'angular';
+import dragular                      from 'dragular';
+import angular_artifact_modal_module from 'angular-artifact-modal';
+
 import 'angular-gettext';
-import 'tuleap-artifact-modal';
 
 import drop                  from '../drop/drop.js';
 import highlight_filter      from '../highlight-filter/highlight-filter.js';
@@ -13,7 +14,7 @@ import BacklogItemDirective from './backlog-item-directive.js';
 
 export default angular.module('backlog-item', [
     'gettext',
-    'tuleap.artifact-modal',
+    angular_artifact_modal_module,
     backlog_item_details,
     backlog_item_rest,
     backlog_item_selected,

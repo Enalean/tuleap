@@ -1,34 +1,64 @@
 /* eslint-disable */
-var path                  = require('path');
-var webpack               = require('webpack');
-var WebpackAssetsManifest = require('webpack-assets-manifest');
-var BabelPresetEnv        = require('babel-preset-env');
+const path                  = require('path');
+const webpack               = require('webpack');
+const WebpackAssetsManifest = require('webpack-assets-manifest');
+const babel_preset_env      = require('babel-preset-env');
+const babel_plugin_istanbul = require('babel-plugin-istanbul').default;
 
-var babel_plugin_istanbul_path = path.resolve(__dirname, './node_modules/babel-plugin-istanbul');
+const assets_dir_path = path.resolve(__dirname, './dist');
 
-var assets_dir_path = path.resolve(__dirname, './dist');
+const babel_preset_env_ie_config = [babel_preset_env, {
+    targets: {
+        ie: 11
+    },
+    modules: false
+}];
 
-var babel_options = {
-    presets: [
-        [BabelPresetEnv, {
-                targets: {
-                    ie: 11
-                },
-                modules: false
-        }]
-    ],
+const babel_preset_env_chrome_config = [babel_preset_env, {
+    targets: {
+        browsers: ['last 2 Chrome versions']
+    },
+    modules: false,
+    useBuiltIns: true,
+    shippedProposals: true
+}];
+
+const babel_options   = {
     env: {
+        watch: {
+            presets: [babel_preset_env_ie_config]
+        },
+        production: {
+            presets: [babel_preset_env_ie_config]
+        },
+        test: {
+            presets: [babel_preset_env_chrome_config]
+        },
         coverage: {
+            presets: [babel_preset_env_chrome_config],
             plugins: [
-                [babel_plugin_istanbul_path, {
-                    exclude: [ "**/*.spec.js"]
+                [babel_plugin_istanbul, {
+                    exclude: ['**/*.spec.js']
                 }]
             ]
         }
     }
 };
 
-var webpack_config = {
+const babel_rule = {
+    test: /\.js$/,
+    exclude: /node_modules/,
+    use: [
+        {
+            loader: 'babel-loader',
+            options: babel_options
+        }
+    ]
+};
+
+const path_to_tlp = path.resolve(__dirname, '../../../../../src/www/themes/common/tlp/');
+
+const webpack_config = {
     entry : {
         'planning-v2': './src/app/app.js'
     },
@@ -36,42 +66,32 @@ var webpack_config = {
         path    : assets_dir_path,
         filename: '[name]-[chunkhash].js'
     },
+    externals: {
+        tlp: 'tlp'
+    },
     resolve: {
         modules: [
-            'node_modules',
-            'vendor',
+            // This ensures that dependencies resolve their imported modules in planning's node_modules
+            path.resolve(__dirname, 'node_modules'),
+            'node_modules'
         ],
         alias: {
-            // Needed as long as we use FlamingParrot
-            'angular-ui-bootstrap-templates'  : 'angular-ui-bootstrap-bower/ui-bootstrap-tpls.js',
-            // Bower angular modal dependencies
-            'angular-ckeditor'                : 'angular-ckeditor/angular-ckeditor.js',
-            'angular-bootstrap-datetimepicker': 'angular-bootstrap-datetimepicker/src/js/datetimepicker.js',
-            'angular-ui-select'               : 'angular-ui-select/dist/select.js',
-            'angular-filter'                  : 'angular-filter/index.js',
-            'angular-base64-upload'           : 'angular-base64-upload/index.js',
-            'tuleap-artifact-modal'           : 'artifact-modal/dist/tuleap-artifact-modal.js',
+            'angular-artifact-modal': path.resolve(__dirname, '../../../../tracker/www/scripts/angular-artifact-modal/index.js'),
+            'angular-tlp'           : path.join(path_to_tlp, 'angular-tlp/index.js'),
+            'tlp-mocks'             : path.join(path_to_tlp, 'mocks/index.js')
         }
     },
     module: {
         rules: [
+            babel_rule,
             {
-                test: /\.js$/,
-                exclude: [
-                    /node_modules/,
-                    /vendor/
-                ],
-                use: [
-                    {
-                        loader: 'babel-loader',
-                        options: babel_options
-                    }
-                ]
-            }, {
                 test: /\.html$/,
                 exclude: /node_modules/,
                 use: [
-                    { loader: 'ng-cache-loader' }
+                    {
+                        loader: 'ng-cache-loader',
+                        query: '-url'
+                    }
                 ]
             }, {
                 test: /\.po$/,

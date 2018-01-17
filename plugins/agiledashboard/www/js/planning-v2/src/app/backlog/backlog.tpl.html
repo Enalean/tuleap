@@ -1,66 +1,79 @@
 <div class="planning-header">
-    <h2 translate>To be planned</h2>
+    <h2 class="planning-header-title" translate>To be planned</h2>
 
-    <div ng-if="backlog.details.accepted_types.content.length > 1  && backlog.details.user_can_move_cards" class="btn-group dropdown">
-        <span class="dropdown-toggle btn btn-small" id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="#">
-            <i class="icon-plus"></i> <span translate>Add an item</span>
-            <b class="caret"></b>
-        </span>
-        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-            <li ng-repeat="accepted_type in backlog.details.accepted_types.content">
-                <a
-                    href="#"
-                    class="create-item-link"
-                    ng-click="backlog.showAddBacklogItemModal($event, accepted_type)"
-                    translate
-                >Add a {{ accepted_type.label }}</a>
-            </li>
-        </ul>
+    <div class="tlp-dropdown backlog-add-item-button"
+        ng-if="backlog.details.accepted_types.content.length > 1  && backlog.details.user_can_move_cards"
+    >
+        <button type="button"
+            class="tlp-button-primary tlp-button-outline tlp-button-small"
+            open-tlp-dropdown
+        >
+            <i class="fa fa-plus tlp-button-icon"></i>
+            <span translate>Add an item</span>
+            <i class="fa fa-caret-down tlp-button-icon-right"></i>
+        </button>
+        <div class="tlp-dropdown-menu" role="menu">
+            <a href="javascript:;"
+                ng-repeat="accepted_type in backlog.details.accepted_types.content"
+                ng-click="backlog.showAddBacklogItemModal($event, accepted_type)"
+                class="tlp-dropdown-menu-item"
+                role="menuitem"
+                translate
+            >Add a {{ accepted_type.label }}</a>
+        </div>
     </div>
-    <button ng-if="backlog.details.accepted_types.content.length === 1 && backlog.canUserMoveCards()"
-        class="btn btn-small"
+
+    <button type="button"
+        ng-if="backlog.details.accepted_types.content.length === 1 && backlog.canUserMoveCards()"
+        class="tlp-button-secondary tlp-button-small backlog-add-item-button"
         ng-click="backlog.showAddBacklogItemModal($event, backlog.details.accepted_types.content[0])"
     >
-        <i class="icon-plus"></i> <span translate>Add a {{ backlog.details.accepted_types.content[0].label }}</span>
+        <i class="fa fa-plus tlp-button-icon"></i> <span translate>Add a {{ backlog.details.accepted_types.content[0].label }}</span>
     </button>
 
-    <div class="pull-right">
-        <div class="btn-group view-switcher" data-toggle="buttons-radio">
-            <button
-                type="button"
-                class="btn btn-small"
-                ng-class="{ active: planning.current_view_class === planning.compact_view_key }"
-                ng-click="planning.switchViewMode(planning.compact_view_key)"
-                title="{{ 'Compact view' | translate }}"
-            >
-                <i class="icon-list"></i> <span translate>Compact view</span>
-            </button>
-            <button
-                type="button"
-                class="btn btn-small"
-                ng-class="{ active: planning.current_view_class === planning.detailed_view_key }"
-                ng-click="planning.switchViewMode(planning.detailed_view_key)"
-                title="{{ 'Detailed view' | translate }}"
-            >
-                <i class="icon-th-list"></i> <span translate>Detailed view</span>
-            </button>
-        </div>
+    <div class="planning-header-spacer"></div>
 
-        <div class="input-search" ng-show="backlog.backlog_items.content.length > 0">
-            <input
-                type="search"
-                class="search input-medium"
-                placeholder="{{ 'Filter...' | translate }}"
-                ng-model="backlog.filter.terms"
-                ng-keyup="backlog.filterBacklog()"
+    <input type="search"
+        ng-show="backlog.backlog_items.content.length > 0"
+        class="tlp-search tlp-search-small backlog-header-search"
+        placeholder="{{::'Filter...' | translate }}"
+        ng-model="backlog.filter.terms"
+        ng-keyup="backlog.filterBacklog()"
+    >
+
+    <div class="tlp-button-bar backlog-header-view-toggler">
+        <div class="tlp-button-bar-item" title="{{::'Compact view' | translate }}">
+            <input type="radio"
+                id="backlog-header-compact-toggler"
+                class="tlp-button-bar-checkbox"
+                ng-change="planning.switchViewMode(planning.compact_view_key)"
+                ng-model="planning.current_view_class"
+                ng-value="planning.compact_view_key"
             >
+            <label for="backlog-header-compact-toggler"
+                class="tlp-button-secondary tlp-button-small"
+            >
+                <i class="fa fa-list tlp-button-icon"></i> <span class="planning-header-toggler-label" translate>Compact view</span>
+            </label>
+        </div>
+        <div class="tlp-button-bar-item" title="{{::'Detailed view' | translate }}">
+            <input type="radio"
+                id="backlog-header-detailed-toggler"
+                class="tlp-button-bar-checkbox"
+                ng-change="planning.switchViewMode(planning.detailed_view_key)"
+                ng-model="planning.current_view_class"
+                ng-value="planning.detailed_view_key"
+            >
+            <label for="backlog-header-detailed-toggler"
+                class="tlp-button-secondary tlp-button-small"
+            >
+                <i class="fa fa-th-list tlp-button-icon"></i> <span class="planning-header-toggler-label" translate>Detailed view</span>
+            </label>
         </div>
     </div>
-
-    <div class="clearfix"></div>
 </div>
 
-<div class="alert alert-warning" ng-if="backlog.displayUserCantPrioritize()" translate>
+<div class="tlp-alert-warning planning-warning" ng-if="backlog.displayUserCantPrioritize()" translate>
     You are not allowed to rank on this planning
 </div>
 
@@ -68,25 +81,27 @@
     scroll-callback="backlog.displayBacklogItems()"
     scroll-threshold="100"
 >
-    <ul class="backlog-items backlog"
-        ng-class="{ 'empty-backlog': backlog.isBacklogLoadedAndEmpty() }"
+    <div class="backlog-items backlog"
+        ng-class="{ 'backlog-empty': backlog.isBacklogLoadedAndEmpty() }"
         data-accept="{{ backlog.details.accepted_types.toString() }}"
         data-nodrop="{{ ! backlog.canUserMoveCards() }}"
     >
-        <li ng-repeat="backlog_item in backlog.backlog_items.filtered_content"
-            data-type="{{ backlog_item.trackerId }}"
+        <div ng-repeat="backlog_item in backlog.backlog_items.filtered_content"
+            class="backlog-item {{ planning.current_view_class }}"
             data-accept="{{ backlog_item.accepted_types.toString() }}"
-            class="backlog-item parent in-backlog {{ planning.current_view_class }}"
-            ng-class="{ updating: backlog_item.updating, selected: backlog_item.selected, multiple: backlog_item.multiple, hidden: backlog_item.hidden, shaking: backlog_item.shaking, undraggable: ! backlog.canUserMoveCards() }"
+            data-type="{{ backlog_item.trackerId }}"
             collapsed="true"
             data-nodrag="{{ ! backlog.canUserMoveCards() }}"
             data-item-id="{{ backlog_item.id }}"
             backlog-item-index="$index"
             backlog-item-select="backlog_item"
-        >
-            <backlog-item ng-init="canUserMoveCards=backlog.canUserMoveCards"></backlog-item>
-        </li>
-    </ul>
+            backlog-item
+            ng-init="canUserMoveCards=backlog.canUserMoveCards"
+        ></li>
+    </div>
 </div>
-<div ng-if="backlog.backlog_items.fully_loaded && backlog.backlog_items.content.length > 0" class="fully-loaded" translate>All items have been loaded.</div>
-<div ng-if="backlog.backlog_items.loading" class="loading"></div>
+<div ng-if="backlog.backlog_items.loading" class="backlog-loading"></div>
+<div ng-if="backlog.backlog_items.fully_loaded && backlog.backlog_items.content.length > 0"
+    class="backlog-fully-loaded"
+    translate
+>All items have been loaded.</div>
