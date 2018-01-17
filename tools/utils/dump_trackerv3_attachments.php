@@ -1,4 +1,4 @@
-#!/usr/bin/php
+#!/usr/share/tuleap/src/utils/php-launcher.sh
 <?php
 
 define('EMPTY_FILE_MD5', 'd41d8cd98f00b204e9800998ecf8427e');

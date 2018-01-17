@@ -78,15 +78,3 @@ create a file
 with additional customizations.
 
 
-Upgrading the Mediawiki installation
-------------------------------------
-
-(TODO: not working!)
-When FusionForge was installed from a package manager, this should be
-happening automatically. Otherwise, when the Mediawiki installation is
-upgraded, it is necessary to upgrade all project instances. To do
-that, you can call
-
-	bin/mw-wrapper <project> update.php
-
-

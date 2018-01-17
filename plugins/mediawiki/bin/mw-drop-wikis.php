@@ -1,16 +1,17 @@
-#! /usr/bin/php
+#!/usr/share/tuleap/src/utils/php-launcher.sh
 <?php
 /*
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  * Copyright (C) 2010  Olaf Lenz
  *
- * This file is part of FusionForge.
+ * This file is part of Tuleap.
  *
- * FusionForge is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * FusionForge is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
