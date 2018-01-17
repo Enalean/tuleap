@@ -27,14 +27,8 @@ function LinkFieldController(
     self.init();
 
     function init() {
-        let promise;
-        if (isInCreationMode()) {
-            promise = $q.when(self.linked_artifact);
-        } else {
-            promise = self.hasArtifactAlreadyAParent();
-        }
-
-        promise.then(linked_artifact => {
+        self.is_loading = true;
+        getParentArtifact().then(linked_artifact => {
             self.parent_artifact = linked_artifact;
 
             const canChoose = canChooseArtifactsParent(
@@ -44,7 +38,21 @@ function LinkFieldController(
             if (canChoose === true) {
                 return self.loadParentArtifactsTitle();
             }
+        }).finally(() => {
+            self.is_loading = false;
         });
+    }
+
+    function getParentArtifact() {
+        if (! isInCreationMode()) {
+            return self.hasArtifactAlreadyAParent();
+        }
+
+        if (self.parent_artifact_id) {
+            return TuleapArtifactModalRestService.getArtifact(self.parent_artifact_id);
+        }
+
+        return $q.when(null);
     }
 
     function showParentArtifactChoice() {
@@ -56,7 +64,6 @@ function LinkFieldController(
     }
 
     function loadParentArtifactsTitle() {
-        self.is_loading = true;
         return TuleapArtifactModalRestService.getAllOpenParentArtifacts(self.tracker.id, 1000, 0).then(artifacts => {
             self.possible_parent_artifacts = artifacts.map(artifact => {
                 return {
@@ -64,21 +71,16 @@ function LinkFieldController(
                     formatted_ref: formatArtifact(artifact)
                 };
             });
-        }).finally(() => {
-            self.is_loading = false;
         });
     }
 
     function hasArtifactAlreadyAParent() {
-        self.is_loading = true;
         return TuleapArtifactModalRestService.getFirstReverseIsChildLink(self.artifact_id).then((parent_artifacts) => {
             if (parent_artifacts.length > 0) {
                 return parent_artifacts[0];
             }
 
             return null;
-        }).finally(() => {
-            self.is_loading = false;
         });
     }
 

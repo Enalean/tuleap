@@ -1,11 +1,11 @@
 import model_module from './model.js';
-import angular from 'angular';
+import angular      from 'angular';
+import moment       from 'moment';
 import 'angular-mocks';
-import moment from 'moment';
 
-describe("TuleapArtifactFieldValuesService", function() {
-    var FieldValuesService;
-    beforeEach(function() {
+describe("TuleapArtifactFieldValuesService", () => {
+    let FieldValuesService;
+    beforeEach(() => {
         angular.mock.module(model_module);
 
         angular.mock.inject(function(
@@ -17,10 +17,10 @@ describe("TuleapArtifactFieldValuesService", function() {
         });
     });
 
-    describe("getSelectedValues() -", function() {
-        describe("Given a map of artifact field values", function() {
-            it("and given a tracker containing those fields, when I get the fields' selected values, then a map containing all the fields provided and also containing default values for all the other fields of the tracker will be returned", function() {
-                var artifact_values = {
+    describe("getSelectedValues() -", () => {
+        describe("Given a map of artifact field values", () => {
+            it("and given a tracker containing those fields, when I get the fields' selected values, then a map containing all the fields provided and also containing default values for all the other fields of the tracker will be returned", () => {
+                const artifact_values = {
                     655: { field_id: 655, value: "alumna Aurora Arpin" },
                     378: { field_id: 378, bind_value_ids: [667, 967] },
                     320: { field_id: 320, links: [
@@ -28,70 +28,70 @@ describe("TuleapArtifactFieldValuesService", function() {
                         { id: 434 }
                     ]}
                 };
-                var tracker = {
+                const tracker = {
                     fields: [
                         {
-                            field_id: 655,
-                            label: "antithetically",
-                            name: "arbusterol",
-                            type: "string",
-                            permissions: ["read", "update", "create"],
+                            field_id     : 655,
+                            label        : "antithetically",
+                            name         : "arbusterol",
+                            type         : "string",
+                            permissions  : ["read", "update", "create"],
                             default_value: "yogasana"
                         }, {
-                            field_id: 728,
-                            label: "turus",
-                            name: "hemicycle",
-                            type: "rb",
-                            permissions: ["read", "update", "create"],
+                            field_id     : 728,
+                            label        : "turus",
+                            name         : "hemicycle",
+                            type         : "rb",
+                            permissions  : ["read", "update", "create"],
                             default_value: [
                                 { id: 422, label: "unilinear" }
                             ]
                         }, {
-                            field_id: 378,
-                            label: "overplay",
-                            name: "awaredom",
-                            type: "sb",
-                            permissions: ["read", "update", "create"],
+                            field_id     : 378,
+                            label        : "overplay",
+                            name         : "awaredom",
+                            type         : "sb",
+                            permissions  : ["read", "update", "create"],
                             default_value: [
                                 { id: 967, label: "intertransmission" }
                             ]
                         }, {
-                            field_id: 320,
-                            label: "rani",
-                            name: "troot",
-                            type: "art_link",
+                            field_id   : 320,
+                            label      : "rani",
+                            name       : "troot",
+                            type       : "art_link",
                             permissions: ["read", "update", "create"]
                         }
                     ]
                 };
-                var output = FieldValuesService.getSelectedValues(artifact_values, tracker);
+
+                const output = FieldValuesService.getSelectedValues(artifact_values, tracker);
+
                 expect(output).toEqual({
                     655: {
-                        field_id: 655,
-                        type: "string",
+                        field_id   : 655,
+                        type       : "string",
                         permissions: ["read", "update", "create"],
-                        value: "alumna Aurora Arpin"
+                        value      : "alumna Aurora Arpin"
                     },
                     728: {
-                        field_id: 728,
+                        field_id      : 728,
                         bind_value_ids: [422],
-                        type: "rb",
-                        permissions: ["read", "update", "create"]
+                        type          : "rb",
+                        permissions   : ["read", "update", "create"]
                     },
                     378: {
-                        field_id: 378,
+                        field_id      : 378,
                         bind_value_ids: [667, 967],
-                        type: "sb",
-                        permissions: ["read", "update", "create"]
+                        type          : "sb",
+                        permissions   : ["read", "update", "create"]
                     },
                     320: {
-                        field_id: 320,
-                        links: [
-                            { id: 158 },
-                            { id: 434 }
-                        ],
-                        type: "art_link",
-                        permissions: ["read", "update", "create"]
+                        field_id         : 320,
+                        links            : [{}],
+                        unformatted_links: '158, 434',
+                        type             : "art_link",
+                        permissions      : ["read", "update", "create"]
                     }
                 });
             });
