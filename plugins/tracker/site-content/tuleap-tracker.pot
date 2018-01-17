@@ -72,9 +72,6 @@ msgstr ""
 msgid "Error during parsing expert query"
 msgstr ""
 
-msgid "Field is under construction"
-msgstr ""
-
 #, php-format
 msgid "Group '%s' couldn't be added."
 msgid_plural "Groups '%s' couldn't be added."

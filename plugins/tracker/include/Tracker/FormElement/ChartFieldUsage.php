@@ -27,22 +27,19 @@ class ChartFieldUsage
     private $use_capacity;
     private $use_hierarchy;
     private $use_remaining_effort;
-    private $is_under_construction;
 
     public function __construct(
         $use_start_date,
         $use_duration,
         $use_capacity,
         $use_hierarchy,
-        $use_remaining_effort,
-        $is_under_construction
+        $use_remaining_effort
     ) {
         $this->use_start_date        = $use_start_date;
         $this->use_duration          = $use_duration;
         $this->use_capacity          = $use_capacity;
         $this->use_hierarchy         = $use_hierarchy;
         $this->use_remaining_effort  = $use_remaining_effort;
-        $this->is_under_construction = $is_under_construction;
     }
 
     public function getUseStartDate()
@@ -68,10 +65,5 @@ class ChartFieldUsage
     public function getUseRemainingEffort()
     {
         return $this->use_remaining_effort;
-    }
-
-    public function getIsUnderConstruction()
-    {
-        return $this->is_under_construction;
     }
 }

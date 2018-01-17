@@ -108,10 +108,6 @@ class ChartMessageFetcher
 
         $warnings = array_merge($warnings, $event->getWarnings());
 
-        if ($usage->getIsUnderConstruction()) {
-            $warnings[] = "<li>" . dgettext('tuleap-tracker', 'Field is under construction') . "</li>";
-        }
-
         if (count($warnings) > 0) {
             return '<ul class="feedback_warning">' . implode('', $warnings) . '</ul>';
         }

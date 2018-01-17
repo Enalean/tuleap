@@ -359,15 +359,13 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
         $use_capacity          = true;
         $use_hierarchy         = false;
         $use_remaining_effort  = false;
-        $is_under_construction = true;
 
         return new ChartFieldUsage(
             $use_start_date,
             $use_duration,
             $use_capacity,
             $use_hierarchy,
-            $use_remaining_effort,
-            $is_under_construction
+            $use_remaining_effort
         );
     }
 
