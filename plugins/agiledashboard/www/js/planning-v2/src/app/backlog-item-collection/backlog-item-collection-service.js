@@ -1,4 +1,8 @@
-import _ from 'lodash';
+import {
+    remove,
+    some,
+    find
+} from 'lodash';
 
 export default BacklogItemCollectionService;
 
@@ -9,34 +13,30 @@ BacklogItemCollectionService.$inject = [
 function BacklogItemCollectionService(
     BacklogItemService
 ) {
-    var self = this;
-    _.extend(self, {
-        items                               : {},
-        refreshBacklogItem                  : refreshBacklogItem,
-        removeBacklogItemsFromCollection    : removeBacklogItemsFromCollection,
-        addOrReorderBacklogItemsInCollection: addOrReorderBacklogItemsInCollection
+    const self = this;
+    Object.assign(self, {
+        items: {},
+        refreshBacklogItem,
+        removeBacklogItemsFromCollection,
+        addOrReorderBacklogItemsInCollection
     });
 
     function refreshBacklogItem(backlog_item_id) {
         self.items[backlog_item_id].updating = true;
 
-        return BacklogItemService.getBacklogItem(backlog_item_id).then(function(data) {
-            self.items[backlog_item_id].label          = data.backlog_item.label;
-            self.items[backlog_item_id].initial_effort = data.backlog_item.initial_effort;
-            self.items[backlog_item_id].card_fields    = data.backlog_item.card_fields;
-            self.items[backlog_item_id].updating       = false;
-            self.items[backlog_item_id].status         = data.backlog_item.status;
-            self.items[backlog_item_id].has_children   = data.backlog_item.has_children;
+        return BacklogItemService.getBacklogItem(backlog_item_id).then(({ backlog_item }) => {
+            Object.assign(self.items[backlog_item_id], backlog_item);
+            self.items[backlog_item_id].updating = false;
 
-            if (! data.backlog_item.has_children) {
+            if (! backlog_item.has_children) {
                 self.items[backlog_item_id].children.collapsed = true;
             }
         });
     }
 
     function removeBacklogItemsFromCollection(backlog_items_collection, backlog_items_to_remove) {
-        _.remove(backlog_items_collection, function(item) {
-            return _.some(backlog_items_to_remove, item);
+        remove(backlog_items_collection, function(item) {
+            return some(backlog_items_to_remove, item);
         });
     }
 
@@ -47,7 +47,7 @@ function BacklogItemCollectionService(
 
         if (compared_to) {
             index = backlog_items_collection.indexOf(
-                _.find(backlog_items_collection, { id: compared_to.item_id })
+                find(backlog_items_collection, { id: compared_to.item_id })
             );
 
             if (compared_to.direction === 'after') {

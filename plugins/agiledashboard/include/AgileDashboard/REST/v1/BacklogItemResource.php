@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -45,8 +45,8 @@ use Tuleap\Tracker\REST\v1\ArtifactLinkUpdater;
 /**
  * Wrapper for Backlog_Items related REST methods
  */
-class BacklogItemResource extends AuthenticatedResource {
-
+class BacklogItemResource extends AuthenticatedResource
+{
     const MAX_LIMIT = 100;
 
     /** @var Tracker_ArtifactFactory */
@@ -123,14 +123,24 @@ class BacklogItemResource extends AuthenticatedResource {
         return $backlog_item_representation;
     }
 
-    private function getBacklogItem(PFUser $current_user, Tracker_Artifact $artifact) {
+    private function getBacklogItem(PFUser $current_user, Tracker_Artifact $artifact)
+    {
         $semantic_manager = new Tracker_SemanticManager($artifact->getTracker());
         $semantics        = $semantic_manager->getSemantics();
 
         $artifact     = $this->updateArtifactTitleSemantic($current_user, $artifact, $semantics);
         $backlog_item = new AgileDashboard_Milestone_Backlog_BacklogItem($artifact);
         $backlog_item = $this->updateBacklogItemStatusSemantic($current_user, $artifact, $backlog_item, $semantics);
-        $backlog_item = $this->updateBacklogItemInitialEffortSemantic($current_user, $artifact, $backlog_item, $semantics);
+        $backlog_item = $this->updateBacklogItemInitialEffortSemantic(
+            $current_user,
+            $artifact,
+            $backlog_item,
+            $semantics
+        );
+        $parent_artifact = $artifact->getParent($current_user);
+        if ($parent_artifact !== null) {
+            $backlog_item->setParent($parent_artifact);
+        }
 
         return $backlog_item;
     }

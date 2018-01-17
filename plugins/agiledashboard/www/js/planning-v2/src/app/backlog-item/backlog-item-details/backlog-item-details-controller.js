@@ -1,5 +1,4 @@
-import _ from 'lodash';
-
+import _                  from 'lodash';
 import BacklogFilterValue from '../../backlog-filter-terms.js';
 
 export default BacklogItemDetailsController;
@@ -55,33 +54,30 @@ function BacklogItemDetailsController(
     function showAddChildModal($event, item_type) {
         $event.preventDefault();
 
-        var callback = function(item_id) {
-            var promise = BacklogItemService.removeAddBacklogItemChildren(
+        function callback(item_id) {
+            return BacklogItemService.removeAddBacklogItemChildren(
                 undefined,
                 self.backlog_item.id,
                 [item_id]
-            );
-
-            promise.then(function() {
+            ).then(() => {
                 return appendItemToChildren(item_id, self.backlog_item);
             });
-
-            return promise;
-        };
+        }
 
         NewTuleapArtifactModalService.showCreation(
             item_type.id,
-            self.backlog_item,
+            self.backlog_item.id,
             callback
         );
     }
 
     function appendItemToChildren(child_item_id) {
-        return BacklogItemService.getBacklogItem(child_item_id).then(function(data) {
-            BacklogItemCollectionService.items[child_item_id] = data.backlog_item;
+        return BacklogItemService.getBacklogItem(child_item_id).then(({ backlog_item: child_item }) => {
+            child_item.parent = self.backlog_item;
+            BacklogItemCollectionService.items[child_item_id] = child_item;
 
             if (canBeAddedToChildren(child_item_id)) {
-                self.backlog_item.children.data.push(data.backlog_item);
+                self.backlog_item.children.data.push(child_item);
                 if (! self.backlog_item.has_children) {
                     self.backlog_item.children.loaded = true;
                 }

@@ -1,5 +1,4 @@
-import _ from 'lodash';
-
+import _                  from 'lodash';
 import BacklogFilterValue from '../backlog-filter-terms.js';
 
 export default BacklogController;
@@ -184,18 +183,17 @@ function BacklogController(
     }
 
     function prependItemToBacklog(backlog_item_id) {
-        return prependItemToFilteredBacklog(backlog_item_id).then(function(new_item) {
+        return prependItemToFilteredBacklog(backlog_item_id).then(new_item => {
             self.backlog_items.filtered_content.unshift(new_item);
         });
     }
 
     function prependItemToFilteredBacklog(backlog_item_id) {
-        return BacklogItemService.getBacklogItem(backlog_item_id).then(function(data) {
-            var new_item = data.backlog_item;
-            self.all_backlog_items[backlog_item_id] = new_item;
-            self.backlog_items.content.unshift(new_item);
+        return BacklogItemService.getBacklogItem(backlog_item_id).then(({ backlog_item }) => {
+            self.all_backlog_items[backlog_item_id] = backlog_item;
+            self.backlog_items.content.unshift(backlog_item);
 
-            return new_item;
+            return backlog_item;
         });
     }
 
@@ -215,7 +213,7 @@ function BacklogController(
         }
 
         function callback(item_id) {
-            var promise;
+            let promise;
             if (! self.isMilestoneContext()) {
                 if (compared_to) {
                     promise = ProjectService.removeAddReorderToBacklog(undefined, self.details.rest_route_id, [item_id], compared_to);
@@ -228,21 +226,17 @@ function BacklogController(
                 promise = MilestoneService.removeAddToBacklog(undefined, self.details.rest_route_id, [item_id]);
             }
 
-            promise.then(function() {
-                var subpromise;
+            promise.then(() => {
                 if (self.filter.terms) {
-                    subpromise = prependItemToFilteredBacklog(item_id);
-                } else {
-                    subpromise = prependItemToBacklog(item_id);
+                    return prependItemToFilteredBacklog(item_id);
                 }
-                return subpromise;
+                return prependItemToBacklog(item_id);
             });
 
             return promise;
         }
 
-        var parent_item = (! _.isEmpty(self.current_milestone)) ? self.current_milestone : undefined;
-        NewTuleapArtifactModalService.showCreation(item_type.id, parent_item, callback);
+        NewTuleapArtifactModalService.showCreation(item_type.id, null, callback);
     }
 
     function dragularOptionsForBacklog() {
