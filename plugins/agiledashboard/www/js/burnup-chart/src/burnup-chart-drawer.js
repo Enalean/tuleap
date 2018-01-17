@@ -123,7 +123,7 @@ function createBurnupChart({
             column.append('rect')
                 .attr('class', 'chart-column')
                 .attr('x', () => {
-                    const x_position = x_scale(moment(point.date, moment.ISO_8601).toDate());
+                    const x_position = x_scale(moment(point.date, moment.ISO_8601).format('YYYY-MM-DD'));
 
                     if (isFirstColumn(point)) {
                         return x_position;
@@ -143,13 +143,13 @@ function createBurnupChart({
 
             column.append('circle')
                 .attr('class', `chart-plot-total-effort`)
-                .attr('cx', ({ date }) => x_scale(moment(date, moment.ISO_8601).toDate()))
+                .attr('cx', ({ date }) => x_scale(moment(date, moment.ISO_8601).format('YYYY-MM-DD')))
                 .attr('cy', ({ total_effort }) => y_scale(total_effort))
                 .attr('r', 4);
 
             column.append('circle')
                 .attr('class', `chart-plot-team-effort chart-tooltip-target`)
-                .attr('cx', ({ date }) => x_scale(moment(date, moment.ISO_8601).toDate()))
+                .attr('cx', ({ date }) => x_scale(moment(date, moment.ISO_8601).format('YYYY-MM-DD')))
                 .attr('cy', ({ team_effort }) => y_scale(team_effort))
                 .attr('r', 4);
         });
@@ -157,7 +157,7 @@ function createBurnupChart({
 
     function drawCurve(line_name) {
         const lines = line()
-            .x(({ date }) => x_scale(moment(date, moment.ISO_8601).toDate()))
+            .x(({ date }) => x_scale(moment(date, moment.ISO_8601).format('YYYY-MM-DD')))
             .y((point) => y_scale(point[`${ line_name }_effort`]));
 
         svg_burnup.append('path')
@@ -241,10 +241,10 @@ function createBurnupChart({
 
         const coordinates = [
             {
-                x_coordinate: x_scale(moment(x_minimum, moment.ISO_8601).toDate()),
+                x_coordinate: x_scale(moment(x_minimum, moment.ISO_8601).format('YYYY-MM-DD')),
                 y_coordinate: y_scale(0)
             }, {
-                x_coordinate: x_scale(moment(x_maximum, moment.ISO_8601).toDate()),
+                x_coordinate: x_scale(moment(x_maximum, moment.ISO_8601).format('YYYY-MM-DD')),
                 y_coordinate: y_scale(final_total_effort)
             }
         ];

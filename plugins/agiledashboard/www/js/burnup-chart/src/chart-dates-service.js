@@ -32,7 +32,7 @@ function getDaysToDisplay({ opening_days, duration, points, start_date }) {
 
     do {
         if (opening_days.includes(moment_iterator.isoWeekday())) {
-            dates.push(moment_iterator.toDate());
+            dates.push(moment_iterator.format('YYYY-MM-DD'));
             i++;
         }
 
