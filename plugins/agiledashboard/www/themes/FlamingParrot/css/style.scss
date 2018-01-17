@@ -40,33 +40,6 @@
         }
     }
 
-    #kanban-board {
-        .kanban-item .kanban-item-content > .moves > .icon-stack:hover > .icon-stack-base {
-            color: $main;
-        }
-
-        .kanban-item .kanban-item-expand-collapse:hover > i {
-            color: $main;
-        }
-
-        > div:not(.wip-reached) > .column-header {
-            box-shadow: inset 0 3px 0 $main, inset 0 -1px 0 #E0E0E0;
-            color: $main;
-
-            > .wip-limit {
-                background-color: $main;
-            }
-        }
-
-        .kanban-item.gu-transit {
-            background: $main;
-        }
-    }
-
-    .edit-kanban-modal > .modal-body > .column-configuration > ul > li.column.draggable:not(.editing):hover {
-        background: fade($main, 10%);
-    }
-
     .tuleap-artifact-modal {
         .followups-title {
             color: $main;
@@ -79,210 +52,74 @@
     }
 }
 
-@mixin override-kanban-colors($color) {
-    .column-hidden .kanban-items.appending-item {
-        background: transparentize($color, 0.9);
-    }
-
-    .kanban-item .kanban-item-expand-collapse:hover {
-        background-color: lighten($color, 45%);
-    }
-}
-
-@mixin override-kanban-images($theme-name) {
-    .column:not(.column-hidden) .column-empty .kanban-items.appending-item {
-        background: transparent url('../images/column-empty-drop-#{$theme-name}.png') no-repeat center 100px;
-    }
-}
-
 body {
     &.FlamingParrot_Orange {
-        @import "variables-orange";
-
-        @include definitions($main);
-        #kanban-board {
-            $kanban-image-name: 'orange';
-
-            @include override-kanban-colors($main);
-            @include override-kanban-images($kanban-image-name);
-        }
-
         .empty-home {
             background: transparent url('../images/agile-dashboard-not-configured-orange.png') no-repeat center 20px;
         }
     }
 
     &.FlamingParrot_Blue {
-        @import "variables-blue";
-
-        @include definitions($main);
-        #kanban-board {
-            $kanban-image-name: 'blue';
-
-            @include override-kanban-colors($main);
-            @include override-kanban-images($kanban-image-name);
-        }
-
         .empty-home {
             background: transparent url('../images/agile-dashboard-not-configured-blue.png') no-repeat center 20px;
         }
     }
 
     &.FlamingParrot_Green {
-        @import "variables-green";
-
-        @include definitions($main);
-        #kanban-board {
-            $kanban-image-name: 'green';
-
-            @include override-kanban-colors($main);
-            @include override-kanban-images($kanban-image-name);
-        }
-
         .empty-home {
             background: transparent url('../images/agile-dashboard-not-configured-green.png') no-repeat center 20px;
         }
     }
 
     &.FlamingParrot_BlueGrey {
-        @import "variables-bluegrey";
-
-        @include definitions($main);
-        #kanban-board {
-            $kanban-image-name: 'bluegrey';
-
-            @include override-kanban-colors($main);
-            @include override-kanban-images($kanban-image-name);
-        }
-
         .empty-home {
             background: transparent url('../images/agile-dashboard-not-configured-bluegrey.png') no-repeat center 20px;
         }
     }
 
     &.FlamingParrot_Purple {
-        @import "variables-purple";
-
-        @include definitions($main);
-        #kanban-board {
-            $kanban-image-name: 'purple';
-
-            @include override-kanban-colors($main);
-            @include override-kanban-images($kanban-image-name);
-        }
-
         .empty-home {
             background: transparent url('../images/agile-dashboard-not-configured-purple.png') no-repeat center 20px;
         }
     }
 
     &.FlamingParrot_Red {
-        @import "variables-red";
-
-        @include definitions($main);
-        #kanban-board {
-            $kanban-image-name: 'red';
-
-            @include override-kanban-colors($main);
-            @include override-kanban-images($kanban-image-name);
-        }
-
         .empty-home {
             background: transparent url('../images/agile-dashboard-not-configured-red.png') no-repeat center 20px;
         }
     }
 
     &.FlamingParrot_DarkOrange {
-        @import "variables-darkorange";
-
-        @include definitions($main);
-        #kanban-board {
-            $kanban-image-name: 'dark-orange';
-
-            @include override-kanban-colors($main);
-            @include override-kanban-images($kanban-image-name);
-        }
-
         .empty-home {
             background: transparent url('../images/agile-dashboard-not-configured-dark-orange.png') no-repeat center 20px;
         }
     }
 
     &.FlamingParrot_DarkBlue {
-        @import "variables-darkblue";
-
-        @include definitions($main);
-        #kanban-board {
-            $kanban-image-name: 'blue';
-
-            @include override-kanban-colors($main);
-            @include override-kanban-images($kanban-image-name);
-        }
-
         .empty-home {
             background: transparent url('../images/agile-dashboard-not-configured-blue.png') no-repeat center 20px;
         }
     }
 
     &.FlamingParrot_DarkGreen {
-        @import "variables-darkgreen";
-
-        @include definitions($main);
-        #kanban-board {
-            $kanban-image-name: 'green';
-
-            @include override-kanban-colors($main);
-            @include override-kanban-images($kanban-image-name);
-        }
-
         .empty-home {
             background: transparent url('../images/agile-dashboard-not-configured-green.png') no-repeat center 20px;
         }
     }
 
     &.FlamingParrot_DarkBlueGrey {
-        @import "variables-darkbluegrey";
-
-        @include definitions($main);
-        #kanban-board {
-            $kanban-image-name: 'bluegrey';
-
-            @include override-kanban-colors($main);
-            @include override-kanban-images($kanban-image-name);
-        }
-
         .empty-home {
             background: transparent url('../images/agile-dashboard-not-configured-bluegrey.png') no-repeat center 20px;
         }
     }
 
     &.FlamingParrot_DarkPurple {
-        @import "variables-darkpurple";
-
-        @include definitions($main);
-        #kanban-board {
-            $kanban-image-name: 'purple';
-
-            @include override-kanban-colors($main);
-            @include override-kanban-images($kanban-image-name);
-        }
-
         .empty-home {
             background: transparent url('../images/agile-dashboard-not-configured-purple.png') no-repeat center 20px;
         }
     }
 
     &.FlamingParrot_DarkRed {
-        @import "variables-darkred";
-
-        @include definitions($main);
-        #kanban-board {
-            $kanban-image-name: 'red';
-
-            @include override-kanban-colors($main);
-            @include override-kanban-images($kanban-image-name);
-        }
-
         .empty-home {
             background: transparent url('../images/agile-dashboard-not-configured-red.png') no-repeat center 20px;
         }
