@@ -1,6 +1,6 @@
 #!/usr/bin/perl -UT
 
-# Copyright (c) Enalean, 2011. All Rights Reserved.
+# Copyright (c) Enalean, 2011-2018. All Rights Reserved.
 #
 # This file is a part of Tuleap.
 #
@@ -35,7 +35,7 @@ if ($#ARGV == 0 && $ARGV[0] =~ /^([A-Za-z0-9-_.]+)$/) {
 
 # get PHP_PARAMS variable from php-laucher.sh
 my $PHP_PARAMS="";
-open(PHP_LAUNCHER, "</usr/share/codendi/src/utils/php-launcher.sh");
+open(PHP_LAUNCHER, "</usr/share/tuleap/src/utils/php-launcher.sh");
 while (<PHP_LAUNCHER>) {
     if (m/^[ ]*PHP_PARAMS="(.*)"$/) {
         $PHP_PARAMS=$1
@@ -43,4 +43,4 @@ while (<PHP_LAUNCHER>) {
 }
 close(PHP_LAUNCHER);
 
-exec "/usr/bin/php $PHP_PARAMS /usr/share/codendi/plugins/git/bin/gl-membership.php $username";
+exec "/opt/rh/rh-php56/root/usr/bin/php $PHP_PARAMS /usr/share/tuleap/plugins/git/bin/gl-membership.php $username";
