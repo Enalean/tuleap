@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -51,17 +51,17 @@ class MembersPresenterBuilder
             array('ugroup_id' => $ugroup->getId(), 'allowed' => &$can_be_updated)
         );
 
-        $members          = $this->getFormattedProjectMembers($ugroup);
+        $members          = $this->getFormattedUgroupMembers($ugroup);
         $is_dynamic_group = ! $ugroup->isStatic();
 
         return new MembersPresenter($members, $can_be_updated, $is_dynamic_group);
     }
 
-    private function getFormattedProjectMembers(ProjectUGroup $ugroup)
+    private function getFormattedUgroupMembers(ProjectUGroup $ugroup)
     {
         $ugroup_members = array();
 
-        $members                   = $ugroup->getMembers();
+        $members                   = $ugroup->getMembersIncludingSuspended();
         $is_the_last_project_admin = (int) $ugroup->getId() === ProjectUGroup::PROJECT_ADMIN && count($members) === 1;
 
         foreach ($members as $key => $member) {
