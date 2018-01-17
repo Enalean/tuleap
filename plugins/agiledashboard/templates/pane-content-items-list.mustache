@@ -14,10 +14,12 @@
                 {{# items_collection }}
                     <tr data-artifact-id="{{ id }}">
                         <td>
-                            <span class="planning-view-items-list-content-badge badge tlp-badge-outline tlp-badge-{{color}}">
-                                {{ xRef }}
-                            </span>
-                            <span class="history-item-content-description-info-title">{{ title }}</span>
+                            <a href="{{ url }}">
+                                <span class="planning-view-items-list-content-badge badge tlp-badge-outline tlp-badge-{{color}}">
+                                    {{ xRef }}
+                                </span>
+                                {{ title }}
+                            </a>
                         </td>
                         <td>{{ status }}</td>
                         <td class="milestone-element-parent">
