@@ -346,46 +346,6 @@ body.agiledashboard_homepage .main .content {
     color: #999;
 }
 
-#planning table,
-#blcontent table {
-    border-spacing: 0;
-}
-
-#planning table th,
-#blcontent table th {
-    white-space: nowrap;
-}
-
-#planning table td.milestone-element-title,
-#blcontent table td.milestone-element-title {
-    width: 100%;
-    white-space: normal;
-}
-
-#blcontent table td.milestone-element-parent {
-    min-width: 200px;
-    max-width: 200px;
-    white-space: normal;
-}
-
-#planning table td.milestone-element-parent {
-    min-width: 200px;
-    max-width: 200px;
-    white-space: normal;
-}
-
-#planning table td:first-child,
-#blcontent table td:first-child {
-    white-space: nowrap;
-    min-width: 35px;
-    max-width: 60px;
-}
-
-#blcontent table {
-    /*width: auto;*/
-    margin-bottom: 40px;
-}
-
 .inconsistent-items-title {
     color: #E99424;
 }
