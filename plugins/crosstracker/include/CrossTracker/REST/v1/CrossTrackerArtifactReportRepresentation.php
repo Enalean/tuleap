@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  *  This file is a part of Tuleap.
  *
@@ -21,6 +21,7 @@
 
 namespace Tuleap\CrossTracker\REST\v1;
 
+use Tuleap\Project\REST\ProjectReference;
 use Tuleap\REST\JsonCast;
 use Tuleap\Tracker\REST\TrackerReference;
 use Tuleap\User\REST\MinimalUserRepresentation;
@@ -67,6 +68,11 @@ class CrossTrackerArtifactReportRepresentation
      */
     public $badge;
 
+    /**
+     * @var ProjectReference
+     */
+    public $project;
+
     public function build(\Tracker_Artifact $artifact, \PFUser $user)
     {
         $this->id               = JsonCast::toInt($artifact->getId());
@@ -91,9 +97,15 @@ class CrossTrackerArtifactReportRepresentation
             $this->assigned_to[] = $user_assigned_representation;
         }
 
+        $tracker = $artifact->getTracker();
         $tracker_representation = new TrackerReference();
-        $tracker_representation->build($artifact->getTracker());
+        $tracker_representation->build($tracker);
 
         $this->tracker = $tracker_representation;
+
+        $project_reference = new ProjectReference();
+        $project_reference->build($tracker->getProject());
+
+        $this->project = $project_reference;
     }
 }

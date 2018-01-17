@@ -46,26 +46,26 @@
             v-on:error="showError"
             v-on:clearErrors="hideFeedbacks"
         ></writing-mode>
-        <artifact-table-renderer
+        <artifact-table
             v-if="! is_loading"
             v-bind:writing-cross-tracker-report="writingCrossTrackerReport"
             v-bind:is-report-saved="is_saved"
             v-bind:is-report-in-reading-mode="reading_mode"
             v-bind:report-id="reportId"
             v-on:restError="showRestError"
-        ></artifact-table-renderer>
+        ></artifact-table>
     </div>
 </template>)
 (<script>
-    import ArtifactTableRenderer from './ArtifactTableRenderer.vue';
-    import ReadingMode           from './reading-mode/ReadingMode.vue';
-    import WritingMode           from './writing-mode/WritingMode.vue';
-    import { gettext_provider }  from './gettext-provider.js';
-    import { isAnonymous }       from './user-service.js';
-    import { getReport }         from './rest-querier.js';
+    import ArtifactTable        from './ArtifactTable.vue';
+    import ReadingMode          from './reading-mode/ReadingMode.vue';
+    import WritingMode          from './writing-mode/WritingMode.vue';
+    import { gettext_provider } from './gettext-provider.js';
+    import { isAnonymous }      from './user-service.js';
+    import { getReport }        from './rest-querier.js';
 
     export default {
-        components: { ArtifactTableRenderer, ReadingMode, WritingMode },
+        components: { ArtifactTable, ReadingMode, WritingMode },
         name: 'CrossTrackerWidget',
         props: [
             'backendCrossTrackerReport',
