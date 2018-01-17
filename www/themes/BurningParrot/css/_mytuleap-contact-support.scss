@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,7 +23,7 @@
 }
 
 
-#contact-support-modal-form {
+.contact-support-modal-form {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
@@ -33,14 +33,14 @@
     }
 }
 
-#contact-support-modal-success-message,
-#contact-support-modal-error-message {
+.contact-support-modal-success-message,
+.contact-support-modal-error-message {
     &:not(.shown) {
         display: none;
     }
 }
 
-#contact-support-modal-submit {
+.contact-support-modal-submit {
     .tlp-button-icon {
         margin: 0 5px 0 0;
     }

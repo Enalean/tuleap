@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -41,6 +41,7 @@ class mytuleap_contact_supportPlugin extends Plugin
     {
         $this->addHook('cssfile');
         $this->addHook('javascript_file');
+        $this->addHook('site_help');
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
 
@@ -59,9 +60,14 @@ class mytuleap_contact_supportPlugin extends Plugin
     private function getRouter()
     {
         return new Router(
-            new ContactSupportController(
-                $this->getRenderer()
-            )
+            $this->getContactSupportController()
+        );
+    }
+
+    private function getContactSupportController()
+    {
+        return new ContactSupportController(
+            $this->getRenderer()
         );
     }
 
@@ -92,11 +98,20 @@ class mytuleap_contact_supportPlugin extends Plugin
         }
     }
 
+    public function site_help($params)
+    {
+        $params['extra_content'] = $this->getContactSupportController()->getFormContent();
+    }
+
     public function burning_parrot_get_javascript_files(array $params)
     {
         if (! UserManager::instance()->getCurrentUser()->isAnonymous()) {
             $params['javascript_files'][] = $this->getPluginPath().'/js/modal.js';
             $params['javascript_files'][] = $this->getPluginPath().'/js/modal-burning-parrot.js';
+        }
+
+        if (strpos($_SERVER['REQUEST_URI'], '/help/') === 0) {
+            $params['javascript_files'][] = $this->getPluginPath().'/js/help-page.js';
         }
     }
 

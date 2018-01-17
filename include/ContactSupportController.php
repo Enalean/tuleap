@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,6 +26,7 @@ use ForgeConfig;
 use MustacheRenderer;
 use Valid_Email;
 use UserManager;
+use Tuleap\MyTuleapContactSupport\Presenter\FormPresenter;
 use Tuleap\MyTuleapContactSupport\Presenter\ModalPresenter;
 use Tuleap\MyTuleapContactSupport\Presenter\EmailToSupportPresenter;
 use Tuleap\MyTuleapContactSupport\Presenter\ConfirmationEmailToUserPresenter;
@@ -42,9 +43,8 @@ class ContactSupportController
 
     public function displayModalContent(HTTPRequest $request)
     {
-
         $modal_presenter = new ModalPresenter(
-            ForgeConfig::get('sys_email_admin'),
+            $this->getFormPresenter(),
             $this->getHelpPageContent()
         );
 
@@ -55,6 +55,20 @@ class ContactSupportController
         }
 
         echo $this->renderer->renderToString($mustache_template, $modal_presenter);
+    }
+
+    public function getFormContent()
+    {
+        $form_presenter = $this->getFormPresenter();
+
+        return $this->renderer->renderToString('form-burning-parrot', $form_presenter);
+    }
+
+    private function getFormPresenter()
+    {
+        return new FormPresenter(
+            ForgeConfig::get('sys_email_admin')
+        );
     }
 
     private function getHelpPageContent()

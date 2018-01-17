@@ -1,7 +1,7 @@
 <div class="tlp-modal contact-support-modal" role="dialog" aria-labelledby="contact-support-modal-label">
     <div class="tlp-modal-header">
         <h1 class="tlp-modal-title" id="contact-support-modal-label">
-            <i class="fa fa-question-circle-o tlp-modal-title-icon"></i > {{ modal_title }}
+            <i class="fa fa-question-circle-o tlp-modal-title-icon"></i > {{# gettext }}Help{{/ gettext }}
         </h1>
         <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">
             &times;
@@ -10,50 +10,8 @@
     <div class="tlp-modal-body">
         {{{ help_page_content }}}
 
-        <section class="tlp-pane">
-            <div class="tlp-pane-container">
-                <div class="tlp-pane-header">
-                    <h1 class="tlp-pane-title">
-                        <i class="fa fa-envelope-o tlp-pane-title-icon"></i> {{ form_title }}
-                    </h1>
-                </div>
-                <form id="contact-support-modal-form" class="tlp-pane-section" action="/plugins/mytuleap_contact_support/index.php?action=send-message">
-                    <p id="contact-support-modal-success-message" class="tlp-alert-success">
-                        <i class="fa fa-check tlp-alert-icon"></i> {{ form_submit_success }}
-                    </p>
-                    <p id="contact-support-modal-error-message" class="tlp-alert-danger">
-                        <i class="fa fa-frown-o tlp-alert-icon"></i> {{ form_submit_error }}
-                    </p>
-                    <div class="tlp-form-element">
-                        <label class="tlp-label" for="contact-support-modal-subject">{{ subject_label }} <i class="fa fa-asterisk"></i></label>
-                        <input type="text"
-                            id="contact-support-modal-subject"
-                            class="tlp-input"
-                            name="message-title"
-                            placeholder="{{ subject_placeholder }}"
-                            required
-                        >
-                    </div>
-                    <div class="tlp-form-element">
-                        <label class="tlp-label" for="contact-support-modal-message">{{ your_message_label }} <i class="fa fa-asterisk"></i></label>
-                        <textarea
-                            id="contact-support-modal-message"
-                            class="tlp-textarea"
-                            name="message-content"
-                            rows="5"
-                            placeholder="{{ your_message_placeholder }}"
-                            required></textarea>
-                    </div>
-                    <button type="submit"
-                        id="contact-support-modal-submit"
-                        class="tlp-button-primary"
-                    >
-                        <span class="normal-text"><i class="tlp-button-icon fa fa-send-o"></i> {{ submit_label }}</span>
-                        <span class="sending-text"><i class="tlp-button-icon fa fa-circle-o-notch fa-spin"></i> {{ sending_submit_label }}</span>
-                        <span class="thank-you-text"><i class="tlp-button-icon fa fa-thumbs-o-up"></i> {{ thank_you_submit_label }}</span>
-                    </button>
-                </form>
-            </div>
-        </section>
+        {{# form_presenter }}
+            {{> form-burning-parrot }}
+        {{/ form_presenter }}
     </div>
 </div>

@@ -2,50 +2,14 @@
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
         <h2 id="contact-support-modal-label">
-            <i class="icon-question"></i > {{ modal_title }}
+            <i class="icon-question"></i > {{# gettext }}Help{{/ gettext }}
         </h2>
     </div>
     <div class="modal-body">
         {{{ help_page_content }}}
 
-        <form id="contact-support-modal-form" class="tlp-pane-section" action="/plugins/mytuleap_contact_support/index.php?action=send-message">
-            <h1>{{ form_title }}</h1>
-            <p id="contact-support-modal-success-message" class="alert alert-success">
-                <i class="icon-ok"></i> {{ form_submit_success }}
-            </p>
-            <p id="contact-support-modal-error-message" class="alert alert-error">
-                <i class="icon-frown"></i> {{ form_submit_error }}
-            </p>
-            <div class="control-group">
-                <div class="controls">
-                    <label for="contact-support-modal-subject">{{ subject_label }} <i class="icon-asterisk"></i></label>
-                    <input type="text"
-                        id="contact-support-modal-subject"
-                        name="message-title"
-                        placeholder="{{ subject_placeholder }}"
-                        required
-                    >
-                </div>
-            </div>
-            <div class="control-group">
-                <div class="controls">
-                    <label for="contact-support-modal-message">{{ your_message_label }} <i class="icon-asterisk"></i></label>
-                    <textarea
-                        id="contact-support-modal-message"
-                        name="message-content"
-                        rows="5"
-                        placeholder="{{ your_message_placeholder }}"
-                        required></textarea>
-                </div>
-            </div>
-            <button type="submit"
-                id="contact-support-modal-submit"
-                class="btn btn-primary"
-            >
-                <span class="normal-text"><i class="icon-envelope-alt"></i> {{ submit_label }}</span>
-                <span class="sending-text"><i class="icon-spinner icon-spin"></i> {{ sending_submit_label }}</span>
-                <span class="thank-you-text"><i class="icon-thumbs-up-alt"></i> {{ thank_you_submit_label }}</span>
-            </button>
-        </form>
+        {{# form_presenter }}
+            {{> form-flaming-parrot }}
+        {{/ form_presenter }}
     </div>
 </div>

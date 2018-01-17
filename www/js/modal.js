@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2017. All rights reserved
+ * Copyright (c) Enalean, 2017 - 2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -20,67 +20,70 @@
 var tuleap  = tuleap || { };
 
 tuleap.contact_support_modal_shown = function contactSupportModalShown() {
-    var contact_support_modal_form            = document.getElementById('contact-support-modal-form'),
-        contact_support_modal_submit          = document.getElementById('contact-support-modal-submit'),
-        contact_support_modal_success_message = document.getElementById('contact-support-modal-success-message'),
-        contact_support_modal_error_message   = document.getElementById('contact-support-modal-error-message');
+    var contact_support_modal_forms = document.querySelectorAll('.contact-support-modal-form');
 
-    contact_support_modal_form.addEventListener('submit', function(event) {
-        event.preventDefault();
+    [].forEach.call(contact_support_modal_forms, function(contact_support_modal_form) {
+            contact_support_modal_form.addEventListener('submit', function(event) {
+            event.preventDefault();
 
-        switchSubmitButtonToSendingState();
+            var contact_support_modal_submit          = contact_support_modal_form.querySelector('.contact-support-modal-submit'),
+                contact_support_modal_success_message = contact_support_modal_form.querySelector('.contact-support-modal-success-message'),
+                contact_support_modal_error_message   = contact_support_modal_form.querySelector('.contact-support-modal-error-message');
 
-        jQuery.post(
-            contact_support_modal_form.getAttribute('action'),
-            jQuery(contact_support_modal_form).serialize()
+            switchSubmitButtonToSendingState(contact_support_modal_submit);
 
-        ).success(function(data) {
-            hideErrorMessage();
-            switchSubmitButtonToThankYouState();
-            showSuccessMessage();
+            jQuery.post(
+                contact_support_modal_form.getAttribute('action'),
+                jQuery(contact_support_modal_form).serialize()
 
-            setTimeout(function() {
-                contact_support_modal_form.reset();
-                switchSubmitButtonToNormalState();
-                hideSuccessMessage();
-            }, 5000);
+            ).success(function(data) {
+                hideErrorMessage(contact_support_modal_error_message);
+                switchSubmitButtonToThankYouState(contact_support_modal_submit);
+                showSuccessMessage(contact_support_modal_success_message);
 
-        }).error(function(data) {
-            switchSubmitButtonToNormalState();
-            showErrorMessage();
+                setTimeout(function() {
+                    contact_support_modal_form.reset();
+                    switchSubmitButtonToNormalState(contact_support_modal_submit);
+                    hideSuccessMessage(contact_support_modal_success_message);
+                }, 5000);
+
+            }).error(function(data) {
+                switchSubmitButtonToNormalState(contact_support_modal_submit);
+                showErrorMessage(contact_support_modal_error_message);
+            });
         });
     });
 
-    function switchSubmitButtonToSendingState() {
+    function switchSubmitButtonToSendingState(contact_support_modal_submit) {
         contact_support_modal_submit.disabled = true;
         contact_support_modal_submit.classList.remove('thank-you');
         contact_support_modal_submit.classList.add('sending');
     }
 
-    function switchSubmitButtonToThankYouState() {
+    function switchSubmitButtonToThankYouState(contact_support_modal_submit) {
         contact_support_modal_submit.disabled = true;
         contact_support_modal_submit.classList.remove('sending');
         contact_support_modal_submit.classList.add('thank-you');
     }
 
-    function switchSubmitButtonToNormalState() {
+    function switchSubmitButtonToNormalState(contact_support_modal_submit) {
         contact_support_modal_submit.disabled = false;
         contact_support_modal_submit.classList.remove('sending', 'thank-you');
     }
 
-    function showErrorMessage() {
+    function showErrorMessage(contact_support_modal_error_message) {
         contact_support_modal_error_message.classList.add('shown');
     }
 
-    function hideErrorMessage() {
+    function hideErrorMessage(contact_support_modal_error_message) {
         contact_support_modal_error_message.classList.remove('shown');
     }
 
-    function showSuccessMessage() {
+    function showSuccessMessage(contact_support_modal_success_message) {
         contact_support_modal_success_message.classList.add('shown');
     }
 
-    function hideSuccessMessage() {
+    function hideSuccessMessage(contact_support_modal_success_message) {
         contact_support_modal_success_message.classList.remove('shown');
     }
 }

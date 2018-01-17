@@ -1,0 +1,42 @@
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">
+                <i class="fa fa-envelope-o tlp-pane-title-icon"></i> {{# gettext }}Send a message to the myTuleap team{{/ gettext }}
+            </h1>
+        </div>
+        <form class="tlp-pane-section contact-support-modal-form" action="/plugins/mytuleap_contact_support/index.php?action=send-message">
+            <p class="tlp-alert-success contact-support-modal-success-message">
+                <i class="fa fa-check tlp-alert-icon"></i> {{# gettext }}Your message has been sent to the myTuleap team. You will receive an answer as soon as possible.{{/ gettext }}
+            </p>
+            <p class="tlp-alert-danger contact-support-modal-error-message">
+                <i class="fa fa-frown-o tlp-alert-icon"></i> {{# gettext }}Ooops, an error has occured. Please contact your administrator %s. | {{ administrator_email }}{{/ gettext }}
+            </p>
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="contact-support-modal-subject">{{# gettext }}Subject{{/ gettext }} <i class="fa fa-asterisk"></i></label>
+                <input type="text"
+                    class="tlp-input contact-support-modal-subject"
+                    name="message-title"
+                    placeholder="{{# gettext }}I have a question about the tracker reports{{/ gettext }}"
+                    required
+                >
+            </div>
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="contact-support-modal-message">{{# gettext }}Message{{/ gettext }} <i class="fa fa-asterisk"></i></label>
+                <textarea
+                    class="tlp-textarea contact-support-modal-message"
+                    name="message-content"
+                    rows="5"
+                    placeholder="{{# gettext }}I need help to configure my own report in order to...{{/ gettext }}"
+                    required></textarea>
+            </div>
+            <button type="submit"
+                class="tlp-button-primary contact-support-modal-submit"
+            >
+                <span class="normal-text"><i class="tlp-button-icon fa fa-send-o"></i> {{# gettext }}Send my message{{/ gettext }}</span>
+                <span class="sending-text"><i class="tlp-button-icon fa fa-circle-o-notch fa-spin"></i> {{# gettext }}Sending...{{/ gettext }}</span>
+                <span class="thank-you-text"><i class="tlp-button-icon fa fa-thumbs-o-up"></i> {{# gettext }}Thank you{{/ gettext }}</span>
+            </button>
+        </form>
+    </div>
+</section>
