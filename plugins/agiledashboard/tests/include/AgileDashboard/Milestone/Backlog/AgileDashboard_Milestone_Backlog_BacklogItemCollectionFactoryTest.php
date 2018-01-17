@@ -223,9 +223,9 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
         );
 
         $redirect_to_self = 'tra la la';
-        $backlog_item1 = new AgileDashboard_BacklogItemPresenter($this->story1, $redirect_to_self);
-        $backlog_item2 = new AgileDashboard_BacklogItemPresenter($this->story2, $redirect_to_self);
-        $backlog_item3 = new AgileDashboard_BacklogItemPresenter($this->story3, $redirect_to_self);
+        $backlog_item1 = new AgileDashboard_BacklogItemPresenter($this->story1, $redirect_to_self, false);
+        $backlog_item2 = new AgileDashboard_BacklogItemPresenter($this->story2, $redirect_to_self, false);
+        $backlog_item3 = new AgileDashboard_BacklogItemPresenter($this->story3, $redirect_to_self, false);
 
         $mixed_collection = new AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection();
         $mixed_collection->push($backlog_item1);
@@ -246,5 +246,3 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
         $this->assertEqual($cleaned_collection->count(), 2);
     }
 }
-
-?>

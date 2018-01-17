@@ -58,8 +58,12 @@ class AgileDashboard_BacklogItemPresenter implements
 
     /** @var boolean */
     private $has_children = null;
+    /**
+     * @var
+     */
+    private $is_inconsistent;
 
-    public function __construct(Tracker_Artifact $artifact, $redirect_to_self) {
+    public function __construct(Tracker_Artifact $artifact, $redirect_to_self, $is_inconsistent) {
         $this->id               = $artifact->getId();
         $this->title            = $artifact->getTitle();
         $this->url              = $artifact->getUri();
@@ -67,6 +71,7 @@ class AgileDashboard_BacklogItemPresenter implements
         $this->artifact         = $artifact;
         $this->type             = $this->artifact->getTracker()->getName();
         $this->color            = $this->artifact->getTracker()->getNormalizedColor();
+        $this->is_inconsistent = $is_inconsistent;
     }
 
     public function setParent(Tracker_Artifact $parent) {
@@ -166,5 +171,13 @@ class AgileDashboard_BacklogItemPresenter implements
     public function xRef()
     {
         return $this->artifact->getXRef();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isInconsistent()
+    {
+        return $this->is_inconsistent;
     }
 }

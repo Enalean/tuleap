@@ -1,39 +1,46 @@
 <h3>{{ backlog_item_type }}</h3>
-<div class="row-fluid">
-    <div class="span10">
-        <table class="table">
-            <thead>
-            <tr>
-                <th>{{ item_title }}</th>
-                <th>{{ status_title }}</th>
-                <th>{{ parent_title }}</th>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>{{ item_title }}</th>
+        {{# has_something_inconsistent }}
+            <th></th>
+        {{/ has_something_inconsistent }}
+        <th>{{ status_title }}</th>
+        <th>{{ parent_title }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{# has_something }}
+        {{# items_collection }}
+            <tr data-artifact-id="{{ id }}">
+                <td>
+                    <a href="{{ url }}">
+                        <span class="planning-view-items-list-content-badge badge tlp-badge-outline tlp-badge-{{color}}">
+                            {{ xRef }}
+                        </span>
+                        {{ title }}
+                    </a>
+                </td>
+                {{# has_something_inconsistent }}
+                    <td>
+                        {{# isInconsistent }}
+                            <i class="text-warning icon-warning-sign" title="{{ item_is_inconsistent_label }}"></i>
+                        {{/ isInconsistent }}
+                    </td>
+                {{/ has_something_inconsistent }}
+                <td>{{ status }}</td>
+                <td class="milestone-element-parent">
+                    <a href="{{ parent_url }}">{{ parent_title }}</a>
+                </td>
             </tr>
-            </thead>
-            <tbody>
-            {{# has_something }}
-                {{# items_collection }}
-                    <tr data-artifact-id="{{ id }}">
-                        <td>
-                            <a href="{{ url }}">
-                                <span class="planning-view-items-list-content-badge badge tlp-badge-outline tlp-badge-{{color}}">
-                                    {{ xRef }}
-                                </span>
-                                {{ title }}
-                            </a>
-                        </td>
-                        <td>{{ status }}</td>
-                        <td class="milestone-element-parent">
-                            <a href="{{ parent_url }}">{{ parent_title }}</a>
-                        </td>
-                    </tr>
-                {{/ items_collection }}
-            {{/ has_something }}
-            {{^ has_something }}
-                <tr>
-                    <td colspan="3" class="table-cell-empty">{{ no_items_label }}</td>
-                </tr>
-            {{/ has_something}}
-            </tbody>
-        </table>
-    </div>
-</div>
+        {{/ items_collection }}
+    {{/ has_something }}
+    {{^ has_something }}
+        <tr>
+            <td colspan="3" class="table-cell-empty">{{ no_items_label }}</td>
+        </tr>
+    {{/ has_something}}
+    </tbody>
+</table>

@@ -65,6 +65,9 @@ msgstr ""
 msgid "Go back to semantic overview"
 msgstr ""
 
+msgid "Item is inconsistent"
+msgstr ""
+
 msgid "Planning succesfully created."
 msgstr ""
 

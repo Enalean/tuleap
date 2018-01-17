@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2013. All rights reserved.
+ * Copyright Enalean (c) 2013 - 2018. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -31,7 +31,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemPresenterBuilder implements Ag
         return new AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection();
     }
 
-    public function getItem(Tracker_Artifact $artifact, $redirect_to_self) {
-        return new AgileDashboard_BacklogItemPresenter($artifact, $redirect_to_self);
+    public function getItem(Tracker_Artifact $artifact, $redirect_to_self, $is_inconsistent) {
+        return new AgileDashboard_BacklogItemPresenter($artifact, $redirect_to_self, $is_inconsistent);
     }
 }

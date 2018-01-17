@@ -1183,7 +1183,7 @@ class AgileDashboardPlugin extends Plugin {
         $milestone_id  = $event->getMilestoneId();
         $milestone     = $milestone_factory->getValidatedBareMilestoneByArtifactId($user, $milestone_id);
         $backlog       = $backlog_factory->getSelfBacklog($milestone);
-        $backlog_items = $backlog_item_collection_factory->getAllCollection($user, $milestone, $backlog, '');
+        $backlog_items = $backlog_item_collection_factory->getOpenAndClosedCollection($user, $milestone, $backlog, '');
         $items_ids     = array();
 
         foreach ($backlog_items as $item) {

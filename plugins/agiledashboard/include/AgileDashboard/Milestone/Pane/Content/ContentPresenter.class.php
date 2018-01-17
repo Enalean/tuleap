@@ -32,10 +32,15 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter
     public $items_collection;
 
     /** @var AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection */
-    private $inconsistent_collection;
+    public $inconsistent_collection;
 
     /** @var String */
     public $backlog_item_type;
+
+    /**
+     * @var string
+     */
+    public $item_is_inconsistent_label;
 
     /** @var String */
     private $solve_inconsistencies_url;
@@ -56,10 +61,11 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter
         $this->items_collection          = $items;
         $this->inconsistent_collection   = $inconsistent_collection;
         $this->backlog_item_type         = $this->getTrackerNames($trackers);
-        $this->solve_inconsistencies_url   = $solve_inconsistencies_url;
+        $this->solve_inconsistencies_url = $solve_inconsistencies_url;
 
-        $this->no_items_label  = dgettext('plugin-agiledashboard', 'There is no item yet');
-        $this->chart_presenter = $chart_presenter;
+        $this->no_items_label             = dgettext('plugin-agiledashboard', 'There is no item yet');
+        $this->item_is_inconsistent_label = dgettext('plugin-agiledashboard', 'Item is inconsistent');
+        $this->chart_presenter            = $chart_presenter;
     }
 
     private function getTrackerNames($trackers)
@@ -105,19 +111,11 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter
         return $this->items_collection->count() > 0;
     }
 
-    public function inconsistent_items_title() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'inconsistent_items_title', $this->backlog_item_type);
-    }
-
     public function inconsistent_items_intro() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'inconsistent_items_intro');
     }
 
     public function has_something_inconsistent() {
         return count($this->inconsistent_collection) > 0;
-    }
-
-    public function inconsistent_collection() {
-        return $this->inconsistent_collection;
     }
 }

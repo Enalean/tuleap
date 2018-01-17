@@ -87,4 +87,9 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollection implements
     public function setTotalAvaialableSize($size) {
         $this->total_available_size = (int) $size;
     }
+
+    public function getItemIds()
+    {
+        return array_keys($this->index);
+    }
 }

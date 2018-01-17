@@ -129,7 +129,7 @@ class BacklogItemResource extends AuthenticatedResource
         $semantics        = $semantic_manager->getSemantics();
 
         $artifact     = $this->updateArtifactTitleSemantic($current_user, $artifact, $semantics);
-        $backlog_item = new AgileDashboard_Milestone_Backlog_BacklogItem($artifact);
+        $backlog_item = new AgileDashboard_Milestone_Backlog_BacklogItem($artifact, false);
         $backlog_item = $this->updateBacklogItemStatusSemantic($current_user, $artifact, $backlog_item, $semantics);
         $backlog_item = $this->updateBacklogItemInitialEffortSemantic(
             $current_user,
