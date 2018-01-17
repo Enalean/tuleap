@@ -487,7 +487,6 @@ done
 #%{__install} src/utils/svn/pre-revprop-change.php $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 #%{__install} src/utils/svn/post-revprop-change.php $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 #%{__install} src/utils/fileforge.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}/fileforge
-#%{__install} plugins/forumml/bin/mail_2_DB.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 
 # Special custom include script
 #%{__install} src/etc/env.inc.php.dist $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}/env.inc.php
@@ -1021,7 +1020,6 @@ fi
 %files plugin-forumml
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/forumml
-#%attr(06755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/mail_2_DB.pl
 #%attr(00750,%{APP_USER},%{APP_USER}) %{_localstatedir}/run/forumml
 #%attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_plugin_forumml
 

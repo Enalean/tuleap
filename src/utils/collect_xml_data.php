@@ -1,4 +1,4 @@
-#!/usr/bin/php
+#!/usr/share/tuleap/src/utils/php-launcher.sh
 <?php
 
 /**
