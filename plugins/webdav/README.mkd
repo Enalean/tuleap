@@ -1,0 +1,7 @@
+INSTALLATION
+============
+
+This plugin adds the ability to do some actions on some services (FRS and docman) with Webdav.
+
+You access webdav via "https://example.com/plugins/webdav/".
+If you want to do some custom configuration, please check [the documentation](/doc/en/installation-guide/advanced-configuration.html#webdav-over-nginx)
