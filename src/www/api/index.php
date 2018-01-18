@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,9 +35,11 @@ if (! headers_sent()) {
     header('Access-Control-Expose-Headers: X-PAGINATION-SIZE, X-PAGINATION-LIMIT-MAX, X-PAGINATION-LIMIT');
 }
 
+
+$http_request = HTTPRequest::instance();
 try {
     $gate_keeper = new GateKeeper();
-    $gate_keeper->assertAccess(UserManager::instance()->getCurrentUser(), HTTPRequest::instance());
+    $gate_keeper->assertAccess(UserManager::instance()->getCurrentUser(), $http_request);
 } catch (Exception $exception) {
     header("HTTP/1.0 403 Forbidden");
     $GLOBALS['Response']->sendJSON(array(
@@ -77,7 +79,7 @@ if (ForgeConfig::get('DEBUG_MODE')) {
 
 // Do not let Restler find itself the domain, when behind a reverse proxy, it's
 // a mess.
-$restler->setBaseUrl($sys_default_domain);
+$restler->setBaseUrls($http_request->getServerUrl());
 $restler->setAPIVersion($version);
 
 $core_resources_injector = new Tuleap\REST\ResourcesInjector();
