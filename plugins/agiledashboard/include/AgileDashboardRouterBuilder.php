@@ -18,12 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\FormElement\BurnupFieldRetriever;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
-use Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentationFactory;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
+use Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentationFactory;
 
 class AgileDashboardRouterBuilder {
 
@@ -158,10 +159,12 @@ class AgileDashboardRouterBuilder {
         );
     }
 
-    private function getPanePresenterBuilderFactory($milestone_factory) {
+    private function getPanePresenterBuilderFactory($milestone_factory)
+    {
         return new AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory(
             $this->getBacklogFactory(),
-            $this->getBacklogItemPresenterCollectionFactory($milestone_factory)
+            $this->getBacklogItemPresenterCollectionFactory($milestone_factory),
+            new BurnupFieldRetriever(Tracker_FormElementFactory::instance())
         );
     }
 

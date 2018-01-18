@@ -48,13 +48,22 @@ class BurnupFieldPresenter
      * @var string
      */
     public $user_locale;
+    /**
+     * @var string
+     */
+    public $warning;
+    /**
+     * @var bool
+     */
+    public $has_warning;
 
     public function __construct(
         BurnupRepresentation $burnup_representation,
         \Tracker_Artifact $artifact,
         $can_burnup_be_regenerated,
         $css_url,
-        $user_locale
+        $user_locale,
+        $warning
     ) {
         $this->burnup_data               = json_encode($burnup_representation);
         $this->project_id                = $artifact->getTracker()->getProject()->getId();
@@ -62,5 +71,7 @@ class BurnupFieldPresenter
         $this->can_burnup_be_regenerated = $can_burnup_be_regenerated;
         $this->css_url                   = $css_url;
         $this->user_locale               = $user_locale;
+        $this->warning                   = $warning;
+        $this->has_warning               = $warning !== "";
     }
 }

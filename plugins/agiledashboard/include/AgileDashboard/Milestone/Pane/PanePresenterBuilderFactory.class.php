@@ -22,32 +22,43 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\FormElement\BurnupFieldRetriever;
+
 /**
  * Like RepRap, I build builders
  */
-class AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory {
+class AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory
+{
 
     /** @var AgileDashboard_Milestone_Backlog_BacklogFactory */
     private $backlog_factory;
 
     /** @var AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory */
     private $row_collection_factory;
+    /**
+     * @var BurnupFieldRetriever
+     */
+    private $field_retriever;
 
     public function __construct(
         AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory,
-        AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory $row_collection_factory
+        AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory $row_collection_factory,
+        BurnupFieldRetriever $field_retriever
     ) {
         $this->backlog_factory        = $backlog_factory;
         $this->row_collection_factory = $row_collection_factory;
+        $this->field_retriever        = $field_retriever;
     }
 
     /**
      * @return AgileDashboard_Milestone_Pane_Content_ContentPresenterBuilder
      */
-    public function getContentPresenterBuilder() {
+    public function getContentPresenterBuilder()
+    {
         return new AgileDashboard_Milestone_Pane_Content_ContentPresenterBuilder(
             $this->backlog_factory,
-            $this->row_collection_factory
+            $this->row_collection_factory,
+            $this->field_retriever
         );
     }
 }

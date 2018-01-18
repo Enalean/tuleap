@@ -22,6 +22,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\FormElement\BurnupFieldRetriever;
+use Tuleap\AgileDashboard\Milestone\Pane\Conent\ContentChartPresenter;
+
 class AgileDashboard_Milestone_Pane_Content_ContentPresenterBuilder
 {
     /** @var AgileDashboard_Milestone_Backlog_BacklogFactory */
@@ -30,12 +33,19 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenterBuilder
     /** @var AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory */
     private $collection_factory;
 
+    /**
+     * @var BurnupFieldRetriever
+     */
+    private $field_retriever;
+
     public function __construct(
         AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory,
-        AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory $collection_factory
+        AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory $collection_factory,
+        BurnupFieldRetriever $field_retriever
     ) {
         $this->backlog_factory    = $backlog_factory;
         $this->collection_factory = $collection_factory;
+        $this->field_retriever    = $field_retriever;
     }
 
     public function getMilestoneContentPresenter(PFUser $user, Planning_Milestone $milestone)
@@ -46,13 +56,51 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenterBuilder
 
         $descendant_trackers = $backlog->getDescendantTrackers();
 
+        $chart_presenter = $this->getChartPresenter($milestone, $user);
+
         return new AgileDashboard_Milestone_Pane_Content_ContentPresenter(
             $milestone,
             $this->collection_factory->getAllCollection($user, $milestone, $backlog, $redirect_to_self),
             $this->collection_factory->getInconsistentCollection($user, $milestone, $backlog, $redirect_to_self),
             $descendant_trackers,
             $this->getSolveInconsistenciesUrl($milestone, $redirect_to_self),
-            $user
+            $user,
+            $chart_presenter
+        );
+    }
+
+    private function getChartPresenter(Planning_Milestone $milestone, PFUser $user)
+    {
+        $artifact = $milestone->getArtifact();
+
+
+        $burndown_field = $artifact->getABurndownField($user);
+        $has_burndown   = false;
+        $burndown_label = null;
+        $burndown_url   = null;
+        if ($burndown_field) {
+            $has_burndown   = true;
+            $burndown_label = $burndown_field->getLabel();
+            $burndown_url   = $burndown_field->getBurndownImageUrl($artifact);
+        }
+
+        $has_burnup       = false;
+        $burnup_label     = null;
+        $burnup_presenter = null;
+        $burnup_field     = $this->field_retriever->getField($milestone->getArtifact(), $user);
+        if ($burnup_field) {
+            $has_burnup       = true;
+            $burnup_label     = $burnup_field->getLabel();
+            $burnup_presenter = $burnup_field->buildPresenter($milestone->getArtifact(), false, $user);
+        }
+
+        return new ContentChartPresenter(
+            $has_burndown,
+            $burndown_label,
+            $burndown_url,
+            $has_burnup,
+            $burnup_label,
+            $burnup_presenter
         );
     }
 
