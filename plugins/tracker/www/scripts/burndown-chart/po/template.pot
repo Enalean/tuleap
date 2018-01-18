@@ -1,0 +1,19 @@
+#, javascript-format
+msgid "%s - Remaining effort"
+msgstr ""
+
+msgid "Ideal burndown"
+msgstr ""
+
+msgid "MM/DD"
+msgstr ""
+
+msgid "Remaining effort"
+msgstr ""
+
+#, javascript-format
+msgid "Remaining effort: %s"
+msgstr ""
+
+msgid "n/k"
+msgstr ""

@@ -17,18 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import moment                from 'moment';
-import { createBurnupChart } from './burnup-chart-drawer.js';
-import { gettext_provider }  from './gettext-provider.js';
+import moment                  from 'moment';
+import { createBurndownChart } from './burndown-chart-drawer.js';
+import { gettext_provider }    from './gettext-provider.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-    const chart_container = document.getElementById('burnup-chart');
+    const chart_container = document.getElementById('burndown-chart');
 
     if (! chart_container) {
         return;
     }
 
-    const burnup_data     = JSON.parse(chart_container.dataset.burnup);
+    const burndown_data   = JSON.parse(chart_container.dataset.burndown);
     const container_width = chart_container.clientWidth;
     const locale          = chart_container.dataset.locale;
 
@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
         graph_width        : container_width,
         graph_height       : container_width / 1.33,
         tooltip_date_format: gettext_provider.gettext('MM/DD'),
-        margins: {
+        margins            : {
             top   : 100,
             right : 80,
             bottom: 60,
@@ -48,20 +48,17 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const chart_legends = {
-        title  : gettext_provider.gettext('%s - Team effort'),
+        title  : gettext_provider.gettext('%s - Remaining effort'),
         bullets: [
             {
-                label: gettext_provider.gettext('Ideal burnup'),
+                label    : gettext_provider.gettext('Ideal burndown'),
                 classname: 'chart-plot-ideal-burnup'
             }, {
-                label    : gettext_provider.gettext('Team effort'),
+                label    : gettext_provider.gettext('Remaining effort'),
                 classname: 'chart-plot-team-effort'
-            }, {
-                label    : gettext_provider.gettext('Total effort'),
-                classname: 'chart-plot-total-effort'
             }
         ]
     };
 
-    createBurnupChart({chart_container, chart_props, chart_legends, burnup_data});
+    createBurndownChart({ chart_container, chart_props, chart_legends, burndown_data });
 });

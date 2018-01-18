@@ -1,0 +1,11 @@
+{{# has_warning }}
+    <div class='feedback_warning'>{{ warning }}</div>
+{{/ has_warning }}
+
+{{^ has_warning }}
+    <div id="burndown-chart"
+         data-burndown="{{ data_burndown }}"
+         data-locale="{{ locale }}"
+    ></div>
+    <link rel="stylesheet" type="text/css" href="{{ css_url }}" />
+{{/ has_warning }}

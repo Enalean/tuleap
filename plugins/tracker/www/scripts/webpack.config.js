@@ -141,8 +141,47 @@ const webpack_config_for_artifact_modal = {
     ]
 }
 
+const webpack_config_for_burndown_chart = {
+    entry: {
+        'burndown-chart': './burndown-chart/src/burndown-chart.js',
+    },
+    output: {
+        path    : assets_dir_path,
+        filename: '[name]-[chunkhash].js',
+    },
+    resolve: {
+        modules: [
+            path.resolve(__dirname, 'node_modules'),
+        ],
+        alias: {
+            'charts-builders': path.resolve(__dirname, '../../../../src/www/scripts/charts-builders/')
+        }
+    },
+    module: {
+        rules: [
+            babel_rule,
+            {
+                test: /\.po$/,
+                exclude: /node_modules/,
+                use: [
+                    { loader: 'json-loader' },
+                    { loader: 'po-gettext-loader' }
+                ]
+            }
+        ]
+    },
+    plugins: [
+        new WebpackAssetsManifest({
+            output: 'manifest.json',
+            merge: true,
+            writeToDisk: true
+        })
+    ]
+};
+
 if (process.env.NODE_ENV === 'watch' || process.env.NODE_ENV === 'test') {
     webpack_config_for_artifact_modal.devtool = 'cheap-module-eval-source-map';
+    webpack_config_for_burndown_chart.devtool = 'cheap-module-eval-source-map';
 }
 
 if (process.env.NODE_ENV === 'production') {
@@ -150,11 +189,13 @@ if (process.env.NODE_ENV === 'production') {
         new webpack.optimize.ModuleConcatenationPlugin()
     ]);
     module.exports = [
-        webpack_config_for_trackers
+        webpack_config_for_trackers,
+        webpack_config_for_burndown_chart
     ];
 } else {
     module.exports = [
         webpack_config_for_trackers,
-        webpack_config_for_artifact_modal
+        webpack_config_for_artifact_modal,
+        webpack_config_for_burndown_chart
     ];
 }

@@ -18,8 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\TimezoneRetriever;
 use Tuleap\Tracker\FormElement\BurndownCacheIsCurrentlyCalculatedException;
+use Tuleap\Tracker\FormElement\BurndownFieldPresenter;
 use Tuleap\Tracker\FormElement\ChartCachedDaysComparator;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueChecker;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueRetriever;
@@ -126,12 +128,66 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
 
     public function fetchBurndownReadOnly(Tracker_Artifact $artifact)
     {
-        $purifier = Codendi_HTMLPurifier::instance();
-        $html     = '';
-        $html .= '<img src="' . $this->getBurndownImageUrl($artifact) . '" alt="' .
-            $purifier->purify($this->getLabel()) . '" width="640" height="480" />';
+        $user               = $this->getCurrentUser();
+        $burndown_presenter = $this->buildPresenter($artifact, $user);
 
-        return $html;
+        return $this->renderPresenter($burndown_presenter);
+    }
+
+    private function buildPresenter(Tracker_Artifact $artifact, PFUser $user)
+    {
+        $warning                      = "";
+        $burndown_rest_representation = null;
+
+        try {
+            $value_retriever= $this->getBurndownConfigurationValueRetriever();
+
+            $burndown_data = $this->getBurndownData(
+                $artifact,
+                $user,
+                $value_retriever->getStartDate($artifact, $user),
+                $value_retriever->getDuration($artifact, $user)
+            );
+
+
+            if ($burndown_data->isBeingCalculated()) {
+                $warning = dgettext(
+                    'tuleap-tracker',
+                    'Burndown is under calculation. It will be available in a few minutes.'
+                );
+            }
+
+            $burndown_rest_representation = $burndown_data->getRESTRepresentation();
+        } catch (BurndownCacheIsCurrentlyCalculatedException $error) {
+            $burndown_representation = null;
+            $warning                 = $error->getMessage();
+        } catch (Tracker_FormElement_Chart_Field_Exception $error) {
+            $burndown_representation = null;
+            $warning                 = $error->getMessage();
+        }
+
+        $burndown_chart_include_assets = new IncludeAssets(
+            TRACKER_BASE_DIR . '/../www/assets',
+            TRACKER_BASE_URL . '/assets'
+        );
+
+        $theme_include_assets = new IncludeAssets(
+            TRACKER_BASE_DIR . '/../www/themes/FlamingParrot/assets',
+            TRACKER_BASE_URL . '/themes/FlamingParrot/assets'
+        );
+
+        $css_file_url = $theme_include_assets->getFileURL('burndown-chart.css');
+
+        $GLOBALS['HTML']->includeFooterJavascriptFile(
+            $burndown_chart_include_assets->getFileURL('burndown-chart.js')
+        );
+
+        return new BurndownFieldPresenter(
+            $user,
+            $css_file_url,
+            $warning,
+            $burndown_rest_representation
+        );
     }
 
     public function fetchArtifactForOverlay(Tracker_Artifact $artifact, $submitted_values = array())
@@ -846,5 +902,15 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     private function getCachedDaysComparator()
     {
         return new ChartCachedDaysComparator($this->getLogger());
+    }
+
+    /**
+     * For testing purpose
+     */
+    protected function renderPresenter(BurndownFieldPresenter $burndown_presenter)
+    {
+        $renderer = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
+
+        return $renderer->renderToString('burndown-field', $burndown_presenter);
     }
 }

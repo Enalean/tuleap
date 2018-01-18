@@ -27,7 +27,7 @@ function buildGraphScales({
     margins,
     graph_width,
     graph_height,
-    total_effort,
+    y_axis_maximum,
     x_axis_tick_values
 }) {
     return {
@@ -48,7 +48,7 @@ function buildGraphScales({
         return scaleLinear()
             .domain([
                 0,
-                total_effort
+                y_axis_maximum
             ])
             .range([
                 graph_height - margins.bottom,
