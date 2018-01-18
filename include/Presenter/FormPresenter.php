@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,16 +20,13 @@
 
 namespace Tuleap\MyTuleapContactSupport\Presenter;
 
-class ModalPresenter
+class FormPresenter
 {
-    /** @var FormPresenter */
-    public $form_presenter;
     /** @var string */
-    public $help_page_content;
+    public $administrator_email;
 
-    public function __construct(FormPresenter $form_presenter, $help_page_content)
+    public function __construct($administrator_email)
     {
-        $this->form_presenter    = $form_presenter;
-        $this->help_page_content = $help_page_content;
+        $this->administrator_email = $administrator_email;
     }
 }

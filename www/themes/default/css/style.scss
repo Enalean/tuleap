@@ -5,7 +5,7 @@
         min-height: 450px;
     }
 
-    #contact-support-modal-form,
+    .contact-support-modal-form,
     .tlp-pane {
         padding: 20px;
         border: 1px solid #e8e8e8;
@@ -29,7 +29,7 @@
     }
 }
 
-#contact-support-modal-form {
+.contact-support-modal-form {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
@@ -50,21 +50,21 @@
     }
 }
 
-#contact-support-modal-subject,
-#contact-support-modal-message {
+.contact-support-modal-subject,
+.contact-support-modal-message {
     box-sizing: border-box;
     width: 100%;
     min-height: 30px;
 }
 
-#contact-support-modal-success-message,
-#contact-support-modal-error-message {
+.contact-support-modal-success-message,
+.contact-support-modal-error-message {
     &:not(.shown) {
         display: none;
     }
 }
 
-#contact-support-modal-submit {
+.contact-support-modal-submit {
     .icon-envelope-alt,
     .icon-spinner,
     .icon-thumbs-up-alt {
