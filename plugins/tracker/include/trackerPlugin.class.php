@@ -512,7 +512,10 @@ class trackerPlugin extends Plugin {
                                        ->getSemantics();
                         if (isset($semantics['title'])) {
                             if ($field = Tracker_FormElementFactory::instance()->getFormElementById($semantics['title']->getFieldId())) {
-                                $ret .= ' - '. $a->getValue($field)->getText();
+                                $value = $a->getValue($field);
+                                if ($value) {
+                                    $ret .= ' - ' . $value->getText();
+                                }
                             }
                         }
                     }
