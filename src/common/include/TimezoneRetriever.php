@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -31,6 +31,15 @@ class TimezoneRetriever
 
     public static function getUserTimezone(PFUser $user)
     {
-        return $user->isLoggedIn() ? $user->getTimezone() : self::getServerTimezone();
+        $timezone = '';
+        if ($user->isLoggedIn()) {
+            $timezone = $user->getTimezone();
+        }
+        try {
+            new \DateTimeZone($timezone);
+        } catch (\Exception $ex) {
+            $timezone = self::getServerTimezone();
+        }
+        return $timezone;
     }
 }

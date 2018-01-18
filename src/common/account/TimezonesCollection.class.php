@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -261,9 +261,6 @@ class Account_TimezonesCollection {
         'Asia/Qatar',
         'Asia/Rangoon',
         'Asia/Riyadh',
-        'Asia/Riyadh87',
-        'Asia/Riyadh88',
-        'Asia/Riyadh89',
         'Asia/Saigon',
         'Asia/Samarkand',
         'Asia/Seoul',
@@ -324,7 +321,6 @@ class Account_TimezonesCollection {
         'Canada/Atlantic',
         'Canada/Central',
         'Canada/Eastern',
-        'Canada/East-Saskatchewan',
         'Canada/Mountain',
         'Canada/Newfoundland',
         'Canada/Pacific',
@@ -391,7 +387,6 @@ class Account_TimezonesCollection {
         'Europe/Zagreb',
         'Europe/Zaporozhye',
         'Europe/Zurich',
-        'Factory',
         'GB',
         'GB-Eire',
         'GMT',
@@ -423,9 +418,6 @@ class Account_TimezonesCollection {
         'Mexico/BajaNorte',
         'Mexico/BajaSur',
         'Mexico/General',
-        'Mideast/Riyadh87',
-        'Mideast/Riyadh88',
-        'Mideast/Riyadh89',
         'MST',
         'MST7MDT',
         'Navajo',
