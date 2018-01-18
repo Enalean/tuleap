@@ -52,7 +52,7 @@ class ChartMessageFetcherTest extends \TuleapTestCase
 
     public function itDisplaysWarningsWhenFieldsAreMissingInChartConfiguration()
     {
-        $chart_configuration = new ChartFieldUsage(true, true, false, false, false, false);
+        $chart_configuration = new ChartFieldUsage(true, true, false, false, false);
         stub($this->tracker)->hasFormElementWithNameAndType('start_date', 'date')->returns(false);
         stub($this->tracker)->hasFormElementWithNameAndType('duration', 'int')->returns(false);
 
@@ -70,7 +70,7 @@ class ChartMessageFetcherTest extends \TuleapTestCase
 
     public function itDoesnotDisplayAnyErrorsWhenNoFieldsAreMissingInChartConfiguration()
     {
-        $chart_configuration = new ChartFieldUsage(true, true, false, false, false, false);
+        $chart_configuration = new ChartFieldUsage(true, true, false, false, false);
 
         stub($this->tracker)->hasFormElementWithNameAndType('start_date', 'date')->returns(true);
         stub($this->tracker)->hasFormElementWithNameAndType('duration', 'int')->returns(true);

@@ -793,15 +793,13 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         $use_capacity          = false;
         $use_hierarchy         = true;
         $use_remaining_effort  = true;
-        $is_under_construction = false;
 
         return new ChartFieldUsage(
             $use_start_date,
             $use_duration,
             $use_capacity,
             $use_hierarchy,
-            $use_remaining_effort,
-            $is_under_construction
+            $use_remaining_effort
         );
     }
 

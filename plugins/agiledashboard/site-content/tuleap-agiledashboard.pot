@@ -59,9 +59,6 @@ msgstr ""
 msgid "Done values successfully updated."
 msgstr ""
 
-msgid "Field under implementation"
-msgstr ""
-
 msgid "Force cache regeneration"
 msgstr ""
 
