@@ -3233,6 +3233,10 @@ select[name='add_notempty_condition[]'] {
     }
 }
 
+.tracker_artifact_field-burndown {
+    min-width: 640px;
+}
+
 .tracker_hidden_edition_field {
     display: none;
 

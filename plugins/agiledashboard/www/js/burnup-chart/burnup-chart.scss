@@ -86,3 +86,7 @@ $line-color        : #dedede;
     stroke: $line-color;
     fill: transparent;
 }
+
+.tracker_artifact_field-burnup {
+    min-width: 640px;
+}
