@@ -22,6 +22,7 @@ import { sprintf }              from 'sprintf-js';
 import { select, selectAll }    from 'd3-selection';
 import { axisLeft, axisBottom } from 'd3-axis';
 import { gettext_provider }     from './gettext-provider.js';
+import { getDifference }        from './chart-dates-service.js';
 import {
     getBadgeProperties,
     getElementsWidth,
@@ -31,7 +32,8 @@ import {
 
 export { buildChartLayout };
 
-const WEEK = 'week';
+const WEEK  = 'week';
+const MONTH = 'month';
 
 const localized_date_formats = {
     day        : gettext_provider.gettext('ddd DD'),
@@ -69,7 +71,7 @@ function buildChartLayout(
         legend_config
     );
 
-    ticksEvery();
+    ticksEvery(timeframe_granularity);
 
     return layout;
 }
@@ -221,11 +223,11 @@ function appendBadge(container, current_team_effort, legend_y_position) {
         .attr('ry', 10);
 }
 
-function ticksEvery() {
-    const all_ticks = selectAll(`.chart-x-axis > .tick`);
+function ticksEvery(timeframe_granularity) {
+    const all_ticks = selectAll(`.chart-x-axis > .tick`).nodes();
     let previous_label;
 
-    all_ticks.nodes().forEach((node) => {
+    all_ticks.forEach((node) => {
         const label = select(node).text();
 
         if (! previous_label) {
@@ -240,6 +242,31 @@ function ticksEvery() {
 
         previous_label = label;
     });
+
+    const displayed_ticks = selectAll(`.chart-x-axis > .tick`).nodes();
+
+    if (
+        canFirstLabelOverlapSecondLabel(
+            displayed_ticks[0],
+            displayed_ticks[1],
+            timeframe_granularity
+        )
+    ) {
+        select(displayed_ticks[0]).remove();
+    }
+}
+
+function canFirstLabelOverlapSecondLabel(first_tick, second_tick, timeframe_granularity) {
+    if (timeframe_granularity !== MONTH) {
+        return false;
+    }
+
+    const first_label  = select(first_tick);
+    const second_label = select(second_tick);
+
+    const { weeks } = getDifference(first_label.datum(), second_label.datum());
+
+    return weeks < 2;
 }
 
 function getTickFormatter(timeframe_granularity) {
