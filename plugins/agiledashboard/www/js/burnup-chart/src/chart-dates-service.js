@@ -20,7 +20,8 @@ import moment from 'moment';
 
 export {
     getDaysToDisplay,
-    getGranularity
+    getGranularity,
+    getDifference
 };
 
 function getDaysToDisplay({ opening_days, duration, points, start_date }) {
