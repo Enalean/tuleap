@@ -137,7 +137,7 @@ msgid "Size: {{ file.size | byteFmt: 2 }}"
 msgstr ""
 
 #: src/tuleap-artifact-modal.tpl.html
-msgid "The artifact will be linked to {{ modal.parent.label }}."
+msgid "The artifact will be linked to {{ modal.parent.title }}."
 msgstr ""
 
 #: src/quota-display/quota-display.tpl.html

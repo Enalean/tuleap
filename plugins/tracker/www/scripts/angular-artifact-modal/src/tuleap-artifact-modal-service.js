@@ -34,13 +34,13 @@ function ArtifactModalService(
     TuleapArtifactModalFieldDependenciesService,
     TuleapArtifactModalFileUploadRules
 ) {
-    var self = this;
-
-    self.initCreationModalModel = initCreationModalModel;
-    self.initEditionModalModel  = initEditionModalModel;
-    self.loading                = TuleapArtifactModalLoading;
-    self.showCreation           = showCreation;
-    self.showEdition            = showEdition;
+    const self = this;
+    Object.assign(self, {
+        initCreationModalModel,
+        initEditionModalModel,
+        showCreation,
+        showEdition
+    });
 
     /**
      * Opens a new modal pop-in which will display a form with all the fields defined in the
@@ -48,11 +48,11 @@ function ArtifactModalService(
      * displayItemCallback will be called after the last HTTP response is received.
      *
      * @param {int} tracker_id               The tracker to which the item we want to add/edit belongs
-     * @param {object} parent                The artifact's parent item
+     * @param {int} parent_artifact_id       The artifact's parent's id
      * @param {function} displayItemCallback The function to call after receiving the last HTTP response. It will be called with the new artifact's id.
      * @param {array} prefill_values         The prefill values for creation, using field name as identifier
      */
-    function showCreation(tracker_id, parent, displayItemCallback, prefill_values) {
+    function showCreation(tracker_id, parent_artifact_id, displayItemCallback, prefill_values) {
         TuleapArtifactModalLoading.loading = true;
 
         return TlpModalService.open({
@@ -61,7 +61,7 @@ function ArtifactModalService(
             controllerAs   : 'modal',
             tlpModalOptions: { keyboard: false },
             resolve        : {
-                modal_model        : self.initCreationModalModel(tracker_id, parent, prefill_values),
+                modal_model        : self.initCreationModalModel(tracker_id, parent_artifact_id, prefill_values),
                 displayItemCallback: (displayItemCallback) ? displayItemCallback : _.noop
             }
         });
@@ -100,14 +100,14 @@ function ArtifactModalService(
         { id: TEXT_FORMAT_HTML_ID, label: 'HTML' }
     ];
 
-    function initCreationModalModel(tracker_id, parent_artifact, prefill_values) {
+    function initCreationModalModel(tracker_id, parent_artifact_id, prefill_values) {
         var modal_model = {};
 
         const creation_mode = true;
         setCreationMode(creation_mode);
-        modal_model.tracker_id   = tracker_id;
-        modal_model.parent       = parent_artifact;
-        modal_model.text_formats = text_formats;
+        modal_model.tracker_id         = tracker_id;
+        modal_model.parent_artifact_id = parent_artifact_id;
+        modal_model.text_formats       = text_formats;
 
         var promise = TuleapArtifactModalRestService.getTracker(tracker_id).then(function(tracker) {
             var transformed_tracker = TuleapArtifactModalTrackerTransformerService.transform(tracker, creation_mode);

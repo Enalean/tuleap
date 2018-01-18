@@ -67,16 +67,30 @@ describe("LinkFieldController -", () => {
             expect(LinkFieldController.loadParentArtifactsTitle).toHaveBeenCalled();
         });
 
+        it("Given the modal was in creation mode and given a parent artifact id, then the parent artifact will be loaded and the list of possible parents won't be loaded", () => {
+            const parent_artifact_id               = 74;
+            LinkFieldController.parent_artifact_id = parent_artifact_id;
+            canChooseArtifactsParent.and.returnValue(false);
+            isInCreationMode.and.returnValue(true);
+            const artifact = { id: parent_artifact_id, title: 'Julietta' };
+            spyOn(TuleapArtifactModalRestService, "getArtifact").and.returnValue($q.when(artifact));
+
+            LinkFieldController.init();
+            $rootScope.$apply();
+
+            expect(LinkFieldController.parent_artifact).toEqual(artifact);
+            expect(TuleapArtifactModalRestService.getArtifact).toHaveBeenCalledWith(parent_artifact_id);
+            expect(LinkFieldController.loadParentArtifactsTitle).not.toHaveBeenCalled();
+        });
+
         it("Given the modal was in creation mode and given I can't choose a parent, then the list of possible parents won't be loaded", () => {
-            const linked_artifact               = { id: 74 };
-            LinkFieldController.linked_artifact = linked_artifact;
             canChooseArtifactsParent.and.returnValue(false);
             isInCreationMode.and.returnValue(true);
 
             LinkFieldController.init();
             $rootScope.$apply();
 
-            expect(LinkFieldController.parent_artifact).toEqual(linked_artifact);
+            expect(LinkFieldController.parent_artifact).toBe(null);
             expect(LinkFieldController.loadParentArtifactsTitle).not.toHaveBeenCalled();
         });
 

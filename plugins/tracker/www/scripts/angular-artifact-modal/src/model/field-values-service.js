@@ -1,19 +1,21 @@
-import { copy } from 'angular';
-import _ from 'lodash';
-import moment from 'moment';
+import { copy }              from 'angular';
+import _                     from 'lodash';
+import moment                from 'moment';
+import AwkwardCreationFields from './awkward-creation-fields-constant.js';
+import {
+    formatExistingValue as formatForLinkField
+} from '../tuleap-artifact-modal-fields/link-field/link-field-initializer.js';
 
 export default TuleapArtifactFieldValuesService;
 
 TuleapArtifactFieldValuesService.$inject = [
-    '$sce',
-    'TuleapArtifactModalAwkwardCreationFields'
+    '$sce'
 ];
 
 function TuleapArtifactFieldValuesService(
-    $sce,
-    TuleapArtifactModalAwkwardCreationFields
+    $sce
 ) {
-    var self = this;
+    const self = this;
     self.getSelectedValues = getSelectedValues;
 
     /**
@@ -30,7 +32,7 @@ function TuleapArtifactFieldValuesService(
         _.forEach(tracker.fields, function(field) {
             artifact_value = artifact_values[field.field_id];
 
-            if (_(TuleapArtifactModalAwkwardCreationFields).contains(field.type)) {
+            if (AwkwardCreationFields.includes(field.type)) {
                 values[field.field_id] = {
                     field_id: field.field_id,
                     type    : field.type
@@ -102,6 +104,9 @@ function TuleapArtifactFieldValuesService(
                 break;
             case 'computed':
                 delete value_obj.value;
+                break;
+            case 'art_link':
+                value_obj = formatForLinkField(field, artifact_value);
                 break;
             default:
                 break;

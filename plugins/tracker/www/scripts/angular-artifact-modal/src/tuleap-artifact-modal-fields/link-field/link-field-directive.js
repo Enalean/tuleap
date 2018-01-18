@@ -6,12 +6,13 @@ export default function linkFieldDirective() {
         restrict: 'EA',
         replace : false,
         scope   : {
-            field          : '=tuleapArtifactModalLinkField',
-            isDisabled     : '&isDisabled',
-            value_model    : '=valueModel',
-            artifact_id    : '=artifactId',
-            tracker        : '=tracker',
-            linked_artifact: '=linkedArtifact'
+            field             : '=tuleapArtifactModalLinkField',
+            isDisabled        : '&isDisabled',
+            value_model       : '=valueModel',
+            artifact_id       : '=artifactId',
+            tracker           : '=tracker',
+            parent_artifact_id: '=parentArtifactId',
+            parent_artifact   : '=parentArtifact'
         },
         controller      : LinkFieldController,
         controllerAs    : 'link_field',

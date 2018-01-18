@@ -32,15 +32,17 @@ function ArtifactModalController(
     TuleapArtifactModalFieldDependenciesService,
     TuleapArtifactModalFileUploadService
 ) {
-    var self    = this,
+    const self  = this,
         user_id = modal_model.user_id;
-    _.extend(self, {
+
+    Object.assign(self, {
         artifact_id        : modal_model.artifact_id,
         color              : formatColor(modal_model.color),
         creation_mode      : isInCreationMode(),
         is_disk_usage_empty: true,
         ordered_fields     : modal_model.ordered_fields,
-        parent             : modal_model.parent,
+        parent             : null,
+        parent_artifact_id : modal_model.parent_artifact_id,
         title              : (modal_model.title.content !== undefined) ? modal_model.title.content : modal_model.title,
         tracker            : modal_model.tracker,
         values             : modal_model.values,
@@ -50,22 +52,23 @@ function ArtifactModalController(
             loading_comments: true,
             invert_order    : (modal_model.invert_followups_comments_order) ? 'asc' : 'desc'
         },
-        formatColor                   : formatColor,
-        getDropdownAttribute          : getDropdownAttribute,
-        getError                      : function() { return TuleapArtifactModalRestService.error; },
-        isDisabled                    : isDisabled,
-        isFollowupCommentFormDisplayed: isFollowupCommentFormDisplayed,
-        isLoading                     : function() { return TuleapArtifactModalRestService.is_loading; },
-        isThereAtLeastOneFileField    : isThereAtLeastOneFileField,
-        setupTooltips                 : setupTooltips,
-        submit                        : submit,
-        toggleFieldset                : toggleFieldset,
-        initCkeditorConfig            : initCkeditorConfig,
-        followup_comment              : {
+        formatColor,
+        getDropdownAttribute,
+        getError() { return TuleapArtifactModalRestService.error; },
+        initCkeditorConfig,
+        isDisabled,
+        isFollowupCommentFormDisplayed,
+        isLoading() { return TuleapArtifactModalRestService.is_loading; },
+        isNewParentAlertShown,
+        isThereAtLeastOneFileField,
+        setupTooltips,
+        submit,
+        toggleFieldset,
+        followup_comment: {
             body  : '',
             format: modal_model.text_fields_format
         },
-        ckeditor_options              : {
+        ckeditor_options: {
             default_ckeditor: {
                 toolbar: [
                     ['Bold', 'Italic', 'Underline'],
@@ -221,16 +224,7 @@ function ArtifactModalController(
     }
 
     function formatColor(color) {
-        var color_formatted = '';
-        var color_split     = color.split('_');
-        color_split.forEach(function (color, index) {
-            if (index === 0) {
-                color_formatted = color_formatted.concat(color);
-            } else {
-                color_formatted = color_formatted.concat('-', color);
-            }
-        });
-        return color_formatted;
+        return color.split('_').join('-');
     }
 
     function setFieldDependenciesWatchers() {
@@ -278,5 +272,9 @@ function ArtifactModalController(
 
     function emptyArray(array) {
         array.length = 0;
+    }
+
+    function isNewParentAlertShown() {
+        return isInCreationMode() && self.parent;
     }
 }

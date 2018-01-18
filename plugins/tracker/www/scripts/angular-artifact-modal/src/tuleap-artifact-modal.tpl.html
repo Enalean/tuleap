@@ -237,7 +237,8 @@
     value-model="modal.values[field.field_id]"
     artifact-id="modal.artifact_id"
     tracker="modal.tracker"
-    linked-artifact="modal.parent"
+    parent-artifact-id="modal.parent_artifact_id"
+    parent-artifact="modal.parent"
 ></div>
 </script>
 
@@ -411,8 +412,8 @@
             <div class="tlp-alert-danger" ng-if="modal.getError().is_error">
                 {{ 'Error:' | translate }} {{ modal.getError().error_message }}
             </div>
-            <div class="tlp-alert-info" ng-if="modal.parent" translate>
-                The artifact will be linked to {{ modal.parent.label }}.
+            <div class="tlp-alert-info" ng-if="modal.isNewParentAlertShown()" translate>
+                The artifact will be linked to {{ modal.parent.title }}.
             </div>
 
             <ng-include src="field.template_url" ng-repeat="field in modal.ordered_fields"></ng-include>

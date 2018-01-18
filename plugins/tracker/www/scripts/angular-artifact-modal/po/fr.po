@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: AgileDashboard Planning\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-01-12 11:23+0100\n"
+"PO-Revision-Date: 2018-01-17 11:55+0100\n"
 "Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/test-188/language/"
 "fr/)\n"
@@ -154,8 +154,8 @@ msgid "Size: {{ file.size | byteFmt: 2 }}"
 msgstr "Taille : {{ file.size | byteFmt: 2 }}"
 
 #: src/tuleap-artifact-modal.tpl.html
-msgid "The artifact will be linked to {{ modal.parent.label }}."
-msgstr "L'artifact sera lié à  {{ modal.parent.label }}."
+msgid "The artifact will be linked to {{ modal.parent.title }}."
+msgstr "L'artefact sera lié à  {{ modal.parent.title }}."
 
 #: src/quota-display/quota-display.tpl.html
 msgid ""

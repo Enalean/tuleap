@@ -23,7 +23,6 @@ describe("NewTuleapArtifactModalService", () => {
         angular.mock.module(artifact_modal_module, function($provide) {
             $provide.decorator('TuleapArtifactModalRestService', function($delegate) {
                 spyOn($delegate, "getArtifactFieldValues");
-                spyOn($delegate, "getAllOpenParentArtifacts");
                 spyOn($delegate, "getTracker");
                 spyOn($delegate, "getUserPreference");
                 spyOn($delegate, "getFileUploadRules");
@@ -95,17 +94,10 @@ describe("NewTuleapArtifactModalService", () => {
     });
 
     describe("", () => {
-        let tracker_request,
-            tracker,
-            file_upload_rules_request,
+        let tracker,
             file_upload_rules;
 
         beforeEach(() => {
-            tracker_request           = $q.defer();
-            file_upload_rules_request = $q.defer();
-            TuleapArtifactModalRestService.getTracker.and.returnValue(tracker_request.promise);
-            TuleapArtifactModalRestService.getFileUploadRules.and.returnValue(file_upload_rules_request.promise);
-
             file_upload_rules = {
                 disk_quota    : 64,
                 disk_usage    : 57,
@@ -114,29 +106,28 @@ describe("NewTuleapArtifactModalService", () => {
         });
 
         describe("initCreationModalModel() -", () => {
-            let tracker_id, parent_artifact;
+            let tracker_id, parent_artifact_id;
 
             beforeEach(() => {
-                tracker_id      = 28;
-                parent_artifact = { id: 581 };
+                tracker_id         = 28;
+                parent_artifact_id = 581;
             });
 
 
-            it("Given a tracker id and a parent artifact, when I create the modal's creation model, then the tracker's structure will be retrieved and a promise will be resolved with the modal's model object", function() {
+            it("Given a tracker id and a parent artifact id, then the tracker's structure will be retrieved and a promise will be resolved with the modal's model object", () => {
                 tracker = {
-                    id: tracker_id,
+                    id        : tracker_id,
                     color_name: "importer",
-                    label: "preinvest",
-                    parent: null
+                    label     : "preinvest",
+                    parent    : null
                 };
+                TuleapArtifactModalRestService.getTracker.and.returnValue($q.when(tracker));
+                TuleapArtifactModalRestService.getFileUploadRules.and.returnValue($q.when(file_upload_rules));
 
-                const promise = NewTuleapArtifactModalService.initCreationModalModel(tracker_id, parent_artifact);
-                tracker_request.resolve(tracker);
-                file_upload_rules_request.resolve(file_upload_rules);
+                const promise = NewTuleapArtifactModalService.initCreationModalModel(tracker_id, parent_artifact_id);
 
                 expect(promise).toBeResolved();
                 expect(TuleapArtifactModalRestService.getTracker).toHaveBeenCalledWith(tracker_id);
-                expect(TuleapArtifactModalRestService.getAllOpenParentArtifacts).not.toHaveBeenCalled();
                 expect(TuleapArtifactModalRestService.getFileUploadRules).toHaveBeenCalled();
                 expect(TuleapArtifactFieldValuesService.getSelectedValues).toHaveBeenCalledWith({}, tracker);
                 expect(TuleapArtifactModalTrackerTransformerService.transform).toHaveBeenCalledWith(tracker, true);
@@ -144,7 +135,7 @@ describe("NewTuleapArtifactModalService", () => {
                 const model = promise.$$state.value;
                 expect(setCreationMode).toHaveBeenCalledWith(true);
                 expect(model.tracker_id).toEqual(tracker_id);
-                expect(model.parent).toEqual(parent_artifact);
+                expect(model.parent_artifact_id).toEqual(parent_artifact_id);
                 expect(model.tracker).toEqual(tracker);
                 expect(model.title).toEqual("preinvest");
                 expect(model.color).toEqual("importer");
@@ -158,25 +149,24 @@ describe("NewTuleapArtifactModalService", () => {
                 ]);
             });
 
-            it("Given that I could not get the tracker structure, when I create the modal's creation model, then a promise will be rejected", () => {
-                const promise = NewTuleapArtifactModalService.initCreationModalModel(tracker_id, parent_artifact);
-                tracker_request.reject();
+            it("Given that I could not get the tracker structure, then a promise will be rejected", () => {
+                TuleapArtifactModalRestService.getTracker.and.returnValue($q.reject());
+
+                const promise = NewTuleapArtifactModalService.initCreationModalModel(tracker_id, parent_artifact_id);
 
                 expect(promise).toBeRejected();
             });
 
-            describe("apply transitions -", function() {
-                var workflow_field;
-
-                beforeEach(function() {
-                    workflow_field = {
-                        field_id: 189
-                    };
+            describe("apply transitions -", () => {
+                beforeEach(() => {
                     isInCreationMode.and.returnValue(true);
                 });
 
-                it("Given a tracker that had workflow transitions, when I create the modal's creation model, then the transitions will be enforced", function() {
-                    var workflow = {
+                it("Given a tracker that had workflow transitions, when I create the modal's creation model, then the transitions will be enforced", () => {
+                    const workflow_field = {
+                        field_id: 189
+                    };
+                    const workflow = {
                         is_used: "1",
                         field_id: 189,
                         transitions: [
@@ -191,22 +181,22 @@ describe("NewTuleapArtifactModalService", () => {
                         fields: [
                             workflow_field
                         ],
-                        workflow: workflow
+                        workflow
                     };
+                    TuleapArtifactModalRestService.getTracker.and.returnValue($q.when(tracker));
+                    TuleapArtifactModalRestService.getFileUploadRules.and.returnValue($q.when(file_upload_rules));
 
-                    var promise = NewTuleapArtifactModalService.initCreationModalModel(tracker_id);
-                    tracker_request.resolve(tracker);
-                    file_upload_rules_request.resolve(file_upload_rules);
+                    const promise = NewTuleapArtifactModalService.initCreationModalModel(tracker_id);
 
                     expect(promise).toBeResolved();
                     expect(TuleapArtifactModalWorkflowService.enforceWorkflowTransitions).toHaveBeenCalledWith(null, workflow_field, workflow);
                 });
 
-                it("Given a tracker that had workflow transitions but were not used, when I create the modal's creation model, then the transitions won't be enforced", function() {
-                    var workflow_field = {
+                it("Given a tracker that had workflow transitions but were not used, then the transitions won't be enforced", () => {
+                    const workflow_field = {
                         field_id: tracker_id
                     };
-                    var workflow = {
+                    const workflow = {
                         is_used: "0",
                         field_id: 189,
                         transitions: [
@@ -221,22 +211,22 @@ describe("NewTuleapArtifactModalService", () => {
                         fields: [
                             workflow_field
                         ],
-                        workflow: workflow
+                        workflow
                     };
+                    TuleapArtifactModalRestService.getTracker.and.returnValue($q.when(tracker));
+                    TuleapArtifactModalRestService.getFileUploadRules.and.returnValue($q.when(file_upload_rules));
 
-                    var promise = NewTuleapArtifactModalService.initCreationModalModel(tracker_id);
-                    tracker_request.resolve(tracker);
-                    file_upload_rules_request.resolve(file_upload_rules);
+                    const promise = NewTuleapArtifactModalService.initCreationModalModel(tracker_id);
 
                     expect(promise).toBeResolved();
                     expect(TuleapArtifactModalWorkflowService.enforceWorkflowTransitions).not.toHaveBeenCalled();
                 });
 
-                it("Given a tracker that didn't have workflow transitions, when I create the modal's creation model, then the transitions won't be enforced", function() {
-                    var workflow_field = {
+                it("Given a tracker that didn't have workflow transitions, when I create the modal's creation model, then the transitions won't be enforced", () => {
+                    const workflow_field = {
                         field_id: tracker_id
                     };
-                    var workflow = {
+                    const workflow = {
                         is_used: "1",
                         field_id: 189,
                         transitions: []
@@ -246,12 +236,12 @@ describe("NewTuleapArtifactModalService", () => {
                         fields: [
                             workflow_field
                         ],
-                        workflow: workflow
+                        workflow
                     };
+                    TuleapArtifactModalRestService.getTracker.and.returnValue($q.when(tracker));
+                    TuleapArtifactModalRestService.getFileUploadRules.and.returnValue($q.when(file_upload_rules));
 
                     var promise = NewTuleapArtifactModalService.initCreationModalModel(tracker_id);
-                    tracker_request.resolve(tracker);
-                    file_upload_rules_request.resolve(file_upload_rules);
 
                     expect(promise).toBeResolved();
                     expect(TuleapArtifactModalWorkflowService.enforceWorkflowTransitions).not.toHaveBeenCalled();
