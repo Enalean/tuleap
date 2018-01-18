@@ -23,6 +23,11 @@ import moment                from 'moment';
 
 document.addEventListener('DOMContentLoaded', () => {
     const chart_container = document.getElementById('burnup-chart');
+
+    if (! chart_container) {
+        return;
+    }
+
     const burnup_data     = JSON.parse(chart_container.dataset.burnup);
     const container_width = chart_container.clientWidth;
 
