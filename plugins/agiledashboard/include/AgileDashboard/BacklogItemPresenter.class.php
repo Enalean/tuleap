@@ -195,4 +195,9 @@ class AgileDashboard_BacklogItemPresenter implements
     {
         return $this->normalized_status_label;
     }
+
+    public function isOpen()
+    {
+        return $this->artifact->isOpen();
+    }
 }

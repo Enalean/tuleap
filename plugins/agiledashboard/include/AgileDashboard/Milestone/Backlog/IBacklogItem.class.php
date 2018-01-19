@@ -48,4 +48,6 @@ interface AgileDashboard_Milestone_Backlog_IBacklogItem
     public function isInconsistent();
 
     public function getNormalizedStatusLabel();
+
+    public function isOpen();
 }
