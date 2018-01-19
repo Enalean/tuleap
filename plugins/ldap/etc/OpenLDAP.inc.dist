@@ -98,10 +98,10 @@ $sys_ldap_grp_cn        = 'cn';
 // Field that indicate the membership of a user in a group
 $sys_ldap_grp_member    = 'uniquemember';
 
-//group objectclass
+// objectclass that distinguish groups
 $sys_ldap_grp_oc    = 'groupOfNames';
 
-//user objectclass
+// objectclass that distinguish users (can also be posixAccount, etc)
 $sys_ldap_user_oc    = 'person';
 
 // Threshold for users to be suspended
