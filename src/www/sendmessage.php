@@ -3,7 +3,7 @@
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
-// Copyright (c) Enalean, 2015. All rights reserved
+// Copyright (c) Enalean, 2015-2018. All rights reserved
 //
 
 require_once('pre.php');    
@@ -71,7 +71,7 @@ if ($request->valid($valid)) {
     $toaddress = $request->get('toaddress');
 }
 
-$valid = new Valid_Email('touser');
+$valid = new Valid_UInt('touser');
 $valid->required();
 if ($request->valid($valid)) {
     $touser = $request->get('touser');
@@ -107,7 +107,7 @@ if ($request->valid($valid)) {
 $csrf_token = new CSRFSynchronizerToken('sendmessage.php');
 $purifier = Codendi_HTMLPurifier::instance();
 
-if (isset($send_mail)) {
+if ($request->exist('send_mail')) {
     if (!$subject || !$body || !$email) {
         /*
          force them to enter all vars
@@ -180,7 +180,7 @@ $GLOBALS['Response']->redirect('/users/'.urlencode($to->getUserName()));
 exit;
 }
 
-if ($toaddress) {
+if (isset($toaddress) && $toaddress !== '') {
 	$to_msg = $toaddress;
 } else {
 	$to_msg = $to->getUserName();
