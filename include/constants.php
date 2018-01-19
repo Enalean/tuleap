@@ -19,4 +19,4 @@
  */
 
 define('MYTULEAP_CONTACT_SUPPORT_BASE_DIR', realpath(__DIR__.'/..'));
-define('MYTULEAP_CONTACT_SUPPORT_EMAIL_TO', 'support+mytuleap@enalean.com');
+define('MYTULEAP_CONTACT_SUPPORT_EMAIL_TO', 'support@mytuleap.com');
