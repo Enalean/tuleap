@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,32 +18,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Captcha;
+namespace Tuleap\DB;
 
-class ConfigurationRetriever
+use ParagonIE\EasyDB\Factory;
+
+class DBFactory
 {
-    /**
-     * @var DataAccessObject
-     */
-    private $dao;
+    private static $db;
 
-    public function __construct(DataAccessObject $dao)
+    public static function instance()
     {
-        $this->dao = $dao;
-    }
-
-    /**
-     * @return Configuration
-     * @throws \Tuleap\Captcha\ConfigurationNotFoundException
-     */
-    public function retrieve()
-    {
-        $row = $this->dao->getConfiguration();
-
-        if (empty($row)) {
-            throw new ConfigurationNotFoundException();
+        if (self::$db !== null) {
+            return self::$db;
         }
 
-        return new Configuration($row['site_key'], $row['secret_key']);
+        self::$db = Factory::create(
+            self::getDSN(),
+            \ForgeConfig::get('sys_dbuser'),
+            \ForgeConfig::get('sys_dbpasswd')
+        );
+
+        return self::$db;
+    }
+
+    private static function getDSN()
+    {
+        return 'mysql:host=' . \ForgeConfig::get('sys_dbhost') . ';dbname=' . \ForgeConfig::get('sys_dbname');
     }
 }
