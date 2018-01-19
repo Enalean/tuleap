@@ -18,7 +18,7 @@
  */
 
 import 'babel-polyfill';
-import './ArtifactTableRenderer.spec';
+import './ArtifactTable.spec.js';
 import './CrossTrackerWidget.spec.js';
 import './reading-mode/ReadingMode.spec.js';
 import './rest-querier.spec.js';

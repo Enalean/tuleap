@@ -23,6 +23,7 @@
             <thead>
                 <tr>
                     <th>{{ artifact_label }}</th>
+                    <th>{{ project_label }}</th>
                     <th>{{ status_label }}</th>
                     <th>{{ last_update_label }}</th>
                     <th>{{ submitted_by_label }}</th>
@@ -31,12 +32,12 @@
             </thead>
             <tbody v-if="is_loading === true">
                 <tr>
-                    <td colspan="5"><div class="cross-tracker-loader"></div></td>
+                    <td colspan="6"><div class="cross-tracker-loader"></div></td>
                 </tr>
             </tbody>
             <tbody v-else-if="artifacts.length === 0">
                 <tr>
-                    <td colspan="5" class="tlp-table-cell-empty">
+                    <td colspan="6" class="tlp-table-cell-empty">
                         {{ artifacts_empty }}
                     </td>
                 </tr>
@@ -74,7 +75,7 @@
     import { getUserPreferredDateFormat }       from './user-service.js';
 
     export default {
-        name: 'ArtifactTableRenderer',
+        name: 'ArtifactTable',
         components: { ArtifactTableRow },
         props: {
             isReportSaved: Boolean,
@@ -94,6 +95,7 @@
         },
         computed: {
             artifact_label: ()     => gettext_provider.gettext("Artifact"),
+            project_label: ()      => gettext_provider.gettext("Project"),
             status_label: ()       => gettext_provider.gettext("Status"),
             last_update_label: ()  => gettext_provider.gettext("Last update date"),
             submitted_by_label: () => gettext_provider.gettext("Submitted by"),

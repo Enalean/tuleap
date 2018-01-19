@@ -17,23 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue                                                from 'vue';
-import WritingCrossTrackerReport                          from './writing-mode/writing-cross-tracker-report.js';
-import ArtifactTableRenderer                              from './ArtifactTableRenderer.vue';
+import Vue                       from 'vue';
+import WritingCrossTrackerReport from './writing-mode/writing-cross-tracker-report.js';
+import ArtifactTable             from './ArtifactTable.vue';
 import {
     rewire$getReportContent,
     rewire$getQueryResult,
     restore
 } from './rest-querier.js';
 
-describe("ArtifactTableRenderer", () => {
+describe("ArtifactTable", () => {
     let Widget,
         reportId,
         writingCrossTrackerReport,
         isReportSaved;
 
     beforeEach(() => {
-        Widget                    = Vue.extend(ArtifactTableRenderer);
+        Widget                    = Vue.extend(ArtifactTable);
         writingCrossTrackerReport = new WritingCrossTrackerReport();
         reportId                  = '86';
         isReportSaved             = true;

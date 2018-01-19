@@ -26,6 +26,7 @@
                 </span>{{ artifact.title }}
             </a>
         </td>
+        <td>{{ artifact.project.label }}</td>
         <td>{{ artifact.status }}</td>
         <td>{{ artifact.formatted_last_update_date }}</td>
         <td><a v-bind:href="artifact.submitted_by.user_url">{{ artifact.submitted_by.display_name }}</a></td>
