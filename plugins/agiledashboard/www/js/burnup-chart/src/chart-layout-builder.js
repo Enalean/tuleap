@@ -236,7 +236,7 @@ function ticksEvery(timeframe_granularity) {
         }
 
         if (label === previous_label) {
-            node.remove();
+            select(node).remove();
             return;
         }
 
