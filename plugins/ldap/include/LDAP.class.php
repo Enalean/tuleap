@@ -2,6 +2,7 @@
 // Codendi
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 // http://www.codendi.com
+// Copyright (c) cjt Systemsoftware AG, 2017. All Rights Reserved.
 
 /**
  * LDAP class definition
@@ -526,9 +527,8 @@ class LDAP {
             // Catch errors to detect if there are more results available than
             // the list actually returned (helps to refine the search)
             $this->trapErrors();
-            // Use SCOPE_ONELEVEL to only search in "sys_ldap_grp_dn" branch 
-            // of the directory to speed up the search.
-            $lri = $this->search($this->ldapParams['grp_dn'], $filter, self::SCOPE_ONELEVEL, $attrs, $attrsOnly, $sizeLimit);
+            // Use SCOPE_SUBTREE to get all groups from different subbranches of "sys_ldap_grp_dn"
+            $lri = $this->search($this->ldapParams['grp_dn'], $filter, self::SCOPE_SUBTREE, $attrs, $attrsOnly, $sizeLimit);
         }
         if ($lri === false) {
             return new LDAPResultIterator(array(), array());
