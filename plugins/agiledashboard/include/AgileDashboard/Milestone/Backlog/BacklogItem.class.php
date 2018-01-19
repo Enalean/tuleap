@@ -45,6 +45,11 @@ class AgileDashboard_Milestone_Backlog_BacklogItem implements AgileDashboard_Mil
     /** @var String */
     private $status;
 
+    /**
+     * @var String
+     */
+    private $normalized_status_label;
+
     /** @var String */
     private $color;
 
@@ -92,8 +97,10 @@ class AgileDashboard_Milestone_Backlog_BacklogItem implements AgileDashboard_Mil
         return $this->initial_effort;
     }
 
-    public function setStatus($status) {
-        $this->status = $status;
+    public function setStatus($status, $status_semantic)
+    {
+        $this->status                  = $status;
+        $this->normalized_status_label = $status_semantic;
     }
 
     public function id() {
@@ -122,7 +129,8 @@ class AgileDashboard_Milestone_Backlog_BacklogItem implements AgileDashboard_Mil
         }
     }
 
-    public function status() {
+    public function getStatus()
+    {
         return $this->status;
     }
 
@@ -158,5 +166,10 @@ class AgileDashboard_Milestone_Backlog_BacklogItem implements AgileDashboard_Mil
     public function isInconsistent()
     {
         return $this->is_inconsistent;
+    }
+
+    public function getNormalizedStatusLabel()
+    {
+        return $this->normalized_status_label;
     }
 }

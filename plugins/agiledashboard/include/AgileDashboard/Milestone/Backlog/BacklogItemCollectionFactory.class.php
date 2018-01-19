@@ -164,7 +164,10 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory {
             $artifact->setTitle($this->artifact_factory->getTitleFromRowAsText($semantics[$artifact_id]));
 
             $backlog_item = $this->backlog_item_builder->getItem($artifact, $redirect_to_self, false);
-            $backlog_item->setStatus($semantics[$artifact_id][Tracker_Semantic_Status::NAME]);
+            $backlog_item->setStatus(
+                $artifact->getStatus(),
+                $semantics[$artifact_id][Tracker_Semantic_Status::NAME]
+            );
             if (isset($parents[$artifact_id])) {
                 $backlog_item->setParent($parents[$artifact_id]);
             }
@@ -217,7 +220,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory {
             $artifact->setTitle($this->artifact_factory->getTitleFromRowAsText($semantics[$artifact_id]));
 
             $backlog_item = $this->backlog_item_builder->getItem($artifact, $redirect_to_self, false);
-            $backlog_item->setStatus(Tracker_Semantic_Status::OPEN);
+            $backlog_item->setStatus($artifact->getStatus(), Tracker_Semantic_Status::OPEN);
             if (isset($parents[$artifact_id])) {
                 $backlog_item->setParent($parents[$artifact_id]);
             }
@@ -489,27 +492,37 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory {
         }
 
         $this->pushItemInOpenCollections($milestone, $artifact, $semantics, $backlog_item);
-        $this->pushItemInDoneCollection($milestone, $semantics, $artifact_id, $backlog_item);
+        $this->pushItemInDoneCollection($milestone, $artifact, $semantics, $backlog_item);
         $this->open_and_closed_collection[$milestone->getArtifactId()]->push($backlog_item);
         $this->open_closed_and_inconsistent_collection[$milestone->getArtifactId()]->push($backlog_item);
     }
 
-    private function pushItemInOpenCollections(Planning_Milestone $milestone, Tracker_Artifact $artifact, array $semantics, AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item) {
+    private function pushItemInOpenCollections(
+        Planning_Milestone $milestone,
+        Tracker_Artifact $artifact,
+        array $semantics,
+        AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item
+    ) {
         $artifact_id = $artifact->getId();
 
         if ($semantics[$artifact_id][Tracker_Semantic_Status::NAME] == AgileDashboard_BacklogItemDao::STATUS_OPEN) {
-            $backlog_item->setStatus(Tracker_Semantic_Status::OPEN);
+            $backlog_item->setStatus($artifact->getStatus(), Tracker_Semantic_Status::OPEN);
 
             $this->setInitialEffort($backlog_item, $semantics[$artifact_id]);
             $this->todo_collection[$milestone->getArtifactId()]->push($backlog_item);
         }
     }
 
-    private function pushItemInDoneCollection(Planning_Milestone $milestone, array $semantics, $artifact_id, AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item) {
-        $this->setInitialEffort($backlog_item, $semantics[$artifact_id]);
+    private function pushItemInDoneCollection(
+        Planning_Milestone $milestone,
+        Tracker_Artifact $artifact,
+        array $semantics,
+        AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item
+    ) {
+        $this->setInitialEffort($backlog_item, $semantics[$artifact->getId()]);
 
-        if ($semantics[$artifact_id][Tracker_Semantic_Status::NAME] != AgileDashboard_BacklogItemDao::STATUS_OPEN) {
-            $backlog_item->setStatus(Tracker_Semantic_Status::CLOSED);
+        if ($semantics[$artifact->getId()][Tracker_Semantic_Status::NAME] != AgileDashboard_BacklogItemDao::STATUS_OPEN) {
+            $backlog_item->setStatus($artifact->getStatus(), Tracker_Semantic_Status::CLOSED);
             $this->done_collection[$milestone->getArtifactId()]->push($backlog_item);
         }
     }
@@ -595,6 +608,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory {
 
                 if ($artifact) {
                     $item = $this->backlog_item_builder->getItem($artifact, $redirect_to_self, true);
+                    $item->setStatus($artifact->getStatus(), $artifact->getSemanticStatusValue());
                     $this->inconsistent_collection[$milestone->getArtifactId()]->push($item);
                     $this->open_closed_and_inconsistent_collection[$milestone->getArtifactId()]->push($item);
                 }

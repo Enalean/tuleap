@@ -44,8 +44,15 @@ class AgileDashboard_BacklogItemPresenter implements
     /** @var String */
     private $redirect_to_self;
 
-    /** @var String */
+    /**
+     * @var String
+     */
     private $status;
+
+    /**
+     * @var String
+     */
+    private $normalized_status_label;
 
     /** @var String */
     private $color;
@@ -71,7 +78,7 @@ class AgileDashboard_BacklogItemPresenter implements
         $this->artifact         = $artifact;
         $this->type             = $this->artifact->getTracker()->getName();
         $this->color            = $this->artifact->getTracker()->getNormalizedColor();
-        $this->is_inconsistent = $is_inconsistent;
+        $this->is_inconsistent  = $is_inconsistent;
     }
 
     public function setParent(Tracker_Artifact $parent) {
@@ -93,8 +100,10 @@ class AgileDashboard_BacklogItemPresenter implements
         return $this->initial_effort;
     }
 
-    public function setStatus($status) {
-        $this->status = $status;
+    public function setStatus($status, $status_semantic)
+    {
+        $this->status                  = $status;
+        $this->normalized_status_label = $status_semantic;
     }
 
     public function id() {
@@ -135,7 +144,8 @@ class AgileDashboard_BacklogItemPresenter implements
         }
     }
 
-    public function status() {
+    public function getStatus()
+    {
         return $this->status;
     }
 
@@ -179,5 +189,10 @@ class AgileDashboard_BacklogItemPresenter implements
     public function isInconsistent()
     {
         return $this->is_inconsistent;
+    }
+
+    public function getNormalizedStatusLabel()
+    {
+        return $this->normalized_status_label;
     }
 }

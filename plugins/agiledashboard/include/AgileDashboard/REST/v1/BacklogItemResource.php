@@ -20,27 +20,27 @@
 
 namespace Tuleap\AgileDashboard\REST\v1;
 
-use Tuleap\REST\Header;
-use Tuleap\REST\AuthenticatedResource;
-use Luracast\Restler\RestException;
-use UserManager;
-use PFUser;
-use Tracker_ArtifactFactory;
 use AgileDashboard_Milestone_Backlog_BacklogItem;
-use Tracker_ArtifactDao;
-use Tracker_SlicedArtifactsBuilder;
-use Tracker_Artifact_PriorityDao;
-use Tracker_Artifact_PriorityManager;
-use Tracker_Artifact_PriorityHistoryDao;
-use Tracker_Artifact_Exception_CannotRankWithMyself;
-use Tracker_Artifact;
-use TrackerFactory;
-use Tracker_SemanticManager;
-use Tracker_SemanticCollection;
-use Tracker_Semantic_Title;
-use Tracker_Semantic_Status;
 use AgileDashBoard_Semantic_InitialEffort;
+use Luracast\Restler\RestException;
+use PFUser;
+use Tracker_Artifact;
+use Tracker_Artifact_Exception_CannotRankWithMyself;
+use Tracker_Artifact_PriorityDao;
+use Tracker_Artifact_PriorityHistoryDao;
+use Tracker_Artifact_PriorityManager;
+use Tracker_ArtifactDao;
+use Tracker_ArtifactFactory;
+use Tracker_Semantic_Status;
+use Tracker_Semantic_Title;
+use Tracker_SemanticCollection;
+use Tracker_SemanticManager;
+use Tracker_SlicedArtifactsBuilder;
+use TrackerFactory;
+use Tuleap\REST\AuthenticatedResource;
+use Tuleap\REST\Header;
 use Tuleap\Tracker\REST\v1\ArtifactLinkUpdater;
+use UserManager;
 
 /**
  * Wrapper for Backlog_Items related REST methods
@@ -156,14 +156,21 @@ class BacklogItemResource extends AuthenticatedResource
         return $artifact;
     }
 
-    private function updateBacklogItemStatusSemantic(PFUser $current_user, Tracker_Artifact $artifact, AgileDashboard_Milestone_Backlog_BacklogItem $backlog_item, Tracker_SemanticCollection $semantics) {
+    private function updateBacklogItemStatusSemantic(
+        PFUser $current_user,
+        Tracker_Artifact $artifact,
+        AgileDashboard_Milestone_Backlog_BacklogItem $backlog_item,
+        Tracker_SemanticCollection $semantics
+    ) {
         $semantic_status = $semantics[Tracker_Semantic_Status::NAME];
 
-        if ($semantic_status && $semantic_status->getField() && $semantic_status->getField()->userCanRead($current_user)) {
+        if ($semantic_status && $semantic_status->getField() && $semantic_status->getField()->userCanRead(
+                $current_user
+            )) {
             $label = $semantic_status->getNormalizedStatusLabel($artifact);
 
             if ($label) {
-                $backlog_item->setStatus($label);
+                $backlog_item->setStatus($artifact->getStatus(), $label);
             }
         }
 
