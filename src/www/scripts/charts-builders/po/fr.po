@@ -10,28 +10,21 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.0.3\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
-#, javascript-format
-msgid "%s - Team effort"
-msgstr "%s - Effort de l'équipe"
-
-msgid "Ideal burnup"
-msgstr "Burnup idéal"
-
-msgid "MM/DD"
-msgstr "DD/MM"
-
-msgid "Team effort"
-msgstr "Effort de l'équipe"
+msgid "MMM YYYY"
+msgstr "MMM YYYY"
 
 #, javascript-format
-msgid "Team effort: %s"
-msgstr "Effort de l'équipe: %s"
+msgid "W %s"
+msgstr "S %s"
 
-msgid "Total effort"
-msgstr "Effort total"
+msgid "WW"
+msgstr "WW"
 
-#, javascript-format
-msgid "Total effort: %s"
-msgstr "Effort total : %s"
+msgid "ddd DD"
+msgstr "ddd DD"
+
+msgid "n/k"
+msgstr "n/c"

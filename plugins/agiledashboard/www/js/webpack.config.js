@@ -21,13 +21,21 @@ const babel_options = {
     ]
 };
 
-module.exports = {
+const webpack_config_for_charts = {
     entry : {
        'burnup-chart': './burnup-chart/src/burnup-chart.js'
     },
     output: {
         path    : build_dir_path,
         filename: '[name]-[chunkhash].js'
+    },
+    resolve: {
+        modules: [
+            path.resolve(__dirname, 'node_modules'),
+        ],
+        alias: {
+            'charts-builders': path.resolve(__dirname, '../../../../src/www/scripts/charts-builders/')
+        }
     },
     module: {
         rules: [
@@ -57,4 +65,12 @@ module.exports = {
         // This ensure we only load moment's fr locale. Otherwise, every single locale is included !
         new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /fr/)
     ]
-};
+}
+
+if (process.env.NODE_ENV === 'production') {
+    webpack_config_for_charts.plugins = webpack_config_for_charts.plugins.concat([
+        new webpack.optimize.ModuleConcatenationPlugin()
+    ]);
+}
+
+module.exports = webpack_config_for_charts;
