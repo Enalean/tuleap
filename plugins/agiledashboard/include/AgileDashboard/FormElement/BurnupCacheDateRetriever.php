@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,8 +27,7 @@ class BurnupCacheDateRetriever
 {
     public function getYesterday()
     {
-        $date = new DateTime();
-        $date->setTime(0, 0, 0);
+        $date = new DateTime('yesterday 23:59:59');
 
         return $date->getTimestamp();
     }
