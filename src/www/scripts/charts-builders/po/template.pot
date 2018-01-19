@@ -1,0 +1,15 @@
+msgid "MMM YYYY"
+msgstr ""
+
+#, javascript-format
+msgid "W %s"
+msgstr ""
+
+msgid "WW"
+msgstr ""
+
+msgid "ddd DD"
+msgstr ""
+
+msgid "n/k"
+msgstr ""

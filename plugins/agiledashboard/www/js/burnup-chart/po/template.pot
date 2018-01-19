@@ -8,9 +8,6 @@ msgstr ""
 msgid "MM/DD"
 msgstr ""
 
-msgid "MMM YYYY"
-msgstr ""
-
 msgid "Team effort"
 msgstr ""
 
@@ -23,17 +20,4 @@ msgstr ""
 
 #, javascript-format
 msgid "Total effort: %s"
-msgstr ""
-
-#, javascript-format
-msgid "W %s"
-msgstr ""
-
-msgid "WW"
-msgstr ""
-
-msgid "ddd DD"
-msgstr ""
-
-msgid "n/k"
 msgstr ""

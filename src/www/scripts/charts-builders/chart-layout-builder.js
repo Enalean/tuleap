@@ -32,6 +32,8 @@ import {
 
 export { buildChartLayout };
 
+moment.locale(gettext_provider.locale);
+
 const WEEK  = 'week';
 const MONTH = 'month';
 

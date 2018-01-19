@@ -17,9 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import moment                from 'moment';
 import { createBurnupChart } from './burnup-chart-drawer.js';
 import { gettext_provider }  from './gettext-provider.js';
-import moment                from 'moment';
+import {
+    gettext_provider as builders_gettext_provider
+} from 'charts-builders/gettext-provider.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const chart_container = document.getElementById('burnup-chart');
@@ -30,9 +33,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const burnup_data     = JSON.parse(chart_container.dataset.burnup);
     const container_width = chart_container.clientWidth;
+    const locale          = chart_container.dataset.locale;
 
-    gettext_provider.setLocale(chart_container.dataset.locale);
-    moment.locale(chart_container.dataset.locale);
+    gettext_provider.setLocale(locale);
+    builders_gettext_provider.setLocale(locale);
+
+    moment.locale(locale);
 
     const chart_props = {
         graph_width        : container_width,

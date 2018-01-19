@@ -23,8 +23,8 @@ import { line }              from 'd3-shape';
 import { select, selectAll } from 'd3-selection';
 import { gettext_provider }  from './gettext-provider.js';
 import { buildGraphScales }  from './burnup-chart-scales-factory.js';
-import { buildChartLayout }  from './chart-layout-builder.js';
-import { TooltipFactory }    from './chart-tooltip-factory.js';
+import { buildChartLayout }  from 'charts-builders/chart-layout-builder.js';
+import { TooltipFactory }    from 'charts-builders/chart-tooltip-factory.js';
 import {
     getLastDayData,
     getDisplayableData,
@@ -33,7 +33,7 @@ import {
 import {
     getDaysToDisplay,
     getGranularity
-} from './chart-dates-service.js';
+} from 'charts-builders/chart-dates-service.js';
 
 export { createBurnupChart };
 
