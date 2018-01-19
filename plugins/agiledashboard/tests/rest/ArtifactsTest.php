@@ -47,7 +47,7 @@ class ArtifactsTest extends ArtifactBase
 
         foreach ($burnup['values'] as $field) {
             if ($field['label'] === ArtifactBase::BURNUP_FIELD_SHORTNAME) {
-                $this->assertEquals($field['value']['points'], $expected_burnup_chart);
+                $this->assertEquals($field['value']['points_with_date'], $expected_burnup_chart);
             }
         }
     }
