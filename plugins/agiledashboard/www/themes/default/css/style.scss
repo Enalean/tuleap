@@ -1,3 +1,24 @@
+/**
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@import 'milestone-details';
+
 body.agiledashboard_homepage .main .content {
     padding: 0;
 }
@@ -346,14 +367,6 @@ body.agiledashboard_homepage .main .content {
     color: #999;
 }
 
-.inconsistent-items-title {
-    color: #E99424;
-}
-
-.closed-items-title {
-    color: #8E8E8E;
-}
-
 .agiledashboard h2.dropdown-toggle {
     display: inline-block;
     cursor: pointer;
@@ -362,10 +375,6 @@ body.agiledashboard_homepage .main .content {
     .caret {
         margin-top: 17px;
     }
-}
-
-.agiledasboard-content-open-items, .agiledasboard-content-inconsistent-items, .agiledasboard-content-closed-items {
-    background: #FFFFFF;
 }
 
 .agiledashboard-admin-kanban {
@@ -485,29 +494,5 @@ body.agiledashboard_kanban {
 .admin-scrum-not-activated {
     > p {
         margin-top: 10px;
-    }
-}
-
-.agiledashboard-milestone-content {
-    display: flex;
-}
-
-.agiledashboard-milestone-content-items {
-    flex: 1 1 auto;
-}
-
-.agiledashboard-milestone-content-graphs {
-    flex: 0 0 640px;
-    margin: 0 0 0 20px;
-}
-
-
-@media screen and (max-width: 1200px) {
-    .agiledashboard-milestone-content {
-        flex-direction: column;
-    }
-
-    .agiledashboard-milestone-content-graphs {
-        margin: 20px 0 0;
     }
 }
