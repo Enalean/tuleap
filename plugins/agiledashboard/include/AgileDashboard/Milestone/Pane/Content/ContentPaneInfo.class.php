@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,8 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_Milestone_Pane_Content_ContentPaneInfo extends AgileDashboard_PaneInfo {
-    const IDENTIFIER = 'blcontent';
+class AgileDashboard_Milestone_Pane_Content_ContentPaneInfo extends AgileDashboard_PaneInfo
+{
+    const IDENTIFIER = 'details';
 
     /** @var string */
     private $theme_path;
@@ -56,7 +57,4 @@ class AgileDashboard_Milestone_Pane_Content_ContentPaneInfo extends AgileDashboa
     protected function getIconTitle() {
         return $this->getTitle();
     }
-
 }
-
-?>
