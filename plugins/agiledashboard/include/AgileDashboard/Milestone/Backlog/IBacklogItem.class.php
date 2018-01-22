@@ -26,7 +26,9 @@ interface AgileDashboard_Milestone_Backlog_IBacklogItem
 {
     public function setInitialEffort($value);
 
-    public function setStatus($status);
+    public function setStatus($status, $status_semantic);
+
+    public function getStatus();
 
     public function setHasChildren($has_children);
 
@@ -44,4 +46,6 @@ interface AgileDashboard_Milestone_Backlog_IBacklogItem
      * @return bool
      */
     public function isInconsistent();
+
+    public function getNormalizedStatusLabel();
 }

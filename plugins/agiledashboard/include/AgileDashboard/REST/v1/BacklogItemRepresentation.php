@@ -30,7 +30,7 @@ class BacklogItemRepresentation extends BacklogItemRepresentationBase{
     public function build(\AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item, array $card_fields) {
         $this->id             = JsonCast::toInt($backlog_item->id());
         $this->label          = $backlog_item->title();
-        $this->status         = $backlog_item->status();
+        $this->status         = $backlog_item->getNormalizedStatusLabel();
         $this->type           = $backlog_item->type();
         $this->short_type     = $backlog_item->short_type();
         $this->initial_effort = JsonCast::toFloat($backlog_item->getInitialEffort());
