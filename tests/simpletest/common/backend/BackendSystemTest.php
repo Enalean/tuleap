@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  * Copyright (c) The Codendi Team, Xerox, 2009. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -54,10 +54,10 @@ class BackendSystemTest extends TuleapTestCase {
         $GLOBALS['tmp_dir']                   = $this->getTmpDir() . '/var/tmp';
         $GLOBALS['ftp_frs_dir_prefix']        = $this->getTmpDir() . '/var/lib/codendi/ftp/codendi';
         $GLOBALS['sys_file_deletion_delay']   = 5;
-        $GLOBALS['sys_custom_incdir']         = $GLOBALS['tmp_dir'];
-        $GLOBALS['sys_incdir']                = $GLOBALS['tmp_dir'];
         $GLOBALS['codendi_log']               = $GLOBALS['tmp_dir'];
         ForgeConfig::store();
+        ForgeConfig::set('sys_incdir', $GLOBALS['tmp_dir']);
+        ForgeConfig::set('sys_custom_incdir', $GLOBALS['tmp_dir']);
         ForgeConfig::set('sys_project_backup_path', $GLOBALS['tmp_dir']);
         ForgeConfig::set('homedir_prefix', $this->getTmpDir() . '/home/users');
         ForgeConfig::set('grpdir_prefix', $this->getTmpDir() . '/home/groups');

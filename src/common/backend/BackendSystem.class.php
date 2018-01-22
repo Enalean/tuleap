@@ -1,21 +1,22 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  *
  * 
  */
@@ -285,13 +286,15 @@ class BackendSystem extends Backend {
                 chmod($ht_dir, 02775);
 
                 // Copy custom homepage template for project web site if any
-                $custom_homepage = $GLOBALS['sys_custom_incdir']."/en_US/others/default_page.php";
-                $default_homepage = $GLOBALS['sys_incdir']."/en_US/others/default_page.php";
-                $dest_homepage = $ht_dir."/index.php";
+                $dest_homepage    = '';
+                $custom_homepage  = ForgeConfig::get('sys_custom_incdir'). '/en_US/others/default_page.php';
+                $default_homepage = ForgeConfig::get('sys_incdir') . '/en_US/others/default_page.html';
                 if (is_file($custom_homepage)) {
-                    copy($custom_homepage,$dest_homepage);
+                    $dest_homepage = $ht_dir . '/index.php';
+                    copy($custom_homepage, $dest_homepage);
                 } else if (is_file($default_homepage)) {
-                    copy($default_homepage,$dest_homepage);
+                    $dest_homepage = $ht_dir . '/index.html';
+                    copy($default_homepage, $dest_homepage);
                 }
                 if (is_file($dest_homepage)) {
                     $this->chown($dest_homepage, "dummy");
