@@ -39,4 +39,9 @@ interface AgileDashboard_Milestone_Backlog_IBacklogItem
     public function getParent();
 
     public function setParent(Tracker_Artifact $parent);
+
+    /**
+     * @return bool
+     */
+    public function isInconsistent();
 }

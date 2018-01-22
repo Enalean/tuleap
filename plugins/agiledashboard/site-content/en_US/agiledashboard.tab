@@ -97,9 +97,8 @@ plugin_agiledashboard	activate_scrum_v2	Start Scrum V2
 plugin_agiledashboard_contentpane	lab	This is a lab feature that is subjected to change in a near future. Please get in touch with us to <a href="mailto:tuleap-devel@tuleap.net">provide any feedback</a> about this work in progress, thanks!
 plugin_agiledashboard_contentpane	closed_items_nothing_yet	Nothing closed yet
 plugin_agiledashboard_contentpane	open_items_title	Open $1
-plugin_agiledashboard_contentpane	inconsistent_items_title	Inconsistent $1
-plugin_agiledashboard_contentpane	inconsistent_items_intro	Here are the items that have been created inside a sub-milestone. You cannot change the priorities.
-plugin_agiledashboard_contentpane	solve_inconsistencies	Add them to current backlog
+plugin_agiledashboard_contentpane	inconsistent_items_intro	Some items are not linked to this milestone.
+plugin_agiledashboard_contentpane	solve_inconsistencies	Import them in the backlog
 
 plugin_agiledashboard_milestone_planning	help_intro	This section allows to do $1 planning:
 plugin_agiledashboard_milestone_planning	help_left	On the left side, you have the $2 backlog with all open elements, not already scheduled for a $1.

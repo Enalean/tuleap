@@ -98,8 +98,8 @@ plugin_agiledashboard_contentpane	lab	Ceci est une fonctionnalité expérimental
 plugin_agiledashboard_contentpane	closed_items_nothing_yet	Rien de fermé actuellement
 plugin_agiledashboard_contentpane	open_items_title	$1 ouvert(e)s
 plugin_agiledashboard_contentpane	inconsistent_items_title	$1 inconsistent(e)s
-plugin_agiledashboard_contentpane	inconsistent_items_intro	Voici les éléments qui ont été créés directement à partir des sous-milestones. Vous ne pouvez pas changer leur priorité.
-plugin_agiledashboard_contentpane	solve_inconsistencies	Importer dans le backlog
+plugin_agiledashboard_contentpane	inconsistent_items_intro	Certains éléments n'ont pas été liés à ce jalon.
+plugin_agiledashboard_contentpane	solve_inconsistencies	Les importer dans le backlog
 
 
 plugin_agiledashboard_milestone_planning	help_intro	Cette section vous permet de faire votre planning de $1:

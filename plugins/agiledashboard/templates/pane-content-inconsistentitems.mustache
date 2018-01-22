@@ -1,32 +1,10 @@
-{{#has_something_inconsistent}}
-    <h3 class="inconsistent-items-title">{{inconsistent_items_title}}</h3>
-    <form method="POST" action="{{solve_inconsistencies_url}}">
-        {{#inconsistent_collection}}
+{{# has_something_inconsistent }}
+    <form method="POST" action="{{ solve_inconsistencies_url }}" class="feedback_warning">
+        {{# inconsistent_collection }}
             <input type="hidden" name="inconsistent-artifacts-ids[]" value="{{id}}"/>
-        {{/inconsistent_collection}}
-        <input type="submit" class="btn" value="{{solve_inconsistencies_button}}"/>
-        <p>{{inconsistent_items_intro}}</p>
-        <div class="row-fluid">
-            <div class="span10 agiledasboard-content-inconsistent-items">
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>{{ item_title }}</th>
-                        <th>{{ parent_title }}</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {{#inconsistent_collection}}
-                        <tr data-artifact-id="{{id}}">
-                            <td><a href="{{url}}" class="backlog-item-link" data-artifact-id="{{id}}">{{id}}</a></td>
-                            <td><span class="{{ color }} xref-in-title label">{{type}}</span> {{title}}</td>
-                            <td class="milestone-element-parent"><a href="{{parent_url}}" class="backlog-item-link" data-artifact-id="{{parent_id}}">{{parent_title}}</a></td>
-                        </tr>
-                    {{/inconsistent_collection}}
-                    </tbody>
-                </table>
-            </div>
-        </div>
+        {{/ inconsistent_collection }}
+
+        <i class="icon-warning-sign"></i> {{ inconsistent_items_intro }}
+        <input type="submit" class="btn btn-warning" value="{{ solve_inconsistencies_button }}"/>
     </form>
-{{/has_something_inconsistent}}
+{{/ has_something_inconsistent }}

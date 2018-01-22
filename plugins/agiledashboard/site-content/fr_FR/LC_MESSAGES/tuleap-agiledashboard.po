@@ -93,6 +93,9 @@ msgstr "Reconstruire le cache"
 msgid "Go back to semantic overview"
 msgstr "Retour à l'administration de la sémantique"
 
+msgid "Item is inconsistent"
+msgstr "L'élément est inconsistent"
+
 msgid "Planning succesfully created."
 msgstr "La planning a été créé."
 

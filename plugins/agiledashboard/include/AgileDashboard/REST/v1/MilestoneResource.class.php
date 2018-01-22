@@ -1026,7 +1026,7 @@ class MilestoneResource extends AuthenticatedResource {
     }
 
     private function getMilestoneContentItems($milestone, $backlog) {
-        return $this->backlog_item_collection_factory->getAllCollection(
+        return $this->backlog_item_collection_factory->getOpenAndClosedCollection(
             $this->getCurrentUser(),
             $milestone,
             $backlog,

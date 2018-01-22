@@ -35,4 +35,6 @@ interface AgileDashboard_Milestone_Backlog_IBacklogItemCollection {
     public function getTotalAvaialableSize();
 
     public function setTotalAvaialableSize($size);
+
+    public function getItemIds();
 }

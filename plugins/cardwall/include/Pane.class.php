@@ -234,7 +234,7 @@ class Cardwall_Pane extends AgileDashboard_Pane {
             $mono_milestone_items_finder
         );
 
-        return $backlog_item_collection_factory->getAllCollection(
+        return $backlog_item_collection_factory->getOpenAndClosedCollection(
             $this->user_manager->getCurrentUser(),
             $this->milestone,
             $backlog_factory->getSelfBacklog($this->milestone),

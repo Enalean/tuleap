@@ -31,7 +31,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemBuilder implements AgileDashbo
         return new AgileDashboard_Milestone_Backlog_BacklogItemCollection();
     }
 
-    public function getItem(Tracker_Artifact $artifact, $redirect_to_self) {
-        return new AgileDashboard_Milestone_Backlog_BacklogItem($artifact);
+    public function getItem(Tracker_Artifact $artifact, $redirect_to_self, $is_inconsistent) {
+        return new AgileDashboard_Milestone_Backlog_BacklogItem($artifact, $is_inconsistent);
     }
 }
