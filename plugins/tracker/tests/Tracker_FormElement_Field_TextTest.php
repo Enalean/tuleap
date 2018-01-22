@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,7 +24,7 @@ require_once('bootstrap.php');
 Mock::generatePartial(
     'Tracker_FormElement_Field_Text',
     'Tracker_FormElement_Field_TextTestVersion',
-    array('getValueDao', 'getRuleString', 'isRequired', 'getProperty')
+    array('getValueDao', 'getRuleString', 'isRequired', 'getProperty', 'getCriteriaDao')
 );
 
 Mock::generate('Tracker_Artifact_ChangesetValue_Text');
@@ -39,9 +39,9 @@ Mock::generate('Tracker_Artifact');
 require_once('common/valid/Rule.class.php');
 Mock::generate('Rule_String');
 
-class Tracker_FormElement_Field_TextTestVersion_Expose_ProtectedMethod extends Tracker_FormElement_Field_TextTestVersion {
+class Tracker_FormElement_Field_TextTestVersion_Expose_ProtectedMethod extends Tracker_FormElement_Field_TextTestVersion
+{
     public function buildMatchExpression($a, $b) { return parent::buildMatchExpression($a, $b); }
-    public function quote($a) { return "'$a'"; }
 }
 
 class Tracker_FormElement_Field_TextTest extends TuleapTestCase {
@@ -203,12 +203,21 @@ class Tracker_FormElement_Field_TextTest extends TuleapTestCase {
         $this->assertEqual('this is a text value', $f->getFieldData('this is a text value'));
     }
 
-    public function test_buildMatchExpression() {
-        $f = new Tracker_FormElement_Field_TextTestVersion_Expose_ProtectedMethod();
-        $this->assertEqual($f->buildMatchExpression('field', 'tutu'), "field LIKE '%tutu%'");
-        $this->assertEqual($f->buildMatchExpression('field', 'tutu toto'), "field LIKE '%tutu%' AND field LIKE '%toto%'");
-        $this->assertEqual($f->buildMatchExpression('field', '/regexp/'), "field RLIKE 'regexp'");
-        $this->assertEqual($f->buildMatchExpression('field', '!/regexp/'), "field NOT RLIKE 'regexp'");
+    public function testBuildMatchExpression()
+    {
+        $field = new Tracker_FormElement_Field_TextTestVersion_Expose_ProtectedMethod();
+
+        $data_access = stub('DataAccess')->quoteLikeValueSurround('tutu')->returns("'%tutu%'");
+        stub($data_access)->quoteLikeValueSurround('toto')->returns("'%toto%'");
+        stub($data_access)->quoteSmart('regexp')->returns("'regexp'");
+
+        $dao = stub('Tracker_Report_Criteria_Text_ValueDao')->getDa()->returns($data_access);
+        stub($field)->getCriteriaDao()->returns($dao);
+
+        $this->assertEqual($field->buildMatchExpression('field', 'tutu'), "field LIKE '%tutu%'");
+        $this->assertEqual($field->buildMatchExpression('field', 'tutu toto'), "field LIKE '%tutu%' AND field LIKE '%toto%'");
+        $this->assertEqual($field->buildMatchExpression('field', '/regexp/'), "field RLIKE 'regexp'");
+        $this->assertEqual($field->buildMatchExpression('field', '!/regexp/'), "field NOT RLIKE 'regexp'");
     }
 
     /**

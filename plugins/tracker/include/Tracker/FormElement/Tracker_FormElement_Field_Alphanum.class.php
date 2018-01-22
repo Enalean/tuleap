@@ -41,8 +41,9 @@ abstract class Tracker_FormElement_Field_Alphanum extends Tracker_FormElement_Fi
         return $expr;
     }
     
-    protected function quote($string) {
-        return $this->getCriteriaDao()->da->quoteSmart($string);
+    protected function quote($string)
+    {
+        return $this->getCriteriaDao()->getDa()->quoteSmart($string);
     }
     
     public function fetchCriteriaValue($criteria) {        
