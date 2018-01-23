@@ -27,6 +27,7 @@ use Tuleap\Timesheeting\Admin\TimesheetingUgroupRetriever;
 use Tuleap\Timesheeting\Admin\TimesheetingUgroupSaver;
 use Tuleap\Timesheeting\ArtifactView\ArtifactViewBuilder;
 use Tuleap\Timesheeting\Permissions\PermissionsRetriever;
+use Tuleap\Timesheeting\Time\TimeController;
 use Tuleap\Timesheeting\Time\TimeDao;
 use Tuleap\Timesheeting\Time\TimeUpdater;
 use Tuleap\Timesheeting\TimesheetingPluginInfo;
@@ -113,19 +114,39 @@ class timesheetingPlugin extends Plugin
     {
         $router = new Router(
             TrackerFactory::instance(),
-            new TrackerManager(),
             Tracker_ArtifactFactory::instance(),
+            $this->getAdminController(),
+            $this->getTimeController()
+        );
+
+        $router->route($request);
+    }
+
+    /**
+     * @return AdminController
+     */
+    private function getAdminController()
+    {
+        return new AdminController(
+            new TrackerManager(),
             $this->getTimesheetingEnabler(),
             new User_ForgeUserGroupFactory(new UserGroupDao()),
             new PermissionsNormalizer(),
             new TimesheetingUgroupSaver(new TimesheetingUgroupDao()),
             $this->getTimesheetingUgroupRetriever(),
-            new ProjectHistoryDao(),
+            new ProjectHistoryDao()
+        );
+    }
+
+    /**
+     * @return TimeController
+     */
+    private function getTimeController()
+    {
+        return new TimeController(
             $this->getPermissionsRetriever(),
             new TimeUpdater(new TimeDao())
         );
-
-        $router->route($request);
     }
 
     /**

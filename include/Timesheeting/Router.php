@@ -21,23 +21,13 @@
 namespace Tuleap\Timesheeting;
 
 use Codendi_Request;
-use CSRFSynchronizerToken;
 use Feedback;
-use PermissionsNormalizer;
 use PFUser;
-use ProjectHistoryDao;
 use Tracker;
 use Tracker_Artifact;
 use Tracker_ArtifactFactory;
 use TrackerFactory;
-use TrackerManager;
 use Tuleap\Timesheeting\Admin\AdminController;
-use Tuleap\Timesheeting\Admin\TimesheetingEnabler;
-use Tuleap\Timesheeting\Admin\TimesheetingUgroupRetriever;
-use Tuleap\Timesheeting\Admin\TimesheetingUgroupSaver;
-use Tuleap\Timesheeting\Permissions\PermissionsRetriever;
-use Tuleap\Timesheeting\Time\TimeUpdater;
-use User_ForgeUserGroupFactory;
 use Tuleap\Timesheeting\Time\TimeController;
 
 class Router
@@ -48,84 +38,30 @@ class Router
     private $tracker_factory;
 
     /**
-     * @var TrackerManager
-     */
-    private $tracker_manager;
-
-    /**
-     * @var TimesheetingEnabler
-     */
-    private $timesheeting_enabler;
-
-    /**
-     * @var User_ForgeUserGroupFactory
-     */
-    private $user_forge_user_group_factory;
-
-    /**
-     * @var PermissionsNormalizer
-     */
-    private $permissions_normalizer;
-
-    /**
-     * @var TimesheetingUgroupSaver
-     */
-    private $timesheeting_ugroup_saver;
-
-    /**
-     * @var TimesheetingUgroupRetriever
-     */
-    private $timesheeting_ugroup_retriever;
-
-    /**
-     * @var ProjectHistoryDao
-     */
-    private $project_history_dao;
-
-    /**
-     * @var TimeController
-     */
-    private $controller;
-
-    /**
-     * @var PermissionsRetriever
-     */
-    private $permissions_retriever;
-
-    /**
-     * @var TimeUpdater
-     */
-    private $time_updater;
-
-    /**
      * @var Tracker_ArtifactFactory
      */
     private $artifact_factory;
 
+    /**
+     * @var AdminController
+     */
+    private $admin_controller;
+
+    /**
+     * @var TimeController
+     */
+    private $time_controller;
+
     public function __construct(
         TrackerFactory $tracker_factory,
-        TrackerManager $tracker_manager,
         Tracker_ArtifactFactory $artifact_factory,
-        TimesheetingEnabler $timesheeting_enabler,
-        User_ForgeUserGroupFactory $user_forge_user_group_factory,
-        PermissionsNormalizer $permissions_normalizer,
-        TimesheetingUgroupSaver $timesheeting_ugroup_saver,
-        TimesheetingUgroupRetriever $timesheeting_ugroup_retriever,
-        ProjectHistoryDao $project_history_dao,
-        PermissionsRetriever $permissions_retriever,
-        TimeUpdater $time_updater
+        AdminController $admin_controller,
+        TimeController $time_controller
     ) {
-        $this->tracker_factory               = $tracker_factory;
-        $this->tracker_manager               = $tracker_manager;
-        $this->timesheeting_enabler          = $timesheeting_enabler;
-        $this->user_forge_user_group_factory = $user_forge_user_group_factory;
-        $this->permissions_normalizer        = $permissions_normalizer;
-        $this->timesheeting_ugroup_saver     = $timesheeting_ugroup_saver;
-        $this->timesheeting_ugroup_retriever = $timesheeting_ugroup_retriever;
-        $this->project_history_dao           = $project_history_dao;
-        $this->permissions_retriever         = $permissions_retriever;
-        $this->time_updater                  = $time_updater;
-        $this->artifact_factory              = $artifact_factory;
+        $this->tracker_factory  = $tracker_factory;
+        $this->artifact_factory = $artifact_factory;
+        $this->admin_controller = $admin_controller;
+        $this->time_controller  = $time_controller;
     }
 
     public function route(Codendi_Request $request)
@@ -135,23 +71,21 @@ class Router
 
         switch ($action) {
             case "admin-timesheeting":
-                $tracker          = $this->getTrackerFromRequest($request);
-                $admin_controller = $this->getAdminController($user, $tracker);
+                $tracker = $this->getTrackerFromRequest($request, $user);
 
-                $admin_controller->displayAdminForm($tracker);
+                $this->admin_controller->displayAdminForm($tracker);
 
                 break;
             case "edit-timesheeting":
-                $tracker          = $this->getTrackerFromRequest($request);
-                $admin_controller = $this->getAdminController($user, $tracker);
+                $tracker = $this->getTrackerFromRequest($request, $user);
 
-                $admin_controller->editTimesheetingAdminSettings($tracker, $request);
+                $this->admin_controller->editTimesheetingAdminSettings($tracker, $request);
 
                 $this->redirectToTimesheetingAdminPage($tracker);
                 break;
             case "add-time":
-                $artifact = $this->getArtifactFromRequest($request);
-                $this->getTimeController()->addTimeForUser($request, $user, $artifact);
+                $artifact = $this->getArtifactFromRequest($request, $user);
+                $this->time_controller->addTimeForUser($request, $user, $artifact);
 
                 break;
             default:
@@ -164,7 +98,7 @@ class Router
     /**
      * @return Tracker
      */
-    private function getTrackerFromRequest(Codendi_Request $request)
+    private function getTrackerFromRequest(Codendi_Request $request, PFUser $user)
     {
         $tracker_id = $request->get('tracker');
         $tracker    = $this->tracker_factory->getTrackerById($tracker_id);
@@ -173,53 +107,26 @@ class Router
             $this->redirectToTuleapHomepage();
         }
 
+        if (! $tracker->userIsAdmin($user)) {
+            $this->redirectToTrackerHomepage($tracker_id);
+        }
+
         return $tracker;
     }
 
     /**
      * @return Tracker_Artifact
      */
-    private function getArtifactFromRequest(Codendi_Request $request)
+    private function getArtifactFromRequest(Codendi_Request $request, PFUser $user)
     {
         $artifact_id = $request->get('artifact');
         $artifact    = $this->artifact_factory->getArtifactById($artifact_id);
 
-        if (! $artifact) {
+        if (! $artifact || ! $artifact->userCanView($user)) {
             $this->redirectToTuleapHomepage();
         }
 
         return $artifact;
-    }
-
-    /**
-     * @return AdminController
-     */
-    private function getAdminController(PFUser $user, Tracker $tracker)
-    {
-        if (! $tracker->userIsAdmin($user)) {
-            $this->redirectToTrackerHomepage($tracker->getId());
-        }
-
-        return new AdminController(
-            $this->tracker_manager,
-            $this->timesheeting_enabler,
-            $this->user_forge_user_group_factory,
-            $this->permissions_normalizer,
-            $this->timesheeting_ugroup_saver,
-            $this->timesheeting_ugroup_retriever,
-            $this->project_history_dao
-        );
-    }
-
-    /**
-     * @return TimeController
-     */
-    private function getTimeController()
-    {
-        return new TimeController(
-            $this->permissions_retriever,
-            $this->time_updater
-        );
     }
 
     private function redirectToTrackerHomepage($tracker_id)
