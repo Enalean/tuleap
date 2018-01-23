@@ -50,6 +50,10 @@
             color: $main;
         }
     }
+
+    #details .table > tbody > tr:hover > td.agiledashboard-milestone-content-items-list-is-closed {
+        background: transparentize($main, .93);
+    }
 }
 
 body {
