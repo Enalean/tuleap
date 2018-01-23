@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,69 +19,77 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Delight\Cookie\Cookie;
+
 /**
  * CookieManager
  *
  * Manages cookies
  */
-class CookieManager {
+class CookieManager
+{
+    public function setCookie($name, $value, $expire = 0)
+    {
+        $cookie = $this->buildCookie($name);
+        $cookie->setValue($value);
+        $cookie->setExpiryTime($expire);
 
-    public function setHTTPOnlyCookie($name, $value, $expire = 0) {
-        $secure    = (bool) ForgeConfig::get('sys_https_host');
-        $http_only = true;
-
-        return $this->phpsetcookie(
-            $this->getInternalCookieName($name),
-            $value,
-            $expire,
-            '/',
-            $this->getCookieHost(),
-            $secure,
-            $http_only
-        );
+        return $cookie->save();
     }
 
-    public function setGlobalCookie($name, $value, $expire = 0) {
-        $secure    = (bool) ForgeConfig::get('sys_https_host');
-        $http_only = false;
+    /**
+     * @return Cookie
+     */
+    private function buildCookie($name)
+    {
+        $cookie = new Cookie($this->getInternalCookieName($name));
+        $cookie->setHttpOnly(true);
+        $cookie->setSecureOnly($this->canCookieBeSecure());
+        $cookie->setDomain($this->getCookieDomain());
+        $cookie->setSameSiteRestriction(Cookie::SAME_SITE_RESTRICTION_LAX);
 
-        return $this->phpsetcookie(
-            $this->getInternalCookieName($name),
-            $value,
-            $expire,
-            '/',
-            $this->getCookieHost(),
-            $secure,
-            $http_only
-        );
+        return $cookie;
     }
 
     public function configureSessionCookie()
     {
         $lifetime  = 0;
         $path      = '/';
-        $domain    = $this->getCookieHost();
-        $secure    = (bool) ForgeConfig::get('sys_https_host');
+        $domain    = $this->getCookieDomain();
+        $secure    = $this->canCookieBeSecure();
         $http_only = true;
         session_set_cookie_params($lifetime, $path, $domain, $secure, $http_only);
     }
 
-    private function getCookieHost() {
-        // Make sure there isn't a port number in the default domain name
-        // or the setcookie for the entire domain won't work
-        if (isset($GLOBALS['sys_cookie_domain'])) {
-            $host = $this->getHostNameWithoutPort($GLOBALS['sys_cookie_domain']);
-        } else {
-            $host = $this->getHostNameWithoutPort($GLOBALS['sys_default_domain']);
+    /**
+     * @return string|null
+     */
+    private function getCookieDomain()
+    {
+        $sys_cookie_domain = ForgeConfig::get('sys_cookie_domain');
+        if (empty($sys_cookie_domain)) {
+            return null;
         }
 
-        if ($this->isIpAdress($host) || $this->isHostWithoutTLD($host)) {
-            $cookie_host = '';
-        } else {
-            $cookie_host = ".".$host;
+        $host = ForgeConfig::get('sys_default_domain');
+        if ($this->canCookieBeSecure()) {
+            $host = ForgeConfig::get('sys_https_host');
         }
 
-        return $cookie_host;
+        $sys_cookie_domain = $this->getHostNameWithoutPort($sys_cookie_domain);
+        if ($this->getHostNameWithoutPort($host) === $sys_cookie_domain) {
+            return null;
+        }
+
+        return $sys_cookie_domain;
+    }
+
+    /**
+     * @return bool
+     */
+    private function canCookieBeSecure()
+    {
+        return (bool) ForgeConfig::get('sys_https_host');
     }
 
     private function getHostNameWithoutPort($domain) {
@@ -92,35 +100,38 @@ class CookieManager {
         return $domain;
     }
 
-    private function isIpAdress($host) {
-        return preg_match('/[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+/', $host);
+    public function getCookie($name)
+    {
+        return Cookie::get($this->getInternalCookieName($name), '');
     }
 
-    private function isHostWithoutTLD($host) {
-        return strpos($host, ".") === false;
+    /**
+     * @return bool
+     */
+    public function isCookie($name)
+    {
+        return Cookie::exists($this->getInternalCookieName($name));
     }
 
-    protected function phpsetcookie($name, $value, $expire, $path, $domain, $secure, $httponly) {
-        return setcookie($name, $value, $expire, $path, $domain, $secure, $httponly);
+    public function removeCookie($name)
+    {
+        $cookie = $this->buildCookie($name);
+        $cookie->delete();
     }
 
-    public function getCookie($name) {
-        if($this->isCookie($name)) {
-            return $_COOKIE[$this->getInternalCookieName($name)];
-        } else {
-            return '';
+    /**
+     * @return string
+     */
+    private function getInternalCookieName($name)
+    {
+        $cookie_prefix = ForgeConfig::get('sys_cookie_prefix');
+        $cookie_name   = "${cookie_prefix}_${name}";
+        if ($this->getCookieDomain() === null) {
+            return Cookie::PREFIX_HOST . $cookie_name;
         }
-    }
-
-    public function isCookie($name) {
-        return isset($_COOKIE[$this->getInternalCookieName($name)]);
-    }
-
-    public function removeCookie($name) {
-        $this->setHTTPOnlyCookie($name, '');
-    }
-
-    private function getInternalCookieName($name) {
-        return $GLOBALS['sys_cookie_prefix'] .'_'. $name;
+        if ($this->canCookieBeSecure()) {
+            return Cookie::PREFIX_SECURE . $cookie_name;
+        }
+        return $cookie_name;
     }
 }

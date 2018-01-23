@@ -43,7 +43,7 @@ class MockEM4UserManager extends BaseMockEventManager {
 
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -216,7 +216,7 @@ class UserManagerTest extends TuleapTestCase
         $user123->setReturnValue('getStatus', 'A');
         $user123->setReturnValue('isAnonymous', false);
 
-        $cm->expectOnce('setHTTPOnlyCookie', array('session_hash', $hash, 0));
+        $cm->expectOnce('setCookie', array('session_hash', $hash, 0));
 
         stub($session_manager)->createSession()->returns($hash);
 
@@ -255,8 +255,7 @@ class UserManagerTest extends TuleapTestCase
         $userAnonymous->setReturnValue('getId', 0);
         $userAnonymous->setReturnValue('isAnonymous', true);
 
-        $cm->expectNever('setHTTPOnlyCookie');
-        $cm->expectNever('setGlobalCookie');
+        $cm->expectNever('setCookie');
         $um->setReturnReference('getCookieManager', $cm);
 
         $dao->setReturnReference('searchByUserName', $dar, array('user_123'));
