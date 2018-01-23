@@ -17,31 +17,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.agiledashboard-milestone-content {
+.agiledashboard-milestone-details {
     display: flex;
 }
 
-.agiledashboard-milestone-content-items {
+.agiledashboard-milestone-details-items {
     flex: 1 1 auto;
 }
 
-.agiledashboard-milestone-content-graphs {
+.agiledashboard-milestone-details-graphs {
     flex: 0 0 640px;
     margin: 0 0 0 20px;
 }
 
 @media screen and (max-width: 1200px) {
-    .agiledashboard-milestone-content {
+    .agiledashboard-milestone-details {
         flex-direction: column;
     }
 
-    .agiledashboard-milestone-content-graphs {
+    .agiledashboard-milestone-details-graphs {
         margin: 20px 0 0;
     }
 }
 
 // scss-lint:disable QualifyingElement
-#details .table > tbody > tr > td.agiledashboard-milestone-content-items-list-is-closed {
+#details .table > tbody > tr > td.agiledashboard-milestone-details-items-list-is-closed {
     background-color: #f8f8f8;
     color: #999999;
 }
