@@ -40,7 +40,8 @@
     }
 }
 
-#blcontent .table > tbody > tr > td.agiledashboard-milestone-content-items-list-is-closed {
+// scss-lint:disable QualifyingElement
+#details .table > tbody > tr > td.agiledashboard-milestone-content-items-list-is-closed {
     background-color: #f8f8f8;
     color: #999999;
 }
