@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,6 +24,7 @@ require_once 'constants.php';
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Glyph\GlyphLocation;
 use Tuleap\Glyph\GlyphLocationsCollector;
+use Tuleap\Label\CanProjectUseLabels;
 use Tuleap\Label\CollectionOfLabelableDao;
 use Tuleap\Git\GitRepositoryDeletionEvent;
 use Tuleap\Label\LabeledItemCollection;
@@ -77,6 +78,7 @@ class pullrequestPlugin extends Plugin
         $this->addHook(CollectionOfLabelableDao::NAME);
         $this->addHook(LabeledItemCollection::NAME);
         $this->addHook(GlyphLocationsCollector::NAME);
+        $this->addHook(CanProjectUseLabels::NAME);
 
         if (defined('GIT_BASE_URL')) {
             $this->addHook('cssfile');
@@ -549,5 +551,12 @@ class pullrequestPlugin extends Plugin
         );
 
         $labeled_item_collector->collect($event);
+    }
+
+    public function canProjectUseLabels(CanProjectUseLabels $event)
+    {
+        if ($event->getProject()->usesService(GitPlugin::SERVICE_SHORTNAME)) {
+            $event->projectCanUseLabels();
+        }
     }
 }

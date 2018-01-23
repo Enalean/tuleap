@@ -419,6 +419,9 @@ msgstr "Annonces"
 msgid "No children projects"
 msgstr "Aucun projet enfant"
 
+msgid "No items can use labels in this project."
+msgstr "Aucun éléments dans ce projet ne peux utiliser les labels."
+
 msgid "No labels defined in this project"
 msgstr "Il n'y a pas de label défini dans ce projet"
 

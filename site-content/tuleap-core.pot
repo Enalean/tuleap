@@ -391,6 +391,9 @@ msgstr ""
 msgid "No children projects"
 msgstr ""
 
+msgid "No items can use labels in this project."
+msgstr ""
+
 msgid "No labels defined in this project"
 msgstr ""
 
