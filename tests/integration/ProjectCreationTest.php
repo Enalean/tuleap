@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,6 +24,7 @@ require_once 'exit.php';
 require_once 'html.php';
 require_once 'user.php';
 
+use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
@@ -118,6 +119,7 @@ class ProjectCreationTest extends TuleapDbTestCase {
             ),
             $duplicator,
             new ServiceCreator(),
+            new LabelDao(),
             $force_activation
         );
 

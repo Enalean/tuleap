@@ -1,7 +1,7 @@
 #!/usr/share/codendi/src/utils/php-launcher.sh
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,6 +23,7 @@ require_once 'pre.php';
 
 use Tuleap\FRS\UploadedLinksDao;
 use Tuleap\FRS\UploadedLinksUpdater;
+use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\XML\Import;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Project\UgroupDuplicator;
@@ -263,6 +264,7 @@ try {
         $frs_permissions_creator,
         $duplicator,
         new ServiceCreator(),
+        new LabelDao(),
         $force_activation
     );
 

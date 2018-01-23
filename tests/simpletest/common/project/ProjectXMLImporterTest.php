@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -59,7 +59,8 @@ class ProjectXMLImporterTest extends TuleapTestCase {
             false,
             $frs_permissions_creator,
             mock('Tuleap\Dashboard\Project\ProjectDashboardDuplicator'),
-            mock('Tuleap\Service\ServiceCreator')
+            mock('Tuleap\Service\ServiceCreator'),
+            mock(Tuleap\Project\Label\LabelDao::class)
         );
 
         $this->xml_importer = new ProjectXMLImporter(

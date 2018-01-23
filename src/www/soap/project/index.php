@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -36,6 +36,7 @@ use Tuleap\Dashboard\Project\ProjectDashboardDao;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
 use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
+use Tuleap\Project\Label\LabelDao;
 use Tuleap\Service\ServiceCreator;
 use Tuleap\Widget\WidgetFactory;
 
@@ -104,6 +105,7 @@ if ($request->exist('wsdl')) {
         ),
         $duplicator,
         new ServiceCreator(),
+        new LabelDao(),
         $force_activation
     );
 
