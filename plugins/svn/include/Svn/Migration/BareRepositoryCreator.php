@@ -59,6 +59,10 @@ class BareRepositoryCreator
      * @var RepositoryCopier
      */
     private $repository_copier;
+    /**
+     * @var SettingsRetriever
+     */
+    private $settings_retriever;
 
     public function __construct(
         RepositoryCreator $repository_creator,
@@ -67,7 +71,8 @@ class BareRepositoryCreator
         UserManager $user_manager,
         \BackendSVN $backend_svn,
         \BackendSystem $backend_system,
-        RepositoryCopier $repository_copier
+        RepositoryCopier $repository_copier,
+        SettingsRetriever $settings_retriever
     ) {
         $this->repository_creator          = $repository_creator;
         $this->access_file_history_creator = $access_file_history_creator;
@@ -76,15 +81,20 @@ class BareRepositoryCreator
         $this->backend_svn                 = $backend_svn;
         $this->backend_system              = $backend_system;
         $this->repository_copier           = $repository_copier;
+        $this->settings_retriever          = $settings_retriever;
     }
 
     public function create(Repository $repository, PFUser $user)
     {
         try {
+            $settings = $this->settings_retriever->getSettingsFromCoreRepository($repository);
+
             $copy_from_core = true;
-            $system_event   = $this->repository_creator->createWithoutUserAdminCheck(
+            $system_event   = $this->repository_creator->createWithSettings(
                 $repository,
                 $user,
+                $settings,
+                array(),
                 $copy_from_core
             );
         } catch (RepositoryNameIsInvalidException $e) {

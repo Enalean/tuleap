@@ -35,6 +35,7 @@ use Tuleap\Svn\Admin\MailNotificationManager;
 use Tuleap\Svn\Dao;
 use Tuleap\Svn\Migration\BareRepositoryCreator;
 use Tuleap\Svn\Migration\RepositoryCopier;
+use Tuleap\Svn\Migration\SettingsRetriever;
 use Tuleap\Svn\Migration\SvnMigratorException;
 use Tuleap\Svn\Notifications\NotificationsEmailsBuilder;
 use Tuleap\Svn\Notifications\UgroupsToNotifyDao;
@@ -164,7 +165,8 @@ $svn_creator = new BareRepositoryCreator(
     $user_manager,
     Backend::instance(Backend::SVN),
     Backend::instance(Backend::SYSTEM),
-    new RepositoryCopier($system_command)
+    new RepositoryCopier($system_command),
+    new SettingsRetriever(new SVN_Immutable_Tags_DAO(), new SvnNotificationDao())
 );
 
 $permission_manager = new SvnPermissionManager(
