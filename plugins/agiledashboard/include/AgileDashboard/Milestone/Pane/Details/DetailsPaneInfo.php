@@ -18,14 +18,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_Milestone_Pane_Content_ContentPaneInfo extends AgileDashboard_PaneInfo
+namespace Tuleap\AgileDashboard\Milestone\Pane\Details;
+
+use AgileDashboard_PaneInfo;
+use Planning_Milestone;
+
+class DetailsPaneInfo extends AgileDashboard_PaneInfo
 {
     const IDENTIFIER = 'details';
 
     /** @var string */
     private $theme_path;
 
-    public function __construct(Planning_Milestone $milestone, $theme_path) {
+    public function __construct(Planning_Milestone $milestone, $theme_path)
+    {
         parent::__construct($milestone);
         $this->theme_path = $theme_path;
     }
@@ -33,28 +39,32 @@ class AgileDashboard_Milestone_Pane_Content_ContentPaneInfo extends AgileDashboa
     /**
      * @return string eg: 'cardwall'
      */
-    public function getIdentifier() {
+    public function getIdentifier()
+    {
         return self::IDENTIFIER;
     }
 
     /**
      * @return string eg: 'Card Wall'
      */
-    public function getTitle() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'content_pane_title');
+    public function getTitle()
+    {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'details_pane_title');
     }
 
     /**
      * @see string eg: '/themes/common/images/ic/duck.png'
      */
-    protected function getIcon() {
-        return $this->theme_path.'/images/content-list.png';
+    protected function getIcon()
+    {
+        return $this->theme_path . '/images/content-list.png';
     }
 
     /**
      * @return string eg: 'Access to cardwall'
      */
-    protected function getIconTitle() {
+    protected function getIconTitle()
+    {
         return $this->getTitle();
     }
 }

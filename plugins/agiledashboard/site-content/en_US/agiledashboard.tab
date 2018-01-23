@@ -39,7 +39,7 @@ plugin_agiledashboard	edit_item	Edit
 plugin_agiledashboard	add_subitem	Add new $1
 plugin_agiledashboard	backlog_add	Add
 plugin_agiledashboard	planning_pane_title	Backlog/Planning
-plugin_agiledashboard	content_pane_title	Details
+plugin_agiledashboard	details_pane_title	Details
 plugin_agiledashboard	planning	Planning
 plugin_agiledashboard	cardwall	Cardwall
 plugin_agiledashboard	open	open
@@ -72,9 +72,6 @@ plugin_agiledashboard	home_user_helper_others	All milestones that have a status 
 plugin_agiledashboard	capacity	Capacity:
 plugin_agiledashboard	available	Available $1
 
-plugin_agiledashboard	content_head_title	Item
-plugin_agiledashboard	content_head_parent	Parent item
-plugin_agiledashboard	content_head_type	Type
 plugin_agiledashboard	top_planning_link	Top Backlog Planning
 
 plugin_agiledashboard	display_five_more	Display $1 more
@@ -94,11 +91,8 @@ plugin_agiledashboard	start_kanban	Start Kanban
 plugin_agiledashboard	start_scrum	Start Scrum
 plugin_agiledashboard	activate_scrum_v2	Start Scrum V2
 
-plugin_agiledashboard_contentpane	lab	This is a lab feature that is subjected to change in a near future. Please get in touch with us to <a href="mailto:tuleap-devel@tuleap.net">provide any feedback</a> about this work in progress, thanks!
-plugin_agiledashboard_contentpane	closed_items_nothing_yet	Nothing closed yet
-plugin_agiledashboard_contentpane	open_items_title	Open $1
-plugin_agiledashboard_contentpane	inconsistent_items_intro	Some items are not linked to this milestone.
-plugin_agiledashboard_contentpane	solve_inconsistencies	Import them in the backlog
+plugin_agiledashboard_detailspane	inconsistent_items_intro	Some items are not linked to this milestone.
+plugin_agiledashboard_detailspane	solve_inconsistencies	Import them in the backlog
 
 plugin_agiledashboard_milestone_planning	help_intro	This section allows to do $1 planning:
 plugin_agiledashboard_milestone_planning	help_left	On the left side, you have the $2 backlog with all open elements, not already scheduled for a $1.

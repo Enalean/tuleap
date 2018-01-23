@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 – 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 – 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
+use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPane;
 
 /**
  * I build panes for a Planning_Milestone
@@ -114,13 +117,13 @@ class Planning_MilestonePaneFactory {
 
     /** @return string */
     public function getDefaultPaneIdentifier() {
-        return AgileDashboard_Milestone_Pane_Content_ContentPaneInfo::IDENTIFIER;
+        return DetailsPaneInfo::IDENTIFIER;
     }
 
     private function buildListOfPaneInfo(Planning_Milestone $milestone) {
         $this->active_pane[$milestone->getArtifactId()] = null;
 
-        $this->list_of_pane_info[$milestone->getArtifactId()][] = $this->getContentPaneInfo($milestone);
+        $this->list_of_pane_info[$milestone->getArtifactId()][] = $this->getDetailsPaneInfo($milestone);
         $this->list_of_pane_info[$milestone->getArtifactId()][] = $this->getPlanningV2PaneInfo($milestone);
 
         $this->buildAdditionnalPanes($milestone);
@@ -135,27 +138,27 @@ class Planning_MilestonePaneFactory {
         $this->available_milestones[$milestone->getArtifactId()] = $this->getAvailableMilestones($milestone);
     }
 
-    private function getContentPaneInfo(Planning_Milestone $milestone) {
-        $pane_info = $this->pane_info_factory->getContentPaneInfo($milestone);
-        if ($this->request->get('pane') == AgileDashboard_Milestone_Pane_Content_ContentPaneInfo::IDENTIFIER) {
+    private function getDetailsPaneInfo(Planning_Milestone $milestone) {
+        $pane_info = $this->pane_info_factory->getDetailsPaneInfo($milestone);
+        if ($this->request->get('pane') == DetailsPaneInfo::IDENTIFIER) {
             $pane_info->setActive(true);
-            $this->active_pane[$milestone->getArtifactId()] = $this->getContentPane($pane_info, $milestone);
+            $this->active_pane[$milestone->getArtifactId()] = $this->getDetailsPane($pane_info, $milestone);
         }
 
         return $pane_info;
     }
 
-    private function getContentPane(AgileDashboard_Milestone_Pane_Content_ContentPaneInfo $pane_info, Planning_Milestone $milestone) {
-        return new AgileDashboard_Milestone_Pane_Content_ContentPane(
+    private function getDetailsPane(DetailsPaneInfo $pane_info, Planning_Milestone $milestone) {
+        return new DetailsPane(
             $pane_info,
-            $this->getContentPresenterBuilder()->getMilestoneContentPresenter($this->request->getCurrentUser(), $milestone)
+            $this->getDetailsPresenterBuilder()->getMilestoneDetailsPresenter($this->request->getCurrentUser(), $milestone)
         );
     }
 
     private function buildDefaultPane(Planning_Milestone $milestone) {
         if (! isset($this->list_of_default_pane_info[$milestone->getArtifactId()])) {
-            $pane_info                                                    = $this->pane_info_factory->getContentPaneInfo($milestone);
-            $this->active_pane[$milestone->getArtifactId()]               = $this->getContentPane($pane_info, $milestone);
+            $pane_info                                                    = $this->pane_info_factory->getDetailsPaneInfo($milestone);
+            $this->active_pane[$milestone->getArtifactId()]               = $this->getDetailsPane($pane_info, $milestone);
             $this->list_of_default_pane_info[$milestone->getArtifactId()] = $pane_info;
         } else {
             $pane_info = $this->list_of_default_pane_info[$milestone->getArtifactId()];
@@ -267,8 +270,8 @@ class Planning_MilestonePaneFactory {
         return $this->milestone_factory->getAllBareMilestones($this->request->getCurrentUser(), $milestone->getPlanning());
     }
 
-    private function getContentPresenterBuilder() {
-        return $this->pane_presenter_builder_factory->getContentPresenterBuilder();
+    private function getDetailsPresenterBuilder() {
+        return $this->pane_presenter_builder_factory->getDetailsPresenterBuilder();
     }
 }
 

@@ -22,10 +22,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\AgileDashboard\FormElement\BurnupFieldRetriever;
-use Tuleap\AgileDashboard\Milestone\Pane\Conent\ContentChartPresenter;
+namespace Tuleap\AgileDashboard\Milestone\Pane\Details;
 
-class AgileDashboard_Milestone_Pane_Content_ContentPresenterBuilder
+use AgileDashboard_Milestone_Backlog_BacklogFactory;
+use AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
+use PFUser;
+use Planning_Milestone;
+use Planning_MilestoneRedirectParameter;
+use Tuleap\AgileDashboard\FormElement\BurnupFieldRetriever;
+
+class DetailsPresenterBuilder
 {
     /** @var AgileDashboard_Milestone_Backlog_BacklogFactory */
     private $backlog_factory;
@@ -48,19 +54,24 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenterBuilder
         $this->field_retriever    = $field_retriever;
     }
 
-    public function getMilestoneContentPresenter(PFUser $user, Planning_Milestone $milestone)
+    public function getMilestoneDetailsPresenter(PFUser $user, Planning_Milestone $milestone)
     {
         $redirect_parameter = new Planning_MilestoneRedirectParameter();
         $backlog            = $this->backlog_factory->getBacklog($milestone);
-        $redirect_to_self   = $redirect_parameter->getPlanningRedirectToSelf($milestone, AgileDashboard_Milestone_Pane_Content_ContentPaneInfo::IDENTIFIER);
+        $redirect_to_self   = $redirect_parameter->getPlanningRedirectToSelf($milestone, DetailsPaneInfo::IDENTIFIER);
 
         $descendant_trackers = $backlog->getDescendantTrackers();
 
         $chart_presenter = $this->getChartPresenter($milestone, $user);
 
-        return new AgileDashboard_Milestone_Pane_Content_ContentPresenter(
+        return new DetailsPresenter(
             $milestone,
-            $this->collection_factory->getOpenClosedAndInconsistentCollection($user, $milestone, $backlog, $redirect_to_self),
+            $this->collection_factory->getOpenClosedAndInconsistentCollection(
+                $user,
+                $milestone,
+                $backlog,
+                $redirect_to_self
+            ),
             $this->collection_factory->getInconsistentCollection($user, $milestone, $backlog, $redirect_to_self),
             $descendant_trackers,
             $this->getSolveInconsistenciesUrl($milestone, $redirect_to_self),
@@ -74,10 +85,10 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenterBuilder
         $artifact = $milestone->getArtifact();
 
 
-        $burndown_field = $artifact->getABurndownField($user);
-        $has_burndown   = false;
-        $burndown_label = null;
-        $burndown_url   = null;
+        $burndown_field   = $artifact->getABurndownField($user);
+        $has_burndown     = false;
+        $burndown_label   = null;
+        $burndown_url     = null;
         if ($burndown_field) {
             $has_burndown   = true;
             $burndown_label = $burndown_field->getLabel();
@@ -94,7 +105,7 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenterBuilder
             $burnup_presenter = $burnup_field->buildPresenter($milestone->getArtifact(), false, $user);
         }
 
-        return new ContentChartPresenter(
+        return new DetailsChartPresenter(
             $has_burndown,
             $burndown_label,
             $burndown_url,
@@ -106,10 +117,10 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenterBuilder
 
     private function getSolveInconsistenciesUrl(Planning_Milestone $milestone, $redirect_to_self)
     {
-        return  AGILEDASHBOARD_BASE_URL.
-            "/?group_id=".$milestone->getGroupId().
-            "&aid=".$milestone->getArtifactId().
-            "&action=solve-inconsistencies".
-            "&".$redirect_to_self;
+        return AGILEDASHBOARD_BASE_URL .
+            "/?group_id=" . $milestone->getGroupId() .
+            "&aid=" . $milestone->getArtifactId() .
+            "&action=solve-inconsistencies" .
+            "&" . $redirect_to_self;
     }
 }
