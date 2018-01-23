@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -48,11 +48,6 @@ class AdminController
     private $enabler;
 
     /**
-     * @var CSRFSynchronizerToken
-     */
-    private $csrf;
-
-    /**
      * @var User_ForgeUserGroupFactory
      */
     private $user_group_factory;
@@ -80,7 +75,6 @@ class AdminController
     public function __construct(
         TrackerManager $tracker_manager,
         TimesheetingEnabler $enabler,
-        CSRFSynchronizerToken $csrf,
         User_ForgeUserGroupFactory $user_group_factory,
         PermissionsNormalizer $permissions_normalizer,
         TimesheetingUgroupSaver $timesheeting_ugroup_saver,
@@ -89,7 +83,6 @@ class AdminController
     ) {
         $this->tracker_manager               = $tracker_manager;
         $this->enabler                       = $enabler;
-        $this->csrf                          = $csrf;
         $this->user_group_factory            = $user_group_factory;
         $this->permissions_normalizer        = $permissions_normalizer;
         $this->timesheeting_ugroup_saver     = $timesheeting_ugroup_saver;
@@ -97,13 +90,20 @@ class AdminController
         $this->project_history_dao           = $project_history_dao;
     }
 
+    /**
+     * @return CSRFSynchronizerToken
+     */
+    private function getCSRFSynchronizerToken(Tracker $tracker)
+    {
+        return new CSRFSynchronizerToken($tracker->getAdministrationUrl());
+    }
+
     public function displayAdminForm(Tracker $tracker)
     {
-
         $renderer  = TemplateRendererFactory::build()->getRenderer(TIMESHEETING_TEMPLATE_DIR);
         $presenter = new AdminPresenter(
             $tracker,
-            $this->csrf,
+            $this->getCSRFSynchronizerToken($tracker),
             $this->enabler->isTimesheetingEnabledForTracker($tracker),
             $this->getReadersUGroupPresenters($tracker),
             $this->getWritersUGroupPresenters($tracker)
@@ -158,7 +158,8 @@ class AdminController
 
     public function editTimesheetingAdminSettings(Tracker $tracker, Codendi_Request $request)
     {
-        $this->csrf->check();
+        $csrf = $this->getCSRFSynchronizerToken($tracker);
+        $csrf->check();
 
         if ($request->get('enable_timesheeting') && ! $this->enabler->isTimesheetingEnabledForTracker($tracker)) {
             $this->enableTimesheeting($tracker);

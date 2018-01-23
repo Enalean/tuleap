@@ -203,7 +203,6 @@ class Router
         return new AdminController(
             $this->tracker_manager,
             $this->timesheeting_enabler,
-            new CSRFSynchronizerToken($tracker->getAdministrationUrl()),
             $this->user_forge_user_group_factory,
             $this->permissions_normalizer,
             $this->timesheeting_ugroup_saver,
