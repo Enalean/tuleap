@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,6 +27,7 @@ use SimpleXMLElement;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Svn\AccessControl\AccessFileHistoryCreator;
 use Tuleap\Svn\Admin\MailNotificationManager;
+use Tuleap\Svn\Migration\RepositoryCopier;
 use Tuleap\Svn\Notifications\NotificationsEmailsBuilder;
 use Tuleap\Svn\Repository\RepositoryCreator;
 use Tuleap\Svn\Repository\RepositoryManager;
@@ -46,7 +47,8 @@ class XMLImporter {
         AccessFileHistoryCreator $access_file_history_creator,
         RepositoryManager $repository_manager,
         \UserManager $user_manager,
-        NotificationsEmailsBuilder $notifications_emails_builder
+        NotificationsEmailsBuilder $notifications_emails_builder,
+        RepositoryCopier $repository_copier
     ) {
         $this->repositories_data = array();
 
@@ -67,7 +69,8 @@ class XMLImporter {
                 $access_file_history_creator,
                 $repository_manager,
                 $user_manager,
-                $notifications_emails_builder
+                $notifications_emails_builder,
+                $repository_copier
             );
         }
     }

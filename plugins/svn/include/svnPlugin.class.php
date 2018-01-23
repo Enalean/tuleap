@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,7 +25,6 @@ use Tuleap\CVS\DiskUsage\FullHistoryDao;
 use Tuleap\CVS\DiskUsage\Retriever as CVSRetriever;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
 use Tuleap\project\Admin\Navigation\NavigationDropdownQuickLinksCollector;
-use Tuleap\project\Admin\Navigation\NavigationPermissionsDropdownPresenterBuilder;
 use Tuleap\project\Event\ProjectRegistrationActivateService;
 use Tuleap\REST\Event\ProjectGetSvn;
 use Tuleap\REST\Event\ProjectOptionsSvn;
@@ -61,6 +60,7 @@ use Tuleap\Svn\Explorer\ExplorerController;
 use Tuleap\Svn\Explorer\RepositoryBuilder;
 use Tuleap\Svn\Explorer\RepositoryDisplayController;
 use Tuleap\Svn\Logs\QueryBuilder;
+use Tuleap\Svn\Migration\RepositoryCopier;
 use Tuleap\SVN\Notifications\CollectionOfUgroupToBeNotifiedPresenterBuilder;
 use Tuleap\Svn\Notifications\CollectionOfUserToBeNotifiedPresenterBuilder;
 use Tuleap\Svn\Notifications\NotificationListBuilder;
@@ -296,7 +296,8 @@ class SvnPlugin extends Plugin
                     $this->getRepositoryManager(),
                     $this->getUserManager(),
                     $this->getBackendSVN(),
-                    $this->getBackendSystem()
+                    $this->getBackendSystem(),
+                    $this->getCopier()
                 );
                 break;
             case 'Tuleap\\Svn\\EventRepository\\SystemEvent_SVN_DELETE_REPOSITORY':
@@ -532,7 +533,8 @@ class SvnPlugin extends Plugin
             $this->getAccessFileHistoryCreator(),
             $this->getRepositoryManager(),
             $user_manager,
-            $this->getNotificationEmailsBuilder()
+            $this->getNotificationEmailsBuilder(),
+            $this->getCopier()
         );
         $svn->import(
             $params['configuration'],
@@ -1074,5 +1076,21 @@ class SvnPlugin extends Plugin
                 )
             )
         );
+    }
+
+    /**
+     * @return System_Command
+     */
+    private function getSystemCommand()
+    {
+        return new System_Command();
+    }
+
+    /**
+     * @return RepositoryCopier
+     */
+    private function getCopier()
+    {
+        return new RepositoryCopier($this->getSystemCommand());
     }
 }
