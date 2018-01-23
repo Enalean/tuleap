@@ -172,4 +172,9 @@ class AgileDashboard_Milestone_Backlog_BacklogItem implements AgileDashboard_Mil
     {
         return $this->normalized_status_label;
     }
+
+    public function isOpen()
+    {
+        return $this->artifact->isOpen();
+    }
 }
