@@ -104,7 +104,6 @@ function createBurnupChart({
         drawCurve('total');
         drawCurve('team');
         setInteraction();
-        highlightLastColumn();
     }
 
     function drawDataColumns() {
@@ -178,18 +177,6 @@ function createBurnupChart({
                     ceaseHighlight();
                 });
             });
-    }
-
-    function highlightLastColumn() {
-        const columns = selectAll('.chart-datum-column').nodes();
-
-        if (! columns.length) {
-            return;
-        }
-
-        const last_column = select(columns.pop());
-
-        highlightColumn(last_column);
     }
 
     function highlightColumn(target_column) {
