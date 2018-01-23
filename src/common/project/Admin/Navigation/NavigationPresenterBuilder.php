@@ -24,6 +24,7 @@ use EventManager;
 use HTTPRequest;
 use Project;
 use Service;
+use Tuleap\Label\CanProjectUseLabels;
 
 class NavigationPresenterBuilder
 {
@@ -135,12 +136,14 @@ class NavigationPresenterBuilder
             'services',
             $current_pane_shortname
         );
-        $entries['labels']                   = new NavigationItemPresenter(
-            _('labels'),
-            '/project/admin/labels.php?' . http_build_query(array('group_id' => $project_id)),
-            'labels',
-            $current_pane_shortname
-        );
+        if ($this->canLabelsBeUsedByProject($project)) {
+            $entries['labels'] = new NavigationItemPresenter(
+                _('labels'),
+                '/project/admin/labels.php?' . http_build_query(array('group_id' => $project_id)),
+                'labels',
+                $current_pane_shortname
+            );
+        }
         $entries['references']               = new NavigationItemPresenter(
             _('references'),
             '/project/admin/reference.php?' . http_build_query(array('group_id' => $project_id)),
@@ -196,5 +199,13 @@ class NavigationPresenterBuilder
             'members',
             $current_pane_shortname
         );
+    }
+
+    private function canLabelsBeUsedByProject(Project $project)
+    {
+        $event = new CanProjectUseLabels($project);
+        $this->event_manager->processEvent($event);
+
+        return $event->areLabelsUsable();
     }
 }

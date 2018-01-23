@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,26 +19,35 @@
  */
 
 use Tuleap\Label\AllowedColorsCollection;
+use Tuleap\Label\CanProjectUseLabels;
 use Tuleap\Label\CollectionOfLabelableDao;
 use Tuleap\Label\ColorPresenterFactory;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Label\AddController;
-use Tuleap\Project\Label\EditController;
-use Tuleap\Project\Label\LabelsManagementURLBuilder;
 use Tuleap\Project\Label\DeleteController;
+use Tuleap\Project\Label\EditController;
 use Tuleap\Project\Label\IndexController;
 use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\Label\LabelsManagementRouter;
+use Tuleap\Project\Label\LabelsManagementURLBuilder;
 
 require_once('pre.php');
 
-$request = HTTPRequest::instance();
-session_require(array('group' => $request->get('group_id'), 'admin_flags' => 'A'));
+$event_manager = EventManager::instance();
+$request       = HTTPRequest::instance();
+$project       = $request->getProject();
+session_require(array('group' => $project->getID(), 'admin_flags' => 'A'));
+
+$event = new CanProjectUseLabels($project);
+$event_manager->processEvent($event);
+if (! $event->areLabelsUsable()) {
+    $GLOBALS['Response']->addFeedback(Feedback::ERROR, gettext('No items can use labels in this project.'));
+    $GLOBALS['Response']->redirect('/project/admin/?group_id=' . urlencode($project->getID()));
+}
 
 $url_builder   = new LabelsManagementURLBuilder();
 $dao           = new LabelDao();
 $history_dao   = new ProjectHistoryDao();
-$event_manager = EventManager::instance();
 $assets        = new IncludeAssets(ForgeConfig::get('codendi_dir').'/src/www/assets', '/assets');
 $colors        = new AllowedColorsCollection();
 $color_factory = new ColorPresenterFactory($colors);
