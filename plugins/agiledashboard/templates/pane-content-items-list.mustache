@@ -15,7 +15,7 @@
     {{# has_something }}
         {{# items_collection }}
             <tr data-artifact-id="{{ id }}">
-                <td  {{^ isOpen }} class="agiledashboard-milestone-content-items-list-is-closed" {{/ isOpen }}>
+                <td {{^ isOpen }} class="agiledashboard-milestone-details-items-list-is-closed" {{/ isOpen }}>
                     <a href="{{ url }}">
                         <span class="planning-view-items-list-content-badge badge tlp-badge-outline tlp-badge-{{color}}">
                             {{ xRef }}
@@ -24,14 +24,14 @@
                     </a>
                 </td>
                 {{# has_something_inconsistent }}
-                    <td  {{^ isOpen }} class="agiledashboard-milestone-content-items-list-is-closed" {{/ isOpen }}>
+                    <td {{^ isOpen }} class="agiledashboard-milestone-details-items-list-is-closed" {{/ isOpen }}>
                         {{# isInconsistent }}
                             <i class="text-warning icon-warning-sign" title="{{ item_is_inconsistent_label }}"></i>
                         {{/ isInconsistent }}
                     </td>
                 {{/ has_something_inconsistent }}
-                <td  {{^ isOpen }} class="agiledashboard-milestone-content-items-list-is-closed" {{/ isOpen }}>{{ getStatus }}</td>
-                <td class="milestone-element-parent {{^ isOpen }} agiledashboard-milestone-content-items-list-is-closed {{/ isOpen }}" >
+                <td {{^ isOpen }} class="agiledashboard-milestone-details-items-list-is-closed" {{/ isOpen }}>{{ getStatus }}</td>
+                <td class="milestone-element-parent {{^ isOpen }} agiledashboard-milestone-details-items-list-is-closed {{/ isOpen }}" >
                     <a href="{{ parent_url }}">{{ parent_title }}</a>
                 </td>
             </tr>
