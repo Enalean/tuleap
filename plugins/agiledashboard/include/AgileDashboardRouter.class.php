@@ -57,11 +57,6 @@ class AgileDashboardRouter {
     private $planning_factory;
 
     /**
-     * @var Planning_ShortAccessFactory
-     */
-    private $planning_shortaccess_factory;
-
-    /**
      * @var Planning_MilestoneControllerFactory
      */
     private $milestone_controller_factory;
@@ -105,7 +100,6 @@ class AgileDashboardRouter {
         Plugin $plugin,
         Planning_MilestoneFactory $milestone_factory,
         PlanningFactory $planning_factory,
-        Planning_ShortAccessFactory $planning_shortaccess_factory,
         Planning_MilestoneControllerFactory $milestone_controller_factory,
         ProjectManager $project_manager,
         AgileDashboard_XMLFullStructureExporter $xml_exporter,
@@ -120,7 +114,6 @@ class AgileDashboardRouter {
         $this->plugin                       = $plugin;
         $this->milestone_factory            = $milestone_factory;
         $this->planning_factory             = $planning_factory;
-        $this->planning_shortaccess_factory = $planning_shortaccess_factory;
         $this->milestone_controller_factory = $milestone_controller_factory;
         $this->project_manager              = $project_manager;
         $this->xml_exporter                 = $xml_exporter;
@@ -327,7 +320,6 @@ class AgileDashboardRouter {
         return new Planning_Controller(
             $request,
             $this->planning_factory,
-            $this->planning_shortaccess_factory,
             $this->milestone_factory,
             $this->project_manager,
             $this->xml_exporter,

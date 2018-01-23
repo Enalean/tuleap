@@ -51,7 +51,6 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase {
         $this->planning_controller    = new Planning_Controller(
             $this->request,
             $this->planning_factory,
-            mock('Planning_ShortAccessFactory'),
             mock('Planning_MilestoneFactory'),
             mock('ProjectManager'),
             mock('AgileDashboard_XMLFullStructureExporter'),
@@ -198,7 +197,6 @@ class Planning_ControllerNewTest extends TuleapTestCase {
         $this->planning_controller = new Planning_Controller(
             $this->request,
             $this->planning_factory,
-            mock('Planning_ShortAccessFactory'),
             mock('Planning_MilestoneFactory'),
             mock('ProjectManager'),
             mock('AgileDashboard_XMLFullStructureExporter'),
@@ -346,7 +344,6 @@ class Planning_Controller_EditTest extends Planning_Controller_BaseTest {
             array(
                 $request,
                 $planning_factory,
-                mock('Planning_ShortAccessFactory'),
                 mock('Planning_MilestoneFactory'),
                 mock('ProjectManager'),
                 mock('AgileDashboard_XMLFullStructureExporter'),

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,10 +22,8 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 /**
  * Loads planning milestones from the persistence layer.
  */
-class Planning_MilestoneFactory {
-
-    private static $DEFAULT_ORDER = 'asc';
-
+class Planning_MilestoneFactory
+{
     /**
      * @var PlanningFactory
      */
@@ -107,31 +105,6 @@ class Planning_MilestoneFactory {
     public function getNoMilestone(Project $project, $planning_id) {
         $planning = $this->planning_factory->getPlanning($planning_id);
         return new Planning_NoMilestone($project, $planning);
-    }
-
-    /**
-     * @return array of Planning_Milestone (the last $number_to_fetch open ones for the given $planning)
-     */
-    public function getLastOpenMilestones(PFUser $user, Planning $planning, $offset, $number_to_fetch) {
-        $artifacts           = $this->getLastOpenArtifacts($user, $planning, $offset, $number_to_fetch);
-        $milestones          = array();
-        foreach ($artifacts as $artifact) {
-            $milestones[] = $this->getMilestoneFromArtifact($artifact);
-        }
-        return $milestones;
-    }
-
-    private function getLastOpenArtifacts(PFUser $user, Planning $planning, $offset, $number_to_fetch) {
-        $artifacts = $this->artifact_factory->getOpenArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
-        $artifacts = array_slice($artifacts, $offset, $number_to_fetch);
-        krsort($artifacts);
-        return $artifacts;
-    }
-
-    private function getPlannedArtifactsForLatestMilestone(PFUser $user, Tracker_Artifact $artifact, $current_index, $number_of_artifacts) {
-        if ($current_index >= $number_of_artifacts) {
-            return $this->getPlannedArtifacts($user, $artifact);
-        }
     }
 
     /**
@@ -966,4 +939,3 @@ class Planning_MilestoneFactory {
         return $user_can_change_priorities;
     }
 }
-?>

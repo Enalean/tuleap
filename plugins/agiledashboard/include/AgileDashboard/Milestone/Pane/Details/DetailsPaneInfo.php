@@ -51,20 +51,4 @@ class DetailsPaneInfo extends AgileDashboard_PaneInfo
     {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'details_pane_title');
     }
-
-    /**
-     * @see string eg: '/themes/common/images/ic/duck.png'
-     */
-    protected function getIcon()
-    {
-        return $this->theme_path . '/images/content-list.png';
-    }
-
-    /**
-     * @return string eg: 'Access to cardwall'
-     */
-    protected function getIconTitle()
-    {
-        return $this->getTitle();
-    }
 }

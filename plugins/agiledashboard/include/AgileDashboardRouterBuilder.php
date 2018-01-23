@@ -101,7 +101,6 @@ class AgileDashboardRouterBuilder {
             $plugin,
             $milestone_factory,
             $planning_factory,
-            new Planning_ShortAccessFactory($planning_factory, $pane_info_factory),
             $milestone_controller_factory,
             ProjectManager::instance(),
             new AgileDashboard_XMLFullStructureExporter(
