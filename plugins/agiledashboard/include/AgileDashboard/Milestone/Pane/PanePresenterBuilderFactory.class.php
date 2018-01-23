@@ -23,6 +23,7 @@
  */
 
 use Tuleap\AgileDashboard\FormElement\BurnupFieldRetriever;
+use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPresenterBuilder;
 
 /**
  * Like RepRap, I build builders
@@ -51,11 +52,11 @@ class AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory
     }
 
     /**
-     * @return AgileDashboard_Milestone_Pane_Content_ContentPresenterBuilder
+     * @return DetailsPresenterBuilder
      */
-    public function getContentPresenterBuilder()
+    public function getDetailsPresenterBuilder()
     {
-        return new AgileDashboard_Milestone_Pane_Content_ContentPresenterBuilder(
+        return new DetailsPresenterBuilder(
             $this->backlog_factory,
             $this->row_collection_factory,
             $this->field_retriever

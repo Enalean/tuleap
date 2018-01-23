@@ -3,12 +3,12 @@
 <table class="table">
     <thead>
     <tr>
-        <th>{{ item_title }}</th>
+        <th>{{# dgettext }} tuleap-agiledashboard | Item {{/ dgettext }}</th>
         {{# has_something_inconsistent }}
             <th></th>
         {{/ has_something_inconsistent }}
         <th>{{ status_title }}</th>
-        <th>{{ parent_title }}</th>
+        <th>{{# dgettext }} tuleap-agiledashboard | Parent item {{/ dgettext }}</th>
     </tr>
     </thead>
     <tbody>

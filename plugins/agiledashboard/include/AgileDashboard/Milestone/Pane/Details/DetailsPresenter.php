@@ -22,9 +22,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\AgileDashboard\Milestone\Pane\Conent\ContentChartPresenter;
+namespace Tuleap\AgileDashboard\Milestone\Pane\Details;
 
-class AgileDashboard_Milestone_Pane_Content_ContentPresenter
+use AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection;
+use PFUser;
+use Planning_Milestone;
+
+class DetailsPresenter
 {
     public $no_items_label;
 
@@ -45,7 +49,7 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter
     /** @var String */
     private $solve_inconsistencies_url;
     /**
-     * @var ContentChartPresenter
+     * @var DetailsChartPresenter
      */
     public $chart_presenter;
 
@@ -56,7 +60,7 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter
         $trackers,
         $solve_inconsistencies_url,
         PFUser $user,
-        ContentChartPresenter $chart_presenter
+        DetailsChartPresenter $chart_presenter
     ) {
         $this->items_collection          = $items;
         $this->inconsistent_collection   = $inconsistent_collection;
@@ -79,21 +83,19 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter
         return implode(', ', $tracker_names);
     }
 
-    public function getTemplateName() {
-        return 'pane-content';
-    }
-
-    public function solve_inconsistencies_button() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'solve_inconsistencies');
-    }
-
-    public function solve_inconsistencies_url() {
-        return $this->solve_inconsistencies_url;
-    }
-
-    public function item_title()
+    public function getTemplateName()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'content_head_title');
+        return 'pane-details';
+    }
+
+    public function solve_inconsistencies_button()
+    {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard_detailspane', 'solve_inconsistencies');
+    }
+
+    public function solve_inconsistencies_url()
+    {
+        return $this->solve_inconsistencies_url;
     }
 
     public function status_title()
@@ -101,21 +103,18 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter
         return dgettext('plugin-agiledashboard', 'Status');
     }
 
-    public function parent_title()
-    {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'content_head_parent');
-    }
-
     public function has_something()
     {
         return $this->items_collection->count() > 0;
     }
 
-    public function inconsistent_items_intro() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'inconsistent_items_intro');
+    public function inconsistent_items_intro()
+    {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard_detailspane', 'inconsistent_items_intro');
     }
 
-    public function has_something_inconsistent() {
+    public function has_something_inconsistent()
+    {
         return count($this->inconsistent_collection) > 0;
     }
 }

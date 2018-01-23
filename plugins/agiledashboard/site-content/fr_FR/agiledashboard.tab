@@ -39,7 +39,7 @@ plugin_agiledashboard	edit_item	Éditer
 plugin_agiledashboard	add_subitem	Ajouter un(e) nouveau(lle) $1
 plugin_agiledashboard	backlog_add	Ajouter
 plugin_agiledashboard	planning_pane_title	Backlog/Planning
-plugin_agiledashboard	content_pane_title	Détails
+plugin_agiledashboard	details_pane_title	Détails
 plugin_agiledashboard	planning	Planning
 plugin_agiledashboard	cardwall	Cardwall
 plugin_agiledashboard	open	ouverts
@@ -72,9 +72,6 @@ plugin_agiledashboard	home_user_helper_others	Les jalons en cours et à venir on
 plugin_agiledashboard	capacity	Capacité :
 plugin_agiledashboard	available	$1 disponible(s)
 
-plugin_agiledashboard	content_head_title	Elément
-plugin_agiledashboard	content_head_parent	Elément parent
-plugin_agiledashboard	content_head_type	Type
 plugin_agiledashboard	top_planning_link	Planification Générale
 
 plugin_agiledashboard	display_five_more	En afficher $1 de plus
@@ -94,12 +91,8 @@ plugin_agiledashboard	start_kanban	Démarrez Kanban
 plugin_agiledashboard	start_scrum	Démarrez Scrum
 plugin_agiledashboard	activate_scrum_v2	Activer Scrum V2
 
-plugin_agiledashboard_contentpane	lab	Ceci est une fonctionnalité expérimentale qui est sujette à évolution prochainement. N'hésitez pas à <a href="mailto:tuleap-devel@tuleap.net">nous contater pour nous transmettre vos impressions</a> et retours d'expérience afin d'améliorer la fonctionnalité, merci!
-plugin_agiledashboard_contentpane	closed_items_nothing_yet	Rien de fermé actuellement
-plugin_agiledashboard_contentpane	open_items_title	$1 ouvert(e)s
-plugin_agiledashboard_contentpane	inconsistent_items_title	$1 inconsistent(e)s
-plugin_agiledashboard_contentpane	inconsistent_items_intro	Certains éléments n'ont pas été liés à ce jalon.
-plugin_agiledashboard_contentpane	solve_inconsistencies	Les importer dans le backlog
+plugin_agiledashboard_detailspane	inconsistent_items_intro	Certains éléments n'ont pas été liés à ce jalon.
+plugin_agiledashboard_detailspane	solve_inconsistencies	Les importer dans le backlog
 
 
 plugin_agiledashboard_milestone_planning	help_intro	Cette section vous permet de faire votre planning de $1:

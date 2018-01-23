@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
 
 /**
  * I build panes info for a Planning_Milestone
@@ -42,8 +44,8 @@ class AgileDashboard_PaneInfoFactory {
         $this->theme_path                   = $theme_path;
     }
 
-    public function getContentPaneInfo(Planning_Milestone $milestone) {
-        return new AgileDashboard_Milestone_Pane_Content_ContentPaneInfo($milestone, $this->theme_path);
+    public function getDetailsPaneInfo(Planning_Milestone $milestone) {
+        return new DetailsPaneInfo($milestone, $this->theme_path);
     }
 
     public function getPlanningV2PaneInfo(Planning_Milestone $milestone) {

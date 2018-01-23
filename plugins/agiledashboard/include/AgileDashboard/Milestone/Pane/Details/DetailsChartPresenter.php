@@ -18,11 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard\Milestone\Pane\Conent;
+namespace Tuleap\AgileDashboard\Milestone\Pane\Details;
 
 use Tuleap\AgileDashboard\FormElement\BurnupFieldPresenter;
 
-class ContentChartPresenter
+class DetailsChartPresenter
 {
     public $has_burndown = false;
     public $burndown_label;

@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.8.3\n"
+"X-Generator: Poedit 1.8.7.1\n"
 
 msgid "Add Kanban to dashboard"
 msgstr "Ajouter Kanban au tableau de bord"
@@ -93,8 +93,14 @@ msgstr "Reconstruire le cache"
 msgid "Go back to semantic overview"
 msgstr "Retour à l'administration de la sémantique"
 
+msgid "Item"
+msgstr "Élément"
+
 msgid "Item is inconsistent"
 msgstr "L'élément est inconsistent"
+
+msgid "Parent item"
+msgstr "Parent"
 
 msgid "Planning succesfully created."
 msgstr "La planning a été créé."

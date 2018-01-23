@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -41,7 +41,7 @@ class Planning_Presenter_MilestoneAccessPresenter {
     }
 
     public function content() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard','content_pane_title');
+        return $GLOBALS['Language']->getText('plugin_agiledashboard','details_pane_title');
     }
 
     public function planning() {

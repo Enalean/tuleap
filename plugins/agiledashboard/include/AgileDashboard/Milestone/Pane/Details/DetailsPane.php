@@ -18,49 +18,64 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\AgileDashboard\Milestone\Pane\Details;
+
+use AgileDashboard_Pane;
+use Planning_Milestone;
+use TemplateRendererFactory;
+
 /**
  * I display the content of a milestone in a pane
  *
  * The content of a "release" is all "stories" (open and closed) that belongs to
  * the release (aka their "epic" parent are planned into the release)
  */
-class AgileDashboard_Milestone_Pane_Content_ContentPane extends AgileDashboard_Pane {
-
-    /** @var AgileDashboard_Milestone_Pane_Content_ContentPaneInfo */
+class DetailsPane extends AgileDashboard_Pane
+{
+    /** @var DetailsPaneInfo */
     private $info;
 
-    /** @var AgileDashboard_Milestone_Pane_Content_ContentPresenter */
+    /** @var DetailsPresenter */
     private $presenter;
 
-    public function __construct(AgileDashboard_Milestone_Pane_Content_ContentPaneInfo $info, AgileDashboard_Milestone_Pane_Content_ContentPresenter $presenter) {
+    public function __construct(
+        DetailsPaneInfo $info,
+        DetailsPresenter $presenter
+    ) {
         $this->info      = $info;
         $this->presenter = $presenter;
     }
 
-    public function getIdentifier() {
+    public function getIdentifier()
+    {
         return $this->info->getIdentifier();
     }
 
-    public function getUriForMilestone(Planning_Milestone $milestone) {
+    public function getUriForMilestone(Planning_Milestone $milestone)
+    {
         return $this->info->getUriForMilestone($milestone);
     }
 
     /**
      * @see AgileDashboard_Pane::getFullContent()
      */
-    public function getFullContent() {
+    public function getFullContent()
+    {
         return $this->getPaneContent();
     }
 
     /**
      * @see AgileDashboard_Pane::getMinimalContent()
      */
-    public function getMinimalContent() {
+    public function getMinimalContent()
+    {
         return '';
     }
 
-    private function getPaneContent() {
-        $renderer  = TemplateRendererFactory::build()->getRenderer(AGILEDASHBOARD_TEMPLATE_DIR);
+    private function getPaneContent()
+    {
+        $renderer = TemplateRendererFactory::build()->getRenderer(AGILEDASHBOARD_TEMPLATE_DIR);
+
         return $renderer->renderToString($this->presenter->getTemplateName(), $this->presenter);
     }
 }
