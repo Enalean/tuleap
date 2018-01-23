@@ -77,4 +77,12 @@ class CookieManagerTest extends TuleapTestCase
 
         $this->assertEqual($headers[0], 'Set-Cookie: test_name=deleted; expires=Thu, 01-Jan-1970 00:00:01 GMT; Max-Age=0; path=/; httponly; SameSite=Lax');
     }
+
+    public function itDeterminesIfACookieCanUseSecureFlag()
+    {
+        ForgeConfig::set('sys_https_host', '');
+        $this->assertFalse(CookieManager::canCookieUseSecureFlag());
+        ForgeConfig::set('sys_https_host', 'example.com');
+        $this->assertTrue(CookieManager::canCookieUseSecureFlag());
+    }
 }
