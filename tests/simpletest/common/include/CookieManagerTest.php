@@ -79,6 +79,19 @@ class CookieManagerTest extends TuleapTestCase
         $this->assertEqual($headers[0], 'Set-Cookie: __Secure-test_name=value; path=/; domain=.example.com; secure; httponly; SameSite=Lax');
     }
 
+    public function itDoesNotSetCookiePrefixIfHTTPSIsNotAvailable()
+    {
+        ForgeConfig::set('sys_default_domain', 'example.com');
+        ForgeConfig::set('sys_https_host', '');
+        ForgeConfig::set('sys_cookie_domain', '');
+        $cookie_manager = new CookieManager();
+        $cookie_manager->setCookie('name', 'value');
+
+        $headers = xdebug_get_headers();
+
+        $this->assertEqual($headers[0], 'Set-Cookie: test_name=value; path=/; httponly; SameSite=Lax');
+    }
+
     public function itRemovesCookies()
     {
         $cookie_manager = new CookieManager();
@@ -86,6 +99,6 @@ class CookieManagerTest extends TuleapTestCase
 
         $headers = xdebug_get_headers();
 
-        $this->assertEqual($headers[0], 'Set-Cookie: __Host-test_name=deleted; expires=Thu, 01-Jan-1970 00:00:01 GMT; Max-Age=0; path=/; httponly; SameSite=Lax');
+        $this->assertEqual($headers[0], 'Set-Cookie: test_name=deleted; expires=Thu, 01-Jan-1970 00:00:01 GMT; Max-Age=0; path=/; httponly; SameSite=Lax');
     }
 }
