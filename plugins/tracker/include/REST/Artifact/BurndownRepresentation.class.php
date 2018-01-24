@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,11 +20,17 @@
 
 namespace Tuleap\Tracker\REST\Artifact;
 
+use Tracker_Chart_Data_Burndown;
 use Tuleap\REST\JsonCast;
 
 class BurndownRepresentation
 {
     const ROUTE = 'burndown';
+
+    /**
+     * @var string {@type date}
+     */
+    public $start_date;
 
     /**
      * @var int Time needed to complete the milestone (in days)
@@ -37,7 +43,7 @@ class BurndownRepresentation
     public $capacity;
 
     /**
-     * @var array Values for each days {@type float}
+     * @var array {@type float}
      */
     public $points = array();
 
@@ -46,12 +52,31 @@ class BurndownRepresentation
      */
     public $is_under_calculation;
 
-    public function build($duration, $capacity, array $points, $is_under_calculation)
+    /**
+     * @var array {@type int} Opening days in week (Sunday as 0 and Saturday as 6)
+     */
+    public $opening_days;
+
+    /**
+     * @var array {@type BurndownPointRepresentation}
+     */
+    public $points_with_date = array();
+
+    public function build(Tracker_Chart_Data_Burndown $data_burndown)
     {
-        $this->duration             = JsonCast::toInt($duration);
-        $this->capacity             = JsonCast::toFloat($capacity);
-        $this->points               = array_map(array('\Tuleap\REST\JsonCast', 'toFloat'), $points);
-        $this->is_under_calculation = JsonCast::toBoolean($is_under_calculation);
+        $this->start_date           = JsonCast::toDate($data_burndown->getTimePeriod()->getStartDate());
+        $this->duration             = JsonCast::toInt($data_burndown->getTimePeriod()->getDuration());
+        $this->capacity             = JsonCast::toFloat($data_burndown->getCapacity());
+        $this->points               = array_map(
+            array('\Tuleap\REST\JsonCast', 'toFloat'),
+            $data_burndown->getRemainingEffortWithoutNullValues()
+        );
+        $this->is_under_calculation = JsonCast::toBoolean($data_burndown->isUnderCalcul());
+        foreach ($data_burndown->getRemainingEffortsAtDate() as $timestamp => $burndown_effort) {
+            $this->points_with_date [] = new BurndownPointRepresentation($burndown_effort, $timestamp);
+        }
+
+        $this->opening_days = array(1, 2, 3, 4, 5);
 
         return $this;
     }

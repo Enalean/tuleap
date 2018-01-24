@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,11 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\REST\Artifact\BurndownRepresentation;
+
 /**
- * Storage data for Burndown display via JPgraph
+ * Storage data for Burndown display
  */
 class Tracker_Chart_Data_Burndown
 {
+    /**
+     * @var array
+     */
+    private $remaining_efforts_at_date;
     /**
      * @var TimePeriod
      */
@@ -35,11 +41,12 @@ class Tracker_Chart_Data_Burndown
 
     public function __construct(TimePeriodWithoutWeekEnd $time_period, $capacity = null, $is_under_calcul = false)
     {
-        $this->time_period      = $time_period;
-        $this->capacity         = $capacity;
-        $this->is_under_calcul  = $is_under_calcul;
-        $this->remaining_effort = array();
-        $this->ideal_effort     = array();
+        $this->time_period               = $time_period;
+        $this->capacity                  = $capacity;
+        $this->is_under_calcul           = $is_under_calcul;
+        $this->remaining_effort          = array();
+        $this->ideal_effort              = array();
+        $this->remaining_efforts_at_date = array();
     }
 
     /**
@@ -121,16 +128,12 @@ class Tracker_Chart_Data_Burndown
     }
 
     /**
-     * @return \Tuleap\Tracker\REST\Artifact\BurndownRepresentation
+     * @return BurndownRepresentation
      */
     public function getRESTRepresentation() {
-        $classname = '\Tuleap\Tracker\REST\Artifact\BurndownRepresentation';
-        $burndown = new $classname;
+        $burndown = new BurndownRepresentation();
         return $burndown->build(
-            $this->getDuration(),
-            $this->capacity,
-            $this->getRemainingEffortWithoutNullValues(),
-            $this->is_under_calcul
+            $this
         );
     }
 
@@ -148,7 +151,8 @@ class Tracker_Chart_Data_Burndown
         return isset($this->capacity) ? $this->capacity : 'null';
     }
 
-    private function getRemainingEffortWithoutNullValues() {
+    public function getRemainingEffortWithoutNullValues()
+    {
         if ($this->is_under_calcul === true) {
             return array();
         }
@@ -199,5 +203,34 @@ class Tracker_Chart_Data_Burndown
         }
         
         return null;
+    }
+
+    /**
+     * @return null
+     */
+    public function getCapacity()
+    {
+        return $this->capacity;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isUnderCalcul()
+    {
+        return $this->is_under_calcul;
+    }
+
+    public function addEffortAtDateTime(DateTime $date, $remaining_effort)
+    {
+        $this->remaining_efforts_at_date[$date->getTimestamp()] = $remaining_effort;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRemainingEffortsAtDate()
+    {
+        return $this->remaining_efforts_at_date;
     }
 }

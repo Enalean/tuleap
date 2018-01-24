@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2017. All rights reserved
+ * Copyright (c) Enalean, 2013-2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -25,7 +25,7 @@ use Tuleap\REST\ArtifactBase;
 /**
  * @group ArtifactsTest
  */
-class ArtifactsTest extends ArtifactBase
+class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
 {
     public function testOptionsArtifactId() {
         $response = $this->getResponse($this->client->options('artifacts/9'));
@@ -167,11 +167,11 @@ class ArtifactsTest extends ArtifactBase
 
     public function testGETBurndownForParentArtifact()
     {
-        $response     = $this->getResponse(
+        $response = $this->getResponse(
             $this->client->get("artifacts/" . $this->pokemon_artifact_ids[1])
         );
 
-        $burndown     = $response->json();
+        $burndown = $response->json();
 
         $this->assertNotNull($response->getHeader('Last-Modified'));
         $this->assertNotNull($response->getHeader('Etag'));
@@ -187,7 +187,40 @@ class ArtifactsTest extends ArtifactBase
             37
         );
 
+        $start_date = new DateTime();
+        $start_date->setTimezone(new DateTimeZone('GMT+1'));
+        $start_date->setDate(2016, 11, 17);
+        $start_date->setTime(0, 0, 0);
+
+        $expected_burndown_chart_with_date = array(
+            array(
+                "date"             => $start_date->format(DATE_ATOM),
+                "remaining_effort" => 55
+            ),
+            array(
+                "date"             => $start_date->modify('+1 day')->format(DATE_ATOM),
+                "remaining_effort" => 43
+            ),
+            array(
+                "date"             => $start_date->modify('+3 day')->format(DATE_ATOM),
+                "remaining_effort" => 48
+            ),
+            array(
+                "date"             => $start_date->modify('+1 day')->format(DATE_ATOM),
+                "remaining_effort" => 37
+            ),
+            array(
+                "date"             => $start_date->modify('+1 day')->format(DATE_ATOM),
+                "remaining_effort" => 37
+            ),
+            array(
+                "date"             => $start_date->modify('+1 day')->format(DATE_ATOM),
+                "remaining_effort" => 37
+            )
+        );
+
         $this->assertEquals($burndown['values'][6]['value']['points'], $expected_burndown_chart);
+        $this->assertEquals($burndown['values'][6]['value']['points_with_date'], $expected_burndown_chart_with_date);
     }
 
     public function testGETBurndownForAChildrenArtifact()
