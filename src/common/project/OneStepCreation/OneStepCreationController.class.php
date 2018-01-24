@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,6 +25,7 @@ require_once 'OneStepCreationValidator.class.php';
 require_once 'common/project/CustomDescription/CustomDescriptionPresenter.class.php';
 require_once 'common/project/OneStepRegistration/OneStepRegistrationPresenterFactory.class.php';
 
+use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
@@ -165,6 +166,7 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
             ),
             $duplicator,
             new ServiceCreator(),
+            new LabelDao(),
             $force_activation
         );
 

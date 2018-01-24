@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -60,7 +60,8 @@ class ProjectCreatorTest extends TuleapTestCase
                 false,
                 mock('Tuleap\FRS\FRSPermissionCreator'),
                 mock('Tuleap\Dashboard\Project\ProjectDashboardDuplicator'),
-                mock('Tuleap\Service\ServiceCreator')
+                mock('Tuleap\Service\ServiceCreator'),
+                mock(\Tuleap\Project\Label\LabelDao::class)
             ));
     }
 
@@ -126,7 +127,8 @@ class ProjectCreatorTest extends TuleapTestCase
                 false,
                 mock('Tuleap\FRS\FRSPermissionCreator'),
                 mock('Tuleap\Dashboard\Project\ProjectDashboardDuplicator'),
-                mock('Tuleap\Service\ServiceCreator')
+                mock('Tuleap\Service\ServiceCreator'),
+                Mock(\Tuleap\Project\Label\LabelDao::class)
             )
         );
         $project_id      = 100;

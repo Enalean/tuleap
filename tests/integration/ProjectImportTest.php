@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,7 @@
 
 use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
 use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
+use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
@@ -177,6 +178,7 @@ class ProjectImportTest extends TuleapDbTestCase
             $frs_permissions_creator,
             $duplicator,
             new ServiceCreator(),
+            new LabelDao(),
             $force_activation
         );
 
@@ -281,6 +283,7 @@ class ProjectImportTest extends TuleapDbTestCase
             $frs_permissions_creator,
             $duplicator,
             new ServiceCreator(),
+            new LabelDao(),
             $force_activation
         );
 

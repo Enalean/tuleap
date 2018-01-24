@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -43,6 +43,7 @@ define('PROJECT_APPROVAL_AUTO',     'A');
 use Tuleap\project\Event\ProjectRegistrationActivateService;
 use Tuleap\Project\DescriptionFieldsFactory;
 use Tuleap\Project\DescriptionFieldsDao;
+use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\ProjectRegistrationDisabledException;
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\FRS\FRSPermissionCreator;
@@ -122,6 +123,10 @@ class ProjectCreator {
      * @var ServiceCreator
      */
     private $service_creator;
+    /**
+     * @var LabelDao
+     */
+    private $label_dao;
 
     public function __construct(
         ProjectManager $projectManager,
@@ -132,6 +137,7 @@ class ProjectCreator {
         FRSPermissionCreator $frs_permissions_creator,
         ProjectDashboardDuplicator $dashboard_duplicator,
         ServiceCreator $service_creator,
+        LabelDao $label_dao,
         $force_activation = false
     ) {
         $this->send_notifications      = $send_notifications;
@@ -145,6 +151,7 @@ class ProjectCreator {
         $this->ugroup_duplicator       = $ugroup_duplicator;
         $this->dashboard_duplicator    = $dashboard_duplicator;
         $this->service_creator         = $service_creator;
+        $this->label_dao               = $label_dao;
     }
 
     /**
@@ -306,6 +313,8 @@ class ProjectCreator {
         }
 
         $this->copyEmailOptionsFromTemplate($group_id, $template_id);
+
+        $this->label_dao->duplicateLabelsIfNeededBetweenProjectsId($template_id, $group_id);
 
         // Raise an event for plugin configuration
         $em->processEvent(Event::REGISTER_PROJECT_CREATION, array(

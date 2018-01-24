@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -205,5 +205,20 @@ class LabelDao extends DataAccessObject
         $sql = "SELECT * FROM project_label WHERE id = $id";
 
         return $this->retrieveFirstRow($sql);
+    }
+
+    public function duplicateLabelsIfNeededBetweenProjectsId($source_project_id, $destination_project_id)
+    {
+        $source_project_id      = $this->da->escapeInt($source_project_id);
+        $destination_project_id = $this->da->escapeInt($destination_project_id);
+
+        $sql = "INSERT INTO project_label (project_id, name, is_outline, color)
+                SELECT $destination_project_id, project_label_source.name, project_label_source.is_outline, project_label_source.color
+                FROM project_label AS project_label_source
+                LEFT JOIN project_label AS project_label_destination
+                  ON project_label_source.name = project_label_destination.name AND project_label_destination.project_id = $destination_project_id
+                WHERE project_label_source.project_id = $source_project_id AND project_label_destination.id IS NULL";
+
+        $this->update($sql);
     }
 }

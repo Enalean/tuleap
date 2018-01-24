@@ -27,6 +27,7 @@ use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\FRS\UploadedLinksDao;
 use Tuleap\FRS\UploadedLinksUpdater;
+use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Project\UserRemover;
@@ -442,6 +443,7 @@ class Planning_Controller extends MVC2_PluginController {
             $frs_permissions_creator,
             $duplicator,
             new ServiceCreator(),
+            new LabelDao(),
             $force_activation
         );
 

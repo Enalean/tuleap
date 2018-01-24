@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -145,6 +145,7 @@ class ProjectResource extends AuthenticatedResource {
         $ugroup_user_dao, EventManager::instance());
         $send_notifications = true;
         $force_activation   = false;
+        $label_dao          = new LabelDao();
 
         $this->project_creator = new ProjectCreator(
             $this->project_manager,
@@ -155,12 +156,13 @@ class ProjectResource extends AuthenticatedResource {
             new FRSPermissionCreator(new FRSPermissionDao(), new UGroupDao()),
             $duplicator,
             new ServiceCreator(),
+            $label_dao,
             $force_activation
         );
 
         $this->labels_retriever = new LabelsCurlyCoatedRetriever(
             new PaginatedCollectionsOfLabelsBuilder(),
-            new LabelDao()
+            $label_dao
         );
     }
 
