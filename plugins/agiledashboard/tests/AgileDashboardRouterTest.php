@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -44,7 +44,6 @@ class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase {
             mock('Plugin'),
             mock('Planning_MilestoneFactory'),
             mock('PlanningFactory'),
-            mock('Planning_ShortAccessFactory'),
             $milestone_controller_factory,
             mock('ProjectManager'),
             mock('AgileDashboard_XMLFullStructureExporter'),

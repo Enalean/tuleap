@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -44,13 +44,4 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningV2PaneInfo extends AgileDas
             $this->submilestone_tracker->getName()
         );
     }
-
-    protected function getIcon() {
-        return $this->theme_path.'/images/planning.png';
-    }
-
-    protected function getIconTitle() {
-        return $this->getTitle();
-    }
-
 }

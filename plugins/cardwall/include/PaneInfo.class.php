@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -44,21 +44,4 @@ class Cardwall_PaneInfo extends AgileDashboard_PaneInfo {
     public function getTitle() {
         return 'Card Wall';
     }
-
-    /**
-     * @see AgileDashboard_Pane::getIcon()
-     */
-    protected function getIcon() {
-        return $this->plugin_theme_path .'/images/ic/sticky-note.png';
-    }
-
-    /**
-     * @see AgileDashboard_Pane::getIconTitle()
-     */
-    protected function getIconTitle() {
-        return $GLOBALS['Language']->getText('plugin_cardwall', 'access_cardwall');
-    }
-
 }
-
-?>

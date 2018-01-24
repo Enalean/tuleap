@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -94,21 +94,6 @@ abstract class AgileDashboard_PaneInfo {
     }
 
     /**
-     * Return data to present an Icon to the current Pane for given milestone
-     *
-     * @param Planning_Milestone $milestone
-     * 
-     * @return Array
-     */
-    public function getIconTemplateParametersForMilestone(Planning_Milestone $milestone) {
-        return new AgileDashboard_PaneIconLinkPresenter(
-            $this->getUriForMilestone($milestone),
-            $this->getIconTitle(),
-            $this->getIcon()
-        );
-    }
-
-    /**
      * Technical identifier for HTML output
      *
      * @return string eg: 'cardwall'
@@ -119,17 +104,4 @@ abstract class AgileDashboard_PaneInfo {
      * @return string eg: 'Card Wall'
      */
     public abstract function getTitle();
-
-    /**
-     * @return string eg: '/themes/common/images/ic/duck.png'
-     */
-    protected abstract function getIcon();
-
-    /**
-     * @return string eg: 'Access to cardwall'
-     */
-    protected abstract function getIconTitle();
 }
-
-
-?>

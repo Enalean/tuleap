@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -44,18 +44,6 @@ class AgileDashboardPaneInfo extends AgileDashboard_PaneInfo
     {
         return $GLOBALS['Language']->getText('plugin_frs', 'File_release')
             . ' <i class="icon-external-link"></i>';
-    }
-
-    /** @see AgileDashboard_PaneInfo::getIcon */
-    protected function getIcon()
-    {
-        return '';
-    }
-
-    /** @see AgileDashboard_PaneInfo::getIconTitle */
-    protected function getIconTitle()
-    {
-        return '';
     }
 
     public function getUri()

@@ -50,9 +50,6 @@ class Planning_Controller extends MVC2_PluginController {
     /** @var PlanningFactory */
     private $planning_factory;
 
-    /** @var Planning_ShortAccessFactory */
-    private $planning_shortaccess_factory;
-
     /** @var Planning_MilestoneFactory */
     private $milestone_factory;
 
@@ -106,7 +103,6 @@ class Planning_Controller extends MVC2_PluginController {
     public function __construct(
         Codendi_Request $request,
         PlanningFactory $planning_factory,
-        Planning_ShortAccessFactory $planning_shortaccess_factory,
         Planning_MilestoneFactory $milestone_factory,
         ProjectManager $project_manager,
         AgileDashboard_XMLFullStructureExporter $xml_exporter,
@@ -126,7 +122,6 @@ class Planning_Controller extends MVC2_PluginController {
 
         $this->group_id                     = (int) $request->get('group_id');
         $this->planning_factory             = $planning_factory;
-        $this->planning_shortaccess_factory = $planning_shortaccess_factory;
         $this->milestone_factory            = $milestone_factory;
         $this->project_manager              = $project_manager;
         $this->xml_exporter                 = $xml_exporter;
