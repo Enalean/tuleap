@@ -126,12 +126,15 @@ class CookieManager
     {
         $cookie_prefix = ForgeConfig::get('sys_cookie_prefix');
         $cookie_name   = "${cookie_prefix}_${name}";
+
+        if (! $this->canCookieBeSecure()) {
+            return $cookie_name;
+        }
+
         if ($this->getCookieDomain() === null) {
             return Cookie::PREFIX_HOST . $cookie_name;
         }
-        if ($this->canCookieBeSecure()) {
-            return Cookie::PREFIX_SECURE . $cookie_name;
-        }
-        return $cookie_name;
+
+        return Cookie::PREFIX_SECURE . $cookie_name;
     }
 }
