@@ -67,7 +67,7 @@ class pullrequestPlugin extends Plugin
     public function __construct($id)
     {
         parent::__construct($id);
-        $this->setScope(self::SCOPE_PROJECT);
+        $this->setScope(self::SCOPE_SYSTEM);
 
         $this->addHook(Event::SERVICE_CLASSNAMES);
         $this->addHook(Event::REST_RESOURCES);
