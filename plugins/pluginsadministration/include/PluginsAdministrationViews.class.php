@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -138,20 +138,6 @@ class PluginsAdministrationViews extends Views {
         echo $output;
     }
 
-    private function isPluginAlreadyInstalled($name) {
-        if ($this->plugin_manager->getPluginByName($name)) {
-            return true;
-        }
-        return false;
-    }
-
-    private function displayInstallReadme($name) {
-        $readme_content = $this->getFormattedReadme($name);
-        if ($readme_content) {
-            echo $readme_content;
-        }
-    }
-
     private function getFormattedReadme($name) {
         $readme_file    = $this->plugin_manager->getInstallReadme($name);
         $readme_content = $this->plugin_manager->fetchFormattedReadme($readme_file);
@@ -173,19 +159,6 @@ class PluginsAdministrationViews extends Views {
 
         $dependencies           = implode(', ', $plugin->getDependencies());
         $are_there_dependencies = ! empty($dependencies);
-
-        $col_hooks = $plugin->getHooks();
-        $hooks     = $col_hooks->iterator();
-        $the_hooks = array();
-        while($hooks->valid()) {
-            $hook        = $hooks->current();
-            $the_hooks[] = $hook;
-            $hooks->next();
-        }
-        natcasesort($the_hooks);
-
-        $hooks           = implode(', ', $the_hooks);
-        $are_there_hooks = ! empty($hooks);
 
         $properties = array();
         if (ForgeConfig::get('sys_plugins_editable_configuration')) {
@@ -235,8 +208,6 @@ class PluginsAdministrationViews extends Views {
             $dependencies,
             $is_there_readme,
             $readme,
-            $are_there_hooks,
-            $hooks,
             $are_there_properties,
             $properties,
             $are_there_additional_options,

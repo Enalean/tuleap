@@ -33,15 +33,6 @@
                 <p>{{ description }}</p>
             </div>
             <div class="tlp-property">
-                <label class="tlp-label">{{ properties_pane_hooks }}</label>
-                {{# are_there_hooks }}
-                    <p>{{ hooks }}</p>
-                {{/ are_there_hooks }}
-                {{^ are_there_hooks }}
-                    <p class="tlp-property-empty">{{ properties_pane_empty_hooks }}</p>
-                {{/ are_there_hooks }}
-            </div>
-            <div class="tlp-property">
                 <label class="tlp-label">{{ properties_pane_dependencies }}</label>
                 {{# are_there_dependencies }}
                     <p>{{ dependencies }}</p>

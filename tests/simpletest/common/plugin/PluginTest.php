@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -64,25 +64,6 @@ class PluginTest extends TuleapTestCase {
     function testPluginInfo() {
         $p = new Plugin();
         $this->assertIsA($p->getPluginInfo(), 'PluginInfo');
-    }
-
-    public function testHooks()
-    {
-        $p = new FakePluginToTestHooks();
-        $col = $p->getHooks();
-        $this->assertTrue($col->isEmpty());
-
-        $hook1 = 'hook 1';
-        $p->addHook($hook1);
-        $col = $p->getHooks();
-        $this->assertFalse($col->isEmpty());
-        $this->assertTrue($col->contains($hook1));
-
-        $hook2 = 'hook 2';
-        $p->addHook($hook2);
-        $col = $p->getHooks();
-        $this->assertTrue($col->contains($hook1));
-        $this->assertTrue($col->contains($hook2));
     }
 
     public function testDefaultCallbackIsHookNameInCamelCase()
