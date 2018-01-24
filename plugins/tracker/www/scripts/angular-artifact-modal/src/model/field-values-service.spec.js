@@ -401,7 +401,7 @@ describe("TuleapArtifactFieldValuesService", () => {
                     ]
                 };
                 var output = FieldValuesService.getSelectedValues(artifact_values, tracker);
-                expect(moment.fn.format).toHaveBeenCalledWith("YYYY-MM-DD HH:mm:ss");
+                expect(moment.fn.format).toHaveBeenCalledWith("YYYY-MM-DD HH:mm");
                 expect(output[609].field_id).toEqual(609);
                 expect(output[609].permissions).toEqual(["read", "update", "create"]);
             });
