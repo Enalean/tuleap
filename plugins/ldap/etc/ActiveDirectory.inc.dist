@@ -92,15 +92,21 @@ $sys_ldap_grp_enabled   = '1';
 
 // Specific DN where the user groups are
 $sys_ldap_grp_dn        = 'ou=groups,dc=tuleap,dc=local';
-// Field that reprsent group name
+
+// How group search is performed
+// - either 'onelevel' for search only within $sys_ldap_grp_dn branch
+// - or 'subtree' for a recursive look-up
+// be careful with the later, as it's used in autocompleter, LDAP server performances are critical for good responsiveness
+$sys_ldap_grp_search_scope = 'onelevel';
+
+// Field that represent group name
 $sys_ldap_grp_cn        = 'cn';
+
 // Field that indicate the membership of a user in a group
-
-//group identifier (for ActiveDirectory servers)
-$sys_ldap_grp_uid       = 'sAMAccountName';
-
-//group identifier (for ActiveDirectory servers)
 $sys_ldap_grp_member    = 'member';
+
+// Group identifier (for ActiveDirectory servers only)
+$sys_ldap_grp_uid       = 'sAMAccountName';
 
 // objectclass that distinguish groups
 $sys_ldap_grp_oc    = 'group';
@@ -111,6 +117,11 @@ $sys_ldap_user_oc    = 'person';
 // Threshold for users to be suspended
 // On beyond of this value expressed in percentage no users will be suspended
 $sys_ldap_threshold_users_suspension = '';
+
+// Search depth for daily sync
+// 'onelevel': search for users only into the level immediately below $sys_ldap_people_dn
+// 'subtree' : search for users into all $sys_ldap_people_dn subtrees (default)
+$search_depth = 'subtree';
 
 //
 // Write user accounts into an OpenLDAP server
