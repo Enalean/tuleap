@@ -621,8 +621,14 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory {
         $order_artifacts   = array();
         $indexed_rank      = array();
         $artifact_priority = new Tracker_Artifact_PriorityDao();
+        $sort_collection   = $this->backlog_item_builder->getCollection();
 
-        $ranks = $artifact_priority->getGlobalRanks($this->open_closed_and_inconsistent_collection[$milestone->getArtifactId()]->getItemIds());
+        $item_ids = $this->open_closed_and_inconsistent_collection[$milestone->getArtifactId()]->getItemIds();
+        if (count($item_ids) === 0) {
+            return $sort_collection;
+        }
+
+        $ranks = $artifact_priority->getGlobalRanks($item_ids);
         foreach ($ranks as $rank) {
             $indexed_rank[$rank['artifact_id']] = $rank['rank'];
         }
@@ -633,7 +639,6 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory {
 
         ksort($order_artifacts);
 
-        $sort_collection = $this->backlog_item_builder->getCollection();
 
         foreach ($order_artifacts as $artifact) {
             $sort_collection->push($artifact);
