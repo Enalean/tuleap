@@ -1,10 +1,12 @@
 import { copy }              from 'angular';
 import _                     from 'lodash';
-import moment                from 'moment';
 import AwkwardCreationFields from './awkward-creation-fields-constant.js';
 import {
     formatExistingValue as formatForLinkField
 } from '../tuleap-artifact-modal-fields/link-field/link-field-initializer.js';
+import {
+    formatExistingValue as formatForDateField
+} from '../tuleap-artifact-modal-fields/date-field/date-field-initializer.js';
 
 export default TuleapArtifactFieldValuesService;
 
@@ -54,15 +56,7 @@ function TuleapArtifactFieldValuesService(
 
         switch (field.type) {
             case 'date':
-                if (field.is_time_displayed) {
-                    if (artifact_value.value) {
-                        value_obj.value = moment(artifact_value.value, moment.ISO_8601).format('YYYY-MM-DD HH:mm:ss');
-                    }
-                } else {
-                    if (artifact_value.value) {
-                        value_obj.value = moment(artifact_value.value, moment.ISO_8601).format('YYYY-MM-DD');
-                    }
-                }
+                value_obj = formatForDateField(field, artifact_value);
                 break;
             case 'cb':
                 value_obj.bind_value_ids = mapCheckboxValues(field, artifact_value.bind_value_ids);

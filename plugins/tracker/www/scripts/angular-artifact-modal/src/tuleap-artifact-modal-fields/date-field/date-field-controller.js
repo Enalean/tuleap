@@ -25,7 +25,6 @@ function DateFieldController(
 
         if (self.field.is_time_displayed) {
             date_picker.setAttribute('data-enabletime', true);
-            removeSecondsToDate();
         }
 
         var options = {
@@ -39,10 +38,6 @@ function DateFieldController(
 
     function getFieldSize() {
         return (self.field.is_time_displayed) ? DATETIME_PICKER_SIZE : DATE_PICKER_SIZE;
-    }
-
-    function removeSecondsToDate() {
-        self.value_model.value = self.value_model.value.slice(0, -3);
     }
 
     function isRequiredAndEmpty() {
