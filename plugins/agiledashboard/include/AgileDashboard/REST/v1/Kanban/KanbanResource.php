@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -246,7 +246,8 @@ class KanbanResource extends AuthenticatedResource
         $this->filtered_item_collection_builder = new FilteredItemCollectionRepresentationBuilder(
             $report_from_where_builder,
             $report_artifact_factory,
-            $this->time_info_factory
+            $this->time_info_factory,
+            new Tracker_Artifact_PriorityDao()
         );
 
         $ordered_column_representation_builder = new OrderedColumnRepresentationsBuilder(
