@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,7 +23,7 @@ namespace Tuleap;
 
 use Tuleap\Request\CurrentPage;
 
-class BurningParrotCompatiblePageDetector_InHomePageTest extends \TuleapTestCase
+class BurningParrotCompatiblePageDetectorInHomePageTest extends \TuleapTestCase
 {
     private $dao;
     private $detector;
@@ -33,13 +33,23 @@ class BurningParrotCompatiblePageDetector_InHomePageTest extends \TuleapTestCase
         parent::setUp();
 
         $this->preserveServer('REQUEST_URI');
+        $this->preserveServer('SERVER_NAME');
+        \ForgeConfig::store();
 
         $this->dao = stub('Admin_Homepage_Dao')->isStandardHomepageUsed()->returns(true);
         $this->detector = new BurningParrotCompatiblePageDetector(new CurrentPage(), $this->dao);
     }
 
+    public function tearDown()
+    {
+        \ForgeConfig::restore();
+        parent::tearDown();
+    }
+
     public function itReturnsTrueWhenSlash()
     {
+        \ForgeConfig::set('sys_default_domain', 'tuleap.example.com');
+        $_SERVER['SERVER_NAME'] = 'tuleap.example.com';
         $_SERVER['REQUEST_URI'] = '/';
 
         $this->assertTrue($this->detector->isInHomepage());
@@ -47,6 +57,8 @@ class BurningParrotCompatiblePageDetector_InHomePageTest extends \TuleapTestCase
 
     public function itReturnsTrueWhenSlashIndex()
     {
+        \ForgeConfig::set('sys_default_domain', 'tuleap.example.com');
+        $_SERVER['SERVER_NAME'] = 'tuleap.example.com';
         $_SERVER['REQUEST_URI'] = '/index.php';
 
         $this->assertTrue($this->detector->isInHomepage());
@@ -55,8 +67,19 @@ class BurningParrotCompatiblePageDetector_InHomePageTest extends \TuleapTestCase
 
     public function itReturnsTrueWhenSlashIndexWithParams()
     {
+        \ForgeConfig::set('sys_default_domain', 'tuleap.example.com');
+        $_SERVER['SERVER_NAME'] = 'tuleap.example.com';
         $_SERVER['REQUEST_URI'] = '/index.php?foo=bar';
 
         $this->assertTrue($this->detector->isInHomepage());
+    }
+
+    public function itReturnsFalseWhenRunningOutsideTheBaseHostNames()
+    {
+        \ForgeConfig::set('sys_default_domain', 'tuleap.example.com');
+        $_SERVER['SERVER_NAME'] = 'webdav.tuleap.example.com';
+        $_SERVER['REQUEST_URI'] = '/';
+
+        $this->assertFalse($this->detector->isInHomepage());
     }
 }

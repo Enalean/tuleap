@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -90,7 +90,9 @@ class BurningParrotCompatiblePageDetector
 
     public function isInHomepage()
     {
-        return ($_SERVER['REQUEST_URI'] === '/' || strpos($_SERVER['REQUEST_URI'], '/index.php') === 0)
+        return ($_SERVER['SERVER_NAME'] === \ForgeConfig::get('sys_default_domain') ||
+                    $_SERVER['SERVER_NAME'] === \ForgeConfig::get('sys_https_host'))
+            && ($_SERVER['REQUEST_URI'] === '/' || strpos($_SERVER['REQUEST_URI'], '/index.php') === 0)
             && $this->homepage_dao->isStandardHomepageUsed();
     }
 
