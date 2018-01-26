@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -70,6 +70,17 @@ class Tracker_Artifact_MailGateway_CitationStripperTest extends TuleapTestCase {
         $this->assertIdentical(
             $this->citation_stripper->stripText($parsed_text_content),
             $text_content_witout_citation
+        );
+    }
+
+    public function itStripsCitationFromOutlookWhereNewLineAreNotCRFLF()
+    {
+        $parsed_text_content = file_get_contents($this->fixtures_dir .'/outlook_quote_no_crlf.txt');
+        $expected_text       = file_get_contents($this->fixtures_dir .'/expected_outlook_quote_no_crlf.txt');
+
+        $this->assertIdentical(
+            $this->citation_stripper->stripText($parsed_text_content),
+            $expected_text
         );
     }
 }
