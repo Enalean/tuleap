@@ -45,7 +45,6 @@ class CookieManager
         $cookie = new Cookie($this->getInternalCookieName($name));
         $cookie->setHttpOnly(true);
         $cookie->setSecureOnly($this->canCookieBeSecure());
-        $cookie->setDomain($this->getCookieDomain());
         $cookie->setSameSiteRestriction(Cookie::SAME_SITE_RESTRICTION_LAX);
 
         return $cookie;
@@ -55,33 +54,10 @@ class CookieManager
     {
         $lifetime  = 0;
         $path      = '/';
-        $domain    = $this->getCookieDomain();
+        $domain    = null;
         $secure    = $this->canCookieBeSecure();
         $http_only = true;
         session_set_cookie_params($lifetime, $path, $domain, $secure, $http_only);
-    }
-
-    /**
-     * @return string|null
-     */
-    private function getCookieDomain()
-    {
-        $sys_cookie_domain = ForgeConfig::get('sys_cookie_domain');
-        if (empty($sys_cookie_domain)) {
-            return null;
-        }
-
-        $host = ForgeConfig::get('sys_default_domain');
-        if ($this->canCookieBeSecure()) {
-            $host = ForgeConfig::get('sys_https_host');
-        }
-
-        $sys_cookie_domain = $this->getHostNameWithoutPort($sys_cookie_domain);
-        if ($this->getHostNameWithoutPort($host) === $sys_cookie_domain) {
-            return null;
-        }
-
-        return $sys_cookie_domain;
     }
 
     /**
@@ -90,14 +66,6 @@ class CookieManager
     private function canCookieBeSecure()
     {
         return (bool) ForgeConfig::get('sys_https_host');
-    }
-
-    private function getHostNameWithoutPort($domain) {
-        if (strpos($domain, ':') !== false) {
-            list($host,) = explode(':', $domain);
-            return $host;
-        }
-        return $domain;
     }
 
     public function getCookie($name)
@@ -131,10 +99,6 @@ class CookieManager
             return $cookie_name;
         }
 
-        if ($this->getCookieDomain() === null) {
-            return Cookie::PREFIX_HOST . $cookie_name;
-        }
-
-        return Cookie::PREFIX_SECURE . $cookie_name;
+        return Cookie::PREFIX_HOST . $cookie_name;
     }
 }
