@@ -44,21 +44,10 @@ class CookieManagerTest extends TuleapTestCase
         ForgeConfig::restore();
     }
 
-    public function itSetsCookieOnDomainWhenExplicitlyConfigured()
+    public function itSetsCookiePrefix()
     {
-        ForgeConfig::set('sys_cookie_domain', 'example.com');
-        $cookie_manager = new CookieManager();
-        $cookie_manager->setCookie('name', 'value');
-
-        $headers = xdebug_get_headers();
-
-        $this->assertEqual($headers[0], 'Set-Cookie: test_name=value; path=/; domain=.example.com; httponly; SameSite=Lax');
-    }
-
-    public function itDoesNotSetDomainWhenConfiguredCookieDomainIsTheSameThanTheConfiguredHost()
-    {
-        ForgeConfig::set('sys_cookie_domain', 'example.com');
-        ForgeConfig::set('sys_https_host', 'example.com:8080');
+        ForgeConfig::set('sys_default_domain', 'example.com');
+        ForgeConfig::set('sys_https_host', 'example.com');
         $cookie_manager = new CookieManager();
         $cookie_manager->setCookie('name', 'value');
 
@@ -67,23 +56,10 @@ class CookieManagerTest extends TuleapTestCase
         $this->assertEqual($headers[0], 'Set-Cookie: __Host-test_name=value; path=/; secure; httponly; SameSite=Lax');
     }
 
-    public function itSetsSecurePrefixWheneverHTTPSIsAvailable()
-    {
-        ForgeConfig::set('sys_cookie_domain', '.example.com');
-        ForgeConfig::set('sys_https_host', 'https.example.com');
-        $cookie_manager = new CookieManager();
-        $cookie_manager->setCookie('name', 'value');
-
-        $headers = xdebug_get_headers();
-
-        $this->assertEqual($headers[0], 'Set-Cookie: __Secure-test_name=value; path=/; domain=.example.com; secure; httponly; SameSite=Lax');
-    }
-
     public function itDoesNotSetCookiePrefixIfHTTPSIsNotAvailable()
     {
         ForgeConfig::set('sys_default_domain', 'example.com');
         ForgeConfig::set('sys_https_host', '');
-        ForgeConfig::set('sys_cookie_domain', '');
         $cookie_manager = new CookieManager();
         $cookie_manager->setCookie('name', 'value');
 

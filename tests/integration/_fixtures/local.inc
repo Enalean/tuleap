@@ -16,15 +16,6 @@ $sys_custompluginspath = "/customplugins";
 // to indicate a specific port for the https traffic (default 443)
 $sys_https_host = "%sys_default_domain%";
 
-//This is used for cookie authentication. If you have distributed servers,
-//please use a generic domain to allow single sign on.
-//Examples:
-//- you have 1 server (s1.example.com)
-//   => cookie domain is "s1.example.com"
-//- you have 2 servers (s1.example.com & s2.example.com)
-//   => cookie domain should be "example.com" for SSO
-$sys_cookie_domain = "%sys_default_domain%";
-
 // Machine that hosts the mailing lists (This could also be
 // the mail host if you have enough horsepower & bandwidth)
 // /!\ Developers: if you need to change the default value, it will have an
