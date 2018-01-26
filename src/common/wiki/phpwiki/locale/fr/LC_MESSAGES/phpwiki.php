@@ -706,8 +706,6 @@ $locale["Empty link to: %s"] =
    "Aucune correspondance de lien pour %s.";
 $locale["Empty pagename!"] =
    "La page n'a aucun titre !";
-$locale["Enable configurable polls"] =
-   "Permettre de faire des sondages configurables";
 $locale["Enter pages seperated by space or comma. Wildcards (fileglobbing) allowed."] =
    "Entrer les pages séparées par des virgules.";
 $locale["Enter your UserId to sign in"] =
@@ -1330,8 +1328,6 @@ $locale["PhpWikiAdministration/SetAcl"] =
    "AdministrationDePhpWiki/DéfinirAcl";
 $locale["PhpWikiDocumentation"] =
    "DocumentationDePhpWiki";
-$locale["PhpWikiPoll"] =
-   "SondagePhpWiki";
 $locale["Please check it through before saving."] =
    "Veuillez la vérifier avant de la sauver.";
 $locale["Please contact your PhpWiki administrator for assistance."] =
@@ -1742,8 +1738,6 @@ $locale["The most recent %s during the past day are listed below."] =
    "Les %s les plus récentes pendant le dernier jour sont listées ci-dessous.";
 $locale["The newest registered user is %s."] =
    "L'utilisateur enregistré le plus récent est %s.";
-$locale["The result of this poll so far:"] =
-   "Le résultat du sondage :";
 $locale["The session.save_path directory"] =
    "Le répertoire 'session.save_path'";
 $locale["The upload logfile is not writable."] =
@@ -2014,8 +2008,6 @@ $locale["WikiForum"] =
    "WikiForum";
 $locale["WikiPlugin"] =
    "PluginWiki";
-$locale["WikiPoll"] =
-   "WikiPoll";
 $locale["WikiWikiWeb"] =
    "WikiWikiWeb";
 $locale["Wikiname regexp"] =

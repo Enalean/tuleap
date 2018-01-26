@@ -1784,21 +1784,6 @@ OrphanedPages which are otherwise inaccessible.\
 \
 <?plugin AllPages?>	a:4:{s:6:"markup";s:1:"2";s:6:"author";s:28:"The PhpWiki programming team";s:9:"author_id";s:28:"The PhpWiki programming team";s:8:"pagetype";s:8:"wikitext";}
 6080	1	1431503105	0	<?plugin SearchHighlight ?>	a:4:{s:6:"markup";s:1:"2";s:6:"author";s:28:"The PhpWiki programming team";s:9:"author_id";s:28:"The PhpWiki programming team";s:8:"pagetype";s:8:"wikitext";}
-6081	1	1431503105	0	<?plugin WikiPoll require_all=0 require_least=2\
-           question[1]="Do you like PhpWiki?"\
-             answer[1][1]="Yes" answer[1][2]="Do not know" answer[1][3]="No"\
-           question[2]="Do you have PhpWiki installed by your own?"\
-             answer[2][1]="Yes" answer[2][2]="No"\
-           question[3]="Did you install any other wiki engine?"\
-             answer[3][1]="Yes" answer[3][2]="No"\
-           question[4]="What wiki engine do you like most?"\
-             answer[4][1]="c2Wiki" answer[4][2]="MoinMoin" answer[4][3]="PhpWiki"\
-             answer[4][4]="usemod" answer[4][5]="Twiki" answer[4][5]="guiki"\
-             answer[4][6]="Other"\
-           question[5]="Which PhpWiki version do you use?"\
-             answer[5][1]="1.2.x" answer[5][2]="1.3. 1-2" answer[5][3]="1.3. 3-4"\
-             answer[5][4]="1.3. 5-8"\
-?>	a:4:{s:6:"markup";s:1:"2";s:6:"author";s:28:"The PhpWiki programming team";s:9:"author_id";s:28:"The PhpWiki programming team";s:8:"pagetype";s:8:"wikitext";}
 6082	1	1431503105	0	<noinclude>\
 The following predefined variables are automatically expanded if existing:\
   pagename\

@@ -3827,53 +3827,6 @@ msgstr ""
 msgid "Handles threaded topics with comments/news and provide a input form"
 msgstr ""
 
-#: ../lib/plugin/WikiPoll.php:59
-msgid "WikiPoll"
-msgstr ""
-
-#: ../lib/plugin/WikiPoll.php:63
-msgid "Enable configurable polls"
-msgstr ""
-
-#: ../lib/plugin/WikiPoll.php:114
-#, php-format
-msgid "argument '%s' not declared by plugin"
-msgstr ""
-
-#: ../lib/plugin/WikiPoll.php:161 ../lib/plugin/WikiPoll.php:230
-msgid "Sorry! You must wait at least 20 minutes until you can vote again!"
-msgstr ""
-
-#: ../lib/plugin/WikiPoll.php:187
-msgid "Not enough questions answered!"
-msgstr ""
-
-#: ../lib/plugin/WikiPoll.php:196 ../lib/plugin/WikiPoll.php:257
-#, php-format
-msgid "Missing %s for %s"
-msgstr ""
-
-#: ../lib/plugin/WikiPoll.php:224
-msgid "Ok"
-msgstr ""
-
-#: ../lib/plugin/WikiPoll.php:227
-msgid "Reset"
-msgstr ""
-
-#: ../lib/plugin/WikiPoll.php:273 ../lib/plugin/WikiPoll.php:287
-#, php-format
-msgid "  %d%% (%d/%d)"
-msgstr ""
-
-#: ../lib/plugin/WikiPoll.php:303 ../lib/plugin/WikiPoll.php:305
-msgid "The result of this poll so far:"
-msgstr ""
-
-#: ../lib/plugin/WikiPoll.php:303
-msgid "Thanks for participating!"
-msgstr ""
-
 #: ../lib/plugin/_WikiTranslation.php:47
 msgid "AddCommentPlugin"
 msgstr ""
@@ -4042,10 +3995,6 @@ msgstr ""
 
 #: ../lib/plugin/_WikiTranslation.php:95
 msgid "PhpWikiDocumentation"
-msgstr ""
-
-#: ../lib/plugin/_WikiTranslation.php:96
-msgid "PhpWikiPoll"
 msgstr ""
 
 #: ../lib/plugin/_WikiTranslation.php:97
