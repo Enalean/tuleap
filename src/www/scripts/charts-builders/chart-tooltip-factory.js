@@ -53,8 +53,7 @@ export class TooltipFactory {
 
         this.bubble_arrow.append('path')
             .attr('d', this.arrow())
-            .attr('class', 'chart-tooltip-bubble')
-            .attr('transform', 'rotate(180)');
+            .attr('class', 'chart-tooltip-bubble');
 
         this.resizeTheBubble();
         this.positionBubble();
@@ -62,8 +61,8 @@ export class TooltipFactory {
         return this;
     }
 
-    static removeTooltips(conatiner) {
-        conatiner.selectAll('.chart-tooltip').remove();
+    static removeTooltips(container) {
+        container.selectAll('.chart-tooltip').remove();
     }
 
     getTooltipWidth() {
@@ -79,12 +78,9 @@ export class TooltipFactory {
     }
 
     getTooltipCoordinates() {
-        const { x, y, width } = this.tooltip_target.node().getBBox();
+        const target_position = this.tooltip_target.node().getBBox();
 
-        return {
-            tooltip_x: x - this.tooltip_middle + width / 2,
-            tooltip_y: y - this.tooltip_margin_bottom - this.tooltip_height
-        };
+        return this.getTooltipOrientation(target_position);
     }
 
     getTooltipArrow() {
@@ -99,15 +95,6 @@ export class TooltipFactory {
         this.bubble.attr('width', this.tooltip_width)
             .attr('height', this.tooltip_height)
             .attr('rx', 3);
-
-        this.bubble_arrow
-            .attr(
-                'transform',
-                `translate(
-                    ${ this.tooltip_middle },
-                    ${ this.tooltip_height }
-                )`
-            );
     }
 
     centerText() {
@@ -116,9 +103,21 @@ export class TooltipFactory {
     }
 
     positionBubble() {
-        const { tooltip_x, tooltip_y } = this.getTooltipCoordinates();
+        const {
+            tooltip_x,
+            tooltip_y,
+            arrow_x,
+            arrow_y,
+            arrow_angle
+        } = this.getTooltipCoordinates();
 
         this.tooltip.attr('transform', `translate(${ tooltip_x }, ${ tooltip_y })`);
+
+        this.bubble_arrow
+            .attr('transform', `translate(${ arrow_x }, ${ arrow_y })`);
+
+        this.bubble_arrow.select('.chart-tooltip-bubble')
+            .attr('transform', `rotate(${ arrow_angle })`);
 
         this.column.raise();
     }
@@ -136,5 +135,47 @@ export class TooltipFactory {
         this.positionBubble();
 
         return this;
+    }
+
+    getTooltipOrientation({
+        x     : target_x,
+        y     : target_y,
+        width : target_width,
+        height: target_height
+    }) {
+        if (this.shouldTooltipBeAtTheBottom(target_y)) {
+            return this.getBottomOrientedTooltipCoordinates(
+                target_x,
+                target_y,
+                target_width,
+                target_height
+            );
+        }
+
+        return this.getTopOrientedTooltipCoordinates(target_x, target_y, target_width);
+    }
+
+    shouldTooltipBeAtTheBottom(target_y) {
+        return target_y < (this.tooltip_height + this.tooltip_margin_bottom);
+    }
+
+    getBottomOrientedTooltipCoordinates(x, y, width, height) {
+        return {
+            tooltip_x  : x - this.tooltip_middle + width / 2,
+            tooltip_y  : y + this.tooltip_margin_bottom + height,
+            arrow_x    : this.tooltip_middle,
+            arrow_y    : this.tooltip_height - this.tooltip_height,
+            arrow_angle: 0
+        };
+    }
+
+    getTopOrientedTooltipCoordinates(x, y, width) {
+        return {
+            tooltip_x  : x - this.tooltip_middle + width / 2,
+            tooltip_y  : y - this.tooltip_margin_bottom - this.tooltip_height,
+            arrow_x    : this.tooltip_middle,
+            arrow_y    : this.tooltip_height,
+            arrow_angle: 180
+        };
     }
 }

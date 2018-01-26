@@ -49,7 +49,7 @@ function createBurnupChart({
     burnup_data
 }) {
     const tooltip_factory = new TooltipFactory({
-        tooltip_margin_bottom : 30,
+        tooltip_margin_bottom : 25,
         tooltip_padding_width : 15,
         tooltip_padding_height: 5,
         tooltip_arrow_size    : 150,

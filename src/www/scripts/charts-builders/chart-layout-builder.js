@@ -147,7 +147,7 @@ function addLegend(
     badge_data,
     graph_legends
 ) {
-    const legend_y_position = margins.top * 0.66;
+    const legend_y_position = margins.top * 0.5;
     const current_date      = moment(badge_data.date).format(localized_date_formats.day);
     const badge_value       = badge_data.value;
 
@@ -198,7 +198,7 @@ function addLegend(
             .attr('cx', ((data, index) => getElementSpacing(widths, index, 30, 10)))
             .attr('r', 5);
 
-    const right_legend_length = graph_width - right_legend.node().getBBox().width - margins.left;
+    const right_legend_length = graph_width - right_legend.node().getBBox().width - margins.right;
 
     right_legend.attr('transform', `translate(${ right_legend_length }, ${ legend_y_position })`);
 }
