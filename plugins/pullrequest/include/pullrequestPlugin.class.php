@@ -251,7 +251,10 @@ class pullrequestPlugin extends Plugin
             }
         }
 
-        $presenter = new AdditionalActionsPresenter($repository, $csrf, $branches, $dest_branches);
+        $has_an_unique_branch    = count($branches) === 1 && count($dest_branches) === 1;
+        $can_create_pull_request = !$has_an_unique_branch && !empty($branches) && !empty($dest_branches);
+
+        $presenter = new AdditionalActionsPresenter($repository, $csrf, $branches, $dest_branches, $can_create_pull_request);
         $params['actions'] = $renderer->renderToString($presenter->getTemplateName(), $presenter);
     }
 
