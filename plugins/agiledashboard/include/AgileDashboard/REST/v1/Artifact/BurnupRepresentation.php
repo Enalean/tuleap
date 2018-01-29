@@ -48,7 +48,7 @@ class BurnupRepresentation
     /**
      * @var array {@type BurnupPointRepresentation}
      */
-    public $points = array();
+    public $points_with_date = array();
 
     public function __construct($capacity, BurnupData $burnup_data = null)
     {
@@ -61,7 +61,7 @@ class BurnupRepresentation
         $this->is_under_calculation = JsonCast::toBoolean($burnup_data->isBeingCalculated());
         $this->opening_days         = array(1, 2, 3, 4, 5);
         foreach ($burnup_data->getEfforts() as $timestamp => $burnup_effort) {
-            $this->points[] = new BurnupPointRepresentation($burnup_effort, $timestamp);
+            $this->points_with_date[] = new BurnupPointRepresentation($burnup_effort, $timestamp);
         }
     }
 }

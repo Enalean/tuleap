@@ -24,9 +24,9 @@ export {
     getDifference
 };
 
-function getDaysToDisplay({ opening_days, duration, points, start_date }) {
+function getDaysToDisplay({ opening_days, duration, points_with_date, start_date }) {
     const dates           = [];
-    const start           = (points.length) ? points[0].date : start_date;
+    const start           = (points_with_date.length) ? points_with_date[0].date : start_date;
     const moment_iterator = moment(start, moment.ISO_8601);
 
     let i = 0;

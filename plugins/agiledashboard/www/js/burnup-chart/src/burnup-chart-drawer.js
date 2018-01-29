@@ -53,8 +53,8 @@ function createBurnupChart({
 
     const default_total_effort = 5,
           x_axis_tick_values   = getDaysToDisplay(burnup_data),
-          displayable_data     = getDisplayableData(burnup_data.points),
-          last_day_data        = getLastDayData(burnup_data.points),
+          displayable_data     = getDisplayableData(burnup_data.points_with_date),
+          last_day_data        = getLastDayData(burnup_data.points_with_date),
           total_effort         = getTotalEffort(burnup_data);
 
     const properties = {
@@ -83,7 +83,7 @@ function createBurnupChart({
         timeframe_granularity
     );
 
-    if (! burnup_data.points.length) {
+    if (! burnup_data.points_with_date.length) {
         last_day_data.date = moment();
 
         return;
@@ -258,8 +258,8 @@ function createBurnupChart({
             .attr('d', ideal_line_generator);
     }
 
-    function getTotalEffort({points, capacity}) {
-        const max_total_effort = max(points, ({ total_effort }) => total_effort);
+    function getTotalEffort({points_with_date, capacity}) {
+        const max_total_effort = max(points_with_date, ({ total_effort }) => total_effort);
 
         if (max_total_effort) {
             return max_total_effort;
