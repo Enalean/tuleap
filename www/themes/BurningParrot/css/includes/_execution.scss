@@ -266,6 +266,11 @@ $toolbar-height: 46px;
         background: $tlp-ui-success;
         color: $tlp-ui-white;
 
+        a {
+            color: $tlp-ui-white;
+            text-decoration: underline;
+        }
+
         > .current-test-header-who {
             color: transparentize($tlp-ui-white, .3);
         }
@@ -275,6 +280,11 @@ $toolbar-height: 46px;
         background: $tlp-ui-danger;
         color: $tlp-ui-white;
 
+        a {
+            color: $tlp-ui-white;
+            text-decoration: underline;
+        }
+
         > .current-test-header-who {
             color: transparentize($tlp-ui-white, .3);
         }
@@ -283,6 +293,11 @@ $toolbar-height: 46px;
     &.blocked > .tlp-pane-container > .current-test-header {
         background: $tlp-ui-info;
         color: $tlp-ui-white;
+
+        a {
+            color: $tlp-ui-white;
+            text-decoration: underline;
+        }
 
         > .current-test-header-who {
             color: transparentize($tlp-ui-white, .3);
