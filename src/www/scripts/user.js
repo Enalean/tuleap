@@ -1,38 +1,31 @@
 new Insertion.After('form_pw','<input type="button" name="generate" class="btn" value="Generate" onclick="setPwd()">');
 
-function generate(){
-    var lowercase = "abcdefghijklmnopqrstuvwxyz";
-    var uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    var numbers = "0123456789";
-    var specials_chars = "&%#|-!{?*+";
-    var pass = "";
-    pass += lowercase.substr($random(0,25),1);
-    pass += lowercase.substr($random(0,25),1);
-    pass += uppercase.substr($random(0,25),1);
-    pass += uppercase.substr($random(0,25),1);
-    pass += numbers.substr($random(0,9),1);
-    pass += numbers.substr($random(0,9),1);
-    pass += specials_chars.substr($random(0,9),1);
-    pass += specials_chars.substr($random(0,9),1);
+function generate(entropy_bits) {
+    const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789&%#|-!{?*+";
+    function getRandomChar() {
+        if (charset.length >= 256) {
+            throw "We cannot get a random char from a charset with more than 255 chars";
+        }
 
-    function $random(min, max){
-        return Math.floor(Math.random() * (max - min + 1) + min);
-    };
+        const random_byte = new Uint8Array(1);
+        const crypto      = window.crypto || window.msCrypto;
+        crypto.getRandomValues(random_byte);
 
-    function shuffle(sentence) {
-        return sentence.split("").sort(function(a,b) {
-                 if($random(0,100)%2 == 0) {
-                    return 1;
-                 } else {
-                    return -1;
-                 }
-            }).join("");
+        if (random_byte[0] >= charset.length) {
+            return getRandomChar();
+        }
+
+        return charset[random_byte[0]];
     }
-    pass = shuffle(pass);
+
+    const pass_length = Math.ceil(entropy_bits / (Math.log(charset.length) / Math.LN2));
+    let pass          = "";
+    for (let i  = 0; i < pass_length; i++) {
+        pass += getRandomChar();
+    }
     return pass;
 }
 
-function setPwd(){
-    var password = generate();
-    $('form_pw').value=password;
+function setPwd() {
+    $('form_pw').value = generate(128);
 }
