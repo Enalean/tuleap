@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -158,7 +158,13 @@ class Docman_Widget_Embedded extends Widget /* implements Visitor */ {
      * @return int the id of the new content
      * @todo Use dao instead of legacy db functions
      */
-    public function cloneContent($id, $owner_id, $owner_type) {
+    public function cloneContent(
+        Project $template_project,
+        Project $new_project,
+        $id,
+        $owner_id,
+        $owner_type
+    ) {
         $sql = "INSERT INTO plugin_docman_widget_embedded (owner_id, owner_type, title, item_id) 
                 SELECT  ". $owner_id .", '". $owner_type ."', title, item_id
                 FROM plugin_docman_widget_embedded

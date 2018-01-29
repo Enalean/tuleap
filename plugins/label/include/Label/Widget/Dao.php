@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -107,5 +107,40 @@ class Dao extends \DataAccessObject
                         WHERE widget.content_id = $content_id";
 
         $this->update($sql);
+    }
+
+    public function duplicate(
+        array $used_labels,
+        $content_id,
+        $template_project_id,
+        $new_project_id
+    ) {
+        try {
+            foreach ($used_labels as $used_label) {
+                $this->duplicateLabel($used_label['id'], $content_id, $template_project_id, $new_project_id);
+            }
+        } catch (DataAccessException $exception) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private function duplicateLabel($used_label_id, $content_id, $template_project_id, $new_project_id)
+    {
+        $used_label_id       = $this->da->escapeInt($used_label_id);
+        $content_id          = $this->da->escapeInt($content_id);
+        $template_project_id = $this->da->escapeInt($template_project_id);
+        $new_project_id      = $this->da->escapeInt($new_project_id);
+
+        $sql = "INSERT INTO plugin_label_widget_config (content_id, label_id)
+                SELECT $content_id, new_project_label.id
+                FROM project_label as template_label
+                  INNER JOIN project_label as new_project_label USING (name)
+                WHERE template_label.project_id = $template_project_id
+                  AND new_project_label.project_id = $new_project_id
+                  AND template_label.id = $used_label_id";
+
+        return $this->update($sql);
     }
 }

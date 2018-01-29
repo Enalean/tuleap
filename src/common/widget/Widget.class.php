@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -127,14 +127,17 @@ use Tuleap\Dashboard\User\UserDashboardController;
     * cloneContent
     *
     * Take the content of a widget, clone it and return the id of the new content
-    *
-    * @param $id the id of the content to clone
-    * @param $owner_id the owner of the widget of the new widget
-    * @param $owner_type the type of the owner of the new widget
     */
-    function cloneContent($id, $owner_id, $owner_type) {
+    public function cloneContent(
+        Project $template_project,
+        Project $new_project,
+        $id,
+        $owner_id,
+        $owner_type
+    ) {
         return $this->getInstanceId();
     }
+
     function create(&$request) {
     }
     function destroy($id) {

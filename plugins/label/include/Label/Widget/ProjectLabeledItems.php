@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,6 +24,7 @@ use Codendi_HTMLPurifier;
 use DataAccessException;
 use Feedback;
 use HTTPRequest;
+use Project;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Label\LabelDao;
 use Widget;
@@ -156,7 +157,7 @@ class ProjectLabeledItems extends Widget
 
     public function create(&$request)
     {
-        $this->content_id = $this->dao->create();
+        $this->storeContentId();
 
         $project_labels = $this->getProjectLabels();
         $this->storeLabelsConfiguration($request, $project_labels);
@@ -164,6 +165,10 @@ class ProjectLabeledItems extends Widget
         return $this->content_id;
     }
 
+    private function storeContentId()
+    {
+        $this->content_id = $this->dao->create();
+    }
 
     public function updatePreferences(&$request)
     {
@@ -255,5 +260,30 @@ class ProjectLabeledItems extends Widget
     private function getProject()
     {
         return HTTPRequest::instance()->getProject();
+    }
+
+    public function cloneContent(
+        Project $template_project,
+        Project $new_project,
+        $template_content_id,
+        $owner_id,
+        $owner_type
+    ) {
+        $this->storeContentId();
+        $this->duplicateContent($template_project, $new_project, $template_content_id);
+
+        return $this->content_id;
+    }
+
+    private function duplicateContent(Project $template_project, Project $new_project, $template_content_id)
+    {
+        $used_labels = $this->config_retriever->getLabelsConfig($template_content_id);
+
+        return $this->dao->duplicate(
+            $used_labels,
+            $this->content_id,
+            $template_project->getID(),
+            $new_project->getID()
+        );
     }
 }
