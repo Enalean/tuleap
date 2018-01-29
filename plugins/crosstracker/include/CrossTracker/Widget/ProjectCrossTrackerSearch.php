@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,6 +21,7 @@
 namespace Tuleap\CrossTracker\Widget;
 
 use HTTPRequest;
+use Project;
 use TemplateRendererFactory;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\CrossTracker\CrossTrackerReportDao;
@@ -94,8 +95,13 @@ class ProjectCrossTrackerSearch extends Widget
         $this->getDao()->delete($content_id);
     }
 
-    public function cloneContent($id, $new_project_id, $owner_type)
-    {
+    public function cloneContent(
+        Project $template_project,
+        Project $new_project,
+        $id,
+        $new_project_id,
+        $owner_type
+    ) {
         $content_id      = $this->getDao()->create();
         $tracker_factory = $this->getTrackerFactory();
 

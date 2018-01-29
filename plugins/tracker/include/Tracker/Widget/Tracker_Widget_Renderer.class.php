@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
  *
  * This file is a part of Codendi.
  *
@@ -140,7 +140,13 @@ abstract class Tracker_Widget_Renderer extends Widget {
             ';
     }
 
-    function cloneContent($id, $owner_id, $owner_type) {
+    public function cloneContent(
+        Project $template_project,
+        Project $new_project,
+        $id,
+        $owner_id,
+        $owner_type
+    ) {
         $sql = "INSERT INTO tracker_widget_renderer (owner_id, owner_type, title, renderer_id) 
         SELECT  ". $owner_id .", '". $owner_type ."', title, renderer_id
         FROM widget_renderer

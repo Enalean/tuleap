@@ -135,6 +135,8 @@ class ProjectDashboardDuplicator
             $widget = $this->widget_factory->getInstanceByWidgetName($template_widget->getName());
             $widget->setOwner($template_project->getID(), ProjectDashboardController::LEGACY_DASHBOARD_TYPE);
             $new_content_id = $widget->cloneContent(
+                $template_project,
+                $new_project,
                 $template_widget->getContentId(),
                 $new_project->getID(),
                 ProjectDashboardController::LEGACY_DASHBOARD_TYPE

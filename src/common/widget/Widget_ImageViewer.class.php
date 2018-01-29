@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -117,8 +117,13 @@ class Widget_ImageViewer extends Widget {
             ';
     }
 
-    public function cloneContent($id, $owner_id, $owner_type)
-    {
+    public function cloneContent(
+        Project $template_project,
+        Project $new_project,
+        $id,
+        $owner_id,
+        $owner_type
+    ) {
         $da                = CodendiDataAccess::instance();
         $id                = $da->escapeInt($id);
         $template_owner_id = $da->escapeInt($this->owner_id);
