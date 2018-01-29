@@ -8,6 +8,7 @@ plugin_pullrequest	nb_pull_request_badge	$1 pull request
 plugin_pullrequest	nb_pull_request_badge_plural	$1 pull requests
 
 plugin_pullrequest	new_pull_request_button_title	Créer une pull request
+plugin_pullrequest	pull_request_can_not_be_created	Aucune pull request ne peut actuellement être créée
 plugin_pullrequest	new_pull_request_modal_title	Créer une pull request
 plugin_pullrequest	new_pull_request_modal_from	A partir de
 plugin_pullrequest	new_pull_request_modal_to	Dans

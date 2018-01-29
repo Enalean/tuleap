@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -36,15 +36,20 @@ class AdditionalActionsPresenter
     public $src_branches;
 
     /** @var array */
-    public $dest_branches;
+    public  $dest_branches;
+    /**
+     * @var bool
+     */
+    public $can_create_pull_request;
 
 
-    public function __construct(GitRepository $repository, CSRFSynchronizerToken $csrf, array $src_branches, array $dest_branches)
+    public function __construct(GitRepository $repository, CSRFSynchronizerToken $csrf, array $src_branches, array $dest_branches, $can_create_pull_request)
     {
-        $this->repository    = $repository;
-        $this->csrf_input    = $csrf->fetchHTMLInput();
-        $this->src_branches  = $src_branches;
-        $this->dest_branches = $dest_branches;
+        $this->repository              = $repository;
+        $this->csrf_input              = $csrf->fetchHTMLInput();
+        $this->src_branches            = $src_branches;
+        $this->dest_branches           = $dest_branches;
+        $this->can_create_pull_request = $can_create_pull_request;
     }
 
     public function getTemplateName()
@@ -60,6 +65,11 @@ class AdditionalActionsPresenter
     public function new_pull_request_button_title()
     {
         return $GLOBALS['Language']->getText('plugin_pullrequest', 'new_pull_request_button_title');
+    }
+
+    public function pull_request_can_not_be_created()
+    {
+        return $GLOBALS['Language']->getText('plugin_pullrequest', 'pull_request_can_not_be_created');
     }
 
     public function new_pull_request_modal_title()
