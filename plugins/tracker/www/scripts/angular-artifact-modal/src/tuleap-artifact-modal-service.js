@@ -39,7 +39,8 @@ function ArtifactModalService(
         initCreationModalModel,
         initEditionModalModel,
         showCreation,
-        showEdition
+        showEdition,
+        loading: TuleapArtifactModalLoading
     });
 
     /**
