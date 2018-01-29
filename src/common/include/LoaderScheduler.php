@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -39,10 +39,7 @@ class LoaderScheduler {
 
     private function startSession($is_script) {
         if (! $is_script) {
-            $this->cookie_manager->configureSessionCookie();
-            // Prevent "Pragma: no-cache" to be sent to user (break https & IE)
-            session_cache_limiter(false);
-            session_start();
+            PHP_Session::start();
             $GLOBALS['session_hash'] = $this->cookie_manager->isCookie('session_hash') ?
                 $this->cookie_manager->getCookie('session_hash') : false;
         }

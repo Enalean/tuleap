@@ -44,26 +44,16 @@ class CookieManager
     {
         $cookie = new Cookie($this->getInternalCookieName($name));
         $cookie->setHttpOnly(true);
-        $cookie->setSecureOnly($this->canCookieBeSecure());
+        $cookie->setSecureOnly(self::canCookieUseSecureFlag());
         $cookie->setSameSiteRestriction(Cookie::SAME_SITE_RESTRICTION_LAX);
 
         return $cookie;
     }
 
-    public function configureSessionCookie()
-    {
-        $lifetime  = 0;
-        $path      = '/';
-        $domain    = null;
-        $secure    = $this->canCookieBeSecure();
-        $http_only = true;
-        session_set_cookie_params($lifetime, $path, $domain, $secure, $http_only);
-    }
-
     /**
      * @return bool
      */
-    private function canCookieBeSecure()
+    public static function canCookieUseSecureFlag()
     {
         return (bool) ForgeConfig::get('sys_https_host');
     }
@@ -95,7 +85,7 @@ class CookieManager
         $cookie_prefix = ForgeConfig::get('sys_cookie_prefix');
         $cookie_name   = "${cookie_prefix}_${name}";
 
-        if (! $this->canCookieBeSecure()) {
+        if (! self::canCookieUseSecureFlag()) {
             return $cookie_name;
         }
 
