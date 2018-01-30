@@ -2,7 +2,9 @@
     <div class="agiledashboard-milestone-details-graphs">
         {{# has_burndown }}
             <h3>{{ burndown_label }}</h3>
-            <img src="{{ burndown_url }}" width="640" height="480">
+            {{# burndown_presenter }}
+                {{> ../../tracker/templates/burndown-field }}
+            {{/ burndown_presenter }}
         {{/ has_burndown }}
         {{# has_burnup }}
             <h3>{{ burnup_label }}</h3>

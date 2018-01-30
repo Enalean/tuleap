@@ -85,14 +85,14 @@ class DetailsPresenterBuilder
         $artifact = $milestone->getArtifact();
 
 
-        $burndown_field   = $artifact->getABurndownField($user);
-        $has_burndown     = false;
-        $burndown_label   = null;
-        $burndown_url     = null;
+        $burndown_field     = $artifact->getABurndownField($user);
+        $has_burndown       = false;
+        $burndown_label     = null;
+        $burndown_presenter = null;
         if ($burndown_field) {
-            $has_burndown   = true;
-            $burndown_label = $burndown_field->getLabel();
-            $burndown_url   = $burndown_field->getBurndownImageUrl($artifact);
+            $has_burndown       = true;
+            $burndown_label     = $burndown_field->getLabel();
+            $burndown_presenter = $burndown_field->buildPresenter($artifact, $user);
         }
 
         $has_burnup       = false;
@@ -108,9 +108,9 @@ class DetailsPresenterBuilder
         return new DetailsChartPresenter(
             $has_burndown,
             $burndown_label,
-            $burndown_url,
             $has_burnup,
             $burnup_label,
+            $burndown_presenter,
             $burnup_presenter
         );
     }
