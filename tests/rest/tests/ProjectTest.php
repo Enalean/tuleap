@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2017. All rights reserved
+ * Copyright (c) Enalean, 2013 - 2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -636,7 +636,7 @@ class ProjectTest extends ProjectBase
         $response = $this->getResponse($this->client->get('projects/'.$this->project_private_member_id.'/user_groups'));
         $expected_result = array(
 
-            0 => array(
+            array(
                 'id' => $this->project_private_member_id.'_'.REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_MEMBERS_ID,
                 'uri' => 'user_groups/'.$this->project_private_member_id.'_'.REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_MEMBERS_ID,
                 'label' => 'Project members',
@@ -644,7 +644,7 @@ class ProjectTest extends ProjectBase
                 'key' => REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_MEMBERS_KEY,
                 'short_name' => 'project_members'
             ),
-            1 => array(
+            array(
                 'id' => $this->project_private_member_id.'_'.REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_ADMINS_ID,
                 'uri' => 'user_groups/'.$this->project_private_member_id.'_'.REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_ADMINS_ID,
                 'label' => 'Project administrators',
@@ -652,15 +652,7 @@ class ProjectTest extends ProjectBase
                 'key' => 'ugroup_'.REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_ADMINS_LABEL.'_name_key',
                 'short_name' => 'project_admins'
             ),
-            2 => array(
-                'id' => (string) REST_TestDataBuilder::DYNAMIC_UGROUP_AUTHENTICATED_USERS_ID,
-                'uri' => 'user_groups/'.REST_TestDataBuilder::DYNAMIC_UGROUP_AUTHENTICATED_USERS_ID,
-                'label' => 'Registered and restricted users',
-                'users_uri' => 'user_groups/'.REST_TestDataBuilder::DYNAMIC_UGROUP_AUTHENTICATED_USERS_ID.'/users',
-                'key' => 'ugroup_'.REST_TestDataBuilder::DYNAMIC_UGROUP_AUTHENTICATED_USERS_LABEL.'_name_key',
-                'short_name' => 'authenticated_users'
-            ),
-            3 => array(
+            array(
                 'id'         => $this->project_private_member_id.'_'.REST_TestDataBuilder::DYNAMIC_UGROUP_FILE_MANAGER_ID,
                 'uri'        => 'user_groups/'.$this->project_private_member_id.'_'.REST_TestDataBuilder::DYNAMIC_UGROUP_FILE_MANAGER_ID,
                 'label'      => REST_TestDataBuilder::DYNAMIC_UGROUP_FILE_MANAGER_LABEL,
@@ -668,7 +660,7 @@ class ProjectTest extends ProjectBase
                 'key'        => 'ugroup_file_manager_admin_name_key',
                 'short_name' => 'file_manager_admins'
             ),
-            4 => array(
+            array(
                 'id' => $this->project_private_member_id.'_'.REST_TestDataBuilder::DYNAMIC_UGROUP_WIKI_ADMIN_ID,
                 'uri' => 'user_groups/'.$this->project_private_member_id.'_'.REST_TestDataBuilder::DYNAMIC_UGROUP_WIKI_ADMIN_ID,
                 'label' => 'Wiki administrators',
@@ -676,7 +668,7 @@ class ProjectTest extends ProjectBase
                 'key' => 'ugroup_wiki_admin_name_key',
                 'short_name' => 'wiki_admins'
             ),
-            5 => array(
+            array(
                 'id' => $this->project_private_member_id.'_'.REST_TestDataBuilder::DYNAMIC_UGROUP_FORUM_ADMIN_ID,
                 'uri' => 'user_groups/'.$this->project_private_member_id.'_'.REST_TestDataBuilder::DYNAMIC_UGROUP_FORUM_ADMIN_ID,
                 'label' => 'Forum moderators',
@@ -684,7 +676,7 @@ class ProjectTest extends ProjectBase
                 'key' => 'ugroup_forum_admin_name_key',
                 'short_name' => 'forum_admins'
             ),
-            6 => array(
+            array(
                 'id'         => $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_NEWS_ADMIN_ID,
                 'uri'        => 'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_NEWS_ADMIN_ID,
                 'label'      => 'News administrators',
@@ -693,7 +685,7 @@ class ProjectTest extends ProjectBase
                 'short_name' => 'news_admins'
 
             ),
-            7 => array(
+            array(
                 'id'         => $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_NEWS_WRITER_ID,
                 'uri'        => 'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_NEWS_WRITER_ID,
                 'label'      => 'News writers',
@@ -701,7 +693,7 @@ class ProjectTest extends ProjectBase
                 'key'        => 'ugroup_news_writer_name_key',
                 'short_name' => 'news_editors'
             ),
-            8 => array(
+            array(
                 'id' => (string) REST_TestDataBuilder::STATIC_UGROUP_1_ID,
                 'uri' => 'user_groups/'.REST_TestDataBuilder::STATIC_UGROUP_1_ID,
                 'label' => REST_TestDataBuilder::STATIC_UGROUP_1_LABEL,
@@ -709,7 +701,7 @@ class ProjectTest extends ProjectBase
                 'key' => REST_TestDataBuilder::STATIC_UGROUP_1_LABEL,
                 'short_name' => 'static_ugroup_1'
             ),
-            9 => array(
+            array(
                 'id' => (string) REST_TestDataBuilder::STATIC_UGROUP_2_ID,
                 'uri' => 'user_groups/'.REST_TestDataBuilder::STATIC_UGROUP_2_ID,
                 'label' => REST_TestDataBuilder::STATIC_UGROUP_2_LABEL,
@@ -717,7 +709,7 @@ class ProjectTest extends ProjectBase
                 'key' => REST_TestDataBuilder::STATIC_UGROUP_2_LABEL,
                 'short_name' => 'static_ugroup_2'
             ),
-            10 => array(
+            array(
                 'id' => (string) REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID,
                 'uri' => 'user_groups/'.REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID,
                 'label' => REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_LABEL,
