@@ -379,8 +379,24 @@ $toolbar-height: 46px;
     cursor: pointer;
 }
 
+.artifact-link-graph-dot {
+    fill: $tlp-ui-white;
+}
+
+.artifact-link-graph-path {
+    stroke: $tlp-ui-white;
+}
+
 .notrun .current-test-header-action {
-    filter: drop-shadow(0 0 .5px #bbbbbb);
+    color: $tlp-ui-dimmed;
+
+    .artifact-link-graph-dot {
+        fill: $tlp-ui-dimmed;
+    }
+
+    .artifact-link-graph-path {
+        stroke: $tlp-ui-dimmed;
+    }
 }
 
 .current-test-content {
