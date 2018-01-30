@@ -24,7 +24,7 @@
                 <h1 class="current-test-header-title">
                     {{ execution.definition.summary }}
                 </h1>
-                <div class="current-test-header-who">
+                <div class="current-test-header-who" ng-if="execution.previous_result.has_been_run_at_least_once">
                     <span ng-if="execution.previous_result.submitted_on">
                         {{ execution.previous_result.submitted_on | amCalendar }}
                     </span>

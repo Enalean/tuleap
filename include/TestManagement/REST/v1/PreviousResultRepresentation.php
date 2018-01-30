@@ -45,10 +45,22 @@ class PreviousResultRepresentation {
      */
     public $result;
 
-    public function build($submitted_on, UserRepresentation $submitted_by, $status, $result) {
-        $this->submitted_on = JsonCast::toDate($submitted_on);
-        $this->submitted_by = $submitted_by;
-        $this->status       = $status;
-        $this->result       = $result;
+    /**
+     * @var bool
+     */
+    public $has_been_run_at_least_once;
+
+    public function build(
+        $submitted_on,
+        UserRepresentation $submitted_by,
+        $status,
+        $result,
+        $has_been_run_at_least_once
+    ) {
+        $this->submitted_on               = JsonCast::toDate($submitted_on);
+        $this->submitted_by               = $submitted_by;
+        $this->status                     = $status;
+        $this->result                     = $result;
+        $this->has_been_run_at_least_once = $has_been_run_at_least_once;
     }
 }

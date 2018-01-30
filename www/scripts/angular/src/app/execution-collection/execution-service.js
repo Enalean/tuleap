@@ -197,6 +197,8 @@ function ExecutionService(
             _.assign(execution, execution_updated);
         }
 
+        execution.previous_result.has_been_run_at_least_once = true;
+
         execution.saving       = false;
         execution.submitted_by = null;
         execution.error        = '';
