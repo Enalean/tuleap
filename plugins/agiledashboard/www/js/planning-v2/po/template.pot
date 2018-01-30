@@ -54,10 +54,6 @@ msgid "Detailed view"
 msgstr ""
 
 #: src/app/milestone/milestone.tpl.html
-msgid "Details"
-msgstr ""
-
-#: src/app/milestone/milestone.tpl.html
 msgid "Edit"
 msgstr ""
 
@@ -103,6 +99,10 @@ msgstr ""
 
 #: src/app/backlog-item/backlog-item-details/backlog-item-details.tpl.html
 msgid "No initial effort defined"
+msgstr ""
+
+#: src/app/milestone/milestone.tpl.html
+msgid "Overview"
 msgstr ""
 
 #: src/app/milestone/milestone.tpl.html
