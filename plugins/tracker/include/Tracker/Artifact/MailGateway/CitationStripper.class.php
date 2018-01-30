@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -94,12 +94,25 @@ class Tracker_Artifact_MailGateway_CitationStripper {
         return $content;
     }
 
-    private function stripOutlook($body, $lang) {
-        $pos_from    = strpos($body, "\r\n" . $this->outlook_header[$lang]['from']);
-        $pos_sent    = strpos($body, "\r\n" . $this->outlook_header[$lang]['sent'],    $pos_from);
-        $pos_to      = strpos($body, "\r\n" . $this->outlook_header[$lang]['to'],      $pos_sent);
-        $pos_subject = strpos($body, "\r\n" . $this->outlook_header[$lang]['subject'], $pos_to);
-        $pos_body    = strpos($body, "\r\n\r\n", $pos_subject);
+    private function stripOutlook($body, $lang)
+    {
+        $stripped_body = $this->stripOutlookAccordingToNewLine($body, $lang, "\r\n");
+        if ($stripped_body === $body) {
+            $stripped_body = $this->stripOutlookAccordingToNewLine($body, $lang, "\n");
+        }
+        return $stripped_body;
+    }
+
+    /**
+     * @return string
+     */
+    private function stripOutlookAccordingToNewLine($body, $lang, $new_line)
+    {
+        $pos_from    = strpos($body, $new_line . $this->outlook_header[$lang]['from']);
+        $pos_sent    = strpos($body, $new_line . $this->outlook_header[$lang]['sent'],    $pos_from);
+        $pos_to      = strpos($body, $new_line . $this->outlook_header[$lang]['to'],      $pos_sent);
+        $pos_subject = strpos($body, $new_line . $this->outlook_header[$lang]['subject'], $pos_to);
+        $pos_body    = strpos($body, $new_line . $new_line, $pos_subject);
 
         if ($pos_from !== false && $pos_sent !== false && $pos_to !== false && $pos_subject !== false && $pos_body !== false) {
             return substr($body, 0, $pos_from);
