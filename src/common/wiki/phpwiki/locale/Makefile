@@ -202,7 +202,6 @@ ${POT_FILE}: ../lib/plugin/WikiBlog.php
 ${POT_FILE}: ../lib/plugin/WikiForm.php
 ${POT_FILE}: ../lib/plugin/WikiFormRich.php
 ${POT_FILE}: ../lib/plugin/WikiForum.php
-${POT_FILE}: ../lib/plugin/WikiPoll.php
 ${POT_FILE}: ../lib/plugin/_WikiTranslation.php
 ${POT_FILE}: ../lib/prepend.php
 ${POT_FILE}: ../lib/removepage.php

@@ -486,7 +486,7 @@ class WikiPage {
              ,"RichTablePlugin","RssFeedPlugin","SearchHighlightPlugin"
              ,"SyntaxHighlighterPlugin","TemplateExample","TemplatePlugin"
              ,"TranscludePlugin","UnfoldSubpagesPlugin","WikiBlogPlugin"
-             ,"CalendarPlugin","PhpWikiPoll"
+             ,"CalendarPlugin"
              
              // Wiki doc page
              ,"WikiPlugin","OldStyleTablePlugin","OldTextFormattingRules"
@@ -531,7 +531,7 @@ class WikiPage {
              ,"URLMagiquesPhpWiki" ,"VersionsRécentes" ,"VisiteursRécents"
              ,"WabiSabi" ,"WikiWikiWeb" ,"DernièresModifs" ,"CatégorieGroupes" 
              ,"SteveWainstead" ,"PluginInsérer" ,"StyleCorrect" ,"DétailsTechniques" 
-             ,"PagesFloues" ,"PluginInfosSystème", "PagesOrphelines" ,"SondagePhpWiki"
+             ,"PagesFloues" ,"PluginInfosSystème", "PagesOrphelines"
              
              // Old projects initialised their wiki with the old set of internal pages (pgsrc folder)
              // In the current version of PHPWiki, we initialise wiki with a different folder. 

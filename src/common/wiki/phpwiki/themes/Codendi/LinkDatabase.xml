@@ -972,8 +972,6 @@
 
 <node name="PhpWikiAdministrationx2f.SetAcl"><label>PhpWikiAdministration/SetAcl</label><dataref><ref xlink:href="http://reini/wiki/sidebar/PhpWikiAdministration/SetAcl"/></dataref></node>
 
-<node name="PhpWikiPoll"><label>PhpWikiPoll</label><dataref><ref xlink:href="http://reini/wiki/sidebar/PhpWikiPoll"/></dataref></node>
-
 <node name="WikiForum"><label>WikiForum</label><dataref><ref xlink:href="http://reini/wiki/sidebar/WikiForum"/></dataref></node>
 
 <node name="Diff"><label>Diff</label><dataref><ref xlink:href="http://reini/wiki/sidebar/Diff"/></dataref></node>
@@ -1235,7 +1233,6 @@
 <edge source="SfNetHomePage" target="PhpWiki"/>
 <edge source="SfNetHomePage" target="UserPreferences"/>
 <edge source="SfNetHomePage" target="PgsrcTranslation"/>
-<edge source="SfNetHomePage" target="PhpWikiPoll"/>
 <edge source="SfNetHomePage" target="AddCommentPlugin"/>
 <edge source="SfNetHomePage" target="CreateTocPlugin"/>
 <edge source="SfNetHomePage" target="PhpWikiDocumentation"/>
@@ -1544,8 +1541,6 @@
 <edge source="RechercheInterWiki" target="PluginWiki"/>
 
 <node name="SommaireDuProjet"><label>SommaireDuProjet</label><dataref><ref xlink:href="http://reini/wiki/sidebar/SommaireDuProjet"/></dataref></node>
-
-<node name="SondagePhpWiki"><label>SondagePhpWiki</label><dataref><ref xlink:href="http://reini/wiki/sidebar/SondagePhpWiki"/></dataref></node>
 
 <node name="TestDeCache"><label>TestDeCache</label><dataref><ref xlink:href="http://reini/wiki/sidebar/TestDeCache"/></dataref></node>
 <edge source="TestDeCache" target="TestDeCache"/>

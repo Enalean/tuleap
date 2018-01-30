@@ -93,7 +93,6 @@ $pgsrc_container =
     _("PhpWikiAdministration/Replace") .','.
     _("PhpWikiAdministration/SetAcl") .','.
     _("PhpWikiDocumentation") .','.
-    _("PhpWikiPoll") .','.
     _("PloticusPlugin") .','.
     _("PgsrcTranslation") .','.
     _("PgsrcTranslation/de") .','.
