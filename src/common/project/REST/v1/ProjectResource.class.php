@@ -938,9 +938,15 @@ class ProjectResource extends AuthenticatedResource {
         $project = $this->getProjectForUser($id);
         $this->userCanSeeUserGroups($id);
 
-        $excluded_ugroups_ids = array(ProjectUGroup::NONE, ProjectUGroup::ANONYMOUS, ProjectUGroup::REGISTERED);
-        $ugroups              = $this->ugroup_manager->getUGroups($project, $excluded_ugroups_ids);
-        $user_groups          = $this->getUserGroupsRepresentations($ugroups, $id);
+        $excluded_ugroups_ids = array(
+            ProjectUGroup::NONE,
+            ProjectUGroup::ANONYMOUS,
+            ProjectUGroup::REGISTERED,
+            ProjectUGroup::AUTHENTICATED
+        );
+
+        $ugroups     = $this->ugroup_manager->getUGroups($project, $excluded_ugroups_ids);
+        $user_groups = $this->getUserGroupsRepresentations($ugroups, $id);
 
         $this->sendAllowHeadersForProject();
 
