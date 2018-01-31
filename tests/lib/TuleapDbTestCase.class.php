@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -50,6 +50,7 @@ abstract class TuleapDbTestCase extends TuleapTestCase {
         }
         $this->mysqli->select_db($GLOBALS['sys_dbname']);
         db_connect();
+        \Tuleap\DB\DBFactory::instance();
     }
 
     public function skip() {

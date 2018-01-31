@@ -52,8 +52,8 @@ class Factory
      */
     public function getPullRequestById($id)
     {
-        $row = $this->dao->searchByPullRequestId($id)->getRow();
-        if ($row === false) {
+        $row = $this->dao->searchByPullRequestId($id);
+        if (empty($row)) {
             throw new PullRequestNotFoundException();
         }
 
@@ -138,21 +138,21 @@ class Factory
      */
     public function create(PFUser $user, PullRequest $pull_request, $project_id)
     {
-        $new_pull_request_id = $this->dao->create(
-            $pull_request->getRepositoryId(),
-            $pull_request->getTitle(),
-            $pull_request->getDescription(),
-            $pull_request->getUserId(),
-            $pull_request->getCreationDate(),
-            $pull_request->getBranchSrc(),
-            $pull_request->getSha1Src(),
-            $pull_request->getRepoDestId(),
-            $pull_request->getBranchDest(),
-            $pull_request->getSha1Dest(),
-            $pull_request->getMergeStatus()
-        );
-
-        if (! $new_pull_request_id) {
+        try {
+            $new_pull_request_id = $this->dao->create(
+                $pull_request->getRepositoryId(),
+                $pull_request->getTitle(),
+                $pull_request->getDescription(),
+                $pull_request->getUserId(),
+                $pull_request->getCreationDate(),
+                $pull_request->getBranchSrc(),
+                $pull_request->getSha1Src(),
+                $pull_request->getRepoDestId(),
+                $pull_request->getBranchDest(),
+                $pull_request->getSha1Dest(),
+                $pull_request->getMergeStatus()
+            );
+        } catch (\Exception $ex) {
             throw new PullRequestNotCreatedException();
         }
 
@@ -181,33 +181,33 @@ class Factory
 
     public function updateSourceRev(PullRequest $pull_request, $new_rev)
     {
-        return $this->dao->updateSha1Src($pull_request->getId(), $new_rev);
+        $this->dao->updateSha1Src($pull_request->getId(), $new_rev);
     }
 
     public function updateDestRev(PullRequest $pull_request, $new_rev)
     {
-        return $this->dao->updateSha1Dest($pull_request->getId(), $new_rev);
+        $this->dao->updateSha1Dest($pull_request->getId(), $new_rev);
     }
 
     public function updateMergeStatus(PullRequest $pull_request, $merge_status)
     {
-        return $this->dao->updateMergeStatus($pull_request->getId(), $merge_status);
+        $this->dao->updateMergeStatus($pull_request->getId(), $merge_status);
     }
 
     public function markAsAbandoned($pull_request)
     {
-        return $this->dao->markAsAbandoned($pull_request->getId());
+        $this->dao->markAsAbandoned($pull_request->getId());
     }
 
     public function markAsMerged($pull_request)
     {
-        return $this->dao->markAsMerged($pull_request->getId());
+        $this->dao->markAsMerged($pull_request->getId());
     }
 
     public function updateTitleAndDescription(PFUser $user, PullRequest $pull_request, $project_id, $new_title, $new_description)
     {
         $pull_request_id = $pull_request->getId();
-        $updated         = $this->dao->updateTitleAndDescription($pull_request_id, $new_title, $new_description);
+        $this->dao->updateTitleAndDescription($pull_request_id, $new_title, $new_description);
 
         $this->reference_manager->extractCrossRef(
             $new_title,
@@ -226,18 +226,16 @@ class Factory
             $user->getId(),
             pullrequestPlugin::PULLREQUEST_REFERENCE_KEYWORD
         );
-
-        return $updated;
     }
 
     public function updateLastBuildStatus(PullRequest $pull_request, $status, $date)
     {
-        if (   $status != PullRequest::BUILD_STATUS_FAIL
+        if ($status != PullRequest::BUILD_STATUS_FAIL
             && $status != PullRequest::BUILD_STATUS_SUCCESS
             && $status != PullRequest::BUILD_STATUS_UNKNOWN) {
             throw new InvalidBuildStatusException();
         }
 
-        return $this->dao->updateLastBuildStatus($pull_request->getId(), $status, $date);
+        $this->dao->updateLastBuildStatus($pull_request->getId(), $status, $date);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -103,8 +103,6 @@ class PullRequestCloserTest extends TuleapTestCase
 
     public function itMergesABranchIntoAnEmptyBranch()
     {
-        stub($this->dao)->markAsMerged(1)->returns(true);
-
         $chat_ouane_master = $this->git_exec->getBranchSha1('refs/heads/master');
         $chat_ouane_dev    = $this->git_exec->getBranchSha1('refs/heads/dev');
 
@@ -123,13 +121,11 @@ class PullRequestCloserTest extends TuleapTestCase
             'R'
         );
 
-        $result = $this->pull_request_closer->fastForwardMerge(
+        $this->pull_request_closer->fastForwardMerge(
             $this->git_repository,
             $this->git_repository,
             $pull_request
         );
-
-        $this->assertTrue($result);
 
         system("cd $this->git_repository_dir && git checkout master --quiet");
 
@@ -139,8 +135,6 @@ class PullRequestCloserTest extends TuleapTestCase
 
     public function itMergesABranchIntoAnotherBranchThatIsNotMaster()
     {
-        stub($this->dao)->markAsMerged(1)->returns(true);
-
         file_put_contents("$this->git_repository_dir/antiracing", "hatlike");
         system("cd $this->git_repository_dir && git checkout -b feature --quiet && git add . && git commit --quiet -m 'Add antiracing'");
 
@@ -162,13 +156,11 @@ class PullRequestCloserTest extends TuleapTestCase
             'R'
         );
 
-        $result = $this->pull_request_closer->fastForwardMerge(
+        $this->pull_request_closer->fastForwardMerge(
             $this->git_repository,
             $this->git_repository,
             $pull_request
         );
-
-        $this->assertTrue($result);
 
         system("cd $this->git_repository_dir && git checkout dev --quiet");
 
@@ -200,13 +192,11 @@ class PullRequestCloserTest extends TuleapTestCase
 
         expect($this->dao)->markAsMerged()->never();
 
-        $result = $this->pull_request_closer->fastForwardMerge(
+        $this->pull_request_closer->fastForwardMerge(
             $this->git_repository,
             $this->git_repository,
             $pull_request
         );
-
-        $this->assertTrue($result);
     }
 
     public function itThrowsAnExceptionIfPullRequestWasPreviouslyAbandoned()
@@ -243,8 +233,6 @@ class PullRequestCloserTest extends TuleapTestCase
 
     public function itMergesAForkBranchIntoAnEmptyBranch()
     {
-        stub($this->dao)->markAsMerged(1)->returns(true);
-
         $chat_ouane_master = $this->git_exec->getBranchSha1('72/master');
         $chat_ouane_dev    = $this->git_exec->getBranchSha1('refs/heads/dev');
 
@@ -265,13 +253,11 @@ class PullRequestCloserTest extends TuleapTestCase
             'R'
         );
 
-        $result = $this->pull_request_closer->fastForwardMerge(
+        $this->pull_request_closer->fastForwardMerge(
             $this->git_repository,
             $this->git_parent_repository,
             $pull_request
         );
-
-        $this->assertTrue($result);
 
         system("mkdir {$this->git_parent_repository_dir}_local");
         system("git clone --quiet $this->git_parent_repository_dir {$this->git_parent_repository_dir}_local");
@@ -282,8 +268,6 @@ class PullRequestCloserTest extends TuleapTestCase
 
     public function itMergesAForkBranchIntoAnotherBranchThatIsNotMaster()
     {
-        stub($this->dao)->markAsMerged(1)->returns(true);
-
         file_put_contents("$this->git_repository_dir/antiracing", "hatlike");
         system("cd $this->git_repository_dir && git checkout -b feature --quiet && git add . && git commit --quiet -m 'Add antiracing'");
 
@@ -307,13 +291,11 @@ class PullRequestCloserTest extends TuleapTestCase
             'R'
         );
 
-        $result = $this->pull_request_closer->fastForwardMerge(
+        $this->pull_request_closer->fastForwardMerge(
             $this->git_repository,
             $this->git_parent_repository,
             $pull_request
         );
-
-        $this->assertTrue($result);
 
         system("mkdir {$this->git_parent_repository_dir}_local");
         system("git clone --quiet $this->git_parent_repository_dir {$this->git_parent_repository_dir}_local");
@@ -348,13 +330,11 @@ class PullRequestCloserTest extends TuleapTestCase
 
         expect($this->dao)->markAsMerged()->never();
 
-        $result = $this->pull_request_closer->fastForwardMerge(
+        $this->pull_request_closer->fastForwardMerge(
             $this->git_repository,
             $this->git_parent_repository,
             $pull_request
         );
-
-        $this->assertTrue($result);
     }
 
     public function itThrowsAnExceptionIfForkPullRequestWasPreviouslyAbandoned()
@@ -388,6 +368,4 @@ class PullRequestCloserTest extends TuleapTestCase
             $pull_request
         );
     }
-
-
 }
