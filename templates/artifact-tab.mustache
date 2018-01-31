@@ -14,11 +14,21 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td class="table-cell-empty" colspan="3">
-                        {{# dgettext }} tuleap-timesheeting | There is nothing here ... for now ... {{/ dgettext }}
-                    </td>
-                </tr>
+                {{# times }}
+                    <tr>
+                        <td>{{ step }}</td>
+                        <td>{{ time }}</td>
+                        <td>{{ day }}</td>
+                    </tr>
+                {{/ times }}
+
+                {{^ times }}
+                    <tr>
+                        <td class="table-cell-empty" colspan="3">
+                            {{# dgettext }} tuleap-timesheeting | No times saved {{/ dgettext }}
+                        </td>
+                    </tr>
+                {{/ times }}
             </tbody>
         </table>
     </div>

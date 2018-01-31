@@ -1,0 +1,78 @@
+<?php
+/**
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+namespace Tuleap\Timesheeting\Time;
+
+class Time
+{
+    /**
+     * @var int
+     */
+    private $user_id;
+
+    /**
+     * @var int
+     */
+    private $artifact_id;
+
+    /**
+     * @var string
+     */
+    private $day;
+
+    /**
+     * @var int
+     */
+    private $minutes;
+
+    /**
+     * @var string
+     */
+    private $step;
+
+    public function __construct($user_id, $artifact_id, $day, $minutes, $step)
+    {
+        $this->user_id     = $user_id;
+        $this->artifact_id = $artifact_id;
+        $this->day         = $day;
+        $this->minutes     = $minutes;
+        $this->step        = $step;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAsPresenter()
+    {
+        return array(
+            'day'  => $this->day,
+            'time' => $this->getFormattedTime(),
+            'step' => $this->step
+        );
+    }
+
+    private function getFormattedTime()
+    {
+        $hours   = floor($this->minutes / 60);
+        $minutes = $this->minutes % 60;
+
+        return str_pad($hours, 2, "0", STR_PAD_LEFT) . ":" . str_pad($minutes, 2, "0", STR_PAD_LEFT);
+    }
+}

@@ -46,4 +46,18 @@ class TimeDao extends DataAccessObject
 
         return $this->update($sql);
     }
+
+    public function getTimesAddedInArtifactByUser($user_id, $artifact_id)
+    {
+        $user_id     = $this->da->escapeInt($user_id);
+        $artifact_id = $this->da->escapeInt($artifact_id);
+
+        $sql = "SELECT *
+                FROM plugin_timesheeting_times
+                WHERE user_id = $user_id
+                  AND artifact_id = $artifact_id
+                ORDER BY day DESC";
+
+        return $this->retrieve($sql);
+    }
 }

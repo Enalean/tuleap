@@ -45,8 +45,14 @@ class ArtifactViewBuilderTest extends TuleapTestCase
         $this->plugin                = mock('timesheetingPlugin');
         $this->enabler               = mock('Tuleap\Timesheeting\Admin\TimesheetingEnabler');
         $this->permissions_retriever = mock('Tuleap\Timesheeting\Permissions\PermissionsRetriever');
+        $this->time_retriever        = mock('Tuleap\Timesheeting\Time\TimeRetriever');
 
-        $this->builder = new ArtifactViewBuilder($this->plugin, $this->enabler, $this->permissions_retriever);
+        $this->builder = new ArtifactViewBuilder(
+            $this->plugin,
+            $this->enabler,
+            $this->permissions_retriever,
+            $this->time_retriever
+        );
     }
 
     public function itBuildsTheArtifactView()
@@ -55,6 +61,7 @@ class ArtifactViewBuilderTest extends TuleapTestCase
         stub($this->enabler)->isTimesheetingEnabledForTracker($this->tracker)->returns(true);
         stub($this->permissions_retriever)->userCanAddTimeInTracker($this->user, $this->tracker)->returns(true);
         stub($this->permissions_retriever)->userCanAddTimeInTracker($this->user, $this->tracker)->returns(true);
+        stub($this->time_retriever)->getTimesForUser($this->user, $this->artifact)->returns(array());
 
         $view = $this->builder->build($this->user, $this->request, $this->artifact);
 

@@ -29,6 +29,7 @@ use Tuleap\Timesheeting\ArtifactView\ArtifactViewBuilder;
 use Tuleap\Timesheeting\Permissions\PermissionsRetriever;
 use Tuleap\Timesheeting\Time\TimeController;
 use Tuleap\Timesheeting\Time\TimeDao;
+use Tuleap\Timesheeting\Time\TimeRetriever;
 use Tuleap\Timesheeting\Time\TimeUpdater;
 use Tuleap\Timesheeting\TimesheetingPluginInfo;
 use Tuleap\Timesheeting\Router;
@@ -173,7 +174,13 @@ class timesheetingPlugin extends Plugin
         $artifact   = $params['artifact'];
 
         $permissions_retriever = $this->getPermissionsRetriever();
-        $builder               = new ArtifactViewBuilder($this, $this->getTimesheetingEnabler(), $permissions_retriever);
+        $time_retriever        = new TimeRetriever(new TimeDao(), $permissions_retriever);
+        $builder               = new ArtifactViewBuilder(
+            $this,
+            $this->getTimesheetingEnabler(),
+            $permissions_retriever,
+            $time_retriever
+        );
 
         $view = $builder->build($user, $request, $artifact);
 

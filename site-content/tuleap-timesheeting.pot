@@ -19,6 +19,9 @@ msgstr ""
 msgid "Enable timesheeting for tracker"
 msgstr ""
 
+msgid "No times saved"
+msgstr ""
+
 msgid "Permissions"
 msgstr ""
 

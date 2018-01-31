@@ -27,6 +27,7 @@ use timesheetingPlugin;
 use Tracker_Artifact;
 use Tuleap\Timesheeting\Admin\TimesheetingEnabler;
 use Tuleap\Timesheeting\Permissions\PermissionsRetriever;
+use Tuleap\Timesheeting\Time\TimeRetriever;
 
 class ArtifactViewBuilder
 {
@@ -34,23 +35,32 @@ class ArtifactViewBuilder
      * @var timesheetingPlugin
      */
     private $plugin;
+
     /**
      * @var TimesheetingEnabler
      */
     private $timesheeting_enabler;
+
     /**
      * @var PermissionsRetriever
      */
     private $permissions_retriever;
 
+    /**
+     * @var TimeRetriever
+     */
+    private $time_retriever;
+
     public function __construct(
         TimesheetingPlugin $plugin,
         TimesheetingEnabler $timesheeting_enabler,
-        PermissionsRetriever $permissions_retriever
+        PermissionsRetriever $permissions_retriever,
+        TimeRetriever $time_retriever
     ) {
         $this->plugin                = $plugin;
         $this->timesheeting_enabler  = $timesheeting_enabler;
         $this->permissions_retriever = $permissions_retriever;
+        $this->time_retriever        = $time_retriever;
     }
 
     /**
@@ -77,9 +87,25 @@ class ArtifactViewBuilder
             return null;
         }
 
-        $csrf      = new CSRFSynchronizerToken($artifact->getUri());
-        $presenter = new ArtifactViewPresenter($artifact, $csrf, $user_cann_add_time);
+        $csrf            = new CSRFSynchronizerToken($artifact->getUri());
+        $time_presenters = $this->getTimePresenters($user, $artifact);
+
+        $presenter = new ArtifactViewPresenter($artifact, $csrf, $time_presenters, $user_cann_add_time);
 
         return new ArtifactView($artifact, $request, $user, $presenter);
+    }
+
+    /**
+     * @return array
+     */
+    private function getTimePresenters(PFUser $user, Tracker_Artifact $artifact)
+    {
+        $presenters = array();
+
+        foreach ($this->time_retriever->getTimesForUser($user, $artifact) as $time) {
+            $presenters[] = $time->getAsPresenter();
+        }
+
+        return $presenters;
     }
 }

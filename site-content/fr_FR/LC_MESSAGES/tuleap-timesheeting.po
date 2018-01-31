@@ -24,6 +24,9 @@ msgstr "Afficher vos timesheetings de toute la plateforme."
 msgid "Enable timesheeting for tracker"
 msgstr "Activer le timesheeting pour ce tracker"
 
+msgid "No times saved"
+msgstr "Aucun temps n'a été enregistré"
+
 msgid "Permissions"
 msgstr "Permissions"
 
