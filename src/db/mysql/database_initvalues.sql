@@ -624,7 +624,7 @@ INSERT INTO dashboards_lines_columns_widgets (id, column_id, rank, name, content
 INSERT INTO dashboards_lines_columns (id, line_id, rank) VALUES (2, 1, 1);
 INSERT INTO dashboards_lines_columns_widgets (id, column_id, rank, name, content_id, is_minimized) VALUES (2, 2, 0, 'projectheartbeat', 0, 0);
 
-INSERT INTO user_dashboards (id, user_id, name) VALUES (1, 101, 'Dashboard');
+INSERT INTO user_dashboards (id, user_id, name) VALUES (1, 101, 'My Dashboard');
 INSERT INTO dashboards_lines (id, dashboard_id, dashboard_type, layout, rank) VALUES (2, 1, 'user', 'two-columns', 0);
 INSERT INTO dashboards_lines_columns (id, line_id, rank) VALUES (3, 2, 0);
 INSERT INTO dashboards_lines_columns_widgets (id, column_id, rank, name, content_id, is_minimized) VALUES (3, 3, 0, 'mywelcomemessage', 0, 0);
