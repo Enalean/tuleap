@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -417,7 +417,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
     private function checkUserIsAllowedToSeeReport(PFUser $user, CrossTrackerReport $report)
     {
         $widget = $this->cross_tracker_dao->searchCrossTrackerWidgetByCrossTrackerReportId($report->getId());
-        if ($widget['dashboard_type'] === 'user' && $widget['user_id'] !== $user->getId()) {
+        if ($widget['dashboard_type'] === 'user' && $widget['user_id'] !== (int) $user->getId()) {
             throw new RestException(403);
         }
 

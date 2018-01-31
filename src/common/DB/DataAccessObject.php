@@ -41,4 +41,15 @@ class DataAccessObject
     {
         return $this->db;
     }
+
+    /**
+     * Returns the number of affected rows by the LAST query.
+     * Must be called immediately after performing a query.
+     *
+     * @return int
+     */
+    public function foundRows()
+    {
+        return $this->db->single('SELECT FOUND_ROWS()');
+    }
 }

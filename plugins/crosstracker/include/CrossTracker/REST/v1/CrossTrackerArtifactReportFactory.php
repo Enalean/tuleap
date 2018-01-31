@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  *  This file is a part of Tuleap.
  *
@@ -172,11 +172,11 @@ class CrossTrackerArtifactReportFactory
 
     /**
      * @param PFUser $current_user
-     * @param \DataAccessResult $results
+     * @param array $results
      * @param int $total_size
      * @return PaginatedCollectionOfCrossTrackerArtifacts
      */
-    private function buildCollectionOfArtifacts(PFUser $current_user, \DataAccessResult $results, $total_size)
+    private function buildCollectionOfArtifacts(PFUser $current_user, array $results, $total_size)
     {
         $artifacts = array();
         foreach ($results as $artifact) {

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  *  This file is a part of Tuleap.
  *
@@ -21,15 +21,14 @@
 
 namespace Tuleap\CrossTracker;
 
-use DataAccessObject;
+use ParagonIE\EasyDB\EasyStatement;
+use Tuleap\DB\DataAccessObject;
 
 class CrossTrackerArtifactReportDao extends DataAccessObject
 {
     public function searchArtifactsFromTracker(array $tracker_ids, $limit, $offset)
     {
-        $tracker_ids = $this->da->escapeIntImplode($tracker_ids);
-        $limit       = $this->da->escapeInt($limit);
-        $offset      = $this->da->escapeInt($offset);
+        $tracker_ids_statement = EasyStatement::open()->in('tracker_artifact.tracker_id IN (?*)', $tracker_ids);
 
         $sql = "SELECT
                   SQL_CALC_FOUND_ROWS
@@ -66,10 +65,14 @@ class CrossTrackerArtifactReportDao extends DataAccessObject
                       )
                       AND groups.status = 'A'
                       AND tracker.deletion_date IS NULL
-                      AND tracker_artifact.tracker_id IN ($tracker_ids)
+                      AND $tracker_ids_statement
                 ORDER BY tracker_artifact.id DESC
-                LIMIT $offset, $limit";
+                LIMIT ?, ?";
 
-        return $this->retrieve($sql);
+        $parameters   = $tracker_ids_statement->values();
+        $parameters[] = $offset;
+        $parameters[] = $limit;
+
+        return $this->getDB()->safeQuery($sql, $parameters);
     }
 }
