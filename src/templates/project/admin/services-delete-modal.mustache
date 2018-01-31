@@ -1,0 +1,48 @@
+<form method="POST"
+      action=""
+      class="tlp-modal tlp-modal-danger"
+      role="dialog"
+      id="project-admin-services-delete-modal-{{ id }}"
+      aria-labelledby="project-admin-services-delete-modal-{{ id }}-title"
+>
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="project-admin-services-delete-modal-{{ id }}-title">
+            <i class="fa fa-trash-o tlp-modal-title-icon"></i>
+            {{# gettext }} Delete service {{/ gettext }}
+        </h1>
+        <div class="tlp-modal-close" data-dismiss="modal" aria-label="{{# gettext }}Close{{/ gettext }}">
+            ×
+        </div>
+    </div>
+    <div class="tlp-modal-body">
+        {{# csrf }}
+            {{> csrf_token_input }}
+        {{/ csrf }}
+        <input type="hidden" name="group_id" value="{{ project_id }}">
+        <input type="hidden" name="action" value="delete">
+        <input type="hidden" name="service_id" value="{{ id }}">
+        {{# short_name }}
+            <input type="hidden" name="short_name" value="{{ short_name }}">
+        {{/ short_name }}
+        {{# is_default_template }}
+            <div class="tlp-alert tlp-alert-warning">
+                <i class="fa fa-warning tlp-alert-icon"></i>
+                {{# gettext }}This will remove this service from all projects.{{/ gettext }}
+            </div>
+        {{/ is_default_template }}
+        <p>
+            {{# gettext }}
+                You are about to delete the service <b>%s</b>. Please, confirm your action.
+                | {{ label }}
+            {{/ gettext }}
+        </p>
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="reset" class="tlp-button-danger tlp-button-outline tlp-modal-action" data-dismiss="modal">
+            {{# gettext }}Cancel{{/ gettext }}
+        </button>
+        <button type="submit" class="tlp-button-danger tlp-modal-action user-group-modal-button">
+            <i class="fa fa-trash-o tlp-button-icon"></i> {{# gettext }}Delete{{/ gettext }}
+        </button>
+    </div>
+</form>

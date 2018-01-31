@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -19,96 +19,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Layout\IncludeAssets;
+use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
+use Tuleap\Project\Service\AdminRouter;
+use Tuleap\Project\Service\DeleteController;
+use Tuleap\Project\Service\IndexController;
+use Tuleap\Project\Service\ServicesPresenterBuilder;
+
 require_once('pre.php');
 require_once('www/project/admin/project_admin_utils.php');
-require_once('common/reference/ReferenceManager.class.php');
-require_once('common/event/EventManager.class.php');
 
 $request = HTTPRequest::instance();
-
-function display_service_row($group_id, $service_id, $label, $short_name, $description, $is_active, $is_used, $scope, $rank, &$row_num, $su, $is_template) {
-    global $Language;
-    $matches = array();
-
-    // Normal projects should not see inactive services.
-    if (!$su) {
-        if (!$is_active) return;
-    }
-
-    if ($service_id==100) return; // 'None' service
-
-    if ($description == "service_".$short_name."_desc_key") {
-      $description = $Language->getText('project_admin_editservice',$description);
-    }
-    elseif(preg_match('/(.*):(.*)/', $description, $matches)) {
-        if ($Language->hasText($matches[1], $matches[2])) {
-            $description = $Language->getText($matches[1], $matches[2]);
-        }
-    }
-
-    if ($label == "service_".$short_name."_lbl_key") {
-      $label = $Language->getText('project_admin_editservice',$label);
-    }
-    elseif(preg_match('/(.*):(.*)/', $label, $matches)) {
-        if ($Language->hasText($matches[1], $matches[2])) {
-            $label = $Language->getText($matches[1], $matches[2]);
-        }
-    }
-    $hp          = Codendi_HTMLPurifier::instance();
-    $description = $hp->purify($description);
-
-    echo '<TR class="'. util_get_alt_row_color($row_num) .'">
-            <TD>
-              <a href="/project/admin/editservice.php?group_id='.$group_id.'&service_id='.$service_id.'" title="'.$description.'">'.$hp->purify($label).'</TD>';
-    if ($is_template) {
-        echo '<td align="center">';
-        switch($short_name) {
-        case 'docman':
-        case 'file':
-        case 'forum':
-        case 'salome':
-        case 'cvs':
-        case 'tracker':
-            echo $Language->getText('project_admin_editservice','conf_inherited_yes');;
-            break;
-        case 'svn':
-        case 'admin':
-            echo $Language->getText('project_admin_editservice','conf_inherited_partially');;
-            break;
-        default:
-            echo $Language->getText('project_admin_editservice','conf_inherited_no');;
-        }
-        echo '</td>';
-    }
-    if ($group_id==100) {
-        echo '<TD align="center">'.( $is_active ? $Language->getText('project_admin_editservice','available') : $Language->getText('project_admin_servicebar','unavailable') ).'</TD>';
-    }
-
-    #echo '<TD align="center">'.( $is_used ? 'Yes' : 'No' ).'</TD>';
-    echo '<TD align="center">'.( $is_used ? $Language->getText('project_admin_editservice','enabled') : ( $is_active ? '<i>'.$Language->getText('project_admin_servicebar','disabled').'</i>' : '-' ) ).'</TD>';
-    if ($group_id==100) {
-        echo'<TD align="center">'.$scope.'</TD>';
-    }
-    echo '<TD align="center">'.$rank.'</TD>';
-
-    if ((($scope!="system")&&($label!=$Language->getText('project_admin_servicebar','home_page')))||($group_id==100)) {
-        if ($short_name) {
-            $short= "&short_name=$short_name";
-        } else $short='';
-        echo '<TD align="center"><A HREF="?group_id='.$group_id.'&service_id='.$service_id.'&func=delete'.$short.'" onClick="return confirm(\'';
-        if ($group_id==100) {
-             echo $Language->getText('project_admin_servicebar','warning_del_s', $hp->purify($label, CODENDI_PURIFIER_JS_QUOTE));
-       } else {
-            echo $Language->getText('project_admin_servicebar','del_s');
-        }
-        echo '\')"><IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="DELETE"></A></TD>';
-    } else {
-        echo '<TD align="center">-</TD>';
-    }
-    echo '</TR>';
-    $row_num++;
-}
-
 
 $group_id = $request->getValidated('group_id', 'uint', 0);
 
@@ -118,48 +39,8 @@ $service_manager = ServiceManager::instance();
 $pm = ProjectManager::instance();
 $project = $pm->getProject($group_id);
 
-
-$is_superuser=false;
-if (user_is_super_user()) {
-    $is_superuser=true;
-}
-
-$is_used           = $request->getValidated('is_used', 'uint', false);
-$func              = $request->getValidated('func', 'string', '');
-
-if ($func=='delete') {
-    $service_id = $request->getValidated('service_id', 'uint', 0);
-    // Delete service
-     if (!$service_id) {
-        $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_servicebar','s_id_not_given'));
-    } else {
-
-        $sql = "DELETE FROM service WHERE group_id=". db_ei($group_id) ." AND service_id=". db_ei($service_id);
-
-        $result=db_query($sql);
-        if (!$result || db_affected_rows($result) < 1) {
-            $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_editgroupinfo','upd_fail',(db_error() ? db_error() : ' ' )));
-        } else {
-            $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_servicebar','s_del'));
-        }
-        if ($group_id==100) {
-            $short_name = $request->getValidated('short_name', 'string', '');
-            if (!$short_name) {
-                $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_servicebar','cant_delete_s_from_p'));
-            } else {
-                // Delete service from all projects
-                $sql = "DELETE FROM service WHERE short_name='".db_es($short_name)."'";
-                $result=db_query($sql);
-                if (!$result || db_affected_rows($result) < 1) {
-                    $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_servicebar','del_fail',db_error()));
-                } else {
-                    $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_servicebar','s_del_from_p',db_affected_rows($result)));
-                }
-            }
-        }
-    }
-    $GLOBALS['Response']->redirect('/project/admin/servicebar.php?group_id='.$group_id);
-}
+$is_used = $request->getValidated('is_used', 'uint', false);
+$func    = $request->getValidated('func', 'string', '');
 
 if (($func=='do_create')||($func=='do_update')) {
     $short_name  = $request->getValidated('short_name', 'string', '');
@@ -342,81 +223,12 @@ if ($func=='do_update') {
     $GLOBALS['Response']->redirect($redirect_url);
 }
 
-project_admin_header(
-    array(
-        'title'=>$Language->getText('project_admin_servicebar','edit_s_bar'),
-        'group'=>$group_id,
-        'help' => 'project-admin.html#service-configuration'
+$router = new AdminRouter(
+    new IndexController(
+        new ServicesPresenterBuilder(ServiceManager::instance()),
+        new IncludeAssets(ForgeConfig::get('tuleap_dir') . '/src/www/assets', '/assets'),
+        new HeaderNavigationDisplayer()
     ),
-    'services'
+    new DeleteController(new ServiceDao())
 );
-
-if ($group_id==100) {
-    print '<P><h2>'.$Language->getText('project_admin_servicebar','edit_system_s').'</B></h2>';
-} else {
-    $purifier = Codendi_HTMLPurifier::instance();
-    print '<P><h2>'.$Language->getText('project_admin_servicebar','edit_s_for',$purifier->purify($project->getPublicName())).'</h2>';
-}
-print '
-<P>
-<H3>'.$Language->getText('project_admin_servicebar','new_s').'</H3>
-<a href="/project/admin/editservice.php?func=create&group_id='.$group_id.'">'.$Language->getText('project_admin_servicebar','create_s').'</a>
-<p>
-
-
-<H3>'.$Language->getText('project_admin_servicebar','manage_s').'</H3>
-<P>
-';
-/*
-	Show the options that this project is using
-*/
-echo '
-<HR>
-<TABLE width="100%" cellspacing=0 cellpadding=3 border=0>';
-
-$title_arr=array();
-$title_arr[]=$Language->getText('project_admin_editservice','s_label');
-if ($project->isTemplate()) {
-    $title_arr[]=$Language->getText('project_admin_editservice','conf_inherited');
-}
-if ($group_id==100) {
-    $title_arr[]=$Language->getText('project_admin_servicebar','availability');
-}
-$title_arr[]=$Language->getText('global','status');
-if ($group_id==100) {
-    $title_arr[]=$Language->getText('project_admin_editservice','scope');
-}
-$title_arr[]=$Language->getText('project_admin_servicebar','rank_on_screen');
-$title_arr[]=$Language->getText('project_admin_servicebar','del?');
-echo html_build_list_table_top($title_arr);
-
-
-
-$allowed_services = $service_manager->getListOfAllowedServicesForProject($project);
-$row_num=0;
-foreach ($allowed_services as $service) {
-    display_service_row(
-        $group_id,
-        $service->getId(),
-        $service->getLabel(),
-        $service->getShortName(),
-        $service->getDescription(),
-        $service->isActive(),
-        $service->isUsed(),
-        $service->getScope(),
-        $service->getRank(),
-        $row_num,
-        $is_superuser,
-        $project->isTemplate()
-    );
-}
-
-
-echo '
-</TABLE>
-';
-
-
-
-
-project_admin_footer(array());
+$router->process($request);

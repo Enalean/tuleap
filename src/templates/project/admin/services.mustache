@@ -1,0 +1,94 @@
+<div class="tlp-framed-horizontally">
+    <section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">
+                    {{# gettext }}Services{{/ gettext }}
+                </h1>
+            </div>
+            <section class="tlp-pane-section">
+                <div class="tlp-table-actions">
+                    <a href="/project/admin/editservice.php?func=create&group_id={{ project_id }}"
+                       id="project-admin-services-add-button"
+                       type="button"
+                       data-target-modal-id="project-admin-services-add-modal"
+                       class="tlp-button-primary tlp-table-actions-element"
+                    >
+                        <i class="tlp-button-icon fa fa-plus"></i>
+                        {{# gettext }}Create a new service{{/ gettext }}
+                    </a>
+                    {{> services-add-modal }}
+                </div>
+                <table class="tlp-table">
+                    <thead>
+                        <tr>
+                            <th>{{# gettext }}Label{{/ gettext }}</th>
+                            {{# is_default_template }}
+                                <th>{{# gettext }}Inherited?{{/ gettext }}</th>
+                            {{/ is_default_template }}
+                            <th>{{# gettext }}Enabled?{{/ gettext }}</th>
+                            {{# is_default_template }}
+                                <th>{{# gettext }}Scope{{/ gettext }}</th>
+                            {{/ is_default_template }}
+                            <th class="tlp-table-cell-numeric">{{# gettext }}Rank{{/ gettext }}</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{# services }}
+                            <tr>
+                                <td title="{{ description }}">
+                                    {{ label }}
+                                </td>
+                                {{# is_default_template }}
+                                    <td>{{# is_active }}<i class="fa fa-check"></i>{{/ is_active }}</td>
+                                {{/ is_default_template }}
+                                <td>{{# is_used }}<i class="fa fa-check"></i>{{/ is_used }}</td>
+                                {{# is_default_template }}
+                                    <td>{{ scope }}</td>
+                                {{/ is_default_template }}
+                                <td class="tlp-table-cell-numeric">{{ rank }}</td>
+
+                                <td class="tlp-table-cell-actions">
+                                    <a href="/project/admin/editservice.php?group_id={{ project_id }}&service_id={{ id }}"
+                                       class="tlp-table-cell-actions-button
+                                           tlp-button-small
+                                           tlp-button-primary
+                                           tlp-button-outline
+                                           project-admin-services-edit-button
+                                       "
+                                       data-target-modal-id="project-admin-services-edit-modal-{{ id }}"
+                                    >
+                                        <i class="fa fa-pencil tlp-button-icon"></i> {{# gettext }}Edit{{/ gettext }}
+                                    </a>
+                                    <button class="tlp-table-cell-actions-button
+                                                tlp-button-small
+                                                tlp-button-danger
+                                                tlp-button-outline
+                                                {{^ can_be_deleted }}
+                                                    tlp-tooltip
+                                                    tlp-tooltip-left
+                                                {{/ can_be_deleted }}
+                                                project-admin-services-delete-button
+                                            "
+                                            data-target-modal-id="project-admin-services-delete-modal-{{ id }}"
+                                        {{^ can_be_deleted }}
+                                            disabled
+                                            data-tlp-tooltip="{{# gettext }}
+                                                    This is a system service, you cannot delete it.
+                                                {{/ gettext }}"
+                                        {{/ can_be_deleted }}
+                                    >
+                                        <i class="fa fa-trash-o tlp-button-icon"></i> {{# gettext }}Delete{{/ gettext }}
+                                    </button>
+                                    {{> services-edit-modal }}
+                                    {{> services-delete-modal }}
+                                </td>
+                            </tr>
+                        {{/ services }}
+                    </tbody>
+                </table>
+            </section>
+        </div>
+    </section>
+</div>
