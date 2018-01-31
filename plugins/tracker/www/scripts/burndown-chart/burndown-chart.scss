@@ -1,7 +1,6 @@
-$team-effort-color : #57b258;
-$total-effort-color: #bd2626;
-$text-color        : #767676;
-$line-color        : #dedede;
+$remaining-effort-color : #57b258;
+$text-color             : #767676;
+$line-color             : #dedede;
 
 .chart-y-axis > .tick > line {
     stroke: $line-color;
@@ -19,45 +18,30 @@ $line-color        : #dedede;
     font-family: "SourceSansPro", Helvetica, Arial, sans-serif;
 }
 
-.chart-plot-team-effort {
-    fill: $team-effort-color;
+.chart-plot-remaining-effort {
+    fill: $remaining-effort-color;
 
     &.highlighted {
         stroke-width: 4px;
-        stroke: lighten($team-effort-color, 20%);
+        stroke: lighten($remaining-effort-color, 20%);
     }
 }
 
-.chart-plot-total-effort {
-    fill: $total-effort-color;
-
-    &.highlighted {
-        stroke-width: 4px;
-        stroke: lighten($total-effort-color, 20%);
-    }
-}
-
-.chart-curve-team-effort {
+.chart-curve-remaining-effort {
     stroke-width: 3px;
-    stroke: $team-effort-color;
-    fill: transparent;
-}
-
-.chart-curve-total-effort {
-    stroke-width: 3px;
-    stroke: $total-effort-color;
+    stroke: $remaining-effort-color;
     fill: transparent;
 }
 
 .chart-badge {
     stroke-width: 1px;
-    stroke: $team-effort-color;
+    stroke: $remaining-effort-color;
     fill: transparent;
 }
 
 #chart-badge-value {
     stroke: transparent;
-    fill: $team-effort-color;
+    fill: $remaining-effort-color;
 }
 
 .chart-curve-label {
@@ -77,7 +61,7 @@ $line-color        : #dedede;
     fill: #2f2f2f;
 }
 
-.chart-plot-ideal-burnup {
+.chart-plot-ideal-burndown {
     fill: $line-color;
 }
 
@@ -91,8 +75,4 @@ $line-color        : #dedede;
         stroke: $line-color;
         fill: transparent;
     }
-}
-
-.tracker_artifact_field-burnup {
-    min-width: 640px;
 }

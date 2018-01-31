@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import { selectAll }              from 'd3-selection';
+
 import { symbol, symbolTriangle } from 'd3-shape';
 
 export class TooltipFactory {
@@ -38,6 +38,7 @@ export class TooltipFactory {
             tooltip_font_size
         });
     }
+
     addTooltip(column) {
         this.column         = column;
         this.tooltip_target = column.select('.chart-tooltip-target');
@@ -61,8 +62,8 @@ export class TooltipFactory {
         return this;
     }
 
-    static removeTooltips() {
-        selectAll('.chart-tooltip').remove();
+    static removeTooltips(conatiner) {
+        conatiner.selectAll('.chart-tooltip').remove();
     }
 
     getTooltipWidth() {
@@ -131,6 +132,7 @@ export class TooltipFactory {
 
         this.centerText();
         this.resizeTheBubble();
+        this.centerText();
         this.positionBubble();
 
         return this;

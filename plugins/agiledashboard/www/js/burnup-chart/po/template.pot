@@ -21,3 +21,6 @@ msgstr ""
 #, javascript-format
 msgid "Total effort: %s"
 msgstr ""
+
+msgid "n/k"
+msgstr ""

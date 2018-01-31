@@ -51,6 +51,9 @@ msgid ""
 "Artifact submissions (and possibly updates) will be systematically sent."
 msgstr ""
 
+msgid "Burndown is under calculation. It will be available in a few minutes."
+msgstr ""
+
 msgid "Cancel"
 msgstr ""
 

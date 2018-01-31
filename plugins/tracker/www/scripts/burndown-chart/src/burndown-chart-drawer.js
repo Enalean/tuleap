@@ -16,15 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import moment                from 'moment';
-import { sprintf }           from 'sprintf-js';
-import { max }               from 'd3-array';
-import { select }            from 'd3-selection';
-import { gettext_provider }  from './gettext-provider.js';
-import { buildGraphScales }  from 'charts-builders/line-chart-scales-factory.js';
-import { buildChartLayout }  from 'charts-builders/chart-layout-builder.js';
-import { TooltipFactory }    from 'charts-builders/chart-tooltip-factory.js';
-import { ColumnFactory }     from 'charts-builders/chart-column-factory.js';
+import moment               from 'moment';
+import { sprintf }          from 'sprintf-js';
+import { extent, max }      from 'd3-array';
+import { select }           from 'd3-selection';
+import { gettext_provider } from './gettext-provider.js';
+import { buildGraphScales } from 'charts-builders/line-chart-scales-factory.js';
+import { buildChartLayout } from 'charts-builders/chart-layout-builder.js';
+import { TooltipFactory }   from 'charts-builders/chart-tooltip-factory.js';
+import { ColumnFactory }    from 'charts-builders/chart-column-factory.js';
 import {
     drawIdealLine,
     drawCurve
@@ -40,32 +40,32 @@ import {
     getGranularity
 } from 'charts-builders/chart-dates-service.js';
 
-export { createBurnupChart };
+export { createBurndownChart };
 
-function createBurnupChart({
+function createBurndownChart({
     chart_container,
     chart_props,
     chart_legends,
-    burnup_data
+    burndown_data
 }) {
     const tooltip_factory = new TooltipFactory({
         tooltip_margin_bottom : 30,
-        tooltip_padding_width : 15,
+        tooltip_padding_width : 10,
         tooltip_padding_height: 5,
         tooltip_arrow_size    : 150,
         tooltip_font_size     : 12
     });
 
-    const default_total_effort = 5,
-          x_axis_tick_values   = getDaysToDisplay(burnup_data),
-          displayable_data     = getDisplayableData(burnup_data.points_with_date),
-          last_day_data        = getLastDayData(burnup_data.points_with_date),
-          total_effort         = getTotalEffort(burnup_data);
+    const DEFAULT_REMAINING_EFFORT = 5,
+          x_axis_tick_values       = getDaysToDisplay(burndown_data),
+          displayable_data         = getDisplayableData(burndown_data.points_with_date),
+          last_day_data            = getLastDayData(burndown_data.points_with_date),
+          y_axis_maximum           = getMaxRemainingEffort(burndown_data);
 
     const properties = {
         ...chart_props,
         x_axis_tick_values,
-        y_axis_maximum: total_effort
+        y_axis_maximum
     };
 
     const {
@@ -83,7 +83,7 @@ function createBurnupChart({
     const end_date              = x_axis_tick_values[x_axis_tick_values.length - 1];
     const timeframe_granularity = getGranularity(x_axis_tick_values[0], end_date);
 
-    const svg_burnup = buildChartLayout(
+    const svg_burndown = buildChartLayout(
         chart_container,
         chart_props,
         chart_legends,
@@ -95,9 +95,7 @@ function createBurnupChart({
         timeframe_granularity
     );
 
-    if (! burnup_data.points_with_date.length) {
-        last_day_data.date = moment();
-
+    if (! burndown_data.points_with_date.length) {
         return;
     }
 
@@ -108,24 +106,23 @@ function createBurnupChart({
     .endOf('day')
     .toISOString();
 
-    drawBurnupChart(chart_container);
+    drawBurndownChart();
 
-    function drawBurnupChart() {
+    function drawBurndownChart() {
         addIdealLine();
         drawDataColumns();
-        addCurve('total');
-        addCurve('team');
+        addCurve('remaining');
         setInteraction();
     }
 
     function drawDataColumns() {
-        const columns = svg_burnup.selectAll('.chart-datum-column')
+        const columns = svg_burndown.selectAll('.chart-datum-column')
             .data(displayable_data)
             .enter()
                 .append('g')
                 .attr('class', 'chart-datum-column');
 
-        columns.each(function({ date, total_effort, team_effort }) {
+        columns.each(function({ date, remaining_effort }) {
             const column = select(this);
 
             column_factory.addColumn(
@@ -134,22 +131,16 @@ function createBurnupChart({
             );
 
             column.append('circle')
-                .attr('class', 'chart-plot-total-effort')
+                .attr('class', 'chart-plot-remaining-effort chart-tooltip-target')
                 .attr('cx', x_scale(moment(date, moment.ISO_8601).format('YYYY-MM-DD')))
-                .attr('cy', y_scale(total_effort))
-                .attr('r', 4);
-
-            column.append('circle')
-                .attr('class', 'chart-plot-team-effort chart-tooltip-target')
-                .attr('cx', x_scale(moment(date, moment.ISO_8601).format('YYYY-MM-DD')))
-                .attr('cy', y_scale(team_effort))
+                .attr('cy', y_scale(remaining_effort))
                 .attr('r', 4);
         });
     }
 
     function addCurve(line_name) {
         drawCurve(
-            svg_burnup,
+            svg_burndown,
             {
                 x_scale,
                 y_scale
@@ -160,7 +151,7 @@ function createBurnupChart({
     }
 
     function setInteraction() {
-        svg_burnup.selectAll('.chart-datum-column')
+        svg_burndown.selectAll('.chart-datum-column')
             .each(function() {
                 const datum_column = select(this);
                 datum_column.on('mouseenter', () => {
@@ -184,52 +175,35 @@ function createBurnupChart({
 
         tooltip_factory.addTooltip(target_column)
             .addTextLine(({ date }) => moment(date, moment.ISO_8601).format(properties.tooltip_date_format))
-            .addTextLine(({ team_effort }) => sprintf(gettext_provider.gettext('Team effort: %s'), team_effort))
-            .addTextLine(({ total_effort }) => sprintf(gettext_provider.gettext('Total effort: %s'), total_effort));
+            .addTextLine(({ remaining_effort }) => sprintf(gettext_provider.gettext('Remaining effort: %s'), remaining_effort));
     }
 
     function ceaseHighlight() {
-        svg_burnup.selectAll('circle').classed('highlighted', false);
-        svg_burnup.selectAll('.chart-column').classed('highlighted', false);
+        svg_burndown.selectAll('circle').classed('highlighted', false);
+        svg_burndown.selectAll('.chart-column').classed('highlighted', false);
 
-        TooltipFactory.removeTooltips(svg_burnup);
+        TooltipFactory.removeTooltips(svg_burndown);
     }
 
     function addIdealLine() {
-        const final_total_effort = (last_day_data.total_effort) ? last_day_data.total_effort : burnup_data.capacity;
-
         drawIdealLine(
-            svg_burnup, {
+            svg_burndown, {
                 x_scale,
                 y_scale
             }, {
-                line_start: 0,
-                line_end  : final_total_effort
+                line_start: y_axis_maximum,
+                line_end  : 0
             }
         );
     }
 
-    function getTotalEffort({points_with_date, capacity}) {
-        const max_total_effort = max(points_with_date, ({ total_effort }) => total_effort);
-
-        if (max_total_effort) {
-            return max_total_effort;
-        }
-
-        if (capacity) {
-            return capacity;
-        }
-
-        return default_total_effort;
-    }
-
     function getLayoutBadgeData() {
         if (
-            last_day_data.hasOwnProperty('team_effort')
-            && last_day_data.team_effort !== null
+            last_day_data.hasOwnProperty('remaining_effort') &&
+            last_day_data.remaining_effort !== null
         ) {
             return {
-                value: last_day_data.team_effort,
+                value: last_day_data.remaining_effort,
                 date : last_day_data.date
             };
         }
@@ -239,4 +213,19 @@ function createBurnupChart({
             date : moment()
         };
     }
+
+    function getMaxRemainingEffort({ points_with_date, capacity }) {
+        const max_remaining_effort = max(points_with_date, ({ remaining_effort }) => remaining_effort);
+
+        if (max_remaining_effort) {
+            return max_remaining_effort;
+        }
+
+        if (capacity) {
+            return capacity;
+        }
+
+        return DEFAULT_REMAINING_EFFORT;
+    }
+
 }

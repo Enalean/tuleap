@@ -12,12 +12,14 @@
         "FlamingParrot": {
             "files": [
                 "www/themes/FlamingParrot/css/style.scss",
-                "www/themes/FlamingParrot/css/print.scss"
+                "www/themes/FlamingParrot/css/print.scss",
+                "www/themes/FlamingParrot/css/burndown-chart.scss"
             ],
             "includes": [
                 "../../src/www/themes/FlamingParrot/css/utils"
             ],
-            "target_dir": "www/themes/FlamingParrot/css"
+            "target_dir": "www/themes/FlamingParrot/assets",
+            "is_revisioned": true
         },
         "BurningParrot": {
             "files": [
@@ -74,6 +76,12 @@
         "www/scripts/tracker-admin-notifications.js",
         "www/scripts/tracker-admin-notifications-popover.js"
     ],
+    "gettext-js": {
+        "burndown-chart": {
+            "src": "www/scripts/burndown-chart/src",
+            "po": "www/scripts/burndown-chart/po"
+        }
+    },
     "components": [
         "plugins/tracker/grammar/",
         "plugins/tracker/www/scripts/"

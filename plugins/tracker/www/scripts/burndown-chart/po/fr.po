@@ -10,18 +10,25 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.0.3\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-
-msgid "MMM YYYY"
-msgstr "MMM YYYY"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #, javascript-format
-msgid "W %s"
-msgstr "S %s"
+msgid "%s - Remaining effort"
+msgstr "%s - Effort restant"
 
-msgid "WW"
-msgstr "WW"
+msgid "Ideal burndown"
+msgstr "Burndown idéal"
 
-msgid "ddd DD"
-msgstr "ddd DD"
+msgid "MM/DD"
+msgstr "DD/MM"
+
+msgid "Remaining effort"
+msgstr "Effort restant"
+
+#, javascript-format
+msgid "Remaining effort: %s"
+msgstr "Effort  restant : %s"
+
+msgid "n/k"
+msgstr "n/c"

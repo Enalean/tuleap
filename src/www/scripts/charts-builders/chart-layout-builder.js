@@ -19,7 +19,7 @@
 
 import moment                   from 'moment';
 import { sprintf }              from 'sprintf-js';
-import { select, selectAll }    from 'd3-selection';
+import { select }               from 'd3-selection';
 import { axisLeft, axisBottom } from 'd3-axis';
 import { gettext_provider }     from './gettext-provider.js';
 import { getDifference }        from './chart-dates-service.js';
@@ -31,8 +31,6 @@ import {
 } from './chart-layout-service.js';
 
 export { buildChartLayout };
-
-moment.locale(gettext_provider.locale);
 
 const WEEK  = 'week';
 const MONTH = 'month';
@@ -57,6 +55,8 @@ function buildChartLayout(
     scales,
     timeframe_granularity
 ) {
+    gettext_provider.setLocale(chart_container.dataset.locale);
+
     const layout = drawSVG(chart_container, graph_width, graph_height);
     const axes   = initAxis(
         graph_width,
@@ -73,7 +73,7 @@ function buildChartLayout(
         legend_config
     );
 
-    ticksEvery(timeframe_granularity);
+    ticksEvery(layout, timeframe_granularity);
 
     return layout;
 }
@@ -136,20 +136,20 @@ function drawAxis(
         .attr('transform', `translate(${left}, 0)`)
         .call(y_axis);
 
-    selectAll('.domain').remove();
-    selectAll('.chart-x-axis > .tick > line').remove();
+    layout.selectAll('.domain').remove();
+    layout.selectAll('.chart-x-axis > .tick > line').remove();
 }
 
 function addLegend(
     layout,
     graph_width,
     margins,
-    badge_data = {},
+    badge_data,
     graph_legends
 ) {
-    const legend_y_position   = margins.top * 0.66;
-    const current_date        = moment(badge_data.date).format(localized_date_formats.day);
-    const current_team_effort = badge_data.team_effort || gettext_provider.gettext('n/k');
+    const legend_y_position = margins.top * 0.66;
+    const current_date      = moment(badge_data.date).format(localized_date_formats.day);
+    const badge_value       = badge_data.value;
 
     const legend = layout.append('g')
         .attr('class', 'chart-legend chart-text-grey');
@@ -163,7 +163,7 @@ function addLegend(
 
     appendBadge(
         left_legend,
-        current_team_effort,
+        badge_value,
         legend_y_position
     );
 
@@ -179,9 +179,9 @@ function addLegend(
                 .attr('class', 'chart-curve-label')
                 .text(({ label }) => label);
 
-    const widths = getElementsWidth(selectAll('.chart-curve-label'));
+    const widths = getElementsWidth(right_legend.selectAll('.chart-curve-label'));
 
-    selectAll('.legend-item')
+    right_legend.selectAll('.legend-item')
         .each(function(label, index) {
             const previous_label_width = getElementSpacing(widths, index, 30, 20);
 
@@ -203,7 +203,7 @@ function addLegend(
     right_legend.attr('transform', `translate(${ right_legend_length }, ${ legend_y_position })`);
 }
 
-function appendBadge(container, current_team_effort, legend_y_position) {
+function appendBadge(container, badge_value, legend_y_position) {
     const { width } = container.node().getBBox();
     const badge     = container.append('g')
         .attr('transform', `translate(${ width + 10 }, ${ legend_y_position })`)
@@ -212,9 +212,9 @@ function appendBadge(container, current_team_effort, legend_y_position) {
     badge.append('text')
         .attr('id', 'chart-badge-value')
         .attr('x', 10)
-        .text(current_team_effort);
+        .text(badge_value);
 
-    const badge_props = getBadgeProperties(select('#chart-badge-value'), 10, 2);
+    const badge_props = getBadgeProperties(badge.select('#chart-badge-value'), 10, 2);
 
     badge.append('rect')
         .attr('width', badge_props.width)
@@ -225,8 +225,8 @@ function appendBadge(container, current_team_effort, legend_y_position) {
         .attr('ry', 10);
 }
 
-function ticksEvery(timeframe_granularity) {
-    const all_ticks = selectAll(`.chart-x-axis > .tick`).nodes();
+function ticksEvery(container, timeframe_granularity) {
+    const all_ticks = container.selectAll(`.chart-x-axis > .tick`).nodes();
     let previous_label;
 
     all_ticks.forEach((node) => {
@@ -245,7 +245,7 @@ function ticksEvery(timeframe_granularity) {
         previous_label = label;
     });
 
-    const displayed_ticks = selectAll(`.chart-x-axis > .tick`).nodes();
+    const displayed_ticks = container.selectAll(`.chart-x-axis > .tick`).nodes();
 
     if (
         canFirstLabelOverlapSecondLabel(

@@ -17,6 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
@@ -257,7 +258,7 @@ class trackerPlugin extends Plugin {
         }
     }
 
-    public function cssFile($params) {
+    public function cssFile() {
         $include_tracker_css_file = false;
         EventManager::instance()->processEvent(TRACKER_EVENT_INCLUDE_CSS_FILE, array('include_tracker_css_file' => &$include_tracker_css_file));
         // Only show the stylesheet if we're actually in the tracker pages.
@@ -266,11 +267,21 @@ class trackerPlugin extends Plugin {
             strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
             strpos($_SERVER['REQUEST_URI'], '/my/') === 0 ||
             strpos($_SERVER['REQUEST_URI'], '/projects/') === 0 ||
-            strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0 ) {
-            echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
-            echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/print.css" media="print" />';
+            strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0
+        ) {
+            $include_assets = new IncludeAssets(
+                TRACKER_BASE_DIR . '/../www/themes/FlamingParrot/assets',
+                TRACKER_BASE_URL . '/themes/FlamingParrot/assets'
+            );
+
+            $style_css_url = $include_assets->getFileURL('style.css');
+            $print_css_url = $include_assets->getFileURL('print.css');
+
+            echo '<link rel="stylesheet" type="text/css" href="'.$style_css_url.'" />';
+            echo '<link rel="stylesheet" type="text/css" href="'.$print_css_url.'" media="print" />';
             if (file_exists($this->getThemePath().'/css/ieStyle.css')) {
-                echo '<!--[if lte IE 8]><link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/ieStyle.css" /><![endif]-->';
+                $ie_style_css_url = $include_assets->getFileURL('ieStyle.css');
+                echo '<!--[if lte IE 8]><link rel="stylesheet" type="text/css" href="'.$ie_style_css_url.'" /><![endif]-->';
             }
         }
     }
