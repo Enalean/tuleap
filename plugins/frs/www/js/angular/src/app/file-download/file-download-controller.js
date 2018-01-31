@@ -1,23 +1,21 @@
-angular
-    .module('tuleap.frs')
-    .controller('FileDownloadController', FileDownloadController);
+import './license-modal/license-modal.tpl.html';
+
+export default FileDownloadController;
 
 FileDownloadController.$inject = [
     '$modal',
     '$window',
-    'lodash'
 ];
 
 function FileDownloadController(
     $modal,
     $window,
-    _
 ) {
-    var self = this;
+    const self = this;
 
-    _.extend(self, {
-        init        : init,
-        downloadFile: downloadFile,
+    Object.assign(self, {
+        init,
+        downloadFile,
 
         file_download_url: null
     });
@@ -25,7 +23,7 @@ function FileDownloadController(
     self.init();
 
     function init() {
-        if (_.has(self, 'file.download_url')) {
+        if (self.hasOwnProperty('file') && self.file.hasOwnProperty('download_url')) {
             self.file_download_url = decodeURIComponent(self.file.download_url);
         }
     }
@@ -48,7 +46,7 @@ function FileDownloadController(
         return $modal.open({
             backdrop   : 'static',
             keyboard   : true,
-            templateUrl: 'file-download/license-modal/license-modal.tpl.html',
+            templateUrl: 'license-modal.tpl.html',
             controller : 'LicenseModalController as $ctrl',
             windowClass: 'license-modal'
         });

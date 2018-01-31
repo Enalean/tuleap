@@ -1,33 +1,29 @@
-angular
-    .module('tuleap.frs')
-    .controller('ReleaseController', ReleaseController);
+export default ReleaseController;
 
 ReleaseController.$inject = [
-    'lodash',
     'ReleaseRestService',
     'SharedPropertiesService'
 ];
 
 function ReleaseController(
-    _,
     ReleaseRestService,
     SharedPropertiesService
 ) {
-    var self = this;
+    const self = this;
 
-    _.extend(self, {
+    Object.assign(self, {
         error_no_release_artifact: false,
         project_id               : SharedPropertiesService.getProjectId(),
         release                  : SharedPropertiesService.getRelease(),
         milestone                : null,
 
-        init: init
+        init
     });
 
     self.init();
 
     function init() {
-        if (!_.has(self.release, 'artifact.id')) {
+        if (! doesReleaseArtifactExist()) {
             self.error_no_release_artifact = true;
             return;
         }
@@ -36,5 +32,12 @@ function ReleaseController(
             .then(function(milestone) {
                 self.milestone = milestone;
             });
+    }
+
+    function doesReleaseArtifactExist() {
+        return (
+            self.release.artifact !== null
+            && self.release.artifact.id !== null
+        );
     }
 }

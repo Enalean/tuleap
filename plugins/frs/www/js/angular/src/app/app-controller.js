@@ -1,6 +1,6 @@
-angular
-    .module('tuleap.frs')
-    .controller('AppController', AppController);
+import { fromJson } from 'angular';
+
+export default AppController;
 
 AppController.$inject = [
     '$element',
@@ -13,7 +13,7 @@ function AppController(
     gettextCatalog,
     SharedPropertiesService
 ) {
-    var self = this;
+    const self = this;
 
     self.init = init;
     self.init();
@@ -21,11 +21,13 @@ function AppController(
     function init() {
         const frs_init_data = $element[0].querySelector('.frs-init-data').dataset;
 
-        const release = angular.fromJson(frs_init_data.release);
+        const release = fromJson(frs_init_data.release);
         SharedPropertiesService.setProjectId(release.project.id);
         SharedPropertiesService.setRelease(release);
-        const platform_license_info = angular.fromJson(frs_init_data.platformLicenseInfo);
+
+        const platform_license_info = fromJson(frs_init_data.platformLicenseInfo);
         SharedPropertiesService.setPlatformLicenseInfo(platform_license_info);
+
         const language = frs_init_data.language;
         initLocale(language);
     }

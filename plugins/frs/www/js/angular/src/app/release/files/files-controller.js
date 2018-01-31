@@ -1,19 +1,15 @@
-angular
-    .module('tuleap.frs')
-    .controller('FilesController', FilesController);
+export default FilesController;
 
 FilesController.$inject = [
-    'lodash',
     'SharedPropertiesService'
 ];
 
 function FilesController(
-    _,
     SharedPropertiesService
 ) {
-    var self = this;
+    const self = this;
 
-    _.extend(self, {
+    Object.assign(self, {
         release: SharedPropertiesService.getRelease()
     });
 }

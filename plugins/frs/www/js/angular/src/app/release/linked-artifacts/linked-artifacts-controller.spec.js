@@ -1,3 +1,9 @@
+import angular                    from 'angular';
+import tuleap_frs_module          from 'tuleap-frs-module';
+import linked_artifacts_controller from './linked-artifacts-controller.js';
+
+import 'angular-mocks';
+
 describe("LinkedArtifactsController -", function() {
     var $q,
         $controller,
@@ -7,9 +13,9 @@ describe("LinkedArtifactsController -", function() {
         SharedPropertiesService;
 
     beforeEach(function() {
-        module('tuleap.frs');
+        angular.mock.module(tuleap_frs_module);
 
-        inject(function( // eslint-disable-line angular/di
+        angular.mock.inject(function( // eslint-disable-line angular/di
             _$q_,
             _$rootScope_,
             _$controller_,
@@ -79,7 +85,7 @@ describe("LinkedArtifactsController -", function() {
                 }
             });
 
-            LinkedArtifactsController = $controller('LinkedArtifactsController');
+            LinkedArtifactsController = $controller(linked_artifacts_controller);
             expect(LinkedArtifactsController.loading_natures).toBeTruthy();
             $rootScope.$apply();
 
@@ -122,7 +128,7 @@ describe("LinkedArtifactsController -", function() {
             ]));
             ReleaseRestService.getAllLinkedArtifacts.and.returnValue($q.when());
 
-            LinkedArtifactsController = $controller('LinkedArtifactsController');
+            LinkedArtifactsController = $controller(linked_artifacts_controller);
             $rootScope.$apply();
 
             expect(LinkedArtifactsController.natures).toEqual([]);

@@ -1,23 +1,19 @@
-angular
-    .module('tuleap.frs')
-    .controller('LicenseModalController', LicenseModalController);
+export default LicenseModalController;
 
 LicenseModalController.$inject = [
     '$modalInstance',
-    'lodash',
     'SharedPropertiesService'
 ];
 
 function LicenseModalController(
     $modalInstance,
-    _,
     SharedPropertiesService
 ) {
-    var self = this;
+    const self = this;
 
-    var platform_license_info = SharedPropertiesService.getPlatformLicenseInfo();
+    const platform_license_info = SharedPropertiesService.getPlatformLicenseInfo();
 
-    _.extend(self, {
+    Object.assign(self, {
         accept : $modalInstance.close,
         decline: $modalInstance.dismiss,
 

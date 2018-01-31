@@ -1,6 +1,4 @@
-angular
-    .module('tuleap.frs')
-    .service('SharedPropertiesService', SharedPropertiesService);
+export default SharedPropertiesService;
 
 function SharedPropertiesService() {
     var property = {

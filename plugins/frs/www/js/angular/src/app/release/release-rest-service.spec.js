@@ -1,10 +1,15 @@
+import angular           from 'angular';
+import tuleap_frs_module from 'tuleap-frs-module';
+
+import 'angular-mocks';
+
 describe("ReleaseRestService -", function() {
     var $q, $httpBackend, ReleaseRestService, RestErrorService;
 
     beforeEach(function() {
-        module('tuleap.frs');
+        angular.mock.module(tuleap_frs_module);
 
-        inject(function( // eslint-disable-line angular/di
+        angular.mock.inject(function( // eslint-disable-line angular/di
             _$httpBackend_,
             _$q_,
             _ReleaseRestService_,

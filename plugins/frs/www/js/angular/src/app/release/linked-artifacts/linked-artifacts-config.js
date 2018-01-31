@@ -1,6 +1,4 @@
-angular
-    .module('tuleap.frs')
-    .config(LinkedArtifactsConfig);
+export default LinkedArtifactsConfig;
 
 LinkedArtifactsConfig.$inject = [
     '$stateProvider'

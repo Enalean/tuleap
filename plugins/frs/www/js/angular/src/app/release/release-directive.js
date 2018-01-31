@@ -1,13 +1,16 @@
-angular
-    .module('tuleap.frs')
-    .directive('release', releaseDirective);
+import './release.tpl.html';
+
+import ReleaseController from './release-controller.js';
+
+export default releaseDirective;
 
 function releaseDirective() {
     return {
         restrict        : 'A',
         scope           : {},
-        templateUrl     : 'release/release.tpl.html',
-        controller      : 'ReleaseController as $ctrl',
+        templateUrl     : 'release.tpl.html',
+        controller      : ReleaseController,
+        controllerAs    : '$ctrl',
         bindToController: true
     };
 }

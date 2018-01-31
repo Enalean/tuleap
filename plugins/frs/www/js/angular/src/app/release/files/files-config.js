@@ -1,6 +1,4 @@
-angular
-    .module('tuleap.frs')
-    .config(FilesConfig);
+export default FilesConfig;
 
 FilesConfig.$inject = [
     '$stateProvider'

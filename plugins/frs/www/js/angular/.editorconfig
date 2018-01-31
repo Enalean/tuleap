@@ -1,5 +1,0 @@
-# EditorConfig is awesome: http://EditorConfig.org
-root = false
-
-[{bower.json,package.json}]
-indent_size = 2

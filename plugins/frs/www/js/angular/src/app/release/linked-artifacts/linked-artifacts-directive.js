@@ -1,13 +1,16 @@
-angular
-    .module('tuleap.frs')
-    .directive('linkedArtifacts', linkedArtifactsDirective);
+import './linked-artifacts.tpl.html';
+
+import LinkedArtifactsController from './linked-artifacts-controller.js';
+
+export default linkedArtifactsDirective;
 
 function linkedArtifactsDirective() {
     return {
         restrict        : 'A',
         scope           : {},
-        templateUrl     : 'release/linked-artifacts/linked-artifacts.tpl.html',
-        controller      : 'LinkedArtifactsController as $ctrl',
+        templateUrl     : 'linked-artifacts.tpl.html',
+        controller      : LinkedArtifactsController,
+        controllerAs    : '$ctrl',
         bindToController: true
     };
 }

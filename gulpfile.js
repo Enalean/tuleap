@@ -184,6 +184,7 @@ var fat_combined_files = [
     ],
     bower_app_paths = [
         'plugins/agiledashboard/www/js/planning-v2/',
+        'plugins/frs/www/js/angular'
     ],
     asset_dir = 'www/assets';
 

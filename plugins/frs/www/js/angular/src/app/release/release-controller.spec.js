@@ -1,3 +1,9 @@
+import angular            from 'angular';
+import tuleap_frs_module  from 'tuleap-frs-module';
+import release_controller from './release-controller.js';
+
+import 'angular-mocks';
+
 describe("ReleaseController -", function() {
     var $q,
         $controller,
@@ -7,9 +13,9 @@ describe("ReleaseController -", function() {
         SharedPropertiesService;
 
     beforeEach(function() {
-        module('tuleap.frs');
+        angular.mock.module(tuleap_frs_module);
 
-        inject(function( // eslint-disable-line angular/di
+        angular.mock.inject(function( // eslint-disable-line angular/di
             _$q_,
             _$rootScope_,
             _$controller_,
@@ -46,7 +52,7 @@ describe("ReleaseController -", function() {
             SharedPropertiesService.getRelease.and.returnValue(release);
             ReleaseRestService.getMilestone.and.returnValue($q.when());
 
-            ReleaseController = $controller('ReleaseController');
+            ReleaseController = $controller(release_controller);
 
             expect(SharedPropertiesService.getProjectId).toHaveBeenCalled();
             expect(SharedPropertiesService.getRelease).toHaveBeenCalled();
@@ -57,24 +63,26 @@ describe("ReleaseController -", function() {
 
         it("Given that no artifact had been bound to the FRS release, when I init the release controller then an error boolean will be set to true", function() {
             var release = {
-                id: 92
+                id      : 92,
+                artifact: null
             };
 
             SharedPropertiesService.getRelease.and.returnValue(release);
 
-            ReleaseController = $controller('ReleaseController');
+            ReleaseController = $controller(release_controller);
 
             expect(ReleaseController.error_no_release_artifact).toBeTruthy();
         });
 
         it("Given that no artifact had been bound to the FRS release, when I init the release controller then the milestone property is null", function() {
             var release = {
-                id: 92
+                id      : 92,
+                artifact: null
             };
 
             SharedPropertiesService.getRelease.and.returnValue(release);
 
-            ReleaseController = $controller('ReleaseController');
+            ReleaseController = $controller(release_controller);
 
             expect(ReleaseController.milestone).toBeFalsy();
         });
@@ -94,7 +102,7 @@ describe("ReleaseController -", function() {
             SharedPropertiesService.getRelease.and.returnValue(release);
             ReleaseRestService.getMilestone.and.returnValue($q.when(milestone));
 
-            ReleaseController = $controller('ReleaseController');
+            ReleaseController = $controller(release_controller);
             $rootScope.$apply();
 
             expect(ReleaseController.milestone.id).toEqual(230);

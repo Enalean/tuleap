@@ -1,49 +1,80 @@
-module.exports = {
-    /**
-     * From where to look for files, starting with the location of this file.
-     */
-    basePath: '.',
+/* eslint-disable */
+var webpack_config = require('./webpack.config.js');
+var path           = require('path');
 
-    frameworks: ['jasmine'],
+// Karma configuration
+module.exports = function(config) {
+    config.set({
 
-    preprocessors: {
+        // base path that will be used to resolve all patterns (eg. files, exclude)
+        basePath: '.',
 
-        'src/app/**/!(*spec).js': ['coverage']
-    },
+        // frameworks to use
+        // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
+        frameworks: ['jasmine'],
 
-    /**
-     * How to report, by default.
-     */
-    reporters: ['dots'],
+        // list of files / patterns to load in the browser
+        // This is filled by gulp
+        files: [
+            'node_modules/jasmine-promise-matchers/dist/jasmine-promise-matchers.js',
+            'src/app/app.spec.js'
+        ],
 
-    /**
-     * On which port should the browser connect, on which port is the test runner
-     * operating, and what is the URL path for the browser to use.
-     */
-    port: 9018,
-    runnerPort: 9100,
-    urlRoot: '/',
+        // preprocess matching files before serving them to the browser
+        // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
+        preprocessors: {
+            'src/app/app.spec.js': ['webpack']
+        },
 
-    /**
-     * Disable file watching by default.
-     */
-    autoWatch: false,
-    usePolling: true,
-    "atomic_save": false,
+        // web server port
+        port: 9876,
 
-    /**
-     * The list of browsers to launch to test on. This includes only "Firefox" by
-     * default, but other browser names include:
-     * Chrome, ChromeCanary, Firefox, Opera, Safari, PhantomJS
-     *
-     * Note that you can also use the executable name of the browser, like "chromium"
-     * or "firefox", but that these vary based on your operating system.
-     *
-     * You may also leave this blank and manually navigate your browser to
-     * http://localhost:9018/ when you're running tests. The window/tab can be left
-     * open and the tests will automatically occur there during the build. This has
-     * the aesthetic advantage of not launching a browser every time you save.
-     */
-    browsers: [process.platform !== 'linux' ? 'ChromeHeadless' : 'ChromiumHeadless'],
-    logLevel: 'INFO'
+        // enable / disable colors in the output (reporters and logs)
+        colors: true,
+
+        // level of logging
+        // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
+        logLevel: config.LOG_INFO,
+
+        // enable / disable watching file and executing tests whenever any file changes
+        autoWatch: false,
+
+        // start these browsers
+        // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
+        browsers: [process.platform !== 'linux' ? 'ChromeHeadless' : 'ChromiumHeadless'],
+
+        webpack: webpack_config,
+
+        webpackMiddleware: {
+            stats: 'errors-only'
+        }
+    });
+
+    if (process.env.NODE_ENV === 'test') {
+        config.set({
+            singleRun: true,
+            reporters: ['dots', 'junit'],
+            junitReporter: {
+                outputDir     : process.env.REPORT_OUTPUT_FOLDER || '',
+                outputFile    : 'test-results.xml',
+                useBrowserName: false
+            }
+        });
+    } else if (process.env.NODE_ENV === 'watch') {
+        config.set({
+            reporters: ['dots'],
+            autoWatch: true
+        });
+    } else if (process.env.NODE_ENV === 'coverage') {
+        config.set({
+            singleRun: true,
+            reporters: ['dots', 'coverage'],
+            coverageReporter: {
+                dir      : path.resolve(__dirname, './coverage'),
+                reporters: [
+                    { type: 'html'}
+                ]
+            }
+        })
+    }
 };
