@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 export default CampaignNewCtrl;
 
 CampaignNewCtrl.$inject = [
@@ -22,22 +20,21 @@ function CampaignNewCtrl(
 
     var self = this;
 
-    _.extend(self, {
-        submitting_campaign:  false,
-        createCampaign:       createCampaign,
-        has_milestone:        !! milestone_id,
-        campaign: {
-            label:    ''
+    Object.assign(self, {
+        $onInit,
+        createCampaign,
+        submitting_campaign: false,
+        has_milestone      : Boolean(milestone_id),
+        campaign           : {
+            label: ''
         },
         test_params: {
             selector: 'all'
         },
-        test_reports:  []
+        test_reports: []
     });
 
-    init();
-
-    function init() {
+    function $onInit() {
         getDefinitionReports();
     }
 

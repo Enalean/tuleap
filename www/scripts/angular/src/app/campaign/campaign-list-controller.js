@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 import './campaign-new.tpl.html';
 
 export default CampaignListCtrl;
@@ -23,26 +21,24 @@ function CampaignListCtrl(
 ) {
     var project_id = SharedPropertiesService.getProjectId();
 
-    _.extend($scope, {
-        loading                       : true,
-        campaigns                     : [],
-        filtered_campaigns            : [],
-        has_open_campaigns            : false,
-        has_closed_campaigns          : false,
-        campaigns_loaded              : false,
-        closed_campaigns_hidden       : true,
-        shouldShowNoCampaigns         : shouldShowNoCampaigns,
-        shouldShowNoOpenCampaigns     : shouldShowNoOpenCampaigns,
-        showClosedCampaigns           : showClosedCampaigns,
-        hideClosedCampaigns           : hideClosedCampaigns,
-        openNewCampaignModal          : openNewCampaignModal
+    Object.assign($scope, {
+        loading                : true,
+        campaigns              : [],
+        filtered_campaigns     : [],
+        has_open_campaigns     : false,
+        has_closed_campaigns   : false,
+        campaigns_loaded       : false,
+        closed_campaigns_hidden: true,
+        shouldShowNoCampaigns,
+        shouldShowNoOpenCampaigns,
+        showClosedCampaigns,
+        hideClosedCampaigns,
+        openNewCampaignModal
     });
 
-    init(project_id);
-
-    function init(project_id) {
+    this.$onInit = function() {
         loadCampaigns(project_id, 10, 0);
-    }
+    };
 
     function getCampaigns(project_id, milestone_id, campaign_status, limit, offset) {
         return CampaignService
@@ -109,6 +105,4 @@ function CampaignListCtrl(
             controllerAs: 'campaign_modal'
         });
     }
-
 }
-

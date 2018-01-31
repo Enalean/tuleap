@@ -40,6 +40,8 @@ function ExecutionListCtrl(
         isRealtimeEnabled          : isRealtimeEnabled
     });
 
+    this.$onInit = initialization;
+
     function checkActiveClassOnExecution(execution) {
         return $state.includes('campaigns.executions.detail', { execid: execution.id, defid: execution.definition.id });
     }
@@ -133,9 +135,10 @@ function ExecutionListCtrl(
             $scope.campaign = campaign;
             ExecutionService.updateCampaign(campaign);
         });
+    }, () => {
+        // ignore the fact that there is no nodejs server
     });
 
-    initialization();
 
     function initialization() {
         var toolbar = angular.element('.toolbar');

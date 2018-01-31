@@ -59,8 +59,7 @@ function ExecutionDetailCtrl(
         showLinkToNewBugModal
     });
 
-    initialization();
-    resetTimer();
+    this.$onInit = initialization;
 
     $scope.$on('controller-reload', function() {
         initialization();
@@ -89,6 +88,7 @@ function ExecutionDetailCtrl(
 
         $scope.artifact_links_graph_modal_loading = ArtifactLinksGraphModalLoading.loading;
         $scope.edit_artifact_modal_loading        = NewTuleapArtifactModalService.loading;
+        resetTimer();
     }
 
     function resetTimer() {
