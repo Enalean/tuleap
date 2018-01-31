@@ -3,7 +3,7 @@ var pegjs = require('pegjs');
 var phppegjs = require('php-pegjs');
 
 fs.readFile('tql.pegjs', function (err, data) {
-    if (err) throw err;
+    if (err) { throw err; }
     var parser = pegjs.buildParser(
         data.toString(),
         {
@@ -32,5 +32,7 @@ fs.readFile('tql.pegjs', function (err, data) {
      */
     parser = parser.replace(/(\s+)private \$input( +)= "";/, '$1public  $input$2= "";');
 
-    fs.writeFile('../include/Tracker/Report/Query/Advanced/Grammar/Parser.php', parser);
+    fs.writeFile('../include/Tracker/Report/Query/Advanced/Grammar/Parser.php', parser, function(err) {
+        if (err) { throw err; }
+    });
 });
