@@ -134,6 +134,10 @@ msgid "No initial effort defined"
 msgstr "Aucun effort n’a été estimé"
 
 #: src/app/milestone/milestone.tpl.html
+msgid "Overview"
+msgstr "Résumé"
+
+#: src/app/milestone/milestone.tpl.html
 msgid "Planning"
 msgstr "Planification"
 

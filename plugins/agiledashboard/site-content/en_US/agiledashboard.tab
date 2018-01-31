@@ -37,7 +37,7 @@ plugin_agiledashboard	edit_item	Edit
 plugin_agiledashboard	add_subitem	Add new $1
 plugin_agiledashboard	backlog_add	Add
 plugin_agiledashboard	planning_pane_title	Backlog/Planning
-plugin_agiledashboard	details_pane_title	Details
+plugin_agiledashboard	details_pane_title	Overview
 plugin_agiledashboard	planning	Planning
 plugin_agiledashboard	cardwall	Cardwall
 plugin_agiledashboard	open	open
