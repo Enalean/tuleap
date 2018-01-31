@@ -439,13 +439,13 @@ project_admin_servicebar	s_del	Service supprimé
 project_admin_servicebar	cant_delete_s_from_p	- Impossible détruire le service dans les projets&nbsp;: le nom court est manquant
 project_admin_servicebar	del_fail	Une erreur est survenue lors de la suppression du service de tous les projets.
 project_admin_servicebar	s_del_from_p	Service supprimé de tous les projets
-project_admin_servicebar	label_missed	Le label est manquant, veuillez cliquer sur le bouton "Retour" de votre navigateur et remplissez ce champ
-project_admin_servicebar	link_missed	Le lien est manquant, veuillez cliquer sur le bouton "Retour" de votre navigateur et remplissez ce champ
-project_admin_servicebar	rank_missed	Le rang est manquant, veuillez cliquer sur le bouton "Retour" de votre navigateur et remplissez ce champ
-project_admin_servicebar	cant_make_s	Impossible de créer un service de portée "système" sans un nom court, veuillez cliquer sur le bouton "Retour" de votre navigateur et remplissez ce champ
+project_admin_servicebar	label_missed	Le label est manquant
+project_admin_servicebar	link_missed	Le lien est manquant
+project_admin_servicebar	rank_missed	Le rang est manquant
+project_admin_servicebar	cant_make_s	Impossible de créer un service de portée "système" sans un nom court
 project_admin_servicebar	set_stat_unused	- Statut sur "inutilisé" -
-project_admin_servicebar	short_name_exist	Un service ayant le même nom court existe déjà. Veuillez cliquer sur le bouton "Retour" de votre navigateur et modifier de champ
-project_admin_servicebar	cant_make_system_wide_s	Impossible de créer un service de portée "système" dans un projet autre que le projet 100. Veuillez cliquer sur le bouton "Retour" de votre navigateur et modifier le champ
+project_admin_servicebar	short_name_exist	Un service ayant le même nom court existe déjà
+project_admin_servicebar	cant_make_system_wide_s	Impossible de créer un service de portée "système" dans un projet autre que le projet 100
 project_admin_servicebar	cant_create_s	ERREUR - Impossible de créer le service&nbsp;: $1
 project_admin_servicebar	s_create_success	Service créé avec succès
 project_admin_servicebar	s_add_success	- Service ajouté avec succès à $1 projet(s)
