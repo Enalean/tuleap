@@ -58,6 +58,10 @@ class ServicePOSTData
      * @var string
      */
     private $scope;
+    /**
+     * @var bool
+     */
+    private $is_in_iframe;
 
     /**
      * @param string $short_name
@@ -69,6 +73,7 @@ class ServicePOSTData
      * @param bool $is_active
      * @param bool $is_used
      * @param bool $is_system_service
+     * @param bool $is_in_iframe
      */
     public function __construct(
         $short_name,
@@ -79,7 +84,8 @@ class ServicePOSTData
         $scope,
         $is_active,
         $is_used,
-        $is_system_service
+        $is_system_service,
+        $is_in_iframe
     ) {
         $this->short_name        = $short_name;
         $this->label             = $label;
@@ -90,6 +96,7 @@ class ServicePOSTData
         $this->is_active         = $is_active;
         $this->is_used           = $is_used;
         $this->is_system_service = $is_system_service;
+        $this->is_in_iframe      = $is_in_iframe;
     }
 
     /**
@@ -162,5 +169,13 @@ class ServicePOSTData
     public function getScope()
     {
         return $this->scope;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isInIframe()
+    {
+        return $this->is_in_iframe;
     }
 }

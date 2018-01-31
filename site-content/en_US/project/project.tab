@@ -449,7 +449,7 @@ project_admin_servicebar	cant_make_s	Cannot make system-wide service without sho
 project_admin_servicebar	set_stat_unused	- Setting status to "unused" -
 project_admin_servicebar	short_name_exist	A service with this short name ($short_name) already exists
 project_admin_servicebar	cant_make_system_wide_s	Cannot make system-wide service in project other than 100
-project_admin_servicebar	cant_create_s	ERROR - Can not create service: $1
+project_admin_servicebar	cant_create_s	Can not create service
 project_admin_servicebar	s_create_success	Successfully Created Service
 project_admin_servicebar	s_add_success	- Successfully Added Service to $1 Projects
 project_admin_servicebar	s_id_missed	The service ID is missing
@@ -466,7 +466,7 @@ project_admin_servicebar	rank_on_screen	Rank On Screen
 project_admin_servicebar	del?	Delete?
 project_admin_servicebar	home_page	Home Page
 project_admin_servicebar	cant_create_s_for_p	ERROR - Can not create service for project $1
-project_admin_servicebar	bad_rank	ERROR - The rank must be superior to $1.
+project_admin_servicebar	bad_rank	The rank must be superior to $1.
 project_admin_servicebar	not_allowed	Service is not allowed
 #
 #-----------------------------------------------

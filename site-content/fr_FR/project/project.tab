@@ -446,7 +446,7 @@ project_admin_servicebar	cant_make_s	Impossible de créer un service de portée 
 project_admin_servicebar	set_stat_unused	- Statut sur "inutilisé" -
 project_admin_servicebar	short_name_exist	Un service ayant le même nom court existe déjà
 project_admin_servicebar	cant_make_system_wide_s	Impossible de créer un service de portée "système" dans un projet autre que le projet 100
-project_admin_servicebar	cant_create_s	ERREUR - Impossible de créer le service&nbsp;: $1
+project_admin_servicebar	cant_create_s	Impossible de créer le service
 project_admin_servicebar	s_create_success	Service créé avec succès
 project_admin_servicebar	s_add_success	- Service ajouté avec succès à $1 projet(s)
 project_admin_servicebar	s_id_missed	L'ID du service est manquant
@@ -463,7 +463,7 @@ project_admin_servicebar	rank_on_screen	Rang à l'écran
 project_admin_servicebar	del?	Détruire ?
 project_admin_servicebar	home_page	Site Web
 project_admin_servicebar	cant_create_s_for_p	ERREUR - Impossible de créer le service pour le projet $1
-project_admin_servicebar	bad_rank	ERREUR - Le rang doit être supérieur à $1.
+project_admin_servicebar	bad_rank	Le rang doit être supérieur à $1.
 project_admin_servicebar	not_allowed	Ce service n'est pas autorisé
 
 #

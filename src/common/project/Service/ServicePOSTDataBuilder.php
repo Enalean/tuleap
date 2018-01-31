@@ -21,6 +21,7 @@
 namespace Tuleap\Project\Service;
 
 use Codendi_Request;
+use Feedback;
 use ForgeConfig;
 use Project;
 
@@ -43,6 +44,7 @@ class ServicePOSTDataBuilder
         $scope             = $request->getValidated('scope', 'string', '');
         $is_active         = $request->getValidated('is_active', 'uint', 0);
         $is_used           = $request->getValidated('is_used', 'uint', false);
+        $is_in_iframe      = $request->get('is_in_iframe') ? 1 : 0;
         $is_system_service = $this->isSystemService($request, $short_name);
 
         $this->checkShortname($project, $short_name);
@@ -51,6 +53,16 @@ class ServicePOSTDataBuilder
         $this->checkRank($project, $short_name, $rank);
 
         $link = $this->substituteVariablesInLink($project, $link);
+
+        if (! $is_active) {
+            if ($is_used) {
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::INFO,
+                    $GLOBALS['Language']->getText('project_admin_servicebar', 'set_stat_unused')
+                );
+                $is_used = false;
+            }
+        }
 
         return new ServicePOSTData(
             $short_name,
@@ -61,7 +73,8 @@ class ServicePOSTDataBuilder
             $scope,
             (bool) $is_active,
             (bool) $is_used,
-            (bool) $is_system_service
+            (bool) $is_system_service,
+            (bool) $is_in_iframe
         );
     }
 

@@ -34,13 +34,19 @@ class AdminRouter
      * @var DeleteController
      */
     private $delete_controller;
+    /**
+     * @var AddController
+     */
+    private $add_controller;
 
     public function __construct(
         IndexController $index_controller,
-        DeleteController $delete_controller
+        DeleteController $delete_controller,
+        AddController $add_controller
     ) {
         $this->index_controller  = $index_controller;
         $this->delete_controller = $delete_controller;
+        $this->add_controller    = $add_controller;
     }
 
     public function process(HTTPRequest $request)
