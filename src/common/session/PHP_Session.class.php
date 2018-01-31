@@ -30,6 +30,9 @@ class PHP_Session
 
     private static function configureSessionCookie()
     {
+        $session_name = CookieManager::getCookieName(session_name());
+        session_name($session_name);
+
         $lifetime  = 0;
         $path      = '/';
         $domain    = null;
