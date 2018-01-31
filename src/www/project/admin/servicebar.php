@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -39,73 +39,33 @@ $service_manager = ServiceManager::instance();
 $pm = ProjectManager::instance();
 $project = $pm->getProject($group_id);
 
-$is_used = $request->getValidated('is_used', 'uint', false);
-$func    = $request->getValidated('func', 'string', '');
-
-if (($func=='do_create')||($func=='do_update')) {
-    $short_name  = $request->getValidated('short_name', 'string', '');
-    $label       = $request->getValidated('label', 'string', '');
-    $description = $request->getValidated('description', 'string', '');
-    $link        = $request->getValidated('link', 'localuri', '');
-    $rank        = $request->getValidated('rank', 'int', 500);
-    $is_active   = $request->getValidated('is_active', 'uint', 0);
-
-    $is_system_service = false;
-    if ($request->exist('short_name') && trim($short_name) != '') {
-        $is_system_service = true;
-    }
-
-    // Sanity check
-    if (!$label) {
-        exit_error($Language->getText('global','error'),$Language->getText('project_admin_servicebar','label_missed'));
-    }
-    if (!$link) {
-        exit_error($Language->getText('global','error'),$Language->getText('project_admin_servicebar','link_missed'));
-    }
-
-    $minimal_rank = $project->getMinimalRank();
-
-    if ($short_name!='summary'){
-        if($rank <= $minimal_rank){
-            exit_error($Language->getText('global','error'),$Language->getText('project_admin_servicebar','bad_rank', $minimal_rank));
-        }
-        if (!$rank) {
-            exit_error($Language->getText('global','error'),$Language->getText('project_admin_servicebar','rank_missed'));
-        }
-    }
-
-    if (($group_id==100)&&(!$short_name)) {
-        exit_error($Language->getText('global','error'),$Language->getText('project_admin_servicebar','cant_make_s'));
-    }
-
-    if (!$is_active) {
-        if ($is_used) {
-            $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_servicebar','set_stat_unused'));
-            $is_used=false;
-        }
-    }
-    // Substitute variables in link
-    if ($group_id!=100) {
-        // NOTE: if you change link variables here, change them also below, and  in src/common/project/RegisterProjectStep_Confirmation.class.php and src/www/include/Layout.class.php
-        if (strstr($link,'$projectname')) {
-            // Don't check project name if not needed.
-            // When it is done here, the service bar will not appear updated on the current page
-            $link=str_replace('$projectname',$project->getUnixName(),$link);
-        }
-        $link=str_replace('$sys_default_domain',$GLOBALS['sys_default_domain'],$link);
-        $sys_default_protocol='http';
-        if (ForgeConfig::get('sys_https_host')) {
-            $sys_default_protocol='https';
-        }
-        $link=str_replace('$sys_default_protocol',$sys_default_protocol,$link);
-        $link=str_replace('$group_id',$group_id,$link);
-    }
-
-}
-
-$scope = $request->getValidated('scope', 'string', '');
+$func = $request->getValidated('func', 'string', '');
 
 if ($func=='do_create') {
+    $builder = new \Tuleap\Project\Service\ServicePOSTDataBuilder();
+    try {
+        $service_data = $builder->buildFromRequest($request);
+    } catch (\Tuleap\Project\Service\InvalidServicePOSTDataException $exception) {
+        exit_error($Language->getText('global','error'), $exception->getMessage());
+    }
+
+    $short_name        = $service_data->getShortName();
+    $label             = $service_data->getLabel();
+    $description       = $service_data->getDescription();
+    $link              = $service_data->getLink();
+    $rank              = $service_data->getRank();
+    $scope             = $service_data->getScope();
+    $is_active         = $service_data->isActive();
+    $is_used           = $service_data->isUsed();
+    $is_system_service = $service_data->isSystemService();
+
+    if (! $is_active) {
+        if ($is_used) {
+            $GLOBALS['Response']->addFeedback('info',
+                $Language->getText('project_admin_servicebar', 'set_stat_unused'));
+            $is_used = false;
+        }
+    }
 
     if ($short_name) {
         // Check that the short_name is not already used
@@ -169,6 +129,31 @@ if ($func=='do_create') {
 }
 
 if ($func=='do_update') {
+    $builder = new \Tuleap\Project\Service\ServicePOSTDataBuilder();
+    try {
+        $service_data = $builder->buildFromRequest($request);
+    } catch (\Tuleap\Project\Service\InvalidServicePOSTDataException $exception) {
+        exit_error($Language->getText('global','error'), $exception->getMessage());
+    }
+
+    $short_name        = $service_data->getShortName();
+    $label             = $service_data->getLabel();
+    $description       = $service_data->getDescription();
+    $link              = $service_data->getLink();
+    $rank              = $service_data->getRank();
+    $scope             = $service_data->getScope();
+    $is_active         = $service_data->isActive();
+    $is_used           = $service_data->isUsed();
+    $is_system_service = $service_data->isSystemService();
+
+    if (! $is_active) {
+        if ($is_used) {
+            $GLOBALS['Response']->addFeedback('info',
+                $Language->getText('project_admin_servicebar', 'set_stat_unused'));
+            $is_used = false;
+        }
+    }
+
     $redirect_url = '/project/admin/servicebar.php?' . http_build_query(array(
         'group_id' => $group_id
     ));
