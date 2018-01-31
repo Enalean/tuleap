@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,16 +20,14 @@
 
 namespace Tuleap\Captcha;
 
-class DataAccessObject extends \DataAccessObject
+class DataAccessObject extends \Tuleap\DB\DataAccessObject
 {
     /**
-     * @return array|false
+     * @return array
      */
     public function getConfiguration()
     {
-        $sql = 'SELECT * FROM plugin_captcha_configuration';
-
-        return $this->retrieveFirstRow($sql);
+        return $this->getDB()->row('SELECT * FROM plugin_captcha_configuration');
     }
 
     /**
@@ -37,27 +35,20 @@ class DataAccessObject extends \DataAccessObject
      */
     public function save($site_key, $secret_key)
     {
-        $site_key   = $this->da->quoteSmart($site_key);
-        $secret_key = $this->da->quoteSmart($secret_key);
+        $this->getDB()->beginTransaction();
 
-        $this->startTransaction();
-
-        $sql_delete = "DELETE FROM plugin_captcha_configuration";
-
-        if (! $this->update($sql_delete)) {
-            $this->rollBack();
+        try {
+            $this->getDB()->run('DELETE FROM plugin_captcha_configuration');
+            $this->getDB()->run(
+                'INSERT INTO plugin_captcha_configuration(site_key, secret_key) VALUES (?, ?)',
+                $site_key,
+                $secret_key
+            );
+        } catch (\PDOException $ex) {
+            $this->getDB()->rollBack();
             return false;
         }
 
-        $sql_save = "INSERT INTO plugin_captcha_configuration(site_key, secret_key) VALUES ($site_key, $secret_key)";
-
-        if (! $this->update($sql_save)) {
-            $this->rollBack();
-            return false;
-        }
-
-        $this->commit();
-
-        return true;
+        return $this->getDB()->commit();
     }
 }

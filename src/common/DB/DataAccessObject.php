@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,32 +18,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Captcha;
+namespace Tuleap\DB;
 
-class ConfigurationRetriever
+use ParagonIE\EasyDB\EasyDB;
+
+class DataAccessObject
 {
     /**
-     * @var DataAccessObject
+     * @var EasyDB
      */
-    private $dao;
+    private $db;
 
-    public function __construct(DataAccessObject $dao)
+    public function __construct()
     {
-        $this->dao = $dao;
+        $this->db = DBFactory::instance();
     }
 
     /**
-     * @return Configuration
-     * @throws \Tuleap\Captcha\ConfigurationNotFoundException
+     * @return EasyDB
      */
-    public function retrieve()
+    protected function getDB()
     {
-        $row = $this->dao->getConfiguration();
-
-        if (empty($row)) {
-            throw new ConfigurationNotFoundException();
-        }
-
-        return new Configuration($row['site_key'], $row['secret_key']);
+        return $this->db;
     }
 }
