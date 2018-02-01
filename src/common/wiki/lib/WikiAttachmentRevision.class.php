@@ -1,24 +1,27 @@
 <?php
-/* 
+/*
+ * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
  * Copyright 2005, 2006, STMicroelectronics
  *
  * Originally written by Manuel Vacelet
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Http\BinaryFileResponse;
 
 /**
  *
@@ -147,21 +150,19 @@ class WikiAttachmentRevision {
      */
     function htmlDump() {
         if($this->exist()){
-            header('Content-type: '.$this->getMimeType());
-            header('Content-Length: '.$this->getSize());
-            header('Content-Disposition: filename="'.$this->displayFilename.'"');
-      
-            $this->getContent();
+            $binary_reponse = new BinaryFileResponse($this->getFilePath(), $this->displayFilename, $this->getMimeType());
+            $binary_reponse->send();
         }
     }
 
     /**
-     *
+     * @return string
      */
-    function getContent() {
+    private function getFilePath()
+    {
         $this->getFilename();
 
-        print file_get_contents($this->basedir.'/'.$this->filename.'/'.$this->revision);
+        return $this->basedir.'/'.$this->filename.'/'.$this->revision;
     }
 
 
@@ -278,13 +279,6 @@ class WikiAttachmentRevision {
 
     function getOwnerId() {
         return $this->owner_id;
-    }
-
-    /**
-     *
-     */
-    function getFilepath() {
-        return $this->file;
     }
 
 
