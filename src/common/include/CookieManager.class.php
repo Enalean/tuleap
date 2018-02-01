@@ -42,7 +42,7 @@ class CookieManager
      */
     private function buildCookie($name)
     {
-        $cookie = new Cookie($this->getInternalCookieName($name));
+        $cookie = new Cookie(self::getCookieName($name));
         $cookie->setHttpOnly(true);
         $cookie->setSecureOnly(self::canCookieUseSecureFlag());
         $cookie->setSameSiteRestriction(Cookie::SAME_SITE_RESTRICTION_LAX);
@@ -60,7 +60,7 @@ class CookieManager
 
     public function getCookie($name)
     {
-        return Cookie::get($this->getInternalCookieName($name), '');
+        return Cookie::get(self::getCookieName($name), '');
     }
 
     /**
@@ -68,7 +68,7 @@ class CookieManager
      */
     public function isCookie($name)
     {
-        return Cookie::exists($this->getInternalCookieName($name));
+        return Cookie::exists(self::getCookieName($name));
     }
 
     public function removeCookie($name)
@@ -80,7 +80,7 @@ class CookieManager
     /**
      * @return string
      */
-    private function getInternalCookieName($name)
+    public static function getCookieName($name)
     {
         $cookie_prefix = ForgeConfig::get('sys_cookie_prefix');
         $cookie_name   = "${cookie_prefix}_${name}";
