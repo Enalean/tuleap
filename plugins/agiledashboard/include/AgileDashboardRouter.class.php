@@ -228,7 +228,7 @@ class AgileDashboardRouter {
      *
      * @return string
      */
-    private function getHeaderTitle($action_name) {
+    private function getHeaderTitle(Codendi_Request $request, $action_name) {
         $header_title = array(
             'index'               => $GLOBALS['Language']->getText('plugin_agiledashboard', 'service_lbl_key'),
             'exportToFile'        => $GLOBALS['Language']->getText('plugin_agiledashboard', 'service_lbl_key'),
@@ -242,7 +242,13 @@ class AgileDashboardRouter {
             'showKanban'          => $GLOBALS['Language']->getText('plugin_agiledashboard', 'kanban_show')
         );
 
-        return $header_title[$action_name];
+        $title = $header_title[$action_name];
+
+        if ($action_name === 'showKanban') {
+            return $this->getPageTitleWithKanbanName($request, $title);
+        }
+
+        return $title;
     }
 
     /**
@@ -378,7 +384,7 @@ class AgileDashboardRouter {
         $content = $this->executeAction($controller, $action_name, $args);
         $header_options = array_merge($header_options, $controller->getHeaderOptions());
 
-        $this->displayHeader($controller, $request, $this->getHeaderTitle($action_name), $header_options);
+        $this->displayHeader($controller, $request, $this->getHeaderTitle($request, $action_name), $header_options);
         echo $content;
         $this->displayFooter($request);
     }
@@ -460,8 +466,23 @@ class AgileDashboardRouter {
         );
 
         $top_planning_rendered = $this->executeAction($controller, 'showTop', array());
-        $service->displayHeader($this->getHeaderTitle('showTop'), $no_breadcrumbs, $toolbar, $header_options);
+        $service->displayHeader($this->getHeaderTitle($request, 'showTop'), $no_breadcrumbs, $toolbar, $header_options);
         echo $top_planning_rendered;
         $this->displayFooter($request);
+    }
+
+    private function getPageTitleWithKanbanName(Codendi_Request $request, $title)
+    {
+        $kanban_id = $request->get('id');
+        $user      = $request->getCurrentUser();
+
+        try {
+            $kanban = $this->kanban_factory->getKanban($user, $kanban_id);
+            $title  = $kanban->getName();
+        } catch (AgileDashboard_KanbanNotFoundException $exception) {
+        } catch (AgileDashboard_KanbanCannotAccessException $exception) {
+        }
+
+        return $title;
     }
 }
