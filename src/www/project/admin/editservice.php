@@ -178,11 +178,18 @@ function display_service_creation_form($group_id,$su) {
     $pm = ProjectManager::instance();
     $project=$pm->getProject($group_id);
 
+    $csrf = new CSRFSynchronizerToken('/project/admin/servicebar.php?' . http_build_query(
+            array(
+                'group_id' => $project->getID()
+            )
+        )
+    );
     $link_expected_title = _('Please, enter a http:// or https:// link');
     echo '
 <h3>'.$Language->getText('project_admin_editservice','s_creation').'</h3>
 <form name="form_create" method="post" action="/project/admin/servicebar.php?group_id='.$group_id.'">
-<input type="hidden" name="func" VALUE="do_create">
+<input type="hidden" name="action" VALUE="add">
+'. $csrf->fetchHTMLInput() .'
 <input type="hidden" name="group_id" VALUE="'.$group_id.'">
 
 <table width="100%" cellspacing=0 cellpadding=3 border=0>

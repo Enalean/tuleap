@@ -19,11 +19,11 @@
  */
 
 /**
- *  Data Access Object for Service 
+ *  Data Access Object for Service
  */
 class ServiceDao extends DataAccessObject {
     /**
-    * Searches Service by Server Id 
+    * Searches Service by Server Id
     * @return DataAccessResult
     */
     function searchByServerId($server_id) {
@@ -106,5 +106,35 @@ class ServiceDao extends DataAccessObject {
         $sql = "DELETE FROM service WHERE short_name = $short_name";
 
         return $this->update($sql) && $this->da->affectedRows() > 0;
+    }
+
+    public function create(
+        $project_id,
+        $label,
+        $description,
+        $short_name,
+        $link,
+        $is_active,
+        $is_used,
+        $scope,
+        $rank,
+        $is_in_iframe
+    ) {
+        $project_id   = $this->da->escapeInt($project_id);
+        $label        = $this->da->quoteSmart($label);
+        $description  = $this->da->quoteSmart($description);
+        $short_name   = $this->da->quoteSmart($short_name);
+        $link         = $this->da->quoteSmart($link);
+        $scope        = $this->da->quoteSmart($scope);
+        $rank         = $this->da->escapeInt($rank);
+        $is_active    = $is_active ? 1 : 0;
+        $is_used      = $is_used ? 1 : 0;
+        $is_in_iframe = $is_in_iframe ? 1 : 0;
+
+        $sql = "INSERT INTO service (group_id, label, description, short_name, link, is_active, is_used, scope, rank, is_in_iframe)
+                VALUES ($project_id, $label, $description, $short_name, $link, $is_active, $is_used, $scope, $rank, $is_in_iframe)";
+
+        return $this->update($sql) && $this->da->affectedRows() > 0;
+
     }
 }
