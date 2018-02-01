@@ -32,6 +32,7 @@ use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportDao;
 use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportUpdater;
 use Tuleap\AgileDashboard\KanbanJavascriptDependenciesProvider;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
+use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\RealTime\RealTimeArtifactMessageController;
