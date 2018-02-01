@@ -1,0 +1,152 @@
+<form method="POST"
+      action=""
+      class="tlp-modal"
+      role="dialog"
+      id="project-admin-services-add-modal"
+      aria-labelledby="project-admin-services-add-modal-title"
+>
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="project-admin-services-add-modal-title">
+            <i class="fa fa-plus tlp-modal-title-icon"></i>
+            {{# gettext }} Create a new service {{/ gettext }}
+        </h1>
+        <div class="tlp-modal-close" data-dismiss="modal" aria-label="{{# gettext }}Close{{/ gettext }}">
+            ×
+        </div>
+    </div>
+    <div class="tlp-modal-body">
+        {{# csrf }}
+            {{> csrf_token_input }}
+        {{/ csrf }}
+        <input type="hidden" name="group_id" value="{{ project_id }}">
+        <input type="hidden" name="action" value="add">
+
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="project-admin-services-add-modal-label">
+                {{# gettext }}Label{{/ gettext }}
+                <i class="fa fa-asterisk"></i>
+            </label>
+            <input type="text"
+                   class="tlp-input"
+                   id="project-admin-services-add-modal-label"
+                   name="label"
+                   placeholder="{{# gettext }}My service{{/ gettext }}"
+                   size="30"
+                   maxlength="40"
+                   required>
+        </div>
+
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="project-admin-services-add-modal-link">
+                {{# gettext }}Link{{/ gettext }}
+                <i class="fa fa-asterisk"></i>
+            </label>
+            <input type="text"
+                   class="tlp-input"
+                   id="project-admin-services-add-modal-link"
+                   name="link"
+                   placeholder="https://example.com/my-service/"
+                   maxlength="255"
+                   pattern="(https?://|#|/|\?).+"
+                   title="{{# gettext }}Please, enter a http:// or https:// link{{/ gettext }}"
+                   required>
+        </div>
+
+        {{# is_default_template }}
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="project-admin-services-add-modal-shortname">
+                    {{# gettext }}Short name{{/ gettext }}
+                    <i class="fa fa-asterisk"></i>
+                </label>
+                <input type="text"
+                       class="tlp-input"
+                       id="project-admin-services-add-modal-shortname"
+                       name="short_name"
+                       placeholder="{{# gettext }}my_service{{/ gettext }}"
+                       size="15"
+                       maxlength="40"
+                       required>
+            </div>
+        {{/ is_default_template }}
+
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="project-admin-services-add-modal-description">
+                {{# gettext }}Description{{/ gettext }}
+            </label>
+            <input type="text"
+                   class="tlp-input"
+                   id="project-admin-services-add-modal-description"
+                   name="description"
+                   placeholder="{{# gettext }}Awesome service to manage extra stuff{{/ gettext }}"
+                   size="70"
+                   maxlength="255">
+        </div>
+
+        {{# is_default_template }}
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="project-admin-services-add-modal-scope">
+                    {{# gettext }}Scope{{/ gettext }}
+                </label>
+                <select class="tlp-select tlp-select-adjusted" id="project-admin-services-add-modal-scope" name="scope">
+                    <option value="system" selected>{{# gettext }}System{{/ gettext }}</option>
+                    <option value="project">{{# gettext }}Project{{/ gettext }}</option>
+                </select>
+            </div>
+        {{/ is_default_template }}
+        {{^ is_default_template }}
+            <input type="hidden" name="scope" value="project">
+        {{/ is_default_template }}
+
+        <hr class="tlp-modal-separator">
+
+        {{# is_default_template }}
+            <div class="tlp-form-element">
+                <label class="tlp-label tlp-checkbox">
+                    <input type="checkbox" name="is_active" value="1" checked>
+                    {{# gettext }}Instantiated for new projects{{/ gettext }}
+                </label>
+            </div>
+        {{/ is_default_template }}
+        {{^ is_default_template }}
+            <input type="hidden" name="is_active" value="1">
+        {{/ is_default_template }}
+
+        <div class="tlp-form-element">
+            <label class="tlp-label tlp-checkbox">
+                <input type="checkbox" name="is_used" value="1" checked>
+                {{# gettext }}Enabled{{/ gettext }}
+            </label>
+        </div>
+
+        <div class="tlp-form-element">
+            <label class="tlp-label tlp-checkbox">
+                <input type="checkbox" name="is_in_iframe" value="1">
+                {{# gettext }}Display in iframe{{/ gettext }}
+            </label>
+        </div>
+
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="project-admin-services-add-modal-rank">
+                {{# gettext }}Rank{{/ gettext }}
+                <i class="fa fa-asterisk"></i>
+            </label>
+            <input type="number"
+                   class="tlp-input"
+                   id="project-admin-services-add-modal-rank"
+                   name="rank"
+                   placeholder="150"
+                   size="5"
+                   maxlength="5"
+                   min="{{ minimal_rank }}"
+                   required>
+        </div>
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="reset" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
+            {{# gettext }}Cancel{{/ gettext }}
+        </button>
+        <button type="submit" class="tlp-button-primary tlp-modal-action user-group-modal-button">
+            <i class="fa fa-save tlp-button-icon"></i> {{# gettext }}Create service{{/ gettext }}
+        </button>
+    </div>
+</form>

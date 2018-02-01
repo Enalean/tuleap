@@ -50,7 +50,6 @@ project_admin_editservice	enabled	Actif
 project_admin_editservice	pos_in_s_bar	Position dans la barre des services
 project_admin_editservice	screen_rank	Rang à l'écran
 project_admin_editservice	fields_required	Champs imposés
-project_admin_editservice	s_creation	Création de service
 project_admin_editservice	system	système
 project_admin_editservice	project	projet
 project_admin_editservice	mandatory	: imposé pour les services de type système

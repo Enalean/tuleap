@@ -8,7 +8,7 @@
             </div>
             <section class="tlp-pane-section">
                 <div class="tlp-table-actions">
-                    <a href="/project/admin/editservice.php?func=create&group_id={{ project_id }}"
+                    <button
                        id="project-admin-services-add-button"
                        type="button"
                        data-target-modal-id="project-admin-services-add-modal"
@@ -16,7 +16,7 @@
                     >
                         <i class="tlp-button-icon fa fa-plus"></i>
                         {{# gettext }}Create a new service{{/ gettext }}
-                    </a>
+                    </button>
                     {{> services-add-modal }}
                 </div>
                 <table class="tlp-table">
