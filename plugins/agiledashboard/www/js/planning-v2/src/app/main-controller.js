@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 export default MainController;
 
 MainController.$inject = [
@@ -40,5 +42,6 @@ function MainController(
     function initLocale(lang) {
         gettextCatalog.setCurrentLanguage(lang);
         amMoment.changeLocale(lang);
+        moment.locale(lang);
     }
 }
