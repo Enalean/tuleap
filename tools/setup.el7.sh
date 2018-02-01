@@ -22,7 +22,8 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-declare -r include="$(/usr/bin/dirname "${BASH_SOURCE[0]}")/setup/el7/include"
+declare -r tools_dir="$(/usr/bin/dirname "${BASH_SOURCE[0]}")"
+declare -r include="${tools_dir}/setup/el7/include"
 
 . ${include}/define.sh
 . ${include}/messages.sh
@@ -31,6 +32,7 @@ declare -r include="$(/usr/bin/dirname "${BASH_SOURCE[0]}")/setup/el7/include"
 . ${include}/options.sh
 . ${include}/helper.sh
 . ${include}/logger.sh
+. ${include}/php.sh
 . ${include}/mysqlcli.sh
 . ${include}/sql.sh
 
@@ -45,6 +47,8 @@ _optionsSelected "${@}"
 _checkMandatoryOptions "${@}"
 _infoMessage "Start Tuleap installation"
 _checkOsVersion
+_infoMessage "Checking all command line tools"
+_checkCommand
 _checkSeLinux
 _optionMessages "${@}"
 
@@ -56,20 +60,29 @@ if [[ ${mysql_password} = "NULL" ]]; then
         exit 1
     fi
 
-    _checkFilePassword
     _infoMessage "Generate MySQL password"
     mysql_password=$(_setupRandomPassword)
     _infoMessage "Set MySQL password for ${mysql_user}"
-    _logPassword "MySQL user password (${mysql_user}): ${mysql_password}"
     _setupMysqlPassword "${mysql_user}" ${mysql_password}
     admin_password=$(_setupRandomPassword)
     _setupMysqlPrivileges "${mysql_user}" "${mysql_password}"
-    _logPassword "System user password (${project_admin}): ${admin_password}"
 else
+    admin_password=$(_setupRandomPassword)
     _checkMysqlStatus "${mysql_user}" "${mysql_password}"
 fi
 
+_checkFilePassword
+_logPassword "MySQL user password (${mysql_user}): ${mysql_password}"
+_logPassword "System user password (${project_admin}): ${admin_password}"
 _checkMysqlMode "${mysql_user}" "${mysql_password}"
-_checkDatabase "${mysql_user}" "${mysql_password}" "tuleap"
-_setupDatabase "${mysql_user}" "${mysql_password}" "tuleap" "${db_exist}"
+_checkDatabase "${mysql_user}" "${mysql_password}" "${db_name}"
+_setupDatabase "${mysql_user}" "${mysql_password}" "${db_name}" "${db_exist}"
+_infoMessage "Populating the Tuleap database..."
+_setupSourceDb "${mysql_user}" "${mysql_password}" "${db_name}" \
+    "${sql_structure}"
+
+_setupInitValues $(_phpPasswordHasher "${admin_password}") "${server_name}" \
+    "${sql_init}" | \
+    $(_mysqlConnectDb "${mysql_user}" "${mysql_password}" "${db_name}")
+
 _endMessage

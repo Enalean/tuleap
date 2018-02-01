@@ -1,14 +1,19 @@
-_checkDatabase() {
-    if _mysqlConnect ${1} ${2} "$(_sqlShowDb)" 2> >(_logCatcher) | ${grep} --silent ${3}; then
-        db_exist="true"
-    fi
+_checkCommand() {
+    for c in ${cmd[@]}; do
+        if [ ! -f ${c} ]; then
+            _errorMessage "${c}: command not found"
+            exit 1
+        fi
+    done
 }
 
-_checkDns() {
-    if [ -z "${1}" ]; then
-        ${dig} +short . A . AAAA
-    else
-        ${dig} +short ${1} A ${1} AAAA | ${tail} -1
+_checkDatabase() {
+    # ${1}: mysql user
+    # ${2}: mysql password
+    # ${3}: database
+
+    if _mysqlExecute ${1} ${2} "$(_sqlShowDb)" | ${grep} --silent ${3}; then
+        db_exist="true"
     fi
 }
 
@@ -38,7 +43,10 @@ _checkMandatoryOptions() {
 }
 
 _checkMysqlStatus() {
-    if ! _mysqlConnect ${1} ${2} ";" 2> >(_logCatcher); then
+    # ${1}: mysql user
+    # ${2}: mysql password
+
+    if ! _mysqlExecute ${1} ${2} ";"; then
         _errorMessage "MySQL server is not accessible or bad password"
         exit 1
     else
@@ -47,14 +55,17 @@ _checkMysqlStatus() {
 }
 
 _checkMysqlMode() {
-    local sql_mode=$(_mysqlConnect ${1} ${2} "$(_sqlShowMode)" 2> >(_logCatcher))
+    # ${1}: mysql user
+    # ${2}: mysql password
+
+    local sql_mode=$(_mysqlExecute ${1} ${2} "$(_sqlShowMode)")
 
     if [[ ${sql_mode#* } =~ STRICT_.*_TABLES ]]; then
-        _errorMessage "MySQL: unsupported sql_mode: ${sql_mode#* }"
+        _errorMessage "MySQL: unsupported sql_mode: ${sql_mode//sql_mode/}"
         _errorMessage "Please remove STRICT_ALL_TABLES or STRICT_TRANS_TABLES from my.cnf"
         exit 1
     else
-        _infoMessage "Sql_mode : ${sql_mode##* }"
+        _infoMessage "Sql_mode : ${sql_mode//sql_mode/}"
     fi
 
 }

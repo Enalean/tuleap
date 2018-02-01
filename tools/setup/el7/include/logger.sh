@@ -6,7 +6,7 @@ _logCatcher() {
     local timeout=0.1
     while read -t ${timeout} stdin; do
         datelog=$(${date} --rfc-3339=seconds)
-        ${printf} "%s" "[${datelog}] ${stdin}\n" >> ${tuleap_log}
+        ${printf} "[${datelog}] ${stdin}\n" >> ${tuleap_log}
     done
 }
 
