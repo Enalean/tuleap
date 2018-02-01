@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,51 +20,41 @@
 
 namespace Tuleap\PullRequest\Comment;
 
-use DataAccessObject;
+use Tuleap\DB\DataAccessObject;
 
 class Dao extends DataAccessObject
 {
 
     public function save($pull_request_id, $user_id, $post_date, $content)
     {
-        $pull_request_id = $this->da->escapeInt($pull_request_id);
-        $user_id         = $this->da->escapeInt($user_id);
-        $post_date       = $this->da->escapeInt($post_date);
-        $content         = $this->da->quoteSmart($content);
+        $sql = 'INSERT INTO plugin_pullrequest_comments (pull_request_id, user_id, post_date, content)
+                VALUES (?, ?, ?, ?)';
+        $this->getDB()->run($sql, $pull_request_id, $user_id, $post_date, $content);
 
-        $sql = "INSERT INTO plugin_pullrequest_comments (pull_request_id, user_id, post_date, content)
-                VALUES ($pull_request_id, $user_id, $post_date, $content)";
-
-        return $this->updateAndGetLastId($sql);
+        return $this->getDB()->lastInsertId();
     }
 
     public function searchByPullRequestId($pull_request_id, $limit, $offset, $order)
     {
-        $pull_request_id = $this->da->escapeInt($pull_request_id);
-        $limit           = $this->da->escapeInt($limit);
-        $offset          = $this->da->escapeInt($offset);
-
         if (strtolower($order) !== 'asc') {
             $order = 'desc';
         }
 
         $sql = "SELECT SQL_CALC_FOUND_ROWS *
                 FROM plugin_pullrequest_comments
-                WHERE pull_request_id = $pull_request_id
+                WHERE pull_request_id = ?
                 ORDER BY id $order
-                LIMIT $offset, $limit";
+                LIMIT ?, ?";
 
-        return $this->retrieve($sql);
+        return $this->getDB()->run($sql, $pull_request_id, $offset, $limit);
     }
 
     public function searchAllByPullRequestId($pull_request_id)
     {
-        $pull_request_id = $this->da->escapeInt($pull_request_id);
-
-        $sql = "SELECT SQL_CALC_FOUND_ROWS *
+        $sql = 'SELECT SQL_CALC_FOUND_ROWS *
                 FROM plugin_pullrequest_comments
-                WHERE pull_request_id = $pull_request_id";
+                WHERE pull_request_id = ?';
 
-        return $this->retrieve($sql);
+        return $this->getDB()->run($sql, $pull_request_id);
     }
 }

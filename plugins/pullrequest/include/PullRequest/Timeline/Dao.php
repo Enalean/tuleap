@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,34 +20,25 @@
 
 namespace Tuleap\PullRequest\Timeline;
 
-use DataAccessObject;
+use Tuleap\DB\DataAccessObject;
 
 class Dao extends DataAccessObject
 {
 
     public function searchAllByPullRequestId($pull_request_id)
     {
-        $pull_request_id = $this->da->escapeInt($pull_request_id);
-
-        $sql = "SELECT SQL_CALC_FOUND_ROWS *
+        $sql = 'SELECT SQL_CALC_FOUND_ROWS *
                 FROM plugin_pullrequest_timeline_event
-                WHERE pull_request_id = $pull_request_id";
+                WHERE pull_request_id = ?';
 
-        return $this->retrieve($sql);
+        return $this->getDB()->run($sql, $pull_request_id);
     }
 
     public function save($pull_request_id, $user_id, $post_date, $type)
     {
-        $pull_request_id = $this->da->escapeInt($pull_request_id);
-        $user_id         = $this->da->escapeInt($user_id);
-        $post_date       = $this->da->escapeInt($post_date);
-        $type            = $this->da->escapeInt($type);
+        $sql = 'INSERT INTO plugin_pullrequest_timeline_event (pull_request_id, user_id, post_date, type)
+                VALUES (?, ?, ?, ?)';
 
-        $sql = "INSERT INTO plugin_pullrequest_timeline_event (pull_request_id, user_id, post_date, type)
-                VALUES ($pull_request_id, $user_id, $post_date, $type)";
-
-        return $this->updateAndGetLastId($sql);
+        $this->getDB()->run($sql, $pull_request_id, $user_id, $post_date, $type);
     }
-
-
 }

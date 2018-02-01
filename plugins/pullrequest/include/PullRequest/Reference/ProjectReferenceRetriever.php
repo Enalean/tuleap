@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -36,6 +36,6 @@ class ProjectReferenceRetriever
     {
         $result = $this->dao->searchByScopeAndKeywordAndGroupId('P', $keyword, $project_id);
 
-        return $result->rowCount() > 0;
+        return count($result) > 0;
     }
 }

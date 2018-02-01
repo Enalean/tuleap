@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -51,24 +51,24 @@ class Factory
         foreach ($this->comments_dao->searchAllByPullRequestId($pull_request_id) as $row) {
             $comments[] = $this->buildComment($row);
         }
+        $total_comment_events = $this->comments_dao->foundRows();
 
         $inline_comments = array();
         foreach ($this->inline_comments_dao->searchAllByPullRequestId($pull_request_id) as $row) {
             $inline_comments[] = InlineComment::buildFromRow($row);
         }
-
+        $total_inline_comment_events = $this->inline_comments_dao->foundRows();
 
         $timeline_events = array();
         foreach ($this->timeline_dao->searchAllByPullRequestId($pull_request_id) as $row) {
             $timeline_events[] = TimelineEvent::buildFromRow($row);
         }
+        $total_timeline_events = $this->timeline_dao->foundRows();
 
         $full_timeline   = array_merge($comments, $inline_comments, $timeline_events);
         usort($full_timeline, array($this, 'sortByPostDate'));
         $timeline     = array_slice($full_timeline, $offset, $limit);
-        $total_events = $this->comments_dao->foundRows() +
-                        $this->inline_comments_dao->foundRows() +
-                        $this->timeline_dao->foundRows();
+        $total_events = $total_comment_events + $total_inline_comment_events + $total_timeline_events;
         return new PaginatedTimeline($timeline, $total_events);
     }
 
