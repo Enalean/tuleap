@@ -24,6 +24,7 @@
     <services>
         <service shortname="plugin_docman" enabled="true" />
         <service shortname="tracker" enabled="true" />
+        <service shortname="frs" enabled="true" />
     </services>
     <ugroups>
         <ugroup name="project_members" description="">

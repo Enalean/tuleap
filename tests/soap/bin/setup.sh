@@ -39,6 +39,8 @@ setup_tuleap() {
 	-e "s#/usr/share/codendi#/usr/share/tuleap#g" \
 	-e "s#/var/log/codendi#/var/log/tuleap#g" \
 	-e "s#/var/lib/codendi/ftp/codendi#/var/lib/tuleap/ftp/tuleap#g" \
+	-e "s#/var/lib/codendi/ftp/incoming#/var/lib/tuleap/ftp/incoming#g" \
+	-e "s#/var/lib/codendi/ftp/pub#/var/lib/tuleap/ftp/pub#g" \
 	-e "s#/var/lib/codendi#/var/lib/tuleap#g" \
 	-e "s#/usr/lib/codendi#/usr/lib/tuleap#g" \
 	-e "s#/var/tmp/codendi_cache#/var/tmp/tuleap_cache#g" \
@@ -48,10 +50,18 @@ setup_tuleap() {
 	-e "s#%sys_org_name%#Tuleap#g" \
 	-e "s#%sys_long_org_name%#Tuleap#g" \
 	-e 's#\$sys_https_host =.*#\$sys_https_host = "";#' \
-	-e 's#/home/groups##' \
-	-e 's#/home/users##' \
-	-e 's#/var/lib/codendi/ftp/pub##' \
+	-e 's#\$sys_logger_level =.*#\$sys_logger_level = "debug";#' \
 	> /etc/tuleap/conf/local.inc
+
+    mkdir -p /usr/lib/tuleap/bin \
+        /var/lib/tuleap/ftp/pub \
+        /var/lib/tuleap/ftp/incoming \
+        /var/lib/tuleap/ftp/tuleap \
+        /home/groups
+
+    chown -R codendiadm:codendiadm /var/lib/tuleap/ftp
+
+    install -m 04755 /usr/share/tuleap/src/utils/fileforge.pl /usr/lib/tuleap/bin/fileforge
 }
 
 setup_database() {
