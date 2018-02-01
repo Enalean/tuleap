@@ -62,8 +62,13 @@ class ServicePOSTData
      * @var bool
      */
     private $is_in_iframe;
+    /**
+     * @var int
+     */
+    private $id;
 
     /**
+     * @param int $id
      * @param string $short_name
      * @param string $label
      * @param string $description
@@ -76,6 +81,7 @@ class ServicePOSTData
      * @param bool $is_in_iframe
      */
     public function __construct(
+        $id,
         $short_name,
         $label,
         $description,
@@ -87,6 +93,7 @@ class ServicePOSTData
         $is_system_service,
         $is_in_iframe
     ) {
+        $this->id                = $id;
         $this->short_name        = $short_name;
         $this->label             = $label;
         $this->description       = $description;
@@ -177,5 +184,13 @@ class ServicePOSTData
     public function isInIframe()
     {
         return $this->is_in_iframe;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 }

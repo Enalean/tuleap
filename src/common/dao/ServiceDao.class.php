@@ -21,17 +21,8 @@
 /**
  *  Data Access Object for Service
  */
-class ServiceDao extends DataAccessObject {
-    /**
-    * Searches Service by Server Id
-    * @return DataAccessResult
-    */
-    function searchByServerId($server_id) {
-        $sql = sprintf("SELECT * FROM service WHERE server_id = %s ORDER BY group_id, rank",
-                $this->da->quoteSmart($server_id));
-        return $this->retrieve($sql);
-    }
-
+class ServiceDao extends DataAccessObject
+{
     /**
     * Return active projects that use a specific service
     * WARNING: this returns all fields of all projects (might be big)
@@ -135,6 +126,40 @@ class ServiceDao extends DataAccessObject {
                 VALUES ($project_id, $label, $description, $short_name, $link, $is_active, $is_used, $scope, $rank, $is_in_iframe)";
 
         return $this->update($sql) && $this->da->affectedRows() > 0;
+    }
 
+    public function saveBasicInformation($service_id, $label, $description, $link, $rank, $is_in_iframe)
+    {
+        $service_id   = $this->da->escapeInt($service_id);
+        $label        = $this->da->quoteSmart($label);
+        $description  = $this->da->quoteSmart($description);
+        $link         = $this->da->quoteSmart($link);
+        $rank         = $this->da->escapeInt($rank);
+        $is_in_iframe = $is_in_iframe ? 1 : 0;
+
+        $sql = "UPDATE service
+                SET label = $label,
+                    description = $description,
+                    link = $link,
+                    rank = $rank,
+                    is_in_iframe = $is_in_iframe
+                WHERE service_id = $service_id";
+        var_dump($sql);
+
+        return $this->update($sql) && $this->da->affectedRows() > 0;
+    }
+
+    public function saveIsActiveAndScope($service_id, $is_active, $scope)
+    {
+        $service_id = $this->da->escapeInt($service_id);
+        $scope      = $this->da->quoteSmart($scope);
+        $is_active  = $is_active ? 1 : 0;
+
+        $sql = "UPDATE service
+                SET scope = $scope,
+                    is_active = $is_active
+                WHERE service_id = $service_id";
+
+        $this->update($sql);
     }
 }
