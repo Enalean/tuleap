@@ -125,6 +125,9 @@ msgid_plural "And %d other users groups you are not allowed to administrate."
 msgstr[0] "Et un autre groupe que vous ne pouvez pas administrer."
 msgstr[1] "Et %d autres groupes que vous ne pouvez pas administrer."
 
+msgid "Awesome service to manage extra stuff"
+msgstr "Le service qui gère des trucs"
+
 msgid "Beyond 3 columns, each column<br>will have the same size."
 msgstr "Au-delà de 3 colonnes, chaque colonne<br>aura la même taille."
 
@@ -199,6 +202,9 @@ msgstr "Créer à partir de"
 msgid "Create label"
 msgstr "Créer le label"
 
+msgid "Create service"
+msgstr "Créer le service"
+
 msgid "Create user group"
 msgstr "Ajouter un groupe utilisateur"
 
@@ -254,6 +260,9 @@ msgstr "Description"
 msgid "Details"
 msgstr "Détails"
 
+msgid "Display in iframe"
+msgstr "Afficher dans une iframe"
+
 msgid "Displays the 30 last updated or created items in the project."
 msgstr "Affiche les 30 derniers éléments modifiés ou créés dans le projet."
 
@@ -286,6 +295,9 @@ msgstr "Urgent"
 
 msgid "Empty group"
 msgstr "Groupe vide"
+
+msgid "Enabled"
+msgstr "Actif"
 
 msgid "Enabled?"
 msgstr "Activé?"
@@ -350,6 +362,9 @@ msgstr "Création de la structure initiale"
 msgid "Instant messaging"
 msgstr "Messagerie Instantanée"
 
+msgid "Instantiated for new projects"
+msgstr "Instancié dans les nouveaux projets"
+
 #, php-format
 msgid "Invalid group name: %s. Please use only alphanumerical characters."
 msgstr ""
@@ -412,6 +427,9 @@ msgstr "Information manquante. Veuillez saisir les informations demandées."
 
 msgid "My personnal page"
 msgstr "Ma page personnelle"
+
+msgid "My service"
+msgstr "Mon service"
 
 msgid "Name"
 msgstr "Nom"
@@ -631,6 +649,9 @@ msgstr "Description courte"
 msgid "Short description shouldn't exceed 255 characters."
 msgstr "La description courte ne doit pas dépasser 255 caractères."
 
+msgid "Short name"
+msgstr "Nom court"
+
 msgid "Shortcut list"
 msgstr "Liste des raccourcis"
 
@@ -642,6 +663,9 @@ msgstr "Commencez par choisir un widget"
 
 msgid "Style"
 msgstr "Style"
+
+msgid "System"
+msgstr "Système"
 
 msgid "Template used by project"
 msgstr "Patron utilisé par ce projet"
@@ -1029,6 +1053,9 @@ msgstr "groupes"
 
 msgid "labels"
 msgstr "labels"
+
+msgid "my_service"
+msgstr "mon_service"
 
 msgid "permissions"
 msgstr "permissions"

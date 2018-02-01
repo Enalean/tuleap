@@ -29,6 +29,7 @@ class ServicesPresenter
     public $csrf;
     public $project_id;
     public $is_default_template;
+    public $minimal_rank;
 
     public function __construct(Project $project, CSRFSynchronizerToken $csrf, array $services)
     {
@@ -36,5 +37,6 @@ class ServicesPresenter
         $this->csrf                = $csrf;
         $this->project_id          = $project->getID();
         $this->is_default_template = (int)$project->getID() === Project::ADMIN_PROJECT_ID;
+        $this->minimal_rank        = $project->getMinimalRank();
     }
 }

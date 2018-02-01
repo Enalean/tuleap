@@ -103,6 +103,9 @@ msgid_plural "And %d other users groups you are not allowed to administrate."
 msgstr[0] ""
 msgstr[1] ""
 
+msgid "Awesome service to manage extra stuff"
+msgstr ""
+
 msgid "Beyond 3 columns, each column<br>will have the same size."
 msgstr ""
 
@@ -175,6 +178,9 @@ msgstr ""
 msgid "Create label"
 msgstr ""
 
+msgid "Create service"
+msgstr ""
+
 msgid "Create user group"
 msgstr ""
 
@@ -230,6 +236,9 @@ msgstr ""
 msgid "Details"
 msgstr ""
 
+msgid "Display in iframe"
+msgstr ""
+
 msgid "Displays the 30 last updated or created items in the project."
 msgstr ""
 
@@ -259,6 +268,9 @@ msgid "Emergency"
 msgstr ""
 
 msgid "Empty group"
+msgstr ""
+
+msgid "Enabled"
 msgstr ""
 
 msgid "Enabled?"
@@ -324,6 +336,9 @@ msgstr ""
 msgid "Instant messaging"
 msgstr ""
 
+msgid "Instantiated for new projects"
+msgstr ""
+
 #, php-format
 msgid "Invalid group name: %s. Please use only alphanumerical characters."
 msgstr ""
@@ -383,6 +398,9 @@ msgid "Missing Information. PLEASE fill in all required information."
 msgstr ""
 
 msgid "My personnal page"
+msgstr ""
+
+msgid "My service"
 msgstr ""
 
 msgid "Name"
@@ -596,6 +614,9 @@ msgstr ""
 msgid "Short description shouldn't exceed 255 characters."
 msgstr ""
 
+msgid "Short name"
+msgstr ""
+
 msgid "Shortcut list"
 msgstr ""
 
@@ -606,6 +627,9 @@ msgid "Start by choosing a widget"
 msgstr ""
 
 msgid "Style"
+msgstr ""
+
+msgid "System"
 msgstr ""
 
 msgid "Template used by project"
@@ -943,6 +967,9 @@ msgid "groups"
 msgstr ""
 
 msgid "labels"
+msgstr ""
+
+msgid "my_service"
 msgstr ""
 
 msgid "permissions"
