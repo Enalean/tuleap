@@ -108,6 +108,6 @@ class MailFilter
      */
     private function deduplicateEmails(array $mails)
     {
-        return array_flip(array_flip($mails));
+        return array_flip(array_flip(array_filter($mails)));
     }
 }
