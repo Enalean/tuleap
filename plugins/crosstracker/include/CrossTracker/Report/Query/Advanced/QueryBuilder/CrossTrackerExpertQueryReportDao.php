@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,8 @@
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder;
 
-use DataAccessObject;
+use ParagonIE\EasyDB\EasyStatement;
+use Tuleap\DB\DataAccessObject;
 use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
 
 class CrossTrackerExpertQueryReportDao extends DataAccessObject
@@ -34,9 +35,7 @@ class CrossTrackerExpertQueryReportDao extends DataAccessObject
         $from  = implode(' ', array_unique($from_where->getFromAsArray()));
         $where = $from_where->getWhere();
 
-        $tracker_ids = $this->da->escapeIntImplode($tracker_ids);
-        $limit       = $this->da->escapeInt($limit);
-        $offset      = $this->da->escapeInt($offset);
+        $tracker_ids_statement = EasyStatement::open()->in('tracker_artifact.tracker_id IN (?*)', $tracker_ids);
 
         $sql = "SELECT
                   SQL_CALC_FOUND_ROWS
@@ -59,11 +58,15 @@ class CrossTrackerExpertQueryReportDao extends DataAccessObject
                     $from
                     WHERE groups.status = 'A'
                       AND tracker.deletion_date IS NULL
-                      AND tracker_artifact.tracker_id IN ($tracker_ids)
+                      AND $tracker_ids_statement
                       AND $where
                 ORDER BY tracker_artifact.id DESC
-                LIMIT $offset, $limit";
+                LIMIT ?, ?";
 
-        return $this->retrieve($sql);
+        $parameters   = $tracker_ids_statement->values();
+        $parameters[] = $offset;
+        $parameters[] = $limit;
+
+        return $this->getDB()->safeQuery($sql, $parameters);
     }
 }

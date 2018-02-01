@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,78 +20,56 @@
 
 namespace Tuleap\CrossTracker;
 
-use DataAccessObject;
-use DataAccessQueryException;
+use Tuleap\DB\DataAccessObject;
 
 class CrossTrackerReportDao extends DataAccessObject
 {
-    public function __construct()
-    {
-        parent::__construct();
-        $this->enableExceptionsOnError();
-    }
-
     public function searchReportById($report_id)
     {
-        $report_id = $this->da->escapeInt($report_id);
-
-        $sql = "SELECT *
+        $sql = 'SELECT *
                 FROM plugin_crosstracker_report
-                WHERE id = $report_id";
+                WHERE id = ?';
 
-        return $this->retrieveFirstRow($sql);
+        return $this->getDB()->row($sql, $report_id);
     }
 
     public function searchReportTrackersById($report_id)
     {
-        $report_id = $this->da->escapeInt($report_id);
-
-        $sql = "SELECT report_tracker.*
+        $sql = 'SELECT report_tracker.*
                   FROM plugin_crosstracker_report AS report
                   INNER JOIN plugin_crosstracker_report_tracker AS report_tracker
                           ON report.id = report_tracker.report_id
-                 WHERE report_id = $report_id";
+                 WHERE report_id = ?';
 
-        return $this->retrieve($sql);
+        return $this->getDB()->run($sql, $report_id);
     }
 
     public function create()
     {
-        $sql = "INSERT INTO plugin_crosstracker_report(id)
-            VALUES (null)";
-
-        return $this->updateAndGetLastId($sql);
+        $this->getDB()->run('INSERT INTO plugin_crosstracker_report(id) VALUES (null)');
+        return $this->getDB()->lastInsertId();
     }
 
     public function updateReport($report_id, array $trackers, $expert_query)
     {
-        $this->da->startTransaction();
-
-        $report_id = $this->da->escapeInt($report_id);
+        $this->getDB()->beginTransaction();
 
         try {
-            $sql = "DELETE FROM plugin_crosstracker_report_tracker WHERE report_id = $report_id";
-            $this->update($sql);
-
+            $this->getDB()->run('DELETE FROM plugin_crosstracker_report_tracker WHERE report_id = ?', $report_id);
             $this->addTrackersToReport($trackers, $report_id);
             $this->updateExpertQuery($report_id, $expert_query);
-        } catch (DataAccessQueryException $e) {
-            $this->rollBack();
-
+        } catch (\PDOException $ex) {
+            $this->getDB()->rollBack();
             return;
         }
 
-        $this->da->commit();
+        $this->getDB()->commit();
     }
 
     private function updateExpertQuery($report_id, $expert_query)
     {
-        $expert_query = $this->da->quoteSmart($expert_query);
-
-        $sql = "REPLACE INTO plugin_crosstracker_report (id, expert_query)
-                VALUES ($report_id, $expert_query)";
-
-        return $this->update($sql);
+        $sql = 'REPLACE INTO plugin_crosstracker_report (id, expert_query) VALUES (?, ?)';
+        $this->getDB()->run($sql, $report_id, $expert_query);
     }
 
     /**
@@ -100,63 +78,49 @@ class CrossTrackerReportDao extends DataAccessObject
      */
     public function addTrackersToReport(array $trackers, $report_id)
     {
-        $report_id = $this->da->escapeInt($report_id);
-
-        $sql_value = array();
+        $data_to_insert = [];
         foreach ($trackers as $tracker) {
-            $tracker_id  = $this->da->escapeInt($tracker->getId());
-            $sql_value[] = "($report_id, $tracker_id)";
+            $data_to_insert[] = ['report_id' => $report_id, 'tracker_id' => $tracker->getId()];
         }
 
-        if (count($sql_value) > 0) {
-            $sql = "INSERT INTO plugin_crosstracker_report_tracker(report_id, tracker_id) VALUES " .
-                implode(',', $sql_value);
-
-            $this->update($sql);
+        if (! empty($data_to_insert)) {
+            $this->getDB()->insertMany('plugin_crosstracker_report_tracker', $data_to_insert);
         }
     }
 
     public function deleteTrackersByGroupId($group_id)
     {
-        $group_id = $this->da->escapeInt($group_id);
-
-        $sql = "DELETE report.* FROM plugin_crosstracker_report_tracker report
+        $sql = 'DELETE report.* FROM plugin_crosstracker_report_tracker report
                   INNER JOIN tracker ON report.tracker_id = tracker.id
-                WHERE tracker.group_id = $group_id";
+                WHERE tracker.group_id = ?';
 
-        $this->update($sql);
+        $this->getDB()->run($sql, $group_id);
     }
 
     public function searchTrackersIdUsedByCrossTrackerByProjectId($project_id)
     {
-        $project_id = $this->da->escapeInt($project_id);
-
-        $sql = "SELECT tracker.id
+        $sql = 'SELECT tracker.id
                 FROM plugin_crosstracker_report_tracker AS report
                 INNER JOIN tracker ON report.tracker_id = tracker.id
-                WHERE tracker.group_id = $project_id";
+                WHERE tracker.group_id = ?';
 
-        return $this->retrieve($sql);
+        return $this->getDB()->run($sql, $project_id);
     }
 
     public function delete($report_id)
     {
-        $report_id = $this->da->escapeInt($report_id);
-
-        $sql = "DELETE report.*, tracker_report.*
+        $sql = 'DELETE report.*, tracker_report.*
                 FROM plugin_crosstracker_report AS report
                   LEFT JOIN plugin_crosstracker_report_tracker AS tracker_report
                     ON (report.id = tracker_report.report_id)
-                  WHERE report.id = $report_id;";
+                  WHERE report.id = ?';
 
-        $this->update($sql);
+        return $this->getDB()->run($sql, $report_id);
     }
 
 
     public function searchCrossTrackerWidgetByCrossTrackerReportId($content_id)
     {
-        $content_id = $this->da->escapeInt($content_id);
-
         $sql = "SELECT dashboard_id, dashboard_type, user_id, project_dashboards.project_id
                   FROM plugin_crosstracker_report
                 INNER JOIN dashboards_lines_columns_widgets AS widget
@@ -169,9 +133,9 @@ class CrossTrackerReportDao extends DataAccessObject
                     ON user_dashboards.id = dashboards_lines.dashboard_id
                 LEFT JOIN project_dashboards
                     ON project_dashboards.id = dashboards_lines.dashboard_id
-                WHERE plugin_crosstracker_report.id = $content_id
+                WHERE plugin_crosstracker_report.id = ?
                   AND widget.name = 'crosstrackersearch';";
 
-        return $this->retrieveFirstRow($sql);
+        return $this->getDB()->row($sql, $content_id);
     }
 }
