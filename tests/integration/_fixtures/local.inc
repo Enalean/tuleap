@@ -67,16 +67,16 @@ $codendi_dir = "/usr/share/tuleap";
 $tuleap_dir  = $codendi_dir;
 
 // Site specific settings are stored there:
-$sys_custom_dir = "/etc/codendi";
+$sys_custom_dir = "/etc/tuleap";
 
 // Tuleap binary prefix - do *not* use variables in this definition (compile_fileforge.sh)
-$codendi_bin_prefix = "/usr/lib/codendi/bin";
+$codendi_bin_prefix = "/usr/lib/tuleap/bin";
 
 // Tuleap database configuration file
 //$db_config_file = $sys_custom_dir . "/conf/database.inc";
 
 // Data Directory
-$sys_data_dir = "/var/lib/codendi";
+$sys_data_dir = "/var/lib/tuleap";
 
 // Place to put temporary data: deleted user's accounts, etc
 $tmp_dir = "/tmp";
@@ -84,9 +84,9 @@ $tmp_dir = "/tmp";
 // Tuleap utils directory
 // WARNING: DO NOT USE VARIABLES in the three parameter definitions below.
 // For instance, do *not* use someting like
-//    *wrong* $codendi_utils_prefix = $codendi_dir . "codendi/utils" *wrong*
+//    *wrong* $codendi_utils_prefix = $codendi_dir . "tuleap/utils" *wrong*
 // this is because those variables will be read by shell scripts.
-$codendi_utils_prefix         = "/usr/share/codendi/src/utils";
+$codendi_utils_prefix         = "/usr/share/tuleap/src/utils";
 
 // Where wiki attachments are stored
 $sys_wiki_attachment_data_dir = $sys_data_dir . "/wiki";
@@ -106,7 +106,7 @@ $homedir_prefix = "/home/users"; // prefix to add to the user's homedir
 $grpdir_prefix  = "/home/groups";// prefix to add to the project's homedir
 
 // CVS paths
-$cvs_prefix          = "/var/lib/codendi/cvsroot";  // cvs root
+$cvs_prefix          = "/var/lib/tuleap/cvsroot";  // cvs root
 $cvslock_prefix      = "/var/lock/cvs";           // prefix to add to the cvs lock directory
 $cvs_root_allow_file = "/etc/cvs_root_allow";// File containing allowed cvs roots (regular CVS *and* CVSnt)
 $cvsnt_config_file   = "/etc/cvsnt/PServer"; // File containing CVSnt configuration
@@ -114,24 +114,23 @@ $cvs_cmd             = "/usr/bin/cvs";       // CVS binary
 $cvs_hook_tmp_dir    = "/var/run/log_accum"; // temporary directory used by CVS commit hooks. Must be similar in commit_prep
 
 // Subversion paths
-$svn_prefix    = "/var/lib/codendi/svnroot";// prefix to add to the subversion root directory
+$svn_prefix    = "/var/lib/tuleap/svnroot";// prefix to add to the subversion root directory
 $svnadmin_cmd  = "/usr/bin/svnadmin";     // SVN Admin binary
-$svn_root_file = "/etc/httpd/conf.d/codendi_svnroot.conf"; // File containing SVN repository definitions for Apache
+$svn_root_file = "/etc/httpd/conf.d/tuleap_svnroot.conf"; // File containing SVN repository definitions for Apache
 $svn_log_path  = 'logs/svn_log'; // Where apache logs files for svn should go to
 
 // FRS paths - do *not* use variables in the following parameters
 // If you change those paths, please run utils/compile_fileforge.sh
-$ftp_frs_dir_prefix  = "/var/lib/codendi/ftp/codendi";   // Where the released files are located
-$ftp_incoming_dir    = "/var/lib/codendi/ftp/incoming";// Where files are placed when uploaded
-$ftp_anon_dir_prefix = "/var/lib/codendi/ftp/pub";     // prefix to add to the anon ftp project homedir
+$ftp_frs_dir_prefix  = "/var/lib/tuleap/ftp/codendi";   // Where the released files are located
+$ftp_incoming_dir    = "/var/lib/tuleap/ftp/incoming";// Where files are placed when uploaded
+$ftp_anon_dir_prefix = "/var/lib/tuleap/ftp/pub";     // prefix to add to the anon ftp project homedir
 
 // Path for DB dumps. Do *not* use variables in this parameter
-$dump_dir         = "/var/lib/codendi/dumps";// Where should we stick files we're working with
+$dump_dir         = "/var/lib/tuleap/dumps";// Where should we stick files we're working with
 
 // Paths for backend scripts
 $codendi_log        = "/tmp";   // Tuleap log dir (cvslogs,)
 $codendi_shell_skel = "/etc/skel_codendi";  // Tuleap Shell skeleton files directory
-$dns_master_file  = "/var/named/codendi.zone";// DNS master file
 
 // Mailman paths
 $mailman_bin_dir = "/usr/lib/mailman/bin";
@@ -155,7 +154,7 @@ $ckeditor_dir     = "/usr/share/ckeditor";
 $ttf_font_dir     = "/usr/share/fonts/";
 
 // ForgeUpgrade config file
-$forgeupgrade_file = "/etc/codendi/forgeupgrade/config.ini";
+$forgeupgrade_file = "/etc/tuleap/forgeupgrade/config.ini";
 
 // How much to add to the database unix_uid to get the actual unix uid
 // NOTE: if you change the default value, you need to update /etc/libnss-mysql.cfg

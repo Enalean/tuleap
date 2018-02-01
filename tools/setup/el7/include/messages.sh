@@ -1,10 +1,14 @@
 _errorMessage() {
+    # ${1}: message to sent
+
     ${printf} "\033[31m * \033[0m${1}\n"
     _logMessages "Error: ${1}"
 
 }
 
 _infoMessage() {
+    # ${1}: message to sent
+
     ${printf} "\033[32m * \033[0m${1}\n"
     _logMessages "Info: ${1}"
 }
@@ -30,10 +34,14 @@ _optionMessages() {
 }
 
 _questionMessage() {
+    # ${1}: message to sent
+
     ${printf} "\033[34m * \033[0m${1}"
 }
 
 _warningMessage() {
+    # ${1}: message to sent
+
     ${printf} "\033[33m * \033[0m${1}\n"
     _logMessages "Warning: ${1}"
 }

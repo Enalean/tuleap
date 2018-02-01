@@ -65,7 +65,9 @@ if [[ ${mysql_password} = "NULL" ]]; then
     _infoMessage "Set MySQL password for ${mysql_user}"
     _setupMysqlPassword "${mysql_user}" ${mysql_password}
     admin_password=$(_setupRandomPassword)
-    _setupMysqlPrivileges "${mysql_user}" "${mysql_password}"
+    sys_db_password=$(_setupRandomPassword)
+    _setupMysqlPrivileges "${mysql_user}" "${mysql_password}" \
+        "${sys_db_user}"  "${sys_db_password}"
 else
     admin_password=$(_setupRandomPassword)
     _checkMysqlStatus "${mysql_user}" "${mysql_password}"
@@ -73,16 +75,43 @@ fi
 
 _checkFilePassword
 _logPassword "MySQL user password (${mysql_user}): ${mysql_password}"
-_logPassword "System user password (${project_admin}): ${admin_password}"
+_logPassword "MySQL system user password (${sys_db_user}): ${sys_db_password}"
+_logPassword "Site admin password (${project_admin}): ${admin_password}"
 _checkMysqlMode "${mysql_user}" "${mysql_password}"
-_checkDatabase "${mysql_user}" "${mysql_password}" "${db_name}"
-_setupDatabase "${mysql_user}" "${mysql_password}" "${db_name}" "${db_exist}"
+_checkDatabase "${mysql_user}" "${mysql_password}" "${sys_db_name}"
+_setupDatabase "${mysql_user}" "${mysql_password}" "${sys_db_name}" "${db_exist}"
 _infoMessage "Populating the Tuleap database..."
-_setupSourceDb "${mysql_user}" "${mysql_password}" "${db_name}" \
-    "${sql_structure}"
+
+for file_sql in "${sql_structure}" "${sql_forgeupgrade}"; do
+    _setupSourceDb "${mysql_user}" "${mysql_password}" "${sys_db_name}" \
+        "${file_sql}"
+done
 
 _setupInitValues $(_phpPasswordHasher "${admin_password}") "${server_name}" \
     "${sql_init}" | \
-    $(_mysqlConnectDb "${mysql_user}" "${mysql_password}" "${db_name}")
+    $(_mysqlConnectDb "${mysql_user}" "${mysql_password}" "${sys_db_name}")
+
+for directory in ${tuleap_conf} ${tuleap_plugins} ${pluginsadministration}; do
+    if [ ! -d ${directory} ]; then
+        _setupDirectory "${tuleap_unix_user}" "${tuleap_unix_user}" "0755" \
+            "${directory}"
+    fi
+done
+
+if [ ! -e "${tuleap_conf}/${local_inc}" ] || [ "${assumeyes}" = "true" ]; then
+    _setupLocalInc
+fi
+
+if [ ! -e "${tuleap_conf}/${database_inc}" ] || [ "${assumeyes}" = "true" ]; then
+    _setupDatabaseInc
+fi
+
+_setupForgeupgrade
+_phpActivePlugin "tracker" "${tuleap_unix_user}"
+_phpForgeupgrade "record-only"
+
+for pwd in mysql_password dbpasswd admin_password; do
+    unset ${pwd}
+done
 
 _endMessage
