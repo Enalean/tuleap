@@ -143,12 +143,12 @@ class TrackerXmlFieldsMapping_FromAnotherPlatform_OpenList_StaticTest extends Tu
     public function itGetsNewValueIdForAStaticList() {
         $new_value_id = $this->xml_fields_mapping->getNewOpenValueId('b24058');
 
-        $this->assertEqual('b24076', $new_value_id);
+        $this->assertEqual('24076', $new_value_id);
     }
 
     public function itThrowsAnExceptionIfTheNewValueIsNotFound() {
         $this->expectException('TrackerXmlFieldsMapping_ValueNotFoundException');
 
-        $this->xml_fields_mapping->getNewValueId('b12345');
+        $this->xml_fields_mapping->getNewValueId('12345');
     }
 }

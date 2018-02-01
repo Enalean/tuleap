@@ -71,11 +71,12 @@ class AgileDashboard_XMLController extends MVC2_PluginController
     public function import() {
         $this->checkUserIsAdmin();
 
-        $xml = $this->request->get('xml_content')->agiledashboard;
+        $xml           = $this->request->get('xml_content');
         $xml_validator = new XML_RNGValidator();
-        $rng_path      = realpath(AGILEDASHBOARD_BASE_DIR.'/../www/resources/xml_project_agiledashboard.rng');
+        $rng_path      = realpath(ForgeConfig::get('tuleap_dir').'/src/common/xml/resources/project/project.rng');
 
         $xml_validator->validate($xml, $rng_path);
+        $xml = $this->request->get('xml_content')->agiledashboard;
 
         $xml_importer = new AgileDashboard_XMLImporter();
         $data = $xml_importer->toArray($xml, $this->request->get('mapping'));

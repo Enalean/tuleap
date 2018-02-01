@@ -25,13 +25,13 @@ use Tuleap\AgileDashboard\FormElement\BurnupDao;
 use Tuleap\AgileDashboard\FormElement\MessageFetcher;
 use Tuleap\Agiledashboard\FormElement\SystemEvent\SystemEvent_BURNUP_DAILY;
 use Tuleap\AgileDashboard\FormElement\SystemEvent\SystemEvent_BURNUP_GENERATE;
+use Tuleap\AgileDashboard\Kanban\KanbanXmlImporter;
 use Tuleap\AgileDashboard\Kanban\RealTime\KanbanArtifactMessageBuilder;
 use Tuleap\AgileDashboard\Kanban\RealTime\KanbanArtifactMessageSender;
 use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportDao;
 use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportUpdater;
 use Tuleap\AgileDashboard\KanbanJavascriptDependenciesProvider;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
-use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\RealTime\RealTimeArtifactMessageController;
@@ -148,6 +148,7 @@ class AgileDashboardPlugin extends Plugin {
             $this->addHook('codendi_daily_start');
             $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
             $this->addHook(MessageFetcherAdditionalWarnings::NAME);
+            $this->addHook(Event::IMPORT_XML_PROJECT_TRACKER_DONE);
         }
 
         if (defined('CARDWALL_BASE_URL')) {
@@ -647,7 +648,7 @@ class AgileDashboardPlugin extends Plugin {
         return new Planning_MilestoneFactory(
             $this->getPlanningFactory(),
             $this->getArtifactFactory(),
-            Tracker_FormElementFactory::instance(),
+            $this->getFormElementFactory(),
             $this->getTrackerFactory(),
             $this->getStatusCounter(),
             new PlanningPermissionsManager(),
@@ -1061,7 +1062,7 @@ class AgileDashboardPlugin extends Plugin {
         return new AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory(
             new AgileDashboard_BacklogItemDao(),
             $this->getArtifactFactory(),
-            Tracker_FormElementFactory::instance(),
+            $this->getFormElementFactory(),
             $this->getMilestoneFactory(),
             $this->getPlanningFactory(),
             new AgileDashboard_Milestone_Backlog_BacklogItemBuilder()
@@ -1425,5 +1426,56 @@ class AgileDashboardPlugin extends Plugin {
         if (get_class($field) === 'Tuleap\AgileDashboard\FormElement\Burnup') {
             $event->setWarnings($message_fetcher->getWarningsRelatedToPlanningConfiguration($field->getTracker()));
         }
+    }
+
+    public function import_xml_project_tracker_done(array $params)
+    {
+        $xml             = $params['xml_content'];
+        $tracker_mapping = $params['mapping'];
+        $field_mapping   = $params['value_mapping'];
+        $logger          = $params['logger'];
+        $project         = $params['project'];
+        $user            = UserManager::instance()->getCurrentUser();
+
+        $kanban = new KanbanXmlImporter(
+            new WrapperLogger($logger, "kanban"),
+            $this->getKanbanManager(),
+            $this->getConfigurationManager(),
+            $this->getDashboardKanbanColumnManager(),
+            $this->getKanbanFactory(),
+            $this->getKanbanColumnFactory()
+        );
+        $kanban->import($xml, $tracker_mapping, $project, $field_mapping, $user);
+    }
+
+    private function getDashboardKanbanColumnManager()
+    {
+        return new AgileDashboard_KanbanColumnManager(
+            new AgileDashboard_KanbanColumnDao(),
+            new Tracker_FormElement_Field_List_Bind_Static_ValueDao(),
+            new AgileDashboard_KanbanActionsChecker(
+                $this->getTrackerFactory(), new AgileDashboard_PermissionsManager(),
+                $this->getFormElementFactory()
+            )
+        );
+    }
+
+    /**
+     * @return Tracker_FormElementFactory
+     */
+    private function getFormElementFactory()
+    {
+        return Tracker_FormElementFactory::instance();
+    }
+
+    /**
+     * @return AgileDashboard_KanbanColumnFactory
+     */
+    private function getKanbanColumnFactory()
+    {
+        return new AgileDashboard_KanbanColumnFactory(
+            new AgileDashboard_KanbanColumnDao(),
+            new AgileDashboard_KanbanUserPreferences()
+        );
     }
 }
