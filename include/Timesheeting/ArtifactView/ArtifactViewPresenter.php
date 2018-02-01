@@ -45,10 +45,21 @@ class ArtifactViewPresenter
      */
     public $times;
 
+    /**
+     * @var boolean
+     */
+    public $has_times;
+
+    /**
+     * @var string
+     */
+    public $total_time;
+
     public function __construct(
         Tracker_Artifact $artifact,
         CSRFSynchronizerToken $csrf,
         array $times,
+        $formatted_total_time,
         $user_can_add_time
     ) {
         $this->url = TIMESHEETING_BASE_URL . '/?' . http_build_query(array(
@@ -59,5 +70,7 @@ class ArtifactViewPresenter
         $this->csrf_token        = $csrf;
         $this->user_can_add_time = $user_can_add_time;
         $this->times             = $times;
+        $this->has_times         = count($times) > 0;
+        $this->total_time        = $formatted_total_time;
     }
 }

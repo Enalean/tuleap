@@ -57,6 +57,14 @@ class Time
     }
 
     /**
+     * @return int
+     */
+    public function getMinutes()
+    {
+        return $this->minutes;
+    }
+
+    /**
      * @return array
      */
     public function getAsPresenter()

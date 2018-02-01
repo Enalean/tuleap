@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,7 +15,6 @@
  *
  * You should have received a copy of the GNU General Public License
  */
-
 
 .timesheeting-from {
     padding: 20px 20px 0;
@@ -43,4 +42,8 @@
 
 #timesheeting-admin-enable {
     margin: 0 0 20px;
+}
+
+.total-timesheeting-row {
+    font-weight: bold;
 }

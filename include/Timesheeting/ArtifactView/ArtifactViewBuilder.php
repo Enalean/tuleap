@@ -79,18 +79,26 @@ class ArtifactViewBuilder
             return null;
         }
 
-        $user_cann_add_time = $this->permissions_retriever->userCanAddTimeInTracker($user, $tracker);
+        $user_can_add_time = $this->permissions_retriever->userCanAddTimeInTracker($user, $tracker);
 
-        if (! $user_cann_add_time &&
+        if (! $user_can_add_time &&
             ! $this->permissions_retriever->userCanSeeAggregatedTimesInTracker($user, $tracker)
         ) {
             return null;
         }
 
-        $csrf            = new CSRFSynchronizerToken($artifact->getUri());
-        $time_presenters = $this->getTimePresenters($user, $artifact);
+        $csrf                 = new CSRFSynchronizerToken($artifact->getUri());
+        $times_for_user       = $this->time_retriever->getTimesForUser($user, $artifact);
+        $time_presenters      = $this->getTimePresenters($times_for_user);
+        $formatted_total_time = $this->getFormattedTotalTime($times_for_user);
 
-        $presenter = new ArtifactViewPresenter($artifact, $csrf, $time_presenters, $user_cann_add_time);
+        $presenter = new ArtifactViewPresenter(
+            $artifact,
+            $csrf,
+            $time_presenters,
+            $formatted_total_time,
+            $user_can_add_time
+        );
 
         return new ArtifactView($artifact, $request, $user, $presenter);
     }
@@ -98,14 +106,27 @@ class ArtifactViewBuilder
     /**
      * @return array
      */
-    private function getTimePresenters(PFUser $user, Tracker_Artifact $artifact)
+    private function getTimePresenters(array $times_for_user)
     {
         $presenters = array();
 
-        foreach ($this->time_retriever->getTimesForUser($user, $artifact) as $time) {
+        foreach ($times_for_user as $time) {
             $presenters[] = $time->getAsPresenter();
         }
 
         return $presenters;
+    }
+
+    private function getFormattedTotalTime(array $times_for_user)
+    {
+        $total_minutes = 0;
+        foreach ($times_for_user as $time) {
+            $total_minutes += $time->getMinutes();
+        }
+
+        $hours   = floor($total_minutes / 60);
+        $minutes = $total_minutes % 60;
+
+        return str_pad($hours, 2, "0", STR_PAD_LEFT) . ":" . str_pad($minutes, 2, "0", STR_PAD_LEFT);
     }
 }

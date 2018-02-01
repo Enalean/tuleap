@@ -8,27 +8,34 @@
         <table class="table">
             <thead>
                 <tr>
+                    <th>{{# dgettext }} tuleap-timesheeting | Date {{/ dgettext }}</th>
                     <th>{{# dgettext }} tuleap-timesheeting | Steps {{/ dgettext }}</th>
                     <th>{{# dgettext }} tuleap-timesheeting | Time {{/ dgettext }}</th>
-                    <th>{{# dgettext }} tuleap-timesheeting | Date {{/ dgettext }}</th>
                 </tr>
             </thead>
             <tbody>
-                {{# times }}
+                {{# has_times }}
+                    {{# times }}
+                        <tr>
+                            <td>{{ day }}</td>
+                            <td>{{ step }}</td>
+                            <td>{{ time }}</td>
+                        </tr>
+                    {{/ times }}
                     <tr>
-                        <td>{{ step }}</td>
-                        <td>{{ time }}</td>
-                        <td>{{ day }}</td>
+                        <td colspan="2"></td>
+                        <td class="total-timesheeting-row">∑ {{ total_time }}</td>
                     </tr>
-                {{/ times }}
+                {{/ has_times }}
 
-                {{^ times }}
+
+                {{^ has_times }}
                     <tr>
                         <td class="table-cell-empty" colspan="3">
                             {{# dgettext }} tuleap-timesheeting | No times saved {{/ dgettext }}
                         </td>
                     </tr>
-                {{/ times }}
+                {{/ has_times }}
             </tbody>
         </table>
     </div>
