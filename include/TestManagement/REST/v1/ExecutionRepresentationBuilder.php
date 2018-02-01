@@ -245,12 +245,15 @@ class ExecutionRepresentationBuilder
         $user_representation = new UserRepresentation();
         $user_representation->build($submitted_by);
 
+        $has_been_run_at_least_once = ! $execution->isFirstChangeset($last_changeset);
+
         $previous_result_representation = new PreviousResultRepresentation();
         $previous_result_representation->build(
             $last_changeset->getSubmittedOn(),
             $user_representation,
             $execution->getStatusForChangeset($last_changeset),
-            $this->getExecutionResult($user, $execution)
+            $this->getExecutionResult($user, $execution),
+            $has_been_run_at_least_once
         );
 
         return $previous_result_representation;
