@@ -24,7 +24,6 @@
     "moment": "^2.18.1",
     "ng-ckeditor": "^2.0.3",
     "node-gettext": "^2.0.0",
-    "restangular": "^1.4.0",
     "sprintf-js": "^1.1.1"
   },
   "devDependencies": {

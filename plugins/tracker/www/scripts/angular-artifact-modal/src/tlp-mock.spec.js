@@ -1,4 +1,7 @@
 window.tlp = {
     get         : () => {},
-    recursiveGet: () => {}
+    recursiveGet: () => {},
+    put         : () => {},
+    post        : () => {},
+    options     : () => {}
 };

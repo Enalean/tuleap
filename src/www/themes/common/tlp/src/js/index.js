@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,13 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export {
-    get,
-    recursiveGet,
-    put,
-    patch,
-    post
-} from './fetch-wrapper.js';
+export * from './fetch-wrapper.js';
 
 export {
     default as locale

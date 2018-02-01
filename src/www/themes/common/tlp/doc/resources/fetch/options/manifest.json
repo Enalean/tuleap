@@ -1,0 +1,4 @@
+{
+    "label": "options",
+    "shortcode": "tlp.options(url_to_query, options)"
+}

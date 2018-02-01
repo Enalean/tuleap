@@ -1,6 +1,6 @@
 
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,8 +23,9 @@ export {
     patch,
     put,
     post,
-    recursiveGet
-}
+    recursiveGet,
+    options
+};
 
 const get = async (input, init = {}) => {
     const method = 'GET';
@@ -59,7 +60,7 @@ const encodeAllParamsToURI = (params) => {
     return url_params;
 };
 
-const encodeParamToURI = ([key, value] = param) => {
+const encodeParamToURI = ([key, value]) => {
     return encodeURIComponent(key) + '=' + encodeURIComponent(value);
 };
 
@@ -89,7 +90,7 @@ const recursiveGet = async (input, init = {}) => {
     const new_offset = offset + limit;
 
     if (new_offset >= total) {
-       return results;
+        return results;
     }
 
     const new_init = {
@@ -106,33 +107,38 @@ const recursiveGet = async (input, init = {}) => {
 
 const put = (input, init = {}) => {
     const method = 'PUT',
-          { credentials = 'same-origin' } = init;
+        { credentials = 'same-origin' } = init;
 
-    return fetch(input, {method, credentials, ...init}).then(checkResponse);
+    return fetch(input, { method, credentials, ...init }).then(checkResponse);
 };
 
 const patch = (input, init = {}) => {
     const method = 'PATCH',
-          { credentials = 'same-origin' } = init;
+        { credentials = 'same-origin' } = init;
 
-    return fetch(input, {method, credentials, ...init}).then(checkResponse);
+    return fetch(input, { method, credentials, ...init }).then(checkResponse);
 };
 
-const post = async (input, init = {}) => {
+const post = (input, init = {}) => {
     const method = 'POST',
         { credentials = 'same-origin' } = init;
 
-    const response = await fetch(input, {method, credentials, ...init});
+    return fetch(input, { method, credentials, ...init }).then(checkResponse);
+};
 
-    return checkResponse(response);
+const options = (input, init = {}) => {
+    const method = 'OPTIONS',
+        { credentials = 'same-origin' } = init;
+
+    return fetch(input, { method, credentials, ...init }).then(checkResponse);
 };
 
 function checkResponse(response) {
     if (response.ok) {
         return response;
-    } else {
-        const error = new Error(response.statusText);
-        error.response = response;
-        throw error;
     }
+
+    const error = new Error(response.statusText);
+    error.response = response;
+    throw error;
 }

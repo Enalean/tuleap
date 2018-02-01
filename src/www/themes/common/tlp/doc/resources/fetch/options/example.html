@@ -1,0 +1,17 @@
+<script>
+    import { options } from 'tlp';
+
+    async function getFileUploadRules() {
+        const route          = '/api/v1/artifact_temporary_files';
+        const response       = await options(route);
+        const disk_quota     = parseInt(response.headers.get('X-QUOTA'), 10);
+        const disk_usage     = parseInt(response.headers.get('X-DISK-USAGE'), 10);
+        const max_chunk_size = parseInt(response.headers.get('X-UPLOAD-MAX-FILE-CHUNKSIZE'), 10);
+
+        return {
+            disk_quota,
+            disk_usage,
+            max_chunk_size
+        };
+    }
+</script>
