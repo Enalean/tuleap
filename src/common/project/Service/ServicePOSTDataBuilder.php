@@ -36,6 +36,7 @@ class ServicePOSTDataBuilder
     {
         $project = $request->getProject();
 
+        $service_id        = $request->getValidated('service_id', 'uint', 0);
         $short_name        = $request->getValidated('short_name', 'string', '');
         $label             = $request->getValidated('label', 'string', '');
         $description       = $request->getValidated('description', 'string', '');
@@ -65,6 +66,7 @@ class ServicePOSTDataBuilder
         }
 
         return new ServicePOSTData(
+            $service_id,
             $short_name,
             $label,
             $description,

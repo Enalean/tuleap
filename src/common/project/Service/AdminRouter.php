@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -38,15 +38,21 @@ class AdminRouter
      * @var AddController
      */
     private $add_controller;
+    /**
+     * @var EditController
+     */
+    private $edit_controller;
 
     public function __construct(
         IndexController $index_controller,
         DeleteController $delete_controller,
-        AddController $add_controller
+        AddController $add_controller,
+        EditController $edit_controller
     ) {
         $this->index_controller  = $index_controller;
         $this->delete_controller = $delete_controller;
         $this->add_controller    = $add_controller;
+        $this->edit_controller   = $edit_controller;
     }
 
     public function process(HTTPRequest $request)

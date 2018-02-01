@@ -38,6 +38,12 @@ require_once('www/project/admin/project_admin_utils.php');
 function display_service_configuration_form($group_id, $service_id, $service, $ro, $su) {
   global $Language;
 
+    $csrf = new CSRFSynchronizerToken('/project/admin/servicebar.php?' . http_build_query(
+            array(
+                'group_id' => $group_id
+            )
+        )
+    );
   // There is a special case for the 'Home Page' service: only the link can be modified (except for superuser)
   $hp=false;
   if ($service['short_name']=="homepage") {
@@ -59,7 +65,8 @@ function display_service_configuration_form($group_id, $service_id, $service, $r
 
   echo '
 <form method="post" name="form_update" action="/project/admin/servicebar.php?group_id='.$group_id.'">
-<input type="hidden" name="func" VALUE="do_update">
+<input type="hidden" name="action" VALUE="edit">
+'. $csrf->fetchHTMLInput() .'
 <input type="hidden" name="service_id" VALUE="'.$service_id.'">
 <input type="hidden" name="group_id" VALUE="'.$group_id.'">';
   if ($service['short_name']) {

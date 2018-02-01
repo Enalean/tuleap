@@ -450,9 +450,8 @@ project_admin_servicebar	short_name_exist	A service with this short name ($short
 project_admin_servicebar	cant_make_system_wide_s	Cannot make system-wide service in project other than 100
 project_admin_servicebar	cant_create_s	Can not create service
 project_admin_servicebar	s_create_success	Successfully Created Service
-project_admin_servicebar	s_add_success	- Successfully Added Service to $1 Projects
+project_admin_servicebar	s_add_success	Successfully Added Service to $1 Projects
 project_admin_servicebar	s_id_missed	The service ID is missing
-project_admin_servicebar	cant_update_s	ERROR - Can not update service: $1
 project_admin_servicebar	s_update_success	Successfully Updated Service
 project_admin_servicebar	edit_s_bar	Editing Service Bar
 project_admin_servicebar	edit_system_s	Editing System Services

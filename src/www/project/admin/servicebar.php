@@ -24,10 +24,12 @@ use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Project\Service\AddController;
 use Tuleap\Project\Service\AdminRouter;
 use Tuleap\Project\Service\DeleteController;
+use Tuleap\Project\Service\EditController;
 use Tuleap\Project\Service\IndexController;
 use Tuleap\Project\Service\ServiceCreator;
 use Tuleap\Project\Service\ServicePOSTDataBuilder;
 use Tuleap\Project\Service\ServicesPresenterBuilder;
+use Tuleap\Project\Service\ServiceUpdator;
 
 require_once('pre.php');
 require_once('www/project/admin/project_admin_utils.php');
@@ -39,88 +41,8 @@ $group_id = $request->getValidated('group_id', 'uint', 0);
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 
 $service_manager = ServiceManager::instance();
-$pm = ProjectManager::instance();
-$project = $pm->getProject($group_id);
-
-$func = $request->getValidated('func', 'string', '');
-
-if ($func=='do_create') {
-
-}
-
-if ($func=='do_update') {
-    $builder = new \Tuleap\Project\Service\ServicePOSTDataBuilder();
-    try {
-        $service_data = $builder->buildFromRequest($request);
-    } catch (\Tuleap\Project\Service\InvalidServicePOSTDataException $exception) {
-        exit_error($Language->getText('global','error'), $exception->getMessage());
-    }
-
-    $short_name        = $service_data->getShortName();
-    $label             = $service_data->getLabel();
-    $description       = $service_data->getDescription();
-    $link              = $service_data->getLink();
-    $rank              = $service_data->getRank();
-    $scope             = $service_data->getScope();
-    $is_active         = $service_data->isActive();
-    $is_used           = $service_data->isUsed();
-    $is_system_service = $service_data->isSystemService();
-    $is_in_iframe      = $service_data->isInIframe();
-
-    $redirect_url = '/project/admin/servicebar.php?' . http_build_query(array(
-        'group_id' => $group_id
-    ));
-
-    $service_id = $request->getValidated('service_id', 'uint', 0);
-    if (!$service_id) {
-        exit_error($Language->getText('global','error'),$Language->getText('project_admin_servicebar','s_id_missed'));
-    }
-
-    if (! $service_manager->isServiceAllowedForProject($project, $service_id)) {
-        exit_error($Language->getText('global','error'),$Language->getText('project_admin_servicebar','not_allowed'));
-    }
-
-    $set_server_id = '';
-    $server_id = $request->getValidated('server_id', 'uint');
-    if (user_is_super_user() && $server_id) {
-        $set_server_id = ", location = 'satellite', server_id = ". (int)$server_id .' ';
-    }
-    $admin_statement = '';
-    if (user_is_super_user()) { //is_active and scope can only be change by a siteadmin
-        $admin_statement = ", is_active=". ($is_active ? 1 : 0) .", scope='". db_es($scope) ."'";
-
-    }
-
-    $update_usage = '';
-    if ($is_system_service) {
-        $updatable = $service_manager->checkServiceCanBeUpdated($project, $short_name, $is_used);
-
-        if (! $updatable) {
-            $GLOBALS['Response']->redirect($redirect_url);
-        }
-    } else {
-        $update_usage = ', is_used = '.db_ei($is_used);
-    }
-
-    echo $sql = "UPDATE service SET label='".db_es($label)."', description='".db_es($description)."', link='".db_es($link)."' ". $admin_statement .
-        ", rank='".db_ei($rank)."' $set_server_id, is_in_iframe=". ($is_in_iframe ? 1 : 0) ." $update_usage WHERE service_id=".db_ei($service_id);
-    $result=db_query($sql);
-
-    if (!$result) {
-        exit_error($Language->getText('global','error'),$Language->getText('project_admin_servicebar','cant_update_s',db_error()));
-    } else {
-        $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_servicebar','s_update_success'));
-    }
-    $pm->clear($group_id);
-
-    if ($is_system_service) {
-        $service_manager->toggleServiceUsage($project, $short_name, $is_used);
-    }
-
-    $GLOBALS['Response']->redirect($redirect_url);
-}
-
-$service_dao = new ServiceDao();
+$project_manager = ProjectManager::instance();
+$service_dao     = new ServiceDao();
 
 $router = new AdminRouter(
     new IndexController(
@@ -130,8 +52,13 @@ $router = new AdminRouter(
     ),
     new DeleteController($service_dao),
     new AddController(
-        new ServiceCreator($service_dao, $pm),
+        new ServiceCreator($service_dao, $project_manager),
         new ServicePOSTDataBuilder()
+    ),
+    new EditController(
+        new ServiceUpdator($service_dao, $project_manager, $service_manager),
+        new ServicePOSTDataBuilder(),
+        $service_manager
     )
 );
 $router->process($request);
