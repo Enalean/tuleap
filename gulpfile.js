@@ -172,7 +172,8 @@ var fat_combined_files = [
         'src/www/scripts/'
     ],
     bower_app_paths = [
-        'plugins/frs/www/js/angular'
+        'plugins/frs/www/js/angular',
+        'plugins/pullrequest/www/scripts/'
     ],
     asset_dir = 'www/assets';
 
