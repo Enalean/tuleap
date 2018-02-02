@@ -17,7 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import moment     from 'moment';
 import { line }   from 'd3-shape';
 import { extent } from 'd3-array';
 
@@ -43,10 +42,10 @@ function drawIdealLine(
 
     const coordinates = [
         {
-            x_coordinate: x_scale(moment(x_minimum, moment.ISO_8601).format('YYYY-MM-DD')),
+            x_coordinate: x_scale(x_minimum),
             y_coordinate: y_scale(line_start)
         }, {
-            x_coordinate: x_scale(moment(x_maximum, moment.ISO_8601).format('YYYY-MM-DD')),
+            x_coordinate: x_scale(x_maximum),
             y_coordinate: y_scale(line_end)
         }
     ];
@@ -82,7 +81,7 @@ function drawCurve(
     line_name
 ) {
     const lines = line()
-        .x(({ date }) => x_scale(moment(date, moment.ISO_8601).format('YYYY-MM-DD')))
+        .x(({ date }) => x_scale(date))
         .y((point) => y_scale(point[`${ line_name }_effort`]));
 
     container.append('path')

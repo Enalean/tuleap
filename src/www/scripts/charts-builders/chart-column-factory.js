@@ -17,8 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import moment from 'moment';
-
 export class ColumnFactory {
     constructor({
         x_scale,
@@ -40,7 +38,7 @@ export class ColumnFactory {
         container.append('rect')
             .attr('class', 'chart-column')
             .attr('x', () => {
-                const x_position = this.x_scale(moment(date, moment.ISO_8601).format('YYYY-MM-DD'));
+                const x_position = this.x_scale(date);
 
                 if (this.isFirstColumn(date)) {
                     return x_position;
@@ -60,18 +58,14 @@ export class ColumnFactory {
     }
 
     isFirstColumn(date) {
-        const [x_minimum]  = this.x_domain;
-        const point        = moment(date, moment.ISO_8601);
-        const first_column = moment(x_minimum, moment.ISO_8601);
+        const [x_minimum] = this.x_domain;
 
-        return first_column.isSame(point, 'day');
+        return date === x_minimum;
     }
 
     isLastColumn(date) {
-        const x_maximum   = this.x_domain[ this.x_domain.length - 1 ];
-        const point       = moment(date, moment.ISO_8601);
-        const last_column = moment(x_maximum, moment.ISO_8601);
+        const x_maximum = this.x_domain[ this.x_domain.length - 1 ];
 
-        return last_column.isSame(point, 'day');
+        return date === x_maximum;
     }
 }

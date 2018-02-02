@@ -175,7 +175,9 @@ const webpack_config_for_burndown_chart = {
             output: 'manifest.json',
             merge: true,
             writeToDisk: true
-        })
+        }),
+        // This ensure we only load moment's fr locale. Otherwise, every single locale is included !
+        new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /fr/)
     ]
 };
 
@@ -188,6 +190,11 @@ if (process.env.NODE_ENV === 'production') {
     webpack_config_for_trackers.plugins = webpack_config_for_trackers.plugins.concat([
         new webpack.optimize.ModuleConcatenationPlugin()
     ]);
+
+    webpack_config_for_burndown_chart.plugins = webpack_config_for_burndown_chart.plugins.concat([
+        new webpack.optimize.ModuleConcatenationPlugin()
+    ]);
+
     module.exports = [
         webpack_config_for_trackers,
         webpack_config_for_burndown_chart

@@ -99,13 +99,6 @@ function createBurndownChart({
         return;
     }
 
-    last_day_data.date = moment(
-        last_day_data.date,
-        moment.ISO_8601
-    )
-    .endOf('day')
-    .toISOString();
-
     drawBurndownChart();
 
     function drawBurndownChart() {
@@ -132,7 +125,7 @@ function createBurndownChart({
 
             column.append('circle')
                 .attr('class', 'chart-plot-remaining-effort chart-tooltip-target')
-                .attr('cx', x_scale(moment(date, moment.ISO_8601).format('YYYY-MM-DD')))
+                .attr('cx', x_scale(date))
                 .attr('cy', y_scale(remaining_effort))
                 .attr('r', 4);
         });
@@ -227,5 +220,4 @@ function createBurndownChart({
 
         return DEFAULT_REMAINING_EFFORT;
     }
-
 }

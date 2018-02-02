@@ -21,7 +21,8 @@ import moment from 'moment';
 export {
     getDaysToDisplay,
     getGranularity,
-    getDifference
+    getDifference,
+    getFormattedDates
 };
 
 function getDaysToDisplay({ opening_days, duration, points_with_date, start_date }) {
@@ -72,4 +73,14 @@ function getDifference(start_date, end_date) {
         weeks : Math.trunc(difference.as('weeks')),
         months: Math.trunc(difference.as('months'))
     };
+}
+
+function getFormattedDates(dataset) {
+    dataset.forEach(data => {
+        data.date = moment(data.date, moment.ISO_8601)
+            .endOf('day')
+            .format('YYYY-MM-DD');
+    });
+
+    return dataset;
 }
