@@ -187,7 +187,11 @@ class AgileDashboardRouter {
                 $this->executeAction($agile_dashboard_xml_controller, 'export');
                 break;
             case 'import':
-                $this->executeAction($agile_dashboard_xml_controller, 'import');
+                if ($request->get('home-ease-onboarding')) {
+                    $this->executeAction($agile_dashboard_xml_controller, 'importOnlyAgileDashboard');
+                } else {
+                    $this->executeAction($agile_dashboard_xml_controller, 'importProject');
+                }
                 break;
             case 'solve-inconsistencies':
                 $milestone_controller = $this->milestone_controller_factory->getMilestoneController($request);
