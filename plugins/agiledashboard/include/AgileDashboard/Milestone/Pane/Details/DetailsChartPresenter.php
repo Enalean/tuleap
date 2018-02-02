@@ -21,12 +21,13 @@
 namespace Tuleap\AgileDashboard\Milestone\Pane\Details;
 
 use Tuleap\AgileDashboard\FormElement\BurnupFieldPresenter;
+use Tuleap\Tracker\FormElement\BurndownFieldPresenter;
 
 class DetailsChartPresenter
 {
     public $has_burndown = false;
     public $burndown_label;
-    public $burndown_url;
+    public $burndown_presenter;
 
     public $has_burnup = false;
     public $burnup_label;
@@ -36,17 +37,17 @@ class DetailsChartPresenter
     public function __construct(
         $has_burndown,
         $burndown_label,
-        $burndown_url,
         $has_burnup,
         $burnup_label,
+        BurndownFieldPresenter $burndown_presenter = null,
         BurnupFieldPresenter $burnup_presenter = null
     ) {
-        $this->has_burndown     = $has_burndown;
-        $this->burndown_label   = $burndown_label;
-        $this->burndown_url     = $burndown_url;
-        $this->has_burnup       = $has_burnup;
-        $this->burnup_label     = $burnup_label;
-        $this->burnup_presenter = $burnup_presenter;
+        $this->has_burndown       = $has_burndown;
+        $this->burndown_label     = $burndown_label;
+        $this->burndown_presenter = $burndown_presenter;
+        $this->has_burnup         = $has_burnup;
+        $this->burnup_label       = $burnup_label;
+        $this->burnup_presenter   = $burnup_presenter;
 
         $this->has_charts = $this->has_burndown || $this->has_burnup;
     }

@@ -134,7 +134,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         return $this->renderPresenter($burndown_presenter);
     }
 
-    private function buildPresenter(Tracker_Artifact $artifact, PFUser $user)
+    public function buildPresenter(Tracker_Artifact $artifact, PFUser $user)
     {
         $warning                      = "";
         $burndown_rest_representation = null;
