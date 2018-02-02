@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
         graph_height       : container_width / 1.33,
         tooltip_date_format: gettext_provider.gettext('MM/DD'),
         margins: {
-            top   : 100,
+            top   : 50,
             right : 80,
             bottom: 60,
             left  : 80
