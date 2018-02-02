@@ -26,37 +26,7 @@ project_admin_editgroupinfo	restricted_warning	Only project members can access a
 project_admin_editgroupinfo	general_warning	Only project members can access a <b>private</b> project <br>A <b>public</b> project is accessible to everyone.
 project_admin_editgroupinfo	under_construction	Page under construction.
 project_admin_editgroupinfo	term_of_service	Please accept platform <a href='/tos/tos.php'>Term of Services</a>
-#
-#-----------------------------------------------
-# Script: SF/www/project/admin/editservice.php
-#
-project_admin_editservice	s_conf	Service Configuration
-project_admin_editservice	s_ident_desc	Service Identification and Description
-project_admin_editservice	s_name_in_bar	Name that is displayed in the Service Bar
-project_admin_editservice	s_label	Service Label
-project_admin_editservice	url	URL pointed by the service
-project_admin_editservice	s_link	Service Link
-project_admin_editservice	s_short_name	Short name for the service
-project_admin_editservice	short_name	Short name
-project_admin_editservice	s_desc_in_tooltip	Service Description will be displayed in a tooltip above service label.
-project_admin_editservice	s_desc	Service Description
-project_admin_editservice	s_scope	Scope of the service: project only or system-wide
-project_admin_editservice	scope	Scope
-project_admin_editservice	display_options	Display Options
-project_admin_editservice	instanciated_for_new_p	Is instanciated for new projects?
-project_admin_editservice	available	Available
-project_admin_editservice	display_in_s_bar	Is displayed in the service bar?
-project_admin_editservice	enabled	Enabled
-project_admin_editservice	pos_in_s_bar	Position in service bar
-project_admin_editservice	screen_rank	Rank on screen
-project_admin_editservice	fields_required	fields required
-project_admin_editservice	system	system
-project_admin_editservice	project	project
-project_admin_editservice	mandatory	: mandatory for system-wide services
-project_admin_editservice	edit_s	Edit Service
-project_admin_editservice	s_not_exist	Service does not exist: $1
-project_admin_editservice	forbidden	Forbidden
-project_admin_editservice	no_access_inactive_s	You cannot access an inactive service
+
 ## There must be a label and description value here for each service name (system or project wide) that should be localized
 ## Naming rule for the key:
 ## service_<service short name>_lbl_key for the service label
@@ -93,10 +63,6 @@ project_admin_editservice	service_svn_lbl_key	Subversion
 project_admin_editservice	service_svn_desc_key	Subversion Access
 project_admin_editservice	service_wiki_lbl_key	Wiki
 project_admin_editservice	service_wiki_desc_key	Wiki
-project_admin_editservice	conf_inherited	Configuration inherited
-project_admin_editservice	conf_inherited_no	-
-project_admin_editservice	conf_inherited_partially	Partially
-project_admin_editservice	conf_inherited_yes	Yes
 #-----------------------------------------------
 # Script: SF/www/project/admin/editugroup.php
 #

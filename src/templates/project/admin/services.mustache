@@ -50,17 +50,18 @@
                                 <td class="tlp-table-cell-numeric">{{ rank }}</td>
 
                                 <td class="tlp-table-cell-actions">
-                                    <a href="/project/admin/editservice.php?group_id={{ project_id }}&service_id={{ id }}"
-                                       class="tlp-table-cell-actions-button
-                                           tlp-button-small
-                                           tlp-button-primary
-                                           tlp-button-outline
-                                           project-admin-services-edit-button
-                                       "
-                                       data-target-modal-id="project-admin-services-edit-modal-{{ id }}"
+                                    <button
+                                        type="button"
+                                        class="tlp-table-cell-actions-button
+                                            tlp-button-small
+                                            tlp-button-primary
+                                            tlp-button-outline
+                                            project-admin-services-edit-button
+                                        "
+                                        data-target-modal-id="project-admin-services-edit-modal-{{ id }}"
                                     >
                                         <i class="fa fa-pencil tlp-button-icon"></i> {{# gettext }}Edit{{/ gettext }}
-                                    </a>
+                                    </button>
                                     <button class="tlp-table-cell-actions-button
                                                 tlp-button-small
                                                 tlp-button-danger
