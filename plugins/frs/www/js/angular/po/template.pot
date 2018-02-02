@@ -4,7 +4,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Project-Id-Version: \n"
 
-#: src/app/file-download/license-modal/license-modal.tpl.html
+#: src/app/file-download/license-modal/license-modal.tpl.html:10
 msgid ""
 "<p>\n"
 "        You are about to download software from this site. Software re-use and sharing <b>inside</b> {{ $ctrl.organisation_name }} is subject to the <a ng-href=\"{{ $ctrl.exchange_policy_url }}\"><b>Code eXchange Corporate Policy</b></a>.\n"
@@ -17,122 +17,130 @@ msgid ""
 "    </p>"
 msgstr ""
 
-#: src/app/release/files/files.tpl.html
+#: src/app/release/files/files.tpl.html:9
 msgid "Arch."
 msgstr ""
 
-#: src/app/release/release.tpl.html
+#: src/app/release/release.tpl.html:47
 msgid "Artifact"
 msgstr ""
 
-#: src/app/release/files/files.tpl.html
+#: src/app/release/files/files.tpl.html:80
 msgid "Changelog"
 msgstr ""
 
-#: src/app/release/files/files.tpl.html
+#: src/app/release/files/files.tpl.html:11
+#: src/app/release/files/files.tpl.html:47
 msgid "Date"
 msgstr ""
 
-#: src/app/file-download/license-modal/license-modal.tpl.html
+#: src/app/file-download/license-modal/license-modal.tpl.html:8
 msgid "Download agreement"
 msgstr ""
 
-#: src/app/release/files/files.tpl.html
+#: src/app/release/files/files.tpl.html:8
 msgid "Downloads"
 msgstr ""
 
-#: src/app/release/files/files.tpl.html
+#: src/app/release/files/files.tpl.html:2
 msgid "Files"
 msgstr ""
 
-#: src/app/file-download/license-modal/license-modal.tpl.html
+#: src/app/file-download/license-modal/license-modal.tpl.html:23
 msgid "I accept"
 msgstr ""
 
-#: src/app/file-download/license-modal/license-modal.tpl.html
+#: src/app/file-download/license-modal/license-modal.tpl.html:29
 msgid "I decline"
 msgstr ""
 
-#: src/app/release/files/files.tpl.html
+#: src/app/release/files/files.tpl.html:46
 msgid "Link"
 msgstr ""
 
-#: src/app/release/release.tpl.html
+#: src/app/release/release.tpl.html:27
 msgid "Linked Artifacts"
 msgstr ""
 
-#: src/app/release/files/files.tpl.html
+#: src/app/release/files/files.tpl.html:42
 msgid "Links"
 msgstr ""
 
-#: src/app/release/files/files.tpl.html
+#: src/app/release/files/files.tpl.html:12
 msgid "MD5Sum"
 msgstr ""
 
-#: src/app/release/release.tpl.html
+#: src/app/release/release.tpl.html:38
 msgid "Milestone"
 msgstr ""
 
-#: src/app/release/files/files.tpl.html
+#: src/app/release/files/files.tpl.html:6
 msgid "Name"
 msgstr ""
 
-#: src/app/release/files/files.tpl.html
+#: src/app/release/files/files.tpl.html:13
+#: src/app/release/files/files.tpl.html:48
 msgid "Owner"
 msgstr ""
 
-#: src/app/release/release.tpl.html
+#: src/app/release/release.tpl.html:4
 msgid "Package {{ $ctrl.release.package.name }}"
 msgstr ""
 
-#: src/app/release/linked-artifacts/linked-artifacts.tpl.html
+#: src/app/release/linked-artifacts/linked-artifacts.tpl.html:17
+#: src/app/release/linked-artifacts/linked-artifacts.tpl.html:52
 msgid "Project"
 msgstr ""
 
-#: src/app/release/files/files.tpl.html
+#: src/app/release/files/files.tpl.html:69
 msgid "Release Note"
 msgstr ""
 
-#: src/app/release/release.tpl.html
+#: src/app/release/release.tpl.html:17
 msgid "Release Note &amp; Files"
 msgstr ""
 
-#: src/app/release/files/files.tpl.html
+#: src/app/release/files/files.tpl.html:7
 msgid "Size"
 msgstr ""
 
-#: src/app/release/linked-artifacts/linked-artifacts.tpl.html
+#: src/app/release/linked-artifacts/linked-artifacts.tpl.html:20
+#: src/app/release/linked-artifacts/linked-artifacts.tpl.html:55
 msgid "Status"
 msgstr ""
 
-#: src/app/release/linked-artifacts/linked-artifacts.tpl.html
+#: src/app/release/linked-artifacts/linked-artifacts.tpl.html:21
+#: src/app/release/linked-artifacts/linked-artifacts.tpl.html:56
 msgid "Submitted by"
 msgstr ""
 
-#: src/app/release/linked-artifacts/linked-artifacts.tpl.html
+#: src/app/release/linked-artifacts/linked-artifacts.tpl.html:22
+#: src/app/release/linked-artifacts/linked-artifacts.tpl.html:57
 msgid "Submitted on"
 msgstr ""
 
-#: src/app/release/linked-artifacts/linked-artifacts.tpl.html
+#: src/app/release/linked-artifacts/linked-artifacts.tpl.html:19
+#: src/app/release/linked-artifacts/linked-artifacts.tpl.html:54
 msgid "Summary"
 msgstr ""
 
-#: src/app/release/linked-artifacts/linked-artifacts.tpl.html
+#: src/app/release/linked-artifacts/linked-artifacts.tpl.html:62
 msgid "There are no artifact links defined in this release."
 msgstr ""
 
-#: src/app/release/files/files.tpl.html
+#: src/app/release/files/files.tpl.html:18
 msgid "There are no files in this release."
 msgstr ""
 
-#: src/app/release/linked-artifacts/linked-artifacts.tpl.html
+#: src/app/release/linked-artifacts/linked-artifacts.tpl.html:3
 msgid "There was an error while getting the list of linked artifacts: {{ $ctrl.getError().rest_error }}"
 msgstr ""
 
-#: src/app/release/linked-artifacts/linked-artifacts.tpl.html
+#: src/app/release/linked-artifacts/linked-artifacts.tpl.html:18
+#: src/app/release/linked-artifacts/linked-artifacts.tpl.html:53
 msgid "Tracker"
 msgstr ""
 
-#: src/app/release/files/files.tpl.html
+#: src/app/release/files/files.tpl.html:10
 msgid "Type"
 msgstr ""

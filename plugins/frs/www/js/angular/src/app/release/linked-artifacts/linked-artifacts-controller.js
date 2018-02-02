@@ -1,28 +1,24 @@
-angular
-    .module('tuleap.frs')
-    .controller('LinkedArtifactsController', LinkedArtifactsController);
+export default LinkedArtifactsController;
 
 LinkedArtifactsController.$inject = [
-    'lodash',
     'ReleaseRestService',
     'RestErrorService',
     'SharedPropertiesService'
 ];
 
 function LinkedArtifactsController(
-    _,
     ReleaseRestService,
     RestErrorService,
     SharedPropertiesService
 ) {
-    var self = this;
+    const self = this;
 
-    _.extend(self, {
+    Object.assign(self, {
         loading_natures: true,
         natures        : [],
         release        : SharedPropertiesService.getRelease(),
 
-        init    : init,
+        init,
         getError: RestErrorService.getError
     });
 
@@ -33,10 +29,9 @@ function LinkedArtifactsController(
 
         ReleaseRestService.getReleaseLinkNatures(self.release.artifact.id)
         .then(function(natures) {
-            self.natures = _(natures)
-                .filter(function(nature) { return nature.label; }) // we intentionally omit links with no nature
-                .map(retrieveLinkedArtifactsByNature)
-                .value();
+            self.natures = natures
+                .filter(({ label }) => label) // we intentionally omit links with no nature
+                .map(retrieveLinkedArtifactsByNature);
         })
         .finally(function() {
             self.loading_natures = false;
@@ -48,7 +43,7 @@ function LinkedArtifactsController(
         nature.linked_artifacts = [];
 
         ReleaseRestService.getAllLinkedArtifacts(nature.uri, function(batch_of_artifacts) {
-            _.map(batch_of_artifacts, function(artifact) {
+            batch_of_artifacts.map((artifact) => {
                 nature.linked_artifacts.push(artifact);
             });
         })

@@ -1,6 +1,4 @@
-angular
-    .module('tuleap.frs')
-    .config(FrsConfig);
+export default FrsConfig;
 
 FrsConfig.$inject = [
     '$showdownProvider',

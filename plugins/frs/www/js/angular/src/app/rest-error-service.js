@@ -1,21 +1,16 @@
-angular
-    .module('tuleap.frs')
-    .service('RestErrorService', RestErrorService);
+export default RestErrorService;
 
-RestErrorService.$inject = [
-    'lodash'
-];
+RestErrorService.$inject = [];
 
-function RestErrorService(
-    _
-) {
-    var self = this;
-    _.extend(self, {
-        getError: getError,
-        setError: setError
+function RestErrorService() {
+    const self = this;
+
+    Object.assign(self, {
+        getError,
+        setError
     });
 
-    var error = {
+    const error = {
         rest_error        : '',
         rest_error_occured: false
     };

@@ -1,27 +1,23 @@
-angular
-    .module('tuleap.frs')
-    .service('ReleaseRestService', ReleaseRestService);
+export default ReleaseRestService;
 
 ReleaseRestService.$inject = [
     '$http',
     '$q',
-    'lodash',
     'RestErrorService'
 ];
 
 function ReleaseRestService(
     $http,
     $q,
-    _,
     RestErrorService
 ) {
-    var self = this;
+    const self = this;
 
-    _.extend(self, {
-        getAllLinkedArtifacts: getAllLinkedArtifacts,
-        getLinkedArtifacts   : getLinkedArtifacts,
-        getReleaseLinkNatures: getReleaseLinkNatures,
-        getMilestone         : getMilestone,
+    Object.assign(self, {
+        getAllLinkedArtifacts,
+        getLinkedArtifacts,
+        getReleaseLinkNatures,
+        getMilestone,
 
         linked_artifacts_pagination_limit : 50,
         linked_artifacts_pagination_offset: 0
@@ -56,7 +52,7 @@ function ReleaseRestService(
         .then(function(response) {
             return {
                 results: response.data.collection,
-                total  : _.toInteger(response.headers('X-PAGINATION-SIZE'))
+                total  : Number.parseInt(response.headers('X-PAGINATION-SIZE'), 10)
             };
         })
         .catch(function(error) {

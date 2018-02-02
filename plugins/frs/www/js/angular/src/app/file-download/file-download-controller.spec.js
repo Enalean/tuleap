@@ -1,3 +1,9 @@
+import angular                  from 'angular';
+import tuleap_frs_module        from 'tuleap-frs-module';
+import file_download_controller from './file-download-controller.js';
+
+import 'angular-mocks';
+
 describe("FileDownloadController -", function() {
     var $controller,
         $modal,
@@ -7,9 +13,9 @@ describe("FileDownloadController -", function() {
         FileDownloadController;
 
     beforeEach(function() {
-        module('tuleap.frs');
+        angular.mock.module(tuleap_frs_module);
 
-        inject(function( // eslint-disable-line angular/di
+        angular.mock.inject(function( // eslint-disable-line angular/di
             _$controller_,
             _$modal_,
             _$q_,
@@ -31,7 +37,7 @@ describe("FileDownloadController -", function() {
                 download_url: '%2Fsenso%2Finflationism%3Fa%3Dsextillionth%26b%3Dunfishable%23tricostate'
             };
 
-            FileDownloadController = $controller('FileDownloadController', {}, {
+            FileDownloadController = $controller(file_download_controller, {}, {
                 file: file
             });
 
@@ -47,7 +53,7 @@ describe("FileDownloadController -", function() {
             });
             spyOn($window, "open");
 
-            FileDownloadController = $controller('FileDownloadController', {
+            FileDownloadController = $controller(file_download_controller, {
                 $modal : $modal,
                 $window: $window
             });

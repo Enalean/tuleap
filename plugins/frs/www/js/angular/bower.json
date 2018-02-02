@@ -3,18 +3,9 @@
   "version": "0.0.1",
   "dependencies": {
     "angular": "~1.4.10",
-    "angular-gettext": "^2.2.1",
-    "angular-ui-bootstrap-bower": "~0.8.0",
-    "ng-lodash": "^0.4.0",
-    "angular-filter": "^0.5.8",
-    "ng-showdown": "^1.1.0",
-    "angular-sanitize": "~1.4.10",
-    "angular-ui-router": "^0.2.18"
+    "angular-ui-bootstrap-bower": "~0.8.0"
   },
-  "devDependencies": {
-    "angular-mocks": "~1.4.10",
-    "jasmine-promise-matchers": "^2.0.2"
-  },
+  "devDependencies": {},
   "resolutions": {
     "angular": "~1.4.10"
   }

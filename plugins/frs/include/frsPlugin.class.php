@@ -31,6 +31,7 @@ use Tuleap\FRS\ReleasePresenter;
 use Tuleap\FRS\REST\v1\ReleaseRepresentation;
 use Tuleap\FRS\UploadedLinksDao;
 use Tuleap\FRS\UploadedLinksRetriever;
+use Tuleap\Layout\IncludeAssets;
 
 class frsPlugin extends \Plugin
 {
@@ -158,16 +159,21 @@ class frsPlugin extends \Plugin
 
     public function cssfile($params)
     {
-        if (strpos($_SERVER['REQUEST_URI'], FRS_BASE_URL . '/') === 0) {
-            echo '<link rel="stylesheet" type="text/css" href="' . $this->getPluginPath() . '/js/angular/bin/assets/tuleap-frs.css" />';
+        if ($this->isAFRSrequest()) {
+            echo '<link rel="stylesheet" type="text/css" href="' . $this->getPluginPath() . '/assets/tuleap-frs.css" />';
             echo '<link rel="stylesheet" type="text/css" href="' . $this->getThemePath() . '/css/style.css" />';
         }
     }
 
     public function javascript_file()
     {
-        if (strpos($_SERVER['REQUEST_URI'], FRS_BASE_URL . '/') === 0) {
-            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/js/angular/bin/assets/tuleap-frs.js"></script>';
+        if ($this->isAFRSrequest()) {
+            $include_assets = new IncludeAssets(
+                FRS_BASE_DIR . '/www/assets',
+                $this->getPluginPath() . '/assets'
+            );
+
+            echo $include_assets->getHTMLSnippet('tuleap-frs.js');
         }
     }
 
@@ -272,5 +278,13 @@ class frsPlugin extends \Plugin
     private function getUploadedLinkRetriever()
     {
         return new UploadedLinksRetriever(new UploadedLinksDao(), UserManager::instance());
+    }
+
+    /**
+     * @return bool
+     */
+    private function isAFRSrequest()
+    {
+        return strpos($_SERVER['REQUEST_URI'], FRS_BASE_URL . '/') === 0;
     }
 }

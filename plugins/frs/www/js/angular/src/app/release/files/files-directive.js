@@ -1,13 +1,16 @@
-angular
-    .module('tuleap.frs')
-    .directive('files', filesDirective);
+import './files.tpl.html';
+
+import FilesController from './files-controller.js';
+
+export default filesDirective;
 
 function filesDirective() {
     return {
         restrict        : 'A',
         scope           : {},
-        templateUrl     : 'release/files/files.tpl.html',
-        controller      : 'FilesController as $ctrl',
+        templateUrl     : 'files.tpl.html',
+        controller      : FilesController,
+        controllerAs    : '$ctrl',
         bindToController: true
     };
 }
