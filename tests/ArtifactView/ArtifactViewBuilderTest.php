@@ -20,6 +20,8 @@
 
 namespace Tuleap\Timesheeting\ArtifactView;
 
+use Tuleap\Timesheeting\Time\DateFormatter;
+use Tuleap\Timesheeting\Time\TimePresenterBuilder;
 use TuleapTestCase;
 
 require_once __DIR__.'/../bootstrap.php';
@@ -42,16 +44,20 @@ class ArtifactViewBuilderTest extends TuleapTestCase
         $this->tracker  = aMockTracker()->withProject($project)->build();
         $this->artifact = aMockArtifact()->withTracker($this->tracker)->build();
 
-        $this->plugin                = mock('timesheetingPlugin');
-        $this->enabler               = mock('Tuleap\Timesheeting\Admin\TimesheetingEnabler');
-        $this->permissions_retriever = mock('Tuleap\Timesheeting\Permissions\PermissionsRetriever');
-        $this->time_retriever        = mock('Tuleap\Timesheeting\Time\TimeRetriever');
+        $this->plugin                 = mock('timesheetingPlugin');
+        $this->enabler                = mock('Tuleap\Timesheeting\Admin\TimesheetingEnabler');
+        $this->permissions_retriever  = mock('Tuleap\Timesheeting\Permissions\PermissionsRetriever');
+        $this->time_retriever         = mock('Tuleap\Timesheeting\Time\TimeRetriever');
+        $this->date_formatter         = new DateFormatter();
+        $this->time_presenter_builder = new TimePresenterBuilder($this->date_formatter);
 
         $this->builder = new ArtifactViewBuilder(
             $this->plugin,
             $this->enabler,
             $this->permissions_retriever,
-            $this->time_retriever
+            $this->time_retriever,
+            $this->time_presenter_builder,
+            $this->date_formatter
         );
     }
 

@@ -65,22 +65,18 @@ class Time
     }
 
     /**
-     * @return array
+     * @return string
      */
-    public function getAsPresenter()
+    public function getDay()
     {
-        return array(
-            'day'  => $this->day,
-            'time' => $this->getFormattedTime(),
-            'step' => $this->step
-        );
+        return $this->day;
     }
 
-    private function getFormattedTime()
+    /**
+     * @return string
+     */
+    public function getStep()
     {
-        $hours   = floor($this->minutes / 60);
-        $minutes = $this->minutes % 60;
-
-        return str_pad($hours, 2, "0", STR_PAD_LEFT) . ":" . str_pad($minutes, 2, "0", STR_PAD_LEFT);
+        return $this->step;
     }
 }

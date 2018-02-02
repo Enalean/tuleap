@@ -27,6 +27,8 @@ use timesheetingPlugin;
 use Tracker_Artifact;
 use Tuleap\Timesheeting\Admin\TimesheetingEnabler;
 use Tuleap\Timesheeting\Permissions\PermissionsRetriever;
+use Tuleap\Timesheeting\Time\DateFormatter;
+use Tuleap\Timesheeting\Time\TimePresenterBuilder;
 use Tuleap\Timesheeting\Time\TimeRetriever;
 
 class ArtifactViewBuilder
@@ -51,16 +53,30 @@ class ArtifactViewBuilder
      */
     private $time_retriever;
 
+    /**
+     * @var TimePresenterBuilder
+     */
+    private $time_presenter_builder;
+
+    /**
+     * @var DateFormatter
+     */
+    private $date_formatter;
+
     public function __construct(
         TimesheetingPlugin $plugin,
         TimesheetingEnabler $timesheeting_enabler,
         PermissionsRetriever $permissions_retriever,
-        TimeRetriever $time_retriever
+        TimeRetriever $time_retriever,
+        TimePresenterBuilder $time_presenter_builder,
+        DateFormatter $date_formatter
     ) {
-        $this->plugin                = $plugin;
-        $this->timesheeting_enabler  = $timesheeting_enabler;
-        $this->permissions_retriever = $permissions_retriever;
-        $this->time_retriever        = $time_retriever;
+        $this->plugin                 = $plugin;
+        $this->timesheeting_enabler   = $timesheeting_enabler;
+        $this->permissions_retriever  = $permissions_retriever;
+        $this->time_retriever         = $time_retriever;
+        $this->time_presenter_builder = $time_presenter_builder;
+        $this->date_formatter         = $date_formatter;
     }
 
     /**
@@ -111,12 +127,15 @@ class ArtifactViewBuilder
         $presenters = array();
 
         foreach ($times_for_user as $time) {
-            $presenters[] = $time->getAsPresenter();
+            $presenters[] = $this->time_presenter_builder->buildPresenter($time);
         }
 
         return $presenters;
     }
 
+    /**
+     * @return string
+     */
     private function getFormattedTotalTime(array $times_for_user)
     {
         $total_minutes = 0;
@@ -124,9 +143,6 @@ class ArtifactViewBuilder
             $total_minutes += $time->getMinutes();
         }
 
-        $hours   = floor($total_minutes / 60);
-        $minutes = $total_minutes % 60;
-
-        return str_pad($hours, 2, "0", STR_PAD_LEFT) . ":" . str_pad($minutes, 2, "0", STR_PAD_LEFT);
+        return $this->date_formatter->formatMinutes($total_minutes);
     }
 }
