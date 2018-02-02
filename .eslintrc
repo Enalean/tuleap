@@ -1,6 +1,7 @@
 {
     "plugins": [
-        "you-dont-need-lodash-underscore"
+        "you-dont-need-lodash-underscore",
+        "cypress"
     ],
     "extends": [
         "eslint:recommended",
@@ -101,6 +102,14 @@
             ],
             "env": {
                 "node": true
+            }
+        },
+        {
+            "files": [
+                "tests/e2e/cypress/**/*.js"
+            ],
+            "env": {
+                "cypress/globals": true
             }
         }
     ],
