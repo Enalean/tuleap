@@ -8,6 +8,12 @@ import {
     rewire$isInCreationMode,
     restore as restoreCreationMode
 } from './modal-creation-mode-state.js';
+import {
+    rewire$createArtifact,
+    rewire$editArtifact,
+    rewire$getFollowupsComments,
+    restore as restoreRest
+} from './rest/rest-service.js';
 
 describe("TuleapArtifactModalController", () => {
     let $scope,
@@ -16,30 +22,18 @@ describe("TuleapArtifactModalController", () => {
         controller_params,
         ArtifactModalController,
         tlp_modal,
-        TuleapArtifactModalRestService,
         TuleapArtifactModalValidateService,
         TuleapArtifactModalFieldDependenciesService,
         TuleapArtifactModalLoading,
         TuleapArtifactModalFileUploadService,
         mockCallback,
-        isInCreationMode;
+        isInCreationMode,
+        getFollowupsComments,
+        createArtifact,
+        editArtifact;
 
     beforeEach(() => {
         angular.mock.module(artifact_modal_module, function($provide) {
-            $provide.decorator('TuleapArtifactModalRestService', function($delegate, $q) {
-                spyOn($delegate, "createArtifact");
-                spyOn($delegate, "editArtifact");
-                spyOn($delegate, "searchUsers");
-                spyOn($delegate, 'getFollowupsComments').and.returnValue($q.resolve({
-                    data: {
-                        results: []
-                    },
-                    total: 0
-                }));
-
-                return $delegate;
-            });
-
             $provide.decorator('TuleapArtifactModalValidateService', function($delegate) {
                 spyOn($delegate, "validateArtifactFieldsValues");
 
@@ -65,14 +59,12 @@ describe("TuleapArtifactModalController", () => {
             $rootScope,
             _$q_,
             _$timeout_,
-            _TuleapArtifactModalRestService_,
             _TuleapArtifactModalValidateService_,
             _TuleapArtifactModalFieldDependenciesService_,
             _TuleapArtifactModalLoading_,
             _TuleapArtifactModalFileUploadService_
         ) {
             $q = _$q_;
-            TuleapArtifactModalRestService              = _TuleapArtifactModalRestService_;
             TuleapArtifactModalValidateService          = _TuleapArtifactModalValidateService_;
             TuleapArtifactModalFieldDependenciesService = _TuleapArtifactModalFieldDependenciesService_;
             TuleapArtifactModalLoading                  = _TuleapArtifactModalLoading_;
@@ -98,7 +90,6 @@ describe("TuleapArtifactModalController", () => {
                     },
                     color: "inca_silver"
                 },
-                TuleapArtifactModalRestService,
                 TuleapArtifactModalValidateService,
                 TuleapArtifactModalLoading,
                 TuleapArtifactModalFieldDependenciesService,
@@ -109,10 +100,23 @@ describe("TuleapArtifactModalController", () => {
 
         isInCreationMode = jasmine.createSpy("isInCreationMode");
         rewire$isInCreationMode(isInCreationMode);
+
+        getFollowupsComments = jasmine.createSpy("getFollowupsComments").and.returnValue($q.resolve({
+            data: {
+                results: []
+            },
+            total: 0
+        }));
+        rewire$getFollowupsComments(getFollowupsComments);
+        createArtifact = jasmine.createSpy("createArtifact");
+        rewire$createArtifact(createArtifact);
+        editArtifact = jasmine.createSpy("editArtifact");
+        rewire$editArtifact(editArtifact);
     });
 
     afterEach(() => {
         restoreCreationMode();
+        restoreRest();
     });
 
     describe("init() -", function() {
@@ -186,7 +190,7 @@ describe("TuleapArtifactModalController", () => {
         });
 
         it("and no artifact_id, when I submit the modal to Tuleap, then the field values will be validated, the artifact will be created , the modal will be closed and the callback will be called", () => {
-            TuleapArtifactModalRestService.createArtifact.and.returnValue($q.resolve({ id: 3042 }));
+            createArtifact.and.returnValue($q.resolve({ id: 3042 }));
             isInCreationMode.and.returnValue(true);
             controller_params.modal_model.tracker_id = 39;
             ArtifactModalController                  = $controller(BaseModalController, controller_params);
@@ -201,8 +205,8 @@ describe("TuleapArtifactModalController", () => {
             $scope.$apply();
 
             expect(TuleapArtifactModalValidateService.validateArtifactFieldsValues).toHaveBeenCalledWith(values, true);
-            expect(TuleapArtifactModalRestService.createArtifact).toHaveBeenCalledWith(39, values);
-            expect(TuleapArtifactModalRestService.editArtifact).not.toHaveBeenCalled();
+            expect(createArtifact).toHaveBeenCalledWith(39, values);
+            expect(editArtifact).not.toHaveBeenCalled();
             expect(tlp_modal.hide).toHaveBeenCalled();
             expect(TuleapArtifactModalLoading.loading).toBeFalsy();
             expect(mockCallback).toHaveBeenCalled();
@@ -210,7 +214,7 @@ describe("TuleapArtifactModalController", () => {
 
         it("and an artifact_id to edit, when I submit the modal to Tuleap, then the field values will be validated, the artifact will be edited, the modal will be closed and the callback will be called", () => {
             var edit_request = $q.defer();
-            TuleapArtifactModalRestService.editArtifact.and.returnValue(edit_request.promise);
+            editArtifact.and.returnValue(edit_request.promise);
             isInCreationMode.and.returnValue(false);
             controller_params.modal_model.artifact_id = 8155;
             controller_params.modal_model.tracker_id  = 186;
@@ -232,14 +236,14 @@ describe("TuleapArtifactModalController", () => {
             $scope.$apply();
 
             expect(TuleapArtifactModalValidateService.validateArtifactFieldsValues).toHaveBeenCalledWith(values, false);
-            expect(TuleapArtifactModalRestService.editArtifact).toHaveBeenCalledWith(8155, values, followup_comment);
-            expect(TuleapArtifactModalRestService.createArtifact).not.toHaveBeenCalled();
+            expect(editArtifact).toHaveBeenCalledWith(8155, values, followup_comment);
+            expect(createArtifact).not.toHaveBeenCalled();
             expect(tlp_modal.hide).toHaveBeenCalled();
             expect(TuleapArtifactModalLoading.loading).toBeFalsy();
             expect(mockCallback).toHaveBeenCalledWith(8155);
         });
 
-        it("and given that there were 2 file fields, when I submit the modal to Tuleap, then all temporary files chosen in those fields will be uploaded before fields are validated", function() {
+        it("and given that there were 2 file fields, when I submit the modal to Tuleap, then all temporary files chosen in those fields will be uploaded before fields are validated", () => {
             ArtifactModalController    = $controller(BaseModalController, controller_params);
             var first_field_temporary_files  = [{ description: "one" }];
             var second_field_temporary_files = [{ description: "two" }];
@@ -257,7 +261,7 @@ describe("TuleapArtifactModalController", () => {
             };
             var first_upload  = $q.defer();
             var second_upload = $q.defer();
-            TuleapArtifactModalFileUploadService.uploadAllTemporaryFiles.and.callFake(function(temporary_files) {
+            TuleapArtifactModalFileUploadService.uploadAllTemporaryFiles.and.callFake(temporary_files => {
                 switch (temporary_files[0].description) {
                     case "one":
                         return first_upload.promise;
@@ -266,7 +270,7 @@ describe("TuleapArtifactModalController", () => {
                 }
             });
             var edit_request = $q.defer();
-            TuleapArtifactModalRestService.editArtifact.and.returnValue(edit_request.promise);
+            editArtifact.and.returnValue(edit_request.promise);
             var values = [first_file_field_value, second_file_field_value];
             ArtifactModalController.values = values;
 
@@ -282,8 +286,8 @@ describe("TuleapArtifactModalController", () => {
             expect(second_file_field_value.value).toEqual([71]);
         });
 
-        it("and given the server responded an error, when I submit the modal to Tuleap, then the modal will not be closed and the callback won't be called", function() {
-            TuleapArtifactModalRestService.editArtifact.and.returnValue($q.reject());
+        it("and given the server responded an error, when I submit the modal to Tuleap, then the modal will not be closed and the callback won't be called", () => {
+            editArtifact.and.returnValue($q.reject());
             ArtifactModalController = $controller(BaseModalController, controller_params);
 
             ArtifactModalController.submit();

@@ -6,13 +6,18 @@ import {
     setCreationMode,
     isInCreationMode
 } from './modal-creation-mode-state.js';
+import {
+    getArtifactFieldValues,
+    getFileUploadRules,
+    getTracker,
+    getUserPreference
+} from './rest/rest-service.js';
 
 export default ArtifactModalService;
 
 ArtifactModalService.$inject = [
     '$q',
     'TlpModalService',
-    'TuleapArtifactModalRestService',
     'TuleapArtifactModalLoading',
     'TuleapArtifactModalTrackerTransformerService',
     'TuleapArtifactModalFormTreeBuilderService',
@@ -25,7 +30,6 @@ ArtifactModalService.$inject = [
 function ArtifactModalService(
     $q,
     TlpModalService,
-    TuleapArtifactModalRestService,
     TuleapArtifactModalLoading,
     TuleapArtifactModalTrackerTransformerService,
     TuleapArtifactModalFormTreeBuilderService,
@@ -110,7 +114,7 @@ function ArtifactModalService(
         modal_model.parent_artifact_id = parent_artifact_id;
         modal_model.text_formats       = text_formats;
 
-        var promise = TuleapArtifactModalRestService.getTracker(tracker_id).then(function(tracker) {
+        var promise = $q.when(getTracker(tracker_id)).then(function(tracker) {
             var transformed_tracker = TuleapArtifactModalTrackerTransformerService.transform(tracker, creation_mode);
             modal_model.tracker     = transformed_tracker;
             modal_model.color       = transformed_tracker.color_name;
@@ -143,7 +147,7 @@ function ArtifactModalService(
         modal_model.text_formats = text_formats;
         var transformed_tracker;
 
-        var promise = TuleapArtifactModalRestService.getTracker(tracker_id).then(function(tracker) {
+        var promise = $q.when(getTracker(tracker_id)).then(function(tracker) {
             transformed_tracker        = TuleapArtifactModalTrackerTransformerService.transform(tracker, creation_mode);
             modal_model.ordered_fields = transformed_tracker.ordered_fields;
             modal_model.color          = transformed_tracker.color_name;
@@ -180,14 +184,14 @@ function ArtifactModalService(
     function getFollowupsCommentsOrderUserPreference(user_id, tracker_id, modal_model) {
         var preference_key = 'tracker_comment_invertorder_' + tracker_id;
 
-        return TuleapArtifactModalRestService.getUserPreference(user_id, preference_key)
+        return $q.when(getUserPreference(user_id, preference_key))
             .then(function(data) {
                 modal_model.invert_followups_comments_order = Boolean(data.value);
             });
     }
 
     function getTextFieldsFormatUserPreference(user_id, modal_model) {
-        return TuleapArtifactModalRestService.getUserPreference(user_id, 'user_edition_default_format')
+        return $q.when(getUserPreference(user_id, 'user_edition_default_format'))
             .then(function(data) {
                 modal_model.text_fields_format = (data.value !== false) ? data.value : TEXT_FORMAT_TEXT_ID;
             });
@@ -196,7 +200,7 @@ function ArtifactModalService(
     function getArtifactValues(artifact_id) {
         var promise;
         if (artifact_id) {
-            promise = TuleapArtifactModalRestService.getArtifactFieldValues(artifact_id);
+            promise = getArtifactFieldValues(artifact_id);
         }
         return $q.when(promise);
     }
@@ -253,7 +257,7 @@ function ArtifactModalService(
     }
 
     function updateFileUploadRules() {
-        var promise = TuleapArtifactModalRestService.getFileUploadRules()
+        var promise = $q.when(getFileUploadRules())
             .then(function(data) {
                 TuleapArtifactModalFileUploadRules.disk_quota     = data.disk_quota;
                 TuleapArtifactModalFileUploadRules.disk_usage     = data.disk_usage;

@@ -1,27 +1,28 @@
-import _ from 'lodash';
+import {
+    uploadTemporaryFile as uploadFile,
+    uploadAdditionalChunk
+} from '../../rest/rest-service.js';
 
 export default FileUploadService;
 
 FileUploadService.$inject = [
     '$q',
-    'TuleapArtifactModalRestService',
     'TuleapArtifactModalFileUploadRules'
 ];
 
 function FileUploadService(
     $q,
-    TuleapArtifactModalRestService,
     TuleapArtifactModalFileUploadRules
 ) {
-    var self = this;
-    _.extend(self, {
-        uploadAllTemporaryFiles: uploadAllTemporaryFiles,
-        uploadTemporaryFile    : uploadTemporaryFile
+    const self = this;
+    Object.assign(self, {
+        uploadAllTemporaryFiles,
+        uploadTemporaryFile
     });
     var file_upload_rules = TuleapArtifactModalFileUploadRules;
 
     function uploadAllTemporaryFiles(temporary_files) {
-        var promises = _.map(temporary_files, function(file) {
+        var promises = temporary_files.map(function(file) {
             return self.uploadTemporaryFile(file);
         });
 
@@ -29,16 +30,16 @@ function FileUploadService(
     }
 
     function uploadTemporaryFile(temporary_file) {
-        if (! _.has(temporary_file, 'file') || ! _.has(temporary_file.file, 'base64')) {
+        if (! temporary_file.hasOwnProperty('file') || ! temporary_file.file.hasOwnProperty('base64')) {
             return $q.when();
         }
 
         temporary_file.file.chunks = splitIntoChunks(temporary_file.file.base64);
 
-        var promise = TuleapArtifactModalRestService.uploadTemporaryFile(
+        var promise = $q.when(uploadFile(
             temporary_file.file,
             temporary_file.description
-        ).then(function(temporary_file_id) {
+        )).then(function(temporary_file_id) {
             return uploadAllAdditionalChunks(
                 temporary_file_id,
                 temporary_file.file.chunks,
@@ -65,11 +66,11 @@ function FileUploadService(
             return $q.when(temporary_file_id);
         }
 
-        var promise = TuleapArtifactModalRestService.uploadAdditionalChunk(
+        var promise = $q.when(uploadAdditionalChunk(
             temporary_file_id,
             chunks[chunk_offset - 1],
             chunk_offset
-        ).then(function() {
+        )).then(function() {
             return uploadAllAdditionalChunks(
                 temporary_file_id,
                 chunks,

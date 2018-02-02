@@ -409,8 +409,8 @@
 
     <div class="tlp-modal-body tuleap-artifact-modal-body">
         <div class="tuleap-artifact-modal-artifact">
-            <div class="tlp-alert-danger" ng-if="modal.getError().is_error">
-                {{ 'Error:' | translate }} {{ modal.getError().error_message }}
+            <div class="tlp-alert-danger" ng-if="modal.hasRestError()">
+                {{ 'Error:' | translate }} {{ modal.getRestErrorMessage() }}
             </div>
             <div class="tlp-alert-info" ng-if="modal.isNewParentAlertShown()" translate>
                 The artifact will be linked to {{ modal.parent.title }}.

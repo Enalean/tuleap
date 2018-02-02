@@ -8,28 +8,30 @@ import {
     restore as restoreCreationMode
 } from './modal-creation-mode-state.js';
 
+import {
+    rewire$getArtifactFieldValues,
+    rewire$getFileUploadRules,
+    rewire$getTracker,
+    rewire$getUserPreference,
+    restore as restoreRest
+} from './rest/rest-service.js';
+
 describe("NewTuleapArtifactModalService", () => {
     let NewTuleapArtifactModalService,
         $q,
-        TuleapArtifactModalRestService,
         TuleapArtifactFieldValuesService,
         TuleapArtifactModalTrackerTransformerService,
         TuleapArtifactModalFormTreeBuilderService,
         TuleapArtifactModalWorkflowService,
         setCreationMode,
-        isInCreationMode;
+        isInCreationMode,
+        getTracker,
+        getFileUploadRules,
+        getUserPreference,
+        getArtifactFieldValues;
 
     beforeEach(() => {
         angular.mock.module(artifact_modal_module, function($provide) {
-            $provide.decorator('TuleapArtifactModalRestService', function($delegate) {
-                spyOn($delegate, "getArtifactFieldValues");
-                spyOn($delegate, "getTracker");
-                spyOn($delegate, "getUserPreference");
-                spyOn($delegate, "getFileUploadRules");
-
-                return $delegate;
-            });
-
             $provide.decorator('TuleapArtifactModalTrackerTransformerService', function($delegate) {
                 spyOn($delegate, "addFieldValuesToTracker").and.callFake(function(artifact_values, tracker) {
                     return tracker;
@@ -66,7 +68,6 @@ describe("NewTuleapArtifactModalService", () => {
 
         angular.mock.inject(function(
             _$q_,
-            _TuleapArtifactModalRestService_,
             _TuleapArtifactModalTrackerTransformerService_,
             _TuleapArtifactFieldValuesService_,
             _TuleapArtifactModalFormTreeBuilderService_,
@@ -74,7 +75,6 @@ describe("NewTuleapArtifactModalService", () => {
             _NewTuleapArtifactModalService_
         ) {
             $q                                           = _$q_;
-            TuleapArtifactModalRestService               = _TuleapArtifactModalRestService_;
             TuleapArtifactModalTrackerTransformerService = _TuleapArtifactModalTrackerTransformerService_;
             TuleapArtifactFieldValuesService             = _TuleapArtifactFieldValuesService_;
             TuleapArtifactModalFormTreeBuilderService    = _TuleapArtifactModalFormTreeBuilderService_;
@@ -87,10 +87,20 @@ describe("NewTuleapArtifactModalService", () => {
         rewire$setCreationMode(setCreationMode);
         isInCreationMode = jasmine.createSpy("isInCreationMode");
         rewire$isInCreationMode(isInCreationMode);
+
+        getTracker = jasmine.createSpy("getTracker");
+        rewire$getTracker(getTracker);
+        getFileUploadRules = jasmine.createSpy("getFileUploadRules");
+        rewire$getFileUploadRules(getFileUploadRules);
+        getUserPreference = jasmine.createSpy("getUserPreference");
+        rewire$getUserPreference(getUserPreference);
+        getArtifactFieldValues = jasmine.createSpy("getArtifactFieldValues");
+        rewire$getArtifactFieldValues(getArtifactFieldValues);
     });
 
     afterEach(() => {
         restoreCreationMode();
+        restoreRest();
     });
 
     describe("", () => {
@@ -121,14 +131,14 @@ describe("NewTuleapArtifactModalService", () => {
                     label     : "preinvest",
                     parent    : null
                 };
-                TuleapArtifactModalRestService.getTracker.and.returnValue($q.when(tracker));
-                TuleapArtifactModalRestService.getFileUploadRules.and.returnValue($q.when(file_upload_rules));
+                getTracker.and.returnValue($q.when(tracker));
+                getFileUploadRules.and.returnValue($q.when(file_upload_rules));
 
                 const promise = NewTuleapArtifactModalService.initCreationModalModel(tracker_id, parent_artifact_id);
 
                 expect(promise).toBeResolved();
-                expect(TuleapArtifactModalRestService.getTracker).toHaveBeenCalledWith(tracker_id);
-                expect(TuleapArtifactModalRestService.getFileUploadRules).toHaveBeenCalled();
+                expect(getTracker).toHaveBeenCalledWith(tracker_id);
+                expect(getFileUploadRules).toHaveBeenCalled();
                 expect(TuleapArtifactFieldValuesService.getSelectedValues).toHaveBeenCalledWith({}, tracker);
                 expect(TuleapArtifactModalTrackerTransformerService.transform).toHaveBeenCalledWith(tracker, true);
                 expect(TuleapArtifactModalFormTreeBuilderService.buildFormTree).toHaveBeenCalledWith(tracker);
@@ -150,7 +160,7 @@ describe("NewTuleapArtifactModalService", () => {
             });
 
             it("Given that I could not get the tracker structure, then a promise will be rejected", () => {
-                TuleapArtifactModalRestService.getTracker.and.returnValue($q.reject());
+                getTracker.and.returnValue($q.reject());
 
                 const promise = NewTuleapArtifactModalService.initCreationModalModel(tracker_id, parent_artifact_id);
 
@@ -183,8 +193,8 @@ describe("NewTuleapArtifactModalService", () => {
                         ],
                         workflow
                     };
-                    TuleapArtifactModalRestService.getTracker.and.returnValue($q.when(tracker));
-                    TuleapArtifactModalRestService.getFileUploadRules.and.returnValue($q.when(file_upload_rules));
+                    getTracker.and.returnValue($q.when(tracker));
+                    getFileUploadRules.and.returnValue($q.when(file_upload_rules));
 
                     const promise = NewTuleapArtifactModalService.initCreationModalModel(tracker_id);
 
@@ -213,8 +223,8 @@ describe("NewTuleapArtifactModalService", () => {
                         ],
                         workflow
                     };
-                    TuleapArtifactModalRestService.getTracker.and.returnValue($q.when(tracker));
-                    TuleapArtifactModalRestService.getFileUploadRules.and.returnValue($q.when(file_upload_rules));
+                    getTracker.and.returnValue($q.when(tracker));
+                    getFileUploadRules.and.returnValue($q.when(file_upload_rules));
 
                     const promise = NewTuleapArtifactModalService.initCreationModalModel(tracker_id);
 
@@ -238,8 +248,8 @@ describe("NewTuleapArtifactModalService", () => {
                         ],
                         workflow
                     };
-                    TuleapArtifactModalRestService.getTracker.and.returnValue($q.when(tracker));
-                    TuleapArtifactModalRestService.getFileUploadRules.and.returnValue($q.when(file_upload_rules));
+                    getTracker.and.returnValue($q.when(tracker));
+                    getFileUploadRules.and.returnValue($q.when(file_upload_rules));
 
                     var promise = NewTuleapArtifactModalService.initCreationModalModel(tracker_id);
 
@@ -249,14 +259,14 @@ describe("NewTuleapArtifactModalService", () => {
             });
         });
 
-        describe("initEditionModalModel() -", function() {
+        describe("initEditionModalModel() -", () => {
             var user_id,
                 tracker_id,
                 artifact_id,
                 artifact_values;
 
-            beforeEach(function() {
-                TuleapArtifactFieldValuesService.getSelectedValues.and.callFake(function() {
+            beforeEach(() => {
+                TuleapArtifactFieldValuesService.getSelectedValues.and.callFake(() => {
                     return {
                         113: {
                             value: "onomatomania"
@@ -283,18 +293,18 @@ describe("NewTuleapArtifactModalService", () => {
                 user_id         = 102;
                 tracker_id      = 93;
                 artifact_id     = 250;
-                TuleapArtifactModalRestService.getUserPreference.and.callFake(function(user_id, preference_key) {
+                getUserPreference.and.callFake((user_id, preference_key) => {
                     if (preference_key.contains('tracker_comment_invertorder_')) {
                         return $q.when(comment_order_preference);
                     } else if (preference_key === 'user_edition_default_format') {
                         return $q.when(text_format_preference);
                     }
                 });
-                TuleapArtifactModalRestService.getFileUploadRules.and.returnValue($q.when(file_upload_rules));
+                getFileUploadRules.and.returnValue($q.when(file_upload_rules));
             });
 
-            describe("", function() {
-                beforeEach(function() {
+            describe("", () => {
+                beforeEach(() => {
                     tracker = {
                         id        : tracker_id,
                         color_name: "slackerism",
@@ -308,18 +318,18 @@ describe("NewTuleapArtifactModalService", () => {
                         },
                         'title': 'onomatomania'
                     };
-                    TuleapArtifactModalRestService.getTracker.and.returnValue($q.when(tracker));
-                    TuleapArtifactModalRestService.getArtifactFieldValues.and.returnValue($q.when(artifact_values));
+                    getTracker.and.returnValue($q.when(tracker));
+                    getArtifactFieldValues.and.returnValue($q.when(artifact_values));
                 });
 
-                it("Given a user id, tracker id and an artifact id, when I create the modal's edition model, then the artifact's field values will be retrieved, the tracker's structure will be retrieved and a promise will be resolved with the modal's model object", function() {
+                it("Given a user id, tracker id and an artifact id, when I create the modal's edition model, then the artifact's field values will be retrieved, the tracker's structure will be retrieved and a promise will be resolved with the modal's model object", () => {
                     var promise = NewTuleapArtifactModalService.initEditionModalModel(user_id, tracker_id, artifact_id);
 
                     expect(promise).toBeResolved();
-                    expect(TuleapArtifactModalRestService.getTracker).toHaveBeenCalledWith(tracker_id);
-                    expect(TuleapArtifactModalRestService.getArtifactFieldValues).toHaveBeenCalledWith(artifact_id);
-                    expect(TuleapArtifactModalRestService.getUserPreference).toHaveBeenCalledWith(user_id, 'tracker_comment_invertorder_93');
-                    expect(TuleapArtifactModalRestService.getFileUploadRules).toHaveBeenCalled();
+                    expect(getTracker).toHaveBeenCalledWith(tracker_id);
+                    expect(getArtifactFieldValues).toHaveBeenCalledWith(artifact_id);
+                    expect(getUserPreference).toHaveBeenCalledWith(user_id, 'tracker_comment_invertorder_93');
+                    expect(getFileUploadRules).toHaveBeenCalled();
                     expect(TuleapArtifactFieldValuesService.getSelectedValues).toHaveBeenCalledWith(artifact_values, tracker);
                     expect(TuleapArtifactModalTrackerTransformerService.transform).toHaveBeenCalledWith(tracker, false);
                     expect(TuleapArtifactModalTrackerTransformerService.addFieldValuesToTracker).toHaveBeenCalledWith(artifact_values, tracker);
@@ -341,13 +351,13 @@ describe("NewTuleapArtifactModalService", () => {
                     ]);
                 });
 
-                it("Given that the user didn't have a preference set for text fields format, when I create the modal's edition model, then the default text_field format will be 'text' by default", function() {
+                it("Given that the user didn't have a preference set for text fields format, when I create the modal's edition model, then the default text_field format will be 'text' by default", () => {
                     var comment_order_preference = {
                         key  : 'tracker_comment_invertorder_93',
                         value: '1'
                     };
 
-                    TuleapArtifactModalRestService.getUserPreference.and.callFake(function(user_id, preference_key) {
+                    getUserPreference.and.callFake((user_id, preference_key) => {
                         if (preference_key.contains('tracker_comment_invertorder_')) {
                             return $q.when(comment_order_preference);
                         } else if (preference_key === 'user_edition_default_format') {
@@ -368,10 +378,10 @@ describe("NewTuleapArtifactModalService", () => {
             });
 
 
-            describe("apply transitions -", function() {
+            describe("apply transitions -", () => {
                 var workflow_field;
 
-                beforeEach(function() {
+                beforeEach(() => {
                     workflow_field = {
                         field_id: 189
                     };
@@ -381,10 +391,10 @@ describe("NewTuleapArtifactModalService", () => {
                             bind_value_ids: [757]
                         }
                     };
-                    TuleapArtifactModalRestService.getArtifactFieldValues.and.returnValue($q.when(artifact_values));
+                    getArtifactFieldValues.and.returnValue($q.when(artifact_values));
                 });
 
-                it("Given a tracker that had workflow transitions, when I create the modal's edition model, then the transitions will be enforced", function() {
+                it("Given a tracker that had workflow transitions, when I create the modal's edition model, then the transitions will be enforced", () => {
                     var workflow = {
                         is_used    : "1",
                         field_id   : 189,
@@ -402,7 +412,7 @@ describe("NewTuleapArtifactModalService", () => {
                         ],
                         workflow: workflow
                     };
-                    TuleapArtifactModalRestService.getTracker.and.returnValue($q.when(tracker));
+                    getTracker.and.returnValue($q.when(tracker));
 
                     var promise = NewTuleapArtifactModalService.initEditionModalModel(user_id, tracker_id, artifact_id);
 
@@ -410,7 +420,7 @@ describe("NewTuleapArtifactModalService", () => {
                     expect(TuleapArtifactModalWorkflowService.enforceWorkflowTransitions).toHaveBeenCalledWith(757, workflow_field, workflow);
                 });
 
-                it("Given a tracker that had workflow transitions but were not used, when I create the modal's edition model, then the transitions won't be enforced", function() {
+                it("Given a tracker that had workflow transitions but were not used, when I create the modal's edition model, then the transitions won't be enforced", () => {
                     var workflow = {
                         is_used    : "0",
                         field_id   : 189,
@@ -428,7 +438,7 @@ describe("NewTuleapArtifactModalService", () => {
                         ],
                         workflow: workflow
                     };
-                    TuleapArtifactModalRestService.getTracker.and.returnValue($q.when(tracker));
+                    getTracker.and.returnValue($q.when(tracker));
 
                     var promise = NewTuleapArtifactModalService.initEditionModalModel(user_id, tracker_id, artifact_id);
 

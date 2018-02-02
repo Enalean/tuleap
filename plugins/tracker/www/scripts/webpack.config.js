@@ -66,6 +66,8 @@ const babel_rule = {
     ]
 };
 
+const path_to_tlp = path.resolve(__dirname, '../../../../src/www/themes/common/tlp/');
+
 const webpack_config_for_trackers = {
     entry: {
         'tracker-report-expert-mode': './report/index.js',
@@ -80,7 +82,7 @@ const webpack_config_for_trackers = {
     resolve: {
         alias: {
             // TLP is not included in FlamingParrot
-            'tlp-fetch': path.resolve(__dirname, '../../../../src/www/themes/common/tlp/src/js/fetch-wrapper.js')
+            'tlp-fetch': path.join(path_to_tlp, 'src/js/fetch-wrapper.js')
         }
     },
     module: {
@@ -111,7 +113,8 @@ const webpack_config_for_artifact_modal = {
             path.resolve(__dirname, 'node_modules')
         ],
         alias: {
-            'angular-tlp': path.resolve(__dirname, '../../../../src/www/themes/common/tlp/angular-tlp/index.js'),
+            'angular-tlp': path.join(path_to_tlp, 'angular-tlp/index.js'),
+            'tlp-mocks': path.join(path_to_tlp, 'mocks/index.js')
         }
     },
     module: {

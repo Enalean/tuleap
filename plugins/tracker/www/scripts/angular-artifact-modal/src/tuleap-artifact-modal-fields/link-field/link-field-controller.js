@@ -1,16 +1,19 @@
 import { canChooseArtifactsParent } from './link-field-service.js';
 import { isInCreationMode }         from '../../modal-creation-mode-state.js';
+import {
+    getArtifact,
+    getAllOpenParentArtifacts,
+    getFirstReverseIsChildLink
+} from '../../rest/rest-service.js';
 
 export default LinkFieldController;
 
 LinkFieldController.$inject = [
-    '$q',
-    'TuleapArtifactModalRestService',
+    '$q'
 ];
 
 function LinkFieldController(
-    $q,
-    TuleapArtifactModalRestService,
+    $q
 ) {
     const self = this;
 
@@ -49,7 +52,7 @@ function LinkFieldController(
         }
 
         if (self.parent_artifact_id) {
-            return TuleapArtifactModalRestService.getArtifact(self.parent_artifact_id);
+            return $q.when(getArtifact(self.parent_artifact_id));
         }
 
         return $q.when(null);
@@ -64,7 +67,7 @@ function LinkFieldController(
     }
 
     function loadParentArtifactsTitle() {
-        return TuleapArtifactModalRestService.getAllOpenParentArtifacts(self.tracker.id, 1000, 0).then(artifacts => {
+        return $q.when(getAllOpenParentArtifacts(self.tracker.id, 1000, 0)).then(artifacts => {
             self.possible_parent_artifacts = artifacts.map(artifact => {
                 return {
                     id           : artifact.id,
@@ -75,7 +78,7 @@ function LinkFieldController(
     }
 
     function hasArtifactAlreadyAParent() {
-        return TuleapArtifactModalRestService.getFirstReverseIsChildLink(self.artifact_id).then((parent_artifacts) => {
+        return $q.when(getFirstReverseIsChildLink(self.artifact_id)).then((parent_artifacts) => {
             if (parent_artifacts.length > 0) {
                 return parent_artifacts[0];
             }

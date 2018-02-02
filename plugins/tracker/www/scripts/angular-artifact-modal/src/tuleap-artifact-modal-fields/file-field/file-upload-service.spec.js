@@ -1,37 +1,36 @@
 import file_field_module from './file-field.js';
-import angular from 'angular';
+import angular           from 'angular';
 import 'angular-mocks';
 
-describe("TuleapArtifactModalFileUploadService", function() {
-    var $q, TuleapArtifactModalFileUploadService, TuleapArtifactModalRestService,
-        TuleapArtifactModalFileUploadRules;
-    beforeEach(function() {
-        angular.mock.module(file_field_module, function($provide) {
-            $provide.decorator('TuleapArtifactModalRestService', function(
-                $delegate,
-                $q
-            ) {
-                spyOn($delegate, "uploadTemporaryFile");
-                spyOn($delegate, "uploadAdditionalChunk");
-                spyOn($delegate, "getFileUploadRules").and.returnValue($q.defer().promise);
+import {
+    rewire$uploadTemporaryFile,
+    rewire$uploadAdditionalChunk,
+    restore
+} from '../../rest/rest-service.js';
 
-                return $delegate;
-            });
-        });
+describe("TuleapArtifactModalFileUploadService", () => {
+    let $q,
+        TuleapArtifactModalFileUploadService,
+        TuleapArtifactModalFileUploadRules;
+
+    beforeEach(() => {
+        angular.mock.module(file_field_module);
 
         angular.mock.inject(function(
             _$q_,
             _TuleapArtifactModalFileUploadService_,
-            _TuleapArtifactModalRestService_,
             _TuleapArtifactModalFileUploadRules_
         ) {
             $q                                   = _$q_;
             TuleapArtifactModalFileUploadService = _TuleapArtifactModalFileUploadService_;
-            TuleapArtifactModalRestService       = _TuleapArtifactModalRestService_;
             TuleapArtifactModalFileUploadRules   = _TuleapArtifactModalFileUploadRules_;
         });
 
         installPromiseMatchers();
+    });
+
+    afterEach(() => {
+        restore();
     });
 
     describe("uploadAllTemporaryFiles() -", function() {
@@ -88,21 +87,22 @@ describe("TuleapArtifactModalFileUploadService", function() {
         });
     });
 
-    describe("uploadTemporaryFile() -", function() {
-        var post_request, put_request;
-        beforeEach(function() {
-            post_request = $q.defer();
-            put_request  = $q.defer();
-            TuleapArtifactModalRestService.uploadTemporaryFile.and.returnValue(post_request.promise);
-            TuleapArtifactModalRestService.uploadAdditionalChunk.and.returnValue(put_request.promise);
+    describe("uploadTemporaryFile() -", () => {
+        let uploadTemporaryFile,
+            uploadAdditionalChunk;
+        beforeEach(() => {
+            uploadTemporaryFile = jasmine.createSpy("uploadTemporaryFile");
+            rewire$uploadTemporaryFile(uploadTemporaryFile);
+            uploadAdditionalChunk = jasmine.createSpy("uploadAdditionalChunk");
+            rewire$uploadAdditionalChunk(uploadAdditionalChunk);
         });
 
-        describe("Given that the max chunk size that can be sent is 128 bytes", function() {
-            beforeEach(function() {
+        describe("Given that the max chunk size that can be sent is 128 bytes", () => {
+            beforeEach(() => {
                 TuleapArtifactModalFileUploadRules.max_chunk_size = 128;
             });
 
-            it("and given an object with a 128 bytes file and a description property, when I upload this file to my temporary list, then the only chunk will be sent using the POST REST route and a promise will be resolved with the new temporary file's id", function() {
+            it("and given an object with a 128 bytes file and a description property, when I upload this file to my temporary list, then the only chunk will be sent using the POST REST route and a promise will be resolved with the new temporary file's id", () => {
                 var new_temporary_file_id = 11;
                 var file_to_upload = {
                     file: {
@@ -111,18 +111,19 @@ describe("TuleapArtifactModalFileUploadService", function() {
                     },
                     description: "antirealism ephemeralness writable"
                 };
+                uploadTemporaryFile.and.returnValue($q.when(new_temporary_file_id));
+
                 var promise = TuleapArtifactModalFileUploadService.uploadTemporaryFile(file_to_upload);
-                post_request.resolve(new_temporary_file_id);
 
                 expect(promise).toBeResolvedWith(new_temporary_file_id);
-                expect(TuleapArtifactModalRestService.uploadTemporaryFile).toHaveBeenCalledWith(
+                expect(uploadTemporaryFile).toHaveBeenCalledWith(
                     file_to_upload.file,
                     file_to_upload.description
                 );
-                expect(TuleapArtifactModalRestService.uploadAdditionalChunk).not.toHaveBeenCalled();
+                expect(uploadAdditionalChunk).not.toHaveBeenCalled();
             });
 
-            it("and given an object with a 257 bytes file, when I upload this file to my temporary list, then it will be split into 3 chunks, the two last chunks will be uploaded one after the other using the PUT REST route and a promise will be resolved with the new temporary file's id", function() {
+            it("and given an object with a 257 bytes file, when I upload this file to my temporary list, then it will be split into 3 chunks, the two last chunks will be uploaded one after the other using the PUT REST route and a promise will be resolved with the new temporary file's id", () => {
                 var new_temporary_file_id = 14;
                 var file_to_upload = {
                     file: {
@@ -131,22 +132,22 @@ describe("TuleapArtifactModalFileUploadService", function() {
                     },
                     description: "resistive detentive"
                 };
+                uploadTemporaryFile.and.returnValue($q.when(new_temporary_file_id));
+                uploadAdditionalChunk.and.returnValue($q.when());
 
                 var promise = TuleapArtifactModalFileUploadService.uploadTemporaryFile(file_to_upload);
-                post_request.resolve(new_temporary_file_id);
-                put_request.resolve();
 
                 expect(promise).toBeResolvedWith(new_temporary_file_id);
-                expect(TuleapArtifactModalRestService.uploadTemporaryFile).toHaveBeenCalledWith(
+                expect(uploadTemporaryFile).toHaveBeenCalledWith(
                     file_to_upload.file,
                     file_to_upload.description
                 );
-                expect(TuleapArtifactModalRestService.uploadAdditionalChunk).toHaveBeenCalledWith(
+                expect(uploadAdditionalChunk).toHaveBeenCalledWith(
                     new_temporary_file_id,
                     jasmine.any(String),
                     2
                 );
-                expect(TuleapArtifactModalRestService.uploadAdditionalChunk).toHaveBeenCalledWith(
+                expect(uploadAdditionalChunk).toHaveBeenCalledWith(
                     new_temporary_file_id,
                     jasmine.any(String),
                     3
