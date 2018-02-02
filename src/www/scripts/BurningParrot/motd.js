@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,7 +22,9 @@
  * top navbar whent the motd is displayed
  */
 
-document.addEventListener('DOMContentLoaded', function () {
+export { init };
+
+function init() {
     const motd    = document.querySelector('.header-motd');
     const main    = document.querySelector('main');
     const sidebar = document.querySelector('.sidebar');
@@ -33,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function updateTopMarginAccordinglyToMOTDHeight() {
         const initial_margin_top = {
-            main:    parseInt(getComputedStyle(main).marginTop, 10),
+            main   : parseInt(getComputedStyle(main).marginTop, 10),
             sidebar: sidebar ? parseInt(getComputedStyle(sidebar).marginTop, 10) : false
         };
 
@@ -49,4 +51,4 @@ document.addEventListener('DOMContentLoaded', function () {
         window.addEventListener('resize', motdResized);
         motdResized();
     }
-});
+}

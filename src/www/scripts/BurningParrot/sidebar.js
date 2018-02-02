@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,9 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-(function(jQuery) {
-    var sidebar_collapsers = document.querySelectorAll('.sidebar-collapser'),
-        sidebar            = document.querySelector('.sidebar');
+import { post } from 'tlp';
+
+export { init };
+
+function init() {
+    const sidebar_collapsers = document.querySelectorAll('.sidebar-collapser'),
+        sidebar              = document.querySelector('.sidebar');
 
     if (! sidebar) {
         return;
@@ -28,8 +32,8 @@
     bindSidebarEvent();
 
     function bindSidebarEvent() {
-        sidebar.addEventListener('click', function(event) {
-            var clicked_element                        = event.target,
+        sidebar.addEventListener('click', event => {
+            const clicked_element                      = event.target,
                 is_clicked_element_a_sidebar_collapser = isClickedElementASidebarCollapser(clicked_element),
                 sidebar_collapsed_class                = clicked_element.dataset.collapsedClass,
                 user_preference_name                   = clicked_element.dataset.userPreferenceName;
@@ -42,7 +46,6 @@
             if (document.body.classList.contains(sidebar_collapsed_class)) {
                 document.body.classList.remove(sidebar_collapsed_class);
                 updateUserPreferences(user_preference_name, 'sidebar-expanded');
-
             } else {
                 document.body.classList.remove('sidebar-expanded', sidebar_collapsed_class);
                 document.body.classList.add(sidebar_collapsed_class);
@@ -52,25 +55,23 @@
     }
 
     function isClickedElementASidebarCollapser(clicked_element) {
-        var is_clicked_element_a_sidebar_collapser = false;
+        let is_clicked_element_a_sidebar_collapser = false;
 
-        [].forEach.call(sidebar_collapsers, function(sidebar_collapser) {
+        for (const sidebar_collapser of sidebar_collapsers) {
             if (sidebar_collapser === clicked_element) {
                 is_clicked_element_a_sidebar_collapser = true;
             }
-        });
+        }
 
         return is_clicked_element_a_sidebar_collapser;
     }
+}
 
-    function updateUserPreferences(user_preference_name, state) {
-        jQuery.ajax({
-            type: 'POST',
-            url : '/account/update-sidebar-preference.php',
-            data: {
-                user_preference_name: user_preference_name,
-                sidebar_state       : state
-            }
-        });
-    }
-})(jQuery);
+function updateUserPreferences(user_preference_name, state) {
+    const headers = { "Content-Type": "application/x-www-form-urlencoded; charset=utf-8" };
+    const body    = `user_preference_name=${ user_preference_name }&sidebar_state=${ state }`;
+    post('/account/update-sidebar-preference.php', {
+        headers,
+        body
+    });
+}

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,88 +22,92 @@
  * Handle lists filtering
  */
 
-var tuleap  = tuleap || { };
-tuleap.core = tuleap.core || { };
+if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+    module.exports = {
+        listFilter: listFilterFactory
+    };
+} else {
+    var tuleap  = tuleap || { };
+    tuleap.core = tuleap.core || { };
+    tuleap.core.listFilter = listFilterFactory;
+}
 
-(function() {
-    tuleap.core.listFilter = function() {
+function listFilterFactory() {
+    var esc_keycode = 27;
+    var list_element;
+    var filter_element;
+    var excluded_element;
 
-        var esc_keycode = 27;
-        var list_element;
-        var filter_element;
-        var excluded_element;
+    var filterProjects = function (value) {
+        var matching_elements = document.querySelectorAll(list_element);
 
-        var filterProjects = function (value) {
-            var matching_elements = document.querySelectorAll(list_element);
+        [].forEach.call(matching_elements, function(element) {
+            if (caseInsensitiveContains(getChildTagAWithText(element), value)) {
+                element.style.display = 'inherit';
+            } else {
+                element.style.display = 'none';
+            }
+        });
+    };
 
-            [].forEach.call(matching_elements, function(element) {
-                if (caseInsensitiveContains(getChildTagAWithText(element), value)) {
-                    element.style.display = 'inherit';
+    var getChildTagAWithText = function(parent) {
+        var elements_tag_a = parent.getElementsByTagName('a');
+        for (var i = 0, n = elements_tag_a.length; i < n; i++) {
+            if (elements_tag_a[i].textContent) {
+                return elements_tag_a[i].textContent;
+            }
+        }
+    };
+
+    var caseInsensitiveContains = function(element, value) {
+        return element.toUpperCase()
+                .indexOf(value.toUpperCase()) >= 0;
+    };
+
+    var clearFilterProjects = function () {
+        filter_element.value = '';
+        filterProjects('');
+    };
+
+    var bindClickEventOnFilter = function (filter_element_selected) {
+        if (filter_element_selected) {
+            filter_element_selected.addEventListener('click', function (event) {
+                event.stopPropagation();
+            });
+        }
+    };
+
+    var bindKeyUpEventOnFilter = function(filter_element_selected) {
+        if (filter_element_selected) {
+            filter_element_selected.addEventListener('keyup', function (event) {
+                if (event.keyCode === esc_keycode) {
+                    clearFilterProjects();
                 } else {
-                    element.style.display = 'none';
+                    filterProjects(filter_element_selected.value);
                 }
             });
-        };
-
-        var getChildTagAWithText = function(parent) {
-            var elements_tag_a = parent.getElementsByTagName('a');
-            for (var i = 0, n = elements_tag_a.length; i < n; i++) {
-                if (elements_tag_a[i].textContent) {
-                    return elements_tag_a[i].textContent;
-                }
-            }
-        };
-
-        var caseInsensitiveContains = function(element, value) {
-            return element.toUpperCase()
-                    .indexOf(value.toUpperCase()) >= 0;
-        };
-
-        var clearFilterProjects = function () {
-            filter_element.value = '';
-            filterProjects('');
-        };
-
-        var bindClickEventOnFilter = function (filter_element_selected) {
-            if (filter_element_selected) {
-                filter_element_selected.addEventListener('click', function (event) {
-                    event.stopPropagation();
-                });
-            }
-        };
-
-        var bindKeyUpEventOnFilter = function(filter_element_selected) {
-            if (filter_element_selected) {
-                filter_element_selected.addEventListener('keyup', function (event) {
-                    if (event.keyCode === esc_keycode) {
-                        clearFilterProjects();
-                    } else {
-                        filterProjects(filter_element_selected.value);
-                    }
-                });
-            }
-        };
-
-        var bindInputEventOnFilter = function(filter_element_selected) {
-            if (filter_element_selected) {
-                filter_element_selected.addEventListener('input', function (event) {
-                    if (event.target && event.target.value === '') {
-                        clearFilterProjects();
-                    }
-                });
-            }
-        };
-
-        var init = function(filter_element_selected, list_element_selector, excluded_element_selector) {
-            filter_element   = filter_element_selected;
-            list_element     = list_element_selector;
-            excluded_element = excluded_element_selector;
-
-            bindClickEventOnFilter(filter_element_selected);
-            bindKeyUpEventOnFilter(filter_element_selected);
-            bindInputEventOnFilter(filter_element_selected);
-        };
-
-        return {init: init};
+        }
     };
-})();
+
+    var bindInputEventOnFilter = function(filter_element_selected) {
+        if (filter_element_selected) {
+            filter_element_selected.addEventListener('input', function (event) {
+                if (event.target && event.target.value === '') {
+                    clearFilterProjects();
+                }
+            });
+        }
+    };
+
+    var init = function(filter_element_selected, list_element_selector, excluded_element_selector) {
+        filter_element   = filter_element_selected;
+        list_element     = list_element_selector;
+        excluded_element = excluded_element_selector;
+
+        bindClickEventOnFilter(filter_element_selected);
+        bindKeyUpEventOnFilter(filter_element_selected);
+        bindInputEventOnFilter(filter_element_selected);
+    };
+
+    return {init: init};
+}

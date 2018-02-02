@@ -66,8 +66,7 @@ class BurningParrotTheme extends BaseLayout
         $this->renderer        = TemplateRendererFactory::build()->getRenderer($this->getTemplateDir());
         $tlp_include_assets    = new IncludeAssets(ForgeConfig::get('tuleap_dir') . '/src/www/themes/common/tlp/dist', '/themes/common/tlp/dist');
         $this->includeFooterJavascriptFile($tlp_include_assets->getFileURL('tlp.' . $user->getLocale() . '.min.js'));
-        $this->includeFooterJavascriptFile($this->include_asset->getFileURL('burningparrot.js'));
-        $this->includeFooterJavascriptFile($this->include_asset->getFileURL('navbar-history.js'));
+        $this->includeFooterJavascriptFile($this->include_asset->getFileURL('burning-parrot.js'));
     }
 
     protected function getUser()

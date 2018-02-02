@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,10 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get, put } from 'tlp';
+import { get, put }                from 'tlp';
 import initNavbarHistoryController from './navbar-history-controller.js';
 
-document.addEventListener('DOMContentLoaded', function() {
+export function init() {
     const user_history_dropdown_trigger = document.querySelector('#nav-dropdown-user-history > .nav-dropdown-link');
 
     if (! user_history_dropdown_trigger) {
@@ -28,4 +28,4 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     initNavbarHistoryController(get, put, user_history_dropdown_trigger);
-});
+}
