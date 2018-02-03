@@ -206,7 +206,7 @@ class WebDAVUtils {
      */
     function getPermissionsManager() {
 
-        $pm = & PermissionsManager::instance();
+        $pm = PermissionsManager::instance();
         return $pm;
 
     }

@@ -1,21 +1,22 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 require_once 'bootstrap.php';
@@ -217,7 +218,7 @@ class WebDAVDocmanFolderTest extends TuleapTestCase {
         $utils->setReturnValue('getDocmanItemFactory', $docmanItemFactory);
         $webDAVDocmanFolder->setReturnValue('getUtils', $utils);
 
-        $this->expectException('Sabre_DAV_Exception_FileNotFound');
+        $this->expectException(\Sabre\DAV\Exception\NotFound::class);
         $webDAVDocmanFolder->getChild('whatever');
     }
 
@@ -244,7 +245,7 @@ class WebDAVDocmanFolderTest extends TuleapTestCase {
 
         $webDAVDocmanFolder->setReturnValue('getWebDAVDocmanFolder', $item1);
 
-        $this->expectException('Sabre_DAV_Exception_Conflict');
+        $this->expectException(\Sabre\DAV\Exception\Conflict::class);
         $webDAVDocmanFolder->getChild('SameName');
     }
 
@@ -271,7 +272,7 @@ class WebDAVDocmanFolderTest extends TuleapTestCase {
 
         $webDAVDocmanFolder->setReturnValue('getWebDAVDocmanFolder', $item1);
 
-        $this->expectException('Sabre_DAV_Exception_Conflict');
+        $this->expectException(\Sabre\DAV\Exception\Conflict::class);
         $webDAVDocmanFolder->getChild('SameName');
     }
 
@@ -309,7 +310,7 @@ class WebDAVDocmanFolderTest extends TuleapTestCase {
         $utils->setReturnValue('isWriteEnabled', false);
         $webDAVDocmanFolder->setReturnValue('getUtils', $utils);
 
-        $this->expectException('Sabre_DAV_Exception_Forbidden');
+        $this->expectException(\Sabre\DAV\Exception\Forbidden::class);
         $webDAVDocmanFolder->createDirectory('name');
     }
 
@@ -337,7 +338,7 @@ class WebDAVDocmanFolderTest extends TuleapTestCase {
         $utils->setReturnValue('isWriteEnabled', false);
         $webDAVDocmanFolder->setReturnValue('getUtils', $utils);
 
-        $this->expectException('Sabre_DAV_Exception_Forbidden');
+        $this->expectException(\Sabre\DAV\Exception\Forbidden::class);
         $webDAVDocmanFolder->delete();
     }
 
@@ -347,7 +348,7 @@ class WebDAVDocmanFolderTest extends TuleapTestCase {
         $utils->setReturnValue('isWriteEnabled', false);
         $webDAVDocmanFolder->setReturnValue('getUtils', $utils);
 
-        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
+        $this->expectException(\Sabre\DAV\Exception\MethodNotAllowed::class);
         $webDAVDocmanFolder->setName('newName');
     }
 
@@ -374,7 +375,7 @@ class WebDAVDocmanFolderTest extends TuleapTestCase {
         $utils->setReturnValue('isWriteEnabled', false);
         $webDAVDocmanFolder->setReturnValue('getUtils', $utils);
 
-        $this->expectException('Sabre_DAV_Exception_Forbidden');
+        $this->expectException(\Sabre\DAV\Exception\Forbidden::class);
         $data = fopen(dirname(__FILE__).'/_fixtures/test.txt', 'r');
         $webDAVDocmanFolder->createFile('name', $data);
     }
@@ -396,7 +397,7 @@ class WebDAVDocmanFolderTest extends TuleapTestCase {
         $webDAVDocmanFolder->setReturnValue('getMaxFileSize', 23);
         
 
-        $this->expectException('Sabre_DAV_Exception_RequestedRangeNotSatisfiable');
+        $this->expectException(\Sabre\DAV\Exception\RequestedRangeNotSatisfiable::class);
         $data = fopen(dirname(__FILE__).'/_fixtures/test.txt', 'r');
         $webDAVDocmanFolder->createFile('name', $data);
     }
