@@ -18,6 +18,9 @@ msgstr "Ajouter un temps"
 msgid "Date"
 msgstr "Date"
 
+msgid "Delete"
+msgstr "Supprimer"
+
 msgid "Displays your timesheeting in the whole platform."
 msgstr "Afficher vos timesheetings de toute la plateforme."
 
@@ -74,6 +77,9 @@ msgstr "Le timesheeting est désactivé pour ce tracker."
 
 msgid "Timesheeting is enabled for tracker."
 msgstr "Le timesheeting est activé pour ce tracker."
+
+msgid "Update"
+msgstr "Mettre à jour"
 
 msgid "User"
 msgstr "Utilisateur"

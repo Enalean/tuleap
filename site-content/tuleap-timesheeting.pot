@@ -13,6 +13,9 @@ msgstr ""
 msgid "Date"
 msgstr ""
 
+msgid "Delete"
+msgstr ""
+
 msgid "Displays your timesheeting in the whole platform."
 msgstr ""
 
@@ -68,6 +71,9 @@ msgid "Timesheeting is disabled for tracker."
 msgstr ""
 
 msgid "Timesheeting is enabled for tracker."
+msgstr ""
+
+msgid "Update"
 msgstr ""
 
 msgid "User"

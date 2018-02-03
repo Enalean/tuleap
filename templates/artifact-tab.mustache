@@ -12,6 +12,7 @@
                     <th>{{# dgettext }} tuleap-timesheeting | User {{/ dgettext }}</th>
                     <th>{{# dgettext }} tuleap-timesheeting | Steps {{/ dgettext }}</th>
                     <th>{{# dgettext }} tuleap-timesheeting | Time {{/ dgettext }}</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -22,18 +23,31 @@
                             <td>{{ user }}</td>
                             <td>{{ step }}</td>
                             <td>{{ time }}</td>
+                            <td>
+                                <div>
+                                    <a class="timesheeting-edit-action timesheeting-action-not-clickable" href="#">
+                                        <i class="icon-pencil"></i>
+                                        {{# dgettext }} tuleap-timesheeting | Update {{/ dgettext }}
+                                    </a>
+                                    <a class="timesheeting-action-not-clickable" href="#">
+                                        <i class="icon-trash"></i>
+                                        {{# dgettext }} tuleap-timesheeting | Delete {{/ dgettext }}
+                                    </a>
+                                </div>
+                            </td>
                         </tr>
                     {{/ times }}
                     <tr>
                         <td colspan="3"></td>
                         <td class="total-timesheeting-row">∑ {{ total_time }}</td>
+                        <td></td>
                     </tr>
                 {{/ has_times }}
 
 
                 {{^ has_times }}
                     <tr>
-                        <td class="table-cell-empty" colspan="4">
+                        <td class="table-cell-empty" colspan="5">
                             {{# dgettext }} tuleap-timesheeting | No times saved {{/ dgettext }}
                         </td>
                     </tr>

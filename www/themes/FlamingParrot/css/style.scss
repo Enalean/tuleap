@@ -47,3 +47,12 @@
 .total-timesheeting-row {
     font-weight: bold;
 }
+
+.timesheeting-edit-action {
+    margin: 0 5px 0 0;
+}
+
+.timesheeting-action-not-clickable {
+    pointer-events: none;
+    color: #BBB;
+}
