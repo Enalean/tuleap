@@ -21,22 +21,24 @@
 
 require_once 'pre.php';
 
+use Tuleap\Dashboard\Project\ProjectDashboardDao;
+use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;
+use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
+use Tuleap\Dashboard\Project\ProjectDashboardSaver;
+use Tuleap\Dashboard\Project\ProjectDashboardXMLImporter;
+use Tuleap\Dashboard\Widget\DashboardWidgetDao;
+use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
+use Tuleap\FRS\FRSPermissionCreator;
+use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\FRS\UploadedLinksDao;
 use Tuleap\FRS\UploadedLinksUpdater;
 use Tuleap\Project\Label\LabelDao;
-use Tuleap\Project\XML\Import;
-use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Project\UgroupDuplicator;
-use Tuleap\FRS\FRSPermissionCreator;
-use Tuleap\FRS\FRSPermissionDao;
-use Tuleap\Project\XML\Import\ImportNotValidException;
 use Tuleap\Project\UserRemover;
 use Tuleap\Project\UserRemoverDao;
-use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;
-use Tuleap\Dashboard\Project\ProjectDashboardDao;
-use Tuleap\Dashboard\Widget\DashboardWidgetDao;
-use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
-use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
+use Tuleap\Project\XML\Import;
+use Tuleap\Project\XML\Import\ImportConfig;
+use Tuleap\Project\XML\Import\ImportNotValidException;
 use Tuleap\Service\ServiceCreator;
 use Tuleap\Widget\WidgetFactory;
 
@@ -179,6 +181,7 @@ if(empty($project_id) && posix_geteuid() != 0) {
 }
 
 $user_manager  = UserManager::instance();
+$event_manager = EventManager::instance();
 $security      = new XML_Security();
 $xml_validator = new XML_RNGValidator();
 
@@ -219,14 +222,14 @@ try {
 
     $user_finder = new User\XML\Import\Mapping($user_manager, $users_collection, $broker_log);
 
-    $ugroup_user_dao    = new UGroupUserDao();
-    $ugroup_manager     = new UGroupManager();
-    $ugroup_duplicator  = new UgroupDuplicator(
+    $ugroup_user_dao   = new UGroupUserDao();
+    $ugroup_manager    = new UGroupManager();
+    $ugroup_duplicator = new UgroupDuplicator(
         new UGroupDao(),
         $ugroup_manager,
         new UGroupBinding($ugroup_user_dao, $ugroup_manager),
         $ugroup_user_dao,
-        EventManager::instance()
+        $event_manager
     );
 
     $send_notifications = false;
@@ -238,9 +241,9 @@ try {
     );
 
     $widget_factory = new WidgetFactory(
-        UserManager::instance(),
+        $user_manager,
         new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
-        EventManager::instance()
+        $event_manager
     );
 
     $widget_dao        = new DashboardWidgetDao($widget_factory);
@@ -269,9 +272,9 @@ try {
     );
 
     $xml_importer  = new ProjectXMLImporter(
-        EventManager::instance(),
+        $event_manager,
         ProjectManager::instance(),
-        UserManager::instance(),
+        $user_manager,
         $xml_validator,
         new UGroupManager(),
         $user_finder,
@@ -281,20 +284,36 @@ try {
         $frs_permissions_creator,
         new UserRemover(
             ProjectManager::instance(),
-            EventManager::instance(),
+            $event_manager,
             new ArtifactTypeFactory(false),
             new UserRemoverDao(),
-            UserManager::instance(),
+            $user_manager,
             new ProjectHistoryDao(),
             new UGroupManager()
         ),
         $project_creator,
-        new UploadedLinksUpdater(new UploadedLinksDao(), FRSLog::instance())
+        new UploadedLinksUpdater(new UploadedLinksDao(), FRSLog::instance()),
+        new ProjectDashboardXMLImporter(
+            new ProjectDashboardSaver(
+                new ProjectDashboardDao(
+                    new DashboardWidgetDao(
+                        new WidgetFactory(
+                            $user_manager,
+                            new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
+                            $event_manager
+                        )
+                    )
+                )
+            ),
+            $logger
+        )
     );
 
     try {
         if (empty($project_id)) {
-            $factory = new SystemEventProcessor_Factory($broker_log, SystemEventManager::instance(), EventManager::instance());
+            $factory             = new SystemEventProcessor_Factory(
+                $broker_log, SystemEventManager::instance(), $event_manager
+            );
             $system_event_runner = new Tuleap\Project\SystemEventRunner($factory);
             $xml_importer->importNewFromArchive(
                 $configuration,

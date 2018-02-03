@@ -8,6 +8,7 @@ grammar {
     include "../frs-definition.rnc"
     include "../nature-definition.rnc"
     include "../mediawiki-definition.rnc"
+    include "../dashboard.rnc"
     include "../../../../../plugins/agiledashboard/www/resources/xml_project_agiledashboard_planning.rnc"
     include "../../../../../plugins/cardwall/www/resources/xml_project_cardwall_data.rnc"
     include "../../../../../plugins/tracker/www/resources/tracker-definition.rnc"
@@ -17,6 +18,7 @@ grammar {
         element project {
             project_attributes &
             project_tags &
+            element dashboards  { dashboards }*&
             element trackers { trackers }* &
             element svn { svn }? &
             element git { git }? &
