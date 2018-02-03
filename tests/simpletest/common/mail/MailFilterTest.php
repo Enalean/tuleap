@@ -255,4 +255,36 @@ class MailFilterTest extends TuleapTestCase
 
         $this->assertEqual(array_values($filtered_emails), array('user1@example.com'));
     }
+
+    public function itManageWhenEmailsAreNull()
+    {
+        ForgeConfig::set('sys_mail_secure_mode', false);
+
+        $filtered_emails = $this->mail_filter->filter(
+            $this->project,
+            array(
+                null,
+                'user-active@example.com',
+                'user1@example.com'
+            )
+        );
+
+        $this->assertEqual(array_values($filtered_emails), array('user-active@example.com', 'user1@example.com'));
+    }
+
+    public function itManageWhenEmailsAreFalse()
+    {
+        ForgeConfig::set('sys_mail_secure_mode', false);
+
+        $filtered_emails = $this->mail_filter->filter(
+            $this->project,
+            array(
+                false,
+                'user-active@example.com',
+                'user1@example.com'
+            )
+        );
+
+        $this->assertEqual(array_values($filtered_emails), array('user-active@example.com', 'user1@example.com'));
+    }
 }
