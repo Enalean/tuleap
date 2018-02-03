@@ -62,6 +62,7 @@ class TimeRetrieverTest extends TuleapTestCase
         stub($this->dao)->getTimesAddedInArtifactByUser()->returns(array());
 
         expect($this->dao)->getTimesAddedInArtifactByUser(102, 200)->once();
+        expect($this->dao)->getAllTimesAddedInArtifact(200)->never();
 
         $this->retriever->getTimesForUser($this->user, $this->artifact);
     }
@@ -70,9 +71,10 @@ class TimeRetrieverTest extends TuleapTestCase
     {
         stub($this->permissions_retriever)->userCanSeeAggregatedTimesInTracker($this->user, $this->tracker)->returns(true);
         stub($this->permissions_retriever)->userCanAddTimeInTracker($this->user, $this->tracker)->returns(false);
-        stub($this->dao)->getTimesAddedInArtifactByUser()->returns(array());
+        stub($this->dao)->getAllTimesAddedInArtifact()->returns(array());
 
-        expect($this->dao)->getTimesAddedInArtifactByUser(102, 200)->once();
+        expect($this->dao)->getTimesAddedInArtifactByUser(102, 200)->never();
+        expect($this->dao)->getAllTimesAddedInArtifact(200)->once();
 
         $this->retriever->getTimesForUser($this->user, $this->artifact);
     }

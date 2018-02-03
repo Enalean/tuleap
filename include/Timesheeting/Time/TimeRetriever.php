@@ -48,9 +48,11 @@ class TimeRetriever
     {
         $times = array();
 
-        if ($this->permissions_retriever->userCanSeeAggregatedTimesInTracker($user, $artifact->getTracker()) ||
-            $this->permissions_retriever->userCanAddTimeInTracker($user, $artifact->getTracker())
-        ) {
+        if ($this->permissions_retriever->userCanSeeAggregatedTimesInTracker($user, $artifact->getTracker())) {
+            foreach ($this->dao->getAllTimesAddedInArtifact($artifact->getId()) as $row_time) {
+                $times[] = $this->buildTimeFromRow($row_time);
+            }
+        } else if ($this->permissions_retriever->userCanAddTimeInTracker($user, $artifact->getTracker())) {
             foreach ($this->dao->getTimesAddedInArtifactByUser($user->getId(), $artifact->getId()) as $row_time) {
                 $times[] = $this->buildTimeFromRow($row_time);
             }
