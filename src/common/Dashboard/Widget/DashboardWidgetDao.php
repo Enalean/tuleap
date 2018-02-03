@@ -776,7 +776,7 @@ class DashboardWidgetDao extends DataAccessObject
     private function createUserDashboard($user_id)
     {
         $user_id = $this->da->escapeInt($user_id);
-        $name    = $this->da->quoteSmart('Dashboard');
+        $name    = $this->da->quoteSmart('My Dashboard');
 
         $sql = "INSERT INTO user_dashboards (user_id, name) VALUES ($user_id, $name)";
 
