@@ -49,7 +49,7 @@ class ArtifactViewBuilderTest extends TuleapTestCase
         $this->permissions_retriever  = mock('Tuleap\Timesheeting\Permissions\PermissionsRetriever');
         $this->time_retriever         = mock('Tuleap\Timesheeting\Time\TimeRetriever');
         $this->date_formatter         = new DateFormatter();
-        $this->time_presenter_builder = new TimePresenterBuilder($this->date_formatter);
+        $this->time_presenter_builder = new TimePresenterBuilder($this->date_formatter, mock('UserManager'));
 
         $this->builder = new ArtifactViewBuilder(
             $this->plugin,

@@ -9,6 +9,7 @@
             <thead>
                 <tr>
                     <th>{{# dgettext }} tuleap-timesheeting | Date {{/ dgettext }}</th>
+                    <th>{{# dgettext }} tuleap-timesheeting | User {{/ dgettext }}</th>
                     <th>{{# dgettext }} tuleap-timesheeting | Steps {{/ dgettext }}</th>
                     <th>{{# dgettext }} tuleap-timesheeting | Time {{/ dgettext }}</th>
                 </tr>
@@ -18,12 +19,13 @@
                     {{# times }}
                         <tr>
                             <td>{{ day }}</td>
+                            <td>{{ user }}</td>
                             <td>{{ step }}</td>
                             <td>{{ time }}</td>
                         </tr>
                     {{/ times }}
                     <tr>
-                        <td colspan="2"></td>
+                        <td colspan="3"></td>
                         <td class="total-timesheeting-row">∑ {{ total_time }}</td>
                     </tr>
                 {{/ has_times }}
@@ -31,7 +33,7 @@
 
                 {{^ has_times }}
                     <tr>
-                        <td class="table-cell-empty" colspan="3">
+                        <td class="table-cell-empty" colspan="4">
                             {{# dgettext }} tuleap-timesheeting | No times saved {{/ dgettext }}
                         </td>
                     </tr>

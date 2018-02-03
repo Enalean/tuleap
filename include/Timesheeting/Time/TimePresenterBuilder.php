@@ -20,6 +20,8 @@
 
 namespace Tuleap\Timesheeting\Time;
 
+use UserManager;
+
 class TimePresenterBuilder
 {
     /**
@@ -27,9 +29,15 @@ class TimePresenterBuilder
      */
     private $date_formatter;
 
-    public function __construct(DateFormatter $date_formatter)
+    /**
+     * @var UserManager
+     */
+    private $user_manager;
+
+    public function __construct(DateFormatter $date_formatter, UserManager $user_manager)
     {
         $this->date_formatter = $date_formatter;
+        $this->user_manager   = $user_manager;
     }
 
     /**
@@ -37,8 +45,11 @@ class TimePresenterBuilder
      */
     public function buildPresenter(Time $time)
     {
+        $user = $this->user_manager->getUserById($time->getUserId());
+
         return array(
             'day'  => $time->getDay(),
+            'user' => $user->getRealName(),
             'time' => $this->date_formatter->formatMinutes($time->getMinutes()),
             'step' => $time->getStep()
         );

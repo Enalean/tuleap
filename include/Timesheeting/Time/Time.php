@@ -79,4 +79,12 @@ class Time
     {
         return $this->step;
     }
+
+    /**
+     * @return int
+     */
+    public function getUserId()
+    {
+        return $this->user_id;
+    }
 }

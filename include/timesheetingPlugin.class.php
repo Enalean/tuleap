@@ -183,7 +183,7 @@ class timesheetingPlugin extends Plugin
             $this->getTimesheetingEnabler(),
             $permissions_retriever,
             $time_retriever,
-            new TimePresenterBuilder($date_formatter),
+            new TimePresenterBuilder($date_formatter, UserManager::instance()),
             $date_formatter
         );
 

@@ -75,6 +75,9 @@ msgstr "Le timesheeting est désactivé pour ce tracker."
 msgid "Timesheeting is enabled for tracker."
 msgstr "Le timesheeting est activé pour ce tracker."
 
+msgid "User"
+msgstr "Utilisateur"
+
 msgid "Write"
 msgstr "Écriture"
 
