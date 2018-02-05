@@ -32,6 +32,7 @@ import {
 
 export { buildChartLayout };
 
+const DAY   = 'day';
 const WEEK  = 'week';
 const MONTH = 'month';
 
@@ -259,14 +260,18 @@ function ticksEvery(container, timeframe_granularity) {
 }
 
 function canFirstLabelOverlapSecondLabel(first_tick, second_tick, timeframe_granularity) {
-    if (timeframe_granularity !== MONTH) {
+    if (timeframe_granularity === DAY) {
         return false;
     }
 
     const first_label  = select(first_tick);
     const second_label = select(second_tick);
 
-    const { weeks } = getDifference(first_label.datum(), second_label.datum());
+    const { weeks, days } = getDifference(first_label.datum(), second_label.datum());
+
+    if (timeframe_granularity === WEEK) {
+        return days < 4;
+    }
 
     return weeks < 2;
 }
