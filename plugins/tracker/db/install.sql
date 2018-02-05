@@ -838,6 +838,12 @@ CREATE TABLE IF NOT EXISTS tracker_email_notification_log (
     INDEX idx_end_date( end_date )
 ) ENGINE=InnoDB;
 
+DROP TABLE IF EXISTS tracker_report_criteria_comment_value;
+CREATE TABLE tracker_report_criteria_comment_value(
+    report_id INT(11) NOT NULL PRIMARY KEY,
+    comment VARCHAR(255)
+) ENGINE=InnoDB;
+
 -- Enable service for project 100
 INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank)
        VALUES      ( 100, 'plugin_tracker:service_lbl_key', 'plugin_tracker:service_desc_key', 'plugin_tracker', '/plugins/tracker/?group_id=$group_id', 1, 1, 'system', 151);
