@@ -52,10 +52,10 @@ document.addEventListener('DOMContentLoaded', () => {
         bullets: [
             {
                 label    : gettext_provider.gettext('Ideal burndown'),
-                classname: 'chart-plot-ideal-burnup'
+                classname: 'chart-plot-ideal-burndown'
             }, {
                 label    : gettext_provider.gettext('Remaining effort'),
-                classname: 'chart-plot-team-effort'
+                classname: 'chart-plot-remaining-effort'
             }
         ]
     };
