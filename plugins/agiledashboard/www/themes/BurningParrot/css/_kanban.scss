@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,14 +23,14 @@
 
 @import 'global-variables';
 
-@import 'includes/socket';
-@import 'includes/edit-kanban';
-@import 'includes/kanban-item';
-@import 'includes/highlight';
-@import 'includes/reports-modal';
-@import 'includes/diagram';
-@import 'includes/add-to-dashboard';
-@import 'includes/filter';
+@import 'kanban/socket';
+@import 'kanban/edit-kanban';
+@import 'kanban/kanban-item';
+@import 'kanban/highlight';
+@import 'kanban/reports-modal';
+@import 'kanban/diagram';
+@import 'kanban/add-to-dashboard';
+@import 'kanban/filter';
 
 $kanban-column-closed-width: 60px;
 $kanban-column-header-height: 50px;

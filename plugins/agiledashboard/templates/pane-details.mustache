@@ -1,10 +1,39 @@
-<div class="agiledashboard-milestone-details">
+<div class="agiledashboard-milestone-details tlp-framed-horizontally">
     <div class="agiledashboard-milestone-details-items">
-        {{> pane-details-inconsistentitems}}
-
         {{> pane-details-items-list}}
     </div>
     {{# chart_presenter }}
-        {{> pane-details-charts }}
+        {{# has_charts }}
+            <div class="agiledashboard-milestone-details-graphs">
+                {{# has_burndown }}
+                    <section class=" tlp-pane">
+                        <div class="tlp-pane-container">
+                            <div class="tlp-pane-header">
+                                <h1 class="tlp-pane-title">{{ burndown_label }}</h1>
+                            </div>
+                            <section class="tlp-pane-section">
+                                {{# burndown_presenter }}
+                                    {{> ../../tracker/templates/burndown-field }}
+                                {{/ burndown_presenter }}
+                            </section>
+                        </div>
+                    </section>
+                {{/ has_burndown }}
+                {{# has_burnup }}
+                    <section class=" tlp-pane">
+                        <div class="tlp-pane-container">
+                            <div class="tlp-pane-header">
+                                <h1 class="tlp-pane-title">{{ burnup_label }}</h1>
+                            </div>
+                            <section class="tlp-pane-section">
+                                {{# burnup_presenter }}
+                                    {{> formelement/burnup-field }}
+                                {{/ burnup_presenter }}
+                            </section>
+                        </div>
+                    </section>
+                {{/ has_burnup }}
+            </div>
+        {{/ has_charts }}
     {{/ chart_presenter }}
 </div>

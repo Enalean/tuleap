@@ -17,31 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.agiledashboard-milestone-details {
-    display: flex;
+@import 'scrum/overview';
+
+#agiledashboard-scrum-milestone-menu {
+    cursor: pointer;
 }
 
-.agiledashboard-milestone-details-items {
-    flex: 1 1 auto;
-}
-
-.agiledashboard-milestone-details-graphs {
-    flex: 0 0 640px;
-    margin: 0 0 0 20px;
-}
-
-@media screen and (max-width: 1200px) {
-    .agiledashboard-milestone-details {
-        flex-direction: column;
-    }
-
-    .agiledashboard-milestone-details-graphs {
-        margin: 20px 0 0;
-    }
-}
-
-// scss-lint:disable QualifyingElement
-#details .table > tbody > tr > td.agiledashboard-milestone-details-items-list-is-closed {
-    background-color: #f8f8f8;
-    color: #999999;
+#agiledashboard-scrum-milestone-menu-caret {
+    font-size: 20px;
 }

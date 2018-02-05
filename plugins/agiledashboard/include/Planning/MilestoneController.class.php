@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
+
 require_once 'common/mvc2/PluginController.class.php';
 
 /**
@@ -71,9 +74,13 @@ class Planning_MilestoneController extends MVC2_PluginController {
     public function show() {
         $this->generateBareMilestone();
         $this->redirectToCorrectPane();
+
+        $presenter_data = $this->pane_factory->getPanePresenterData($this->milestone);
+        $template_name  = $this->getTemplateName($presenter_data);
+
         return $this->renderToString(
-            'show',
-            $this->getMilestonePresenter()
+            $template_name,
+            $this->getMilestonePresenter($presenter_data)
         );
     }
 
@@ -100,14 +107,15 @@ class Planning_MilestoneController extends MVC2_PluginController {
         );
     }
 
-    private function getMilestonePresenter() {
+    private function getMilestonePresenter(AgileDashboard_Milestone_Pane_PresenterData $presenter_data)
+    {
         $redirect_parameter = new Planning_MilestoneRedirectParameter();
-        
+
         return new AgileDashboard_MilestonePresenter(
             $this->milestone,
             $this->getCurrentUser(),
             $this->request,
-            $this->pane_factory->getPanePresenterData($this->milestone),
+            $presenter_data,
             $redirect_parameter->getPlanningRedirectToNew($this->milestone, $this->pane_factory->getDefaultPaneIdentifier())
         );
     }
@@ -127,7 +135,7 @@ class Planning_MilestoneController extends MVC2_PluginController {
             $breadcrumbs_merger->push(new BreadCrumb_Milestone($plugin_path, $this->milestone));
             return $breadcrumbs_merger;
         }
-        
+
         return new BreadCrumb_NoCrumb();
     }
 
@@ -173,6 +181,17 @@ class Planning_MilestoneController extends MVC2_PluginController {
             $this->request->get('aid')
         );
     }
-}
 
-?>
+    /**
+     * @param AgileDashboard_Milestone_Pane_PresenterData $presenter_data
+     * @return string
+     */
+    private function getTemplateName(AgileDashboard_Milestone_Pane_PresenterData $presenter_data)
+    {
+        if ($presenter_data->getActivePane()->getIdentifier() === DetailsPaneInfo::IDENTIFIER) {
+            return 'show';
+        }
+
+        return 'show-flaming-parrot';
+    }
+}

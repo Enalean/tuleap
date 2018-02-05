@@ -35,6 +35,11 @@ class BurnupFieldRetriever
         $this->factory = $factory;
     }
 
+    /**
+     * @param \Tracker_Artifact $artifact
+     * @param PFUser $user
+     * @return Burnup|null
+     */
     public function getField(\Tracker_Artifact $artifact, PFUser $user)
     {
         $burnup_fields = $this->factory->getUsedFormElementsByType($artifact->getTracker(), array(Burnup::TYPE));
