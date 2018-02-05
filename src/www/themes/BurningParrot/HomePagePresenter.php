@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -67,7 +67,7 @@ class HomePagePresenter
         $this->login_url                   = $login_url;
 
         $purifier        = Codendi_HTMLPurifier::instance();
-        $welcome_message = $GLOBALS['Language']->getText('homepage', 'welcome_title');
+        $welcome_message = $GLOBALS['Language']->getText('homepage', 'welcome_title', \ForgeConfig::get('sys_name'));
 
         $this->purified_welcome_message = $purifier->purify($welcome_message, CODENDI_PURIFIER_LIGHT);
         $this->purified_headline        = $purifier->purify($headline, CODENDI_PURIFIER_LIGHT);

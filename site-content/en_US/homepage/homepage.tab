@@ -34,7 +34,7 @@ homepage	forgot_password	 Ooops, I forgot my password
 homepage	not_a_member	Not a member?
 homepage	create_account	Create account
 homepage	welcome_back	Welcome back
-homepage	welcome_title	Hello,<br> Welcome to Tuleap!
+homepage	welcome_title	Hello,<br> Welcome to $1!
 homepage	my_personal_page	My personal page
 #
 #-----------------------------------------------

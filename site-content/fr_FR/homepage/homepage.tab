@@ -27,7 +27,7 @@ homepage	forgot_password	Oups, j'ai perdu mon mot de passe
 homepage	not_a_member	Pas encore membre ?
 homepage	create_account	Créer un compte
 homepage	welcome_back	Bienvenue
-homepage	welcome_title	Bonjour,<br/> Bienvenue sur Tuleap !
+homepage	welcome_title	Bonjour,<br/> Bienvenue sur $1 !
 homepage	my_personal_page	Ma page personnelle
 
 #
