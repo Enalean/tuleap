@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -55,13 +55,13 @@ class PullRequestCloser
         $status = $pull_request->getStatus();
 
         if ($status === PullRequest::STATUS_ABANDONED) {
-            return true;
+            return;
         }
 
         if ($status === PullRequest::STATUS_MERGED) {
             throw new PullRequestCannotBeAbandoned('This pull request has already been merged, it can no longer be abandoned');
         }
-        return $this->pull_request_factory->markAsAbandoned($pull_request);
+        $this->pull_request_factory->markAsAbandoned($pull_request);
     }
 
     public function doMerge(
@@ -72,7 +72,7 @@ class PullRequestCloser
         $status = $pull_request->getStatus();
 
         if ($status === PullRequest::STATUS_MERGED) {
-            return true;
+            return;
         }
 
         if ($status === PullRequest::STATUS_ABANDONED) {
@@ -83,7 +83,7 @@ class PullRequestCloser
 
         $this->pull_request_merger->doMergeIntoDestination($pull_request, $repository_dest, $user);
 
-        return $this->pull_request_factory->markAsMerged($pull_request);
+        $this->pull_request_factory->markAsMerged($pull_request);
     }
 
     public function fastForwardMerge(
@@ -94,7 +94,7 @@ class PullRequestCloser
         $status = $pull_request->getStatus();
 
         if ($status === PullRequest::STATUS_MERGED) {
-            return true;
+            return;
         }
 
         if ($status === PullRequest::STATUS_ABANDONED) {
@@ -120,7 +120,7 @@ class PullRequestCloser
 
         $this->cleanTemporaryRepository($temporary_name);
 
-        return $this->pull_request_factory->markAsMerged($pull_request);
+        $this->pull_request_factory->markAsMerged($pull_request);
     }
 
     private function getUniqueRandomDirectory()

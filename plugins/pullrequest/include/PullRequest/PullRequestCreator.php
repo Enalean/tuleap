@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -127,7 +127,7 @@ class PullRequestCreator
 
     private function checkIfPullRequestAlreadyExists($repo_src_id, $sha1_src, $repo_dest_id, $sha1_dest)
     {
-        $row = $this->pull_request_dao->searchByReferences($repo_src_id, $sha1_src, $repo_dest_id, $sha1_dest)->getRow();
+        $row = $this->pull_request_dao->searchByReferences($repo_src_id, $sha1_src, $repo_dest_id, $sha1_dest);
 
         if ($row) {
             throw new PullRequestAlreadyExistsException();

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -93,13 +93,13 @@ class PullRequestUpdaterTest extends TuleapDbTestCase
 
         $this->pull_request_updater->updatePullRequests($this->user, $this->git_exec, $git_repo, 'dev', 'sha1new');
 
-        $pr1 = $this->dao->searchByPullRequestId($pr1_id)->getRow();
-        $pr2 = $this->dao->searchByPullRequestId($pr2_id)->getRow();
-        $pr3 = $this->dao->searchByPullRequestId($pr3_id)->getRow();
+        $pr1 = $this->dao->searchByPullRequestId($pr1_id);
+        $pr2 = $this->dao->searchByPullRequestId($pr2_id);
+        $pr3 = $this->dao->searchByPullRequestId($pr3_id);
 
         $this->assertEqual('sha1new', $pr1['sha1_src']);
         $this->assertEqual('sha1new', $pr2['sha1_src']);
-        $this->assertEqual('sha1',    $pr3['sha1_src']);
+        $this->assertEqual('sha1', $pr3['sha1_src']);
     }
 
     public function itDoesNotUpdateSourceBranchOfOtherRepositories()
@@ -114,8 +114,8 @@ class PullRequestUpdaterTest extends TuleapDbTestCase
 
         $this->pull_request_updater->updatePullRequests($this->user, $this->git_exec, $git_repo, 'dev', 'sha1new');
 
-        $pr1 = $this->dao->searchByPullRequestId($pr1_id)->getRow();
-        $pr2 = $this->dao->searchByPullRequestId($pr2_id)->getRow();
+        $pr1 = $this->dao->searchByPullRequestId($pr1_id);
+        $pr2 = $this->dao->searchByPullRequestId($pr2_id);
 
         $this->assertEqual('sha1', $pr1['sha1_src']);
         $this->assertEqual('sha1', $pr2['sha1_src']);
@@ -136,11 +136,10 @@ class PullRequestUpdaterTest extends TuleapDbTestCase
 
         $this->pull_request_updater->updatePullRequests($this->user, $this->git_exec, $git_repo, 'dev', 'sha1new');
 
-        $pr1 = $this->dao->searchByPullRequestId($pr1_id)->getRow();
-        $pr2 = $this->dao->searchByPullRequestId($pr2_id)->getRow();
+        $pr1 = $this->dao->searchByPullRequestId($pr1_id);
+        $pr2 = $this->dao->searchByPullRequestId($pr2_id);
 
         $this->assertEqual('sha1', $pr1['sha1_src']);
         $this->assertEqual('sha1', $pr2['sha1_src']);
     }
-
 }

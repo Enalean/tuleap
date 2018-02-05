@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -759,9 +759,7 @@ class PullRequestsResource extends AuthenticatedResource
 
     private function abandon(PullRequest $pull_request)
     {
-        if (! $this->pull_request_closer->abandon($pull_request)) {
-            throw new RestException(500, 'Error while abandoning the pull request');
-        }
+        $this->pull_request_closer->abandon($pull_request);
     }
 
     private function patchInfo(
