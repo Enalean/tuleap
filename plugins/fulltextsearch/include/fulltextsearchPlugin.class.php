@@ -499,10 +499,10 @@ class fulltextsearchPlugin extends Plugin {
             $filter  = $hp->purify($request->getValidated('search_fulltext', 'string', ''));
 
             $additional_criteria  = '';
-            $additional_criteria .= '<label title="'.$GLOBALS['Language']->getText('plugin_fulltextsearch', 'global_search_tooltip').'" for="tracker_report_crit_followup_search">';
+            $additional_criteria .= '<label title="'.$GLOBALS['Language']->getText('plugin_fulltextsearch', 'global_search_tooltip').'" for="tracker_report_crit_fulltext_search">';
             $additional_criteria .= '<i class="icon-beaker"></i> '. $GLOBALS['Language']->getText('plugin_fulltextsearch', 'global_search_label');
             $additional_criteria .= '</label>';
-            $additional_criteria .= '<input id="tracker_report_crit_followup_search" type="text" name="search_fulltext" value="'.$filter.'" />';
+            $additional_criteria .= '<input id="tracker_report_crit_fulltext_search" type="text" name="search_fulltext" value="'.$filter.'" />';
 
             $params['array_of_html_criteria'][] = $additional_criteria;
         }
