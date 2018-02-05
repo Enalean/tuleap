@@ -70,6 +70,7 @@ function getDifference(start_date, end_date) {
     const difference = moment.duration(end.diff(start, 'days'), 'days');
 
     return {
+        days  : Math.trunc(difference.as('days')),
         weeks : Math.trunc(difference.as('weeks')),
         months: Math.trunc(difference.as('months'))
     };
