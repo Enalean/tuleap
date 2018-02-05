@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2017. All rights reserved.
+ * Copyright Enalean (c) 2017 - 2018. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -34,6 +34,17 @@ class NavigationPermissionsDropdownPresenterBuilder
     public function build(Project $project, $current_pane_shortname)
     {
         $permission_links = array();
+
+        $permission_links[] = new NavigationDropdownItemPresenter(
+            _('Per group'),
+            '/project/admin/permission_per_group.php?' . http_build_query(
+                array(
+                    'group_id' => $project->getID(),
+                )
+            )
+        );
+
+
         if ($project->usesTracker() || $project->usesSVN()) {
             $permission_links[] = new NavigationDropdownItemPresenter(
                 _('Permissions for deprecated services'),
