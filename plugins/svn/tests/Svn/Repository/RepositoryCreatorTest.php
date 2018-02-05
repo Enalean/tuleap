@@ -149,7 +149,7 @@ class RepositoryCreatorTest extends \TuleapTestCase
         $settings           = new Settings($commit_rules, $immutable_tag, $access_file, $mail_notifications);
         $initial_layout     = array();
 
-        $this->repository_creator->createWithSettings($this->repository, $this->user, $settings, $initial_layout);
+        $this->repository_creator->createWithSettings($this->repository, $this->user, $settings, $initial_layout, false);
     }
 
     public function itCreatesRepositoryWithNoCustomSettings()
@@ -167,6 +167,6 @@ class RepositoryCreatorTest extends \TuleapTestCase
         $settings           = new Settings($commit_rules, $immutable_tag, $access_file, $mail_notifications);
         $initial_layout     = array();
 
-        $this->repository_creator->createWithSettings($this->repository, $this->user, $settings, $initial_layout);
+        $this->repository_creator->createWithSettings($this->repository, $this->user, $settings, $initial_layout, false);
     }
 }

@@ -158,7 +158,8 @@ class RepositoryCreator
         Repository $repository,
         PFUser $user,
         Settings $settings,
-        array $initial_repository_layout
+        array $initial_repository_layout,
+        $copy_from_core
     ) {
         $this->checkUserHasAdministrationPermissions($repository, $user);
         $repository = $this->createRepository($repository);
@@ -169,8 +170,6 @@ class RepositoryCreator
         } else {
             $this->logCreation($repository);
         }
-
-        $copy_from_core = false;
 
         return $this->sendEvent($repository, $user, $initial_repository_layout, $copy_from_core);
     }
@@ -256,7 +255,7 @@ class RepositoryCreator
         }
 
         $immutable_tag = $settings->getImmutableTag();
-        if ($immutable_tag) {
+        if (count($immutable_tag->getPaths()) > 0) {
             $this->immutable_tag_creator->saveWithoutHistory(
                 $repository,
                 $immutable_tag->getPathsAsString(),
