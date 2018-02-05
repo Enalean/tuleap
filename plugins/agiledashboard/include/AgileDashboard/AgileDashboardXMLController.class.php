@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -68,18 +68,37 @@ class AgileDashboard_XMLController extends MVC2_PluginController
         $xml_exporter->export($root_node, $plannings);
     }
 
-    public function import() {
+    public function importOnlyAgileDashboard()
+    {
+        $this->checkUserIsAdmin();
+
+        $xml           = $this->request->get('xml_content')->agiledashboard;
+        $xml_validator = new XML_RNGValidator();
+        $rng_path      = realpath(AGILEDASHBOARD_BASE_DIR . '/../www/resources/xml_project_agiledashboard.rng');
+
+        $xml_validator->validate($xml, $rng_path);
+
+        $this->import($xml);
+    }
+
+    public function importProject()
+    {
         $this->checkUserIsAdmin();
 
         $xml           = $this->request->get('xml_content');
         $xml_validator = new XML_RNGValidator();
-        $rng_path      = realpath(ForgeConfig::get('tuleap_dir').'/src/common/xml/resources/project/project.rng');
+        $rng_path      = realpath(ForgeConfig::get('tuleap_dir') . '/src/common/xml/resources/project/project.rng');
 
         $xml_validator->validate($xml, $rng_path);
         $xml = $this->request->get('xml_content')->agiledashboard;
 
+        $this->import($xml);
+    }
+
+    private function import(SimpleXMLElement $xml)
+    {
         $xml_importer = new AgileDashboard_XMLImporter();
-        $data = $xml_importer->toArray($xml, $this->request->get('mapping'));
+        $data         = $xml_importer->toArray($xml, $this->request->get('mapping'));
 
         $validator = new Planning_RequestValidator($this->planning_factory);
 
