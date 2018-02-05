@@ -25,8 +25,16 @@ function BacklogItemCollectionService(
         self.items[backlog_item_id].updating = true;
 
         return BacklogItemService.getBacklogItem(backlog_item_id).then(({ backlog_item }) => {
-            Object.assign(self.items[backlog_item_id], backlog_item);
-            self.items[backlog_item_id].updating = false;
+            const { label, initial_effort, card_fields, status, has_children } = backlog_item;
+
+            Object.assign(self.items[backlog_item_id], {
+                label,
+                initial_effort,
+                card_fields,
+                updating: false,
+                status,
+                has_children
+            });
 
             if (! backlog_item.has_children) {
                 self.items[backlog_item_id].children.collapsed = true;
