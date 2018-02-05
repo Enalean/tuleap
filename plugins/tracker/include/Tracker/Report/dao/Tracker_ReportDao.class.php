@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -302,10 +302,10 @@ class Tracker_ReportDao extends DataAccessObject {
         
         // {{{ The static ugroups
         if ($this->hasPermissionForStaticUgroup($static_ugroups, $allowed_ugroups)) {
-            $static_ugroups       = $this->da->quoteSmartImplode(',', $static_ugroups);
+            $ugroups              = $this->da->quoteSmartImplode(',', array_intersect($static_ugroups, $allowed_ugroups));
             $join_user_constraint = " INNER JOIN ugroup_user uu ON (
                                           artifact.submitted_by = uu.user_id
-                                          AND uu.ugroup_id IN ($static_ugroups)) ";
+                                          AND uu.ugroup_id IN ($ugroups)) ";
             $sqls[] = $this->getSqlFilterForSubmittedByGroup($from, $where, $join_user_constraint);
         }
         // }}}
@@ -365,11 +365,11 @@ class Tracker_ReportDao extends DataAccessObject {
         
         // {{{ The static ugroups
         if ($this->hasPermissionForStaticUgroup($static_ugroups, $allowed_ugroups)) {
-            $static_ugroups = $this->da->quoteSmartImplode(',', $static_ugroups);
+            $ugroups              = $this->da->quoteSmartImplode(',', array_intersect($static_ugroups, $allowed_ugroups));
             $join_user_constraint = "
                 INNER JOIN ugroup_user AS uu ON (
                     uu.user_id = tcvl.bindvalue_id
-                    AND uu.ugroup_id IN ($static_ugroups)
+                    AND uu.ugroup_id IN ($ugroups)
                 )
             ";
             $sqls[] = $this->getSqlFilterForContributorGroup($from, $where, $contributor_field_id, $join_user_constraint);
