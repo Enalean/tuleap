@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -48,7 +48,13 @@ class ServicesPresenterBuilder
             if (! $this->isServiceReadable($service, $user)) {
                 continue;
             }
-            $service_presenters[] = new ServicePresenter($service);
+            $service_presenters[] = new ServicePresenter(
+                $service,
+                $this->isReadOnly($service, $user),
+                $this->canSeeShortname($service, $user),
+                $service->getScope() !== Service::SCOPE_SYSTEM,
+                $this->canUpdateIsActive($user)
+            );
         }
 
         return new ServicesPresenter($project, $csrf, $service_presenters);
@@ -65,5 +71,24 @@ class ServicesPresenterBuilder
         }
 
         return $service->isActive();
+    }
+
+    private function isReadOnly(Service $service, PFUser $user)
+    {
+        if ($user->isSuperUser()) {
+            return false;
+        }
+
+        return $service->getScope() === Service::SCOPE_SYSTEM;
+    }
+
+    private function canSeeShortname(Service $service, PFUser $user)
+    {
+        return $user->isSuperUser() && ! empty($service->getShortName());
+    }
+
+    private function canUpdateIsActive(PFuser $user)
+    {
+        return $user->isSuperUser();
     }
 }

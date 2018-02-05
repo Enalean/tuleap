@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,7 +27,6 @@ class ServicePresenter
 {
     public $label;
     public $description;
-    public $conf_inherited_text;
     public $id;
     public $is_active;
     public $is_used;
@@ -35,18 +34,37 @@ class ServicePresenter
     public $rank;
     public $can_be_deleted;
     public $short_name;
+    public $is_read_only;
+    public $can_see_shortname;
+    public $is_scope_project;
+    public $can_update_is_active;
+    public $link;
+    public $is_summary;
+    public $is_in_iframe;
 
-    public function __construct(Service $service)
-    {
-        $this->id             = $service->getId();
-        $this->label          = $service->getInternationalizedName();
-        $this->description    = $service->getInternationalizedDescription();
-        $this->is_active      = $service->isActive();
-        $this->is_used        = $service->isUsed();
-        $this->scope          = $service->getScope();
-        $this->rank           = $service->getRank();
-        $this->short_name     = $service->getShortName();
-        $this->can_be_deleted = $this->canBeDeleted($service);
+    public function __construct(
+        Service $service,
+        $is_read_only,
+        $can_see_shortname,
+        $is_scope_project,
+        $can_update_is_active
+    ) {
+        $this->id                   = $service->getId();
+        $this->label                = $service->getInternationalizedName();
+        $this->description          = $service->getInternationalizedDescription();
+        $this->is_active            = $service->isActive();
+        $this->is_in_iframe         = $service->isIFrame();
+        $this->is_used              = $service->isUsed();
+        $this->scope                = $service->getScope();
+        $this->rank                 = $service->getRank();
+        $this->short_name           = $service->getShortName();
+        $this->link                 = $service->getUrl();
+        $this->can_be_deleted       = $this->canBeDeleted($service);
+        $this->is_read_only         = $is_read_only;
+        $this->can_see_shortname    = $can_see_shortname;
+        $this->is_scope_project     = $is_scope_project;
+        $this->can_update_is_active = $can_update_is_active;
+        $this->is_summary           = $service->getShortName() === 'summary';
     }
 
     private function canBeDeleted(Service $service)
