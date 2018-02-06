@@ -11,7 +11,9 @@
                     {{/ inconsistent_collection }}
 
                     <i class="fa fa-warning tlp-alert-icon"></i> {{ inconsistent_items_intro }}
-                    <input type="submit" class="tlp-button-warning" value="{{ solve_inconsistencies_button }}"/>
+                    <input type="submit"
+                           class="tlp-button-warning agiledashboard-milestone-details-items-inconsistent-button"
+                           value="{{ solve_inconsistencies_button }}"/>
                 </form>
             {{/ has_something_inconsistent }}
 
@@ -32,16 +34,17 @@
                         <tr data-artifact-id="{{ id }}">
                             <td {{^ isOpen }} class="agiledashboard-milestone-details-items-list-is-closed" {{/ isOpen }}>
                                 <a href="{{ url }}">
-                                    <span class="planning-view-items-list-content-badge badge tlp-badge-outline tlp-badge-{{color}}">
+                                    <span class="agiledashboard-milestone-details-items-list-badge badge tlp-badge-outline tlp-badge-{{color}}">
                                         {{ xRef }}
-                                    </span>
-                                    {{ title }}
+                                    </span>{{ title }}
                                 </a>
                             </td>
                             {{# has_something_inconsistent }}
                                 <td {{^ isOpen }} class="agiledashboard-milestone-details-items-list-is-closed" {{/ isOpen }}>
                                     {{# isInconsistent }}
-                                        <i class="tlp-text-warning fa fa-warning" title="{{ item_is_inconsistent_label }}"></i>
+                                        <span class="tlp-tooltip tlp-tooltip-top" data-tlp-tooltip="{{ item_is_inconsistent_label }}">
+                                            <i class="tlp-text-warning fa fa-warning" aria-label="{{ item_is_inconsistent_label }}"></i>
+                                        </span>
                                     {{/ isInconsistent }}
                                 </td>
                             {{/ has_something_inconsistent }}

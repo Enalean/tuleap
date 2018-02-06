@@ -68,7 +68,7 @@ msgstr ""
 msgid "Item"
 msgstr ""
 
-msgid "Item is inconsistent"
+msgid "Item is not linked to this milestone"
 msgstr ""
 
 msgid "Parent item"
