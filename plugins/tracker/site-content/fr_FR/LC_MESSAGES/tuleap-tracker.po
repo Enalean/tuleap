@@ -74,8 +74,7 @@ msgstr ""
 
 msgid "Burndown is under calculation. It will be available in a few minutes."
 msgstr ""
-"Le burndown est en cours de calcul. Il sera disponible dans quelques "
-"minutes."
+"Le burndown est en cours de calcul. Il sera disponible dans quelques minutes."
 
 msgid "Cancel"
 msgstr "Annuler"
@@ -85,6 +84,9 @@ msgstr "Vérifier les permissions ?"
 
 msgid "Comment"
 msgstr "Commentaire"
+
+msgid "Comment must be empty or at least 4 characters length"
+msgstr "Le commentaire peut être vide ou doit contenir au moins 4 caractères"
 
 msgid "Configure trackers"
 msgstr "Configurer les trackers"

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,9 +20,8 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 
-use CodendiDataAccess;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
-use Tuleap\Tracker\Report\Query\FromWhere;
+use Tuleap\Tracker\Report\Query\CommentFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
@@ -36,6 +35,16 @@ use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
 
 class MetadataEqualComparisonFromWhereBuilder implements MetadataComparisonFromWhereBuilder, ValueWrapperVisitor
 {
+    /**
+     * @var CommentFromWhereBuilder
+     */
+    private $comment_from_where_builder;
+
+    public function __construct(CommentFromWhereBuilder $comment_from_where_builder)
+    {
+        $this->comment_from_where_builder = $comment_from_where_builder;
+    }
+
     public function getFromWhere(Metadata $metadata, Comparison $comparison)
     {
         $value = $comparison->getValueWrapper()->accept($this, new MetadataValueWrapperParameters($metadata));
@@ -77,25 +86,6 @@ class MetadataEqualComparisonFromWhereBuilder implements MetadataComparisonFromW
     ) {
         throw new \RuntimeException("Metadata is not supported here.");
     }
-    private function quoteSmart($value)
-    {
-        return $this->removeEnclosingSimpleQuoteToNotFailMatchSqlQuery(
-            CodendiDataAccess::instance()->quoteSmart($value)
-        );
-    }
-
-    private function removeEnclosingSimpleQuoteToNotFailMatchSqlQuery($value)
-    {
-        return trim($value, "'");
-    }
-
-    /**
-     * @return string
-     */
-    protected function surroundValueWithSimpleAndThenDoubleQuotesForFulltextMatching($value)
-    {
-        return '\'"' . $value . '"\'';
-    }
 
     /**
      * @param Comparison $comparison
@@ -103,43 +93,20 @@ class MetadataEqualComparisonFromWhereBuilder implements MetadataComparisonFromW
      *
      * @return IProvideFromAndWhereSQLFragments
      */
-    protected function searchComment(Comparison $comparison, $value)
+    private function searchComment(Comparison $comparison, $value)
     {
-        $value = $this->quoteSmart($value);
-        $value = $this->surroundValueWithSimpleAndThenDoubleQuotesForFulltextMatching($value);
-
         $suffix = spl_object_hash($comparison);
 
-        $from = " LEFT JOIN (
-                    tracker_changeset_comment_fulltext AS TCCF_$suffix
-                    INNER JOIN tracker_changeset_comment AS TCC_$suffix
-                     ON (
-                        TCC_$suffix.id = TCCF_$suffix.comment_id
-                        AND TCC_$suffix.parent_id = 0
-                        AND match(TCCF_$suffix.stripped_body) against ($value IN BOOLEAN MODE)
-                     )
-                     INNER JOIN  tracker_changeset AS TC_$suffix  ON TC_$suffix.id = TCC_$suffix.changeset_id
-                 ) ON TC_$suffix.artifact_id = artifact.id";
-
-        $where = "TCC_$suffix.changeset_id IS NOT NULL";
-
-        return new FromWhere($from, $where);
+        return $this->comment_from_where_builder->getFromWhereWithComment($value, $suffix);
     }
 
+    /**
+     * @return IProvideFromAndWhereSQLFragments
+     */
     private function searchArtifactsWithoutComment(Comparison $comparison)
     {
         $suffix = spl_object_hash($comparison);
 
-        $from = " LEFT JOIN (
-                    tracker_changeset AS TC_$suffix
-                    JOIN tracker_changeset_comment AS TCC_$suffix
-                       ON TC_$suffix.id = TCC_$suffix.changeset_id
-                    JOIN tracker_changeset_comment_fulltext AS TCCF_$suffix
-                        ON TCC_$suffix.id = TCCF_$suffix.comment_id
-                    ) ON TC_$suffix.artifact_id = artifact.id";
-
-        $where = "TCCF_$suffix.comment_id IS NULL";
-
-        return new FromWhere($from, $where);
+        return $this->comment_from_where_builder->getFromWhereWithoutComment($suffix);
     }
 }

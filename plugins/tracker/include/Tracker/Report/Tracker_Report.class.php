@@ -47,6 +47,7 @@ use Tuleap\Tracker\Report\Query\Advanced\QueryBuilderVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
 use Tuleap\Tracker\Report\Query\Advanced\SizeValidatorVisitor;
+use Tuleap\Tracker\Report\Query\CommentFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
 use Tuleap\Tracker\Report\TrackerReportConfig;
 use Tuleap\Tracker\Report\TrackerReportConfigDao;
@@ -102,6 +103,11 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
     private $additional_from_where;
 
     /**
+     * @var CommentFromWhereBuilder
+     */
+    private $comment_from_where_builder;
+
+    /**
      * Constructor
      *
      * @param int     $id The id of the report
@@ -113,7 +119,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
      * @param bool    $is_default true if the report is the default one
      * @param int     $tracker_id The id of the tracker to which this Tracker_Report is associated.
      */
-    function __construct(
+    public function __construct(
         $id,
         $name,
         $description,
@@ -142,7 +148,9 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         $this->updated_by          = $updated_by;
         $this->updated_at          = $updated_at;
 
-        $this->parser    = new ParserCacheProxy(new Parser());
+        $this->parser = new ParserCacheProxy(new Parser());
+
+        $this->comment_from_where_builder = new CommentFromWhereBuilder();
 
         $this->query_builder  = new QueryBuilderVisitor(
             new QueryBuilder\EqualFieldComparisonVisitor(),
@@ -155,7 +163,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
             new QueryBuilder\InFieldComparisonVisitor,
             new QueryBuilder\NotInFieldComparisonVisitor(),
             new QueryBuilder\SearchableVisitor($this->getFormElementFactory()),
-            new QueryBuilder\MetadataEqualComparisonFromWhereBuilder(),
+            new QueryBuilder\MetadataEqualComparisonFromWhereBuilder($this->comment_from_where_builder),
             new QueryBuilder\MetadataNotEqualComparisonFromWhereBuilder(),
             new QueryBuilder\MetadataLesserThanComparisonFromWhereBuilder(),
             new QueryBuilder\MetadataGreaterThanComparisonFromWhereBuilder(),
@@ -380,7 +388,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         return $matchingIds;
     }
 
-    private function getMatchingIdsFromCriteriaInDb(array $criteria)
+    private function getMatchingIdsFromCriteriaInDb(array $criteria, array $additional_criteria)
     {
         $additional_from  = array();
         $additional_where = array();
@@ -393,12 +401,34 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
                 $additional_where[] = $w;
             }
         }
+
+        $this->addCommentCriterionFromWhere($additional_criteria, $additional_from, $additional_where);
+
         $matching_ids = $this->getMatchingIdsInDb(
             $additional_from,
             $additional_where
         );
 
         return $matching_ids;
+    }
+
+    private function addCommentCriterionFromWhere(
+        array $additional_criteria,
+        array &$additional_from,
+        array &$additional_where
+    ) {
+        $comment_criterion = $this->getAdditionalCommentCriterion($additional_criteria);
+        if (! $comment_criterion || (string) $comment_criterion->getValue() === '') {
+            return;
+        }
+
+        $from_where = $this->comment_from_where_builder->getFromWhereWithComment(
+            $comment_criterion->getValue(),
+            self::COMMENT_CRITERION_NAME
+        );
+
+        $additional_from[]  = $from_where->getFromAsString();
+        $additional_where[] = $from_where->getWhere();
     }
 
     /**
@@ -1806,11 +1836,12 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
             } else {
                 $criteria = $this->getCriteria();
             }
-            $this->matching_ids = $this->getMatchingIdsFromCriteriaInDb($criteria);
 
             $additional_criteria = $this->getAdditionalCriteria();
-            $result              = array();
-            $search_performed    = false;
+            $this->matching_ids  = $this->getMatchingIdsFromCriteriaInDb($criteria, $additional_criteria);
+
+            $result           = array();
+            $search_performed = false;
             EventManager::instance()->processEvent(
                 TRACKER_EVENT_REPORT_PROCESS_ADDITIONAL_QUERY,
                 array(
