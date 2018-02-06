@@ -153,8 +153,8 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
         $GLOBALS['HTML']->includeFooterJavascriptFile($burnup_chart_include_assets->getFileURL('burnup-chart.js'));
 
         $theme_include_assets = new IncludeAssets(
-            AGILEDASHBOARD_BASE_DIR . '/../www/themes/FlamingParrot/assets',
-            AGILEDASHBOARD_BASE_URL . '/themes/FlamingParrot/assets'
+            AGILEDASHBOARD_BASE_DIR . '/../www/themes/'. $GLOBALS['sys_user_theme'] .'/assets',
+            AGILEDASHBOARD_BASE_URL . '/themes/'. $GLOBALS['sys_user_theme'] .'/assets'
         );
 
         $capacity                  = $this->getConfigurationValueRetriever()->getCapacity($artifact, $user);

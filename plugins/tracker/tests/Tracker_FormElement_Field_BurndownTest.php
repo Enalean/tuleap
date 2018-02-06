@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -259,6 +259,10 @@ class Tracker_FormElement_Field_Burndown_JPGraphRender extends TuleapTestCase
 class Tracker_FormElement_Field_Burndown_D3Render extends TuleapTestCase
 {
     /**
+     * @var string
+     */
+    private $old_user_theme;
+    /**
      * @var \Tracker
      */
     private $tracker;
@@ -294,6 +298,9 @@ class Tracker_FormElement_Field_Burndown_D3Render extends TuleapTestCase
         parent::setUp();
         $_SERVER['REQUEST_URI'] = '/plugins/tracker';
 
+        $this->old_user_theme      = isset($GLOBALS['sys_user_theme']) ? $GLOBALS['sys_user_theme'] : null;
+        $GLOBALS['sys_user_theme'] = 'BurningParrot';
+
         $GLOBALS['Language'] = mock('BaseLanguage');
 
         $this->tracker = mock('Tracker');
@@ -326,6 +333,7 @@ class Tracker_FormElement_Field_Burndown_D3Render extends TuleapTestCase
 
     public function tearDown()
     {
+        $GLOBALS['sys_user_theme'] = $this->old_user_theme;
         Tracker_FormElementFactory::clearInstance();
         unset($_SERVER['REQUEST_URI']);
         unset($GLOBALS['Language']);

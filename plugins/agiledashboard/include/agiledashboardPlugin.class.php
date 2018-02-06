@@ -31,6 +31,7 @@ use Tuleap\AgileDashboard\Kanban\RealTime\KanbanArtifactMessageSender;
 use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportDao;
 use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportUpdater;
 use Tuleap\AgileDashboard\KanbanJavascriptDependenciesProvider;
+use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
@@ -562,6 +563,7 @@ class AgileDashboardPlugin extends Plugin {
         }
     }
 
+    /** @see Event::BURNING_PARROT_GET_STYLESHEETS */
     public function burning_parrot_get_stylesheets(array $params)
     {
         $theme_include_assets = new IncludeAssets(
@@ -569,9 +571,11 @@ class AgileDashboardPlugin extends Plugin {
             $this->getThemePath() . '/assets'
         );
 
+        $variant = $params['variant'];
         if ($this->isInDashboard() || $this->isKanbanURL()) {
-            $variant = $params['variant'];
-            $params['stylesheets'][] = $theme_include_assets->getFileURL('style-' . $variant->getName() . '.css');
+            $params['stylesheets'][] = $theme_include_assets->getFileURL('kanban-' . $variant->getName() . '.css');
+        } else if ($this->isInOverviewTab()) {
+            $params['stylesheets'][] = $theme_include_assets->getFileURL('scrum-' . $variant->getName() . '.css');
         }
     }
 
@@ -588,6 +592,12 @@ class AgileDashboardPlugin extends Plugin {
                     $params['javascript_files'][] = $javascript['file'];
                 }
             }
+        } else if ($this->isInOverviewTab()) {
+            $assets = new IncludeAssets(
+                AGILEDASHBOARD_BASE_DIR . '/../www/assets',
+                $this->getPluginPath() . '/assets'
+            );
+            $params['javascript_files'][] = $assets->getFileURL('overview.js');
         }
     }
 
@@ -1103,7 +1113,7 @@ class AgileDashboardPlugin extends Plugin {
 
     public function burning_parrot_compatible_page(BurningParrotCompatiblePageEvent $event)
     {
-        if ($this->isKanbanURL()) {
+        if ($this->isKanbanURL() || $this->isInOverviewTab()) {
             $event->setIsInBurningParrotCompatiblePage();
         }
     }
@@ -1482,5 +1492,14 @@ class AgileDashboardPlugin extends Plugin {
             new AgileDashboard_KanbanColumnDao(),
             new AgileDashboard_KanbanUserPreferences()
         );
+    }
+
+    private function isInOverviewTab()
+    {
+        $request = HTTPRequest::instance();
+
+        return $this->isAnAgiledashboardRequest()
+            && $request->get('action') === DetailsPaneInfo::ACTION
+            && $request->get('pane') === DetailsPaneInfo::IDENTIFIER;
     }
 }

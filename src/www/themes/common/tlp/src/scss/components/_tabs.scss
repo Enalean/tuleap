@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -125,4 +125,9 @@ $tlp-tabs-transition: 75ms ease-out;
 .tlp-tab-icon {
     margin: 0 8px 0 0;
     font-size: 16px;
+
+    &.fa-external-link {
+        margin: 0 0 0 5px;
+        font-size: 10px;
+    }
 }

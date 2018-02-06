@@ -7,6 +7,8 @@ const BabelPluginObjectRestSpread = require('babel-plugin-transform-object-rest-
 
 const build_dir_path = path.resolve(__dirname, '../assets');
 
+const manifest_data   = Object.create(null);
+
 const babel_options = {
     presets: [
         [BabelPresetEnv, {
@@ -21,9 +23,41 @@ const babel_options = {
     ]
 };
 
+const webpack_config_for_overview = {
+    entry : {
+        'overview': './overview.js'
+    },
+    output: {
+        path    : build_dir_path,
+        filename: '[name]-[chunkhash].js'
+    },
+    externals: {
+        tlp: 'tlp'
+    },
+    module: {
+        rules: [{
+            test   : /\.js$/,
+            exclude: /node_modules/,
+            use    : [
+                {
+                    loader : 'babel-loader',
+                    options: babel_options
+                }
+            ]
+        }]
+    },
+    plugins: [
+        new WebpackAssetsManifest({
+            output: 'manifest.json',
+            assets: manifest_data,
+            merge : true,
+        })
+    ]
+};
+
 const webpack_config_for_charts = {
     entry : {
-       'burnup-chart': './burnup-chart/src/burnup-chart.js'
+        'burnup-chart': './burnup-chart/src/burnup-chart.js'
     },
     output: {
         path    : build_dir_path,
@@ -59,13 +93,14 @@ const webpack_config_for_charts = {
     plugins: [
         new WebpackAssetsManifest({
             output: 'manifest.json',
+            assets: manifest_data,
             merge: true,
             writeToDisk: true
         }),
         // This ensure we only load moment's fr locale. Otherwise, every single locale is included !
         new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /fr/)
     ]
-}
+};
 
 if (process.env.NODE_ENV === 'production') {
     webpack_config_for_charts.plugins = webpack_config_for_charts.plugins.concat([
@@ -73,4 +108,7 @@ if (process.env.NODE_ENV === 'production') {
     ]);
 }
 
-module.exports = webpack_config_for_charts;
+module.exports = [
+    webpack_config_for_overview,
+    webpack_config_for_charts
+];
