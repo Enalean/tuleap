@@ -63,6 +63,9 @@ msgstr ""
 msgid "Comment"
 msgstr ""
 
+msgid "Comment must be empty or at least 4 characters length"
+msgstr ""
+
 msgid "Configure trackers"
 msgstr ""
 

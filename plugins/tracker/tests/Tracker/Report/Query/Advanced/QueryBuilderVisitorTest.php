@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,28 +26,15 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanOrEqualComparison;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\InValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\LesserThanComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\LesserThanOrEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotEqualComparison;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotInComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
-use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\BetweenFieldComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\EqualFieldComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereNotEqualComparisonListFieldBuilder;
-use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\GreaterThanOrEqualFieldComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotInComparison\ForListBindStatic as NotInComparisonForListBindStatic;
-use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\InFieldComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\LesserThanFieldComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\LesserThanOrEqualFieldComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotEqualFieldComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\GreaterThanFieldComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotInFieldComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\SearchableVisitor;
+use Tuleap\Tracker\Report\Query\CommentFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\FromWhere;
 use TuleapTestCase;
 
@@ -98,7 +85,7 @@ class QueryBuilderVisitorTest extends TuleapTestCase
             new QueryBuilder\InFieldComparisonVisitor,
             new QueryBuilder\NotInFieldComparisonVisitor(),
             new QueryBuilder\SearchableVisitor($formelement_factory),
-            new QueryBuilder\MetadataEqualComparisonFromWhereBuilder(),
+            new QueryBuilder\MetadataEqualComparisonFromWhereBuilder(new CommentFromWhereBuilder()),
             new QueryBuilder\MetadataNotEqualComparisonFromWhereBuilder(),
             new QueryBuilder\MetadataLesserThanComparisonFromWhereBuilder(),
             new QueryBuilder\MetadataGreaterThanComparisonFromWhereBuilder(),
