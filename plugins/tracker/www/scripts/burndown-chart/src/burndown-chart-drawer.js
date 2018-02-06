@@ -179,12 +179,17 @@ function createBurndownChart({
     }
 
     function addIdealLine() {
+        const { capacity }           = burndown_data;
+        const first_ideal_line_point = (capacity)
+            ? capacity
+            : y_axis_maximum;
+
         drawIdealLine(
             svg_burndown, {
                 x_scale,
                 y_scale
             }, {
-                line_start: y_axis_maximum,
+                line_start: first_ideal_line_point,
                 line_end  : 0
             }
         );
@@ -210,12 +215,11 @@ function createBurndownChart({
     function getMaxRemainingEffort({ points_with_date, capacity }) {
         const max_remaining_effort = max(points_with_date, ({ remaining_effort }) => remaining_effort);
 
-        if (max_remaining_effort) {
-            return max_remaining_effort;
-        }
 
-        if (capacity) {
-            return capacity;
+        const maximum = max([max_remaining_effort, capacity]);
+
+        if (maximum) {
+            return maximum;
         }
 
         return DEFAULT_REMAINING_EFFORT;
