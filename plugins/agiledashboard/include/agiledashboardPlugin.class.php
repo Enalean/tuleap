@@ -86,13 +86,14 @@ class AgileDashboardPlugin extends Plugin {
         bindTextDomain('tuleap-agiledashboard', AGILEDASHBOARD_BASE_DIR . '/../site-content');
     }
 
-    public function getHooksAndCallbacks() {
+    public function getHooksAndCallbacks()
+    {
         // Do not load the plugin if tracker is not installed & active
         if (defined('TRACKER_BASE_URL')) {
             require_once dirname(__FILE__) .'/../../tracker/include/autoload.php';
             $this->addHook('cssfile', 'cssfile', false);
             $this->addHook('javascript_file');
-            $this->addHook(TRACKER_EVENT_INCLUDE_CSS_FILE, 'tracker_event_include_css_file', false);
+            $this->addHook(TRACKER_EVENT_INCLUDE_CSS_FILE);
             $this->addHook(TRACKER_EVENT_TRACKERS_DUPLICATED, 'tracker_event_trackers_duplicated', false);
             $this->addHook(TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION, 'tracker_event_build_artifact_form_action', false);
             $this->addHook(TRACKER_EVENT_ARTIFACT_ASSOCIATION_EDITED, 'tracker_event_artifact_association_edited', false);
@@ -321,7 +322,10 @@ class AgileDashboardPlugin extends Plugin {
     }
 
     public function tracker_event_include_css_file($params) {
-        $params['include_tracker_css_file'] = true;
+        $request = HTTPRequest::instance();
+        if ($request->get('pane') === Cardwall_PaneInfo::IDENTIFIER) {
+            $params['include_tracker_css_file'] = true;
+        }
     }
 
     public function tracker_event_general_settings($params) {
