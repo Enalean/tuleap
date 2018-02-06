@@ -804,9 +804,6 @@ msgstr ""
 msgid "Unable to fetch the latest activities of the project"
 msgstr ""
 
-msgid "Under development, there is nothing here"
-msgstr ""
-
 msgid "Unix name"
 msgstr ""
 

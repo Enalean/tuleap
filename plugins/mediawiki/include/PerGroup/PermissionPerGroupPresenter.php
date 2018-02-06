@@ -18,33 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Project\Admin\Permission;
-
-use Project;
-use Tuleap\Project\Admin\ProjectUGroup\UGroupPresenter;
+namespace Tuleap\Mediawiki\PerGroup;
 
 class PermissionPerGroupPresenter
 {
-    public $group_id;
+    public $permissions;
+    public $has_permissions;
 
-    /**
-     * @var UGroupPresenter[]
-     */
-    public $groups;
-    /**
-     * @var string[]
-     */
-    public $additional_panes;
-    /**
-     * @var bool
-     */
-    public $has_additional_panes;
-
-    public function __construct(Project $project, array $groups, array $additional_panes)
+    public function __construct(array $permissions)
     {
-        $this->group_id             = $project->getID();
-        $this->groups               = $groups;
-        $this->additional_panes     = $additional_panes;
-        $this->has_additional_panes = count($additional_panes) > 0;
+        $this->permissions     = $permissions;
+        $this->has_permissions = count($permissions) > 0;
     }
 }

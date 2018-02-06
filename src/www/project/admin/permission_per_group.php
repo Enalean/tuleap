@@ -19,8 +19,9 @@
  */
 
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
+use Tuleap\Project\Admin\Permission\AdditionalPanesPermissionPerGroupBuilder;
+use Tuleap\Project\Admin\Permission\PermissionPerGroupBuilder;
 use Tuleap\Project\Admin\Permission\PermissionPerGroupPresenter;
-use Tuleap\Project\Admin\Permission\PermissionPerGroupUGroupBuilder;
 
 require_once('pre.php');
 
@@ -37,10 +38,14 @@ $title = _('Permissions per group');
 $navigation_displayer = new HeaderNavigationDisplayer();
 $navigation_displayer->displayBurningParrotNavigation($title, $project, 'permissions');
 
-$presenter_builder = new PermissionPerGroupUGroupBuilder(new UGroupManager());
-$groups            = $presenter_builder->build($project);
+$presenter_builder = new PermissionPerGroupBuilder(new UGroupManager());
+$groups            = $presenter_builder->buildUGroup($project);
 
-$presenter = new PermissionPerGroupPresenter($project, $groups);
+$additional_panes_builder = new AdditionalPanesPermissionPerGroupBuilder(EventManager::instance());
+$additional_panes         = $additional_panes_builder->buildAdditionalPresenters($project);
+
+$presenter = new PermissionPerGroupPresenter($project, $groups, $additional_panes);
+
 
 $templates_dir = ForgeConfig::get('tuleap_dir') . '/src/templates/project/admin/';
 TemplateRendererFactory::build()

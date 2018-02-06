@@ -4,7 +4,7 @@
  *
  * Copyright 2000-2011, Fusionforge Team
  * Copyright 2012, Franck Villaume - TrivialDev
- * Copyright (c) Enalean SAS 2014 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean SAS 2014 - 2018 All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,13 +24,15 @@
  */
 
 use Tuleap\BurningParrotCompatiblePageEvent;
-use Tuleap\Mediawiki\ForgeUserGroupPermission\MediawikiAdminAllProjects;
 use Tuleap\Mediawiki\Events\SystemEvent_MEDIAWIKI_TO_CENTRAL_DB;
-use Tuleap\Mediawiki\Migration\MoveToCentralDbDao;
+use Tuleap\Mediawiki\ForgeUserGroupPermission\MediawikiAdminAllProjects;
 use Tuleap\Mediawiki\Maintenance\CleanUnused;
 use Tuleap\Mediawiki\Maintenance\CleanUnusedDao;
+use Tuleap\Mediawiki\Migration\MoveToCentralDbDao;
+use Tuleap\Mediawiki\PerGroup\PermissionPerGroupPaneBuilder;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
 use Tuleap\project\Admin\Navigation\NavigationDropdownQuickLinksCollector;
+use Tuleap\Project\Admin\Permission\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\ProjectUGroup\UserAndProjectUGroupRelationshipEvent;
 use Tuleap\Project\Admin\ProjectUGroup\UserBecomesForumAdmin;
 use Tuleap\Project\Admin\ProjectUGroup\UserBecomesNewsAdministrator;
@@ -120,10 +122,14 @@ class MediaWikiPlugin extends Plugin {
             $this->addHook(UserBecomesNewsAdministrator::NAME, 'updateUserGroupMappingFromUserAndProjectUGroupRelationshipEvent');
             $this->addHook(UserIsNoLongerNewsAdministrator::NAME, 'updateUserGroupMappingFromUserAndProjectUGroupRelationshipEvent');
 
-            /**
+        $this->addHook(PermissionPerGroupPaneCollector::NAME);
+
+        /**
              * HACK
              */
             require_once MEDIAWIKI_BASE_DIR . '/../fusionforge/compat/load_compatibilities_method.php';
+
+        bindtextdomain('tuleap-mediawiki', __DIR__ . '/../site-content');
     }
 
     public function getServiceShortname() {
@@ -813,5 +819,28 @@ class MediaWikiPlugin extends Plugin {
                 )
             )
         );
+    }
+
+    /**
+     * @param PermissionPerGroupPaneCollector $event
+     */
+    public function permissionPerGroupPaneCollector(PermissionPerGroupPaneCollector $event)
+    {
+        if (! $event->getProject()->usesService(self::SERVICE_SHORTNAME)) {
+            return;
+        }
+
+        $builder   = new PermissionPerGroupPaneBuilder(
+            $this->getMediawikiManager(),
+            new UGroupManager()
+        );
+        $presenter = $builder->buildPresenter($event->getProject());
+
+        $templates_dir = ForgeConfig::get('tuleap_dir') . '/plugins/mediawiki/templates/';
+        $content       = TemplateRendererFactory::build()
+            ->getRenderer($templates_dir)
+            ->renderToString('project-admin-permission-per-group', $presenter);
+
+        $event->addAdditionalPane($content);
     }
 }

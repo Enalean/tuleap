@@ -854,9 +854,6 @@ msgstr "Import outils de suivi v3"
 msgid "Unable to fetch the latest activities of the project"
 msgstr "Impossible de récupérer les dernières activités du projet"
 
-msgid "Under development, there is nothing here"
-msgstr "En cours de developpement, il n'y a rien ici"
-
 msgid "Unix name"
 msgstr "Now unix"
 

@@ -1,0 +1,14 @@
+msgid "Granted groups"
+msgstr ""
+
+msgid "Mediawiki permissions"
+msgstr ""
+
+msgid "Permission"
+msgstr ""
+
+msgid "Readers"
+msgstr ""
+
+msgid "Writers"
+msgstr ""
