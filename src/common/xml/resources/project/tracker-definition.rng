@@ -939,6 +939,11 @@
           <ref name="criteriaContent"/>
         </element>
       </zeroOrMore>
+      <optional>
+        <element name="additional_criteria">
+          <ref name="additional_criteria_content"/>
+        </element>
+      </optional>
     </element>
     <element name="renderers">
       <zeroOrMore>
@@ -979,6 +984,14 @@
       <attribute name="REF">
         <data type="IDREF"/>
       </attribute>
+    </element>
+  </define>
+  <define name="additional_criteria_content">
+    <attribute name="name">
+      <value>comment</value>
+    </attribute>
+    <element name="value">
+      <data type="string"/>
     </element>
   </define>
   <define name="rendererContent">

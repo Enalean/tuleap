@@ -249,6 +249,9 @@
 				<criteria rank="3">
 					<field REF="F4" />
 				</criteria>
+				<additional_criteria name="comment">
+					<value><![CDATA[test]]></value>
+				</additional_criteria>
 			</criterias>
 			<renderers>
 				<renderer type="table" rank="1" chunksz="25" multisort="25">

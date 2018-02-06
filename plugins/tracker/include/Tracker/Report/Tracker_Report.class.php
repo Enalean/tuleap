@@ -19,12 +19,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
-use Tuleap\Tracker\Report\AdditionalCriteria\CommentCriterion;
+use Tuleap\Tracker\Report\AdditionalCriteria\AdditionalCriterionXMLExporter;
 use Tuleap\Tracker\Report\AdditionalCriteria\CommentCriterionPresenter;
 use Tuleap\Tracker\Report\AdditionalCriteria\CommentCriterionValueRetriever;
 use Tuleap\Tracker\Report\AdditionalCriteria\CommentCriterionValueSaver;
@@ -106,6 +105,11 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
      * @var CommentFromWhereBuilder
      */
     private $comment_from_where_builder;
+
+    /**
+     * @var Tracker_Report_AdditionalCriterion[]
+     */
+    private $xml_additional_criteria = array();
 
     /**
      * Constructor
@@ -1647,11 +1651,27 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
                 $criteria->exportToXML($grandchild, $xmlMapping);
             }
         }
+
+        $this->exportCommentCriterionToXML($child);
+
         $child = $root->addChild('renderers');
         foreach($this->getRenderers() as $renderer) {
             $grandchild = $child->addChild('renderer');
             $renderer->exportToXML($grandchild, $xmlMapping);
         }
+    }
+
+    private function exportCommentCriterionToXML(SimpleXMLElement $criterias)
+    {
+        $additional_criteria = $this->getAdditionalCriteria();
+        $comment_criterion   = $this->getAdditionalCommentCriterion($additional_criteria);
+
+        if (! $comment_criterion) {
+            return;
+        }
+
+        $xml_exporter = new AdditionalCriterionXMLExporter(new XML_SimpleXMLCDATAFactory());
+        $xml_exporter->exportToXML($comment_criterion, $criterias);
     }
 
     /**
@@ -2026,5 +2046,18 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         }
 
         return $this->collector;
+    }
+
+    public function addAdditionalCriteriaForXmlImport(Tracker_Report_AdditionalCriterion $additional_criterion)
+    {
+        $this->xml_additional_criteria[] = $additional_criterion;
+    }
+
+    /**
+     * @return Tracker_Report_AdditionalCriterion[]
+     */
+    public function getAdditionalCriteriaForXmlImport()
+    {
+        return $this->xml_additional_criteria;
     }
 }

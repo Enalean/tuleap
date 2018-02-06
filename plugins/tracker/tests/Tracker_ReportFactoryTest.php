@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2015 - 2018. All rights reserved
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -22,7 +22,7 @@
 require_once('bootstrap.php');
 Mock::generatePartial('Tracker_ReportFactory',
                       'Tracker_ReportFactoryTestVersion',
-                      array('getCriteriaFactory', 'getRendererFactory'));
+                      array('getCriteriaFactory', 'getRendererFactory', 'getCommentDao'));
 Mock::generate('Tracker_Report_CriteriaFactory');
 Mock::generate('Tracker_Report_RendererFactory');
 
@@ -36,6 +36,9 @@ class Tracker_ReportFactoryTest extends TuleapTestCase {
 
         $this->xml_security = new XML_Security();
         $this->xml_security->enableExternalLoadOfEntities();
+
+        $this->additional_criteria_factory = new Tuleap\Tracker\Report\AdditionalCriteria\AdditionalCriteriaFactory();
+        $this->comment_dao                 = mock('Tuleap\Tracker\Report\AdditionalCriteria\CommentDao');
     }
 
     public function tearDown() {
@@ -66,6 +69,11 @@ class Tracker_ReportFactoryTest extends TuleapTestCase {
         $this->assertEqual($reports[0]->name, 'Default');
         $this->assertEqual($reports[0]->description, 'The system default artifact report');
         $this->assertEqual($reports[0]->is_default, 0);
+
+        $additional_critera = $reports[0]->getAdditionalCriteriaForXmlImport();
+        $this->assertIsA($additional_critera[0], Tracker_Report_AdditionalCriterion::class);
+        $this->assertEqual($additional_critera[0]->getKey(), 'comment');
+        $this->assertEqual($additional_critera[0]->getValue(), 'test');
 
         //default values
         $this->assertEqual($reports[0]->is_query_displayed, 1);
