@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,7 +25,8 @@ use Tuleap\Svn\Repository\Repository;
 /**
  * I return instances of AccessFileHistory
  */
-class AccessFileHistoryFactory {
+class AccessFileHistoryFactory
+{
 
     private $dao;
 
@@ -46,6 +47,18 @@ class AccessFileHistoryFactory {
     /** return AccessFileHistory */
     public function getById($id, Repository $repository) {
         $row = $this->dao->searchById($id, $repository->getId());
+
+        if (! $row) {
+            throw new AccessFileHistoryNotFoundException();
+        }
+
+        return $this->instantiateFromRowAndRepository($row, $repository);
+    }
+
+    /** return AccessFileHistory */
+    public function getByVersionNumber($id, Repository $repository)
+    {
+        $row = $this->dao->searchByVersionNumber($id, $repository->getId());
 
         if (! $row) {
             throw new AccessFileHistoryNotFoundException();

@@ -21,8 +21,10 @@
 namespace Tuleap\Svn\Migration;
 
 use Project;
+use SVN_AccessFile_DAO;
 use SVN_Immutable_Tags_DAO;
 use SvnNotificationDao;
+use Tuleap\Svn\AccessControl\AccessFileHistory;
 use Tuleap\Svn\Admin\ImmutableTag;
 use Tuleap\Svn\Admin\MailNotification;
 use Tuleap\Svn\Repository\HookConfig;
@@ -39,23 +41,39 @@ class SettingsRetriever
      * @var SVN_Immutable_Tags_DAO
      */
     private $tags_dao;
+    /**
+     * @var SVN_AccessFile_DAO
+     */
+    private $history_dao;
 
     public function __construct(
         SVN_Immutable_Tags_DAO $immutable_tags_dao,
-        SvnNotificationDao $notification_dao
+        SvnNotificationDao $notification_dao,
+        SVN_AccessFile_DAO $history_dao
     ) {
         $this->tags_dao         = $immutable_tags_dao;
         $this->notification_dao = $notification_dao;
+        $this->history_dao      = $history_dao;
     }
 
     public function getSettingsFromCoreRepository(Repository $repository)
     {
-        $commit_rules      = $this->getCommitRules($repository->getProject());
-        $immutable_tag     = $this->getImmutableTag($repository);
-        $access_file       = "";
-        $mail_notification = $this->getMailNotification($repository);
+        $commit_rules        = $this->getCommitRules($repository->getProject());
+        $immutable_tag       = $this->getImmutableTag($repository);
+        $access_file         = "";
+        $mail_notification   = $this->getMailNotification($repository);
+        $access_file_history = $this->getAccessFileHistory($repository);
+        $used_version        = $this->getUsedVersion($repository);
 
-        return new Settings($commit_rules, $immutable_tag, $access_file, $mail_notification);
+        return new Settings(
+            $commit_rules,
+            $immutable_tag,
+            $access_file,
+            $mail_notification,
+            $access_file_history,
+            $used_version,
+            true
+        );
     }
 
     private function getCommitRules(Project $project)
@@ -109,5 +127,27 @@ class SettingsRetriever
         }
 
         return $mail_notifications;
+    }
+
+    private function getAccessFileHistory(Repository $repository)
+    {
+        $version_history = array();
+
+        foreach ($this->history_dao->getAllVersions($repository->getProject()->getID()) as $version) {
+            $version_history[] = new AccessFileHistory(
+                $repository,
+                $version['id'],
+                $version['version_number'],
+                $version['content'],
+                $version['version_date']
+            );
+        }
+
+        return $version_history;
+    }
+
+    private function getUsedVersion(Repository $repository)
+    {
+        return $this->history_dao->getCurrentVersionNumber($repository->getProject()->getID());
     }
 }

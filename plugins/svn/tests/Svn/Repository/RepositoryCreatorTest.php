@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,8 @@
 
 namespace Tuleap\Svn\Repository;
 
+use Tuleap\Svn\AccessControl\AccessFileHistory;
+use Tuleap\Svn\AccessControl\AccessFileHistoryCreator;
 use Tuleap\Svn\Admin\ImmutableTag;
 use Tuleap\Svn\Dao;
 use Tuleap\Svn\SvnPermissionManager;
@@ -28,6 +30,14 @@ require_once __DIR__ . '/../../bootstrap.php';
 
 class RepositoryCreatorTest extends \TuleapTestCase
 {
+    /**
+     * @var AccessFileHistoryCreator
+     */
+    private $history_creator;
+    /**
+     * @var \ProjectHistoryDao
+     */
+    private $history_dao;
     /**
      * @var HookConfigUpdator
      */
@@ -73,6 +83,7 @@ class RepositoryCreatorTest extends \TuleapTestCase
         $this->dao                  = mock('Tuleap\Svn\Dao');
         $this->permissions_manager  = mock('Tuleap\Svn\SvnPermissionManager');
         $this->hook_config_updator  = mock('Tuleap\Svn\Repository\HookConfigUpdator');
+        $this->history_creator      = mock('Tuleap\Svn\AccessControl\AccessFileHistoryCreator');
         $this->repository_creator   = new RepositoryCreator(
             $this->dao,
             $this->system_event_manager,
@@ -81,7 +92,7 @@ class RepositoryCreatorTest extends \TuleapTestCase
             $this->hook_config_updator,
             new ProjectHistoryFormatter(),
             mock('Tuleap\Svn\Admin\ImmutableTagCreator'),
-            mock('Tuleap\Svn\AccessControl\AccessFileHistoryCreator'),
+            $this->history_creator,
             mock('Tuleap\Svn\Admin\MailNotificationManager')
         );
 
@@ -131,12 +142,87 @@ class RepositoryCreatorTest extends \TuleapTestCase
         $this->repository_creator->create($this->repository, $this->user);
     }
 
+    public function itCreatesRepositoryWithCustomSettingsAndImportAllAccessFileHistory()
+    {
+        stub($this->permissions_manager)->isAdmin($this->project, $this->user)->returns(true);
+
+        expect($this->system_event_manager)->createEvent()->once();
+        expect($this->history_creator)->useAVersionWithHistoryWithoutUpdateSVNAccessFile()->once();
+        expect($this->history_dao)->groupAddHistory('svn_multi_repository_creation_with_full_settings', '*', '*')->once();
+        expect($this->history_creator)->storeInDBWithoutCleaningContent()->never();
+
+        $commit_rules        = array(
+            HookConfig::COMMIT_MESSAGE_CAN_CHANGE => true,
+            HookConfig::MANDATORY_REFERENCE       => true
+        );
+        $immutable_tag       = new ImmutableTag($this->repository, array(), array());
+        $access_file         = "[/]\r\n* = rw \r\n@members = rw\r\n[/tags]\r\n@admins = rw";
+        $access_file_history = array(new AccessFileHistory($this->repository, 1, 1, $access_file, time()));
+        $mail_notifications  = array();
+        $settings            = new Settings(
+            $commit_rules,
+            $immutable_tag,
+            $access_file,
+            $mail_notifications,
+            $access_file_history,
+            1,
+            false
+        );
+        $initial_layout      = array();
+
+        $this->repository_creator->createWithSettings(
+            $this->repository,
+            $this->user,
+            $settings,
+            $initial_layout,
+            false
+        );
+    }
+
+    public function itCreatesRepositoryWithCustomSettingsAndImportAllAccessFileHistoryWithoutPurgeThemContent()
+    {
+        stub($this->permissions_manager)->isAdmin($this->project, $this->user)->returns(true);
+
+        expect($this->system_event_manager)->createEvent()->once();
+        expect($this->history_creator)->useAVersionWithHistoryWithoutUpdateSVNAccessFile()->once();
+        expect($this->history_dao)->groupAddHistory('svn_multi_repository_creation_with_full_settings', '*', '*')->once();
+        expect($this->history_creator)->storeInDBWithoutCleaningContent()->once();
+
+        $commit_rules        = array(
+            HookConfig::COMMIT_MESSAGE_CAN_CHANGE => true,
+            HookConfig::MANDATORY_REFERENCE       => true
+        );
+        $immutable_tag       = new ImmutableTag($this->repository, array(), array());
+        $access_file         = "[/]\r\n* = rw \r\n@members = rw\r\n[/tags]\r\n@admins = rw";
+        $access_file_history = array(new AccessFileHistory($this->repository, 1, 1, $access_file, time()));
+        $mail_notifications  = array();
+        $settings            = new Settings(
+            $commit_rules,
+            $immutable_tag,
+            $access_file,
+            $mail_notifications,
+            $access_file_history,
+            1,
+            true
+        );
+        $initial_layout      = array();
+
+        $this->repository_creator->createWithSettings(
+            $this->repository,
+            $this->user,
+            $settings,
+            $initial_layout,
+            false
+        );
+    }
+
     public function itCreatesRepositoryWithCustomSettings()
     {
         stub($this->permissions_manager)->isAdmin($this->project, $this->user)->returns(true);
 
         expect($this->system_event_manager)->createEvent()->once();
         expect($this->hook_config_updator)->initHookConfiguration()->once();
+        expect($this->history_creator)->useAVersionWithHistoryWithoutUpdateSVNAccessFile()->never();
         expect($this->history_dao)->groupAddHistory('svn_multi_repository_creation_with_full_settings', '*', '*')->once();
 
         $commit_rules       = array(
@@ -146,7 +232,15 @@ class RepositoryCreatorTest extends \TuleapTestCase
         $immutable_tag      = new ImmutableTag($this->repository, array(), array());
         $access_file        = "[/]\r\n* = rw \r\n@members = rw\r\n[/tags]\r\n@admins = rw";
         $mail_notifications = array();
-        $settings           = new Settings($commit_rules, $immutable_tag, $access_file, $mail_notifications);
+        $settings           = new Settings(
+            $commit_rules,
+            $immutable_tag,
+            $access_file,
+            $mail_notifications,
+            array(),
+            1,
+            false
+        );
         $initial_layout     = array();
 
         $this->repository_creator->createWithSettings($this->repository, $this->user, $settings, $initial_layout, false);
@@ -164,7 +258,15 @@ class RepositoryCreatorTest extends \TuleapTestCase
         $immutable_tag      = new ImmutableTag($this->repository, array(), array());
         $access_file        = "";
         $mail_notifications = array();
-        $settings           = new Settings($commit_rules, $immutable_tag, $access_file, $mail_notifications);
+        $settings           = new Settings(
+            $commit_rules,
+            $immutable_tag,
+            $access_file,
+            $mail_notifications,
+            array(),
+            1,
+            false
+        );
         $initial_layout     = array();
 
         $this->repository_creator->createWithSettings($this->repository, $this->user, $settings, $initial_layout, false);

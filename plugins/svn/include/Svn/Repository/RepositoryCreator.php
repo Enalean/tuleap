@@ -247,13 +247,32 @@ class RepositoryCreator
      */
     private function addSettingsToRepository(Repository $repository, Settings $settings)
     {
+        $this->createCommitRules($repository, $settings);
+
+        $this->createImmutableTags($repository, $settings);
+
+        $access_file_history = $settings->getAccessFileHistory();
+        if (count($access_file_history) > 0) {
+            $this->createAccessAndAVersionOfFileHistoryWithoutCleaningContent($repository, $settings, $access_file_history);
+        } else {
+            $this->createLastVersionOfFileHistory($repository, $settings);
+        }
+
+        $this->createMailNotifications($settings);
+    }
+
+    private function createCommitRules(Repository $repository, Settings $settings)
+    {
         $commit_rules = $settings->getCommitRules();
         if ($commit_rules) {
             $this->hook_config_updator->initHookConfiguration($repository, $commit_rules);
 
             $this->project_history_formatter->addCommitRuleHistory($commit_rules);
         }
+    }
 
+    private function createImmutableTags(Repository $repository, Settings $settings)
+    {
         $immutable_tag = $settings->getImmutableTag();
         if (count($immutable_tag->getPaths()) > 0) {
             $this->immutable_tag_creator->saveWithoutHistory(
@@ -264,14 +283,48 @@ class RepositoryCreator
 
             $this->project_history_formatter->addImmutableTagHistory($immutable_tag);
         }
+    }
 
+    private function createAccessAndAVersionOfFileHistoryWithoutCleaningContent(
+        Repository $repository,
+        Settings $settings,
+        array $access_file_history
+    ) {
+        foreach ($access_file_history as $history) {
+            if ($settings->isAccessFileAlreadyPurged()) {
+                $this->access_file_history_creator->storeInDBWithoutCleaningContent(
+                    $repository,
+                    $history->getContent(),
+                    $history->getVersionDate()
+                );
+            } else {
+                $this->access_file_history_creator->storeInDB(
+                    $repository,
+                    $history->getContent(),
+                    $history->getVersionDate()
+                );
+            }
+            $this->project_history_formatter->addAccessFileContentHistory($history->getContent());
+        }
+
+        $this->access_file_history_creator->useAVersionWithHistoryWithoutUpdateSVNAccessFile(
+            $repository,
+            $settings->getUsedVersion()
+        );
+    }
+
+    private function createLastVersionOfFileHistory(Repository $repository, Settings $settings)
+    {
         $access_file = $settings->getAccessFileContent();
         if ($access_file) {
             $this->access_file_history_creator->storeInDB($repository, $access_file, time());
 
             $this->project_history_formatter->addAccessFileContentHistory($access_file);
         }
+    }
 
+    private function createMailNotifications(Settings $settings)
+    {
         $mail_notifications = $settings->getMailNotification();
         if ($mail_notifications) {
             foreach ($mail_notifications as $notification) {
