@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -74,6 +74,11 @@ class PullRequestMinimalRepresentation
      */
     public $branch_dest;
 
+    /**
+     * @var string {@type string}
+     */
+    public $status;
+
     public function buildMinimal(
         PullRequest $pull_request,
         GitRepository $repository,
@@ -97,5 +102,17 @@ class PullRequestMinimalRepresentation
         $this->creation_date = JsonCast::toDate($pull_request->getCreationDate());
         $this->branch_src    = $pull_request->getBranchSrc();
         $this->branch_dest   = $pull_request->getBranchDest();
+        $this->status        = $this->expandStatusName($pull_request->getStatus());
+    }
+
+    private function expandStatusName($status_acronym)
+    {
+        $status_name = array(
+            PullRequest::STATUS_ABANDONED => PullRequestRepresentation::STATUS_ABANDON,
+            PullRequest::STATUS_MERGED    => PullRequestRepresentation::STATUS_MERGE,
+            PullRequest::STATUS_REVIEW    => PullRequestRepresentation::STATUS_REVIEW
+        );
+
+        return $status_name[$status_acronym];
     }
 }
