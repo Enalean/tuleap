@@ -60,6 +60,9 @@ msgstr ""
 msgid "Check permissions?"
 msgstr ""
 
+msgid "Comment"
+msgstr ""
+
 msgid "Configure trackers"
 msgstr ""
 

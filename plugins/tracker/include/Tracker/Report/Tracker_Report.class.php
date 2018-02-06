@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2011-2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -24,6 +24,11 @@ use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
+use Tuleap\Tracker\Report\AdditionalCriteria\CommentCriterion;
+use Tuleap\Tracker\Report\AdditionalCriteria\CommentCriterionPresenter;
+use Tuleap\Tracker\Report\AdditionalCriteria\CommentCriterionValueRetriever;
+use Tuleap\Tracker\Report\AdditionalCriteria\CommentCriterionValueSaver;
+use Tuleap\Tracker\Report\AdditionalCriteria\CommentDao;
 use Tuleap\Tracker\Report\Event\trackerReportDeleted;
 use Tuleap\Tracker\Report\ExpertModePresenter;
 use Tuleap\Tracker\Report\Query\Advanced\ExpertQueryValidator;
@@ -52,15 +57,16 @@ use Tuleap\Tracker\Report\TrackerReportConfigDao;
  */
 class Tracker_Report implements Tracker_Dispatchable_Interface {
 
-    const ACTION_SAVE         = 'report-save';
-    const ACTION_SAVEAS       = 'report-saveas';
-    const ACTION_REPLACE      = 'report-replace';
-    const ACTION_DELETE       = 'report-delete';
-    const ACTION_SCOPE        = 'report-scope';
-    const ACTION_DEFAULT      = 'report-default';
-    const ACTION_CLEANSESSION = 'clean-session';
-    const TYPE_CRITERIA       = 'criteria';
-    const TYPE_TABLE          = 'table';
+    const ACTION_SAVE            = 'report-save';
+    const ACTION_SAVEAS          = 'report-saveas';
+    const ACTION_REPLACE         = 'report-replace';
+    const ACTION_DELETE          = 'report-delete';
+    const ACTION_SCOPE           = 'report-scope';
+    const ACTION_DEFAULT         = 'report-default';
+    const ACTION_CLEANSESSION    = 'clean-session';
+    const TYPE_CRITERIA          = 'criteria';
+    const TYPE_TABLE             = 'table';
+    const COMMENT_CRITERION_NAME = 'comment';
 
     public $id;
     public $name;
@@ -468,6 +474,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         }
 
         $array_of_html_criteria = array();
+        $this->getCommentCriterionHtmlContent($additional_criteria, $array_of_html_criteria);
+
         EventManager::instance()->processEvent(
             TRACKER_EVENT_REPORT_DISPLAY_ADDITIONAL_CRITERIA,
             array(
@@ -491,6 +499,34 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         $html .= '</form>';
         $html .= '</div>';
         return $html;
+    }
+
+    /**
+     * @return Tracker_Report_AdditionalCriterion|null
+     */
+    private function getAdditionalCommentCriterion(array $additional_criteria)
+    {
+        foreach ($additional_criteria as $additional_criterion) {
+            if ($additional_criterion->getKey() === self::COMMENT_CRITERION_NAME) {
+                return $additional_criterion;
+            }
+        }
+
+        return null;
+    }
+
+    private function getCommentCriterionHtmlContent(array $additional_criteria, array &$array_of_html_criteria)
+    {
+        $comment_criterion = $this->getAdditionalCommentCriterion($additional_criteria);
+        if ($comment_criterion) {
+            $presenter = new CommentCriterionPresenter($comment_criterion);
+
+            $renderer = TemplateRendererFactory::build()->getRenderer(
+                TRACKER_TEMPLATE_DIR .'/report/'
+            );
+
+            $array_of_html_criteria[] = $renderer->renderToString('comment-criterion', $presenter);
+        }
     }
 
     public function fetchDisplayQueryExpertMode($report_can_be_modified, PFUser $current_user)
@@ -1449,13 +1485,25 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
 
     public function saveAdditionalCriteria() {
         $additional_criteria = $this->getAdditionalCriteria();
+
+        $this->saveCommentCriterion($additional_criteria);
+
         EventManager::instance()->processEvent(
             TRACKER_EVENT_REPORT_SAVE_ADDITIONAL_CRITERIA,
             array(
-                'additional_criteria'    => $additional_criteria,
-                'report'                 => $this,
+                'additional_criteria' => $additional_criteria,
+                'report'              => $this,
             )
         );
+    }
+
+    private function saveCommentCriterion(array $additional_criteria)
+    {
+        $saver             = new CommentCriterionValueSaver(new CommentDao());
+        $comment_criterion = $this->getAdditionalCommentCriterion($additional_criteria);
+        if ($comment_criterion) {
+            $saver->saveValueForReport($this, $comment_criterion);
+        }
     }
 
     /**
@@ -1623,7 +1671,12 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
                 $additional_criteria[$key] = $additional_criterion;
             }
         } else {
-            $additional_criteria_values = array();
+            $additional_criteria_values = array(
+                self::COMMENT_CRITERION_NAME => array(
+                    'value' => $this->getCommentCriterionValueFromDatabase()
+                )
+            );
+
             EventManager::instance()->processEvent(
                 TRACKER_EVENT_REPORT_LOAD_ADDITIONAL_CRITERIA,
                 array(
@@ -1641,6 +1694,16 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         }
 
         return $additional_criteria;
+    }
+
+    /**
+     * @return string|null
+     */
+    private function getCommentCriterionValueFromDatabase()
+    {
+        $retriever = new CommentCriterionValueRetriever(new CommentDao());
+
+        return $retriever->getValueForReport($this);
     }
 
     /**

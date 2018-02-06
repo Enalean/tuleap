@@ -83,6 +83,9 @@ msgstr "Annuler"
 msgid "Check permissions?"
 msgstr "Vérifier les permissions ?"
 
+msgid "Comment"
+msgstr "Commentaire"
+
 msgid "Configure trackers"
 msgstr "Configurer les trackers"
 
