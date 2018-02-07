@@ -26,76 +26,10 @@
         </span>
     </div>
 
-    <ul class="extra-card-fields" ng-if="item.card_fields.length > 0">
-        <li ng-repeat="card_field in item.card_fields track by $index"
-            ng-class="{ large: $ctrl.cardFieldIsText(card_field.type) && card_field.value }"
-            class="extra-card-field"
-        >
-            <div
-                    class="extra-card-field-content"
-                    ng-if="$ctrl.cardFieldIsSimpleValue(card_field.type) && card_field.value"
-            >
-                <span class="extra-card-field-title">{{ card_field.label }}: </span>
-                <tuleap-simple-field
-                        value="card_field.value"
-                        filter-terms="$ctrl.kanban_filter.terms"
-                ></tuleap-simple-field>
-            </div>
-            <div
-                    class="extra-card-field-content"
-                    ng-if="$ctrl.cardFieldIsList(card_field.type) && card_field.values.length > 0 && $ctrl.isListBoundToAValueDifferentFromNone(card_field.values)"
-            >
-                <span class="extra-card-field-title">{{ card_field.label }}: </span>
-                <span ng-bind-html="$ctrl.getCardFieldListValues(card_field.values, $ctrl.kanban_filter.terms)"></span>
-            </div>
-            <div
-                    class="extra-card-field-content"
-                    ng-if="$ctrl.cardFieldIsDate(card_field.type) && card_field.value"
-            >
-                <span class="extra-card-field-title">{{ card_field.label }}: </span>
-                <span title="{{ card_field.value }}" ng-bind-html="card_field.value | amCalendar | tuleapHighlight:$ctrl.kanban_filter.terms"></span>
-            </div>
-            <card-text-field
-                    ng-if="$ctrl.cardFieldIsText(card_field.type)"
-                    field="card_field"
-                    filter-terms="$ctrl.kanban_filter.terms"
-            ></card-text-field>
-            <div
-                    class="extra-card-field-content"
-                    ng-if="$ctrl.cardFieldIsFile(card_field.type) && card_field.file_descriptions.length > 0"
-            >
-                <span class="extra-card-field-title">{{ card_field.label }}: </span>
-                <span ng-bind-html="$ctrl.getCardFieldFileValue(item.id, card_field.field_id, card_field.file_descriptions, $ctrl.kanban_filter.terms)"></span>
-            </div>
-            <div
-                    class="extra-card-field-content"
-                    ng-if="$ctrl.cardFieldIsCross(card_field.type) && card_field.value"
-            >
-                <span class="extra-card-field-title">{{ card_field.label }}: </span>
-                <span ng-bind-html="$ctrl.getCardFieldCrossValue(card_field.value, $ctrl.kanban_filter.terms)"></span>
-            </div>
-            <div
-                    class="extra-card-field-content"
-                    ng-if="$ctrl.cardFieldIsPermissions(card_field.type) && card_field.granted_groups.length > 0"
-            >
-                <span class="extra-card-field-title">{{ card_field.label }}: </span>
-                <span ng-bind-html="$ctrl.getCardFieldPermissionsValue(card_field.granted_groups) | tuleapHighlight:$ctrl.kanban_filter.terms"></span>
-            </div>
-            <div
-                    class="extra-card-field-content"
-                    ng-if="$ctrl.cardFieldIsUser(card_field.type) && card_field.value"
-            >
-                <span class="extra-card-field-title">{{ card_field.label }}: </span>
-                <span ng-bind-html="$ctrl.getCardFieldUserValue(card_field.value, $ctrl.kanban_filter.terms)"></span>
-            </div>
-            <card-computed-field
-                    ng-if="$ctrl.cardFieldIsComputed(card_field.type)"
-                    field="card_field"
-                    filter-terms="$ctrl.kanban_filter.terms"
-            ></card-computed-field>
-            <!-- Artifact links & Burndown fields are not managed yet -->
-        </li>
-    </ul>
+    <card-fields
+        item="item"
+        filter-terms="$ctrl.kanban_filter.terms"
+    ></card-fields>
 
     <div data-nodrag="true"
         class="kanban-item-content-expand-collapse"

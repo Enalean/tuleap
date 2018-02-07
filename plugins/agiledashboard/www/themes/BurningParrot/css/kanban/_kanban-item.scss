@@ -4,7 +4,7 @@ $expand-collapse-bar-height: 8px;
 $margin-between-kanban-item-on-hover: 4px;
 $margin-between-kanban-item: $expand-collapse-bar-height + $margin-between-kanban-item-on-hover;
 
-@import 'kanban-item-card-fields';
+@import '../card-fields';
 @import 'kanban-item-moves';
 @import 'kanban-item-transit';
 

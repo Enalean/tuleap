@@ -15,7 +15,6 @@ import backlog               from './backlog/backlog.js';
 import backlog_item_rest     from './backlog-item-rest/backlog-item-rest.js';
 import backlog_item_selected from './backlog-item-selected/backlog-item-selected.js';
 import edit_item             from './edit-item/edit-item.js';
-import highlight_filter      from './highlight-filter/highlight-filter.js';
 import in_properties         from './in-properties/in-properties.js';
 import milestone             from './milestone/milestone.js';
 import shared_properties     from './shared-properties/shared-properties.js';
@@ -36,7 +35,6 @@ export default angular.module('planning', [
     backlog_item_rest,
     backlog_item_selected,
     edit_item,
-    highlight_filter,
     in_properties,
     milestone,
     rest_error,

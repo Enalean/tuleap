@@ -22,11 +22,11 @@
 @import 'dragular/dist/dragular';
 
 @import 'global-variables';
+@import './highlight';
 
 @import 'kanban/socket';
 @import 'kanban/edit-kanban';
 @import 'kanban/kanban-item';
-@import 'kanban/highlight';
 @import 'kanban/reports-modal';
 @import 'kanban/diagram';
 @import 'kanban/add-to-dashboard';

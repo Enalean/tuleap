@@ -44,7 +44,9 @@
         </a>
 
         <span class="backlog-item-details-title"
-            ng-bind-html="details.getCardFieldTextValue(details.backlog_item.label) | tuleapHighlight:details.backlog_filter.terms"
+            tuleap-simple-field
+            value="details.backlog_item.label"
+            filter-terms="details.backlog_filter.terms"
         ></span>
 
         <div class="backlog-item-details-spacer"></div>
@@ -67,67 +69,10 @@
         </div>
     </div>
 
-    <ul class="extra-card-fields" ng-if="details.backlog_item.card_fields.length > 0">
-        <li ng-repeat="card_field in details.backlog_item.card_fields track by $index"
-            ng-class="{ large: details.cardFieldIsText(card_field.type) && card_field.value }"
-            class="extra-card-field"
-        >
-            <div class="extra-card-field-content"
-                ng-if="details.cardFieldIsSimpleValue(card_field.type) && card_field.value"
-            >
-                <span class="extra-card-field-title">{{ card_field.label }}: </span>
-                <span ng-bind-html="details.getCardFieldTextValue(card_field.value) | tuleapHighlight:details.backlog_filter.terms"></span>
-            </div>
-            <div class="extra-card-field-content"
-                ng-if="details.cardFieldIsList(card_field.type) && card_field.values.length > 0 && details.isListBoundToAValueDifferentFromNone(card_field.values)"
-            >
-                <span class="extra-card-field-title">{{ card_field.label }}: </span>
-                <span ng-bind-html="details.getCardFieldListValues(card_field.values, details.backlog_filter.terms)"></span>
-            </div>
-            <div class="extra-card-field-content"
-                ng-if="details.cardFieldIsDate(card_field.type) && card_field.value"
-            >
-                <span class="extra-card-field-title">{{ card_field.label }}: </span>
-                <span title="{{ card_field.value }}" ng-bind-html="details.getCardFieldDateValue(card_field.value) | tuleapHighlight:details.backlog_filter.terms"></span>
-            </div>
-            <div class="extra-card-field-content"
-                ng-if="details.cardFieldIsText(card_field.type) && card_field.value"
-            >
-                <span class="extra-card-field-title">{{ card_field.label }}: </span>
-                <span ng-bind-html="details.getCardFieldTextValue(card_field.value) | tuleapHighlight:details.backlog_filter.terms"></span>
-            </div>
-            <div class="extra-card-field-content"
-                ng-if="details.cardFieldIsFile(card_field.type) && card_field.file_descriptions.length > 0"
-            >
-                <span class="extra-card-field-title">{{ card_field.label }}: </span>
-                <span ng-bind-html="details.getCardFieldFileValue(details.backlog_item.id, card_field.field_id, card_field.file_descriptions, details.backlog_filter.terms)"></span>
-            </div>
-            <div class="extra-card-field-content"
-                ng-if="details.cardFieldIsCross(card_field.type) && card_field.value"
-            >
-                <span class="extra-card-field-title">{{ card_field.label }}: </span>
-                <span ng-bind-html="details.getCardFieldCrossValue(card_field.value, details.backlog_filter.terms)"></span>
-            </div>
-            <div class="extra-card-field-content"
-                ng-if="details.cardFieldIsPermissions(card_field.type) && card_field.granted_groups.length > 0"
-            >
-                <span class="extra-card-field-title">{{ card_field.label }}: </span>
-                <span ng-bind-html="details.getCardFieldPermissionsValue(card_field.granted_groups) | tuleapHighlight:details.backlog_filter.terms"></span>
-            </div>
-            <div class="extra-card-field-content"
-                ng-if="details.cardFieldIsUser(card_field.type) && card_field.value"
-            >
-                <span class="extra-card-field-title">{{ card_field.label }}: </span>
-                <span ng-bind-html="details.getCardFieldUserValue(card_field.value, details.backlog_filter.terms)"></span>
-            </div>
-            <card-computed-field
-                ng-if="details.cardFieldIsComputed(card_field.type)"
-                field="card_field"
-                filter-terms="details.backlog_filter.terms"
-            ></card-computed-field>
-            <!-- Artifact links & Burndown fields are not managed yet -->
-        </li>
-    </ul>
+    <card-fields
+        item="details.backlog_item"
+        filter-terms="details.backlog_filter.terms"
+    ></card-fields>
 </div>
 
 <div class="backlog-item-details-moves" data-nodrag="true">

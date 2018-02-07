@@ -13,7 +13,8 @@
     "d3-shape": "^1.2.0",
     "moment": "^2.19.4",
     "node-gettext": "^2.0.0",
-    "sprintf-js": "^1.1.1"
+    "sprintf-js": "^1.1.1",
+    "striptags": "^2.2.1"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
