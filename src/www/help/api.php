@@ -8,7 +8,7 @@ $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('code
 
 $presenter = array(
     'should_display_documentation_about_deprecated_soap_api' => ForgeConfig::get('should_display_documentation_about_deprecated_soap_api'),
-    'explorer_available' => is_dir('/usr/share/restler/vendor/Luracast/Restler/explorer'),
+    'explorer_available' => is_dir('/usr/share/tuleap/src/www/api/explorer'),
     'end_points'         => array(
         array(
             'title'       => 'Core',
