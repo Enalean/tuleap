@@ -1,6 +1,6 @@
 <?php
 /**
-* Copyright Enalean (c) 2013. All rights reserved.
+* Copyright Enalean (c) 2013 - 2018. All rights reserved.
 * Tuleap and Enalean names and logos are registrated trademarks owned by
 * Enalean SAS. All other trademarks or names are properties of their respective
 * owners.
@@ -21,10 +21,97 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class Tracker_SemanticCollection extends ArrayIterator{
+class Tracker_SemanticCollection implements ArrayAccess, Iterator
+{
+    /**
+     * @var Tracker_Semantic[]
+     */
+    private $semantics_by_name;
+    /**
+     * @var Tracker_Semantic[]
+     */
+    private $semantics;
 
-    public function add($key, $value) {
-        $this->offsetSet($key, $value);
+    public function __construct()
+    {
+        $this->semantics         = [];
+        $this->semantics_by_name = [];
+    }
+
+    public function add(Tracker_Semantic $semantic)
+    {
+        $this->semantics[] = $semantic;
+
+        $this->semantics_by_name[$semantic->getShortName()] = $semantic;
+    }
+
+    public function insertAfter($semantic_shortname, Tracker_Semantic $semantic)
+    {
+        $position = 0;
+        foreach ($this->semantics as $index => $previous_semantic) {
+            if ($previous_semantic->getShortName() === $semantic_shortname) {
+                $position = $index + 1;
+                break;
+            }
+        }
+
+        array_splice($this->semantics, $position, 0, array($semantic));
+        $this->semantics_by_name[$semantic->getShortName()] = $semantic;
+    }
+
+    public function offsetExists($offset)
+    {
+        return isset($this->semantics_by_name[$offset]);
+    }
+
+    public function offsetGet($offset)
+    {
+        return isset($this->semantics_by_name[$offset]) ? $this->semantics_by_name[$offset] : null;
+    }
+
+    public function offsetSet($offset, $value)
+    {
+        if (is_null($offset) || ! isset($this->semantics_by_name[$offset])) {
+            $this->add($value);
+        } else {
+            $this->semantics_by_name[$offset] = $value;
+        }
+    }
+
+    public function offsetUnset($offset)
+    {
+        unset($this->semantics_by_name[$offset]);
+
+        foreach ($this->semantics as $index => $semantic) {
+            if ($semantic->getShortName() === $offset) {
+                unset($this->semantics[$index]);
+                break;
+            }
+        }
+    }
+
+    public function current()
+    {
+        return current($this->semantics);
+    }
+
+    public function next()
+    {
+        return next($this->semantics);
+    }
+
+    public function key()
+    {
+        return key($this->semantics);
+    }
+
+    public function valid()
+    {
+        return key($this->semantics) !== null;
+    }
+
+    public function rewind()
+    {
+        return reset($this->semantics);
     }
 }
-?>

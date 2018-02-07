@@ -232,8 +232,7 @@ class cardwallPlugin extends Plugin {
         $semantics = $parameters['semantics'];
 
 
-        $card_fields_semantic = Cardwall_Semantic_CardFields::load($tracker);
-        $semantics->add($card_fields_semantic->getShortName(), $card_fields_semantic);
+        $semantics->add(Cardwall_Semantic_CardFields::load($tracker));
     }
 
     /**

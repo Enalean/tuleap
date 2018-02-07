@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -20,10 +20,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Tuleap\Tracker\Semantic\SemanticDone;
-
-class Tracker_SemanticManager {
-
+class Tracker_SemanticManager
+{
     /** @var Tracker */
     protected $tracker;
 
@@ -111,20 +109,11 @@ class Tracker_SemanticManager {
     public function getSemantics() {
         $semantics = new Tracker_SemanticCollection();
 
-        $title_semantic = Tracker_Semantic_Title::load($this->tracker);
-        $semantics->add($title_semantic->getShortName(), $title_semantic);
-
-        $description_semantic = Tracker_Semantic_Description::load($this->tracker);
-        $semantics->add($description_semantic->getShortName(), $description_semantic);
-
-        $status_semantic = Tracker_Semantic_Status::load($this->tracker);
-        $semantics->add($status_semantic->getShortName(), $status_semantic);
-
-        $contributor_semantic = Tracker_Semantic_Contributor::load($this->tracker);
-        $semantics->add($contributor_semantic->getShortName(), $contributor_semantic);
-
-        $tooltip_semantic = $this->tracker->getTooltip();
-        $semantics->add($tooltip_semantic->getShortName(), $tooltip_semantic);
+        $semantics->add(Tracker_Semantic_Title::load($this->tracker));
+        $semantics->add(Tracker_Semantic_Description::load($this->tracker));
+        $semantics->add(Tracker_Semantic_Status::load($this->tracker));
+        $semantics->add(Tracker_Semantic_Contributor::load($this->tracker));
+        $semantics->add($this->tracker->getTooltip());
 
         $this->addOtherSemantics($semantics);
 
@@ -201,4 +190,3 @@ class Tracker_SemanticManager {
         return $order;
     }
 }
-?>

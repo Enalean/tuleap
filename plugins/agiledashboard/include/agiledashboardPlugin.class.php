@@ -717,11 +717,8 @@ class AgileDashboardPlugin extends Plugin {
         /* @var $semantics Tracker_SemanticCollection */
         $semantics = $parameters['semantics'];
 
-        $effort_semantic = AgileDashBoard_Semantic_InitialEffort::load($tracker);
-        $semantics->add($effort_semantic->getShortName(), $effort_semantic);
-
-        $done_semantic = SemanticDone::load($tracker);
-        $semantics->add($done_semantic->getShortName(), $done_semantic);
+        $semantics->add(AgileDashBoard_Semantic_InitialEffort::load($tracker));
+        $semantics->insertAfter(Tracker_Semantic_Status::NAME, SemanticDone::load($tracker));
     }
 
     /**
