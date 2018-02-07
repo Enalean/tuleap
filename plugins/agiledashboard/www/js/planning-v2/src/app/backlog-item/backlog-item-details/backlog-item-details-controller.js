@@ -42,14 +42,9 @@ function BacklogItemDetailsController(
         getCardFieldTextValue                : CardFieldsService.getCardFieldTextValue,
         getCardFieldUserValue                : CardFieldsService.getCardFieldUserValue,
         isListBoundToAValueDifferentFromNone : CardFieldsService.isListBoundToAValueDifferentFromNone,
-        getInitialEffortMessage              : getInitialEffortMessage,
         showAddChildModal                    : showAddChildModal,
         showEditModal                        : EditItemService.showEditModal
     });
-
-    function getInitialEffortMessage(initial_effort) {
-        return gettextCatalog.getPlural(initial_effort, "pt", "pts");
-    }
 
     function showAddChildModal($event, item_type) {
         $event.preventDefault();

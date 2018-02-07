@@ -17,17 +17,38 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'scrum/overview';
-@import 'scrum/planning';
+#backlog-items-selected-bar {
+    position: fixed;
+    z-index: 999;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 15px 0 15px $sidebar-expanded-width;
+    border-top: 1px solid #e0e0e0;
+    background: rgba(255, 255, 255, .95);
+    text-align: center;
 
-#agiledashboard-scrum-milestone-menu {
-    cursor: pointer;
+    &.ng-enter {
+        animation: slideInUp 200ms;
+    }
+
+    &.ng-leave {
+        animation: slideOutDown 200ms;
+    }
+
+    > p:first-child {
+        margin: 0 0 $tlp-half-spacing;
+    }
+
+    > p:last-child {
+        margin: 0;
+
+        &.focus {
+            animation: pulse ease-in-out 750ms;
+        }
+    }
 }
 
-#agiledashboard-scrum-milestone-menu-caret {
-    font-size: 20px;
-}
-
-.agiledashboard-milestone-details-items-list-badge {
-    margin: 0 5px 0 0;
+.sidebar-collapsed #backlog-items-selected-bar {
+    padding-left: $sidebar-collapsed-width;
 }

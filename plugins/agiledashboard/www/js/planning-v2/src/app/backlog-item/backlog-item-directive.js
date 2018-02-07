@@ -3,9 +3,8 @@ import BacklogItemController from './backlog-item-controller.js';
 
 export default function BacklogItem() {
     return {
-        restrict        : 'E',
+        restrict        : 'EA',
         scope           : false,
-        replace         : false,
         controller      : BacklogItemController,
         controllerAs    :'backlogItemController',
         bindToController: true,

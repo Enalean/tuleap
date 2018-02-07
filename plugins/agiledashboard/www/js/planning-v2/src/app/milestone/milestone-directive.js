@@ -3,7 +3,7 @@ import MilestoneController from './milestone-controller.js';
 
 export default function Milestone() {
     return {
-        restrict        : 'E',
+        restrict        : 'AE',
         scope           : false,
         replace         : false,
         controller      : MilestoneController,

@@ -1,0 +1,132 @@
+/**
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@import 'card-fields';
+@import 'backlog-item-moves';
+
+.backlog-item-details {
+    display: flex;
+    position: relative;
+    flex: 1 1 auto;
+    border: 1px solid $tlp-ui-border-normal;
+    border-radius: 3px;
+    background: $tlp-ui-white;
+    box-shadow: 0 1px 0 0 rgba(242, 242, 242, .5);
+    cursor: move;
+
+    @for $i from 1 through length($tlp-swatch-color-names) {
+        &.#{nth($tlp-swatch-color-names, $i)} {
+            > .backlog-item-details-type-border {
+                border-left-color: nth($tlp-swatch-color-primaries, $i);
+            }
+        }
+    }
+
+    .highlight {
+        margin: 0;
+        padding: 3px 1px;
+        border-radius: 2px;
+        background: rgb(250, 250, 36);
+        box-shadow: 0 1px 1px rgba(0, 0, 0, .2);
+        color: #000000;
+    }
+
+    &.closed {
+        background-color: #f8f8f8;
+        color: #999999;
+    }
+
+    &.updating {
+        background: url('../images/loader-mini.gif') right 45px bottom 5px no-repeat;
+    }
+
+    &:hover,
+    &.moving-to {
+        > .backlog-item-details-moves {
+            transition: opacity 100ms ease-in-out 500ms;
+            opacity: 1;
+        }
+
+        > .backlog-item-content-collapsed > .backlog-item-details-effort-container {
+            left: -15px;
+            transition: left 100ms ease-in-out 500ms;
+        }
+    }
+}
+
+.backlog-item-details-type-border {
+    flex: 0 0 auto;
+    border-left-width: 4px;
+    border-style: solid;
+    border-top-left-radius: 2px;
+    border-bottom-left-radius: 2px;
+}
+
+.backlog-item-content {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+}
+
+.backlog-item-content-collapsed {
+    display: flex;
+    flex: 1 1 auto;
+    padding: 5px;
+}
+
+.backlog-item-details-id {
+    color: $tlp-ui-dimmed;
+    font-size: 12px;
+
+    &:hover {
+        opacity: .8;
+        text-decoration: none;
+    }
+}
+
+.backlog-item-details-id-icon {
+    margin: 0 0 0 2px;
+}
+
+.backlog-item-details-title {
+    margin: 0 0 0 7px;
+    font-size: 14px;
+    line-height: 24px;
+}
+
+.backlog-item-details-spacer {
+    flex: 1 1 auto;
+}
+
+.backlog-item-details-parent {
+    align-self: center;
+    margin: 0 5px;
+    color: #50b9d8;
+    font-size: 12px;
+    text-align: center;
+}
+
+.backlog-item-details-effort-container {
+    position: relative;
+    left: 0;
+    min-width: 40px;
+    margin: 0 0 0 $tlp-spacing;
+    transition: left 100ms ease-in-out;
+    text-align: right;
+}

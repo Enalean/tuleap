@@ -159,7 +159,7 @@ function BacklogItemController(
     }
 
     function initDragularForBacklogItemChildren() {
-        var backlog_item_element = angular.element('ul.backlog-item-children[data-backlog-item-id="' + self.backlog_item.id + '"]');
+        var backlog_item_element = angular.element('.backlog-item-children-list[data-backlog-item-id="' + self.backlog_item.id + '"]');
 
         self.dragular_instance_for_backlog_item_children = dragularService(backlog_item_element, self.dragularOptionsForBacklogItemChildren());
 
@@ -246,7 +246,7 @@ function BacklogItemController(
             return;
         }
 
-        var backlog_item_element = target_element.closest('backlog-item'),
+        var backlog_item_element = target_element.closest('.backlog-item'),
             target_list_element  = getListElement(backlog_item_element);
 
         if (! canDropIntoElement(source_list_element, target_list_element, dropped_item_element)) {
@@ -363,7 +363,7 @@ function BacklogItemController(
 
     function getListElement(element) {
         return angular.element(element)
-            .find('.backlog-item-children')
+            .find('.backlog-item-children-list')
             .last();
     }
 
@@ -438,7 +438,7 @@ function BacklogItemController(
     }
 
     function isABacklogItem(element) {
-        return element.hasClass('backlog-item-children');
+        return element.hasClass('backlog-item-children-list');
     }
 
     function isItemDroppable(element_to_drop, target_container_element) {
@@ -467,7 +467,7 @@ function BacklogItemController(
     function ancestorCannotBeDragged(handle_element) {
         return (
             angular.element(handle_element)
-                .parentsUntil('.backlog-item-children')
+                .parentsUntil('.backlog-item-children-list')
                 .addBack()
                 .filter('[data-nodrag="true"]')
                 .length > 0

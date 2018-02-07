@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,25 +18,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard;
+namespace Tuleap\AgileDashboard\Planning;
 
+use Tuleap\AgileDashboard\JavascriptDependenciesProvider;
 use Tuleap\Layout\IncludeAssets;
 
-class KanbanJavascriptDependenciesProvider implements JavascriptDependenciesProvider
+class PlanningJavascriptDependenciesProvider implements JavascriptDependenciesProvider
 {
     public function getDependencies()
     {
-        $kanban_include_assets = new IncludeAssets(
-            AGILEDASHBOARD_BASE_DIR . '/../www/js/kanban/dist',
-            AGILEDASHBOARD_BASE_URL . '/js/kanban/dist'
+        $planning_v2_include_assets = new IncludeAssets(
+            AGILEDASHBOARD_BASE_DIR . '/../www/js/planning-v2/dist',
+            AGILEDASHBOARD_BASE_URL . '/js/planning-v2/dist'
         );
         $ckeditor_path = '/scripts/ckeditor-4.3.2/';
 
         return array(
-            array('file' => $kanban_include_assets->getFileURL('angular.js'), 'unique-name' => 'angular'),
             array('snippet' => 'window.CKEDITOR_BASEPATH = "' . $ckeditor_path . '";'),
             array('file' => $ckeditor_path . 'ckeditor.js'),
-            array('file' => $kanban_include_assets->getFileURL('kanban.js')),
+            array('file' => $planning_v2_include_assets->getFileURL('planning-v2.js')),
         );
     }
 }

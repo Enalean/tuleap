@@ -72,7 +72,7 @@ function BacklogController(
     }
 
     function initDragular() {
-        var backlog_element = angular.element('ul.backlog');
+        var backlog_element = angular.element('div.backlog');
 
         self.dragular_instance_for_backlog = dragularService(backlog_element, self.dragularOptionsForBacklog());
 

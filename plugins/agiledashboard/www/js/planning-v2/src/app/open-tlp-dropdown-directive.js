@@ -17,17 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'scrum/overview';
-@import 'scrum/planning';
+import { dropdown } from 'tlp';
 
-#agiledashboard-scrum-milestone-menu {
-    cursor: pointer;
-}
-
-#agiledashboard-scrum-milestone-menu-caret {
-    font-size: 20px;
-}
-
-.agiledashboard-milestone-details-items-list-badge {
-    margin: 0 5px 0 0;
+export default function OpenTlpDropdown() {
+    return {
+        restrict: 'A',
+        link(scope, element) {
+            dropdown(element[0]);
+        }
+    };
 }

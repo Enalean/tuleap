@@ -1,4 +1,5 @@
-import './app-planning-controller.spec.js';
+import 'babel-polyfill';
+import './planning-controller.spec.js';
 import './backlog-item-collection/backlog-item-collection-service.spec.js';
 import './backlog-item-rest/backlog-item-factory.spec.js';
 import './backlog-item-rest/backlog-item-service.spec.js';

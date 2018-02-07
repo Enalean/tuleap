@@ -1,2 +1,0 @@
-# We do not want to load files in src/ directory in development mode
-Deny from all

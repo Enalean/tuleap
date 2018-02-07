@@ -1,13 +1,14 @@
-import angular    from 'angular';
-import ngAnimate  from 'angular-animate';
-import ngSanitize from 'angular-sanitize';
-import ui_router  from 'angular-ui-router';
+import '../../../scrum-header.js';
+
+import angular                       from 'angular';
+import ngAnimate                     from 'angular-animate';
+import ngSanitize                    from 'angular-sanitize';
+import angular_artifact_modal_module from 'angular-artifact-modal';
 
 import 'angular-moment';
 import 'moment/locale/fr.js';
 import 'angular-gettext';
 import 'restangular';
-import 'angular-ui-bootstrap-templates';
 import '../../po/fr.po';
 
 import backlog               from './backlog/backlog.js';
@@ -21,26 +22,16 @@ import shared_properties     from './shared-properties/shared-properties.js';
 import user_preferences      from './user-preferences/user-preferences.js';
 import rest_error            from './rest-error/rest-error.js';
 
-// Modal deps should be required by modal
-import 'angular-ckeditor';
-import 'angular-bootstrap-datetimepicker';
-import 'angular-ui-select';
-import 'angular-filter';
-import 'angular-base64-upload';
-import 'tuleap-artifact-modal';
-import './modal-moment-fix.js';
-
-import MainController     from './main-controller.js';
-import PlanningConfig     from './app-config.js';
-import PlanningController from './app-planning-controller.js';
+import MainController           from './main-controller.js';
+import PlanningDirective        from './planning-directive.js';
+import OpenTlpDropdownDirective from './open-tlp-dropdown-directive.js';
 
 export default angular.module('planning', [
     'angularMoment',
     'gettext',
-    'tuleap.artifact-modal',
-    ngSanitize,
+    angular_artifact_modal_module,
     ngAnimate,
-    ui_router,
+    ngSanitize,
     backlog,
     backlog_item_rest,
     backlog_item_selected,
@@ -52,7 +43,7 @@ export default angular.module('planning', [
     shared_properties,
     user_preferences,
 ])
-.config(PlanningConfig)
 .controller('MainController', MainController)
-.controller('PlanningController', PlanningController)
+.directive('planning', PlanningDirective)
+.directive('openTlpDropdown', OpenTlpDropdownDirective)
 .name;

@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
@@ -17,17 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'scrum/overview';
-@import 'scrum/planning';
+namespace Tuleap\AgileDashboard;
 
-#agiledashboard-scrum-milestone-menu {
-    cursor: pointer;
-}
-
-#agiledashboard-scrum-milestone-menu-caret {
-    font-size: 20px;
-}
-
-.agiledashboard-milestone-details-items-list-badge {
-    margin: 0 5px 0 0;
+interface JavascriptDependenciesProvider
+{
+    /**
+     * @return array
+     */
+    public function getDependencies();
 }

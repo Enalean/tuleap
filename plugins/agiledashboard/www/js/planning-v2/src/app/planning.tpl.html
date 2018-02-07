@@ -1,93 +1,101 @@
-<div class="alert alert-error" ng-if="planning.getRestError().rest_error_occured" translate>A server error has occured. <b>You should refresh this page</b>.</div>
-<div class="alert alert-error" ng-if="planning.getRestError().rest_error_occured" ng-bind-html="planning.getRestError().rest_error"></div>
+<div class="tlp-alert-danger" ng-if="planning.getRestError().rest_error_occured" translate>
+    A server error has occured. <b>You should refresh this page</b>.
+</div>
+<div class="tlp-alert-danger" ng-if="planning.getRestError().rest_error_occured" ng-bind-html="planning.getRestError().rest_error"></div>
 
 <div class="tuleap-modal-loading" ng-if="planning.loading_modal.loading"></div>
 
-<div id="planning-view" ng-class="{ 'multi-selected-backlog-items': planning.getNumberOfSelectedBacklogItem() > 0 }">
-    <div backlog id="backlog"></div>
+<div class="planning-view" ng-class="{ 'multi-selected-backlog-items': planning.getNumberOfSelectedBacklogItem() > 0 }">
+    <div backlog class="planning-backlog"></div>
 
-    <div id="divider"></div>
+    <div class="planning-divider"></div>
 
-    <div id="planned">
-        <div class="milestones">
-            <div class="planning-header">
-                <h2 translate>Milestones</h2>
+    <div class="planning-planned">
+        <div class="planning-header">
+            <h2 class="planning-header-title" translate>Milestones</h2>
 
-                <button ng-if="planning.backlog.submilestone_type  && planning.backlog.user_can_move_cards"
-                    class="btn btn-small"
-                    ng-click="planning.showAddSubmilestoneModal($event, planning.backlog.submilestone_type)"
-                >
-                    <i class="icon-plus"></i> <span translate>Add a {{ planning.backlog.submilestone_type.label }}</span>
-                </button>
-
-                <div ng-if="planning.milestones.content.length > 0" class="btn-group view-switcher" data-toggle="buttons-radio">
-                    <button
-                        type="button"
-                        class="btn btn-small"
-                        ng-class="{active: planning.current_closed_view_class === planning.show_closed_view_key}"
-                        ng-click="planning.switchClosedMilestoneItemsViewMode(planning.show_closed_view_key)"
-                        title="{{ 'Show closed backlog items' | translate }}"
-                    >
-                        <i class="icon-eye-open"></i> <span translate>Show closed backlog items</span>
-                    </button>
-                    <button
-                        type="button"
-                        class="btn btn-small"
-                        ng-class="{active: planning.current_closed_view_class === planning.hide_closed_view_key}"
-                        ng-click="planning.switchClosedMilestoneItemsViewMode(planning.hide_closed_view_key)"
-                        title="{{ 'Hide closed backlog items' | translate }}"
-                    >
-                        <i class="icon-eye-close"></i> <span translate>Hide closed backlog items</span>
-                    </button>
-                </div>
-
-                <div class="clearfix"></div>
-            </div>
-
-            <div translate class="alert alert-warning" ng-if="planning.displayUserCantPrioritizeForMilestones()">
-                You are not allowed to rank on this planning
-            </div>
-
-            <div class="no-open-milestones" ng-if="! planning.thereAreOpenMilestonesLoaded() && planning.milestones.open_milestones_fully_loaded" translate>
-                There are no open milestones
-            </div>
-            <fieldset
-                ng-repeat="milestone in planning.getOpenMilestones() track by milestone.id"
-                class="milestone"
-                ng-class="{ collapsed: milestone.collapsed, updating: milestone.updating }"
+            <button ng-if="planning.backlog.submilestone_type  && planning.backlog.user_can_move_cards"
+                type="button"
+                class="tlp-button-primary tlp-button-outline tlp-button-small planned-header-add-button"
+                ng-click="planning.showAddSubmilestoneModal($event, planning.backlog.submilestone_type)"
             >
-                <milestone></milestone>
-            </fieldset>
-
-
-            <div ng-if="planning.thereAreClosedMilestonesLoaded() || (! planning.thereAreClosedMilestonesLoaded() && planning.milestones.closed_milestones_fully_loaded)" class="milestones-separator">
-                <span translate>Closed milestones are below</span>
-            </div>
-            <button id="load-closed-milestone"
-                ng-if="! planning.thereAreClosedMilestonesLoaded() && ! planning.milestones.loading && ! planning.milestones.closed_milestones_fully_loaded"
-                class="btn btn-link btn-small"
-                ng-click="planning.displayClosedMilestones()"
-                translate
-            >
-                Load closed milestones
+                <i class="fa fa-plus tlp-button-icon"></i> <span translate>Add a {{ planning.backlog.submilestone_type.label }}</span>
             </button>
-            <div class="no-closed-milestones" ng-if="! planning.thereAreClosedMilestonesLoaded() && planning.milestones.closed_milestones_fully_loaded" translate>
-                There are no closed milestones
-            </div>
-            <fieldset
-                ng-if="planning.thereAreClosedMilestonesLoaded()"
-                ng-repeat="milestone in planning.getClosedMilestones() track by milestone.id"
-                class="milestone"
-                ng-class="{ collapsed: milestone.collapsed, updating: milestone.updating }"
+
+            <div class="planning-header-spacer"></div>
+
+            <div class="tlp-button-bar"
+                ng-if="planning.milestones.content.length > 0"
             >
-                <milestone></milestone>
-            </fieldset>
-
-            <div class="loading" ng-if="planning.milestones.loading"></div>
+                <div class="tlp-button-bar-item" title="{{::'Show closed backlog items' | translate }}">
+                    <input type="radio"
+                        id="planning-header-closed-toggler"
+                        class="tlp-button-bar-checkbox"
+                        ng-change="planning.switchClosedMilestoneItemsViewMode(planning.show_closed_view_key)"
+                        ng-model="planning.current_closed_view_class"
+                        ng-value="planning.show_closed_view_key"
+                    >
+                    <label for="planning-header-closed-toggler"
+                        class="tlp-button-secondary tlp-button-small"
+                    >
+                        <i class="fa fa-eye tlp-button-icon"></i> <span class="planning-header-toggler-label" translate>Show closed backlog items</span>
+                    </label>
+                </div>
+                <div class="tlp-button-bar-item" title="{{::'Hide closed backlog items' | translate }}">
+                    <input type="radio"
+                        id="planning-header-opened-toggler"
+                        class="tlp-button-bar-checkbox"
+                        ng-change="planning.switchClosedMilestoneItemsViewMode(planning.hide_closed_view_key)"
+                        ng-model="planning.current_closed_view_class"
+                        ng-value="planning.hide_closed_view_key"
+                    >
+                    <label for="planning-header-opened-toggler"
+                        class="tlp-button-secondary tlp-button-small"
+                    >
+                        <i class="fa fa-eye-slash tlp-button-icon"></i> <span class="planning-header-toggler-label" translate>Hide closed backlog items</span>
+                    </label>
+                </div>
+            </div>
         </div>
-    </div>
 
-    <div class="clearfix"></div>
+        <div class="tlp-alert-warning planning-warning" ng-if="planning.displayUserCantPrioritizeForMilestones()" translate>
+            You are not allowed to rank on this planning
+        </div>
+
+        <div class="no-open-milestones" ng-if="! planning.thereAreOpenMilestonesLoaded() && planning.milestones.open_milestones_fully_loaded" translate>
+            There are no open milestones
+        </div>
+        <section class="tlp-pane milestone"
+            ng-repeat="milestone in planning.getOpenMilestones() track by milestone.id"
+            ng-class="{ collapsed: milestone.collapsed }"
+            milestone
+        ></section>
+
+        <div ng-if="planning.thereAreClosedMilestonesLoaded() || (! planning.thereAreClosedMilestonesLoaded() && planning.milestones.closed_milestones_fully_loaded)" class="milestones-separator">
+            <span translate>Closed milestones are below</span>
+        </div>
+
+        <div class="milestones-load-closed">
+            <a href="javascript:;"
+                ng-if="! planning.thereAreClosedMilestonesLoaded() && ! planning.milestones.loading && ! planning.milestones.closed_milestones_fully_loaded"
+                ng-click="planning.displayClosedMilestones()"
+                class="milestones-load-closed-link"
+                translate
+            >Load closed milestones</a>
+        </div>
+
+        <div class="no-closed-milestones" ng-if="! planning.thereAreClosedMilestonesLoaded() && planning.milestones.closed_milestones_fully_loaded" translate>
+            There are no closed milestones
+        </div>
+        <section class="tlp-pane milestone"
+            ng-if="planning.thereAreClosedMilestonesLoaded()"
+            ng-repeat="milestone in planning.getClosedMilestones() track by milestone.id"
+            ng-class="{ collapsed: milestone.collapsed }"
+            milestone
+        ></section>
+
+        <div class="milestones-loading" ng-if="planning.milestones.loading"></div>
+    </div>
 </div>
 
 <div backlog-item-selected-bar></div>

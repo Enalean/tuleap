@@ -17,13 +17,42 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { dropdown} from "tlp";
+.extra-card-fields {
+    margin: 0;
+    padding: 0 $tlp-half-spacing $tlp-half-spacing;
+}
 
-document.addEventListener('DOMContentLoaded', () => {
-    const menu = document.getElementById('agiledashboard-scrum-milestone-menu');
-    if (! menu) {
-        return;
+.extra-card-field {
+    display: inline-block;
+    list-style-type: none;
+    font-size: 12px;
+
+    &.large {
+        width: 100%;
     }
+}
 
-    dropdown(menu);
-});
+.extra-card-field-content {
+    margin: 0 15px 0 0;
+}
+
+.extra-card-field-title {
+    margin: 0 3px 0 0;
+    color: $tlp-ui-dimmed;
+}
+
+.extra-card-field-color {
+    display: inline-block;
+    width: 9px;
+    height: 9px;
+    margin: 0 3px 0 0;
+    border-radius: 50%;
+}
+
+.extra-card-field-link {
+    text-decoration: none;
+}
+
+.extra-card-field-user > .tlp-avatar-mini {
+    margin: 0 3px 0 0;
+}

@@ -36,6 +36,7 @@ use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
+use Tuleap\AgileDashboard\Planning\PlanningJavascriptDependenciesProvider;
 use Tuleap\AgileDashboard\RealTime\RealTimeArtifactMessageController;
 use Tuleap\AgileDashboard\RealTime\RealTimeArtifactMessageSender;
 use Tuleap\AgileDashboard\Semantic\Dao\SemanticDoneDao;
@@ -533,33 +534,20 @@ class AgileDashboardPlugin extends Plugin {
 
     public function cssfile($params)
     {
-        if ($this->isAnAgiledashboardRequest() && ! $this->isKanbanURL()) {
+        if ($this->isAnAgiledashboardRequest()) {
             $theme_include_assets = new IncludeAssets(
                 AGILEDASHBOARD_BASE_DIR . '/../www/themes/FlamingParrot/assets',
                 $this->getThemePath() . '/assets'
             );
             $css_file_url = $theme_include_assets->getFileURL('style.css');
             echo '<link rel="stylesheet" type="text/css" href="' . $css_file_url . '" />';
-
-            if ($this->isPlanningV2URL()) {
-                echo '<link rel="stylesheet" type="text/css" href="' . $this->getPluginPath() . '/js/planning-v2/dist/planning-v2.css" />';
-            }
         }
     }
 
     public function javascript_file()
     {
         if ($this->isAnAgiledashboardRequest()) {
-            if ($this->isPlanningV2URL()) {
-                $planning_v2_include_assets = new IncludeAssets(
-                    AGILEDASHBOARD_BASE_DIR . '/../www/js/planning-v2/dist',
-                    AGILEDASHBOARD_BASE_URL . '/js/planning-v2/dist'
-                );
-
-                echo $planning_v2_include_assets->getHTMLSnippet('planning-v2.js') ."\n";
-            } else {
-                echo $this->getMinifiedAssetHTML()."\n";
-            }
+            echo $this->getMinifiedAssetHTML()."\n";
         }
     }
 
@@ -574,31 +562,50 @@ class AgileDashboardPlugin extends Plugin {
         $variant = $params['variant'];
         if ($this->isInDashboard() || $this->isKanbanURL()) {
             $params['stylesheets'][] = $theme_include_assets->getFileURL('kanban-' . $variant->getName() . '.css');
-        } else if ($this->isInOverviewTab()) {
+        } else if ($this->isInOverviewTab() || $this->isPlanningV2URL()) {
             $params['stylesheets'][] = $theme_include_assets->getFileURL('scrum-' . $variant->getName() . '.css');
         }
     }
 
     public function burning_parrot_get_javascript_files(array $params)
     {
-        if ($this->isKanbanURL()) {
-            $provider = new KanbanJavascriptDependenciesProvider();
-            $params['javascript_files'][] = '/scripts/codendi/Tooltip.js';
-            $params['javascript_files'][] = '/scripts/codendi/Tooltip-loader.js';
-            foreach ($provider->getDependencies() as $javascript) {
-                if (isset($javascript['snippet'])) {
-                    $GLOBALS['HTML']->includeFooterJavascriptSnippet($javascript['snippet']);
-                } else {
-                    $params['javascript_files'][] = $javascript['file'];
-                }
-            }
-        } else if ($this->isInOverviewTab()) {
+        if ($this->isInOverviewTab()) {
             $assets = new IncludeAssets(
                 AGILEDASHBOARD_BASE_DIR . '/../www/assets',
                 $this->getPluginPath() . '/assets'
             );
             $params['javascript_files'][] = $assets->getFileURL('overview.js');
+            return;
         }
+
+        $provider = $this->getJavascriptDependenciesProvider();
+        if ($provider === null) {
+            return;
+        }
+
+        $params['javascript_files'][] = '/scripts/codendi/Tooltip.js';
+        $params['javascript_files'][] = '/scripts/codendi/Tooltip-loader.js';
+        foreach ($provider->getDependencies() as $javascript) {
+            if (isset($javascript['snippet'])) {
+                $GLOBALS['HTML']->includeFooterJavascriptSnippet($javascript['snippet']);
+            } else {
+                $params['javascript_files'][] = $javascript['file'];
+            }
+        }
+    }
+
+    /**
+     * @return \Tuleap\AgileDashboard\JavascriptDependenciesProvider
+     */
+    private function getJavascriptDependenciesProvider()
+    {
+        if ($this->isKanbanURL()) {
+            return new KanbanJavascriptDependenciesProvider();
+        } else if ($this->isPlanningV2URL()) {
+            return new PlanningJavascriptDependenciesProvider();
+        }
+
+        return null;
     }
 
     private function isInDashboard()
@@ -1113,7 +1120,10 @@ class AgileDashboardPlugin extends Plugin {
 
     public function burning_parrot_compatible_page(BurningParrotCompatiblePageEvent $event)
     {
-        if ($this->isKanbanURL() || $this->isInOverviewTab()) {
+        if ($this->isKanbanURL() ||
+            $this->isInOverviewTab() ||
+            $this->isPlanningV2URL()
+        ) {
             $event->setIsInBurningParrotCompatiblePage();
         }
     }

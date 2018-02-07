@@ -17,17 +17,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'scrum/overview';
-@import 'scrum/planning';
-
-#agiledashboard-scrum-milestone-menu {
-    cursor: pointer;
+.backlog-add-item-button {
+    margin: 0 0 0 $tlp-spacing;
 }
 
-#agiledashboard-scrum-milestone-menu-caret {
-    font-size: 20px;
+.backlog-header-search {
+    flex: 0 1 auto;
+    width: 150px;
 }
 
-.agiledashboard-milestone-details-items-list-badge {
-    margin: 0 5px 0 0;
+.backlog-header-view-toggler {
+    margin: 0 0 0 $tlp-half-spacing;
+}
+
+.backlog-empty {
+    height: 100px;
+    background: url('../images/milestone-empty.png') no-repeat center center;
+}
+
+.backlog-loading {
+    @extend %loader;
+}
+
+.backlog-fully-loaded {
+    padding: 30px 0 0;
+    color: #cccccc;
+    font-size: .9em;
+    text-align: center;
 }
