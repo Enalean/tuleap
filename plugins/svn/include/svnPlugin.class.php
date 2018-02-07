@@ -25,6 +25,9 @@ use Tuleap\CVS\DiskUsage\FullHistoryDao;
 use Tuleap\CVS\DiskUsage\Retriever as CVSRetriever;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
 use Tuleap\project\Admin\Navigation\NavigationDropdownQuickLinksCollector;
+use Tuleap\Project\Admin\PerGroup\PermissionPerGroupUGroupFormatter;
+use Tuleap\Project\Admin\Permission\PermissionPerGroupPaneCollector;
+use Tuleap\Project\Admin\Permission\PermissionPerGroupUGroupRetriever;
 use Tuleap\project\Event\ProjectRegistrationActivateService;
 use Tuleap\REST\Event\ProjectGetSvn;
 use Tuleap\REST\Event\ProjectOptionsSvn;
@@ -69,6 +72,7 @@ use Tuleap\Svn\Notifications\NotificationsForProjectMemberCleaner;
 use Tuleap\Svn\Notifications\UgroupsToNotifyDao;
 use Tuleap\Svn\Notifications\UgroupsToNotifyUpdater;
 use Tuleap\Svn\Notifications\UsersToNotifyDao;
+use Tuleap\Svn\PerGroup\PermissionPerGroupPaneBuilder;
 use Tuleap\Svn\Reference\Extractor;
 use Tuleap\Svn\Repository\HookConfigChecker;
 use Tuleap\Svn\Repository\HookConfigRetriever;
@@ -164,6 +168,7 @@ class SvnPlugin extends Plugin
         $this->addHook(ProjectOptionsSvn::NAME);
         $this->addHook(ProjectRegistrationActivateService::NAME);
         $this->addHook(NavigationDropdownQuickLinksCollector::NAME);
+        $this->addHook(PermissionPerGroupPaneCollector::NAME);
     }
 
     public function export_xml_project($params)
@@ -1092,5 +1097,27 @@ class SvnPlugin extends Plugin
     private function getCopier()
     {
         return new RepositoryCopier($this->getSystemCommand());
+    }
+
+    public function permissionPerGroupPaneCollector(PermissionPerGroupPaneCollector $event)
+    {
+        if (! $event->getProject()->usesService(self::SERVICE_SHORTNAME)) {
+            return;
+        }
+
+        $ugroup_manager = new UGroupManager();
+        $builder        = new PermissionPerGroupPaneBuilder(
+            new PermissionPerGroupUGroupRetriever(PermissionsManager::instance()),
+            new PermissionPerGroupUGroupFormatter($ugroup_manager),
+            $ugroup_manager
+        );
+        $presenter      = $builder->buildPresenter($event);
+
+        $templates_dir = ForgeConfig::get('tuleap_dir') . '/plugins/svn/templates/';
+        $content       = TemplateRendererFactory::build()
+            ->getRenderer($templates_dir)
+            ->renderToString('project-admin-permission-per-group', $presenter);
+
+        $event->addAdditionalPane($content);
     }
 }

@@ -32,6 +32,7 @@ use Tuleap\Mediawiki\Migration\MoveToCentralDbDao;
 use Tuleap\Mediawiki\PerGroup\PermissionPerGroupPaneBuilder;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
 use Tuleap\project\Admin\Navigation\NavigationDropdownQuickLinksCollector;
+use Tuleap\Project\Admin\PerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Project\Admin\Permission\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\ProjectUGroup\UserAndProjectUGroupRelationshipEvent;
 use Tuleap\Project\Admin\ProjectUGroup\UserBecomesForumAdmin;
@@ -830,9 +831,12 @@ class MediaWikiPlugin extends Plugin {
             return;
         }
 
+        $ugroup_manager = new UGroupManager();
+
         $builder   = new PermissionPerGroupPaneBuilder(
             $this->getMediawikiManager(),
-            new UGroupManager()
+            $ugroup_manager,
+            new PermissionPerGroupUGroupFormatter($ugroup_manager)
         );
         $presenter = $builder->buildPresenter($event);
 
