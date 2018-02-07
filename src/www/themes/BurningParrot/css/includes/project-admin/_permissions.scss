@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+/*!
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,13 +17,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'project-admin/labels';
-@import 'project-admin/details';
-@import 'project-admin/ugroups';
-@import 'project-admin/members';
-@import 'project-admin/permissions';
+.project-admin-permission-per-group {
+    display: flex;
+    align-items: flex-start;
+}
 
-.project-administration-title {
-    padding: $tlp-spacing $tlp-spacing 0;
-    word-break: break-all;
+.permission-per-group-search-section {
+    width: 300px;
+}
+
+.permission-per-group-result-section {
+    width: 100%;
+    margin: 0 0 0 $tlp-spacing;
+}
+
+@media screen and (max-width: 1200px) {
+    .project-admin-permission-per-group {
+        flex-direction: column;
+    }
+
+    .permission-per-group-result-section {
+        margin: $tlp-spacing 0 0;
+    }
+
+    .permission-per-group-search-section {
+        width: 100%;
+    }
 }

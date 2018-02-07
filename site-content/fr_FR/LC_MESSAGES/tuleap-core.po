@@ -284,6 +284,9 @@ msgstr "Éditer %s"
 msgid "Edit dashboard"
 msgstr "Éditer le tableau de bord"
 
+msgid "Edit service"
+msgstr "Éditer le service"
+
 msgid "Edit settings"
 msgstr "Éditer les paramètres"
 
@@ -325,6 +328,9 @@ msgstr "Git"
 
 msgid "Go up"
 msgstr "Niveau supérieur"
+
+msgid "Group"
+msgstr "Groupes"
 
 msgid "Group binding"
 msgstr "Lien entre groupes"
@@ -498,6 +504,9 @@ msgid "People in this group will be able to manage project members."
 msgstr ""
 "Les personnes dans ce groupe seront capables de gérer les membres du projet."
 
+msgid "Per group"
+msgstr "Par groupe"
+
 msgid "Permission"
 msgstr "Permission"
 
@@ -512,6 +521,9 @@ msgstr "Les délégations de permissions ont été mises à jour."
 
 msgid "Permissions for deprecated services"
 msgstr "Permissions pour les services dépréciés"
+
+msgid "Permissions per group"
+msgstr "Permissions par groupe"
 
 msgid "Platform administration"
 msgstr "Administration de la plateforme"
@@ -631,8 +643,14 @@ msgstr "Sauvegarder les permissions déléguées"
 msgid "Save information"
 msgstr "Enregistrer les informations"
 
+msgid "Save modifications"
+msgstr "Enregistrer les modifications"
+
 msgid "Scope"
 msgstr "Portée"
+
+msgid "Search"
+msgstr "Rechercher"
 
 msgid "See permissions"
 msgstr "Voir les permissions"
@@ -835,6 +853,9 @@ msgstr "Import outils de suivi v3"
 
 msgid "Unable to fetch the latest activities of the project"
 msgstr "Impossible de récupérer les dernières activités du projet"
+
+msgid "Under development, there is nothing here"
+msgstr "En cours de developpement, il n'y a rien ici"
 
 msgid "Unix name"
 msgstr "Now unix"

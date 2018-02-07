@@ -258,6 +258,9 @@ msgstr ""
 msgid "Edit dashboard"
 msgstr ""
 
+msgid "Edit service"
+msgstr ""
+
 msgid "Edit settings"
 msgstr ""
 
@@ -298,6 +301,9 @@ msgid "Git"
 msgstr ""
 
 msgid "Go up"
+msgstr ""
+
+msgid "Group"
 msgstr ""
 
 msgid "Group binding"
@@ -469,6 +475,9 @@ msgstr ""
 msgid "People in this group will be able to manage project members."
 msgstr ""
 
+msgid "Per group"
+msgstr ""
+
 msgid "Permission"
 msgstr ""
 
@@ -482,6 +491,9 @@ msgid "Permissions delegations have been successfully updated."
 msgstr ""
 
 msgid "Permissions for deprecated services"
+msgstr ""
+
+msgid "Permissions per group"
 msgstr ""
 
 msgid "Platform administration"
@@ -596,7 +608,13 @@ msgstr ""
 msgid "Save information"
 msgstr ""
 
+msgid "Save modifications"
+msgstr ""
+
 msgid "Scope"
+msgstr ""
+
+msgid "Search"
 msgstr ""
 
 msgid "See permissions"
@@ -784,6 +802,9 @@ msgid "Trackers v3 import"
 msgstr ""
 
 msgid "Unable to fetch the latest activities of the project"
+msgstr ""
+
+msgid "Under development, there is nothing here"
 msgstr ""
 
 msgid "Unix name"

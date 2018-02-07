@@ -1,5 +1,6 @@
+<?php
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,13 +18,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'project-admin/labels';
-@import 'project-admin/details';
-@import 'project-admin/ugroups';
-@import 'project-admin/members';
-@import 'project-admin/permissions';
+namespace Tuleap\Project\Admin\Permission;
 
-.project-administration-title {
-    padding: $tlp-spacing $tlp-spacing 0;
-    word-break: break-all;
+use Project;
+use Tuleap\Project\Admin\ProjectUGroup\UGroupListPresenter;
+use Tuleap\Project\Admin\ProjectUGroup\UGroupPresenter;
+
+class PermissionPerGroupPresenter
+{
+    public $group_id;
+
+    /**
+     * @var UGroupPresenter[]
+     */
+    public $groups;
+
+    public function __construct(Project $project, array $groups)
+    {
+        $this->group_id = $project->getID();
+        $this->groups   = $groups;
+    }
 }
