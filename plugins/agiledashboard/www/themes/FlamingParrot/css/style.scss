@@ -165,10 +165,3 @@ body {
         }
     }
 }
-
-.planning-view-items-list-content-badge {
-    @extend %badge-colors;
-
-    margin: 0 5px 0 0;
-    text-shadow: none;
-}

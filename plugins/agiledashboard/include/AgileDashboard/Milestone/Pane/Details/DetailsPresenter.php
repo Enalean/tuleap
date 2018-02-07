@@ -67,8 +67,8 @@ class DetailsPresenter
         $this->backlog_item_type         = $this->getTrackerNames($trackers);
         $this->solve_inconsistencies_url = $solve_inconsistencies_url;
 
-        $this->no_items_label             = dgettext('plugin-agiledashboard', 'There is no item yet');
-        $this->item_is_inconsistent_label = dgettext('plugin-agiledashboard', 'Item is inconsistent');
+        $this->no_items_label             = dgettext('tuleap-agiledashboard', 'There is no item yet');
+        $this->item_is_inconsistent_label = dgettext('tuleap-agiledashboard', 'Item is not linked to this milestone');
         $this->chart_presenter            = $chart_presenter;
     }
 

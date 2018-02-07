@@ -96,8 +96,8 @@ msgstr "Retour à l'administration de la sémantique"
 msgid "Item"
 msgstr "Élément"
 
-msgid "Item is inconsistent"
-msgstr "L'élément est inconsistent"
+msgid "Item is not linked to this milestone"
+msgstr "L'élément n'est pas lié à ce jalon"
 
 msgid "Parent item"
 msgstr "Parent"

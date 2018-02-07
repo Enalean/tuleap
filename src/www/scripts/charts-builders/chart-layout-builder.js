@@ -222,8 +222,8 @@ function appendBadge(container, badge_value, legend_y_position) {
         .attr('height', badge_props.height)
         .attr('y', badge_props.y)
         .attr('x', badge_props.x)
-        .attr('rx', 10)
-        .attr('ry', 10);
+        .attr('rx', badge_props.height / 2)
+        .attr('ry', badge_props.height / 2);
 }
 
 function ticksEvery(container, timeframe_granularity) {
