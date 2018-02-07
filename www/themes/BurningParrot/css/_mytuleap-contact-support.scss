@@ -35,6 +35,8 @@
 
 .contact-support-modal-success-message,
 .contact-support-modal-error-message {
+    width: 100%;
+
     &:not(.shown) {
         display: none;
     }

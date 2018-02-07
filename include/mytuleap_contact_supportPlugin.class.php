@@ -85,17 +85,13 @@ class mytuleap_contact_supportPlugin extends Plugin
 
     public function cssfile()
     {
-        if (! UserManager::instance()->getCurrentUser()->isAnonymous()) {
-            echo '<link rel="stylesheet" type="text/css" href="'. $this->getThemePath() .'/css/style.css" />';
-        }
+        echo '<link rel="stylesheet" type="text/css" href="'. $this->getThemePath() .'/css/style.css" />';
     }
 
     public function javascript_file($params)
     {
-        if (! UserManager::instance()->getCurrentUser()->isAnonymous()) {
-            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/js/modal.js"></script>';
-            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/js/modal-flaming-parrot.js"></script>';
-        }
+        echo '<script type="text/javascript" src="'.$this->getPluginPath().'/js/modal.js"></script>';
+        echo '<script type="text/javascript" src="'.$this->getPluginPath().'/js/modal-flaming-parrot.js"></script>';
     }
 
     public function site_help($params)
@@ -105,10 +101,8 @@ class mytuleap_contact_supportPlugin extends Plugin
 
     public function burning_parrot_get_javascript_files(array $params)
     {
-        if (! UserManager::instance()->getCurrentUser()->isAnonymous()) {
-            $params['javascript_files'][] = $this->getPluginPath().'/js/modal.js';
-            $params['javascript_files'][] = $this->getPluginPath().'/js/modal-burning-parrot.js';
-        }
+        $params['javascript_files'][] = $this->getPluginPath().'/js/modal.js';
+        $params['javascript_files'][] = $this->getPluginPath().'/js/modal-burning-parrot.js';
 
         if (strpos($_SERVER['REQUEST_URI'], '/help/') === 0) {
             $params['javascript_files'][] = $this->getPluginPath().'/js/help-page.js';
@@ -117,9 +111,7 @@ class mytuleap_contact_supportPlugin extends Plugin
 
     public function burning_parrot_get_stylesheets(array $params)
     {
-        if (! UserManager::instance()->getCurrentUser()->isAnonymous()) {
-            $variant = $params['variant'];
-            $params['stylesheets'][] = $this->getThemePath() .'/css/style-'. $variant->getName() .'.css';
-        }
+        $variant                 = $params['variant'];
+        $params['stylesheets'][] = $this->getThemePath() .'/css/style-'. $variant->getName() .'.css';
     }
 }

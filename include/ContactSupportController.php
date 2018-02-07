@@ -87,7 +87,10 @@ class ContactSupportController
 
         try {
             $this->sendEmailToMyTuleapSupport($sys_https_host, $current_user, $message_title, $message_content);
-            $this->sendConfirmationEmailToUser($sys_https_host, $current_user, $message_title, $message_content);
+
+            if (! $current_user->isAnonymous()) {
+                $this->sendConfirmationEmailToUser($sys_https_host, $current_user, $message_title, $message_content);
+            }
 
             $GLOBALS['Response']->sendStatusCode(200);
         } catch (EmailSendException $exception) {
@@ -97,9 +100,15 @@ class ContactSupportController
 
     private function sendEmailToMyTuleapSupport($sys_https_host, $current_user, $message_title, $message_content)
     {
+        $current_user_name = 'Anonymous';
+
+        if (! $current_user->isAnonymous()) {
+            $current_user_name = $current_user->getRealName();
+        }
+
         $email_presenter = new EmailToSupportPresenter(
             $sys_https_host,
-            $current_user->getRealName(),
+            $current_user_name,
             $message_title,
             $message_content
         );
@@ -109,7 +118,11 @@ class ContactSupportController
         $mail = new Codendi_Mail();
         $mail->setFrom(ForgeConfig::get('sys_noreply'));
         $mail->setTo(MYTULEAP_CONTACT_SUPPORT_EMAIL_TO);
-        $mail->addAdditionalHeader('Reply-To', $current_user->getRealName().' <'.$current_user->getEmail().'>');
+
+        if (! $current_user->isAnonymous()) {
+            $mail->addAdditionalHeader('Reply-To', $current_user_name.' <'.$current_user->getEmail().'>');
+        }
+
         $mail->setSubject('[myTuleap '.$sys_https_host.'] '.$message_title);
         $mail->setBodyHtml($email_body, Codendi_Mail::DISCARD_COMMON_LOOK_AND_FEEL);
 
