@@ -134,9 +134,9 @@ var webpack_config_for_labels = {
     ]
 };
 
-var webpack_config_for_buring_parrot_code = {
+const webpack_config_for_buring_parrot_code = {
     entry: {
-        'navbar-history'       : './navbar-history/index-burningparrot.js',
+        'burning-parrot'       : './BurningParrot/index.js',
         'project-admin'        : './project/admin/index.js',
         'project-admin-ugroups': './project/admin//project-admin-ugroups.js',
     },

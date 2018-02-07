@@ -16,6 +16,7 @@
     "mustache": "^2.3.0",
     "node-gettext": "^2.0.0",
     "phptomoment": "0.0.2",
+    "smooth-scrollbar": "^7.4.1",
     "sprintf-js": "^1.1.1",
     "whatwg-fetch": "^2.0.3"
   },
