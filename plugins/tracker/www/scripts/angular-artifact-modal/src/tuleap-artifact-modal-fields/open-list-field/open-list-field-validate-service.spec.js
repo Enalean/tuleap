@@ -4,7 +4,7 @@ import angular from 'angular';
 import 'angular-mocks';
 
 describe("TuleapArtifactModalOpenListFieldValidateService", function() {
-    var OpenListFieldValidateService;
+    let OpenListFieldValidateService;
 
     beforeEach(function() {
         angular.mock.module(open_list_field_module);
@@ -18,14 +18,14 @@ describe("TuleapArtifactModalOpenListFieldValidateService", function() {
 
     describe("validateFieldValue() -", function() {
         it("Given a field value that was undefined, then it will return null", function() {
-            var result = OpenListFieldValidateService.validateFieldValue(undefined);
+            const result = OpenListFieldValidateService.validateFieldValue(undefined);
 
             expect(result).toBe(null);
         });
 
         it("Given an open list value model, then it will return only the 'field_id' an 'value' attributes", function() {
-            var value_model = {
-                bind_type  : 'static',
+            const value_model = {
+                bindings   :  { type: 'static' },
                 field_id   : 628,
                 label      : 'chubby smiddum',
                 permissions: ['read', 'update', 'create'],
@@ -35,7 +35,7 @@ describe("TuleapArtifactModalOpenListFieldValidateService", function() {
                 }
             };
 
-            var result = OpenListFieldValidateService.validateFieldValue(value_model);
+            const result = OpenListFieldValidateService.validateFieldValue(value_model);
 
             expect(result).toEqual({
                 field_id: 628,
@@ -46,9 +46,9 @@ describe("TuleapArtifactModalOpenListFieldValidateService", function() {
         });
 
         it("Given a static open list value model, then it will return the values with only 'id' and 'label' attributes", function() {
-            var value_model = {
-                bind_type: 'static',
-                value    : {
+            const value_model = {
+                bindings: { type: 'static' },
+                value   : {
                     bind_value_objects: [
                         {
                             id            : 127,
@@ -64,7 +64,7 @@ describe("TuleapArtifactModalOpenListFieldValidateService", function() {
                 }
             };
 
-            var result = OpenListFieldValidateService.validateFieldValue(value_model);
+            const result = OpenListFieldValidateService.validateFieldValue(value_model);
 
             expect(result).toEqual({
                 value: {
@@ -82,9 +82,9 @@ describe("TuleapArtifactModalOpenListFieldValidateService", function() {
         });
 
         it("Given a ugroups open list value model, then it will return the values with only 'id' and 'short_name' attributes", function() {
-            var value_model = {
-                bind_type: 'ugroups',
-                value    : {
+            const value_model = {
+                bindings: { type: 'ugroups' },
+                value   : {
                     bind_value_objects: [
                         {
                             id            : '769',
@@ -106,7 +106,7 @@ describe("TuleapArtifactModalOpenListFieldValidateService", function() {
                 }
             };
 
-            var result = OpenListFieldValidateService.validateFieldValue(value_model);
+            const result = OpenListFieldValidateService.validateFieldValue(value_model);
 
             expect(result).toEqual({
                 value: {
@@ -124,9 +124,9 @@ describe("TuleapArtifactModalOpenListFieldValidateService", function() {
         });
 
         it("Given a users open list value model, then it will return the values with only 'email' for anonymous users and 'id', 'username' and 'email' attributes for registered users", function() {
-            var value_model = {
-                bind_type: 'users',
-                value    : {
+            const value_model = {
+                bindings: { type: 'users' },
+                value   : {
                     bind_value_objects: [
                         {
                             id            : 168,
@@ -157,7 +157,7 @@ describe("TuleapArtifactModalOpenListFieldValidateService", function() {
                 }
             };
 
-            var result = OpenListFieldValidateService.validateFieldValue(value_model);
+            const result = OpenListFieldValidateService.validateFieldValue(value_model);
 
             expect(result).toEqual({
                 value: {
@@ -175,9 +175,9 @@ describe("TuleapArtifactModalOpenListFieldValidateService", function() {
         });
 
         it("Given a users open list value model with an anonymous user entered through select2, then it will return the value with only the 'email' attribute", function() {
-            var value_model = {
-                bind_type: 'users',
-                value    : {
+            const value_model = {
+                bindings: { type: 'users' },
+                value   : {
                     bind_value_objects: [
                         {
                             display_name: 'nubbling@thasian.edu',
@@ -189,7 +189,7 @@ describe("TuleapArtifactModalOpenListFieldValidateService", function() {
                 }
             };
 
-            var result = OpenListFieldValidateService.validateFieldValue(value_model);
+            const result = OpenListFieldValidateService.validateFieldValue(value_model);
 
             expect(result).toEqual({
                 value: {

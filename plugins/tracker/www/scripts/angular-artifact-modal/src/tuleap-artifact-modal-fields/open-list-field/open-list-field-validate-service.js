@@ -16,11 +16,11 @@ function OpenListFieldValidateService() {
         }
 
         value_model.value.bind_value_objects = value_model.value.bind_value_objects.map(function (bind_value_object) {
-            if (value_model.bind_type === 'static') {
+            if (value_model.bindings.type === 'static') {
                 return removeStaticValueUnusedAttributes(bind_value_object);
-            } else if (value_model.bind_type === 'ugroups') {
+            } else if (value_model.bindings.type === 'ugroups') {
                 return removeUgroupsValueUnusedAttributes(bind_value_object);
-            } else if (value_model.bind_type === 'users') {
+            } else if (value_model.bindings.type === 'users') {
                 return removeUsersValueUnusedAttributes(bind_value_object);
             }
         });

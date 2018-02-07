@@ -994,9 +994,9 @@ describe("TuleapArtifactFieldValuesService", () => {
         });
     });
 
-    describe("Given a tracker containing an openlist field,", function() {
-        it("and given a map of artifact field values containing that field, when I get the fields' selected values, then a map of objects containing the artifact's bind_value_objects will be returned", function() {
-            var artifact_values = {
+    describe("Given a tracker containing an openlist field,", () => {
+        it("and given a map of artifact field values containing that field, when I get the fields' selected values, then a map of objects containing the artifact's bind_value_objects will be returned", () => {
+            const artifact_values = {
                 319: {
                     field_id: 319,
                     bind_value_objects: [
@@ -1013,7 +1013,7 @@ describe("TuleapArtifactFieldValuesService", () => {
                     bind_value_ids: ["periscopism", "distinguisher"]
                 }
             };
-            var tracker = {
+            const tracker = {
                 fields: [
                     {
                         field_id: 319,
@@ -1031,12 +1031,13 @@ describe("TuleapArtifactFieldValuesService", () => {
                     }
                 ]
             };
-            var output = FieldValuesService.getSelectedValues(artifact_values, tracker);
+            const output = FieldValuesService.getSelectedValues(artifact_values, tracker);
             expect(output).toEqual({
                 319: {
                     field_id: 319,
                     type: "tbl",
                     permissions: ["read", "update", "create"],
+                    bindings: { type: "static" },
                     value: {
                         bind_value_objects: [
                             {
@@ -1054,8 +1055,8 @@ describe("TuleapArtifactFieldValuesService", () => {
             });
         });
 
-        it("and that it didn't have a default value, when I get the fields' selected values, then a map of objects containing the field will be returned", function() {
-            var tracker = {
+        it("and that it didn't have a default value, when I get the fields' selected values, then a map of objects containing the field will be returned", () => {
+            const tracker = {
                 fields: [
                     {
                         field_id: 378,
@@ -1073,12 +1074,13 @@ describe("TuleapArtifactFieldValuesService", () => {
                     }
                 ]
             };
-            var output = FieldValuesService.getSelectedValues({}, tracker);
+            const output = FieldValuesService.getSelectedValues({}, tracker);
             expect(output).toEqual({
                 378: {
                     field_id: 378,
                     type: "tbl",
                     permissions: ["read", "update", "create"],
+                    bindings: { type: "static" },
                     value: {
                         bind_value_objects: []
                     }
@@ -1086,8 +1088,8 @@ describe("TuleapArtifactFieldValuesService", () => {
             });
         });
 
-        it("and that it had 2 default values, when I get the fields' selected values, then a map of objects containing the field's id and bind_value_objects array filled with the 2 default values will be returned", function() {
-            var tracker = {
+        it("and that it had 2 default values, when I get the fields' selected values, then a map of objects containing the field's id and bind_value_objects array filled with the 2 default values will be returned", () => {
+            const tracker = {
                 fields: [
                     {
                         field_id: 667,
@@ -1109,12 +1111,13 @@ describe("TuleapArtifactFieldValuesService", () => {
                     }
                 ]
             };
-            var output = FieldValuesService.getSelectedValues({}, tracker);
+            const output = FieldValuesService.getSelectedValues({}, tracker);
             expect(output).toEqual({
                 667: {
                     field_id: 667,
                     type: "tbl",
                     permissions: ["read", "update", "create"],
+                    bindings: { type: "static" },
                     value: {
                         bind_value_objects: [
                             { id: 378, label: "Linda", is_hidden: false },
