@@ -82,14 +82,9 @@ class timesheetingPlugin extends Plugin
 
     public function cssfile($params)
     {
-        $include_tracker_css_file = false;
-        EventManager::instance()->processEvent(
-            TRACKER_EVENT_INCLUDE_CSS_FILE,
-            array('include_tracker_css_file' => &$include_tracker_css_file)
-        );
-        // Only show the stylesheet if we're actually in the tracker pages.
-        // This stops styles inadvertently clashing with the main site.
-        if ($include_tracker_css_file) {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
+            strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL) === 0
+        ) {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
         }
     }
