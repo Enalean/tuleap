@@ -20,6 +20,7 @@
 
 namespace Tuleap\Project\Admin\Permission;
 
+use HTTPRequest;
 use Project;
 use ProjectUGroup;
 use Tuleap\User\UserGroup\NameTranslator;
@@ -37,7 +38,7 @@ class PermissionPerGroupBuilder
         $this->ugroup_manager = $ugroup_manager;
     }
 
-    public function buildUGroup(Project $project)
+    public function buildUGroup(Project $project, HTTPRequest $request)
     {
         $static_ugroups = $this->ugroup_manager->getStaticUGroups($project);
         if ($project->usesWiki()) {
@@ -53,7 +54,7 @@ class PermissionPerGroupBuilder
             $static_ugroups[] = $this->ugroup_manager->getUGroup($project, ProjectUGroup::NEWS_ADMIN);
         }
 
-        return $this->getUGroupsThatCanBeUsedAsTemplate($static_ugroups);
+        return $this->getUGroupsThatCanBeUsedAsTemplate($static_ugroups, $request);
     }
 
     /**
@@ -61,24 +62,29 @@ class PermissionPerGroupBuilder
      *
      * @return array
      */
-    private function getUGroupsThatCanBeUsedAsTemplate(array $static_ugroups)
+    private function getUGroupsThatCanBeUsedAsTemplate(array $static_ugroups, HTTPRequest $request)
     {
+        $selected_group = $request->get('group');
+
         $ugroups = array();
 
         $ugroups[] = array(
-            'id'   => 'cx_members',
-            'name' => NameTranslator::getUserGroupDisplayName(NameTranslator::PROJECT_MEMBERS)
+            'id'          => ProjectUGroup::PROJECT_MEMBERS,
+            'name'        => NameTranslator::getUserGroupDisplayName(NameTranslator::PROJECT_MEMBERS),
+            'is_selected' => (int)$selected_group === ProjectUGroup::PROJECT_MEMBERS
         );
 
         $ugroups[] = array(
-            'id'   => 'cx_admins',
-            'name' => NameTranslator::getUserGroupDisplayName(NameTranslator::PROJECT_ADMINS)
+            'id'          => ProjectUGroup::PROJECT_ADMIN,
+            'name'        => NameTranslator::getUserGroupDisplayName(NameTranslator::PROJECT_ADMINS),
+            'is_selected' => (int)$selected_group === ProjectUGroup::PROJECT_ADMIN
         );
 
         foreach ($static_ugroups as $ugroup) {
             $ugroups[] = array(
-                'id'   => $ugroup->getId(),
-                'name' => NameTranslator::getUserGroupDisplayName($ugroup->getName())
+                'id'          => $ugroup->getId(),
+                'name'        => NameTranslator::getUserGroupDisplayName($ugroup->getName()),
+                'is_selected' => $selected_group === $ugroup->getId()
             );
         }
 

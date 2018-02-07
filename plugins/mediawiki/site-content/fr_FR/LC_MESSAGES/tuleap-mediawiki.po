@@ -26,3 +26,6 @@ msgstr "Lecteurs"
 
 msgid "Writers"
 msgstr "Rédacteurs"
+
+msgid "{{ user_group_name }} has no permission for Mediawiki"
+msgstr "{{ user_group_name }} n'a pas de permission pour Mediawiki"

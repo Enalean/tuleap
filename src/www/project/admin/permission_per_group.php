@@ -38,11 +38,12 @@ $title = _('Permissions per group');
 $navigation_displayer = new HeaderNavigationDisplayer();
 $navigation_displayer->displayBurningParrotNavigation($title, $project, 'permissions');
 
-$presenter_builder = new PermissionPerGroupBuilder(new UGroupManager());
-$groups            = $presenter_builder->buildUGroup($project);
+$ugroup_manager    = new UGroupManager();
+$presenter_builder = new PermissionPerGroupBuilder($ugroup_manager);
+$groups            = $presenter_builder->buildUGroup($project, $request);
 
 $additional_panes_builder = new AdditionalPanesPermissionPerGroupBuilder(EventManager::instance());
-$additional_panes         = $additional_panes_builder->buildAdditionalPresenters($project);
+$additional_panes         = $additional_panes_builder->buildAdditionalPresenters($project, $request->get('group'));
 
 $presenter = new PermissionPerGroupPresenter($project, $groups, $additional_panes);
 

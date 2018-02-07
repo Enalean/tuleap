@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2013, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -535,6 +535,23 @@ class MediawikiDao extends DataAccessObject {
                 FROM plugin_mediawiki_access_control
                 WHERE project_id = $project_id
                   AND access = $access";
+        return $this->retrieve($sql);
+    }
+
+    public function getAccessControlForProjectContainingUGroup($project_id, $access, $ugroup_id)
+    {
+        $project_id = $this->da->escapeInt($project_id);
+        $ugroup_id  = $this->da->escapeInt($ugroup_id);
+        $access     = $this->da->quoteSmart($access);
+
+        $sql = "SELECT acces_control.*
+                FROM plugin_mediawiki_access_control      AS ugroup_access_control
+                  JOIN plugin_mediawiki_access_control    AS acces_control
+                    ON ugroup_access_control.project_id = acces_control.project_id
+                    AND ugroup_access_control.access    = acces_control.access
+                WHERE ugroup_access_control.project_id = $project_id
+                  AND ugroup_access_control.access     = $access
+                  AND ugroup_access_control.ugroup_id  = $ugroup_id";
 
         return $this->retrieve($sql);
     }

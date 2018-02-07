@@ -60,6 +60,9 @@ msgstr ""
 msgid "Agile Dashboard"
 msgstr ""
 
+msgid "All groups"
+msgstr ""
+
 msgid "Already used"
 msgstr ""
 
@@ -802,6 +805,9 @@ msgid "Trackers v3 import"
 msgstr ""
 
 msgid "Unable to fetch the latest activities of the project"
+msgstr ""
+
+msgid "Under development, there is nothing here"
 msgstr ""
 
 msgid "Unix name"

@@ -23,6 +23,7 @@ namespace Tuleap\Mediawiki\PerGroup;
 use MediawikiManager;
 use Project;
 use ProjectUGroup;
+use Tuleap\Project\Admin\Permission\PermissionPerGroupPaneCollector;
 use UGroupManager;
 
 class PermissionPerGroupPaneBuilder
@@ -44,29 +45,17 @@ class PermissionPerGroupPaneBuilder
         $this->ugroup_manager    = $ugroup_manager;
     }
 
-    public function buildPresenter(Project $project)
+    public function buildPresenter(PermissionPerGroupPaneCollector $event)
     {
-        $readers = $this->mediawiki_manager->getReadAccessControl($project);
-        $writers = $this->mediawiki_manager->getWriteAccessControl($project);
+        $project = $event->getProject();
 
-        $permission = array();
-        if ($readers) {
-            $formatted_group = array();
-            foreach ($readers as $reader) {
-                $formatted_group[] = $this->formatGroup($project, $reader);
-            }
-            $permission[] = array('name' => dgettext('tuleap-mediawiki', 'Readers'), 'groups' => $formatted_group);
-        }
+        $selected_group = $event->getSelectedUGroupId();
+        $ugroup         = $this->ugroup_manager->getUGroup($event->getProject(), $selected_group);
 
-        if ($writers) {
-            $formatted_group = array();
-            foreach ($writers as $writer) {
-                $formatted_group[] = $this->formatGroup($project, $writer);
-            }
-            $permission[] = array('name' => dgettext('tuleap-mediawiki', 'Writers'), 'groups' => $formatted_group);
-        }
+        $read_permission  = $this->addReadersToPermission($project, $ugroup);
+        $write_permission = $this->addWritersToPermission($project, $ugroup);
 
-        return new PermissionPerGroupPresenter($permission);
+        return new PermissionPerGroupPresenter(array_merge($read_permission, $write_permission), $ugroup);
     }
 
     private function formatGroup(Project $project, $group)
@@ -91,5 +80,55 @@ class PermissionPerGroupPaneBuilder
     private function isProjectAdmin(ProjectUGroup $user_group)
     {
         return (int) $user_group->getId() === ProjectUGroup::PROJECT_ADMIN;
+    }
+
+    /**
+     * @return array
+     */
+    private function addReadersToPermission(
+        Project $project,
+        ProjectUGroup $ugroup = null
+    ) {
+        if ($ugroup) {
+            $readers = $this->mediawiki_manager->getReadAccessControlForProjectContainingGroup($project, $ugroup);
+        } else {
+            $readers = $this->mediawiki_manager->getReadAccessControl($project);
+        }
+
+        $permissions = array();
+        if ($readers) {
+            $formatted_group = array();
+            foreach ($readers as $reader) {
+                $formatted_group[] = $this->formatGroup($project, $reader);
+            }
+            $permissions[] = array('name' => dgettext('tuleap-mediawiki', 'Readers'), 'groups' => $formatted_group);
+        }
+
+        return $permissions;
+    }
+
+    /**
+     * @return array
+     */
+    private function addWritersToPermission(
+        Project $project,
+        ProjectUGroup $ugroup = null
+    ) {
+        if ($ugroup) {
+            $writers = $this->mediawiki_manager->getWriteAccessControlForProjectContainingUGroup($project, $ugroup);
+        } else {
+            $writers = $this->mediawiki_manager->getWriteAccessControl($project);
+        }
+
+        $permissions = array();
+        if ($writers) {
+            $formatted_group = array();
+            foreach ($writers as $writer) {
+                $formatted_group[] = $this->formatGroup($project, $writer);
+            }
+            $permissions[] = array('name' => dgettext('tuleap-mediawiki', 'Writers'), 'groups' => $formatted_group);
+        }
+
+        return $permissions;
     }
 }
