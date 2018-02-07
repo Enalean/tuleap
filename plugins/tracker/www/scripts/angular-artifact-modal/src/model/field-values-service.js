@@ -7,6 +7,11 @@ import {
 import {
     formatExistingValue as formatForDateField
 } from '../tuleap-artifact-modal-fields/date-field/date-field-initializer.js';
+import {
+    formatDefaultValue as defaultForOpenListField,
+    formatExistingValue as formatForOpenListField
+} from '../tuleap-artifact-modal-fields/open-list-field/open-list-field-initializer.js';
+
 
 export default TuleapArtifactFieldValuesService;
 
@@ -81,16 +86,7 @@ function TuleapArtifactFieldValuesService(
                 delete value_obj.granted_groups;
                 break;
             case 'tbl':
-                value_obj.value = {
-                    bind_value_objects: _.uniq(artifact_value.bind_value_objects, function(item) {
-                        if (item.is_anonymous) {
-                            return item.email;
-                        }
-                        return item.id;
-                    })
-                };
-                delete value_obj.bind_value_objects;
-                delete value_obj.bind_value_ids;
+                value_obj = formatForOpenListField(field, artifact_value);
                 break;
             case 'file':
                 value_obj       = addTemporaryFileToValue(value_obj);
@@ -176,9 +172,7 @@ function TuleapArtifactFieldValuesService(
                 };
                 break;
             case 'tbl':
-                value_obj.value = {
-                    bind_value_objects: (field.default_value) ? [].concat(field.default_value) : []
-                };
+                value_obj = defaultForOpenListField(field);
                 break;
             case 'file':
                 value_obj       = addTemporaryFileToValue(value_obj);
