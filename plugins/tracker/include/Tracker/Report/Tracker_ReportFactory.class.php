@@ -19,16 +19,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\Report\AdditionalCriteria\AdditionalCriteriaFactory;
-use Tuleap\Tracker\Report\AdditionalCriteria\CommentDao;
-
-class Tracker_ReportFactory
-{
+class Tracker_ReportFactory {
     /**
      * A protected constructor; prevents direct creation of object
      */
-    protected function __construct()
-    {
+    protected function __construct() {
     }
 
     /**
@@ -43,8 +38,8 @@ class Tracker_ReportFactory
      */
     public static function instance() {
         if (!isset(self::$_instance)) {
-            $instance = __CLASS__;
-            self::$_instance = new $instance();
+            $c = __CLASS__;
+            self::$_instance = new $c;
         }
         return self::$_instance;
     }
@@ -287,14 +282,6 @@ class Tracker_ReportFactory
         foreach ($xml->criterias->criteria as $criteria) {
             $report->criterias[] = $this->getCriteriaFactory()->getInstanceFromXML($criteria, $xmlMapping);
         }
-
-        if (count($xml->criterias->additional_criteria) > 0) {
-            foreach ($xml->criterias->additional_criteria as $xml_additional_criterion) {
-                $additional_criterion = $this->getAdditionalCriteriaFactory()->getInstanceFromXml($xml_additional_criterion);
-                $report->addAdditionalCriteriaForXmlImport($additional_criterion);
-            }
-        }
-
         // create renderers
         $report->renderers = array();
         foreach ($xml->renderers->renderer as $renderer) {
@@ -332,16 +319,6 @@ class Tracker_ReportFactory
                 $reportDB->addCriteria($criteria);
             }
         }
-
-        $additional_criteria = $report->getAdditionalCriteriaForXmlImport();
-        if ($additional_criteria) {
-            foreach ($additional_criteria as $additional_criterion) {
-                if ($additional_criterion->getKey() === Tracker_Report::COMMENT_CRITERION_NAME) {
-                    $this->getCommentDao()->save($reportId, (string) $additional_criterion->getValue());
-                }
-            }
-        }
-
         //create renderers
         if ($report->renderers) {
             foreach ($report->renderers as $renderer) {
@@ -375,21 +352,5 @@ class Tracker_ReportFactory
         if ($report_session->get('expert_query') !== null) {
             $tracker_report->setExpertQuery($report_session->get('expert_query'));
         }
-    }
-
-    /**
-     * @return CommentDao
-     */
-    protected function getCommentDao()
-    {
-        return new CommentDao();
-    }
-
-    /**
-     * @return AdditionalCriteriaFactory
-     */
-    protected function getAdditionalCriteriaFactory()
-    {
-        return new AdditionalCriteriaFactory();
     }
 }
