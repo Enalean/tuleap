@@ -25,7 +25,7 @@ use ProjectUGroup;
 use Tuleap\User\UserGroup\NameTranslator;
 use UGroupManager;
 
-class PermissionPerGroupUGroupBuilder
+class PermissionPerGroupBuilder
 {
     /**
      * @var UGroupManager
@@ -37,9 +37,9 @@ class PermissionPerGroupUGroupBuilder
         $this->ugroup_manager = $ugroup_manager;
     }
 
-    public function build(Project $project)
+    public function buildUGroup(Project $project)
     {
-        $static_ugroups   = $this->ugroup_manager->getStaticUGroups($project);
+        $static_ugroups = $this->ugroup_manager->getStaticUGroups($project);
         if ($project->usesWiki()) {
             $static_ugroups[] = $this->ugroup_manager->getUGroup($project, ProjectUGroup::WIKI_ADMIN);
         }

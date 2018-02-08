@@ -1,0 +1,36 @@
+{{# has_permissions }}
+    <section class="tlp-pane permission-per-group-result-section">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title"> {{# dgettext }} tuleap-mediawiki | Mediawiki permissions {{/ dgettext }}</h1>
+            </div>
+
+            <section class="tlp-pane-section">
+                <table class="tlp-table">
+                    <thead>
+                    <tr>
+                        <th> {{# dgettext }} tuleap-mediawiki | Permission {{/ dgettext }}</th>
+                        <th> {{# dgettext }} tuleap-mediawiki | Granted groups {{/ dgettext }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{# permissions }}
+                        <tr>
+                            <td>{{ name }}</td>
+                            <td>
+                                {{# groups }}
+                                    <span class="
+                                            {{# is_project_admin }}tlp-badge-danger tlp-badge-outline{{/ is_project_admin }}
+                                            {{# is_static }}tlp-badge-primary tlp-badge-outline{{/ is_static }}
+                                            {{# is_custom }}tlp-badge-secondary{{/ is_custom }}
+                                        ">{{ name }}</span>
+                                {{/ groups }}
+                            </td>
+                        </tr>
+                    {{/ permissions }}
+                    </tbody>
+                </table>
+            </section>
+        </div>
+    </section>
+{{/ has_permissions }}

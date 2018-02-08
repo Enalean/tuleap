@@ -21,30 +21,47 @@
 namespace Tuleap\Project\Admin\Permission;
 
 use Project;
-use Tuleap\Project\Admin\ProjectUGroup\UGroupPresenter;
+use Tuleap\Event\Dispatchable;
 
-class PermissionPerGroupPresenter
+class PermissionPerGroupPaneCollector implements Dispatchable
 {
-    public $group_id;
+    const NAME = 'permissionPerGroupPaneCollector';
 
-    /**
-     * @var UGroupPresenter[]
-     */
-    public $groups;
     /**
      * @var string[]
      */
-    public $additional_panes;
+    private $additional_panes = array();
     /**
-     * @var bool
+     * @var Project
      */
-    public $has_additional_panes;
+    private $project;
 
-    public function __construct(Project $project, array $groups, array $additional_panes)
+    public function __construct(Project $project)
     {
-        $this->group_id             = $project->getID();
-        $this->groups               = $groups;
-        $this->additional_panes     = $additional_panes;
-        $this->has_additional_panes = count($additional_panes) > 0;
+        $this->project = $project;
+    }
+
+    /**
+     * @return Project
+     */
+    public function getProject()
+    {
+        return $this->project;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getAdditionalPanes()
+    {
+        return $this->additional_panes;
+    }
+
+    /**
+     * @param string $additional_pane
+     */
+    public function addAdditionalPane($additional_pane)
+    {
+        $this->additional_panes[] = $additional_pane;
     }
 }

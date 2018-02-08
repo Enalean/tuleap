@@ -20,31 +20,26 @@
 
 namespace Tuleap\Project\Admin\Permission;
 
+use EventManager;
 use Project;
-use Tuleap\Project\Admin\ProjectUGroup\UGroupPresenter;
 
-class PermissionPerGroupPresenter
+class AdditionalPanesPermissionPerGroupBuilder
 {
-    public $group_id;
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
 
-    /**
-     * @var UGroupPresenter[]
-     */
-    public $groups;
-    /**
-     * @var string[]
-     */
-    public $additional_panes;
-    /**
-     * @var bool
-     */
-    public $has_additional_panes;
-
-    public function __construct(Project $project, array $groups, array $additional_panes)
+    public function __construct(EventManager $event_manager)
     {
-        $this->group_id             = $project->getID();
-        $this->groups               = $groups;
-        $this->additional_panes     = $additional_panes;
-        $this->has_additional_panes = count($additional_panes) > 0;
+        $this->event_manager = $event_manager;
+    }
+
+    public function buildAdditionalPresenters(Project $project)
+    {
+        $event = new PermissionPerGroupPaneCollector($project);
+        $this->event_manager->processEvent($event);
+
+        return $event->getAdditionalPanes();
     }
 }
