@@ -1,41 +1,80 @@
 <section class="tlp-pane">
     <div class="tlp-pane-container">
         <div class="tlp-pane-header">
-            <h1 class="tlp-pane-title"> {{# dgettext }} tuleap-svn | SVN Global permissions {{/ dgettext }}</h1>
+            <h1 class="tlp-pane-title"> {{# dgettext }} tuleap-svn | Subversion {{/ dgettext }}</h1>
         </div>
 
-        <section class="tlp-pane-section">
-            <table class="tlp-table">
-                <thead>
-                <tr>
-                    <th> {{# dgettext }} tuleap-svn | Permission {{/ dgettext }}</th>
-                    <th> {{# dgettext }} tuleap-svn | Granted groups {{/ dgettext }}</th>
-                </tr>
-                </thead>
-                <tbody>
-                {{# has_permissions }}
+        {{# service_presenter }}
+            <section class="tlp-pane-section">
+                <h2 class="tlp-pane-subtitle">{{# dgettext }} tuleap-svn | Global permissions {{/ dgettext }}</h2>
+                <table class="tlp-table">
+                    <thead>
                     <tr>
-                        <td>{{# dgettext }} tuleap-svn | SVN Administrators {{/ dgettext }}</td>
-                        <td>
-                            {{# permissions }}
-                                <span class="
+                        <th> {{# dgettext }} tuleap-svn | Permission {{/ dgettext }}</th>
+                        <th> {{# dgettext }} tuleap-svn | Granted groups {{/ dgettext }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{# has_permissions }}
+                        <tr>
+                            <td>{{# dgettext }} tuleap-svn | SVN Administrators {{/ dgettext }}</td>
+                            <td>
+                                {{# permissions }}
+                                    <span class="
                                         {{# is_project_admin }}tlp-badge-danger tlp-badge-outline{{/ is_project_admin }}
-                                    {{# is_static }}tlp-badge-primary tlp-badge-outline{{/ is_static }}
-                                    {{# is_custom }}tlp-badge-secondary{{/ is_custom }}
+                                        {{# is_static }}tlp-badge-primary tlp-badge-outline{{/ is_static }}
+                                        {{# is_custom }}tlp-badge-secondary{{/ is_custom }}
                                         ">{{ name }}</span>
-                            {{/ permissions }}
-                        </td>
-                    </tr>
-                {{/ has_permissions }}
-                {{^ has_permissions }}
+                                {{/ permissions }}
+                            </td>
+                        </tr>
+                    {{/ has_permissions }}
+                    {{^ has_permissions }}
+                        <tr>
+                            <td colspan="2" class="tlp-table-cell-empty">
+                                {{# dgettext }} tuleap-svn | {{ user_group_name }} has no global permission {{/ dgettext }}
+                            </td>
+                        </tr>
+                    {{/ has_permissions }}
+                    </tbody>
+                </table>
+            </section>
+        {{/ service_presenter }}
+
+        {{# repository_presenter }}
+            <section class="tlp-pane-section">
+                <h2 class="tlp-pane-subtitle">{{# dgettext }} tuleap-svn | Repositories permissions {{/ dgettext }}</h2>
+                <table class="tlp-table">
+                    <thead>
                     <tr>
-                        <td colspan="2" class="tlp-table-cell-empty">
-                            {{# dgettext }} tuleap-svn | {{ user_group_name }} has no permission for SVN {{/ dgettext }}
-                        </td>
+                        <th class="svn-permission-per-group-repository"> {{# dgettext }} tuleap-svn | Repository {{/ dgettext }}</th>
+                        <th> {{# dgettext }} tuleap-svn | Permission {{/ dgettext }}</th>
                     </tr>
-                {{/ has_permissions }}
-                </tbody>
-            </table>
-        </section>
+                    </thead>
+                    <tbody>
+                    {{# permissions }}
+                        <tr>
+                            <td>{{ name }}</td>
+                            <td class="tlp-table-cell-actions">
+                                <a
+                                        class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline"
+                                        href="/plugins/svn/?group_id={{ project_id }}&action=access-control&repo_id={{ id }}"
+                                >
+                                    {{# dgettext }} tuleap-svn | See access file {{/ dgettext }}
+                                </a>
+                            </td>
+                        </tr>
+                    {{/ permissions }}
+                    {{^ has_permissions }}
+                        <tr>
+                            <td colspan="2" class="tlp-table-cell-empty">
+                                {{# dgettext }} tuleap-svn | No repository found for project {{/ dgettext }}
+                            </td>
+                        </tr>
+                    {{/ has_permissions }}
+                    </tbody>
+                </table>
+            </section>
+        {{/ repository_presenter }}
     </div>
 </section>

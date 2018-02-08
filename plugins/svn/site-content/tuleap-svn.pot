@@ -30,6 +30,9 @@ msgstr ""
 msgid "Edit"
 msgstr ""
 
+msgid "Global permissions"
+msgstr ""
+
 msgid "Granted groups"
 msgstr ""
 
@@ -45,6 +48,9 @@ msgstr ""
 msgid "Multi SVN"
 msgstr ""
 
+msgid "No repository found for project"
+msgstr ""
+
 msgid "Notification deleted successfully."
 msgstr ""
 
@@ -55,19 +61,28 @@ msgstr ""
 msgid "Permission"
 msgstr ""
 
+msgid "Repositories permissions"
+msgstr ""
+
+msgid "Repository"
+msgstr ""
+
 msgid "SVN"
 msgstr ""
 
 msgid "SVN Administrators"
 msgstr ""
 
-msgid "SVN Global permissions"
-msgstr ""
-
 msgid "Save"
 msgstr ""
 
+msgid "See access file"
+msgstr ""
+
 msgid "Settings"
+msgstr ""
+
+msgid "Subversion"
 msgstr ""
 
 #, php-format
@@ -92,5 +107,5 @@ msgstr ""
 msgid "You are about to remove the notification. Please confirm your action."
 msgstr ""
 
-msgid "{{ user_group_name }} has no permission for SVN"
+msgid "{{ user_group_name }} has no global permission"
 msgstr ""

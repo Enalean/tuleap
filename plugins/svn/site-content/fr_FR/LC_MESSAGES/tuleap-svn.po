@@ -48,6 +48,9 @@ msgstr "Supprimer"
 msgid "Edit"
 msgstr "Éditer"
 
+msgid "Global permissions"
+msgstr "Permissions globales de SVN"
+
 msgid "Granted groups"
 msgstr "Groupes autorisés"
 
@@ -63,6 +66,9 @@ msgstr "Dernier commit"
 msgid "Multi SVN"
 msgstr "Multi SVN"
 
+msgid "No repository found for project"
+msgstr "Aucun dépôt trouvé pour le projet"
+
 msgid "Notification deleted successfully."
 msgstr "La notification a été correctement supprimée."
 
@@ -73,20 +79,29 @@ msgstr "La notification à mettre à jour n’existe pas."
 msgid "Permission"
 msgstr "Permission"
 
+msgid "Repositories permissions"
+msgstr "Permissions du dépôt"
+
+msgid "Repository"
+msgstr "Dépôt"
+
 msgid "SVN"
 msgstr "SVN"
 
 msgid "SVN Administrators"
 msgstr "Administrateurs SVN"
 
-msgid "SVN Global permissions"
-msgstr "Permissions globales de SVN"
-
 msgid "Save"
 msgstr "Sauvegarder"
 
+msgid "See access file"
+msgstr "Voir le fichier d'accès"
+
 msgid "Settings"
 msgstr "Paramètres"
+
+msgid "Subversion"
+msgstr "Subversion"
 
 #, php-format
 msgid "The path '%s' already exists."
@@ -112,5 +127,5 @@ msgstr ""
 "Vous êtes sur le point de supprimer la notification. Merci de confirmer "
 "votre action."
 
-msgid "{{ user_group_name }} has no permission for SVN"
-msgstr ""
+msgid "{{ user_group_name }} has no global permission"
+msgstr "{{ user_group_name }} n'a pas de permissions globales"

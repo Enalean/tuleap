@@ -27,7 +27,7 @@ use Tuleap\Project\Admin\Permission\PermissionPerGroupUGroupRetriever;
 use Tuleap\Svn\SvnPermissionManager;
 use UGroupManager;
 
-class PermissionPerGroupPaneBuilder
+class PermissionPerGroupSVNServicePaneBuilder
 {
     /**
      * @var PermissionPerGroupUGroupFormatter
@@ -74,8 +74,8 @@ class PermissionPerGroupPaneBuilder
         }
 
         $selected_group = $event->getSelectedUGroupId();
-        $ugroup         = $this->ugroup_manager->getUGroup($event->getProject(), $selected_group);
+        $user_group     = $this->ugroup_manager->getUGroup($event->getProject(), $selected_group);
 
-        return new PermissionPerGroupPanePresenter($permissions, $ugroup);
+        return new PermissionPerGroupPanePresenter($permissions, $user_group);
     }
 }
