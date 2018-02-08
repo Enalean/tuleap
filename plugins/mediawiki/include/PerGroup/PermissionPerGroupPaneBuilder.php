@@ -21,6 +21,7 @@
 namespace Tuleap\Mediawiki\PerGroup;
 
 use MediawikiManager;
+use MediawikiUserGroupsMapper;
 use Project;
 use ProjectUGroup;
 use Tuleap\Project\Admin\PerGroup\PermissionPerGroupPanePresenter;
@@ -43,14 +44,21 @@ class PermissionPerGroupPaneBuilder
      */
     private $formatter;
 
+    /**
+     * @var MediawikiUserGroupsMapper
+     */
+    private $mapper;
+
     public function __construct(
         MediawikiManager $mediawiki_manager,
         UGroupManager $ugroup_manager,
-        PermissionPerGroupUGroupFormatter $formatter
+        PermissionPerGroupUGroupFormatter $formatter,
+        MediawikiUserGroupsMapper $mediawiki_user_groups_mapper
     ) {
         $this->mediawiki_manager = $mediawiki_manager;
         $this->ugroup_manager    = $ugroup_manager;
         $this->formatter         = $formatter;
+        $this->mapper            = $mediawiki_user_groups_mapper;
     }
 
     public function buildPresenter(PermissionPerGroupPaneCollector $event)
@@ -60,17 +68,24 @@ class PermissionPerGroupPaneBuilder
         $selected_group = $event->getSelectedUGroupId();
         $ugroup         = $this->ugroup_manager->getUGroup($event->getProject(), $selected_group);
 
-        $read_permission  = $this->addReadersToPermission($project, $ugroup);
-        $write_permission = $this->addWritersToPermission($project, $ugroup);
+        $permissions = new PermissionPerGroupCollection();
 
-        return new PermissionPerGroupPanePresenter(array_merge($read_permission, $write_permission), $ugroup);
+        $this->addReadersToCollection($project, $permissions, $ugroup);
+        $this->addWritersToCollection($project, $permissions, $ugroup);
+        $this->addMediawikiSpecificPermissionsToCollection($project, $permissions, $ugroup);
+
+        return new PermissionPerGroupPanePresenter(
+            $permissions->getPermissions(),
+            $ugroup
+        );
     }
 
     /**
      * @return array
      */
-    private function addReadersToPermission(
+    private function addReadersToCollection(
         Project $project,
+        PermissionPerGroupCollection $collection,
         ProjectUGroup $ugroup = null
     ) {
         if ($ugroup) {
@@ -79,23 +94,17 @@ class PermissionPerGroupPaneBuilder
             $readers = $this->mediawiki_manager->getReadAccessControl($project);
         }
 
-        $permissions = array();
         if ($readers) {
-            $formatted_group = array();
-            foreach ($readers as $reader) {
-                $formatted_group[] = $this->formatter->formatGroup($project, $reader);
-            }
-            $permissions[] = array('name' => dgettext('tuleap-mediawiki', 'Readers'), 'groups' => $formatted_group);
+            $this->formatUGroupPermissions($project, $readers, dgettext('tuleap-mediawiki', 'Readers'), $collection);
         }
-
-        return $permissions;
     }
 
     /**
      * @return array
      */
-    private function addWritersToPermission(
+    private function addWritersToCollection(
         Project $project,
+        PermissionPerGroupCollection $collection,
         ProjectUGroup $ugroup = null
     ) {
         if ($ugroup) {
@@ -104,15 +113,101 @@ class PermissionPerGroupPaneBuilder
             $writers = $this->mediawiki_manager->getWriteAccessControl($project);
         }
 
-        $permissions = array();
         if ($writers) {
-            $formatted_group = array();
-            foreach ($writers as $writer) {
-                $formatted_group[] = $this->formatter->formatGroup($project, $writer);
-            }
-            $permissions[] = array('name' => dgettext('tuleap-mediawiki', 'Writers'), 'groups' => $formatted_group);
+            $this->formatUGroupPermissions($project, $writers, dgettext('tuleap-mediawiki', 'Writers'), $collection);
+        }
+    }
+
+    private function addMediawikiSpecificPermissionsToCollection(
+        Project $project,
+        PermissionPerGroupCollection $collection,
+        ProjectUGroup $selected_ugroup = null
+    ) {
+        $current_mapping = $this->mapper->getCurrentUserGroupMapping($project);
+
+        foreach (MediawikiUserGroupsMapper::$MEDIAWIKI_MODIFIABLE_GROUP_NAMES as $mw_group_name) {
+            $this->addPermissionRelativeToSearch(
+                $project,
+                $collection,
+                $current_mapping,
+                $mw_group_name,
+                $selected_ugroup
+            );
+            $this->addAllPermissionsWhenNoSearchCriteriaIsDefined(
+                $project,
+                $collection,
+                $current_mapping,
+                $mw_group_name,
+                $selected_ugroup
+            );
+        }
+    }
+
+    private function formatUGroupPermissions(
+        Project $project,
+        array $permissions,
+        $group_name,
+        PermissionPerGroupCollection $collection
+    ) {
+        $formatted_group = array();
+        foreach ($permissions as $mapped_ugroup) {
+            $formatted_group[] = $this->formatter->formatGroup($project, $mapped_ugroup);
         }
 
-        return $permissions;
+        $collection->addPermissions(array('name' => $group_name, 'groups' => $formatted_group));
+    }
+
+    /**
+     * @param Project                      $project
+     * @param PermissionPerGroupCollection $collection
+     * @param ProjectUGroup                $selected_ugroup
+     * @param                              $current_mapping
+     * @param                              $mw_group_name
+     */
+    private function addPermissionRelativeToSearch(
+        Project $project,
+        PermissionPerGroupCollection $collection,
+        $current_mapping,
+        $mw_group_name,
+        ProjectUGroup $selected_ugroup = null
+    ) {
+        if (! $selected_ugroup) {
+            return;
+        }
+
+        if (in_array($selected_ugroup->getId(), $current_mapping[$mw_group_name])) {
+            $this->formatUGroupPermissions(
+                $project,
+                $current_mapping[$mw_group_name],
+                $GLOBALS['Language']->getText('plugin_mediawiki', 'group_name_'.$mw_group_name),
+                $collection
+            );
+        }
+    }
+
+    /**
+     * @param Project                      $project
+     * @param PermissionPerGroupCollection $collection
+     * @param ProjectUGroup                $selected_ugroup
+     * @param                              $current_mapping
+     * @param                              $mw_group_name
+     */
+    private function addAllPermissionsWhenNoSearchCriteriaIsDefined(
+        Project $project,
+        PermissionPerGroupCollection $collection,
+        $current_mapping,
+        $mw_group_name,
+        ProjectUGroup $selected_ugroup = null
+    ) {
+        if ($selected_ugroup) {
+            return;
+        }
+
+        $this->formatUGroupPermissions(
+            $project,
+            $current_mapping[$mw_group_name],
+            $GLOBALS['Language']->getText('plugin_mediawiki', 'group_name_'.$mw_group_name),
+            $collection
+        );
     }
 }

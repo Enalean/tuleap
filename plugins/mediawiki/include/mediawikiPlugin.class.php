@@ -836,7 +836,8 @@ class MediaWikiPlugin extends Plugin {
         $builder   = new PermissionPerGroupPaneBuilder(
             $this->getMediawikiManager(),
             $ugroup_manager,
-            new PermissionPerGroupUGroupFormatter($ugroup_manager)
+            new PermissionPerGroupUGroupFormatter($ugroup_manager),
+            new MediawikiUserGroupsMapper($this->getDao(), new User_ForgeUserGroupPermissionsDao())
         );
         $presenter = $builder->buildPresenter($event);
 
