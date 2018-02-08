@@ -62,12 +62,19 @@ tuleap.tracker.artifact.editionSwitcher = function() {
 
     var toggleEmptyMandatoryFields = function () {
         $('.editable').each(function() {
-            var field = $(this);
+            const field              = $(this);
+            const field_id           = field[0].dataset.fieldId;
+            const html_field_element = document.getElementById('tracker_field_'+field_id);
+
+            if (html_field_element !== null && ! html_field_element.checkValidity()) {
+                toggleField(field);
+            }
+
             if (field.find('.highlight').size() > 0 && field.find('.empty_value').size() > 0) {
                 toggleField(field);
             }
 
-            var is_legacy = field.find('.auto-computed-label').attr('data-is-legacy');
+            const is_legacy = field.find('.auto-computed-label').attr('data-is-legacy');
             if (is_legacy) {
                 $(field).removeClass('editable');
             }
