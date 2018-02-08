@@ -524,7 +524,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         //}}}
 
         $html .= '<span class="tracker-admin-bindvalue_label">';
-        $html .= '<input type="text" name="bind[edit][' . $v->getId() . '][label]" value="' . $hp->purify($v->getLabel(), CODENDI_PURIFIER_CONVERT_HTML) . '" />';
+        $html .= '<input type="text" name="bind[edit][' . $v->getId() . '][label]" required value="' . $hp->purify($v->getLabel(), CODENDI_PURIFIER_CONVERT_HTML) . '" />';
         $placeholder = $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'description_placeholder');
         $html .= '<textarea name="bind[edit][' . $v->getId() . '][description]" class="tracker-admin-bindvalue_description_field" placeholder="'. $placeholder .'" cols="50" rows="3">';
         $html .= $hp->purify($v->getDescription(), CODENDI_PURIFIER_CONVERT_HTML);
@@ -630,7 +630,14 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
                             $new_description = null;
                             $new_is_hidden   = null;
                             if (isset($info['label']) && trim($info['label']) != $this->values[$value_id]->getLabel()) {
-                                $new_label = trim($info['label']);
+                                if (empty(trim($info['label']))) {
+                                    $GLOBALS['Response']->addFeedback(
+                                        Feedback::WARN,
+                                        dgettext('tuleap-tracker', 'Field value cannot be empty')
+                                    );
+                                } else {
+                                    $new_label = trim($info['label']);
+                                }
                             }
                             if (isset($info['description']) && trim($info['description']) != $this->values[$value_id]->getDescription()) {
                                 $new_description = trim($info['description']);
