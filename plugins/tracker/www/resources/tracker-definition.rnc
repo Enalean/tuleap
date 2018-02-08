@@ -397,8 +397,7 @@ tracker =
         element description { xsd:string }?,
 
         element criterias {
-            element criteria { criteriaContent }*,
-            element additional_criteria { additional_criteria_content }?
+            element criteria { criteriaContent }*
         },
         element renderers {
             element renderer { rendererContent }*
@@ -415,10 +414,6 @@ tracker =
         element field {
             attribute REF { xsd:IDREF }
         }
-
-    additional_criteria_content =
-        attribute name { "comment" },
-        element value { xsd:string }
 
     rendererContent =
         element name { xsd:string },
