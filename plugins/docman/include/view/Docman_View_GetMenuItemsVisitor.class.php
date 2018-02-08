@@ -1,11 +1,24 @@
 <?php
 /**
-* Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-* 
-* 
-*
-* Docman_View_GetMenuItemsVisitor
-*/
+ * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 require_once dirname(__FILE__).'/../Docman_LockFactory.class.php';
 
 class Docman_View_GetMenuItemsVisitor /* implements Visitor*/ {
@@ -16,7 +29,7 @@ class Docman_View_GetMenuItemsVisitor /* implements Visitor*/ {
         $this->if =& Docman_ItemFactory::instance($groupId);
         $this->actions = array();
     }
-    
+
     function visitItem(&$item, $params = array()) {
         if($this->dPm->userCanManage($this->user, $item->getId())) {
             $this->actions['canPermissions'] = true;
@@ -52,7 +65,9 @@ class Docman_View_GetMenuItemsVisitor /* implements Visitor*/ {
             }
             $this->actions['isLocked'] = true;
         } else {
-            $this->actions['canLock'] = true;
+            if($this->dPm->userCanWrite($this->user, $item->getId())) {
+                $this->actions['canLock'] = true;
+            }
         }
 
         // Approval tables
@@ -60,7 +75,7 @@ class Docman_View_GetMenuItemsVisitor /* implements Visitor*/ {
 
         return $this->actions;
     }
-    
+
     function visitFolder(&$item, $params = array()) {
         if($this->dPm->userCanWrite($this->user, $item->getId())) {
             $this->actions['canNewDocument'] = true;
@@ -75,24 +90,24 @@ class Docman_View_GetMenuItemsVisitor /* implements Visitor*/ {
             }
         }
         $actions = $this->visitItem($item, $params);
-        
+
         // Cannot lock nor unlock a folder yet.
         $this->actions['canUnlock'] = false;
         $this->actions['canLock']   = false;
         return $this->actions;
     }
-    
+
     function visitDocument($item, $params = array()) {
         return $this->visitItem($item, $params);
     }
-    
+
     function visitWiki(&$item, $params = array()) {
         if($this->dPm->userCanWrite($this->user, $item->getId())) {
             $this->actions['canUpdate'] = true;
         }
         return $this->visitDocument($item, $params);
     }
-    
+
     function visitLink(&$item, $params = array()) {
         if ($this->dPm->userCanWrite($this->user, $item->getId())) {
             $this->actions['canNewVersion'] = true;
@@ -100,14 +115,14 @@ class Docman_View_GetMenuItemsVisitor /* implements Visitor*/ {
 
         return $this->visitDocument($item, $params);
     }
-    
+
     function visitFile(&$item, $params = array()) {
         if($this->dPm->userCanWrite($this->user, $item->getId())) {
             $this->actions['canNewVersion'] = true;
         }
         return $this->visitDocument($item, $params);
     }
-    
+
     function visitEmbeddedFile(&$item, $params = array()) {
         return $this->visitFile($item, $params);
     }
@@ -121,4 +136,3 @@ class Docman_View_GetMenuItemsVisitor /* implements Visitor*/ {
         return $actions;
     }
 }
-?>
