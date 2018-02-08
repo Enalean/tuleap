@@ -27,7 +27,6 @@ function CardFieldsService(
         getCardFieldDateValue,
         getCardFieldListValues,
         getCardFieldFileValue,
-        getCardFieldCrossValue,
         getCardFieldPermissionsValue,
         getCardFieldUserValue,
         isListBoundToAValueDifferentFromNone
@@ -127,14 +126,6 @@ function CardFieldsService(
         }
 
         return $sce.trustAsHtml(file_descriptions.map(getFileLink).join(', '));
-    }
-
-    function getCardFieldCrossValue(links, filter_terms) {
-        function getCrossLink(link) {
-            return $sce.trustAsHtml('<a data-nodrag="true" href="' + link.url + '">' + highlight(_.escape(link.ref), filter_terms) + '</a>');
-        }
-
-        return $sce.trustAsHtml(links.map(getCrossLink).join(', '));
     }
 
     function getCardFieldPermissionsValue(values) {

@@ -51,9 +51,11 @@
 
         <div class="backlog-item-details-spacer"></div>
 
-        <span class="backlog-item-details-parent"
-            ng-bind-html="details.backlog_item.parent.label | tuleapHighlight:details.backlog_filter.terms"
-        ></span>
+        <tuleap-card-link class="backlog-item-details-parent"
+            text="{{ details.backlog_item.parent.label }}"
+            url="{{ '/plugins/tracker/?aid=' + details.backlog_item.parent.id }}"
+            filter-terms="{{ details.backlog_filter.terms }}"
+        ></tuleap-card-link>
 
         <div class="backlog-item-details-effort-container">
             <span ng-if="details.backlog_item.initial_effort"

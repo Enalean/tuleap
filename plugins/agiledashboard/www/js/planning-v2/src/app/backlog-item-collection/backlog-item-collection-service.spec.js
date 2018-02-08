@@ -3,20 +3,13 @@ import 'angular-mocks';
 
 import collection_module from './backlog-item-collection.js';
 
-describe("BacklogItemCollectionService -", function() {
-    var $q,
-        $scope,
+describe("BacklogItemCollectionService -", () => {
+    let $q,
         BacklogItemCollectionService,
         BacklogItemService;
 
-    beforeEach(function() {
-        angular.mock.module(collection_module, function($provide) {
-            $provide.decorator('BacklogItemService', function($delegate) {
-                spyOn($delegate, "getBacklogItem");
-
-                return $delegate;
-            });
-        });
+    beforeEach(() => {
+        angular.mock.module(collection_module);
 
         angular.mock.inject(function(
             _$q_,
@@ -25,32 +18,27 @@ describe("BacklogItemCollectionService -", function() {
             _BacklogItemService_
         ) {
             $q                           = _$q_;
-            $scope                       = _$rootScope_.$new();
             BacklogItemCollectionService = _BacklogItemCollectionService_;
             BacklogItemService           = _BacklogItemService_;
         });
 
+        spyOn(BacklogItemService, "getBacklogItem");
+
         installPromiseMatchers();
     });
 
-    describe("refreshBacklogItem() -", function() {
-        var get_backlog_item_request;
+    describe("refreshBacklogItem() -", () => {
+        describe("Given a backlog item's id and given that this item existed in the item collection", () => {
+            let initial_item;
 
-        beforeEach(function() {
-            get_backlog_item_request = $q.defer();
-        });
-
-        describe("Given a backlog item's id and given that this item existed in the item collection", function() {
-            var initial_item;
-
-            beforeEach(function() {
+            beforeEach(() => {
                 initial_item = {
-                    id: 7088,
+                    id         : 7088,
                     card_fields: [],
-                    children: {
-                        data: [],
+                    children   : {
+                        data     : [],
                         collapsed: true,
-                        loaded: true
+                        loaded   : true
                     },
                     has_children  : false,
                     initial_effort: 8,
@@ -62,57 +50,66 @@ describe("BacklogItemCollectionService -", function() {
                 BacklogItemCollectionService.items = {
                     7088: initial_item
                 };
-                BacklogItemService.getBacklogItem.and.returnValue(get_backlog_item_request.promise);
             });
 
-            it("when I refresh it, then a promise will be resolved and the item will be fetched from the server and updated in the item collection", function() {
-                var promise = BacklogItemCollectionService.refreshBacklogItem(7088);
-
-                expect(BacklogItemCollectionService.items[7088].updating).toBeTruthy();
-                get_backlog_item_request.resolve({
+            it("when I refresh it, then a promise will be resolved and the item will be fetched from the server and updated in the item collection", () => {
+                const updated_item = {
                     backlog_item: {
-                        id: 7088,
+                        id         : 7088,
                         card_fields: [
                             {
                                 field_id: 35,
-                                label: "Remaining Story Points",
-                                type: "float",
-                                value: 1.5
+                                label   : "Remaining Story Points",
+                                type    : "float",
+                                value   : 1.5
                             }
                         ],
                         has_children  : true,
                         initial_effort: 6,
                         label         : 'unspeedy',
-                        status        : 'Closed'
+                        status        : 'Closed',
+                        parent        : {
+                            id   : 504,
+                            label: 'pretangible'
+                        }
                     }
-                });
+                };
+
+                BacklogItemService.getBacklogItem.and.returnValue($q.when(updated_item));
+
+                const promise = BacklogItemCollectionService.refreshBacklogItem(7088);
+
+                expect(BacklogItemCollectionService.items[7088].updating).toBeTruthy();
 
                 expect(promise).toBeResolved();
                 expect(BacklogItemService.getBacklogItem).toHaveBeenCalledWith(7088);
                 expect(BacklogItemCollectionService.items[7088]).toBe(initial_item);
                 expect(BacklogItemCollectionService.items[7088]).toEqual({
-                    id: 7088,
+                    id         : 7088,
                     card_fields: [
                         {
                             field_id: 35,
-                            label: "Remaining Story Points",
-                            type: "float",
-                            value: 1.5
+                            label   : "Remaining Story Points",
+                            type    : "float",
+                            value   : 1.5
                         }
                     ],
                     children: {
-                        data: [],
+                        data     : [],
                         collapsed: true,
-                        loaded: true
+                        loaded   : true
                     },
                     has_children  : true,
                     initial_effort: 6,
                     label         : 'unspeedy',
                     status        : 'Closed',
-                    updating      : false
+                    parent        : {
+                        id   : 504,
+                        label: 'pretangible'
+                    },
+                    updating: false
                 });
             });
         });
-
     });
 });

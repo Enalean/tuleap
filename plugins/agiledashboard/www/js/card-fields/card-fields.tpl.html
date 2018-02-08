@@ -41,12 +41,16 @@
             <span class="extra-card-field-title">{{ card_field.label }}: </span>
             <span ng-bind-html="card_ctrl.getCardFieldFileValue(card_ctrl.item.id, card_field.field_id, card_field.file_descriptions, card_ctrl.filter_terms)"></span>
         </div>
-        <div
-                class="extra-card-field-content"
-                ng-if="card_ctrl.cardFieldIsCross(card_field.type) && card_field.value"
+        <div class="extra-card-field-content"
+            ng-if="card_ctrl.cardFieldIsCross(card_field.type) && card_field.value"
         >
             <span class="extra-card-field-title">{{ card_field.label }}: </span>
-            <span ng-bind-html="card_ctrl.getCardFieldCrossValue(card_field.value, card_ctrl.filter_terms)"></span>
+            <tuleap-card-link ng-repeat="link in card_field.value"
+                class="extra-card-field-list-item"
+                text="{{ ::link.ref }}"
+                url="{{ ::link.url }}"
+                filter-terms="{{ card_ctrl.filter_terms }}"
+            ></tuleap-card-link>
         </div>
         <div
                 class="extra-card-field-content"
