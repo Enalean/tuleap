@@ -695,7 +695,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                         $csv_header = $session->get('csv_header');
                         $csv_body   = $session->get('csv_body');
 
-                        if ($this->importFromCSV($layout, $request, $current_user, $csv_header, $csv_body)) {
+                        if ($this->importFromCSV($request, $current_user, $csv_header, $csv_body)) {
                             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'import_succeed'));
                             $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
                         } else {
@@ -2655,16 +2655,17 @@ EOS;
      *
      * @return array of Tracker_FormElementField the fields, in the same order than the header, or false if there is an unknown field
      */
-    private function _getCSVFields($header) {
+    private function getCSVFields(array $header)
+    {
         $fef = $this->getFormElementFactory();
         $fields = array();
         foreach($header as $field_name) {
-            if ($field_name != 'aid') {
+            if ($field_name !== 'aid') {
                 $field = $fef->getUsedFieldByName($this->getId(), $field_name);
                 if ($field) {
                     $fields[] = $field;
                 } else {
-                    return false;
+                    $fields[] = null;
                 }
             } else {
                 $fields[] = 'aid';
@@ -2746,7 +2747,7 @@ EOS;
                             $header = array_shift($lines);
                             $html_table .=  '<tr class="boxtable">';
                             $html_table .=  '<th class="boxtitle"></th>';
-                            $fields = $this->_getCSVFields($header);
+                            $fields = $this->getCSVFields($header);
 
                             foreach ($header as $field_name) {
                                 $html_table .=  '<th class="boxtitle tracker_report_table_column">';
@@ -2774,7 +2775,7 @@ EOS;
                                         $displayed_data = $field->getFieldDataForCSVPreview($data_cell);
                                     } else  {
                                         // else: this cell is an 'aid' cell
-                                        if ($data_cell) {
+                                        if ($fields[$idx] === 'aid' && $data_cell) {
                                             $mode = 'update';
                                         }
                                         $displayed_data = $purifier->purify($data_cell);
@@ -3072,7 +3073,7 @@ EOS;
      *
      * @return boolean true if import succeed, false otherwise
      */
-    protected function importFromCSV(Tracker_IDisplayTrackerLayout $layout, $request, $current_user, $header, $lines)
+    private function importFromCSV(Codendi_Request $request, PFUser $current_user, array $header, array $lines)
     {
         $is_error = false;
         if (count($lines) >= 1) {
@@ -3081,7 +3082,7 @@ EOS;
             } else {
                 $send_notifications = false;
             }
-            $fields = $this->_getCSVFields($header);
+            $fields = $this->getCSVFields($header);
             $af = Tracker_ArtifactFactory::instance();
             $nb_lines = 0;
             $nb_artifact_creation = 0;
@@ -3090,20 +3091,22 @@ EOS;
                 $mode = 'creation';
                 $fields_data = array();
                 foreach ($data_line as $idx => $data_cell) {
-                    if ($fields[$idx] && is_a($fields[$idx], 'Tracker_FormElement')) {
-                        $field = $fields[$idx];
-                        if ($field->isCSVImportable()) {
-                            $fields_data[$field->getId()] = $field->getFieldDataFromCSVValue($data_cell);
-                        } else {
-                            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'field_not_taken_account', $field->getName()));
-                        }
-                    } else {
-                        // else: this cell is an 'aid' cell
+
+                    if (($fields[$idx]) === null) {
+                        continue;
+                    } else if ($fields[$idx] === 'aid') {
                         if ($data_cell) {
                             $mode = 'update';
                             $artifact_id = (int) $data_cell;
                         } else {
                             $artifact_id = 0;
+                        }
+                    } else if (is_a($fields[$idx], 'Tracker_FormElement')) {
+                        $field = $fields[$idx];
+                        if ($field->isCSVImportable()) {
+                            $fields_data[$field->getId()] = $field->getFieldDataFromCSVValue($data_cell);
+                        } else {
+                            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'field_not_taken_account', $field->getName()));
                         }
                     }
                 }
@@ -3116,9 +3119,20 @@ EOS;
                         $is_error = true;
                     }
                 } else {
-                    // $idx is the artifact id
                     $artifact = $af->getArtifactById($artifact_id);
                     if ($artifact) {
+
+                        if ($artifact->getTracker()->getId() !== $this->getId()) {
+                            $GLOBALS['Response']->addFeedback(
+                                Feedback::ERROR,
+                                sprintf(
+                                    dgettext('tuleap-tracker', "Artifact (%s) does not belong to this tracker."),
+                                    $artifact->getId()
+                                )
+                            );
+
+                            $is_error = true;
+                        }
                         $followup_comment = '';
                         try {
                             $artifact->createNewChangeset($fields_data, $followup_comment, $current_user, $send_notifications);

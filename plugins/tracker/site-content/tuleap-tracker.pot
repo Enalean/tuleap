@@ -37,6 +37,10 @@ msgid ""
 "removing the existing link."
 msgstr ""
 
+#, php-format
+msgid "Artifact (%s) does not belong to this tracker."
+msgstr ""
+
 msgid "Artifact link types has been disabled."
 msgstr ""
 

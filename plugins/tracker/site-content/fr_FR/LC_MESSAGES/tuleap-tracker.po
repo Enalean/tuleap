@@ -55,6 +55,10 @@ msgstr ""
 "Suite à une mise à jour d'artéfact, les types de lien désactivés seront "
 "supprimés sans enlever les liens existants."
 
+#, php-format
+msgid "Artifact (%s) does not belong to this tracker."
+msgstr "L'artéfact (%s) n'appartient pas à ce tracker."
+
 msgid "Artifact link types has been disabled."
 msgstr "Les liens entre artéfacts typés ont été désactivés."
 
