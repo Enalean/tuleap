@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -53,6 +53,7 @@ use Tuleap\Git\Notifications\NotificationsForProjectMemberCleaner;
 use Tuleap\Git\Notifications\UgroupsToNotifyDao;
 use Tuleap\Git\Notifications\UgroupToNotifyUpdater;
 use Tuleap\Git\Notifications\UsersToNotifyDao;
+use Tuleap\Git\PerGroup\PermissionPerGroupPaneBuilder;
 use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\DefaultFineGrainedPermissionReplicator;
 use Tuleap\Git\Permissions\FineGrainedDao;
@@ -95,6 +96,9 @@ use Tuleap\Glyph\GlyphLocation;
 use Tuleap\Glyph\GlyphLocationsCollector;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
+use Tuleap\Project\Admin\PerGroup\PermissionPerGroupUGroupFormatter;
+use Tuleap\Project\Admin\Permission\PermissionPerGroupPaneCollector;
+use Tuleap\Project\Admin\Permission\PermissionPerGroupUGroupRetriever;
 use Tuleap\Project\Admin\ProjectUGroup\UserBecomesProjectAdmin;
 use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerProjectAdmin;
 use Tuleap\Project\HierarchyDisplayer;
@@ -108,8 +112,8 @@ require_once 'autoload.php';
 /**
  * GitPlugin
  */
-class GitPlugin extends Plugin {
-
+class GitPlugin extends Plugin
+{
     /**
      *
      * @var Logger
@@ -246,6 +250,7 @@ class GitPlugin extends Plugin {
         $this->addHook(NavigationDropdownQuickLinksCollector::NAME);
         $this->addHook(UserBecomesProjectAdmin::NAME);
         $this->addHook(UserIsNoLongerProjectAdmin::NAME);
+        $this->addHook(PermissionPerGroupPaneCollector::NAME);
 
         if (defined('STATISTICS_BASE_DIR')) {
             $this->addHook(Statistics_Event::FREQUENCE_STAT_ENTRIES);
@@ -2425,5 +2430,26 @@ class GitPlugin extends Plugin {
                 )
             )
         );
+    }
+
+    public function permissionPerGroupPaneCollector(PermissionPerGroupPaneCollector $event)
+    {
+        if (! $event->getProject()->usesService(self::SERVICE_SHORTNAME)) {
+            return;
+        }
+
+        $ugroup_manager = new UGroupManager();
+        $builder        = new PermissionPerGroupPaneBuilder(
+            new PermissionPerGroupUGroupRetriever(PermissionsManager::instance()),
+            new PermissionPerGroupUGroupFormatter($ugroup_manager),
+            $ugroup_manager
+        );
+        $presenter      = $builder->buildPresenter($event);
+        $templates_dir  = GIT_TEMPLATE_DIR . '/project-admin/';
+        $pane           = TemplateRendererFactory::build()
+            ->getRenderer($templates_dir)
+            ->renderToString('project-admin-permission-per-group', $presenter);
+
+        $event->addAdditionalPane($pane);
     }
 }
