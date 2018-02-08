@@ -64,6 +64,11 @@ $tlp-theme-homepage-background-color: #f6f6f6;
 
     a {
         color: $homepage-white-color;
+        text-decoration: underline;
+
+        &:hover {
+            text-decoration: none;
+        }
     }
 }
 
