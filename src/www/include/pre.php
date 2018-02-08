@@ -194,11 +194,6 @@ $current_locale = $current_user->getLocale();
 setlocale(LC_CTYPE, "$current_locale.UTF-8");
 setlocale(LC_MESSAGES, "$current_locale.UTF-8");
 
-//Pass username in order to be written in Apache access_log
-if(!IS_SCRIPT && function_exists('apache_note')) {
-    apache_note('username', $current_user->getUnixName());
-}
-
 //library to set up context help
 require_once('help.php');
 
@@ -244,6 +239,10 @@ if (!IS_SCRIPT) {
     $urlVerifFactory = new URLVerificationFactory();
     $urlVerif = $urlVerifFactory->getURLVerification($_SERVER);
     $urlVerif->assertValidUrl($_SERVER, $request);
+
+    if (! $current_user->isAnonymous()) {
+        header('X-Tuleap-Username: '.$current_user->getUserName());
+    }
 }
 
 //Check post max size
