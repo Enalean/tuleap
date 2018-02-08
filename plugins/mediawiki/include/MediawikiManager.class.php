@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -69,6 +69,14 @@ class MediawikiManager {
     /**
      * @return int[]
      */
+    public function getReadAccessControlForProjectContainingGroup(Project $project, ProjectUGroup $ugroup)
+    {
+        return $this->getAccessControlForProjectContainingUGroup($project, self::READ_ACCESS, $ugroup);
+    }
+
+    /**
+     * @return int[]
+     */
     private function getDefaultReadAccessControl(Project $project) {
         if ($project->isPublic()) {
             return array(ProjectUGroup::REGISTERED);
@@ -93,6 +101,14 @@ class MediawikiManager {
     /**
      * @return int[]
      */
+    public function getWriteAccessControlForProjectContainingUGroup(Project $project, ProjectUGroup $ugroup)
+    {
+        return $this->getAccessControlForProjectContainingUGroup($project, self::WRITE_ACCESS, $ugroup);
+    }
+
+    /**
+     * @return int[]
+     */
     private function getDefaultWriteAccessControl() {
         return array(ProjectUGroup::PROJECT_MEMBERS);
     }
@@ -111,6 +127,17 @@ class MediawikiManager {
         return $ugroup_ids;
     }
 
+    private function getAccessControlForProjectContainingUGroup(Project $project, $access, ProjectUGroup $ugroup)
+    {
+        $result     = $this->dao->getAccessControlForProjectContainingUGroup($project->getID(), $access, $ugroup->getId());
+        $ugroup_ids = array();
+
+        foreach ($result as $row) {
+            $ugroup_ids[] = $row['ugroup_id'];
+        }
+
+        return $ugroup_ids;
+    }
 
     public function saveReadAccessControl(Project $project, array $ugroup_ids) {
         return $this->saveAccessControl($project, self::READ_ACCESS, $ugroup_ids);

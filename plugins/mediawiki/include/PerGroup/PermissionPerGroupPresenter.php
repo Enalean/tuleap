@@ -20,14 +20,22 @@
 
 namespace Tuleap\Mediawiki\PerGroup;
 
+use ProjectUGroup;
+
 class PermissionPerGroupPresenter
 {
     public $permissions;
     public $has_permissions;
+    public $user_group_name;
 
-    public function __construct(array $permissions)
-    {
+    public function __construct(
+        array $permissions,
+        ProjectUGroup $selected_ugroup = null
+    ) {
         $this->permissions     = $permissions;
         $this->has_permissions = count($permissions) > 0;
+        $this->user_group_name = ($selected_ugroup)
+            ? $selected_ugroup->getTranslatedName()
+            : '';
     }
 }

@@ -35,9 +35,9 @@ class AdditionalPanesPermissionPerGroupBuilder
         $this->event_manager = $event_manager;
     }
 
-    public function buildAdditionalPresenters(Project $project)
+    public function buildAdditionalPresenters(Project $project, $selected_ugroup)
     {
-        $event = new PermissionPerGroupPaneCollector($project);
+        $event = new PermissionPerGroupPaneCollector($project, $selected_ugroup);
         $this->event_manager->processEvent($event);
 
         return $event->getAdditionalPanes();

@@ -12,3 +12,6 @@ msgstr ""
 
 msgid "Writers"
 msgstr ""
+
+msgid "{{ user_group_name }} has no permission for Mediawiki"
+msgstr ""

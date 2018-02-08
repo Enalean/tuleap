@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.8.7.1\n"
+"X-Generator: Poedit 2.0.3\n"
 
 #, php-format
 msgid ""
@@ -75,6 +75,9 @@ msgstr "Ajouter un utilisateur non membre du projet"
 
 msgid "Agile Dashboard"
 msgstr "Agile Dashboard"
+
+msgid "All groups"
+msgstr "Tous les groupes"
 
 msgid "Already used"
 msgstr "Déjà utilisé"
@@ -854,6 +857,9 @@ msgstr "Import outils de suivi v3"
 msgid "Unable to fetch the latest activities of the project"
 msgstr "Impossible de récupérer les dernières activités du projet"
 
+msgid "Under development, there is nothing here"
+msgstr "En cours de developpement, il n'y a rien ici"
+
 msgid "Unix name"
 msgstr "Now unix"
 
@@ -1083,3 +1089,6 @@ msgstr "références"
 
 msgid "services"
 msgstr "services"
+
+#~ msgid "Filter by user group"
+#~ msgstr "Filtrer par groupe d'utilisateurs"

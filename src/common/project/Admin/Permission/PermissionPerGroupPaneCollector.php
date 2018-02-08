@@ -20,12 +20,18 @@
 
 namespace Tuleap\Project\Admin\Permission;
 
+use HTTPRequest;
 use Project;
 use Tuleap\Event\Dispatchable;
 
 class PermissionPerGroupPaneCollector implements Dispatchable
 {
     const NAME = 'permissionPerGroupPaneCollector';
+
+    /**
+     * @var int|false
+     */
+    private $selected_ugroup_id;
 
     /**
      * @var string[]
@@ -36,9 +42,10 @@ class PermissionPerGroupPaneCollector implements Dispatchable
      */
     private $project;
 
-    public function __construct(Project $project)
+    public function __construct(Project $project, $selected_ugroup_id)
     {
-        $this->project = $project;
+        $this->project            = $project;
+        $this->selected_ugroup_id = $selected_ugroup_id;
     }
 
     /**
@@ -63,5 +70,13 @@ class PermissionPerGroupPaneCollector implements Dispatchable
     public function addAdditionalPane($additional_pane)
     {
         $this->additional_panes[] = $additional_pane;
+    }
+
+    /**
+     * @return false|int
+     */
+    public function getSelectedUGroupId()
+    {
+        return $this->selected_ugroup_id;
     }
 }

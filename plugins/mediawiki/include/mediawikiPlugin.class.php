@@ -834,7 +834,7 @@ class MediaWikiPlugin extends Plugin {
             $this->getMediawikiManager(),
             new UGroupManager()
         );
-        $presenter = $builder->buildPresenter($event->getProject());
+        $presenter = $builder->buildPresenter($event);
 
         $templates_dir = ForgeConfig::get('tuleap_dir') . '/plugins/mediawiki/templates/';
         $content       = TemplateRendererFactory::build()
