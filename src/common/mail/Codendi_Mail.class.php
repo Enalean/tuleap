@@ -21,6 +21,7 @@
 
 use Zend\Mail;
 use Zend\Mime\Message as MimeMessage;
+use Zend\Mime\Mime;
 use Zend\Mime\Part as MimePart;
 
 /**
@@ -300,8 +301,10 @@ class Codendi_Mail implements Codendi_Mail_Interface {
         if ($this->body_text === '') {
             return null;
         }
-        $text_part       = new MimePart($this->body_text);
-        $text_part->type = 'text/plain';
+        $text_part           = new MimePart($this->body_text);
+        $text_part->type     = Mime::TYPE_TEXT;
+        $text_part->encoding = Mime::ENCODING_QUOTEDPRINTABLE;
+        $text_part->charset  = 'UTF-8';
 
         return $text_part;
     }
@@ -370,8 +373,10 @@ class Codendi_Mail implements Codendi_Mail_Interface {
         if ($this->body_html === '') {
             return null;
         }
-        $html_code_part       = new MimePart($this->body_html);
-        $html_code_part->type = 'text/html';
+        $html_code_part           = new MimePart($this->body_html);
+        $html_code_part->type     = Mime::TYPE_HTML;
+        $html_code_part->encoding = Mime::ENCODING_QUOTEDPRINTABLE;
+        $html_code_part->charset  = 'UTF-8';
 
         if (empty($this->inline_attachments)) {
             return $html_code_part;
