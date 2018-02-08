@@ -1,4 +1,5 @@
 import 'babel-polyfill';
+import 'card-fields/index.spec.js';
 import './planning-controller.spec.js';
 import './backlog-item-collection/backlog-item-collection-service.spec.js';
 import './backlog-item-rest/backlog-item-factory.spec.js';
@@ -9,7 +10,6 @@ import './backlog-rest/backlog-service.spec.js';
 import './backlog/backlog-controller.spec.js';
 import './drop/dropped-service.spec.js';
 import './drop/dropped-service.spec.js';
-import './highlight-filter/highlight-filter.spec.js';
 import './in-properties/in-properties-filter.spec.js';
 import './milestone-collection/milestone-collection-service.spec.js';
 import './milestone-rest/milestone-service.spec.js';

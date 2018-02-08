@@ -1,0 +1,72 @@
+<ul class="extra-card-fields"
+    ng-if="card_ctrl.item.card_fields.length > 0"
+>
+    <li ng-repeat="card_field in card_ctrl.item.card_fields track by $index"
+        ng-class="{ large: card_ctrl.cardFieldIsText(card_field.type) && card_field.value }"
+        class="extra-card-field"
+    >
+        <div
+                class="extra-card-field-content"
+                ng-if="card_ctrl.cardFieldIsSimpleValue(card_field.type) && card_field.value"
+        >
+            <span class="extra-card-field-title">{{ card_field.label }}: </span>
+            <tuleap-simple-field
+                    value="card_field.value"
+                    filter-terms="card_ctrl.filter_terms"
+            ></tuleap-simple-field>
+        </div>
+        <div
+                class="extra-card-field-content"
+                ng-if="card_ctrl.cardFieldIsList(card_field.type) && card_field.values.length > 0 && card_ctrl.isListBoundToAValueDifferentFromNone(card_field.values)"
+        >
+            <span class="extra-card-field-title">{{ card_field.label }}: </span>
+            <span ng-bind-html="card_ctrl.getCardFieldListValues(card_field.values, card_ctrl.filter_terms)"></span>
+        </div>
+        <div
+                class="extra-card-field-content"
+                ng-if="card_ctrl.cardFieldIsDate(card_field.type) && card_field.value"
+        >
+            <span class="extra-card-field-title">{{ card_field.label }}: </span>
+            <span title="{{ card_field.value }}" ng-bind-html="card_field.value | amCalendar | tuleapHighlight:card_ctrl.filter_terms"></span>
+        </div>
+        <card-text-field
+                ng-if="card_ctrl.cardFieldIsText(card_field.type)"
+                field="card_field"
+                filter-terms="card_ctrl.filter_terms"
+        ></card-text-field>
+        <div
+                class="extra-card-field-content"
+                ng-if="card_ctrl.cardFieldIsFile(card_field.type) && card_field.file_descriptions.length > 0"
+        >
+            <span class="extra-card-field-title">{{ card_field.label }}: </span>
+            <span ng-bind-html="card_ctrl.getCardFieldFileValue(card_ctrl.item.id, card_field.field_id, card_field.file_descriptions, card_ctrl.filter_terms)"></span>
+        </div>
+        <div
+                class="extra-card-field-content"
+                ng-if="card_ctrl.cardFieldIsCross(card_field.type) && card_field.value"
+        >
+            <span class="extra-card-field-title">{{ card_field.label }}: </span>
+            <span ng-bind-html="card_ctrl.getCardFieldCrossValue(card_field.value, card_ctrl.filter_terms)"></span>
+        </div>
+        <div
+                class="extra-card-field-content"
+                ng-if="card_ctrl.cardFieldIsPermissions(card_field.type) && card_field.granted_groups.length > 0"
+        >
+            <span class="extra-card-field-title">{{ card_field.label }}: </span>
+            <span ng-bind-html="card_ctrl.getCardFieldPermissionsValue(card_field.granted_groups) | tuleapHighlight:card_ctrl.filter_terms"></span>
+        </div>
+        <div
+                class="extra-card-field-content"
+                ng-if="card_ctrl.cardFieldIsUser(card_field.type) && card_field.value"
+        >
+            <span class="extra-card-field-title">{{ card_field.label }}: </span>
+            <span ng-bind-html="card_ctrl.getCardFieldUserValue(card_field.value, card_ctrl.filter_terms)"></span>
+        </div>
+        <card-computed-field
+                ng-if="card_ctrl.cardFieldIsComputed(card_field.type)"
+                field="card_field"
+                filter-terms="card_ctrl.filter_terms"
+        ></card-computed-field>
+        <!-- Artifact links & Burndown fields are not managed yet -->
+    </li>
+</ul>

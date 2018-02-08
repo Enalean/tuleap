@@ -4,7 +4,7 @@
  *
  * @license MIT
  */
-import kanban_module from '../app.js';
+import card_fields_module from './index.js';
 import angular from 'angular';
 import 'angular-mocks';
 
@@ -12,7 +12,7 @@ describe('tuleapHighlight', function() {
     var highlightFilter,
         testPhrase = 'Prefix Highlight Suffix';
     beforeEach(function() {
-        angular.mock.module(kanban_module);
+        angular.mock.module(card_fields_module);
 
         angular.mock.inject(function($filter) {
             highlightFilter = $filter('tuleapHighlight');

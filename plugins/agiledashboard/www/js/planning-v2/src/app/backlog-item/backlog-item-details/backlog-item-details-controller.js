@@ -1,3 +1,4 @@
+import angular            from 'angular';
 import _                  from 'lodash';
 import BacklogFilterValue from '../../backlog-filter-terms.js';
 
@@ -5,7 +6,6 @@ export default BacklogItemDetailsController;
 
 BacklogItemDetailsController.$inject = [
     'gettextCatalog',
-    'CardFieldsService',
     'EditItemService',
     'BacklogItemService',
     'BacklogItemCollectionService',
@@ -14,36 +14,17 @@ BacklogItemDetailsController.$inject = [
 
 function BacklogItemDetailsController(
     gettextCatalog,
-    CardFieldsService,
     EditItemService,
     BacklogItemService,
     BacklogItemCollectionService,
     NewTuleapArtifactModalService
 ) {
-    var self = this;
-
-    _.extend(self, {
-        backlog_filter                       : BacklogFilterValue,
-        canBeAddedToChildren                 : canBeAddedToChildren,
-        cardFieldIsCross                     : CardFieldsService.cardFieldIsCross,
-        cardFieldIsDate                      : CardFieldsService.cardFieldIsDate,
-        cardFieldIsFile                      : CardFieldsService.cardFieldIsFile,
-        cardFieldIsList                      : CardFieldsService.cardFieldIsList,
-        cardFieldIsPermissions               : CardFieldsService.cardFieldIsPermissions,
-        cardFieldIsSimpleValue               : CardFieldsService.cardFieldIsSimpleValue,
-        cardFieldIsText                      : CardFieldsService.cardFieldIsText,
-        cardFieldIsUser                      : CardFieldsService.cardFieldIsUser,
-        cardFieldIsComputed                  : CardFieldsService.cardFieldIsComputed,
-        getCardFieldCrossValue               : CardFieldsService.getCardFieldCrossValue,
-        getCardFieldDateValue                : CardFieldsService.getCardFieldDateValue,
-        getCardFieldFileValue                : CardFieldsService.getCardFieldFileValue,
-        getCardFieldListValues               : CardFieldsService.getCardFieldListValues,
-        getCardFieldPermissionsValue         : CardFieldsService.getCardFieldPermissionsValue,
-        getCardFieldTextValue                : CardFieldsService.getCardFieldTextValue,
-        getCardFieldUserValue                : CardFieldsService.getCardFieldUserValue,
-        isListBoundToAValueDifferentFromNone : CardFieldsService.isListBoundToAValueDifferentFromNone,
-        showAddChildModal                    : showAddChildModal,
-        showEditModal                        : EditItemService.showEditModal
+    const self = this;
+    Object.assign(self, {
+        backlog_filter: BacklogFilterValue,
+        showEditModal : EditItemService.showEditModal,
+        showAddChildModal,
+        canBeAddedToChildren
     });
 
     function showAddChildModal($event, item_type) {

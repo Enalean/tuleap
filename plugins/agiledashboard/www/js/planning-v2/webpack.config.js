@@ -78,7 +78,8 @@ const webpack_config = {
         alias: {
             'angular-artifact-modal': path.resolve(__dirname, '../../../../tracker/www/scripts/angular-artifact-modal/index.js'),
             'angular-tlp'           : path.join(path_to_tlp, 'angular-tlp/index.js'),
-            'tlp-mocks'             : path.join(path_to_tlp, 'mocks/index.js')
+            'tlp-mocks'             : path.join(path_to_tlp, 'mocks/index.js'),
+            'card-fields'           : path.resolve(__dirname, '../card-fields')
         }
     },
     module: {

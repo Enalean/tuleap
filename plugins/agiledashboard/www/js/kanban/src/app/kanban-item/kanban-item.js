@@ -1,7 +1,7 @@
 import angular from 'angular';
 import 'angular-gettext';
 
-import card_fields from '../card-fields/card-fields.js';
+import card_fields from 'card-fields/index.js';
 
 import KanbanItemDirective from './kanban-item-directive.js';
 

@@ -21,7 +21,6 @@ import error_modal                         from './error-modal/error-modal.js';
 import ErrorCtrl                           from './error-modal/error-controller.js';
 import KanbanConfig                        from './app-config.js';
 import MainCtrl                            from './app-main-controller.js';
-import KanbanCtrl                          from './app-kanban-controller.js';
 import KanbanService                       from './kanban-service.js';
 import ColumnCollectionService             from './column-collection-service.js';
 import DroppedService                      from './dropped-service.js';
@@ -44,7 +43,6 @@ import DiagramRestService                  from './reports-modal/diagram-rest-se
 import ReportsModalController              from './reports-modal/reports-modal-controller.js';
 import FilterTrackerReportController       from './filter-tracker-report/filter-tracker-report-controller.js';
 import FilterTrackerReportService          from './filter-tracker-report/filter-tracker-report-service.js';
-import TuleapStripTagsFilter               from './strip-tags/strip-tags-filter.js';
 import WipPopoverDirective                 from './wip-popover/wip-popover-directive.js';
 import KanbanColumnController              from './kanban-column/kanban-column-controller.js';
 import KanbanDirective                     from './kanban-directive.js';
@@ -97,7 +95,6 @@ export default angular.module('kanban', [
 .directive('columnWipHeader', ColumnWipHeaderDirective)
 .value('KanbanFilterValue', KanbanFilterValue)
 .filter('InPropertiesFilter', InPropertiesFilter)
-.filter('tuleapStripTags', TuleapStripTagsFilter)
 .name;
 
 var kanban_elements = document.getElementsByClassName('widget-kanban');

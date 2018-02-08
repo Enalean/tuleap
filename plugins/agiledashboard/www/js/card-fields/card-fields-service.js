@@ -1,37 +1,36 @@
-import _ from 'lodash';
+import _      from 'lodash';
+import moment from 'moment';
 
 export default CardFieldsService;
 
 CardFieldsService.$inject = [
     '$sce',
-    '$filter',
-    'moment'
+    '$filter'
 ];
 
 function CardFieldsService(
     $sce,
-    $filter,
-    moment
+    $filter
 ) {
-    var highlight = $filter('tuleapHighlight');
+    const highlight = $filter('tuleapHighlight');
 
     return {
-        cardFieldIsSimpleValue               : cardFieldIsSimpleValue,
-        cardFieldIsList                      : cardFieldIsList,
-        cardFieldIsText                      : cardFieldIsText,
-        cardFieldIsDate                      : cardFieldIsDate,
-        cardFieldIsFile                      : cardFieldIsFile,
-        cardFieldIsCross                     : cardFieldIsCross,
-        cardFieldIsPermissions               : cardFieldIsPermissions,
-        cardFieldIsUser                      : cardFieldIsUser,
-        cardFieldIsComputed                  : cardFieldIsComputed,
-        getCardFieldDateValue                : getCardFieldDateValue,
-        getCardFieldListValues               : getCardFieldListValues,
-        getCardFieldFileValue                : getCardFieldFileValue,
-        getCardFieldCrossValue               : getCardFieldCrossValue,
-        getCardFieldPermissionsValue         : getCardFieldPermissionsValue,
-        getCardFieldUserValue                : getCardFieldUserValue,
-        isListBoundToAValueDifferentFromNone : isListBoundToAValueDifferentFromNone
+        cardFieldIsSimpleValue,
+        cardFieldIsList,
+        cardFieldIsText,
+        cardFieldIsDate,
+        cardFieldIsFile,
+        cardFieldIsCross,
+        cardFieldIsPermissions,
+        cardFieldIsUser,
+        cardFieldIsComputed,
+        getCardFieldDateValue,
+        getCardFieldListValues,
+        getCardFieldFileValue,
+        getCardFieldCrossValue,
+        getCardFieldPermissionsValue,
+        getCardFieldUserValue,
+        isListBoundToAValueDifferentFromNone
     };
 
     function cardFieldIsSimpleValue(type) {
@@ -104,12 +103,12 @@ function CardFieldsService(
 
         function getValueRenderedWithColor(value, filter_terms) {
             var rgb   = 'rgb(' + _.escape(value.color.r) + ', ' + _.escape(value.color.g) + ', ' + _.escape(value.color.b) + ')',
-                color = '<span class="color" style="background: ' + rgb + '"></span>';
+                color = '<span class="extra-card-field-color" style="background: ' + rgb + '"></span>';
 
             return color + highlight(_.escape(value.label), filter_terms);
         }
 
-        return $sce.trustAsHtml(_.map(values, getValueRendered).join(', '));
+        return $sce.trustAsHtml(values.map(getValueRendered).join(', '));
     }
 
     function getCardFieldDateValue(value) {
@@ -124,10 +123,10 @@ function CardFieldsService(
         function getFileLink(file) {
             var file_name = highlight(_.escape(file.name), filter_terms);
 
-            return '<a data-nodrag="true" href="' + getFileUrl(file) + '" title="' + _.escape(file.description) + '"><i class="icon-file-text-alt"></i> ' + file_name + '</a>';
+            return '<a data-nodrag="true" href="' + getFileUrl(file) + '" title="' + _.escape(file.description) + '"><i class="fa fa-file-text"></i> ' + file_name + '</a>';
         }
 
-        return $sce.trustAsHtml(_.map(file_descriptions, getFileLink).join(', '));
+        return $sce.trustAsHtml(file_descriptions.map(getFileLink).join(', '));
     }
 
     function getCardFieldCrossValue(links, filter_terms) {
@@ -135,34 +134,31 @@ function CardFieldsService(
             return $sce.trustAsHtml('<a data-nodrag="true" href="' + link.url + '">' + highlight(_.escape(link.ref), filter_terms) + '</a>');
         }
 
-        return $sce.trustAsHtml(_.map(links, getCrossLink).join(', '));
+        return $sce.trustAsHtml(links.map(getCrossLink).join(', '));
     }
 
     function getCardFieldPermissionsValue(values) {
-        return _(values).join(', ');
+        return values.join(', ');
     }
 
     function getCardFieldUserValue(value, filter_terms) {
-        var avatar,
-            display_name,
+        let display_name,
             link;
 
         if (value.user_url === null) {
-            avatar       = '<div class="tlp-avatar-mini"> </div> ';
             display_name = highlight(_.escape(value.display_name), filter_terms);
-            link         = avatar + '<span>' + display_name + '</span>';
+            link         = `<div class="tlp-avatar-mini"> </div><span>${ display_name }</span>`;
         } else {
-            avatar       = '<div class="tlp-avatar-mini"><img src="' + value.avatar_url + '" /></div> ';
             display_name = highlight(_.escape(value.display_name), filter_terms);
-            link         = '<a data-nodrag="true" class="user" href="' + value.user_url + '">' + avatar + '<span>' + display_name + '</span></a>';
+            link         = `<a data-nodrag="true" class="extra-card-field-user" href="${ value.user_url }">
+                                <div class="tlp-avatar-mini"><img src="${ value.avatar_url }" /></div><span>${ display_name }</span>
+                            </a>`;
         }
 
         return $sce.trustAsHtml(link);
     }
 
     function isListBoundToAValueDifferentFromNone(values) {
-        return _.find(values, function(value) {
-            return value.id !== null;
-        });
+        return values.find(value => (value.id !== null));
     }
 }

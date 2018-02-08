@@ -5,7 +5,6 @@ import angular_artifact_modal_module from 'angular-artifact-modal';
 import 'angular-gettext';
 
 import drop                  from '../drop/drop.js';
-import highlight_filter      from '../highlight-filter/highlight-filter.js';
 import backlog_item_selected from '../backlog-item-selected/backlog-item-selected.js';
 import backlog_item_details  from './backlog-item-details/backlog-item-details.js';
 import backlog_item_rest     from '../backlog-item-rest/backlog-item-rest.js';
@@ -20,7 +19,6 @@ export default angular.module('backlog-item', [
     backlog_item_selected,
     dragular,
     drop,
-    highlight_filter,
 ])
 .directive('backlogItem', BacklogItemDirective)
 .name;

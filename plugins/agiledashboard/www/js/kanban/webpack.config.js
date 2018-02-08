@@ -62,9 +62,10 @@ var webpack_config_for_kanban = {
         ],
         alias: {
             // Our own components and their dependencies
-            'angular-artifact-modal'  : path.resolve(__dirname, '../../../../tracker/www/scripts/angular-artifact-modal/index.js'),
-            'cumulative-flow-diagram' : path.resolve(__dirname, '../cumulative-flow-diagram/index.js'),
-            'angular-tlp'             : path.resolve(__dirname, '../../../../../src/www/themes/common/tlp/angular-tlp'),
+            'angular-artifact-modal' : path.resolve(__dirname, '../../../../tracker/www/scripts/angular-artifact-modal/index.js'),
+            'cumulative-flow-diagram': path.resolve(__dirname, '../cumulative-flow-diagram/index.js'),
+            'angular-tlp'            : path.resolve(__dirname, '../../../../../src/www/themes/common/tlp/angular-tlp'),
+            'card-fields'            : path.resolve(__dirname, '../card-fields')
         }
     },
     externals: {
