@@ -86,21 +86,23 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent {
                     $deleteState = false;
             }
 
-            $backendSystem = $this->getBackend('System');
-            if ($backendSystem->projectHomeExists($project)) {
-                if (!$backendSystem->archiveProjectHome($groupId)) {
-                    $this->error("Could not archive project home");
-                    $deleteState = false;
-                } else {
-                    // Need to update system group cache
-                    $backendSystem->setNeedRefreshGroupCache();
+            if (ForgeConfig::areUnixGroupsAvailableOnSystem()) {
+                $backendSystem = $this->getBackend('System');
+                if ($backendSystem->projectHomeExists($project)) {
+                    if (!$backendSystem->archiveProjectHome($groupId)) {
+                        $this->error("Could not archive project home");
+                        $deleteState = false;
+                    } else {
+                        // Need to update system group cache
+                        $backendSystem->setNeedRefreshGroupCache();
+                    }
                 }
-            }
 
-            // Archive public ftp
-            if (!$backendSystem->archiveProjectFtp($groupId)) {
-                $this->error("Could not archive project public ftp");
-                $deleteState = false;
+                // Archive public ftp
+                if (!$backendSystem->archiveProjectFtp($groupId)) {
+                    $this->error("Could not archive project public ftp");
+                    $deleteState = false;
+                }
             }
 
             // Mark Wiki attachments as deleted

@@ -137,4 +137,14 @@ class ForgeConfig {
     {
         return self::get('sys_http_user');
     }
+
+    public static function areUnixGroupsAvailableOnSystem()
+    {
+        return trim(self::get('grpdir_prefix')) !== '';
+    }
+
+    public static function areUnixUsersAvailableOnSystem()
+    {
+        return trim(self::get('homedir_prefix')) !== '';
+    }
 }

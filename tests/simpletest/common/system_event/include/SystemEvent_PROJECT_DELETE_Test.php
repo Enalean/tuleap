@@ -50,6 +50,19 @@ Mock::generate('WikiAttachment');
  */
 class SystemEvent_PROJECT_DELETE_Test extends TuleapTestCase {
 
+    public function setUp()
+    {
+        parent::setUp();
+        ForgeConfig::store();
+        ForgeConfig::set('grpdir_prefix', '/tmp');
+    }
+
+    function tearDown()
+    {
+        ForgeConfig::restore();
+        parent::tearDown();
+    }
+
     /**
      * Project delete Users fail
      *

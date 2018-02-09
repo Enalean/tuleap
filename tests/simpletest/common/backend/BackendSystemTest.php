@@ -104,7 +104,7 @@ class BackendSystemTest extends TuleapTestCase {
     function testCreateProjectHome() {
 
         $project = new MockProject($this);
-        $project->setReturnValue('getUnixName', 'TestPrj',array(false));
+        $project->setReturnValue('getUnixNameMixedCase', 'TestPrj');
         $project->setReturnValue('getUnixName', 'testprj',array(true));
 
         $pm = new MockProjectManager();
@@ -201,6 +201,7 @@ class BackendSystemTest extends TuleapTestCase {
     public function testRenameProjectHomeDirectory() {
         $project = new MockProject($this);
         $project->setReturnValue('getUnixName', 'TestProject',array(false));
+        $project->setReturnValue('getUnixNameMixedCase', 'TestProject');
         $project->setReturnValue('getUnixName', 'testproject',array(true));
 
         $pm = new MockProjectManager();
@@ -238,6 +239,7 @@ class BackendSystemTest extends TuleapTestCase {
     public function testRenameProjectHomeDirectoryToLowerCase() {
         $project = new MockProject($this);
         $project->setReturnValue('getUnixName', 'TestProject',array(false));
+        $project->setReturnValue('getUnixNameMixedCase', 'TestProject');
         $project->setReturnValue('getUnixName', 'testproject',array(true));
 
         $pm = new MockProjectManager();
@@ -270,6 +272,7 @@ class BackendSystemTest extends TuleapTestCase {
     public function testRenameProjectHomeDirectoryToUpperCase() {
         $project = new MockProject($this);
         $project->setReturnValue('getUnixName', 'testproject',array(false));
+        $project->setReturnValue('getUnixNameMixedCase', 'testproject');
         $project->setReturnValue('getUnixName', 'testproject',array(true));
 
         $pm = new MockProjectManager();
@@ -306,6 +309,7 @@ class BackendSystemTest extends TuleapTestCase {
     public function testRenameProjectHomeDirectoryLowerCase() {
         $project = new MockProject($this);
         $project->setReturnValue('getUnixName', 'testproject',array(false));
+        $project->setReturnValue('getUnixNameMixedCase', 'testproject');
         $project->setReturnValue('getUnixName', 'testproject',array(true));
 
         $pm = new MockProjectManager();

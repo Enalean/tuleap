@@ -39,7 +39,7 @@ class BackendSystem extends Backend {
      * @return true on success, false otherwise
      */
     public function refreshUserCache() {
-        if (! is_dir(ForgeConfig::get('homedir_prefix'))) {
+        if (! ForgeConfig::areUnixUsersAvailableOnSystem()) {
             $this->log('No homedir_prefix, refreshUserCache skipped', Backend::LOG_INFO);
             return true;
         }
@@ -75,7 +75,7 @@ class BackendSystem extends Backend {
      * @return true on success, false otherwise
      */
     public function refreshGroupCache() {
-        if (! is_dir(ForgeConfig::get('grpdir_prefix'))) {
+        if (! ForgeConfig::areUnixGroupsAvailableOnSystem()) {
             $this->log('No grpdir_prefix, refreshGroupCache skipped', Backend::LOG_INFO);
             return true;
         }
@@ -122,7 +122,7 @@ class BackendSystem extends Backend {
      * @return null
      */
     public function userHomeSanityCheck(PFUser $user) {
-        if (! is_dir(ForgeConfig::get('homedir_prefix'))) {
+        if (! ForgeConfig::areUnixUsersAvailableOnSystem()) {
             $this->log('No homedir_prefix, userHomeSanityCheck skipped', Backend::LOG_INFO);
             return true;
         }
@@ -146,7 +146,7 @@ class BackendSystem extends Backend {
      * @return true if directory is successfully created, false otherwise
      */
     public function createUserHome(PFUser $user) {
-        if (! is_dir(ForgeConfig::get('homedir_prefix'))) {
+        if (! ForgeConfig::areUnixUsersAvailableOnSystem()) {
             $this->log('No homedir_prefix, createUserHome skipped', Backend::LOG_INFO);
             return true;
         }
@@ -225,25 +225,33 @@ class BackendSystem extends Backend {
      * @return true if directory is successfully created, false otherwise
      */
     public function createProjectHome($group_id) {
-        if (! is_dir(ForgeConfig::get('grpdir_prefix'))) {
-            $this->log('No grpdir_prefix, createProjectHome skipped', Backend::LOG_INFO);
-            return true;
-        }
         $project = $this->getProjectManager()->getProject($group_id);
-        if (!$project) return false;
+        if (! $project || $project->isDeleted()) {
+            return false;
+        }
 
-        $unix_group_name = $project->getUnixName(false); // May contain upper-case letters
+        if (ForgeConfig::areUnixGroupsAvailableOnSystem()) {
+            $this->createProjectWebDirectory($project);
+            $this->createProjectAnonymousFTP($project);
+        } else {
+            $this->log('No "grpdir_prefix", skip web directory and anonymous ftp', Backend::LOG_INFO);
+        }
+
+        return $this->createProjectFRSDirectory($project);
+    }
+
+    private function createProjectWebDirectory(Project $project)
+    {
+        $unix_group_name = $project->getUnixNameMixedCase();
         $projdir         = ForgeConfig::get('grpdir_prefix')."/".$unix_group_name;
         $ht_dir          = $projdir."/htdocs";
         $private_dir     = $projdir .'/private';
-        $ftp_anon_dir    = ForgeConfig::get('ftp_anon_dir_prefix')."/".$unix_group_name;
-        $ftp_frs_dir     = $GLOBALS['ftp_frs_dir_prefix']."/".$unix_group_name;
 
         if (!is_dir($projdir)) {
-        	// Lets create the group's homedir.
-	        // (put the SGID sticky bit on all dir so that all files
-	        // in there are owned by the project group and not
-	        // the user own group
+            // Lets create the group's homedir.
+            // (put the SGID sticky bit on all dir so that all files
+            // in there are owned by the project group and not
+            // the user own group
             // Moreover, we need to chmod after mkdir because the umask may not allow the precised mode
             if (mkdir($projdir,0775)) {
                 $this->chown($projdir, "dummy");
@@ -254,7 +262,7 @@ class BackendSystem extends Backend {
                 return false;
             }
         } else {
-            // Get directory stat 
+            // Get directory stat
             $stat = stat("$projdir");
             if ($stat && $stat['gid'] != $project->getUnixGID()) {
                 $this->log("Restoring ownership on project dir: $projdir", Backend::LOG_WARNING);
@@ -277,7 +285,7 @@ class BackendSystem extends Backend {
                 }
             }
         }
-                
+
         if (!is_dir($ht_dir)) {
             // Project web site directory
             if (mkdir($ht_dir,0775)) {
@@ -308,34 +316,6 @@ class BackendSystem extends Backend {
             }
         }
 
-        if (!is_dir($ftp_anon_dir)) {
-            // Now lets create the group's ftp homedir for anonymous ftp space
-            // This one must be owned by the project gid so that all project
-            // admins can work on it (upload, delete, etc...)
-            if (mkdir($ftp_anon_dir, 02775)) {
-                $this->chown($ftp_anon_dir, "dummy");
-                $this->chgrp($ftp_anon_dir, $unix_group_name);
-                chmod($ftp_anon_dir, 02775);
-            } else {
-                $this->log("Can't create project public ftp dir: $ftp_anon_dir", Backend::LOG_ERROR);
-                return false;
-            }
-        }
-        
-        if (!is_dir($ftp_frs_dir)) {
-            // Now lets create the group's ftp homedir for anonymous ftp space
-            // This one must be owned by the project gid so that all project
-            // admins can work on it (upload, delete, etc...)
-            if (mkdir($ftp_frs_dir,0771)) {
-                chmod($ftp_frs_dir, 0771);
-                $this->chown($ftp_frs_dir, "dummy");
-                $this->chgrp($ftp_frs_dir, $unix_group_name);
-            } else {
-                $this->log("Can't create project file release dir: $ftp_frs_dir", Backend::LOG_ERROR);
-                return false;
-            }
-        }
-        
         if (!is_dir($private_dir)) {
             if (mkdir($private_dir,0770)) {
                 $this->chmod($private_dir, 02770);
@@ -350,20 +330,66 @@ class BackendSystem extends Backend {
             $perms = fileperms($private_dir);
             // 'others' should have no right on the repository
             if (($perms & 0x0004) || ($perms & 0x0002) || ($perms & 0x0001) || ($perms & 0x0200)) {
-            	$this->chmod($private_dir, 02770);		
+                $this->chmod($private_dir, 02770);
             }
-            // Get directory stat 
+            // Get directory stat
             $stat = stat("$private_dir");
             if ($stat) {
                 $dummy_user = posix_getpwnam('dummy');
                 if ( ($stat['uid'] != $dummy_user['uid'])
-                     || ($stat['gid'] != $project->getUnixGID()) ) {
+                    || ($stat['gid'] != $project->getUnixGID()) ) {
                     $this->log("Restoring privacy on private dir: $private_dir", Backend::LOG_WARNING);
                     $this->chown($private_dir, "dummy");
                     $this->chgrp($private_dir, $unix_group_name);
                 }
             }
         }
+
+        return true;
+    }
+
+    private function createProjectAnonymousFTP(Project $project)
+    {
+        $unix_group_name = $project->getUnixNameMixedCase();
+        $ftp_anon_dir    = ForgeConfig::get('ftp_anon_dir_prefix')."/".$unix_group_name;
+
+        if (!is_dir($ftp_anon_dir)) {
+            // Now lets create the group's ftp homedir for anonymous ftp space
+            // This one must be owned by the project gid so that all project
+            // admins can work on it (upload, delete, etc...)
+            if (mkdir($ftp_anon_dir, 02775)) {
+                $this->chown($ftp_anon_dir, "dummy");
+                $this->chgrp($ftp_anon_dir, $unix_group_name);
+                chmod($ftp_anon_dir, 02775);
+            } else {
+                $this->log("Can't create project public ftp dir: $ftp_anon_dir", Backend::LOG_ERROR);
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private function createProjectFRSDirectory(Project $project)
+    {
+        $unix_group_name = $project->getUnixNameMixedCase();
+
+        $ftp_frs_dir     = $GLOBALS['ftp_frs_dir_prefix']."/".$unix_group_name;
+
+        if (!is_dir($ftp_frs_dir)) {
+            // Now lets create the group's ftp homedir for anonymous ftp space
+            // This one must be owned by the project gid so that all project
+            // admins can work on it (upload, delete, etc...)
+            if (mkdir($ftp_frs_dir,0771)) {
+                chmod($ftp_frs_dir, 0771);
+                $this->chown($ftp_frs_dir, "dummy");
+                $this->chgrp($ftp_frs_dir, $this->getUnixGroupNameForProject($project));
+            } else {
+                $this->log("Can't create project file release dir: $ftp_frs_dir", Backend::LOG_ERROR);
+                return false;
+            }
+        }
+
         return true;
     }
 
@@ -375,7 +401,7 @@ class BackendSystem extends Backend {
      * @return true if directory is successfully archived, false otherwise
      */
     public function archiveUserHome($user_id) {
-        if (! is_dir(ForgeConfig::get('homedir_prefix'))) {
+        if (! ForgeConfig::areUnixUsersAvailableOnSystem()) {
             $this->log('No homedir_prefix, archiveUserHome skipped', Backend::LOG_INFO);
             return true;
         }
@@ -404,7 +430,7 @@ class BackendSystem extends Backend {
      * @return true if directory is successfully archived, false otherwise
      */
     public function archiveProjectHome($group_id) {
-        if (! is_dir(ForgeConfig::get('grpdir_prefix'))) {
+        if (! ForgeConfig::areUnixGroupsAvailableOnSystem()) {
             $this->log('No grpdir_prefix, archiveProjectHome skipped', Backend::LOG_INFO);
             return true;
         }
@@ -500,10 +526,12 @@ class BackendSystem extends Backend {
      * @return boolean always true
      */
     public function dumpSSHKeys() {
-        $sshkey_dumper = new User_SSHKeyDumper($this);
-        $user_manager  = $this->getUserManager();
-        foreach($user_manager->getUsersWithSshKey() as $user) {
-            $sshkey_dumper->writeSSHKeys($user);
+        if (ForgeConfig::areUnixUsersAvailableOnSystem()) {
+            $sshkey_dumper = new User_SSHKeyDumper($this);
+            $user_manager  = $this->getUserManager();
+            foreach($user_manager->getUsersWithSshKey() as $user) {
+                $sshkey_dumper->writeSSHKeys($user);
+            }
         }
         EventManager::instance()->processEvent(Event::DUMP_SSH_KEYS, array());
         return true;
@@ -552,6 +580,9 @@ class BackendSystem extends Backend {
      * @return boolean 
      */
     public function isProjectNameAvailable($name) {
+        if (! ForgeConfig::areUnixGroupsAvailableOnSystem()) {
+            return true;
+        }
         $dir = ForgeConfig::get('grpdir_prefix')."/".$name;
         $frs = $GLOBALS['ftp_frs_dir_prefix']."/".$name;
         $ftp = ForgeConfig::get('ftp_anon_dir_prefix')."/".$name;
@@ -580,6 +611,9 @@ class BackendSystem extends Backend {
      * @return boolean false if repository or file  or link already exists, true otherwise
      */
     function isUserNameAvailable($name) {
+        if (! ForgeConfig::areUnixUsersAvailableOnSystem()) {
+            return true;
+        }
         $path = ForgeConfig::get('homedir_prefix')."/".$name;
         return (!$this->fileExists($path));
     }
@@ -594,7 +628,7 @@ class BackendSystem extends Backend {
      * @return boolean
      */
     public function renameProjectHomeDirectory($project, $newName) {
-        if (! is_dir(ForgeConfig::get('grpdir_prefix'))) {
+        if (! ForgeConfig::areUnixGroupsAvailableOnSystem()) {
             $this->log('No grpdir_prefix, renameProjectHomeDirectory skipped', Backend::LOG_INFO);
             return true;
         }
@@ -664,7 +698,7 @@ class BackendSystem extends Backend {
      * @return boolean
      */
     public function renameUserHomeDirectory($user, $newName) {
-        if (! is_dir(ForgeConfig::get('homedir_prefix'))) {
+        if (! ForgeConfig::areUnixUsersAvailableOnSystem()) {
             $this->log('No homedir_prefix, renameUserHomeDirectory skipped', Backend::LOG_INFO);
             return true;
         }

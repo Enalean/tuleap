@@ -39,6 +39,7 @@ INSTALL_OPTIONS="
     --password-file=/data/root/.tuleap_passwd
     --disable-chkconfig
     --disable-domain-name-check
+    --disable-unix-groups
     --sys-default-domain=$VIRTUAL_HOST
     --sys-org-name=Tuleap
     --sys-long-org-name=Tuleap"
@@ -89,10 +90,7 @@ mv /etc/ssl/certs/localhost.crt /data/etc/ssl/certs
 mv /etc/tuleap                /data/etc
 mv /etc/aliases               /data/etc
 mv /etc/logrotate.d/httpd     /data/etc/logrotate.d
-mv /etc/libnss-mysql.cfg      /data/etc
-mv /etc/libnss-mysql-root.cfg /data/etc
 mv /etc/my.cnf                /data/etc
-mv /etc/nsswitch.conf         /data/etc
 mv /etc/crontab               /data/etc
 mv /etc/nginx                 /data/etc
 mv /etc/opt/rh/rh-php56/php-fpm.d /data/etc/opt/rh/rh-php56/

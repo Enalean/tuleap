@@ -39,7 +39,6 @@ class SystemEventManager {
         $events_to_listen = array(
             Event::SYSTEM_CHECK,
             Event::USER_EMAIL_CHANGED,
-            Event::EDIT_SSH_KEYS,
             Event::PROJECT_RENAME,
             Event::USER_RENAME,
             Event::COMPUTE_MD5SUM,
@@ -68,7 +67,10 @@ class SystemEventManager {
             'mail_list_delete',
             Event::SERVICE_IS_USED,
             'codendi_daily_start'
-            );
+        );
+        if (ForgeConfig::areUnixUsersAvailableOnSystem()) {
+            $events_to_listen[] = Event::EDIT_SSH_KEYS;
+        }
         foreach($events_to_listen as $event) {
             $event_manager->addListener($event, $this, 'addSystemEvent', true);
         }

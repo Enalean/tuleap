@@ -171,8 +171,10 @@ class UserDao extends DataAccessObject {
             $columns[] = 'password';
             $values[]  = $this->password_handler->computeHashPassword($user_pw);
 
-            $columns[] = 'unix_pw';
-            $values[]  = $this->password_handler->computeUnixPassword($user_pw);
+            if (ForgeConfig::areUnixUsersAvailableOnSystem()) {
+                $columns[] = 'unix_pw';
+                $values[]  = $this->password_handler->computeUnixPassword($user_pw);
+            }
         }
         if ($realname !== null) {
             $columns[] = 'realname';
@@ -279,7 +281,9 @@ class UserDao extends DataAccessObject {
              * We need to keep it for old instances with non migrated accounts yet
              */
             $stmt[] = 'user_pw=""';
-            $stmt[] = 'unix_pw='.$this->da->quoteSmart($this->password_handler->computeUnixPassword($user['clear_password']));
+            if (ForgeConfig::areUnixUsersAvailableOnSystem()) {
+                $stmt[] = 'unix_pw='.$this->da->quoteSmart($this->password_handler->computeUnixPassword($user['clear_password']));
+            }
             $stmt[] = 'last_pwd_update='.$_SERVER['REQUEST_TIME'];
             unset($user['clear_password']);
         }

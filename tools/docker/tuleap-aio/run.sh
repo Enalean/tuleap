@@ -53,9 +53,6 @@ perl -pi -e "s%enable-cache[\t ]+group[\t ]+yes%enable-cache group no%" /etc/nsc
 start_mysql
 
 if [ "$TULEAP_INSTALL_TIME" == "false" ]; then
-    # It seems there is no way to have nscd in foreground
-    /usr/sbin/nscd
-
     # DB upgrade (after config as we might depends on it)
     ./boot-upgrade.sh
 fi

@@ -69,6 +69,8 @@ setup_tuleap() {
 	-e 's#\$sys_https_host =.*#\$sys_https_host = "";#' \
 	-e 's#\$sys_rest_api_over_http =.*#\$sys_rest_api_over_http = 1;#' \
 	-e 's#\$sys_logger_level =.*#\$sys_logger_level = "debug";#' \
+	-e 's#/home/users##' \
+	-e 's#/home/groups##' \
 	> /etc/tuleap/conf/local.inc
 
 	cp /usr/share/tuleap/src/utils/svn/Tuleap.pm /usr/share/perl5/vendor_perl/Apache/Tuleap.pm
