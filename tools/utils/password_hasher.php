@@ -47,8 +47,8 @@ if ($password === false) {
     exit(1);
 }
 
-require_once('/usr/share/codendi/src/vendor/autoload.php');
-require_once('/usr/share/codendi/src/common/autoload.php');
+require_once('/usr/share/tuleap/src/vendor/autoload.php');
+require_once('/usr/share/tuleap/src/common/autoload.php');
 
 $password_handler = PasswordHandlerFactory::getPasswordHandler();
 
