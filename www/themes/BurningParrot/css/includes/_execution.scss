@@ -266,7 +266,7 @@ $toolbar-height: 46px;
         background: $tlp-ui-success;
         color: $tlp-ui-white;
 
-        a {
+        .current-test-header-comment a {
             color: $tlp-ui-white;
             text-decoration: underline;
         }
@@ -280,7 +280,7 @@ $toolbar-height: 46px;
         background: $tlp-ui-danger;
         color: $tlp-ui-white;
 
-        a {
+        .current-test-header-comment a {
             color: $tlp-ui-white;
             text-decoration: underline;
         }
@@ -294,7 +294,7 @@ $toolbar-height: 46px;
         background: $tlp-ui-info;
         color: $tlp-ui-white;
 
-        a {
+        .current-test-header-comment a {
             color: $tlp-ui-white;
             text-decoration: underline;
         }
