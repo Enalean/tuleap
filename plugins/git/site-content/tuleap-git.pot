@@ -37,10 +37,22 @@ msgstr ""
 msgid "Git"
 msgstr ""
 
+msgid "Git Administrators"
+msgstr ""
+
+msgid "Git global permissions"
+msgstr ""
+
+msgid "Granted groups"
+msgstr ""
+
 msgid "No notifications set"
 msgstr ""
 
 msgid "Notified people"
+msgstr ""
+
+msgid "Permission"
 msgstr ""
 
 #, php-format
@@ -60,4 +72,7 @@ msgid "User group \"%s\" successfully added to notifications"
 msgstr ""
 
 msgid "User, group, email"
+msgstr ""
+
+msgid "{{ user_group_name }} has no permission for Git"
 msgstr ""

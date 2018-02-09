@@ -1,0 +1,41 @@
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">{{# dgettext }} tuleap-git | Git global permissions {{/ dgettext }}</h1>
+        </div>
+
+        <section class="tlp-pane-section">
+            <table class="tlp-table">
+                <thead>
+                    <tr>
+                        <th>{{# dgettext }} tuleap-git | Permission {{/ dgettext }}</th>
+                        <th>{{# dgettext }} tuleap-git | Granted groups {{/ dgettext }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {{# has_permissions }}
+                    <tr>
+                        <td>{{# dgettext }} tuleap-git | Git Administrators {{/ dgettext }}</td>
+                        <td>
+                            {{# permissions }}
+                                <span class="
+                                    {{# is_project_admin }}tlp-badge-danger tlp-badge-outline{{/ is_project_admin }}
+                                    {{# is_static }}tlp-badge-primary tlp-badge-outline{{/ is_static }}
+                                    {{# is_custom }}tlp-badge-secondary{{/ is_custom }}
+                                ">{{ name }}</span>
+                            {{/permissions}}
+                        </td>
+                    </tr>
+                {{/ has_permissions }}
+                {{^ has_permissions }}
+                    <tr>
+                        <td colspan="2" class="tlp-table-cell-empty">
+                            {{# dgettext }} tuleap-git | {{ user_group_name }} has no permission for Git {{/ dgettext }}
+                        </td>
+                    </tr>
+                {{/ has_permissions }}
+                </tbody>
+            </table>
+        </section>
+    </div>
+</section>
