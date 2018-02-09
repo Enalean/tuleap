@@ -48,15 +48,15 @@ class Tracker_SemanticManager
         echo $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','semantic_intro');
         echo '</p>';
 
-        foreach($this->getSemantics() as $key => $s) {
-            echo '<h3>'. $s->getLabel() .' <a href="'.TRACKER_BASE_URL.'/?'. http_build_query(array(
+        foreach($this->getSemantics() as $semantic) {
+            echo '<h3>'. $semantic->getLabel() .' <a href="'.TRACKER_BASE_URL.'/?'. http_build_query(array(
                 'tracker'  => $this->tracker->getId(),
                 'func'     => 'admin-semantic',
-                'semantic' => $key,
+                'semantic' => $semantic->getShortName(),
             )) .'">';
             echo $GLOBALS['HTML']->getImage('ic/edit.png', array('alt' => 'edit'));
             echo '</a></h3>';
-            $s->display();
+            $semantic->display();
         }
 
         $this->tracker->displayFooter($tracker_manager);
