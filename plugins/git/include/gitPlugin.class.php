@@ -53,7 +53,9 @@ use Tuleap\Git\Notifications\NotificationsForProjectMemberCleaner;
 use Tuleap\Git\Notifications\UgroupsToNotifyDao;
 use Tuleap\Git\Notifications\UgroupToNotifyUpdater;
 use Tuleap\Git\Notifications\UsersToNotifyDao;
-use Tuleap\Git\PerGroup\PermissionPerGroupPaneBuilder;
+use Tuleap\Git\PerGroup\GitPaneSectionCollector;
+use Tuleap\Git\PerGroup\PermissionPerGroupGitRepositoriesSectionBuilder;
+use Tuleap\Git\PerGroup\PermissionPerGroupGitSectionBuilder;
 use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\DefaultFineGrainedPermissionReplicator;
 use Tuleap\Git\Permissions\FineGrainedDao;
@@ -2411,8 +2413,9 @@ class GitPlugin extends Plugin
         return new CITokenManager(new CITokenDao());
     }
 
-    public function collectProjectAdminNavigationPermissionDropdownQuickLinks(NavigationDropdownQuickLinksCollector $quick_links_collector)
-    {
+    public function collectProjectAdminNavigationPermissionDropdownQuickLinks(
+        NavigationDropdownQuickLinksCollector $quick_links_collector
+    ) {
         $project = $quick_links_collector->getProject();
 
         if (! $project->usesService(self::SERVICE_SHORTNAME)) {
@@ -2438,18 +2441,25 @@ class GitPlugin extends Plugin
             return;
         }
 
-        $ugroup_manager = new UGroupManager();
-        $builder        = new PermissionPerGroupPaneBuilder(
+        $ugroup_manager          = $this->getUGroupManager();
+        $formatter               = new PermissionPerGroupUGroupFormatter($ugroup_manager);
+        $service_section_builder = new PermissionPerGroupGitSectionBuilder(
             new PermissionPerGroupUGroupRetriever(PermissionsManager::instance()),
-            new PermissionPerGroupUGroupFormatter($ugroup_manager),
+            $formatter,
             $ugroup_manager
         );
-        $presenter      = $builder->buildPresenter($event);
-        $templates_dir  = GIT_TEMPLATE_DIR . '/project-admin/';
-        $pane           = TemplateRendererFactory::build()
-            ->getRenderer($templates_dir)
-            ->renderToString('project-admin-permission-per-group', $presenter);
+        $repos_section_builder   = new PermissionPerGroupGitRepositoriesSectionBuilder(
+            $formatter,
+            $this->getFineGrainedRetriever(),
+            $this->getGitPermissionsManager(),
+            $ugroup_manager,
+            $this->getRepositoryFactory()
+        );
+        $sections_collector      = new GitPaneSectionCollector(
+            $service_section_builder,
+            $repos_section_builder
+        );
 
-        $event->addAdditionalPane($pane);
+        $sections_collector->collectSections($event);
     }
 }

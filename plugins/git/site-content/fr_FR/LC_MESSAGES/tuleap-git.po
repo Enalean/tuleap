@@ -54,8 +54,8 @@ msgstr "Git"
 msgid "Git Administrators"
 msgstr "Administrateurs Git"
 
-msgid "Git global permissions"
-msgstr "Permissions globales de Git"
+msgid "Global permissions"
+msgstr "Permissions globales"
 
 msgid "Granted groups"
 msgstr "Groupes autorisés"
@@ -63,11 +63,26 @@ msgstr "Groupes autorisés"
 msgid "No notifications set"
 msgstr "Aucune notification n'a été définie"
 
+msgid "No repository found for project"
+msgstr "Aucun dépôt trouvé dans ce projet"
+
 msgid "Notified people"
 msgstr "Personnes notifiées"
 
 msgid "Permission"
 msgstr "Permission"
+
+msgid "Readers"
+msgstr "Droits de lecture"
+
+msgid "Repository"
+msgstr "Dépôt"
+
+msgid "Repository permissions"
+msgstr "Permissions de dépôt"
+
+msgid "Rewinders"
+msgstr "Droits de rewind"
 
 #, php-format
 msgid "User \"%s\" successfully added to notifications"
@@ -88,5 +103,11 @@ msgstr "Le groupe \"%s\" a été ajouté aux notifications"
 msgid "User, group, email"
 msgstr "Utilisateur, groupe, email"
 
-msgid "{{ user_group_name }} has no permission for Git"
-msgstr "{{ user_group_name }} n'a pas de permission pour Git"
+msgid "Writers"
+msgstr "Droits d'écriture"
+
+msgid "{{ user_group_name }} has no global permission for Git"
+msgstr "{{ user_group_name }} n'a pas de permission globale pour Git"
+
+msgid "{{ user_group_name }} has no permission for any repository in this project"
+msgstr "{{ user_group_name }} n'a de permission pour aucun dépôt de ce projet"
