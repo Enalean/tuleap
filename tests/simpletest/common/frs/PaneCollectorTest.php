@@ -20,21 +20,18 @@
 
 namespace Tuleap\FRS\PerGroup;
 
-use Tuleap\Project\Admin\Permission\PermissionPerGroupPaneCollector;
 use TuleapTestCase;
 
-class PermissionPerGroupPaneBuilderTest extends TuleapTestCase
+class PaneCollectorTest extends TuleapTestCase
 {
     public function itDoesNotBuildPaneIfServiceNotUsed()
     {
-        $permission_factory = mock('Tuleap\FRS\FRSPermissionFactory');
-        $formatter          = mock('Tuleap\Project\Admin\PerGroup\PermissionPerGroupUGroupFormatter');
-        $ugroup_manager     = mock('UGroupManager');
+        $service_builder = mock('Tuleap\FRS\PerGroup\PermissionPerGroupFRSServicePresenterBuilder');
+        $package_builder = mock('Tuleap\FRS\PerGroup\PermissionPerGroupFRSPackagesPresenterBuilder');
 
-        $builder = new PermissionPerGroupPaneBuilder(
-            $permission_factory,
-            $formatter,
-            $ugroup_manager
+        $builder = new PaneCollector(
+            $service_builder,
+            $package_builder
         );
 
         $project = aMockProject()->build();
@@ -42,11 +39,9 @@ class PermissionPerGroupPaneBuilderTest extends TuleapTestCase
 
         $selected_ugroup_id = null;
 
-        $event = new PermissionPerGroupPaneCollector($project, $selected_ugroup_id);
+        expect($service_builder)->getPanePresenter()->never();
+        expect($package_builder)->getPanePresenter()->never();
 
-        expect($formatter)->formatGroup()->never();
-        expect($permission_factory)->getFrsUGroupsByPermission()->never();
-
-        $builder->getPaneContent($project, $event, $selected_ugroup_id);
+        $builder->collectPane($project, $selected_ugroup_id);
     }
 }

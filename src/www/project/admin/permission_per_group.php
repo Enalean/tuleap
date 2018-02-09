@@ -20,13 +20,16 @@
 
 use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\FRS\FRSPermissionFactory;
-use Tuleap\FRS\PerGroup\PermissionPerGroupPaneBuilder;
+use Tuleap\FRS\PerGroup\PaneCollector;
+use Tuleap\FRS\PerGroup\PermissionPerGroupFRSPackagesPresenterBuilder;
+use Tuleap\FRS\PerGroup\PermissionPerGroupFRSServicePresenterBuilder;
 use Tuleap\PHPWiki\PerGroup\PHPWikiPermissionPerGroupPaneBuilder;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Project\Admin\PerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Project\Admin\Permission\PanesPermissionPerGroupBuilder;
 use Tuleap\Project\Admin\Permission\PermissionPerGroupBuilder;
 use Tuleap\Project\Admin\Permission\PermissionPerGroupPresenter;
+use Tuleap\Project\Admin\Permission\PermissionPerGroupUGroupRetriever;
 
 require_once('pre.php');
 
@@ -47,15 +50,22 @@ $ugroup_manager    = new UGroupManager();
 $formatter         = new PermissionPerGroupUGroupFormatter($ugroup_manager);
 $presenter_builder = new PermissionPerGroupBuilder($ugroup_manager);
 $groups            = $presenter_builder->buildUGroup($project, $request);
+$formatter         = new PermissionPerGroupUGroupFormatter($ugroup_manager);
 
 $additional_panes_builder = new PanesPermissionPerGroupBuilder(
     EventManager::instance(),
-    new PermissionPerGroupPaneBuilder(
-        new FRSPermissionFactory(
-            new FRSPermissionDao()
+    new PaneCollector(
+        new PermissionPerGroupFRSServicePresenterBuilder(
+            new FRSPermissionFactory(new FRSPermissionDao()),
+            $formatter,
+            $ugroup_manager
         ),
-        $formatter,
-        $ugroup_manager
+        new PermissionPerGroupFRSPackagesPresenterBuilder(
+            $ugroup_manager,
+            new PermissionPerGroupUGroupRetriever(PermissionsManager::instance()),
+            new FRSPackageFactory(),
+            $formatter
+        )
     ),
     new PHPWikiPermissionPerGroupPaneBuilder(
         new Wiki_PermissionsManager(

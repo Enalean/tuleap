@@ -482,6 +482,9 @@ msgstr "Il n'y a pas de label défini dans ce projet"
 msgid "No matching labels"
 msgstr "Il n'y a aucun label correspondant"
 
+msgid "No packages found for project"
+msgstr "Pas de paquet trouvé pour ce projet"
+
 msgid "No project trove categories"
 msgstr "Aucune catégorie de projet"
 
@@ -520,6 +523,9 @@ msgstr "Permissions par page"
 
 msgid "Page permissions are not listed."
 msgstr "Les permissions par page ne sont pas listées."
+
+msgid "Package"
+msgstr "Paquet"
 
 msgid "Parent project"
 msgstr "Projet parent"
@@ -639,6 +645,9 @@ msgstr "RSS"
 
 msgid "Rank"
 msgstr "Rang"
+
+msgid "Readers"
+msgstr "Lecteurs"
 
 msgid "Recently"
 msgstr "Récemment"

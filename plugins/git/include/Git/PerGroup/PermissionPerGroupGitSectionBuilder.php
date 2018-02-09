@@ -60,12 +60,14 @@ class PermissionPerGroupGitSectionBuilder
         if ($event->getSelectedUGroupId()) {
             $all_permissions = $this->permisson_retriever->getAdminUGroupIdsForProjectContainingUGroupId(
                 $event->getProject(),
+                $event->getProject()->getID(),
                 Git::PERM_ADMIN,
                 $selected_ugroup_id
             );
         } else {
-            $all_permissions = $this->permisson_retriever->getAllUGroupForProject(
+            $all_permissions = $this->permisson_retriever->getAllUGroupForObject(
                 $event->getProject(),
+                $event->getProject()->getID(),
                 Git::PERM_ADMIN
             );
         }
