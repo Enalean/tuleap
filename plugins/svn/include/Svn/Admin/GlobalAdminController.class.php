@@ -53,7 +53,7 @@ class GlobalAdminController
 
         $token = $this->generateToken($project);
         $token->check();
-        $ugroups          = $request->get("admin_groups");
+        $ugroups          = $request->get("admin_groups") ?: [];
         $selected_ugroups = $this->getSelectedUGroups($project, $ugroups);
 
         $this->permissions_manager->save($project, $selected_ugroups);
