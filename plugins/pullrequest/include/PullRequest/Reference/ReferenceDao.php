@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,23 +20,20 @@
 
 namespace Tuleap\PullRequest\Reference;
 
-use DataAccessObject;
+use Tuleap\DB\DataAccessObject;
 
 class ReferenceDao extends DataAccessObject
 {
-    public function searchByScopeAndKeywordAndGroupId($scope, $keyword, $project_id) {
-        $scope      = $this->da->quoteSmart($scope);
-        $keyword    = $this->da->quoteSmart($keyword);
-        $project_id = $this->da->escapeInt($project_id);
-
-        $sql = "SELECT *
+    public function searchByScopeAndKeywordAndGroupId($scope, $keyword, $project_id)
+    {
+        $sql = 'SELECT *
                 FROM reference
                 LEFT JOIN reference_group ON (reference.id = reference_group.reference_id)
-                WHERE scope = $scope
-                    AND reference.keyword = $keyword
-                    AND group_id = $project_id
-                    AND reference.id != 100";
+                WHERE scope = ?
+                    AND reference.keyword = ?
+                    AND group_id = ?
+                    AND reference.id != 100';
 
-        return $this->retrieve($sql);
+        return $this->getDB()->run($sql, $scope, $keyword, $project_id);
     }
 }
