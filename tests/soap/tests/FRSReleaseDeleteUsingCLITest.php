@@ -19,12 +19,18 @@
  *
  */
 
+namespace Tuleap\Tests\SOAP;
+
 require_once __DIR__.'/../lib/autoload.php';
 
+use SOAP_TestDataBuilder;
+use SOAPBase;
+
 /**
+ * Automation of "File releases delete using CLI"
  * @group FRSTest
  */
-class FRSTest extends SOAPBase
+class FRSReleaseDeleteUsingCLITest extends SOAPBase
 {
     private $content = 'Content of the file';
 
@@ -139,27 +145,6 @@ class FRSTest extends SOAPBase
         );
 
         return $file_id;
-    }
-
-    /**
-     * @depends testAddPackage
-     * @depends testAddRelease
-     * @depends testAddFile
-     */
-    public function testGetFile($package_id, $release_id, $file_id)
-    {
-        $base64_encoded_content = $this->soap_base->getFile(
-            $this->session_hash,
-            SOAP_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID,
-            $package_id,
-            $release_id,
-            $file_id
-        );
-
-        $this->assertEquals(
-            $this->content,
-            base64_decode($base64_encoded_content)
-        );
     }
 
     /**
