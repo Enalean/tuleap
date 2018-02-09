@@ -18,7 +18,7 @@
                             {{/ groups }}
                         </select>
                     </div>
-                    <div class="tlp-form-element" id="permission-per-group-filter-button">
+                    <div class="tlp-form-element">
                         <button type="submit" class="tlp-button-primary tlp-button-wide">
                             <i class="fa fa-search tlp-button-icon"></i>{{# gettext }}Search{{/ gettext }}
                         </button>
@@ -27,8 +27,9 @@
             </section>
         </div>
     </section>
+    <section class="permission-per-group-result-section">
         {{^ has_additional_panes }}
-            <section class="tlp-pane permission-per-group-result-section">
+            <section class="tlp-pane">
                 <div class="tlp-pane-container">
                     <div class="tlp-pane-header empty-pane empty-pane-text">
                         {{# gettext }}Under development, there is nothing here{{/ gettext }}
@@ -39,4 +40,5 @@
         {{# additional_panes }}
             {{{ . }}}
         {{/ additional_panes }}
+    </section>
 </div>

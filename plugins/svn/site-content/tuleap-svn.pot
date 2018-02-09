@@ -30,6 +30,9 @@ msgstr ""
 msgid "Edit"
 msgstr ""
 
+msgid "Granted groups"
+msgstr ""
+
 #, php-format
 msgid "Group '%s' couldn't be added."
 msgid_plural "Groups '%s' couldn't be added."
@@ -49,7 +52,16 @@ msgstr ""
 msgid "Notification to update doesn't exist."
 msgstr ""
 
+msgid "Permission"
+msgstr ""
+
 msgid "SVN"
+msgstr ""
+
+msgid "SVN Administrators"
+msgstr ""
+
+msgid "SVN Global permissions"
 msgstr ""
 
 msgid "Save"
@@ -78,4 +90,7 @@ msgid "Wait a minute..."
 msgstr ""
 
 msgid "You are about to remove the notification. Please confirm your action."
+msgstr ""
+
+msgid "{{ user_group_name }} has no permission for SVN"
 msgstr ""

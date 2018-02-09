@@ -48,6 +48,9 @@ msgstr "Supprimer"
 msgid "Edit"
 msgstr "Éditer"
 
+msgid "Granted groups"
+msgstr "Groupes autorisés"
+
 #, php-format
 msgid "Group '%s' couldn't be added."
 msgid_plural "Groups '%s' couldn't be added."
@@ -67,8 +70,17 @@ msgstr "La notification a été correctement supprimée."
 msgid "Notification to update doesn't exist."
 msgstr "La notification à mettre à jour n’existe pas."
 
+msgid "Permission"
+msgstr "Permission"
+
 msgid "SVN"
 msgstr "SVN"
+
+msgid "SVN Administrators"
+msgstr "Administrateurs SVN"
+
+msgid "SVN Global permissions"
+msgstr "Permissions globales de SVN"
 
 msgid "Save"
 msgstr "Sauvegarder"
@@ -99,3 +111,6 @@ msgid "You are about to remove the notification. Please confirm your action."
 msgstr ""
 "Vous êtes sur le point de supprimer la notification. Merci de confirmer "
 "votre action."
+
+msgid "{{ user_group_name }} has no permission for SVN"
+msgstr ""

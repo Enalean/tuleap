@@ -18,11 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Mediawiki\PerGroup;
+namespace Tuleap\Project\Admin\PerGroup;
 
 use ProjectUGroup;
 
-class PermissionPerGroupPresenter
+class PermissionPerGroupPanePresenter
 {
     public $permissions;
     public $has_permissions;
