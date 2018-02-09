@@ -26,6 +26,7 @@ use Project;
 use ProjectUGroup;
 use Tuleap\Project\Admin\PerGroup\PermissionPerGroupPanePresenter;
 use Tuleap\Project\Admin\PerGroup\PermissionPerGroupUGroupFormatter;
+use Tuleap\Project\Admin\Permission\PermissionPerGroupCollection;
 use Tuleap\Project\Admin\Permission\PermissionPerGroupPaneCollector;
 use UGroupManager;
 

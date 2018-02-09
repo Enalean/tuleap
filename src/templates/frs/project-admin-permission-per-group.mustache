@@ -1,0 +1,43 @@
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title"> {{# gettext }} Files {{/ gettext }}</h1>
+        </div>
+
+            <section class="tlp-pane-section">
+                <h2 class="tlp-pane-subtitle">{{# gettext }} Global permissions {{/ gettext }}</h2>
+                <table class="tlp-table">
+                    <thead>
+                    <tr>
+                        <th> {{# gettext }} Permission {{/ gettext }}</th>
+                        <th> {{# gettext }} Granted groups {{/ gettext }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{# permissions }}
+                        <tr>
+                            <td>{{ name }}</td>
+                            <td>
+                                {{# groups }}
+                                    <span class="
+                                        {{# is_project_admin }}tlp-badge-danger tlp-badge-outline{{/ is_project_admin }}
+                                        {{# is_static }}tlp-badge-primary tlp-badge-outline{{/ is_static }}
+                                        {{# is_custom }}tlp-badge-secondary{{/ is_custom }}
+                                        ">{{ name }}</span>
+                                {{/ groups }}
+                            </td>
+                        </tr>
+                    {{/ permissions }}
+                    {{^ has_permissions }}
+                        <tr>
+                            <td colspan="2" class="tlp-table-cell-empty">
+                                {{# gettext }} {{ user_group_name }} has no global permission {{/ gettext }}
+                            </td>
+                        </tr>
+                    {{/ has_permissions }}
+                    </tbody>
+                </table>
+            </section>
+
+    </div>
+</section>
