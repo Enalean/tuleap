@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.3\n"
+"X-Generator: Poedit 1.8.7.1\n"
 
 #, php-format
 msgid "%s has been created"
@@ -106,6 +106,9 @@ msgstr "Éditer"
 
 msgid "Error during parsing expert query"
 msgstr "Erreur pendant l'analyse de la requête experte"
+
+msgid "Field value cannot be empty"
+msgstr "La valeur du champ ne peux pas être vide"
 
 #, php-format
 msgid "Group '%s' couldn't be added."
