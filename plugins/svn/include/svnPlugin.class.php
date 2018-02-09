@@ -23,6 +23,7 @@ require_once 'constants.php';
 use Tuleap\CVS\DiskUsage\Collector as CVSCollector;
 use Tuleap\CVS\DiskUsage\FullHistoryDao;
 use Tuleap\CVS\DiskUsage\Retriever as CVSRetriever;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
 use Tuleap\project\Admin\Navigation\NavigationDropdownQuickLinksCollector;
 use Tuleap\Project\Admin\PerGroup\PermissionPerGroupUGroupFormatter;
@@ -72,7 +73,9 @@ use Tuleap\Svn\Notifications\NotificationsForProjectMemberCleaner;
 use Tuleap\Svn\Notifications\UgroupsToNotifyDao;
 use Tuleap\Svn\Notifications\UgroupsToNotifyUpdater;
 use Tuleap\Svn\Notifications\UsersToNotifyDao;
-use Tuleap\Svn\PerGroup\PermissionPerGroupPaneBuilder;
+use Tuleap\Svn\PerGroup\PaneCollector;
+use Tuleap\Svn\PerGroup\PermissionPerGroupRepositoryPaneBuilder;
+use Tuleap\Svn\PerGroup\PermissionPerGroupSVNServicePaneBuilder;
 use Tuleap\Svn\Reference\Extractor;
 use Tuleap\Svn\Repository\HookConfigChecker;
 use Tuleap\Svn\Repository\HookConfigRetriever;
@@ -169,6 +172,8 @@ class SvnPlugin extends Plugin
         $this->addHook(ProjectRegistrationActivateService::NAME);
         $this->addHook(NavigationDropdownQuickLinksCollector::NAME);
         $this->addHook(PermissionPerGroupPaneCollector::NAME);
+
+        $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
     }
 
     public function export_xml_project($params)
@@ -1106,18 +1111,34 @@ class SvnPlugin extends Plugin
         }
 
         $ugroup_manager = new UGroupManager();
-        $builder        = new PermissionPerGroupPaneBuilder(
+
+        $service_pane_builder = new PermissionPerGroupSVNServicePaneBuilder(
             new PermissionPerGroupUGroupRetriever(PermissionsManager::instance()),
             new PermissionPerGroupUGroupFormatter($ugroup_manager),
             $ugroup_manager
         );
-        $presenter      = $builder->buildPresenter($event);
 
-        $templates_dir = ForgeConfig::get('tuleap_dir') . '/plugins/svn/templates/';
-        $content       = TemplateRendererFactory::build()
-            ->getRenderer($templates_dir)
-            ->renderToString('project-admin-permission-per-group', $presenter);
+        $repository_pane_builder = new PermissionPerGroupRepositoryPaneBuilder(
+            $this->getRepositoryManager(),
+            $this->getUGroupManager()
+        );
 
-        $event->addAdditionalPane($content);
+        $collector = new PaneCollector($this->getUGroupManager(), $service_pane_builder, $repository_pane_builder);
+        $collector->collectPane($event);
+    }
+
+    /**
+     * @see Event:BURNING_PARROT_GET_STYLESHEETS
+     */
+    public function burningParrotGetStylesheets(array $params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], '/project/admin/permission_per_group') === 0) {
+            $theme_include_assets = new IncludeAssets(
+                SVN_BASE_DIR . '/../www/themes/BurningParrot/assets',
+                $this->getThemePath() . '/assets'
+            );
+            $variant = $params['variant'];
+            $params['stylesheets'][] = $theme_include_assets->getFileURL('style-' . $variant->getName() . '.css');
+        }
     }
 }
