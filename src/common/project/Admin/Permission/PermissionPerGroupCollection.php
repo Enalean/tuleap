@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Mediawiki\PerGroup;
+namespace Tuleap\Project\Admin\Permission;
 
 class PermissionPerGroupCollection
 {

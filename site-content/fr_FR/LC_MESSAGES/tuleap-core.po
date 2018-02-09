@@ -329,8 +329,14 @@ msgstr "Forums"
 msgid "Git"
 msgstr "Git"
 
+msgid "Global permissions"
+msgstr "Permissions globales"
+
 msgid "Go up"
 msgstr "Niveau supérieur"
+
+msgid "Granted groups"
+msgstr "Groupes autorisés"
 
 msgid "Group"
 msgstr "Groupes"
@@ -1081,6 +1087,9 @@ msgstr "labels"
 msgid "my_service"
 msgstr "mon_service"
 
+msgid "name"
+msgstr "Nom"
+
 msgid "permissions"
 msgstr "permissions"
 
@@ -1090,5 +1099,5 @@ msgstr "références"
 msgid "services"
 msgstr "services"
 
-#~ msgid "Filter by user group"
-#~ msgstr "Filtrer par groupe d'utilisateurs"
+msgid "{{ user_group_name }} has no global permission"
+msgstr "{{ user_group_name }} n' pas de permissions globales"

@@ -18,7 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\FRS\FRSPermissionDao;
+use Tuleap\FRS\FRSPermissionFactory;
+use Tuleap\FRS\PerGroup\PermissionPerGroupPaneBuilder;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
+use Tuleap\Project\Admin\PerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Project\Admin\Permission\AdditionalPanesPermissionPerGroupBuilder;
 use Tuleap\Project\Admin\Permission\PermissionPerGroupBuilder;
 use Tuleap\Project\Admin\Permission\PermissionPerGroupPresenter;
@@ -42,11 +46,19 @@ $ugroup_manager    = new UGroupManager();
 $presenter_builder = new PermissionPerGroupBuilder($ugroup_manager);
 $groups            = $presenter_builder->buildUGroup($project, $request);
 
-$additional_panes_builder = new AdditionalPanesPermissionPerGroupBuilder(EventManager::instance());
-$additional_panes         = $additional_panes_builder->buildAdditionalPresenters($project, $request->get('group'));
+$additional_panes_builder = new AdditionalPanesPermissionPerGroupBuilder(
+    EventManager::instance(),
+    new PermissionPerGroupPaneBuilder(
+        new FRSPermissionFactory(
+            new FRSPermissionDao()
+        ),
+        new PermissionPerGroupUGroupFormatter($ugroup_manager),
+        $ugroup_manager
+    )
+);
 
-$presenter = new PermissionPerGroupPresenter($project, $groups, $additional_panes);
-
+$additional_panes = $additional_panes_builder->buildAdditionalPresenters($project, $request->get('group'));
+$presenter        = new PermissionPerGroupPresenter($project, $groups, $additional_panes);
 
 $templates_dir = ForgeConfig::get('tuleap_dir') . '/src/templates/project/admin/';
 TemplateRendererFactory::build()
