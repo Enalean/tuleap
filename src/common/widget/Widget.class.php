@@ -138,8 +138,16 @@ use Tuleap\Dashboard\User\UserDashboardController;
         return $this->getInstanceId();
     }
 
-    function create(&$request) {
+    /**
+     * @param Codendi_Request $request
+     *
+     * @return null|false|int
+     */
+    public function create(Codendi_Request $request)
+    {
+        return null;
     }
+
     function destroy($id) {
     }
 

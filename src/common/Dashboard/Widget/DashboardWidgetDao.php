@@ -490,6 +490,18 @@ class DashboardWidgetDao extends DataAccessObject
         return $this->updateAndGetLastId($sql);
     }
 
+    public function insertWidgetInColumnWithRank($name, $content_id, $column_id, $rank)
+    {
+        $column_id  = $this->da->escapeInt($column_id);
+        $content_id = $this->da->escapeInt($content_id);
+        $rank       = $this->da->escapeInt($rank);
+        $name       = $this->da->quoteSmart($name);
+
+        $sql = "INSERT INTO dashboards_lines_columns_widgets (column_id, rank, name, content_id)
+                VALUES ($column_id, $rank, $name, $content_id)";
+        return $this->update($sql);
+    }
+
     private function insertWidgetInColumn($name, $content_id, $column_id)
     {
         $column_id  = $this->da->escapeInt($column_id);
@@ -791,7 +803,7 @@ class DashboardWidgetDao extends DataAccessObject
         return $line_id;
     }
 
-    private function adjustLayoutAccordinglyToNumberOfWidgets($nb_widgets, $line_id)
+    public function adjustLayoutAccordinglyToNumberOfWidgets($nb_widgets, $line_id)
     {
         if ($nb_widgets < 2) {
             return;

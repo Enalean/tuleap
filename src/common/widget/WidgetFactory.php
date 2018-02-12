@@ -36,7 +36,6 @@ use Widget_MyLatestSvnCommits;
 use Widget_MyArtifacts;
 use Widget_MyRss;
 use Widget_MySystemEvent;
-use Widget_ProjectClassification;
 use Widget_ProjectDescription;
 use Widget_ProjectImageViewer;
 use Widget_ProjectLatestCvsCommits;
@@ -47,6 +46,8 @@ use Widget_ProjectMembers;
 use Widget_ProjectPublicAreas;
 use Widget_ProjectRss;
 use Widget_ProjectSvnStats;
+use Tuleap\Dashboard\Project\ProjectDashboardController;
+use Tuleap\Dashboard\User\UserDashboardController;
 
 class WidgetFactory
 {
@@ -76,7 +77,7 @@ class WidgetFactory
     }
 
     /**
-     * @return Widget
+     * @return Widget|null
      */
     public function getInstanceByWidgetName($widget_name)
     {
@@ -178,5 +179,54 @@ class WidgetFactory
         }
 
         return $widget;
+    }
+
+    public function isProjectWidget(Widget $widget)
+    {
+        return in_array($widget->getId(), $this->getWidgetsForOwnerType(ProjectDashboardController::LEGACY_DASHBOARD_TYPE));
+    }
+
+    public function getWidgetsForOwnerType($dashboard_type)
+    {
+        $owner_type = $this->getOwnerTypeByDashboardType($dashboard_type);
+        switch ($owner_type) {
+            case UserDashboardController::LEGACY_DASHBOARD_TYPE:
+                $widgets = array('myadmin', 'myprojects', 'mybookmarks',
+                    'mymonitoredforums', 'mymonitoredfp', 'myartifacts', 'mybugs',
+                    'mytasks', 'mysrs', 'myimageviewer',
+                    'mylatestsvncommits', 'mysystemevent', 'myrss',
+                    MyWelcomeMessage::NAME,
+                );
+                break;
+            case ProjectDashboardController::LEGACY_DASHBOARD_TYPE:
+                $widgets = array('projectdescription', 'projectmembers', 'projectheartbeat',
+                    'projectlatestfilereleases', 'projectlatestnews', 'projectpublicareas',
+                    'projectlatestsvncommits', 'projectlatestcvscommits', 'projectsvnstats',
+                    'projectrss', 'projectimageviewer', 'projectcontacts'
+                );
+                break;
+            default:
+                $widgets = array();
+                break;
+        }
+
+        $plugins_widgets = array();
+        $this->event_manager->processEvent('widgets', array('codendi_widgets' => &$plugins_widgets, 'owner_type' => $owner_type));
+
+        if (is_array($plugins_widgets)) {
+            $widgets = array_merge($widgets, $plugins_widgets);
+        }
+        return $widgets;
+    }
+
+    /**
+     * @param $dashboard_type
+     * @return string
+     */
+    public function getOwnerTypeByDashboardType($dashboard_type)
+    {
+        return $dashboard_type === UserDashboardController::DASHBOARD_TYPE ?
+            UserDashboardController::LEGACY_DASHBOARD_TYPE :
+            ProjectDashboardController::LEGACY_DASHBOARD_TYPE;
     }
 }

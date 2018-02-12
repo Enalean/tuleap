@@ -41,6 +41,7 @@ use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Project\XML\Import\ImportNotValidException;
 use Tuleap\Service\ServiceCreator;
 use Tuleap\Widget\WidgetFactory;
+use Tuleap\Dashboard\Widget\WidgetCreator;
 
 $posix_user = posix_getpwuid(posix_geteuid());
 $sys_user   = $posix_user['name'];
@@ -296,16 +297,12 @@ try {
         new ProjectDashboardXMLImporter(
             new ProjectDashboardSaver(
                 new ProjectDashboardDao(
-                    new DashboardWidgetDao(
-                        new WidgetFactory(
-                            $user_manager,
-                            new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
-                            $event_manager
-                        )
-                    )
+                    $widget_dao
                 )
             ),
-            $logger
+            $widget_factory,
+            $widget_dao,
+            $broker_log
         )
     );
 
