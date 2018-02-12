@@ -92,7 +92,7 @@ class Wiki_PermissionsManager {
     }
 
     private function filterWikiPagePermissionsAccordingToService(Project $project, array $wiki_page_ugroup_ids) {
-        $wiki_service_ugroup_ids = $this->getWikiServicePermissions($project->getId());
+        $wiki_service_ugroup_ids = $this->getWikiServicePermissions($project);
 
         foreach($wiki_service_ugroup_ids as $wiki_service_ugroup_id) {
             $this->checkServiceOverridesPagePermission($wiki_page_ugroup_ids, $wiki_service_ugroup_id);
@@ -125,8 +125,9 @@ class Wiki_PermissionsManager {
         return $ugroup_ids;
     }
 
-    private function getWikiServicePermissions($project_id) {
-        return $this->permission_manager->getAuthorizedUgroupIds($project_id, self::SERVICE_WIKI_PERMISSION_READ);
+    public function getWikiServicePermissions(Project $project)
+    {
+        return $this->permission_manager->getAuthorizedUgroupIds($project->getID(), self::SERVICE_WIKI_PERMISSION_READ);
     }
 
     private function getNonProjectMembersGroups() {

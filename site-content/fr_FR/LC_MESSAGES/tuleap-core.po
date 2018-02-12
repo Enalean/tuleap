@@ -332,6 +332,9 @@ msgstr "Forums"
 msgid "Git"
 msgstr "Git"
 
+msgid "Global access"
+msgstr "Accès global"
+
 msgid "Global permissions"
 msgstr "Permissions globales"
 
