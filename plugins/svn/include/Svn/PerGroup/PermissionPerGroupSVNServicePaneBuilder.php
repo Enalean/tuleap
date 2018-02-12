@@ -20,6 +20,7 @@
 
 namespace Tuleap\Svn\PerGroup;
 
+use ProjectUGroup;
 use Tuleap\Project\Admin\PerGroup\PermissionPerGroupPanePresenter;
 use Tuleap\Project\Admin\PerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Project\Admin\Permission\PermissionPerGroupPaneCollector;
@@ -56,6 +57,8 @@ class PermissionPerGroupSVNServicePaneBuilder
     {
         $permissions = array();
 
+        $permissions[ProjectUGroup::PROJECT_ADMIN] = $this->formatter->formatGroup($event->getProject(), ProjectUGroup::PROJECT_ADMIN);
+
         if ($event->getSelectedUGroupId()) {
             $all_permissions = $this->permission_retriever->getAdminUGroupIdsForProjectContainingUGroupId(
                 $event->getProject(),
@@ -70,12 +73,16 @@ class PermissionPerGroupSVNServicePaneBuilder
         }
 
         foreach ($all_permissions as $permission) {
-            $permissions[] = $this->formatter->formatGroup($event->getProject(), $permission);
+            if ($permission !== ProjectUGroup::PROJECT_ADMIN) {
+                $permissions[$permission] = $this->formatter->formatGroup($event->getProject(), $permission);
+            }
         }
+
+        $unique_permissions = array_values($permissions);
 
         $selected_group = $event->getSelectedUGroupId();
         $user_group     = $this->ugroup_manager->getUGroup($event->getProject(), $selected_group);
 
-        return new PermissionPerGroupPanePresenter($permissions, $user_group);
+        return new PermissionPerGroupPanePresenter($unique_permissions, $user_group);
     }
 }
