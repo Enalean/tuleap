@@ -22,7 +22,6 @@ namespace Tuleap\Git\PerGroup;
 
 use Git;
 use Tuleap\Project\Admin\PerGroup\PermissionPerGroupPanePresenter;
-use Tuleap\Project\Admin\PerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Project\Admin\Permission\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\Permission\PermissionPerGroupUGroupRetriever;
 use UGroupManager;
@@ -34,7 +33,7 @@ class PermissionPerGroupGitSectionBuilder
      */
     private $permisson_retriever;
     /**
-     * @var PermissionPerGroupUGroupFormatter
+     * @var CollectionOfUgroupsFormatter
      */
     private $formatter;
     /**
@@ -44,7 +43,7 @@ class PermissionPerGroupGitSectionBuilder
 
     public function __construct(
         PermissionPerGroupUGroupRetriever $permisson_retriever,
-        PermissionPerGroupUGroupFormatter $formatter,
+        CollectionOfUgroupsFormatter $formatter,
         UGroupManager $ugroup_manager
     ) {
         $this->permisson_retriever = $permisson_retriever;
@@ -54,7 +53,7 @@ class PermissionPerGroupGitSectionBuilder
 
     public function buildPresenter(PermissionPerGroupPaneCollector $event)
     {
-        $permissions = array();
+        $project            = $event->getProject();
         $selected_ugroup_id = $event->getSelectedUGroupId();
 
         if ($event->getSelectedUGroupId()) {
@@ -72,9 +71,7 @@ class PermissionPerGroupGitSectionBuilder
 
         // This is done to avoid listing many times Project admins. See https://tuleap.net/plugins/tracker/?aid=11125
         $unique_permissions = array_unique($all_permissions, SORT_NUMERIC);
-        foreach ($unique_permissions as $permission) {
-            $permissions[] = $this->formatter->formatGroup($event->getProject(), $permission);
-        }
+        $permissions        = $this->formatter->formatCollectionOfUgroupIds($unique_permissions, $project);
 
         $selected_ugroup = $this->ugroup_manager->getUGroup($event->getProject(), $selected_ugroup_id);
 

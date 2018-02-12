@@ -20,7 +20,21 @@
 
 namespace Tuleap\Git\PerGroup;
 
-interface RepositoryPermissionsPresenter
+use GitRepository;
+use Project;
+
+class AdminUrlBuilder
 {
-    public function usesFineGrainedPermissions();
+    public function buildAdminUrl(GitRepository $repository, Project $project)
+    {
+        $admin_url_params = http_build_query(
+            [
+                'action'   => 'repo_management',
+                'group_id' => $project->getID(),
+                'repo_id'  => $repository->getId(),
+                'pane'     => 'perms'
+            ]
+        );
+        return GIT_BASE_URL . '/?' . $admin_url_params;
+    }
 }

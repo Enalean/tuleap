@@ -20,7 +20,30 @@
 
 namespace Tuleap\Git\PerGroup;
 
-interface RepositoryPermissionsPresenter
+class FineGrainedRowPresenter
 {
-    public function usesFineGrainedPermissions();
+    /**
+     * @var string
+     */
+    public $pattern;
+    /**
+     * @var array
+     */
+    public $writers;
+    /**
+     * @var array
+     */
+    public $rewinders;
+    /**
+     * @var bool
+     */
+    public $is_tag;
+
+    public function __construct($pattern, $is_tag, array $writers, array $rewinders)
+    {
+        $this->pattern   = $pattern;
+        $this->writers   = $writers;
+        $this->rewinders = $rewinders;
+        $this->is_tag    = $is_tag;
+    }
 }
