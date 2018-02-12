@@ -63,7 +63,7 @@ class PaneCollector
             ->getRenderer($templates_dir)
             ->renderToString('project-admin-permission-per-group', $global_presenter);
 
-        $event->addAdditionalPane($content);
+        $event->addPane($content);
     }
 
     /**

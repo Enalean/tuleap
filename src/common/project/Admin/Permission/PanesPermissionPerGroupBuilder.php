@@ -25,7 +25,7 @@ use Project;
 use Tuleap\FRS\PerGroup\PermissionPerGroupPaneBuilder;
 use Tuleap\PHPWiki\PerGroup\PHPWikiPermissionPerGroupPaneBuilder;
 
-class AdditionalPanesPermissionPerGroupBuilder
+class PanesPermissionPerGroupBuilder
 {
     /**
      * @var EventManager
@@ -52,14 +52,23 @@ class AdditionalPanesPermissionPerGroupBuilder
         $this->phpwiki_pane_builder = $phpwiki_pane_builder;
     }
 
-    public function buildAdditionalPresenters(Project $project, $selected_ugroup)
+    /**
+     * @return string[]
+     */
+    public function getPanes(Project $project, $selected_ugroup)
     {
         $event = new PermissionPerGroupPaneCollector($project, $selected_ugroup);
         $this->event_manager->processEvent($event);
 
-        $this->frs_pane_builder->buildPane($project, $event, $selected_ugroup);
-        $this->phpwiki_pane_builder->buildPane($project, $event, $selected_ugroup);
+        $panes = $event->getPanes();
+        $this->addCorePanes($project, $panes, $selected_ugroup);
 
-        return $event->getAdditionalPanes();
+        return $panes;
+    }
+
+    private function addCorePanes(Project $project, array &$panes, $selected_ugroup)
+    {
+        $panes[] = $this->frs_pane_builder->getPaneContent($project, $selected_ugroup);
+        $panes[] = $this->phpwiki_pane_builder->getPaneContent($project, $selected_ugroup);
     }
 }

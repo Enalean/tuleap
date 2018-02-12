@@ -47,6 +47,6 @@ class PermissionPerGroupPaneBuilderTest extends TuleapTestCase
         expect($formatter)->formatGroup()->never();
         expect($permission_factory)->getFrsUGroupsByPermission()->never();
 
-        $builder->buildPane($project, $event, $selected_ugroup_id);
+        $builder->getPaneContent($project, $event, $selected_ugroup_id);
     }
 }

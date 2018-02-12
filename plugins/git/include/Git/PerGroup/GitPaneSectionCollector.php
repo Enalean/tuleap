@@ -54,6 +54,6 @@ class GitPaneSectionCollector
             ->getRenderer($templates_dir)
             ->renderToString('project-admin-permission-per-group', $pane_presenter);
 
-        $pane_collector->addAdditionalPane($pane);
+        $pane_collector->addPane($pane);
     }
 }

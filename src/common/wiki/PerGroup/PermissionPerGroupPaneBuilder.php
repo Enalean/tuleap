@@ -57,7 +57,7 @@ class PHPWikiPermissionPerGroupPaneBuilder
         $this->wiki_permissions_manager = $wiki_permissions_manager;
     }
 
-    public function buildPane(Project $project, PermissionPerGroupPaneCollector $event, $selected_ugroup_id)
+    public function getPaneContent(Project $project, $selected_ugroup_id)
     {
         if (! $project->usesWiki()) {
             return;
@@ -70,7 +70,7 @@ class PHPWikiPermissionPerGroupPaneBuilder
             $selected_ugroup_id
         );
 
-        $ugroup = $this->ugroup_manager->getUGroup($event->getProject(), $selected_ugroup_id);
+        $ugroup = $this->ugroup_manager->getUGroup($project, $selected_ugroup_id);
 
         $presenter = new PermissionPerGroupPanePresenter(
             $permissions->getPermissions(),
@@ -78,11 +78,10 @@ class PHPWikiPermissionPerGroupPaneBuilder
         );
 
         $templates_dir = ForgeConfig::get('tuleap_dir') . '/src/templates/wiki/';
-        $content       = TemplateRendererFactory::build()
+
+        return TemplateRendererFactory::build()
             ->getRenderer($templates_dir)
             ->renderToString('project-admin-permission-per-group', $presenter);
-
-        $event->addAdditionalPane($content);
     }
 
     /**

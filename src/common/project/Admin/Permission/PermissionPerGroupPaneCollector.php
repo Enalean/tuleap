@@ -36,7 +36,7 @@ class PermissionPerGroupPaneCollector implements Dispatchable
     /**
      * @var string[]
      */
-    private $additional_panes = array();
+    private $panes = array();
     /**
      * @var Project
      */
@@ -59,17 +59,17 @@ class PermissionPerGroupPaneCollector implements Dispatchable
     /**
      * @return string[]
      */
-    public function getAdditionalPanes()
+    public function getPanes()
     {
-        return $this->additional_panes;
+        return $this->panes;
     }
 
     /**
      * @param string $additional_pane
      */
-    public function addAdditionalPane($additional_pane)
+    public function addPane($additional_pane)
     {
-        $this->additional_panes[] = $additional_pane;
+        $this->panes[] = $additional_pane;
     }
 
     /**

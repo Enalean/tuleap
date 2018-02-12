@@ -56,7 +56,7 @@ class PermissionPerGroupPaneBuilder
         $this->ugroup_manager         = $ugroup_manager;
     }
 
-    public function buildPane(Project $project, PermissionPerGroupPaneCollector $event, $selected_ugroup)
+    public function getPaneContent(Project $project, $selected_ugroup)
     {
         if (! $project->usesFile()) {
             return;
@@ -78,7 +78,7 @@ class PermissionPerGroupPaneBuilder
             $selected_ugroup
         );
 
-        $ugroup = $this->ugroup_manager->getUGroup($event->getProject(), $selected_ugroup);
+        $ugroup = $this->ugroup_manager->getUGroup($project, $selected_ugroup);
 
         $presenter = new PermissionPerGroupPanePresenter(
             $permissions->getPermissions(),
@@ -86,11 +86,10 @@ class PermissionPerGroupPaneBuilder
         );
 
         $templates_dir = ForgeConfig::get('tuleap_dir') . '/src/templates/frs/';
-        $content       = TemplateRendererFactory::build()
+
+        return TemplateRendererFactory::build()
             ->getRenderer($templates_dir)
             ->renderToString('project-admin-permission-per-group', $presenter);
-
-        $event->addAdditionalPane($content);
     }
 
     /**
