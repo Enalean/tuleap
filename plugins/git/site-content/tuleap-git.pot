@@ -40,7 +40,7 @@ msgstr ""
 msgid "Git Administrators"
 msgstr ""
 
-msgid "Git global permissions"
+msgid "Global permissions"
 msgstr ""
 
 msgid "Granted groups"
@@ -49,10 +49,25 @@ msgstr ""
 msgid "No notifications set"
 msgstr ""
 
+msgid "No repository found for project"
+msgstr ""
+
 msgid "Notified people"
 msgstr ""
 
 msgid "Permission"
+msgstr ""
+
+msgid "Readers"
+msgstr ""
+
+msgid "Repository"
+msgstr ""
+
+msgid "Repository permissions"
+msgstr ""
+
+msgid "Rewinders"
 msgstr ""
 
 #, php-format
@@ -74,5 +89,12 @@ msgstr ""
 msgid "User, group, email"
 msgstr ""
 
-msgid "{{ user_group_name }} has no permission for Git"
+msgid "Writers"
+msgstr ""
+
+msgid "{{ user_group_name }} has no global permission for Git"
+msgstr ""
+
+msgid ""
+"{{ user_group_name }} has no permission for any repository in this project"
 msgstr ""

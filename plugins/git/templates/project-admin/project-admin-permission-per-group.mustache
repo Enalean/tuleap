@@ -1,10 +1,12 @@
 <section class="tlp-pane">
     <div class="tlp-pane-container">
         <div class="tlp-pane-header">
-            <h1 class="tlp-pane-title">{{# dgettext }} tuleap-git | Git global permissions {{/ dgettext }}</h1>
+            <h1 class="tlp-pane-title">{{# dgettext }} tuleap-git | Git {{/ dgettext }}</h1>
         </div>
 
+        {{# service_presenter}}
         <section class="tlp-pane-section">
+            <h2 class="tlp-pane-subtitle">{{# dgettext }} tuleap-git | Global permissions {{/ dgettext }}</h2>
             <table class="tlp-table">
                 <thead>
                     <tr>
@@ -23,19 +25,83 @@
                                     {{# is_static }}tlp-badge-primary tlp-badge-outline{{/ is_static }}
                                     {{# is_custom }}tlp-badge-secondary{{/ is_custom }}
                                 ">{{ name }}</span>
-                            {{/permissions}}
+                            {{/ permissions }}
                         </td>
                     </tr>
                 {{/ has_permissions }}
                 {{^ has_permissions }}
                     <tr>
                         <td colspan="2" class="tlp-table-cell-empty">
-                            {{# dgettext }} tuleap-git | {{ user_group_name }} has no permission for Git {{/ dgettext }}
+                            {{# dgettext }} tuleap-git | {{ user_group_name }} has no global permission for Git {{/ dgettext }}
                         </td>
                     </tr>
                 {{/ has_permissions }}
                 </tbody>
             </table>
         </section>
+        {{/ service_presenter }}
+        {{# repositories_presenter }}
+            <section class="tlp-pane-section">
+                <h2 class="tlp-pane-subtitle">{{# dgettext }} tuleap-git | Repository permissions {{/ dgettext }}</h2>
+                <table class="tlp-table">
+                    <thead>
+                        <tr>
+                            <th>{{# dgettext }} tuleap-git | Repository {{/ dgettext }}</th>
+                            <th>{{# dgettext }} tuleap-git | Readers {{/ dgettext }}</th>
+                            <th>{{# dgettext }} tuleap-git | Writers {{/ dgettext }}</th>
+                            <th>{{# dgettext }} tuleap-git | Rewinders {{/ dgettext }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {{# repository_presenters }}
+                        <tr>
+                            <td><a href="{{ repository_admin_url }}">{{ repository_name }}</a></td>
+                            <td>
+                                {{# readers }}
+                                <span class="
+                                    {{# is_project_admin }}tlp-badge-danger tlp-badge-outline{{/ is_project_admin }}
+                                    {{# is_static }}tlp-badge-primary tlp-badge-outline{{/ is_static }}
+                                    {{# is_custom }}tlp-badge-secondary{{/ is_custom }}
+                                ">{{ name }}</span>
+                                {{/ readers }}
+                            </td>
+                            <td>
+                                {{# writers }}
+                                <span class="
+                                    {{# is_project_admin }}tlp-badge-danger tlp-badge-outline{{/ is_project_admin }}
+                                    {{# is_static }}tlp-badge-primary tlp-badge-outline{{/ is_static }}
+                                    {{# is_custom }}tlp-badge-secondary{{/ is_custom }}
+                                ">{{ name }}</span>
+                                {{/ writers }}
+                            </td>
+                            <td>
+                                {{# rewinders }}
+                                <span class="
+                                    {{# is_project_admin }}tlp-badge-danger tlp-badge-outline{{/ is_project_admin }}
+                                    {{# is_static }}tlp-badge-primary tlp-badge-outline{{/ is_static }}
+                                    {{# is_custom }}tlp-badge-secondary{{/ is_custom }}
+                                ">{{ name }}</span>
+                                {{/ rewinders }}
+                            </td>
+                        </tr>
+                    {{/ repository_presenters }}
+                    {{# has_no_permission }}
+                        <tr>
+                            <td colspan="4" class="tlp-table-cell-empty">
+                                {{# dgettext }} tuleap-git | {{ user_group_name }} has no permission for any repository in this project {{/dgettext}}
+                            </td>
+                        </tr>
+                    {{/ has_no_permission }}
+                    {{^ has_repositories }}
+                        <tr>
+                            <td colspan="4" class="tlp-table-cell-empty">
+                                {{# dgettext }} tuleap-git | No repository found for project {{/ dgettext }}
+                            </td>
+                        </tr>
+                    {{/ has_repositories }}
+                    </tbody>
+                </table>
+            </section>
+        {{/ repositories_presenter }}
     </div>
 </section>

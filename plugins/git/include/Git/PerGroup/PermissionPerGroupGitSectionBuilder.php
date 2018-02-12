@@ -27,9 +27,8 @@ use Tuleap\Project\Admin\Permission\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\Permission\PermissionPerGroupUGroupRetriever;
 use UGroupManager;
 
-class PermissionPerGroupPaneBuilder
+class PermissionPerGroupGitSectionBuilder
 {
-
     /**
      * @var PermissionPerGroupUGroupRetriever
      */
