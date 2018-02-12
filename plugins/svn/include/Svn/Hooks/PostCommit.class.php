@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2016 - 2017. All rights reserved.
+ * Copyright Enalean (c) 2016 - 2018. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -25,7 +25,6 @@
 namespace Tuleap\Svn\Hooks;
 
 use EventManager;
-use ForgeConfig;
 use MailBuilder;
 use MailEnhancer;
 use Notification;
@@ -149,8 +148,6 @@ class PostCommit
             $repository->getSystemPath()
         );
 
-        $this->setFrom($mail_enhancer, $committer);
-
         $notification = new Notification($notified_mail, $subject, '', $body, $goto_link, 'Svn');
         return $this->mail_builder->buildAndSendEmail($repository->getProject(), $notification, $mail_enhancer);
     }
@@ -251,9 +248,5 @@ class PostCommit
         }
 
         return array_unique($notified_mails);
-    }
-
-    private function setFrom(MailEnhancer $mail_enhancer, PFUser $user) {
-        $mail_enhancer->addHeader('From', $user->getEmail());
     }
 }
