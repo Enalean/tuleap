@@ -23,6 +23,7 @@ namespace Tuleap\Project\Admin\Permission;
 use EventManager;
 use Project;
 use Tuleap\FRS\PerGroup\PermissionPerGroupPaneBuilder;
+use Tuleap\PHPWiki\PerGroup\PHPWikiPermissionPerGroupPaneBuilder;
 
 class AdditionalPanesPermissionPerGroupBuilder
 {
@@ -30,15 +31,25 @@ class AdditionalPanesPermissionPerGroupBuilder
      * @var EventManager
      */
     private $event_manager;
+
     /**
      * @var PermissionPerGroupPaneBuilder
      */
     private $frs_pane_builder;
 
-    public function __construct(EventManager $event_manager, PermissionPerGroupPaneBuilder $frs_pane_builder)
-    {
-        $this->event_manager    = $event_manager;
-        $this->frs_pane_builder = $frs_pane_builder;
+    /**
+     * @var PHPWikiPermissionPerGroupPaneBuilder
+     */
+    private $phpwiki_pane_builder;
+
+    public function __construct(
+        EventManager $event_manager,
+        PermissionPerGroupPaneBuilder $frs_pane_builder,
+        PHPWikiPermissionPerGroupPaneBuilder $phpwiki_pane_builder
+    ) {
+        $this->event_manager        = $event_manager;
+        $this->frs_pane_builder     = $frs_pane_builder;
+        $this->phpwiki_pane_builder = $phpwiki_pane_builder;
     }
 
     public function buildAdditionalPresenters(Project $project, $selected_ugroup)
@@ -47,6 +58,7 @@ class AdditionalPanesPermissionPerGroupBuilder
         $this->event_manager->processEvent($event);
 
         $this->frs_pane_builder->buildPane($project, $selected_ugroup, $event);
+        $this->phpwiki_pane_builder->buildPane($project, $event, $selected_ugroup);
 
         return $event->getAdditionalPanes();
     }
