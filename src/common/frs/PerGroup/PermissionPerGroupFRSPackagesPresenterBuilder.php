@@ -22,6 +22,8 @@ namespace Tuleap\FRS\PerGroup;
 
 use FRSPackage;
 use FRSPackageFactory;
+use FRSRelease;
+use FRSReleaseFactory;
 use Project;
 use Tuleap\Project\Admin\PerGroup\PermissionPerGroupPanePresenter;
 use Tuleap\Project\Admin\PerGroup\PermissionPerGroupUGroupFormatter;
@@ -44,6 +46,10 @@ class PermissionPerGroupFRSPackagesPresenterBuilder
      */
     private $package_factory;
     /**
+     * @var FRSReleaseFactory
+     */
+    private $release_factory;
+    /**
      * @var PermissionPerGroupUGroupFormatter
      */
     private $formatter;
@@ -52,21 +58,23 @@ class PermissionPerGroupFRSPackagesPresenterBuilder
         UGroupManager $ugroup_manager,
         PermissionPerGroupUGroupRetriever $permission_ugroup_retriever,
         FRSPackageFactory $package_factory,
-        PermissionPerGroupUGroupFormatter $formatter
+        PermissionPerGroupUGroupFormatter $formatter,
+        FRSReleaseFactory $release_factory
     ) {
         $this->ugroup_manager              = $ugroup_manager;
         $this->permission_ugroup_retriever = $permission_ugroup_retriever;
         $this->package_factory             = $package_factory;
+        $this->release_factory             = $release_factory;
         $this->formatter                   = $formatter;
     }
 
-    public function getPanePresenter(Project $project, $selected_ugroup)
+    public function getPanePresenter(Project $project, $selected_ugroup_id)
     {
         $permissions = new PermissionPerGroupCollection();
 
-        $this->addPackagePermissions($project, $permissions, $selected_ugroup);
+        $this->addPackagePermissions($project, $permissions, $selected_ugroup_id);
 
-        $ugroup = $this->ugroup_manager->getUGroup($project, $selected_ugroup);
+        $ugroup = $this->ugroup_manager->getUGroup($project, $selected_ugroup_id);
 
         return new PermissionPerGroupPanePresenter(
             $permissions->getPermissions(),
@@ -81,107 +89,184 @@ class PermissionPerGroupFRSPackagesPresenterBuilder
     private function addPackagePermissions(
         Project $project,
         PermissionPerGroupCollection $permissions,
-        $selected_ugroup = null
+        $selected_ugroup_id = null
     ) {
         $packages = $this->package_factory->getFRSPackagesFromDb($project->getID());
         foreach ($packages as $package) {
-            $package_permissions = $this->permission_ugroup_retriever->getAllUGroupForObject(
+            $package_permission_ids = $this->permission_ugroup_retriever->getAllUGroupForObject(
                 $project,
                 $package->getPackageID(),
                 FRSPackage::PERM_READ
             );
 
-            $this->addPackagePermissionForSelectedGroup(
+            $formatted_package_permissions = [];
+            foreach ($package_permission_ids as $permission) {
+                $formatted_package_permissions[] = $this->formatter->formatGroup($project, $permission);
+            }
+
+            $releases_permissions        = [];
+            $all_release_permissions_ids = [];
+            $releases                    = $this->release_factory->getFRSReleasesFromDb($package->getPackageID());
+            foreach ($releases as $release) {
+                $release_permission_ids = $this->permission_ugroup_retriever->getAllUGroupForObject(
+                    $project,
+                    $release->getReleaseID(),
+                    FRSRelease::PERM_READ
+                );
+
+                $release_permission_ids = $this->getPackagePermissionWhenReleaseDontHavePermission(
+                    $package_permission_ids,
+                    $release_permission_ids
+                );
+
+
+                $releases_permissions[] = $this->getReleasePermissions(
+                    $project,
+                    $selected_ugroup_id,
+                    $release,
+                    $release_permission_ids
+                );
+
+                $all_release_permissions_ids = array_merge($all_release_permissions_ids, $release_permission_ids);
+            }
+
+            $releases_permissions = array_values(array_filter($releases_permissions));
+
+            $formatted_permission = $this->formatPackagePermissions(
                 $project,
-                $permissions,
                 $package,
-                $package_permissions,
-                $selected_ugroup
+                $formatted_package_permissions,
+                $releases_permissions
             );
-            $this->addPackagePermissionsWhenNoGroupIsSelected(
-                $project,
+
+            $this->addPermissionWhenNoFilterIsSelected($permissions, $selected_ugroup_id, $formatted_permission);
+            $this->addPermissionWhenFilterIsDefinedAndPermissionMatchesPackageOrRelease(
                 $permissions,
-                $package,
-                $package_permissions,
-                $selected_ugroup
+                $selected_ugroup_id,
+                $package_permission_ids,
+                $all_release_permissions_ids,
+                $formatted_permission
             );
         }
     }
 
-    /**
-     * @param Project                      $project
-     * @param PermissionPerGroupCollection $permissions
-     * @param FRSPackage                   $package
-     * @param Int[]                        $package_permissions
-     * @param                              $selected_ugroup
-     */
-    private function addPackagePermissionForSelectedGroup(
+    private function formatReleasePermissionsForPresenter(
         Project $project,
-        PermissionPerGroupCollection $permissions,
-        FRSPackage $package,
-        array $package_permissions,
-        $selected_ugroup
+        FRSRelease $release,
+        array $formatted_release_permissions
     ) {
-        if (! $selected_ugroup) {
-            return;
-        }
-
-        if (in_array($selected_ugroup, $package_permissions)) {
-            $this->formatPermission($project, $permissions, $package, $package_permissions);
-        }
-    }
-
-    /**
-     * @param Project                      $project
-     * @param PermissionPerGroupCollection $permissions
-     * @param FRSPackage                   $package
-     * @param array                        $package_permissions
-     */
-    private function formatPermission(
-        Project $project,
-        PermissionPerGroupCollection $permissions,
-        FRSPackage $package,
-        array $package_permissions
-    ) {
-        $formatted_permissions = array();
-
-        foreach ($package_permissions as $permission) {
-            $formatted_permissions[] = $this->formatter->formatGroup($project, $permission);
-        }
-
-        $permissions->addPermissions(
-            array(
-                'package_url'  => '/file/admin/package.php?' . http_build_query(
-                    array(
-                        "func"     => "edit",
-                        "group_id" => $project->getID(),
-                        "id"       => $package->getPackageID()
-                    )
-                ),
-                'package_name' => $package->getName(),
-                'permissions'  => $formatted_permissions
-            )
+        $releases_permissions = array(
+            'release_url'         => '/file/admin/release.php?' . http_build_query(
+                array(
+                    "func"       => "edit",
+                    "group_id"   => $project->getID(),
+                    "package_id" => $release->getPackageID(),
+                    "id"         => $release->getReleaseID()
+                )
+            ),
+            'release_name'        => $release->getName(),
+            'release_permissions' => $formatted_release_permissions
         );
+
+        return $releases_permissions;
     }
 
-    /**
-     * @param Project                      $project
-     * @param PermissionPerGroupCollection $permissions
-     * @param FRSPackage                   $package
-     * @param Int[]                        $package_permissions
-     * @param                              $selected_ugroup
-     */
-    private function addPackagePermissionsWhenNoGroupIsSelected(
+    private function formatPackagePermissions(
         Project $project,
-        PermissionPerGroupCollection $permissions,
         FRSPackage $package,
-        array $package_permissions,
-        $selected_ugroup
+        array $formatted_package_permissions,
+        array $releases_permissions
     ) {
-        if ($selected_ugroup) {
-            return;
+        $formatted_permission = array(
+            'package_url'  => '/file/admin/package.php?' . http_build_query(
+                array(
+                    "func"     => "edit",
+                    "group_id" => $project->getID(),
+                    "id"       => $package->getPackageID()
+                )
+            ),
+            'package_name' => $package->getName(),
+            'permissions'  => $formatted_package_permissions,
+            'releases'     => $releases_permissions
+        );
+
+        return $formatted_permission;
+    }
+
+    private function addPermissionWhenNoFilterIsSelected(
+        PermissionPerGroupCollection $permissions,
+        $selected_ugroup_id,
+        array $formatted_permission
+    ) {
+        if (! $selected_ugroup_id) {
+            $permissions->addPermissions($formatted_permission);
+        }
+    }
+
+    private function addPermissionWhenFilterIsDefinedAndPermissionMatchesPackageOrRelease(
+        PermissionPerGroupCollection $permissions,
+        $selected_ugroup_id,
+        array $package_permissions,
+        array $release_permissions,
+        array $formatted_permission
+    ) {
+        $object_permissions = array_merge($package_permissions, $release_permissions);
+        if ($selected_ugroup_id && in_array($selected_ugroup_id, $object_permissions)) {
+            $permissions->addPermissions($formatted_permission);
+        }
+    }
+
+    private function getFormattedUGroupsReleasePermissions(
+        Project $project,
+        $release_permission
+    ) {
+        $formatted_release_permissions = [];
+        foreach ($release_permission as $permission) {
+            $formatted_release_permissions[] = $this->formatter->formatGroup($project, $permission);
         }
 
-        $this->formatPermission($project, $permissions, $package, $package_permissions);
+        return $formatted_release_permissions;
+    }
+
+    private function getPackagePermissionWhenReleaseDontHavePermission(
+        array $formatted_package_permissions,
+        array $formatted_release_permissions
+    ) {
+        if (count($formatted_release_permissions) === 0) {
+            return $formatted_package_permissions;
+        }
+
+        return $formatted_release_permissions;
+    }
+
+    private function getReleasePermissions(
+        Project $project,
+        $selected_ugroup_id,
+        FRSRelease $release,
+        array $release_permission
+    ) {
+        if (! $selected_ugroup_id) {
+            return $this->formatReleasePermissionsForPresenter(
+                $project,
+                $release,
+                $this->getFormattedUGroupsReleasePermissions(
+                    $project,
+                    $release_permission
+                )
+            );
+        }
+
+        if ($selected_ugroup_id && in_array($selected_ugroup_id, $release_permission)) {
+            return $this->formatReleasePermissionsForPresenter(
+                $project,
+                $release,
+                $this->getFormattedUGroupsReleasePermissions(
+                    $project,
+                    $release_permission
+                )
+            );
+        }
+
+        return [];
     }
 }

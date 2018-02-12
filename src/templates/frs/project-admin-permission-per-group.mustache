@@ -45,6 +45,7 @@
                     <thead>
                     <tr>
                         <th> {{# gettext }} Package {{/ gettext }}</th>
+                        <th> {{# gettext }} Release {{/ gettext }}</th>
                         <th> {{# gettext }} Readers {{/ gettext }}</th>
                     </tr>
                     </thead>
@@ -52,6 +53,7 @@
                     {{# permissions }}
                         <tr>
                             <td><a href="{{ package_url }}">{{ package_name }}</a></td>
+                            <td></td>
                             <td>
                                 {{# permissions }}
                                     <span class="
@@ -62,10 +64,25 @@
                                 {{/ permissions }}
                             </td>
                         </tr>
+                        {{# releases }}
+                            <tr>
+                                <td></td>
+                                <td><a href="{{ release_url }}">{{ release_name }}</a></td>
+                                <td>
+                                    {{# release_permissions }}
+                                        <span class="
+                                        {{# is_project_admin }}tlp-badge-danger tlp-badge-outline{{/ is_project_admin }}
+                                            {{# is_static }}tlp-badge-primary tlp-badge-outline{{/ is_static }}
+                                            {{# is_custom }}tlp-badge-secondary{{/ is_custom }}
+                                    ">{{ name }}</span>
+                                    {{/ release_permissions }}
+                                </td>
+                            </tr>
+                        {{/ releases }}
                     {{/ permissions }}
                     {{^ has_permissions }}
                         <tr>
-                            <td colspan="2" class="tlp-table-cell-empty">
+                            <td colspan="3" class="tlp-table-cell-empty">
                                 {{# gettext }} No packages found for project {{/ gettext }}
                             </td>
                         </tr>

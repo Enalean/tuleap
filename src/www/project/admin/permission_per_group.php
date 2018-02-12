@@ -67,7 +67,8 @@ $additional_panes_builder = new PanesPermissionPerGroupBuilder(
             $ugroup_manager,
             new PermissionPerGroupUGroupRetriever(PermissionsManager::instance()),
             new FRSPackageFactory(),
-            $formatter
+            $formatter,
+            new FRSReleaseFactory()
         )
     ),
     new PHPWikiPermissionPerGroupPaneBuilder(
