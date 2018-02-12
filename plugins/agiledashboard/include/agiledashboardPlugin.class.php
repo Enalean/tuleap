@@ -1546,6 +1546,6 @@ class AgileDashboardPlugin extends Plugin {
                 $presenter
             );
 
-        $event->addAdditionalPane($admin_permission_pane);
+        $event->addPane($admin_permission_pane);
     }
 }

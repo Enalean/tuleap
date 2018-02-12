@@ -43,11 +43,9 @@ class PHPWikiPermissionPerGroupPaneBuilderTest extends TuleapTestCase
 
         $selected_ugroup_id = null;
 
-        $event = new PermissionPerGroupPaneCollector($project, $selected_ugroup_id);
-
         expect($formatter)->formatGroup()->never();
         expect($wiki_permissions_manager)->getWikiAdminsGroups()->never();
 
-        $builder->buildPane($project, $event, $selected_ugroup_id);
+        $builder->getPaneContent($project, $selected_ugroup_id);
     }
 }

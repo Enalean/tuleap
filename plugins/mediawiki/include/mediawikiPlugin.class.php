@@ -846,6 +846,6 @@ class MediaWikiPlugin extends Plugin {
             ->getRenderer($templates_dir)
             ->renderToString('project-admin-permission-per-group', $presenter);
 
-        $event->addAdditionalPane($content);
+        $event->addPane($content);
     }
 }
