@@ -20,32 +20,67 @@
 
 namespace Tuleap\PHPWiki\PerGroup;
 
-use Tuleap\Project\Admin\Permission\PermissionPerGroupPaneCollector;
+use ProjectUGroup;
 use TuleapTestCase;
 
 class PHPWikiPermissionPerGroupPaneBuilderTest extends TuleapTestCase
 {
+    /**
+     * @var PHPWikiPermissionPerGroupPaneBuilder
+     */
+    private $builder;
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->wiki_permissions_manager = mock('Wiki_PermissionsManager');
+        $this->formatter                = mock('Tuleap\Project\Admin\PerGroup\PermissionPerGroupUGroupFormatter');
+        $this->ugroup_manager           = mock('UGroupManager');
+
+        $renderer         = mock('TemplateRenderer');
+        $template_factory = stub('TemplateRendererFactory')->getRenderer()->returns($renderer);
+
+        $this->builder = new PHPWikiPermissionPerGroupPaneBuilder(
+            $this->wiki_permissions_manager,
+            $this->formatter,
+            $this->ugroup_manager,
+            $template_factory
+        );
+
+        $this->project = aMockProject()->build();
+
+        stub($this->wiki_permissions_manager)->getWikiAdminsGroups()->returns(
+            array(ProjectUGroup::PROJECT_ADMIN, ProjectUGroup::WIKI_ADMIN)
+        );
+    }
 
     public function itDoesNotBuildPaneIfServiceNotUsed()
     {
-        $wiki_permissions_manager = mock('Wiki_PermissionsManager');
-        $formatter                = mock('Tuleap\Project\Admin\PerGroup\PermissionPerGroupUGroupFormatter');
-        $ugroup_manager           = mock('UGroupManager');
-
-        $builder = new PHPWikiPermissionPerGroupPaneBuilder(
-            $wiki_permissions_manager,
-            $formatter,
-            $ugroup_manager
-        );
-
-        $project = aMockProject()->build();
-        stub($project)->usesWiki()->returns(false);
+        stub($this->project)->usesWiki()->returns(false);
 
         $selected_ugroup_id = null;
 
-        expect($formatter)->formatGroup()->never();
-        expect($wiki_permissions_manager)->getWikiAdminsGroups()->never();
+        expect($this->formatter)->formatGroup()->never();
+        expect($this->wiki_permissions_manager)->getWikiAdminsGroups()->never();
+        expect($this->wiki_permissions_manager)->getWikiServicePermissions()->never();
 
-        $builder->getPaneContent($project, $selected_ugroup_id);
+        $this->builder->getPaneContent($this->project, $selected_ugroup_id);
+    }
+
+    public function itExportsServicePermissions()
+    {
+        stub($this->project)->usesWiki()->returns(true);
+        stub($this->wiki_permissions_manager)->getWikiServicePermissions($this->project)->returns(
+            array(2)
+        );
+
+        $selected_ugroup_id = null;
+
+        $this->formatter->expectCallCount('formatGroup', 3);
+        expect($this->wiki_permissions_manager)->getWikiAdminsGroups()->once();
+        expect($this->wiki_permissions_manager)->getWikiServicePermissions($this->project)->once();
+
+        $this->builder->getPaneContent($this->project, $selected_ugroup_id);
     }
 }

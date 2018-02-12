@@ -26,7 +26,6 @@ use TemplateRendererFactory;
 use Tuleap\Project\Admin\PerGroup\PermissionPerGroupPanePresenter;
 use Tuleap\Project\Admin\PerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Project\Admin\Permission\PermissionPerGroupCollection;
-use Tuleap\Project\Admin\Permission\PermissionPerGroupPaneCollector;
 use UGroupManager;
 use Wiki_PermissionsManager;
 
@@ -47,14 +46,21 @@ class PHPWikiPermissionPerGroupPaneBuilder
      */
     private $wiki_permissions_manager;
 
+    /**
+     * @var TemplateRendererFactory
+     */
+    private $template_renderer_factory;
+
     public function __construct(
         Wiki_PermissionsManager $wiki_permissions_manager,
         PermissionPerGroupUGroupFormatter $formatter,
-        UGroupManager $ugroup_manager
+        UGroupManager $ugroup_manager,
+        TemplateRendererFactory $template_renderer_factory
     ) {
-        $this->formatter                = $formatter;
-        $this->ugroup_manager           = $ugroup_manager;
-        $this->wiki_permissions_manager = $wiki_permissions_manager;
+        $this->formatter                 = $formatter;
+        $this->ugroup_manager            = $ugroup_manager;
+        $this->wiki_permissions_manager  = $wiki_permissions_manager;
+        $this->template_renderer_factory = $template_renderer_factory;
     }
 
     public function getPaneContent(Project $project, $selected_ugroup_id)
@@ -79,7 +85,7 @@ class PHPWikiPermissionPerGroupPaneBuilder
 
         $templates_dir = ForgeConfig::get('tuleap_dir') . '/src/templates/wiki/';
 
-        return TemplateRendererFactory::build()
+        return $this->template_renderer_factory
             ->getRenderer($templates_dir)
             ->renderToString('project-admin-permission-per-group', $presenter);
     }
@@ -92,16 +98,22 @@ class PHPWikiPermissionPerGroupPaneBuilder
         PermissionPerGroupCollection $permissions,
         $selected_ugroup_id = null
     ) {
-        $ugroups = $this->getUgroups($selected_ugroup_id);
+        $this->addAdministrationPermission($project, $permissions, $selected_ugroup_id);
+        $this->addGlobalAccessPermission($project, $permissions, $selected_ugroup_id);
+    }
+
+    private function addAdministrationPermission(
+        Project $project,
+        PermissionPerGroupCollection $permissions,
+        $selected_ugroup_id = null
+    ) {
+        $ugroups = $this->getAdministrationUgroups($selected_ugroup_id);
 
         if (count($ugroups) === 0) {
             return;
         }
 
-        $formatted_group = [];
-        foreach ($ugroups as $wiki_admins_group) {
-            $formatted_group[] =  $this->formatter->formatGroup($project, $wiki_admins_group);
-        }
+        $formatted_group = $this->getFormattedUgroups($project, $ugroups);
 
         $permissions->addPermissions(array(
             'name' => _('Administrator'),
@@ -112,14 +124,63 @@ class PHPWikiPermissionPerGroupPaneBuilder
     /**
      * @return array
      */
-    private function getUgroups($selected_ugroup_id)
+    private function getAdministrationUgroups($selected_ugroup_id)
     {
-        if ($selected_ugroup_id) {
-            $ugroups = in_array($selected_ugroup_id, $this->wiki_permissions_manager->getWikiAdminsGroups()) ? $this->wiki_permissions_manager->getWikiAdminsGroups() : [];
-        } else {
-            $ugroups = $this->wiki_permissions_manager->getWikiAdminsGroups();
+        return $this->getUgroups(
+            $this->wiki_permissions_manager->getWikiAdminsGroups(),
+            $selected_ugroup_id
+        );
+    }
+
+    private function addGlobalAccessPermission(
+        Project $project,
+        PermissionPerGroupCollection $permissions,
+        $selected_ugroup_id = null
+    ) {
+        $ugroups = $this->getGlobalAccessUgroups($project, $selected_ugroup_id);
+
+        if (count($ugroups) === 0) {
+            return;
+        }
+
+        $formatted_group = $this->getFormattedUgroups($project, $ugroups);
+
+        $permissions->addPermissions(array(
+            'name' => _('Global access'),
+            'groups' => $formatted_group
+        ));
+    }
+
+    /**
+     * @return array
+     */
+    private function getGlobalAccessUgroups(Project $project, $selected_ugroup_id)
+    {
+        return $this->getUgroups(
+            $this->wiki_permissions_manager->getWikiServicePermissions($project),
+            $selected_ugroup_id
+        );
+    }
+
+    private function getUgroups(array $ugroups, $selected_ugroup_id)
+    {
+        if ($selected_ugroup_id && ! in_array($selected_ugroup_id, $ugroups)) {
+            return [];
         }
 
         return $ugroups;
+    }
+
+    /**
+     * @return array
+     */
+    private function getFormattedUgroups(Project $project, array $ugroups)
+    {
+        $formatted_ugroups = [];
+        foreach ($ugroups as $ugroup) {
+            $formatted_ugroups[] =  $this->formatter->formatGroup($project, $ugroup);
+        }
+
+        return $formatted_ugroups;
     }
 }

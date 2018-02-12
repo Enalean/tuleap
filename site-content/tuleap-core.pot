@@ -306,6 +306,9 @@ msgstr ""
 msgid "Git"
 msgstr ""
 
+msgid "Global access"
+msgstr ""
+
 msgid "Global permissions"
 msgstr ""
 

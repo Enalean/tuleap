@@ -64,7 +64,8 @@ $additional_panes_builder = new PanesPermissionPerGroupBuilder(
             new UGroupLiteralizer()
         ),
         $formatter,
-        $ugroup_manager
+        $ugroup_manager,
+        TemplateRendererFactory::build()
     )
 );
 
