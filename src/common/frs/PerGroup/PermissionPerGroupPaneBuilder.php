@@ -56,8 +56,12 @@ class PermissionPerGroupPaneBuilder
         $this->ugroup_manager         = $ugroup_manager;
     }
 
-    public function buildPane(Project $project, $selected_ugroup, PermissionPerGroupPaneCollector $event)
+    public function buildPane(Project $project, PermissionPerGroupPaneCollector $event, $selected_ugroup)
     {
+        if (! $project->usesFile()) {
+            return;
+        }
+
         $permissions = new PermissionPerGroupCollection();
         $this->extractPermissionByType(
             $project,

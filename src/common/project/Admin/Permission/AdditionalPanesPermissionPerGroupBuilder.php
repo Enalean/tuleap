@@ -57,7 +57,7 @@ class AdditionalPanesPermissionPerGroupBuilder
         $event = new PermissionPerGroupPaneCollector($project, $selected_ugroup);
         $this->event_manager->processEvent($event);
 
-        $this->frs_pane_builder->buildPane($project, $selected_ugroup, $event);
+        $this->frs_pane_builder->buildPane($project, $event, $selected_ugroup);
         $this->phpwiki_pane_builder->buildPane($project, $event, $selected_ugroup);
 
         return $event->getAdditionalPanes();
