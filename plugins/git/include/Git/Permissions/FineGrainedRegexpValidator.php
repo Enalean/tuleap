@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,20 +21,40 @@
 
 namespace Tuleap\Git\Permissions;
 
+use System_Command_CommandException;
+
 class FineGrainedRegexpValidator
 {
+
     public function isPatternValid($pattern)
     {
-        return ! $this->hasALineBreak($pattern) && ! $this->isPatternEmpty($pattern);
+        return ! $this->isEmpty($pattern) && ! $this->hasALineBreak($pattern) && $this->hasOnlyAuthorizedCharacters($pattern);
     }
 
-    private function isPatternEmpty($pattern)
+    /**
+     * @return bool
+     */
+    private function hasOnlyAuthorizedCharacters($pattern)
     {
-        return strlen($pattern) === 0;
+        $system_command = new \System_Command();
+        try {
+            $system_command->exec('/usr/share/tuleap/plugins/git/bin/gitolite-test-ref-pattern.pl ' . escapeshellarg($pattern));
+        } catch (System_Command_CommandException $ex) {
+            return false;
+        }
+        return true;
     }
 
     private function hasALineBreak($pattern)
     {
         return preg_match('/[\s\v]/', $pattern);
+    }
+
+    /**
+     * @return bool
+     */
+    private function isEmpty($pattern)
+    {
+        return trim($pattern) === '';
     }
 }

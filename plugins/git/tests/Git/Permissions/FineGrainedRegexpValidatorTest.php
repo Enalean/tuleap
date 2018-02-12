@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,7 +22,7 @@ namespace Tuleap\Git\Permissions;
 
 use TuleapTestCase;
 
-require_once dirname(__FILE__).'/../../bootstrap.php';
+require_once __DIR__ .'/../../bootstrap.php';
 
 class FineGrainedRegexpValidatorTest extends TuleapTestCase
 {
@@ -51,6 +51,8 @@ class FineGrainedRegexpValidatorTest extends TuleapTestCase
         $pattern_20 = "\f";
         $pattern_21 = 'master\norms';
 
+        $pattern_22 = 'refs/heads/^(?!master)$';
+
         $validator = new FineGrainedRegexpValidator();
 
         $this->assertTrue($validator->isPatternValid($pattern_01));
@@ -75,5 +77,7 @@ class FineGrainedRegexpValidatorTest extends TuleapTestCase
         $this->assertFalse($validator->isPatternValid($pattern_19));
         $this->assertFalse($validator->isPatternValid($pattern_20));
         $this->assertTrue($validator->isPatternValid($pattern_21));
+
+        $this->assertFalse($validator->isPatternValid($pattern_22));
     }
 }
