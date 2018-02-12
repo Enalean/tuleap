@@ -1,6 +1,7 @@
 <div class="dragular-handle backlog-item-details {{ backlogItemController.backlog_item.status | lowercase }} {{ backlogItemController.backlog_item.color }}"
     ng-class="{
         'moving-to': backlogItemController.backlog_item.moving_to,
+        updated    : backlogItemController.backlog_item.updated,
         updating   : backlogItemController.backlog_item.updating,
         selected   : backlogItemController.backlog_item.selected,
         multiple   : backlogItemController.backlog_item.multiple,
@@ -39,6 +40,7 @@
                     ng-class="{
                         'moving-to': backlog_item.moving_to,
                         updating   : backlog_item.updating,
+                        updated    : backlog_item.updated,
                         selected   : backlog_item.selected,
                         multiple   : backlog_item.multiple,
                         hidden     : backlog_item.hidden,

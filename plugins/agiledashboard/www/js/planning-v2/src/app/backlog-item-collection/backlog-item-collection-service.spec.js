@@ -5,6 +5,7 @@ import collection_module from './backlog-item-collection.js';
 
 describe("BacklogItemCollectionService -", () => {
     let $q,
+        $timeout,
         BacklogItemCollectionService,
         BacklogItemService;
 
@@ -14,10 +15,12 @@ describe("BacklogItemCollectionService -", () => {
         angular.mock.inject(function(
             _$q_,
             _$rootScope_,
+            _$timeout_,
             _BacklogItemCollectionService_,
             _BacklogItemService_
         ) {
             $q                           = _$q_;
+            $timeout                     = _$timeout_;
             BacklogItemCollectionService = _BacklogItemCollectionService_;
             BacklogItemService           = _BacklogItemService_;
         });
@@ -83,7 +86,6 @@ describe("BacklogItemCollectionService -", () => {
 
                 expect(promise).toBeResolved();
                 expect(BacklogItemService.getBacklogItem).toHaveBeenCalledWith(7088);
-                expect(BacklogItemCollectionService.items[7088]).toBe(initial_item);
                 expect(BacklogItemCollectionService.items[7088]).toEqual({
                     id         : 7088,
                     card_fields: [
@@ -107,7 +109,8 @@ describe("BacklogItemCollectionService -", () => {
                         id   : 504,
                         label: 'pretangible'
                     },
-                    updating: false
+                    updating: false,
+                    updated: true
                 });
             });
         });

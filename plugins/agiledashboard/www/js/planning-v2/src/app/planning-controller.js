@@ -229,18 +229,14 @@ function PlanningController(
     }
 
     function showEditSubmilestoneModal($event, submilestone) {
-        var when_left_mouse_click = 1;
+        $event.stopPropagation();
 
-        if ($event.which === when_left_mouse_click) {
-            $event.preventDefault();
-
-            NewTuleapArtifactModalService.showEdition(
-                self.user_id,
-                submilestone.artifact.tracker.id,
-                submilestone.artifact.id,
-                self.refreshSubmilestone
-            );
-        }
+        NewTuleapArtifactModalService.showEdition(
+            self.user_id,
+            submilestone.artifact.tracker.id,
+            submilestone.artifact.id,
+            self.refreshSubmilestone
+        );
     }
 
     function showAddSubmilestoneModal($event, submilestone_type) {

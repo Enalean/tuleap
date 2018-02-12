@@ -29,8 +29,12 @@
 
 %loader {
     height: 30px;
-    margin: $tlp-spacing 0 $tlp-half-spacing;
+    margin: $tlp-half-spacing 0 0;
     background: url('/themes/BurningParrot/images/spinner.gif') no-repeat center center;
+
+    &:only-child {
+        margin: 0;
+    }
 }
 
 planning {
@@ -48,14 +52,22 @@ planning {
 }
 
 .planning-divider {
+    display: flex;
     flex: 0 0 auto;
-    min-width: 80px;
-    background: url('../images/planning-divider.png') no-repeat center 70px;
+    justify-content: center;
+    width: 60px;
+    padding: 65px 0 0;
+}
+
+.planning-arrows {
+    opacity: .4;
+    fill: darken($tlp-theme-background-color, 20%);
 }
 
 .planning-header {
     display: flex;
     flex: 0 0 auto;
+    align-items: center;
     margin: 0 0 $tlp-spacing;
 }
 
@@ -69,18 +81,5 @@ planning {
 
 .planning-header-spacer {
     flex: 1 1 auto;
-}
-
-.planning-header-toggler-label {
-    display: none;
-}
-
-@media screen and (min-width: 1920px) {
-    .planning-header-toggler-label {
-        display: initial;
-    }
-}
-
-.planning-warning {
-    text-align: center;
+    min-width: $tlp-spacing;
 }

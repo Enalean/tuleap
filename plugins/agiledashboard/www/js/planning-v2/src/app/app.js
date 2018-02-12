@@ -22,6 +22,7 @@ import user_preferences      from './user-preferences/user-preferences.js';
 import rest_error            from './rest-error/rest-error.js';
 
 import MainController           from './main-controller.js';
+import PlanningConfig           from './app-config.js';
 import PlanningDirective        from './planning-directive.js';
 import OpenTlpDropdownDirective from './open-tlp-dropdown-directive.js';
 
@@ -41,6 +42,7 @@ export default angular.module('planning', [
     shared_properties,
     user_preferences,
 ])
+.config(PlanningConfig)
 .controller('MainController', MainController)
 .directive('planning', PlanningDirective)
 .directive('openTlpDropdown', OpenTlpDropdownDirective)

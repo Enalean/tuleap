@@ -512,7 +512,7 @@ describe("PlanningController - ", function() {
     describe("showEditSubmilestoneModal() -", function() {
         var event, item;
         beforeEach(function() {
-            event = jasmine.createSpyObj("Click event", ["preventDefault"]);
+            event = jasmine.createSpyObj("Click event", ["stopPropagation", "preventDefault"]);
             NewTuleapArtifactModalService.showEdition.and.callFake(function(c, a, b, callback) {
                 callback(9040);
             });
@@ -532,18 +532,8 @@ describe("PlanningController - ", function() {
 
             PlanningController.showEditSubmilestoneModal(event, item);
 
-            expect(event.preventDefault).toHaveBeenCalled();
             expect(NewTuleapArtifactModalService.showEdition).toHaveBeenCalledWith(102, 12, 9040, jasmine.any(Function));
             expect(PlanningController.refreshSubmilestone).toHaveBeenCalledWith(9040);
-        });
-
-        it("Given a middle click event and a submilestone to edit, when I show the edit modal, then the event's default action will NOT be prevented and the NewTuleapArtifactModalService won't be called.", function() {
-            event.which = 2;
-
-            PlanningController.showEditSubmilestoneModal(event, item);
-
-            expect(event.preventDefault).not.toHaveBeenCalled();
-            expect(NewTuleapArtifactModalService.showEdition).not.toHaveBeenCalled();
         });
     });
 

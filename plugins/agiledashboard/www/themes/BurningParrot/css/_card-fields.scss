@@ -17,9 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+card-fields {
+    width: 100%;
+}
+
 .extra-card-fields {
     margin: 0;
-    padding: 0 $tlp-half-spacing $tlp-half-spacing;
+    padding: 0 5px 5px $tlp-half-spacing;
 }
 
 .extra-card-field {
