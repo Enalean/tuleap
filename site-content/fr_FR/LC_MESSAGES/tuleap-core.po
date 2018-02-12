@@ -515,6 +515,12 @@ msgstr "Propriétaire"
 msgid "PHPWiki"
 msgstr "PHPWiki"
 
+msgid "Page permissions"
+msgstr "Permissions par page"
+
+msgid "Page permissions are not listed."
+msgstr "Les permissions par page ne sont pas listées."
+
 msgid "Parent project"
 msgstr "Projet parent"
 
