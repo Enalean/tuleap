@@ -487,6 +487,12 @@ msgstr ""
 msgid "PHPWiki"
 msgstr ""
 
+msgid "Page permissions"
+msgstr ""
+
+msgid "Page permissions are not listed."
+msgstr ""
+
 msgid "Parent project"
 msgstr ""
 
