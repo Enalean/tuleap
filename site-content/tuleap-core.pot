@@ -57,6 +57,9 @@ msgstr ""
 msgid "Adding a non-project member"
 msgstr ""
 
+msgid "Administrator"
+msgstr ""
+
 msgid "Agile Dashboard"
 msgstr ""
 
@@ -476,6 +479,9 @@ msgid "Outline"
 msgstr ""
 
 msgid "Owner"
+msgstr ""
+
+msgid "PHPWiki"
 msgstr ""
 
 msgid "Parent project"
@@ -1000,9 +1006,6 @@ msgid "labels"
 msgstr ""
 
 msgid "my_service"
-msgstr ""
-
-msgid "name"
 msgstr ""
 
 msgid "permissions"

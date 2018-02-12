@@ -21,6 +21,7 @@
 use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\FRS\FRSPermissionFactory;
 use Tuleap\FRS\PerGroup\PermissionPerGroupPaneBuilder;
+use Tuleap\PHPWiki\PerGroup\PHPWikiPermissionPerGroupPaneBuilder;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Project\Admin\PerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Project\Admin\Permission\AdditionalPanesPermissionPerGroupBuilder;
@@ -43,6 +44,7 @@ $navigation_displayer = new HeaderNavigationDisplayer();
 $navigation_displayer->displayBurningParrotNavigation($title, $project, 'permissions');
 
 $ugroup_manager    = new UGroupManager();
+$formatter         = new PermissionPerGroupUGroupFormatter($ugroup_manager);
 $presenter_builder = new PermissionPerGroupBuilder($ugroup_manager);
 $groups            = $presenter_builder->buildUGroup($project, $request);
 
@@ -52,7 +54,16 @@ $additional_panes_builder = new AdditionalPanesPermissionPerGroupBuilder(
         new FRSPermissionFactory(
             new FRSPermissionDao()
         ),
-        new PermissionPerGroupUGroupFormatter($ugroup_manager),
+        $formatter,
+        $ugroup_manager
+    ),
+    new PHPWikiPermissionPerGroupPaneBuilder(
+        new Wiki_PermissionsManager(
+            PermissionsManager::instance(),
+            $project_manager,
+            new UGroupLiteralizer()
+        ),
+        $formatter,
         $ugroup_manager
     )
 );

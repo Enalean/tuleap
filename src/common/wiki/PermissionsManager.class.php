@@ -133,7 +133,11 @@ class Wiki_PermissionsManager {
         return array(ProjectUGroup::REGISTERED, ProjectUGroup::ANONYMOUS);
     }
 
-    private function getWikiAdminsGroups() {
+    /**
+     * @return array
+     */
+    public function getWikiAdminsGroups()
+    {
         return array(ProjectUGroup::PROJECT_ADMIN, ProjectUGroup::WIKI_ADMIN);
     }
 
