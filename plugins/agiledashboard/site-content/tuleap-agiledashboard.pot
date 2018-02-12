@@ -10,6 +10,9 @@ msgstr ""
 msgid "Add to project dashboard"
 msgstr ""
 
+msgid "Agiledashboard plannings"
+msgstr ""
+
 msgid ""
 "An artifact could be considered <strong>done</strong> only if a semantic "
 "status is defined."
@@ -72,6 +75,9 @@ msgid "Item is not linked to this milestone"
 msgstr ""
 
 msgid "Parent item"
+msgstr ""
+
+msgid "Planning"
 msgstr ""
 
 msgid "Planning succesfully created."
@@ -137,7 +143,13 @@ msgstr ""
 msgid "Tracker semantic done"
 msgstr ""
 
+msgid "Who can prioritize?"
+msgstr ""
+
 msgid ""
 "You can't add values in this semantic because all possible values are "
 "defined as open in semantic status."
+msgstr ""
+
+msgid "{{ user_group_name }} has no permission for agiledashboard plannings"
 msgstr ""

@@ -37,6 +37,7 @@ use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\Planning\PlanningJavascriptDependenciesProvider;
+use Tuleap\AgileDashboard\ProjectAdminPermissionPerGroupPresenterBuilder;
 use Tuleap\AgileDashboard\RealTime\RealTimeArtifactMessageController;
 use Tuleap\AgileDashboard\RealTime\RealTimeArtifactMessageSender;
 use Tuleap\AgileDashboard\Semantic\Dao\SemanticDoneDao;
@@ -53,6 +54,8 @@ use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Project\Admin\PerGroup\PermissionPerGroupUGroupFormatter;
+use Tuleap\Project\Admin\Permission\PermissionPerGroupPaneCollector;
 use Tuleap\RealTime\NodeJSClient;
 use Tuleap\Request\CurrentPage;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
@@ -153,6 +156,7 @@ class AgileDashboardPlugin extends Plugin {
             $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
             $this->addHook(MessageFetcherAdditionalWarnings::NAME);
             $this->addHook(Event::IMPORT_XML_PROJECT_TRACKER_DONE);
+            $this->addHook(PermissionPerGroupPaneCollector::NAME);
         }
 
         if (defined('CARDWALL_BASE_URL')) {
@@ -1508,5 +1512,40 @@ class AgileDashboardPlugin extends Plugin {
         return $this->isAnAgiledashboardRequest()
             && $request->get('action') === DetailsPaneInfo::ACTION
             && $request->get('pane') === DetailsPaneInfo::IDENTIFIER;
+    }
+
+    /**
+     * @param PermissionPerGroupPaneCollector $event
+     */
+    public function permissionPerGroupPaneCollector(PermissionPerGroupPaneCollector $event)
+    {
+        if (! $event->getProject()->usesService(self::PLUGIN_SHORTNAME)) {
+            return;
+        }
+
+        $ugroup_manager    = new UGroupManager();
+        $presenter_builder = new ProjectAdminPermissionPerGroupPresenterBuilder(
+            new PlanningPermissionsManager(),
+            $ugroup_manager,
+            PlanningFactory::build(),
+            PermissionsManager::instance(),
+            new PermissionPerGroupUGroupFormatter($ugroup_manager)
+        );
+
+        $presenter = $presenter_builder->buildPresenter(
+            $event->getProject(),
+            HTTPRequest::instance()->getCurrentUser(),
+            $event->getSelectedUGroupId()
+        );
+
+        $template_factory      = TemplateRendererFactory::build();
+        $admin_permission_pane = $template_factory
+            ->getRenderer(AGILEDASHBOARD_TEMPLATE_DIR)
+            ->renderToString(
+                'project-admin-permission-per-group',
+                $presenter
+            );
+
+        $event->addAdditionalPane($admin_permission_pane);
     }
 }
