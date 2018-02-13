@@ -325,7 +325,9 @@ class DocmanPlugin extends Plugin
     function service_is_used($params) {
         if (isset($params['shortname']) && $params['shortname'] == $this->getServiceShortname()) {
             if (isset($params['is_used']) && $params['is_used']) {
-                $this->installNewDocman(array('ugroupsMapping' => false));
+                $this->installNewDocman(
+                    array('ugroupsMapping' => false, 'group_id' => $params['group_id'])
+                );
             }
         }
     }

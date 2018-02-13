@@ -144,7 +144,6 @@ class ServiceDao extends DataAccessObject
                     rank = $rank,
                     is_in_iframe = $is_in_iframe
                 WHERE service_id = $service_id";
-        var_dump($sql);
 
         return $this->update($sql) && $this->da->affectedRows() > 0;
     }
