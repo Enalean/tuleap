@@ -20,6 +20,8 @@
 
 namespace Tuleap\Timesheeting\Time;
 
+use PFUser;
+use UserHelper;
 use UserManager;
 
 class TimePresenterBuilder
@@ -49,9 +51,18 @@ class TimePresenterBuilder
 
         return array(
             'day'  => $time->getDay(),
-            'user' => $user->getRealName(),
+            'user' => $this->getUserPresenter($user),
             'time' => $this->date_formatter->formatMinutes($time->getMinutes()),
             'step' => $time->getStep()
+        );
+    }
+
+    private function getUserPresenter(PFUser $user)
+    {
+        return array(
+            'avatar_url' => $user->getAvatarUrl(),
+            'has_avatar' => $user->hasAvatar(),
+            'label'      => UserHelper::instance()->getDisplayName($user->getUserName(), $user->getRealName())
         );
     }
 }

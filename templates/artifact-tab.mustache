@@ -20,7 +20,14 @@
                     {{# times }}
                         <tr>
                             <td>{{ day }}</td>
-                            <td>{{ user }}</td>
+                            <td>
+                                {{# user }}
+                                    <div class="avatar timesheeting-time-user-avatar">
+                                        {{# has_avatar }}<img src="{{ avatar_url }}" />{{/ has_avatar }}
+                                    </div>
+                                    {{ label }}
+                                {{/ user }}
+                            </td>
                             <td>{{ step }}</td>
                             <td>{{ time }}</td>
                             <td>
