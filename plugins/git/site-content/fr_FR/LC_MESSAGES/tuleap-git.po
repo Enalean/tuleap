@@ -32,6 +32,9 @@ msgstr "%s a poussé sur %s"
 msgid "A push occured on %s"
 msgstr "Un push est survenu sur %s"
 
+msgid "Branch"
+msgstr "Branche"
+
 #, php-format
 msgid "Cannot add user \"%s\""
 msgstr "Impossible d'ajouter l'utilisateur \"%s\""
@@ -83,6 +86,9 @@ msgstr "Permissions de dépôt"
 
 msgid "Rewinders"
 msgstr "Droits de rewind"
+
+msgid "Tag"
+msgstr "Étiquette"
 
 #, php-format
 msgid "User \"%s\" successfully added to notifications"

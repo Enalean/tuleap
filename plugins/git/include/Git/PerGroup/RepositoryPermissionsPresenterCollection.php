@@ -20,7 +20,21 @@
 
 namespace Tuleap\Git\PerGroup;
 
-interface RepositoryPermissionsPresenter
+class RepositoryPermissionsPresenterCollection
 {
-    public function usesFineGrainedPermissions();
+    /** @var RepositoryPermissionsPresenter[] */
+    private $presenters = [];
+
+    /**
+     * @return RepositoryPermissionsPresenter[]
+     */
+    public function getPresenters()
+    {
+        return $this->presenters;
+    }
+
+    public function addPresenter(RepositoryPermissionsPresenter $presenter)
+    {
+        $this->presenters[] = $presenter;
+    }
 }

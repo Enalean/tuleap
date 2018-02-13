@@ -47,6 +47,8 @@
                     <thead>
                         <tr>
                             <th>{{# dgettext }} tuleap-git | Repository {{/ dgettext }}</th>
+                            <th>{{# dgettext }} tuleap-git | Branch {{/ dgettext }}</th>
+                            <th>{{# dgettext }} tuleap-git | Tag {{/ dgettext }}</th>
                             <th>{{# dgettext }} tuleap-git | Readers {{/ dgettext }}</th>
                             <th>{{# dgettext }} tuleap-git | Writers {{/ dgettext }}</th>
                             <th>{{# dgettext }} tuleap-git | Rewinders {{/ dgettext }}</th>
@@ -54,47 +56,23 @@
                     </thead>
                     <tbody>
                     {{# repository_presenters }}
-                        <tr>
-                            <td><a href="{{ repository_admin_url }}">{{ repository_name }}</a></td>
-                            <td>
-                                {{# readers }}
-                                <span class="
-                                    {{# is_project_admin }}tlp-badge-danger tlp-badge-outline{{/ is_project_admin }}
-                                    {{# is_static }}tlp-badge-primary tlp-badge-outline{{/ is_static }}
-                                    {{# is_custom }}tlp-badge-secondary{{/ is_custom }}
-                                ">{{ name }}</span>
-                                {{/ readers }}
-                            </td>
-                            <td>
-                                {{# writers }}
-                                <span class="
-                                    {{# is_project_admin }}tlp-badge-danger tlp-badge-outline{{/ is_project_admin }}
-                                    {{# is_static }}tlp-badge-primary tlp-badge-outline{{/ is_static }}
-                                    {{# is_custom }}tlp-badge-secondary{{/ is_custom }}
-                                ">{{ name }}</span>
-                                {{/ writers }}
-                            </td>
-                            <td>
-                                {{# rewinders }}
-                                <span class="
-                                    {{# is_project_admin }}tlp-badge-danger tlp-badge-outline{{/ is_project_admin }}
-                                    {{# is_static }}tlp-badge-primary tlp-badge-outline{{/ is_static }}
-                                    {{# is_custom }}tlp-badge-secondary{{/ is_custom }}
-                                ">{{ name }}</span>
-                                {{/ rewinders }}
-                            </td>
-                        </tr>
+                        {{# usesFineGrainedPermissions }}
+                            {{> fine-grained-repository }}
+                        {{/ usesFineGrainedPermissions }}
+                        {{^ usesFineGrainedPermissions }}
+                            {{> simple-repository }}
+                        {{/ usesFineGrainedPermissions }}
                     {{/ repository_presenters }}
                     {{# has_no_permission }}
                         <tr>
-                            <td colspan="4" class="tlp-table-cell-empty">
+                            <td colspan="6" class="tlp-table-cell-empty">
                                 {{# dgettext }} tuleap-git | {{ user_group_name }} has no permission for any repository in this project {{/dgettext}}
                             </td>
                         </tr>
                     {{/ has_no_permission }}
                     {{^ has_repositories }}
                         <tr>
-                            <td colspan="4" class="tlp-table-cell-empty">
+                            <td colspan="6" class="tlp-table-cell-empty">
                                 {{# dgettext }} tuleap-git | No repository found for project {{/ dgettext }}
                             </td>
                         </tr>

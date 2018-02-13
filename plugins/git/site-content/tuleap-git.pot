@@ -18,6 +18,9 @@ msgstr ""
 msgid "A push occured on %s"
 msgstr ""
 
+msgid "Branch"
+msgstr ""
+
 #, php-format
 msgid "Cannot add user \"%s\""
 msgstr ""
@@ -68,6 +71,9 @@ msgid "Repository permissions"
 msgstr ""
 
 msgid "Rewinders"
+msgstr ""
+
+msgid "Tag"
 msgstr ""
 
 #, php-format

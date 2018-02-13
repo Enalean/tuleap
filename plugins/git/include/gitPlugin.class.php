@@ -53,9 +53,13 @@ use Tuleap\Git\Notifications\NotificationsForProjectMemberCleaner;
 use Tuleap\Git\Notifications\UgroupsToNotifyDao;
 use Tuleap\Git\Notifications\UgroupToNotifyUpdater;
 use Tuleap\Git\Notifications\UsersToNotifyDao;
+use Tuleap\Git\PerGroup\AdminUrlBuilder;
+use Tuleap\Git\PerGroup\CollectionOfUgroupsFormatter;
+use Tuleap\Git\PerGroup\FineGrainedPermissionsPresenterBuilder;
 use Tuleap\Git\PerGroup\GitPaneSectionCollector;
 use Tuleap\Git\PerGroup\PermissionPerGroupGitRepositoriesSectionBuilder;
 use Tuleap\Git\PerGroup\PermissionPerGroupGitSectionBuilder;
+use Tuleap\Git\PerGroup\SimplePermissionsPresenterBuilder;
 use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\DefaultFineGrainedPermissionReplicator;
 use Tuleap\Git\Permissions\FineGrainedDao;
@@ -2443,17 +2447,30 @@ class GitPlugin extends Plugin
 
         $ugroup_manager          = $this->getUGroupManager();
         $formatter               = new PermissionPerGroupUGroupFormatter($ugroup_manager);
+        $collection_formatter    = new CollectionOfUgroupsFormatter($formatter);
         $service_section_builder = new PermissionPerGroupGitSectionBuilder(
             new PermissionPerGroupUGroupRetriever(PermissionsManager::instance()),
-            $formatter,
+            $collection_formatter,
             $ugroup_manager
         );
-        $repos_section_builder   = new PermissionPerGroupGitRepositoriesSectionBuilder(
-            $formatter,
-            $this->getFineGrainedRetriever(),
+        $admin_url_builder       = new AdminUrlBuilder();
+        $simple_builder          = new SimplePermissionsPresenterBuilder(
             $this->getGitPermissionsManager(),
+            $collection_formatter,
+            $admin_url_builder
+        );
+        $fine_grained_builder    = new FineGrainedPermissionsPresenterBuilder(
+            $this->getGitPermissionsManager(),
+            $collection_formatter,
+            $this->getFineGrainedFactory(),
+            $admin_url_builder
+        );
+        $repos_section_builder   = new PermissionPerGroupGitRepositoriesSectionBuilder(
+            $this->getFineGrainedRetriever(),
             $ugroup_manager,
-            $this->getRepositoryFactory()
+            $this->getRepositoryFactory(),
+            $simple_builder,
+            $fine_grained_builder
         );
         $sections_collector      = new GitPaneSectionCollector(
             $service_section_builder,
