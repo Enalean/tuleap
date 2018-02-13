@@ -1,23 +1,24 @@
 <?php
-/*
+/**
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2006
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 require_once('Docman_PermissionsManagerDao.class.php');
@@ -30,6 +31,7 @@ require_once 'Docman_ItemFactory.class.php';
 class Docman_PermissionsManager {
 
     const PLUGIN_OPTION_DELETE = 'only_siteadmin_can_delete';
+    const PLUGIN_DOCMAN_ADMIN  = 'PLUGIN_DOCMAN_ADMIN';
 
     protected $groupId;
     protected $cache_access = array();
@@ -306,12 +308,12 @@ class Docman_PermissionsManager {
         require_once('www/project/admin/permissions.php');
         $has_permission = false;
 
-        $permission_type = 'PLUGIN_DOCMAN_ADMIN';
+        $permission_type = self::PLUGIN_DOCMAN_ADMIN;
         $object_id       = $this->groupId;
 
         // permissions set for this object.
         $res = permission_db_authorized_ugroups($permission_type, (int)$object_id);
-        if (db_numrows($res) < 1 && $permission_type == 'PLUGIN_DOCMAN_ADMIN') {
+        if (db_numrows($res) < 1 && $permission_type == self::PLUGIN_DOCMAN_ADMIN) {
             // No ugroup defined => no permissions set => get default permissions only for admin permission
             $res=permission_db_get_defaults($permission_type);
         }
@@ -405,7 +407,7 @@ class Docman_PermissionsManager {
     }
 
     function cloneDocmanPermissions($srcGroupId, $dstGroupId) {
-        $perms = array('PLUGIN_DOCMAN_ADMIN');
+        $perms = array(self::PLUGIN_DOCMAN_ADMIN);
         $pm = $this->_getPermissionManagerInstance();
         $pm->clonePermissions($srcGroupId, $dstGroupId, $perms, $dstGroupId);
     }
@@ -421,7 +423,7 @@ class Docman_PermissionsManager {
     function setDefaultDocmanPermissions($groupId) {
         $dao = $this->getDao();
 
-        $dao->setDefaultPermissions($groupId, 'PLUGIN_DOCMAN_ADMIN');
+        $dao->setDefaultPermissions($groupId, self::PLUGIN_DOCMAN_ADMIN);
     }
 
     /**
