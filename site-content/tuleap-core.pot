@@ -388,6 +388,9 @@ msgstr ""
 msgid "Instantiated for new projects"
 msgstr ""
 
+msgid "Internal server error"
+msgstr ""
+
 #, php-format
 msgid "Invalid group name: %s. Please use only alphanumerical characters."
 msgstr ""
@@ -492,6 +495,9 @@ msgid "No project trove categories"
 msgstr ""
 
 msgid "Not categorized"
+msgstr ""
+
+msgid "Ooops an error occured"
 msgstr ""
 
 msgid "Open \"Help\" dropdown"
@@ -928,6 +934,11 @@ msgid "Users groups"
 msgstr ""
 
 msgid "Users groups bound to this one"
+msgstr ""
+
+msgid ""
+"We are sorry you caught an error, something meaningful was logged for site "
+"administrators. You may want got get in touch with them."
 msgstr ""
 
 msgid "We cannot find any edition information for the requested widget."

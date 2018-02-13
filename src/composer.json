@@ -12,13 +12,14 @@
   "require": {
     "paragonie/random_compat": "^2.0",
     "mustache/mustache": "dev-feature/strict-variables",
-    "ezyang/htmlpurifier": "^4.9.3",
+    "ezyang/htmlpurifier": "4.9.*",
     "firebase/php-jwt": "^5.0.0",
     "paragonie/sodium_compat": "^1.6",
     "Luracast/Restler": "3.0.0-RC6",
     "php-amqplib/php-amqplib": "^2.7",
     "delight-im/cookie": "^3.1",
-    "paragonie/easydb": "^1.3"
+    "paragonie/easydb": "^1.3",
+    "nikic/fast-route": "^1.2"
   },
   "config": {
     "platform": {
