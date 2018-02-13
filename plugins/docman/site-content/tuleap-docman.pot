@@ -1,11 +1,26 @@
+msgid "Docman Administrators"
+msgstr ""
+
 msgid "Document Manager"
 msgstr ""
 
+msgid "Global permissions"
+msgstr ""
+
+msgid "Granted groups"
+msgstr ""
+
 msgid "Notified people"
+msgstr ""
+
+msgid "Permission"
 msgstr ""
 
 msgid "User, group"
 msgstr ""
 
 msgid "Validate"
+msgstr ""
+
+msgid "{{ user_group_name }} has no global permission"
 msgstr ""

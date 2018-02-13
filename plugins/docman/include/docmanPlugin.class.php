@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
- * Copyright (c) Enalean, 2015 - 2017.
+ * Copyright (c) Enalean, 2015 - 2018.
  *
  * Originally written by Manuel Vacelet, 2006
  *
@@ -35,6 +35,7 @@ use Tuleap\Docman\Notifications\UgroupsUpdater;
 use Tuleap\Docman\Notifications\UsersRetriever;
 use Tuleap\Docman\Notifications\UsersToNotifyDao;
 use Tuleap\Docman\Notifications\UsersUpdater;
+use Tuleap\Docman\PerGroup\PermissionPerGroupDocmanServicePaneBuilder;
 use Tuleap\Layout\PaginationPresenter;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
@@ -42,6 +43,9 @@ use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
 use Tuleap\project\Admin\Navigation\NavigationDropdownQuickLinksCollector;
 use Tuleap\project\Admin\Navigation\NavigationPermissionsDropdownPresenterBuilder;
 use Tuleap\Project\Admin\Navigation\NavigationPresenter;
+use Tuleap\Project\Admin\PerGroup\PermissionPerGroupUGroupFormatter;
+use Tuleap\Project\Admin\Permission\PermissionPerGroupPaneCollector;
+use Tuleap\Project\Admin\Permission\PermissionPerGroupUGroupRetriever;
 use Tuleap\Widget\Event\GetPublicAreas;
 
 require_once 'autoload.php';
@@ -126,6 +130,7 @@ class DocmanPlugin extends Plugin
         $this->addHook(Event::SERVICE_CLASSNAMES);
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(NavigationDropdownQuickLinksCollector::NAME);
+        $this->addHook(PermissionPerGroupPaneCollector::NAME);
     }
 
     public function getHooksAndCallbacks() {
@@ -1174,5 +1179,30 @@ class DocmanPlugin extends Plugin
                 )
             )
         );
+    }
+
+    public function permissionPerGroupPaneCollector(PermissionPerGroupPaneCollector $event)
+    {
+        if (! $event->getProject()->usesService(self::SERVICE_SHORTNAME)) {
+            return;
+        }
+
+        $ugroup_manager = new UGroupManager();
+
+        $service_pane_builder = new PermissionPerGroupDocmanServicePaneBuilder(
+            new PermissionPerGroupUGroupRetriever(PermissionsManager::instance()),
+            new PermissionPerGroupUGroupFormatter($ugroup_manager),
+            $ugroup_manager
+        );
+
+        $template_factory      = TemplateRendererFactory::build();
+        $admin_permission_pane = $template_factory
+            ->getRenderer(dirname(PLUGIN_DOCMAN_BASE_DIR) . '/templates')
+            ->renderToString(
+                'project-admin-permission-per-group',
+                $service_pane_builder->buildPresenter($event)
+            );
+
+        $event->addPane($admin_permission_pane);
     }
 }
