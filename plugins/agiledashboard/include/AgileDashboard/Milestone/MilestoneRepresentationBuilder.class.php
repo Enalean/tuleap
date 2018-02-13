@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever;
 use Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 
@@ -37,16 +38,23 @@ class AgileDashboard_Milestone_MilestoneRepresentationBuilder {
      */
     private $scrum_mono_milestone_checker;
 
+    /**
+     * @var ParentTrackerRetriever
+     */
+    private $parent_tracker_retriever;
+
     public function __construct(
         Planning_MilestoneFactory $milestone_factory,
         AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory,
         EventManager $event_manager,
-        ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker
+        ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker,
+        ParentTrackerRetriever $parent_tracker_retriever
     ) {
         $this->milestone_factory            = $milestone_factory;
         $this->backlog_factory              = $backlog_factory;
         $this->event_manager                = $event_manager;
         $this->scrum_mono_milestone_checker = $scrum_mono_milestone_checker;
+        $this->parent_tracker_retriever     = $parent_tracker_retriever;
     }
 
     public function getMilestoneRepresentation(Planning_Milestone $milestone, PFUser $user, $representation_type) {
@@ -59,11 +67,14 @@ class AgileDashboard_Milestone_MilestoneRepresentationBuilder {
             $milestone->getProject()->getID()
         );
 
+        $backlog_trackers = $this->getBacklogTrackers($milestone);
+
         $milestone_representation = new MilestoneRepresentation();
         $milestone_representation->build(
             $milestone,
             $status_count,
-            $this->getBacklogTrackers($milestone),
+            $backlog_trackers,
+            $this->parent_tracker_retriever->getCreatableParentTrackers($milestone, $user, $backlog_trackers),
             $this->milestone_factory->userCanChangePrioritiesInMilestone($milestone, $user),
             $representation_type,
             $is_scrum_mono_milestone_enabled

@@ -22,6 +22,7 @@ namespace Tuleap\AgileDashboard\REST\v1;
 
 use BacklogItemReference;
 use Tracker_FormElement_Field_ArtifactLink;
+use Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
@@ -179,11 +180,14 @@ class MilestoneResource extends AuthenticatedResource {
             $this->event_manager
         );
 
+        $parent_tracker_retriever = new ParentTrackerRetriever($planning_factory);
+
         $this->milestone_representation_builder = new AgileDashboard_Milestone_MilestoneRepresentationBuilder(
             $this->milestone_factory,
             $this->backlog_factory,
             $this->event_manager,
-            $scrum_for_mono_milestone_checker
+            $scrum_for_mono_milestone_checker,
+            $parent_tracker_retriever
         );
 
         $this->milestone_parent_linker = new MilestoneParentLinker(

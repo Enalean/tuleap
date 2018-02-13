@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace Tuleap\AgileDashboard\REST\v1;
 
 use \Tracker_ArtifactFactory;
@@ -28,6 +29,7 @@ use \Planning_MilestoneFactory;
 use \PFUser;
 use \Project;
 use \Luracast\Restler\RestException;
+use Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
@@ -114,11 +116,14 @@ class ProjectMilestonesResource {
             $mono_milestone_items_finder
         );
 
+        $parent_tracker_retriever = new ParentTrackerRetriever($this->planning_factory);
+
         $this->milestone_representation_builder = new AgileDashboard_Milestone_MilestoneRepresentationBuilder(
             $this->milestone_factory,
             $backlog_factory,
             EventManager::instance(),
-            $scrum_mono_milestone_checker
+            $scrum_mono_milestone_checker,
+            $parent_tracker_retriever
         );
 
         $this->query_to_criterion_converter = new QueryToCriterionConverter();

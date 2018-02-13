@@ -60,7 +60,8 @@ function BacklogController(
         moveToBottom                 : moveToBottom,
         moveToTop                    : moveToTop,
         reorderBacklogItems          : reorderBacklogItems,
-        showAddBacklogItemModal      : showAddBacklogItemModal
+        showAddBacklogItemModal      : showAddBacklogItemModal,
+        soloButtonCanBeDisplayed     : soloButtonCanBeDisplayed
     });
 
     init();
@@ -444,5 +445,14 @@ function BacklogController(
     function ancestorCannotBeDragged(handle_element) {
         return (angular.element(handle_element)
             .closest('[data-nodrag="true"]').length > 0);
+    }
+
+    function soloButtonCanBeDisplayed() {
+        return self.canUserMoveCards()
+            && 'content' in self.details.accepted_types
+            && self.details.accepted_types.content.length === 1
+            && ('parent_trackers' in self.details.accepted_types === false
+                || self.details.accepted_types.parent_trackers.length === 0
+            )
     }
 }
