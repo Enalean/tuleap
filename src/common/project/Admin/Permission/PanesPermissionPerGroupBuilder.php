@@ -67,7 +67,14 @@ class PanesPermissionPerGroupBuilder
 
     private function addCorePanes(Project $project, array &$panes, $selected_ugroup)
     {
-        $panes[] = $this->pane_collector->collectPane($project, $selected_ugroup);
-        $panes[] = $this->phpwiki_pane_builder->getPaneContent($project, $selected_ugroup);
+        $frs_pane = $this->pane_collector->collectPane($project, $selected_ugroup);
+        if ($frs_pane) {
+            $panes[] = $frs_pane;
+        }
+
+        $phpwiki_pane =  $this->phpwiki_pane_builder->getPaneContent($project, $selected_ugroup);
+        if ($phpwiki_pane) {
+            $panes[] = $phpwiki_pane;
+        }
     }
 }
