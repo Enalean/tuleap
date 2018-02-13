@@ -1,0 +1,1 @@
+return 301 https://%sys_default_domain%$request_uri;
