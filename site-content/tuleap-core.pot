@@ -454,6 +454,9 @@ msgstr ""
 msgid "No matching labels"
 msgstr ""
 
+msgid "No packages found for project"
+msgstr ""
+
 msgid "No project trove categories"
 msgstr ""
 
@@ -491,6 +494,9 @@ msgid "Page permissions"
 msgstr ""
 
 msgid "Page permissions are not listed."
+msgstr ""
+
+msgid "Package"
 msgstr ""
 
 msgid "Parent project"
@@ -603,6 +609,9 @@ msgid "RSS"
 msgstr ""
 
 msgid "Rank"
+msgstr ""
+
+msgid "Readers"
 msgstr ""
 
 msgid "Recently"

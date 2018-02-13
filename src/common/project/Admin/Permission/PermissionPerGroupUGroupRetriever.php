@@ -34,9 +34,9 @@ class PermissionPerGroupUGroupRetriever
         $this->permissions_manager = $permissions_manager;
     }
 
-    public function getAdminUGroupIdsForProjectContainingUGroupId(\Project $project, $permission_type, $permission_id)
+    public function getAdminUGroupIdsForProjectContainingUGroupId(\Project $project, $object_id, $permission_type, $permission_id)
     {
-        $permissions = $this->permissions_manager->getAuthorizedUGroupIdsForProject($project, $project->getID(), $permission_type);
+        $permissions = $this->permissions_manager->getAuthorizedUGroupIdsForProject($project, $object_id, $permission_type);
 
         if (in_array($permission_id, $permissions)) {
             return $permissions;
@@ -45,8 +45,8 @@ class PermissionPerGroupUGroupRetriever
         return array();
     }
 
-    public function getAllUGroupForProject(\Project $project, $permission_type)
+    public function getAllUGroupForObject(\Project $project, $object_id, $permission_type)
     {
-        return $this->permissions_manager->getAuthorizedUGroupIdsForProject($project, $project->getID(), $permission_type);
+        return $this->permissions_manager->getAuthorizedUGroupIdsForProject($project, $object_id, $permission_type);
     }
 }

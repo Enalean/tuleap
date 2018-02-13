@@ -3,7 +3,7 @@
         <div class="tlp-pane-header">
             <h1 class="tlp-pane-title"> {{# gettext }} Files {{/ gettext }}</h1>
         </div>
-
+        {{# service_presenter }}
             <section class="tlp-pane-section">
                 <h2 class="tlp-pane-subtitle">{{# gettext }} Global permissions {{/ gettext }}</h2>
                 <table class="tlp-table">
@@ -38,6 +38,41 @@
                     </tbody>
                 </table>
             </section>
-
+        {{/ service_presenter }}
+        {{# package_presenter }}
+            <section class="tlp-pane-section">
+                <table class="tlp-table">
+                    <thead>
+                    <tr>
+                        <th> {{# gettext }} Package {{/ gettext }}</th>
+                        <th> {{# gettext }} Readers {{/ gettext }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{# permissions }}
+                        <tr>
+                            <td><a href="{{ package_url }}">{{ package_name }}</a></td>
+                            <td>
+                                {{# permissions }}
+                                    <span class="
+                                        {{# is_project_admin }}tlp-badge-danger tlp-badge-outline{{/ is_project_admin }}
+                                        {{# is_static }}tlp-badge-primary tlp-badge-outline{{/ is_static }}
+                                        {{# is_custom }}tlp-badge-secondary{{/ is_custom }}
+                                    ">{{ name }}</span>
+                                {{/ permissions }}
+                            </td>
+                        </tr>
+                    {{/ permissions }}
+                    {{^ has_permissions }}
+                        <tr>
+                            <td colspan="2" class="tlp-table-cell-empty">
+                                {{# gettext }} No packages found for project {{/ gettext }}
+                            </td>
+                        </tr>
+                    {{/ has_permissions }}
+                    </tbody>
+                </table>
+            </section>
+        {{/ package_presenter }}
     </div>
 </section>

@@ -31,7 +31,7 @@ use Tuleap\Project\Admin\PerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Project\Admin\Permission\PermissionPerGroupCollection;
 use Tuleap\Project\Admin\Permission\PermissionPerGroupPaneCollector;
 
-class PermissionPerGroupPaneBuilder
+class PermissionPerGroupFRSServicePresenterBuilder
 {
     /**
      * @var FRSPermissionFactory
@@ -56,12 +56,8 @@ class PermissionPerGroupPaneBuilder
         $this->ugroup_manager         = $ugroup_manager;
     }
 
-    public function getPaneContent(Project $project, $selected_ugroup)
+    public function getPanePresenter(Project $project, $selected_ugroup)
     {
-        if (! $project->usesFile()) {
-            return;
-        }
-
         $permissions = new PermissionPerGroupCollection();
         $this->extractPermissionByType(
             $project,
@@ -80,16 +76,10 @@ class PermissionPerGroupPaneBuilder
 
         $ugroup = $this->ugroup_manager->getUGroup($project, $selected_ugroup);
 
-        $presenter = new PermissionPerGroupPanePresenter(
+        return new PermissionPerGroupPanePresenter(
             $permissions->getPermissions(),
             $ugroup
         );
-
-        $templates_dir = ForgeConfig::get('tuleap_dir') . '/src/templates/frs/';
-
-        return TemplateRendererFactory::build()
-            ->getRenderer($templates_dir)
-            ->renderToString('project-admin-permission-per-group', $presenter);
     }
 
     /**
