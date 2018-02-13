@@ -24,6 +24,9 @@ use Tuleap\FRS\PerGroup\PaneCollector;
 use Tuleap\FRS\PerGroup\PermissionPerGroupFRSPackagesPresenterBuilder;
 use Tuleap\FRS\PerGroup\PermissionPerGroupFRSServicePresenterBuilder;
 use Tuleap\FRS\PerGroup\PermissionPerTypeExtractor;
+use Tuleap\News\Admin\AdminNewsDao;
+use Tuleap\News\Admin\PerGroup\NewsPermissionPerGroupPaneBuilder;
+use Tuleap\News\Admin\PerGroup\NewsPermissionsManager;
 use Tuleap\PHPWiki\PerGroup\PHPWikiPermissionPerGroupPaneBuilder;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Project\Admin\PerGroup\PermissionPerGroupUGroupFormatter;
@@ -79,6 +82,14 @@ $additional_panes_builder = new PanesPermissionPerGroupBuilder(
         $formatter,
         $ugroup_manager,
         TemplateRendererFactory::build()
+    ),
+    new NewsPermissionPerGroupPaneBuilder(
+        new NewsPermissionsManager(
+            PermissionsManager::instance(),
+            new AdminNewsDAO()
+        ),
+        $formatter,
+        $ugroup_manager
     )
 );
 
