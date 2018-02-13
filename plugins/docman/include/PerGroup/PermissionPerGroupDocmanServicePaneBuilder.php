@@ -79,12 +79,14 @@ class PermissionPerGroupDocmanServicePaneBuilder
         if ($event->getSelectedUGroupId()) {
             $all_permissions = $this->permission_retriever->getAdminUGroupIdsForProjectContainingUGroupId(
                 $event->getProject(),
+                $event->getProject()->getID(),
                 Docman_PermissionsManager::PLUGIN_DOCMAN_ADMIN,
                 $event->getSelectedUGroupId()
             );
         } else {
-            $all_permissions = $this->permission_retriever->getAllUGroupForProject(
+            $all_permissions = $this->permission_retriever->getAllUGroupForObject(
                 $event->getProject(),
+                $event->getProject()->getID(),
                 Docman_PermissionsManager::PLUGIN_DOCMAN_ADMIN
             );
         }

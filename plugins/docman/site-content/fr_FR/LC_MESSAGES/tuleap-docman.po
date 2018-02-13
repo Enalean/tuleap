@@ -24,6 +24,12 @@ msgstr "Permissions globales"
 msgid "Granted groups"
 msgstr "Groupes autorisés"
 
+msgid "Items permissions"
+msgstr "Permissions des éléments"
+
+msgid "Items permissions are not listed."
+msgstr "Les permissions des éléments ne sont pas listées"
+
 msgid "Notified people"
 msgstr "Personnes notifiées"
 
