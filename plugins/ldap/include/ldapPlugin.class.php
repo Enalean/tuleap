@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2008. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2008
@@ -639,12 +639,7 @@ class LdapPlugin extends Plugin {
 
     function before_register($params) {
         if ($this->isLdapAuthType() && ! $this->hasLDAPWrite()) {
-            if (isset($GLOBALS['sys_https_host']) && ($GLOBALS['sys_https_host'] != "")) {
-                $host = 'https://'.$GLOBALS['sys_https_host'];
-            } else {
-                $host = 'http://'.$GLOBALS['sys_default_domain'];
-            }
-            util_return_to($host.'/account/login.php');
+            util_return_to('/account/login.php');
         }
     }
 

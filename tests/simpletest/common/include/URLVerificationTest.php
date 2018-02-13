@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
- * Copyright (c) Enalean, 2015-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -816,16 +816,22 @@ class URLVerification_PrivateRestrictedTest extends TuleapTestCase {
     }
 
     public function itChecksUriInternal() {
-        $this->assertFalse($this->url_verification->isInternal('http://evil.tld/'));
-        $this->assertFalse($this->url_verification->isInternal('https://evil.tld/'));
+        $this->assertFalse($this->url_verification->isInternal('http://evil.example.com/'));
+        $this->assertFalse($this->url_verification->isInternal('https://evil.example.com/'));
         $this->assertFalse($this->url_verification->isInternal('javascript:alert(1)'));
         $this->assertTrue($this->url_verification->isInternal('/path/to/feature'));
-        $this->assertTrue(
+        $this->assertFalse(
                 $this->url_verification->isInternal('http://' . ForgeConfig::get('sys_default_domain') . '/smthing')
             );
-        $this->assertTrue(
+        $this->assertFalse(
                 $this->url_verification->isInternal('https://' . ForgeConfig::get('sys_https_host') . '/smthing')
             );
+
+        $this->assertFalse($this->url_verification->isInternal('//example.com'));
+        $this->assertFalse($this->url_verification->isInternal('/\example.com'));
+        $this->assertFalse($this->url_verification->isInternal(
+            'https://' . ForgeConfig::get('sys_https_host') . '@evil.example.com')
+        );
 
     }
 }
