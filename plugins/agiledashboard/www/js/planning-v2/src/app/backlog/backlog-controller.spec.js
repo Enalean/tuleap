@@ -374,30 +374,27 @@ describe("BacklogController - ", function() {
         });
     });
 
-    describe("filterBacklog() -", function() {
-        var fetch_all_backlog_items_request;
-
-        beforeEach(function() {
-            fetch_all_backlog_items_request = $q.defer();
-            spyOn(BacklogController, "fetchAllBacklogItems").and.returnValue(fetch_all_backlog_items_request.promise);
+    describe("filterBacklog() -", () => {
+        beforeEach(() => {
+            spyOn(BacklogController, "fetchAllBacklogItems");
         });
 
-        it("Given that all items had not been loaded, when I filter the backlog, then all the backlog items will be loaded and filtered", function() {
+        it("Given that all items had not been loaded, when I filter the backlog, then all the backlog items will be loaded and filtered", () => {
+            BacklogController.fetchAllBacklogItems.and.returnValue($q.when(50));
             BacklogController.filter.terms = 'flamboyantly';
 
             BacklogController.filterBacklog();
-            fetch_all_backlog_items_request.resolve(50);
             $scope.$apply();
 
             expect(BacklogController.fetchAllBacklogItems).toHaveBeenCalledWith(50, 50);
             expect(BacklogService.filterItems).toHaveBeenCalledWith('flamboyantly');
         });
 
-        it("Given that all items had already been loaded, when I filter the backlog, then all the backlog items will be filtered", function() {
+        it("Given that all items had already been loaded, when I filter the backlog, then all the backlog items will be filtered", () => {
+            BacklogController.fetchAllBacklogItems.and.returnValue($q.reject(99));
             BacklogController.filter.terms = 'Jeffersonianism';
 
             BacklogController.filterBacklog();
-            fetch_all_backlog_items_request.reject(99);
             $scope.$apply();
 
             expect(BacklogController.fetchAllBacklogItems).toHaveBeenCalledWith(50, 50);
