@@ -154,17 +154,14 @@ class URLVerification {
 
     /**
      * Check if an URI is internal to the application or not. We reject all URLs
-     * except http://<tuleap_domain>/smthing, https://<tuleap_domain>/smthing and
-     * /path/to/feature
+     * except /path/to/feature
      *
      * @return boolean
      */
-    public function isInternal($uri) {
+    public function isInternal($uri)
+    {
         $url_decoded = urldecode($uri);
-        $pattern_only_internal = '/^(http:\/\/'.ForgeConfig::get('sys_default_domain').'|'
-                                  . 'https:\/\/'.ForgeConfig::get('sys_https_host').'|'
-                                  . '\/)/';
-        return preg_match($pattern_only_internal, $url_decoded) === 1;
+        return preg_match('/^\/[[:alnum:]]+/', $url_decoded) === 1;
     }
 
     /**
