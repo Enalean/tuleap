@@ -177,7 +177,7 @@ plugin_docman	admin_obsolete_descr	Afficher et modifier les documents obsolètes
 plugin_docman	admin_obsolete_help	Ceci est la liste de tous les documents qui sont obsolètes. Si vous cliquez sur le titre d'un document, vous serez redirigé vers les propriétés du document où vous pourrez le rendre à nouveau disponible.
 plugin_docman	admin_permissions_title	Gérer les permissions
 plugin_docman	admin_permissions_descr	Définir qui peut administrer le gestionnaire de documents.
-plugin_docman	admin_permissions_instructions	Sélectionnez les groupes d'utilisateurs qui peuvent administrer le gestionnaire de documents :
+plugin_docman	admin_permissions_instructions	Sélectionnez les groupes d'utilisateurs qui peuvent administrer le gestionnaire de documents, en complément des administrateurs de projet :
 plugin_docman	admin_report_title	Gérer les rapports de recherche
 plugin_docman	admin_report_descr	Modifier la portée des rapports.
 plugin_docman	admin_lock_infos_title	Documents Réservés
