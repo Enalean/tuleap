@@ -22,18 +22,6 @@
 class Codendi_Request {
     /**
      * @var array
-     * @access protected
-     */
-    protected $_validated_input;
-
-    /**
-     * @var array
-     * @access protected
-     */
-    protected $_last_access_to_input;
-
-    /**
-     * @var array
      */
     public $params;
 
@@ -55,35 +43,11 @@ class Codendi_Request {
      */
     public function __construct($params, ProjectManager $project_manager = null) {
         $this->params                = $params;
-        $this->_validated_input      = array();
-        $this->_last_access_to_input = array();
         $this->project_manager       = $project_manager ? $project_manager : ProjectManager::instance();
-    }
-
-    public function registerShutdownFunction() {
-        if (ForgeConfig::get('DEBUG_MODE') && (strpos($_SERVER['REQUEST_URI'], '/soap/') !== 0)) {
-            $php_code = '$request =& '. get_class($this) .'::instance(); $request->checkThatAllVariablesAreValidated();';
-            register_shutdown_function(create_function('', $php_code));
-        }
     }
 
     public function isAjax() {
         return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtoupper($_SERVER['HTTP_X_REQUESTED_WITH']) == 'XMLHTTPREQUEST';
-    }
-
-    /**
-     * Returns from where the variable is accessed.
-     *
-     * @return string
-     */
-    protected function _getCallTrace() {
-        $backtrace = debug_backtrace();
-        $files = explode('/', $backtrace[1]['file']);
-        return $files[count($files) - 4] . '/'.
-            $files[count($files) - 3] . '/'.
-            $files[count($files) - 2] . '/'.
-            $files[count($files) - 1] . ' Line: '.
-            $backtrace[1]['line'];
     }
 
     /**
@@ -94,7 +58,6 @@ class Codendi_Request {
      * otherwise return false;
      */
     public function get($variable) {
-        $this->_last_access_to_input[$variable] = $this->_getCallTrace();
         return $this->_get($variable, $this->params);
     }
 
@@ -121,7 +84,6 @@ class Codendi_Request {
      * otherwise return false;
      */
     public function getInArray($idx, $variable) {
-        $this->_last_access_to_input[$idx][$variable] = $this->_getCallTrace();
         if(is_array($this->params[$idx])) {
             return $this->_get($variable, $this->params[$idx]);
         } else {
@@ -182,7 +144,6 @@ class Codendi_Request {
      * @return boolean
      */
     public function valid(&$validator) {
-        $this->_validated_input[$validator->getKey()] = true;
         return $validator->validate($this->get($validator->getKey()));
     }
 
@@ -193,7 +154,6 @@ class Codendi_Request {
      * @return boolean
      */
     public function validArray(&$validator) {
-        $this->_validated_input[$validator->getKey()] = true;
         $isValid = true;
         $array = $this->get($validator->getKey());
         if (is_array($array)) {
@@ -220,7 +180,6 @@ class Codendi_Request {
      * @return boolean
      */
     public function validInArray($index, &$validator) {
-        $this->_validated_input[$index][$validator->getKey()] = true;
         return $validator->validate($this->getInArray($index, $validator->getKey()));
     }
 
@@ -232,7 +191,6 @@ class Codendi_Request {
      * @return boolean
      */
     public function validKey($key, &$rule) {
-        $this->_validated_input[$key] = true;
         return $rule->isValid($this->get($key));
     }
 
@@ -251,25 +209,6 @@ class Codendi_Request {
             trigger_error('Validator '. $validator .' is not found', E_USER_ERROR);
         }
         return $is_valid ? $this->get($variable) : $default_value;
-    }
-
-    /**
-     * Check that all submitted value has been validated
-     */
-    public function checkThatAllVariablesAreValidated() {
-        foreach($this->params as $key => $v) {
-            if(is_array($v)) {
-                foreach($v as $subK => $subV) {
-                    if(!isset($this->_validated_input[$key][$subK])) {
-                        trigger_error('Variable: '.$key.'['.$subK.'] not validated. Last access @ '. (isset($this->_last_access_to_input[$key][$subK]) ? $this->_last_access_to_input[$key][$subK] : 'unknown'), E_USER_NOTICE);
-                    }
-                }
-            } else {
-                if(!isset($this->_validated_input[$key])) {
-                    trigger_error("Variable: $key not validated. Last access @ ". (isset($this->_last_access_to_input[$key]) ? $this->_last_access_to_input[$key] : 'unknown'), E_USER_NOTICE);
-                }
-            }
-        }
     }
 
     /**
@@ -335,4 +274,3 @@ class Codendi_Request {
         return $_SERVER['REQUEST_TIME'];
     }
 }
-?>
