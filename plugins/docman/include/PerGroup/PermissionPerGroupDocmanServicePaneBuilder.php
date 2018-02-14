@@ -64,7 +64,7 @@ class PermissionPerGroupDocmanServicePaneBuilder
         $docman_admin = [];
         if (count($formatted_permissions->getPermissions()) > 0) {
             $docman_admin = [
-                "name" => dgettext('tuleap-docman', 'Docman Administrators'),
+                "name" => dgettext('tuleap-docman', 'Document manager administrators'),
                 "groups" => $formatted_permissions->getPermissions()
             ];
         }
