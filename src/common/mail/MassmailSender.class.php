@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -45,7 +45,7 @@ class MassmailSender {
         }
 
         $mail = new Codendi_Mail();
-        $mail->setFrom($user->getEmail());
+        $mail->setFrom(ForgeConfig::get('sys_noreply'));
         $mail->setTo($user->getEmail());
         $mail->setBccUser($receivers);
         $mail->setSubject("[".$GLOBALS['sys_name']."] [".$project_name. "] ". $subject);
