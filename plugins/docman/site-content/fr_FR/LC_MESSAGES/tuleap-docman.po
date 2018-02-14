@@ -12,11 +12,11 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 1.5.4\n"
 
-msgid "Docman Administrators"
-msgstr "Administrateurs du gestionnaire de documents"
-
-msgid "Document Manager"
+msgid "Document manager"
 msgstr "Gestionnaire de documents"
+
+msgid "Document manager administrators"
+msgstr "Administrateurs du gestionnaire de documents"
 
 msgid "Global permissions"
 msgstr "Permissions globales"

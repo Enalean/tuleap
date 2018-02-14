@@ -1172,7 +1172,7 @@ class DocmanPlugin extends Plugin
 
         $quick_links_collector->addQuickLink(
             new NavigationDropdownItemPresenter(
-                dgettext('tuleap-docman', 'Document Manager'),
+                dgettext('tuleap-docman', 'Document manager'),
                 $this->getPluginPath() . '/?' . http_build_query(
                     array(
                         'group_id' => $project->getID(),

@@ -1,7 +1,7 @@
-msgid "Docman Administrators"
+msgid "Document manager"
 msgstr ""
 
-msgid "Document Manager"
+msgid "Document manager administrators"
 msgstr ""
 
 msgid "Global permissions"
