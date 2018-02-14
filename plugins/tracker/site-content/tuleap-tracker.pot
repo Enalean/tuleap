@@ -100,6 +100,9 @@ msgstr[1] ""
 msgid "Hierarchy"
 msgstr ""
 
+msgid "Items permissions"
+msgstr ""
+
 msgid "No element selected."
 msgstr ""
 
@@ -349,6 +352,10 @@ msgid "This template does not use trackers"
 msgstr ""
 
 msgid "Tracker"
+msgstr ""
+
+msgid ""
+"Tracker configuration permission and artifacts permissions are not listed."
 msgstr ""
 
 msgid "Tracker global admininistration"

@@ -122,6 +122,9 @@ msgstr[1] "Les groupes '%s' n'ont pas pu être ajoutés"
 msgid "Hierarchy"
 msgstr "Hiérarchie"
 
+msgid "Items permissions"
+msgstr "Permissions des éléments"
+
 msgid "No element selected."
 msgstr "Aucun élément sélectionné."
 
@@ -421,6 +424,10 @@ msgstr "Ce patron n'utilise pas les trackers"
 
 msgid "Tracker"
 msgstr "Tracker"
+
+msgid ""
+"Tracker configuration permission and artifacts permissions are not listed."
+msgstr "Les permissions des configurations de tracker et celles des artéfacts ne sont pas listées"
 
 msgid "Tracker global admininistration"
 msgstr "Administration globale des outils de suivi"
