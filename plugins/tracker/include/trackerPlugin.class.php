@@ -18,6 +18,8 @@
  */
 
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Project\Admin\PerGroup\PermissionPerGroupUGroupFormatter;
+use Tuleap\Project\Admin\Permission\PermissionPerGroupPaneCollector;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
@@ -54,6 +56,7 @@ use Tuleap\Tracker\Notifications\NotificationsForProjectMemberCleaner;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyDao;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyUpdater;
 use Tuleap\Tracker\Notifications\UsersToNotifyDao;
+use Tuleap\Tracker\ProjectAdminPermissionPerGroupPresenterBuilder;
 use Tuleap\Tracker\ProjectDeletion;
 use Tuleap\Tracker\ProjectDeletionEvent;
 use Tuleap\Tracker\Service\ServiceActivator;
@@ -156,6 +159,7 @@ class trackerPlugin extends Plugin {
         $this->addHook(ProjectRegistrationActivateService::NAME);
 
         $this->addHook(WorkerEvent::NAME);
+        $this->addHook(PermissionPerGroupPaneCollector::NAME);
     }
 
     public function getHooksAndCallbacks() {
@@ -1526,5 +1530,37 @@ class trackerPlugin extends Plugin {
     {
         $async_notifier = new \Tuleap\Tracker\Artifact\Changeset\Notification\AsynchronousNotifier();
         $async_notifier->addListener($event);
+    }
+
+    public function permissionPerGroupPaneCollector(PermissionPerGroupPaneCollector $event)
+    {
+        if (! $event->getProject()->usesService(self::SERVICE_SHORTNAME)) {
+            return;
+        }
+
+        $ugroup_manager    = new UGroupManager();
+        $presenter_builder = new ProjectAdminPermissionPerGroupPresenterBuilder(
+            $ugroup_manager,
+            TrackerFactory::instance(),
+            new PermissionPerGroupUGroupFormatter(
+                $ugroup_manager
+            )
+        );
+
+        $selected_ugroup_id = $event->getSelectedUGroupId();
+        $presenter          = $presenter_builder->buildPresenter(
+            HTTPRequest::instance()->getProject(),
+            $selected_ugroup_id
+        );
+
+        $template_factory      = TemplateRendererFactory::build();
+        $admin_permission_pane = $template_factory
+            ->getRenderer(TRACKER_TEMPLATE_DIR . '/project-admin/')
+            ->renderToString(
+                'project-admin-permission-per-group',
+                $presenter
+            );
+
+        $event->addPane($admin_permission_pane);
     }
 }
