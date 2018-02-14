@@ -1,21 +1,22 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 require_once ('WebDAVFRSFile.class.php');
@@ -516,8 +517,8 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory {
      *
      * @return void
      */
-    function createFileIntoIncoming($name, $data) {
-
+    function createFileIntoIncoming($name, $data)
+    {
         $path = $GLOBALS['ftp_incoming_dir'].'/'.$name;
         if (file_exists($path)) {
             if (!$this->unlinkFile($path)) {
@@ -526,13 +527,14 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory {
         }
         if (!$file = $this->openFile($path)) {
             throw new Sabre_DAV_Exception($GLOBALS['Language']->getText('plugin_webdav_upload', 'create_file_fail'));
-        } else {
-            if (!$this->closeFile($file)) {
-                throw new Sabre_DAV_Exception($GLOBALS['Language']->getText('plugin_webdav_upload', 'close_file_fail'));
-            }
+        }
+
+        if ($this->streamCopyToStream($data, $file) === false) {
+            throw new Sabre_DAV_Exception($GLOBALS['Language']->getText('plugin_webdav_upload', 'write_file_fail'));
+        }
+
+        if (!$this->closeFile($file)) {
+            throw new Sabre_DAV_Exception($GLOBALS['Language']->getText('plugin_webdav_upload', 'close_file_fail'));
         }
     }
-
 }
-
-?>

@@ -939,6 +939,7 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
 
         $webDAVFRSRelease->expectNever('unlinkFile');
         $webDAVFRSRelease->expectOnce('openFile');
+        $webDAVFRSRelease->expectOnce('streamCopyToStream');
         $webDAVFRSRelease->expectOnce('closeFile');
         $this->expectException('Sabre_DAV_Exception');
         $this->expectException('Sabre_DAV_Exception');
@@ -955,6 +956,7 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
 
         $webDAVFRSRelease->expectNever('unlinkFile');
         $webDAVFRSRelease->expectOnce('openFile');
+        $webDAVFRSRelease->expectOnce('streamCopyToStream');
         $webDAVFRSRelease->expectOnce('closeFile');
 
         $webDAVFRSRelease->createFileIntoIncoming('toto.txt', 'text');
@@ -970,6 +972,7 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
 
         $webDAVFRSRelease->expectOnce('unlinkFile');
         $webDAVFRSRelease->expectOnce('openFile');
+        $webDAVFRSRelease->expectOnce('streamCopyToStream');
         $webDAVFRSRelease->expectOnce('closeFile');
 
         $webDAVFRSRelease->createFileIntoIncoming('test.txt', 'text');
