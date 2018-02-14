@@ -39,39 +39,6 @@
         ng-model="backlog.filter.terms"
         ng-keyup="backlog.filterBacklog()"
     >
-
-    <div class="tlp-button-bar backlog-header-view-toggler">
-        <div class="tlp-button-bar-item" title="{{::'Compact view' | translate }}">
-            <input type="radio"
-                id="backlog-header-compact-toggler"
-                class="tlp-button-bar-checkbox"
-                ng-change="planning.switchViewMode(planning.compact_view_key)"
-                ng-model="planning.current_view_class"
-                ng-value="planning.compact_view_key"
-            >
-            <label for="backlog-header-compact-toggler"
-                class="tlp-button-secondary tlp-button-outline tlp-button-small"
-                title="{{::'Compact view' | translate }}"
-            >
-                <i class="fa fa-list"></i>
-            </label>
-        </div>
-        <div class="tlp-button-bar-item" title="{{::'Detailed view' | translate }}">
-            <input type="radio"
-                id="backlog-header-detailed-toggler"
-                class="tlp-button-bar-checkbox"
-                ng-change="planning.switchViewMode(planning.detailed_view_key)"
-                ng-model="planning.current_view_class"
-                ng-value="planning.detailed_view_key"
-            >
-            <label for="backlog-header-detailed-toggler"
-                class="tlp-button-secondary tlp-button-outline tlp-button-small"
-                title="{{::'Detailed view' | translate }}"
-            >
-                <i class="fa fa-th-list"></i>
-            </label>
-        </div>
-    </div>
 </div>
 
 <div class="tlp-alert-warning planning-warning" ng-if="backlog.displayUserCantPrioritize()" translate>
