@@ -8,29 +8,27 @@ msgstr ""
 msgid "A server error has occured. <b>You should refresh this page</b>."
 msgstr ""
 
-#: src/app/backlog-item/backlog-item-details/backlog-item-details.tpl.html
 #: src/app/backlog/backlog.tpl.html
-msgid "Add a {{ accepted_type.label }}"
-msgstr ""
-
-#: src/app/backlog/backlog.tpl.html
-msgid "Add a {{ backlog.details.accepted_types.content[0].label }}"
-msgstr ""
-
-#: src/app/planning.tpl.html
-msgid "Add a {{ planning.backlog.submilestone_type.label }}"
-msgstr ""
-
-#: src/app/backlog/backlog.tpl.html
-msgid "Add an item"
-msgstr ""
-
 #: src/app/milestone/milestone.tpl.html
 msgid "Add item"
 msgstr ""
 
+#: src/app/backlog-item/backlog-item-details/backlog-item-details.tpl.html
 #: src/app/backlog/backlog.tpl.html
-msgid "All items have been loaded."
+#: src/app/milestone/milestone.tpl.html
+msgid "Add {{ accepted_type.label }}"
+msgstr ""
+
+#: src/app/backlog/backlog.tpl.html
+msgid "Add {{ backlog.details.accepted_types.content[0].label }}"
+msgstr ""
+
+#: src/app/planning.tpl.html
+msgid "Add {{ planning.backlog.submilestone_type.label }}"
+msgstr ""
+
+#: src/app/backlog/backlog.tpl.html
+msgid "All items have been loaded"
 msgstr ""
 
 #: src/app/milestone/milestone.tpl.html
@@ -43,6 +41,10 @@ msgstr ""
 
 #: src/app/milestone/milestone.tpl.html
 msgid "Cardwall"
+msgstr ""
+
+#: src/app/backlog-item/backlog-item-details/backlog-item-details.tpl.html
+msgid "Children"
 msgstr ""
 
 #: src/app/planning.tpl.html

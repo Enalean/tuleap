@@ -32,9 +32,8 @@
     }
 
     &.gu-mirror {
-        display: initial;
         opacity: 1;
-        line-height: 24px;
+        height: auto !important;
 
         > .backlog-item-show-children {
             display: none;
@@ -46,16 +45,9 @@
     }
 
     &.appending-child {
-        $add-in-place-green: #58b359;
-
         > .backlog-item-details {
-            border: 1px solid $add-in-place-green;
-            background: rgba(88, 179, 89, .12);
-            box-shadow: inset 0 0 0 1px $add-in-place-green;
-
-            > .backlog-item-details-type-border {
-                background-color: $add-in-place-green;
-            }
+            border: 1px solid $tlp-ui-info;
+            background: transparentize($tlp-ui-info, .9);
         }
     }
 }
@@ -68,15 +60,15 @@
 
     &.selected {
         transition: border-color 75ms ease-in-out, background-color 75ms ease-in-out;
-        border-color: #c9e6f9;
-        background: #ebf7ff;
+        border-color: $tlp-ui-info;
+        background: transparentize($tlp-ui-info, .9);
     }
 
     &.shaking {
         transition: border-color 75ms ease-in-out, background-color 75ms ease-in-out;
         animation: shake 750ms ease-in-out;
-        border-color: lighten(#da5353, 33%);
-        background-color: lighten(#da5353, 37%);
+        border-color: $tlp-ui-danger;
+        background-color: transparentize($tlp-ui-danger, .9);
     }
 
     &.multiple {
@@ -106,6 +98,10 @@
 
     &.hidden {
         display: none;
+
+        + .backlog-item-show-children {
+            display: none;
+        }
     }
 }
 

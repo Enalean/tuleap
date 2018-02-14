@@ -1,81 +1,77 @@
 <div class="backlog-item-details-type-border"></div>
 
-<div class="backlog-item-content">
-    <div class="backlog-item-content-collapsed">
-        <div ng-if="details.backlog_item.accept.trackers.length > 0"
-            class="tlp-dropdown"
-            data-nodrag="true"
-        >
-            <a href="/plugins/tracker/?aid={{ details.backlog_item.id }}"
-                class="backlog-item-details-id"
-                open-tlp-dropdown
-            >
-                <span ng-bind-html="'#' + details.backlog_item.id | tuleapHighlight:details.backlog_filter.terms"></span>
-                <i class="fa fa-caret-down backlog-item-details-id-icon"></i>
-            </a>
-            <div class="tlp-dropdown-menu" role="menu">
-                <a href="/plugins/tracker/?aid={{ details.backlog_item.id }}"
-                    ng-click="details.showEditModal($event, details.backlog_item, details.current_milestone)"
-                    class="tlp-dropdown-menu-item"
-                    role="menuitem"
-                >
-                    <i class="fa fa-edit"></i> <span translate>Edit this item</span>
-                </a>
-                <span class="tlp-dropdown-menu-separator" role="separator"></span>
-                <a href="javascript:;"
-                    ng-repeat="accepted_type in details.backlog_item.accept.trackers"
-                    ng-click="details.showAddChildModal($event, accepted_type, details.backlog_item)"
-                    class="tlp-dropdown-menu-item"
-                    role="menuitem"
-                >
-                    <i class="fa fa-plus"></i> <span translate>Add a {{ accepted_type.label }}</span>
-                </a>
-            </div>
-        </div>
-
+<div class="backlog-item-details-content">
+    <div ng-if="details.backlog_item.accept.trackers.length > 0"
+        class="tlp-dropdown"
+        data-nodrag="true"
+    >
         <a href="/plugins/tracker/?aid={{ details.backlog_item.id }}"
-            ng-if="details.backlog_item.accept.trackers.length === 0"
-            ng-click="details.showEditModal($event, details.backlog_item, details.current_milestone)"
             class="backlog-item-details-id"
-            data-nodrag="true"
+            open-tlp-dropdown
         >
             <span ng-bind-html="'#' + details.backlog_item.id | tuleapHighlight:details.backlog_filter.terms"></span>
             <i class="fa fa-caret-down backlog-item-details-id-icon"></i>
         </a>
-
-        <span class="backlog-item-details-title"
-            tuleap-simple-field
-            value="details.backlog_item.label"
-            filter-terms="details.backlog_filter.terms"
-        ></span>
-
-        <div class="backlog-item-details-spacer"></div>
-
-        <tuleap-card-link class="backlog-item-details-parent"
-            text="{{ details.backlog_item.parent.label }}"
-            url="{{ '/plugins/tracker/?aid=' + details.backlog_item.parent.id }}"
-            filter-terms="{{ details.backlog_filter.terms }}"
-        ></tuleap-card-link>
-
-        <div class="backlog-item-details-effort-container">
-            <span ng-if="details.backlog_item.initial_effort"
-                class="tlp-badge-{{ details.backlog_item.color }}"
-                title="{{::'Initial effort' | translate }}"
-                ng-bind-html="(details.backlog_item.initial_effort | tuleapHighlight:details.backlog_filter.terms)"
-            ></span>
-
-            <span ng-if="! details.backlog_item.initial_effort"
-                class="tlp-badge-secondary"
-                title="{{::'No initial effort defined' | translate }}"
-            ><i class="fa fa-question"></i></span>
+        <div class="tlp-dropdown-menu" role="menu">
+            <a href="/plugins/tracker/?aid={{ details.backlog_item.id }}"
+                ng-click="details.showEditModal($event, details.backlog_item, details.current_milestone)"
+                class="tlp-dropdown-menu-item"
+                role="menuitem"
+            >
+                <i class="tlp-dropdown-menu-item-icon fa fa-fw fa-pencil"></i> <span translate>Edit this item</span>
+            </a>
+            <span class="tlp-dropdown-menu-title" translate>Children</span>
+            <a href="javascript:;"
+                ng-repeat="accepted_type in details.backlog_item.accept.trackers"
+                ng-click="details.showAddChildModal($event, accepted_type, details.backlog_item)"
+                class="tlp-dropdown-menu-item"
+                role="menuitem"
+            >
+                <i class="tlp-dropdown-menu-item-icon fa fa-fw fa-plus"></i> <span translate>Add {{ accepted_type.label }}</span>
+            </a>
         </div>
     </div>
 
-    <card-fields
-        item="details.backlog_item"
+    <a href="/plugins/tracker/?aid={{ details.backlog_item.id }}"
+        ng-if="details.backlog_item.accept.trackers.length === 0"
+        ng-click="details.showEditModal($event, details.backlog_item, details.current_milestone)"
+        class="backlog-item-details-id"
+        data-nodrag="true"
+    >
+        <span ng-bind-html="'#' + details.backlog_item.id | tuleapHighlight:details.backlog_filter.terms"></span>
+        <i class="fa fa-caret-down backlog-item-details-id-icon"></i>
+    </a>
+
+    <span class="backlog-item-details-title"
+        tuleap-simple-field
+        value="details.backlog_item.label"
         filter-terms="details.backlog_filter.terms"
-    ></card-fields>
+    ></span>
+
+    <tuleap-card-link class="backlog-item-details-parent"
+        text="{{ details.backlog_item.parent.label }}"
+        url="{{ '/plugins/tracker/?aid=' + details.backlog_item.parent.id }}"
+        filter-terms="{{ details.backlog_filter.terms }}"
+    ></tuleap-card-link>
+
+    <div class="backlog-item-details-effort-container">
+        <span ng-if="details.backlog_item.initial_effort"
+            class="tlp-badge-{{ details.backlog_item.color }}"
+            title="{{::'Initial effort' | translate }}"
+            ng-bind-html="(details.backlog_item.initial_effort | tuleapHighlight:details.backlog_filter.terms)"
+        ></span>
+
+        <span ng-if="! details.backlog_item.initial_effort"
+            class="tlp-badge-secondary"
+            title="{{::'No initial effort defined' | translate }}"
+        ><i class="fa fa-question"></i></span>
+    </div>
 </div>
+
+<card-fields
+    item="details.backlog_item"
+    filter-terms="details.backlog_filter.terms"
+></card-fields>
 
 <div class="backlog-item-details-moves" data-nodrag="true">
     <span class="tlp-button-primary backlog-item-details-move"

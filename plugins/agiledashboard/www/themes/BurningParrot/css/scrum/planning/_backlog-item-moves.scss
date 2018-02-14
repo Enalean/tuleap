@@ -23,6 +23,7 @@ $transition-delay: 500ms;
 .backlog-item-details-moves {
     position: absolute;
     z-index: 1000;
+    top: 0;
     right: 13px;
     height: 100%;
     transition: opacity $transition-duration $transition-delay;
@@ -55,18 +56,23 @@ $transition-delay: 500ms;
     &.fa-chevron-up,
     &.fa-chevron-down {
         top: -2px;
-        left: .5px;
+        left: 0px;
+    }
+
+    &.fa-chevron-down {
+        top: -1px;
     }
 
     &.fa-angle-double-up {
         top: -1px;
-        left: -.5px;
+        left: 0;
         font-size: 14px;
         font-weight: 700;
     }
 
     &.fa-angle-double-down {
-        left: -.5px;
+        top: 1px;
+        left: 0;
         font-size: 14px;
         font-weight: 700;
     }

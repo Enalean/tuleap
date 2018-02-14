@@ -17,8 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$milestone-background: #fafafa;
-
 .milestone {
     margin: 0 0 $tlp-half-spacing;
 }
@@ -30,12 +28,14 @@ $milestone-background: #fafafa;
     top: 44px;
     align-items: center;
     transition: background .1s linear;
+    border-bottom: 1px solid darken($tlp-ui-white, 2%);
     background: $tlp-ui-white;
+    color: $tlp-ui-dimmed;
     cursor: pointer;
 
     &:hover {
         transition: background .1s linear;
-        background: $milestone-background;
+        background: darken($tlp-ui-white, 2%);
     }
 }
 
@@ -44,7 +44,7 @@ $milestone-background: #fafafa;
 }
 
 .milestone-action-button {
-    margin: 0 0 0 30px;
+    margin: 0 0 0 $tlp-half-spacing;
 
     &.ng-enter {
         animation: fadeIn .2s;
@@ -57,6 +57,7 @@ $milestone-background: #fafafa;
 
 .milestone-header-spacer {
     flex: 1 1 auto;
+    min-width: $tlp-spacing;
 }
 
 .milestone-header-dates {
@@ -72,7 +73,7 @@ $milestone-background: #fafafa;
     display: flex;
     align-items: center;
     padding: $tlp-half-spacing $tlp-spacing;
-    background: $milestone-background;
+    background: darken($tlp-ui-white, 2%);
 }
 
 .milestone-info-badge {
@@ -84,31 +85,44 @@ $milestone-background: #fafafa;
 }
 
 .milestone-info-link {
-    margin: 0 0 0 $tlp-half-spacing;
-    font-size: .9em;
+    margin: 0 0 0 15px;
+    font-size: 14px;
+
+    > .fa {
+        margin: 0 5px 0 0;
+        font-size: 12px;
+        text-decoration: none;
+    }
 
     @media screen and (max-width: 1400px) {
         > span {
             display: none;
         }
-    }
 
-    > .fa {
-        margin: 0 5px 0 0;
-        text-decoration: none;
+        > .fa {
+            font-size: 14px;
+        }
     }
 }
 
-.milestone-backlog-items {
-    padding: $tlp-spacing;
-    border: 1px solid #e3e5ed;
-    border-radius: 3px;
-    background: #f7f7f7;
+.milestone-content {
+    position: relative;
+}
 
-    &.empty-milestone {
-        height: 100px;
-        background: transparent url('../images/milestone-empty.png') no-repeat center center;
-    }
+.milestone-backlog-items {
+    min-height: 70px;
+    padding: $tlp-spacing;
+    border: 1px solid $tlp-ui-border-normal;
+    border-radius: 3px;
+    background: lighten($tlp-theme-background-color, 2%);
+}
+
+.empty-milestone {
+    position: absolute;
+    top: 2px;
+    left: 50%;
+    transform: translate(-50%, 100%);
+    fill: transparentize($tlp-theme-color, .8);
 }
 
 .milestone-content-loading {
