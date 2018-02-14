@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,8 +20,6 @@
 
 namespace Tuleap\User\Admin;
 
-use Event;
-use EventManager;
 use ForgeConfig;
 use PFUser;
 
@@ -61,6 +59,9 @@ class UserDetailsPresenter
     public $has_additional_details;
     public $additional_details;
     public $expiry;
+    public $is_in_limbo;
+    public $current_status_id;
+    public $current_status_label;
 
     public function __construct(
         PFUser $user,
@@ -118,5 +119,27 @@ class UserDetailsPresenter
         $this->empty_purpose      = $GLOBALS['Language']->getText('admin_usergroup', 'empty_purpose');
 
         $this->has_additional_details = count($this->additional_details) > 0;
+
+        $this->is_in_limbo = in_array(
+            $user->getStatus(),
+            array(PFUser::STATUS_PENDING, PFUser::STATUS_VALIDATED, PFUser::STATUS_VALIDATED_RESTRICTED)
+        );
+        $this->current_status_id    = $user->getStatus();
+        $this->current_status_label = $this->getCurrentStatusLabel($this->current_status_id);
+    }
+
+    private function getCurrentStatusLabel($current_status_id)
+    {
+        $labels = array(
+            PFUser::STATUS_ACTIVE               => $GLOBALS['Language']->getText('admin_userlist', 'active'),
+            PFUser::STATUS_RESTRICTED           => $GLOBALS['Language']->getText('admin_userlist', 'restricted'),
+            PFUser::STATUS_VALIDATED_RESTRICTED => $GLOBALS['Language']->getText('admin_userlist', 'validated_restricted'),
+            PFUser::STATUS_DELETED              => $GLOBALS['Language']->getText('admin_userlist', 'deleted'),
+            PFUser::STATUS_SUSPENDED            => $GLOBALS['Language']->getText('admin_userlist', 'suspended'),
+            PFUser::STATUS_PENDING              => $GLOBALS['Language']->getText('admin_userlist', 'pending'),
+            PFUser::STATUS_VALIDATED            => $GLOBALS['Language']->getText('admin_userlist', 'validated')
+        );
+
+        return $labels[$current_status_id];
     }
 }

@@ -34,16 +34,27 @@
                             <label class="tlp-label" for="login">{{ login_label }} <i class="fa fa-asterisk"></i></label>
                             <input type="text" class="tlp-input" id="login" name="form_user_login_name" placeholder="{{ login }}" value="{{ login }}">
                         </div>
-                        <div class="tlp-form-element siteadmin-user-details-row-field">
-                            <label class="tlp-label" for="status">{{ status_label }} <i class="fa fa-asterisk"></i></label>
-                            <select class="tlp-select" id="status" name="form_status">
-                                {{# status }}
-                                    <option value="{{ key }}" {{# is_current }}selected{{/ is_current }}>
-                                        {{ status }}
-                                    </option>
-                                {{/ status }}
-                            </select>
-                        </div>
+                        {{# is_in_limbo }}
+                            <div class="tlp-property siteadmin-user-details-row-field">
+                                <label class="tlp-label">{{ status_label }}</label>
+                                <input type="hidden" name="form_status" value="{{ current_status_id }}">
+                                <p>{{ current_status_label }}</p>
+                            </div>
+                        {{/ is_in_limbo }}
+                        {{^ is_in_limbo }}
+                            <div class="tlp-form-element siteadmin-user-details-row-field">
+                                <label class="tlp-label" for="status">{{ status_label }}
+                                    {{^ is_in_limbo }}<i class="fa fa-asterisk"></i>{{/ is_in_limbo }}
+                                </label>
+                                <select class="tlp-select" id="status" name="form_status">
+                                    {{# status }}
+                                        <option value="{{ key }}" {{# is_current }}selected{{/ is_current }}>
+                                            {{ status }}
+                                        </option>
+                                    {{/ status }}
+                                </select>
+                            </div>
+                        {{/ is_in_limbo }}
                     </div>
 
                     <div class="siteadmin-user-details-row">
