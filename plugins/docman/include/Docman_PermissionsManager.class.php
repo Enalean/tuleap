@@ -21,13 +21,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Docman_PermissionsManagerDao.class.php');
-require_once('Docman_SubItemsWritableVisitor.class.php');
-require_once('Docman_LockFactory.class.php');
-require_once 'common/project/UGroupLiteralizer.class.php';
-require_once 'common/project/ProjectManager.class.php';
-require_once 'Docman_ItemFactory.class.php';
-
 class Docman_PermissionsManager {
 
     const PLUGIN_OPTION_DELETE = 'only_siteadmin_can_delete';
@@ -329,28 +322,17 @@ class Docman_PermissionsManager {
     * Return true if the user can administrate the current docman
     * @return boolean
     */
-    function userCanAdmin($user) {
-        if(!isset($this->cache_admin[$user->getId()][$this->groupId])) {
-            //Todo: see if this code already exists in permission_xxx
-
-            // Super-user has all rights...
-            $has_permission = $user->isSuperUser();
-            if (!$has_permission) {
+    public function userCanAdmin(PFUser $user)
+    {
+        if (! isset($this->cache_admin[$user->getId()][$this->groupId])) {
+            $has_permission = $user->isSuperUser() || $user->isAdmin($this->groupId);
+            if (! $has_permission) {
                 $has_permission = $this->_isUserDocmanAdmin($user);
             }
             $this->cache_admin[$user->getId()][$this->groupId] = $has_permission;
         }
-        return $this->cache_admin[$user->getId()][$this->groupId];
-    }
 
-    /**
-    * Return true if the current user can administrate the current docman
-    * @return boolean
-    * @see userCanAdmin
-    */
-    function currentUserCanAdmin() {
-        $user = $this->getCurrentUser();
-        return $this->userCanAdmin($user);
+        return $this->cache_admin[$user->getId()][$this->groupId];
     }
 
     /**
@@ -360,8 +342,10 @@ class Docman_PermissionsManager {
      * @see userCanWriteSubItems
      * @return boolean
      */
-    function currentUserCanWriteSubItems($itemId) {
-        $user = $this->getCurrentUser();
+    public function currentUserCanWriteSubItems($itemId)
+    {
+        $user = UserManager::instance()->getCurrentUser();
+
         return $this->userCanWriteSubItems($user, $itemId);
     }
 
@@ -569,10 +553,6 @@ class Docman_PermissionsManager {
         }
 
         return $oneWritable;
-    }
-
-    function getCurrentUser() {
-        return UserManager::instance()->getCurrentUser();
     }
 
     /**

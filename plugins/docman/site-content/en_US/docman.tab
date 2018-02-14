@@ -177,7 +177,7 @@ plugin_docman	admin_obsolete_descr	View and update obsolete documents.
 plugin_docman	admin_obsolete_help	This is the list of all documents obsolete today. If you click on document title you will be redirected to the document properties and you will be able to make it available again.
 plugin_docman	admin_permissions_title	Manage Permissions
 plugin_docman	admin_permissions_descr	Define who can administrate the document manager.
-plugin_docman	admin_permissions_instructions	Please select user groups that can administrate the document manager:
+plugin_docman	admin_permissions_instructions	Please select user groups that can administrate the document manager, in addition of project administrators:
 plugin_docman	admin_report_title	Manage Search Report
 plugin_docman	admin_report_descr	Modify the scope of the reports.
 plugin_docman	admin_lock_infos_title	Locked Documents
