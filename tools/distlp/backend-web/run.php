@@ -37,7 +37,7 @@ set_error_handler(function ($errno, $errstr, $errfile, $errline) {
 $logger = new Tuleap\Configuration\Logger\Console();
 
 $fpm   = new Tuleap\Configuration\FPM\TuleapWeb($logger, 'codendiadm', true);
-$nginx = new \Tuleap\Configuration\Nginx\BackendWeb($logger, '/usr/share/tuleap', '/etc/opt/rh/rh-nginx18/nginx', 'tuleap-web.tuleap-aio-dev.docker');
+$nginx = new \Tuleap\Configuration\Nginx\BackendWeb($logger, '/usr/share/tuleap', '/etc/opt/rh/rh-nginx18/nginx', 'reverse-proxy');
 $rabbitmq = new Tuleap\Configuration\RabbitMQ\BackendWeb('codendiadm');
 
 $fpm->configure();

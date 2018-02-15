@@ -44,7 +44,16 @@
                 <column>
                     <widget name="projectmembers" />
                 </column>
+                <column>
+                    <widget name="plugin_agiledashboard_projects_kanban">
+                        <preference name="kanban">
+                            <reference name="id" REF="K01"></reference>
+                            <value name="title">Todo</value>
+                        </preference>
+                    </widget>
+                </column>
             </line>
+
         </dashboard>
     </dashboards>
     <trackers>
@@ -2693,5 +2702,8 @@
                 </backlogs>
             </planning>
         </plannings>
+        <kanban_list title="Kanban">
+            <kanban tracker_id="T221" name="My first kanban" ID="K01" />
+        </kanban_list>
     </agiledashboard>
 </project>

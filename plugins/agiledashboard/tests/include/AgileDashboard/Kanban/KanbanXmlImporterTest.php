@@ -54,6 +54,10 @@ class KanbanXmlImporterTest extends \TuleapTestCase
      * @var \AgileDashboard_ConfigurationManager
      */
     private $agile_dashboard_configuration_manager;
+    /**
+     * @var \Tuleap\XML\MappingsRegistry
+     */
+    private $mappings_registry;
 
     public function setUp()
     {
@@ -63,6 +67,8 @@ class KanbanXmlImporterTest extends \TuleapTestCase
         $this->agile_dashboard_configuration_manager = mock('\AgileDashboard_ConfigurationManager');
         $this->kanban_column_manager                 = mock('\AgileDashboard_KanbanColumnManager');
         $this->kanban_manager                        = mock('\AgileDashboard_KanbanManager');
+
+        $this->mappings_registry = new \Tuleap\XML\MappingsRegistry;
 
         $this->user                = aUser()->withId(101)->build();
         $this->project             = aMockProject()->withId(100)->build();
@@ -110,7 +116,8 @@ class KanbanXmlImporterTest extends \TuleapTestCase
             array(),
             $this->project,
             $field_mapping,
-            $this->user
+            $this->user,
+            $this->mappings_registry
         );
     }
 
@@ -144,7 +151,8 @@ class KanbanXmlImporterTest extends \TuleapTestCase
             ),
             $this->project,
             $field_mapping,
-            $this->user
+            $this->user,
+            $this->mappings_registry
         );
     }
 
@@ -172,7 +180,8 @@ class KanbanXmlImporterTest extends \TuleapTestCase
             ),
             $this->project,
             $field_mapping,
-            $this->user
+            $this->user,
+            $this->mappings_registry
         );
     }
 
@@ -208,7 +217,43 @@ class KanbanXmlImporterTest extends \TuleapTestCase
             ),
             $this->project,
             $field_mapping,
-            $this->user
+            $this->user,
+            $this->mappings_registry
         );
+    }
+
+    public function itSetsKanbanIdInWidgetRegistry()
+    {
+        $xml = new SimpleXMLElement(
+            '<?xml version="1.0" encoding="UTF-8"?>
+            <project unix-name="kanban" full-name="kanban" description="kanban" access="public">
+              <agiledashboard>
+                <kanban_list title="Kanban">
+                    <kanban tracker_id="T22" name="My personal kanban" ID="K03">
+                      <column wip="1" REF="V383"/>
+                      <column wip="2" REF="V384"/>
+                      <column wip="3" REF="V385"/>
+                    </kanban>
+                 <kanban tracker_id="T21" name="Support request" />
+                </kanban_list>
+              </agiledashboard>
+            </project>'
+        );
+
+        stub($this->kanban_manager)->createKanban()->returns(11221);
+
+        $this->kanban_xml_importer->import(
+            $xml,
+            array(
+                'T22' => 50,
+                'T21' => 51
+            ),
+            $this->project,
+            mock('TrackerXmlFieldsMapping'),
+            $this->user,
+            $this->mappings_registry
+        );
+
+        $this->assertEqual($this->mappings_registry->getWidget('K03'), 11221);
     }
 }

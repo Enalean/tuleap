@@ -26,12 +26,12 @@ class MappingsRegistry
     /**
      * @var array
      */
-    private $mappings;
+    private $mappings = [];
 
-    public function __construct()
-    {
-        $this->mappings = array();
-    }
+    /**
+     * @var array
+     */
+    private $widget_reference = [];
 
     public function add(array $mapping, $mapping_name)
     {
@@ -45,5 +45,18 @@ class MappingsRegistry
         }
 
         return false;
+    }
+
+    public function addWidget($reference, $id)
+    {
+        $this->widget_reference[$reference] = $id;
+    }
+
+    public function getWidget($reference)
+    {
+        if (! isset($this->widget_reference[$reference])) {
+            return null;
+        }
+        return $this->widget_reference[$reference];
     }
 }

@@ -1471,7 +1471,7 @@ class AgileDashboardPlugin extends Plugin {
             $this->getKanbanFactory(),
             $this->getKanbanColumnFactory()
         );
-        $kanban->import($xml, $tracker_mapping, $project, $field_mapping, $user);
+        $kanban->import($xml, $tracker_mapping, $project, $field_mapping, $user, $params['mappings_registery']);
     }
 
     private function getDashboardKanbanColumnManager()

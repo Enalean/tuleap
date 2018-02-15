@@ -20,6 +20,7 @@ agiledashboard = element plannings  {
 element kanban_list {
     attribute title { xsd:string },
     element kanban {
+         attribute ID { xsd:ID },
          attribute tracker_id { xsd:string },
          attribute name { xsd:string },
 

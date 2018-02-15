@@ -20,7 +20,7 @@
 
 namespace Tuleap\AgileDashboard\Widget;
 
-use HTTPRequest;
+use Codendi_Request;
 
 class WidgetKanbanCreator
 {
@@ -34,9 +34,25 @@ class WidgetKanbanCreator
         $this->widget_kanban_dao = $widget_kanban_dao;
     }
 
-    public function create(HTTPRequest $request, $owner_id, $owner_type)
+    /**
+     * @param Codendi_Request $request
+     * @param $owner_id
+     * @param $owner_type
+     * @return int
+     * @throws \RuntimeException
+     */
+    public function create(Codendi_Request $request, $owner_id, $owner_type)
     {
         $kanban         = $request->get('kanban');
+        if ($kanban === false) {
+            throw new \RuntimeException('Missing parameter: kanban');
+        }
+        if (! isset($kanban['id'])) {
+            throw new \RuntimeException('Missing parameter: kanban[id]');
+        }
+        if (! isset($kanban['title'])) {
+            throw new \RuntimeException('Missing parameter: kanban[title]');
+        }
         $kanban_id      = $kanban['id'];
         $kanban_title   = $kanban['title'];
 

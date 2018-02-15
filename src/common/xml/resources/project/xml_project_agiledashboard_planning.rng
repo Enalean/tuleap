@@ -47,6 +47,9 @@
         </attribute>
         <zeroOrMore>
           <element name="kanban">
+            <attribute name="ID">
+              <data type="ID"/>
+            </attribute>
             <attribute name="tracker_id">
               <data type="string"/>
             </attribute>

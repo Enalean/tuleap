@@ -22,11 +22,13 @@
 
 namespace Tuleap\Dashboard\Project;
 
+use Mockery\Exception;
 use SimpleXMLElement;
 use Tuleap\Dashboard\NameDashboardAlreadyExistsException;
 use Tuleap\Dashboard\NameDashboardDoesNotExistException;
 use Tuleap\Widget\WidgetFactory;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
+use Tuleap\XML\MappingsRegistry;
 
 class ProjectDashboardXMLImporter_Base extends \TuleapTestCase
 {
@@ -68,6 +70,10 @@ class ProjectDashboardXMLImporter_Base extends \TuleapTestCase
      * @var DashboardWidgetDao
      */
     protected $widget_dao;
+    /**
+     * @var MappingsRegistry
+     */
+    protected $mappings_registry;
 
     public function setUp()
     {
@@ -88,6 +94,8 @@ class ProjectDashboardXMLImporter_Base extends \TuleapTestCase
             $this->widget_dao,
             $this->logger
         );
+
+        $this->mappings_registry = new MappingsRegistry();
 
         $this->user    = mock('PFUser');
         $this->project = aMockProject()->withId(101)->build();
@@ -113,7 +121,7 @@ class ProjectDashboardXMLImporterTest extends ProjectDashboardXMLImporter_Base
         $expected_exception = new UserCanNotUpdateProjectDashboardException();
         stub($this->logger)->warn('[Dashboards] '.$expected_exception->getMessage(), null)->once();
 
-        $this->project_dashboard_importer->import($xml, $this->user, $this->project);
+        $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
     public function itLogsAWarningWhenDashboardNameIsNull()
@@ -132,7 +140,7 @@ class ProjectDashboardXMLImporterTest extends ProjectDashboardXMLImporter_Base
         $expected_exception = new NameDashboardDoesNotExistException();
         stub($this->logger)->warn('[Dashboards] '.$expected_exception->getMessage(), null)->once();
 
-        $this->project_dashboard_importer->import($xml, $this->user, $this->project);
+        $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
     public function itLogsAWarningWhenDashboardNameAlreadyExistsInTheSameProject()
@@ -154,7 +162,7 @@ class ProjectDashboardXMLImporterTest extends ProjectDashboardXMLImporter_Base
         $expected_exception = new NameDashboardAlreadyExistsException();
         stub($this->logger)->warn('[Dashboards] '.$expected_exception->getMessage(), null)->once();
 
-        $this->project_dashboard_importer->import($xml, $this->user, $this->project);
+        $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
     public function itImportsAProjectDashboard()
@@ -174,7 +182,7 @@ class ProjectDashboardXMLImporterTest extends ProjectDashboardXMLImporter_Base
 
         stub($this->logger)->warn()->never();
         stub($this->project_dashboard_saver)->expectCallCount('save', 3);
-        $this->project_dashboard_importer->import($xml, $this->user, $this->project);
+        $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 }
 
@@ -206,7 +214,7 @@ class ProjectDashboardXMLImporter_LinesTest extends ProjectDashboardXMLImporter_
 
         expect($this->widget_dao)->createLine(10001, ProjectDashboardController::DASHBOARD_TYPE, 1)->once();
 
-        $this->project_dashboard_importer->import($xml, $this->user, $this->project);
+        $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
     public function itImportsAColumn()
@@ -237,7 +245,7 @@ class ProjectDashboardXMLImporter_LinesTest extends ProjectDashboardXMLImporter_
         stub($this->widget_dao)->createLine()->returns(12);
         expect($this->widget_dao)->createColumn(12, 1)->once();
 
-        $this->project_dashboard_importer->import($xml, $this->user, $this->project);
+        $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
     public function itSetOwnerAndIdExplicitlyToOvercomeWidgetDesignedToGatherThoseDataFromHTTP()
@@ -271,7 +279,7 @@ class ProjectDashboardXMLImporter_LinesTest extends ProjectDashboardXMLImporter_
 
         expect($this->widget_dao)->insertWidgetInColumnWithRank('projectmembers', 0, 122, 1)->once();
 
-        $this->project_dashboard_importer->import($xml, $this->user, $this->project);
+        $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
     public function itImportsAWidget()
@@ -301,7 +309,7 @@ class ProjectDashboardXMLImporter_LinesTest extends ProjectDashboardXMLImporter_
 
         expect($this->widget_dao)->insertWidgetInColumnWithRank('projectmembers', 0, 122, 1)->once();
 
-        $this->project_dashboard_importer->import($xml, $this->user, $this->project);
+        $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
     public function itErrorsWhenWidgetNameIsUnknown()
@@ -333,7 +341,7 @@ class ProjectDashboardXMLImporter_LinesTest extends ProjectDashboardXMLImporter_
 
         stub($this->logger)->error()->once();
 
-        $this->project_dashboard_importer->import($xml, $this->user, $this->project);
+        $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
     public function itErrorsWhenWidgetContentCannotBeCreated()
@@ -365,7 +373,7 @@ class ProjectDashboardXMLImporter_LinesTest extends ProjectDashboardXMLImporter_
 
         stub($this->logger)->error()->once();
 
-        $this->project_dashboard_importer->import($xml, $this->user, $this->project);
+        $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
     public function itImportsTwoWidgetsInSameColumn()
@@ -401,7 +409,7 @@ class ProjectDashboardXMLImporter_LinesTest extends ProjectDashboardXMLImporter_
         expect($this->widget_dao)->insertWidgetInColumnWithRank('projectmembers', 0, 122, 1)->at(0);
         expect($this->widget_dao)->insertWidgetInColumnWithRank('projectheartbeat', 0, 122, 2)->at(1);
 
-        $this->project_dashboard_importer->import($xml, $this->user, $this->project);
+        $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
     public function itDoesntImportTwiceUniqueWidgets()
@@ -441,7 +449,7 @@ class ProjectDashboardXMLImporter_LinesTest extends ProjectDashboardXMLImporter_
         expect($this->widget_dao)->insertWidgetInColumnWithRank()->count(1);
         expect($this->widget_dao)->insertWidgetInColumnWithRank('projectheartbeat', 0, 122, 1);
 
-        $this->project_dashboard_importer->import($xml, $this->user, $this->project);
+        $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
     public function itImportsUniqueWidgetsWhenThereAreInDifferentDashboards()
@@ -487,7 +495,7 @@ class ProjectDashboardXMLImporter_LinesTest extends ProjectDashboardXMLImporter_
         expect($this->widget_dao)->insertWidgetInColumnWithRank('projectheartbeat', 0, 122, 1)->at(0);
         expect($this->widget_dao)->insertWidgetInColumnWithRank('projectheartbeat', 0, 222, 1)->at(1);
 
-        $this->project_dashboard_importer->import($xml, $this->user, $this->project);
+        $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
     public function itDoesntCreateLineAndColumnWhenWidgetIsNotValid()
@@ -517,7 +525,7 @@ class ProjectDashboardXMLImporter_LinesTest extends ProjectDashboardXMLImporter_
         stub($this->widget_factory)->getInstanceByWidgetName('projectmembers')->returns(null);
         stub($this->widget_factory)->isProjectWidget()->returns(false);
 
-        $this->project_dashboard_importer->import($xml, $this->user, $this->project);
+        $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
     public function itDoesntImportAPersonalWidget()
@@ -548,7 +556,7 @@ class ProjectDashboardXMLImporter_LinesTest extends ProjectDashboardXMLImporter_
         expect($this->logger)->error()->once();
         expect($this->widget_dao)->insertWidgetInColumnWithRank()->never();
 
-        $this->project_dashboard_importer->import($xml, $this->user, $this->project);
+        $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
     public function itImportsTwoWidgetsInTwoColumns()
@@ -589,7 +597,7 @@ class ProjectDashboardXMLImporter_LinesTest extends ProjectDashboardXMLImporter_
 
         expect($this->widget_dao)->adjustLayoutAccordinglyToNumberOfWidgets(2, 12)->once();
 
-        $this->project_dashboard_importer->import($xml, $this->user, $this->project);
+        $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
     public function itImportsAWidgetWithPreferences()
@@ -638,7 +646,100 @@ class ProjectDashboardXMLImporter_LinesTest extends ProjectDashboardXMLImporter_
 
         expect($this->widget_dao)->insertWidgetInColumnWithRank('projectrss', 35, 122, 1)->once();
 
-        $this->project_dashboard_importer->import($xml, $this->user, $this->project);
+        $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
+    }
+
+    public function itImportsAWidgetWithPreferencesThatRefersToExternalIds()
+    {
+        stub($this->user)->isAdmin(101)->returns(true);
+        stub($this->dao)->searchByProjectIdAndName()->returnsDar();
+
+        $xml = new SimpleXMLElement(
+            '<?xml version="1.0" encoding="UTF-8"?>
+            <project>
+              <dashboards>
+                <dashboard name="dashboard 1">
+                  <line>
+                    <column>
+                      <widget name="kanban">
+                        <preference name="kanban">
+                            <value name="title">Da kanban</value>
+                            <reference name="id" REF="K123"/>
+                        </preference>
+                      </widget>
+                    </column>
+                  </line>
+                </dashboard>
+              </dashboards>
+              </project>'
+        );
+
+        stub($this->widget_dao)->createLine()->returns(12);
+        stub($this->widget_dao)->createColumn()->returns(122);
+
+        $this->mappings_registry->addWidget('K123', 78998);
+
+        $widget = mock('Widget');
+        stub($widget)->getId()->returns('kanban');
+        stub($widget)->create(
+            new CreateWidgetRequestExpectation(
+                [
+                    'kanban' => [
+                        'title' => 'Da kanban',
+                        'id'    => 78998
+                    ]
+                ]
+            )
+        )->returns(35);
+
+        stub($this->widget_factory)->isProjectWidget()->returns(true);
+        stub($this->widget_factory)->getInstanceByWidgetName('kanban')->returns($widget);
+
+        expect($this->widget_dao)->insertWidgetInColumnWithRank('kanban', 35, 122, 1)->once();
+
+        $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
+    }
+
+    public function itSkipWidgetCreationWhenCreateRaisesExceptions()
+    {
+        stub($this->user)->isAdmin(101)->returns(true);
+        stub($this->dao)->searchByProjectIdAndName()->returnsDar();
+
+        $xml = new SimpleXMLElement(
+            '<?xml version="1.0" encoding="UTF-8"?>
+            <project>
+              <dashboards>
+                <dashboard name="dashboard 1">
+                  <line>
+                    <column>
+                      <widget name="kanban">
+                        <preference name="kanban">
+                            <value name="title">Da kanban</value>
+                            <reference name="id" REF="K123"/>
+                        </preference>
+                      </widget>
+                    </column>
+                  </line>
+                </dashboard>
+              </dashboards>
+              </project>'
+        );
+
+        expect($this->widget_dao)->createLine()->never();
+        expect($this->widget_dao)->createColumn()->never();
+
+        $this->mappings_registry->addWidget('K123', 78998);
+
+        $widget = mock('Widget');
+        stub($widget)->getId()->returns('kanban');
+        stub($widget)->create()->throws(new \Exception("foo"));
+
+        stub($this->widget_factory)->isProjectWidget()->returns(true);
+        stub($this->widget_factory)->getInstanceByWidgetName('kanban')->returns($widget);
+
+        expect($this->widget_dao)->insertWidgetInColumnWithRank()->never();
+
+        $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 }
 
