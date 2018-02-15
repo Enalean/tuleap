@@ -76,9 +76,6 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
-msgid "See access file"
-msgstr ""
-
 msgid "Settings"
 msgstr ""
 

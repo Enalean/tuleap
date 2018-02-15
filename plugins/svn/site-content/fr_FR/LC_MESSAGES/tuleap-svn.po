@@ -94,9 +94,6 @@ msgstr "Administrateurs SVN"
 msgid "Save"
 msgstr "Sauvegarder"
 
-msgid "See access file"
-msgstr "Voir le fichier d'accès"
-
 msgid "Settings"
 msgstr "Paramètres"
 

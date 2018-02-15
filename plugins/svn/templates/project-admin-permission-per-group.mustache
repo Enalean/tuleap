@@ -48,26 +48,21 @@
                     <thead>
                     <tr>
                         <th class="svn-permission-per-group-repository"> {{# dgettext }} tuleap-svn | Repository {{/ dgettext }}</th>
-                        <th> {{# dgettext }} tuleap-svn | Permission {{/ dgettext }}</th>
                     </tr>
                     </thead>
                     <tbody>
                     {{# permissions }}
                         <tr>
-                            <td>{{ name }}</td>
-                            <td class="tlp-table-cell-actions">
-                                <a
-                                        class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline"
-                                        href="/plugins/svn/?group_id={{ project_id }}&action=access-control&repo_id={{ id }}"
-                                >
-                                    {{# dgettext }} tuleap-svn | See access file {{/ dgettext }}
+                            <td>
+                                <a href="/plugins/svn/?group_id={{ project_id }}&action=access-control&repo_id={{ id }}">
+                                    {{ name }}
                                 </a>
                             </td>
                         </tr>
                     {{/ permissions }}
                     {{^ has_permissions }}
                         <tr>
-                            <td colspan="2" class="tlp-table-cell-empty">
+                            <td class="tlp-table-cell-empty">
                                 {{# dgettext }} tuleap-svn | No repository found for project {{/ dgettext }}
                             </td>
                         </tr>
