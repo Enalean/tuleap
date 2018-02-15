@@ -28,6 +28,39 @@
 
             <div class="planning-header-spacer"></div>
 
+            <div class="tlp-button-bar planning-header-view-toggler {">
+                <div class="tlp-button-bar-item" title="{{::'Compact view' | translate }}">
+                    <input type="radio"
+                        id="planning-header-compact-toggler"
+                        class="tlp-button-bar-checkbox"
+                        ng-change="planning.switchViewMode(planning.compact_view_key)"
+                        ng-model="planning.current_view_class"
+                        ng-value="planning.compact_view_key"
+                    >
+                    <label for="planning-header-compact-toggler"
+                        class="tlp-button-secondary tlp-button-outline tlp-button-small"
+                        title="{{::'Compact view' | translate }}"
+                    >
+                        <i class="fa fa-list"></i>
+                    </label>
+                </div>
+                <div class="tlp-button-bar-item" title="{{::'Detailed view' | translate }}">
+                    <input type="radio"
+                        id="planning-header-detailed-toggler"
+                        class="tlp-button-bar-checkbox"
+                        ng-change="planning.switchViewMode(planning.detailed_view_key)"
+                        ng-model="planning.current_view_class"
+                        ng-value="planning.detailed_view_key"
+                    >
+                    <label for="planning-header-detailed-toggler"
+                        class="tlp-button-secondary tlp-button-outline tlp-button-small"
+                        title="{{::'Detailed view' | translate }}"
+                    >
+                        <i class="fa fa-th-list"></i>
+                    </label>
+                </div>
+            </div>
+
             <div class="tlp-button-bar"
                 ng-if="planning.milestones.content.length > 0"
             >

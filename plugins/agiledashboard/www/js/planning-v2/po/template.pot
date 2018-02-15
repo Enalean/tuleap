@@ -51,11 +51,11 @@ msgstr ""
 msgid "Closed milestones are below"
 msgstr ""
 
-#: src/app/backlog/backlog.tpl.html
+#: src/app/planning.tpl.html
 msgid "Compact view"
 msgstr ""
 
-#: src/app/backlog/backlog.tpl.html
+#: src/app/planning.tpl.html
 msgid "Detailed view"
 msgstr ""
 

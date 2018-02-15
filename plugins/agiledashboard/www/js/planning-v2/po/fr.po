@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: AgileDashboard Planning\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-02-12 16:20+0100\n"
+"PO-Revision-Date: 2018-02-14 17:40+0100\n"
 "Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/test-188/language/"
 "fr/)\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.2\n"
+"X-Generator: Poedit 2.0.3\n"
 
 #: src/app/planning.tpl.html
 msgid "A server error has occured. <b>You should refresh this page</b>."
@@ -26,17 +26,14 @@ msgstr "Ajouter élément"
 
 #: src/app/backlog-item/backlog-item-details/backlog-item-details.tpl.html
 #: src/app/backlog/backlog.tpl.html src/app/milestone/milestone.tpl.html
-#| msgid "Add a {{ accepted_type.label }}"
 msgid "Add {{ accepted_type.label }}"
 msgstr "Ajouter un(e) {{ accepted_type.label }}"
 
 #: src/app/backlog/backlog.tpl.html
-#| msgid "Add a {{ backlog.details.accepted_types.content[0].label }}"
 msgid "Add {{ backlog.details.accepted_types.content[0].label }}"
 msgstr "Ajouter un(e) {{ backlog.details.accepted_types.content[0].label }}"
 
 #: src/app/planning.tpl.html
-#| msgid "Add a {{ planning.backlog.submilestone_type.label }}"
 msgid "Add {{ planning.backlog.submilestone_type.label }}"
 msgstr "Ajouter un(e) {{ planning.backlog.submilestone_type.label }}"
 
@@ -64,11 +61,11 @@ msgstr "Enfants"
 msgid "Closed milestones are below"
 msgstr "Les jalons fermés sont en dessous"
 
-#: src/app/backlog/backlog.tpl.html
+#: src/app/planning.tpl.html
 msgid "Compact view"
 msgstr "Vue compacte"
 
-#: src/app/backlog/backlog.tpl.html
+#: src/app/planning.tpl.html
 msgid "Detailed view"
 msgstr "Vue détaillée"
 
