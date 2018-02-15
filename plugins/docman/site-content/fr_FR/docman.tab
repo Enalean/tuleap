@@ -778,8 +778,6 @@ plugin_docman	report_upd_notfound	Rapport non trouvé. Mise à jour annulée.
 plugin_docman	report_upd_success	Rapport mis à jour.
 plugin_docman	report_upd_groupmismatch	Les ids de projet ne correspondent pas. Mise à jour annulée.
 
-plugin_docman	resource_name_document	Document <a href="$1">$2</a>
-plugin_docman	resource_name_folder	 Dossier <a href="$1">$2</a>
 plugin_docman	roottitle_lbl_key	Documentation du projet
 
 plugin_docman	search_help	<table style="width: 100%; padding-left: 2em;"><tr><td>Les motifs autorisés: <ol style="margin-top: 0;"><li><span class="code">mot</span></li><li><span class="code">mot*</span></li><li><span class="code">*mot</span></li><li><span class="code">*mot*</span></li></ol></td><td valign="top" style="border-left: 1px solid black; padding-left: 1em;">Si le motif ne commence pas par <span class="code">*</span> (motif #1 or #2):<ul style="list-style: none; margin-top: 0;"><li><span class="code">mot</span> la longueur doit dépasser $1</li><li><span class="code">+mot</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mot doit figurer dans le résultat</li><li><span class="code">-mot</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mot ne doit pas figurer dans le résultat</li><li><span class="code">"quelques mots"</span>&nbsp;&nbsp;chercher la phrase complète</li></ul></td></tr><tr><td colspan="2">Info: Global text search va chercher le motif dans tout les champs "Texte" (mais pas dans le contenu du document).</td></tr></table>

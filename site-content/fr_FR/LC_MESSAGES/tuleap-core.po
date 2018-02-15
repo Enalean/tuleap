@@ -673,9 +673,6 @@ msgstr "Supprimer du groupe"
 msgid "Remove group member"
 msgstr "Supprimer un membre du groupe"
 
-msgid "Resource"
-msgstr "Ressource"
-
 msgid "SVN"
 msgstr "SVN"
 
@@ -859,9 +856,6 @@ msgstr "Ce projet n'est pas encore catégorisé."
 msgid "This reference does not exist"
 msgstr "La référence demandée n'existe pas"
 
-msgid "This user group is not granted any permissions yet"
-msgstr "Ce groupe n'a pas encore de permissions définies"
-
 msgid ""
 "This users group is bound to a group you are not allowed to administrate."
 msgstr "Ce groupe est lié à un groupe que vous ne pouvez pas administrer."
@@ -937,9 +931,6 @@ msgstr ""
 
 msgid "User group created but cannot get Id."
 msgstr "Groupe utilisateur crée, mais impossible de retrouver son Id"
-
-msgid "User group permissions"
-msgstr "Permissions du groupe"
 
 msgid "User name"
 msgstr "Nom d'utilisateur"

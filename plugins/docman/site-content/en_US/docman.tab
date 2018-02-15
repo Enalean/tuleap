@@ -778,8 +778,6 @@ plugin_docman	report_upd_notfound	Report not found. Cancel update.
 plugin_docman	report_upd_success	Report successfully updated.
 plugin_docman	report_upd_groupmismatch	Project ids mismatch. Cancel update.
 
-plugin_docman	resource_name_document	Document <a href="$1">$2</a>
-plugin_docman	resource_name_folder	Folder <a href="$1">$2</a>
 plugin_docman	roottitle_lbl_key	Project Documentation
 
 plugin_docman	search_help	<table style="width: 100%; padding-left: 2em;"><tr><td>Allowed patterns: <ol style="margin-top: 0;"><li><span class="code">word</span></li><li><span class="code">word*</span></li><li><span class="code">*word</span></li><li><span class="code">*word*</span></li></ol></td><td valign="top" style="border-left: 1px solid black; padding-left: 1em;">When the pattern doesn't start with <span class="code">*</span> (pattern #1 or #2):<ul style="list-style: none; margin-top: 0;"><li><span class="code">word</span> length must be greater than $1</li><li><span class="code">+word</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;word must be in result</li><li><span class="code">-word</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;word must not be in result</li><li><span class="code">"some words"</span>&nbsp;&nbsp;look for exact sentence</li></ul></td></tr><tr><td colspan="2">Info: Global text search will search pattern in all "Text" properties (but not within documents yet).</td></tr></table>

@@ -638,9 +638,6 @@ msgstr ""
 msgid "Remove group member"
 msgstr ""
 
-msgid "Resource"
-msgstr ""
-
 msgid "SVN"
 msgstr ""
 
@@ -812,9 +809,6 @@ msgstr ""
 msgid "This reference does not exist"
 msgstr ""
 
-msgid "This user group is not granted any permissions yet"
-msgstr ""
-
 msgid ""
 "This users group is bound to a group you are not allowed to administrate."
 msgstr ""
@@ -884,9 +878,6 @@ msgid "User group already exists in this project. Please choose another name."
 msgstr ""
 
 msgid "User group created but cannot get Id."
-msgstr ""
-
-msgid "User group permissions"
 msgstr ""
 
 msgid "User name"

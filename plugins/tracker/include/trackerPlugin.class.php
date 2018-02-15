@@ -102,8 +102,6 @@ class trackerPlugin extends Plugin {
         $this->addHook('permission_get_object_name',          'permission_get_object_name',        false);
         $this->addHook('permission_get_object_fullname',      'permission_get_object_fullname',    false);
         $this->addHook('permission_user_allowed_to_change',   'permission_user_allowed_to_change', false);
-        $this->addHook('permissions_for_ugroup',              'permissions_for_ugroup',            false);
-
         $this->addHook(Event::SYSTEM_EVENT_GET_CUSTOM_QUEUES);
         $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_CUSTOM_QUEUE);
         $this->addHook(Event::GET_SYSTEM_EVENT_CLASS,         'getSystemEventClass',               false);
@@ -542,55 +540,6 @@ class trackerPlugin extends Plugin {
 
     function permission_get_object_fullname($params) {
         $this->permission_get_object_name($params);
-    }
-
-    function permissions_for_ugroup($params) {
-        if (!$params['results'] || !$params['not_existing']) {
-
-            $group_id = $params['group_id'];
-            $hp = Codendi_HTMLPurifier::instance();
-            $atid = $params['object_id'];
-            $objname = $params['objname'];
-
-            if (in_array($params['permission_type'], array(Tracker::PERMISSION_ADMIN, Tracker::PERMISSION_FULL, Tracker::PERMISSION_SUBMITTER, Tracker::PERMISSION_ASSIGNEE, Tracker::PERMISSION_SUBMITTER_ONLY, 'PLUGIN_TRACKER_FIELD_SUBMIT', 'PLUGIN_TRACKER_FIELD_READ', 'PLUGIN_TRACKER_FIELD_UPDATE', 'PLUGIN_TRACKER_ARTIFACT_ACCESS', 'PLUGIN_TRACKER_WORKFLOW_TRANSITION'))) {
-                if (strpos($params['permission_type'], 'PLUGIN_TRACKER_ACCESS') === 0 || $params['permission_type'] === Tracker::PERMISSION_ADMIN) {
-                    $params['results'] = $GLOBALS['Language']->getText('project_admin_editugroup','tracker')
-                    .' <a href="'.TRACKER_BASE_URL.'/?tracker='.$atid.'&func=admin-perms-tracker">'
-                    .$objname.'</a>';
-
-                } else if (strpos($params['permission_type'], 'PLUGIN_TRACKER_FIELD') === 0) {
-                    $field = Tracker_FormElementFactory::instance()->getFormElementById($atid);
-                    if ($field === null) {
-                        $params['not_existing'] = true;
-                        return;
-                    }
-                    $tracker_id = $field->getTrackerId();
-
-                    $params['results'] = $GLOBALS['Language']->getText('project_admin_editugroup','tracker')
-                    .' <a href="'.TRACKER_BASE_URL.'/?tracker='.$tracker_id.'&func=admin-perms-fields">'
-                    .$objname.'</a>';
-
-                } else if ($params['permission_type'] == 'PLUGIN_TRACKER_ARTIFACT_ACCESS') {
-                    $params['results'] = $hp->purify($objname, CODENDI_PURIFIER_BASIC);
-
-                } else if ($params['permission_type'] == 'PLUGIN_TRACKER_WORKFLOW_TRANSITION') {
-                    $transition = TransitionFactory::instance()->getTransition($atid);
-                    if ($transition === null) {
-                        $params['not_existing'] = true;
-                        return;
-                    }
-                    $tracker_id = $transition->getWorkflow()->getTrackerId();
-                    $edit_transition = $transition->getFieldValueFrom().'_'.$transition->getFieldValueTo();
-                    $params['results'] = '<a href="'.TRACKER_BASE_URL.'/?'. http_build_query(
-                        array(
-                            'tracker'         => $tracker_id,
-                            'func'            => Workflow::FUNC_ADMIN_TRANSITIONS,
-                            'edit_transition' => $edit_transition
-                        )
-                    ).'">'.$objname.'</a>';
-                }
-            }
-        }
     }
 
     var $_cached_permission_user_allowed_to_change;

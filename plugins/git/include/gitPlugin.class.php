@@ -181,7 +181,6 @@ class GitPlugin extends Plugin
         $this->addHook('permission_get_object_name',                      'permission_get_object_name',                   false);
         $this->addHook('permission_get_object_fullname',                  'permission_get_object_fullname',               false);
         $this->addHook('permission_user_allowed_to_change',               'permission_user_allowed_to_change',            false);
-        $this->addHook('permissions_for_ugroup',                          'permissions_for_ugroup',                       false);
 
         $this->addHook('statistics_collector',                            'statistics_collector',                         false);
 
@@ -1079,20 +1078,6 @@ class GitPlugin extends Plugin
                     $params['object_name'] = 'git repository '. $repository->getName();
                 } catch (Exception $e) {
                     // do nothing
-                }
-            }
-        }
-    }
-    function permissions_for_ugroup($params) {
-        if (!$params['results'] || !$params['not_existing']) {
-            if (in_array($params['permission_type'], array('PLUGIN_GIT_READ', 'PLUGIN_GIT_WRITE', 'PLUGIN_GIT_WPLUS'))) {
-                $repository = new GitRepository();
-                $repository->setId($params['object_id']);
-                try {
-                    $repository->load();
-                    $params['results']  = $repository->getName();
-                } catch (Exception $e) {
-                    $params['not_existing'] = true;
                 }
             }
         }

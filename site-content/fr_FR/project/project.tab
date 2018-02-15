@@ -68,22 +68,7 @@ project_admin_editservice	service_wiki_desc_key	Wiki
 #
 project_admin_editugroup	desc	Description
 project_admin_editugroup	proj_members	Membres du projet
-project_admin_editugroup	proj_admins	Administrateurs du projet
-project_admin_editugroup	ug_id_missed	L'ID du ugroup est manquant
 project_admin_editugroup	edit_ug	Modifier les groupes d'utilisateurs
-project_admin_editugroup	ug_admin	Administration du groupe d'utilisateurs '<B>$1</B>'
-project_admin_editugroup	show_items	Montrer les items commençant par $1
-project_admin_editugroup	filter	Filtre&nbsp;:
-project_admin_editugroup	release		Version
-project_admin_editugroup	from_package	du paquet
-project_admin_editugroup	package	Paquet
-project_admin_editugroup	document	Document
-project_admin_editugroup	document_group	Groupe de documents
-project_admin_editugroup	wiki	Wiki
-project_admin_editugroup	wiki_page	Page Wiki
-project_admin_editugroup	tracker	Outil de suivi
-project_admin_editugroup	tracker_field	Champs de l'outil de suivi
-project_admin_editugroup	group_empty	le groupe est vide
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/grouptrove.php

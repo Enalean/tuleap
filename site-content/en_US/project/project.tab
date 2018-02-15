@@ -68,21 +68,7 @@ project_admin_editservice	service_wiki_desc_key	Wiki
 #
 project_admin_editugroup	desc	Description
 project_admin_editugroup	proj_members	Project Members
-project_admin_editugroup	ug_id_missed	The ugroup ID is missing
 project_admin_editugroup	edit_ug	Edit User Group
-project_admin_editugroup	ug_admin	User Group '<B>$1</B>' - Administration
-project_admin_editugroup	show_items	Show items starting with $1
-project_admin_editugroup	filter	Filter:
-project_admin_editugroup	release	Release
-project_admin_editugroup	from_package	from package
-project_admin_editugroup	package	Package
-project_admin_editugroup	document	Document
-project_admin_editugroup	document_group	Document Group
-project_admin_editugroup	wiki	Wiki
-project_admin_editugroup	wiki_page	Wiki Page
-project_admin_editugroup	tracker	Tracker
-project_admin_editugroup	tracker_field	Fields from tracker
-project_admin_editugroup	group_empty	The group is empty
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/grouptrove.php
