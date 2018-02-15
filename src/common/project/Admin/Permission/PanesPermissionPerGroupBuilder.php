@@ -22,6 +22,7 @@ namespace Tuleap\Project\Admin\Permission;
 
 use EventManager;
 use Project;
+use Service;
 use Tuleap\FRS\PerGroup\PaneCollector;
 use Tuleap\News\Admin\PerGroup\NewsPermissionPerGroupPaneBuilder;
 use Tuleap\PHPWiki\PerGroup\PHPWikiPermissionPerGroupPaneBuilder;
@@ -62,7 +63,7 @@ class PanesPermissionPerGroupBuilder
     /**
      * @return string[]
      */
-    public function getPanes(Project $project, $selected_ugroup)
+    public function getSortedPanes(Project $project, $selected_ugroup)
     {
         $event = new PermissionPerGroupPaneCollector($project, $selected_ugroup);
         $this->event_manager->processEvent($event);
@@ -70,24 +71,34 @@ class PanesPermissionPerGroupBuilder
         $panes = $event->getPanes();
         $this->addCorePanes($project, $panes, $selected_ugroup);
 
-        return $panes;
+        return $this->sortPanesByServiceRank($panes);
+    }
+
+    private function sortPanesByServiceRank(array $panes)
+    {
+        ksort($panes);
+
+        return array_values($panes);
     }
 
     private function addCorePanes(Project $project, array &$panes, $selected_ugroup)
     {
         $frs_pane = $this->pane_collector->collectPane($project, $selected_ugroup);
         if ($frs_pane) {
-            $panes[] = $frs_pane;
+            $rank_in_project           = $project->getService(Service::FILE)->getRank();
+            $panes[ $rank_in_project ] = $frs_pane;
         }
 
         $phpwiki_pane =  $this->phpwiki_pane_builder->getPaneContent($project, $selected_ugroup);
         if ($phpwiki_pane) {
-            $panes[] = $phpwiki_pane;
+            $rank_in_project           = $project->getService(Service::WIKI)->getRank();
+            $panes[ $rank_in_project ] = $phpwiki_pane;
         }
 
         $news_pane = $this->news_pane_builder->getPaneContent($project, $selected_ugroup);
         if ($news_pane) {
-            $panes[] = $news_pane;
+            $rank_in_project           = $project->getService(Service::NEWS)->getRank();
+            $panes[ $rank_in_project ] = $news_pane;
         }
     }
 }

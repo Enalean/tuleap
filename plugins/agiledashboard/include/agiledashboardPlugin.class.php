@@ -1519,7 +1519,9 @@ class AgileDashboardPlugin extends Plugin {
      */
     public function permissionPerGroupPaneCollector(PermissionPerGroupPaneCollector $event)
     {
-        if (! $event->getProject()->usesService(self::PLUGIN_SHORTNAME)) {
+        $project = $event->getProject();
+
+        if (! $project->usesService($this->getServiceShortname())) {
             return;
         }
 
@@ -1533,7 +1535,7 @@ class AgileDashboardPlugin extends Plugin {
         );
 
         $presenter = $presenter_builder->buildPresenter(
-            $event->getProject(),
+            $project,
             HTTPRequest::instance()->getCurrentUser(),
             $event->getSelectedUGroupId()
         );
@@ -1546,6 +1548,10 @@ class AgileDashboardPlugin extends Plugin {
                 $presenter
             );
 
-        $event->addPane($admin_permission_pane);
+        $rank_in_project = $project->getService(
+            $this->getServiceShortname()
+        )->getRank();
+
+        $event->addPane($admin_permission_pane, $rank_in_project);
     }
 }

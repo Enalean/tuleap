@@ -20,6 +20,7 @@
 
 namespace Tuleap\Git\PerGroup;
 
+use GitPlugin;
 use TemplateRendererFactory;
 use Tuleap\Project\Admin\Permission\PermissionPerGroupPaneCollector;
 
@@ -49,11 +50,16 @@ class GitPaneSectionCollector
 
         $pane_presenter = new GitPanePresenter($service_section_presenter, $repository_sections_presenter);
 
+        $project         = $pane_collector->getProject();
+        $rank_in_project = $project->getService(
+            GitPlugin::SERVICE_SHORTNAME
+        )->getRank();
+
         $templates_dir = GIT_TEMPLATE_DIR . '/project-admin/';
         $pane          = TemplateRendererFactory::build()
             ->getRenderer($templates_dir)
             ->renderToString('project-admin-permission-per-group', $pane_presenter);
 
-        $pane_collector->addPane($pane);
+        $pane_collector->addPane($pane, $rank_in_project);
     }
 }
