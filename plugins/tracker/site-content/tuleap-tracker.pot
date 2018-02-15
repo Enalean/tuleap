@@ -100,9 +100,6 @@ msgstr[1] ""
 msgid "Hierarchy"
 msgstr ""
 
-msgid "Items permissions"
-msgstr ""
-
 msgid "No element selected."
 msgstr ""
 

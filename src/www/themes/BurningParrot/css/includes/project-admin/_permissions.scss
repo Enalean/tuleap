@@ -39,6 +39,11 @@
     color: $tlp-ui-danger;
 }
 
+.permission-per-group-header-tooltip {
+    margin: 0 0 0 5px;
+    text-transform: none;
+}
+
 @media screen and (max-width: 1200px) {
     .project-admin-permission-per-group {
         flex-direction: column;

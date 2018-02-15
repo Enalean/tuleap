@@ -10,9 +10,6 @@ msgstr ""
 msgid "Granted groups"
 msgstr ""
 
-msgid "Items permissions"
-msgstr ""
-
 msgid "Items permissions are not listed."
 msgstr ""
 
