@@ -21,6 +21,7 @@
 namespace Tuleap\Docman\PerGroup;
 
 use Docman_PermissionsManager;
+use Project;
 use ProjectUGroup;
 use Tuleap\Project\Admin\PerGroup\PermissionPerGroupPanePresenter;
 use Tuleap\Project\Admin\PerGroup\PermissionPerGroupUGroupFormatter;
@@ -77,18 +78,18 @@ class PermissionPerGroupDocmanServicePaneBuilder
         DocmanGlobalAdminPermissionCollection $permissions
     ) {
         if ($event->getSelectedUGroupId()) {
-            $all_permissions = $this->permission_retriever->getAdminUGroupIdsForProjectContainingUGroupId(
-                $event->getProject(),
-                $event->getProject()->getID(),
-                Docman_PermissionsManager::PLUGIN_DOCMAN_ADMIN,
-                $event->getSelectedUGroupId()
-            );
+            $all_permissions = $this->extractUGroupsFromSelection($event);
         } else {
             $all_permissions = $this->permission_retriever->getAllUGroupForObject(
                 $event->getProject(),
                 $event->getProject()->getID(),
                 Docman_PermissionsManager::PLUGIN_DOCMAN_ADMIN
             );
+            $this->addProjectAdministrators($event->getProject(), $permissions);
+        }
+
+        if (count($all_permissions) > 0 || (int) $event->getSelectedUGroupId() === ProjectUGroup::PROJECT_ADMIN) {
+            $this->addProjectAdministrators($event->getProject(), $permissions);
         }
 
         foreach ($all_permissions as $permission) {
@@ -97,5 +98,30 @@ class PermissionPerGroupDocmanServicePaneBuilder
                 $this->formatter->formatGroup($event->getProject(), $permission)
             );
         }
+    }
+
+    private function addProjectAdministrators(Project $project, DocmanGlobalAdminPermissionCollection $permissions)
+    {
+        $permissions->addPermission(
+            ProjectUGroup::PROJECT_ADMIN,
+            $this->formatter->formatGroup($project, ProjectUGroup::PROJECT_ADMIN)
+        );
+    }
+
+    private function extractUGroupsFromSelection(PermissionPerGroupPaneCollector $event)
+    {
+        $all_ugroups = $this->permission_retriever->getAllUGroupForObject(
+            $event->getProject(),
+            $event->getProject()->getID(),
+            Docman_PermissionsManager::PLUGIN_DOCMAN_ADMIN
+        );
+
+        if (in_array($event->getSelectedUGroupId(), $all_ugroups) ||
+            ((int) $event->getSelectedUGroupId() === ProjectUGroup::PROJECT_ADMIN)
+        ) {
+            return $all_ugroups;
+        }
+
+        return [];
     }
 }
