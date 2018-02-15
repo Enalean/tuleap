@@ -1139,4 +1139,4 @@ msgid "{{ user_group_name }} can't see any news"
 msgstr "{{ user_group_name }} n'a accès à aucune annonce"
 
 msgid "{{ user_group_name }} has no global permission"
-msgstr "{{ user_group_name }} n' pas de permissions globales"
+msgstr "{{ user_group_name }} n'a pas de permissions globales"
