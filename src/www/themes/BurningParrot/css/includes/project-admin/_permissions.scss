@@ -31,6 +31,14 @@
     margin: 0 0 0 $tlp-spacing;
 }
 
+.permission-per-group-public-news {
+    color: $tlp-ui-success;
+}
+
+.permission-per-group-private-news {
+    color: $tlp-ui-danger;
+}
+
 @media screen and (max-width: 1200px) {
     .project-admin-permission-per-group {
         flex-direction: column;

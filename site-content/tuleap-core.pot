@@ -442,6 +442,9 @@ msgstr ""
 msgid "News"
 msgstr ""
 
+msgid "News {{ user_group_name }} can see"
+msgstr ""
+
 msgid "No children projects"
 msgstr ""
 
@@ -549,6 +552,9 @@ msgstr ""
 msgid "Please, enter a http:// or https:// link"
 msgstr ""
 
+msgid "Private"
+msgstr ""
+
 msgid "Project"
 msgstr ""
 
@@ -600,6 +606,9 @@ msgid "Projects created from this template"
 msgstr ""
 
 msgid "Projects in category"
+msgstr ""
+
+msgid "Public"
 msgstr ""
 
 msgid "Public information"
@@ -719,6 +728,9 @@ msgid "The name is missing for creating a dashboard."
 msgstr ""
 
 msgid "The name is missing for editing the dashboard."
+msgstr ""
+
+msgid "The project hasn't any news"
 msgstr ""
 
 msgid "The requested dashboard does not exist."
@@ -889,6 +901,9 @@ msgstr ""
 msgid "Users groups bound to this one"
 msgstr ""
 
+msgid "Visibility"
+msgstr ""
+
 msgid "We cannot find any edition information for the requested widget."
 msgstr ""
 
@@ -1033,6 +1048,9 @@ msgid "references"
 msgstr ""
 
 msgid "services"
+msgstr ""
+
+msgid "{{ user_group_name }} can't see any news"
 msgstr ""
 
 msgid "{{ user_group_name }} has no global permission"

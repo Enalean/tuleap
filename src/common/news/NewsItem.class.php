@@ -18,6 +18,7 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
  class NewsItem {
+    const NEWS_DELETED = 4;
 
     /**
     * @var array
@@ -29,7 +30,7 @@
     }
 
     public function isDisplayed() {
-        return (bool) ( $this->data['is_approved'] < 4);
+        return (bool) ( $this->data['is_approved'] < self::NEWS_DELETED);
     }
 
     public function getId() {

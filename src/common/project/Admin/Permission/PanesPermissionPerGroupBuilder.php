@@ -23,6 +23,7 @@ namespace Tuleap\Project\Admin\Permission;
 use EventManager;
 use Project;
 use Tuleap\FRS\PerGroup\PaneCollector;
+use Tuleap\News\Admin\PerGroup\NewsPermissionPerGroupPaneBuilder;
 use Tuleap\PHPWiki\PerGroup\PHPWikiPermissionPerGroupPaneBuilder;
 
 class PanesPermissionPerGroupBuilder
@@ -41,14 +42,21 @@ class PanesPermissionPerGroupBuilder
      */
     private $pane_collector;
 
+    /**
+     * @var NewsPermissionPerGroupPaneBuilder
+     */
+    private $news_pane_builder;
+
     public function __construct(
         EventManager $event_manager,
         PaneCollector $pane_collector,
-        PHPWikiPermissionPerGroupPaneBuilder $phpwiki_pane_builder
+        PHPWikiPermissionPerGroupPaneBuilder $phpwiki_pane_builder,
+        NewsPermissionPerGroupPaneBuilder $news_pane_builder
     ) {
         $this->event_manager        = $event_manager;
         $this->phpwiki_pane_builder = $phpwiki_pane_builder;
         $this->pane_collector       = $pane_collector;
+        $this->news_pane_builder    = $news_pane_builder;
     }
 
     /**
@@ -75,6 +83,11 @@ class PanesPermissionPerGroupBuilder
         $phpwiki_pane =  $this->phpwiki_pane_builder->getPaneContent($project, $selected_ugroup);
         if ($phpwiki_pane) {
             $panes[] = $phpwiki_pane;
+        }
+
+        $news_pane = $this->news_pane_builder->getPaneContent($project, $selected_ugroup);
+        if ($news_pane) {
+            $panes[] = $news_pane;
         }
     }
 }
