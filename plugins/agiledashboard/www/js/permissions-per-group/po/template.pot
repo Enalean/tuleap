@@ -1,0 +1,15 @@
+#, javascript-format
+msgid "%s has no permission for agiledashboard plannings"
+msgstr ""
+
+msgid "Agiledashboard has no planning defined"
+msgstr ""
+
+msgid "Planning"
+msgstr ""
+
+msgid "View planning permissions"
+msgstr ""
+
+msgid "Who can prioritize?"
+msgstr ""
