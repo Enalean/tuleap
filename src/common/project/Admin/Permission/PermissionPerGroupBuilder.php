@@ -20,6 +20,7 @@
 
 namespace Tuleap\Project\Admin\Permission;
 
+use ForgeConfig;
 use HTTPRequest;
 use Project;
 use ProjectUGroup;
@@ -38,17 +39,42 @@ class PermissionPerGroupBuilder
         $this->ugroup_manager = $ugroup_manager;
     }
 
+    /**
+     * @return array
+     */
     public function buildUGroup(Project $project, HTTPRequest $request)
     {
         $selected_ugroup_id = $request->get('group');
 
         $ugroups = array();
+        $this->addForgeUGroups($ugroups);
         $this->addDynamicUgroups($project, $ugroups);
         $this->addStaticUgroups($project, $ugroups);
+        $this->addNobody($ugroups);
 
         $this->preselectGroup($ugroups, $selected_ugroup_id);
 
         return $ugroups;
+    }
+
+    private function addForgeUGroups(array &$ugroups)
+    {
+        if (ForgeConfig::areAnonymousAllowed()) {
+            $ugroups[] = array(
+                'id'   => ProjectUGroup::ANONYMOUS,
+                'name' => NameTranslator::getUserGroupDisplayName(NameTranslator::ANON),
+            );
+        } elseif (ForgeConfig::areRestrictedUsersAllowed()) {
+            $ugroups[] = array(
+                'id'   => ProjectUGroup::AUTHENTICATED,
+                'name' => NameTranslator::getUserGroupDisplayName(NameTranslator::AUTHENTICATED),
+            );
+        }
+
+        $ugroups[] = array(
+            'id'   => ProjectUGroup::REGISTERED,
+            'name' => NameTranslator::getUserGroupDisplayName(NameTranslator::REGISTERED),
+        );
     }
 
     private function addDynamicUgroups(Project $project, array &$ugroups)
@@ -103,6 +129,14 @@ class PermissionPerGroupBuilder
                 $this->ugroup_manager->getUGroup($project, ProjectUGroup::NEWS_ADMIN)
             );
         }
+    }
+
+    private function addNobody(array &$ugroups)
+    {
+        $ugroups[] = array(
+            'id'   => ProjectUGroup::NONE,
+            'name' => NameTranslator::getUserGroupDisplayName(NameTranslator::NOBODY),
+        );
     }
 
     private function addStaticUgroups(Project $project, array &$ugroups)
