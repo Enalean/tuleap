@@ -61,6 +61,7 @@ function BacklogController(
         moveToTop                    : moveToTop,
         reorderBacklogItems          : reorderBacklogItems,
         showAddBacklogItemModal      : showAddBacklogItemModal,
+        showAddBacklogItemParentModal: showAddBacklogItemParentModal,
         soloButtonCanBeDisplayed     : soloButtonCanBeDisplayed
     });
 
@@ -233,6 +234,20 @@ function BacklogController(
                 }
                 return prependItemToBacklog(item_id);
             });
+
+            return promise;
+        }
+
+        NewTuleapArtifactModalService.showCreation(item_type.id, null, callback);
+    }
+
+    function showAddBacklogItemParentModal(item_type) {
+        function callback(item_id) {
+            let promise;
+
+            if (self.isMilestoneContext()) {
+                promise = MilestoneService.addToContent(self.milestone_id, [item_id]);
+            }
 
             return promise;
         }

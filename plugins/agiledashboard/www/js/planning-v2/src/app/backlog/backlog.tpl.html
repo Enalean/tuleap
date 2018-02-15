@@ -20,7 +20,7 @@
                   translate>Parents</span>
             <a href="javascript:;"
                ng-repeat="accepted_type in backlog.details.accepted_types.parent_trackers"
-               ng-click="backlog.showAddBacklogItemModal($event, accepted_type)"
+               ng-click="backlog.showAddBacklogItemParentModal(accepted_type)"
                class="tlp-dropdown-menu-item"
                role="menuitem"
             ><i class="tlp-dropdown-menu-item-icon fa fa-fw fa-plus"></i> <span translate>Add {{ accepted_type.label }}</span></a>

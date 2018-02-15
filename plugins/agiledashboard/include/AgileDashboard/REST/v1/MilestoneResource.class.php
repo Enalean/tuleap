@@ -609,7 +609,7 @@ class MilestoneResource extends AuthenticatedResource {
                     $this->artifactlink_updater->updateArtifactLinks(
                         $user,
                         $milestone->getArtifact(),
-                        $to_add,
+                        $this->getFilteredArtifactIdsToAdd($milestone, $to_add),
                         array(),
                         Tracker_FormElement_Field_ArtifactLink::NO_NATURE
                     );
@@ -650,6 +650,25 @@ class MilestoneResource extends AuthenticatedResource {
             throw new RestException(400, $exception->getMessage());
         }
         $this->sendAllowHeaderForContent();
+    }
+
+    /**
+     * @return array
+     */
+    private function getFilteredArtifactIdsToAdd(Planning_Milestone $milestone, array $to_add)
+    {
+        $backlog_tracker_ids   = $milestone->getPlanning()->getBacklogTrackersIds();
+        $filtered_artifact_ids = [];
+
+        foreach ($to_add as $key => $artifact_id) {
+            $artifact = $this->tracker_artifact_factory->getArtifactById($artifact_id);
+
+            if (in_array($artifact->getTrackerId(), $backlog_tracker_ids)) {
+                $filtered_artifact_ids[] = $artifact_id;
+            }
+        }
+
+        return array_unique($filtered_artifact_ids);
     }
 
     /**
