@@ -168,7 +168,8 @@ if ($bodyFormat == FORMAT_HTML) {
     $mail->setBodyText($body);
 }
 $mail->clearFrom();
-$mail->setFrom($email);
+$mail->setFrom(ForgeConfig::get('sys_noreply'));
+$mail->addAdditionalHeader('Reply-To', $email);
 
 if ($mail->send()) {
     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('sendmessage', 'title_sent', str_replace(',', ', ',$dest)));

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -201,9 +201,8 @@ abstract class Error_PermissionDenied {
         $to = implode(',', $admins);
         $mail->setTo($to);
 
-        //from
-        $from = $user->getEmail();
-        $mail->setFrom($from);
+        $mail->setFrom(ForgeConfig::get('sys_noreply'));
+        $mail->addAdditionalHeader('Reply-To', $user->getEmail());
 
         $mail->setSubject($GLOBALS['Language']->getText($this->getTextBase(), 'mail_subject_'.$this->getType(), array($project->getPublicName(), $user->getRealName())));
 
