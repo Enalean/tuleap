@@ -84,7 +84,6 @@ class DocmanPlugin extends Plugin
         $this->addHook('permission_get_object_fullname',    'permission_get_object_fullname',    false);
         $this->addHook('permission_user_allowed_to_change', 'permission_user_allowed_to_change', false);
         $this->addHook(GetPublicAreas::NAME);
-        $this->addHook('permissions_for_ugroup',            'permissions_for_ugroup',            false);
         $this->addHook(Event::REGISTER_PROJECT_CREATION,    'installNewDocman',                  false);
         $this->addHook(Event::SERVICE_IS_USED);
         $this->addHook('soap',                              'soap',                              false);
@@ -234,27 +233,7 @@ class DocmanPlugin extends Plugin
             }
         }
     }
-    function permissions_for_ugroup($params) {
-        if (!$params['results'] || !$params['not_existing']) {
-            if (in_array($params['permission_type'], array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE', 'PLUGIN_DOCMAN_ADMIN'))) {
-                require_once('Docman_ItemFactory.class.php');
-                $if = new Docman_ItemFactory();
-                $item = $if->getItemFromDb($params['object_id']);
-                if ($item) {
-                    $type = is_a($item, 'Docman_Folder') ? 'folder' : 'document';
-                    $params['results']  = $GLOBALS['Language']->getText('plugin_docman', 'resource_name_'.$type, array(
-                            '/plugins/docman/?group_id='. $params['group_id'] .
-                              '&amp;action=details&amp;section=permissions' .
-                              '&amp;id='. $item->getId()
-                            , $item->getTitle()
-                        )
-                    );
-                } else {
-                    $params['not_existing'] = true;
-                }
-            }
-        }
-    }
+
     var $_cached_permission_user_allowed_to_change;
     function permission_user_allowed_to_change($params) {
         if (!$params['allowed']) {

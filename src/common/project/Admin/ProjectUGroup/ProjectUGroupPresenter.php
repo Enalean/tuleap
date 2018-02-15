@@ -34,13 +34,13 @@ class ProjectUGroupPresenter
     public $project_id;
     public $name;
     public $description;
-    public $has_permissions;
-    public $permissions;
     public $binding;
     public $members;
     public $csrf_token;
     public $is_static_ugroup;
     public $locale;
+    public $permissions_per_group_url;
+
     /**
      * @var PermissionsDelegationPresenter
      */
@@ -48,25 +48,33 @@ class ProjectUGroupPresenter
 
     public function __construct(
         ProjectUGroup $ugroup,
-        array $permissions,
         PermissionsDelegationPresenter $permissions_delegation,
         $binding,
         $members,
         CSRFSynchronizerToken $csrf_token,
         PFUser $user
     ) {
-        $this->id               = $ugroup->getId();
-        $this->project_id       = $ugroup->getProjectId();
-        $this->name             = $ugroup->getTranslatedName();
-        $this->description      = $ugroup->getDescription();
-        $this->has_permissions  = count($permissions) > 0;
-        $this->permissions      = $permissions;
-        $this->binding          = $binding;
-        $this->members          = $members;
-        $this->csrf_token       = $csrf_token;
-        $this->is_static_ugroup = $ugroup->isStatic();
-        $this->locale           = $user->getLocale();
+        $this->id                        = $ugroup->getId();
+        $this->project_id                = $ugroup->getProjectId();
+        $this->name                      = $ugroup->getTranslatedName();
+        $this->description               = $ugroup->getDescription();
+        $this->binding                   = $binding;
+        $this->members                   = $members;
+        $this->csrf_token                = $csrf_token;
+        $this->is_static_ugroup          = $ugroup->isStatic();
+        $this->locale                    = $user->getLocale();
+        $this->permissions_per_group_url = $this->getPermissionPerGroupUrl();
 
         $this->permissions_delegation = $permissions_delegation;
+    }
+
+    private function getPermissionPerGroupUrl()
+    {
+        $url_params = http_build_query([
+            'group_id' => $this->project_id,
+            'group'    => $this->id
+        ]);
+
+        return '/project/admin/permission_per_group.php?' . $url_params;
     }
 }

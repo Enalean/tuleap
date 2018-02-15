@@ -37,18 +37,6 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao {
     }
 
     /**
-    * Searches Permissions by UgroupId 
-    * @return DataAccessResult
-    */
-    public function searchByUgroupId($ugroup_id)
-    {
-        $ugroup_id = $this->da->escapeInt($ugroup_id);
-
-        $sql = "SELECT permission_type, object_id FROM permissions WHERE ugroup_id = $ugroup_id";
-        return $this->retrieve($sql);
-    }
-
-    /**
      * Searches Ugroups Ids (and names if required) from ObjectId and Permission type
      *
      * @param String  $objectId       Id of object

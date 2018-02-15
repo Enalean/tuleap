@@ -2,7 +2,12 @@
     <div class="project-admin-user-groups-header">
         <h2 class="project-admin-user-groups-header-title">{{ name }}</h2>
         {{# is_static_ugroup }}
-            {{> ugroup-permissions-modal }}
+            <a class="tlp-button-primary tlp-button-outline"
+               href="{{ permissions_per_group_url }}"
+            >
+                <i class="fa fa-lock tlp-button-icon"></i>
+                {{# gettext }}See permissions{{/ gettext }}
+            </a>
         {{/ is_static_ugroup }}
     </div>
     <div class="project-admin-user-groups-container">

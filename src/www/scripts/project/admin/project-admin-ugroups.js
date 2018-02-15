@@ -45,7 +45,6 @@ function initModals() {
         const button = event.target;
         const allowed_ids = [
             'project-admin-ugroup-add-binding',
-            'project-admin-ugroup-show-permissions-modal',
             'project-admin-ugroups-modal',
             'project-admin-delete-binding'
         ];
