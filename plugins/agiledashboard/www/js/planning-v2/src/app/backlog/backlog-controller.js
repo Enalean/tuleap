@@ -172,7 +172,9 @@ function BacklogController(
         self.fetchAllBacklogItems(
             self.backlog_items.pagination.limit,
             self.backlog_items.pagination.offset
-        ).finally(function() {
+        ).catch(() => {
+            // ignore rejection
+        }).finally(function() {
             BacklogService.filterItems(self.filter.terms);
         });
     }
