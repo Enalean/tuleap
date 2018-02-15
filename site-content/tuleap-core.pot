@@ -803,6 +803,9 @@ msgid ""
 "Every single user added here will be a platform administrator."
 msgstr ""
 
+msgid "This project doesn't use any services with permissions."
+msgstr ""
+
 msgid "This project is not categorized yet."
 msgstr ""
 
@@ -847,9 +850,6 @@ msgid "Trackers v3 import"
 msgstr ""
 
 msgid "Unable to fetch the latest activities of the project"
-msgstr ""
-
-msgid "Under development, there is nothing here"
 msgstr ""
 
 msgid "Unix name"

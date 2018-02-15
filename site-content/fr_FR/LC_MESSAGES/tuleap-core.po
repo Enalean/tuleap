@@ -850,6 +850,9 @@ msgstr ""
 "Cette permission donne le droit de gérer les administrateurs de la "
 "plateforme. Chaque utilisateur ajouté sera un adminstrateur de la plateforme."
 
+msgid "This project doesn't use any services with permissions."
+msgstr "Ce project n'utilise pas de service avec des permissions."
+
 msgid "This project is not categorized yet."
 msgstr "Ce projet n'est pas encore catégorisé."
 
@@ -898,9 +901,6 @@ msgstr "Import outils de suivi v3"
 
 msgid "Unable to fetch the latest activities of the project"
 msgstr "Impossible de récupérer les dernières activités du projet"
-
-msgid "Under development, there is nothing here"
-msgstr "En cours de developpement, il n'y a rien ici"
 
 msgid "Unix name"
 msgstr "Now unix"
