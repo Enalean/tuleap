@@ -17,4 +17,13 @@
             </members>
         </ugroup>
     </ugroups>
+    <dashboards>
+        <dashboard name="Dashboard">
+            <line>
+                <column>
+                    <widget name="projectmembers" />
+                </column>
+            </line>
+        </dashboard>
+    </dashboards>
 </project>

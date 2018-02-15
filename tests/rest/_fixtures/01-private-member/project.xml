@@ -38,6 +38,15 @@
             </members>
         </ugroup>
     </ugroups>
+    <dashboards>
+        <dashboard name="Dashboard">
+            <line>
+                <column>
+                    <widget name="projectmembers" />
+                </column>
+            </line>
+        </dashboard>
+    </dashboards>
     <trackers>
         <tracker id="T215" parent_id="0" instantiate_for_new_projects="1">
             <name>Epics</name>
