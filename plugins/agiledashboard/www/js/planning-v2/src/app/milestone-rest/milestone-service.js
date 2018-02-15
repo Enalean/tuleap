@@ -199,10 +199,12 @@ function MilestoneService(
     }
 
     function defineAllowedBacklogItemTypes(milestone) {
-        var allowed_trackers = milestone.resources.backlog.accept.trackers;
+        const allowed_trackers = milestone.resources.backlog.accept.trackers;
+        const parent_trackers  = milestone.resources.backlog.accept.parent_trackers;
 
         milestone.backlog_accepted_types = {
             content : allowed_trackers,
+            parent_trackers,
             toString: function() {
                 var accept = [];
                 _.forEach(this.content, function(allowed_tracker) {

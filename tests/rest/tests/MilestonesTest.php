@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2017. All rights reserved
+ * Copyright (c) Enalean, 2013 - 2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
+
+// @codingStandardsIgnoreFile
 
 require_once dirname(__FILE__).'/../lib/autoload.php';
 
@@ -88,7 +90,19 @@ class MilestonesTest extends MilestoneBase
                                 'label' => REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_LABEL
                             )
                         )
-                    )
+                    ),
+                    'parent_trackers' => array(
+                        array(
+                            'id'  => $this->epic_tracker_id,
+                            'uri' => 'trackers/'.$this->epic_tracker_id,
+                            'label' => 'Epics',
+                            'project' => array(
+                                'id'    => $this->project_private_member_id,
+                                'uri'   => 'projects/' . $this->project_private_member_id,
+                                'label' => REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_LABEL
+                            )
+                        )
+                    ),
                 ),
             ),
             $milestone['resources']['backlog']

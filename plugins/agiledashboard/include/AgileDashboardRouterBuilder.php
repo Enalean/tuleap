@@ -19,6 +19,7 @@
  */
 
 use Tuleap\AgileDashboard\FormElement\BurnupFieldRetriever;
+use Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
@@ -273,7 +274,8 @@ class AgileDashboardRouterBuilder {
             $this->getMilestoneFactory(),
             $this->getBacklogFactory(),
             EventManager::instance(),
-            $this->getMonoMileStoneChecker()
+            $this->getMonoMileStoneChecker(),
+            new ParentTrackerRetriever($this->getPlanningFactory())
         );
     }
 

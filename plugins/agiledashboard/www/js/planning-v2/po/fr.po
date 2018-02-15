@@ -41,6 +41,10 @@ msgstr "Ajouter un(e) {{ planning.backlog.submilestone_type.label }}"
 msgid "All items have been loaded"
 msgstr "Tous les éléments ont été chargés"
 
+#: src/app/backlog/backlog.tpl.html
+msgid "Backlog Item"
+msgstr "Éléments de backlog"
+
 #: src/app/milestone/milestone.tpl.html
 msgid "Capacity: N/A"
 msgstr "Capacité : N/A"
@@ -120,6 +124,10 @@ msgstr "Aucun effort n’a été estimé"
 #: src/app/milestone/milestone.tpl.html
 msgid "Overview"
 msgstr "Résumé"
+
+#: src/app/backlog/backlog.tpl.html
+msgid "Parents"
+msgstr "Parents"
 
 #: src/app/milestone/milestone.tpl.html
 msgid "Planning"

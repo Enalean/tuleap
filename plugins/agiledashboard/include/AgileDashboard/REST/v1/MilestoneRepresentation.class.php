@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,6 +16,7 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
 namespace Tuleap\AgileDashboard\REST\v1;
 
 use TrackerFactory;
@@ -40,6 +41,7 @@ class MilestoneRepresentation extends MilestoneRepresentationBase {
         Planning_Milestone $milestone,
         array $status_count,
         array $backlog_trackers,
+        array $parent_trackers,
         $has_user_priority_change_permission,
         $representation_type,
         $is_mono_milestone_enabled
@@ -123,7 +125,8 @@ class MilestoneRepresentation extends MilestoneRepresentationBase {
         $this->resources['backlog'] = array(
             'uri'    => $this->uri . '/'. BacklogItemRepresentation::BACKLOG_ROUTE,
             'accept' => array(
-                'trackers' => $this->getTrackersRepresentation($backlog_trackers)
+                'trackers'        => $this->getTrackersRepresentation($backlog_trackers),
+                'parent_trackers' => $this->getTrackersRepresentation($parent_trackers)
             )
         );
         $this->resources['content'] = array(
