@@ -22,7 +22,6 @@ namespace Tuleap\Dashboard\Widget\Add;
 
 use CSRFSynchronizerToken;
 use DataAccessException;
-use EventManager;
 use Exception;
 use Feedback;
 use HTTPRequest;
@@ -30,7 +29,6 @@ use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Dashboard\Widget\WidgetCreator;
-use Tuleap\Widget\MyWelcomeMessage;
 use Tuleap\Widget\WidgetFactory;
 use Widget;
 
@@ -88,7 +86,7 @@ class AddWidgetController
             if (! $widget->isUnique() || ! $this->isUniqueWidgetAlreadyAddedInDashboard($widget, $dashboard_id, $dashboard_type)) {
                 $this->creator->create(
                     $this->getOwnerIdByDashboardType($request, $dashboard_type),
-                    $this->getOwnerTypeByDashboardType($dashboard_type),
+                    $this->factory->getOwnerTypeByDashboardType($dashboard_type),
                     $dashboard_id,
                     $widget,
                     $request
@@ -183,7 +181,7 @@ class AddWidgetController
     private function getWidgetsGroupedByCategories($dashboard_type)
     {
         $categories = array();
-        $widgets    = $this->getWidgetsForOwnerType($dashboard_type);
+        $widgets    = $this->factory->getWidgetsForOwnerType($dashboard_type);
         foreach ($widgets as $widget_name) {
             $widget = $this->factory->getInstanceByWidgetName($widget_name);
             if ($widget && $widget->isAvailable()) {
@@ -284,39 +282,5 @@ class AddWidgetController
             $used_widgets[] = $row['name'];
         }
         return $used_widgets;
-    }
-
-    private function getWidgetsForOwnerType($dashboard_type)
-    {
-        $owner_type = $this->getOwnerTypeByDashboardType($dashboard_type);
-        switch ($owner_type) {
-            case UserDashboardController::LEGACY_DASHBOARD_TYPE:
-                $widgets = array('myadmin', 'myprojects', 'mybookmarks',
-                    'mymonitoredforums', 'mymonitoredfp', 'myartifacts', 'mybugs', //'mywikipage' //not yet
-                    'mytasks', 'mysrs', 'myimageviewer',
-                    'mylatestsvncommits', 'mysystemevent', 'myrss',
-                    MyWelcomeMessage::NAME,
-                );
-                break;
-            case ProjectDashboardController::LEGACY_DASHBOARD_TYPE:
-                $widgets = array('projectdescription', 'projectmembers', 'projectheartbeat',
-                    'projectlatestfilereleases', 'projectlatestnews', 'projectpublicareas', //'projectwikipage' //not yet
-                    'projectlatestsvncommits', 'projectlatestcvscommits', 'projectsvnstats',
-                    'projectrss', 'projectimageviewer', 'projectcontacts'
-                );
-                break;
-            default:
-                $widgets = array();
-                break;
-        }
-
-        $plugins_widgets = array();
-        $em = EventManager::instance();
-        $em->processEvent('widgets', array('codendi_widgets' => &$plugins_widgets, 'owner_type' => $owner_type));
-
-        if (is_array($plugins_widgets)) {
-            $widgets = array_merge($widgets, $plugins_widgets);
-        }
-        return $widgets;
     }
 }

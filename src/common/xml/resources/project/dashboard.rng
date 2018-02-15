@@ -6,6 +6,36 @@
         <attribute name="name">
           <data type="string"/>
         </attribute>
+        <oneOrMore>
+          <element name="line">
+            <oneOrMore>
+              <element name="column">
+                <oneOrMore>
+                  <element name="widget">
+                    <attribute name="name">
+                      <data type="string"/>
+                    </attribute>
+                    <zeroOrMore>
+                      <element name="preference">
+                        <attribute name="name">
+                          <data type="string"/>
+                        </attribute>
+                        <oneOrMore>
+                          <element name="value">
+                            <attribute name="name">
+                              <data type="string"/>
+                            </attribute>
+                            <data type="string"/>
+                          </element>
+                        </oneOrMore>
+                      </element>
+                    </zeroOrMore>
+                  </element>
+                </oneOrMore>
+              </element>
+            </oneOrMore>
+          </element>
+        </oneOrMore>
       </element>
     </oneOrMore>
   </define>

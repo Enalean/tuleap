@@ -1,5 +1,19 @@
 namespace xsd = "http://www.w3.org/2001/XMLSchema"
 
 dashboards = element dashboard {
-   attribute name { xsd:string }
+    attribute name { xsd:string },
+    element line {
+        element column {
+            element widget {
+                attribute name { xsd:string },
+                element preference {
+                    attribute name { xsd:string },
+                    element value {
+                        attribute name { xsd:string },
+                        xsd:string
+                    }+
+                }*
+            }+
+        }+
+    }+
 }+
