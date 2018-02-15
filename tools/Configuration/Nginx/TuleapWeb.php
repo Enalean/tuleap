@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -70,6 +70,14 @@ class TuleapWeb
                     self::SSL_CERT_CERT_PATH,
                     $this->server_name,
                 )
+            );
+
+            $this->logger->info('Generate default.d/redirect_tuleap.conf');
+            $this->common->replacePlaceHolderInto(
+                $this->tuleap_base_dir.'/src/etc/nginx18/default.d/redirect_tuleap.conf.dist',
+                $this->nginx_base_dir.'/default.d/redirect_tuleap.conf',
+                ['%sys_default_domain%'],
+                [$this->server_name]
             );
         }
 
