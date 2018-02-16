@@ -40,54 +40,82 @@ class PermissionPerGroupBuilder
 
     public function buildUGroup(Project $project, HTTPRequest $request)
     {
-        $static_ugroups = $this->ugroup_manager->getStaticUGroups($project);
-        if ($project->usesWiki()) {
-            $static_ugroups[] = $this->ugroup_manager->getUGroup($project, ProjectUGroup::WIKI_ADMIN);
-        }
-
-        if ($project->usesForum()) {
-            $static_ugroups[] = $this->ugroup_manager->getUGroup($project, ProjectUGroup::FORUM_ADMIN);
-        }
-
-        if ($project->usesNews()) {
-            $static_ugroups[] = $this->ugroup_manager->getUGroup($project, ProjectUGroup::NEWS_WRITER);
-            $static_ugroups[] = $this->ugroup_manager->getUGroup($project, ProjectUGroup::NEWS_ADMIN);
-        }
-
-        return $this->getUGroupsThatCanBeUsedAsTemplate($static_ugroups, $request);
-    }
-
-    /**
-     * @param \ProjectUGroup[] $static_ugroups
-     *
-     * @return array
-     */
-    private function getUGroupsThatCanBeUsedAsTemplate(array $static_ugroups, HTTPRequest $request)
-    {
-        $selected_group = $request->get('group');
+        $selected_ugroup_id = $request->get('group');
 
         $ugroups = array();
+        $this->addDynamicUgroups($project, $ugroups);
+        $this->addStaticUgroups($project, $ugroups);
 
-        $ugroups[] = array(
-            'id'          => ProjectUGroup::PROJECT_MEMBERS,
-            'name'        => NameTranslator::getUserGroupDisplayName(NameTranslator::PROJECT_MEMBERS),
-            'is_selected' => (int)$selected_group === ProjectUGroup::PROJECT_MEMBERS
-        );
-
-        $ugroups[] = array(
-            'id'          => ProjectUGroup::PROJECT_ADMIN,
-            'name'        => NameTranslator::getUserGroupDisplayName(NameTranslator::PROJECT_ADMINS),
-            'is_selected' => (int)$selected_group === ProjectUGroup::PROJECT_ADMIN
-        );
-
-        foreach ($static_ugroups as $ugroup) {
-            $ugroups[] = array(
-                'id'          => $ugroup->getId(),
-                'name'        => NameTranslator::getUserGroupDisplayName($ugroup->getName()),
-                'is_selected' => $selected_group === $ugroup->getId()
-            );
-        }
+        $this->preselectGroup($ugroups, $selected_ugroup_id);
 
         return $ugroups;
+    }
+
+    private function addDynamicUgroups(Project $project, array &$ugroups)
+    {
+        $ugroups[] = array(
+            'id'   => ProjectUGroup::PROJECT_MEMBERS,
+            'name' => NameTranslator::getUserGroupDisplayName(NameTranslator::PROJECT_MEMBERS),
+        );
+        $ugroups[] = array(
+            'id'   => ProjectUGroup::PROJECT_ADMIN,
+            'name' => NameTranslator::getUserGroupDisplayName(NameTranslator::PROJECT_ADMINS),
+        );
+
+        $this->addWiki($project, $ugroups);
+        $this->addForum($project, $ugroups);
+        $this->addNews($project, $ugroups);
+    }
+
+    private function getUGroupEntry(ProjectUGroup $ugroup)
+    {
+        return array(
+            'id'   => $ugroup->getId(),
+            'name' => NameTranslator::getUserGroupDisplayName($ugroup->getName()),
+        );
+    }
+
+    private function addWiki(Project $project, array &$ugroups)
+    {
+        if ($project->usesWiki()) {
+            $ugroups[] = $this->getUGroupEntry(
+                $this->ugroup_manager->getUGroup($project, ProjectUGroup::WIKI_ADMIN)
+            );
+        }
+    }
+
+    private function addForum(Project $project, array &$ugroups)
+    {
+        if ($project->usesForum()) {
+            $ugroups[] = $this->getUGroupEntry(
+                $this->ugroup_manager->getUGroup($project, ProjectUGroup::FORUM_ADMIN)
+            );
+        }
+    }
+
+    private function addNews(Project $project, array &$ugroups)
+    {
+        if ($project->usesNews()) {
+            $ugroups[] = $this->getUGroupEntry(
+                $this->ugroup_manager->getUGroup($project, ProjectUGroup::NEWS_WRITER)
+            );
+            $ugroups[] = $this->getUGroupEntry(
+                $this->ugroup_manager->getUGroup($project, ProjectUGroup::NEWS_ADMIN)
+            );
+        }
+    }
+
+    private function addStaticUgroups(Project $project, array &$ugroups)
+    {
+        foreach ($this->ugroup_manager->getStaticUGroups($project) as $ugroup) {
+            $ugroups[] = $this->getUGroupEntry($ugroup);
+        }
+    }
+
+    private function preselectGroup(array &$ugroups, $selected_ugroup_id)
+    {
+        foreach ($ugroups as $key => $ugroup) {
+            $ugroups[$key]['is_selected'] = (int) $selected_ugroup_id === (int) $ugroup['id'];
+        }
     }
 }
