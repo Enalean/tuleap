@@ -2,7 +2,7 @@ import kanban_module from '../app.js';
 import angular from 'angular';
 import 'angular-mocks';
 
-describe('InPropertiesItemFilter', function() {
+describe('InPropertiesItemFilter', () => {
     var in_properties_filter,
         list = [{
             label      : 'Riri',
@@ -27,7 +27,7 @@ describe('InPropertiesItemFilter', function() {
             card_fields: []
         }];
 
-    beforeEach(function() {
+    beforeEach(() => {
         angular.mock.module(kanban_module);
 
         var $filter, moment;
@@ -139,20 +139,56 @@ describe('InPropertiesItemFilter', function() {
         });
     });
 
+    it("Given an item with a text card field, when I filter it with a matching query, then it will be returned", () => {
+        const items = [
+            {
+                id: null,
+                label: null,
+                card_fields: [
+                    { type: 'text', format: 'text', value: 'Histoire de Toto' }
+                ]
+            }
+        ];
+
+        const filtered_items = in_properties_filter(items, 'toto');
+
+        expect(filtered_items).toEqual(items);
+    });
+
+    it("Given an item with a text card field in HTML, when I filter it with a matching query, then it will be returned", () => {
+        const items = [
+            {
+                id: null,
+                label: null,
+                card_fields: [
+                    { type: 'text', format: 'html', value: 'Histoire <strong>de TOTO</strong>' }
+                ]
+            }
+        ];
+
+        expect(in_properties_filter(items, 'toto')).toEqual(items);
+    });
+
+    it("Given an item with a text card field in HTML with &nbsp;, when I filter it with an &, then it won't be returned", () => {
+        const items = [
+            {
+                id: null,
+                label: null,
+                card_fields: [
+                    { type: 'text', format: 'html', value: 'William&nbspWallace' }
+                ]
+            }
+        ];
+
+        expect(in_properties_filter(items, '&')).toEqual([]);
+    });
+
     it('returns items that have matching card_fields', function() {
         expect(in_properties_filter([{
             id         : null,
             label      : null,
             card_fields: [{
                 type : 'string',
-                value: 'Histoire de Toto'
-            }]
-        }], 'toto').length).toBe(1);
-        expect(in_properties_filter([{
-            id         : null,
-            label      : null,
-            card_fields: [{
-                type : 'text',
                 value: 'Histoire de Toto'
             }]
         }], 'toto').length).toBe(1);

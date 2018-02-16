@@ -13,6 +13,8 @@
     "angular-sanitize": "^1.6.9",
     "animate.css": "3.5.2",
     "dragular": "4.2.0",
+    "escape-string-regexp": "^1.0.5",
+    "he": "^1.1.1",
     "lodash": "2.4.0",
     "moment": "^2.18.1",
     "restangular": "1.4.0"

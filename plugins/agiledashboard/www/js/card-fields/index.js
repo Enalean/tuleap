@@ -3,9 +3,7 @@ import ngSanitize           from 'angular-sanitize';
 import 'angular-gettext';
 import 'angular-moment';
 
-import highlight_filter from './highlight-filter.js';
-import StripTagsFilter  from './strip-tags-filter.js';
-
+import HighlightFilter            from './highlight-filter.js';
 import CardFieldsDirective        from './card-fields-directive.js';
 import CardFieldsService          from './card-fields-service.js';
 import tuleapSimpleFieldDirective from './tuleap-simple-field-directive.js';
@@ -17,7 +15,6 @@ export default angular.module('card-fields', [
     ngSanitize,
     'gettext',
     'angularMoment',
-    highlight_filter,
 ])
 .service('CardFieldsService', CardFieldsService)
 .directive('cardFields', CardFieldsDirective)
@@ -25,5 +22,5 @@ export default angular.module('card-fields', [
 .directive('tuleapCardLink', tuleapCardLinkDirective)
 .directive('cardComputedField', cardComputedFieldDirective)
 .directive('cardTextField', cardTextFieldDirective)
-.filter('tuleapStripTags', StripTagsFilter)
+.filter('tuleapHighlight', HighlightFilter)
 .name;
