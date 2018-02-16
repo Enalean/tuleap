@@ -327,7 +327,9 @@ class ProjectCreator {
             'legacy_service_usage'  => $legacy,
         ));
 
-        $this->initLayoutFromTemplate($group, $template_group);
+        if ($data->projectShouldInheritFromTemplate()) {
+            $this->initLayoutFromTemplate($group, $template_group);
+        }
 
         $this->autoActivateProject($group);
 
