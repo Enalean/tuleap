@@ -15,8 +15,26 @@
                             <select id="group" name="group" class="tlp-select">
                                 <option value="">{{# gettext }}All groups{{/ gettext }}</option>
                                 {{# groups }}
-                                    <option value="{{ id }}" {{# is_selected }}
-                                            selected="selected" {{/ is_selected }}>{{ name }}</option>
+                                    <optgroup label="{{# gettext }}System groups{{/ gettext }}">
+                                        {{# dynamic }}
+                                            <option value="{{ id }}"
+                                                    {{# is_selected }}selected="selected"{{/ is_selected }}
+                                            >
+                                                {{ name }}
+                                            </option>
+                                        {{/ dynamic }}
+                                    </optgroup>
+                                    {{# has_static_ugroups }}
+                                        <optgroup label="{{# gettext }}Custom groups{{/ gettext }}">
+                                            {{# static }}
+                                                <option value="{{ id }}"
+                                                        {{# is_selected }}selected="selected"{{/ is_selected }}
+                                                >
+                                                    {{ name }}
+                                                </option>
+                                            {{/ static }}
+                                        </optgroup>
+                                    {{/has_static_ugroups}}
                                 {{/ groups }}
                             </select>
                         </div>

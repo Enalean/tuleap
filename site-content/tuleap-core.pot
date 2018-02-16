@@ -190,6 +190,9 @@ msgstr ""
 msgid "Create user group"
 msgstr ""
 
+msgid "Custom groups"
+msgstr ""
+
 msgid "Dashboard creation failed."
 msgstr ""
 
@@ -687,6 +690,9 @@ msgid "Style"
 msgstr ""
 
 msgid "System"
+msgstr ""
+
+msgid "System groups"
 msgstr ""
 
 msgid "Template used by project"

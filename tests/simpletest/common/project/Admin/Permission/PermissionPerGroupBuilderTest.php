@@ -65,7 +65,7 @@ class PermissionPerGroupBuilderTest extends TuleapTestCase
 
         $ugroups = $this->builder->buildUGroup($project, $request);
 
-        $this->assertEqual($ugroups[0]['id'], ProjectUGroup::ANONYMOUS);
+        $this->assertEqual($ugroups['dynamic'][0]['id'], ProjectUGroup::ANONYMOUS);
     }
 
     public function itAddsAuthenticatedUgroupIfPlatformAllowsThem()
@@ -79,7 +79,7 @@ class PermissionPerGroupBuilderTest extends TuleapTestCase
 
         $ugroups = $this->builder->buildUGroup($project, $request);
 
-        $this->assertEqual($ugroups[0]['id'], ProjectUGroup::AUTHENTICATED);
+        $this->assertEqual($ugroups['dynamic'][0]['id'], ProjectUGroup::AUTHENTICATED);
     }
 
     public function itAlwaysAddRegisteredUgroup()
@@ -91,10 +91,10 @@ class PermissionPerGroupBuilderTest extends TuleapTestCase
 
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
         $ugroups = $this->builder->buildUGroup($project, $request);
-        $this->assertEqual($ugroups[1]['id'], ProjectUGroup::REGISTERED);
+        $this->assertEqual($ugroups['dynamic'][1]['id'], ProjectUGroup::REGISTERED);
 
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
         $ugroups = $this->builder->buildUGroup($project, $request);
-        $this->assertEqual($ugroups[1]['id'], ProjectUGroup::REGISTERED);
+        $this->assertEqual($ugroups['dynamic'][1]['id'], ProjectUGroup::REGISTERED);
     }
 }
