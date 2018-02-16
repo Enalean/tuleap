@@ -419,7 +419,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         $html_computed_value = '<span class="auto-computed">'. $purifier->purify($computed_value) .' (' .
             $GLOBALS['Language']->getText('plugin_tracker', 'autocomputed_field').')</span>';
 
-        if ($changeset_value && ! $changeset_value->isManualValue()) {
+        if ($value === null) {
             $value = $html_computed_value;
         }
 
