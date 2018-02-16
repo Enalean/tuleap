@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.3\n"
+"X-Generator: Poedit 1.8.7.1\n"
 
 #, php-format
 msgid ""
@@ -213,6 +213,9 @@ msgstr "Créer le service"
 
 msgid "Create user group"
 msgstr "Ajouter un groupe utilisateur"
+
+msgid "Custom groups"
+msgstr "Groupes personnalisés"
 
 msgid "Dashboard creation failed."
 msgstr "La création du tableau de bord a échouée."
@@ -720,6 +723,9 @@ msgstr "Style"
 
 msgid "System"
 msgstr "Système"
+
+msgid "System groups"
+msgstr "Groupes système"
 
 msgid "Template used by project"
 msgstr "Patron utilisé par ce projet"

@@ -46,13 +46,15 @@ class PermissionPerGroupBuilder
     {
         $selected_ugroup_id = $request->get('group');
 
-        $ugroups = array();
-        $this->addForgeUGroups($ugroups);
-        $this->addDynamicUgroups($project, $ugroups);
-        $this->addStaticUgroups($project, $ugroups);
-        $this->addNobody($ugroups);
-
+        $ugroups = [
+            'dynamic' => [],
+            'static'  => []
+        ];
+        $this->addDynamicUgroups($project, $ugroups['dynamic']);
+        $this->addStaticUgroups($project, $ugroups['static']);
         $this->preselectGroup($ugroups, $selected_ugroup_id);
+
+        $ugroups['has_static_ugroups'] = ! empty($ugroups['static']);
 
         return $ugroups;
     }
@@ -79,18 +81,17 @@ class PermissionPerGroupBuilder
 
     private function addDynamicUgroups(Project $project, array &$ugroups)
     {
+        $this->addForgeUGroups($ugroups);
+
         $ugroups[] = array(
             'id'   => ProjectUGroup::PROJECT_MEMBERS,
             'name' => NameTranslator::getUserGroupDisplayName(NameTranslator::PROJECT_MEMBERS),
-        );
-        $ugroups[] = array(
-            'id'   => ProjectUGroup::PROJECT_ADMIN,
-            'name' => NameTranslator::getUserGroupDisplayName(NameTranslator::PROJECT_ADMINS),
         );
 
         $this->addWiki($project, $ugroups);
         $this->addForum($project, $ugroups);
         $this->addNews($project, $ugroups);
+        $this->addNobody($ugroups);
     }
 
     private function getUGroupEntry(ProjectUGroup $ugroup)
@@ -148,8 +149,10 @@ class PermissionPerGroupBuilder
 
     private function preselectGroup(array &$ugroups, $selected_ugroup_id)
     {
-        foreach ($ugroups as $key => $ugroup) {
-            $ugroups[$key]['is_selected'] = (int) $selected_ugroup_id === (int) $ugroup['id'];
+        foreach ($ugroups as $section => $subgroups) {
+            foreach ($subgroups as $key => $ugroup) {
+                $ugroups[$section][$key]['is_selected'] = (int) $selected_ugroup_id === (int) $ugroup['id'];
+            }
         }
     }
 }
