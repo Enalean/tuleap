@@ -137,17 +137,20 @@ tests_rest_setup: ## Start REST tests container to launch tests manually
 phpunit-ci-run:
 	/opt/rh/rh-php56/root/usr/bin/php src/vendor/bin/phpunit \
 		-c tests/phpunit/phpunit.xml \
-		--log-junit /tmp/phpunit_tests_results.xml \
-		--coverage-html /tmp/phpunit_coverage \
-		--coverage-clover /tmp/phpunit_coverage/coverage.xml
+		--log-junit /tmp/results/phpunit_tests_results.xml \
+		--coverage-html /tmp/results/phpunit_coverage \
+		--coverage-clover /tmp/results/phpunit_coverage/coverage.xml
+
+phpunit-run-as-owner:
+	@USER_ID=`stat -c '%u' /tuleap`; \
+	GROUP_ID=`stat -c '%g' /tuleap`; \
+	groupadd -g $$GROUP_ID runner; \
+	useradd -u $$USER_ID -g $$GROUP_ID runner
+	su -c "$(MAKE) -C $(CURDIR) phpunit-ci-run" -l runner
 
 phpunit-ci:
 	mkdir -p $(WORKSPACE)/results/ut-phpunit-php-56
-	cid=`$(DOCKER) create -v $(CURDIR):/tuleap:ro --entrypoint /bin/bash enalean/tuleap-test-phpunit:c6-php56 -c "make -C /tuleap phpunit-ci-run"`;\
-		docker start --attach "$$cid" || true;\
-		docker cp "$$cid":/tmp/phpunit_tests_results.xml $(WORKSPACE)/results/ut-phpunit-php-56/;\
-		docker cp "$$cid":/tmp/phpunit_coverage $(WORKSPACE)/results/ut-phpunit-php-56/;\
-		docker rm -fv "$$cid"
+	@docker run --rm -v $(CURDIR):/tuleap:ro -v $(WORKSPACE)/results/ut-phpunit-php-56:/tmp/results --entrypoint /bin/bash enalean/tuleap-test-phpunit:c6-php56 -c "make -C /tuleap phpunit-run-as-owner"
 
 phpunit:
 	src/vendor/bin/phpunit -c tests/phpunit/phpunit.xml
