@@ -59,3 +59,4 @@ test_results/*
 tests/soap/vendor
 tests/rest/vendor
 src/www/themes/local
+tests/phpunit/phpunit_test_results.xml

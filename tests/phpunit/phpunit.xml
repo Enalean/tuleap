@@ -1,0 +1,20 @@
+<?xml version='1.0'?>
+<phpunit bootstrap="bootstrap.php" verbose="true" colors="auto">
+    <php>
+        <ini name="date.timezone" value="Europe/Paris"/>
+    </php>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <file>../../src/common/Dashboard/Dashboard.php</file>
+            <directory suffix=".php">../../plugins/proftpd/include</directory>
+        </whitelist>
+    </filter>
+    <testsuites>
+        <testsuite name="Core Tests">
+            <directory>common</directory>
+        </testsuite>
+        <testsuite name="Plugins">
+            <directory>../../plugins/*/phpunit</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>
