@@ -1,0 +1,10 @@
+[Unit]
+Description=Tuleap launch system check
+
+[Service]
+Type=simple
+User=root
+ExecStart=/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/src/utils/launch_system_check.php
+
+[Install]
+WantedBy=multi-user.target

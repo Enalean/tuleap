@@ -61,6 +61,9 @@ declare -r project_admin="admin"
 declare -r tuleap_unix_user="codendiadm"
 declare -i mysql_port=3306
 
+declare -a timers=("tuleap-process-system-events-default.timer"
+                   "tuleap-launch-system-check.timer")
+
 assumeyes="false"
 db_exist="false"
 long_org_name="Tuleap ALM"

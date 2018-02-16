@@ -1,0 +1,10 @@
+[Unit]
+Description=Tuleap default system events
+
+[Service]
+Type=simple
+User=root
+ExecStart=/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/src/utils/process_system_events.php default
+
+[Install]
+WantedBy=multi-user.target
