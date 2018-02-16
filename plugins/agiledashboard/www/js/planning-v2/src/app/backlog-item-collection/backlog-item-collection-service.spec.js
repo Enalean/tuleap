@@ -5,7 +5,6 @@ import collection_module from './backlog-item-collection.js';
 
 describe("BacklogItemCollectionService -", () => {
     let $q,
-        $timeout,
         BacklogItemCollectionService,
         BacklogItemService;
 
@@ -15,12 +14,10 @@ describe("BacklogItemCollectionService -", () => {
         angular.mock.inject(function(
             _$q_,
             _$rootScope_,
-            _$timeout_,
             _BacklogItemCollectionService_,
             _BacklogItemService_
         ) {
             $q                           = _$q_;
-            $timeout                     = _$timeout_;
             BacklogItemCollectionService = _BacklogItemCollectionService_;
             BacklogItemService           = _BacklogItemService_;
         });

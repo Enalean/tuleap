@@ -17,7 +17,8 @@ BacklogController.$inject = [
     'MilestoneCollectionService',
     'BacklogItemSelectedService',
     'SharedPropertiesService',
-    'NewTuleapArtifactModalService'
+    'NewTuleapArtifactModalService',
+    'ItemAnimatorService'
 ];
 
 function BacklogController(
@@ -34,10 +35,11 @@ function BacklogController(
     MilestoneCollectionService,
     BacklogItemSelectedService,
     SharedPropertiesService,
-    NewTuleapArtifactModalService
+    NewTuleapArtifactModalService,
+    ItemAnimatorService
 ) {
-    var self = this;
-    _.extend(self, {
+    const self = this;
+    Object.assign(self, {
         project_id                   : SharedPropertiesService.getProjectId(),
         milestone_id                 : parseInt(SharedPropertiesService.getMilestoneId(), 10),
         details                      : BacklogService.backlog,
@@ -46,29 +48,27 @@ function BacklogController(
         filter                       : BacklogFilterValue,
         dragular_instance_for_backlog: undefined,
         canUserMoveCards             : BacklogService.canUserMoveCards,
-        displayBacklogItems          : displayBacklogItems,
-        displayUserCantPrioritize    : displayUserCantPrioritize,
-        dragularOptionsForBacklog    : dragularOptionsForBacklog,
-        fetchAllBacklogItems         : fetchAllBacklogItems,
-        fetchBacklogItems            : fetchBacklogItems,
-        filterBacklog                : filterBacklog,
-        init                         : init,
-        isBacklogLoadedAndEmpty      : isBacklogLoadedAndEmpty,
-        isMilestoneContext           : isMilestoneContext,
-        loadBacklog                  : loadBacklog,
-        loadInitialBacklogItems      : loadInitialBacklogItems,
-        moveToBottom                 : moveToBottom,
-        moveToTop                    : moveToTop,
-        reorderBacklogItems          : reorderBacklogItems,
-        showAddBacklogItemModal      : showAddBacklogItemModal,
-        showAddBacklogItemParentModal: showAddBacklogItemParentModal,
-        soloButtonCanBeDisplayed     : soloButtonCanBeDisplayed
+        $onInit                      : init,
+        displayBacklogItems,
+        displayUserCantPrioritize,
+        dragularOptionsForBacklog,
+        fetchAllBacklogItems,
+        fetchBacklogItems,
+        filterBacklog,
+        isBacklogLoadedAndEmpty,
+        isMilestoneContext,
+        loadBacklog,
+        loadInitialBacklogItems,
+        moveToBottom,
+        moveToTop,
+        reorderBacklogItems,
+        showAddBacklogItemModal,
+        showAddBacklogItemParentModal,
+        soloButtonCanBeDisplayed
     });
 
-    init();
-    initDragular();
-
     function init() {
+        initDragular();
         self.loadBacklog(SharedPropertiesService.getMilestone());
         self.loadInitialBacklogItems(SharedPropertiesService.getInitialBacklogItems());
     }
@@ -194,6 +194,7 @@ function BacklogController(
 
     function prependItemToFilteredBacklog(backlog_item_id) {
         return BacklogItemService.getBacklogItem(backlog_item_id).then(({ backlog_item }) => {
+            ItemAnimatorService.animateCreated(backlog_item);
             self.all_backlog_items[backlog_item_id] = backlog_item;
             self.backlog_items.content.unshift(backlog_item);
 

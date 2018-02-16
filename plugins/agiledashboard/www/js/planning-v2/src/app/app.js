@@ -20,6 +20,7 @@ import milestone             from './milestone/milestone.js';
 import shared_properties     from './shared-properties/shared-properties.js';
 import user_preferences      from './user-preferences/user-preferences.js';
 import rest_error            from './rest-error/rest-error.js';
+import animator_module       from './animator/animator.js';
 
 import MainController           from './main-controller.js';
 import PlanningConfig           from './app-config.js';
@@ -32,6 +33,7 @@ export default angular.module('planning', [
     angular_artifact_modal_module,
     ngAnimate,
     ngSanitize,
+    animator_module,
     backlog,
     backlog_item_rest,
     backlog_item_selected,

@@ -8,12 +8,12 @@ export default BacklogItemCollectionService;
 
 BacklogItemCollectionService.$inject = [
     'BacklogItemService',
-    '$timeout'
+    'ItemAnimatorService'
 ];
 
 function BacklogItemCollectionService(
     BacklogItemService,
-    $timeout
+    ItemAnimatorService
 ) {
     const self = this;
     Object.assign(self, {
@@ -34,15 +34,12 @@ function BacklogItemCollectionService(
                 initial_effort,
                 card_fields,
                 updating: false,
-                updated: true,
                 status,
                 has_children,
                 parent
             });
 
-            $timeout(function() {
-                self.items[backlog_item_id].updated = false;
-            }, 1500);
+            ItemAnimatorService.animateUpdated(self.items[backlog_item_id]);
 
             if (! backlog_item.has_children) {
                 self.items[backlog_item_id].children.collapsed = true;

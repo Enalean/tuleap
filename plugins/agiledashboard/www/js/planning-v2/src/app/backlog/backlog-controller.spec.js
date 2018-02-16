@@ -5,10 +5,11 @@ import backlog_module        from './backlog.js';
 import BaseBacklogController from './backlog-controller.js';
 import BacklogFilterValue    from '../backlog-filter-terms.js';
 
-describe("BacklogController - ", function() {
-    var $q,
+describe("BacklogController - ", () => {
+    let $q,
         $scope,
         $document,
+        $controller,
         dragularService,
         BacklogController,
         BacklogService,
@@ -20,9 +21,10 @@ describe("BacklogController - ", function() {
         BacklogItemCollectionService,
         ProjectService,
         SharedPropertiesService,
-        NewTuleapArtifactModalService;
+        NewTuleapArtifactModalService,
+        ItemAnimatorService;
 
-    var milestone = {
+    const milestone = {
             id: 592,
             resources: {
                 backlog: {
@@ -49,14 +51,14 @@ describe("BacklogController - ", function() {
             total_size: 104
         };
 
-    beforeEach(function() {
+    beforeEach(() => {
         angular.mock.module(backlog_module);
 
         angular.mock.inject(function(
             _$q_,
             _$document_,
             $rootScope,
-            $controller,
+            _$controller_,
             _dragularService_,
             _BacklogService_,
             _MilestoneService_,
@@ -67,7 +69,8 @@ describe("BacklogController - ", function() {
             _MilestoneCollectionService_,
             _BacklogItemSelectedService_,
             _SharedPropertiesService_,
-            _NewTuleapArtifactModalService_
+            _NewTuleapArtifactModalService_,
+            _ItemAnimatorService_
         ) {
             $q              = _$q_;
             $document       = _$document_;
@@ -149,34 +152,41 @@ describe("BacklogController - ", function() {
             spyOn(NewTuleapArtifactModalService, "showCreation");
             spyOn(NewTuleapArtifactModalService, "showEdition");
 
-            BacklogFilterValue.terms = '';
-
-            BacklogController = $controller(BaseBacklogController, {
-                $q                           : $q,
-                $scope                       : $scope,
-                $document                    : $document,
-                dragularService              : dragularService,
-                BacklogService               : BacklogService,
-                MilestoneService             : MilestoneService,
-                BacklogItemService           : BacklogItemService,
-                ProjectService               : ProjectService,
-                BacklogItemCollectionService : BacklogItemCollectionService,
-                DroppedService               : DroppedService,
-                MilestoneCollectionService   : MilestoneCollectionService,
-                BacklogItemSelectedService   : BacklogItemSelectedService,
-                SharedPropertiesService      : SharedPropertiesService,
-                NewTuleapArtifactModalService: NewTuleapArtifactModalService
-            });
-
-            installPromiseMatchers();
+            ItemAnimatorService = _ItemAnimatorService_;
+            $controller         = _$controller_;
         });
+
+        spyOn(ItemAnimatorService, "animateCreated");
+
+        BacklogFilterValue.terms = '';
+
+        BacklogController = $controller(BaseBacklogController, {
+            $q,
+            $scope,
+            $document,
+            dragularService,
+            BacklogService,
+            MilestoneService,
+            BacklogItemService,
+            ProjectService,
+            BacklogItemCollectionService,
+            DroppedService,
+            MilestoneCollectionService,
+            BacklogItemSelectedService,
+            SharedPropertiesService,
+            NewTuleapArtifactModalService,
+            ItemAnimatorService
+        });
+        BacklogController.$onInit();
+
+        installPromiseMatchers();
     });
 
-    describe("init() - ", function () {
+    describe("$onInit() - ", function () {
         describe("Given we are in a top backlog context", function() {
             it("When I load the controller, then the project's backlog will be retrieved and the backlog updated", function() {
                 BacklogController.milestone_id = undefined;
-                BacklogController.init();
+                BacklogController.$onInit();
 
                 expect(BacklogService.loadProjectBacklog).toHaveBeenCalledWith(736);
             });
@@ -186,7 +196,7 @@ describe("BacklogController - ", function() {
             it("If a milestone has been injected, then use it", inject(function() {
                 spyOn(BacklogController, 'loadBacklog').and.callThrough();
 
-                BacklogController.init();
+                BacklogController.$onInit();
 
                 expect(BacklogController.loadBacklog).toHaveBeenCalledWith(milestone);
                 expect(MilestoneService.defineAllowedBacklogItemTypes).toHaveBeenCalledWith(milestone);
@@ -200,7 +210,7 @@ describe("BacklogController - ", function() {
                 MilestoneService.getMilestone.and.returnValue(milestone_request.promise);
                 spyOn(BacklogController, 'loadBacklog').and.callThrough();
 
-                BacklogController.init();
+                BacklogController.$onInit();
                 milestone_request.resolve({
                     results: milestone
                 });
@@ -215,7 +225,7 @@ describe("BacklogController - ", function() {
             SharedPropertiesService.getInitialBacklogItems.and.returnValue(initial_backlog_items);
             spyOn(BacklogController, 'loadInitialBacklogItems').and.callThrough();
 
-            BacklogController.init();
+            BacklogController.$onInit();
 
             expect(BacklogController.loadInitialBacklogItems).toHaveBeenCalledWith(initial_backlog_items);
             expect(BacklogController.all_backlog_items).toEqual({
@@ -317,25 +327,18 @@ describe("BacklogController - ", function() {
         });
     });
 
-    describe("fetchBacklogItems() -", function() {
-        var get_project_backlog_items_request;
-
-        beforeEach(function() {
-            get_project_backlog_items_request = $q.defer();
-        });
-
-        it("Given that we were in a project's context and given a limit and an offset, when I fetch backlog items, then the backlog will be marked as loading, BacklogItemService's Project route will be queried, its result will be appended to the backlog items and its promise will be returned", function() {
+    describe("fetchBacklogItems() -", () => {
+        it("Given that we were in a project's context and given a limit and an offset, when I fetch backlog items, then the backlog will be marked as loading, BacklogItemService's Project route will be queried, its result will be appended to the backlog items and its promise will be returned", () => {
             spyOn(BacklogController, "isMilestoneContext").and.returnValue(false);
-            BacklogItemService.getProjectBacklogItems.and.returnValue(get_project_backlog_items_request.promise);
-
-            var promise = BacklogController.fetchBacklogItems(60, 25);
-            expect(BacklogController.backlog_items.loading).toBeTruthy();
-            get_project_backlog_items_request.resolve({
+            BacklogItemService.getProjectBacklogItems.and.returnValue($q.resolve({
                 results: [
                     { id: 734 }
                 ],
                 total: 34
-            });
+            }));
+
+            var promise = BacklogController.fetchBacklogItems(60, 25);
+            expect(BacklogController.backlog_items.loading).toBeTruthy();
 
             expect(promise).toBeResolvedWith(34);
             expect(BacklogItemService.getProjectBacklogItems).toHaveBeenCalledWith(736, 60, 25);
@@ -349,17 +352,16 @@ describe("BacklogController - ", function() {
             expect(BacklogService.filterItems).toHaveBeenCalledWith('');
         });
 
-        it("Given that we were in a milestone's context and given a limit and an offset, when I fetch backlog items, then the backlog will be marked as loading, BacklogItemService's Milestone route will be queried, its result will be appended to the backlog items and its promise will be returned", function() {
-            BacklogItemService.getMilestoneBacklogItems.and.returnValue(get_project_backlog_items_request.promise);
-
-            var promise = BacklogController.fetchBacklogItems(60, 25);
-            expect(BacklogController.backlog_items.loading).toBeTruthy();
-            get_project_backlog_items_request.resolve({
+        it("Given that we were in a milestone's context and given a limit and an offset, when I fetch backlog items, then the backlog will be marked as loading, BacklogItemService's Milestone route will be queried, its result will be appended to the backlog items and its promise will be returned", () => {
+            BacklogItemService.getMilestoneBacklogItems.and.returnValue($q.resolve({
                 results: [
                     { id: 836 }
                 ],
                 total: 85
-            });
+            }));
+
+            var promise = BacklogController.fetchBacklogItems(60, 25);
+            expect(BacklogController.backlog_items.loading).toBeTruthy();
 
             expect(promise).toBeResolvedWith(85);
             expect(BacklogItemService.getMilestoneBacklogItems).toHaveBeenCalledWith(592, 60, 25);
@@ -463,7 +465,7 @@ describe("BacklogController - ", function() {
 
         describe("callback -", () => {
             let artifact;
-            beforeEach(function() {
+            beforeEach(() => {
                 NewTuleapArtifactModalService.showCreation.and.callFake((a, b, callback) => callback(5202));
                 artifact = {
                     backlog_item: {

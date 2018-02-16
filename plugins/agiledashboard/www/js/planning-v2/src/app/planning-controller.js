@@ -15,7 +15,8 @@ PlanningController.$inject = [
     'BacklogItemCollectionService',
     'MilestoneCollectionService',
     'BacklogItemSelectedService',
-    'EditItemService'
+    'EditItemService',
+    'ItemAnimatorService'
 ];
 
 function PlanningController(
@@ -30,7 +31,8 @@ function PlanningController(
     BacklogItemCollectionService,
     MilestoneCollectionService,
     BacklogItemSelectedService,
-    EditItemService
+    EditItemService,
+    ItemAnimatorService
 ) {
     const self = this;
 
@@ -47,6 +49,7 @@ function PlanningController(
         getRestError                  : RestErrorService.getError,
         getNumberOfSelectedBacklogItem: BacklogItemSelectedService.getNumberOfSelectedBacklogItem,
         showEditModal                 : EditItemService.showEditModal,
+        $onInit                       : init,
         canShowBacklogItem,
         displayClosedMilestones,
         displayUserCantPrioritizeForMilestones,
@@ -65,8 +68,6 @@ function PlanningController(
         thereAreClosedMilestonesLoaded,
         thereAreOpenMilestonesLoaded
     });
-
-    self.init();
 
     function init() {
         self.user_id               = SharedPropertiesService.getUserId();
@@ -301,10 +302,11 @@ function PlanningController(
     }
 
     function prependItemToSubmilestone(child_item_id, parent_item) {
-        return BacklogItemService.getBacklogItem(child_item_id).then(function(data) {
-            self.items[child_item_id] = data.backlog_item;
+        return BacklogItemService.getBacklogItem(child_item_id).then(({ backlog_item }) => {
+            ItemAnimatorService.animateCreated(backlog_item);
+            self.items[child_item_id] = backlog_item;
 
-            parent_item.content.unshift(data.backlog_item);
+            parent_item.content.unshift(backlog_item);
             MilestoneService.updateInitialEffort(parent_item);
         });
     }

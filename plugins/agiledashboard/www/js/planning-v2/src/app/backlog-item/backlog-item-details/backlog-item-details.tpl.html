@@ -9,7 +9,7 @@
             class="backlog-item-details-id"
             open-tlp-dropdown
         >
-            <span ng-bind-html="'#' + details.backlog_item.id | tuleapHighlight:details.backlog_filter.terms"></span>
+            <span ng-bind-html="details.backlog_item.short_type + ' #' + details.backlog_item.id | tuleapHighlight:details.backlog_filter.terms"></span>
             <i class="fa fa-caret-down backlog-item-details-id-icon"></i>
         </a>
         <div class="tlp-dropdown-menu" role="menu">
@@ -38,7 +38,7 @@
         class="backlog-item-details-id"
         data-nodrag="true"
     >
-        <span ng-bind-html="'#' + details.backlog_item.id | tuleapHighlight:details.backlog_filter.terms"></span>
+        <span ng-bind-html="details.backlog_item.short_type + ' #' + details.backlog_item.id | tuleapHighlight:details.backlog_filter.terms"></span>
         <i class="fa fa-caret-down backlog-item-details-id-icon"></i>
     </a>
 
