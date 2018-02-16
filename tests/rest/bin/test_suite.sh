@@ -2,8 +2,10 @@
 
 set -e
 
+PHP=/opt/rh/rh-php70/root/usr/bin/php
+
 setup_composer() {
-    (cd /usr/share/tuleap/tests/rest && scl enable rh-git29 "/usr/local/bin/composer.phar --no-interaction install")
+    (cd /usr/share/tuleap/tests/rest && scl enable rh-git29 "$PHP /usr/local/bin/composer.phar --no-interaction install")
 }
 
 generate_testsuite() {
@@ -11,9 +13,9 @@ generate_testsuite() {
 }
 
 run_testsuite() {
-    PHPUNIT=/usr/share/tuleap/tests/rest/vendor/bin/phpunit
-    if [ -x /opt/rh/rh-php70/root/usr/bin/php ]; then
-        PHPUNIT="/opt/rh/rh-php70/root/usr/bin/php $PHPUNIT"
+    PHPUNIT=/usr/share/tuleap/src/vendor/bin/phpunit
+    if [ -x $PHP ]; then
+        PHPUNIT="$PHP $PHPUNIT"
     fi
     $PHPUNIT --configuration /tmp/suite.xml
 }
