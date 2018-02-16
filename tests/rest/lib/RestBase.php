@@ -25,8 +25,8 @@ use Test\Rest\Cache;
 
 class RestBase extends PHPUnit_Framework_TestCase
 {
-    protected $base_url  = 'http://localhost/api/v1';
-    private   $setup_url = 'http://localhost/api/v1';
+    protected $base_url  = 'https://localhost/api/v1';
+    private   $setup_url = 'https://localhost/api/v1';
 
     /**
      * @var Client
@@ -77,8 +77,10 @@ class RestBase extends PHPUnit_Framework_TestCase
 
         $this->cache = Cache::instance();
 
-        $this->client       = new Client($this->base_url, array('ssl.certificate_authority' => 'system'));
-        $this->setup_client = new Client($this->setup_url, array('ssl.certificate_authority' => 'system'));
+        $this->client       = new Client($this->base_url);
+        $this->client->setSslVerification(false, false, false);
+        $this->setup_client = new Client($this->setup_url);
+        $this->setup_client->setSslVerification(false, false, false);
 
         $this->client->setDefaultOption('headers/Accept', 'application/json');
         $this->client->setDefaultOption('headers/Content-Type', 'application/json');

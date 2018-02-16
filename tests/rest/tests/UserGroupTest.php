@@ -113,7 +113,7 @@ class UserGroupTest extends RestBase {
                     'display_name' => REST_TestDataBuilder::TEST_USER_RESTRICTED_1_DISPLAYNAME,
                     'username'     => REST_TestDataBuilder::TEST_USER_RESTRICTED_1_NAME,
                     'ldap_id'      => '',
-                    'avatar_url'   => 'http://localhost/themes/common/images/avatar_default.png',
+                    'avatar_url'   => 'https://localhost/themes/common/images/avatar_default.png',
                     'status'       => 'R',
                     'is_anonymous' => false
                 ),
@@ -126,7 +126,7 @@ class UserGroupTest extends RestBase {
                     'display_name' => REST_TestDataBuilder::TEST_USER_1_DISPLAYNAME,
                     'username'     => REST_TestDataBuilder::TEST_USER_1_NAME,
                     'ldap_id'      => REST_TestDataBuilder::TEST_USER_1_LDAPID,
-                    'avatar_url'   => 'http://localhost/themes/common/images/avatar_default.png',
+                    'avatar_url'   => 'https://localhost/themes/common/images/avatar_default.png',
                     'status'       => 'A',
                     'is_anonymous' => false
                 ),
@@ -139,7 +139,7 @@ class UserGroupTest extends RestBase {
                     'display_name' => REST_TestDataBuilder::TEST_USER_2_DISPLAYNAME,
                     'username'     => REST_TestDataBuilder::TEST_USER_2_NAME,
                     'ldap_id'      => null,
-                    'avatar_url'   => 'http://localhost/themes/common/images/avatar_default.png',
+                    'avatar_url'   => 'https://localhost/themes/common/images/avatar_default.png',
                     'status'       => 'A',
                     'is_anonymous' => false
                 ),
@@ -152,7 +152,7 @@ class UserGroupTest extends RestBase {
                     'display_name' => REST_TestDataBuilder::TEST_USER_3_DISPLAYNAME,
                     'username'     => REST_TestDataBuilder::TEST_USER_3_NAME,
                     'ldap_id'      => null,
-                    'avatar_url'   => 'http://localhost/themes/common/images/avatar_default.png',
+                    'avatar_url'   => 'https://localhost/themes/common/images/avatar_default.png',
                     'status'       => 'A',
                     'is_anonymous' => false
                 )
@@ -176,7 +176,7 @@ class UserGroupTest extends RestBase {
                     'display_name' => REST_TestDataBuilder::TEST_USER_1_DISPLAYNAME,
                     'username'     => REST_TestDataBuilder::TEST_USER_1_NAME,
                     'ldap_id'      => REST_TestDataBuilder::TEST_USER_1_LDAPID,
-                    'avatar_url'   => 'http://localhost/themes/common/images/avatar_default.png',
+                    'avatar_url'   => 'https://localhost/themes/common/images/avatar_default.png',
                     'status'       => 'A',
                     'is_anonymous' => false
                 )
@@ -200,7 +200,7 @@ class UserGroupTest extends RestBase {
                     'display_name' => REST_TestDataBuilder::TEST_USER_1_DISPLAYNAME,
                     'username'     => REST_TestDataBuilder::TEST_USER_1_NAME,
                     'ldap_id'      => REST_TestDataBuilder::TEST_USER_1_LDAPID,
-                    'avatar_url'   => 'http://localhost/themes/common/images/avatar_default.png',
+                    'avatar_url'   => 'https://localhost/themes/common/images/avatar_default.png',
                     'status'       => 'A',
                     'is_anonymous' => false
                 ),
@@ -213,7 +213,7 @@ class UserGroupTest extends RestBase {
                     'display_name' => REST_TestDataBuilder::TEST_USER_2_DISPLAYNAME,
                     'username'     => REST_TestDataBuilder::TEST_USER_2_NAME,
                     'ldap_id'      => null,
-                    'avatar_url'   => 'http://localhost/themes/common/images/avatar_default.png',
+                    'avatar_url'   => 'https://localhost/themes/common/images/avatar_default.png',
                     'status'       => 'A',
                     'is_anonymous' => false
                 )

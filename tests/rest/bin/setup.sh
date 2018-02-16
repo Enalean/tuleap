@@ -6,41 +6,6 @@ if [ -z "$MYSQL_DAEMON" ]; then
     MYSQL_DAEMON=mysqld
 fi
 
-if [ -z "$HTTPD_DAEMON" ]; then
-    HTTPD_DAEMON=httpd24-httpd
-fi
-
-setup_apache() {
-    echo "Setup $HTTPD_DAEMON"
-    case "$HTTPD_DAEMON" in
-	nginx)
-	    type=nginx
-	    CONF_DIR=/etc/nginx/
-	    TAG=nginx
-	    ;;
-	*)
-	    CONF_DIR=/opt/rh/httpd24/root/etc/httpd
-	    TAG=httpd24
-	    setup_apache_service_for_httpd24
-	    ;;
-    esac
-    if [ "$type" == "nginx" ]; then
-	cp /usr/share/tuleap/tests/rest/etc/rest-tests.$TAG.conf $CONF_DIR/nginx.conf
-    else
-	cp /usr/share/tuleap/src/etc/combined.conf.dist $CONF_DIR/conf.d/combined.conf
-	sed -i -e "s/User apache/User codendiadm/" \
-	    -e "s/Group apache/Group codendiadm/" $CONF_DIR/conf/httpd.conf
-	cp /usr/share/tuleap/tests/rest/etc/rest-tests.$TAG.conf $CONF_DIR/conf.d/rest-tests.conf
-    fi
-    service $HTTPD_DAEMON restart
-}
-
-setup_apache_service_for_httpd24() {
-    echo "Bind httpd24-httpd service to httpd service"
-    rm -f /etc/init.d/httpd
-    ln -s /etc/init.d/httpd24-httpd /etc/init.d/httpd
-}
-
 setup_tuleap() {
     echo "Setup Tuleap"
     cat /usr/share/tuleap/src/etc/database.inc.dist | \
@@ -66,7 +31,7 @@ setup_tuleap() {
 	-e "s#%sys_dbauth_passwd%#welcome0#g" \
 	-e "s#%sys_org_name%#Tuleap#g" \
 	-e "s#%sys_long_org_name%#Tuleap#g" \
-	-e 's#\$sys_https_host =.*#\$sys_https_host = "";#' \
+	-e 's#\$sys_https_host =.*#\$sys_https_host = "localhost";#' \
 	-e 's#\$sys_rest_api_over_http =.*#\$sys_rest_api_over_http = 1;#' \
 	-e 's#\$sys_logger_level =.*#\$sys_logger_level = "debug";#' \
 	-e 's#/home/users##' \
@@ -75,17 +40,6 @@ setup_tuleap() {
 
 	cp /usr/share/tuleap/src/utils/svn/Tuleap.pm /usr/share/perl5/vendor_perl/Apache/Tuleap.pm
 	cp /usr/share/tuleap/src/utils/fileforge.pl /usr/lib/tuleap/bin/fileforge
-}
-
-setup_fpm() {
-    if [ -n "$FPM_DAEMON" ]; then
-        echo "Setup FPM $FPM_DAEMON"
-        sed -i -e "s/user = apache/user = codendiadm/" \
-            -e "s/group = apache/group = codendiadm/" \
-            /etc/opt/rh/rh-php56/php-fpm.d/www.conf
-        cat /usr/share/tuleap/src/etc/fpm.conf.dist >> /etc/opt/rh/rh-php56/php-fpm.d/www.conf
-        service $FPM_DAEMON restart
-    fi
 }
 
 setup_database() {
@@ -173,7 +127,8 @@ seed_plugin_data() {
 }
 
 setup_tuleap
-setup_fpm
-setup_apache
+/usr/share/tuleap/tools/utils/php56/run.php --modules=nginx,fpm
+service rh-php56-php-fpm start
+service nginx start
 setup_database
 seed_data
