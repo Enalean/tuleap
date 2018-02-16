@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,6 +21,8 @@ namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
 interface ValueWrapperVisitor
 {
+    public function visitStatusOpenValueWrapper(StatusOpenValueWrapper $value_wrapper, ValueWrapperParameters $parameters);
+
     public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, ValueWrapperParameters $parameters);
 
     public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, ValueWrapperParameters $parameters);

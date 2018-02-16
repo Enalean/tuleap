@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2017, Enalean. All rights reserved
+ * Copyright (c) 2017 - 2018, Enalean. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -40,7 +40,7 @@ const TQL_mode_definition = {
             token: "keyword"
         },
         {
-            regex: /(?:now|between|in|not|myself)\b/i,
+            regex: /(?:now|between|in|not|myself|open)\b/i,
             token: "variable-2"
         },
         {

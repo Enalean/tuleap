@@ -1,6 +1,6 @@
 <?php
 /**
- *  Copyright (c) Enalean, 2017. All Rights Reserved.
+ *  Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  *  This file is a part of Tuleap.
  *
@@ -28,10 +28,12 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\InValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\MetadataValueWrapperParameters;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\StatusOpenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\Comment\CommentToMySelfComparisonException;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\Comment\CommentToNowComparisonException;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\Comment\CommentToStatusOpenComparisonException;
 
 class EqualComparisonChecker implements ICheckMetadataForAComparison, ValueWrapperVisitor
 {
@@ -69,5 +71,12 @@ class EqualComparisonChecker implements ICheckMetadataForAComparison, ValueWrapp
         ValueWrapperParameters $parameters
     ) {
         throw new CommentToMySelfComparisonException();
+    }
+
+    public function visitStatusOpenValueWrapper(
+        StatusOpenValueWrapper $value_wrapper,
+        ValueWrapperParameters $parameters
+    ) {
+        throw new CommentToStatusOpenComparisonException();
     }
 }

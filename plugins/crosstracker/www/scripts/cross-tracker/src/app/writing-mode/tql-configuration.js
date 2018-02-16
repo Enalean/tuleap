@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2017, Enalean. All rights reserved
+ * Copyright (c) 2017 - 2018, Enalean. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -24,6 +24,7 @@ import {
 const TQL_cross_tracker_autocomplete_keywords = [
     'AND',
     'OR',
+    'OPEN()',
     '@title',
     '@description'
 ];

@@ -21,6 +21,7 @@
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\StatusOpenValueWrapper;
 use Tuleap\Tracker\Report\Query\CommentFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
@@ -82,6 +83,13 @@ class MetadataEqualComparisonFromWhereBuilder implements MetadataComparisonFromW
 
     public function visitCurrentUserValueWrapper(
         CurrentUserValueWrapper $value_wrapper,
+        ValueWrapperParameters $parameters
+    ) {
+        throw new \RuntimeException("Metadata is not supported here.");
+    }
+
+    public function visitStatusOpenValueWrapper(
+        StatusOpenValueWrapper $value_wrapper,
         ValueWrapperParameters $parameters
     ) {
         throw new \RuntimeException("Metadata is not supported here.");
