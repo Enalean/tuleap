@@ -10,12 +10,8 @@ PHP=php -q -d date.timezone=Europe/Paris -d include_path=$(PHP_INCLUDE_PATH) -d 
 ifeq ($(BUILD_ENV),ci)
 OUTPUT_DIR=$(WORKSPACE)
 SIMPLETEST_OPTIONS=-x
-PHPUNIT_TESTS_OPTIONS=--log-junit $(OUTPUT_DIR)/phpunit_tests.xml --coverage-html $(OUTPUT_DIR)/phpunit_coverage --coverage-clover $(OUTPUT_DIR)/phpunit_coverage/coverage.xml
-PHPUNIT_OPTIONS=
 else
 SIMPLETEST_OPTIONS=
-PHPUNIT_TESTS_OPTIONS=
-PHPUNIT_OPTIONS=--color
 endif
 
 OS := $(shell uname)
@@ -29,7 +25,6 @@ SUDO=
 DOCKER=$(SUDO) docker
 DOCKER_COMPOSE=$(SUDO) docker-compose $(DOCKER_COMPOSE_FILE)
 
-PHPUNIT=$(PHP) vendor/phpunit/phpunit/phpunit.php $(PHPUNIT_OPTIONS)
 SIMPLETEST=$(PHP) tests/bin/simpletest $(SIMPLETEST_OPTIONS)
 
 AUTOLOAD_EXCLUDES=^tests|^template
@@ -139,8 +134,23 @@ tests_rest: ## Run all REST tests
 tests_rest_setup: ## Start REST tests container to launch tests manually
 	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap --mount type=tmpfs,destination=/tmp -w /usr/share/tuleap enalean/tuleap-test-rest:c6-php56-httpd24-mysql56 bash
 
+phpunit-ci-run:
+	/opt/rh/rh-php56/root/usr/bin/php src/vendor/bin/phpunit \
+		-c tests/phpunit/phpunit.xml \
+		--log-junit /tmp/phpunit_tests_results.xml \
+		--coverage-html /tmp/phpunit_coverage \
+		--coverage-clover /tmp/phpunit_coverage/coverage.xml
+
+phpunit-ci:
+	mkdir -p $(WORKSPACE)/results/ut-phpunit-php-56
+	cid=`$(DOCKER) create -v $(CURDIR):/tuleap:ro --entrypoint /bin/bash enalean/tuleap-test-phpunit:c6-php56 -c "make -C /tuleap phpunit-ci-run"`;\
+		docker start --attach "$$cid" || true;\
+		docker cp "$$cid":/tmp/phpunit_tests_results.xml $(WORKSPACE)/results/ut-phpunit-php-56/;\
+		docker cp "$$cid":/tmp/phpunit_coverage $(WORKSPACE)/results/ut-phpunit-php-56/;\
+		docker rm -fv "$$cid"
+
 phpunit:
-	$(PHPUNIT) $(PHPUNIT_TESTS_OPTIONS) --bootstrap tests/phpunit_boostrap.php plugins/proftpd/phpunit
+	src/vendor/bin/phpunit -c tests/phpunit/phpunit.xml
 
 simpletest:
 	$(SIMPLETEST) $(SIMPLETEST_OPTIONS) tests/simpletest plugins tests/integration

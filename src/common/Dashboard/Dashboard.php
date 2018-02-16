@@ -22,6 +22,24 @@ namespace Tuleap\Dashboard;
 
 class Dashboard
 {
+    /**
+     * This is also defined in dashboard-layout.js
+     *
+     * @var array
+     */
+    public static $LAYOUTS = [
+        0 => [ '' ],
+        1 => ['one-column'],
+        2 => ['two-columns', 'two-columns-small-big', 'two-columns-big-small'],
+        3 => [
+            'three-columns',
+            'three-columns-small-big-small',
+            'three-columns-big-small-small',
+            'three-columns-small-small-big'
+        ],
+        4 => [ 'too-many-columns' ]
+    ];
+
     private $id;
     private $name;
 
@@ -39,5 +57,12 @@ class Dashboard
     public function getName()
     {
         return $this->name;
+    }
+
+    public function isLayoutValid($layout, $columns_count)
+    {
+        $index = max($columns_count, 0);
+        $index = min($index, 4);
+        return in_array($layout, self::$LAYOUTS[$index]);
     }
 }

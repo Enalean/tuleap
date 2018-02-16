@@ -41,7 +41,7 @@ pipeline {
                     deleteDir()
                 }
                 withCredentials(npm_credentials) {
-                    sh 'docker run --rm -e NPM_REGISTRY="$NPM_REGISTRY" -e NPM_USER="$NPM_USER" -e NPM_PASSWORD="$NPM_PASSWORD" -e NPM_EMAIL="$NPM_EMAIL" -v "$WORKSPACE/sources/":/tuleap -v "$WORKSPACE/sources/":/output --tmpfs /tmp/tuleap_build:rw,noexec,nosuid --read-only $DOCKER_REGISTRY/tuleap-generated-files-builder'
+                    sh 'docker run --rm -e NPM_REGISTRY="$NPM_REGISTRY" -e NPM_USER="$NPM_USER" -e NPM_PASSWORD="$NPM_PASSWORD" -e NPM_EMAIL="$NPM_EMAIL" -v "$WORKSPACE/sources/":/tuleap -v "$WORKSPACE/sources/":/output --tmpfs /tmp/tuleap_build:rw,noexec,nosuid --read-only $DOCKER_REGISTRY/tuleap-generated-files-builder dev'
                 }
             }
         }
@@ -85,14 +85,8 @@ pipeline {
                     junit 'results/ut-simpletest-php-56/unit_tests_report.xml'
                 },
                 'UT PHPUnit PHP 5.6': {
-                    sh """
-                    cid="\$(docker create -v \$WORKSPACE/sources:/tuleap:ro \$DOCKER_REGISTRY/enalean/tuleap-test-phpunit:c6-php56 --ci)"
-                    docker start --attach "\$cid" || true
-                    mkdir -p 'results/ut-phpunit-php-56'
-                    docker cp "\$cid":/output/phpunit_tests.xml results/ut-phpunit-php-56/
-                    docker rm -fv "\$cid"
-                    """
-                    junit 'results/ut-phpunit-php-56/phpunit_tests.xml'
+                    sh "make -C $WORKSPACE/sources phpunit-ci"
+                    junit 'results/ut-phpunit-php-56/phpunit_tests_results.xml'
                 },
                 'Karma AgileDashboard PlanningV2': { runKarmaTests('planning', 'plugins/agiledashboard/www/js/planning-v2') },
                 'Karma AgileDashboard Kanban': { runKarmaTests('kanban', 'plugins/agiledashboard/www/js/kanban') },
