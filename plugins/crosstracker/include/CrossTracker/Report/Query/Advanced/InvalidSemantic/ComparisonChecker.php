@@ -20,6 +20,7 @@
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic;
 
+use Tuleap\CrossTracker\Report\Query\Advanced\AllowedMetadata;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
@@ -66,7 +67,9 @@ class ComparisonChecker implements ICheckSemanticFieldForAComparison, ValueWrapp
 
     public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
     {
-        return $value_wrapper->getValue();
+        if ($parameters->getMetadata()->getName() === AllowedMetadata::STATUS) {
+            throw new StatusToSimpleValueComparisonException($value_wrapper->getValue());
+        }
     }
 
     public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
@@ -92,6 +95,8 @@ class ComparisonChecker implements ICheckSemanticFieldForAComparison, ValueWrapp
         StatusOpenValueWrapper $value_wrapper,
         ValueWrapperParameters $parameters
     ) {
-        throw new ToStatusOpenComparisonException($parameters->getMetadata());
+        if ($parameters->getMetadata()->getName() !== AllowedMetadata::STATUS) {
+            throw new ToStatusOpenComparisonException($parameters->getMetadata());
+        }
     }
 }

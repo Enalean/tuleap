@@ -1,21 +1,23 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
 require_once('common/dao/include/DataAccessObject.class.php');
@@ -64,5 +66,20 @@ class Tracker_Semantic_StatusDao extends DataAccessObject {
                 WHERE tracker_id = $tracker_id";
         return $this->update($sql);
     }
+
+    public function getNbOfTrackerWithoutSemanticStatusDefined(array $trackers_id)
+    {
+        $trackers_id = $this->da->escapeIntImplode($trackers_id);
+
+        $sql = "SELECT count(*) AS nb
+                FROM tracker
+                    LEFT JOIN tracker_semantic_status AS status
+                    ON (tracker.id = status.tracker_id)
+                WHERE tracker.id IN ($trackers_id)
+                    AND status.tracker_id IS NULL";
+
+        $row = $this->retrieveFirstRow($sql);
+
+        return $row['nb'];
+    }
 }
-?>

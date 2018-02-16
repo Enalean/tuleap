@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,7 +23,6 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Semantic;
 use Tuleap\CrossTracker\Report\Query\Advanced\AllowedMetadata;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
-use Tuleap\Tracker\Report\Query\FromWhere;
 use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
 
 abstract class ComparisonFromWhereBuilder implements FromWhereBuilder
@@ -36,13 +35,19 @@ abstract class ComparisonFromWhereBuilder implements FromWhereBuilder
      * @var Description\FromWhereBuilder
      */
     private $description_builder;
+    /**
+     * @var Status\FromWhereBuilder
+     */
+    private $status_builder;
 
     public function __construct(
         Title\FromWhereBuilder $title_builder,
-        Description\FromWhereBuilder $description_builder
+        Description\FromWhereBuilder $description_builder,
+        Status\FromWhereBuilder $status_builder
     ) {
         $this->title_builder       = $title_builder;
         $this->description_builder = $description_builder;
+        $this->status_builder      = $status_builder;
     }
 
     /**
@@ -50,10 +55,16 @@ abstract class ComparisonFromWhereBuilder implements FromWhereBuilder
      */
     public function getFromWhere(Metadata $metadata, Comparison $comparison)
     {
-        if ($metadata->getName() === AllowedMetadata::TITLE) {
-            return $this->title_builder->getFromWhere($metadata, $comparison);
+        switch ($metadata->getName()) {
+            case AllowedMetadata::TITLE:
+                return $this->title_builder->getFromWhere($metadata, $comparison);
+                break;
+            case AllowedMetadata::DESCRIPTION:
+                return $this->description_builder->getFromWhere($metadata, $comparison);
+                break;
+            case AllowedMetadata::STATUS:
+                return $this->status_builder->getFromWhere($metadata, $comparison);
+                break;
         }
-
-        return $this->description_builder->getFromWhere($metadata, $comparison);
     }
 }
