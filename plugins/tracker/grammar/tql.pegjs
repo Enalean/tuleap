@@ -139,7 +139,7 @@ SimpleExpr
     = l:Literal { return $l; }
 
 Literal
-    = String / Float / Integer / CurrentDateTime / CurrentUser
+    = String / Float / Integer / CurrentDateTime / CurrentUser / StatusOpen
 
 ListValue
     = l:Literal { return $l; }
@@ -194,6 +194,11 @@ CurrentDateTime
 CurrentUser
     = "myself"i _ "(" _ ")" {
         return new CurrentUserValueWrapper(\UserManager::instance());
+    }
+
+StatusOpen
+    = "open"i _ "(" _ ")" {
+        return new StatusOpenValueWrapper();
     }
 
 PeriodCurrentDateTime

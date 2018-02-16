@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -28,6 +28,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\InValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\MetadataValueWrapperParameters;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\StatusOpenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 
@@ -85,5 +86,12 @@ class ComparisonChecker implements ICheckSemanticFieldForAComparison, ValueWrapp
         ValueWrapperParameters $parameters
     ) {
         throw new ToMyselfComparisonException($parameters->getMetadata());
+    }
+
+    public function visitStatusOpenValueWrapper(
+        StatusOpenValueWrapper $value_wrapper,
+        ValueWrapperParameters $parameters
+    ) {
+        throw new ToStatusOpenComparisonException($parameters->getMetadata());
     }
 }

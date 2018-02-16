@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,6 +26,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\MySelfIsNotSupportedException;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NowIsNotSupportedException;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\StatusOpenIsNotSupportedException;
 
 class FloatFieldChecker implements InvalidFieldChecker
 {
@@ -55,6 +56,8 @@ class FloatFieldChecker implements InvalidFieldChecker
             throw new FloatToNowComparisonException($field);
         } catch (MySelfIsNotSupportedException $exception) {
             throw new FloatToMySelfComparisonException($field);
+        } catch (StatusOpenIsNotSupportedException $exception) {
+            throw new FloatToStatusOpenComparisonException($field);
         }
 
         foreach ($values as $value) {

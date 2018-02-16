@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,6 +22,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 
 use CodendiDataAccess;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\StatusOpenValueWrapper;
 use Tuleap\Tracker\Report\Query\FromWhere;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
@@ -77,6 +78,14 @@ class MetadataNotEqualComparisonFromWhereBuilder implements MetadataComparisonFr
     ) {
         throw new \RuntimeException("Metadata is not supported here.");
     }
+
+    public function visitStatusOpenValueWrapper(
+        StatusOpenValueWrapper $value_wrapper,
+        ValueWrapperParameters $parameters
+    ) {
+        throw new \RuntimeException("Metadata is not supported here.");
+    }
+
     private function quoteSmart($value)
     {
         return $this->removeEnclosingSimpleQuoteToNotFailMatchSqlQuery(
