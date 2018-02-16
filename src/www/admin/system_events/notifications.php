@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Layout\IncludeAssets;
 
 require_once 'pre.php';
 
@@ -152,7 +154,12 @@ foreach ($dao->searchAll() as $row) {
     );
 }
 
-$GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/admin/system-events-notifications.js');
+$assets_path    = ForgeConfig::get('tuleap_dir') . '/src/www/assets';
+$include_assets = new IncludeAssets($assets_path, '/assets');
+
+$GLOBALS['HTML']->includeFooterJavascriptFile(
+    $include_assets->getFileURL('site-admin-system-events-notifications.js')
+);
 
 $renderer = new \Tuleap\Admin\AdminPageRenderer();
 $renderer->renderANoFramedPresenter(

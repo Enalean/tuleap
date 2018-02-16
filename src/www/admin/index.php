@@ -1,7 +1,7 @@
 <?php
 /**
   * Copyright 1999-2000 (c) The SourceForge Crew
-  * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
+  * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
   *
   * This file is a part of Tuleap.
   *
@@ -24,6 +24,7 @@ use Tuleap\Admin\Homepage\StatisticsBadgePresenter;
 use Tuleap\Admin\Homepage\StatisticsPresenter;
 use Tuleap\Admin\Homepage\UserCounterDao;
 use Tuleap\Admin\Homepage\UsersStatisticsPresenter;
+use Tuleap\Layout\IncludeAssets;
 
 require_once('pre.php');
 require_once('www/admin/admin_utils.php');
@@ -32,11 +33,16 @@ require_once('common/widget/Widget_Static.class.php');
 $request = HTTPRequest::instance();
 $request->checkUserIsSuperUser();
 
+$assets_path    = ForgeConfig::get('tuleap_dir') . '/src/www/assets';
+$include_assets = new IncludeAssets($assets_path, '/assets');
+
 $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/d3/v4/d3.min.js');
 $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/admin/statistics-chart.js');
 $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/admin/statistics-chart-factory.js');
 $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/admin/generate-pie-charts.js');
-$GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/admin/system-events-admin-homepage.js');
+$GLOBALS['HTML']->includeFooterJavascriptFile(
+    $include_assets->getFileURL('site-admin-system-events-admin-homepage.js')
+);
 
 $abc_array = array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','0','1','2','3','4','5','6','7','8','9');
 

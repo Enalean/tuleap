@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean SAS - 2016. All rights reserved
+ * Copyright (c) Enalean SAS - 2016 - 2018. All rights reserved
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,16 +15,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-document.addEventListener('DOMContentLoaded', function () {
-    var matching_buttons = document.querySelectorAll('.delete-tv3-button');
+import { modal as createModal } from 'tlp';
 
-    [].forEach.call(matching_buttons, function (button) {
-        var modal_element = document.getElementById(button.dataset.modalId);
+document.addEventListener('DOMContentLoaded', () => {
+    const matching_buttons = document.querySelectorAll('.delete-tv3-button');
+
+    [].forEach.call(matching_buttons, button => {
+        const modal_element = document.getElementById(button.dataset.modalId);
 
         if (modal_element) {
-            var modal = tlp.modal(modal_element);
+            const modal = createModal(modal_element);
 
-            button.addEventListener('click', function () {
+            button.addEventListener('click', () => {
                 modal.toggle();
             });
         }

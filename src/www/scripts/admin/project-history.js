@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean SAS - 2016. All rights reserved
+ * Copyright (c) Enalean SAS - 2016 - 2018. All rights reserved
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,22 +15,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-document.addEventListener('DOMContentLoaded', function() {
+import { datePicker, select2 } from 'tlp';
+import {
+    autocomplete_users_for_select2 as autocomplete
+} from '../tuleap/autocomplete-for-select2.js'
 
-    var sub_events_panels = document.querySelectorAll('.siteadmin-project-history-filter-form-subevents'),
-        events            = document.getElementById('siteadmin-project-history-events'),
-        by_filter         = document.getElementById('siteadmin-project-history-by');
+document.addEventListener('DOMContentLoaded', () => {
+    const sub_events_panels = document.querySelectorAll('.siteadmin-project-history-filter-form-subevents'),
+        events              = document.getElementById('siteadmin-project-history-events'),
+        by_filter           = document.getElementById('siteadmin-project-history-by');
 
     if (events) {
         displayCurrentSubEventsPanel();
 
-        events.addEventListener('change', function () {
-            [].forEach.call(sub_events_panels, function (panel) {
-                var box = panel.querySelector('select');
+        events.addEventListener('change', () => {
+            [].forEach.call(sub_events_panels, panel => {
+                const box = panel.querySelector('select');
 
                 panel.style.display = 'none';
                 box.disabled = true;
-                [].forEach.call(box.options, function (option) {
+                [].forEach.call(box.options, option => {
                     option.selected = false;
                 });
             });
@@ -40,21 +44,21 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     if (by_filter) {
-        tuleap.autocomplete_users_for_select2(by_filter, { internal_users_only: 1 });
+        autocomplete(by_filter, { internal_users_only: 1 });
     }
 
-    var datepickers = document.querySelectorAll('.tlp-input-date');
-    [].forEach.call(datepickers, function (element) {
-        tlp.datePicker(element);
+    const datepickers = document.querySelectorAll('.tlp-input-date');
+    [].forEach.call(datepickers, element => {
+        datePicker(element);
     });
 
     function displayCurrentSubEventsPanel() {
-        var panel = document.getElementById(events.options[events.selectedIndex].dataset.target);
+        const panel = document.getElementById(events.options[events.selectedIndex].dataset.target);
         if (! panel) {
             return;
         }
 
-        var box = panel.querySelector('select');
+        const box = panel.querySelector('select');
 
         panel.style.display = 'block';
         box.disabled = false;
@@ -62,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function initSelect2(box) {
-        tlp.select2(box, {
+        select2(box, {
             placeholder: box.dataset.placeholder,
             allowClear: true
         });

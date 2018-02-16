@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean SAS - 2016. All rights reserved
+ * Copyright (c) Enalean SAS - 2016 - 2018. All rights reserved
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,21 +15,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-document.addEventListener('DOMContentLoaded', function() {
+import { modal as createModal, datePicker } from 'tlp';
 
-    var expiry_element = document.querySelector('#expiry');
+document.addEventListener('DOMContentLoaded', function() {
+    const expiry_element = document.querySelector('#expiry');
     if (expiry_element) {
-        tlp.datePicker(expiry_element);
+        datePicker(expiry_element);
     }
 
+    const dom_user_change_password_modal = document.getElementById('user-change-password-modal');
+    const tlp_user_change_password_modal = createModal(dom_user_change_password_modal, {});
 
-    var dom_user_change_password_modal = document.getElementById('user-change-password-modal');
-    var tlp_user_change_password_modal = tlp.modal(dom_user_change_password_modal, {});
-    document.getElementById('siteadmin-user-details-change-password').addEventListener('click', function () {
+    document.getElementById('siteadmin-user-details-change-password').addEventListener('click', () => {
         tlp_user_change_password_modal.toggle();
     });
 
-    var url_params = location.search;
+    const url_params = location.search;
     if (url_params.indexOf("show-change-user-password-modal") !== -1) {
         tlp_user_change_password_modal.toggle();
     }

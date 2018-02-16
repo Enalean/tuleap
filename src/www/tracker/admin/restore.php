@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Tracker\ArtifactPendingDeletionPresenter;
 
 require_once('pre.php');
@@ -30,7 +31,12 @@ ini_set('max_execution_time', 1800);
 $request = HTTPRequest::instance();
 $request->checkUserIsSuperUser();
 
-$GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/admin/trackers-pending-removal.js');
+$assets_path    = ForgeConfig::get('tuleap_dir') . '/src/www/assets';
+$include_assets = new IncludeAssets($assets_path, '/assets');
+
+$GLOBALS['HTML']->includeFooterJavascriptFile(
+    $include_assets->getFileURL('site-admin-trackers-pending-removal.js')
+);
 
 $pm   = ProjectManager::instance();
 $func = $request->get('func');

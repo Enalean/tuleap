@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,14 +18,17 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-(function () {
-    var logs_buttons = document.querySelectorAll('.project-webhook-modal');
+import { modal as createModal } from 'tlp';
+
+document.addEventListener('DOMContentLoaded', () => {
+    const logs_buttons = document.querySelectorAll('.project-webhook-modal');
+
     [].forEach.call(logs_buttons, function (button) {
-        var modal_element = document.getElementById(button.dataset.modalId),
-            modal         = tlp.modal(modal_element);
+        const modal_element = document.getElementById(button.dataset.modalId),
+            modal           = createModal(modal_element);
 
         button.addEventListener('click', function () {
             modal.toggle();
         });
     });
-})();
+});

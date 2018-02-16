@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2017. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\user\GroupCannotRemoveLastAdministrationPermission;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Admin\PermissionDelegation\PermissionPresenterBuilder;
@@ -240,9 +241,13 @@ class Admin_PermissionDelegationController {
             $add_perm_presenter = new Admin_PermissionDelegationPermissionsModalPresenter($current_group, $unused_permissions);
         }
 
+        $assets_path    = ForgeConfig::get('tuleap_dir') . '/src/www/assets';
+        $include_assets = new IncludeAssets($assets_path, '/assets');
+
         $presenter = new Admin_PermissionDelegationIndexPresenter(
             $this->csrf_token,
             $formatted_groups,
+            $include_assets->getFileURL('site-admin-permission-delegation.js'),
             new Admin_PermissionDelegationGroupModalPresenter(),
             $delete_group_presenter,
             $edit_group_presenter,
