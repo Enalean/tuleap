@@ -1184,6 +1184,11 @@ class DocmanPlugin extends Plugin
                 $service_pane_builder->buildPresenter($event)
             );
 
-        $event->addPane($admin_permission_pane);
+        $project         = $event->getProject();
+        $rank_in_project = $project->getService(
+            $this->getServiceShortname()
+        )->getRank();
+
+        $event->addPane($admin_permission_pane, $rank_in_project);
     }
 }

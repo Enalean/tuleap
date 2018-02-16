@@ -21,6 +21,7 @@
 namespace Tuleap\Svn\PerGroup;
 
 use ForgeConfig;
+use SvnPlugin;
 use TemplateRendererFactory;
 use Tuleap\Project\Admin\PerGroup\PermissionPerGroupPanePresenter;
 use Tuleap\Project\Admin\Permission\PermissionPerGroupPaneCollector;
@@ -63,7 +64,12 @@ class PaneCollector
             ->getRenderer($templates_dir)
             ->renderToString('project-admin-permission-per-group', $global_presenter);
 
-        $event->addPane($content);
+        $project         = $event->getProject();
+        $rank_in_project = $project->getService(
+            SvnPlugin::SERVICE_SHORTNAME
+        )->getRank();
+
+        $event->addPane($content, $rank_in_project);
     }
 
     /**

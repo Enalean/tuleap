@@ -1510,6 +1510,11 @@ class trackerPlugin extends Plugin {
                 $presenter
             );
 
-        $event->addPane($admin_permission_pane);
+        $project         = $event->getProject();
+        $rank_in_project = $project->getService(
+            $this->getServiceShortname()
+        )->getRank();
+
+        $event->addPane($admin_permission_pane, $rank_in_project);
     }
 }

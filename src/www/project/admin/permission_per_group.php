@@ -93,7 +93,7 @@ $additional_panes_builder = new PanesPermissionPerGroupBuilder(
     )
 );
 
-$additional_panes = $additional_panes_builder->getPanes($project, $request->get('group'));
+$additional_panes = $additional_panes_builder->getSortedPanes($project, $request->get('group'));
 $presenter        = new PermissionPerGroupPresenter($project, $groups, $additional_panes);
 
 $templates_dir = ForgeConfig::get('tuleap_dir') . '/src/templates/project/admin/';
