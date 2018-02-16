@@ -32,7 +32,9 @@ document.addEventListener('DOMContentLoaded', () => {
     initMotd();
     initScrollbar();
     initNavbarHistory();
-    // tuleap.autocomplete* is still used by siteadmin scripts
-    const tuleap = window.tuleap || {};
-    Object.assign(tuleap, autocomplete);
 });
+
+// tuleap.autocomplete* is still used by siteadmin scripts which may run without listening to DOMContentLoaded
+const tuleap = window.tuleap || {};
+Object.assign(tuleap, autocomplete);
+window.tuleap = tuleap;
