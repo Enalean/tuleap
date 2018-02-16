@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.8.7.1\n"
+"X-Generator: Poedit 2.0.3\n"
 
 #, php-format
 msgid "%s has been created"
@@ -121,9 +121,6 @@ msgstr[1] "Les groupes '%s' n'ont pas pu être ajoutés"
 
 msgid "Hierarchy"
 msgstr "Hiérarchie"
-
-msgid "Items permissions"
-msgstr "Permissions des éléments"
 
 msgid "No element selected."
 msgstr "Aucun élément sélectionné."
@@ -427,7 +424,9 @@ msgstr "Tracker"
 
 msgid ""
 "Tracker configuration permission and artifacts permissions are not listed."
-msgstr "Les permissions des configurations de tracker et celles des artéfacts ne sont pas listées"
+msgstr ""
+"Les permissions des configurations de tracker et celles des artéfacts ne "
+"sont pas listées"
 
 msgid "Tracker global admininistration"
 msgstr "Administration globale des outils de suivi"
@@ -482,4 +481,5 @@ msgstr ""
 "les différences dans un temps raisonnable.)"
 
 msgid "{{ user_group_name }} has no permission for trackers"
-msgstr "{{ user_group_name }} n'a aucune permission au niveau des outils de suivi"
+msgstr ""
+"{{ user_group_name }} n'a aucune permission au niveau des outils de suivi"

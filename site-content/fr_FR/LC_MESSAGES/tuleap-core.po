@@ -524,9 +524,6 @@ msgstr "PHPWiki"
 msgid "Package"
 msgstr "Paquet"
 
-msgid "Page permissions"
-msgstr "Permissions par page"
-
 msgid "Page permissions are not listed."
 msgstr "Les permissions par page ne sont pas listées."
 
