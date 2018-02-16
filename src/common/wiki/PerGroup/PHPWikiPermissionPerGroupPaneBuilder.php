@@ -115,10 +115,13 @@ class PHPWikiPermissionPerGroupPaneBuilder
 
         $formatted_group = $this->getFormattedUgroups($project, $ugroups);
 
-        $permissions->addPermissions(array(
-            'name' => _('Administrator'),
-            'groups' => $formatted_group
-        ));
+        $permissions->addPermissions(
+            array(
+                'name'    => _('Administrator'),
+                'groups'  => $formatted_group,
+                'url'     => ''
+            )
+        );
     }
 
     /**
@@ -145,10 +148,13 @@ class PHPWikiPermissionPerGroupPaneBuilder
 
         $formatted_group = $this->getFormattedUgroups($project, $ugroups);
 
-        $permissions->addPermissions(array(
-            'name' => _('Global access'),
-            'groups' => $formatted_group
-        ));
+        $permissions->addPermissions(
+            array(
+                'name'    => _('Global access'),
+                'groups'  => $formatted_group,
+                'url'     => $this->getGlobalAdminLink($project)
+            )
+        );
     }
 
     /**
@@ -182,5 +188,15 @@ class PHPWikiPermissionPerGroupPaneBuilder
         }
 
         return $formatted_ugroups;
+    }
+
+    private function getGlobalAdminLink(Project $project)
+    {
+        return '/wiki/admin/index.php?' . http_build_query(
+            [
+                "group_id" => $project->getID(),
+                "view"     => "wikiPerms"
+            ]
+        );
     }
 }

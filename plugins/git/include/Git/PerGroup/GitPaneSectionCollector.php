@@ -48,7 +48,7 @@ class GitPaneSectionCollector
         $service_section_presenter     = $this->git_section_builder->buildPresenter($pane_collector);
         $repository_sections_presenter = $this->git_repos_section_builder->buildPresenter($pane_collector);
 
-        $pane_presenter = new GitPanePresenter($service_section_presenter, $repository_sections_presenter);
+        $pane_presenter = new GitPanePresenter($service_section_presenter, $repository_sections_presenter, $pane_collector->getProject());
 
         $project         = $pane_collector->getProject();
         $rank_in_project = $project->getService(

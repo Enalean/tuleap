@@ -20,6 +20,7 @@
 
 use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\FRS\FRSPermissionFactory;
+use Tuleap\FRS\PerGroup\FRSPermissionPerGroupURLBuilder;
 use Tuleap\FRS\PerGroup\PaneCollector;
 use Tuleap\FRS\PerGroup\PermissionPerGroupFRSPackagesPresenterBuilder;
 use Tuleap\FRS\PerGroup\PermissionPerGroupFRSServicePresenterBuilder;
@@ -62,7 +63,8 @@ $additional_panes_builder = new PanesPermissionPerGroupBuilder(
         new PermissionPerGroupFRSServicePresenterBuilder(
             new PermissionPerTypeExtractor(
                 new FRSPermissionFactory(new FRSPermissionDao()),
-                $formatter
+                $formatter,
+                new FRSPermissionPerGroupURLBuilder()
             ),
             $ugroup_manager
         ),

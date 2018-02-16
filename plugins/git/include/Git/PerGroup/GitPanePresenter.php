@@ -20,6 +20,7 @@
 
 namespace Tuleap\Git\PerGroup;
 
+use Project;
 use Tuleap\Project\Admin\PerGroup\PermissionPerGroupPanePresenter;
 
 class GitPanePresenter
@@ -32,12 +33,25 @@ class GitPanePresenter
      * @var RepositoriesSectionPresenter
      */
     public $repositories_presenter;
+    public $url;
 
     public function __construct(
         PermissionPerGroupPanePresenter $service_presenter,
-        RepositoriesSectionPresenter $repositories_presenter
+        RepositoriesSectionPresenter $repositories_presenter,
+        Project $project
     ) {
         $this->service_presenter      = $service_presenter;
         $this->repositories_presenter = $repositories_presenter;
+        $this->url                    = $this->getGlobalAdminLink($project);
+    }
+
+    private function getGlobalAdminLink(Project $project)
+    {
+        return GIT_BASE_URL . "?" . http_build_query(
+            [
+                "group_id" => $project->getID(),
+                "action"   => "admin-git-admins"
+            ]
+        );
     }
 }

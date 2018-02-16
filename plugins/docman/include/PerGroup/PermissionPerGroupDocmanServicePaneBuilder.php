@@ -65,8 +65,9 @@ class PermissionPerGroupDocmanServicePaneBuilder
         $docman_admin = [];
         if (count($formatted_permissions->getPermissions()) > 0) {
             $docman_admin = [
-                "name" => dgettext('tuleap-docman', 'Document manager administrators'),
-                "groups" => $formatted_permissions->getPermissions()
+                "name"   => dgettext('tuleap-docman', 'Document manager administrators'),
+                "groups" => $formatted_permissions->getPermissions(),
+                "url"    => $this->getGlobalAdminLink($event)
             ];
         }
 
@@ -123,5 +124,15 @@ class PermissionPerGroupDocmanServicePaneBuilder
         }
 
         return [];
+    }
+
+    private function getGlobalAdminLink(PermissionPerGroupPaneCollector $event)
+    {
+        return DOCMAN_BASE_URL . "?" . http_build_query(
+            [
+                "group_id" => $event->getProject()->getID(),
+                "action"   => "admin_permissions"
+            ]
+        );
     }
 }

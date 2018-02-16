@@ -20,6 +20,7 @@
 
 namespace Tuleap\Svn\PerGroup;
 
+use Project;
 use Tuleap\Project\Admin\PerGroup\PermissionPerGroupPanePresenter;
 
 class GlobalPresenter
@@ -32,12 +33,25 @@ class GlobalPresenter
      * @var PermissionPerGroupPanePresenter
      */
     public $repository_presenter;
+    public $url;
 
     public function __construct(
         PermissionPerGroupPanePresenter $service_presenter,
-        PermissionPerGroupPanePresenter $repository_presenter
+        PermissionPerGroupPanePresenter $repository_presenter,
+        Project $project
     ) {
         $this->service_presenter    = $service_presenter;
         $this->repository_presenter = $repository_presenter;
+        $this->url                  = $this->getGlobalAdminLink($project);
+    }
+
+    private function getGlobalAdminLink(Project $project)
+    {
+        return SVN_BASE_URL . "?" . http_build_query(
+            [
+                "group_id" => $project->getID(),
+                "action"   => "admin-groups"
+            ]
+        );
     }
 }

@@ -16,7 +16,14 @@
                     <tbody>
                     {{# permissions }}
                         <tr>
-                            <td>{{ name }}</td>
+                            <td>
+                                {{# url}}
+                                    <a href="{{ url }}">{{ name }}</a>
+                                {{/ url }}
+                                {{^ url}}
+                                    {{ name }}
+                                {{/ url }}
+                            </td>
                             <td>
                                 {{# groups }}
                                     <span class="
