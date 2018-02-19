@@ -119,16 +119,6 @@ abstract class SystemEvent {
         $this->log          = $log;
     }
 
-    /**
-     * Allow custom system event to have other, external dependencies injected on instantiation
-     *
-     * Extra parameters should be given via Event::GET_SYSTEM_EVENT_CLASS arguments and should
-     * be regular function parameters
-     * @see Event::GET_SYSTEM_EVENT_CLASS
-     */
-    public function injectDependencies() {
-    }
-
     // Getters
 
     function getId() {

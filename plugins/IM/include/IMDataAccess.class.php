@@ -4,8 +4,6 @@
 //
 //
 
-require_once('common/dao/include/DataAccess.class.php');
-require_once('common/dao/include/DataAccessCredentials.class.php');
 require_once('IMPluginInfo.class.php');
 
 /**
@@ -13,14 +11,14 @@ require_once('IMPluginInfo.class.php');
  */
 class IMDataAccess extends DataAccess {
     
-    function IMDataAccess($controler) {
+    public function __construct($controler) {
         // include the database config file
         $plugin = $controler->getPlugin();
         $etc_root = $plugin->getPluginEtcRoot();
         
         include_once($etc_root . '/database_im.inc');
         $credentials = new DataAccessCredentials($im_dbhost, $im_dbuser, $im_dbpasswd, $im_dbname);
-        $this->DataAccess($credentials);
+        parent::__construct($credentials);
     }
     
     function instance($controler) {
@@ -31,6 +29,3 @@ class IMDataAccess extends DataAccess {
         return $_imdataaccess_instance;
     }
 }
-
-
-?>

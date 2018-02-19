@@ -1,5 +1,5 @@
 <?xml version='1.0'?>
-<phpunit bootstrap="bootstrap.php" verbose="true" colors="auto" beStrictAboutChangesToGlobalState="true">
+<phpunit bootstrap="bootstrap.php" verbose="true" colors="auto" beStrictAboutChangesToGlobalState="true" failOnRisky="true">
     <php>
         <ini name="date.timezone" value="Europe/Paris"/>
     </php>

@@ -3,17 +3,6 @@
 # Run the phpunit tests in Jenkins: make -C tuleap BUILD_ENV=ci ci_phpunit
 # Run docker as a priviledged user: make SUDO=sudo ... or make SUDO=pkexec ...
 
-TULEAP_INCLUDE_PATH=$(CURDIR)/src/www/include:$(CURDIR)/src:/usr/share/codendi/src/www/include:/usr/share/codendi/src
-PHP_INCLUDE_PATH=/usr/share/php:/usr/share/pear:$(TULEAP_INCLUDE_PATH):/usr/share/jpgraph:.
-PHP=php -q -d date.timezone=Europe/Paris -d include_path=$(PHP_INCLUDE_PATH) -d memory_limit=256M -d display_errors=On
-
-ifeq ($(BUILD_ENV),ci)
-OUTPUT_DIR=$(WORKSPACE)
-SIMPLETEST_OPTIONS=-x
-else
-SIMPLETEST_OPTIONS=
-endif
-
 OS := $(shell uname)
 ifeq ($(OS),Darwin)
 DOCKER_COMPOSE_FILE=-f docker-compose.yml -f docker-compose-mac.yml
@@ -24,8 +13,6 @@ endif
 SUDO=
 DOCKER=$(SUDO) docker
 DOCKER_COMPOSE=$(SUDO) docker-compose $(DOCKER_COMPOSE_FILE)
-
-SIMPLETEST=$(PHP) tests/bin/simpletest $(SIMPLETEST_OPTIONS)
 
 AUTOLOAD_EXCLUDES=^tests|^template
 
@@ -138,28 +125,35 @@ tests_rest_setup: ## Start REST tests container to launch tests manually
 	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap --mount type=tmpfs,destination=/tmp -w /usr/share/tuleap enalean/tuleap-test-rest:c6-php56-httpd24-mysql56 bash
 
 phpunit-ci-run:
-	/opt/rh/rh-php56/root/usr/bin/php src/vendor/bin/phpunit \
+	$(PHP) src/vendor/bin/phpunit \
 		-c tests/phpunit/phpunit.xml \
 		--log-junit /tmp/results/phpunit_tests_results.xml \
 		--coverage-html /tmp/results/phpunit_coverage \
 		--coverage-clover /tmp/results/phpunit_coverage/coverage.xml
 
-phpunit-run-as-owner:
+run-as-owner:
 	@USER_ID=`stat -c '%u' /tuleap`; \
 	GROUP_ID=`stat -c '%g' /tuleap`; \
 	groupadd -g $$GROUP_ID runner; \
 	useradd -u $$USER_ID -g $$GROUP_ID runner
-	su -c "$(MAKE) -C $(CURDIR) phpunit-ci-run" -l runner
+	su -c "$(MAKE) -C $(CURDIR) $(TARGET) PHP=$(PHP)" -l runner
 
-phpunit-ci:
+phpunit-ci-56:
 	mkdir -p $(WORKSPACE)/results/ut-phpunit-php-56
-	@docker run --rm -v $(CURDIR):/tuleap:ro -v $(WORKSPACE)/results/ut-phpunit-php-56:/tmp/results --entrypoint /bin/bash enalean/tuleap-test-phpunit:c6-php56 -c "make -C /tuleap phpunit-run-as-owner"
+	@docker run --rm -v $(CURDIR):/tuleap:ro -v $(WORKSPACE)/results/ut-phpunit-php-56:/tmp/results --entrypoint /bin/bash enalean/tuleap-test-phpunit:c6-php56 -c "make -C /tuleap run-as-owner TARGET=phpunit-ci-run PHP=/opt/rh/rh-php56/root/usr/bin/php"
+
+phpunit-ci-70:
+	mkdir -p $(WORKSPACE)/results/ut-phpunit-php-70
+	@docker run --rm -v $(CURDIR):/tuleap:ro -v $(WORKSPACE)/results/ut-phpunit-php-70:/tmp/results enalean/tuleap-test-phpunit:c6-php70 make -C /tuleap TARGET=phpunit-ci-run PHP=/opt/rh/rh-php70/root/usr/bin/php run-as-owner
+
+phpunit-docker-56:
+	@docker run --rm -v $(CURDIR):/tuleap:ro enalean/tuleap-test-phpunit:c6-php56 scl enable rh-php56 "make -C /tuleap phpunit"
+
+phpunit-docker-70:
+	@docker run --rm -v $(CURDIR):/tuleap:ro enalean/tuleap-test-phpunit:c6-php70 scl enable rh-php70 "make -C /tuleap phpunit"
 
 phpunit:
 	src/vendor/bin/phpunit -c tests/phpunit/phpunit.xml
-
-simpletest:
-	$(SIMPLETEST) $(SIMPLETEST_OPTIONS) tests/simpletest plugins tests/integration
 
 deploy-githooks:
 	@if [ -e .git/hooks/pre-commit ]; then\
