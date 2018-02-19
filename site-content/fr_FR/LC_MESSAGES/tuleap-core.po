@@ -661,6 +661,9 @@ msgstr "Lecteurs"
 msgid "Recently"
 msgstr "Récemment"
 
+msgid "Release"
+msgstr "Version"
+
 msgid "Remove"
 msgstr "Retirer"
 

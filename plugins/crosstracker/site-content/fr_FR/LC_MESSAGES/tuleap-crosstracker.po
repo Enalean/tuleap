@@ -10,7 +10,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.3\n"
+"X-Generator: Poedit 1.8.7.1\n"
+
+#, php-format
+msgid "%s cannot be compared to '%s'."
+msgstr "%s ne peut pas être comparé à '%s'."
 
 #, php-format
 msgid "%s cannot be compared to MYSELF()."
@@ -19,6 +23,10 @@ msgstr "%s ne peut pas être comparé à MYSELF()."
 #, php-format
 msgid "%s cannot be compared to NOW()."
 msgstr "%s ne peut pas être comparé à NOW()."
+
+#, php-format
+msgid "%s cannot be compared to OPEN()."
+msgstr "%s ne peut pas être comparé à OPEN()."
 
 msgid "Cross trackers search"
 msgstr "Recherche multi trackers"
@@ -43,6 +51,24 @@ msgstr[1] ""
 "%d des outils de suivi utilisés pour la requête n'ont pas de sémantique "
 "description définie. Merci de modifier votre requête ou de vérifier la "
 "configuration des outils de suivi."
+
+#, php-format
+msgid ""
+"One of the trackers involved in the query does not have the semantic status "
+"defined. Please refine\n"
+"                    your query or check the configuration of the trackers."
+msgid_plural ""
+"%d of the trackers involved in the query do not have the semantic status "
+"defined. Please refine\n"
+"                    your query or check the configuration of the trackers."
+msgstr[0] ""
+"Un des outils de suivi utilisés pour la requête n'a pas de sémantique état "
+"définie. Merci de modifier votre requête ou de vérifier la configuration des "
+"outils de suivi."
+msgstr[1] ""
+"%d des outils de suivi utilisés pour la requête n'ont pas de sémantique état "
+"définie. Merci de modifier votre requête ou de vérifier la configuration des "
+"outils de suivi."
 
 #, php-format
 msgid ""
