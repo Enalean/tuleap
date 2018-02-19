@@ -72,6 +72,13 @@
         background: transparentize($tlp-ui-success, .9);
     }
 
+    &.created {
+        transition: border-color 75ms ease-in-out, background-color 75ms ease-in-out;
+        animation: pulse 500ms ease-in-out;
+        border-color: $tlp-ui-success;
+        background: transparentize($tlp-ui-success, .9);
+    }
+
     &:hover,
     &.moving-to {
         > .backlog-item-details-moves {
@@ -114,6 +121,7 @@
     margin: 0 7px 0 0;
     color: $tlp-ui-dimmed;
     font-size: 12px;
+    white-space: nowrap;
 
     &:hover {
         opacity: .7;

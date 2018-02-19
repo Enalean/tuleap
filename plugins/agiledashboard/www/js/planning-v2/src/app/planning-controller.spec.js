@@ -5,9 +5,10 @@ import 'tlp-mocks';
 import planning_module from './app.js';
 import BaseController  from './planning-controller.js';
 
-describe("PlanningController - ", function() {
-    var $scope,
+describe("PlanningController - ", () => {
+    let $scope,
         $filter,
+        $controller,
         $q,
         PlanningController,
         BacklogItemService,
@@ -17,9 +18,10 @@ describe("PlanningController - ", function() {
         NewTuleapArtifactModalService,
         UserPreferencesService,
         BacklogItemCollectionService,
-        BacklogItemSelectedService;
+        BacklogItemSelectedService,
+        ItemAnimatorService;
 
-    var milestone = {
+    const milestone = {
             id: 592,
             resources: {
                 backlog: {
@@ -58,12 +60,11 @@ describe("PlanningController - ", function() {
             }
         }];
 
-    beforeEach(function() {
+    beforeEach(() => {
         angular.mock.module(planning_module);
 
-        // eslint-disable-next-line angular/di
         angular.mock.inject(function(
-            $controller,
+            _$controller_,
             $rootScope,
             _$q_,
             _BacklogService_,
@@ -73,7 +74,8 @@ describe("PlanningController - ", function() {
             _SharedPropertiesService_,
             _UserPreferencesService_,
             _BacklogItemCollectionService_,
-            _BacklogItemSelectedService_
+            _BacklogItemSelectedService_,
+            _ItemAnimatorService_
         ) {
             $scope = $rootScope.$new();
             $q     = _$q_;
@@ -134,28 +136,33 @@ describe("PlanningController - ", function() {
                 return function() {};
             });
 
+            ItemAnimatorService        = _ItemAnimatorService_;
             BacklogItemSelectedService = _BacklogItemSelectedService_;
-
-            PlanningController = $controller(BaseController, {
-                $filter,
-                $q,
-                BacklogService,
-                BacklogItemService,
-                MilestoneService,
-                NewTuleapArtifactModalService,
-                SharedPropertiesService,
-                UserPreferencesService,
-                BacklogItemCollectionService,
-                BacklogItemSelectedService
-            });
+            $controller                = _$controller_;
         });
+
+        spyOn(ItemAnimatorService, "animateCreated");
+
+        PlanningController = $controller(BaseController, {
+            $filter,
+            $q,
+            BacklogService,
+            BacklogItemService,
+            MilestoneService,
+            NewTuleapArtifactModalService,
+            SharedPropertiesService,
+            UserPreferencesService,
+            BacklogItemCollectionService,
+            BacklogItemSelectedService
+        });
+        PlanningController.$onInit();
 
         installPromiseMatchers();
     });
 
-    describe("init() -", function() {
-        describe("Given we were in a Project context (Top backlog)", function() {
-            beforeEach(function() {
+    describe("$onInit() -", () => {
+        describe("Given we were in a Project context (Top backlog)", () => {
+            beforeEach(() => {
                 SharedPropertiesService.getMilestoneId.and.stub();
             });
 
@@ -164,7 +171,7 @@ describe("PlanningController - ", function() {
                 var milestone_request = $q.defer();
                 MilestoneService.getOpenMilestones.and.returnValue(milestone_request.promise);
 
-                PlanningController.init();
+                PlanningController.$onInit();
                 milestone_request.resolve({
                     results: [
                         {
@@ -189,19 +196,19 @@ describe("PlanningController - ", function() {
             });
         });
 
-        describe("Given we were in a Milestone context", function() {
-            beforeEach(function() {
+        describe("Given we were in a Milestone context", () => {
+            beforeEach(() => {
                 SharedPropertiesService.getMilestoneId.and.returnValue(592);
             });
 
-            it("and given that no milestone was injected, when I load the controller, then the submilestones will be retrieved", function() {
+            it("and given that no milestone was injected, when I load the controller, then the submilestones will be retrieved", () => {
                 SharedPropertiesService.getInitialMilestones.and.stub();
                 var milestone_request    = $q.defer();
                 var submilestone_request = $q.defer();
                 MilestoneService.getMilestone.and.returnValue(milestone_request.promise);
                 MilestoneService.getOpenSubMilestones.and.returnValue(submilestone_request.promise);
 
-                PlanningController.init();
+                PlanningController.$onInit();
                 milestone_request.resolve({
                     results: milestone
                 });
@@ -228,20 +235,20 @@ describe("PlanningController - ", function() {
             });
         });
 
-        it("Load injected milestones", inject(function() {
+        it("Load injected milestones", inject(() => {
             SharedPropertiesService.getInitialMilestones.and.returnValue(initial_milestones);
             spyOn(PlanningController, 'loadInitialMilestones').and.callThrough();
 
-            PlanningController.init();
+            PlanningController.$onInit();
 
             expect(PlanningController.loadInitialMilestones).toHaveBeenCalledWith(initial_milestones);
         }));
 
-        it("Load injected view mode", function() {
+        it("Load injected view mode", () => {
             SharedPropertiesService.getViewMode.and.returnValue('detailed-view');
             PlanningController.show_closed_view_key = 'show-closed-view';
 
-            PlanningController.init();
+            PlanningController.$onInit();
 
             expect(PlanningController.current_view_class).toEqual('detailed-view');
             expect(PlanningController.current_closed_view_class).toEqual('show-closed-view');

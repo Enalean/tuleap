@@ -11,11 +11,13 @@ import milestone_collection    from '../milestone-collection/milestone-collectio
 import milestone_rest          from '../milestone-rest/milestone-rest.js';
 import project                 from '../project/project.js';
 import shared_properties       from '../shared-properties/shared-properties.js';
+import animator_module         from '../animator/animator.js';
 
 import BacklogDirective        from './backlog-directive.js';
 
 export default angular.module('backlog', [
     dragular,
+    animator_module,
     backlog_item,
     backlog_item_collection,
     backlog_item_selected,

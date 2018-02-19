@@ -9,7 +9,8 @@ BacklogItemDetailsController.$inject = [
     'EditItemService',
     'BacklogItemService',
     'BacklogItemCollectionService',
-    'NewTuleapArtifactModalService'
+    'NewTuleapArtifactModalService',
+    'ItemAnimatorService'
 ];
 
 function BacklogItemDetailsController(
@@ -17,7 +18,8 @@ function BacklogItemDetailsController(
     EditItemService,
     BacklogItemService,
     BacklogItemCollectionService,
-    NewTuleapArtifactModalService
+    NewTuleapArtifactModalService,
+    ItemAnimatorService
 ) {
     const self = this;
     Object.assign(self, {
@@ -50,6 +52,7 @@ function BacklogItemDetailsController(
     function appendItemToChildren(child_item_id) {
         return BacklogItemService.getBacklogItem(child_item_id).then(({ backlog_item: child_item }) => {
             child_item.parent = self.backlog_item;
+            ItemAnimatorService.animateCreated(child_item);
             BacklogItemCollectionService.items[child_item_id] = child_item;
 
             if (canBeAddedToChildren(child_item_id)) {

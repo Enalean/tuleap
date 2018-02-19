@@ -1,6 +1,8 @@
-<div class="dragular-handle backlog-item-details {{ backlogItemController.backlog_item.status | lowercase }} {{ backlogItemController.backlog_item.color }}"
-    ng-class="{
+<div class="dragular-handle backlog-item-details {{ backlogItemController.backlog_item.status | lowercase }}"
+    ng-class="[
+        backlogItemController.backlog_item.color, {
         'moving-to': backlogItemController.backlog_item.moving_to,
+        created    : backlogItemController.backlog_item.created,
         updated    : backlogItemController.backlog_item.updated,
         updating   : backlogItemController.backlog_item.updating,
         selected   : backlogItemController.backlog_item.selected,
@@ -8,7 +10,7 @@
         hidden     : backlogItemController.backlog_item.hidden,
         shaking    : backlogItemController.backlog_item.shaking,
         undraggable: ! canUserMoveCards()
-    }"
+    }]"
     backlog-item-details="backlogItemController.backlog_item"
     move-to-top="backlogItemController.moveToTopInParent(backlogItemController.backlog_item)"
     move-to-bottom="backlogItemController.moveToBottomInParent(backlogItemController.backlog_item)"
@@ -36,17 +38,19 @@
                 backlog-item-index="$index"
                 backlog-item-select="backlog_item"
             >
-                <div class="backlog-item-details dragular-handle-child {{ backlog_item.status | lowercase }} {{ backlog_item.color }}"
-                    ng-class="{
+                <div class="backlog-item-details dragular-handle-child {{ backlog_item.status | lowercase }}"
+                    ng-class="[
+                        backlog_item.color, {
                         'moving-to': backlog_item.moving_to,
-                        updating   : backlog_item.updating,
+                        created    : backlog_item.created,
                         updated    : backlog_item.updated,
+                        updating   : backlog_item.updating,
                         selected   : backlog_item.selected,
                         multiple   : backlog_item.multiple,
                         hidden     : backlog_item.hidden,
                         shaking    : backlog_item.shaking,
                         undraggable: ! canUserMoveCards()
-                    }"
+                    }]"
                     backlog-item-details="backlog_item"
                     move-to-top="backlogItemController.moveToTop(backlog_item)"
                     move-to-bottom="backlogItemController.moveToBottom(backlog_item)"
