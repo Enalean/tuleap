@@ -76,4 +76,12 @@ class ParametrizedAndFromWhere implements IProvideParametrizedFromAndWhereSQLFra
     {
         return array_merge($this->left->getFromParameters(), $this->right->getFromParameters());
     }
+
+    /**
+     * @return array
+     */
+    public function getWhereParameters()
+    {
+        return array_merge($this->left->getWhereParameters(), $this->right->getWhereParameters());
+    }
 }

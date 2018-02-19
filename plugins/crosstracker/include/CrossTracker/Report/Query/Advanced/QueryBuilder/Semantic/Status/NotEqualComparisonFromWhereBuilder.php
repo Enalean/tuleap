@@ -65,6 +65,6 @@ class NotEqualComparisonFromWhereBuilder implements FromWhereBuilder
         $where = "changeset_value_status.changeset_id IS NOT NULL
             AND tracker_changeset_value_status.bindvalue_id = closed_values.id";
 
-        return new ParametrizedFromWhere($from, $where, $tracker_ids);
+        return new ParametrizedFromWhere($from, $where, $tracker_ids, []);
     }
 }

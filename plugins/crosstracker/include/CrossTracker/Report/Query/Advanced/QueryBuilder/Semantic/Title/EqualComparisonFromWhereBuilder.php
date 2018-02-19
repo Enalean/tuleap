@@ -21,6 +21,7 @@
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Semantic\Title;
 
 use Tuleap\CrossTracker\Report\Query\ParametrizedFromWhere;
+use Tuleap\DB\DBFactory;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
@@ -28,23 +29,20 @@ class EqualComparisonFromWhereBuilder implements FromWhereBuilder
 {
     public function getFromWhere(Metadata $metadata, Comparison $comparison, array $trackers)
     {
-        $value = $comparison->getValueWrapper()->getValue();
+        $where_parameters = [];
+        $value            = $comparison->getValueWrapper()->getValue();
 
         if ($value === '') {
             $matches_value = " = ''";
         } else {
-            $matches_value = " LIKE " . $this->quoteLikeValueSurround($value);
+            $matches_value     = " LIKE ?";
+            $where_parameters[] = '%' . DBFactory::instance()->escapeLikeValue($value) . '%';
         }
 
         $from = "";
         $where = "changeset_value_title.changeset_id IS NOT NULL
             AND tracker_changeset_value_title.value $matches_value";
 
-        return new ParametrizedFromWhere($from, $where, array());
-    }
-
-    private function quoteLikeValueSurround($value)
-    {
-        return \CodendiDataAccess::instance()->quoteLikeValueSurround($value);
+        return new ParametrizedFromWhere($from, $where, [], $where_parameters);
     }
 }

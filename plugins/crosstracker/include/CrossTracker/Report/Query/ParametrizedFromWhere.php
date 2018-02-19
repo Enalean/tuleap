@@ -29,10 +29,14 @@ class ParametrizedFromWhere implements IProvideParametrizedFromAndWhereSQLFragme
     /** @var array */
     private $from_parameters;
 
-    public function __construct($from, $where, array $from_parameters)
+    /** @var array */
+    private $where_parameters;
+
+    public function __construct($from, $where, array $from_parameters, array $where_parameters)
     {
-        $this->from_where      = new FromWhere($from, $where);
-        $this->from_parameters = $from_parameters;
+        $this->from_where       = new FromWhere($from, $where);
+        $this->from_parameters  = $from_parameters;
+        $this->where_parameters = $where_parameters;
     }
 
     /**
@@ -65,5 +69,13 @@ class ParametrizedFromWhere implements IProvideParametrizedFromAndWhereSQLFragme
     public function getFromParameters()
     {
         return $this->from_parameters;
+    }
+
+    /**
+     * @return array
+     */
+    public function getWhereParameters()
+    {
+        return $this->where_parameters;
     }
 }
