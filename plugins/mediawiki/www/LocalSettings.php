@@ -158,6 +158,28 @@ $wgMainCacheType    = CACHE_NONE;
 $wgMemCachedServers = array();
 $wgEnableParserCache = false;
 
+$debug_project_ids = array();
+$debug_project_id = forge_get_config('mw_debug_project_id', 'mediawiki');
+if ($debug_project_id !== false) {
+    $debug_project_ids = array_map(
+        function ($arg) {
+            return (int) trim($arg);
+        },
+        explode(',', $debug_project_id)
+    );
+
+    if (in_array($group->getID(), $debug_project_ids)) {
+        ini_set('display_errors', 1);
+        $wgShowSQLErrors = true;
+        $wgDebugDumpSql = true;
+        $wgShowDBErrorBacktrace = true;
+        $wgDebugToolbar = true;
+        if (forge_get_config('mw_debug_full', 'mediawiki') === true) {
+            $wgShowDebug = true;
+        }
+    }
+}
+
 //$wgEnableUploads = forge_get_config('enable_uploads', 'mediawiki');
 $wgEnableUploads             = true;
 $wgUploadDirectory           = "$project_dir/images";
