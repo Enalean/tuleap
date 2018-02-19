@@ -42,6 +42,7 @@
             >
                 <option value="@title">{{ title_semantic_label }}</option>
                 <option value="@description">{{ description_semantic_label }}</option>
+                <option value="@status">{{ status_semantic_label }}</option>
             </select>
         </div>
     </div>
@@ -75,6 +76,7 @@
             allowed_fields_label      : () => gettext_provider.gettext("Allowed fields"),
             title_semantic_label      : () => gettext_provider.gettext("Title"),
             description_semantic_label: () => gettext_provider.gettext("Description"),
+            status_semantic_label     : () => gettext_provider.gettext("Status"),
             placeholder               : () => gettext_provider.gettext("Example: @title = 'value'"),
             tql_tips                  : () => gettext_provider.gettext("You can use: AND, OR, parenthesis. Autocomplete is activated with Ctrl + Space."),
         },
