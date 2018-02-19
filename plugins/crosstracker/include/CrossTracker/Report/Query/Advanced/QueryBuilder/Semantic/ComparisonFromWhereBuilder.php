@@ -21,9 +21,9 @@
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Semantic;
 
 use Tuleap\CrossTracker\Report\Query\Advanced\AllowedMetadata;
+use Tuleap\CrossTracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
-use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
 
 abstract class ComparisonFromWhereBuilder implements FromWhereBuilder
 {
@@ -51,19 +51,19 @@ abstract class ComparisonFromWhereBuilder implements FromWhereBuilder
     }
 
     /**
-     * @return IProvideFromAndWhereSQLFragments
+     * @return IProvideParametrizedFromAndWhereSQLFragments
      */
-    public function getFromWhere(Metadata $metadata, Comparison $comparison)
+    public function getFromWhere(Metadata $metadata, Comparison $comparison, array $trackers)
     {
         switch ($metadata->getName()) {
             case AllowedMetadata::TITLE:
-                return $this->title_builder->getFromWhere($metadata, $comparison);
+                return $this->title_builder->getFromWhere($metadata, $comparison, $trackers);
                 break;
             case AllowedMetadata::DESCRIPTION:
-                return $this->description_builder->getFromWhere($metadata, $comparison);
+                return $this->description_builder->getFromWhere($metadata, $comparison, $trackers);
                 break;
             case AllowedMetadata::STATUS:
-                return $this->status_builder->getFromWhere($metadata, $comparison);
+                return $this->status_builder->getFromWhere($metadata, $comparison, $trackers);
                 break;
         }
     }

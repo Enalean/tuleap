@@ -20,13 +20,13 @@
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Semantic\Status;
 
+use Tuleap\CrossTracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
-use Tuleap\Tracker\Report\Query\FromWhere;
 
 class EqualComparisonFromWhereBuilder implements FromWhereBuilder
 {
-    public function getFromWhere(Metadata $metadata, Comparison $comparison)
+    public function getFromWhere(Metadata $metadata, Comparison $comparison, array $trackers)
     {
         $from = "LEFT JOIN (
             tracker_changeset_value AS changeset_value_status
@@ -46,6 +46,6 @@ class EqualComparisonFromWhereBuilder implements FromWhereBuilder
         $where = "changeset_value_status.changeset_id IS NOT NULL
             AND tracker_changeset_value_status.bindvalue_id = tracker_semantic_status.open_value_id";
 
-        return new FromWhere($from, $where);
+        return new ParametrizedFromWhere($from, $where, array());
     }
 }

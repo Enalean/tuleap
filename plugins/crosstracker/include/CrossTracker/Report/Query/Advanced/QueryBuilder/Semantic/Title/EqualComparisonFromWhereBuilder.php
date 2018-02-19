@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,13 +20,13 @@
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Semantic\Title;
 
+use Tuleap\CrossTracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
-use Tuleap\Tracker\Report\Query\FromWhere;
 
 class EqualComparisonFromWhereBuilder implements FromWhereBuilder
 {
-    public function getFromWhere(Metadata $metadata, Comparison $comparison)
+    public function getFromWhere(Metadata $metadata, Comparison $comparison, array $trackers)
     {
         $value = $comparison->getValueWrapper()->getValue();
 
@@ -40,7 +40,7 @@ class EqualComparisonFromWhereBuilder implements FromWhereBuilder
         $where = "changeset_value_title.changeset_id IS NOT NULL
             AND tracker_changeset_value_title.value $matches_value";
 
-        return new FromWhere($from, $where);
+        return new ParametrizedFromWhere($from, $where, array());
     }
 
     private function quoteLikeValueSurround($value)

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,26 +20,28 @@
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Semantic\Description;
 
+use Tuleap\CrossTracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
-use Tuleap\Tracker\Report\Query\FromWhere;
 
 class NotEqualComparisonFromWhereBuilder extends DescriptionFromWhereBuilder
 {
-    public function getFromWhere(Metadata $metadata, Comparison $comparison)
+    public function getFromWhere(Metadata $metadata, Comparison $comparison, array $trackers)
     {
         $value = $comparison->getValueWrapper()->getValue();
 
         if ($value === '') {
-            return new FromWhere(
+            return new ParametrizedFromWhere(
                 $this->getFrom(),
-                "tracker_changeset_value_description.value IS NOT NULL AND tracker_changeset_value_description.value <> ''"
+                "tracker_changeset_value_description.value IS NOT NULL AND tracker_changeset_value_description.value <> ''",
+                array()
             );
         } else {
-            return new FromWhere(
+            return new ParametrizedFromWhere(
                 $this->getFrom(),
                 "(tracker_changeset_value_description.value IS NULL
-                    OR tracker_changeset_value_description.value NOT LIKE " . $this->quoteLikeValueSurround($value) . ")"
+                    OR tracker_changeset_value_description.value NOT LIKE " . $this->quoteLikeValueSurround($value) . ")",
+                array()
             );
         }
     }
