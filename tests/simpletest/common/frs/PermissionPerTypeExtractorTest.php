@@ -30,6 +30,10 @@ use TuleapTestCase;
 class PermissionPerTypeExtractorTest extends TuleapTestCase
 {
     /**
+     * @var FRSPermissionPerGroupURLBuilder
+     */
+    private $url_builder;
+    /**
      * @var \Project
      */
     private $project;
@@ -60,10 +64,12 @@ class PermissionPerTypeExtractorTest extends TuleapTestCase
 
         $this->permission_factory = mock('Tuleap\FRS\FRSPermissionFactory');
         $this->formatter          = mock('Tuleap\Project\Admin\PerGroup\PermissionPerGroupUGroupFormatter');
+        $this->url_builder        = mock('Tuleap\FRS\PerGroup\FRSPermissionPerGroupURLBuilder');
 
         $this->extractor = new PermissionPerTypeExtractor(
             $this->permission_factory,
-            $this->formatter
+            $this->formatter,
+            $this->url_builder
         );
 
         $this->project_member = array(
@@ -101,6 +107,10 @@ class PermissionPerTypeExtractorTest extends TuleapTestCase
             $this->project_admin
         );
 
+        stub($this->url_builder)->getGlobalAdminLink()->returns(
+            "/admin/?group_id=" . $this->project->getID() . "&action=edit-permissions"
+        );
+
         $permissions = new PermissionPerGroupCollection();
 
         $this->extractor->extractPermissionByType(
@@ -115,7 +125,8 @@ class PermissionPerTypeExtractorTest extends TuleapTestCase
             array(
                 array(
                     "name"   => "FRS administrators",
-                    "groups" => array($this->project_admin, $this->project_member)
+                    "groups" => array($this->project_admin, $this->project_member),
+                    "url"    => "/admin/?group_id=" . $this->project->getID() . "&action=edit-permissions"
                 )
             ),
             $permissions->getPermissions()
@@ -137,6 +148,11 @@ class PermissionPerTypeExtractorTest extends TuleapTestCase
             $this->project_member
         );
 
+        stub($this->url_builder)->getGlobalAdminLink()->returns(
+            "/admin/?group_id=" . $this->project->getID() . "&action=edit-permissions"
+        );
+
+
         $permissions = new PermissionPerGroupCollection();
 
         $this->extractor->extractPermissionByType(
@@ -151,7 +167,8 @@ class PermissionPerTypeExtractorTest extends TuleapTestCase
             array(
                 array(
                     "name"   => "File readers",
-                    "groups" => array($this->project_member)
+                    "groups" => array($this->project_member),
+                    "url"    => "/admin/?group_id=" . $this->project->getID() . "&action=edit-permissions"
                 )
             ),
             $permissions->getPermissions()
@@ -186,6 +203,10 @@ class PermissionPerTypeExtractorTest extends TuleapTestCase
             $this->project_admin
         );
 
+        stub($this->url_builder)->getGlobalAdminLink()->returns(
+            "/admin/?group_id=" . $this->project->getID() . "&action=edit-permissions"
+        );
+
         $permissions = new PermissionPerGroupCollection();
 
         $this->extractor->extractPermissionByType(
@@ -200,7 +221,8 @@ class PermissionPerTypeExtractorTest extends TuleapTestCase
             array(
                 array(
                     "name"   => "FRS administrators",
-                    "groups" => array($this->project_admin)
+                    "groups" => array($this->project_admin),
+                    "url"    => "/admin/?group_id=" . $this->project->getID() . "&action=edit-permissions"
                 )
             ),
             $permissions->getPermissions()

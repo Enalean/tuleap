@@ -155,7 +155,9 @@ class PermissionPerGroupPaneBuilder
             $formatted_group[] = $this->formatter->formatGroup($project, $mapped_ugroup);
         }
 
-        $collection->addPermissions(array('name' => $group_name, 'groups' => $formatted_group));
+        $collection->addPermissions(
+            array('name' => $group_name, 'groups' => $formatted_group, 'url' => $this->getGlobalAdminLink($project))
+        );
     }
 
     /**
@@ -209,6 +211,15 @@ class PermissionPerGroupPaneBuilder
             $current_mapping[$mw_group_name],
             $GLOBALS['Language']->getText('plugin_mediawiki', 'group_name_'.$mw_group_name),
             $collection
+        );
+    }
+
+    private function getGlobalAdminLink(Project $project)
+    {
+        return MEDIAWIKI_BASE_URL . "/forge_admin.php?" . http_build_query(
+            [
+                "group_id" => $project->getID()
+            ]
         );
     }
 }

@@ -37,13 +37,19 @@ class PermissionPerTypeExtractor
      * @var PermissionPerGroupUGroupFormatter
      */
     private $formatter;
+    /**
+     * @var FRSPermissionPerGroupURLBuilder
+     */
+    private $url_builder;
 
     public function __construct(
         FRSPermissionFactory $frs_permission_factory,
-        PermissionPerGroupUGroupFormatter $formatter
+        PermissionPerGroupUGroupFormatter $formatter,
+        FRSPermissionPerGroupURLBuilder $url_builder
     ) {
         $this->frs_permission_factory = $frs_permission_factory;
         $this->formatter              = $formatter;
+        $this->url_builder            = $url_builder;
     }
 
     /**
@@ -65,7 +71,11 @@ class PermissionPerTypeExtractor
 
         if (count($formatted_permissions->getPermissions()) > 0) {
             $permissions->addPermissions(
-                array('name' => $permission_title, 'groups' => $formatted_permissions->getPermissions())
+                array(
+                    'name'   => $permission_title,
+                    'groups' => $formatted_permissions->getPermissions(),
+                    'url'    => $this->url_builder->getGlobalAdminLink($project)
+                )
             );
         }
     }

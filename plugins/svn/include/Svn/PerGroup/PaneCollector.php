@@ -57,7 +57,7 @@ class PaneCollector
         $service_presenter    = $this->getServicePresenter($event);
         $repository_presenter = $this->getRepositoryPresenter($event);
 
-        $global_presenter = new GlobalPresenter($service_presenter, $repository_presenter);
+        $global_presenter = new GlobalPresenter($service_presenter, $repository_presenter, $event->getProject());
 
         $templates_dir = ForgeConfig::get('tuleap_dir') . '/plugins/svn/templates/';
         $content       = TemplateRendererFactory::build()
