@@ -20,14 +20,24 @@
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Semantic\Status;
 
+use ParagonIE\EasyDB\EasyStatement;
+use Tracker;
+use Tuleap\CrossTracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
-use Tuleap\Tracker\Report\Query\FromWhere;
 
 class NotEqualComparisonFromWhereBuilder implements FromWhereBuilder
 {
-    public function getFromWhere(Metadata $metadata, Comparison $comparison)
+    public function getFromWhere(Metadata $metadata, Comparison $comparison, array $trackers)
     {
+        $tracker_ids = array_map(
+            function (Tracker $tracker) {
+                return $tracker->getId();
+            },
+            $trackers
+        );
+        $tracker_ids_statement = EasyStatement::open()->in('field.tracker_id IN (?*)', $tracker_ids);
+
         $from = "LEFT JOIN (
                     tracker_changeset_value AS changeset_value_status
                     INNER JOIN tracker_changeset_value_list AS tracker_changeset_value_status
@@ -38,7 +48,7 @@ class NotEqualComparisonFromWhereBuilder implements FromWhereBuilder
                         SELECT DISTINCT static.field_id, static.id
                         FROM tracker_field_list_bind_static_value AS static
                             INNER JOIN tracker_field AS field
-                                ON field.id = static.field_id
+                                ON field.id = static.field_id AND $tracker_ids_statement
                             INNER JOIN tracker_semantic_status AS SS1
                                 ON field.id = SS1.field_id
                             LEFT JOIN tracker_semantic_status AS SS2
@@ -55,6 +65,6 @@ class NotEqualComparisonFromWhereBuilder implements FromWhereBuilder
         $where = "changeset_value_status.changeset_id IS NOT NULL
             AND tracker_changeset_value_status.bindvalue_id = closed_values.id";
 
-        return new FromWhere($from, $where);
+        return new ParametrizedFromWhere($from, $where, $tracker_ids);
     }
 }

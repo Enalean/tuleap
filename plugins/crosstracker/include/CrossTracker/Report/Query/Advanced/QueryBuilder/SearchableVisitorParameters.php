@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,7 @@
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder;
 
+use Tracker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Semantic\FromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\VisitorParameters;
@@ -30,13 +31,17 @@ class SearchableVisitorParameters implements VisitorParameters
     private $comparison;
     /** @var FromWhereBuilder */
     private $from_where_builder;
+    /** @var Tracker[] */
+    private $trackers;
 
     public function __construct(
         Comparison $comparison,
-        FromWhereBuilder $from_where_builder
+        FromWhereBuilder $from_where_builder,
+        array $trackers
     ) {
-        $this->comparison               = $comparison;
-        $this->from_where_builder       = $from_where_builder;
+        $this->comparison         = $comparison;
+        $this->from_where_builder = $from_where_builder;
+        $this->trackers           = $trackers;
     }
 
     /** @return FromWhereBuilder */
@@ -49,5 +54,11 @@ class SearchableVisitorParameters implements VisitorParameters
     public function getComparison()
     {
         return $this->comparison;
+    }
+
+    /** @return Tracker[] */
+    public function getTrackers()
+    {
+        return $this->trackers;
     }
 }

@@ -21,13 +21,13 @@
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder;
 
 use ParagonIE\EasyDB\EasyStatement;
+use Tuleap\CrossTracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 use Tuleap\DB\DataAccessObject;
-use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
 
 class CrossTrackerExpertQueryReportDao extends DataAccessObject
 {
     public function searchArtifactsMatchingQuery(
-        IProvideFromAndWhereSQLFragments $from_where,
+        IProvideParametrizedFromAndWhereSQLFragments $from_where,
         array $tracker_ids,
         $limit,
         $offset
@@ -63,7 +63,8 @@ class CrossTrackerExpertQueryReportDao extends DataAccessObject
                 ORDER BY tracker_artifact.id DESC
                 LIMIT ?, ?";
 
-        $parameters   = $tracker_ids_statement->values();
+        $parameters = $from_where->getFromParameters();
+        $parameters = array_merge($parameters, $tracker_ids_statement->values());
         $parameters[] = $offset;
         $parameters[] = $limit;
 
