@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -29,6 +29,7 @@ use Tuleap\Svn\Admin\ImmutableTagController;
 use Tuleap\Svn\Admin\RestoreController;
 use Tuleap\Svn\Explorer\ExplorerController;
 use Tuleap\Svn\Explorer\RepositoryDisplayController;
+use Tuleap\Svn\PerGroup\SVNJSONPermissionsRetriever;
 use Tuleap\Svn\Repository\Exception\CannotFindRepositoryException;
 use Tuleap\Svn\Repository\RepositoryManager;
 use UGroupManager;
@@ -64,6 +65,10 @@ class SvnRouter {
 
     /** @var RestoreController  */
     private $restore_controller;
+    /**
+     * @var SVNJSONPermissionsRetriever
+     */
+    private $json_retriever;
 
     public function __construct(
         RepositoryManager $repository_manager,
@@ -75,7 +80,8 @@ class SvnRouter {
         RepositoryDisplayController $display_controller,
         ImmutableTagController $immutable_tag_controller,
         GlobalAdminController $global_admin_controller,
-        RestoreController $restore_controller
+        RestoreController $restore_controller,
+        SVNJSONPermissionsRetriever $json_retriever
     ) {
         $this->repository_manager        = $repository_manager;
         $this->permissions_manager       = $permissions_manager;
@@ -87,6 +93,7 @@ class SvnRouter {
         $this->immutable_tag_controller  = $immutable_tag_controller;
         $this->global_admin_controller   = $global_admin_controller;
         $this->restore_controller        = $restore_controller;
+        $this->json_retriever            = $json_retriever;
     }
 
     /**
@@ -182,6 +189,20 @@ class SvnRouter {
                         $this->getService($request),
                         $request
                     );
+                    break;
+                case 'permission-per-group':
+                    if (! $request->getCurrentUser()->isAdmin($request->getProject()->getID())) {
+                        $GLOBALS['Response']->send400JSONErrors(
+                            array(
+                                'error' => dgettext(
+                                    'tuleap-svn',
+                                    "You don't have permissions to see user groups."
+                                )
+                            )
+                        );
+                    }
+
+                    $this->json_retriever->retrieve($request->getProject());
                     break;
 
                 default:

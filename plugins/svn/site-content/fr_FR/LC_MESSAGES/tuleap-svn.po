@@ -66,9 +66,6 @@ msgstr "Dernier commit"
 msgid "Multi SVN"
 msgstr "Multi SVN"
 
-msgid "No repository found for project"
-msgstr "Aucun dépôt trouvé pour le projet"
-
 msgid "Notification deleted successfully."
 msgstr "La notification a été correctement supprimée."
 
@@ -79,17 +76,14 @@ msgstr "La notification à mettre à jour n’existe pas."
 msgid "Permission"
 msgstr "Permission"
 
-msgid "Repositories permissions"
-msgstr "Permissions du dépôt"
-
-msgid "Repository"
-msgstr "Dépôt"
-
 msgid "SVN"
 msgstr "SVN"
 
 msgid "SVN Administrators"
 msgstr "Administrateurs SVN"
+
+msgid "SVN service is disabled."
+msgstr "Le service SVN est inactif."
 
 msgid "Save"
 msgstr "Sauvegarder"
@@ -123,6 +117,9 @@ msgid "You are about to remove the notification. Please confirm your action."
 msgstr ""
 "Vous êtes sur le point de supprimer la notification. Merci de confirmer "
 "votre action."
+
+msgid "You don't have permissions to see user groups."
+msgstr "Vous n'avez pas les droits de voir les groupes utilisateurs"
 
 msgid "{{ user_group_name }} has no global permission"
 msgstr "{{ user_group_name }} n'a pas de permissions globales"

@@ -48,9 +48,6 @@ msgstr ""
 msgid "Multi SVN"
 msgstr ""
 
-msgid "No repository found for project"
-msgstr ""
-
 msgid "Notification deleted successfully."
 msgstr ""
 
@@ -61,16 +58,13 @@ msgstr ""
 msgid "Permission"
 msgstr ""
 
-msgid "Repositories permissions"
-msgstr ""
-
-msgid "Repository"
-msgstr ""
-
 msgid "SVN"
 msgstr ""
 
 msgid "SVN Administrators"
+msgstr ""
+
+msgid "SVN service is disabled."
 msgstr ""
 
 msgid "Save"
@@ -102,6 +96,9 @@ msgid "Wait a minute..."
 msgstr ""
 
 msgid "You are about to remove the notification. Please confirm your action."
+msgstr ""
+
+msgid "You don't have permissions to see user groups."
 msgstr ""
 
 msgid "{{ user_group_name }} has no global permission"
