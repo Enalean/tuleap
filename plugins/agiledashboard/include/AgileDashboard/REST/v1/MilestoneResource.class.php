@@ -660,7 +660,7 @@ class MilestoneResource extends AuthenticatedResource {
         $backlog_tracker_ids   = $milestone->getPlanning()->getBacklogTrackersIds();
         $filtered_artifact_ids = [];
 
-        foreach ($to_add as $key => $artifact_id) {
+        foreach ($to_add as $artifact_id) {
             $artifact = $this->tracker_artifact_factory->getArtifactById($artifact_id);
 
             if (in_array($artifact->getTrackerId(), $backlog_tracker_ids)) {
