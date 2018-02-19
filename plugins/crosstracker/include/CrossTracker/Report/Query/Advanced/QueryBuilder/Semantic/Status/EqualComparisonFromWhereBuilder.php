@@ -46,6 +46,6 @@ class EqualComparisonFromWhereBuilder implements FromWhereBuilder
         $where = "changeset_value_status.changeset_id IS NOT NULL
             AND tracker_changeset_value_status.bindvalue_id = tracker_semantic_status.open_value_id";
 
-        return new ParametrizedFromWhere($from, $where, array());
+        return new ParametrizedFromWhere($from, $where, [], []);
     }
 }

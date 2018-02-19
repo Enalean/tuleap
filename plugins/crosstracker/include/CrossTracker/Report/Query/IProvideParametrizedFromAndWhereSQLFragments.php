@@ -28,4 +28,9 @@ interface IProvideParametrizedFromAndWhereSQLFragments extends IProvideFromAndWh
      * @return array
      */
     public function getFromParameters();
+
+    /**
+     * @return array
+     */
+    public function getWhereParameters();
 }

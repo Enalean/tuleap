@@ -65,6 +65,7 @@ class CrossTrackerExpertQueryReportDao extends DataAccessObject
 
         $parameters = $from_where->getFromParameters();
         $parameters = array_merge($parameters, $tracker_ids_statement->values());
+        $parameters = array_merge($parameters, $from_where->getWhereParameters());
         $parameters[] = $offset;
         $parameters[] = $limit;
 
