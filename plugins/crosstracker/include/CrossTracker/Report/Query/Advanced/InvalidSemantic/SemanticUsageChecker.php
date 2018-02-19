@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,6 +21,7 @@
 namespace Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic;
 
 use Tracker_Semantic_DescriptionDao;
+use Tracker_Semantic_StatusDao;
 use Tracker_Semantic_TitleDao;
 use Tuleap\CrossTracker\Report\Query\Advanced\AllowedMetadata;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
@@ -39,11 +40,19 @@ class SemanticUsageChecker
      * @var Tracker_Semantic_DescriptionDao
      */
     private $description_dao;
+    /**
+     * @var Tracker_Semantic_StatusDao
+     */
+    private $status_dao;
 
-    public function __construct(Tracker_Semantic_TitleDao $title_dao, Tracker_Semantic_DescriptionDao $description_dao)
-    {
+    public function __construct(
+        Tracker_Semantic_TitleDao $title_dao,
+        Tracker_Semantic_DescriptionDao $description_dao,
+        Tracker_Semantic_StatusDao $status_dao
+    ) {
         $this->title_dao       = $title_dao;
         $this->description_dao = $description_dao;
+        $this->status_dao      = $status_dao;
 
         $this->cache_already_checked = array();
     }
@@ -53,6 +62,7 @@ class SemanticUsageChecker
      * @param int[] $trackers_id
      * @throws DescriptionIsMissingInAtLeastOneTrackerException
      * @throws TitleIsMissingInAtLeastOneTrackerException
+     * @throws StatusIsMissingInAtLeastOneTrackerException
      */
     public function checkSemanticIsUsedByAllTrackers(Metadata $metadata, array $trackers_id)
     {
@@ -67,6 +77,9 @@ class SemanticUsageChecker
                 break;
             case AllowedMetadata::DESCRIPTION:
                 $this->checkDescriptionIsUsedByAllTrackers($trackers_id);
+                break;
+            case AllowedMetadata::STATUS:
+                $this->checkStatusIsUsedByAllTrackers($trackers_id);
                 break;
         }
     }
@@ -92,6 +105,18 @@ class SemanticUsageChecker
         $count = $this->description_dao->getNbOfTrackerWithoutSemanticDescriptionDefined($trackers_id);
         if ($count > 0) {
             throw new DescriptionIsMissingInAtLeastOneTrackerException($count);
+        }
+    }
+
+    /**
+     * @param int[] $trackers_id
+     * @throws StatusIsMissingInAtLeastOneTrackerException
+     */
+    private function checkStatusIsUsedByAllTrackers(array $trackers_id)
+    {
+        $count = $this->status_dao->getNbOfTrackerWithoutSemanticStatusDefined($trackers_id);
+        if ($count > 0) {
+            throw new StatusIsMissingInAtLeastOneTrackerException($count);
         }
     }
 }

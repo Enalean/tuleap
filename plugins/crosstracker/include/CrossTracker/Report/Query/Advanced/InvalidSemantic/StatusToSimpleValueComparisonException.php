@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,17 +18,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic;
 
-class AllowedMetadata
+use Tuleap\CrossTracker\Report\Query\Advanced\AllowedMetadata;
+
+class StatusToSimpleValueComparisonException extends InvalidSemanticComparisonException
 {
-    const TITLE       = '@title';
-    const DESCRIPTION = '@description';
-    const STATUS      = '@status';
-
-    public static $NAMES = array(
-        self::TITLE,
-        self::DESCRIPTION,
-        self::STATUS
-    );
+    public function __construct($value)
+    {
+        $message = sprintf(
+            dgettext("tuleap-crosstracker", "%s cannot be compared to '%s'."),
+            AllowedMetadata::STATUS,
+            $value
+        );
+        parent::__construct($message);
+    }
 }

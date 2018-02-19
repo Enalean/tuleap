@@ -25,6 +25,7 @@ use Luracast\Restler\RestException;
 use PFUser;
 use ProjectManager;
 use Tracker_Semantic_DescriptionDao;
+use Tracker_Semantic_StatusDao;
 use Tracker_Semantic_TitleDao;
 use TrackerFactory;
 use Tuleap\CrossTracker\CrossTrackerArtifactReportDao;
@@ -41,10 +42,11 @@ use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\ComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\SemanticUsageChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\CrossTrackerExpertQueryReportDao;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\SearchableVisitor;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Semantic\Title;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Semantic\Description;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Semantic\EqualComparisonFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Semantic\NotEqualComparisonFromWhereBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Semantic\Status;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Semantic\Title;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilderVisitor;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
@@ -131,7 +133,11 @@ class CrossTrackerReportsResource extends AuthenticatedResource
         $this->invalid_comparisons_collector = new InvalidComparisonCollectorVisitor(
             new InvalidSearchableCollectorVisitor(),
             new ComparisonChecker(
-                new SemanticUsageChecker(new Tracker_Semantic_TitleDao(), new Tracker_Semantic_DescriptionDao())
+                new SemanticUsageChecker(
+                    new Tracker_Semantic_TitleDao(),
+                    new Tracker_Semantic_DescriptionDao(),
+                    new Tracker_Semantic_StatusDao()
+                )
             )
         );
 
@@ -139,11 +145,13 @@ class CrossTrackerReportsResource extends AuthenticatedResource
             new SearchableVisitor(),
             new EqualComparisonFromWhereBuilder(
                 new Title\EqualComparisonFromWhereBuilder(),
-                new Description\EqualComparisonFromWhereBuilder()
+                new Description\EqualComparisonFromWhereBuilder(),
+                new Status\EqualComparisonFromWhereBuilder()
             ),
             new NotEqualComparisonFromWhereBuilder(
                 new Title\NotEqualComparisonFromWhereBuilder(),
-                new Description\NotEqualComparisonFromWhereBuilder()
+                new Description\NotEqualComparisonFromWhereBuilder(),
+                new Status\NotEqualComparisonFromWhereBuilder()
             )
         );
 
