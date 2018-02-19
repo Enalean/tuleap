@@ -4,75 +4,76 @@
  *
  * @license MIT
  */
-import card_fields_module from './index.js';
 import angular from 'angular';
 import 'angular-mocks';
 
-describe('tuleapHighlight', function() {
-    var highlightFilter,
-        testPhrase = 'Prefix Highlight Suffix';
-    beforeEach(function() {
+import card_fields_module from './index.js';
+
+describe('tuleapHighlight', () => {
+    let highlightFilter,
+        test_phrase;
+
+    beforeEach(() => {
         angular.mock.module(card_fields_module);
 
         angular.mock.inject(function($filter) {
             highlightFilter = $filter('tuleapHighlight');
         });
+
+        test_phrase = 'Prefix Highlight Suffix';
     });
 
-    describe('case insensitive', function() {
-        it('should highlight a matching phrase', function() {
-            expect(highlightFilter(testPhrase, 'highlight')).toEqual('Prefix <span class="highlight">Highlight</span> Suffix');
-        });
-        it('should highlight nothing if no match found', function() {
-            expect(highlightFilter(testPhrase, 'no match')).toEqual(testPhrase);
-        });
-        it('should highlight nothing for the undefined filter', function() {
-            expect(highlightFilter(testPhrase, undefined)).toEqual(testPhrase);
-        });
-        it('should work correctly if text is null', function() {
-            expect(highlightFilter(null, 'highlight')).toEqual(null);
-        });
-        it('should work correctly for number filters', function() {
-            expect(highlightFilter('3210123', 0)).toEqual('321<span class="highlight">0</span>123');
-        });
-        it('should work correctly for number text', function() {
-            expect(highlightFilter(3210123, '0')).toEqual('321<span class="highlight">0</span>123');
-        });
+    it('should highlight a matching phrase', () => {
+        expect(highlightFilter(test_phrase, 'highlight')).toEqual('Prefix <span class="highlight">Highlight</span> Suffix');
     });
 
-    describe('case sensitive', function() {
-        it('should highlight a matching phrase', function() {
-            expect(highlightFilter(testPhrase, 'Highlight', true)).toEqual('Prefix <span class="highlight">Highlight</span> Suffix');
-        });
-        it('should highlight nothing if no match found', function() {
-            expect(highlightFilter(testPhrase, 'no match', true)).toEqual(testPhrase);
-        });
-        it('should highlight nothing for the undefined filter', function() {
-            expect(highlightFilter(testPhrase, undefined, true)).toEqual(testPhrase);
-        });
-        it('should work correctly if text is null', function() {
-            expect(highlightFilter(null, 'Highlight')).toEqual(null);
-        });
-        it('should work correctly for number filters', function() {
-            expect(highlightFilter('3210123', 0, true)).toEqual('321<span class="highlight">0</span>123');
-        });
-        it('should work correctly for number text', function() {
-            expect(highlightFilter(3210123, '0', true)).toEqual('321<span class="highlight">0</span>123');
-        });
-        it('should not highlight a phrase with different letter-casing', function() {
-            expect(highlightFilter(testPhrase, 'highlight', true)).toEqual(testPhrase);
-        });
+    it('should highlight nothing if no match found', () => {
+        expect(highlightFilter(test_phrase, 'no match')).toEqual(test_phrase);
     });
 
-    it('should highlight nothing if empty filter string passed - issue #114', function() {
-        expect(highlightFilter(testPhrase, '')).toEqual(testPhrase);
+    it('should highlight nothing for the undefined filter', () => {
+        expect(highlightFilter(test_phrase, undefined)).toEqual(test_phrase);
     });
 
-    it('should highlight more that one element', function() {
-        expect(highlightFilter(testPhrase, 'gh')).toEqual('Prefix Hi<span class="highlight">gh</span>li<span class="highlight">gh</span>t Suffix');
+    it('should work correctly if text is null', () => {
+        expect(highlightFilter(null, 'highlight')).toEqual(null);
     });
 
-    it('highlights each matching search terms', function() {
-        expect(highlightFilter(testPhrase, 'suffix highlight')).toEqual('Prefix <span class="highlight">Highlight</span> <span class="highlight">Suffix</span>');
+    it('should work correctly for number filters', () => {
+        expect(highlightFilter('3210123', 0)).toEqual('321<span class="highlight">0</span>123');
+    });
+
+    it('should work correctly for number text', () => {
+        expect(highlightFilter(3210123, '0')).toEqual('321<span class="highlight">0</span>123');
+    });
+
+    it("should work correctly for text containing html tags", () => {
+        test_phrase = 'Echo <span>yeah</span>';
+        const search_term = '>';
+
+        expect(highlightFilter(test_phrase, search_term)).toEqual('Echo &#x3C;span<span class="highlight">&#x3E;</span>yeah&#x3C;/span<span class="highlight">&#x3E;</span>');
+    });
+
+    it("should not highlight html entities when searching a number in text containing html tags", () => {
+        test_phrase = 'Echo<span>yeah</span>';
+        const search_term = '3';
+
+        expect(highlightFilter(test_phrase, search_term)).toEqual('Echo&#x3C;span&#x3E;yeah&#x3C;/span&#x3E;');
+    });
+
+    it('should highlight nothing if empty filter string passed', () => {
+        expect(highlightFilter(test_phrase, '')).toEqual(test_phrase);
+    });
+
+    it('should highlight more that one element', () => {
+        expect(highlightFilter(test_phrase, 'gh')).toEqual('Prefix Hi<span class="highlight">gh</span>li<span class="highlight">gh</span>t Suffix');
+    });
+
+    it('highlights each matching search terms', () => {
+        expect(highlightFilter(test_phrase, 'suffix highlight')).toEqual('Prefix <span class="highlight">Highlight</span> <span class="highlight">Suffix</span>');
+    });
+
+    it("should escape regexp search terms", () => {
+        expect(highlightFilter('Prefix (Highlight) Suffix', '(Highlight)')).toEqual('Prefix <span class="highlight">(Highlight)</span> Suffix');
     });
 });

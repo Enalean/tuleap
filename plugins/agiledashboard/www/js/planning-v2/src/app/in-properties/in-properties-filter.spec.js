@@ -4,7 +4,7 @@ import moment  from 'moment';
 
 import filter_module from './in-properties.js';
 
-describe('InPropertiesItemFilter', function() {
+describe('InPropertiesItemFilter', () => {
     var in_properties_filter,
         list = [
             {
@@ -36,13 +36,12 @@ describe('InPropertiesItemFilter', function() {
             }
         ];
 
-    beforeEach(function() {
+    beforeEach(() => {
         angular.mock.module(filter_module);
 
         var $filter;
         angular.mock.inject(function(
-            _$filter_,
-            _moment_
+            _$filter_
         ) {
             $filter = _$filter_;
         });
@@ -206,20 +205,48 @@ describe('InPropertiesItemFilter', function() {
             expect(filtered_items).toEqual(items);
         });
 
-        it("Given an item with a text card field, when I filter it with a matching query, then it will be returned", function() {
-            var items = [
+        it("Given an item with a text card field, when I filter it with a matching query, then it will be returned", () => {
+            const items = [
                 {
                     id: null,
                     label: null,
                     card_fields: [
-                        { type: 'text', value: 'Histoire de Toto' }
+                        { type: 'text', format: 'text', value: 'Histoire de Toto' }
                     ]
                 }
             ];
 
-            var filtered_items = in_properties_filter(items, 'toto');
+            const filtered_items = in_properties_filter(items, 'toto');
 
             expect(filtered_items).toEqual(items);
+        });
+
+        it("Given an item with a text card field in HTML, when I filter it with a matching query, then it will be returned", () => {
+            const items = [
+                {
+                    id: null,
+                    label: null,
+                    card_fields: [
+                        { type: 'text', format: 'html', value: 'Histoire <strong>de TOTO</strong>' }
+                    ]
+                }
+            ];
+
+            expect(in_properties_filter(items, 'toto')).toEqual(items);
+        });
+
+        it("Given an item with a text card field in HTML with &nbsp;, when I filter it with an &, then it won't be returned", () => {
+            const items = [
+                {
+                    id: null,
+                    label: null,
+                    card_fields: [
+                        { type: 'text', format: 'html', value: 'William&nbspWallace' }
+                    ]
+                }
+            ];
+
+            expect(in_properties_filter(items, '&')).toEqual([]);
         });
 
         it("Given an item with an int card field, when I filter it with a matching query, then it will be returned", function() {

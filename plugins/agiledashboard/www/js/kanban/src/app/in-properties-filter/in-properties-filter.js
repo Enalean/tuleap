@@ -1,9 +1,13 @@
+import { escape } from 'lodash';
+
 export default InPropertiesFilter;
 
 InPropertiesFilter.$inject = ['$filter'];
 
 function InPropertiesFilter($filter) {
     var amCalendarFilter = $filter('amCalendar');
+
+    const HTML_FORMAT = 'html';
 
     return function(list, terms) {
         if (! terms || terms === '') {
@@ -15,7 +19,8 @@ function InPropertiesFilter($filter) {
             filtered_list = list;
 
         keywords.forEach(function(keyword) {
-            var regexp = new RegExp(keyword, 'gi');
+            const regexp         = new RegExp(keyword, 'gi');
+            const encoded_regexp = new RegExp(escape(keyword), 'gi');
 
             filtered_list = $filter('filter')(filtered_list, function (item) {
                 if (properties.some(function (property) {
@@ -43,13 +48,16 @@ function InPropertiesFilter($filter) {
                                 return match(value.label);
                             });
                         case 'string':
-                        case 'text':
                         case 'int':
                         case 'float':
                         case 'aid':
                         case 'atid':
                         case 'priority':
                             return match(card_field.value);
+                        case 'text':
+                            return (card_field.format === HTML_FORMAT)
+                                ? matchEncoded(card_field.value)
+                                : match(card_field.value);
                         case 'file':
                             return card_field.file_descriptions.some(function (file) {
                               return match(file.name);
@@ -80,7 +88,11 @@ function InPropertiesFilter($filter) {
                 });
 
                 function match(value) {
-                    return (""+value).match(regexp);
+                    return String(value).match(regexp);
+                }
+
+                function matchEncoded(value) {
+                    return String(value).match(encoded_regexp);
                 }
             });
         });

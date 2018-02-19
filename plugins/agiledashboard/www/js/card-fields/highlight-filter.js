@@ -1,14 +1,3 @@
-import angular from 'angular';
-import _ from 'lodash';
-
-angular
-    .module('highlight.filter', [])
-    .filter('tuleapHighlight', TuleapHighlightFilter);
-
-export default 'highlight.filter';
-
-TuleapHighlightFilter.$inject = [];
-
 /*
  * Inspired from highlight filter in ui-utils
  * https://github.com/angular-ui/ui-utils/tree/d16cd00d129479eb1cde362bea034781b5bd1ff0/modules/highlight
@@ -16,32 +5,44 @@ TuleapHighlightFilter.$inject = [];
  * @license MIT
  */
 
+import { isNumber }       from 'angular';
+import escapeStringRegexp from 'escape-string-regexp';
+import { encode }         from 'he';
+
+export default TuleapHighlightFilter;
+
+TuleapHighlightFilter.$inject = [];
+
 /**
- * Wraps the
  * @param text {string} haystack to search through
  * @param search {string} needle to search for
- * @param [caseSensitive] {boolean} optional boolean to use case-sensitive searching
+ * @returns HTML-encoded string
  */
 function TuleapHighlightFilter() {
-    'use strict';
-
     function isTextSearchable(text, search) {
-        return text && (search || angular.isNumber(search));
+        return text && (search || isNumber(search));
     }
 
-    return function(text, search, caseSensitive) {
-        if (!isTextSearchable(text, search)) {
-            return text;
+    return function(text, search) {
+        if (! isTextSearchable(text, search)) {
+            return (text !== null)
+                ? encode(text.toString())
+                : text;
         }
 
-        var flags = 'g';
-        if (!caseSensitive) {
-            flags += 'i';
-        }
+        const regexp_escaped_search = escapeStringRegexp(search.toString());
+        const or_search             = regexp_escaped_search.replace(' ', '|');
 
-        var text_string = text.toString();
-        search = _.escape(search.toString().replace(' ', '|'));
+        const regex = new RegExp('(' + or_search + ')', 'gi');
 
-        return text_string.replace(new RegExp(search, flags), '<span class="highlight">$&</span>');
+        const split_html = text.toString().split(regex);
+        const encoded_parts = split_html.map(part => {
+            if (regex.test(part)) {
+                return `<span class="highlight">${ encode(part) }</span>`;
+            }
+
+            return encode(part);
+        });
+        return encoded_parts.join('');
     };
 }

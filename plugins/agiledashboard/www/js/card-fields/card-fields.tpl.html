@@ -10,9 +10,8 @@
                 ng-if="card_ctrl.cardFieldIsSimpleValue(card_field.type) && card_field.value"
         >
             <span class="extra-card-field-title">{{ card_field.label }}: </span>
-            <tuleap-simple-field
-                    value="card_field.value"
-                    filter-terms="card_ctrl.filter_terms"
+            <tuleap-simple-field value="{{ card_field.value }}"
+                filter-terms="{{ card_ctrl.filter_terms }}"
             ></tuleap-simple-field>
         </div>
         <div
@@ -29,10 +28,9 @@
             <span class="extra-card-field-title">{{ card_field.label }}: </span>
             <span title="{{ card_field.value }}" ng-bind-html="card_field.value | amCalendar | tuleapHighlight:card_ctrl.filter_terms"></span>
         </div>
-        <card-text-field
-                ng-if="card_ctrl.cardFieldIsText(card_field.type)"
-                field="card_field"
-                filter-terms="card_ctrl.filter_terms"
+        <card-text-field ng-if="card_ctrl.cardFieldIsText(card_field.type)"
+            field="card_field"
+            filter-terms="{{ card_ctrl.filter_terms }}"
         ></card-text-field>
         <div
                 class="extra-card-field-content"

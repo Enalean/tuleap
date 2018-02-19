@@ -1,34 +1,27 @@
 import './card-text-field.tpl.html';
+import striptags  from 'striptags';
+import { decode } from 'he';
 
-export default cardTextField;
-
-function cardTextField() {
-    var TEXT_FORMAT = 'text';
-    var HTML_FORMAT = 'html';
+export default () => {
+    const HTML_FORMAT = 'html';
 
     return {
         restrict: 'AE',
         scope   : {
             card_field  : '=field',
-            filter_terms: '=filterTerms'
+            filter_terms: '@filterTerms'
         },
         templateUrl: 'card-text-field.tpl.html',
-        link       : link
+        link
     };
 
     function link(scope) {
         scope.getDisplayableValue = getDisplayableValue;
     }
 
-    function getDisplayableValue(text_field) {
-        if (text_field.format === TEXT_FORMAT) {
-            return _.escape(text_field.value);
-        }
-
-        if (text_field.format === HTML_FORMAT) {
-            return text_field.value;
-        }
-
-        return text_field;
+    function getDisplayableValue({ format, value }) {
+        return (format === HTML_FORMAT)
+            ? striptags(decode(value))
+            : value;
     }
-}
+};
