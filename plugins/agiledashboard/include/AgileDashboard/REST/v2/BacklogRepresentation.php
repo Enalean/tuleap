@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,21 +22,32 @@ namespace Tuleap\AgileDashboard\REST\v2;
 use Tuleap\Tracker\REST\TrackerReference;
 use Tuleap\REST\v2\BacklogRepresentationBase;
 
-class BacklogRepresentation extends BacklogRepresentationBase {
-
-    public function build(array $backlog_items, array $accepted_trackers, $has_user_priority_change_permission) {
+class BacklogRepresentation extends BacklogRepresentationBase
+{
+    public function build(
+        array $backlog_items,
+        array $accepted_trackers,
+        array $parent_trackers,
+        $has_user_priority_change_permission
+    ) {
         $this->content = $backlog_items;
 
-        $this->accept = array('trackers' => array());
-        foreach ($accepted_trackers as $accepted_tracker) {
-            $reference = new TrackerReference();
-            $reference->build($accepted_tracker);
-
-            $this->accept['trackers'][] = $reference;
-        }
+        $this->accept['trackers']        = $this->getTrackersRepresentation($accepted_trackers);
+        $this->accept['parent_trackers'] = $this->getTrackersRepresentation($parent_trackers);
 
         $this->has_user_priority_change_permission = $has_user_priority_change_permission;
 
         return $this;
+    }
+
+    private function getTrackersRepresentation(array $trackers)
+    {
+        $trackers_representation = array();
+        foreach ($trackers as $tracker) {
+            $tracker_reference = new TrackerReference();
+            $tracker_reference->build($tracker);
+            $trackers_representation[] = $tracker_reference;
+        }
+        return $trackers_representation;
     }
 }

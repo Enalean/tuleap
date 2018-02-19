@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -18,36 +18,53 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-require_once dirname(__FILE__).'/../lib/autoload.php';
+namespace Tuleap\REST;
+
+use RestBase;
+
+require_once dirname(__FILE__) . '/../lib/autoload.php';
 
 /**
  * @group BacklogItemsTest
  */
-class ProjectBacklogV2Test extends RestBase {
-
-    protected $base_url  = 'http://localhost/api/v2';
+class ProjectBacklogV2Test extends RestBase
+{
+    protected $base_url = 'http://localhost/api/v2';
 
     public function __construct()
     {
         parent::__construct();
         if (isset($_ENV['TULEAP_HOST'])) {
-            $this->base_url = $_ENV['TULEAP_HOST'].'/api/v2';
+            $this->base_url = $_ENV['TULEAP_HOST'] . '/api/v2';
         }
     }
 
-    public function testOPTIONSBacklog() {
-        $response = $this->getResponse($this->client->options("projects/$this->project_public_id/backlog"));
+    public function testOPTIONSBacklog()
+    {
+        $response = $this->getResponse($this->client->options("projects/$this->project_pbi_id/backlog"));
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
-    public function testGETBacklogNoItems() {
-        $response = $this->getResponse($this->client->get("projects/$this->project_public_id/backlog?limit=0.0&offset=0"));
+    public function testGETProjectTopBacklogNoItems()
+    {
+        $response = $this->getResponse($this->client->get("projects/$this->project_pbi_id/backlog?limit=0&offset=0"));
 
         $backlog = $response->json();
 
         $this->assertCount(0, $backlog['content']);
-        $this->assertCount(0, $backlog['accept']['trackers']);
+        $this->assertCount(1, $backlog['accept']['trackers']);
+        $this->assertCount(0, $backlog['accept']['parent_trackers']);
 
         $this->assertEquals($response->getStatusCode(), 200);
+    }
+
+    /**
+     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function testGETProjectTopBacklogNoPlannings()
+    {
+        $response = $this->getResponse($this->client->get("projects/$this->project_public_id/backlog"));
+
+        $this->assertEquals($response->getStatusCode(), 404);
     }
 }

@@ -87,9 +87,12 @@ function ProjectService(
     }
 
     function getAllowedBacklogItemTypes(data) {
-        var allowed_trackers = data.accept.trackers;
-        var accepted_types = {
+        const allowed_trackers = data.accept.trackers;
+        const parent_trackers  = data.accept.parent_trackers;
+
+        const accepted_types = {
             content : allowed_trackers,
+            parent_trackers,
             toString: function() {
                 var accept = [];
                 _.forEach(this.content, function(allowed_tracker) {
