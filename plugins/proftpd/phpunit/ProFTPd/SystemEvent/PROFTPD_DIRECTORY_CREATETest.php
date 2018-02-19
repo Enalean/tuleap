@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2011, 2012, 2013. All rights reserved.
+ * Copyright Enalean (c) 2011-2018. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -54,8 +54,10 @@ class SystemEvent_PROFTPD_DIRECTORY_CREATETest extends PHPUnit_Framework_TestCas
         $this->event->injectDependencies($this->backend, $this->acl_updater, $this->ftp_directory);
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         rmdir($this->path);
+        unset($GLOBALS['sys_http_user']);
     }
 
     public function testItCreatesDirectory() {

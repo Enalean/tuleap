@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2014. All rights reserved.
+ * Copyright Enalean (c) 2014-2018. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -100,7 +100,19 @@ class SystemEvent_PROFTPD_UPDATE_ACLTest extends PHPUnit_Framework_TestCase {
         $this->event->injectDependencies($this->acl_updater, $this->permissions_manager, $this->project_manager, $this->ftp_directory);
     }
 
-    public function testItSetsACLWithWritersAndReaders() {
+    protected function tearDown()
+    {
+        parent::tearDown();
+        unset($GLOBALS['sys_http_user']);
+    }
+
+    /**
+     * @preserveGlobalState enabled
+     */
+    public function testItSetsACLWithWritersAndReaders()
+    {
+        $initial_global_state = $GLOBALS;
+
         $this->event->setParameters($this->group_unix_name);
         $this->permissions_manager
              ->expects($this->any())
@@ -117,6 +129,9 @@ class SystemEvent_PROFTPD_UPDATE_ACLTest extends PHPUnit_Framework_TestCase {
         $this->acl_updater->expects($this->once())->method('recursivelyApplyACL')->with($this->path, 'httpuser', 'gpig-ftp_writers', 'gpig-ftp_readers');
 
         $this->event->process();
+
+        // Operations related to ugroups permissions does not leave the global state clean so we need to clean up ourselves
+        $GLOBALS = $initial_global_state;
     }
 
     public function testItUsesTheUnixNameInLowerCase() {
