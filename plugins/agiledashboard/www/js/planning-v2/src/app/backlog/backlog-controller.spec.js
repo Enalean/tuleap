@@ -402,6 +402,49 @@ describe("BacklogController - ", function() {
         });
     });
 
+    describe("showAddBacklogItemParentModal() -", () => {
+        let item_type;
+        beforeEach(() => {
+            item_type = {id: 50};
+        });
+
+        it("Given an event and an item_type object, when I show the new artifact modal, then the NewTuleapArtifactModalService will be called with a callback", () => {
+            SharedPropertiesService.getMilestone.and.returnValue(undefined);
+
+            BacklogController.showAddBacklogItemParentModal(item_type);
+
+            expect(NewTuleapArtifactModalService.showCreation).toHaveBeenCalledWith(50, null, jasmine.any(Function));
+        });
+
+        describe("callback -", () => {
+            beforeEach( () => {
+                NewTuleapArtifactModalService.showCreation.and.callFake((a, b, callback) => callback(5202));
+            });
+
+            describe("Given an item id and given that we were in a project's context,", () => {
+                it("when the new artifact modal calls its callback, then the created artifact will not be added to milestone content", () => {
+                    spyOn(BacklogController, "isMilestoneContext").and.returnValue(false);
+
+                    BacklogController.showAddBacklogItemParentModal(item_type);
+                    $scope.$apply();
+
+                    expect(MilestoneService.addToContent).not.toHaveBeenCalled();
+                });
+            });
+
+            describe("Given an item id and given that we were in a milestone's context,", () => {
+                it("when the new artifact modal calls its callback, then the created artifact will be added to milestone content", () => {
+                    spyOn(BacklogController, "isMilestoneContext").and.returnValue(true);
+
+                    BacklogController.showAddBacklogItemParentModal(item_type);
+                    $scope.$apply();
+
+                    expect(MilestoneService.addToContent).toHaveBeenCalled();
+                });
+            });
+        });
+    });
+
     describe("showAddBacklogItemModal() -", () => {
         let event, item_type;
         beforeEach(() => {
