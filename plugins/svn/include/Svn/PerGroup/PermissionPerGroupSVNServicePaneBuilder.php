@@ -55,36 +55,66 @@ class PermissionPerGroupSVNServicePaneBuilder
 
     public function buildPresenter(PermissionPerGroupPaneCollector $event)
     {
-        $permissions = array();
+        $selected_group = $event->getSelectedUGroupId();
 
-        $permissions[ProjectUGroup::PROJECT_ADMIN] = $this->formatter->formatGroup($event->getProject(), ProjectUGroup::PROJECT_ADMIN);
+        $permissions = new PermissionPerGroupSVNGlobalAdminPermissionCollection();
+        $this->addUGroupsToPermissions($event, $permissions);
+
+        $user_group = $this->ugroup_manager->getUGroup($event->getProject(), $selected_group);
+
+        return new PermissionPerGroupPanePresenter($permissions->getPermissions(), $user_group);
+    }
+
+    private function addUGroupsToPermissions(
+        PermissionPerGroupPaneCollector $event,
+        PermissionPerGroupSVNGlobalAdminPermissionCollection $permissions
+    ) {
+        $project = $event->getProject();
 
         if ($event->getSelectedUGroupId()) {
-            $all_permissions = $this->permission_retriever->getAdminUGroupIdsForProjectContainingUGroupId(
-                $event->getProject(),
-                $event->getProject()->getID(),
-                SvnPermissionManager::PERMISSION_ADMIN,
-                $event->getSelectedUGroupId()
-            );
+            $ugroups = $this->extractUGroupsFromSelection($event);
         } else {
-            $all_permissions = $this->permission_retriever->getAllUGroupForObject(
-                $event->getProject(),
-                $event->getProject()->getID(),
+            $ugroups = $this->permission_retriever->getAllUGroupForObject(
+                $project,
+                $project->getID(),
                 SvnPermissionManager::PERMISSION_ADMIN
             );
+
+            $permissions->addPermission(
+                ProjectUGroup::PROJECT_ADMIN,
+                $this->formatter->formatGroup($project, ProjectUGroup::PROJECT_ADMIN)
+            );
         }
 
-        foreach ($all_permissions as $permission) {
-            if ($permission !== ProjectUGroup::PROJECT_ADMIN) {
-                $permissions[$permission] = $this->formatter->formatGroup($event->getProject(), $permission);
-            }
+        if (count($ugroups) > 0 || (int) $event->getSelectedUGroupId() === ProjectUGroup::PROJECT_ADMIN) {
+            $permissions->addPermission(
+                ProjectUGroup::PROJECT_ADMIN,
+                $this->formatter->formatGroup($project, ProjectUGroup::PROJECT_ADMIN)
+            );
         }
 
-        $unique_permissions = array_values($permissions);
+        foreach ($ugroups as $ugroup) {
+            $permissions->addPermission(
+                $ugroup,
+                $this->formatter->formatGroup($project, $ugroup)
+            );
+        }
+    }
 
-        $selected_group = $event->getSelectedUGroupId();
-        $user_group     = $this->ugroup_manager->getUGroup($event->getProject(), $selected_group);
+    private function extractUGroupsFromSelection(PermissionPerGroupPaneCollector $event)
+    {
+        $all_ugroups = $this->permission_retriever->getAllUGroupForObject(
+            $event->getProject(),
+            $event->getProject()->getID(),
+            SvnPermissionManager::PERMISSION_ADMIN
+        );
 
-        return new PermissionPerGroupPanePresenter($unique_permissions, $user_group);
+        if (in_array($event->getSelectedUGroupId(), $all_ugroups) ||
+            ((int) $event->getSelectedUGroupId() === ProjectUGroup::PROJECT_ADMIN)
+        ) {
+            return $all_ugroups;
+        }
+
+        return [];
     }
 }
