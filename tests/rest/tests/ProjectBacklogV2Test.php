@@ -29,7 +29,7 @@ require_once dirname(__FILE__) . '/../lib/autoload.php';
  */
 class ProjectBacklogV2Test extends RestBase
 {
-    protected $base_url = 'http://localhost/api/v2';
+    protected $base_url  = 'https://localhost/api/v2';
 
     public function __construct()
     {
@@ -59,7 +59,7 @@ class ProjectBacklogV2Test extends RestBase
     }
 
     /**
-     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
+     * @expectedException \Guzzle\Http\Exception\ClientErrorResponseException
      */
     public function testGETProjectTopBacklogNoPlannings()
     {

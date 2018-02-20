@@ -85,7 +85,7 @@ class TestBase extends RestBase
             "display_name" => "Test User 1 (rest_api_tester_1)",
             "username"     => "rest_api_tester_1",
             "ldap_id"      => "tester1",
-            "avatar_url"   => "http://localhost/themes/common/images/avatar_default.png",
+            "avatar_url"   => "https://localhost/themes/common/images/avatar_default.png",
             "is_anonymous" => false
         );
 
@@ -97,7 +97,7 @@ class TestBase extends RestBase
             "display_name" => " (rest_api_tester_2)",
             "username"     => "rest_api_tester_2",
             "ldap_id"      => "",
-            "avatar_url"   => "http://localhost/themes/common/images/avatar_default.png",
+            "avatar_url"   => "https://localhost/themes/common/images/avatar_default.png",
             "is_anonymous" => false
         );
 

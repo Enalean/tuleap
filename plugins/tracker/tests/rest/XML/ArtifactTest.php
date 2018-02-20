@@ -51,7 +51,8 @@ class ArtifactTest extends RestBase {
     {
         parent::__construct();
 
-        $this->xml_client   = new Client($this->base_url, array('ssl.certificate_authority' => 'system'));
+        $this->xml_client   = new Client($this->base_url);
+        $this->xml_client->setSslVerification(false, false, false);
 
         $this->xml_client->setDefaultOption('headers/Accept', 'application/xml');
         $this->xml_client->setDefaultOption('headers/Content-Type', 'application/xml; charset=UTF8');

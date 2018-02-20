@@ -39,22 +39,31 @@ class SOAPBase extends PHPUnit_Framework_TestCase {
 
         $this->login              = SOAP_TestDataBuilder::TEST_USER_1_NAME;
         $this->password           = SOAP_TestDataBuilder::TEST_USER_1_PASS;
-        $this->server_base_url    = 'http://localhost/soap/?wsdl';
-        $this->server_project_url = 'http://localhost/soap/project/?wsdl';
+        $this->server_base_url    = 'https://localhost/soap/?wsdl';
+        $this->server_project_url = 'https://localhost/soap/project/?wsdl';
         $this->base_wsdl          = '/soap/codendi.wsdl.php';
         $this->server_name        = 'localhost';
-        $this->server_port        = '80';
+        $this->server_port        = '443';
+
+        $context = stream_context_create([
+            'ssl' => [
+                // set some SSL/TLS specific options
+                'verify_peer' => false,
+                'verify_peer_name' => false,
+                'allow_self_signed' => true
+            ]
+        ]);
 
         // Connecting to the soap's tracker client
         $this->soap_base = new SoapClient(
             $this->server_base_url,
-            array('cache_wsdl' => WSDL_CACHE_NONE, 'exceptions' => 1, 'trace' => 1)
+            array('cache_wsdl' => WSDL_CACHE_NONE, 'exceptions' => 1, 'trace' => 1, 'stream_context' => $context)
         );
 
         // Connecting to the soap's tracker client
         $this->soap_project = new SoapClient(
             $this->server_project_url,
-            array('cache_wsdl' => WSDL_CACHE_NONE)
+            array('cache_wsdl' => WSDL_CACHE_NONE, 'stream_context' => $context)
         );
     }
 
