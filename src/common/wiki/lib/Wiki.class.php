@@ -1,6 +1,6 @@
 <?php
-/*
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  * Copyright 2005, STMicroelectronics
  *
  * Originally written by Manuel Vacelet
@@ -45,10 +45,11 @@ class Wiki {
    * @access public
    * @param  int $id Project identifier
    */
-  function Wiki($id=0) {
-    $this->gid = (int) $id;
-    $this->exist = null;
-  }
+    public function __construct($id = 0)
+    {
+        $this->gid   = (int) $id;
+        $this->exist = null;
+    }
 
   /**
    *
@@ -58,17 +59,21 @@ class Wiki {
     return permission_exist('WIKI_READ', $this->gid);
   }
 
-  /**
-   * Check if user can access to whole wiki
-   *
-   * checkPermissions - Public
-   * @param  int     User identifier
-   * @return boolean Is the given user allowed to access to the Wiki
-   */
-  function isAutorized($uid) {
-    $autorized = permission_is_authorized('WIKI_READ', $this->gid, $uid, $this->gid);
-    return $autorized;
-  }
+    /**
+     * @param  int     User identifier
+     *
+     * @return boolean
+     */
+    public function isAutorized($uid)
+    {
+        $user = UserManager::instance()->getUserById($uid);
+        if ($user->isMember($this->gid, ProjectUGroup::PROJECT_ADMIN_PERMISSIONS)
+        || $user->isMember($this->gid, ProjectUGroup::WIKI_ADMIN_PERMISSIONS)) {
+            return true;
+        }
+
+        return permission_is_authorized('WIKI_READ', $this->gid, $uid, $this->gid);
+    }
 
   /**
    * Set access permissions.
@@ -129,7 +134,7 @@ class Wiki {
       return 0;
   }
 
-  
+
   /**
    * Get number of project wiki pages.
    * @return number of project pages (0 if wiki is empty)
@@ -239,4 +244,3 @@ class Wiki {
     }
   }
 }
-?>

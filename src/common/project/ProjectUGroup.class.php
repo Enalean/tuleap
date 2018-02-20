@@ -40,6 +40,9 @@ class ProjectUGroup implements User_UGroup {
     const NEWS_WRITER        = 18;
     const SVN_ADMIN          = 19;
 
+    const WIKI_ADMIN_PERMISSIONS    = 'W2';
+    const PROJECT_ADMIN_PERMISSIONS = 'A';
+
     const DYNAMIC_UPPER_BOUNDARY = 100;
 
     public static $legacy_ugroups = array(
