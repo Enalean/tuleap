@@ -39,25 +39,25 @@ class NotEqualComparisonFromWhereBuilder implements FromWhereBuilder
         $tracker_ids_statement = EasyStatement::open()->in('field.tracker_id IN (?*)', $tracker_ids);
 
         $from = "LEFT JOIN (
-                    tracker_changeset_value AS changeset_value_status
-                    INNER JOIN tracker_changeset_value_list AS tracker_changeset_value_status
+                    tracker_changeset_value AS not_equal_changeset_value_status
+                    INNER JOIN tracker_changeset_value_list AS not_equal_tracker_changeset_value_status
                         ON (
-                            tracker_changeset_value_status.changeset_value_id = changeset_value_status.id
+                            not_equal_tracker_changeset_value_status.changeset_value_id = not_equal_changeset_value_status.id
                         )
                     INNER JOIN (
                         SELECT DISTINCT field_id
                         FROM tracker_semantic_status AS field
                         WHERE $tracker_ids_statement
-                    ) AS status_field
+                    ) AS not_equal_status_field
                         ON (
-                            status_field.field_id = changeset_value_status.field_id
+                            not_equal_status_field.field_id = not_equal_changeset_value_status.field_id
                         )
                 ) ON (
-                    changeset_value_status.changeset_id = tracker_artifact.last_changeset_id
+                    not_equal_changeset_value_status.changeset_id = tracker_artifact.last_changeset_id
                 )";
 
-        $where = "changeset_value_status.changeset_id IS NOT NULL
-            AND tracker_changeset_value_status.bindvalue_id IN (
+        $where = "not_equal_changeset_value_status.changeset_id IS NOT NULL
+            AND not_equal_tracker_changeset_value_status.bindvalue_id IN (
                 SELECT static.id
                 FROM tracker_field_list_bind_static_value AS static
                     INNER JOIN tracker_field AS field
