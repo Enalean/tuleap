@@ -4,6 +4,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Project-Id-Version: \n"
 
+#: src/app/backlog/backlog-controller.js
+msgid "%s succesfully created."
+msgstr ""
+
 #: src/app/planning.tpl.html
 msgid "A server error has occured. <b>You should refresh this page</b>."
 msgstr ""

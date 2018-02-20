@@ -407,10 +407,10 @@ describe("BacklogController - ", () => {
     describe("showAddBacklogItemParentModal() -", () => {
         let item_type;
         beforeEach(() => {
-            item_type = {id: 50};
+            item_type = { id: 50 };
         });
 
-        it("Given an event and an item_type object, when I show the new artifact modal, then the NewTuleapArtifactModalService will be called with a callback", () => {
+        it("Given an event and an item_type, when I show the new artifact modal, then the NewTuleapArtifactModalService will be called with a callback", () => {
             SharedPropertiesService.getMilestone.and.returnValue(undefined);
 
             BacklogController.showAddBacklogItemParentModal(item_type);
@@ -419,7 +419,7 @@ describe("BacklogController - ", () => {
         });
 
         describe("callback -", () => {
-            beforeEach( () => {
+            beforeEach(() => {
                 NewTuleapArtifactModalService.showCreation.and.callFake((a, b, callback) => callback(5202));
             });
 
@@ -431,6 +431,7 @@ describe("BacklogController - ", () => {
                     $scope.$apply();
 
                     expect(MilestoneService.addToContent).not.toHaveBeenCalled();
+                    expect(BacklogItemService.getBacklogItem).toHaveBeenCalledWith(5202);
                 });
             });
 
@@ -442,6 +443,7 @@ describe("BacklogController - ", () => {
                     $scope.$apply();
 
                     expect(MilestoneService.addToContent).toHaveBeenCalled();
+                    expect(BacklogItemService.getBacklogItem).toHaveBeenCalledWith(5202);
                 });
             });
         });

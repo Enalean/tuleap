@@ -3,6 +3,8 @@
 </div>
 <div class="tlp-alert-danger" ng-if="planning.getRestError().rest_error_occured" ng-bind-html="planning.getRestError().rest_error"></div>
 
+<success-message></success-message>
+
 <div class="tuleap-modal-loading" ng-if="planning.loading_modal.loading"></div>
 
 <div class="planning-view" ng-class="{ 'multi-selected-backlog-items': planning.getNumberOfSelectedBacklogItem() > 0 }">
