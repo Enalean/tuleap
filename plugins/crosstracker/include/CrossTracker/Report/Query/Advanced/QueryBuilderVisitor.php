@@ -23,8 +23,8 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced;
 use Tracker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\SearchableVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\SearchableVisitorParameters;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Semantic\EqualComparisonFromWhereBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Semantic\NotEqualComparisonFromWhereBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\EqualComparisonFromWhereBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\NotEqualComparisonFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 use Tuleap\CrossTracker\Report\Query\ParametrizedAndFromWhere;
 use Tuleap\CrossTracker\Report\Query\ParametrizedOrFromWhere;
@@ -43,8 +43,6 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitable;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitor;
-use Tuleap\Tracker\Report\Query\AndFromWhere;
-use Tuleap\Tracker\Report\Query\OrFromWhere;
 
 class QueryBuilderVisitor implements Visitor
 {

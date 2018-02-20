@@ -18,14 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Semantic\Description;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\Title;
 
 use Tuleap\CrossTracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\DB\DBFactory;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
-class EqualComparisonFromWhereBuilder extends DescriptionFromWhereBuilder
+class EqualComparisonFromWhereBuilder implements FromWhereBuilder
 {
     public function getFromWhere(Metadata $metadata, Comparison $comparison, array $trackers)
     {
@@ -35,13 +35,13 @@ class EqualComparisonFromWhereBuilder extends DescriptionFromWhereBuilder
         if ($value === '') {
             $matches_value = " = ''";
         } else {
-            $matches_value      = " LIKE ?";
+            $matches_value     = " LIKE ?";
             $where_parameters[] = '%' . DBFactory::instance()->escapeLikeValue($value) . '%';
         }
 
-        $from  = $this->getFrom();
-        $where = "changeset_value_description.changeset_id IS NOT NULL
-            AND tracker_changeset_value_description.value $matches_value";
+        $from = "";
+        $where = "changeset_value_title.changeset_id IS NOT NULL
+            AND tracker_changeset_value_title.value $matches_value";
 
         return new ParametrizedFromWhere($from, $where, [], $where_parameters);
     }

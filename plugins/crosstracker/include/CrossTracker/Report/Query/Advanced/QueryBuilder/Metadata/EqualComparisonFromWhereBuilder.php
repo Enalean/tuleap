@@ -18,19 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata;
 
-class AllowedMetadata
+class EqualComparisonFromWhereBuilder extends ComparisonFromWhereBuilder
 {
-    const TITLE        = '@title';
-    const DESCRIPTION  = '@description';
-    const STATUS       = '@status';
-    const SUBMITTED_ON = '@submitted_on';
-
-    public static $NAMES = array(
-        self::TITLE,
-        self::DESCRIPTION,
-        self::STATUS,
-        self::SUBMITTED_ON,
-    );
 }

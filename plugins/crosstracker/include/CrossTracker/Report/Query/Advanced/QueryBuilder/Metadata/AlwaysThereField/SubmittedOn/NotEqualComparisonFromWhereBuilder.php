@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,34 +18,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Semantic\Title;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\SubmittedOn;
 
+use Tracker;
+use Tuleap\CrossTracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 use Tuleap\CrossTracker\Report\Query\ParametrizedFromWhere;
-use Tuleap\DB\DBFactory;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
 class NotEqualComparisonFromWhereBuilder implements FromWhereBuilder
 {
+
+    /**
+     * @param Metadata $metadata
+     * @param Comparison $comparison
+     * @param Tracker[] $trackers
+     * @return IProvideParametrizedFromAndWhereSQLFragments
+     */
     public function getFromWhere(Metadata $metadata, Comparison $comparison, array $trackers)
     {
-        $value = $comparison->getValueWrapper()->getValue();
-
-        if ($value === '') {
-            return new ParametrizedFromWhere(
-                "",
-                "tracker_changeset_value_title.value IS NOT NULL AND tracker_changeset_value_title.value <> ''",
-                [],
-                []
-            );
-        } else {
-            return new ParametrizedFromWhere(
-                "",
-                "(tracker_changeset_value_title.value IS NULL
-                    OR tracker_changeset_value_title.value NOT LIKE ?)",
-                [],
-                ['%' . DBFactory::instance()->escapeLikeValue($value) . '%']
-            );
-        }
+        return new ParametrizedFromWhere('', '1', [], []);
     }
 }
