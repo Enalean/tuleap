@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright Enalean (c) 2018. All rights reserved.
  *
@@ -22,47 +21,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\News\Admin\PerGroup;
+import Gettext             from 'node-gettext';
+import french_translations from '../po/fr.po';
 
-use PFUser;
-use Project;
-use ProjectUGroup;
+const gettext_provider = new Gettext();
+gettext_provider.addTranslations('fr_FR', 'news', french_translations);
+gettext_provider.setTextDomain('news');
 
-class NewsPermissionPerGroupPresenter
-{
-    /**
-     * @var int
-     */
-    public $ugroup_id;
-
-    /**
-     * @var string
-     */
-    public $user_locale;
-
-    /**
-     * @var string
-     */
-    public $selected_ugroup_name;
-
-    /**
-     * @var int
-     */
-    public $project_id;
-
-    public function __construct(
-        PFUser $user,
-        Project $project,
-        ProjectUGroup $ugroup = null
-    ) {
-        $this->user_locale = $user->getLocale();
-        $this->project_id  = $project->getID();
-        $this->ugroup_id   = ($ugroup)
-            ? $ugroup->getId()
-            : '';
-
-        $this->selected_ugroup_name = ($ugroup)
-            ? $ugroup->getTranslatedName()
-            : '';
-    }
-}
+export { gettext_provider };

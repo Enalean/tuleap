@@ -24,45 +24,28 @@
 
 namespace Tuleap\News\Admin\PerGroup;
 
-use PFUser;
-use Project;
-use ProjectUGroup;
-
-class NewsPermissionPerGroupPresenter
+class NewsVisibilityRepresentation
 {
     /**
-     * @var int
+     * @var String
      */
-    public $ugroup_id;
-
+    public $news_name;
     /**
-     * @var string
+     * @var String
      */
-    public $user_locale;
-
+    public $admin_quicklink;
     /**
-     * @var string
+     * @var bool
      */
-    public $selected_ugroup_name;
-
-    /**
-     * @var int
-     */
-    public $project_id;
+    public $is_public;
 
     public function __construct(
-        PFUser $user,
-        Project $project,
-        ProjectUGroup $ugroup = null
+        $news_name,
+        $admin_quicklink,
+        $is_public
     ) {
-        $this->user_locale = $user->getLocale();
-        $this->project_id  = $project->getID();
-        $this->ugroup_id   = ($ugroup)
-            ? $ugroup->getId()
-            : '';
-
-        $this->selected_ugroup_name = ($ugroup)
-            ? $ugroup->getTranslatedName()
-            : '';
+        $this->news_name       = $news_name;
+        $this->admin_quicklink = $admin_quicklink;
+        $this->is_public       = $is_public;
     }
 }

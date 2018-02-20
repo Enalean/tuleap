@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright Enalean (c) 2018. All rights reserved.
  *
@@ -22,47 +21,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\News\Admin\PerGroup;
+import { get } from 'tlp';
 
-use PFUser;
-use Project;
-use ProjectUGroup;
+export {
+    getNewsPermissions
+}
 
-class NewsPermissionPerGroupPresenter
-{
-    /**
-     * @var int
-     */
-    public $ugroup_id;
+async function getNewsPermissions(project_id, selected_ugroup_id) {
+    const url = '/new/news_permissions_per_group.php/?group_id='
+        + project_id
+        + '&selected_ugroup_id='
+        + selected_ugroup_id;
 
-    /**
-     * @var string
-     */
-    public $user_locale;
+    const response = await get(url);
 
-    /**
-     * @var string
-     */
-    public $selected_ugroup_name;
-
-    /**
-     * @var int
-     */
-    public $project_id;
-
-    public function __construct(
-        PFUser $user,
-        Project $project,
-        ProjectUGroup $ugroup = null
-    ) {
-        $this->user_locale = $user->getLocale();
-        $this->project_id  = $project->getID();
-        $this->ugroup_id   = ($ugroup)
-            ? $ugroup->getId()
-            : '';
-
-        $this->selected_ugroup_name = ($ugroup)
-            ? $ugroup->getTranslatedName()
-            : '';
-    }
+    return await response.json();
 }

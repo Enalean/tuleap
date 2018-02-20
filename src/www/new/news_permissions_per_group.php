@@ -22,47 +22,33 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\News\Admin\PerGroup;
+use Tuleap\News\Admin\AdminNewsDao;
+use Tuleap\News\Admin\PerGroup\NewsJSONPermissionsRetriever;
+use Tuleap\News\Admin\PerGroup\NewsPermissionsManager;
+use Tuleap\News\Admin\PerGroup\NewsPermissionsRepresentationBuilder;
 
-use PFUser;
-use Project;
-use ProjectUGroup;
+require_once 'pre.php';
 
-class NewsPermissionPerGroupPresenter
-{
-    /**
-     * @var int
-     */
-    public $ugroup_id;
-
-    /**
-     * @var string
-     */
-    public $user_locale;
-
-    /**
-     * @var string
-     */
-    public $selected_ugroup_name;
-
-    /**
-     * @var int
-     */
-    public $project_id;
-
-    public function __construct(
-        PFUser $user,
-        Project $project,
-        ProjectUGroup $ugroup = null
-    ) {
-        $this->user_locale = $user->getLocale();
-        $this->project_id  = $project->getID();
-        $this->ugroup_id   = ($ugroup)
-            ? $ugroup->getId()
-            : '';
-
-        $this->selected_ugroup_name = ($ugroup)
-            ? $ugroup->getTranslatedName()
-            : '';
-    }
+if (! $request->getCurrentUser()->isAdmin($request->getProject()->getID())) {
+    $GLOBALS['Response']->send400JSONErrors(
+        array(
+            'error' => _(
+                "You don't have permissions to see user groups."
+            )
+        )
+    );
 }
+
+$news_permissions_retriever = new NewsJSONPermissionsRetriever(
+    new NewsPermissionsRepresentationBuilder(
+        new NewsPermissionsManager(
+            PermissionsManager::instance(),
+            new AdminNewsDao()
+        )
+    )
+);
+
+$news_permissions_retriever->retrieve(
+    $request->getProject(),
+    $request->get('selected_ugroup_id')
+);

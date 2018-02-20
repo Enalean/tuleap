@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright Enalean (c) 2018. All rights reserved.
  *
@@ -22,47 +21,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\News\Admin\PerGroup;
+import Vue                  from 'vue';
+import NewsPermissions      from './BaseNewsPermissions.vue';
+import { gettext_provider } from './gettext-provider.js';
 
-use PFUser;
-use Project;
-use ProjectUGroup;
+document.addEventListener('DOMContentLoaded', () => {
+    const vue_mount_point = document.getElementById('news-permission-per-group');
+    const rootComponent   = Vue.extend(NewsPermissions);
 
-class NewsPermissionPerGroupPresenter
-{
-    /**
-     * @var int
-     */
-    public $ugroup_id;
+    gettext_provider.setLocale(vue_mount_point.dataset.locale);
 
-    /**
-     * @var string
-     */
-    public $user_locale;
-
-    /**
-     * @var string
-     */
-    public $selected_ugroup_name;
-
-    /**
-     * @var int
-     */
-    public $project_id;
-
-    public function __construct(
-        PFUser $user,
-        Project $project,
-        ProjectUGroup $ugroup = null
-    ) {
-        $this->user_locale = $user->getLocale();
-        $this->project_id  = $project->getID();
-        $this->ugroup_id   = ($ugroup)
-            ? $ugroup->getId()
-            : '';
-
-        $this->selected_ugroup_name = ($ugroup)
-            ? $ugroup->getTranslatedName()
-            : '';
-    }
-}
+    new rootComponent({
+        propsData: { ...vue_mount_point.dataset }
+    }).$mount(vue_mount_point);
+});

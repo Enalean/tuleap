@@ -25,9 +25,10 @@
 namespace Tuleap\News\Admin\PerGroup;
 
 use ForgeConfig;
+use PFUser;
 use Project;
-use ProjectUGroup;
 use TemplateRendererFactory;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\PerGroup\PermissionPerGroupUGroupFormatter;
 use UGroupManager;
 
@@ -46,14 +47,21 @@ class NewsPermissionPerGroupPaneBuilder
      */
     private $ugroup_manager;
 
+    /**
+     * @var PFUser
+     */
+    private $user;
+
     public function __construct(
         NewsPermissionsManager $news_permissions_manager,
         PermissionPerGroupUGroupFormatter $formatter,
-        UGroupManager $ugroup_manager
+        UGroupManager $ugroup_manager,
+        PFuser $user
     ) {
         $this->news_permissions_manager = $news_permissions_manager;
         $this->formatter                = $formatter;
         $this->ugroup_manager           = $ugroup_manager;
+        $this->user                     = $user;
     }
 
     public function getPaneContent(Project $project, $selected_ugroup_id)
@@ -62,10 +70,21 @@ class NewsPermissionPerGroupPaneBuilder
             return;
         }
 
-        $news          = $this->getFormattedNews($project, $selected_ugroup_id);
+        $tuleap_base_dir = ForgeConfig::get('tuleap_dir');
+        $include_assets  = new IncludeAssets(
+            $tuleap_base_dir . '/src/www/assets',
+            '/assets'
+        );
+
+        $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('news-permissions.js'));
+
         $ugroup        = $this->ugroup_manager->getUGroup($project, $selected_ugroup_id);
-        $templates_dir = ForgeConfig::get('tuleap_dir') . '/src/templates/news/';
-        $presenter     = new NewsPermissionPerGroupPresenter($news, $ugroup);
+        $templates_dir = $tuleap_base_dir . '/src/templates/news/';
+        $presenter     = new NewsPermissionPerGroupPresenter(
+            $this->user,
+            $project,
+            $ugroup
+        );
 
         return TemplateRendererFactory::build()
             ->getRenderer($templates_dir)
@@ -73,49 +92,5 @@ class NewsPermissionPerGroupPaneBuilder
                 'project-admin-permission-per-group',
                 $presenter
             );
-    }
-
-    private function getFormattedNews(Project $project, $selected_ugroup_id)
-    {
-        $news         = [];
-        $project_news = $this->news_permissions_manager->getAccessibleProjectNews($project);
-
-        foreach ($project_news as $new) {
-            $is_public = $this->news_permissions_manager->isProjectNewsPublic($new);
-
-            if ($selected_ugroup_id
-                && ! $is_public
-                && ! $this->isUGroupAuthorizedToSeePrivateNews($selected_ugroup_id)
-            ) {
-                continue;
-            }
-
-            $news[] = [
-                'name'            => $new[ 'summary' ],
-                'is_public'       => $is_public,
-                'admin_quicklink' => $this->getNewAdminQuickLink($new)
-            ];
-        }
-
-        return $news;
-    }
-
-    private function isUGroupAuthorizedToSeePrivateNews($selected_ugroup_id)
-    {
-        return (int) $selected_ugroup_id === ProjectUGroup::PROJECT_ADMIN
-            || (int) $selected_ugroup_id === ProjectUGroup::PROJECT_MEMBERS
-            || (int) $selected_ugroup_id === ProjectUGroup::NEWS_ADMIN
-            || (int) $selected_ugroup_id === ProjectUGroup::NEWS_WRITER;
-    }
-
-    private function getNewAdminQuickLink($new)
-    {
-        $query_params = http_build_query([
-            'approve'  => $new[ 'is_approved' ],
-            'id'       => $new[ 'id' ],
-            'group_id' => $new[ 'group_id' ]
-        ]);
-
-        return '/news/admin/?' . $query_params;
     }
 }

@@ -24,45 +24,40 @@
 
 namespace Tuleap\News\Admin\PerGroup;
 
-use PFUser;
 use Project;
-use ProjectUGroup;
+use Tuleap\TestManagement\Service;
 
-class NewsPermissionPerGroupPresenter
+class NewsJSONPermissionsRetriever
 {
     /**
-     * @var int
+     * @var NewsPermissionsRepresentationBuilder
      */
-    public $ugroup_id;
+    private $representation_builder;
 
-    /**
-     * @var string
-     */
-    public $user_locale;
+    public function __construct(NewsPermissionsRepresentationBuilder $representation_builder)
+    {
+        $this->representation_builder = $representation_builder;
+    }
 
-    /**
-     * @var string
-     */
-    public $selected_ugroup_name;
+    public function retrieve(Project $project, $selected_ugroup_id = null)
+    {
+        if (!$project->usesService(Service::NEWS)) {
+            $GLOBALS['Response']->send400JSONErrors(
+                array(
+                    'error' => _(
+                        "Service news is disabled for this project."
+                    )
+                )
+            );
+        }
 
-    /**
-     * @var int
-     */
-    public $project_id;
+        $representations = $this->representation_builder->build(
+            $project,
+            $selected_ugroup_id
+        );
 
-    public function __construct(
-        PFUser $user,
-        Project $project,
-        ProjectUGroup $ugroup = null
-    ) {
-        $this->user_locale = $user->getLocale();
-        $this->project_id  = $project->getID();
-        $this->ugroup_id   = ($ugroup)
-            ? $ugroup->getId()
-            : '';
-
-        $this->selected_ugroup_name = ($ugroup)
-            ? $ugroup->getTranslatedName()
-            : '';
+        $GLOBALS['Response']->sendJSON(
+            $representations
+        );
     }
 }
