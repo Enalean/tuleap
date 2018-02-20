@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright Enalean (c) 2011 - 2018. All rights reserved.
  * Copyright 1999-2000 (c) The SourceForge Crew
- * Copyright Enalean (c) 2015. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -504,5 +504,13 @@ class Project extends Group implements PFO_Project {
     public function projectsMustBeApprovedByAdmin() {
         return ForgeConfig::get('sys_project_approval', 1) === 1;
     }
+
+    /**
+     * @param Project $project
+     * @return bool
+     */
+    public function isLegacyDefaultTemplate()
+    {
+        return (int) $this->getID() === self::ADMIN_PROJECT_ID;
+    }
 }
-?>

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -40,28 +40,11 @@ class UGroupListPresenterBuilder
 
     public function build(Project $project, CSRFSynchronizerToken $csrf)
     {
-        $static_ugroups = $this->ugroup_manager->getStaticUGroups($project);
-        $templates      = $this->getUGroupsThatCanBeUsedAsTemplate($static_ugroups);
+        $static_ugroups = $this->getStaticUGroups($project);
+        $templates      = $this->getUGroupsThatCanBeUsedAsTemplate($project, $static_ugroups);
 
-        $ugroups = array();
-        $this->injectDynamicUGroup($project, ProjectUGroup::PROJECT_ADMIN, $ugroups);
-        if ($project->usesWiki()) {
-            $this->injectDynamicUGroup($project, ProjectUGroup::WIKI_ADMIN, $ugroups);
-        }
-
-        if ($project->usesForum()) {
-            $this->injectDynamicUGroup($project, ProjectUGroup::FORUM_ADMIN, $ugroups);
-        }
-
-        if ($project->usesNews()) {
-            $this->injectDynamicUGroup($project, ProjectUGroup::NEWS_WRITER, $ugroups);
-            $this->injectDynamicUGroup($project, ProjectUGroup::NEWS_ADMIN, $ugroups);
-        }
-
-        $can_be_deleted = true;
-        foreach ($static_ugroups as $ugroup) {
-            $ugroups[] = new UGroupPresenter($project, $ugroup, $can_be_deleted);
-        }
+        $ugroups = $this->getDynamicUGroups($project);
+        $this->injectStaticUGroups($project, $static_ugroups, $ugroups);
 
         return new UGroupListPresenter($project, $ugroups, $templates, $csrf);
     }
@@ -70,15 +53,18 @@ class UGroupListPresenterBuilder
      * @param \ProjectUGroup[] $static_ugroups
      * @return array
      */
-    private function getUGroupsThatCanBeUsedAsTemplate(array $static_ugroups)
+    private function getUGroupsThatCanBeUsedAsTemplate(Project $project, array $static_ugroups)
     {
-        $ugroups = array();
-
+        $ugroups   = [];
         $ugroups[] = array(
             'id'       => 'cx_empty',
             'name'     => _('Empty group'),
             'selected' => 'selected="selected"'
         );
+
+        if ($project->isLegacyDefaultTemplate()) {
+            return $ugroups;
+        }
 
         $ugroups[] = array(
             'id'       => 'cx_members',
@@ -108,5 +94,72 @@ class UGroupListPresenterBuilder
         $ugroup         = $this->ugroup_manager->getUGroup($project, $ugroup_id);
         $can_be_deleted = false;
         $ugroups[]      = new UGroupPresenter($project, $ugroup, $can_be_deleted);
+    }
+
+    /**
+     * @param Project $project
+     * @return UGroupPresenter[]
+     */
+    private function getDynamicUGroups(Project $project)
+    {
+        if ($project->isLegacyDefaultTemplate()) {
+            return [];
+        }
+
+        $ugroups = array();
+        $this->injectDynamicUGroup($project, ProjectUGroup::PROJECT_ADMIN, $ugroups);
+        if ($project->usesWiki()) {
+            $this->injectDynamicUGroup($project, ProjectUGroup::WIKI_ADMIN, $ugroups);
+        }
+
+        if ($project->usesForum()) {
+            $this->injectDynamicUGroup($project, ProjectUGroup::FORUM_ADMIN, $ugroups);
+        }
+
+        if ($project->usesNews()) {
+            $this->injectDynamicUGroup($project, ProjectUGroup::NEWS_WRITER, $ugroups);
+            $this->injectDynamicUGroup($project, ProjectUGroup::NEWS_ADMIN, $ugroups);
+        }
+
+        return $ugroups;
+    }
+
+    /**
+     * @param Project $project
+     * @param $static_ugroups
+     * @param $ugroups
+     */
+    private function injectStaticUGroups(Project $project, $static_ugroups, &$ugroups)
+    {
+        $can_be_deleted = true;
+        foreach ($static_ugroups as $ugroup) {
+            $ugroups[] = new UGroupPresenter($project, $ugroup, $can_be_deleted);
+        }
+    }
+
+    /**
+     * @param Project $project
+     * @return ProjectUGroup[]
+     */
+    private function getStaticUGroups(Project $project)
+    {
+        $static_ugroups = $this->ugroup_manager->getStaticUGroups($project);
+
+        // Default template (project id 100) does not know the difference between
+        // a dynamic ugroup (that typically belongs to project id 100 for every project)
+        // and a static ugroup (that belongs to the current project id 100)
+        // Therefore we need to manually remove those dynamic ugroups.
+        if ($project->isLegacyDefaultTemplate()) {
+            $static_ugroups = $this->removeDynamicUGroups($static_ugroups);
+        }
+
+        return $static_ugroups;
+    }
+
+    private function removeDynamicUGroups(array &$static_ugroups)
+    {
+        return array_filter($static_ugroups, function (ProjectUGroup $ugroup) {
+            return $ugroup->getId() > 100;
+        });
     }
 }
