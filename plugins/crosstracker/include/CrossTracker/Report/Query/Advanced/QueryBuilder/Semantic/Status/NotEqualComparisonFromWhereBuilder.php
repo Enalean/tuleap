@@ -45,26 +45,30 @@ class NotEqualComparisonFromWhereBuilder implements FromWhereBuilder
                             tracker_changeset_value_status.changeset_value_id = changeset_value_status.id
                         )
                     INNER JOIN (
-                        SELECT DISTINCT static.field_id, static.id
-                        FROM tracker_field_list_bind_static_value AS static
-                            INNER JOIN tracker_field AS field
-                                ON field.id = static.field_id AND $tracker_ids_statement
-                            INNER JOIN tracker_semantic_status AS SS1
-                                ON field.id = SS1.field_id
-                            LEFT JOIN tracker_semantic_status AS SS2
-                                ON static.field_id = SS2.field_id AND static.id = SS2.open_value_id
-                        WHERE SS2.open_value_id IS NULL
-                    ) AS closed_values
+                        SELECT DISTINCT field_id
+                        FROM tracker_semantic_status AS field
+                        WHERE $tracker_ids_statement
+                    ) AS status_field
                         ON (
-                            changeset_value_status.field_id = closed_values.field_id
+                            status_field.field_id = changeset_value_status.field_id
                         )
                 ) ON (
                     changeset_value_status.changeset_id = tracker_artifact.last_changeset_id
                 )";
 
         $where = "changeset_value_status.changeset_id IS NOT NULL
-            AND tracker_changeset_value_status.bindvalue_id = closed_values.id";
+            AND tracker_changeset_value_status.bindvalue_id IN (
+                SELECT static.id
+                FROM tracker_field_list_bind_static_value AS static
+                    INNER JOIN tracker_field AS field
+                        ON field.id = static.field_id AND $tracker_ids_statement
+                    INNER JOIN tracker_semantic_status AS SS1
+                        ON field.id = SS1.field_id
+                    LEFT JOIN tracker_semantic_status AS SS2
+                        ON static.field_id = SS2.field_id AND static.id = SS2.open_value_id
+                WHERE SS2.open_value_id IS NULL
+            )";
 
-        return new ParametrizedFromWhere($from, $where, $tracker_ids, []);
+        return new ParametrizedFromWhere($from, $where, $tracker_ids, $tracker_ids);
     }
 }
