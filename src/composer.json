@@ -14,7 +14,7 @@
     "mustache/mustache": "dev-feature/strict-variables",
     "ezyang/htmlpurifier": "^4.9.3",
     "firebase/php-jwt": "^5.0.0",
-    "paragonie/sodium_compat": "^1.4",
+    "paragonie/sodium_compat": "^1.6",
     "Luracast/Restler": "3.0.0-RC6",
     "php-amqplib/php-amqplib": "^2.7",
     "delight-im/cookie": "^3.1",
