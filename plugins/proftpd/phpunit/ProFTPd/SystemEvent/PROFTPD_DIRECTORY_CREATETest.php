@@ -38,9 +38,7 @@ class SystemEvent_PROFTPD_DIRECTORY_CREATETest extends PHPUnit_Framework_TestCas
 
     public function setUp() {
         parent::setUp();
-        $current_reporting_level = error_reporting(E_ALL & ~E_STRICT);
         $this->event   = $this->getMockBuilder('Tuleap\ProFTPd\SystemEvent\PROFTPD_DIRECTORY_CREATE')->setMethods(array('done'))->disableOriginalConstructor()->getMock();
-        error_reporting($current_reporting_level);
         $this->backend = $this->getMockBuilder('Backend')->disableOriginalConstructor()->getMock();
         $this->acl_updater = $this->getMockBuilder('Tuleap\ProFTPd\Admin\ACLUpdater')->disableOriginalConstructor()->getMock();
 

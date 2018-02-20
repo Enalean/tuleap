@@ -18,10 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/dao/include/DataAccess.class.php');
-require_once('common/dao/include/DataAccessCredentials.class.php');
-Mock::generatePartial('DataAccess', 'DataAccessTestVersion', array('connect'));
-
 /**
  * Tests the class DataAccess
  */
@@ -34,14 +30,12 @@ class DataAccessTest extends TuleapTestCase {
         $sys_dbpasswd = 'pass';
         $sys_dbname   = 'db';
         $this->expectException('DataAccessException');
-        $this->expectError();
-        $da = new DataAccessTestVersion($this);
         $data_access_credentials = new DataAccessCredentials($sys_dbhost, $sys_dbuser, $sys_dbpasswd, $sys_dbname);
-        $da->DataAccess($data_access_credentials);
+        partial_mock('DataAccess', array('connect', 'getErrorMessage'), array($data_access_credentials));
     }
     
     function testQuoteSmart() {
-        $da = new DataAccessTestVersion($this);
+        $da = partial_mock('DataAccess', array('connect'));
         $this->assertIdentical("'123'", $da->quoteSmart("123"));
         $this->assertIdentical("'12.3'", $da->quoteSmart("12.3"));
         $this->assertIdentical("'value'", $da->quoteSmart("value"), "A string is quoted");
@@ -56,7 +50,7 @@ class DataAccessTest extends TuleapTestCase {
     }
 
     function testQuoteSmartImplode() {
-        $da = new DataAccessTestVersion($this);
+        $da = partial_mock('DataAccess', array('connect'));
         $this->assertIdentical("'123'", $da->quoteSmartImplode('',array("123")), "Array with one element");
         $this->assertIdentical("'123''456'", $da->quoteSmartImplode('',array("123","456")), "Glue is empty");
         $this->assertIdentical("'123' '456'", $da->quoteSmartImplode(' ',array("123","456")), "Glue is empty");
@@ -69,13 +63,13 @@ class DataAccessTest extends TuleapTestCase {
    }
 
    function testEscapeIntImplode() {
-       $da = new DataAccessTestVersion($this);
+       $da = partial_mock('DataAccess', array('connect'));
        $this->assertIdentical('12,34,+5,-6,0', $da->escapeIntImplode(array(12, '34', '+5', '-6', 'crap')));
    }
 
    public function itQuotesLikeValueSurround()
    {
-       $data_access             = new DataAccessTestVersion($this);
+       $data_access             = partial_mock('DataAccess', array('connect'));
        $string_to_escape        = '_%\\';
        $expected_escaped_string = '\_\%\\\\';
        $this->assertEqual($data_access->escapeLikeValue($string_to_escape), $expected_escaped_string);
@@ -172,4 +166,3 @@ class DataAccessTest extends TuleapTestCase {
         $this->assertEqual(DataAccess::escapeInt('abc', CODENDI_DB_NULL), '0');
     }
 }
-?>

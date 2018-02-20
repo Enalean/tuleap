@@ -25,7 +25,7 @@ require_once('include/DataAccessCredentials.class.php');
 
 class CodendiDataAccess extends DataAccess {
     
-    protected function __construct() {
+    public function __construct() {
       $conn_opt = 0;
       if(isset($GLOBALS['sys_enablessl']) && $GLOBALS['sys_enablessl']) {
           $conn_opt = MYSQL_CLIENT_SSL;
@@ -38,7 +38,7 @@ class CodendiDataAccess extends DataAccess {
         $GLOBALS['sys_dbname']
       );
 
-      $this->DataAccess($credentials, $conn_opt);
+      parent::__construct($credentials, $conn_opt);
     }
     
     protected static $_instance;
@@ -62,5 +62,3 @@ class CodendiDataAccess extends DataAccess {
         self::$_instance = null;
     }
 }
-
-?>

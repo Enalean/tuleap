@@ -27,7 +27,7 @@ use TemplateRendererFactory;
 class ServiceProFTPd extends Service {
 
     public function renderInPage(HTTPRequest $request, $title, $template, $presenter = null) {
-        $this->displayHeader($request, $title);
+        $this->displayServiceHeader($request, $title);
 
         if ($presenter) {
             $this->getRenderer()->renderToPage($template, $presenter);
@@ -41,7 +41,7 @@ class ServiceProFTPd extends Service {
         return TemplateRendererFactory::build()->getRenderer(dirname(PROFTPD_BASE_DIR).'/templates');
     }
 
-    public function displayHeader(HTTPRequest $request, $title) {
+    private function displayServiceHeader(HTTPRequest $request, $title) {
         $toolbar = array();
         if ($this->userIsAdmin($request)) {
             $toolbar[] = array(

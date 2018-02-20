@@ -19,12 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('DataAccessResult.class.php');
-require_once('DataAccessException.class.php');
-require_once('DataAccessCredentials.class.php');
-
-$GLOBALS['DEBUG_DAO_QUERY_COUNT'] = 0;
-
 if(!defined('CODENDI_DB_NULL')) define('CODENDI_DB_NULL', 0);
 if(!defined('CODENDI_DB_NOT_NULL')) define('CODENDI_DB_NOT_NULL', 1);
 
@@ -64,7 +58,7 @@ class DataAccess {
      *
      * @param DataAccessCredentials $credentials
      */
-    function DataAccess(DataAccessCredentials $credentials, $opt=0) {
+    public function __construct(DataAccessCredentials $credentials, $opt=0) {
         $this->credentials = $credentials;
         $this->db_name     = $credentials->getDatabaseName();
         $this->opt         = $opt;
@@ -85,10 +79,10 @@ class DataAccess {
                 throw new DataAccessException('Unable to set the character set of the MySQL client.');
             }
             if (!mysql_select_db($this->db_name, $this->db)) {
-                throw new DataAccessException('Unable to select the database ('. mysql_error($this->db) .' - '. mysql_errno() .'). Please contact your administrator.');
+                throw new DataAccessException('Unable to select the database ('. $this->getErrorMessage() .'). Please contact your administrator.');
             }
         } else {
-            throw new DataAccessException('Unable to access the database ('. mysql_error($this->db) .' - '. mysql_errno() .'). Please contact your administrator.');
+            throw new DataAccessException('Unable to access the database ('. $this->getErrorMessage() .'). Please contact your administrator.');
         }
     }
 
@@ -136,6 +130,9 @@ class DataAccess {
         }
 
         if (ForgeConfig::get('DEBUG_MODE')) {
+            if (! isset($GLOBALS['DEBUG_DAO_QUERY_COUNT'])) {
+                $GLOBALS['DEBUG_DAO_QUERY_COUNT'] = 0;
+            }
             $GLOBALS['DEBUG_DAO_QUERY_COUNT']++;
             $GLOBALS['QUERIES'][]=$sql;
             if (!isset($GLOBALS['DBSTORE'][md5($sql)])) {
@@ -207,7 +204,7 @@ class DataAccess {
     }
 
     public function getErrorMessage() {
-        return mysql_error($this->db);
+        return mysql_error($this->db).' - '.mysql_errno($this->db);
     }
 
     /**

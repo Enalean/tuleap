@@ -44,9 +44,9 @@ class SystemEvent_PROFTPD_UPDATE_ACLTest extends PHPUnit_Framework_TestCase {
 
     public function setUp() {
         parent::setUp();
-        $current_reporting_level = error_reporting(E_ALL & ~E_STRICT);
+        $initial_global_state = array_merge(array(), $GLOBALS);
+
         $this->event   = $this->getMockBuilder('Tuleap\ProFTPd\SystemEvent\PROFTPD_UPDATE_ACL')->setMethods(array('done'))->disableOriginalConstructor()->getMock();
-        error_reporting($current_reporting_level);
         $this->acl_updater = $this->getMockBuilder('Tuleap\ProFTPd\Admin\ACLUpdater')->disableOriginalConstructor()->getMock();
 
         $group_unix_name            = "project_name";
@@ -58,8 +58,6 @@ class SystemEvent_PROFTPD_UPDATE_ACLTest extends PHPUnit_Framework_TestCase {
         $this->ftp_directory       = dirname(__FILE__).'/../_fixtures';
         $this->path                = realpath($this->ftp_directory . "/" . $this->group_unix_name);
         $this->not_mixed_case_path = realpath($this->ftp_directory . "/" . strtolower($this->mixed_case_group_unix_name));
-
-        $GLOBALS['sys_http_user'] = 'httpuser';
 
         $this->permissions_manager = $this->getMockBuilder('Tuleap\ProFTPd\Admin\PermissionsManager')->disableOriginalConstructor()->getMock();
 
@@ -98,6 +96,8 @@ class SystemEvent_PROFTPD_UPDATE_ACLTest extends PHPUnit_Framework_TestCase {
              }));
 
         $this->event->injectDependencies($this->acl_updater, $this->permissions_manager, $this->project_manager, $this->ftp_directory);
+        $GLOBALS = $initial_global_state;
+        $GLOBALS['sys_http_user'] = 'httpuser';
     }
 
     protected function tearDown()
@@ -106,13 +106,8 @@ class SystemEvent_PROFTPD_UPDATE_ACLTest extends PHPUnit_Framework_TestCase {
         unset($GLOBALS['sys_http_user']);
     }
 
-    /**
-     * @preserveGlobalState enabled
-     */
     public function testItSetsACLWithWritersAndReaders()
     {
-        $initial_global_state = $GLOBALS;
-
         $this->event->setParameters($this->group_unix_name);
         $this->permissions_manager
              ->expects($this->any())
@@ -129,9 +124,6 @@ class SystemEvent_PROFTPD_UPDATE_ACLTest extends PHPUnit_Framework_TestCase {
         $this->acl_updater->expects($this->once())->method('recursivelyApplyACL')->with($this->path, 'httpuser', 'gpig-ftp_writers', 'gpig-ftp_readers');
 
         $this->event->process();
-
-        // Operations related to ugroups permissions does not leave the global state clean so we need to clean up ourselves
-        $GLOBALS = $initial_global_state;
     }
 
     public function testItUsesTheUnixNameInLowerCase() {
