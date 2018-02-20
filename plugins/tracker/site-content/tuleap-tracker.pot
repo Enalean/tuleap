@@ -145,6 +145,10 @@ msgid "The @comments metadata cannot be compared to NOW()."
 msgstr ""
 
 #, php-format
+msgid "The @comments metadata cannot be compared to OPEN()."
+msgstr ""
+
+#, php-format
 msgid "The artifact link type \"%s\" cannot be disabled"
 msgstr ""
 
@@ -167,6 +171,10 @@ msgstr ""
 
 #, php-format
 msgid "The date field '%s' cannot be compared to MYSELF()."
+msgstr ""
+
+#, php-format
+msgid "The date field '%s' cannot be compared to OPEN()."
 msgstr ""
 
 #, php-format
@@ -218,6 +226,10 @@ msgid "The float field '%s' cannot be compared to NOW()."
 msgstr ""
 
 #, php-format
+msgid "The float field '%s' cannot be compared to OPEN()."
+msgstr ""
+
+#, php-format
 msgid ""
 "The float field '%s' cannot be compared to the empty string with < operator."
 msgstr ""
@@ -253,6 +265,10 @@ msgstr ""
 
 #, php-format
 msgid "The integer field '%s' cannot be compared to NOW()."
+msgstr ""
+
+#, php-format
+msgid "The integer field '%s' cannot be compared to OPEN()."
 msgstr ""
 
 #, php-format
@@ -302,6 +318,10 @@ msgid "The list field '%s' cannot be compared to NOW()."
 msgstr ""
 
 #, php-format
+msgid "The list field '%s' cannot be compared to OPEN()."
+msgstr ""
+
+#, php-format
 msgid ""
 "The list field '%s' cannot be compared to the empty string with IN() "
 "operator."
@@ -336,6 +356,10 @@ msgstr ""
 
 #, php-format
 msgid "The text field '%s' cannot be compared to NOW()."
+msgstr ""
+
+#, php-format
+msgid "The text field '%s' cannot be compared to OPEN()."
 msgstr ""
 
 msgid "The tracker hierarchy cannot be defined."

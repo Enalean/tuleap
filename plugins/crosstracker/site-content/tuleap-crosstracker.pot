@@ -1,9 +1,17 @@
 #, php-format
+msgid "%s cannot be compared to '%s'."
+msgstr ""
+
+#, php-format
 msgid "%s cannot be compared to MYSELF()."
 msgstr ""
 
 #, php-format
 msgid "%s cannot be compared to NOW()."
+msgstr ""
+
+#, php-format
+msgid "%s cannot be compared to OPEN()."
 msgstr ""
 
 msgid "Cross trackers search"
@@ -20,6 +28,18 @@ msgid ""
 msgid_plural ""
 "%d of the trackers involved in the query do not have the semantic "
 "description defined. Please refine\n"
+"                    your query or check the configuration of the trackers."
+msgstr[0] ""
+msgstr[1] ""
+
+#, php-format
+msgid ""
+"One of the trackers involved in the query does not have the semantic status "
+"defined. Please refine\n"
+"                    your query or check the configuration of the trackers."
+msgid_plural ""
+"%d of the trackers involved in the query do not have the semantic status "
+"defined. Please refine\n"
 "                    your query or check the configuration of the trackers."
 msgstr[0] ""
 msgstr[1] ""

@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.3\n"
+"X-Generator: Poedit 1.8.7.1\n"
 
 #, php-format
 msgid "%s has been created"
@@ -171,6 +171,10 @@ msgid "The @comments metadata cannot be compared to NOW()."
 msgstr "@comments ne peut pas être comparé à NOW()."
 
 #, php-format
+msgid "The @comments metadata cannot be compared to OPEN()."
+msgstr "@comments ne peut pas être comparé à OPEN()."
+
+#, php-format
 msgid "The artifact link type \"%s\" cannot be disabled"
 msgstr "Le lien entre artéfacts typé \"%s\" ne peut être désactivé."
 
@@ -196,6 +200,10 @@ msgstr "Le lien entre artéfacts typé n'existe pas."
 #, php-format
 msgid "The date field '%s' cannot be compared to MYSELF()."
 msgstr "Le champ date '%s' ne peut pas être comparé à MYSELF()."
+
+#, php-format
+msgid "The date field '%s' cannot be compared to OPEN()."
+msgstr "Le champ date '%s' ne peut pas être comparé à OPEN()."
 
 #, php-format
 msgid ""
@@ -258,6 +266,10 @@ msgid "The float field '%s' cannot be compared to NOW()."
 msgstr "Le champ flottant '%s' ne peut pas être comparé à NOW()."
 
 #, php-format
+msgid "The float field '%s' cannot be compared to OPEN()."
+msgstr "Le champ flottant '%s' ne peut pas être comparé à OPEN()."
+
+#, php-format
 msgid ""
 "The float field '%s' cannot be compared to the empty string with < operator."
 msgstr ""
@@ -304,6 +316,10 @@ msgstr "Le champ entier '%s' ne peut pas être comparé à MYSELF()."
 #, php-format
 msgid "The integer field '%s' cannot be compared to NOW()."
 msgstr "Le champ entier '%s' ne peut pas être comparé à NOW()."
+
+#, php-format
+msgid "The integer field '%s' cannot be compared to OPEN()."
+msgstr "Le champ entier '%s' ne peut pas être comparé à OPEN()."
 
 #, php-format
 msgid ""
@@ -365,6 +381,10 @@ msgid "The list field '%s' cannot be compared to NOW()."
 msgstr "Le champ liste '%s' ne peut pas être comparé à NOW()."
 
 #, php-format
+msgid "The list field '%s' cannot be compared to OPEN()."
+msgstr "Le champ liste '%s' ne peut pas être comparé à OPEN()."
+
+#, php-format
 msgid ""
 "The list field '%s' cannot be compared to the empty string with IN() "
 "operator."
@@ -408,6 +428,10 @@ msgstr "Le champ texte '%s' ne peut pas être comparé à MYSELF()."
 #, php-format
 msgid "The text field '%s' cannot be compared to NOW()."
 msgstr "Le champ texte '%s' ne peut pas être comparé à NOW()."
+
+#, php-format
+msgid "The text field '%s' cannot be compared to OPEN()."
+msgstr "Le champ texte '%s' ne peut pas être comparé à OPEN()."
 
 msgid "The tracker hierarchy cannot be defined."
 msgstr "La hiérarchie entre outils de suivi ne peut être définie."
