@@ -1,22 +1,25 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Http\BinaryFileResponse;
 
 require_once ('common/include/MIME.class.php');
 require_once ('www/project/admin/permissions.php');
@@ -60,17 +63,17 @@ class WebDAVFRSFile extends Sabre_DAV_File {
     /**
      * This method is used to download the file
      *
-     * @return File
      */
-    function get() {
+    function get()
+    {
         // Log the download in the Log system
         $this->logDownload($this->getUser());
 
         // Start download
-        $fileLocation = $this->getFileLocation();
-        $fp= fopen($fileLocation, 'r');
-        return $fp;
-
+        $binary_file_response = new BinaryFileResponse($this->getFileLocation(), $this->getName(), $this->getContentType());
+        header('ETag: ' . $this->getETag());
+        header('Last-Modified: ' . $this->getLastModified());
+        $binary_file_response->send();
     }
 
     public function put($data) {

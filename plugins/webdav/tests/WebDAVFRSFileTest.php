@@ -1,21 +1,22 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 require_once 'bootstrap.php';
@@ -36,24 +37,8 @@ array('getFileLocation', 'getFile', 'getFileId', 'getProject', 'getUtils', 'logD
 /**
  * This is the unit test of WebDAVFRSFile
  */
-class WebDAVFRSFileTest extends TuleapTestCase {
-
-    /**
-     * Testing if the download method works perfectly
-     */
-    function testSucceedGet() {
-
-        $webDAVFile = new WebDAVFRSFileTestVersion($this);
-
-        $file = new MockFRSFile($this);
-        $webDAVFile->setReturnValue('getFile', $file);
-
-        $path = dirname(__FILE__).'/_fixtures/test.txt';
-        $webDAVFile->setReturnValue('getFileLocation', $path);
-
-        $this->assertNotEqual($webDAVFile->get(), false);
-
-    }
+class WebDAVFRSFileTest extends TuleapTestCase
+{
 
     /**
      * Testing delete when user is not admin
