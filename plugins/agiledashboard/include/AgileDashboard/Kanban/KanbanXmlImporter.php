@@ -30,6 +30,7 @@ use PFUser;
 use Project;
 use SimpleXMLElement;
 use TrackerXmlFieldsMapping;
+use Tuleap\XML\MappingsRegistry;
 
 class KanbanXmlImporter
 {
@@ -79,7 +80,8 @@ class KanbanXmlImporter
         array $tracker_mapping,
         Project $project,
         TrackerXmlFieldsMapping $field_mapping,
-        PFUser $user
+        PFUser $user,
+        MappingsRegistry $mappings_registry
     ) {
         if (! $xml->agiledashboard->kanban_list) {
             $this->logger->info("0 Kanban found");
@@ -97,6 +99,8 @@ class KanbanXmlImporter
                 (string) $attrs["name"],
                 $tracker_mapping[(string) $attrs["tracker_id"]]
             );
+            $mappings_registry->addWidget((string)$attrs['ID'], $kanban_id);
+
             $kanban    = $this->dashboard_kanban_factory->getKanban(
                 $user,
                 $kanban_id

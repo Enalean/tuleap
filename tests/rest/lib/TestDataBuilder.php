@@ -233,19 +233,6 @@ class REST_TestDataBuilder extends TestDataBuilder  // @codingStandardsIgnoreLin
         throw new RuntimeException('Data seems not correctly initialized');
     }
 
-    public function generateKanban()
-    {
-        echo "Create 'My first kanban'\n";
-
-        $tracker    = $this->getKanbanTracker();
-        $tracker_id = $tracker->getId();
-
-        $kanban_manager = new AgileDashboard_KanbanManager(new AgileDashboard_KanbanDao(), $this->tracker_factory, $this->hierarchy_checker);
-        $kanban_manager->createKanban('My first kanban', $tracker_id);
-
-        return $this;
-    }
-
     public function generateCrossTracker()
     {
         echo "Generate Cross Tracker\n";

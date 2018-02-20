@@ -21,12 +21,22 @@
                           <data type="string"/>
                         </attribute>
                         <oneOrMore>
-                          <element name="value">
-                            <attribute name="name">
+                          <choice>
+                            <element name="value">
+                              <attribute name="name">
+                                <data type="string"/>
+                              </attribute>
                               <data type="string"/>
-                            </attribute>
-                            <data type="string"/>
-                          </element>
+                            </element>
+                            <element name="reference">
+                              <attribute name="name">
+                                <data type="string"/>
+                              </attribute>
+                              <attribute name="REF">
+                                <data type="IDREF"/>
+                              </attribute>
+                            </element>
+                          </choice>
                         </oneOrMore>
                       </element>
                     </zeroOrMore>

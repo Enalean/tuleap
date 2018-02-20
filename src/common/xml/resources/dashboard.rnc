@@ -8,10 +8,17 @@ dashboards = element dashboard {
                 attribute name { xsd:string },
                 element preference {
                     attribute name { xsd:string },
-                    element value {
-                        attribute name { xsd:string },
-                        xsd:string
-                    }+
+                    (
+                        element value {
+                            attribute name { xsd:string },
+                            xsd:string
+                        }
+                    |
+                        element reference {
+                            attribute name { xsd:string },
+                            attribute REF { xsd:IDREF }
+                        }
+                    )+
                 }*
             }+
         }+

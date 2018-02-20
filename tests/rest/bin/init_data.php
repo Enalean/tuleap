@@ -28,7 +28,6 @@ $data_builder
     ->generateUsers()
     ->delegatePermissionsToRetrieveMembership()
     ->delegatePermissionsToManageUser()
-    ->generateKanban()
     ->generateCrossTracker()
     ->deleteTracker()
     ->activateDebug();

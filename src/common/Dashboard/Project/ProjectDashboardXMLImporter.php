@@ -27,6 +27,7 @@ use Tuleap\Dashboard\NameDashboardAlreadyExistsException;
 use Tuleap\Dashboard\NameDashboardDoesNotExistException;
 use Tuleap\Widget\WidgetFactory;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
+use Tuleap\XML\MappingsRegistry;
 
 class ProjectDashboardXMLImporter
 {
@@ -55,7 +56,7 @@ class ProjectDashboardXMLImporter
         $this->logger                  = new \WrapperLogger($logger, 'Dashboards');
     }
 
-    public function import(\SimpleXMLElement $xml_element, PFUser $user, Project $project)
+    public function import(\SimpleXMLElement $xml_element, PFUser $user, Project $project, MappingsRegistry $mapping_registry)
     {
         $this->logger->info('Start import');
         if ($xml_element->dashboards) {
@@ -64,7 +65,7 @@ class ProjectDashboardXMLImporter
                     $dashboard_name = trim((string) $dashboard["name"]);
                     $this->logger->info("Create dashboard $dashboard_name");
                     $dashboard_id = $this->project_dashboard_saver->save($user, $project, $dashboard_name);
-                    $this->importWidgets($dashboard_id, $project, $dashboard);
+                    $this->importWidgets($dashboard_id, $project, $dashboard, $mapping_registry);
                 } catch (UserCanNotUpdateProjectDashboardException $e) {
                     $this->logger->warn($e->getMessage());
                 } catch (NameDashboardDoesNotExistException $e) {
@@ -77,7 +78,7 @@ class ProjectDashboardXMLImporter
         $this->logger->info('Import completed');
     }
 
-    private function importWidgets($dashboard_id, Project $project, \SimpleXMLElement $dashboard)
+    private function importWidgets($dashboard_id, Project $project, \SimpleXMLElement $dashboard, MappingsRegistry $mapping_registry)
     {
         $this->logger->info("Import widgets");
         if (! isset($dashboard->line)) {
@@ -87,18 +88,18 @@ class ProjectDashboardXMLImporter
         $line_rank = 1;
         $all_widgets = [];
         foreach ($dashboard->line as $line) {
-            $this->createLine($line, $project, $dashboard_id, $line_rank, $all_widgets);
+            $this->createLine($line, $project, $dashboard_id, $line_rank, $all_widgets, $mapping_registry);
             $line_rank++;
         }
         $this->logger->info("Import of widgets: Done");
     }
 
-    private function createLine(\SimpleXMLElement $line, Project $project, $dashboard_id, $line_rank, array &$all_widgets)
+    private function createLine(\SimpleXMLElement $line, Project $project, $dashboard_id, $line_rank, array &$all_widgets, MappingsRegistry $mapping_registry)
     {
         $line_id = -1;
         $column_rank = 1;
         foreach ($line->column as $column) {
-            $this->createColumn($column, $project, $dashboard_id, $line_id, $line_rank, $column_rank, $all_widgets);
+            $this->createColumn($column, $project, $dashboard_id, $line_id, $line_rank, $column_rank, $all_widgets, $mapping_registry);
             $column_rank++;
         }
         if ($column_rank > 2) {
@@ -106,28 +107,32 @@ class ProjectDashboardXMLImporter
         }
     }
 
-    private function createColumn(\SimpleXMLElement $column, Project $project, $dashboard_id, &$line_id, $line_rank, $column_rank, array &$all_widgets)
+    private function createColumn(\SimpleXMLElement $column, Project $project, $dashboard_id, &$line_id, $line_rank, $column_rank, array &$all_widgets, MappingsRegistry $mapping_registry)
     {
         $column_id = -1;
         $widget_rank = 1;
         foreach ($column->widget as $widget_xml) {
-            list($widget, $content_id) = $this->getWidget($project, $widget_xml, $all_widgets);
-            if (! $this->isWidgetCreated($widget, $content_id)) {
-                continue;
+            try {
+                list($widget, $content_id) = $this->getWidget($project, $widget_xml, $all_widgets, $mapping_registry);
+                if (! $this->isWidgetCreated($widget, $content_id)) {
+                    continue;
+                }
+                if (! $this->isLineCreated($line_id)) {
+                    $line_id = $this->widget_dao->createLine($dashboard_id, ProjectDashboardController::DASHBOARD_TYPE, $line_rank);
+                }
+                if (! $this->isColumnCreated($line_id, $column_id)) {
+                    $column_id = $this->widget_dao->createColumn($line_id, $column_rank);
+                }
+                if ($column_id) {
+                    $this->widget_dao->insertWidgetInColumnWithRank($widget->getId(), $content_id, $column_id, $widget_rank);
+                    $all_widgets[$widget->getId()] = true;
+                } else {
+                    $this->logger->warn("Impossible to create line or column, widget {$widget->getId()} not added");
+                }
+                $widget_rank++;
+            } catch (\Exception $exception) {
+                $this->logger->warn("Impossible to create widget: ".$exception->getMessage());
             }
-            if (! $this->isLineCreated($line_id)) {
-                $line_id = $this->widget_dao->createLine($dashboard_id, ProjectDashboardController::DASHBOARD_TYPE, $line_rank);
-            }
-            if (! $this->isColumnCreated($line_id, $column_id)) {
-                $column_id = $this->widget_dao->createColumn($line_id, $column_rank);
-            }
-            if ($column_id) {
-                $this->widget_dao->insertWidgetInColumnWithRank($widget->getId(), $content_id, $column_id, $widget_rank);
-                $all_widgets[$widget->getId()] = true;
-            } else {
-                $this->logger->warn("Impossible to created line or column, widget {$widget->getId()} not added");
-            }
-            $widget_rank++;
         }
     }
 
@@ -151,7 +156,7 @@ class ProjectDashboardXMLImporter
      * @param \SimpleXMLElement $widget_xml
      * @return []
      */
-    private function getWidget(Project $project, \SimpleXMLElement $widget_xml, array $all_widgets)
+    private function getWidget(Project $project, \SimpleXMLElement $widget_xml, array $all_widgets, MappingsRegistry $mapping_registry)
     {
         $widget_name = trim((string) $widget_xml['name']);
         $this->logger->info("Import widget $widget_name");
@@ -168,7 +173,7 @@ class ProjectDashboardXMLImporter
             $this->logger->error("Impossible to instantiate a personal widget ($widget_name) on a Project Dashboard.  Widget skipped");
             return [null, null];
         }
-        $content_id = $this->configureWidget($project, $widget, $widget_xml);
+        $content_id = $this->configureWidget($project, $widget, $widget_xml, $mapping_registry);
         if ($content_id === false) {
             $this->logger->error("Impossible to create content for widget $widget_name. Widget skipped");
             return [null, null];
@@ -183,7 +188,7 @@ class ProjectDashboardXMLImporter
      *
      * @return null|false|int
      */
-    private function configureWidget(Project $project, \Widget $widget, \SimpleXMLElement $widget_xml)
+    private function configureWidget(Project $project, \Widget $widget, \SimpleXMLElement $widget_xml, MappingsRegistry $mapping_registry)
     {
         $widget->setOwner($project->getID(), ProjectDashboardController::LEGACY_DASHBOARD_TYPE);
         $params = [];
@@ -193,6 +198,16 @@ class ProjectDashboardXMLImporter
                 foreach ($preference->value as $value) {
                     $key = trim((string)$value['name']);
                     $val = trim((string)$value);
+                    $params[$preference_name][$key] = $val;
+                }
+                foreach ($preference->reference as $reference) {
+                    $key = trim((string)$reference['name']);
+                    $ref = trim((string)$reference['REF']);
+                    $val = $mapping_registry->getWidget($ref);
+                    if ($val === null) {
+                        $this->logger->error('Unable to find reference for widget configuration');
+                        return false;
+                    }
                     $params[$preference_name][$key] = $val;
                 }
             }

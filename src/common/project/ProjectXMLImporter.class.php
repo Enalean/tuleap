@@ -241,8 +241,6 @@ class ProjectXMLImporter {
 
         $this->importUgroups($project, $xml_element, $user_creator);
 
-        $this->importDashboards($xml_element, $user_creator, $project);
-
         $frs = new FRSXMLImporter(
             $this->logger,
             $this->xml_validator,
@@ -275,6 +273,8 @@ class ProjectXMLImporter {
                 'configuration'       => $configuration,
             )
         );
+
+        $this->importDashboards($xml_element, $user_creator, $project, $mappings_registery);
 
         $this->logger->info("Finish importing project in project ".$project->getUnixName() . " id " . $project->getID());
     }
@@ -476,8 +476,8 @@ class ProjectXMLImporter {
         return defined('IS_SCRIPT') && IS_SCRIPT;
     }
 
-    private function importDashboards(SimpleXMLElement $xml_element, PFUser $user, Project $project)
+    private function importDashboards(SimpleXMLElement $xml_element, PFUser $user, Project $project, MappingsRegistry $mapping_registry)
     {
-        $this->dashboard_importer->import($xml_element, $user, $project);
+        $this->dashboard_importer->import($xml_element, $user, $project, $mapping_registry);
     }
 }
