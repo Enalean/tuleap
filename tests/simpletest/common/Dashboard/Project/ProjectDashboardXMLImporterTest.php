@@ -600,6 +600,92 @@ class ProjectDashboardXMLImporter_LinesTest extends ProjectDashboardXMLImporter_
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
+    public function itImportsTwoWidgetsWithSetLayout()
+    {
+        stub($this->user)->isAdmin(101)->returns(true);
+        stub($this->dao)->searchByProjectIdAndName()->returnsDar();
+
+        $xml = new SimpleXMLElement(
+            '<?xml version="1.0" encoding="UTF-8"?>
+            <project>
+              <dashboards>
+                <dashboard name="dashboard 1">
+                  <line layout="two-columns-small-big">
+                    <column>
+                      <widget name="projectmembers"></widget>
+                    </column>
+                    <column>
+                      <widget name="projectheartbeat"></widget>
+                    </column>
+                  </line>
+                </dashboard>
+              </dashboards>
+              </project>'
+        );
+
+        stub($this->dao)->save()->returns(144);
+
+        stub($this->logger)->error()->never();
+
+        stub($this->widget_dao)->createLine()->returns(12);
+        stub($this->widget_dao)->createColumn()->returnsAt(0, 122);
+        stub($this->widget_dao)->createColumn()->returnsAt(1, 124);
+        stub($this->widget_factory)->getInstanceByWidgetName('projectmembers')->returns(stub('Widget')->getId()->returns('projectmembers'));
+        stub($this->widget_factory)->getInstanceByWidgetName('projectheartbeat')->returns(stub('Widget')->getId()->returns('projectheartbeat'));
+        stub($this->widget_factory)->isProjectWidget()->returns(true);
+
+        expect($this->widget_dao)->insertWidgetInColumnWithRank()->count(2);
+        expect($this->widget_dao)->insertWidgetInColumnWithRank('projectmembers', 0, 122, 1)->at(0);
+        expect($this->widget_dao)->insertWidgetInColumnWithRank('projectheartbeat', 0, 124, 1)->at(1);
+
+        expect($this->widget_dao)->updateLayout(12, 'two-columns-small-big')->once();
+
+        $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
+    }
+
+    public function itFallsbackToAutomaticLayoutWhenLayoutIsUnknown()
+    {
+        stub($this->user)->isAdmin(101)->returns(true);
+        stub($this->dao)->searchByProjectIdAndName()->returnsDar();
+
+        $xml = new SimpleXMLElement(
+            '<?xml version="1.0" encoding="UTF-8"?>
+            <project>
+              <dashboards>
+                <dashboard name="dashboard 1">
+                  <line layout="foobar">
+                    <column>
+                      <widget name="projectmembers"></widget>
+                    </column>
+                    <column>
+                      <widget name="projectheartbeat"></widget>
+                    </column>
+                  </line>
+                </dashboard>
+              </dashboards>
+              </project>'
+        );
+
+        stub($this->logger)->error()->never();
+        stub($this->logger)->warn()->once();
+
+        stub($this->widget_dao)->createLine()->returns(12);
+        stub($this->widget_dao)->createColumn()->returnsAt(0, 122);
+        stub($this->widget_dao)->createColumn()->returnsAt(1, 124);
+        stub($this->widget_factory)->getInstanceByWidgetName('projectmembers')->returns(stub('Widget')->getId()->returns('projectmembers'));
+        stub($this->widget_factory)->getInstanceByWidgetName('projectheartbeat')->returns(stub('Widget')->getId()->returns('projectheartbeat'));
+        stub($this->widget_factory)->isProjectWidget()->returns(true);
+
+        expect($this->widget_dao)->insertWidgetInColumnWithRank()->count(2);
+        expect($this->widget_dao)->insertWidgetInColumnWithRank('projectmembers', 0, 122, 1)->at(0);
+        expect($this->widget_dao)->insertWidgetInColumnWithRank('projectheartbeat', 0, 124, 1)->at(1);
+
+        expect($this->widget_dao)->updateLayout()->never();
+        expect($this->widget_dao)->adjustLayoutAccordinglyToNumberOfWidgets()->once();
+
+        $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
+    }
+
     public function itImportsAWidgetWithPreferences()
     {
         stub($this->user)->isAdmin(101)->returns(true);
