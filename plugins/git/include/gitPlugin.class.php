@@ -190,7 +190,7 @@ class GitPlugin extends Plugin
         $this->addHook('delete_ci_triggers',                              'delete_ci_triggers',                           false);
 
         $this->addHook('logs_daily',                                       'logsDaily',                                   false);
-        $this->addHook('widget_instance',                                  'myPageBox',                                   false);
+        $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
         $this->addHook('widgets',                                          'widgets',                                     false);
         $this->addHook('show_pending_documents',                           'showArchivedRepositories',                    false);
 
@@ -1291,17 +1291,17 @@ class GitPlugin extends Plugin
     /**
      * Instanciate the corresponding widget
      *
-     * @param Array $params Name and instance of the widget
+     * @param \Tuleap\Widget\Event\GetWidget $get_widget_event Name and instance of the widget
      *
      * @return Void
      */
-    function myPageBox($params) {
-        switch ($params['widget']) {
+    public function widgetInstance(\Tuleap\Widget\Event\GetWidget $get_widget_event) {
+        switch ($get_widget_event->getName()) {
             case 'plugin_git_user_pushes':
-                $params['instance'] = new Git_Widget_UserPushes($this->getPluginPath());
+                $get_widget_event->setWidget(new Git_Widget_UserPushes($this->getPluginPath()));
                 break;
             case 'plugin_git_project_pushes':
-                $params['instance'] = new Git_Widget_ProjectPushes($this->getPluginPath());
+                $get_widget_event->setWidget(new Git_Widget_ProjectPushes($this->getPluginPath()));
                 break;
             default:
                 break;

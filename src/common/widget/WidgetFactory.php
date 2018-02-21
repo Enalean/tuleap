@@ -20,6 +20,7 @@
 
 namespace Tuleap\Widget;
 
+use Tuleap\Widget\Event\GetWidget;
 use UserManager;
 use User_ForgeUserGroupPermissionsManager;
 use User_ForgeUserGroupPermission_ProjectApproval;
@@ -167,10 +168,9 @@ class WidgetFactory
                 $widget = new Widget_Contacts();
                 break;
             default:
-                $this->event_manager->processEvent(
-                    'widget_instance',
-                    array('widget' => $widget_name, 'instance' => &$widget)
-                );
+                $get_widget_event = new GetWidget($widget_name);
+                $this->event_manager->processEvent($get_widget_event);
+                $widget = $get_widget_event->getWidget();
                 break;
         }
 

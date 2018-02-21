@@ -45,7 +45,7 @@ class StatisticsPlugin extends Plugin {
         $this->addHook('cssfile',                  'cssFile',                false);
         $this->addHook('site_admin_option_hook',   'site_admin_option_hook', false);
         $this->addHook('root_daily_start',         'root_daily_start',       false);
-        $this->addHook('widget_instance',          'widget_instance',        false);
+        $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
         $this->addHook('widgets',                  'widgets',                false);
         $this->addHook('usergroup_data',           'usergroup_data',         false);
         $this->addHook('groupedit_data',           'groupedit_data',         false);
@@ -208,14 +208,14 @@ class StatisticsPlugin extends Plugin {
     /**
      * Instanciate the widget
      *
-     * @param Array $params params of the event
+     * @param \Tuleap\Widget\Event\GetWidget $get_wiget_event
      *
      * @return void
      */
-    function widget_instance($params) {
-        if ($params['widget'] == 'plugin_statistics_projectstatistics') {
+    public function widgetInstance(\Tuleap\Widget\Event\GetWidget $get_wiget_event) {
+        if ($get_wiget_event->getName() === 'plugin_statistics_projectstatistics') {
             include_once 'Statistics_Widget_ProjectStatistics.class.php';
-            $params['instance'] = new Statistics_Widget_ProjectStatistics();
+            $get_wiget_event->setWidget(new Statistics_Widget_ProjectStatistics());
         }
     }
 

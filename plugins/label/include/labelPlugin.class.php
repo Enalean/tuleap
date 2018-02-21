@@ -43,7 +43,7 @@ class labelPlugin extends Plugin
     public function getHooksAndCallbacks()
     {
         $this->addHook('widgets');
-        $this->addHook('widget_instance');
+        $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(Event::REST_PROJECT_RESOURCES);
         $this->addHook(RemoveLabel::NAME);
@@ -74,11 +74,11 @@ class labelPlugin extends Plugin
         }
     }
 
-    public function widgetInstance(array $params)
+    public function widgetInstance(\Tuleap\Widget\Event\GetWidget $get_widget_event)
     {
-        switch ($params['widget']) {
+        switch ($get_widget_event->getName()) {
             case ProjectLabeledItems::NAME:
-                $params['instance'] = new ProjectLabeledItems();
+                $get_widget_event->setWidget(new ProjectLabeledItems());
                 break;
         }
     }

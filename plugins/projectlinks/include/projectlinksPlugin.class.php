@@ -47,7 +47,7 @@ class ProjectLinksPlugin extends Plugin {
             'registerProjectCreation', false);
 
         $this->addHook('cssfile',         'cssfile',         false);
-        $this->addHook('widget_instance', 'widget_instance', false);
+        $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
         $this->addHook('widgets',         'widgets',         false);
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(NavigationPresenter::NAME);
@@ -985,10 +985,10 @@ class ProjectLinksPlugin extends Plugin {
         }
     }
 
-    function widget_instance($params) {
-        if ($params['widget'] == 'projectlinkshomepage') {
+    public function widgetInstance(\Tuleap\Widget\Event\GetWidget $get_widget_event) {
+        if ($get_widget_event->getName() === 'projectlinkshomepage') {
             include_once 'ProjectLinks_Widget_HomePageLinks.class.php';
-            $params['instance'] = new ProjectLinks_Widget_HomePageLinks($this);
+            $get_widget_event->setWidget(new ProjectLinks_Widget_HomePageLinks($this));
         }
     }
 
