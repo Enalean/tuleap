@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2014-2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -72,6 +72,7 @@ class ACLUpdaterTest extends PHPUnit_Framework_TestCase {
         }));
 
         $this->acl_updater->recursivelyApplyACL($this->path, $this->http_user, $this->writers, $this->readers);
+        $this->addToAssertionCount(1);
     }
 
     public function testItSetsAclOn4Elements() {
