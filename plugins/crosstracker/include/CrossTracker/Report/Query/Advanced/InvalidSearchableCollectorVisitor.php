@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -50,10 +50,11 @@ class InvalidSearchableCollectorVisitor implements Visitor
         }
 
         try {
-            $parameters->getSemanticFieldChecker()->checkSemanticMetadataIsValid(
+            $parameters->getMetadataChecker()->checkMetadataIsValid(
                 $metadata,
                 $parameters->getComparison(),
-                $parameters->getInvalidSearchablesCollectorParameters()->getTrackersId()
+                $parameters->getInvalidSearchablesCollectorParameters()->getTrackersId(),
+                $parameters->getComparisonChecker()
             );
         } catch (InvalidSemanticComparisonException $exception) {
             $invalid_searchables_collection->addInvalidSearchableError(

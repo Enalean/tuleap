@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,8 @@
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
-use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\ICheckSemanticFieldForAComparison;
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\ComparisonChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\ICheckMetadataForAComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\VisitorParameters;
 
@@ -28,18 +29,22 @@ class InvalidSearchableCollectorParameters implements VisitorParameters
 {
     /** @var InvalidComparisonCollectorParameters */
     private $invalid_searchables_collector_parameters;
-    /** @var ICheckSemanticFieldForAComparison */
-    private $semantic_checker;
+    /** @var ICheckMetadataForAComparison */
+    private $metadata_checker;
     /** @var Comparison */
     private $comparison;
+    /** @var ComparisonChecker */
+    private $comparison_checker;
 
     public function __construct(
         InvalidComparisonCollectorParameters $invalid_searchables_collector_parameters,
-        ICheckSemanticFieldForAComparison $semantic_checker,
+        ICheckMetadataForAComparison $metadata_checker,
+        ComparisonChecker $comparison_checker,
         Comparison $comparison
     ) {
         $this->invalid_searchables_collector_parameters = $invalid_searchables_collector_parameters;
-        $this->semantic_checker                         = $semantic_checker;
+        $this->metadata_checker                         = $metadata_checker;
+        $this->comparison_checker                       = $comparison_checker;
         $this->comparison                               = $comparison;
     }
 
@@ -55,9 +60,15 @@ class InvalidSearchableCollectorParameters implements VisitorParameters
         return $this->invalid_searchables_collector_parameters;
     }
 
-    /** @return ICheckSemanticFieldForAComparison */
-    public function getSemanticFieldChecker()
+    /** @return ICheckMetadataForAComparison */
+    public function getMetadataChecker()
     {
-        return $this->semantic_checker;
+        return $this->metadata_checker;
+    }
+
+    /** @return ComparisonChecker */
+    public function getComparisonChecker()
+    {
+        return $this->comparison_checker;
     }
 }

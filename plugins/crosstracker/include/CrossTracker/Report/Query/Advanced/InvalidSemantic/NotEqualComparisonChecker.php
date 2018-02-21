@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,16 +20,6 @@
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic;
 
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
-
-interface ICheckSemanticFieldForAComparison
+class NotEqualComparisonChecker extends ComparisonChecker
 {
-    /**
-     * @param Metadata $metadata
-     * @param Comparison $comparison
-     * @param int[] $trackers_id
-     * @return
-     */
-    public function checkSemanticMetadataIsValid(Metadata $metadata, Comparison $comparison, array $trackers_id);
 }
