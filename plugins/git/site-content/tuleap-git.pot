@@ -18,9 +18,6 @@ msgstr ""
 msgid "A push occured on %s"
 msgstr ""
 
-msgid "Branch"
-msgstr ""
-
 #, php-format
 msgid "Cannot add user \"%s\""
 msgstr ""
@@ -43,6 +40,9 @@ msgstr ""
 msgid "Git Administrators"
 msgstr ""
 
+msgid "Git service is disabled."
+msgstr ""
+
 msgid "Global permissions"
 msgstr ""
 
@@ -52,28 +52,10 @@ msgstr ""
 msgid "No notifications set"
 msgstr ""
 
-msgid "No repository found for project"
-msgstr ""
-
 msgid "Notified people"
 msgstr ""
 
 msgid "Permission"
-msgstr ""
-
-msgid "Readers"
-msgstr ""
-
-msgid "Repository"
-msgstr ""
-
-msgid "Repository permissions"
-msgstr ""
-
-msgid "Rewinders"
-msgstr ""
-
-msgid "Tag"
 msgstr ""
 
 #, php-format
@@ -95,12 +77,8 @@ msgstr ""
 msgid "User, group, email"
 msgstr ""
 
-msgid "Writers"
+msgid "You don't have permissions to see user groups."
 msgstr ""
 
 msgid "{{ user_group_name }} has no global permission for Git"
-msgstr ""
-
-msgid ""
-"{{ user_group_name }} has no permission for any repository in this project"
 msgstr ""

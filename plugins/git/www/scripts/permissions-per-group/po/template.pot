@@ -1,0 +1,30 @@
+#, javascript-format
+msgid "%s has no permission for any repository in this project"
+msgstr ""
+
+msgid "Branch"
+msgstr ""
+
+msgid "No repository found for project"
+msgstr ""
+
+msgid "Readers"
+msgstr ""
+
+msgid "Repository"
+msgstr ""
+
+msgid "Repository permissions"
+msgstr ""
+
+msgid "Rewinders"
+msgstr ""
+
+msgid "Tag"
+msgstr ""
+
+msgid "View repositories permissions"
+msgstr ""
+
+msgid "Writers"
+msgstr ""

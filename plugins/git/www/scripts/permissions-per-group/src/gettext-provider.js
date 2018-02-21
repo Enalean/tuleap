@@ -1,5 +1,4 @@
-<?php
-/**
+/*
  * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -18,9 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Git\PerGroup;
+import Gettext             from 'node-gettext';
+import french_translations from '../po/fr.po';
 
-interface RepositoryPermissionsPresenter
-{
-    public function usesFineGrainedPermissions();
-}
+const gettext_provider = new Gettext();
+gettext_provider.addTranslations('fr_FR', 'git', french_translations);
+gettext_provider.setTextDomain('git');
+
+export { gettext_provider };

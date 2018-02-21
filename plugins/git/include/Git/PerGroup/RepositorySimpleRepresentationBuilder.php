@@ -25,33 +25,35 @@ use GitPermissionsManager;
 use GitRepository;
 use Project;
 
-class SimplePermissionsPresenterBuilder
+class RepositorySimpleRepresentationBuilder
 {
     /** @var GitPermissionsManager */
     private $permissions_manager;
-    /** @var CollectionOfUgroupsFormatter */
-    private $formatter;
     /** @var AdminUrlBuilder */
     private $url_builder;
+    /**
+     * @var CollectionOfUGroupRepresentationBuilder
+     */
+    private $collection_of_ugroups_builder;
 
     public function __construct(
         GitPermissionsManager $permissions_manager,
-        CollectionOfUgroupsFormatter $formatter,
+        CollectionOfUGroupRepresentationBuilder $collection_of_ugroups_builder,
         AdminUrlBuilder $url_builder
     ) {
         $this->permissions_manager = $permissions_manager;
-        $this->formatter           = $formatter;
         $this->url_builder         = $url_builder;
+        $this->collection_of_ugroups_builder = $collection_of_ugroups_builder;
     }
 
     /**
-     * @param RepositoryPermissionsPresenterCollection $collection
      * @param GitRepository $repository
-     * @param Project $project
-     * @param int $selected_ugroup_id
+     * @param Project       $project
+     * @param               $selected_ugroup_id
+     *
+     * @return RepositoryPermissionRepresentation
      */
-    public function addPresenterToCollection(
-        RepositoryPermissionsPresenterCollection $collection,
+    public function build(
         GitRepository $repository,
         Project $project,
         $selected_ugroup_id
@@ -64,21 +66,19 @@ class SimplePermissionsPresenterBuilder
             return;
         }
 
-        $readers   = $this->formatter->formatCollectionOfUgroupIds($permissions[Git::PERM_READ], $project);
-        $writers   = $this->formatter->formatCollectionOfUgroupIds($permissions[Git::PERM_WRITE], $project);
-        $rewinders = $this->formatter->formatCollectionOfUgroupIds($permissions[Git::PERM_WPLUS], $project);
+        $readers   = $this->collection_of_ugroups_builder->build($project, $permissions[Git::PERM_READ]);
+        $writers   = $this->collection_of_ugroups_builder->build($project, $permissions[Git::PERM_WRITE]);
+        $rewinders = $this->collection_of_ugroups_builder->build($project, $permissions[Git::PERM_WPLUS]);
 
         $repository_name      = $repository->getFullName();
         $repository_admin_url = $this->url_builder->buildAdminUrl($repository, $project);
 
-        $collection->addPresenter(
-            new SimplePermissionsPresenter(
-                $repository_name,
-                $repository_admin_url,
-                $readers,
-                $writers,
-                $rewinders
-            )
+        return new RepositoryPermissionSimpleRepresentation(
+            $repository_name,
+            $repository_admin_url,
+            $readers,
+            $writers,
+            $rewinders
         );
     }
 

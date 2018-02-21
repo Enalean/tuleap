@@ -20,39 +20,41 @@
 
 namespace Tuleap\Git\PerGroup;
 
-class FineGrainedPermissionsPresenter implements RepositoryPermissionsPresenter
+use Tuleap\Project\Admin\Permission\PermissionPerGroupUGroupRepresentation;
+
+class RepositoryFineGrainedRepresentation
 {
     /**
-     * @var string
+     * @var boolean
      */
-    public $repository_name;
+    public $has_fined_grained_permissions;
     /**
      * @var string
      */
-    public $repository_admin_url;
+    public $name;
     /**
-     * @var array
+     * @var string
+     */
+    public $url;
+    /**
+     * @var FineGrainedPermissionRepresentation[]
+     */
+    public $fine_grained_permission;
+    /**
+     * @var PermissionPerGroupUGroupRepresentation[]
      */
     public $readers;
-    /**
-     * @var FineGrainedRowPresenter[]
-     */
-    public $fine_grained_permissions;
 
     public function __construct(
-        $repository_name,
-        $repository_admin_url,
         array $readers,
-        array $fine_grained_permissions
+        $name,
+        $url,
+        array $fine_grained_permission
     ) {
-        $this->repository_name          = $repository_name;
-        $this->repository_admin_url     = $repository_admin_url;
-        $this->readers                  = $readers;
-        $this->fine_grained_permissions = $fine_grained_permissions;
-    }
-
-    public function usesFineGrainedPermissions()
-    {
-        return true;
+        $this->has_fined_grained_permissions = true;
+        $this->name                          = $name;
+        $this->url                           = $url;
+        $this->fine_grained_permission       = $fine_grained_permission;
+        $this->readers                       = $readers;
     }
 }

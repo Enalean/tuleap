@@ -22,8 +22,6 @@
 
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\BurningParrotCompatiblePageEvent;
-use Tuleap\Dashboard\Project\ProjectDashboardController;
-use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
 use Tuleap\Git\CIToken\Dao as CITokenDao;
 use Tuleap\Git\CIToken\Manager as CITokenManager;
@@ -54,12 +52,15 @@ use Tuleap\Git\Notifications\UgroupsToNotifyDao;
 use Tuleap\Git\Notifications\UgroupToNotifyUpdater;
 use Tuleap\Git\Notifications\UsersToNotifyDao;
 use Tuleap\Git\PerGroup\AdminUrlBuilder;
+use Tuleap\Git\PerGroup\CollectionOfUGroupRepresentationBuilder;
 use Tuleap\Git\PerGroup\CollectionOfUgroupsFormatter;
-use Tuleap\Git\PerGroup\FineGrainedPermissionsPresenterBuilder;
+use Tuleap\Git\PerGroup\CollectionOfUGroupsRepresentationFormatter;
+use Tuleap\Git\PerGroup\GitJSONPermissionsRetriever;
 use Tuleap\Git\PerGroup\GitPaneSectionCollector;
-use Tuleap\Git\PerGroup\PermissionPerGroupGitRepositoriesSectionBuilder;
+use Tuleap\Git\PerGroup\PermissionPerGroupController;
 use Tuleap\Git\PerGroup\PermissionPerGroupGitSectionBuilder;
-use Tuleap\Git\PerGroup\SimplePermissionsPresenterBuilder;
+use Tuleap\Git\PerGroup\RepositoryFineGrainedRepresentationBuilder;
+use Tuleap\Git\PerGroup\RepositorySimpleRepresentationBuilder;
 use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\DefaultFineGrainedPermissionReplicator;
 use Tuleap\Git\Permissions\FineGrainedDao;
@@ -100,17 +101,19 @@ use Tuleap\Git\Webhook\WebhookDao;
 use Tuleap\Git\XmlUgroupRetriever;
 use Tuleap\Glyph\GlyphLocation;
 use Tuleap\Glyph\GlyphLocationsCollector;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
+use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
+use Tuleap\project\Admin\Navigation\NavigationDropdownQuickLinksCollector;
 use Tuleap\Project\Admin\PerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Project\Admin\Permission\PermissionPerGroupPaneCollector;
+use Tuleap\Project\Admin\Permission\PermissionPerGroupUGroupRepresentationBuilder;
 use Tuleap\Project\Admin\Permission\PermissionPerGroupUGroupRetriever;
 use Tuleap\Project\Admin\ProjectUGroup\UserBecomesProjectAdmin;
 use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerProjectAdmin;
-use Tuleap\Project\HierarchyDisplayer;
-use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
-use Tuleap\project\Admin\Navigation\NavigationDropdownQuickLinksCollector;
 use Tuleap\Project\HeartbeatsEntryCollection;
+use Tuleap\Project\HierarchyDisplayer;
 
 require_once 'constants.php';
 require_once 'autoload.php';
@@ -368,11 +371,22 @@ class GitPlugin extends Plugin
                 $params['javascript_files'][] = '/scripts/tuleap/manage-allowed-projects-on-resource.js';
             } else if (strpos($_SERVER['REQUEST_URI'], 'gerrit_servers_restriction')) {
                 $params['javascript_files'][] = '/scripts/tuleap/manage-allowed-projects-on-resource.js';
-            }
-            else if (strpos($_SERVER['REQUEST_URI'], 'gitolite_config')) {
+            } else if (strpos($_SERVER['REQUEST_URI'], 'gitolite_config')) {
                 $params['javascript_files'][] = GIT_BASE_URL . '/scripts/admin-gitolite.js';
             }
+        } else if ($this->isInProjectAdminPermissionPerGroup()) {
+            $include_assets = new IncludeAssets(
+                GIT_BASE_DIR . '/../www/assets',
+                $this->getPluginPath() . '/assets'
+            );
+
+            $params['javascript_files'][] = $include_assets->getFileURL('permission-per-group.js');
         }
+    }
+
+    private function isInProjectAdminPermissionPerGroup()
+    {
+        return strpos($_SERVER['REQUEST_URI'], '/project/admin/permission_per_group') === 0;
     }
 
     public function javascript($params) {
@@ -696,6 +710,7 @@ class GitPlugin extends Plugin
         $webhook_router
             ->chain($this->getCreateRepositoryController())
             ->chain($this->getCITokenRouter($repository_retriever))
+            ->chain($this->getPermissionsPerGroupController())
             ->chain($final_link);
 
         return $webhook_router;
@@ -2432,30 +2447,49 @@ class GitPlugin extends Plugin
             $collection_formatter,
             $ugroup_manager
         );
-        $admin_url_builder       = new AdminUrlBuilder();
-        $simple_builder          = new SimplePermissionsPresenterBuilder(
-            $this->getGitPermissionsManager(),
-            $collection_formatter,
-            $admin_url_builder
-        );
-        $fine_grained_builder    = new FineGrainedPermissionsPresenterBuilder(
-            $this->getGitPermissionsManager(),
-            $collection_formatter,
-            $this->getFineGrainedFactory(),
-            $admin_url_builder
-        );
-        $repos_section_builder   = new PermissionPerGroupGitRepositoriesSectionBuilder(
-            $this->getFineGrainedRetriever(),
-            $ugroup_manager,
-            $this->getRepositoryFactory(),
-            $simple_builder,
-            $fine_grained_builder
-        );
-        $sections_collector      = new GitPaneSectionCollector(
+
+        $sections_collector = new GitPaneSectionCollector(
             $service_section_builder,
-            $repos_section_builder
+            $this->getUGroupManager(),
+            UserManager::instance()
         );
 
         $sections_collector->collectSections($event);
+    }
+
+    private function getJSONRepositoriesRetriever()
+    {
+        $ugroup_manager = $this->getUGroupManager();
+        $ugroup_representation_builder = new PermissionPerGroupUGroupRepresentationBuilder($this->getUGroupManager());
+        $ugroup_builder = new CollectionOfUGroupRepresentationBuilder(
+            $ugroup_manager, $ugroup_representation_builder
+        );
+        $admin_url_builder = new AdminUrlBuilder();
+        $simple_builder = new RepositorySimpleRepresentationBuilder(
+            $this->getGitPermissionsManager(),
+            $ugroup_builder,
+            $admin_url_builder
+        );
+        $fine_grained_builder = new RepositoryFineGrainedRepresentationBuilder(
+            $this->getGitPermissionsManager(),
+            $ugroup_builder,
+            new CollectionOfUGroupsRepresentationFormatter($ugroup_representation_builder),
+            $this->getFineGrainedFactory(),
+            $admin_url_builder
+        );
+
+        return new GitJSONPermissionsRetriever(
+            new \Tuleap\Git\PerGroup\RepositoriesPermissionRepresentationBuilder(
+                $fine_grained_builder,
+                $simple_builder,
+                $this->getRepositoryFactory(),
+                $this->getFineGrainedRetriever()
+            )
+        );
+    }
+
+    private function getPermissionsPerGroupController()
+    {
+        return new PermissionPerGroupController($this->getJSONRepositoriesRetriever());
     }
 }
