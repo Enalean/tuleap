@@ -12,11 +12,11 @@ setup_tuleap() {
         /etc/tuleap/conf \
         /etc/tuleap/plugins \
         /var/log/tuleap \
-        /var/tmp/codendi_cache
+        /var/tmp/tuleap_cache
     touch /var/log/tuleap/codendi_syslog
     chgrp codendiadm /var/log/tuleap/codendi_syslog
     chmod g+w /var/log/tuleap/codendi_syslog
-    chown -R codendiadm:codendiadm /var/tmp/codendi_cache /etc/tuleap/plugins
+    chown -R codendiadm:codendiadm /var/tmp/tuleap_cache /etc/tuleap/plugins
 
     cat /usr/share/tuleap/src/etc/database.inc.dist | \
         sed \
@@ -27,15 +27,7 @@ setup_tuleap() {
 
     cat /usr/share/tuleap/src/etc/local.inc.dist | \
 	sed \
-	-e "s#/etc/codendi#/etc/tuleap#g" \
-	-e "s#/usr/share/codendi#/usr/share/tuleap#g" \
-	-e "s#/var/log/codendi#/var/log/tuleap#g" \
-	-e "s#/var/lib/codendi/ftp/codendi#/var/lib/tuleap/ftp/tuleap#g" \
-	-e "s#/var/lib/codendi/ftp/incoming#/var/lib/tuleap/ftp/incoming#g" \
-	-e "s#/var/lib/codendi/ftp/pub#/var/lib/tuleap/ftp/pub#g" \
-	-e "s#/var/lib/codendi#/var/lib/tuleap#g" \
-	-e "s#/usr/lib/codendi#/usr/lib/tuleap#g" \
-	-e "s#/var/tmp/codendi_cache#/var/tmp/tuleap_cache#g" \
+	-e "s#/var/lib/tuleap/ftp/codendi#/var/lib/tuleap/ftp/tuleap#g" \
 	-e "s#%sys_default_domain%#localhost#g" \
 	-e "s#%sys_fullname%#localhost#g" \
 	-e "s#%sys_dbauth_passwd%#welcome0#g" \

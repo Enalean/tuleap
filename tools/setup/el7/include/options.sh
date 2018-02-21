@@ -35,6 +35,14 @@ _optionsSelected() {
                 mysql_password=${2}
                 shift 2
                 ;;
+            --long-org-name)
+                long_org_name=${2}
+                shift 2
+                ;;
+            --org-name)
+                org_name=${2}
+                shift 2
+                ;;
             --disable-auto-passwd)
                 disable_auto_password="true"
                 shift 1

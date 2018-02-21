@@ -17,15 +17,7 @@ setup_tuleap() {
 
     cat /usr/share/tuleap/src/etc/local.inc.dist | \
 	sed \
-	-e "s#/etc/codendi#/etc/tuleap#g" \
-	-e "s#/usr/share/codendi#/usr/share/tuleap#g" \
-	-e "s#/var/log/codendi#/var/log/tuleap#g" \
-	-e "s#/var/lib/codendi/ftp/codendi#/var/lib/tuleap/ftp/tuleap#g" \
-	-e "s#/var/lib/codendi/ftp/incoming#/var/lib/tuleap/ftp/incoming#g" \
-	-e "s#/var/lib/codendi/ftp/pub#/var/lib/tuleap/ftp/pub#g" \
-	-e "s#/var/lib/codendi#/var/lib/tuleap#g" \
-	-e "s#/usr/lib/codendi#/usr/lib/tuleap#g" \
-	-e "s#/var/tmp/codendi_cache#/var/tmp/tuleap_cache#g" \
+	-e "s#/var/lib/tuleap/ftp/codendi#/var/lib/tuleap/ftp/tuleap#g" \
 	-e "s#%sys_default_domain%#localhost#g" \
 	-e "s#%sys_fullname%#localhost#g" \
 	-e "s#%sys_dbauth_passwd%#welcome0#g" \
