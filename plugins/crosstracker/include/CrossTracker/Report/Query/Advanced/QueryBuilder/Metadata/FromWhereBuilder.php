@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,10 +18,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Semantic\Status;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata;
 
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Semantic;
+use Tracker;
+use Tuleap\CrossTracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
-interface FromWhereBuilder extends Semantic\FromWhereBuilder
+interface FromWhereBuilder
 {
+    /**
+     * @param Metadata $metadata
+     * @param Comparison $comparison
+     * @param Tracker[] $trackers
+     * @return IProvideParametrizedFromAndWhereSQLFragments
+     */
+    public function getFromWhere(Metadata $metadata, Comparison $comparison, array $trackers);
 }

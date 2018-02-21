@@ -18,14 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Semantic\Description;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\Title;
 
 use Tuleap\CrossTracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\DB\DBFactory;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
-class NotEqualComparisonFromWhereBuilder extends DescriptionFromWhereBuilder
+class NotEqualComparisonFromWhereBuilder implements FromWhereBuilder
 {
     public function getFromWhere(Metadata $metadata, Comparison $comparison, array $trackers)
     {
@@ -33,16 +33,16 @@ class NotEqualComparisonFromWhereBuilder extends DescriptionFromWhereBuilder
 
         if ($value === '') {
             return new ParametrizedFromWhere(
-                $this->getFrom(),
-                "tracker_changeset_value_description.value IS NOT NULL AND tracker_changeset_value_description.value <> ''",
+                "",
+                "tracker_changeset_value_title.value IS NOT NULL AND tracker_changeset_value_title.value <> ''",
                 [],
                 []
             );
         } else {
             return new ParametrizedFromWhere(
-                $this->getFrom(),
-                "(tracker_changeset_value_description.value IS NULL
-                    OR tracker_changeset_value_description.value NOT LIKE ?)",
+                "",
+                "(tracker_changeset_value_title.value IS NULL
+                    OR tracker_changeset_value_title.value NOT LIKE ?)",
                 [],
                 ['%' . DBFactory::instance()->escapeLikeValue($value) . '%']
             );

@@ -18,10 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Semantic\Title;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\Title;
 
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Semantic;
-
-interface FromWhereBuilder extends Semantic\FromWhereBuilder
+interface FromWhereBuilder extends \Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\FromWhereBuilder
 {
 }

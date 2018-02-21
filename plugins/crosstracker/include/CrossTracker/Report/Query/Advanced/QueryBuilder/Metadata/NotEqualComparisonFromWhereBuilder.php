@@ -18,20 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Semantic;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata;
 
-use Tracker;
-use Tuleap\CrossTracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
-
-interface FromWhereBuilder
+class NotEqualComparisonFromWhereBuilder extends ComparisonFromWhereBuilder
 {
-    /**
-     * @param Metadata $metadata
-     * @param Comparison $comparison
-     * @param Tracker[] $trackers
-     * @return IProvideParametrizedFromAndWhereSQLFragments
-     */
-    public function getFromWhere(Metadata $metadata, Comparison $comparison, array $trackers);
 }

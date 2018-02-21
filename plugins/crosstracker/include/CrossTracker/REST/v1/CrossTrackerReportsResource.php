@@ -42,11 +42,12 @@ use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\ComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\SemanticUsageChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\CrossTrackerExpertQueryReportDao;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\SearchableVisitor;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Semantic\Description;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Semantic\EqualComparisonFromWhereBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Semantic\NotEqualComparisonFromWhereBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Semantic\Status;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Semantic\Title;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\Description;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\EqualComparisonFromWhereBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\NotEqualComparisonFromWhereBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\Status;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\Title;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\SubmittedOn;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilderVisitor;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
@@ -146,12 +147,14 @@ class CrossTrackerReportsResource extends AuthenticatedResource
             new EqualComparisonFromWhereBuilder(
                 new Title\EqualComparisonFromWhereBuilder(),
                 new Description\EqualComparisonFromWhereBuilder(),
-                new Status\EqualComparisonFromWhereBuilder()
+                new Status\EqualComparisonFromWhereBuilder(),
+                new SubmittedOn\EqualComparisonFromWhereBuilder()
             ),
             new NotEqualComparisonFromWhereBuilder(
                 new Title\NotEqualComparisonFromWhereBuilder(),
                 new Description\NotEqualComparisonFromWhereBuilder(),
-                new Status\NotEqualComparisonFromWhereBuilder()
+                new Status\NotEqualComparisonFromWhereBuilder(),
+                new SubmittedOn\NotEqualComparisonFromWhereBuilder()
             )
         );
 

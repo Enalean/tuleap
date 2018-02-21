@@ -21,7 +21,7 @@
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder;
 
 use Tracker;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Semantic\FromWhereBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\FromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\VisitorParameters;
 
