@@ -20,6 +20,8 @@
 
 namespace Tuleap\Widget;
 
+use Tuleap\Widget\Event\GetProjectWidgetList;
+use Tuleap\Widget\Event\GetUserWidgetList;
 use Tuleap\Widget\Event\GetWidget;
 use UserManager;
 use User_ForgeUserGroupPermissionsManager;
@@ -186,37 +188,20 @@ class WidgetFactory
         return in_array($widget->getId(), $this->getWidgetsForOwnerType(ProjectDashboardController::LEGACY_DASHBOARD_TYPE));
     }
 
+    /**
+     * @param string $dashboard_type
+     * @return Widget[]
+     */
     public function getWidgetsForOwnerType($dashboard_type)
     {
-        $owner_type = $this->getOwnerTypeByDashboardType($dashboard_type);
-        switch ($owner_type) {
-            case UserDashboardController::LEGACY_DASHBOARD_TYPE:
-                $widgets = array('myadmin', 'myprojects', 'mybookmarks',
-                    'mymonitoredforums', 'mymonitoredfp', 'myartifacts', 'mybugs',
-                    'mytasks', 'mysrs', 'myimageviewer',
-                    'mylatestsvncommits', 'mysystemevent', 'myrss',
-                    MyWelcomeMessage::NAME,
-                );
-                break;
-            case ProjectDashboardController::LEGACY_DASHBOARD_TYPE:
-                $widgets = array('projectdescription', 'projectmembers', 'projectheartbeat',
-                    'projectlatestfilereleases', 'projectlatestnews', 'projectpublicareas',
-                    'projectlatestsvncommits', 'projectlatestcvscommits', 'projectsvnstats',
-                    'projectrss', 'projectimageviewer', 'projectcontacts'
-                );
-                break;
-            default:
-                $widgets = array();
-                break;
+        if ($dashboard_type === UserDashboardController::DASHBOARD_TYPE) {
+            $event = new GetUserWidgetList();
+        } else {
+            $event = new GetProjectWidgetList();
         }
 
-        $plugins_widgets = array();
-        $this->event_manager->processEvent('widgets', array('codendi_widgets' => &$plugins_widgets, 'owner_type' => $owner_type));
-
-        if (is_array($plugins_widgets)) {
-            $widgets = array_merge($widgets, $plugins_widgets);
-        }
-        return $widgets;
+        $this->event_manager->processEvent($event);
+        return $event->getWidgets();
     }
 
     /**

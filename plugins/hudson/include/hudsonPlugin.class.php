@@ -38,7 +38,8 @@ class hudsonPlugin extends Plugin
         $this->addHook('project_is_deleted', 'projectIsDeleted', false);
 
         $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
-        $this->addHook('widgets', 'widgets', false);
+        $this->addHook(\Tuleap\Widget\Event\GetUserWidgetList::NAME);
+        $this->addHook(\Tuleap\Widget\Event\GetProjectWidgetList::NAME);
 
         $this->addHook('get_available_reference_natures', 'getAvailableReferenceNatures', false);
         $this->addHook('ajax_reference_tooltip', 'ajax_reference_tooltip', false);
@@ -182,24 +183,24 @@ class hudsonPlugin extends Plugin
         }
     }
 
-    public function widgets($params)
+    public function getUserWidgetList(\Tuleap\Widget\Event\GetUserWidgetList $event)
     {
-        if ($params['owner_type'] == UserDashboardController::LEGACY_DASHBOARD_TYPE) {
-            $params['codendi_widgets'][] = 'plugin_hudson_my_jobs';
-            $params['codendi_widgets'][] = 'plugin_hudson_my_joblastbuilds';
-            $params['codendi_widgets'][] = 'plugin_hudson_my_jobtestresults';
-            $params['codendi_widgets'][] = 'plugin_hudson_my_jobtesttrend';
-            $params['codendi_widgets'][] = 'plugin_hudson_my_jobbuildhistory';
-            $params['codendi_widgets'][] = 'plugin_hudson_my_joblastartifacts';
-        }
-        if ($params['owner_type'] == ProjectDashboardController::LEGACY_DASHBOARD_TYPE) {
-            $params['codendi_widgets'][] = 'plugin_hudson_project_jobsoverview';
-            $params['codendi_widgets'][] = 'plugin_hudson_project_joblastbuilds';
-            $params['codendi_widgets'][] = 'plugin_hudson_project_jobtestresults';
-            $params['codendi_widgets'][] = 'plugin_hudson_project_jobtesttrend';
-            $params['codendi_widgets'][] = 'plugin_hudson_project_jobbuildhistory';
-            $params['codendi_widgets'][] = 'plugin_hudson_project_joblastartifacts';
-        }
+        $event->addWidget('plugin_hudson_my_jobs');
+        $event->addWidget('plugin_hudson_my_joblastbuilds');
+        $event->addWidget('plugin_hudson_my_jobtestresults');
+        $event->addWidget('plugin_hudson_my_jobtesttrend');
+        $event->addWidget('plugin_hudson_my_jobbuildhistory');
+        $event->addWidget('plugin_hudson_my_joblastartifacts');
+    }
+
+    public function getProjectWidgetList(\Tuleap\Widget\Event\GetProjectWidgetList $event)
+    {
+        $event->addWidget('plugin_hudson_project_jobsoverview');
+        $event->addWidget('plugin_hudson_project_joblastbuilds');
+        $event->addWidget('plugin_hudson_project_jobtestresults');
+        $event->addWidget('plugin_hudson_project_jobtesttrend');
+        $event->addWidget('plugin_hudson_project_jobbuildhistory');
+        $event->addWidget('plugin_hudson_project_joblastartifacts');
     }
 
     public function uninstall()
