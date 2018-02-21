@@ -157,7 +157,9 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                 new Title\NotEqualComparisonFromWhereBuilder(),
                 new Description\NotEqualComparisonFromWhereBuilder(),
                 new Status\NotEqualComparisonFromWhereBuilder(),
-                new SubmittedOn\NotEqualComparisonFromWhereBuilder()
+                new SubmittedOn\NotEqualComparisonFromWhereBuilder(
+                    new DateTimeValueRounder()
+                )
             )
         );
 

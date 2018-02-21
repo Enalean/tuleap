@@ -25,9 +25,20 @@ use Tuleap\CrossTracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragment
 use Tuleap\CrossTracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\DateTimeValueRounder;
 
 class NotEqualComparisonFromWhereBuilder implements FromWhereBuilder
 {
+
+    /**
+     * @var DateTimeValueRounder
+     */
+    private $date_time_value_rounder;
+
+    public function __construct(DateTimeValueRounder $date_time_value_rounder)
+    {
+        $this->date_time_value_rounder = $date_time_value_rounder;
+    }
 
     /**
      * @param Metadata $metadata
@@ -37,6 +48,17 @@ class NotEqualComparisonFromWhereBuilder implements FromWhereBuilder
      */
     public function getFromWhere(Metadata $metadata, Comparison $comparison, array $trackers)
     {
-        return new ParametrizedFromWhere('', '1', [], []);
+        $value            = $comparison->getValueWrapper()->getValue();
+        $where            = "1";
+        $where_parameters = [];
+
+        if ($value !== '') {
+            $floored_timestamp = $this->date_time_value_rounder->getFlooredTimestampFromDateTime($value);
+            $ceiled_timestamp  = $this->date_time_value_rounder->getCeiledTimestampFromDateTime($value);
+            $where_parameters  = [$floored_timestamp, $ceiled_timestamp];
+            $where             = "tracker_artifact.submitted_on NOT BETWEEN ? AND ?";
+        }
+
+        return new ParametrizedFromWhere('', $where, [], $where_parameters);
     }
 }
