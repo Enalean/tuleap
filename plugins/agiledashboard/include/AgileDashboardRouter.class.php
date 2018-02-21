@@ -22,6 +22,7 @@ use Tuleap\Agiledashboard\FormElement\BurnupCacheGenerator;
 use Tuleap\AgileDashboard\FormElement\FormElementController;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
+use Tuleap\AgileDashboard\PerGroup\AgileDashboardJSONPermissionsRetriever;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
 
 require_once 'common/plugin/Plugin.class.php';
@@ -95,6 +96,10 @@ class AgileDashboardRouter {
      * @var ScrumPlanningFilter
      */
     private $planning_filter;
+    /**
+     * @var AgileDashboardJSONPermissionsRetriever
+     */
+    private $permissions_retriever;
 
     public function __construct(
         Plugin $plugin,
@@ -109,7 +114,8 @@ class AgileDashboardRouter {
         PlanningPermissionsManager $planning_permissions_manager,
         AgileDashboard_HierarchyChecker $hierarchy_checker,
         ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker,
-        ScrumPlanningFilter $planning_filter
+        ScrumPlanningFilter $planning_filter,
+        AgileDashboardJSONPermissionsRetriever $permissions_retriever
     ) {
         $this->plugin                       = $plugin;
         $this->milestone_factory            = $milestone_factory;
@@ -124,6 +130,7 @@ class AgileDashboardRouter {
         $this->hierarchy_checker            = $hierarchy_checker;
         $this->scrum_mono_milestone_checker = $scrum_mono_milestone_checker;
         $this->planning_filter              = $planning_filter;
+        $this->permissions_retriever        = $permissions_retriever;
     }
 
     /**
@@ -212,6 +219,20 @@ class AgileDashboardRouter {
                 break;
             case 'burnup-cache-generate':
                 $this->buildFormElementController()->forceBurnupCacheGeneration($request);
+                break;
+            case 'permission-per-group':
+                if (! $request->getCurrentUser()->isAdmin($request->getProject()->getID())) {
+                    $GLOBALS['Response']->send400JSONErrors(
+                        array(
+                            'error' => dgettext(
+                                'tuleap-agiledashboard',
+                                "You don't have permissions to see user groups."
+                            )
+                        )
+                    );
+                }
+
+                $this->permissions_retriever->retrieve($request->getProject(), $request->getCurrentUser(), $request->get('selected_ugroup_id'));
                 break;
             case 'index':
             default:

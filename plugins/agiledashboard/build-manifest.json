@@ -70,11 +70,16 @@
         "burnup-chart": {
             "src": "www/js/burnup-chart/src",
             "po": "www/js/burnup-chart/po"
+        },
+        "permissions-per-group": {
+            "src": "www/js/permissions-per-group/src",
+            "po": "www/js/permissions-per-group/po"
         }
     },
     "components": [
         "plugins/agiledashboard/www/js/kanban",
         "plugins/agiledashboard/www/js/planning-v2",
+        "plugins/agiledashboard/www/js/permissions-per-group",
         "plugins/agiledashboard/www/js"
     ]
 }

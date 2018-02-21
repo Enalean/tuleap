@@ -24,8 +24,12 @@ use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
+use Tuleap\AgileDashboard\PerGroup\AgileDashboardJSONPermissionsRetriever;
+use Tuleap\AgileDashboard\PerGroup\AgileDashboardPermissionsRepresentationBuilder;
+use Tuleap\AgileDashboard\PerGroup\PlanningPermissionsRepresentationBuilder;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
 use Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentationFactory;
+use Tuleap\Project\Admin\Permission\PermissionPerGroupUGroupRepresentationBuilder;
 
 class AgileDashboardRouterBuilder {
 
@@ -98,6 +102,7 @@ class AgileDashboardRouterBuilder {
 
         $mono_milestone_checker = new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory);
 
+        $ugroup_manager = new UGroupManager();
         return new AgileDashboardRouter(
             $plugin,
             $milestone_factory,
@@ -114,7 +119,19 @@ class AgileDashboardRouterBuilder {
             new PlanningPermissionsManager(),
             $this->getHierarchyChecker(),
             $mono_milestone_checker,
-            new ScrumPlanningFilter($mono_milestone_checker, $planning_factory)
+            new ScrumPlanningFilter($mono_milestone_checker, $planning_factory),
+            new AgileDashboardJSONPermissionsRetriever(
+                new AgileDashboardPermissionsRepresentationBuilder(
+                    $ugroup_manager, $planning_factory,
+                    new PlanningPermissionsRepresentationBuilder(
+                        new PlanningPermissionsManager(),
+                        PermissionsManager::instance(),
+                        new PermissionPerGroupUGroupRepresentationBuilder(
+                            $ugroup_manager
+                        )
+                    )
+                )
+            )
         );
     }
 

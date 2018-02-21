@@ -53,7 +53,8 @@ class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase {
             mock('PlanningPermissionsManager'),
             mock('AgileDashboard_HierarchyChecker'),
             mock('Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker'),
-            mock('Tuleap\AgileDashboard\Planning\ScrumPlanningFilter')
+            mock('Tuleap\AgileDashboard\Planning\ScrumPlanningFilter'),
+            mock('Tuleap\AgileDashboard\PerGroup\AgileDashboardJSONPermissionsRetriever')
         );
 
         stub($this->router)->buildPlanningController()->returns($this->planning_controller);

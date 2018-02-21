@@ -37,7 +37,6 @@ use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\Planning\PlanningJavascriptDependenciesProvider;
-use Tuleap\AgileDashboard\ProjectAdminPermissionPerGroupPresenterBuilder;
 use Tuleap\AgileDashboard\RealTime\RealTimeArtifactMessageController;
 use Tuleap\AgileDashboard\RealTime\RealTimeArtifactMessageSender;
 use Tuleap\AgileDashboard\Semantic\Dao\SemanticDoneDao;
@@ -54,7 +53,6 @@ use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\Layout\IncludeAssets;
-use Tuleap\Project\Admin\PerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Project\Admin\Permission\PermissionPerGroupPaneCollector;
 use Tuleap\RealTime\NodeJSClient;
 use Tuleap\Request\CurrentPage;
@@ -580,6 +578,15 @@ class AgileDashboardPlugin extends Plugin {
             );
             $params['javascript_files'][] = $assets->getFileURL('overview.js');
             return;
+        }
+
+        if ($this->isInPermissionsPerGroupProjectAdmin()) {
+            $include_assets = new IncludeAssets(
+                AGILEDASHBOARD_BASE_DIR . '/../www/assets',
+                $this->getPluginPath() . '/assets'
+            );
+
+            $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('permission-per-group.js'));
         }
 
         $provider = $this->getJavascriptDependenciesProvider();
@@ -1514,6 +1521,11 @@ class AgileDashboardPlugin extends Plugin {
             && $request->get('pane') === DetailsPaneInfo::IDENTIFIER;
     }
 
+    private function isInPermissionsPerGroupProjectAdmin()
+    {
+        return strpos($_SERVER['REQUEST_URI'], '/project/admin/permission_per_group') === 0;
+    }
+
     /**
      * @param PermissionPerGroupPaneCollector $event
      */
@@ -1525,32 +1537,26 @@ class AgileDashboardPlugin extends Plugin {
             return;
         }
 
-        $ugroup_manager    = new UGroupManager();
-        $presenter_builder = new ProjectAdminPermissionPerGroupPresenterBuilder(
-            new PlanningPermissionsManager(),
-            $ugroup_manager,
-            PlanningFactory::build(),
-            PermissionsManager::instance(),
-            new PermissionPerGroupUGroupFormatter($ugroup_manager)
-        );
+        $ugroup_id = HTTPRequest::instance()->get('group');
 
-        $presenter = $presenter_builder->buildPresenter(
-            $project,
-            HTTPRequest::instance()->getCurrentUser(),
-            $event->getSelectedUGroupId()
-        );
+        $ugroup_manager = new UGroupManager();
+        $ugroup         = $ugroup_manager->getUGroup($project, $ugroup_id);
+        $ugroup_name    = ($ugroup)? $ugroup->getTranslatedName() : "";
 
         $template_factory      = TemplateRendererFactory::build();
         $admin_permission_pane = $template_factory
             ->getRenderer(AGILEDASHBOARD_TEMPLATE_DIR)
             ->renderToString(
                 'project-admin-permission-per-group',
-                $presenter
+                array(
+                    "ugroup_id"            => $ugroup_id,
+                    "project_id"           => $project->getID(),
+                    "selected_ugroup_name" => $ugroup_name,
+                    "locale"               => $this->getCurrentUser()->getLocale()
+                )
             );
 
-        $rank_in_project = $project->getService(
-            $this->getServiceShortname()
-        )->getRank();
+        $rank_in_project = $project->getService($this->getServiceShortname())->getRank();
 
         $event->addPane($admin_permission_pane, $rank_in_project);
     }
