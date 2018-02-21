@@ -552,9 +552,6 @@ msgstr ""
 msgid "Please, enter a http:// or https:// link"
 msgstr ""
 
-msgid "Private"
-msgstr ""
-
 msgid "Project"
 msgstr ""
 
@@ -608,9 +605,6 @@ msgstr ""
 msgid "Projects in category"
 msgstr ""
 
-msgid "Public"
-msgstr ""
-
 msgid "Public information"
 msgstr ""
 
@@ -660,6 +654,9 @@ msgid "Search"
 msgstr ""
 
 msgid "See permissions"
+msgstr ""
+
+msgid "Service news is disabled for this project."
 msgstr ""
 
 msgid "Service permissions"
@@ -731,9 +728,6 @@ msgid "The name is missing for creating a dashboard."
 msgstr ""
 
 msgid "The name is missing for editing the dashboard."
-msgstr ""
-
-msgid "The project hasn't any news"
 msgstr ""
 
 msgid "The requested dashboard does not exist."
@@ -898,9 +892,6 @@ msgstr ""
 msgid "Users groups bound to this one"
 msgstr ""
 
-msgid "Visibility"
-msgstr ""
-
 msgid "We cannot find any edition information for the requested widget."
 msgstr ""
 
@@ -994,6 +985,9 @@ msgstr ""
 msgid "You don't have any dashboards."
 msgstr ""
 
+msgid "You don't have permissions to see user groups."
+msgstr ""
+
 #, php-format
 msgid "You have not rights to update dashboards of the project \"%s\"."
 msgstr ""
@@ -1045,9 +1039,6 @@ msgid "references"
 msgstr ""
 
 msgid "services"
-msgstr ""
-
-msgid "{{ user_group_name }} can't see any news"
 msgstr ""
 
 msgid "{{ user_group_name }} has no global permission"

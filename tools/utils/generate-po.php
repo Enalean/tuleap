@@ -127,7 +127,7 @@ foreach (glob("$basedir/src/www/scripts/*", GLOB_ONLYDIR) as $path) {
             $po       = escapeshellarg("$path/${gettext['po']}");
             $template = escapeshellarg("$path/${gettext['po']}/template.pot");
             executeCommandAndExitIfStderrNotEmpty("find $src \
-                        \( -name '*.js'  \) \
+                        \( -name '*.js' -o -name '*.vue'  \) \
                     | xargs xgettext \
                         --language=JavaScript \
                         --default-domain=core \

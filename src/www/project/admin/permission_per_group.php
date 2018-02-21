@@ -92,7 +92,8 @@ $additional_panes_builder = new PanesPermissionPerGroupBuilder(
             new AdminNewsDAO()
         ),
         $formatter,
-        $ugroup_manager
+        $ugroup_manager,
+        $request->getCurrentUser()
     )
 );
 

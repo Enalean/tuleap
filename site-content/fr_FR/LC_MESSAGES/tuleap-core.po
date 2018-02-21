@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.8.7.1\n"
+"X-Generator: Poedit 2.0.3\n"
 
 #, php-format
 msgid ""
@@ -585,9 +585,6 @@ msgstr "Veuillez sélectionner un fichier à téléverser"
 msgid "Please, enter a http:// or https:// link"
 msgstr "Veuillez utiliser un lien http:// ou https://"
 
-msgid "Private"
-msgstr "Privée"
-
 msgid "Project"
 msgstr "Projet"
 
@@ -643,9 +640,6 @@ msgstr "Projets créés à partir de ce patron"
 msgid "Projects in category"
 msgstr "Projets dans la catégorie selectionnée"
 
-msgid "Public"
-msgstr "Publique"
-
 msgid "Public information"
 msgstr "Informations publiques"
 
@@ -696,6 +690,9 @@ msgstr "Rechercher"
 
 msgid "See permissions"
 msgstr "Voir les permissions"
+
+msgid "Service news is disabled for this project."
+msgstr "Le service annonces est désactivé pour ce projet."
 
 msgid "Service permissions"
 msgstr "Permissions des services"
@@ -769,9 +766,6 @@ msgstr "Il manque le nom pour créer un tableau de bord."
 
 msgid "The name is missing for editing the dashboard."
 msgstr "Il manque le nom pour éditer le tableau de bord."
-
-msgid "The project hasn't any news"
-msgstr "Le projet ne possède aucune annonce"
 
 msgid "The requested dashboard does not exist."
 msgstr "Le tableau de bord demandé n’existe pas."
@@ -950,9 +944,6 @@ msgstr "Groupes d'utilisateurs"
 msgid "Users groups bound to this one"
 msgstr "Groupes liés à celui-ci"
 
-msgid "Visibility"
-msgstr "Visibilité"
-
 msgid "We cannot find any edition information for the requested widget."
 msgstr "Impossible de trouver comment éditer le widget requis."
 
@@ -1072,6 +1063,9 @@ msgstr ""
 msgid "You don't have any dashboards."
 msgstr "Vous n'avez aucun tableau de bord."
 
+msgid "You don't have permissions to see user groups."
+msgstr "Vous n'avez pas la permission de voir les groupes d'utilisateurs."
+
 #, php-format
 msgid "You have not rights to update dashboards of the project \"%s\"."
 msgstr ""
@@ -1131,9 +1125,6 @@ msgstr "références"
 
 msgid "services"
 msgstr "services"
-
-msgid "{{ user_group_name }} can't see any news"
-msgstr "{{ user_group_name }} n'a accès à aucune annonce"
 
 msgid "{{ user_group_name }} has no global permission"
 msgstr "{{ user_group_name }} n'a pas de permissions globales"

@@ -18,6 +18,7 @@
     "phptomoment": "0.0.2",
     "smooth-scrollbar": "^7.4.1",
     "sprintf-js": "^1.1.1",
+    "vue": "^2.5.13",
     "whatwg-fetch": "^2.0.3"
   },
   "devDependencies": {
@@ -29,6 +30,9 @@
     "json-loader": "^0.5.7",
     "po-gettext-loader": "^0.1.1",
     "raw-loader": "^0.5.1",
+    "vue-loader": "^14.1.1",
+    "vue-loader-options-plugin": "^0.1.1",
+    "vue-template-compiler": "^2.5.13",
     "webpack": "^3.5.5",
     "webpack-assets-manifest": "^1.0.0"
   },
