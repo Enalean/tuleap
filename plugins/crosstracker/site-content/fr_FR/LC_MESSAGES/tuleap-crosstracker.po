@@ -28,6 +28,20 @@ msgstr "%s ne peut pas être comparé à NOW()."
 msgid "%s cannot be compared to OPEN()."
 msgstr "%s ne peut pas être comparé à OPEN()."
 
+#, php-format
+msgid "%s cannot be compared to the empty string with > operator."
+msgstr ""
+"%s ne peut pas être comparé à une chaîne vide avec "
+"l'opérateur >."
+
+#, php-format
+msgid "%s cannot be compared to the string value '%s'."
+msgstr "%s ne peut pas être comparé à '%s'."
+
+#, php-format
+msgid "%s is not supported for the operator >."
+msgstr "%s ne supporte pas l'opérateur >."
+
 msgid "Cross trackers search"
 msgstr "Recherche multi trackers"
 

@@ -14,6 +14,18 @@ msgstr ""
 msgid "%s cannot be compared to OPEN()."
 msgstr ""
 
+#, php-format
+msgid "%s cannot be compared to the empty string with > operator."
+msgstr ""
+
+#, php-format
+msgid "%s cannot be compared to the string value '%s'."
+msgstr ""
+
+#, php-format
+msgid "%s is not supported for the operator >."
+msgstr ""
+
 msgid "Cross trackers search"
 msgstr ""
 

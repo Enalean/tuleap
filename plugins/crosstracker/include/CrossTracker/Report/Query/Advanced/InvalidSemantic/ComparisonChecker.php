@@ -38,7 +38,6 @@ class ComparisonChecker implements ValueWrapperVisitor
     /**
      * @param Metadata $metadata
      * @param Comparison $comparison
-     * @param int[] $trackers_id
      * @throws InvalidSemanticComparisonException
      */
     public function checkComparisonIsValid(Metadata $metadata, Comparison $comparison)

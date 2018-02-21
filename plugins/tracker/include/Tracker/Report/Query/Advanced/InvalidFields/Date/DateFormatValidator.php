@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,18 +45,19 @@ class DateFormatValidator
     }
 
     /**
-     * @throws InvalidFieldException
+     * @throws DateToEmptyStringException
+     * @throws DateToStringException
      */
-    public function checkValueIsValid(Comparison $comparison, Tracker_FormElement_Field $field, $value)
+    public function checkValueIsValid($value)
     {
         $date_value = $this->getDateTimeFromValue($value);
 
         if ($this->empty_string_checker->isEmptyStringAProblem($value)) {
-            throw new DateToEmptyStringComparisonException($comparison, $field);
+            throw new DateToEmptyStringException();
         }
 
         if ($date_value === false && $value !== '') {
-            throw new DateToStringComparisonException($field, $value);
+            throw new DateToStringException();
         }
     }
 
