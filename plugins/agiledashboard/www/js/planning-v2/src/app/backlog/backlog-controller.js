@@ -1,5 +1,8 @@
+import angular            from 'angular';
 import _                  from 'lodash';
+import { sprintf }        from 'sprintf-js';
 import BacklogFilterValue from '../backlog-filter-terms.js';
+import { setSuccess }     from '../success-state.js';
 
 export default BacklogController;
 
@@ -8,6 +11,7 @@ BacklogController.$inject = [
     '$scope',
     '$document',
     'dragularService',
+    'gettextCatalog',
     'BacklogService',
     'MilestoneService',
     'BacklogItemService',
@@ -26,6 +30,7 @@ function BacklogController(
     $scope,
     $document,
     dragularService,
+    gettextCatalog,
     BacklogService,
     MilestoneService,
     BacklogItemService,
@@ -246,13 +251,16 @@ function BacklogController(
 
     function showAddBacklogItemParentModal(item_type) {
         function callback(item_id) {
-            let promise;
-
+            let patch_promise;
             if (self.isMilestoneContext()) {
-                promise = MilestoneService.addToContent(self.milestone_id, [item_id]);
+                patch_promise = MilestoneService.addToContent(self.milestone_id, [item_id]);
             }
 
-            return promise;
+            const get_promise = BacklogItemService.getBacklogItem(item_id);
+
+            return $q.all([get_promise, patch_promise]).then(([{ backlog_item }]) => {
+                setSuccess(sprintf(gettextCatalog.getString('%s succesfully created.'), backlog_item.label));
+            });
         }
 
         NewTuleapArtifactModalService.showCreation(item_type.id, null, callback);

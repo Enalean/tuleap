@@ -26,6 +26,7 @@ import MainController           from './main-controller.js';
 import PlanningConfig           from './app-config.js';
 import PlanningDirective        from './planning-directive.js';
 import OpenTlpDropdownDirective from './open-tlp-dropdown-directive.js';
+import SuccessMessageComponent  from './success-message-component.js';
 
 export default angular.module('planning', [
     'angularMoment',
@@ -48,4 +49,5 @@ export default angular.module('planning', [
 .controller('MainController', MainController)
 .directive('planning', PlanningDirective)
 .directive('openTlpDropdown', OpenTlpDropdownDirective)
+.component('successMessage', SuccessMessageComponent)
 .name;

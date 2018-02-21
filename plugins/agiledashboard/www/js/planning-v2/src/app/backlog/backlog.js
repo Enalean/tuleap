@@ -1,5 +1,6 @@
 import angular  from 'angular';
 import dragular from 'dragular';
+import 'angular-gettext';
 
 import backlog_item            from '../backlog-item/backlog-item.js';
 import backlog_item_collection from '../backlog-item-collection/backlog-item-collection.js';
@@ -16,6 +17,7 @@ import animator_module         from '../animator/animator.js';
 import BacklogDirective        from './backlog-directive.js';
 
 export default angular.module('backlog', [
+    'gettext',
     dragular,
     animator_module,
     backlog_item,
