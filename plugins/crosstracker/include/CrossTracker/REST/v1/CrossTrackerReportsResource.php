@@ -60,6 +60,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parser;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
 use Tuleap\Tracker\Report\Query\Advanced\LimitSizeIsExceededException;
 use Tuleap\Tracker\Report\Query\Advanced\ParserCacheProxy;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\DateTimeValueRounder;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
 use Tuleap\Tracker\Report\Query\Advanced\SizeValidatorVisitor;
@@ -148,7 +149,9 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                 new Title\EqualComparisonFromWhereBuilder(),
                 new Description\EqualComparisonFromWhereBuilder(),
                 new Status\EqualComparisonFromWhereBuilder(),
-                new SubmittedOn\EqualComparisonFromWhereBuilder()
+                new SubmittedOn\EqualComparisonFromWhereBuilder(
+                    new DateTimeValueRounder()
+                )
             ),
             new NotEqualComparisonFromWhereBuilder(
                 new Title\NotEqualComparisonFromWhereBuilder(),
