@@ -23,7 +23,6 @@ namespace Tuleap\Svn\PerGroup;
 use ForgeConfig;
 use SvnPlugin;
 use TemplateRendererFactory;
-use Tuleap\Project\Admin\PerGroup\PermissionPerGroupPanePresenter;
 use Tuleap\Project\Admin\Permission\PermissionPerGroupPaneCollector;
 use UGroupManager;
 
@@ -37,32 +36,23 @@ class PaneCollector
      * @var PermissionPerGroupSVNServicePaneBuilder
      */
     private $group_pane_builder;
-    /**
-     * @var PermissionPerGroupRepositoryPaneBuilder
-     */
-    private $repository_pane_builder;
 
     public function __construct(
         UGroupManager $ugroup_manager,
-        PermissionPerGroupSVNServicePaneBuilder $group_pane_builder,
-        PermissionPerGroupRepositoryPaneBuilder $repository_pane_builder
+        PermissionPerGroupSVNServicePaneBuilder $group_pane_builder
     ) {
         $this->ugroup_manager          = $ugroup_manager;
         $this->group_pane_builder      = $group_pane_builder;
-        $this->repository_pane_builder = $repository_pane_builder;
     }
 
     public function collectPane(PermissionPerGroupPaneCollector $event)
     {
-        $service_presenter    = $this->getServicePresenter($event);
-        $repository_presenter = $this->getRepositoryPresenter($event);
-
-        $global_presenter = new GlobalPresenter($service_presenter, $repository_presenter, $event->getProject());
+        $service_presenter = $this->group_pane_builder->buildPresenter($event);
 
         $templates_dir = ForgeConfig::get('tuleap_dir') . '/plugins/svn/templates/';
         $content       = TemplateRendererFactory::build()
             ->getRenderer($templates_dir)
-            ->renderToString('project-admin-permission-per-group', $global_presenter);
+            ->renderToString('project-admin-permission-per-group', $service_presenter);
 
         $project         = $event->getProject();
         $rank_in_project = $project->getService(
@@ -70,25 +60,5 @@ class PaneCollector
         )->getRank();
 
         $event->addPane($content, $rank_in_project);
-    }
-
-    /**
-     * @param PermissionPerGroupPaneCollector $event
-     *
-     * @return PermissionPerGroupPanePresenter
-     */
-    private function getServicePresenter(PermissionPerGroupPaneCollector $event)
-    {
-        return $this->group_pane_builder->buildPresenter($event);
-    }
-
-    /**
-     * @param PermissionPerGroupPaneCollector $event
-     *
-     * @return PermissionPerGroupPanePresenter
-     */
-    private function getRepositoryPresenter(PermissionPerGroupPaneCollector $event)
-    {
-        return $this->repository_pane_builder->buildPresenter($event);
     }
 }

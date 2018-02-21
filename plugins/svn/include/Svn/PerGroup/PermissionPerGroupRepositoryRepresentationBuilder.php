@@ -20,13 +20,12 @@
 
 namespace Tuleap\Svn\PerGroup;
 
-use Tuleap\Project\Admin\PerGroup\PermissionPerGroupPanePresenter;
-use Tuleap\Project\Admin\Permission\PermissionPerGroupPaneCollector;
+use Project;
 use Tuleap\Svn\Repository\Repository;
 use Tuleap\Svn\Repository\RepositoryManager;
 use UGroupManager;
 
-class PermissionPerGroupRepositoryPaneBuilder
+class PermissionPerGroupRepositoryRepresentationBuilder
 {
     /**
      * @var RepositoryManager
@@ -43,32 +42,28 @@ class PermissionPerGroupRepositoryPaneBuilder
         $this->ugroup_manager     = $ugroup_manager;
     }
 
-    public function buildPresenter(PermissionPerGroupPaneCollector $event)
+    public function build(Project $project)
     {
-        $repositories = $this->repository_manager->getRepositoriesInProject($event->getProject());
-        $ugroup       = $this->ugroup_manager->getUGroup($event->getProject(), $event->getSelectedUGroupId());
-
-        $permissions = $this->formatRepositoriesPermissions($repositories);
-
-        return new PermissionPerGroupPanePresenter($permissions, $ugroup);
-    }
-
-    /**
-     * @param Repository[] $repositories
-     *
-     * @return array
-     */
-    private function formatRepositoriesPermissions(array $repositories)
-    {
-        $permission = array();
+        $repositories = $this->repository_manager->getRepositoriesInProject($project);
+        $permissions   = array();
         foreach ($repositories as $repository) {
-            $permission[] = array(
-                'name'       => $repository->getName(),
-                'id'         => $repository->getId(),
-                'project_id' => $repository->getProject()->getID()
+            $permissions[] = new PermissionPerGroupRepositoryRepresentation(
+                $repository->getName(),
+                $this->getRepositoryAdminUrl($repository)
             );
         }
 
-        return $permission;
+        return new PermissionPerGroupRepositoriesRepresentation($permissions);
+    }
+
+    private function getRepositoryAdminUrl(Repository $repository)
+    {
+        return SVN_BASE_URL . '?' . http_build_query(
+            array(
+                'group_id' => $repository->getProject()->getID(),
+                'action'   => 'access-control',
+                'repo_id'  => $repository->getId()
+            )
+        );
     }
 }

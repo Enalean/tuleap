@@ -74,8 +74,9 @@ use Tuleap\Svn\Notifications\UgroupsToNotifyDao;
 use Tuleap\Svn\Notifications\UgroupsToNotifyUpdater;
 use Tuleap\Svn\Notifications\UsersToNotifyDao;
 use Tuleap\Svn\PerGroup\PaneCollector;
-use Tuleap\Svn\PerGroup\PermissionPerGroupRepositoryPaneBuilder;
+use Tuleap\Svn\PerGroup\PermissionPerGroupRepositoryRepresentationBuilder;
 use Tuleap\Svn\PerGroup\PermissionPerGroupSVNServicePaneBuilder;
+use Tuleap\Svn\PerGroup\SVNJSONPermissionsRetriever;
 use Tuleap\Svn\Reference\Extractor;
 use Tuleap\Svn\Repository\HookConfigChecker;
 use Tuleap\Svn\Repository\HookConfigRetriever;
@@ -174,6 +175,7 @@ class SvnPlugin extends Plugin
         $this->addHook(PermissionPerGroupPaneCollector::NAME);
 
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
+        $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
     }
 
     public function export_xml_project($params)
@@ -624,7 +626,13 @@ class SvnPlugin extends Plugin
                 $this->getForgeUserGroupFactory(),
                 $permissions_manager
             ),
-            new RestoreController($this->getRepositoryManager())
+            new RestoreController($this->getRepositoryManager()),
+            new SVNJSONPermissionsRetriever(
+                new PermissionPerGroupRepositoryRepresentationBuilder(
+                    $this->getRepositoryManager(),
+                    $this->getUGroupManager()
+                )
+            )
         );
     }
 
@@ -1115,15 +1123,11 @@ class SvnPlugin extends Plugin
         $service_pane_builder = new PermissionPerGroupSVNServicePaneBuilder(
             new PermissionPerGroupUGroupRetriever(PermissionsManager::instance()),
             new PermissionPerGroupUGroupFormatter($ugroup_manager),
-            $ugroup_manager
+            $ugroup_manager,
+            $this->getUserManager()
         );
 
-        $repository_pane_builder = new PermissionPerGroupRepositoryPaneBuilder(
-            $this->getRepositoryManager(),
-            $this->getUGroupManager()
-        );
-
-        $collector = new PaneCollector($this->getUGroupManager(), $service_pane_builder, $repository_pane_builder);
+        $collector = new PaneCollector($this->getUGroupManager(), $service_pane_builder);
         $collector->collectPane($event);
     }
 
@@ -1140,5 +1144,23 @@ class SvnPlugin extends Plugin
             $variant = $params['variant'];
             $params['stylesheets'][] = $theme_include_assets->getFileURL('style-' . $variant->getName() . '.css');
         }
+    }
+
+
+    public function burning_parrot_get_javascript_files(array $params)
+    {
+        if ($this->isInProjectAdmin()) {
+            $include_assets = new IncludeAssets(
+                SVN_BASE_DIR . '/../www/assets',
+                $this->getPluginPath() . '/assets'
+            );
+
+            $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('permission-per-group.js'));
+        }
+    }
+
+    private function isInProjectAdmin()
+    {
+        return strpos($_SERVER['REQUEST_URI'], '/project/admin/permission_per_group') === 0;
     }
 }

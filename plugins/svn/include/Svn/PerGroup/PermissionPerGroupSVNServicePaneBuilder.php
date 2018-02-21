@@ -21,12 +21,12 @@
 namespace Tuleap\Svn\PerGroup;
 
 use ProjectUGroup;
-use Tuleap\Project\Admin\PerGroup\PermissionPerGroupPanePresenter;
 use Tuleap\Project\Admin\PerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Project\Admin\Permission\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\Permission\PermissionPerGroupUGroupRetriever;
 use Tuleap\Svn\SvnPermissionManager;
 use UGroupManager;
+use UserManager;
 
 class PermissionPerGroupSVNServicePaneBuilder
 {
@@ -42,15 +42,21 @@ class PermissionPerGroupSVNServicePaneBuilder
      * @var UGroupManager
      */
     private $ugroup_manager;
+    /**
+     * @var UserManager
+     */
+    private $user_manager;
 
     public function __construct(
         PermissionPerGroupUGroupRetriever $permission_retriever,
         PermissionPerGroupUGroupFormatter $formatter,
-        UGroupManager $ugroup_manager
+        UGroupManager $ugroup_manager,
+        UserManager $user_manager
     ) {
         $this->formatter            = $formatter;
         $this->permission_retriever = $permission_retriever;
         $this->ugroup_manager       = $ugroup_manager;
+        $this->user_manager         = $user_manager;
     }
 
     public function buildPresenter(PermissionPerGroupPaneCollector $event)
@@ -62,7 +68,14 @@ class PermissionPerGroupSVNServicePaneBuilder
 
         $user_group = $this->ugroup_manager->getUGroup($event->getProject(), $selected_group);
 
-        return new PermissionPerGroupPanePresenter($permissions->getPermissions(), $user_group);
+        $user = $this->user_manager->getCurrentUser();
+
+        return new PermissionPerGroupServicePresenter(
+            $permissions->getPermissions(),
+            $event->getProject(),
+            $user,
+            $user_group
+        );
     }
 
     private function addUGroupsToPermissions(
