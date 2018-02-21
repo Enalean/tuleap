@@ -58,6 +58,10 @@ class KanbanXmlImporterTest extends \TuleapTestCase
      * @var \Tuleap\XML\MappingsRegistry
      */
     private $mappings_registry;
+    /**
+     * @var \AgileDashboard_KanbanFactory
+     */
+    private $kanban_factory;
 
     public function setUp()
     {
@@ -67,7 +71,7 @@ class KanbanXmlImporterTest extends \TuleapTestCase
         $this->agile_dashboard_configuration_manager = mock('\AgileDashboard_ConfigurationManager');
         $this->kanban_column_manager                 = mock('\AgileDashboard_KanbanColumnManager');
         $this->kanban_manager                        = mock('\AgileDashboard_KanbanManager');
-
+        $this->kanban_factory                        = mock(\AgileDashboard_KanbanFactory::class);
         $this->mappings_registry = new \Tuleap\XML\MappingsRegistry;
 
         $this->user                = aUser()->withId(101)->build();
@@ -77,7 +81,7 @@ class KanbanXmlImporterTest extends \TuleapTestCase
             $this->kanban_manager,
             $this->agile_dashboard_configuration_manager,
             $this->kanban_column_manager,
-            mock('\AgileDashboard_KanbanFactory'),
+            $this->kanban_factory,
             $this->dashboard_kanban_column_factory
         );
     }
@@ -240,7 +244,7 @@ class KanbanXmlImporterTest extends \TuleapTestCase
             </project>'
         );
 
-        stub($this->kanban_manager)->createKanban()->returns(11221);
+        stub($this->kanban_factory)->getKanban()->returns(new \AgileDashboard_Kanban(11221, -1, ''));
 
         $this->kanban_xml_importer->import(
             $xml,
@@ -254,6 +258,6 @@ class KanbanXmlImporterTest extends \TuleapTestCase
             $this->mappings_registry
         );
 
-        $this->assertEqual($this->mappings_registry->getWidget('K03'), 11221);
+        $this->assertEqual($this->mappings_registry->getReference('K03')->getId(), 11221);
     }
 }

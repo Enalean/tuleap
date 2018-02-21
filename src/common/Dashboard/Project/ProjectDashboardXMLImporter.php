@@ -26,6 +26,8 @@ use Codendi_Request;
 use Tuleap\Dashboard\Dashboard;
 use Tuleap\Dashboard\NameDashboardAlreadyExistsException;
 use Tuleap\Dashboard\NameDashboardDoesNotExistException;
+use Tuleap\Widget\Event\ConfigureAtXMLImport;
+use Tuleap\Widget\Event\GetProjectWidgetList;
 use Tuleap\Widget\WidgetFactory;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\XML\MappingsRegistry;
@@ -48,13 +50,18 @@ class ProjectDashboardXMLImporter
      * @var DashboardWidgetDao
      */
     private $widget_dao;
+    /**
+     * @var \EventManager
+     */
+    private $event_manager;
 
-    public function __construct(ProjectDashboardSaver $project_dashboard_saver, WidgetFactory $widget_factory, DashboardWidgetDao $widget_dao, \Logger $logger)
+    public function __construct(ProjectDashboardSaver $project_dashboard_saver, WidgetFactory $widget_factory, DashboardWidgetDao $widget_dao, \Logger $logger, \EventManager $event_manager)
     {
         $this->project_dashboard_saver = $project_dashboard_saver;
         $this->widget_factory          = $widget_factory;
         $this->widget_dao              = $widget_dao;
         $this->logger                  = new \WrapperLogger($logger, 'Dashboards');
+        $this->event_manager           = $event_manager;
     }
 
     public function import(\SimpleXMLElement $xml_element, PFUser $user, Project $project, MappingsRegistry $mapping_registry)
@@ -175,18 +182,24 @@ class ProjectDashboardXMLImporter
         $this->logger->info("Import widget $widget_name");
         $widget = $this->widget_factory->getInstanceByWidgetName($widget_name);
         if ($widget === null) {
-            $this->logger->error("Impossible to instantiate widget named '".$widget_name."', is name valid ?.  Widget skipped");
+            $this->logger->error("Impossible to instantiate widget named '".$widget_name."'.  Widget skipped");
             return [null, null];
         }
+        $widget->setOwner($project->getID(), ProjectDashboardController::LEGACY_DASHBOARD_TYPE);
         if ($widget->isUnique() && isset($all_widgets[$widget->getId()])) {
             $this->logger->warn("Impossible to instantiate twice widget named '".$widget_name."'.  Widget skipped");
             return [null, null];
         }
-        if (! $this->widget_factory->isProjectWidget($widget)) {
-            $this->logger->error("Impossible to instantiate a personal widget ($widget_name) on a Project Dashboard.  Widget skipped");
+        $event = new ConfigureAtXMLImport($widget, $widget_xml, $mapping_registry);
+        $this->event_manager->processEvent($event);
+        if ($event->isWidgetConfigured()) {
+            return [$widget, $event->getContentId()];
+        }
+        if (! in_array($widget->getId(), GetProjectWidgetList::CORE_WIDGETS)) {
+            $this->logger->error("Widget named '".$widget_name."' is not supported at import.  Widget skipped");
             return [null, null];
         }
-        $content_id = $this->configureWidget($project, $widget, $widget_xml, $mapping_registry);
+        $content_id = $this->configureWidget($widget, $widget_xml);
         if ($content_id === false) {
             $this->logger->error("Impossible to create content for widget $widget_name. Widget skipped");
             return [null, null];
@@ -195,15 +208,13 @@ class ProjectDashboardXMLImporter
     }
 
     /**
-     * @param Project $project
      * @param \Widget $widget
      * @param \SimpleXMLElement $widget_xml
      *
      * @return null|false|int
      */
-    private function configureWidget(Project $project, \Widget $widget, \SimpleXMLElement $widget_xml, MappingsRegistry $mapping_registry)
+    private function configureWidget(\Widget $widget, \SimpleXMLElement $widget_xml)
     {
-        $widget->setOwner($project->getID(), ProjectDashboardController::LEGACY_DASHBOARD_TYPE);
         $params = [];
         if (isset($widget_xml->preference)) {
             foreach ($widget_xml->preference as $preference) {
@@ -211,16 +222,6 @@ class ProjectDashboardXMLImporter
                 foreach ($preference->value as $value) {
                     $key = trim((string)$value['name']);
                     $val = trim((string)$value);
-                    $params[$preference_name][$key] = $val;
-                }
-                foreach ($preference->reference as $reference) {
-                    $key = trim((string)$reference['name']);
-                    $ref = trim((string)$reference['REF']);
-                    $val = $mapping_registry->getWidget($ref);
-                    if ($val === null) {
-                        $this->logger->error('Unable to find reference for widget configuration');
-                        return false;
-                    }
                     $params[$preference_name][$key] = $val;
                 }
             }

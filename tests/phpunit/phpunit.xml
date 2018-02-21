@@ -9,6 +9,7 @@
             <file>../../src/common/Dashboard/Dashboard.php</file>
             <directory suffix=".php">../../plugins/proftpd/include</directory>
             <directory suffix=".php">../../plugins/crosstracker/include</directory>
+            <directory suffix=".php">../../plugins/agiledashboard/include/</directory>
         </whitelist>
     </filter>
     <testsuites>

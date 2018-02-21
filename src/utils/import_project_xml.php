@@ -302,7 +302,8 @@ try {
             ),
             $widget_factory,
             $widget_dao,
-            $broker_log
+            $broker_log,
+            $event_manager
         )
     );
 
