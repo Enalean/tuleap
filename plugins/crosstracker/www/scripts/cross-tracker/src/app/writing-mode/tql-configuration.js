@@ -27,10 +27,11 @@ const TQL_cross_tracker_autocomplete_keywords = [
     'OPEN()',
     '@title',
     '@description',
-    '@status'
+    '@status',
+    '@submitted_on'
 ];
 
-const cross_tracker_allowed_keywords    = { additional_keywords: ['@title', '@description', '@status']};
+const cross_tracker_allowed_keywords    = { additional_keywords: ['@title', '@description', '@status', '@submitted_on']};
 const TQL_cross_tracker_mode_definition = buildModeDefinition(cross_tracker_allowed_keywords);
 
 export {
