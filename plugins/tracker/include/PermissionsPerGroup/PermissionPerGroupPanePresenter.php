@@ -22,40 +22,47 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Tracker\Tests;
+namespace Tuleap\Tracker\PermissionsPerGroup;
 
-use Tuleap\Tracker\PermissionsPerGroup\ProjectAdminPermissionPerGroupPresenterBuilder;
-use TuleapTestCase;
+use PFUser;
+use Project;
+use ProjectUGroup;
 
-require_once('bootstrap.php');
-
-class ProjectAdminPermissionPerGroupPresenterBuilderTest extends TuleapTestCase
+class PermissionPerGroupPanePresenter
 {
     /**
-     * @var ProjectAdminPermissionPerGroupPresenterBuilder
+     * @var int
      */
-    private $presenter_builder;
+    public $ugroup_id;
 
-    public function setUp()
-    {
-        parent::setUp();
+    /**
+     * @var string
+     */
+    public $user_locale;
 
-        $this->presenter_builder = new ProjectAdminPermissionPerGroupPresenterBuilder(
-            mock('UGroupManager')
-        );
-    }
+    /**
+     * @var string
+     */
+    public $selected_ugroup_name;
 
-    public function itBuildsAPresenterWithANullUGroupNameWhenNoGroupIsSelected()
-    {
-        $project = aMockProject()->build();
-        $user    = mock('PFUser');
+    /**
+     * @var int
+     */
+    public $project_id;
 
-        $presenter = $this->presenter_builder->buildPresenter(
-            $project,
-            $user,
-            null
-        );
+    public function __construct(
+        PFUser $user,
+        Project $project,
+        ProjectUGroup $ugroup = null
+    ) {
+        $this->user_locale = $user->getLocale();
+        $this->project_id  = $project->getID();
+        $this->ugroup_id   = ($ugroup)
+            ? $ugroup->getId()
+            : '';
 
-        $this->assertEqual($presenter->selected_ugroup_name, '');
+        $this->selected_ugroup_name = ($ugroup)
+            ? $ugroup->getTranslatedName()
+            : '';
     }
 }

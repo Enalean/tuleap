@@ -18,7 +18,6 @@
  */
 
 use Tuleap\Layout\IncludeAssets;
-use Tuleap\Project\Admin\PerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Project\Admin\Permission\PermissionPerGroupPaneCollector;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\BurningParrotCompatiblePageEvent;
@@ -56,7 +55,7 @@ use Tuleap\Tracker\Notifications\NotificationsForProjectMemberCleaner;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyDao;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyUpdater;
 use Tuleap\Tracker\Notifications\UsersToNotifyDao;
-use Tuleap\Tracker\ProjectAdminPermissionPerGroupPresenterBuilder;
+use Tuleap\Tracker\PermissionsPerGroup\ProjectAdminPermissionPerGroupPresenterBuilder;
 use Tuleap\Tracker\ProjectDeletion;
 use Tuleap\Tracker\ProjectDeletionEvent;
 use Tuleap\Tracker\Service\ServiceActivator;
@@ -322,6 +321,22 @@ class trackerPlugin extends Plugin {
         if ($this->isInTrackerGlobalAdmin()) {
             $params['javascript_files'][] = $this->getPluginPath() .'/scripts/global-admin.js';
         }
+
+        if ($this->isInPermissionsPerGroupProjectAdmin()) {
+            $include_assets = new IncludeAssets(
+                TRACKER_BASE_DIR . '/../www/assets',
+                $this->getPluginPath() . '/assets'
+            );
+
+            $GLOBALS['HTML']->includeFooterJavascriptFile(
+                $include_assets->getFileURL('tracker-permissions-per-group.js')
+            );
+        }
+    }
+
+    private function isInPermissionsPerGroupProjectAdmin()
+    {
+        return strpos($_SERVER['REQUEST_URI'], '/project/admin/permission_per_group') === 0;
     }
 
     /**
@@ -1489,16 +1504,14 @@ class trackerPlugin extends Plugin {
 
         $ugroup_manager    = new UGroupManager();
         $presenter_builder = new ProjectAdminPermissionPerGroupPresenterBuilder(
-            $ugroup_manager,
-            TrackerFactory::instance(),
-            new PermissionPerGroupUGroupFormatter(
-                $ugroup_manager
-            )
+            $ugroup_manager
         );
 
+        $request            = HTTPRequest::instance();
         $selected_ugroup_id = $event->getSelectedUGroupId();
         $presenter          = $presenter_builder->buildPresenter(
-            HTTPRequest::instance()->getProject(),
+            $request->getProject(),
+            $request->getCurrentUser(),
             $selected_ugroup_id
         );
 

@@ -6,6 +6,7 @@ const BabelPresetEnv              = require('babel-preset-env');
 const BabelPluginIstanbul         = require('babel-plugin-istanbul').default;
 const BabelPluginRewireExports    = require('babel-plugin-rewire-exports').default;
 const BabelPluginObjectRestSpread = require('babel-plugin-transform-object-rest-spread');
+const VueLoaderOptionsPlugin      = require('vue-loader-options-plugin');
 
 const assets_dir_path = path.resolve(__dirname, '../assets');
 
@@ -66,11 +67,21 @@ const babel_rule = {
     ]
 };
 
+const po_rule = {
+    test: /\.po$/,
+    exclude: /node_modules/,
+    use: [
+        { loader: 'json-loader' },
+        { loader: 'po-gettext-loader' }
+    ]
+};
+
 const path_to_tlp = path.resolve(__dirname, '../../../../src/www/themes/common/tlp/');
 
 const webpack_config_for_trackers = {
     entry: {
-        'tracker-report-expert-mode': './report/index.js',
+        'tracker-report-expert-mode'   : './report/index.js',
+        'tracker-permissions-per-group': './permissions-per-group/src/index.js'
     },
     output: {
         path    : assets_dir_path,
@@ -82,17 +93,37 @@ const webpack_config_for_trackers = {
     resolve: {
         alias: {
             // TLP is not included in FlamingParrot
-            'tlp-fetch': path.join(path_to_tlp, 'src/js/fetch-wrapper.js')
+            'tlp-fetch'       : path.join(path_to_tlp, 'src/js/fetch-wrapper.js'),
+            'permission-badge': path.resolve(__dirname, '../../../../src/www/scripts/project/admin/permissions-per-group/')
         }
     },
     module: {
-        rules: [babel_rule]
+        rules: [
+            babel_rule,
+            po_rule,
+            {
+                test: /\.vue$/,
+                use: [
+                    {
+                        loader: 'vue-loader',
+                        options: {
+                            loaders: {
+                                js: 'babel-loader'
+                            },
+                            esModule: true
+                        }
+                    }
+                ]
+            }
+        ]
     },
     plugins: [
         new WebpackAssetsManifest({
             output: 'manifest.json',
-            merge: true,
-            writeToDisk: true
+            merge: true
+        }),
+        new VueLoaderOptionsPlugin({
+            babel: babel_options
         })
     ]
 };
@@ -142,7 +173,7 @@ const webpack_config_for_artifact_modal = {
         // This ensure we only load moment's fr locale. Otherwise, every single locale is included !
         new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /fr/)
     ]
-}
+};
 
 const webpack_config_for_burndown_chart = {
     entry: {
@@ -163,14 +194,7 @@ const webpack_config_for_burndown_chart = {
     module: {
         rules: [
             babel_rule,
-            {
-                test: /\.po$/,
-                exclude: /node_modules/,
-                use: [
-                    { loader: 'json-loader' },
-                    { loader: 'po-gettext-loader' }
-                ]
-            }
+            po_rule
         ]
     },
     plugins: [
@@ -190,12 +214,23 @@ if (process.env.NODE_ENV === 'watch' || process.env.NODE_ENV === 'test') {
 }
 
 if (process.env.NODE_ENV === 'production') {
-    webpack_config_for_trackers.plugins = webpack_config_for_trackers.plugins.concat([
-        new webpack.optimize.ModuleConcatenationPlugin()
-    ]);
+    const optimized_configs = [
+        webpack_config_for_trackers,
+        webpack_config_for_burndown_chart
+    ];
 
-    webpack_config_for_burndown_chart.plugins = webpack_config_for_burndown_chart.plugins.concat([
-        new webpack.optimize.ModuleConcatenationPlugin()
+    optimized_configs.forEach(config => {
+        config.plugins.concat([
+            new webpack.optimize.ModuleConcatenationPlugin()
+        ]);
+    });
+
+    webpack_config_for_trackers.plugins = webpack_config_for_trackers.plugins.concat([
+        new webpack.DefinePlugin({
+            'process.env': {
+                NODE_ENV: '"production"'
+            }
+        })
     ]);
 
     module.exports = [

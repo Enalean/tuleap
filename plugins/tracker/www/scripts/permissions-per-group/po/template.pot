@@ -1,0 +1,18 @@
+#, javascript-format
+msgid "%s has no permission for trackers"
+msgstr ""
+
+msgid "Granted groups"
+msgstr ""
+
+msgid "Permissions"
+msgstr ""
+
+msgid "Project has no tracker"
+msgstr ""
+
+msgid "See all tracker permissions"
+msgstr ""
+
+msgid "Tracker name"
+msgstr ""

@@ -22,17 +22,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Tracker;
+namespace Tuleap\Tracker\PermissionsPerGroup;
 
 use Project;
 use ProjectUGroup;
 use Tracker;
-use TrackerFactory;
-use Tuleap\Project\Admin\PerGroup\PermissionPerGroupPanePresenter;
-use Tuleap\Project\Admin\PerGroup\PermissionPerGroupUGroupFormatter;
+use Tuleap\Project\Admin\Permission\PermissionPerGroupUGroupRepresentationBuilder;
 use UGroupManager;
 
-class ProjectAdminPermissionPerGroupPresenterBuilder
+class TrackerPermissionPerGroupPermissionRepresentationBuilder
 {
     /**
      * @var UGroupManager
@@ -40,65 +38,19 @@ class ProjectAdminPermissionPerGroupPresenterBuilder
     private $ugroup_manager;
 
     /**
-     * @var TrackerFactory
+     * @var PermissionPerGroupUGroupRepresentationBuilder
      */
-    private $tracker_factory;
-
-    /**
-     * @var PermissionPerGroupUGroupFormatter
-     */
-    private $badge_formatter;
+    private $ugroup_builder;
 
     public function __construct(
         UGroupManager $ugroup_manager,
-        TrackerFactory $tracker_factory,
-        PermissionPerGroupUGroupFormatter $badge_formatter
+        PermissionPerGroupUGroupRepresentationBuilder $ugroup_builder
     ) {
-        $this->ugroup_manager  = $ugroup_manager;
-        $this->tracker_factory = $tracker_factory;
-        $this->badge_formatter = $badge_formatter;
+        $this->ugroup_manager = $ugroup_manager;
+        $this->ugroup_builder = $ugroup_builder;
     }
 
-    public function buildPresenter(Project $project, $ugroup_id = null)
-    {
-        $permissions = $this->getPermissions($project, $ugroup_id);
-        $ugroup      = ($ugroup_id)
-            ? $this->ugroup_manager->getById($ugroup_id)
-            : null;
-
-        return new PermissionPerGroupPanePresenter(
-            $permissions,
-            $ugroup
-        );
-    }
-
-    private function getPermissions(Project $project, $ugroup_id = null)
-    {
-        $trackers_list = $this->tracker_factory->getTrackersByGroupId($project->group_id);
-        $permissions   = array();
-
-        foreach ($trackers_list as $tracker) {
-            $ugroups_permissions = plugin_tracker_permission_get_tracker_ugroups_permissions(
-                $tracker->getGroupId(),
-                $tracker->getId()
-            );
-
-            $permissions_per_group = $this->indexGroupsByPermission($project, $ugroups_permissions, $ugroup_id);
-
-            if (count($permissions_per_group) === 0) {
-                continue;
-            }
-            $permissions[] = array(
-                "tracker"     => $tracker->getName(),
-                "quick_link"  => $this->getTrackerAdminQuickLink($tracker),
-                "permissions" => $permissions_per_group
-            );
-        }
-
-        return $permissions;
-    }
-
-    private function indexGroupsByPermission(Project $project, array $ugroups_permissions, $selected_ugroup_id = null)
+    public function build(Project $project, array $ugroups_permissions, $selected_ugroup_id = null)
     {
         $indexed_permissions = array();
 
@@ -132,17 +84,17 @@ class ProjectAdminPermissionPerGroupPresenterBuilder
             );
         }
 
-        return $this->getCollectionOfPermissions($indexed_permissions);
+        return $this->getCollectionOfPermissionsRepresentations($indexed_permissions);
     }
 
-    private function getCollectionOfPermissions(array $indexed_permissions)
+    private function getCollectionOfPermissionsRepresentations(array $indexed_permissions)
     {
         $permissions_collection = array();
 
         foreach ($indexed_permissions as $permission_name => $granted_groups) {
-            $permissions_collection[] = array(
-                'permission_name' => permission_get_name($permission_name),
-                'granted_groups'  => $this->getBadges($granted_groups)
+            $permissions_collection[] = new TrackerPermissionPerGroupPermissionRepresentation(
+                permission_get_name($permission_name),
+                $this->getBadges($granted_groups)
             );
         }
 
@@ -156,7 +108,7 @@ class ProjectAdminPermissionPerGroupPresenterBuilder
         foreach ($granted_groups as $group_id) {
             $user_group = $this->ugroup_manager->getById($group_id);
 
-            $badges[] = $this->badge_formatter->formatGroup(
+            $badges[] = $this->ugroup_builder->build(
                 $user_group->getProject(),
                 $user_group->getId()
             );
@@ -171,21 +123,11 @@ class ProjectAdminPermissionPerGroupPresenterBuilder
 
         foreach ($permissions_per_group as $permission => $granted_groups) {
             if (in_array($ugroup_id, $granted_groups)) {
-                $granted_permissions[ $permission ] = $granted_groups;
+                $granted_permissions[$permission] = $granted_groups;
             }
         }
 
         return $granted_permissions;
-    }
-
-    private function getTrackerAdminQuickLink(Tracker $tracker)
-    {
-        $query_parameters = http_build_query([
-            "tracker" => $tracker->getId(),
-            "func"    => "admin-perms-tracker"
-        ]);
-
-        return "/plugins/tracker/?" . $query_parameters;
     }
 
     /**
@@ -194,13 +136,13 @@ class ProjectAdminPermissionPerGroupPresenterBuilder
     private function appendTrackerVIPs(Project $project, array & $indexed_permissions)
     {
         if (! array_key_exists(Tracker::PERMISSION_FULL, $indexed_permissions)) {
-            $indexed_permissions[ Tracker::PERMISSION_FULL ] = [];
+            $indexed_permissions[Tracker::PERMISSION_FULL] = [];
         }
 
         $project_admins = $this->ugroup_manager->getUGroup($project, ProjectUGroup::PROJECT_ADMIN);
 
         array_unshift(
-            $indexed_permissions[ Tracker::PERMISSION_FULL ],
+            $indexed_permissions[Tracker::PERMISSION_FULL],
             $project_admins->getId()
         );
 
@@ -209,10 +151,10 @@ class ProjectAdminPermissionPerGroupPresenterBuilder
         }
 
         $tracker_VIPs = array_merge(
-            $indexed_permissions[ Tracker::PERMISSION_FULL ],
-            $indexed_permissions[ Tracker::PERMISSION_ADMIN ]
+            $indexed_permissions[Tracker::PERMISSION_FULL],
+            $indexed_permissions[Tracker::PERMISSION_ADMIN]
         );
 
-        $indexed_permissions[ Tracker::PERMISSION_FULL ] = array_unique($tracker_VIPs);
+        $indexed_permissions[Tracker::PERMISSION_FULL] = array_unique($tracker_VIPs);
     }
 }

@@ -22,40 +22,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Tracker\Tests;
+namespace Tuleap\Tracker\PermissionsPerGroup;
 
-use Tuleap\Tracker\PermissionsPerGroup\ProjectAdminPermissionPerGroupPresenterBuilder;
-use TuleapTestCase;
+use Tuleap\Project\Admin\Permission\PermissionPerGroupUGroupRepresentation;
 
-require_once('bootstrap.php');
-
-class ProjectAdminPermissionPerGroupPresenterBuilderTest extends TuleapTestCase
+class TrackerPermissionPerGroupPermissionRepresentation
 {
     /**
-     * @var ProjectAdminPermissionPerGroupPresenterBuilder
+     * @var String
      */
-    private $presenter_builder;
+    public $permission_name;
 
-    public function setUp()
-    {
-        parent::setUp();
+    /**
+     * @var PermissionPerGroupUGroupRepresentation[]
+     */
+    public $granted_groups;
 
-        $this->presenter_builder = new ProjectAdminPermissionPerGroupPresenterBuilder(
-            mock('UGroupManager')
-        );
-    }
-
-    public function itBuildsAPresenterWithANullUGroupNameWhenNoGroupIsSelected()
-    {
-        $project = aMockProject()->build();
-        $user    = mock('PFUser');
-
-        $presenter = $this->presenter_builder->buildPresenter(
-            $project,
-            $user,
-            null
-        );
-
-        $this->assertEqual($presenter->selected_ugroup_name, '');
+    public function __construct(
+        $permission_name,
+        array $granted_groups
+    ) {
+        $this->permission_name = $permission_name;
+        $this->granted_groups  = $granted_groups;
     }
 }
