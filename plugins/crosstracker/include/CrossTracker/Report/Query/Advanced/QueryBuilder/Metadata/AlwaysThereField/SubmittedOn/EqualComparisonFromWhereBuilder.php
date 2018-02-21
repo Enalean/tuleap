@@ -30,6 +30,11 @@ use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\DateTimeValueRounder;
 class EqualComparisonFromWhereBuilder implements FromWhereBuilder
 {
 
+    /**
+     * @var DateTimeValueRounder
+     */
+    private $date_time_value_rounder;
+
     public function __construct(DateTimeValueRounder $date_time_value_rounder)
     {
         $this->date_time_value_rounder = $date_time_value_rounder;
