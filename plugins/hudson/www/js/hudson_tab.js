@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,16 +20,5 @@
 (function($) {
     toggle_addurlform = function() {
         $('#hudson_add_job').slideToggle(300);
-    }
-
-    toggle_iframe = function(joburl) {
-        var hudson_iframe_div = $('#hudson_iframe_div');
-
-        if (hudson_iframe_div.is(":visible") === false) {
-            hudson_iframe_div.show();
-        }
-
-        $('#hudson_iframe').attr('src', joburl);
-        $('#link_show_only').attr('href', joburl);
-    }
+    };
 })(jQuery);
