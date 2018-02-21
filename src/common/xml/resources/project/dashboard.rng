@@ -8,6 +8,11 @@
         </attribute>
         <oneOrMore>
           <element name="line">
+            <optional>
+              <attribute name="layout">
+                <data type="string"/>
+              </attribute>
+            </optional>
             <oneOrMore>
               <element name="column">
                 <oneOrMore>

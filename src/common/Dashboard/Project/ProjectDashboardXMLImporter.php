@@ -23,6 +23,7 @@ namespace Tuleap\Dashboard\Project;
 use PFUser;
 use Project;
 use Codendi_Request;
+use Tuleap\Dashboard\Dashboard;
 use Tuleap\Dashboard\NameDashboardAlreadyExistsException;
 use Tuleap\Dashboard\NameDashboardDoesNotExistException;
 use Tuleap\Widget\WidgetFactory;
@@ -60,12 +61,13 @@ class ProjectDashboardXMLImporter
     {
         $this->logger->info('Start import');
         if ($xml_element->dashboards) {
-            foreach ($xml_element->dashboards->dashboard as $dashboard) {
+            foreach ($xml_element->dashboards->dashboard as $dashboard_xml) {
                 try {
-                    $dashboard_name = trim((string) $dashboard["name"]);
+                    $dashboard_name = trim((string) $dashboard_xml["name"]);
                     $this->logger->info("Create dashboard $dashboard_name");
                     $dashboard_id = $this->project_dashboard_saver->save($user, $project, $dashboard_name);
-                    $this->importWidgets($dashboard_id, $project, $dashboard, $mapping_registry);
+                    $dashboard = new Dashboard($dashboard_id, $dashboard_name);
+                    $this->importWidgets($dashboard, $project, $dashboard_xml, $mapping_registry);
                 } catch (UserCanNotUpdateProjectDashboardException $e) {
                     $this->logger->warn($e->getMessage());
                 } catch (NameDashboardDoesNotExistException $e) {
@@ -78,36 +80,47 @@ class ProjectDashboardXMLImporter
         $this->logger->info('Import completed');
     }
 
-    private function importWidgets($dashboard_id, Project $project, \SimpleXMLElement $dashboard, MappingsRegistry $mapping_registry)
+    private function importWidgets(Dashboard $dashboard, Project $project, \SimpleXMLElement $dashboard_xml, MappingsRegistry $mapping_registry)
     {
         $this->logger->info("Import widgets");
-        if (! isset($dashboard->line)) {
+        if (! isset($dashboard_xml->line)) {
             return;
         }
 
         $line_rank = 1;
         $all_widgets = [];
-        foreach ($dashboard->line as $line) {
-            $this->createLine($line, $project, $dashboard_id, $line_rank, $all_widgets, $mapping_registry);
+        foreach ($dashboard_xml->line as $line) {
+            $this->createLine($line, $project, $dashboard, $line_rank, $all_widgets, $mapping_registry);
             $line_rank++;
         }
         $this->logger->info("Import of widgets: Done");
     }
 
-    private function createLine(\SimpleXMLElement $line, Project $project, $dashboard_id, $line_rank, array &$all_widgets, MappingsRegistry $mapping_registry)
+    private function createLine(\SimpleXMLElement $line, Project $project, Dashboard $dashboard, $line_rank, array &$all_widgets, MappingsRegistry $mapping_registry)
     {
         $line_id = -1;
         $column_rank = 1;
         foreach ($line->column as $column) {
-            $this->createColumn($column, $project, $dashboard_id, $line_id, $line_rank, $column_rank, $all_widgets, $mapping_registry);
+            $this->createColumn($column, $project, $dashboard, $line_id, $line_rank, $column_rank, $all_widgets, $mapping_registry);
             $column_rank++;
         }
-        if ($column_rank > 2) {
-            $this->widget_dao->adjustLayoutAccordinglyToNumberOfWidgets($column_rank - 1, $line_id);
+        $nb_columns = $column_rank - 1;
+        $layout = '';
+        if (isset($line['layout'])) {
+            $layout = (string) $line['layout'];
+            if (! $dashboard->isLayoutValid($layout, $nb_columns)) {
+                $layout = '';
+                $this->logger->warn("Invalid layout $layout for $nb_columns columns");
+            }
+        }
+        if ($layout !== '') {
+            $this->widget_dao->updateLayout($line_id, $layout);
+        } elseif ($column_rank > 2) {
+            $this->widget_dao->adjustLayoutAccordinglyToNumberOfWidgets($nb_columns, $line_id);
         }
     }
 
-    private function createColumn(\SimpleXMLElement $column, Project $project, $dashboard_id, &$line_id, $line_rank, $column_rank, array &$all_widgets, MappingsRegistry $mapping_registry)
+    private function createColumn(\SimpleXMLElement $column, Project $project, Dashboard $dashboard, &$line_id, $line_rank, $column_rank, array &$all_widgets, MappingsRegistry $mapping_registry)
     {
         $column_id = -1;
         $widget_rank = 1;
@@ -118,7 +131,7 @@ class ProjectDashboardXMLImporter
                     continue;
                 }
                 if (! $this->isLineCreated($line_id)) {
-                    $line_id = $this->widget_dao->createLine($dashboard_id, ProjectDashboardController::DASHBOARD_TYPE, $line_rank);
+                    $line_id = $this->widget_dao->createLine($dashboard->getId(), ProjectDashboardController::DASHBOARD_TYPE, $line_rank);
                 }
                 if (! $this->isColumnCreated($line_id, $column_id)) {
                     $column_id = $this->widget_dao->createColumn($line_id, $column_rank);
