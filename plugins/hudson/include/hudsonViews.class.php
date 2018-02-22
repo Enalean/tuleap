@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -89,8 +89,6 @@ class hudsonViews extends Views {
         if ($user->isMember($request->get('group_id'), 'A')) {
             $this->_display_add_job_form($group_id, $services);
         }
-        $this->_display_iframe();
-        $this->_hide_iframe();
     }
 
     function job_details() {
@@ -113,22 +111,7 @@ class hudsonViews extends Views {
                 echo '<b> '.$GLOBALS['Language']->getText('cross_ref_fact_include','references').'</b>';
                 $crossref_fact->DisplayCrossRefs();
             }
-            $this->_display_iframe($row['job_url']);
-        } else {
-            echo '<span class="error">'.$GLOBALS['Language']->getText('plugin_hudson','error_object_not_found').'</span>';
-        }
-    }
-
-    function last_build() {
-        $request =& HTTPRequest::instance();
-        $group_id = $request->get('group_id');
-        $job_id = $request->get('job_id');
-
-        $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
-        $dar = $job_dao->searchByJobID($job_id);
-        if ($dar->valid()) {
-            $row = $dar->current();
-            $this->_display_iframe($row['job_url'].'/lastBuild/');
+            echo Codendi_HTMLPurifier::instance()->purify($row['job_url'], CODENDI_PURIFIER_BASIC_NOBR, $group_id);
         } else {
             echo '<span class="error">'.$GLOBALS['Language']->getText('plugin_hudson','error_object_not_found').'</span>';
         }
@@ -167,7 +150,11 @@ class hudsonViews extends Views {
                 echo '<b> '.$GLOBALS['Language']->getText('cross_ref_fact_include','references').'</b>';
                 $crossref_fact->DisplayCrossRefs();
             }
-            $this->_display_iframe($row['job_url'].'/'.$build_id.'/');
+            echo Codendi_HTMLPurifier::instance()->purify(
+                $row['job_url'] .'/'. $build_id.'/',
+                CODENDI_PURIFIER_BASIC_NOBR,
+                $group_id
+            );
         } else {
             echo '<span class="error">'.$GLOBALS['Language']->getText('plugin_hudson','error_object_not_found').'</span>';
         }
@@ -183,7 +170,11 @@ class hudsonViews extends Views {
         $dar = $job_dao->searchByJobID($job_id);
         if ($dar->valid()) {
             $row = $dar->current();
-            $this->_display_iframe($row['job_url'].'/lastBuild/testReport/');
+            echo Codendi_HTMLPurifier::instance()->purify(
+                $row['job_url'].'/lastBuild/testReport/',
+                CODENDI_PURIFIER_BASIC_NOBR,
+                $group_id
+            );
         } else {
             echo '<span class="error">'.$GLOBALS['Language']->getText('plugin_hudson','error_object_not_found').'</span>';
         }
@@ -199,7 +190,11 @@ class hudsonViews extends Views {
         $dar = $job_dao->searchByJobID($job_id);
         if ($dar->valid()) {
             $row = $dar->current();
-            $this->_display_iframe($row['job_url'].'/test/?width=800&height=600&failureOnly=false');
+            echo Codendi_HTMLPurifier::instance()->purify(
+                $row['job_url'].'/test/?width=800&height=600&failureOnly=false',
+                CODENDI_PURIFIER_BASIC_NOBR,
+                $group_id
+            );
         } else {
             echo '<span class="error">'.$GLOBALS['Language']->getText('plugin_hudson','error_object_not_found').'</span>';
         }
@@ -295,22 +290,21 @@ class hudsonViews extends Views {
                     $http_client = new Http_Client();
                     $job         = new HudsonJob($row['job_url'], $http_client);
 
-                    // function toggle_iframe is in script plugins/hudson/www/hudson_tab.js
                     echo '<td>';
                     echo '<img src="'.$purifier->purify($job->getStatusIcon()).'" alt="'.$purifier->purify($job->getStatus()).'" title="'.$purifier->purify($job->getStatus()).'" /> ';
-                    echo '<a href="'.$purifier->purify($job->getUrl()).'" onclick="toggle_iframe(this); return false;" title="'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson','show_job', array($row['name']))).'">'.$purifier->purify($row['name']).'</a>';
+                    echo '<a href="'.$purifier->purify($job->getUrl()).'" title="'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson','show_job', array($row['name']))).'">'.$purifier->purify($row['name']).'</a>';
                     echo '</td>';
                     if ($job->getLastSuccessfulBuildNumber() != '') {
-                        echo '  <td><a href="'.$purifier->purify($job->getLastSuccessfulBuildUrl()).'" onclick="toggle_iframe(this); return false;" title="'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson','show_build', array($job->getLastSuccessfulBuildNumber(), $row['name']))).'">'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson','build').' #'.$job->getLastSuccessfulBuildNumber()).'</a></td>';
+                        echo '  <td><a href="'.$purifier->purify($job->getLastSuccessfulBuildUrl()).'" title="'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson','show_build', array($job->getLastSuccessfulBuildNumber(), $row['name']))).'">'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson','build').' #'.$job->getLastSuccessfulBuildNumber()).'</a></td>';
                     } else {
                         echo '  <td>&nbsp;</td>';
                     }
                     if ($job->getLastFailedBuildNumber() != '') {
-                        echo '  <td><a href="'.$purifier->purify($job->getLastFailedBuildUrl()).'" onclick="toggle_iframe(this); return false;" title="'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson','show_build', array($job->getLastFailedBuildNumber(), $row['name']))).'">'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson','build').' #'.$job->getLastFailedBuildNumber()).'</a></td>';
+                        echo '  <td><a href="'.$purifier->purify($job->getLastFailedBuildUrl()).'" title="'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson','show_build', array($job->getLastFailedBuildNumber(), $row['name']))).'">'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson','build').' #'.$job->getLastFailedBuildNumber()).'</a></td>';
                     } else {
                         echo '  <td>&nbsp;</td>';
                     }
-                    echo '  <td align="center"><a href="'.$purifier->purify($job->getUrl()).'/rssAll" onclick="toggle_iframe(this); return false;"><img src="'.$this->getControler()->getIconsPath().'rss_feed.png" alt="'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson','rss_feed', array($row['name']))).'" title="'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson','rss_feed', array($row['name']))).'"></a></td>';
+                    echo '  <td align="center"><a href="'.$purifier->purify($job->getUrl()).'/rssAll"><img src="'.$this->getControler()->getIconsPath().'rss_feed.png" alt="'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson','rss_feed', array($row['name']))).'" title="'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson','rss_feed', array($row['name']))).'"></a></td>';
 
                     if ($project->usesSVN()) {
                         if ($row['use_svn_trigger'] == 1) {
@@ -477,14 +471,5 @@ class hudsonViews extends Views {
                     </div>
                   </div>
                 </form>';
-    }
-
-    function _display_iframe($url = '') {
-        echo '<div id="hudson_iframe_div">';
-        $GLOBALS['HTML']->iframe($url, array('id' => 'hudson_iframe', 'class' => 'iframe_service', 'width' => '100%', 'height' => '650px'));
-        echo '</div>';
-    }
-    function _hide_iframe() {
-        echo "<script>Element.toggle('hudson_iframe_div', 'slide');</script>";
     }
 }
