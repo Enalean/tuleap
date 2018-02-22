@@ -20,12 +20,16 @@
  */
 
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Project\Admin\Permission\PermissionPerGroupUGroupRepresentationBuilder;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\Admin\GlobalAdminController;
 use Tuleap\Tracker\ForgeUserGroupPermission\TrackerAdminAllProjects;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
+use Tuleap\Tracker\PermissionsPerGroup\TrackerPermissionPerGroupJSONRetriever;
+use Tuleap\Tracker\PermissionsPerGroup\TrackerPermissionPerGroupPermissionRepresentationBuilder;
+use Tuleap\Tracker\PermissionsPerGroup\TrackerPermissionPerGroupRepresentationBuilder;
 
 class TrackerManager implements Tracker_IFetchTrackerSwitcher {
     const DELETED_TRACKERS_TEMPLATE_NAME = 'deleted_trackers';
@@ -255,6 +259,38 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
                                 } else {
                                     $this->redirectToTrackerHomepage($group_id);
                                 }
+
+                                break;
+
+                            case 'permissions-per-group':
+                                if (! $request->getCurrentUser()->isAdmin($request->getProject()->getID())) {
+                                    $GLOBALS['Response']->send400JSONErrors(
+                                        array(
+                                            'error' => dgettext(
+                                                "tuleap-tracker",
+                                                "You don't have permissions to see user groups."
+                                            )
+                                        )
+                                    );
+                                }
+
+                                $ugroup_manager       = new UGroupManager();
+                                $permission_retriever = new TrackerPermissionPerGroupJSONRetriever(
+                                    new TrackerPermissionPerGroupRepresentationBuilder(
+                                        TrackerFactory::instance(),
+                                        new TrackerPermissionPerGroupPermissionRepresentationBuilder(
+                                            $ugroup_manager,
+                                            new PermissionPerGroupUGroupRepresentationBuilder(
+                                                $ugroup_manager
+                                            )
+                                        )
+                                    )
+                                );
+
+                                $permission_retriever->retrieve(
+                                    $request->getProject(),
+                                    $request->get('selected_ugroup_id')
+                                );
 
                                 break;
                             default:

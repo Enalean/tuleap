@@ -1,0 +1,33 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Thomas Gorka <thomas.gorka@enalean.com>\n"
+"Language-Team: \n"
+"Language: fr_FR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.0.3\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+
+#, javascript-format
+msgid "%s has no permission for trackers"
+msgstr "%s n'a aucune permission au niveau des outils de suivi"
+
+msgid "Granted groups"
+msgstr "Groupes autorisés"
+
+msgid "Permissions"
+msgstr "Permissions"
+
+msgid "Project has no tracker"
+msgstr "Le projet ne possède pas d'outil de suivi"
+
+msgid "See all tracker permissions"
+msgstr "Voir toutes les permissions des trackers"
+
+msgid "Tracker name"
+msgstr "Nom du tracker"

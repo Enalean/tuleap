@@ -82,6 +82,10 @@
         "burndown-chart": {
             "src": "www/scripts/burndown-chart/src",
             "po": "www/scripts/burndown-chart/po"
+        },
+        "permissions-per-group": {
+            "src": "www/scripts/permissions-per-group/src",
+            "po" : "www/scripts/permissions-per-group/po"
         }
     },
     "components": [

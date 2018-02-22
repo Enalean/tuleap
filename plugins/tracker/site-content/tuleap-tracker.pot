@@ -88,9 +88,6 @@ msgstr ""
 msgid "Field value cannot be empty"
 msgstr ""
 
-msgid "Granted groups"
-msgstr ""
-
 #, php-format
 msgid "Group '%s' couldn't be added."
 msgid_plural "Groups '%s' couldn't be added."
@@ -116,9 +113,6 @@ msgid "Notified people"
 msgstr ""
 
 msgid "On all updates?"
-msgstr ""
-
-msgid "Permissions"
 msgstr ""
 
 msgid ""
@@ -382,10 +376,10 @@ msgstr ""
 msgid "Tracker global admininistration"
 msgstr ""
 
-msgid "Tracker name"
+msgid "Tracker renderer"
 msgstr ""
 
-msgid "Tracker renderer"
+msgid "Tracker service is disabled."
 msgstr ""
 
 msgid "Use"
@@ -416,10 +410,10 @@ msgstr[1] ""
 msgid "You are about to remove the notification. Please confirm your action."
 msgstr ""
 
+msgid "You don't have permissions to see user groups."
+msgstr ""
+
 msgid ""
 "changed. (But text is too long, we are unable to compute the differences in "
 "a reasonable amount of time.)"
-msgstr ""
-
-msgid "{{ user_group_name }} has no permission for trackers"
 msgstr ""

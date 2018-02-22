@@ -24,7 +24,8 @@
     "moment": "^2.18.1",
     "ng-ckeditor": "^2.0.3",
     "node-gettext": "^2.0.0",
-    "sprintf-js": "^1.1.1"
+    "sprintf-js": "^1.1.1",
+    "vue": "^2.5.13"
   },
   "devDependencies": {
     "angular-gettext-loader": "^1.0.1",
@@ -50,6 +51,9 @@
     "karma-webpack": "^2.0.9",
     "ng-cache-loader": "0.0.23",
     "po-gettext-loader": "^0.1.1",
+    "vue-loader": "^14.1.1",
+    "vue-loader-options-plugin": "^0.1.1",
+    "vue-template-compiler": "^2.5.13",
     "webpack": "^3.10.0",
     "webpack-assets-manifest": "^1.0.0"
   },

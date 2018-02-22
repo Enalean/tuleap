@@ -19,50 +19,11 @@
             </h1>
         </div>
 
-        <section class="tlp-pane-section">
-            <table class="tlp-table">
-                <thead>
-                <tr>
-                    <th> {{# dgettext }} tuleap-tracker | Tracker name {{/ dgettext }}</th>
-                    <th> {{# dgettext }} tuleap-tracker | Permissions {{/ dgettext }}</th>
-                    <th> {{# dgettext }} tuleap-tracker | Granted groups {{/ dgettext }}</th>
-                </tr>
-                </thead>
-                <tbody>
-                {{# permissions }}
-                    <tr>
-                        <td>
-                            <a href="{{ quick_link }}">{{ tracker }}</a>
-                        </td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    {{# permissions }}
-                        <tr>
-                            <td></td>
-                            <td>{{ permission_name }}</td>
-
-                            <td>
-                                {{# granted_groups }}
-                                    <span class="
-                                    {{# is_project_admin }}tlp-badge-danger tlp-badge-outline{{/ is_project_admin }}
-                                        {{# is_static }}tlp-badge-primary tlp-badge-outline{{/ is_static }}
-                                        {{# is_custom }}tlp-badge-secondary{{/ is_custom }}
-                                ">{{ name }}</span>
-                                {{/ granted_groups }}
-                            </td>
-                    </tr>
-                    {{/permissions}}
-                {{/ permissions }}
-                {{^ has_permissions }}
-                    <tr>
-                        <td colspan="3" class="tlp-table-cell-empty">
-                            {{# dgettext }} tuleap-tracker | {{ user_group_name }} has no permission for trackers {{/ dgettext }}
-                        </td>
-                    </tr>
-                {{/ has_permissions }}
-                </tbody>
-            </table>
-        </section>
+        <div id="tracker-permissions-per-group"
+             data-locale="{{ user_locale }}"
+             data-selected-ugroup-id="{{ ugroup_id }}"
+             data-selected-project-id="{{ project_id }}"
+             data-selected-ugroup-name="{{ selected_ugroup_name }}"
+        ></div>
     </div>
 </section>
