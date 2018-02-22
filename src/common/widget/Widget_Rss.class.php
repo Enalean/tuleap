@@ -161,7 +161,8 @@ require_once('common/date/DateHelper.class.php');
             $this->content_id = $id;
         }
     }
-    function create($request) {
+
+    function create(Codendi_Request $request) {
         $content_id = false;
         $vUrl = new Valid_String('url');
         $vUrl->setErrorMessage("Can't add empty rss url");

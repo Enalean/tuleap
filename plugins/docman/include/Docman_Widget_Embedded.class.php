@@ -193,7 +193,7 @@ class Docman_Widget_Embedded extends Widget /* implements Visitor */ {
      * @param Codendi_Request $request
      * @return int the id of the new content
      */
-    public function create($request) {
+    public function create(Codendi_Request $request) {
         $content_id = false;
         $vItem_id = new Valid_String('item_id');
         $vItem_id->setErrorMessage("Unable to add the widget. Please give an item id.");

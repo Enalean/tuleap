@@ -24,6 +24,7 @@ use AgileDashboard_KanbanCannotAccessException;
 use AgileDashboard_KanbanFactory;
 use AgileDashboard_KanbanNotFoundException;
 use AgileDashboard_PermissionsManager;
+use Codendi_Request;
 use KanbanPresenter;
 use TemplateRendererFactory;
 use TrackerFactory;
@@ -84,7 +85,7 @@ abstract class Kanban extends Widget
         $this->tracker_report_id       = $tracker_report_id;
     }
 
-    public function create(&$request)
+    public function create(Codendi_Request $request)
     {
         return $this->widget_kanban_creator->create($request, $this->owner_id, $this->owner_type);
     }

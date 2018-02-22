@@ -21,6 +21,7 @@
 namespace Tuleap\Label\Widget;
 
 use Codendi_HTMLPurifier;
+use Codendi_Request;
 use DataAccessException;
 use Feedback;
 use HTTPRequest;
@@ -155,7 +156,7 @@ class ProjectLabeledItems extends Widget
         );
     }
 
-    public function create(&$request)
+    public function create(Codendi_Request $request)
     {
         $this->storeContentId();
 

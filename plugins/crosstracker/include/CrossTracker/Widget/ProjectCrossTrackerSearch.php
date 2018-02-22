@@ -20,6 +20,7 @@
 
 namespace Tuleap\CrossTracker\Widget;
 
+use Codendi_Request;
 use HTTPRequest;
 use Project;
 use TemplateRendererFactory;
@@ -83,7 +84,7 @@ class ProjectCrossTrackerSearch extends Widget
         return false;
     }
 
-    public function create(&$request)
+    public function create(Codendi_Request $request)
     {
         $content_id = $this->getDao()->create();
 
