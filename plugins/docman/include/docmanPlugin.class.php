@@ -87,7 +87,7 @@ class DocmanPlugin extends Plugin
         $this->addHook(Event::REGISTER_PROJECT_CREATION,    'installNewDocman',                  false);
         $this->addHook(Event::SERVICE_IS_USED);
         $this->addHook('soap',                              'soap',                              false);
-        $this->addHook('widget_instance',                   'myPageBox',                         false);
+        $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
         $this->addHook('widgets',                           'widgets',                           false);
         $this->addHook('codendi_daily_start',               'codendiDaily',                      false);
         $this->addHook('wiki_page_updated',                 'wiki_page_updated',                 false);
@@ -314,23 +314,23 @@ class DocmanPlugin extends Plugin
         require_once('soap.php');
     }
 
-    function myPageBox($params) {
-        switch ($params['widget']) {
+    public function widgetInstance(\Tuleap\Widget\Event\GetWidget $get_widget_event) {
+        switch ($get_widget_event->getName()) {
             case 'plugin_docman_mydocman':
                 require_once('Docman_Widget_MyDocman.class.php');
-                $params['instance'] = new Docman_Widget_MyDocman($this->getPluginPath());
+                $get_widget_event->setWidget(new Docman_Widget_MyDocman($this->getPluginPath()));
                 break;
             case 'plugin_docman_my_embedded':
                 require_once('Docman_Widget_MyEmbedded.class.php');
-                $params['instance'] = new Docman_Widget_MyEmbedded($this->getPluginPath());
+                $get_widget_event->setWidget(new Docman_Widget_MyEmbedded($this->getPluginPath()));
                 break;
             case 'plugin_docman_project_embedded':
                 require_once('Docman_Widget_ProjectEmbedded.class.php');
-                $params['instance'] = new Docman_Widget_ProjectEmbedded($this->getPluginPath());
+                $get_widget_event->setWidget(new Docman_Widget_ProjectEmbedded($this->getPluginPath()));
                 break;
             case 'plugin_docman_mydocman_search':
                 require_once('Docman_Widget_MyDocmanSearch.class.php');
-                $params['instance'] = new Docman_Widget_MyDocmanSearch($this->getPluginPath());
+                $get_widget_event->setWidget(new Docman_Widget_MyDocmanSearch($this->getPluginPath()));
                 break;
             default:
                 break;

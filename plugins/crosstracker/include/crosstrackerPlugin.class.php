@@ -43,7 +43,7 @@ class crosstrackerPlugin extends Plugin
     public function getHooksAndCallbacks()
     {
         if (defined('TRACKER_BASE_URL')) {
-            $this->addHook('widget_instance');
+            $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
             $this->addHook('widgets');
             $this->addHook(Event::REST_RESOURCES);
             $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
@@ -87,10 +87,10 @@ class crosstrackerPlugin extends Plugin
         }
     }
 
-    public function widgetInstance(array $params)
+    public function widgetInstance(\Tuleap\Widget\Event\GetWidget $get_widget_event)
     {
-        if ($params['widget'] === ProjectCrossTrackerSearch::NAME) {
-            $params['instance'] = new ProjectCrossTrackerSearch();
+        if ($get_widget_event->getName() === ProjectCrossTrackerSearch::NAME) {
+            $get_widget_event->setWidget(new ProjectCrossTrackerSearch());
         }
     }
 

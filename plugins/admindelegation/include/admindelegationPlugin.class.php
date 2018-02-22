@@ -48,7 +48,7 @@ class AdminDelegationPlugin extends Plugin {
         parent::__construct($id);
         $this->addHook('cssfile',                'cssFile',                false);
         $this->addHook('site_admin_option_hook', 'site_admin_option_hook', false);
-        $this->addHook('widget_instance',        'widget_instance',        false);
+        $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
         $this->addHook('widgets',                'widgets',                false);
         $this->addHook(BurningParrotCompatiblePageEvent::NAME);
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
@@ -132,18 +132,17 @@ class AdminDelegationPlugin extends Plugin {
     /**
      * Hook: event raised when widget are instanciated
      *
-     * @param Array $params
+     * @param \Tuleap\Widget\Event\GetWidget $get_widget_event
      */
-    public function widget_instance($params) {
-        if ($params['widget'] == 'admindelegation' && $this->_userCanViewWidget('admindelegation')) {
+    public function widgetInstance(\Tuleap\Widget\Event\GetWidget $get_widget_event) {
+        if ($get_widget_event->getName() === 'admindelegation' && $this->_userCanViewWidget('admindelegation')) {
             include_once 'AdminDelegation_UserWidget.class.php';
-            $params['instance'] = new AdminDelegation_UserWidget($this);
+            $get_widget_event->setWidget(new AdminDelegation_UserWidget($this));
         }
-        if ($params['widget'] == 'admindelegation_projects' && $this->_userCanViewWidget('admindelegation_projects')) {
+        if ($get_widget_event->getName() ==='admindelegation_projects' && $this->_userCanViewWidget('admindelegation_projects')) {
             include_once 'AdminDelegation_ShowProjectWidget.class.php';
-            $params['instance'] = new AdminDelegation_ShowProjectWidget($this);
+            $get_widget_event->setWidget(new AdminDelegation_ShowProjectWidget($this));
         }
-
     }
 
     /**

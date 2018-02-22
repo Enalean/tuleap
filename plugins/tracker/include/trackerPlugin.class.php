@@ -112,7 +112,7 @@ class trackerPlugin extends Plugin {
         $this->addHook(Event::SERVICE_ICON);
         $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
 
-        $this->addHook('widget_instance');
+        $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
         $this->addHook('widgets');
         $this->addHook(AtUserCreationDefaultWidgetsCreator::DEFAULT_WIDGETS_FOR_NEW_USER);
 
@@ -662,18 +662,18 @@ class trackerPlugin extends Plugin {
     /**
      * Hook: event raised when widget are instanciated
      *
-     * @param Array $params
+     * @param \Tuleap\Widget\Event\GetWidget $get_widget_event
      */
-    public function widget_instance($params) {
-        switch ($params['widget']) {
+    public function widgetInstance(\Tuleap\Widget\Event\GetWidget $get_widget_event) {
+        switch ($get_widget_event->getName()) {
             case Tracker_Widget_MyArtifacts::ID:
-                $params['instance'] = new Tracker_Widget_MyArtifacts();
+                $get_widget_event->setWidget(new Tracker_Widget_MyArtifacts());
                 break;
             case Tracker_Widget_MyRenderer::ID:
-                $params['instance'] = new Tracker_Widget_MyRenderer();
+                $get_widget_event->setWidget(new Tracker_Widget_MyRenderer());
                 break;
             case Tracker_Widget_ProjectRenderer::ID:
-                $params['instance'] = new Tracker_Widget_ProjectRenderer();
+                $get_widget_event->setWidget(new Tracker_Widget_ProjectRenderer());
                 break;
         }
     }

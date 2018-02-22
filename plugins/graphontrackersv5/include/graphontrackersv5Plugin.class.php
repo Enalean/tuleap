@@ -67,7 +67,7 @@ class GraphOnTrackersV5Plugin extends Plugin {
             $this->addHook('trackers_get_renderers' ,    'trackers_get_renderers',     false);
 
             //Widgets
-            $this->addHook('widget_instance');
+            $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
             $this->addHook('widgets');
 
             $this->addHook('graphontrackersv5_load_chart_factories', 'graphontrackersv5_load_chart_factories', false);
@@ -209,18 +209,18 @@ class GraphOnTrackersV5Plugin extends Plugin {
 
     /**
      * Search for an instance of a specific widget
-     * @param (in) string 'widget' => the name of the widget, eg: 'mydocman'
-     * @param (out) Widget 'instance' => the instance of the widget
+     *
+     * @param \Tuleap\Widget\Event\GetWidget $get_widget_event
      */
-    public function widget_instance($params) {
-        switch ($params['widget']) {
+    public function widgetInstance(\Tuleap\Widget\Event\GetWidget $get_widget_event) {
+        switch ($get_widget_event->getName()) {
             case 'my_plugin_graphontrackersv5_chart':
                 require_once('GraphOnTrackersV5_Widget_MyChart.class.php');
-                $params['instance'] = new GraphOnTrackersV5_Widget_MyChart();
+                $get_widget_event->setWidget(new GraphOnTrackersV5_Widget_MyChart());
                 break;
             case 'project_plugin_graphontrackersv5_chart':
                 require_once('GraphOnTrackersV5_Widget_ProjectChart.class.php');
-                $params['instance'] = new GraphOnTrackersV5_Widget_ProjectChart();
+                $get_widget_event->setWidget(new GraphOnTrackersV5_Widget_ProjectChart());
                 break;
             default:
                 break;

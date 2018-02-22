@@ -96,6 +96,8 @@ class AgileDashboardPlugin extends Plugin {
             require_once dirname(__FILE__) .'/../../tracker/include/autoload.php';
             $this->addHook('cssfile', 'cssfile', false);
             $this->addHook('javascript_file');
+            $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
+            $this->addHook('widgets');
             $this->addHook(TRACKER_EVENT_INCLUDE_CSS_FILE);
             $this->addHook(TRACKER_EVENT_TRACKERS_DUPLICATED, 'tracker_event_trackers_duplicated', false);
             $this->addHook(TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION, 'tracker_event_build_artifact_form_action', false);
@@ -138,8 +140,6 @@ class AgileDashboardPlugin extends Plugin {
             $this->addHook(Tracker_Artifact_EditRenderer::EVENT_ADD_VIEW_IN_COLLECTION);
             $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
             $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
-            $this->addHook('widget_instance');
-            $this->addHook('widgets');
             $this->addHook(BurningParrotCompatiblePageEvent::NAME);
             $this->addHook(CanValueBeHiddenStatementsCollection::NAME);
             $this->addHook(SemanticStatusGetDisabledValues::NAME);
@@ -395,9 +395,9 @@ class AgileDashboardPlugin extends Plugin {
 
     }
 
-    public function widgetInstance($params)
+    public function widgetInstance(\Tuleap\Widget\Event\GetWidget $event)
     {
-        if ($params['widget'] !== MyKanban::NAME && $params['widget'] !== ProjectKanban::NAME) {
+        if ($event->getName() !== MyKanban::NAME && $event->getName() !== ProjectKanban::NAME) {
             return;
         }
 
@@ -417,36 +417,38 @@ class AgileDashboardPlugin extends Plugin {
             new AgileDashboard_KanbanDao()
         );
 
-        switch ($params['widget']) {
+        switch ($event->getName()) {
             case MyKanban::NAME:
                 $request           = HTTPRequest::instance();
                 $tracker_report_id = $request->get('tracker_report_id');
 
-                $params['instance'] = new MyKanban(
-                    $widget_kanban_creator,
-                    $widget_kanban_retriever,
-                    $widget_kanban_deletor,
-                    $kanban_factory,
-                    TrackerFactory::instance(),
-                    $permission_manager,
-                    $tracker_report_id
+                $event->setWidget(
+                    new MyKanban(
+                        $widget_kanban_creator,
+                        $widget_kanban_retriever,
+                        $widget_kanban_deletor,
+                        $kanban_factory,
+                        TrackerFactory::instance(),
+                        $permission_manager,
+                        $tracker_report_id
+                    )
                 );
                 break;
             case ProjectKanban::NAME:
                 $request           = HTTPRequest::instance();
                 $tracker_report_id = $request->get('tracker_report_id');
 
-                $params['instance'] = new ProjectKanban(
-                    $widget_kanban_creator,
-                    $widget_kanban_retriever,
-                    $widget_kanban_deletor,
-                    $kanban_factory,
-                    TrackerFactory::instance(),
-                    $permission_manager,
-                    $tracker_report_id
+                $event->setWidget(
+                    new ProjectKanban(
+                        $widget_kanban_creator,
+                        $widget_kanban_retriever,
+                        $widget_kanban_deletor,
+                        $kanban_factory,
+                        TrackerFactory::instance(),
+                        $permission_manager,
+                        $tracker_report_id
+                    )
                 );
-                break;
-            default:
                 break;
         }
     }
