@@ -137,6 +137,15 @@ const rule_angular_gettext_extract_loader = {
     ]
 };
 
+const rule_easygettext_loader = {
+    test: /\.po$/,
+    exclude: /node_modules/,
+    use: [
+        { loader: 'json-loader' },
+        { loader: 'easygettext-loader' }
+    ]
+};
+
 module.exports = {
     configureBabelRule,
     babel_options_ie11,
@@ -146,5 +155,6 @@ module.exports = {
     rule_vue_loader,
     rule_ng_cache_loader,
     rule_angular_gettext_loader,
-    rule_angular_gettext_extract_loader
+    rule_angular_gettext_extract_loader,
+    rule_easygettext_loader
 };

@@ -17,6 +17,7 @@
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "del": "^2.2.1",
+    "easygettext": "^2.4.0",
     "eslint": "^4.18.1",
     "eslint-plugin-cypress": "^2.0.1",
     "eslint-plugin-you-dont-need-lodash-underscore": "^6.3.1",

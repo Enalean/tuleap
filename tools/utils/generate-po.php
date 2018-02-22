@@ -260,5 +260,22 @@ EOS;
                 exec("find $po -name '*.po' -exec msgmerge --update \"{}\" $template \;");
             }
         }
+
+        if (isset($json['gettext-vue']) && is_array($json['gettext-vue'])) {
+            foreach ($json['gettext-vue'] as $component => $gettext) {
+                info("[$translated_plugin][vue][$component] Generating default .pot file");
+                $scripts           = escapeshellarg("$path/${gettext['scripts']}");
+                $po                = escapeshellarg("$path/${gettext['po']}");
+                $template          = escapeshellarg("$path/${gettext['po']}/template.pot");
+                $vue_template_path = "$path/${gettext['po']}/template.pot";
+                $vue_template      = escapeshellarg($vue_template_path);
+                executeCommandAndExitIfStderrNotEmpty("(cd $scripts && npm run extract-gettext-cli -- --output $template)");
+
+                exec("msgcat --no-location --sort-output -o $template $vue_template");
+
+                info("[$translated_plugin][js][$component] Merging .pot file into .po files");
+                exec("find $po -name '*.po' -exec msgmerge --update \"{}\" $template \;");
+            }
+        }
     }
 }

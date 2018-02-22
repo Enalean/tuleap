@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,11 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Gettext             from 'node-gettext';
-import french_translations from '../po/fr.po';
+const easygettextCompile = require('easygettext/src/compile.js');
 
-const gettext_provider = new Gettext();
-gettext_provider.addTranslations('fr_FR', 'label', french_translations);
-gettext_provider.setTextDomain('label');
-
-export { gettext_provider };
+/**
+ * "Compiles" po files to easygettext json format
+ */
+module.exports = function(content) {
+    const json = easygettextCompile.po2json(content);
+    return JSON.stringify(json);
+};
