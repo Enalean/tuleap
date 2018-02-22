@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,7 +21,10 @@
 namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\ComparisonChecker;
-use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\ICheckSemanticFieldForAComparison;
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\EqualComparisonChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\ICheckMetadataForAComparison;
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\MetadataChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\NotEqualComparisonChecker;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenComparison;
@@ -45,15 +48,25 @@ class InvalidComparisonCollectorVisitor implements Visitor
     /** @var InvalidSearchableCollectorVisitor */
     private $invalid_searchable_collector_visitor;
 
-    /** @var ComparisonChecker */
-    private $semantic_comparison_checker;
+    /** @var MetadataChecker */
+    private $metadata_checker;
+
+    /** @var EqualComparisonChecker */
+    private $equal_comparison_checker;
+
+    /** @var NotEqualComparisonChecker */
+    private $not_equal_comparison_checker;
 
     public function __construct(
         InvalidSearchableCollectorVisitor $invalid_searchable_collector_visitor,
-        ComparisonChecker $semantic_comparison_checker
+        MetadataChecker $metadata_checker,
+        EqualComparisonChecker $equal_comparison_checker,
+        NotEqualComparisonChecker $not_equal_comparison_checker
     ) {
         $this->invalid_searchable_collector_visitor = $invalid_searchable_collector_visitor;
-        $this->semantic_comparison_checker          = $semantic_comparison_checker;
+        $this->metadata_checker                     = $metadata_checker;
+        $this->equal_comparison_checker             = $equal_comparison_checker;
+        $this->not_equal_comparison_checker         = $not_equal_comparison_checker;
     }
 
     public function collectErrors(
@@ -68,7 +81,8 @@ class InvalidComparisonCollectorVisitor implements Visitor
     {
         $this->visitComparison(
             $comparison,
-            $this->semantic_comparison_checker,
+            $this->metadata_checker,
+            $this->equal_comparison_checker,
             $parameters
         );
     }
@@ -77,7 +91,8 @@ class InvalidComparisonCollectorVisitor implements Visitor
     {
         $this->visitComparison(
             $comparison,
-            $this->semantic_comparison_checker,
+            $this->metadata_checker,
+            $this->not_equal_comparison_checker,
             $parameters
         );
     }
@@ -119,14 +134,16 @@ class InvalidComparisonCollectorVisitor implements Visitor
 
     private function visitComparison(
         Comparison $comparison,
-        ICheckSemanticFieldForAComparison $semantic_checker,
+        ICheckMetadataForAComparison $metadata_checker,
+        ComparisonChecker $comparison_checker,
         InvalidComparisonCollectorParameters $parameters
     ) {
         $comparison->getSearchable()->accept(
             $this->invalid_searchable_collector_visitor,
             new InvalidSearchableCollectorParameters(
                 $parameters,
-                $semantic_checker,
+                $metadata_checker,
+                $comparison_checker,
                 $comparison
             )
         );

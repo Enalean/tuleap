@@ -38,7 +38,9 @@ use Tuleap\CrossTracker\Permission\CrossTrackerUnauthorizedException;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidComparisonCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchablesCollectionBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\ComparisonChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\EqualComparisonChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\MetadataChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\NotEqualComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\SemanticUsageChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\CrossTrackerExpertQueryReportDao;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\SearchableVisitor;
@@ -134,13 +136,15 @@ class CrossTrackerReportsResource extends AuthenticatedResource
 
         $this->invalid_comparisons_collector = new InvalidComparisonCollectorVisitor(
             new InvalidSearchableCollectorVisitor(),
-            new ComparisonChecker(
+            new MetadataChecker(
                 new SemanticUsageChecker(
                     new Tracker_Semantic_TitleDao(),
                     new Tracker_Semantic_DescriptionDao(),
                     new Tracker_Semantic_StatusDao()
                 )
-            )
+            ),
+            new EqualComparisonChecker(),
+            new NotEqualComparisonChecker()
         );
 
         $query_builder_visitor = new QueryBuilderVisitor(
