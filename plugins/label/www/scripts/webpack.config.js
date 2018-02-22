@@ -1,40 +1,72 @@
 /* eslint-disable */
-var path                  = require('path');
-var webpack               = require('webpack');
-var WebpackAssetsManifest = require('webpack-assets-manifest');
+const path                        = require('path');
+const webpack                     = require('webpack');
+const WebpackAssetsManifest       = require('webpack-assets-manifest');
+const BabelPresetEnv              = require('babel-preset-env');
+const VueLoaderOptionsPlugin      = require('vue-loader-options-plugin');
+const BabelPluginObjectRestSpread = require('babel-plugin-transform-object-rest-spread');
+const BabelPluginRewireExports    = require('babel-plugin-rewire-exports').default;
+const BabelPluginIstanbul         = require('babel-plugin-istanbul').default;
 
-var assets_dir_path = path.resolve(__dirname, '../assets');
+const assets_dir_path = path.resolve(__dirname, '../assets');
 
-var babel_options = {
-    presets: [
-        ["babel-preset-env", {
-            targets: {
-                ie: 11
-            },
-            modules: false
-        }],
-    ],
-    plugins: [
-        "babel-plugin-transform-object-rest-spread"
-    ],
+const babel_preset_env_ie_config = [BabelPresetEnv, {
+    targets: {
+        ie: 11
+    },
+    modules: false
+}];
+
+const babel_preset_env_chrome_config = [BabelPresetEnv, {
+    targets: {
+        browsers: ['last 2 Chrome versions']
+    },
+    modules: false,
+    useBuiltIns: true,
+    shippedProposals: true
+}];
+
+const babel_options   = {
     env: {
-        test: {
+        watch: {
+            presets: [babel_preset_env_ie_config],
             plugins: [
-                "babel-plugin-rewire-exports"
+                BabelPluginObjectRestSpread,
             ]
         },
+        production: {
+            presets: [babel_preset_env_ie_config],
+            plugins: [BabelPluginObjectRestSpread]
+        },
+        test: {
+            presets: [babel_preset_env_chrome_config],
+            plugins: [BabelPluginObjectRestSpread, BabelPluginRewireExports]
+        },
         coverage: {
+            presets: [babel_preset_env_chrome_config],
             plugins: [
-                "babel-plugin-rewire-exports",
-                ["babel-plugin-istanbul", {
-                    exclude: [ "**/*.spec.js"]
+                BabelPluginObjectRestSpread,
+                BabelPluginRewireExports,
+                [BabelPluginIstanbul, {
+                    exclude: ['**/*.spec.js']
                 }]
             ]
         }
     }
 };
 
-var webpack_config = {
+const babel_rule = {
+    test: /\.js$/,
+    exclude: /node_modules/,
+    use: [
+        {
+            loader: 'babel-loader',
+            options: babel_options
+        }
+    ]
+};
+
+const webpack_config = {
     entry : {
         'widget-project-labeled-items': './project-labeled-items/src/index.js',
         'configure-widget'            : './configure-widget/index.js'
@@ -48,29 +80,22 @@ var webpack_config = {
     },
     resolve: {
         alias: {
-            'vue$': 'vue/dist/vue.esm.js'
+            'tlp-mocks': path.resolve('../../../../src/www/themes/common/tlp/mocks/index.js'),
         }
     },
     module: {
         rules: [
+            babel_rule,
             {
-                test: /\.js$/,
-                exclude: /node_modules/,
-                use: [
-                    {
-                        loader: 'babel-loader',
-                        options: babel_options
-                    }
-                ]
-            }, {
                 test: /\.vue$/,
                 use: [
                     {
                         loader: 'vue-loader',
                         options: {
                             loaders: {
-                                js: 'babel-loader?' + JSON.stringify(babel_options)
-                            }
+                                js: 'babel-loader'
+                            },
+                            esModule: true
                         }
                     }
                 ]
@@ -89,6 +114,9 @@ var webpack_config = {
             output: 'manifest.json',
             merge: true,
             writeToDisk: true
+        }),
+        new VueLoaderOptionsPlugin({
+            babel: babel_options
         })
     ]
 };
@@ -102,6 +130,8 @@ if (process.env.NODE_ENV === 'production') {
         }),
         new webpack.optimize.ModuleConcatenationPlugin()
     ]);
+} else if (process.env.NODE_ENV === 'watch') {
+    webpack_config.devtool = 'eval';
 }
 
 module.exports = webpack_config;

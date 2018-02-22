@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,31 +16,31 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import Vue from 'vue';
-
+import Vue                                 from 'vue';
 import { rewire$getLabeledItems, restore } from './rest-querier.js';
-import LabeledItemsList from './LabeledItemsList.vue';
+import LabeledItemsList                    from './LabeledItemsList.vue';
+import { mockFetchError }                  from 'tlp-mocks';
 
 describe('LabeledItemsList', () => {
     let getLabeledItems;
     let LabeledItemsListVueElement;
 
-    beforeEach(function() {
+    beforeEach(() => {
         getLabeledItems = jasmine.createSpy('getLabeledItems');
         rewire$getLabeledItems(getLabeledItems);
 
         LabeledItemsListVueElement = Vue.extend(LabeledItemsList);
     });
 
-    afterEach(function() {
+    afterEach(() => {
         restore();
     });
 
     it('Should display an error when no labels id are provided', () => {
         const vm = new LabeledItemsListVueElement({
             propsData: {
-                dataLabelsId: "[]",
-                dataProjectId: 101
+                labelsId: "[]",
+                projectId: "101"
             }
         });
 
@@ -50,23 +50,18 @@ describe('LabeledItemsList', () => {
     });
 
     it('Should display an error when REST route fails', async () => {
-        getLabeledItems.and.returnValue(Promise.reject({
-            response: {
-                json: () => {
-                    return {
-                        error: {
-                            code: 404,
-                            message: 'Not Found'
-                        }
-                    }
-                }
+        const error_json = {
+            error: {
+                code: 404,
+                message: 'Not Found'
             }
-        }));
+        };
+        mockFetchError(getLabeledItems, { error_json });
 
         const vm = new LabeledItemsListVueElement({
             propsData: {
-                dataLabelsId: "[1]",
-                dataProjectId: 101
+                labelsId: "[1]",
+                projectId: "101"
             }
         });
 
@@ -83,8 +78,8 @@ describe('LabeledItemsList', () => {
 
         const vm = new LabeledItemsListVueElement({
             propsData: {
-                dataLabelsId: "[1]",
-                dataProjectId: 101
+                labelsId: "[1]",
+                projectId: "101"
             }
         });
 
@@ -99,7 +94,7 @@ describe('LabeledItemsList', () => {
             labeled_items: [
                 {
                     title: 'test 1'
-                },{
+                }, {
                     title: 'test 2'
                 }
             ]
@@ -107,8 +102,8 @@ describe('LabeledItemsList', () => {
 
         const vm = new LabeledItemsListVueElement({
             propsData: {
-                dataLabelsId: "[3, 4]",
-                dataProjectId: 101
+                labelsId: "[3, 4]",
+                projectId: "101"
             }
         });
 
@@ -129,8 +124,8 @@ describe('LabeledItemsList', () => {
 
         const vm = new LabeledItemsListVueElement({
             propsData: {
-                dataLabelsId: "[3, 4]",
-                dataProjectId: 101
+                labelsId: "[3, 4]",
+                projectId: "101"
             }
         });
 
@@ -148,8 +143,8 @@ describe('LabeledItemsList', () => {
 
         const vm = new LabeledItemsListVueElement({
             propsData: {
-                dataLabelsId: "[3, 4]",
-                dataProjectId: 101
+                labelsId: "[3, 4]",
+                projectId: "101"
             }
         });
 
@@ -175,8 +170,8 @@ describe('LabeledItemsList', () => {
 
         const vm = new LabeledItemsListVueElement({
             propsData: {
-                dataLabelsId: "[3, 4]",
-                dataProjectId: 101
+                labelsId: "[3, 4]",
+                projectId: "101"
             }
         });
 
@@ -184,10 +179,10 @@ describe('LabeledItemsList', () => {
 
         await Vue.nextTick();
         expect(getLabeledItems.calls.count()).toEqual(1);
-        expect(getLabeledItems.calls.argsFor(0)).toEqual([101, [3, 4], 0, 50]);
+        expect(getLabeledItems.calls.argsFor(0)).toEqual(["101", [3, 4], 0, 50]);
 
         vm.loadMore();
         expect(getLabeledItems.calls.count()).toEqual(2);
-        expect(getLabeledItems.calls.argsFor(1)).toEqual([101, [3, 4], 50, 50]);
+        expect(getLabeledItems.calls.argsFor(1)).toEqual(["101", [3, 4], 50, 50]);
     });
 });
