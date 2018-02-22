@@ -10,18 +10,16 @@ const VueLoaderOptionsPlugin      = require('vue-loader-options-plugin');
 const manifest_data   = Object.create(null);
 const assets_dir_path = path.resolve(__dirname, '../assets');
 
+const babel_preset_env_ie_config = [BabelPresetEnv, {
+    targets: {
+        ie: 11
+    },
+    modules: false
+}];
+
 const babel_options = {
-    presets: [
-        [BabelPresetEnv, {
-            targets: {
-                ie: 11
-            },
-            modules: false
-        }]
-    ],
-    plugins: [
-        BabelPluginObjectRestSpread
-    ]
+    presets: [babel_preset_env_ie_config],
+    plugins: [BabelPluginObjectRestSpread]
 };
 
 const babel_rule = {
@@ -32,6 +30,15 @@ const babel_rule = {
             loader: 'babel-loader',
             options: babel_options
         }
+    ]
+};
+
+const po_rule = {
+    test: /\.po$/,
+    exclude: /node_modules/,
+    use: [
+        { loader: 'json-loader' },
+        { loader: 'po-gettext-loader' }
     ]
 };
 
@@ -137,7 +144,7 @@ const webpack_config_for_labels = {
     ]
 };
 
-const webpack_config_for_buring_parrot_code = {
+const webpack_config_for_burning_parrot_code = {
     entry: {
         'burning-parrot'       : './BurningParrot/index.js',
         'project-admin'        : './project/admin/index.js',
@@ -153,17 +160,10 @@ const webpack_config_for_buring_parrot_code = {
     module: {
         rules: [
             babel_rule,
+            po_rule,
             {
                 test: /\.mustache$/,
                 use: { loader: 'raw-loader' }
-            },
-            {
-                test: /\.po$/,
-                exclude: /node_modules/,
-                use: [
-                    { loader: 'json-loader' },
-                    { loader: 'po-gettext-loader' }
-                ]
             }
         ]
     },
@@ -187,22 +187,11 @@ const webpack_config_for_vue_components = {
     externals: {
         tlp: 'tlp'
     },
-    resolve: {
-        alias: {
-            'vue$': 'vue/dist/vue.esm.js'
-        }
-    },
     module: {
         rules: [
             babel_rule,
+            po_rule,
             {
-                test: /\.po$/,
-                exclude: /node_modules/,
-                use: [
-                    { loader: 'json-loader' },
-                    { loader: 'po-gettext-loader' }
-                ]
-            }, {
                 test: /\.vue$/,
                 use: [
                     {
@@ -236,20 +225,29 @@ if (process.env.NODE_ENV === 'production') {
         webpack_config_for_dashboards,
         webpack_config_for_labels,
         webpack_config_for_flaming_parrot_code,
-        webpack_config_for_buring_parrot_code,
+        webpack_config_for_burning_parrot_code,
         webpack_config_for_vue_components
     ];
-    optimized_configs.forEach(function (config) {
-        return config.plugins = config.plugins.concat([
+    optimized_configs.forEach(config => {
+        config.plugins = config.plugins.concat([
             new webpack.optimize.ModuleConcatenationPlugin()
         ]);
     });
+    webpack_config_for_vue_components.plugins = webpack_config_for_vue_components.plugins.concat([
+        new webpack.DefinePlugin({
+            'process.env': {
+                NODE_ENV: '"production"'
+            }
+        })
+    ]);
+} else if (process.env.NODE_ENV === 'watch') {
+    webpack_config_for_vue_components.devtool = 'eval';
 }
 
 module.exports = [
     webpack_config_for_dashboards,
     webpack_config_for_labels,
     webpack_config_for_flaming_parrot_code,
-    webpack_config_for_buring_parrot_code,
+    webpack_config_for_burning_parrot_code,
     webpack_config_for_vue_components
 ];

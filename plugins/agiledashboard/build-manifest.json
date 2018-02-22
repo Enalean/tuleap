@@ -79,7 +79,6 @@
     "components": [
         "plugins/agiledashboard/www/js/kanban",
         "plugins/agiledashboard/www/js/planning-v2",
-        "plugins/agiledashboard/www/js/permissions-per-group",
         "plugins/agiledashboard/www/js"
     ]
 }
