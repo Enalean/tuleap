@@ -113,7 +113,8 @@ class trackerPlugin extends Plugin {
         $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
 
         $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
-        $this->addHook('widgets');
+        $this->addHook(\Tuleap\Widget\Event\GetUserWidgetList::NAME);
+        $this->addHook(\Tuleap\Widget\Event\GetProjectWidgetList::NAME);
         $this->addHook(AtUserCreationDefaultWidgetsCreator::DEFAULT_WIDGETS_FOR_NEW_USER);
 
         $this->addHook('project_is_deleted',                  'project_is_deleted',                false);
@@ -682,23 +683,15 @@ class trackerPlugin extends Plugin {
         $params['list_of_icon_unicodes'][$this->getServiceShortname()] = TRACKER_SERVICE_ICON;
     }
 
-    /**
-     * Hook: event raised when user lists all available widget
-     *
-     * @param Array $params
-     */
-    public function widgets($params)
+    public function getUserWidgetList(\Tuleap\Widget\Event\GetUserWidgetList $event)
     {
-        switch ($params['owner_type']) {
-            case UserDashboardController::LEGACY_DASHBOARD_TYPE:
-                $params['codendi_widgets'][] = Tracker_Widget_MyArtifacts::ID;
-                $params['codendi_widgets'][] = Tracker_Widget_MyRenderer::ID;
-                break;
+        $event->addWidget(Tracker_Widget_MyArtifacts::ID);
+        $event->addWidget(Tracker_Widget_MyRenderer::ID);
+    }
 
-            case ProjectDashboardController::LEGACY_DASHBOARD_TYPE:
-                $params['codendi_widgets'][] = Tracker_Widget_ProjectRenderer::ID;
-                break;
-        }
+    public function getProjectWidgetList(\Tuleap\Widget\Event\GetProjectWidgetList $event)
+    {
+        $event->addWidget(Tracker_Widget_ProjectRenderer::ID);
     }
 
     public function uninstall()

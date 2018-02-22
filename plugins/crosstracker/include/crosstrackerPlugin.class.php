@@ -44,7 +44,8 @@ class crosstrackerPlugin extends Plugin
     {
         if (defined('TRACKER_BASE_URL')) {
             $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
-            $this->addHook('widgets');
+            $this->addHook(\Tuleap\Widget\Event\GetUserWidgetList::NAME);
+            $this->addHook(\Tuleap\Widget\Event\GetProjectWidgetList::NAME);
             $this->addHook(Event::REST_RESOURCES);
             $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
             $this->addHook(ProjectDeletionEvent::NAME);
@@ -74,17 +75,14 @@ class crosstrackerPlugin extends Plugin
         return $this->pluginInfo;
     }
 
-    public function widgets(array $params)
+    public function getUserWidgetList(\Tuleap\Widget\Event\GetUserWidgetList $event)
     {
-        switch ($params['owner_type']) {
-            case UserDashboardController::LEGACY_DASHBOARD_TYPE:
-                $params['codendi_widgets'][] = ProjectCrossTrackerSearch::NAME;
-                break;
+        $event->addWidget(ProjectCrossTrackerSearch::NAME);
+    }
 
-            case ProjectDashboardController::LEGACY_DASHBOARD_TYPE:
-                $params['codendi_widgets'][] = ProjectCrossTrackerSearch::NAME;
-                break;
-        }
+    public function getProjectWidgetList(\Tuleap\Widget\Event\GetProjectWidgetList $event)
+    {
+        $event->addWidget(ProjectCrossTrackerSearch::NAME);
     }
 
     public function widgetInstance(\Tuleap\Widget\Event\GetWidget $get_widget_event)

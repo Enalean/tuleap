@@ -97,7 +97,8 @@ class AgileDashboardPlugin extends Plugin {
             $this->addHook('cssfile', 'cssfile', false);
             $this->addHook('javascript_file');
             $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
-            $this->addHook('widgets');
+            $this->addHook(\Tuleap\Widget\Event\GetUserWidgetList::NAME);
+            $this->addHook(\Tuleap\Widget\Event\GetProjectWidgetList::NAME);
             $this->addHook(TRACKER_EVENT_INCLUDE_CSS_FILE);
             $this->addHook(TRACKER_EVENT_TRACKERS_DUPLICATED, 'tracker_event_trackers_duplicated', false);
             $this->addHook(TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION, 'tracker_event_build_artifact_form_action', false);
@@ -453,14 +454,14 @@ class AgileDashboardPlugin extends Plugin {
         }
     }
 
-    public function widgets($params)
+    public function getUserWidgetList(\Tuleap\Widget\Event\GetUserWidgetList $event)
     {
-        if ($params['owner_type'] == UserDashboardController::LEGACY_DASHBOARD_TYPE) {
-            $params['codendi_widgets'][] = MyKanban::NAME;
-        }
-        if ($params['owner_type'] == ProjectDashboardController::LEGACY_DASHBOARD_TYPE) {
-            $params['codendi_widgets'][] = ProjectKanban::NAME;
-        }
+        $event->addWidget(MyKanban::NAME);
+    }
+
+    public function getProjectWidgetList(\Tuleap\Widget\Event\GetProjectWidgetList $event)
+    {
+        $event->addWidget(ProjectKanban::NAME);
     }
 
     private function redirectOrAppend(Codendi_Request $request, Tracker_Artifact $artifact, Tracker_Artifact_Redirect $redirect, $requested_planning, Tracker_Artifact $last_milestone_artifact = null) {

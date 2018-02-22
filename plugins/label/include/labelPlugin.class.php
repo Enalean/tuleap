@@ -42,7 +42,7 @@ class labelPlugin extends Plugin
 
     public function getHooksAndCallbacks()
     {
-        $this->addHook('widgets');
+        $this->addHook(\Tuleap\Widget\Event\GetProjectWidgetList::NAME);
         $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(Event::REST_PROJECT_RESOURCES);
@@ -65,13 +65,9 @@ class labelPlugin extends Plugin
         return $this->pluginInfo;
     }
 
-    public function widgets(array $params)
+    public function getProjectWidgetList(\Tuleap\Widget\Event\GetProjectWidgetList $event)
     {
-        switch ($params['owner_type']) {
-            case ProjectDashboardController::LEGACY_DASHBOARD_TYPE:
-                $params['codendi_widgets'][] = ProjectLabeledItems::NAME;
-                break;
-        }
+        $event->addWidget(ProjectLabeledItems::NAME);
     }
 
     public function widgetInstance(\Tuleap\Widget\Event\GetWidget $get_widget_event)

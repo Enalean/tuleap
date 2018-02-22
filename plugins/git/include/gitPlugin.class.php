@@ -191,7 +191,8 @@ class GitPlugin extends Plugin
 
         $this->addHook('logs_daily',                                       'logsDaily',                                   false);
         $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
-        $this->addHook('widgets',                                          'widgets',                                     false);
+        $this->addHook(\Tuleap\Widget\Event\GetUserWidgetList::NAME);
+        $this->addHook(\Tuleap\Widget\Event\GetProjectWidgetList::NAME);
         $this->addHook('show_pending_documents',                           'showArchivedRepositories',                    false);
 
         $this->addHook('SystemEvent_USER_RENAME', 'systemevent_user_rename');
@@ -1433,26 +1434,19 @@ class GitPlugin extends Plugin
         }
     }
 
-    /**
-     * List plugin's widgets in customize menu
-     *
-     * @param Array $params List of widgets
-     *
-     * @return Void
-     */
-    public function widgets($params)
+    public function getUserWidgetList(\Tuleap\Widget\Event\GetUserWidgetList $event)
     {
-        if ($params['owner_type'] == UserDashboardController::LEGACY_DASHBOARD_TYPE) {
-            $params['codendi_widgets'][] = 'plugin_git_user_pushes';
-        }
+        $event->addWidget('plugin_git_user_pushes');
+    }
+
+    public function getProjectWidgetList(\Tuleap\Widget\Event\GetProjectWidgetList $event)
+    {
         $request = HTTPRequest::instance();
         $groupId = $request->get('group_id');
         $pm      = ProjectManager::instance();
         $project = $pm->getProject($groupId);
         if ($project->usesService(GitPlugin::SERVICE_SHORTNAME)) {
-            if ($params['owner_type'] == ProjectDashboardController::LEGACY_DASHBOARD_TYPE) {
-                $params['codendi_widgets'][] = 'plugin_git_project_pushes';
-            }
+            $event->addWidget('plugin_git_project_pushes');
         }
     }
 

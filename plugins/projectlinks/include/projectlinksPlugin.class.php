@@ -48,7 +48,7 @@ class ProjectLinksPlugin extends Plugin {
 
         $this->addHook('cssfile',         'cssfile',         false);
         $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
-        $this->addHook('widgets',         'widgets',         false);
+        $this->addHook(\Tuleap\Widget\Event\GetProjectWidgetList::NAME);
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(NavigationPresenter::NAME);
     }
@@ -992,10 +992,9 @@ class ProjectLinksPlugin extends Plugin {
         }
     }
 
-    function widgets($params) {
-        if ($params['owner_type'] == ProjectDashboardController::LEGACY_DASHBOARD_TYPE) {
-            $params['codendi_widgets'][] = 'projectlinkshomepage';
-        }
+    public function getProjectWidgetList(\Tuleap\Widget\Event\GetProjectWidgetList $event)
+    {
+        $event->addWidget('projectlinkshomepage');
     }
 
     public function uninstall()

@@ -88,7 +88,8 @@ class DocmanPlugin extends Plugin
         $this->addHook(Event::SERVICE_IS_USED);
         $this->addHook('soap',                              'soap',                              false);
         $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
-        $this->addHook('widgets',                           'widgets',                           false);
+        $this->addHook(\Tuleap\Widget\Event\GetUserWidgetList::NAME);
+        $this->addHook(\Tuleap\Widget\Event\GetProjectWidgetList::NAME);
         $this->addHook('codendi_daily_start',               'codendiDaily',                      false);
         $this->addHook('wiki_page_updated',                 'wiki_page_updated',                 false);
         $this->addHook('wiki_before_content',               'wiki_before_content',               false);
@@ -337,16 +338,16 @@ class DocmanPlugin extends Plugin
         }
     }
 
-    public function widgets($params)
+    public function getUserWidgetList(\Tuleap\Widget\Event\GetUserWidgetList $event)
     {
-        if ($params['owner_type'] == UserDashboardController::LEGACY_DASHBOARD_TYPE) {
-            $params['codendi_widgets'][] = 'plugin_docman_mydocman';
-            $params['codendi_widgets'][] = 'plugin_docman_mydocman_search';
-            $params['codendi_widgets'][] = 'plugin_docman_my_embedded';
-        }
-        if ($params['owner_type'] == ProjectDashboardController::LEGACY_DASHBOARD_TYPE) {
-            $params['codendi_widgets'][] = 'plugin_docman_project_embedded';
-        }
+        $event->addWidget('plugin_docman_mydocman');
+        $event->addWidget('plugin_docman_mydocman_search');
+        $event->addWidget('plugin_docman_my_embedded');
+    }
+
+    public function getProjectWidgetList(\Tuleap\Widget\Event\GetProjectWidgetList $event)
+    {
+        $event->addWidget('plugin_docman_project_embedded');
     }
 
     public function uninstall()

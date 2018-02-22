@@ -68,7 +68,8 @@ class GraphOnTrackersV5Plugin extends Plugin {
 
             //Widgets
             $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
-            $this->addHook('widgets');
+            $this->addHook(\Tuleap\Widget\Event\GetUserWidgetList::NAME);
+            $this->addHook(\Tuleap\Widget\Event\GetProjectWidgetList::NAME);
 
             $this->addHook('graphontrackersv5_load_chart_factories', 'graphontrackersv5_load_chart_factories', false);
 
@@ -227,24 +228,14 @@ class GraphOnTrackersV5Plugin extends Plugin {
         }
     }
 
-    /**
-     * Ask for provided widgets.
-     * @param (in) string 'owner_type' => the type of the "owner" (user, project, ...)
-     * @param (in/out) array 'codendi_widgets' => a collection of 'internal' widget names
-     * @param (in/out) array 'external_widgets' => the same but external
-     */
-    public function widgets($params)
+    public function getUserWidgetList(\Tuleap\Widget\Event\GetUserWidgetList $event)
     {
-        switch ($params['owner_type']) {
-            case UserDashboardController::LEGACY_DASHBOARD_TYPE:
-                $params['codendi_widgets'][] = 'my_plugin_graphontrackersv5_chart';
-                break;
-            case ProjectDashboardController::LEGACY_DASHBOARD_TYPE:
-                $params['codendi_widgets'][] = 'project_plugin_graphontrackersv5_chart';
-                break;
-            default:
-                break;
-        }
+        $event->addWidget('my_plugin_graphontrackersv5_chart');
+    }
+
+    public function getProjectWidgetList(\Tuleap\Widget\Event\GetProjectWidgetList $event)
+    {
+        $event->addWidget('project_plugin_graphontrackersv5_chart');
     }
 
     public function uninstall()

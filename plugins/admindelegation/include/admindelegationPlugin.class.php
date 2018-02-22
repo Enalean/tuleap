@@ -49,7 +49,7 @@ class AdminDelegationPlugin extends Plugin {
         $this->addHook('cssfile',                'cssFile',                false);
         $this->addHook('site_admin_option_hook', 'site_admin_option_hook', false);
         $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
-        $this->addHook('widgets',                'widgets',                false);
+        $this->addHook(\Tuleap\Widget\Event\GetUserWidgetList::NAME);
         $this->addHook(BurningParrotCompatiblePageEvent::NAME);
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
@@ -148,18 +148,16 @@ class AdminDelegationPlugin extends Plugin {
     /**
      * Hook: event raised when user lists all available widget
      *
-     * @param Array $params
+     * @param \Tuleap\Widget\Event\GetUserWidgetList $get_user_widget_list_event
      */
-    public function widgets($params) {
-        if ($params['owner_type'] == UserDashboardController::LEGACY_DASHBOARD_TYPE) {
-            if ($this->_userCanViewWidget('admindelegation')) {
-                include_once 'AdminDelegation_UserWidget.class.php';
-                $params['codendi_widgets'][] = 'admindelegation';
-            }
-            if ($this->_userCanViewWidget('admindelegation_projects')) {
-                include_once 'AdminDelegation_ShowProjectWidget.class.php';
-                $params['codendi_widgets'][] = 'admindelegation_projects';
-            }
+    public function getUserWidgetList(\Tuleap\Widget\Event\GetUserWidgetList $get_user_widget_list_event) {
+        if ($this->_userCanViewWidget('admindelegation')) {
+            include_once 'AdminDelegation_UserWidget.class.php';
+            $get_user_widget_list_event->addWidget('admindelegation');
+        }
+        if ($this->_userCanViewWidget('admindelegation_projects')) {
+            include_once 'AdminDelegation_ShowProjectWidget.class.php';
+            $get_user_widget_list_event->addWidget('admindelegation_projects');
         }
     }
 

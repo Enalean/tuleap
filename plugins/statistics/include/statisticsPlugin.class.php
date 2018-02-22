@@ -46,7 +46,7 @@ class StatisticsPlugin extends Plugin {
         $this->addHook('site_admin_option_hook',   'site_admin_option_hook', false);
         $this->addHook('root_daily_start',         'root_daily_start',       false);
         $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
-        $this->addHook('widgets',                  'widgets',                false);
+        $this->addHook(\Tuleap\Widget\Event\GetProjectWidgetList::NAME);
         $this->addHook('usergroup_data',           'usergroup_data',         false);
         $this->addHook('groupedit_data',           'groupedit_data',         false);
         $this->addHook(Event::WSDL_DOC2SOAP_TYPES, 'wsdl_doc2soap_types',    false);
@@ -219,17 +219,9 @@ class StatisticsPlugin extends Plugin {
         }
     }
 
-    /**
-     * Add the widget to the list
-     *
-     * @param Array $params params of the event
-     *
-     * @return void
-     */
-    function widgets($params) {
-        if ($params['owner_type'] == ProjectDashboardController::LEGACY_DASHBOARD_TYPE) {
-            $params['codendi_widgets'][] = 'plugin_statistics_projectstatistics';
-        }
+    public function getProjectWidgetList(\Tuleap\Widget\Event\GetProjectWidgetList $event)
+    {
+        $event->addWidget('plugin_statistics_projectstatistics');
     }
 
     public function uninstall()
