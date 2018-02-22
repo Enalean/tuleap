@@ -111,6 +111,7 @@ class XMLSvnExporterTest extends TuleapTestCase
     public function tearDown()
     {
         ForgeConfig::restore();
+        $this->zip->close();
         parent::tearDown();
     }
 
