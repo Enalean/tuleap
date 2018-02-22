@@ -24,6 +24,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\AllowedMetadata;
 use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\MetadataValueWrapperParameters;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFormatValidator;
@@ -45,7 +46,7 @@ class GreaterThanComparisonChecker extends ComparisonChecker
         }
 
         try {
-            parent::checkComparisonIsValid($metadata, $comparison);
+            $comparison->getValueWrapper()->accept($this, new MetadataValueWrapperParameters($metadata));
         } catch (DateToEmptyStringException $e) {
             throw new DateToEmptyStringComparisonException($metadata);
         } catch (DateToStringException $e) {

@@ -21,6 +21,7 @@
 namespace Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic;
 
 use Tuleap\CrossTracker\Report\Query\Advanced\AllowedMetadata;
+use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
@@ -32,6 +33,9 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\StatusOpenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFormatValidator;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateToStringException;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringAllowed;
 
 class ComparisonChecker implements ValueWrapperVisitor
 {
@@ -42,7 +46,11 @@ class ComparisonChecker implements ValueWrapperVisitor
      */
     public function checkComparisonIsValid(Metadata $metadata, Comparison $comparison)
     {
-        $comparison->getValueWrapper()->accept($this, new MetadataValueWrapperParameters($metadata));
+        try {
+            $comparison->getValueWrapper()->accept($this, new MetadataValueWrapperParameters($metadata));
+        } catch (DateToStringException $exception) {
+            throw new DateToStringComparisonException($metadata, $comparison->getValueWrapper()->getValue());
+        }
     }
 
     public function visitCurrentDateTimeValueWrapper(
@@ -56,6 +64,11 @@ class ComparisonChecker implements ValueWrapperVisitor
     {
         if ($parameters->getMetadata()->getName() === AllowedMetadata::STATUS) {
             throw new StatusToSimpleValueComparisonException($value_wrapper->getValue());
+        }
+
+        if ($parameters->getMetadata()->getName() === AllowedMetadata::SUBMITTED_ON) {
+            $date_validator = new DateFormatValidator(new EmptyStringAllowed(), DateFormat::DATETIME);
+            $date_validator->checkValueIsValid($value_wrapper->getValue());
         }
     }
 
