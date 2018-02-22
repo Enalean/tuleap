@@ -24,10 +24,13 @@ export {
 }
 
 async function getAgiledashboardPermissions(project_id, selected_ugroup_id) {
-    const url = '/plugins/agiledashboard/?group_id=' + project_id + '&action=permission-per-group' +
-        '&selected_ugroup_id=' + selected_ugroup_id;
-
-    const response = await get(url);
+    const response = await get('/plugins/agiledashboard/', {
+        params: {
+            group_id: project_id,
+            selected_ugroup_id: selected_ugroup_id,
+            action: 'permission-per-group',
+        }
+    });
 
     return await response.json();
 }
