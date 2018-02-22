@@ -39,10 +39,12 @@ use Tuleap\CrossTracker\Report\Query\Advanced\InvalidComparisonCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchablesCollectionBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\EqualComparisonChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\GreaterThanComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\MetadataChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\NotEqualComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\SemanticUsageChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\CrossTrackerExpertQueryReportDao;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\GreaterThanComparisonFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\SearchableVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\Description;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\EqualComparisonFromWhereBuilder;
@@ -144,7 +146,8 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                 )
             ),
             new EqualComparisonChecker(),
-            new NotEqualComparisonChecker()
+            new NotEqualComparisonChecker(),
+            new GreaterThanComparisonChecker()
         );
 
         $query_builder_visitor = new QueryBuilderVisitor(
@@ -162,6 +165,11 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                 new Description\NotEqualComparisonFromWhereBuilder(),
                 new Status\NotEqualComparisonFromWhereBuilder(),
                 new SubmittedOn\NotEqualComparisonFromWhereBuilder(
+                    new DateTimeValueRounder()
+                )
+            ),
+            new GreaterThanComparisonFromWhereBuilder(
+                new SubmittedOn\GreaterThanComparisonFromWhereBuilder(
                     new DateTimeValueRounder()
                 )
             )

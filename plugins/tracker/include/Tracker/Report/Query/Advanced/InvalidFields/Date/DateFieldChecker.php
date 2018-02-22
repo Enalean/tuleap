@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date;
 use Tracker_FormElement_Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldException;
 
 class DateFieldChecker implements InvalidFieldChecker
 {
@@ -41,12 +42,23 @@ class DateFieldChecker implements InvalidFieldChecker
         $this->values_extractor = $values_extractor;
     }
 
+    /**
+     * @param Comparison $comparison
+     * @param Tracker_FormElement_Field $field
+     * @throws InvalidFieldException
+     */
     public function checkFieldIsValidForComparison(Comparison $comparison, Tracker_FormElement_Field $field)
     {
         $date_values = $this->values_extractor->extractCollectionOfValues($comparison->getValueWrapper(), $field);
 
         foreach ($date_values as $value) {
-            $this->validator->checkValueIsValid($comparison, $field, $value);
+            try {
+                $this->validator->checkValueIsValid($value);
+            } catch (DateToEmptyStringException $exception) {
+                throw new DateToEmptyStringComparisonException($comparison, $field);
+            } catch (DateToStringException $exception) {
+                throw new DateToStringComparisonException($field, $value);
+            }
         }
     }
 }
