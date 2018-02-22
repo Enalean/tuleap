@@ -148,7 +148,7 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget {
             $this->content_id = $id;
         }
     }
-    function create(&$request) {
+    function create(Codendi_Request $request) {
         $content_id = false;
         $vId = new Valid_Uint('chart_id');
         $vId->setErrorMessage("Can't add empty chart id");

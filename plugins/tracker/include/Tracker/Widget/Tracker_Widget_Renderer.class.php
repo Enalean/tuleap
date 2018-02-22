@@ -166,7 +166,7 @@ abstract class Tracker_Widget_Renderer extends Widget {
         }
     }
 
-    function create($request) {
+    function create(Codendi_Request $request) {
         $content_id = false;
         $vId = new Valid_Uint('renderer_id');
         $vId->setErrorMessage("Can't add empty renderer id");

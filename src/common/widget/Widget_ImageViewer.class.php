@@ -150,7 +150,7 @@ class Widget_ImageViewer extends Widget {
             $this->content_id = $id;
         }
     }
-    function create(&$request) {
+    function create(Codendi_Request $request) {
         $content_id = false;
         $vUrl = new Valid_HTTPURI('url');
         $vUrl->setErrorMessage($GLOBALS['Language']->getText('widget_imageviewer', 'invalid_url'));
