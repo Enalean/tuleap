@@ -8,7 +8,7 @@ _setupDatabase() {
         _warningMessage "Database \033[1m${3}\033[0m already exists"
 
         if [ ${assumeyes} = "false" ]; then
-            _questionMessage "Do you want to dump/drop database? [y/N] "
+            _questionMessage "Do you want to dump and drop database? [y/N] "
             read answer
             local answer=${answer:-"n"}
 
@@ -29,7 +29,8 @@ _setupDatabase() {
                 "Dump \033[1m${3}\033[0m database to /tmp/${3}.$(${date} \
                 +%Y-%m-%d_%H-%M-%S).sql.gz"
 
-            ${mysqldump} --user="${1}" \
+            ${mysqldump} --host="${mysql_server:-localhost}" \
+                         --user="${1}" \
                          --password="${2}" \
                          ${3} 2> >(_logCatcher) | ${gzip} > \
                          /tmp/${3}.$(${date} +%Y-%m-%d_%H-%M-%S).sql.gz
