@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,8 @@
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
+use PFUser;
+use Tracker;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitable;
 use Tuleap\Tracker\Report\Query\Advanced\IBuildInvalidSearchablesCollection;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollection;
@@ -31,14 +33,22 @@ class InvalidSearchablesCollectionBuilder implements IBuildInvalidSearchablesCol
      */
     private $invalid_comparison_collector;
     /**
-     * @var int[]
+     * @var Tracker[]
      */
-    private $trackers_id;
+    private $trackers;
+    /**
+     * @var PFUser
+     */
+    private $user;
 
-    public function __construct(InvalidComparisonCollectorVisitor $invalid_comparison_collector, array $trackers_id)
-    {
+    public function __construct(
+        InvalidComparisonCollectorVisitor $invalid_comparison_collector,
+        array $trackers,
+        PFUser $user
+    ) {
         $this->invalid_comparison_collector = $invalid_comparison_collector;
-        $this->trackers_id                  = $trackers_id;
+        $this->trackers                     = $trackers;
+        $this->user                         = $user;
     }
 
     /**
@@ -51,7 +61,8 @@ class InvalidSearchablesCollectionBuilder implements IBuildInvalidSearchablesCol
         $this->invalid_comparison_collector->collectErrors(
             $parsed_expert_query,
             $invalid_searchables_collection,
-            $this->trackers_id
+            $this->trackers,
+            $this->user
         );
 
         return $invalid_searchables_collection;

@@ -24,6 +24,8 @@ use Exception;
 use Luracast\Restler\RestException;
 use PFUser;
 use ProjectManager;
+use Tracker;
+use Tracker_FormElementFactory;
 use Tracker_Semantic_DescriptionDao;
 use Tracker_Semantic_StatusDao;
 use Tracker_Semantic_TitleDao;
@@ -43,7 +45,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\GreaterThanCompari
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\GreaterThanOrEqualComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\MetadataChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\NotEqualComparisonChecker;
-use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\SemanticUsageChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\MetadataUsageChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\CrossTrackerExpertQueryReportDao;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\GreaterThanComparisonFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\GreaterThanOrEqualComparisonFromWhereBuilder;
@@ -141,7 +143,8 @@ class CrossTrackerReportsResource extends AuthenticatedResource
         $this->invalid_comparisons_collector = new InvalidComparisonCollectorVisitor(
             new InvalidSearchableCollectorVisitor(),
             new MetadataChecker(
-                new SemanticUsageChecker(
+                new MetadataUsageChecker(
+                    Tracker_FormElementFactory::instance(),
                     new Tracker_Semantic_TitleDao(),
                     new Tracker_Semantic_DescriptionDao(),
                     new Tracker_Semantic_StatusDao()
@@ -347,10 +350,11 @@ class CrossTrackerReportsResource extends AuthenticatedResource
 
         $current_user = $this->user_manager->getCurrentUser();
         try {
-            $this->checkQueryIsValid($trackers_id, $expert_query);
+            $trackers  = $this->cross_tracker_extractor->extractTrackers($trackers_id);
+
+            $this->checkQueryIsValid($trackers, $expert_query, $current_user);
 
             $report          = $this->getReport($id);
-            $trackers        = $this->cross_tracker_extractor->extractTrackers($trackers_id);
             $expected_report = new CrossTrackerReport($report->getId(), $expert_query, $trackers);
 
             $this->checkUserIsAllowedToSeeReport($current_user, $expected_report);
@@ -367,7 +371,13 @@ class CrossTrackerReportsResource extends AuthenticatedResource
         return $this->getReportRepresentation($expected_report);
     }
 
-    private function checkQueryIsValid(array $trackers_id, $expert_query)
+    /**
+     * @param Tracker[] $trackers
+     * @param $expert_query
+     * @param PFUser $user
+     * @throws RestException
+     */
+    private function checkQueryIsValid(array $trackers, $expert_query, PFUser $user)
     {
         if ($expert_query === '') {
             return;
@@ -376,7 +386,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
         try {
             $this->validator->validateExpertQuery(
                 $expert_query,
-                new InvalidSearchablesCollectionBuilder($this->invalid_comparisons_collector, $trackers_id)
+                new InvalidSearchablesCollectionBuilder($this->invalid_comparisons_collector, $trackers, $user)
             );
         } catch (SearchablesDoNotExistException $exception) {
             throw new RestException(400, $exception->getMessage());

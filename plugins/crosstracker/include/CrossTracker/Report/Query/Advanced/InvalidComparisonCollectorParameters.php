@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,24 +19,45 @@
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
+use PFUser;
+use Tracker;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\VisitorParameters;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollection;
 
 class InvalidComparisonCollectorParameters implements VisitorParameters
 {
     /**
+     * @var int[]
+     */
+    private $tracker_ids;
+    /**
      * @var InvalidSearchablesCollection
      */
     private $invalid_searchables_collection;
     /**
-     * @var array
+     * @var Tracker[]
      */
-    private $trackers_id;
+    private $trackers;
+    /**
+     * @var PFUser
+     */
+    private $user;
 
-    public function __construct(InvalidSearchablesCollection $invalid_searchables_collection, array $trackers_id)
-    {
+    public function __construct(
+        InvalidSearchablesCollection $invalid_searchables_collection,
+        array $trackers,
+        PFUser $user
+    ) {
         $this->invalid_searchables_collection = $invalid_searchables_collection;
-        $this->trackers_id                    = $trackers_id;
+        $this->trackers                       = $trackers;
+        $this->user                           = $user;
+
+        $this->tracker_ids = array_map(
+            function (Tracker $tracker) {
+                return $tracker->getId();
+            },
+            $trackers
+        );
     }
 
     /**
@@ -48,10 +69,26 @@ class InvalidComparisonCollectorParameters implements VisitorParameters
     }
 
     /**
-     * @return array
+     * @return Tracker[]
      */
-    public function getTrackersId()
+    public function getTrackers()
     {
-        return $this->trackers_id;
+        return $this->trackers;
+    }
+
+    /**
+     * @return PFUser
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getTrackerIds()
+    {
+        return $this->tracker_ids;
     }
 }

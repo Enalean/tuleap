@@ -769,7 +769,7 @@ class Tracker_FormElement_Field_Date_RESTTests extends TuleapTestCase {
 
         $this->expectException('Tracker_FormElement_RESTValueByField_NotImplementedException');
 
-        $value = 'some_value';
+        $value = array('some_value');
 
         $field->getFieldDataFromRESTValueByField($value);
     }

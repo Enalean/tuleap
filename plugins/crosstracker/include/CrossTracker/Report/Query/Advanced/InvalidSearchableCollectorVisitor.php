@@ -53,7 +53,7 @@ class InvalidSearchableCollectorVisitor implements Visitor
             $parameters->getMetadataChecker()->checkMetadataIsValid(
                 $metadata,
                 $parameters->getComparison(),
-                $parameters->getInvalidSearchablesCollectorParameters()->getTrackersId(),
+                $parameters->getInvalidSearchablesCollectorParameters(),
                 $parameters->getComparisonChecker()
             );
         } catch (InvalidSemanticComparisonException $exception) {
