@@ -24,9 +24,12 @@ export {
 }
 
 async function getSVNPermissions(project_id) {
-    const url = '/plugins/svn?group_id=' + project_id + '&action=permission-per-group';
-
-    const response = await get(url);
+    const response = await get('/plugins/svn/', {
+        params: {
+            group_id: project_id,
+            action: 'permission-per-group',
+        }
+    });
 
     return await response.json();
 }

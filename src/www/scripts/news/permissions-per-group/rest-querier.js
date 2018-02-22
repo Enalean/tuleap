@@ -28,12 +28,13 @@ export {
 }
 
 async function getNewsPermissions(project_id, selected_ugroup_id) {
-    const url = '/new/news_permissions_per_group.php/?group_id='
-        + project_id
-        + '&selected_ugroup_id='
-        + selected_ugroup_id;
+    const response = await get('/new/news_permissions_per_group.php/', {
+        params: {
+            group_id: project_id,
+            selected_ugroup_id: selected_ugroup_id
+        }
+    });
 
-    const response = await get(url);
 
     return await response.json();
 }
