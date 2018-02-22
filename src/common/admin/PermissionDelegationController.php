@@ -250,6 +250,7 @@ class Admin_PermissionDelegationController {
             $current_group_presenter
         );
 
+        $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/admin/permission-delegation.js');
         $renderer = new AdminPageRenderer();
         $renderer->renderANoFramedPresenter(
             $GLOBALS['Language']->getText('admin_permission_delegation', 'page_title'),
