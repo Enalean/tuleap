@@ -23,6 +23,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\ComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\EqualComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\GreaterThanComparisonChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\GreaterThanOrEqualComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\ICheckMetadataForAComparison;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\MetadataChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\NotEqualComparisonChecker;
@@ -61,18 +62,23 @@ class InvalidComparisonCollectorVisitor implements Visitor
     /** @var GreaterThanComparisonChecker */
     private $greater_than_comparison_checker;
 
+    /** @var GreaterThanOrEqualComparisonChecker */
+    private $greater_than_or_equal_comparison_checker;
+
     public function __construct(
         InvalidSearchableCollectorVisitor $invalid_searchable_collector_visitor,
         MetadataChecker $metadata_checker,
         EqualComparisonChecker $equal_comparison_checker,
         NotEqualComparisonChecker $not_equal_comparison_checker,
-        GreaterThanComparisonChecker $greater_than_comparison_checker
+        GreaterThanComparisonChecker $greater_than_comparison_checker,
+        GreaterThanOrEqualComparisonChecker $greater_than_or_equal_comparison_checker
     ) {
-        $this->invalid_searchable_collector_visitor = $invalid_searchable_collector_visitor;
-        $this->metadata_checker                     = $metadata_checker;
-        $this->equal_comparison_checker             = $equal_comparison_checker;
-        $this->not_equal_comparison_checker         = $not_equal_comparison_checker;
-        $this->greater_than_comparison_checker      = $greater_than_comparison_checker;
+        $this->invalid_searchable_collector_visitor     = $invalid_searchable_collector_visitor;
+        $this->metadata_checker                         = $metadata_checker;
+        $this->equal_comparison_checker                 = $equal_comparison_checker;
+        $this->not_equal_comparison_checker             = $not_equal_comparison_checker;
+        $this->greater_than_comparison_checker          = $greater_than_comparison_checker;
+        $this->greater_than_or_equal_comparison_checker = $greater_than_or_equal_comparison_checker;
     }
 
     public function collectErrors(
@@ -125,7 +131,12 @@ class InvalidComparisonCollectorVisitor implements Visitor
 
     public function visitGreaterThanOrEqualComparison(GreaterThanOrEqualComparison $comparison, InvalidComparisonCollectorParameters $parameters)
     {
-        $this->addUnsupportedComparisonError($parameters, ">=");
+        $this->visitComparison(
+            $comparison,
+            $this->metadata_checker,
+            $this->greater_than_or_equal_comparison_checker,
+            $parameters
+        );
     }
 
     public function visitBetweenComparison(BetweenComparison $comparison, InvalidComparisonCollectorParameters $parameters)

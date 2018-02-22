@@ -29,10 +29,8 @@ msgid "%s cannot be compared to OPEN()."
 msgstr "%s ne peut pas être comparé à OPEN()."
 
 #, php-format
-msgid "%s cannot be compared to the empty string with > operator."
-msgstr ""
-"%s ne peut pas être comparé à une chaîne vide avec "
-"l'opérateur >."
+msgid "%s cannot be compared to the empty string with %s operator."
+msgstr "%s ne peut pas être comparé à une chaîne vide avec l'opérateur %s."
 
 #, php-format
 msgid "%s cannot be compared to the string value '%s'."

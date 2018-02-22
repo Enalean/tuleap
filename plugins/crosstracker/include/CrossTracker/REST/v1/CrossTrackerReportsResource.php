@@ -40,11 +40,13 @@ use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchablesCollectionBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\EqualComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\GreaterThanComparisonChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\GreaterThanOrEqualComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\MetadataChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\NotEqualComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\SemanticUsageChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\CrossTrackerExpertQueryReportDao;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\GreaterThanComparisonFromWhereBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\GreaterThanOrEqualComparisonFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\SearchableVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\Description;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\EqualComparisonFromWhereBuilder;
@@ -147,7 +149,8 @@ class CrossTrackerReportsResource extends AuthenticatedResource
             ),
             new EqualComparisonChecker(),
             new NotEqualComparisonChecker(),
-            new GreaterThanComparisonChecker()
+            new GreaterThanComparisonChecker(),
+            new GreaterThanOrEqualComparisonChecker()
         );
 
         $query_builder_visitor = new QueryBuilderVisitor(
@@ -170,6 +173,11 @@ class CrossTrackerReportsResource extends AuthenticatedResource
             ),
             new GreaterThanComparisonFromWhereBuilder(
                 new SubmittedOn\GreaterThanComparisonFromWhereBuilder(
+                    new DateTimeValueRounder()
+                )
+            ),
+            new GreaterThanOrEqualComparisonFromWhereBuilder(
+                new SubmittedOn\GreaterThanOrEqualComparisonFromWhereBuilder(
                     new DateTimeValueRounder()
                 )
             )

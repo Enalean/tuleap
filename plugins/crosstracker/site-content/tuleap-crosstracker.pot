@@ -15,7 +15,7 @@ msgid "%s cannot be compared to OPEN()."
 msgstr ""
 
 #, php-format
-msgid "%s cannot be compared to the empty string with > operator."
+msgid "%s cannot be compared to the empty string with %s operator."
 msgstr ""
 
 #, php-format

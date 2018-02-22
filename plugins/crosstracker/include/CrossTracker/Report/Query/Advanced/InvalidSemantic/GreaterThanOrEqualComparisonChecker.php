@@ -20,17 +20,7 @@
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic;
 
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
-
-class DateToEmptyStringComparisonException extends InvalidSemanticComparisonException
+class GreaterThanOrEqualComparisonChecker extends GreaterThanComparisonChecker
 {
-    public function __construct(Metadata $metadata, $operator)
-    {
-        $message = sprintf(
-            dgettext("tuleap-crosstracker", "%s cannot be compared to the empty string with %s operator."),
-            $metadata->getName(),
-            $operator
-        );
-        parent::__construct($message);
-    }
+    const OPERATOR = '>=';
 }

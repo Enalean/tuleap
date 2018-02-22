@@ -34,6 +34,8 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringForbidden;
 
 class GreaterThanComparisonChecker extends ComparisonChecker
 {
+    const OPERATOR = '>';
+
     /**
      * @param Metadata $metadata
      * @param Comparison $comparison
@@ -48,7 +50,7 @@ class GreaterThanComparisonChecker extends ComparisonChecker
         try {
             $comparison->getValueWrapper()->accept($this, new MetadataValueWrapperParameters($metadata));
         } catch (DateToEmptyStringException $e) {
-            throw new DateToEmptyStringComparisonException($metadata);
+            throw new DateToEmptyStringComparisonException($metadata, static::OPERATOR);
         } catch (DateToStringException $e) {
             throw new DateToStringComparisonException($metadata, $comparison->getValueWrapper()->getValue());
         }
