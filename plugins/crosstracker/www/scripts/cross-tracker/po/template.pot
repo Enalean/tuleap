@@ -4,6 +4,9 @@ msgstr ""
 msgid "Allowed fields"
 msgstr ""
 
+msgid "An error occured"
+msgstr ""
+
 msgid "Artifact"
 msgstr ""
 
