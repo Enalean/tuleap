@@ -1,3 +1,13 @@
+_checkArgument() {
+    # ${1}: option name
+    # ${2}: option value
+
+    if [ -z "${2}" ]; then
+        _errorMessage "${1//--} is not defined"
+        exit 1
+    fi
+}
+
 _checkCommand() {
     for c in ${cmd[@]}; do
         if [ ! -f ${c} ]; then
@@ -31,7 +41,13 @@ _checkLogFile() {
 }
 
 _checkMandatoryOptions() {
-    local -a mandatoryOptions=('\--server-name=' '\--mysql-server=')
+    if [ "${mysql_password:-NULL}" = "NULL" -a "${mysql_server,,}" = "localhost" ] || \
+        [ "${mysql_password:-NULL}" = "NULL" -a "${mysql_server}" = "127.0.0.1" ]; then
+        local -a mandatoryOptions=('\--server-name=' '\--mysql-server=')
+    else
+        local -a mandatoryOptions=('\--server-name=' '\--mysql-server='
+                               '\--mysql-password=')
+    fi
 
     for option in ${mandatoryOptions[@]}; do
         if ! ${printf} "%s" ${@} | ${grep} --silent ${option}; then
@@ -99,5 +115,13 @@ _checkSeLinux() {
         exit 1
     else
         _infoMessage "SELinux in $(${getenforce}) mode"
+    fi
+}
+
+_checkWebServerIp() {
+    if [ "${mysql_server,,}" != "localhost" -a "${mysql_server}" != "127.0.0.1" -a "${web_server_ip:-NULL}" = "NULL" ]; then
+       _errorMessage "You are running Tuleap with a remote mysql server"
+       _errorMessage "You have to define the web server IP with --web-server-ip option"
+       exit 1
     fi
 }

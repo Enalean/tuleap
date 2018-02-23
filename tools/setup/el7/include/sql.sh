@@ -32,9 +32,7 @@ _sqlAllPrivileges() {
     # ${3}: password
 
     ${cat} << EOSQL
-GRANT ALL PRIVILEGES on *.* to '${mysql_user}'@'${2}' IDENTIFIED BY '${mysql_password}';
 GRANT ALL PRIVILEGES ON tuleap.* TO '${1}'@'${2}' IDENTIFIED BY '${3}';
-GRANT ALL PRIVILEGES ON \`plugin_mediawiki_%\` . * TO '${1}'@'${2}' IDENTIFIED BY '${3}';
 FLUSH PRIVILEGES;
 EOSQL
 }
