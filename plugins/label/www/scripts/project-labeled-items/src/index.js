@@ -21,14 +21,16 @@ import Vue                  from 'vue';
 import LabeledItemsList     from './LabeledItemsList.vue';
 import { gettext_provider } from './gettext-provider.js';
 
-const widgets       = document.getElementsByClassName("labeled-items-widget");
-const RootComponent = Vue.extend(LabeledItemsList);
-
-for (const widget of widgets) {
-    const locale = widget.dataset.locale;
+document.addEventListener('DOMContentLoaded', () => {
+    const locale = document.body.dataset.userLocale;
     gettext_provider.setLocale(locale);
+    const widgets       = document.getElementsByClassName("labeled-items-widget");
+    const RootComponent = Vue.extend(LabeledItemsList);
 
-    new RootComponent({
-        propsData: { ...widget.dataset }
-    }).$mount(widget);
-}
+    const widgets_array = [...widgets];
+    for (const widget of widgets_array) {
+        new RootComponent({
+            propsData: { ...widget.dataset }
+        }).$mount(widget);
+    }
+});

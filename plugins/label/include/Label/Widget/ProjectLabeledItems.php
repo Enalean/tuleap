@@ -121,11 +121,10 @@ class ProjectLabeledItems extends Widget
     {
         $config_labels = $this->config_retriever->getLabelsConfig($this->content_id);
         $project       = $this->getProject();
-        $request       = HTTPRequest::instance();
 
         return $this->renderer->renderToString(
             'project-labeled-items',
-            new ProjectLabeledItemsPresenter($project, $request->getCurrentUser(), $config_labels)
+            new ProjectLabeledItemsPresenter($project, $config_labels)
         );
     }
 
