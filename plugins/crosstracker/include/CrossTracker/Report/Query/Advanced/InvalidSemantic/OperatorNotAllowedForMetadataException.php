@@ -22,7 +22,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic;
 
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
-class GreaterOrLesserThanNotAllowedForMetadataException extends InvalidSemanticComparisonException
+class OperatorNotAllowedForMetadataException extends InvalidSemanticComparisonException
 {
     public function __construct(Metadata $metadata, $operator)
     {
