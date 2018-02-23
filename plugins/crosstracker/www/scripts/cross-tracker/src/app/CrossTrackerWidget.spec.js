@@ -173,6 +173,23 @@ describe("CrossTrackerWidget", () => {
                 expect(vm.error_message).toEqual(i18n_error_message);
             });
         });
+
+        it("When there is an error in REST error, a generic error message will be shown", async () => {
+            getReport.and.returnValue(Promise.reject({
+                response: {
+                    json() {
+                        return Promise.reject();
+                    }
+                }
+            }));
+            const vm = instantiateComponent();
+
+            vm.loadBackendReport().then(() => {
+                fail();
+            }, () => {
+                expect(vm.error_message).toEqual('An error occured');
+            });
+        });
     });
 
     describe("reportSaved() -", () => {
