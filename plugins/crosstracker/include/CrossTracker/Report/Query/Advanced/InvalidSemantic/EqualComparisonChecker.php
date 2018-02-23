@@ -20,6 +20,22 @@
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic;
 
+use Tuleap\CrossTracker\Report\Query\Advanced\AllowedMetadata;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
+
 class EqualComparisonChecker extends ComparisonChecker
 {
+    const OPERATOR = '=';
+
+    public function visitCurrentDateTimeValueWrapper(
+        CurrentDateTimeValueWrapper $value_wrapper,
+        ValueWrapperParameters $parameters
+    ) {
+        if ($parameters->getMetadata()->getName() === AllowedMetadata::SUBMITTED_ON) {
+            throw new OperatorToNowComparisonException($parameters->getMetadata(), static::OPERATOR);
+        }
+
+        parent::visitCurrentDateTimeValueWrapper($value_wrapper, $parameters);
+    }
 }

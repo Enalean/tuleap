@@ -21,6 +21,10 @@ msgid "%s cannot be compared to MYSELF()."
 msgstr "%s ne peut pas être comparé à MYSELF()."
 
 #, php-format
+msgid "%s cannot be compared to NOW() with the operator %s."
+msgstr "%s ne peut pas être comparé à NOW() avec l'opérateur %s."
+
+#, php-format
 msgid "%s cannot be compared to NOW()."
 msgstr "%s ne peut pas être comparé à NOW()."
 

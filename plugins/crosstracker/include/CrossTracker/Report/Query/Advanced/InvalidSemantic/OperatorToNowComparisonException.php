@@ -20,22 +20,21 @@
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic;
 
-use Tuleap\CrossTracker\Report\Query\Advanced\AllowedMetadata;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
-class NotEqualComparisonChecker extends ComparisonChecker
+class OperatorToNowComparisonException extends InvalidSemanticComparisonException
 {
-    const OPERATOR = '!=';
-
-    public function visitCurrentDateTimeValueWrapper(
-        CurrentDateTimeValueWrapper $value_wrapper,
-        ValueWrapperParameters $parameters
-    ) {
-        if ($parameters->getMetadata()->getName() === AllowedMetadata::SUBMITTED_ON) {
-            throw new OperatorToNowComparisonException($parameters->getMetadata(), static::OPERATOR);
-        }
-
-        parent::visitCurrentDateTimeValueWrapper($value_wrapper, $parameters);
+    /**
+     * @param Metadata $metadata
+     * @param string $operator
+     */
+    public function __construct(Metadata $metadata, $operator)
+    {
+        $message = sprintf(
+            dgettext("tuleap-crosstracker", "%s cannot be compared to NOW() with the operator %s."),
+            $metadata->getName(),
+            $operator
+        );
+        parent::__construct($message);
     }
 }

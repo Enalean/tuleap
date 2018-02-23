@@ -23,6 +23,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic;
 use Tuleap\CrossTracker\Report\Query\Advanced\AllowedMetadata;
 use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\MetadataValueWrapperParameters;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
@@ -60,5 +61,12 @@ abstract class GreaterOrLesserThanComparisonChecker extends ComparisonChecker
     {
         $date_validator = new DateFormatValidator(new EmptyStringForbidden(), DateFormat::DATETIME);
         $date_validator->checkValueIsValid($value_wrapper->getValue());
+    }
+
+    public function visitCurrentDateTimeValueWrapper(
+        CurrentDateTimeValueWrapper $value_wrapper,
+        ValueWrapperParameters $parameters
+    ) {
+        // AllowedMetadata::SUBMITTED_ON can be used with GreaterOrLesserThan operators
     }
 }
