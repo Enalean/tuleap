@@ -22,12 +22,14 @@ import AgileDashboardPermissions from './AgileDashboardPermissions.vue';
 import { gettext_provider }      from './gettext-provider.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-    const vue_mount_points = document.getElementById('agile-dashboard-permission-per-group');
-    const rootComponent    = Vue.extend(AgileDashboardPermissions);
-    const locale           = vue_mount_points.dataset.locale;
-    gettext_provider.setLocale(locale);
+    const vue_mount_point = document.getElementById('agile-dashboard-permission-per-group');
 
-    new rootComponent({
-        propsData: { ...vue_mount_points.dataset }
-    }).$mount(vue_mount_points);
+    if (vue_mount_point) {
+        const RootComponent = Vue.extend(AgileDashboardPermissions);
+        gettext_provider.setLocale(vue_mount_point.dataset.locale);
+
+        new RootComponent({
+            propsData: { ...vue_mount_point.dataset }
+        }).$mount(vue_mount_point);
+    }
 });
