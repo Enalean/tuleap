@@ -49,7 +49,7 @@ class ComparisonChecker implements ValueWrapperVisitor
         try {
             $comparison->getValueWrapper()->accept($this, new MetadataValueWrapperParameters($metadata));
         } catch (DateToStringException $exception) {
-            throw new DateToStringComparisonException($metadata, $comparison->getValueWrapper()->getValue());
+            throw new DateToStringComparisonException($metadata, $exception->getSubmittedValue());
         }
     }
 

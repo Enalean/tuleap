@@ -40,6 +40,7 @@ use Tuleap\CrossTracker\Permission\CrossTrackerUnauthorizedException;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidComparisonCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchablesCollectionBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\BetweenComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\EqualComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\GreaterThanComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\GreaterThanOrEqualComparisonChecker;
@@ -49,6 +50,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\MetadataChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\NotEqualComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\MetadataUsageChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\CrossTrackerExpertQueryReportDao;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\BetweenComparisonFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\GreaterThanComparisonFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\GreaterThanOrEqualComparisonFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\LesserThanComparisonFromWhereBuilder;
@@ -159,7 +161,8 @@ class CrossTrackerReportsResource extends AuthenticatedResource
             new GreaterThanComparisonChecker(),
             new GreaterThanOrEqualComparisonChecker(),
             new LesserThanComparisonChecker(),
-            new LesserThanOrEqualComparisonChecker()
+            new LesserThanOrEqualComparisonChecker(),
+            new BetweenComparisonChecker()
         );
 
         $query_builder_visitor = new QueryBuilderVisitor(
@@ -197,6 +200,11 @@ class CrossTrackerReportsResource extends AuthenticatedResource
             ),
             new LesserThanOrEqualComparisonFromWhereBuilder(
                 new SubmittedOn\LesserThanOrEqualComparisonFromWhereBuilder(
+                    new DateTimeValueRounder()
+                )
+            ),
+            new BetweenComparisonFromWhereBuilder(
+                new SubmittedOn\BetweenComparisonFromWhereBuilder(
                     new DateTimeValueRounder()
                 )
             )

@@ -21,14 +21,15 @@
 namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
 use Tracker;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\LesserThanOrEqualComparisonFromWhereBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\BetweenComparisonFromWhereBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\EqualComparisonFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\GreaterThanComparisonFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\GreaterThanOrEqualComparisonFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\LesserThanComparisonFromWhereBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\LesserThanOrEqualComparisonFromWhereBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\NotEqualComparisonFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\SearchableVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\SearchableVisitorParameters;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\EqualComparisonFromWhereBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\NotEqualComparisonFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 use Tuleap\CrossTracker\Report\Query\ParametrizedAndFromWhere;
 use Tuleap\CrossTracker\Report\Query\ParametrizedOrFromWhere;
@@ -69,6 +70,10 @@ class QueryBuilderVisitor implements Visitor
 
     /** @var LesserThanOrEqualComparisonFromWhereBuilder */
     private $lesser_than_or_equal_comparison_from_where_builder;
+    /**
+     * @var BetweenComparisonFromWhereBuilder
+     */
+    private $between_comparison_from_where_builder;
 
     public function __construct(
         SearchableVisitor $searchable_visitor,
@@ -77,7 +82,8 @@ class QueryBuilderVisitor implements Visitor
         GreaterThanComparisonFromWhereBuilder $greater_than_comparison_from_where_builder,
         GreaterThanOrEqualComparisonFromWhereBuilder $greater_than_or_equal_comparison_from_where_builder,
         LesserThanComparisonFromWhereBuilder $lesser_than_comparison_from_where_builder,
-        LesserThanOrEqualComparisonFromWhereBuilder $lesser_than_or_equal_comparison_from_where_builder
+        LesserThanOrEqualComparisonFromWhereBuilder $lesser_than_or_equal_comparison_from_where_builder,
+        BetweenComparisonFromWhereBuilder $between_comparison_from_where_builder
     ) {
         $this->searchable_visitor                                  = $searchable_visitor;
         $this->equal_comparison_from_where_builder                 = $equal_comparison_from_where_builder;
@@ -86,6 +92,7 @@ class QueryBuilderVisitor implements Visitor
         $this->greater_than_or_equal_comparison_from_where_builder = $greater_than_or_equal_comparison_from_where_builder;
         $this->lesser_than_comparison_from_where_builder           = $lesser_than_comparison_from_where_builder;
         $this->lesser_than_or_equal_comparison_from_where_builder  = $lesser_than_or_equal_comparison_from_where_builder;
+        $this->between_comparison_from_where_builder               = $between_comparison_from_where_builder;
     }
 
     /**
@@ -172,6 +179,14 @@ class QueryBuilderVisitor implements Visitor
 
     public function visitBetweenComparison(BetweenComparison $comparison, QueryBuilderVisitorParameters $parameters)
     {
+        return $comparison->getSearchable()->accept(
+            $this->searchable_visitor,
+            new SearchableVisitorParameters(
+                $comparison,
+                $this->between_comparison_from_where_builder,
+                $parameters->getTrackers()
+            )
+        );
     }
 
     public function visitInComparison(InComparison $comparison, QueryBuilderVisitorParameters $parameters)
