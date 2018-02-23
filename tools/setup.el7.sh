@@ -121,6 +121,7 @@ fi
 
 _setupForgeupgrade
 _phpActivePlugin "tracker" "${tuleap_unix_user}"
+_phpImportTrackerTemplate
 _phpForgeupgrade "record-only"
 
 for pwd in mysql_password dbpasswd admin_password; do
