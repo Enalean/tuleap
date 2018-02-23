@@ -49,18 +49,7 @@ pipeline {
         stage('Check lockfiles') {
             steps {
                 dir ('sources') {
-                    sh """
-                    #!/bin/bash
-                    set +ex
-                    modified_lockfiles="\$(git status --porcelain | grep -E '(package-lock.json|composer.lock)' || true)"
-                    if [ -z "\$modified_lockfiles" ]; then
-                        echo "All lockfiles are present and up to date!"
-                    else
-                        echo 'Your lockfiles does not seem to be present or up to date!'
-                        echo "\$modified_lockfiles"
-                        exit 1
-                    fi
-                    """
+                    sh 'tests/files_status_checker/verify.sh lockfiles package-lock.json composer.lock'
                 }
             }
             post {
@@ -138,6 +127,11 @@ pipeline {
 
                     grep "version \$(cat sources/VERSION)" results/build-and-run/index.html
                     """
+                },
+                'Check translation files': {
+                    dir ('sources') {
+                        sh 'tests/files_status_checker/verify.sh "translation files" "*.po\$"'
+                    }
                 },
                 failFast: false
             }
