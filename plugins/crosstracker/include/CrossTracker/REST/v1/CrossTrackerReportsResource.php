@@ -44,6 +44,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\EqualComparisonChe
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\GreaterThanComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\GreaterThanOrEqualComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\LesserThanComparisonChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\LesserThanOrEqualComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\MetadataChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\NotEqualComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\MetadataUsageChecker;
@@ -51,6 +52,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\CrossTrackerExpertQue
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\GreaterThanComparisonFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\GreaterThanOrEqualComparisonFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\LesserThanComparisonFromWhereBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\LesserThanOrEqualComparisonFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\SearchableVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\Description;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\EqualComparisonFromWhereBuilder;
@@ -156,7 +158,8 @@ class CrossTrackerReportsResource extends AuthenticatedResource
             new NotEqualComparisonChecker(),
             new GreaterThanComparisonChecker(),
             new GreaterThanOrEqualComparisonChecker(),
-            new LesserThanComparisonChecker()
+            new LesserThanComparisonChecker(),
+            new LesserThanOrEqualComparisonChecker()
         );
 
         $query_builder_visitor = new QueryBuilderVisitor(
@@ -189,6 +192,11 @@ class CrossTrackerReportsResource extends AuthenticatedResource
             ),
             new LesserThanComparisonFromWhereBuilder(
                 new SubmittedOn\LesserThanComparisonFromWhereBuilder(
+                    new DateTimeValueRounder()
+                )
+            ),
+            new LesserThanOrEqualComparisonFromWhereBuilder(
+                new SubmittedOn\LesserThanOrEqualComparisonFromWhereBuilder(
                     new DateTimeValueRounder()
                 )
             )
