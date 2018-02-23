@@ -18,9 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\LesserThan;
 
-class GreaterThanOrEqualComparisonChecker extends GreaterOrLesserThanComparisonChecker
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\GreaterOrLesserThanComparisonChecker;
+
+class LesserThanComparisonChecker extends GreaterOrLesserThanComparisonChecker
 {
-    const OPERATOR = '>=';
+    const OPERATOR = '<';
 }

@@ -18,9 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison;
 
 use Tuleap\CrossTracker\Report\Query\Advanced\AllowedMetadata;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\InvalidQueryException;
 use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
@@ -42,7 +43,7 @@ class ComparisonChecker implements ValueWrapperVisitor
     /**
      * @param Metadata $metadata
      * @param Comparison $comparison
-     * @throws InvalidSemanticComparisonException
+     * @throws InvalidQueryException
      */
     public function checkComparisonIsValid(Metadata $metadata, Comparison $comparison)
     {

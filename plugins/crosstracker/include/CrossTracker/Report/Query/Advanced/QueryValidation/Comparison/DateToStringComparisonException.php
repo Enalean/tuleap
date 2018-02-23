@@ -18,18 +18,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison;
 
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\InvalidQueryException;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
-class OperatorNotAllowedForMetadataException extends InvalidSemanticComparisonException
+class DateToStringComparisonException extends InvalidQueryException
 {
-    public function __construct(Metadata $metadata, $operator)
+    public function __construct(Metadata $metadata, $value)
     {
         $message = sprintf(
-            dgettext("tuleap-crosstracker", "%s is not supported for the operator %s."),
+            dgettext("tuleap-crosstracker", "%s cannot be compared to the string value '%s'."),
             $metadata->getName(),
-            $operator
+            $value
         );
         parent::__construct($message);
     }

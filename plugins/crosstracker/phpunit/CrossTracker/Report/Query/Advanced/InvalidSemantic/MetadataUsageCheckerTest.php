@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation;
 
 use PFUser;
 use Tracker;
@@ -28,6 +28,8 @@ use Tracker_Semantic_DescriptionDao;
 use Tracker_Semantic_StatusDao;
 use Tracker_Semantic_TitleDao;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidComparisonCollectorParameters;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataUsageChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\SubmittedOnIsMissingInAtLeastOneTrackerException;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollection;
 

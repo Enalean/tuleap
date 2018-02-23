@@ -18,40 +18,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata;
 
-use PFUser;
-use Tracker;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidComparisonCollectorParameters;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ComparisonChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\InvalidQueryException;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
-class MetadataChecker implements ICheckMetadataForAComparison
+interface ICheckMetadataForAComparison
 {
-    /**
-     * @var MetadataUsageChecker
-     */
-    private $semantic_usage_checker;
-
-    public function __construct(MetadataUsageChecker $semantic_usage_checker)
-    {
-        $this->semantic_usage_checker = $semantic_usage_checker;
-    }
-
     /**
      * @param Metadata $metadata
      * @param Comparison $comparison
      * @param InvalidComparisonCollectorParameters $collector_parameters
      * @param ComparisonChecker $checker
-     * @throws InvalidSemanticComparisonException
+     * @throws InvalidQueryException
      */
     public function checkMetadataIsValid(
         Metadata $metadata,
         Comparison $comparison,
         InvalidComparisonCollectorParameters $collector_parameters,
         ComparisonChecker $checker
-    ) {
-        $this->semantic_usage_checker->checkMetadataIsUsedByAllTrackers($metadata, $collector_parameters);
-        $checker->checkComparisonIsValid($metadata, $comparison);
-    }
+    );
 }

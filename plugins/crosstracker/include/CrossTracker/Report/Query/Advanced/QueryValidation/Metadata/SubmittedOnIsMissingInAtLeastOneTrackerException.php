@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,9 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata;
 
-class TitleIsMissingInAtLeastOneTrackerException extends InvalidSemanticComparisonException
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\InvalidQueryException;
+
+class SubmittedOnIsMissingInAtLeastOneTrackerException extends InvalidQueryException
 {
     public function __construct($count)
     {
@@ -28,9 +30,9 @@ class TitleIsMissingInAtLeastOneTrackerException extends InvalidSemanticComparis
             sprintf(
                 dngettext(
                     'tuleap-crosstracker',
-                    'One of the trackers involved in the query does not have the semantic title defined. Please refine
+                    'One of the trackers involved in the query does not expose a submitted on field. Please refine
                     your query or check the configuration of the trackers.',
-                    '%d of the trackers involved in the query do not have the semantic title defined. Please refine
+                    '%d of the trackers involved in the query do not expose a submitted on field. Please refine
                     your query or check the configuration of the trackers.',
                     $count
                 ),

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,8 +18,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison;
 
-class InvalidSemanticComparisonException extends \Exception
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\InvalidQueryException;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
+
+class OperatorNotAllowedForMetadataException extends InvalidQueryException
 {
+    public function __construct(Metadata $metadata, $operator)
+    {
+        $message = sprintf(
+            dgettext("tuleap-crosstracker", "%s is not supported for the operator %s."),
+            $metadata->getName(),
+            $operator
+        );
+        parent::__construct($message);
+    }
 }

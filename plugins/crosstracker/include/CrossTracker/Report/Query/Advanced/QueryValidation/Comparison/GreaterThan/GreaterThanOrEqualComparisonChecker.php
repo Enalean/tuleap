@@ -18,23 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\GreaterThan;
 
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\GreaterOrLesserThanComparisonChecker;
 
-class OperatorToNowComparisonException extends InvalidSemanticComparisonException
+class GreaterThanOrEqualComparisonChecker extends GreaterOrLesserThanComparisonChecker
 {
-    /**
-     * @param Metadata $metadata
-     * @param string $operator
-     */
-    public function __construct(Metadata $metadata, $operator)
-    {
-        $message = sprintf(
-            dgettext("tuleap-crosstracker", "%s cannot be compared to NOW() with the operator %s."),
-            $metadata->getName(),
-            $operator
-        );
-        parent::__construct($message);
-    }
+    const OPERATOR = '>=';
 }
