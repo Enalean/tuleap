@@ -1,7 +1,7 @@
 <?php
 /*
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2006
  *
@@ -301,8 +301,10 @@ class Docman_MetadataHtmlDate extends Docman_MetadataHtml {
     function getValue() {
         $v = $this->md->getValue();
         if($v != null && $v != '' && $v != 0) {
-            return htmlentities(strftime("%e %b %Y", $v));
+            $html_purifier = Codendi_HTMLPurifier::instance();
+            return $html_purifier->purify(format_date($GLOBALS['Language']->getText('system', 'datefmt_short'), $v));
         }
+        return '';
     }
 }
 
