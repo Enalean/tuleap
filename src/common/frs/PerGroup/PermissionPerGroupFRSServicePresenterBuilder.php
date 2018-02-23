@@ -20,13 +20,10 @@
 
 namespace Tuleap\FRS\PerGroup;
 
-use ForgeConfig;
 use Project;
-use TemplateRendererFactory;
 use Tuleap\FRS\FRSPermission;
 use Tuleap\Project\Admin\PerGroup\PermissionPerGroupPanePresenter;
 use Tuleap\Project\Admin\Permission\PermissionPerGroupCollection;
-use Tuleap\Project\Admin\Permission\PermissionPerGroupPaneCollector;
 use UGroupManager;
 
 class PermissionPerGroupFRSServicePresenterBuilder

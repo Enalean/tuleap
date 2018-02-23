@@ -178,7 +178,8 @@ const webpack_config_for_burning_parrot_code = {
 
 const webpack_config_for_vue_components = {
     entry: {
-        'news-permissions': './news/permissions-per-group/index.js'
+        'news-permissions': './news/permissions-per-group/index.js',
+        'frs-permissions' : './frs/permissions-per-group/index.js'
     },
     output: {
         path: assets_dir_path,

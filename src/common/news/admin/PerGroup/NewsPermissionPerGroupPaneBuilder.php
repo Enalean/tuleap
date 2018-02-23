@@ -30,6 +30,7 @@ use Project;
 use TemplateRendererFactory;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\PerGroup\PermissionPerGroupUGroupFormatter;
+use Tuleap\Project\Admin\Permission\PermissionPerGroupLoadAllButtonPresenter;
 use UGroupManager;
 
 class NewsPermissionPerGroupPaneBuilder
@@ -80,7 +81,7 @@ class NewsPermissionPerGroupPaneBuilder
 
         $ugroup        = $this->ugroup_manager->getUGroup($project, $selected_ugroup_id);
         $templates_dir = $tuleap_base_dir . '/src/templates/news/';
-        $presenter     = new NewsPermissionPerGroupPresenter(
+        $presenter     = new PermissionPerGroupLoadAllButtonPresenter(
             $this->user,
             $project,
             $ugroup

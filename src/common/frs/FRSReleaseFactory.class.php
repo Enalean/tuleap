@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean 2017. All rights reserved
+ * Copyright (c) Enalean 2017 - 2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -30,7 +30,6 @@ require_once ('common/dao/FRSReleaseDao.class.php');
 require_once ('common/frs/FRSFileFactory.class.php');
 require_once ('common/frs/FRSPackageFactory.class.php');
 require_once ('common/frs/FileModuleMonitorFactory.class.php');
-require_once('www/project/admin/ugroup_utils.php');
 require_once ('common/frs/FRSLog.class.php');
 
 /**
