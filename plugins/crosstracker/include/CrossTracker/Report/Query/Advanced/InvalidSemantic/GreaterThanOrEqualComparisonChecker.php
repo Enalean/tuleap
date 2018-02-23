@@ -20,7 +20,7 @@
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic;
 
-class GreaterThanOrEqualComparisonChecker extends GreaterThanComparisonChecker
+class GreaterThanOrEqualComparisonChecker extends GreaterOrLesserThanComparisonChecker
 {
     const OPERATOR = '>=';
 }
