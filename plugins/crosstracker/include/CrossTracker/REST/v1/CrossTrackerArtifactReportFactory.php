@@ -141,17 +141,17 @@ class CrossTrackerArtifactReportFactory
         $limit,
         $offset
     ) {
-        $trackers_id  = $this->getTrackersId($report->getTrackers());
+        $trackers     = $report->getTrackers();
         $expert_query = $report->getExpertQuery();
         $this->expert_query_validator->validateExpertQuery(
             $expert_query,
-            new InvalidSearchablesCollectionBuilder($this->collector, $trackers_id)
+            new InvalidSearchablesCollectionBuilder($this->collector, $trackers, $current_user)
         );
         $parsed_expert_query   = $this->parser->parse($expert_query);
-        $additional_from_where = $this->query_builder->buildFromWhere($parsed_expert_query, $report->getTrackers());
+        $additional_from_where = $this->query_builder->buildFromWhere($parsed_expert_query, $trackers);
         $results               = $this->expert_query_dao->searchArtifactsMatchingQuery(
             $additional_from_where,
-            $trackers_id,
+            $this->getTrackersId($trackers),
             $limit,
             $offset
         );

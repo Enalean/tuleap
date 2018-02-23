@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2011-2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -1012,7 +1012,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
         return date(Tracker_FormElement_DateFormatter::DATE_FORMAT, strtotime($value['value']));
     }
 
-    public function getFieldDataFromRESTValueByField($value, Tracker_Artifact $artifact = null) {
+    public function getFieldDataFromRESTValueByField(array $value, Tracker_Artifact $artifact = null) {
         throw new Tracker_FormElement_RESTValueByField_NotImplementedException();
     }
 

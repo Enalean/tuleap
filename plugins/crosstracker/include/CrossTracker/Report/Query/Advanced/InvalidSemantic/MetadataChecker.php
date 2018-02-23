@@ -20,17 +20,20 @@
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic;
 
+use PFUser;
+use Tracker;
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidComparisonCollectorParameters;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
 class MetadataChecker implements ICheckMetadataForAComparison
 {
     /**
-     * @var SemanticUsageChecker
+     * @var MetadataUsageChecker
      */
     private $semantic_usage_checker;
 
-    public function __construct(SemanticUsageChecker $semantic_usage_checker)
+    public function __construct(MetadataUsageChecker $semantic_usage_checker)
     {
         $this->semantic_usage_checker = $semantic_usage_checker;
     }
@@ -38,17 +41,17 @@ class MetadataChecker implements ICheckMetadataForAComparison
     /**
      * @param Metadata $metadata
      * @param Comparison $comparison
-     * @param int[] $trackers_id
+     * @param InvalidComparisonCollectorParameters $collector_parameters
      * @param ComparisonChecker $checker
      * @throws InvalidSemanticComparisonException
      */
     public function checkMetadataIsValid(
         Metadata $metadata,
         Comparison $comparison,
-        array $trackers_id,
+        InvalidComparisonCollectorParameters $collector_parameters,
         ComparisonChecker $checker
     ) {
-        $this->semantic_usage_checker->checkSemanticIsUsedByAllTrackers($metadata, $trackers_id);
+        $this->semantic_usage_checker->checkMetadataIsUsedByAllTrackers($metadata, $collector_parameters);
         $checker->checkComparisonIsValid($metadata, $comparison);
     }
 }

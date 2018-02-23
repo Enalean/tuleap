@@ -20,14 +20,22 @@
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic;
 
+use PFUser;
+use Tracker;
+use Tracker_FormElementFactory;
 use Tracker_Semantic_DescriptionDao;
 use Tracker_Semantic_StatusDao;
 use Tracker_Semantic_TitleDao;
 use Tuleap\CrossTracker\Report\Query\Advanced\AllowedMetadata;
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidComparisonCollectorParameters;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
-class SemanticUsageChecker
+class MetadataUsageChecker
 {
+    /**
+     * @var \Tracker_FormElementFactory
+     */
+    private $form_element_factory;
     /**
      * @var bool[]
      */
@@ -46,26 +54,31 @@ class SemanticUsageChecker
     private $status_dao;
 
     public function __construct(
+        Tracker_FormElementFactory $form_element_factory,
         Tracker_Semantic_TitleDao $title_dao,
         Tracker_Semantic_DescriptionDao $description_dao,
         Tracker_Semantic_StatusDao $status_dao
     ) {
-        $this->title_dao       = $title_dao;
-        $this->description_dao = $description_dao;
-        $this->status_dao      = $status_dao;
+        $this->form_element_factory = $form_element_factory;
+        $this->title_dao            = $title_dao;
+        $this->description_dao      = $description_dao;
+        $this->status_dao           = $status_dao;
 
         $this->cache_already_checked = array();
     }
 
     /**
      * @param Metadata $metadata
-     * @param int[] $trackers_id
+     * @param InvalidComparisonCollectorParameters $collector_parameters
      * @throws DescriptionIsMissingInAtLeastOneTrackerException
-     * @throws TitleIsMissingInAtLeastOneTrackerException
      * @throws StatusIsMissingInAtLeastOneTrackerException
+     * @throws SubmittedOnIsMissingInAtLeastOneTrackerException
+     * @throws TitleIsMissingInAtLeastOneTrackerException
      */
-    public function checkSemanticIsUsedByAllTrackers(Metadata $metadata, array $trackers_id)
-    {
+    public function checkMetadataIsUsedByAllTrackers(
+        Metadata $metadata,
+        InvalidComparisonCollectorParameters $collector_parameters
+    ) {
         if (isset($this->cache_already_checked[$metadata->getName()])) {
             return;
         }
@@ -73,13 +86,19 @@ class SemanticUsageChecker
 
         switch ($metadata->getName()) {
             case AllowedMetadata::TITLE:
-                $this->checkTitleIsUsedByAllTrackers($trackers_id);
+                $this->checkTitleIsUsedByAllTrackers($collector_parameters->getTrackerIds());
                 break;
             case AllowedMetadata::DESCRIPTION:
-                $this->checkDescriptionIsUsedByAllTrackers($trackers_id);
+                $this->checkDescriptionIsUsedByAllTrackers($collector_parameters->getTrackerIds());
                 break;
             case AllowedMetadata::STATUS:
-                $this->checkStatusIsUsedByAllTrackers($trackers_id);
+                $this->checkStatusIsUsedByAllTrackers($collector_parameters->getTrackerIds());
+                break;
+            case AllowedMetadata::SUBMITTED_ON:
+                $this->checkSubmittedOnIsUsedByAllTrackers(
+                    $collector_parameters->getTrackers(),
+                    $collector_parameters->getUser()
+                );
                 break;
         }
     }
@@ -118,5 +137,40 @@ class SemanticUsageChecker
         if ($count > 0) {
             throw new StatusIsMissingInAtLeastOneTrackerException($count);
         }
+    }
+
+    /**
+     * @param Tracker[] $trackers
+     * @param PFUser $user
+     * @throws SubmittedOnIsMissingInAtLeastOneTrackerException
+     */
+    private function checkSubmittedOnIsUsedByAllTrackers($trackers, PFUser $user)
+    {
+        $count = 0;
+        foreach ($trackers as $tracker) {
+            $fields = $this->form_element_factory->getFormElementsByType($tracker, 'subon', true);
+            if (empty($fields) || ! $this->isThereAtLeastOneReadableField($fields, $user)) {
+                $count++;
+            }
+        }
+        if ($count > 0) {
+            throw new SubmittedOnIsMissingInAtLeastOneTrackerException($count);
+        }
+    }
+
+    /**
+     * @param \Tracker_FormElement[] $fields
+     * @param PFUser $user
+     * @return bool
+     */
+    private function isThereAtLeastOneReadableField(array $fields, PFUser $user)
+    {
+        foreach ($fields as $field) {
+            if ($field->userCanRead($user)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

@@ -20,6 +20,8 @@
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
+use PFUser;
+use Tracker;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\ComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\EqualComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\GreaterThanComparisonChecker;
@@ -81,12 +83,22 @@ class InvalidComparisonCollectorVisitor implements Visitor
         $this->greater_than_or_equal_comparison_checker = $greater_than_or_equal_comparison_checker;
     }
 
+    /**
+     * @param Visitable $parsed_query
+     * @param InvalidSearchablesCollection $invalid_searchables_collection
+     * @param Tracker[] $trackers
+     * @param PFUser $user
+     */
     public function collectErrors(
         Visitable $parsed_query,
         InvalidSearchablesCollection $invalid_searchables_collection,
-        array $trackers_id
+        array $trackers,
+        PFUser $user
     ) {
-        $parsed_query->accept($this, new InvalidComparisonCollectorParameters($invalid_searchables_collection, $trackers_id));
+        $parsed_query->accept(
+            $this,
+            new InvalidComparisonCollectorParameters($invalid_searchables_collection, $trackers, $user)
+        );
     }
 
     public function visitEqualComparison(EqualComparison $comparison, InvalidComparisonCollectorParameters $parameters)
