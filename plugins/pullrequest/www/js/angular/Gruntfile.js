@@ -214,29 +214,6 @@ module.exports = function(grunt) {
         },
 
         /**
-         * `jshint` defines the rules of our linter as well as which files we
-         * should check. This file, all javascript sources, and all our unit tests
-         * are linted based on the policies listed in `options`. But we can also
-         * specify exclusionary patterns by prefixing them with an exclamation
-         * point (!); this is useful when code comes from a third party but is
-         * nonetheless inside `src/`.
-         */
-        eslint: {
-            src: [
-                '<%= app_files.js %>'
-            ],
-            test: [
-                '<%= app_files.jsunit %>'
-            ],
-            gruntfile: [
-                'Gruntfile.js'
-            ],
-            options: {
-                configFile: './.eslintrc.json'
-            }
-        },
-
-        /**
          * HTML2JS is a Grunt plugin that takes all of your template files and
          * places them into JavaScript files as strings that are added to
          * AngularJS's template cache. This means that the templates too become
@@ -320,18 +297,6 @@ module.exports = function(grunt) {
             },
 
             /**
-             * When the Gruntfile changes, we just want to lint it. In fact, when
-             * your Gruntfile changes, it will automatically be reloaded!
-             */
-            gruntfile: {
-                files: 'Gruntfile.js',
-                tasks: ['eslint:gruntfile'],
-                options: {
-                    livereload: false
-                }
-            },
-
-            /**
              * When our JavaScript source files change, we want to run lint them and
              * run our unit tests.
              */
@@ -339,7 +304,7 @@ module.exports = function(grunt) {
                 files: [
                     '<%= app_files.js %>'
                 ],
-                tasks: ['eslint:src', 'nggettext_extract', 'karmaconfig', 'karma:continuous', 'copy:build_appmodules', 'copy:build_appjs', 'copy:compile_assets', 'concat']
+                tasks: ['nggettext_extract', 'karmaconfig', 'karma:continuous', 'copy:build_appmodules', 'copy:build_appjs', 'copy:compile_assets', 'concat']
             },
 
             /**
@@ -379,7 +344,7 @@ module.exports = function(grunt) {
                 files: [
                     '<%= app_files.jsunit %>'
                 ],
-                tasks: ['eslint:test', 'karma:continuous'],
+                tasks: ['karma:continuous'],
                 options: {
                     livereload: false
                 }
@@ -472,7 +437,6 @@ module.exports = function(grunt) {
 
     grunt.registerTask('test', 'Run unit tests and generate a junit report for the Continuous Integration', function() {
         return grunt.task.run([
-            'eslint',
             'karmaconfig',
             'karma:continuous'
         ]);
