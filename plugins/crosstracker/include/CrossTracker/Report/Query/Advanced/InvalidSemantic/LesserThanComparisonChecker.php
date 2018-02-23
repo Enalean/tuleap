@@ -20,16 +20,7 @@
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic;
 
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
-
-class GreaterThanNotAllowedForMetadataException extends InvalidSemanticComparisonException
+class LesserThanComparisonChecker extends GreaterOrLesserThanComparisonChecker
 {
-    public function __construct(Metadata $metadata)
-    {
-        $message = sprintf(
-            dgettext("tuleap-crosstracker", "%s is not supported for the operator >."),
-            $metadata->getName()
-        );
-        parent::__construct($message);
-    }
+    const OPERATOR = '<';
 }

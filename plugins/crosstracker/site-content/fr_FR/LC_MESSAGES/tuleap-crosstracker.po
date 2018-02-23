@@ -37,8 +37,8 @@ msgid "%s cannot be compared to the string value '%s'."
 msgstr "%s ne peut pas être comparé à '%s'."
 
 #, php-format
-msgid "%s is not supported for the operator >."
-msgstr "%s ne supporte pas l'opérateur >."
+msgid "%s is not supported for the operator %s."
+msgstr "%s ne supporte pas l'opérateur %s."
 
 msgid "Cross trackers search"
 msgstr "Recherche multi trackers"
