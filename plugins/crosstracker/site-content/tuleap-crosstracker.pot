@@ -23,7 +23,7 @@ msgid "%s cannot be compared to the string value '%s'."
 msgstr ""
 
 #, php-format
-msgid "%s is not supported for the operator >."
+msgid "%s is not supported for the operator %s."
 msgstr ""
 
 msgid "Cross trackers search"
