@@ -20,6 +20,87 @@
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\SubmittedOn;
 
-interface FromWhereBuilder extends \Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\FromWhereBuilder
+use RuntimeException;
+use Tracker;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder;
+use Tuleap\CrossTracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
+use Tuleap\CrossTracker\Report\Query\ParametrizedFromWhere;
+use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentUserValueWrapper;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\InValueWrapper;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\StatusOpenValueWrapper;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
+
+abstract class FromWhereBuilder implements QueryBuilder\Metadata\FromWhereBuilder, ValueWrapperVisitor
 {
+    /**
+     * @param Metadata $metadata
+     * @param Comparison $comparison
+     * @param Tracker[] $trackers
+     * @return IProvideParametrizedFromAndWhereSQLFragments
+     */
+    public function getFromWhere(Metadata $metadata, Comparison $comparison, array $trackers)
+    {
+        return $comparison->getValueWrapper()->accept($this, new NoValueWrapperParameters());
+    }
+
+    /**
+     * @return ParametrizedFromWhere
+     */
+    public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
+    {
+        return $this->getParametrizedFromWhere(
+            $value_wrapper->getValue()
+        );
+    }
+
+    /**
+     * @return ParametrizedFromWhere
+     */
+    public function visitCurrentDateTimeValueWrapper(
+        CurrentDateTimeValueWrapper $value_wrapper,
+        ValueWrapperParameters $parameters
+    ) {
+        return $this->getParametrizedFromWhere(
+            $value_wrapper->getValue()->format(DateFormat::DATETIME)
+        );
+    }
+
+    public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
+    {
+        throw new RuntimeException('Should not end there');
+    }
+
+    public function visitInValueWrapper(
+        InValueWrapper $collection_of_value_wrappers,
+        ValueWrapperParameters $parameters
+    ) {
+        throw new RuntimeException('Should not end there');
+    }
+
+    public function visitCurrentUserValueWrapper(
+        CurrentUserValueWrapper $value_wrapper,
+        ValueWrapperParameters $parameters
+    ) {
+        throw new RuntimeException('Should not end there');
+    }
+
+    public function visitStatusOpenValueWrapper(
+        StatusOpenValueWrapper $value_wrapper,
+        ValueWrapperParameters $parameters
+    ) {
+        throw new RuntimeException('Should not end there');
+    }
+
+    /**
+     * @param $value
+     * @return ParametrizedFromWhere
+     */
+    abstract protected function getParametrizedFromWhere($value);
 }

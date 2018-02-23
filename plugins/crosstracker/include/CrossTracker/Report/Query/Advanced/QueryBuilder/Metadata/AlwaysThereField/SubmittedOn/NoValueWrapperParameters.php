@@ -18,24 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\SubmittedOn;
 
-use Tuleap\CrossTracker\Report\Query\Advanced\AllowedMetadata;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
 
-class NotEqualComparisonChecker extends ComparisonChecker
+class NoValueWrapperParameters implements ValueWrapperParameters
 {
-    const OPERATOR = '!=';
-
-    public function visitCurrentDateTimeValueWrapper(
-        CurrentDateTimeValueWrapper $value_wrapper,
-        ValueWrapperParameters $parameters
-    ) {
-        if ($parameters->getMetadata()->getName() === AllowedMetadata::SUBMITTED_ON) {
-            throw new OperatorToNowComparisonException($parameters->getMetadata(), static::OPERATOR);
-        }
-
-        parent::visitCurrentDateTimeValueWrapper($value_wrapper, $parameters);
-    }
 }

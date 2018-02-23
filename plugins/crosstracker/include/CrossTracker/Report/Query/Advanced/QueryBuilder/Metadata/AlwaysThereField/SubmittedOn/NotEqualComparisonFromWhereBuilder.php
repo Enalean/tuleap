@@ -20,16 +20,11 @@
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\SubmittedOn;
 
-use Tracker;
-use Tuleap\CrossTracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 use Tuleap\CrossTracker\Report\Query\ParametrizedFromWhere;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\DateTimeValueRounder;
 
-class NotEqualComparisonFromWhereBuilder implements FromWhereBuilder
+class NotEqualComparisonFromWhereBuilder extends FromWhereBuilder
 {
-
     /**
      * @var DateTimeValueRounder
      */
@@ -41,14 +36,11 @@ class NotEqualComparisonFromWhereBuilder implements FromWhereBuilder
     }
 
     /**
-     * @param Metadata $metadata
-     * @param Comparison $comparison
-     * @param Tracker[] $trackers
-     * @return IProvideParametrizedFromAndWhereSQLFragments
+     * @param $value
+     * @return ParametrizedFromWhere
      */
-    public function getFromWhere(Metadata $metadata, Comparison $comparison, array $trackers)
+    protected function getParametrizedFromWhere($value)
     {
-        $value            = $comparison->getValueWrapper()->getValue();
         $where            = "1";
         $where_parameters = [];
 
