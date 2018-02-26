@@ -168,18 +168,22 @@ class CrossTrackerReportsResource extends AuthenticatedResource
         $submitted_on_alias_field     = 'tracker_artifact.submitted_on';
         $last_update_date_alias_field = 'last_changeset.submitted_on';
 
-        $query_builder_visitor = new QueryBuilderVisitor(
+        $date_value_extractor    = new Date\DateValueExtractor();
+        $date_time_value_rounder = new DateTimeValueRounder();
+        $query_builder_visitor   = new QueryBuilderVisitor(
             new SearchableVisitor(),
             new EqualComparisonFromWhereBuilder(
                 new Title\EqualComparisonFromWhereBuilder(),
                 new Description\EqualComparisonFromWhereBuilder(),
                 new Status\EqualComparisonFromWhereBuilder(),
                 new Date\EqualComparisonFromWhereBuilder(
-                    new DateTimeValueRounder(),
+                    $date_value_extractor,
+                    $date_time_value_rounder,
                     $submitted_on_alias_field
                 ),
                 new Date\EqualComparisonFromWhereBuilder(
-                    new DateTimeValueRounder(),
+                    $date_value_extractor,
+                    $date_time_value_rounder,
                     $last_update_date_alias_field
                 )
             ),
@@ -188,61 +192,73 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                 new Description\NotEqualComparisonFromWhereBuilder(),
                 new Status\NotEqualComparisonFromWhereBuilder(),
                 new Date\NotEqualComparisonFromWhereBuilder(
-                    new DateTimeValueRounder(),
+                    $date_value_extractor,
+                    $date_time_value_rounder,
                     $submitted_on_alias_field
                 ),
                 new Date\NotEqualComparisonFromWhereBuilder(
-                    new DateTimeValueRounder(),
+                    $date_value_extractor,
+                    $date_time_value_rounder,
                     $last_update_date_alias_field
                 )
             ),
             new GreaterThanComparisonFromWhereBuilder(
                 new Date\GreaterThanComparisonFromWhereBuilder(
-                    new DateTimeValueRounder(),
+                    $date_value_extractor,
+                    $date_time_value_rounder,
                     $submitted_on_alias_field
                 ),
                 new Date\GreaterThanComparisonFromWhereBuilder(
-                    new DateTimeValueRounder(),
+                    $date_value_extractor,
+                    $date_time_value_rounder,
                     $last_update_date_alias_field
                 )
             ),
             new GreaterThanOrEqualComparisonFromWhereBuilder(
                 new Date\GreaterThanOrEqualComparisonFromWhereBuilder(
-                    new DateTimeValueRounder(),
+                    $date_value_extractor,
+                    $date_time_value_rounder,
                     $submitted_on_alias_field
                 ),
                 new Date\GreaterThanOrEqualComparisonFromWhereBuilder(
-                    new DateTimeValueRounder(),
+                    $date_value_extractor,
+                    $date_time_value_rounder,
                     $last_update_date_alias_field
                 )
             ),
             new LesserThanComparisonFromWhereBuilder(
                 new Date\LesserThanComparisonFromWhereBuilder(
-                    new DateTimeValueRounder(),
+                    $date_value_extractor,
+                    $date_time_value_rounder,
                     $submitted_on_alias_field
                 ),
                 new Date\LesserThanComparisonFromWhereBuilder(
-                    new DateTimeValueRounder(),
+                    $date_value_extractor,
+                    $date_time_value_rounder,
                     $last_update_date_alias_field
                 )
             ),
             new LesserThanOrEqualComparisonFromWhereBuilder(
                 new Date\LesserThanOrEqualComparisonFromWhereBuilder(
-                    new DateTimeValueRounder(),
+                    $date_value_extractor,
+                    $date_time_value_rounder,
                     $submitted_on_alias_field
                 ),
                 new Date\LesserThanOrEqualComparisonFromWhereBuilder(
-                    new DateTimeValueRounder(),
+                    $date_value_extractor,
+                    $date_time_value_rounder,
                     $last_update_date_alias_field
                 )
             ),
             new BetweenComparisonFromWhereBuilder(
                 new Date\BetweenComparisonFromWhereBuilder(
-                    new DateTimeValueRounder(),
+                    $date_value_extractor,
+                    $date_time_value_rounder,
                     $submitted_on_alias_field
                 ),
                 new Date\BetweenComparisonFromWhereBuilder(
-                    new DateTimeValueRounder(),
+                    $date_value_extractor,
+                    $date_time_value_rounder,
                     $last_update_date_alias_field
                 )
             )
