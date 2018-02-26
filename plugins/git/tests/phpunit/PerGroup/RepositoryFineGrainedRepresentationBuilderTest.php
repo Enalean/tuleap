@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Git\PerGroup;
+namespace Tuleap\Git\PermissionsPerGroup;
 
 use Git;
 use GitPermissionsManager;

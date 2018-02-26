@@ -24,12 +24,12 @@ use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
-use Tuleap\AgileDashboard\PerGroup\AgileDashboardJSONPermissionsRetriever;
-use Tuleap\AgileDashboard\PerGroup\AgileDashboardPermissionsRepresentationBuilder;
-use Tuleap\AgileDashboard\PerGroup\PlanningPermissionsRepresentationBuilder;
+use Tuleap\AgileDashboard\PermissionsPerGroup\AgileDashboardJSONPermissionsRetriever;
+use Tuleap\AgileDashboard\PermissionsPerGroup\AgileDashboardPermissionsRepresentationBuilder;
+use Tuleap\AgileDashboard\PermissionsPerGroup\PlanningPermissionsRepresentationBuilder;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
 use Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentationFactory;
-use Tuleap\Project\Admin\Permission\PermissionPerGroupUGroupRepresentationBuilder;
+use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRepresentationBuilder;
 
 class AgileDashboardRouterBuilder {
 

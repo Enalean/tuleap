@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\FRS\PerGroup;
+namespace Tuleap\FRS\PermissionsPerGroup;
 
 use TuleapTestCase;
 
@@ -26,8 +26,8 @@ class PaneCollectorTest extends TuleapTestCase
 {
     public function itDoesNotBuildPaneIfServiceNotUsed()
     {
-        $service_builder = mock('Tuleap\FRS\PerGroup\PermissionPerGroupFRSServicePresenterBuilder');
-        $package_builder = mock('Tuleap\FRS\PerGroup\PermissionPerGroupFRSPackagesPresenterBuilder');
+        $service_builder = mock('Tuleap\FRS\PermissionsPerGroup\PermissionPerGroupFRSServicePresenterBuilder');
+        $package_builder = mock('Tuleap\FRS\PermissionsPerGroup\PermissionPerGroupFRSPackagesPresenterBuilder');
 
         $builder = new PaneCollector(
             $service_builder,
