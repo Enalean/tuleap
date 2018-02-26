@@ -25,6 +25,8 @@ const TQL_cross_tracker_autocomplete_keywords = [
     'AND',
     'OR',
     'OPEN()',
+    'NOW()',
+    'BETWEEN()',
     '@title',
     '@description',
     '@status',
