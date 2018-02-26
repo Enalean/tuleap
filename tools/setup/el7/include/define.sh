@@ -23,7 +23,7 @@ declare -r su="/bin/su"
 declare -r systemctl="/usr/bin/systemctl"
 declare -r tr="/usr/bin/tr"
 
-declare -a cmd=("${awk}" "${basename}" "${cat}" "${date}" "${getenforce}"
+declare -a cmd=("${awk}" "${basename}" "${cat}" "${cp}" "${date}" "${getenforce}"
                 "${getopt}" "${grep}" "${gzip}" "${head}" "${install}" "${ln}"
                 "${mkdir}" "${mv}" "${mysql}" "${mysqladmin}" "${mysqldump}"
                 "${php}" "${printf}" "${su}" "${systemctl}" "${tr}")
@@ -51,6 +51,7 @@ declare -r database_inc="database.inc"
 declare -r tuleap_log="/var/log/tuleap/tuleap_setup.log"
 declare -r tuleap_src="${install_dir}/src"
 declare -r urandom="/dev/urandom"
+declare -r nginx_conf="/etc/nginx/conf.d/tuleap.conf"
 
 # declare options
 declare -r sys_db_name="tuleap"

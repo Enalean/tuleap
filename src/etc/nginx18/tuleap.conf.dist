@@ -6,8 +6,8 @@ server {
         listen       443 ssl;
         server_name  %sys_default_domain%;
 
-        ssl_certificate /etc/pki/tls/certs/localhost.crt;
-        ssl_certificate_key /etc/pki/tls/private/localhost.key;
+        ssl_certificate %ssl_certificate_path%;
+        ssl_certificate_key %ssl_certificate_key_path%;
         ssl_session_timeout 1d;
         ssl_session_cache shared:SSL:50m;
         ssl_session_tickets off;
