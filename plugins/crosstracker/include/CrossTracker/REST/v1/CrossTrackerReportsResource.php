@@ -41,7 +41,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\InvalidComparisonCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchablesCollectionBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\CrossTrackerExpertQueryReportDao;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\SubmittedOn;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\Date;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\BetweenComparisonFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\EqualComparisonFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\GreaterThanComparisonFromWhereBuilder;
@@ -165,47 +165,85 @@ class CrossTrackerReportsResource extends AuthenticatedResource
             new BetweenComparisonChecker()
         );
 
+        $submitted_on_alias_field     = 'tracker_artifact.submitted_on';
+        $last_update_date_alias_field = 'last_changeset.submitted_on';
+
         $query_builder_visitor = new QueryBuilderVisitor(
             new SearchableVisitor(),
             new EqualComparisonFromWhereBuilder(
                 new Title\EqualComparisonFromWhereBuilder(),
                 new Description\EqualComparisonFromWhereBuilder(),
                 new Status\EqualComparisonFromWhereBuilder(),
-                new SubmittedOn\EqualComparisonFromWhereBuilder(
-                    new DateTimeValueRounder()
+                new Date\EqualComparisonFromWhereBuilder(
+                    new DateTimeValueRounder(),
+                    $submitted_on_alias_field
+                ),
+                new Date\EqualComparisonFromWhereBuilder(
+                    new DateTimeValueRounder(),
+                    $last_update_date_alias_field
                 )
             ),
             new NotEqualComparisonFromWhereBuilder(
                 new Title\NotEqualComparisonFromWhereBuilder(),
                 new Description\NotEqualComparisonFromWhereBuilder(),
                 new Status\NotEqualComparisonFromWhereBuilder(),
-                new SubmittedOn\NotEqualComparisonFromWhereBuilder(
-                    new DateTimeValueRounder()
+                new Date\NotEqualComparisonFromWhereBuilder(
+                    new DateTimeValueRounder(),
+                    $submitted_on_alias_field
+                ),
+                new Date\NotEqualComparisonFromWhereBuilder(
+                    new DateTimeValueRounder(),
+                    $last_update_date_alias_field
                 )
             ),
             new GreaterThanComparisonFromWhereBuilder(
-                new SubmittedOn\GreaterThanComparisonFromWhereBuilder(
-                    new DateTimeValueRounder()
+                new Date\GreaterThanComparisonFromWhereBuilder(
+                    new DateTimeValueRounder(),
+                    $submitted_on_alias_field
+                ),
+                new Date\GreaterThanComparisonFromWhereBuilder(
+                    new DateTimeValueRounder(),
+                    $last_update_date_alias_field
                 )
             ),
             new GreaterThanOrEqualComparisonFromWhereBuilder(
-                new SubmittedOn\GreaterThanOrEqualComparisonFromWhereBuilder(
-                    new DateTimeValueRounder()
+                new Date\GreaterThanOrEqualComparisonFromWhereBuilder(
+                    new DateTimeValueRounder(),
+                    $submitted_on_alias_field
+                ),
+                new Date\GreaterThanOrEqualComparisonFromWhereBuilder(
+                    new DateTimeValueRounder(),
+                    $last_update_date_alias_field
                 )
             ),
             new LesserThanComparisonFromWhereBuilder(
-                new SubmittedOn\LesserThanComparisonFromWhereBuilder(
-                    new DateTimeValueRounder()
+                new Date\LesserThanComparisonFromWhereBuilder(
+                    new DateTimeValueRounder(),
+                    $submitted_on_alias_field
+                ),
+                new Date\LesserThanComparisonFromWhereBuilder(
+                    new DateTimeValueRounder(),
+                    $last_update_date_alias_field
                 )
             ),
             new LesserThanOrEqualComparisonFromWhereBuilder(
-                new SubmittedOn\LesserThanOrEqualComparisonFromWhereBuilder(
-                    new DateTimeValueRounder()
+                new Date\LesserThanOrEqualComparisonFromWhereBuilder(
+                    new DateTimeValueRounder(),
+                    $submitted_on_alias_field
+                ),
+                new Date\LesserThanOrEqualComparisonFromWhereBuilder(
+                    new DateTimeValueRounder(),
+                    $last_update_date_alias_field
                 )
             ),
             new BetweenComparisonFromWhereBuilder(
-                new SubmittedOn\BetweenComparisonFromWhereBuilder(
-                    new DateTimeValueRounder()
+                new Date\BetweenComparisonFromWhereBuilder(
+                    new DateTimeValueRounder(),
+                    $submitted_on_alias_field
+                ),
+                new Date\BetweenComparisonFromWhereBuilder(
+                    new DateTimeValueRounder(),
+                    $last_update_date_alias_field
                 )
             )
         );

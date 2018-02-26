@@ -28,13 +28,20 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 class LesserThanOrEqualComparisonFromWhereBuilder implements FromWhereBuilder
 {
     /**
-     * @var AlwaysThereField\SubmittedOn\FromWhereBuilder
+     * @var AlwaysThereField\Date\LesserThanOrEqualComparisonFromWhereBuilder
      */
     private $submitted_on_builder;
+    /**
+     * @var AlwaysThereField\Date\LesserThanOrEqualComparisonFromWhereBuilder
+     */
+    private $last_update_date_builder;
 
-    public function __construct(AlwaysThereField\SubmittedOn\FromWhereBuilder $submitted_on_builder)
-    {
-        $this->submitted_on_builder = $submitted_on_builder;
+    public function __construct(
+        AlwaysThereField\Date\LesserThanOrEqualComparisonFromWhereBuilder $submitted_on_builder,
+        AlwaysThereField\Date\LesserThanOrEqualComparisonFromWhereBuilder $last_update_date_builder
+    ) {
+        $this->submitted_on_builder     = $submitted_on_builder;
+        $this->last_update_date_builder = $last_update_date_builder;
     }
 
     /**
@@ -45,6 +52,9 @@ class LesserThanOrEqualComparisonFromWhereBuilder implements FromWhereBuilder
         switch ($metadata->getName()) {
             case AllowedMetadata::SUBMITTED_ON:
                 return $this->submitted_on_builder->getFromWhere($metadata, $comparison, $trackers);
+                break;
+            case AllowedMetadata::LAST_UPDATE_DATE:
+                return $this->last_update_date_builder->getFromWhere($metadata, $comparison, $trackers);
                 break;
         }
     }

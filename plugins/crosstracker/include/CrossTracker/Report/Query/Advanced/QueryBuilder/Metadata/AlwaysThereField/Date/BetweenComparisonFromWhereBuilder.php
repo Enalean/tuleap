@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\SubmittedOn;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\Date;
 
 use Tuleap\CrossTracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
@@ -34,10 +34,19 @@ class BetweenComparisonFromWhereBuilder extends FromWhereBuilder
      * @var DateTimeValueRounder
      */
     private $date_time_value_rounder;
+    /**
+     * @var string
+     */
+    private $alias_field;
 
-    public function __construct(DateTimeValueRounder $date_time_value_rounder)
+    /**
+     * @param DateTimeValueRounder $date_time_value_rounder
+     * @param string $alias_field
+     */
+    public function __construct(DateTimeValueRounder $date_time_value_rounder, $alias_field)
     {
         $this->date_time_value_rounder = $date_time_value_rounder;
+        $this->alias_field             = $alias_field;
     }
 
     public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
@@ -72,8 +81,7 @@ class BetweenComparisonFromWhereBuilder extends FromWhereBuilder
         $min_value_floored_timestamp = $this->date_time_value_rounder->getFlooredTimestampFromDateTime($min_value);
         $max_value_ceiled_timestamp  = $this->date_time_value_rounder->getCeiledTimestampFromDateTime($max_value);
 
-        $where = "tracker_artifact.submitted_on >= ?
-            AND tracker_artifact.submitted_on <= ?";
+        $where = "{$this->alias_field} >= ? AND {$this->alias_field} <= ?";
 
         $where_parameters = [$min_value_floored_timestamp, $max_value_ceiled_timestamp];
 

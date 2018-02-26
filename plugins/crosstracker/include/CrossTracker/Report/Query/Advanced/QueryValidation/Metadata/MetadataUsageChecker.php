@@ -74,6 +74,7 @@ class MetadataUsageChecker
      * @throws StatusIsMissingInAtLeastOneTrackerException
      * @throws SubmittedOnIsMissingInAtLeastOneTrackerException
      * @throws TitleIsMissingInAtLeastOneTrackerException
+     * @throws LastUpdateDateIsMissingInAtLeastOneTrackerException
      */
     public function checkMetadataIsUsedByAllTrackers(
         Metadata $metadata,
@@ -96,6 +97,12 @@ class MetadataUsageChecker
                 break;
             case AllowedMetadata::SUBMITTED_ON:
                 $this->checkSubmittedOnIsUsedByAllTrackers(
+                    $collector_parameters->getTrackers(),
+                    $collector_parameters->getUser()
+                );
+                break;
+            case AllowedMetadata::LAST_UPDATE_DATE:
+                $this->checkLastUpdateDateIsUsedByAllTrackers(
                     $collector_parameters->getTrackers(),
                     $collector_parameters->getUser()
                 );
@@ -144,17 +151,24 @@ class MetadataUsageChecker
      * @param PFUser $user
      * @throws SubmittedOnIsMissingInAtLeastOneTrackerException
      */
-    private function checkSubmittedOnIsUsedByAllTrackers($trackers, PFUser $user)
+    private function checkSubmittedOnIsUsedByAllTrackers(array $trackers, PFUser $user)
     {
-        $count = 0;
-        foreach ($trackers as $tracker) {
-            $fields = $this->form_element_factory->getFormElementsByType($tracker, 'subon', true);
-            if (empty($fields) || ! $this->isThereAtLeastOneReadableField($fields, $user)) {
-                $count++;
-            }
-        }
+        $count = $this->getNumberOfReadableFieldByType($trackers, $user, 'subon');
         if ($count > 0) {
             throw new SubmittedOnIsMissingInAtLeastOneTrackerException($count);
+        }
+    }
+
+    /**
+     * @param Tracker[] $trackers
+     * @param PFUser $user
+     * @throws LastUpdateDateIsMissingInAtLeastOneTrackerException
+     */
+    private function checkLastUpdateDateIsUsedByAllTrackers(array $trackers, PFUser $user)
+    {
+        $count = $this->getNumberOfReadableFieldByType($trackers, $user, 'lud');
+        if ($count > 0) {
+            throw new LastUpdateDateIsMissingInAtLeastOneTrackerException($count);
         }
     }
 
@@ -172,5 +186,24 @@ class MetadataUsageChecker
         }
 
         return false;
+    }
+
+    /**
+     * @param $trackers
+     * @param PFUser $user
+     * @param $type
+     * @return int
+     */
+    private function getNumberOfReadableFieldByType($trackers, PFUser $user, $type)
+    {
+        $count = 0;
+        foreach ($trackers as $tracker) {
+            $fields = $this->form_element_factory->getFormElementsByType($tracker, $type, true);
+            if (empty($fields) || ! $this->isThereAtLeastOneReadableField($fields, $user)) {
+                $count++;
+            }
+        }
+
+        return $count;
     }
 }

@@ -41,7 +41,7 @@ class InvalidSearchableCollectorVisitor implements Visitor
         InvalidSearchableCollectorParameters $parameters
     ) {
         $invalid_searchables_collection = $parameters->getInvalidSearchablesCollectorParameters()->getInvalidSearchablesCollection();
-        if (! in_array($metadata->getName(), AllowedMetadata::$NAMES, true)) {
+        if (! in_array($metadata->getName(), AllowedMetadata::NAMES, true)) {
             $invalid_searchables_collection->addNonexistentSearchable(
                 $metadata->getName()
             );

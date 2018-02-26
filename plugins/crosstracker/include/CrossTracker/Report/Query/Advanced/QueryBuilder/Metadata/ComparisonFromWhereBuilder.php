@@ -41,20 +41,26 @@ abstract class ComparisonFromWhereBuilder implements FromWhereBuilder
     private $status_builder;
 
     /**
-     * @var AlwaysThereField\SubmittedOn\FromWhereBuilder
+     * @var AlwaysThereField\Date\FromWhereBuilder
      */
     private $submitted_on_builder;
+    /**
+     * @var AlwaysThereField\Date\FromWhereBuilder
+     */
+    private $last_update_date_builder;
 
     public function __construct(
         Semantic\Title\FromWhereBuilder $title_builder,
         Semantic\Description\FromWhereBuilder $description_builder,
         Semantic\Status\FromWhereBuilder $status_builder,
-        AlwaysThereField\SubmittedOn\FromWhereBuilder $submitted_on_builder
+        AlwaysThereField\Date\FromWhereBuilder $submitted_on_builder,
+        AlwaysThereField\Date\FromWhereBuilder $last_update_date_builder
     ) {
-        $this->title_builder        = $title_builder;
-        $this->description_builder  = $description_builder;
-        $this->status_builder       = $status_builder;
-        $this->submitted_on_builder = $submitted_on_builder;
+        $this->title_builder            = $title_builder;
+        $this->description_builder      = $description_builder;
+        $this->status_builder           = $status_builder;
+        $this->submitted_on_builder     = $submitted_on_builder;
+        $this->last_update_date_builder = $last_update_date_builder;
     }
 
     /**
@@ -74,6 +80,9 @@ abstract class ComparisonFromWhereBuilder implements FromWhereBuilder
                 break;
             case AllowedMetadata::SUBMITTED_ON:
                 return $this->submitted_on_builder->getFromWhere($metadata, $comparison, $trackers);
+                break;
+            case AllowedMetadata::LAST_UPDATE_DATE:
+                return $this->last_update_date_builder->getFromWhere($metadata, $comparison, $trackers);
                 break;
         }
     }

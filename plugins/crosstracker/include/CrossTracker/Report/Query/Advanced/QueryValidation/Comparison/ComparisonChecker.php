@@ -35,11 +35,14 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\StatusOpenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFormatValidator;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateToEmptyStringException;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateToStringException;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringAllowed;
 
 class ComparisonChecker implements ValueWrapperVisitor
 {
+    const OPERATOR = '';
+
     /**
      * @param Metadata $metadata
      * @param Comparison $comparison
@@ -51,6 +54,8 @@ class ComparisonChecker implements ValueWrapperVisitor
             $comparison->getValueWrapper()->accept($this, new MetadataValueWrapperParameters($metadata));
         } catch (DateToStringException $exception) {
             throw new DateToStringComparisonException($metadata, $exception->getSubmittedValue());
+        } catch (DateToEmptyStringException $exception) {
+            throw new DateToEmptyStringComparisonException($metadata, static::OPERATOR);
         }
     }
 
@@ -63,11 +68,12 @@ class ComparisonChecker implements ValueWrapperVisitor
 
     public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
     {
-        if ($parameters->getMetadata()->getName() === AllowedMetadata::STATUS) {
+        $metadata = $parameters->getMetadata();
+        if ($metadata->getName() === AllowedMetadata::STATUS) {
             throw new StatusToSimpleValueComparisonException($value_wrapper->getValue());
         }
 
-        if ($parameters->getMetadata()->getName() === AllowedMetadata::SUBMITTED_ON) {
+        if (in_array($metadata->getName(), AllowedMetadata::DATES)) {
             $date_validator = new DateFormatValidator(new EmptyStringAllowed(), DateFormat::DATETIME);
             $date_validator->checkValueIsValid($value_wrapper->getValue());
         }
