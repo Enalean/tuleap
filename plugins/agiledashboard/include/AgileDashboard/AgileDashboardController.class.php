@@ -324,18 +324,10 @@ class AgileDashboard_Controller extends MVC2_PluginController {
                         new UploadedLinksUpdater(new UploadedLinksDao(), FRSLog::instance()),
                         new ProjectDashboardXMLImporter(
                             new ProjectDashboardSaver(
-                                new ProjectDashboardDao(
-                                    new DashboardWidgetDao(
-                                        new WidgetFactory(
-                                            $user_manager,
-                                            new User_ForgeUserGroupPermissionsManager(
-                                                new User_ForgeUserGroupPermissionsDao()
-                                            ),
-                                            $this->event_manager
-                                        )
-                                    )
-                                )
+                                $project_dao
                             ),
+                            $widget_factory,
+                            $widget_dao,
                             $logger,
                             $this->event_manager
                         )
