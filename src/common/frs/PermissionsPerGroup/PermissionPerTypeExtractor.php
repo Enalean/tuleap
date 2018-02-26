@@ -26,6 +26,7 @@ use Tuleap\FRS\FRSPermission;
 use Tuleap\FRS\FRSPermissionFactory;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupCollection;
+use UGroupManager;
 
 class PermissionPerTypeExtractor
 {
@@ -41,15 +42,21 @@ class PermissionPerTypeExtractor
      * @var FRSPermissionPerGroupURLBuilder
      */
     private $url_builder;
+    /**
+     * @var UGroupManager
+     */
+    private $ugroup_manager;
 
     public function __construct(
         FRSPermissionFactory $frs_permission_factory,
         PermissionPerGroupUGroupFormatter $formatter,
-        FRSPermissionPerGroupURLBuilder $url_builder
+        FRSPermissionPerGroupURLBuilder $url_builder,
+        UGroupManager $ugroup_manager
     ) {
         $this->frs_permission_factory = $frs_permission_factory;
         $this->formatter              = $formatter;
         $this->url_builder            = $url_builder;
+        $this->ugroup_manager         = $ugroup_manager;
     }
 
     /**
@@ -98,10 +105,13 @@ class PermissionPerTypeExtractor
         }
 
         foreach ($ugroups as $ugroup) {
-            $permissions->addPermission(
-                $ugroup->getUGroupId(),
-                $this->formatter->formatGroup($project, $ugroup->getUGroupId())
-            );
+            $user_group = $this->ugroup_manager->getUGroup($project, $ugroup->getUGroupId());
+            if ($user_group) {
+                $permissions->addPermission(
+                    $ugroup->getUGroupId(),
+                    $this->formatter->formatGroup($user_group)
+                );
+            }
         }
     }
 
@@ -131,9 +141,10 @@ class PermissionPerTypeExtractor
         FrsGlobalAdminPermissionCollection $permission
     ) {
         if ($type === FRSPermission::FRS_ADMIN) {
+            $user_group = $this->ugroup_manager->getUGroup($project, ProjectUGroup::PROJECT_ADMIN);
             $permission->addPermission(
                 ProjectUGroup::PROJECT_ADMIN,
-                $this->formatter->formatGroup($project, ProjectUGroup::PROJECT_ADMIN)
+                $this->formatter->formatGroup($user_group)
             );
         }
     }

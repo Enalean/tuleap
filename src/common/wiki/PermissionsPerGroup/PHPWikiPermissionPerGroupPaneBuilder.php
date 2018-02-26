@@ -113,7 +113,7 @@ class PHPWikiPermissionPerGroupPaneBuilder
             return;
         }
 
-        $formatted_group = $this->getFormattedUgroups($project, $ugroups);
+        $formatted_group = $this->formatter->getFormattedUgroups($project, $ugroups);
 
         $permissions->addPermissions(
             array(
@@ -146,7 +146,7 @@ class PHPWikiPermissionPerGroupPaneBuilder
             return;
         }
 
-        $formatted_group = $this->getFormattedUgroups($project, $ugroups);
+        $formatted_group = $this->formatter->getFormattedUgroups($project, $ugroups);
 
         $permissions->addPermissions(
             array(
@@ -175,19 +175,6 @@ class PHPWikiPermissionPerGroupPaneBuilder
         }
 
         return $ugroups;
-    }
-
-    /**
-     * @return array
-     */
-    private function getFormattedUgroups(Project $project, array $ugroups)
-    {
-        $formatted_ugroups = [];
-        foreach ($ugroups as $ugroup) {
-            $formatted_ugroups[] =  $this->formatter->formatGroup($project, $ugroup);
-        }
-
-        return $formatted_ugroups;
     }
 
     private function getGlobalAdminLink(Project $project)

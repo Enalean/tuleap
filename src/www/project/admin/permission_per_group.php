@@ -55,7 +55,6 @@ $ugroup_manager    = new UGroupManager();
 $formatter         = new PermissionPerGroupUGroupFormatter($ugroup_manager);
 $presenter_builder = new PermissionPerGroupBuilder($ugroup_manager);
 $groups            = $presenter_builder->buildUGroup($project, $request);
-$formatter         = new PermissionPerGroupUGroupFormatter($ugroup_manager);
 
 $additional_panes_builder = new PanesPermissionPerGroupBuilder(
     EventManager::instance(),
@@ -64,7 +63,8 @@ $additional_panes_builder = new PanesPermissionPerGroupBuilder(
             new PermissionPerTypeExtractor(
                 new FRSPermissionFactory(new FRSPermissionDao()),
                 $formatter,
-                new FRSPermissionPerGroupURLBuilder()
+                new FRSPermissionPerGroupURLBuilder(),
+                $ugroup_manager
             ),
             $ugroup_manager
         ),

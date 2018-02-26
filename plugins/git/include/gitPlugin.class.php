@@ -2441,7 +2441,7 @@ class GitPlugin extends Plugin
 
         $ugroup_manager          = $this->getUGroupManager();
         $formatter               = new PermissionPerGroupUGroupFormatter($ugroup_manager);
-        $collection_formatter    = new CollectionOfUgroupsFormatter($formatter);
+        $collection_formatter    = new CollectionOfUgroupsFormatter($formatter, $ugroup_manager);
         $service_section_builder = new PermissionPerGroupGitSectionBuilder(
             new PermissionPerGroupUGroupRetriever(PermissionsManager::instance()),
             $collection_formatter,
