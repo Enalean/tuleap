@@ -78,9 +78,6 @@ export default {
             return gettext_provider.gettext("Load more");
         }
     },
-    created() {
-        gettext_provider.setLocale(this.dataLocale);
-    },
     mounted() {
         this.loadLabeledItems();
     },
