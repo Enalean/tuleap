@@ -9,7 +9,6 @@ MainController.$inject = [
     'SharedPropertiesService'
 ];
 
-/* eslint-disable angular/controller-as */
 function MainController(
     $element,
     gettextCatalog,

@@ -11,7 +11,6 @@ describe("PullRequestController -", function() {
 
         module('tuleap.pull-request');
 
-        // eslint-disable-next-line angular/di
         inject(function(
             _$controller_,
             _$q_,

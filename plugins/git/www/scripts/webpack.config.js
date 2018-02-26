@@ -16,8 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-/* eslint-disable */
 const path                        = require('path');
 const webpack                     = require('webpack');
 const WebpackAssetsManifest       = require('webpack-assets-manifest');

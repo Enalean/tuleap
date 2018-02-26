@@ -15,7 +15,7 @@ describe("ReleaseController -", function() {
     beforeEach(function() {
         angular.mock.module(tuleap_frs_module);
 
-        angular.mock.inject(function( // eslint-disable-line angular/di
+        angular.mock.inject(function(
             _$q_,
             _$rootScope_,
             _$controller_,
