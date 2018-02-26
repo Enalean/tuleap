@@ -22,13 +22,14 @@ import SvnPermissions       from './SVNPermissions.vue';
 import { gettext_provider } from './gettext-provider.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-    const vue_mount_points = document.getElementById('svn-permission-per-group');
-    const rootComponent    = Vue.extend(SvnPermissions);
+    const vue_mount_point = document.getElementById('svn-permission-per-group');
 
-    const locale           = vue_mount_points.dataset.locale;
-    gettext_provider.setLocale(locale);
+    if (vue_mount_point) {
+        const RootComponent = Vue.extend(SvnPermissions);
+        gettext_provider.setLocale(vue_mount_point.dataset.locale);
 
-    new rootComponent({
-        propsData: { ...vue_mount_points.dataset }
-    }).$mount(vue_mount_points);
+        new RootComponent({
+            propsData: { ...vue_mount_point.dataset }
+        }).$mount(vue_mount_point);
+    }
 });

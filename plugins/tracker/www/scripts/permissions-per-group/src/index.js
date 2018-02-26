@@ -21,18 +21,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import vue                             from 'vue';
+import Vue                             from 'vue';
 import BaseTrackerPermissionsComponent from './BaseTrackerPermissions.vue';
 import { gettext_provider }            from './gettext-provider.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const vue_mount_point = document.getElementById('tracker-permissions-per-group');
-    const rootComponent   = vue.extend(BaseTrackerPermissionsComponent);
 
-    gettext_provider.setLocale(vue_mount_point.dataset.locale);
+    if (vue_mount_point) {
+        const RootComponent = Vue.extend(BaseTrackerPermissionsComponent);
+        gettext_provider.setLocale(vue_mount_point.dataset.locale);
 
-    new rootComponent({
-        propsData: { ...vue_mount_point.dataset }
-    })
-    .$mount(vue_mount_point);
+        new RootComponent({
+            propsData: { ...vue_mount_point.dataset }
+        }).$mount(vue_mount_point);
+    }
 });
