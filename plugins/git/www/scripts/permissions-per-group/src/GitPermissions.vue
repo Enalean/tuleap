@@ -34,21 +34,26 @@
         <div class="permission-per-group-loader" v-if="is_loading"></div>
 
         <h2 class="tlp-pane-subtitle" v-if="is_loaded"> {{ repository_permissions_title }} </h2>
-        <git-permissions-table
-                v-bind:repositoryPermissions="permissions"
-                v-bind:selectedUgroupName="selectedUgroupName"
-                v-if="is_loaded"
+        <git-inline-filter v-if="is_loaded"
+                           v-model="filter"
+        />
+        <git-permissions-table v-if="is_loaded"
+                               v-bind:repositories="repositories"
+                               v-bind:selectedUgroupName="selectedUgroupName"
+                               v-bind:filter="filter"
         />
     </section>
-
 </template>)
 (
 <script>
     import GitPermissionsTable   from './GitPermissionsTable.vue';
+    import GitInlineFilter       from './GitInlineFilter.vue';
     import { gettext_provider }  from './gettext-provider.js';
     import { getGitPermissions } from './rest-querier.js';
+
     export default {
         components: {
+            GitInlineFilter,
             GitPermissionsTable,
         },
         name: 'GitPermissions',
@@ -56,8 +61,9 @@
             return {
                 is_loaded  : false,
                 is_loading : false,
-                permissions: [],
+                repositories: [],
                 error      : null,
+                filter     : ""
             };
         },
         props: {
@@ -71,7 +77,7 @@
                     this.is_loading        = true;
                     const { repositories } = await getGitPermissions(this.selectedProjectId, this.selectedUgroupId);
                     this.is_loaded         = true;
-                    this.permissions       = repositories;
+                    this.repositories      = repositories;
                 } catch (e) {
                     const {error} = await e.response.json();
                     this.error    = error;
@@ -82,9 +88,8 @@
         },
         computed: {
             repositories_permissions:     () => gettext_provider.gettext("See all repositories permissions"),
-            repository_permissions_title: () => gettext_provider.gettext("Repository permissions"),
-            hasError()                    { return this.error !== null; },
-            displayButtonLoadAll()        { return ! this.is_loaded && ! this.is_loading },
+            hasError() { return this.error !== null; },
+            displayButtonLoadAll() { return ! this.is_loaded && ! this.is_loading },
         }
     };
 </script>)

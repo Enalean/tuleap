@@ -19,7 +19,7 @@
 
 (
 <template>
-    <table class="tlp-table permission-per-group-table">
+    <table class="tlp-table permission-per-group-table" id="permission-per-group-git-repositories">
         <thead>
         <tr class="permission-per-group-sextuple-column-table">
             <th>{{ repository_label  }}</th>
@@ -31,72 +31,91 @@
         </tr>
         </thead>
 
-        <tbody v-if="isEmpty">
+        <tbody v-if="is_empty_state_shown">
         <tr>
-            <td colspan="6" v-if="hasASelectedUGroup" class="tlp-table-cell-empty">
+            <td colspan="6" class="tlp-table-cell-empty">
                 {{ empty_state }}
-            </td>
-            <td colspan="6" v-else class="tlp-table-cell-empty">
-                {{ ugroup_empty_state }}
             </td>
         </tr>
         </tbody>
 
-        <tbody>
-            <template v-for="permission in repositoryPermissions">
-                <git-repository-table-simple-permissions v-if="! permission.has_fined_grained_permissions"
-                                                         v-bind:repository-permission="permission"
-                />
-
-                <git-repository-table-fine-grained-permissions-repository v-if="permission.has_fined_grained_permissions"
-                                                                          v-bind:repository-permission="permission"
-                />
-
-                <git-repository-table-fine-grained-permission v-if="permission.has_fined_grained_permissions"
-                    v-for="fined_grained_permission in permission.fine_grained_permission"
-                    v-bind:key="fined_grained_permission.id"
-                    v-bind:fine-grained-permissions="fined_grained_permission"
-                />
-            </template>
-        </tbody>
+        <git-permissions-table-repository
+                v-for="repository in repositories"
+                v-bind:key="repository.repository_id"
+                v-bind:repository="repository"
+                v-bind:filter="filter"
+                v-on:filtered="togglePermission"
+        />
     </table>
 </template>
 )
 (
 <script>
-    import GitRepositoryTableSimplePermissions                 from './GitRepositoryTableSimplePermissions.vue';
-    import GitRepositoryTableFineGrainedPermissionsRepository  from './GitRepositoryTableFineGrainedPermissionsRepository.vue';
-    import GitRepositoryTableFineGrainedPermission             from './GitRepositoryTableFineGrainedPermission.vue';
-    import { gettext_provider }                                from './gettext-provider.js';
-    import { sprintf }                                         from 'sprintf-js';
+    import GitPermissionsTableRepository from './GitPermissionsTableRepository.vue';
+    import { gettext_provider }          from './gettext-provider.js';
+    import { sprintf }                   from 'sprintf-js';
 
     export default {
         name: 'GitPermissionsTable',
         components: {
-            GitRepositoryTableSimplePermissions,
-            GitRepositoryTableFineGrainedPermissionsRepository,
-            GitRepositoryTableFineGrainedPermission
+            GitPermissionsTableRepository
         },
         props: {
-            repositoryPermissions: Array,
-            selectedUgroupName   : String
+            repositories: Array,
+            selectedUgroupName: String,
+            filter: String
+        },
+        data() {
+            return {
+                nb_repo_hidden: 0
+            }
+        },
+        methods: {
+            togglePermission(event) {
+                if (event.hidden) {
+                    this.nb_repo_hidden++;
+                }
+            }
         },
         computed: {
-            empty_state: ()          => gettext_provider.gettext("No repository found for project"),
+            no_repo_empty_state: ()  => gettext_provider.gettext("No repository found for project"),
+            filter_empty_state: ()   => gettext_provider.gettext("There isn't any matching repository"),
             repository_label: ()     => gettext_provider.gettext("Repository"),
             branch_label: ()         => gettext_provider.gettext("Branch"),
             tag_label: ()            => gettext_provider.gettext("Tag"),
             readers_label: ()        => gettext_provider.gettext("Readers"),
             writers_label: ()        => gettext_provider.gettext("Writers"),
             rewinders_label: ()      => gettext_provider.gettext("Rewinders"),
-            ugroup_empty_state()   {
+            ugroup_empty_state() {
                 return sprintf(
                     gettext_provider.gettext("%s has no permission for any repository in this project"),
                     this.selectedUgroupName
                 );
             },
-            isEmpty()              { return this.repositoryPermissions.length === 0; },
-            hasASelectedUGroup()   { return this.selectedUgroupName === '' },
+            is_empty() {
+                return this.repositories.length === 0;
+            },
+            has_a_selected_ugroup() {
+                return this.selectedUgroupName !== ''
+            },
+            are_all_repositories_hidden() {
+                return ! this.is_empty && this.nb_repo_hidden === this.repositories.length;
+            },
+            is_empty_state_shown() {
+                return this.is_empty || this.are_all_repositories_hidden;
+            },
+            empty_state() {
+                return (this.are_all_repositories_hidden)
+                    ? this.filter_empty_state
+                    : (this.has_a_selected_ugroup)
+                    ? this.ugroup_empty_state
+                    : this.no_repo_empty_state;
+            },
+        },
+        watch: {
+            filter() {
+                this.nb_repo_hidden = 0;
+            }
         }
     };
 </script>)
