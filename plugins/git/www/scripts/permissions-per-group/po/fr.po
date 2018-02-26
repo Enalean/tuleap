@@ -1,0 +1,44 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Marie Ange GARNIER <marie-ange.garnier@enalean.com>\n"
+"Language-Team: \n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.7.1\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#, javascript-format
+msgid "%s has no permission for any repository in this project"
+msgstr "%s n'a de permission pour aucun dépôt de ce projet"
+
+msgid "Branch"
+msgstr "Branche"
+
+msgid "No repository found for project"
+msgstr "Aucun dépôt trouvé pour le projet"
+
+msgid "Readers"
+msgstr "Droits de lecture"
+
+msgid "Repository"
+msgstr "Dépôt"
+
+msgid "Repository permissions"
+msgstr "Permissions du dépôt"
+
+msgid "Rewinders"
+msgstr "Droits de rewind"
+
+msgid "Tag"
+msgstr "Étiquette"
+
+msgid "View repositories permissions"
+msgstr "Voir les permissions des dépôts"
+
+msgid "Writers"
+msgstr "Droits d'écriture"

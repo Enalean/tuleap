@@ -40,46 +40,12 @@
             </table>
         </section>
         {{/ service_presenter }}
-        {{# repositories_presenter }}
-            <section class="tlp-pane-section">
-                <h2 class="tlp-pane-subtitle">{{# dgettext }} tuleap-git | Repository permissions {{/ dgettext }}</h2>
-                <table class="tlp-table">
-                    <thead>
-                        <tr>
-                            <th>{{# dgettext }} tuleap-git | Repository {{/ dgettext }}</th>
-                            <th>{{# dgettext }} tuleap-git | Branch {{/ dgettext }}</th>
-                            <th>{{# dgettext }} tuleap-git | Tag {{/ dgettext }}</th>
-                            <th>{{# dgettext }} tuleap-git | Readers {{/ dgettext }}</th>
-                            <th>{{# dgettext }} tuleap-git | Writers {{/ dgettext }}</th>
-                            <th>{{# dgettext }} tuleap-git | Rewinders {{/ dgettext }}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {{# repository_presenters }}
-                        {{# usesFineGrainedPermissions }}
-                            {{> fine-grained-repository }}
-                        {{/ usesFineGrainedPermissions }}
-                        {{^ usesFineGrainedPermissions }}
-                            {{> simple-repository }}
-                        {{/ usesFineGrainedPermissions }}
-                    {{/ repository_presenters }}
-                    {{# has_no_permission }}
-                        <tr>
-                            <td colspan="6" class="tlp-table-cell-empty">
-                                {{# dgettext }} tuleap-git | {{ user_group_name }} has no permission for any repository in this project {{/dgettext}}
-                            </td>
-                        </tr>
-                    {{/ has_no_permission }}
-                    {{^ has_repositories }}
-                        <tr>
-                            <td colspan="6" class="tlp-table-cell-empty">
-                                {{# dgettext }} tuleap-git | No repository found for project {{/ dgettext }}
-                            </td>
-                        </tr>
-                    {{/ has_repositories }}
-                    </tbody>
-                </table>
-            </section>
-        {{/ repositories_presenter }}
+
+        <div id="git-permission-per-group"
+             data-selected-ugroup-id="{{ ugroup_id }}"
+             data-selected-project-id="{{ project_id }}"
+             data-selected-ugroup-name="{{ selected_ugroup_name }}"
+             data-locale="{{ locale }}">
+        </div>
     </div>
 </section>

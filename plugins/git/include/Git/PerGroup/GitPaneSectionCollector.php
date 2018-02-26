@@ -23,6 +23,8 @@ namespace Tuleap\Git\PerGroup;
 use GitPlugin;
 use TemplateRendererFactory;
 use Tuleap\Project\Admin\Permission\PermissionPerGroupPaneCollector;
+use UGroupManager;
+use UserManager;
 
 class GitPaneSectionCollector
 {
@@ -31,26 +33,39 @@ class GitPaneSectionCollector
      */
     private $git_section_builder;
     /**
-     * @var PermissionPerGroupGitRepositoriesSectionBuilder
+     * @var UGroupManager
      */
-    private $git_repos_section_builder;
+    private $ugroup_manager;
+    /**
+     * @var UserManager
+     */
+    private $user_manager;
 
     public function __construct(
         PermissionPerGroupGitSectionBuilder $git_section_builder,
-        PermissionPerGroupGitRepositoriesSectionBuilder $git_repos_section_builder
+        UGroupManager $ugroup_manager,
+        UserManager $user_manager
     ) {
         $this->git_section_builder       = $git_section_builder;
-        $this->git_repos_section_builder = $git_repos_section_builder;
+        $this->ugroup_manager = $ugroup_manager;
+        $this->user_manager = $user_manager;
     }
 
     public function collectSections(PermissionPerGroupPaneCollector $pane_collector)
     {
         $service_section_presenter     = $this->git_section_builder->buildPresenter($pane_collector);
-        $repository_sections_presenter = $this->git_repos_section_builder->buildPresenter($pane_collector);
+        $project                       = $pane_collector->getProject();
 
-        $pane_presenter = new GitPanePresenter($service_section_presenter, $repository_sections_presenter, $pane_collector->getProject());
+        $user_group = $this->ugroup_manager->getUGroup($project, $pane_collector->getSelectedUGroupId());
+        $user       = $this->user_manager->getCurrentUser();
 
-        $project         = $pane_collector->getProject();
+        $pane_presenter = new GitPanePresenter(
+            $service_section_presenter,
+            $project,
+            $user,
+            $user_group
+        );
+
         $rank_in_project = $project->getService(
             GitPlugin::SERVICE_SHORTNAME
         )->getRank();

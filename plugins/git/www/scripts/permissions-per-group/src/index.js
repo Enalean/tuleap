@@ -1,5 +1,4 @@
-<?php
-/**
+/*
  * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -18,32 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Git\PerGroup;
+import Vue                  from 'vue';
+import GitPermissions       from './GitPermissions.vue';
+import { gettext_provider } from './gettext-provider.js';
 
-class FineGrainedRowPresenter
-{
-    /**
-     * @var string
-     */
-    public $pattern;
-    /**
-     * @var array
-     */
-    public $writers;
-    /**
-     * @var array
-     */
-    public $rewinders;
-    /**
-     * @var bool
-     */
-    public $is_tag;
+document.addEventListener('DOMContentLoaded', () => {
+    const vue_mount_points = document.getElementById('git-permission-per-group');
+    if (vue_mount_points) {
+        const rootComponent    = Vue.extend(GitPermissions);
+        const locale           = vue_mount_points.dataset.locale;
+        gettext_provider.setLocale(locale);
+        new rootComponent({
+            propsData: { ...vue_mount_points.dataset }
+        }).$mount(vue_mount_points);
 
-    public function __construct($pattern, $is_tag, array $writers, array $rewinders)
-    {
-        $this->pattern   = $pattern;
-        $this->writers   = $writers;
-        $this->rewinders = $rewinders;
-        $this->is_tag    = $is_tag;
     }
-}
+});

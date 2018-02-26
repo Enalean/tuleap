@@ -20,8 +20,6 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
-require_once('common/valid/ValidFactory.class.php');
-
 use Tuleap\Git\GerritCanMigrateChecker;
 use Tuleap\Git\Gitolite\VersionDetector;
 use Tuleap\User\InvalidEntryInAutocompleterCollection;

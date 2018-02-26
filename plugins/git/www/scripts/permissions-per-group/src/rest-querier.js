@@ -1,5 +1,4 @@
-<?php
-/**
+/*
  * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -18,23 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Git\PerGroup;
+import { get } from 'tlp';
 
-class RepositoryPermissionsPresenterCollection
-{
-    /** @var RepositoryPermissionsPresenter[] */
-    private $presenters = [];
+export {
+    getGitPermissions
+}
 
-    /**
-     * @return RepositoryPermissionsPresenter[]
-     */
-    public function getPresenters()
-    {
-        return $this->presenters;
-    }
+async function getGitPermissions(project_id, selected_ugroup_id) {
+    const response = await get('/plugins/git/', {
+        params: {
+            group_id: project_id,
+            selected_ugroup_id: selected_ugroup_id,
+            action: 'permission-per-group',
+        }
+    });
 
-    public function addPresenter(RepositoryPermissionsPresenter $presenter)
-    {
-        $this->presenters[] = $presenter;
-    }
+
+    return await response.json();
 }

@@ -37,5 +37,14 @@
         "www/themes/BurningParrot/js/modal-edit-gerrit-server.js",
         "www/themes/BurningParrot/js/modal-add-mirror.js",
         "www/themes/BurningParrot/js/modal-mirror-configuration.js"
+    ],
+    "gettext-js": {
+        "permissions-per-group": {
+            "src": "www/scripts/permissions-per-group/src",
+            "po": "www/scripts/permissions-per-group/po"
+        }
+    },
+    "components": [
+        "plugins/git/www/scripts"
     ]
 }
