@@ -18,22 +18,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\SubmittedOn;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\Date;
 
 use Tuleap\CrossTracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\DateTimeValueRounder;
 
-class GreaterThanComparisonFromWhereBuilder extends FromWhereBuilder
+class GreaterThanOrEqualComparisonFromWhereBuilder extends FromWhereBuilder
 {
-
     /**
      * @var DateTimeValueRounder
      */
     private $date_time_value_rounder;
+    /**
+     * @var string
+     */
+    private $alias_field;
 
-    public function __construct(DateTimeValueRounder $date_time_value_rounder)
+    /**
+     * @param DateTimeValueRounder $date_time_value_rounder
+     * @param string $alias_field
+     */
+    public function __construct(DateTimeValueRounder $date_time_value_rounder, $alias_field)
     {
         $this->date_time_value_rounder = $date_time_value_rounder;
+        $this->alias_field             = $alias_field;
     }
 
     /**
@@ -42,9 +50,9 @@ class GreaterThanComparisonFromWhereBuilder extends FromWhereBuilder
      */
     protected function getParametrizedFromWhere($value)
     {
-        $ceiled_timestamp = $this->date_time_value_rounder->getCeiledTimestampFromDateTime($value);
-        $where_parameters = [$ceiled_timestamp];
-        $where            = "tracker_artifact.submitted_on > ?";
+        $floored_timestamp = $this->date_time_value_rounder->getFlooredTimestampFromDateTime($value);
+        $where_parameters  = [$floored_timestamp];
+        $where             = "{$this->alias_field} >= ?";
 
         return new ParametrizedFromWhere('', $where, [], $where_parameters);
     }

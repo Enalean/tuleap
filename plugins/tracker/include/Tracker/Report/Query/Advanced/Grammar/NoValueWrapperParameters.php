@@ -18,9 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\SubmittedOn;
-
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
+namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
 class NoValueWrapperParameters implements ValueWrapperParameters
 {

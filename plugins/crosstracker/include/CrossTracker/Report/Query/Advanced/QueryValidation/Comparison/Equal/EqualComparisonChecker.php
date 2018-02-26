@@ -34,8 +34,9 @@ class EqualComparisonChecker extends ComparisonChecker
         CurrentDateTimeValueWrapper $value_wrapper,
         ValueWrapperParameters $parameters
     ) {
-        if ($parameters->getMetadata()->getName() === AllowedMetadata::SUBMITTED_ON) {
-            throw new OperatorToNowComparisonException($parameters->getMetadata(), static::OPERATOR);
+        $metadata = $parameters->getMetadata();
+        if (in_array($metadata->getName(), AllowedMetadata::DATES)) {
+            throw new OperatorToNowComparisonException($metadata, static::OPERATOR);
         }
 
         parent::visitCurrentDateTimeValueWrapper($value_wrapper, $parameters);

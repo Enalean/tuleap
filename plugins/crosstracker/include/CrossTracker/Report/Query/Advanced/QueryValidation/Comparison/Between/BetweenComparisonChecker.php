@@ -44,7 +44,7 @@ class BetweenComparisonChecker extends ComparisonChecker
     public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
     {
         $metadata = $parameters->getMetadata();
-        if ($metadata->getName() !== AllowedMetadata::SUBMITTED_ON) {
+        if (! in_array($metadata->getName(), AllowedMetadata::DATES)) {
             throw new OperatorNotAllowedForMetadataException($metadata, static::OPERATOR);
         }
 

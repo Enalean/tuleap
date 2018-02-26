@@ -25,6 +25,37 @@ use Tuleap\CrossTracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragment
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
-class GreaterThanOrEqualComparisonFromWhereBuilder extends GreaterThanComparisonFromWhereBuilder
+class GreaterThanOrEqualComparisonFromWhereBuilder implements FromWhereBuilder
 {
+    /**
+     * @var AlwaysThereField\Date\GreaterThanOrEqualComparisonFromWhereBuilder
+     */
+    private $submitted_on_builder;
+    /**
+     * @var AlwaysThereField\Date\GreaterThanOrEqualComparisonFromWhereBuilder
+     */
+    private $last_update_date_builder;
+
+    public function __construct(
+        AlwaysThereField\Date\GreaterThanOrEqualComparisonFromWhereBuilder $submitted_on_builder,
+        AlwaysThereField\Date\GreaterThanOrEqualComparisonFromWhereBuilder $last_update_date_builder
+    ) {
+        $this->submitted_on_builder     = $submitted_on_builder;
+        $this->last_update_date_builder = $last_update_date_builder;
+    }
+
+    /**
+     * @return IProvideParametrizedFromAndWhereSQLFragments
+     */
+    public function getFromWhere(Metadata $metadata, Comparison $comparison, array $trackers)
+    {
+        switch ($metadata->getName()) {
+            case AllowedMetadata::SUBMITTED_ON:
+                return $this->submitted_on_builder->getFromWhere($metadata, $comparison, $trackers);
+                break;
+            case AllowedMetadata::LAST_UPDATE_DATE:
+                return $this->last_update_date_builder->getFromWhere($metadata, $comparison, $trackers);
+                break;
+        }
+    }
 }
