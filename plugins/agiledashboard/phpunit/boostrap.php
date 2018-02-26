@@ -19,35 +19,4 @@
  *
  */
 
-namespace Tuleap\Widget\Event;
-
-use Tuleap\Event\Dispatchable;
-
-class GetWidget implements Dispatchable
-{
-
-    const NAME = 'widgetInstance';
-
-    private $widget_name;
-    private $widget;
-
-    public function __construct($widget_name)
-    {
-        $this->widget_name = $widget_name;
-    }
-
-    public function getName()
-    {
-        return $this->widget_name;
-    }
-
-    public function setWidget(\Widget $widget)
-    {
-        $this->widget = $widget;
-    }
-
-    public function getWidget()
-    {
-        return $this->widget;
-    }
-}
+require_once __DIR__.'/../include/autoload.php';

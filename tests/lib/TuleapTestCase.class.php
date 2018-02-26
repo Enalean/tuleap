@@ -91,6 +91,14 @@ abstract class TuleapTestCase extends UnitTestCase {
         // So to avoid a huge shame during daily stand-up we do some cleaning
         // for you.
         set_time_limit(0);
+
+        // Include mocker assertions into SimpleTest results
+        if ($container = \Mockery::getContainer()) {
+            for ($i = 0; $i < $container->mockery_getExpectationCount(); $i++) {
+                $this->pass();
+            }
+        }
+        \Mockery::close();
     }
 
     function getTests() {

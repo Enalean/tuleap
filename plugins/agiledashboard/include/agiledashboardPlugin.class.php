@@ -99,6 +99,7 @@ class AgileDashboardPlugin extends Plugin {
             $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
             $this->addHook(\Tuleap\Widget\Event\GetUserWidgetList::NAME);
             $this->addHook(\Tuleap\Widget\Event\GetProjectWidgetList::NAME);
+            $this->addHook(\Tuleap\Widget\Event\ConfigureAtXMLImport::NAME);
             $this->addHook(TRACKER_EVENT_INCLUDE_CSS_FILE);
             $this->addHook(TRACKER_EVENT_TRACKERS_DUPLICATED, 'tracker_event_trackers_duplicated', false);
             $this->addHook(TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION, 'tracker_event_build_artifact_form_action', false);
@@ -462,6 +463,14 @@ class AgileDashboardPlugin extends Plugin {
     public function getProjectWidgetList(\Tuleap\Widget\Event\GetProjectWidgetList $event)
     {
         $event->addWidget(ProjectKanban::NAME);
+    }
+
+    public function configureAtXMLImport(\Tuleap\Widget\Event\ConfigureAtXMLImport $event)
+    {
+        if ($event->getWidget()->getId() === ProjectKanban::NAME) {
+            $xml_import = new \Tuleap\AgileDashboard\Widget\WidgetKanbanXMLImporter();
+            $xml_import->configureWidget($event);
+        }
     }
 
     private function redirectOrAppend(Codendi_Request $request, Tracker_Artifact $artifact, Tracker_Artifact_Redirect $redirect, $requested_planning, Tracker_Artifact $last_milestone_artifact = null) {

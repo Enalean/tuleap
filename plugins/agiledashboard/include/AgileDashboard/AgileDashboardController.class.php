@@ -336,7 +336,8 @@ class AgileDashboard_Controller extends MVC2_PluginController {
                                     )
                                 )
                             ),
-                            $logger
+                            $logger,
+                            $this->event_manager
                         )
                     )
                 ),

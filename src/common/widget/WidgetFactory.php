@@ -183,11 +183,6 @@ class WidgetFactory
         return $widget;
     }
 
-    public function isProjectWidget(Widget $widget)
-    {
-        return in_array($widget->getId(), $this->getWidgetsForOwnerType(ProjectDashboardController::LEGACY_DASHBOARD_TYPE));
-    }
-
     /**
      * @param string $dashboard_type
      * @return Widget[]

@@ -47,12 +47,12 @@ class MappingsRegistry
         return false;
     }
 
-    public function addWidget($reference, $id)
+    public function addReference($reference, $id)
     {
         $this->widget_reference[$reference] = $id;
     }
 
-    public function getWidget($reference)
+    public function getReference($reference)
     {
         if (! isset($this->widget_reference[$reference])) {
             return null;

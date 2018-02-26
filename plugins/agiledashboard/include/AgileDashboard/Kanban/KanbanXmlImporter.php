@@ -99,12 +99,12 @@ class KanbanXmlImporter
                 (string) $attrs["name"],
                 $tracker_mapping[(string) $attrs["tracker_id"]]
             );
-            $mappings_registry->addWidget((string)$attrs['ID'], $kanban_id);
 
-            $kanban    = $this->dashboard_kanban_factory->getKanban(
+            $kanban = $this->dashboard_kanban_factory->getKanban(
                 $user,
                 $kanban_id
             );
+            $mappings_registry->addReference((string)$attrs['ID'], $kanban);
 
             foreach ($xml_configuration as $xml_columns) {
                 $columns_attrs = $xml_columns->attributes();

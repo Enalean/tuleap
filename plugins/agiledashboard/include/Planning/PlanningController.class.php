@@ -488,7 +488,8 @@ class Planning_Controller extends MVC2_PluginController {
                         )
                     )
                 ),
-                $logger
+                $logger,
+                $event_manager
             )
         );
 

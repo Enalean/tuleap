@@ -44,15 +44,6 @@ class WidgetKanbanCreator
     public function create(Codendi_Request $request, $owner_id, $owner_type)
     {
         $kanban         = $request->get('kanban');
-        if ($kanban === false) {
-            throw new \RuntimeException('Missing parameter: kanban');
-        }
-        if (! isset($kanban['id'])) {
-            throw new \RuntimeException('Missing parameter: kanban[id]');
-        }
-        if (! isset($kanban['title'])) {
-            throw new \RuntimeException('Missing parameter: kanban[title]');
-        }
         $kanban_id      = $kanban['id'];
         $kanban_title   = $kanban['title'];
 
