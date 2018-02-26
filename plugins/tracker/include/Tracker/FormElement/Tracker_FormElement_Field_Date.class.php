@@ -365,49 +365,28 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
                 $to = $_SERVER['REQUEST_TIME'];
             }
             if ( empty($from) ) {
+                $to               = $this->getDao()->getDa()->escapeInt($to);
                 $and_compare_date = "$column <=  $to + $seconds_in_a_day - 1 ";
             } else {
+                $from             = $this->getDao()->getDa()->escapeInt($from);
+                $to               = $this->getDao()->getDa()->escapeInt($to);
                 $and_compare_date = "$column BETWEEN $from
                                              AND $to + $seconds_in_a_day - 1";
             }
         } else {
             switch ($op) {
                 case '<':
+                    $to               = $this->getDao()->getDa()->escapeInt($to);
                     $and_compare_date = "$column < $to";
                     break;
                 case '=':
+                    $to               = $this->getDao()->getDa()->escapeInt($to);
                     $and_compare_date = "$column BETWEEN $to
                                                  AND $to + $seconds_in_a_day - 1";
                     break;
                 default:
+                    $to               = $this->getDao()->getDa()->escapeInt($to);
                     $and_compare_date = "$column > $to + $seconds_in_a_day";
-                    break;
-            }
-        }
-
-        return $and_compare_date;
-    }
-
-    private function getSQLCompareDateTime($is_advanced, $op, $from, $to, $column) {
-        if ($is_advanced) {
-            if ( ! $to ) {
-                $to = $_SERVER['REQUEST_TIME'];
-            }
-            if ( empty($from) ) {
-                $and_compare_date = "$column <= ". $to;
-            } else {
-                $and_compare_date = "$column BETWEEN $from AND $to";
-            }
-        } else {
-            switch ($op) {
-                case '<':
-                    $and_compare_date = "$column < ". $to;
-                    break;
-                case '=':
-                    $and_compare_date = "$column = $to";
-                    break;
-                default:
-                    $and_compare_date = "$column > $to";
                     break;
             }
         }

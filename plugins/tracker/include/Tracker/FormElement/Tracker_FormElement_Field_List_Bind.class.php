@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -288,14 +288,18 @@ abstract class Tracker_FormElement_Field_List_Bind implements
             $a = 'A_'. $this->field->id;
             $b = 'B_'. $this->field->id;
             if ($this->isSearchingNone($criteria_value)) {
-                $values_id = array_values($criteria_value);
+                $values_id = $this->getDao()->getDa()->escapeIntImplode(array_values($criteria_value));
 
-                return " $b.bindvalue_id IN (". implode(',', $values_id) .") OR $b.bindvalue_id IS NULL ";
+                return " $b.bindvalue_id IN (". $values_id .") OR $b.bindvalue_id IS NULL ";
             }
 
-            $ids_to_search = $this->getIdsToSearch($criteria_value);
+            $ids_to_search = $this->getDao()->getDa()->escapeIntImplode($this->getIdsToSearch($criteria_value));
 
-            return " $b.bindvalue_id IN(". implode(',', $ids_to_search) .") ";
+            if ($ids_to_search === '') {
+                return '';
+            }
+
+            return " $b.bindvalue_id IN(". $ids_to_search .") ";
         }
         return '';
     }
