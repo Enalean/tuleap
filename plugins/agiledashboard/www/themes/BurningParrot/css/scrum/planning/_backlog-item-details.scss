@@ -40,7 +40,20 @@
     }
 
     &.closed {
-        opacity: .4;
+        border-color: transparentize($tlp-ui-border-normal, .5);
+        background: transparent;
+
+        .backlog-item-details-id {
+            color: transparentize($tlp-ui-dimmed, .4);
+        }
+
+        .backlog-item-details-type-border,
+        .backlog-item-details-title,
+        .backlog-item-details-parent,
+        .backlog-item-details-effort-container,
+        .extra-card-fields {
+            opacity: .5;
+        }
     }
 
     @keyframes blink {
