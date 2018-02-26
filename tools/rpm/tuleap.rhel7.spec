@@ -54,17 +54,6 @@ Tuleap is a web based application that address all the aspects of product develo
 ## Core component definitions
 #
 
-%package install
-Summary: Initial setup of the platform
-Group: Development/Tools
-Version: @@VERSION@@
-Release: @@VERSION@@_@@RELEASE@@%{?dist}
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
-%description install
-This package contains the setup script for the tuleap platform.
-It is meant to be install at the initial setup of the platform and
-recommanded to uninstall it after.
-
 %package core-mailman
 Summary: Mailman component for Tuleap
 Group: Development/Tools
@@ -460,9 +449,6 @@ done
 #%{__install} -m 700 -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/user
 #%{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/images
 
-# Install script
-#%{__install} -m 755 -d $RPM_BUILD_ROOT/%{_datadir}/tuleap-install
-#%{__install} -m 755 tools/setup.sh $RPM_BUILD_ROOT/%{_datadir}/tuleap-install/setup.sh
 
 # Install systemd Unit
 %{__install} -d $RPM_BUILD_ROOT/%{_unitdir}
@@ -989,13 +975,6 @@ fi
 
 %attr(00644,root,root) %{_unitdir}/tuleap.service
 %attr(00644,root,root) %{_unitdir}/tuleap-php-fpm.service
-
-#
-# Install
-#
-%files install
-%defattr(-,root,root,-)
-#%{_datadir}/tuleap-install
 
 #
 # Core
