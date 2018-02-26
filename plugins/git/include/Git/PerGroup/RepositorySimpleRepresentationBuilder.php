@@ -66,6 +66,11 @@ class RepositorySimpleRepresentationBuilder
             return;
         }
 
+        if ($repository->isMigratedToGerrit()) {
+            $permissions[Git::PERM_WRITE] = [];
+            $permissions[Git::PERM_WPLUS] = [];
+        }
+
         $readers   = $this->collection_of_ugroups_builder->build($project, $permissions[Git::PERM_READ]);
         $writers   = $this->collection_of_ugroups_builder->build($project, $permissions[Git::PERM_WRITE]);
         $rewinders = $this->collection_of_ugroups_builder->build($project, $permissions[Git::PERM_WPLUS]);
