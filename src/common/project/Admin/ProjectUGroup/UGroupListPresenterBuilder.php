@@ -43,10 +43,13 @@ class UGroupListPresenterBuilder
         $static_ugroups = $this->getStaticUGroups($project);
         $templates      = $this->getUGroupsThatCanBeUsedAsTemplate($project, $static_ugroups);
 
-        $ugroups = $this->getDynamicUGroups($project);
-        $this->injectStaticUGroups($project, $static_ugroups, $ugroups);
-
-        return new UGroupListPresenter($project, $ugroups, $templates, $csrf);
+        return new UGroupListPresenter(
+            $project,
+            $this->getDynamicUGroups($project),
+            $this->getStaticUGroupsPresenters($project, $static_ugroups),
+            $templates,
+            $csrf
+        );
     }
 
     /**
@@ -126,15 +129,18 @@ class UGroupListPresenterBuilder
 
     /**
      * @param Project $project
-     * @param $static_ugroups
-     * @param $ugroups
+     * @param ProjectUGroup[] $static_ugroups
+     * @return UGroupPresenter[]
      */
-    private function injectStaticUGroups(Project $project, $static_ugroups, &$ugroups)
+    private function getStaticUGroupsPresenters(Project $project, array $static_ugroups)
     {
+        $presenters     = [];
         $can_be_deleted = true;
         foreach ($static_ugroups as $ugroup) {
-            $ugroups[] = new UGroupPresenter($project, $ugroup, $can_be_deleted);
+            $presenters[] = new UGroupPresenter($project, $ugroup, $can_be_deleted);
         }
+
+        return $presenters;
     }
 
     /**
