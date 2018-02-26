@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata;
 
 use PFUser;
 use Tracker;

@@ -18,7 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\GreaterThan;
+
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\GreaterOrLesserThanComparisonChecker;
 
 class GreaterThanComparisonChecker extends GreaterOrLesserThanComparisonChecker
 {

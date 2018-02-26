@@ -20,7 +20,7 @@
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
-use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic\InvalidSemanticComparisonException;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\InvalidQueryException;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitor;
@@ -56,7 +56,7 @@ class InvalidSearchableCollectorVisitor implements Visitor
                 $parameters->getInvalidSearchablesCollectorParameters(),
                 $parameters->getComparisonChecker()
             );
-        } catch (InvalidSemanticComparisonException $exception) {
+        } catch (InvalidQueryException $exception) {
             $invalid_searchables_collection->addInvalidSearchableError(
                 $exception->getMessage()
             );

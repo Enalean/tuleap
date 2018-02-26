@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,11 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison;
 
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\InvalidQueryException;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
-class ToStatusOpenComparisonException extends InvalidSemanticComparisonException
+class ToStatusOpenComparisonException extends InvalidQueryException
 {
     public function __construct(Metadata $metadata)
     {

@@ -18,9 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\InvalidSemantic;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\NotEqual;
 
 use Tuleap\CrossTracker\Report\Query\Advanced\AllowedMetadata;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ComparisonChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\OperatorToNowComparisonException;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
 
