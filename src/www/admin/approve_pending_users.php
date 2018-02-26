@@ -159,31 +159,30 @@ $expiry_date = 0;
             }
         } else if ($action_select === 'resend_email') {
             $csrf_token->check();
-            if (ForgeConfig::get('sys_user_approval') == 0) {
-                $user_manager = UserManager::instance();
-                foreach ($users_array as $user_id) {
-                    $user = $user_manager->getUserById($user_id);
-                    if ($user === null) {
-                        continue;
-                    }
-                    if ($user->getStatus() !== PFUser::STATUS_PENDING && $user->getStatus() !== PFUser::STATUS_VALIDATED &&
-                        $user->getStatus() !== PFUser::STATUS_VALIDATED_RESTRICTED) {
-                        continue;
-                    }
+            $user_manager = UserManager::instance();
+            foreach ($users_array as $user_id) {
+                $user = $user_manager->getUserById($user_id);
+                if ($user === null) {
+                    continue;
+                }
+                if ($user->getStatus() !== PFUser::STATUS_PENDING && $user->getStatus() !== PFUser::STATUS_VALIDATED &&
+                    $user->getStatus() !== PFUser::STATUS_VALIDATED_RESTRICTED) {
+                    continue;
+                }
 
-                    $is_mail_sent = send_new_user_email($user->getEmail(), $user->getUserName(), $user->getConfirmHash());
+                $is_mail_sent = send_new_user_email($user->getEmail(), $user->getUserName(), $user->getConfirmHash());
 
-                    if ($is_mail_sent) {
-                        $GLOBALS['Response']->addFeedback(
-                            Feedback::INFO,
-                            $Language->getText('admin_approve_pending_users', 'resend_mail_success', array($user->getEmail()))
-                        );
-                    } else {
-                        $GLOBALS['Response']->addFeedback(
-                            Feedback::INFO,
-                            $Language->getText('admin_approve_pending_users', 'resend_mail_error', array($user->getEmail()))
-                        );
-                    }
+                if ($is_mail_sent) {
+                    $GLOBALS['Response']->addFeedback(
+                        Feedback::INFO,
+                        $Language->getText('admin_approve_pending_users', 'resend_mail_success',
+                            array($user->getEmail()))
+                    );
+                } else {
+                    $GLOBALS['Response']->addFeedback(
+                        Feedback::INFO,
+                        $Language->getText('admin_approve_pending_users', 'resend_mail_error', array($user->getEmail()))
+                    );
                 }
             }
         }
