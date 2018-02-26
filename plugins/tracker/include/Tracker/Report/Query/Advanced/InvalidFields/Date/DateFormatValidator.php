@@ -57,7 +57,7 @@ class DateFormatValidator
         }
 
         if ($date_value === false && $value !== '') {
-            throw new DateToStringException();
+            throw new DateToStringException($value);
         }
     }
 

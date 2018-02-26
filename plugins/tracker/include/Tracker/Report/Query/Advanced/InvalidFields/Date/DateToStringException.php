@@ -22,4 +22,23 @@ namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date;
 
 class DateToStringException extends \Exception
 {
+    private $submitted_value;
+
+    /**
+     * @param string $submitted_value
+     */
+    public function __construct($submitted_value)
+    {
+        parent::__construct();
+
+        $this->submitted_value = $submitted_value;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSubmittedValue()
+    {
+        return $this->submitted_value;
+    }
 }
