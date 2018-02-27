@@ -255,7 +255,7 @@ class Git_Gitolite_ConfigPermissionsSerializer_GitoliteConfTest extends TuleapTe
         );
     }
 
-    public function __only__itGrantsReadAccessToGitoliteAdminForMirrorUsers() {
+    public function itGrantsReadAccessToGitoliteAdminForMirrorUsers() {
         stub($this->mirror_mapper)->fetchAll()->returns(array($this->mirror_1, $this->mirror_2));
         $serializer = new Git_Gitolite_ConfigPermissionsSerializer(
             $this->mirror_mapper,
