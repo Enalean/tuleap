@@ -1,5 +1,5 @@
 (<template>
-    <table class="tlp-table">
+    <table class="tlp-table permission-per-group-table">
         <thead>
         <tr>
             <th> {{ package_label }}</th>

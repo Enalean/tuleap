@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -30,3 +30,5 @@ $tlp-ui-border-dark  : #d4d7e1;
 $tlp-theme-color                   : $tlp-theme-orange;
 $tlp-theme-background-color        : $tlp-theme-background-orange;
 $tlp-theme-sidebar-background-color: $tlp-theme-sidebar-background-orange;
+
+@import './names';

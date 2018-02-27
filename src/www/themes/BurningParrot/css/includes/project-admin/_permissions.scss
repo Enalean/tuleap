@@ -62,3 +62,11 @@
     height: 100px;
     background: url('/themes/BurningParrot/images/spinner.gif') no-repeat center center;
 }
+
+.permission-per-group-table > tbody > tr > td {
+    @each $badge in $badge-names {
+        > .#{$badge} {
+            margin: 1px 2px 1px 0;
+        }
+    }
+}
