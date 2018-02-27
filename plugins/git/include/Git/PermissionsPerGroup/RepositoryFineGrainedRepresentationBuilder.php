@@ -24,6 +24,7 @@ use Git;
 use GitPermissionsManager;
 use GitRepository;
 use Project;
+use Tuleap\Git\Permissions\FineGrainedPermission;
 use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
 
 class RepositoryFineGrainedRepresentationBuilder
@@ -140,6 +141,12 @@ class RepositoryFineGrainedRepresentationBuilder
         return $filtered_permissions;
     }
 
+    /**
+     * @param FineGrainedPermission[] $permissions
+     * @param Project $project
+     * @param bool $is_tag
+     * @return FineGrainedPermissionRepresentation[]
+     */
     private function buildFineGrainedPermission(array $permissions, Project $project, $is_tag)
     {
         $fine_grained_permissions = [];
@@ -166,6 +173,7 @@ class RepositoryFineGrainedRepresentationBuilder
             );
 
             $fine_grained_permissions[] = new FineGrainedPermissionRepresentation(
+                $fine_grained->getId(),
                 $formatted_writers,
                 $formatted_rewinders,
                 $branch,

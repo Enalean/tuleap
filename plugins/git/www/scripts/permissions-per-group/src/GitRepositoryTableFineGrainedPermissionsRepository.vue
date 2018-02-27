@@ -37,8 +37,8 @@
     import GitPermissionsBadge from 'permission-badge/PermissionsPerGroupBadge.vue';
 
     export default {
-        components: {GitPermissionsBadge},
-        name: 'GitRepositoryTableFineGrainedPermissions',
+        components: { GitPermissionsBadge },
+        name: 'GitRepositoryTableFineGrainedPermissionsRepository',
         props: {
             repositoryPermission: Object
         }

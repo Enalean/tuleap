@@ -45,14 +45,18 @@
         <tbody>
             <template v-for="permission in repositoryPermissions">
                 <git-repository-table-simple-permissions v-if="! permission.has_fined_grained_permissions"
-                                                         v-bind:repository-permission="permission"/>
+                                                         v-bind:repository-permission="permission"
+                />
 
                 <git-repository-table-fine-grained-permissions-repository v-if="permission.has_fined_grained_permissions"
-                                                                            v-bind:repository-permission="permission"/>
+                                                                          v-bind:repository-permission="permission"
+                />
 
                 <git-repository-table-fine-grained-permission v-if="permission.has_fined_grained_permissions"
                     v-for="fined_grained_permission in permission.fine_grained_permission"
-                    v-bind:fine-grained-permissions="fined_grained_permission"/>
+                    v-bind:key="fined_grained_permission.id"
+                    v-bind:fine-grained-permissions="fined_grained_permission"
+                />
             </template>
         </tbody>
     </table>
