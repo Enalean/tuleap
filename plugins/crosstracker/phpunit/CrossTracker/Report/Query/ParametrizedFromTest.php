@@ -20,20 +20,17 @@
 
 namespace Tuleap\CrossTracker\Report\Query;
 
-interface IProvideParametrizedFromAndWhereSQLFragments
+use PHPUnit\Framework\TestCase;
+
+class ParametrizedFromTest extends TestCase
 {
-    /**
-     * @return ParametrizedFrom[]
-     */
-    public function getAllParametrizedFrom();
+    public function testArrayUniqueOfArrayOfParametrizedFromObjectsExcludSameObjects()
+    {
+        $o1 = new ParametrizedFrom('some sql', [1, 2]);
+        $o2 = new ParametrizedFrom('another sql', [1, 2]);
+        $o3 = new ParametrizedFrom('some sql', [1, 2]);
+        $o4 = new ParametrizedFrom('some sql', [1, 2, 3]);
 
-    /**
-     * @return string
-     */
-    public function getWhere();
-
-    /**
-     * @return array
-     */
-    public function getWhereParameters();
+        $this->assertEquals([$o1, $o2, $o4], array_values(array_unique([$o1, $o2, $o3, $o4])));
+    }
 }

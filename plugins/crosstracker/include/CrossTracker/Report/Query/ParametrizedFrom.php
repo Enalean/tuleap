@@ -20,20 +20,48 @@
 
 namespace Tuleap\CrossTracker\Report\Query;
 
-interface IProvideParametrizedFromAndWhereSQLFragments
+class ParametrizedFrom
 {
     /**
-     * @return ParametrizedFrom[]
+     * @var string
      */
-    public function getAllParametrizedFrom();
+    private $from;
+    /**
+     * @var array
+     */
+    private $parameters;
+
+    /**
+     * @param string $from
+     * @param array $parameters
+     */
+    public function __construct($from, array $parameters)
+    {
+        $this->from       = $from;
+        $this->parameters = $parameters;
+    }
 
     /**
      * @return string
      */
-    public function getWhere();
+    public function getFrom()
+    {
+        return $this->from;
+    }
 
     /**
      * @return array
      */
-    public function getWhereParameters();
+    public function getParameters()
+    {
+        return $this->parameters;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->from . var_export($this->parameters, 1);
+    }
 }
