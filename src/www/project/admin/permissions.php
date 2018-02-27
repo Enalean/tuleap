@@ -1,13 +1,25 @@
 <?php
-//
-// Codendi
-// Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-// http://www.codendi.com
-//
-// 
-//
-// Originally written by Nicolas Guerin 2004, Codendi Team, Xerox
-//
+/**
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean 2017 - 2018. All rights reserved
+ *
+ * Originally written by Nicolas Guerin 2004, Codendi Team, Xerox
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 // Supported object types and related object_id:
 //
@@ -30,7 +42,6 @@ use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\FRS\FRSPermissionFactory;
 use Tuleap\FRS\FRSPermissionManager;
 
-require_once('www/project/admin/ugroup_utils.php');
 require_once('www/project/admin/project_admin_utils.php');
 
 
@@ -931,9 +942,10 @@ function permission_add_history($group_id, $permission_type, $object_id){
         return;
     } 
     $ugroup_list='';
+    $manager = new UGroupManager();
     while ($row = db_fetch_array($res)) {
         if ($ugroup_list) { $ugroup_list.=', ';}
-        $ugroup_list.= ugroup_get_name_from_id($row['ugroup_id']);
+        $ugroup_list.= $manager->getById($row['ugroup_id'])->getTranslatedName();
     }
     group_add_history('perm_granted_for_'.$type, $ugroup_list, $group_id, array($name));
 }

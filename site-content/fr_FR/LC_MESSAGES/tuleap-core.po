@@ -323,6 +323,9 @@ msgstr "FRS"
 msgid "Files"
 msgstr "Fichiers"
 
+msgid "Files service is disabled for this project."
+msgstr "Le service fichiers est désactivé pour ce projet."
+
 msgid "Filled"
 msgstr "Rempli"
 
@@ -488,9 +491,6 @@ msgstr "Il n'y a pas de label défini dans ce projet"
 msgid "No matching labels"
 msgstr "Il n'y a aucun label correspondant"
 
-msgid "No packages found for project"
-msgstr "Pas de paquet trouvé pour ce projet"
-
 msgid "No project trove categories"
 msgstr "Aucune catégorie de projet"
 
@@ -523,9 +523,6 @@ msgstr "Propriétaire"
 
 msgid "PHPWiki"
 msgstr "PHPWiki"
-
-msgid "Package"
-msgstr "Paquet"
 
 msgid "Page permissions are not listed."
 msgstr "Les permissions par page ne sont pas listées."
@@ -649,14 +646,8 @@ msgstr "RSS"
 msgid "Rank"
 msgstr "Rang"
 
-msgid "Readers"
-msgstr "Lecteurs"
-
 msgid "Recently"
 msgstr "Récemment"
-
-msgid "Release"
-msgstr "Version"
 
 msgid "Remove"
 msgstr "Retirer"

@@ -39,57 +39,13 @@
                 </table>
             </section>
         {{/ service_presenter }}
-        {{# package_presenter }}
-            <section class="tlp-pane-section">
-                <table class="tlp-table">
-                    <thead>
-                    <tr>
-                        <th> {{# gettext }} Package {{/ gettext }}</th>
-                        <th> {{# gettext }} Release {{/ gettext }}</th>
-                        <th> {{# gettext }} Readers {{/ gettext }}</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {{# permissions }}
-                        <tr>
-                            <td><a href="{{ package_url }}">{{ package_name }}</a></td>
-                            <td></td>
-                            <td>
-                                {{# permissions }}
-                                    <span class="
-                                        {{# is_project_admin }}tlp-badge-danger tlp-badge-outline{{/ is_project_admin }}
-                                        {{# is_static }}tlp-badge-primary tlp-badge-outline{{/ is_static }}
-                                        {{# is_custom }}tlp-badge-secondary{{/ is_custom }}
-                                    ">{{ name }}</span>
-                                {{/ permissions }}
-                            </td>
-                        </tr>
-                        {{# releases }}
-                            <tr>
-                                <td></td>
-                                <td><a href="{{ release_url }}">{{ release_name }}</a></td>
-                                <td>
-                                    {{# release_permissions }}
-                                        <span class="
-                                        {{# is_project_admin }}tlp-badge-danger tlp-badge-outline{{/ is_project_admin }}
-                                            {{# is_static }}tlp-badge-primary tlp-badge-outline{{/ is_static }}
-                                            {{# is_custom }}tlp-badge-secondary{{/ is_custom }}
-                                    ">{{ name }}</span>
-                                    {{/ release_permissions }}
-                                </td>
-                            </tr>
-                        {{/ releases }}
-                    {{/ permissions }}
-                    {{^ has_permissions }}
-                        <tr>
-                            <td colspan="3" class="tlp-table-cell-empty">
-                                {{# gettext }} No packages found for project {{/ gettext }}
-                            </td>
-                        </tr>
-                    {{/ has_permissions }}
-                    </tbody>
-                </table>
-            </section>
-        {{/ package_presenter }}
+        {{# package_load_all_presenter }}
+            <div id="frs-packages-permissions-per-group"
+                 data-locale="{{ user_locale }}"
+                 data-selected-ugroup-id="{{ ugroup_id }}"
+                 data-selected-project-id="{{ project_id }}"
+                 data-selected-ugroup-name="{{ selected_ugroup_name }}"
+            ></div>
+        {{/ package_load_all_presenter }}
     </div>
 </section>

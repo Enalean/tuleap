@@ -27,7 +27,6 @@ use Tuleap\FRS\UploadedLinksRetriever;
 use Tuleap\FRS\UploadedLinksUpdater;
 use Tuleap\FRS\UploadedLinkUpdateTablePresenter;
 
-require_once('www/news/news_utils.php');
 require_once('common/autoload.php');
 
 function file_utils_header($params) {

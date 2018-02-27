@@ -21,10 +21,10 @@
 namespace Tuleap\FRS\PerGroup;
 
 use ForgeConfig;
+use PFUser;
 use Project;
 use TemplateRendererFactory;
-use Tuleap\Project\Admin\PerGroup\PermissionPerGroupPanePresenter;
-use Tuleap\Project\Admin\Permission\PermissionPerGroupPaneCollector;
+use Tuleap\Layout\IncludeAssets;
 
 class PaneCollector
 {
@@ -45,18 +45,26 @@ class PaneCollector
         $this->packages_pane_builder     = $packages_pane_builder;
     }
 
-    public function collectPane(Project $project, $selected_ugroup = null)
+    public function collectPane(Project $project, PFUser $user, $selected_ugroup = null)
     {
         if (! $project->usesFile()) {
             return;
         }
 
         $service_presenter = $this->service_presenter_builder->getPanePresenter($project, $selected_ugroup);
-        $package_presenter = $this->packages_pane_builder->getPanePresenter($project, $selected_ugroup);
+        $package_presenter = $this->packages_pane_builder->getPanePresenter($project, $user, $selected_ugroup);
+
+        $tuleap_base_dir = ForgeConfig::get('tuleap_dir');
+        $include_assets  = new IncludeAssets(
+            $tuleap_base_dir . '/src/www/assets',
+            '/assets'
+        );
+
+        $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('frs-permissions.js'));
 
         $global_presenter = new GlobalPresenter($service_presenter, $package_presenter);
 
-        $templates_dir = ForgeConfig::get('tuleap_dir') . '/src/templates/frs';
+        $templates_dir = $tuleap_base_dir . '/src/templates/frs';
         $content       = TemplateRendererFactory::build()
             ->getRenderer($templates_dir)
             ->renderToString('project-admin-permission-per-group', $global_presenter);

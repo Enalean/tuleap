@@ -1,6 +1,10 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright Enalean (c) 2018. All rights reserved.
+ *
+ * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Enalean SAS. All other trademarks or names are properties of their respective
+ * owners.
  *
  * This file is a part of Tuleap.
  *
@@ -20,25 +24,31 @@
 
 namespace Tuleap\FRS\PerGroup;
 
-use Tuleap\Project\Admin\PerGroup\PermissionPerGroupPanePresenter;
-use Tuleap\Project\Admin\Permission\PermissionPerGroupLoadAllButtonPresenter;
+use Tuleap\Project\Admin\Permission\PermissionPerGroupUGroupRepresentation;
 
-class GlobalPresenter
+class PackagePermissionPerGroupReleaseRepresentation
 {
     /**
-     * @var PermissionPerGroupPanePresenter
+     * @var string
      */
-    public $service_presenter;
+    public $release_url;
+
     /**
-     * @var PermissionPerGroupLoadAllButtonPresenter
+     * @var string
      */
-    public $package_load_all_presenter;
+    public $release_name;
+    /**
+     * @var PermissionPerGroupUGroupRepresentation[]
+     */
+    public $release_permissions;
 
     public function __construct(
-        PermissionPerGroupPanePresenter $service_presenter,
-        PermissionPerGroupLoadAllButtonPresenter $package_load_all_presenter
+        $release_url,
+        $release_name,
+        array $release_permissions
     ) {
-        $this->service_presenter          = $service_presenter;
-        $this->package_load_all_presenter = $package_load_all_presenter;
+        $this->release_url         = $release_url;
+        $this->release_name        = $release_name;
+        $this->release_permissions = $release_permissions;
     }
 }

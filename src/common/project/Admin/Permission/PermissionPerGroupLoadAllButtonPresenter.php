@@ -22,13 +22,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\News\Admin\PerGroup;
+namespace Tuleap\Project\Admin\Permission;
 
 use PFUser;
 use Project;
 use ProjectUGroup;
 
-class NewsPermissionPerGroupPresenter
+class PermissionPerGroupLoadAllButtonPresenter
 {
     /**
      * @var int

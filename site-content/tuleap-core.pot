@@ -297,6 +297,9 @@ msgstr ""
 msgid "Files"
 msgstr ""
 
+msgid "Files service is disabled for this project."
+msgstr ""
+
 msgid "Filled"
 msgstr ""
 
@@ -460,9 +463,6 @@ msgstr ""
 msgid "No matching labels"
 msgstr ""
 
-msgid "No packages found for project"
-msgstr ""
-
 msgid "No project trove categories"
 msgstr ""
 
@@ -494,9 +494,6 @@ msgid "Owner"
 msgstr ""
 
 msgid "PHPWiki"
-msgstr ""
-
-msgid "Package"
 msgstr ""
 
 msgid "Page permissions are not listed."
@@ -614,13 +611,7 @@ msgstr ""
 msgid "Rank"
 msgstr ""
 
-msgid "Readers"
-msgstr ""
-
 msgid "Recently"
-msgstr ""
-
-msgid "Release"
 msgstr ""
 
 msgid "Remove"
