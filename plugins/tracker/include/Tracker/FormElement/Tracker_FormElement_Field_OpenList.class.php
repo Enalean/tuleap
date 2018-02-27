@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001 - 2009. All rights reserved
- * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -595,21 +595,19 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
                     $bindvalues[] = $v->getId();
                 }
             }
-            $openvalues = implode(',', $openvalues);
-            $bindvalues = implode(',', $bindvalues);
             //Only filter query if criteria is valuated
             if ($openvalues || $bindvalues) {
                 $a = 'A_'. $this->id;
                 $b = 'B_'. $this->id;
                 $statement = '';
                 if ($openvalues) {
-                    $statement .= "$b.openvalue_id IN ($openvalues)";
+                    $statement .= "$b.openvalue_id IN (". $this->getDao()->getDa()->escapeIntImplode($openvalues).")";
                 }
                 if ($bindvalues) {
                     if ($statement) {
                         $statement .= ' OR ';
                     }
-                    $statement .= "$b.bindvalue_id IN ($bindvalues)";
+                    $statement .= "$b.bindvalue_id IN (". $this->getDao()->getDa()->escapeIntImplode($bindvalues) . ")";
                 }
                 return " INNER JOIN tracker_changeset_value AS $a 
                          ON ($a.changeset_id = c.id 
