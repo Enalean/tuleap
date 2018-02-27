@@ -23,9 +23,9 @@
  */
 
 use Tuleap\News\Admin\AdminNewsDao;
-use Tuleap\News\Admin\PerGroup\NewsJSONPermissionsRetriever;
-use Tuleap\News\Admin\PerGroup\NewsPermissionsManager;
-use Tuleap\News\Admin\PerGroup\NewsPermissionsRepresentationBuilder;
+use Tuleap\News\Admin\PermissionsPerGroup\NewsJSONPermissionsRetriever;
+use Tuleap\News\Admin\PermissionsPerGroup\NewsPermissionsManager;
+use Tuleap\News\Admin\PermissionsPerGroup\NewsPermissionsRepresentationBuilder;
 
 require_once 'pre.php';
 

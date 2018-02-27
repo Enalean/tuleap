@@ -20,21 +20,21 @@
 
 use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\FRS\FRSPermissionFactory;
-use Tuleap\FRS\PerGroup\FRSPermissionPerGroupURLBuilder;
-use Tuleap\FRS\PerGroup\PaneCollector;
-use Tuleap\FRS\PerGroup\PermissionPerGroupFRSPackagesPresenterBuilder;
-use Tuleap\FRS\PerGroup\PermissionPerGroupFRSServicePresenterBuilder;
-use Tuleap\FRS\PerGroup\PermissionPerTypeExtractor;
+use Tuleap\FRS\PermissionsPerGroup\FRSPermissionPerGroupURLBuilder;
+use Tuleap\FRS\PermissionsPerGroup\PaneCollector;
+use Tuleap\FRS\PermissionsPerGroup\PermissionPerGroupFRSPackagesPresenterBuilder;
+use Tuleap\FRS\PermissionsPerGroup\PermissionPerGroupFRSServicePresenterBuilder;
+use Tuleap\FRS\PermissionsPerGroup\PermissionPerTypeExtractor;
 use Tuleap\News\Admin\AdminNewsDao;
-use Tuleap\News\Admin\PerGroup\NewsPermissionPerGroupPaneBuilder;
-use Tuleap\News\Admin\PerGroup\NewsPermissionsManager;
-use Tuleap\PHPWiki\PerGroup\PHPWikiPermissionPerGroupPaneBuilder;
+use Tuleap\News\Admin\PermissionsPerGroup\NewsPermissionPerGroupPaneBuilder;
+use Tuleap\News\Admin\PermissionsPerGroup\NewsPermissionsManager;
+use Tuleap\PHPWiki\PermissionsPerGroup\PHPWikiPermissionPerGroupPaneBuilder;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
-use Tuleap\Project\Admin\PerGroup\PermissionPerGroupUGroupFormatter;
-use Tuleap\Project\Admin\Permission\PanesPermissionPerGroupBuilder;
-use Tuleap\Project\Admin\Permission\PermissionPerGroupBuilder;
-use Tuleap\Project\Admin\Permission\PermissionPerGroupPresenter;
-use Tuleap\Project\Admin\Permission\PermissionPerGroupUGroupRetriever;
+use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
+use Tuleap\Project\Admin\PermissionsPerGroup\PanesPermissionPerGroupBuilder;
+use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupBuilder;
+use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPresenter;
+use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRetriever;
 
 require_once('pre.php');
 

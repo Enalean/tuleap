@@ -18,13 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\FRS\PerGroup;
+namespace Tuleap\FRS\PermissionsPerGroup;
 
 use ProjectUGroup;
 use Tuleap\FRS\FRSPermission;
 use Tuleap\FRS\FRSPermissionFactory;
-use Tuleap\Project\Admin\PerGroup\PermissionPerGroupUGroupFormatter;
-use Tuleap\Project\Admin\Permission\PermissionPerGroupCollection;
+use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
+use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupCollection;
 use TuleapTestCase;
 
 class PermissionPerTypeExtractorTest extends TuleapTestCase
@@ -63,8 +63,8 @@ class PermissionPerTypeExtractorTest extends TuleapTestCase
         parent::setUp();
 
         $this->permission_factory = mock('Tuleap\FRS\FRSPermissionFactory');
-        $this->formatter          = mock('Tuleap\Project\Admin\PerGroup\PermissionPerGroupUGroupFormatter');
-        $this->url_builder        = mock('Tuleap\FRS\PerGroup\FRSPermissionPerGroupURLBuilder');
+        $this->formatter          = mock('Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter');
+        $this->url_builder        = mock('Tuleap\FRS\PermissionsPerGroup\FRSPermissionPerGroupURLBuilder');
 
         $this->extractor = new PermissionPerTypeExtractor(
             $this->permission_factory,

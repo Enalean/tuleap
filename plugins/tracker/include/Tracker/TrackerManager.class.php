@@ -20,7 +20,7 @@
  */
 
 use Tuleap\Admin\AdminPageRenderer;
-use Tuleap\Project\Admin\Permission\PermissionPerGroupUGroupRepresentationBuilder;
+use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRepresentationBuilder;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\Admin\GlobalAdminController;

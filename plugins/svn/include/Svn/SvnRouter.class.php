@@ -29,7 +29,7 @@ use Tuleap\Svn\Admin\ImmutableTagController;
 use Tuleap\Svn\Admin\RestoreController;
 use Tuleap\Svn\Explorer\ExplorerController;
 use Tuleap\Svn\Explorer\RepositoryDisplayController;
-use Tuleap\Svn\PerGroup\SVNJSONPermissionsRetriever;
+use Tuleap\Svn\PermissionsPerGroup\SVNJSONPermissionsRetriever;
 use Tuleap\Svn\Repository\Exception\CannotFindRepositoryException;
 use Tuleap\Svn\Repository\RepositoryManager;
 use UGroupManager;

@@ -51,16 +51,16 @@ use Tuleap\Git\Notifications\NotificationsForProjectMemberCleaner;
 use Tuleap\Git\Notifications\UgroupsToNotifyDao;
 use Tuleap\Git\Notifications\UgroupToNotifyUpdater;
 use Tuleap\Git\Notifications\UsersToNotifyDao;
-use Tuleap\Git\PerGroup\AdminUrlBuilder;
-use Tuleap\Git\PerGroup\CollectionOfUGroupRepresentationBuilder;
-use Tuleap\Git\PerGroup\CollectionOfUgroupsFormatter;
-use Tuleap\Git\PerGroup\CollectionOfUGroupsRepresentationFormatter;
-use Tuleap\Git\PerGroup\GitJSONPermissionsRetriever;
-use Tuleap\Git\PerGroup\GitPaneSectionCollector;
-use Tuleap\Git\PerGroup\PermissionPerGroupController;
-use Tuleap\Git\PerGroup\PermissionPerGroupGitSectionBuilder;
-use Tuleap\Git\PerGroup\RepositoryFineGrainedRepresentationBuilder;
-use Tuleap\Git\PerGroup\RepositorySimpleRepresentationBuilder;
+use Tuleap\Git\PermissionsPerGroup\AdminUrlBuilder;
+use Tuleap\Git\PermissionsPerGroup\CollectionOfUGroupRepresentationBuilder;
+use Tuleap\Git\PermissionsPerGroup\CollectionOfUgroupsFormatter;
+use Tuleap\Git\PermissionsPerGroup\CollectionOfUGroupsRepresentationFormatter;
+use Tuleap\Git\PermissionsPerGroup\GitJSONPermissionsRetriever;
+use Tuleap\Git\PermissionsPerGroup\GitPaneSectionCollector;
+use Tuleap\Git\PermissionsPerGroup\PermissionPerGroupController;
+use Tuleap\Git\PermissionsPerGroup\PermissionPerGroupGitSectionBuilder;
+use Tuleap\Git\PermissionsPerGroup\RepositoryFineGrainedRepresentationBuilder;
+use Tuleap\Git\PermissionsPerGroup\RepositorySimpleRepresentationBuilder;
 use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\DefaultFineGrainedPermissionReplicator;
 use Tuleap\Git\Permissions\FineGrainedDao;
@@ -106,10 +106,10 @@ use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
 use Tuleap\project\Admin\Navigation\NavigationDropdownQuickLinksCollector;
-use Tuleap\Project\Admin\PerGroup\PermissionPerGroupUGroupFormatter;
-use Tuleap\Project\Admin\Permission\PermissionPerGroupPaneCollector;
-use Tuleap\Project\Admin\Permission\PermissionPerGroupUGroupRepresentationBuilder;
-use Tuleap\Project\Admin\Permission\PermissionPerGroupUGroupRetriever;
+use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
+use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
+use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRepresentationBuilder;
+use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRetriever;
 use Tuleap\Project\Admin\ProjectUGroup\UserBecomesProjectAdmin;
 use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerProjectAdmin;
 use Tuleap\Project\HeartbeatsEntryCollection;
@@ -2479,7 +2479,7 @@ class GitPlugin extends Plugin
         );
 
         return new GitJSONPermissionsRetriever(
-            new \Tuleap\Git\PerGroup\RepositoriesPermissionRepresentationBuilder(
+            new \Tuleap\Git\PermissionsPerGroup\RepositoriesPermissionRepresentationBuilder(
                 $fine_grained_builder,
                 $simple_builder,
                 $this->getRepositoryFactory(),

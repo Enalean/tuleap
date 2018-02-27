@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Project\Admin\Permission;
+namespace Tuleap\Project\Admin\PermissionsPerGroup;
 
 use ForgeAccess;
 use ForgeConfig;

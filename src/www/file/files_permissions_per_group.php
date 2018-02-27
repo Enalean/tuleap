@@ -22,11 +22,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\FRS\PerGroup\PackagePermissionPerGroupJSONRepresentationRetriever;
-use Tuleap\FRS\PerGroup\PackagePermissionPerGroupReleaseRepresentationBuilder;
-use Tuleap\FRS\PerGroup\PackagePermissionPerGroupRepresentationBuilder;
-use Tuleap\Project\Admin\Permission\PermissionPerGroupUGroupRepresentationBuilder;
-use Tuleap\Project\Admin\Permission\PermissionPerGroupUGroupRetriever;
+use Tuleap\FRS\PermissionsPerGroup\PackagePermissionPerGroupJSONRepresentationRetriever;
+use Tuleap\FRS\PermissionsPerGroup\PackagePermissionPerGroupReleaseRepresentationBuilder;
+use Tuleap\FRS\PermissionsPerGroup\PackagePermissionPerGroupRepresentationBuilder;
+use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRepresentationBuilder;
+use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRetriever;
 
 require_once 'pre.php';
 
