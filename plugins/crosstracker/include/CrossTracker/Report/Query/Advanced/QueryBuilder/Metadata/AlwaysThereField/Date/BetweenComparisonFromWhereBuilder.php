@@ -20,15 +20,14 @@
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\Date;
 
+use Tracker;
+use Tuleap\CrossTracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 use Tuleap\CrossTracker\Report\Query\ParametrizedFromWhere;
-use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\DateTimeValueRounder;
 
-class BetweenComparisonFromWhereBuilder extends FromWhereBuilder
+class BetweenComparisonFromWhereBuilder implements FromWhereBuilder
 {
     /**
      * @var DateTimeValueRounder
@@ -38,43 +37,36 @@ class BetweenComparisonFromWhereBuilder extends FromWhereBuilder
      * @var string
      */
     private $alias_field;
+    /**
+     * @var DateValueExtractor
+     */
+    private $extractor;
 
     /**
+     * @param DateValueExtractor $extractor
      * @param DateTimeValueRounder $date_time_value_rounder
      * @param string $alias_field
      */
-    public function __construct(DateTimeValueRounder $date_time_value_rounder, $alias_field)
-    {
+    public function __construct(
+        DateValueExtractor $extractor,
+        DateTimeValueRounder $date_time_value_rounder,
+        $alias_field
+    ) {
         $this->date_time_value_rounder = $date_time_value_rounder;
         $this->alias_field             = $alias_field;
-    }
-
-    public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
-    {
-        return $value_wrapper->getValue();
-    }
-
-    public function visitCurrentDateTimeValueWrapper(
-        CurrentDateTimeValueWrapper $value_wrapper,
-        ValueWrapperParameters $parameters
-    ) {
-        return $value_wrapper->getValue()->format(DateFormat::DATETIME);
-    }
-
-    public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
-    {
-        return $this->getParametrizedFromWhere([
-            'min_value' => $value_wrapper->getMinValue()->accept($this, $parameters),
-            'max_value' => $value_wrapper->getMaxValue()->accept($this, $parameters)
-        ]);
+        $this->extractor               = $extractor;
     }
 
     /**
-     * @param $value
-     * @return ParametrizedFromWhere
+     * @param Metadata $metadata
+     * @param Comparison $comparison
+     * @param Tracker[] $trackers
+     * @return IProvideParametrizedFromAndWhereSQLFragments
      */
-    protected function getParametrizedFromWhere($value)
+    public function getFromWhere(Metadata $metadata, Comparison $comparison, array $trackers)
     {
+        $value = $this->extractor->getValue($comparison);
+
         $min_value = $value['min_value'];
         $max_value = $value['max_value'];
 

@@ -20,10 +20,14 @@
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\Date;
 
+use Tracker;
+use Tuleap\CrossTracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 use Tuleap\CrossTracker\Report\Query\ParametrizedFromWhere;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\DateTimeValueRounder;
 
-class GreaterThanOrEqualComparisonFromWhereBuilder extends FromWhereBuilder
+class GreaterThanOrEqualComparisonFromWhereBuilder implements FromWhereBuilder
 {
     /**
      * @var DateTimeValueRounder
@@ -33,23 +37,35 @@ class GreaterThanOrEqualComparisonFromWhereBuilder extends FromWhereBuilder
      * @var string
      */
     private $alias_field;
+    /**
+     * @var DateValueExtractor
+     */
+    private $extractor;
 
     /**
+     * @param DateValueExtractor $extractor
      * @param DateTimeValueRounder $date_time_value_rounder
      * @param string $alias_field
      */
-    public function __construct(DateTimeValueRounder $date_time_value_rounder, $alias_field)
-    {
+    public function __construct(
+        DateValueExtractor $extractor,
+        DateTimeValueRounder $date_time_value_rounder,
+        $alias_field
+    ) {
         $this->date_time_value_rounder = $date_time_value_rounder;
         $this->alias_field             = $alias_field;
+        $this->extractor               = $extractor;
     }
 
     /**
-     * @param $value
-     * @return ParametrizedFromWhere
+     * @param Metadata $metadata
+     * @param Comparison $comparison
+     * @param Tracker[] $trackers
+     * @return IProvideParametrizedFromAndWhereSQLFragments
      */
-    protected function getParametrizedFromWhere($value)
+    public function getFromWhere(Metadata $metadata, Comparison $comparison, array $trackers)
     {
+        $value             = $this->extractor->getValue($comparison);
         $floored_timestamp = $this->date_time_value_rounder->getFlooredTimestampFromDateTime($value);
         $where_parameters  = [$floored_timestamp];
         $where             = "{$this->alias_field} >= ?";
