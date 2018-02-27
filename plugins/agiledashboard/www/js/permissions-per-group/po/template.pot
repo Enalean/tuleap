@@ -8,7 +8,7 @@ msgstr ""
 msgid "Planning"
 msgstr ""
 
-msgid "View planning permissions"
+msgid "See all plannings permissions"
 msgstr ""
 
 msgid "Who can prioritize?"

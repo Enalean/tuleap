@@ -79,7 +79,7 @@
             }
         },
         computed: {
-            repositories_permissions:     () => gettext_provider.gettext("View repositories permissions"),
+            repositories_permissions:     () => gettext_provider.gettext("See all repositories permissions"),
             repository_permissions_title: () => gettext_provider.gettext("Repository permissions"),
             hasError()                    { return this.error !== null; },
             displayButtonLoadAll()        { return ! this.is_loaded && ! this.is_loading },

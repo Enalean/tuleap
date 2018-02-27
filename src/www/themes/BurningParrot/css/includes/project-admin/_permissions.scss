@@ -70,3 +70,25 @@
         }
     }
 }
+
+.permission-per-group-double-column-table {
+    > th:first-child {
+        width: 33%;
+    }
+
+    > th:last-child {
+        width: 66%;
+    }
+}
+
+.permission-per-group-triple-column-table {
+    > th {
+        width: 33%;
+    }
+}
+
+.permission-per-group-sextuple-column-table {
+    > th {
+        width: 16.667%;
+    }
+}

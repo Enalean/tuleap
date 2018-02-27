@@ -1,7 +1,7 @@
 (<template>
     <table class="tlp-table permission-per-group-table">
         <thead>
-        <tr>
+        <tr class="permission-per-group-triple-column-table">
             <th> {{ package_label }}</th>
             <th> {{ release_label }}</th>
             <th> {{ readers_label }}</th>

@@ -20,10 +20,10 @@ msgstr ""
 msgid "Rewinders"
 msgstr ""
 
-msgid "Tag"
+msgid "See all repositories permissions"
 msgstr ""
 
-msgid "View repositories permissions"
+msgid "Tag"
 msgstr ""
 
 msgid "Writers"
