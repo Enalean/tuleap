@@ -27,11 +27,13 @@
             {{ error }}
         </div>
 
-        <button class="tlp-button-primary tlp-button-outline"  v-if="isButtonLoadAllDisplayed"
-                v-on:click="loadAll"
-        >
-            {{ button_tracker_permissions_label }}
-        </button>
+        <div class="permission-per-group-load-button" v-if="isButtonLoadAllDisplayed">
+            <button class="tlp-button-primary tlp-button-outline"
+                    v-on:click="loadAll"
+            >
+                {{ button_tracker_permissions_label }}
+            </button>
+        </div>
 
         <div class="permission-per-group-loader" v-if="is_loading"></div>
 
