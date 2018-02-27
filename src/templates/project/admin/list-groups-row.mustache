@@ -1,0 +1,43 @@
+<tr>
+    <td class="tlp-table-cell-filterable project-admin-ugroups-list-table-ugroup-name"
+        title="{{ name }}"
+    >
+        {{ name }}
+    </td>
+    <td class="tlp-table-cell-filterable project-admin-ugroups-list-table-ugroup-description">
+        {{ description }}
+    </td>
+    <td class="tlp-table-cell-numeric project-admin-ugroups-list-table-ugroup-nb-members">
+        {{ nb_members }}
+    </td>
+    <td class="tlp-table-cell-actions">
+        <a class="tlp-table-cell-actions-button
+            tlp-button-small
+            tlp-button-primary
+            tlp-button-outline"
+           href="/project/admin/editugroup.php?group_id={{ project_id }}&ugroup_id={{ id }}"
+        >
+            <i class="fa fa-users tlp-button-icon"></i> {{# gettext }}Details{{/ gettext }}
+        </a>
+        <button class="tlp-table-cell-actions-button
+            tlp-button-small
+            tlp-button-danger
+            tlp-button-outline
+            {{^ can_be_deleted }}
+                tlp-tooltip
+                tlp-tooltip-left
+            {{/ can_be_deleted }}
+            project-admin-delete-ugroups-modal"
+            data-target-modal-id="project-admin-delete-ugroups-modal-{{ id }}"
+            {{^ can_be_deleted }}
+                disabled
+                data-tlp-tooltip="{{# gettext }}
+                    This is a system group, you cannot delete it.
+                {{/ gettext }}"
+            {{/ can_be_deleted }}
+        >
+            <i class="fa fa-trash-o tlp-button-icon"></i> {{# gettext }}Delete{{/ gettext }}
+        </button>
+        {{> modal-ugroup-delete }}
+    </td>
+</tr>

@@ -26,16 +26,29 @@ use Project;
 class UGroupListPresenter
 {
 
-    public $ugroups;
+    public $dynamic_ugroups;
     public $template_ugroups;
     public $project_id;
     public $csrf;
+    public $static_ugroups;
+    public $has_dynamic_ugroups;
+    public $has_ugroups;
+    public $has_static_ugroups;
 
-    public function __construct(Project $project, array $ugroups, array $template_ugroups, CSRFSynchronizerToken $csrf)
-    {
-        $this->ugroups          = $ugroups;
-        $this->template_ugroups = $template_ugroups;
-        $this->project_id       = $project->getID();
-        $this->csrf             = $csrf;
+    public function __construct(
+        Project $project,
+        array $dynamic_ugroups,
+        array $static_ugroups,
+        array $template_ugroups,
+        CSRFSynchronizerToken $csrf
+    ) {
+        $this->dynamic_ugroups     = $dynamic_ugroups;
+        $this->static_ugroups      = $static_ugroups;
+        $this->template_ugroups    = $template_ugroups;
+        $this->project_id          = $project->getID();
+        $this->csrf                = $csrf;
+        $this->has_dynamic_ugroups = ! empty($dynamic_ugroups);
+        $this->has_static_ugroups  = ! empty($static_ugroups);
+        $this->has_ugroups         = $this->has_dynamic_ugroups || $this->has_static_ugroups;
     }
 }
