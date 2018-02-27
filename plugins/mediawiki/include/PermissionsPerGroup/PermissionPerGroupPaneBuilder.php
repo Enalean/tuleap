@@ -150,10 +150,7 @@ class PermissionPerGroupPaneBuilder
         $group_name,
         PermissionPerGroupCollection $collection
     ) {
-        $formatted_group = array();
-        foreach ($permissions as $mapped_ugroup) {
-            $formatted_group[] = $this->formatter->formatGroup($project, $mapped_ugroup);
-        }
+        $formatted_group = $this->formatter->getFormattedUGroups($project, $permissions);
 
         $collection->addPermissions(
             array('name' => $group_name, 'groups' => $formatted_group, 'url' => $this->getGlobalAdminLink($project))

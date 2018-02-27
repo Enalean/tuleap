@@ -94,18 +94,22 @@ class PermissionPerGroupDocmanServicePaneBuilder
         }
 
         foreach ($all_permissions as $permission) {
-            $permissions->addPermission(
-                $permission,
-                $this->formatter->formatGroup($event->getProject(), $permission)
-            );
+            $user_group = $this->ugroup_manager->getUGroup($event->getProject(), $permission);
+            if ($user_group) {
+                $permissions->addPermission(
+                    $permission,
+                    $this->formatter->formatGroup($user_group)
+                );
+            }
         }
     }
 
     private function addProjectAdministrators(Project $project, DocmanGlobalAdminPermissionCollection $permissions)
     {
+        $user_group = $this->ugroup_manager->getUGroup($project, ProjectUGroup::PROJECT_ADMIN);
         $permissions->addPermission(
             ProjectUGroup::PROJECT_ADMIN,
-            $this->formatter->formatGroup($project, ProjectUGroup::PROJECT_ADMIN)
+            $this->formatter->formatGroup($user_group)
         );
     }
 

@@ -21,6 +21,7 @@
 namespace Tuleap\PHPWiki\PermissionsPerGroup;
 
 use ProjectUGroup;
+use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 use TuleapTestCase;
 
 class PHPWikiPermissionPerGroupPaneBuilderTest extends TuleapTestCase
@@ -35,8 +36,8 @@ class PHPWikiPermissionPerGroupPaneBuilderTest extends TuleapTestCase
         parent::setUp();
 
         $this->wiki_permissions_manager = mock('Wiki_PermissionsManager');
-        $this->formatter                = mock('Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter');
         $this->ugroup_manager           = mock('UGroupManager');
+        $this->formatter                = new PermissionPerGroupUGroupFormatter($this->ugroup_manager);
 
         $renderer         = mock('TemplateRenderer');
         $template_factory = stub('TemplateRendererFactory')->getRenderer()->returns($renderer);
@@ -44,7 +45,7 @@ class PHPWikiPermissionPerGroupPaneBuilderTest extends TuleapTestCase
         $this->builder = new PHPWikiPermissionPerGroupPaneBuilder(
             $this->wiki_permissions_manager,
             $this->formatter,
-            $this->ugroup_manager,
+            mock('UGroupManager'),
             $template_factory
         );
 
@@ -61,7 +62,7 @@ class PHPWikiPermissionPerGroupPaneBuilderTest extends TuleapTestCase
 
         $selected_ugroup_id = null;
 
-        expect($this->formatter)->formatGroup()->never();
+        expect($this->ugroup_manager)->getUGroup()->never();
         expect($this->wiki_permissions_manager)->getWikiAdminsGroups()->never();
         expect($this->wiki_permissions_manager)->getWikiServicePermissions()->never();
 
@@ -72,12 +73,12 @@ class PHPWikiPermissionPerGroupPaneBuilderTest extends TuleapTestCase
     {
         stub($this->project)->usesWiki()->returns(true);
         stub($this->wiki_permissions_manager)->getWikiServicePermissions($this->project)->returns(
-            array(2)
+            array(ProjectUGroup::REGISTERED)
         );
 
         $selected_ugroup_id = null;
 
-        $this->formatter->expectCallCount('formatGroup', 3);
+        $this->ugroup_manager->expectCallCount('getUGroup', 3);
         expect($this->wiki_permissions_manager)->getWikiAdminsGroups()->once();
         expect($this->wiki_permissions_manager)->getWikiServicePermissions($this->project)->once();
 

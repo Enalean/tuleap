@@ -23,18 +23,25 @@ namespace Tuleap\Git\PermissionsPerGroup;
 use Project;
 use ProjectUGroup;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
+use UGroupManager;
 
 class CollectionOfUgroupsFormatter
 {
     /** @var PermissionPerGroupUGroupFormatter */
     private $formatter;
+    /**
+     * @var UGroupManager
+     */
+    private $ugroup_manager;
 
     /**
      * @param PermissionPerGroupUGroupFormatter $formatter
+     * @param UGroupManager                     $ugroup_manager
      */
-    public function __construct(PermissionPerGroupUGroupFormatter $formatter)
+    public function __construct(PermissionPerGroupUGroupFormatter $formatter, UGroupManager $ugroup_manager)
     {
-        $this->formatter = $formatter;
+        $this->formatter      = $formatter;
+        $this->ugroup_manager = $ugroup_manager;
     }
 
     /**
@@ -44,11 +51,7 @@ class CollectionOfUgroupsFormatter
      */
     public function formatCollectionOfUgroupIds(array $ugroup_ids, Project $project)
     {
-        $formatted_permissions = [];
-        foreach ($ugroup_ids as $ugroup_id) {
-            $formatted_permissions[] = $this->formatter->formatGroup($project, $ugroup_id);
-        }
-        return $formatted_permissions;
+        return $this->formatter->getFormattedUGroups($project, $ugroup_ids);
     }
 
     /**
@@ -60,7 +63,10 @@ class CollectionOfUgroupsFormatter
     {
         $formatted_permissions = [];
         foreach ($ugroups as $ugroup) {
-            $formatted_permissions[] = $this->formatter->formatGroup($project, $ugroup->getId());
+            $user_group = $this->ugroup_manager->getUGroup($project, $ugroup->getId());
+            if ($user_group) {
+                $formatted_permissions[] =  $this->formatter->formatGroup($user_group);
+            }
         }
         return $formatted_permissions;
     }

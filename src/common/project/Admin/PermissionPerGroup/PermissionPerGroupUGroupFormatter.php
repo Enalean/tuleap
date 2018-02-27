@@ -22,32 +22,40 @@ namespace Tuleap\Project\Admin\PermissionsPerGroup;
 
 use Project;
 use ProjectUGroup;
-use UGroupManager;
 
 class PermissionPerGroupUGroupFormatter
 {
     /**
-     * @var UGroupManager
+     * @var \UGroupManager
      */
     private $ugroup_manager;
 
-    public function __construct(UGroupManager $ugroup_manager)
+    public function __construct(\UGroupManager $ugroup_manager)
     {
         $this->ugroup_manager = $ugroup_manager;
     }
 
-    public function formatGroup(Project $project, $group)
+    public function getFormattedUGroups(Project $project, array $ugroups_ids)
     {
-        $user_group = $this->ugroup_manager->getUGroup($project, $group);
+        $formatted_ugroups = [];
+        foreach ($ugroups_ids as $ugroup_id) {
+            $user_group = $this->ugroup_manager->getUGroup($project, $ugroup_id);
+            if ($user_group) {
+                $formatted_ugroups[] = $this->formatGroup($user_group);
+            }
+        }
 
-        $formatted_group = array(
+        return $formatted_ugroups;
+    }
+
+    public function formatGroup(ProjectUGroup $user_group)
+    {
+        return [
             'is_project_admin' => $this->isProjectAdmin($user_group),
             'is_static'        => $user_group->isStatic(),
             'is_custom'        => ! $this->isProjectAdmin($user_group) && ! $user_group->isStatic(),
             'name'             => $user_group->getTranslatedName()
-        );
-
-        return $formatted_group;
+        ];
     }
 
     /**
