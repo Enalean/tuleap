@@ -22,17 +22,14 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison;
 
 use Tuleap\CrossTracker\Report\Query\Advanced\AllowedMetadata;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\InvalidQueryException;
-use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\MetadataValueWrapperParameters;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFormatValidator;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateToEmptyStringException;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateToStringException;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringForbidden;
 
 abstract class GreaterOrLesserThanComparisonChecker extends ComparisonChecker
 {
@@ -60,8 +57,7 @@ abstract class GreaterOrLesserThanComparisonChecker extends ComparisonChecker
 
     public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
     {
-        $date_validator = new DateFormatValidator(new EmptyStringForbidden(), DateFormat::DATETIME);
-        $date_validator->checkValueIsValid($value_wrapper->getValue());
+        $this->date_validator->checkValueIsValid($value_wrapper->getValue());
     }
 
     public function visitCurrentDateTimeValueWrapper(
