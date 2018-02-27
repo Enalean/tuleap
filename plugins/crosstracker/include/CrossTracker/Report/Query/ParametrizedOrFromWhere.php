@@ -24,10 +24,6 @@ use Tuleap\Tracker\Report\Query\OrFromWhere;
 class ParametrizedOrFromWhere implements IProvideParametrizedFromAndWhereSQLFragments
 {
     /**
-     * @var OrFromWhere
-     */
-    private $from_where;
-    /**
      * @var IProvideParametrizedFromAndWhereSQLFragments
      */
     private $left;
@@ -42,23 +38,6 @@ class ParametrizedOrFromWhere implements IProvideParametrizedFromAndWhereSQLFrag
     ) {
         $this->left       = $left;
         $this->right      = $right;
-        $this->from_where = new OrFromWhere($left, $right);
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getFromAsArray()
-    {
-        return $this->from_where->getFromAsArray();
-    }
-
-    /**
-     * @return string
-     */
-    public function getFromAsString()
-    {
-        return $this->from_where->getFromAsString();
     }
 
     /**
@@ -66,15 +45,15 @@ class ParametrizedOrFromWhere implements IProvideParametrizedFromAndWhereSQLFrag
      */
     public function getWhere()
     {
-        return $this->from_where->getWhere();
+        return '(' . $this->left->getWhere() . ' OR ' . $this->right->getWhere() . ')';
     }
 
     /**
-     * @return array
+     * @return ParametrizedFrom[]
      */
-    public function getFromParameters()
+    public function getAllParametrizedFrom()
     {
-        return array_merge($this->left->getFromParameters(), $this->right->getFromParameters());
+        return array_merge($this->left->getAllParametrizedFrom(), $this->right->getAllParametrizedFrom());
     }
 
     /**

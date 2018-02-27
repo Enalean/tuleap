@@ -19,40 +19,22 @@
 
 namespace Tuleap\CrossTracker\Report\Query;
 
-use Tuleap\Tracker\Report\Query\FromWhere;
-
 class ParametrizedFromWhere implements IProvideParametrizedFromAndWhereSQLFragments
 {
-    /** @var FromWhere */
-    private $from_where;
-
     /** @var array */
-    private $from_parameters;
+    private $parametrized_from;
 
     /** @var array */
     private $where_parameters;
 
+    /** @var string */
+    private $where;
+
     public function __construct($from, $where, array $from_parameters, array $where_parameters)
     {
-        $this->from_where       = new FromWhere($from, $where);
-        $this->from_parameters  = $from_parameters;
-        $this->where_parameters = $where_parameters;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getFromAsArray()
-    {
-        return $this->from_where->getFromAsArray();
-    }
-
-    /**
-     * @return string
-     */
-    public function getFromAsString()
-    {
-        return $this->from_where->getFromAsString();
+        $this->parametrized_from = new ParametrizedFrom($from, $from_parameters);
+        $this->where             = $where;
+        $this->where_parameters  = $where_parameters;
     }
 
     /**
@@ -60,15 +42,15 @@ class ParametrizedFromWhere implements IProvideParametrizedFromAndWhereSQLFragme
      */
     public function getWhere()
     {
-        return $this->from_where->getWhere();
+        return $this->where;
     }
 
     /**
-     * @return array
+     * @return ParametrizedFrom[]
      */
-    public function getFromParameters()
+    public function getAllParametrizedFrom()
     {
-        return $this->from_parameters;
+        return array($this->parametrized_from);
     }
 
     /**
