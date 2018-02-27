@@ -22,7 +22,6 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison;
 
 use Tuleap\CrossTracker\Report\Query\Advanced\AllowedMetadata;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\InvalidQueryException;
-use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
@@ -37,11 +36,20 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFormatValidator;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateToEmptyStringException;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateToStringException;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringAllowed;
 
 class ComparisonChecker implements ValueWrapperVisitor
 {
     const OPERATOR = '';
+
+    /**
+     * @var DateFormatValidator
+     */
+    protected $date_validator;
+
+    public function __construct(DateFormatValidator $date_validator)
+    {
+        $this->date_validator = $date_validator;
+    }
 
     /**
      * @param Metadata $metadata
@@ -74,8 +82,7 @@ class ComparisonChecker implements ValueWrapperVisitor
         }
 
         if (in_array($metadata->getName(), AllowedMetadata::DATES)) {
-            $date_validator = new DateFormatValidator(new EmptyStringAllowed(), DateFormat::DATETIME);
-            $date_validator->checkValueIsValid($value_wrapper->getValue());
+            $this->date_validator->checkValueIsValid($value_wrapper->getValue());
         }
     }
 

@@ -69,9 +69,12 @@ use Tuleap\REST\JsonDecoder;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\QueryParameterException;
 use Tuleap\REST\QueryParameterParser;
+use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
 use Tuleap\Tracker\Report\Query\Advanced\ExpertQueryValidator;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parser;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFormatValidator;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringForbidden;
 use Tuleap\Tracker\Report\Query\Advanced\LimitSizeIsExceededException;
 use Tuleap\Tracker\Report\Query\Advanced\ParserCacheProxy;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\DateTimeValueRounder;
@@ -146,6 +149,8 @@ class CrossTrackerReportsResource extends AuthenticatedResource
             new SizeValidatorVisitor($report_config->getExpertQueryLimit())
         );
 
+        $date_validator = new DateFormatValidator(new EmptyStringForbidden(), DateFormat::DATETIME);
+
         $this->invalid_comparisons_collector = new InvalidComparisonCollectorVisitor(
             new InvalidSearchableCollectorVisitor(),
             new MetadataChecker(
@@ -156,13 +161,13 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                     new Tracker_Semantic_StatusDao()
                 )
             ),
-            new EqualComparisonChecker(),
-            new NotEqualComparisonChecker(),
-            new GreaterThanComparisonChecker(),
-            new GreaterThanOrEqualComparisonChecker(),
-            new LesserThanComparisonChecker(),
-            new LesserThanOrEqualComparisonChecker(),
-            new BetweenComparisonChecker()
+            new EqualComparisonChecker($date_validator),
+            new NotEqualComparisonChecker($date_validator),
+            new GreaterThanComparisonChecker($date_validator),
+            new GreaterThanOrEqualComparisonChecker($date_validator),
+            new LesserThanComparisonChecker($date_validator),
+            new LesserThanOrEqualComparisonChecker($date_validator),
+            new BetweenComparisonChecker($date_validator)
         );
 
         $submitted_on_alias_field     = 'tracker_artifact.submitted_on';
