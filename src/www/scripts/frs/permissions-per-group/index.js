@@ -33,8 +33,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const rootComponent = Vue.extend(NewsPermissions);
+    const locale        = document.body.dataset.userLocale;
 
-    gettext_provider.setLocale(vue_mount_point.dataset.locale);
+    gettext_provider.setLocale(locale);
 
     new rootComponent({
         propsData: { ...vue_mount_point.dataset }

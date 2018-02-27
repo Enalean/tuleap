@@ -1123,8 +1123,7 @@ class SvnPlugin extends Plugin
         $service_pane_builder = new PermissionPerGroupSVNServicePaneBuilder(
             new PermissionPerGroupUGroupRetriever(PermissionsManager::instance()),
             new PermissionPerGroupUGroupFormatter($ugroup_manager),
-            $ugroup_manager,
-            $this->getUserManager()
+            $ugroup_manager
         );
 
         $collector = new PaneCollector($this->getUGroupManager(), $service_pane_builder);

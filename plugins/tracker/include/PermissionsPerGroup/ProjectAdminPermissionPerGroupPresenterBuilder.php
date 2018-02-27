@@ -24,7 +24,6 @@
 
 namespace Tuleap\Tracker\PermissionsPerGroup;
 
-use PFUser;
 use Project;
 use UGroupManager;
 
@@ -43,7 +42,6 @@ class ProjectAdminPermissionPerGroupPresenterBuilder
 
     public function buildPresenter(
         Project $project,
-        PFUser $user,
         $ugroup_id = null
     ) {
         $ugroup = ($ugroup_id)
@@ -51,7 +49,6 @@ class ProjectAdminPermissionPerGroupPresenterBuilder
             : null;
 
         return new PermissionPerGroupPanePresenter(
-            $user,
             $project,
             $ugroup
         );

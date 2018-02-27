@@ -23,13 +23,15 @@ import { gettext_provider } from './gettext-provider.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const vue_mount_points = document.getElementById('git-permission-per-group');
+
     if (vue_mount_points) {
-        const rootComponent    = Vue.extend(GitPermissions);
-        const locale           = vue_mount_points.dataset.locale;
+        const rootComponent = Vue.extend(GitPermissions);
+        const locale        = document.body.dataset.userLocale;
+
         gettext_provider.setLocale(locale);
+
         new rootComponent({
             propsData: { ...vue_mount_points.dataset }
         }).$mount(vue_mount_points);
-
     }
 });

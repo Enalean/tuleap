@@ -24,13 +24,8 @@
 
 namespace Tuleap\FRS\PermissionsPerGroup;
 
-use FRSPackageFactory;
-use FRSReleaseFactory;
-use PFUser;
 use Project;
-use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupLoadAllButtonPresenter;
-use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRetriever;
 use UGroupManager;
 
 class PermissionPerGroupFRSPackagesPresenterBuilder
@@ -39,43 +34,18 @@ class PermissionPerGroupFRSPackagesPresenterBuilder
      * @var UGroupManager
      */
     private $ugroup_manager;
-    /**
-     * @var PermissionPerGroupUGroupRetriever
-     */
-    private $permission_ugroup_retriever;
-    /**
-     * @var FRSPackageFactory
-     */
-    private $package_factory;
-    /**
-     * @var FRSReleaseFactory
-     */
-    private $release_factory;
-    /**
-     * @var PermissionPerGroupUGroupFormatter
-     */
-    private $formatter;
 
     public function __construct(
-        UGroupManager $ugroup_manager,
-        PermissionPerGroupUGroupRetriever $permission_ugroup_retriever,
-        FRSPackageFactory $package_factory,
-        PermissionPerGroupUGroupFormatter $formatter,
-        FRSReleaseFactory $release_factory
+        UGroupManager $ugroup_manager
     ) {
-        $this->ugroup_manager              = $ugroup_manager;
-        $this->permission_ugroup_retriever = $permission_ugroup_retriever;
-        $this->package_factory             = $package_factory;
-        $this->release_factory             = $release_factory;
-        $this->formatter                   = $formatter;
+        $this->ugroup_manager = $ugroup_manager;
     }
 
-    public function getPanePresenter(Project $project, PFUser $user, $selected_ugroup_id)
+    public function getPanePresenter(Project $project, $selected_ugroup_id)
     {
         $ugroup = $this->ugroup_manager->getUGroup($project, $selected_ugroup_id);
 
         return new PermissionPerGroupLoadAllButtonPresenter(
-            $user,
             $project,
             $ugroup
         );

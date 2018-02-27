@@ -21,9 +21,7 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\BurningParrotCompatiblePageEvent;
-use Tuleap\Dashboard\Project\ProjectDashboardController;
-use Tuleap\Dashboard\User\AtUserCreationDefaultWidgetsCreator;
-use Tuleap\Dashboard\User\UserDashboardController;
+use Tuleap\Dashboard\User\AtUserCreationDefaultWidgetsCreator;;
 use Tuleap\Glyph\GlyphLocation;
 use Tuleap\Glyph\GlyphLocationsCollector;
 use Tuleap\Project\Admin\TemplatePresenter;
@@ -1504,7 +1502,6 @@ class trackerPlugin extends Plugin {
         $selected_ugroup_id = $event->getSelectedUGroupId();
         $presenter          = $presenter_builder->buildPresenter(
             $request->getProject(),
-            $request->getCurrentUser(),
             $selected_ugroup_id
         );
 

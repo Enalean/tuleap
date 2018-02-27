@@ -50,8 +50,6 @@ use Tuleap\AgileDashboard\Widget\WidgetKanbanDao;
 use Tuleap\AgileDashboard\Widget\WidgetKanbanDeletor;
 use Tuleap\AgileDashboard\Widget\WidgetKanbanRetriever;
 use Tuleap\BurningParrotCompatiblePageEvent;
-use Tuleap\Dashboard\Project\ProjectDashboardController;
-use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\RealTime\NodeJSClient;
@@ -1563,8 +1561,7 @@ class AgileDashboardPlugin extends Plugin {
                 array(
                     "ugroup_id"            => $ugroup_id,
                     "project_id"           => $project->getID(),
-                    "selected_ugroup_name" => $ugroup_name,
-                    "locale"               => $this->getCurrentUser()->getLocale()
+                    "selected_ugroup_name" => $ugroup_name
                 )
             );
 

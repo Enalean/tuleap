@@ -21,7 +21,6 @@
 namespace Tuleap\Project\Admin\PermissionsPerGroup;
 
 use EventManager;
-use PFUser;
 use Project;
 use Service;
 use Tuleap\FRS\PermissionsPerGroup\PaneCollector;
@@ -64,13 +63,13 @@ class PanesPermissionPerGroupBuilder
     /**
      * @return string[]
      */
-    public function getSortedPanes(Project $project, PFUser $user, $selected_ugroup)
+    public function getSortedPanes(Project $project, $selected_ugroup)
     {
         $event = new PermissionPerGroupPaneCollector($project, $selected_ugroup);
         $this->event_manager->processEvent($event);
 
         $panes = $event->getPanes();
-        $this->addCorePanes($project, $panes, $user, $selected_ugroup);
+        $this->addCorePanes($project, $panes, $selected_ugroup);
 
         return $this->sortPanesByServiceRank($panes);
     }
@@ -82,9 +81,9 @@ class PanesPermissionPerGroupBuilder
         return array_values($panes);
     }
 
-    private function addCorePanes(Project $project, array &$panes, PFUser $user, $selected_ugroup)
+    private function addCorePanes(Project $project, array &$panes, $selected_ugroup)
     {
-        $frs_pane = $this->pane_collector->collectPane($project, $user, $selected_ugroup);
+        $frs_pane = $this->pane_collector->collectPane($project, $selected_ugroup);
         if ($frs_pane) {
             $rank_in_project           = $project->getService(Service::FILE)->getRank();
             $panes[ $rank_in_project ] = $frs_pane;

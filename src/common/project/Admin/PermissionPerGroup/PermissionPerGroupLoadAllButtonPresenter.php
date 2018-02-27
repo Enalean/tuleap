@@ -24,7 +24,6 @@
 
 namespace Tuleap\Project\Admin\PermissionsPerGroup;
 
-use PFUser;
 use Project;
 use ProjectUGroup;
 
@@ -38,11 +37,6 @@ class PermissionPerGroupLoadAllButtonPresenter
     /**
      * @var string
      */
-    public $user_locale;
-
-    /**
-     * @var string
-     */
     public $selected_ugroup_name;
 
     /**
@@ -51,11 +45,9 @@ class PermissionPerGroupLoadAllButtonPresenter
     public $project_id;
 
     public function __construct(
-        PFUser $user,
         Project $project,
         ProjectUGroup $ugroup = null
     ) {
-        $this->user_locale = $user->getLocale();
         $this->project_id  = $project->getID();
         $this->ugroup_id   = ($ugroup)
             ? $ugroup->getId()

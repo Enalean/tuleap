@@ -24,7 +24,6 @@ use GitPlugin;
 use TemplateRendererFactory;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use UGroupManager;
-use UserManager;
 
 class GitPaneSectionCollector
 {
@@ -36,19 +35,13 @@ class GitPaneSectionCollector
      * @var UGroupManager
      */
     private $ugroup_manager;
-    /**
-     * @var UserManager
-     */
-    private $user_manager;
 
     public function __construct(
         PermissionPerGroupGitSectionBuilder $git_section_builder,
-        UGroupManager $ugroup_manager,
-        UserManager $user_manager
+        UGroupManager $ugroup_manager
     ) {
-        $this->git_section_builder       = $git_section_builder;
-        $this->ugroup_manager = $ugroup_manager;
-        $this->user_manager = $user_manager;
+        $this->git_section_builder = $git_section_builder;
+        $this->ugroup_manager      = $ugroup_manager;
     }
 
     public function collectSections(PermissionPerGroupPaneCollector $pane_collector)
@@ -57,12 +50,10 @@ class GitPaneSectionCollector
         $project                       = $pane_collector->getProject();
 
         $user_group = $this->ugroup_manager->getUGroup($project, $pane_collector->getSelectedUGroupId());
-        $user       = $this->user_manager->getCurrentUser();
 
         $pane_presenter = new GitPanePresenter(
             $service_section_presenter,
             $project,
-            $user,
             $user_group
         );
 

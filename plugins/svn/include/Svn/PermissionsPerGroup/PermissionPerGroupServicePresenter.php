@@ -20,7 +20,6 @@
 
 namespace Tuleap\Svn\PermissionsPerGroup;
 
-use PFUser;
 use Project;
 use ProjectUGroup;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPanePresenter;
@@ -31,10 +30,7 @@ class PermissionPerGroupServicePresenter extends PermissionPerGroupPanePresenter
      * @var int
      */
     public $project_id;
-    /**
-     * @var string
-     */
-    public $locale;
+
     /**
      * @var string
      */
@@ -43,13 +39,11 @@ class PermissionPerGroupServicePresenter extends PermissionPerGroupPanePresenter
     public function __construct(
         array $permissions,
         Project $project,
-        PFUser $user,
         ProjectUGroup $selected_ugroup = null
     ) {
         parent::__construct($permissions, $selected_ugroup);
 
         $this->project_id = $project->getID();
-        $this->locale     = $user->getLocale();
         $this->url        = $this->getGlobalAdminLink($project);
     }
 
