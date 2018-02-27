@@ -18,17 +18,17 @@ $sys_ldap_server_type = 'OpenLDAP';
 // (distinguised name) to use in LDAP queries.
 // The ldap filter is the filter to use to query the LDAP directory
 // (%name% are substituted with the value from the user table)
-$sys_ldap_dn     = 'dc=tuleap,dc=local';
+$sys_ldap_dn     = 'dc=example,dc=com';
 
 // For LDAP systems that do not accept anonymous binding, define here
 // a valid DN and password:
-//$sys_ldap_bind_dn = 'eduid=1234,ou=people,dc=tuleap,dc=com';
+//$sys_ldap_bind_dn = 'eduid=1234,ou=people,dc=example,dc=com';
 //$sys_ldap_bind_passwd = 'xxxxxxxxx';
 
 // LDAP authentication:
 // Tuleap only supports authentication with a attempt to bind with LDAP server
 // with a DN and a password.
-// As the DN is usually long (eduid=1234,ou=people,dc=tuleap,dc=com) people
+// As the DN is usually long (eduid=1234,ou=people,dc=example,dc=com) people
 // usually authenticate themself with a login. So we need to first look
 // for the DN that correspond to the given login and once found attempt to bind
 // with the given password.
@@ -51,8 +51,8 @@ $sys_ldap_mail  = 'mail';
 
 // Specific DN to look for people, used for user authentication.
 // You may use more than one DN separated by ; if you want to use several branches.
-// Example : 'ou=People, dc=st, dc=com ; ou=Extranet, dc=st, dc=com'
-$sys_ldap_people_dn     = 'ou=people,dc=tuleap,dc=local';
+// Example : 'ou=People, dc=example, dc=com ; ou=Extranet, dc=example, dc=com'
+$sys_ldap_people_dn     = 'ou=people,dc=example,dc=com';
 
 // Filter used to look for user (autocomplete, daily sync between Tuleap and LDAP...) It should cover a wide selection of
 // fields because it's aim to find a user whatever it's given (email, name,
@@ -90,7 +90,7 @@ $sys_ldap_user_management = 1;
 $sys_ldap_grp_enabled   = 1;
 
 // Specific DN where the user groups are
-$sys_ldap_grp_dn        = 'ou=groups,dc=tuleap,dc=local';
+$sys_ldap_grp_dn        = 'ou=groups,dc=example,dc=com';
 
 // How group search is performed
 // - either 'onelevel' for search only within $sys_ldap_grp_dn branch
@@ -128,11 +128,11 @@ $search_depth = 'subtree';
 /*
 $sys_ldap_write_server    = '';
 
-$sys_ldap_write_dn        = 'cn=Manager,dc=tuleap,dc=local';
+$sys_ldap_write_dn        = 'cn=Manager,dc=example,dc=com';
 
 $sys_ldap_write_password  = 'welcome0';
 
-$sys_ldap_write_people_dn = 'ou=people,dc=tuleap,dc=local';
+$sys_ldap_write_people_dn = 'ou=people,dc=example,dc=com';
 
-$sys_ldap_write_group_dn  = 'ou=groups,dc=tuleap,dc=local';
+$sys_ldap_write_group_dn  = 'ou=groups,dc=example,dc=com';
 */
