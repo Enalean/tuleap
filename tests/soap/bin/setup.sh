@@ -38,13 +38,21 @@ setup_tuleap() {
 	-e 's#\$sys_use_unsecure_ssl_certificate =.*#\$sys_use_unsecure_ssl_certificate = true;#' \
 	> /etc/tuleap/conf/local.inc
 
+    mkdir -p /etc/tuleap/plugins/docman/etc
+	cat /usr/share/tuleap/plugins/docman/etc/docman.inc.dist | \
+	sed \
+	-e "s#codendi#tuleap#g"\
+	> /etc/tuleap/plugins/docman/etc/docman.inc
+
     mkdir -p /usr/lib/tuleap/bin \
         /var/lib/tuleap/ftp/pub \
         /var/lib/tuleap/ftp/incoming \
         /var/lib/tuleap/ftp/tuleap \
+        /var/lib/tuleap/docman \
         /home/groups
 
     chown -R codendiadm:codendiadm /var/lib/tuleap/ftp
+    chown -R codendiadm:codendiadm /var/lib/tuleap/docman
 
     install -m 04755 /usr/share/tuleap/src/utils/fileforge.pl /usr/lib/tuleap/bin/fileforge
 }
