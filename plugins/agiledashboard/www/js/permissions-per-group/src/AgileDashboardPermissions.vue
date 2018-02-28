@@ -24,11 +24,12 @@
             {{ error }}
         </div>
 
-        <button class="tlp-button-primary tlp-button-outline"
-                v-if="displayButtonLoadAll"
-                v-on:click="loadAll"
-        > {{ planning_permissions }}
-        </button>
+        <div class="permission-per-group-load-button" v-if="displayButtonLoadAll">
+            <button class="tlp-button-primary tlp-button-outline"
+                    v-on:click="loadAll"
+            > {{ planning_permissions }}
+            </button>
+        </div>
 
         <div class="permission-per-group-loader" v-if="is_loading"></div>
 

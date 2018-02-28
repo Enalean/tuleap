@@ -44,6 +44,11 @@
     text-transform: none;
 }
 
+.permission-per-group-load-button {
+    display: flex;
+    justify-content: center;
+}
+
 @media screen and (max-width: 1200px) {
     .project-admin-permission-per-group {
         flex-direction: column;
