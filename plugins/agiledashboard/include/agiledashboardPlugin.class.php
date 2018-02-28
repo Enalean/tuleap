@@ -325,9 +325,10 @@ class AgileDashboardPlugin extends Plugin {
         $event_listener->process($params);
     }
 
-    public function tracker_event_include_css_file($params) {
+    public function tracker_event_include_css_file($params)
+    {
         $request = HTTPRequest::instance();
-        if ($request->get('pane') === Cardwall_PaneInfo::IDENTIFIER) {
+        if ($request->get('pane') === Cardwall_PaneInfo::IDENTIFIER || $this->isHomepageURL($request)) {
             $params['include_tracker_css_file'] = true;
         }
     }
@@ -651,6 +652,13 @@ class AgileDashboardPlugin extends Plugin {
         $pane_info_identifier = new AgileDashboard_PaneInfoIdentifier();
 
         return $pane_info_identifier->isPaneAPlanningV2($request->get('pane'));
+    }
+
+    private function isHomepageURL(HTTPRequest $request)
+    {
+        return (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath() . '/?group_id=') === 0
+            && $request->get('action') === false
+        );
     }
 
     public function process(Codendi_Request $request)
