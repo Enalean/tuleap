@@ -55,17 +55,8 @@ class ParentTrackerRetriever
             }
         }
 
-        $all_plannings = $this->planning_factory->getOrderedPlanningsWithBacklogTracker($user, $milestone->getGroupId());
-        $sub_plannings = [];
-        foreach ($all_plannings as $key => $planning) {
-            if ($planning->getId() == $milestone->getPlanning()->getId()) {
-                $sub_plannings = array_slice($all_plannings, $key+1);
-                break;
-            }
-        }
-
         $sub_backlog_tracker_ids = [];
-        foreach ($sub_plannings as $sub_planning) {
+        foreach ($this->planning_factory->getSubPlannings($milestone->getPlanning(), $user) as $sub_planning) {
             $sub_backlog_tracker_ids = array_merge($sub_backlog_tracker_ids, $sub_planning->getBacklogTrackersIds());
         }
 
