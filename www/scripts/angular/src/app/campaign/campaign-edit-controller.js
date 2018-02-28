@@ -1,5 +1,6 @@
 import _ from 'lodash';
-import * as tlp from 'tlp';
+
+import { sortAlphabetically } from '../ksort.js';
 
 export default CampaignEditCtrl;
 
@@ -107,7 +108,7 @@ function CampaignEditCtrl(
     }
 
     function buildInitialTestsList(definitions, executions) {
-        var tests_list = {};
+        let tests_list = {};
 
         _.forEach(definitions, function(definition) {
             var category = definition.category;
@@ -129,7 +130,7 @@ function CampaignEditCtrl(
             });
         });
 
-        return tests_list;
+        return sortAlphabetically(tests_list);
     }
 
     function buildCategory(category) {

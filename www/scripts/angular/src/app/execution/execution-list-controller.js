@@ -1,6 +1,8 @@
 import _ from 'lodash';
 import angular from 'angular';
 
+import { sortAlphabetically } from '../ksort.js';
+
 import '../campaign/campaign-edit.tpl.html';
 import './execution-presences.tpl.html';
 
@@ -178,7 +180,7 @@ function ExecutionListCtrl(
             ExecutionService.executions_loaded = true;
             ExecutionService.displayPresencesForAllExecutions();
 
-            $scope.categories = ExecutionService.executions_by_categories_by_campaigns[$scope.campaign_id];
+            $scope.categories = sortAlphabetically(ExecutionService.executions_by_categories_by_campaigns[$scope.campaign_id]);
         });
     }
 
