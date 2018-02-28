@@ -7,7 +7,6 @@
   "main": "index.js",
   "private": true,
   "dependencies": {
-    "babel-polyfill": "^6.26.0",
     "dom4": "^1.8.3",
     "flatpickr": "1.9.1",
     "jquery": "2.1.0",
@@ -15,10 +14,6 @@
     "whatwg-fetch": "^2.0.3"
   },
   "devDependencies": {
-    "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.2",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-preset-env": "^1.5.1",
     "concurrently": "^3.4.0",
     "del": "^2.2.2",
     "gulp": "^3.9.1",
@@ -27,8 +22,7 @@
     "gulp-sass": "^3.1.0",
     "gulp-scss-lint": "^0.5.0",
     "run-sequence": "^1.2.2",
-    "webpack": "^3.5.5",
-    "webpack-assets-manifest": "^1.0.0"
+    "webpack": "^3.5.5"
   },
   "scripts": {
     "build": "NODE_ENV=production gulp build && webpack --optimize-minimize --bail",

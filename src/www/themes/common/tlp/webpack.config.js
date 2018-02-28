@@ -1,26 +1,11 @@
-var path                        = require('path');
-var webpack                     = require('webpack');
-var WebpackAssetsManifest       = require('webpack-assets-manifest');
-var BabelPresetEnv              = require('babel-preset-env');
-var BabelPluginObjectRestSpread = require('babel-plugin-transform-object-rest-spread');
-var polyfills_for_fetch         = require('../../../../../tools/utils/ie11-polyfill-names.js').polyfills_for_fetch;
+const path = require('path');
+const webpack = require('webpack');
+const WebpackAssetsManifest = require('webpack-assets-manifest');
+const polyfills_for_fetch = require('../../../../../tools/utils/scripts/ie11-polyfill-names.js').polyfills_for_fetch;
+const webpack_configurator = require('../../../../../tools/utils/scripts/webpack-configurator.js');
 
-var babel_options = {
-    presets: [
-        ["babel-preset-env", {
-            targets: {
-                ie: 11
-            },
-            modules: false
-        }],
-    ],
-    plugins: [
-        BabelPluginObjectRestSpread
-    ]
-};
-
-var webpack_config = {
-    entry : {
+const webpack_config = {
+    entry: {
         'en_US.min': polyfills_for_fetch.concat([
             'dom4',
             './src/index.en_US.js'
@@ -30,30 +15,19 @@ var webpack_config = {
             './src/index.fr_FR.js'
         ])
     },
+    context: path.resolve(__dirname),
     output: {
-        path    : path.resolve(__dirname, 'dist/'),
+        path: path.resolve(__dirname, 'dist/'),
         filename: 'tlp-[chunkhash].[name].js',
-        library : 'tlp'
+        library: 'tlp'
     },
     resolve: {
-        modules: ['node_modules'],
         alias: {
-            'select2': 'select2/dist/js/select2.full.js'
+            select2: 'select2/dist/js/select2.full.js'
         }
     },
     module: {
-        rules: [
-            {
-                test: /\.js$/,
-                exclude: /node_modules/,
-                use: [
-                    {
-                        loader: 'babel-loader',
-                        options: babel_options
-                    }
-                ]
-            }
-        ]
+        rules: [webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11)]
     },
     plugins: [
         new WebpackAssetsManifest({

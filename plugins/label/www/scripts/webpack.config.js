@@ -1,79 +1,16 @@
-const path                        = require('path');
-const webpack                     = require('webpack');
-const WebpackAssetsManifest       = require('webpack-assets-manifest');
-const BabelPresetEnv              = require('babel-preset-env');
-const VueLoaderOptionsPlugin      = require('vue-loader-options-plugin');
-const BabelPluginObjectRestSpread = require('babel-plugin-transform-object-rest-spread');
-const BabelPluginRewireExports    = require('babel-plugin-rewire-exports').default;
-const BabelPluginIstanbul         = require('babel-plugin-istanbul').default;
+const path = require('path');
+const webpack = require('webpack');
+const webpack_configurator = require('../../../../tools/utils/scripts/webpack-configurator.js');
 
 const assets_dir_path = path.resolve(__dirname, '../assets');
-
-const babel_preset_env_ie_config = [BabelPresetEnv, {
-    targets: {
-        ie: 11
-    },
-    modules: false
-}];
-
-const babel_preset_env_chrome_config = [BabelPresetEnv, {
-    targets: {
-        browsers: ['last 2 Chrome versions']
-    },
-    modules: false,
-    useBuiltIns: true,
-    shippedProposals: true
-}];
-
-const babel_options   = {
-    env: {
-        watch: {
-            presets: [babel_preset_env_ie_config],
-            plugins: [
-                BabelPluginObjectRestSpread,
-            ]
-        },
-        production: {
-            presets: [babel_preset_env_ie_config],
-            plugins: [BabelPluginObjectRestSpread]
-        },
-        test: {
-            presets: [babel_preset_env_chrome_config],
-            plugins: [BabelPluginObjectRestSpread, BabelPluginRewireExports]
-        },
-        coverage: {
-            presets: [babel_preset_env_chrome_config],
-            plugins: [
-                BabelPluginObjectRestSpread,
-                BabelPluginRewireExports,
-                [BabelPluginIstanbul, {
-                    exclude: ['**/*.spec.js']
-                }]
-            ]
-        }
-    }
-};
-
-const babel_rule = {
-    test: /\.js$/,
-    exclude: /node_modules/,
-    use: [
-        {
-            loader: 'babel-loader',
-            options: babel_options
-        }
-    ]
-};
 
 const webpack_config = {
     entry : {
         'widget-project-labeled-items': './project-labeled-items/src/index.js',
         'configure-widget'            : './configure-widget/index.js'
     },
-    output: {
-        path    : assets_dir_path,
-        filename: '[name]-[chunkhash].js',
-    },
+    context: path.resolve(__dirname),
+    output: webpack_configurator.configureOutput(assets_dir_path),
     externals: {
         tlp: 'tlp'
     },
@@ -84,39 +21,14 @@ const webpack_config = {
     },
     module: {
         rules: [
-            babel_rule,
-            {
-                test: /\.vue$/,
-                use: [
-                    {
-                        loader: 'vue-loader',
-                        options: {
-                            loaders: {
-                                js: 'babel-loader'
-                            },
-                            esModule: true
-                        }
-                    }
-                ]
-            }, {
-                test: /\.po$/,
-                exclude: /node_modules/,
-                use: [
-                    { loader: 'json-loader' },
-                    { loader: 'po-gettext-loader' }
-                ]
-            }
+            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_karma),
+            webpack_configurator.rule_po_files,
+            webpack_configurator.rule_vue_loader
         ]
     },
     plugins: [
-        new WebpackAssetsManifest({
-            output: 'manifest.json',
-            merge: true,
-            writeToDisk: true
-        }),
-        new VueLoaderOptionsPlugin({
-            babel: babel_options
-        })
+        webpack_configurator.getManifestPlugin(),
+        webpack_configurator.getVueLoaderOptionsPlugin(webpack_configurator.babel_options_karma)
     ]
 };
 
