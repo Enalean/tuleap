@@ -601,13 +601,13 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
                 $b = 'B_'. $this->id;
                 $statement = '';
                 if ($openvalues) {
-                    $statement .= "$b.openvalue_id IN (". $this->getDao()->getDa()->escapeIntImplode($openvalues).")";
+                    $statement .= "$b.openvalue_id IN (". $this->getCriteriaDao()->getDa()->escapeIntImplode($openvalues).")";
                 }
                 if ($bindvalues) {
                     if ($statement) {
                         $statement .= ' OR ';
                     }
-                    $statement .= "$b.bindvalue_id IN (". $this->getDao()->getDa()->escapeIntImplode($bindvalues) . ")";
+                    $statement .= "$b.bindvalue_id IN (". $this->getCriteriaDao()->getDa()->escapeIntImplode($bindvalues) . ")";
                 }
                 return " INNER JOIN tracker_changeset_value AS $a 
                          ON ($a.changeset_id = c.id 
