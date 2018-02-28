@@ -1,0 +1,22 @@
+<?php
+//
+// Codendi
+// Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+// http://www.codendi.com
+//
+//
+//
+
+$pm = ProjectManager::instance();
+
+echo '
+
+<P>列表以这样的方式命名: <em>'.ForgeConfig::get('sys_lists_prefix').'projectname-listname'.ForgeConfig::get('sys_lists_suffix').'@'. $sys_lists_domain .'</em>
+<P>为了协调邮件列表上的名字'.$GLOBALS['sys_name'].' 我们建议您创建(至少)为您的项目下面的邮件列表:<BR>
+<ul>
+<li><b>'.$pm->getProject($group_id)->getUnixName().'-interest</b>: 通用讨论特别是在用户级.
+<li><b>'.$pm->getProject($group_id)->getUnixName().'-devel</b>: 发展问题和争论.
+<li><b>'.$pm->getProject($group_id)->getUnixName().'-announce</b>: 新版本或任何新的事件公告的生命工程.
+</ul>
+
+<P>';

@@ -1,0 +1,1002 @@
+#
+# Copyright (c) Xerox Corporation, CodeX, Codendi 2004-2009.
+# This file is licensed under the GNU General Public License version 2. See the file COPYING.
+#
+#-----------------------------------------------
+# Script: SF/www/project/admin/editgroupinfo.php
+#
+project_admin_editgroupinfo	upd_fail	更新失败或没有数据改变
+project_admin_editgroupinfo	upd_success		更新成功
+project_admin_editgroupinfo	changed_public_info	    改变公共信息
+project_admin_editgroupinfo	editing_g_info	     编辑群信息
+project_admin_editgroupinfo	editing_g_info_for	编辑群信息: <B>$1</B>
+project_admin_editgroupinfo	descriptive_g_name	群名称描述:
+project_admin_editgroupinfo	short_desc	短整形 (最多255字符):
+project_admin_editgroupinfo	long_desc	   长整型
+project_admin_editgroupinfo	patents	专利权和发明专利和发明提案(IPs)
+project_admin_editgroupinfo	soft_required	其他软件需求
+project_admin_editgroupinfo	comments	其他注释:
+project_admin_editgroupinfo	info_missed	信息丢失.请填写所有必需的信息。project_admin_editgroupinfo	parent_project	 父类项目:
+project_admin_editgroupinfo	sub_projects	分项目:
+project_admin_editgroupinfo	project_hierarchy_title	项目等级
+project_admin_editgroupinfo	must_be_admin_of_parent_project	关联的父类项目不存在或者你不是本项目的管理员
+project_admin_editgroupinfo	project_hierarchy_desc_1	他的功能旨在提供从权限，用户组和控制角度来构建项目组织的方法。
+project_admin_editgroupinfo	project_hierarchy_desc_2	截至今天，Git / Gerrit仅用于伞形项目（如果与您的平台/项目相关）。
+project_admin_editgroupinfo	project_hierarchy_desc_3	但是，在项目之间设置层次结构可能会有未来的影响（例如，即使没有明确的授权，父类项目的成员也可能访问所有子项目）。project_admin_editgroupinfo	autocompleter_placeholde项目名称 (像你规定的那样搜索)
+project_admin_editgroupinfo	remove_parent_project	移除父类项目
+project_admin_editgroupinfo	self_exception	 一个项目不能成为自己的父类项目
+project_admin_editgroupinfo	ancestor_exception	这些项目已经被关联
+project_admin_editgroupinfo	visibility_section	使用权限
+project_admin_editgroupinfo	private_label	私有
+project_admin_editgroupinfo	public_label	公共
+project_admin_editgroupinfo	choose_visbility	选择你的项目的可见性
+project_admin_editgroupinfo	use_truncated_emails	使用阉割版的邮件
+project_admin_editgroupinfo	truncated_emails_title	阉割版的邮件
+project_admin_editgroupinfo	truncated_emails_impacted_services_introduction	阉割版的电子邮件是指其内容被清除的电子邮件（机密性），并被修改的项目的链接替换。project_admin_editgroupinfo	truncated_emails_impacted_services_no_available	没有使用阉割版的电子邮件的服务被激活。
+project_admin_editgroupinfo	truncated_emails_impacted_services_impacted_services受影响的服务：
+project_admin_editgroupinfo	unrestricted_label	public incl. restricted users
+project_admin_editgroupinfo	restricted_warning	只有项目成员可以访问 <b>私有</b> 项目. <br>一个<b>共有</b> 项目都可以访问 <b>除了受限制用户</b>.<br>它不建议允许<b>受限制用户</b>在 没有正确原因的情况下访问项目<br />请不要 <b>公开受限制的</b> 只适用于 <em>项目仪表页面的</em>, <em>Mediawiki的</em> 和<em>git 仓库</em>.
+project_admin_editgroupinfo	general_warning	只有项目成员可以访问 <b>私有</b> 项目<br>一个<b>公开的</b> 项目所有人都可以访问.
+project_admin_editgroupinfo	under_construction	建设中的页面.
+project_admin_editgroupinfo	term_of_service	请接收平台的<a href='/tos/tos.php'>服务期限</a>
+#
+#-----------------------------------------------
+# Script: SF/www/project/admin/editservice.php
+#
+project_admin_editservice	s_conf	服务器配置
+project_admin_editservice	s_ident_desc	服务器识别和证明
+project_admin_editservice	s_name_in_bar	在服务栏中显示的名称
+project_admin_editservice	s_label	服务器标签
+project_admin_editservice	url	服务指向的URL
+project_admin_editservice	s_link	服务器链接
+project_admin_editservice	s_short_name	服务器简写名称
+project_admin_editservice	short_name	简写名称
+project_admin_editservice	s_desc_in_tooltip	服务说明将显示在服务标签上方的工具提示中。project_admin_editservice	s_desc	服务器描述
+project_admin_editservice	s_scope	服务范围：仅项目或全系统project_admin_editservice	scope	范围
+project_admin_editservice	display_options	显示选项
+project_admin_editservice	instanciated_for_new_p	实例化为新项目？project_admin_editservice	available	可得到
+project_admin_editservice	display_in_s_bar	是否显示在服务栏中？
+project_admin_editservice	enabled	启用
+project_admin_editservice	pos_in_s_bar	在服务栏中的位置
+project_admin_editservice	screen_rank	在屏幕上排序
+
+project_admin_editservice	fields_required	字段需求
+project_admin_editservice	s_creation	服务创建
+project_admin_editservice	system	系统
+project_admin_editservice	project	项目
+project_admin_editservice	mandatory	:强制为全系统服务
+project_admin_editservice	edit_s	编辑服务
+project_admin_editservice	s_not_exist	服务不存在: $1
+project_admin_editservice	forbidden	被禁止
+project_admin_editservice	no_access_inactive_s	您不能访问不活跃的服务
+## There must be a label and description value here for each service name (system or project wide) that should be localized
+## Naming rule for the key: 
+## service_<service short name>_lbl_key for the service label
+## service_<service short name>_desc_key for the service description
+project_admin_editservice	service_summary_lbl_key	概要
+project_admin_editservice	service_summary_desc_key	项目概要
+project_admin_editservice	service_admin_lbl_key	管理
+project_admin_editservice	service_admin_desc_key	项目管理
+project_admin_editservice	service_homepage_lbl_key	主页
+project_admin_editservice	service_homepage_desc_key	项目主页
+project_admin_editservice	service_forum_lbl_key	论坛
+project_admin_editservice	service_forum_desc_key	项目论坛
+project_admin_editservice	service_bugs_lbl_key	漏洞
+project_admin_editservice	service_bugs_desc_key	漏洞追踪系统
+project_admin_editservice	service_support_lbl_key	支持
+project_admin_editservice	service_support_desc_key	支持请求管理
+project_admin_editservice	service_patch_lbl_key	补丁
+project_admin_editservice	service_patch_desc_key	补丁管理
+project_admin_editservice	service_mail_lbl_key	Lists
+project_admin_editservice	service_mail_desc_key	邮件列表
+project_admin_editservice	service_task_lbl_key	任务
+project_admin_editservice	service_task_desc_key	任务管理
+project_admin_editservice	service_doc_lbl_key	     文档
+project_admin_editservice	service_doc_desc_key	文档管理
+project_admin_editservice	service_news_lbl_key	消息
+project_admin_editservice	service_news_desc_key	项目消息
+project_admin_editservice	service_cvs_lbl_key	     CVS
+project_admin_editservice	service_cvs_desc_key	CVS访问
+project_admin_editservice	service_file_lbl_key	文件
+project_admin_editservice	service_file_desc_key	文件释放
+project_admin_editservice	service_tracker_lbl_key	 追踪者v3
+project_admin_editservice	service_tracker_desc_key	项目追踪者 (版本3)
+project_admin_editservice	service_svn_lbl_key		Subversion
+project_admin_editservice	service_svn_desc_key	Subversion访问
+project_admin_editservice	service_wiki_lbl_key	维基
+project_admin_editservice	service_wiki_desc_key	维基
+project_admin_editservice	conf_inherited	    		结构继承
+project_admin_editservice	conf_inherited_no	-
+project_admin_editservice	conf_inherited_partially	部分的
+project_admin_editservice	conf_inherited_yes	是，正确
+#-----------------------------------------------
+# Script: SF/www/project/admin/editugroup.php
+#
+project_admin_editugroup	name	名称
+project_admin_editugroup	avoid_special_ch	请不要在群名称里包含空格和标点符号
+project_admin_editugroup	desc	描述
+project_admin_editugroup	create_ug	创建用户群组
+project_admin_editugroup	create_ug_for	为 <B>$1</B>创建新的用户群组
+project_admin_editugroup	fill_ug_desc	请填写新用户群组的名称和描述
+project_admin_editugroup	create_from	从...创建
+project_admin_editugroup	empty_g	空群组
+project_admin_editugroup	proj_members	项目成员
+project_admin_editugroup	proj_admins	项目管理
+project_admin_editugroup	ug_id_missed	用户组ID丢失
+project_admin_editugroup	ug_not_found	错误-用户组未发现:$1 - $2
+project_admin_editugroup	edit_ug	编辑用户群组
+project_admin_editugroup	ug_admin	用户群组 '<B>$1</B>' - 管理
+project_admin_editugroup	upd_ug_name	你没有权限改变此用户群组的名称和描述
+project_admin_editugroup	select_ug_members	请选择用户成员:
+project_admin_editugroup	quick_filters	快速过滤:
+project_admin_editugroup	show_items	使用$1 开始展示项目
+project_admin_editugroup	sel01	选项01 - 请忽略
+project_admin_editugroup	please_wait	请等待..
+project_admin_editugroup	filter	过滤:
+project_admin_editugroup	ug_perms	此用户群组被授予以下权限
+project_admin_editugroup	no_perms	此用户群组没有被授予过任何权限
+project_admin_editugroup	permission	权限
+project_admin_editugroup	resource_name	资源名称
+project_admin_editugroup	release	释放
+project_admin_editugroup	from_package	从包中
+project_admin_editugroup	package	包
+project_admin_editugroup	document	文件
+project_admin_editugroup	document_group	 文件组
+project_admin_editugroup	wiki	Wiki
+project_admin_editugroup	wiki_page	维基页面
+project_admin_editugroup	tracker	追踪器
+project_admin_editugroup	tracker_field	追踪器字段
+project_admin_editugroup	group_members	群组成员
+project_admin_editugroup	nobody_yet	已经没人
+project_admin_editugroup	go_back	返回用户群组列表
+project_admin_editugroup	add_user	添加用户到此群组
+project_admin_editugroup	members	成员
+project_admin_editugroup	users	用户
+project_admin_editugroup	search_in	  或搜索 
+project_admin_editugroup	any_project	任何项目
+project_admin_editugroup	this_project	此项目
+project_admin_editugroup	name_contains	 用户的名称或邮箱包含...
+project_admin_editugroup	begins	或和..开始
+project_admin_editugroup	show	展示
+project_admin_editugroup	users_per_page	用户个人页面.
+project_admin_editugroup	add_users_to	添加用户到
+project_admin_editugroup	group_empty	此群组为空
+project_admin_editugroup	permissions_title	权限
+project_admin_editugroup	settings_title	 常规设置
+project_admin_editugroup	binding_title	群组规定
+project_admin_editugroup	parent	父类项目: 
+project_admin_editugroup	no_parent	 此项目没有父类项目
+project_admin_editugroup	go_to_hierarchy_admin	转向项目层级管理#
+#-----------------------------------------------
+# Script: SF/www/project/admin/grouptrove.php
+#
+project_admin_grouptrove	changed_trove	改变收藏
+project_admin_grouptrove	g_trove_info	组收藏信息
+project_admin_grouptrove	select_3_classifs	请在每个Trove根类别中为此项目选择三个分类。 这将帮助潜在的开发人员和用户找到您的项目并进行互动。 如果项目不需要任何或所有这些分类，只需选择“无选择”.<P>IMPORTANT REMARKS: <ul><li>Projects should be categorized in the most specific locations available in the map.</li><li>Simultaneous categorization in a specific category AND a parent category will result in only the more specific categorization being accepted.</li><li><em><b>Topic Trove only</b></em>: If your project does not seem to fit into any of the categories or sub-categories, simply select "Other/Non Listed Topics". As new projects are submitted, the $1 Team will refine the Topic Trove by defining 2nd and possibly 3rd level subcategories.  We welcome any suggestions on this. You can change the trove categories for this project at any time.</li></ul>
+project_admin_grouptrove	submit_all_changes	提交所有类别更改
+#
+#-----------------------------------------------
+# Script: SF/www/project/admin/history.php
+#
+project_admin_history	proj_history	项目历史
+project_admin_history	proj_change_log_msg	 此日志显示了谁和什么时候对你项目做了有效的改变
+#
+#-----------------------------------------------
+# Script: SF/www/project/admin/index.php
+#
+project_admin_index	invalid_p	无效项目
+project_admin_index	p_not_found	文件被隐藏.
+project_admin_index	user_not_removed	用户未删除 - 您不能从项目中删除管理员。 您必须首先关闭其管理员标志和/或为该项目找到另一个管理员
+project_admin_index	not_get_atf	不能获得 ArtifactTypeFactory
+project_admin_index	del_tracker_perm_fail	删除追踪器权限失败 ($1)
+project_admin_index	del_user_from_ug_fail	删除群组用户失败
+project_admin_index	user_removed	移除一位用户
+project_admin_index	self_user_remove	你不再是...的成员
+project_admin_index	p_admin	项目管理: $1
+project_admin_index	p_edit	项目信息: $1
+project_admin_index	short_desc	简单描述: $1
+project_admin_index	home_page_link	 主页链接: $1
+project_admin_index	trove_cat_info	 <B>收藏分类信息</B> - 此项目在以下被发现的分类中:
+project_admin_index	edit_trove_cat	[Edit Trove Categorization]
+project_admin_index	login_name	注册名称:
+project_admin_index	add_user	添加用户
+project_admin_index	edit_member_perm	[Edit Member Permissions]	
+project_admin_index	s_admin	服务管理
+project_admin_index	forum_admin	论坛管理
+project_admin_index	bug_admin	     漏洞管理
+project_admin_index	support_admin	支持管理
+project_admin_index	patch_admin	补丁管理
+project_admin_index	lists_admin	列表管理
+project_admin_index	task_admin	任务管理员管理
+project_admin_index	doc_admin		文件管理
+project_admin_index	wiki_admin	Wiki Admin
+project_admin_index	news_admin	消息管理
+project_admin_index	cvs_admin	      CVS Admin
+project_admin_index	svn_admin	      Subversion Admin
+project_admin_index	file_admin	文件管理
+project_admin_index	tracker_admin	追踪器管理
+project_admin_index	no_tracker_found	没有发现可用的追踪器
+project_admin_index	admin	管理
+project_admin_index	member_request_delegation_title	请求授权项目成员资格
+project_admin_index	member_request_delegation_desc_private_group	当人们无法访问您的项目时，因为您的项目是私有的，所以他们可以请求作为成员添加。<br />以下组将收到电子邮件请求：
+
+project_admin_index	member_request_delegation_desc_restricted_user	当人们无法访问您的项目时，由于受限制，只能访问他们所属的项目，他们可以请求作为成员添加。<br />以下组将收到电子邮件请求：
+
+project_admin_index	member_request_delegation_ugroups_error	无效用户群组project_admin_index	member_request_delegation_ugroups_all_invalid	所有被选择的用户群组无法被添加，这些用户群组没有项目管理或者为空
+project_admin_index	member_request_delegation_ugroups_some_invalid	这些被选择的用户群组无法被添加，这些用户群组没有项目管理或者为空
+project_admin_index	member_request_delegation_ugroups_non_admins	一些被选择的用户群组没有项目管理S($1 都没有项目管理，他们不会收到权限请求).
+project_admin_index	member_request_delegation_ugroups_msg	此用户群组的管理授权被通知已被改变
+project_admin_index	member_request_delegation_msg_to_requester	请给管理写信息
+project_admin_index	member_request_delegation_msg_desc	这是默认展示给请求者的，你不能私自定义
+project_admin_index	member_request_delegation_msg_info	修改展示给请求者的默认信息成功
+project_admin_index	member_request_delegation_msg_error	不能更新给请求者的默认信息
+project_admin_index	or	或者
+project_admin_index	changed_group_type	改变项目类型
+project_admin_index	group_type	项目类型
+project_admin_index	built_from_template	Template 曾用于此项目: $1
+project_admin_index	import_user	[包含用户列表]
+project_admin_index	show_projects	按照模板
+project_admin_index	show_projects_hide	隐藏
+project_admin_index	show_projects_show	展示
+#
+#-----------------------------------------------
+# Script: SF/www/project/admin/permissions.php
+#
+project_admin_permissions	news_access	消息存取
+project_admin_permissions	pack_download	下载包
+project_admin_permissions	rel_download	Release Download
+project_admin_permissions	doc_access	文件存取
+project_admin_permissions	docgroup_access	文件组存取
+project_admin_permissions	wiki_access	Wiki Access
+project_admin_permissions	wiki_attachment_access	Wiki Attachment Access
+# message key below must comply with values returned by 
+# the permission_get_object_type function
+project_admin_permissions	package	包$1
+project_admin_permissions	release	释放$1
+project_admin_permissions	document	文件$1
+project_admin_permissions	docgroup	文件组$1
+project_admin_permissions	wiki	wiki $1
+project_admin_permissions	wikipage	维基页面 $1
+project_admin_permissions	wikiattachment	wiki 附件$1
+project_admin_permissions	tracker_artifact_access	访问生成文件
+project_admin_permissions	tracker_full_access 	访问所有追踪器生成文件
+project_admin_permissions	tracker_submitter_access	访问由组提交的跟踪器生成文件
+project_admin_permissions	tracker_assignee_access	访问分配给组的跟踪器生成文件
+project_admin_permissions	tracker_field_submit	可以提交跟踪器字段
+project_admin_permissions	tracker_field_read	可以阅读跟踪器字段
+project_admin_permissions	tracker_field_update	可以更新跟踪器字段
+project_admin_permissions	tracker	追踪$1
+project_admin_permissions	tracker_field	跟踪器字段 $1
+project_admin_permissions	object	目标$1
+project_admin_permissions	artifact	Artifact $1
+# ...end of values
+project_admin_permissions	perm_type_not_def	权限类型 '$1' 未被定义
+project_admin_permissions	submit_perm	提交权限
+project_admin_permissions	admins_create_modify_ug	项目管理可以创建或更新用户群组
+project_admin_permissions	perm_reset_for	  对 $1 权限重设
+project_admin_permissions	perm_granted_for	许可授予 $1
+project_admin_permissions	obj_id_missed	目标ID 丢失
+project_admin_permissions	perm_type_missed	权限类型 丢失
+project_admin_permissions	g_id_missed	 群组ID丢失
+project_admin_permissions	all_users_added	添加了所有用户，包括匿名的
+project_admin_permissions	cant_add_ug_anonymous	$1 - 错误: 不能添加匿名
+project_admin_permissions	ignore_g	- 忽视其他指定的群组
+project_admin_permissions	all_registered_users_added	添加了所有注册过的用户 
+project_admin_permissions	cant_add_ug_reg_users	$1 - 错误: 不能添加注册过的用户到用户群组
+project_admin_permissions	g_nobody_ignored	当其他群组被选择时忽视‘nobody’群组
+project_admin_permissions	nobody_has_no_access请注解群组‘nobody不存取任何目标’
+project_admin_permissions	cant_add_ug	$1 - 错误: 不能添加用户群组 $2. 你是此服务器的管理员吗？
+project_admin_permissions	def_val	(默认值)
+project_admin_permissions	perm_update_success	$1 - 成功更新权限
+project_admin_permissions	reset_to_def	重新设为默认
+project_admin_permissions	save_db_error	保存权限到数据库的时候发生错误，请联系管理员
+project_admin_permissions	override	忽视 $1 权限设置为 $2 因为已经被确认 $3
+#-----------------------------------------------
+# Script: SF/www/project/admin/reference.php
+#
+project_reference	create_fail	参考模式创建失败：所选关键字无效（已保留或已存在）project_reference	create_for_tracker_fail	引用模式未创建：短名称无效（已保留或已存在）。 您仍然可以使用'art'或'artifact'关键字来引用跟踪器生成文件。
+project_reference	create_s	创建新的参考模板.
+project_reference	del?	删除?
+project_reference	del_fail	-删除失败! $1
+project_reference	del_r	删除参考模板?
+project_reference	disabled	<i>Disabled</i>
+project_reference	edit_fail	参考模板版本失败：选择的关键字无效（预留，或者已经存在）
+project_reference	edit_r	编辑参考模板
+project_reference	edit_reference	编辑参考模板
+project_reference	edit_s_for	为 <B>$1</B>编辑参考模板
+project_reference	edit_system_s	编辑系统参考模板
+project_reference	enabled	可行的
+project_reference	enabled_desc	自动提取关键字
+project_reference	force	绕开过滤器 <em>(Site administrators only)</em>:
+project_reference	force_desc	强制创建参考模板
+project_reference	fields_required	字段需求
+project_reference	id	参考ID
+project_reference	keyword	关键字
+project_reference	manage_sys_r	管理系统参考模板
+project_reference	manage_proj_r	管理项目参考模板
+project_reference	missing_parameter	一个参数丢失，请按‘back’键并提交表单A
+project_reference	new_s	新参考末班
+project_reference	project	项目
+project_reference	r_create_success	成功创建参考模板
+project_reference	r_creation	创建新的参考模板
+project_reference	r_desc	描述
+project_reference	r_desc_in_tooltip	这个描述将被展示在一个工具上作为参考
+project_reference	r_keyword	Keyword 关键字
+project_reference	r_keyword_desc 关键字会引发一个参考创建
+project_reference	r_link	Link  链接
+project_reference	r_scope	参考模板的范围：项目和系统
+project_reference	r_service	服务器绑定
+project_reference	r_service_desc	 如果此参考模板特定于一个服务，在这里选择它project_reference	r_nature	属性	
+project_reference	r_nature_desc	说明参考的属性，或者其他任何东西
+project_reference	ref_scope_P	项目
+project_reference	ref_scope_S	系统
+project_reference	scope	范围
+project_reference	sr_deleted	删除系统参考模板
+project_reference	system	系统
+project_reference	system_r_create_success	成功创建系统参考模板-参考模版添加到所有项目
+project_reference	t_r_deleted	删除相应的参考模板
+project_reference	url	URL指向的参考
+project_reference	warning_del_r	*********** WARNING ***********  要删除参考模式吗？ 这将从该服务器的所有项目中删除此引用模式（$ 1）。 你确定你要继续吗 ？project_reference	extract_syntax	Parameters:\n  group_id : project where reference patterns are defined\n  text     : input text
+project_reference	insert_syntax	<p>Parameters:<br>- group_id or group_name : project where reference patterns are defined<br>- text : input text
+## Description value here for each reference pattern (system or project wide) that should be localized
+## Naming rule for the key: 
+## reference_<reference keyword>_desc_key for the reference pattern description
+project_reference	reference_art_desc_key	跟踪工件
+project_reference	reference_cvs_desc_key	CVS 提交细节
+project_reference	reference_svn_desc_key	颠覆修改细节
+project_reference	reference_wiki_desc_key	Wiki 页面
+project_reference	reference_wikiversion_desc_key	Wiki 版本
+project_reference	reference_file_desc_key	文件
+project_reference	reference_doc_desc_key	文档
+project_reference	reference_news_desc_key 	消息块
+project_reference	reference_forum_desc_key	论坛
+project_reference	reference_msg_desc_key	论坛信息
+project_reference	reference_bug_desc_key	漏洞
+project_reference	reference_task_desc_key	任务
+project_reference	reference_sr_desc_key	支持请求
+project_reference	reference_patch_desc_key	补丁
+project_reference	reference_release_desc_key	释放
+
+project_reference	reference_artifact_nature_key	工件
+project_reference	reference_document_nature_key	文档
+project_reference	reference_cvs_commit_nature_key	CVS 提交
+project_reference	reference_svn_revision_nature_key	 Subversion 版本
+project_reference	reference_file_nature_key	文件
+project_reference	reference_release_nature_key	释放
+project_reference	reference_forum_nature_key	论坛
+project_reference	reference_forum_message_nature_key	论坛消息
+project_reference	reference_news_nature_key	消息
+project_reference	reference_wiki_page_nature_key	Wiki 页面
+project_reference	reference_other_nature_key	其他
+#
+#-----------------------------------------------
+# Script: SF/www/project/admin/project_admin_utils.php
+#
+project_admin_utils	edit_public_info	编辑公共信息
+project_admin_utils	edit_project_visibility	项目透明度
+project_admin_utils	user_perms	用户权限
+project_admin_utils	references	参考配置
+project_admin_utils	ug_admin	用户群组管理
+project_admin_utils	project_data_export 	项目数据输出
+project_admin_utils	tracker_import	 跟踪输入
+project_admin_utils	access_logs	存取日志
+project_admin_utils	g_change_history	项目改变历史
+project_admin_utils	event	事件
+project_admin_utils	event_placeholder	选择事件…
+project_admin_utils	val	值
+project_admin_utils	date	日期
+project_admin_utils	access	改变存取
+project_admin_utils	no_g_change	没有改变，项目过滤器的对应已经做过改变
+project_admin_utils	permission_request	更新选择的群组和消息
+project_admin_utils	selected_ugroups_title	用户群组被管理授权通知：
+project_admin_utils	notif_message_title	 默认通知信息:
+
+project_admin_utils	previous	之前
+project_admin_utils	next	下一个
+
+project_admin_utils	search_user	通过用户姓名搜索:
+
+# ... message for the group_history field_name
+# they do not appear in the code !!!!
+project_admin_utils	approved	核准
+project_admin_utils	deleted	删除
+project_admin_utils	is_public	是公共的
+project_admin_utils	type	类型
+project_admin_utils	http_domain	HTTP 域名
+project_admin_utils	unix_box	Unix 盒子
+project_admin_utils	feedback_history	反馈历史
+project_admin_utils	changed_personal_email_notif	  改变个人通知邮箱地址设置
+project_admin_utils	changed_bts_form_message	从消息中改变BTS漏洞
+project_admin_utils	changed_bts_allow_anon	改变BTS中允许匿名提交的漏洞
+project_admin_utils	doc_deleted	文档删除
+project_admin_utils	removed_project	移除项目
+project_admin_utils	added_user	添加用户 ($1)
+project_admin_utils	removed_user	已出用户
+project_admin_utils	added_project	添加项目
+project_admin_utils	data_updated	数据更新
+project_admin_utils	changed_patch_mgr_settings	改变补丁设置
+project_admin_utils	changed_task_mgr_other_settings	改变任务管理器其他设置
+project_admin_utils	changed_public_info	 改变公共信息
+project_admin_utils	changed_trove	改变被发现的分类
+project_admin_utils	upd_ug	改变用户群组 $1
+project_admin_utils	del_ug	删除用户群组 $1
+project_admin_utils	changed_member_perm	 改变用户权限
+project_admin_utils	perm_reset_for	用户权限重设 $1
+project_admin_utils	perm_granted_for	权限授予用户 $1
+project_admin_utils	changed_sr_settings	 改变支持的请求设置
+project_admin_utils	mass_change	跟踪质量变化
+project_admin_utils	import	数据导入
+project_admin_utils	rename_request	请求项目重命名
+project_admin_utils	rename_done	已经重命名项目
+project_admin_utils	rename_with_error	重命名项目报错
+project_admin_utils	membership_request_updated	用户群主成员资格更新
+project_admin_utils	add_custom_quota	请求定制磁盘配额
+project_admin_utils	restore_default_quota	恢复默认磁盘配额
+# There must be one message here for each return value of
+# the permission_get_object_type function in www/project/admin/permissions.php
+project_admin_utils	perm_reset_for_field	允许重置域 $1
+project_admin_utils	perm_reset_for_tracker	允许重置跟踪器 $1
+project_admin_utils	perm_reset_for_package	允许重置包 $1
+project_admin_utils	perm_reset_for_release	允许重置释放 $1
+project_admin_utils	perm_reset_for_document	允许重置文档 $1
+project_admin_utils	perm_reset_for_folder	允许重置文件夹$1
+project_admin_utils	perm_reset_for_docgroup	允许重置文件组 $1
+project_admin_utils	perm_reset_for_wiki	 	允许重置 wiki $1
+project_admin_utils	perm_reset_for_wikipage	允许重置 wiki 页面$1
+project_admin_utils	perm_reset_for_wikiattachment	允许重置 wiki 附件 $1
+project_admin_utils	perm_reset_for_object	允许重置项目 $1
+project_admin_utils	perm_granted_for_field	许可授予域 $1
+project_admin_utils	perm_granted_for_files	许可授予文件$1
+project_admin_utils	perm_granted_for_tracker	许可授予跟踪器$1
+project_admin_utils	perm_granted_for_package	许可授予包 $1
+project_admin_utils	perm_granted_for_release	许可授予释放$1
+project_admin_utils	perm_granted_for_document	许可授予文档 $1
+project_admin_utils	perm_granted_for_folder	许可授予文件夹 $1
+project_admin_utils	perm_granted_for_docgroup	许可授予文件组$1
+project_admin_utils	perm_granted_for_wiki	许可授予 wiki  $1
+project_admin_utils	perm_granted_for_wikipage	许可授予 wiki 页面  $1
+project_admin_utils	perm_granted_for_wikiattachment	许可授予 wiki 附件$1
+project_admin_utils	perm_granted_for_object许可授予项目 $1 
+project_admin_utils	menu_config	配置: 
+project_admin_utils	menu_permissions	授权: 
+project_admin_utils	menu_data	数据: 
+project_admin_utils	group_type	改变项目类型
+project_admin_utils	action	行动
+project_admin_utils	event_permission	权限
+project_admin_utils	event_user	用户
+project_admin_utils	event_ug	用户群组
+project_admin_utils	event_project	项目
+project_admin_utils	event_others	其他
+project_admin_utils	export_history	 输出项目历史
+project_admin_utils	toggle_search	切换搜索
+project_admin_utils	history_search_title	在项目历史内搜索
+project_admin_utils	choose_event	--选择事件--
+project_admin_utils	verify_start_date	验证开始日期
+project_admin_utils	verify_end_date	验证结束日期
+project_admin_utils	verify_dates	开始日期必须在结束日期之前
+project_admin_utils	from	从
+project_admin_utils	to	向
+project_admin_utils	status	状态改变
+project_admin_utils	ugroup_add_binding	用户群组约束添加
+project_admin_utils	ugroup_remove_binding	项目用户组约束移除
+project_admin_utils	frs_self_add_monitor_package	添加包监控
+project_admin_utils	frs_add_monitor_package	添加包监控
+project_admin_utils	frs_stop_monitor_package	停止包监控
+project_admin_utils	ugroup_binding	Binding
+project_admin_utils	truncated_emails	Use truncated emails
+#... end of values
+#
+#-----------------------------------------------
+# Script: SF/www/project/admin/servicebar.php
+#
+project_admin_servicebar	unavailable	不可用
+project_admin_servicebar	disabled	有缺陷的
+project_admin_servicebar	warning_del_s	*********** 警告*********** 你想删除此服务？这样会从服务器的所有服务中删除此服务，你确定你想继续？project_admin_servicebar	del_s	删除此服务 ?
+project_admin_servicebar	del	删除
+project_admin_servicebar	s_id_not_given	 失败: 服务ID未被指定
+project_admin_servicebar	s_del	服务已删除
+project_admin_servicebar	cant_delete_s_from_p	- 不能从所有项目删除服务：服务简称丢失
+project_admin_servicebar	del_fail	- 删除失败！ $1
+project_admin_servicebar	s_del_from_p	- 服务从项目$1中删除 
+project_admin_servicebar	label_missed	标签丢失，请按下“back”键并完成此信息
+project_admin_servicebar	link_missed	链接丢失，请按下“back”键并完成此信息project_admin_servicebar	rank_missed	队列丢失，请按下“back”键并完成此信息
+project_admin_servicebar	cant_make_s	不能让系统服务没有简称，请按下“back”键并完成此信息
+project_admin_servicebar	set_stat_unused	- 设置状态为 "未使用" -
+project_admin_servicebar	short_name_exist	简称为($short_name)的项目已存在，请按下“back”键并改变此信息
+project_admin_servicebar	cant_make_system_wide_s	不能在项目中建立系统超过100年服务，请按下“back”键并改变此信息
+project_admin_servicebar	cant_create_s	ERROR - 不能创建服务： $1
+project_admin_servicebar	s_create_success	成功创建服务
+project_admin_servicebar	s_add_success	- 成功在项目 $1 中创建服务
+project_admin_servicebar	s_id_missed	此服务ID丢失
+project_admin_servicebar	cant_update_s	ERROR -不能更新服务: $1
+project_admin_servicebar	s_update_success	成功更新服务
+project_admin_servicebar	edit_s_bar	编辑服务备用位置暂存器
+project_admin_servicebar	edit_system_s	编辑系统服务
+project_admin_servicebar	edit_s_for	为 <B>$1</B>编辑服务
+project_admin_servicebar	new_s	新服务
+project_admin_servicebar	create_s	创建一个新服务.
+project_admin_servicebar	manage_s	管理存在的服务
+project_admin_servicebar	availability	可用的
+project_admin_servicebar	rank_on_screen	 在屏幕上排序
+project_admin_servicebar	del?	删除?
+project_admin_servicebar	home_page	主页
+project_admin_servicebar	cant_create_s_for_p	ERROR - 不能为项目 $1创建服务
+project_admin_servicebar	bad_rank	ERROR - 等级必须优于 $1.
+project_admin_servicebar	not_allowed	服务未被允许
+#
+#-----------------------------------------------
+# Script: SF/www/project/admin/ugroup.php
+#
+project_admin_ugroup	manage_ug	Manage 用户组
+project_admin_ugroup	manage_ug_for	为 <B>$1</B>管理用户组
+project_admin_ugroup	create_ug	创建新的用户组
+project_admin_ugroup	create_ug_for_p	为此项目创建新的用户组
+project_admin_ugroup	edit_ug	编辑用户组
+project_admin_ugroup	ug_name	用户组名称
+project_admin_ugroup	members	成员
+project_admin_ugroup	del_ug	删除此用户组?
+project_admin_ugroup	predef_g	(*) 表示预定义组
+project_admin_ugroup	permission_request	权限请求
+#
+#-----------------------------------------------
+# Script: SF/www/project/admin/ugroup_utils.php
+#
+project_admin_ugroup_utils	ug__exist 	用户组$1已经在次项目中存在，请选择另一个名称
+project_admin_ugroup_utils	cant_create_ug	错误- 不能创建用户组: $1
+project_admin_ugroup_utils	ug_create_success	成功创建用户组
+project_admin_ugroup_utils	ug_created_but_no_id	错误- 用户组已创建但未得到ID
+project_admin_ugroup_utils	no_g_template	无群组模板被选择
+project_admin_ugroup_utils	cant_insert_u_in_g	错误- 不能加入用户 $1 在群组 $2: $3
+project_admin_ugroup_utils	user_already_exist	用户已经存在
+project_admin_ugroup_utils	u_added	$1 用户已添加
+project_admin_ugroup_utils	ug_name_missed	 组名丢失，请按下“back”键并完成信息
+project_admin_ugroup_utils	invalid_ug_name	无效组名: $1. 请仅使用字母数字混合的字符，请按下“back”键并完成信息
+project_admin_ugroup_utils	cant_update_ug	ERROR -不能更新用户组: $1
+project_admin_ugroup_utils	cant_reset_ug	ERROR - 不能重置用户组 $1: $2
+project_admin_ugroup_utils	ug_upd_success	成功更新用户组 $1 ($2 成员)
+project_admin_ugroup_utils	ug_not_given	失败	: 用户组ID 未规定
+project_admin_ugroup_utils	g_del	用户组已删除
+project_admin_ugroup_utils	cant_remove_u	错误: 不能移除用户! $1
+project_admin_ugroup_utils	all_u_removed	所有用户从此群组删除
+project_admin_ugroup_utils	cant_remove_perm	错误: 不能删除权限! $1
+project_admin_ugroup_utils	perm_warning	警告: $1 权限删除，如果这组是唯一授权访问一个对象，这个对象现在重置为默认的权限
+project_admin_ugroup_utils	ug_upd_empty	这个用户组已空，会被评论如果存在，访问控制列表
+#
+#-----------------------------------------------
+# Script: SF/www/project/admin/userperms.php
+#
+project_admin_userperms	invalid_g	无效组
+project_admin_userperms	group_not_exist	此组不存在
+project_admin_userperms	unable_load_p	不能加载项目对象
+project_admin_userperms	cannot_remove_admin_stat	不能移除你的管理状态：项目至少需要一位管理
+project_admin_userperms	perm_fail_for	 $1权限失败
+project_admin_userperms	perm_upd	权限已更新
+project_admin_userperms	user_name	用户名称
+project_admin_userperms	proj_admin	项目管理
+project_admin_userperms	cvs_write	 CVS 书写
+project_admin_userperms	bug_track	漏洞跟踪
+project_admin_userperms	forums	论坛
+project_admin_userperms	wiki	Wiki
+project_admin_userperms	news	消息
+project_admin_userperms	svn	SVN
+project_admin_userperms	task_man	任务管理器
+project_admin_userperms	patch_man补丁管理器
+project_admin_userperms	supp_man	支持管理器
+project_admin_userperms	doc_man	文档管理器
+project_admin_userperms	file_man	文件管理器
+project_admin_userperms	tracker	跟踪器: $1
+project_admin_userperms	member_ug	群组成员:
+project_admin_userperms	no_users_found	 未发现相应的项目成员
+project_admin_userperms	tech_only	 Tech Only
+project_admin_userperms	admin_only	仅管理
+project_admin_userperms	admin	管理
+project_admin_userperms	tech&admin	技术和管理
+project_admin_userperms	moderator	版主
+project_admin_userperms	upd_user_perm	更新用户权限
+project_admin_userperms	read_perms	读权限
+project_admin_userperms	write_perms	写权限
+#
+#-----------------------------------------------
+# Script: SF/www/project/admin/userimport.php
+#
+project_admin_userimport	import_members	Import Project Members $1
+project_admin_userimport	import_welcome	You can import users into your project, by specifying a text file. <br>See the <a href="$1">Import Format</a> for more details.
+project_admin_userimport	upload_file	上传文件 :
+project_admin_userimport	submit	加载用户
+project_admin_userimport	parse_report	用户分析报告
+project_admin_userimport	ready	准备导入新用户
+project_admin_userimport	import	导入
+project_admin_userimport	success_import用户成功导入
+project_admin_userimport	fail_import	用户导入失败.
+project_admin_userimport	format_hdr	用户导入格式
+project_admin_userimport	missing_file	丢失或不能读的文件
+project_admin_userimport	username	用户名称
+project_admin_userimport	mail_addr	邮箱地址
+project_admin_userimport	invalid_mail_or_username	分析错误 : '$1' 不是一个有效的邮箱地址或用户名称
+project_admin_userimport	multiple_users	Parse 错误: '$1' 已经对应多个用户
+project_admin_userimport	unknown_user	分析错误： 用户'$1' 不存在.
+project_admin_userimport	special_user	警告: 不止一个用户名对应此邮箱地址或用户名 '$1'. 用户导入不会继续.
+project_admin_userimport	member_user	解析错误 : 用户'$1' 已经是此项目的成员
+project_admin_userimport	active_user	解析错误 : 用户'$1' 账户活跃度低
+
+project_admin_userimport	import_format	导入用户，你需要提供一个简单的文本文件，每行包括一个用户的邮箱地址或用户名，可以写入空行在导入文件里，请保证将要导入的用户已经注册且账号处于活跃状态，模板导入文件 : 
+<BR><BR>john.doe@example.com<BR>jacques.dupont@example.com<BR>durandb<BR><BR> $1
+project_admin_userimport	err_no_user_to_import	没有有效的用户导入文件#
+#-----------------------------------------------
+# Script: SF/www/project/export/artifact_deps_export.php
+#
+project_export_artifact_deps_export	at_not_created	ArtifactType 不能创建
+project_export_artifact_deps_export	tracker_no_longer_valid	此追踪器不在有效
+project_export_artifact_deps_export	art_deps_export	依赖导出
+project_export_artifact_deps_export	no_deps_found	未发现依赖. 不能正常导出
+project_export_artifact_deps_export	db_access_err	访问依赖数据库时发生错误，请向管理员汇报$1错误
+project_export_artifact_deps_export	deps_export_format	依赖导出格式
+project_export_artifact_deps_export	deps_export_format_msg		出口提供了以下字段的依赖关系，样本值显示了字段的类型
+project_export_artifact_deps_export	create_proj_err	创建项目 $1中 表: $2时发生错误
+project_export_artifact_deps_export	security_violation	安全障碍!!! 非法数据库名字: $1
+project_export_artifact_deps_export	art_id_desc	唯一导入文件标识符
+project_export_artifact_deps_export	depend_on_art	取决于导入文件
+#
+#-----------------------------------------------
+# Script: SF/www/project/export/artifact_export.php
+#
+project_export_artifact_export	ath_not_created	ArtifactTypeHtml 不能被创建
+project_export_artifact_export	follow_up_comments	后续评论
+project_export_artifact_export	depend_on	取决于
+project_export_artifact_export	all_followup_comments	所有的后续评论在文本的一个块里
+project_export_artifact_export	depend_on_list	 生成文件取决于列表里依赖的生成文件
+project_export_artifact_export	art_export	生成文件导出
+project_export_artifact_export	no_art_found	没有发现生成文件，无法生成导出project_export_artifact_export	db_access_err	访问生成文件数据库时发生错误，请将此错误报告给管理员$1
+project_export_artifact_export	art_exp_format	生成文件导出格式
+project_export_artifact_export	art_exp_format_msg	出口提供了以下生成文件字段的生成文件，摸板值显示了字段数据的类型
+project_export_artifact_export	add_cc_lbl	CC 列表
+project_export_artifact_export	add_cc_dsc	收到电子邮件通知的CC的人员列表
+project_export_artifact_export	cc_comment_lbl	 CC 评论
+project_export_artifact_export	cc_comment_dsc	 解释为什么这些CC名称被添加和/或他们是谁
+#
+#-----------------------------------------------
+# Script: SF/www/project/export/artifact_history_export.php
+#
+project_export_artifact_history_export	art_id	生成文件ID
+project_export_artifact_history_export	field_name	域名
+project_export_artifact_history_export	old_val	旧值
+project_export_artifact_history_export	new_val	新值
+project_export_artifact_history_export	mod_by	通过..改进
+project_export_artifact_history_export	email	邮箱
+project_export_artifact_history_export	mod_on	在...改进
+project_export_artifact_history_export	comment_type	评论类型
+project_export_artifact_history_export	label	标签
+project_export_artifact_history_export	field_name_desc	值改变的字段的内部名称
+project_export_artifact_history_export	old_val_desc	字段改变前的值
+project_export_artifact_history_export	new_val_desc	字段改编后的值
+project_export_artifact_history_export	mod_by_desc	改变用户名的的用户的注册名
+project_export_artifact_history_export	mod_on_desc	改变日期
+project_export_artifact_history_export	comment_type_desc	后续评论的类型已加入历史
+project_export_artifact_history_export	label_desc	值改变的字段的公共名称
+project_export_artifact_history_export	art_hist_export	生成文件历史导出
+project_export_artifact_history_export	no_hist_found	未找到生成文件历史. 不能形成一个出口
+project_export_artifact_history_export	db_access_err	访问生成文件历史数据库时发生错误，请向管理员$1 报告此错误
+project_export_artifact_history_export	hist_export_format	生成文件历史导出格式
+project_export_artifact_history_export	hist_export_format_msg	出口提供了以下生成文件历史字段的生成文件历史，摸板值显示了字段数据的类型
+>
+#
+#-----------------------------------------------
+# Script: SF/www/project/export/bug_bug_deps_export.php
+#
+project_export_bug_deps_export	g_id	组ID
+project_export_bug_deps_export	bug_id	漏洞ID
+project_export_bug_deps_export	depend_on_bug	漏洞依赖
+project_export_bug_deps_export	bug_id_desc	唯一漏洞标识符
+project_export_bug_deps_export	g_id_desc	唯一项目标识符
+#project_export_bug_deps_export	depend_on_bug_desc	漏洞依赖
+project_export_bug_deps_export	bug_deps_export	$1 出口
+project_export_bug_deps_export	no_bug_deps_found	未发现$1.不能形成出口
+project_export_bug_deps_export	db_access_err	访问$1数据库时发生错误，请向管理员$2报告此错误
+project_export_bug_deps_export	bug_deps_export_format	<h3>$1导出格式</h3>  出口提供了以下字段的$1，摸板值显示了字段数据的类型
+The $1 export provides you with the following fields. The sample values indicate what the field data types are. <p>
+#
+#-----------------------------------------------
+# Script: SF/www/project/export/bug_export.php
+#
+project_export_bug_export	depend_on_bugs	漏洞依赖
+project_export_bug_export	depend_on_bugs_desc 	漏洞依赖的漏洞列表
+#
+#-----------------------------------------------
+# Script: SF/www/project/export/index.php
+#
+project_export_index	proj_db_success	你的项目数据库已成功生成，您现在可以使用自己喜欢的桌面应用程序，并通过桌面计算机上安装的MySQL ODBC / JDBC驱动程序访问您的项目数据库。 配置ODBC / JDBC数据库连接的参数如下：project_export_index	proj_db_no_data	No data to export. Only <strong>Tracker v3</strong> are exported.
+project_export_index	export_to_csv_or_db	 您的项目数据可以导出为单独的文本文件（CSV格式）或特定于项目的数据库，您可以通过ODBC / JDBC连接从桌面计算机直接访问。 有关更多信息，请参阅$ 1。
+project_export_index	export_to_csv_hdr	Text File Export $2
+project_export_index	export_to_csv_msg	点击下面的链接生成文本文件导出（CSV格式）。
+project_export_index	online_help	在线帮助
+project_export_index	art_data	数据
+project_export_index	history	历史
+project_export_index	dependencies	依赖
+project_export_index	legacy	遗产
+project_export_index	bug_tracker	漏洞追踪
+project_export_index	tracker	追踪器
+project_export_index	export	出口
+project_export_index	show_format	显示格式
+project_export_index	export_x	出口 $1
+project_export_index	support_request	支持请求
+project_export_index	access_logs	项目存取日志
+project_export_index	user_groups	用户组定义
+project_export_index	direct_db_access	管理数据库存取 
+project_export_index	generate_full_db	生成完整的项目数据库</a> </b> (<- Click to generate)
+project_export_index	db_connection_params	数据库连接参数:
+#
+#-----------------------------------------------
+# Script: SF/www/project/export/project_export_utils.php
+#
+project_export_utils	ins_err	加入 $1: $2发生错误
+project_export_utils	label	标签
+project_export_utils	sample_val	样本值
+project_export_utils	server	服务器
+project_export_utils	port	端口
+project_export_utils	leave_blank	(leave it blank)
+project_export_utils	db	数据库
+project_export_utils	user	用户
+project_export_utils	passwd	密码
+project_export_utils	type	类型
+project_export_utils	query_is	询问是($1): $2
+#
+#-----------------------------------------------
+# Script: SF/www/project/export/support_request_export.php
+#	
+project_export_support_request_export	support_id	支持ID
+project_export_support_request_export	category	分类
+project_export_support_request_export	summary	概要
+project_export_support_request_export	priority	优先级
+project_export_support_request_export	submitted_by	通过..递交
+project_export_support_request_export	assigned_to	分配给
+project_export_support_request_export	open_date	Open 日期
+project_export_support_request_export	close_date	关闭日期
+project_export_support_request_export	support_id_desc	唯一支持的请求的标识符
+project_export_support_request_export	category_desc	支持请求所在类别的名称project_export_support_request_export	summary_desc	支持请求的一行描述project_export_support_request_export	submitted_by_desc	提交支持请求的用户的名称project_export_support_request_export	assigned_to_desc	项目成员分配了支持请求project_export_support_request_export	open_date_desc	S支持请求提交日期
+project_export_support_request_export	close_date_desc	支持请求关闭日期
+project_export_support_request_export	status_desc	状态(开放, 关闭&省略;)
+project_export_support_request_export	follow_up_desc所有后续评论都在一段文字中，包括原始描述
+#
+#-----------------------------------------------
+# Script: src/www/project/export/access_logs_export.php
+#
+project_export_access_logs_export	time	日期
+project_export_access_logs_export	user	用户
+project_export_access_logs_export	email	邮箱
+project_export_access_logs_export	page	Page 名称
+project_export_access_logs_export	document	文件
+project_export_access_logs_export	doc	文档
+project_export_access_logs_export	file	文件
+project_export_access_logs_export	attachment	附件
+project_export_access_logs_export	access	接近	
+project_export_access_logs_export	file_brows	文件浏览
+project_export_access_logs_export	chk_upd	检查/更新
+project_export_access_logs_export	local_time	当地时间
+project_export_access_logs_export	date_desc	 	用户访问发生时的日期（D / M / Y）project_export_access_logs_export	email_desc	访问作者的电子邮件地址
+project_export_access_logs_export	page_desc	 访问维基页面
+project_export_access_logs_export	local_time_desc	当地访问时间 (H:m)
+#
+#-----------------------------------------------
+# Script: src/www/project/export/user_groups_export.php
+#
+project_export_user_groups	user_group	组
+project_export_user_groups	user_username	$1 用户姓名
+project_export_user_groups	user_realname	真实姓名
+project_export_user_groups	user_group_desc	组名
+project_export_user_groups	user_username_desc	用户注册 $1
+project_export_user_groups	user_realname_desc	用户真实姓名
+project_export_user_groups	exp_format	用户组导出格式
+project_export_user_groups	exp_format_msg	用户组导出为您提供以下信息。
+#
+#-----------------------------------------------
+# Script: SF/www/project/export/task_assigned_to_export.php
+#
+project_export_task_assigned_to_export	task_id	任务ID
+project_export_task_assigned_to_export	task_id_desc	唯一任务标识符
+project_export_task_assigned_to_export	assigned_to_desc	任务分配到的项目成员#
+#-----------------------------------------------
+# Script: SF/www/project/export/task_export.php
+#
+project_export_task_export	subproject	子项目
+project_export_task_export	summary	任务概要
+project_export_task_export	details	原始评论
+project_export_task_export	percent_complete	完成百分比
+project_export_task_export	hours	小时
+project_export_task_export	start_date	开始日期
+project_export_task_export	end_date	结束日期
+project_export_task_export	created_by	由...创建
+project_export_task_export	depend_on_task	任务依赖
+project_export_task_export	subproject_desc	项目中的子项目名称
+project_export_task_export	summary_desc	任务的第一行描述
+project_export_task_export	details_desc	人物的详细描述
+project_export_task_export	percent_complete_desc	已经完成多少任务
+project_export_task_export	hours_desc	努力在数小时内完成任务
+project_export_task_export	start_date_desc	任务开始的时间
+project_export_task_export	end_date_desc	任务完成的时间
+project_export_task_export	created_by_desc	创建人物的项目成员
+project_export_task_export	depend_on_task_desc 	任务依赖的任务列表
+project_stats_index	months	月
+project_stats_index	weeks	周
+project_stats_index	days	天
+project_stats_index	cvs	计算机并行版本系统
+
+#
+#-----------------------------------------------
+# Script: SF/www/project/stats/source_code_access.php
+#
+project_stats_source_code_access	all_users	所有用户
+project_stats_source_code_access	non_proj_members	无项目成员
+project_stats_source_code_access	access_log_from	访问日志
+project_stats_source_code_access	for_last	最后
+project_stats_source_code_access	logs_export	导出匹配日志
+#
+#-----------------------------------------------
+# Script: SF/www/project/stats/source_code_access_utils.php
+#
+project_stats_source_code_access_utils	file_download	文件下载 
+project_stats_source_code_access_utils	frs_actions	FRS动作
+project_stats_source_code_access_utils	frs_elements	包/释放/文件
+project_stats_source_code_access_utils	files	文件
+project_stats_source_code_access_utils	frs_create_package	创建包
+project_stats_source_code_access_utils	frs_update_package	更新包
+project_stats_source_code_access_utils	frs_delete_package	删除包
+project_stats_source_code_access_utils	frs_create_release	创建释放
+project_stats_source_code_access_utils	frs_update_release	更新释放
+project_stats_source_code_access_utils	frs_delete_release	删除释放
+project_stats_source_code_access_utils	frs_create_file	创建文件
+project_stats_source_code_access_utils	frs_update_file	更新文件
+project_stats_source_code_access_utils	frs_delete_file	删除文件
+project_stats_source_code_access_utils	frs_restore	恢复文件
+project_stats_source_code_access_utils	frs_unknown_action	不知道的行为
+project_stats_source_code_access_utils	access_for_past_x_days	过去$ 2天$ 1
+project_stats_source_code_access_utils	in_total	$1 总共
+project_stats_source_code_access_utils	time	当地时间
+project_stats_source_code_access_utils	no_access	 没有这个时期.
+project_stats_source_code_access_utils	service_disabled	$1 服务已禁用
+project_stats_source_code_access_utils	subversion	颠覆
+project_stats_source_code_access_utils	docs	文档
+project_stats_source_code_access_utils	wiki	维基
+project_stats_source_code_access_utils	wiki_attachments	维基附件
+project_stats_source_code_access_utils	cvs_co_upd	CVS访问（检查/更新
+project_stats_source_code_access_utils	svn_access	Subversion 访问
+project_stats_source_code_access_utils	doc_download	文件下载
+project_stats_source_code_access_utils	documents	文件
+project_stats_source_code_access_utils	wiki_access	维基访问
+project_stats_source_code_access_utils	wiki_page	页面
+project_stats_source_code_access_utils	wiki_attachment_access	维基附件访问
+project_stats_source_code_access_utils	wiki_attachment_title	附件
+project_stats_source_code_access_utils	cvs_access	CVS 访问
+project_stats_source_code_access_utils	co_upd	检查/更新
+project_stats_source_code_access_utils	browsing	文件浏览
+project_stats_source_code_access_utils	accesses	访问
+#
+#-----------------------------------------------
+# Script: SF/www/project/index.php
+#
+project_index	g_missed	缺少组参数
+project_index	must_spec_g	必须为此页面指定一个组.
+#
+#-----------------------------------------------
+# Script: SF/www/project/memberlist.php
+#
+project_memberlist	proj_member_list	项目成员列表
+project_memberlist	contact_to_become_member	<P>想要成为这个项目的成员，请联系其中一个项目管理员，以下面粗体字指定.<br><br>
+project_memberlist	developer	成员
+project_memberlist	username	用户名
+#
+#-----------------------------------------------
+# Script: SF/www/project/showdetails.php
+#
+project_showdetails	proj_details	项目详细信息
+project_showdetails	no_detail	没有关于项目的详细信息
+project_showdetails	proj_not_found	错误 - 项目未找到
+project_showdetails	back_main	[返回主页]
+project_showdetails	references	参考模式
+#
+#-----------------------------------------------
+# Script: 
+#
+project_ugroup	ugroup_anonymous_users_desc_key	匿名
+project_ugroup	ugroup_registered_users_desc_key	已注册用户
+project_ugroup	ugroup_authenticated_users_desc_key	已认证用户
+project_ugroup	ugroup_project_members_desc_key	项目成员
+project_ugroup	ugroup_project_admins_desc_key	项目管理员
+project_ugroup	ugroup_file_manager_admin_desc_key	文件管理器管理员
+project_ugroup	ugroup_document_tech_desc_key	文档管理器技术员
+project_ugroup	ugroup_document_admin_desc_key	文档管理器管理员
+project_ugroup	ugroup_wiki_admin_desc_key	维基管理员
+project_ugroup	ugroup_tracker_admins_desc_key	追踪器管理员
+#project_ugroup	ugroup_tracker_techs_desc_key	追踪器技术员
+project_ugroup	ugroup_nobody_desc_key	空组
+project_ugroup	ugroup_anonymous_users_name_key	所有用户
+project_ugroup	ugroup_registered_users_name_key	已注册用户
+project_ugroup	ugroup_authenticated_users_name_key	已认证用户
+project_ugroup	ugroup_project_members_name_key	项目成员
+project_ugroup	ugroup_project_admins_name_key	项目管理
+project_ugroup	ugroup_file_manager_admin_name_key	文件管理器管理员
+project_ugroup	ugroup_document_tech_name_key	文档管理器技术员
+project_ugroup	ugroup_document_admin_name_key	文档管理器管理员
+project_ugroup	ugroup_wiki_admin_name_key	维基管理员
+project_ugroup	ugroup_tracker_admins_name_key	追踪器管理员
+#project_ugroup	ugroup_tracker_techs_name_key	追踪器技术员
+
+project_ugroup	ugroup_all_users	所有用户
+project_ugroup	ugroup_nobody_name_key	没有人
+project_ugroup	ugroup_nobody	没有人
+project_ugroup	ugroup_anonymous_users	匿名
+project_ugroup	ugroup_authenticated_users	注册和限制用户
+project_ugroup	ugroup_registered_users	注册用户
+project_ugroup	ugroup_project_members	项目成员
+project_ugroup	ugroup_project_admins	项目管理员
+project_ugroup	ugroup_file_manager_admins	文件管理器管理员
+project_ugroup	ugroup_document_techs	文档管理器技术员
+project_ugroup	ugroup_document_admins	文档管理器管理员
+project_ugroup	ugroup_wiki_admins	Wiki 维基管理员
+
+# Script: /www/project/Project.class.php
+#
+project_desc_name	full_desc	Full 项目描述
+project_desc_name	other_comments	 其他评论
+project_desc_name	req_soft	所需软件
+project_desc_name	int_prop	知识产权
+
+project_desc_desc	full_desc	<b>*** 重要的提示 ***</b> 确保提供详细的描述，其中包含所有关键字，帮助他人找到并重用您的软件组件。 没有提供准确的描述也可能延迟您的项目的批准。
+project_desc_desc	other_comments	任何你想说的关于你的项目，上面没有介绍。 例如，如果您的软件用于其他产品，您可能希望在这里列出。 如果软件正在商业化，您还可以提供价格信息或联系人等。
+project_desc_desc	req_soft	如果您的项目需要使用第三方（商业或开源）或其他内部软件正常工作，请在此处列出。
+project_desc_desc	int_prop	如果您的项目由专利或IP覆盖，请在这里列出。
+#
+#-----------------------------------------------
+# Script: /www/project/privacy.php
+#
+project_privacy	private	私有
+project_privacy	public	共有
+project_privacy	tooltip_private	<p class='project-privacy'>项目隐私设置为<big><strong>私有</strong></big><br />只有项目成员可以访问其内容.</p>
+project_privacy	tooltip_public_w_anon	<p class='project-privacy'>项目隐私设置为<big><strong>共有</strong></big><br />默认情况下，其内容适用于所有人（经过身份验证）.<br />请注意，某些项目可能存在更多的限制性权限。</p>
+project_privacy	tooltip_public_wo_anon	<p class='project-privacy'>项目隐私设置为<big><strong>共有</strong></big><br />默认情况下，其内容可用于所有已验证但不受限制的用户。<br />请注意，某些项目可能存在更多的限制性权限。</p>
+
+
+project_service	service_not_used	$1 服务未启用
+project	does_not_exist	项目不存在
+#-----------------------------------------------
+# Script: /www/project/admin/ugroup_binding.php
+#
+project_ugroup_binding	ugroup	用户组
+project_ugroup_binding	binding	约束
+project_ugroup_binding	edit_binding_title	编辑用户组约束
+project_ugroup_binding	update_binding	 更新约束
+project_ugroup_binding	add_binding	添加约束
+project_ugroup_binding	binding_added	约束已添加
+project_ugroup_binding	add_error	约束用户组时出错
+project_ugroup_binding	duplicate_binding_warning	T有id $ 1的用户组已经被定义为约束源
+project_ugroup_binding	binding_removed	用户组约束成功删除
+project_ugroup_binding	remove_error	用户组约束未删除
+project_ugroup_binding	current_binding	当前绑定
+project_ugroup_binding	binding_sources	用户组绑定到这一个
+project_ugroup_binding	edit_binding	编辑约束
+project_ugroup_binding	source_project		源项目
+project_ugroup_binding	source_ugroup	源用户组
+project_ugroup_binding	no_binding	此群组不受其他任何群组的约束
+project_ugroup_binding	remove_binding	移除目前的约束
+project_ugroup_binding	current_binded	此用户组在项目$2中受到$2的约束 project_ugroup_binding	not_source	该用户组不是任何其他用户组的源
+project_ugroup_binding	update_user_not_allowed	用户组$1的用户不允许被更新
+project_ugroup_binding	reset_error	无权限重置用户组 $1
+project_ugroup_binding	clone_error	无权限克隆用户组 $1
+
+#-----------------------------------------------
+# Script: /www/project/admin/ugroup/UGroupController.class.php
+#
+
+project_ugroup_binding	ldap_group_error	LDAP 组'$1' 不存在.
+project_ugroup_binding	link_ldap_group	 LDAP 组'$1' 已经被联系到项目
+project_ugroup_binding	ldap_group_empty	LDAP 组名不能为空.
+project_ugroup_user	add_username	用户名类型
+
+project_admin	generic_member_settings	通用用户设置
+project_admin	generic_member_updated	通用用户设置更新
+project_admin	generic_member_not_updated	更新通用用户设置时发生错误
+project_admin	generic_member_not_changed	通用用户设置没有改变过
+project_admin	generic_member_leave_blank	留空以保留当前密码
+project_admin	edit_generic_user_settings	编辑设置
+
+project_import	invalid_user	无效的用户名 $1 必须是项目管理且处于活跃状态
+project_import	invalid_xml	无效的XML

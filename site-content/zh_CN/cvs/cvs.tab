@@ -1,0 +1,120 @@
+#/**
+#  *
+#  * CVS scripts message catalog (English)
+#  *
+#  * Codendi 
+#  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+#  * http://www.codendi.com
+#  *
+#  *
+#  */
+#
+#
+#-----------------------------------------------
+# Script: SF/www/cvs/index.php
+#
+cvs_index	config_updated	配置更新
+cvs_index	full_success	成功地
+cvs_index	partial_success	partly<br>Email地址出现无效，电子邮件通知已关闭。
+#
+#-----------------------------------------------
+# Script: SF/www/cvs/admin_commit.php
+#
+cvs_admin_commit	title	CVS管理
+cvs_admin_commit	private_hdr	CVS的权限
+cvs_admin_commit	private_lbl	私人信息库
+cvs_admin_commit	private_private_msg	私人项目不能使他们的知识库公开。
+cvs_admin_commit	tracking_hdr	CVS追踪
+cvs_admin_commit	tracking_msg	当CVS跟踪是，提交（文件更改，添加和删除）注册在$1的数据库，使他们可以浏览和搜索。其他提交没有登录到数据库中，只有CVS历史可用
+cvs_admin_commit	tracking_lbl	CVS追踪
+cvs_admin_commit	watches_hdr	CVS的观看模式
+cvs_admin_commit	watches_msg	CVS创建项目文件的工作副本只读，提醒开发人员在运行它们之前运行CVS编辑命令。
+cvs_admin_commit	watches_lblCVS的观看模式
+cvs_admin_commit	notif_hdr	提交电子邮件通知
+cvs_admin_commit	notif_msg	每个提交事件也可以通过电子邮件通知特定收件人或邮件列表（逗号分隔）。也可以指定电子邮件的特定主题头。
+cvs_admin_commit	mail_to	邮件发送至
+cvs_admin_commit	subject	主题标题
+cvs_admin_commit	preamble_hdr	CVS的序言
+cvs_admin_commit	preamble_msg	介绍消息，以取代默认的 <a href="$1">CVS的欢迎页面</a>. （允许HTML标签）
+#
+#-----------------------------------------------
+# Script: SF/www/cvs/cvs_intro.php
+#
+# Rk: for the introduction text see the intro.txt file
+#
+cvs_intro	title	简历信息
+cvs_intro	repo_history	库的历史
+cvs_intro	no_history	该项目没有CVS历史。
+cvs_intro	nb_commits	开发者提交（最后7天/总）
+cvs_intro	browse_title	浏览CVS树
+cvs_intro	browse_msg	浏览CVS树可以使您对项目代码的当前状态有很好的了解。您还可以查看库中任何文件的完整历史记录。
+#
+#-----------------------------------------------
+# Script: SF/www/cvs/browse_commit.php
+#
+cvs_browse_commit	title	CVS提交浏览
+cvs_browse_commit	browse_by	即通过浏览
+cvs_browse_commit	id	身份证件
+cvs_browse_commit	branch	分公司
+cvs_browse_commit	who	提交
+cvs_browse_commit	keyword	关键词日志消息
+cvs_browse_commit	date	提交日期
+cvs_browse_commit	pick_date	点击这里获取日期
+cvs_browse_commit	nb_at_once	有一次
+cvs_browse_commit	no_commit	没有提交符合您的标准
+cvs_browse_commit	log_message	日志信息
+#
+#-----------------------------------------------
+# Script: SF/www/cvs/detail_commit.php
+#
+cvs_detail_commit	title	CVS提交 #$1 - 细节
+cvs_detail_commit	error_notfound	提交 #$1 没有发现在这个项目
+#
+#-----------------------------------------------
+# Script: SF/www/cvs/commit_utils.php
+#
+cvs_commit_utils	error_project	只有项目可以使用CVS web服务
+cvs_commit_utils	error_off	这个项目已经关闭了CVS
+cvs_commit_utils	menu_info	CVS信息
+cvs_commit_utils	menu_browse	浏览CVS树
+cvs_commit_utils	menu_my	My CVS提交
+cvs_commit_utils	menu_query	简历查询
+cvs_commit_utils	menu_admin	CVS管理
+cvs_commit_utils	error_nogid	错误-没有group_id
+cvs_commit_utils	sorted_by	排序
+cvs_commit_utils	matching	匹配的承诺
+cvs_commit_utils	sort_msg	单击列标题来排序结果（向上或向下），或<A HREF="$1"><b>重新排序</b></a>.你也可以 <a href="$2"><b>$3 多列排序</b></a>.
+cvs_commit_utils	activate	激活	
+cvs_commit_utils	deactivate	停用	
+cvs_commit_utils	description	说明
+cvs_commit_utils	id	身份证件
+cvs_commit_utils	who	提交
+cvs_commit_utils	date	日期
+cvs_commit_utils	no_date	日志上没有日期
+cvs_commit_utils	on_log	在这个日志
+cvs_commit_utils	commit	提交#
+cvs_commit_utils	checkin签-
+cvs_commit_utils	impacted_file	影响文件列表
+cvs_commit_utils	file	文件
+cvs_commit_utils	rev	修订
+cvs_commit_utils	branch	分公司
+cvs_commit_utils	type	型
+cvs_commit_utils	add	添加
+cvs_commit_utils	change	改变
+cvs_commit_utils	remove删除
+cvs_commit_utils	added_line	添加的行
+cvs_commit_utils	removed_line	删除线
+#
+#-----------------------------------------------
+# Script: SF/www/cvs/viewvc.php
+#
+cvs_viewvc	title	Browse CVS树	
+cvs_viewvc	error_noaccess	拒绝访问	
+cvs_viewvc	error_noaccess_msg	您没有权限访问此文件。请联系 <A HREF="$1">项目管理员</A>.
+
+
+
+
+
+
+

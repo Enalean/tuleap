@@ -1,0 +1,116 @@
+#
+# Copyright (c) Enalean, 2011 - 2016. All Rights Reserved.
+# Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+#
+# This file is a part of Tuleap.
+#
+# Tuleap is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# Tuleap is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Tuleap; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+
+system	locale	zh_CN
+system	locale_label	简体中文
+system	strftimefmt	%Y %B %e  %H:%M
+system	datefmt	Y-m-d H:i
+system	datefmt_full	Y-m-d 时:分:秒
+system	datefmt_short	Y-m-d
+system	datefmt_day_and_month	月 日
+system	decimal_separator	.
+system	thousand_separator	,
+conf	content_encoding	utf-8
+conf	default_font	Verdana，Arial，Helvetica，sans-serif
+conf	language_code	en
+conf	language_id	en_US
+global	perm_denied	权限被拒绝
+global	error_perm_denied	错误-权限被拒绝
+global	back_home	回到首页
+global	back	回来
+global	btn_apply	应用
+global	btn_delete	删除
+global	btn_cancel	取消
+global	btn_update	更新
+global	btn_submit	提交
+global	btn_search	搜索
+global	btn_submit_and_continue提交并继续
+global	btn_submit_and_stay	提交和停留
+global	btn_browse	浏览
+global	btn_create	创建
+global	btn_preview 预览
+global	btn_close	关闭
+global	btn_reset	复位
+global	btn_edit	编辑
+global	btn_restrict	限制
+global	search_title	搜索
+global	save_change 保存您的更改
+global	reset	复位
+global	delete	删除
+global	add	添加
+global	total	全部
+global	warning	警告！
+global	yes	是的
+global	no	没有
+global	on	在
+global	off	下车
+global	any	任何
+global	none	没有
+global	none_dashed	-- 没有 --
+global	please_choose_dashed	--请选择
+global	begin	开始
+global	end	终点
+global	next	下一个
+global	prev	以前的
+global	of	属于
+global	printer_version	打印版
+global	error	误差
+global	help	帮助
+global	by	通过
+global	select	选择
+global	unchanged	不变
+global	or	或
+global	and	和
+global	more	更多
+global	activate	激活
+global	deactivate	停用
+global	Project	项目
+global	System	系统
+global	Admin	行政
+global	Administration	管理
+global	Settings	设置
+global	Personal	个人的
+global	default	违约
+global	no_mail_for_account 此帐户没有电子邮件地址。
+global	mail_failed	邮件不接受的交付。请与管理员联系。他的电子邮件地址是： $1.
+global	open	正常开放
+global	closed	关闭
+global	status	现状
+global	return_to	<p>请求页当前加载。如果没有，尝试 <a href="$1">$1</a>.</p>
+global	at_the_beginning	在开始
+global	at_the_end	最后
+global	after	后面的 $1
+global	missing_parameters	缺少的参数
+global	error_upload	文件上传错误。请再试一次。
+global	error_upload_nofile	文件上传错误($1). 没有上传文件。
+global	error_upload_partial	文件上传错误($1).上传的文件只是部分上传。
+global	error_upload_size	文件上传错误($1). 上传的文件超过了允许的最大文件大小。
+global	error_upload_unknown	文件上传错误($1). 未知错误代码。
+global	service_conf_not_inherited	该服务的配置将不会为子项目沿用
+global	pick_date	选定一个日期
+global	show_frame	仅显示此帧
+global	null	无效的
+global	error_synchronizertoken	您的请求似乎不有效。请重试。
+global	operation_not_allowed	不允许操作
+global	settings	设置
+global	usage	使用
+global	powered_by	Powered By <a href="https://tuleap.org/?utm_source=forge&utm_medium=forge&utm_campaign=forge" target="_blank" rel="noreferrer">Tuleap&trade;</a>
+global	copyright	Copyright &copy; 2011-2017 <a href="https://www.enalean.com/?utm_source=forge&utm_medium=forge&utm_campaign=forge" target="_blank" rel="noreferrer">Enalean</a>

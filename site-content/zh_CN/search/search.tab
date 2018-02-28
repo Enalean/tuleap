@@ -1,0 +1,44 @@
+#/**
+#  *
+#  * Include scripts message catalog (English)
+#  *
+#  * Codendi 
+#  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+#  * http://www.codendi.com
+#  *
+#  *
+#  */
+#
+#-----------------------------------------------
+# Script: SF/www/search/index.php
+#
+search_index	search	搜索
+search_index	search_tab	经典搜索
+search_index	site_wide_search	全站搜索
+search_index	project_wide_search	 在 $1里搜索
+search_index	no_searchable_services	这个项目没有可搜索的服务
+search_index	at_least_3_ch	搜索必须至少有三个字符
+search_index	no_match_found	找不到匹配项<span>$1</span>
+search_index	no_more_results	找不到更多匹配
+search_index	more_results	更多结果
+search_index	search_res	为 $1 ($2 results)搜索结果
+search_index	project_name	项目名字
+search_index	description	描述
+search_index	user_n	用户名
+search_index	real_n	真实姓名
+search_index	thread	线程
+search_index	author	作者
+search_index	date	日期
+search_index	bug_summary	错误摘要
+search_index	submitted_by	由...所提交
+search_index	sr_summary	SR 总结
+search_index	task_summary	任务摘要
+search_index	created_by	通过...创建
+search_index	start_date	开始时间
+search_index	end_date	结束时间
+search_index	artifact_summary	生成文件摘要
+search_index	invalid_search	 错误- 无效搜索
+search_index	prev_res	以前的结果
+search_index	next_res	下一个结果
+search_index	soft	项目
+search_index	people	人

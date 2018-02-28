@@ -1,0 +1,328 @@
+#/**
+#  *
+#  * Account scripts message catalog (English)
+#  *
+#  * Codendi
+#  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+#  * http://www.codendi.com
+#  *
+#  *
+#  */
+#
+#
+#-----------------------------------------------
+# Script: SF/www/account/index.php
+#
+account_options	title		账户维护
+account_options	welcome		欢迎
+account_options	welcome_intro	您可以从这里查看或更改您的所有帐户功能，您也可能希望查看您的个人资料。
+account_options	member_since	会员自：
+account_options	user_id	用户 ID:
+account_options	login_name	$1 名字
+account_options	ldap_name	登陆
+account_options	change_password	更改密码
+account_options	real_name	真实名字
+account_options	change_real_name	修改真实名字
+account_options	language	语言:
+account_options	timezone	时区:
+account_options	change_timezone	修改时区
+account_options	email_address		电子邮件地址:
+account_options	change_email_address	修改电子邮件地址
+account_options	preferences 偏好
+account_options	theme	主题:
+account_options	theme_variant	选择你的颜色:
+account_options	shell_account_title	Shell 账户信息
+account_options	shell_box	Shell 盒子
+account_options	shell_shared_keys	共享密钥：
+account_options	shell_add_keys 添加钥匙
+account_options	shell_delete_ssh_keys	删除选定的关键词
+account_options	ssh_keys_no_key 没有SSH密钥
+account_options	svn_tokens_title	SVN标记
+account_options	svn_tokens_help	你可以使用SVN标记作为你的管理员密码替换所选项目.
+account_options	svn_tokens_no_token	没有SVN标记
+account_options	svn_token_generated_date	生成
+account_options	svn_token_last_usage	最后使用
+account_options	svn_token_last_ip	最后使用
+account_options	svn_token_comment	评论
+account_options	generate_svn_token_button	生成一个SVN标记
+account_options	generated_svn_token	生成的令牌是
+account_options	delete_svn_tokens_button	删除选定的SVN标记
+account_options	generate_svn_token_modal_title	生成一个SVN标记
+account_options	generate_svn_token_modal_button_help	在表单提交时将自动生成令牌。该点评不是必需的，但它可以帮助您管理您的令牌。
+account_options	generate_svn_token_modal_button_comment_label	令牌点评
+account_options	generate_svn_token_modal_button_comment_placeholder	我的点评，所以我不会忘记这个令牌的目的…
+account_options	generate_svn_token_modal_button	生成
+account_options	generate_svn_token_success	一个SVN标记已成功生成。
+account_options	generate_svn_token_error	SVN的令牌生成过程中出错。
+account_options	delete_svn_tokens_success	SVN标记已成功删除。
+account_options	delete_svn_tokens_error	SVN标记删除时出错。
+account_options	remember_me	"Remember me" <span style="color:#666">($1 记得你的登录/密码。如果你改变了这种偏好确定注销并重新登录)</span>
+account_options	csv_separator	分为：
+account_options	comma	逗号
+account_options	semicolon	分号
+account_options	tab	标签
+account_options	username_display	用户名显示:
+account_options	tuleap_login_and_name	登录（实名）
+account_options	tuleap_name_and_login	真正的名字（登录）
+account_options	tuleap_login	登录
+account_options	realname	真正的姓名
+account_options	auth_attempt_title	认证的详细信息
+account_options	auth_attempt_last_success	最后成功登录
+account_options	auth_attempt_prev_success	最后成功登录
+account_options	auth_attempt_last_failure	最后登录失败
+account_options	auth_attempt_nb_failure 登录失败次数
+account_options	auth_attempt_sessions	公开会议:
+
+#
+#-----------------------------------------------
+#
+account_preferences	email_settings	电子邮件设置：
+account_preferences	session	会话
+account_preferences	appearance	外观
+account_preferences	import_export	进口/出口
+account_preferences	csv_dateformat	日期格式：
+account_preferences	month_day_year	月/日/年
+account_preferences	day_month_year	日/月/年
+account_preferences	lab_features_title	$1 实验
+account_preferences	lab_features_description	$1 预览模式的边缘用户的实验功能。只有使用它你才知道你在做什么。
+account_preferences	lab_features_cblabel	启用$1实验室
+account_preferences	tracker_mail_format	追踪电子邮件格式：
+account_preferences	error_form_mail_site	验证站点更新值
+account_preferences	error_form_mail_va	验证邮件附加社会价值
+account_preferences	error_user_theme	验证主题价值
+account_preferences	error_form_sticky_login	验证记得我的价值
+account_preferences	error_language_id	验证语言的价值
+account_preferences	error_user_csv_separator	验证CSV分隔符值
+account_preferences	error_user_csv_dateformat	验证CSV日期格式值
+account_preferences	error_username_display	验证用户名显示值
+account_preferences	error_user_tracker_mailformat	验证电子邮件格式值
+account_preferences	save_preferences	保存设置
+account_preferences	edition_title	版式
+account_preferences	default_format_label	默认格式：
+account_preferences	default_format_intro	此选项允许您选择跟踪文本字段的默认格式。
+account_preferences	html_format	HTML
+account_preferences	text_format	文本
+#
+#-----------------------------------------------
+# Script: SF/www/account/change_email.php
+#
+account_change_email	title	更改电子邮件地址
+account_change_email	message	<P>更改您的电子邮件地址将需要从您的新电子邮件地址确认，以便我们可以确保我们有一个良好的电子邮件地址的文件。 <P>提交下面的表单将发送确认URL到新的电子邮件地址。访问此链接将完成电子邮件的更改。
+account_change_email	label_new	新的电子邮件地址
+account_change_email	send_new	发送确认到新地址
+#
+#-----------------------------------------------
+# Script: SF/www/account/change_email-confirm.php
+#
+account_change_email-confirm	message	你所要求的 $1 更改电子邮件地址，请访问以下网址完成电子邮件的改变:\n\n$2\n\n-- $1 团队
+account_change_email-confirm	title	电子邮件变更确认
+account_change_email-confirm	mailsent	电子邮件已发送到新地址。按照电子邮件中的说明完成电子邮件更改。
+#
+#-----------------------------------------------
+# Script: SF/www/account/change_email-complete.php
+#
+account_change_email-complete	invalid_hash	无效确认散列。
+account_change_email-complete	duplicate_hash	此hash密钥不止存在一次。
+account_change_email-complete	title	电子邮件完全改变
+account_change_email-complete	message	欢迎， $1.<P>您的电子邮件更改完成。您的新电子邮件地址文件是: <B>$2</B>. 地址给你 $3 用户 $1 (login $4）现在将转发到这个新的电子邮件地址。
+#
+#-----------------------------------------------
+# Script: SF/www/account/change_pw.php
+#
+account_change_pw	title_success	成功更改密码
+account_change_pw	message	Congratulations. 你已经改变了你的$1密码。
+account_change_pw	title	更改密码
+account_change_pw	old_password	旧密码
+account_change_pw	new_password	密码
+account_change_pw	new_password2	重复密码
+account_change_pw	user_not_found	内部错误：无法在数据库中定位用户。
+account_change_pw	incorrect_old_password	旧密码不正确。
+account_change_pw	account_inactive	帐户必须激活更改密码。
+account_change_pw	password_needed	您必须提供密码。
+account_change_pw	password_not_match	密码不匹配。
+account_change_pw	identical_password	旧的和新的密码是相同的。
+account_change_pw	internal_error_update	内部错误：无法更新密码。
+account_change_pw	error_no_rights_to_change_password	您不能更改其他用户的密码。
+#
+#-----------------------------------------------
+# Script: SF/www/account/change_realname.php
+#
+account_change_realname	error	你必须提供一个新的真实姓名。
+account_change_realname	title	真正的名称变更
+account_change_realname	new_name	新的实名
+
+account_change_avatar	success	头像改变！
+account_change_avatar	title	更改头像
+account_change_avatar	link	更改头像
+#
+#-----------------------------------------------
+# Script: SF/www/account/change_timezone.php
+#
+account_change_timezone	title	更改时区
+account_change_timezone	title2	更改时区
+account_change_timezone	message	现在，无论你住在哪里，你可以看到所有的日期和时间在整个$1，如果它是在你的邻居。
+account_change_timezone	no_update	没有更新
+account_change_timezone	choose_tz	请选择一个时区
+#
+#-----------------------------------------------
+# Script: SF/www/scripts/check_pw.js
+#
+account_check_pw	password_robustness	密码强度
+account_check_pw	good	高
+account_check_pw	bad	低
+#
+#-----------------------------------------------
+# Script: SF/www/account/deleted.php
+account_deleted	title	删除帐户
+account_deleted	message	您的帐户已被删除。如果您有关于您的删除问题，请电子邮件给我们<A HREF="mailto:$1">$2</A>.
+#
+#-----------------------------------------------
+# Script: SF/www/account/editsshkeys.php
+#
+account_editsshkeys	add_keys_title	添加授权SSH密钥
+account_editsshkeys	keys	授权的钥匙:<BR><I>重要：确保除了键之间没有换行符。提交后，验证文件中的密钥数是你所希望的。</I>
+account_editsshkeys	invalid_key	跳过无效密钥 $1
+account_editsshkeys	key_already_added	密钥 $1 已经存在的用户
+account_editsshkeys	update_filesystem	在数据库中更新的SSH密钥，将在几分钟内在文件系统上传播，请耐心等待。
+account_editsshkeys	btn_save_keys	保存键
+#
+#-----------------------------------------------
+# Script: SF/www/account/login.php
+#
+account_login	secure	安全
+account_login	error_can_t_update_passwd	内部错误：无法更新密码。
+account_login	pending_title	等待帐户
+account_login	pending_msg	您的帐户目前正在等待您的电子邮件确认。访问链接发送给您在这个电子邮件将激活您的帐户.<P>如果您需要此电子邮件再一次发送，请点击下面和确认电子邮件将被发送到您提供的注册电子邮件地址。
+account_login	validation_msg	您的帐户已由管理员验证，目前正在等待您的电子邮件确认。访问此电子邮件发送给您的链接将激活您的帐户。如果您需要此电子邮件再次发送，请点击下面和确认电子邮件将被发送到您提供的注册电子邮件地址。
+account_login	need_approval	您的帐户当前正在等待管理员的批准。当您的帐户被验证时，您将通过电子邮件通知。
+account_login	resend_btn	发送确认邮件
+account_login	name	用户名
+account_login	password	密码
+account_login	need_help	不能登录？给管理员发送电子邮件
+account_login	login_btn	登录
+account_login	lost_pw	抱歉，我忘了我的密码
+account_login	create_acct	<b><A HREF="register.php">[创建一个新账户]</A></b><BR> 如果这是你第一次 <b>$1</b>成为这个网站的会员！现在可以创造一个<a href="register.php">新的账户</a> 这需要几秒钟，你可以利用$ 1的网站提供的服务优势。
+account_login	login_with_tuleap	登录
+account_login	page_title	$1 登录
+account_login	help_subject	无法登录 $1
+#
+#-----------------------------------------------
+# Script: SF/www/account/lostlogin.php
+#
+account_lostlogin	title	丢失的密码
+account_lostlogin	message	Welcome,$1 . 您现在可以更改您丢失的密码。
+account_lostlogin	duplicate_hash	此hash密匙不止存在一次。
+account_lostlogin	invalid_hash	无效确认hash密匙。
+account_lostlogin	expired_token	确认密钥已过期，如有需要请续订，以便找回丢失的密码
+account_lostlogin	newpasswd	新的密码
+account_lostlogin	newpasswd2	新密码（重复）
+#
+#-----------------------------------------------
+# Script: SF/www/account/lostpw-confirm.php
+#
+account_lostpw-confirm	token_generation_failed	遇到问题，请重试
+account_lostpw-confirm	title	丢失的密码确认
+account_lostpw-confirm	mail_subject	$1密码验证
+account_lostpw-confirm	mail_body	有人（大概你）在$1的网站要求ed a\n通过电子邮件验证密码更改， 如果这是没有你，忽略此消息，什么都不会发生.\n\n如果你请求这个验证，访问以下网址\n更改您的密码:\n\n$2\n\n -- $1 团队\n
+account_lostpw-confirm	msg_confirm	<B>确认邮寄</B><P>电子邮件已发送到您的文件上的地址。按照指示在电子邮件中更改您的帐户密码。
+#
+#-----------------------------------------------
+# Script: SF/www/account/lostpw.php
+#
+account_lostpw	title	丢失的账号密码
+account_lostpw	message	<B>丢失密码？</B><P>嘿...丢失密码是严重的事情。它危及您的帐户，您的项目和本网站的安全性。<P>点击下面的按钮将电子邮件地址的电子邮件地址，我们有你的文件。在这个URL是一个128位确认散列密钥为您的帐户。访问网址将允许您更改您的密码在线和登录。
+account_lostpw	send_hash	发送丢失密码
+#
+#-----------------------------------------------
+# Script: SF/www/account/myprojectlist.php
+#
+account_myprojectlist	title	我的项目清单等待帐户
+account_myprojectlist	grp_list	组列表等待帐户 <B>$1</B>
+#
+#-----------------------------------------------
+# Script: SF/www/account/pending.php
+#
+account_pending	title	等待帐户
+account_pending	message	<B>等待帐户</B><P>您的帐户目前正在等待您的电子邮件确认。访问链接发送给您在这个电子邮件将激活您的帐户。 <P>如果您需要此电子邮件再次发送，请点击下面和确认电子邮件将被发送到您提供的注册电子邮件地址。
+account_pending	btn_resend	发送确认邮件
+#
+#-----------------------------------------------
+# Script: SF/www/account/register.php
+#
+account_register	err_exist	用户名已经存在。
+account_register	err_realname	实名包含非法字符。
+account_register	err_nouser	您必须提供用户名。
+account_register	err_nopasswd	您必须提供密码。
+account_register	err_passwd	密码不匹配。
+account_register	err_notz	你必须提供一个时区。
+account_register	err_nopurpose	你必须说明你注册的目的。
+account_register	err_email	无效的电子邮件地址
+account_register	err_name	登录名无效
+account_register	err_invpasswd	密码无效
+account_register	err_no_ldap	缺少LDAP登录
+account_register	title_confirm	您的帐户创建, </br>现在需要激活.
+account_register	title_confirm_admin	创建用户帐户.
+account_register	title	登记
+account_register	title_admin	创建新用户
+account_register	login	登录名
+account_register	ldap_login	LDAP的登录名
+account_register	ldap_unix_login	$1 名字<strong>(只有小写，没有空格)</strong>
+account_register	ldap_email_help	<em><strong>Remark:</strong> 此电子邮件地址从目录中检索。请不要改变它。</em>
+account_register	codendi_login_help	此登录是从您的电子邮件地址。你可以改变它，如果需要的话。
+account_register	login_directions	<strong>(仅小写！)</strong>
+account_register	passwd 密码
+account_register	passwd_directions	（至少6个字符)
+account_register	passwd2	Password （重复)
+account_register	passwd2_directions	&nbsp;
+account_register	realname 全名
+account_register	realname_directions	&nbsp;
+account_register	email 电子邮件
+account_register	email_directions	<em><strong>Remark:</strong> 此电子邮件地址将验证帐户激活之前。请使用批准的电子邮件地址.</em>
+account_register	email_tooltip	我们将在这个地址发送电子邮件，以确认您的帐户。
+account_register	expiry_date	到期日期
+account_register	expiry_date_directions	<em><strong>Remark:</strong> 该帐户将暂停时到达的日期。如果你不想到到期日，请留空。</em>
+account_register	data_not_parsed	      对不起-过期日期条目无法解析。它必须规范日期格式。
+account_register	tz	时区
+account_register	mandatory	所有字段都是强制的。
+account_register	siteupdate	接收电子邮件关于站点更新 <span class="label-help">非常低的流量，包括安全通知。强烈推荐。</span>
+account_register	communitymail	获得额外的社区邮件。<span style="color:#666">(低流量。)</span>
+account_register	purpose	目的
+account_register	purpose_directions	请解释你为什么申请在这个网站注册<br>
+account_register	purpose_directions_admin	您可以在此用户注册上添加注释<br>
+account_register	btn_register	登记
+account_register	btn_activate	激活
+account_register	btn_next	下一步
+account_register	send_email	发送欢迎电子邮件给用户
+account_register	msg_redirect	转到主页
+account_register	msg_redirect_admin	转到管理页面
+account_register	msg_thanks	感谢您使用tuleap
+account_register	msg_confirm	单击电子邮件中的“确认”按钮。 <i class="icon-envelope-alt"></i>
+account_register	msg_confirm_admin	请注意登录 <span class="confirmation-user">$3</span> 和密码 <span class="confirmation-user">$4</span>
+account_register	title_approval	您的帐户已创建，</br> 必须由管理员批准。
+account_register	msg_approval	一旦批准点击此电子邮件中的确认按钮。<i class="icon-envelope-alt"></i>
+account_register	mail_approval_subject	新用户注册: $1
+account_register	mail_approval_title	创建帐户！
+account_register	mail_approval_section_one	一个新用户刚刚注册 $1.\n\nUser Name:
+account_register	mail_approval_section_after_login	.
+account_register	mail_approval_section_two	请点击以下网址批准注册:
+account_register	mail_approval_redirect_button	确认帐户创建
+account_register	mail_thanks	谢谢
+account_register	mail_signature	-  $1 团队.
+account_register	restricted_user	受限用户
+account_register	welcome_email_title	欢迎光临 $1!
+#
+#-----------------------------------------------
+# Script: SF/www/account/suspended.php
+#
+account_suspended	title	暂停账户
+account_suspended	message您的帐户已被暂停。如果您有关于您的暂停问题，请电子邮件联系我们<a href="mailto:$1">网站管理员</A>. 通过其他渠道查询将直接指向此地址。
+#
+#-----------------------------------------------
+# Script: SF/www/account/login.php
+#
+account_verify	title	帐户验证
+account_verify	message	为了完成您的注册，现在登录。您的帐户将被正常登录激活。
+account_verify	err_user	无效的用户名。
+account_verify	err_hash	无效的hash确认。
+account_verify	err_status	无效的状态。网站管理员没有验证您的帐户。
+account_verify	account_confirm	您的帐户已成功确认。

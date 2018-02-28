@@ -1,0 +1,36 @@
+<?php
+//
+// Codendi
+// Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+// http://www.codendi.com
+//
+//
+//
+
+$body = "您现在是注册用户".$GLOBALS['sys_name']
+.".作为注册用户，您现在可以充分参与活动了 ".$GLOBALS['sys_name']." 站点. "
+."您可以使用论坛，订阅邮件列表，浏览托管项目列表，甚至启动自己的项目 "
+."项目.\n\n\n 我们强烈建议您浏览网站，阅读 "
+."网站文档 (<". $base_url ."/help/>) 并最终确定用户配置文件的设置 (<". $base_url ."/account/>) "
+."(定义你的喜好等.)\n\n\n享受网站，提供给我们的反馈方式，我们可以提高 "
+.$GLOBALS['sys_name']."你也可以告诉我们 ".$GLOBALS['sys_name']."我们会一直在你身边. \n\n\n-- The ".$GLOBALS['sys_name']." 团队";
+
+
+$title = "创建帐户 ".$GLOBALS['sys_name']." !";
+
+$section_one = "您现在是注册用户 ".$GLOBALS['sys_name'].".作为注册用户，您现在可以充分参与活动了 ".$GLOBALS['sys_name']."站点 "
+."您可以使用论坛，订阅邮件列表，浏览托管项目列表，甚至启动自己的项目。";
+
+$section_two = "我们强烈建议您浏览网站，阅读网站文档 (<". $base_url ."/help/>) "
+."并最终确定用户配置文件的设置 (<". $base_url ."/account/>) (定义你的喜好等)";
+
+$section_three = "享受网站，提供给我们反馈方式，我们可以提高" .$GLOBALS['sys_name']." 你也可以告诉我们 ".$GLOBALS['sys_name']."我们会一直在你身边";
+
+$thanks = "谢谢！";
+
+$signature = "- 在团队方面 ".$GLOBALS['sys_name'];
+
+$help = "任何需要帮助请联系： ".$GLOBALS['sys_email_admin'];
+
+$message = $title . "\n\n" .  $section_one ."\n\n" . $section_two . "\n\n"
+            .$section_three. "\n\n".$thanks. "\n\n" .$signature. "\n\n" .$help;

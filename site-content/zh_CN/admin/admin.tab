@@ -1,0 +1,871 @@
+#/**
+#  *
+#  * Admin scripts message catalog (English)
+#  *
+#  * Codendi
+#  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+#  * http://www.codendi.com
+#  *
+#  *
+#  */
+#
+#
+
+admin_sidebar	users_section_标题的用户
+admin_sidebar	users_search_placeholder	电子邮件用户名…
+admin_sidebar	users_nav_all_users	所有用户
+admin_sidebar	users_nav_new_user	 新用户
+admin_sidebar	users_nav_pending_users	待用户
+admin_sidebar	users_nav_validated_users	等待邮件激活的用户
+admin_sidebar	users_nav_permission_delegation	权限委托代理
+admin_sidebar	projects_section_title	项目
+admin_sidebar	projects_search_placeholder	和UNIX名称…
+admin_sidebar	projects_nav_all_projects	所有的项目
+admin_sidebar	projects_nav_pending_projects	待项目
+admin_sidebar	projects_nav_configuration	项目配置
+admin_sidebar	configuration_section_title	全局配置
+admin_sidebar	configuration_nav_global_access_rights	全球的访问权限
+admin_sidebar	configuration_nav_homepage	主页
+admin_sidebar	configuration_nav_categories	项目类别
+admin_sidebar	configuration_nav_project_fields	自定义项目领域
+admin_sidebar	configuration_nav_predefined_references	预定义的项目引用
+admin_sidebar	configuration_nav_tracker_restore	待跟踪去除
+admin_sidebar	configuration_nav_svn	管理SVN
+admin_sidebar	utils_section_title	全球工具
+admin_sidebar	utils_nav_system_events系统事件
+admin_sidebar	utils_nav_news	新闻审批
+admin_sidebar	utils_nav_mass_mail群发邮件
+admin_sidebar	links_nav_plugins	插件
+admin_sidebar	links_nav_doc	文档
+
+#-----------------------------------------------
+# Script: SF/www/admin/index.php
+#
+admin_main	title		网站管理
+admin_main	header		行政职能
+admin_main	forgeupgrade	<h4><i class="警告标志 fa fa-warning tlp-alert-icon"></i> 提炼升级没有运行!</h4><p>似乎有人升级tuleap RPM，但没有升级命令。请检查 <a href="http://tuleap-documentation.readthedocs.org/en/latest/installation-guide/update.html">upgrade documentation</a>.</p>
+admin_main	header_user	待用户
+admin_main	display_user	显示用户开始：
+admin_main	search_user	用户
+admin_main	search	搜索
+admin_main	export_csv	导出CSV
+admin_main	review_pending_users	待用户评论
+admin_main	review_pending_users_empty	没有用户验证
+admin_main	pending_user	用户在 <a href="$1"><B>P</B> （待定）状态</a>
+admin_main	validated_user	验证用户 <a href="$1"><B>等待邮箱激活</B></a>
+admin_main	need_approval	需批准
+admin_main	need_validation需要验证
+admin_main	header_group	待项目
+admin_main	display_group	显示项目开始：
+admin_main	search_group	搜索（组ID，UNIX名称，实名）：
+admin_main	all_users	All <a href="$1">用户</a>
+admin_main	all_groups	All <a href="$1">项目</a>
+admin_main	review_pending_projects	审查待批的项目
+admin_main	review_pending_projects_empty	没有要验证的项目
+admin_main	incomplete_group	项目 <a href="$1"><B>I</B> （不完全）状态</A>
+admin_main	pending_group	项目 <a href="$1"><B>P</B>（待定）状态</A>
+admin_main	deleted_group	项目 <a href="$1"><B>D</B> （已删除）状态</A>
+admin_main	header_svc	服务管理
+admin_main	configure_svc	预定义服务配置
+admin_main	header_ref	参考管理
+admin_main	configure_ref	预定义引用的配置
+admin_main	header_tracker	跟踪管理
+admin_main	header_svn	Subversion管理
+admin_main	svn_token_config	令牌的项目配置
+admin_main	tracker_remove	待跟踪的去除
+admin_main	tracker_template	预定义的跟踪V3模板的配置
+admin_main	header_stat	统计
+admin_main	stat_login	查看最近的登录
+admin_main	stat_spu	看全球的统计数据
+admin_main	header_utils	网站事业
+admin_main	mail_engine	邮件群发引擎
+admin_main	header_sstat	统计
+admin_main	header_plugins	插件
+admin_main	manage_all_plugins	管理所有的插件
+admin_main	servers	服务器
+admin_main	servers_admin	服务器管理
+admin_main	sstat_reg_u 注册活跃或受限网站用户
+admin_main	sstat_reg_g	注册
+admin_main	sstat_reg_act_g	活跃的
+admin_main	sstat_deleted	删除
+admin_main	sstat_pend_g	等待
+admin_main	sstat_pend_u	等待用户
+admin_main	site_news	网站新闻
+admin_main	site_news_approval	网站新闻的批准
+admin_main	trove_cat	Trove类别
+admin_main	trove_cat_list	管理类别清单
+admin_main	trove_cat_add	添加一个
+admin_main	new_user	新用户
+admin_main	detail_button_label	详细资料
+admin_main	permission_delegation	权限委托代理
+admin_main	active_users	每个活动
+admin_main	lastday_users	活动持续24小时
+admin_main	lastweek_users	活动最后一周
+admin_main	lastmonth_users	活动的最后一个月
+admin_main	last3months_users	活跃最近3个月
+admin_main	mode_lab_users	使用模式实验室的活动或受限用户
+admin_main	mode_lab_users_nb_users	用户
+admin_main	stat_projects	项目统计
+admin_main	status_project	每个状态
+admin_main	stat_users	用户统计
+admin_main	status_user	每个状态
+admin_main	statusactif_user	活跃的
+admin_main	statusrestricted_user	受限制的
+admin_main	statushold_user暂停的
+admin_main	statusdeleted_user	删除
+admin_main	statusvalidated_user	验证
+admin_main	statuspending_user	等待
+admin_main	statustotal_user	全部的
+admin_main	desc_fields	Project 描述字段
+admin_main	desc_fields_edit	项目描述字段版本
+admin_main	system_event	系统事件
+admin_main	sysevent_monitor	系统事件监控
+admin_main	documentation	文档
+admin_main	install_guide	安装指南
+admin_main	admin_guide	行政指导
+admin_main	conf_project	项目配置
+admin_main	tool_internal	内部
+admin_main	tool_external	第三方
+admin_main	configure_generic_user	一般的用户
+admin_main	configure_homepage	配置主页
+admin_main	placeholder_headline	输入有意义的标题…
+admin_main	headline	标题
+admin_main	headline_help	写一个引人注目的标题是必要的步骤，以鼓励用户登录。选择一个引人注目的标题，总结tuleap的背景是什么。不要罗嗦，保持标题短。
+admin_main	use_standard_homepage_label	使用标准的tuleap主页
+admin_main	use_standard_homepage_help	您使用的是传统的主页，可以定制通过 /etc/tuleap/site-content/…/homepage/* 文件夹. 一旦你切换到标准主页（不能定制），它将无法切换到自定义主页。
+admin_main	successfully_updated	成功更新。
+admin_main	homepage_logo	首页LOGO
+admin_main	homepage_logo_help	你可以上传你自己的标志。为了不破坏主页设计的标志，你应该有一个透明的背景和一个100px的高度请避免上传太大文件。
+admin_main	homepage_logo_help_end	 请避免上传太大文件(< 500kB).
+admin_main	homepage_upload_logo	上传你自己的logo
+admin_main	homepage_replace_logo	替换当前logo
+admin_main	remove_custom_logo	删除当前的标志
+admin_main	homepage_or_label	或
+admin_main	save_conf	保存配置
+admin_main	logo_too_big	上传文件太大
+admin_main	upload_error	文件上传错误（错误代码） $1)
+admin_main	no_png	你应该发送PNG图像
+admin_main	100px	你应该把图像高度小于100px
+admin_main	standard_title	标准tuleap主页
+admin_main	customize_title	个性化网页
+admin_main	label_language	你的吸引人的标题
+admin_main	homepage_all_users	查看所有用户
+admin_main	homepage_all_projects	查看所有项目
+
+admin_main	system_events_pane_title	系统事件（last 48小时）
+admin_main	system_events_view_all_label	查看所有系统活动
+admin_main	new_label_tooltip	最新活动
+admin_main	running_label_tooltip	运行事件
+admin_main	done_label_tooltip	做活动
+admin_main	warning_label_tooltip	事件在预警
+admin_main	error_label_tooltip	在错误的事件
+admin_main	warning_label	警告
+admin_main	error_label	错误
+
+admin_main	configure_access_controls	访问控制
+admin_main	platform_access_control	网络访问控制
+admin_main	projects_visibility	项目的知名度
+admin_main	projects_visibility_label	项目管理员可以选择项目可见性
+admin_main	projects_visibility_help	如果，在你的组织中，项目的严格的隐私必须得到保护，“设计问题上”的，那么你应该选中此选项，项目管理员不能向其他平台的用户泄露机密资源。
+admin_main	localinc_obsolete_message	<h4><i class="icon-warning-sign"></i> 你的local.inc文件是过时的！</h4><p>看来你的local.inc文件包含有未使用的变量的定义和它可能导致混乱。</p><p>请编辑<code>$1</code> 并移除以下变量： <code>$sys_allow_anon</code> and <code>$sys_allow_restricted_users</code>.</p>
+admin_main	access_anonymous_label	匿名用户可以访问平台
+admin_main	access_anonymous_desc	匿名用户可以浏览站点的公共部分，而不需要登录。
+admin_main	access_regular_label	所有用户必须登录
+admin_main	access_regular_desc	用户必须先登录后再进一步。
+admin_main	access_restrited_label	必须登录所有用户并启用受限用户
+admin_main	access_restrited_desc	用户必须先登录后再进一步。某些用户可能受到限制（限制用户必须被授权访问项目和服务）。
+admin_main	current_restricted_users_message	<h4>抬头！</h4><p>目前有 <a href="/admin/userlist.php?status_values[]=R">$1 user(s)</a> 有限制地位。改变当前的访问模式不会改变他们的状态，他们将需要手动处理。</p>
+admin_main	ugroup_authenticated_users_placeholder	E.g $1 employees & subco
+admin_main	ugroup_registered_users_placeholder	E.g $1 employees
+admin_main	ugroup_authenticated_users_label	认证用户（注册+限制）标签
+admin_main	ugroup_registered_users_label	注册用户标签
+admin_main	customize_ugroups_label_info	可以为两个特殊组重写默认名称。目前只适用于Git权限。
+admin_main	btn_update_information	更新信息
+#
+#-----------------------------------------------
+# Script: SF/www/admin/admin_utils.php
+#
+admin_utils	title	$1网站管理
+admin_utils	menu	网站管理员中心
+#
+#-----------------------------------------------
+# Script: SF/www/admin/approve_pending.php
+#
+admin_approve_pending	title	等待验证的项目
+admin_approve_pending	no_pending	休息一下,
+admin_approve_pending	no_pending_next	没有要验证的项目。
+admin_approve_pending	go_back回到管理界面
+admin_approve_pending	approve审批项目
+admin_approve_pending	delete删除项目
+admin_approve_pending	remove_categor删除类别
+admin_approve_pending	approve_all	批准此页上的所有内容
+admin_approve_pending	creator_and_creation_date  创建: $3 by <a href="/admin/usergroup.php?user_id=$1">$2</a>
+admin_approve_pending	distributed_services	分布式服务服务器
+admin_approve_pending	error_update	项目更新错误
+admin_approve_pending	description	说明
+admin_approve_pending	see_project_details	看到项目的详细信息
+admin_approve_pending	description_label	说明
+admin_approve_pending	submitted_by_label	提交
+admin_approve_pending	creation_date_label	创建日期
+admin_approve_pending	delete_label	删除
+admin_approve_pending	validate_label	验证
+admin_approve_pending	validate_all_label	验证所有项目
+admin_approve_pending	activate_all_label	激活所有项目
+
+#
+#-----------------------------------------------
+# Script: SF/www/admin/approve-pending_users.php
+#
+admin_approve_pending_users	title	等待验证的用户
+admin_approve_pending_users	title_validated	需要激活的验证用户
+admin_approve_pending_users	go_back	回到管理
+admin_approve_pending_users	take_break	休息一下，
+admin_approve_pending_users	no_pending	没有用户批准。
+admin_approve_pending_users	no_pending_validated	没有用户验证。
+admin_approve_pending_users	no_validated	没有验证用户批准。
+admin_approve_pending_users	user_info	显示用户信息/发送邮件注意
+admin_approve_pending_users	user_edit	显示的用户信息
+admin_approve_pending_users	activate	激活
+admin_approve_pending_users	activate_all	激活所有用户
+admin_approve_pending_users	validate_notice	验证: 电子邮件发送给用户确认。 如果他/她遵循的电子邮件内的链接，该帐户被激活。
+admin_approve_pending_users	activate_notice	激活: 该帐户立即激活。
+admin_approve_pending_users	delete	删除
+admin_approve_pending_users	purpose	目的
+admin_approve_pending_users	other_info	其他信息
+admin_approve_pending_users	name	用户名
+admin_approve_pending_users	id	ID
+admin_approve_pending_users	email	电子邮件
+admin_approve_pending_users	reg_date 注册日期	
+admin_approve_pending_users	empty 空
+admin_approve_pending_users	validate 验证	
+admin_approve_pending_users	validate_all 验证所有用户	
+admin_approve_pending_users	account	 帐户
+admin_approve_pending_users	ok	 好的
+admin_approve_pending_users	all_accounts 所有的账户	
+admin_approve_pending_users	status	现状
+admin_approve_pending_users	status_restricted 受限制的用户	
+admin_approve_pending_users	status_all_restricted	受限制的用户
+admin_approve_pending_users	status_standard	标准
+admin_approve_pending_users	email_title	欢迎您到$1!
+admin_approve_pending_users	data_not_parsed	Sorry -截止日期入口不能解析。 它必须有日期格式。
+admin_approve_pending_users	expiry_date	到期日期
+admin_approve_pending_users	expiry_date_directions	如果到达此日期，帐户将收起。如果您不想有到期日期，则留空。
+admin_approve_pending_users	resend	发送电子邮件
+admin_approve_pending_users	resend_notice	发送电子邮件帐户注册
+admin_approve_pending_users	resend_mail_success	邮件已成功发送到$1
+admin_approve_pending_users	resend_mail_error	发送邮件时出错$1
+admin_approve_pending_users	users_activated_success	用户已成功激活
+admin_approve_pending_users	user_activated_success	用户已成功激活
+admin_approve_pending_users	users_validated_success	用户已成功验证
+admin_approve_pending_users	user_validated_success	用户已成功验证
+admin_approve_pending_users	users_deleted_success	用户已成功删除
+admin_approve_pending_users	user_deleted_success	用户已成功删除
+
+#
+#-----------------------------------------------
+# Script: SF/www/admin/groupedit-add.php
+#
+admin_groupedit_add	title	添加项目组
+admin_groupedit_add	desc_name	新描述组名称
+admin_groupedit_add	unix_name	新UNIX组名称
+#
+#-----------------------------------------------
+# Script: SF/www/admin/groupedit.php
+#
+admin_groupedit	title	编辑项目
+admin_groupedit	feedback_info	更新项目信息
+admin_groupedit	error_group	无效项目被传递。
+admin_groupedit	proj_edit	编辑项目详情
+admin_groupedit	proj_admin	项目管理
+admin_groupedit	proj_member	查看/编辑项目成员
+admin_groupedit	pending_data	显示未决的项目数据
+admin_groupedit	group_type	项目类型
+admin_groupedit	status_I	不完整的
+admin_groupedit	status_A	活跃
+admin_groupedit	status_P	待定
+admin_groupedit	status_H	控股
+admin_groupedit	status_D	删除
+admin_groupedit	status_s	系统
+admin_groupedit	public	公共？
+admin_groupedit	home_box	中心区域
+admin_groupedit	http_domain	HTTP域
+admin_groupedit	other	其他
+admin_groupedit	send_email	发送新项目指令电子邮件
+admin_groupedit	other_info	其他信息
+admin_groupedit	grp_name	项目名称
+admin_groupedit	unix_grp	UNIX组名称
+admin_groupedit	description	说明
+admin_groupedit	built_from_template	建立模板
+admin_groupedit	rename_project_title	重命名项目
+admin_groupedit	rename_project_label	重命名项目
+admin_groupedit	rename_project_msg	项目名称更新在系统队列中的传播 ($1 -> $2). 它会在一段时间内处理。
+admin_groupedit	rename_project_warn	项目名称更新只在系统事件处理后有效。
+admin_groupedit	rename_project_already_queued	已计划重新命名此项目的事件. 请检查 <a href="/admin/system_events/">System Event Monitor</a>.
+admin_groupedit	invalid_short_name	无效的短名称
+admin_groupedit	manage_access	管理访问
+admin_groupedit	archived_wiki	删除维基附件
+admin_groupedit	archived_files	被删除的文件
+
+#
+#-----------------------------------------------
+# Script: SF/www/admin/grouplist.php
+#
+admin_grouplist	title	项目列表
+admin_grouplist	add_group	添加项目
+admin_grouplist	for_categ	类别项目清单
+admin_grouplist	begins_with	开始的项目 $1
+admin_grouplist	all_categ	所有类别
+admin_grouplist	click	（点击编辑）
+admin_grouplist	categ	类别
+admin_grouplist	members	成员
+admin_grouplist	id_group	ID组
+#
+#-----------------------------------------------
+# Script: SF/www/admin/lastlogins.php
+#
+admin_lastlogins	title	最近的登录
+admin_lastlogins	pane_title	最近的登录
+admin_lastlogins	no_result	没有任何最近登录
+admin_lastlogins	username_column_header 用户名
+admin_lastlogins	ip_column_header	IP地址
+admin_lastlogins	date_column_header	日期
+admin_lastlogins	filter_placeholder	用户名，IP，日期
+admin_lastlogins	filter_no_matching_result	没有任何匹配最近登录
+#
+#-----------------------------------------------
+# Script: SF/www/admin/massmail_execute.php
+#
+admin_massmail_execute	post_recvd	接收后。查询
+admin_massmail_execute	mailing	开始邮件不同的电子邮件地址到$1
+admin_massmail_execute	sending	预览发送
+admin_massmail_execute	no_sending	无法发送预览
+admin_massmail_execute	done	完成!
+admin_massmail_execute	no_user_mail	新增$1用户 没有邮箱地址。
+admin_massmail_execute	no_user	没有$1用户对应条目
+admin_massmail_execute	no_mails	没有有效的电子邮件发送预览。
+#
+#-----------------------------------------------
+# Script: SF/www/admin/massmail.php
+#
+admin_massmail	title	群发邮件
+admin_massmail	header	电子邮件
+admin_massmail	warning	$1 用户将收到此电子邮件。
+admin_massmail	to_additional	只发送给用户订阅了“额外的社区邮件” ($1 users)
+admin_massmail	to_update	同意接收“网站更新”的用户 ($1 users)
+admin_massmail	to_devel	项目开发商($1 users)
+admin_massmail	to_proj_admin	项目管理员 ($1 users)
+admin_massmail	to_site_admin	网站管理员 ($1 users)
+admin_massmail	to_all	所有用户，不管他们的喜好 ($1 users)
+admin_massmail	subject主题
+admin_massmail	send_email_label	发送电子邮件
+admin_massmail	destination_label	发送到
+admin_massmail	subject_label	主题
+admin_massmail	subject_placeholder	邮件主题线
+admin_massmail	content_label	内容
+admin_massmail	content_placeholder 消息…
+admin_massmail	preview_label	预览
+admin_massmail	send_preview_label	发送预览
+admin_massmail	massmail_queued	发送的邮件已经 <a href="$1">put in the queue</a>
+admin_massmail	confirmation_title	群发邮件发送
+admin_massmail	confirmation_body	请确认你的行动。
+#
+#-----------------------------------------------
+# Script: SF/www/admin/newprojectmail.php
+#
+admin_newprojectmail	title	新项目电子邮件通知
+admin_newprojectmail	success	邮件成功发送。
+#
+#-----------------------------------------------
+# Script: SF/www/admin/search.php
+#
+admin_search	title	管理-搜索用户/项目
+admin_search	header	管理搜索功能
+admin_search	maintenance	用户/项目/类别维护
+admin_search	criteria	搜索条件
+admin_search	error_nowholedb一个空的搜索标准将显示整个数据库。
+admin_search	nomatch	没有匹配
+admin_search	login	登录名
+admin_search	user_name	用户的名字
+admin_search	unix_grp_name	UNIX组名称
+admin_search	grp_name	项目名称
+#
+#-----------------------------------------------
+# Script: SF/www/admin/user_changepw.php
+#
+admin_user_changepw	error_userid	没有用户ID
+admin_user_changepw	error_nopasswd	您必须提供密码。
+admin_user_changepw	error_passwd	密码不匹配。
+admin_user_changepw	error_update	无法更新密码。
+admin_user_changepw	title_changed	成功更改密码
+admin_user_changepw	header_changed	更改密码的确认
+admin_user_changepw	msg_changed	用户的密码已更改。
+admin_user_changepw	title	更改密码
+admin_user_changepw	ldap_warning	更改密码不会改变LDAP密码
+admin_user_changepw	header	更改密码
+admin_user_changepw	save	更新密码
+admin_user_changepw	cancel	取消
+admin_user_changepw	password_field_label	密码
+admin_user_changepw	confirm_password_field_label	密码（确认）
+#
+#-----------------------------------------------
+# Script: SF/www/admin/usergroup.php
+#
+admin_usergroup	title	管理-用户信息
+admin_usergroup	error_del_u 删除用户错误
+admin_usergroup	success_del_u	成功删除用户
+admin_usergroup	error_upd_ug	更新用户组时出错
+admin_usergroup	success_upd_ug	成功更新用户组
+admin_usergroup	error_upd_u	错误更新用户
+admin_usergroup	success_upd_u	成功更新用户
+admin_usergroup	error_upd_ux	更新UNIX状态时出错
+admin_usergroup	success_upd_ux	成功更新UNIX状态
+admin_usergroup	error_nouid	缺少用户标识！
+admin_usergroup	error_nogid	组ID丢失
+admin_usergroup	error_add_ug	添加用户到组的错误
+admin_usergroup	success_add_ug	成功添加用户到组
+admin_usergroup	error_member	用户已经是组的成员
+admin_usergroup	header	用户/组管理
+admin_usergroup	shell shell
+admin_usergroup	email	电子邮件
+admin_usergroup	expiry_date	失效日期
+admin_usergroup	data_not_parsed	对不起-到期日期条目无法解析。它必须有日期格式。
+admin_usergroup	ldap_id	LDAP的标识符
+admin_usergroup	unix_details	UNIX的细节：
+admin_usergroup	unix_status	Unix的地位
+admin_usergroup	status	现状
+admin_usergroup	no_account	没有UNIX帐户
+admin_usergroup	active	主动
+admin_usergroup	restricted	受限制的
+admin_usergroup	suspended	暂停的
+admin_usergroup	deleted	删除
+admin_usergroup	current_groups	当前组
+admin_usergroup	remove_ug	从组中移除用户
+admin_usergroup	admin_flags管理的旗帜
+admin_usergroup	add_ug	添加用户到组（组ID）
+admin_usergroup	change_passwd	更改密码
+admin_usergroup	was	Was:
+admin_usergroup	rename_user_msg	用户登录名更新在系统队列中的传播($1 -> $2).它会在一段时间内处理.
+admin_usergroup	rename_user_warn	登录名更新只在系统事件处理后有效。
+admin_usergroup	rename_user_already_queued	已经有计划重命名此用户的事件。请检查<a href="/admin/system_events/">系统事件监控</a>.
+admin_usergroup	account_details	帐户的详细资料
+admin_usergroup	access	访问
+admin_usergroup	current_projects	目前的项目
+admin_usergroup	is_admin	项目管理员
+admin_usergroup	no_project	不是任何项目的成员
+admin_usergroup	last_pwd_update	最后的密码更新
+admin_usergroup	last_access_date	最后访问日期
+admin_usergroup	cannot_change_status	无法在帐户验证前更改状态
+admin_usergroup	user_public_profile	公众配置文件
+admin_usergroup	more_info	更多的信息
+admin_usergroup	update_information	更新信息
+admin_usergroup	purpose_label	目的
+admin_usergroup	empty_purpose	空
+#
+#-----------------------------------------------
+# Script: SF/www/admin/userlist.php
+#
+admin_userlist	title	管理-用户列表
+admin_userlist	user_deleted	用户更新删除状态- UNIX帐户预定删除
+admin_userlist	user_active	User 更新到活跃状态
+admin_userlist	user_validated	用户更新到验证状态
+admin_userlist	user_suspended	用户更新暂停状态
+admin_userlist	user_restricted用户更新到限制状态
+admin_userlist	error_uid	错误-找不到有ID的用户 $1
+admin_userlist	error_noadd	错误-无法将用户添加到组中
+admin_userlist	user_list	用户
+admin_userlist	all_groups	所有的项目
+admin_userlist	uid_toadd	要添加的用户ID
+admin_userlist	active	主动
+admin_userlist	validated	验证
+admin_userlist	validated_restricted	有效的限制
+admin_userlist	restricted	受限制的
+admin_userlist	deleted	删除
+admin_userlist	suspended	暂停的
+admin_userlist	pending	待定的
+admin_userlist	activate	激活
+admin_userlist	validate	验证
+admin_userlist	restrict	限制
+admin_userlist	delete	删除
+admin_userlist	suspend	暂停
+admin_userlist	status	状态
+admin_userlist	active_sessions_label	清除当前会话
+admin_userlist	active_sessions_confirm	您确定要强制重新连接所有$1用户吗？这将迫使所有用户登录。
+admin_userlist	nb_projects	# 项目
+admin_userlist	not_member_of	任何项目的成员
+admin_userlist	member_of	$1项目成员（s）
+admin_userlist	admin_of	$1项目管理（s）
+admin_userlist	id_user	ID的用户
+admin_userlist	any	任何
+admin_userlist	filter	筛选
+admin_userlist	matching_users	匹配用户
+admin_userlist	export_csv	CSV出口
+admin_userlist	profile	简况
+admin_userlist	no_matching_users	没有任何匹配的用户
+admin_userlist	name	名称
+admin_userlist	login	登录
+admin_userlist	filter_name	电子邮件，姓名，身份证
+admin_userlist	pending_users_text	对于您的信息，有<a href="$1">$2 等待验证的用户</a>.
+
+#
+#-----------------------------------------------
+# Script: SF/www/admin/trove/trove_cat_add.php
+#
+admin_trove_cat_add	add_trove_cat	添加项目类别
+admin_trove_cat_add	add	添加类别
+admin_trove_cat_add	short_name	类的短名称
+admin_trove_cat_add	full_name	类的全名
+admin_trove_cat_add	description	类别描述
+#
+#-----------------------------------------------
+# Script: SF/www/admin/trove/trove_cat_delete.php
+#
+admin_trove_cat_delete	delete_trove_cat	删除项目类别
+admin_trove_cat_delete	alert_description_delete_modal	哇，等一下。你要删除 <b>$1</b> 类别.请确认你的行动。
+admin_trove_cat_delete	parent_is_root	无法删除一个目录
+
+#-----------------------------------------------
+# Script: SF/www/admin/trove/trove_cat_edit.php
+#
+admin_trove_cat_edit	header	编辑项目类别
+admin_trove_cat_edit	root	根源
+admin_trove_cat_edit	edit	更新类
+admin_trove_cat_edit	label_fullname	全名
+admin_trove_cat_edit	label_shortname 短名称
+admin_trove_cat_edit	label_mandatory	强制执行
+admin_trove_cat_edit	mandatory_info	如果父级是“根”，则可以选择
+admin_trove_cat_edit	label_display	在项目创建时显示
+admin_trove_cat_edit	display_info	如果父级是强制的顶级父级，则可以选择
+admin_trove_cat_edit	label_description	描述
+admin_trove_cat_edit	description_placeholder	类型类别描述
+admin_trove_cat_edit	parent_category_label	父类
+admin_trove_cat_edit	missing_fullname	这是必需的
+admin_trove_cat_edit	missing_shortname	名是必需的
+admin_trove_cat_edit	update_forbidden	不能在其子子或其自身下移动项目类别。
+
+#-----------------------------------------------
+# Script: SF/www/admin/trove/trove_cat_list.php
+#
+admin_trove_cat_list	title	项目类别
+admin_trove_cat_list	header_name	全名
+admin_trove_cat_list	header_description	描述
+admin_trove_cat_list	header	项目类别
+admin_trove_cat_list	edit	编辑
+admin_trove_cat_list	delete	删除
+admin_trove_cat_list	add	添加一个收藏类别
+admin_trove_cat_list	cancel	取消
+#-----------------------------------------------
+# Script: src/www/admin/index.php
+#
+admin_servers	all_add	添加服务器
+admin_servers	all_choose	选择主服务器
+admin_servers	all_delete	删除服务器1
+admin_servers	all_description	描述
+admin_servers	all_edit	编辑服务器$1
+admin_servers	all_is_master	是主要的？
+admin_servers	all_master	分支
+admin_servers	all_name	名称
+admin_servers	delete	是的，我想删除这个服务器！
+admin_servers	delete_using	下列服务仍在使用此服务器：
+admin_servers	delete_R_U_sure	您确定要删除此服务器吗？
+admin_servers	error_notfound	找不到服务器
+admin_servers	form_descr	描述：
+admin_servers	form_http	HTTP：
+admin_servers	form_https	HTTPS：
+admin_servers	form_id	身份证件:
+admin_servers	form_name	名称：
+admin_servers	info_created	服务器 <em>$1</em> 已创建
+admin_servers	info_deleted	服务器 <em>$1</em> 已被删除
+admin_servers	info_mastered	服务器 <em>$1</em> 现在的分支
+admin_servers	info_updated	服务器<em>$1</em> 已更新
+admin_servers	info_notcreated	尚未创建服务器
+admin_servers	info_notdeleted	服务器 <em>$1</em> 尚未删除
+admin_servers	info_notupdated	服务器<em>$1</em> 尚未更新
+#-----------------------------------------------
+# Script: src/www/admin/descfields/desc_fields_edit.php
+#
+admin_desc_fields	title	自定义项目领域
+admin_desc_fields	header_add	添加字段
+admin_desc_fields	desc_name	名称
+admin_desc_fields	desc_description	描述
+admin_desc_fields	desc_required	要求？
+admin_desc_fields	desc_type	类型
+admin_desc_fields	desc_yes	必需的字段
+admin_desc_fields	desc_no	可选字段
+admin_desc_fields	desc_line	字符串
+admin_desc_fields	desc_text	文本区域
+admin_desc_fields	rank	秩
+admin_desc_fields	rank_on_screen	屏幕上的秩
+admin_desc_fields	ins_desc_field_fail	插入描述失败。请报告给管理员@$1 $2.
+admin_desc_fields	del_desc_field_fail删除描述失败。请报告给管理员@$1 $2.
+admin_desc_fields	update_required_desc_field_fail	更新描述失败。请报告管理n@$1 $2.
+admin_desc_fields	update_desc_field_fail	更新失败或没有数据更改。
+admin_desc_fields	info_missed	丢失的信息。请填写所有所需资料。
+admin_desc_fields	info_rank_noint	秩必须是整数值。
+admin_desc_fields	add_success	自定义项目字段已成功添加。
+admin_desc_fields	update_success	自定义项目字段已成功更新。
+admin_desc_fields	remove_success	自定义项目字段已成功删除。
+admin_desc_fields	edit_btn	编辑
+admin_desc_fields	delete_btn	删除
+admin_desc_fields	description_fields_header	自定义项目领域
+admin_desc_fields	no_description_fields	没有自定义项目字段
+admin_desc_fields	add_modal_title	添加字段
+admin_desc_fields	add_modal_cancel	取消
+admin_desc_fields	add_modal_submit	添加字段
+admin_desc_fields	edit_modal_title	编辑字段
+admin_desc_fields	edit_modal_cancel	取消
+admin_desc_fields	edit_modal_submit	更新域
+admin_desc_fields	modal_field_form_name_label	名称
+admin_desc_fields	modal_field_form_name_placeholder	项目描述
+admin_desc_fields	modal_field_form_rank_label	屏幕上的秩
+admin_desc_fields	modal_field_form_required_label这个字段是强制性的
+admin_desc_fields	modal_field_form_type_label	类型
+admin_desc_fields	modal_field_form_description_label	描述
+admin_desc_fields	modal_field_form_description_placeholder	项目描述将由经理使用…
+admin_desc_fields	modal_field_form_description_info	此文本将显示在该字段，并将帮助最终用户填写它。
+admin_desc_fields	modal_field_form_type_label_line	字符串
+admin_desc_fields	modal_field_form_type_label_text	文本区域
+admin_desc_fields	delete_modal_title	删除字段
+admin_desc_fields	delete_modal_content	您将删除自定义项目字段。请确认你的行动。
+admin_desc_fields	delete_modal_cancel	取消
+admin_desc_fields	delete_modal_submit	删除字段
+
+admin_system_events	title	系统事件
+admin_system_events	notifications	通知
+admin_system_events	send_email	发送电子邮件到：
+admin_system_events	nobody	无人
+admin_system_events	default_queue	主队列
+admin_system_events	fts_queue	全文检索
+admin_system_events	tv3tv5_queue	TV3 -> TV5迁移
+admin_system_events	empty_state	没有系统事件符合您的标准。
+admin_system_events	filter_label	筛选
+admin_system_events	search_label	搜索
+admin_system_events	types_label	类型
+admin_system_events	type_label	类型
+admin_system_events	all_status_label	现状
+admin_system_events	status_label	现状
+admin_system_events	queue_label	队列
+admin_system_events	parameters_label	参数
+admin_system_events	time_taken_label	时间
+admin_system_events	details_label	细节
+admin_system_events	replay_label	重启
+admin_system_events	id_label	身份证件
+admin_system_events	created_label	创建日期
+admin_system_events	created_at	创建于
+admin_system_events	owner_label所有者
+admin_system_events	priority_label	优先
+admin_system_events	start_label	开始日期
+admin_system_events	start_at	开始在
+admin_system_events	end_label	结束日期
+admin_system_events	end_at	结束
+admin_system_events	log_label	日志
+admin_system_events	replayed_label	重新启动
+admin_system_events	details_title	系统事件的细节
+%y years %m months %d days %h h %i m %s s
+admin_system_events	duration_months	%m 月 %d 日 %h 时 %i分 %s秒
+admin_system_events	duration_days	%d  日 %h   时 %i分 %s秒
+admin_system_events	duration_hours	%h 时 %i分 %s秒
+admin_system_events	duration_minutes	%i分 %s秒
+admin_system_events	duration_seconds	%s秒
+admin_system_events	section_date_format	%h %e, %Y
+admin_system_events	priority_1	高
+admin_system_events	priority_2	基
+admin_system_events	priority_3	低
+admin_system_events	not_ended_yet	没有结束
+admin_system_events	not_started_yet	还未开始
+admin_system_events	events	事件
+admin_system_events	add_notification	添加通知
+admin_system_events	emails	电子邮件
+admin_system_events	listen	级
+admin_system_events	edit	编辑
+admin_system_events	delete	删除
+admin_system_events	delete_confirm	您将永久删除此通知。请确认你的行动。
+admin_system_events	delete_notif_label	删除通知
+admin_system_events	edit_notif_label	编辑通知
+admin_system_events	save_notif_label	保存更改
+admin_system_events	notifs_empty	没有任何通知。
+admin_system_events	notified_label	通知人
+admin_system_events	status_to_listen	事件状态监听
+admin_system_events	emails_instructions	式登录，电子邮件或邮件列表。多值分离昏迷。
+
+admin_system_events	save_success	通知成功保存
+admin_system_events	save_error	保存通知时出错
+admin_system_events	delete_success	成功删除通知
+admin_system_events	delete_error	删除通知时出错
+admin_system_events	at_least_one_status	人们必须至少听一个状态
+admin_system_events	people_not_empty	被通知的人不能是空的
+
+#-----------------------------------------------
+# Script: SF/www/admin/show_pending_documents.php
+#
+admin_show_pending_documents	pending_doc	正在删除的项目文档 <a href="/项目/管理/?group_id=$1">$2</a>
+admin_show_pending_documents	delay_info	按照配置 (<code>$sys_file_deletion_delay</code>) 定义 <code> / etc / codendi /本地公司< /code>级别 <strong>清除</strong>在文件系统<strong>之后$1 days.</strong>
+
+admin_show_pending_documents	note_intro	注：可能会有一些延迟（最多30分钟）的时间的文件被删除，就可恢复之间的时间。
+admin_show_pending_documents	note_intro_system	当一个文件被用户删除后，就可恢复 SYSTEM_CHECK
+admin_show_pending_documents	note_intro_system_end	加工。
+admin_show_pending_documents	note_intro_restaure	请注意，实际文件恢复将由下一个 SYSTEM_CHECK 事件. 此接口仅调度恢复。
+
+admin_show_pending_documents	frs_filename	文件名
+admin_show_pending_documents	frs_release	发布名称
+admin_show_pending_documents	frs_package	软件包名称
+admin_show_pending_documents	frs_deleted	删除日期
+admin_show_pending_documents	frs_forecast	预测日期清除
+admin_show_pending_documents	frs_confirm_message	确认此文件的还原
+admin_show_pending_documents	frs_restore	恢复
+admin_show_pending_documents	frs_no_restore	没有发现可恢复文件
+admin_show_pending_documents	frs_restore_info	要还原的文件 SYSTEM_CHECK event
+admin_show_pending_documents	frs_restore_file_info	要在已删除版本中还原的文件
+admin_show_pending_documents	frs_not_yet	不可恢复的
+admin_show_pending_documents	frs_restored	要还原的文件
+admin_show_pending_documents	frs_not_restored	文件无法恢复
+admin_show_pending_documents	frs_active	已经有一个文件，该文件名具有一个活动状态
+admin_show_pending_documents	frs_same	标记为同一名称的文件将被还原
+admin_show_pending_documents	frs_bad	坏的文件ID
+
+admin_show_pending_documents	wiki_name	附件名称
+admin_show_pending_documents	wiki_date	删除日期
+admin_show_pending_documents	wiki_purge	预测清除日期
+admin_show_pending_documents	wiki_restore	恢复
+admin_show_pending_documents	wiki_confirm	确认此附件的还原
+admin_show_pending_documents	wiki_no_restore	不可恢复的附件发现
+admin_show_pending_documents	wiki_restore_attachment	维基附件恢复
+admin_show_pending_documents	wiki_restore_error	维基附件未恢复
+admin_show_pending_documents	wiki_bad_id	坏附件ID
+
+admin_generic_user	title	一般的用户
+admin_generic_user	help	“通用用户”是指在连续集成等自动化过程中使用的每一个项目用户。注：从今天起，他们只能通过SOAP API调用激活，工程项目，项目管理员访问权。
+admin_generic_user	help_update	这个页面显示的默认设置适用于所有的项目。一般用户后缀可以用$1在local.inc自定义变量
+admin_generic_user	invalid_suffix	 无效的后缀的配置，请换$1的local.inc ASAP！
+admin_generic_user	unix_name_template	% project_name%
+admin_generic_user	name_template	% 项目名称%
+admin_generic_user	back	«  返回
+admin_generic_user	set_by_project	 在项目级别配置（每个项目管理员可以在项目管理页面中配置）
+admin_generic_user	email	 电子邮件
+admin_generic_user	password	 密码
+
+admin_permission_delegation	page_title	权限委托代理
+admin_permission_delegation	page_description	在这里你可以指定平台的角色，用户组。
+admin_permission_delegation	group_action_add	添加组
+admin_permission_delegation	group_action_edit	编辑
+admin_permission_delegation	group_action_delete	删除
+admin_permission_delegation	no_group	这里没有什么，开始添加一个组。
+admin_permission_delegation	permissions_title	权限
+admin_permission_delegation	no_permission	没有与此组关联的权限
+admin_permission_delegation	users_title用户
+admin_permission_delegation	no_user	没有与此组关联的用户
+admin_permission_delegation	permissions_list_title	许可
+admin_permission_delegation	users_list_title	用户
+admin_permission_delegation	permissions_action_add	添加权限
+admin_permission_delegation	permissions_action_delete	删除权限
+admin_permission_delegation	users_action_add	添加用户
+admin_permission_delegation	users_action_delete	删除用户
+admin_permission_delegation	group_title_create	创建一个新组
+admin_permission_delegation	group_title_edit	编辑组 "$1"
+admin_permission_delegation	group_name	名称
+admin_permission_delegation	group_description	描述
+admin_permission_delegation	group_submit_create	创建组
+admin_permission_delegation	group_submit_edit	保存更改
+admin_permission_delegation	group_cancel	取消
+admin_permission_delegation	group_title_delete	删除组 "$1"
+admin_permission_delegation	group_delete_confirmation	您将要删除该组 <b>$1</b>. 这个动作是不可逆的。你确认这个删除？
+admin_permission_delegation	group_submit_delete删除组
+admin_permission_delegation	group_cancel_delete	取消
+admin_permission_delegation	user_group_already_exists	用户组名称无效（空或已存在）
+admin_permission_delegation	ugroup_not_found	用户组不存在
+admin_permission_delegation	permissions_modal_title	添加权限"$1"
+admin_permission_delegation	permissions_modal_description	选择要向组添加的权限 "<b>$1</b>"
+admin_permission_delegation	permissions_modal_submit	添加权限
+admin_permission_delegation	permissions_modal_cancel	取消
+admin_permission_delegation	no_permission_to_add	此组已拥有所有可用权限。
+admin_permission_delegation	permission_not_found	权限不存在
+
+admin_project	information_label	信息
+admin_project	history_label	改变历史
+admin_project	project_details_label	项目详情
+admin_project	access_label	项目访问
+admin_project	description_label	描述
+admin_project	more_label	更多的信息
+admin_project	homepage_label	项目主页
+admin_project	admin_label	项目管理
+admin_project	members_label	项目成员
+admin_project	pending_label	待删除文件
+admin_project	manage_access_label	管理访问
+admin_project	incl_restricted_label	incl.受限制的用户
+admin_project	public_label	公共
+admin_project	private_label	私人
+admin_project	unix_name_label	UNIX组名称
+admin_project	save_label	更新信息
+admin_project	status_label	现状
+admin_project	instructions_label	指令
+admin_project	instructions_desc	当项目启动时，电子邮件将发送给项目管理员。该电子邮件作为通知，并包含有关新项目的基本说明。你可以手动发送这封邮件。
+admin_project	send_email_label	发送新的项目说明
+admin_project	filter_label	筛选
+admin_project	search_label	搜索
+admin_project	change_label	变更历史
+admin_project	history_empty_state	历史变更还没有改变。
+admin_project	history_empty_results	在更改历史中没有匹配您的请求。
+#
+#-----------------------------------------------
+# Script: SF/www/admin/grouplist.php
+#
+admin_projectlist	title	Administration - 项目列表
+admin_projectlist	project_list	项目
+admin_projectlist	new_project	添加项目
+admin_projectlist	detail_button_label详情
+admin_projectlist	more_button_project_dashboard	转到项目仪表板
+admin_projectlist	more_button_project_administration	去项目管理
+admin_projectlist	filter_name	项目名称
+admin_projectlist	status	现状
+admin_projectlist	filter	筛选
+admin_projectlist	any	任何
+admin_projectlist	active	活跃
+admin_projectlist	system	系统
+admin_projectlist	pending	待定
+admin_projectlist	incomplete	不完全
+admin_projectlist	holding	持有
+admin_projectlist	deleted	删除
+admin_projectlist	matching_projects匹配的项目
+admin_projectlist	no_matching_projects	没有匹配的项目
+admin_projectlist	export_csv	CSV出口
+admin_projectlist	project_name	项目名称
+admin_projectlist	unix_group_name	UNIX组名称
+admin_projectlist	type	项目类型
+admin_projectlist	members	成员
+admin_projectlist	private	私人
+admin_projectlist	public_unrestricted公众不受限制
+admin_projectlist	public	公共
+admin_projectlist	pending_projects_text	对于您的信息，有 <a href="$1">$2 等待验证的项目</a>.
+
+admin	allowed_projects_filter_empty	没有任何项目匹配你的筛选。
+
+admin_project_configuration	webhook_tab_title	webhooks
+admin_project_configuration	webhook_pane_title	项目创建webhooks
+admin_project_configuration	webhook_project_creation_description	每次验证新项目后都会调用webhooks。
+admin_project_configuration	webhook_name	名称
+admin_project_configuration	webhook_url统一资源定位地址
+admin_project_configuration	webhook_last_push_date	最后把日期
+admin_project_configuration	webhook_last_push_status	最后把状态
+admin_project_configuration	no_webhooks	没有任何webhooks
+admin_project_configuration	show_logs	显示日志
+admin_project_configuration	close_modal关闭
+admin_project_configuration	cancel_modal	取消
+admin_project_configuration	date_modal	日期
+admin_project_configuration	status_modal	现状
+admin_project_configuration	add_new_webhook	添加项目创建webhooks
+admin_project_configuration	add_webhook_modal	添加webhooks
+admin_project_configuration	add_webhook_description_modal	新webhook将被称为每次与下列载荷创建新项目：
+admin_project_configuration	webhook_name_placeholder_modal	我的新webhook
+admin_project_configuration	webhook_add_error	在创建webhook出错
+admin_project_configuration	webhook_add_success	新webhook已成功创建
+admin_project_configuration	edit	编辑
+admin_project_configuration	show_logs_title_modal	日志"$1"
+admin_project_configuration	update_title_modal	更新webhook "$1"
+admin_project_configuration	update_webhook_modal	更新webhook
+admin_project_configuration	webhook_edit_error	更新webhook时出错
+admin_project_configuration	webhook_edit_success	该webhook已成功更新
+admin_project_configuration	webhook_delete_error	而除去webhook出错
+admin_project_configuration	webhook_delete_success	该webhook已成功删除
+admin_project_configuration	delete	删除
+admin_project_configuration	delete_title_modal	删除webhook"$1"
+admin_project_configuration	delete_webhook_modal	删除webhook
+admin_project_configuration	delete_webhook_warning_modal	您要删除的webhook "$1".请确认你的行动。

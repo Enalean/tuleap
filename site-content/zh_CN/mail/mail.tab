@@ -1,0 +1,92 @@
+#/**
+#  *
+#  * Include scripts message catalog (English)
+#  *
+#  * Codendi
+#  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+#  * http://www.codendi.com
+#  *
+#  *
+#  */
+#
+#-----------------------------------------------
+# Script: SF/www/mail/admin/index.php
+#
+mail_admin_index	provide_correct_list_name	必须提供名称列表4或更多字符
+mail_admin_index	list_name_unauthorized_char	名字包含坏字符列表。授权字符:字母、数字.
+mail_admin_index	list_exists_err	ERROR - List 已经存在
+mail_admin_index	add_list_err	错误添加列表
+mail_admin_index	list_added	添加列表
+mail_admin_index	invalid_userid	无效的用户名
+mail_admin_index	does_not_compute	电子邮件地址没有找到
+mail_admin_index	list_create_explain	将会创建一个邮件列表 $1 在几分钟\与非你是电子邮件列表\n\n你的邮件列表信息:\n$3 \n\n政府可以再列表: \n$4\n\n你的密码列表: $5\n建议你尽快更改这个密码.\n\n感谢你的使用 $1.\n\n -- 一美元的团队\n
+mail_admin_index	new_mail_list	新邮件列表
+mail_admin_index	mail_sent_to	电子邮件发送与细节: $1
+mail_admin_index	invalid_list_name	无效的名称列表
+mail_admin_index	upate_status_err	错误的更新状态
+mail_admin_index	status_update_success	状态跟新成功
+mail_admin_index	add_a_mail_list	添加一个邮件列表
+mail_admin_index	existing_mail_list	现有的邮件列表
+mail_admin_index	mail_list_name	邮件列表的名称
+mail_admin_index	is_public	是公共的?
+mail_admin_index	public_explain	(公共意味着认购权授予任何用户,和档案都是公开的)
+mail_admin_index	desc	描述
+mail_admin_index	add_this_list	添加这个列表
+mail_admin_index	update_mail_list	更新邮件列表
+mail_admin_index	no_list_found	没有发现列表
+mail_admin_index	none_found_for_project	没有发现这个项目
+mail_admin_index	admin_lists_here	从这里你可以管理列表。请注意,私人列表仍然可以被您的项目的成员,但不上市 $1
+mail_admin_index	list	列表
+mail_admin_index	update	更新
+mail_admin_index	list_admin	名单管理者
+mail_admin_index	public	公众的
+mail_admin_index	private	私人的
+mail_admin_index	delete	删除
+mail_admin_index	admin_in_gnu	在GNU邮差管理这个列表
+mail_admin_index	mail_list_admin	邮件列表管理
+mail_admin_index	add_mail_list	加入邮件列表
+mail_admin_index	create_new_mail_lists	创建新的邮件列表
+mail_admin_index	admin_update_lists	管理/更新列表
+mail_admin_index	manage_mail	管理现有的邮件(更改描述,隐私…)
+#
+#-----------------------------------------------
+# Script: SF/www/mail/index.php
+#
+mail_index	mail_list_for	邮件列表的 for $1
+mail_index	no_list_found_for	没有发现列表 $1
+mail_index	proj_admin_use_admin_link	Project 项目管理员使用admin链接请求邮件列表.
+mail_index	mail_list_via_gnu	通过提供邮件列表 <A href="http://www.list.org">GNU Mailman</A>. 多亏了邮差 <A href="http://www.python.org">Python</A> 乘员组为优秀的软件的.
+mail_index	choose_and_browse	选择要浏览、 搜索和发布消息的列表
+mail_index	archive	档案
+mail_index	public	公众
+mail_index	private	私有
+mail_index	unsubscribe	(Un)订阅/参数选择
+mail_index	ml_admin	毫升管理
+mail_index	choose_group_first	首先选择一组
+mail_index	group_err	错误——选择一组第一
+#
+#-----------------------------------------------
+# Script: SF/www/mail/mail_nav.php
+#
+mail_nav	home_page	主页
+mail_nav	mail_list	邮件列表
+mail_nav	admin	管理
+#
+#-----------------------------------------------
+# Script: SF/www/mail/mail_utils.php
+#
+mail_utils	mail_turned_off	这个项目已经关闭的邮件列表
+mail_utils	admin	管理
+mail_utils	add_list	添加列表
+mail_utils	update_list	管理列表
+#------------------------------------------------
+# SystemEvent
+#
+mail_system_event	md5_compute_error	亲爱的文件服务用户,\n\n 发生错误时计算md5sum上传文件中 $1.\n请尽量下载一遍.
+mail_system_event	md5_compare_error	亲爱的文件服务用户, \n\n输入参考md5sum文件 $1 不同于一个等于计算 = $2.\n 注意,将显示一条错误消息每次显示发布的内容在web界面. \n如果你认为上传已经做得很好,您可以修改md5sum字段中的值将正确的值.
+#
+#
+#
+mail_html_template	display_not_correct	这是电子邮件无法正确显示吗?
+mail_html_template	update_prefs	更新电子邮件首选项
+mail_html_template	can_update_prefs	更新您的电子邮件首选项

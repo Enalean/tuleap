@@ -1,0 +1,848 @@
+﻿#/**
+#  *
+#  * Tracker scripts message catalog (English)
+#  *
+#  * Codendi 
+#  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+#  * http://www.codendi.com
+#  *
+#  *
+#  */
+#
+#
+#-----------------------------------------------
+# Script: SF/www/tracker/add.php
+#
+tracker_add	invalid	  这个追踪器不再有效
+tracker_add	add_a	添加一个
+#
+#-----------------------------------------------
+# Script: SF/www/tracker/browse.php
+#
+tracker_browse	search_report 搜索报告
+#
+#-----------------------------------------------
+# Script: SF/www/tracker/download.php
+#
+tracker_download	file_is_null  不存在-文件为空
+tracker_download	file_not_found	找不到附加文件 （id #$1）
+#
+#-----------------------------------------------
+tracker_fieldeditor	edit	edit 编辑
+tracker_fieldeditor	preview	预览
+tracker_fieldeditor	warning	你的修改还未保存.不要忘记提交表单!
+#
+#-----------------------------------------------
+# Script: SF/www/tracker/gotoid.php
+#
+tracker_gotoid	art_belongs_to	注意: 这个文件属于项目 '$1'
+tracker_gotoid	art_is_a	<br>注意: 这个文件是 '$1' (不是 '$2')
+tracker_gotoid	commit_belongs_to	注意: 这个提交属于项目 '$1'
+tracker_gotoid	invalid_tracker	无效的追踪器名字.
+tracker_gotoid	invalid_art_nb	无效的文件编号: $1.
+#
+#-----------------------------------------------
+# Script: SF/www/tracker/group_selection.php
+#
+tracker_group_selection	project_sel	项目选择
+tracker_group_selection	my_proj	我的项目
+tracker_group_selection	all_proj	全部项目
+#
+#-----------------------------------------------
+# Script: SF/www/tracker/edit_comment.php
+#
+tracker_edit_comment	upd_followup	更新后续评论
+tracker_edit_comment	upd_followup_details	提交过的意见 $1 by $2
+#
+#-----------------------------------------------
+# Script: SF/www/tracker/import_admin.php
+#
+tracker_import_admin	not_get_atf	不能得到文件类型工厂
+tracker_import_admin	art_import	追踪器生成文件导入
+tracker_import_admin	welcome	<P> <h3>追踪器器文件导入</h3><P>你可以从文本文件(CSV格式)中导入文件到一个特定的追踪器. 点击下面的链接导入新文件或更新现有的.<P>
+tracker_import_admin	art_data_import	文件输入导入
+tracker_import_admin	import_format	导入格式
+tracker_import_admin	import	导入
+tracker_import_admin	show_format	输出格式
+tracker_import_admin	tracker	跟踪
+tracker_import_admin	disabled	在这个项目中跟踪已经被禁用
+#
+#-----------------------------------------------
+# Script: SF/www/tracker/import.php
+#
+tracker_import	art_import	追踪器生成文件导入:
+tracker_import	parse_report	文件解析报告
+tracker_import	ready	准备导入文件 $1 文件(s): $2 新文件(s), $3 现有文件(s)
+tracker_import	check_data	在导入之前,请检查你的数据,尤其是日期。
+tracker_import	success_import	$1 文件成功的导入
+tracker_import	format_hdr	追踪器文件导入格式
+tracker_import	format_msg	从CSV文件导入构件需要提供以下文件。样本值显示字段数据类型是什么。 <br>到<b>创建</b>您需要至少提供标注的必填字段的新文件<span class="highlight"><big>*</big></b></span>除了不能指定的文件ID。所有其他字段可以省略，在CSV文件中将用默认值初始化它们。 <br>到<b>更新 </b>文件只需指定文件ID以及您想要更新的字段。CSV文件中指定的所有字段不将保持不变。<br>请注意,CSV文件应该使用utf – 8编码。
+tracker_import	sample_cvs_file	样本CSV文件:
+tracker_import	import_new_hdr	文件导入$1:
+tracker_import	import_new_msg	通过指定CSV文件，可以将文件导入到该跟踪程序中。<br>看到 <a href="$1"> CSV导入格式</a>为更多的细节。
+tracker_import	upload_file	上传文件:	
+tracker_import	max_upload_size	(最大上传文件大小是$1 Mb)
+tracker_import	submit_info	加载文件
+tracker_import	send_notifications	发送通知:
+#
+#-----------------------------------------------
+# Script: SF/www/tracker/index.php
+#
+tracker_index	art_id_necessary	文件ID 是必须存在的
+tracker_index	not_create_at	文件类型不能被创建
+tracker_index	a_tracker	一个追踪器
+tracker_index	an_artif	一个文件
+tracker_index	not_create_art	文件不能被创建
+tracker_index	artifact_has_changed_title	警告:你的更新没有被应用。tracker_index	artifact_has_changed	此项目已被其他人更新，如果您显示它，因此您的更新可能无意中删除他们的更改。<br>要继续，您必须使用浏览器返回按钮，然后获取其他用户的更改，通过: <ul><li><a href="$1" target="_blank" rel="noreferrer">在新窗口中加载更新的文件</a>和在这更新你的数据,</li><li>或者使用浏览器的刷新按钮重新加载表单(请注意，刷新将清除您的更改，您将不得不重新输入; 我们建议您在刷新之前复制任何冗长的更改).</li></ul>
+tracker_index	cc_list_invalid	错误—CC列表是无效的
+tracker_index	invalid_filename	无效的文件名
+tracker_index	not_create_file	无法创建文件对象
+tracker_index	not_create_file_obj	无法创建文件对象: $1
+tracker_index	not_attach_file	不能附加文件到文件: $1
+tracker_index	create_success	文件成功的创建 ($1)
+tracker_index	invalid_filename_attach	Invalid filename for attachment
+tracker_index	trackers_for	追踪器为了 $1
+tracker_index	admin_all_trackers	管理所有追踪器
+tracker_index	create_new_tracker	创建一个新的追踪器
+tracker_index	no_accessible_trackers_hdr	无法使用找到跟踪
+tracker_index	no_accessible_trackers_msg	<strong>没有跟踪设置, 或者不允许你查看它们.</strong>
+tracker_index	choose_tracker	选择跟踪器，您可以浏览/编辑/添加文件。tracker_index	total	总数
+tracker_index	file_delete	文件删除: $1
+tracker_index	file_delete_success	文件成功删除的
+tracker_index	file_upload_err	文件上传: $1
+tracker_index	file_upload_success	文件成功上传
+tracker_index	mass_update_success	成功更新
+tracker_index	update_success	成功更新($1)
+tracker_index	not_saved_comment	评论没被保存
+tracker_index	open	打开
+tracker_index	updated_aid	更新过的 $1
+tracker_index	mass_change	成批改变
+tracker_index	invalid_field_dependency	字段依赖关系无效
+tracker_index	missing_dependency	请至少选择一个值为必填字段 $1
+tracker_index	notification_stopped	注意：此跟踪器暂停了电子邮件通知。tracker_index	report_definition_updated	报表定义已更新。
+#
+#-----------------------------------------------
+# Script: SF/www/tracker/masschange_detail.php
+#
+tracker_masschange_detail	selected_items	成批更改所选文件
+tracker_masschange_detail	no_items_selected	没有选择任何文件
+#
+#-----------------------------------------------
+# Script: SF/www/tracker/masschange.php
+#
+tracker_masschange	mass_change_report	成批改变报道
+#
+#-----------------------------------------------
+# Script: SF/www/tracker/tracker_import_utils.php
+#
+tracker_import_utils	field_not_known	"$1" 不是跟踪中的已知字段 $2
+tracker_import_utils	field_mandatory	"$1"是跟踪器中的必填字段 $2. 请在您的CSV文件中指定。
+tracker_import_utils	not_a_predefined_value	<b>行$1 [</b>$2<b>]</b>:<br>值 "$3"不是字段的预定义值之一"$4" ($5).
+tracker_import_utils	field_mandatory_and_current	<b>行 $1 [</b>$2<b>]</b>:<br>"$3"是跟踪器中的必填字段$4。请在您的csv文件中指定（当前值为“$5”）。
+tracker_import_utils	incorrect_date	<b>行 $1 [</b>$2<b>]</b>:<br>日期“$3”格式不正确（YYYY-MM-DD）。
+tracker_import_utils	field_mandatory_and_line	<b>行 $1 [</b>$2<b>]</b>:<br>“$3”是追踪器$4中的必填字段。请在您的csv文件中指定。
+tracker_import_utils	already_submitted	<b>行 $1 [</b>$2<b>]</b>:<br>用户$3已经提交了与（“$4”）相同摘要的文件。请不要再尝试导入它。
+tracker_import_utils	art_not_exists	<b>行 $1 [</b>$2<b>]</b>:<br>跟踪器$4中不存在指定的文件（id = $3）
+tracker_import_utils	date	数据
+tracker_import_utils	type	类型
+tracker_import_utils	comment	评论
+tracker_import_utils	comment_parse_error	 $1不会为此文件插入任何后续评论。tracker_import_utils	new	新的
+tracker_import_utils	column_mismatch	<b>行 $1 [</b>$2<b>]</b>:<br>值的数量（$3）与字段数（$4）不匹配。<br>
+tracker_import_utils	no_followups	没有后续发布
+tracker_import_utils	not_a_user	指定为后续评论＃$2的发起人的“$1”既不是用户名也不是有效的电子邮件地址。
+tracker_import_utils	specify_originator	您必须指定一个发起人，以便后续评论＃$1（$2）。
+tracker_import_utils	specify_valid_user	“无”不是后续评论的有效发起人。 请注明＃$1的用户名或有效的电子邮件地址。
+tracker_import_utils	problem_insert_dependent	错误 插入依赖问件时出错（文件 id = $1）<br>
+tracker_import_utils	problem_add_cc	错误 当添加列表CC时(文件id=$1)出错。<br>
+tracker_import_utils	problem_insert_followup	错误 插入后续评论时出错（文件 id = $1）。<br>
+#
+#-----------------------------------------------
+# Script: SF/www/tracker/tracker_selection.php
+#
+tracker_selection	no_tracker_available	没有跟踪器可用于此项目
+tracker_selection	tracker_sel	 追踪器选择	
+#
+#-----------------------------------------------
+# Script: SF/www/tracker/admin/admin_trackers.php
+#
+tracker_admin_trackers	all_admin	所有的追踪器管理
+#
+#-----------------------------------------------
+# Script: SF/www/tracker/admin/field_usage.php
+#
+tracker_admin_field_usage	tracker_admin	追踪器管理 
+tracker_admin_field_usage	usage_admin	-现场使用管理
+#
+#-----------------------------------------------
+# Script: SF/www/tracker/admin/field_values_details.php
+#
+tracker_admin_field_values_details	values_admin	-字段值管理
+tracker_admin_field_values_details	manage_for	 -管理“$1”的字段值
+#
+#-----------------------------------------------
+# Script: SF/www/tracker/admin/index.php
+#
+tracker_admin_index	create_tracker	- 创建追踪器器
+tracker_admin_index	tracker_created	Tracker created -单击新的跟踪器ID以完成跟踪器配置
+tracker_admin_index	not_create_canned	ArtifactCanned无法创建
+tracker_admin_index	not_retrieved_report	ArtifactReport 无法检索: $1 
+tracker_admin_index	not_updated_report	ArtifactReport无法更新
+tracker_admin_index	not_created_report	ArtifactReport无法创建
+tracker_admin_index	new_report_created	新创建的报告
+tracker_admin_index	report_deleted	报告已删除
+tracker_admin_index	not_create_canneditem	ArtifactCanned项目无法创建tracker_admin_index	not_found_canneditem	ArtifactCanned  找不到项目＃$1
+tracker_admin_index	not_update_canneditem	ArtifactCanned项目＃$1无法更新tracker_admin_index	deleted_cannedresponse	 Canned Response已删除
+tracker_admin_index	updated_cannedresponse	 Canned Response已更新
+tracker_admin_index	not_delete_canneditem	ArtifactCanned项目＃$1无法删除tracker_admin_index	modify_cannedresponse	修改Canned Response 
+tracker_admin_index	create_modify_cannedresponse	创建/修改 Canned Response 
+tracker_admin_index	art_admin	追踪管理 - 个人电子邮件通知设置tracker_admin_index	update_success	 - 成功更新
+tracker_admin_index	update_failed	 -更新失败: $1
+tracker_admin_index	options	 -选项
+tracker_admin_index	update_success_title	成功的数据
+tracker_admin_index	values_updated	字段值（S）已更新
+tracker_admin_index	value_updated	字段值更新
+tracker_admin_index	value_created	字段值创建
+tracker_admin_index	value_deleted	字段值删除
+tracker_admin_index	field_created	使用默认权限创建的字段
+tracker_admin_index	field_updated	字段更新
+tracker_admin_index	field_deleted	字段删除
+tracker_admin_index	modify_usage	 -修改字段使用
+tracker_admin_index	modify_usage_for	 -修改'$1'的字段用法
+tracker_admin_index	deletion_failed	追踪器'$1' - 删除失败- 
+tracker_admin_index	delete_success	追踪器“$1” - 已成功删除
+tracker_admin_index	tracker_deleted	<H2>追踪器'$1' - 已删除</H2> <p>如果您无意中删除了该跟踪器并希望将其恢复，请联系<a href="mailto:$2">网站管理员</A>在未来10天内。</p>
+tracker_admin_index	fieldset_created	字段集创建
+tracker_admin_index	fieldset_updated	字段集更新
+tracker_admin_index	fieldset_deleted	字段集删除
+tracker_admin_index	modify_fieldset	 - 修改字段集
+tracker_admin_index	modify_fieldset_for	 -修改字段设置为'$1'
+#
+#-----------------------------------------------
+# Script: SF/www/tracker/admin/restore.php
+#
+tracker_admin_restore	restore_failed	还原操作失败	
+tracker_admin_restore	tracker_restored	恢复跟踪器
+tracker_admin_restore	delay_failed	延迟操作失败
+tracker_admin_restore	delayed_deletion	延期操作
+tracker_admin_restore	pending_deletions	跟踪器删除
+tracker_admin_restore	tracker_deleted	追踪器删除
+#
+#-----------------------------------------------
+# Script: SF/www/tracker/include/ArtifactCannedHtml.class.php
+#
+tracker_include_canned	create_response	创建一个新的响应
+tracker_include_canned	save_time	如果您经常为用户提供相同的答案，创建固定响应可以节省大量时间。
+tracker_include_canned	title	标题头
+tracker_include_canned	message_body	消息内容:
+tracker_include_canned	existing_responses	存在的响应:
+tracker_include_canned	body_extract	内容 (摘录)
+tracker_include_canned	delete	删除 ?
+tracker_include_canned	delete_canned	删除这个Canned Response : $1 ?
+tracker_include_canned	no_canned_response	没有为此跟踪器设置的无效响应#
+#-----------------------------------------------
+# Script: SF/www/tracker/include/ArtifactFieldHtml.class.php
+#
+tracker_include_field	error_no_atid	错误 - 没有group_artifact_id 
+tracker_include_field	start	开始:
+tracker_include_field	end	结束:
+tracker_include_field	any_time	任何时候
+tracker_include_field	pick_date	点击这里取一个日期
+tracker_include_field	unknown_display_type	$1: 未知的文件字段显示类型
+tracker_include_field	unknown_value	*** 不知道值 ***
+#
+#-----------------------------------------------
+# Script: SF/www/tracker/include/ArtifactFileHtml.class.php
+#
+tracker_include_artifactfile	invalid_name	ArtifactFile:无效的文件名
+tracker_include_artifactfile	not_attached	文件未附加：文件大小必须小于$1 Mb#
+#-----------------------------------------------
+# Script: SF/www/tracker/include/ArtifactHtml.class.php
+#
+tracker_include_artifact	project	项目:
+tracker_include_artifact	submit	提交更新
+tracker_include_artifact	follow_ups	跟进
+tracker_include_artifact	cc_list	CC列表
+tracker_include_artifact	use_canned	使用一个Canned Response:
+tracker_include_artifact	define_canned	或者定义一个新的Canned Response
+tracker_include_artifact	not_logged_in	<B><span class="highlight"><H2>您还没有登录</H2><P>请 <A HREF="$1">登录,</A>所以更新通知可以通过电子邮件发送给您。</span></B><P>如果没有用户帐户, 然后输入你的电子邮件地址:
+tracker_include_artifact	fill_cc_list_msg	<u><b>注意:</b></u>用户使用他们的登录名，而不是他们的电子邮件地址。<br>使用逗号或半列分隔符分割您填入的清单。tracker_include_artifact	fill_cc_list_lbl	<p><B>添加 CC:&nbsp;</b>
+tracker_include_artifact	fill_cc_list_cmt	评论
+tracker_include_artifact	attachment	附件
+tracker_include_artifact	upload_checkbox	<B> Check to Upload&hellip;</b>
+tracker_include_artifact	upload_file_lbl	<b>&nbsp;&hellip;and&nbsp; 附加文件:</B>
+tracker_include_artifact	upload_file_msg	<br><span class="small" style="color:#666">(最大上传文件大小为 $1 MB  - <u>请压缩文件</u>)</span>
+tracker_include_artifact	upload_file_desc	<P><B>文件描述:</B>&nbsp;
+tracker_include_artifact	dependencies 依赖
+tracker_include_artifact	references	参考文献
+tracker_include_artifact	aids	文件标识:
+tracker_include_artifact	fill	(填写使用逗号作为分隔符列表)
+tracker_include_artifact	dependent_on	是依赖:
+tracker_include_artifact	change_history	改变历史:
+tracker_include_artifact	field	场
+tracker_include_artifact	old_val	旧值
+tracker_include_artifact	new_val	新值
+tracker_include_artifact	no_changes	没有变化
+tracker_include_artifact	no_file_attached	目前没有附加文件	
+tracker_include_artifact	file_attachment	文件附件
+tracker_include_artifact	name	姓名
+tracker_include_artifact	desc	说明书
+tracker_include_artifact	size_kb	大小 (KB)	
+tracker_include_artifact	size	大小	
+tracker_include_artifact	posted_on	发表于	
+tracker_include_artifact	delete_attachment	删除这个附件?	
+tracker_include_artifact	cc_empty	CC列表是无意义的
+tracker_include_artifact	artifact	文件
+tracker_include_artifact	summary	摘要
+tracker_include_artifact	group	组织
+tracker_include_artifact	comment_type	评论类型:
+tracker_include_artifact	add_comment	添加一个评论:
+tracker_include_artifact	depend_on	是依赖:
+tracker_include_artifact	cc_address	CC地址
+tracker_include_artifact	comment	评论
+tracker_include_artifact	delete_comment	删除此后续评论？
+tracker_include_artifact	added_by	添加通过
+tracker_include_artifact	delete_cc	删除这个CC地址？
+tracker_include_artifact	add_cc	添加 CC:
+tracker_include_artifact	check_already_submitted	如果你检查这个文件是否提交了了吗?</span></b> (使用搜索框)	
+tracker_include_artifact	latest_modif	最后一次修改
+tracker_include_artifact	full_snapshot	完整的 $1 快照
+tracker_include_artifact	follow_link	有关详细信息，请点击此链接:
+tracker_include_artifact	changes_by	改变通过:
+tracker_include_artifact	anon_user	匿名用户名
+tracker_include_artifact	add_flup_comment	其他后续评论
+tracker_include_artifact	rem_followup	删除后续评论
+tracker_include_artifact	add_followup	增加后续评论
+tracker_include_artifact	upd_followup_nochange	后续评论并没有改变tracker_include_artifact	add_attachment	其他文件附件
+tracker_include_artifact	file_name	文件名:
+tracker_include_artifact	what	什么
+tracker_include_artifact	removed	删除
+tracker_include_artifact	added	添加
+tracker_include_artifact	dep_list_empty	依赖列表是空的
+tracker_include_artifact	ref_list_empty	参考文献列表为空
+tracker_include_artifact	dep_list	依赖列表
+tracker_include_artifact	del_dep	删除这种依赖性?
+tracker_include_artifact	no_depend	不依赖于其他文件的文件
+tracker_include_artifact	copy_art	复制这个文件
+tracker_include_artifact	is_copy	this $1复制为 $2
+tracker_include_artifact	copy_of	复制$1
+tracker_include_artifact	copy	复制
+tracker_include_artifact	flup_hidden	[没有记录]
+tracker_include_artifact	del	删除文件
+tracker_include_artifact	last_edited	上次编辑通过:
+tracker_include_artifact	toggle	触发器
+tracker_include_artifact	expand_all	展开全部
+tracker_include_artifact	collapse_all	折叠所有
+tracker_include_artifact	details	详细资料
+tracker_include_artifact	permissions权限
+tracker_include_artifact	permissions_label	限制访问此文件以下用户组：tracker_include_artifact	permissions_not_restricted	权限并不限于此文件
+tracker_include_artifact	permissions_use_default	使用默认跟踪权限
+tracker_include_artifact	mail_direct_link	直接链接到文件
+tracker_include_artifact	mail_comment_title	注释
+tracker_include_artifact	mail_snapshot_title快照
+tracker_include_artifact	mail_latest_modifications	最新修改
+tracker_include_artifact	mail_changes	改变:
+tracker_include_artifact	mail_answer_now	现在回答
+#
+#-----------------------------------------------
+# Script: SF/www/tracker/include/ArtifactReportHtml.class.php
+#
+tracker_include_report	prio_colors	Priority Colors:
+tracker_include_report	items	项目
+tracker_include_report	check_items	检查项目 
+tracker_include_report	clear_items	清除项目
+tracker_include_report	mass_change_all	集中改变所有($1 文件)
+tracker_include_report	check_all_items	检查所有项目
+tracker_include_report	clear_all_items	清除所有项目
+tracker_include_report	selected	查找出来 $1
+tracker_include_report	using_report	使用报告
+tracker_include_report	btn_go	Go
+tracker_include_report	or_use	或者使用
+tracker_include_report	simple_search	简单搜索
+tracker_include_report	adv_search	高级搜索
+tracker_include_report	at_once	s 在一次.
+tracker_include_report	sorted_by	排序
+tracker_include_report	matching	匹配
+tracker_include_report	sort_results	单击列标题排序结果（向上或向下）tracker_include_report	sort_sev	通过$1排序
+tracker_include_report	reset_sort	重新排序
+tracker_include_report	multicolumn_sort	您也可以<a href="$1"><b> $2多列排序</b></a>.
+tracker_include_report	sev_colors	颜色:严重程度
+tracker_include_report	no_match	没有匹配的文件找到
+tracker_include_report	report_mgmt	Tracker管理 - 跟踪报告管理tracker_include_report	report_admin	  -报表管理
+tracker_include_report	scope	范围
+tracker_include_report	default	默认
+tracker_include_report	set_default	[设为默认值]
+tracker_include_report	is_default	[默认]
+tracker_include_report	report_name	报告名称
+tracker_include_report	id	ID
+tracker_include_report	mod	(点击修改)
+tracker_include_report	delete_report	删除此报告: $1  ?
+tracker_include_report	no_rep_def	没有文件报告尚未确定.
+tracker_include_report	create_report	你能 <b><A HREF="$1">创建新报告</a></b>
+tracker_include_report	create_rep	创建一个新的跟踪报告
+tracker_include_report	field_label字段标签
+tracker_include_report	search_crit	使用作为搜索条件	
+tracker_include_report	rank_search	排名上搜索
+tracker_include_report	rep_col	使用作为报告列
+tracker_include_report	rank_repo	排名的报告
+tracker_include_report	col_width	列宽(可选)
+tracker_include_report	modify_report	修改跟踪报告
+tracker_include_report	btn_export	导出匹配的文件
+tracker_include_report	export_only_report_fields	仅导出报表字段
+tracker_include_report	query 询问
+#
+#-----------------------------------------------
+# Script: SF/www/tracker/include/ArtifactTypeHtml.class.php
+#
+tracker_include_type	submit_new	提交新的$1
+tracker_include_type	my	我的 $1
+tracker_include_type	open	打开 $1
+tracker_include_type	reporting	报告
+tracker_include_type	admin	管理员
+tracker_include_type	settings	常规设置
+tracker_include_type	field_usage	字段使用
+tracker_include_type	field_values	字段值
+tracker_include_type	canned_resp	Canned Responses
+tracker_include_type	reports	跟踪报告
+tracker_include_type	mail_notif	电子邮件通知设置
+tracker_include_type	pending_removal	待定跟踪器V3删除
+tracker_include_type	no_pending	没有跟踪V3为删除未决
+tracker_include_type	pending_deletion	跟踪器V3未决删除
+tracker_include_type	deletion_date	删除日期
+tracker_include_type	restore	恢复
+tracker_include_type	delete	删除
+tracker_include_type	cancel	取消
+tracker_include_type	remove_tracker	删除跟踪器
+tracker_include_type	restore_tracker	恢复跟踪器
+tracker_include_type	restore_confirm	恢复此跟踪器和其所有的依赖？tracker_include_type	warning	删除这个跟踪器和其所有的依赖关系（没有可能恢复操作）？
+tracker_include_type	create_from_scratch	从头开始创建或从现有的跟踪新的跟踪器
+tracker_include_type	manage	管理跟踪器
+tracker_include_type	admin_or_del	管理或删除跟踪器。	
+tracker_include_type	instantiate	实例为新项目
+tracker_include_type	administration	 - Administration
+tracker_include_type	mng_field_usage  管理字段使用
+tracker_include_type	define_use	定义你想在这个跟踪器使用的跟踪器领域。tracker_include_type	mng_field_values	管理字段值
+tracker_include_type	define_values	定义设置您的跟踪领域相关的值。
+tracker_include_type	mng_response	管理 Canned Responses
+tracker_include_type	add_del_resp	添加，更新或删除canned responses.
+tracker_include_type	mng_reports	管理跟踪报告
+tracker_include_type	define_reports	定义跟踪搜索报告：什么搜索条件使用，并在跟踪检索报告显示什么跟踪器领域。
+tracker_include_type	define_title	定义标题、描述等跟踪。
+tracker_include_type	define_notif	用户可以定义时，他们希望通过电子邮件通知跟踪器的更新，项目管理员还可以定义全局电子邮件通知规则。P>
+tracker_include_type	user	用户
+tracker_include_type	perm	权限
+tracker_include_type	del_user	删除这个用户?
+tracker_include_type	no_user	没有用户此跟踪。
+tracker_include_type	allow_copy	允许重复文件：
+tracker_include_type	submit_instr	<b>提交说明</b>:<br><i>(允许HTML标记)</i>
+tracker_include_type	browse_instr	<b浏览指令/b>:<br><i>(HTML tags allowed)</i>
+tracker_include_type	fill_name	请填写跟踪器名称。
+tracker_include_type	fill_desc	请填写跟踪描述。	
+tracker_include_type	fill_short	请填写跟踪简称。
+tracker_include_type	choose_proj	请选择一个项目，跟踪器第一。
+tracker_include_type	choose_tmpl请首先选择一个模板。
+tracker_include_type	select_proj	请首先选择一个项目！
+tracker_include_type	create_tracker	<h2>创建一个新的跟踪:</h2><p>请填写这个新的跟踪器的名称，描述和短名称:</p>
+tracker_include_type	short_name	短名称
+tracker_include_type	avoid_spaces	请避免在短名称空格和标点符号
+tracker_include_type	choose_creation	选择创建方法:
+tracker_include_type	from_tmpl	从预定义模板:
+tracker_include_type	from_exist	<b>从现有的跟踪器:</b><br><i>(首先选择一个项目，那么这个项目的跟踪器)</i>
+tracker_include_type	proj_id	 项目ID:
+tracker_include_type	tracker_id	跟踪器ID:
+tracker_include_type	list_all_fields	所有可用字段列表
+tracker_include_type	type	类型
+tracker_include_type	rank_screen	排名在屏幕上
+tracker_include_type	used	用户
+tracker_include_type	unused	未使用
+tracker_include_type	warning_loose_data	**警告!! **如果删除该字段，你会失去所有相关数据。你也可以设置为未使用此字段，是否继续？
+tracker_include_type	no_field_in_use	----在未使用任何领域。以下选一----
+tracker_include_type	used_field	----使用的字段----
+tracker_include_type	no_unused_field	---- NO未使用的字段----
+tracker_include_type	no_used_field	---- NO使用的字段 ----
+tracker_include_type	unused_field	----未使用的字段----
+tracker_include_type	sb	选择框
+tracker_include_type	mb	多选择框
+tracker_include_type	tf	文本框
+tracker_include_type	ta	文本区域
+tracker_include_type	df	日期字段
+tracker_include_type	ff	扩展字段
+tracker_include_type	if	整数字段
+tracker_include_type	create_field	创建一个新的字段
+tracker_include_type	upd_label	更新字段 '$1'	
+tracker_include_type	imp_note	<b>**重要提示**</b> '$1'是一个标准的追踪。其目的是全球所有追踪器,我们强烈建议你不要改变它的标签和描述,除非他们有一个保护的作用类似的意思。
+tracker_include_type	field_ident 字段标识和说明
+tracker_include_type	field_type	字段类型
+tracker_include_type	display_info	显示信息
+tracker_include_type	display_size	显示大小
+tracker_include_type	allow_empty	允许空值
+tracker_include_type	keep_change_history	保留更改历史记录
+tracker_include_type	misc	杂项:
+tracker_include_type	use_field	使用这个字段
+tracker_include_type	fields_requ	必填字段
+tracker_include_type	bind_to_list	绑定字段值的列表
+tracker_include_type	bind_to	结合
+tracker_include_type	group_members	项目成员
+tracker_include_type	group_admins	项目管理员
+tracker_include_type	tracker_admins	跟踪管理员
+tracker_include_type	submitters	文件提交者
+tracker_include_type	techicians	文件技术人员
+tracker_include_type	bind	捆绑
+tracker_include_type	create_value	创建一个新的字段值
+tracker_include_type	update_value	更新字段值
+tracker_include_type	note_standard	<b>**重要提示**</b>你正在编辑一个永久的字段值。永久的字段值经常<b>非常</b>统特定的意义,我们强烈建议你不要改变它的标签和/ 意义除非他们有相似的意义。
+tracker_include_type	permanent	永久
+tracker_include_type	active	活跃
+tracker_include_type	hidden	隐藏
+tracker_include_type	no_values	没有价值尚未确定
+tracker_include_type	exist_values	现有的值
+tracker_include_type	value_label	值标签
+tracker_include_type	rank	等级
+tracker_include_type	del_value	删除这个字段的值?	
+tracker_include_type	no_active_val	----没有活跃的值----
+tracker_include_type	active_val	----活跃的值 ----
+tracker_include_type	no_hidden_val	----没有隐藏值----
+tracker_include_type	hidden_val	----隐藏值----
+tracker_include_type	toggle_notification	切换电子邮件通知
+tracker_include_type	notification_suspended	电子邮件通知暂停
+tracker_include_type	toggle_notif_note	<B>作为跟踪管理员</B>,你可以暂时停止所有的电子邮件通知，在这个跟踪器，不管下面的通知设置。
+tracker_include_type	toggle_notif_warn	跟踪器管理员在这个跟踪器暂停电子邮件通知，下面的通知设置现在忽略。
+tracker_include_type	stop_notification	暂停电子邮件通知
+tracker_include_type	global_mail_notif	全球电子邮件通知
+tracker_include_type	admin_note	<B>作为跟踪管理员</B>您可以提供电子邮件地址（以逗号分隔）到新的神器意见书（以及可能的更新）将系统发送
+tracker_include_type	send_all	发送所有更新
+tracker_include_type	check_perms	检查权限
+tracker_include_type	admin_conf	<P>该跟踪器管理员已经配置了以下的电子邮件地址以接收新的工件提交通知（以及可能的更新）<P><u>收件人</u>:
+tracker_include_type	send_all_or_not	(发送所有更新: $1)
+tracker_include_type	admin_not_conf	<P>追踪管理员还没有指定的电子邮件地址,将系统接收电子邮件通知的新工件。
+tracker_include_type	perso_mail_notif	个人电子邮件通知
+tracker_include_type	users_to_watch	用户在观看
+tracker_include_type	backup_person	您可以接收发送到该项目的某些用户的电子邮件通知的翻版，列出你想观看，用逗号分隔的任何用户的登录名。</b>
+tracker_include_type	watchers	为了您的信息，你自己的文件通知正在观看了： <u>$1</u>	
+tracker_include_type	no_watcher	为了您的信息<U>人</ U>当前正在观看自己的神器通知。 
+tracker_include_type	event_settings	事件/角色特定的设置
+tracker_include_type	tune_settings	您可以优化您的通知设置和决定工件改变你想要知道什么取决于你的角色。
+tracker_include_type	role_is	如果我在工件中的作用是：
+tracker_include_type	def_default	定义默认值
+tracker_include_type	val	值
+tracker_include_type	unknown_stat	未知状态
+tracker_include_type	report_system	报告系统
+tracker_include_type	tracker_report_syst	跟踪报告制度
+tracker_include_type	aging_rep	老龄化报告
+tracker_include_type	tracker_aging_rep	跟踪帐龄报表
+tracker_include_type	avg_time	平均周转时间封闭式$1
+tracker_include_type	nb_open	揭开数$1
+tracker_include_type	rep_field	报告字段
+tracker_include_type	open_by	打开 $1 通过 $2
+tracker_include_type	all_by	所有$1由$2
+tracker_include_type	changing_items	改变$1中选择的文件（S）: 
+tracker_include_type	submit_mass_change	提交
+tracker_include_type	occurrence	发生
+tracker_include_type	notify_me	我想被通知时:
+tracker_include_type	permissions权限
+tracker_include_type	manage_permissions	管理权限
+tracker_include_type	manage_permissions_title	 -管理权限
+tracker_include_type	define_manage_permissions	定义跟踪器及其字段权限tracker_include_type	manage_tracker_permissions	管理权限追踪
+tracker_include_type	manage_tracker_permissions_title	 -管理权限追踪tracker_include_type	define_manage_tracker_permissions	定义跟踪器的权限tracker_include_type	manage_fields_tracker_permissions	管理字段权限
+tracker_include_type	manage_fields_tracker_permissions_title	 -管理字段权限tracker_include_type	define_manage_fields_tracker_permissions	定义跟踪字段的权限
+tracker_include_type	edit_field_perm	编辑字段权限
+tracker_include_type	field_dependencies	字段＆NBSP;依存关系
+tracker_include_type	mng_field_dependencies	管理字段依赖性
+tracker_include_type	mng_field_dependencies_title	 -管理字段依赖性
+tracker_include_type	define_field_dependencies	定义一个字段中的值取决于其他字段值。
+tracker_include_type	manage_fieldsets	管理字段设置
+tracker_include_type	define_manage_fieldsets定义字段集为跟踪器。
+tracker_include_type	fieldsets	字段集
+tracker_include_type	fieldset	字段集
+tracker_include_type	create_fieldset 创建一个新的字段集
+tracker_include_type	list_all_fieldsets	所有字段设置列表
+tracker_include_type	fieldset_ident	字段集标识和描述
+tracker_include_type	fieldset_name	结果集的标签
+tracker_include_type	fieldset_desc	描述
+tracker_include_type	fieldset_display	显示信息
+tracker_include_type	fields_inside	字段
+tracker_include_type	update_fieldset	更新字段集“$1”
+tracker_include_type	warning_delete_fieldset	**警告！**删除此字段设置（没有可能恢复操作）？
+tracker_include_type	rank_in_fieldset	排序字段集
+tracker_include_type	current_date	当前日期。
+tracker_include_type	date_value	日期值：
+tracker_include_type	mass_change_permissions	更改权限
+tracker_include_type	tracker_v3_empty_state	没有任何匹配的跟踪器V3
+tracker_include_type	add	添加
+tracker_include_type	error_gn_default_not_added	无法添加默认的全局通知
+tracker_include_type	error_gn_not_added	无法添加全局通知
+tracker_include_type	error_gn_not_deleted	无法删除全局通知
+tracker_include_type	error_missing_param缺少的参数
+tracker_include_type	info_gn_default_added	默认情况下添加全局通知
+tracker_include_type	info_gn_default_not_added	不添加默认的全局通知
+tracker_include_type	info_gn_deleted	Global通知已被删除
+#
+#-----------------------------------------------
+# Script: SF/common/tracker/ArtifactCanned.class.php
+#
+tracker_common_canned not_valid否有效的ArtifactType对象
+tracker_common_canned name_requ名称和描述是必需的
+tracker_common_canned perm_denied权限被拒绝
+tracker_common_canned invalid_id无效的ArtifactCanned ID
+tracker_common_canned missing_param Missing Params#
+#-----------------------------------------------
+# Script: SF/common/tracker/Artifact.class.php
+#
+tracker_common_artifact view_private您不能访问此跟踪器
+tracker_common_artifact view_private_artifact您不能访问此工件
+tracker_common_artifact invalid_id无效的ArtifactID
+tracker_common_artifact行行$1：
+tracker_common_artifact double_subm ERROR  -  DOUBLE SUBMISSION。您已经提交了具有相同摘要的工件（id = $1）。
+tracker_common_artifact insert_err INSERT新工件失败。向管理员报告<br> SQL语句：<br> $1 <br>
+tracker_common_artifact field_err创建文件，但无法插入字段值 -  $1：$2
+tracker_common_artifact def_err创建了Artifact，但未能插入默认字段值 -  $1：$2
+tracker_common_artifact enter_email您需要输入电子邮件！
+tracker_common_artifact add_comment注释添加到工件 
+tracker_common_artifact comment_removed已删除后续评论
+tracker_common_artifact err_del_comment删除后续注释ID $1：$2
+tracker_common_artifact err_upd_comment错误编辑后续注释ID $1：$2
+tracker_common_artifact field_upd_fail无法更新字段值$1
+tracker_common_artifact canned_used已使用的罐头响应 
+tracker_common_artifact unable_canned无法使用罐装响应 
+tracker_common_artifact upd_fail更新失败
+tracker_common_artifact cc_add_fail CC添加失败
+tracker_common_artifact prob_cc_list问题删除旧的CC列表（aid = $1）。 
+tracker_common_artifact err_cc_id错误CC ID $1不属于工件ID
+tracker_common_artifact err_del_cc删除CC ID $1：$2时出错
+tracker_common_artifact cc_remove已被删除
+tracker_common_artifact invalid_art无效工件＃$1
+tracker_common_artifact depend_add_fail对于工件＃$1的依赖关系增加失败
+tracker_common_artifact depend_removed依赖关系删除
+tracker_common_artifact bad_field_permission_submission您不能提交字段$1。
+tracker_common_artifact bad_field_permission_update您不能更新字段$1。
+tracker_common_artifact bad_field_value值$2不是字段$1的有效值。
+tracker_common_artifact followup_upd_succ后续注释更新成功。
+tracker_common_artifact followup_upd_fail后续注释更新失败。
+tracker_common_artifact mandatory_not_set无法提交工件：隐藏的某些必填字段已设置为“无”值，请联系跟踪管理员。 #
+#-----------------------------------------------
+# Script: SF/common/tracker/ArtifactFactory.class.php
+#
+tracker_common_factory	db_err	数据库错误
+#
+#-----------------------------------------------
+# Script: SF/common/tracker/ArtifactField.class.php
+#
+tracker_common_field unkown未知的显示类型
+tracker_common_field not_found（错误 - 未找到）
+tracker_common_field name_requ需要字段名称，数据类型或显示类型。
+tracker_common_field upd_err更新artifact_field（$1- $2）期间的错误：$3
+tracker_common_field use_err更新时的错误artifact_field_usage（$1- $2）：$3
+tracker_common_field del_err删除中的错误artifact_field（$1- $2）：$3
+tracker_common_field use_del_err删除中的错误artifact_field_usage（$1- $2）：$3
+tracker_common_field vl_ins_err在插入artifact_field_value_list（$1- $2- $3）期间错误：$4
+tracker_common_field vl_upd_err更新时的错误artifact_field_value_list（$1- $2- $3）：$4
+tracker_common_field vl_del_err删除中的错误artifact_field_value_list（$1- $2- $3）：$4
+tracker_common_field val_requ需要值名称。
+tracker_common_field val_exist此值id已存在。
+tracker_common_field val_id_requ需要值id和值名称。#
+#-----------------------------------------------
+# Script: SF/common/tracker/ArtifactFieldFactory.class.php
+#
+tracker_common_field_factory missing缺少字段：$1。不允许上述列出的字段的空值。
+tracker_common_field_factory use_ins_err插入artifact_field_usage（$1- $2）期间的错误：$3
+tracker_common_field_factory vl_ins_err插入artifact_field_value_list（$1- $2）期间的错误：$3
+tracker_common_field_factory label_requ需要字段标签，数据类型或显示类型。
+tracker_common_field_factory ins_err插入artifact_field（$1- $2）期间的错误：$3
+tracker_common_field_factory ugroup_not_exist字段$1无法绑定到未知的用户组$2#
+#-----------------------------------------------
+# Script: SF/common/tracker/ArtifactFile.class.php
+#
+tracker_common_file无效无有效文件
+tracker_common_file name_requ文件名，类型，大小和数据都是必需的
+tracker_common_file del_err无法删除
+tracker_common_file invalid_id无效的ArtifactFile ID#
+#-----------------------------------------------
+# Script: SF/common/tracker/ArtifactFromID.class.php
+#
+tracker_common_fromid not_create无法创建ArtifactType
+tracker_common_fromid not_create_a无法创建文件#
+#-----------------------------------------------
+# Script: SF/common/tracker/ArtifactGroup.class.php
+#
+tracker_common_group name_requ名称为必需
+tracker_common_group无效的ArtifactGroup ID#
+#-----------------------------------------------
+# Script: SF/common/tracker/ArtifactReport.class.php
+#
+tracker_common_report name_requ名称，描述和范围是必需的
+tracker_common_report not_found fetchData报告未找到#
+#-----------------------------------------------
+# Script: SF/common/tracker/ArtifactReportFactory.class.php
+#
+tracker_common_reportfactory ins_err 插入artifact_report（$1- $2）期间的错误：$3
+tracker_common_reportfactory f_ind_err   插入artifact_report_field（$1- $2）期间的错误：$3#
+#-----------------------------------------------
+# Script: SF/common/tracker/Artifacts.class.php
+#
+tracker_common_artifacts	not_get无法获取工件：$1
+#
+#-----------------------------------------------
+# Script: SF/common/tracker/ArtifactType.class.php
+#
+tracker_common_type invalid无有效组对象
+tracker_common_type no_match数据库结果中的Group_id与组对象不匹配
+tracker_common_type perm_fail无法创建用户权限：$1
+tracker_common_type name_requ需要名称，说明和短名称。
+tracker_common_type invalid_shortname无效的短名称：$1。请仅使用字母数字字符或未保留的引用。按“返回”按钮并更新此信息。
+tracker_common_type invalid_templ无效的group_id_template
+tracker_common_type load_fail无法加载新的跟踪器
+tracker_common_type invalid_at无效的ArtifactTypeID
+tracker_common_type invalid_date延迟日期不能在过去
+tracker_common_type perm_err更新用户权限时出错 -  user_id = $1  -  $2
+tracker_common_type invalid_name错误无效的用户名'$1'
+tracker_common_type copy_fail插入通知事件时出错
+tracker_common_type notif_fail插入通知角色时出错
+tracker_common_type del_err错误删除依赖项$1：$2
+tracker_common_type none_found找不到 
+tracker_common_type invalid_mail“$1”不是有效的电子邮件地址
+tracker_common_type no_view_permission您没有查看此跟踪器的权限。
+tracker_common_type shortname_already_exists短名称“$1”已被使用。请使用另一个。按“返回”按钮并更新此信息。
+tracker_common_type name_already_exists跟踪器名称已被使用。请使用另一个。按“返回”按钮并更新此信息。
+#
+#-----------------------------------------------
+# Script: SF/common/tracker/ArtifactTypes.class.php
+#
+tracker_common_types err_bugs为Bug Tracker创建ArtifactType时出错
+tracker_common_types错误Bugs
+tracker_common_types bug_desc错误跟踪系统
+tracker_common_types bug_ex界面（示例）
+tracker_common_types v1_ex v1.0（示例）
+tracker_common_types fail_bug无法创建错误跟踪器：$1
+tracker_common_types err_sr创建支持跟踪器的ArtifactType时出错
+tracker_common_types sr支持请求
+tracker_common_types sr_desc技术支持跟踪系统
+tracker_common_types sr_ex安装问题（示例）
+tracker_common_types fail_sr无法创建支持跟踪器：$1
+tracker_common_types err_patch为修补程序跟踪器创建ArtifactType时出错
+tracker_common_types补丁补丁
+tracker_common_types patch_desc补丁跟踪系统
+tracker_common_types patch_ex1小部件（示例）
+tracker_common_types patch_ex2不稳定（示例）
+tracker_common_types fail_patch无法创建修补程序跟踪器：$1
+tracker_common_types err_fr创建功能跟踪器的ArtifactType时出错
+tracker_common_types fr功能请求
+tracker_common_types fr_desc功能请求跟踪系统
+tracker_common_types fr_ex1界面改进（示例）
+tracker_common_types fr_ex2下一个版本（示例）
+tracker_common_types fail_fr无法创建功能请求跟踪器：$1
+tracker_common_types role_SUBMITTER_short_desc提交者
+tracker_common_types role_ASSIGNEE_short_desc受让人
+tracker_common_types role_CC_short_desc CC
+tracker_common_types role_COMMENTER_short_desc评论者
+tracker_common_types role_SUBMITTER_desc提交工件的人
+tracker_common_types role_ASSIGNEE_desc分配了工件的人
+tracker_common_types role_CC_desc在CC列表中的人
+tracker_common_types role_COMMENTER_desc曾经发布后续评论的人
+tracker_common_types event_ROLE_CHANGE_short_desc角色已更改
+tracker_common_types event_NEW_COMMENT_short_desc新评论
+tracker_common_types event_NEW_FILE_short_desc新附件
+tracker_common_types event_CC_CHANGE_short_desc CC更改
+tracker_common_types event_CLOSED_short_desc工件已关闭
+tracker_common_types event_PSS_CHANGE_short_desc PSS更改
+tracker_common_types event_ANY_OTHER_CHANGE_short_desc任何其他更改
+tracker_common_types event_I_MADE_IT_short_desc我做到了
+tracker_common_types event_NEW_ARTIFACT_short_desc新工件
+tracker_common_types event_ROLE_CHANGE_desc我被添加到或从此角色中删除
+tracker_common_types event_NEW_COMMENT_desc添加了一个新的后续注释
+tracker_common_types event_NEW_FILE_desc添加了一个新的文件附件
+tracker_common_types event_CC_CHANGE_desc添加/删除新的CC地址
+tracker_common_types event_CLOSED_desc工件已关闭
+tracker_common_types event_PSS_CHANGE_desc优先级，状态，严重性更改
+tracker_common_types event_ANY_OTHER_CHANGE_desc上述任何更改
+tracker_common_types event_I_MADE_IT_desc我是更改的作者
+tracker_common_types event_NEW_ARTIFACT_desc已提交新的工件
+tracker_common_types event_COMMENT_CHANGE_desc后续注释已更改#
+# Tracker permissions
+#
+#
+tracker_admin_permissions fields_no_ugroups <div> <em>没有用户组可以访问此跟踪器</ em> </ div>
+tracker_admin_permissions fields_tracker_intro <div> </ div>
+tracker_admin_permissions fields_tracker_toggle_field <div>您可以<a href='$1'>切换到“栏位”视图</a>，方法是点击下表中的栏位标签。</ div>
+tracker_admin_permissions fields_tracker_toggle_group <div>您可以<a href='$1'>切换到“用户组”视图</a>，方法是单击下表中的组名。</ div>
+tracker_admin_permissions ignore_g_anon_read忽略组'$1'，因为“$2”被允许读取
+tracker_admin_permissions ignore_g_anon_submit忽略“$1”组，因为“$2”被允许提交
+tracker_admin_permissions ignore_g_anon_update忽略“$1”组，因为“$2”被允许更新
+tracker_admin_permissions ignore_g_regis_read忽略组'$1'，因为“$2”被允许读取
+tracker_admin_permissions ignore_g_regis_submit忽略“$1”组，因为允许“$2”提交
+tracker_admin_permissions ignore_g_regis_update忽略“$1”组，因为“$2”被允许更新
+tracker_admin_permissions ignore_g_tech_update忽略“$1”组，因为“$2”被允许更新
+tracker_admin_permissions ignore_ug_during_copy请注意，一些原始跟踪器权限未被复制
+tracker_admin_permissions权限访问权限
+tracker_admin_permissions TRACKER_ACCESS_FULL可以访问所有工件
+tracker_admin_permissions TRACKER_ACCESS_ASSIGNEE可以访问分配给组的工件
+tracker_admin_permissions TRACKER_ACCESS_SUBMITTER可以访问组提交的工件
+tracker_admin_permissions TRACKER_ACCESS_ASSIGNEE_AND_TRACKER_ACCESS_SUBMITTER可以访问分配给组或由组提交的工件
+tracker_admin_permissions TRACKER_FIELD_SUBMIT可以提交
+tracker_admin_permissions TRACKER_FIELD_READ只读
+tracker_admin_permissions TRACKER_FIELD_UPDATE更新
+tracker_admin_permissions TRACKER_NONE  - 
+tracker_admin_permissions tracker_ignore_g_anon_full忽略组'$1'，因为'$2'可以访问所有工件
+tracker_admin_permissions tracker_ignore_g_regis_full忽略组'$1'，因为'$2'可以访问所有工件
+tracker_admin_permissions tracker_ignore_g_regis_assignee忽略组'$1'，因为'$2'可以访问分配给组的工件
+tracker_admin_permissions tracker_ignore_g_regis_submitter忽略组'$1'，因为'$2'可以访问组提交的工件
+tracker_admin_permissions tracker_ignore_g_regis_submitter_assignee忽略组'$1'，因为'$2'可以访问由组分配或提交的工件
+tracker_admin_permissions tracker_intro <div> </ div>
+tracker_admin_permissions ugroup用户组
+tracker_admin_permissions ug_may_have_no_access <div> *表示可能无法访问跟踪器的用户组（不设<a href="$1">跟踪者权限</a>）。</ div>#
+# Tracker field dependencies
+#
+#
+tracker_field_dependencies noscript启用JavaScript的浏览器是管理字段依赖关系的必需条件。
+tracker_field_dependencies choose_field  - 选择字段
+#tracker_field_dependencies if_then如果将字段％1选择为％2，则字段％3将提出％4
+tracker_field_dependencies源资料来源：
+tracker_field_dependencies target目标：
+tracker_field_dependencies已成功保存
+tracker_field_dependencies inline_help选择源字段和目标字段以编辑它们之间的依赖关系。#
+#--------------------------------------
+# Tracker fieldsets
+# Script: SF/www/tracker/admin/fieldset.php
+#
+tracker_admin_fieldset tracker_admin跟踪管理
+tracker_admin_fieldset fieldset_admin字段设置管理#
+#-----------------------------------------------
+# Script: SF/common/tracker/ArtifactFieldSet.class.php
+#
+tracker_common_fieldset invalid_at无效的ArtifactFieldSetID
+tracker_common_fieldset name_requ字段集标签是必需的。
+tracker_common_fieldset fieldset_default_lbl_key详细信息
+tracker_common_fieldset fieldset_default_desc_key工件的详细信息
+tracker_common_fieldset fieldset_default_bugs_lbl_key详细信息
+tracker_common_fieldset fieldset_default_bugs_desc_key该bug的详细信息
+tracker_common_fieldset fieldset_status_bugs_lbl_key状态
+tracker_common_fieldset fieldset_status_bugs_desc_key错误的状态
+tracker_common_fieldset fieldset_default_patches_lbl_key详细信息
+tracker_common_fieldset fieldset_default_patches_desc_key补丁的详细信息
+tracker_common_fieldset fieldset_patchtext_patches_lbl_key在此处粘贴补丁（仅限文本）
+tracker_common_fieldset fieldset_patchtext_patches_desc_key在此处粘贴补丁（仅限文本）或将其作为文件附加到“附件”部分
+tracker_common_fieldset fieldset_status_patches_lbl_key状态
+tracker_common_fieldset fieldset_status_patches_desc_key补丁的状态
+tracker_common_fieldset fieldset_default_SR_lbl_key详细信息
+tracker_common_fieldset fieldset_default_SR_desc_key支持请求的详细信息
+tracker_common_fieldset fieldset_status_SR_lbl_key状态
+tracker_common_fieldset fieldset_status_SR_desc_key支持请求的状态
+tracker_common_fieldset fieldset_default_tasks_lbl_key详细信息
+tracker_common_fieldset fieldset_default_tasks_desc_key任务的详细信息
+tracker_common_fieldset fieldset_status_tasks_lbl_key状态
+tracker_common_fieldset fieldset_status_tasks_desc_key任务的状态
+tracker_common_fieldset fieldset_default_slmbugs_lbl_key详细信息
+tracker_common_fieldset fieldset_default_slmbugs_desc_keySalomébug的详细信息
+tracker_common_fieldset fieldset_salome_slmbugs_lbl_keySalomé
+tracker_common_fieldset fieldset_salome_slmbugs_desc_keySalomé字段集
+tracker_common_fieldset fieldset_status_slmbugs_lbl_key状态
+tracker_common_fieldset fieldset_status_slmbugs_desc_keySalomébug的状态
+tracker_common_fieldset fieldset_scrum_status_lbl_key状态
+tracker_common_fieldset fieldset_scrum_status_desc_key与SCRUM相关的状态
+tracker_common_fieldset fieldset_scrum_description_lbl_key描述
+tracker_common_fieldset fieldset_scrum_description_desc_key故事描述#
+#-----------------------------------------------
+# Script: SF/common/tracker/ArtifactFieldSetFactory.class.php
+#
+tracker_common_fieldset_factory delete_only_empty_fieldset不允许删除非空字段集。
+tracker_common_fieldset_factory label_requ需要字段集标签。
+tracker_common_fieldset_factory ins_err插入artifact_field_set（$1- $2）期间的错误：$$3 ($1-$2): $3
+

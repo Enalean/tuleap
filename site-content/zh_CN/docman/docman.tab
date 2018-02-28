@@ -1,0 +1,128 @@
+#/**
+#  *
+#  * Doc Manager scripts message catalog (English)
+#  *
+#  * Codendi 
+#  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+#  * http://www.codendi.com
+#  *
+#  *
+#  */
+#
+#
+#-----------------------------------------------
+# Script: SF/www/docman/index.php
+#
+docman_index	title		文档$1
+docman_index	header		项目文档
+docman_index	nodoc		尚未公布文件。
+docman_index	description	描述
+#
+#-----------------------------------------------
+# Script: SF/www/docman/display_doc.php
+#
+docman_display_doc	error_nodoc	文件$1未发现：文件不存在或已被删除。
+docman_display_doc	error_wrongid	没有要显示的文档-无效的文档号。
+docman_display_doc	warning_different_group	请注意，该文件属于项目“$1”。
+#
+#-----------------------------------------------
+# Script: SF/www/docman/doc_utils.php
+#
+docman_doc_utils	error_nogroup	目前没有文件组存在。
+docman_doc_utils	error_nodocyet	还没有文件。
+docman_doc_utils	group_id	组ID
+docman_doc_utils	group_name	组名
+docman_doc_utils	delete_ask	删除吗？
+docman_doc_utils	delete_confirm	删除此文档组？
+docman_doc_utils	delete_doc_confirm	永久删除此文档？
+docman_doc_utils	doc_id	文档ID
+docman_doc_utils	doc_name	标题
+docman_doc_utils	create_date	创建日期
+docman_doc_utils	error_proj	只有项目可以使用文档管理器
+docman_doc_utils	error_off	此项目已关闭文档管理器
+docman_doc_utils	submit_doc	提交新的文件
+docman_doc_utils	admin管理员
+docman_doc_utils	edit_groups	编辑文档组
+docman_doc_utils	rank_in_group	该组
+docman_doc_utils	rank	屏幕上的秩
+docman_doc_utils	permissions	权限
+docman_doc_utils	define_perms	[定义权限]
+docman_doc_utils	edit_perms	[编辑权限]
+docman_doc_utils	doc_group	文件组
+#
+#-----------------------------------------------
+# Script: SF/www/docman/download.php
+#
+docman_download	error_nofile	这里没有什么-文件有空大小
+docman_download	error_nodoc	找不到与文档ID关联的文件#$1
+#
+#-----------------------------------------------
+# Script: SF/www/docman/new.php
+#
+docman_new	error_noproj	没有选择有效的项目（组ID）
+docman_new	error_size	文件必须是非NULL和小于$1的字符长度	
+docman_new	title_new	新提交的文件
+docman_new	error_dbinsert	发生了一个错误	
+docman_new	insert_ok	您的文档已被添加
+docman_new	title_add	添加新的文件	
+docman_new	header_add	添加新的文件	
+docman_new	not_logged	您没有登录，并不会给予信贷。
+docman_new	no_docgroup	在提交新文档之前，必须指定文档组。点击 <a href="$1">Admin</a></b> 编辑项目文档组。
+docman_new	doc_title	文件标题
+docman_new	doc_desc	说明：（HTML标签OK）
+docman_new	doc_upload	上载文件
+docman_new	max_size_msg	（最大上传文件大小为1字节）
+docman_new	doc_paste	或粘贴文档（以HTML格式）
+docman_new	doc_group	文件属于
+docman_new	mandatory	标有$ 1的字段是强制性的。
+docman_new	error_dbupdate	错误- SQL错误= $ 1
+#
+#-----------------------------------------------
+# Script: SF/www/docman/admin/index.php
+#
+docman_admin_index	error_perm	你需要的文档管理权限才能访问此网页	
+docman_admin_index	title	文件管理器管理
+docman_admin_index	title_edit	编辑文档
+docman_admin_index	doc_edit	或编辑文档的地方
+docman_admin_index	msg_group_del	删除文件组（doc_group: $1)
+docman_admin_index	msg_group_del_fail	文档组未删除。无法删除仍在其下分组的文档的组。
+docman_admin_index	title_group_edit	文件组编辑
+docman_admin_index	header_group_edit	编辑一个文件组
+docman_admin_index	feedback_group_updated	文件组更新
+docman_admin_index	error_nodocgroup	没有选择有效的文档组
+docman_admin_index	feedback_doc_uploaded	文件上传 
+docman_admin_index	feedback_doc_updated	文件更新
+docman_admin_index	error_nodoc	无法更新-文档不存在，或不属于该文档组。
+docman_admin_index	feedback_group_added	添加文件组
+docman_admin_index	title_group_mgt文件组管理
+docman_admin_index	header_group_mgt	文件组管理
+docman_admin_index	create_doc_group	创建文档组
+docman_admin_index	doc_group_list	现有的文件组
+docman_admin_index	header_doc_mgt	编辑文件
+docman_admin_index	doc_deleted	文件的删除
+docman_admin_index	error_deleting_doc	误删除的文件
+docman_admin_index	error_updating_perm	错误：无法更新权限
+docman_admin_index	perm_reset	权限重置为默认值
+#
+#-----------------------------------------------
+# Script: SF/www/docs/site/index.php
+#
+docs_site_index	title	ysite文档
+#-----------------------------------------------
+# Script: SF/www/docs/site/about_codendi.php
+#
+docs_site_about	title	关于1美元的网站
+#
+#-----------------------------------------------
+# Script: SF/www/docman/admin/editdocgrouppermissions.php
+#
+docman_admin_editdocgrouppermissions	title	编辑文档组权限
+docman_admin_editdocgrouppermissions	introduction	您可以为文档组设置特定权限。这些权限适用于属于此文档组的所有文档。但您也可以对特定文档设置不同权限。默认情况下，访问文档组将授予任何访问者。
+docman_admin_editdocgrouppermissions	instructions	选择授予此文档组访问权限的用户组：
+#
+#-----------------------------------------------
+# Script: SF/www/docman/admin/editdocpermissions.php
+#
+docman_admin_editdocpermissions	title	编辑文档的权限
+docman_admin_editdocpermissions	doc_title	编辑文档的权限
+docman_admin_editdocpermissions	instructions	选择授予此文档访问权限的用户组：<br><b>Note</b>:如果没有为文档定义权限，则它与 <a href="$1">母文件组</a>. <br>当为文档定义权限时，它重写为文档组定义的权限。

@@ -1,0 +1,145 @@
+#/**
+#  *
+#  * Personal Home Page message catalog (English)
+#  *
+#  * Codendi
+#  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+#  * http://www.codendi.com
+#  *
+#  *
+#  */
+#
+#
+#-----------------------------------------------
+# Script: SF/www/my/index.php
+#
+my_index	my_dashboard	我的仪表板
+my_index	账户维护 	 我的账户
+my_index	title      	关于$1的私人页面
+my_index	你的私人网站包含错误列表 [<b>A</b>]做标记或者[<b>S</b>]不是你手写的，任务就将被以百分比的形式结束，论坛和你数据组成员中的项目包将会被检测到<P>
+my_index	err_artf	创建ArtifactTypeFactory失败
+my_index	my_bugs     我的错误
+my_index	my_srs	我的支持请求
+my_index	my_forums	监控论坛
+my_index	my_forums_msg	<b>你并没有在监控论坛</b><P>如果你在监控论坛, 你将会发送新的邮件到邮箱表, 并且附送新消息的链接.<P>你可以监控论坛通过点击讨论论坛中合适的菜单项目.<BR>&nbsp;
+my_index	stop_forum	停止监控论坛?
+my_index	my_files	监控文件包
+my_index	my_files_msg	<b>你没有在监控文件</b><P>如果你在监控文件, 你将会被通过邮件发送一条带有链接的新版通知可以连接到我们下载服务器的新文件.<P>你可以监视文件通过访问项目的 &quot;摘要页面&quot;并且点击文件部件上合适的图标.<BR>&nbsp;
+my_index	stop_file	停止监控这个包?
+my_index	stop_monitor  停止监控
+my_index	my_tasks	我的任务
+my_index	my_arts	我的工件
+my_index	display_arts	展示工件:
+my_index	my_bookmarks	我的书签
+my_index	no_bookmark	    你目前没有保存任何书签
+my_index	edit_link	    编辑
+my_index	del_bookmark	你确定删除这个书签吗?
+my_index	add_bookmark	添加一个书签
+my_index	my_projects	    我的项目
+my_index	not_member	    你并不是该项目成员
+my_index	admin_link	    执行
+my_index	quit_proj	    中断项目?
+my_index	priv_proj	<em>个人项目</em>
+my_index	my_projects_legend	图例:
+#my_index	a	A
+#my_index	s	S
+#my_index	as	AS
+my_index	no_info	不要显示工件
+my_index	a_info	通过我被分配 [A]
+my_index	s_info	通过我被提供 [S]
+my_index	as_info	通过我被分配或者被提供 [AS]
+my_index	my_admin	待定使用者、项目和消息
+my_index	my_admin_non_super	待定项目
+my_index	no_bug	现在没有错误
+my_index	no_task	现在没有任务
+my_index	no_support	现在不支持强求
+my_index	my_latest_svn_commit	最新的SVN保证
+my_index	my_latest_svn_commit_desc	列出你做过的项目的SVN保证.
+my_index	my_latest_svn_commit_on	对
+my_index	my_latest_svn_commit_by	通过
+my_index	my_latest_svn_commit_nb_prefs	SVN保证的最大人数值来展示每个项目
+my_index	send_mail	联系$1项目的成员
+my_index	mail_sent	    发送邮件给$1项目的所有成员
+my_index	mail_not_sent	不发送邮件给$1项目的成员
+my_index	subject_label	主题
+my_index	body_label	    消息主体
+my_index	mass_mail_label	大量邮件给项目管理者
+my_index	massmail_not_sent_max_users	你已经超过了($1)发送消息的最大字数限度，邮件没有发送.
+my_index	massmail_form_title	发送邮件给这个项目的成员
+
+#
+#-----------------------------------------------
+# Script: SF/www/my/my_utils.php
+#
+my_utils	collapse	衰竭
+my_utils	expand	货站
+my_utils	new_items	新建$1
+#
+#-----------------------------------------------
+# Script: SF/www/my/bookmark_add.php
+#
+bookmark_add	title	添加一个新书签
+bookmark_add	message	为 <b>'$1'</b>添加一个新书签并且标题为 <b>'$2'</b>.
+bookmark_add	visit	访问书签页面
+bookmark_add	edit	编辑这个书签
+bookmark_add	bkm_url	书签地址
+bookmark_add	bkm_title	书签标题
+bookmark_add	favorite	我最喜欢的网站
+bookmark_add	invalid_uri	这个地址无效.
+#
+#-----------------------------------------------
+# Script: SF/www/my/bookmark_delete.php
+#
+bookmark_delete	title	删除书签
+bookmark_delete	deleted	书签被删除!
+#
+#-----------------------------------------------
+# Script: SF/www/my/bookmark_edit.php
+#
+bookmark_edit	title	编辑书签
+#
+#-----------------------------------------------
+# Script: SF/www/my/rmproject.php
+#
+bookmark_rmproject	err_notmember	你不是项目成员.
+bookmark_rmproject	err_removing	你不能移出团队管理者.移除这个人的管理员权限在使用者允许浏览之前试图把他们移除这个项目
+bookmark_rmproject	mail_subject	$1: $2被从$3中移出
+bookmark_rmproject	mail_body  这个消息将被发送到管理员的\n ID为'$1' 用户ID 为'$2'被选择的项目中\n移除他或她自己从这个项目中。\n\n 根据这个链接可以看到你的项目中现在的成员\n: '$3' \n\n
+#
+#-----------------------------------------------
+# Script: SF/www/my/redirect.php
+#
+my_redirect	page_title	更改至
+my_redirect	return_to	<p>目前被访问的页面正在加载. 如果没有, 尝试 <a href="$1">$1</a>.</p>
+my_redirect	default_txt	你处于重定向页面. 你可以找到有用的链接在 <a href="/my">私人页面</a>.
+#
+#-----------------------------------------------
+# Script: SF/www/my/stop_monitor.php
+#
+my_monitored_forum	stop_monitoring	监控已经被关掉. 你将不会再收到来自论坛的邮件.
+my_monitored_forum	title	停止监控论坛.
+
+my_tour	welcome_title	欢迎来到Tuleap!
+my_tour	welcome	很高心见到你$1! 这是你第一次使用Tuleap, 所以我会告诉你怎么使用.
+my_tour	my_personal_page_title	我的私人页面
+my_tour	my_personal_page	这是你的私人页面(你在哪).你可以通过自己的数据找到私人的仪表板 .
+my_tour	projects_title	项目
+my_tour	projects	这是可以创建你的第一个项目的标签.你也可以通过它进入你的项目.
+my_tour	help_title	帮助
+my_tour	help	你可以在这里找到一些像是联系点和参考文献等助手.
+my_tour	search_title	全局搜素
+my_tour	search	这是Tuleap's的全局搜索. 你可以通过项目和服务业查询数据.
+my_tour	user_menu_title	使用者菜单
+my_tour	user_menu	你将会在这里找到你的可以修改的比如化身、主题、上传密码等账号信息
+my_tour	end_tour_title	现在你可以去使用Tuleap
+my_tour	end_tour	    欢迎导语即将结束.祝你使用Tuleap愉快.
+
+fp_bp_unification_tour	new_style_title	新风格
+fp_bp_unification_tour	new_style	这是导航条的新外观.你可能也注意到Tuleap的部分页面风格被改变.
+fp_bp_unification_tour	personal_page_title	我的私人页面
+fp_bp_unification_tour	personal_page	现在你可以通过鼠标点击自己的名字进入私人页面.
+fp_bp_unification_tour	account_title	我的账号
+fp_bp_unification_tour	account	Your account preferences and settings are accessible by clicking on this cog.
+  你的账号设置和设置选项一致将是点击进入的条件
+fp_bp_unification_tour	be_prepared_title	它并没有结束!
+fp_bp_unification_tour	be_prepared	新的特征即将到来. 保持睁开你的眼睛…

@@ -1,0 +1,63 @@
+#/**
+#  *
+#  * Top level scripts message catalog (English)
+#  *
+#  * Codendi
+#  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+#  * http://www.codendi.com
+#  *
+#  *
+#  */
+#
+#-----------------------------------------------
+# Script: SF/www/contact.php
+#
+contact	title	Contact Us
+#
+#-----------------------------------------------
+# Script: SF/www/404.php
+#
+404	title	Requested Page not Found (Error 404)
+404	no_archive	No messages archived
+404	no_page	PAGE NOT FOUND
+#
+#-----------------------------------------------
+# Script: SF/www/index.php
+#
+homepage	title  欢迎
+homepage	news_title	最新消息
+homepage	news_title2	最新消息 — RSS格式
+homepage	discover_tuleap_awesomeness	发现Tuleap特别迷人<strong>迷死</strong>
+homepage	latest_news	最新消息
+homepage	nb_project_label	项目
+homepage	nb_user_label	用户
+homepage	nb_projects_label	项目
+homepage	nb_users_label	用户
+homepage	sign_in_title	签到
+homepage	username_placeholder	用户名
+homepage	password_placeholder	密码
+homepage	sign_in_submit	登录
+homepage	forgot_password	 哎呀，我忘记我的密码了
+homepage	sign_in_or	或者
+homepage	not_a_member	非会员？
+homepage	create_account	创建账户
+homepage	register	寄存器
+homepage	welcome_back	欢迎回来
+homepage	welcome_title	Hello,<br> 欢迎来到Toleap.
+homepage	my_personal_page	我的个人页面
+#
+#-----------------------------------------------
+# Script: SF/www/sendmessage.php
+#
+sendmessage	title	发送消息到$1
+sendmessage	message	完全填写完整或接收机可能无法响应。<P><span class="highlight"><B>如果你正在写帮助：</B>你阅读网页文档了吗？你包含了你的 <B>用户姓名？</B> 如果你正在写一个项目 ，包含你的 <B>项目ID</B> (<B>group_id</B>) 和 <B>和项目名称</B>。</span>
+sendmessage	err_nouser	用户不存在。
+sendmessage	err_host	你只能发送到地址@$1
+sendmessage	err_noparam	一些变量没有被提供（用户ID或者电子邮件地址）
+sendmessage	title_sent	信息发送到$1
+sendmessage	email	你的邮件地址
+sendmessage	name	你的名字
+sendmessage	subject	主题
+sendmessage	message_body	信息
+sendmessage	send_btn	发送消息
+sendmessage	invalid_msg	你的消息无效，你不可以发送默认消息或者一个空的消息。

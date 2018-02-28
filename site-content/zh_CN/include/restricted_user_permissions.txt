@@ -1,0 +1,46 @@
+<?php
+//
+// Copyright (c) Enalean SAS, 2011-2015. All rights reserved
+// Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+
+// Restricted users are only granted access to their projects pages
+// Still, there are a few possible customizations proposed here.
+
+// Select forbidden URLs
+
+//$forbidden_url = array( 
+//          '/softwaremap/', // browsable software map
+//          '/new',         // list of the newest releases made on the site
+//          '/search',      // search for people, projects, and artifacts in trackers!
+//          '/people/',      // people skills and profile
+//          '/project/register.php',    // Register a new project
+//          '/export',      //  XML feeds
+//          '/info.php'      // PHP info
+//          );
+        
+// Use true/false for those options
+// (default values displayed below)
+
+//$allow_welcome_page=false; // Allow access to welcome page 
+//$allow_news_browsing=false;      // Allow restricted users to read/comment news, including for their project
+//$allow_user_browsing=false;      // Allow restricted users to access other user's page (Developer Profile)
+
+// The following variables define access rules for the support project(s)
+// For instance $allow_access_to_project_forums = array(105) will give
+// access to project number 105 forums to all users (restricted or not).
+
+// Default support project is project 1.
+
+//$allow_access_to_project_forums      = array(1); // Support project help forums are accessible through the 'Discussion Forums' link
+//$allow_access_to_project_trackers    = array(1); // Support project trackers are used for support requests
+//$allow_access_to_project_docs        = array(1); // Support project documents and wiki (Note that the User Guide is always accessible)
+//$allow_access_to_project_mail        = array(1); // Support project mailing lists (Developers Channels)
+//$allow_access_to_project_frs         = array(1); // Support project file releases
+//$allow_access_to_project_refs        = array(1); // Support project references
+//$allow_access_to_project_news        = array(1); // Support project news
+//$allow_access_to_project_trackers_v5 = array(1); //Support project trackers v5 are used for support requests
+
+// List of fully public projects (same access for restricted and unrestricted users)
+//$public_projects = array(); 
+
+?>

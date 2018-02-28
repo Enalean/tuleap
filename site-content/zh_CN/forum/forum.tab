@@ -1,0 +1,171 @@
+#/**
+#  *
+#  * forum scripts message catalog (English)
+#  *
+#  * Codendi
+#  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+#  * http://www.codendi.com
+#  *
+#  *
+#  */
+#
+#-----------------------------------------------
+# Script: SF/www/forum/admin/index.php
+#
+forum_admin_index	msgs_del	$1 消息删除
+forum_admin_index	msg_not_in_group	消息不在你的组里
+forum_admin_index	msg_not_found	找不到消息
+forum_admin_index	upd_err	Error 更新论坛消息
+forum_admin_index	upd_success	论坛消息更新成功
+forum_admin_index	del_a_msg	删除一条消息
+forum_admin_index	delete_warn	警告！你即将永久删除邮件及其所有后续操作
+forum_admin_index	enter_msg_id	输入消息ID
+forum_admin_index	add_a_forum	添加一个论坛
+forum_admin_index	existing_forums	论坛已存在
+forum_admin_index	forum_name	论坛名字
+forum_admin_index	description	描述
+forum_admin_index	is_public	公开吗？
+forum_admin_index	monitor	想监控这个论坛吗？
+forum_admin_index	monitor_recommendation	作为论坛创建者<u>强烈建议</u> 您监控此论坛，以便通过电子邮件通知发布到论坛的任何新消息
+forum_admin_index	once_added_no_delete	一旦你添加了一个论坛，它就不能被修改或者删除
+forum_admin_index	add_this_forum	添加这个论坛
+forum_admin_index	change_status	更改论坛状态
+forum_admin_index	forum_not_found	找不到论坛
+forum_admin_index	none_found_for_group	这个项目没有论坛
+forum_admin_index	update_f_status	更新论坛状态
+forum_admin_index	private_explain	你可以从这里做私人论坛。请注意，私人论坛仍然可以被你的项目的成员看到，而不是公众。
+forum_admin_index	forum	论坛
+forum_admin_index	update	更新
+forum_admin_index	deleted	已删除
+forum_admin_index	forum_admin	论坛管理
+forum_admin_index	add_forum	添加论坛
+forum_admin_index	del_msg	删除信息
+forum_admin_index	update_forum_status	更新论坛信息/状态
+forum_admin_index	params_missing	缺少论坛名称和描述，请按“返回”按钮并完成此信息
+#
+#-----------------------------------------------
+# Script: SF/www/forum/expand.php
+#
+forum_expand	expand_threads	展开/折叠线程
+forum_expand	prefs	Preference 设定
+forum_expand	now_expand	线程现在将被展开
+forum_expand	now_collaps	线程现在将被折叠
+#
+#-----------------------------------------------
+# Script: SF/www/forum/forum.php
+#
+forum_forum	by	通过
+forum_forum	reply	回复
+forum_forum	forum_restricted	论坛被限制
+forum_forum	no_msg	$1中没有信息
+forum_forum	nested	嵌套
+forum_forum	flat	平面
+forum_forum	threaded	看语境
+forum_forum	no_comments	没有注释
+forum_forum	show	显示$1
+forum_forum	change_view	更改视图
+forum_forum	thread	看语境
+forum_forum	author	作者
+forum_forum	date	日期
+forum_forum	prev_msg	以前的信息
+forum_forum	next_msg	下一条信息
+forum_forum	start_new_thread	开始一个新的线程
+forum_forum	choose_forum_first	错误 — 先选择一个论坛
+#
+#-----------------------------------------------
+# Script: SF/www/forum/forum_utils.php
+#
+forum_forum_utils	news	新闻
+forum_forum_utils	news_not_found	错误 — 找不到这个新闻项目
+forum_forum_utils	posted_by	发表于
+forum_forum_utils	summary	概要
+forum_forum_utils	proj_latest_news	项目最新消息
+forum_forum_utils	discuss_forum	讨论论坛
+forum_forum_utils	stop_monitor	停止监控论坛
+forum_forum_utils	monitor	监控论坛
+forum_forum_utils	monitor_thread	线程监控面板
+forum_forum_utils	save_place	保存地点
+forum_forum_utils	start_thread	开始新的线程
+forum_forum_utils	admin	管理
+forum_forum_utils	forum_monitored	论坛已经被监控
+forum_forum_utils	insert_err	论坛监控错误
+forum_forum_utils	add_err	添加论坛“$1”错误
+forum_forum_utils	forum_added 论坛”$1”被添加
+forum_forum_utils	welcome_to	欢迎来到$1
+forum_forum_utils	not_found	未找到
+forum_forum_utils	broken_thread	断线
+forum_forum_utils	post_without_id	尝试在没有论坛账号下发送
+forum_forum_utils	include_body_and_subject	必须包括消息内容和主体
+forum_forum_utils	do_not_double_post	你似乎是重复发布了这条消息，因为它具有与之前帖子相同的主体和跟进信息
+forum_forum_utils	msg_not_exist	尝试跟踪不存在的消息
+forum_forum_utils	no_folowup_id	尝试发布到现有线程时没有后续ID存在
+forum_forum_utils	insert_fail	插入失败
+forum_forum_utils	post_failed	发布失败
+forum_forum_utils	msg_posted	消息发布
+forum_forum_utils	could_post_if_logged	你可以发布如果你已经登录
+forum_forum_utils	msg 信息
+forum_forum_utils	subj	项目
+forum_forum_utils	html_displays_as_text	html标签将在你的帖子中显示为文本
+forum_forum_utils	post_comment	发表评论
+forum_forum_utils	log_to_post	<A HREF="$1"><u>先登录</u></A><span class="highlight"> 发布信息</span>
+forum_forum_utils	read_and_respond	读取并回复这个消息
+forum_forum_utils	stop_monitor_explain 你收到此电子邮件是因为你选择监控此论坛或线程。\nTo 停止监控此论坛，登录和访问：\n $1 .\nTo 改变线程监控设置，访问：\n $2.
+forum_forum_utils	mail_sent	邮件已发送
+forum_forum_utils	mail_not_sent	邮件未发送
+forum_forum_utils	people_monitoring	用户监控
+forum_forum_utils	no_one_monitoring	没有监控
+forum_forum_utils	monitor_this_thread	<strong>监控线程</strong>
+#
+#-----------------------------------------------
+# Script: SF/www/forum/index.php
+#
+forum_index	forums_for	$1的论坛
+forum_index	no_forums	在$1中没有找到论坛
+forum_index	choose_forum	选择一个你可以浏览、搜索、和发布信息的论坛
+#
+#-----------------------------------------------
+# Script: SF/www/forum/message.php
+#
+forum_message	by	通过
+forum_message	date	日期
+forum_message	subject	项目
+forum_message	thread_view	线程视图
+forum_message	post_followup	发布此消息的跟进
+forum_message	choose_msg_first	必须先选择一个消息
+#
+#-----------------------------------------------
+# Script: SF/www/forum/monitor.php
+#
+forum_monitor	monitor 监控一个论坛
+forum_monitor	monitor_off	监控被关闭
+forum_monitor	no_mails_anymore	你将不能从这个论坛接收任何消息
+forum_monitor	now_monitoring	论坛现在被监控
+forum_monitor	get_followups	你现在将通过电子邮件跟进到整个论坛
+forum_monitor	to_turn_monitor_off	关闭监控，只需点击<B>停止监控论坛</B>.
+forum_monitor	choose_forum_first	先选择一个论坛
+#
+#-----------------------------------------------
+# Script: SF/www/forum/save.php
+#
+forum_save	save_place	保存你的地点
+forum_save	save_your_place	保存你的地点
+forum_save	insert_err	插入到forum_saved_place时出错
+forum_save	msg_highlighted	返回时新消息会被突出显示
+forum_save	update_err	更新forum_saved_place时出错
+forum_save	place_saved	你的地点被保存
+#
+#-----------------------------------------------
+# Script: SF/www/forum/thread.php
+#
+forum_thread	post_to_thread	发布到这个线程
+forum_thread	choose_thread	选择线程
+forum_thread	choose_thread_first	对不起，先选择A线程
+forum_thread	view_thread	视图线程
+#
+#-----------------------------------------------
+# Script: src/www/forum/monitor_thread.php
+#
+forum_monitor_thread	tmonitor	监控？
+forum_monitor_thread	notice	你监控了整个论坛。如果你想监控特定的线程，停止监控论坛。
+forum_monitor_thread	monitor_success	线程监控被更新
+forum_monitor_thread	monitor_fail	线程监控更新失败

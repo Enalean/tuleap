@@ -1,0 +1,33 @@
+#/**
+#  *
+#  * help scripts message catalog (English)
+#  *
+#  * Codendi
+#  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+#  * http://www.codendi.com
+#  *
+#  *
+#  */
+#
+#-----------------------------------------------
+# Script: SF/www/help/browse_bug_query_field.php
+#
+help_browse_bug_query_field	no_field	没有这样的领域：$1
+help_browse_bug_query_field	bug_search_criteria	错误搜索 - 选择标准
+help_browse_bug_query_field	field_name	领域名字
+help_browse_bug_query_field	field_type	领域类型
+help_browse_bug_query_field	description	描述
+#
+#-----------------------------------------------
+# Script: SF/www/help/browse_tracker_query_field.php
+#
+help_browse_tracker_query_field	at_not_created	ArtifactType 无法被创建
+help_browse_tracker_query_field	aff_not_created	ArtifactFieldFactory 无法被创建
+help_browse_tracker_query_field	af_not_created	ArtifactField 无法被创建
+help_browse_tracker_query_field	art_search_criteria	Artifact搜索 - 选择标准
+#
+#-----------------------------------------------
+# Script: SF/www/help/show_help.php
+#
+help_show_help	page_not_found	$1帮助系统—错误：页面找不到
+help_show_help	page_not_available	<h4>对不起，你请求的帮助页面 ($1部分) 不可用.<br> \n请通知 <a href="mailto:$2">$3 网站管理员</a></h4>

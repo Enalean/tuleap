@@ -1,0 +1,101 @@
+#
+# Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+# This file is licensed under the GNU General Public License version 2. See the file COPYING.
+#
+advanced_search	and_search	所有单词
+advanced_search	all	所有
+advanced_search	or_search	     一个单词
+advanced_search	none	没有
+advanced_search	search_button	搜索
+advanced_search	search_in	    在..搜索
+advanced_search	select	查询
+advanced_search	headline	查询一条结果
+advanced_search	no_matches_found	没有找到匹配
+advanced_search	no_matches_found_no_under_section	  没有找到匹配 - 没有可找到的节段 (检查你的权限)
+advanced_search	error_search_minlength	搜索最少必须有三个字符
+common	login	登录
+common	logout	登出
+common	myaccount	我的账户
+common	newaccount	新账户
+group	activity	     百分比进度:&nbsp;
+group	developer_info   	开发者信息
+group	developers	开发商
+group	long_bugs	    Bug追踪
+group	long_scm	   SCM 仓库
+group	long_docman	DocManager: 项目文档
+group	long_forum	公共论坛
+group	long_ftp	   匿名FTP空间
+group	long_homepage	项目主页
+group	long_mail	     邮件列表
+group	long_news	    最新的消息
+group	long_patch	维护人员
+group	long_pm	任务分配人员
+group	long_support	技术支持人员
+group	long_tracker	追踪者
+group	nodescription	这个项目没有递交一份说明书.
+group	norelease	      这个文件没有释放任何文件
+group	project_admins	   项目管理员
+group	project_developers	开发商
+group	public_area	公共区域
+group	registered	注册过的:&nbsp;
+group	short_admin	管理
+group	short_bugs	漏洞
+group	short_scm   	SCM
+group	short_docman	说明文件
+group	short_files	 文件
+group	short_forum	论坛
+group	short_homepage	 主页
+group	short_mail	列表
+group	short_main	要点
+group	short_memberlist	开发商
+group	short_news	消息
+group	short_patch	补丁
+group	short_pm	任务
+group	short_summary	摘要
+group	short_support	支持
+group	short_tracker	追踪者
+menu	about_gforge	    大约$1
+menu	account_maintenance	  维护说明
+menu	admin	管理
+menu	bookmark_page	标记页
+menu	change_my_theme	改变我的主题
+menu	compile_farm	编译环境
+menu	diary_notes	日志&amp; 笔记
+menu	discussion_forums	配置管理
+menu	documentation	网站文档
+menu	home	Home
+menu	login	登录
+menu	login_ssl  	登录渠道 SSL
+menu	logout	登出
+menu	my_account	我的账户
+menu	my_personal_page	我的私人页
+menu	administration 	管理
+menu	mypage	我的&nbsp;页
+menu	new_project	记录新的项目
+menu	new_releases	新的释放
+menu	new_user	新的用户渠道SSL
+menu	other_site_mirrors	其他的地址映射
+menu	project_admin	项目管理
+menu	project_help_wanted	  项目&nbsp;开头
+menu	project_summary		项目摘要
+menu	projectree	项目&nbsp;树状图
+menu	register_project	注册项目
+menu	reporting	   报告
+menu	search	搜索
+menu	site_status	位置状态
+menu	software_map	软件示意图
+menu	submit	提交
+menu	top_projects	首项目
+searchbox	advanced_search	高级搜索
+searchbox	docs	这个项目的文档
+searchbox	forum	这个论坛
+searchbox	forums	这个项目的讨论
+searchbox	frs	  这个项目的释放
+searchbox	full	搜索全部项目
+searchbox	news	这个项目的消息
+searchbox	people	人
+searchbox	search	搜索
+searchbox	softwaregroup	软件/团体
+searchbox	task	任务
+searchbox	tasks	这个项目的任务
+searchbox	trackers	这个项目的追踪者

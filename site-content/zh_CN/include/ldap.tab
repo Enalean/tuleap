@@ -1,0 +1,24 @@
+#/**
+#  *
+#  * LDAP class scripts message catalog (English)
+#  *
+#  * Codendi 
+#  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+#  * http://www.codendi.com
+#  *
+#  *
+#  */
+#
+#-----------------------------------------------
+# Script: SF/common/include/LDAP.class.php
+#
+ldap_class	err_bind_nopasswd	Could not bind to $1: no password:无法绑定到$1,没有密码
+ldap_class	err_bind_invpasswd	Could not bind to $1: invalid password?:无法绑定到$1,无效密码
+ldap_class	err_nopasswd	No password:没有密码
+ldap_class	err_cant_connect	Could not connect to LDAP server:不能连接到LDAP服务器
+ldap_class	err_auth_search	Authentication search failed:验证搜索失败
+ldap_class	err_nouser	User not found:没有找到用户
+ldap_class	err_badpasswd	Invalid Password:无效密码
+ldap_class	err_cant_bind	Could not bind to LDAP server:不能绑定到LDAP服务器
+ldap_class	err_search	LDAP search failed:LDAP搜索失败
+ldap_class	err_nores	No result found (no matching user):没有发现结果(没有匹配的用户)

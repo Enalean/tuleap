@@ -1,0 +1,37 @@
+#/**
+#  *
+#  * Include scripts message catalog (English)
+#  *
+#  * Codendi
+#  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+#  * http://www.codendi.com
+#  *
+#  *
+#  */
+#
+#-----------------------------------------------
+# Script: SF/www/new/index.php
+#
+new_index	new_file_release	���ļ�����
+new_index	new_releases	    �µķ���
+new_index	no_release_found	û�з����·���.
+new_index	no_projects_found	û���ҵ�����Ŀ.
+new_index	db_err	DB error.
+new_index	released_by	        ͨ������
+new_index	module	            ����
+new_index	version             �汾
+new_index	no_desc     	    ������Ŀ��û���ύ����.
+new_index	download	        ����
+new_index	total	            ��������Ŀ
+new_index	notes	            ��ע & ����
+new_index	newer_releases  	���·���
+new_index	newer_projects  	������Ŀ
+new_index	older_releases	    �ϰ淢��
+new_index	older_projects	    �ϰ���Ŀ
+new_index	new_projects	    �°���Ŀ
+new_index	prog_lang	        ��������
+new_index	os	                ����ϵͳ
+new_index	devel_status	    ��չ����
+new_index	contact             ͨѶ
+new_index	languages	        ����
+new_index	os_runtime_support	����ϵͳ����ʱ��ά��
