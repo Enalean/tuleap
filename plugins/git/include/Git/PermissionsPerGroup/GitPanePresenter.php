@@ -20,7 +20,6 @@
 
 namespace Tuleap\Git\PermissionsPerGroup;
 
-use PFUser;
 use Project;
 use ProjectUGroup;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPanePresenter;
@@ -46,23 +45,17 @@ class GitPanePresenter
     /**
      * @var string
      */
-    public $locale;
-    /**
-     * @var string
-     */
     public $selected_ugroup_name;
 
     public function __construct(
         PermissionPerGroupPanePresenter $service_presenter,
         Project $project,
-        PFUser $user,
         ProjectUGroup $ugroup = null
     ) {
         $this->service_presenter    = $service_presenter;
         $this->url                  = $this->getGlobalAdminLink($project);
         $this->project_id           = $project->getID();
         $this->ugroup_id            = ($ugroup) ? $ugroup->getId(): "";
-        $this->locale               = $user->getLocale();
         $this->selected_ugroup_name = ($ugroup) ? $ugroup->getTranslatedName(): "";
     }
 

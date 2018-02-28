@@ -28,8 +28,9 @@ import { gettext_provider } from './gettext-provider.js';
 document.addEventListener('DOMContentLoaded', () => {
     const vue_mount_point = document.getElementById('news-permission-per-group');
     const rootComponent   = Vue.extend(NewsPermissions);
+    const locale          = document.body.dataset.userLocale;
 
-    gettext_provider.setLocale(vue_mount_point.dataset.locale);
+    gettext_provider.setLocale(locale);
 
     new rootComponent({
         propsData: { ...vue_mount_point.dataset }

@@ -38,11 +38,10 @@ class PaneCollectorTest extends TuleapTestCase
         stub($project)->usesFile()->returns(false);
 
         $selected_ugroup_id = null;
-        $user               = mock('PFUser');
 
         expect($service_builder)->getPanePresenter()->never();
         expect($package_builder)->getPanePresenter()->never();
 
-        $builder->collectPane($project, $user, $selected_ugroup_id);
+        $builder->collectPane($project, $selected_ugroup_id);
     }
 }

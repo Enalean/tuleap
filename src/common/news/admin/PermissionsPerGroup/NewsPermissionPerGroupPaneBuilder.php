@@ -25,44 +25,23 @@
 namespace Tuleap\News\Admin\PermissionsPerGroup;
 
 use ForgeConfig;
-use PFUser;
 use Project;
 use TemplateRendererFactory;
 use Tuleap\Layout\IncludeAssets;
-use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupLoadAllButtonPresenter;
 use UGroupManager;
 
 class NewsPermissionPerGroupPaneBuilder
 {
     /**
-     * @var NewsPermissionsManager
-     */
-    private $news_permissions_manager;
-    /**
-     * @var PermissionPerGroupUGroupFormatter
-     */
-    private $formatter;
-    /**
      * @var UGroupManager
      */
     private $ugroup_manager;
 
-    /**
-     * @var PFUser
-     */
-    private $user;
-
     public function __construct(
-        NewsPermissionsManager $news_permissions_manager,
-        PermissionPerGroupUGroupFormatter $formatter,
-        UGroupManager $ugroup_manager,
-        PFuser $user
+        UGroupManager $ugroup_manager
     ) {
-        $this->news_permissions_manager = $news_permissions_manager;
-        $this->formatter                = $formatter;
-        $this->ugroup_manager           = $ugroup_manager;
-        $this->user                     = $user;
+        $this->ugroup_manager = $ugroup_manager;
     }
 
     public function getPaneContent(Project $project, $selected_ugroup_id)
@@ -82,7 +61,6 @@ class NewsPermissionPerGroupPaneBuilder
         $ugroup        = $this->ugroup_manager->getUGroup($project, $selected_ugroup_id);
         $templates_dir = $tuleap_base_dir . '/src/templates/news/';
         $presenter     = new PermissionPerGroupLoadAllButtonPresenter(
-            $this->user,
             $project,
             $ugroup
         );

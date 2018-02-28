@@ -25,16 +25,13 @@ use Tuleap\FRS\PermissionsPerGroup\PaneCollector;
 use Tuleap\FRS\PermissionsPerGroup\PermissionPerGroupFRSPackagesPresenterBuilder;
 use Tuleap\FRS\PermissionsPerGroup\PermissionPerGroupFRSServicePresenterBuilder;
 use Tuleap\FRS\PermissionsPerGroup\PermissionPerTypeExtractor;
-use Tuleap\News\Admin\AdminNewsDao;
 use Tuleap\News\Admin\PermissionsPerGroup\NewsPermissionPerGroupPaneBuilder;
-use Tuleap\News\Admin\PermissionsPerGroup\NewsPermissionsManager;
 use Tuleap\PHPWiki\PermissionsPerGroup\PHPWikiPermissionPerGroupPaneBuilder;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
-use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Project\Admin\PermissionsPerGroup\PanesPermissionPerGroupBuilder;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupBuilder;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPresenter;
-use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRetriever;
+use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 
 require_once('pre.php');
 
@@ -69,11 +66,7 @@ $additional_panes_builder = new PanesPermissionPerGroupBuilder(
             $ugroup_manager
         ),
         new PermissionPerGroupFRSPackagesPresenterBuilder(
-            $ugroup_manager,
-            new PermissionPerGroupUGroupRetriever(PermissionsManager::instance()),
-            new FRSPackageFactory(),
-            $formatter,
-            new FRSReleaseFactory()
+            $ugroup_manager
         )
     ),
     new PHPWikiPermissionPerGroupPaneBuilder(
@@ -87,19 +80,12 @@ $additional_panes_builder = new PanesPermissionPerGroupBuilder(
         TemplateRendererFactory::build()
     ),
     new NewsPermissionPerGroupPaneBuilder(
-        new NewsPermissionsManager(
-            PermissionsManager::instance(),
-            new AdminNewsDAO()
-        ),
-        $formatter,
-        $ugroup_manager,
-        $request->getCurrentUser()
+        $ugroup_manager
     )
 );
 
 $additional_panes = $additional_panes_builder->getSortedPanes(
     $project,
-    $request->getCurrentUser(),
     $request->get('group')
 );
 

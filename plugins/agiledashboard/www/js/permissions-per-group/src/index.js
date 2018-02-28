@@ -26,7 +26,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (vue_mount_point) {
         const RootComponent = Vue.extend(AgileDashboardPermissions);
-        gettext_provider.setLocale(vue_mount_point.dataset.locale);
+        const locale        = document.body.dataset.userLocale;
+
+        gettext_provider.setLocale(locale);
 
         new RootComponent({
             propsData: { ...vue_mount_point.dataset }

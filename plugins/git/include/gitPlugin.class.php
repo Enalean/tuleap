@@ -2450,8 +2450,7 @@ class GitPlugin extends Plugin
 
         $sections_collector = new GitPaneSectionCollector(
             $service_section_builder,
-            $this->getUGroupManager(),
-            UserManager::instance()
+            $this->getUGroupManager()
         );
 
         $sections_collector->collectSections($event);

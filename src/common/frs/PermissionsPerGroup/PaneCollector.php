@@ -21,7 +21,6 @@
 namespace Tuleap\FRS\PermissionsPerGroup;
 
 use ForgeConfig;
-use PFUser;
 use Project;
 use TemplateRendererFactory;
 use Tuleap\Layout\IncludeAssets;
@@ -45,14 +44,14 @@ class PaneCollector
         $this->packages_pane_builder     = $packages_pane_builder;
     }
 
-    public function collectPane(Project $project, PFUser $user, $selected_ugroup = null)
+    public function collectPane(Project $project, $selected_ugroup = null)
     {
         if (! $project->usesFile()) {
             return;
         }
 
         $service_presenter = $this->service_presenter_builder->getPanePresenter($project, $selected_ugroup);
-        $package_presenter = $this->packages_pane_builder->getPanePresenter($project, $user, $selected_ugroup);
+        $package_presenter = $this->packages_pane_builder->getPanePresenter($project, $selected_ugroup);
 
         $tuleap_base_dir = ForgeConfig::get('tuleap_dir');
         $include_assets  = new IncludeAssets(
