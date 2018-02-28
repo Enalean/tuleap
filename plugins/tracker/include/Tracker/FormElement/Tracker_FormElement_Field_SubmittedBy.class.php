@@ -49,9 +49,9 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
                                array_values($criteria_value),
                                array_merge(array(100),array_keys($this->getBind()->getAllValues())));
             if (count($ids_to_search) > 1) {
-                return " artifact.submitted_by IN(". $this->getDao()->getDa()->escapeIntImplode($ids_to_search) .") ";
+                return " artifact.submitted_by IN(". $this->getCriteriaDao()->getDa()->escapeIntImplode($ids_to_search) .") ";
             } else if (count($ids_to_search)) {
-                return " artifact.submitted_by = ". $this->getDao()->getDa()->escapeInt($ids_to_search) ." ";
+                return " artifact.submitted_by = ". $this->getCriteriaDao()->getDa()->escapeInt($ids_to_search[0]) ." ";
             }
         }
         return '';
