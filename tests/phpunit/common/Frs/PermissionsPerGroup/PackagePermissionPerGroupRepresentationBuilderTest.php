@@ -87,6 +87,7 @@ class PackagePermissionPerGroupRepresentationBuilderTest extends TestCase
     public function setUp()
     {
         parent::setUp();
+        $initial_global_state = array_merge(array(), $GLOBALS);
 
         $this->permission_ugroup_retriever    = $this->createMock(PermissionPerGroupUGroupRetriever::class);
         $this->package_factory                = $this->createMock(FRSPackageFactory::class);
@@ -130,6 +131,8 @@ class PackagePermissionPerGroupRepresentationBuilderTest extends TestCase
                 'name'       => 'Package 1'
             ]
         );
+
+        $GLOBALS = $initial_global_state;
     }
 
     public function testItAddEmptyPackages()
