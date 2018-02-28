@@ -39,7 +39,7 @@
 
         <table v-if="is_loaded" class="tlp-table">
             <thead>
-                <tr>
+                <tr class="permission-per-group-double-column-table">
                     <th>{{ news_label }}</th>
                     <th>{{ visibility_label }}</th>
                 </tr>

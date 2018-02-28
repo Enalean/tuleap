@@ -95,7 +95,7 @@
             }
         },
         computed: {
-            load_repositories_button: () =>  gettext_provider.gettext("Load repositories"),
+            load_repositories_button: () =>  gettext_provider.gettext("See all repositories"),
             repository: ()               =>  gettext_provider.gettext("Repository"),
             empty_state: ()              => gettext_provider.gettext("No repository found for project"),
             pane_title: ()               => gettext_provider.gettext("Repositories permissions"),

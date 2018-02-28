@@ -21,7 +21,7 @@
 <template>
     <table class="tlp-table permission-per-group-table">
         <thead>
-        <tr>
+        <tr class="permission-per-group-sextuple-column-table">
             <th>{{ repository_label  }}</th>
             <th>{{ branch_label  }}</th>
             <th>{{ tag_label  }}</th>

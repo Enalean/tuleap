@@ -24,7 +24,7 @@
 (<template>
     <table class="tlp-table permission-per-group-table">
         <thead>
-        <tr>
+        <tr class="permission-per-group-triple-column-table">
             <th> {{ tracker_label }}</th>
             <th> {{ permission_label }}</th>
             <th> {{ group_label }}</th>

@@ -1,6 +1,3 @@
-msgid "Load repositories"
-msgstr ""
-
 msgid "No repository found for project"
 msgstr ""
 
@@ -8,4 +5,7 @@ msgid "Repositories permissions"
 msgstr ""
 
 msgid "Repository"
+msgstr ""
+
+msgid "See all repositories"
 msgstr ""
