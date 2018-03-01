@@ -102,29 +102,6 @@ account_preferences	html_format	HTML
 account_preferences	text_format	Texte
 #
 #-----------------------------------------------
-# Script: SF/www/account/change_email.php
-#
-account_change_email	title	Changer l'adresse e-mail
-account_change_email	message	<P>Le changement d'adresse e-mail nécessite une confirmation depuis votre nouvelle adresse e-mail de façon à s'assurer que nous disposons d'une adresse valide. <P>La soumission de ce formulaire déclenchera l'envoi d'un e-mail à votre nouvelle adresse incluant un lien à visiter pour confirmer définitivement le changement.
-account_change_email	label_new	Nouvelle adresse e-mail
-account_change_email	send_new	Envoyer la confirmation
-#
-#-----------------------------------------------
-# Script: SF/www/account/change_email-confirm.php
-#
-account_change_email-confirm	message	Vous avez demandé a changer votre adresse e-mail en $1.\nMerci de visiter le lien ci-dessous pour confirmer ce changement :\n\n$2\n\n-- L'équipe $1
-account_change_email-confirm	title	Confirmation de changement d'adresse e-mail
-account_change_email-confirm	mailsent	Un courrier électronique vient d'être envoyé à votre nouvelle adresse e-mail. Suivez les instructions fournies dans ce message pour confirmer définitivement le changement.
-#
-#-----------------------------------------------
-# Script: SF/www/account/change_email-complete.php
-#
-account_change_email-complete	invalid_hash	Clé de confirmation invalide.
-account_change_email-complete	duplicate_hash	Cette clé de confirmation est présente plus d'une fois dans la base.
-account_change_email-complete	title	Changement d'e-mail confirmé
-account_change_email-complete	message	Bienvenue, $1.<P>Votre changement d'adresse e-mail est confirmé. Votre nouvelle adresse e-mail est <B>$2</B>. Les courriers électroniques envoyés à $3, utilisateur $1 (compte $4) seront désormais envoyés à cette nouvelle adresse e-mail.
-#
-#-----------------------------------------------
 # Script: SF/www/account/change_pw.php
 #
 account_change_pw	title_success	Mot de passe modifié avec succès

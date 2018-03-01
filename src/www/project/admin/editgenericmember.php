@@ -86,7 +86,7 @@ echo '<input type="hidden" name="group_id" value="'. (int)$group_id .'" />
         '. $generic_user->getRealName() .'
     </p>
     <p>
-        <label for="generic_user_email"><b>'. $Language->getText('account_change_email', 'title') .'</b>:</label><br />
+        <label for="generic_user_email"><b>'. _('Change email address') .'</b>:</label><br />
         <input type="email" name="email" id="generic_user_email" value="'.
             $hp->purify($generic_user->getEmail(), CODENDI_PURIFIER_CONVERT_HTML) .'" />
      </p>

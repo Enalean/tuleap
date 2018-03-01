@@ -70,6 +70,11 @@ msgid "Already used"
 msgstr ""
 
 msgid ""
+"An email has been sent to the new address. Follow the instructions in the "
+"email to complete the email change."
+msgstr ""
+
+msgid ""
 "An error occured with your upload. Please try again or choose another image."
 msgstr ""
 
@@ -146,6 +151,14 @@ msgid "Cannot update users group."
 msgstr ""
 
 msgid "Categories"
+msgstr ""
+
+msgid "Change email address"
+msgstr ""
+
+msgid ""
+"Changing your email address will require confirmation from your new email "
+"address, so that we can ensure we have a good email address on file."
 msgstr ""
 
 msgid "Child projects"
@@ -274,6 +287,15 @@ msgid "Edit settings"
 msgstr ""
 
 msgid "Edit widget"
+msgstr ""
+
+msgid "Email change complete"
+msgstr ""
+
+msgid "Email change confirmation"
+msgstr ""
+
+msgid "Email format invalid"
 msgstr ""
 
 msgid "Emergency"
@@ -443,6 +465,9 @@ msgid "Navebar"
 msgstr ""
 
 msgid "Nb members"
+msgstr ""
+
+msgid "New email address:"
 msgstr ""
 
 msgid "News"
@@ -647,6 +672,9 @@ msgstr ""
 msgid "See permissions"
 msgstr ""
 
+msgid "Send confirmation to new address"
+msgstr ""
+
 msgid "Service news is disabled for this project."
 msgstr ""
 
@@ -675,6 +703,11 @@ msgid "Start by choosing a widget"
 msgstr ""
 
 msgid "Style"
+msgstr ""
+
+msgid ""
+"Submitting the form below will mail a confirmation URL to the new email "
+"address. Visiting this link will complete the email change."
 msgstr ""
 
 msgid "System"
@@ -713,6 +746,12 @@ msgid "The group name is missing"
 msgstr ""
 
 msgid "The last project administrator cannot be removed."
+msgstr ""
+
+#, php-format
+msgid ""
+"The mail was not accepted for the delivery. Please contact the administrator "
+"at %s."
 msgstr ""
 
 msgid "The name is missing for creating a dashboard."
@@ -777,6 +816,9 @@ msgstr ""
 msgid "This group does not have any members yet."
 msgstr ""
 
+msgid "This hash key exists more than once"
+msgstr ""
+
 msgid "This is a system group, you cannot delete it."
 msgstr ""
 
@@ -837,6 +879,9 @@ msgstr ""
 msgid "Unable to fetch the latest activities of the project"
 msgstr ""
 
+msgid "Unauthorized action for anonymous"
+msgstr ""
+
 msgid "Unix name"
 msgstr ""
 
@@ -895,6 +940,9 @@ msgstr ""
 msgid "Welcome message and information for users"
 msgstr ""
 
+msgid "Welcome, %s."
+msgstr ""
+
 msgid ""
 "Why don't you start by editing your dashboard <br> and adding some widgets?"
 msgstr ""
@@ -945,6 +993,9 @@ msgid ""
 "                This action is irreversible. Please confirm this deletion."
 msgstr ""
 
+msgid "You are not the user who asked for email change"
+msgstr ""
+
 msgid ""
 "You can delegate to this group several permissions. All the members of this\n"
 "                        group will take advantage of these permissions."
@@ -983,6 +1034,16 @@ msgstr ""
 msgid "You have not rights to update dashboards of the project \"%s\"."
 msgstr ""
 
+#, php-format
+msgid ""
+"You have requested a change of email address on %s.\n"
+"Please visit the following URL to complete the email change:\n"
+"\n"
+"%s\n"
+"\n"
+"-- The %s Team"
+msgstr ""
+
 msgid "You must be a project admin to edit this widget."
 msgstr ""
 
@@ -999,10 +1060,21 @@ msgid ""
 "him from writers."
 msgstr ""
 
+msgid ""
+"Your email change is complete. Your new email address is <strong>%s</strong>."
+msgstr ""
+
 msgid "Your history is empty"
 msgstr ""
 
 msgid "Your platform does not allow restricted users."
+msgstr ""
+
+#, php-format
+msgid "[%s] Email change confirmation"
+msgstr ""
+
+msgid "back to home page"
 msgstr ""
 
 msgid "categories"

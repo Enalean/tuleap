@@ -110,29 +110,6 @@ account_preferences	html_format	HTML
 account_preferences	text_format	Text
 #
 #-----------------------------------------------
-# Script: SF/www/account/change_email.php
-#
-account_change_email	title	Change Email Address
-account_change_email	message	<P>Changing your email address will require confirmation from your new email address, so that we can ensure we have a good email address on file. <P>Submitting the form below will mail a confirmation URL to the new email address. Visiting this link will complete the email change.
-account_change_email	label_new	New Email Address
-account_change_email	send_new	Send Confirmation to New Address
-#
-#-----------------------------------------------
-# Script: SF/www/account/change_email-confirm.php
-#
-account_change_email-confirm	message	You have requested a change of email address on $1.\nPlease visit the following URL to complete the email change:\n\n$2\n\n-- The $1 Team
-account_change_email-confirm	title	Email Change Confirmation
-account_change_email-confirm	mailsent	An email has been sent to the new address. Follow the instructions in the email to complete the email change.
-#
-#-----------------------------------------------
-# Script: SF/www/account/change_email-complete.php
-#
-account_change_email-complete	invalid_hash	Invalid confirmation hash.
-account_change_email-complete	duplicate_hash	This hash key exists more than once.
-account_change_email-complete	title	Email Change Complete
-account_change_email-complete	message	Welcome, $1.<P>Your email change is complete. Your new email address on file is <B>$2</B>. Mail sent to $3 user $1 (login $4) will now be forwarded to this new email address.
-#
-#-----------------------------------------------
 # Script: SF/www/account/change_pw.php
 #
 account_change_pw	title_success	Successfully Changed Password

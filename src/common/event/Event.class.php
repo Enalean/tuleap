@@ -68,16 +68,6 @@ class Event {
     const LIST_SSH_KEYS = 'list_ssh_keys';
 
     /**
-     * The user has just changed his email address.
-     *
-     * Parameters:
-     *  'user_id' => User ID
-     *
-     * No expected results
-     */
-    const USER_EMAIL_CHANGED = 'user_email_changed';
-
-    /**
      * Force aliases database update.
      *
      * No Parameters.
