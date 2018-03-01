@@ -55,7 +55,7 @@ class Plugin implements PFO_Plugin {
      */
     protected $allowedForProject = array();
 
-    public function Plugin($id = -1) {
+    public function __construct($id = -1) {
         $this->id            = $id;
         $this->hooks         = new Map();
 

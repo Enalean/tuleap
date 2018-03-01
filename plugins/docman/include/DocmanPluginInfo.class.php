@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2006
@@ -29,6 +29,6 @@ class DocmanPluginInfo extends PluginFileInfo
     public function __construct($plugin)
     {
         parent::__construct($plugin, 'docman');
-        $this->setPluginDescriptor(new DocmanPluginDescriptor($plugin));
+        $this->setPluginDescriptor(new DocmanPluginDescriptor());
     }
 }

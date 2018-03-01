@@ -142,7 +142,6 @@ class PluginTest extends TuleapTestCase {
         $pm->setReturnValue('getNameForPlugin', $shortname);
         $p = new PluginTestVersion($this);
         $p->setReturnReference('_getPluginManager', $pm);
-        $p->Plugin();
 
         $this->assertEqual($p->getPluginEtcRoot(), $GLOBALS['sys_custompluginsroot'].'/'.$shortname.'/etc');
      }
@@ -156,7 +155,6 @@ class PluginTest extends TuleapTestCase {
         $pm->setReturnValue('getNameForPlugin', $shortname);
         $p = new PluginTestVersion($this);
         $p->setReturnReference('_getPluginManager', $pm);
-        $p->Plugin();
 
         $this->assertEqual($p->getPluginPath(), $GLOBALS['sys_pluginspath'].'/'.$shortname);
         $this->assertEqual($p->getPluginPath(), $GLOBALS['sys_custompluginspath'].'/'.$shortname);
@@ -178,7 +176,6 @@ class PluginTest extends TuleapTestCase {
         $pm->setReturnValue('getNameForPlugin', $shortname);
         $p = new PluginTestVersion($this);
         $p->setReturnReference('_getPluginManager', $pm);
-        $p->Plugin();
 
         //Plugin is official
         mkdir($GLOBALS['sys_custompluginsroot']);
@@ -271,7 +268,6 @@ class PluginTest extends TuleapTestCase {
 
         $p = new PluginTestVersion($this);
         $p->setReturnReference('_getPluginManager', $pm);
-        $p->Plugin();
 
         $this->assertEqual($p->getThemePath(), '');
     }

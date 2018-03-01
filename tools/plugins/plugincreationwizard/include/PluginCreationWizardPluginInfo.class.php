@@ -5,10 +5,9 @@ require_once('PluginCreationWizardPluginDescriptor.class.php');
 
 class PluginCreationWizardPluginInfo extends PluginInfo {
     
-    function PluginCreationWizardPluginInfo(&$plugin) {
-        $this->PluginInfo($plugin);
+    public function __construct($plugin) {
+        parent::__construct($plugin);
         $this->setPluginDescriptor(new PluginCreationWizardPluginDescriptor());
     }
     
 }
-?>
