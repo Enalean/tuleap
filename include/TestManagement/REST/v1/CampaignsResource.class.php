@@ -55,6 +55,8 @@ use Tuleap\REST\ProjectAuthorization;
 use Tuleap\TestManagement\ArtifactDao;
 use Tuleap\TestManagement\ArtifactFactory;
 use Tuleap\TestManagement\Campaign\ArtifactNotFoundException;
+use Tuleap\TestManagement\Campaign\AutomatedTests\AutomatedTestsTriggerer;
+use Tuleap\TestManagement\Campaign\AutomatedTests\NoJobConfiguredForCampaignException;
 use Tuleap\TestManagement\Campaign\Campaign;
 use Tuleap\TestManagement\Campaign\CampaignDao;
 use Tuleap\TestManagement\Campaign\CampaignRetriever;
@@ -240,6 +242,15 @@ class CampaignsResource
             $node_js_client,
             $permissions_serializer,
             $this->testmanagement_artifact_factory
+        );
+
+        $http_client = new \Http_Client();
+
+        $this->automated_triggerer = new AutomatedTestsTriggerer(
+            new Jenkins_Client(
+                $http_client,
+                new JenkinsCSRFCrumbRetriever($http_client)
+            )
         );
     }
 
@@ -476,6 +487,31 @@ class CampaignsResource
         return $campaign_representation;
     }
 
+    /**
+     * POST automated tests
+     *
+     * <pre>/!\ Experimental. DO NOT USE</pre>
+     *
+     * @url POST {id}/automated_tests
+     *
+     * @param int $id Id of the campaign
+     *
+     */
+    protected function postAutomatedTests($id)
+    {
+        $this->options();
+
+        $user     = UserManager::instance()->getCurrentUser();
+        $campaign = $this->getCampaignUserCanRead($user, $id);
+
+        try {
+            $this->automated_triggerer->triggerAutomatedTests($campaign);
+        } catch (Jenkins_ClientUnableToLaunchBuildException $e) {
+            throw new RestException(500, $e->getMessage());
+        } catch (NoJobConfiguredForCampaignException $e) {
+            throw new RestException(400, $e->getMessage());
+        }
+    }
 
     private function sendPaginationHeaders($limit, $offset, $size)
     {

@@ -18,6 +18,12 @@ msgstr ""
 msgid "Configuration incomplete"
 msgstr "Configuration incomplète"
 
+msgid ""
+"Current campaign does not have any job configured to launch automated tests"
+msgstr ""
+"La campagne courante n'a pas de job configuré pour pouvoir exécuter des "
+"tests automatisés"
+
 msgid "Job URL is invalid"
 msgstr "L'URL du job n'est pas valide"
 
