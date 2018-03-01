@@ -9,7 +9,6 @@ import CampaignService from './campaign-service.js';
 import CampaignCtrl from './campaign-controller.js';
 import CampaignListCtrl from './campaign-list-controller.js';
 import CampaignNewCtrl from './campaign-new-controller.js';
-import CampaignEditCtrl from './campaign-edit-controller.js';
 import CurrentPageFilter from './campaign-new-filter.js';
 
 export default angular.module('campaign', [
@@ -22,7 +21,6 @@ export default angular.module('campaign', [
 .controller('CampaignCtrl', CampaignCtrl)
 .controller('CampaignListCtrl', CampaignListCtrl)
 .controller('CampaignNewCtrl', CampaignNewCtrl)
-.controller('CampaignEditCtrl', CampaignEditCtrl)
 .filter('CurrentPageFilter', CurrentPageFilter)
 .constant('CampaignEditConstants', {
     'SELECTION_STATES': {

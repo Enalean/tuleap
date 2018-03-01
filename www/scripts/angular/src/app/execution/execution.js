@@ -14,11 +14,11 @@ import artifact_links_module       from '../artifact-links-graph/artifact-links-
 import socket_module               from '../socket/socket.js';
 
 import ExecutionConfig         from './execution-config.js';
-import ExecutionPresencesCtrl  from './execution-presences-controller.js';
 import ExecutionListCtrl       from './execution-list-controller.js';
 import ExecutionDetailCtrl     from './execution-detail-controller.js';
 import ExecutionTimerDirective from './timer/execution-timer-directive.js';
 import ExecutionListFilter     from './execution-list-filter.js';
+import ExecutionListHeader     from './execution-list-header/execution-list-header-component.js';
 
 export default angular.module('execution', [
     'gettext',
@@ -33,10 +33,10 @@ export default angular.module('execution', [
     ui_router,
 ])
 .config(ExecutionConfig)
-.controller('ExecutionPresencesCtrl', ExecutionPresencesCtrl)
 .controller('ExecutionListCtrl', ExecutionListCtrl)
 .controller('ExecutionDetailCtrl', ExecutionDetailCtrl)
 .directive('timer', ExecutionTimerDirective)
+.component('executionListHeader', ExecutionListHeader)
 .filter('ExecutionListFilter', ExecutionListFilter)
 .name;
 
