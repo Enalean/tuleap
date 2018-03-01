@@ -426,12 +426,12 @@ class Planning_Controller extends MVC2_PluginController {
             $event_manager
         );
 
-        $widget_dao        = new DashboardWidgetDao($widget_factory);
-        $project_dao       = new ProjectDashboardDao($widget_dao);
-        $project_retriever = new ProjectDashboardRetriever($project_dao);
-        $widget_retriever  = new DashboardWidgetRetriever($widget_dao);
-        $duplicator        = new ProjectDashboardDuplicator(
-            $project_dao,
+        $widget_dao            = new DashboardWidgetDao($widget_factory);
+        $project_dashboard_dao = new ProjectDashboardDao($widget_dao);
+        $project_retriever     = new ProjectDashboardRetriever($project_dashboard_dao);
+        $widget_retriever      = new DashboardWidgetRetriever($widget_dao);
+        $duplicator            = new ProjectDashboardDuplicator(
+            $project_dashboard_dao,
             $project_retriever,
             $widget_dao,
             $widget_retriever,
@@ -476,18 +476,10 @@ class Planning_Controller extends MVC2_PluginController {
             new UploadedLinksUpdater(new UploadedLinksDao(), FRSLog::instance()),
             new ProjectDashboardXMLImporter(
                 new ProjectDashboardSaver(
-                    new ProjectDashboardDao(
-                        new DashboardWidgetDao(
-                            new WidgetFactory(
-                                $user_manager,
-                                new User_ForgeUserGroupPermissionsManager(
-                                    new User_ForgeUserGroupPermissionsDao()
-                                ),
-                                $event_manager
-                            )
-                        )
-                    )
+                    $project_dashboard_dao
                 ),
+                $widget_factory,
+                $widget_dao,
                 $logger,
                 $event_manager
             )

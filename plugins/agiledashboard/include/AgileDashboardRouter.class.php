@@ -194,7 +194,7 @@ class AgileDashboardRouter {
                 $this->executeAction($agile_dashboard_xml_controller, 'export');
                 break;
             case 'import':
-                if ($request->get('home-ease-onboarding')) {
+                if (! IS_SCRIPT) {
                     $this->executeAction($agile_dashboard_xml_controller, 'importOnlyAgileDashboard');
                 } else {
                     $this->executeAction($agile_dashboard_xml_controller, 'importProject');
