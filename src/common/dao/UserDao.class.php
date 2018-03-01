@@ -769,4 +769,14 @@ class UserDao extends DataAccessObject {
         $sql = "UPDATE user SET confirm_hash = null WHERE confirm_hash=$confirm_hash";
         return $this->update($sql);
     }
+
+    public function setEmailChangeConfirm($user_id, $confirm_hash, $email_new)
+    {
+        $user_id      = $this->da->escapeInt($user_id);
+        $confirm_hash = $this->da->quoteSmart($confirm_hash);
+        $email_new    = $this->da->quoteSmart($email_new);
+
+        $sql = "UPDATE user SET confirm_hash=$confirm_hash, email_new=$email_new WHERE user_id=$user_id";
+        return $this->update($sql);
+    }
 }

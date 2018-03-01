@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.3\n"
+"X-Generator: Poedit 1.8.7.1\n"
 
 #, php-format
 msgid ""
@@ -84,6 +84,14 @@ msgstr "Tous les groupes"
 
 msgid "Already used"
 msgstr "Déjà utilisé"
+
+msgid ""
+"An email has been sent to the new address. Follow the instructions in the "
+"email to complete the email change."
+msgstr ""
+"Un courrier électronique vient d'être envoyé à votre nouvelle adresse e-"
+"mail. Suivez les instructions fournies dans ce message pour confirmer "
+"définitivement le changement."
 
 msgid ""
 "An error occured with your upload. Please try again or choose another image."
@@ -171,6 +179,17 @@ msgstr "Impossible de mettre à jour le groupe utilisateur"
 
 msgid "Categories"
 msgstr "Catégories"
+
+msgid "Change email address"
+msgstr "Changer l'adresse e-mail"
+
+msgid ""
+"Changing your email address will require confirmation from your new email "
+"address, so that we can ensure we have a good email address on file."
+msgstr ""
+"Le changement d'adresse e-mail nécessite une confirmation depuis votre "
+"nouvelle adresse e-mail de façon à s'assurer que nous disposons d'une "
+"adresse valide."
 
 msgid "Child projects"
 msgstr "Projets enfants"
@@ -301,6 +320,15 @@ msgstr "Éditer les paramètres"
 
 msgid "Edit widget"
 msgstr "Éditer le widget"
+
+msgid "Email change complete"
+msgstr "Changement d'e-mail confirmé"
+
+msgid "Email change confirmation"
+msgstr "Confirmation de changement d'adresse e-mail"
+
+msgid "Email format invalid"
+msgstr "Le formal de l'e-mail n'est pas valide"
 
 msgid "Emergency"
 msgstr "Urgent"
@@ -472,6 +500,9 @@ msgstr "Barre de menu"
 
 msgid "Nb members"
 msgstr "Nb membres"
+
+msgid "New email address:"
+msgstr "Nouvelle adresse e-mail"
 
 msgid "News"
 msgstr "Annonces"
@@ -682,6 +713,9 @@ msgstr "Rechercher"
 msgid "See permissions"
 msgstr "Voir les permissions"
 
+msgid "Send confirmation to new address"
+msgstr "Envoyer la confirmation"
+
 msgid "Service news is disabled for this project."
 msgstr "Le service annonces est désactivé pour ce projet."
 
@@ -711,6 +745,14 @@ msgstr "Commencez par choisir un widget"
 
 msgid "Style"
 msgstr "Style"
+
+msgid ""
+"Submitting the form below will mail a confirmation URL to the new email "
+"address. Visiting this link will complete the email change."
+msgstr ""
+"La soumission de ce formulaire déclenchera l'envoi d'un e-mail à votre "
+"nouvelle adresse incluant un lien à visiter pour confirmer définitivement le "
+"changement."
 
 msgid "System"
 msgstr "Système"
@@ -751,6 +793,14 @@ msgstr "Le nom du groupe utilisateur est requis"
 msgid "The last project administrator cannot be removed."
 msgstr ""
 "Il n'est pas possible de supprimer le dernier administrateur du projet."
+
+#, php-format
+msgid ""
+"The mail was not accepted for the delivery. Please contact the administrator "
+"at %s."
+msgstr ""
+"L'e-mail n'a pas pu être envoyé. Veuillez contacter les administrateurs à "
+"l'adresse %s."
 
 msgid "The name is missing for creating a dashboard."
 msgstr "Il manque le nom pour créer un tableau de bord."
@@ -822,6 +872,9 @@ msgstr ""
 msgid "This group does not have any members yet."
 msgstr "Ce groupe n'a pas encore de membres."
 
+msgid "This hash key exists more than once"
+msgstr "Cette clé de confirmation est présente plus d'une fois dans la base."
+
 msgid "This is a system group, you cannot delete it."
 msgstr "Ceci est un groupe système, vous ne pouvez pas le supprimer."
 
@@ -887,6 +940,9 @@ msgstr "Import outils de suivi v3"
 msgid "Unable to fetch the latest activities of the project"
 msgstr "Impossible de récupérer les dernières activités du projet"
 
+msgid "Unauthorized action for anonymous"
+msgstr "Cette action n'est pas autorisée pour les anonymes"
+
 msgid "Unix name"
 msgstr "Now unix"
 
@@ -946,6 +1002,9 @@ msgstr "Bienvenue à bord"
 
 msgid "Welcome message and information for users"
 msgstr "Message de bienvenue et informations générales pour les utilisateurs"
+
+msgid "Welcome, %s."
+msgstr "Bienvenue, %s"
 
 msgid ""
 "Why don't you start by editing your dashboard <br> and adding some widgets?"
@@ -1013,6 +1072,11 @@ msgstr ""
 "Vous êtes sur le point de supprimer le widget \"%s\". Cette action est "
 "irréversible. Merci de confirmer cette suppression."
 
+msgid "You are not the user who asked for email change"
+msgstr ""
+"Vous n'etes pas l'utilisateur à l'origine de la demande de changement d'e-"
+"mail"
+
 msgid ""
 "You can delegate to this group several permissions. All the members of this\n"
 "                        group will take advantage of these permissions."
@@ -1063,6 +1127,22 @@ msgstr ""
 "Vous n’avez pas les droits pour mettre à jour des tableaux de bord du projet "
 "\"%s\"."
 
+#, php-format
+msgid ""
+"You have requested a change of email address on %s.\n"
+"Please visit the following URL to complete the email change:\n"
+"\n"
+"%s\n"
+"\n"
+"-- The %s Team"
+msgstr ""
+"Vous avez demandé a changer votre adresse e-mail en %s.\n"
+"Merci de visiter le lien ci-dessous pour confirmer ce changement :\n"
+"\n"
+"%s\n"
+"\n"
+"-- L'équipe %s"
+
 msgid "You must be a project admin to edit this widget."
 msgstr ""
 "Vous devez être administrateur du projet pour pouvoir éditer ce widget."
@@ -1084,11 +1164,24 @@ msgstr ""
 "Vous devez supprimer l'utilisateur des administrateurs d'annonces avant de "
 "pouvoir l'enlever des rédacteurs"
 
+msgid ""
+"Your email change is complete. Your new email address is <strong>%s</strong>."
+msgstr ""
+"Votre changement d'adresse e-mail est confirmé. Votre nouvelle adresse e-"
+"mail est <strong>%s</strong>"
+
 msgid "Your history is empty"
 msgstr "Votre historique est vide"
 
 msgid "Your platform does not allow restricted users."
 msgstr "Votre plateforme n'authorise pas les utilisateurs restreints"
+
+#, php-format
+msgid "[%s] Email change confirmation"
+msgstr "[%s] Confirmation de changement d'e-mail"
+
+msgid "back to home page"
+msgstr "Retour à la page d'accueil"
 
 msgid "categories"
 msgstr "catégories"

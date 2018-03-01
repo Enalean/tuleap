@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All rights reserved
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -11,14 +11,30 @@
  *
  * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-require_once 'pre.php';
+namespace Tuleap\User\Account;
 
-$controller = new \Tuleap\User\Account\ChangePasswordController(UserManager::instance(), EventManager::instance());
-$controller->change(HTTPRequest::instance(), $GLOBALS['Response']);
+class ChangePasswordPresenter
+{
+    /**
+     * @var int
+     */
+    public $user_id;
+    /**
+     * @var CSRFSynchronizerToken
+     */
+    public $csrf_token;
+
+    public function __construct(\CSRFSynchronizerToken $csrf_token, $user_id)
+    {
+        $this->csrf_token = $csrf_token;
+        $this->user_id    = $user_id;
+    }
+}

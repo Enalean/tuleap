@@ -1006,4 +1006,9 @@ class UserManager {
         $dao = $this->getDao();
         $dao->removeConfirmHash($confirm_hash);
     }
+
+    public function setEmailChangeConfirm($user_id, $confirm_hash, $email_new)
+    {
+        return $this->getDao()->setEmailChangeConfirm($user_id, $confirm_hash, $email_new);
+    }
 }

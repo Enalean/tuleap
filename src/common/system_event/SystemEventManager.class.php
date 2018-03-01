@@ -38,7 +38,6 @@ class SystemEventManager {
         $event_manager = $this->_getEventManager();
         $events_to_listen = array(
             Event::SYSTEM_CHECK,
-            Event::USER_EMAIL_CHANGED,
             Event::PROJECT_RENAME,
             Event::USER_RENAME,
             Event::COMPUTE_MD5SUM,
@@ -156,11 +155,6 @@ class SystemEventManager {
             $this->createEvent(SystemEvent::TYPE_MOVE_FRS_FILE,
                                $this->concatParameters($params, array('project_path', 'file_id', 'old_path' )),
                                SystemEvent::PRIORITY_HIGH);
-            break;
-        case Event::USER_EMAIL_CHANGED:
-            $this->createEvent(SystemEvent::TYPE_USER_EMAIL_CHANGED,
-                               $params['user_id'],
-                               SystemEvent::PRIORITY_LOW);
             break;
         case 'approve_pending_project':
             $this->createEvent(SystemEvent::TYPE_PROJECT_CREATE,
