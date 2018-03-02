@@ -4,9 +4,8 @@ require_once('IMPluginDescriptor.class.php');
 
 class IMPluginInfo extends PluginInfo {
 
-    function IMPluginInfo(&$plugin) {
-        $this->PluginInfo($plugin);
+    public function __construct($plugin) {
+        parent::__construct($plugin);
         $this->setPluginDescriptor(new IMPluginDescriptor());
     }
 }
-?>

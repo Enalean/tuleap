@@ -1,36 +1,33 @@
 <?php
-
 /*
+ * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
  * Copyright (c) Xerox, 2010. All Rights Reserved.
  *
  * Originally written by Nicolas Terray, 2010. Xerox Codendi Team.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once('common/plugin/Plugin.class.php');
 
 /**
  * Google_AnalyticsPlugin
  */
 class Google_AnalyticsPlugin extends Plugin {
 
-    function Google_AnalyticsPlugin($id) {
-        $this->Plugin($id);
+    public function __construct($id) {
+        parent::__construct($id);
         $this->addHook(Event::JAVASCRIPT_FOOTER, 'getAnalyticsCode', false);
     }
 
@@ -58,9 +55,4 @@ EOS;
         $ga_code = sprintf($ga_code, $ga_id);
         echo $ga_code;
     }
-
-
-
 }
-
-?>
