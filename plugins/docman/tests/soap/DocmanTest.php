@@ -23,7 +23,9 @@ require_once dirname(__FILE__).'/../bootstrap.php';
 /**
  * @group DocmanTest
  */
-class DocmanTest extends SOAPBase {
+class DocmanTest extends SOAPBase
+{
+    private $content = 'Content of the file';
 
     public function setUp() {
         parent::setUp();
@@ -53,6 +55,62 @@ class DocmanTest extends SOAPBase {
         $this->assertTrue(is_int($root_folder_id));
 
         return $root_folder_id;
+    }
+
+    /**
+     * @depends testGetDocumentRootFolder
+     * @param $root_folder_id
+     */
+    public function testCreateFile($root_folder_id)
+    {
+        $session_hash = $this->getSessionHash();
+
+        $file_id = $this->soap_base->createDocmanFile(
+            $session_hash,
+            SOAP_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID,
+            $root_folder_id,
+            'Uploaded document',
+            'Description of uploaded document',
+            'end',
+            null,
+            null,
+            array(),
+            array(),
+            strlen($this->content),
+            'file.txt',
+            'text/plain',
+            base64_encode($this->content),
+            0,
+            strlen($this->content),
+            SOAP_TestDataBuilder::TEST_USER_1_NAME,
+            '1438953065',
+            SOAP_TestDataBuilder::TEST_USER_1_NAME,
+            '1438953065',
+            ''
+        );
+
+        return $file_id;
+    }
+
+    /**
+     * @depends testCreateFile
+     * @param int $file_id
+     */
+    public function testGetFile($file_id)
+    {
+        $session_hash = $this->getSessionHash();
+
+        $downloaded_content = $this->soap_base->getDocmanFileContents(
+            $session_hash,
+            SOAP_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID,
+            $file_id,
+            null
+        );
+
+        $this->assertEquals(
+            $this->content,
+            base64_decode($downloaded_content)
+        );
     }
 
     /**
@@ -141,9 +199,10 @@ class DocmanTest extends SOAPBase {
             $root_folder_id
         );
 
-        $this->assertEquals(count($response), 2);
+        $this->assertEquals(count($response), 3);
 
         $this->assertEquals($response[0]->title, 'My second Folder');
         $this->assertEquals($response[1]->title, 'My Folder');
+        $this->assertEquals($response[2]->title, 'Uploaded document');
     }
 }
