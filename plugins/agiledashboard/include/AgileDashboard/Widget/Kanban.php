@@ -108,11 +108,16 @@ abstract class Kanban extends Widget
     public function loadContent($id)
     {
         $widget = $this->widget_kanban_retriever->searchWidgetById($id, $this->owner_id, $this->owner_type);
-        if ($widget) {
+        if (! $widget) {
+            return;
+        }
+
+        try {
             $this->content_id   = $id;
             $this->kanban_id    = $widget['kanban_id'];
             $kanban             = $this->kanban_factory->getKanban($this->getCurrentUser(), $this->kanban_id);
             $this->kanban_title = $kanban->getName();
+        } catch (AgileDashboard_KanbanCannotAccessException $e) {
         }
     }
 
