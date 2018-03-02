@@ -1,3 +1,5 @@
 *.css
 *.mo
 *.po~
+node_modules/
+assets/
