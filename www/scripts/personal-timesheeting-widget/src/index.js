@@ -1,6 +1,5 @@
-<?php
-/**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('TIMESHEETING_TEMPLATE_DIR', __DIR__.'/../templates');
-define('TIMESHEETING_BASE_DIR', realpath(__DIR__.'/..'));
-define('TIMESHEETING_BASE_URL', '/plugins/timesheeting');
+import Vue                  from 'vue';
+import Widget               from './Widget.vue';
+import { gettext_provider } from './gettext-provider.js';
+
+document.addEventListener('DOMContentLoaded', () => {
+    const vue_mount_point = document.getElementById('personal-timesheeting-widget');
+
+    if (vue_mount_point) {
+        const rootComponent = Vue.extend(Widget);
+        const locale        = document.body.dataset.userLocale;
+
+        gettext_provider.setLocale(locale);
+
+        new rootComponent({}).$mount(vue_mount_point);
+    }
+});

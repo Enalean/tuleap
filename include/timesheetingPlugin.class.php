@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Dashboard\User\UserDashboardController;
+use Tuleap\Request\CurrentPage;
 use Tuleap\Timesheeting\Admin\AdminController;
 use Tuleap\Timesheeting\Admin\AdminDao;
 use Tuleap\Timesheeting\Admin\TimesheetingEnabler;
@@ -58,6 +59,7 @@ class timesheetingPlugin extends Plugin
         $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
         $this->addHook(\Tuleap\Widget\Event\GetUserWidgetList::NAME);
         $this->addHook('fill_project_history_sub_events');
+        $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
 
         if (defined('TRACKER_BASE_URL')) {
             $this->addHook(TRACKER_EVENT_FETCH_ADMIN_BUTTONS);
@@ -242,5 +244,24 @@ class timesheetingPlugin extends Plugin
             'timesheeting_disabled',
             'timesheeting_permissions_updated'
         );
+    }
+
+    public function burningParrotGetJavascriptFiles(array $params)
+    {
+        if ($this->isInDashboard()) {
+            $include_assets = new \Tuleap\Layout\IncludeAssets(
+                TIMESHEETING_BASE_DIR . '/www/assets',
+                $this->getPluginPath() . '/assets'
+            );
+
+            $params['javascript_files'][] = $include_assets->getFileURL('widget.js');
+        }
+    }
+
+    private function isInDashboard()
+    {
+        $current_page = new CurrentPage();
+
+        return $current_page->isDashboard();
     }
 }

@@ -10,5 +10,14 @@
             ],
             "target_dir": "www/themes/FlamingParrot/css"
         }
-    }
+    },
+    "gettext-js": {
+        "permissions-per-group": {
+            "src": "www/scripts/personal-timesheeting-widget/src",
+            "po": "www/scripts/personal-timesheeting-widget/po"
+        }
+    },
+    "components": [
+        "plugins/timesheeting/www/scripts"
+    ]
 }

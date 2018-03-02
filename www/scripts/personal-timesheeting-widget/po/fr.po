@@ -1,0 +1,2 @@
+msgid "There is nothing here ... for now ..."
+msgstr "Cet espace est vide ... pour le moment ..."

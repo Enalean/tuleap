@@ -57,9 +57,6 @@ msgstr "La requête n'est pas valide."
 msgid "The time is missing"
 msgstr "Le temps est manquant"
 
-msgid "There is nothing here ... for now ..."
-msgstr "Cet espace est vide ... pour le moment ..."
-
 msgid "Time"
 msgstr "Temps"
 

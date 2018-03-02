@@ -1,6 +1,5 @@
-<?php
-/**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('TIMESHEETING_TEMPLATE_DIR', __DIR__.'/../templates');
-define('TIMESHEETING_BASE_DIR', realpath(__DIR__.'/..'));
-define('TIMESHEETING_BASE_URL', '/plugins/timesheeting');
+import Gettext             from 'node-gettext';
+import french_translations from '../po/fr.po';
+
+const gettext_provider = new Gettext();
+gettext_provider.addTranslations('fr_FR', 'timesheeting', french_translations);
+gettext_provider.setTextDomain('timesheeting');
+
+export { gettext_provider };
