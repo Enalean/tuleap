@@ -21,6 +21,9 @@ const webpack                     = require('webpack');
 const WebpackAssetsManifest       = require('webpack-assets-manifest');
 const babel_preset_env            = require('babel-preset-env');
 const VueLoaderOptionsPlugin      = require('vue-loader-options-plugin');
+const BabelPluginObjectRestSpread = require('babel-plugin-transform-object-rest-spread');
+const BabelPluginRewireExports    = require('babel-plugin-rewire-exports').default;
+const BabelPluginIstanbul         = require('babel-plugin-istanbul').default;
 
 const assets_dir_path = path.resolve(__dirname, '../assets');
 
@@ -31,6 +34,15 @@ const babel_preset_env_ie_config = [babel_preset_env, {
     modules: false
 }];
 
+const babel_preset_env_chrome_config = [babel_preset_env, {
+    targets: {
+        browsers: ['last 2 Chrome versions']
+    },
+    modules: false,
+    useBuiltIns: true,
+    shippedProposals: true
+}];
+
 const babel_options = {
     env: {
         watch: {
@@ -38,8 +50,24 @@ const babel_options = {
         },
         production: {
             presets: [babel_preset_env_ie_config]
+        },
+        test: {
+            presets: [babel_preset_env_chrome_config],
+            plugins: [BabelPluginRewireExports]
+        },
+        coverage: {
+            presets: [babel_preset_env_chrome_config],
+            plugins: [
+                BabelPluginRewireExports,
+                [BabelPluginIstanbul, {
+                    exclude: ['**/*.spec.js']
+                }]
+            ]
         }
-    }
+    },
+    plugins: [
+        BabelPluginObjectRestSpread
+    ]
 };
 
 const babel_rule = {
@@ -55,11 +83,19 @@ const babel_rule = {
 
 const webpack_config = {
     entry : {
-        'widget' : './personal-timesheeting-widget/src/index.js'
+        'widget-timesheeting' : './personal-timesheeting-widget/src/index.js'
     },
     output: {
         path    : assets_dir_path,
         filename: '[name]-[chunkhash].js'
+    },
+    resolve: {
+        alias: {
+            "tlp-mocks": path.resolve(__dirname, '../../../../src/www/themes/common/tlp/mocks/index.js')
+        }
+    },
+    externals: {
+        tlp: 'tlp'
     },
     module: {
         rules: [
@@ -108,7 +144,7 @@ if (process.env.NODE_ENV === 'production') {
         }),
         new webpack.optimize.ModuleConcatenationPlugin()
     ]);
-} else if (process.env.NODE_ENV === 'watch') {
+} else if (process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'watch') {
     webpack_config.devtool = 'eval';
 }
 

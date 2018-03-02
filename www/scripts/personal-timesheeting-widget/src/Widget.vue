@@ -19,18 +19,60 @@
 
 (
 <template>
-    <div class="empty-pane-text">{{ empty_state }}</div>
+    <div class="timesheeting-widget">
+        <widget-reading-mode v-if="reading_mode"
+             v-on:switchToWritingMode="switchToWritingMode"
+             v-bind:startDate="start_date"
+             v-bind:endDate="end_date"
+        />
+        <widget-writing-mode v-else
+             v-on:switchToReadingMode="switchToReadingMode"
+             v-bind:readingStartDate="start_date"
+             v-bind:readingEndDate="end_date"
+        />
+        <div class="empty-pane-text">{{ empty_state }}</div>
+    </div>
 </template>
 )
 (
 <script>
+    import { DateTime }         from 'luxon';
     import { gettext_provider } from './gettext-provider.js';
+    import WidgetReadingMode    from './WidgetReadingMode.vue';
+    import WidgetWritingMode    from './WidgetWritingMode.vue';
 
     export default {
-        name: 'Widget',
+        name      : 'Widget',
+        components: { WidgetReadingMode, WidgetWritingMode },
+        data() {
+            const start_date = DateTime.local().minus({ weeks: 1 }).toISODate();
+            const end_date   = DateTime.local().toISODate();
+
+            return {
+                reading_mode: true,
+                start_date,
+                end_date
+            }
+        },
         computed: {
             empty_state: () => gettext_provider.gettext('There is nothing here ... for now ...')
+        },
+        methods: {
+            switchToWritingMode() {
+                this.reading_mode = false;
+            },
+
+            switchToReadingMode(data) {
+                if (data) {
+                    const { start_date, end_date } = data;
+
+                    this.start_date = start_date;
+                    this.end_date   = end_date;
+                }
+
+                this.reading_mode = true;
+            }
         }
-    }
+    };
 </script>
 )

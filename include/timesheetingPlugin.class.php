@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Dashboard\User\UserDashboardController;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\CurrentPage;
 use Tuleap\Timesheeting\Admin\AdminController;
 use Tuleap\Timesheeting\Admin\AdminDao;
@@ -60,6 +61,7 @@ class timesheetingPlugin extends Plugin
         $this->addHook(\Tuleap\Widget\Event\GetUserWidgetList::NAME);
         $this->addHook('fill_project_history_sub_events');
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
+        $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
 
         if (defined('TRACKER_BASE_URL')) {
             $this->addHook(TRACKER_EVENT_FETCH_ADMIN_BUTTONS);
@@ -250,12 +252,25 @@ class timesheetingPlugin extends Plugin
     public function burningParrotGetJavascriptFiles(array $params)
     {
         if ($this->isInDashboard()) {
-            $include_assets = new \Tuleap\Layout\IncludeAssets(
+            $include_assets = new IncludeAssets(
                 TIMESHEETING_BASE_DIR . '/www/assets',
                 $this->getPluginPath() . '/assets'
             );
 
-            $params['javascript_files'][] = $include_assets->getFileURL('widget.js');
+            $params['javascript_files'][] = $include_assets->getFileURL('widget-timesheeting.js');
+        }
+    }
+
+    public function burningParrotGetStylesheets(array $params)
+    {
+        if ($this->isInDashboard()) {
+            $theme_include_assets = new IncludeAssets(
+                $this->getFilesystemPath() . '/www/themes/BurningParrot/assets',
+                $this->getThemePath() . '/assets'
+            );
+
+            $variant                 = $params['variant'];
+            $params['stylesheets'][] = $theme_include_assets->getFileURL('style-' . $variant->getName() . '.css');
         }
     }
 

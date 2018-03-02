@@ -3,3 +3,5 @@
 *.po~
 node_modules/
 assets/
+test-results.xml
+coverage/
