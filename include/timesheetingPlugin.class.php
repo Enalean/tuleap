@@ -143,7 +143,8 @@ class timesheetingPlugin extends Plugin
     {
         return new TimeController(
             $this->getPermissionsRetriever(),
-            new TimeUpdater(new TimeDao())
+            new TimeUpdater(new TimeDao()),
+            new TimeRetriever(new TimeDao(), $this->getPermissionsRetriever())
         );
     }
 

@@ -15,11 +15,17 @@ msgstr "Ajouter un nouveau temps"
 msgid "Add time"
 msgstr "Ajouter un temps"
 
+msgid "Close"
+msgstr "Fermer"
+
 msgid "Date"
 msgstr "Date"
 
 msgid "Delete"
 msgstr "Supprimer"
+
+msgid "Delete the time"
+msgstr "Supprimer ce temps"
 
 msgid "Displays your timesheeting in the whole platform."
 msgstr "Afficher vos timesheetings de toute la plateforme."
@@ -63,8 +69,14 @@ msgstr "Cet espace est vide ... pour le moment ..."
 msgid "Time"
 msgstr "Temps"
 
+msgid "Time not found"
+msgstr "Temps non trouvé"
+
 msgid "Time successfully added."
 msgstr "Temps ajouté avec succès."
+
+msgid "Time successfully deleted."
+msgstr "Temps supprimé avec succès."
 
 msgid "Timesheeting"
 msgstr "Timesheeting"
@@ -87,5 +99,11 @@ msgstr "Utilisateur"
 msgid "Write"
 msgstr "Écriture"
 
+msgid "You are about to delete this time. Please confirm your action."
+msgstr "Vous êtes sur le point de supprimer ce temps. Merci de confirmer votre action."
+
 msgid "You are not allowed to add a time."
 msgstr "Vous n'êtes pas autorisé à ajouter un temps"
+
+msgid "You are not allowed to delete a time."
+msgstr "Vous n'êtes pas autorisé à supprimer un temps"

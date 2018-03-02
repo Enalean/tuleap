@@ -36,10 +36,13 @@
                                         <i class="icon-pencil"></i>
                                         {{# dgettext }} tuleap-timesheeting | Update {{/ dgettext }}
                                     </a>
-                                    <a class="timesheeting-action-not-clickable" href="#">
-                                        <i class="icon-trash"></i>
-                                        {{# dgettext }} tuleap-timesheeting | Delete {{/ dgettext }}
+                                    <a {{^ time_belongs_to_user }}class="timesheeting-action-not-clickable"{{/ time_belongs_to_user }}
+                                        data-toggle="modal"
+                                        href="#timesheeting-delete-{{ id }}"
+                                    >
+                                        <i class="icon-trash"></i> {{# dgettext }} tuleap-timesheeting | Delete {{/ dgettext }}
                                     </a>
+                                    {{> timesheeting-delete-modal }}
                                 </div>
                             </td>
                         </tr>

@@ -10,10 +10,16 @@ msgstr ""
 msgid "Add time"
 msgstr ""
 
+msgid "Close"
+msgstr ""
+
 msgid "Date"
 msgstr ""
 
 msgid "Delete"
+msgstr ""
+
+msgid "Delete the time"
 msgstr ""
 
 msgid "Displays your timesheeting in the whole platform."
@@ -58,7 +64,13 @@ msgstr ""
 msgid "Time"
 msgstr ""
 
+msgid "Time not found"
+msgstr ""
+
 msgid "Time successfully added."
+msgstr ""
+
+msgid "Time successfully deleted."
 msgstr ""
 
 msgid "Timesheeting"
@@ -82,5 +94,11 @@ msgstr ""
 msgid "Write"
 msgstr ""
 
+msgid "You are about to delete this time. Please confirm your action."
+msgstr ""
+
 msgid "You are not allowed to add a time."
+msgstr ""
+
+msgid "You are not allowed to delete a time."
 msgstr ""

@@ -28,7 +28,7 @@ class ArtifactViewPresenter
     /**
      * @var string
      */
-    public $url;
+    public $add_url;
 
     /**
      * @var CSRFSynchronizerToken
@@ -60,6 +60,11 @@ class ArtifactViewPresenter
      */
     public $purified_date_picker;
 
+    /**
+     * @var string
+     */
+    public $base_delete_url;
+
     public function __construct(
         Tracker_Artifact $artifact,
         CSRFSynchronizerToken $csrf,
@@ -67,9 +72,14 @@ class ArtifactViewPresenter
         $formatted_total_time,
         $user_can_add_time
     ) {
-        $this->url = TIMESHEETING_BASE_URL . '/?' . http_build_query(array(
+        $this->add_url = TIMESHEETING_BASE_URL . '/?' . http_build_query(array(
             'artifact' => $artifact->getId(),
             'action'   => 'add-time'
+        ));
+
+        $this->base_delete_url = TIMESHEETING_BASE_URL . '/?' . http_build_query(array(
+            'artifact' => $artifact->getId(),
+            'action'   => 'delete-time'
         ));
 
         $this->csrf_token        = $csrf;

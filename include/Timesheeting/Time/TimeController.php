@@ -39,9 +39,19 @@ class TimeController
      */
     private $time_updater;
 
-    public function __construct(PermissionsRetriever $permissions_retriever, TimeUpdater $time_updater) {
+    /**
+     * @var TimeRetriever
+     */
+    private $time_retriever;
+
+    public function __construct(
+        PermissionsRetriever $permissions_retriever,
+        TimeUpdater $time_updater,
+        TimeRetriever $time_retriever
+    ) {
         $this->permissions_retriever = $permissions_retriever;
         $this->time_updater          = $time_updater;
+        $this->time_retriever        = $time_retriever;
     }
 
     public function addTimeForUser(Codendi_Request $request, PFUser $user, Tracker_Artifact $artifact)
@@ -77,6 +87,42 @@ class TimeController
         $GLOBALS['Response']->addFeedback(
             Feedback::INFO,
             dgettext('tuleap-timesheeting',"Time successfully added.")
+        );
+
+        $this->redirectToArtifactViewInTimesheetingPane($artifact);
+    }
+
+    public function deleteTimeForUser(Codendi_Request $request, PFUser $user, Tracker_Artifact $artifact)
+    {
+        $csrf = new CSRFSynchronizerToken($artifact->getUri());
+        $csrf->check();
+
+        if (! $this->permissions_retriever->userCanAddTimeInTracker($user, $artifact->getTracker())) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                dgettext('tuleap-timesheeting',"You are not allowed to delete a time.")
+            );
+
+            $this->redirectToArtifactView($artifact);
+        }
+
+        $time_id = $request->get('time-id');
+        $time    = $this->time_retriever->getTimeByIdForUser($user, $time_id);
+
+        if (! $time) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                dgettext('tuleap-timesheeting', "Time not found")
+            );
+
+            $this->redirectToArtifactViewInTimesheetingPane($artifact);
+        }
+
+        $this->time_updater->deleteTime($time);
+
+        $GLOBALS['Response']->addFeedback(
+            Feedback::INFO,
+            dgettext('tuleap-timesheeting',"Time successfully deleted.")
         );
 
         $this->redirectToArtifactViewInTimesheetingPane($artifact);

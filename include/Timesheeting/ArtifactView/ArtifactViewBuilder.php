@@ -105,7 +105,7 @@ class ArtifactViewBuilder
 
         $csrf                 = new CSRFSynchronizerToken($artifact->getUri());
         $times_for_user       = $this->time_retriever->getTimesForUser($user, $artifact);
-        $time_presenters      = $this->getTimePresenters($times_for_user);
+        $time_presenters      = $this->getTimePresenters($user, $times_for_user);
         $formatted_total_time = $this->getFormattedTotalTime($times_for_user);
 
         $presenter = new ArtifactViewPresenter(
@@ -122,12 +122,12 @@ class ArtifactViewBuilder
     /**
      * @return array
      */
-    private function getTimePresenters(array $times_for_user)
+    private function getTimePresenters(PFUser $user, array $times_for_user)
     {
         $presenters = array();
 
         foreach ($times_for_user as $time) {
-            $presenters[] = $this->time_presenter_builder->buildPresenter($time);
+            $presenters[] = $this->time_presenter_builder->buildPresenter($time, $user);
         }
 
         return $presenters;

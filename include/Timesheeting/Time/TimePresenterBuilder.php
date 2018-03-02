@@ -45,15 +45,17 @@ class TimePresenterBuilder
     /**
      * @return array
      */
-    public function buildPresenter(Time $time)
+    public function buildPresenter(Time $time, PFUser $current_user)
     {
         $user = $this->user_manager->getUserById($time->getUserId());
 
         return array(
-            'day'  => $time->getDay(),
-            'user' => $this->getUserPresenter($user),
-            'time' => $this->date_formatter->formatMinutes($time->getMinutes()),
-            'step' => $time->getStep()
+            'id'                   => $time->getId(),
+            'day'                  => $time->getDay(),
+            'user'                 => $this->getUserPresenter($user),
+            'time'                 => $this->date_formatter->formatMinutes($time->getMinutes()),
+            'step'                 => $time->getStep(),
+            'time_belongs_to_user' => $time->getUserId() === $current_user->getId()
         );
     }
 
