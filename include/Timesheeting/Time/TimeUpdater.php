@@ -30,14 +30,17 @@ class TimeUpdater
         $this->time_dao = $time_dao;
     }
 
-    public function addTimeForUserInArtifact(PFUser $user, Tracker_Artifact $artifact, $added_time, $added_step)
-    {
-        $request_time = $_SERVER['REQUEST_TIME'];
-
+    public function addTimeForUserInArtifact(
+        PFUser $user,
+        Tracker_Artifact $artifact,
+        $added_time,
+        $added_step,
+        $added_date
+    ) {
         $added_time_parts = explode(':', $added_time);
 
         $minutes = $added_time_parts[0] * 60 + $added_time_parts[1];
-        $day     = date('Y-m-d', $request_time);
+        $day     = $this->getDate($added_date);
 
         return $this->time_dao->addTime(
             $user->getId(),
@@ -46,5 +49,19 @@ class TimeUpdater
             $minutes,
             $added_step
         );
+    }
+
+    /**
+     * @param $added_date
+     *
+     * @return string
+     */
+    private function getDate($added_date)
+    {
+        if ($added_date) {
+            return $added_date;
+        }
+
+        return date('Y-m-d', $_SERVER['REQUEST_TIME']);
     }
 }

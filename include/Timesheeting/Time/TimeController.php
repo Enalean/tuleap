@@ -39,8 +39,7 @@ class TimeController
      */
     private $time_updater;
 
-    public function __construct(PermissionsRetriever $permissions_retriever, TimeUpdater $time_updater)
-    {
+    public function __construct(PermissionsRetriever $permissions_retriever, TimeUpdater $time_updater) {
         $this->permissions_retriever = $permissions_retriever;
         $this->time_updater          = $time_updater;
     }
@@ -61,6 +60,8 @@ class TimeController
 
         $added_step = $request->get('timesheeting-new-time-step');
         $added_time = $request->get('timesheeting-new-time-time');
+        $added_date = $request->get('timesheeting-new-time-date');
+
 
         if (! $added_time) {
             $GLOBALS['Response']->addFeedback(
@@ -71,7 +72,7 @@ class TimeController
             $this->redirectToArtifactViewInTimesheetingPane($artifact);
         }
 
-        $this->time_updater->addTimeForUserInArtifact($user, $artifact, $added_time, $added_step);
+        $this->time_updater->addTimeForUserInArtifact($user, $artifact, $added_time, $added_step, $added_date);
 
         $GLOBALS['Response']->addFeedback(
             Feedback::INFO,

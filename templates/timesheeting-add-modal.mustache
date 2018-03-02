@@ -16,6 +16,8 @@
             {{/ csrf_token }}
             <label>{{# dgettext }} tuleap-timesheeting | Step {{/ dgettext }}</label>
             <input type="text" name="timesheeting-new-time-step">
+            <label>{{# dgettext }} tuleap-timesheeting | Date {{/ dgettext }}</label>
+            {{{ purified_date_picker }}}
             <label>{{# dgettext }} tuleap-timesheeting | Time {{/ dgettext }}</label>
             <input type="text"
                    name="timesheeting-new-time-time"
