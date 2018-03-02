@@ -25,7 +25,8 @@ require_once dirname(__FILE__).'/../bootstrap.php';
  */
 class DocmanTest extends SOAPBase
 {
-    private $content = 'Content of the file';
+    private $content    = 'Content of the file';
+    private $content_v2 = 'Updated content of the file';
 
     public function setUp() {
         parent::setUp();
@@ -111,6 +112,60 @@ class DocmanTest extends SOAPBase
             $this->content,
             base64_decode($downloaded_content)
         );
+    }
+
+    /**
+     * @depends testCreateFile
+     * @param int $item_id
+     * @return int
+     */
+    public function testCreateFileVersion($item_id)
+    {
+        $session_hash = $this->getSessionHash();
+
+        $this->soap_base->createDocmanFileVersion(
+            $session_hash,
+            SOAP_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID,
+            $item_id,
+            'New version',
+            '',
+            strlen($this->content_v2),
+            'file.txt',
+            'text/plain',
+            base64_encode($this->content_v2),
+            0,
+            strlen($this->content_v2),
+            SOAP_TestDataBuilder::TEST_USER_1_NAME,
+            '1438953065'
+        );
+
+        return $item_id;
+    }
+
+    /**
+     * @depends testCreateFileVersion
+     * @param int $file_id
+     */
+    public function testGetFileVersion($file_id)
+    {
+        $session_hash = $this->getSessionHash();
+
+        $previous_version_downloaded_content = $this->soap_base->getDocmanFileContents(
+            $session_hash,
+            SOAP_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID,
+            $file_id,
+            1
+        );
+
+        $new_version_downloaded_content = $this->soap_base->getDocmanFileContents(
+            $session_hash,
+            SOAP_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID,
+            $file_id,
+            2
+        );
+
+        $this->assertEquals($this->content, base64_decode($previous_version_downloaded_content));
+        $this->assertEquals($this->content_v2, base64_decode($new_version_downloaded_content));
     }
 
     /**
