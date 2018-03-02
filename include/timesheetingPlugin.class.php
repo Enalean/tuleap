@@ -55,8 +55,8 @@ class timesheetingPlugin extends Plugin
         $this->addHook('cssfile');
         $this->addHook('permission_get_name');
         $this->addHook('project_admin_ugroup_deletion');
-        $this->addHook('widget_instance');
-        $this->addHook('widgets');
+        $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
+        $this->addHook(\Tuleap\Widget\Event\GetUserWidgetList::NAME);
         $this->addHook('fill_project_history_sub_events');
 
         if (defined('TRACKER_BASE_URL')) {
@@ -222,20 +222,16 @@ class timesheetingPlugin extends Plugin
         $dao->deleteByUgroupId($ugroup->getId());
     }
 
-    public function widgets(array $params)
+    public function widgetInstance(\Tuleap\Widget\Event\GetWidget $get_widget_event)
     {
-        switch ($params['owner_type']) {
-            case UserDashboardController::LEGACY_DASHBOARD_TYPE:
-                $params['codendi_widgets'][] = UserWidget::NAME;
-                break;
+        if ($get_widget_event->getName() === UserWidget::NAME) {
+            $get_widget_event->setWidget(new UserWidget());
         }
     }
 
-    public function widgetInstance(array $params)
+    public function getUserWidgetList(\Tuleap\Widget\Event\GetUserWidgetList $event)
     {
-        if ($params['widget'] === UserWidget::NAME) {
-            $params['instance'] = new UserWidget();
-        }
+        $event->addWidget(UserWidget::NAME);
     }
 
     public function fill_project_history_sub_events($params)
