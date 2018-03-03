@@ -82,6 +82,20 @@ class TimeController
             $this->redirectToArtifactViewInTimesheetingPane($artifact);
         }
 
+        $existing_time = $this->getExistingTimeForUserInArtifactAtGivenDate($user, $artifact, $added_date);
+
+        if ($existing_time) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::WARN,
+                sprintf(
+                    dgettext('tuleap-timesheeting',"A time already exists for the day %s. Please update it to change some values."),
+                    $existing_time->getDay()
+                )
+            );
+
+            $this->redirectToArtifactViewInTimesheetingPane($artifact);
+        }
+
         $this->time_updater->addTimeForUserInArtifact($user, $artifact, $added_time, $added_step, $added_date);
 
         $GLOBALS['Response']->addFeedback(
@@ -90,6 +104,11 @@ class TimeController
         );
 
         $this->redirectToArtifactViewInTimesheetingPane($artifact);
+    }
+
+    private function getExistingTimeForUserInArtifactAtGivenDate(PFUser $user, Tracker_Artifact $artifact, $date)
+    {
+        return $this->time_retriever->getExistingTimeForUserInArtifactAtGivenDate($user, $artifact, $date);
     }
 
     public function deleteTimeForUser(Codendi_Request $request, PFUser $user, Tracker_Artifact $artifact)

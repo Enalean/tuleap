@@ -1,3 +1,8 @@
+#, php-format
+msgid ""
+"A time already exists for the day %s. Please update it to change some values."
+msgstr ""
+
 msgid "Access denied. You don't have permissions to perform this action."
 msgstr ""
 
