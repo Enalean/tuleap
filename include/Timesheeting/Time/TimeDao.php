@@ -94,6 +94,22 @@ class TimeDao extends DataAccessObject
                   AND id = $time_id
                 LIMIT 1";
 
-        return $this->retrieve($sql);
+        return $this->retrieveFirstRow($sql);
+    }
+
+    public function getExistingTimeForUserInArtifactAtGivenDate($user_id, $artifact_id, $day)
+    {
+        $user_id     = $this->da->escapeInt($user_id);
+        $artifact_id = $this->da->escapeInt($artifact_id);
+        $day         = $this->da->quoteSmart($day);
+
+        $sql = "SELECT *
+                FROM plugin_timesheeting_times
+                WHERE user_id = $user_id
+                  AND artifact_id = $artifact_id
+                  AND day = $day
+                LIMIT 1";
+
+        return $this->retrieveFirstRow($sql);
     }
 }
