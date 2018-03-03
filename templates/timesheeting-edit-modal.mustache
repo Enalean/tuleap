@@ -1,30 +1,33 @@
-<div id="timesheeting-add-time-modal"
+<div id="timesheeting-edit-{{ id }}"
      class="modal hide fade"
      tabindex="-1"
      role="dialog"
-     aria-labelledby="timesheeting-add-time-modal-title"
+     aria-labelledby="timesheeting-edit-time-modal-title"
      aria-hidden="true"
 >
     <div class="modal-header">
-        <h3>{{# dgettext }} tuleap-timesheeting | Add a new time {{/ dgettext }}</h3>
+        <h3>{{# dgettext }} tuleap-timesheeting | Edit time {{/ dgettext }}</h3>
     </div>
 
-    <form action="{{ add_url }}" method="post">
+    <form action="{{ edit_url }}" method="post">
         <div class="modal-body">
             {{# csrf_token }}
                 {{> csrf_token_input }}
             {{/ csrf_token }}
+
+            <input type="hidden" name="time-id" value="{{ id }}">
+
             <label>{{# dgettext }} tuleap-timesheeting | Step {{/ dgettext }}</label>
-            <input type="text" name="timesheeting-new-time-step">
+            <input type="text" name="timesheeting-edit-time-step" value="{{ step }}">
 
             <label>{{# dgettext }} tuleap-timesheeting | Date {{/ dgettext }}</label>
             <div class="input-prepend dropdown input-append date">
                 <span class="tuleap_field_date">
-                    <input name="timesheeting-new-time-date"
-                           id="timesheeting-new-time-date"
+                    <input name="timesheeting-edit-time-date"
+                           id="timesheeting-edit-time-date"
                            data-format="yyyy-MM-dd"
                            type="text"
-                           value="{{ default_date_value }}">
+                           value="{{ day }}">
                     </input>
                     <span class="add-on add-on-calendar">
                         <i class="icon-calendar" data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
@@ -34,10 +37,11 @@
 
             <label>{{# dgettext }} tuleap-timesheeting | Time {{/ dgettext }}</label>
             <input type="text"
-                   name="timesheeting-new-time-time"
+                   name="timesheeting-edit-time-time"
                    placeholder="00:00"
                    pattern="[0-9]{2}:[0-9]{2}"
                    required
+                   value="{{ time }}"
             >
         </div>
 
@@ -45,8 +49,8 @@
             <button class="btn" data-dismiss="modal" aria-hidden="true">{{# gettext }}Close{{/ gettext }}</button>
             <input type="submit"
                    class="btn btn-primary"
-                   name="timesheeting-add-time"
-                   value="{{# dgettext }} tuleap-timesheeting | Add time {{/ dgettext }}"
+                   name="timesheeting-edit-time"
+                   value="{{# dgettext }} tuleap-timesheeting | Edit time {{/ dgettext }}"
             >
         </div>
     </form>

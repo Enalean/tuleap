@@ -33,40 +33,40 @@ class TimeUpdater
     public function addTimeForUserInArtifact(
         PFUser $user,
         Tracker_Artifact $artifact,
+        $added_date,
         $added_time,
-        $added_step,
-        $added_date
+        $added_step
     ) {
-        $added_time_parts = explode(':', $added_time);
-
-        $minutes = $added_time_parts[0] * 60 + $added_time_parts[1];
-        $day     = $this->getDate($added_date);
+        $minutes = $this->getMinutes($added_time);
 
         return $this->time_dao->addTime(
             $user->getId(),
             $artifact->getId(),
-            $day,
+            $added_date,
             $minutes,
             $added_step
         );
     }
 
-    /**
-     * @param $added_date
-     *
-     * @return string
-     */
-    private function getDate($added_date)
-    {
-        if ($added_date) {
-            return $added_date;
-        }
-
-        return date('Y-m-d', $_SERVER['REQUEST_TIME']);
-    }
-
     public function deleteTime(Time $time)
     {
         return $this->time_dao->deleteTime($time->getId());
+    }
+
+    public function updateTime(Time $time, $updated_date, $updated_time, $updated_step)
+    {
+        return $this->time_dao->updateTime(
+            $time->getId(),
+            $updated_date,
+            $this->getMinutes($updated_time),
+            $updated_step
+        );
+    }
+
+    private function getMinutes($time_value)
+    {
+        $time_parts = explode(':', $time_value);
+
+        return $time_parts[0] * 60 + $time_parts[1];
     }
 }

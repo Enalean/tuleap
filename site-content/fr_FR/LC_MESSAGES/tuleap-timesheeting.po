@@ -2,9 +2,9 @@ msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8\n"
 
 #, php-format
-msgid ""
-"A time already exists for the day %s. Please update it to change some values."
-msgstr "Un temps est déjà existant pour la journée du %s. Merci de le mettre à jour pour changer certaines valeurs."
+msgid "A time already exists for the day %s. Skipping."
+msgstr ""
+"Un temps est déjà existant pour la journée du %s. Il n'a pas été pris en compte."
 
 msgid "Access denied. You don't have permissions to perform this action."
 msgstr ""
@@ -34,6 +34,9 @@ msgstr "Supprimer ce temps"
 
 msgid "Displays your timesheeting in the whole platform."
 msgstr "Afficher vos timesheetings de toute la plateforme."
+
+msgid "Edit time"
+msgstr "Editer un temps"
 
 msgid "Enable timesheeting for tracker"
 msgstr "Activer le timesheeting pour ce tracker"
@@ -68,17 +71,23 @@ msgstr "La requête n'est pas valide."
 msgid "The time is missing"
 msgstr "Le temps est manquant"
 
+msgid "This time does not belong to you."
+msgstr "Ce temps ne vous appartient pas."
+
 msgid "Time"
 msgstr "Temps"
 
-msgid "Time not found"
-msgstr "Temps non trouvé"
+msgid "Time not found."
+msgstr "Temps non trouvé."
 
 msgid "Time successfully added."
 msgstr "Temps ajouté avec succès."
 
 msgid "Time successfully deleted."
 msgstr "Temps supprimé avec succès."
+
+msgid "Time successfully updated."
+msgstr "Temps mis à jour avec succès."
 
 msgid "Timesheeting"
 msgstr "Timesheeting"
@@ -107,7 +116,10 @@ msgstr ""
 "action."
 
 msgid "You are not allowed to add a time."
-msgstr "Vous n'êtes pas autorisé à ajouter un temps"
+msgstr "Vous n'êtes pas autorisé à ajouter un temps."
 
 msgid "You are not allowed to delete a time."
-msgstr "Vous n'êtes pas autorisé à supprimer un temps"
+msgstr "Vous n'êtes pas autorisé à supprimer un temps."
+
+msgid "You are not allowed to edit this time."
+msgstr "Vous n'êtes pas autorisé à modifier ce temps."

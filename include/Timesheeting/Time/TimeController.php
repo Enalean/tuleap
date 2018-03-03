@@ -56,8 +56,7 @@ class TimeController
 
     public function addTimeForUser(Codendi_Request $request, PFUser $user, Tracker_Artifact $artifact)
     {
-        $csrf = new CSRFSynchronizerToken($artifact->getUri());
-        $csrf->check();
+        $this->checkCsrf($artifact);
 
         if (! $this->permissions_retriever->userCanAddTimeInTracker($user, $artifact->getTracker())) {
             $GLOBALS['Response']->addFeedback(
@@ -70,33 +69,13 @@ class TimeController
 
         $added_step = $request->get('timesheeting-new-time-step');
         $added_time = $request->get('timesheeting-new-time-time');
-        $added_date = $request->get('timesheeting-new-time-date');
+        $added_date = $request->get('timesheeting-new-time-date') ?: date('Y-m-d', $_SERVER['REQUEST_TIME']);
 
+        $this->checkMandatoryTimeValue($artifact, $added_time);
 
-        if (! $added_time) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::ERROR,
-                dgettext('tuleap-timesheeting',"The time is missing")
-            );
+        $this->checkExistingTimeForUserInArtifactAtGivenDate($user, $artifact, $added_date);
 
-            $this->redirectToArtifactViewInTimesheetingPane($artifact);
-        }
-
-        $existing_time = $this->getExistingTimeForUserInArtifactAtGivenDate($user, $artifact, $added_date);
-
-        if ($existing_time) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::WARN,
-                sprintf(
-                    dgettext('tuleap-timesheeting',"A time already exists for the day %s. Please update it to change some values."),
-                    $existing_time->getDay()
-                )
-            );
-
-            $this->redirectToArtifactViewInTimesheetingPane($artifact);
-        }
-
-        $this->time_updater->addTimeForUserInArtifact($user, $artifact, $added_time, $added_step, $added_date);
+        $this->time_updater->addTimeForUserInArtifact($user, $artifact, $added_date, $added_time, $added_step);
 
         $GLOBALS['Response']->addFeedback(
             Feedback::INFO,
@@ -113,8 +92,7 @@ class TimeController
 
     public function deleteTimeForUser(Codendi_Request $request, PFUser $user, Tracker_Artifact $artifact)
     {
-        $csrf = new CSRFSynchronizerToken($artifact->getUri());
-        $csrf->check();
+        $this->checkCsrf($artifact);
 
         if (! $this->permissions_retriever->userCanAddTimeInTracker($user, $artifact->getTracker())) {
             $GLOBALS['Response']->addFeedback(
@@ -125,17 +103,9 @@ class TimeController
             $this->redirectToArtifactView($artifact);
         }
 
-        $time_id = $request->get('time-id');
-        $time    = $this->time_retriever->getTimeByIdForUser($user, $time_id);
+        $time = $this->getTimeFromRequest($request, $user, $artifact);
 
-        if (! $time) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::ERROR,
-                dgettext('tuleap-timesheeting', "Time not found")
-            );
-
-            $this->redirectToArtifactViewInTimesheetingPane($artifact);
-        }
+        $this->checkTimeBelongsToUser($time, $user, $artifact);
 
         $this->time_updater->deleteTime($time);
 
@@ -145,6 +115,81 @@ class TimeController
         );
 
         $this->redirectToArtifactViewInTimesheetingPane($artifact);
+    }
+
+    public function editTimeForUser(Codendi_Request $request, PFUser $user, Tracker_Artifact $artifact)
+    {
+        $this->checkCsrf($artifact);
+
+        if (! $this->permissions_retriever->userCanAddTimeInTracker($user, $artifact->getTracker())) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                dgettext('tuleap-timesheeting',"You are not allowed to edit this time.")
+            );
+
+            $this->redirectToArtifactView($artifact);
+        }
+
+        $time = $this->getTimeFromRequest($request, $user, $artifact);
+
+        $this->checkTimeBelongsToUser($time, $user, $artifact);
+
+        $updated_step = $request->get('timesheeting-edit-time-step');
+        $updated_time = $request->get('timesheeting-edit-time-time');
+        $updated_date = $request->get('timesheeting-edit-time-date') ?: date('Y-m-d', $_SERVER['REQUEST_TIME']);
+
+        $this->checkMandatoryTimeValue($artifact, $updated_time);
+
+        if ($time->getDay() !== $updated_date) {
+            $this->checkExistingTimeForUserInArtifactAtGivenDate($user, $artifact, $updated_date);
+        }
+
+        $this->time_updater->updateTime($time, $updated_date, $updated_time, $updated_step);
+
+        $GLOBALS['Response']->addFeedback(
+            Feedback::INFO,
+            dgettext('tuleap-timesheeting',"Time successfully updated.")
+        );
+
+        $this->redirectToArtifactViewInTimesheetingPane($artifact);
+    }
+
+    /**
+     * @return Time
+     */
+    private function getTimeFromRequest(Codendi_Request $request, PFUser $user, Tracker_Artifact $artifact)
+    {
+        $time_id = $request->get('time-id');
+        $time    = $this->time_retriever->getTimeByIdForUser($user, $time_id);
+
+        if (! $time) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                dgettext('tuleap-timesheeting', "Time not found.")
+            );
+
+            $this->redirectToArtifactViewInTimesheetingPane($artifact);
+        }
+
+        return $time;
+    }
+
+    private function checkCsrf(Tracker_Artifact $artifact)
+    {
+        $csrf = new CSRFSynchronizerToken($artifact->getUri());
+        $csrf->check();
+    }
+
+    private function checkMandatoryTimeValue(Tracker_Artifact $artifact, $time_value)
+    {
+        if (! $time_value) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                dgettext('tuleap-timesheeting',"The time is missing")
+            );
+
+            $this->redirectToArtifactViewInTimesheetingPane($artifact);
+        }
     }
 
     private function redirectToArtifactViewInTimesheetingPane(Tracker_Artifact $artifact)
@@ -164,5 +209,34 @@ class TimeController
         ));
 
         $GLOBALS['Response']->redirect($url);
+    }
+
+    private function checkExistingTimeForUserInArtifactAtGivenDate(PFUser $user, Tracker_Artifact $artifact, $date)
+    {
+        $existing_time = $this->getExistingTimeForUserInArtifactAtGivenDate($user, $artifact, $date);
+
+        if ($existing_time) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::WARN,
+                sprintf(
+                    dgettext('tuleap-timesheeting', "A time already exists for the day %s. Skipping."),
+                    $existing_time->getDay()
+                )
+            );
+
+            $this->redirectToArtifactViewInTimesheetingPane($artifact);
+        }
+    }
+
+    private function checkTimeBelongsToUser(Time $time, PFUser $user, Tracker_Artifact $artifact)
+    {
+        if ($time->getUserId() !== $user->getId()) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                dgettext('tuleap-timesheeting', "This time does not belong to you.")
+            );
+
+            $this->redirectToArtifactViewInTimesheetingPane($artifact);
+        }
     }
 }

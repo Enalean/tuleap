@@ -1,6 +1,5 @@
 #, php-format
-msgid ""
-"A time already exists for the day %s. Please update it to change some values."
+msgid "A time already exists for the day %s. Skipping."
 msgstr ""
 
 msgid "Access denied. You don't have permissions to perform this action."
@@ -28,6 +27,9 @@ msgid "Delete the time"
 msgstr ""
 
 msgid "Displays your timesheeting in the whole platform."
+msgstr ""
+
+msgid "Edit time"
 msgstr ""
 
 msgid "Enable timesheeting for tracker"
@@ -63,16 +65,22 @@ msgstr ""
 msgid "The time is missing"
 msgstr ""
 
+msgid "This time does not belong to you."
+msgstr ""
+
 msgid "Time"
 msgstr ""
 
-msgid "Time not found"
+msgid "Time not found."
 msgstr ""
 
 msgid "Time successfully added."
 msgstr ""
 
 msgid "Time successfully deleted."
+msgstr ""
+
+msgid "Time successfully updated."
 msgstr ""
 
 msgid "Timesheeting"
@@ -103,4 +111,7 @@ msgid "You are not allowed to add a time."
 msgstr ""
 
 msgid "You are not allowed to delete a time."
+msgstr ""
+
+msgid "You are not allowed to edit this time."
 msgstr ""

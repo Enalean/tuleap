@@ -112,4 +112,18 @@ class TimeDao extends DataAccessObject
 
         return $this->retrieveFirstRow($sql);
     }
+
+    public function updateTime($time_id, $day, $minutes, $step)
+    {
+        $time_id     = $this->da->escapeInt($time_id);
+        $day         = $this->da->quoteSmart($day);
+        $minutes     = $this->da->escapeInt($minutes);
+        $step        = $this->da->quoteSmart($step);
+
+        $sql = "UPDATE plugin_timesheeting_times
+                SET day = $day, minutes = $minutes, step = $step
+                WHERE id = $time_id";
+
+        return $this->update($sql);
+    }
 }

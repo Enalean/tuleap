@@ -70,6 +70,11 @@ class ArtifactViewPresenter
      */
     public $default_date_value;
 
+    /**
+     * @var string
+     */
+    public $edit_url;
+
     public function __construct(
         Tracker_Artifact $artifact,
         CSRFSynchronizerToken $csrf,
@@ -85,6 +90,11 @@ class ArtifactViewPresenter
         $this->base_delete_url = TIMESHEETING_BASE_URL . '/?' . http_build_query(array(
             'artifact' => $artifact->getId(),
             'action'   => 'delete-time'
+        ));
+
+        $this->edit_url = TIMESHEETING_BASE_URL . '/?' . http_build_query(array(
+            'artifact' => $artifact->getId(),
+            'action'   => 'edit-time'
         ));
 
         $this->csrf_token        = $csrf;

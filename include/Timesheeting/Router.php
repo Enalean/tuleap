@@ -93,6 +93,11 @@ class Router
                 $this->time_controller->deleteTimeForUser($request, $user, $artifact);
 
                 break;
+            case "edit-time":
+                $artifact = $this->getArtifactFromRequest($request, $user);
+                $this->time_controller->editTimeForUser($request, $user, $artifact);
+
+                break;
             default:
                 $this->redirectToTuleapHomepage();
 
