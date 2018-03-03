@@ -65,6 +65,11 @@ class ArtifactViewPresenter
      */
     public $base_delete_url;
 
+    /**
+     * @var string
+     */
+    public $default_date_value;
+
     public function __construct(
         Tracker_Artifact $artifact,
         CSRFSynchronizerToken $csrf,
@@ -88,15 +93,7 @@ class ArtifactViewPresenter
         $this->has_times         = count($times) > 0;
         $this->total_time        = $formatted_total_time;
 
-        $request_time  = $_SERVER['REQUEST_TIME'];
-        $default_value = date('Y-m-d', $request_time);
-        $this->purified_date_picker = $GLOBALS['HTML']->getBootstrapDatePicker(
-            "timesheeting-new-time-date",
-            "timesheeting-new-time-date",
-            $default_value,
-            array(),
-            array(),
-            false
-        );
+        $request_time             = $_SERVER['REQUEST_TIME'];
+        $this->default_date_value = date('Y-m-d', $request_time);
     }
 }
