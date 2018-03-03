@@ -64,4 +64,9 @@ class TimeUpdater
 
         return date('Y-m-d', $_SERVER['REQUEST_TIME']);
     }
+
+    public function deleteTime(Time $time)
+    {
+        return $this->time_dao->deleteTime($time->getId());
+    }
 }

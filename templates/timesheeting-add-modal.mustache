@@ -9,7 +9,7 @@
         <h3>{{# dgettext }} tuleap-timesheeting | Add a new time {{/ dgettext }}</h3>
     </div>
 
-    <form action="{{ url }}" method="post">
+    <form action="{{ add_url }}" method="post">
         <div class="modal-body">
             {{# csrf_token }}
                 {{> csrf_token_input }}

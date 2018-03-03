@@ -47,8 +47,14 @@ class Time
      */
     private $step;
 
-    public function __construct($user_id, $artifact_id, $day, $minutes, $step)
+    /**
+     * @var int
+     */
+    private $id;
+
+    public function __construct($id, $user_id, $artifact_id, $day, $minutes, $step)
     {
+        $this->id          = $id;
         $this->user_id     = $user_id;
         $this->artifact_id = $artifact_id;
         $this->day         = $day;
@@ -86,5 +92,13 @@ class Time
     public function getUserId()
     {
         return $this->user_id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 }
