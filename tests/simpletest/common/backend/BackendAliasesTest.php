@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean 2011 - 2017. All rights reserved
+ * Copyright (c) Enalean 2011 - 2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -25,6 +25,8 @@ class BackendAliasesTest extends TuleapTestCase {
     private $alias_file;
 
     public function setUp() {
+        parent::setUp();
+        ForgeConfig::store();
         $GLOBALS['alias_file'] = $this->getTmpDir() . '/aliases.codendi';
         $this->alias_file      = $GLOBALS['alias_file'];
 
@@ -83,6 +85,8 @@ class BackendAliasesTest extends TuleapTestCase {
         //clear the cache between each tests
         Backend::clearInstances();
         EventManager::clearInstance();
+        ForgeConfig::restore();
+        parent::tearDown();
     }
 
     public function itReturnsTrueInCaseOfSuccess() {
@@ -112,10 +116,19 @@ class BackendAliasesTest extends TuleapTestCase {
         $this->assertPattern("/list1-bounces:/", $aliases, "ML aliases not set");
     }
 
-    public function itGeneratesUserAliases() {
+    public function itGeneratesUserAliasesWhenExplicitelyEnabled()
+    {
+        ForgeConfig::set('accept_security_risk_and_enable_user_aliases', 1);
         $this->backend->update();
         $aliases = file_get_contents($this->alias_file);
         $this->assertPattern("/user3:/", $aliases, "User aliases not set");
+    }
+
+    public function itDoesNotGenerateUserAliasesByDefault()
+    {
+        $this->backend->update();
+        $aliases = file_get_contents($this->alias_file);
+        $this->assertNoPattern("/user3:/", $aliases, "User aliases not set");
     }
 
     public function itGeneratesUserAliasesGivenByPlugins() {

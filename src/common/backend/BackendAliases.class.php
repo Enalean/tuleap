@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2011, 2012, 2013, 2014. All rights reserved
+ * Copyright (c) Enalean, 2011-2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -139,8 +139,14 @@ class BackendAliases extends Backend {
      * @param resource $fp A file system pointer resource that is typically created using fopen().
      * 
      * @return bool
+     *
+     * @todo This must be removed with Tuleap 10.1
      */
-    protected function writeUserAliases($fp) {
+    protected function writeUserAliases($fp)
+    {
+        if (! ForgeConfig::get('accept_security_risk_and_enable_user_aliases')) {
+            return true;
+        }
         fwrite($fp, "### Begin User Aliases ###\n\n");
 
         $allowed_statuses=array('A', 'R'); // Active and restricted users
