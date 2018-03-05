@@ -21,9 +21,14 @@
 namespace Tuleap\Git\PermissionsPerGroup;
 
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRepresentation;
+use Tuleap\REST\JsonCast;
 
 class FineGrainedPermissionRepresentation
 {
+    /**
+     * @var int
+     */
+    public $id;
     /**
      * @var PermissionPerGroupUGroupRepresentation[]
      */
@@ -46,12 +51,14 @@ class FineGrainedPermissionRepresentation
     private $all_ugroup_ids;
 
     public function __construct(
+        $id,
         array $writers,
         array $rewinders,
         $branch,
         $tag,
         array $all_ugroup_ids
     ) {
+        $this->id             = JsonCast::toInt($id);
         $this->writers        = $writers;
         $this->rewinders      = $rewinders;
         $this->branch         = $branch;

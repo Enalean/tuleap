@@ -46,7 +46,7 @@
 
     export default {
         components: {GitPermissionsBadge},
-        name: 'GitRepositoryTableFineGrainedPermissionsFineGrained',
+        name: 'GitRepositoryTableFineGrainedPermission',
         props: {
             fineGrainedPermissions: Object
         }

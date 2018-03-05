@@ -29,7 +29,7 @@ use ProjectUGroup;
 use Tuleap\Git\Permissions\FineGrainedPermission;
 use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
 
-require_once __DIR__ . '/../../bootstrap.php';
+require_once dirname(__FILE__).'/../bootstrap.php';
 
 class RepositoryFineGrainedRepresentationBuilderTest extends TestCase
 {
@@ -121,7 +121,7 @@ class RepositoryFineGrainedRepresentationBuilderTest extends TestCase
         );
 
         $tag_permission = new FineGrainedPermission(
-            1,
+            2,
             $this->repository->getId(),
             '/name/tag',
             [$this->project_member_id],
@@ -138,6 +138,7 @@ class RepositoryFineGrainedRepresentationBuilderTest extends TestCase
         $this->formatter->method('formatCollectionOfUgroups')->willReturn($formatted_ugroup);
 
         $expected__branch_fine_grained_representation = new FineGrainedPermissionRepresentation(
+            1,
             $formatted_ugroup,
             $formatted_ugroup,
             '/name',
@@ -145,6 +146,7 @@ class RepositoryFineGrainedRepresentationBuilderTest extends TestCase
             [$this->project_member_id, $this->project_member_id]
         );
         $expected__tag_fine_grained_representation    = new FineGrainedPermissionRepresentation(
+            2,
             $formatted_ugroup,
             $formatted_ugroup,
             '',
@@ -225,7 +227,7 @@ class RepositoryFineGrainedRepresentationBuilderTest extends TestCase
         );
 
         $tag_permission = new FineGrainedPermission(
-            1,
+            2,
             $this->repository->getId(),
             '/name/tag',
             [],
@@ -247,6 +249,7 @@ class RepositoryFineGrainedRepresentationBuilderTest extends TestCase
         )->willReturnOnConsecutiveCalls($formatted_ugroup, [], [], []);
 
         $expected__branch_fine_grained_representation = new FineGrainedPermissionRepresentation(
+            1,
             $formatted_ugroup,
             [],
             '/name',
