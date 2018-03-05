@@ -52,10 +52,7 @@ class ParentTrackerRetrieverTest extends TuleapTestCase
         $user                        = mock(PFUser::class);
         $descendant_backlog_trackers = [$user_story_tracker, $bug_tracker];
 
-        stub($planning_factory)->getOrderedPlanningsWithBacklogTracker()->returns([
-            $release_planning,
-            $sprint_planning
-        ]);
+        stub($planning_factory)->getSubPlannings($sprint_planning, $user)->returns([]);
 
         $trackers = $retriever->getCreatableParentTrackers($milestone, $user, $descendant_backlog_trackers);
 
@@ -88,9 +85,7 @@ class ParentTrackerRetrieverTest extends TuleapTestCase
         $user                        = mock(PFUser::class);
         $descendant_backlog_trackers = [$user_story_tracker, $bug_tracker];
 
-        stub($planning_factory)->getOrderedPlanningsWithBacklogTracker($user, '*')->returns([
-            $product_planning,
-            $release_planning,
+        stub($planning_factory)->getSubPlannings($release_planning, $user)->returns([
             $sprint_planning
         ]);
 
@@ -122,8 +117,7 @@ class ParentTrackerRetrieverTest extends TuleapTestCase
         $user                        = mock(PFUser::class);
         $descendant_backlog_trackers = [$user_story_tracker, $bug_tracker];
 
-        stub($planning_factory)->getOrderedPlanningsWithBacklogTracker($user, '*')->returns([
-            $release_planning,
+        stub($planning_factory)->getSubPlannings($release_planning, $user)->returns([
             $sprint_planning
         ]);
 
@@ -162,8 +156,7 @@ class ParentTrackerRetrieverTest extends TuleapTestCase
         $user                        = mock(PFUser::class);
         $descendant_backlog_trackers = [$user_story_tracker, $bug_tracker];
 
-        stub($planning_factory)->getOrderedPlanningsWithBacklogTracker($user, '*')->returns([
-            $release_planning,
+        stub($planning_factory)->getSubPlannings($release_planning, $user)->returns([
             $sprint_planning,
             $sub_sprint_planning
         ]);
@@ -196,9 +189,7 @@ class ParentTrackerRetrieverTest extends TuleapTestCase
         $user                        = mock(PFUser::class);
         $descendant_backlog_trackers = [$user_story_tracker, $bug_tracker, $epic_tracker];
 
-        stub($planning_factory)->getOrderedPlanningsWithBacklogTracker($user, '*')->returns([
-            $sprint_planning,
-        ]);
+        stub($planning_factory)->getSubPlannings($sprint_planning, $user)->returns([]);
 
         $trackers = $retriever->getCreatableParentTrackers($milestone, $user, $descendant_backlog_trackers);
 

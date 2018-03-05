@@ -45,13 +45,20 @@ class AgileDashboard_BacklogItem_SubBacklogItemProvider {
     /** @var AgileDashboard_Milestone_Backlog_BacklogFactory */
     private $backlog_factory;
 
+    /**
+     * @var PlanningFactory
+     */
+    private $planning_factory;
+
     public function __construct(Tracker_ArtifactDao $dao,
         AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory,
-        AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory $backlog_item_collection_factory
+        AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory $backlog_item_collection_factory,
+        PlanningFactory $planning_factory
     ) {
         $this->backlog_item_collection_factory = $backlog_item_collection_factory;
         $this->backlog_factory                 = $backlog_factory;
         $this->dao                             = $dao;
+        $this->planning_factory                = $planning_factory;
     }
 
     /**
@@ -67,14 +74,16 @@ class AgileDashboard_BacklogItem_SubBacklogItemProvider {
             return $this->getMatchingIdsForTopBacklog($milestone, $backlog_tracker, $user);
         }
 
-        return $this->getMatchingIdsForMilestone($milestone, $backlog_tracker);
+        return $this->getMatchingIdsForMilestone($milestone, $backlog_tracker, $user);
     }
 
-    private function getMatchingIdsForMilestone(Planning_Milestone $milestone, Tracker $backlog_tracker) {
+    private function getMatchingIdsForMilestone(Planning_Milestone $milestone, Tracker $backlog_tracker, PFUser $user)
+    {
         $milestone_id_seed = array($milestone->getArtifactId());
-
         $this->inspected_ids = $milestone_id_seed;
-        $this->filterBacklogIds($backlog_tracker->getId(), $milestone_id_seed);
+
+        $filtrable_backlog_tracker_ids = $this->getSubPlanningTrackerIds($milestone, $user);
+        $this->filterBacklogIds($backlog_tracker->getId(), $milestone_id_seed, $filtrable_backlog_tracker_ids);
 
         return $this->backlog_ids;
     }
@@ -96,21 +105,37 @@ class AgileDashboard_BacklogItem_SubBacklogItemProvider {
      * Retrieve all linked artifacts and keep only those that belong to backlog tracker
      *
      * We need to keep list of ids we already looked at so we avoid cycles.
-     *
-     * @param int $backlog_tracker_id
-     * @param array $artifacts
      */
-    private function filterBacklogIds($backlog_tracker_id, array $artifacts) {
+    private function filterBacklogIds($backlog_tracker_id, array $artifacts, array $filtrable_planning_tracker_ids)
+    {
         $artifacts_to_inspect = array();
         foreach ($this->dao->getLinkedArtifactsByIds($artifacts, $this->inspected_ids) as $artifact_row) {
-            $artifacts_to_inspect[] = $artifact_row['id'];
+            if (in_array($artifact_row['tracker_id'], $filtrable_planning_tracker_ids)) {
+                $artifacts_to_inspect[] = $artifact_row['id'];
+            }
+
             if ($artifact_row['tracker_id'] == $backlog_tracker_id) {
                 $this->backlog_ids[$artifact_row['id']] = true;
             }
+
             $this->inspected_ids[] = $artifact_row['id'];
         }
+
         if (count($artifacts_to_inspect) > 0) {
-            $this->filterBacklogIds($backlog_tracker_id, $artifacts_to_inspect);
+            $this->filterBacklogIds($backlog_tracker_id, $artifacts_to_inspect, $filtrable_planning_tracker_ids);
         }
+    }
+
+    /**
+     * @return int[]
+     */
+    private function getSubPlanningTrackerIds(Planning_Milestone $milestone, PFUser $user)
+    {
+        $planning_tracker_ids = [];
+        foreach ($this->planning_factory->getSubPlannings($milestone->getPlanning(), $user) as $sub_planning) {
+            $planning_tracker_ids[] = $sub_planning->getPlanningTrackerId();
+        }
+
+        return $planning_tracker_ids;
     }
 }

@@ -277,7 +277,13 @@ class AgileDashboardPlugin extends Plugin {
         $milestone          = $milestone_provider->getMilestone();
 
         if ($milestone) {
-            $provider = new AgileDashboard_BacklogItem_SubBacklogItemProvider(new Tracker_ArtifactDao(), $this->getBacklogFactory(), $this->getBacklogItemCollectionFactory());
+            $provider = new AgileDashboard_BacklogItem_SubBacklogItemProvider(
+                new Tracker_ArtifactDao(),
+                $this->getBacklogFactory(),
+                $this->getBacklogItemCollectionFactory(),
+                $this->getPlanningFactory()
+            );
+
             $params['result'][]         = $provider->getMatchingIds($milestone, $backlog_tracker, $user);
             $params['search_performed'] = true;
         }
