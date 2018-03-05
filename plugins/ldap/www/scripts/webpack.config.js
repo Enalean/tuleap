@@ -21,7 +21,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* eslint-disable */
 var path                  = require('path');;
 var WebpackAssetsManifest = require('webpack-assets-manifest');
 var BabelPresetEnv        = require('babel-preset-env');

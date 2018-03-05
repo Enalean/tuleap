@@ -9,7 +9,7 @@ describe("ReleaseRestService -", function() {
     beforeEach(function() {
         angular.mock.module(tuleap_frs_module);
 
-        angular.mock.inject(function( // eslint-disable-line angular/di
+        angular.mock.inject(function(
             _$httpBackend_,
             _$q_,
             _ReleaseRestService_,

@@ -1,4 +1,3 @@
-/* eslint-disable */
 var webpack_config = require('./webpack.config.js')[0];
 var path           = require('path');
 

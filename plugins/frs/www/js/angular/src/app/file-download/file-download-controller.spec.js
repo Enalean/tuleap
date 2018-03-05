@@ -15,7 +15,7 @@ describe("FileDownloadController -", function() {
     beforeEach(function() {
         angular.mock.module(tuleap_frs_module);
 
-        angular.mock.inject(function( // eslint-disable-line angular/di
+        angular.mock.inject(function(
             _$controller_,
             _$modal_,
             _$q_,

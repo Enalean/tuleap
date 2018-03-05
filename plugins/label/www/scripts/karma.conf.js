@@ -17,7 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* eslint-disable */
 const webpack_config = require('./webpack.config.js');
 const path           = require('path');
 

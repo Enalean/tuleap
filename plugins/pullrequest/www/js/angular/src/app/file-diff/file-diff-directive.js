@@ -1,4 +1,3 @@
-/* eslint-disable angular/document-service */
 angular
     .module('tuleap.pull-request')
     .directive('fileDiff', FileDiffDirective);

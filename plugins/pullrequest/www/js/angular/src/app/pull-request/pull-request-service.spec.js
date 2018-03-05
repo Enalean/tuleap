@@ -4,7 +4,6 @@ describe("PullRequestService -", function() {
     beforeEach(function() {
         module('tuleap.pull-request');
 
-        // eslint-disable-next-line angular/di
         inject(function(
             _PullRequestService_
         ) {

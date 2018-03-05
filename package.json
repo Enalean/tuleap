@@ -31,7 +31,7 @@
     "build": "gulp build",
     "components": "gulp components",
     "core": "gulp core",
-    "eslint": "eslint --config .eslintrc --no-eslintrc",
+    "eslint": "eslint --config .eslintrc --no-eslintrc  --report-unused-disable-directives",
     "js": "gulp js",
     "sass": "gulp sass",
     "scss-lint": "gulp scss-lint",

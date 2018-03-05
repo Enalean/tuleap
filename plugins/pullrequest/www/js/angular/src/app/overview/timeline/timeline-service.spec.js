@@ -1,4 +1,3 @@
-/* eslint-disable max-nested-callbacks */
 describe('TimelineService', function() {
     var $httpBackend,
         $sce,
@@ -8,7 +7,6 @@ describe('TimelineService', function() {
     beforeEach(function() {
         module('tuleap.pull-request');
 
-        // eslint-disable-next-line angular/di
         inject(function(
             _$httpBackend_,
             _$sce_,

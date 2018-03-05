@@ -7,7 +7,6 @@ describe("PullRequestRefsController -", function() {
 
         module('tuleap.pull-request');
 
-        // eslint-disable-next-line angular/di
         inject(function(
             _$controller_,
             _SharedPropertiesService_
