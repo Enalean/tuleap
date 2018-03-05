@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,7 +17,10 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-(function() {
+
+import { StatisticsPieChart } from './statistics-chart.js';
+
+document.addEventListener('DOMContentLoaded', () => {
     const PIE_CHART_MAX_HEIGHT    = 250;
     const PIE_CHART_MARGIN        = 50;
     const PIE_CHART_LEGEND_MARGIN = 10;
@@ -25,25 +28,25 @@
     initializePieCharts();
 
     function initializePieCharts() {
-        var pie_chart_elements = document.getElementsByClassName('siteadmin-homepage-pie-chart');
+        const pie_chart_elements = document.getElementsByClassName('siteadmin-homepage-pie-chart');
 
         [].forEach.call(pie_chart_elements, function(pie_chart_element) {
-            var pie_chart_element_sizes = getSizes(pie_chart_element);
-            var options = {
-                graph_id   : pie_chart_element.id,
-                graph_class: 'siteadmin-homepage-pie-chart',
-                data       : JSON.parse(pie_chart_element.dataset.statistics),
-                width      : pie_chart_element_sizes.width,
-                height     : pie_chart_element_sizes.height,
-                radius     : pie_chart_element_sizes.radius
-            };
+            const pie_chart_element_sizes = getSizes(pie_chart_element);
 
-            var pie_chart = tuleap.charts.statisticsPieChartFactory(options);
-            pie_chart();
+            const pie_chart = new StatisticsPieChart({
+                prefix        : pie_chart_element.id,
+                general_prefix: 'siteadmin-homepage-pie-chart',
+                data          : JSON.parse(pie_chart_element.dataset.statistics),
+                width         : pie_chart_element_sizes.width,
+                height        : pie_chart_element_sizes.height,
+                radius        : pie_chart_element_sizes.radius
+            });
+
+            pie_chart.init();
 
             window.addEventListener('resize', function() {
-                updateSizes(pie_chart, pie_chart_element);
-                pie_chart.redraw();
+                const sizes = getSizes(pie_chart_element);
+                pie_chart.redraw(sizes);
             });
         });
 
@@ -51,11 +54,11 @@
     }
 
     function initializePieChartsLegendSize() {
-        var legend_max_width   = 0;
-        var legend_li_elements = document.querySelectorAll('.siteadmin-homepage-pie-chart-legend > li');
+        let legend_max_width     = 0;
+        const legend_li_elements = document.querySelectorAll('.siteadmin-homepage-pie-chart-legend > li');
 
         [].forEach.call(legend_li_elements, function(li_element) {
-            var li_width = li_element.getBoundingClientRect().width;
+            const li_width = li_element.getBoundingClientRect().width;
 
             if (li_width > legend_max_width) {
                 legend_max_width = li_width;
@@ -68,7 +71,7 @@
     }
 
     function getSizes(element) {
-        var client_rect_width = element.getBoundingClientRect().width,
+        const client_rect_width = element.getBoundingClientRect().width,
             width             = client_rect_width / 2,
             height            = PIE_CHART_MAX_HEIGHT > client_rect_width / 2 ?
                 client_rect_width / 2 : PIE_CHART_MAX_HEIGHT,
@@ -76,12 +79,4 @@
 
         return {width: width, height: height, radius: radius};
     }
-
-    function updateSizes(chart, element) {
-        var sizes = getSizes(element);
-
-        chart.width(sizes.width);
-        chart.height(sizes.height);
-        chart.radius(sizes.radius);
-    }
-} ());
+});
