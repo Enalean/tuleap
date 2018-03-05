@@ -104,10 +104,18 @@ pipeline {
                 'Whole platform integration': {
                     dir ('sources') {
                         sh """
-                        tests/selenium/wrap.sh "$WORKSPACE/results/distlp-integration"
+                        tests/e2e/selenium/wrap.sh "$WORKSPACE/results/distlp-integration"
                         """
                     }
                     junit 'results/distlp-integration/Tuleap-Tests-*.xml'
+                },
+                'Cypress': {
+                    dir ('sources') {
+                        sh """
+                        tests/e2e/cypress/wrap.sh "$WORKSPACE/results/cypress"
+                        """
+                    }
+                    junit 'results/cypress/*.xml'
                 },
                 'Build and run CentOS 6': {
                     dir ('sources') {

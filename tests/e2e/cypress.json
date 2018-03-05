@@ -1,0 +1,11 @@
+{
+    "baseUrl": "https://reverse-proxy",
+    "reporter": "junit",
+    "reporterOptions": {
+        "mochaFile": "/output/results.xml"
+    },
+    "screenshotsFolder": "/output/screenshots",
+    "videosFolder": "/output/videos",
+    "videoRecording": false,
+    "pluginsFile": false
+}

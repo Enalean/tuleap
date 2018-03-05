@@ -29,7 +29,7 @@ is_server_ready() {
 }
 
 composer_install() {
-    su -c 'composer --working-dir=/tuleap/tests/selenium install' -l runner
+    su -c 'composer --working-dir=/tuleap/tests/e2e/selenium install' -l runner
 }
 
 setup_user
@@ -38,7 +38,7 @@ composer_install
 
 is_server_ready
 
-su -c '/tuleap/tests/selenium/vendor/bin/steward run \
+su -c '/tuleap/tests/e2e/selenium/vendor/bin/steward run \
     -vvv \
     --logs-dir=/output \
     --server-url http://chrome:4444 \
