@@ -15,5 +15,13 @@ msgstr ""
 msgid "Adds velocity chart into Agiledashboard"
 msgstr "Ajoute le graphique de vélocité dans le tableau de bord Agile"
 
+msgid ""
+"Choose the \"velocity\" field that will be used for computation of velocity "
+"chart."
+msgstr "Choisissez le champ \"vélocité\" qui sera utilisé pour le calcul de la vélocité"
+
+msgid "Define the field to use to compute velocity."
+msgstr "Définissez le champ à utiliser pour calculer la vélocité"
+
 msgid "Velocity"
 msgstr "Vélocité"
