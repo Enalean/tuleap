@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2011 — 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 — 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -50,7 +50,6 @@ abstract class SystemEvent {
     const TYPE_UGROUP_MODIFY         = "UGROUP_MODIFY";
     const TYPE_USER_CREATE           = "USER_CREATE";
     const TYPE_USER_DELETE           = "USER_DELETE";
-    const TYPE_USER_EMAIL_CHANGED    = "USER_EMAIL_CHANGED";
     const TYPE_USER_MODIFY           = "USER_MODIFY";
     const TYPE_USER_RENAME           = "USER_RENAME";
     const TYPE_MEMBERSHIP_CREATE     = "MEMBERSHIP_CREATE";

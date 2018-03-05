@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2011 — 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 — 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -408,7 +408,6 @@ class SystemEventManager {
         case SystemEvent::TYPE_UGROUP_MODIFY:
         case SystemEvent::TYPE_USER_CREATE:
         case SystemEvent::TYPE_USER_DELETE:
-        case SystemEvent::TYPE_USER_EMAIL_CHANGED:
         case SystemEvent::TYPE_USER_RENAME:
         case SystemEvent::TYPE_MAILING_LIST_CREATE:
         case SystemEvent::TYPE_MAILING_LIST_DELETE:
