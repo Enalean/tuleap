@@ -1,0 +1,4 @@
+Velocity plugin
+===============
+
+Adds velocity chart in Agiledashboard plugin.

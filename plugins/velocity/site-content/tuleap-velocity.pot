@@ -1,0 +1,5 @@
+msgid "Adds velocity chart into Agiledashboard"
+msgstr ""
+
+msgid "Velocity"
+msgstr ""
