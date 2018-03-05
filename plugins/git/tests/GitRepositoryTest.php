@@ -64,7 +64,8 @@ class GitRepositoryTest extends TuleapTestCase {
         $this->assertFalse($repo->isDotGit('default.git.old'));
     }
 
-    public function testGetRepositoryIDByNameSuccess() {
+    public function testGetRepositoryIDByNameSuccess()
+    {
         $repo = new GitRepositorySecondTestVersion();
         $pm = new MockProjectManager();
         $project = new Mockproject();
@@ -72,18 +73,13 @@ class GitRepositoryTest extends TuleapTestCase {
         $pm->setReturnValue('getProjectByUnixName', $project);
         $dao = new MockGitDao();
         $repo->setReturnValue('getDao', $dao);
-        $dar = new MockDataAccessResult();
-        $dar->setReturnValue('isError', false);
-        $dar->setReturnValue('getRow', array ("repository_id" => 48));
-        $dao->setReturnValue('getProjectRepositoryByName', $dar);
+        $dao->setReturnValue('getProjectRepositoryByName', ['repository_id' => 48]);
 
         $this->assertEqual($repo->getRepositoryIDByName('repo', 'prj'), 48);
 
         $repo->expectOnce('_getProjectManager');
         $dao->expectOnce('getProjectRepositoryByName');
         $project->expectOnce('getID');
-        $dar->expectOnce('isError');
-        $dar->expectOnce('getRow');
     }
 
     public function testGetRepositoryIDByNameNoRepository() {
@@ -94,17 +90,13 @@ class GitRepositoryTest extends TuleapTestCase {
         $pm->setReturnValue('getProjectByUnixName', $project);
         $dao = new MockGitDao();
         $repo->setReturnValue('getDao', $dao);
-        $dar = new MockDataAccessResult();
-        $dar->setReturnValue('isError', true);
-        $dao->setReturnValue('getProjectRepositoryByName', $dar);
+        $dao->setReturnValue('getProjectRepositoryByName', false);
 
         $this->assertEqual($repo->getRepositoryIDByName('repo', 'prj'), 0);
 
         $repo->expectOnce('_getProjectManager');
         $dao->expectOnce('getProjectRepositoryByName');
         $project->expectOnce('getID');
-        $dar->expectOnce('isError');
-        $dar->expectNever('getRow');
     }
 
     public function testGetRepositoryIDByNameNoProjectID() {

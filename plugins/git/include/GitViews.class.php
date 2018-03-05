@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -641,9 +641,9 @@ class GitViews extends PluginViews {
         if ( empty($params) ) {
             $params = $this->getData();
         }
-        if (!empty($params['repository_list']) || (isset($params['repositories_owners']) && $params['repositories_owners']->rowCount() > 0)) {
+        if (!empty($params['repository_list']) || (isset($params['repositories_owners']) && count($params['repositories_owners']) > 0)) {
             echo '<h1>'.$this->getText('tree_title_available_repo').' <a href="#" onclick="$(\'help_tree\').toggle();"><i class="icon-question-sign"></i></a></h1>';
-            if (isset($params['repositories_owners']) && $params['repositories_owners']->rowCount() > 0) {
+            if (isset($params['repositories_owners']) && count($params['repositories_owners']) > 0) {
                 $purifier   = Codendi_HTMLPurifier::instance();
                 $current_id = null;
                 if (!empty($params['user'])) {
