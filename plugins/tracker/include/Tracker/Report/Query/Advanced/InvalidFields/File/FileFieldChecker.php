@@ -42,17 +42,13 @@ class FileFieldChecker implements InvalidFieldChecker
     public function checkFieldIsValidForComparison(Comparison $comparison, Tracker_FormElement_Field $field)
     {
         try {
-            $value = $this->values_extractor->extractValue($comparison->getValueWrapper());
+            $this->values_extractor->extractValue($comparison->getValueWrapper());
         } catch (NowIsNotSupportedException $exception) {
             throw new FileToNowComparisonException($field);
         } catch (MySelfIsNotSupportedException $exception) {
             throw new FileToMySelfComparisonException($field);
         } catch (StatusOpenIsNotSupportedException $exception) {
             throw new FileToStatusOpenComparisonException($field);
-        }
-
-        if ($value !== "") {
-            throw new FileToStringComparisonException($field, $value);
         }
     }
 }
