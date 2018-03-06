@@ -50,6 +50,8 @@ use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFormatValidator;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\CollectionOfDateValuesExtractor;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\File\FileFieldChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\File\ValueForFileExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FloatFields\FloatFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Integer\IntegerFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
@@ -62,8 +64,6 @@ class EqualComparisonVisitor implements
     Tracker_FormElement_FieldVisitor,
     IProvideTheInvalidFieldCheckerForAComparison
 {
-    private static $OPERATOR = '=';
-
     /**
      * @return InvalidFieldChecker
      * @throws FieldIsNotSupportedForComparisonException
@@ -94,7 +94,7 @@ class EqualComparisonVisitor implements
 
     public function visitFile(Tracker_FormElement_Field_File $field)
     {
-        throw new FieldIsNotSupportedForComparisonException($field, self::$OPERATOR);
+        return new FileFieldChecker(new ValueForFileExtractor());
     }
 
     public function visitFloat(Tracker_FormElement_Field_Float $field)
