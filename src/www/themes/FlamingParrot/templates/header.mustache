@@ -1,6 +1,11 @@
 <!DOCTYPE HTML>
-<html lang="en">
+<html lang="en" xmlns:og="http://opengraphprotocol.org/schema/">
 <head>
     <meta charset="utf-8">
     <title>{{title}}</title>
     <link rel="SHORTCUT ICON" href="{{imgRoot}}favicon.ico">
+    {{# open_graph }}
+        {{# properties }}
+            <meta property="og:{{ name }}" content="{{ content }}" />
+        {{/ properties}}
+    {{/ open_graph }}

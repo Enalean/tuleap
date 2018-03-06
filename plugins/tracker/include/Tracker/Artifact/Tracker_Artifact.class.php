@@ -494,6 +494,33 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         return $this->title;
     }
 
+    /**
+     * @return string the description of the artifact, or null if no description defined in semantics
+     */
+    public function getDescription()
+    {
+        $description_field = Tracker_Semantic_Description::load($this->getTracker())->getField();
+        if (! $description_field) {
+            return null;
+        }
+
+        if (! $description_field->userCanRead()) {
+            return null;
+        }
+
+        $last_changeset = $this->getLastChangeset();
+        if (! $last_changeset) {
+            return null;
+        }
+
+        $description_field_value = $last_changeset->getValue($description_field);
+        if (! $description_field_value) {
+            return null;
+        }
+
+        return $description_field_value->getContentAsText();
+    }
+
     public function getCachedTitle() {
         return $this->title;
     }

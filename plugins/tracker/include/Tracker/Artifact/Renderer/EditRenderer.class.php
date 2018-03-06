@@ -122,7 +122,15 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
                   'url'   => TRACKER_BASE_URL.'/?aid='. $this->artifact->getId())
         );
         $toolbar = $this->getToolbar();
-        $this->tracker->displayHeader($this->layout, $title, $breadcrumbs, $toolbar, array('body_class' => array('widgetable')));
+        $params = [
+            'body_class' => ['widgetable'],
+            'open_graph' => new \Tuleap\OpenGraph\OpenGraphPresenter(
+                HTTPRequest::instance()->getServerUrl() . $this->artifact->getUri(),
+                $this->artifact->getTitle(),
+                $this->artifact->getDescription()
+            )
+        ];
+        $this->tracker->displayHeader($this->layout, $title, $breadcrumbs, $toolbar, $params);
     }
 
     protected function getToolbar() {
