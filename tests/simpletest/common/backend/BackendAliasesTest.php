@@ -55,7 +55,9 @@ class BackendAliasesTest extends TuleapTestCase {
                 array("list_name"=> "list1"),
                 array("list_name"=> "list2"),
                 array("list_name"=> "list3"),
-                array("list_name"=> "list4")
+                array("list_name"=> "list4"),
+                array("list_name"=> 'list with an unexpected quote "'),
+                array("list_name"=> "list with an unexpected newline\n")
             );
 
         $this->backend = partial_mock(
@@ -107,13 +109,15 @@ class BackendAliasesTest extends TuleapTestCase {
     public function itGenerateSiteWideAliases() {
         $this->backend->update();
         $aliases = file_get_contents($this->alias_file);
-        $this->assertPattern("/codendi-contact/", $aliases, "Codendi-wide aliases not set");
+        $this->assertPattern('/codendi-contact/', $aliases, "Codendi-wide aliases not set");
     }
 
     public function itGeneratesMailingListAliases() {
         $this->backend->update();
         $aliases = file_get_contents($this->alias_file);
-        $this->assertPattern("/list1-bounces:/", $aliases, "ML aliases not set");
+        $this->assertPattern('/"list1-bounces":/', $aliases, "ML aliases not set");
+        $this->assertPattern('/"listwithanunexpectedquote":/', $aliases);
+        $this->assertPattern('/"listwithanunexpectednewline":/', $aliases);
     }
 
     public function itGeneratesUserAliasesWhenExplicitelyEnabled()
@@ -121,20 +125,20 @@ class BackendAliasesTest extends TuleapTestCase {
         ForgeConfig::set('accept_security_risk_and_enable_user_aliases', 1);
         $this->backend->update();
         $aliases = file_get_contents($this->alias_file);
-        $this->assertPattern("/user3:/", $aliases, "User aliases not set");
+        $this->assertPattern('/"user3":/', $aliases, "User aliases not set");
     }
 
     public function itDoesNotGenerateUserAliasesByDefault()
     {
         $this->backend->update();
         $aliases = file_get_contents($this->alias_file);
-        $this->assertNoPattern("/user3:/", $aliases, "User aliases not set");
+        $this->assertNoPattern('/"user3":/', $aliases, "User aliases not set");
     }
 
     public function itGeneratesUserAliasesGivenByPlugins() {
         $this->backend->update();
         $aliases = file_get_contents($this->alias_file);
-        $this->assertPattern("/forge__tracker:/", $aliases, "Alias of plugins not set");
+        $this->assertPattern('/"forge__tracker":/', $aliases, "Alias of plugins not set");
     }
 }
 

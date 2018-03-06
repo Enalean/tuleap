@@ -179,16 +179,17 @@ class BackendAliases extends Backend {
                 // Remove blank chars
                 $list_name = str_replace(' ', '', $list_name);
                 // Mailman 2.1 aliases
-                $this->writeAlias($fp, new System_Alias("$list_name",             "\"|$mm_wrapper post $list_name\""));
-                $this->writeAlias($fp, new System_Alias("$list_name-admin",       "\"|$mm_wrapper admin $list_name\""));
-                $this->writeAlias($fp, new System_Alias("$list_name-bounces",     "\"|$mm_wrapper bounces $list_name\""));
-                $this->writeAlias($fp, new System_Alias("$list_name-confirm",     "\"|$mm_wrapper confirm $list_name\""));
-                $this->writeAlias($fp, new System_Alias("$list_name-join",        "\"|$mm_wrapper join $list_name\""));
-                $this->writeAlias($fp, new System_Alias("$list_name-leave",       "\"|$mm_wrapper leave $list_name\""));
-                $this->writeAlias($fp, new System_Alias("$list_name-owner",       "\"|$mm_wrapper owner $list_name\""));
-                $this->writeAlias($fp, new System_Alias("$list_name-request",     "\"|$mm_wrapper request $list_name\""));
-                $this->writeAlias($fp, new System_Alias("$list_name-subscribe",   "\"|$mm_wrapper subscribe $list_name\""));
-                $this->writeAlias($fp, new System_Alias("$list_name-unsubscribe", "\"|$mm_wrapper unsubscribe $list_name\""));
+                $list_name_as_argument = escapeshellarg($list_name);
+                $this->writeAlias($fp, new System_Alias("$list_name",             "\"|$mm_wrapper post $list_name_as_argument\""));
+                $this->writeAlias($fp, new System_Alias("$list_name-admin",       "\"|$mm_wrapper admin $list_name_as_argument\""));
+                $this->writeAlias($fp, new System_Alias("$list_name-bounces",     "\"|$mm_wrapper bounces $list_name_as_argument\""));
+                $this->writeAlias($fp, new System_Alias("$list_name-confirm",     "\"|$mm_wrapper confirm $list_name_as_argument\""));
+                $this->writeAlias($fp, new System_Alias("$list_name-join",        "\"|$mm_wrapper join $list_name_as_argument\""));
+                $this->writeAlias($fp, new System_Alias("$list_name-leave",       "\"|$mm_wrapper leave $list_name_as_argument\""));
+                $this->writeAlias($fp, new System_Alias("$list_name-owner",       "\"|$mm_wrapper owner $list_name_as_argument\""));
+                $this->writeAlias($fp, new System_Alias("$list_name-request",     "\"|$mm_wrapper request $list_name_as_argument\""));
+                $this->writeAlias($fp, new System_Alias("$list_name-subscribe",   "\"|$mm_wrapper subscribe $list_name_as_argument\""));
+                $this->writeAlias($fp, new System_Alias("$list_name-unsubscribe", "\"|$mm_wrapper unsubscribe $list_name_as_argument\""));
             }
         }
         return fwrite($fp, "\n\n");
@@ -210,7 +211,10 @@ class BackendAliases extends Backend {
         return fwrite($fp, "\n\n");
     }
 
-    private function writeAlias($fp, System_Alias $alias) {
-        fwrite($fp, sprintf(self::ALIAS_ENTRY_FORMAT, $alias->getName() . ":", $alias->getValue() . "\n"));
+    private function writeAlias($fp, System_Alias $alias)
+    {
+        $name  = str_replace(['"', "\n"], '', $alias->getName());
+        $value = str_replace("\n", '', $alias->getValue());
+        fwrite($fp, sprintf(self::ALIAS_ENTRY_FORMAT, '"' . $name . '":', $value . "\n"));
     }
 }
