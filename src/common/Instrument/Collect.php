@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -53,6 +53,12 @@ class Collect implements StatsdInterface
     {
         self::connect();
         self::$statsd->endTiming($key);
+    }
+
+    public static function gauge($key, $value)
+    {
+        self::connect();
+        self::$statsd->gauge($key, $value);
     }
 
     private static function connect()

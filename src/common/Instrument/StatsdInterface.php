@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,4 +25,5 @@ interface StatsdInterface
     public static function increment($key);
     public static function startTiming($key);
     public static function endTiming($key);
+    public static function gauge($key, $value);
 }
