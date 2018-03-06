@@ -872,9 +872,6 @@ msgstr ""
 msgid "This group does not have any members yet."
 msgstr "Ce groupe n'a pas encore de membres."
 
-msgid "This hash key exists more than once"
-msgstr "Cette clé de confirmation est présente plus d'une fois dans la base."
-
 msgid "This is a system group, you cannot delete it."
 msgstr "Ceci est un groupe système, vous ne pouvez pas le supprimer."
 
