@@ -41,6 +41,9 @@ class AgileDashboard_BacklogItemPresenter implements
     /** @var Int */
     private $initial_effort;
 
+    /** @var float */
+    private $remaining_effort;
+
     /** @var String */
     private $redirect_to_self;
 
@@ -199,5 +202,14 @@ class AgileDashboard_BacklogItemPresenter implements
     public function isOpen()
     {
         return $this->artifact->isOpen();
+    }
+    public function getRemainingEffort()
+    {
+        return $this->remaining_effort;
+    }
+
+    public function setRemainingEffort($value)
+    {
+        $this->remaining_effort = $value;
     }
 }

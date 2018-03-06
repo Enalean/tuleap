@@ -24,7 +24,11 @@
  */
 interface AgileDashboard_Milestone_Backlog_IBacklogItem
 {
+    const REMAINING_EFFORT_FIELD_NAME = 'remaining_effort';
+
     public function setInitialEffort($value);
+
+    public function getInitialEffort();
 
     public function setStatus($status, $status_semantic);
 
@@ -50,4 +54,8 @@ interface AgileDashboard_Milestone_Backlog_IBacklogItem
     public function getNormalizedStatusLabel();
 
     public function isOpen();
+
+    public function getRemainingEffort();
+
+    public function setRemainingEffort($value);
 }

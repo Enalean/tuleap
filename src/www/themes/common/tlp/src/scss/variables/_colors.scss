@@ -53,6 +53,25 @@ $tlp-swatch-color-secondaries: #eeeeee, #fafafa, #ffdfdf, #f9ebe1, #fff0dc,
 #f7e8e8, #ecf4d9, #e5f2c8, #e9ffeb, #d3fcf2, #e3ffff, #dff5ff,
 #deeaff, #f3e2ff, #ffe9fd, #fff2f8;
 
+$tlp-swatch-color-map: (
+    'inca-silver': (primary: #767676, secondary: #eeeeee),
+    'chrome-silver': (primary: #a5a5a5, secondary: #fafafa),
+    'fiesta-red': (primary: #dc2f2f, secondary: #ffdfdf),
+    'teddy-brown': (primary: #9b6542, secondary: #f9ebe1),
+    'clockwork-orange': (primary: #ff9400, secondary: #fff0dc),
+    'red-wine': (primary: #9e1919, secondary: #f7e8e8),
+    'acid-green': (primary: #92c71e, secondary: #ecf4d9),
+    'army-green': (primary: #7f9a42, secondary: #e5f2c8),
+    'sherwood-green': (primary: #28c43a, secondary: #e9ffeb),
+    'ocean-turquoise': (primary: #28c4a0, secondary: #d3fcf2),
+    'daphne-blue': (primary: #0fd8d8, secondary: #e3ffff),
+    'lake-placid-blue': (primary: #33c0ea, secondary: #dff5ff),
+    'deep-blue': (primary: #2b6cdc, secondary: #deeaff),
+    'plum-crazy': (primary: #890de1, secondary: #f3e2ff),
+    'peggy-pink': (primary: #e10dcb, secondary: #ffe9fd),
+    'flamingo-pink': (primary: #ff87c4, secondary: #fff2f8),
+);
+
 // Business colors - Primaries
 $tlp-swatch-inca-silver               : #767676;
 $tlp-swatch-chrome-silver             : #a5a5a5;

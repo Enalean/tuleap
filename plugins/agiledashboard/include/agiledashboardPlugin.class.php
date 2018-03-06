@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\BacklogItem\RemainingEffortValueRetriever;
 use Tuleap\Agiledashboard\FormElement\BurnupCacheDao;
 use Tuleap\Agiledashboard\FormElement\BurnupCacheDateRetriever;
 use Tuleap\AgileDashboard\FormElement\BurnupCalculator;
@@ -1112,14 +1113,18 @@ class AgileDashboardPlugin extends Plugin {
         return $this->sequence_id_manager;
     }
 
-    private function getBacklogItemCollectionFactory() {
+    private function getBacklogItemCollectionFactory()
+    {
         return new AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory(
             new AgileDashboard_BacklogItemDao(),
             $this->getArtifactFactory(),
             $this->getFormElementFactory(),
             $this->getMilestoneFactory(),
             $this->getPlanningFactory(),
-            new AgileDashboard_Milestone_Backlog_BacklogItemBuilder()
+            new AgileDashboard_Milestone_Backlog_BacklogItemBuilder(),
+            new RemainingEffortValueRetriever(
+                $this->getFormElementFactory()
+            )
         );
     }
 

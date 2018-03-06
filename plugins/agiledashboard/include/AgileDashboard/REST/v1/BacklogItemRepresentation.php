@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,16 +25,20 @@ use Tuleap\Project\REST\ProjectReference;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
 use Tuleap\Tracker\REST\TrackerReference;
 
-class BacklogItemRepresentation extends BacklogItemRepresentationBase{
-
-    public function build(\AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item, array $card_fields) {
-        $this->id             = JsonCast::toInt($backlog_item->id());
-        $this->label          = $backlog_item->title();
-        $this->status         = $backlog_item->getNormalizedStatusLabel();
-        $this->type           = $backlog_item->type();
-        $this->short_type     = $backlog_item->short_type();
-        $this->initial_effort = JsonCast::toFloat($backlog_item->getInitialEffort());
-        $this->color          = $backlog_item->color();
+class BacklogItemRepresentation extends BacklogItemRepresentationBase
+{
+    public function build(
+        \AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item,
+        array $card_fields
+    ) {
+        $this->id               = JsonCast::toInt($backlog_item->id());
+        $this->label            = $backlog_item->title();
+        $this->status           = $backlog_item->getNormalizedStatusLabel();
+        $this->type             = $backlog_item->type();
+        $this->short_type       = $backlog_item->short_type();
+        $this->initial_effort   = JsonCast::toFloat($backlog_item->getInitialEffort());
+        $this->remaining_effort = JsonCast::toFloat($backlog_item->getRemainingEffort());
+        $this->color            = $backlog_item->color();
 
         $this->artifact = new ArtifactReference();
         $this->artifact->build($backlog_item->getArtifact());

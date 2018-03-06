@@ -27,11 +27,20 @@ function BacklogItemCollectionService(
         self.items[backlog_item_id].updating = true;
 
         return BacklogItemService.getBacklogItem(backlog_item_id).then(({ backlog_item }) => {
-            const { label, initial_effort, card_fields, status, has_children, parent } = backlog_item;
+            const {
+                label,
+                initial_effort,
+                remaining_effort,
+                card_fields,
+                status,
+                has_children,
+                parent
+            } = backlog_item;
 
             Object.assign(self.items[backlog_item_id], {
                 label,
                 initial_effort,
+                remaining_effort,
                 card_fields,
                 updating: false,
                 status,

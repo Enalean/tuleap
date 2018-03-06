@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,24 +20,32 @@
 namespace Tuleap\AgileDashboard\REST\v1;
 
 use \AgileDashboard_Milestone_Backlog_IBacklogItem;
+use PFUser;
 use \UserManager;
 use \EventManager;
 
-class BacklogItemRepresentationFactory {
-
-    public function createBacklogItemRepresentation(AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item) {
+class BacklogItemRepresentationFactory
+{
+    public function createBacklogItemRepresentation(AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item)
+    {
         $backlog_item_representation = new BacklogItemRepresentation();
-        $backlog_item_representation->build($backlog_item, $this->getBacklogItemCardFields($backlog_item));
+        $current_user = UserManager::instance()->getCurrentUser();
+        $backlog_item_representation->build(
+            $backlog_item,
+            $this->getBacklogItemCardFields($backlog_item, $current_user)
+        );
 
         return $backlog_item_representation;
     }
 
-    private function getBacklogItemCardFields($backlog_item) {
-        $current_user         = UserManager::instance()->getCurrentUser();
+    private function getBacklogItemCardFields(
+        AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item,
+        PFUser $current_user
+    ) {
         $card_fields_semantic = $this->getCardFieldsSemantic($backlog_item);
         $card_fields          = array();
 
-        foreach($card_fields_semantic->getFields() as $field) {
+        foreach ($card_fields_semantic->getFields() as $field) {
             if ($field->userCanRead($current_user)) {
                 $card_fields[] = $field->getFullRESTValue($current_user, $backlog_item->getArtifact()->getLastChangesetWithFieldValue($field));
             }
@@ -59,5 +67,4 @@ class BacklogItemRepresentationFactory {
 
         return $card_fields_semantic;
     }
-
 }
