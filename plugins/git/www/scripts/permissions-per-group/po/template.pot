@@ -14,7 +14,7 @@ msgstr ""
 msgid "Repository"
 msgstr ""
 
-msgid "Repository permissions"
+msgid "Repository name"
 msgstr ""
 
 msgid "Rewinders"
@@ -24,6 +24,9 @@ msgid "See all repositories permissions"
 msgstr ""
 
 msgid "Tag"
+msgstr ""
+
+msgid "There isn't any matching repository"
 msgstr ""
 
 msgid "Writers"

@@ -28,8 +28,8 @@ msgstr "Droits de lecture"
 msgid "Repository"
 msgstr "Dépôt"
 
-msgid "Repository permissions"
-msgstr "Permissions du dépôt"
+msgid "Repository name"
+msgstr "Nom du dépôt"
 
 msgid "Rewinders"
 msgstr "Droits de rewind"
@@ -40,5 +40,14 @@ msgstr "Voir toutes les permissions des dépôts"
 msgid "Tag"
 msgstr "Étiquette"
 
+msgid "There isn't any matching repository"
+msgstr "Il n'y a pas de dépôt correspondant"
+
 msgid "Writers"
 msgstr "Droits d'écriture"
+
+#~ msgid "Repository permissions"
+#~ msgstr "Permissions du dépôt"
+
+#~ msgid "View repositories permissions"
+#~ msgstr "Voir les permissions des dépôts"
