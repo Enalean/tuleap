@@ -85,7 +85,7 @@ class GreaterThanComparisonVisitor implements Tracker_FormElement_FieldVisitor, 
 
     public function visitFile(Tracker_FormElement_Field_File $field)
     {
-        throw new FieldIsNotSupportedAtAllException($field);
+        throw new FieldIsNotSupportedForComparisonException($field, self::$OPERATOR);
     }
 
     public function visitFloat(Tracker_FormElement_Field_Float $field)

@@ -62,6 +62,8 @@ class EqualComparisonVisitor implements
     Tracker_FormElement_FieldVisitor,
     IProvideTheInvalidFieldCheckerForAComparison
 {
+    private static $OPERATOR = '=';
+
     /**
      * @return InvalidFieldChecker
      * @throws FieldIsNotSupportedForComparisonException
@@ -92,7 +94,7 @@ class EqualComparisonVisitor implements
 
     public function visitFile(Tracker_FormElement_Field_File $field)
     {
-        throw new FieldIsNotSupportedAtAllException($field);
+        throw new FieldIsNotSupportedForComparisonException($field, self::$OPERATOR);
     }
 
     public function visitFloat(Tracker_FormElement_Field_Float $field)
