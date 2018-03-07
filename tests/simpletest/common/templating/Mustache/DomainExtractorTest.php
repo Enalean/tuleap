@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -68,6 +68,25 @@ class DomainExtractorTest extends \TuleapTestCase
         $this->assertPattern('/foo in mydomain/', $content);
         $this->assertPattern('/bar in mydomain/', $content);
         $this->assertNoPattern('/foo in .php/', $content);
+    }
+
+    public function itFindsNothingIfSourcesFolderDoesNotExist()
+    {
+        $destination_template = $this->getTmpDir() . '/template.pot';
+        $sources              = '/donotexist';
+
+        $extractor = new DomainExtractor(
+            new POTFileDumper(),
+            new GettextExtractor(
+                new \Mustache_Parser(),
+                new \Mustache_Tokenizer(),
+                new GettextCollector(new GettextSectionContentTransformer())
+            )
+        );
+        $extractor->extract('mydomain', $sources, $destination_template);
+
+        $content = file_get_contents($destination_template);
+        $this->assertEqual('', $content);
     }
 
     public function itFindsNothingForUnknownDomain()
