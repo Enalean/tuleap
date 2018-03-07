@@ -23,13 +23,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Tests\Selenium\SVN;
 
-use Lmc\Steward\Test\AbstractTestCase;
+use PHPUnit\Framework\TestCase;
 use SimpleXmlElement;
 
-/**
- * @noBrowser
- */
-class SVNCLITest extends AbstractTestCase
+class SVNCLITest extends TestCase
 {
     private $init_pwd;
 
