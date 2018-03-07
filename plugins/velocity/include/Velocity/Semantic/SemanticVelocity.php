@@ -21,6 +21,8 @@
 namespace Tuleap\Velocity\Semantic;
 
 use Codendi_Request;
+use CSRFSynchronizerToken;
+use Feedback;
 use PFUser;
 use SimpleXMLElement;
 use TemplateRendererFactory;
@@ -69,33 +71,38 @@ class SemanticVelocity extends Tracker_Semantic
 
     public function display()
     {
-        $renderer  = TemplateRendererFactory::build()->getRenderer(VELOCITY_BASE_DIR.'/templates');
+        $renderer = TemplateRendererFactory::build()->getRenderer(VELOCITY_BASE_DIR . '/templates');
 
-        $renderer->renderToPage('velocity-intro', array());
+        $used_velocity_field = $this->getSemanticDao()->searchUsedVelocityField($this->getTracker()->getId());
+
+        $factory  = Tracker_FormElementFactory::instance();
+        $field_id =  $factory->getFormElementById($used_velocity_field['field_id']);
+
+        $velocity_presenter  = new SemanticVelocityPresenter(
+            $this->semantic_done->isSemanticDefined(),
+            $field_id
+        );
+        $renderer->renderToPage('velocity-intro', $velocity_presenter);
     }
 
     public function displayAdmin(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user)
     {
         $sm->displaySemanticHeader($this, $tracker_manager);
 
-        $factory = Tracker_FormElementFactory::instance();
+        $factory         = Tracker_FormElementFactory::instance();
         $possible_fields =  $factory->getUsedFormElementsByType($this->getTracker(), array('int', 'float'));
 
-        $csrf = new \CSRFSynchronizerToken(
-            TRACKER_BASE_URL . http_build_query(
-                [
-                    "semantic" => "velocity",
-                    "func"     => "admin-semantic"
-                ]
-            )
-        );
+        $used_velocity_field = $this->getSemanticDao()->searchUsedVelocityField($this->getTracker()->getId());
+
+        $csrf = $this->getCSRFSynchronizerToken();
 
         $renderer  = TemplateRendererFactory::build()->getRenderer(VELOCITY_BASE_DIR.'/templates');
         $presenter = new SemanticVelocityAdminPresenter(
             $possible_fields,
             $csrf,
             $this->getTracker(),
-            $this->semantic_done->isSemanticDefined()
+            $this->semantic_done->isSemanticDefined(),
+            $used_velocity_field['field_id']
         );
 
         $renderer->renderToPage('velocity-admin', $presenter);
@@ -105,6 +112,38 @@ class SemanticVelocity extends Tracker_Semantic
 
     public function process(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user)
     {
+        if ($request->exist('submit')) {
+            $csrf = $this->getCSRFSynchronizerToken();
+            $csrf->check();
+
+            $values = $request->get('velocity_field');
+
+            if (! $this->semantic_done->isSemanticDefined()) {
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::WARN,
+                    dgettext('tuleap-velocity', 'Semantic done is not defined.')
+                );
+            } elseif (isset($values)) {
+                $this->getSemanticDao()->addField($this->getTracker()->getId(), $values);
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::INFO,
+                    dgettext('tuleap-velocity', 'Semantic updated successfully.')
+                );
+            } else {
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::ERROR,
+                    dgettext('tuleap-velocity', 'The request is not valid.')
+                );
+            }
+        }
+
+        if ($request->exist('delete')) {
+            $csrf = $this->getCSRFSynchronizerToken();
+            $csrf->check();
+
+            $this->getSemanticDao()->removeField($this->getTracker()->getId());
+        }
+
         $this->displayAdmin($sm, $tracker_manager, $request, $current_user);
     }
 
@@ -150,5 +189,25 @@ class SemanticVelocity extends Tracker_Semantic
         self::$_instances[$tracker->getId()] = new SemanticVelocity($tracker, $semantic_done);
 
         return self::$_instances[$tracker->getId()];
+    }
+
+    /**
+     * @return CSRFSynchronizerToken
+     */
+    private function getCSRFSynchronizerToken()
+    {
+        return new CSRFSynchronizerToken(
+            TRACKER_BASE_URL . "?" . http_build_query(
+                [
+                    "semantic" => "velocity",
+                    "func"     => "admin-semantic"
+                ]
+            )
+        );
+    }
+
+    private function getSemanticDao()
+    {
+        return new SemanticVelocityDao();
     }
 }

@@ -64,7 +64,6 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
         /* @var $semantics Tracker_SemanticCollection */
         $semantics = $parameters['semantics'];
 
-        $semantics->add(SemanticVelocity::load($tracker));
         $semantics->insertAfter(SemanticDone::NAME, SemanticVelocity::load($tracker));
     }
 }
