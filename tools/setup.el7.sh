@@ -123,6 +123,7 @@ _setupForgeupgrade
 _phpActivePlugin "tracker" "${tuleap_unix_user}"
 _phpImportTrackerTemplate
 _phpForgeupgrade "record-only"
+_phpConfigureModule "nginx"
 
 for pwd in mysql_password dbpasswd admin_password; do
     unset ${pwd}

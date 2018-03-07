@@ -51,6 +51,8 @@ class TuleapWeb
 
     public function configure()
     {
+        $should_tls_certificate_be_generated = false;
+
         $this->logger->info("Start configuration");
 
         $this->common->deployConfigurationChunks();
@@ -71,6 +73,7 @@ class TuleapWeb
                     $this->server_name,
                 )
             );
+            $should_tls_certificate_be_generated = true;
 
             $this->logger->info('Generate default.d/redirect_tuleap.conf');
             $this->common->replacePlaceHolderInto(
@@ -81,7 +84,8 @@ class TuleapWeb
             );
         }
 
-        if ($this->for_development && ! file_exists(self::SSL_CERT_CERT_PATH)) {
+        if (($this->for_development | $should_tls_certificate_be_generated )
+            && ! file_exists(self::SSL_CERT_CERT_PATH)) {
             $this->common->generateSSLCertificate(
                 $this->server_name,
                 self::SSL_CERT_CERT_PATH,

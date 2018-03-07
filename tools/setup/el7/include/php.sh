@@ -27,3 +27,9 @@ _phpImportTrackerTemplate() {
         echo "${install_dir}/plugins/tracker/bin/import_tracker_xml_template.php ${template}"
     done
 }
+
+_phpConfigureModule() {
+    # ${1}: module name
+
+    ${install_dir}/tools/utils/php56/run.php --module="${1}"
+}
