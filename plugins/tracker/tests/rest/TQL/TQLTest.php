@@ -63,6 +63,12 @@ class TQLTest extends RestBase
             'status IN ("todo", "doing") OR ugroups = "Membres du projet"' => array('bug1', 'bug2'),
             'status = ""'                                                  => array('bug2', 'bug3'),
             'ugroups = "Contractors"'                                      => array('bug1'),
+            '@comments != ""'                                              => array('bug1'),
+            '@comments = "comment"'                                        => array('bug1'),
+            '@comments = ""'                                               => array('bug2', 'bug3'),
+            'attachment = "file"'                                          => array('bug3'),
+            'attachment = "awesome"'                                       => array('bug3'),
+            'attachment != "document"'                                     => array('bug1', 'bug2', 'bug3'),
         );
         foreach ($tests as $query => $expectation) {
             $message = "Query $query should returns ". implode(', ', $expectation);
