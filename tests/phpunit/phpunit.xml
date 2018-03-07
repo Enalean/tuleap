@@ -12,6 +12,7 @@
             <directory suffix=".php">../../plugins/crosstracker/include</directory>
             <directory suffix=".php">../../plugins/agiledashboard/include/</directory>
             <directory suffix=".php">../../plugins/git/include/Git/PermissionsPerGroup</directory>
+            <directory suffix=".php">../../plugins/dynamic_credentials/include/</directory>
         </whitelist>
     </filter>
     <testsuites>

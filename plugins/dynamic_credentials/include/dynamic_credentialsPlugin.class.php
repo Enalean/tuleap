@@ -18,9 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\DynamicCredentials\REST\ResourcesInjector;
+
 class dynamic_credentialsPlugin extends Plugin // @codingStandardsIgnoreLine
 {
-    const NAME = 'dynamic-credentials';
+    const NAME = 'dynamic_credentials';
 
     public function __construct($id)
     {
@@ -36,5 +38,18 @@ class dynamic_credentialsPlugin extends Plugin // @codingStandardsIgnoreLine
         }
 
         return $this->pluginInfo;
+    }
+
+    public function getHooksAndCallbacks()
+    {
+        $this->addHook(Event::REST_RESOURCES);
+
+        return parent::getHooksAndCallbacks();
+    }
+
+    public function restResources(array $params)
+    {
+        $injector = new ResourcesInjector();
+        $injector->populate($params['restler']);
     }
 }
