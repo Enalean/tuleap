@@ -9,5 +9,25 @@ msgstr ""
 msgid "Define the field to use to compute velocity."
 msgstr ""
 
+msgid "Feel free to chose one:"
+msgstr ""
+
+msgid "Save your change"
+msgstr ""
+
+msgid ""
+"The semantic velocity cannot be defined because the semantic done is not "
+"defined."
+msgstr ""
+
+msgid "This tracker does not have a <i>velocity</i> field yet."
+msgstr ""
+
+msgid "Tracker semantic velocity"
+msgstr ""
+
 msgid "Velocity"
+msgstr ""
+
+msgid "go back to semantic overview"
 msgstr ""

@@ -1,0 +1,33 @@
+{{^ has_semantic_done_defined }}
+    <div id="tracker-semantic-disabled">
+        <p class="tracker-semantic-content">{{# dgettext }}tuleap-velocity | Tracker semantic velocity{{/ dgettext }}</p>
+        <p class="tracker-semantic-content tracker-semantic-description">
+            {{# dgettext }}tuleap-velocity | The semantic velocity cannot be defined because the semantic done is not defined.{{/ dgettext }}
+        </p>
+    </div>
+{{/ has_semantic_done_defined }}
+
+{{# has_semantic_done_defined }}
+<form action="" method="POST">
+    {{# csrf_token }}
+        {{> csrf_token_input }}
+    {{/ csrf_token }}
+
+    {{# dgettext }} tuleap-velocity | This tracker does not have a <i>velocity</i> field yet.{{/ dgettext }}
+    <p>
+        {{# dgettext }} tuleap-velocity | Feel free to chose one:{{/ dgettext }}
+        <select name="velocity_field">
+            {{# possible_velocity_field }}
+                <option value="{{ getId }}"> {{ getName }} </option>
+            {{/ possible_velocity_field }}
+        </select>
+       <input type="submit"
+              class="btn btn-primary tracker-semantic-submit"
+              name="add"
+              value="{{# dgettext }} tuleap-velocity | Save your change{{/ dgettext }}"
+              disabled="disabled"/>
+    </p>
+    <p><a href="{{ back_url }}">&laquo; {{# dgettext }} tuleap-velocity | go back to semantic overview{{/ dgettext }}</a></p>
+
+</form>
+{{/ has_semantic_done_defined }}

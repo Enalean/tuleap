@@ -18,10 +18,34 @@ msgstr "Ajoute le graphique de vélocité dans le tableau de bord Agile"
 msgid ""
 "Choose the \"velocity\" field that will be used for computation of velocity "
 "chart."
-msgstr "Choisissez le champ \"vélocité\" qui sera utilisé pour le calcul de la vélocité"
+msgstr ""
+"Choisissez le champ \"vélocité\" qui sera utilisé pour le calcul de la "
+"vélocité"
 
 msgid "Define the field to use to compute velocity."
 msgstr "Définissez le champ à utiliser pour calculer la vélocité"
 
+msgid "Feel free to chose one:"
+msgstr "N'hésitez pas à en choisir un :"
+
+msgid "Save your change"
+msgstr "Sauvegarder vos changements"
+
+msgid ""
+"The semantic velocity cannot be defined because the semantic done is not "
+"defined."
+msgstr ""
+"La semantique vélocité ne peut pas être définie parce que la sémantique "
+"finie n'est pas définie"
+
+msgid "This tracker does not have a <i>velocity</i> field yet."
+msgstr "Cet outil de suivi n'a pas encore de champ <i>vélocité</i>."
+
+msgid "Tracker semantic velocity"
+msgstr "Sémantique vélocité de l'outil de suivi"
+
 msgid "Velocity"
 msgstr "Vélocité"
+
+msgid "go back to semantic overview"
+msgstr "retour à l'administration de la sémantique"
