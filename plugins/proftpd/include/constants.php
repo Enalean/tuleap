@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,3 +20,4 @@
 
 define('PROFTPD_BASE_URL', '/plugins/proftpd');
 define('PROFTPD_BASE_DIR', dirname(__FILE__));
+define('PROFTPD_BASE_TEMPLATES_DIR', PROFTPD_BASE_DIR . '/../templates/');

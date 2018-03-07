@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,8 +17,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+use Tuleap\ProFTPd\Admin\PermissionsManager as ProftpdPermissionsManager;
+use Tuleap\ProFTPd\PermissionsPerGroup\ProftpdPermissionsPerGroupPresenterBuilder;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
 use Tuleap\project\Admin\Navigation\NavigationDropdownQuickLinksCollector;
+use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
+use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 
 require_once 'constants.php';
 
@@ -41,6 +45,7 @@ class proftpdPlugin extends Plugin {
         $this->addHook(Event::REGISTER_PROJECT_CREATION);
         $this->addHook(Event::RENAME_PROJECT);
         $this->addHook(NavigationDropdownQuickLinksCollector::NAME);
+        $this->addHook(PermissionPerGroupPaneCollector::NAME);
     }
 
     public function getPluginInfo() {
@@ -198,7 +203,7 @@ class proftpdPlugin extends Plugin {
     public function get_ftp_incoming_dir($params) {
         $project = $params['project'];
 
-        if ($project->usesService(self::SERVICE_SHORTNAME)) {
+        if ($this->isPluginUsedInProject($project)) {
             $base_sftp_dir     = $this->getPluginInfo()->getPropVal('proftpd_base_directory');
             $params['src_dir'] = $base_sftp_dir . '/' . $project->getUnixName();
         }
@@ -208,7 +213,7 @@ class proftpdPlugin extends Plugin {
     {
         $project = $quick_links_collector->getProject();
 
-        if (! $project->usesService(self::SERVICE_SHORTNAME)) {
+        if (! $this->isPluginUsedInProject($project)) {
             return;
         }
 
@@ -224,5 +229,55 @@ class proftpdPlugin extends Plugin {
                 )
             )
         );
+    }
+
+    /**
+     * @param PermissionPerGroupPaneCollector $event
+     */
+    public function permissionPerGroupPaneCollector(PermissionPerGroupPaneCollector $event)
+    {
+        $project = $event->getProject();
+
+        if (! $this->isPluginUsedInProject($project)) {
+            return;
+        }
+
+        $ugroup_manager    = new UGroupManager();
+        $presenter_builder = new ProftpdPermissionsPerGroupPresenterBuilder(
+            new ProftpdPermissionsManager(
+                PermissionsManager::instance(),
+                $ugroup_manager
+            ),
+            $ugroup_manager,
+            new PermissionPerGroupUGroupFormatter(
+                $ugroup_manager
+            )
+        );
+
+        $presenter = $presenter_builder->build(
+            $event->getProject(),
+            HttpRequest::instance()->get('group')
+        );
+
+        $template_factory      = TemplateRendererFactory::build();
+        $admin_permission_pane = $template_factory
+            ->getRenderer(PROFTPD_BASE_TEMPLATES_DIR)
+            ->renderToString(
+                'project-admin-permission-per-group',
+                $presenter
+            );
+
+        $rank_in_project = $project->getService($this->getServiceShortname())->getRank();
+
+        $event->addPane($admin_permission_pane, $rank_in_project);
+    }
+
+    /**
+     * @param $project
+     * @return bool
+     */
+    private function isPluginUsedInProject(Project $project)
+    {
+        return $project->usesService(self::SERVICE_SHORTNAME);
     }
 }
