@@ -121,33 +121,25 @@ class ChangePasswordController
     {
         $this->event_manager->processEvent('before_change_email-complete', []);
 
-        $current_user = $request->getCurrentUser();
+        $confirmation_hash = $request->getValidated('confirm_hash', 'string', '');
+        $current_user      = $request->getCurrentUser();
         if ($current_user->isAnonymous()) {
             $url_redirect  = new \URLRedirect($this->event_manager);
-            $return_to     = $this->getChangeCompleteUrl($request->getValidated('confirm_hash', 'string', ''));
+            $return_to     = $this->getChangeCompleteUrl($confirmation_hash);
             $response->redirect($url_redirect->makeReturnToUrl('/account/login.php', $return_to));
         }
 
-        $user = $this->user_manager->getUserByConfirmHash(
-            $request->getValidated('confirm_hash', 'string', '')
-        );
-
-        if ($user === null) {
-            $response->addFeedback(\Feedback::ERROR, _('This hash key exists more than once'));
-            $response->redirect('/');
-        }
-
-        if ($user->getId() != $current_user->getId()) {
+        if (! hash_equals($current_user->getConfirmHash(), $confirmation_hash)) {
             $response->addFeedback(\Feedback::ERROR, _('You are not the user who asked for email change'));
             $response->redirect('/');
         }
 
-        $old_email_user = clone $user;
-        $user->clearConfirmHash();
-        $user->setEmail($old_email_user->getEmailNew());
-        $user->setEmailNew($old_email_user->getEmail());
+        $old_email_user = clone $current_user;
+        $current_user->clearConfirmHash();
+        $current_user->setEmail($old_email_user->getEmailNew());
+        $current_user->setEmailNew($old_email_user->getEmail());
 
-        $this->user_manager->updateDb($user);
+        $this->user_manager->updateDb($current_user);
 
 
         $response->header(['title' => _('Email change complete')]);
@@ -156,8 +148,8 @@ class ChangePasswordController
         $renderer->renderToPage(
             'change-email-complete',
             [
-                'realname' => $user->getRealName(),
-                'email'    => $user->getEmail(),
+                'realname' => $current_user->getRealName(),
+                'email'    => $current_user->getEmail(),
             ]
         );
 

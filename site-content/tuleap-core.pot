@@ -816,9 +816,6 @@ msgstr ""
 msgid "This group does not have any members yet."
 msgstr ""
 
-msgid "This hash key exists more than once"
-msgstr ""
-
 msgid "This is a system group, you cannot delete it."
 msgstr ""
 
