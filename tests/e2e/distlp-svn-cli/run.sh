@@ -28,19 +28,9 @@ is_server_ready() {
     done
 }
 
-composer_install() {
-    su -c 'composer --working-dir=/tuleap/tests/e2e/selenium install' -l runner
-}
-
 setup_user
-
-composer_install
 
 is_server_ready
 
-su -c '/tuleap/tests/e2e/selenium/vendor/bin/steward run \
-    -vvv \
-    --logs-dir=/output \
-    --server-url http://chrome:4444 \
-    --capability="acceptInsecureCerts:true" \
-    staging chrome' -l runner
+su -c '/tuleap/src/vendor/bin/phpunit --log-junit=/output/distlp-svn-cli.xml /tuleap/tests/e2e/distlp-svn-cli/tests/' \
+    -l runner
