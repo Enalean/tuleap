@@ -18,6 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\Semantic\SemanticDone;
+use Tuleap\Velocity\Semantic\SemanticVelocity;
+
 require_once 'autoload.php';
 require_once 'constants.php';
 
@@ -28,14 +31,20 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
         parent::__construct($id);
         $this->setScope(self::SCOPE_SYSTEM);
 
-        bindTextDomain('tuleap-velocity', VELOCITY_BASE_DIR . '/../site-content');
+        bindTextDomain('tuleap-velocity', VELOCITY_BASE_DIR . '/site-content');
+    }
+
+    public function getHooksAndCallbacks()
+    {
+        $this->addHook(TRACKER_EVENT_MANAGE_SEMANTICS);
+
+        return parent::getHooksAndCallbacks();
     }
 
     public function getDependencies()
     {
         return array('tracker', 'agiledashboard');
     }
-
 
     public function getPluginInfo()
     {
@@ -44,5 +53,18 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
         }
 
         return $this->pluginInfo;
+    }
+
+    /**
+     * @see Event::TRACKER_EVENT_MANAGE_SEMANTICS
+     */
+    public function tracker_event_manage_semantics($parameters) // @codingStandardsIgnoreLine
+    {
+        $tracker   = $parameters['tracker'];
+        /* @var $semantics Tracker_SemanticCollection */
+        $semantics = $parameters['semantics'];
+
+        $semantics->add(SemanticVelocity::load($tracker));
+        $semantics->insertAfter(SemanticDone::NAME, SemanticVelocity::load($tracker));
     }
 }
