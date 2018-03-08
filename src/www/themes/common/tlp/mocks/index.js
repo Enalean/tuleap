@@ -23,7 +23,12 @@ const tlp = jasmine.createSpyObj("tlp", [
     "put",
     "post",
     "recursiveGet",
-    "options"
+    "options",
+    "datePicker",
+    "select2",
+    "modal",
+    "dropdown",
+    "filterInlineTable"
 ]);
 
 // Because TLP is set up as external in webpack configs
