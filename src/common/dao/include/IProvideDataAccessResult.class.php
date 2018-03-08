@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,24 +20,28 @@
 
 /**
  * Define methods needed by DataAccessResult to manipulate a 
- * database result set 
+ * database result set
+ * @deprecated See \Tuleap\DB\DataAccessObject
  */
 interface IProvideDataAccessResult extends Iterator, Countable {
 
     /**
      * Returns an array from query row or false if no more rows
+     * @deprecated
      * @return mixed
      */
     public function getRow();
 
     /**
      * Returns the number of rows affected
+     * @deprecated
      * @return int
      */
     public function rowCount();
     
     /**
      * Returns false if no errors or returns a MySQL error message
+     * @deprecated
      * @return mixed
      */
     public function isError();

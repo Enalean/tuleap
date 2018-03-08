@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,11 +25,13 @@ require_once 'IProvideDataAccessResult.class.php';
  * 
  * Use it when you feel returning something empty without teadious if/else code
  * in calling method
+ * @deprecated See \Tuleap\DB\DataAccessObject
  */
 class DataAccessResultEmpty implements IProvideDataAccessResult {
 
     /**
      * @see IProvideDataAccessResult
+     * @deprecated
      * @return Boolean
      */
     public function getRow() {
@@ -38,6 +40,7 @@ class DataAccessResultEmpty implements IProvideDataAccessResult {
 
     /**
      * @see IProvideDataAccessResult
+     * @deprecated
      * @return Integer
      */
     public function rowCount() {
@@ -46,6 +49,7 @@ class DataAccessResultEmpty implements IProvideDataAccessResult {
 
     /**
      * @see IProvideDataAccessResult
+     * @deprecated
      * @return Boolean
      */
     public function isError() {
@@ -54,6 +58,7 @@ class DataAccessResultEmpty implements IProvideDataAccessResult {
     
     /**
      * @see IProvideDataAccessResult
+     * @deprecated
      * @return Boolean
      */
     public function current() {
@@ -62,6 +67,7 @@ class DataAccessResultEmpty implements IProvideDataAccessResult {
     
     /**
      * @see IProvideDataAccessResult
+     * @deprecated
      * @return void
      */
     public function next() {
@@ -69,6 +75,7 @@ class DataAccessResultEmpty implements IProvideDataAccessResult {
     
     /**
      * @see IProvideDataAccessResult
+     * @deprecated
      * @return Boolean
      */
     public function valid() {
@@ -77,6 +84,7 @@ class DataAccessResultEmpty implements IProvideDataAccessResult {
     
     /**
      * @see IProvideDataAccessResult
+     * @deprecated
      * @return void
      */
     public function rewind() {
@@ -84,6 +92,7 @@ class DataAccessResultEmpty implements IProvideDataAccessResult {
     
     /**
      * @see IProvideDataAccessResult
+     * @deprecated
      * @return Boolean
      */
     public function key() {
@@ -92,15 +101,17 @@ class DataAccessResultEmpty implements IProvideDataAccessResult {
 
     /**
      * @see IProvideDataAccessResult
+     * @deprecated
      * @return Integer
      */
     public function count() {
         return 0;
     }
 
+    /**
+     * @deprecated
+     */
     public function instanciateWith() {
         return $this;
     }
 }
-
-?>

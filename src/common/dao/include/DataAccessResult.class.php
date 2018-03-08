@@ -1,31 +1,33 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 require_once 'IProvideDataAccessResult.class.php';
 
 /**
- *  Fetches MySQL database rows as objects
+ * @deprecated See \Tuleap\DB\DataAccessObject
  */
 class DataAccessResult implements IProvideDataAccessResult {
     /**
      * $da stores data access object
+     * @deprecated
      */
     protected $da;
     
@@ -38,7 +40,10 @@ class DataAccessResult implements IProvideDataAccessResult {
     protected $_current;
     protected $_row;
     private $instance_callback = null;
-    
+
+    /**
+     * @deprecated
+     */
     public function __construct($da, $result) {
         $this->da     = $da;
         $this->result = $result;
@@ -49,6 +54,9 @@ class DataAccessResult implements IProvideDataAccessResult {
         }
     }
 
+    /**
+     * @deprecated
+     */
     public function getResult() {
         return $this->result;
     }
@@ -57,6 +65,8 @@ class DataAccessResult implements IProvideDataAccessResult {
      * Allow to create an object instead of an array when iterating over results
      *
      * @param callback $instance_callback The callback to use to create object
+     *
+     * @deprecated
      *
      * @return \DataAccessResult
      */
@@ -67,6 +77,9 @@ class DataAccessResult implements IProvideDataAccessResult {
 
     /**
      * Returns an array from query row or false if no more rows
+     *
+     * @deprecated
+     *
      * @return mixed
      */
     public function getRow() {
@@ -77,6 +90,9 @@ class DataAccessResult implements IProvideDataAccessResult {
 
     /**
      * Returns the number of rows affected
+     *
+     * @deprecated
+     *
      * @return int
      */
     public function rowCount() {
@@ -85,6 +101,9 @@ class DataAccessResult implements IProvideDataAccessResult {
 
     /**
      * Returns false if no errors or returns a MySQL error message
+     *
+     * @deprecated
+     *
      * @return mixed
      */
     public function isError() {
@@ -101,6 +120,7 @@ class DataAccessResult implements IProvideDataAccessResult {
 
     // {{{ Iterator
     /**
+     * @deprecated
      * @return array Return the current element
      */
     public function current() {
@@ -114,6 +134,8 @@ class DataAccessResult implements IProvideDataAccessResult {
     /**
      * Move forward to next element. 
      *
+     * @deprecated
+     *
      * @return void 
      */
     public function next() {
@@ -121,12 +143,17 @@ class DataAccessResult implements IProvideDataAccessResult {
         $this->_row = $this->daFetch();
     }
 
+    /**
+     * @deprecated
+     */
     protected function daFetch() {
         return $this->da->fetch($this->result);
     }
     
     /**
-     * Check if there is a current element after calls to rewind() or next(). 
+     * Check if there is a current element after calls to rewind() or next().
+     *
+     * @deprecated
      *
      * @return boolean 
      */
@@ -136,6 +163,8 @@ class DataAccessResult implements IProvideDataAccessResult {
     
     /**
      * Rewind the Iterator to the first element.
+     *
+     * @deprecated
      *
      * @return void
      */
@@ -147,13 +176,18 @@ class DataAccessResult implements IProvideDataAccessResult {
         }
     }
 
+    /**
+     * @deprecated
+     */
     protected function daSeek() {
         $this->da->dataSeek($this->result, 0);
     }
 
     /**
      * Return the key of the current element. 
-     * 
+     *
+     * @deprecated
+     *
      * @return mixed 
      */
     public function key() {
@@ -163,6 +197,8 @@ class DataAccessResult implements IProvideDataAccessResult {
     
     // {{{ Countable
     /**
+     * @deprecated
+     *
      * @return int the number the global function count() should show
      */
     public function count() {
@@ -171,8 +207,10 @@ class DataAccessResult implements IProvideDataAccessResult {
 
     //}}}
 
+    /**
+     * @deprecated
+     */
     public function freeMemory() {
         mysql_free_result($this->result);
     }
 }
-?>
