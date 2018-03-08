@@ -34,7 +34,7 @@ $project = ProjectManager::instance()->getProject($group_id);
 
 $who_whitelist = new Valid_WhiteList('who', array('nonmembers', 'members', 'allusers'));
 $who_whitelist->required();
-$who  = $request->getValidated('who', $who_whitelist, 'nonmembers');
+$who  = $request->getValidated('who', $who_whitelist, 'allusers');
 
 $unsigned_int_validator = new Valid_UInt();
 $unsigned_int_validator->required();

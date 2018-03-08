@@ -130,11 +130,14 @@ class proftpdPlugin extends Plugin {
     public function logs_daily($params) {
         $dao = new Tuleap\ProFTPd\Xferlog\Dao();
 
-        $params['logs'][] = array(
-            'sql'   => $dao->getLogQuery($params['group_id'], $params['logs_cond']),
-            'field' => dgettext('tuleap-proftpd', 'Filepath'),
-            'title' => dgettext('tuleap-proftpd', 'FTP access')
-        );
+        $project = $this->getProject($params['group_id']);
+        if ($project->usesService($this->getServiceShortname())) {
+            $params['logs'][] = array(
+                'sql'   => $dao->getLogQuery($params['group_id'], $params['logs_cond']),
+                'field' => dgettext('tuleap-proftpd', 'Filepath'),
+                'title' => dgettext('tuleap-proftpd', 'FTP access')
+            );
+        }
     }
 
     public function service_is_used($params) {

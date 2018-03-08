@@ -95,7 +95,8 @@ class QueryBuilder extends DataAccessObject
                     INNER JOIN user USING (user_id)
                   WHERE plugin_svn_full_history.day >= $date
                   AND svn_browse_operations > 0
-                  $user_where_condition";
+                  $user_where_condition
+                ORDER BY time DESC";
 
         return $query;
     }

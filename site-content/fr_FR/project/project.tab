@@ -708,7 +708,6 @@ project_stats_source_code_access_utils	access_for_past_x_days	$1 sur les $2 dern
 project_stats_source_code_access_utils	in_total	$1 au total
 project_stats_source_code_access_utils	time	Heure locale
 project_stats_source_code_access_utils	no_access	Aucun pour cette période.
-project_stats_source_code_access_utils	service_disabled	Service $1 désactivé
 project_stats_source_code_access_utils	subversion	Subversion
 project_stats_source_code_access_utils	docs	Documentation
 project_stats_source_code_access_utils	wiki	Wiki

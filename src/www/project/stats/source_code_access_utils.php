@@ -4,7 +4,7 @@
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 // http://www.codendi.com
 //
-//  
+//
 //
 
 
@@ -12,7 +12,7 @@
  * Prepare SQL query for given date and given person
  */
 function logs_cond($project, $span, $who) {
-	// Get information about the date $span days ago 
+	// Get information about the date $span days ago
 	// Start at midnight $span days ago
 	$time_back = localtime( (time() - ($span * 86400)), 1);
 
@@ -41,7 +41,7 @@ function logs_cond($project, $span, $who) {
 
   $whereclause = "log.user_id=user.user_id ".$cond
     ." AND log.time >= $begin_date ";
-	
+
   return $whereclause;
 }
 
@@ -61,7 +61,7 @@ function logs_display($sql, $span, $field, $title='') {
         print '<table width="100%" cellpadding="2" cellspacing="0" border="0">'."\n"
             . '<tr valign="top">'."\n"
             . ' <th>'.$GLOBALS['Language']->getText('project_admin_utils','date').'</th>'."\n";
-        
+
         if (isset($row['type'])){
             print ' <th>'.$GLOBALS['Language']->getText('project_admin_utils','action').'</th>'."\n";
         }
@@ -125,7 +125,7 @@ function frs_logs_extract($project,$span,$who) {
            "        AND ( log.action_id=".FRSPackage::EVT_CREATE." OR log.action_id=".FRSPackage::EVT_UPDATE." OR log.action_id=".FRSPackage::EVT_DELETE." )".
            " UNION".
            "    SELECT log.log_id, log.time AS time, user.user_name AS user_name, user.realname AS realname, user.email AS email, CONCAT(frs_package.name, '/', frs_release.name) AS title,".
-           "        CASE ". 
+           "        CASE ".
            "        WHEN log.action_id = ".FRSRelease::EVT_CREATE." THEN '".$GLOBALS['Language']->getText('project_stats_source_code_access_utils','frs_create_release')."'".
            "        WHEN log.action_id = ".FRSRelease::EVT_UPDATE." THEN '".$GLOBALS['Language']->getText('project_stats_source_code_access_utils','frs_update_release')."'".
            "        WHEN log.action_id = ".FRSRelease::EVT_DELETE." THEN '".$GLOBALS['Language']->getText('project_stats_source_code_access_utils','frs_delete_release')."'".
@@ -133,7 +133,7 @@ function frs_logs_extract($project,$span,$who) {
            "    FROM frs_log AS log".
            "        JOIN user using (user_id)".
            "        JOIN frs_release ON log.item_id=frs_release.release_id ".
-           "        JOIN frs_package using (package_id)". 
+           "        JOIN frs_package using (package_id)".
            "    WHERE ".logs_cond($project, $span, $who).
            "        AND ( log.action_id=".FRSRelease::EVT_CREATE." OR log.action_id=".FRSRelease::EVT_UPDATE." OR log.action_id=".FRSRelease::EVT_DELETE." ) ".
            "        AND log.group_id=".$project->getGroupId()." ".
@@ -188,23 +188,22 @@ function filedownload_logs_extract($project,$span,$who) {
         ."AND frs_release.release_id=frs_file.release_id "
         ."AND frs_package.package_id=frs_release.package_id "
 	."ORDER BY time DESC";
-	
+
 	return $sql;
 
 }
 
 // filedownload_logs_daily
 function filedownload_logs_daily($project, $span = 7, $who="allusers") {
-  
+
 	// check first if service is used by this project
-        // if service not used return immediately
+    // if service not used return immediately
 	if (!$project->usesFile()) {
-		print '<P><B><U>'.$GLOBALS['Language']->getText('project_stats_source_code_access_utils','service_disabled',$GLOBALS['Language']->getText('project_stats_source_code_access_utils','file_download')).'</U></B>';
 		return;
 	}
 
     $sql = filedownload_logs_extract($project,$span,$who);
-    	
+
 	logs_display($sql, $span, $GLOBALS['Language']->getText('project_stats_source_code_access_utils','files'),
 		     $GLOBALS['Language']->getText('project_stats_source_code_access_utils','file_download'));
 
@@ -215,7 +214,7 @@ function filedownload_logs_daily($project, $span = 7, $who="allusers") {
 
 function cvsaccess_logs_extract($project,$span,$who) {
 
-	// Get information about the date $span days ago 
+	// Get information about the date $span days ago
 	// Start at midnight $span days ago
 	$time_back = localtime( (time() - ($span * 86400)), 1);
 
@@ -254,19 +253,18 @@ function cvsaccess_logs_extract($project,$span,$who) {
 	return $sql;
 }
 
-function cvsaccess_logs_daily($project, $span = 7, $who="allusers") {  
+function cvsaccess_logs_daily($project, $span = 7, $who="allusers") {
     $hp = Codendi_HTMLPurifier::instance();
 	// check first if service is used by this project
-        // if service not used return immediately
-        if (!$project->usesCVS()) {
-                print '<P><B><U>'.$GLOBALS['Language']->getText('project_stats_source_code_access_utils','service_disabled',$GLOBALS['Language']->getText('project_stats_index','cvs')).'</U></B>';
+    // if service not used return immediately
+    if (!$project->usesCVS()) {
 		return;
 	}
 
 	$month_name = array('Jan','Feb','Mar','Apr','May','June','Jul','Aug', 'Sep','Oct','Nov','Dec');
 
     $sql = cvsaccess_logs_extract($project, $span, $who);
-    	
+
 	// Executions will continue until morale improves.
 	$res = db_query( $sql );
 
@@ -283,7 +281,7 @@ function cvsaccess_logs_daily($project, $span = 7, $who="allusers") {
 			. '<TD align><B>'.$GLOBALS['Language']->getText('project_stats_source_code_access_utils','co_upd').'</B></TD>'
 			. '<TD align><B>'.$GLOBALS['Language']->getText('project_stats_source_code_access_utils','browsing').'</B></TD>'
 			. '</TR>' . "\n";
-		
+
 		while ( $row = db_fetch_array($res) ) {
 			$i++;
 			print	'<TR class="' . util_get_alt_row_color($i) . '">'
@@ -307,7 +305,7 @@ function cvsaccess_logs_daily($project, $span = 7, $who="allusers") {
 
 function svnaccess_logs_extract($project, $span, $who) {
 
-	// Get information about the date $span days ago 
+	// Get information about the date $span days ago
 	// Start at midnight $span days ago
 	$time_back = localtime( (time() - ($span * 86400)), 1);
 
@@ -336,14 +334,14 @@ function svnaccess_logs_extract($project, $span, $who) {
 	}
 
 	// We do not show Co/up/del/add svn counters for now because
-	// they are at 0 in the DB 
+	// they are at 0 in the DB
 	$sql  = "SELECT group_svn_full_history.day, user.user_name, user.realname, user.email, svn_access_count, svn_browse "
 	."FROM group_svn_full_history, user "
 	."WHERE group_svn_full_history.user_id=user.user_id ".$cond
 	."AND group_svn_full_history.group_id=".$project->getGroupId()." "
 	."AND group_svn_full_history.day >= $begin_day "
 	."ORDER BY day DESC";
-	
+
 	return $sql;
 
 }
@@ -351,16 +349,15 @@ function svnaccess_logs_extract($project, $span, $who) {
 function svnaccess_logs_daily($project, $span = 7, $who="allusers") {
     $hp = Codendi_HTMLPurifier::instance();
 	// check first if service is used by this project
-        // if service not used return immediately
-        if (! $project->usesSVN()) {
-                print '<P><B><U>'.$GLOBALS['Language']->getText('project_stats_source_code_access_utils','service_disabled',$GLOBALS['Language']->getText('project_stats_source_code_access_utils','subversion')).'</U></B>';
+    // if service not used return immediately
+    if (! $project->usesSVN()) {
 		return;
 	}
 
 	$month_name = array('Jan','Feb','Mar','Apr','May','June','Jul','Aug', 'Sep','Oct','Nov','Dec');
 
     $sql = svnaccess_logs_extract($project, $span, $who);
-    	
+
 	// Executions will continue until morale improves.
 	$res = db_query( $sql );
 
@@ -406,7 +403,7 @@ function wiki_logs_extract($project, $span, $who) {
     ." WHERE ".logs_cond($project, $span, $who)
     ." AND log.group_id=".$project->getGroupId()
     ." ORDER BY time DESC";
-    
+
   return $sql;
 
 }
@@ -417,14 +414,13 @@ function wiki_logs_extract($project, $span, $who) {
 function wiki_logs_daily($project, $span = 7, $who="allusers") {
 
   // check first if service is used by this project
-  // if service not used return immediately  
+  // if service not used return immediately
   if(!$project->usesWiki()) {
-      print '<P><B><U>'.$GLOBALS['Language']->getText('project_stats_source_code_access_utils','service_disabled',$GLOBALS['Language']->getText('project_stats_source_code_access_utils','wiki')).'</U></B>';
      return;
   }
 
   $sql = wiki_logs_extract($project, $span, $who);
-  
+
   logs_display($sql, $span, $GLOBALS['Language']->getText('project_stats_source_code_access_utils','wiki_page'),
 	       $GLOBALS['Language']->getText('project_stats_source_code_access_utils','wiki_access'));
 }
@@ -437,7 +433,7 @@ function wiki_attachments_logs_extract($project, $span, $who) {
         ." AND log.group_id=".$project->getGroupId()
         ." AND wa.id=log.wiki_attachment_id"
         ." ORDER BY time DESC";
-	
+
     return $sql;
 
 }
@@ -450,12 +446,11 @@ function wiki_attachments_logs_daily($project, $span = 7, $who="allusers") {
 	// check first if service is used by this project
     // if service not used return immediately
     if(!$project->usesWiki()) {
-        print '<P><B><U>'.$GLOBALS['Language']->getText('project_stats_source_code_access_utils','service_disabled',$GLOBALS['Language']->getText('project_stats_source_code_access_utils','wiki_attachments')).'</U></B>';
         return;
     }
-    
+
     $sql = wiki_attachments_logs_extract($project, $span, $who);
-        
+
     logs_display($sql, $span, $GLOBALS['Language']->getText('project_stats_source_code_access_utils','wiki_attachment_title'),
                  $GLOBALS['Language']->getText('project_stats_source_code_access_utils','wiki_attachment_access'));
 }
