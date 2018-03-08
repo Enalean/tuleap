@@ -25,6 +25,7 @@ use PFUser;
 use SimpleXMLElement;
 use TemplateRendererFactory;
 use Tracker;
+use Tracker_FormElementFactory;
 use Tracker_Semantic;
 use Tracker_SemanticManager;
 use TrackerManager;
@@ -75,12 +76,36 @@ class SemanticVelocity extends Tracker_Semantic
 
     public function displayAdmin(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user)
     {
-        return;
+        $sm->displaySemanticHeader($this, $tracker_manager);
+
+        $factory = Tracker_FormElementFactory::instance();
+        $possible_fields =  $factory->getUsedFormElementsByType($this->getTracker(), array('int', 'float'));
+
+        $csrf = new \CSRFSynchronizerToken(
+            TRACKER_BASE_URL . http_build_query(
+                [
+                    "semantic" => "velocity",
+                    "func"     => "admin-semantic"
+                ]
+            )
+        );
+
+        $renderer  = TemplateRendererFactory::build()->getRenderer(VELOCITY_BASE_DIR.'/templates');
+        $presenter = new SemanticVelocityAdminPresenter(
+            $possible_fields,
+            $csrf,
+            $this->getTracker(),
+            $this->semantic_done->isSemanticDefined()
+        );
+
+        $renderer->renderToPage('velocity-admin', $presenter);
+
+        $sm->displaySemanticFooter($this, $tracker_manager);
     }
 
     public function process(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user)
     {
-        return;
+        $this->displayAdmin($sm, $tracker_manager, $request, $current_user);
     }
 
     public function exportToXml(SimpleXMLElement $root, $xmlMapping)
