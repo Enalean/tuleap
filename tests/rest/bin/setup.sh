@@ -104,8 +104,6 @@ seed_data() {
     /opt/rh/rh-php56/root/usr/bin/php -d include_path=/usr/share/tuleap/src/www/include:/usr/share/tuleap/src /usr/share/tuleap/tests/rest/bin/init_data.php
 
     seed_plugin_data
-
-    chown -R codendiadm:codendiadm /var/lib/tuleap/tracker
 }
 
 seed_plugin_data() {

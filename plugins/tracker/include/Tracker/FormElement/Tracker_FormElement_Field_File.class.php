@@ -557,7 +557,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
     }
 
     public function getRootPath() {
-        return ForgeConfig::get('sys_data_dir') .'/tracker/'. $this->getId();
+        return $this->getGlobalTrackerRootPath() . $this->getId();
     }
 
     /**
@@ -945,7 +945,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
         if (! is_dir($path)) {
             mkdir($path, 0777, true);
             $backend->recurseChownChgrp(
-                $this->getRootPath(),
+                $this->getGlobalTrackerRootPath(),
                 ForgeConfig::get('sys_http_user'),
                 ForgeConfig::get('sys_http_user'),
                 $no_filter_file_extension
@@ -1185,5 +1185,13 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
             $is_empty = $this->isPreviousChangesetEmpty($artifact, $value);
         }
         return $is_empty;
+    }
+
+    /**
+     * @return string
+     */
+    private function getGlobalTrackerRootPath()
+    {
+        return ForgeConfig::get('sys_data_dir') . '/tracker/';
     }
 }

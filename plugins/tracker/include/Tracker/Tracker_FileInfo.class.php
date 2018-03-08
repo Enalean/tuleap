@@ -231,6 +231,22 @@ class Tracker_FileInfo {
         if ($this->isImage()) {
             $this->createThumbnail();
         }
+
+        $this->setOwnershipToHttpUser();
+    }
+
+    private function setOwnershipToHttpUser()
+    {
+        $http_user    = ForgeConfig::get('sys_http_user');
+        $folder_group = posix_getgrgid(filegroup($this->getPath()));
+        $folder_owner = posix_getpwuid(fileowner($this->getPath()));
+
+        if ($folder_group['name'] ===  $http_user && $folder_owner['name'] === $http_user) {
+            return;
+        }
+
+        $backend = Backend::instance();
+        $backend->changeOwnerGroupMode($this->getPath(), $http_user, $http_user, 0644);
     }
 
     /**
