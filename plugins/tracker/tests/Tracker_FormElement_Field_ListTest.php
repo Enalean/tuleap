@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Codendi.
@@ -606,14 +606,15 @@ class Tracker_FormElement_Field_ListsetCriteriaValueFromRESTTest extends TuleapT
     }
 }
 
-class Tracker_FormElement_Field_List_RESTTests extends TuleapTestCase {
-
-    public function itThrowsAnExceptionWhenReturningValueIndexedByFieldName() {
+class Tracker_FormElement_Field_List_RESTTests extends TuleapTestCase
+{
+    public function itThrowsAnExceptionWhenReturningValueIndexedByFieldName()
+    {
         $field = new Tracker_FormElement_Field_ListTestVersion();
 
         $this->expectException('Tracker_FormElement_RESTValueByField_NotImplementedException');
 
-        $value = 'some_value';
+        $value = ['some_value'];
 
         $field->getFieldDataFromRESTValueByField($value);
     }

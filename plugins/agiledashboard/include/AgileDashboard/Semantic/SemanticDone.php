@@ -422,7 +422,7 @@ class SemanticDone extends Tracker_Semantic
     /**
      * @return array
      */
-    private function getDoneValuesIds()
+    public function getDoneValuesIds()
     {
         $done_values_ids = array();
         foreach ($this->done_values as $done_value) {
@@ -502,5 +502,13 @@ class SemanticDone extends Tracker_Semantic
         self::$_instances[$tracker->getId()] = new SemanticDone($tracker, $semantic_status, $dao, $value_checker, $done_values);
 
         return self::$_instances[$tracker->getId()];
+    }
+
+    /**
+     * @return Tracker_Semantic_Status
+     */
+    public function getSemanticStatus()
+    {
+        return $this->semantic_status;
     }
 }

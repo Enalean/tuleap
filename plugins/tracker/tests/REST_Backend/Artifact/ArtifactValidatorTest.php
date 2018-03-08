@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -170,9 +170,10 @@ class Tracker_REST_Artifact_ArtifactValidator_Test extends TuleapTestCase {
         $this->validator->getFieldsDataOnCreateFromValuesByField($values, $this->tracker);
     }
 
-    public function itThrowsAnExceptionIfFieldIsNotAlphaNumeric() {
+    public function itThrowsAnExceptionIfFieldIsNotAlphaNumeric()
+    {
         $values = array(
-            'msb' => 'whatever'
+            'msb' => ['whatever']
         );
 
         stub($this->form_element_factory)->getUsedFieldByName(101, 'msb')->returns($this->field_msb);

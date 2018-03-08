@@ -51,6 +51,10 @@ msgid ""
 "Dashboard by the field"
 msgstr ""
 
+#, php-format
+msgid "The field %s will be automatically set to %s"
+msgstr ""
+
 msgid "The request is not valid."
 msgstr ""
 

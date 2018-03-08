@@ -134,18 +134,15 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
         PFUser $submitter
     ) {
         $workflow = $artifact->getWorkflow();
-        if ($workflow) {
-            $workflow->before($fields_data, $submitter, $artifact);
-            $augmented_data = $this->field_initializator->process($artifact, $fields_data);
+        $workflow->before($fields_data, $submitter, $artifact);
+        $augmented_data = $this->field_initializator->process($artifact, $fields_data);
 
-            try {
-                $workflow->checkGlobalRules($augmented_data, $this->formelement_factory);
-            } catch (Tracker_Workflow_GlobalRulesViolationException $e) {
-                return false;
-            }
+        try {
+            $workflow->checkGlobalRules($augmented_data, $this->formelement_factory);
+            return true;
+        } catch (Tracker_Workflow_GlobalRulesViolationException $e) {
+            return false;
         }
-
-        return true;
     }
 
     private function initializeAFakeChangesetSoThatListAndWorkflowEncounterAnEmptyState(Tracker_Artifact $artifact) {

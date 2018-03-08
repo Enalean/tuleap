@@ -224,7 +224,7 @@ class Tracker_FormElement_Field_Selectbox_RESTTests extends TuleapTestCase {
 
         $this->expectException('Tracker_FormElement_RESTValueByField_NotImplementedException');
 
-        $value = 'some_value';
+        $value = ['some_value'];
 
         $field->getFieldDataFromRESTValueByField($value);
     }
