@@ -21,12 +21,13 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+use Tuleap\AgileDashboard\BacklogItem\RemainingEffortValueRetriever;
 
 /**
  * I build collections of IBacklogItem
  */
-class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory {
-
+class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
+{
     /** @var AgileDashboard_BacklogItemDao */
     private $dao;
 
@@ -69,20 +70,25 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory {
     /** @var AgileDashboard_Milestone_Backlog_IBuildBacklogItemAndBacklogItemCollection */
     private $backlog_item_builder;
 
+    /** @var RemainingEffortValueRetriever */
+    private $remaining_effort_value_retriever;
+
     public function __construct(
         AgileDashboard_BacklogItemDao $dao,
         Tracker_ArtifactFactory $artifact_factory,
         Tracker_FormElementFactory $form_element_factory,
         Planning_MilestoneFactory $milestone_factory,
         PlanningFactory $planning_factory,
-        AgileDashboard_Milestone_Backlog_IBuildBacklogItemAndBacklogItemCollection $backlog_item_builder
+        AgileDashboard_Milestone_Backlog_IBuildBacklogItemAndBacklogItemCollection $backlog_item_builder,
+        RemainingEffortValueRetriever $remaining_effort_value_retriever
     ) {
-        $this->dao                  = $dao;
-        $this->artifact_factory     = $artifact_factory;
-        $this->form_element_factory = $form_element_factory;
-        $this->milestone_factory    = $milestone_factory;
-        $this->planning_factory     = $planning_factory;
-        $this->backlog_item_builder = $backlog_item_builder;
+        $this->dao                              = $dao;
+        $this->artifact_factory                 = $artifact_factory;
+        $this->form_element_factory             = $form_element_factory;
+        $this->milestone_factory                = $milestone_factory;
+        $this->planning_factory                 = $planning_factory;
+        $this->backlog_item_builder             = $backlog_item_builder;
+        $this->remaining_effort_value_retriever = $remaining_effort_value_retriever;
 
         $this->open_and_closed_collection              = array();
         $this->open_closed_and_inconsistent_collection = array();
@@ -173,6 +179,9 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory {
             }
 
             $this->setInitialEffort($backlog_item, $semantics[$artifact_id]);
+            $backlog_item->setRemainingEffort(
+                $this->remaining_effort_value_retriever->getRemainingEffortValue($user, $backlog_item)
+            );
 
             $collection->push($backlog_item);
         }
@@ -229,6 +238,9 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory {
             }
 
             $this->setInitialEffort($backlog_item, $semantics[$artifact_id]);
+            $backlog_item->setRemainingEffort(
+                $this->remaining_effort_value_retriever->getRemainingEffortValue($user, $backlog_item)
+            );
 
             $collection->push($backlog_item);
         }
@@ -308,6 +320,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory {
             $this->pushItem(
                 $milestone,
                 $artifact,
+                $user,
                 $parents,
                 $semantics,
                 $redirect_to_self
@@ -471,9 +484,12 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory {
         }
     }
 
+
+
     private function pushItem(
         Planning_Milestone $milestone,
         Tracker_Artifact $artifact,
+        PFUser $user,
         array $parents,
         array $semantics,
         $redirect_to_self
@@ -491,8 +507,8 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory {
             $backlog_item->setParent($parents[$artifact_id]);
         }
 
-        $this->pushItemInOpenCollections($milestone, $artifact, $semantics, $backlog_item);
-        $this->pushItemInDoneCollection($milestone, $artifact, $semantics, $backlog_item);
+        $this->pushItemInOpenCollections($milestone, $artifact, $semantics, $backlog_item, $user);
+        $this->pushItemInDoneCollection($milestone, $artifact, $semantics, $backlog_item, $user);
         $this->open_and_closed_collection[$milestone->getArtifactId()]->push($backlog_item);
         $this->open_closed_and_inconsistent_collection[$milestone->getArtifactId()]->push($backlog_item);
     }
@@ -501,7 +517,8 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory {
         Planning_Milestone $milestone,
         Tracker_Artifact $artifact,
         array $semantics,
-        AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item
+        AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item,
+        PFUser $user
     ) {
         $artifact_id = $artifact->getId();
 
@@ -509,6 +526,9 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory {
             $backlog_item->setStatus($artifact->getStatus(), Tracker_Semantic_Status::OPEN);
 
             $this->setInitialEffort($backlog_item, $semantics[$artifact_id]);
+            $backlog_item->setRemainingEffort(
+                $this->remaining_effort_value_retriever->getRemainingEffortValue($user, $backlog_item)
+            );
             $this->todo_collection[$milestone->getArtifactId()]->push($backlog_item);
         }
     }
@@ -517,9 +537,13 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory {
         Planning_Milestone $milestone,
         Tracker_Artifact $artifact,
         array $semantics,
-        AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item
+        AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item,
+        PFUser $user
     ) {
         $this->setInitialEffort($backlog_item, $semantics[$artifact->getId()]);
+        $backlog_item->setRemainingEffort(
+            $this->remaining_effort_value_retriever->getRemainingEffortValue($user, $backlog_item)
+        );
 
         if ($semantics[$artifact->getId()][Tracker_Semantic_Status::NAME] != AgileDashboard_BacklogItemDao::STATUS_OPEN) {
             $backlog_item->setStatus($artifact->getStatus(), Tracker_Semantic_Status::CLOSED);

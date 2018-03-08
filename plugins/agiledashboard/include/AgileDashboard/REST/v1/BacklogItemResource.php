@@ -31,12 +31,14 @@ use Tracker_Artifact_PriorityHistoryDao;
 use Tracker_Artifact_PriorityManager;
 use Tracker_ArtifactDao;
 use Tracker_ArtifactFactory;
+use Tracker_FormElementFactory;
 use Tracker_Semantic_Status;
 use Tracker_Semantic_Title;
 use Tracker_SemanticCollection;
 use Tracker_SemanticManager;
 use Tracker_SlicedArtifactsBuilder;
 use TrackerFactory;
+use Tuleap\AgileDashboard\BacklogItem\RemainingEffortValueRetriever;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\Tracker\REST\v1\ArtifactLinkUpdater;
@@ -64,7 +66,14 @@ class BacklogItemResource extends AuthenticatedResource
     /** @var ResourcesPatcher */
     private $resources_patcher;
 
-    public function __construct() {
+    /** @var Tracker_FormElementFactory */
+    private $form_element_factory;
+
+    /** @var RemainingEffortValueRetriever */
+    private $remaining_effort_value_retriever;
+
+    public function __construct()
+    {
         $this->artifact_factory = Tracker_ArtifactFactory::instance();
         $this->user_manager     = UserManager::instance();
 
@@ -82,6 +91,10 @@ class BacklogItemResource extends AuthenticatedResource
             $this->artifact_factory,
             $priority_manager,
             \EventManager::instance()
+        );
+        $this->form_element_factory = Tracker_FormElementFactory::instance();
+        $this->remaining_effort_value_retriever = new RemainingEffortValueRetriever(
+            $this->form_element_factory
         );
     }
 
@@ -109,13 +122,14 @@ class BacklogItemResource extends AuthenticatedResource
      * @throws 403
      * @throws 404
      */
-    public function get($id) {
+    public function get($id)
+    {
         $this->checkAccess();
         $current_user = $this->getCurrentUser();
         $artifact     = $this->getArtifact($id);
         $backlog_item = $this->getBacklogItem($current_user, $artifact);
 
-        $backlog_item_representation_factory = new BacklogItemRepresentationFactory();
+        $backlog_item_representation_factory = $this->getBacklogItemRepresentationFactory();
         $backlog_item_representation         = $backlog_item_representation_factory->createBacklogItemRepresentation($backlog_item);
 
         $this->sendAllowHeader();
@@ -137,6 +151,7 @@ class BacklogItemResource extends AuthenticatedResource
             $backlog_item,
             $semantics
         );
+        $backlog_item = $this->updateBacklogItemRemainingEffort($current_user, $backlog_item);
         $parent_artifact = $artifact->getParent($current_user);
         if ($parent_artifact !== null) {
             $backlog_item->setParent($parent_artifact);
@@ -212,6 +227,17 @@ class BacklogItemResource extends AuthenticatedResource
         return $rest_value->values[0]['label'];
     }
 
+    private function updateBacklogItemRemainingEffort(
+        PFUser $current_user,
+        AgileDashboard_Milestone_Backlog_BacklogItem $backlog_item
+    ) {
+        $backlog_item->setRemainingEffort(
+            $this->remaining_effort_value_retriever->getRemainingEffortValue($current_user, $backlog_item)
+        );
+
+        return $backlog_item;
+    }
+
     /**
      * Get children
      *
@@ -230,14 +256,15 @@ class BacklogItemResource extends AuthenticatedResource
      * @throws 404
      * @throws 406
      */
-    public function getChildren($id, $limit = 10, $offset = 0) {
+    public function getChildren($id, $limit = 10, $offset = 0)
+    {
         $this->checkAccess();
         $this->checkContentLimit($limit);
 
         $current_user                        = $this->getCurrentUser();
         $artifact                            = $this->getArtifact($id);
         $backlog_items_representations       = array();
-        $backlog_item_representation_factory = new BacklogItemRepresentationFactory();
+        $backlog_item_representation_factory = $this->getBacklogItemRepresentationFactory();
 
         $sliced_children = $this->getSlicedArtifactsBuilder()->getSlicedChildrenArtifactsForUser($artifact, $this->getCurrentUser(), $limit, $offset);
 
@@ -409,5 +436,10 @@ class BacklogItemResource extends AuthenticatedResource
 
     private function getCurrentUser() {
         return $this->user_manager->getCurrentUser();
+    }
+
+    private function getBacklogItemRepresentationFactory()
+    {
+        return new BacklogItemRepresentationFactory();
     }
 }

@@ -36,6 +36,7 @@ use \AgileDashboard_BacklogItemDao;
 use \AgileDashboard_Milestone_MilestoneStatusCounter;
 use \Tracker_ArtifactDao;
 use \Luracast\Restler\RestException;
+use Tuleap\AgileDashboard\BacklogItem\RemainingEffortValueRetriever;
 use Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
@@ -117,7 +118,10 @@ class ProjectBacklogResource {
             $tracker_form_element_factory,
             $this->milestone_factory,
             $this->planning_factory,
-            new AgileDashboard_Milestone_Backlog_BacklogItemBuilder()
+            new AgileDashboard_Milestone_Backlog_BacklogItemBuilder(),
+            new RemainingEffortValueRetriever(
+                $tracker_form_element_factory
+            )
         );
 
         $this->parent_tracker_retriever = new ParentTrackerRetriever($this->planning_factory);

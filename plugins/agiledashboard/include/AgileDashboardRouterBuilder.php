@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\BacklogItem\RemainingEffortValueRetriever;
 use Tuleap\AgileDashboard\FormElement\BurnupFieldRetriever;
 use Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
@@ -211,14 +212,20 @@ class AgileDashboardRouterBuilder {
         );
     }
 
-    private function getBacklogItemPresenterCollectionFactory($milestone_factory) {
+    private function getBacklogItemPresenterCollectionFactory($milestone_factory)
+    {
+        $form_element_factory = Tracker_FormElementFactory::instance();
+
         return new AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory(
             new AgileDashboard_BacklogItemDao(),
             $this->getArtifactFactory(),
-            Tracker_FormElementFactory::instance(),
+            $form_element_factory,
             $milestone_factory,
             $this->getPlanningFactory(),
-            new AgileDashboard_Milestone_Backlog_BacklogItemPresenterBuilder()
+            new AgileDashboard_Milestone_Backlog_BacklogItemPresenterBuilder(),
+            new RemainingEffortValueRetriever(
+                $form_element_factory
+            )
         );
     }
 
@@ -304,14 +311,20 @@ class AgileDashboardRouterBuilder {
         );
     }
 
-    private function getBacklogItemCollectionFactory() {
+    private function getBacklogItemCollectionFactory()
+    {
+        $form_element_factory = Tracker_FormElementFactory::instance();
+
         return new AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory(
             new AgileDashboard_BacklogItemDao(),
             $this->getArtifactFactory(),
-            Tracker_FormElementFactory::instance(),
+            $form_element_factory,
             $this->getMilestoneFactory(),
             $this->getPlanningFactory(),
-            new AgileDashboard_Milestone_Backlog_BacklogItemBuilder()
+            new AgileDashboard_Milestone_Backlog_BacklogItemBuilder(),
+            new RemainingEffortValueRetriever(
+                $form_element_factory
+            )
         );
     }
 

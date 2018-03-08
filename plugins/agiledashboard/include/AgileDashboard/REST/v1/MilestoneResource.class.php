@@ -22,6 +22,7 @@ namespace Tuleap\AgileDashboard\REST\v1;
 
 use BacklogItemReference;
 use Tracker_FormElement_Field_ArtifactLink;
+use Tuleap\AgileDashboard\BacklogItem\RemainingEffortValueRetriever;
 use Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
@@ -104,11 +105,15 @@ class MilestoneResource extends AuthenticatedResource {
     /** @var QueryToCriterionConverter */
     private $query_to_criterion_converter;
 
-    public function __construct() {
-        $planning_factory               = PlanningFactory::build();
-        $this->tracker_artifact_factory = Tracker_ArtifactFactory::instance();
-        $tracker_form_element_factory   = Tracker_FormElementFactory::instance();
-        $status_counter                 = new AgileDashboard_Milestone_MilestoneStatusCounter(
+    /** @var Tracker_FormElementFactory  */
+    private $tracker_form_element_factory;
+
+    public function __construct()
+    {
+        $planning_factory                   = PlanningFactory::build();
+        $this->tracker_artifact_factory     = Tracker_ArtifactFactory::instance();
+        $this->tracker_form_element_factory = Tracker_FormElementFactory::instance();
+        $status_counter                     = new AgileDashboard_Milestone_MilestoneStatusCounter(
             new AgileDashboard_BacklogItemDao(),
             new Tracker_ArtifactDao(),
             $this->tracker_artifact_factory
@@ -127,7 +132,7 @@ class MilestoneResource extends AuthenticatedResource {
         $this->milestone_factory = new Planning_MilestoneFactory(
             $planning_factory,
             $this->tracker_artifact_factory,
-            $tracker_form_element_factory,
+            $this->tracker_form_element_factory,
             TrackerFactory::instance(),
             $status_counter,
             new PlanningPermissionsManager(),
@@ -146,16 +151,19 @@ class MilestoneResource extends AuthenticatedResource {
         $this->backlog_item_collection_factory = new AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory(
             new AgileDashboard_BacklogItemDao(),
             $this->tracker_artifact_factory,
-            $tracker_form_element_factory,
+            $this->tracker_form_element_factory,
             $this->milestone_factory,
             $planning_factory,
-            new AgileDashboard_Milestone_Backlog_BacklogItemBuilder()
+            new AgileDashboard_Milestone_Backlog_BacklogItemBuilder(),
+            new RemainingEffortValueRetriever(
+                $this->tracker_form_element_factory
+            )
         );
 
         $this->milestone_validator = new MilestoneResourceValidator(
             $planning_factory,
             $this->tracker_artifact_factory,
-            $tracker_form_element_factory,
+            $this->tracker_form_element_factory,
             $this->backlog_factory,
             $this->milestone_factory,
             $this->backlog_item_collection_factory,
@@ -172,7 +180,7 @@ class MilestoneResource extends AuthenticatedResource {
         $this->event_manager = EventManager::instance();
 
         $this->artifactlink_updater      = new ArtifactLinkUpdater($priority_manager);
-        $this->milestone_content_updater = new MilestoneContentUpdater($tracker_form_element_factory, $this->artifactlink_updater);
+        $this->milestone_content_updater = new MilestoneContentUpdater($this->tracker_form_element_factory, $this->artifactlink_updater);
         $this->resources_patcher         = new ResourcesPatcher(
             $this->artifactlink_updater,
             $this->tracker_artifact_factory,
@@ -468,7 +476,8 @@ class MilestoneResource extends AuthenticatedResource {
      * @throws 403
      * @throws 404
      */
-    public function getContent($id, $limit = 10, $offset = 0) {
+    public function getContent($id, $limit = 10, $offset = 0)
+    {
         $this->checkAccess();
         $this->checkContentLimit($limit);
 
@@ -476,7 +485,7 @@ class MilestoneResource extends AuthenticatedResource {
         $backlog                             = $this->backlog_factory->getSelfBacklog($milestone, $limit, $offset);
         $backlog_items                       = $this->getMilestoneContentItems($milestone, $backlog);
         $backlog_items_representations       = array();
-        $backlog_item_representation_factory = new BacklogItemRepresentationFactory();
+        $backlog_item_representation_factory = $this->getBacklogItemRepresentationFactory();
 
         foreach ($backlog_items as $backlog_item) {
             $backlog_items_representations[] = $backlog_item_representation_factory->createBacklogItemRepresentation($backlog_item);
@@ -700,7 +709,8 @@ class MilestoneResource extends AuthenticatedResource {
      * @throws 403
      * @throws 404
      */
-    public function getBacklog($id, $limit = 10, $offset = 0) {
+    public function getBacklog($id, $limit = 10, $offset = 0)
+    {
         $this->checkAccess();
         $this->checkContentLimit($limit);
 
@@ -708,7 +718,7 @@ class MilestoneResource extends AuthenticatedResource {
         $milestone = $this->getMilestoneById($user, $id);
 
         $paginated_backlog_item_representation_builder = new AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder(
-            new BacklogItemRepresentationFactory(),
+            $this->getBacklogItemRepresentationFactory(),
             $this->backlog_item_collection_factory,
             $this->backlog_factory
         );
@@ -1095,5 +1105,10 @@ class MilestoneResource extends AuthenticatedResource {
 
     private function sendAllowHeadersForBurndown(){
         Header::allowOptionsGet();
+    }
+
+    private function getBacklogItemRepresentationFactory()
+    {
+        return new BacklogItemRepresentationFactory();
     }
 }

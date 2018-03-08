@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\BacklogItem\RemainingEffortValueRetriever;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
@@ -213,7 +214,10 @@ class Cardwall_Pane extends AgileDashboard_Pane {
             $this->tracker_form_element_factory,
             $this->milestone_factory,
             $this->planning_factory,
-            new AgileDashboard_Milestone_Backlog_BacklogItemBuilder()
+            new AgileDashboard_Milestone_Backlog_BacklogItemBuilder(),
+            new RemainingEffortValueRetriever(
+                $this->tracker_form_element_factory
+            )
         );
 
         $mono_milestone_items_finder = new MonoMilestoneItemsFinder(

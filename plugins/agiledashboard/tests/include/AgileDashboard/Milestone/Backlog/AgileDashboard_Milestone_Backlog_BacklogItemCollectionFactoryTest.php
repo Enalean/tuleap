@@ -24,7 +24,8 @@
 
 require_once dirname(__FILE__).'/../../../../common.php';
 
-class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends TuleapTestCase {
+class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends TuleapTestCase
+{
     private $backlog;
 
     /** @var AgileDashboard_BacklogItemDao */
@@ -49,15 +50,17 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
     private $open_unplanned_story_id = 47;
     private $closed_story_id         = 66;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
-        $this->dao                  = mock('AgileDashboard_BacklogItemDao');
-        $this->artifact_factory     = mock('Tracker_ArtifactFactory');
-        $this->form_element_factory = mock('Tracker_FormElementFactory');
-        $this->milestone_factory    = mock('Planning_MilestoneFactory');
-        $this->planning_factory     = mock('PlanningFactory');
-        $this->backlog_item_builder = new AgileDashboard_Milestone_Backlog_BacklogItemBuilder();
+        $this->dao                              = mock('AgileDashboard_BacklogItemDao');
+        $this->artifact_factory                 = mock('Tracker_ArtifactFactory');
+        $this->form_element_factory             = mock('Tracker_FormElementFactory');
+        $this->milestone_factory                = mock('Planning_MilestoneFactory');
+        $this->planning_factory                 = mock('PlanningFactory');
+        $this->backlog_item_builder             = new AgileDashboard_Milestone_Backlog_BacklogItemBuilder();
+        $this->remaining_effort_value_retriever = mock('Tuleap\AgileDashboard\BacklogItem\RemainingEffortValueRetriever');
 
         $this->user = mock('PFUser');
 
@@ -81,7 +84,8 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
                 $this->form_element_factory,
                 $this->milestone_factory,
                 $this->planning_factory,
-                $this->backlog_item_builder
+                $this->backlog_item_builder,
+                $this->remaining_effort_value_retriever
             )
         );
         stub($this->factory)->userCanReadBacklogTitleField()->returns(true);
@@ -218,7 +222,8 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
                 $this->form_element_factory,
                 $this->milestone_factory,
                 $this->planning_factory,
-                $this->backlog_item_builder
+                $this->backlog_item_builder,
+                $this->remaining_effort_value_retriever
             )
         );
 

@@ -42,6 +42,7 @@ describe("BacklogItemCollectionService -", () => {
                     },
                     has_children  : false,
                     initial_effort: 8,
+                    remaining_effort: 7,
                     label         : 'hexapod',
                     status        : 'Review',
                     updating      : false
@@ -66,6 +67,7 @@ describe("BacklogItemCollectionService -", () => {
                         ],
                         has_children  : true,
                         initial_effort: 6,
+                        remaining_effort: 3,
                         label         : 'unspeedy',
                         status        : 'Closed',
                         parent        : {
@@ -100,6 +102,7 @@ describe("BacklogItemCollectionService -", () => {
                     },
                     has_children  : true,
                     initial_effort: 6,
+                    remaining_effort: 3,
                     label         : 'unspeedy',
                     status        : 'Closed',
                     parent        : {

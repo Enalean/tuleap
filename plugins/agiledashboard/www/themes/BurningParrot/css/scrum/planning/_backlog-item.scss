@@ -19,6 +19,7 @@
 
 @import 'backlog-item-details';
 @import 'backlog-item-transit';
+@import './item-progress';
 
 %hide-moves-icons {
     > .backlog-item-content-collapsed > .backlog-item-details-effort-container {

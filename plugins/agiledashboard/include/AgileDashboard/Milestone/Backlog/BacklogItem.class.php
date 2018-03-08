@@ -22,8 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_Milestone_Backlog_BacklogItem implements AgileDashboard_Milestone_Backlog_IBacklogItem {
-
+class AgileDashboard_Milestone_Backlog_BacklogItem implements AgileDashboard_Milestone_Backlog_IBacklogItem
+{
     /** @var Int */
     private $id;
 
@@ -41,6 +41,9 @@ class AgileDashboard_Milestone_Backlog_BacklogItem implements AgileDashboard_Mil
 
     /** @var Int */
     private $initial_effort;
+
+    /** @var float */
+    private $remaining_effort;
 
     /** @var String */
     private $status;
@@ -176,5 +179,15 @@ class AgileDashboard_Milestone_Backlog_BacklogItem implements AgileDashboard_Mil
     public function isOpen()
     {
         return $this->artifact->isOpen();
+    }
+
+    public function getRemainingEffort()
+    {
+        return $this->remaining_effort;
+    }
+
+    public function setRemainingEffort($value)
+    {
+        $this->remaining_effort = $value;
     }
 }
