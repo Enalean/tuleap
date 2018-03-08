@@ -1,17 +1,31 @@
 <?php
-//
-// SourceForge: Breaking Down the Barriers to Open Source Development
-// Copyright 1999-2000 (c) The SourceForge Crew
-// http://sourceforge.net
-//
-// 
-//
-//
+/**
+ * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
+ * Copyright 1999-2000 (c) The SourceForge Crew
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 $GLOBALS['DEBUG_DBPHP_QUERY_COUNT'] = 0;
 if(!defined('CODENDI_DB_NULL')) define('CODENDI_DB_NULL', 0);
 if(!defined('CODENDI_DB_NOT_NULL')) define('CODENDI_DB_NOT_NULL', 1);
 
 $conn = null;
+/**
+ * @deprecated
+ */
 function db_connect() {
     global $conn;
     $conn = CodendiDataAccess::instance();
@@ -19,6 +33,8 @@ function db_connect() {
 
 /**
  * Returns the connection object, or null if there is no connection
+ *
+ * @deprecated
  *
  * @return {resource} the connection, or null if no connection
  */
@@ -31,6 +47,9 @@ function getConnection() {
     }
 }
 
+/**
+ * @deprecated
+ */
 function db_query($sql,$print=0) {
     global $conn;
     if ($print) {
@@ -39,6 +58,9 @@ function db_query($sql,$print=0) {
     return db_query_params($sql, array());
 }
 
+/**
+ * @deprecated
+ */
 function db_query_params($sql, $params) {
     global $conn;
 	$dar = $conn->query($sql, $params);
@@ -49,6 +71,9 @@ function db_query_params($sql, $params) {
     return $GLOBALS['db_qhandle'];
 }
 
+/**
+ * @deprecated
+ */
 function db_numrows($qhandle) {
     global $conn;
 	// return only if qhandle exists, otherwise 0
@@ -59,26 +84,44 @@ function db_numrows($qhandle) {
 	}
 }
 
+/**
+ * @deprecated
+ */
 function db_free_result($qhandle) {
 	return @mysql_free_result($qhandle);
 }
 
+/**
+ * @deprecated
+ */
 function db_result($qhandle,$row,$field) {
 	return @mysql_result($qhandle,$row,$field);
 }
 
+/**
+ * @deprecated
+ */
 function db_numfields($lhandle) {
 	return @mysql_num_fields($lhandle);
 }
 
+/**
+ * @deprecated
+ */
 function db_fieldname($lhandle,$fnumber) {
            return @mysql_field_name($lhandle,$fnumber);
 }
 
+/**
+ * @deprecated
+ */
 function db_affected_rows($qhandle) {
 	return @mysql_affected_rows();
 }
-	
+
+/**
+ * @deprecated
+ */
 function db_fetch_array($qhandle = 0) {
     global $conn;
 	if ($qhandle) {
@@ -91,7 +134,10 @@ function db_fetch_array($qhandle = 0) {
 		}
 	}
 }
-	
+
+/**
+ * @deprecated
+ */
 function db_insertid($qhandle) {
 	global $conn;
     if (isset($conn) && $conn) {
@@ -103,6 +149,8 @@ function db_insertid($qhandle) {
 
 /**
  * Display real error only if we are in Debug mode
+ *
+ * @deprecated
  * 
  * @return String 
  */
@@ -121,12 +169,17 @@ function db_error() {
  *
  *  @param		string	Query result set handle
  *  @param		int		Row number
+ *
+ * @deprecated
  */
 function db_reset_result($qhandle,$row=0) {
     global $conn;
     return $conn->dataSeek($qhandle,$row);
 }
 
+/**
+ * @deprecated
+ */
 function db_escape_string($string,$qhandle=false) {
   if (function_exists('mysql_real_escape_string')) {
     if ($qhandle) {
@@ -141,6 +194,7 @@ function db_escape_string($string,$qhandle=false) {
 
 /**
  * Alias for db_escape_string.
+ * @deprecated
  */
 function db_es($string,$qhandle=false) {
     return db_escape_string($string,$qhandle);
@@ -158,6 +212,9 @@ function db_es($string,$qhandle=false) {
  * @see DataAccess::escapeInt for tests.
  * @param  mixed $val a value to escape
  * @param  int   $null CODENDI_DB_NOT_NULL or CODENDI_DB_NULL
+ *
+ * @deprecated
+ *
  * @return string Decimal integer encoded as a string
  */
 function db_escape_int($val, $null = CODENDI_DB_NOT_NULL) {
@@ -176,6 +233,7 @@ function db_escape_int($val, $null = CODENDI_DB_NOT_NULL) {
  *
  * @param mixed $val a value to escape
  * @param  int   $null CODENDI_DB_NOT_NULL or CODENDI_DB_NULL
+ * @deprecated
  * @return string Decimal integer encoded as a string
  */
 function db_ei($val, $null = CODENDI_DB_NOT_NULL) {
@@ -190,12 +248,21 @@ function db_ei_implode($val) {
     return implode(',', array_map('db_ei', $val));
 }
 
+/**
+ * @deprecated
+ */
 function db_begin(){
 	echo "db_begin()\n";
 }
+/**
+ * @deprecated
+ */
 function db_commit(){
 	echo "db_commit()\n";
 }
+/**
+ * @deprecated
+ */
 function db_rollback(){
 	echo "db_rollback()\n";
 }
