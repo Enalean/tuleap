@@ -307,24 +307,20 @@ try {
         )
     );
 
-    try {
-        if (empty($project_id)) {
-            $factory             = new SystemEventProcessor_Factory(
-                $broker_log, SystemEventManager::instance(), $event_manager
-            );
-            $system_event_runner = new Tuleap\Project\SystemEventRunner($factory);
-            $xml_importer->importNewFromArchive(
-                $configuration,
-                $archive,
-                $system_event_runner,
-                $is_template,
-                $project_name_override
-            );
-        } else {
-            $xml_importer->importFromArchive($configuration, $project_id, $archive);
-        }
-    } catch (ImportNotValidException $exception) {
-        $broker_log->error("Some natures used in trackers are not created on plateform.");
+    if (empty($project_id)) {
+        $factory             = new SystemEventProcessor_Factory(
+            $broker_log, SystemEventManager::instance(), $event_manager
+        );
+        $system_event_runner = new Tuleap\Project\SystemEventRunner($factory);
+        $xml_importer->importNewFromArchive(
+            $configuration,
+            $archive,
+            $system_event_runner,
+            $is_template,
+            $project_name_override
+        );
+    } else {
+        $xml_importer->importFromArchive($configuration, $project_id, $archive);
     }
 
     $archive->cleanUp();
@@ -334,7 +330,12 @@ try {
     foreach ($exception->getErrors() as $parse_error) {
         $broker_log->error('XML: '.$parse_error.' line:'.$exception->getSourceXMLForError($parse_error));
     }
+} catch(ImportNotValidException $exception) {
+    $broker_log->error("Some natures used in trackers are not created on plateform.");
 } catch (Exception $exception) {
     $broker_log->error(get_class($exception).': '.$exception->getMessage().' in '.$exception->getFile().' L'.$exception->getLine());
+}
+if ($archive) {
+    $archive->cleanUp();
 }
 exit(1);

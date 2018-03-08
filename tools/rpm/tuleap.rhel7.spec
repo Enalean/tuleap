@@ -428,6 +428,7 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/crosstracker
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/dynamic_credentials
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/velocity
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/create_test_env
 # Remove development tools and utility files
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/composer.json
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/composer.lock

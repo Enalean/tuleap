@@ -1,0 +1,5 @@
+msgid "Automate creation of test users and environments"
+msgstr ""
+
+msgid "Create test environment"
+msgstr ""
