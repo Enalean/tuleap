@@ -30,20 +30,27 @@
              v-bind:readingStartDate="start_date"
              v-bind:readingEndDate="end_date"
         />
-        <div class="empty-pane-text">{{ empty_state }}</div>
+        <widget-artifact-table
+            v-bind:startDate="start_date"
+            v-bind:endDate="end_date"
+        />
     </div>
 </template>
 )
 (
 <script>
     import { DateTime }         from 'luxon';
-    import { gettext_provider } from './gettext-provider.js';
     import WidgetReadingMode    from './WidgetReadingMode.vue';
     import WidgetWritingMode    from './WidgetWritingMode.vue';
+    import WidgetArtifactTable  from './WidgetArtifactTable.vue';
 
     export default {
         name      : 'Widget',
-        components: { WidgetReadingMode, WidgetWritingMode },
+        components: {
+            WidgetReadingMode,
+            WidgetWritingMode,
+            WidgetArtifactTable
+        },
         data() {
             const start_date = DateTime.local().minus({ weeks: 1 }).toISODate();
             const end_date   = DateTime.local().toISODate();
@@ -53,9 +60,6 @@
                 start_date,
                 end_date
             }
-        },
-        computed: {
-            empty_state: () => gettext_provider.gettext('There is nothing here ... for now ...')
         },
         methods: {
             switchToWritingMode() {

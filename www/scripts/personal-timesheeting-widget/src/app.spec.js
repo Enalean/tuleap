@@ -23,3 +23,4 @@ import 'tlp-mocks';
 import './Widget.spec.js';
 import './WidgetWritingMode.spec.js';
 import './WidgetReadingMode.spec.js';
+import './WidgetArtifactTable.spec.js';

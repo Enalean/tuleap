@@ -1,13 +1,22 @@
+msgid "Artifact"
+msgstr ""
+
 msgid "Cancel"
 msgstr ""
 
 msgid "From"
 msgstr ""
 
+msgid "Project"
+msgstr ""
+
 msgid "Search"
 msgstr ""
 
 msgid "There is nothing here ... for now ..."
+msgstr ""
+
+msgid "Time"
 msgstr ""
 
 msgid "To"
