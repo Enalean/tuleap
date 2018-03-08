@@ -20,6 +20,10 @@
 
 namespace Tuleap\DynamicCredentials\REST;
 
+use Guzzle\Http\Exception\ClientErrorResponseException;
+
+require_once 'bootstrap.php';
+
 class DynamicCredentialsTest extends \RestBase
 {
     const USERNAME         = 'forge__dynamic_credential-user1';
@@ -32,6 +36,29 @@ class DynamicCredentialsTest extends \RestBase
         $this->createAccount(self::USERNAME, self::PASSWORD, $expiration_date);
     }
 
+    public function testPOSTInvalidSignatureRejected()
+    {
+        $expiration_date = new \DateTimeImmutable('+30 minutes');
+        $expiration = $expiration_date->format(\DateTime::ATOM);
+
+        try {
+            $this->getResponseWithoutAuth($this->client->post(
+                'dynamic_credentials',
+                null,
+                json_encode([
+                    'username'   => self::USERNAME . 'reject_me',
+                    'password'   => self::PASSWORD,
+                    'expiration' => $expiration,
+                    'signature'  => $this->getSignatureForPostAction('wrong_username', self::PASSWORD, $expiration)
+                ])
+            ));
+        } catch (ClientErrorResponseException $ex) {
+            $this->assertEquals(403, $ex->getResponse()->getStatusCode());
+            return;
+        }
+        $this->fail();
+    }
+
     private function createAccount(string $username, string $password, \DateTimeImmutable $expiration_date)
     {
         $expiration = $expiration_date->format(\DateTime::ATOM);
@@ -41,8 +68,19 @@ class DynamicCredentialsTest extends \RestBase
             json_encode([
                 'username'   => $username,
                 'password'   => $password,
-                'expiration' => $expiration
+                'expiration' => $expiration,
+                'signature'  => $this->getSignatureForPostAction($username, $password, $expiration)
             ])
         ));
+    }
+
+    private function getSignatureForPostAction(string $username, string $password, string $expiration_date): string
+    {
+        $host    = parse_url('https://localhost/api/v1', PHP_URL_HOST);
+        $message = $host . $username . $password . $expiration_date;
+
+        return base64_encode(
+            \sodium_crypto_sign_detached($message, base64_decode(DynamicCredentialsPluginRESTInitializer::PRIVATE_KEY))
+        );
     }
 }

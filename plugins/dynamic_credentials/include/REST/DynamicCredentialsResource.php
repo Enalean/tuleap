@@ -44,9 +44,15 @@ class DynamicCredentialsResource
      * @param string $username {@from body} Username must be formatted as forge__dynamic_credential-&lt;identifier&gt; where &lt;identifier&gt; is a chosen value
      * @param string $password {@from body}
      * @param string $expiration {@from body} Expiration date ISO8601 formatted
+     * @param string $signature {@from body} Base64 encoded signature associated with the request
      */
-    public function post($username, $password, $expiration)
+    public function post($username, $password, $expiration, $signature)
     {
+        $request_signature_verifier = $this->getRequestSignatureVerifier();
+        if (! $request_signature_verifier->isSignatureValid($signature, $username, $password, $expiration)) {
+            throw new RestException(403, 'Invalid signature');
+        }
+
         $account_creator = new CredentialCreator(
             new CredentialDAO(),
             \PasswordHandlerFactory::getPasswordHandler(),
@@ -65,5 +71,14 @@ class DynamicCredentialsResource
         } catch (DuplicateCredentialException $ex) {
             throw new RestException(400, $ex->getMessage());
         }
+    }
+
+    /**
+     * @return RequestSignatureVerifier
+     */
+    private function getRequestSignatureVerifier()
+    {
+        $plugin = \PluginFactory::instance()->getPluginByName(\dynamic_credentialsPlugin::NAME);
+        return new RequestSignatureVerifier($plugin->getPluginInfo());
     }
 }
