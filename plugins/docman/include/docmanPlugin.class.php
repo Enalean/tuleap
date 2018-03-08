@@ -282,8 +282,11 @@ class DocmanPlugin extends Plugin
     }
 
     function logsDaily($params) {
-        $controler = $this->getHTTPController();
-        $controler->logsDaily($params);
+        $project = $this->getProject($params['group_id']);
+        if ($project->usesService($this->getServiceShortname())) {
+            $controler = $this->getHTTPController();
+            $controler->logsDaily($params);
+        }
     }
 
     public function service_public_areas(GetPublicAreas $event) {

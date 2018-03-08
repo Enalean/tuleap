@@ -110,7 +110,7 @@ plugin_svn	deleted_date	Deleted date
 plugin_svn	anonymous_browse_access_denied	You can not browse the repository without being logged.
 
 plugin_svn	logsdaily_field	Repository name
-plugin_svn	logsdaily_title	Subversion commits multi repositories
+plugin_svn	logsdaily_title	SVN
 plugin_svn	log_read_label	Read
 plugin_svn	log_write_label	Write
 plugin_svn	log_browse_label	Browse

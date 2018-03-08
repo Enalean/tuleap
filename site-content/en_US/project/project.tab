@@ -709,7 +709,6 @@ project_stats_source_code_access_utils	access_for_past_x_days	$1 for the past $2
 project_stats_source_code_access_utils	in_total	$1 in total
 project_stats_source_code_access_utils	time	Local Time
 project_stats_source_code_access_utils	no_access	None for this period.
-project_stats_source_code_access_utils	service_disabled	$1 Service Disabled
 project_stats_source_code_access_utils	subversion	Subversion
 project_stats_source_code_access_utils	docs	Docs
 project_stats_source_code_access_utils	wiki	Wiki
