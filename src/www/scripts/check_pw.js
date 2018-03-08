@@ -1,6 +1,6 @@
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2011-2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2011-2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -67,11 +67,28 @@
         $('.robustness .password_strategy_good').hide();
     }
 
+    /**
+     * Simplified version of debounce function of Underscore.js
+     *
+     * @see http://underscorejs.org/#debounce
+     */
+    function debounce(func, wait) {
+        let timeout;
+        return function() {
+            const context = this, args = arguments;
+            clearTimeout(timeout);
+            timeout = setTimeout(function() {
+                timeout = null;
+                func.apply(context, args);
+            }, wait);
+        };
+    }
+
     $(document).ready(function() {
-        $('#form_pw').attr('autocomplete', 'off');
         setRobustnessToBad();
 
-        $('#form_pw').on('paste keyup', checkPassword);
-        $.proxy(checkPassword, $('#form_pw'))();
+        const debouncedCheckPassword = debounce(checkPassword, 300);
+
+        $('#form_pw').on('paste keyup', debouncedCheckPassword);
     });
 })(jQuery);

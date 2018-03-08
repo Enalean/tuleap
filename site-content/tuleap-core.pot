@@ -760,6 +760,11 @@ msgstr ""
 msgid "The name is missing for editing the dashboard."
 msgstr ""
 
+msgid ""
+"The password must not be considered as compromised due to his presence in "
+"known data breaches."
+msgstr ""
+
 msgid "The requested dashboard does not exist."
 msgstr ""
 

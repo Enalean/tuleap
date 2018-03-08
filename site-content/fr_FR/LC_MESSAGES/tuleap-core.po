@@ -808,6 +808,13 @@ msgstr "Il manque le nom pour créer un tableau de bord."
 msgid "The name is missing for editing the dashboard."
 msgstr "Il manque le nom pour éditer le tableau de bord."
 
+msgid ""
+"The password must not be considered as compromised due to his presence in "
+"known data breaches."
+msgstr ""
+"Le mot de passe ne doit pas être considéré comme compromis en raison de sa "
+"présence dans des fuites d'information connues."
+
 msgid "The requested dashboard does not exist."
 msgstr "Le tableau de bord demandé n’existe pas."
 
