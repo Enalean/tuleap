@@ -59,6 +59,46 @@ class DynamicCredentialsTest extends \RestBase
         $this->fail();
     }
 
+
+    /**
+     * @depends testPOSTNewAccountAndLogin
+     */
+    public function testDELETEAccount()
+    {
+        $uri = 'dynamic_credentials/' . urlencode(self::USERNAME) . '?' . http_build_query([
+                'signature'  => $this->getSignatureForDeleteAction(self::USERNAME)
+            ]);
+        $this->getResponseWithoutAuth($this->client->delete($uri));
+    }
+
+    public function testDELETEInvalidSignatureRejected()
+    {
+        $uri = 'dynamic_credentials/' . urlencode(self::USERNAME . 'reject_me') . '?'  . http_build_query([
+                'signature' => $this->getSignatureForDeleteAction('wrong_username')
+            ]);
+        try {
+            $this->getResponseWithoutAuth($this->client->delete($uri));
+        } catch (ClientErrorResponseException $ex) {
+            $this->assertEquals(403, $ex->getResponse()->getStatusCode());
+            return;
+        }
+        $this->fail();
+    }
+
+    public function testDELETENonExistingAccount()
+    {
+        $uri = 'dynamic_credentials/' . urlencode(self::USERNAME. 'donotexist') . '?' . http_build_query([
+                'signature'  => $this->getSignatureForDeleteAction(self::USERNAME. 'donotexist')
+            ]);
+        try {
+            $this->getResponseWithoutAuth($this->client->delete($uri));
+        } catch (ClientErrorResponseException $ex) {
+            $this->assertEquals(404, $ex->getResponse()->getStatusCode());
+            return;
+        }
+        $this->fail();
+    }
+
     private function createAccount(string $username, string $password, \DateTimeImmutable $expiration_date)
     {
         $expiration = $expiration_date->format(\DateTime::ATOM);
@@ -78,6 +118,16 @@ class DynamicCredentialsTest extends \RestBase
     {
         $host    = parse_url('https://localhost/api/v1', PHP_URL_HOST);
         $message = $host . $username . $password . $expiration_date;
+
+        return base64_encode(
+            \sodium_crypto_sign_detached($message, base64_decode(DynamicCredentialsPluginRESTInitializer::PRIVATE_KEY))
+        );
+    }
+
+    private function getSignatureForDeleteAction(string $username): string
+    {
+        $host    = parse_url('https://localhost/api/v1', PHP_URL_HOST);
+        $message = $host . $username;
 
         return base64_encode(
             \sodium_crypto_sign_detached($message, base64_decode(DynamicCredentialsPluginRESTInitializer::PRIVATE_KEY))
