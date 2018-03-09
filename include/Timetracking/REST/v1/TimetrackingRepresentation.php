@@ -41,10 +41,13 @@ class TimetrackingRepresentation
 
     public $minutes;
 
+    public $id;
+
     public function build(Time $time)
     {
         $this->artifact = $this->getArtifactRepresentation($time);
         $this->project  = $this->getProjectRepresentation($time);
+        $this->id       = JsonCast::toInt($time->getId());
         $this->minutes  = JsonCast::toInt($time->getMinutes());
         $this->date     = $time->getDay();
     }
