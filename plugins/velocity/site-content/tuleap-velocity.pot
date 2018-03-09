@@ -2,8 +2,8 @@ msgid "Adds velocity chart into Agiledashboard"
 msgstr ""
 
 msgid ""
-"Choose the \"velocity\" field that will be used for computation of velocity "
-"chart."
+"Choose the \"velocity\" field that will be used for computation of velocity\n"
+"    chart."
 msgstr ""
 
 msgid "Define the field to use to compute velocity."
@@ -24,6 +24,9 @@ msgid "No field defined for velocity computation."
 msgstr ""
 
 msgid "Save your change"
+msgstr ""
+
+msgid "Semantic done is not defined for tracker <a href=\"%s\">%s</a>"
 msgstr ""
 
 msgid "Semantic done is not defined."

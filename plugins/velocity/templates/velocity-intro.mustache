@@ -1,4 +1,21 @@
-<p>{{# dgettext }}tuleap-velocity | Choose the "velocity" field that will be used for computation of velocity chart.{{/ dgettext }}</p>
+{{# semantic_done_is_defined }}
+    {{# has_backlog_trackers_without_done_semantic }}
+        <ul class="feedback_warning">
+            {{# backlog_trackers_without_done_semantic }}
+                <li>
+                    {{# dgettext }}
+                        tuleap-velocity |
+                        Semantic done is not defined for tracker <a href="%s">%s</a> |
+                        {{ url }} |
+                        {{ name }}
+                    {{/ dgettext }}
+                </li>
+            {{/ backlog_trackers_without_done_semantic }}
+        </ul>
+    {{/ has_backlog_trackers_without_done_semantic }}
+{{/ semantic_done_is_defined }}
+<p>{{# dgettext }}tuleap-velocity | Choose the "velocity" field that will be used for computation of velocity
+    chart.{{/ dgettext }}</p>
 <p>
     {{# semantic_done_is_defined }}
         {{^ velocity_field }}

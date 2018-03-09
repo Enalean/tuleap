@@ -36,11 +36,24 @@ class SemanticVelocityPresenter
      * @var string
      */
     public $velocity_field_label;
+    /**
+     * @var array
+     */
+    public $backlog_trackers_without_done_semantic;
+    /**
+     * @var bool
+     */
+    public $has_backlog_trackers_without_done_semantic;
 
-    public function __construct($semantic_done_is_defined, Tracker_FormElement_Field $velocity_field = null)
-    {
-        $this->semantic_done_is_defined = $semantic_done_is_defined;
-        $this->velocity_field          = $velocity_field;
-        $this->velocity_field_label    = ($velocity_field !== null) ? $velocity_field->getLabel() : "";
+    public function __construct(
+        $semantic_done_is_defined,
+        array $incorrect_backlog_trackers,
+        Tracker_FormElement_Field $velocity_field = null
+    ) {
+        $this->semantic_done_is_defined                   = $semantic_done_is_defined;
+        $this->velocity_field                             = $velocity_field;
+        $this->velocity_field_label                       = ($velocity_field !== null) ? $velocity_field->getLabel() : "";
+        $this->backlog_trackers_without_done_semantic     = $incorrect_backlog_trackers;
+        $this->has_backlog_trackers_without_done_semantic = count($incorrect_backlog_trackers) > 0;
     }
 }

@@ -8,7 +8,22 @@
 {{/ has_semantic_done_defined }}
 
 {{# has_semantic_done_defined }}
-<form action="" method="POST">
+    {{# has_backlog_trackers_without_done_semantic }}
+        <ul class="feedback_warning">
+            {{# backlog_trackers_without_done_semantic }}
+                <li>
+                    {{# dgettext }}
+                        tuleap-velocity |
+                        Semantic done is not defined for tracker <a href="%s">%s</a> |
+                        {{ url }} |
+                        {{ name }}
+                    {{/ dgettext }}
+                </li>
+            {{/ backlog_trackers_without_done_semantic }}
+        </ul>
+    {{/ has_backlog_trackers_without_done_semantic }}
+
+    <form action="" method="POST">
     {{# csrf_token }}
         {{> csrf_token_input }}
     {{/ csrf_token }}
