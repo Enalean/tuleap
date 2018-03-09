@@ -1014,7 +1014,6 @@ class Tracker_ArtifactDao extends DataAccessObject {
                     INNER JOIN tracker_artifact                     linked_art ON (linked_art.id = artlink.artifact_id $additional_artifacts_sql)
                     INNER JOIN tracker_artifact_priority_rank                       ON (tracker_artifact_priority_rank.artifact_id = linked_art.id)
                      $exclude
-                        -- only those with open status
                     INNER JOIN tracker AS T ON (linked_art.tracker_id = T.id)
                     INNER JOIN groups AS G ON (G.group_id = T.group_id)
                     INNER JOIN tracker_changeset AS C ON (linked_art.last_changeset_id = C.id)
@@ -1023,9 +1022,20 @@ class Tracker_ArtifactDao extends DataAccessObject {
                         INNER JOIN tracker_semantic_title as ST ON (CV2.field_id = ST.field_id)
                         INNER JOIN tracker_changeset_value_text AS CVT ON (CV2.id = CVT.changeset_value_id)
                     ) ON (C.id = CV2.changeset_id)
+                    -- only those with open status
+                    LEFT JOIN (
+                        tracker_semantic_status as SS
+                        INNER JOIN tracker_changeset_value AS CV3       ON (SS.field_id = CV3.field_id)
+                        INNER JOIN tracker_changeset_value_list AS CVL2 ON (CV3.id = CVL2.changeset_value_id)
+                    ) ON (T.id = SS.tracker_id AND C.id = CV3.changeset_id)
                 WHERE parent_art.id = $artifact_id
                     $submile_null
                     AND linked_art.tracker_id IN ($tracker_ids)
+                    AND (
+                        SS.field_id IS NULL -- Use the status semantic only if it is defined
+                        OR
+                        CVL2.bindvalue_id = SS.open_value_id
+                    )
                 GROUP BY (linked_art.id)
                 ORDER BY tracker_artifact_priority_rank.rank ASC
                 LIMIT $limit OFFSET $offset";
