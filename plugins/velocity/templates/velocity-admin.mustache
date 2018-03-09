@@ -13,19 +13,35 @@
         {{> csrf_token_input }}
     {{/ csrf_token }}
 
-    {{# dgettext }} tuleap-velocity | This tracker does not have a <i>velocity</i> field yet.{{/ dgettext }}
+    {{^ has_velocity_field }}
+        {{# dgettext }} tuleap-velocity | This tracker does not have a <i>velocity</i> field yet.{{/ dgettext }}
+    {{/ has_velocity_field }}
     <p>
-        {{# dgettext }} tuleap-velocity | Feel free to chose one:{{/ dgettext }}
+        {{^ has_velocity_field }}
+            {{# dgettext }} tuleap-velocity | Feel free to choose one:{{/ dgettext }}
+        {{/ has_velocity_field }}
+
+        {{# has_velocity_field }}
+            {{# dgettext }}tuleap-velocity | The <i>velocity</i> of this tracker will be represented in the Agile Dashboard by the field{{/ dgettext }}
+        {{/ has_velocity_field }}
+
         <select name="velocity_field">
             {{# possible_velocity_field }}
-                <option value="{{ getId }}"> {{ getName }} </option>
+                <option value="{{ id }}" {{# is_selected }} selected="selected"{{/ is_selected }}> {{ name }} </option>
             {{/ possible_velocity_field }}
         </select>
-       <input type="submit"
-              class="btn btn-primary tracker-semantic-submit"
-              name="add"
-              value="{{# dgettext }} tuleap-velocity | Save your change{{/ dgettext }}"
-              disabled="disabled"/>
+    </p>
+    <p>
+        <input type="submit"
+               class="btn btn-primary"
+               name="submit"
+               value="{{# dgettext }} tuleap-velocity | Save your change{{/ dgettext }}"/>
+        {{# dgettext }} tuleap-velocity | or {{/ dgettext }}
+        <input
+                type="submit"
+                class="btn btn-danger"
+                name="delete"
+                value="{{# dgettext }} tuleap-velocity | Unset this semantic{{/ dgettext }}"/>
     </p>
     <p><a href="{{ back_url }}">&laquo; {{# dgettext }} tuleap-velocity | go back to semantic overview{{/ dgettext }}</a></p>
 

@@ -25,11 +25,40 @@ msgstr ""
 msgid "Define the field to use to compute velocity."
 msgstr "Définissez le champ à utiliser pour calculer la vélocité"
 
-msgid "Feel free to chose one:"
+msgid ""
+"Done semantic is needed to define a Velocity semantic. Please select a Done "
+"semantic first."
+msgstr ""
+"La sémantique fini est nécessaire pour définir une sémantique vélocité. "
+"Merci de choisir une sémantique fini d'abord"
+
+msgid "Feel free to choose one:"
 msgstr "N'hésitez pas à en choisir un :"
+
+msgid "Field used for velocity computation:"
+msgstr "Champ utilisé pour le calcul de la vélocité:"
+
+msgid "No field defined for velocity computation."
+msgstr "Aucun champ défini pour le calcul de la vélocité"
 
 msgid "Save your change"
 msgstr "Sauvegarder vos changements"
+
+msgid "Semantic done is not defined."
+msgstr "La sémantique finie n'est pas définie"
+
+msgid "Semantic updated successfully."
+msgstr "La sémantique a été correctement sauvegardée"
+
+msgid ""
+"The <i>velocity</i> of this tracker will be represented in the Agile "
+"Dashboard by the field"
+msgstr ""
+"La <i>vélocité</i> de ce tracker sera représentée dans le tableau de bord "
+"agile par le champ"
+
+msgid "The request is not valid."
+msgstr "La requête n'est pas valide"
 
 msgid ""
 "The semantic velocity cannot be defined because the semantic done is not "
@@ -44,8 +73,14 @@ msgstr "Cet outil de suivi n'a pas encore de champ <i>vélocité</i>."
 msgid "Tracker semantic velocity"
 msgstr "Sémantique vélocité de l'outil de suivi"
 
+msgid "Unset this semantic"
+msgstr "Supprimer cette sémantique"
+
 msgid "Velocity"
 msgstr "Vélocité"
 
 msgid "go back to semantic overview"
 msgstr "retour à l'administration de la sémantique"
+
+msgid "or"
+msgstr "ou"

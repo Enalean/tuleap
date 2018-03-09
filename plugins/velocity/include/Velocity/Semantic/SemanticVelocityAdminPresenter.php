@@ -37,21 +37,48 @@ class SemanticVelocityAdminPresenter
      * @var bool
      */
     public $has_semantic_done_defined;
+    /**
+     * @var string
+     */
+    public $back_url;
+    /**
+     * @var bool
+     */
+    public $has_velocity_field;
 
     public function __construct(
         array $possible_velocity_field,
         CSRFSynchronizerToken $csrf_token,
         Tracker $tracker,
-        $has_semantic_done_defined
+        $has_semantic_done_defined,
+        $selected_velocity_field_id
     ) {
-        $this->possible_velocity_field   = $possible_velocity_field;
+        $this->possible_velocity_field   = $this->buildPossibleVelocityField(
+            $possible_velocity_field,
+            $selected_velocity_field_id
+        );
         $this->csrf_token                = $csrf_token;
         $this->has_semantic_done_defined = $has_semantic_done_defined;
+        $this->has_velocity_field        = $selected_velocity_field_id !== null;
         $this->back_url                  = TRACKER_BASE_URL . "?" . http_build_query(
             [
                 "tracker" => $tracker->getId(),
                 "func"    => "admin-semantic"
             ]
         );
+    }
+
+    private function buildPossibleVelocityField(array $possible_velocity_field, $selected_velocity_field_id)
+    {
+        $built_field = [];
+        foreach ($possible_velocity_field as $field) {
+            $built_field[] = [
+                "id"          => $field->getId(),
+                "name"        => $field->getLabel(),
+                "is_selected" => (int) $field->getId() === (int) $selected_velocity_field_id
+            ];
+        }
+
+        return $built_field;
     }
 }

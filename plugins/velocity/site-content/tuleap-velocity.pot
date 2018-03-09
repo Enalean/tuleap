@@ -9,10 +9,35 @@ msgstr ""
 msgid "Define the field to use to compute velocity."
 msgstr ""
 
-msgid "Feel free to chose one:"
+msgid ""
+"Done semantic is needed to define a Velocity semantic. Please select a Done "
+"semantic first."
+msgstr ""
+
+msgid "Feel free to choose one:"
+msgstr ""
+
+msgid "Field used for velocity computation:"
+msgstr ""
+
+msgid "No field defined for velocity computation."
 msgstr ""
 
 msgid "Save your change"
+msgstr ""
+
+msgid "Semantic done is not defined."
+msgstr ""
+
+msgid "Semantic updated successfully."
+msgstr ""
+
+msgid ""
+"The <i>velocity</i> of this tracker will be represented in the Agile "
+"Dashboard by the field"
+msgstr ""
+
+msgid "The request is not valid."
 msgstr ""
 
 msgid ""
@@ -26,8 +51,14 @@ msgstr ""
 msgid "Tracker semantic velocity"
 msgstr ""
 
+msgid "Unset this semantic"
+msgstr ""
+
 msgid "Velocity"
 msgstr ""
 
 msgid "go back to semantic overview"
+msgstr ""
+
+msgid "or"
 msgstr ""

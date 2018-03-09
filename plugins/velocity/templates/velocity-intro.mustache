@@ -1,3 +1,17 @@
+<p>{{# dgettext }}tuleap-velocity | Choose the "velocity" field that will be used for computation of velocity chart.{{/ dgettext }}</p>
 <p>
-    {{# dgettext }}tuleap-velocity | Choose the "velocity" field that will be used for computation of velocity chart.{{/ dgettext }}
+    {{# semantic_done_is_defined }}
+        {{^ velocity_field }}
+            {{# dgettext }}tuleap-velocity | No field defined for velocity computation.{{/ dgettext }}
+        {{/ velocity_field }}
+
+        {{# velocity_field }}
+            {{# dgettext }} tuleap-velocity  | Field used for velocity computation: {{/ dgettext }}
+            <b>{{ velocity_field_label }}</b>
+        {{/ velocity_field }}
+    {{/ semantic_done_is_defined }}
+
+    {{^ semantic_done_is_defined }}
+        {{# dgettext }}tuleap-velocity | Done semantic is needed to define a Velocity semantic. Please select a Done semantic first.{{/ dgettext }}
+    {{/ semantic_done_is_defined }}
 </p>
