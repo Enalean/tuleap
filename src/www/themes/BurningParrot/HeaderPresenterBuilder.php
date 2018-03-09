@@ -195,36 +195,7 @@ class HeaderPresenterBuilder
     private function getMainColor()
     {
         $theme_variant = new ThemeVariant();
-        $color         = new ThemeVariantColor('blue', '#1593c4');
-
-        switch ($theme_variant->getVariantForUser($this->current_user)) {
-            case 'FlamingParrot_Orange':
-            case 'FlamingParrot_DarkOrange':
-                $color = new ThemeVariantColor('orange', '#f79514');
-                break;
-            case 'FlamingParrot_Green':
-            case 'FlamingParrot_DarkGreen':
-                $color = new ThemeVariantColor('green', '#67af45');
-                break;
-            case 'FlamingParrot_BlueGrey':
-            case 'FlamingParrot_DarkBlueGrey':
-                $color = new ThemeVariantColor('grey', '#5b6c79');
-                break;
-            case 'FlamingParrot_Purple':
-            case 'FlamingParrot_DarkPurple':
-                $color = new ThemeVariantColor('purple', '#79558a');
-                break;
-            case 'FlamingParrot_Red':
-            case 'FlamingParrot_DarkRed':
-                $color = new ThemeVariantColor('red', '#bd2626');
-                break;
-            case 'FlamingParrot_Blue':
-            case 'FlamingParrot_DarkBlue':
-            default:
-                $color = new ThemeVariantColor('blue', '#1593c4');
-        }
-
-        return $color;
+        return ThemeVariantColor::buildFromVariant($theme_variant->getVariantForUser($this->current_user));
     }
 
     private function getMainClassesAsString()

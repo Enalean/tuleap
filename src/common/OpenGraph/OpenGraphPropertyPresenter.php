@@ -1,6 +1,6 @@
 <?php
-/*
- * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,37 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\OpenGraph\OpenGraphPresenter;
+namespace Tuleap\OpenGraph;
 
-class FlamingParrot_HeaderPresenter
+class OpenGraphPropertyPresenter
 {
+    public $name;
+    public $content;
 
-    /** @var string */
-    private $title;
-
-    /** @var string */
-    private $img_root;
-
-    /** @var OpenGraphPresenter */
-    public $open_graph;
-
-    function __construct(
-        $title,
-        $img_root,
-        OpenGraphPresenter $open_graph
-    ) {
-        $this->title      = $title;
-        $this->img_root   = $img_root;
-        $this->open_graph = $open_graph;
-    }
-
-    public function title()
+    public function __construct($name, $content)
     {
-        return html_entity_decode($this->title);
-    }
-
-    public function imgRoot()
-    {
-        return $this->img_root;
+        $this->name    = $name;
+        $this->content = $content;
     }
 }

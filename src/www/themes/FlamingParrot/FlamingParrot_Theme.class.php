@@ -20,6 +20,7 @@
 
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\OpenGraph\NoOpenGraphPresenter;
 
 require_once 'common/templating/TemplateRenderer.class.php';
 require_once 'common/templating/TemplateRendererFactory.class.php';
@@ -106,10 +107,12 @@ class FlamingParrot_Theme extends Layout {
         if (!empty($params['title'])) {
            $title = $params['title'] .' - '. $title;
         }
+        $open_graph = isset($params['open_graph']) ? $params['open_graph'] : new NoOpenGraphPresenter();
 
         $this->render('header', new FlamingParrot_HeaderPresenter(
             $title,
-            $this->imgroot
+            $this->imgroot,
+            $open_graph
         ));
 
         $this->displayJavascriptElements($params);
