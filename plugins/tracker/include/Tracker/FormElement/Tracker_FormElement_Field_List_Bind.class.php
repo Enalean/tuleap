@@ -287,13 +287,16 @@ abstract class Tracker_FormElement_Field_List_Bind implements
         if ($criteria_value) {
             $a = 'A_'. $this->field->id;
             $b = 'B_'. $this->field->id;
+
+            $data_access = CodendiDataAccess::instance();
+
             if ($this->isSearchingNone($criteria_value)) {
-                $values_id = $this->getDao()->getDa()->escapeIntImplode(array_values($criteria_value));
+                $values_id = $data_access->escapeIntImplode(array_values($criteria_value));
 
                 return " $b.bindvalue_id IN (". $values_id .") OR $b.bindvalue_id IS NULL ";
             }
 
-            $ids_to_search = $this->getDao()->getDa()->escapeIntImplode($this->getIdsToSearch($criteria_value));
+            $ids_to_search = $data_access->escapeIntImplode($this->getIdsToSearch($criteria_value));
 
             if ($ids_to_search === '') {
                 return '';
