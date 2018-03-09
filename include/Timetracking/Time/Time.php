@@ -101,4 +101,9 @@ class Time
     {
         return $this->id;
     }
+
+    public function getArtifactId()
+    {
+        return $this->artifact_id;
+    }
 }

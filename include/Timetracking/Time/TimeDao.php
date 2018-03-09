@@ -126,4 +126,15 @@ class TimeDao extends DataAccessObject
 
         return $this->update($sql);
     }
+
+    public function searchAllTimesForUser($user_id)
+    {
+        $escaped_user_id = $this->da->escapeInt($user_id);
+
+        $sql = "SELECT *
+                FROM plugin_timetracking_times
+                WHERE user_id = $escaped_user_id";
+
+        return $this->retrieve($sql);
+    }
 }

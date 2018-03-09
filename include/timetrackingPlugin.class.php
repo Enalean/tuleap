@@ -28,6 +28,7 @@ use Tuleap\Timetracking\Admin\TimetrackingUgroupRetriever;
 use Tuleap\Timetracking\Admin\TimetrackingUgroupSaver;
 use Tuleap\Timetracking\ArtifactView\ArtifactViewBuilder;
 use Tuleap\Timetracking\Permissions\PermissionsRetriever;
+use Tuleap\Timetracking\REST\ResourcesInjector;
 use Tuleap\Timetracking\Time\DateFormatter;
 use Tuleap\Timetracking\Time\TimeController;
 use Tuleap\Timetracking\Time\TimeDao;
@@ -61,6 +62,7 @@ class timetrackingPlugin extends Plugin
         $this->addHook('fill_project_history_sub_events');
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
+        $this->addHook(Event::REST_RESOURCES);
 
         if (defined('TRACKER_BASE_URL')) {
             $this->addHook(TRACKER_EVENT_FETCH_ADMIN_BUTTONS);
@@ -278,5 +280,12 @@ class timetrackingPlugin extends Plugin
         $current_page = new CurrentPage();
 
         return $current_page->isDashboard();
+    }
+
+    /** @see Event::REST_RESOURCES */
+    public function restResources(array $params)
+    {
+        $injector = new ResourcesInjector();
+        $injector->populate($params['restler']);
     }
 }

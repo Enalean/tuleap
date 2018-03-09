@@ -62,6 +62,20 @@ class TimeRetriever
     }
 
     /**
+     * @return Time[]
+     */
+    public function getAllTimesForUser(PFUser $user)
+    {
+        $times = [];
+
+        foreach ($this->dao->searchAllTimesForUser($user->getId()) as $row_time) {
+            $times[] = $this->buildTimeFromRow($row_time);
+        }
+
+        return $times;
+    }
+
+    /**
      * @return null|Time
      */
     public function getTimeByIdForUser(PFUser $user, $time_id)
