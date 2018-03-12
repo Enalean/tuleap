@@ -18,10 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Timesheeting\ArtifactView;
+namespace Tuleap\Timetracking\ArtifactView;
 
-use Tuleap\Timesheeting\Time\DateFormatter;
-use Tuleap\Timesheeting\Time\TimePresenterBuilder;
+use Tuleap\Timetracking\Time\DateFormatter;
+use Tuleap\Timetracking\Time\TimePresenterBuilder;
 use TuleapTestCase;
 
 require_once __DIR__.'/../bootstrap.php';
@@ -44,10 +44,10 @@ class ArtifactViewBuilderTest extends TuleapTestCase
         $this->tracker  = aMockTracker()->withProject($project)->build();
         $this->artifact = aMockArtifact()->withTracker($this->tracker)->build();
 
-        $this->plugin                 = mock('timesheetingPlugin');
-        $this->enabler                = mock('Tuleap\Timesheeting\Admin\TimesheetingEnabler');
-        $this->permissions_retriever  = mock('Tuleap\Timesheeting\Permissions\PermissionsRetriever');
-        $this->time_retriever         = mock('Tuleap\Timesheeting\Time\TimeRetriever');
+        $this->plugin                 = mock('timetrackingPlugin');
+        $this->enabler                = mock('Tuleap\Timetracking\Admin\TimetrackingEnabler');
+        $this->permissions_retriever  = mock('Tuleap\Timetracking\Permissions\PermissionsRetriever');
+        $this->time_retriever         = mock('Tuleap\Timetracking\Time\TimeRetriever');
         $this->date_formatter         = new DateFormatter();
         $this->time_presenter_builder = new TimePresenterBuilder($this->date_formatter, mock('UserManager'));
 
@@ -64,7 +64,7 @@ class ArtifactViewBuilderTest extends TuleapTestCase
     public function itBuildsTheArtifactView()
     {
         stub($this->plugin)->isAllowed(201)->returns(true);
-        stub($this->enabler)->isTimesheetingEnabledForTracker($this->tracker)->returns(true);
+        stub($this->enabler)->isTimetrackingEnabledForTracker($this->tracker)->returns(true);
         stub($this->permissions_retriever)->userCanAddTimeInTracker($this->user, $this->tracker)->returns(true);
         stub($this->permissions_retriever)->userCanAddTimeInTracker($this->user, $this->tracker)->returns(true);
         stub($this->time_retriever)->getTimesForUser($this->user, $this->artifact)->returns(array());
@@ -83,10 +83,10 @@ class ArtifactViewBuilderTest extends TuleapTestCase
         $this->assertNull($view);
     }
 
-    public function itReturnsNullIfTimesheetingNotActivatedForTracker()
+    public function itReturnsNullIfTimetrackingNotActivatedForTracker()
     {
         stub($this->plugin)->isAllowed(201)->returns(true);
-        stub($this->enabler)->isTimesheetingEnabledForTracker($this->tracker)->returns(false);
+        stub($this->enabler)->isTimetrackingEnabledForTracker($this->tracker)->returns(false);
 
         $view = $this->builder->build($this->user, $this->request, $this->artifact);
 
@@ -96,7 +96,7 @@ class ArtifactViewBuilderTest extends TuleapTestCase
     public function itReturnsNullIfUserIsNeitherReaderNorWriter()
     {
         stub($this->plugin)->isAllowed(201)->returns(true);
-        stub($this->enabler)->isTimesheetingEnabledForTracker($this->tracker)->returns(true);
+        stub($this->enabler)->isTimetrackingEnabledForTracker($this->tracker)->returns(true);
         stub($this->permissions_retriever)->userCanAddTimeInTracker($this->user, $this->tracker)->returns(false);
         stub($this->permissions_retriever)->userCanAddTimeInTracker($this->user, $this->tracker)->returns(false);
 

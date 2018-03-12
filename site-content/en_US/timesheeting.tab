@@ -1,6 +1,0 @@
-# Widget category
-widget_categ_label	plugin_timesheeting	Timesheeting
-
-project_admin_utils	timesheeting_enabled	Timesheeting enabled
-project_admin_utils	timesheeting_disabled	Timesheeting disabled
-project_admin_utils	timesheeting_permissions_updated	Permissions for Timesheeting updated

@@ -1,4 +1,4 @@
-Timesheeting
+Timetracking
 =============
 
-This plugin allows users to add spend time on artifacts.
+This plugin allows users to track spend time on artifacts.

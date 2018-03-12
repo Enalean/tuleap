@@ -17,11 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.dashboard-widget-content-timesheeting {
+.dashboard-widget-content-timetracking {
     margin: 0;
 }
 
-.timesheeting-reading-mode {
+.timetracking-reading-mode {
     display: flex;
 
     &:hover {
@@ -30,32 +30,32 @@
     }
 }
 
-.timesheeting-writing-mode {
+.timetracking-writing-mode {
     margin: $tlp-spacing;
 }
 
-.timesheeting-writing-mode-actions {
+.timetracking-writing-mode-actions {
     display: flex;
     align-items: center;
     justify-content: center;
     margin: $tlp-spacing;
 }
 
-.timesheeting-writing-mode-selected-dates,
-.timesheeting-reading-mode-dates {
+.timetracking-writing-mode-selected-dates,
+.timetracking-reading-mode-dates {
     display: flex;
     margin: $tlp-spacing;
 }
 
-.timesheeting-writing-mode-selected-date:last-of-type,
-.timesheeting-reading-date:last-of-type {
+.timetracking-writing-mode-selected-date:last-of-type,
+.timetracking-reading-date:last-of-type {
     margin: 0 0 0 $tlp-spacing;
 }
 
-.timesheeting-writing-search {
+.timetracking-writing-search {
     margin: 0 0 0 $tlp-spacing;
 }
 
-.timesheeting-artifacts-table {
+.timetracking-artifacts-table {
     margin: $tlp-spacing;
 }

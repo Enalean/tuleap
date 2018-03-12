@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('TIMETRACKING_TEMPLATE_DIR', __DIR__.'/../templates');
-define('TIMETRACKING_BASE_DIR', realpath(__DIR__.'/..'));
-define('TIMETRACKING_BASE_URL', '/plugins/timetracking');
+namespace Tuleap\Timetracking\Time;
+
+class DateFormatter
+{
+    /**
+     * @return string
+     */
+    public function formatMinutes($total_minutes)
+    {
+        $total_minutes = intval($total_minutes);
+
+        $hours   = floor($total_minutes / 60);
+        $minutes = $total_minutes % 60;
+
+        return str_pad($hours, 2, "0", STR_PAD_LEFT) . ":" . str_pad($minutes, 2, "0", STR_PAD_LEFT);
+    }
+}

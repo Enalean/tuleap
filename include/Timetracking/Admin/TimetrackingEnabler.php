@@ -18,6 +18,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('TIMETRACKING_TEMPLATE_DIR', __DIR__.'/../templates');
-define('TIMETRACKING_BASE_DIR', realpath(__DIR__.'/..'));
-define('TIMETRACKING_BASE_URL', '/plugins/timetracking');
+namespace Tuleap\Timetracking\Admin;
+
+use Tracker;
+
+class TimetrackingEnabler
+{
+
+    public function __construct(AdminDao $dao)
+    {
+        $this->dao = $dao;
+    }
+
+    public function enableTimetrackingForTracker(Tracker $tracker)
+    {
+        return $this->dao->enableTimetrackingForTracker($tracker->getId());
+    }
+
+    public function disableTimetrackingForTracker(Tracker $tracker)
+    {
+        return $this->dao->disableTimetrackingForTracker($tracker->getId());
+    }
+
+    public function isTimetrackingEnabledForTracker(Tracker $tracker)
+    {
+        return $this->dao->isTimetrackingEnabledForTracker($tracker->getId());
+    }
+}

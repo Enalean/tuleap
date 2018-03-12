@@ -83,7 +83,7 @@ const babel_rule = {
 
 const webpack_config = {
     entry : {
-        'widget-timesheeting' : './personal-timesheeting-widget/src/index.js'
+        'widget-timetracking' : './personal-timetracking-widget/src/index.js'
     },
     output: {
         path    : assets_dir_path,

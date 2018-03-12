@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Timesheeting\Time;
+namespace Tuleap\Timetracking\Time;
 
 use TuleapTestCase;
 
@@ -35,8 +35,8 @@ class TimeRetrieverTest extends TuleapTestCase
     {
         parent::setUp();
 
-        $this->dao                   = mock('Tuleap\Timesheeting\Time\TimeDao');
-        $this->permissions_retriever = mock('Tuleap\Timesheeting\Permissions\PermissionsRetriever');
+        $this->dao                   = mock('Tuleap\Timetracking\Time\TimeDao');
+        $this->permissions_retriever = mock('Tuleap\Timetracking\Permissions\PermissionsRetriever');
 
         $this->retriever = new TimeRetriever($this->dao, $this->permissions_retriever);
 

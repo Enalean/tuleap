@@ -16,15 +16,15 @@
  * You should have received a copy of the GNU General Public License
  */
 
-.timesheeting-from {
+.timetracking-from {
     padding: 20px 20px 0;
 }
 
-.timesheeting-add-button {
+.timetracking-add-button {
     margin: 0 0 10px;
 }
 
-.timesheeting-empty {
+.timetracking-empty {
     height: 100px;
     color: #BBB;
     font-style: italic;
@@ -32,32 +32,32 @@
     vertical-align: middle;
 }
 
-#timesheeting-admin-form {
+#timetracking-admin-form {
     padding: 20px 0 0;
 }
 
-#timesheeting-admin-rights {
+#timetracking-admin-rights {
     width: inherit;
 }
 
-#timesheeting-admin-enable {
+#timetracking-admin-enable {
     margin: 0 0 20px;
 }
 
-.total-timesheeting-row {
+.total-timetracking-row {
     font-weight: bold;
 }
 
-.timesheeting-edit-action {
+.timetracking-edit-action {
     margin: 0 5px 0 0;
 }
 
-.timesheeting-action-not-clickable {
+.timetracking-action-not-clickable {
     pointer-events: none;
     color: #BBB;
 }
 
-.avatar.timesheeting-time-user-avatar {
+.avatar.timetracking-time-user-avatar {
     display: inline-block;
     position: relative;
     top: -2px;

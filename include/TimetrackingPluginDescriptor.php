@@ -18,6 +18,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('TIMETRACKING_TEMPLATE_DIR', __DIR__.'/../templates');
-define('TIMETRACKING_BASE_DIR', realpath(__DIR__.'/..'));
-define('TIMETRACKING_BASE_URL', '/plugins/timetracking');
+namespace Tuleap\Timetracking;
+
+use PluginDescriptor;
+
+class TimetrackingPluginDescriptor extends PluginDescriptor
+{
+    public function __construct() {
+        parent::__construct(
+            dgettext('tuleap-timetracking', 'Timetracking'),
+            false,
+            dgettext('tuleap-timetracking', 'Timetracking for Tuleap artifacts')
+        );
+
+        $this->setVersionFromFile(dirname(__FILE__).'/../VERSION');
+    }
+}

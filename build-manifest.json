@@ -1,5 +1,5 @@
 {
-    "name": "timesheeting",
+    "name": "timetracking",
     "themes": {
         "FlamingParrot": {
             "files": [
@@ -37,11 +37,11 @@
     },
     "gettext-js": {
         "permissions-per-group": {
-            "src": "www/scripts/personal-timesheeting-widget/src",
-            "po": "www/scripts/personal-timesheeting-widget/po"
+            "src": "www/scripts/personal-timetracking-widget/src",
+            "po": "www/scripts/personal-timetracking-widget/po"
         }
     },
     "components": [
-        "plugins/timesheeting/www/scripts"
+        "plugins/timetracking/www/scripts"
     ]
 }

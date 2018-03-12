@@ -38,13 +38,13 @@ module.exports = function (config) {
 
         // list of files / patterns to load in the browser
         files: [
-            './personal-timesheeting-widget/src/app.spec.js'
+            './personal-timetracking-widget/src/app.spec.js'
         ],
 
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
-            './personal-timesheeting-widget/src/app.spec.js': [ 'webpack' ]
+            './personal-timetracking-widget/src/app.spec.js': [ 'webpack' ]
         },
 
         // web server port

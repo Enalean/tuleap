@@ -1,0 +1,6 @@
+# Widget category
+widget_categ_label	plugin_timetracking	Timetracking
+
+project_admin_utils	timetracking_enabled	Timetracking enabled
+project_admin_utils	timetracking_disabled	Timetracking disabled
+project_admin_utils	timetracking_permissions_updated	Permissions for timetracking updated
