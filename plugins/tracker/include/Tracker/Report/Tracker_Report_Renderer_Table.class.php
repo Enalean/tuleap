@@ -2123,13 +2123,21 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             $file_name = str_replace(' ', '_', 'artifact_' . $this->report->getTracker()->getItemName());
             header('Content-Disposition: filename='. $http->purify($file_name) .'_'. $this->report->getTracker()->getProject()->getUnixName(). '.csv');
             header('Content-type: text/csv');
+            $csv_file = fopen("php://output", "a");
+            $this->addBOMToCSVContent($csv_file);
             foreach ($lines as $line) {
-                fputcsv(fopen("php://output", "a"), $line, $separator, '"');
+                fputcsv($csv_file, $line, $separator, '"');
             }
             die();
         } else {
             $GLOBALS['Response']->addFeedback('error', 'Unable to export (too many fields?)');
         }
+    }
+
+    private function addBOMToCSVContent($csv_file)
+    {
+        $bom = (chr(0xEF) . chr(0xBB) . chr(0xBF));
+        fputs($csv_file, $bom);
     }
 
     private function canFieldBeExportedToCSV(Tracker_FormElement_Field $field) {
