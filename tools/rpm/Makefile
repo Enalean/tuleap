@@ -41,8 +41,6 @@ PLUGIN_BUGZILLA_REFERENCE_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/bugzill
 THEME_FLAMINGPARROT_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/FlamingParrot/VERSION)
 THEME_BURNINGPARROT_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/BurningParrot/VERSION)
 
-ANGULAR_APPS_TO_BUILD=plugins/pullrequest/www/js/angular
-
 ifdef GIT_BRANCH
 TAG_RELEASE = $(subst -, ,$(GIT_BRANCH))
 RELEASE = $(word 2, $(TAG_RELEASE))
@@ -108,13 +106,7 @@ mo:
 node:
 	cd $(BASE_DIR) &&\
 	     npm install &&\
-	     npm run build &&\
-	for directory in $(ANGULAR_APPS_TO_BUILD); do\
-	     cd $(BASE_DIR)/$$directory &&\
-	     npm install &&\
-	     bower install --allow-root --config.interactive=false &&\
-	     npm run build; \
-	done
+	     npm run build
 
 composer:
 	composer install --classmap-authoritative --no-dev --no-interaction --no-scripts --working-dir=$(BASE_DIR)/src/
@@ -136,13 +128,12 @@ $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: rpmprep node composer mo
 				-path "*/.DS_Store" -o\
 				-path $(PKG_NAME)-$(version)/src/www/themes/common/tlp -o\
 				-path $(PKG_NAME)-$(version)/plugins/tests -o\
-				-path $(PKG_NAME)-$(version)/plugins/pullrequest/www/js/angular -o\
+				-path $(PKG_NAME)-$(version)/plugins/pullrequest/www/scripts -o\
 				-path $(PKG_NAME)-$(version)/plugins/agiledashboard/www/js/planning-v2 -o\
 				-path $(PKG_NAME)-$(version)/plugins/agiledashboard/www/js/kanban \)\
 				-prune -o -print \
 			&& \
 			find $(PKG_NAME)-$(version)/src/www/themes/common/tlp/dist; \
-			find $(PKG_NAME)-$(version)/plugins/pullrequest/www/js/angular/bin; \
 			find $(PKG_NAME)-$(version)/plugins/agiledashboard/www/js/planning-v2/dist; \
 			find $(PKG_NAME)-$(version)/plugins/agiledashboard/www/js/kanban/dist; \
 		} | \

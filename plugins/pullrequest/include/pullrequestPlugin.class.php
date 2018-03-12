@@ -118,20 +118,35 @@ class pullrequestPlugin extends Plugin
 
     public function cssfile($params)
     {
-        if (strpos($_SERVER['REQUEST_URI'], GIT_BASE_URL . '/') === 0) {
-            echo '<link rel="stylesheet" type="text/css" href="' . $this->getPluginPath() . '/js/angular/bin/assets/tuleap-pullrequest.css" />';
+        if ($this->isAPullrequestRequest()) {
+            echo '<link rel="stylesheet" type="text/css" href="' . $this->getPluginPath() . '/assets/tuleap-pullrequest.css" />';
             echo '<link rel="stylesheet" type="text/css" href="' . $this->getThemePath() . '/css/style.css" />';
         }
     }
 
     public function javascript_file()
     {
-        if (strpos($_SERVER['REQUEST_URI'], GIT_BASE_URL . '/') === 0) {
-            $include_asset = new IncludeAssets(ForgeConfig::get('codendi_dir').'/src/www/assets', '/assets');
-            echo '<script type="text/javascript" src="'. $include_asset->getFileURL('labels-box.js') .'"></script>';
-            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/js/angular/bin/assets/tuleap-pullrequest.js"></script>'."\n";
-            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/js/move-button-back.js"></script>';
+        if ($this->isAPullrequestRequest()) {
+            $include_asset_core = new IncludeAssets(
+                ForgeConfig::get('tuleap_dir').'/src/www/assets',
+                '/assets'
+            );
+
+            echo $include_asset_core->getHTMLSnippet('labels-box.js');
+
+            $include_asset_pullrequest = new IncludeAssets(
+                PULLREQUEST_BASE_DIR . '/www/assets',
+                $this->getPluginPath() . '/assets'
+            );
+
+            echo $include_asset_pullrequest->getHTMLSnippet('move-button-back.js');
+            echo $include_asset_pullrequest->getHTMLSnippet('tuleap-pullrequest.js');
         }
+    }
+
+    private function isAPullrequestRequest()
+    {
+        return strpos($_SERVER['REQUEST_URI'], GIT_BASE_URL . '/') === 0;
     }
 
     public function process(Codendi_Request $request)
