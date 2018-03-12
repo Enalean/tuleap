@@ -79,7 +79,7 @@ class SemanticVelocity extends Tracker_Semantic
 
         $renderer = TemplateRendererFactory::build()->getRenderer(VELOCITY_BASE_DIR . '/templates');
 
-        $used_velocity_field = $this->getSemanticDao()->searchUsedVelocityField($this->getTracker()->getId());
+        $used_velocity_field = $this->getVelocityField();
 
         $factory  = Tracker_FormElementFactory::instance();
         $field_id =  $factory->getFormElementById($used_velocity_field['field_id']);
@@ -99,7 +99,7 @@ class SemanticVelocity extends Tracker_Semantic
         $factory         = Tracker_FormElementFactory::instance();
         $possible_fields =  $factory->getUsedFormElementsByType($this->getTracker(), array('int', 'float'));
 
-        $used_velocity_field = $this->getSemanticDao()->searchUsedVelocityField($this->getTracker()->getId());
+        $used_velocity_field = $this->getVelocityField();
 
         $backlog_trackers_without_done_semantic = $this->getPresentersOfBacklogTrackersWithoutDoneSemantic();
 
@@ -169,8 +169,9 @@ class SemanticVelocity extends Tracker_Semantic
 
     public function getFieldId()
     {
-        if ($this->velocity_field) {
-            return $this->velocity_field->getId();
+        $used_velocity_field = $this->getVelocityField();
+        if ($used_velocity_field) {
+            return $used_velocity_field['field_id'];
         } else {
             return 0;
         }
@@ -233,7 +234,7 @@ class SemanticVelocity extends Tracker_Semantic
             $semantic_done = $semantic_done_factory->getInstanceByTracker($tracker);
             if (! $semantic_done->isSemanticDefined()) {
                 $trackers[] = [
-                    "url" => TRACKER_BASE_URL . "?" . http_build_query(
+                    "url"  => TRACKER_BASE_URL . "?" . http_build_query(
                         [
                             "tracker"  => $tracker->getId(),
                             "func"     => "admin-semantic",
@@ -246,5 +247,13 @@ class SemanticVelocity extends Tracker_Semantic
         }
 
         return $trackers;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVelocityField()
+    {
+        return $this->getSemanticDao()->searchUsedVelocityField($this->getTracker()->getId());
     }
 }

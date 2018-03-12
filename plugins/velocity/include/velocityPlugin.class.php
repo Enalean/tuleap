@@ -18,6 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+
+use Tuleap\AgileDashboard\Planning\AdditionalPlanningConfigurationWarningsRetriever;
+use Tuleap\AgileDashboard\Semantic\Dao\SemanticDoneDao;
 use Tuleap\AgileDashboard\Semantic\SemanticDone;
 use Tuleap\Velocity\Semantic\SemanticVelocity;
 
@@ -37,6 +40,7 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
     public function getHooksAndCallbacks()
     {
         $this->addHook(TRACKER_EVENT_MANAGE_SEMANTICS);
+        $this->addHook(AdditionalPlanningConfigurationWarningsRetriever::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -60,7 +64,7 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
      */
     public function tracker_event_manage_semantics($parameters) // @codingStandardsIgnoreLine
     {
-        $tracker   = $parameters['tracker'];
+        $tracker = $parameters['tracker'];
         /* @var $semantics Tracker_SemanticCollection */
         $semantics = $parameters['semantics'];
 
@@ -70,6 +74,7 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
 
         $semantics->insertAfter(SemanticDone::NAME, SemanticVelocity::load($tracker));
     }
+
 
     private function isAPlanningTrackers(Tracker $semantic_tracker)
     {
@@ -81,5 +86,23 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
         }
 
         return false;
+    }
+
+    public function additionalPlanningConfigurationWarningsRetriever(
+        AdditionalPlanningConfigurationWarningsRetriever $event
+    ) {
+        $velocity = SemanticVelocity::load($event->getTracker());
+
+        if ($velocity->getVelocityField()) {
+            $event->addWarnings(
+                sprintf(
+                    dgettext(
+                        'tuleap-velocity',
+                        'The tracker %s uses a Velocity semantic. Please check its configuration.'
+                    ),
+                    $event->getTracker()->getName()
+                )
+            );
+        }
     }
 }
