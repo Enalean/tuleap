@@ -1,6 +1,18 @@
 version: "2"
 
 services:
+  reverse-proxy:
+    container_name: reverse-proxy
+    build:
+      context: tools/docker/reverse-proxy
+    volumes:
+    - ./tools/docker/reverse-proxy/nginx.conf:/etc/nginx/nginx.conf:ro
+    - ./tools/docker/reverse-proxy/default.conf:/etc/nginx/conf.d/default.conf:ro
+    - reverse-proxy-cert:/etc/pki/tls
+    depends_on:
+    - web
+    - realtime
+
   web:
     container_name: tuleap-web
     image: enalean/tuleap-aio-dev:c6-php56-nginx
@@ -8,11 +20,24 @@ services:
     - .:/usr/share/tuleap
     - ../tuleap-plugins:/usr/share/tuleap-plugins
     - tuleap-data:/data
+    - realtime-cert:/etc/pki/ca-trust/source/anchors
     env_file:
     - .env
     depends_on:
     - ldap
     - db
+    - realtime
+
+  realtime:
+    build:
+      context: tools/docker/realtime
+    command: /tuleap/tools/docker/realtime/run.sh
+    volumes:
+      - .:/tuleap
+      - realtime-conf:/etc/tuleap-realtime
+      - realtime-cert:/published-certificate
+    env_file:
+      - .env
 
   ldap:
     image: enalean/ldap
@@ -67,3 +92,6 @@ volumes:
   graphite-data:
   rabbitmq-data:
   redis-data:
+  realtime-conf:
+  realtime-cert:
+  reverse-proxy-cert:
