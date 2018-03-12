@@ -1,32 +1,7 @@
 <socket-disconnect></socket-disconnect>
 <div class="tlp-framed test-campaign">
-    <div class="test-campaign-header">
-        <h1 class="test-campaign-header-title">{{ campaign.label }}</h1>
-        <button type="button"
-                class="tlp-button-primary edit-campaign-button"
-                aria-haspopup="true"
-                aria-expanded="false"
-                onclick="this.blur();"
-                ng-click="openEditCampaignModal()">
-            <i class="fa fa-pencil tlp-button-icon"></i> {{ 'Edit' | translate }}
-        </button>
-        <div class="test-campaign-header-spacer"></div>
-        <div class="test-campaign-tester"
-             ng-if="isRealtimeEnabled()"
-             ng-repeat="presence in presences_on_campaign | orderBy:'-score' | limitTo:6"
-        >
-            <div class="tlp-avatar tlp-tooltip tlp-tooltip-top" data-tlp-tooltip="{{ presence.real_name }}">
-                <img title="{{ presence.real_name }}"
-                     ng-src="{{ presence.avatar_url }}"
-                     onerror="this.src='scripts/angular/bin/assets/avatar_default.png'"
-                     alt="avatar">
-            </div>
-            <span class="tlp-badge-primary">{{ positiveScore(presence.score) }}</span>
-        </div>
-        <i class="fa fa-trophy test-campaign-header-trophy"
-           ng-if="isRealtimeEnabled()"
-           ng-click="showPresencesModal()"></i>
-    </div>
+    <execution-list-header handle-removed-executions-callback="hideDetailsForRemovedTestExecution()"
+    ></execution-list-header>
 
     <div class="test-campaign-current-progression-container">
         <div class="test-campaign-current-progression">

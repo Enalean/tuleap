@@ -3,16 +3,12 @@ import angular from 'angular';
 
 import { sortAlphabetically } from '../ksort.js';
 
-import '../campaign/campaign-edit.tpl.html';
-import './execution-presences.tpl.html';
-
 export default ExecutionListCtrl;
 
 ExecutionListCtrl.$inject = [
     '$scope',
     '$state',
     '$filter',
-    'TlpModalService',
     'ExecutionService',
     'CampaignService',
     'SocketService',
@@ -24,22 +20,18 @@ function ExecutionListCtrl(
     $scope,
     $state,
     $filter,
-    TlpModalService,
     ExecutionService,
     CampaignService,
     SocketService,
     SharedPropertiesService,
     ExecutionRestService
 ) {
-    _.extend($scope, {
-        openEditCampaignModal      : openEditCampaignModal,
-        checkActiveClassOnExecution: checkActiveClassOnExecution,
-        toggleStatus               : toggleStatus,
-        viewTestExecution          : viewTestExecution,
-        showPresencesModal         : showPresencesModal,
-        canCategoryBeDisplayed     : canCategoryBeDisplayed,
-        positiveScore              : positiveScore,
-        isRealtimeEnabled          : isRealtimeEnabled
+    Object.assign($scope, {
+        checkActiveClassOnExecution,
+        toggleStatus,
+        viewTestExecution,
+        canCategoryBeDisplayed,
+        hideDetailsForRemovedTestExecution,
     });
 
     this.$onInit = initialization;
@@ -68,37 +60,6 @@ function ExecutionListCtrl(
         } else {
             updateViewTestExecution(current_execution.id, old_execution_id);
         }
-    }
-
-    function showPresencesModal() {
-        return TlpModalService.open({
-            templateUrl : 'execution-presences.tpl.html',
-            controller  : 'ExecutionPresencesCtrl',
-            controllerAs: 'modal',
-            resolve: {
-                modal_model: {
-                    title:     $scope.campaign.label,
-                    presences: ExecutionService.presences_on_campaign
-                }
-            }
-        });
-    }
-
-    function openEditCampaignModal() {
-        return TlpModalService.open({
-            templateUrl:  'campaign-edit.tpl.html',
-            controller :  'CampaignEditCtrl',
-            controllerAs: 'edit_modal',
-            resolve: {
-                editCampaignCallback: function(campaign) {
-                    $scope.campaign = campaign;
-                    ExecutionService.updateCampaign(campaign);
-                    ExecutionService
-                        .synchronizeExecutions($scope.campaign_id)
-                        .then(hideDetailsForRemovedTestExecution);
-                }
-            }
-        });
     }
 
     $scope.$on('$destroy', function() {
@@ -164,7 +125,6 @@ function ExecutionListCtrl(
                 blocked: false,
                 notrun:  false
             };
-            $scope.presences_on_campaign  = ExecutionService.presences_on_campaign;
 
             ExecutionService.updateCampaign($scope.campaign);
         });
@@ -218,13 +178,4 @@ function ExecutionListCtrl(
 
         return _.size(filtered_executions) > 0;
     }
-
-    function positiveScore(score) {
-        return score ? Math.max(score, 0) : '-';
-    }
-
-    function isRealtimeEnabled() {
-        return SharedPropertiesService.getNodeServerAddress();
-    }
 }
-
