@@ -45,27 +45,38 @@ class SemanticVelocityAdminPresenter
      * @var bool
      */
     public $has_velocity_field;
+    /**
+     * @var array
+     */
+    public $backlog_trackers_without_done_semantic;
+    /**
+     * @var bool
+     */
+    public $has_backlog_trackers_without_done_semantic;
 
     public function __construct(
         array $possible_velocity_field,
         CSRFSynchronizerToken $csrf_token,
         Tracker $tracker,
         $has_semantic_done_defined,
-        $selected_velocity_field_id
+        $selected_velocity_field_id,
+        array $incorrect_backlog_trackers
     ) {
-        $this->possible_velocity_field   = $this->buildPossibleVelocityField(
+        $this->possible_velocity_field                    = $this->buildPossibleVelocityField(
             $possible_velocity_field,
             $selected_velocity_field_id
         );
-        $this->csrf_token                = $csrf_token;
-        $this->has_semantic_done_defined = $has_semantic_done_defined;
-        $this->has_velocity_field        = $selected_velocity_field_id !== null;
-        $this->back_url                  = TRACKER_BASE_URL . "?" . http_build_query(
+        $this->csrf_token                                 = $csrf_token;
+        $this->has_semantic_done_defined                  = $has_semantic_done_defined;
+        $this->has_velocity_field                         = $selected_velocity_field_id !== null;
+        $this->back_url                                   = TRACKER_BASE_URL . "?" . http_build_query(
             [
                 "tracker" => $tracker->getId(),
                 "func"    => "admin-semantic"
             ]
         );
+        $this->backlog_trackers_without_done_semantic     = $incorrect_backlog_trackers;
+        $this->has_backlog_trackers_without_done_semantic = count($incorrect_backlog_trackers) > 0;
     }
 
     private function buildPossibleVelocityField(array $possible_velocity_field, $selected_velocity_field_id)

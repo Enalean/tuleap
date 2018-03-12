@@ -24,6 +24,7 @@ use Codendi_Request;
 use CSRFSynchronizerToken;
 use Feedback;
 use PFUser;
+use PlanningFactory;
 use SimpleXMLElement;
 use TemplateRendererFactory;
 use Tracker;
@@ -31,7 +32,10 @@ use Tracker_FormElementFactory;
 use Tracker_Semantic;
 use Tracker_SemanticManager;
 use TrackerManager;
+use Tuleap\AgileDashboard\Semantic\Dao\SemanticDoneDao;
 use Tuleap\AgileDashboard\Semantic\SemanticDone;
+use Tuleap\AgileDashboard\Semantic\SemanticDoneFactory;
+use Tuleap\AgileDashboard\Semantic\SemanticDoneValueChecker;
 
 class SemanticVelocity extends Tracker_Semantic
 {
@@ -71,6 +75,8 @@ class SemanticVelocity extends Tracker_Semantic
 
     public function display()
     {
+        $backlog_trackers_without_done_semantic = $this->getPresentersOfBacklogTrackersWithoutDoneSemantic();
+
         $renderer = TemplateRendererFactory::build()->getRenderer(VELOCITY_BASE_DIR . '/templates');
 
         $used_velocity_field = $this->getSemanticDao()->searchUsedVelocityField($this->getTracker()->getId());
@@ -80,6 +86,7 @@ class SemanticVelocity extends Tracker_Semantic
 
         $velocity_presenter  = new SemanticVelocityPresenter(
             $this->semantic_done->isSemanticDefined(),
+            $backlog_trackers_without_done_semantic,
             $field_id
         );
         $renderer->renderToPage('velocity-intro', $velocity_presenter);
@@ -94,6 +101,8 @@ class SemanticVelocity extends Tracker_Semantic
 
         $used_velocity_field = $this->getSemanticDao()->searchUsedVelocityField($this->getTracker()->getId());
 
+        $backlog_trackers_without_done_semantic = $this->getPresentersOfBacklogTrackersWithoutDoneSemantic();
+
         $csrf = $this->getCSRFSynchronizerToken();
 
         $renderer  = TemplateRendererFactory::build()->getRenderer(VELOCITY_BASE_DIR.'/templates');
@@ -102,7 +111,8 @@ class SemanticVelocity extends Tracker_Semantic
             $csrf,
             $this->getTracker(),
             $this->semantic_done->isSemanticDefined(),
-            $used_velocity_field['field_id']
+            $used_velocity_field['field_id'],
+            $backlog_trackers_without_done_semantic
         );
 
         $renderer->renderToPage('velocity-admin', $presenter);
@@ -209,5 +219,32 @@ class SemanticVelocity extends Tracker_Semantic
     private function getSemanticDao()
     {
         return new SemanticVelocityDao();
+    }
+
+    private function getPresentersOfBacklogTrackersWithoutDoneSemantic()
+    {
+        $trackers = [];
+
+        $planning_factory      = PlanningFactory::build();
+        $semantic_done_factory = new SemanticDoneFactory(new SemanticDoneDao(), new SemanticDoneValueChecker());
+
+        $planning_trackers = $planning_factory->getPlanningByPlanningTracker($this->getTracker());
+        foreach ($planning_trackers->getBacklogTrackers() as $tracker) {
+            $semantic_done = $semantic_done_factory->getInstanceByTracker($tracker);
+            if (! $semantic_done->isSemanticDefined()) {
+                $trackers[] = [
+                    "url" => TRACKER_BASE_URL . "?" . http_build_query(
+                        [
+                            "tracker"  => $tracker->getId(),
+                            "func"     => "admin-semantic",
+                            "semantic" => "done"
+                        ]
+                    ),
+                    "name" => $tracker->getName()
+                ];
+            }
+        }
+
+        return $trackers;
     }
 }
