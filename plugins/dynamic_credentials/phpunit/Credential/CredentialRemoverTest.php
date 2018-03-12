@@ -20,31 +20,25 @@
 
 namespace Tuleap\DynamicCredentials\Credential;
 
-use Tuleap\DB\DataAccessObject;
+require_once __DIR__ . '/../bootstrap.php';
 
-class CredentialDAO extends DataAccessObject
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+
+class CredentialRemoverTest extends TestCase
 {
-    public function save($identifier, $password, $expiration_date)
-    {
-        $this->getDB()->insert(
-            'plugin_dynamic_credentials_account',
-            [
-                'identifier' => $identifier,
-                'password'   => $password,
-                'expiration' => $expiration_date
-            ]
-        );
-    }
+    use MockeryPHPUnitIntegration;
 
-    /**
-     * @return int
-     */
-    public function revokeByIdentifier($identifier)
+    public function testCredentialsAreMarkedAsRevoked()
     {
-        return $this->getDB()->update(
-            'plugin_dynamic_credentials_account',
-            ['revoked' => 1],
-            ['identifier' => $identifier]
-        );
+        $dao = Mockery::mock(CredentialDAO::class);
+        $dao->shouldReceive('revokeByIdentifier')->andReturn(1, 0);
+        $identifier_extractor = Mockery::mock(CredentialIdentifierExtractor::class);
+        $identifier_extractor->shouldReceive('extract');
+
+        $credential_remover = new CredentialRemover($dao, $identifier_extractor);
+        $this->assertTrue($credential_remover->revokeByUsername('username'));
+        $this->assertFalse($credential_remover->revokeByUsername('username'));
     }
 }

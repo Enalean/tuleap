@@ -25,6 +25,7 @@ use Tuleap\DynamicCredentials\Credential\CredentialCreator;
 use Tuleap\DynamicCredentials\Credential\CredentialDAO;
 use Tuleap\DynamicCredentials\Credential\CredentialIdentifierExtractor;
 use Tuleap\DynamicCredentials\Credential\CredentialInvalidUsernameException;
+use Tuleap\DynamicCredentials\Credential\CredentialRemover;
 use Tuleap\DynamicCredentials\Credential\DuplicateCredentialException;
 use Tuleap\REST\Header;
 
@@ -70,6 +71,42 @@ class DynamicCredentialsResource
             throw new RestException(400, $ex->getMessage());
         } catch (DuplicateCredentialException $ex) {
             throw new RestException(400, $ex->getMessage());
+        }
+    }
+
+    /**
+     * @url OPTIONS {username}
+     */
+    public function optionsUsername()
+    {
+        Header::allowOptionsDelete();
+    }
+
+    /**
+     * Revoke a set of credential
+     *
+     * @url DELETE {username}
+     *
+     * @param string $username Username must be formatted as forge__dynamic_credential-&lt;identifier&gt; where &lt;identifier&gt; is a chosen value
+     * @param string $signature Base64 encoded signature associated with the request
+     */
+    public function deleteUsername($username, $signature)
+    {
+        $request_signature_verifier = $this->getRequestSignatureVerifier();
+        if (! $request_signature_verifier->isSignatureValid($signature, $username)) {
+            throw new RestException(403, 'Invalid signature');
+        }
+
+        $credential_remover = new CredentialRemover(new CredentialDAO(), new CredentialIdentifierExtractor());
+
+        try {
+            $has_credential_been_revoked = $credential_remover->revokeByUsername($username);
+        } catch (CredentialInvalidUsernameException $ex) {
+            throw new RestException(400, $ex->getMessage());
+        }
+
+        if (! $has_credential_been_revoked) {
+            throw new RestException(404, 'Credential not found');
         }
     }
 

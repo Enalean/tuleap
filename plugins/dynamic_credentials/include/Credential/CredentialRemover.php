@@ -20,31 +20,31 @@
 
 namespace Tuleap\DynamicCredentials\Credential;
 
-use Tuleap\DB\DataAccessObject;
-
-class CredentialDAO extends DataAccessObject
+class CredentialRemover
 {
-    public function save($identifier, $password, $expiration_date)
+    /**
+     * @var CredentialDAO
+     */
+    private $dao;
+    /**
+     * @var CredentialIdentifierExtractor
+     */
+    private $identifier_extractor;
+
+    public function __construct(CredentialDAO $dao, CredentialIdentifierExtractor $identifier_extractor)
     {
-        $this->getDB()->insert(
-            'plugin_dynamic_credentials_account',
-            [
-                'identifier' => $identifier,
-                'password'   => $password,
-                'expiration' => $expiration_date
-            ]
-        );
+        $this->dao                  = $dao;
+        $this->identifier_extractor = $identifier_extractor;
     }
 
     /**
-     * @return int
+     * @throws CredentialInvalidUsernameException
+     * @return bool
      */
-    public function revokeByIdentifier($identifier)
+    public function revokeByUsername($username)
     {
-        return $this->getDB()->update(
-            'plugin_dynamic_credentials_account',
-            ['revoked' => 1],
-            ['identifier' => $identifier]
-        );
+        $identifier = $this->identifier_extractor->extract($username);
+
+        return $this->dao->revokeByIdentifier($identifier) > 0;
     }
 }
