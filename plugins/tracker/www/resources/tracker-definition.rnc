@@ -377,6 +377,16 @@ tracker =
                     }*
                 }
             )
+        |
+            (
+                attribute type { "velocity" },
+                element shortname {xsd:string},
+                element label {xsd:string},
+                element description {xsd:string},
+                element field {
+                    attribute REF { xsd:IDREF }
+                }
+            )
         )
 
 

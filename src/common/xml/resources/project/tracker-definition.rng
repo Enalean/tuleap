@@ -863,6 +863,25 @@
           </zeroOrMore>
         </element>
       </group>
+      <group>
+        <attribute name="type">
+          <value>velocity</value>
+        </attribute>
+        <element name="shortname">
+          <data type="string"/>
+        </element>
+        <element name="label">
+          <data type="string"/>
+        </element>
+        <element name="description">
+          <data type="string"/>
+        </element>
+        <element name="field">
+          <attribute name="REF">
+            <data type="IDREF"/>
+          </attribute>
+        </element>
+      </group>
     </choice>
   </define>
   <define name="reportContent">

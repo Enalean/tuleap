@@ -26,7 +26,9 @@ use Tuleap\AgileDashboard\Semantic\SemanticDoneFactory;
 use Tuleap\AgileDashboard\Semantic\SemanticDoneValueChecker;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Tracker\Workflow\BeforeEvent;
+use Tuleap\Velocity\Semantic\SemanticFormatter;
 use Tuleap\Velocity\Semantic\SemanticVelocity;
+use Tuleap\Velocity\Semantic\SemanticVelocityFactory;
 use Tuleap\Velocity\VelocityComputationChecker;
 use Tuleap\Velocity\VelocityDao;
 
@@ -54,6 +56,7 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
         $this->addHook(TRACKER_EVENT_MANAGE_SEMANTICS);
         $this->addHook(AdditionalPlanningConfigurationWarningsRetriever::NAME);
         $this->addHook(BeforeEvent::NAME);
+        $this->addHook(TRACKER_EVENT_SEMANTIC_FROM_XML);
 
         return parent::getHooksAndCallbacks();
     }
@@ -200,5 +203,18 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
     {
         return strpos($_SERVER['REQUEST_URI'], '/plugins/tracker/') === 0
             && strpos($_SERVER['REQUEST_URI'], 'func=admin-semantic') !== false;
+    }
+
+    public function tracker_event_semantic_from_xml(&$parameters) // @codingStandardsIgnoreLine
+    {
+        $tracker = $parameters['tracker'];
+        $type    = $parameters['type'];
+        $xml     = $parameters['xml'];
+        $mapping = $parameters['xml_mapping'];
+
+        if ($type == SemanticVelocity::NAME) {
+            $factory                = new SemanticVelocityFactory(new SemanticFormatter());
+            $parameters['semantic'] = $factory->getInstanceFromXML($xml, $tracker, $mapping);
+        }
     }
 }
