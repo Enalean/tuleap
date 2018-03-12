@@ -38,7 +38,7 @@ class PasswordStrategy {
         $this->validators = array();
         $this->errors     = array();
 
-        if (! ForgeConfig::get('reject_compromised_password')) {
+        if (ForgeConfig::get('reject_compromised_password')) {
             $pwned_password_range_retriever = new PwnedPasswordRangeRetriever(new Http_Client(), new BackendLogger());
             $pwned_password_checker         = new PwnedPasswordChecker($pwned_password_range_retriever);
             $password_compromise_validator  = new PasswordCompromiseValidator($pwned_password_checker);
