@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\WebhookPresenter;
 use Tuleap\Project\Admin\WebhooksPresenter;
 use Tuleap\Project\Webhook\Log\StatusRetriever;
@@ -115,7 +116,12 @@ foreach ($webhooks as $webhook) {
 
 $presenter = new WebhooksPresenter($title, $webhooks_presenter, $csrf_token);
 
-$GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/admin/project-configuration.js');
+$assets_path    = ForgeConfig::get('tuleap_dir') . '/src/www/assets';
+$include_assets = new IncludeAssets($assets_path, '/assets');
+
+$GLOBALS['HTML']->includeFooterJavascriptFile(
+    $include_assets->getFileURL('site-admin-project-configuration.js')
+);
 
 $admin_page = new AdminPageRenderer();
 $admin_page->renderANoFramedPresenter(

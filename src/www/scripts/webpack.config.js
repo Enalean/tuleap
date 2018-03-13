@@ -145,9 +145,21 @@ const webpack_config_for_labels = {
 
 const webpack_config_for_burning_parrot_code = {
     entry: {
-        'burning-parrot'       : './BurningParrot/index.js',
-        'project-admin'        : './project/admin/index.js',
-        'project-admin-ugroups': './project/admin//project-admin-ugroups.js',
+        'burning-parrot'                         : './BurningParrot/index.js',
+        'project-admin'                          : './project/admin/index.js',
+        'project-admin-ugroups'                  : './project/admin//project-admin-ugroups.js',
+        'site-admin-permission-delegation'       : './admin/permission-delegation.js',
+        'site-admin-mass-emailing'               : './admin/massmail.js',
+        'site-admin-most-recent-logins'          : './admin/most-recent-logins.js',
+        'site-admin-pending-users'               : './admin/pending-users.js',
+        'site-admin-project-configuration'       : './admin/project-configuration.js',
+        'site-admin-project-history'             : './admin/project-history.js',
+        'site-admin-project-list'                : './admin/project-list.js',
+        'site-admin-system-events'               : './admin/system-events.js',
+        'site-admin-system-events-admin-homepage': './admin/system-events-admin-homepage.js',
+        'site-admin-system-events-notifications' : './admin/system-events-notifications.js',
+        'site-admin-trackers-pending-removal'    : './admin/trackers-pending-removal.js',
+        'site-admin-user-details'                : './admin/userdetails.js'
     },
     output: {
         path: assets_dir_path,

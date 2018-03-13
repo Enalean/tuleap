@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean SAS - 2016. All rights reserved
+ * Copyright (c) Enalean SAS - 2016 - 2018. All rights reserved
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,11 +15,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-document.addEventListener('DOMContentLoaded', function() {
+import { datePicker } from "tlp";
 
-    var expiry_elements = document.querySelectorAll('input[id^=expiry-]');
+document.addEventListener('DOMContentLoaded', () => {
 
-    [].forEach.call(expiry_elements, function (expiry_element) {
-        tlp.datePicker(expiry_element);
-    });
+    const expiry_elements = document.querySelectorAll('input[id^=expiry-]');
+
+    for (const expiry_element of expiry_elements) {
+        datePicker(expiry_element);
+    }
 });

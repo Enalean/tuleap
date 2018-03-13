@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright 1999-2000 (c) The SourceForge Crew
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Layout\IncludeAssets;
 
 require_once('pre.php');
 
@@ -80,9 +82,12 @@ $recipients = array(
     )
 );
 
+$assets_path    = ForgeConfig::get('tuleap_dir') . '/src/www/assets';
+$include_assets = new IncludeAssets($assets_path, '/assets');
+
 $GLOBALS['HTML']->includeFooterJavascriptFile("/scripts/ckeditor-4.3.2/ckeditor.js");
 $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tuleap/tuleap-ckeditor-toolbar.js');
-$GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/admin/massmail.js');
+$GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('site-admin-mass-emailing.js'));
 
 $csrf  = new CSRFSynchronizerToken('/admin/massmail.php');
 $title = $Language->getText('admin_massmail', 'title');

@@ -4,7 +4,7 @@
  * Copyright 1999-2000 (c) VA Linux Systems
  * http://sourceforge.net
  *
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,6 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\User\Admin\UserChangePasswordPresenter;
 use Tuleap\User\Admin\UserDetailsAccessPresenter;
 use Tuleap\user\Admin\UserDetailsFormatter;
@@ -38,7 +39,12 @@ require_once('common/system_event/SystemEventManager.class.php');
 $request = HTTPRequest::instance();
 $request->checkUserIsSuperUser();
 
-$GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/admin/userdetails.js');
+$assets_path    = ForgeConfig::get('tuleap_dir') . '/src/www/assets';
+$include_assets = new IncludeAssets($assets_path, '/assets');
+
+$GLOBALS['HTML']->includeFooterJavascriptFile(
+    $include_assets->getFileURL('site-admin-user-details.js')
+);
 $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/check_pw.js');
 
 $um                  = UserManager::instance();

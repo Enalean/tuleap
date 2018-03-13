@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean SAS - 2016. All rights reserved
+ * Copyright (c) Enalean SAS - 2016 - 2018. All rights reserved
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,7 +15,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-(function () {
+import { modal as createModal } from 'tlp';
+
+import {
+    autocomplete_users_for_select2 as autocomplete
+} from '../tuleap/autocomplete-for-select2.js';
+
+document.addEventListener('DOMContentLoaded', () => {
     var warning_element     = document.getElementById('massmail-warning'),
         destination_element = document.getElementById('massmail-destination'),
         submit_button       = document.getElementById('massmail-submit'),
@@ -23,7 +29,7 @@
         preview_feedback    = document.getElementById('massmail-preview-feedback'),
         confirm_element     = document.getElementById('massmail-modal-warning'),
         confirm_button      = document.getElementById('massmail-confirm-sending'),
-        confirm_modal       = tlp.modal(confirm_element),
+        confirm_modal       = createModal(confirm_element),
         form                = preview_button.form,
         preview_timeout,
         editor;
@@ -67,7 +73,7 @@
             return;
         }
 
-        tuleap.autocomplete_users_for_select2(preview);
+        autocomplete(preview);
     }
 
     function sendAPreview() {
@@ -116,4 +122,4 @@
         window.clearTimeout(preview_timeout);
         preview_timeout = undefined;
     }
-})();
+});

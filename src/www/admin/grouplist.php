@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\ProjectListPresenter;
 use Tuleap\Project\Admin\ProjectListSearchFieldsPresenterBuilder;
 use Tuleap\Project\Admin\ProjectListSearchFieldsPresenter;
@@ -32,7 +33,12 @@ require_once('www/admin/admin_utils.php');
 $request = HTTPRequest::instance();
 $request->checkUserIsSuperUser();
 
-$GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/admin/project-list.js');
+$assets_path    = ForgeConfig::get('tuleap_dir') . '/src/www/assets';
+$include_assets = new IncludeAssets($assets_path, '/assets');
+
+$GLOBALS['HTML']->includeFooterJavascriptFile(
+    $include_assets->getFileURL('site-admin-project-list.js')
+);
 
 //EXPORT-CSV
 if ($request->exist('export')) {
