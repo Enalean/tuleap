@@ -11,7 +11,13 @@ _serviceMask() {
 }
 
 _serviceStart() {
-    # $@1}: services name
+    # ${@}: services name
 
     ${systemctl} start ${@}
+}
+
+_serviceRestart() {
+    # ${@}: services name
+
+    ${systemctl} restart ${@}
 }
