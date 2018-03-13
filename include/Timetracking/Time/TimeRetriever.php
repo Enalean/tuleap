@@ -64,11 +64,11 @@ class TimeRetriever
     /**
      * @return Time[]
      */
-    public function getAllTimesForUser(PFUser $user)
+    public function getTimesForUserInTimePeriod(PFUser $user, $start_date, $end_date)
     {
         $times = [];
 
-        foreach ($this->dao->searchAllTimesForUser($user->getId()) as $row_time) {
+        foreach ($this->dao->searchTimesForUserInTimePeriod($user->getId(), $start_date, $end_date) as $row_time) {
             $times[] = $this->buildTimeFromRow($row_time);
         }
 

@@ -24,6 +24,7 @@
 
 namespace Tuleap\Timetracking\REST;
 
+use Guzzle\Http\Exception\ClientErrorResponseException;
 use RestBase;
 use TimetrackingDataBuilder;
 
@@ -31,10 +32,17 @@ require_once dirname(__FILE__) . '/../bootstrap.php';
 
 class TimetrackingTest extends RestBase
 {
-    public function testGetTimesForUser()
+    public function testGetTimesForUserWithDates()
     {
+        $query = urlencode(
+            json_encode([
+                "start_date" => "2018-03-01T00:00:00+01",
+                "end_date"   => "2018-03-10T00:00:00+01"
+            ])
+        );
+
         $response = $this->getResponse(
-            $this->client->get('timetracking'),
+            $this->client->get("timetracking?query=$query"),
             TimetrackingDataBuilder::USER_TESTER_NAME
         );
 
@@ -44,5 +52,195 @@ class TimetrackingTest extends RestBase
         $this->assertEquals($times[0]['id'], 1);
         $this->assertEquals($times[0]['minutes'], 600);
         $this->assertEquals($times[0]['date'], '2018-03-09');
+    }
+
+    public function testExceptionWhenStartDateMissing()
+    {
+        $query = urlencode(
+            json_encode([
+                "end_date" => "2018-03-10T00:00:00+01"
+            ])
+        );
+
+        $exception_thrown = false;
+
+        try {
+            $this->getResponse(
+                $this->client->get("timetracking?query=$query"),
+                TimetrackingDataBuilder::USER_TESTER_NAME
+            );
+        } catch (ClientErrorResponseException $exception) {
+            $response = $exception->getResponse();
+            $body     = $response->json();
+
+            $this->assertEquals(400, $response->getStatusCode());
+            $this->assertContains(
+                'Missing start_date entry in the query parameter',
+                $body['error']['message']
+            );
+
+            $exception_thrown = true;
+        }
+
+        $this->assertTrue($exception_thrown);
+    }
+
+    public function testExceptionWhenEndDateMissing()
+    {
+        $query = urlencode(
+            json_encode([
+                "start_date" => "2018-03-01T00:00:00+01"
+            ])
+        );
+
+        $exception_thrown = false;
+
+        try {
+            $this->getResponse(
+                $this->client->get("timetracking?query=$query"),
+                TimetrackingDataBuilder::USER_TESTER_NAME
+            );
+        } catch (ClientErrorResponseException $exception) {
+            $response = $exception->getResponse();
+            $body     = $response->json();
+
+            $this->assertEquals(400, $response->getStatusCode());
+            $this->assertContains(
+                'Missing end_date entry in the query parameter',
+                $body['error']['message']
+            );
+
+            $exception_thrown = true;
+        }
+
+        $this->assertTrue($exception_thrown);
+    }
+
+    public function testExceptionWhenStartDateGreaterThanEndDate()
+    {
+        $query = urlencode(
+            json_encode([
+                "start_date" => "2018-03-10T00:00:00+01",
+                "end_date"   => "2018-03-01T00:00:00+01"
+            ])
+        );
+
+        $exception_thrown = false;
+
+        try {
+            $this->getResponse(
+                $this->client->get("timetracking?query=$query"),
+                TimetrackingDataBuilder::USER_TESTER_NAME
+            );
+        } catch (ClientErrorResponseException $exception) {
+            $response = $exception->getResponse();
+            $body     = $response->json();
+
+            $this->assertEquals(400, $response->getStatusCode());
+            $this->assertContains(
+                'end_date must be greater than start_date',
+                $body['error']['message']
+            );
+
+            $exception_thrown = true;
+        }
+
+        $this->assertTrue($exception_thrown);
+    }
+
+    public function testExceptionWhenDayOffsetLessThanOneDay()
+    {
+        $query = urlencode(
+            json_encode([
+                "start_date" => "2018-03-01T00:00:00+01",
+                "end_date"   => "2018-03-01T00:00:00+01"
+            ])
+        );
+
+        $exception_thrown = false;
+
+        try {
+            $this->getResponse(
+                $this->client->get("timetracking?query=$query"),
+                TimetrackingDataBuilder::USER_TESTER_NAME
+            );
+        } catch (ClientErrorResponseException $exception) {
+            $response = $exception->getResponse();
+            $body     = $response->json();
+
+            $this->assertEquals(400, $response->getStatusCode());
+            $this->assertContains(
+                'There must be one day offset between the both dates',
+                $body['error']['message']
+            );
+
+            $exception_thrown = true;
+        }
+
+        $this->assertTrue($exception_thrown);
+    }
+
+    public function testExceptionWhenDatesAreInvalid()
+    {
+        $query = urlencode(
+            json_encode([
+                "start_date" => "not a valid date",
+                "end_date"   => ""
+            ])
+        );
+
+        $exception_thrown = false;
+
+        try {
+            $this->getResponse(
+                $this->client->get("timetracking?query=$query"),
+                TimetrackingDataBuilder::USER_TESTER_NAME
+            );
+        } catch (ClientErrorResponseException $exception) {
+            $response = $exception->getResponse();
+            $body     = $response->json();
+
+            $this->assertEquals(400, $response->getStatusCode());
+            $this->assertContains(
+                'Please provide valid ISO-8601 dates',
+                $body['error']['message']
+            );
+
+            $exception_thrown = true;
+        }
+
+        $this->assertTrue($exception_thrown);
+    }
+
+    public function testExceptionWhenDatesAreNotISO8601()
+    {
+        $query = urlencode(
+            json_encode([
+                "start_date" => "2018/01/01",
+                "end_date"   => "2018/01/30"
+            ])
+        );
+
+        $exception_thrown = false;
+
+        try {
+            $this->getResponse(
+                $this->client->get("timetracking?query=$query"),
+                TimetrackingDataBuilder::USER_TESTER_NAME
+            );
+        } catch (ClientErrorResponseException $exception) {
+            $response = $exception->getResponse();
+            $body     = $response->json();
+
+            $this->assertEquals(400, $response->getStatusCode());
+            $this->assertContains(
+                'Please provide valid ISO-8601 dates',
+                $body['error']['message']
+            );
+
+            $exception_thrown = true;
+        }
+
+        $this->assertTrue($exception_thrown);
     }
 }

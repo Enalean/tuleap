@@ -127,13 +127,18 @@ class TimeDao extends DataAccessObject
         return $this->update($sql);
     }
 
-    public function searchAllTimesForUser($user_id)
+    public function searchTimesForUserInTimePeriod($user_id, $start_date, $end_date)
     {
-        $escaped_user_id = $this->da->escapeInt($user_id);
+        $escaped_user_id    = $this->da->escapeInt($user_id);
+        $escaped_start_date = $this->da->quoteSmart($start_date);
+        $escaped_end_date   = $this->da->quoteSmart($end_date);
 
         $sql = "SELECT *
                 FROM plugin_timetracking_times
-                WHERE user_id = $escaped_user_id";
+                WHERE user_id = $escaped_user_id
+                AND   day BETWEEN CAST($escaped_start_date AS DATE)
+                            AND   CAST($escaped_end_date AS DATE)
+        ";
 
         return $this->retrieve($sql);
     }
