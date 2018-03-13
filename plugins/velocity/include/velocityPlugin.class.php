@@ -20,11 +20,15 @@
 
 
 use Tuleap\AgileDashboard\Planning\AdditionalPlanningConfigurationWarningsRetriever;
+use Tuleap\AgileDashboard\Semantic\Dao\SemanticDoneDao;
 use Tuleap\AgileDashboard\Semantic\SemanticDone;
+use Tuleap\AgileDashboard\Semantic\SemanticDoneFactory;
+use Tuleap\AgileDashboard\Semantic\SemanticDoneValueChecker;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Tracker\Workflow\BeforeEvent;
 use Tuleap\Velocity\Semantic\SemanticVelocity;
 use Tuleap\Velocity\VelocityComputationChecker;
+use Tuleap\Velocity\VelocityDao;
 
 require_once 'autoload.php';
 require_once 'constants.php';
@@ -143,7 +147,8 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
             return;
         }
 
-        $computed_velocity = 10;
+        $calculator = $this->getVelocityCalculator();
+        $computed_velocity = $calculator->calculate($before_event->getArtifact());
 
         $current_user = UserManager::instance()->getCurrentUser();
         $factory      = Tracker_FormElementFactory::instance();
@@ -164,5 +169,20 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
         }
 
         $before_event->forceFieldData($field_id, $computed_velocity);
+    }
+
+    /**
+     * @return \Tuleap\Velocity\VelocityCalculator
+     */
+    private function getVelocityCalculator()
+    {
+        $calculator = new \Tuleap\Velocity\VelocityCalculator(
+            Tracker_ArtifactFactory::instance(),
+            AgileDashboard_Semantic_InitialEffortFactory::instance(),
+            new SemanticDoneFactory(new SemanticDoneDao(), new SemanticDoneValueChecker()),
+            new VelocityDao()
+        );
+
+        return $calculator;
     }
 }
