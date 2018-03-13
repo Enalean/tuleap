@@ -46,11 +46,6 @@ class SemanticVelocity extends Tracker_Semantic
      */
     private $semantic_done;
 
-    /**
-     * @var \Tracker_FormElement_Field
-     */
-    private $velocity_field;
-
     public function __construct(Tracker $tracker, SemanticDone $semantic_done)
     {
         parent::__construct($tracker);
@@ -75,44 +70,62 @@ class SemanticVelocity extends Tracker_Semantic
 
     public function display()
     {
-        $backlog_trackers_without_done_semantic = $this->getPresentersOfBacklogTrackersWithoutDoneSemantic();
+        $backlog_trackers                       = $this->getBacklogTrackers();
+        $backlog_trackers_without_done_semantic = $this->getPresentersOfBacklogTrackersWithoutDoneSemantic(
+            $backlog_trackers
+        );
 
         $renderer = TemplateRendererFactory::build()->getRenderer(VELOCITY_BASE_DIR . '/templates');
 
         $used_velocity_field = $this->getVelocityField();
 
         $factory  = Tracker_FormElementFactory::instance();
-        $field_id =  $factory->getFormElementById($used_velocity_field['field_id']);
+        $field_id = $factory->getFormElementById($used_velocity_field['field_id']);
 
-        $velocity_presenter  = new SemanticVelocityPresenter(
+        $backlog_trackers = $this->formatBacklogTrackers($backlog_trackers_without_done_semantic, $backlog_trackers);
+
+        $velocity_presenter = new SemanticVelocityPresenter(
             $this->semantic_done->isSemanticDefined(),
             $backlog_trackers_without_done_semantic,
+            $backlog_trackers,
+            $this->getTracker(),
+            count($backlog_trackers) === count($backlog_trackers_without_done_semantic),
             $field_id
         );
         $renderer->renderToPage('velocity-intro', $velocity_presenter);
     }
 
-    public function displayAdmin(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user)
-    {
+    public function displayAdmin(
+        Tracker_SemanticManager $sm,
+        TrackerManager $tracker_manager,
+        Codendi_Request $request,
+        PFUser $current_user
+    ) {
         $sm->displaySemanticHeader($this, $tracker_manager);
 
         $factory         = Tracker_FormElementFactory::instance();
-        $possible_fields =  $factory->getUsedFormElementsByType($this->getTracker(), array('int', 'float'));
+        $possible_fields = $factory->getUsedFormElementsByType($this->getTracker(), array('int', 'float'));
 
         $used_velocity_field = $this->getVelocityField();
 
-        $backlog_trackers_without_done_semantic = $this->getPresentersOfBacklogTrackersWithoutDoneSemantic();
+        $planning_trackers                      = $this->getBacklogTrackers();
+        $backlog_trackers_without_done_semantic = $this->getPresentersOfBacklogTrackersWithoutDoneSemantic(
+            $planning_trackers
+        );
+
+        $backlog_trackers = $this->formatBacklogTrackers($backlog_trackers_without_done_semantic, $planning_trackers);
 
         $csrf = $this->getCSRFSynchronizerToken();
 
-        $renderer  = TemplateRendererFactory::build()->getRenderer(VELOCITY_BASE_DIR.'/templates');
+        $renderer  = TemplateRendererFactory::build()->getRenderer(VELOCITY_BASE_DIR . '/templates');
         $presenter = new SemanticVelocityAdminPresenter(
             $possible_fields,
             $csrf,
             $this->getTracker(),
             $this->semantic_done->isSemanticDefined(),
             $used_velocity_field['field_id'],
-            $backlog_trackers_without_done_semantic
+            $backlog_trackers,
+            count($planning_trackers) === count($backlog_trackers_without_done_semantic)
         );
 
         $renderer->renderToPage('velocity-admin', $presenter);
@@ -120,8 +133,12 @@ class SemanticVelocity extends Tracker_Semantic
         $sm->displaySemanticFooter($this, $tracker_manager);
     }
 
-    public function process(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user)
-    {
+    public function process(
+        Tracker_SemanticManager $sm,
+        TrackerManager $tracker_manager,
+        Codendi_Request $request,
+        PFUser $current_user
+    ) {
         if ($request->exist('submit')) {
             $csrf = $this->getCSRFSynchronizerToken();
             $csrf->check();
@@ -222,27 +239,16 @@ class SemanticVelocity extends Tracker_Semantic
         return new SemanticVelocityDao();
     }
 
-    private function getPresentersOfBacklogTrackersWithoutDoneSemantic()
+    private function getPresentersOfBacklogTrackersWithoutDoneSemantic(array $all_baklog_trackers)
     {
         $trackers = [];
 
-        $planning_factory      = PlanningFactory::build();
         $semantic_done_factory = new SemanticDoneFactory(new SemanticDoneDao(), new SemanticDoneValueChecker());
 
-        $planning_trackers = $planning_factory->getPlanningByPlanningTracker($this->getTracker());
-        foreach ($planning_trackers->getBacklogTrackers() as $tracker) {
+        foreach ($all_baklog_trackers as $tracker) {
             $semantic_done = $semantic_done_factory->getInstanceByTracker($tracker);
             if (! $semantic_done->isSemanticDefined()) {
-                $trackers[] = [
-                    "url"  => TRACKER_BASE_URL . "?" . http_build_query(
-                        [
-                            "tracker"  => $tracker->getId(),
-                            "func"     => "admin-semantic",
-                            "semantic" => "done"
-                        ]
-                    ),
-                    "name" => $tracker->getName()
-                ];
+                $trackers[] = $tracker->getId();
             }
         }
 
@@ -255,5 +261,48 @@ class SemanticVelocity extends Tracker_Semantic
     public function getVelocityField()
     {
         return $this->getSemanticDao()->searchUsedVelocityField($this->getTracker()->getId());
+    }
+
+    /**
+     * @return Tracker[]
+     */
+    private function getBacklogTrackers()
+    {
+        $planning_factory  = PlanningFactory::build();
+        $planning_trackers = $planning_factory->getPlanningByPlanningTracker($this->getTracker());
+
+        return $planning_trackers->getBacklogTrackers();
+    }
+
+    /**
+     * @param Tracker[] $incorrect_backlog_trackers
+     * @param Tracker[] $backlog_trackers
+     *
+     * @return array
+     */
+    private function formatBacklogTrackers(array $incorrect_backlog_trackers, array $backlog_trackers)
+    {
+        $formatted_tracker = [];
+        foreach ($backlog_trackers as $tracker) {
+            $formatted_tracker[] = [
+                "name"              => $tracker->getName(),
+                "is_missconfigured" => in_array($tracker->getId(), $incorrect_backlog_trackers),
+                "semantic_url"       => TRACKER_BASE_URL . "?" . http_build_query(
+                    [
+                        "tracker"  => $tracker->getId(),
+                        "func"     => "admin-semantic",
+                        "semantic" => "done"
+                    ]
+                ),
+                "tracker_url"      => TRACKER_BASE_URL . "?" . http_build_query(
+                    [
+                        "tracker" => $tracker->getId(),
+                        "func"    => "admin"
+                    ]
+                )
+            ];
+        }
+
+        return $formatted_tracker;
     }
 }

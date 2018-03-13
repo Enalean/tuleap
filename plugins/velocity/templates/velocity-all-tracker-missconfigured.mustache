@@ -1,0 +1,18 @@
+{{# are_all_backlog_trackers_missconfigured }}
+    <ul class="feedback_error">
+        {{# dgettext }}
+            tuleap-velocity |
+            No backlog trackers have a <b>done</b> semantic, velocity will always be set to 0.
+        {{/ dgettext }}
+        {{# backlog_trackers_without_done_semantic }}
+            <li>
+                {{# dgettext }}
+                    tuleap-velocity |
+                    Semantic done is not defined for tracker <a href="%s">%s</a> |
+                    {{ url }} |
+                    {{ name }}
+                {{/ dgettext }}
+            </li>
+        {{/ backlog_trackers_without_done_semantic }}
+    </ul>
+{{/ are_all_backlog_trackers_missconfigured }}

@@ -46,13 +46,17 @@ class SemanticVelocityAdminPresenter
      */
     public $has_velocity_field;
     /**
-     * @var array
+     * @var string
      */
-    public $backlog_trackers_without_done_semantic;
+    public $tracker_name;
     /**
      * @var bool
      */
-    public $has_backlog_trackers_without_done_semantic;
+    public $are_all_backlog_trackers_missconfigured;
+    /**
+     * @var array
+     */
+    public $backlog_trackers;
 
     public function __construct(
         array $possible_velocity_field,
@@ -60,7 +64,8 @@ class SemanticVelocityAdminPresenter
         Tracker $tracker,
         $has_semantic_done_defined,
         $selected_velocity_field_id,
-        array $incorrect_backlog_trackers
+        array $backlog_trackers,
+        $are_all_backlog_trackers_missconfigured
     ) {
         $this->possible_velocity_field                    = $this->buildPossibleVelocityField(
             $possible_velocity_field,
@@ -75,8 +80,9 @@ class SemanticVelocityAdminPresenter
                 "func"    => "admin-semantic"
             ]
         );
-        $this->backlog_trackers_without_done_semantic     = $incorrect_backlog_trackers;
-        $this->has_backlog_trackers_without_done_semantic = count($incorrect_backlog_trackers) > 0;
+        $this->tracker_name                               = $tracker->getName();
+        $this->are_all_backlog_trackers_missconfigured    = $are_all_backlog_trackers_missconfigured;
+        $this->backlog_trackers                           = $backlog_trackers;
     }
 
     private function buildPossibleVelocityField(array $possible_velocity_field, $selected_velocity_field_id)

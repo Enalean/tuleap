@@ -1,29 +1,40 @@
+msgid ""
+"<b>Done</b> semantic is needed since Velocity computation is made over "
+"<b>done</b> artifacts. Please select a Done semantic first."
+msgstr ""
+
 msgid "Adds velocity chart into Agiledashboard"
 msgstr ""
 
 msgid ""
-"Choose the \"velocity\" field that will be used for computation of velocity\n"
-"    chart."
+"Choose the \"velocity\" field that will be used for computation of velocity "
+"chart."
 msgstr ""
 
 msgid "Define the field to use to compute velocity."
 msgstr ""
 
-msgid ""
-"Done semantic is needed to define a Velocity semantic. Please select a Done "
-"semantic first."
-msgstr ""
-
-msgid "Feel free to choose one:"
-msgstr ""
-
 msgid "Field used for velocity computation:"
+msgstr ""
+
+msgid ""
+"No backlog trackers have a <b>done</b> semantic, velocity will always be set "
+"to 0."
 msgstr ""
 
 msgid "No field defined for velocity computation."
 msgstr ""
 
+msgid ""
+"Only integers and float fields are listed. By choosing one of these fields, "
+"it will be\n"
+"            automatically computed in order to give you the velocity value."
+msgstr ""
+
 msgid "Save your change"
+msgstr ""
+
+msgid "Semantic <a href=\"%s\">done</a> is not defined"
 msgstr ""
 
 msgid "Semantic done is not defined for tracker <a href=\"%s\">%s</a>"
@@ -43,11 +54,6 @@ msgstr ""
 msgid "The request is not valid."
 msgstr ""
 
-msgid ""
-"The semantic velocity cannot be defined because the semantic done is not "
-"defined."
-msgstr ""
-
 #, php-format
 msgid ""
 "The tracker %s uses a Velocity semantic. Please check its configuration."
@@ -63,6 +69,11 @@ msgid "Unset this semantic"
 msgstr ""
 
 msgid "Velocity"
+msgstr ""
+
+msgid ""
+"Velocity chart represents the sum of <b>initial effort</b> of <b>done</b> "
+"backlog elements of %s."
 msgstr ""
 
 msgid "go back to semantic overview"
