@@ -1,4 +1,4 @@
-<h1>{{# dgettext }} tuleap-timetracking | timetracking {{/ dgettext }}</h1>
+<h1>{{# dgettext }} tuleap-timetracking | time tracking {{/ dgettext }}</h1>
 
 <form action="{{ form_url }}" id="timetracking-admin-form" method="POST">
     {{# csrf_token }}
@@ -11,7 +11,7 @@
                    id="enable_timetracking"
                    name="enable_timetracking"
                 {{# is_timetracking_enabled }} checked="checked" {{/ is_timetracking_enabled }}
-            /> {{# dgettext }} tuleap-timetracking | Enable timetracking for tracker {{/ dgettext }}
+            /> {{# dgettext }} tuleap-timetracking | Enable time tracking for tracker {{/ dgettext }}
         </label>
     </div>
 

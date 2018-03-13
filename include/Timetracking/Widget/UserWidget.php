@@ -34,12 +34,12 @@ class UserWidget extends Widget
 
     public function getTitle()
     {
-        return dgettext('tuleap-timetracking', 'Personal Timetracking');
+        return dgettext('tuleap-timetracking', 'Personal time tracking');
     }
 
     public function getDescription()
     {
-        return dgettext('tuleap-timetracking', 'Displays your timetracking in the whole platform.');
+        return dgettext('tuleap-timetracking', 'Displays your time tracking of the whole platform.');
     }
 
     public function isUnique()

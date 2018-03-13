@@ -176,13 +176,13 @@ class AdminController
 
         $this->project_history_dao->groupAddHistory(
             'timetracking_enabled',
-            'Timetracking enabled for tracker ' . $tracker->getName(),
+            'Time tracking enabled for tracker ' . $tracker->getName(),
             $tracker->getGroupId()
         );
 
         $GLOBALS['Response']->addFeedback(
             Feedback::INFO,
-            dgettext('tuleap-timetracking', 'Timetracking is enabled for tracker.')
+            dgettext('tuleap-timetracking', 'Time tracking is enabled for tracker.')
         );
     }
 
@@ -192,13 +192,13 @@ class AdminController
 
         $this->project_history_dao->groupAddHistory(
             'timetracking_disabled',
-            'Timetracking disabled for tracker ' . $tracker->getName(),
+            'Time tracking disabled for tracker ' . $tracker->getName(),
             $tracker->getGroupId()
         );
 
         $GLOBALS['Response']->addFeedback(
             Feedback::INFO,
-            dgettext('tuleap-timetracking', 'Timetracking is disabled for tracker.')
+            dgettext('tuleap-timetracking', 'Time tracking is disabled for tracker.')
         );
     }
 
@@ -225,7 +225,7 @@ class AdminController
 
         $this->project_history_dao->groupAddHistory(
             'timetracking_permissions_updated',
-            'Timetracking permissions updated for tracker ' . $tracker->getName(),
+            'Time tracking permissions updated for tracker ' . $tracker->getName(),
             $tracker->getGroupId()
         );
 

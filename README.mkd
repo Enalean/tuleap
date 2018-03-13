@@ -1,4 +1,4 @@
 Timetracking
 =============
 
-This plugin allows users to track spend time on artifacts.
+This plugin allows users to track spent time on artifacts.

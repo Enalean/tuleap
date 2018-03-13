@@ -49,7 +49,7 @@ class ArtifactView extends Tracker_Artifact_View_View
     /** @see Tracker_Artifact_View_View::getTitle() */
     public function getTitle()
     {
-        return dgettext('tuleap-timetracking', 'Timetracking');
+        return dgettext('tuleap-timetracking', 'Time tracking');
     }
 
     /** @see Tracker_Artifact_View_View::getIdentifier() */

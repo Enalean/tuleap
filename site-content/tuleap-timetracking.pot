@@ -26,13 +26,13 @@ msgstr ""
 msgid "Delete the time"
 msgstr ""
 
-msgid "Displays your timetracking in the whole platform."
+msgid "Displays your time tracking of the whole platform."
 msgstr ""
 
 msgid "Edit time"
 msgstr ""
 
-msgid "Enable timetracking for tracker"
+msgid "Enable time tracking for tracker"
 msgstr ""
 
 msgid "No times saved"
@@ -44,7 +44,7 @@ msgstr ""
 msgid "Permissions successfully saved."
 msgstr ""
 
-msgid "Personal Timetracking"
+msgid "Personal time tracking"
 msgstr ""
 
 msgid "Read"
@@ -83,16 +83,16 @@ msgstr ""
 msgid "Time successfully updated."
 msgstr ""
 
-msgid "Timetracking"
+msgid "Time tracking"
 msgstr ""
 
-msgid "Timetracking for Tuleap artifacts"
+msgid "Time tracking for Tuleap artifacts"
 msgstr ""
 
-msgid "Timetracking is disabled for tracker."
+msgid "Time tracking is disabled for tracker."
 msgstr ""
 
-msgid "Timetracking is enabled for tracker."
+msgid "Time tracking is enabled for tracker."
 msgstr ""
 
 msgid "Update"
@@ -116,5 +116,5 @@ msgstr ""
 msgid "You are not allowed to edit this time."
 msgstr ""
 
-msgid "timetracking"
+msgid "time tracking"
 msgstr ""

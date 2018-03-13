@@ -106,9 +106,9 @@ class timetrackingPlugin extends Plugin
 
         $params['items']['timetracking'] = array(
             'url'         => $url,
-            'short_title' => dgettext('tuleap-timetracking', 'Timetracking'),
-            'title'       => dgettext('tuleap-timetracking', 'Timetracking'),
-            'description' => dgettext('tuleap-timetracking', 'Timetracking for Tuleap artifacts'),
+            'short_title' => dgettext('tuleap-timetracking', 'Time tracking'),
+            'title'       => dgettext('tuleap-timetracking', 'Time tracking'),
+            'description' => dgettext('tuleap-timetracking', 'Time tracking for Tuleap artifacts'),
             'img'         => TIMETRACKING_BASE_URL . '/images/icon-timetracking.png'
         );
     }
