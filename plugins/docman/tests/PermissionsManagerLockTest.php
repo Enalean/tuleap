@@ -22,10 +22,6 @@
 
 require_once 'bootstrap.php';
 
-Mock::generatePartial('Docman_PermissionsManager', 'Docman_PermissionsManagerTestLock', array('getLockFactory', '_isUserDocmanAdmin', 'userCanManage'));
-Mock::generate('PFUser');
-Mock::generate('Docman_LockFactory');
-
 class PermissionsManagerLockTest extends TuleapTestCase {
     private $user;
     private $docmanPm;
@@ -33,71 +29,71 @@ class PermissionsManagerLockTest extends TuleapTestCase {
     public function setUp()
     {
         parent::setUp();
-        $this->user = mock('PFUser');
-        $this->user->setReturnValue('getId', 1234);
+        $this->user = \Mockery::spy(PFUser::class);
+        $this->user->allows(['getId' => 1234]);
         $this->itemId = 1848;
-        $this->docmanPm = new Docman_PermissionsManagerTestLock($this);
+        $this->docmanPm = \Mockery::mock(Docman_PermissionsManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
     }
 
     function testItemIsNotLocked() {
         // user is not docman admin
-        $this->docmanPm->setReturnValue('_isUserDocmanAdmin', false);
+        $this->docmanPm->allows(['_isUserDocmanAdmin' => false]);
         // user is not super admin
-        $this->user->setReturnValue('isSuperUser', false);
+        $this->user->allows(['isSuperUser' => false]);
         // user cannot manage
-        $this->docmanPm->setReturnValue('userCanManage', false);
+        $this->docmanPm->allows(['userCanManage' => false]);
 
-        $lockFactory = new MockDocman_LockFactory($this);
-        $lockFactory->setReturnValue('itemIsLockedByItemId', false);
-        $this->docmanPm->setReturnValue('getLockFactory', $lockFactory);
+        $lockFactory = \Mockery::spy(Docman_LockFactory::class);
+        $lockFactory->allows(['itemIsLockedByItemId' => false]);
+        $this->docmanPm->allows(['getLockFactory' => $lockFactory]);
 
         $this->assertFalse($this->docmanPm->_itemIsLockedForUser($this->user, $this->itemId));
     }
 
     function testItemIsLockedBySomeoneelse() {
         // user is not docman admin
-        $this->docmanPm->setReturnValue('_isUserDocmanAdmin', false);
+        $this->docmanPm->allows(['_isUserDocmanAdmin' => false]);
         // user is not super admin
-        $this->user->setReturnValue('isSuperUser', false);
+        $this->user->allows(['isSuperUser' => false]);
         // user cannot manage
-        $this->docmanPm->setReturnValue('userCanManage', false);
+        $this->docmanPm->allows(['userCanManage' => false]);
 
-        $lockFactory = new MockDocman_LockFactory($this);
-        $lockFactory->setReturnValue('itemIsLockedByItemId', true);
-        $lockFactory->setReturnValue('userIsLockerByItemId', false);
-        $this->docmanPm->setReturnValue('getLockFactory', $lockFactory);
+        $lockFactory = \Mockery::spy(Docman_LockFactory::class);
+        $lockFactory->allows(['itemIsLockedByItemId' => true]);
+        $lockFactory->allows(['userIsLockerByItemId' => false]);
+        $this->docmanPm->allows(['getLockFactory' => $lockFactory]);
 
         $this->assertTrue($this->docmanPm->_itemIsLockedForUser($this->user, $this->itemId));
     }
 
     function testItemIsLockedBySomeoneelseButUserCanManage() {
         // user is not docman admin
-        $this->docmanPm->setReturnValue('_isUserDocmanAdmin', false);
+        $this->docmanPm->allows(['_isUserDocmanAdmin' => false]);
         // user is not super admin
-        $this->user->setReturnValue('isSuperUser', false);
+        $this->user->allows(['isSuperUser' => false]);
         // user cannot manage
-        $this->docmanPm->setReturnValue('userCanManage', true);
+        $this->docmanPm->allows(['userCanManage' => true]);
 
-        $lockFactory = new MockDocman_LockFactory($this);
-        $lockFactory->setReturnValue('itemIsLockedByItemId', true);
-        $lockFactory->setReturnValue('userIsLockerByItemId', false);
-        $this->docmanPm->setReturnValue('getLockFactory', $lockFactory);
+        $lockFactory = \Mockery::spy(Docman_LockFactory::class);
+        $lockFactory->allows(['itemIsLockedByItemId' => true]);
+        $lockFactory->allows(['userIsLockerByItemId' => false]);
+        $this->docmanPm->allows(['getLockFactory' => $lockFactory]);
 
         $this->assertFalse($this->docmanPm->_itemIsLockedForUser($this->user, $this->itemId));
     }
 
     function testItemIsLockedByOwner() {
         // user is not docman admin
-        $this->docmanPm->setReturnValue('_isUserDocmanAdmin', false);
+        $this->docmanPm->allows(['_isUserDocmanAdmin' => false]);
         // user is not super admin
-        $this->user->setReturnValue('isSuperUser', false);
+        $this->user->allows(['isSuperUser' => false]);
         // user cannot manage
-        $this->docmanPm->setReturnValue('userCanManage', false);
+        $this->docmanPm->allows(['userCanManage' => false]);
 
-        $lockFactory = new MockDocman_LockFactory($this);
-        $lockFactory->setReturnValue('itemIsLockedByItemId', true);
-        $lockFactory->setReturnValue('userIsLockerByItemId', true);
-        $this->docmanPm->setReturnValue('getLockFactory', $lockFactory);
+        $lockFactory = \Mockery::spy(Docman_LockFactory::class);
+        $lockFactory->allows(['itemIsLockedByItemId' => true]);
+        $lockFactory->allows(['userIsLockerByItemId' => true]);
+        $this->docmanPm->allows(['getLockFactory' => $lockFactory]);
 
         $this->assertFalse($this->docmanPm->_itemIsLockedForUser($this->user, $this->itemId));
     }

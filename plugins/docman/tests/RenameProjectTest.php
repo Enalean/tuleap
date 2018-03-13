@@ -22,12 +22,6 @@
 
 require_once 'bootstrap.php';
 
-Mock::generatePartial('Docman_VersionFactory', 'Docman_VersionFactoryTestVersion2', array('_getVersionDao'));
-
-Mock::generate('Docman_VersionDao');
-
-Mock::generate('Project');
-
 class RenameProjectTest extends TuleapTestCase
 {
     public function testRenameProjectTest()
@@ -37,15 +31,15 @@ class RenameProjectTest extends TuleapTestCase
         $new_name = 'TestProj';
         mkdir($docman_root.$old_name);
 
-        $project = new MockProject($this);
-        $project->setReturnValue('getUnixName', $old_name, array(true));
+        $project = \Mockery::spy(Project::class);
+        $project->allows()->getUnixName(true)->andReturns($old_name);
 
-        $fact = new Docman_VersionFactoryTestVersion2($this);
+        $fact = \Mockery::mock(Docman_VersionFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->assertEqual(rename($docman_root.$old_name, $docman_root.$new_name), true);
 
-        $dao = new MockDocman_VersionDao($fact);
-        $fact->setReturnValue('_getVersionDao', $dao);
-        $dao->setReturnValue('renameProject', true, array($docman_root, $project, $new_name));
+        $dao = \Mockery::spy(Docman_VersionDao::class);
+        $fact->allows(['_getVersionDao' => $dao]);
+        $dao->allows()->renameProject($docman_root, $project, $new_name)->andReturns(true);
 
         $this->assertFalse(is_dir($docman_root.$old_name), "Docman old rep should be renamed");
         $this->assertTrue(is_dir($docman_root.$new_name), "Docman new Rep should be created");
