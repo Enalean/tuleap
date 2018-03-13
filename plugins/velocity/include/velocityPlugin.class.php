@@ -64,6 +64,22 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
         /* @var $semantics Tracker_SemanticCollection */
         $semantics = $parameters['semantics'];
 
+        if (! $this->isAPlanningTrackers($tracker)) {
+            return;
+        }
+
         $semantics->insertAfter(SemanticDone::NAME, SemanticVelocity::load($tracker));
+    }
+
+    private function isAPlanningTrackers(Tracker $semantic_tracker)
+    {
+        $planning_factory = PlanningFactory::build();
+        $planning         = $planning_factory->getPlanningByPlanningTracker($semantic_tracker);
+
+        if ($planning) {
+            return $semantic_tracker->getId() === $planning->getPlanningTrackerId();
+        }
+
+        return false;
     }
 }
