@@ -491,33 +491,27 @@ class BackendSystem extends Backend {
      * 
      * @return bool the status
      */
-    public function cleanupFRS() {
+    public function cleanupFRS()
+    {
+        $status = true;
         // Purge all deleted files older than 3 days old
-        if (!isset($GLOBALS['sys_file_deletion_delay'])) {
-            $delay = 3;
-        } else {
-            $delay = intval($GLOBALS['sys_file_deletion_delay']);
-        }
-        $time = $_SERVER['REQUEST_TIME'] - (3600*24*$delay);
-        $frs = $this->getFRSFileFactory();
-        $status =  $frs->moveFiles($time, $this);
-        // {{{ /!\ WARNING HACK /!\
-        // We keep the good old purge mecanism for at least one release to clean
-        // the previously deleted files
-        // Delete all files under DELETE that are older than 10 days
-        //$delete_dir = $GLOBALS['ftp_frs_dir_prefix']."/DELETED";
-        //system("find $delete_dir -type f -mtime +10 -exec rm {} \\;");
-        //system("find $delete_dir -mindepth 1 -type d -empty -exec rm -R {} \\;");
-        // }}} /!\ WARNING HACK /!\
+        $delay = (int) ForgeConfig::get('sys_file_deletion_delay', 3);
+        $time  = $_SERVER['REQUEST_TIME'] - (3600*24*$delay);
 
-        //Manage the purge of wiki attachments
-        $wiki   = $this->getWikiAttachment();
-        $status = $status && $wiki->purgeAttachments($time);
+        if (is_dir(ForgeConfig::get('ftp_frs_dir_prefix'))) {
+            $frs = $this->getFRSFileFactory();
+            $status =  $frs->moveFiles($time, $this);
+        }
+
+        if (is_dir(ForgeConfig::get('sys_wiki_attachment_data_dir'))) {
+            $wiki   = $this->getWikiAttachment();
+            $status = $status && $wiki->purgeAttachments($time);
+        }
 
         $em = EventManager::instance();
         $em->processEvent('backend_system_purge_files', array('time' => $time));
 
-        return ($status);
+        return $status;
     }
 
     /**
