@@ -61,18 +61,28 @@ class TimeRetriever
         return $times;
     }
 
+
     /**
-     * @return Time[]
+     * @return PaginatedTimes
      */
-    public function getTimesForUserInTimePeriod(PFUser $user, $start_date, $end_date)
+    public function getPaginatedTimesForUserInTimePeriod(PFUser $user, $start_date, $end_date, $limit, $offset)
     {
         $times = [];
+        $user_times = $this->dao->searchTimesForUserInTimePeriod(
+            $user->getId(),
+            $start_date,
+            $end_date,
+            $limit,
+            $offset
+        );
 
-        foreach ($this->dao->searchTimesForUserInTimePeriod($user->getId(), $start_date, $end_date) as $row_time) {
+        $total_rows = (int) $this->dao->foundRows();
+
+        foreach ($user_times as $row_time) {
             $times[] = $this->buildTimeFromRow($row_time);
         }
 
-        return $times;
+        return new PaginatedTimes($times, $total_rows);
     }
 
     /**

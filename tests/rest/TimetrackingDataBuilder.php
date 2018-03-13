@@ -82,7 +82,7 @@ class TimetrackingDataBuilder extends REST_TestDataBuilder
             $time_updater->addTimeForUserInArtifact(
                 $user,
                 $artifact,
-                '2018-03-09',
+                date('Y-m-d', $artifact->getSubmittedOn()),
                 '10:00',
                 'test'
             );

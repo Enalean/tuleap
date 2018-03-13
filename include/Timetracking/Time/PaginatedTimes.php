@@ -22,26 +22,38 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Timetracking\REST\v1;
+namespace Tuleap\Timetracking\Time;
 
-use Tuleap\Timetracking\Time\Time;
-
-class TimetrackingRepresentationBuilder
+class PaginatedTimes
 {
     /**
-     * @param Time[]
-     * @return TimetrackingRepresentation[]
+     * @var Time[]
      */
-    public function buildPaginatedTimes(array $times) {
-        $representations = [];
+    private $times;
 
-        foreach ($times as $time) {
-            $representation = new TimetrackingRepresentation();
-            $representation->build($time);
+    /**
+     * @var int
+     */
+    private $total_size;
 
-            $representations[] = $representation;
-        }
+    /**
+     *
+     * @param Time[] $times
+     * @param int $total_size
+     */
+    public function __construct(array $times, $total_size) {
+        $this->times      = $times;
+        $this->total_size = $total_size;
+    }
 
-        return $representations;
+    public function getTotalSize() {
+        return $this->total_size;
+    }
+
+    /**
+     * @return Time[]
+     */
+    public function getTimes() {
+        return $this->times;
     }
 }

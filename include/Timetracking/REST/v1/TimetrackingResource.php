@@ -45,6 +45,10 @@ use User_PasswordExpirationChecker;
 
 class TimetrackingResource extends AuthenticatedResource
 {
+    const DEFAULT_OFFSET  = 0;
+    const MAX_LIMIT       = 50;
+    const MAX_TIMES_BATCH = 100;
+
     /**
      * @var UserManager
      */
@@ -55,15 +59,19 @@ class TimetrackingResource extends AuthenticatedResource
      */
     private $representation_builder;
 
+    /**
+     * @var TimeRetriever
+     */
+    private $time_retriever;
+
     public function __construct()
     {
-        $this->representation_builder = new TimetrackingRepresentationBuilder(
-            new TimeRetriever(
-                new TimeDao(),
-                new PermissionsRetriever(
-                    new TimetrackingUgroupRetriever(
-                        new TimetrackingUgroupDao()
-                    )
+        $this->representation_builder = new TimetrackingRepresentationBuilder();
+        $this->time_retriever         = new TimeRetriever(
+            new TimeDao(),
+            new PermissionsRetriever(
+                new TimetrackingUgroupRetriever(
+                    new TimetrackingUgroupDao()
                 )
             )
         );
@@ -113,11 +121,13 @@ class TimetrackingResource extends AuthenticatedResource
      * @access protected
      *
      * @param string $query JSON object of search criteria properties {@from query}
+     * @param int    $limit     Number of elements displayed per page {@from path}{@min 1}{@max 100}
+     * @param int    $offset    Position of the first element to display {@from path}{@min 0}
      *
      * @return array {@type TimetrackingRepresentation}
      * @throws RestException
      */
-    protected function get($query)
+    protected function get($query, $limit = self::MAX_TIMES_BATCH,  $offset = self::DEFAULT_OFFSET)
     {
         $this->checkAccess();
 
@@ -136,7 +146,22 @@ class TimetrackingResource extends AuthenticatedResource
 
         $current_user = $this->rest_user_manager->getCurrentUser();
 
-        return $this->representation_builder->buildAllRepresentationsForUser($current_user, $start_date, $end_date);
+        $paginated_times = $this->time_retriever->getPaginatedTimesForUserInTimePeriod(
+            $current_user,
+            $start_date,
+            $end_date,
+            $limit,
+            $offset
+        );
+
+        Header::sendPaginationHeaders(
+            $limit,
+            $offset,
+            $paginated_times->getTotalSize(),
+            self::MAX_TIMES_BATCH
+        );
+
+        return $this->representation_builder->buildPaginatedTimes($paginated_times->getTimes());
     }
 
     private function sendAllowHeaders()

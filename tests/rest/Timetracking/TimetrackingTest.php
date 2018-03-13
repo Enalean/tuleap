@@ -51,7 +51,7 @@ class TimetrackingTest extends RestBase
         $this->assertTrue(count($times) === 1);
         $this->assertEquals($times[0]['id'], 1);
         $this->assertEquals($times[0]['minutes'], 600);
-        $this->assertEquals($times[0]['date'], '2018-03-09');
+        $this->assertEquals($times[0]['date'], '2018-03-01');
     }
 
     public function testExceptionWhenStartDateMissing()
@@ -215,10 +215,12 @@ class TimetrackingTest extends RestBase
     public function testExceptionWhenDatesAreNotISO8601()
     {
         $query = urlencode(
-            json_encode([
-                "start_date" => "2018/01/01",
-                "end_date"   => "2018/01/30"
-            ])
+            json_encode(
+                [
+                    "start_date" => "2018/01/01",
+                    "end_date"   => "2018/01/30"
+                ]
+            )
         );
 
         $exception_thrown = false;
@@ -242,5 +244,29 @@ class TimetrackingTest extends RestBase
         }
 
         $this->assertTrue($exception_thrown);
+    }
+
+    public function testGetTimesPaginated()
+    {
+        $query = urlencode(
+            json_encode([
+                "start_date" => "2018-03-01T00:00:00+01",
+                "end_date"   => "2018-03-31T00:00:00+01"
+            ])
+        );
+
+        $times_ids = [ 1, 2 ];
+
+        for ($offset = 0; $offset <= 1; $offset ++) {
+            $response = $this->getResponse(
+                $this->client->get("timetracking?limit=1&offset=$offset&query=$query"),
+                TimetrackingDataBuilder::USER_TESTER_NAME
+            );
+
+            $times = $response->json();
+
+            $this->assertTrue(count($times) === 1);
+            $this->assertEquals($times[0]['id'], $times_ids[ $offset ]);
+        }
     }
 }
