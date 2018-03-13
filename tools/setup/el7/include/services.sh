@@ -1,17 +1,17 @@
 _serviceEnable() {
-    # ${1}: service name
+    # ${@}: services name
 
-    ${systemctl} enable ${1}
+    ${systemctl} enable ${@}
 }
 
 _serviceMask() {
-    # ${1}: service name
+    # ${@}: services name
 
-    ${systemctl} mask ${1}
+    ${systemctl} mask ${@}
 }
 
 _serviceStart() {
-    # ${1}: service name
+    # $@1}: services name
 
-    ${systemctl} start ${1}
+    ${systemctl} start ${@}
 }

@@ -35,6 +35,7 @@ declare -r include="${tools_dir}/setup/el7/include"
 . ${include}/php.sh
 . ${include}/mysqlcli.sh
 . ${include}/sql.sh
+. ${include}/services.sh
 
 # Main
 ###############################################################################
@@ -123,6 +124,8 @@ _setupForgeupgrade
 _phpActivePlugin "tracker" "${tuleap_unix_user}"
 _phpImportTrackerTemplate
 _phpForgeupgrade "record-only"
+_serviceEnable "${timers[@]}"
+_serviceStart "${timers[@]}"
 _phpConfigureModule "nginx,fpm"
 
 for pwd in mysql_password dbpasswd admin_password; do
