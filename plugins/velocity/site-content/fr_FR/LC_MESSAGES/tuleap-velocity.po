@@ -24,6 +24,19 @@ msgid "Adds velocity chart into Agiledashboard"
 msgstr "Ajoute le graphique de vélocité dans le tableau de bord Agile"
 
 msgid ""
+"Artifact velocity will always be set to 0, because no backlog tracker have "
+"the following semantic:"
+msgid_plural ""
+"Artifact velocity will always be set to 0, because no backlog tracker have "
+"the following semantics:"
+msgstr[0] ""
+"La vélocité de l'artifact sera toujours sauvegardée à 0, parce qu'aucun "
+"élément du backlog n'a la sémantique :"
+msgstr[1] ""
+"La vélocité de l'artifact sera toujours sauvegardée à 0, parce qu'aucun "
+"élément du backlog n'a les sémantiques :"
+
+msgid ""
 "Choose the \"velocity\" field that will be used for computation of velocity "
 "chart."
 msgstr ""
@@ -35,13 +48,6 @@ msgstr "Définissez le champ à utiliser pour calculer la vélocité"
 
 msgid "Field used for velocity computation:"
 msgstr "Champ utilisé pour le calcul de la vélocité:"
-
-msgid ""
-"No backlog trackers have a <b>done</b> semantic, velocity will always be set "
-"to 0."
-msgstr ""
-"Aucun ouil de suivi de backlog n'a une sémantique <b>done</b>, la vélocité "
-"sera toujours égale à 0."
 
 msgid "No field defined for velocity computation."
 msgstr "Aucun champ défini pour le calcul de la vélocité"
@@ -56,14 +62,6 @@ msgstr ""
 
 msgid "Save your change"
 msgstr "Sauvegarder vos changements"
-
-msgid "Semantic <a href=\"%s\">done</a> is not defined"
-msgstr "La sémantique <a href=\"%s\">finie</a> n'est pas définie"
-
-msgid "Semantic done is not defined for tracker <a href=\"%s\">%s</a>"
-msgstr ""
-"La sémantique finie n'est pas définie pour l'outil de suivi <a href=\"%s\">"
-"%s</a>"
 
 msgid "Semantic done is not defined."
 msgstr "La sémantique finie n'est pas définie"
@@ -81,6 +79,11 @@ msgstr ""
 #, php-format
 msgid "The field %s will be automatically set to %s"
 msgstr "Le champ %s sera automatiquement valué à %s"
+
+msgid "The following semantic is not defined:"
+msgid_plural "The following semantics are not defined:"
+msgstr[0] "La sémantique suivante n'est pas définie:"
+msgstr[1] "Les sémantiques suivantes ne sont pas définies:"
 
 msgid "The request is not valid."
 msgstr "La requête n'est pas valide"
