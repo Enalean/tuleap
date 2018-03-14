@@ -48,6 +48,11 @@ msgid ""
 "defined."
 msgstr ""
 
+#, php-format
+msgid ""
+"The tracker %s uses a Velocity semantic. Please check its configuration."
+msgstr ""
+
 msgid "This tracker does not have a <i>velocity</i> field yet."
 msgstr ""
 

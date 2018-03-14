@@ -70,6 +70,13 @@ msgstr ""
 "La sémantique vélocité ne peut pas être définie parce que la sémantique "
 "finie n'est pas définie"
 
+#, php-format
+msgid ""
+"The tracker %s uses a Velocity semantic. Please check its configuration."
+msgstr ""
+"Le tracker %s utilise la sémantique vélocité. Merci de vérifier sa "
+"configuration."
+
 msgid "This tracker does not have a <i>velocity</i> field yet."
 msgstr "Cet outil de suivi n'a pas encore de champ <i>vélocité</i>."
 

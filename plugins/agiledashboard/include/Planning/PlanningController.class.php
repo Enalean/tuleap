@@ -20,6 +20,7 @@
 
 use Tuleap\AgileDashboard\FormElement\Burnup;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
+use Tuleap\AgileDashboard\Planning\AdditionalPlanningConfigurationWarningsRetriever;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
 use Tuleap\Dashboard\Project\ProjectDashboardDao;
 use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;
@@ -657,16 +658,9 @@ class Planning_Controller extends MVC2_PluginController {
             $planning_tracker_id = $planning_parameter->planning_tracker_id;
             $planning_tracker    = $this->tracker_factory->getTrackerById($planning_tracker_id);
 
-            $burnup_fields = $this->tracker_form_element_factory->getFormElementsByType($planning_tracker, Burnup::TYPE);
-
-            if ($burnup_fields && $burnup_fields[0]->isUsed()) {
-                $this->addFeedback(
-                    Feedback::WARN,
-                    sprintf(
-                        dgettext('tuleap-agiledashboard', 'The tracker %s uses a Burnup field. Please check its configuration.'),
-                        $planning_tracker->getName()
-                    )
-                );
+            if ($planning_tracker) {
+                $this->addBurnupWarning($planning_tracker);
+                $this->addOtherWarnings($planning_tracker);
             }
         } else {
             $this->addFeedback('error', $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_all_fields_mandatory'));
@@ -708,6 +702,37 @@ class Planning_Controller extends MVC2_PluginController {
         $planning_id = $this->request->get('planning_id');
         return $this->planning_factory->getPlanning($planning_id);
     }
-}
 
-?>
+    /**
+     * @param $planning_tracker
+     */
+    private function addBurnupWarning(Tracker $planning_tracker)
+    {
+        $burnup_fields = $this->tracker_form_element_factory->getFormElementsByType($planning_tracker, Burnup::TYPE);
+
+        if ($burnup_fields && $burnup_fields[0]->isUsed()) {
+            $this->addFeedback(
+                Feedback::WARN,
+                sprintf(
+                    dgettext(
+                        'tuleap-agiledashboard', 'The tracker %s uses a Burnup field. Please check its configuration.'
+                    ),
+                    $planning_tracker->getName()
+                )
+            );
+        }
+    }
+
+    private function addOtherWarnings(Tracker $planning_tracker)
+    {
+        $event = new AdditionalPlanningConfigurationWarningsRetriever($planning_tracker);
+        EventManager::instance()->processEvent($event);
+
+        foreach ($event->getAllWarnings() as $warning) {
+            $this->addFeedback(
+                Feedback::WARN,
+                $warning
+            );
+        }
+    }
+}
