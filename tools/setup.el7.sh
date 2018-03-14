@@ -127,6 +127,7 @@ _phpForgeupgrade "record-only"
 _serviceEnable "${timers[@]}"
 _serviceStart "${timers[@]}"
 _phpConfigureModule "nginx,fpm"
+_serviceRestart "nginx" "tuleap"
 
 for pwd in mysql_password dbpasswd admin_password; do
     unset ${pwd}
