@@ -20,12 +20,23 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+use Tuleap\BotMattermost\BotMattermostLogger;
+use Tuleap\BotMattermost\SenderServices\ClientBotMattermost;
+use Tuleap\BotMattermost\SenderServices\EncoderMessage;
+use Tuleap\BotMattermost\SenderServices\Sender;
+use Tuleap\CreateTestEnv\NotificationBotDao;
 use Tuleap\CreateTestEnv\NotificationBotIndexController;
 use Tuleap\CreateTestEnv\NotificationBotSaveController;
 use Tuleap\CreateTestEnv\REST\ResourcesInjector;
 use Tuleap\CreateTestEnv\Plugin\PluginInfo;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\BurningParrotCompatiblePageEvent;
+use Tuleap\CreateTestEnv\MattermostNotifier;
+use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
+use Tuleap\User\UserConnectionUpdateEvent;
+use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\BotMattermost\Bot\BotFactory;
+use Tuleap\BotMattermost\Bot\BotDao;
 
 // @codingStandardsIgnoreLine
 class create_test_envPlugin extends Plugin
@@ -35,8 +46,7 @@ class create_test_envPlugin extends Plugin
     public function __construct($id)
     {
         parent::__construct($id);
-        $this->setScope(self::SCOPE_SYSTEM);
-        bindTextDomain('tuleap-create_test_env', __DIR__ . '/../site-content');
+        bindtextdomain('tuleap-create_test_env', __DIR__ . '/../site-content');
     }
 
     /**
@@ -45,14 +55,14 @@ class create_test_envPlugin extends Plugin
     public function getPluginInfo()
     {
         if (!$this->pluginInfo) {
-            $this->pluginInfo = new Tuleap\CreateTestEnv\Plugin\PluginInfo($this);
+            $this->pluginInfo = new PluginInfo($this);
         }
         return $this->pluginInfo;
     }
 
     public function getDependencies()
     {
-        return [ 'botmattermost' ];
+        return [ 'botmattermost', 'tracker' ];
     }
 
     public function getHooksAndCallbacks()
@@ -61,13 +71,17 @@ class create_test_envPlugin extends Plugin
         $this->addHook(CollectRoutesEvent::NAME);
         $this->addHook(BurningParrotCompatiblePageEvent::NAME);
         $this->addHook('site_admin_option_hook');
+        $this->addHook(UserConnectionUpdateEvent::NAME);
+        $this->addHook(Event::SERVICE_IS_USED);
+        $this->addHook(ArtifactCreated::NAME);
+        $this->addHook(TRACKER_EVENT_ARTIFACT_POST_UPDATE);
 
         return parent::getHooksAndCallbacks();
     }
 
     public function restResources(array $params)
     {
-        $injector = new \Tuleap\CreateTestEnv\REST\ResourcesInjector();
+        $injector = new ResourcesInjector();
         $injector->populate($params['restler']);
     }
 
@@ -81,10 +95,18 @@ class create_test_envPlugin extends Plugin
     public function collectRoutesEvent(CollectRoutesEvent $event)
     {
         $event->getRouteCollector()->get($this->getPluginPath(), function () {
-            return new NotificationBotIndexController();
+            return new NotificationBotIndexController(
+                new BotFactory(new BotDao()),
+                new NotificationBotDao(),
+                new AdminPageRenderer(),
+                TemplateRendererFactory::build()->getRenderer(__DIR__.'/../templates')
+            );
         });
         $event->getRouteCollector()->post($this->getPluginPath(), function () {
-            return new NotificationBotSaveController($this->getPluginPath());
+            return new NotificationBotSaveController(
+                new NotificationBotDao(),
+                $this->getPluginPath()
+            );
         });
     }
 
@@ -95,5 +117,57 @@ class create_test_envPlugin extends Plugin
             'label' => dgettext('tuleap-create_test_env', 'Create test environment'),
             'href'  => $this->getPluginPath()
         ];
+    }
+
+    public function userConnectionUpdateEvent(UserConnectionUpdateEvent $event)
+    {
+        $platform_url = HTTPRequest::instance()->getServerUrl();
+        $current_user = $event->getUser();
+        $this->notify("[{$current_user->getRealName()}](mailto:{$current_user->getEmail()}) is using $platform_url. #connection #{$current_user->getUnixName()}");
+    }
+
+    // @codingStandardsIgnoreLine
+    public function service_is_used(array $params)
+    {
+        $request = HTTPRequest::instance();
+        $current_user = $request->getCurrentUser();
+        $platform_url = $request->getServerUrl();
+        $project = ProjectManager::instance()->getProject($params['group_id']);
+        $verb = $params['is_used'] ? 'activated' : 'desactivated';
+        $this->notify("[{$current_user->getRealName()}](mailto:{$current_user->getEmail()}) $verb service {$params['shortname']} in [{$project->getUnconvertedPublicName()}]({$platform_url}/project/admin/servicebar.php?group_id={$project->getID()}). #project-admin #{$current_user->getUnixName()}");
+    }
+
+    public function trackerArtifactCreated(ArtifactCreated $event)
+    {
+        $request      = HTTPRequest::instance();
+        $current_user = $request->getCurrentUser();
+        $platform_url = $request->getServerUrl();
+        $artifact     = $event->getArtifact();
+        $project      = $artifact->getTracker()->getProject();
+        $this->notify("[{$current_user->getRealName()}](mailto:{$current_user->getEmail()}) created an [artifact]($platform_url/plugins/tracker/?aid={$artifact->getId()}) in [{$project->getUnconvertedPublicName()}]({$platform_url}/projects/{$project->getUnixNameLowerCase()}). #tracker #{$current_user->getUnixName()}");
+    }
+
+    // @codingStandardsIgnoreLine
+    public function tracker_event_artifact_post_update(array $params)
+    {
+        $request      = HTTPRequest::instance();
+        $current_user = $request->getCurrentUser();
+        $platform_url = $request->getServerUrl();
+        $artifact     = $params['artifact'];
+        $project      = $artifact->getTracker()->getProject();
+        $this->notify("[{$current_user->getRealName()}](mailto:{$current_user->getEmail()}) updated an [artifact]($platform_url/plugins/tracker/?aid={$artifact->getId()}) in [{$project->getUnconvertedPublicName()}]({$platform_url}/projects/{$project->getUnixNameLowerCase()}). #tracker #{$current_user->getUnixName()}");
+    }
+
+    private function notify($text)
+    {
+        (new MattermostNotifier(
+            new BotFactory(new BotDao()),
+            new NotificationBotDao(),
+            new Sender(
+                new EncoderMessage(),
+                new ClientBotMattermost(),
+                new BotMattermostLogger()
+            )
+        ))->notify($text);
     }
 }

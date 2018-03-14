@@ -24,6 +24,7 @@ use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\User\InvalidSessionException;
 use Tuleap\User\SessionManager;
 use Tuleap\User\SessionNotCreatedException;
+use Tuleap\User\UserConnectionUpdateEvent;
 use Tuleap\User\UserRetrieverByLoginNameEvent;
 use Tuleap\Widget\WidgetFactory;
 
@@ -404,7 +405,8 @@ class UserManager {
                     $now = $_SERVER['REQUEST_TIME'];
                     $break_time = $now - $accessInfo['last_access_date'];
                     //if the access is not later than 6 hours, it is not necessary to log it
-                    if ($break_time > 21600) {
+                    if ($break_time > ForgeConfig::get('last_access_resolution')) {
+                        $this->_getEventManager()->processEvent(new UserConnectionUpdateEvent($this->_currentuser));
                         $this->getDao()->storeLastAccessDate($this->_currentuser->getId(), $now);
                     }
                 }
