@@ -708,6 +708,7 @@ if [ $1 -eq 1 ]; then
     /usr/bin/systemctl enable \
         tuleap.service \
         tuleap-php-fpm.service &>/dev/null || :
+    /usr/bin/systemctl mask rh-php56-php-fpm || :
 fi
 
 %post core-subversion
@@ -843,6 +844,7 @@ if [ $1 -eq 0 ]; then
 fi
 
 %postun
+/usr/bin/systemctl unmask rh-php56-php-fpm || :
 /usr/bin/systemctl daemon-reload &>/dev/null || :
 
 %postun core-subversion
