@@ -24,10 +24,16 @@
 
 namespace Tuleap\Timetracking\REST\v1;
 
+use DateTime;
 use EventManager;
+use Exception;
+use Luracast\Restler\RestException;
 use StandardPasswordHandler;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
+use Tuleap\REST\JsonDecoder;
+use Tuleap\REST\QueryParameterException;
+use Tuleap\REST\QueryParameterParser;
 use Tuleap\REST\UserManager;
 use Tuleap\Timetracking\Admin\TimetrackingUgroupDao;
 use Tuleap\Timetracking\Admin\TimetrackingUgroupRetriever;
@@ -86,26 +92,74 @@ class TimetrackingResource extends AuthenticatedResource
     /**
      * Get Timetracking times
      *
-     * Get the times in all platform for user
+     * Get the times in all projects for the current user and a given time period
      *
+     * <br><br>
+     * Notes on the query parameter
+     * <ol>
+     *  <li>You have to specify a start_date and an end_date</li>
+     *  <li>One day minimum between the two dates</li>
+     *  <li>end_date must be greater than start_date</li>
+     *  <li>Dates must be in ISO date format</li>
+     * </ol>
+     *
+     * Example of query:
+     * <br><br>
+     * {
+     *   "start_date": "2018-03-01T00:00:00+01",
+     *   "end_date"  : "2018-03-31T00:00:00+01"
+     * }
      * @url GET
      * @access protected
      *
+     * @param string $query JSON object of search criteria properties {@from query}
+     *
      * @return array {@type TimetrackingRepresentation}
+     * @throws RestException
      */
-    protected function get()
+    protected function get($query)
     {
         $this->checkAccess();
 
         $this->sendAllowHeaders();
 
+        $query_parameter_parser = new QueryParameterParser(new JsonDecoder());
+
+        try {
+            $start_date = $query_parameter_parser->getString($query, 'start_date');
+            $end_date   = $query_parameter_parser->getString($query, 'end_date');
+        } catch (QueryParameterException $ex) {
+            throw new RestException(400, $ex->getMessage());
+        }
+
+        $this->checkTimePeriodIsValid($start_date, $end_date);
+
         $current_user = $this->rest_user_manager->getCurrentUser();
 
-        return $this->representation_builder->buildAllRepresentationsForUser($current_user);
+        return $this->representation_builder->buildAllRepresentationsForUser($current_user, $start_date, $end_date);
     }
 
     private function sendAllowHeaders()
     {
         Header::allowOptionsGet();
+    }
+
+    private function checkTimePeriodIsValid($start_date, $end_date)
+    {
+        $period_start = DateTime::createFromFormat(DateTime::ISO8601, $start_date);
+        $period_end   = DateTime::createFromFormat(DateTime::ISO8601, $end_date);
+
+        if (! $period_start || ! $period_end) {
+            throw new RestException(400, "Please provide valid ISO-8601 dates");
+        }
+
+        $period_length = $period_start->diff($period_end);
+
+        if ($period_length->days < 1) {
+            throw new RestException(400, 'There must be one day offset between the both dates');
+        }
+        if ($period_start > $period_end) {
+            throw new RestException(400,"end_date must be greater than start_date");
+        }
     }
 }

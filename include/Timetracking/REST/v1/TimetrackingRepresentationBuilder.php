@@ -42,11 +42,11 @@ class TimetrackingRepresentationBuilder
     /**
      * @return TimetrackingRepresentation[]
      */
-    public function buildAllRepresentationsForUser(PFUser $user)
+    public function buildAllRepresentationsForUser(PFUser $user, $start_date, $end_date)
     {
         $representations = [];
 
-        foreach ($this->time_retriever->getAllTimesForUser($user) as $time) {
+        foreach ($this->time_retriever->getTimesForUserInTimePeriod($user, $start_date, $end_date) as $time) {
             $representation = new TimetrackingRepresentation();
             $representation->build($time);
 
