@@ -21,6 +21,7 @@
 
 use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsChartPresentersRetriever;
 use Tuleap\AgileDashboard\Planning\AdditionalPlanningConfigurationWarningsRetriever;
+use Tuleap\AgileDashboard\Planning\Presenters\PlanningWarningPossibleMisconfigurationPresenter;
 use Tuleap\AgileDashboard\Semantic\Dao\SemanticDoneDao;
 use Tuleap\AgileDashboard\Semantic\SemanticDone;
 use Tuleap\AgileDashboard\Semantic\SemanticDoneFactory;
@@ -116,14 +117,16 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
         $velocity = SemanticVelocity::load($event->getTracker());
 
         if ($velocity->getVelocityField()) {
+            $semantic_url = TRACKER_BASE_URL . "?" . http_build_query(
+                [
+                    "tracker"  => $event->getTracker()->getId(),
+                    "func"     => "admin-semantic",
+                    "semantic" => "velocity"
+                ]
+            );
+            $semantic_name = dgettext('tuleap-velocity', 'Velocity semantic');
             $event->addWarnings(
-                sprintf(
-                    dgettext(
-                        'tuleap-velocity',
-                        'The tracker %s uses a Velocity semantic. Please check its configuration.'
-                    ),
-                    $event->getTracker()->getName()
-                )
+                new PlanningWarningPossibleMisconfigurationPresenter($semantic_url, $semantic_name)
             );
         }
     }

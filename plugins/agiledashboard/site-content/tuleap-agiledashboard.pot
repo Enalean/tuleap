@@ -40,6 +40,9 @@ msgstr ""
 msgid "Burnup Chart"
 msgstr ""
 
+msgid "Burnup field"
+msgstr ""
+
 msgid "Burnup is under calculation. It will be available in few minutes."
 msgstr ""
 
@@ -75,6 +78,9 @@ msgid "Item"
 msgstr ""
 
 msgid "Item is not linked to this milestone"
+msgstr ""
+
+msgid "Make sure to check their configuration."
 msgstr ""
 
 msgid "Parent item"
@@ -126,10 +132,6 @@ msgid ""
 "for this tracker."
 msgstr ""
 
-#, php-format
-msgid "The tracker %s uses a Burnup field. Please check its configuration."
-msgstr ""
-
 msgid "There is no content <br> you can see"
 msgstr ""
 
@@ -145,6 +147,9 @@ msgid "This tracker is not a planning tracker"
 msgstr ""
 
 msgid "Tracker semantic done"
+msgstr ""
+
+msgid "Update of planning assignment may lead to errors in:"
 msgstr ""
 
 msgid ""

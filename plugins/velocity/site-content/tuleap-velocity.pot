@@ -84,11 +84,6 @@ msgstr[1] ""
 msgid "The request is not valid."
 msgstr ""
 
-#, php-format
-msgid ""
-"The tracker %s uses a Velocity semantic. Please check its configuration."
-msgstr ""
-
 msgid "The velocity chart only displays the last 7 artifacts found."
 msgstr ""
 
@@ -107,6 +102,9 @@ msgstr ""
 msgid ""
 "Velocity chart represents the sum of <b>initial effort</b> of <b>done</b> "
 "backlog elements of %s."
+msgstr ""
+
+msgid "Velocity semantic"
 msgstr ""
 
 msgid "Velocity semantic successfully updated."

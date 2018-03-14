@@ -119,13 +119,6 @@ msgstr[1] "Les sémantiques suivantes ne sont pas définies:"
 msgid "The request is not valid."
 msgstr "La requête n'est pas valide"
 
-#, php-format
-msgid ""
-"The tracker %s uses a Velocity semantic. Please check its configuration."
-msgstr ""
-"Le tracker %s utilise la sémantique vélocité. Merci de vérifier sa "
-"configuration."
-
 msgid "The velocity chart only displays the last 7 artifacts found."
 msgstr ""
 "Le graphique de vélocité affiche seulement les 7 artéfacts les plus récents "
@@ -149,6 +142,9 @@ msgid ""
 msgstr ""
 "Le graphique de vélocité represente la somme de l'<b>effort initial</b> des "
 "elements du backlog <b>fini</b> de %s."
+
+msgid "Velocity semantic"
+msgstr "Sémantique vélocité"
 
 msgid "Velocity semantic successfully updated."
 msgstr "La sémantique vélocité a été mis à jour avec succès"
