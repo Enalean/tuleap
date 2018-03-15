@@ -19,62 +19,124 @@
 
 (<template>
     <div class="timetracking-artifacts-table">
-        <table class="tlp-table">
+        <div v-if="hasRestError" class="tlp-alert-danger">
+            {{ this.rest_error }}
+        </div>
+        <div v-if="is_loading" class="timetracking-loader"></div>
+        <table v-if="canResultsBeDisplayed" class="tlp-table">
             <thead>
                 <tr>
                     <th>{{ artifact_label }}</th>
                     <th>{{ project_label }}</th>
-                    <th>{{ time_label }}</th>
+                    <th class="tlp-table-cell-numeric">{{ time_label }}</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td class="tlp-table-cell-section" colspan="3">{{ period_label }}</td>
-                </tr>
-            </tbody>
-            <tbody>
-                <tr>
+                <tr v-if="! hasDataToDisplay">
                     <td colspan="3" class="tlp-table-cell-empty">
                         {{ empty_state }}
                     </td>
                 </tr>
+                <artifact-table-row v-for="time in tracked_times"
+                    v-bind:key="time.id"
+                    v-bind:time-data="time"
+                />
             </tbody>
+            <tfoot v-if="hasDataToDisplay">
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th class="tlp-table-cell-numeric">∑ {{ getFormattedTotalSum() }}</th>
+                </tr>
+            </tfoot>
         </table>
     </div>
 </template>)
 (<script>
-    import { DateTime }         from 'luxon';
-    import { gettext_provider } from './gettext-provider.js';
+    import { gettext_provider }   from './gettext-provider.js';
+    import { getTrackedTimes }    from "./rest-querier.js";
+    import { formatMinutesToISO } from './time-formatters.js';
+    import ArtifactTableRow       from "./WidgetArtifactTableRow.vue";
 
     export default {
         name: "WidgetArtifactTable",
         props: {
-            startDate  : String,
-            endDate    : String
+            startDate      : String,
+            endDate        : String,
+            isInReadingMode: Boolean,
         },
+        components: { ArtifactTableRow },
         data() {
             return {
-                date_format: 'dd LLL yyyy'
+                tracked_times: [],
+                rest_error   : '',
+                is_loading   : false,
+                is_loaded    : false
             }
         },
         computed: {
-            period_label() {
-                return gettext_provider.gettext("From")
-                    + ' '
-                    + this.getFormattedDate(this.startDate)
-                    + ' '
-                    + gettext_provider.gettext('To')
-                    + ' '
-                    + this.getFormattedDate(this.endDate);
+            hasRestError() {
+                return this.rest_error !== "";
             },
-            empty_state   : () => gettext_provider.gettext('There is nothing here ... for now ...'),
+            hasDataToDisplay() {
+                return this.tracked_times.length > 0;
+            },
+            canResultsBeDisplayed() {
+                return this.is_loaded
+                    && ! this.hasRestError;
+            },
+            report_state() {
+                return [ this.isInReadingMode ];
+            },
+            empty_state   : () => gettext_provider.gettext('No tracked time have been found for this period'),
             artifact_label: () => gettext_provider.gettext('Artifact'),
             project_label : () => gettext_provider.gettext('Project'),
             time_label    : () => gettext_provider.gettext('Time')
         },
+        watch: {
+            report_state() {
+                if (this.isInReadingMode === true) {
+                    this.loadTimes();
+                }
+            }
+        },
+        mounted() {
+            this.loadTimes();
+        },
         methods: {
-            getFormattedDate(string_date) {
-                return DateTime.fromISO(string_date).toFormat(this.date_format);
+            getFormattedTotalSum() {
+                const sum = this.tracked_times.reduce(
+                    (sum, { minutes }) => minutes + sum,
+                    0
+                );
+
+                return formatMinutesToISO(sum);
+            },
+            async loadTimes() {
+                try {
+                    this.is_loading = true;
+                    this.rest_error = '';
+
+                    this.tracked_times = await getTrackedTimes(
+                        this.startDate,
+                        this.endDate
+                    );
+
+                    this.is_loaded = true;
+                } catch (error) {
+                    this.showRestError(error);
+                } finally {
+                    this.is_loading = false;
+                }
+            },
+            async showRestError(rest_error) {
+                try {
+                    const { error } = await rest_error.response.json();
+
+                    this.rest_error = error.code + ' ' + error.message;
+                } catch (error) {
+                    this.rest_error = gettext_provider.gettext('An error occured');
+                }
             }
         }
     }

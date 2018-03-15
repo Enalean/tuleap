@@ -21,8 +21,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue                 from 'vue';
-import WidgetArtifactTable from './WidgetArtifactTable.vue';
+import Vue                     from 'vue';
+import { tlp, mockFetchError } from 'tlp-mocks';
+import WidgetArtifactTable     from './WidgetArtifactTable.vue';
 
 describe('WidgetArtifactTable', () => {
     let ArtifactTable;
@@ -37,12 +38,64 @@ describe('WidgetArtifactTable', () => {
         }).$mount();
     }
 
-    describe('getFormattedDate', () => {
-        it('When I call this method with a string date, Then it returns a formatted date.', () => {
-            const vm             = instantiateComponent();
-            const formatted_date = vm.getFormattedDate('2018-01-01T08:00:00Z');
+    describe('getFormattedTotalSum', () => {
+        it('Given a collection of times, then it should return the formatted sum of all the times\' minutes', () => {
+            const vm = instantiateComponent();
 
-            expect(formatted_date).toEqual('01 Jan 2018');
+            vm.tracked_times = [{
+                artifact: {},
+                project : {},
+                minutes : 20
+            }, {
+                artifact: {},
+                project : {},
+                minutes : 20
+            }, {
+                artifact: {},
+                project : {},
+                minutes : 20
+            }];
+
+            const formatted_times = vm.getFormattedTotalSum();
+
+            expect(formatted_times).toEqual('01:00:00');
+        });
+    });
+
+    describe('loadTimes - rest errors', () => {
+        it('Given a rest error, When no json error message is received, Then a default message is st up in the component \'s rest_error private property.', async () => {
+            const vm = instantiateComponent({
+                startDate: "2018-03-08",
+                endDate  : "2018-03-15"
+            });
+
+            mockFetchError(tlp.get, {});
+
+            await vm.loadTimes();
+
+            expect(vm.hasRestError).toBe(true);
+            expect(vm.rest_error).toEqual("An error occured");
+        });
+
+        it('Given a rest error, When a json error message is received, Then the message is extracted in the component \'s rest_error private property.', async () => {
+            const vm = instantiateComponent({
+                startDate: "2018-03-08",
+                endDate  : "2018-03-15"
+            });
+
+            mockFetchError(tlp.get, {
+                error_json: {
+                    error: {
+                        code   : 403,
+                        message: 'Forbidden'
+                    }
+                }
+            });
+
+            await vm.loadTimes();
+
+            expect(vm.hasRestError).toBe(true);
+            expect(vm.rest_error).toEqual("403 Forbidden");
         });
     });
 });

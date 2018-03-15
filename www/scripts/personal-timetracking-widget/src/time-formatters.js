@@ -1,5 +1,9 @@
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright Enalean (c) 2018. All rights reserved.
+ *
+ * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Enalean SAS. All other trademarks or names are properties of their respective
+ * owners.
  *
  * This file is a part of Tuleap.
  *
@@ -17,13 +21,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import 'babel-polyfill';
-import 'tlp-mocks';
+import {
+    Duration,
+    DateTime
+} from 'luxon';
 
-import './time-formatters.spec.js';
-import './rest-querier.spec.js';
+export {
+    formatMinutesToISO,
+    formatDatetimeToISO
+};
 
-import './Widget.spec.js';
-import './WidgetWritingMode.spec.js';
-import './WidgetReadingMode.spec.js';
-import './WidgetArtifactTable.spec.js';
+function formatMinutesToISO(minutes) {
+    return Duration.fromObject({ minutes }).toFormat("hh:mm:ss");
+}
+
+function formatDatetimeToISO(string_date) {
+    return DateTime.fromISO(string_date).toISO({
+        suppressSeconds     : false,
+        suppressMilliseconds: true,
+        includeOffset       : true
+    });
+}
