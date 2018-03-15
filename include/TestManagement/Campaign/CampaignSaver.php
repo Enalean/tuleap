@@ -20,27 +20,21 @@
 
 namespace Tuleap\TestManagement\Campaign;
 
-use Tuleap\DB\DataAccessObject;
-
-class CampaignDao extends DataAccessObject
+class CampaignSaver
 {
-    public function update($campaign_id, $job_url)
+    /** @var CampaignDao */
+    private $dao;
+
+    public function __construct(CampaignDao $dao)
     {
-        if (! $job_url) {
-            return $this->getDB()->delete('plugin_testmanagement_campaign', ['artifact_id' => $campaign_id]);
-        }
-
-        $sql = 'REPLACE INTO plugin_testmanagement_campaign (artifact_id, job_url)
-                VALUES (?, ?)';
-
-        return $this->getDB()->run($sql, $campaign_id, $job_url);
+        $this->dao = $dao;
     }
 
-    public function searchByCampaignId($campaign_id)
+    public function save(Campaign $campaign)
     {
-        $sql = 'SELECT * FROM plugin_testmanagement_campaign
-                WHERE artifact_id = ?';
-
-        return $this->getDB()->row($sql, $campaign_id);
+        $this->dao->update(
+            $campaign->getArtifact()->getId(),
+            $campaign->getJobConfiguration()->getUrl()
+        );
     }
 }

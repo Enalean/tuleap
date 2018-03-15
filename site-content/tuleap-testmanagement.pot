@@ -1,6 +1,9 @@
 msgid "Configuration incomplete"
 msgstr ""
 
+msgid "Job URL is invalid"
+msgstr ""
+
 #, php-format
 msgid ""
 "Service %s cannot be activated because the artifact link type \"%s\" is not "

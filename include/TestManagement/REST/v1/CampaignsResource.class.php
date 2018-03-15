@@ -58,6 +58,7 @@ use Tuleap\TestManagement\Campaign\ArtifactNotFoundException;
 use Tuleap\TestManagement\Campaign\Campaign;
 use Tuleap\TestManagement\Campaign\CampaignDao;
 use Tuleap\TestManagement\Campaign\CampaignRetriever;
+use Tuleap\TestManagement\Campaign\CampaignSaver;
 use Tuleap\TestManagement\Campaign\JobConfiguration;
 use Tuleap\TestManagement\Config;
 use Tuleap\TestManagement\ConfigConformanceValidator;
@@ -217,7 +218,8 @@ class CampaignsResource
 
         $this->campaign_updater = new CampaignUpdater(
             $this->formelement_factory,
-            $artifact_updater
+            $artifact_updater,
+            new CampaignSaver($campaign_dao)
         );
 
         $priority_manager = new Tracker_Artifact_PriorityManager(
@@ -424,8 +426,9 @@ class CampaignsResource
      *
      * @url PATCH {id}
      *
-     * @param int    $id    Id of the campaign
-     * @param string $label New label of the campaign {@from body}
+     * @param int                            $id                Id of the campaign
+     * @param string                         $label             New label of the campaign {@from body}
+     * @param JobConfigurationRepresentation $job_configuration {@from body}
      *
      * @return Tuleap\TestManagement\REST\v1\CampaignRepresentation
      *
@@ -433,10 +436,10 @@ class CampaignsResource
      * @throws 403
      * @throws 500
      */
-    protected function patch($id, $label = null)
+    protected function patch($id, $label = null, JobConfigurationRepresentation $job_configuration = null)
     {
         $user     = UserManager::instance()->getCurrentUser();
-        $campaign = $this->getUpdatedCampaign($user, $id, $label);
+        $campaign = $this->getUpdatedCampaign($user, $id, $label, $job_configuration);
 
         if (! $campaign->getArtifact()->userCanUpdate($user)) {
             throw new RestException(403, "You don't have the permission to update this campaign");
@@ -571,6 +574,20 @@ class CampaignsResource
     ) {
         if ($label) {
             $campaign->setLabel($label);
+        }
+
+        if ($job_representation) {
+            $uri_validator = new \Valid_HTTPURI();
+            $uri_validator->disableFeedback();
+            if (! $uri_validator->validate($job_representation->url)) {
+                throw new RestException(
+                    400,
+                    dgettext('tuleap-testmanagement', 'Job URL is invalid')
+                );
+            }
+
+            $job_configuration = new JobConfiguration($job_representation->url);
+            $campaign->setJobConfiguration($job_configuration);
         }
     }
 }

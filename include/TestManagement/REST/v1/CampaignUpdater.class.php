@@ -25,6 +25,7 @@ use Tracker;
 use Tracker_FormElementFactory;
 use Tracker_REST_Artifact_ArtifactUpdater;
 use Tuleap\TestManagement\Campaign\Campaign;
+use Tuleap\TestManagement\Campaign\CampaignSaver;
 use Tuleap\TestManagement\LabelFieldNotFoundException;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
@@ -36,13 +37,17 @@ class CampaignUpdater
 
     /** @var Tracker_REST_Artifact_ArtifactUpdater */
     private $artifact_updater;
+    /** @var CampaignSaver */
+    private $campaign_saver;
 
     public function __construct(
         Tracker_FormElementFactory $formelement_factory,
-        Tracker_REST_Artifact_ArtifactUpdater $artifact_updater
+        Tracker_REST_Artifact_ArtifactUpdater $artifact_updater,
+        CampaignSaver $campaign_saver
     ) {
         $this->formelement_factory = $formelement_factory;
         $this->artifact_updater    = $artifact_updater;
+        $this->campaign_saver      = $campaign_saver;
     }
 
     /**
@@ -65,6 +70,7 @@ class CampaignUpdater
         PFUser $user,
         Campaign $campaign
     ) {
+        $this->campaign_saver->save($campaign);
 
         $artifact = $campaign->getArtifact();
         $tracker  = $artifact->getTracker();

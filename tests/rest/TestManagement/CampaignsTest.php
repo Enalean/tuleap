@@ -36,7 +36,6 @@ class CampaignsTest extends BaseTest {
         $this->assertEquals($expected_campaign, $campaign);
     }
 
-
     public function testGetExecutions() {
         $campaign = $this->getValid73Campaign();
 
@@ -50,7 +49,6 @@ class CampaignsTest extends BaseTest {
         $this->assertExecutionsContains($executions, 'Delete a repository');
     }
 
-
     private function assertExecutionsContains($executions, $summary) {
         foreach ($executions as $execution) {
             if ($summary === $execution['definition']['summary']) {
@@ -59,5 +57,102 @@ class CampaignsTest extends BaseTest {
             }
         }
         $this->fail();
+    }
+
+    public function testPatchCampaignLabel()
+    {
+        $campaign = $this->getValid73Campaign();
+
+        $response = $this->getResponse(
+            $this->client->patch(
+                'testmanagement_campaigns/' . $campaign['id'],
+                null,
+                json_encode(
+                    [
+                        'label' => 'Tuleap 9.18'
+                    ]
+                )
+            )
+        );
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $updated_campaign = $this->getResponse(
+            $this->client->get('testmanagement_campaigns/' . $campaign['id'])
+        )->json();
+        $this->assertEquals('Tuleap 9.18', $updated_campaign['label']);
+
+        $this->revertCampaign($campaign);
+    }
+
+    public function testPatchCampaignJobUrl()
+    {
+        $campaign = $this->getValid73Campaign();
+
+        $response = $this->getResponse(
+            $this->client->patch(
+                'testmanagement_campaigns/' . $campaign['id'],
+                null,
+                json_encode(
+                    [
+                        'job_configuration' => ['url' => 'https://example.com']
+                    ]
+                )
+            )
+        );
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $updated_campaign = $this->getResponse(
+            $this->client->get('testmanagement_campaigns/' . $campaign['id'])
+        )->json();
+        $this->assertEquals('https://example.com', $updated_campaign['job_configuration']['url']);
+
+        $this->revertCampaign($campaign);
+
+    }
+
+    public function testPatchCampaignThrow400IfJobUrlIsInvalid()
+    {
+        $campaign = $this->getValid73Campaign();
+
+        try {
+            $this->getResponse(
+                $this->client->patch(
+                    'testmanagement_campaigns/' . $campaign['id'],
+                    null,
+                    json_encode(
+                        [
+                            'job_configuration' => ['url' => 'avadakedavra']
+                        ]
+                    )
+                )
+            );
+            $this->fail('Should have receive a 400');
+        } catch (\Guzzle\Http\Exception\ClientErrorResponseException $exception) {
+            $this->assertEquals(400, $exception->getResponse()->getStatusCode());
+            return;
+        }
+    }
+
+    private function revertCampaign(array $campaign)
+    {
+        $response = $this->getResponse(
+            $this->client->patch(
+                'testmanagement_campaigns/' . $campaign['id'],
+                null,
+                json_encode(
+                    [
+                        'label'             => $campaign['label'],
+                        'job_configuration' => $campaign['job_configuration']
+                    ]
+                )
+            )
+        );
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $updated_campaign = $this->getResponse(
+            $this->client->get('testmanagement_campaigns/' . $campaign['id'])
+        )->json();
+        $this->assertEquals($campaign['label'], $updated_campaign['label']);
+        $this->assertEquals($campaign['job_configuration'], $updated_campaign['job_configuration']);
     }
 }

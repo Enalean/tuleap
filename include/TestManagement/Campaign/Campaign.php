@@ -80,4 +80,12 @@ class Campaign
     {
         $this->label = $label;
     }
+
+    /**
+     * @param JobConfiguration $job_configuration
+     */
+    public function setJobConfiguration(JobConfiguration $job_configuration)
+    {
+        $this->job_configuration = $job_configuration;
+    }
 }
