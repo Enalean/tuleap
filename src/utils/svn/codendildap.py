@@ -62,7 +62,7 @@ def get_login_from_username(username):
                    ' FROM user'+
                    ' WHERE user_name="'+username+'"')
     row = cursor.fetchone()
-    if row != None:
+    if row != None and row['ldap_id'] != None:
         return get_login_from_eduid(row['ldap_id'])
     else:
         return ''
