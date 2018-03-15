@@ -256,7 +256,11 @@ function CampaignEditCtrl(
         const execution_ids  = _.map(removedTests(), (test) => { return test.execution.id; });
 
         CampaignService.patchExecutions(campaign.id, definition_ids, execution_ids).then(() => {
-            return CampaignService.patchCampaign(campaign.id, campaign.label);
+            return CampaignService.patchCampaign(
+                campaign.id,
+                campaign.label,
+                campaign.job_configuration
+            );
         }).then(response => {
             $scope.submitting_changes = false;
 

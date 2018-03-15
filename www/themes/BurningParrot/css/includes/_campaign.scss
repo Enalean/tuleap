@@ -108,8 +108,13 @@
     justify-content: center;
 }
 
-.edit-campaign-label-input {
+.edit-campaign-label-input,
+.edit-campaign-job-url-input {
     max-width: 500px;
+}
+
+.edit-campaign-job-token-input {
+    max-width: 300px;
 }
 
 .edit-campaign-tests-list-actions-spacer-small {

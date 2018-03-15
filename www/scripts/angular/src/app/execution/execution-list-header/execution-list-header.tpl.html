@@ -5,7 +5,10 @@
             aria-haspopup="true"
             aria-expanded="false"
             onclick="this.blur();"
-            ng-click="$ctrl.openEditCampaignModal()">
+            ng-click="$ctrl.openEditCampaignModal()"
+            ng-if="$ctrl.campaign_state.campaign.user_can_update"
+            title="{{ ::'Edit campaign' | translate }}"
+    >
         <i class="fa fa-pencil tlp-button-icon"></i> {{ 'Edit' | translate }}
     </button>
     <div class="test-campaign-header-spacer"></div>

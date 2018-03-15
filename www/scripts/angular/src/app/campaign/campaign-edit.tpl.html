@@ -28,6 +28,37 @@
                 <i class="fa fa-frown-o"></i>
             </p>
         </div>
+
+        <hr class="tlp-modal-separator">
+
+        <h2 class="tlp-modal-subtitle" translate>Jenkins job</h2>
+        <div class="tlp-form-element"
+            ng-class="{ 'tlp-form-element-error': editCampaignForm.campaign_job_url.$dirty && editCampaignForm.campaign_job_url.$invalid }"
+        >
+            <label class="tlp-label" for="campaign-job-url" translate>Job URL</label>
+            <input type="url"
+                class="tlp-input edit-campaign-job-url-input"
+                id="campaign-job-url"
+                name="campaign_job_url"
+                ng-model="campaign.job_configuration.url"
+                placeholder="https://jenkins.example.com"
+            />
+            <p class="tlp-text-info" translate>The URL to a Jenkins job that will execute automated tests</p>
+        </div>
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="campaign-job-token" translate>Authentication Token</label>
+            <input type="text"
+                class="tlp-input edit-campaign-job-token-input"
+                id="campaign-job-token"
+                name="campaign_job_token"
+                ng-model="campaign.job_configuration.token"
+                placeholder="{{ ::'Jenkins authentication token' | translate }}"
+            />
+            <p class="tlp-text-info" translate>An authentication token that authorizes Tuleap to trigger this Jenkins job</p>
+        </div>
+
+        <hr class="tlp-modal-separator">
+
         <h2 class="tlp-modal-subtitle" translate>Tests</h2>
         <div class="tlp-table-actions">
             <button type="button"

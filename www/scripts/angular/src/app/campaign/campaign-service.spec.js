@@ -90,8 +90,13 @@ describe ('CampaignService - ', function () {
         });
     });
 
-    it("patchCampaign() - ", function() {
-        var executions = [
+    it("patchCampaign() - ", () => {
+        const label = "cloiochoanitic";
+        const job_configuration = {
+            url: "https://example.com/badan/",
+            token: "phrenicopericardiac"
+        };
+        const executions = [
             {
                 id: 4,
                 previous_result: {
@@ -101,14 +106,17 @@ describe ('CampaignService - ', function () {
         ];
 
         mockBackend
-            .expectPATCH('/api/v1/testmanagement_campaigns/17')
+            .expectPATCH('/api/v1/testmanagement_campaigns/17', {
+                label,
+                job_configuration
+            })
             .respond(executions);
 
-        var promise = CampaignService.patchCampaign(17, [4]);
+        const promise = CampaignService.patchCampaign(17, label, job_configuration);
 
         mockBackend.flush();
 
-        promise.then(function(executions) {
+        promise.then(executions => {
             expect(executions.length).toEqual(1);
         });
     });

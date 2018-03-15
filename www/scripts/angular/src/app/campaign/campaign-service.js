@@ -15,11 +15,11 @@ function CampaignService(
     });
 
     return {
-        getCampaign     : getCampaign,
-        getCampaigns    : getCampaigns,
-        createCampaign  : createCampaign,
-        patchCampaign   : patchCampaign,
-        patchExecutions : patchExecutions,
+        getCampaign,
+        getCampaigns,
+        createCampaign,
+        patchCampaign,
+        patchExecutions,
     };
 
     function getCampaign(campaign_id) {
@@ -61,14 +61,13 @@ function CampaignService(
             .post(campaign, queryParams);
     }
 
-    function patchCampaign(campaign_id, label) {
+    function patchCampaign(campaign_id, label, job_configuration) {
         return rest.one('testmanagement_campaigns', campaign_id)
             .patch({
-                label: label
+                label,
+                job_configuration
             })
-            .then(function(response) {
-                return response.data;
-            });
+            .then(response => response.data);
     }
 
     function patchExecutions(campaign_id, definition_ids, execution_ids) {

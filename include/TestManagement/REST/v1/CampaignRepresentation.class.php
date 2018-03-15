@@ -81,6 +81,9 @@ class CampaignRepresentation
     /** @var JobConfigurationRepresentation */
     public $job_configuration;
 
+    /** @var bool */
+    public $user_can_update;
+
     public function build(
         Campaign $campaign,
         Tracker_FormElementFactory $form_element_factory,
@@ -107,10 +110,11 @@ class CampaignRepresentation
         $this->nb_of_blocked = $executions_status[self::STATUS_BLOCKED];
         $this->total         = $this->nb_of_notrun + $this->nb_of_passed + $this->nb_of_failed + $this->nb_of_blocked;
 
+        $this->user_can_update = $this->isUserAllowedToUpdateLabelField($user, $artifact, $label_field);
         $this->job_configuration = new JobConfigurationRepresentation();
         $this->job_configuration->build(
             $campaign->getJobConfiguration(),
-            $this->isUserAllowedToSeeToken($user, $artifact, $label_field)
+            $this->user_can_update
         );
 
         $this->resources = [
@@ -151,9 +155,9 @@ class CampaignRepresentation
      * @param Tracker_Artifact          $artifact
      * @param Tracker_FormElement_Field $label_field
      *
-     * @return mixed
+     * @return bool
      */
-    private function isUserAllowedToSeeToken(
+    private function isUserAllowedToUpdateLabelField(
         PFUser $user,
         Tracker_Artifact $artifact,
         Tracker_FormElement_Field $label_field

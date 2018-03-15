@@ -29,6 +29,14 @@ msgstr ""
 msgid "All tests"
 msgstr ""
 
+#: src/app/campaign/campaign-edit.tpl.html
+msgid "An authentication token that authorizes Tuleap to trigger this Jenkins job"
+msgstr ""
+
+#: src/app/campaign/campaign-edit.tpl.html
+msgid "Authentication Token"
+msgstr ""
+
 #: src/app/execution/execution-detail.tpl.html
 #: src/app/execution/execution-list.tpl.html
 msgid "Blocked"
@@ -108,6 +116,10 @@ msgstr ""
 msgid "Edit"
 msgstr ""
 
+#: src/app/execution/execution-list-header/execution-list-header.tpl.html
+msgid "Edit campaign"
+msgstr ""
+
 #: src/app/execution/execution-detail.tpl.html
 msgid "Edit this test"
 msgstr ""
@@ -149,6 +161,18 @@ msgstr ""
 #: src/app/campaign/campaign-edit.tpl.html
 #: src/app/execution/execution-list.tpl.html
 msgid "Id, summary, category…"
+msgstr ""
+
+#: src/app/campaign/campaign-edit.tpl.html
+msgid "Jenkins authentication token"
+msgstr ""
+
+#: src/app/campaign/campaign-edit.tpl.html
+msgid "Jenkins job"
+msgstr ""
+
+#: src/app/campaign/campaign-edit.tpl.html
+msgid "Job URL"
 msgstr ""
 
 #: src/app/execution/execution-link-issue.tpl.html
@@ -227,6 +251,10 @@ msgstr ""
 
 #: src/app/campaign/campaign-edit.tpl.html
 msgid "Tests"
+msgstr ""
+
+#: src/app/campaign/campaign-edit.tpl.html
+msgid "The URL to a Jenkins job that will execute automated tests"
 msgstr ""
 
 #: src/app/execution/execution-link-issue.tpl.html

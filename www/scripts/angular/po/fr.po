@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.3\n"
+"X-Generator: Poedit 2.0.6\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: src/app/campaign/campaign-edit.tpl.html
@@ -36,6 +36,16 @@ msgstr "Ajouter un test"
 #: src/app/campaign/campaign-new.tpl.html
 msgid "All tests"
 msgstr "Tous les tests"
+
+#: src/app/campaign/campaign-edit.tpl.html
+msgid ""
+"An authentication token that authorizes Tuleap to trigger this Jenkins job"
+msgstr ""
+"Un jeton d'authentification qui autorise Tuleap à déclencher ce build Jenkins"
+
+#: src/app/campaign/campaign-edit.tpl.html
+msgid "Authentication Token"
+msgstr "Jeton d'authentification"
 
 #: src/app/execution/execution-detail.tpl.html
 #: src/app/execution/execution-list.tpl.html
@@ -112,9 +122,13 @@ msgstr "Graphe de dépendances de &#34;{{ modal.title }}&#34;"
 msgid "Details"
 msgstr "Détails"
 
-#: src/app/execution/execution-list.tpl.html
+#: src/app/execution/execution-list-header/execution-list-header.tpl.html
 msgid "Edit"
 msgstr "Éditer"
+
+#: src/app/execution/execution-list-header/execution-list-header.tpl.html
+msgid "Edit campaign"
+msgstr "Éditer la campagne"
 
 #: src/app/execution/execution-detail.tpl.html
 msgid "Edit this test"
@@ -163,6 +177,18 @@ msgstr "Id"
 #: src/app/execution/execution-list.tpl.html
 msgid "Id, summary, category…"
 msgstr "Id, résumé, catégorie…"
+
+#: src/app/campaign/campaign-edit.tpl.html
+msgid "Jenkins authentication token"
+msgstr "Jeton d'authentification Jenkins"
+
+#: src/app/campaign/campaign-edit.tpl.html
+msgid "Jenkins job"
+msgstr "Projet Jenkins"
+
+#: src/app/campaign/campaign-edit.tpl.html
+msgid "Job URL"
+msgstr "URL du projet"
 
 #: src/app/execution/execution-link-issue.tpl.html
 msgid "Link"
@@ -241,6 +267,10 @@ msgstr "Résumé du test"
 #: src/app/campaign/campaign-edit.tpl.html
 msgid "Tests"
 msgstr "Tests"
+
+#: src/app/campaign/campaign-edit.tpl.html
+msgid "The URL to a Jenkins job that will execute automated tests"
+msgstr "L'URL vers un projet Jenkins qui exécutera les tests automatisés"
 
 #: src/app/execution/execution-link-issue.tpl.html
 msgid "The entered id is incorrect."
