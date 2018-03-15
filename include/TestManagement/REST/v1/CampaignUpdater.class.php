@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,15 +20,13 @@
 
 namespace Tuleap\TestManagement\REST\v1;
 
-use Luracast\Restler\RestException;
 use PFUser;
 use Tracker;
 use Tracker_FormElementFactory;
-use Tracker_Artifact;
-use Tracker_Artifact_Changeset;
 use Tracker_REST_Artifact_ArtifactUpdater;
-use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
+use Tuleap\TestManagement\Campaign\Campaign;
 use Tuleap\TestManagement\LabelFieldNotFoundException;
+use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
 class CampaignUpdater
 {
@@ -48,29 +46,31 @@ class CampaignUpdater
     }
 
     /**
-     * @param PFUser            $user     The user trying to update the campaign
-     * @param Tracker_Artifact  $campaign Campaign to update
-     * @param string            $label    New label of the campaign
+     * @param PFUser   $user     The user trying to update the campaign
+     * @param Campaign $campaign Campaign to update
      *
-     * @return Tracker_Artifact_Changeset
+     * @return void
      *
-     * @throws \Tracker_Exception
-     * @throws \Tracker_NoChangeException
-     * @throws \Tracker_FormElement_InvalidFieldException
-     * @throws \Tracker_FormElement_InvalidFieldValueException
-     * @throws \Tracker_ChangesetNotCreatedException
-     * @throws \Tracker_CommentNotStoredException
+     * @throws LabelFieldNotFoundException
+     * @throws \Luracast\Restler\RestException
      * @throws \Tracker_AfterSaveException
      * @throws \Tracker_ChangesetCommitException
-     * @throws LabelFieldNotFoundException
+     * @throws \Tracker_ChangesetNotCreatedException
+     * @throws \Tracker_CommentNotStoredException
+     * @throws \Tracker_Exception
+     * @throws \Tracker_FormElement_InvalidFieldException
+     * @throws \Tracker_FormElement_InvalidFieldValueException
      */
-    public function updateCampaign(PFUser $user, Tracker_Artifact $campaign, $label)
-    {
-        $tracker             = $campaign->getTracker();
-        $values              = $this->getFieldValuesForCampaignArtifactUpdate($tracker, $user, $label);
-        $artifact_changeset  = $this->artifact_updater->update($user, $campaign, $values);
+    public function updateCampaign(
+        PFUser $user,
+        Campaign $campaign
+    ) {
 
-        return $artifact_changeset;
+        $artifact = $campaign->getArtifact();
+        $tracker  = $artifact->getTracker();
+        $values   = $this->getFieldValuesForCampaignArtifactUpdate($tracker, $user, $campaign->getLabel());
+
+        $this->artifact_updater->update($user, $artifact, $values);
     }
 
     /**
@@ -81,19 +81,20 @@ class CampaignUpdater
         PFUser $user,
         $label
     ) {
-        $label_field  = $this->getLabelField($tracker, $user);
+        $label_field = $this->getLabelField($tracker, $user);
 
         $label_value           = new ArtifactValuesRepresentation();
-        $label_value->field_id = (int)$label_field->getId();
+        $label_value->field_id = (int) $label_field->getId();
         $label_value->value    = $label;
 
-        return array($label_value);
+        return [$label_value];
     }
 
     /**
      * @throws LabelFieldNotFoundException
      */
-    private function getLabelField(Tracker $tracker, PFUser $user) {
+    private function getLabelField(Tracker $tracker, PFUser $user)
+    {
         $field = $this->formelement_factory->getUsedFieldByNameForUser(
             $tracker->getId(),
             CampaignRepresentation::FIELD_NAME,

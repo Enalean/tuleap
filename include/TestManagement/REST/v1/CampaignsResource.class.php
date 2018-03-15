@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,50 +21,56 @@
 namespace Tuleap\TestManagement\REST\v1;
 
 use EventManager;
-use Project_AccessException;
-use Project_AccessProjectNotFoundException;
+use Jenkins_Client;
+use Jenkins_ClientUnableToLaunchBuildException;
+use Luracast\Restler\RestException;
+use PFUser;
+use ProjectManager;
+use Tracker_AfterSaveException;
+use Tracker_Artifact;
+use Tracker_Artifact_PriorityDao;
+use Tracker_Artifact_PriorityHistoryDao;
+use Tracker_Artifact_PriorityManager;
+use Tracker_ArtifactFactory;
+use Tracker_ChangesetCommitException;
+use Tracker_ChangesetNotCreatedException;
+use Tracker_CommentNotStoredException;
 use Tracker_Exception;
 use Tracker_FormElement_InvalidFieldException;
 use Tracker_FormElement_InvalidFieldValueException;
+use Tracker_FormElementFactory;
 use Tracker_NoChangeException;
-use Tracker_ChangesetNotCreatedException;
-use Tracker_CommentNotStoredException;
-use Tracker_AfterSaveException;
-use Tracker_ChangesetCommitException;
-use Tuleap\TestManagement\LabelFieldNotFoundException;
 use Tracker_Permission_PermissionRetrieveAssignee;
 use Tracker_Permission_PermissionsSerializer;
-use Tracker_URLVerification;
-use Tuleap\RealTime\NodeJSClient;
-use Tuleap\REST\Header;
-use Luracast\Restler\RestException;
-use Tracker_ArtifactFactory;
-use Tracker_FormElementFactory;
-use ProjectManager;
-use Tuleap\TestManagement\MilestoneItemsArtifactFactory;
-use Tuleap\TestManagement\RealTime\RealTimeMessageSender;
-use Tuleap\REST\ProjectAuthorization;
-use Tuleap\TestManagement\ArtifactDao;
-use Tuleap\TestManagement\ArtifactFactory;
-use UserManager;
-use PFUser;
-use Tuleap\TestManagement\ConfigConformanceValidator;
-use Tuleap\TestManagement\Config;
-use Tuleap\TestManagement\Dao;
-use Tracker_Artifact;
-use Tracker_Artifact_PriorityDao;
-use Tracker_Artifact_PriorityManager;
-use Tracker_Artifact_PriorityHistoryDao;
-use TrackerFactory;
+use Tracker_ReportFactory;
 use Tracker_REST_Artifact_ArtifactCreator;
 use Tracker_REST_Artifact_ArtifactUpdater;
 use Tracker_REST_Artifact_ArtifactValidator;
-use Tracker_ReportFactory;
+use Tracker_URLVerification;
+use TrackerFactory;
+use Tuleap\Jenkins\JenkinsCSRFCrumbRetriever;
+use Tuleap\RealTime\NodeJSClient;
+use Tuleap\REST\Header;
+use Tuleap\REST\ProjectAuthorization;
+use Tuleap\TestManagement\ArtifactDao;
+use Tuleap\TestManagement\ArtifactFactory;
+use Tuleap\TestManagement\Campaign\ArtifactNotFoundException;
+use Tuleap\TestManagement\Campaign\Campaign;
+use Tuleap\TestManagement\Campaign\CampaignDao;
+use Tuleap\TestManagement\Campaign\CampaignRetriever;
+use Tuleap\TestManagement\Campaign\JobConfiguration;
+use Tuleap\TestManagement\Config;
+use Tuleap\TestManagement\ConfigConformanceValidator;
+use Tuleap\TestManagement\Dao;
+use Tuleap\TestManagement\LabelFieldNotFoundException;
+use Tuleap\TestManagement\MilestoneItemsArtifactFactory;
+use Tuleap\TestManagement\RealTime\RealTimeMessageSender;
 use Tuleap\Tracker\REST\v1\ArtifactLinkUpdater;
+use UserManager;
 
-class CampaignsResource {
-
-    const MAX_LIMIT = 50;
+class CampaignsResource
+{
+    const MAX_LIMIT    = 50;
 
     /** @var Config */
     private $config;
@@ -102,20 +108,30 @@ class CampaignsResource {
     /** @var ArtifactLinkUpdater */
     private $artifactlink_updater;
 
-    /** @var RealTimeMessageSender  */
+    /** @var RealTimeMessageSender */
     private $realtime_message_sender;
 
-    public function __construct() {
-        $this->project_manager                = ProjectManager::instance();
-        $this->user_manager                   = UserManager::instance();
-        $this->tracker_factory                = TrackerFactory::instance();
-        $this->artifact_factory               = Tracker_ArtifactFactory::instance();
-        $this->formelement_factory            = Tracker_FormElementFactory::instance();
-        $this->config                         = new Config(new Dao());
-        $this->conformance_validator          = new ConfigConformanceValidator(
+    /** @var CampaignUpdater */
+    private $campaign_updater;
+
+    /** @var AutomatedTestsTriggerer */
+    private $automated_triggerer;
+
+    /** @var CampaignRetriever */
+    private $campaign_retriever;
+
+    public function __construct()
+    {
+        $this->project_manager       = ProjectManager::instance();
+        $this->user_manager          = UserManager::instance();
+        $this->tracker_factory       = TrackerFactory::instance();
+        $this->artifact_factory      = Tracker_ArtifactFactory::instance();
+        $this->formelement_factory   = Tracker_FormElementFactory::instance();
+        $this->config                = new Config(new Dao());
+        $this->conformance_validator = new ConfigConformanceValidator(
             $this->config
         );
-        $artifact_dao                         = new ArtifactDao();
+        $artifact_dao                = new ArtifactDao();
 
         $this->testmanagement_artifact_factory = new ArtifactFactory(
             $this->config,
@@ -137,7 +153,7 @@ class CampaignsResource {
 
         $retriever = new RequirementRetriever($this->artifact_factory, $artifact_dao, $this->config);
 
-        $this->execution_representation_builder   = new ExecutionRepresentationBuilder(
+        $this->execution_representation_builder = new ExecutionRepresentationBuilder(
             $this->user_manager,
             $this->formelement_factory,
             $this->conformance_validator,
@@ -147,10 +163,15 @@ class CampaignsResource {
             $retriever
         );
 
-        $this->campaign_representation_builder    = new CampaignRepresentationBuilder(
+        $campaign_dao = new CampaignDao();
+
+        $this->campaign_retriever = new CampaignRetriever($this->artifact_factory, $campaign_dao);
+
+        $this->campaign_representation_builder = new CampaignRepresentationBuilder(
             $this->user_manager,
             $this->formelement_factory,
-            $this->testmanagement_artifact_factory
+            $this->testmanagement_artifact_factory,
+            $this->campaign_retriever
         );
 
         $artifact_validator = new Tracker_REST_Artifact_ArtifactValidator(
@@ -190,7 +211,7 @@ class CampaignsResource {
             $this->execution_creator
         );
 
-        $artifact_updater = new Tracker_REST_Artifact_ArtifactUpdater (
+        $artifact_updater = new Tracker_REST_Artifact_ArtifactUpdater(
             $artifact_validator
         );
 
@@ -199,7 +220,7 @@ class CampaignsResource {
             $artifact_updater
         );
 
-        $priority_manager           = new Tracker_Artifact_PriorityManager(
+        $priority_manager = new Tracker_Artifact_PriorityManager(
             new Tracker_Artifact_PriorityDao(),
             new Tracker_Artifact_PriorityHistoryDao(),
             $this->user_manager,
@@ -223,7 +244,8 @@ class CampaignsResource {
     /**
      * @url OPTIONS {id}
      */
-    public function optionsId($id) {
+    public function optionsId($id)
+    {
         Header::allowOptionsGet();
     }
 
@@ -238,11 +260,12 @@ class CampaignsResource {
      *
      * @return Tuleap\TestManagement\REST\v1\CampaignRepresentation
      */
-    protected function getId($id) {
+    protected function getId($id)
+    {
         $this->optionsId($id);
 
         $user     = $this->user_manager->getCurrentUser();
-        $campaign = $this->getCampaignFromId($id, $user);
+        $campaign = $this->getCampaignUserCanRead($user, $id);
 
         return $this->campaign_representation_builder->getCampaignRepresentation($user, $campaign);
     }
@@ -250,7 +273,8 @@ class CampaignsResource {
     /**
      * @url OPTIONS {id}/testmanagement_executions
      */
-    public function optionsExecutions($id) {
+    public function optionsExecutions($id)
+    {
         Header::allowOptionsGet();
     }
 
@@ -261,25 +285,28 @@ class CampaignsResource {
      *
      * @url GET {id}/testmanagement_executions
      *
-     * @param int $id Id of the campaign
+     * @param int $id     Id of the campaign
      * @param int $limit  Number of elements displayed per page {@from path}
      * @param int $offset Position of the first element to display {@from path}
      *
      * @return array {@type Tuleap\TestManagement\REST\v1\ExecutionRepresentation}
      */
-    protected function getExecutions($id, $limit = 10, $offset = 0) {
+    protected function getExecutions($id, $limit = 10, $offset = 0)
+    {
         $this->optionsExecutions($id);
 
         $user     = $this->user_manager->getCurrentUser();
-        $campaign = $this->getCampaignFromId($id, $user);
+        $campaign = $this->getCampaignUserCanRead($user, $id);
+        $artifact = $campaign->getArtifact();
 
-        $execution_representations = $this->execution_representation_builder->getPaginatedExecutionsRepresentationsForCampaign(
-            $user,
-            $campaign,
-            $this->config->getTestExecutionTrackerId($campaign->getTracker()->getProject()),
-            $limit,
-            $offset
-        );
+        $execution_representations = $this->execution_representation_builder
+            ->getPaginatedExecutionsRepresentationsForCampaign(
+                $user,
+                $artifact,
+                $this->config->getTestExecutionTrackerId($artifact->getTracker()->getProject()),
+                $limit,
+                $offset
+            );
 
         $this->sendPaginationHeaders($limit, $offset, $execution_representations->getTotalSize());
 
@@ -293,22 +320,23 @@ class CampaignsResource {
      *
      * @url PATCH {id}/testmanagement_executions
      *
-     * @param int     $id                      Id of the campaign
-     * @param string  $uuid                    UUID of current user {@from body}
-     * @param array   $definition_ids_to_add   Test definition ids for which test executions should be created {@from body}
-     * @param array   $execution_ids_to_remove Test execution ids which should be unlinked from the campaign {@from body}
+     * @param int    $id                      Id of the campaign
+     * @param string $uuid                    UUID of current user {@from body}
+     * @param array  $definition_ids_to_add   Test definition ids for which test executions should be created {@from body}
+     * @param array  $execution_ids_to_remove Test execution ids which should be unlinked from the campaign {@from body}
      *
      * @return array {@type Tuleap\TestManagement\REST\v1\ExecutionRepresentation}
+     * @throws RestException
      */
     protected function patchExecutions($id, $uuid, $definition_ids_to_add, $execution_ids_to_remove)
     {
-        $user                 = $this->user_manager->getCurrentUser();
-        $campaign             = $this->getCampaignFromId($id, $user);
-        $project              = $campaign->getTracker()->getProject();
-        $project_id           = $project->getID();
-        $new_execution_ids    = array();
-        $executions_to_add    = array();
-        $executions_to_remove = array();
+        $user              = $this->user_manager->getCurrentUser();
+        $campaign          = $this->getCampaignUserCanRead($user, $id);
+        $artifact          = $campaign->getArtifact();
+        $project           = $artifact->getTracker()->getProject();
+        $project_id        = $project->getID();
+        $new_execution_ids = [];
+        $executions_to_add = [];
 
         foreach ($definition_ids_to_add as $definition_id) {
             $new_execution_ref   = $this->execution_creator->createTestExecution(
@@ -324,31 +352,32 @@ class CampaignsResource {
 
         $this->artifactlink_updater->updateArtifactLinks(
             $user,
-            $campaign,
+            $artifact,
             $new_execution_ids,
             $execution_ids_to_remove,
             \Tracker_FormElement_Field_ArtifactLink::NO_NATURE
         );
 
-        foreach($executions_to_remove as $execution) {
-            $this->realtime_message_sender->sendExecutionDeleted($user, $campaign, $execution);
+        foreach ($executions_to_remove as $execution) {
+            $this->realtime_message_sender->sendExecutionDeleted($user, $artifact, $execution);
         }
 
         foreach ($executions_to_add as $execution) {
-            $this->realtime_message_sender->sendExecutionCreated($user, $campaign, $execution);
+            $this->realtime_message_sender->sendExecutionCreated($user, $artifact, $execution);
         }
 
-        $this->sendAllowHeadersForExecutionsList($campaign);
+        $this->sendAllowHeadersForExecutionsList($artifact);
 
         $limit                     = 10;
         $offset                    = 0;
-        $execution_representations = $this->execution_representation_builder->getPaginatedExecutionsRepresentationsForCampaign(
-            $user,
-            $campaign,
-            $this->config->getTestExecutionTrackerId($project),
-            $limit,
-            $offset
-        );
+        $execution_representations =
+            $this->execution_representation_builder->getPaginatedExecutionsRepresentationsForCampaign(
+                $user,
+                $artifact,
+                $this->config->getTestExecutionTrackerId($project),
+                $limit,
+                $offset
+            );
 
         $this->sendPaginationHeaders($limit, $offset, $execution_representations->getTotalSize());
 
@@ -358,7 +387,8 @@ class CampaignsResource {
     /**
      * @url OPTIONS
      */
-    public function options() {
+    public function options()
+    {
         Header::allowOptionsPost();
     }
 
@@ -378,6 +408,7 @@ class CampaignsResource {
     protected function post($project_id, $label, $test_selector = 'all', $milestone_id = 0, $report_id = 0)
     {
         $this->options();
+
         return $this->campaign_creator->createCampaign(
             UserManager::instance()->getCurrentUser(),
             $project_id,
@@ -393,8 +424,8 @@ class CampaignsResource {
      *
      * @url PATCH {id}
      *
-     * @param int     $id     Id of the campaign
-     * @param string  $label  New label of the campaign {@from body}
+     * @param int    $id    Id of the campaign
+     * @param string $label New label of the campaign {@from body}
      *
      * @return Tuleap\TestManagement\REST\v1\CampaignRepresentation
      *
@@ -404,18 +435,15 @@ class CampaignsResource {
      */
     protected function patch($id, $label = null)
     {
-        $user                     = UserManager::instance()->getCurrentUser();
-        $campaign                 = $this->getArtifactById($user, $id);
-        $campaign_representation  = $this->campaign_representation_builder->getCampaignRepresentation($user, $campaign);
+        $user     = UserManager::instance()->getCurrentUser();
+        $campaign = $this->getUpdatedCampaign($user, $id, $label);
 
-        if (! $campaign->userCanUpdate($user)) {
+        if (! $campaign->getArtifact()->userCanUpdate($user)) {
             throw new RestException(403, "You don't have the permission to update this campaign");
         }
 
         try {
-            $this->campaign_updater->updateCampaign($user, $campaign, $label);
-
-            $campaign_representation = $this->campaign_representation_builder->getCampaignRepresentation($user, $campaign);
+            $this->campaign_updater->updateCampaign($user, $campaign);
         } catch (Tracker_ChangesetNotCreatedException $exception) {
             throw new RestException(400, $exception->getMessage());
         } catch (Tracker_CommentNotStoredException $exception) {
@@ -436,32 +464,18 @@ class CampaignsResource {
             throw new RestException(500, $exception->getMessage());
         }
 
-        $this->realtime_message_sender->sendCampaignUpdated($user, $campaign);
+        $campaign_representation = $this->campaign_representation_builder->getCampaignRepresentation($user, $campaign);
+
+        $this->realtime_message_sender->sendCampaignUpdated($user, $campaign->getArtifact());
 
         $this->sendAllowHeadersForCampaign($campaign);
 
         return $campaign_representation;
     }
 
-    private function getCampaignFromId($id, PFUser $user) {
-        $campaign = $this->testmanagement_artifact_factory->getArtifactById($id);
 
-        if (! $this->isACampaign($campaign)) {
-            throw new RestException(404, 'The campaign does not exist');
-        }
-
-        if (! $campaign->userCanView($user)) {
-            throw new RestException(403, 'Access denied to this campaign');
-        }
-
-        return $campaign;
-    }
-
-    private function isACampaign($campaign) {
-        return $campaign && $this->conformance_validator->isArtifactACampaign($campaign);
-    }
-
-    private function sendPaginationHeaders($limit, $offset, $size) {
+    private function sendPaginationHeaders($limit, $offset, $size)
+    {
         Header::sendPaginationHeaders($limit, $offset, $size, self::MAX_LIMIT);
     }
 
@@ -472,33 +486,91 @@ class CampaignsResource {
         Header::lastModified($date);
     }
 
-
-    /**
-     * @param int $id
-     *
-     * @return Tracker_Artifact
-     * @throws Project_AccessProjectNotFoundException 404
-     * @throws Project_AccessException 403
-     * @throws RestException 404
-     */
-    private function getArtifactById(PFUser $user, $id)
+    private function sendAllowHeadersForCampaign(Campaign $campaign)
     {
-        $artifact = $this->testmanagement_artifact_factory->getArtifactById($id);
-        if ($artifact) {
-            if (! $artifact->userCanView($user)) {
-                throw new RestException(403);
-            }
-
-            ProjectAuthorization::userCanAccessProject($user, $artifact->getTracker()->getProject(), new Tracker_URLVerification());
-            return $artifact;
-        }
-        throw new RestException(404);
-    }
-
-    private function sendAllowHeadersForCampaign(Tracker_Artifact $artifact)
-    {
-        $date = $artifact->getLastUpdateDate();
+        $date = $campaign->getArtifact()->getLastUpdateDate();
         Header::allowOptionsPatch();
         Header::lastModified($date);
+    }
+
+    /**
+     * @param PFUser                              $user
+     * @param int                                 $id
+     * @param string|null                         $label
+     * @param JobConfigurationRepresentation|null $job_representation
+     *
+     * @return Campaign
+     * @throws RestException
+     */
+    private function getUpdatedCampaign(
+        PFUser $user,
+        $id,
+        $label = null,
+        JobConfigurationRepresentation $job_representation = null
+    ) {
+        $campaign = $this->getCampaignUserCanRead($user, $id);
+
+        $this->overrideWithSubmittedData($campaign, $label, $job_representation);
+
+        return $campaign;
+    }
+
+    /**
+     * @param PFUser $user
+     * @param int    $id
+     *
+     * @return Campaign
+     * @throws RestException
+     */
+    private function getCampaignUserCanRead(PFUser $user, $id)
+    {
+        try {
+            $campaign = $this->campaign_retriever->getById($id);
+            $this->checkUserCanReadCampaign($user, $campaign);
+        } catch (ArtifactNotFoundException $e) {
+            throw new RestException(404);
+        }
+
+        return $campaign;
+    }
+
+    /**
+     * @param PFUser   $user
+     * @param Campaign $campaign
+     *
+     * @throws RestException
+     */
+    private function checkUserCanReadCampaign(PFUser $user, Campaign $campaign)
+    {
+        $artifact = $campaign->getArtifact();
+
+        if (! $this->conformance_validator->isArtifactACampaign($artifact)) {
+            throw new RestException(404, 'The campaign does not exist');
+        }
+
+        if (! $artifact->userCanView($user)) {
+            throw new RestException(403);
+        }
+
+        ProjectAuthorization::userCanAccessProject(
+            $user,
+            $artifact->getTracker()->getProject(),
+            new Tracker_URLVerification()
+        );
+    }
+
+    /**
+     * @param Campaign                            $campaign
+     * @param string|null                         $label
+     * @param JobConfigurationRepresentation|null $job_representation
+     */
+    private function overrideWithSubmittedData(
+        Campaign $campaign,
+        $label = null,
+        JobConfigurationRepresentation $job_representation = null
+    ) {
+        if ($label) {
+            $campaign->setLabel($label);
+        }
     }
 }

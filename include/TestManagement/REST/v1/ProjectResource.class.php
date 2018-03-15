@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,23 +21,25 @@
 namespace Tuleap\TestManagement\REST\v1;
 
 use Luracast\Restler\RestException;
-use Tuleap\REST\Header;
-use Tuleap\REST\ProjectAuthorization;
-use Tuleap\TestManagement\ArtifactDao;
-use Tuleap\TestManagement\ArtifactFactory;
-use Tuleap\TestManagement\MalformedQueryParameterException;
-use Tuleap\TestManagement\QueryToCriterionConverter;
-use UserManager;
-use TrackerFactory;
+use PFUser;
+use ProjectManager;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use Tracker_ReportFactory;
 use Tracker_URLVerification;
-use PFUser;
+use TrackerFactory;
+use Tuleap\REST\Header;
+use Tuleap\REST\ProjectAuthorization;
+use Tuleap\TestManagement\ArtifactDao;
+use Tuleap\TestManagement\ArtifactFactory;
+use Tuleap\TestManagement\Campaign\CampaignDao;
+use Tuleap\TestManagement\Campaign\CampaignRetriever;
 use Tuleap\TestManagement\Config;
 use Tuleap\TestManagement\ConfigConformanceValidator;
-use ProjectManager;
 use Tuleap\TestManagement\Dao;
+use Tuleap\TestManagement\MalformedQueryParameterException;
+use Tuleap\TestManagement\QueryToCriterionConverter;
+use UserManager;
 
 class ProjectResource {
 
@@ -81,7 +83,7 @@ class ProjectResource {
 
         $this->testmanagement_artifact_factory = new ArtifactFactory(
             $this->config,
-            Tracker_ArtifactFactory::instance(),
+            $artifact_factory,
             $artifact_dao
         );
         $this->tracker_form_element_factory      = Tracker_FormElementFactory::instance();
@@ -97,10 +99,13 @@ class ProjectResource {
             $retriever
         );
 
+        $campaign_retriever = new CampaignRetriever($artifact_factory, new CampaignDao());
+
         $this->campaign_representation_builder = new CampaignRepresentationBuilder(
             $this->user_manager,
             $this->tracker_form_element_factory,
-            $this->testmanagement_artifact_factory
+            $this->testmanagement_artifact_factory,
+            $campaign_retriever
         );
 
         $this->query_to_criterion_converter = new QueryToCriterionConverter(
