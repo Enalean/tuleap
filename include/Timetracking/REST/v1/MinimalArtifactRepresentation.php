@@ -36,6 +36,7 @@ class MinimalArtifactRepresentation
     public $xref;
     public $html_url;
     public $title;
+    public $badge_color;
 
     public function build(Tracker_Artifact $artifact)
     {
@@ -43,7 +44,8 @@ class MinimalArtifactRepresentation
         $this->uri  = self::ROUTE . '/' . $this->id;
         $this->xref = $artifact->getXRef();
 
-        $this->html_url = $artifact->getUri();
-        $this->title    = $artifact->getTitle();
+        $this->html_url    = $artifact->getUri();
+        $this->title       = $artifact->getTitle();
+        $this->badge_color = $artifact->getTracker()->getNormalizedColor();
     }
 }

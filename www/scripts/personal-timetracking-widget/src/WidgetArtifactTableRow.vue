@@ -25,7 +25,9 @@
     <tr>
         <td>
             <a v-bind:href="artifact.html_url">
-                <span class="tlp-badge-primary tlp-badge-outline timetracking-badge-direct-link-to-artifact">
+                <span class="tlp-badge-outline timetracking-badge-direct-link-to-artifact"
+                      v-bind:class="badge_color"
+                >
                     {{ artifact.xref }}
                 </span>
                 <span>
@@ -52,6 +54,11 @@
                 artifact: data.artifact,
                 project : data.project
             };
+        },
+        computed: {
+            badge_color() {
+                return 'tlp-badge-' + this.artifact.badge_color;
+            }
         },
         methods: {
             getFormattedAggregatedTime() {
