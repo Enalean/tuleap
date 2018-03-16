@@ -22,6 +22,7 @@
 use Tuleap\AgileDashboard\Planning\AdditionalPlanningConfigurationWarningsRetriever;
 use Tuleap\AgileDashboard\Semantic\Dao\SemanticDoneDao;
 use Tuleap\AgileDashboard\Semantic\SemanticDone;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Velocity\Semantic\SemanticVelocity;
 
 require_once 'autoload.php';
@@ -39,6 +40,7 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
 
     public function getHooksAndCallbacks()
     {
+        $this->addHook('cssfile');
         $this->addHook(TRACKER_EVENT_MANAGE_SEMANTICS);
         $this->addHook(AdditionalPlanningConfigurationWarningsRetriever::NAME);
 
@@ -103,6 +105,19 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
                     $event->getTracker()->getName()
                 )
             );
+        }
+    }
+
+    public function cssfile($params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], '/plugins/tracker/') === 0) {
+            $theme_include_assets = new IncludeAssets(
+                VELOCITY_BASE_DIR . '/www/themes/FlamingParrot/assets/',
+                VELOCITY_BASE_URL . '/themes/FlamingParrot/assets/'
+            );
+            $css_file_url         = $theme_include_assets->getFileURL('style.css');
+
+            echo '<link rel="stylesheet" type="text/css" href="' . $css_file_url . '" />';
         }
     }
 }

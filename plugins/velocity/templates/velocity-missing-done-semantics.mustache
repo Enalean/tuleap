@@ -1,0 +1,19 @@
+<ul>
+    {{# backlog_trackers }}
+        <li>
+            <a href="{{ tracker_url }}">{{ name }}</a>
+            {{# is_missconfigured }}
+                <span class="text-warning velocity-missing-semantic">
+                     <i class="icon-warning-sign"></i>
+                    {{# dgettext }}
+                        tuleap-velocity |
+                        Semantic <a href="%s">done</a> is not defined |
+                        {{ semantic_url }}
+                    {{/ dgettext }}
+                </span>
+            {{/ is_missconfigured }}
+        </li>
+    {{/ backlog_trackers }}
+</ul>
+
+{{> velocity-all-tracker-missconfigured }}

@@ -1,34 +1,35 @@
-{{# semantic_done_is_defined }}
-    {{# has_backlog_trackers_without_done_semantic }}
-        <ul class="feedback_warning">
-            {{# backlog_trackers_without_done_semantic }}
-                <li>
-                    {{# dgettext }}
-                        tuleap-velocity |
-                        Semantic done is not defined for tracker <a href="%s">%s</a> |
-                        {{ url }} |
-                        {{ name }}
-                    {{/ dgettext }}
-                </li>
-            {{/ backlog_trackers_without_done_semantic }}
-        </ul>
-    {{/ has_backlog_trackers_without_done_semantic }}
+{{^ semantic_done_is_defined }}
+    <p>
+        {{# dgettext }}
+            tuleap-velocity |
+            <b>Done</b> semantic is needed since Velocity computation is made over <b>done</b> artifacts. Please select a Done semantic first.
+        {{/ dgettext }}
+    </p>
 {{/ semantic_done_is_defined }}
-<p>{{# dgettext }}tuleap-velocity | Choose the "velocity" field that will be used for computation of velocity
-    chart.{{/ dgettext }}</p>
-<p>
-    {{# semantic_done_is_defined }}
-        {{^ velocity_field }}
-            {{# dgettext }}tuleap-velocity | No field defined for velocity computation.{{/ dgettext }}
-        {{/ velocity_field }}
 
-        {{# velocity_field }}
-            {{# dgettext }} tuleap-velocity  | Field used for velocity computation: {{/ dgettext }}
-            <b>{{ velocity_field_label }}</b>
-        {{/ velocity_field }}
-    {{/ semantic_done_is_defined }}
+{{# semantic_done_is_defined }}
 
-    {{^ semantic_done_is_defined }}
-        {{# dgettext }}tuleap-velocity | Done semantic is needed to define a Velocity semantic. Please select a Done semantic first.{{/ dgettext }}
-    {{/ semantic_done_is_defined }}
-</p>
+    {{> velocity-chart-information }}
+
+    {{> velocity-missing-done-semantics }}
+
+    <p>
+        {{# dgettext }}
+            tuleap-velocity |
+            Choose the "velocity" field that will be used for computation of velocity chart.
+        {{/ dgettext }}
+    </p>
+
+    {{^ are_all_backlog_trackers_missconfigured }}
+        <p>
+            {{^ velocity_field }}
+                {{# dgettext }}tuleap-velocity | No field defined for velocity computation.{{/ dgettext }}
+            {{/ velocity_field }}
+
+            {{# velocity_field }}
+                {{# dgettext }} tuleap-velocity | Field used for velocity computation: {{/ dgettext }}
+                <b>{{ velocity_field_label }}</b>
+            {{/ velocity_field }}
+        </p>
+    {{/ are_all_backlog_trackers_missconfigured }}
+{{/ semantic_done_is_defined }}

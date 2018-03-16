@@ -20,6 +20,7 @@
 
 namespace Tuleap\Velocity\Semantic;
 
+use Tracker;
 use Tracker_FormElement_Field;
 
 class SemanticVelocityPresenter
@@ -37,23 +38,36 @@ class SemanticVelocityPresenter
      */
     public $velocity_field_label;
     /**
-     * @var array
-     */
-    public $backlog_trackers_without_done_semantic;
-    /**
      * @var bool
      */
     public $has_backlog_trackers_without_done_semantic;
+    /**
+     * @var string
+     */
+    public $tracker_name;
+    /**
+     * @var bool
+     */
+    public $are_all_backlog_trackers_missconfigured;
+    /**
+     * @var array
+     */
+    public $backlog_trackers;
 
     public function __construct(
         $semantic_done_is_defined,
         array $incorrect_backlog_trackers,
+        array $backlog_trackers,
+        Tracker $tracker,
+        $are_all_backlog_trackers_missconfigured,
         Tracker_FormElement_Field $velocity_field = null
     ) {
         $this->semantic_done_is_defined                   = $semantic_done_is_defined;
         $this->velocity_field                             = $velocity_field;
         $this->velocity_field_label                       = ($velocity_field !== null) ? $velocity_field->getLabel() : "";
-        $this->backlog_trackers_without_done_semantic     = $incorrect_backlog_trackers;
+        $this->backlog_trackers                           = $backlog_trackers;
         $this->has_backlog_trackers_without_done_semantic = count($incorrect_backlog_trackers) > 0;
+        $this->tracker_name                               = $tracker->getName();
+        $this->are_all_backlog_trackers_missconfigured    = $are_all_backlog_trackers_missconfigured;
     }
 }

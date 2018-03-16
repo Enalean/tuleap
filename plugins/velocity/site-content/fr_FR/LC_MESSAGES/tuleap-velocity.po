@@ -12,12 +12,20 @@ msgstr ""
 "X-Generator: Poedit 2.0.3\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid ""
+"<b>Done</b> semantic is needed since Velocity computation is made over "
+"<b>done</b> artifacts. Please select a Done semantic first."
+msgstr ""
+"La sémantique <b>fini</b> est nécessaire puisque le calcul de la vélocité "
+"est effectué sur les artifacts <b>fini</b>. Merci de choisir une sémantique "
+"<b>fini</b> d'abord."
+
 msgid "Adds velocity chart into Agiledashboard"
 msgstr "Ajoute le graphique de vélocité dans le tableau de bord Agile"
 
 msgid ""
-"Choose the \"velocity\" field that will be used for computation of velocity\n"
-"    chart."
+"Choose the \"velocity\" field that will be used for computation of velocity "
+"chart."
 msgstr ""
 "Choisissez le champ \"vélocité\" qui sera utilisé pour le calcul de la "
 "vélocité"
@@ -25,27 +33,37 @@ msgstr ""
 msgid "Define the field to use to compute velocity."
 msgstr "Définissez le champ à utiliser pour calculer la vélocité"
 
-msgid ""
-"Done semantic is needed to define a Velocity semantic. Please select a Done "
-"semantic first."
-msgstr ""
-"La sémantique fini est nécessaire pour définir une sémantique vélocité. "
-"Merci de choisir une sémantique fini d'abord"
-
-msgid "Feel free to choose one:"
-msgstr "N'hésitez pas à en choisir un :"
-
 msgid "Field used for velocity computation:"
 msgstr "Champ utilisé pour le calcul de la vélocité:"
+
+msgid ""
+"No backlog trackers have a <b>done</b> semantic, velocity will always be set "
+"to 0."
+msgstr ""
+"Aucun ouil de suivi de backlog n'a une sémantique <b>done</b>, la vélocité "
+"sera toujours égale à 0."
 
 msgid "No field defined for velocity computation."
 msgstr "Aucun champ défini pour le calcul de la vélocité"
 
+msgid ""
+"Only integers and float fields are listed. By choosing one of these fields, "
+"it will be\n"
+"            automatically computed in order to give you the velocity value."
+msgstr ""
+"Seuls les champs entiers et flottants sont listés. Ce champ contiendra la "
+"valeur de la vélocité calculée"
+
 msgid "Save your change"
 msgstr "Sauvegarder vos changements"
 
+msgid "Semantic <a href=\"%s\">done</a> is not defined"
+msgstr "La sémantique <a href=\"%s\">finie</a> n'est pas définie"
+
 msgid "Semantic done is not defined for tracker <a href=\"%s\">%s</a>"
-msgstr "La sémantique finie n'est pas définie pour l'outil de suivi <a href=\"%s\">%s</a>"
+msgstr ""
+"La sémantique finie n'est pas définie pour l'outil de suivi <a href=\"%s\">"
+"%s</a>"
 
 msgid "Semantic done is not defined."
 msgstr "La sémantique finie n'est pas définie"
@@ -62,13 +80,6 @@ msgstr ""
 
 msgid "The request is not valid."
 msgstr "La requête n'est pas valide"
-
-msgid ""
-"The semantic velocity cannot be defined because the semantic done is not "
-"defined."
-msgstr ""
-"La sémantique vélocité ne peut pas être définie parce que la sémantique "
-"finie n'est pas définie"
 
 #, php-format
 msgid ""
@@ -88,6 +99,13 @@ msgstr "Supprimer cette sémantique"
 
 msgid "Velocity"
 msgstr "Vélocité"
+
+msgid ""
+"Velocity chart represents the sum of <b>initial effort</b> of <b>done</b> "
+"backlog elements of %s."
+msgstr ""
+"Le graphique de vélocité represente la somme de l'<b>effort inital</b> des "
+"elements du backlog <b>fini</b> de %s."
 
 msgid "go back to semantic overview"
 msgstr "retour à l'administration de la sémantique"
