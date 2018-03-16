@@ -141,6 +141,7 @@ $loader_scheduler = new LoaderScheduler($cookie_manager, $plugin_manager);
 $loader_scheduler->loadPluginsThenStartSession(IS_SCRIPT);
 
 if (!IS_SCRIPT) {
+    header('X-UA-Compatible: IE=Edge');
     header('Referrer-Policy: no-referrer-when-downgrade, strict-origin, same-origin');
 
     // Protection against clickjacking
