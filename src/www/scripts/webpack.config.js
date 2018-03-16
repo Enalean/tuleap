@@ -159,7 +159,8 @@ const webpack_config_for_burning_parrot_code = {
         'site-admin-system-events-admin-homepage': './admin/system-events-admin-homepage.js',
         'site-admin-system-events-notifications' : './admin/system-events-notifications.js',
         'site-admin-trackers-pending-removal'    : './admin/trackers-pending-removal.js',
-        'site-admin-user-details'                : './admin/userdetails.js'
+        'site-admin-user-details'                : './admin/userdetails.js',
+        'site-admin-generate-pie-charts'         : './admin/generate-pie-charts.js'
     },
     output: {
         path: assets_dir_path,

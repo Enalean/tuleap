@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,132 +17,352 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-var tuleap = tuleap || {};
-tuleap.charts = tuleap.charts || {};
 
-tuleap.charts.statisticsPieChart = function (chart) {
-    var width,
+import {select}     from "d3-selection";
+import { arc, pie } from "d3-shape";
+
+import 'd3-transition';
+
+export class StatisticsPieChart {
+    constructor({
+        width,
         height,
         radius,
         data,
-        g,
-        svg,
-        pie,
-        arc,
-        arc_text,
-        div_graph,
         prefix,
-        general_prefix;
+        general_prefix
+    }) {
+        Object.assign(this, {
+            width,
+            height,
+            radius,
+            data,
+            prefix,
+            general_prefix,
+            div_graph: select('#' + prefix),
+            group    : null,
+            svg      : null,
+            arc_text : null
+        });
+    }
 
-    chart.prefix = function (new_prefix) {
-        if (!arguments.length) {
-            return prefix;
-        }
-        prefix = new_prefix;
-        return chart;
-    };
+    init() {
+        this.svg = this.div_graph.append('svg')
+            .attr('width', this.width)
+            .attr('height', this.height);
 
-    chart.generalPrefix = function (new_prefix) {
-        if (!arguments.length) {
-            return general_prefix;
-        }
-        general_prefix = new_prefix;
-        return chart;
-    };
+        this.group = this.svg
+             .append('g')
+             .attr('transform', 'translate(' + (this.width / 2) + ',' + (this.height / 2) + ')');
 
-    chart.divGraph = function (new_div_graph) {
-        if (!arguments.length) {
-            return div_graph;
-        }
-        div_graph = new_div_graph;
-        return chart;
-    };
+        this.initArc();
+        this.initPie();
+        this.initGraph();
+        this.initLegend();
+        this.initText();
+    }
 
-    chart.svg = function (new_svg) {
-        if (!arguments.length) {
-            return svg;
-        }
-        svg = new_svg;
-        return chart;
-    };
+    initArc() {
+        this.arc = arc()
+            .innerRadius(this.radius / 4.5)
+            .outerRadius(this.radius / 3);
 
-    chart.g = function (new_g) {
-        if (!arguments.length) {
-            return g;
-        }
-        g = new_g;
-        return chart;
-    };
+        this.arc_text = arc()
+            .innerRadius(this.radius / 3)
+            .outerRadius(this.radius / 3 + 20);
 
-    chart.arc = function (new_arc) {
-        if (!arguments.length) {
-            return arc;
-        }
-        arc = new_arc;
-        return chart;
-    };
+        this.arc_over = arc()
+            .innerRadius(this.radius / 4.25)
+            .outerRadius(this.radius / 2.75)
+            .padAngle(slice_data => sliceEqualsTo180Degrees(slice_data) ? 0 : 0.05);
 
-    chart.arcText = function (new_arc_text) {
-        if (!arguments.length) {
-            return arc_text;
-        }
-        arc_text = new_arc_text;
-        return chart;
-    };
+        this.arc_over_text = arc()
+            .innerRadius(this.radius / 2.75)
+            .outerRadius(this.radius / 2.75 + 20);
+    }
 
-    chart.arcOver = function (new_arc_over) {
-        if (!arguments.length) {
-            return arc_over;
-        }
-        arc_over = new_arc_over;
-        return chart;
-    };
+    initPie() {
+        this.pie = pie()
+            .value(function(d) { return d.count; })
+            .sort(null);
+    }
 
-    chart.arcOverText = function (new_arc_over_text) {
-        if (!arguments.length) {
-            return arc_over_text;
-        }
-        arc_over_text = new_arc_over_text;
-        return chart;
-    };
+    initLegend() {
+        const svg_legend = select('#' + this.prefix)
+            .append('div')
+            .attr('id', this.getLegendClass())
+                .append('ul')
+                .attr('class', this.getLegendGeneralClass());
 
-    chart.pie = function (new_pie) {
-        if (!arguments.length) {
-            return pie;
-        }
-        pie = new_pie;
-        return chart;
-    };
+        const legend = svg_legend.selectAll('.' + this.getLegendClass())
+            .data(this.data)
+            .enter()
+                .append('li')
+                .attr('class', d => { return this.getLegendClass() + ' ' + this.getLegendClassByKey(d.key); });
 
-    chart.data = function (new_data) {
-        if (!arguments.length) {
-            return data;
-        }
-        data = new_data;
-        return chart;
-    };
+        legend.append('span')
+              .attr('class', d => { return this.getLegendColorSpanClass() + ' ' + this.getLegendColorClassByKey(d.key); });
 
-    chart.width = function (new_width) {
-        if (!arguments.length) {
-            return width;
-        }
-        width = new_width;
-        return chart;
-    };
+        legend.append('span')
+              .attr('class', this.getLegendTextSpanClass())
+              .text(function(d) { return d.label; });
 
-    chart.height = function (new_height) {
-        if (!arguments.length) {
-            return height;
-        }
-        height = new_height;
-        return chart;
-    };
+        legend.on('mouseover', d => {
+            this.onSliceAndTextOver(d.key);
+            this.replaceText(this.group.select('.' + this.getSliceClassByKey(d.key)).datum());
+        })
+        .on('mouseout', d => {
+            this.onSliceAndTextOut(d.key);
+        });
 
-    chart.radius = function (new_radius) {
-        if (!arguments.length) {
-            return radius;
+        legend.each(function() {
+            const li_width = select(this).node().getBoundingClientRect().width;
+            select(this).style('width', li_width + 10 + 'px');
+        });
+    }
+
+    initGraph() {
+        const arc_elements = this.group.selectAll('.' + this.getSliceClass())
+            .data(this.pie(this.data))
+            .enter().append('g')
+            .attr('class', d => {
+                return this.getSliceClass() + ' ' + this.getSliceClassByKey(d.data.key);
+            });
+
+        arc_elements.append('path')
+            .attr('class', this.getSlicePathClass())
+            .attr('d', this.arc);
+
+        arc_elements.append('text')
+            .attr('class', this.getSliceTextClass())
+            .attr('transform', d => {
+                return 'translate(' + this.arc_text.centroid(d) + ')';
+            })
+            .attr('dy', '.35em')
+            .text(d => {
+                if (d.value > 0) {
+                    return d.value;
+                }
+            });
+
+        arc_elements.on('mouseover', d => {
+            this.onSliceAndTextOver(d.data.key);
+            this.replaceText(d);
+        })
+        .on('mouseout', d => {
+            this.onSliceAndTextOut(d.data.key);
+        });
+    }
+
+    initText() {
+        const slices = this.svg.selectAll('.' + this.getSliceClass());
+
+        slices.each(function(d) {
+            const angle = (d.startAngle + d.endAngle) / 2;
+
+            if (angle > Math.PI) {
+                select(this).select('text')
+                            .style('text-anchor', 'end');
+            } else {
+                select(this).select('text')
+                            .style('text-anchor', 'start');
+            }
+        });
+
+        slices.each(d => {
+            this.displayText(d);
+        });
+    }
+
+    redraw({ width, height, radius }) {
+        Object.assign(this, {
+            width,
+            height,
+            radius
+        });
+
+        this.svg.attr('width', this.width)
+             .attr('height', this.height);
+
+        this.group.attr(
+            'transform',
+            'translate(' + (this.width  / 2) + ',' + (this.height / 2) + ')'
+        );
+
+        this.initArc();
+
+        this.group.selectAll('path').attr('d', this.arc);
+
+        this.group.selectAll('text').attr('transform', d => {
+            return 'translate(' + (this.arc_text.centroid(d)) + ')';
+        });
+
+        this.initText();
+    }
+
+    getSliceClass() {
+        return this.prefix + '-slice';
+    }
+
+    getSliceClassByKey(value_key) {
+        return this.prefix + '-slice-' + value_key;
+    }
+
+    getSlicePathClass() {
+        return this.prefix + '-slice-path';
+    }
+
+    getSliceTextClass() {
+        return this.prefix + '-slice-text';
+    }
+
+    getSliceTextUndisplayedClass() {
+        return this.prefix + '-slice-text-undisplayed';
+    }
+
+    getLegendGeneralClass() {
+        return this.general_prefix + '-legend';
+    }
+
+    getLegendClass() {
+        return this.prefix + '-legend';
+    }
+
+    getLegendClassByKey(value_key) {
+        return this.prefix + '-legend-' + value_key;
+    }
+
+    getLegendColorClassByKey(value_key) {
+        return this.prefix + '-legend-color-' + value_key;
+    }
+
+    getLegendColorSpanClass() {
+        return this.prefix + '-legend-color-span';
+    }
+
+    getLegendTextSpanClass() {
+        return this.prefix + '-legend-text-span';
+    }
+
+    getLegendSelectedClass() {
+        return this.prefix + '-legend-selected';
+    }
+
+    displayText(arc_data) {
+        const angle = (arc_data.startAngle + arc_data.endAngle) / 2;
+
+        const arc_element = this.group.select('.' + this.getSliceClassByKey(arc_data.data.key));
+
+        const text_element_client = arc_element.select('text').node().getBoundingClientRect();
+        const text_element_width  = text_element_client.width;
+        const text_element_left   = text_element_client.left;
+        const text_element_right  = text_element_client.right;
+
+        const svg_element_client = this.svg.node().getBoundingClientRect();
+        const svg_element_left   = svg_element_client.left;
+        const svg_element_right  = svg_element_client.right;
+
+        const path_width  = arc_element.select('path').node().getBoundingClientRect().width;
+        const path_height = arc_element.select('path').node().getBoundingClientRect().height;
+
+        if (path_width < text_element_width || path_height < text_element_width) {
+            arc_data.displayed = false;
+            arc_element.select('text').classed(this.getSliceTextUndisplayedClass(), true);
+        } else {
+            arc_data.displayed = true;
         }
-        radius = new_radius;
-        return chart;
-    };
-};
+
+        if (angle > Math.PI) {
+            if (text_element_left < svg_element_left && arc_data.displayed) {
+                arc_data.displayed = false;
+                arc_element.select('text').classed(this.getSliceTextUndisplayedClass(), true);
+            } else if (arc_data.displayed) {
+                arc_data.displayed = true;
+                arc_element.select('text').classed(this.getSliceTextUndisplayedClass(), false);
+            }
+        } else {
+            if (text_element_right > svg_element_right && arc_data.displayed) {
+                arc_data.displayed = false;
+                arc_element.select('text').classed(this.getSliceTextUndisplayedClass(), true);
+            } else if (arc_data.displayed) {
+                arc_data.displayed = true;
+                arc_element.select('text').classed(this.getSliceTextUndisplayedClass(), false);
+            }
+        }
+    }
+
+    replaceText(arc_data) {
+        const arc_element = this.group.select('.' + this.getSliceClassByKey(arc_data.data.key));
+        const angle       = (arc_data.startAngle + arc_data.endAngle) / 2;
+
+        const text_element_client = arc_element.select('text').node().getBoundingClientRect();
+        const text_element_left   = text_element_client.left;
+        const text_element_right  = text_element_client.right;
+
+        const svg_element_client = this.svg.node().getBoundingClientRect();
+        const svg_element_left   = svg_element_client.left;
+        const svg_element_right  = svg_element_client.right;
+
+        if (angle > Math.PI) {
+            if (text_element_left < svg_element_left) {
+                arc_element.select('text').style('text-anchor', 'start');
+            }
+        } else {
+            if (text_element_right > svg_element_right) {
+                arc_element.select('text').style('text-anchor', 'end');
+            }
+        }
+    }
+
+    onSliceAndTextOver(key) {
+        this.group.select('.' + this.getSliceClassByKey(key) + ' path')
+            .transition()
+            .attr('d', this.arc_over)
+            .attr('transform', d => {
+                if (sliceEqualsTo180Degrees(d)) {
+                    const angle = d.startAngle + d.endAngle / 2;
+
+                    if (angle > Math.PI) {
+                        return 'translate(-2,2)';
+                    } else {
+                        return 'translate(2,2)';
+                    }
+                }
+            });
+
+        this.group.select('.' + this.getSliceClassByKey(key) + ' text')
+            .classed(this.getSliceTextUndisplayedClass(), false)
+            .transition()
+            .attr('transform', d => {
+                return 'translate(' + this.arc_over_text.centroid(d) + ')';
+            });
+
+        select('.' + this.getLegendClassByKey(key)).classed(this.getLegendSelectedClass(), true);
+    }
+
+    onSliceAndTextOut(key) {
+        this.group.select('.' + this.getSliceClassByKey(key) + ' path')
+             .transition()
+             .attr('d', this.arc)
+             .attr('transform', d => {
+                 if (sliceEqualsTo180Degrees(d)) {
+                     return 'translate(0,0)';
+                 }
+             });
+
+        this.group.select('.' + this.getSliceClassByKey(key) + ' text')
+             .classed(this.getSliceTextUndisplayedClass(), d => ! d.displayed)
+             .transition()
+             .attr('transform', d => {
+                 return 'translate(' + this.arc_text.centroid(d) + ')';
+             });
+
+        select('.' + this.getLegendClassByKey(key)).classed(this.getLegendSelectedClass(), false);
+    }
+}
+
+function sliceEqualsTo180Degrees(slice_data) {
+    return (slice_data.startAngle === 0 && parseInt(slice_data.endAngle) === parseInt(Math.PI, 10))
+        || (parseInt(slice_data.startAngle, 10) === parseInt(Math.PI, 10)
+            && parseInt(slice_data.endAngle, 10) === parseInt(2 * Math.PI, 10));
+}

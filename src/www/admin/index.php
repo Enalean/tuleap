@@ -36,12 +36,12 @@ $request->checkUserIsSuperUser();
 $assets_path    = ForgeConfig::get('tuleap_dir') . '/src/www/assets';
 $include_assets = new IncludeAssets($assets_path, '/assets');
 
-$GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/d3/v4/d3.min.js');
-$GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/admin/statistics-chart.js');
-$GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/admin/statistics-chart-factory.js');
-$GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/admin/generate-pie-charts.js');
 $GLOBALS['HTML']->includeFooterJavascriptFile(
     $include_assets->getFileURL('site-admin-system-events-admin-homepage.js')
+);
+
+$GLOBALS['HTML']->includeFooterJavascriptFile(
+    $include_assets->getFileURL('site-admin-generate-pie-charts.js')
 );
 
 $abc_array = array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','0','1','2','3','4','5','6','7','8','9');
