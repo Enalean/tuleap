@@ -279,6 +279,7 @@ class MediaWikiPlugin extends Plugin {
                 && ! $project->userIsMember()
                 && ! $user->isSuperUser()
                 && ! $this->doesUserHavePermission($user)
+                && ! $this->getMediawikiManager()->userCanRead($user, $project)
             ) {
                 exit;
             }
