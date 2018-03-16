@@ -20,10 +20,11 @@
 
 
 use Tuleap\AgileDashboard\Planning\AdditionalPlanningConfigurationWarningsRetriever;
-use Tuleap\AgileDashboard\Semantic\Dao\SemanticDoneDao;
 use Tuleap\AgileDashboard\Semantic\SemanticDone;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Tracker\Workflow\BeforeEvent;
 use Tuleap\Velocity\Semantic\SemanticVelocity;
+use Tuleap\Velocity\VelocityComputationChecker;
 
 require_once 'autoload.php';
 require_once 'constants.php';
@@ -43,6 +44,7 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
         $this->addHook('cssfile');
         $this->addHook(TRACKER_EVENT_MANAGE_SEMANTICS);
         $this->addHook(AdditionalPlanningConfigurationWarningsRetriever::NAME);
+        $this->addHook(BeforeEvent::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -76,7 +78,6 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
 
         $semantics->insertAfter(SemanticDone::NAME, SemanticVelocity::load($tracker));
     }
-
 
     private function isAPlanningTrackers(Tracker $semantic_tracker)
     {
@@ -119,5 +120,49 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
 
             echo '<link rel="stylesheet" type="text/css" href="' . $css_file_url . '" />';
         }
+    }
+
+    public function beforeEvent(BeforeEvent $before_event)
+    {
+        if (! ForgeConfig::get('force_velocity_computation')) {
+            return;
+        }
+
+        $tracker           = $before_event->getArtifact()->getTracker();
+        $semantic_status   = Tracker_Semantic_Status::load($tracker);
+        $semantic_done     = SemanticDone::load($tracker);
+        $semantic_velocity = SemanticVelocity::load($tracker);
+
+        $field_id = $semantic_velocity->getFieldId();
+        if (! $semantic_status->getFieldId() || ! $semantic_done->isSemanticDefined() || ! $field_id) {
+            return;
+        }
+
+        $computation_checker = new VelocityComputationChecker();
+        if (! $computation_checker->shouldComputeCapacity($semantic_status, $semantic_done, $before_event)) {
+            return;
+        }
+
+        $computed_velocity = 10;
+
+        $current_user = UserManager::instance()->getCurrentUser();
+        $factory      = Tracker_FormElementFactory::instance();
+        $field        = $factory->getFormElementById($field_id);
+
+        if ($field->userCanRead($current_user)) {
+            $GLOBALS['Response']->addUniqueFeedback(
+                Feedback::INFO,
+                sprintf(
+                    dgettext(
+                        'tuleap-velocity',
+                        'The field %s will be automatically set to %s'
+                    ),
+                    $field->getName(),
+                    $computed_velocity
+                )
+            );
+        }
+
+        $before_event->forceFieldData($field_id, $computed_velocity);
     }
 }

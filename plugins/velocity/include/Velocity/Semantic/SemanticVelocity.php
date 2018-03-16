@@ -186,7 +186,7 @@ class SemanticVelocity extends Tracker_Semantic
 
     public function getFieldId()
     {
-        $used_velocity_field = $this->getVelocityField();
+        $used_velocity_field = $this->getSemanticDao()->searchUsedVelocityField($this->getTracker()->getId());
         if ($used_velocity_field) {
             return $used_velocity_field['field_id'];
         } else {
@@ -201,7 +201,9 @@ class SemanticVelocity extends Tracker_Semantic
 
     protected static $_instances;
 
-
+    /**
+     * @return SemanticVelocity
+     */
     public static function load(Tracker $tracker)
     {
         if (! isset(self::$_instances[$tracker->getId()])) {

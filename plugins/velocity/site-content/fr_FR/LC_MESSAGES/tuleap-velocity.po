@@ -78,6 +78,10 @@ msgstr ""
 "La <i>vélocité</i> de ce tracker sera représentée dans le tableau de bord "
 "agile par le champ"
 
+#, php-format
+msgid "The field %s will be automatically set to %s"
+msgstr "Le champ %s sera automatiquement valué à %s"
+
 msgid "The request is not valid."
 msgstr "La requête n'est pas valide"
 

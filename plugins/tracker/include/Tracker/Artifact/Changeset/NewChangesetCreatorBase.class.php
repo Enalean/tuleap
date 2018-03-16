@@ -250,15 +250,12 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         $workflow = $artifact->getWorkflow();
         $fields_data = $this->field_initializator->process($artifact, $fields_data);
 
-        if ($workflow) {
-            $workflow->validate($fields_data, $artifact, $comment);
-            /*
-             * We need to run the post actions to validate the data
-             */
-            $workflow->before($fields_data, $submitter, $artifact);
-            $workflow->checkGlobalRules($fields_data, $this->formelement_factory);
-            //$GLOBALS['Language']->getText('plugin_tracker_artifact', 'global_rules_not_valid');
-        }
+        $workflow->validate($fields_data, $artifact, $comment);
+        /*
+         * We need to run the post actions to validate the data
+         */
+        $workflow->before($fields_data, $submitter, $artifact);
+        $workflow->checkGlobalRules($fields_data, $this->formelement_factory);
 
         return true;
     }

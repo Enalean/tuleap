@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2011 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Tracker\Workflow\BeforeEvent;
 
 class Workflow {
 
@@ -59,6 +61,11 @@ class Workflow {
     private $logger;
 
     private $disabled = false;
+
+    /**
+     * @var BeforeEvent
+     */
+    private $before_event;
 
     public function __construct(
         Tracker_RulesManager $global_rules_manager,
@@ -312,6 +319,11 @@ class Workflow {
                 $transition->before($fields_data, $current_user);
             }
         }
+
+        $this->before_event = new BeforeEvent($artifact, $fields_data);
+        EventManager::instance()->processEvent($this->before_event);
+
+        $fields_data = $this->before_event->getFieldsData();
     }
 
 
@@ -411,14 +423,19 @@ class Workflow {
     *
     * @return boolean true if the permissions on the field can be bypassed, false otherwise
     */
-    public function bypassPermissions($field) {
+    public function bypassPermissions($field)
+    {
         $transitions = $this->getTransitions();
         foreach ($transitions as $transition) {
             if ($transition->bypassPermissions($field)) {
                 return true;
             }
         }
+
+        if ($this->before_event) {
+            return $this->before_event->shouldBypassPermissions($field);
+        }
+
         return false;
     }
 }
-?>
