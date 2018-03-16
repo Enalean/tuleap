@@ -254,4 +254,8 @@ if (ForgeConfig::get('DEBUG_MODE')) {
     $GLOBALS['DEBUG_TIME_IN_PRE'] = microtime(1) - $GLOBALS['debug_time_start'];
 }
 
+if ($request->isAjax()) {
+    header("Cache-Control: no-store, no-cache, must-revalidate");
+}
+
 Tuleap\Instrument\Collect::endTiming('pre.'.php_sapi_name());
