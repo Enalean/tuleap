@@ -29,5 +29,7 @@
             "target_dir": "www/themes/BurningParrot/css"
         }
     },
-    "javascript": []
+    "components": [
+        "plugins/testmanagement/www/scripts/angular"
+    ]
 }
