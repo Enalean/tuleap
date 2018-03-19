@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once __DIR__ . '/../vendor/autoload.php';
+
 use Tuleap\DynamicCredentials\REST\ResourcesInjector;
 
 class dynamic_credentialsPlugin extends Plugin // @codingStandardsIgnoreLine
@@ -34,7 +36,7 @@ class dynamic_credentialsPlugin extends Plugin // @codingStandardsIgnoreLine
     public function getPluginInfo()
     {
         if (! $this->pluginInfo) {
-            $this->pluginInfo = new \Tuleap\DynamicCredentials\PluginInfo($this);
+            $this->pluginInfo = new \Tuleap\DynamicCredentials\Plugin\PluginInfo($this);
         }
 
         return $this->pluginInfo;

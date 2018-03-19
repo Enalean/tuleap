@@ -24,7 +24,7 @@ use Tuleap\Cryptography\Asymmetric\AsymmetricCrypto;
 use Tuleap\Cryptography\Asymmetric\SignaturePublicKey;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\Exception\InvalidSignatureException;
-use Tuleap\DynamicCredentials\PluginInfo;
+use Tuleap\DynamicCredentials\Plugin\PluginInfo;
 
 class RequestSignatureVerifier
 {

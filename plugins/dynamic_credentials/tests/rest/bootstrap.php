@@ -18,7 +18,5 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__ . '/../../phpunit/bootstrap.php';
-require_once __DIR__ . '/../../../../src/vendor/autoload.php';
 require_once __DIR__ . '/../../../../tests/rest/lib/autoload.php';
 require_once __DIR__ . '/DynamicCredentialsPluginRESTInitializer.php';
