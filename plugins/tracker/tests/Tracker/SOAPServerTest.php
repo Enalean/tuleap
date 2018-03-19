@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,8 +16,8 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
+require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 require_once TRACKER_BASE_DIR.'/Tracker/SOAPServer.class.php';
 
 abstract class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
@@ -69,6 +69,7 @@ abstract class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
     protected $fileinfo_factory;
     protected $user_manager;
     protected $current_user;
+    protected $comment_criterion_value_retriever;
 
     protected $i_should_not_have_access_to_this_private_project_id = 666;
     protected $project_id = 111;
@@ -125,6 +126,9 @@ abstract class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
         $this->tracker_manager = mock('TrackerManager');
         stub($this->tracker_manager)->userCanAdminAllProjectTrackers()->returns(false);
 
+        $this->comment_criterion_value_retriever = stub('Tuleap\Tracker\Report\AdditionalCriteria\CommentCriterionValueRetriever')
+            ->getValueForReport()->returns('');
+
         $this->server = new Tracker_SOAPServer(
             $this->soap_request_validator,
             $this->tracker_factory,
@@ -134,7 +138,8 @@ abstract class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
             $this->artifact_factory,
             $this->report_factory,
             $this->fileinfo_factory,
-            $this->tracker_manager
+            $this->tracker_manager,
+            $this->comment_criterion_value_retriever
         );
     }
 
@@ -383,7 +388,8 @@ class Tracker_SOAPServer_getTrackerStructure_Test extends Tracker_SOAPServer_Bas
             $this->artifact_factory,
             $this->report_factory,
             $this->fileinfo_factory,
-            $this->tracker_manager
+            $this->tracker_manager,
+            $this->comment_criterion_value_retriever
          ));
     }
 
@@ -414,6 +420,21 @@ class Tracker_SOAPServer_getTrackerStructure_Test extends Tracker_SOAPServer_Bas
 }
 
 class Tracker_SOAPServer_getArtifacts_Test extends Tracker_SOAPServer_BaseTest {
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->data_access = mock('DataAccess');
+        CodendiDataAccess::setInstance($this->data_access);
+    }
+
+    public function tearDown()
+    {
+        CodendiDataAccess::clearInstance();
+
+        parent::tearDown();
+    }
 
     public function itRaisesASoapFaultIfTheTrackerIsNotReadableByTheUser() {
         $results = $this->server->getArtifacts($this->session_key, null, $this->unreadable_tracker_id, array(), null, null);
@@ -496,6 +517,8 @@ class Tracker_SOAPServer_getArtifacts_Test extends Tracker_SOAPServer_BaseTest {
     }
 
     public function itReturnsTheArtifactsThatMatchTheQueryForADateField() {
+        stub($this->data_access)->escapeInt('12334567')->returns(12334567);
+
         $criteria = $this->convertCriteriaToSoapParameter(array(
             array(
                 'field_name' => $this->date_field_name,
@@ -515,6 +538,9 @@ class Tracker_SOAPServer_getArtifacts_Test extends Tracker_SOAPServer_BaseTest {
     }
 
     public function itReturnsTheArtifactsThatMatchTheAdvancedQueryForADateField() {
+        stub($this->data_access)->escapeInt('1337')->returns(1337);
+        stub($this->data_access)->escapeInt('1338')->returns(1338);
+
         $criteria = $this->convertCriteriaToSoapParameter(array(
             array(
                 'field_name' => $this->date_field_name,
@@ -535,6 +561,8 @@ class Tracker_SOAPServer_getArtifacts_Test extends Tracker_SOAPServer_BaseTest {
     }
 
     public function itReturnsTheArtifactsThatMatchTheQueryForAListField() {
+        stub($this->data_access)->escapeIntImplode(array('106'))->returns(106);
+
         $criteria = $this->convertCriteriaToSoapParameter(array(
             array(
                 'field_name' => $this->list_field_name,
@@ -552,6 +580,8 @@ class Tracker_SOAPServer_getArtifacts_Test extends Tracker_SOAPServer_BaseTest {
     }
 
     public function itReturnsTheArtifactsThatMatchTheAdvancedQueryForAListField() {
+        stub($this->data_access)->escapeIntImplode(array('106', '107'))->returns('106,107');
+
         $criteria = $this->convertCriteriaToSoapParameter(array(
             array(
                 'field_name' => $this->list_field_name,
