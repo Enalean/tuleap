@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS plugin_cardwall_on_top_column_mapping_field_value(
     field_id INT(11) NULL,
     value_id INT(11) NOT NULL,
     column_id INT(11) NOT NULL,
-    PRIMARY KEY idx(cardwall_tracker_id, tracker_id, field_id, value_id)
+    UNIQUE idx(cardwall_tracker_id, tracker_id, field_id, value_id)
 );
 
 DROP TABLE IF EXISTS plugin_cardwall_semantic_cardfields;
