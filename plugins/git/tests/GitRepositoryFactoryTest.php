@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2011-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -43,14 +43,14 @@ class GitRepositoryFactoryTest extends TuleapTestCase {
 
     function testGetRepositoryFromFullPath() {
         expect($this->dao)->searchProjectRepositoryByPath(101, 'garden/u/manuel/grou/ping/diskinstaller.git')->once();
-        stub($this->dao)->searchProjectRepositoryByPath()->returnsEmptyDar();
+        stub($this->dao)->searchProjectRepositoryByPath()->returns([]);
 
         $this->factory->getFromFullPath('/data/tuleap/gitolite/repositories/garden/u/manuel/grou/ping/diskinstaller.git');
     }
 
     function testGetRepositoryFromFullPathAndGitRoot() {
         expect($this->dao)->searchProjectRepositoryByPath(101, 'garden/diskinstaller.git')->once();
-        stub($this->dao)->searchProjectRepositoryByPath()->returnsEmptyDar();
+        stub($this->dao)->searchProjectRepositoryByPath()->returns([]);
 
         $this->factory->getFromFullPath('/data/tuleap/gitroot/garden/diskinstaller.git');
     }

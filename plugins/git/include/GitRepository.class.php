@@ -321,9 +321,8 @@ class GitRepository implements DVCSRepository {
         $repoId = 0;
         if ($project) {
             $projectId = $project->getID();
-            $dar = $this->getDao()->getProjectRepositoryByName($repositoryName, $projectId);
-            if ($dar && !empty($dar) && !$dar->isError()) {
-                     $row = $dar->getRow();
+            $row = $this->getDao()->getProjectRepositoryByName($repositoryName, $projectId);
+            if ($row && !empty($row)) {
                      $repoId = $row[GitDao::REPOSITORY_ID];
             }
         }

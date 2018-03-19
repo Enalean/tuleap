@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
   * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
   *
   * This file is a part of Tuleap.
@@ -16,19 +16,14 @@
   * GNU General Public License for more details.
   *
   * You should have received a copy of the GNU General Public License
-  * along with Codendi. If not, see <http://www.gnu.org/licenses/
+  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
-require_once('common/dao/include/DataAccessObject.class.php');
-require_once('common/project/ProjectManager.class.php');
-require_once('common/user/UserManager.class.php');
-/**
- * Description of GitDaoclass
- * @todo change date format to timestamp instead of mysql date format
- * @author Guillaume Storchi
- */
-class GitDao extends DataAccessObject {
 
-    protected $tableName              = 'plugin_git';
+use ParagonIE\EasyDB\EasyStatement;
+
+class GitDao extends \Tuleap\DB\DataAccessObject
+{
+
     const REPOSITORY_ID               = 'repository_id'; //PK
     const REPOSITORY_NAME             = 'repository_name';
     const REPOSITORY_PATH             = 'repository_path';
@@ -58,40 +53,25 @@ class GitDao extends DataAccessObject {
 
     const NOT_DELETED_DATE             = '0000-00-00 00:00:00';
 
-    public function __construct() {
-        parent::__construct( CodendiDataAccess::instance() );
-    }
-
-    public function getTable() {
-        return $this->tableName;
-    }
-
-    public function setTable($tableName) {
-        $this->tableName = $tableName;
-    }
-
     public function exists($id) {
         if ( empty($id) ) {
             return false;
         }
-        $id    = $this->da->escapeInt($id);
-        $query = 'SELECT '.self::REPOSITORY_ID.' FROM '.$this->getTable().
-                ' WHERE '.self::REPOSITORY_ID.'='.$id.
-                    ' AND '.self::REPOSITORY_DELETION_DATE.'='."'0000-00-00 00:00:00'";
-        $rs    = $this->retrieve($query);
-        if( !empty($rs) && $rs->rowCount() == 1 ) {
-            return true;
-        }
-        return false;
+        $sql = 'SELECT repository_id
+                FROM plugin_git
+                WHERE repository_id = ? AND repository_deletion_date = "0000-00-00 00:00:00"';
+        $result = $this->getDB()->run($sql, $id);
+
+        return !empty($result) && count($result) === 1;
     }
 
-    public function initialize($repositoryId) {
-        $id = $this->da->escapeInt($repositoryId);
-        $query = ' UPDATE '.$this->getTable().
-                 '  SET '.self::REPOSITORY_IS_INITIALIZED.'=1'.
-                 ' WHERE '.self::REPOSITORY_ID.'='.$id;
-        if ( $this->update($query) === false ) {
-            throw new GitDaoException( $GLOBALS['Language']->getText('plugin_git', 'dao_update_error').' : '.$this->da->isError());
+    public function initialize($repositoryId)
+    {
+        $sql = 'UPDATE plugin_git SET repository_is_initialized = 1 WHERE repository_id = ?';
+        try {
+            $this->getDB()->run($sql, $repositoryId);
+        } catch (PDOException $ex) {
+            throw new GitDaoException( $GLOBALS['Language']->getText('plugin_git', 'dao_update_error'));
         }
         return true;
     }
@@ -118,79 +98,61 @@ class GitDao extends DataAccessObject {
         $isInitialized  = $repository->getIsInitialized();
         $creationUserId = $repository->getCreatorId();
         $access         = $repository->getAccess();
-        //protect parameters
-        $id             = $this->da->escapeInt($id);
-        $name           = $this->da->quoteSmart($name);
-        $description    = $this->da->quoteSmart($description);
-        $path           = $this->da->quoteSmart($path);
-        $projectId      = $this->da->escapeInt($projectId);
-        $isInitialized  = $this->da->escapeInt($isInitialized);
-        $creationUserId = $this->da->escapeInt($creationUserId);
-        $access         = $this->da->quoteSmart($access);
-        $mailPrefix     = $this->da->quoteSmart($mailPrefix);
-        $scope          = $this->da->quoteSmart($scope);
-        $namespace      = $this->da->quoteSmart($namespace);
-        $backup_path    = $this->da->quoteSmart($repository->getBackupPath());
+        $backup_path    = $repository->getBackupPath();
 
-        $insert         = false;
-        if ( $this->exists($id) ) {
-            $query = 'UPDATE '.$this->getTable().
-                     ' SET '.self::REPOSITORY_DESCRIPTION.'='.$description.','.
-                            self::REPOSITORY_IS_INITIALIZED.'='.$isInitialized.','.
-                            self::REPOSITORY_ACCESS.'='.$access.','.
-                            self::REPOSITORY_MAIL_PREFIX.'='.$mailPrefix.','.
-                            self::REPOSITORY_BACKUP_PATH.'='.$backup_path.
-                     'WHERE '.self::REPOSITORY_ID.'='.$id;
-        } else {
-            if ($repository->getBackend() instanceof Git_Backend_Gitolite) {
-                $backendType = self::BACKEND_GITOLITE;
-            } else {
-                $backendType = self::BACKEND_GITSHELL;
+        if ($this->exists($id)) {
+            try {
+                $this->getDB()->update(
+                    'plugin_git',
+                    [
+                        'repository_description'           => $description,
+                        'repository_is_initialized'        => $isInitialized,
+                        'repository_access'                => $access,
+                        'repository_events_mailing_prefix' => $mailPrefix,
+                        'repository_backup_path'           => $backup_path
+                    ],
+                    ['repository_id' => $id]
+                );
+            } catch (PDOException $ex) {
+                throw new GitDaoException( $GLOBALS['Language']->getText('plugin_git', 'dao_update_error'));
             }
-            $insert       = true;
-            $creationDate = date('Y-m-d H:i:s');
-            $query = 'INSERT INTO '.$this->getTable().'('.self::REPOSITORY_NAME.','.
-                                                         self::REPOSITORY_PATH.','.
-                                                         self::REPOSITORY_PARENT.','.
-                                                         self::REPOSITORY_DESCRIPTION.','.
-                                                         self::FK_PROJECT_ID.','.
-                                                         self::REPOSITORY_CREATION_DATE.','.
-                                                         self::REPOSITORY_CREATION_USER_ID.','.
-                                                         self::REPOSITORY_IS_INITIALIZED.','.
-                                                         self::REPOSITORY_ACCESS.','.
-                                                         self::REPOSITORY_BACKEND_TYPE.','.
-                                                         self::REPOSITORY_SCOPE.','.
-                                                         self::REPOSITORY_NAMESPACE.
-                                                    ') values ('.
-                                                        "".$name.",".
-                                                        "".$path.",".
-                                                        "".$parentId.",".
-                                                        "".$description.",".
-                                                        $projectId.",".
-                                                        "'".$creationDate."',".
-                                                        $creationUserId.",".
-                                                        $isInitialized.','.
-                                                        $access.','.
-                                                        $this->da->quoteSmart($backendType).','.
-                                                        $scope.','.
-                                                        $namespace.
-                                                        ')';
+            return true;
         }
 
-        if ( $this->update($query) === false ) {
-            throw new GitDaoException( $GLOBALS['Language']->getText('plugin_git', 'dao_update_error').' : '.$this->da->isError());
+        if ($repository->getBackend() instanceof Git_Backend_Gitolite) {
+            $backendType = self::BACKEND_GITOLITE;
+        } else {
+            $backendType = self::BACKEND_GITSHELL;
         }
-        if ( $insert ) {
-            return $this->da->lastInsertId();
+
+        try {
+            $this->getDB()->insert(
+                'plugin_git',
+                [
+                    'repository_name'             => $name,
+                    'repository_path'             => $path,
+                    'repository_parent_id'        => $parentId,
+                    'repository_description'      => $description,
+                    'project_id'                  => $projectId,
+                    'repository_creation_date'    => date('Y-m-d H:i:s'),
+                    'repository_creation_user_id' => $creationUserId,
+                    'repository_is_initialized'   => $isInitialized,
+                    'repository_access'           => $access,
+                    'repository_backend_type'     => $backendType,
+                    'repository_scope'            => $scope,
+                    'repository_namespace'        => $namespace
+                ]
+            );
+        } catch (PDOException $ex) {
+            throw new GitDaoException( $GLOBALS['Language']->getText('plugin_git', 'dao_update_error'));
         }
-        return true;
+
+        return $this->getDB()->lastInsertId();
     }
 
     public function delete(GitRepository $repository) {
         $id        = $repository->getId();
         $projectId = $repository->getProjectId();
-        $id        = $this->da->escapeInt($id);
-        $projectId = $this->da->escapeInt($projectId);
         if ( empty($id) || empty($projectId) ) {
             throw new GitDaoException( $GLOBALS['Language']->getText('plugin_git', 'dao_delete_params') );
         }
@@ -199,28 +161,43 @@ class GitDao extends DataAccessObject {
         $backup_path  = str_replace('/', '_', $repository->getFullName());
         $backup_path  .= '_'.strtotime($deletionDate);
         $backup_path  = $projectName.'_'.$backup_path;
-        $backup_path  = $this->da->quoteSmart($backup_path);
-        $deletionDate = $this->da->quoteSmart($deletionDate);
-        $query        = ' UPDATE '.$this->getTable().' SET '.self::REPOSITORY_DELETION_DATE.'='.$deletionDate.', '.self::REPOSITORY_BACKUP_PATH.'='.$backup_path.
-                        ' WHERE '.self::REPOSITORY_ID.'='.$id.' AND '.self::FK_PROJECT_ID.'='.$projectId;
-        $r  = $this->update($query);
-        $ar = $this->da->affectedRows();
-        if ( $r === false || $ar == 0 ) {
-            throw new GitDaoException($GLOBALS['Language']->getText('plugin_git', 'dao_delete_error').' '.$this->da->isError());
+
+        try {
+            $affected_rows = $this->getDB()->update(
+                'plugin_git',
+                [
+                    'repository_deletion_date' => $deletionDate,
+                    'repository_backup_path'   => $backup_path
+                ],
+                [
+                    'repository_id' => $id,
+                    'project_id'    => $projectId
+                ]
+            );
+        } catch (PDOException $ex) {
+            return false;
         }
-        if ( $ar == 1 ) {
-            return true;
-        }
-        return false;
+
+        return $affected_rows === 1;
     }
 
-    public function renameProject(Project $project, $newName) {
-        $oldPath = $this->da->quoteSmart($project->getUnixName().'/');
-        $newPath = $this->da->quoteSmart($newName.'/');
-        $sql = 'UPDATE '.$this->getTable().
-               ' SET '.self::REPOSITORY_PATH.' = REPLACE ('.self::REPOSITORY_PATH.','.$oldPath.','.$newPath.') '.
-               ' WHERE '.self::FK_PROJECT_ID.' = '.$this->da->escapeInt($project->getId());
-        return $this->update($sql);
+    public function renameProject(Project $project, $newName)
+    {
+        $oldPath = $project->getUnixName().'/';
+        $newPath = $newName.'/';
+
+        try {
+            $this->getDB()->run(
+                'UPDATE plugin_git
+                SET repository_path = REPLACE(repository_path, ?, ?)
+                WHERE project_id = ?',
+                $oldPath, $newPath, $project->getID()
+            );
+        } catch (PDOException $ex) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -235,88 +212,90 @@ class GitDao extends DataAccessObject {
      *
      * @return Array
      */
-    public function getProjectRepositoryList($projectId, $onlyGitShell = false, $scope = true, $userId = null) {
-        $condition = "";
+    public function getProjectRepositoryList($projectId, $onlyGitShell = false, $scope = true, $userId = null)
+    {
+        $condition = EasyStatement::open();
+        $condition->andWith('project_id = ?', $projectId);
+        $condition->andWith('repository_deletion_date = ?', '0000-00-00 00:00:00');
         if ($onlyGitShell) {
-            $condition .= " AND ". self::REPOSITORY_BACKEND_TYPE ." = '". self::BACKEND_GITSHELL ."' ";
+            $condition->andWith('repository_backend_type = ?', self::BACKEND_GITSHELL);
         }
-        $projectId = $this->da->escapeInt($projectId);
-        $userId    = $this->da->escapeInt($userId);
 
         if (empty($projectId)) {
             return array();
         }
+
         if ($scope) {
             if (empty($userId)) {
-                $condition .= " AND repository_scope = '".GitRepository::REPO_SCOPE_PROJECT."' ";
+                $condition->andWith('repository_scope = ?', GitRepository::REPO_SCOPE_PROJECT);
             } else {
-                $condition .= " AND repository_creation_user_id = $userId AND repository_scope = '".GitRepository::REPO_SCOPE_INDIVIDUAL."' ";
+                $condition->andWith('repository_creation_user_id = ? AND repository_scope = ?', $userId, GitRepository::REPO_SCOPE_INDIVIDUAL);
             }
         }
 
-        $sql = "SELECT * FROM $this->tableName
-                WHERE ". self::FK_PROJECT_ID ." = $projectId
-                  AND ". self::REPOSITORY_DELETION_DATE ." = '0000-00-00 00:00:00'
-                  $condition
-                ORDER BY CONCAT(". self::REPOSITORY_NAMESPACE .', '. self::REPOSITORY_NAME .')';
+        $sql = "SELECT * FROM plugin_git
+                WHERE $condition
+                ORDER BY CONCAT(repository_namespace, repository_name)";
 
-        $rs = $this->retrieve($sql);
-        $list = array();
-        if ($rs && $rs->rowCount() > 0 ) {
-            foreach ($rs as $row) {
-                $repoId        = $row[self::REPOSITORY_ID];
-                $list[$repoId] = $row;
-            }
+        $results = $this->getDB()->safeQuery(
+            $sql,
+            $condition->values()
+        );
+
+        $list = [];
+        foreach ($results as $row) {
+            $repo_id        = $row['repository_id'];
+            $list[$repo_id] = $row;
         }
+
         return $list;
     }
 
-    /**
-     *
-     * @return DataAccessResult
-     */
-    public function getActiveRepositoryPathsWithRemoteServersForAllProjects() {
-        $sql = "SELECT * FROM $this->tableName
+    public function getActiveRepositoryPathsWithRemoteServersForAllProjects()
+    {
+        $sql = "SELECT * FROM plugin_git
                 WHERE remote_server_id IS NOT NULL
                 AND repository_deletion_date = '0000-00-00 00:00:00'";
-        return $this->retrieve($sql);
+
+        return $this->getDB()->run($sql);
     }
 
     /**
      * Return the list of users that owns repositories in the project $projectId
-     *
-     * @return DataAccessResult
      */
-    public function getProjectRepositoriesOwners($projectId) {
-        $projectId = $this->da->escapeInt($projectId);
+    public function getProjectRepositoriesOwners($projectId)
+    {
         $sql = "SELECT DISTINCT repository_creation_user_id, user_name, realname
-                FROM $this->tableName
+                FROM plugin_git
                     INNER JOIN user ON user.user_id = repository_creation_user_id
-                WHERE ". self::FK_PROJECT_ID ." = $projectId
-                  AND ". self::REPOSITORY_DELETION_DATE ." = '0000-00-00 00:00:00'
-                  AND ". self::REPOSITORY_SCOPE." = 'I'
+                WHERE project_id = ?
+                  AND repository_deletion_date = '0000-00-00 00:00:00'
+                  AND repository_scope = 'I'
                 ORDER BY user.user_name";
-        return $this->retrieve($sql);
+
+        return $this->getDB()->run($sql, $projectId);
     }
 
-    public function getAllGitoliteRespositories($projectId) {
-        $projectId     = $this->da->escapeInt($projectId);
-        $type_gitolite = $this->da->quoteSmart(self::BACKEND_GITOLITE);
+    public function getAllGitoliteRespositories($projectId)
+    {
+        $sql = "SELECT * FROM plugin_git
+                WHERE project_id = ?
+                  AND repository_deletion_date = '0000-00-00 00:00:00'
+                  AND repository_backend_type = ?";
 
-        $sql = "SELECT * FROM $this->tableName
-                WHERE ". self::FK_PROJECT_ID ." = $projectId
-                  AND ". self::REPOSITORY_DELETION_DATE ." = '0000-00-00 00:00:00'
-                  AND ". self::REPOSITORY_BACKEND_TYPE ." = $type_gitolite";
-        return $this->retrieve($sql);
+        return $this->getDB()->run($sql, $projectId, self::BACKEND_GITOLITE);
     }
 
-    public function hasGitShellRepositories() {
-        $backend_type = $this->da->quoteSmart(self::BACKEND_GITSHELL);
-        $sql = "SELECT NULL FROM $this->tableName
-                WHERE ".self::REPOSITORY_BACKEND_TYPE." = $backend_type
-                AND ". self::REPOSITORY_DELETION_DATE ." = '0000-00-00 00:00:00'
-                LIMIT 1";
-        return $this->retrieve($sql)->count() != 0;
+    public function hasGitShellRepositories()
+    {
+        $has_git_shell_repositories = $this->getDB()->single(
+            'SELECT TRUE FROM plugin_git
+                       WHERE repository_backend_type = ? AND repository_deletion_date = "0000-00-00 00:00:00"
+                       LIMIT 1',
+            [self::BACKEND_GITSHELL]
+        );
+
+        return (bool) $has_git_shell_repositories;
     }
 
     /**
@@ -330,53 +309,43 @@ class GitDao extends DataAccessObject {
         if ( empty($projectId) || empty($repositoryPath)  )  {
             throw new GitDaoException( $GLOBALS['Language']->getText('plugin_git', 'dao_search_params') );
         }
-        $rs = $this->searchProjectRepositoryByPath($projectId, $repositoryPath);
-        if ( empty($rs) ) {
+        $row = $this->searchProjectRepositoryByPath($projectId, $repositoryPath);
+        if (empty($row)) {
             throw new GitDaoException($GLOBALS['Language']->getText('plugin_git', 'dao_search_error'));
-            return false;
         }
-        $result         = $rs->getRow();
-        if ( empty($result) ) {
-            throw new GitDaoException($GLOBALS['Language']->getText('plugin_git', 'dao_search_error'));
-            return false;
-        }
-        $this->hydrateRepositoryObject($repository, $result);
+        $this->hydrateRepositoryObject($repository, $row);
         return true;
     }
 
 
-    public function searchProjectRepositoryByPath($projectId, $repositoryPath) {
-
-        $projectId      = $this->da->escapeInt($projectId);
-        $repositoryPath = $this->da->quoteSmart($repositoryPath);
-
+    public function searchProjectRepositoryByPath($projectId, $repositoryPath)
+    {
         //COLLATE utf8_bin used in query in order to create a case sensitive match
-        $query = 'SELECT * '.
-                 ' FROM '.$this->getTable().
-                 ' WHERE '.self::REPOSITORY_PATH.' COLLATE utf8_bin = '.$repositoryPath.
-                 ' AND   '.self::FK_PROJECT_ID.'='.$projectId.
-                 ' AND   '.self::REPOSITORY_DELETION_DATE.'='."'0000-00-00 00:00:00'";
-
-        return $this->retrieve($query);
+        return $this->getDB()->row(
+            'SELECT * FROM plugin_git
+                       WHERE repository_path COLLATE utf8_bin = ? AND project_id = ?
+                            AND repository_deletion_date = "0000-00-00 00:00:00"',
+            $repositoryPath,
+            $projectId
+        );
     }
 
-    public function hasChild($repository) {
-        $repoId = $this->da->escapeInt( $repository->getId() );
+    public function hasChild($repository)
+    {
+        $repoId = $repository->getId();
         if ( empty($repoId) ) {
             throw new GitDaoException( $GLOBALS['Language']->getText('plugin_git', 'dao_child_params') );
         }
-        $query = 'SELECT '.self::REPOSITORY_ID.
-                 ' FROM '.$this->getTable().
-                 ' WHERE '.self::REPOSITORY_PARENT.'='.$repoId.' AND '.self::REPOSITORY_DELETION_DATE.'='."'0000-00-00 00:00:00'";
-        $rs = $this->retrieve($query);
-        if ( empty($rs) ) {
+        $query = 'SELECT repository_id'.
+                 ' FROM plugin_git'.
+                 ' WHERE repository_parent_id=? AND repository_deletion_date="0000-00-00 00:00:00"';
+
+        try {
+            $result = $this->getDB()->run($query, $repoId);
+        } catch (PDOException $ex) {
             return false;
         }
-        $count = $rs->rowCount();
-        if ( empty($count) ) {
-            return false;
-        }
-        return true;
+        return !empty($result);
     }
 
     /**
@@ -389,32 +358,25 @@ class GitDao extends DataAccessObject {
      *
      * @return Boolean
      */
-    public function logGitPush($repoId, $userId, $pushTimestamp, $commitsNumber, $refname, $operation_type, $refname_type) {
-        $repositoryId  = $this->da->escapeInt($repoId);
-        $userId        = $this->da->escapeInt($userId);
-        $commitsNumber = $this->da->escapeInt($commitsNumber);
-        $pushDate      = $this->da->escapeInt($pushTimestamp);
-        $refname       = $this->da->quoteSmart($refname);
-        $operation_type = $this->da->quoteSmart($operation_type);
-        $refname_type  = $this->da->quoteSmart($refname_type);
-
-        $query         = "INSERT INTO plugin_git_log (".self::REPOSITORY_ID.",
-                                                      user_id,
-                                                      push_date,
-                                                      commits_number,
-                                                      refname,
-                                                      operation_type,
-                                                      refname_type
-                                                      ) values (
-                                                      $repositoryId,
-                                                      $userId,
-                                                      $pushDate,
-                                                      $commitsNumber,
-                                                      $refname,
-                                                      $operation_type,
-                                                      $refname_type
-                                                      )";
-        return $this->update($query);
+    public function logGitPush($repoId, $userId, $pushTimestamp, $commitsNumber, $refname, $operation_type, $refname_type)
+    {
+        try {
+            $this->getDB()->insert(
+                'plugin_git_log',
+                [
+                    'repository_id'  => $repoId,
+                    'user_id'        => $userId,
+                    'push_date'      => $pushTimestamp,
+                    'commits_number' => $commitsNumber,
+                    'refname'        => $refname,
+                    'operation_type' => $operation_type,
+                    'refname_type'   => $refname_type
+                ]
+            );
+        } catch (PDOException $ex) {
+            return false;
+        }
+        return true;
     }
 
     public function getProjectRepositoryById($repository) {
@@ -422,41 +384,33 @@ class GitDao extends DataAccessObject {
         if ( empty($id) ) {
             return false;
         }
-        $rs = $this->searchProjectRepositoryById($id);
-        if ( empty($rs) ) {
+        $row = $this->searchProjectRepositoryById($id);
+        if (empty($row)) {
             throw new GitDaoException($GLOBALS['Language']->getText('plugin_git', 'dao_search_error'));
-            return false;
         }
-        $result = $rs->getRow();
-        if ( empty($result) ) {
-            throw new GitDaoException($GLOBALS['Language']->getText('plugin_git', 'dao_search_error'));
-            return false;
-        }
-        $this->hydrateRepositoryObject($repository, $result);
+        $this->hydrateRepositoryObject($repository, $row);
         return true;
     }
 
     /**
      * @param Intger $id
      *
-     * @return DataAccessResult
+     * @return array
      */
-    public function searchProjectRepositoryById($id) {
-        $id = $this->da->escapeInt($id);
-        $query = 'SELECT * '.
-                 ' FROM '.$this->getTable().
-                 ' WHERE '.self::REPOSITORY_ID.'='.$id.
-                 ' AND '.self::REPOSITORY_DELETION_DATE." = '0000-00-00 00:00:00'";
-        return $this->retrieve($query);
+    public function searchProjectRepositoryById($id)
+    {
+        return $this->getDB()->row(
+            'SELECT * FROM plugin_git WHERE repository_id = ? AND repository_deletion_date = "0000-00-00 00:00:00"',
+            $id
+        );
     }
 
-    public function searchDeletedRepositoryById($id) {
-        $id = $this->da->escapeInt($id);
-        $query = 'SELECT * '.
-                 ' FROM '.$this->getTable().
-                 ' WHERE '.self::REPOSITORY_ID.'='.$id.
-                 ' AND '.self::REPOSITORY_DELETION_DATE." != '0000-00-00 00:00:00'";
-        return $this->retrieve($query);
+    public function searchDeletedRepositoryById($id)
+    {
+        return $this->getDB()->row(
+            'SELECT * FROM plugin_git WHERE repository_id = ? AND repository_deletion_date != "0000-00-00 00:00:00"',
+            $id
+        );
     }
 
     /**
@@ -465,14 +419,14 @@ class GitDao extends DataAccessObject {
      * @param String $repositoryName Name of the repository we are looking for.
      * @param String $projectId      ID of the project to which the repository belong.
      *
-     * @return DataAccessResult
      */
-    public function getProjectRepositoryByName($repositoryName, $projectId) {
-        $projectId = $this->da->escapeInt($projectId);
-        $repositoryName = $this->da->quoteSmart($repositoryName);
-        $query = 'SELECT * '.' FROM '.$this->getTable().
-                 ' WHERE '.self::REPOSITORY_NAME.'='.$repositoryName.' AND '.self::FK_PROJECT_ID.'='.$projectId.' AND '.self::REPOSITORY_DELETION_DATE.'='."'0000-00-00 00:00:00'";
-        return $this->retrieve($query);
+    public function getProjectRepositoryByName($repositoryName, $projectId)
+    {
+        return $this->getDB()->single(
+            'SELECT * FROM plugin_git
+                       WHERE repository_name = ? AND project_id = ? AND repository_deletion_date = "0000-00-00 00:00:00"',
+            [$repositoryName, $projectId]
+        );
     }
 
     /**
@@ -513,40 +467,40 @@ class GitDao extends DataAccessObject {
      * @param String  $endDate     End date
      * @param Integer $projectId   Project Id
      * @param Boolean $stillActive Select only reposirtories that still active
-     *
-     * @return DataAccessResult
      */
-    public function getBackendStatistics($backend, $startDate, $endDate, $projectId = null, $stillActive = false) {
-        $condition = '';
+    public function getBackendStatistics($backend, $startDate, $endDate, $projectId = null, $stillActive = false)
+    {
+        $condition = EasyStatement::open();
+        $condition->andWith('repository_backend_type = ?', $backend);
+        $condition->andWith('repository_creation_date BETWEEN CAST(? AS DATETIME) AND CAST(? AS DATETIME)', $startDate, $endDate);
         if ($projectId) {
-            $condition = "AND ".self::FK_PROJECT_ID."=".$this->da->escapeInt($projectId);
+            $condition->andWith('project_id = ?', $projectId);
         }
         if ($stillActive) {
-            $condition .= " AND status = 'A' AND ".self::REPOSITORY_DELETION_DATE."="."'0000-00-00 00:00:00' ";
+            $condition->andWith('status = "A" AND repository_deletion_date = "0000-00-00 00:00:00"');
         }
         $query = "SELECT count(repository_id) AS count,
                   YEAR(repository_creation_date) AS year,
                   MONTHNAME(STR_TO_DATE(MONTH(repository_creation_date), '%m')) AS month
-                  FROM ".$this->getTable()."
+                  FROM plugin_git
                   JOIN groups g ON group_id = project_id
-                  WHERE repository_backend_type = ".$this->da->quoteSmart($backend)."
-                    AND repository_creation_date BETWEEN CAST(".$this->da->quoteSmart($startDate)." AS DATETIME) AND CAST(".$this->da->quoteSmart($endDate)." AS DATETIME)
-                    ".$condition."
+                  WHERE $condition
                   GROUP BY year, month
                   ORDER BY year, STR_TO_DATE(month,'%M')";
-        return $this->retrieve($query);
+
+        return $this->getDB()->safeQuery($query, $condition->values());
     }
 
-    public function isRepositoryExisting($project_id, $path) {
-        $project_id = $this->da->escapeInt($project_id);
-        $path       = $this->da->quoteSmart($path);
-        $sql = "SELECT NULL
+    public function isRepositoryExisting($project_id, $path)
+    {
+        $sql = "SELECT TRUE
                 FROM plugin_git
-                WHERE repository_path = $path
-                  AND project_id = $project_id
-                  AND ".self::REPOSITORY_DELETION_DATE." = '0000-00-00 00:00:00'
+                WHERE repository_path = ?
+                  AND project_id = ?
+                  AND repository_deletion_date = '0000-00-00 00:00:00'
                 LIMIT 1";
-        return count($this->retrieve($sql)) > 0;
+
+        return (bool) $this->getDB()->single($sql, [$path, $project_id]);
     }
 
     /**
@@ -556,139 +510,150 @@ class GitDao extends DataAccessObject {
      *
      * @return Boolean
      */
-    public function switchToGerrit($repository_id, $remote_server_id) {
-        $repository_id    = $this->da->escapeInt($repository_id);
-        $remote_server_id = $this->da->escapeInt($remote_server_id);
-        $sql = "UPDATE plugin_git
-                SET remote_server_id = $remote_server_id,
+    public function switchToGerrit($repository_id, $remote_server_id)
+    {
+        $sql = 'UPDATE plugin_git
+                SET remote_server_id = ?,
                     remote_server_disconnect_date = NULL,
                     remote_project_deleted_date = NULL
-                WHERE repository_id = $repository_id";
-        return $this->update($sql);
+                WHERE repository_id = ?';
+
+        try {
+            $this->getDB()->run($sql, $remote_server_id, $repository_id);
+        } catch (PDOException $ex) {
+            return false;
+        }
+        return true;
     }
 
-    public function setGerritMigrationError($repository_id) {
-        $repository_id    = $this->da->escapeInt($repository_id);
+    public function setGerritMigrationError($repository_id)
+    {
         $sql = "UPDATE plugin_git
                 SET remote_server_migration_status = 'ERROR'
-                WHERE repository_id = $repository_id";
-        return $this->update($sql);
+                WHERE repository_id = ?";
+        $this->getDB()->run($sql, $repository_id);
     }
 
-    public function setGerritMigrationSuccess($repository_id) {
-        $repository_id    = $this->da->escapeInt($repository_id);
+    public function setGerritMigrationSuccess($repository_id)
+    {
         $sql = "UPDATE plugin_git
                 SET remote_server_migration_status = 'DONE'
-                WHERE repository_id = $repository_id";
-        return $this->update($sql);
+                WHERE repository_id = ?";
+        $this->getDB()->run($sql, $repository_id);
     }
 
-    public function disconnectFromGerrit($repository_id) {
-        $repository_id = $this->da->escapeInt($repository_id);
-        $sql = "UPDATE plugin_git
+    public function disconnectFromGerrit($repository_id)
+    {
+        $sql = 'UPDATE plugin_git
                 SET remote_server_disconnect_date = UNIX_TIMESTAMP(), remote_server_migration_status = NULL
-                WHERE repository_id = $repository_id";
-        return $this->update($sql);
+                WHERE repository_id = ?';
+        $this->getDB()->run($sql, $repository_id);
     }
 
     /**
      * @return bool
      */
     public function setGerritProjectAsDeleted($repository_id) {
-        $repository_id = $this->da->escapeInt($repository_id);
-        $sql = "UPDATE plugin_git
+        $sql = 'UPDATE plugin_git
                 SET remote_project_deleted_date = UNIX_TIMESTAMP(), remote_server_migration_status = NULL
-                WHERE repository_id = $repository_id";
-        return $this->update($sql);
+                WHERE repository_id = ?';
+        try {
+            $this->getDB()->run($sql, $repository_id);
+        } catch (PDOException $ex) {
+            return false;
+        }
+        return true;
     }
 
     /**
      * @return bool
      */
-    public function isRemoteServerUsed($remote_server_id) {
-        $remote_server_id = $this->da->escapeInt($remote_server_id);
-        $sql = "SELECT NULL
+    public function isRemoteServerUsed($remote_server_id)
+    {
+        $sql = 'SELECT NULL
                 FROM plugin_git
-                WHERE remote_server_id = $remote_server_id
+                WHERE remote_server_id = ?
                     AND remote_server_disconnect_date IS NULL
-                LIMIT 1";
-        return count($this->retrieve($sql)) > 0;
+                LIMIT 1';
+        $rows = $this->getDB()->run($sql, $remote_server_id);
+        return count($rows) > 0;
     }
 
     /**
      * @return bool
      */
-    public function isRemoteServerUsedInProject($remote_server_id, $project_id) {
-        $remote_server_id = $this->da->escapeInt($remote_server_id);
-        $project_id       = $this->da->escapeInt($project_id);
-
-        $sql = "SELECT NULL
+    public function isRemoteServerUsedInProject($remote_server_id, $project_id)
+    {
+        $sql = 'SELECT NULL
                 FROM plugin_git
-                WHERE remote_server_id = $remote_server_id
+                WHERE remote_server_id = ?
                     AND remote_server_disconnect_date IS NULL
-                    AND project_id = $project_id
-                LIMIT 1";
+                    AND project_id = ?
+                LIMIT 1';
 
-        return count($this->retrieve($sql)) > 0;
+        $rows = $this->getDB()->run($sql, $remote_server_id, $project_id);
+
+        return count($rows) > 0;
     }
 
-    public function searchGerritRepositoriesWithPermissionsForUGroupAndProject($project_id, $ugroup_ids) {
-        $project_id = $this->da->escapeInt($project_id);
-        $ugroup_ids = $this->da->escapeIntImplode($ugroup_ids);
+    public function searchGerritRepositoriesWithPermissionsForUGroupAndProject($project_id, $ugroup_ids)
+    {
+        $permission_type_condition = EasyStatement::open()->in('?*', [Git::PERM_READ, Git::PERM_WRITE, Git::PERM_WPLUS]);
+        $ugroup_ids_condition      = EasyStatement::open()->in('?*', $ugroup_ids);
         $sql = "SELECT *
                 FROM plugin_git git
                   JOIN permissions ON (
                     permissions.object_id = CAST(git.repository_id as CHAR)
-                    AND permissions.permission_type IN (".
-                        $this->da->quoteSmart(Git::PERM_READ) .", ".
-                        $this->da->quoteSmart(Git::PERM_WRITE) .", ".
-                        $this->da->quoteSmart(Git::PERM_WPLUS).")
+                    AND permissions.permission_type IN ($permission_type_condition)
                     )
                 WHERE git.remote_server_id IS NOT NULL
-                  AND git.project_id = $project_id
-                  AND permissions.ugroup_id IN ($ugroup_ids)";
-        return $this->retrieve($sql);
+                  AND git.project_id = ?
+                  AND permissions.ugroup_id IN ($ugroup_ids_condition)";
 
+        return $this->getDB()->safeQuery(
+            $sql,
+            array_merge($permission_type_condition->values(), [$project_id], $ugroup_ids_condition->values())
+        );
     }
 
-    public function searchAllGerritRepositoriesOfProject($project_id) {
-        $project_id = $this->da->escapeInt($project_id);
-        $sql = "SELECT *
+    public function searchAllGerritRepositoriesOfProject($project_id)
+    {
+        $sql = 'SELECT *
                 FROM plugin_git
                 WHERE remote_server_id IS NOT NULL
-                  AND project_id = $project_id";
-        return $this->retrieve($sql);
+                  AND project_id = ?';
+
+        return $this->getDB()->run($sql, $project_id);
     }
 
     /**
      * @param array $repository_ids
      */
-    public function searchRepositoriesInSameProjectFromRepositoryList(array $repository_ids, $project_id) {
-        $repository_list = $this->da->escapeIntImplode($repository_ids);
-        $project_id = $this->da->escapeInt($project_id);
+    public function searchRepositoriesInSameProjectFromRepositoryList(array $repository_ids, $project_id)
+    {
+        $repository_list_condition = EasyStatement::open();
+        $repository_list_condition->in('repository_id IN(?*)', $repository_ids);
 
         $sql = "SELECT repository_id FROM plugin_git
-                WHERE repository_id IN ($repository_list)
-                AND project_id = $project_id";
+                WHERE $repository_list_condition AND project_id = ?";
 
-        return $this->retrieve($sql);
+        return $this->getDB()->safeQuery($sql, array_merge($repository_list_condition->values(), [$project_id]));
     }
 
     /**
      * Get the list of all deleted Git repositories to be purged
      *
      * @param int $retention_period
-     *
-     * @return DataAccessResult | false
      */
-    public function getDeletedRepositoriesToPurge($retention_period) {
-        $retention_period = $this->da->escapeInt($retention_period);
+    public function getDeletedRepositoriesToPurge($retention_period)
+    {
         $query = 'SELECT * '.
-                 ' FROM '.$this->getTable().
-                 ' WHERE '.self::REPOSITORY_DELETION_DATE." != '0000-00-00 00:00:00'".
-                 ' AND '.self::REPOSITORY_BACKEND_TYPE." = '".self::BACKEND_GITOLITE."'".
-                 ' AND TO_DAYS(NOW()) - TO_DAYS('.self::REPOSITORY_DELETION_DATE.') ='.$retention_period;
-        return $this->retrieve($query);
+                 ' FROM plugin_git' .
+                 ' WHERE repository_deletion_date != "0000-00-00 00:00:00"' .
+                 ' AND repository_backend_type = ?'.
+                 ' AND TO_DAYS(NOW()) - TO_DAYS(repository_deletion_date) = ?';
+
+        return $this->getDB()->run($query, self::BACKEND_GITOLITE, $retention_period);
      }
 
     /**
@@ -696,23 +661,28 @@ class GitDao extends DataAccessObject {
      *
      * @param Int $project_id
      * @param Int $retention_period
-     *
-     * @return DataAccessResult | false
      */
     public function getDeletedRepositoriesByProjectId($project_id, $retention_period) {
-        $project_id       = $this->da->escapeInt($project_id);
-        $retention_period = $this->da->escapeInt($retention_period);
         $query = 'SELECT * '.
                  ' FROM plugin_git'.
-                 ' WHERE '.self::REPOSITORY_DELETION_DATE.' != "0000-00-00 00:00:00"'.
-                 ' AND '.self::REPOSITORY_BACKEND_TYPE.' = "'.self::BACKEND_GITOLITE.'"'.
-                 ' AND '.self::FK_PROJECT_ID.' = '.$project_id.
-                 ' AND TO_DAYS(NOW()) - TO_DAYS('.self::REPOSITORY_DELETION_DATE.') < '.$retention_period.
-                 ' AND '.self::REPOSITORY_ID.' NOT IN ('.
+                 ' WHERE repository_deletion_date != "0000-00-00 00:00:00"'.
+                 ' AND repository_backend_type = ?'.
+                 ' AND project_id = ?' .
+                 ' AND TO_DAYS(NOW()) - TO_DAYS(repository_deletion_date) < ?'.
+                 ' AND repository_id NOT IN ('.
                  '     SELECT parameters FROM system_event'.
-                 '     WHERE type="'.SystemEvent_GIT_REPO_RESTORE::NAME.'"'.
-                 '     AND status IN ("'.SystemEvent::STATUS_NEW.'","'.SystemEvent::STATUS_RUNNING.'"))';
-        return $this->retrieve($query);
+                 '     WHERE type=? '.
+                 '     AND status IN (?, ?))';
+
+        return $this->getDB()->run(
+            $query,
+            self::BACKEND_GITOLITE,
+            $project_id,
+            $retention_period,
+            SystemEvent_GIT_REPO_RESTORE::NAME,
+            SystemEvent::STATUS_NEW,
+            SystemEvent::STATUS_RUNNING
+        );
     }
 
     /**
@@ -720,59 +690,53 @@ class GitDao extends DataAccessObject {
      *
      * @param Int $repository_id
      *
-     * @return GitDaoException | true
+     * @return true
      */
-    public function activate($repository_id) {
-        $id = $this->da->escapeInt($repository_id);
-        $query = ' UPDATE plugin_git'.
-                 ' SET '.self::REPOSITORY_DELETION_DATE."='0000-00-00 00:00:00'".
-                  ' ,'.self::REPOSITORY_BACKUP_PATH.' = ""'.
-                 ' WHERE '.self::REPOSITORY_ID.'='.$id;
-        return $this->update($query);
+    public function activate($repository_id)
+    {
+        $sql = 'UPDATE plugin_git
+                SET repository_deletion_date = "0000-00-00 00:00:00", repository_backup_path = ""
+                WHERE repository_id = ?';
+        $this->getDB()->run($sql, $repository_id);
+
+        return true;
     }
 
-    public function getPaginatedOpenRepositories($project_id, $limit, $offset) {
-        $project_id = $this->da->escapeInt($project_id);
-        $limit      = $this->da->escapeInt($limit);
-        $offset     = $this->da->escapeInt($offset);
-
-        $sql = "SELECT *
+    public function getPaginatedOpenRepositories($project_id, $limit, $offset)
+    {
+        $sql = 'SELECT *
                 FROM plugin_git
                 WHERE repository_deletion_date IS NULL
-                AND project_id = $project_id
-                LIMIT $limit
-                OFFSET $offset";
+                AND project_id = ?
+                LIMIT ?
+                OFFSET ?';
 
-        return $this->retrieve($sql);
+        return $this->getDB()->run($sql, $project_id, $limit, $offset);
     }
 
-    /**
-     * @return DataAccessResult
-     */
-    public function getUGroupsByRepositoryPermissions($repository_id, $permission_type) {
-        $repository_id   = $this->da->quoteSmart($repository_id);
-        $permission_type = $this->da->quoteSmart($permission_type);
-
-        $sql = "SELECT ugroup_id
+    public function getUGroupsByRepositoryPermissions($repository_id, $permission_type)
+    {
+        $sql = 'SELECT ugroup_id
                 FROM permissions
-                WHERE permission_type = $permission_type
-                AND object_id = CAST($repository_id AS CHAR)";
+                WHERE permission_type = ?
+                AND object_id = CAST(? AS CHAR)';
 
-        $rows = $this->retrieve($sql);
+        $rows = $this->getDB()->run($sql, $permission_type, $repository_id);
 
-        if ($rows !== false && $rows->count() > 0) {
+        if (! empty($rows)) {
             return $rows;
         }
 
        return $this->getDefaultPermissions($permission_type);
     }
 
-    private function getDefaultPermissions($permission_type) {
+    private function getDefaultPermissions($permission_type)
+    {
         $default_sql = "SELECT ugroup_id
                         FROM permissions_values
-                        WHERE permission_type = $permission_type
+                        WHERE permission_type = ?
                             AND is_default = 1";
 
-        return $this->retrieve($default_sql);
+        return $this->getDB()->run($default_sql, $permission_type);
     }
 }
