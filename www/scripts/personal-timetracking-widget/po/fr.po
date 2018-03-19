@@ -12,6 +12,9 @@ msgstr ""
 "X-Generator: Poedit 2.0.6\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
+msgid "An error occured"
+msgstr "Une erreur est survenue"
+
 msgid "Artifact"
 msgstr "Artéfact"
 
@@ -21,14 +24,14 @@ msgstr "Annuler"
 msgid "From"
 msgstr "Du"
 
+msgid "No tracked time have been found for this period"
+msgstr "Aucun temps suivi n'a été trouvé pour cette période"
+
 msgid "Project"
 msgstr "Projet"
 
 msgid "Search"
 msgstr "Rechercher"
-
-msgid "There is nothing here ... for now ..."
-msgstr "Cet espace est vide ... pour le moment ..."
 
 msgid "Time"
 msgstr "Temps"

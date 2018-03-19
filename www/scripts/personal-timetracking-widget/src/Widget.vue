@@ -31,6 +31,7 @@
              v-bind:readingEndDate="end_date"
         />
         <widget-artifact-table
+            v-bind:is-in-reading-mode="reading_mode"
             v-bind:startDate="start_date"
             v-bind:endDate="end_date"
         />

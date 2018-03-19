@@ -59,3 +59,12 @@
 .timetracking-artifacts-table {
     margin: $tlp-spacing;
 }
+
+.timetracking-badge-direct-link-to-artifact {
+    margin: 0 5px 0 0;
+}
+
+.timetracking-loader {
+    height: 100px;
+    background: url('/themes/BurningParrot/images/spinner.gif') no-repeat center center;
+}

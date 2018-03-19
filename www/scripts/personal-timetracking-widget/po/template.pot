@@ -1,3 +1,6 @@
+msgid "An error occured"
+msgstr ""
+
 msgid "Artifact"
 msgstr ""
 
@@ -7,13 +10,13 @@ msgstr ""
 msgid "From"
 msgstr ""
 
+msgid "No tracked time have been found for this period"
+msgstr ""
+
 msgid "Project"
 msgstr ""
 
 msgid "Search"
-msgstr ""
-
-msgid "There is nothing here ... for now ..."
 msgstr ""
 
 msgid "Time"
