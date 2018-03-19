@@ -20,10 +20,12 @@
 
 namespace Tuleap\TestManagement\Campaign;
 
+use Tuleap\Cryptography\ConcealedString;
+
 class NoJobConfiguration extends JobConfiguration
 {
     public function __construct()
     {
-        parent::__construct('');
+        parent::__construct('', new ConcealedString(''));
     }
 }

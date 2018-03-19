@@ -22,6 +22,9 @@ namespace Tuleap\TestManagement\Campaign;
 
 use Tracker_Artifact;
 use Tracker_ArtifactFactory;
+use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Cryptography\KeyFactory;
+use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
 
 class CampaignRetriever
 {
@@ -33,11 +36,19 @@ class CampaignRetriever
      * @var Tracker_ArtifactFactory
      */
     private $artifact_factory;
+    /**
+     * @var KeyFactory
+     */
+    private $key_factory;
 
-    public function __construct(Tracker_ArtifactFactory $artifact_factory, CampaignDao $campaign_dao)
-    {
+    public function __construct(
+        Tracker_ArtifactFactory $artifact_factory,
+        CampaignDao $campaign_dao,
+        KeyFactory $key_factory
+    ) {
         $this->campaign_dao     = $campaign_dao;
         $this->artifact_factory = $artifact_factory;
+        $this->key_factory      = $key_factory;
     }
 
     /**
@@ -67,11 +78,23 @@ class CampaignRetriever
         $configuration = $this->campaign_dao->searchByCampaignId($artifact->getId());
 
         if ($configuration) {
-            $job = new JobConfiguration($configuration['job_url']);
+            $job = new JobConfiguration(
+                $configuration['job_url'],
+                $this->getDecryptedToken($configuration['encrypted_job_token'])
+            );
         } else {
             $job = new NoJobConfiguration();
         }
 
         return new Campaign($artifact, $artifact->getTitle(), $job);
+    }
+
+    private function getDecryptedToken($encrypted_job_token)
+    {
+        if (! $encrypted_job_token) {
+            return new ConcealedString('');
+        }
+
+        return SymmetricCrypto::decrypt($encrypted_job_token, $this->key_factory->getEncryptionKey());
     }
 }

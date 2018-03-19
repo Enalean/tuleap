@@ -20,18 +20,30 @@
 
 namespace Tuleap\TestManagement\REST\v1;
 
+use Tuleap\TestManagement\Campaign\JobConfiguration;
+
 class JobConfigurationRepresentation
 {
     /**
      * @var string $url {@type string} {@required false}
      */
     public $url;
+    /**
+     * @var string $token {@type string} {@required false}
+     */
+    public $token;
 
     /**
      * @param string $url
      */
-    public function build($url)
+    public function build(JobConfiguration $job_configuration, $is_user_allowed_to_see_token)
     {
-        $this->url = $url;
+        $this->url = $job_configuration->getUrl();
+
+        if ($is_user_allowed_to_see_token) {
+            $this->token = (string) $job_configuration->getToken();
+        } else {
+            unset($this->token);
+        }
     }
 }

@@ -28,6 +28,7 @@ use Tracker_FormElementFactory;
 use Tracker_ReportFactory;
 use Tracker_URLVerification;
 use TrackerFactory;
+use Tuleap\Cryptography\KeyFactory;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\TestManagement\ArtifactDao;
@@ -99,7 +100,7 @@ class ProjectResource {
             $retriever
         );
 
-        $campaign_retriever = new CampaignRetriever($artifact_factory, new CampaignDao());
+        $campaign_retriever = new CampaignRetriever($artifact_factory, new CampaignDao(), new KeyFactory());
 
         $this->campaign_representation_builder = new CampaignRepresentationBuilder(
             $this->user_manager,

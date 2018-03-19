@@ -48,6 +48,8 @@ use Tracker_REST_Artifact_ArtifactUpdater;
 use Tracker_REST_Artifact_ArtifactValidator;
 use Tracker_URLVerification;
 use TrackerFactory;
+use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Jenkins\JenkinsCSRFCrumbRetriever;
 use Tuleap\RealTime\NodeJSClient;
 use Tuleap\REST\Header;
@@ -73,7 +75,7 @@ use UserManager;
 
 class CampaignsResource
 {
-    const MAX_LIMIT    = 50;
+    const MAX_LIMIT = 50;
 
     /** @var Config */
     private $config;
@@ -167,8 +169,9 @@ class CampaignsResource
         );
 
         $campaign_dao = new CampaignDao();
+        $key_factory  = new KeyFactory();
 
-        $this->campaign_retriever = new CampaignRetriever($this->artifact_factory, $campaign_dao);
+        $this->campaign_retriever = new CampaignRetriever($this->artifact_factory, $campaign_dao, $key_factory);
 
         $this->campaign_representation_builder = new CampaignRepresentationBuilder(
             $this->user_manager,
@@ -221,7 +224,7 @@ class CampaignsResource
         $this->campaign_updater = new CampaignUpdater(
             $this->formelement_factory,
             $artifact_updater,
-            new CampaignSaver($campaign_dao)
+            new CampaignSaver($campaign_dao, $key_factory)
         );
 
         $priority_manager = new Tracker_Artifact_PriorityManager(
@@ -435,7 +438,7 @@ class CampaignsResource
     /**
      * PATCH campaign
      *
-     * @url PATCH {id}
+     * @url    PATCH {id}
      *
      * @param int                            $id                Id of the campaign
      * @param string                         $label             New label of the campaign {@from body}
@@ -622,7 +625,10 @@ class CampaignsResource
                 );
             }
 
-            $job_configuration = new JobConfiguration($job_representation->url);
+            $job_configuration = new JobConfiguration(
+                $job_representation->url,
+                new ConcealedString($job_representation->token)
+            );
             $campaign->setJobConfiguration($job_configuration);
         }
     }

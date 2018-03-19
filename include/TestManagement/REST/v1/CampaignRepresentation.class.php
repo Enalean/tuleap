@@ -22,6 +22,7 @@ namespace Tuleap\TestManagement\REST\v1;
 
 use PFUser;
 use Tracker_Artifact;
+use Tracker_FormElement_Field;
 use Tracker_FormElementFactory;
 use Tuleap\TestManagement\Campaign\Campaign;
 
@@ -91,10 +92,11 @@ class CampaignRepresentation
         $this->tracker_id           = $artifact->getTrackerId();
         $this->form_element_factory = $form_element_factory;
         $this->user                 = $user;
+        $this->id                   = $artifact->getId();
+        $this->uri                  = self::ROUTE . '/' . $this->id;
 
-        $this->id     = $artifact->getId();
-        $this->uri    = self::ROUTE . '/' . $this->id;
-        $this->label  = $this->getFieldValue(self::FIELD_NAME)->getText();
+        $label_field  = $this->getLabelField();
+        $this->label  = $this->getFieldValue($label_field)->getText();
         $this->status = $this->artifact->getStatus();
 
         $executions_status = $this->getExecutionsStatus();
@@ -106,7 +108,10 @@ class CampaignRepresentation
         $this->total         = $this->nb_of_notrun + $this->nb_of_passed + $this->nb_of_failed + $this->nb_of_blocked;
 
         $this->job_configuration = new JobConfigurationRepresentation();
-        $this->job_configuration->build($campaign->getJobConfiguration()->getUrl());
+        $this->job_configuration->build(
+            $campaign->getJobConfiguration(),
+            $this->isUserAllowedToSeeToken($user, $artifact, $label_field)
+        );
 
         $this->resources = [
             [
@@ -116,14 +121,8 @@ class CampaignRepresentation
         ];
     }
 
-    private function getFieldValue($field_shortname)
+    private function getFieldValue($field)
     {
-        $field = $this->form_element_factory->getUsedFieldByNameForUser(
-            $this->tracker_id,
-            $field_shortname,
-            $this->user
-        );
-
         return $this->artifact->getValue($field);
     }
 
@@ -145,5 +144,32 @@ class CampaignRepresentation
         }
 
         return $executions;
+    }
+
+    /**
+     * @param PFUser                    $user
+     * @param Tracker_Artifact          $artifact
+     * @param Tracker_FormElement_Field $label_field
+     *
+     * @return mixed
+     */
+    private function isUserAllowedToSeeToken(
+        PFUser $user,
+        Tracker_Artifact $artifact,
+        Tracker_FormElement_Field $label_field
+    ) {
+        return $artifact->userCanUpdate($user) && $label_field->userCanUpdate($user);
+    }
+
+    /**
+     * @return Tracker_FormElement_Field
+     */
+    private function getLabelField()
+    {
+        return $this->form_element_factory->getUsedFieldByNameForUser(
+            $this->tracker_id,
+            self::FIELD_NAME,
+            $this->user
+        );
     }
 }

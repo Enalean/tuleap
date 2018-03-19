@@ -20,21 +20,42 @@
 
 namespace Tuleap\TestManagement\Campaign;
 
+use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Cryptography\KeyFactory;
+use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
+
 class CampaignSaver
 {
     /** @var CampaignDao */
     private $dao;
+    /**
+     * @var KeyFactory
+     */
+    private $key_factory;
 
-    public function __construct(CampaignDao $dao)
+    public function __construct(CampaignDao $dao, KeyFactory $key_factory)
     {
-        $this->dao = $dao;
+        $this->dao         = $dao;
+        $this->key_factory = $key_factory;
     }
 
     public function save(Campaign $campaign)
     {
+        $job_configuration = $campaign->getJobConfiguration();
+
         $this->dao->update(
             $campaign->getArtifact()->getId(),
-            $campaign->getJobConfiguration()->getUrl()
+            $job_configuration->getUrl(),
+            $this->getEncryptedToken($job_configuration->getToken())
         );
+    }
+
+    private function getEncryptedToken(ConcealedString $token)
+    {
+        if (! $token) {
+            return '';
+        }
+
+        return SymmetricCrypto::encrypt($token, $this->key_factory->getEncryptionKey());
     }
 }

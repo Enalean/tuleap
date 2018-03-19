@@ -48,7 +48,10 @@ class AutomatedTestsTriggerer
             throw new NoJobConfiguredForCampaignException();
         }
 
-        $this->jenkins_client->setToken('yolo');
+        $token = $job->getToken();
+        if ($token) {
+            $this->jenkins_client->setToken($token->getString());
+        }
 
         $this->jenkins_client->launchJobBuild(
             $url,
