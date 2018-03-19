@@ -87,9 +87,6 @@ class VelocityCalculator
             return 0;
         }
 
-        /**
-         * @var $initial_effort_field \Tracker_FormElement_Field
-         */
         $initial_effort_field = $semantic_initial_effort->getField();
         if (! $initial_effort_field) {
             return 0;
