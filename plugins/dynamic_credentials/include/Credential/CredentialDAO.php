@@ -47,4 +47,15 @@ class CredentialDAO extends DataAccessObject
             ['identifier' => $identifier]
         );
     }
+
+    /**
+     * @return array
+     */
+    public function getUnrevokedCredentialByIdentifier($identifier)
+    {
+        return $this->getDB()->row(
+            'SELECT * FROM plugin_dynamic_credentials_account WHERE revoked = 0 AND identifier = ?',
+            $identifier
+        );
+    }
 }

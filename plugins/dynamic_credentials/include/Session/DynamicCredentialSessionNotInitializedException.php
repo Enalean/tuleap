@@ -18,12 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\DynamicCredentials\Credential;
+namespace Tuleap\DynamicCredentials\Session;
 
-class CredentialInvalidUsernameException extends CredentialException
+class DynamicCredentialSessionNotInitializedException extends \Exception
 {
-    public function __construct()
-    {
-        parent::__construct('Username does not respect the expected format');
-    }
 }

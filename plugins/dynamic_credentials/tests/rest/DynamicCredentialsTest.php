@@ -27,6 +27,7 @@ require_once 'bootstrap.php';
 class DynamicCredentialsTest extends \RestBase
 {
     const USERNAME         = 'forge__dynamic_credential-user1';
+    const USERNAME_EXPIRED = DynamicCredentialsTest::USERNAME . '-expired';
     const PASSWORD         = 'password';
 
     public function testPOSTNewAccountAndLogin()
@@ -34,6 +35,15 @@ class DynamicCredentialsTest extends \RestBase
         $expiration_date = new \DateTimeImmutable('+30 minutes');
 
         $this->createAccount(self::USERNAME, self::PASSWORD, $expiration_date);
+        $this->login(self::USERNAME, self::PASSWORD);
+    }
+
+    public function testPOSTNewAccountAndLoginFailureWithExpiredAccount()
+    {
+        $expiration_date = new \DateTimeImmutable('- 1 seconds');
+
+        $this->createAccount(self::USERNAME_EXPIRED, self::PASSWORD, $expiration_date);
+        $this->ensureLoginFail(self::USERNAME_EXPIRED, self::PASSWORD);
     }
 
     public function testPOSTInvalidSignatureRejected()
@@ -62,6 +72,7 @@ class DynamicCredentialsTest extends \RestBase
 
     /**
      * @depends testPOSTNewAccountAndLogin
+     * @depends testPOSTNewAccountAndLoginFailureWithExpiredAccount
      */
     public function testDELETEAccount()
     {
@@ -99,6 +110,14 @@ class DynamicCredentialsTest extends \RestBase
         $this->fail();
     }
 
+    /**
+     * @depends testDELETEAccount
+     */
+    public function testCannotConnectWithDeletedAccount()
+    {
+        $this->ensureLoginFail(self::USERNAME, self::PASSWORD);
+    }
+
     private function createAccount(string $username, string $password, \DateTimeImmutable $expiration_date)
     {
         $expiration = $expiration_date->format(\DateTime::ATOM);
@@ -112,6 +131,29 @@ class DynamicCredentialsTest extends \RestBase
                 'signature'  => $this->getSignatureForPostAction($username, $password, $expiration)
             ])
         ));
+    }
+
+    private function login(string $username, string $password)
+    {
+        $this->getResponseWithoutAuth($this->client->post(
+            'tokens',
+            null,
+            json_encode([
+                'username' => $username,
+                'password' => $password
+            ])
+        ));
+    }
+
+    private function ensureLoginFail(string $username, string $password)
+    {
+        try {
+            $this->login($username, $password);
+        } catch (ClientErrorResponseException $ex) {
+            $this->assertEquals(401, $ex->getResponse()->getStatusCode());
+            return;
+        }
+        $this->fail();
     }
 
     private function getSignatureForPostAction(string $username, string $password, string $expiration_date): string
