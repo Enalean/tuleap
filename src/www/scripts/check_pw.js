@@ -60,11 +60,13 @@
     function setRobustnessToGood() {
         $('.robustness .password_strategy_bad').hide();
         $('.robustness .password_strategy_good').show();
+        $('.robustness .password_validators_loading').hide();
     }
 
     function setRobustnessToBad() {
         $('.robustness .password_strategy_bad').show();
         $('.robustness .password_strategy_good').hide();
+        $('.robustness .password_validators_loading').hide();
     }
 
     /**
@@ -90,5 +92,8 @@
         const debouncedCheckPassword = debounce(checkPassword, 300);
 
         $('#form_pw').on('paste keyup', debouncedCheckPassword);
+        $('#form_pw').on('paste keyup', function() {
+            $('.robustness .password_validators_loading').show();
+        });
     });
 })(jQuery);
