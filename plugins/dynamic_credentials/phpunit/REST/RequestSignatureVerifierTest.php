@@ -66,6 +66,7 @@ class RequestSignatureVerifierTest extends TestCase
             [$this->getSignature('invalid_signature_for_message'), 'param', false],
             ['not_even_base64_encoded_signature', 'param', false],
             ['QWxwYWNhcw==', 'param', false],
+            ['WxwYWNhcyBhcmUgYW1hemluZw==', 'signature_with_invalid_base64', false],
         ];
     }
 
