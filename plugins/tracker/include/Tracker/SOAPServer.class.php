@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,8 +16,10 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-require_once 'common/soap/SOAP_RequestValidator.class.php';
 
+use Tuleap\Tracker\Report\AdditionalCriteria\CommentCriterionValueRetriever;
+
+require_once 'common/soap/SOAP_RequestValidator.class.php';
 
 //define fault code constants
 define ('get_group_fault', '3000');
@@ -100,28 +102,33 @@ class Tracker_SOAPServer {
      * @var TrackerManager
      */
     private $tracker_manager;
+    /**
+     * @var CommentCriterionValueRetriever
+     */
+    private $comment_criterion_value_retriever;
 
     public function __construct(
-            SOAP_RequestValidator $soap_request_validator,
-            TrackerFactory $tracker_factory,
-            PermissionsManager $permissions_manager,
-            Tracker_ReportDao $dao,
-            Tracker_FormElementFactory $formelement_factory,
-            Tracker_ArtifactFactory $artifact_factory,
-            Tracker_ReportFactory $report_factory,
-            Tracker_FileInfoFactory $fileinfo_factory,
-            TrackerManager $tracker_manager
-
+        SOAP_RequestValidator $soap_request_validator,
+        TrackerFactory $tracker_factory,
+        PermissionsManager $permissions_manager,
+        Tracker_ReportDao $dao,
+        Tracker_FormElementFactory $formelement_factory,
+        Tracker_ArtifactFactory $artifact_factory,
+        Tracker_ReportFactory $report_factory,
+        Tracker_FileInfoFactory $fileinfo_factory,
+        TrackerManager $tracker_manager,
+        CommentCriterionValueRetriever $comment_criterion_value_retriever
     ) {
-        $this->soap_request_validator   = $soap_request_validator;
-        $this->tracker_factory          = $tracker_factory;
-        $this->permissions_manager      = $permissions_manager;
-        $this->report_dao               = $dao;
-        $this->formelement_factory      = $formelement_factory;
-        $this->artifact_factory         = $artifact_factory;
-        $this->report_factory           = $report_factory;
-        $this->fileinfo_factory         = $fileinfo_factory;
-        $this->tracker_manager          = $tracker_manager;
+        $this->soap_request_validator            = $soap_request_validator;
+        $this->tracker_factory                   = $tracker_factory;
+        $this->permissions_manager               = $permissions_manager;
+        $this->report_dao                        = $dao;
+        $this->formelement_factory               = $formelement_factory;
+        $this->artifact_factory                  = $artifact_factory;
+        $this->report_factory                    = $report_factory;
+        $this->fileinfo_factory                  = $fileinfo_factory;
+        $this->tracker_manager                   = $tracker_manager;
+        $this->comment_criterion_value_retriever = $comment_criterion_value_retriever;
     }
 
     public function getVersion() {
@@ -146,7 +153,15 @@ class Tracker_SOAPServer {
             $tracker = $this->tracker_factory->getTrackerById($tracker_id);
             $this->checkUserCanViewTracker($tracker, $current_user);
 
-            $report = new Tracker_Report_SOAP($current_user, $tracker, $this->permissions_manager, $this->report_dao, $this->formelement_factory);
+            $report = new Tracker_Report_SOAP(
+                $current_user,
+                $tracker,
+                $this->permissions_manager,
+                $this->report_dao,
+                $this->formelement_factory,
+                $this->comment_criterion_value_retriever
+            );
+
             $report->setSoapCriteria($criteria);
             $matching = $report->getMatchingIds();
             return $this->artifactListToSoap($current_user, $matching['id'], $offset, $max_rows);

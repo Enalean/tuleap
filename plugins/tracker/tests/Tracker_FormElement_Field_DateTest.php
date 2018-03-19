@@ -685,6 +685,19 @@ class Tracker_FormElement_Field_DateTest_getSQLCompareDate_DAY extends TuleapTes
         parent::setUp();
 
         $this->day_field = new DayFieldTestVersion();
+
+        $data_access = mock('DataAccess');
+        stub($data_access)->escapeInt(1404511200)->returns(1404511200);
+        stub($data_access)->escapeInt(1404684000)->returns(1404684000);
+
+        CodendiDataAccess::setInstance($data_access);
+    }
+
+    public function tearDown()
+    {
+        CodendiDataAccess::clearInstance();
+
+        parent::tearDown();
     }
 
     public function itReturnsTheCorrectCriteriaForBetween() {

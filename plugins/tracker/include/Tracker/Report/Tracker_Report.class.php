@@ -1691,7 +1691,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
     public function getAdditionalCriteria() {
         $session_additional_criteria = null;
         if (isset($this->report_session)) {
-            $session_additional_criteria = &$this->report_session->getAdditionalCriteria();
+            $session_additional_criteria = $this->report_session->getAdditionalCriteria();
         }
 
         $additional_criteria = array();
@@ -1731,9 +1731,17 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
      */
     private function getCommentCriterionValueFromDatabase()
     {
-        $retriever = new CommentCriterionValueRetriever(new CommentDao());
+        $retriever = $this->getCommentCriterionValueRetriever();
 
         return $retriever->getValueForReport($this);
+    }
+
+    /**
+     * @return CommentCriterionValueRetriever
+     */
+    protected function getCommentCriterionValueRetriever()
+    {
+        return new CommentCriterionValueRetriever(new CommentDao());
     }
 
     /**

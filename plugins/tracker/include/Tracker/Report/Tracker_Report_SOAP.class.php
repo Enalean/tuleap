@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,6 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Tracker\Report\AdditionalCriteria\CommentCriterionValueRetriever;
+
 class Tracker_Report_SOAP extends Tracker_Report
 {
     /**
@@ -26,12 +28,18 @@ class Tracker_Report_SOAP extends Tracker_Report
 
     private $soap_criteria = array();
 
+    /**
+     * @var CommentCriterionValueRetriever
+     */
+    private $comment_criterion_value_retriever;
+
     public function __construct(
         PFUser $current_user,
         Tracker $tracker,
         PermissionsManager $permissions_manager,
         Tracker_ReportDao $dao,
-        Tracker_FormElementFactory $formelement_factory
+        Tracker_FormElementFactory $formelement_factory,
+        CommentCriterionValueRetriever $comment_criterion_value_retriever
     ) {
         $id = $name = $description = $current_renderer_id = $parent_report_id = $user_id = $is_default = $tracker_id = $is_query_displayed = $is_in_expert_mode = $expert_query = $updated_by = $updated_at = 0;
         parent::__construct(
@@ -50,12 +58,18 @@ class Tracker_Report_SOAP extends Tracker_Report
             $updated_at
         );
 
-        $this->current_user        = $current_user;
-        $this->tracker             = $tracker;
-        $this->permissions_manager = $permissions_manager;
-        $this->dao                 = $dao;
-        $this->formelement_factory = $formelement_factory;
-        $this->criteria            = array();
+        $this->current_user                      = $current_user;
+        $this->tracker                           = $tracker;
+        $this->permissions_manager               = $permissions_manager;
+        $this->dao                               = $dao;
+        $this->formelement_factory               = $formelement_factory;
+        $this->criteria                          = array();
+        $this->comment_criterion_value_retriever = $comment_criterion_value_retriever;
+    }
+
+    protected function getCommentCriterionValueRetriever()
+    {
+        return $this->comment_criterion_value_retriever;
     }
 
     public function setSoapCriteria($criteria) {
