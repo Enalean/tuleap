@@ -37,8 +37,8 @@
                         {{ empty_state }}
                     </td>
                 </tr>
-                <artifact-table-row v-for="time in tracked_times"
-                    v-bind:key="time.id"
+                <artifact-table-row v-for="(time, index) in tracked_times"
+                    v-bind:key="index"
                     v-bind:time-data="time"
                 />
             </tbody>
@@ -105,10 +105,11 @@
         },
         methods: {
             getFormattedTotalSum() {
-                const sum = this.tracked_times.reduce(
-                    (sum, { minutes }) => minutes + sum,
-                    0
-                );
+                const sum = [].concat(...this.tracked_times)
+                    .reduce(
+                        (sum, { minutes }) => minutes + sum,
+                        0
+                    );
 
                 return formatMinutesToISO(sum);
             },
@@ -117,10 +118,12 @@
                     this.is_loading = true;
                     this.rest_error = '';
 
-                    this.tracked_times = await getTrackedTimes(
+                    const times = await getTrackedTimes(
                         this.startDate,
                         this.endDate
                     );
+
+                    this.tracked_times = Object.values(times);
 
                     this.is_loaded = true;
                 } catch (error) {

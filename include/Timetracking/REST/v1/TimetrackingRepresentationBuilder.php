@@ -39,7 +39,7 @@ class TimetrackingRepresentationBuilder
             $representation = new TimetrackingRepresentation();
             $representation->build($time);
 
-            $representations[] = $representation;
+            $representations[ $time->getArtifactId() ][] = $representation;
         }
 
         return $representations;

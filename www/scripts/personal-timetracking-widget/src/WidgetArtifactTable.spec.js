@@ -39,22 +39,26 @@ describe('WidgetArtifactTable', () => {
     }
 
     describe('getFormattedTotalSum', () => {
-        it('Given a collection of times, then it should return the formatted sum of all the times\' minutes', () => {
+        it('Given a collection of times aggregated by artifacts, then it should return the formatted sum of all the times\' minutes', () => {
             const vm = instantiateComponent();
 
-            vm.tracked_times = [{
-                artifact: {},
-                project : {},
-                minutes : 20
-            }, {
-                artifact: {},
-                project : {},
-                minutes : 20
-            }, {
-                artifact: {},
-                project : {},
-                minutes : 20
-            }];
+            vm.tracked_times = [[
+                {
+                    artifact: {},
+                    project : {},
+                    minutes : 20
+                }, {
+                    artifact: {},
+                    project : {},
+                    minutes : 20
+                }
+            ], [
+                {
+                    artifact: {},
+                    project : {},
+                    minutes : 20
+                }
+            ]];
 
             const formatted_times = vm.getFormattedTotalSum();
 

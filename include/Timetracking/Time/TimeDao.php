@@ -127,7 +127,7 @@ class TimeDao extends DataAccessObject
         return $this->update($sql);
     }
 
-    public function searchTimesForUserInTimePeriod($user_id, $start_date, $end_date, $limit, $offset)
+    public function searchTimesIdsForUserInTimePeriodByArtifact($user_id, $start_date, $end_date, $limit, $offset)
     {
         $escaped_user_id    = $this->da->escapeInt($user_id);
         $escaped_start_date = $this->da->quoteSmart($start_date);
@@ -135,11 +135,12 @@ class TimeDao extends DataAccessObject
         $escaped_limit      = $this->da->escapeInt($limit);
         $escaped_offset     = $this->da->escapeInt($offset);
 
-        $sql = "SELECT *
+        $sql = "SELECT SQL_CALC_FOUND_ROWS GROUP_CONCAT(id) as artifact_times_ids
                 FROM plugin_timetracking_times
                 WHERE user_id = $escaped_user_id
                 AND   day BETWEEN CAST($escaped_start_date AS DATE)
                             AND   CAST($escaped_end_date AS DATE)
+                GROUP BY artifact_id
                 ORDER BY id
                 LIMIT $escaped_offset, $escaped_limit
         ";

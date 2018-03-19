@@ -46,9 +46,13 @@ class TimetrackingTest extends RestBase
             TimetrackingDataBuilder::USER_TESTER_NAME
         );
 
-        $times = $response->json();
+        $times_by_artifact   = $response->json();
+        $current_artifact_id = key($times_by_artifact);
+        $times               = $times_by_artifact[ $current_artifact_id ];
 
+        $this->assertTrue(count($times_by_artifact) === 1);
         $this->assertTrue(count($times) === 1);
+        $this->assertEquals($times[0]['artifact']['id'], $current_artifact_id);
         $this->assertEquals($times[0]['id'], 1);
         $this->assertEquals($times[0]['minutes'], 600);
         $this->assertEquals($times[0]['date'], '2018-03-01');
@@ -263,9 +267,13 @@ class TimetrackingTest extends RestBase
                 TimetrackingDataBuilder::USER_TESTER_NAME
             );
 
-            $times = $response->json();
+            $artifact_times      = $response->json();
+            $current_artifact_id = key($artifact_times);
+            $times               = $artifact_times[ $current_artifact_id ];
 
+            $this->assertTrue(count($artifact_times) === 1);
             $this->assertTrue(count($times) === 1);
+            $this->assertEquals($times[0]['artifact']['id'], $current_artifact_id);
             $this->assertEquals($times[0]['id'], $times_ids[ $offset ]);
         }
     }

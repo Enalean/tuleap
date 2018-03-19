@@ -32,11 +32,13 @@ describe("getTrackedTimes() -", () => {
     it("the REST API will be queried with ISO-8601 dates and the times returned", async () => {
         Settings.defaultZoneName = "Europe/Paris";
 
-        const times   = [{
-            artifact: {},
-            project : {},
-            minutes : 20
-        }];
+        const times   = [
+            [{
+                artifact: {},
+                project : {},
+                minutes : 20
+            }]
+        ];
 
         mockFetchSuccess(tlp.get, { headers: {}, return_json: times });
 

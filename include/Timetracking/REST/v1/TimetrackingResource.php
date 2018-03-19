@@ -146,7 +146,7 @@ class TimetrackingResource extends AuthenticatedResource
 
         $current_user = $this->rest_user_manager->getCurrentUser();
 
-        $paginated_times = $this->time_retriever->getPaginatedTimesForUserInTimePeriod(
+        $paginated_times = $this->time_retriever->getPaginatedTimesForUserInTimePeriodByArtifact(
             $current_user,
             $start_date,
             $end_date,

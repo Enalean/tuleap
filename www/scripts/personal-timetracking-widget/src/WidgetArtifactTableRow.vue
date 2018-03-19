@@ -24,17 +24,17 @@
 (<template>
     <tr>
         <td>
-            <a v-bind:href="timeData.artifact.html_url">
+            <a v-bind:href="artifact.html_url">
                 <span class="tlp-badge-primary tlp-badge-outline timetracking-badge-direct-link-to-artifact">
-                    {{ timeData.artifact.xref }}
+                    {{ artifact.xref }}
                 </span>
                 <span>
-                    {{ timeData.artifact.title }}
+                    {{ artifact.title }}
                 </span>
             </a>
         </td>
-        <td>{{ timeData.project.label }}</td>
-        <td class="tlp-table-cell-numeric">{{ getFormattedMinutes(timeData.minutes) }}</td>
+        <td>{{ project.label }}</td>
+        <td class="tlp-table-cell-numeric">{{ getFormattedAggregatedTime() }}</td>
     </tr>
 </template>)
 (<script>
@@ -43,10 +43,25 @@
     export default {
         name: 'WidgetArtifactTableRow',
         props: {
-            timeData: Object
+            timeData: Array
+        },
+        data() {
+            const data = this.timeData[0];
+
+            return {
+                artifact: data.artifact,
+                project : data.project
+            };
         },
         methods: {
-            getFormattedMinutes: (minutes) => formatMinutesToISO(minutes)
+            getFormattedAggregatedTime() {
+                const minutes = this.timeData.reduce(
+                    (sum, { minutes }) => minutes + sum,
+                    0
+                );
+
+                return formatMinutesToISO(minutes);
+            }
         }
     }
 </script>)

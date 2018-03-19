@@ -65,10 +65,10 @@ class TimeRetriever
     /**
      * @return PaginatedTimes
      */
-    public function getPaginatedTimesForUserInTimePeriod(PFUser $user, $start_date, $end_date, $limit, $offset)
+    public function getPaginatedTimesForUserInTimePeriodByArtifact(PFUser $user, $start_date, $end_date, $limit, $offset)
     {
         $times = [];
-        $user_times = $this->dao->searchTimesForUserInTimePeriod(
+        $matching_times_ids = $this->dao->searchTimesIdsForUserInTimePeriodByArtifact(
             $user->getId(),
             $start_date,
             $end_date,
@@ -78,8 +78,12 @@ class TimeRetriever
 
         $total_rows = (int) $this->dao->foundRows();
 
-        foreach ($user_times as $row_time) {
-            $times[] = $this->buildTimeFromRow($row_time);
+        foreach ($matching_times_ids as $ids) {
+            $times_ids = explode(',', $ids['artifact_times_ids']);
+
+            foreach ($times_ids as $time_id) {
+                $times[] = $this->getTimeByIdForUser($user, $time_id);
+            }
         }
 
         return new PaginatedTimes($times, $total_rows);
