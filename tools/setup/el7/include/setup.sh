@@ -24,17 +24,19 @@ _setupDatabase() {
 
         if [ ${answer,,} = "y" ]; then
             new_db="true"
+            local date_dump=$(${date} +%Y-%m-%d_%H-%M-%S)
 
             _infoMessage \
-                "Dump \033[1m${3}\033[0m database to /tmp/${3}.$(${date} \
-                +%Y-%m-%d_%H-%M-%S).sql.gz"
+                "Dump \033[1m${3}\033[0m database to ${tuleap_dump}/${3}.${date_dump}.sql.gz"
 
+            _setupDirectory "root" "root" "700" "${tuleap_dump}"
             ${mysqldump} --host="${mysql_server:-localhost}" \
                          --user="${1}" \
                          --password="${2}" \
                          ${3} 2> >(_logCatcher) | ${gzip} > \
-                         /tmp/${3}.$(${date} +%Y-%m-%d_%H-%M-%S).sql.gz
+                         "${tuleap_dump}/${3}.${date_dump}.sql.gz"
 
+            ${chmod} 400 "${tuleap_dump}/${3}.${date_dump}.sql.gz"
             _infoMessage "Drop \033[1m${3}\033[0m database"
             _mysqlExecute ${1} ${2} "$(_sqlDropDb ${3})"
         fi

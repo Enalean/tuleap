@@ -2,6 +2,7 @@
 declare -r awk="/usr/bin/awk"
 declare -r basename="/usr/bin/basename"
 declare -r cat="/usr/bin/cat"
+declare -r chmod="/usr/bin/chmod"
 declare -r cp="/usr/bin/cp"
 declare -r date="/usr/bin/date"
 declare -r getenforce="/usr/sbin/getenforce"
@@ -23,10 +24,11 @@ declare -r su="/bin/su"
 declare -r systemctl="/usr/bin/systemctl"
 declare -r tr="/usr/bin/tr"
 
-declare -a cmd=("${awk}" "${basename}" "${cat}" "${cp}" "${date}" "${getenforce}"
-                "${getopt}" "${grep}" "${gzip}" "${head}" "${install}" "${ln}"
-                "${mkdir}" "${mv}" "${mysql}" "${mysqladmin}" "${mysqldump}"
-                "${php}" "${printf}" "${su}" "${systemctl}" "${tr}")
+declare -a cmd=("${awk}" "${basename}" "${cat}" "${chmod}" "${cp}" "${date}"
+                "${getenforce}" "${getopt}" "${grep}" "${gzip}" "${head}"
+                "${install}" "${ln}" "${mkdir}" "${mv}" "${mysql}"
+                "${mysqladmin}" "${mysqldump}" "${php}" "${printf}" "${su}"
+                "${systemctl}" "${tr}")
 
 # declare files path
 declare -r install_dir="/usr/share/tuleap"
@@ -48,6 +50,7 @@ declare -r forgeupgrade_dir="/usr/share/forgeupgrade"
 declare -r forgeupgrade_dist="${install_dir}/src/etc/forgeupgrade-config.ini.dist"
 declare -r local_inc="local.inc"
 declare -r database_inc="database.inc"
+declare -r tuleap_dump="/root/.tuleap_dump"
 declare -r tuleap_log="/var/log/tuleap/tuleap_setup.log"
 declare -r tuleap_src="${install_dir}/src"
 declare -r urandom="/dev/urandom"
