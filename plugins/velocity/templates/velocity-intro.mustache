@@ -7,29 +7,33 @@
     </p>
 {{/ semantic_done_is_defined }}
 
-{{# semantic_done_is_defined }}
+{{> velocity-status-type-error }}
 
-    {{> velocity-chart-information }}
+{{^ can_status_semantic_have_multiple_values }}
+    {{# semantic_done_is_defined }}
 
-    {{> velocity-missing-done-semantics }}
+        {{> velocity-chart-information }}
 
-    <p>
-        {{# dgettext }}
-            tuleap-velocity |
-            Choose the "velocity" field that will be used for computation of velocity chart.
-        {{/ dgettext }}
-    </p>
+        {{> velocity-missing-done-semantics }}
 
-    {{^ are_all_backlog_trackers_missconfigured }}
         <p>
-            {{^ velocity_field }}
-                {{# dgettext }}tuleap-velocity | No field defined for velocity computation.{{/ dgettext }}
-            {{/ velocity_field }}
-
-            {{# velocity_field }}
-                {{# dgettext }} tuleap-velocity | Field used for velocity computation: {{/ dgettext }}
-                <b>{{ velocity_field_label }}</b>
-            {{/ velocity_field }}
+            {{# dgettext }}
+                tuleap-velocity |
+                Choose the "velocity" field that will be used for computation of velocity chart.
+            {{/ dgettext }}
         </p>
-    {{/ are_all_backlog_trackers_missconfigured }}
-{{/ semantic_done_is_defined }}
+
+        {{^ are_all_backlog_trackers_missconfigured }}
+            <p>
+                {{^ velocity_field }}
+                    {{# dgettext }}tuleap-velocity | No field defined for velocity computation.{{/ dgettext }}
+                {{/ velocity_field }}
+
+                {{# velocity_field }}
+                    {{# dgettext }} tuleap-velocity | Field used for velocity computation: {{/ dgettext }}
+                    <b>{{ velocity_field_label }}</b>
+                {{/ velocity_field }}
+            </p>
+        {{/ are_all_backlog_trackers_missconfigured }}
+    {{/ semantic_done_is_defined }}
+{{/ can_status_semantic_have_multiple_values }}

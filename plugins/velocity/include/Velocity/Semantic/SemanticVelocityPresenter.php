@@ -61,6 +61,10 @@ class SemanticVelocityPresenter
      * @var array
      */
     public $misconfigured_semantics;
+    /**
+     * @var bool
+     */
+    public $can_status_semantic_have_multiple_values;
 
     public function __construct(
         $semantic_done_is_defined,
@@ -69,6 +73,7 @@ class SemanticVelocityPresenter
         Tracker $tracker,
         array $misconfigured_semantics_for_all_trackers,
         $are_all_backlog_trackers_missconfigured,
+        $can_status_semantic_have_multiple_values,
         Tracker_FormElement_Field $velocity_field = null
     ) {
         $this->semantic_done_is_defined                   = $semantic_done_is_defined;
@@ -79,8 +84,10 @@ class SemanticVelocityPresenter
         $this->has_backlog_trackers_without_done_semantic = count($incorrect_backlog_trackers) > 0;
         $this->tracker_name                               = $tracker->getName();
 
-        $this->nb_semantic_misconfigured               = count($misconfigured_semantics_for_all_trackers);
-        $this->are_all_backlog_trackers_missconfigured = $are_all_backlog_trackers_missconfigured;
-        $this->misconfigured_semantics                 = $misconfigured_semantics_for_all_trackers;
+        $this->nb_semantic_misconfigured                = count($misconfigured_semantics_for_all_trackers);
+        $this->are_all_backlog_trackers_missconfigured  = $are_all_backlog_trackers_missconfigured;
+        $this->misconfigured_semantics                  = $misconfigured_semantics_for_all_trackers;
+        $this->are_all_backlog_trackers_missconfigured  = $are_all_backlog_trackers_missconfigured;
+        $this->can_status_semantic_have_multiple_values = $can_status_semantic_have_multiple_values;
     }
 }
