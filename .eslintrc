@@ -5,7 +5,7 @@
     ],
     "extends": [
         "eslint:recommended",
-        "plugin:you-dont-need-lodash-underscore/all",
+        "plugin:you-dont-need-lodash-underscore/all"
     ],
     "parserOptions": {
         "ecmaVersion": 2018,
@@ -56,11 +56,11 @@
         "no-void": "error",
         "no-with": "error",
         "radix": "error",
-        "require-await": "error",
+        "require-await": "error"
     },
     "overrides": [
         {
-            "files": [ "*.spec.js"],
+            "files": ["*.spec.js"],
             "env": {
                 "jasmine": true
             },
@@ -69,24 +69,6 @@
                 "affix": true,
                 // jasmine-promise-matchers,
                 "installPromiseMatchers": true,
-            }
-        },
-        // Needed as long as pullrequest does not use webpack
-        {
-            "files": [
-                "plugins/pullrequest/**/*.js"
-            ],
-            "globals": {
-                "angular": true
-            }
-        },
-        {
-            "files": [
-                "plugins/pullrequest/**/*.spec.js"
-            ],
-            "globals": {
-                "module": true,
-                "inject": true
             }
         },
         {
@@ -98,7 +80,7 @@
                 "karma.config.js",
                 "plugins/tracker/grammar/",
                 "tools/**/*.js",
-                "webpack.config.js",
+                "webpack.config.js"
             ],
             "env": {
                 "node": true
@@ -112,5 +94,5 @@
                 "cypress/globals": true
             }
         }
-    ],
+    ]
 }
