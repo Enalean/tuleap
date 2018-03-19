@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2013. All rights reserved.
+ * Copyright Enalean (c) 2013-2018. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -22,68 +22,71 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\DB\DataAccessObject;
+
 /**
  * I'm responsible for interactions with the databse regarding Gerrit's templates
  */
-class Git_Driver_Gerrit_Template_TemplateDao extends DataAccessObject {
-
-    public function getAllTemplatesOfProject($project_id) {
-        $project_id = $this->da->escapeInt($project_id);
-
-        $sql = "SELECT *
+class Git_Driver_Gerrit_Template_TemplateDao extends DataAccessObject
+{
+    public function getAllTemplatesOfProject($project_id)
+    {
+        $sql = 'SELECT *
                 FROM plugin_git_gerrit_config_template
-                WHERE group_id = $project_id";
+                WHERE group_id = ?';
 
-        return $this->retrieve($sql);
+        return $this->getDB()->run($sql, $project_id);
     }
 
-    public function getTemplate($template_id) {
-        $template_id = $this->da->escapeInt($template_id);
-
-        $sql = "SELECT *
+    public function getTemplate($template_id)
+    {
+        $sql = 'SELECT *
                 FROM plugin_git_gerrit_config_template
-                WHERE id = $template_id";
+                WHERE id = ?';
 
-        return $this->retrieve($sql);
+        return $this->getDB()->row($sql, $template_id);
     }
 
-    public function addTemplate($project_id, $name, $content) {
-        $project_id = $this->da->escapeInt($project_id);
-        $name       = $this->da->quoteSmart($name);
-        $content    = $this->da->quoteSmart($content);
-
-        $sql = "INSERT INTO plugin_git_gerrit_config_template (
+    public function addTemplate($project_id, $name, $content)
+    {
+        $sql = 'INSERT INTO plugin_git_gerrit_config_template (
                     group_id,
                     name,
                     content
-                ) VALUES (
-                    $project_id,
-                    $name,
-                    $content
-                )";
+                ) VALUES (?, ?, ?)';
 
-        return $this->update($sql);
+        try {
+            $this->getDB()->run($sql, $project_id, $name, $content);
+        } catch (PDOException $ex) {
+            return false;
+        }
+        return true;
     }
 
-    public function updateTemplate($template_id, $name, $content) {
-        $template_id = $this->da->escapeInt($template_id);
-        $name        = $this->da->quoteSmart($name);
-        $content     = $this->da->quoteSmart($content);
+    public function updateTemplate($template_id, $name, $content)
+    {
+        $sql = 'UPDATE plugin_git_gerrit_config_template
+                SET name = ?, content = ?
+                WHERE id = ?';
 
-        $sql = "UPDATE plugin_git_gerrit_config_template
-                SET name = $name, content = $content
-                WHERE id = $template_id";
-
-        return $this->update($sql);
+        try {
+            $this->getDB()->run($sql, $name, $content, $template_id);
+        } catch (PDOException $ex) {
+            return false;
+        }
+        return true;
     }
 
-    public function deleteTemplate($template_id) {
-        $template_id = $this->da->escapeInt($template_id);
+    public function deleteTemplate($template_id)
+    {
+        $sql = 'DELETE FROM plugin_git_gerrit_config_template
+                WHERE id = ?';
 
-        $sql = "DELETE FROM plugin_git_gerrit_config_template
-                WHERE id = $template_id";
-
-        return $this->update($sql);
+        try {
+            $this->getDB()->run($sql, $template_id);
+        } catch (PDOException $ex) {
+            return false;
+        }
+        return true;
     }
 }
-?>

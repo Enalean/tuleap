@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2011, 2012, 2013. All rights reserved.
+ * Copyright Enalean (c) 2011-2018. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -22,18 +22,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/dao/include/DataAccessObject.class.php';
+use Tuleap\DB\DataAccessObject;
 
-class Git_Driver_Gerrit_MembershipDao extends DataAccessObject {
+class Git_Driver_Gerrit_MembershipDao extends DataAccessObject
+{
+    public function addReference($group_id, $ugroup_id, $remote_server_id)
+    {
+        $sql = 'INSERT INTO plugin_git_remote_ugroups(group_id, ugroup_id, remote_server_id)
+                VALUES (?, ?, ?)';
 
-    public function addReference($group_id, $ugroup_id, $remote_server_id) {
-        $group_id = $this->da->escapeInt($group_id);
-        $ugroup_id = $this->da->escapeInt($ugroup_id);
-        $remote_server_id = $this->da->escapeInt($remote_server_id);
-        $sql = "INSERT INTO plugin_git_remote_ugroups(group_id, ugroup_id, remote_server_id)
-                VALUES ($group_id, $ugroup_id, $remote_server_id)";
-        return $this->update($sql);
+        $this->getDB()->run($sql, $group_id, $ugroup_id, $remote_server_id);
     }
 }
-
-?>
