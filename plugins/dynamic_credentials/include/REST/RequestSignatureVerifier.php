@@ -49,7 +49,10 @@ class RequestSignatureVerifier
     {
         $message_to_verify = \ForgeConfig::get('sys_https_host') . implode('', $request_parameters);
 
-        $decoded_signature = base64_decode($signature);
+        $decoded_signature = base64_decode($signature, true);
+        if ($decoded_signature === false) {
+            return false;
+        }
         try {
             $is_signature_valid = AsymmetricCrypto::verify($message_to_verify, $this->signature_public_key, $decoded_signature);
         } catch (InvalidSignatureException $ex) {
