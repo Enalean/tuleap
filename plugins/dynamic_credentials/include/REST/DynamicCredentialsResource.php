@@ -49,6 +49,7 @@ class DynamicCredentialsResource
      */
     public function post($username, $password, $expiration, $signature)
     {
+        $this->options();
         $request_signature_verifier = $this->getRequestSignatureVerifier();
         if (! $request_signature_verifier->isSignatureValid($signature, $username, $password, $expiration)) {
             throw new RestException(403, 'Invalid signature');
@@ -92,6 +93,7 @@ class DynamicCredentialsResource
      */
     public function deleteUsername($username, $signature)
     {
+        $this->optionsUsername();
         $request_signature_verifier = $this->getRequestSignatureVerifier();
         if (! $request_signature_verifier->isSignatureValid($signature, $username)) {
             throw new RestException(403, 'Invalid signature');
