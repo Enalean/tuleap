@@ -20,10 +20,18 @@
 
 namespace Tuleap\DynamicCredentials\Credential;
 
-class CredentialInvalidUsernameException extends CredentialException
+require_once __DIR__ . '/../bootstrap.php';
+
+use PHPUnit\Framework\TestCase;
+
+class CredentialTest extends TestCase
 {
-    public function __construct()
+    public function testCredentialExpiration()
     {
-        parent::__construct('Username does not respect the expected format');
+        $valid_credential   = new Credential('id1', new \DateTimeImmutable('+10 minutes'));
+        $expired_credential = new Credential('id2', new \DateTimeImmutable('-10 minutes'));
+
+        $this->assertFalse($valid_credential->hasExpired());
+        $this->assertTrue($expired_credential->hasExpired());
     }
 }

@@ -20,7 +20,13 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+use Tuleap\DynamicCredentials\Credential\CredentialDAO;
+use Tuleap\DynamicCredentials\Credential\CredentialIdentifierExtractor;
+use Tuleap\DynamicCredentials\Credential\CredentialRetriever;
 use Tuleap\DynamicCredentials\REST\ResourcesInjector;
+use Tuleap\DynamicCredentials\Session\DynamicCredentialSession;
+use Tuleap\DynamicCredentials\User\DynamicUser;
+use Tuleap\DynamicCredentials\User\DynamicUserCreator;
 
 class dynamic_credentialsPlugin extends Plugin // @codingStandardsIgnoreLine
 {
@@ -45,6 +51,9 @@ class dynamic_credentialsPlugin extends Plugin // @codingStandardsIgnoreLine
     public function getHooksAndCallbacks()
     {
         $this->addHook(Event::REST_RESOURCES);
+        $this->addHook(Event::SESSION_BEFORE_LOGIN);
+        $this->addHook(Event::SESSION_AFTER_LOGIN);
+        $this->addHook(Event::USER_MANAGER_GET_USER_INSTANCE);
 
         return parent::getHooksAndCallbacks();
     }
@@ -53,5 +62,53 @@ class dynamic_credentialsPlugin extends Plugin // @codingStandardsIgnoreLine
     {
         $injector = new ResourcesInjector();
         $injector->populate($params['restler']);
+    }
+
+    public function sessionBeforeLogin(array $params)
+    {
+        $credential_retriever = $this->getCredentialRetriever();
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        $support_session = new DynamicCredentialSession($_SESSION, $credential_retriever);
+        try {
+            $support_session->initialize($params['loginname'], $params['passwd']);
+        } catch (\Tuleap\DynamicCredentials\Credential\CredentialException $e) {
+            return;
+        }
+        $params['auth_success'] = true;
+        $params['auth_user_id'] = DynamicUser::ID;
+    }
+
+    public function sessionAfterLogin(array $params)
+    {
+        if ((int) $params['user']->getId() === DynamicUser::ID) {
+            $params['allow_codendi_login'] = false;
+        }
+    }
+
+    public function userManagerGetUserInstance(array $params)
+    {
+        if ((int) $params['row']['user_id'] !== DynamicUser::ID) {
+            return;
+        }
+
+        $credential_retriever = $this->getCredentialRetriever();
+        $dynamic_session      = new DynamicCredentialSession($_SESSION, $credential_retriever);
+
+        $support_user_creator = new DynamicUserCreator($dynamic_session, UserManager::instance());
+        $params['user']       = $support_user_creator->getDynamicUser($params['row']);
+    }
+
+    /**
+     * @return CredentialRetriever
+     */
+    private function getCredentialRetriever()
+    {
+        return new CredentialRetriever(
+            new CredentialDAO(),
+            PasswordHandlerFactory::getPasswordHandler(),
+            new CredentialIdentifierExtractor()
+        );
     }
 }

@@ -20,10 +20,6 @@
 
 namespace Tuleap\DynamicCredentials\Credential;
 
-class CredentialInvalidUsernameException extends CredentialException
+class CredentialAuthenticationException extends \Exception
 {
-    public function __construct()
-    {
-        parent::__construct('Username does not respect the expected format');
-    }
 }

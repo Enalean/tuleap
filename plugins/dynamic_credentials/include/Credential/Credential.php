@@ -20,10 +20,34 @@
 
 namespace Tuleap\DynamicCredentials\Credential;
 
-class CredentialInvalidUsernameException extends CredentialException
+class Credential
 {
-    public function __construct()
+    private $identifier;
+    /**
+     * @var \DateTimeImmutable
+     */
+    private $expiration_date;
+
+    public function __construct($identifier, \DateTimeImmutable $expiration_date)
     {
-        parent::__construct('Username does not respect the expected format');
+        $this->identifier      = $identifier;
+        $this->expiration_date = $expiration_date;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIdentifier()
+    {
+        return $this->identifier;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasExpired()
+    {
+        $current_time = new \DateTimeImmutable();
+        return $current_time > $this->expiration_date;
     }
 }
