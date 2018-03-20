@@ -35,6 +35,11 @@ require_once 'constants.php';
 
 class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
 {
+    /**
+     * @var bool[]
+     */
+    private $already_computed = [];
+
     public function __construct($id)
     {
         parent::__construct($id);
@@ -128,10 +133,6 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
 
     public function beforeEvent(BeforeEvent $before_event)
     {
-        if (! ForgeConfig::get('force_velocity_computation')) {
-            return;
-        }
-
         $tracker           = $before_event->getArtifact()->getTracker();
         $semantic_status   = Tracker_Semantic_Status::load($tracker);
         $semantic_done     = SemanticDone::load($tracker);
@@ -147,28 +148,34 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
             return;
         }
 
-        $calculator = $this->getVelocityCalculator();
-        $computed_velocity = $calculator->calculate($before_event->getArtifact());
+        $artifact_id  = $before_event->getArtifact()->getId();
+        $changeset    = $before_event->getArtifact()->getLastChangeset();
+        $changeset_id = $changeset ? $changeset->getId() : 0;
 
-        $current_user = UserManager::instance()->getCurrentUser();
-        $factory      = Tracker_FormElementFactory::instance();
-        $field        = $factory->getFormElementById($field_id);
+        if (! isset($this->already_computed[$artifact_id][$changeset_id])) {
+            $calculator                                          = $this->getVelocityCalculator();
+            $computed_velocity                                   = $calculator->calculate($before_event->getArtifact());
+            $this->already_computed[$artifact_id][$changeset_id] = true;
 
-        if ($field->userCanRead($current_user)) {
-            $GLOBALS['Response']->addUniqueFeedback(
-                Feedback::INFO,
-                sprintf(
-                    dgettext(
-                        'tuleap-velocity',
-                        'The field %s will be automatically set to %s'
-                    ),
-                    $field->getName(),
-                    $computed_velocity
-                )
-            );
+            $current_user = UserManager::instance()->getCurrentUser();
+            $factory      = Tracker_FormElementFactory::instance();
+            $field        = $factory->getFormElementById($field_id);
+
+            if ($field->userCanRead($current_user)) {
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::INFO,
+                    sprintf(
+                        dgettext(
+                            'tuleap-velocity',
+                            'The field %s will be automatically set to %s'
+                        ),
+                        $field->getName(),
+                        $computed_velocity
+                    )
+                );
+            }
+            $before_event->forceFieldData($field_id, $computed_velocity);
         }
-
-        $before_event->forceFieldData($field_id, $computed_velocity);
     }
 
     /**
