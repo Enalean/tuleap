@@ -22,6 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Timetracking\Admin\AdminDao;
+use Tuleap\Timetracking\Admin\TimetrackingEnabler;
 use Tuleap\Timetracking\Time\TimeDao;
 use Tuleap\Timetracking\Time\TimeUpdater;
 
@@ -46,8 +48,11 @@ class TimetrackingDataBuilder extends REST_TestDataBuilder
         $this->installPlugin();
         $this->activatePlugin('timetracking');
 
+        $project = $this->project_manager->getProjectByUnixName(self::PROJECT_TEST_TIMETRACKING_SHORTNAME);
+
         $this->createUser();
-        $this->addTimesInDB();
+        $this->addTimesInDB($project);
+        $this->setEnabledTrackers($project);
     }
 
     private function createUser()
@@ -63,20 +68,29 @@ class TimetrackingDataBuilder extends REST_TestDataBuilder
         $dbtables->updateFromFile(dirname(__FILE__) . '/../../db/install.sql');
     }
 
-    private function addTimesInDB()
+    private function addTimesInDB(Project $project)
+    {
+        $user     = $this->user_manager->getUserByUserName(self::USER_TESTER_NAME);
+        $trackers = $this->tracker_factory->getTrackersByGroupId(
+            $project->getID()
+        );
+
+        foreach ($trackers as $tracker) {
+            $artifacts = Tracker_ArtifactFactory::instance()->getArtifactsByTrackerId($tracker->getId());
+
+            $this->addTimes($artifacts, $user);
+        }
+    }
+
+    /**
+     * @param Tracker_Artifact[] $artifacts
+     * @param PFUser $user
+     */
+    private function addTimes(array $artifacts, PFUser $user)
     {
         $time_updater = new TimeUpdater(
             new TimeDao()
         );
-
-        $user    = $this->user_manager->getUserByUserName(self::USER_TESTER_NAME);
-        $project = $this->project_manager->getProjectByUnixName(self::PROJECT_TEST_TIMETRACKING_SHORTNAME);
-        $tracker = $this->tracker_factory->getTrackerByShortnameAndProjectId(
-            self::TRACKER_SHORTNAME,
-            $project->getID()
-        );
-
-        $artifacts = Tracker_ArtifactFactory::instance()->getArtifactsByTrackerId($tracker->getId());
 
         foreach ($artifacts as $artifact) {
             $time_updater->addTimeForUserInArtifact(
@@ -87,5 +101,19 @@ class TimetrackingDataBuilder extends REST_TestDataBuilder
                 'test'
             );
         }
+    }
+
+    private function setEnabledTrackers(Project $project)
+    {
+        $enabler = new TimetrackingEnabler(
+            new AdminDao()
+        );
+
+        $tracker = $this->tracker_factory->getTrackerByShortnameAndProjectId(
+            self::TRACKER_SHORTNAME,
+            $project->getID()
+        );
+
+        $enabler->enableTimetrackingForTracker($tracker);
     }
 }
