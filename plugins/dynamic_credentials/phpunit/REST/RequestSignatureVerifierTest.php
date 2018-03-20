@@ -23,7 +23,7 @@ namespace Tuleap\DynamicCredentials\REST;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\DynamicCredentials\PluginInfo;
+use Tuleap\DynamicCredentials\Plugin\PluginInfo;
 
 class RequestSignatureVerifierTest extends TestCase
 {

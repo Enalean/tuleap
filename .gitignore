@@ -40,6 +40,7 @@ plugins/maillog
 !tools/plugins/languages/*.css
 !tools/plugins/plugincreationwizard/*.css
 src/vendor/
+plugins/*/vendor/
 /.idea/
 npm-debug.log
 yarn-error.log

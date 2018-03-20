@@ -41,6 +41,7 @@ autoload:
 	@(cd tests/soap/lib; phpab  -q --compat -o autoload.php .)
 	@(cd tests/rest/lib; phpab  -q --compat -o autoload.php .)
 	@for path in `ls plugins | egrep -v "$(AUTOLOAD_EXCLUDES)"`; do \
+		test -f "plugins/$$path/composer.json" && continue; \
 		echo "Generate plugin $$path"; \
 		(cd "plugins/$$path/include"; phpab -q --compat -o autoload.php $$(cat phpab-options.txt 2> /dev/null) .) \
         done;
@@ -53,6 +54,7 @@ autoload-with-userid:
 	@(cd tests/soap/lib; phpab  -q --compat -o autoload.php .)
 	@(cd tests/rest/lib; phpab  -q --compat -o autoload.php .)
 	@for path in `ls plugins | egrep -v "$(AUTOLOAD_EXCLUDES)"`; do \
+		test -f "plugins/$$path/composer.json" && continue; \
 		echo "Generate plugin $$path"; \
 		(cd "plugins/$$path/include"; phpab -q --compat -o autoload.php $$(cat phpab-options.txt 2> /dev/null) .; chown $(USER_ID):$(USER_ID) autoload.php) \
         done;
@@ -65,7 +67,10 @@ autoload-dev:
 
 .PHONY: composer
 composer:  ## Install PHP dependencies with Composer
-	composer install --working-dir=src/
+	@echo "Processing src/composer.json"
+	@composer install --working-dir=src/
+	@find plugins/ -mindepth 2 -maxdepth 2 -type f -name 'composer.json' \
+		-exec echo "Processing {}" \; -execdir composer install \;
 
 ## RNG generation
 

@@ -18,7 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once  __DIR__ . '/bootstrap.php';
+require_once __DIR__ . '/../../../../src/common/autoload.php';
+require_once __DIR__ . '/../../../../src/vendor/autoload.php';
+require_once __DIR__ . '/bootstrap.php';
+require_once __DIR__ . '/../../phpunit/bootstrap.php';
 
 $plugin_rest_initializer = new \Tuleap\DynamicCredentials\REST\DynamicCredentialsPluginRESTInitializer;
 $plugin_rest_initializer->initialize();
