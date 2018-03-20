@@ -55,6 +55,9 @@ class FrontRouter
                 if ($handler instanceof Dispatchable) {
                     $handler->process($route_info[2]);
                     exit;
+                } elseif ($handler instanceof DispatchableWithRequest) {
+                    $handler->process(\HTTPRequest::instance(), $GLOBALS['HTML'], $route_info[2]);
+                    exit;
                 }
             }
             throw new \RuntimeException("No valid handler associated to route $http_method $uri");
