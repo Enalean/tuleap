@@ -54,7 +54,7 @@ class SiteCache {
 
     private function invalidateWSDL() {
         $this->logger->info('Invalidate WSDL');
-        foreach (glob('/tmp/wsdl-') as $file) {
+        foreach (glob(ForgeConfig::get('codendi_cache_dir').'/php/wsdlcache/wsdl*') as $file) {
             unlink($file);
         }
     }
