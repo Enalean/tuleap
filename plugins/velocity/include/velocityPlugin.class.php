@@ -120,10 +120,10 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
 
     public function cssfile($params)
     {
-        if (strpos($_SERVER['REQUEST_URI'], '/plugins/tracker/') === 0) {
+        if ($this->isInAdminSemantics()) {
             $theme_include_assets = new IncludeAssets(
-                VELOCITY_BASE_DIR . '/www/themes/FlamingParrot/assets/',
-                VELOCITY_BASE_URL . '/themes/FlamingParrot/assets/'
+                VELOCITY_BASE_DIR . '/www/themes/FlamingParrot/assets',
+                VELOCITY_BASE_URL . '/themes/FlamingParrot/assets'
             );
             $css_file_url         = $theme_include_assets->getFileURL('style.css');
 
@@ -191,5 +191,14 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
         );
 
         return $calculator;
+    }
+
+    /**
+     * @return bool
+     */
+    private function isInAdminSemantics()
+    {
+        return strpos($_SERVER['REQUEST_URI'], '/plugins/tracker/') === 0
+            && strpos($_SERVER['REQUEST_URI'], 'func=admin-semantic') !== false;
     }
 }

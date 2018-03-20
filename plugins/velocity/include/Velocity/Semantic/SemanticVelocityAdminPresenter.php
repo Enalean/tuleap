@@ -84,7 +84,7 @@ class SemanticVelocityAdminPresenter
         $this->has_semantic_done_defined                  = $has_semantic_done_defined;
         $this->has_velocity_field                         = $selected_velocity_field_id !== null;
         $this->tracker_name                               = $tracker->getName();
-        $this->back_url                                   = TRACKER_BASE_URL . "?" . http_build_query(
+        $this->back_url                                   = TRACKER_BASE_URL . "/?" . http_build_query(
             [
                 "tracker" => $tracker->getId(),
                 "func"    => "admin-semantic"
