@@ -32,6 +32,7 @@
         />
         <widget-artifact-table
             v-bind:is-in-reading-mode="reading_mode"
+            v-bind:has-query-changed="query_has_changed"
             v-bind:startDate="start_date"
             v-bind:endDate="end_date"
         />
@@ -57,7 +58,8 @@
             const end_date   = DateTime.local().toISODate();
 
             return {
-                reading_mode: true,
+                reading_mode     : true,
+                query_has_changed: false,
                 start_date,
                 end_date
             }
@@ -71,11 +73,16 @@
                 if (data) {
                     const { start_date, end_date } = data;
 
-                    this.start_date = start_date;
-                    this.end_date   = end_date;
+                    this.start_date        = start_date;
+                    this.end_date          = end_date;
+                    this.reading_mode      = true;
+                    this.query_has_changed = true;
+
+                    return;
                 }
 
-                this.reading_mode = true;
+                this.reading_mode      = true;
+                this.query_has_changed = false;
             }
         }
     };

@@ -50,6 +50,18 @@
                 </tr>
             </tfoot>
         </table>
+        <div class="tlp-pagination">
+            <button
+                class="tlp-button-primary tlp-button-outline tlp-button-small"
+                type="button"
+                v-if="canLoadMore"
+                v-on:click="loadMore"
+                v-bind:disabled="is_loading_more"
+            >
+                <i v-if="is_loading_more" class="tlp-button-icon fa fa-spinner fa-spin"></i>
+                {{ load_more_label }}
+            </button>
+        </div>
     </div>
 </template>)
 (<script>
@@ -64,14 +76,19 @@
             startDate      : String,
             endDate        : String,
             isInReadingMode: Boolean,
+            hasQueryChanged: Boolean
         },
         components: { ArtifactTableRow },
         data() {
             return {
-                tracked_times: [],
-                rest_error   : '',
-                is_loading   : false,
-                is_loaded    : false
+                tracked_times    : [],
+                rest_error       : '',
+                is_loading       : false,
+                is_loaded        : false,
+                is_loading_more  : false,
+                total_times      : 0,
+                pagination_offset: 0,
+                pagination_limit : 10
             }
         },
         computed: {
@@ -86,22 +103,28 @@
                     && ! this.hasRestError;
             },
             report_state() {
-                return [ this.isInReadingMode ];
+                return [ this.isInReadingMode, this.hasQueryChanged ];
             },
-            empty_state   : () => gettext_provider.gettext('No tracked time have been found for this period'),
-            artifact_label: () => gettext_provider.gettext('Artifact'),
-            project_label : () => gettext_provider.gettext('Project'),
-            time_label    : () => gettext_provider.gettext('Time')
+            canLoadMore() {
+                return this.pagination_offset < this.total_times;
+            },
+            empty_state    : () => gettext_provider.gettext('No tracked time have been found for this period'),
+            artifact_label : () => gettext_provider.gettext('Artifact'),
+            project_label  : () => gettext_provider.gettext('Project'),
+            time_label     : () => gettext_provider.gettext('Time'),
+            load_more_label: () => gettext_provider.gettext('Load more')
         },
         watch: {
             report_state() {
-                if (this.isInReadingMode === true) {
-                    this.loadTimes();
+                if (this.isInReadingMode && this.hasQueryChanged) {
+                    this.pagination_offset    = 0;
+                    this.tracked_times.length = 0;
+                    this.loadFirstBatchOfTimes();
                 }
             }
         },
         mounted() {
-            this.loadTimes();
+            this.loadFirstBatchOfTimes();
         },
         methods: {
             getFormattedTotalSum() {
@@ -115,21 +138,25 @@
             },
             async loadTimes() {
                 try {
-                    this.is_loading = true;
                     this.rest_error = '';
 
-                    const times = await getTrackedTimes(
+                    const { times, total } = await getTrackedTimes(
                         this.startDate,
-                        this.endDate
+                        this.endDate,
+                        this.pagination_limit,
+                        this.pagination_offset
                     );
 
-                    this.tracked_times = Object.values(times);
+                    this.tracked_times = this.tracked_times.concat(
+                        Object.values(times)
+                    );
 
-                    this.is_loaded = true;
+                    this.pagination_offset += this.pagination_limit;
+
+                    this.total_times = total;
+                    this.is_loaded   = true;
                 } catch (error) {
                     this.showRestError(error);
-                } finally {
-                    this.is_loading = false;
                 }
             },
             async showRestError(rest_error) {
@@ -140,6 +167,20 @@
                 } catch (error) {
                     this.rest_error = gettext_provider.gettext('An error occured');
                 }
+            },
+            async loadMore() {
+                this.is_loading_more = true;
+
+                await this.loadTimes();
+
+                this.is_loading_more = false;
+            },
+            async loadFirstBatchOfTimes() {
+                this.is_loading = true;
+
+                await this.loadTimes();
+
+                this.is_loading = false;
             }
         }
     }

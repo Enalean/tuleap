@@ -28,7 +28,7 @@ export {
     getTrackedTimes
 };
 
-async function getTrackedTimes(start_date, end_date) {
+async function getTrackedTimes(start_date, end_date, limit, offset) {
     const query = JSON.stringify({
         start_date: formatDatetimeToISO(start_date),
         end_date  : formatDatetimeToISO(end_date)
@@ -36,9 +36,17 @@ async function getTrackedTimes(start_date, end_date) {
 
     const response = await get('/api/v1/timetracking', {
         params: {
+            limit,
+            offset,
             query
         }
     });
 
-    return await response.json();
+    const total = response.headers.get('X-PAGINATION-SIZE');
+    const times = await response.json();
+
+    return {
+        times,
+        total
+    };
 }

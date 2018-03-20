@@ -31,6 +31,8 @@ import {
 describe("getTrackedTimes() -", () => {
     it("the REST API will be queried with ISO-8601 dates and the times returned", async () => {
         Settings.defaultZoneName = "Europe/Paris";
+        const limit  = 1,
+              offset = 0;
 
         const times   = [
             [{
@@ -40,12 +42,22 @@ describe("getTrackedTimes() -", () => {
             }]
         ];
 
-        mockFetchSuccess(tlp.get, { headers: {}, return_json: times });
+        mockFetchSuccess(tlp.get, { headers: {
+            get: (header_name) => {
+                const headers = {
+                    "X-PAGINATION-SIZE": 1
+                };
 
-        const result = await getTrackedTimes("2018-03-08", "2018-03-15");
+                return headers[ header_name ];
+            }
+        }, return_json: times });
+
+        const result = await getTrackedTimes("2018-03-08", "2018-03-15", limit, offset);
 
         expect(tlp.get).toHaveBeenCalledWith('/api/v1/timetracking', {
             params: {
+                limit,
+                offset,
                 query: JSON.stringify({
                     start_date: "2018-03-08T00:00:00+01:00",
                     end_date  : "2018-03-15T00:00:00+01:00"
@@ -53,6 +65,7 @@ describe("getTrackedTimes() -", () => {
             }
         });
 
-        expect(result).toEqual(times);
+        expect(result.times).toEqual(times);
+        expect(result.total).toEqual(1);
     });
 });

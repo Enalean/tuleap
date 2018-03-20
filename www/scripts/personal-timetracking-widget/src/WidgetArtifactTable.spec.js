@@ -102,4 +102,23 @@ describe('WidgetArtifactTable', () => {
             expect(vm.rest_error).toEqual("403 Forbidden");
         });
     });
+
+    describe('loadMore', () => {
+        it('When the query has been modified, then the load more variable are reininitialized', async () => {
+            const vm = instantiateComponent({
+                startDate: "2018-03-08",
+                endDate  : "2018-03-15"
+            });
+
+            vm.pagination_offset    = 100;
+            vm.tracked_times.length = 100;
+            vm.isInReadingMode      = true;
+            vm.hasQueryChanged      = true;
+
+            await vm.$nextTick();
+
+            expect(vm.pagination_offset).toEqual(0);
+            expect(vm.tracked_times.length).toEqual(0);
+        });
+    });
 });
