@@ -20,20 +20,38 @@
 
 namespace Tuleap\TestManagement\Campaign;
 
+use Tuleap\Cryptography\ConcealedString;
+
 class JobConfiguration
 {
+    /**
+     * @var string
+     */
     private $url;
+    /**
+     * @var ConcealedString
+     */
+    private $token;
 
-    public function __construct($url)
+    public function __construct($url, ConcealedString $token)
     {
-        $this->url = $url;
+        $this->url   = $url;
+        $this->token = $token;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getUrl()
     {
         return $this->url;
+    }
+
+    /**
+     * @return ConcealedString
+     */
+    public function getToken()
+    {
+        return $this->token;
     }
 }

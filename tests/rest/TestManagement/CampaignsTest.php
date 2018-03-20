@@ -84,7 +84,7 @@ class CampaignsTest extends BaseTest {
         $this->revertCampaign($campaign);
     }
 
-    public function testPatchCampaignJobUrl()
+    public function testPatchCampaignJobUrlToken()
     {
         $campaign = $this->getValid73Campaign();
 
@@ -94,7 +94,7 @@ class CampaignsTest extends BaseTest {
                 null,
                 json_encode(
                     [
-                        'job_configuration' => ['url' => 'https://example.com']
+                        'job_configuration' => ['url' => 'https://example.com', 'token' => 'so secret']
                     ]
                 )
             )
@@ -105,6 +105,7 @@ class CampaignsTest extends BaseTest {
             $this->client->get('testmanagement_campaigns/' . $campaign['id'])
         )->json();
         $this->assertEquals('https://example.com', $updated_campaign['job_configuration']['url']);
+        $this->assertEquals('so secret', $updated_campaign['job_configuration']['token']);
 
         $this->revertCampaign($campaign);
 
@@ -121,7 +122,7 @@ class CampaignsTest extends BaseTest {
                     null,
                     json_encode(
                         [
-                            'job_configuration' => ['url' => 'avadakedavra']
+                            'job_configuration' => ['url' => 'avadakedavra', 'token' => 'so secret']
                         ]
                     )
                 )

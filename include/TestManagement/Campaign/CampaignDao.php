@@ -24,16 +24,16 @@ use Tuleap\DB\DataAccessObject;
 
 class CampaignDao extends DataAccessObject
 {
-    public function update($campaign_id, $job_url)
+    public function update($campaign_id, $job_url, $encrypted_job_token)
     {
         if (! $job_url) {
             return $this->getDB()->delete('plugin_testmanagement_campaign', ['artifact_id' => $campaign_id]);
         }
 
-        $sql = 'REPLACE INTO plugin_testmanagement_campaign (artifact_id, job_url)
-                VALUES (?, ?)';
+        $sql = 'REPLACE INTO plugin_testmanagement_campaign (artifact_id, job_url, encrypted_job_token)
+                VALUES (?, ?, ?)';
 
-        return $this->getDB()->run($sql, $campaign_id, $job_url);
+        return $this->getDB()->run($sql, $campaign_id, $job_url, $encrypted_job_token);
     }
 
     public function searchByCampaignId($campaign_id)
