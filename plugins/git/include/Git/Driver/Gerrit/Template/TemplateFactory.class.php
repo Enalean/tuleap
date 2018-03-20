@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2013. All rights reserved.
+ * Copyright Enalean (c) 2013-2018. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -116,12 +116,11 @@ class Git_Driver_Gerrit_Template_TemplateFactory {
      * @throws Git_Template_NotFoundException
      */
     public function getTemplate($template_id) {
-        $row = $this->dao->getTemplate($template_id)->getRow();
-        if ($row) {
-            return $this->instantiateTemplateFromRow($row);
+        $row = $this->dao->getTemplate($template_id);
+        if (empty($row)) {
+            throw new Git_Template_NotFoundException($template_id);
         }
-
-        throw new Git_Template_NotFoundException($template_id);
+        return $this->instantiateTemplateFromRow($row);
     }
 
     /**
