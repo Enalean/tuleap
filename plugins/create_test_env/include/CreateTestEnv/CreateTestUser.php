@@ -48,11 +48,18 @@ class CreateTestUser
         $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><users />');
         $user = $xml->addChild('user');
         $user->addChild('id', 101);
-        $user->addChild('username', $this->getUserName());
-        $user->addChild('realname', $this->getRealName());
-        $user->addChild('email', $this->email);
+        $this->addCData($user, 'username', $this->getUserName());
+        $this->addCData($user, 'realname', $this->getRealName());
+        $this->addCData($user, 'email', $this->email);
         $user->addChild('ldapid', 101);
         return $xml;
+    }
+
+    private function addCData(\SimpleXMLElement $node, $name, $value)
+    {
+        $parent = $node->addChild($name);
+        $dom = dom_import_simplexml($parent);
+        $dom->appendChild($dom->ownerDocument->createCDATASection($value));
     }
 
     public function getUserName()
@@ -76,12 +83,13 @@ class CreateTestUser
         return $uid;
     }
 
-    private function getLoginFromString($uid)
+    public function getLoginFromString($string)
     {
-        $name = utf8_decode($uid);
-        $name = strtr($name, utf8_decode(' .:;,?%^*(){}[]<>+=$àâéèêùûç'), '____________________aaeeeuuc');
-        $name = str_replace(array("'", '"', '/', '\\'), '', $name);
-        return strtolower($name);
+        $string = str_replace([' ', '_'], '-', $string);
+        $string = preg_replace('/[^A-Za-z0-9\-]/', '', $string);
+        $string = trim($string, '-');
+        $string = substr($string, 0, 28);
+        return strtolower($string);
     }
 
     /**

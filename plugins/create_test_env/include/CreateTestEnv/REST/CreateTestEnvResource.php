@@ -24,6 +24,8 @@ namespace Tuleap\CreateTestEnv\REST;
 use Luracast\Restler\RestException;
 use Tuleap\CreateTestEnv\CreateTestEnvironment;
 use Tuleap\CreateTestEnv\Exception\CreateTestEnvException;
+use Tuleap\CreateTestEnv\Exception\EmailNotUniqueException;
+use Tuleap\CreateTestEnv\Exception\InvalidInputException;
 use Tuleap\REST\Header;
 
 class CreateTestEnvResource
@@ -48,25 +50,56 @@ class CreateTestEnvResource
      *
      * @return TestEnvironmentRepresentation
      *
-     * @throws RestException
+     * @throws 403 RestException You are not authorized to use this route
+     * @throws 400 RestException Invalid request
+     * @throws 500 RestException Server error
      */
     public function post($secret, $firstname, $lastname, $email)
     {
         try {
             $this->checkSecret($secret);
 
-            $tmp_name = tempnam(\ForgeConfig::get('codendi_cache_dir'), 'tuleap_create_test_env');
-            unlink($tmp_name);
+            $tmp_name = $this->createTempDir();
             $test_env = new CreateTestEnvironment($tmp_name);
             $test_env->main($firstname, $lastname, $email);
+
+            $this->cleanUpTempDir($tmp_name);
 
             return (new TestEnvironmentRepresentation())->build(
                 $test_env->getProject(),
                 \HTTPRequest::instance()->getServerUrl(),
                 $test_env->getUser()
             );
+        } catch (InvalidInputException $exception) {
+            if (! empty($tmp_name)) {
+                $this->cleanUpTempDir($tmp_name);
+            }
+            throw new RestException(400, $exception->getMessage());
         } catch (CreateTestEnvException $exception) {
+            if (! empty($tmp_name)) {
+                $this->cleanUpTempDir($tmp_name);
+            }
             throw new RestException(500, $exception->getMessage());
+        }
+    }
+
+    private function createTempDir()
+    {
+        $tmp_name = tempnam(\ForgeConfig::get('codendi_cache_dir'), 'tuleap_create_test_env');
+        unlink($tmp_name);
+        return $tmp_name;
+    }
+
+    private function cleanUpTempDir($tmp_name)
+    {
+        if (file_exists($tmp_name.'/project.xml')) {
+            unlink($tmp_name.'/project.xml');
+        }
+        if (file_exists($tmp_name.'/users.xml')) {
+            unlink($tmp_name.'/users.xml');
+        }
+        if (is_dir($tmp_name)) {
+            rmdir($tmp_name);
         }
     }
 

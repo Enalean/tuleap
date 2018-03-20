@@ -27,6 +27,9 @@ class CreateTestProject
     private $user_name;
     private $user_realname;
 
+    private $full_name;
+    private $unix_name;
+
     public function __construct($user_name, $user_realname)
     {
         $this->user_name     = $user_name;
@@ -35,6 +38,8 @@ class CreateTestProject
 
     /**
      * @return \SimpleXMLElement
+     * @throws Exception\InvalidProjectFullNameException
+     * @throws Exception\InvalidProjectUnixNameException
      */
     public function generateXML()
     {
@@ -51,12 +56,46 @@ class CreateTestProject
         return simplexml_load_string($xml_str);
     }
 
-    private function getProjectFullName()
+    /**
+     * @return string
+     * @throws Exception\InvalidProjectFullNameException
+     */
+    public function getProjectFullName()
     {
-        return 'Test project for '.$this->user_realname;
+        if ($this->full_name === null) {
+            $full_name = $this->generateProjectFullName();
+            $rule = new \Rule_ProjectFullName();
+            if (! $rule->isValid($full_name)) {
+                throw new Exception\InvalidProjectFullNameException($rule->getErrorMessage());
+            }
+            $this->full_name = $full_name;
+        }
+        return $this->full_name;
     }
 
+    public function generateProjectFullName()
+    {
+        return substr('Test project for '.$this->user_name, 0, 40);
+    }
+
+    /**
+     * @return string
+     * @throws Exception\InvalidProjectUnixNameException
+     */
     public function getProjectUnixName()
+    {
+        if ($this->unix_name === null) {
+            $unix_name = $this->generateProjectUnixName();
+            $rule = new \Rule_ProjectName();
+            if (! $rule->isValid($unix_name)) {
+                throw new Exception\InvalidProjectUnixNameException($rule->getErrorMessage());
+            }
+            $this->unix_name = $unix_name;
+        }
+        return $this->unix_name;
+    }
+
+    public function generateProjectUnixName()
     {
         return 'test-for-'.strtr($this->user_name, '_.', '--');
     }

@@ -21,7 +21,7 @@
 
 namespace Tuleap\CreateTestEnv\Exception;
 
-class EmailNotUniqueException extends CreateTestEnvException
+class EmailNotUniqueException extends InvalidInputException
 {
 
 }

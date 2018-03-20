@@ -37,11 +37,13 @@ class CreateTestEnvironment
      * @param $lastname
      * @param $email
      * @throws Exception\EmailNotUniqueException
-     * @throws Exception\UnableToCreateTemporaryDirectoryException
-     * @throws Exception\ProjectImportFailureException
-     * @throws Exception\UnableToWriteFileException
+     * @throws Exception\InvalidProjectFullNameException
+     * @throws Exception\InvalidProjectUnixNameException
      * @throws Exception\InvalidRealNameException
+     * @throws Exception\ProjectImportFailureException
      * @throws Exception\ProjectNotCreatedException
+     * @throws Exception\UnableToCreateTemporaryDirectoryException
+     * @throws Exception\UnableToWriteFileException
      */
     public function main($firstname, $lastname, $email)
     {

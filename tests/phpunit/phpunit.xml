@@ -15,6 +15,7 @@
             <directory suffix=".php">../../plugins/git/include/Git/PermissionsPerGroup</directory>
             <directory suffix=".php">../../plugins/dynamic_credentials/include/</directory>
             <directory suffix=".php">../../plugins/velocity/include/</directory>
+            <directory suffix=".php">../../plugins/create_test_env/include/</directory>
         </whitelist>
     </filter>
     <testsuites>
