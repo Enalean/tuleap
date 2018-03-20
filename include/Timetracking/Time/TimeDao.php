@@ -135,13 +135,17 @@ class TimeDao extends DataAccessObject
         $escaped_limit      = $this->da->escapeInt($limit);
         $escaped_offset     = $this->da->escapeInt($offset);
 
-        $sql = "SELECT SQL_CALC_FOUND_ROWS GROUP_CONCAT(id) as artifact_times_ids
-                FROM plugin_timetracking_times
+        $sql = "SELECT SQL_CALC_FOUND_ROWS GROUP_CONCAT(times.id) AS artifact_times_ids
+                FROM plugin_timetracking_times AS times
+                    INNER JOIN tracker_artifact AS artifacts
+                        ON times.artifact_id = artifacts.id
+                    INNER JOIN plugin_timetracking_enabled_trackers AS trackers
+                        ON trackers.tracker_id = artifacts.tracker_id
                 WHERE user_id = $escaped_user_id
                 AND   day BETWEEN CAST($escaped_start_date AS DATE)
                             AND   CAST($escaped_end_date AS DATE)
-                GROUP BY artifact_id
-                ORDER BY id
+                GROUP BY times.artifact_id
+                ORDER BY times.id
                 LIMIT $escaped_offset, $escaped_limit
         ";
 
