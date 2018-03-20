@@ -21,8 +21,15 @@
 
 namespace Tuleap\CreateTestEnv\REST;
 
+use Tuleap\REST\JsonCast;
+
 class TestEnvironmentRepresentation
 {
+    /**
+     * @var int Project id
+     */
+    public $id;
+
     /**
      * @var string Project shortname
      */
@@ -50,6 +57,7 @@ class TestEnvironmentRepresentation
 
     public function build(\Project $project, $base_url, \PFUser $user)
     {
+        $this->id                = JsonCast::toInt($project->getID());
         $this->project_shortname = $project->getUnixNameMixedCase();
         $this->project_realname  = $project->getUnconvertedPublicName();
         $this->project_url       = $base_url.'/projects/'.$project->getUnixNameLowerCase();
