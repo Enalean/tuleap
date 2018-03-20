@@ -23,7 +23,7 @@ namespace Tuleap\CreateTestEnv;
 
 use PHPUnit\Framework\TestCase;
 
-require_once __DIR__.'/../../include/autoload.php';
+require_once __DIR__.'/../../include/create_test_envPlugin.class.php';
 
 class CreateTestProjectTest extends TestCase
 {
