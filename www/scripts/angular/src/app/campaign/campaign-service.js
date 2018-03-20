@@ -1,11 +1,15 @@
 export default CampaignService;
 
 CampaignService.$inject = [
+    '$http',
+    '$q',
     'Restangular',
     'SharedPropertiesService'
 ];
 
 function CampaignService(
+    $http,
+    $q,
     Restangular,
     SharedPropertiesService
 ) {
@@ -20,6 +24,7 @@ function CampaignService(
         createCampaign,
         patchCampaign,
         patchExecutions,
+        triggerAutomatedTests
     };
 
     function getCampaign(campaign_id) {
@@ -85,6 +90,14 @@ function CampaignService(
                 };
 
                 return result;
+            });
+    }
+
+     function triggerAutomatedTests(campaign_id) {
+        return $http
+            .post(`/api/v1/testmanagement_campaigns/${campaign_id}/automated_tests`)
+            .catch(response => {
+                return $q.reject(response.data.error);
             });
     }
 }

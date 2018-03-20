@@ -1,20 +1,20 @@
-/* eslint-disable */
-var path                  = require('path');
-var webpack               = require('webpack');
-var WebpackAssetsManifest = require('webpack-assets-manifest');
-var babel_preset_env      = require('babel-preset-env');
-var babel_plugin_istanbul = require('babel-plugin-istanbul');
+const path                     = require('path');
+const webpack                  = require('webpack');
+const WebpackAssetsManifest    = require('webpack-assets-manifest');
+const BabelPresetEnv           = require('babel-preset-env');
+const BabelPluginIstanbul      = require('babel-plugin-istanbul').default;
+const BabelPluginRewireExports = require('babel-plugin-rewire-exports').default;
 
-var assets_dir_path = path.resolve(__dirname, './bin/assets');
+const assets_dir_path = path.resolve(__dirname, './bin/assets');
 
-var babel_preset_env_ie_config = [babel_preset_env, {
+const babel_preset_env_ie_config = [BabelPresetEnv, {
     targets: {
         ie: 11
     },
     modules: false
 }];
 
-var babel_preset_env_chrome_config = [babel_preset_env, {
+const babel_preset_env_chrome_config = [BabelPresetEnv, {
     targets: {
         browsers: ['last 2 Chrome versions']
     },
@@ -23,7 +23,7 @@ var babel_preset_env_chrome_config = [babel_preset_env, {
     shippedProposals: true
 }];
 
-var babel_options   = {
+const babel_options   = {
     env: {
         watch: {
             presets: [babel_preset_env_ie_config]
@@ -32,12 +32,14 @@ var babel_options   = {
             presets: [babel_preset_env_ie_config]
         },
         test: {
-            presets: [babel_preset_env_chrome_config]
+            presets: [babel_preset_env_chrome_config],
+            plugins: [BabelPluginRewireExports]
         },
         coverage: {
             presets: [babel_preset_env_chrome_config],
             plugins: [
-                [babel_plugin_istanbul.default, {
+                BabelPluginRewireExports,
+                [BabelPluginIstanbul, {
                     exclude: ['**/*.spec.js']
                 }]
             ]
@@ -45,7 +47,7 @@ var babel_options   = {
     }
 };
 
-var webpack_config = {
+const webpack_config = {
     entry : {
         testmanagement: './src/app/app.js',
     },
@@ -106,7 +108,7 @@ var webpack_config = {
             writeToDisk: true
         }),
         // This ensure we only load moment's fr locale. Otherwise, every single locale is included !
-        new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /fr/)
+        new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /fr/)
     ]
 };
 

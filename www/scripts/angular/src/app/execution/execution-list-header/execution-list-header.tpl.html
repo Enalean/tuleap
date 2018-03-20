@@ -1,7 +1,7 @@
 <div class="test-campaign-header">
     <h1 class="test-campaign-header-title">{{ $ctrl.campaign_state.campaign.label }}</h1>
     <button type="button"
-            class="tlp-button-primary edit-campaign-button"
+            class="tlp-button-primary execution-header-button"
             aria-haspopup="true"
             aria-expanded="false"
             onclick="this.blur();"
@@ -11,6 +11,13 @@
     >
         <i class="fa fa-pencil tlp-button-icon"></i> {{ 'Edit' | translate }}
     </button>
+    <button type="button"
+        class="tlp-button-primary tlp-button-outline execution-header-button"
+        ng-click="$ctrl.launchAutomatedTests()"
+        ng-if="$ctrl.isAutomatedTestButtonShown()"
+    ><i class="fa fa-gears tlp-button-icon"
+        ng-class="{ 'fa-spinner fa-spin': $ctrl.triggered }"
+    ></i> {{ ::'Launch automated tests' | translate }}</button>
     <div class="test-campaign-header-spacer"></div>
     <div class="test-campaign-tester"
          ng-if="$ctrl.isRealtimeEnabled()"

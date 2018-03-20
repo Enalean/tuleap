@@ -26,6 +26,7 @@ import InPropertiesFilter from './app-filter.js';
 import TestManagementCtrl from './app-controller.js';
 import EnableTlpTableFilterDirective from './enable-tlp-table-filter-directive.js';
 import OpenTlpDropdownDirective from './open-tlp-dropdown-directive.js';
+import FeedbackComponent from './feedback-component.js';
 
 export default angular.module('testmanagement', [
     ngSanitize,
@@ -51,5 +52,6 @@ export default angular.module('testmanagement', [
 .directive('openTlpDropdown', OpenTlpDropdownDirective)
 .filter('InPropertiesFilter', InPropertiesFilter)
 .controller('TestManagementCtrl', TestManagementCtrl)
+.component('feedbackMessage', FeedbackComponent)
 .name;
 

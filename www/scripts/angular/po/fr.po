@@ -190,6 +190,10 @@ msgstr "Projet Jenkins"
 msgid "Job URL"
 msgstr "URL du projet"
 
+#: src/app/execution/execution-list-header/execution-list-header.tpl.html
+msgid "Launch automated tests"
+msgstr "Lancer les tests automatisés"
+
 #: src/app/execution/execution-link-issue.tpl.html
 msgid "Link"
 msgstr "Lier"
@@ -275,6 +279,10 @@ msgstr "L'URL vers un projet Jenkins qui exécutera les tests automatisés"
 #: src/app/execution/execution-link-issue.tpl.html
 msgid "The entered id is incorrect."
 msgstr "L’id saisi est incorrect."
+
+#: src/app/execution/execution-list-header/execution-list-header-controller.js
+msgid "The job at URL {{ job_url }} has been succesfully launched."
+msgstr "Le projet à l'URL {{ job_url }} a été lancé avec succès."
 
 #: src/app/campaign/campaign-list.tpl.html
 msgid "There are no campaigns"

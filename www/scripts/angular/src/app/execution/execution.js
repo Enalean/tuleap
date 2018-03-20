@@ -12,6 +12,7 @@ import shared_props_module         from '../shared-properties/shared-properties.
 import definition_module           from '../definition/definition.js';
 import artifact_links_module       from '../artifact-links-graph/artifact-links-graph.js';
 import socket_module               from '../socket/socket.js';
+import campaign_module             from '../campaign/campaign.js';
 
 import ExecutionConfig         from './execution-config.js';
 import ExecutionListCtrl       from './execution-list-controller.js';
@@ -23,9 +24,10 @@ import ExecutionListHeader     from './execution-list-header/execution-list-head
 export default angular.module('execution', [
     'gettext',
     'restangular',
-    angular_tlp,
     angular_artifact_modal,
+    angular_tlp,
     artifact_links_module,
+    campaign_module,
     definition_module,
     execution_collection_module,
     shared_props_module,

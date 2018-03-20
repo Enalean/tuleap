@@ -2,13 +2,13 @@ import testmanagement_module from '../app.js';
 import angular from 'angular';
 import 'angular-mocks';
 
-describe ('CampaignService - ', function () {
-    var mockBackend,
+describe ('CampaignService - ', () => {
+    let mockBackend,
         CampaignService,
-        SharedPropertiesService,
-        userUUID = '123';
+        SharedPropertiesService;
+    const userUUID = '123';
 
-    beforeEach(function() {
+    beforeEach(() => {
         angular.mock.module(testmanagement_module);
 
         angular.mock.inject(function(
@@ -21,9 +21,11 @@ describe ('CampaignService - ', function () {
         });
 
         spyOn(SharedPropertiesService, "getUUID").and.returnValue(userUUID);
+
+        installPromiseMatchers();
     });
 
-    afterEach (function () {
+    afterEach (() => {
         mockBackend.verifyNoOutstandingExpectation();
         mockBackend.verifyNoOutstandingRequest();
     });
@@ -156,6 +158,26 @@ describe ('CampaignService - ', function () {
 
         promise.then(function(response) {
             expect(response.results.length).toEqual(2);
+        });
+    });
+
+    describe("triggerAutomatedTests() -", () => {
+        it("When the server responds with code 200, then a promise will be resolved", () => {
+            mockBackend.expectPOST('/api/v1/testmanagement_campaigns/53/automated_tests').respond(200);
+
+            const promise = CampaignService.triggerAutomatedTests(53);
+
+            expect(promise).toBeResolved();
+        });
+
+        it("When the server responds with code 500, then a promise will be rejected ", () => {
+            mockBackend.expectPOST('/api/v1/testmanagement_campaigns/31/automated_tests').respond(500, {
+                error: { message: 'Message: The requested URL returned error: 403 Forbidden' }
+            });
+
+            const promise = CampaignService.triggerAutomatedTests(31);
+
+            expect(promise).toBeRejectedWith({ message: 'Message: The requested URL returned error: 403 Forbidden' });
         });
     });
 });

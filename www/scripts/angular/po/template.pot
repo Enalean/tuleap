@@ -175,6 +175,10 @@ msgstr ""
 msgid "Job URL"
 msgstr ""
 
+#: src/app/execution/execution-list-header/execution-list-header.tpl.html
+msgid "Launch automated tests"
+msgstr ""
+
 #: src/app/execution/execution-link-issue.tpl.html
 msgid "Link"
 msgstr ""
@@ -259,6 +263,10 @@ msgstr ""
 
 #: src/app/execution/execution-link-issue.tpl.html
 msgid "The entered id is incorrect."
+msgstr ""
+
+#: src/app/execution/execution-list-header/execution-list-header-controller.js
+msgid "The job at URL {{ job_url }} has been succesfully launched."
 msgstr ""
 
 #: src/app/campaign/campaign-list.tpl.html

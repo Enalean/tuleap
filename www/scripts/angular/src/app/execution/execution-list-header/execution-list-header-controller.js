@@ -4,16 +4,23 @@ import CampaignEditCtrl from '../../campaign/campaign-edit-controller.js';
 import '../execution-presences.tpl.html';
 import ExecutionPresencesCtrl from '../execution-presences-controller.js';
 
+import { setSuccess, setError, resetError } from "../../feedback-state.js";
+import { isDefined } from 'angular';
+
 controller.$inject = [
+    'gettextCatalog',
     'TlpModalService',
     'ExecutionService',
     'SharedPropertiesService',
+    'CampaignService',
 ];
 
 export default function controller(
+    gettextCatalog,
     TlpModalService,
     ExecutionService,
     SharedPropertiesService,
+    CampaignService,
 ) {
     const self = this;
     Object.assign(self, {
@@ -21,7 +28,10 @@ export default function controller(
         showPresencesModal,
         isRealtimeEnabled,
         positiveScore,
-        campaign_state: ExecutionService
+        isAutomatedTestButtonShown,
+        launchAutomatedTests,
+        campaign_state: ExecutionService,
+        triggered     : false
     });
 
     function openEditCampaignModal() {
@@ -60,5 +70,35 @@ export default function controller(
 
     function positiveScore(score) {
         return score ? Math.max(score, 0) : '-';
+    }
+
+    function isAutomatedTestButtonShown() {
+        return isDefined(ExecutionService.campaign.job_configuration)
+            && ExecutionService.campaign.job_configuration.url !== '';
+    }
+
+    function launchAutomatedTests() {
+        self.triggered = true;
+        resetError();
+        return CampaignService.triggerAutomatedTests(ExecutionService.campaign.id)
+            .then(
+                () => {
+                    return setSuccess(
+                        gettextCatalog.getString(
+                            "The job at URL {{ job_url }} has been succesfully launched.",
+                            {
+                                job_url:
+                                    ExecutionService.campaign.job_configuration.url
+                            }
+                        )
+                    );
+                },
+                error => {
+                    setError(error.message);
+                }
+            )
+            .finally(() => {
+                self.triggered = false;
+            });
     }
 }
