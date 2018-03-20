@@ -7,6 +7,15 @@ msgid "Adds velocity chart into Agiledashboard"
 msgstr ""
 
 msgid ""
+"Artifact velocity will always be set to 0, because no backlog tracker have "
+"the following semantic:"
+msgid_plural ""
+"Artifact velocity will always be set to 0, because no backlog tracker have "
+"the following semantics:"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid ""
 "Choose the \"velocity\" field that will be used for computation of velocity "
 "chart."
 msgstr ""
@@ -15,11 +24,6 @@ msgid "Define the field to use to compute velocity."
 msgstr ""
 
 msgid "Field used for velocity computation:"
-msgstr ""
-
-msgid ""
-"No backlog trackers have a <b>done</b> semantic, velocity will always be set "
-"to 0."
 msgstr ""
 
 msgid "No field defined for velocity computation."
@@ -32,12 +36,6 @@ msgid ""
 msgstr ""
 
 msgid "Save your change"
-msgstr ""
-
-msgid "Semantic <a href=\"%s\">done</a> is not defined"
-msgstr ""
-
-msgid "Semantic done is not defined for tracker <a href=\"%s\">%s</a>"
 msgstr ""
 
 msgid "Semantic done is not defined."
@@ -54,6 +52,11 @@ msgstr ""
 #, php-format
 msgid "The field %s will be automatically set to %s"
 msgstr ""
+
+msgid "The following semantic is not defined:"
+msgid_plural "The following semantics are not defined:"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "The request is not valid."
 msgstr ""

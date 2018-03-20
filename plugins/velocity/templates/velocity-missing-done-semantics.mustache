@@ -2,16 +2,20 @@
     {{# backlog_trackers }}
         <li>
             <a href="{{ tracker_url }}">{{ name }}</a>
-            {{# is_missconfigured }}
+            {{# has_misconfigured_semantics }}
                 <span class="text-warning velocity-missing-semantic">
-                     <i class="icon-warning-sign"></i>
-                    {{# dgettext }}
+                 <i class="icon-warning-sign"></i>
+                    {{# dngettext }}
                         tuleap-velocity |
-                        Semantic <a href="%s">done</a> is not defined |
-                        {{ semantic_url }}
-                    {{/ dgettext }}
+                        The following semantic is not defined: |
+                        The following semantics are not defined: |
+                        {{ nb_semantic_misconfigured }}
+                    {{/ dngettext }}
+                    {{# misconfigured_semantics }}
+                        <a href={{ semantic_url }}>{{ semantic_name }}</a><span class="misconfigured-semantic-display-comma">, </span>
+                    {{/ misconfigured_semantics }}
                 </span>
-            {{/ is_missconfigured }}
+            {{/ has_misconfigured_semantics }}
         </li>
     {{/ backlog_trackers }}
 </ul>

@@ -57,6 +57,14 @@ class SemanticVelocityAdminPresenter
      * @var array
      */
     public $backlog_trackers;
+    /**
+     * @var int
+     */
+    public $nb_semantic_misconfigured;
+    /**
+     * @var array
+     */
+    public $misconfigured_semantics;
 
     public function __construct(
         array $possible_velocity_field,
@@ -65,6 +73,7 @@ class SemanticVelocityAdminPresenter
         $has_semantic_done_defined,
         $selected_velocity_field_id,
         array $backlog_trackers,
+        array $misconfigured_semantics_for_all_trackers,
         $are_all_backlog_trackers_missconfigured
     ) {
         $this->possible_velocity_field                    = $this->buildPossibleVelocityField(
@@ -74,15 +83,18 @@ class SemanticVelocityAdminPresenter
         $this->csrf_token                                 = $csrf_token;
         $this->has_semantic_done_defined                  = $has_semantic_done_defined;
         $this->has_velocity_field                         = $selected_velocity_field_id !== null;
+        $this->tracker_name                               = $tracker->getName();
         $this->back_url                                   = TRACKER_BASE_URL . "?" . http_build_query(
             [
                 "tracker" => $tracker->getId(),
                 "func"    => "admin-semantic"
             ]
         );
-        $this->tracker_name                               = $tracker->getName();
-        $this->are_all_backlog_trackers_missconfigured    = $are_all_backlog_trackers_missconfigured;
-        $this->backlog_trackers                           = $backlog_trackers;
+
+        $this->nb_semantic_misconfigured               = count($misconfigured_semantics_for_all_trackers);
+        $this->are_all_backlog_trackers_missconfigured = $are_all_backlog_trackers_missconfigured;
+        $this->misconfigured_semantics                 = $misconfigured_semantics_for_all_trackers;
+        $this->backlog_trackers                        = $backlog_trackers;
     }
 
     private function buildPossibleVelocityField(array $possible_velocity_field, $selected_velocity_field_id)
