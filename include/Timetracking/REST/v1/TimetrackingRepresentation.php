@@ -33,14 +33,29 @@ class TimetrackingRepresentation
 {
     const NAME = "timetracking";
 
+    /**
+     * @var MinimalArtifactRepresentation
+     */
     public $artifact;
 
+    /**
+     * @var MinimalProjectRepresentation
+     */
     public $project;
 
+    /**
+     * @var string
+     */
     public $date;
 
+    /**
+     * @var int
+     */
     public $minutes;
 
+    /**
+     * @var int
+     */
     public $id;
 
     public function build(Time $time)

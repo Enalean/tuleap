@@ -31,11 +31,29 @@ class MinimalArtifactRepresentation
 {
     const ROUTE = 'artifacts';
 
+    /**
+     * @var int
+     */
     public $id;
+    /**
+     * @var string
+     */
     public $uri;
+    /**
+     * @var string
+     */
     public $xref;
+    /**
+     * @var string
+     */
     public $html_url;
+    /**
+     * @var string
+     */
     public $title;
+    /**
+     * @var string
+     */
     public $badge_color;
 
     public function build(Tracker_Artifact $artifact)
