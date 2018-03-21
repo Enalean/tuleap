@@ -182,7 +182,8 @@ class AgileDashboardRouterBuilder {
         return new AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory(
             $this->getBacklogFactory(),
             $this->getBacklogItemPresenterCollectionFactory($milestone_factory),
-            new BurnupFieldRetriever(Tracker_FormElementFactory::instance())
+            new BurnupFieldRetriever(Tracker_FormElementFactory::instance()),
+            EventManager::instance()
         );
     }
 

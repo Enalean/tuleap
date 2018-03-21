@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,7 +21,8 @@
 /**
  * Describe what a Milestone business object should present.
  */
-interface Planning_Milestone {
+interface Planning_Milestone // @codingStandardsIgnoreLine
+{
     const REMAINING_EFFORT_FIELD_NAME = 'remaining_effort';
     const CAPACITY_FIELD_NAME         = 'capacity';
     const START_DATE_FIELD_NAME       = 'start_date';
@@ -86,7 +87,7 @@ interface Planning_Milestone {
     /**
      * All artifacts linked by either the root artifact or any of the artifacts in plannedArtifacts()
      * @param PFUser $user
-     * @return Array of Tracker_Artifact
+     * @return Tracker_Artifact[]
      */
     public function getLinkedArtifacts(PFUser $user);
 
