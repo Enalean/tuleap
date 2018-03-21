@@ -1,21 +1,22 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 require_once ('WebDAVProject.class.php');
@@ -29,7 +30,7 @@ require_once ('common/dao/ProjectDao.class.php');
  *
  * or all public projects in case the user is anonymous
  */
-class WebDAVRoot extends Sabre_DAV_Directory {
+class WebDAVRoot extends \Sabre\DAV\FS\Directory {
 
     private $user;
     private $plugin;
@@ -44,12 +45,13 @@ class WebDAVRoot extends Sabre_DAV_Directory {
      *
      * @return void
      */
-    function __construct($plugin, $user, $maxFileSize) {
-
-        $this->user = $user;
-        $this->plugin = $plugin;
+    public function __construct($plugin, $user, $maxFileSize)
+    {
+        $this->user        = $user;
+        $this->plugin      = $plugin;
         $this->maxFileSize = $maxFileSize;
 
+        parent::__construct('/');
     }
 
     /**
@@ -57,9 +59,7 @@ class WebDAVRoot extends Sabre_DAV_Directory {
      * or all public projects in case the user is anonymous
      * don't generate those for which WebDAV plugin is not available
      *
-     * @return Array
-     *
-     * @see lib/Sabre/DAV/Sabre_DAV_IDirectory#getChildren()
+     * @return array
      */
     function getChildren() {
 
@@ -79,8 +79,6 @@ class WebDAVRoot extends Sabre_DAV_Directory {
      * @param String $projectName
      *
      * @return WebDAVProject
-     *
-     * @see lib/Sabre/DAV/Sabre_DAV_Directory#getChild($name)
      */
     function getChild($projectName) {
 
@@ -90,19 +88,25 @@ class WebDAVRoot extends Sabre_DAV_Directory {
 
         // Check if WebDAV plugin is activated for the project
         if (!$this->isWebDAVAllowedForProject($projectId)) {
-            throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'plugin_not_available'));
+            throw new \Sabre\DAV\Exception\Forbidden(
+                $GLOBALS['Language']->getText('plugin_webdav_common', 'plugin_not_available')
+            );
         }
         $project = $this->getWebDAVProject($projectId);
 
         // Check if project exists
         if (!$project->exist()) {
-            throw new Sabre_DAV_Exception_FileNotFound($GLOBALS['Language']->getText('plugin_webdav_common', 'project_not_available'));
+            throw new \Sabre\DAV\Exception\NotFound(
+                $GLOBALS['Language']->getText('plugin_webdav_common', 'project_not_available')
+            );
         }
 
         // Check if the project has the active status
         if (!$project->isActive()) {
             // Access denied error
-            throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'project_access_not_authorized'));
+            throw new \Sabre\DAV\Exception\Forbidden(
+                $GLOBALS['Language']->getText('plugin_webdav_common', 'project_access_not_authorized')
+            );
         }
 
         // Check if the user can access to the project
@@ -110,14 +114,10 @@ class WebDAVRoot extends Sabre_DAV_Directory {
         // she still have the right to access to all of them
         if (!$project->userCanRead()) {
             // Access denied error
-            throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'project_access_not_authorized'));
+            throw new \Sabre\DAV\Exception\Forbidden(
+                $GLOBALS['Language']->getText('plugin_webdav_common', 'project_access_not_authorized')
+            );
         }
-
-        // Check if the file release service is activated for the project
-        /*if (!$project->usesFile()) {
-            // Access denied error
-            throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'project_have_no_frs'));
-        }*/
 
         return $project;
 
@@ -125,8 +125,6 @@ class WebDAVRoot extends Sabre_DAV_Directory {
 
     /**
      * This  method is used just to suit the class Sabre_DAV_INode
-     *
-     * @see plugins/webdav/lib/Sabre/DAV/Sabre_DAV_INode#getName()
      *
      * @return String
      */
@@ -139,9 +137,7 @@ class WebDAVRoot extends Sabre_DAV_Directory {
     /**
      * This is used only to suit the class Sabre_DAV_Node
      *
-     * @return NULL
-     *
-     * @see plugins/webdav/lib/Sabre/DAV/Sabre_DAV_Node#getLastModified()
+     * @return void
      */
     function getLastModified() {
 
@@ -205,7 +201,7 @@ class WebDAVRoot extends Sabre_DAV_Directory {
      *
      * @param PFUser $user
      *
-     * @return Array
+     * @return array
      */
     function getUserProjectList($user) {
 
@@ -226,7 +222,7 @@ class WebDAVRoot extends Sabre_DAV_Directory {
     /**
      * Generates public projects list
      *
-     * @return Array
+     * @return array
      */
     function getPublicProjectList() {
 
@@ -257,7 +253,4 @@ class WebDAVRoot extends Sabre_DAV_Directory {
         return PluginManager::instance()->isPluginAllowedForProject($this->plugin, $groupId);
 
     }
-
 }
-
-?>

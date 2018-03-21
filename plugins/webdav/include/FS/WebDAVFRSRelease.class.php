@@ -29,7 +29,8 @@ require_once (dirname(__FILE__).'/../WebDAVUtils.class.php');
  * It's an implementation of the abstract class Sabre_DAV_Directory methods
  *
  */
-class WebDAVFRSRelease extends Sabre_DAV_Directory {
+class WebDAVFRSRelease extends \Sabre\DAV\FS\Directory
+{
 
     private $user;
     private $project;
@@ -48,14 +49,15 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory {
      *
      * @return void
      */
-    function __construct($user, $project, $package, $release, $maxFileSize) {
-
-        $this->user = $user;
-        $this->project = $project;
-        $this->package = $package;
-        $this->release = $release;
+    public function __construct($user, $project, $package, $release, $maxFileSize)
+    {
+        $this->user        = $user;
+        $this->project     = $project;
+        $this->package     = $package;
+        $this->release     = $release;
         $this->maxFileSize = $maxFileSize;
 
+        parent::__construct('');
     }
 
     /**
@@ -94,38 +96,50 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory {
         // Check if the file is not null and is not deleted
         if (!$file->getFile() || $file->getFile()->isDeleted()) {
             // File not found error
-            throw new Sabre_DAV_Exception_FileNotFound($GLOBALS['Language']->getText('plugin_webdav_download', 'file_not_available'));
+            throw new \Sabre\DAV\Exception\NotFound(
+                $GLOBALS['Language']->getText('plugin_webdav_download', 'file_not_available')
+            );
         }
 
         // Check that the file has the active status
         if (!$file->isActive()) {
             // Access denied error
-            throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_download', 'access_not_authorized'));
+            throw new \Sabre\DAV\Exception\Forbidden(
+                $GLOBALS['Language']->getText('plugin_webdav_download', 'access_not_authorized')
+            );
         }
 
         // Check if the user can download the file
         if (!$file->userCanDownload($this->getUser())) {
             // Access denied error
-            throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_download', 'access_not_authorized'));
+            throw new \Sabre\DAV\Exception\Forbidden(
+                $GLOBALS['Language']->getText('plugin_webdav_download', 'access_not_authorized')
+            );
         }
 
         // Check if the file exists in the filesystem
         if (! $file->fileExists()) {
             // File doesn't exist error
-            throw new Sabre_DAV_Exception_FileNotFound($GLOBALS['Language']->getText('plugin_webdav_download', 'file_not_available'));
+            throw new \Sabre\DAV\Exception\NotFound(
+                $GLOBALS['Language']->getText('plugin_webdav_download', 'file_not_available')
+            );
         }
 
         // Ceck that the file belongs to the package and the release
         if (($file->getPackageId() != $this->getPackage()->getPackageID()) || ($file->getReleaseId() != $this->getReleaseId())) {
             // File don't belong to package or release error
-            throw new Sabre_DAV_Exception_FileNotFound($GLOBALS['Language']->getText('plugin_webdav_download', 'dont_belong'));
+            throw new \Sabre\DAV\Exception\NotFound(
+                $GLOBALS['Language']->getText('plugin_webdav_download', 'dont_belong')
+            );
         }
 
         // Check the maximum file size limit
         $fileSize = $file->getSize();
         if ($fileSize > $this->getMaxFileSize()) {
             // File size error
-            throw new Sabre_DAV_Exception_RequestedRangeNotSatisfiable($GLOBALS['Language']->getText('plugin_webdav_download', 'error_file_size'));
+            throw new \Sabre\DAV\Exception\RequestedRangeNotSatisfiable(
+                $GLOBALS['Language']->getText('plugin_webdav_download', 'error_file_size')
+            );
         }
         return $file;
 
@@ -135,8 +149,6 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory {
      * Returns the name of the release
      *
      * @return String
-     *
-     * @see lib/Sabre/DAV/Sabre_DAV_INode#getName()
      */
     function getName() {
 
@@ -343,8 +355,6 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory {
      * Deletes the release
      *
      * @return void
-     *
-     * @see plugins/webdav/lib/Sabre/DAV/Sabre_DAV_Node#delete()
      */
     function delete() {
 
@@ -352,10 +362,14 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory {
             $utils = $this->getUtils();
             $result = $utils->getReleaseFactory()->delete_release($this->getProject()->getGroupId(), $this->getReleaseId());
             if ($result == 0) {
-                throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'release_not_available'));
+                throw new \Sabre\DAV\Exception\Forbidden(
+                    $GLOBALS['Language']->getText('plugin_webdav_common', 'release_not_available')
+                );
             }
         } else {
-            throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'release_denied_delete'));
+            throw new \Sabre\DAV\Exception\Forbidden(
+                $GLOBALS['Language']->getText('plugin_webdav_common', 'release_denied_delete')
+            );
         }
 
     }
@@ -366,8 +380,6 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory {
      * @param String $name
      *
      * @return void
-     *
-     * @see plugins/webdav/lib/Sabre/DAV/Sabre_DAV_Node#setName($name)
      */
     function setName($name) {
 
@@ -377,10 +389,14 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory {
                 $this->getRelease()->setName(htmlspecialchars($name));
                 $utils->getReleaseFactory()->update($this->getRelease()->toArray());
             } else {
-                throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'release_name_exist'));
+                throw new \Sabre\DAV\Exception\MethodNotAllowed(
+                    $GLOBALS['Language']->getText('plugin_webdav_common', 'release_name_exist')
+                );
             }
         } else {
-            throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'release_denied_rename'));
+            throw new \Sabre\DAV\Exception\Forbidden(
+                $GLOBALS['Language']->getText('plugin_webdav_common', 'release_denied_rename')
+            );
         }
 
     }
@@ -402,13 +418,19 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory {
                     $this->getRelease()->setPackageID($destination->getPackageId());
                     $utils->getReleaseFactory()->update($this->getRelease()->toArray());
                 } else {
-                    throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'release_hidden'));
+                    throw new \Sabre\DAV\Exception\MethodNotAllowed(
+                        $GLOBALS['Language']->getText('plugin_webdav_common', 'release_hidden')
+                    );
                 }
             } else {
-                throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'release_name_exist'));
+                throw new \Sabre\DAV\Exception\MethodNotAllowed(
+                    $GLOBALS['Language']->getText('plugin_webdav_common', 'release_name_exist')
+                );
             }
         } else {
-            throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'release_denied_move'));
+            throw new \Sabre\DAV\Exception\Forbidden(
+                $GLOBALS['Language']->getText('plugin_webdav_common', 'release_denied_move')
+            );
         }
 
     }
@@ -420,8 +442,6 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory {
      * @param Binary $data
      *
      * @return void
-     *
-     * @see plugins/webdav/include/lib/Sabre/DAV/Sabre_DAV_Directory#createFile($name, $data)
      */
     function createFile($name, $data = null) {
 
@@ -432,7 +452,9 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory {
             $this->createFileIntoIncoming($name, $data);
             $fileSize = $utils->getIncomingFileSize($name);
             if ($fileSize > $this->getMaxFileSize()) {
-                throw new Sabre_DAV_Exception_RequestedRangeNotSatisfiable($GLOBALS['Language']->getText('plugin_webdav_download', 'error_file_size'));
+                throw new \Sabre\DAV\Exception\RequestedRangeNotSatisfiable(
+                    $GLOBALS['Language']->getText('plugin_webdav_download', 'error_file_size')
+                );
             }
 
             $release = $this->getRelease();
@@ -448,10 +470,10 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory {
                 $frsff->createFile($newFile);
                 $utils->getReleaseFactory()->emailNotification($release);
             } catch (Exception $e) {
-                    throw new Sabre_DAV_Exception_BadRequest($e->getMessage());
+                    throw new \Sabre\DAV\Exception\BadRequest($e->getMessage());
             }
         } else {
-            throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_create'));
+            throw new \Sabre\DAV\Exception\Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_create'));
         }
 
     }
@@ -522,19 +544,19 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory {
         $path = $GLOBALS['ftp_incoming_dir'].'/'.$name;
         if (file_exists($path)) {
             if (!$this->unlinkFile($path)) {
-                throw new Sabre_DAV_Exception($GLOBALS['Language']->getText('plugin_webdav_upload', 'delete_file_fail'));
+                throw new \Sabre\DAV\Exception($GLOBALS['Language']->getText('plugin_webdav_upload', 'delete_file_fail'));
             }
         }
         if (!$file = $this->openFile($path)) {
-            throw new Sabre_DAV_Exception($GLOBALS['Language']->getText('plugin_webdav_upload', 'create_file_fail'));
+            throw new \Sabre\DAV\Exception($GLOBALS['Language']->getText('plugin_webdav_upload', 'create_file_fail'));
         }
 
         if ($this->streamCopyToStream($data, $file) === false) {
-            throw new Sabre_DAV_Exception($GLOBALS['Language']->getText('plugin_webdav_upload', 'write_file_fail'));
+            throw new \Sabre\DAV\Exception($GLOBALS['Language']->getText('plugin_webdav_upload', 'write_file_fail'));
         }
 
         if (!$this->closeFile($file)) {
-            throw new Sabre_DAV_Exception($GLOBALS['Language']->getText('plugin_webdav_upload', 'close_file_fail'));
+            throw new \Sabre\DAV\Exception($GLOBALS['Language']->getText('plugin_webdav_upload', 'close_file_fail'));
         }
     }
 }

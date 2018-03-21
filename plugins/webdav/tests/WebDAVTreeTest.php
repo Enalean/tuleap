@@ -1,21 +1,22 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 require_once 'bootstrap.php';
@@ -125,6 +126,8 @@ class WebDAVTreeTest extends TuleapTestCase {
 
         $docman_item_factory = stub('Docman_ItemFactory')->getItemFromDb()->returns(mock('Docman_Item'));
         Docman_ItemFactory::setInstance(101, $docman_item_factory);
+
+        $this->root = new WebDAVRoot(mock('Plugin'), $this->user, 0);
     }
 
     public function tearDown()
@@ -137,7 +140,7 @@ class WebDAVTreeTest extends TuleapTestCase {
     function testCanBeMovedFailNotMovable() {
         $source = null;
         $destination = null;
-        $tree = new TestTree($this->user, $this->project, $this->package, 0);
+        $tree = new TestTree($this->root);
 
         $this->assertEqual($tree->canBeMoved($source, $destination), false);
     }
@@ -145,7 +148,7 @@ class WebDAVTreeTest extends TuleapTestCase {
     function testCanBeMovedFailSourceNotReleaseDestinationPackage() {
         $source = null;
         $destination = new TestPackage($this->user, $this->project, $this->package, 0);
-        $tree = new TestTree();
+        $tree = new TestTree($this->root);
 
         $this->assertEqual($tree->canBeMoved($source, $destination), false);
     }
@@ -153,7 +156,7 @@ class WebDAVTreeTest extends TuleapTestCase {
     function testCanBeMovedFailSourceNotFileDestinationRelease() {
         $source = null;
         $destination = new TestRelease($this->user, $this->project, $this->package, $this->release, 0);
-        $tree = new TestTree();
+        $tree = new TestTree($this->root);
 
         $this->assertEqual($tree->canBeMoved($source, $destination), false);
     }
@@ -161,15 +164,15 @@ class WebDAVTreeTest extends TuleapTestCase {
     function testCanBeMovedFailSourceReleaseDestinationNotPackage() {
         $source = new TestRelease($this->user, $this->project, $this->package, $this->release, 0);
         $destination = null;
-        $tree = new TestTree();
+        $tree = new TestTree($this->root);
 
         $this->assertEqual($tree->canBeMoved($source, $destination), false);
     }
 
     function testCanBeMovedFailSourceFileDestinationNotRelease() {
-        $source = new TestFile($this->user, $this->project, $this->package, $this->release, 0);
+        $source = new TestFile($this->user, $this->project, $this->package, $this->release, $this->file);
         $destination = null;
-        $tree = new TestTree();
+        $tree = new TestTree($this->root);
 
         $this->assertEqual($tree->canBeMoved($source, $destination), false);
     }
@@ -177,15 +180,15 @@ class WebDAVTreeTest extends TuleapTestCase {
     function testCanBeMovedFailSourceReleaseDestinationPackageNotSameProject() {
         $source = new TestRelease2($this->user, $this->project, $this->package, $this->release, 0);
         $destination = new TestPackage($this->user, $this->project, $this->package, 0);
-        $tree = new TestTree();
+        $tree = new TestTree($this->root);
 
         $this->assertEqual($tree->canBeMoved($source, $destination), false);
     }
 
     function testCanBeMovedFailSourceFileDestinationReleaseNotSameProject() {
-        $source = new TestFile($this->user, $this->project, $this->package, $this->release, 0);
+        $source = new TestFile($this->user, $this->project, $this->package, $this->release, $this->file);
         $destination = new TestRelease2($this->user, $this->project, $this->package, $this->release, 0);
-        $tree = new TestTree();
+        $tree = new TestTree($this->root);
 
         $this->assertEqual($tree->canBeMoved($source, $destination), false);
     }
@@ -193,7 +196,7 @@ class WebDAVTreeTest extends TuleapTestCase {
     function testCanBeMovedSucceedeSourceReleaseDestinationPackage() {
         $source = new TestRelease($this->user, $this->project, $this->package, $this->release, 0);
         $destination = new TestPackage($this->user, $this->project, $this->package, 0);
-        $tree = new TestTree();
+        $tree = new TestTree($this->root);
 
         $this->assertEqual($tree->canBeMoved($source, $destination), true);
     }
@@ -201,7 +204,7 @@ class WebDAVTreeTest extends TuleapTestCase {
     function testCanBeMovedSucceedeSourceFileDestinationRelease() {
         $source = new TestFile($this->user, $this->project, $this->package, $this->release, $this->file);
         $destination = new TestRelease($this->user, $this->project, $this->package, $this->release, 0);
-        $tree = new TestTree();
+        $tree = new TestTree($this->root);
 
         $this->assertEqual($tree->canBeMoved($source, $destination), true);
     }
@@ -232,7 +235,7 @@ class WebDAVTreeTest extends TuleapTestCase {
 
         $node->expectNever('setName');
         $node->expectNever('move');
-        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
+        $this->expectException(\Sabre\DAV\Exception\MethodNotAllowed::class);
 
         $tree->move('project1/package1/release1', 'project1/package2/release2');
     }
@@ -248,7 +251,7 @@ class WebDAVTreeTest extends TuleapTestCase {
 
         $node->expectNever('setName');
         //$node->expectOnce('move');
-        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
+        $this->expectException(\Sabre\DAV\Exception\MethodNotAllowed::class);
 
         $tree->move('project1/package1/release1', 'project1/package2/release2');
     }
@@ -259,7 +262,7 @@ class WebDAVTreeTest extends TuleapTestCase {
         $utils->setReturnValue('isWriteEnabled', false);
         $tree->setReturnValue('getUtils', $utils);
 
-        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
+        $this->expectException(\Sabre\DAV\Exception\MethodNotAllowed::class);
         $tree->copy('source', 'destination/item');
     }
 
@@ -276,7 +279,7 @@ class WebDAVTreeTest extends TuleapTestCase {
         $source = new TestFolder($this->user, $this->project, $this->docman_folder, 0);
         $tree->setReturnValue('getNodeForPath', $source, array('destination'));
 
-        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
+        $this->expectException(\Sabre\DAV\Exception\MethodNotAllowed::class);
         $tree->copy('source', 'destination/item');
     }
 
@@ -293,7 +296,7 @@ class WebDAVTreeTest extends TuleapTestCase {
         $source = new TestRelease($this->user, $this->project, $this->package, $this->release, 0);
         $tree->setReturnValue('getNodeForPath', $source, array('destination'));
 
-        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
+        $this->expectException(\Sabre\DAV\Exception\MethodNotAllowed::class);
         $tree->copy('source', 'destination/item');
     }
 
@@ -313,7 +316,7 @@ class WebDAVTreeTest extends TuleapTestCase {
         $destinationItem->setReturnValue('getGroupId', 2);
         $destination->setItem($destinationItem);
 
-        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
+        $this->expectException(\Sabre\DAV\Exception\MethodNotAllowed::class);
         $tree->copy('source', 'destination/item');
     }
 
@@ -337,7 +340,7 @@ class WebDAVTreeTest extends TuleapTestCase {
         $dpm->setReturnValue('userCanWrite', true);
         $utils->setReturnValue('getDocmanPermissionsManager', $dpm);
 
-        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
+        $this->expectException(\Sabre\DAV\Exception\MethodNotAllowed::class);
         $tree->copy('source', 'destination/item');
     }
 
@@ -361,7 +364,7 @@ class WebDAVTreeTest extends TuleapTestCase {
         $dpm->setReturnValue('userCanWrite', false);
         $utils->setReturnValue('getDocmanPermissionsManager', $dpm);
 
-        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
+        $this->expectException(\Sabre\DAV\Exception\MethodNotAllowed::class);
         $tree->copy('source', 'destination/item');
     }
 
@@ -388,7 +391,7 @@ class WebDAVTreeTest extends TuleapTestCase {
         $utils->setReturnValue('getDocmanItemFactory', $dif);
 
         //$this->assertNoErrors();
-        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
+        $this->expectException(\Sabre\DAV\Exception\MethodNotAllowed::class);
         $tree->copy('source', 'destination/item');
     }
 
@@ -421,7 +424,7 @@ class WebDAVTreeTest extends TuleapTestCase {
         //$sourceItem->expectOnce('fireEvent', array('plugin_docman_event_move', $source->getUser(), $destinationItem));
 
         //$this->assertNoErrors();
-        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
+        $this->expectException(\Sabre\DAV\Exception\MethodNotAllowed::class);
         $tree->move('source', 'destination/item');
     }
 
@@ -451,7 +454,7 @@ class WebDAVTreeTest extends TuleapTestCase {
         $dif->expectNever('setNewParent');
         $sourceItem->expectNever('fireEvent');
 
-        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
+        $this->expectException(\Sabre\DAV\Exception\MethodNotAllowed::class);
         $tree->move('source', 'destination/item');
     }
 
@@ -461,7 +464,7 @@ class WebDAVTreeTest extends TuleapTestCase {
         $utils->setReturnValue('isWriteEnabled', false);
         $tree->setReturnValue('getUtils', $utils);
 
-        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
+        $this->expectException(\Sabre\DAV\Exception\MethodNotAllowed::class);
         $tree->move('source', 'destination/item');
     }
 
@@ -481,7 +484,7 @@ class WebDAVTreeTest extends TuleapTestCase {
         $destinationItem->setReturnValue('getGroupId', 11);
         $destination->setItem($destinationItem);
 
-        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
+        $this->expectException(\Sabre\DAV\Exception\MethodNotAllowed::class);
         $tree->move('source', 'destination/item');
     }
 
@@ -506,7 +509,7 @@ class WebDAVTreeTest extends TuleapTestCase {
         $utils->setReturnValue('getDocmanPermissionsManager', $dpm);
         $dpm->expectNever('currentUserCanWriteSubItems');
 
-        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
+        $this->expectException(\Sabre\DAV\Exception\MethodNotAllowed::class);
         $tree->move('source', 'destination/item');
     }
 
@@ -531,7 +534,7 @@ class WebDAVTreeTest extends TuleapTestCase {
         $utils->setReturnValue('getDocmanPermissionsManager', $dpm);
         $dpm->expectNever('currentUserCanWriteSubItems');
 
-        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
+        $this->expectException(\Sabre\DAV\Exception\MethodNotAllowed::class);
         $tree->move('source', 'destination/item');
     }
 
@@ -550,7 +553,7 @@ class WebDAVTreeTest extends TuleapTestCase {
         $destination->setItem($destinationItem);
         $dpm = new MockDocman_PermissionsManager();
 
-        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
+        $this->expectException(\Sabre\DAV\Exception\MethodNotAllowed::class);
         $tree->move('source', 'destination/item');
     }
 }

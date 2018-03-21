@@ -57,6 +57,7 @@ class FilterTestCase extends FilterIterator {
         return (strpos($file->getPathname(), '/_') === false &&
                $this->isNotATestsRestDirectory($file->getPathname()) &&
                $this->isNotATestsSoapDirectory($file->getPathname()) &&
+               $this->isNotAVendorDirectory($file->getPathname()) &&
                (preg_match('/Test.php$/', $file->getFilename()))
         );
     }
@@ -67,6 +68,11 @@ class FilterTestCase extends FilterIterator {
 
     private function isNotATestsSoapDirectory($pathName) {
         return !(preg_match("/^.*\/tests\/soap(\/.+|$)$/", $pathName));
+    }
+
+    private function isNotAVendorDirectory($pathName)
+    {
+        return !(preg_match("/^.*\/vendor(\/.+|$)$/", $pathName));
     }
 }
 

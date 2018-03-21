@@ -1,21 +1,22 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2018. All Rights Reserved
  * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 require_once dirname(__FILE__).'/../WebDAV_Response.class.php';
@@ -26,8 +27,8 @@ require_once dirname(__FILE__).'/../WebDAV_Response.class.php';
  * It's an implementation of the abstract class Sabre_DAV_File methods
  *
  */
-class WebDAVDocmanDocument extends Sabre_DAV_File {
-
+class WebDAVDocmanDocument extends \Sabre\DAV\FS\File
+{
     protected $user;
     protected $project;
     protected $item;
@@ -41,19 +42,21 @@ class WebDAVDocmanDocument extends Sabre_DAV_File {
      *
      * @return void
      */
-    function __construct($user, $project, $item) {
-        $this->user = $user;
-        $this->project = $project;
+    public function __construct($user, $project, $item)
+    {
         $docmanItemFactory = Docman_ItemFactory::instance($project->getId());
-        $this->item = $docmanItemFactory->getItemFromDb($item->getId());
+
+        $this->user    = $user;
+        $this->project = $project;
+        $this->item    = $docmanItemFactory->getItemFromDb($item->getId());
+
+        parent::__construct('');
     }
 
     /**
      * This method is used to download the file
      *
      * @return void
-     *
-     * @see plugins/webdav/include/lib/Sabre/DAV/Sabre_DAV_File::get()
      */
     function get() {
         // in this case download just an empty file
@@ -64,8 +67,6 @@ class WebDAVDocmanDocument extends Sabre_DAV_File {
      * Returns the name of the file
      *
      * @return String
-     *
-     * @see plugins/webdav/include/lib/Sabre/DAV/Sabre_DAV_INode::getName()
      */
     function getName() {
         $utils = $this->getUtils();
@@ -76,8 +77,6 @@ class WebDAVDocmanDocument extends Sabre_DAV_File {
      * Returns mime-type of the file
      *
      * @return String
-     *
-     * @see plugins/webdav/include/lib/Sabre/DAV/Sabre_DAV_File::getContentType()
      */
     function getContentType() {
         switch (get_class($this->getItem())) {
@@ -97,8 +96,6 @@ class WebDAVDocmanDocument extends Sabre_DAV_File {
      * Returns the file size
      *
      * @return Integer
-     *
-     * @see plugins/webdav/include/lib/Sabre/DAV/Sabre_DAV_File::getSize()
      */
     function getSize() {
         return 0;
@@ -108,8 +105,6 @@ class WebDAVDocmanDocument extends Sabre_DAV_File {
      * Returns the last modification date
      *
      * @return date
-     *
-     * @see plugins/webdav/include/lib/Sabre/DAV/Sabre_DAV_Node::getLastModified()
      */
     function getLastModified() {
         return $this->getItem()->getUpdateDate();
@@ -118,7 +113,7 @@ class WebDAVDocmanDocument extends Sabre_DAV_File {
     /**
      * Returns the the project that document belongs to
      *
-     * @return FRSProject
+     * @return Project
      */
     function getProject() {
         return $this->project;
@@ -189,7 +184,9 @@ class WebDAVDocmanDocument extends Sabre_DAV_File {
             $params['id']       = $this->getItem()->getId();
             $this->getUtils()->processDocmanRequest(new WebDAV_Request($params));
         } else {
-            throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_delete'));
+            throw new \Sabre\DAV\Exception\Forbidden(
+                $GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_delete')
+            );
         }
     }
 
@@ -219,13 +216,12 @@ class WebDAVDocmanDocument extends Sabre_DAV_File {
 
                 $this->getUtils()->processDocmanRequest(new WebDAV_Request($params));
             } catch (Exception $e) {
-                throw new Sabre_DAV_Exception_MethodNotAllowed($e->getMessage());
+                throw new \Sabre\DAV\Exception\MethodNotAllowed($e->getMessage());
             }
         } else {
-            throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_rename'));
+            throw new \Sabre\DAV\Exception\MethodNotAllowed(
+                $GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_rename')
+            );
         }
     }
-
 }
-
-?>
