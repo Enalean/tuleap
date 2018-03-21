@@ -204,6 +204,9 @@ require_once('exit.php');
 //various html libs like button bar, themable
 require_once('html.php');
 
+// Permission stuff that need to cripple each and every hit
+require_once __DIR__.'/../project/admin/permissions.php';
+
 $event_manager = EventManager::instance();
 $event_manager->processEvent(
     Event::HIT,

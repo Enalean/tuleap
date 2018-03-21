@@ -21,8 +21,6 @@
 
 use Tuleap\user\ForgeUserGroupPermission\SiteAdministratorPermission;
 
-require_once 'www/project/admin/permissions.php';
-
 /**
  *
  * User object
@@ -497,7 +495,6 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
 
     var $_dynamics_ugroups;
     function getDynamicUgroups($group_id, $instances) {
-        include_once 'www/project/admin/ugroup_utils.php';
         $hash = md5(serialize($instances));
         if (!isset($this->_dynamics_ugroups)) {
             $this->_dynamics_ugroups = array();

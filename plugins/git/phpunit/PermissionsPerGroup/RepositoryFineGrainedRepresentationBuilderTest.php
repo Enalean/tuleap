@@ -98,11 +98,6 @@ class RepositoryFineGrainedRepresentationBuilderTest extends TestCase
         $this->project_admin_id  = ProjectUGroup::PROJECT_ADMIN;
     }
 
-    public function tearDown()
-    {
-        parent::tearDown();
-    }
-
     public function testItShouldReturnAllFinedGrainedPermissionsWhenNoFilterDefined()
     {
         $this->permissions_manager->method('getRepositoryGlobalPermissions')->willReturn(
