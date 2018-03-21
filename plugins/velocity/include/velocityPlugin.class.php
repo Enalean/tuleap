@@ -158,7 +158,7 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
         if (! isset($this->already_computed[$artifact_id][$changeset_id])) {
             $calculator                                          = $this->getVelocityCalculator();
             $computed_velocity                                   = $calculator->calculate($before_event->getArtifact());
-            $this->already_computed[$artifact_id][$changeset_id] = true;
+            $this->already_computed[$artifact_id][$changeset_id] = $computed_velocity;
 
             $current_user = UserManager::instance()->getCurrentUser();
             $factory      = Tracker_FormElementFactory::instance();
@@ -177,8 +177,11 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
                     )
                 );
             }
-            $before_event->forceFieldData($field_id, $computed_velocity);
+        } else {
+            $computed_velocity = $this->already_computed[$artifact_id][$changeset_id];
         }
+
+        $before_event->forceFieldData($field_id, $computed_velocity);
     }
 
     /**
