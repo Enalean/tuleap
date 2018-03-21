@@ -44,7 +44,6 @@ class SystemEvent_PROFTPD_UPDATE_ACLTest extends PHPUnit_Framework_TestCase {
 
     public function setUp() {
         parent::setUp();
-        $initial_global_state = array_merge(array(), $GLOBALS);
 
         $this->event   = $this->getMockBuilder('Tuleap\ProFTPd\SystemEvent\PROFTPD_UPDATE_ACL')->setMethods(array('done'))->disableOriginalConstructor()->getMock();
         $this->acl_updater = $this->getMockBuilder('Tuleap\ProFTPd\Admin\ACLUpdater')->disableOriginalConstructor()->getMock();
@@ -96,7 +95,6 @@ class SystemEvent_PROFTPD_UPDATE_ACLTest extends PHPUnit_Framework_TestCase {
              }));
 
         $this->event->injectDependencies($this->acl_updater, $this->permissions_manager, $this->project_manager, $this->ftp_directory);
-        $GLOBALS = $initial_global_state;
         $GLOBALS['sys_http_user'] = 'httpuser';
     }
 

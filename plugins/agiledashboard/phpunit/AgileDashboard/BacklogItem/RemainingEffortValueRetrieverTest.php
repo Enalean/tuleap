@@ -28,7 +28,6 @@ use Tracker_FormElementFactory;
 
 class RemainingEffortValueRetrieverTest extends TestCase
 {
-    private $globals;
     /** @var \PFUser */
     private $user;
 
@@ -52,7 +51,6 @@ class RemainingEffortValueRetrieverTest extends TestCase
 
     public function setUp()
     {
-        $this->globals = array_merge([], $GLOBALS);
         parent::setUp();
         $this->form_element_factory       = Mockery::mock(Tracker_FormElementFactory::class);
         $this->remaining_effort_retriever = new RemainingEffortValueRetriever($this->form_element_factory);
@@ -70,7 +68,6 @@ class RemainingEffortValueRetrieverTest extends TestCase
 
     public function tearDown()
     {
-        $GLOBALS = $this->globals;
         Mockery::close();
         parent::tearDown();
     }

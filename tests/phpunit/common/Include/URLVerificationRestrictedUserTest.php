@@ -27,18 +27,8 @@ class URLVerificationRestrictedUserTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function setUp()
-    {
-        parent::setUp();
-    }
-
     public function tearDown()
     {
-        foreach ($GLOBALS as $var => $value) {
-            if (strpos($var, 'UGROUP') !== false) {
-                unset($GLOBALS[$var]);
-            }
-        }
         unset($_SERVER['REQUEST_URI']);
         parent::tearDown();
     }

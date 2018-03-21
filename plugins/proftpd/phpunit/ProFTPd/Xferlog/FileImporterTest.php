@@ -24,7 +24,6 @@ class FileImporterTest extends PHPUnit_Framework_TestCase {
 
     protected function setUp() {
         parent::setUp();
-        $globals = array_merge(array(), $GLOBALS);
         $this->dao    = $this->getMockBuilder('Tuleap\ProFTPd\Xferlog\Dao')->disableOriginalConstructor()->getMock();
         $this->parser = $this->getMockBuilder('Tuleap\ProFTPd\Xferlog\Parser')->getMock();
         $this->user_manager = $this->getMockBuilder('UserManager')->disableOriginalConstructor()->getMock();
@@ -37,7 +36,6 @@ class FileImporterTest extends PHPUnit_Framework_TestCase {
         $this->project_manager->expects($this->any())->method('getProject')->will($this->returnValue($project));
 
         $this->file_importer = new Tuleap\ProFTPd\Xferlog\FileImporter($this->dao, $this->parser, $this->user_manager, $this->project_manager, '/bla');
-        $GLOBALS = $globals;
     }
 
     public function testParseAndImportLines() {
