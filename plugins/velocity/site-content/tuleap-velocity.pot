@@ -3,6 +3,11 @@ msgid ""
 "<b>done</b> artifacts. Please select a Done semantic first."
 msgstr ""
 
+msgid ""
+"<b>Status</b> semantic should be a select box or a radiobutton, status must "
+"have only one possible value."
+msgstr ""
+
 msgid "Adds velocity chart into Agiledashboard"
 msgstr ""
 
@@ -31,8 +36,7 @@ msgstr ""
 
 msgid ""
 "Only integers and float fields are listed. By choosing one of these fields, "
-"it will be\n"
-"            automatically computed in order to give you the velocity value."
+"it will be automatically computed in order to give you the velocity value."
 msgstr ""
 
 msgid "Save your change"

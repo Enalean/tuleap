@@ -138,6 +138,10 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
     {
         $tracker           = $before_event->getArtifact()->getTracker();
         $semantic_status   = Tracker_Semantic_Status::load($tracker);
+        if ($semantic_status->getField()->isMultiple()) {
+            return;
+        }
+
         $semantic_done     = SemanticDone::load($tracker);
         $semantic_velocity = SemanticVelocity::load($tracker);
 

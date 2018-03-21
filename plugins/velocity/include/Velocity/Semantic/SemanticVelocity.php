@@ -118,6 +118,7 @@ class SemanticVelocity extends Tracker_Semantic
                 $backlog_trackers_without_done_semantic,
                 $backlog_trackers_without_initial_effort_semantic
             ),
+            $this->semantic_done->getSemanticStatus()->getField()->isMultiple(),
             $this->velocity_field
         );
         $renderer->renderToPage('velocity-intro', $velocity_presenter);
@@ -167,7 +168,8 @@ class SemanticVelocity extends Tracker_Semantic
                 $backlog_trackers,
                 $backlog_trackers_without_done_semantic,
                 $backlog_trackers_without_initial_effort_semantic
-            )
+            ),
+            $this->semantic_done->getSemanticStatus()->getField()->isMultiple()
         );
 
         $renderer->renderToPage('velocity-admin', $presenter);

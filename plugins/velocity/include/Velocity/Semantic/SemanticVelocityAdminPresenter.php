@@ -65,6 +65,10 @@ class SemanticVelocityAdminPresenter
      * @var array
      */
     public $misconfigured_semantics;
+    /**
+    * @var bool
+     */
+    public $can_status_semantic_have_multiple_values;
 
     public function __construct(
         array $possible_velocity_field,
@@ -74,9 +78,10 @@ class SemanticVelocityAdminPresenter
         $selected_velocity_field_id,
         array $backlog_trackers,
         array $misconfigured_semantics_for_all_trackers,
-        $are_all_backlog_trackers_missconfigured
+        $are_all_backlog_trackers_missconfigured,
+        $can_status_semantic_have_multiple_values
     ) {
-        $this->possible_velocity_field                    = $this->buildPossibleVelocityField(
+        $this->possible_velocity_field                 = $this->buildPossibleVelocityField(
             $possible_velocity_field,
             $selected_velocity_field_id
         );
@@ -91,10 +96,12 @@ class SemanticVelocityAdminPresenter
             ]
         );
 
-        $this->nb_semantic_misconfigured               = count($misconfigured_semantics_for_all_trackers);
-        $this->are_all_backlog_trackers_missconfigured = $are_all_backlog_trackers_missconfigured;
-        $this->misconfigured_semantics                 = $misconfigured_semantics_for_all_trackers;
-        $this->backlog_trackers                        = $backlog_trackers;
+        $this->nb_semantic_misconfigured                = count($misconfigured_semantics_for_all_trackers);
+        $this->are_all_backlog_trackers_missconfigured  = $are_all_backlog_trackers_missconfigured;
+        $this->misconfigured_semantics                  = $misconfigured_semantics_for_all_trackers;
+        $this->backlog_trackers                         = $backlog_trackers;
+        $this->tracker_name                             = $tracker->getName();
+        $this->can_status_semantic_have_multiple_values = $can_status_semantic_have_multiple_values;
     }
 
     private function buildPossibleVelocityField(array $possible_velocity_field, $selected_velocity_field_id)

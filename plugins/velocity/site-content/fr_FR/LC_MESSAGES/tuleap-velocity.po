@@ -20,6 +20,13 @@ msgstr ""
 "est effectué sur les artifacts <b>fini</b>. Merci de choisir une sémantique "
 "<b>fini</b> d'abord."
 
+msgid ""
+"<b>Status</b> semantic should be a select box or a radiobutton, status must "
+"have only one possible value."
+msgstr ""
+"La sémantique <b>status</b> doit être une liste déroulante ou des boutons "
+"radio, le status doit avoir une seule valeur possible."
+
 msgid "Adds velocity chart into Agiledashboard"
 msgstr "Ajoute le graphique de vélocité dans le tableau de bord Agile"
 
@@ -54,8 +61,7 @@ msgstr "Aucun champ défini pour le calcul de la vélocité"
 
 msgid ""
 "Only integers and float fields are listed. By choosing one of these fields, "
-"it will be\n"
-"            automatically computed in order to give you the velocity value."
+"it will be automatically computed in order to give you the velocity value."
 msgstr ""
 "Seuls les champs entiers et flottants sont listés. Ce champ contiendra la "
 "valeur de la vélocité calculée"
