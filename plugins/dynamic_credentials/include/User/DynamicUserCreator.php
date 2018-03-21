@@ -34,11 +34,16 @@ class DynamicUserCreator
      * @var \UserManager
      */
     private $user_manager;
+    /**
+     * @var string
+     */
+    private $user_realname;
 
-    public function __construct(DynamicCredentialSession $dynamic_credential_session, \UserManager $user_manager)
+    public function __construct(DynamicCredentialSession $dynamic_credential_session, \UserManager $user_manager, $user_realname)
     {
         $this->dynamic_credential_session = $dynamic_credential_session;
         $this->user_manager               = $user_manager;
+        $this->user_realname              = $user_realname;
     }
 
     /**
@@ -51,14 +56,14 @@ class DynamicUserCreator
         } catch (CredentialNotFoundException $ex) {
             $this->terminateInvalidState();
         } catch (DynamicCredentialSessionNotInitializedException $ex) {
-            return new DynamicUser($row, false);
+            return new DynamicUser($this->user_realname, $row, false);
         }
 
         if ($credential->hasExpired()) {
             $this->terminateInvalidState();
         }
 
-        return new DynamicUser($row, true);
+        return new DynamicUser($this->user_realname, $row, true);
     }
 
     private function terminateInvalidState()

@@ -95,8 +95,9 @@ class dynamic_credentialsPlugin extends Plugin // @codingStandardsIgnoreLine
 
         $credential_retriever = $this->getCredentialRetriever();
         $dynamic_session      = new DynamicCredentialSession($_SESSION, $credential_retriever);
+        $user_realname        = $this->getPluginInfo()->getPropertyValueForName('dynamic_user_realname');
 
-        $support_user_creator = new DynamicUserCreator($dynamic_session, UserManager::instance());
+        $support_user_creator = new DynamicUserCreator($dynamic_session, UserManager::instance(), $user_realname);
         $params['user']       = $support_user_creator->getDynamicUser($params['row']);
     }
 
