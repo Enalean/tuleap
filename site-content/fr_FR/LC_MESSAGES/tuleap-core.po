@@ -420,6 +420,9 @@ msgstr "Messagerie Instantanée"
 msgid "Instantiated for new projects"
 msgstr "Instancié dans les nouveaux projets"
 
+msgid "Internal server error"
+msgstr "Erreur interne du serveur"
+
 #, php-format
 msgid "Invalid group name: %s. Please use only alphanumerical characters."
 msgstr ""
@@ -527,6 +530,9 @@ msgstr "Aucune catégorie de projet"
 
 msgid "Not categorized"
 msgstr "Non catégorisé"
+
+msgid "Ooops an error occured"
+msgstr "Ouuups une erreur est survenue"
 
 msgid "Open \"Help\" dropdown"
 msgstr "Affiche l'onglet \"Aide\""
@@ -994,6 +1000,14 @@ msgstr "Groupes d'utilisateurs"
 
 msgid "Users groups bound to this one"
 msgstr "Groupes liés à celui-ci"
+
+msgid ""
+"We are sorry you caught an error, something meaningful was logged for site "
+"administrators. You may want got get in touch with them."
+msgstr ""
+"Nous sommes désolé que vous ayez rencontré un problème. Une information a "
+"été enregistrée à destination des administrateurs sites. Vous pouvez "
+"éventuellement rentrer en contact avec eux."
 
 msgid "We cannot find any edition information for the requested widget."
 msgstr "Impossible de trouver comment éditer le widget requis."

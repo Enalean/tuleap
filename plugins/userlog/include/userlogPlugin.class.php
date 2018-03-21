@@ -31,7 +31,8 @@ use Tuleap\Userlog\UserLogRouter;
 
 require_once 'constants.php';
 
-class userlogPlugin extends Plugin {
+class userlogPlugin extends Plugin implements \Tuleap\Request\Dispatchable
+{
 
     function __construct($id)
     {
@@ -43,6 +44,8 @@ class userlogPlugin extends Plugin {
 
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
+
+        $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
     }
 
     public function burning_parrot_get_stylesheets($params)
@@ -108,7 +111,7 @@ class userlogPlugin extends Plugin {
         }
     }
 
-    public function process()
+    public function process(array $variables)
     {
         $request = HTTPRequest::instance();
 
@@ -118,5 +121,12 @@ class userlogPlugin extends Plugin {
         );
 
         $router->route($request);
+    }
+
+    public function collectRoutesEvent(\Tuleap\Request\CollectRoutesEvent $event)
+    {
+        $event->getRouteCollector()->addRoute(['GET', 'POST'], '/plugins/userlog[/]', function () {
+           return $this;
+        });
     }
 }

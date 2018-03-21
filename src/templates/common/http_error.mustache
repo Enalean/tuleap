@@ -1,0 +1,26 @@
+<h1>{{# gettext }}Ooops an error occured{{/ gettext }}</h1>
+
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">{{# gettext }}Internal server error{{/ gettext }}</h1>
+        </div>
+        <section class="tlp-pane-section">
+            <p>{{# gettext }}We are sorry you caught an error, something meaningful was logged for site administrators. You may want got get in touch with them.{{/ gettext }}</p>
+
+        </section>
+    </div>
+</section>
+
+{{# development }}
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">Developers details</h1>
+        </div>
+        <section class="tlp-pane-section">
+            <p>{{ error_message}}</p>
+        </section>
+    </div>
+</section>
+{{/ development }}
