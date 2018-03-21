@@ -53,6 +53,7 @@ src/www/assets/*
 src/www/themes/*/assets/*
 plugins/*/www/assets/*
 plugins/*/www/themes/*/assets/*
+plugins/*/assets
 src/www/themes/BurningParrot/css/vendor/*.scss
 test_results/*
 test_results_e2e/*

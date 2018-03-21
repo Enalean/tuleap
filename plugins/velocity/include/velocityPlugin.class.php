@@ -125,8 +125,8 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
     {
         if ($this->isInAdminSemantics()) {
             $theme_include_assets = new IncludeAssets(
-                VELOCITY_BASE_DIR . '/www/themes/FlamingParrot/assets',
-                VELOCITY_BASE_URL . '/themes/FlamingParrot/assets'
+                __DIR__ . '/../../../src/www/assets/velocity/FlamingParrot',
+                '/assets/velocity/FlamingParrot'
             );
             $css_file_url         = $theme_include_assets->getFileURL('style.css');
 

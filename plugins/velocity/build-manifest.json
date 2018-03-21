@@ -3,12 +3,12 @@
     "themes": {
         "FlamingParrot": {
             "files": [
-                "www/themes/FlamingParrot/css/style.scss"
+                "themes/FlamingParrot/css/style.scss"
             ],
             "includes": [
                 "../../src/www/themes/FlamingParrot/css/utils"
             ],
-            "target_dir": "www/themes/FlamingParrot/assets",
+            "target_dir": "../../src/www/assets/velocity/FlamingParrot",
             "is_revisioned": true
         }
     }
