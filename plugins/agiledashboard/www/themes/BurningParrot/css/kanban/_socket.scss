@@ -1,16 +1,15 @@
-.alert-disconnect {
-    display: flex;
-    position: absolute;
-    right: 0;
-    max-width: 300px;
-    z-index: 1002;
-    box-sizing: border-box;
+.kanban.widget-context {
+    > socket-disconnect > .alert-disconnect {
+        margin: 0 0 $tlp-spacing $tlp-spacing;
+    }
+}
 
-    > i {
-        margin: 10px;
+.alert-disconnect {
+    &:last-child {
+        margin: $tlp-spacing 0 0 $tlp-spacing;
     }
 
-    > p {
-        margin-left: 5px;
+    > i {
+        margin: 0 $tlp-half-spacing 0 0;
     }
 }
