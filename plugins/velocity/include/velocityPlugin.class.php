@@ -30,7 +30,7 @@ use Tuleap\Velocity\Semantic\SemanticVelocity;
 use Tuleap\Velocity\VelocityComputationChecker;
 use Tuleap\Velocity\VelocityDao;
 
-require_once 'autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 require_once 'constants.php';
 
 class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
