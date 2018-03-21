@@ -47,4 +47,9 @@ class CredentialRemover
 
         return $this->dao->revokeByIdentifier($identifier) > 0;
     }
+
+    public function deleteExpired()
+    {
+        $this->dao->deleteByExpirationDate(time());
+    }
 }
