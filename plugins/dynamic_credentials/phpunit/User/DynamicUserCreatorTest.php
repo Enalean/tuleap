@@ -55,7 +55,7 @@ class DynamicUserCreatorTest extends TestCase
         $user_manager = \Mockery::mock(\UserManager::class);
         $GLOBALS['Language']->shouldReceive('getLanguageFromAcceptLanguage');
 
-        $dynamic_user_creator = new DynamicUserCreator($dynamic_credential_session, $user_manager);
+        $dynamic_user_creator = new DynamicUserCreator($dynamic_credential_session, $user_manager, 'Realname');
 
         $user = $dynamic_user_creator->getDynamicUser([]);
         $this->assertTrue($user->isLoggedIn());
@@ -68,7 +68,7 @@ class DynamicUserCreatorTest extends TestCase
         $user_manager = \Mockery::mock(\UserManager::class);
         $GLOBALS['Language']->shouldReceive('getLanguageFromAcceptLanguage');
 
-        $dynamic_user_creator = new DynamicUserCreator($dynamic_credential_session, $user_manager);
+        $dynamic_user_creator = new DynamicUserCreator($dynamic_credential_session, $user_manager, 'Realname');
 
         $user = $dynamic_user_creator->getDynamicUser([]);
         $this->assertFalse($user->isLoggedIn());
@@ -86,7 +86,7 @@ class DynamicUserCreatorTest extends TestCase
         $user_manager = \Mockery::mock(\UserManager::class);
         $user_manager->shouldReceive('logout');
 
-        $dynamic_user_creator = new DynamicUserCreator($dynamic_credential_session, $user_manager);
+        $dynamic_user_creator = new DynamicUserCreator($dynamic_credential_session, $user_manager, 'Realname');
 
         $dynamic_user_creator->getDynamicUser([]);
     }
@@ -101,7 +101,7 @@ class DynamicUserCreatorTest extends TestCase
         $user_manager = \Mockery::mock(\UserManager::class);
         $user_manager->shouldReceive('logout');
 
-        $dynamic_user_creator = new DynamicUserCreator($dynamic_credential_session, $user_manager);
+        $dynamic_user_creator = new DynamicUserCreator($dynamic_credential_session, $user_manager, 'Realname');
 
         $dynamic_user_creator->getDynamicUser([]);
     }

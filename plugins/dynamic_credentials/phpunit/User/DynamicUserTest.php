@@ -46,7 +46,7 @@ class DynamicUserTest extends TestCase
     public function testUserIsConsideredAsActiveWhenLoggedIn()
     {
         $is_logged_in = true;
-        $user         = new DynamicUser([], $is_logged_in);
+        $user         = new DynamicUser('Realname', [], $is_logged_in);
 
         $this->assertTrue($user->isActive());
     }
@@ -54,7 +54,7 @@ class DynamicUserTest extends TestCase
     public function testUserIsNotActiveWhenIsNotLoggedIn()
     {
         $is_logged_in = false;
-        $user         = new DynamicUser([], $is_logged_in);
+        $user         = new DynamicUser('Realname', [], $is_logged_in);
 
         $this->assertFalse($user->isActive());
     }
@@ -62,15 +62,23 @@ class DynamicUserTest extends TestCase
     public function testUserIsSuperUser()
     {
         $is_logged_in = true;
-        $user         = new DynamicUser([], $is_logged_in);
+        $user         = new DynamicUser('Realname', [], $is_logged_in);
 
         $this->assertTrue($user->isSuperUser());
+    }
+
+    public function testRealnameUsedIsTheGivenOne()
+    {
+        $is_logged_in = true;
+        $user         = new DynamicUser('Alpaca', [], $is_logged_in);
+
+        $this->assertEquals('Alpaca', $user->getRealName());
     }
 
     public function testSetValuesToUserDoesNothing()
     {
         $is_logged_in = false;
-        $user         = new DynamicUser([], $is_logged_in);
+        $user         = new DynamicUser('Realname', [], $is_logged_in);
 
         $expected_password = $user->getPassword();
         $user->setPassword('password');

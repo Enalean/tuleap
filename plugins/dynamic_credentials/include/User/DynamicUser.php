@@ -29,10 +29,11 @@ class DynamicUser extends \PFUser
      */
     private $is_logged_in;
 
-    public function __construct(array $row, $is_logged_in)
+    public function __construct($realname, array $row, $is_logged_in)
     {
         parent::__construct($row);
         $this->is_logged_in = $is_logged_in;
+        $this->realname     = $realname;
     }
 
     public function getStatus()
