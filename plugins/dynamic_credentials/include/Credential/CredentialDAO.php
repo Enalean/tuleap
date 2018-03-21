@@ -58,4 +58,9 @@ class CredentialDAO extends DataAccessObject
             $identifier
         );
     }
+
+    public function deleteByExpirationDate($expiration_date)
+    {
+        $this->getDB()->run('DELETE FROM plugin_dynamic_credentials_account WHERE ? >= expiration', $expiration_date);
+    }
 }

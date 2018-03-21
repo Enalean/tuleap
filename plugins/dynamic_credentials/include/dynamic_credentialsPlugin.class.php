@@ -22,6 +22,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 use Tuleap\DynamicCredentials\Credential\CredentialDAO;
 use Tuleap\DynamicCredentials\Credential\CredentialIdentifierExtractor;
+use Tuleap\DynamicCredentials\Credential\CredentialRemover;
 use Tuleap\DynamicCredentials\Credential\CredentialRetriever;
 use Tuleap\DynamicCredentials\REST\ResourcesInjector;
 use Tuleap\DynamicCredentials\Session\DynamicCredentialSession;
@@ -54,6 +55,7 @@ class dynamic_credentialsPlugin extends Plugin // @codingStandardsIgnoreLine
         $this->addHook(Event::SESSION_BEFORE_LOGIN);
         $this->addHook(Event::SESSION_AFTER_LOGIN);
         $this->addHook(Event::USER_MANAGER_GET_USER_INSTANCE);
+        $this->addHook('codendi_daily_start', 'dailyCleanup');
 
         return parent::getHooksAndCallbacks();
     }
@@ -99,6 +101,12 @@ class dynamic_credentialsPlugin extends Plugin // @codingStandardsIgnoreLine
 
         $support_user_creator = new DynamicUserCreator($dynamic_session, UserManager::instance(), $user_realname);
         $params['user']       = $support_user_creator->getDynamicUser($params['row']);
+    }
+
+    public function dailyCleanup()
+    {
+        $credential_remover = new CredentialRemover(new CredentialDAO(), new CredentialIdentifierExtractor());
+        $credential_remover->deleteExpired();
     }
 
     /**
