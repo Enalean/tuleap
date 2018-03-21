@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -112,6 +112,7 @@ class Tracker_FormElement_Field_Computed_HasChanges extends TuleapTestCase
     public function itDetectsChangeWhenBackToAutocompute()
     {
         stub($this->old_value)->getNumeric()->returns(1.0);
+        stub($this->old_value)->isManualValue()->returns(true);
         $submitted_value = array(
             'manual_value'    => '',
             'is_autocomputed' => true
@@ -123,6 +124,7 @@ class Tracker_FormElement_Field_Computed_HasChanges extends TuleapTestCase
     public function itDetectsChangeWhenBackToManualValue()
     {
         stub($this->old_value)->getNumeric()->returns(null);
+        stub($this->old_value)->isManualValue()->returns(false);
         $submitted_value = array(
             'manual_value'    => '123',
             'is_autocomputed' => false
@@ -134,6 +136,7 @@ class Tracker_FormElement_Field_Computed_HasChanges extends TuleapTestCase
     public function itDetectsChangeWhenBackToAutocomputeWhenManualValueIs0()
     {
         stub($this->old_value)->getNumeric()->returns(0.0);
+        stub($this->old_value)->isManualValue()->returns(true);
         $submitted_value = array(
             'manual_value'    => '',
             'is_autocomputed' => true
@@ -167,9 +170,22 @@ class Tracker_FormElement_Field_Computed_HasChanges extends TuleapTestCase
     public function itHasNotChangesIfYouAreStillInAutocomputedMode()
     {
         stub($this->old_value)->getNumeric()->returns(null);
+        stub($this->old_value)->isManualValue()->returns(false);
         $new_value = array(
             'is_autocomputed' => '1',
             'manual_value'    => ''
+        );
+
+        $this->assertFalse($this->field->hasChanges($this->artifact, $this->old_value, $new_value));
+    }
+
+    public function itHasNotChangesIfYouAreStillInAutocomputedModeWithAProvidedManualValueByHTMLForm()
+    {
+        stub($this->old_value)->getNumeric()->returns(null);
+        stub($this->old_value)->isManualValue()->returns(false);
+        $new_value = array(
+            'is_autocomputed' => '1',
+            'manual_value'    => '999999'
         );
 
         $this->assertFalse($this->field->hasChanges($this->artifact, $this->old_value, $new_value));
