@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -480,17 +480,24 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     }
 
     var $_static_ugroups;
-    function getStaticUgroups($group_id) {
-        if (!isset($this->_static_ugroups)) {
-            $this->_static_ugroups = array();
-            if (!$this->isSuperUser()) {
+
+    public function getStaticUgroups($group_id)
+    {
+        if (! isset($this->_static_ugroups)) {
+            $this->_static_ugroups = [];
+        }
+
+        if (! isset($this->_static_ugroups[$group_id])) {
+            $this->_static_ugroups[$group_id] = [];
+            if (! $this->isSuperUser()) {
                 $res = ugroup_db_list_all_ugroups_for_user($group_id, $this->id);
                 while ($row = db_fetch_array($res)) {
-                    $this->_static_ugroups[] = $row['ugroup_id'];
+                    $this->_static_ugroups[$group_id][] = $row['ugroup_id'];
                 }
             }
         }
-        return $this->_static_ugroups;
+
+        return $this->_static_ugroups[$group_id];
     }
 
     var $_dynamics_ugroups;
