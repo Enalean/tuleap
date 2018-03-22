@@ -9,11 +9,34 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.7.1\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 msgid "Automate creation of test users and environments"
-msgstr "Automatise la création d'utilisateurs de d'environments de test"
+msgstr "Automatise la création d'utilisateurs et d'environments de test"
+
+msgid "Bot list"
+msgstr "Liste des bots"
+
+msgid "Configure a mattermost bot that will receive notification about people tests."
+msgstr "Selectionnez un bot mattermost qui recevra les notifications de tests des utilisateurs"
 
 msgid "Create test environment"
 msgstr "Création d'environment de test"
+
+msgid "Create test environment - Notification configuration"
+msgstr "Création d'environment de test - Configuration des notifications"
+
+msgid "Mattermost"
+msgstr "Mattermost"
+
+msgid "Mattermost notifications added"
+msgstr "Notification mattermost ajoutée"
+
+msgid "Mattermost notifications removed"
+msgstr "Notification mattermost supprimée"
+
+msgid "Save"
+msgstr "Enregistrer"
+
+msgid "You should be site administrator to access this page"
+msgstr "Vous devez être administrateur site pour accèder à cette page"

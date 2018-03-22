@@ -1,5 +1,30 @@
 msgid "Automate creation of test users and environments"
 msgstr ""
 
+msgid "Bot list"
+msgstr ""
+
+msgid ""
+"Configure a mattermost bot that will receive notification about people tests."
+msgstr ""
+
 msgid "Create test environment"
+msgstr ""
+
+msgid "Create test environment - Notification configuration"
+msgstr ""
+
+msgid "Mattermost"
+msgstr ""
+
+msgid "Mattermost notifications added"
+msgstr ""
+
+msgid "Mattermost notifications removed"
+msgstr ""
+
+msgid "Save"
+msgstr ""
+
+msgid "You should be site administrator to access this page"
 msgstr ""

@@ -20,6 +20,13 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+use Tuleap\CreateTestEnv\NotificationBotIndexController;
+use Tuleap\CreateTestEnv\NotificationBotSaveController;
+use Tuleap\CreateTestEnv\REST\ResourcesInjector;
+use Tuleap\CreateTestEnv\Plugin\PluginInfo;
+use Tuleap\Request\CollectRoutesEvent;
+use Tuleap\BurningParrotCompatiblePageEvent;
+
 // @codingStandardsIgnoreLine
 class create_test_envPlugin extends Plugin
 {
@@ -43,9 +50,17 @@ class create_test_envPlugin extends Plugin
         return $this->pluginInfo;
     }
 
+    public function getDependencies()
+    {
+        return [ 'botmattermost' ];
+    }
+
     public function getHooksAndCallbacks()
     {
         $this->addHook(Event::REST_RESOURCES);
+        $this->addHook(CollectRoutesEvent::NAME);
+        $this->addHook(BurningParrotCompatiblePageEvent::NAME);
+        $this->addHook('site_admin_option_hook');
 
         return parent::getHooksAndCallbacks();
     }
@@ -54,5 +69,31 @@ class create_test_envPlugin extends Plugin
     {
         $injector = new \Tuleap\CreateTestEnv\REST\ResourcesInjector();
         $injector->populate($params['restler']);
+    }
+
+    public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+            $event->setIsInBurningParrotCompatiblePage();
+        }
+    }
+
+    public function collectRoutesEvent(CollectRoutesEvent $event)
+    {
+        $event->getRouteCollector()->get($this->getPluginPath(), function () {
+            return new NotificationBotIndexController();
+        });
+        $event->getRouteCollector()->post($this->getPluginPath(), function () {
+            return new NotificationBotSaveController($this->getPluginPath());
+        });
+    }
+
+    // @codingStandardsIgnoreLine
+    public function site_admin_option_hook(array &$params)
+    {
+        $params['plugins'][] = [
+            'label' => dgettext('tuleap-create_test_env', 'Create test environment'),
+            'href'  => $this->getPluginPath()
+        ];
     }
 }
