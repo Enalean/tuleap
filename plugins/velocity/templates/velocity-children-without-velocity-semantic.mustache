@@ -1,0 +1,13 @@
+{{# has_children_trackers_without_velocity_semantic }}
+    <ul class="feedback_error">
+        {{# dngettext }}
+            tuleap-velocity |
+            Following tracker should have <b>velocity</b> semantic: |
+            Following trackers should have <b>velocity</b> semantic: |
+            {{ nb_children_trackers_without_velocity_semantic }}
+        {{/ dngettext }}
+        {{# children_trackers_without_velocity_semantic }}
+            <a href="{{ tracker_url }}">{{ name }}</a><span class="misconfigured-semantic-display-comma">, </span>
+        {{/ children_trackers_without_velocity_semantic }}
+    </ul>
+{{/ has_children_trackers_without_velocity_semantic }}

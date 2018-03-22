@@ -33,6 +33,7 @@ use Tracker_FormElement_Field;
 use Tracker_FormElementFactory;
 use Tracker_Semantic;
 use Tracker_SemanticManager;
+use TrackerFactory;
 use TrackerManager;
 use Tuleap\AgileDashboard\Semantic\Dao\SemanticDoneDao;
 use Tuleap\AgileDashboard\Semantic\SemanticDone;
@@ -94,6 +95,7 @@ class SemanticVelocity extends Tracker_Semantic
         $backlog_trackers_without_initial_effort_semantic = $this->getTrackersIdsAndInitialEffortUndefined(
             $backlog_trackers
         );
+        $children_trackers_without_velocity_semantic      = $this->getChildrenTrackersWithoutVelocitySemantic();
 
         $renderer = TemplateRendererFactory::build()->getRenderer(VELOCITY_BASE_DIR . '/templates');
 
@@ -119,6 +121,7 @@ class SemanticVelocity extends Tracker_Semantic
                 $backlog_trackers_without_initial_effort_semantic
             ),
             $this->semantic_done->getSemanticStatus()->getField()->isMultiple(),
+            $children_trackers_without_velocity_semantic,
             $this->velocity_field
         );
         $renderer->renderToPage('velocity-intro', $velocity_presenter);
@@ -142,6 +145,7 @@ class SemanticVelocity extends Tracker_Semantic
         $backlog_trackers_without_initial_effort_semantic = $this->getTrackersIdsAndInitialEffortUndefined(
             $backlog_trackers
         );
+        $children_trackers_without_velocity_semantic      = $this->getChildrenTrackersWithoutVelocitySemantic();
 
         $backlog_trackers = $this->semantic_formatter->formatBacklogTrackers(
             $backlog_trackers_without_done_semantic,
@@ -169,7 +173,8 @@ class SemanticVelocity extends Tracker_Semantic
                 $backlog_trackers_without_done_semantic,
                 $backlog_trackers_without_initial_effort_semantic
             ),
-            $this->semantic_done->getSemanticStatus()->getField()->isMultiple()
+            $this->semantic_done->getSemanticStatus()->getField()->isMultiple(),
+            $children_trackers_without_velocity_semantic
         );
 
         $renderer->renderToPage('velocity-admin', $presenter);
@@ -350,6 +355,8 @@ class SemanticVelocity extends Tracker_Semantic
         $planning_factory  = PlanningFactory::build();
         $planning_trackers = $planning_factory->getPlanningByPlanningTracker($this->getTracker());
 
+        $this->getChildrenTrackersWithoutVelocitySemantic();
+
         return $planning_trackers->getBacklogTrackers();
     }
 
@@ -360,5 +367,35 @@ class SemanticVelocity extends Tracker_Semantic
     ) {
         return count($backlog_trackers) === count($backlog_trackers_without_done_semantic) ||
             count($backlog_trackers) === count($backlog_trackers_without_initial_effort_semantic);
+    }
+
+    private function getChildrenTrackersWithoutVelocitySemantic()
+    {
+        $tracker_factory   = TrackerFactory::instance();
+        $has_parent        = $tracker_factory->getHierarchyFactory()->getParent($this->getTracker());
+        if ($has_parent) {
+            return [];
+        }
+        $children_trackers = $tracker_factory->getHierarchyFactory()->getChildren($this->getTracker()->getId());
+
+        $misconfigured_trackers = [];
+
+        foreach ($children_trackers as $tracker) {
+            $velocity = SemanticVelocity::load($tracker);
+            if (! $velocity->getVelocityField()) {
+                $misconfigured_trackers[] = [
+                    "name"        => $tracker->getName(),
+                    "tracker_url" => TRACKER_BASE_URL . "?" . http_build_query(
+                        [
+                            "tracker"  => $tracker->getId(),
+                            "func"     => "admin-semantic",
+                            "semantic" => "velocity"
+                        ]
+                    ),
+                ];
+            }
+        }
+
+        return $misconfigured_trackers;
     }
 }
