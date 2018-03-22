@@ -104,6 +104,9 @@ class ChartConfigurationValueRetriever
     public function getStartDate(Tracker_Artifact $artifact, PFUser $user)
     {
         $start_date_field = $this->configuration_field_retriever->getStartDateField($artifact, $user);
+        if (! $artifact->getValue($start_date_field)) {
+            return;
+        }
         $timestamp        = $artifact->getValue($start_date_field)->getTimestamp();
 
         if (! $timestamp) {

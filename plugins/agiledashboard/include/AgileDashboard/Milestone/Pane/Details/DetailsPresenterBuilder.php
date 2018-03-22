@@ -26,6 +26,7 @@ namespace Tuleap\AgileDashboard\Milestone\Pane\Details;
 
 use AgileDashboard_Milestone_Backlog_BacklogFactory;
 use AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
+use EventManager;
 use PFUser;
 use Planning_Milestone;
 use Planning_MilestoneRedirectParameter;
@@ -43,15 +44,21 @@ class DetailsPresenterBuilder
      * @var BurnupFieldRetriever
      */
     private $field_retriever;
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
 
     public function __construct(
         AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory,
         AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory $collection_factory,
-        BurnupFieldRetriever $field_retriever
+        BurnupFieldRetriever $field_retriever,
+        EventManager $event_manager
     ) {
         $this->backlog_factory    = $backlog_factory;
         $this->collection_factory = $collection_factory;
         $this->field_retriever    = $field_retriever;
+        $this->event_manager      = $event_manager;
     }
 
     public function getMilestoneDetailsPresenter(PFUser $user, Planning_Milestone $milestone)
@@ -105,13 +112,17 @@ class DetailsPresenterBuilder
             $burnup_presenter = $burnup_field->buildPresenter($milestone->getArtifact(), false, $user);
         }
 
+        $event = new DetailsChartPresentersRetriever($milestone, $user);
+        $this->event_manager->processEvent($event);
+
         return new DetailsChartPresenter(
             $has_burndown,
             $burndown_label,
             $has_burnup,
             $burnup_label,
             $burndown_presenter,
-            $burnup_presenter
+            $burnup_presenter,
+            $event->getEscapedCharts()
         );
     }
 

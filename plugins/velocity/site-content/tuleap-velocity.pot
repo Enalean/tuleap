@@ -28,7 +28,13 @@ msgstr ""
 msgid "Define the field to use to compute velocity."
 msgstr ""
 
+msgid "Duration"
+msgstr ""
+
 msgid "Field used for velocity computation:"
+msgstr ""
+
+msgid "Name"
 msgstr ""
 
 msgid "No field defined for velocity computation."
@@ -46,6 +52,9 @@ msgid "Semantic done is not defined."
 msgstr ""
 
 msgid "Semantic updated successfully."
+msgstr ""
+
+msgid "Start date"
 msgstr ""
 
 msgid ""

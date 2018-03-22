@@ -1,0 +1,26 @@
+{{# has_backlog_items_with_computed_velocity }}
+<div class="agiledashboard-milestone-details tlp-framed-horizontally">
+    <table class="tlp-table">
+        <thead>
+        <tr>
+            <th>{{# dgettext }} tuleap-velocity | Name{{/ dgettext }}</th>
+            <th>{{# dgettext }} tuleap-velocity | Start date{{/ dgettext }}</th>
+            <th class="tlp-table-cell-numeric">{{# dgettext }} tuleap-velocity | Duration{{/ dgettext }}</th>
+            <th class="tlp-table-cell-numeric">{{# dgettext }} tuleap-velocity | Velocity{{/ dgettext }}</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {{# backlog_items_representation }}
+            <tr>
+                <td>{{ name }}</td>
+                <td>{{ start_date }}</td>
+                <td class="tlp-table-cell-numeric">{{ duration }}</td>
+                <td class="tlp-table-cell-numeric">{{ velocity }}</td>
+                <td></td>
+            </tr>
+        {{/ backlog_items_representation }}
+        </tbody>
+    </table>
+</div>
+{{/ has_backlog_items_with_computed_velocity }}

@@ -19,6 +19,7 @@
  */
 
 
+use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsChartPresentersRetriever;
 use Tuleap\AgileDashboard\Planning\AdditionalPlanningConfigurationWarningsRetriever;
 use Tuleap\AgileDashboard\Semantic\Dao\SemanticDoneDao;
 use Tuleap\AgileDashboard\Semantic\SemanticDone;
@@ -29,8 +30,10 @@ use Tuleap\Tracker\Workflow\BeforeEvent;
 use Tuleap\Velocity\Semantic\SemanticFormatter;
 use Tuleap\Velocity\Semantic\SemanticVelocity;
 use Tuleap\Velocity\Semantic\SemanticVelocityFactory;
+use Tuleap\Velocity\VelocityChartPresenter;
 use Tuleap\Velocity\VelocityComputationChecker;
 use Tuleap\Velocity\VelocityDao;
+use Tuleap\Velocity\VelocityRepresentationBuilder;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once 'constants.php';
@@ -56,6 +59,7 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
         $this->addHook(TRACKER_EVENT_MANAGE_SEMANTICS);
         $this->addHook(AdditionalPlanningConfigurationWarningsRetriever::NAME);
         $this->addHook(BeforeEvent::NAME);
+        $this->addHook(DetailsChartPresentersRetriever::NAME);
         $this->addHook(TRACKER_EVENT_SEMANTIC_FROM_XML);
 
         return parent::getHooksAndCallbacks();
@@ -223,5 +227,17 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
             $factory                = new SemanticVelocityFactory(new SemanticFormatter());
             $parameters['semantic'] = $factory->getInstanceFromXML($xml, $tracker, $mapping);
         }
+    }
+
+    public function detailsChartPresentersRetriever(DetailsChartPresentersRetriever $event)
+    {
+        $builder        = new VelocityRepresentationBuilder(new VelocityDao(), Tracker_ArtifactFactory::instance(), Tracker_FormElementFactory::instance());
+        $representation = $builder->buildRepresentations($event->getMilestone(), $event->getUser());
+
+        $presenter             = new VelocityChartPresenter($representation);
+        $renderer              = TemplateRendererFactory::build()->getRenderer(VELOCITY_BASE_DIR . '/templates');
+        $string_representation = $renderer->renderToString("chart-field", $presenter);
+
+        $event->addEscapedChart($string_representation);
     }
 }
