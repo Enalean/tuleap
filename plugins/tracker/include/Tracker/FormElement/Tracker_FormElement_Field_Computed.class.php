@@ -366,10 +366,11 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         $submitted_values = array()
     ) {
         $displayed_value = null;
+        $is_autocomputed = true;
         if ($value !== null) {
             $displayed_value = $value->getValue();
+            $is_autocomputed = ! $value->isManualValue();
         }
-        $is_autocomputed = $displayed_value === null;
 
         if (isset($submitted_values[0][$this->getId()][self::FIELD_VALUE_MANUAL])) {
             $displayed_value = $submitted_values[0][$this->getId()][self::FIELD_VALUE_MANUAL];
@@ -386,7 +387,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
             value="' . $purifier->purify($displayed_value) . '" />';
         $html    .= '<input type="hidden"
             name="artifact[' . $purifier->purify($this->getId()) . '][' . self::FIELD_VALUE_IS_AUTOCOMPUTED . ']"
-            value="' . $purifier->purify($is_autocomputed) . '" />';
+            value="' . $purifier->purify((int)$is_autocomputed) . '" />';
 
         return $html;
     }
@@ -872,7 +873,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
 
     private function getStorableValue($value)
     {
-         $new_value = '';
+        $new_value = '';
 
         if (! is_array($value)) {
             return $this->retrieveValueFromJson($value);
@@ -900,6 +901,13 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
      */
     public function hasChanges(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $previous_changeset_value, $value)
     {
+        if (! $previous_changeset_value->isManualValue() &&
+            isset($value[self::FIELD_VALUE_IS_AUTOCOMPUTED]) &&
+            $value[self::FIELD_VALUE_IS_AUTOCOMPUTED]
+        ) {
+            return false;
+        }
+
         $new_value = $this->getStorableValue($value);
 
         if ($previous_changeset_value->getNumeric() === null && $new_value === '') {
