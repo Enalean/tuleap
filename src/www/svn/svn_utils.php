@@ -370,6 +370,7 @@ function svn_utils_field_get_label($sortField) {
 
 function svn_utils_show_revision_detail($result,$group_id,$group_name,$commit_id) {
     global $Language;
+    $purifier = Codendi_HTMLPurifier::instance();
     /*
       Accepts a result set from the svn_checkins table. Should include all columns from
       the table, and it should be joined to USER to get the user_name.
@@ -377,7 +378,11 @@ function svn_utils_show_revision_detail($result,$group_id,$group_name,$commit_id
 
     $rows=db_numrows($result);
     $url = "/svn/?func=detailrevision&commit_id=$commit_id&group_id=$group_id&order=";
-    $list_log = '<pre>'.util_make_links(util_line_wrap(db_result($result, 0, 'description')), $group_id).'</pre>';
+
+    $description = db_result($result, 0, 'description');
+    $description = util_line_wrap(htmlspecialchars_decode($description, ENT_QUOTES));
+    $list_log    = '<pre>' . $purifier->purify($description, CODENDI_PURIFIER_BASIC_NOBR, $group_id) . '</pre>';
+
     $revision = db_result($result, 0, 'revision');
     $hdr = '['.$Language->getText('svn_browse_revision','rev').' #'.$revision.'] - ';
 
