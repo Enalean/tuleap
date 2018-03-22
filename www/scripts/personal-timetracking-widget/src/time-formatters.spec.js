@@ -24,17 +24,16 @@
 import { Settings } from 'luxon';
 
 import {
-    formatMinutesToISO,
-    formatDate,
+    formatMinutes,
     formatDatetimeToISO
 } from "./time-formatters.js";
 
 describe('Time formatters', () => {
-    describe('formatMinutesToISO', () => {
+    describe('formatMinutes', () => {
         it('Given minutes, When I call this function, Then it should format it in a ISO-compliant format', () => {
             const minutes = 600;
 
-            expect(formatMinutesToISO(minutes)).toEqual('10:00:00');
+            expect(formatMinutes(minutes)).toEqual('10:00');
         });
     });
 

@@ -24,6 +24,12 @@
     margin: 0 0 10px;
 }
 
+.timetracking-add-time-mandatory-field::after {
+    content: " *";
+    color: red;
+    font-weight: bold;
+}
+
 .timetracking-empty {
     height: 100px;
     color: #BBB;

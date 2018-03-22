@@ -23,7 +23,7 @@
         <div class="timetracking-writing-mode-selected-dates">
 
             <div class="tlp-form-element timetracking-writing-mode-selected-date">
-                <label for="timetracking-start-date" class="tlp-label">{{ start_date_label }}</label>
+                <label for="timetracking-start-date" class="tlp-label">{{ start_date_label }} <i class="fa fa-asterisk"></i></label>
                 <div class="tlp-form-element tlp-form-element-prepend">
                     <span class="tlp-prepend"><i class="fa fa-calendar"></i></span>
                     <input type="text"
@@ -37,7 +37,7 @@
             </div>
 
             <div class="tlp-form-element timetracking-writing-mode-selected-date">
-                <label for="timetracking-end-date" class="tlp-label">{{ end_date_label }}</label>
+                <label for="timetracking-end-date" class="tlp-label">{{ end_date_label }} <i class="fa fa-asterisk"></i></label>
                 <div class="tlp-form-element tlp-form-element-prepend">
                     <span class="tlp-prepend"><i class="fa fa-calendar"></i></span>
                     <input type="text"

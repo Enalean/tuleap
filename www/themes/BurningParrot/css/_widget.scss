@@ -30,9 +30,6 @@
     }
 }
 
-.timetracking-writing-mode {
-    margin: $tlp-spacing;
-}
 
 .timetracking-writing-mode-actions {
     display: flex;
@@ -44,7 +41,7 @@
 .timetracking-writing-mode-selected-dates,
 .timetracking-reading-mode-dates {
     display: flex;
-    margin: $tlp-spacing;
+    margin: $tlp-spacing $tlp-spacing 0 $tlp-spacing;
 }
 
 .timetracking-writing-mode-selected-date:last-of-type,
@@ -60,6 +57,11 @@
     margin: $tlp-spacing;
 }
 
+.timetracking-time-tooltip {
+    margin: 0 0 0 5px;
+    vertical-align: middle;
+}
+
 .timetracking-badge-direct-link-to-artifact {
     margin: 0 5px 0 0;
 }
@@ -67,4 +69,8 @@
 .timetracking-loader {
     height: 100px;
     background: url('/themes/BurningParrot/images/spinner.gif') no-repeat center center;
+}
+
+.timetracking-total-sum {
+    white-space: nowrap;
 }

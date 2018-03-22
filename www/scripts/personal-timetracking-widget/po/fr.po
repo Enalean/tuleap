@@ -36,6 +36,9 @@ msgstr "Projet"
 msgid "Search"
 msgstr "Rechercher"
 
+msgid "The time is displayed in hours:minutes"
+msgstr "Le temps est affiché en heures:minutes"
+
 msgid "Time"
 msgstr "Temps"
 

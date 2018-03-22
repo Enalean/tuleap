@@ -62,7 +62,7 @@ describe('WidgetArtifactTable', () => {
 
             const formatted_times = vm.getFormattedTotalSum();
 
-            expect(formatted_times).toEqual('01:00:00');
+            expect(formatted_times).toEqual('01:00');
         });
     });
 

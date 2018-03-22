@@ -63,4 +63,9 @@ class UserWidget extends Widget
 
         return $renderer->renderToString('widget', array());
     }
+
+    public function getIcon()
+    {
+        return "fa-clock-o";
+    }
 }

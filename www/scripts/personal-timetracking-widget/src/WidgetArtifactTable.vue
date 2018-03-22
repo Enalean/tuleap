@@ -28,7 +28,15 @@
                 <tr>
                     <th>{{ artifact_label }}</th>
                     <th>{{ project_label }}</th>
-                    <th class="tlp-table-cell-numeric">{{ time_label }}</th>
+                    <th class="tlp-table-cell-numeric">
+                        {{ time_label }}
+                        <span class="tlp-tooltip tlp-tooltip-left timetracking-time-tooltip"
+                            v-bind:data-tlp-tooltip="time_format_tooltip"
+                            v-bind:aria-label="time_format_tooltip"
+                        >
+                            <i class="fa fa-question-circle"></i>
+                        </span>
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -46,7 +54,7 @@
                 <tr>
                     <th></th>
                     <th></th>
-                    <th class="tlp-table-cell-numeric">∑ {{ getFormattedTotalSum() }}</th>
+                    <th class="tlp-table-cell-numeric timetracking-total-sum">∑ {{ getFormattedTotalSum() }}</th>
                 </tr>
             </tfoot>
         </table>
@@ -65,10 +73,10 @@
     </div>
 </template>)
 (<script>
-    import { gettext_provider }   from './gettext-provider.js';
-    import { getTrackedTimes }    from "./rest-querier.js";
-    import { formatMinutesToISO } from './time-formatters.js';
-    import ArtifactTableRow       from "./WidgetArtifactTableRow.vue";
+    import { gettext_provider } from './gettext-provider.js';
+    import { getTrackedTimes }  from "./rest-querier.js";
+    import { formatMinutes }    from './time-formatters.js';
+    import ArtifactTableRow     from "./WidgetArtifactTableRow.vue";
 
     export default {
         name: "WidgetArtifactTable",
@@ -108,11 +116,12 @@
             canLoadMore() {
                 return this.pagination_offset < this.total_times;
             },
-            empty_state    : () => gettext_provider.gettext('No tracked time have been found for this period'),
-            artifact_label : () => gettext_provider.gettext('Artifact'),
-            project_label  : () => gettext_provider.gettext('Project'),
-            time_label     : () => gettext_provider.gettext('Time'),
-            load_more_label: () => gettext_provider.gettext('Load more')
+            time_format_tooltip: () => gettext_provider.gettext('The time is displayed in hours:minutes'),
+            empty_state        : () => gettext_provider.gettext('No tracked time have been found for this period'),
+            artifact_label     : () => gettext_provider.gettext('Artifact'),
+            project_label      : () => gettext_provider.gettext('Project'),
+            time_label         : () => gettext_provider.gettext('Time'),
+            load_more_label    : () => gettext_provider.gettext('Load more')
         },
         watch: {
             report_state() {
@@ -134,7 +143,7 @@
                         0
                     );
 
-                return formatMinutesToISO(sum);
+                return formatMinutes(sum);
             },
             async loadTimes() {
                 try {

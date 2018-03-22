@@ -40,7 +40,7 @@
     </tr>
 </template>)
 (<script>
-    import { formatMinutesToISO } from "./time-formatters.js";
+    import { formatMinutes } from "./time-formatters.js";
 
     export default {
         name: 'WidgetArtifactTableRow',
@@ -67,7 +67,7 @@
                     0
                 );
 
-                return formatMinutesToISO(minutes);
+                return formatMinutes(minutes);
             }
         }
     }

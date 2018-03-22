@@ -22,6 +22,9 @@ msgstr ""
 msgid "Search"
 msgstr ""
 
+msgid "The time is displayed in hours:minutes"
+msgstr ""
+
 msgid "Time"
 msgstr ""
 

@@ -27,12 +27,12 @@ import {
 } from 'luxon';
 
 export {
-    formatMinutesToISO,
+    formatMinutes,
     formatDatetimeToISO
 };
 
-function formatMinutesToISO(minutes) {
-    return Duration.fromObject({ minutes }).toFormat("hh:mm:ss");
+function formatMinutes(minutes) {
+    return Duration.fromObject({ minutes }).toFormat("hh:mm");
 }
 
 function formatDatetimeToISO(string_date) {

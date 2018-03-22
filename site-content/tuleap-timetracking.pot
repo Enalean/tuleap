@@ -32,7 +32,7 @@ msgstr ""
 msgid "Edit time"
 msgstr ""
 
-msgid "Enable time tracking for tracker"
+msgid "Enable time tracking for this tracker"
 msgstr ""
 
 msgid "No times saved"
@@ -116,5 +116,5 @@ msgstr ""
 msgid "You are not allowed to edit this time."
 msgstr ""
 
-msgid "time tracking"
+msgid "hh:mm"
 msgstr ""

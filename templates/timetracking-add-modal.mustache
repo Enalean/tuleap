@@ -17,7 +17,7 @@
             <label>{{# dgettext }} tuleap-timetracking | Step {{/ dgettext }}</label>
             <input type="text" name="timetracking-new-time-step">
 
-            <label>{{# dgettext }} tuleap-timetracking | Date {{/ dgettext }}</label>
+            <label class="timetracking-add-time-mandatory-field">{{# dgettext }} tuleap-timetracking | Date {{/ dgettext }}</label>
             <div class="input-prepend dropdown input-append date">
                 <span class="tuleap_field_date">
                     <input name="timetracking-new-time-date"
@@ -32,10 +32,10 @@
                 </span>
             </div>
 
-            <label>{{# dgettext }} tuleap-timetracking | Time {{/ dgettext }}</label>
+            <label class="timetracking-add-time-mandatory-field">{{# dgettext }} tuleap-timetracking | Time {{/ dgettext }}</label>
             <input type="text"
                    name="timetracking-new-time-time"
-                   placeholder="00:00"
+                   placeholder="{{# dgettext }} tuleap-timetracking | hh:mm {{/ dgettext }}"
                    pattern="[0-9]{2}:[0-9]{2}"
                    required
             >

@@ -49,7 +49,7 @@ msgstr "Afficher votre suivi de temps de toute la plateforme."
 msgid "Edit time"
 msgstr "Editer un temps"
 
-msgid "Enable time tracking for tracker"
+msgid "Enable time tracking for this tracker"
 msgstr "Activer le suivi de temps pour ce tracker"
 
 msgid "No times saved"
@@ -135,5 +135,5 @@ msgstr "Vous n'êtes pas autorisé à supprimer un temps."
 msgid "You are not allowed to edit this time."
 msgstr "Vous n'êtes pas autorisé à modifier ce temps."
 
-msgid "time tracking"
-msgstr "suivi de temps"
+msgid "hh:mm"
+msgstr "hh:mm"
