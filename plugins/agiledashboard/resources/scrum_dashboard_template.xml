@@ -958,6 +958,11 @@
                   <name>remaining_effort</name>
                   <label><![CDATA[Total Remaining effort]]></label>
                 </formElement>
+                <formElement type="float" ID="F22900" rank="4">
+                  <name>velocity</name>
+                  <label><![CDATA[Velocity]]></label>
+                  <properties size="5"/>
+                </formElement>
               </formElements>
             </formElement>
           </formElements>
@@ -1059,7 +1064,15 @@
           <shortname>done</shortname>
           <label>Done</label>
           <description>Define the closed status that are considered Done</description>
-          <closed_values/>
+          <closed_values>
+            <closed_value REF="V13151"/>
+          </closed_values>
+        </semantic>
+        <semantic type="velocity">
+          <shortname>velocity</shortname>
+          <label>velocity</label>
+          <description>Define the velocity field</description>
+          <field REF="F22900"/>
         </semantic>
       </semantics>
       <rules>
@@ -1190,6 +1203,11 @@
                   <label><![CDATA[Total Remaining Effort]]></label>
                   <description><![CDATA[Sum of the remaining efforts of sprint's artifacts]]></description>
                 </formElement>
+                <formElement type="float" ID="F22901" rank="4">
+                  <name>velocity</name>
+                  <label><![CDATA[Velocity]]></label>
+                  <properties size="5"/>
+                </formElement>
               </formElements>
             </formElement>
           </formElements>
@@ -1293,7 +1311,15 @@
           <shortname>done</shortname>
           <label>Done</label>
           <description>Define the closed status that are considered Done</description>
-          <closed_values/>
+          <closed_values>
+            <closed_value REF="V13155"/>
+          </closed_values>
+        </semantic>
+        <semantic type="velocity">
+          <shortname>velocity</shortname>
+          <label>velocity</label>
+          <description>Define the velocity field</description>
+          <field REF="F22901"/>
         </semantic>
       </semantics>
       <rules>
