@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,7 @@
 
 namespace Tuleap\Git;
 
-use DataAccessObject;
+use Tuleap\DB\DataAccessObject;
 
 class GlobalParameterDao extends DataAccessObject
 {
@@ -31,9 +31,9 @@ class GlobalParameterDao extends DataAccessObject
     {
         $sql = 'SELECT * FROM plugin_git_global_parameters WHERE name = "authorized_keys_managed" AND value="tuleap"';
 
-        $row = $this->retrieveFirstRow($sql);
+        $row = $this->getDB()->row($sql);
 
-        return $row !== false;
+        return !empty($row);
     }
 
     /**
@@ -44,6 +44,11 @@ class GlobalParameterDao extends DataAccessObject
         $sql = 'INSERT INTO plugin_git_global_parameters(name, value) VALUES ("authorized_keys_managed", "tuleap")
                 ON DUPLICATE KEY UPDATE value = "tuleap"';
 
-        return $this->update($sql);
+        try {
+            $this->getDB()->run($sql);
+        } catch (\PDOException $ex) {
+            return false;
+        }
+        return true;
     }
 }
