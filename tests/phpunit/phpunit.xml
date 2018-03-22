@@ -17,6 +17,7 @@
             <directory suffix=".php">../../plugins/dynamic_credentials/include/</directory>
             <directory suffix=".php">../../plugins/velocity/include/</directory>
             <directory suffix=".php">../../plugins/create_test_env/include/</directory>
+            <directory suffix=".php">../../plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Numeric.class.php</directory>
         </whitelist>
     </filter>
     <testsuites>
