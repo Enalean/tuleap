@@ -66,9 +66,21 @@ class SemanticVelocityAdminPresenter
      */
     public $misconfigured_semantics;
     /**
-    * @var bool
+     * @var bool
      */
     public $can_status_semantic_have_multiple_values;
+    /**
+     * @var Tracker[]
+     */
+    public $children_trackers_without_velocity_semantic;
+    /**
+     * @var bool
+     */
+    public $has_children_trackers_without_velocity_semantic;
+    /**
+     * @var int
+     */
+    public $nb_children_trackers_without_velocity_semantic;
 
     public function __construct(
         array $possible_velocity_field,
@@ -79,29 +91,33 @@ class SemanticVelocityAdminPresenter
         array $backlog_trackers,
         array $misconfigured_semantics_for_all_trackers,
         $are_all_backlog_trackers_missconfigured,
-        $can_status_semantic_have_multiple_values
+        $can_status_semantic_have_multiple_values,
+        $children_trackers_without_velocity_semantic
     ) {
-        $this->possible_velocity_field                 = $this->buildPossibleVelocityField(
+        $this->possible_velocity_field   = $this->buildPossibleVelocityField(
             $possible_velocity_field,
             $selected_velocity_field_id
         );
-        $this->csrf_token                                 = $csrf_token;
-        $this->has_semantic_done_defined                  = $has_semantic_done_defined;
-        $this->has_velocity_field                         = $selected_velocity_field_id !== null;
-        $this->tracker_name                               = $tracker->getName();
-        $this->back_url                                   = TRACKER_BASE_URL . "/?" . http_build_query(
+        $this->csrf_token                = $csrf_token;
+        $this->has_semantic_done_defined = $has_semantic_done_defined;
+        $this->has_velocity_field        = $selected_velocity_field_id !== null;
+        $this->tracker_name              = $tracker->getName();
+        $this->back_url                  = TRACKER_BASE_URL . "/?" . http_build_query(
             [
                 "tracker" => $tracker->getId(),
                 "func"    => "admin-semantic"
             ]
         );
 
-        $this->nb_semantic_misconfigured                = count($misconfigured_semantics_for_all_trackers);
-        $this->are_all_backlog_trackers_missconfigured  = $are_all_backlog_trackers_missconfigured;
-        $this->misconfigured_semantics                  = $misconfigured_semantics_for_all_trackers;
-        $this->backlog_trackers                         = $backlog_trackers;
-        $this->tracker_name                             = $tracker->getName();
-        $this->can_status_semantic_have_multiple_values = $can_status_semantic_have_multiple_values;
+        $this->nb_semantic_misconfigured                       = count($misconfigured_semantics_for_all_trackers);
+        $this->are_all_backlog_trackers_missconfigured         = $are_all_backlog_trackers_missconfigured;
+        $this->misconfigured_semantics                         = $misconfigured_semantics_for_all_trackers;
+        $this->backlog_trackers                                = $backlog_trackers;
+        $this->tracker_name                                    = $tracker->getName();
+        $this->can_status_semantic_have_multiple_values        = $can_status_semantic_have_multiple_values;
+        $this->children_trackers_without_velocity_semantic     = $children_trackers_without_velocity_semantic;
+        $this->has_children_trackers_without_velocity_semantic = count($children_trackers_without_velocity_semantic) > 0;
+        $this->nb_children_trackers_without_velocity_semantic  = count($children_trackers_without_velocity_semantic);
     }
 
     private function buildPossibleVelocityField(array $possible_velocity_field, $selected_velocity_field_id)

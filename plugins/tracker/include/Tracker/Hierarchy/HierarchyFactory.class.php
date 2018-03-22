@@ -105,7 +105,7 @@ class Tracker_HierarchyFactory
     /**
      *
      * @param int $tracker_id
-     * @return array
+     * @return Tracker[]
      */
     public function getChildren($tracker_id) {
         if (!isset($this->cache_children_of_tracker[$tracker_id])) {
