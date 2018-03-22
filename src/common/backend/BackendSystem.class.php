@@ -353,43 +353,48 @@ class BackendSystem extends Backend {
         $unix_group_name = $project->getUnixNameMixedCase();
         $ftp_anon_dir    = ForgeConfig::get('ftp_anon_dir_prefix')."/".$unix_group_name;
 
-        if (!is_dir($ftp_anon_dir)) {
-            // Now lets create the group's ftp homedir for anonymous ftp space
-            // This one must be owned by the project gid so that all project
-            // admins can work on it (upload, delete, etc...)
-            if (mkdir($ftp_anon_dir, 02775)) {
-                $this->chown($ftp_anon_dir, "dummy");
-                $this->chgrp($ftp_anon_dir, $unix_group_name);
-                chmod($ftp_anon_dir, 02775);
-            } else {
-                $this->log("Can't create project public ftp dir: $ftp_anon_dir", Backend::LOG_ERROR);
-                return false;
+        if (is_dir(ForgeConfig::get('ftp_anon_dir_prefix'))) {
+            if (!is_dir($ftp_anon_dir)) {
+                // Now lets create the group's ftp homedir for anonymous ftp space
+                // This one must be owned by the project gid so that all project
+                // admins can work on it (upload, delete, etc...)
+                if (mkdir($ftp_anon_dir, 02775)) {
+                    $this->chown($ftp_anon_dir, "dummy");
+                    $this->chgrp($ftp_anon_dir, $unix_group_name);
+                    chmod($ftp_anon_dir, 02775);
+                } else {
+                    $this->log("Can't create project public ftp dir: $ftp_anon_dir", Backend::LOG_ERROR);
+                    return false;
+                }
             }
+        } else {
+            $this->log("Skip create project public ftp dir: $ftp_anon_dir", Backend::LOG_INFO);
         }
-
         return true;
     }
 
     private function createProjectFRSDirectory(Project $project)
     {
         $unix_group_name = $project->getUnixNameMixedCase();
+        $ftp_frs_dir     = ForgeConfig::get('ftp_frs_dir_prefix')."/".$unix_group_name;
 
-        $ftp_frs_dir     = $GLOBALS['ftp_frs_dir_prefix']."/".$unix_group_name;
-
-        if (!is_dir($ftp_frs_dir)) {
-            // Now lets create the group's ftp homedir for anonymous ftp space
-            // This one must be owned by the project gid so that all project
-            // admins can work on it (upload, delete, etc...)
-            if (mkdir($ftp_frs_dir,0771)) {
-                chmod($ftp_frs_dir, 0771);
-                $this->chown($ftp_frs_dir, "dummy");
-                $this->chgrp($ftp_frs_dir, $this->getUnixGroupNameForProject($project));
-            } else {
-                $this->log("Can't create project file release dir: $ftp_frs_dir", Backend::LOG_ERROR);
-                return false;
+        if (is_dir(ForgeConfig::get('ftp_frs_dir_prefix'))) {
+            if (!is_dir($ftp_frs_dir)) {
+                // Now lets create the group's ftp homedir for anonymous ftp space
+                // This one must be owned by the project gid so that all project
+                // admins can work on it (upload, delete, etc...)
+                if (mkdir($ftp_frs_dir, 0771)) {
+                    chmod($ftp_frs_dir, 0771);
+                    $this->chown($ftp_frs_dir, "dummy");
+                    $this->chgrp($ftp_frs_dir, $this->getUnixGroupNameForProject($project));
+                } else {
+                    $this->log("Can't create project file release dir: $ftp_frs_dir", Backend::LOG_ERROR);
+                    return false;
+                }
             }
+        } else {
+            $this->log("Skip create project file release dir: $ftp_frs_dir", Backend::LOG_INFO);
         }
-
         return true;
     }
 

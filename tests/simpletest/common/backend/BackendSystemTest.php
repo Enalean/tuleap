@@ -62,6 +62,7 @@ class BackendSystemTest extends TuleapTestCase {
         ForgeConfig::set('homedir_prefix', $this->getTmpDir() . '/home/users');
         ForgeConfig::set('grpdir_prefix', $this->getTmpDir() . '/home/groups');
         ForgeConfig::set('ftp_anon_dir_prefix', $this->getTmpDir() . '/var/lib/codendi/ftp/pub');
+        ForgeConfig::set('ftp_frs_dir_prefix', $GLOBALS['ftp_frs_dir_prefix']);
 
 
         mkdir(ForgeConfig::get('homedir_prefix'), 0770, true);
