@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -42,16 +42,17 @@ class Manager
     {
         $new_token = $this->token_generator->getNumber();
 
-        return $this->dao->updateTokenForRepositoryId($git_repository->getId(), $new_token);
+        $this->dao->updateTokenForRepositoryId($git_repository->getId(), $new_token);
     }
 
     public function getToken(GitRepository $git_repository)
     {
-        $res = $this->dao->getTokenForRepositoryId($git_repository->getId());
-        if (! $res) {
+        $token = $this->dao->getTokenForRepositoryId($git_repository->getId());
+
+        if ($token === false) {
             return null;
         }
-        $row = $res->getRow();
-        return $row['ci_token'];
+
+        return $token;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,22 +21,21 @@
 
 namespace Tuleap\Git\CIToken;
 
-use \DataAccessObject;
+use Tuleap\DB\DataAccessObject;
 
 class Dao extends DataAccessObject
 {
     public function getTokenForRepositoryId($repository_id)
     {
-        $repository_id = $this->da->escapeInt($repository_id);
-        $sql = "SELECT ci_token FROM plugin_git WHERE repository_id=$repository_id";
-        return $this->retrieve($sql);
+        $sql = 'SELECT ci_token FROM plugin_git WHERE repository_id= ?';
+
+        return $this->getDB()->single($sql, [$repository_id]);
     }
 
     public function updateTokenForRepositoryId($repository_id, $new_token)
     {
-        $repository_id = $this->da->escapeInt($repository_id);
-        $new_token     = $this->da->quoteSmart($new_token);
-        $sql = "UPDATE plugin_git SET ci_token=$new_token WHERE repository_id=$repository_id";
-        return $this->update($sql);
+        $sql = 'UPDATE plugin_git SET ci_token=? WHERE repository_id=?';
+
+        return $this->getDB()->run($sql, $new_token, $repository_id);
     }
 }
