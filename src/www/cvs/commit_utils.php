@@ -1,11 +1,24 @@
 <?php
-//
-// Copyright (c) Enalean, 2016. All Rights Reserved.
-// SourceForge: Breaking Down the Barriers to Open Source Development
-// Copyright 1999-2000 (c) The SourceForge Crew
-// http://sourceforge.net
-//
-// 
+/**
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
+ * Copyright 1999-2000 (c) The SourceForge Crew
+ * SourceForge: Breaking Down the Barriers to Open Source Development
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /*
 
@@ -342,66 +355,65 @@ function makeCvsDirLink($group_id, $filename='', $text, $dir='') {
 // simply add it
 function commit_add_sort_criteria($criteria_list, $order, $msort)
 {
-    //echo "<br>DBG \$criteria_list=$criteria_list,\$order=$order";
+    $found = false;
     if ($criteria_list) {
-	$arr = explode(',',$criteria_list);
-	$i = 0;
-	while (list(,$attr) = each($arr)) {
-	    preg_match("/\s*([^<>]*)([<>]*)/", $attr,$match);
-	    list(,$mattr,$mdir) = $match;
-	    //echo "<br><pre>DBG \$mattr=$mattr,\$mdir=$mdir</pre>";
-	    if ($mattr == $order) {
-		if ( ($mdir == '>') || (!isset($mdir)) ) {
-		    $arr[$i] = $order.'<';
-		} else {
-		    $arr[$i] = $order.'>';
-		}
-		$found = true;
-	    }
-	    $i++;
-	}
+        $arr = explode(',',$criteria_list);
+        $i = 0;
+        while (list(,$attr) = each($arr)) {
+            preg_match("/\s*([^<>]*)([<>]*)/", $attr,$match);
+            list(,$mattr,$mdir) = $match;
+            //echo "<br><pre>DBG \$mattr=$mattr,\$mdir=$mdir</pre>";
+            if ($mattr == $order) {
+                if ( ($mdir == '>') || (!isset($mdir)) ) {
+                    $arr[$i] = $order.'<';
+                } else {
+                    $arr[$i] = $order.'>';
+                }
+                $found = true;
+            }
+            $i++;
+        }
     }
 
-    if (!$found) {
-      if (!$msort) { unset($arr); }
-      $arr[] = $order.'<';
+    if (! $found) {
+        if (! $msort) {
+            unset($arr);
+        }
+        $arr[] = $order . '<';
     }
     
-    //echo "<br>DBG \$arr[]=".join(',',$arr);
-
-    return(join(',', $arr));	
-
+    return(join(',', $arr));
 }
 
 // Transform criteria list to SQL query (+ means ascending
 // - is descending)
 function commit_criteria_list_to_query($criteria_list)
 {
-
     $criteria_list = str_replace('>',' ASC',$criteria_list);
     $criteria_list = str_replace('<',' DESC',$criteria_list);
+
     return $criteria_list;
 }
 
 // Transform criteria list to readable text statement
 // $url must not contain the morder parameter
-function commit_criteria_list_to_text($criteria_list, $url){
-
+function commit_criteria_list_to_text($criteria_list, $url)
+{
     if ($criteria_list) {
+        $arr    = explode(',', $criteria_list);
+        $morder = '';
 
-	$arr = explode(',',$criteria_list);
+        while (list(,$crit) = each($arr)) {
 
-	while (list(,$crit) = each($arr)) {
+            $morder .= ($morder ? ",".$crit : $crit);
+            $attr = str_replace('>','',$crit);
+            $attr = str_replace('<','',$attr);
 
-	    $morder .= ($morder ? ",".$crit : $crit);
-	    $attr = str_replace('>','',$crit);
-	    $attr = str_replace('<','',$attr);
-
-	    $arr_text[] = '<a href="'.$url.'&morder='.$morder.'#results">'.
-		commit_field_get_label($attr).'</a><img src="'.util_get_dir_image_theme().
-		((substr($crit, -1) == '<') ? 'dn' : 'up').
-		'_arrow.png" border="0">';
-	}
+            $arr_text[] = '<a href="'.$url.'&morder='.$morder.'#results">'.
+            commit_field_get_label($attr).'</a><img src="'.util_get_dir_image_theme().
+            ((substr($crit, -1) == '<') ? 'dn' : 'up').
+            '_arrow.png" border="0">';
+        }
     }
 
     return join(' > ',$arr_text);
@@ -746,9 +758,11 @@ function cvs_get_revisions(&$project, $offset, $chunksz, $_tag = 100, $_branch =
             "$commit_str ".
         "$srch_str ".
         "$branch_str ";
-    
-     
-    if (!$pv) { $limit = " LIMIT $offset,$chunksz";}
+
+    $limit = '';
+    if (! $pv) {
+        $limit = " LIMIT $offset,$chunksz";
+    }
     
     if (!$order_by) {
       $order_by = " ORDER BY id desc, f_when desc ";
