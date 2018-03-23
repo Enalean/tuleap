@@ -76,9 +76,9 @@ _checkMysqlMode() {
 
     local sql_mode=$(_mysqlExecute ${1} ${2} "$(_sqlShowMode)")
 
-    if [[ ${sql_mode#* } =~ STRICT_.*_TABLES ]]; then
+    if [[ ${sql_mode#* } =~ STRICT_.*_TABLES ]] || [[ ${sql_mode#* } =~ ONLY_FULL_GROUP_BY ]]; then
         _errorMessage "MySQL: unsupported sql_mode: ${sql_mode//sql_mode/}"
-        _errorMessage "Please remove STRICT_ALL_TABLES or STRICT_TRANS_TABLES from my.cnf"
+        _errorMessage "Please remove STRICT_ALL_TABLES or STRICT_TRANS_TABLES and ONLY_FULL_GROUP_BY from my.cnf"
         exit 1
     else
         _infoMessage "Sql_mode : ${sql_mode//sql_mode/}"
