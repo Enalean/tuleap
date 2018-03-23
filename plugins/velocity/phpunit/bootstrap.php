@@ -19,3 +19,4 @@
  */
 
 require_once __DIR__ . '/../include/velocityPlugin.class.php';
+require_once __DIR__ . '/../../tracker/include/autoload.php';

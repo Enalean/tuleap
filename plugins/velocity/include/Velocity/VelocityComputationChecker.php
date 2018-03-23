@@ -23,14 +23,25 @@ namespace Tuleap\Velocity;
 use Tracker_Semantic_Status;
 use Tuleap\AgileDashboard\Semantic\SemanticDone;
 use Tuleap\Tracker\Workflow\BeforeEvent;
+use Tuleap\Velocity\Semantic\SemanticVelocity;
 
 class VelocityComputationChecker
 {
     public function shouldComputeCapacity(
         Tracker_Semantic_Status $semantic_status,
         SemanticDone $semantic_done,
+        SemanticVelocity $semantic_velocity,
         BeforeEvent $before_event
     ) {
+        if (! $semantic_status->getFieldId() || $semantic_status->getField()->isMultiple()) {
+            return false;
+        }
+
+        $field_id = $semantic_velocity->getFieldId();
+        if (! $semantic_done->isSemanticDefined() || ! $field_id) {
+            return false;
+        }
+
         $last_changeset_semantic_status_values = $this->getLastChangesetValues($semantic_status, $before_event);
         $new_semantic_status_values            = $this->getNewChangesetValues($semantic_status, $before_event);
 

@@ -20,8 +20,8 @@
 
 namespace Tuleap\Tracker\Workflow;
 
+use PFUser;
 use Tracker_Artifact;
-use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field;
 use Tuleap\Event\Dispatchable;
 
@@ -42,13 +42,19 @@ class BeforeEvent implements Dispatchable
      * @var array
      */
     private $fields_data;
+    /**
+     * @var PFUser
+     */
+    private $user;
 
     public function __construct(
         Tracker_Artifact $artifact,
-        array $fields_data
+        array $fields_data,
+        PFUser $user
     ) {
         $this->artifact    = $artifact;
         $this->fields_data = $fields_data;
+        $this->user        = $user;
     }
 
     /**
@@ -76,5 +82,13 @@ class BeforeEvent implements Dispatchable
     public function shouldBypassPermissions(Tracker_FormElement_Field $field)
     {
         return isset($this->should_bypass_permissions[$field->getId()]);
+    }
+
+    /**
+     * @return PFUser
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 }

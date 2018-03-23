@@ -34,6 +34,7 @@ use Tuleap\Velocity\VelocityChartPresenter;
 use Tuleap\Velocity\VelocityComputationChecker;
 use Tuleap\Velocity\VelocityDao;
 use Tuleap\Velocity\VelocityRepresentationBuilder;
+use Tuleap\Velocity\VelocityComputation;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once 'constants.php';
@@ -146,50 +147,24 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
             return;
         }
 
+        $velocity_computation = new VelocityComputation(
+            $this->getVelocityCalculator(),
+            new VelocityComputationChecker()
+        );
+
+        $tracker = $before_event->getArtifact()->getTracker();
+
+        $semantic_status   = Tracker_Semantic_Status::load($tracker);
         $semantic_done     = SemanticDone::load($tracker);
         $semantic_velocity = SemanticVelocity::load($tracker);
 
-        $field_id = $semantic_velocity->getFieldId();
-        if (! $semantic_status->getFieldId() || ! $semantic_done->isSemanticDefined() || ! $field_id) {
-            return;
-        }
-
-        $computation_checker = new VelocityComputationChecker();
-        if (! $computation_checker->shouldComputeCapacity($semantic_status, $semantic_done, $before_event)) {
-            return;
-        }
-
-        $artifact_id  = $before_event->getArtifact()->getId();
-        $changeset    = $before_event->getArtifact()->getLastChangeset();
-        $changeset_id = $changeset ? $changeset->getId() : 0;
-
-        if (! isset($this->already_computed[$artifact_id][$changeset_id])) {
-            $calculator                                          = $this->getVelocityCalculator();
-            $computed_velocity                                   = $calculator->calculate($before_event->getArtifact());
-            $this->already_computed[$artifact_id][$changeset_id] = $computed_velocity;
-
-            $current_user = UserManager::instance()->getCurrentUser();
-            $factory      = Tracker_FormElementFactory::instance();
-            $field        = $factory->getFormElementById($field_id);
-
-            if ($field->userCanRead($current_user)) {
-                $GLOBALS['Response']->addFeedback(
-                    Feedback::INFO,
-                    sprintf(
-                        dgettext(
-                            'tuleap-velocity',
-                            'The field %s will be automatically set to %s'
-                        ),
-                        $field->getName(),
-                        $computed_velocity
-                    )
-                );
-            }
-        } else {
-            $computed_velocity = $this->already_computed[$artifact_id][$changeset_id];
-        }
-
-        $before_event->forceFieldData($field_id, $computed_velocity);
+        $velocity_computation->compute(
+            $before_event,
+            $this->already_computed,
+            $semantic_status,
+            $semantic_done,
+            $semantic_velocity
+        );
     }
 
     /**

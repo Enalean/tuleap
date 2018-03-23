@@ -320,7 +320,7 @@ class Workflow {
             }
         }
 
-        $this->before_event = new BeforeEvent($artifact, $fields_data);
+        $this->before_event = new BeforeEvent($artifact, $fields_data, $current_user);
         EventManager::instance()->processEvent($this->before_event);
 
         $fields_data = $this->before_event->getFieldsData();
