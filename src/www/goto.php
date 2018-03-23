@@ -155,7 +155,11 @@ if ($request->isAjax()) {
             $rev_id = $request->get('val');
             $result = svn_data_get_revision_detail($group_id, 0, $rev_id);
             $date = format_date($GLOBALS['Language']->getText('system', 'datefmt'), db_result($result, 0, 'date'));
-            $list_log = util_line_wrap(db_result($result, 0, 'description'), $group_id);
+
+            $description = db_result($result, 0, 'description');
+            $description = htmlspecialchars_decode($description, ENT_QUOTES);
+            $list_log    = util_line_wrap($description);
+
             echo '<table>';
             echo ' <tr>';
             echo '  <td><strong>' . $GLOBALS['Language']->getText('svn_utils','date') . ':</strong></td>';
