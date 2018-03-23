@@ -1,4 +1,4 @@
-{{# are_all_backlog_trackers_missconfigured }}
+{{^ has_at_least_one_tracker_correctly_configured }}
     <ul class="feedback_error">
         {{# dngettext }}
             tuleap-velocity |
@@ -6,8 +6,8 @@
             Artifact velocity will always be set to 0, because no backlog tracker have the following semantics: |
             {{ nb_semantic_misconfigured }}
         {{/ dngettext }}
-        {{# misconfigured_semantics }}
+        {{# semantics_not_correctly_set }}
             <b>{{{ . }}}</b><span class="misconfigured-semantic-display-comma">, </span>
-        {{/ misconfigured_semantics }}
+        {{/ semantics_not_correctly_set }}
     </ul>
-{{/ are_all_backlog_trackers_missconfigured }}
+{{/ has_at_least_one_tracker_correctly_configured }}

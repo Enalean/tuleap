@@ -27,11 +27,11 @@ use Tuleap\AgileDashboard\Semantic\SemanticDone;
 class SemanticVelocityFactory
 {
     /**
-     * @var SemanticFormatter
+     * @var BacklogRequiredTrackerCollectionFormatter
      */
     private $semantic_formatter;
 
-    public function __construct(SemanticFormatter $semantic_formatter)
+    public function __construct(BacklogRequiredTrackerCollectionFormatter $semantic_formatter)
     {
         $this->semantic_formatter = $semantic_formatter;
     }
@@ -47,5 +47,22 @@ class SemanticVelocityFactory
         $field = $mapping[$ref];
 
         return new SemanticVelocity($tracker, $semantic_done, $this->semantic_formatter, $field);
+    }
+
+    public function extractAndFormatMisconfiguredVelocity(array $trackers)
+    {
+        $collection = new ChildrenRequiredTrackerCollection();
+
+        foreach ($trackers as $tracker) {
+            $velocity         = SemanticVelocity::load($tracker);
+            $required_tracker = new ChildrenRequiredTracker(
+                $tracker,
+                ! $velocity->getVelocityField()
+            );
+
+            $collection->addChildrenRequiredTracker($required_tracker);
+        }
+
+        return $collection;
     }
 }

@@ -18,6 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__ . '/../include/velocityPlugin.class.php';
-require_once __DIR__ . '/../../agiledashboard/include/autoload.php';
-require_once __DIR__ . '/../../tracker/include/autoload.php';
+namespace Tuleap\Velocity\Semantic;
+
+class VelocitySemanticChecker
+{
+    public function hasAtLeastOneTrackerCorrectlyConfigured(
+        BacklogRequiredTrackerCollection $required_tracker_collection,
+        ChildrenRequiredTrackerCollection $children_trackers_without_velocity_semantic
+    ) {
+        if (count($children_trackers_without_velocity_semantic->getChildrenTrackers()) > 0 && $children_trackers_without_velocity_semantic->hasAtLeastOneChildrenWithVelocitySemanticForBacklogTrackers()) {
+            return true;
+        }
+
+        return ! $required_tracker_collection->areAllBacklogTrackersMisconfigured();
+    }
+}

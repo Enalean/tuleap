@@ -18,6 +18,38 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__ . '/../include/velocityPlugin.class.php';
-require_once __DIR__ . '/../../agiledashboard/include/autoload.php';
-require_once __DIR__ . '/../../tracker/include/autoload.php';
+namespace Tuleap\Velocity\Semantic;
+
+use Tracker;
+
+class ChildrenRequiredTracker
+{
+    /**
+     * @var Tracker
+     */
+    private $tracker;
+    /**
+     * @var bool
+     */
+    private $is_velocity_semantic_missing;
+
+
+    public function __construct(Tracker $tracker, $is_velocity_semantic_missing)
+    {
+        $this->tracker                      = $tracker;
+        $this->is_velocity_semantic_missing = $is_velocity_semantic_missing;
+    }
+
+    /**
+     * @return Tracker
+     */
+    public function getTracker()
+    {
+        return $this->tracker;
+    }
+
+    public function isVelocitySemanticMissing()
+    {
+        return $this->is_velocity_semantic_missing;
+    }
+}

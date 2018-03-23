@@ -18,6 +18,33 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__ . '/../include/velocityPlugin.class.php';
-require_once __DIR__ . '/../../agiledashboard/include/autoload.php';
-require_once __DIR__ . '/../../tracker/include/autoload.php';
+namespace Tuleap\Velocity\Semantic;
+
+use PlanningFactory;
+use Tracker;
+
+class BacklogRetriever
+{
+    /**
+     * @var PlanningFactory
+     */
+    private $planning_factory;
+
+    public function __construct(PlanningFactory $planning_factory)
+    {
+        $this->planning_factory = $planning_factory;
+    }
+
+    /**
+     * @return Tracker[]
+     */
+    public function getBacklogTrackers(Tracker $tracker)
+    {
+        $planning_trackers = $this->planning_factory->getPlanningByPlanningTracker($tracker);
+        if (! $planning_trackers) {
+            return [];
+        }
+
+        return $planning_trackers->getBacklogTrackers();
+    }
+}

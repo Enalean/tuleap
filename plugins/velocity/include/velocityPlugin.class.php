@@ -27,12 +27,10 @@ use Tuleap\AgileDashboard\Semantic\SemanticDoneFactory;
 use Tuleap\AgileDashboard\Semantic\SemanticDoneValueChecker;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Tracker\Workflow\BeforeEvent;
-use Tuleap\Velocity\InvalidArtifactsPresenter;
-use Tuleap\Velocity\Semantic\SemanticFormatter;
+use Tuleap\Velocity\Semantic\BacklogRequiredTrackerCollectionFormatter;
 use Tuleap\Velocity\Semantic\SemanticVelocity;
 use Tuleap\Velocity\Semantic\SemanticVelocityFactory;
 use Tuleap\Velocity\VelocityChartPresenter;
-use Tuleap\Velocity\VelocityCollection;
 use Tuleap\Velocity\VelocityComputation;
 use Tuleap\Velocity\VelocityComputationChecker;
 use Tuleap\Velocity\VelocityDao;
@@ -237,7 +235,7 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
         $mapping = $parameters['xml_mapping'];
 
         if ($type == SemanticVelocity::NAME) {
-            $factory                = new SemanticVelocityFactory(new SemanticFormatter());
+            $factory                = new SemanticVelocityFactory(new BacklogRequiredTrackerCollectionFormatter());
             $parameters['semantic'] = $factory->getInstanceFromXML($xml, $tracker, $mapping);
         }
     }
