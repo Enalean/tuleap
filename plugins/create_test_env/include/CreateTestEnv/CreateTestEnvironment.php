@@ -32,9 +32,14 @@ class CreateTestEnvironment
      * @var \Project
      */
     private $project;
+    /**
+     * @var MattermostNotifier
+     */
+    private $notifier;
 
-    public function __construct($output_dir)
+    public function __construct(MattermostNotifier $notifier, $output_dir)
     {
+        $this->notifier   = $notifier;
         $this->output_dir = $output_dir;
     }
 
@@ -62,8 +67,9 @@ class CreateTestEnvironment
         $this->execImport();
 
         $user_manager = \UserManager::instance();
-        $this->user    = $user_manager->getUserByUserName($create_test_user->getUserName());
+        $this->user   = $user_manager->getUserByUserName($create_test_user->getUserName());
         $this->user->setPassword((new \RandomNumberGenerator())->getNumber());
+        $this->user->setExpiryDate(strtotime('+3 week'));
         $user_manager->updateDb($this->user);
 
         $this->project = \ProjectManager::instance()->getProjectByUnixName($create_test_project->getProjectUnixName());
@@ -71,9 +77,8 @@ class CreateTestEnvironment
             throw new Exception\ProjectNotCreatedException();
         }
 
-        $notifier = new MattermostNotifier();
         $base_url = \HTTPRequest::instance()->getServerUrl();
-        $notifier->notify("New project created for {$this->user->getRealName()} ({$this->user->getEmail()}): $base_url/projects/{$this->project->getUnixNameLowerCase()}. #{$this->user->getUnixName()}");
+        $this->notifier->notify("New project created for {$this->user->getRealName()} ({$this->user->getEmail()}): $base_url/projects/{$this->project->getUnixNameLowerCase()}. #{$this->user->getUnixName()}");
     }
 
     public function getUser()
