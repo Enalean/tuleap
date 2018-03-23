@@ -20,11 +20,6 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-msgid ""
-"Choose the \"velocity\" field that will be used for computation of velocity "
-"chart."
-msgstr ""
-
 msgid "Define the field to use to compute velocity."
 msgstr ""
 
