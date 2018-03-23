@@ -54,8 +54,10 @@ class DynamicUserCreatorTest extends TestCase
         $dynamic_credential_session->shouldReceive('getAssociatedCredential')->andReturn($credential);
         $user_manager = \Mockery::mock(\UserManager::class);
         $GLOBALS['Language']->shouldReceive('getLanguageFromAcceptLanguage');
+        $clean_up_function = function () {
+        };
 
-        $dynamic_user_creator = new DynamicUserCreator($dynamic_credential_session, $user_manager, 'Realname');
+        $dynamic_user_creator = new DynamicUserCreator($dynamic_credential_session, $user_manager, 'Realname', $clean_up_function);
 
         $user = $dynamic_user_creator->getDynamicUser([]);
         $this->assertTrue($user->isLoggedIn());
@@ -67,8 +69,10 @@ class DynamicUserCreatorTest extends TestCase
         $dynamic_credential_session->shouldReceive('getAssociatedCredential')->andThrow(DynamicCredentialSessionNotInitializedException::class);
         $user_manager = \Mockery::mock(\UserManager::class);
         $GLOBALS['Language']->shouldReceive('getLanguageFromAcceptLanguage');
+        $clean_up_function = function () {
+        };
 
-        $dynamic_user_creator = new DynamicUserCreator($dynamic_credential_session, $user_manager, 'Realname');
+        $dynamic_user_creator = new DynamicUserCreator($dynamic_credential_session, $user_manager, 'Realname', $clean_up_function);
 
         $user = $dynamic_user_creator->getDynamicUser([]);
         $this->assertFalse($user->isLoggedIn());
@@ -76,6 +80,7 @@ class DynamicUserCreatorTest extends TestCase
 
     /**
      * @runInSeparateProcess
+     * @expectedException \Tuleap\DynamicCredentials\User\InvalidStateCleanUpDoesNotInterruptException
      */
     public function testCurrentUserIsLogoutWhenCredentialIsExpired()
     {
@@ -85,14 +90,23 @@ class DynamicUserCreatorTest extends TestCase
         $dynamic_credential_session->shouldReceive('getAssociatedCredential')->andReturn($credential);
         $user_manager = \Mockery::mock(\UserManager::class);
         $user_manager->shouldReceive('logout');
+        $GLOBALS['Language']->shouldReceive('getLanguageFromAcceptLanguage');
+        $clean_up = \Mockery::mock();
+        $clean_up->shouldReceive('clean_up_expired')->once();
 
-        $dynamic_user_creator = new DynamicUserCreator($dynamic_credential_session, $user_manager, 'Realname');
+        $dynamic_user_creator = new DynamicUserCreator(
+            $dynamic_credential_session,
+            $user_manager,
+            'Realname',
+            [$clean_up, 'clean_up_expired']
+        );
 
         $dynamic_user_creator->getDynamicUser([]);
     }
 
     /**
      * @runInSeparateProcess
+     * @expectedException \Tuleap\DynamicCredentials\User\InvalidStateCleanUpDoesNotInterruptException
      */
     public function testCurrentUserIsLogoutWhenCredentialIsNotFound()
     {
@@ -100,8 +114,16 @@ class DynamicUserCreatorTest extends TestCase
         $dynamic_credential_session->shouldReceive('getAssociatedCredential')->andThrow(CredentialNotFoundException::class);
         $user_manager = \Mockery::mock(\UserManager::class);
         $user_manager->shouldReceive('logout');
+        $GLOBALS['Language']->shouldReceive('getLanguageFromAcceptLanguage');
+        $clean_up = \Mockery::mock();
+        $clean_up->shouldReceive('clean_up_not_found')->once();
 
-        $dynamic_user_creator = new DynamicUserCreator($dynamic_credential_session, $user_manager, 'Realname');
+        $dynamic_user_creator = new DynamicUserCreator(
+            $dynamic_credential_session,
+            $user_manager,
+            'Realname',
+            [$clean_up, 'clean_up_not_found']
+        );
 
         $dynamic_user_creator->getDynamicUser([]);
     }
