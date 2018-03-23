@@ -1,0 +1,53 @@
+<div id="timetracking-add-time-modal"
+     class="modal hide fade"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="timetracking-add-time-modal-title"
+     aria-hidden="true"
+>
+    <div class="modal-header">
+        <h3>{{# dgettext }} tuleap-timetracking | Add a new time {{/ dgettext }}</h3>
+    </div>
+
+    <form action="{{ add_url }}" method="post">
+        <div class="modal-body">
+            {{# csrf_token }}
+                {{> csrf_token_input }}
+            {{/ csrf_token }}
+            <label>{{# dgettext }} tuleap-timetracking | Step {{/ dgettext }}</label>
+            <input type="text" name="timetracking-new-time-step">
+
+            <label class="timetracking-add-time-mandatory-field">{{# dgettext }} tuleap-timetracking | Date {{/ dgettext }}</label>
+            <div class="input-prepend dropdown input-append date">
+                <span class="tuleap_field_date">
+                    <input name="timetracking-new-time-date"
+                           id="timetracking-new-time-date"
+                           data-format="yyyy-MM-dd"
+                           type="text"
+                           value="{{ default_date_value }}">
+                    </input>
+                    <span class="add-on add-on-calendar">
+                        <i class="icon-calendar" data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                    </span>
+                </span>
+            </div>
+
+            <label class="timetracking-add-time-mandatory-field">{{# dgettext }} tuleap-timetracking | Time {{/ dgettext }}</label>
+            <input type="text"
+                   name="timetracking-new-time-time"
+                   placeholder="{{# dgettext }} tuleap-timetracking | hh:mm {{/ dgettext }}"
+                   pattern="[0-9]{2}:[0-9]{2}"
+                   required
+            >
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">{{# gettext }}Close{{/ gettext }}</button>
+            <input type="submit"
+                   class="btn btn-primary"
+                   name="timetracking-add-time"
+                   value="{{# dgettext }} tuleap-timetracking | Add time {{/ dgettext }}"
+            >
+        </div>
+    </form>
+</div>

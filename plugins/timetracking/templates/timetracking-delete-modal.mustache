@@ -1,0 +1,34 @@
+<div id="timetracking-delete-{{ id }}"
+    class="modal hide fade modal-danger"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="timetracking-delete-title"
+    aria-hidden="true"
+>
+
+    <div class="modal-header modal-header-error">
+        <a role="button" class="close" data-dismiss="modal">×</a>
+        <h3><i class="icon-trash"></i> {{# dgettext }} tuleap-timetracking | Delete the time {{/ dgettext }}</h3>
+    </div>
+
+    <div class="modal-body">
+        <p>{{# dgettext }} tuleap-timetracking | You are about to delete this time. Please confirm your action. {{/ dgettext }}</p>
+    </div>
+
+    <div class="modal-footer">
+        <form method="POST" action="{{ base_delete_url }}">
+            {{# csrf_token }}
+                {{> csrf_token_input }}
+            {{/ csrf_token }}
+
+            <input type="hidden" name="time-id" value="{{ id }}">
+
+            <button class="btn" data-dismiss="modal" aria-hidden="true">
+                {{# dgettext }} tuleap-timetracking | Close {{/ dgettext }}
+            </button>
+            <button type="submit" class="btn btn-danger">
+                <i class="icon-trash"></i> {{# dgettext }} tuleap-timetracking | Delete {{/ dgettext }}
+            </button>
+        </form>
+    </div>
+</div>

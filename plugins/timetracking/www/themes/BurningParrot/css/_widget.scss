@@ -1,0 +1,76 @@
+/**
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.dashboard-widget-content-timetracking {
+    margin: 0;
+}
+
+.timetracking-reading-mode {
+    display: flex;
+
+    &:hover {
+        background-color: transparentize($tlp-theme-color, .9);
+        cursor: pointer;
+    }
+}
+
+
+.timetracking-writing-mode-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: $tlp-spacing;
+}
+
+.timetracking-writing-mode-selected-dates,
+.timetracking-reading-mode-dates {
+    display: flex;
+    margin: $tlp-spacing $tlp-spacing 0;
+}
+
+.timetracking-writing-mode-selected-date:last-of-type,
+.timetracking-reading-date:last-of-type {
+    margin: 0 0 0 $tlp-spacing;
+}
+
+.timetracking-writing-search {
+    margin: 0 0 0 $tlp-spacing;
+}
+
+.timetracking-artifacts-table {
+    margin: $tlp-spacing;
+}
+
+.timetracking-time-tooltip {
+    margin: 0 0 0 5px;
+    vertical-align: middle;
+}
+
+.timetracking-badge-direct-link-to-artifact {
+    margin: 0 5px 0 0;
+}
+
+.timetracking-loader {
+    height: 100px;
+    background: url('/themes/BurningParrot/images/spinner.gif') no-repeat center center;
+}
+
+.timetracking-total-sum {
+    white-space: nowrap;
+}

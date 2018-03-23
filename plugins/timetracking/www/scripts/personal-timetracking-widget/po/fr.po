@@ -1,0 +1,46 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Thomas Gorka <thomas.gorka@enalean.com>\n"
+"Language-Team: \n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.0.6\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+
+msgid "An error occured"
+msgstr "Une erreur est survenue"
+
+msgid "Artifact"
+msgstr "Artéfact"
+
+msgid "Cancel"
+msgstr "Annuler"
+
+msgid "From"
+msgstr "Du"
+
+msgid "Load more"
+msgstr "Voir plus"
+
+msgid "No tracked time have been found for this period"
+msgstr "Aucun temps suivi n'a été trouvé pour cette période"
+
+msgid "Project"
+msgstr "Projet"
+
+msgid "Search"
+msgstr "Rechercher"
+
+msgid "The time is displayed in hours:minutes"
+msgstr "Le temps est affiché en heures:minutes"
+
+msgid "Time"
+msgstr "Temps"
+
+msgid "To"
+msgstr "Au"

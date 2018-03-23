@@ -426,6 +426,7 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/IM
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/label
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/crosstracker
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/timetracking
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/dynamic_credentials
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/velocity
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/create_test_env
