@@ -86,12 +86,12 @@ function createBurndownChart({
     const svg_burndown = buildChartLayout(
         chart_container,
         chart_props,
-        chart_legends,
-        getLayoutBadgeData(),
         {
             x_scale,
             y_scale
         },
+        chart_legends,
+        getLayoutBadgeData(),
         timeframe_granularity
     );
 

@@ -53,21 +53,14 @@ msgstr ""
 msgid "Define the field to use to compute velocity."
 msgstr "Définissez le champ à utiliser pour calculer la vélocité"
 
-msgid "Duration"
-msgstr "Durée"
-
 msgid "Field used for velocity computation:"
 msgstr "Champ utilisé pour le calcul de la vélocité:"
 
 msgid "Following tracker should have <b>velocity</b> semantic:"
 msgid_plural "Following trackers should have <b>velocity</b> semantic:"
-msgstr[0] ""
-"L'outil de suivi suivant n'a pas de sémantique <b>vélocité</b>."
+msgstr[0] "L'outil de suivi suivant n'a pas de sémantique <b>vélocité</b>."
 msgstr[1] ""
 "Les outils de suivi suivants n'ont pas de sémantique <b>vélocité</b>."
-
-msgid "Name"
-msgstr "Nom"
 
 msgid "No field defined for velocity computation."
 msgstr "Aucun champ défini pour le calcul de la vélocité"
@@ -87,9 +80,6 @@ msgstr "La sémantique finie n'est pas définie"
 
 msgid "Semantic updated successfully."
 msgstr "La sémantique a été correctement sauvegardée"
-
-msgid "Start date"
-msgstr "Date de départ"
 
 msgid ""
 "The <i>velocity</i> of this tracker will be represented in the Agile "

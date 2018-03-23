@@ -1,6 +1,9 @@
-<?php
-/**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+/*
+ * Copyright Enalean (c) 2018. All rights reserved.
+ *
+ * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Enalean SAS. All other trademarks or names are properties of their respective
+ * owners.
  *
  * This file is a part of Tuleap.
  *
@@ -18,22 +21,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Velocity;
+import Gettext             from 'node-gettext';
+import french_translations from '../po/fr.po';
 
-class VelocityChartPresenter
-{
-    /**
-     * @var array
-     */
-    public $backlog_items_representation;
-    /**
-     * @var bool
-     */
-    public $has_backlog_items_with_computed_velocity;
+const gettext_provider = new Gettext();
+gettext_provider.addTranslations('fr_FR', 'velocity-chart', french_translations);
+gettext_provider.setTextDomain('velocity-chart');
 
-    public function __construct(array $backlog_items_representation)
-    {
-        $this->backlog_items_representation             = json_encode($backlog_items_representation);
-        $this->has_backlog_items_with_computed_velocity = count($backlog_items_representation) > 0;
-    }
-}
+export { gettext_provider };

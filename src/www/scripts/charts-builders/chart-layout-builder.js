@@ -51,9 +51,9 @@ function buildChartLayout(
         graph_height,
         margins,
     },
+    scales,
     legend_config,
     badge_data,
-    scales,
     timeframe_granularity
 ) {
     gettext_provider.setLocale(chart_container.dataset.locale);
@@ -66,15 +66,18 @@ function buildChartLayout(
         timeframe_granularity
     );
     drawAxis(layout, axes, graph_height, margins);
-    addLegend(
-        layout,
-        graph_width,
-        margins,
-        badge_data,
-        legend_config
-    );
 
-    ticksEvery(layout, timeframe_granularity);
+    if (legend_config) {
+        addLegend(
+            layout,
+            graph_width,
+            margins,
+            badge_data,
+            legend_config
+        );
+
+        ticksEvery(layout, timeframe_granularity);
+    }
 
     return layout;
 }
@@ -277,6 +280,10 @@ function canFirstLabelOverlapSecondLabel(first_tick, second_tick, timeframe_gran
 }
 
 function getTickFormatter(timeframe_granularity) {
+    if (! timeframe_granularity) {
+        return tick_label => tick_label;
+    }
+
     const tick_format = localized_date_formats[ timeframe_granularity ];
 
     if (timeframe_granularity === WEEK) {

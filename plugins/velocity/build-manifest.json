@@ -10,6 +10,40 @@
             ],
             "target_dir": "../../src/www/assets/velocity/FlamingParrot",
             "is_revisioned": true
+        },
+        "BurningParrot": {
+            "files": [
+                "www/themes/BurningParrot/css/velocity-blue.scss",
+                "www/themes/BurningParrot/css/velocity-blue-condensed.scss",
+                "www/themes/BurningParrot/css/velocity-green.scss",
+                "www/themes/BurningParrot/css/velocity-green-condensed.scss",
+                "www/themes/BurningParrot/css/velocity-grey.scss",
+                "www/themes/BurningParrot/css/velocity-grey-condensed.scss",
+                "www/themes/BurningParrot/css/velocity-orange.scss",
+                "www/themes/BurningParrot/css/velocity-orange-condensed.scss",
+                "www/themes/BurningParrot/css/velocity-purple.scss",
+                "www/themes/BurningParrot/css/velocity-purple-condensed.scss",
+                "www/themes/BurningParrot/css/velocity-red.scss",
+                "www/themes/BurningParrot/css/velocity-red-condensed.scss"
+            ],
+            "includes": [
+                "../../src/www/themes/common/tlp/src/scss",
+                "../../src/www/themes/BurningParrot/css/includes"
+            ],
+            "watched_includes": [
+                "www/themes/BurningParrot/css/**/_*.scss"
+            ],
+            "target_dir": "../../src/www/assets/velocity/BurningParrot",
+            "is_revisioned": true
         }
-    }
+    },
+    "gettext-js": {
+        "velocity-chart": {
+            "src": "www/scripts/velocity-chart/src",
+            "po" : "www/scripts/velocity-chart/po"
+        }
+    },
+    "components": [
+        "plugins/velocity/www/scripts"
+    ]
 }
