@@ -38,12 +38,21 @@ class DynamicUserCreator
      * @var string
      */
     private $user_realname;
+    /**
+     * @var callable
+     */
+    private $invalid_state_clean_up;
 
-    public function __construct(DynamicCredentialSession $dynamic_credential_session, \UserManager $user_manager, $user_realname)
-    {
+    public function __construct(
+        DynamicCredentialSession $dynamic_credential_session,
+        \UserManager $user_manager,
+        $user_realname,
+        callable $invalid_state_clean_up
+    ) {
         $this->dynamic_credential_session = $dynamic_credential_session;
         $this->user_manager               = $user_manager;
         $this->user_realname              = $user_realname;
+        $this->invalid_state_clean_up     = $invalid_state_clean_up;
     }
 
     /**
@@ -53,14 +62,13 @@ class DynamicUserCreator
     {
         try {
             $credential = $this->dynamic_credential_session->getAssociatedCredential();
+            if ($credential->hasExpired()) {
+                $this->terminateInvalidState();
+            }
         } catch (CredentialNotFoundException $ex) {
             $this->terminateInvalidState();
         } catch (DynamicCredentialSessionNotInitializedException $ex) {
             return new DynamicUser($this->user_realname, $row, false);
-        }
-
-        if ($credential->hasExpired()) {
-            $this->terminateInvalidState();
         }
 
         return new DynamicUser($this->user_realname, $row, true);
@@ -72,8 +80,8 @@ class DynamicUserCreator
         if (! $is_trying_to_logout) {
             $is_trying_to_logout = true;
             $this->user_manager->logout();
-            header('Location: /');
-            exit();
+            call_user_func($this->invalid_state_clean_up);
+            throw new InvalidStateCleanUpDoesNotInterruptException();
         }
     }
 }
