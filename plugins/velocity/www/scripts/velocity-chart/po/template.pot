@@ -1,0 +1,6 @@
+msgid "MM/DD"
+msgstr ""
+
+#, javascript-format
+msgid "Velocity: %s"
+msgstr ""
