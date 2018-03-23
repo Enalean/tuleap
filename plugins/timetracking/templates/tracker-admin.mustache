@@ -1,0 +1,60 @@
+<h1>{{# dgettext }} tuleap-timetracking | Time tracking {{/ dgettext }}</h1>
+
+<form action="{{ form_url }}" id="timetracking-admin-form" method="POST">
+    {{# csrf_token }}
+        {{> csrf_token_input }}
+    {{/ csrf_token }}
+
+    <div id="timetracking-admin-enable">
+        <label class="checkbox" for="enable_timetracking">
+            <input type="checkbox"
+                   id="enable_timetracking"
+                   name="enable_timetracking"
+                {{# is_timetracking_enabled }} checked="checked" {{/ is_timetracking_enabled }}
+            /> {{# dgettext }} tuleap-timetracking | Enable time tracking for this tracker {{/ dgettext }}
+        </label>
+    </div>
+
+    {{# is_timetracking_enabled }}
+        <h3>{{# dgettext }} tuleap-timetracking | Permissions {{/ dgettext }}</h3>
+
+        <table class="table" id="timetracking-admin-rights">
+            <thead>
+                <tr>
+                    <th>{{# dgettext }} tuleap-timetracking | Read {{/ dgettext }}</th>
+                    <th>{{# dgettext }} tuleap-timetracking | Write {{/ dgettext }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <select
+                                title="{{# dgettext }} tuleap-timetracking | Read {{/ dgettext }}"
+                                multiple="multiple"
+                                name="read_ugroups[]"
+                                size="8"
+                        >
+                            {{# read_ugroups }}
+                                <option value="{{ value }}" {{# selected }} selected {{/ selected }}>{{ label }}</option>
+                            {{/ read_ugroups }}
+                        </select>
+                    </td>
+                    <td>
+                        <select
+                                title="{{# dgettext }} tuleap-timetracking | Write {{/ dgettext }}"
+                                multiple="multiple"
+                                name="write_ugroups[]"
+                                size="8"
+                        >
+                            {{# write_ugroups }}
+                                <option value="{{ value }}" {{# selected }} selected {{/ selected }}>{{ label }}</option>
+                            {{/ write_ugroups }}
+                        </select>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    {{/ is_timetracking_enabled }}
+
+    <button type="submit" class="btn btn-primary"><i class="icon-save"></i> {{# dgettext }} tuleap-timetracking | Save modifications {{/ dgettext }}</button>
+</form>

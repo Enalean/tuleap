@@ -1,0 +1,32 @@
+msgid "An error occured"
+msgstr ""
+
+msgid "Artifact"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid "From"
+msgstr ""
+
+msgid "Load more"
+msgstr ""
+
+msgid "No tracked time have been found for this period"
+msgstr ""
+
+msgid "Project"
+msgstr ""
+
+msgid "Search"
+msgstr ""
+
+msgid "The time is displayed in hours:minutes"
+msgstr ""
+
+msgid "Time"
+msgstr ""
+
+msgid "To"
+msgstr ""
