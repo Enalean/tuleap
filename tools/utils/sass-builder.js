@@ -68,7 +68,7 @@ function cleanAndBuildSass(sass_task_name, base_dir, scss_hash, dependent_tasks)
                 return cleanSass(base_dir, theme.files);
             }
 
-            return del(theme.target_dir);
+            return del(path.resolve(base_dir, theme.target_dir));
         });
 
         return Promise.all(promises);
