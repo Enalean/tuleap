@@ -24,7 +24,13 @@ namespace Tuleap\CreateTestEnv;
 class CreateTestEnvironment
 {
     private $output_dir;
+    /**
+     * @var \PFUser
+     */
     private $user;
+    /**
+     * @var \Project
+     */
     private $project;
 
     public function __construct($output_dir)
@@ -64,6 +70,10 @@ class CreateTestEnvironment
         if (! $this->project instanceof \Project || $this->project->isError()) {
             throw new Exception\ProjectNotCreatedException();
         }
+
+        $notifier = new MattermostNotifier();
+        $base_url = \HTTPRequest::instance()->getServerUrl();
+        $notifier->notify("New project created for {$this->user->getRealName()} ({$this->user->getEmail()}): $base_url/projects/{$this->project->getUnixNameLowerCase()}. #{$this->user->getUnixName()}");
     }
 
     public function getUser()

@@ -164,35 +164,6 @@ class UserManagerTest extends TuleapTestCase
         $this->assertTrue($um->isUserLoadedByUserName('user_123'));
     }
 
-    function testLogout() {
-        $cm               = new MockCookieManager($this);
-        $session_manager  = mock('Tuleap\User\SessionManager');
-        $user123          = mock('PFUser');
-        $dao              = new MockUserDao($this);
-        $um               = new UserManagerTestVersion($this);
-
-        $user123->setReturnValue('getId', 123);
-        $user123->setReturnValue('getUserName', 'user_123');
-        $user123->setReturnValue('isAnonymous', false);
-        $user123->setReturnValue('getSessionHash', 'valid_hash');
-        $user123->expectAt(0, 'setSessionHash', array('valid_hash'));
-        $user123->expectAt(1, 'setSessionHash', array(false));
-
-        $cm->setReturnValue('getCookie', 'valid_hash');
-        $cm->expectCallCount('removeCookie', 1);
-        $cm->expectAt(2, 'removeCookie', array('session_hash'));
-        stub($session_manager)->getUser()->returns($user123);
-        $um->setReturnReference('getUserInstanceFromRow', $user123, array(array('user_name' => 'user_123', 'user_id' => 123)));
-
-        $um->setReturnReference('getDao', $dao);
-        $um->setReturnReference('getCookieManager', $cm);
-        $um->setReturnReference('getSessionManager', $session_manager);
-        $um->expectOnce('destroySession');
-        $session_manager->expectOnce('destroyCurrentSession', array($user123));
-
-        $um->logout();
-    }
-
     function testGoodLogin() {
         $cm               = new MockCookieManager($this);
         $session_manager  = mock('Tuleap\User\SessionManager');

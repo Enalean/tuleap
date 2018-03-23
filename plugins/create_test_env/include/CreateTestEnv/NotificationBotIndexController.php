@@ -22,6 +22,7 @@
 namespace Tuleap\CreateTestEnv;
 
 use HTTPRequest;
+use TemplateRenderer;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\BotMattermost\Bot\BotFactory;
 use Tuleap\BotMattermost\Bot\BotDao;
@@ -31,12 +32,39 @@ use Tuleap\Request\DispatchableWithRequest;
 class NotificationBotIndexController implements DispatchableWithRequest
 {
     /**
+     * @var BotFactory
+     */
+    private $bot_factory;
+    /**
+     * @var NotificationBotDao
+     */
+    private $notification_bot_dao;
+    /**
+     * @var AdminPageRenderer
+     */
+    private $admin_page_renderer;
+    /**
+     * @var TemplateRenderer
+     */
+    private $template_renderer;
+
+    public function __construct(BotFactory $bot_factory, NotificationBotDao $notification_bot_dao, AdminPageRenderer $admin_page_renderer, TemplateRenderer $template_renderer)
+    {
+
+        $this->bot_factory          = $bot_factory;
+        $this->notification_bot_dao = $notification_bot_dao;
+        $this->admin_page_renderer  = $admin_page_renderer;
+        $this->template_renderer    = $template_renderer;
+    }
+
+    /**
      * Is able to process a request routed by FrontRouter
      *
      * @param HTTPRequest $request
      * @param BaseLayout $layout
      * @param array $variables
      * @return void
+     * @throws \Tuleap\BotMattermost\Exception\BotNotFoundException
      */
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
@@ -46,13 +74,11 @@ class NotificationBotIndexController implements DispatchableWithRequest
             return;
         }
 
-        $bots            = (new BotFactory(new BotDao()))->getBots();
-        $selected_bot_id = (new NotificationBotDao())->get();
+        $bots            = $this->bot_factory->getBots();
+        $selected_bot_id = $this->notification_bot_dao->get();
 
-        $admin_page_renderer = new AdminPageRenderer();
-        $admin_page_renderer->header(dgettext('tuleap-create_test_env', 'Create test environment'));
-        $renderer =\TemplateRendererFactory::build()->getRenderer(__DIR__.'/../../templates');
-        $renderer->renderToPage('admin', new NotificationBotPresenter($bots, $selected_bot_id));
-        $admin_page_renderer->footer();
+        $this->admin_page_renderer->header(dgettext('tuleap-create_test_env', 'Create test environment'));
+        $this->template_renderer->renderToPage('admin', new NotificationBotPresenter($bots, $selected_bot_id));
+        $this->admin_page_renderer->footer();
     }
 }

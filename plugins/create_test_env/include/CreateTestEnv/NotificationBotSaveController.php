@@ -27,10 +27,15 @@ use Tuleap\Request\DispatchableWithRequest;
 class NotificationBotSaveController implements DispatchableWithRequest
 {
     private $plugin_path;
+    /**
+     * @var NotificationBotDao
+     */
+    private $notification_bot_dao;
 
-    public function __construct($plugin_path)
+    public function __construct(NotificationBotDao $notification_bot_dao, $plugin_path)
     {
-        $this->plugin_path = $plugin_path;
+        $this->notification_bot_dao = $notification_bot_dao;
+        $this->plugin_path          = $plugin_path;
     }
 
     /**
@@ -49,14 +54,12 @@ class NotificationBotSaveController implements DispatchableWithRequest
             return;
         }
 
-        $dao = new NotificationBotDao();
-
-        $bot_id = $request->getValidated('bot', 'uint', 0);
+        $bot_id = (int) $request->getValidated('bot', 'uint', 0);
         if ($bot_id === 0) {
-            $dao->remove();
+            $this->notification_bot_dao->remove();
             $layout->addFeedback(\Feedback::INFO, dgettext('tuleap-create_test_env', 'Mattermost notifications removed'));
         } else {
-            $dao->save($bot_id);
+            $this->notification_bot_dao->save($bot_id);
             $layout->addFeedback(\Feedback::INFO, dgettext('tuleap-create_test_env', 'Mattermost notifications added'));
         }
 
