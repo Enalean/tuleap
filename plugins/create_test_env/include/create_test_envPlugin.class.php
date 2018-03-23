@@ -20,10 +20,8 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use Tuleap\BotMattermost\BotMattermostLogger;
-use Tuleap\BotMattermost\SenderServices\ClientBotMattermost;
-use Tuleap\BotMattermost\SenderServices\EncoderMessage;
-use Tuleap\BotMattermost\SenderServices\Sender;
+use Tuleap\BotMattermost\Bot\BotDao;
+use Tuleap\BotMattermost\Bot\BotFactory;
 use Tuleap\CreateTestEnv\NotificationBotDao;
 use Tuleap\CreateTestEnv\NotificationBotIndexController;
 use Tuleap\CreateTestEnv\NotificationBotSaveController;
@@ -31,12 +29,10 @@ use Tuleap\CreateTestEnv\REST\ResourcesInjector;
 use Tuleap\CreateTestEnv\Plugin\PluginInfo;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\BurningParrotCompatiblePageEvent;
-use Tuleap\CreateTestEnv\MattermostNotifier;
+use Tuleap\CreateTestEnv\Notifier;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 use Tuleap\User\UserConnectionUpdateEvent;
 use Tuleap\Admin\AdminPageRenderer;
-use Tuleap\BotMattermost\Bot\BotFactory;
-use Tuleap\BotMattermost\Bot\BotDao;
 
 // @codingStandardsIgnoreLine
 class create_test_envPlugin extends Plugin
@@ -160,14 +156,6 @@ class create_test_envPlugin extends Plugin
 
     private function notify($text)
     {
-        (new MattermostNotifier(
-            new BotFactory(new BotDao()),
-            new NotificationBotDao(),
-            new Sender(
-                new EncoderMessage(),
-                new ClientBotMattermost(),
-                new BotMattermostLogger()
-            )
-        ))->notify($text);
+        (new Notifier(new NotificationBotDao()))->notify($text);
     }
 }

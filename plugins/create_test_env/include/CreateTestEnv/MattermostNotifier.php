@@ -25,6 +25,10 @@ use Tuleap\BotMattermost\Bot\BotFactory;
 use Tuleap\BotMattermost\Exception\BotNotFoundException;
 use Tuleap\BotMattermost\SenderServices\Message;
 use Tuleap\BotMattermost\SenderServices\Sender;
+use Tuleap\BotMattermost\BotMattermostLogger;
+use Tuleap\BotMattermost\SenderServices\ClientBotMattermost;
+use Tuleap\BotMattermost\SenderServices\EncoderMessage;
+use Tuleap\BotMattermost\Bot\BotDao;
 
 class MattermostNotifier
 {
@@ -33,47 +37,35 @@ class MattermostNotifier
      */
     private $bot_factory;
     /**
-     * @var NotificationBotDao
-     */
-    private $notification_bot_dao;
-    /**
      * @var Sender
      */
     private $sender;
 
-    public function __construct(BotFactory $bot_factory, NotificationBotDao $notification_bot_dao, Sender $sender)
+    public function __construct()
     {
-        $this->bot_factory          = $bot_factory;
-        $this->notification_bot_dao = $notification_bot_dao;
-        $this->sender               = $sender;
+        $this->bot_factory = new BotFactory(new BotDao());
+        $this->sender      = new Sender(
+            new EncoderMessage(),
+            new ClientBotMattermost(),
+            new BotMattermostLogger()
+        );
     }
 
     /**
-     * @param $text
+     * @param int $bot_id
+     * @param string $text
      */
-    public function notify($text)
+    public function notify($bot_id, $text)
     {
         try {
             $message = new Message();
             $message->setText($text);
 
-            $bot = $this->getBot();
+            $bot = $this->bot_factory->getBotById($bot_id);
             if ($bot) {
                 $this->sender->pushNotification($bot, $message, []);
             }
         } catch (BotNotFoundException $exception) {
-        }
-    }
-
-    /**
-     * @return \Tuleap\BotMattermost\Bot\Bot
-     * @throws BotNotFoundException
-     */
-    private function getBot()
-    {
-        $bot_id = (int) $this->notification_bot_dao->get();
-        if ($bot_id > 0) {
-            return $this->bot_factory->getBotById($bot_id);
         }
     }
 }

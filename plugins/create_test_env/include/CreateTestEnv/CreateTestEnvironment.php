@@ -33,11 +33,11 @@ class CreateTestEnvironment
      */
     private $project;
     /**
-     * @var MattermostNotifier
+     * @var Notifier
      */
     private $notifier;
 
-    public function __construct(MattermostNotifier $notifier, $output_dir)
+    public function __construct(Notifier $notifier, $output_dir)
     {
         $this->notifier   = $notifier;
         $this->output_dir = $output_dir;
