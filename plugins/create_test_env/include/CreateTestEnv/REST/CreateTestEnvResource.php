@@ -21,15 +21,37 @@
 
 namespace Tuleap\CreateTestEnv\REST;
 
-use Luracast\Restler\RestException;
+use Tuleap\REST\Header;
+use Tuleap\CreateTestEnv\MattermostNotifier;
+use Tuleap\CreateTestEnv\NotificationBotDao;
 use Tuleap\CreateTestEnv\CreateTestEnvironment;
 use Tuleap\CreateTestEnv\Exception\CreateTestEnvException;
-use Tuleap\CreateTestEnv\Exception\EmailNotUniqueException;
 use Tuleap\CreateTestEnv\Exception\InvalidInputException;
-use Tuleap\REST\Header;
+use Tuleap\BotMattermost\Bot\BotDao;
+use Tuleap\BotMattermost\Bot\BotFactory;
+use Tuleap\BotMattermost\BotMattermostLogger;
+use Tuleap\BotMattermost\SenderServices\ClientBotMattermost;
+use Tuleap\BotMattermost\SenderServices\EncoderMessage;
+use Tuleap\BotMattermost\SenderServices\Sender;
+use Luracast\Restler\RestException;
 
 class CreateTestEnvResource
 {
+    private $notifier;
+
+    public function __construct()
+    {
+        $this->notifier = new MattermostNotifier(
+            new BotFactory(new BotDao()),
+            new NotificationBotDao(),
+            new Sender(
+                new EncoderMessage(),
+                new ClientBotMattermost(),
+                new BotMattermostLogger()
+            )
+        );
+    }
+
     /**
      * @url OPTIONS
      */
@@ -60,7 +82,10 @@ class CreateTestEnvResource
             $this->checkSecret($secret);
 
             $tmp_name = $this->createTempDir();
-            $test_env = new CreateTestEnvironment($tmp_name);
+            $test_env = new CreateTestEnvironment(
+                $this->notifier,
+                $tmp_name
+            );
             $test_env->main($firstname, $lastname, $email);
 
             $this->cleanUpTempDir($tmp_name);
@@ -74,11 +99,13 @@ class CreateTestEnvResource
             if (! empty($tmp_name)) {
                 $this->cleanUpTempDir($tmp_name);
             }
+            $this->notifier->notify('Client error at environment creation: '.$exception->getMessage());
             throw new RestException(400, $exception->getMessage());
         } catch (CreateTestEnvException $exception) {
             if (! empty($tmp_name)) {
                 $this->cleanUpTempDir($tmp_name);
             }
+            $this->notifier->notify('Server error at environment creation: '.$exception->getMessage());
             throw new RestException(500, $exception->getMessage());
         }
     }
