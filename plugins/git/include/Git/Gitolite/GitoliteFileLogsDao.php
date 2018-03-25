@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All rights reserved
+ * Copyright (c) Enalean, 2016-2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -20,30 +20,25 @@
 
 namespace Tuleap\Git\Gitolite;
 
-use DataAccessObject;
+use Tuleap\DB\DataAccessObject;
 
 class GitoliteFileLogsDao extends DataAccessObject
 {
     public function getLastReadLine($file_name)
     {
-        $file_name = $this->da->quoteSmart($file_name);
-
-        $sql = "SELECT end_line
+        $sql = 'SELECT end_line
                 FROM plugin_git_file_logs_parse
-                WHERE file_name = $file_name";
+                WHERE file_name = ?';
 
-        return $this->retrieveFirstRow($sql);
+        return $this->getDB()->row($sql, $file_name);
     }
 
     public function storeLastLine($file_name, $end_line)
     {
-        $file_name = $this->da->quoteSmart($file_name);
-        $end_line  = $this->da->escapeInt($end_line);
+        $sql = 'INSERT INTO plugin_git_file_logs_parse (file_name, end_line)
+                VALUES (?, ?)
+                 ON DUPLICATE KEY UPDATE end_line = ?';
 
-        $sql = "INSERT INTO plugin_git_file_logs_parse (file_name, end_line)
-                VALUES ($file_name, $end_line)
-                 ON DUPLICATE KEY UPDATE end_line = $end_line";
-
-        return $this->update($sql);
+        $this->getDB()->run($sql, $file_name, $end_line, $end_line);
     }
 }
