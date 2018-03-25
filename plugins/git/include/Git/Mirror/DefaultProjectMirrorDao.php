@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,80 +18,109 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class DefaultProjectMirrorDao extends DataAccessObject {
+use Tuleap\DB\DataAccessObject;
+use ParagonIE\EasyDB\EasyStatement;
 
-    public function removeAllToProject($project_id) {
-        $project_id = $this->da->escapeInt($project_id);
+class DefaultProjectMirrorDao extends DataAccessObject
+{
 
-        $sql = "DELETE FROM plugin_git_default_project_mirrors
-                WHERE project_id = $project_id";
+    public function removeAllToProject($project_id)
+    {
+        $sql = 'DELETE FROM plugin_git_default_project_mirrors
+                WHERE project_id = ?';
 
-        return $this->update($sql);
-    }
-
-    public function addDefaultMirrorsToProject($project_id, array $selected_mirror_ids) {
-        $project_id = $this->da->escapeInt($project_id);
-
-        $sql = "INSERT INTO plugin_git_default_project_mirrors (project_id, mirror_id)
-                VALUES ";
-
-        $values = array();
-        foreach ($selected_mirror_ids as $mirror_id) {
-            $mirror_id = $this->da->escapeInt($mirror_id);
-            $values[]  = "($project_id, $mirror_id)";
+        try {
+            $this->getDB()->run($sql, $project_id);
+        } catch (PDOException $ex) {
+            return false;
         }
 
-        $sql .= implode(', ', $values);
-
-        return $this->update($sql);
+        return true;
     }
 
-    public function getDefaultMirrorIdsForProject($project_id) {
-        $project_id = $this->da->escapeInt($project_id);
+    public function addDefaultMirrorsToProject($project_id, array $selected_mirror_ids)
+    {
+        $data_to_insert = [];
+        foreach ($selected_mirror_ids as $mirror_id) {
+            $data_to_insert[] = ['project_id' => $project_id, 'mirror_id' => $mirror_id];
+        }
 
-        $sql = "SELECT mirror_id AS id
+        try {
+            $this->getDB()->insertMany('plugin_git_default_project_mirrors', $data_to_insert);
+        } catch (PDOException $ex) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function getDefaultMirrorIdsForProject($project_id)
+    {
+        $sql = 'SELECT mirror_id AS id
                 FROM plugin_git_default_project_mirrors
-                WHERE project_id = $project_id";
+                WHERE project_id = ?';
 
-        return $this->retrieveIds($sql);
+        $result     = $this->getDB()->run($sql, $project_id);
+        $mirror_ids = [];
+        foreach ($result as $row) {
+            $mirror_ids[] = $row['id'];
+        }
+
+        return $mirror_ids;
     }
 
-    public function deleteFromDefaultMirrors($deleted_mirror_id) {
-        $deleted_mirror_id = $this->da->escapeInt($deleted_mirror_id);
+    public function deleteFromDefaultMirrors($deleted_mirror_id)
+    {
+        $sql = 'DELETE FROM plugin_git_default_project_mirrors
+                WHERE mirror_id = ?';
 
-        $sql = "DELETE FROM plugin_git_default_project_mirrors
-                WHERE mirror_id = $deleted_mirror_id";
+        try {
+            $this->getDB()->run($sql, $deleted_mirror_id);
+        } catch (PDOException $ex) {
+            return false;
+        }
 
-        return $this->update($sql);
+        return true;
     }
 
-    public function deleteFromDefaultMirrorsInProjects($mirror_id, array $project_ids) {
-        $mirror_id   = $this->da->escapeInt($mirror_id);
-        $project_ids = $this->da->escapeIntImplode($project_ids);
+    public function deleteFromDefaultMirrorsInProjects($mirror_id, array $project_ids)
+    {
+        $project_ids_in_condition = EasyStatement::open()->in('?*', $project_ids);
 
         $sql = "DELETE FROM plugin_git_default_project_mirrors
-                WHERE mirror_id = $mirror_id
-                AND project_id IN ($project_ids)";
+                WHERE mirror_id = ?
+                AND project_id IN ($project_ids_in_condition)";
 
-        return $this->update($sql);
+        try {
+            $parameters = array_merge([$mirror_id], $project_ids_in_condition->values());
+            $this->getDB()->safeQuery($sql, $parameters);
+        } catch (PDOException $ex) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
      * @return boolean
      */
-    public function duplicate($template_project_id, $new_project_id) {
-        $template_project_id = $this->da->escapeInt($template_project_id);
-        $new_project_id      = $this->da->escapeInt($new_project_id);
-
+    public function duplicate($template_project_id, $new_project_id)
+    {
         $sql = "INSERT INTO plugin_git_default_project_mirrors (project_id, mirror_id)
-                SELECT $new_project_id, plugin_git_default_project_mirrors.mirror_id
+                SELECT ?, plugin_git_default_project_mirrors.mirror_id
                 FROM plugin_git_default_project_mirrors
                     LEFT JOIN plugin_git_restricted_mirrors
                     ON (plugin_git_default_project_mirrors.mirror_id = plugin_git_restricted_mirrors.mirror_id)
-                WHERE project_id = $template_project_id
+                WHERE project_id = ?
                 AND plugin_git_restricted_mirrors.mirror_id IS NULL";
 
-        return $this->update($sql);
+        try {
+            $this->getDB()->run($sql, $new_project_id, $template_project_id);
+        } catch (PDOException $ex) {
+            return false;
+        }
+
+        return true;
     }
 
 }

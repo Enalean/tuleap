@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2016. All rights reserved
+ * Copyright (c) Enalean, 2014-2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -177,7 +177,8 @@ class Git_Mirror_MirrorDataMapper {
     /**
      * @return Git_Mirror_Mirror[]
      */
-    private function mapDataAccessResultToArrayOfMirrors(DataAccessResult $rows) {
+    private function mapDataAccessResultToArrayOfMirrors(array $rows)
+    {
         $mirrors = array();
         foreach ($rows as $row) {
             $owner     = $this->getMirrorOwner($row['id']);

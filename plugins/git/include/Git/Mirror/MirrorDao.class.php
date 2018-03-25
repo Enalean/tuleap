@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2015. All rights reserved
+ * Copyright (c) Enalean, 2014-2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -18,47 +18,44 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class Git_Mirror_MirrorDao extends DataAccessObject{
-
+class Git_Mirror_MirrorDao extends \Tuleap\DB\DataAccessObject
+{
     /**
      * @return int | false
      */
-    public function save($url, $hostname, $name) {
-        $url      = $this->da->quoteSmart($url);
-        $hostname = $this->da->quoteSmart($hostname);
-        $name     = $this->da->quoteSmart($name);
+    public function save($url, $hostname, $name)
+    {
+        $sql = 'INSERT INTO plugin_git_mirrors (url, hostname, name)
+                VALUES(?, ?, ?)';
 
-        $sql = "INSERT INTO plugin_git_mirrors (url, hostname, name)
-                VALUES($url, $hostname, $name)";
+        try {
+            $this->getDB()->run($sql, $url, $hostname, $name);
+        } catch (PDOException $ex) {
+            return false;
+        }
 
-        return $this->updateAndGetLastId($sql);
+        return $this->getDB()->lastInsertId();
+    }
+
+    public function fetchAll()
+    {
+        return $this->getDB()->run('SELECT * FROM plugin_git_mirrors ORDER BY id');
+    }
+
+    public function fetchByIds($selected_mirror_ids)
+    {
+        $mirror_ids_in_condition = \ParagonIE\EasyDB\EasyStatement::open()->in('?*', $selected_mirror_ids);
+        $sql                     = "SELECT * FROM plugin_git_mirrors WHERE id IN ($mirror_ids_in_condition)";
+
+        return $this->getDB()->safeQuery($sql, $mirror_ids_in_condition->values());
     }
 
     /**
      * @return DataAccessObject
      */
-    public function fetchAll() {
-        $sql = "SELECT * FROM plugin_git_mirrors ORDER BY id";
-
-        return $this->retrieve($sql);
-    }
-
-    /**
-     * @return DataAccessObject
-     */
-    public function fetchByIds($selected_mirror_ids) {
-        $sql = "SELECT * FROM plugin_git_mirrors WHERE id IN (" . $this->da->escapeIntImplode($selected_mirror_ids) . ")";
-
-        return $this->retrieve($sql);
-    }
-
-    /**
-     * @return DataAccessObject
-     */
-    public function fetchAllRepositoryMirrors($repository_id) {
-        $repository_id = $this->da->escapeInt($repository_id);
-
-        $sql = "SELECT plugin_git_mirrors.*
+    public function fetchAllRepositoryMirrors($repository_id)
+    {
+        $sql = 'SELECT plugin_git_mirrors.*
                 FROM plugin_git_mirrors
                   INNER JOIN plugin_git_repository_mirrors ON plugin_git_mirrors.id = plugin_git_repository_mirrors.mirror_id
                   INNER JOIN plugin_git USING (repository_id)
@@ -67,95 +64,88 @@ class Git_Mirror_MirrorDao extends DataAccessObject{
                      plugin_git_restricted_mirrors_allowed_projects.mirror_id = plugin_git_restricted_mirrors.mirror_id
                      AND plugin_git.project_id = plugin_git_restricted_mirrors_allowed_projects.project_id
                   )
-                WHERE plugin_git_repository_mirrors.repository_id = $repository_id
+                WHERE plugin_git_repository_mirrors.repository_id = ?
                   AND (plugin_git_restricted_mirrors.mirror_id IS NULL
                    OR plugin_git_restricted_mirrors_allowed_projects.project_id IS NOT NULL)
-                ORDER BY id";
+                ORDER BY id';
 
-        return $this->retrieve($sql);
+        return $this->getDB()->run($sql, $repository_id);
     }
 
-    public function fetchAllProjectRepositoriesForMirror($mirror_id, $project_ids) {
-        $mirror_id   = $this->da->escapeInt($mirror_id);
-        $project_ids = $this->da->escapeIntImplode($project_ids);
+    public function fetchAllProjectRepositoriesForMirror($mirror_id, $project_ids)
+    {
+        $project_ids_in_condition = \ParagonIE\EasyDB\EasyStatement::open()->in('?*', $project_ids);
 
         $sql = "SELECT DISTINCT g.*
                 FROM plugin_git_repository_mirrors rm
                     INNER JOIN plugin_git g ON g.repository_id = rm.repository_id
-                WHERE rm.mirror_id = $mirror_id
-                AND g.project_id IN ($project_ids)
+                WHERE rm.mirror_id = ?
+                AND g.project_id IN ($project_ids_in_condition)
                 AND g.repository_deletion_date = '0000-00-00 00:00:00'";
 
-        return $this->retrieve($sql);
+        $parameters = array_merge([$mirror_id], $project_ids_in_condition->values());
+        return $this->getDB()->safeQuery($sql, $parameters);
     }
 
-    public function fetchAllProjectIdsConcernedByMirroring() {
+    public function fetchAllProjectIdsConcernedByMirroring()
+    {
         $sql = "SELECT DISTINCT g.project_id
                 FROM plugin_git g
                   INNER JOIN plugin_git_repository_mirrors rm ON g.repository_id = rm.repository_id";
 
-        return $this->retrieve($sql);
+        return $this->getDB()->run($sql);
     }
 
-    public function fetchAllProjectIdsConcernedByAMirror($mirror_id) {
-        $mirror_id = $this->da->escapeInt($mirror_id);
-
+    public function fetchAllProjectIdsConcernedByAMirror($mirror_id)
+    {
         $sql = "SELECT DISTINCT g.project_id
                 FROM plugin_git g
                   INNER JOIN plugin_git_repository_mirrors rm ON g.repository_id = rm.repository_id
                   INNER JOIN plugin_git_mirrors gm ON gm.id = rm.mirror_id
-                WHERE rm.mirror_id = $mirror_id
+                WHERE rm.mirror_id = ?
                 AND g.repository_deletion_date = '0000-00-00 00:00:00'";
 
-        return $this->retrieve($sql);
+        return $this->getDB()->run($sql, $mirror_id);
     }
 
-    public function getNumberOfMirrorByHostname($hostname) {
-        $hostname = $this->da->quoteSmart($hostname);
-
-        $sql = "SELECT SQL_CALC_FOUND_ROWS *
+    public function getNumberOfMirrorByHostname($hostname)
+    {
+        $sql = 'SELECT COUNT(*)
                 FROM plugin_git_mirrors
-                WHERE hostname = $hostname";
+                WHERE hostname = ?';
 
-        $this->retrieve($sql);
-
-        return (int) $this->foundRows();
+        return $this->getDB()->single($sql, [$hostname]);
     }
 
-    public function getNumberOfMirrorByHostnameExcludingGivenId($hostname, $id) {
-        $hostname = $this->da->quoteSmart($hostname);
-
-        $sql = "SELECT SQL_CALC_FOUND_ROWS *
+    public function getNumberOfMirrorByHostnameExcludingGivenId($hostname, $id)
+    {
+        $sql = 'SELECT COUNT(*)
                 FROM plugin_git_mirrors
-                WHERE hostname = $hostname
-                AND id <> $id";
+                WHERE hostname = ?
+                AND id <> ?';
 
-        $this->retrieve($sql);
-
-        return (int) $this->foundRows();
+        return $this->getDB()->single($sql, [$hostname, $id]);
     }
 
-    public function fetchAllForProject($project_id) {
-        $project_id = $this->da->escapeInt($project_id);
-
-        $sql = "SELECT plugin_git_mirrors.*
+    public function fetchAllForProject($project_id)
+    {
+        $sql = 'SELECT plugin_git_mirrors.*
                 FROM plugin_git_mirrors
                     LEFT JOIN plugin_git_restricted_mirrors ON plugin_git_restricted_mirrors.mirror_id = plugin_git_mirrors.id
                     LEFT JOIN plugin_git_restricted_mirrors_allowed_projects ON (
                         plugin_git_restricted_mirrors_allowed_projects.mirror_id = plugin_git_restricted_mirrors.mirror_id
-                        AND project_id = $project_id
+                        AND project_id = ?
                     )
                 WHERE plugin_git_restricted_mirrors.mirror_id IS NULL
                    OR plugin_git_restricted_mirrors_allowed_projects.project_id IS NOT NULL
-                ORDER BY id";
+                ORDER BY id';
 
-        return $this->retrieve($sql);
+        return $this->getDB()->run($sql, $project_id);
     }
 
-    public function fetchAllRepositoryMirroredByMirror($mirror_id) {
-        $mirror_id = $this->da->escapeInt($mirror_id);
-
-        $sql = "SELECT plugin_git_repository_mirrors.repository_id, plugin_git.*, groups.group_name, groups.group_id
+    public function fetchAllRepositoryMirroredByMirror($mirror_id)
+    {
+        $sql = 'SELECT plugin_git_repository_mirrors.repository_id, plugin_git.*, groups.group_name, groups.group_id
                 FROM plugin_git_repository_mirrors
                     INNER JOIN plugin_git
                         ON plugin_git_repository_mirrors.repository_id = plugin_git.repository_id
@@ -166,87 +156,94 @@ class Git_Mirror_MirrorDao extends DataAccessObject{
                         plugin_git_restricted_mirrors_allowed_projects.mirror_id = plugin_git_restricted_mirrors.mirror_id
                         AND plugin_git_restricted_mirrors_allowed_projects.project_id = plugin_git.project_id
                     )
-                WHERE plugin_git_repository_mirrors.mirror_id = $mirror_id
+                WHERE plugin_git_repository_mirrors.mirror_id = ?
                     AND plugin_git.repository_deletion_date IS NULL
                     AND (plugin_git_restricted_mirrors.mirror_id IS NULL
                          OR plugin_git_restricted_mirrors_allowed_projects.project_id IS NOT NULL)
-                ORDER BY groups.group_name, plugin_git.repository_name";
+                ORDER BY groups.group_name, plugin_git.repository_name';
 
-        return $this->retrieve($sql);
+        return $this->getDB()->run($sql, $mirror_id);
     }
 
-    public function fetchAllRepositoryMirroredInProject($project_id) {
-        $project_id = $this->da->escapeInt($project_id);
-
-        $sql = "SELECT plugin_git_repository_mirrors.*
+    public function fetchAllRepositoryMirroredInProject($project_id)
+    {
+        $sql = 'SELECT plugin_git_repository_mirrors.*
                 FROM plugin_git_repository_mirrors
                     INNER JOIN plugin_git
                         ON (
                             plugin_git_repository_mirrors.repository_id = plugin_git.repository_id
-                            AND plugin_git.project_id = $project_id
-                        )";
+                            AND plugin_git.project_id = ?
+                        )';
 
-        return $this->retrieve($sql);
+        return $this->getDB()->run($sql, $project_id);
     }
 
-    public function unmirrorRepository($repository_id) {
-        $repository_id = $this->da->escapeInt($repository_id);
+    public function unmirrorRepository($repository_id)
+    {
+        $sql = 'DELETE FROM plugin_git_repository_mirrors WHERE repository_id = ?';
 
-        $sql = "DELETE FROM plugin_git_repository_mirrors WHERE repository_id = " . $repository_id;
-
-        return $this->update($sql);
-    }
-
-    public function mirrorRepositoryTo($repository_id, $selected_mirror_ids) {
-        $repository_id = $this->da->escapeInt($repository_id);
-
-        $sql = 'INSERT INTO plugin_git_repository_mirrors (repository_id, mirror_id) VALUES ';
-
-        $values = array();
-        foreach ($selected_mirror_ids as $selected_mirror_id) {
-            $selected_mirror_id = $this->da->escapeInt($selected_mirror_id);
-            $values[]           = "($repository_id, $selected_mirror_id)";
+        try {
+            $this->getDB()->run($sql, $repository_id);
+        } catch (PDOException $ex) {
+            return false;
         }
 
-        $sql .= implode(', ', $values);
-
-        return $this->update($sql);
+        return true;
     }
 
-    /**
-     * @return DataAccessObject
-     */
-    public function fetch($id) {
-        $id  = $this->da->escapeInt($id);
+    public function mirrorRepositoryTo($repository_id, $selected_mirror_ids)
+    {
+        $data_to_insert = [];
+        foreach ($selected_mirror_ids as $mirror_id) {
+            $data_to_insert[] = ['repository_id' => $repository_id, 'mirror_id' => $mirror_id];
+        }
 
-        $sql = "SELECT * FROM plugin_git_mirrors WHERE id = $id";
-        return $this->retrieveFirstRow($sql);
+        try {
+            $this->getDB()->insertMany('plugin_git_repository_mirrors', $data_to_insert);
+        } catch (PDOException $ex) {
+            return false;
+        }
+
+        return true;
     }
 
-    /**
-     * @return bool
-     */
-    public function updateMirror($id, $url, $hostname, $name) {
-        $url      = $this->da->quoteSmart($url);
-        $hostname = $this->da->quoteSmart($hostname);
-        $name     = $this->da->quoteSmart($name);
-
-        $sql = "UPDATE plugin_git_mirrors
-                SET url = $url, hostname = $hostname, name = $name
-                WHERE id = $id";
-
-        return $this->update($sql);
+    public function fetch($id)
+    {
+        return $this->getDB()->row('SELECT * FROM plugin_git_mirrors WHERE id = ?', $id);
     }
 
     /**
      * @return bool
      */
-    public function delete($id) {
-        $id  = $this->da->escapeInt($id);
+    public function updateMirror($id, $url, $hostname, $name)
+    {
+        $sql = 'UPDATE plugin_git_mirrors
+                SET url = ?, hostname = ?, name = ?
+                WHERE id = ?';
 
-        $sql = "DELETE FROM plugin_git_mirrors
-                WHERE id = $id";
+        try {
+            $this->getDB()->run($sql, $url, $hostname, $name, $id);
+        } catch (PDOException $ex) {
+            return false;
+        }
 
-        return $this->update($sql);
+        return true;
+    }
+
+    /**
+     * @return bool
+     */
+    public function delete($id)
+    {
+        $sql = 'DELETE FROM plugin_git_mirrors
+                WHERE id = ?';
+
+        try {
+            $this->getDB()->run($sql, $id);
+        } catch (PDOException $ex) {
+            return false;
+        }
+
+        return true;
     }
 }
