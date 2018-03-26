@@ -1,5 +1,11 @@
 msgid ""
 "<b>Done</b> semantic is needed since Velocity computation is made over "
+"<b>done</b> artifacts. Please select a <a href=\"%s\">Done</a> semantic "
+"first."
+msgstr ""
+
+msgid ""
+"<b>Done</b> semantic is needed since Velocity computation is made over "
 "<b>done</b> artifacts. Please select a Done semantic first."
 msgstr ""
 

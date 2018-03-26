@@ -81,6 +81,10 @@ class SemanticVelocityAdminPresenter
      * @var int
      */
     public $nb_children_trackers_without_velocity_semantic;
+    /**
+     * @var string
+     */
+    public $url_done_semantic;
 
     public function __construct(
         array $possible_velocity_field,
@@ -102,10 +106,17 @@ class SemanticVelocityAdminPresenter
         $this->has_semantic_done_defined = $has_semantic_done_defined;
         $this->has_velocity_field        = $selected_velocity_field_id !== null;
         $this->tracker_name              = $tracker->getName();
-        $this->back_url                  = TRACKER_BASE_URL . "/?" . http_build_query(
+        $this->back_url = TRACKER_BASE_URL . "/?" . http_build_query(
+            [
+                "tracker"  => $tracker->getId(),
+                "func"     => "admin-semantic"
+            ]
+        );
+        $this->url_done_semantic        = TRACKER_BASE_URL . "/?" .  http_build_query(
             [
                 "tracker" => $tracker->getId(),
-                "func"    => "admin-semantic"
+                "func"    => "admin-semantic",
+                "semantic" => "done"
             ]
         );
 

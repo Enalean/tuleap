@@ -134,7 +134,8 @@ msgid "There is no item yet"
 msgstr ""
 
 msgid ""
-"This semantic will be used in the <strong>AgileDashboard</strong> service."
+"This semantic will be used in the <strong>AgileDashboard</strong> service "
+"for burnup and velocity charts."
 msgstr ""
 
 msgid "This tracker is not a planning tracker"
