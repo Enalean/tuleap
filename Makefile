@@ -109,10 +109,19 @@ clean-rng:
 # Tests and all
 #
 
-post-checkout: composer generate-mo dev-clear-cache dev-forgeupgrade ## Clear caches, run forgeupgrade, build assets and generate language files
+post-checkout: composer generate-mo dev-clear-cache dev-forgeupgrade npm-build restart-services ## Clear caches, run forgeupgrade, build assets and generate language files
+
+npm-build:
 	npm install
 	npm run build
+
+redeploy-nginx: ## Redeploy nginx configuration
+	@$(DOCKER) exec tuleap-web /usr/share/tuleap/tools/utils/php56/run.php --module=nginx
+	@$(DOCKER) exec tuleap-web service nginx restart
+
+restart-services: redeploy-nginx ## Restart nginx, apache and fpm
 	@$(DOCKER) exec tuleap-web service rh-php56-php-fpm restart
+	@$(DOCKER) exec tuleap-web service httpd restart
 
 generate-po: ## Generate translatable strings
 	@tools/utils/generate-po.php `pwd`
