@@ -21,9 +21,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import moment                  from 'moment';
 import { select }              from 'd3-selection';
+import { sprintf }             from 'sprintf-js';
 import { buildBarChartScales } from 'charts-builders/bar-chart-scales-factory.js';
 import { buildChartLayout }    from 'charts-builders/chart-layout-builder.js';
+import { TooltipFactory }      from 'charts-builders/chart-tooltip-factory.js';
+import { gettext_provider }    from './gettext-provider.js';
 
 export class VelocityChartDrawer {
     constructor({
@@ -43,10 +47,12 @@ export class VelocityChartDrawer {
     init() {
         this.initScales();
         this.initLayout();
+        this.initTooltipFactory();
     }
 
     draw() {
         this.drawBars();
+        this.addTooltips();
     }
 
     initScales() {
@@ -77,6 +83,18 @@ export class VelocityChartDrawer {
         );
     }
 
+    initTooltipFactory() {
+        const tooltip_factory = new TooltipFactory({
+            tooltip_margin_bottom : 25,
+            tooltip_padding_width : 15,
+            tooltip_padding_height: 5,
+            tooltip_arrow_size    : 150,
+            tooltip_font_size     : 12
+        });
+
+        Object.assign(this, { tooltip_factory });
+    }
+
     drawBars() {
         const {
             x_scale,
@@ -94,7 +112,7 @@ export class VelocityChartDrawer {
             const column = select(this);
 
             column.append('rect')
-                .attr('class', 'velocity-chart-bar')
+                .attr('class', 'velocity-chart-bar chart-tooltip-target')
                 .attr('x', x_scale(name))
                 .attr('y', y_scale(velocity))
                 .attr('width', x_scale.bandwidth())
@@ -115,5 +133,37 @@ export class VelocityChartDrawer {
         const maximum    = Math.max(...velocities);
 
         return (maximum) ? maximum : this.chart_props.default_max_velocity;
+    }
+
+    addTooltips() {
+        this.svg_velocity.selectAll('.velocity-bar')
+            .on('mouseenter', (data, index, bars_list) => {
+                const target_bar = select(bars_list[ index ]);
+
+                this.tooltip_factory.addTooltip(target_bar)
+                    .addTextLine(sprint => this.getSprintDates(sprint))
+                    .addTextLine(({ velocity }) => {
+                        return sprintf(
+                            gettext_provider.gettext('Velocity: %s'),
+                            velocity
+                        );
+                    });
+            })
+            .on('mouseleave', () => {
+                TooltipFactory.removeTooltips(this.svg_velocity);
+            });
+    }
+
+    getSprintDates({ start_date, duration }) {
+        const sprint_start = moment(start_date, moment.ISO_8601)
+            .format(this.chart_props.tooltip_date_format);
+
+        const sprint_end = moment(start_date, moment.ISO_8601)
+            .add(duration, 'days')
+            .format(this.chart_props.tooltip_date_format);
+
+        return sprint_start
+            + ' 🠦 '
+            + sprint_end;
     }
 }

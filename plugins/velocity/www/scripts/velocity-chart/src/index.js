@@ -38,10 +38,11 @@ document.addEventListener("DOMContentLoaded", () => {
         bands_paddings      : 0.5,
         default_max_velocity: 5,
         minimum_bar_height  : 2, // To have a tiny bar when velocity worth 0
+        tooltip_date_format : gettext_provider.gettext('MM/DD'),
         margins: {
-            top   : 10,
+            top   : 50,
             right : 80,
-            bottom: 60,
+            bottom: 100,
             left  : 80
         }
     };
