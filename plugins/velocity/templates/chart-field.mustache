@@ -5,6 +5,20 @@
                 <h1 class="tlp-pane-title">{{# dgettext }} tuleap-velocity | Velocity{{/ dgettext }}</h1>
             </div>
             <section class="tlp-pane-section">
+                {{# has_invalid_artifacts }}
+                        <p class="tlp-alert-warning">
+                            {{# dngettext }}
+                                tuleap-velocity |
+                                Following artifact won't be displayed because it doesn't have a start date: |
+                                Following artifacts won't be displayed because they don't have a start date: |
+                                {{ nb_invalid_artifacts }}
+                            {{/ dngettext }}
+
+                            {{# invalid_artifacts }}
+                                <a href="{{ html_url }}">{{ xref }} - {{ title }}</a><span class="misconfigured-semantic-display-comma">, </span>
+                            {{/ invalid_artifacts }}
+                        </p>
+                {{/ has_invalid_artifacts }}
                 <div id="velocity-chart"
                      data-sprints="{{ backlog_items_representation }}"
                 ></div>

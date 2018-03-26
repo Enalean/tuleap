@@ -58,7 +58,7 @@ class VelocityRepresentationBuilder
 
     public function buildRepresentations(Planning_Milestone $milestone, PFUser $user)
     {
-        $representations = [];
+        $representations = new VelocityCollection();
 
         $backlog_artifacts = $milestone->getLinkedArtifacts($user);
         foreach ($backlog_artifacts as $artifact) {
@@ -68,13 +68,21 @@ class VelocityRepresentationBuilder
             if ($velocity->getVelocityField() && $done_semantic->isDone($artifact->getLastChangeset())) {
                 $computed_velocity = $artifact->getLastChangeset()->getValue($velocity->getVelocityField());
 
-                $start_date = $this->getArtifactStartDate($artifact, $user);
-                $representations[] = new VelocityRepresentation(
-                    $artifact->getTitle(),
-                    $start_date,
-                    $this->getArtifactDuration($artifact, $user),
-                    ($computed_velocity) ? $computed_velocity->getNumeric() : 0
-                );
+                $start_date     = $this->getArtifactStartDate($artifact, $user);
+
+                if ($start_date) {
+                    $representation = new VelocityRepresentation(
+                        $artifact->getTitle(),
+                        $start_date,
+                        $this->getArtifactDuration($artifact, $user),
+                        ($computed_velocity) ? $computed_velocity->getNumeric() : 0
+                    );
+                    $representations->addVelocityRepresentation($representation);
+                } else {
+                    $representation = new InvalidArtifactRepresentation();
+                    $representation->build($artifact);
+                    $representations->addInvalidArtifact($representation);
+                }
             }
         }
 

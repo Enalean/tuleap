@@ -30,10 +30,25 @@ class VelocityChartPresenter
      * @var bool
      */
     public $has_backlog_items_with_computed_velocity;
+    /**
+     * @var bool
+     */
+    public $has_invalid_artifacts;
+    /**
+     * @var int
+     */
+    public $nb_invalid_artifacts;
+    /**
+     * @var array
+     */
+    public $invalid_artifacts;
 
-    public function __construct(array $backlog_items_representation)
+    public function __construct(array $backlog_items_representation, array $invalid_artifacts)
     {
         $this->backlog_items_representation             = json_encode($backlog_items_representation);
         $this->has_backlog_items_with_computed_velocity = count($backlog_items_representation) > 0;
+        $this->invalid_artifacts                        = $invalid_artifacts;
+        $this->has_invalid_artifacts                    = count($invalid_artifacts) > 0;
+        $this->nb_invalid_artifacts                     = count($invalid_artifacts);
     }
 }

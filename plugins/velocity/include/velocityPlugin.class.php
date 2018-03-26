@@ -27,14 +27,16 @@ use Tuleap\AgileDashboard\Semantic\SemanticDoneFactory;
 use Tuleap\AgileDashboard\Semantic\SemanticDoneValueChecker;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Tracker\Workflow\BeforeEvent;
+use Tuleap\Velocity\InvalidArtifactsPresenter;
 use Tuleap\Velocity\Semantic\SemanticFormatter;
 use Tuleap\Velocity\Semantic\SemanticVelocity;
 use Tuleap\Velocity\Semantic\SemanticVelocityFactory;
 use Tuleap\Velocity\VelocityChartPresenter;
+use Tuleap\Velocity\VelocityCollection;
+use Tuleap\Velocity\VelocityComputation;
 use Tuleap\Velocity\VelocityComputationChecker;
 use Tuleap\Velocity\VelocityDao;
 use Tuleap\Velocity\VelocityRepresentationBuilder;
-use Tuleap\Velocity\VelocityComputation;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once 'constants.php';
@@ -245,7 +247,7 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
         $builder        = new VelocityRepresentationBuilder(new VelocityDao(), Tracker_ArtifactFactory::instance(), Tracker_FormElementFactory::instance());
         $representation = $builder->buildRepresentations($event->getMilestone(), $event->getUser());
 
-        $presenter             = new VelocityChartPresenter($representation);
+        $presenter             = new VelocityChartPresenter($representation->getVelocityRepresentations(), $representation->getInvalidArtifacts());
         $renderer              = TemplateRendererFactory::build()->getRenderer(VELOCITY_BASE_DIR . '/templates');
         $string_representation = $renderer->renderToString("chart-field", $presenter);
 

@@ -1,4 +1,5 @@
-/*!
+<?php
+/**
  * Copyright Enalean (c) 2018. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
@@ -21,8 +22,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../../scripts/velocity-chart/velocity-chart';
+namespace Tuleap\Velocity;
 
-.misconfigured-semantic-display-comma:last-child {
-    display: none;
+use Tracker_Artifact;
+
+class InvalidArtifactRepresentation
+{
+    /**
+     * @var string
+     */
+    public $xref;
+
+    /**
+     * @var string
+     */
+    public $html_url;
+
+    /**
+     * @var string
+     */
+    public $title;
+
+    public function build(Tracker_Artifact $artifact)
+    {
+        $this->xref     = $artifact->getXRef();
+        $this->html_url = $artifact->getUri();
+        $this->title    = $artifact->getTitle();
+    }
 }
