@@ -39,7 +39,7 @@ class TimeUpdater
     ) {
         $minutes = $this->getMinutes($added_time);
 
-        return $this->time_dao->addTime(
+        $this->time_dao->addTime(
             $user->getId(),
             $artifact->getId(),
             $added_date,
@@ -50,12 +50,12 @@ class TimeUpdater
 
     public function deleteTime(Time $time)
     {
-        return $this->time_dao->deleteTime($time->getId());
+        $this->time_dao->deleteTime($time->getId());
     }
 
     public function updateTime(Time $time, $updated_date, $updated_time, $updated_step)
     {
-        return $this->time_dao->updateTime(
+        $this->time_dao->updateTime(
             $time->getId(),
             $updated_date,
             $this->getMinutes($updated_time),

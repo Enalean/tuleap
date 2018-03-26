@@ -55,7 +55,7 @@ class TimePresenterBuilder
             'user'                 => $this->getUserPresenter($user),
             'time'                 => $this->date_formatter->formatMinutes($time->getMinutes()),
             'step'                 => $time->getStep(),
-            'time_belongs_to_user' => $time->getUserId() === $current_user->getId()
+            'time_belongs_to_user' => $time->getUserId() === (int) $current_user->getId()
         );
     }
 

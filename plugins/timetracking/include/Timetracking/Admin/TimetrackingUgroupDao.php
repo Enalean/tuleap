@@ -20,141 +20,101 @@
 
 namespace Tuleap\Timetracking\Admin;
 
-use DataAccess;
-use \DataAccessObject;
-use Exception;
+use Tuleap\DB\DataAccessObject;
 
 class TimetrackingUgroupDao extends DataAccessObject
 {
-
-    public function __construct(DataAccess $da = null)
-    {
-        parent::__construct($da);
-
-        $this->enableExceptionsOnError();
-    }
-
     public function saveWriters($tracker_id, array $ugroup_ids)
     {
-        $this->startTransaction();
+        $this->getDB()->beginTransaction();
 
         try {
             $this->deleteWritersForTracker($tracker_id);
             $this->addWritersForTracker($tracker_id, $ugroup_ids);
-
-            $this->commit();
-            return true;
-        } catch (Exception $exception) {
-            $this->rollBack();
-            return false;
+        } catch (\PDOException $ex) {
+            $this->getDB()->rollBack();
+            throw $ex;
         }
+
+        return $this->getDB()->commit();
     }
 
     public function deleteWritersForTracker($tracker_id)
     {
-        $tracker_id = $this->da->escapeInt($tracker_id);
+        $sql = 'DELETE FROM plugin_timetracking_writers
+                WHERE tracker_id = ?';
 
-        $sql = "DELETE FROM plugin_timetracking_writers
-                WHERE tracker_id = $tracker_id";
-
-        return $this->update($sql);
+        $this->getDB()->run($sql, $tracker_id);
     }
 
     private function addWritersForTracker($tracker_id, array $ugroup_ids)
     {
-        $tracker_id = $this->da->escapeInt($tracker_id);
-
-        $values = array();
+        $data_to_insert = [];
         foreach ($ugroup_ids as $ugroup_id) {
-            $ugroup_id = $this->da->escapeInt($ugroup_id);
-
-            $values[] = "($tracker_id, $ugroup_id)";
+            $data_to_insert[] = ['tracker_id' => $tracker_id, 'ugroup_id' => $ugroup_id];
         }
 
-        $value_statement = implode(', ', $values);
-
-        $sql = "INSERT INTO plugin_timetracking_writers (tracker_id, ugroup_id)
-                VALUES $value_statement";
-
-        return $this->update($sql);
+        $this->getDB()->insertMany('plugin_timetracking_writers', $data_to_insert);
     }
 
     public function saveReaders($tracker_id, array $ugroup_ids)
     {
-        $this->startTransaction();
+        $this->getDB()->beginTransaction();
 
         try {
             $this->deleteReadersForTracker($tracker_id);
             $this->addReadersForTracker($tracker_id, $ugroup_ids);
-
-            $this->commit();
-            return true;
-        } catch (Exception $exception) {
-            $this->rollBack();
-            return false;
+        } catch (\PDOException $ex) {
+            $this->getDB()->rollBack();
+            throw $ex;
         }
+
+        return $this->getDB()->commit();
     }
 
     public function deleteReadersForTracker($tracker_id)
     {
-        $tracker_id = $this->da->escapeInt($tracker_id);
+        $sql = 'DELETE FROM plugin_timetracking_readers
+                WHERE tracker_id = ?';
 
-        $sql = "DELETE FROM plugin_timetracking_readers
-                WHERE tracker_id = $tracker_id";
-
-        return $this->update($sql);
+        $this->getDB()->run($sql, $tracker_id);
     }
 
     private function addReadersForTracker($tracker_id, array $ugroup_ids)
     {
-        $tracker_id = $this->da->escapeInt($tracker_id);
-
-        $values = array();
+        $data_to_insert = [];
         foreach ($ugroup_ids as $ugroup_id) {
-            $ugroup_id = $this->da->escapeInt($ugroup_id);
-
-            $values[] = "($tracker_id, $ugroup_id)";
+            $data_to_insert[] = ['tracker_id' => $tracker_id, 'ugroup_id' => $ugroup_id];
         }
 
-        $value_statement = implode(', ', $values);
-
-        $sql = "INSERT INTO plugin_timetracking_readers (tracker_id, ugroup_id)
-                VALUES $value_statement";
-
-        return $this->update($sql);
+        $this->getDB()->insertMany('plugin_timetracking_readers', $data_to_insert);
     }
 
     public function getWriters($tracker_id)
     {
-        $tracker_id = $this->da->escapeInt($tracker_id);
-
-        $sql = "SELECT ugroup_id
+        $sql = 'SELECT ugroup_id
                 FROM plugin_timetracking_writers
-                WHERE tracker_id = $tracker_id";
+                WHERE tracker_id = ?';
 
-        return $this->retrieve($sql);
+        return $this->getDB()->run($sql, $tracker_id);
     }
 
     public function getReaders($tracker_id)
     {
-        $tracker_id = $this->da->escapeInt($tracker_id);
-
-        $sql = "SELECT ugroup_id
+        $sql = 'SELECT ugroup_id
                 FROM plugin_timetracking_readers
-                WHERE tracker_id = $tracker_id";
+                WHERE tracker_id = ?';
 
-        return $this->retrieve($sql);
+        return $this->getDB()->run($sql, $tracker_id);
     }
 
     public function deleteByUgroupId($ugroup_id)
     {
-        $ugroup_id = $this->da->escapeInt($ugroup_id);
-
-        $sql = "DELETE plugin_timetracking_writers, plugin_timetracking_readers
+        $sql = 'DELETE plugin_timetracking_writers, plugin_timetracking_readers
                 FROM plugin_timetracking_writers
                   INNER JOIN plugin_timetracking_readers USING (ugroup_id)
-                WHERE ugroup_id = $ugroup_id";
+                WHERE ugroup_id = ?';
 
-        return $this->update($sql);
+        return $this->getDB()->run($sql, $ugroup_id);
     }
 }

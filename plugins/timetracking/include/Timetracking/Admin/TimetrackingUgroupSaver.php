@@ -47,11 +47,11 @@ class TimetrackingUgroupSaver
 
     public function deleteWriters(Tracker $tracker)
     {
-        return $this->dao->deleteWritersForTracker($tracker->getId());
+        $this->dao->deleteWritersForTracker($tracker->getId());
     }
 
     public function deleteReaders(Tracker $tracker)
     {
-        return $this->dao->deleteReadersForTracker($tracker->getId());
+        $this->dao->deleteReadersForTracker($tracker->getId());
     }
 }
