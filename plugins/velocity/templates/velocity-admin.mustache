@@ -7,7 +7,11 @@
         <div id="tracker-semantic-disabled">
             <p class="tracker-semantic-content">{{# dgettext }}tuleap-velocity | Tracker semantic velocity{{/ dgettext }}</p>
             <p class="tracker-semantic-content tracker-semantic-description">
-                {{# dgettext }}tuleap-velocity | <b>Done</b> semantic is needed since Velocity computation is made over <b>done</b> artifacts. Please select a Done semantic first.{{/ dgettext }}
+                {{# dgettext }}
+                    tuleap-velocity |
+                    <b>Done</b> semantic is needed since Velocity computation is made over <b>done</b> artifacts. Please select a <a href="%s">Done</a> semantic first.|
+                    {{ url_done_semantic }}
+                {{/ dgettext }}
             </p>
         </div>
     {{/ has_semantic_done_defined }}
