@@ -27,6 +27,7 @@ import { sprintf }             from 'sprintf-js';
 import { buildBarChartScales } from 'charts-builders/bar-chart-scales-factory.js';
 import { buildChartLayout }    from 'charts-builders/chart-layout-builder.js';
 import { TooltipFactory }      from 'charts-builders/chart-tooltip-factory.js';
+import { truncate }            from 'charts-builders/chart-truncation-service.js';
 import { gettext_provider }    from './gettext-provider.js';
 
 export class VelocityChartDrawer {
@@ -52,6 +53,7 @@ export class VelocityChartDrawer {
 
     draw() {
         this.drawBars();
+        this.harmonizeLabels();
         this.addTooltips();
     }
 
@@ -121,7 +123,7 @@ export class VelocityChartDrawer {
     }
 
     getXLabels() {
-        return this.sprints_data.map(sprint => sprint.name);
+        return this.sprints_data.map(({ name }) => name);
     }
 
     getMaximumVelocity() {
@@ -141,6 +143,13 @@ export class VelocityChartDrawer {
                 const target_bar = select(bars_list[ index ]);
 
                 this.tooltip_factory.addTooltip(target_bar)
+                    .addTextLine(({ name }) => {
+                        if (name.length >= 50) {
+                            return name.substring(0, 30) + '...';
+                        }
+
+                        return name;
+                    })
                     .addTextLine(sprint => this.getSprintDates(sprint))
                     .addTextLine(({ velocity }) => {
                         return sprintf(
@@ -165,5 +174,24 @@ export class VelocityChartDrawer {
         return sprint_start
             + ' 🠦 '
             + sprint_end;
+    }
+
+    harmonizeLabels() {
+        const sprint_names = this.svg_velocity.selectAll(`.chart-x-axis > .tick`).nodes();
+        const step_size    = this.x_scale.step();
+
+        sprint_names.forEach(node => {
+            const label = select(node);
+
+            let label_width = node.getBBox().width;
+
+            if (label_width < step_size) {
+                return;
+            }
+
+            const truncation_size = step_size - this.chart_props.abcissa_labels_margin;
+
+            truncate(truncation_size, label);
+        });
     }
 }

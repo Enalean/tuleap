@@ -33,12 +33,13 @@ document.addEventListener("DOMContentLoaded", () => {
     gettext_provider.setLocale(locale);
 
     const chart_props = {
-        graph_width         : container_width,
-        graph_height        : container_width / 1.33,
-        bands_paddings      : 0.5,
-        default_max_velocity: 5,
-        minimum_bar_height  : 2, // To have a tiny bar when velocity worth 0
-        tooltip_date_format : gettext_provider.gettext('MM/DD'),
+        graph_width          : container_width,
+        graph_height         : container_width / 1.33,
+        bands_paddings       : 0.5,
+        default_max_velocity : 5,
+        minimum_bar_height   : 2, // To have a tiny bar when velocity worth 0
+        tooltip_date_format  : gettext_provider.gettext('MM/DD'),
+        abcissa_labels_margin: 20,
         margins: {
             top   : 50,
             right : 80,
