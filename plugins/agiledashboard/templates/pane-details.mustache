@@ -33,15 +33,14 @@
                         </div>
                     </section>
                 {{/ has_burnup }}
+                {{# chart_presenter }}
+                    {{# has_escaped_chart }}
+                        {{# escaped_chart }}
+                            {{{ . }}}
+                        {{/ escaped_chart }}
+                    {{/ has_escaped_chart }}
+                {{/ chart_presenter }}
             </div>
         {{/ has_charts }}
     {{/ chart_presenter }}
 </div>
-
-{{# chart_presenter }}
-    {{# has_escaped_chart }}
-        {{# escaped_chart }}
-            {{{ . }}}
-        {{/ escaped_chart }}
-    {{/ has_escaped_chart }}
-{{/ chart_presenter }}

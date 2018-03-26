@@ -62,6 +62,8 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
         $this->addHook(BeforeEvent::NAME);
         $this->addHook(DetailsChartPresentersRetriever::NAME);
         $this->addHook(TRACKER_EVENT_SEMANTIC_FROM_XML);
+        $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
+        $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
 
         return parent::getHooksAndCallbacks();
     }
@@ -137,6 +139,40 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
 
             echo '<link rel="stylesheet" type="text/css" href="' . $css_file_url . '" />';
         }
+    }
+
+    public function burningParrotGetJavascriptFiles(array $params)
+    {
+        $include_assets = new IncludeAssets(
+            __DIR__ . "/../../../src/www/assets/velocity/scripts",
+            "/assets/velocity/scripts"
+        );
+
+        if ($this->isAPlanningOverviewRequest()) {
+            $params['javascript_files'][] = $include_assets->getFileURL('velocity-chart.js');
+        }
+    }
+
+    /** @see Event::BURNING_PARROT_GET_STYLESHEETS */
+    public function burningParrotGetStylesheets(array $params)
+    {
+        $include_assets = new IncludeAssets(
+            __DIR__ . '/../../../src/www/assets/velocity/BurningParrot',
+            '/assets/velocity/BurningParrot'
+        );
+
+        $variant = $params['variant'];
+
+        if ($this->isAPlanningOverviewRequest()) {
+            $params['stylesheets'][] = $include_assets ->getFileURL('velocity-' . $variant->getName() . '.css');
+        }
+    }
+
+    private function isAPlanningOverviewRequest()
+    {
+        $request = HTTPRequest::instance();
+
+        return $request->exist('planning_id') && $request->get('pane') === 'details';
     }
 
     public function beforeEvent(BeforeEvent $before_event)
