@@ -1,17 +1,30 @@
 <?php
-//
-// SourceForge: Breaking Down the Barriers to Open Source Development
-// Copyright 1999-2000 (c) The SourceForge Crew
-// http://sourceforge.net
-//
-// 
+/**
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
+ * Copyright 1999-2000 (c) The SourceForge Crew
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 
 $request  = HTTPRequest::instance();
 $group_id = $request->get('group_id');
 
 if (!$group_id) {
-    exit_no_group(); // need a group_id !!!
+    exit_no_group();
 }
 
 
@@ -21,43 +34,50 @@ commits_header(array(
     'group' => $group_id
 ));
 
-if (!isset($offset) || $offset < 0) {
-	$offset=0;
+$offset = (int) $request->get('offset');
+if ($offset < 0) {
+	$offset = 0;
 }
 
-if (!isset($chunksz) || ($chunksz <1)) { $chunksz = 15; }
+$chunksz = (int) $request->get('chunksz');
+if ($chunksz < 1) {
+    $chunksz = 15;
+}
 
-if (!isset($msort)) { $msort = 0; }
-if (($msort != 0) && ($msort != 1)) { $msort = 0; }
-if (user_isloggedin() && !isset($morder)) {
+$msort = (int) $request->get('msort');
+if (($msort !== 0) && ($msort !== 1)) {
+    $msort = 0;
+}
+
+$morder = $request->get('morder');
+if (user_isloggedin() && $morder === false) {
     $morder = user_get_preference('commit_browse_order'.$group_id);
 }
 
-if (isset($order)) {
-
+$order = $request->get('order');
+if ($order !== false) {
     if ($order != '') {
-	// Add the criteria to the list of existing ones
-	$morder = commit_add_sort_criteria($morder, $order, $msort);
+        // Add the criteria to the list of existing ones
+        $morder = commit_add_sort_criteria($morder, $order, $msort);
     } else {
-	// reset list of sort criteria
-	$morder = '';
+        // reset list of sort criteria
+        $morder = '';
     }
 }
 
-if (isset($morder)) {
-
+$order_by = '';
+if ($morder !== false) {
     if (user_isloggedin()) {
-	if ($morder != user_get_preference('commit_browse_order'.$group_id))
-	    user_set_preference('commit_browse_order'.$group_id, $morder);
+        if ($morder != user_get_preference('commit_browse_order'.$group_id)) {
+            user_set_preference('commit_browse_order' . $group_id, $morder);
+        }
     }
 
-    if ($morder != '') {
-	$order_by = ' ORDER BY '.commit_criteria_list_to_query($morder);
+    if ($morder !== '') {
+        $order_by = ' ORDER BY '.commit_criteria_list_to_query($morder);
     }
 }
 
-
-// get project name
 $pm = ProjectManager::instance();
 $project = $pm->getProject($group_id);
 $projectname = $project->getUnixName(false);
@@ -66,7 +86,7 @@ $projectname = $project->getUnixName(false);
 // Memorize order by field as a user preference if explicitly specified.
 // Automatically discard invalid field names.
 //
-if (isset($order)) {
+if ($order !== false) {
 	if ($order=='id' || $order=='description' || $order=='date' || $order=='submitted_by') {
 		if(user_isloggedin() &&
 		   ($order != user_get_preference('commits_browse_order')) ) {
@@ -91,8 +111,7 @@ $_branch    = 100;
 $_commit_id = '';
 $_commiter  = 100;
 $_srch      = '';
-$order_by   = '';
-$pv         = 0;
+$pv         = $request->get('pv');
 
 if (! $set) {
 	/*
@@ -148,8 +167,6 @@ $_branch   = $request->exist('_branch') ? $request->get('_branch') : $_branch;
 $_commit_id= $request->exist('_commit_id') ? $request->get('_commit_id') : $_commit_id;
 $_commiter = $request->exist('_commiter') ? $request->get('_commiter') : $_commiter;
 $_srch     = $request->exist('_srch') ? $request->get('_srch') : $_srch;
-$order_by  = $request->exist('$order_by') ? $request->get('$order_by') : $order_by;
-$pv        = $request->exist('$pv') ? $request->get('$pv') : $pv;
 
 list($result, $totalrows) = cvs_get_revisions($project, $offset, $chunksz, $_tag, $_branch, $_commit_id, $_commiter, $_srch, $order_by, $pv);
 
