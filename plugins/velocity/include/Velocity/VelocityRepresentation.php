@@ -40,9 +40,14 @@ class VelocityRepresentation
      * @var Float
      */
     public $velocity;
+    /**
+     * @var int
+     */
+    public $id;
 
-    public function __construct($name, $start_date, $duration, $velocity)
+    public function __construct($id, $name, $start_date, $duration, $velocity)
     {
+        $this->id         = JsonCast::ToInt($id);
         $this->name       = $name;
         $this->start_date = ($start_date) ? JsonCast::toDate($start_date) : "";
         $this->duration   = JsonCast::toFloat($duration);

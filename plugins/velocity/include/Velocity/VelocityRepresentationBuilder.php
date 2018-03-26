@@ -72,6 +72,7 @@ class VelocityRepresentationBuilder
 
                 if ($start_date) {
                     $representation = new VelocityRepresentation(
+                        $artifact->getId(),
                         $artifact->getTitle(),
                         $start_date,
                         $this->getArtifactDuration($artifact, $user),

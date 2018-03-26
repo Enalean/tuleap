@@ -83,6 +83,9 @@ msgid ""
 "The tracker %s uses a Velocity semantic. Please check its configuration."
 msgstr ""
 
+msgid "The velocity chart only displays the last 7 artifacts found."
+msgstr ""
+
 msgid "This tracker does not have a <i>velocity</i> field yet."
 msgstr ""
 

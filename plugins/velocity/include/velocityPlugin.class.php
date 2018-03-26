@@ -247,7 +247,7 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
         $builder        = new VelocityRepresentationBuilder(new VelocityDao(), Tracker_ArtifactFactory::instance(), Tracker_FormElementFactory::instance());
         $representation = $builder->buildRepresentations($event->getMilestone(), $event->getUser());
 
-        $presenter             = new VelocityChartPresenter($representation->getVelocityRepresentations(), $representation->getInvalidArtifacts());
+        $presenter             = new VelocityChartPresenter($representation);
         $renderer              = TemplateRendererFactory::build()->getRenderer(VELOCITY_BASE_DIR . '/templates');
         $string_representation = $renderer->renderToString("chart-field", $presenter);
 

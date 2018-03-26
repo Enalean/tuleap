@@ -24,6 +24,7 @@ use Tracker_Artifact;
 
 class VelocityCollection
 {
+    const NB_MAX_VELOCITIES = 7;
     /**
      * @var Tracker_Artifact[]
      */
@@ -38,12 +39,20 @@ class VelocityCollection
      */
     public function getVelocityRepresentations()
     {
-        return $this->velocity_representations;
+        krsort($this->velocity_representations);
+
+        return array_slice(array_values($this->velocity_representations), 0, self::NB_MAX_VELOCITIES);
+    }
+
+    public function hasMoreThanMaxLimitDisplayVelocities()
+    {
+        return count($this->velocity_representations) > self::NB_MAX_VELOCITIES;
     }
 
     public function addVelocityRepresentation(VelocityRepresentation $velocity_representation)
     {
-        $this->velocity_representations[] = $velocity_representation;
+        $ordering_key =  $velocity_representation->start_date . $velocity_representation->id ;
+        $this->velocity_representations[ $ordering_key ] = $velocity_representation;
     }
 
     /**
