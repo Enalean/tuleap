@@ -25,7 +25,12 @@ import { gettext_provider }    from './gettext-provider.js';
 import { VelocityChartDrawer } from './velocity-chart-drawer.js';
 
 document.addEventListener("DOMContentLoaded", () => {
-    const mount_point     = document.getElementById('velocity-chart');
+    const mount_point = document.getElementById('velocity-chart');
+
+    if (! mount_point) {
+        return;
+    }
+
     const locale          = document.body.dataset.userLocale;
     const sprints_data    = JSON.parse(mount_point.dataset.sprints);
     const container_width = mount_point.clientWidth;
