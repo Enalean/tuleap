@@ -115,7 +115,7 @@ def get_cookie_prefix():
     """Get cookie prefix"""
     if not globals().has_key('sys_cookie_prefix'):
 	return ('')
-    return (sys_cookie_prefix)
+    return ('__Host-'+sys_cookie_prefix)
 
 
 # Get Codendi Apache User
