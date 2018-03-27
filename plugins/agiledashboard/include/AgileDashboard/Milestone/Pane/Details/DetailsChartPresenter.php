@@ -49,7 +49,7 @@ class DetailsChartPresenter
         $burnup_label,
         BurndownFieldPresenter $burndown_presenter = null,
         BurnupFieldPresenter $burnup_presenter = null,
-        $escaped_chart = null
+        array $escaped_chart = null
     ) {
         $this->has_burndown       = $has_burndown;
         $this->burndown_label     = $burndown_label;
@@ -60,7 +60,7 @@ class DetailsChartPresenter
 
         $this->has_charts = $this->has_burndown || $this->has_burnup;
 
-        $this->escaped_chart     = $escaped_chart;
-        $this->has_escaped_chart = count($escaped_chart) > 0;
+        $this->escaped_chart        = $escaped_chart;
+        $this->has_escaped_chart    = count($escaped_chart) > 0;
     }
 }
