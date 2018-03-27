@@ -24,7 +24,7 @@ Requires:	tuleap-plugin-agiledashboard
 
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{_datadir}/tuleap/src/www/assets
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/velocity
-%{__cp} -ar db include site-content templates README.mkd VERSION $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/velocity
+%{__cp} -ar db include site-content templates vendor README.mkd VERSION $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/velocity
 %{__cp} -ar assets $RPM_BUILD_ROOT/%{_datadir}/tuleap/src/www/assets/velocity
 
 %clean
