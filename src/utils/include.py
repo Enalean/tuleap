@@ -113,9 +113,12 @@ def write_array_file(filename, lines):
 # Get cookie Prefix
 def get_cookie_prefix():
     """Get cookie prefix"""
-    if not globals().has_key('sys_cookie_prefix'):
-	return ('')
-    return ('__Host-'+sys_cookie_prefix)
+    cookie_prefix = ''
+    if globals().has_key('sys_https_host') and len(globals()['sys_https_host']) > 0:
+        cookie_prefix = '__Host-'
+    if globals().has_key('sys_cookie_prefix'):
+        return cookie_prefix + sys_cookie_prefix
+    return cookie_prefix
 
 
 # Get Codendi Apache User
