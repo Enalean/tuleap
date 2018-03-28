@@ -1,6 +1,6 @@
 Name:		tuleap-plugin-dynamic-credentials
 Version:	@@VERSION@@
-Release:	@@TULEAP_VERSION@@_@@RELEASE@@
+Release:	@@TULEAP_VERSION@@_@@RELEASE@@%{?dist}
 BuildArch:	noarch
 Summary:	Dynamic credentials generation
 
@@ -10,7 +10,7 @@ URL:		https://enalean.com
 Source0:	%{name}-%{version}.tar.gz
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root
-Requires:	tuleap = @@TULEAP_VERSION@@-@@RELEASE@@
+Requires:	tuleap = @@TULEAP_VERSION@@-@@RELEASE@@%{?dist}
 
 %description
 %{summary}.
