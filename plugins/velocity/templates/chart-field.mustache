@@ -5,6 +5,11 @@
                 <h1 class="tlp-pane-title">{{# dgettext }} tuleap-velocity | Velocity{{/ dgettext }}</h1>
             </div>
             <section class="tlp-pane-section">
+                {{# has_more_than_max_velocities_limit }}
+                    <div class="tlp-alert-info">
+                        {{# dgettext }} tuleap-velocity | The velocity chart only displays the last 7 artifacts found.{{/ dgettext }}
+                    </div>
+                {{/ has_more_than_max_velocities_limit }}
                 {{# has_invalid_artifacts }}
                         <p class="tlp-alert-warning">
                             {{# dngettext }}

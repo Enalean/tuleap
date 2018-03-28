@@ -116,6 +116,9 @@ msgstr ""
 "Le tracker %s utilise la sémantique vélocité. Merci de vérifier sa "
 "configuration."
 
+msgid "The velocity chart only displays the last 7 artifacts found."
+msgstr "Le graphique de vélocité affiche seulement les 7 artéfacts les plus récents trouvés."
+
 msgid "This tracker does not have a <i>velocity</i> field yet."
 msgstr "Cet outil de suivi n'a pas encore de champ <i>vélocité</i>."
 

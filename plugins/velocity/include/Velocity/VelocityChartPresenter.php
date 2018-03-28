@@ -33,6 +33,7 @@ class VelocityChartPresenter
     /**
      * @var bool
      */
+
     public $has_invalid_artifacts;
     /**
      * @var int
@@ -43,12 +44,18 @@ class VelocityChartPresenter
      */
     public $invalid_artifacts;
 
-    public function __construct(array $backlog_items_representation, array $invalid_artifacts)
+    /**
+     * @var bool
+     */
+    public $has_more_than_max_velocities_limit;
+
+    public function __construct(VelocityCollection $backlog_items_representation)
     {
-        $this->backlog_items_representation             = json_encode($backlog_items_representation);
-        $this->has_backlog_items_with_computed_velocity = count($backlog_items_representation) > 0;
-        $this->invalid_artifacts                        = $invalid_artifacts;
-        $this->has_invalid_artifacts                    = count($invalid_artifacts) > 0;
-        $this->nb_invalid_artifacts                     = count($invalid_artifacts);
+        $this->backlog_items_representation             = json_encode($backlog_items_representation->getVelocityRepresentations());
+        $this->has_backlog_items_with_computed_velocity = count($backlog_items_representation->getVelocityRepresentations()) > 0;
+        $this->has_more_than_max_velocities_limit       = $backlog_items_representation->hasMoreThanMaxLimitDisplayVelocities();
+        $this->invalid_artifacts                        = $backlog_items_representation->getInvalidArtifacts();
+        $this->has_invalid_artifacts                    = count($this->invalid_artifacts) > 0;
+        $this->nb_invalid_artifacts                     = count($this->invalid_artifacts);
     }
 }
