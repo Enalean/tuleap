@@ -1,4 +1,5 @@
 _logPassword() {
+    _infoMessage "Adding credentials to /root/.tuleap_passwd"
     ${printf} "%s\n" "${@}" >> ${password_file}
 }
 
