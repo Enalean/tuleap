@@ -1,6 +1,5 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
  * Copyright (c) STMicroelectronics 2011. All rights reserved
  *
  * Tuleap is free software; you can redistribute it and/or modify
@@ -43,7 +42,7 @@ class WebDAVDocmanDocumentTest extends TuleapTestCase {
         $utils->setReturnValue('isWriteEnabled', false);
         $webDAVDocmanDocument->setReturnValue('getUtils', $utils);
 
-        $this->expectException(\Sabre\DAV\Exception\Forbidden::class);
+        $this->expectException('Sabre_DAV_Exception_Forbidden');
         $webDAVDocmanDocument->delete();
     }
 
@@ -70,7 +69,7 @@ class WebDAVDocmanDocumentTest extends TuleapTestCase {
         $utils->setReturnValue('isWriteEnabled', false);
         $webDAVDocmanDocument->setReturnValue('getUtils', $utils);
 
-        $this->expectException(\Sabre\DAV\Exception\MethodNotAllowed::class);
+        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
         $webDAVDocmanDocument->setName('newName');
     }
 

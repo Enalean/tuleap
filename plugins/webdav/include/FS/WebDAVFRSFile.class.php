@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -31,8 +31,7 @@ require_once (dirname(__FILE__).'/../WebDAVUtils.class.php');
  * It's an implementation of the abstract class Sabre_DAV_File methods
  *
  */
-class WebDAVFRSFile extends \Sabre\DAV\FS\File
-{
+class WebDAVFRSFile extends Sabre_DAV_File {
 
     private $user;
     private $project;
@@ -51,15 +50,14 @@ class WebDAVFRSFile extends \Sabre\DAV\FS\File
      *
      * @return void
      */
-    public function __construct($user, $project, $package, $release, $file)
-    {
-        $this->user    = $user;
+    function __construct($user, $project, $package, $release, $file) {
+
+        $this->user = $user;
         $this->project = $project;
         $this->package = $package;
         $this->release = $release;
-        $this->file    = $file;
+        $this->file = $file;
 
-        parent::__construct($this->getFileLocation());
     }
 
     /**
@@ -80,7 +78,7 @@ class WebDAVFRSFile extends \Sabre\DAV\FS\File
 
     public function put($data) {
         if (! file_put_contents($this->getFileLocation(), $data)) {
-            throw new \Sabre\DAV\Exception\Forbidden('Permission denied to change data');
+            throw new Sabre_DAV_Exception_Forbidden('Permission denied to change data');
         }
 
         $frs_file_factory = new FRSFileFactory();
@@ -140,6 +138,8 @@ class WebDAVFRSFile extends \Sabre\DAV\FS\File
      * Returns mime-type of the file
      *
      * @return String
+     *
+     * @see plugins/webdav/lib/Sabre/DAV/Sabre_DAV_File#getContentType()
      */
     function getContentType() {
         if (file_exists($this->getFileLocation()) && filesize($this->getFileLocation())) {
@@ -153,9 +153,10 @@ class WebDAVFRSFile extends \Sabre\DAV\FS\File
      *
      * @return String
      */
-    private function getFileLocation()
-    {
+    function getFileLocation() {
+
         return $this->getFile()->getFileLocation();
+
     }
 
     /**
@@ -163,9 +164,10 @@ class WebDAVFRSFile extends \Sabre\DAV\FS\File
      *
      * @return FRSFile
      */
-    public function getFile()
-    {
+    function getFile() {
+
         return $this->file;
+
     }
 
     /**
@@ -297,6 +299,8 @@ class WebDAVFRSFile extends \Sabre\DAV\FS\File
      * Deletes the file
      *
      * @return void
+     *
+     * @see plugins/webdav/lib/Sabre/DAV/Sabre_DAV_Node#delete()
      */
     function delete() {
 
@@ -304,14 +308,10 @@ class WebDAVFRSFile extends \Sabre\DAV\FS\File
             $utils = $this->getUtils();
             $result = $utils->getFileFactory()->delete_file($this->getProject()->getGroupId(), $this->getFileId());
             if ($result == 0) {
-                throw new \Sabre\DAV\Exception\Forbidden(
-                    $GLOBALS['Language']->getText('plugin_webdav_download', 'file_not_available')
-                );
+                throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_download', 'file_not_available'));
             }
         } else {
-            throw new \Sabre\DAV\Exception\Forbidden(
-                $GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_delete')
-            );
+            throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_delete'));
         }
 
     }
@@ -329,4 +329,7 @@ class WebDAVFRSFile extends \Sabre\DAV\FS\File
         return copy($source, $destination);
 
     }
+
 }
+
+?>

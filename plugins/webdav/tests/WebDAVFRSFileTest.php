@@ -47,7 +47,7 @@ class WebDAVFRSFileTest extends TuleapTestCase
 
         $webDAVFile = new WebDAVFRSFileTestVersion($this);
         $webDAVFile->setReturnValue('userCanWrite', false);
-        $this->expectException(\Sabre\DAV\Exception\Forbidden::class);
+        $this->expectException('Sabre_DAV_Exception_Forbidden');
 
         $webDAVFile->delete();
 
@@ -68,7 +68,7 @@ class WebDAVFRSFileTest extends TuleapTestCase
         $webDAVFile->setReturnValue('getProject', $project);
         $webDAVFile->setReturnValue('getUtils', $utils);
 
-        $this->expectException(\Sabre\DAV\Exception\Forbidden::class);
+        $this->expectException('Sabre_DAV_Exception_Forbidden');
 
         $webDAVFile->delete();
 

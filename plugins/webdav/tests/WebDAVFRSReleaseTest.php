@@ -103,7 +103,7 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
         $webDAVFile->setReturnValue('getFile', null);
         $webDAVFRSRelease->setReturnValue('getWebDAVFRSFile', $webDAVFile);
 
-        $this->expectException(\Sabre\DAV\Exception\NotFound::class);
+        $this->expectException('Sabre_DAV_Exception_FileNotFound');
 
         $webDAVFRSRelease->getChild('fileName');
 
@@ -123,7 +123,7 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
         $webDAVFile->setReturnValue('isActive', false);
         $webDAVFRSRelease->setReturnValue('getWebDAVFRSFile', $webDAVFile);
 
-        $this->expectException(\Sabre\DAV\Exception\Forbidden::class);
+        $this->expectException('Sabre_DAV_Exception_Forbidden');
 
         $webDAVFRSRelease->getChild('fileName');
 
@@ -145,7 +145,7 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
         $webDAVFile->setReturnValue('userCanDownload', false);
         $webDAVFRSRelease->setReturnValue('getWebDAVFRSFile', $webDAVFile);
 
-        $this->expectException(\Sabre\DAV\Exception\Forbidden::class);
+        $this->expectException('Sabre_DAV_Exception_Forbidden');
 
         $webDAVFRSRelease->getChild('fileName');
 
@@ -169,7 +169,7 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
         $webDAVFile->setReturnValue('fileExists', false);
         $webDAVFRSRelease->setReturnValue('getWebDAVFRSFile', $webDAVFile);
 
-        $this->expectException(\Sabre\DAV\Exception\NotFound::class);
+        $this->expectException('Sabre_DAV_Exception_FileNotFound');
 
         $webDAVFRSRelease->getChild('fileName');
 
@@ -200,7 +200,7 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
         $webDAVFRSRelease->setReturnValue('getReleaseId', 3);
         $webDAVFRSRelease->setReturnValue('getWebDAVFRSFile', $webDAVFile);
 
-        $this->expectException(\Sabre\DAV\Exception\NotFound::class);
+        $this->expectException('Sabre_DAV_Exception_FileNotFound');
 
         $webDAVFRSRelease->getChild('fileName');
 
@@ -230,7 +230,7 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
         $webDAVFRSRelease->setReturnValue('getReleaseId', 3);
         $webDAVFRSRelease->setReturnValue('getWebDAVFRSFile', $webDAVFile);
 
-        $this->expectException(\Sabre\DAV\Exception\NotFound::class);
+        $this->expectException('Sabre_DAV_Exception_FileNotFound');
 
         $webDAVFRSRelease->getChild('fileName');
 
@@ -263,7 +263,7 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
         $webDAVFRSRelease->setReturnValue('getMaxFileSize', 64);
         $webDAVFRSRelease->setReturnValue('getWebDAVFRSFile', $webDAVFile);
 
-        $this->expectException(\Sabre\DAV\Exception\RequestedRangeNotSatisfiable::class);
+        $this->expectException('Sabre_DAV_Exception_RequestedRangeNotSatisfiable');
 
         $webDAVFRSRelease->getChild('fileName');
 
@@ -536,7 +536,7 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
 
         $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion($this);
         $webDAVFRSRelease->setReturnValue('userCanWrite', false);
-        $this->expectException(\Sabre\DAV\Exception\Forbidden::class);
+        $this->expectException('Sabre_DAV_Exception_Forbidden');
 
         $webDAVFRSRelease->delete();
 
@@ -557,7 +557,7 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
         $webDAVFRSRelease->setReturnValue('getProject', $project);
         $webDAVFRSRelease->setReturnValue('getUtils', $utils);
 
-        $this->expectException(\Sabre\DAV\Exception\Forbidden::class);
+        $this->expectException('Sabre_DAV_Exception_Forbidden');
 
         $webDAVFRSRelease->delete();
 
@@ -597,7 +597,7 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
         $webDAVFRSRelease->setReturnValue('getUtils', $utils);
         $project = new MockProject();
         $webDAVFRSRelease->setReturnValue('getProject', $project);
-        $this->expectException(\Sabre\DAV\Exception\Forbidden::class);
+        $this->expectException('Sabre_DAV_Exception_Forbidden');
 
         $webDAVFRSRelease->setName('newName');
 
@@ -619,7 +619,7 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
         $webDAVFRSRelease->setReturnValue('getUtils', $utils);
         $project = new MockProject();
         $webDAVFRSRelease->setReturnValue('getProject', $project);
-        $this->expectException(\Sabre\DAV\Exception\MethodNotAllowed::class);
+        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
 
         $webDAVFRSRelease->setName('newName');
 
@@ -664,7 +664,7 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
         $package = new MockFRSPackage();
         $destination->setReturnValue('getPackage', $package);
 
-        $this->expectException(\Sabre\DAV\Exception\Forbidden::class);
+        $this->expectException('Sabre_DAV_Exception_Forbidden');
 
         $source->move($destination);
     }
@@ -685,7 +685,7 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
         $package = new MockFRSPackage();
         $destination->setReturnValue('getPackage', $package);
 
-        $this->expectException(\Sabre\DAV\Exception\Forbidden::class);
+        $this->expectException('Sabre_DAV_Exception_Forbidden');
 
         $source->move($destination);
     }
@@ -706,7 +706,7 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
         $package = new MockFRSPackage();
         $destination->setReturnValue('getPackage', $package);
 
-        $this->expectException(\Sabre\DAV\Exception\Forbidden::class);
+        $this->expectException('Sabre_DAV_Exception_Forbidden');
 
         $source->move($destination);
     }
@@ -728,7 +728,7 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
         $package = new MockFRSPackage();
         $destination->setReturnValue('getPackage', $package);
 
-        $this->expectException(\Sabre\DAV\Exception\MethodNotAllowed::class);
+        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
 
         $source->move($destination);
     }
@@ -752,7 +752,7 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
         $package->setReturnValue('isHidden', true);
         $destination->setReturnValue('getPackage', $package);
 
-        $this->expectException(\Sabre\DAV\Exception\MethodNotAllowed::class);
+        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
 
         $source->move($destination);
     }
@@ -831,7 +831,7 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
         $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion($this);
 
         $webDAVFRSRelease->setReturnValue('userCanWrite', false);
-        $this->expectException(\Sabre\DAV\Exception\Forbidden::class);
+        $this->expectException('Sabre_DAV_Exception_Forbidden');
 
         $webDAVFRSRelease->createFile('release');
 
@@ -853,7 +853,7 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
         $project = new MockProject();
         $webDAVFRSRelease->setReturnValue('getProject', $project);
         $webDAVFRSRelease->setReturnValue('getUtils', $utils);
-        $this->expectException(\Sabre\DAV\Exception\RequestedRangeNotSatisfiable::class);
+        $this->expectException('Sabre_DAV_Exception_RequestedRangeNotSatisfiable');
         $data = fopen(dirname(__FILE__).'/_fixtures/test.txt', 'r');
         $webDAVFRSRelease->setReturnValue('getMaxFileSize', 64);
 
@@ -908,7 +908,7 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
         $webDAVFRSRelease->expectNever('openFile');
         $webDAVFRSRelease->expectNever('streamCopyToStream');
         $webDAVFRSRelease->expectNever('closeFile');
-        $this->expectException(\Sabre\DAV\Exception::class);
+        $this->expectException('Sabre_DAV_Exception');
 
         $webDAVFRSRelease->createFileIntoIncoming('test.txt', 'text');
     }
@@ -924,7 +924,7 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
         $webDAVFRSRelease->expectOnce('openFile');
         $webDAVFRSRelease->expectNever('streamCopyToStream');
         $webDAVFRSRelease->expectNever('closeFile');
-        $this->expectException(\Sabre\DAV\Exception::class);
+        $this->expectException('Sabre_DAV_Exception');
 
         $webDAVFRSRelease->createFileIntoIncoming('toto.txt', 'text');
     }
@@ -941,8 +941,8 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
         $webDAVFRSRelease->expectOnce('openFile');
         $webDAVFRSRelease->expectOnce('streamCopyToStream');
         $webDAVFRSRelease->expectOnce('closeFile');
-        $this->expectException(\Sabre\DAV\Exception::class);
-        $this->expectException(\Sabre\DAV\Exception::class);
+        $this->expectException('Sabre_DAV_Exception');
+        $this->expectException('Sabre_DAV_Exception');
 
         $webDAVFRSRelease->createFileIntoIncoming('toto.txt', 'text');
     }

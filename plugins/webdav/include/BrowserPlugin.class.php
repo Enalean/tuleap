@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -22,8 +22,8 @@
 /**
  * This is a web based WebDAV client added as a plugin into the WebDAV server
  */
-class BrowserPlugin extends Sabre\DAV\Browser\Plugin
-{
+class BrowserPlugin extends Sabre_DAV_Browser_Plugin {
+
     private $purifier;
 
     public function __construct()
@@ -151,19 +151,18 @@ class BrowserPlugin extends Sabre\DAV\Browser\Plugin
      *
      * @return Boolean
      */
-    public function httpPOST(Sabre\HTTP\Request $request, Sabre\HTTP\Response $response)
-    {
-        if ($request->getMethod() != 'POST') {
+    public function httpPOSTHandler($method) {
+
+        if ($method!='POST') {
             return true;
         }
-
         if (isset($_POST['action'])) {
             switch($_POST['action']) {
 
                 case 'mkcol' :
                     if (isset($_POST['name']) && trim($_POST['name'])) {
                         // Using basename() because we won't allow slashes
-                        list(, $folderName) = \Sabre\HTTP\URLUtil::splitPath(trim($_POST['name']));
+                        list(, $folderName) = Sabre_DAV_URLUtil::splitPath(trim($_POST['name']));
                         $this->server->createDirectory($this->server->getRequestUri() . '/' . $folderName);
                     }
                     break;
@@ -174,13 +173,13 @@ class BrowserPlugin extends Sabre\DAV\Browser\Plugin
                         break;
                     }
                     $newName = trim($file['name']);
-                    list(, $newName) = \Sabre\HTTP\URLUtil::splitPath(trim($file['name']));
+                    list(, $newName) = Sabre_DAV_URLUtil::splitPath(trim($file['name']));
                     if (isset($_POST['name']) && trim($_POST['name'])) {
                         $newName = trim($_POST['name']);
                     }
 
                     // Making sure we only have a 'basename' component
-                    list(, $newName) = \Sabre\HTTP\URLUtil::splitPath($newName);
+                    list(, $newName) = Sabre_DAV_URLUtil::splitPath($newName);
 
                     if (is_uploaded_file($file['tmp_name'])) {
                         $parent = $this->server->tree->getNodeForPath(trim($this->server->getRequestUri(), '/'));
@@ -209,9 +208,7 @@ class BrowserPlugin extends Sabre\DAV\Browser\Plugin
                     break;
             }
         }
-
-        $response->setHeader('Location', $request->getUrl());
-        $response->setStatus(302);
+        $this->server->httpResponse->setHeader('Location', $this->server->httpRequest->getUri());
         return false;
 
     }
@@ -222,11 +219,15 @@ class BrowserPlugin extends Sabre\DAV\Browser\Plugin
      * @param String $path
      *
      * @return String
+     *
+     * @see plugins/webdav/lib/Sabre/DAV/Browser/Sabre_DAV_Browser_Plugin#generateDirectoryIndex($path)
      */
     public function generateDirectoryIndex($path) {
 
         $node = $this->server->tree->getNodeForPath($path);
         $class = get_class($node);
+
+        echo $GLOBALS['HTML']->pv_header(array('title'=>' WebDAV : '. $this->purifier->purify($node->getName())));
 
         ob_start();
 
@@ -270,8 +271,8 @@ class BrowserPlugin extends Sabre\DAV\Browser\Plugin
         );
 
         if ($path) {
-            list($parentUri) = \Sabre\HTTP\URLUtil::splitPath($path);
-            $fullPath = \Sabre\HTTP\URLUtil::encodePath($this->server->getBaseUri() . $parentUri);
+            list($parentUri) = Sabre_DAV_URLUtil::splitPath($path);
+            $fullPath = Sabre_DAV_URLUtil::encodePath($this->server->getBaseUri() . $parentUri);
             echo "<tr><td><a href=\"{$this->purifier->purify($fullPath)}\">..</a></td></tr>";
         }
 
@@ -281,7 +282,7 @@ class BrowserPlugin extends Sabre\DAV\Browser\Plugin
                 continue;
             }
 
-            list(, $name) = \Sabre\HTTP\URLUtil::splitPath($file['href']);
+            list(, $name) = Sabre_DAV_URLUtil::splitPath($file['href']);
             $type = null;
 
             if (isset($file[200]['{DAV:}resourcetype'])) {

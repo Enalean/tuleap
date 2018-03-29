@@ -269,6 +269,7 @@ Group: Development/Tools
 Version: @@PLUGIN_WEBDAV_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+Requires: php-sabredav = 1.4.4
 %description plugin-webdav
 Plugin to access to file releases & docman though WebDAV
 
