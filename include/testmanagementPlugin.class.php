@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,22 +21,21 @@
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\project\Event\ProjectServiceBeforeActivation;
+use Tuleap\TestManagement\Config;
+use Tuleap\TestManagement\Dao;
+use Tuleap\TestManagement\FirstConfigCreator;
+use Tuleap\TestManagement\Nature\NatureCoveredByOverrider;
+use Tuleap\TestManagement\Nature\NatureCoveredByPresenter;
 use Tuleap\TestManagement\REST\ResourcesInjector;
 use Tuleap\TestManagement\TestManagementPluginInfo;
 use Tuleap\TestManagement\UserIsNotAdministratorException;
+use Tuleap\TestManagement\XMLImport;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\Events\ArtifactLinkTypeCanBeUnused;
 use Tuleap\Tracker\Events\GetEditableTypesInProject;
 use Tuleap\Tracker\Events\XMLImportArtifactLinkTypeCanBeDisabled;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
-use Tuleap\TestManagement\Config;
-use Tuleap\TestManagement\Dao;
-use Tuleap\TestManagement\XMLImport;
-use Tuleap\TestManagement\FirstConfigCreator;
-use Tuleap\TestManagement\Nature\NatureCoveredByOverrider;
-use Tuleap\TestManagement\Nature\NatureCoveredByPresenter;
-use Tuleap\XML\PHPCast;
 
 require_once 'constants.php';
 
@@ -84,6 +83,7 @@ class testmanagementPlugin extends Plugin
             $this->addHook(GetEditableTypesInProject::NAME);
             $this->addHook(ArtifactLinkTypeCanBeUnused::NAME);
             $this->addHook(XMLImportArtifactLinkTypeCanBeDisabled::NAME);
+            $this->addHook(Tracker_FormElementFactory::GET_CLASSNAMES);
         }
 
         return parent::getHooksAndCallbacks();
@@ -96,6 +96,12 @@ class testmanagementPlugin extends Plugin
 
     public function getServiceShortname() {
         return 'plugin_testmanagement';
+    }
+
+    /** @see Tracker_FormElementFactory::GET_CLASSNAMES */
+    public function tracker_formelement_get_classnames($params)
+    {
+        $params['fields']['ttmstepdef'] = \Tuleap\TestManagement\Step\Definition\Field\StepDefinition::class;
     }
 
     public function isUsedByProject(Project $project)

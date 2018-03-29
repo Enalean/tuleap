@@ -1,0 +1,33 @@
+<table class="table">
+    <thead>
+    <tr>
+        <th>#</th>
+        <th style="width: 100%">
+            {{# dgettext }}
+                tuleap-testmanagement |
+                Description
+            {{/ dgettext }}
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    {{^ steps }}
+        <tr>
+            <td colspan="2" class="tlp-table-cell-empty">
+            {{# dgettext }}
+                tuleap-testmanagement |
+                This test does not have any steps yet.
+            {{/ dgettext }}
+            </td>
+        </tr>
+    {{/ steps }}
+    {{# steps }}
+        <tr>
+            <td style="vertical-align: top;">{{ rank }}</td>
+            <td style="vertical-align: top;">
+                {{ description }}
+            </td>
+        </tr>
+    {{/ steps }}
+    </tbody>
+</table>

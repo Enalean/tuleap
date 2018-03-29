@@ -1,0 +1,33 @@
+<table class="table">
+    <thead>
+    <tr>
+        <th>#</th>
+        <th style="width: 50%">Actions</th>
+        <th style="width: 50%">Expected results</th>
+        <th>Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{^ steps }}
+        <tr>
+            <td colspan="4" class="tlp-table-cell-empty">
+                No steps have been setup for this test
+            </td>
+        </tr>
+    {{/ steps }}
+    {{# steps }}
+        <tr>
+            <td style="vertical-align: top;">{{ getStep.getId }}</td>
+            <td style="vertical-align: top;">
+                {{{ getStep.getAction }}} <!-- :scream: -->
+            </td>
+            <td style="vertical-align: top;">
+                {{{ getStep.getExpected }}} <!-- :scream: -->
+            </td>
+            <td style="vertical-align: top;">
+                {{ getStatus }}
+            </td>
+        </tr>
+    {{/ steps }}
+    </tbody>
+</table>
