@@ -20,6 +20,7 @@
 
 require_once (dirname(__FILE__).'/../../../docman/include/Docman_ItemFactory.class.php');
 require_once (dirname(__FILE__).'/../../../docman/include/Docman_FileStorage.class.php');
+require_once (dirname(__FILE__).'/../../../docman/include/constants.php');
 require_once ('WebDAVDocmanDocument.class.php');
 require_once ('WebDAVDocmanFile.class.php');
 require_once (dirname(__FILE__).'/../WebDAV_Request.class.php');
