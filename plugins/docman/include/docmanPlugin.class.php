@@ -98,7 +98,7 @@ class DocmanPlugin extends Plugin
         $this->addHook('isWikiPageEditable',                'isWikiPageEditable',                false);
         $this->addHook('userCanAccessWikiDocument',         'userCanAccessWikiDocument',         false);
         $this->addHook('getPermsLabelForWiki',              'getPermsLabelForWiki',              false);
-        $this->addHook('ajax_reference_tooltip',            'ajax_reference_tooltip',            false);
+        $this->addHook(\Tuleap\Reference\ReferenceGetTooltipContentEvent::NAME);
         $this->addHook('project_export_entry',              'project_export_entry',              false);
         $this->addHook('project_export',                    'project_export',                    false);
         $this->addHook('SystemEvent_PROJECT_RENAME',        'renameProject',                     false);
@@ -434,15 +434,18 @@ class DocmanPlugin extends Plugin
         $this->getWikiController($request)->process();
     }
 
-    function ajax_reference_tooltip($params) {
-        if ($params['reference']->getServiceShortName() == 'docman') {
+    public function referenceGetTooltipContentEvent(Tuleap\Reference\ReferenceGetTooltipContentEvent $event)
+    {
+        if ($event->getReference()->getServiceShortName() === 'docman') {
             $request = new Codendi_Request(array(
-                'id'       => $params['val'],
-                'group_id' => $params['group_id'],
+                'id'       => $event->getValue(),
+                'group_id' => $event->getProject()->getID(),
                 'action'   => 'ajax_reference_tooltip'
             ));
-            $controler = $this->getHTTPController($request);
-            $controler->process();
+            $controller = $this->getHTTPController($request);
+            ob_start();
+            $controller->process();
+            $event->setOutput(ob_get_clean());
         }
     }
 

@@ -74,7 +74,7 @@ class pullrequestPlugin extends Plugin
         $this->addHook(Event::GET_REFERENCE);
         $this->addHook(Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES);
         $this->addHook(Event::GET_AVAILABLE_REFERENCE_NATURE);
-        $this->addHook('ajax_reference_tooltip');
+        $this->addHook(\Tuleap\Reference\ReferenceGetTooltipContentEvent::NAME);
         $this->addHook(CollectionOfLabelableDao::NAME);
         $this->addHook(LabeledItemCollection::NAME);
         $this->addHook(GlyphLocationsCollector::NAME);
@@ -505,23 +505,26 @@ class pullrequestPlugin extends Plugin
         $params['natures'] = array_merge($params['natures'], $nature);
     }
 
-    public function ajax_reference_tooltip($params)
+    public function referenceGetTooltipContentEvent(Tuleap\Reference\ReferenceGetTooltipContentEvent $event)
     {
-        $reference = $params['reference'];
-        if ($reference->getNature() === self::REFERENCE_NATURE) {
-            $pull_request_id            = $params['val'];
-            $pull_request               = $this->getPullRequestFactory()->getPullRequestById($pull_request_id);
-            $pull_request_title         = $pull_request->getTitle();
-            $pull_request_status        = $pull_request->getStatus();
-            $pull_request_creation_date = $pull_request->getCreationDate();
+        if ($event->getReference()->getNature() === self::REFERENCE_NATURE) {
+            try {
+                $pull_request_id            = $event->getValue();
+                $pull_request               = $this->getPullRequestFactory()->getPullRequestById($pull_request_id);
+                $pull_request_title         = $pull_request->getTitle();
+                $pull_request_status        = $pull_request->getStatus();
+                $pull_request_creation_date = $pull_request->getCreationDate();
 
-            $renderer  = $this->getTemplateRenderer();
-            $presenter = new Presenter(
-                $pull_request_title,
-                $pull_request_status,
-                $pull_request_creation_date
-            );
-            echo $renderer->renderToString($presenter->getTemplateName(), $presenter);
+                $renderer  = $this->getTemplateRenderer();
+                $presenter = new Presenter(
+                    $pull_request_title,
+                    $pull_request_status,
+                    $pull_request_creation_date
+                );
+                $event->setOutput($renderer->renderToString($presenter->getTemplateName(), $presenter));
+            } catch (\Tuleap\PullRequest\Exception\PullRequestNotFoundException $exception) {
+                // No tooltip
+            }
         }
     }
 

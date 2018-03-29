@@ -89,7 +89,7 @@ class trackerPlugin extends Plugin {
         $this->addHook(Event::GET_ARTIFACT_REFERENCE_GROUP_ID,'get_artifact_reference_group_id',   false);
         $this->addHook(Event::SET_ARTIFACT_REFERENCE_GROUP_ID);
         $this->addHook(Event::BUILD_REFERENCE,                'build_reference',                   false);
-        $this->addHook('ajax_reference_tooltip',              'ajax_reference_tooltip',            false);
+        $this->addHook(\Tuleap\Reference\ReferenceGetTooltipContentEvent::NAME);
         $this->addHook(Event::SERVICE_CLASSNAMES,             'service_classnames',                false);
         $this->addHook(Event::JAVASCRIPT,                     'javascript',                        false);
         $this->addHook(Event::TOGGLE,                         'toggle',                            false);
@@ -650,17 +650,15 @@ class trackerPlugin extends Plugin {
         );
     }
 
-    public function ajax_reference_tooltip($params) {
-        if ($params['reference']->getServiceShortName() == $this->getServiceShortname()) {
-            if ($params['reference']->getNature() == Tracker_Artifact::REFERENCE_NATURE) {
-                $user = UserManager::instance()->getCurrentUser();
-                $aid = $params['val'];
-                if ($artifact = Tracker_ArtifactFactory::instance()->getArtifactByid($aid)) {
-                    if ($artifact && $artifact->getTracker()->isActive()) {
-                        echo $artifact->fetchTooltip($user);
-                    } else {
-                        echo $GLOBALS['Language']->getText('plugin_tracker_common_type', 'artifact_not_exist');
-                    }
+    public function referenceGetTooltipContentEvent(Tuleap\Reference\ReferenceGetTooltipContentEvent $event)
+    {
+        if ($event->getReference()->getServiceShortName() === self::SERVICE_SHORTNAME && $event->getReference()->getNature() === Tracker_Artifact::REFERENCE_NATURE) {
+            $aid = (int) $event->getValue();
+            if ($artifact = Tracker_ArtifactFactory::instance()->getArtifactById($aid)) {
+                if ($artifact && $artifact->getTracker()->isActive()) {
+                    $event->setOutput($artifact->fetchTooltip($event->getUser()));
+                } else {
+                    $event->setOutput($GLOBALS['Language']->getText('plugin_tracker_common_type', 'artifact_not_exist'));
                 }
             }
         }

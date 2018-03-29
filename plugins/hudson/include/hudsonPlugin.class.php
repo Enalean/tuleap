@@ -42,7 +42,7 @@ class hudsonPlugin extends Plugin
         $this->addHook(\Tuleap\Widget\Event\GetProjectWidgetList::NAME);
 
         $this->addHook('get_available_reference_natures', 'getAvailableReferenceNatures', false);
-        $this->addHook('ajax_reference_tooltip', 'ajax_reference_tooltip', false);
+        $this->addHook(\Tuleap\Reference\ReferenceGetTooltipContentEvent::NAME);
         $this->addHook(Event::AJAX_REFERENCE_SPARKLINE, 'ajax_reference_sparkline', false);
         $this->addHook('statistics_collector',          'statistics_collector',       false);
 
@@ -228,17 +228,14 @@ class hudsonPlugin extends Plugin
         $params['natures'] = array_merge($params['natures'], $hudson_plugin_reference_natures);
     }
 
-    function ajax_reference_tooltip($params) {
-        require_once('HudsonJob.class.php');
-        require_once('HudsonBuild.class.php');
-        require_once('hudson_Widget_JobLastBuilds.class.php');
+    public function referenceGetTooltipContentEvent(Tuleap\Reference\ReferenceGetTooltipContentEvent $event)
+    {
         $html_purifier = Codendi_HTMLPurifier::instance();
 
-        $ref = $params['reference'];
-        switch ($ref->getNature()) {
+        switch ($event->getReference()->getNature()) {
             case 'hudson_build':
-                $val = $params['val'];
-                $group_id = $params['group_id'];
+                $val = $event->getValue();
+                $group_id = $event->getProject()->getID();
                 $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
                 if (strpos($val, "/") !== false) {
                     $arr = explode("/", $val);
@@ -256,16 +253,18 @@ class hudsonPlugin extends Plugin
                     $row         = $dar->current();
                     $http_client = new Http_Client();
                     $build       = new HudsonBuild($row['job_url'] . '/' . $build_id . '/', $http_client);
-                    echo '<strong>' . $GLOBALS['Language']->getText('plugin_hudson', 'build_time') . '</strong> ' . $html_purifier->purify($build->getBuildTime()) . '<br />';
-                    echo '<strong>' . $GLOBALS['Language']->getText('plugin_hudson', 'status') . '</strong> ' . $html_purifier->purify($build->getResult());
+                    $event->setOutput(
+                        '<strong>' . $GLOBALS['Language']->getText('plugin_hudson', 'build_time') . '</strong> ' . $html_purifier->purify($build->getBuildTime()) . '<br />'.
+                        '<strong>' . $GLOBALS['Language']->getText('plugin_hudson', 'status') . '</strong> ' . $html_purifier->purify($build->getResult())
+                    );
                 } else {
-                    echo '<span class="error">'.$GLOBALS['Language']->getText('plugin_hudson','error_object_not_found').'</span>';
+                    $event->setOutput('<span class="error">'.$GLOBALS['Language']->getText('plugin_hudson','error_object_not_found').'</span>');
                 }
                 break;
             case 'hudson_job':
                 $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
-                $job_name = $params['val'];
-                $group_id = $params['group_id'];
+                $job_name = $event->getValue();
+                $group_id = $event->getProject()->getID();
                 $dar = $job_dao->searchByJobName($job_name, $group_id);
                 if ($dar->valid()) {
                     $row = $dar->current();
@@ -298,11 +297,11 @@ class hudsonPlugin extends Plugin
                         $html .= '  </td>';
                         $html .= ' </tr>';
                         $html .= '</table>';
-                        echo $html;
+                        $event->setOutput($html);
                     } catch (Exception $e) {
                     }
                 } else {
-                    echo '<span class="error">'.$GLOBALS['Language']->getText('plugin_hudson','error_object_not_found').'</span>';
+                    $event->setOutput('<span class="error">'.$GLOBALS['Language']->getText('plugin_hudson','error_object_not_found').'</span>');
                 }
                 break;
         }
