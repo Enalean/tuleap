@@ -30,5 +30,8 @@ msgstr "Effort restant"
 msgid "Remaining effort: %s"
 msgstr "Effort  restant : %s"
 
+msgid "ddd DD"
+msgstr "ddd DD"
+
 msgid "n/k"
 msgstr "n/c"

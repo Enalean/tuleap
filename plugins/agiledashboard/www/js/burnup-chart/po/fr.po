@@ -36,5 +36,8 @@ msgstr "Effort total"
 msgid "Total effort: %s"
 msgstr "Effort total : %s"
 
+msgid "ddd DD"
+msgstr "ddd DD"
+
 msgid "n/k"
 msgstr "n/c"

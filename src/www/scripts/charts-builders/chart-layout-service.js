@@ -17,10 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
- export {
+export {
     getElementSpacing,
     getElementsWidth,
-    getBadgeProperties,
     getYAxisTicksSize
 };
 
@@ -46,17 +45,6 @@ function getElementSpacing(
 function getElementsWidth(selection) {
     const nodes = selection.nodes();
     return nodes.map((node) => node.getBBox().width);
-}
-
-function getBadgeProperties(badge_value_selection, padding_width, padding_height) {
-    const { width, height, x } = badge_value_selection.node().getBBox();
-
-    return {
-        width : width + 2 * padding_width,
-        height: height + 2 * padding_height,
-        x     : x - padding_width,
-        y     : - height + padding_height
-    };
 }
 
 function getYAxisTicksSize(
