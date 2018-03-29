@@ -22,7 +22,6 @@ import { sprintf }              from 'sprintf-js';
 import { select }               from 'd3-selection';
 import { axisLeft, axisBottom } from 'd3-axis';
 import { gettext_provider }     from './gettext-provider.js';
-import { getDifference }        from './chart-dates-service.js';
 import {
     getBadgeProperties,
     getElementsWidth,
@@ -32,17 +31,7 @@ import {
 
 export { buildChartLayout };
 
-const DAY   = 'day';
-const WEEK  = 'week';
-const MONTH = 'month';
-
-const localized_date_formats = {
-    day        : gettext_provider.gettext('ddd DD'),
-    month      : gettext_provider.gettext('MMM YYYY'),
-    week       : gettext_provider.gettext('WW'),
-    /// Week format prefix. Chart ticks will be rendered like W01 for week 01, W02 for week 02 and so on.
-    week_prefix: gettext_provider.gettext('W %s')
-};
+const day_date_format = gettext_provider.gettext('ddd DD');
 
 function buildChartLayout(
     chart_container,
@@ -53,17 +42,15 @@ function buildChartLayout(
     },
     scales,
     legend_config,
-    badge_data,
-    timeframe_granularity
+    badge_data
 ) {
-    gettext_provider.setLocale(chart_container.dataset.locale);
+    gettext_provider.setLocale(document.body.dataset.userLocale);
 
     const layout = drawSVG(chart_container, graph_width, graph_height);
     const axes   = initAxis(
         graph_width,
         margins,
-        scales,
-        timeframe_granularity
+        scales
     );
     drawAxis(layout, axes, graph_height, margins);
 
@@ -75,8 +62,6 @@ function buildChartLayout(
             badge_data,
             legend_config
         );
-
-        ticksEvery(layout, timeframe_granularity);
     }
 
     return layout;
@@ -92,11 +77,8 @@ function drawSVG(element, width, height) {
 function initAxis(
     graph_width,
     margins,
-    { x_scale, y_scale },
-    timeframe_granularity
+    { x_scale, y_scale }
 ) {
-    const tick_formatter = getTickFormatter(timeframe_granularity, localized_date_formats);
-
     const y_ticks_size = getYAxisTicksSize(
         graph_width,
         margins.right,
@@ -104,14 +86,13 @@ function initAxis(
     );
 
     return {
-        x_axis: initXAxis(x_scale, tick_formatter),
+        x_axis: initXAxis(x_scale),
         y_axis: initYAxis(y_scale, y_ticks_size)
     };
 }
 
-function initXAxis(x_scale, tick_formatter) {
+function initXAxis(x_scale) {
     return axisBottom(x_scale)
-        .tickFormat(tick_formatter)
         .tickPadding(20);
 }
 
@@ -152,7 +133,7 @@ function addLegend(
     graph_legends
 ) {
     const legend_y_position = margins.top * 0.5;
-    const current_date      = moment(badge_data.date).format(localized_date_formats.day);
+    const current_date      = moment(badge_data.date).format(day_date_format);
     const badge_value       = badge_data.value;
 
     const legend = layout.append('g')
@@ -227,74 +208,4 @@ function appendBadge(container, badge_value, legend_y_position) {
         .attr('x', badge_props.x)
         .attr('rx', badge_props.height / 2)
         .attr('ry', badge_props.height / 2);
-}
-
-function ticksEvery(container, timeframe_granularity) {
-    const all_ticks = container.selectAll(`.chart-x-axis > .tick`).nodes();
-    let previous_label;
-
-    all_ticks.forEach((node) => {
-        const label = select(node).text();
-
-        if (! previous_label) {
-            previous_label = label;
-            return;
-        }
-
-        if (label === previous_label) {
-            select(node).remove();
-            return;
-        }
-
-        previous_label = label;
-    });
-
-    const displayed_ticks = container.selectAll(`.chart-x-axis > .tick`).nodes();
-
-    if (
-        canFirstLabelOverlapSecondLabel(
-            displayed_ticks[0],
-            displayed_ticks[1],
-            timeframe_granularity
-        )
-    ) {
-        select(displayed_ticks[0]).remove();
-    }
-}
-
-function canFirstLabelOverlapSecondLabel(first_tick, second_tick, timeframe_granularity) {
-    if (timeframe_granularity === DAY) {
-        return false;
-    }
-
-    const first_label  = select(first_tick);
-    const second_label = select(second_tick);
-
-    const { weeks, days } = getDifference(first_label.datum(), second_label.datum());
-
-    if (timeframe_granularity === WEEK) {
-        return days < 4;
-    }
-
-    return weeks < 2;
-}
-
-function getTickFormatter(timeframe_granularity) {
-    if (! timeframe_granularity) {
-        return tick_label => tick_label;
-    }
-
-    const tick_format = localized_date_formats[ timeframe_granularity ];
-
-    if (timeframe_granularity === WEEK) {
-        const prefix = localized_date_formats.week_prefix;
-
-        return function(date) {
-            return sprintf(prefix, moment(date, moment.ISO_8601).format(tick_format));
-        };
-    }
-
-    return function(date) {
-        return moment(date, moment.ISO_8601).format(tick_format);
-    };
 }

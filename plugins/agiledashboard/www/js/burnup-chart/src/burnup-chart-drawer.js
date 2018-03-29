@@ -16,15 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import moment                from 'moment';
-import { sprintf }           from 'sprintf-js';
-import { max }               from 'd3-array';
-import { select }            from 'd3-selection';
-import { gettext_provider }  from './gettext-provider.js';
-import { buildGraphScales }  from 'charts-builders/line-chart-scales-factory.js';
-import { buildChartLayout }  from 'charts-builders/chart-layout-builder.js';
-import { TooltipFactory }    from 'charts-builders/chart-tooltip-factory.js';
-import { ColumnFactory }     from 'charts-builders/chart-column-factory.js';
+import moment                       from 'moment';
+import { sprintf }                  from 'sprintf-js';
+import { max }                      from 'd3-array';
+import { select }                   from 'd3-selection';
+import { gettext_provider }         from './gettext-provider.js';
+import { buildGraphScales }         from 'charts-builders/line-chart-scales-factory.js';
+import { buildChartLayout }         from 'charts-builders/chart-layout-builder.js';
+import { TooltipFactory }           from 'charts-builders/chart-tooltip-factory.js';
+import { ColumnFactory }            from 'charts-builders/chart-column-factory.js';
+import { TimeScaleLabelsFormatter } from "charts-builders/time-scale-labels-formatter.js";
+import { getDaysToDisplay }         from 'charts-builders/chart-dates-service.js';
+
 import {
     drawIdealLine,
     drawCurve
@@ -34,11 +37,6 @@ import {
     getLastDayData,
     getDisplayableData,
 } from './chart-data-service.js';
-
-import {
-    getDaysToDisplay,
-    getGranularity
-} from 'charts-builders/chart-dates-service.js';
 
 export { createBurnupChart };
 
@@ -80,9 +78,6 @@ function createBurnupChart({
         column_height: y_scale(0) - properties.margins.top
     });
 
-    const end_date              = x_axis_tick_values[x_axis_tick_values.length - 1];
-    const timeframe_granularity = getGranularity(x_axis_tick_values[0], end_date);
-
     const svg_burnup = buildChartLayout(
         chart_container,
         chart_props,
@@ -91,9 +86,16 @@ function createBurnupChart({
             y_scale
         },
         chart_legends,
-        getLayoutBadgeData(),
-        timeframe_granularity
+        getLayoutBadgeData()
     );
+
+    const label_formatter = new TimeScaleLabelsFormatter({
+        layout    : svg_burnup,
+        first_date: x_axis_tick_values[0],
+        last_date : x_axis_tick_values[x_axis_tick_values.length - 1]
+    });
+
+    label_formatter.formatTicks();
 
     if (! burnup_data.points_with_date.length) {
         last_day_data.date = moment();
