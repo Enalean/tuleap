@@ -616,6 +616,11 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     protected function getCriteriaDao() {
     }
 
+    public function getAggregateFunctions()
+    {
+        return [];
+    }
+
     /**
      * Fetch the element for the submit new artifact form
      *
