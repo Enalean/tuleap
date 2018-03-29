@@ -23,6 +23,7 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\project\Event\ProjectServiceBeforeActivation;
 use Tuleap\TestManagement\REST\ResourcesInjector;
 use Tuleap\TestManagement\TestManagementPluginInfo;
+use Tuleap\TestManagement\UserIsNotAdministratorException;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\Events\ArtifactLinkTypeCanBeUnused;
@@ -309,7 +310,15 @@ class testmanagementPlugin extends Plugin
             $this->getArtifactLinksUsageUpdater()
         );
 
-        $router->route($request);
+        try {
+            $router->route($request);
+        } catch (UserIsNotAdministratorException $e) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                dgettext('tuleap-testmanagement', 'Permission denied')
+            );
+            $router->renderIndex($request);
+        }
     }
 
     /**
