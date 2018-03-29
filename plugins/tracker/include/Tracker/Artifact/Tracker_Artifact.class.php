@@ -1599,8 +1599,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     public function getLinkedArtifacts(PFUser $user) {
         $artifact_links      = array();
         $artifact_link_field = $this->getAnArtifactLinkField($user);
-        if ($artifact_link_field) {
-            $artifact_links = $artifact_link_field->getLinkedArtifacts($this->getLastChangeset(), $user);
+        $last_changeset      = $this->getLastChangeset();
+        if ($artifact_link_field && $last_changeset) {
+            $artifact_links = $artifact_link_field->getLinkedArtifacts($last_changeset, $user);
         }
         return $artifact_links;
     }
