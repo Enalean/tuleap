@@ -1,0 +1,55 @@
+{
+    "name": "core",
+    "themes": {
+        "common": {
+            "files": [
+                "src/www/themes/common/css/print.scss",
+                "src/www/themes/common/css/style.scss"
+            ],
+            "target_dir": "src/www/themes/common/css"
+        },
+        "FlamingParrot": {
+            "files": [
+                "src/www/themes/FlamingParrot/css/print.scss",
+                "src/www/themes/FlamingParrot/css/FlamingParrot_Orange.scss",
+                "src/www/themes/FlamingParrot/css/FlamingParrot_DarkBlue.scss",
+                "src/www/themes/FlamingParrot/css/FlamingParrot_DarkBlueGrey.scss",
+                "src/www/themes/FlamingParrot/css/FlamingParrot_Red.scss",
+                "src/www/themes/FlamingParrot/css/FlamingParrot_Green.scss",
+                "src/www/themes/FlamingParrot/css/FlamingParrot_DarkOrange.scss",
+                "src/www/themes/FlamingParrot/css/FlamingParrot_Blue.scss",
+                "src/www/themes/FlamingParrot/css/FlamingParrot_DarkGreen.scss",
+                "src/www/themes/FlamingParrot/css/FlamingParrot_Purple.scss",
+                "src/www/themes/FlamingParrot/css/FlamingParrot_DarkRed.scss",
+                "src/www/themes/FlamingParrot/css/FlamingParrot_DarkPurple.scss",
+                "src/www/themes/FlamingParrot/css/FlamingParrot_BlueGrey.scss"
+            ],
+            "watched_includes": ["src/www/themes/FlamingParrot/css/**/_*.scss"],
+            "target_dir": "src/www/themes/FlamingParrot/assets",
+            "is_revisioned": true
+        },
+        "BurningParrot": {
+            "files": [
+                "src/www/themes/BurningParrot/css/burning-parrot-blue.scss",
+                "src/www/themes/BurningParrot/css/burning-parrot-blue-condensed.scss",
+                "src/www/themes/BurningParrot/css/burning-parrot-green.scss",
+                "src/www/themes/BurningParrot/css/burning-parrot-green-condensed.scss",
+                "src/www/themes/BurningParrot/css/burning-parrot-grey.scss",
+                "src/www/themes/BurningParrot/css/burning-parrot-grey-condensed.scss",
+                "src/www/themes/BurningParrot/css/burning-parrot-orange.scss",
+                "src/www/themes/BurningParrot/css/burning-parrot-orange-condensed.scss",
+                "src/www/themes/BurningParrot/css/burning-parrot-purple.scss",
+                "src/www/themes/BurningParrot/css/burning-parrot-purple-condensed.scss",
+                "src/www/themes/BurningParrot/css/burning-parrot-red.scss",
+                "src/www/themes/BurningParrot/css/burning-parrot-red-condensed.scss"
+            ],
+            "watched_includes": ["src/www/themes/BurningParrot/css/**/_*.scss"],
+            "target_dir": "src/www/themes/BurningParrot/assets",
+            "is_revisioned": true
+        }
+    },
+    "components": [
+        "src/www/themes/common/tlp/",
+        "src/www/scripts/"
+    ]
+}
