@@ -1,22 +1,21 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
  *
- * This file is a part of Tuleap.
+ * This file is a part of Codendi.
  *
- * Tuleap is free software; you can redistribute it and/or modify
+ * Codendi is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Tuleap is distributed in the hope that it will be useful,
+ * Codendi is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
 require_once 'bootstrap.php';
@@ -105,7 +104,7 @@ class WebDAVFRSPackageTest extends TuleapTestCase {
         $utils = new MockWebDAVUtils();
         $webDAVFRSPackage->setReturnValue('getUtils', $utils);
 
-        $this->expectException(Sabre\DAV\Exception\NotFound::class);
+        $this->expectException('Sabre_DAV_Exception_FileNotFound');
 
         $webDAVFRSPackage->getChild($WebDAVRelease->getReleaseId());
 
@@ -127,7 +126,7 @@ class WebDAVFRSPackageTest extends TuleapTestCase {
         $utils = new MockWebDAVUtils();
         $webDAVFRSPackage->setReturnValue('getUtils', $utils);
 
-        $this->expectException(Sabre\DAV\Exception\Forbidden::class);
+        $this->expectException('Sabre_DAV_Exception_Forbidden');
 
         $webDAVFRSPackage->getChild($WebDAVRelease->getReleaseId());
 
@@ -389,7 +388,7 @@ class WebDAVFRSPackageTest extends TuleapTestCase {
 
         $webDAVFRSPackage = new WebDAVFRSPackageTestVersion($this);
         $webDAVFRSPackage->setReturnValue('userCanWrite', false);
-        $this->expectException(Sabre\DAV\Exception\Forbidden::class);
+        $this->expectException('Sabre_DAV_Exception_Forbidden');
 
         $webDAVFRSPackage->delete();
 
@@ -404,7 +403,7 @@ class WebDAVFRSPackageTest extends TuleapTestCase {
         $webDAVFRSPackage->setReturnValue('userCanWrite', true);
         $release = new MockFRSRelease();
         $webDAVFRSPackage->setReturnValue('getReleaseList', array($release));
-        $this->expectException(Sabre\DAV\Exception\Forbidden::class);
+        $this->expectException('Sabre_DAV_Exception_Forbidden');
 
         $webDAVFRSPackage->delete();
 
@@ -426,7 +425,7 @@ class WebDAVFRSPackageTest extends TuleapTestCase {
         $project = new MockProject();
         $webDAVFRSPackage->setReturnValue('getProject', $project);
 
-        $this->expectException(Sabre\DAV\Exception\Forbidden::class);
+        $this->expectException('Sabre_DAV_Exception_Forbidden');
 
         $webDAVFRSPackage->delete();
 
@@ -465,7 +464,7 @@ class WebDAVFRSPackageTest extends TuleapTestCase {
         $webDAVFRSPackage->setReturnValue('getUtils', $utils);
         $project = new MockProject();
         $webDAVFRSPackage->setReturnValue('getProject', $project);
-        $this->expectException(Sabre\DAV\Exception\Forbidden::class);
+        $this->expectException('Sabre_DAV_Exception_Forbidden');
 
         $webDAVFRSPackage->setName('newName');
 
@@ -485,7 +484,7 @@ class WebDAVFRSPackageTest extends TuleapTestCase {
     $webDAVFRSPackage->setReturnValue('getUtils', $utils);
     $project = new MockProject();
     $webDAVFRSPackage->setReturnValue('getProject', $project);
-    $this->expectException(Sabre\DAV\Exception\MethodNotAllowed::class);
+    $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
 
     $webDAVFRSPackage->setName('newName');
 
@@ -520,7 +519,7 @@ class WebDAVFRSPackageTest extends TuleapTestCase {
         $webDAVFRSPackage = new WebDAVFRSPackageTestVersion($this);
 
         $webDAVFRSPackage->setReturnValue('userCanWrite', false);
-        $this->expectException(Sabre\DAV\Exception\Forbidden::class);
+        $this->expectException('Sabre_DAV_Exception_Forbidden');
 
         $webDAVFRSPackage->createDirectory('release');
 
@@ -539,7 +538,7 @@ class WebDAVFRSPackageTest extends TuleapTestCase {
         $utils = new MockWebDAVUtils();
         $utils->setReturnValue('getReleaseFactory', $frsrf);
         $webDAVFRSPackage->setReturnValue('getUtils', $utils);
-        $this->expectException(Sabre\DAV\Exception\MethodNotAllowed::class);
+        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
 
         $webDAVFRSPackage->createDirectory('release');
 

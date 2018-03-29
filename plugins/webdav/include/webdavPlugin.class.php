@@ -1,26 +1,25 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
  *
- * This file is a part of Tuleap.
+ * This file is a part of Codendi.
  *
- * Tuleap is free software; you can redistribute it and/or modify
+ * Codendi is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Tuleap is distributed in the hope that it will be useful,
+ * Codendi is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
+ * along with Codendi; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once __DIR__.'/../vendor/autoload.php';
+require_once 'autoload.php';
 
 class WebDAVPlugin extends Plugin {
 
@@ -81,14 +80,17 @@ class WebDAVPlugin extends Plugin {
     /**
      * Setup then return the WebDAV server
      *
-     * @return \Sabre\DAV\Server
+     * @return Sabre_DAV_Server
      */
-    public function getServer()
-    {
+    function getServer() {
+
         // Authentication
         $auth = new WebDAVAuthentication();
         $user = $auth->authenticate();
 
+        // Include the SabreDAV library
+        $SabreDAVPath = $this->getPluginInfo()->getPropertyValueForName('sabredav_path');
+        require_once ($SabreDAVPath.'/lib/Sabre/autoload.php');
         require_once ('exception/WebDAVExceptionServerError.class.php');
 
         // Creating the Root directory from WebDAV file system
@@ -101,7 +103,7 @@ class WebDAVPlugin extends Plugin {
         $tree = new WebDAVTree($rootDirectory);
 
         // Finally, we create the server object. The server object is responsible for making sense out of the WebDAV protocol
-        $server = new \Sabre\DAV\Server($tree);
+        $server = new Sabre_DAV_Server($tree);
 
         // Base URI is the path used to access to WebDAV server
         $server->setBaseUri($this->getPluginInfo()->getPropertyValueForName('webdav_base_uri'));
@@ -112,8 +114,8 @@ class WebDAVPlugin extends Plugin {
         if (! is_dir($locks_path)) {
             mkdir($locks_path, 0750, true);
         }
-        $lockBackend = new Sabre\DAV\Locks\Backend\File($locks_path);
-        $lockPlugin = new \Sabre\DAV\Locks\Plugin($lockBackend);
+        $lockBackend = new Sabre_DAV_Locks_Backend_FS($locks_path);
+        $lockPlugin = new Sabre_DAV_Locks_Plugin($lockBackend);
         $server->addPlugin($lockPlugin);
 
         // Creating the browser plugin
@@ -123,5 +125,9 @@ class WebDAVPlugin extends Plugin {
 
         // The server is now ready to run
         return $server;
+
     }
+
 }
+
+?>
