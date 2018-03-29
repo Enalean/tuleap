@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project access="public" description="" full-name="Permissions Project 01" unix-name="permissions-project-01">
+    <long-description/>
+    <ugroups>
+        <ugroup name="project_members" description="">
+            <members>
+                <member format="username">alice</member>
+                <member format="username">bob</member>
+            </members>
+        </ugroup>
+        <ugroup name="project_admins" description="">
+            <members>
+                <member format="username">alice</member>
+            </members>
+        </ugroup>
+        <ugroup name="Contributors" description="">
+            <members>
+                <member format="username">bob</member>
+            </members>
+        </ugroup>
+        <ugroup name="Integrators" description="">
+            <members>
+                <member format="username">alice</member>
+            </members>
+        </ugroup>
+    </ugroups>
+
+    <services>
+        <service shortname="summary" enabled="true"/>
+        <service shortname="plugin_git" enabled="true"/>
+        <service shortname="admin" enabled="true"/>
+        <service shortname="forum" enabled="true"/>
+        <service shortname="mail" enabled="true"/>
+        <service shortname="docman" enabled="true"/>
+        <service shortname="wiki" enabled="true"/>
+        <service shortname="news" enabled="true"/>
+        <service shortname="plugin_svn" enabled="true"/>
+        <service shortname="file" enabled="true"/>
+        <service shortname="tracker" enabled="true"/>
+        <service shortname="plugin_tracker" enabled="true"/>
+        <service shortname="plugin_agiledashboard" enabled="true"/>
+    </services>
+
+    <agiledashboard>
+        <plannings>
+            <planning name="Release Planning" plan_title="Release Plan" planning_tracker_id="T2021" backlog_title="Product Backlog">
+                <backlogs>
+                    <backlog>T2018</backlog>
+                    <backlog>T2019</backlog>
+                    <backlog>T2024</backlog>
+                </backlogs>
+            </planning>
+            <planning name="Sprint Planning" plan_title="Sprint Plan" planning_tracker_id="T2022" backlog_title="Epic Backlog">
+                <backlogs>
+                    <backlog>T2018</backlog>
+                    <backlog>T2024</backlog>
+                </backlogs>
+                <permissions>
+                    <permission ugroup="UGROUP_PROJECT_ADMIN" type="PLUGIN_AGILEDASHBOARD_PLANNING_PRIORITY_CHANGE"/>
+                </permissions>
+            </planning>
+        </plannings>
+    </agiledashboard>
+</project>
