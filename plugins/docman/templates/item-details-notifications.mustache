@@ -1,4 +1,4 @@
-<form method="POST" action="">
+<form method="POST" action="" data-test="docman_notifications_form">
     <input type="hidden" name="action" value="update_monitoring" />
     <table class="table plugin-docman-notifications-list">
         <thead>
@@ -37,6 +37,7 @@
                             <input type="checkbox"
                                    value="{{# user }}{{ user_id }}{{/ user}}"
                                    name="listeners_users_to_delete[]"
+                                   data-test="user_to_be_notified"
                                    {{^ can_be_deleted }}
                                        disabled="disabled"
                                        title="{{ cannot_delete_title }}"
@@ -68,6 +69,7 @@
                 >
                     <input type="hidden"
                            id="listeners_to_add"
+                           data-test="listeners_to_add"
                            name="listeners_to_add"
                            class="autocompleter-users-and-ugroups-input"
                            placeholder="{{ placeholder }}"
@@ -75,7 +77,11 @@
                            multiple
                     />
                     <label class="checkbox docman-notification-add-cascade" for="plugin_docman_monitor_add_user_cascade">
-                        <input type="checkbox" name="monitor_cascade" value="1" id="plugin_docman_monitor_add_user_cascade">
+                        <input type="checkbox"
+                               name="monitor_cascade"
+                               value="1"
+                               id="plugin_docman_monitor_add_user_cascade"
+                               data-test="plugin_docman_monitor_add_user_cascade">
                         {{ enable_sub_hierarchy }}
                     </label>
                 </td>

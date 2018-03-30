@@ -1,37 +1,40 @@
 <?php
-/*
+/**
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2006
  * 
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Docman_MetaMetadataHtml {
+class Docman_MetaMetadataHtml
+{
     var $md;
     var $str_yes;
     var $str_no;
     var $hp;
 
-    function Docman_MetaMetadataHtml(&$md) {
-        $this->md =& $md;
-        $this->hp =& Codendi_HTMLPurifier::instance();
+    public function __construct(&$md)
+    {
+        $this->md = $md;
+        $this->hp = Codendi_HTMLPurifier::instance();
 
         $this->str_yes = $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_yes');
-        $this->str_no = $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_no');
+        $this->str_no  = $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_no');
     }
 
     function getName(&$sthCanChange) {
@@ -46,7 +49,7 @@ class Docman_MetaMetadataHtml {
         $mdContent .= '<td>';
         if($this->md->canChangeName()) {
             $sthCanChange = true;
-            $mdContent .= '<input type="text" name="name" value="'.$this->hp->purify($this->md->getName()).'" class="text_field" />';
+            $mdContent .= '<input type="text" name="name" data-test="metadata_name" value="'.$this->hp->purify($this->md->getName()).'" class="text_field" />';
         }
         else {
             $mdContent .= $this->hp->purify($this->md->getName());
@@ -86,7 +89,7 @@ class Docman_MetaMetadataHtml {
             if($this->md->isEmptyAllowed()) {
                 $selected = 'checked="checked"';
             }          
-            $mdContent .= '<input type="checkbox" name="empty_allowed" value="1" '.$selected.' />';
+            $mdContent .= '<input type="checkbox" data-test="empty_allowed" name="empty_allowed" value="1" '.$selected.' />';
         }
         else {
             if($this->md->isEmptyAllowed()) {
@@ -141,7 +144,7 @@ class Docman_MetaMetadataHtml {
             if($this->md->isUsed()) {
                 $selected = 'checked="checked"';
             }          
-            $mdContent .= '<input type="checkbox" name="use_it" value="1" '.$selected.' />';
+            $mdContent .= '<input type="checkbox" data-test="use_it" name="use_it" value="1" '.$selected.' />';
         }
         else {
             if($this->md->isUsed()) {

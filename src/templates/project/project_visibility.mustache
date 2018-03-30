@@ -3,7 +3,7 @@
         {{ project_visibility_label }}
         <i class="fa fa-asterisk"></i>
     </label>
-    <select class="tlp-select" name="project_visibility" id="project_visibility">
+    <select class="tlp-select" name="project_visibility" id="project_visibility" data-test="project_visibility">
         {{# options }}
             <option value="{{ value }}" {{ selected }}>{{ label }}</option>
         {{/ options }}
@@ -26,6 +26,7 @@
         <input type="checkbox"
                name="term_of_service"
                id="term-of-service"
+               data-test="term_of_service"
                oninvalid='this.setCustomValidity("{{ accept_tos_message }}")'
                onclick="this.setCustomValidity('')"
         />

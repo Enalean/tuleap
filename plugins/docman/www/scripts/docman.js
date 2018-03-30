@@ -559,6 +559,10 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
     //}}}
     //{{{----------------------------- Approval table check
     approvalTableCheck: function(form) {
+        if (! form['app_table_import']) {
+            return true;
+        }
+
         var selected;
         var len = form['app_table_import'].length;
         for(var i = 0; i < len ; i++) {
