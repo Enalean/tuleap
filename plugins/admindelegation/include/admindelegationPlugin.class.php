@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2009. All Rights Reserved.
- * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet & Dave Kibble, 2007
  *
@@ -22,7 +22,7 @@
  */
 
 use Tuleap\BurningParrotCompatiblePageEvent;
-use Tuleap\Dashboard\User\UserDashboardController;
+use Tuleap\Layout\IncludeAssets;
 
 /**
  * AdminDelegationPlugin
@@ -42,11 +42,13 @@ use Tuleap\Dashboard\User\UserDashboardController;
  * @see AdminDelegation_Service
  *
  */
-class AdminDelegationPlugin extends Plugin {
+class AdminDelegationPlugin extends Plugin  // @codingStandardsIgnoreLine
+{
 
-    public function __construct($id) {
+    public function __construct($id)
+    {
         parent::__construct($id);
-        $this->addHook('cssfile',                'cssFile',                false);
+        $this->addHook('cssfile', 'cssFile', false);
         $this->addHook('site_admin_option_hook', 'site_admin_option_hook', false);
         $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
         $this->addHook(\Tuleap\Widget\Event\GetUserWidgetList::NAME);
@@ -55,23 +57,29 @@ class AdminDelegationPlugin extends Plugin {
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
     }
 
-    public function getPluginInfo() {
-        if (!is_a($this->pluginInfo, 'AdminDelegationPluginInfo')) {
+    public function getPluginInfo()
+    {
+        if (! is_a($this->pluginInfo, 'AdminDelegationPluginInfo')) {
             include_once 'AdminDelegationPluginInfo.class.php';
             $this->pluginInfo = new AdminDelegationPluginInfo($this);
         }
         return $this->pluginInfo;
     }
 
-    public function burning_parrot_get_javascript_files($params)
+    public function burningParrotGetJavascriptFiles($params)
     {
         if (strpos($_SERVER['REQUEST_URI'], '/plugins/admindelegation') === 0) {
-            $params['javascript_files'][] = $this->getPluginPath() .'/scripts/admindelegation.js';
+            $include_assets = new IncludeAssets(
+                __DIR__ . '/../../../src/www/assets/admindelegation/scripts',
+                '/assets/admindelegation/scripts'
+            );
+
+            $params['javascript_files'][] = $include_assets->getFileURL("admin-delegation.js");
         }
     }
 
 
-    public function burning_parrot_get_stylesheets($params)
+    public function burningParrotGetStylesheets($params)
     {
         if (strpos($_SERVER['REQUEST_URI'], '/plugins/admindelegation') === 0) {
             $variant = $params['variant'];
@@ -86,7 +94,8 @@ class AdminDelegationPlugin extends Plugin {
      *
      * @return Boolean
      */
-    protected function _userCanViewWidget($widget) {
+    protected function _userCanViewWidget($widget)
+    {
         $um      = UserManager::instance();
         $user    = $um->getCurrentUser();
         if ($user) {
@@ -99,7 +108,8 @@ class AdminDelegationPlugin extends Plugin {
         return false;
     }
 
-    public function cssFile($params) {
+    public function cssFile($params)
+    {
         // Only show the stylesheet if we're actually in the Docman pages.
         // This stops styles inadvertently clashing with the main site.
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
@@ -112,9 +122,9 @@ class AdminDelegationPlugin extends Plugin {
     /**
      * Hook: admin link to plugin
      *
-     * @param Array $params
+     * @param array $params
      */
-    public function site_admin_option_hook($params)
+    public function site_admin_option_hook($params) // @codingStandardsIgnoreLine
     {
         $params['plugins'][] = array(
             'label' => 'Admin delegation',
@@ -134,7 +144,8 @@ class AdminDelegationPlugin extends Plugin {
      *
      * @param \Tuleap\Widget\Event\GetWidget $get_widget_event
      */
-    public function widgetInstance(\Tuleap\Widget\Event\GetWidget $get_widget_event) {
+    public function widgetInstance(\Tuleap\Widget\Event\GetWidget $get_widget_event)
+    {
         if ($get_widget_event->getName() === 'admindelegation' && $this->_userCanViewWidget('admindelegation')) {
             include_once 'AdminDelegation_UserWidget.class.php';
             $get_widget_event->setWidget(new AdminDelegation_UserWidget($this));
@@ -150,7 +161,8 @@ class AdminDelegationPlugin extends Plugin {
      *
      * @param \Tuleap\Widget\Event\GetUserWidgetList $get_user_widget_list_event
      */
-    public function getUserWidgetList(\Tuleap\Widget\Event\GetUserWidgetList $get_user_widget_list_event) {
+    public function getUserWidgetList(\Tuleap\Widget\Event\GetUserWidgetList $get_user_widget_list_event)
+    {
         if ($this->_userCanViewWidget('admindelegation')) {
             include_once 'AdminDelegation_UserWidget.class.php';
             $get_user_widget_list_event->addWidget('admindelegation');

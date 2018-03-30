@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean SAS - 2016. All rights reserved
+ * Copyright (c) Enalean SAS - 2016 - 2018. All rights reserved
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,24 +15,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-document.addEventListener('DOMContentLoaded', function () {
+import { modal }                          from 'tlp';
+import { autocomplete_users_for_select2 } from 'tuleap/autocomplete-for-select2.js';
 
-    var user_to_grant_element = document.getElementById('permission-delegation-add-user');
+document.addEventListener('DOMContentLoaded', () => {
+    const user_to_grant_element = document.getElementById('permission-delegation-add-user');
+
     if (user_to_grant_element) {
-        tuleap.autocomplete_users_for_select2(user_to_grant_element, { internal_users_only: 1 });
+        autocomplete_users_for_select2(user_to_grant_element, { internal_users_only: 1 });
     }
 
-    var modal_add_permission_element = document.getElementById('siteadmin-add-permission-modal');
-    var modal_add_permission         = tlp.modal(modal_add_permission_element, {});
+    const modal_add_permission_element = document.getElementById('siteadmin-add-permission-modal');
+    const modal_add_permission         = modal(modal_add_permission_element, {});
 
-    document.getElementById('button-grant-permission').addEventListener('click', function () {
+    document.getElementById('button-grant-permission').addEventListener('click', () => {
         modal_add_permission.toggle();
     });
 
-    var modal_revoke_permission_element = document.getElementById('siteadmin-revoke-permission-modal');
-    var modal_revoke_permission = tlp.modal(modal_revoke_permission_element, {});
+    const modal_revoke_permission_element = document.getElementById('siteadmin-revoke-permission-modal');
+    const modal_revoke_permission         = modal(modal_revoke_permission_element, {});
 
-    document.getElementById('button-revoke-permission').addEventListener('click', function () {
+    document.getElementById('button-revoke-permission').addEventListener('click', () => {
         modal_revoke_permission.toggle();
     });
 
@@ -42,13 +45,13 @@ document.addEventListener('DOMContentLoaded', function () {
     );
 
     function handlePrimaryButtonState(source_selector, target_button_selector) {
-        var source_elements = document.querySelectorAll(source_selector),
+        const source_elements = document.querySelectorAll(source_selector),
             target_button = document.querySelector(target_button_selector);
 
-        [].forEach.call(source_elements, function (source) {
-            source.addEventListener('change', function () {
+        for (const source of source_elements) {
+            source.addEventListener('change', () => {
                 target_button.disabled = document.querySelectorAll(source_selector + ':checked').length === 0;
             });
-        });
+        }
     }
 });
