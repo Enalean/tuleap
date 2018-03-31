@@ -22,8 +22,10 @@ namespace Tuleap\TestManagement;
 
 use BackendLogger;
 use EventManager;
+use PFUser;
 use Plugin;
 use Codendi_Request;
+use Project;
 use ProjectManager;
 use TrackerFactory;
 use TrackerXmlImport;
@@ -92,15 +94,18 @@ class Router {
     public function route(Codendi_Request $request) {
         switch ($request->get('action')) {
             case 'admin':
+                $this->checkUserCanAdministrate($request->getProject(), $this->user_manager->getCurrentUser());
                 $controller = new AdminController($request, $this->config, $this->tracker_factory, $this->event_manager);
                 $this->renderAction($controller, 'admin', $request);
                 break;
             case 'admin-update':
+                $this->checkUserCanAdministrate($request->getProject(), $this->user_manager->getCurrentUser());
                 $controller = new AdminController($request, $this->config, $this->tracker_factory, $this->event_manager);
                 $this->executeAction($controller, 'update');
                 $this->renderIndex($request);
                 break;
             case 'create-config':
+                $this->checkUserCanAdministrate($request->getProject(), $this->user_manager->getCurrentUser());
                 $controller = new StartTestManagementController(
                     $this->tracker_factory,
                     new BackendLogger(),
@@ -136,7 +141,7 @@ class Router {
         }
     }
 
-    private function renderIndex(Codendi_Request $request) {
+    public function renderIndex(Codendi_Request $request) {
         $controller = new IndexController($request, $this->config, $this->tracker_factory, $this->event_manager);
         $this->renderAction($controller, 'index', $request);
     }
@@ -267,4 +272,12 @@ class Router {
     private function displayFooter(Codendi_Request $request) {
         $this->getService($request)->displayFooter();
     }
+
+   protected function checkUserCanAdministrate(Project $project, PFUser $user)
+    {
+        if (! $user->isAdmin($project->getId())) {
+            throw new UserIsNotAdministratorException();
+        }
+    }
+
 }
