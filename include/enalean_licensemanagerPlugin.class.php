@@ -22,6 +22,7 @@ use Tuleap\Admin\Homepage\StatisticsBadgePresenter;
 use Tuleap\Admin\Homepage\StatisticsPresenter;
 use Tuleap\Admin\Homepage\UserCounterDao;
 use Tuleap\Enalean\LicenseManager\LicencesWidget;
+use Tuleap\Enalean\LicenseManager\StatusActivityEmitter;
 use Tuleap\Enalean\LicenseManager\UserCounterWebhook;
 use Tuleap\Enalean\LicenseManager\Webhook\StatusLogger;
 use Tuleap\Enalean\LicenseManager\Webhook\UserCounterPayload;
@@ -70,17 +71,12 @@ class enalean_licensemanagerPlugin extends Plugin
         if (! $nb_max_users) {
             return;
         }
-
-        $url = $this->getWebhookUrl();
-        if (! $url) {
-            return;
-        }
-
         $payload = new UserCounterPayload(HTTPRequest::instance(), new UserCounterDao(), $this->getMaxUsers(), $event, $params['user_id']);
-        $emitter = new Emitter(new Http_Client(), new StatusLogger());
-        $webhook = new UserCounterWebhook($url);
 
-        $emitter->emit($webhook, $payload);
+        $webhook_emitter = new Emitter(new Http_Client(), new StatusLogger());
+
+        $emitter = new StatusActivityEmitter($webhook_emitter);
+        $emitter->emit($payload, $this->getWebhookUrl());
     }
 
     /** @see Event::GET_SITEADMIN_WARNINGS */
