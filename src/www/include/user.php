@@ -268,7 +268,9 @@ function user_display_choose_password($page,$user_id = false) {
     <div class="password_strategy">
         <p class="robustness"><?=$purifier->purify($GLOBALS['Language']->getText('account_check_pw', 'password_robustness'))?>
 			<span class="password_strategy_good"><?php echo $purifier->purify($GLOBALS['Language']->getText('account_check_pw', 'good')); ?></span>
-			<span class="password_strategy_bad"><?php echo $purifier->purify($GLOBALS['Language']->getText('account_check_pw', 'bad')); ?></span></p>
+			<span class="password_strategy_bad"><?php echo $purifier->purify($GLOBALS['Language']->getText('account_check_pw', 'bad')); ?></span>
+            <img class="password_validators_loading" src="/themes/common/images/ic/spinner-16.gif">
+        </p>
         <?php
         $password_strategy = new PasswordStrategy();
         include($GLOBALS['Language']->getContent('account/password_strategy'));
