@@ -87,7 +87,7 @@ class ArtifactViewBuilder
         $tracker = $artifact->getTracker();
         $project = $tracker->getProject();
 
-        if (! $this->plugin->isAllowed($project->getId())) {
+        if (! $this->plugin->isAllowed($project->getID())) {
             return null;
         }
 
