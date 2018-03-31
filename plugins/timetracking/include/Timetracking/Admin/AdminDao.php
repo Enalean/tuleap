@@ -20,39 +20,34 @@
 
 namespace Tuleap\Timetracking\Admin;
 
-use DataAccessObject;
+use Tuleap\DB\DataAccessObject;
 
 class AdminDao extends DataAccessObject
 {
     public function enableTimetrackingForTracker($tracker_id)
     {
-        $tracker_id = $this->da->escapeInt($tracker_id);
+        $sql = 'REPLACE INTO plugin_timetracking_enabled_trackers
+                VALUES (?)';
 
-        $sql = "REPLACE INTO plugin_timetracking_enabled_trackers
-                VALUES ($tracker_id)";
-
-        return $this->update($sql);
+        $this->getDB()->run($sql, $tracker_id);
     }
 
     public function disableTimetrackingForTracker($tracker_id)
     {
-        $tracker_id = $this->da->escapeInt($tracker_id);
+        $sql = 'DELETE FROM plugin_timetracking_enabled_trackers
+                WHERE tracker_id = ?';
 
-        $sql = "DELETE FROM plugin_timetracking_enabled_trackers
-                WHERE tracker_id = $tracker_id";
-
-        return $this->update($sql);
+        $this->getDB()->run($sql, $tracker_id);
     }
 
     public function isTimetrackingEnabledForTracker($tracker_id)
     {
-        $tracker_id = $this->da->escapeInt($tracker_id);
-
-        $sql = "SELECT NULL
+        $sql = 'SELECT NULL
                 FROM plugin_timetracking_enabled_trackers
-                WHERE tracker_id = $tracker_id";
+                WHERE tracker_id = ?';
 
-        $this->retrieveFirstRow($sql);
+        $this->getDB()->run($sql, $tracker_id);
+
         return $this->foundRows() > 0;
     }
 }

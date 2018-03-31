@@ -230,7 +230,7 @@ class TimeController
 
     private function checkTimeBelongsToUser(Time $time, PFUser $user, Tracker_Artifact $artifact)
     {
-        if ($time->getUserId() !== $user->getId()) {
+        if ($time->getUserId() !== (int) $user->getId()) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
                 dgettext('tuleap-timetracking', "This time does not belong to you.")

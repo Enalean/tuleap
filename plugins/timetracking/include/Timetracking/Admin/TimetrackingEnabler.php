@@ -32,12 +32,12 @@ class TimetrackingEnabler
 
     public function enableTimetrackingForTracker(Tracker $tracker)
     {
-        return $this->dao->enableTimetrackingForTracker($tracker->getId());
+        $this->dao->enableTimetrackingForTracker($tracker->getId());
     }
 
     public function disableTimetrackingForTracker(Tracker $tracker)
     {
-        return $this->dao->disableTimetrackingForTracker($tracker->getId());
+        $this->dao->disableTimetrackingForTracker($tracker->getId());
     }
 
     public function isTimetrackingEnabledForTracker(Tracker $tracker)
