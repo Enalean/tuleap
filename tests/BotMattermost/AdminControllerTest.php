@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,28 +20,35 @@
 
 namespace Tuleap\BotMattermost\Controller;
 
-require_once dirname(__FILE__) . '/../bootstrap.php';
+require_once __DIR__ . '/../bootstrap.php';
 
+use CSRFSynchronizerToken;
+use EventManager;
 use HTTPRequest;
 use Tuleap\BotMattermost\Bot\Bot;
 use TuleapTestCase;
 
 class AdminControllerTest extends TuleapTestCase
 {
+
+    /**
+     * @var AdminController
+     */
+    private $admin_controller;
+
     private $csrf;
     private $bot_factory;
     private $event_manager;
-    private $admin_controller;
     private $http_request;
 
     public function setUp()
     {
         parent::setUp();
-        $this->csrf             = mock('CSRFSynchronizerToken');
-        $this->bot_factory      = mock('Tuleap\\BotMattermost\\Bot\\BotFactory');
-        $this->event_manager    = mock('EventManager');
+        $this->csrf             = \Mockery::spy(CSRFSynchronizerToken::class);
+        $this->bot_factory      = \Mockery::spy(\Tuleap\BotMattermost\Bot\BotFactory::class);
+        $this->event_manager    = \Mockery::spy(EventManager::class);
         $this->admin_controller = new AdminController($this->csrf, $this->bot_factory, $this->event_manager);
-        $this->http_request     = mock('HTTPRequest');
+        $this->http_request     = \Mockery::spy(HTTPRequest::class);
 
         HTTPRequest::setInstance($this->http_request);
     }
@@ -56,14 +63,14 @@ class AdminControllerTest extends TuleapTestCase
     {
         $bot = new Bot(1, 'bot', 'webhook_url', '');
 
-        stub($this->csrf)->check()->returns(true);
-        stub($this->bot_factory)->getBotById()->returns($bot);
-        stub($this->bot_factory)->deleteBotById()->returns(true);
-        stub($this->event_manager)->processEvent()->returns(true);
+        $this->csrf->allows()->check()->andReturns(true);
+        $this->http_request->allows()->get('bot_id')->andReturns(1);
+        $this->bot_factory->allows()->getBotById(1)->andReturns($bot);
+        $this->bot_factory->allows()->deleteBotById(1)->andReturns(true);
 
-        $this->http_request->set('bot_id', $bot->getId());
-        $this->event_manager->expectCallCount('processEvent', 1);
+        $this_event_manager_processEvent = $this->event_manager->shouldReceive('processEvent');
+        $this_event_manager_processEvent->times(1);
+
         $this->admin_controller->deleteBot($this->http_request);
     }
-
 }

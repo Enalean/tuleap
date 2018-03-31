@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -28,7 +28,7 @@ class MarkdownTemplateRendererFactoryTest extends \TuleapTestCase
     {
         $this->assertIsA(
             MarkdownTemplateRendererFactory::build(),
-            'Tuleap\\BotMattermost\\SenderServices\\MarkdownEngine\\MarkdownTemplateRendererFactory'
+            \Tuleap\BotMattermost\SenderServices\MarkdownEngine\MarkdownTemplateRendererFactory::class
         );
     }
 }

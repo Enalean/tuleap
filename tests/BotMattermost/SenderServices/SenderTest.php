@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,12 +20,16 @@
 
 namespace Tuleap\BotMattermost\SenderServices;
 
-require_once dirname(__FILE__).'/../../bootstrap.php';
+require_once __DIR__.'/../../bootstrap.php';
 
 use TuleapTestCase;
 
 class SenderTest extends TuleapTestCase
 {
+    /**
+     * @var Sender
+     */
+    private $sender;
 
     private $encoder_message;
     private $botMattermost_client;
@@ -34,9 +38,9 @@ class SenderTest extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->encoder_message      = mock('Tuleap\\BotMattermost\\SenderServices\\EncoderMessage');
-        $this->botMattermost_client = mock('Tuleap\\BotMattermost\\SenderServices\\ClientBotMattermost');
-        $this->logger               = mock('Tuleap\\BotMattermost\\BotMattermostLogger');
+        $this->encoder_message      = \Mockery::spy(\Tuleap\BotMattermost\SenderServices\EncoderMessage::class);
+        $this->botMattermost_client = \Mockery::spy(\Tuleap\BotMattermost\SenderServices\ClientBotMattermost::class);
+        $this->logger               = \Mockery::spy(\Tuleap\BotMattermost\BotMattermostLogger::class);
 
         $this->sender = new Sender(
             $this->encoder_message,
@@ -48,12 +52,15 @@ class SenderTest extends TuleapTestCase
     public function itVerifiedThatPushNotificationForEachChannels()
     {
         $message  = new Message();
-        $bot      = mock('Tuleap\\BotMattermost\\Bot\\Bot');
         $channels = array('channel1', 'channel2');
-        stub($bot)->getWebhookUrl()->returns('https:\/\/webhook_url.com');
         $message->setText('{"username":"toto","channel":"channel","icon_url":"https:\/\/avatar_url.com","text":"text"}');
 
+        $bot = \Mockery::spy(\Tuleap\BotMattermost\Bot\Bot::class);
+        $bot->allows()->getWebhookUrl()->andReturns('https:\/\/webhook_url.com');
+
+        $this_botMattermost_client_sendMessage = $this->botMattermost_client->shouldReceive('sendMessage');
+        $this_botMattermost_client_sendMessage->times(2);
+
         $this->sender->pushNotification($bot, $message, $channels);
-        $this->botMattermost_client->expectCallCount('sendMessage', 2);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,7 @@
 
 namespace Tuleap\BotMattermost\SenderServices;
 
-require_once dirname(__FILE__) . '/../../bootstrap.php';
+require_once __DIR__ . '/../../bootstrap.php';
 
 use Tuleap\BotMattermostGit\SenderServices\Attachment;
 use TuleapTestCase;
@@ -28,25 +28,32 @@ use TuleapTestCase;
 class EncoderMessageTest extends TuleapTestCase
 {
 
+    /**
+     * @var EncoderMessage
+     */
     private $encoder_message;
     private $bot;
 
     public function setUp()
     {
         parent::setUp();
-        $this->bot             = mock('Tuleap\\BotMattermost\\Bot\\Bot');
+        $this->bot             = \Mockery::spy(\Tuleap\BotMattermost\Bot\Bot::class);
         $this->encoder_message = new EncoderMessage();
+
+        $this->bot->shouldReceive([
+            'getName'      => 'toto',
+            'getAvatarUrl' => 'https://avatar_url.com',
+        ]);
     }
 
     public function itVerifiesThatGeneratedMessageWithTextReturnsPostFormatForMattermost()
     {
         $message = new Message();
-        $channel = "channel";
-        stub($this->bot)->getName()->returns("toto");
-        stub($this->bot)->getAvatarUrl()->returns("https://avatar_url.com");
         $message->setText("text");
 
-        $result = $this->encoder_message->generateJsonMessage($this->bot, $message, $channel);
+        $channel = "channel";
+        $result  = $this->encoder_message->generateJsonMessage($this->bot, $message, $channel);
+
         $this->assertEqual(
             $result,
             '{"username":"toto","channel":"channel","icon_url":"https:\/\/avatar_url.com","text":"text"}'
@@ -58,8 +65,7 @@ class EncoderMessageTest extends TuleapTestCase
         $message    = new Message();
         $attachment = new Attachment('pre-text', 'title', 'https://www.example.com', 'description');
         $channel    = "channel";
-        stub($this->bot)->getName()->returns("toto");
-        stub($this->bot)->getAvatarUrl()->returns("https://avatar_url.com");
+
         $message->addAttachment($attachment);
 
         $result = $this->encoder_message->generateJsonMessage($this->bot, $message, $channel);

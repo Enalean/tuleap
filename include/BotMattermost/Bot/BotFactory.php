@@ -43,7 +43,6 @@ class BotFactory
         $bot_webhook_url,
         $bot_avatar_url
     ) {
-        $channels_names = $this->convertChannelsToArray($bot_channels_names);
         if (! $this->doesBotAlreadyExist($bot_name, $bot_webhook_url)) {
             $id = $this->dao->addBot(
                 trim($bot_name),
@@ -79,11 +78,6 @@ class BotFactory
         )) {
             throw new CannotUpdateBotException();
         }
-}
-
-    private function convertChannelsToArray($bot_channels_names)
-    {
-        return array_map('trim', explode(PHP_EOL, $bot_channels_names));
     }
 
     public function deleteBotById($id)
