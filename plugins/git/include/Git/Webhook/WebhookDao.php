@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,79 +20,77 @@
 
 namespace Tuleap\Git\Webhook;
 
-use DataAccessObject;
+use Tuleap\DB\DataAccessObject;
 
 class WebhookDao extends DataAccessObject
 {
     public function searchWebhooksForRepository($repository_id)
     {
-        $repository_id = $this->da->escapeInt($repository_id);
-
-        $sql = "SELECT *
+        $sql = 'SELECT *
                 FROM plugin_git_webhook_url
-                WHERE repository_id = $repository_id";
+                WHERE repository_id = ?';
 
-        return $this->retrieve($sql);
+        return $this->getDB()->run($sql, $repository_id);
     }
 
     public function deleteByRepositoryIdAndWebhookId($repository_id, $webhook_id)
     {
-        $repository_id = $this->da->escapeInt($repository_id);
-        $webhook_id    = $this->da->escapeInt($webhook_id);
+        $sql = 'DELETE FROM plugin_git_webhook_url
+                WHERE repository_id = ?
+                  AND id = ?';
 
-        $sql = "DELETE FROM plugin_git_webhook_url
-                WHERE repository_id = $repository_id
-                  AND id = $webhook_id";
-
-        return $this->update($sql);
+        try {
+            $this->getDB()->run($sql, $repository_id, $webhook_id);
+        } catch (\PDOException $ex) {
+            return false;
+        }
+        return true;
     }
 
     public function create($repository_id, $webhook_url)
     {
-        $repository_id = $this->da->escapeInt($repository_id);
-        $webhook_url   = $this->da->quoteSmart($webhook_url);
+        $sql = 'INSERT INTO plugin_git_webhook_url (repository_id, url)
+                VALUES (?, ?)';
 
-        $sql = "INSERT INTO plugin_git_webhook_url (repository_id, url)
-                VALUES ($repository_id, $webhook_url)";
-
-        return $this->updateAndGetLastId($sql);
+        try {
+            $this->getDB()->run($sql, $repository_id, $webhook_url);
+        } catch (\PDOException $ex) {
+            return false;
+        }
+        return true;
     }
 
     public function edit($repository_id, $webhook_id, $webhook_url)
     {
-        $repository_id = $this->da->escapeInt($repository_id);
-        $webhook_url   = $this->da->quoteSmart($webhook_url);
+        $sql = 'UPDATE plugin_git_webhook_url
+                SET url = ?
+                WHERE repository_id = ?
+                  AND id = ?';
 
-        $sql = "UPDATE plugin_git_webhook_url
-                SET url = $webhook_url
-                WHERE repository_id = $repository_id
-                  AND id = $webhook_id";
-
-        return $this->update($sql);
+        try {
+            $this->getDB()->run($sql, $webhook_url, $repository_id, $webhook_id);
+        } catch (\PDOException $ex) {
+            return false;
+        }
+        return true;
     }
 
     public function addLog($webhook_id, $status)
     {
-        $created_on = $this->da->escapeInt($_SERVER['REQUEST_TIME']);
-        $webhook_id = $this->da->escapeInt($webhook_id);
-        $status     = $this->da->quoteSmart($status);
+        $sql = 'INSERT INTO plugin_git_webhook_log(created_on, webhook_id, status)
+                VALUES (?, ?, ?)';
 
-        $sql = "INSERT INTO plugin_git_webhook_log(created_on, webhook_id, status)
-                VALUES ($created_on, $webhook_id, $status)";
-
-        return $this->update($sql);
+        $this->getDB()->run($sql, $_SERVER['REQUEST_TIME'], $webhook_id, $status);
     }
 
     public function getLogs($webhook_id)
     {
-        $webhook_id = $this->da->escapeInt($webhook_id);
-
-        $sql = "SELECT *
+        $sql = 'SELECT *
                 FROM plugin_git_webhook_log
-                WHERE webhook_id = $webhook_id
+                WHERE webhook_id = ?
                 ORDER BY created_on DESC
-                LIMIT 30";
+                LIMIT 30';
 
-        return $this->retrieve($sql);
+        return $this->getDB()->run($sql, $webhook_id);
     }
 }
