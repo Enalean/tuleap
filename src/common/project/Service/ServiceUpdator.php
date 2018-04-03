@@ -73,7 +73,7 @@ class ServiceUpdator
         if ($service_data->isSystemService()) {
             $this->service_manager->toggleServiceUsage($project, $service_data->getShortName(), $service_data->isUsed());
         } else {
-            $this->dao->updateServiceUsage($project->getID(), $service_data->getShortName(), $service_data->isUsed());
+            $this->dao->updateServiceUsageByServiceID($project->getID(), $service_data->getId(), $service_data->isUsed());
         }
     }
 }

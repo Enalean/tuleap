@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -137,7 +137,7 @@ class ServiceManager {
     }
 
     private function updateServiceUsage(Project $project, $short_name, $is_used) {
-        $this->dao->updateServiceUsage($project->getID(), $short_name, $is_used);
+        $this->dao->updateServiceUsageByShortName($project->getID(), $short_name, $is_used);
         ProjectManager::instance()->clearProjectFromCache($project->getID());
 
         $reference_manager = ReferenceManager::instance();
