@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,7 @@
 
 namespace Tuleap\Svn\Repository;
 
+use Tuleap\Svn\AccessControl\AccessFileHistory;
 use Tuleap\Svn\Admin\ImmutableTag;
 use Tuleap\Svn\Admin\MailNotification;
 
@@ -43,25 +44,35 @@ class Settings
      * @var MailNotification[]
      */
     private $mail_notification;
-
     /**
-     * Settings constructor.
-     *
-     * @param array                 $commit_rules
-     * @param ImmutableTag          $immutable_tag
-     * @param                       $access_file
-     * @param MailNotification[]    $mail_notification
+     * @var AccessFileHistory[]
      */
+    private $access_file_history;
+    /**
+     * @var int
+     */
+    private $used_version;
+    /**
+     * @var bool
+     */
+    private $is_access_file_already_purged;
+
     public function __construct(
         array $commit_rules,
         ImmutableTag $immutable_tag,
         $access_file,
-        array $mail_notification
+        array $mail_notification,
+        array $access_file_history,
+        $used_version,
+        $is_access_file_already_purged
     ) {
-        $this->commit_rules      = $commit_rules;
-        $this->immutable_tag     = $immutable_tag;
-        $this->access_file       = $access_file;
-        $this->mail_notification = $mail_notification;
+        $this->commit_rules                  = $commit_rules;
+        $this->immutable_tag                 = $immutable_tag;
+        $this->access_file                   = $access_file;
+        $this->mail_notification             = $mail_notification;
+        $this->access_file_history           = $access_file_history;
+        $this->used_version                  = $used_version;
+        $this->is_access_file_already_purged = $is_access_file_already_purged;
     }
 
     /**
@@ -103,5 +114,23 @@ class Settings
             || count($this->immutable_tag->getWhitelist()) > 0
             || count($this->mail_notification) > 0
             || $this->access_file !== "";
+    }
+
+    public function getAccessFileHistory()
+    {
+        return $this->access_file_history;
+    }
+
+    public function getUsedVersion()
+    {
+        return $this->used_version;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAccessFileAlreadyPurged()
+    {
+        return $this->is_access_file_already_purged;
     }
 }

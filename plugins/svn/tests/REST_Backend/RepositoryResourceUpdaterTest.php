@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -113,12 +113,7 @@ class RepositoryResourceUpdaterTest extends TuleapTestCase
 
         $mail_notifications = array();
 
-        $settings = new Settings(
-            $commit_rules,
-            $immutable_tag,
-            $access_file,
-            $mail_notifications
-        );
+        $settings = new Settings($commit_rules, $immutable_tag, $access_file, $mail_notifications, array(), 1, false);
 
         $current_access_file = new AccessFileHistory(
             $this->repository,
@@ -155,12 +150,7 @@ class RepositoryResourceUpdaterTest extends TuleapTestCase
 
         $mail_notifications = array();
 
-        $settings = new Settings(
-            $commit_rules,
-            $immutable_tag,
-            $access_file,
-            $mail_notifications
-        );
+        $settings = new Settings($commit_rules, $immutable_tag, $access_file, $mail_notifications, array(), 1, false);
 
         $current_access_file = new AccessFileHistory(
             $this->repository,
@@ -197,12 +187,7 @@ class RepositoryResourceUpdaterTest extends TuleapTestCase
 
         $mail_notifications = array();
 
-        $settings = new Settings(
-            $commit_rules,
-            $immutable_tag,
-            $access_file,
-            $mail_notifications
-        );
+        $settings = new Settings($commit_rules, $immutable_tag, $access_file, $mail_notifications, array(), 1, false);
 
         $current_access_file = new AccessFileHistory(
             $this->repository,
@@ -239,12 +224,7 @@ class RepositoryResourceUpdaterTest extends TuleapTestCase
 
         $mail_notifications = array();
 
-        $settings = new Settings(
-            $commit_rules,
-            $immutable_tag,
-            $access_file,
-            $mail_notifications
-        );
+        $settings = new Settings($commit_rules, $immutable_tag, $access_file, $mail_notifications, array(), 1, false);
 
         $current_access_file = new AccessFileHistory(
             $this->repository,

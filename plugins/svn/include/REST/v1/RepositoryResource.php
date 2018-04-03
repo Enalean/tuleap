@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -29,7 +29,6 @@ use ProjectUGroup;
 use SystemEvent;
 use SystemEventManager;
 use Tuleap\Project\REST\UserGroupRetriever;
-use Tuleap\Project\REST\UserGroupRepresentation;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
@@ -790,7 +789,7 @@ class RepositoryResource extends AuthenticatedResource
             }
         }
 
-        return new Settings($commit_rules, $immutable_tag, $access_file, $mail_notification);
+        return new Settings($commit_rules, $immutable_tag, $access_file, $mail_notification, array(), 1, false);
     }
 
     private function isAnAuthorizedDynamicUgroup(ProjectUGroup $group)

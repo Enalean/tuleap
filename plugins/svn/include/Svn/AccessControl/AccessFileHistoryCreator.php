@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,7 +25,8 @@ use SVNAccessFile;
 use Tuleap\Svn\Repository\ProjectHistoryFormatter;
 use Tuleap\Svn\Repository\Repository;
 
-class AccessFileHistoryCreator {
+class AccessFileHistoryCreator
+{
 
     /**
      * @var AccessFileHistoryFactory
@@ -73,16 +74,23 @@ class AccessFileHistoryCreator {
 
     public function useAVersionWithHistory(Repository $repository, $version_id)
     {
-        $this->useVersion($repository, $version_id, true);
+        $version = $this->access_file_factory->getById($version_id, $repository);
+        $this->useVersion($repository, $version->getId(), true);
+    }
+
+    public function useAVersionWithHistoryWithoutUpdateSVNAccessFile(Repository $repository, $version_id)
+    {
+        try {
+            $version = $this->access_file_factory->getByVersionNumber($version_id, $repository);
+            $this->saveUsedVersion($repository, $version->getId());
+            $this->logUseAVersionHistory($repository, $version);
+        } catch (AccessFileHistoryNotFoundException $e) {
+        }
     }
 
     private function useVersion(Repository $repository, $version_id, $log_history)
     {
-        if (! $this->dao->useAVersion($repository->getId(), $version_id)) {
-            throw new CannotCreateAccessFileHistoryException(
-                $GLOBALS['Language']->getText('plugin_svn', 'update_access_history_file_error')
-            );
-        }
+        $this->saveUsedVersion($repository, $version_id);
 
         $current_version = $this->access_file_factory->getCurrentVersion($repository);
         $this->saveAccessFile($repository, $current_version);
@@ -120,6 +128,16 @@ class AccessFileHistoryCreator {
      */
     public function storeInDB(Repository $repository, $content, $timestamp)
     {
+        $content = $this->cleanContent($repository, $content);
+        return $this->storeInDBWithoutCleaningContent($repository, $content, $timestamp);
+    }
+
+    /**
+     * @return AccessFileHistory
+     * @throws CannotCreateAccessFileHistoryException
+     */
+    public function storeInDBWithoutCleaningContent(Repository $repository, $content, $timestamp)
+    {
         $id              = 0;
         $version_number  = $this->access_file_factory->getLastVersion($repository)->getVersionNumber();
 
@@ -127,7 +145,7 @@ class AccessFileHistoryCreator {
             $repository,
             $id,
             $version_number + 1,
-            $this->cleanContent($repository, $content),
+            $content,
             $timestamp
         );
         if (! $this->dao->create($file_history)) {
@@ -164,5 +182,14 @@ class AccessFileHistoryCreator {
             $old_version,
             $repository->getProject()->getID()
         );
+    }
+
+    private function saveUsedVersion(Repository $repository, $version_id)
+    {
+        if (! $this->dao->useAVersion($repository->getId(), $version_id)) {
+            throw new CannotCreateAccessFileHistoryException(
+                $GLOBALS['Language']->getText('plugin_svn', 'update_access_history_file_error')
+            );
+        }
     }
 }

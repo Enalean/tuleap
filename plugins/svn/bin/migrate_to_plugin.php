@@ -166,7 +166,7 @@ $svn_creator = new BareRepositoryCreator(
     Backend::instance(Backend::SVN),
     Backend::instance(Backend::SYSTEM),
     new RepositoryCopier($system_command),
-    new SettingsRetriever(new SVN_Immutable_Tags_DAO(), new SvnNotificationDao())
+    new SettingsRetriever(new SVN_Immutable_Tags_DAO(), new SvnNotificationDao(), new SVN_AccessFile_DAO())
 );
 
 $permission_manager = new SvnPermissionManager(

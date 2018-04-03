@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean SAS 2014. All rights reserved
+ * Copyright (c) Enalean SAS 2014 - 2018. All rights reserved
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -106,7 +106,7 @@ class SVN_AccessFile_DAO extends DataAccessObject {
     public function getAllVersions($group_id) {
         $group_id = $this->da->escapeInt($group_id);
 
-        $sql = "SELECT version_number, id, version_date
+        $sql = "SELECT version_number, id, version_date, content
                 FROM svn_accessfile_history
                 WHERE group_id = $group_id";
 

@@ -1,6 +1,6 @@
 <?php
 /**
-  * Copyright (c) Enalean, 2016. All rights reserved
+  * Copyright (c) Enalean, 2016 - 2018. All rights reserved
   *
   * This file is a part of Tuleap.
   *
@@ -20,8 +20,6 @@
 
 namespace Tuleap\Svn\AccessControl;
 
-use Project;
-use Tuleap\Svn\Repository\Repository;
 use DataAccessObject;
 
 class AccessFileHistoryDao extends DataAccessObject {
@@ -105,6 +103,20 @@ class AccessFileHistoryDao extends DataAccessObject {
 
         return $this->retrieveFirstRow($sql);
     }
+
+    public function searchByVersionNumber($version_number, $repository_id)
+    {
+        $version_number = $this->da->escapeInt($version_number);
+        $repository_id  = $this->da->escapeInt($repository_id);
+
+        $sql = "SELECT *
+                FROM plugin_svn_accessfile_history
+                WHERE version_number = $version_number
+                  AND repository_id = $repository_id";
+
+        return $this->retrieveFirstRow($sql);
+    }
+
 
     public function useAVersion($repository_id, $version_id) {
         $repository_id = $this->da->escapeInt($repository_id);
