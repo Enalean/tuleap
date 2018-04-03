@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,10 +19,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class BreadCrumb_AgileDashboard implements BreadCrumb_BreadCrumbGenerator {
+class BreadCrumb_AgileDashboard implements BreadCrumb_BreadCrumbGenerator
+{
+    /**
+     * @var Project
+     */
+    private $project;
+    /**
+     * @var string
+     */
+    private $plugin_path;
 
-    public function getCrumbs() {
-        return array();
+    public function __construct($plugin_path, Project $project)
+    {
+        $this->project = $project;
+        $this->plugin_path = $plugin_path;
+    }
+
+    public function getCrumbs()
+    {
+        $encoded_id = urlencode($this->project->getID());
+
+        return array(
+            array('url' => $this->plugin_path . '/?group_id=' . $encoded_id, 'title' => dgettext(
+                'tuleap-agiledashboard',
+                'Agile Dashboard'
+            ))
+        );
     }
 }
-?>

@@ -124,20 +124,23 @@ class Planning_MilestoneController extends MVC2_PluginController
     /**
      * @return BreadCrumb_BreadCrumbGenerator
      */
-    public function getBreadcrumbs($plugin_path) {
+    public function getBreadcrumbs($plugin_path)
+    {
         $this->generateBareMilestone();
+        $service_breadcrumb = new BreadCrumb_AgileDashboard($plugin_path, $this->project);
 
         if ($this->milestone->getArtifact()) {
             $breadcrumbs_merger = new BreadCrumb_Merger();
+            $breadcrumbs_merger->push($service_breadcrumb);
             $breadcrumbs_merger->push(new BreadCrumb_VirtualTopMilestone($plugin_path, $this->project));
-            foreach(array_reverse($this->milestone->getAncestors()) as $milestone) {
+            foreach (array_reverse($this->milestone->getAncestors()) as $milestone) {
                 $breadcrumbs_merger->push(new BreadCrumb_Milestone($plugin_path, $milestone));
             }
             $breadcrumbs_merger->push(new BreadCrumb_Milestone($plugin_path, $this->milestone));
             return $breadcrumbs_merger;
         }
 
-        return new BreadCrumb_NoCrumb();
+        return $service_breadcrumb;
     }
 
     public function solveInconsistencies() {

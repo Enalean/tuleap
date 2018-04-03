@@ -103,6 +103,8 @@ class Planning_Controller extends MVC2_PluginController {
      * @var Tracker_FormElementFactory
      */
     private $tracker_form_element_factory;
+    /** @var Project */
+    private $project;
 
     public function __construct(
         Codendi_Request $request,
@@ -125,6 +127,7 @@ class Planning_Controller extends MVC2_PluginController {
         parent::__construct('agiledashboard', $request);
 
         $this->group_id                     = (int) $request->get('group_id');
+        $this->project                      = $this->request->getProject();
         $this->planning_factory             = $planning_factory;
         $this->milestone_factory            = $milestone_factory;
         $this->project_manager              = $project_manager;
@@ -694,8 +697,9 @@ class Planning_Controller extends MVC2_PluginController {
     /**
      * @return BreadCrumb_BreadCrumbGenerator
      */
-    public function getBreadcrumbs($plugin_path) {
-        return new BreadCrumb_AgileDashboard();
+    public function getBreadcrumbs($plugin_path)
+    {
+        return new BreadCrumb_AgileDashboard($plugin_path, $this->project);
     }
 
     private function getPlanning() {
