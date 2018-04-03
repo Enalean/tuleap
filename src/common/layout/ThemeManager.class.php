@@ -52,6 +52,15 @@ class ThemeManager
         return $GLOBALS['Response'];
     }
 
+    /**
+     * @param PFUser $current_user
+     * @return bool|mixed
+     */
+    public function getBurningParrot(PFUser $current_user)
+    {
+        return $this->getValidTheme($current_user, self::$BURNING_PARROT);
+    }
+
     private function getFirstValidTheme(PFUser $current_user, array $theme_names)
     {
         if ($this->page_detector->isInCompatiblePage($current_user)) {

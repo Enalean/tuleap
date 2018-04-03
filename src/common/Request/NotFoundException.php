@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,9 +16,12 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-require_once 'pre.php';
+namespace Tuleap\Request;
 
-$router = new \Tuleap\Request\FrontRouter($event_manager, $theme_manager);
-$router->route($request, $HTML);
+class NotFoundException extends \Exception
+{
+
+}

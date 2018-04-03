@@ -3,24 +3,26 @@
 <section class="tlp-pane">
     <div class="tlp-pane-container">
         <div class="tlp-pane-header">
-            <h1 class="tlp-pane-title">{{# gettext }}Internal server error{{/ gettext }}</h1>
+            <h1 class="tlp-pane-title">{{ title }}</h1>
         </div>
         <section class="tlp-pane-section">
-            <p>{{# gettext }}We are sorry you caught an error, something meaningful was logged for site administrators. You may want got get in touch with them.{{/ gettext }}</p>
+            <p>{{ message }}</p>
 
         </section>
     </div>
 </section>
 
-{{# development }}
+{{# xdebug_message }}
 <section class="tlp-pane">
     <div class="tlp-pane-container">
         <div class="tlp-pane-header">
             <h1 class="tlp-pane-title">Developers details</h1>
         </div>
         <section class="tlp-pane-section">
-            <p>{{ error_message}}</p>
+            <table class="tlp-table">
+            {{{ xdebug_message }}}
+            </table>
         </section>
     </div>
 </section>
-{{/ development }}
+{{/ xdebug_message }}
