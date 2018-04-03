@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +16,8 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
 namespace Tuleap\REST\v1;
-use Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation;
-use Tuleap\Tracker\REST\TrackerRepresentation;
 
 /**
  * Representation of a milestone
@@ -168,5 +167,6 @@ class MilestoneRepresentationBase {
         'content'    => null,
         'cardwall'   => null,
         'burndown'   => null,
+        'siblings'   => null,
     );
 }

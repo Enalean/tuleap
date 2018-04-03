@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 
 /**
@@ -411,6 +412,43 @@ class Planning_MilestoneFactory
         }
 
         return new AgileDashboard_Milestone_PaginatedMilestones($sub_milestones, $total_size);
+    }
+
+    public function getPaginatedSiblingMilestones(
+        PFUser $user,
+        Planning_Milestone $milestone,
+        Tuleap\AgileDashboard\Milestone\Criterion\ISearchOnStatus $criterion,
+        $limit,
+        $offset
+    ) {
+        $milestone_artifact = $milestone->getArtifact();
+        $siblings           = [];
+        $total_size         = 0;
+
+        if ($milestone_artifact) {
+            $parent = $milestone->getParent();
+            if ($parent) {
+                $sibling_milestones = $this->milestone_dao->searchPaginatedSiblingMilestones(
+                    $milestone_artifact->getId(),
+                    $criterion,
+                    $limit,
+                    $offset
+                );
+            } else {
+                $sibling_milestones = $this->milestone_dao->searchPaginatedSiblingTopMilestones(
+                    $milestone_artifact->getId(),
+                    $milestone_artifact->getTrackerId(),
+                    $criterion,
+                    $limit,
+                    $offset
+                );
+            }
+
+            $total_size = $this->milestone_dao->foundRows();
+            $siblings   = $this->convertDarToArrayOfMilestones($user, $milestone, $sibling_milestones);
+        }
+
+        return new AgileDashboard_Milestone_PaginatedMilestones($siblings, $total_size);
     }
 
     public function getPaginatedTopMilestones(

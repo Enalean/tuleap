@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 – 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 – 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\AgileDashboard\Milestone\Criterion\ISearchOnStatus;
 
 class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject {
 
@@ -41,7 +43,7 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject {
             $order = 'desc';
         }
 
-        list($from_status_statement, $where_status_statement) = $this->getStatusStatements($criterion);
+        list($from_status_statement, $where_status_statement) = $this->getStatusStatements($criterion, 'submilestones');
 
         $nature = $this->da->quoteSmart(Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD);
 
@@ -77,6 +79,69 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    public function searchPaginatedSiblingTopMilestones($milestone_id, $tracker_id, $criterion, $limit, $offset)
+    {
+        $artifact_id = $this->da->escapeInt($milestone_id);
+        $tracker_id  = $this->da->escapeInt($tracker_id);
+        $limit       = $this->da->escapeInt($limit);
+        $offset      = $this->da->escapeInt($offset);
+
+        list($from_status_statement, $where_status_statement) = $this->getStatusStatements($criterion, 'art_sibling');
+
+        $sql = "SELECT SQL_CALC_FOUND_ROWS art_sibling.*
+                FROM tracker_artifact AS art_sibling
+
+                    $from_status_statement
+
+                WHERE art_sibling.id <> $artifact_id
+                  AND art_sibling.tracker_id = $tracker_id
+                  AND $where_status_statement
+
+                ORDER BY art_sibling.id DESC
+
+                LIMIT $offset, $limit";
+
+        return $this->retrieve($sql);
+    }
+
+    public function searchPaginatedSiblingMilestones($milestone_id, $criterion, $limit, $offset)
+    {
+        $artifact_id = $this->da->escapeInt($milestone_id);
+        $limit       = $this->da->escapeInt($limit);
+        $offset      = $this->da->escapeInt($offset);
+
+        list($from_status_statement, $where_status_statement) = $this->getStatusStatements($criterion, 'art_sibling');
+
+        $sql = "SELECT SQL_CALC_FOUND_ROWS art_sibling.*
+                FROM tracker_artifact parent_art
+
+                    /* connect parent to its children */
+                    INNER JOIN tracker_field                        f_sibling         ON (f_sibling.tracker_id = parent_art.tracker_id AND f_sibling.formElement_type = 'art_link' AND f_sibling.use_it = 1)
+                    INNER JOIN tracker_changeset_value              cv_sibling        ON (cv_sibling.changeset_id = parent_art.last_changeset_id AND cv_sibling.field_id = f_sibling.id)
+                    INNER JOIN tracker_changeset_value_artifactlink artlink_sibling   ON (artlink_sibling.changeset_value_id = cv_sibling.id)
+                    INNER JOIN tracker_artifact                     art_sibling       ON (art_sibling.id = artlink_sibling.artifact_id)
+                    INNER JOIN tracker_hierarchy                    hierarchy_sibling ON (hierarchy_sibling.child_id = art_sibling.tracker_id AND hierarchy_sibling.parent_id = parent_art.tracker_id)
+
+                    /* connect child to its parent */
+                    INNER JOIN tracker_field                        f_child         ON (f_child.tracker_id = parent_art.tracker_id AND f_child.formElement_type = 'art_link' AND f_child.use_it = 1)
+                    INNER JOIN tracker_changeset_value              cv_child        ON (cv_child.changeset_id = parent_art.last_changeset_id AND cv_child.field_id = f_child.id)
+                    INNER JOIN tracker_changeset_value_artifactlink artlink_child   ON (artlink_child.changeset_value_id = cv_child.id)
+                    INNER JOIN tracker_artifact                     art_child       ON (art_child.id = artlink_child.artifact_id)
+                    INNER JOIN tracker_hierarchy                    hierarchy_child ON (hierarchy_child.child_id = art_child.tracker_id AND hierarchy_child.parent_id = parent_art.tracker_id)
+
+                    $from_status_statement
+
+                WHERE art_child.id = $artifact_id
+                  AND art_sibling.id != art_child.id
+                  AND $where_status_statement
+
+                ORDER BY art_sibling.id DESC
+
+                LIMIT $offset, $limit";
+
+        return $this->retrieve($sql);
+    }
+
     private function getPaginationAndStatusStatements(
         Tuleap\AgileDashboard\Milestone\Criterion\ISearchOnStatus $criterion,
         $limit,
@@ -95,7 +160,7 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject {
             $order = 'desc';
         }
 
-        list($from_status_statement, $where_status_statement) = $this->getStatusStatements($criterion);
+        list($from_status_statement, $where_status_statement) = $this->getStatusStatements($criterion, 'submilestones');
 
 
         return array(
@@ -158,7 +223,7 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    private function getStatusStatements(Tuleap\AgileDashboard\Milestone\Criterion\ISearchOnStatus $criterion) {
+    private function getStatusStatements(ISearchOnStatus $criterion, $alias_name) {
         $from_status_statement  = "";
         $where_status_statement = "1";
         if ($criterion->shouldRetrieveOpenMilestones() && $criterion->shouldRetrieveClosedMilestones()) {
@@ -167,12 +232,12 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject {
         } else {
             if ($criterion->shouldRetrieveOpenMilestones()) {
                 $from_status_statement = "
-                    INNER JOIN tracker_changeset AS C ON (submilestones.last_changeset_id = C.id)
+                    INNER JOIN tracker_changeset AS C ON ($alias_name.last_changeset_id = C.id)
                     LEFT JOIN (
                         tracker_semantic_status as SS
                         INNER JOIN tracker_changeset_value AS CV3 ON (SS.field_id = CV3.field_id)
                         INNER JOIN tracker_changeset_value_list AS CVL2 ON (CV3.id = CVL2.changeset_value_id)
-                    ) ON (submilestones.tracker_id = SS.tracker_id AND C.id = CV3.changeset_id)";
+                    ) ON ($alias_name.tracker_id = SS.tracker_id AND C.id = CV3.changeset_id)";
                 $where_status_statement = "(
                         SS.field_id IS NULL -- Use the status semantic only if it is defined
                         OR
@@ -182,19 +247,19 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject {
             if ($criterion->shouldRetrieveClosedMilestones()) {
                 $from_status_statement = "
                     INNER JOIN tracker_changeset_value AS cvs ON(
-                        submilestones.last_changeset_id = cvs.changeset_id
+                        $alias_name.last_changeset_id = cvs.changeset_id
                     )
                     INNER JOIN (
                         SELECT DISTINCT tracker_id, field_id
                         FROM tracker_semantic_status
                     ) AS R ON (
-                        R.tracker_id   = submilestones.tracker_id
+                        R.tracker_id   = $alias_name.tracker_id
                         AND R.field_id = cvs.field_id
                     )
                     INNER JOIN tracker_changeset_value_list AS cvl ON(cvl.changeset_value_id = cvs.id)
                     LEFT JOIN tracker_semantic_status AS open_values ON (
                         cvl.bindvalue_id = open_values.open_value_id
-                        AND open_values.tracker_id = submilestones.tracker_id
+                        AND open_values.tracker_id = $alias_name.tracker_id
                         AND cvs.field_id = open_values.field_id
                     )";
                 $where_status_statement = "open_values.open_value_id IS NULL";

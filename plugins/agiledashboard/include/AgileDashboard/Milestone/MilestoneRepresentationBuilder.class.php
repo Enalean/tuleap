@@ -19,8 +19,8 @@
  */
 
 use Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever;
-use Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
+use Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation;
 
 class AgileDashboard_Milestone_MilestoneRepresentationBuilder {
 
@@ -113,6 +113,32 @@ class AgileDashboard_Milestone_MilestoneRepresentationBuilder {
         return new AgileDashboard_Milestone_PaginatedMilestonesRepresentations(
             $submilestones_representations,
             $sub_milestones->getTotalSize()
+        );
+    }
+
+    public function getPaginatedSiblingMilestonesRepresentations(
+        Planning_Milestone $milestone,
+        PFUser $user,
+        $representation_type,
+        Tuleap\AgileDashboard\Milestone\Criterion\ISearchOnStatus $criterion,
+        $limit,
+        $offset
+    ) {
+        $siblings = $this->milestone_factory
+            ->getPaginatedSiblingMilestones($user, $milestone, $criterion, $limit, $offset);
+
+        $sibling_representations = [];
+        foreach ($siblings->getMilestones() as $sibling) {
+            $sibling_representations[] = $this->getMilestoneRepresentation(
+                $sibling,
+                $user,
+                $representation_type
+            );
+        }
+
+        return new AgileDashboard_Milestone_PaginatedMilestonesRepresentations(
+            $sibling_representations,
+            $siblings->getTotalSize()
         );
     }
 

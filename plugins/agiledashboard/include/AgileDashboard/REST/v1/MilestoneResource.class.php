@@ -20,47 +20,47 @@
 
 namespace Tuleap\AgileDashboard\REST\v1;
 
+use AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder;
+use AgileDashboard_BacklogItemDao;
+use AgileDashboard_Milestone_Backlog_BacklogFactory;
+use AgileDashboard_Milestone_Backlog_BacklogItemBuilder;
+use AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
+use AgileDashboard_Milestone_MilestoneDao;
+use AgileDashboard_Milestone_MilestoneRepresentationBuilder;
+use AgileDashboard_Milestone_MilestoneStatusCounter;
 use BacklogItemReference;
+use EventManager;
+use Luracast\Restler\RestException;
+use MilestoneParentLinker;
+use PFUser;
+use Planning_Milestone;
+use Planning_MilestoneFactory;
+use PlanningFactory;
+use PlanningPermissionsManager;
+use Tracker_Artifact_PriorityDao;
+use Tracker_Artifact_PriorityHistoryDao;
+use Tracker_Artifact_PriorityManager;
+use Tracker_ArtifactDao;
+use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_ArtifactLink;
+use Tracker_FormElementFactory;
+use Tracker_NoArtifactLinkFieldException;
+use Tracker_NoChangeException;
+use TrackerFactory;
 use Tuleap\AgileDashboard\BacklogItem\RemainingEffortValueRetriever;
 use Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
-use Tuleap\REST\ProjectAuthorization;
-use Tuleap\REST\Header;
-use Tuleap\REST\AuthenticatedResource;
-use Luracast\Restler\RestException;
-use PlanningFactory;
-use Tracker_ArtifactFactory;
-use Tracker_FormElementFactory;
-use TrackerFactory;
-use Planning_MilestoneFactory;
-use AgileDashboard_BacklogItemDao;
-use AgileDashboard_Milestone_Backlog_BacklogFactory;
-use AgileDashboard_Milestone_Backlog_BacklogItemBuilder;
-use AgileDashboard_Milestone_MilestoneStatusCounter;
-use Tracker_ArtifactDao;
-use UserManager;
-use Planning_Milestone;
-use PFUser;
-use AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
-use Tracker_NoChangeException;
-use Tracker_NoArtifactLinkFieldException;
-use EventManager;
-use URLVerification;
-use Tracker_Artifact_PriorityDao;
-use Tracker_Artifact_PriorityManager;
-use Tracker_Artifact_PriorityHistoryDao;
-use PlanningPermissionsManager;
-use AgileDashboard_Milestone_MilestoneRepresentationBuilder;
-use AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder;
-use AgileDashboard_Milestone_MilestoneDao;
-use MilestoneParentLinker;
-use Tuleap\AgileDashboard\REST\QueryToCriterionConverter;
 use Tuleap\AgileDashboard\REST\MalformedQueryParameterException;
+use Tuleap\AgileDashboard\REST\QueryToCriterionConverter;
+use Tuleap\REST\AuthenticatedResource;
+use Tuleap\REST\Header;
+use Tuleap\REST\ProjectAuthorization;
 use Tuleap\Tracker\REST\v1\ArtifactLinkUpdater;
+use URLVerification;
+use UserManager;
 
 /**
  * Wrapper for milestone related REST methods
@@ -400,6 +400,67 @@ class MilestoneResource extends AuthenticatedResource {
      */
     public function optionsMilestones($id) {
         $this->sendAllowHeaderForSubmilestones();
+    }
+
+    /**
+     * @url OPTIONS {id}/siblings
+     *
+     * @param int $id ID of the milestone
+     *
+     * @throws 403
+     * @throws 404
+     */
+    public function optionsSiblings($id)
+    {
+        $this->sendAllowHeaderForSiblings();
+    }
+
+    /**
+     * Get Siblings
+     *
+     * Get siblings of the current milestone. The returned collection is ordered by id in reverse order.
+     *
+     * <p>
+     * $query parameter is optional, by default we return all milestones. If <code>query={"status":"open"}</code>
+     * then only open milestones are returned and if <code>query={"status":"closed"}</code> then only closed milestones
+     * are returned.
+     * </p>
+     *
+     * @url GET {id}/siblings
+     * @access hybrid
+     *
+     * @param int    $id     Id of the milestone
+     * @param string $query  JSON object of search criteria properties {@from path}
+     * @param int    $limit  Number of elements displayed per page {@from path}{@min 1}{@max 10}
+     * @param int    $offset Position of the first element to display {@from path}{@min 0}
+     *
+     * @return array {@type Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation}
+     *
+     * @thorws 400
+     * @throws 403
+     * @throws 404
+     */
+    public function getSiblings($id, $query = '', $limit = 10, $offset = 0)
+    {
+        $this->checkAccess();
+        $user      = $this->getCurrentUser();
+        $milestone = $this->getMilestoneById($user, $id);
+
+        try {
+            $criterion = $this->query_to_criterion_converter->convert($query);
+        } catch (MalformedQueryParameterException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        }
+
+        $paginated_milestones_representations = $this->milestone_representation_builder
+            ->getPaginatedSiblingMilestonesRepresentations(
+                $milestone, $user, MilestoneRepresentation::SLIM, $criterion, $limit, $offset
+            );
+
+        $this->sendAllowHeaderForSubmilestones();
+        $this->sendPaginationHeaders($limit, $offset, $paginated_milestones_representations->getTotalSize());
+
+        return $paginated_milestones_representations->getMilestonesRepresentations();
     }
 
     /**
@@ -1110,5 +1171,10 @@ class MilestoneResource extends AuthenticatedResource {
     private function getBacklogItemRepresentationFactory()
     {
         return new BacklogItemRepresentationFactory();
+    }
+
+    private function sendAllowHeaderForSiblings()
+    {
+        Header::allowOptionsGet();
     }
 }
