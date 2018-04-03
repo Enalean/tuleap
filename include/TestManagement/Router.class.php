@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -91,16 +91,20 @@ class Router {
         $this->artifact_links_usage_updater = $artifact_links_usage_updater;
     }
 
-    public function route(Codendi_Request $request) {
+    public function route(Codendi_Request $request)
+    {
+        $csrf_token = new \CSRFSynchronizerToken(
+            TESTMANAGEMENT_BASE_URL .'/?'. http_build_query(['group_id' => $request->get('group_id')])
+        );
         switch ($request->get('action')) {
             case 'admin':
                 $this->checkUserCanAdministrate($request->getProject(), $this->user_manager->getCurrentUser());
-                $controller = new AdminController($request, $this->config, $this->tracker_factory, $this->event_manager);
+                $controller = new AdminController($request, $this->config, $this->tracker_factory, $this->event_manager, $csrf_token);
                 $this->renderAction($controller, 'admin', $request);
                 break;
             case 'admin-update':
                 $this->checkUserCanAdministrate($request->getProject(), $this->user_manager->getCurrentUser());
-                $controller = new AdminController($request, $this->config, $this->tracker_factory, $this->event_manager);
+                $controller = new AdminController($request, $this->config, $this->tracker_factory, $this->event_manager, $csrf_token);
                 $this->executeAction($controller, 'update');
                 $this->renderIndex($request);
                 break;

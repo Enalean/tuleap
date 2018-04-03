@@ -16,6 +16,9 @@
                     {{ help_message_config_not_fully_set_up }}
                 </span>
                 <form action="" method="POST">
+                    {{# csrf_token }}
+                        {{> csrf_token_input }}
+                    {{/ csrf_token }}
                     <button type="submit" class="tlp-button-primary tlp-button-primary-large">
                     <input type="hidden" name="action" value="create-config" />
                         <i class="fa fa-play tlp-button-icon"></i>

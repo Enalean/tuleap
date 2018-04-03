@@ -21,6 +21,8 @@
 namespace Tuleap\TestManagement;
 
 
+use CSRFSynchronizerToken;
+
 class StartTestManagementPresenter
 {
     // @var String
@@ -38,10 +40,15 @@ class StartTestManagementPresenter
     // @var bool
     public $is_user_admin;
 
-    public function __construct(
-        $is_user_admin
-    ) {
+    /**
+     * @var CSRFSynchronizerToken
+     */
+    public $csrf_token;
+
+    public function __construct($is_user_admin, CSRFSynchronizerToken $csrf_token)
+    {
         $this->is_user_admin = $is_user_admin;
+        $this->csrf_token    = $csrf_token;
 
         $this->config_is_not_fully_set_up = dgettext(
             'tuleap-testmanagement',

@@ -1,6 +1,9 @@
 <div class="tlp-framed">
     <h1>{{ title }}</h1>
     <form action="" method="POST">
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
         <input type="hidden" name="action" value="admin-update" />
         <div class="tlp-form-element">
             <label class="tlp-label" for="campaign_id">

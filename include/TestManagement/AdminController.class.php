@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,11 +20,30 @@
 
 namespace Tuleap\TestManagement;
 
+use Codendi_Request;
+use CSRFSynchronizerToken;
+use EventManager;
 use Feedback;
+use TrackerFactory;
 use Tuleap\TestManagement\Breadcrumbs\AdmininistrationBreadcrumbs;
 
 class AdminController extends TestManagementController
 {
+    /**
+     * @var CSRFSynchronizerToken
+     */
+    private $csrf_token;
+
+    public function __construct(
+        Codendi_Request $request,
+        Config $config,
+        TrackerFactory $tracker_factory,
+        EventManager $event_manager,
+        CSRFSynchronizerToken $csrf_token
+    ) {
+        parent::__construct($request, $config, $tracker_factory, $event_manager);
+        $this->csrf_token = $csrf_token;
+    }
 
     public function admin()
     {
@@ -34,13 +53,15 @@ class AdminController extends TestManagementController
                 $this->config->getCampaignTrackerId($this->project),
                 $this->config->getTestDefinitionTrackerId($this->project),
                 $this->config->getTestExecutionTrackerId($this->project),
-                $this->config->getIssueTrackerId($this->project)
+                $this->config->getIssueTrackerId($this->project),
+                $this->csrf_token
             )
         );
     }
 
     public function update()
     {
+        $this->csrf_token->check();
         $project_trackers    = $this->tracker_factory->getTrackersByGroupId($this->project->getId());
         $project_tracker_ids = array_map(
             function ($tracker) {

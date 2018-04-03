@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,6 +19,8 @@
  */
 
 namespace Tuleap\TestManagement;
+
+use CSRFSynchronizerToken;
 
 class AdminPresenter
 {
@@ -56,16 +58,23 @@ class AdminPresenter
     /** @var string */
     public $placeholder;
 
+    /**
+     * @var CSRFSynchronizerToken
+     */
+    public $csrf_token;
+
     public function __construct(
         $campaign_tracker_id,
         $test_definition_tracker_id,
         $test_execution_tracker_id,
-        $issue_tracker_id
+        $issue_tracker_id,
+        CSRFSynchronizerToken $csrf_token
     ) {
         $this->campaign_tracker_id        = $campaign_tracker_id;
         $this->test_definition_tracker_id = $test_definition_tracker_id;
         $this->test_execution_tracker_id  = $test_execution_tracker_id;
         $this->issue_tracker_id           = $issue_tracker_id;
+        $this->csrf_token                 = $csrf_token;
 
         $this->title       = $GLOBALS['Language']->getText('global', 'Administration');
         $this->campaigns   = $GLOBALS['Language']->getText('plugin_testmanagement', 'admin_campaign_tracker');
