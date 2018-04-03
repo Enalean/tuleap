@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,6 +16,9 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
+use Tuleap\password\Configuration\PasswordConfigurationDAO;
+use Tuleap\password\Configuration\PasswordConfigurationRetriever;
 
 class Account_RegisterPresenter {
 
@@ -57,7 +60,9 @@ class Account_RegisterPresenter {
         $this->should_display_purpose = $GLOBALS['sys_user_approval'] == 1;
         $this->extra_plugin_field     = $extra_plugin_field;
 
-        $password_strategy = new PasswordStrategy();
+        $password_configuration_retriever = new PasswordConfigurationRetriever(new PasswordConfigurationDAO());
+        $password_configuration           = $password_configuration_retriever->getPasswordConfiguration();
+        $password_strategy                = new PasswordStrategy($password_configuration);
         include($GLOBALS['Language']->getContent('account/password_strategy'));
         $this->json_password_strategy_keys = json_encode(array_keys($password_strategy->validators));
         $this->password_strategy_validators = array();

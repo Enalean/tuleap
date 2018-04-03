@@ -1,6 +1,6 @@
 <?php
 //
-// Copyright (c) Enalean, 2015-2016. All Rights Reserved.
+// Copyright (c) Enalean, 2015-2018. All Rights Reserved.
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
@@ -10,10 +10,15 @@
 // adduser.php - All the forms and functions to manage unix users
 //
 
+use Tuleap\password\Configuration\PasswordConfigurationDAO;
+use Tuleap\password\Configuration\PasswordConfigurationRetriever;
+
 // ***** function account_pwvalid()
 // ***** check for valid password
 function account_pwvalid($pw, &$errors) {
-    $password_strategy = new PasswordStrategy();
+    $password_configuration_retriever = new PasswordConfigurationRetriever(new PasswordConfigurationDAO());
+    $password_configuration           = $password_configuration_retriever->getPasswordConfiguration();
+    $password_strategy                = new PasswordStrategy($password_configuration);
     include($GLOBALS['Language']->getContent('account/password_strategy'));
     $valid = $password_strategy->validate($pw);
     $errors = $password_strategy->errors;

@@ -23,6 +23,8 @@
  */
 
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\password\Configuration\PasswordConfigurationDAO;
+use Tuleap\password\Configuration\PasswordConfigurationRetriever;
 use Tuleap\User\Admin\UserChangePasswordPresenter;
 use Tuleap\User\Admin\UserDetailsAccessPresenter;
 use Tuleap\user\Admin\UserDetailsFormatter;
@@ -289,7 +291,9 @@ EventManager::instance()->processEvent(
     )
 );
 
-$password_strategy = new PasswordStrategy();
+$password_configuration_retriever = new PasswordConfigurationRetriever(new PasswordConfigurationDAO());
+$password_configuration           = $password_configuration_retriever->getPasswordConfiguration();
+$password_strategy                = new PasswordStrategy($password_configuration);
 include($GLOBALS['Language']->getContent('account/password_strategy'));
 $passwords_validators = array();
 foreach ($password_strategy->validators as $key => $v) {
