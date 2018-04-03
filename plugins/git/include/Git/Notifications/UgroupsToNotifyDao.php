@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2017. All rights reserved.
+ * Copyright Enalean (c) 2017-2018. All rights reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,72 +20,67 @@
 
 namespace Tuleap\Git\Notifications;
 
-use DataAccessObject;
+use ParagonIE\EasyDB\EasyStatement;
 use ProjectUGroup;
+use Tuleap\DB\DataAccessObject;
 
 class UgroupsToNotifyDao extends DataAccessObject
 {
     public function searchUgroupsByRepositoryId($repository_id)
     {
-        $repository_id = $this->da->escapeInt($repository_id);
-
-        $sql = "SELECT ugroup.*
+        $sql = 'SELECT ugroup.*
                 FROM plugin_git_post_receive_notification_ugroup AS notif
                     INNER JOIN ugroup
                     ON (
                         ugroup.ugroup_id = notif.ugroup_id
-                        AND notif.repository_id = $repository_id
-                    )";
+                        AND notif.repository_id = ?
+                    )';
 
-        return $this->retrieve($sql);
+        return $this->getDB()->run($sql, $repository_id);
     }
 
     public function delete($repository_id, $ugroup_id)
     {
-        $repository_id = $this->da->escapeInt($repository_id);
-        $ugroup_id       = $this->da->escapeInt($ugroup_id);
-
-        $sql = "DELETE
+        $sql = 'DELETE
                 FROM plugin_git_post_receive_notification_ugroup
-                WHERE repository_id = $repository_id
-                  AND ugroup_id = $ugroup_id";
+                WHERE repository_id = ?
+                  AND ugroup_id = ?';
 
-        return $this->update($sql);
+        try {
+            $this->getDB()->run($sql, $repository_id, $ugroup_id);
+        } catch (\PDOException $ex) {
+            return false;
+        }
+
+        return true;
     }
 
     public function deleteByUgroupId($project_id, $ugroup_id)
     {
-        $project_id = $this->da->escapeInt($project_id);
-        $ugroup_id  = $this->da->escapeInt($ugroup_id);
-
-        $sql = "DELETE notif.*
+        $sql = 'DELETE notif.*
                 FROM plugin_git AS repo
                     INNER JOIN plugin_git_post_receive_notification_ugroup AS notif
                     ON (
                       repo.repository_id = notif.repository_id
-                      AND repo.project_id = $project_id
-                      AND notif.ugroup_id = $ugroup_id
-                    )";
+                      AND repo.project_id = ?
+                      AND notif.ugroup_id = ?
+                    )';
 
-        return $this->update($sql);
+        $this->getDB()->run($sql, $project_id, $ugroup_id);
     }
 
     public function deleteByRepositoryId($repository_id)
     {
-        $repository_id = $this->da->escapeInt($repository_id);
-
-        $sql = "DELETE
+        $sql = 'DELETE
                 FROM plugin_git_post_receive_notification_ugroup
-                WHERE repository_id = $repository_id";
+                WHERE repository_id = ?';
 
-        return $this->update($sql);
+        $this->getDB()->run($sql, $repository_id);
     }
 
     public function disableAnonymousRegisteredAuthenticated($project_id)
     {
-        $project_id = $this->da->escapeInt($project_id);
-
-        return $this->updateNotificationUgroups(
+        $this->updateNotificationUgroups(
             $project_id,
             array(ProjectUGroup::ANONYMOUS, ProjectUGroup::REGISTERED, ProjectUGroup::AUTHENTICATED),
             ProjectUGroup::PROJECT_MEMBERS
@@ -94,9 +89,7 @@ class UgroupsToNotifyDao extends DataAccessObject
 
     public function disableAuthenticated($project_id)
     {
-        $project_id = $this->da->escapeInt($project_id);
-
-        return $this->updateNotificationUgroups(
+        $this->updateNotificationUgroups(
             $project_id,
             array(ProjectUGroup::AUTHENTICATED),
             ProjectUGroup::REGISTERED
@@ -105,68 +98,68 @@ class UgroupsToNotifyDao extends DataAccessObject
 
     private function updateNotificationUgroups($project_id, array $old_ugroup_ids, $new_ugroup_id)
     {
-        $project_id          = $this->da->escapeInt($project_id);
-        $old_ugroup_ids      = $this->da->escapeIntImplode($old_ugroup_ids);
+        $this->getDB()->beginTransaction();
 
-        $this->startTransaction();
+        try {
+            $old_ugroup_ids_in_condition = EasyStatement::open()->in('?*', $old_ugroup_ids);
 
-        $sql = "UPDATE IGNORE plugin_git_post_receive_notification_ugroup AS notif
+            $sql = "UPDATE IGNORE plugin_git_post_receive_notification_ugroup AS notif
                   INNER JOIN plugin_git AS git USING (repository_id)
-                SET notif.ugroup_id = $new_ugroup_id
-                WHERE notif.ugroup_id IN ($old_ugroup_ids)
-                  AND git.project_id = $project_id
+                SET notif.ugroup_id = ?
+                WHERE notif.ugroup_id IN ($old_ugroup_ids_in_condition)
+                  AND git.project_id = ?
                 ";
 
+            $params_update   = [$new_ugroup_id];
+            $params_update   = array_merge($params_update, $old_ugroup_ids_in_condition->values());
+            $params_update[] = $project_id;
+            $this->getDB()->safeQuery($sql, $params_update);
 
-        if (! $this->update($sql)) {
-            $this->rollBack();
-            return false;
-        }
 
-        $sql = "DELETE notif.*
+            $sql = "DELETE notif.*
                 FROM plugin_git_post_receive_notification_ugroup AS notif
                   INNER JOIN plugin_git AS git USING (repository_id)
-                WHERE notif.ugroup_id IN ($old_ugroup_ids)
-                  AND git.project_id = $project_id";
+                WHERE notif.ugroup_id IN ($old_ugroup_ids_in_condition)
+                  AND git.project_id = ?";
 
-        if (! $this->update($sql)) {
-            $this->rollBack();
-            return false;
+            $params_delete   = $old_ugroup_ids_in_condition->values();
+            $params_delete[] = $project_id;
+            $this->getDB()->safeQuery($sql, $params_delete);
+        } catch (\PDOException $ex) {
+            $this->getDB()->rollBack();
         }
-
-        return $this->commit($sql);
     }
 
     public function updateAllAnonymousAccessToRegistered()
     {
-        return $this->updateAllPermissions(ProjectUGroup::ANONYMOUS, ProjectUGroup::REGISTERED);
+        $this->updateAllPermissions(ProjectUGroup::ANONYMOUS, ProjectUGroup::REGISTERED);
     }
 
     public function updateAllAuthenticatedAccessToRegistered()
     {
-        return $this->updateAllPermissions(ProjectUGroup::AUTHENTICATED, ProjectUGroup::REGISTERED);
+        $this->updateAllPermissions(ProjectUGroup::AUTHENTICATED, ProjectUGroup::REGISTERED);
     }
 
     private function updateAllPermissions($old_ugroup_id, $new_ugroup_id)
     {
-        $old_ugroup_id = $this->da->escapeInt($old_ugroup_id);
-        $new_ugroup_id = $this->da->escapeInt($new_ugroup_id);
+        $sql = 'UPDATE plugin_git_post_receive_notification_ugroup
+                SET ugroup_id = ?
+                WHERE ugroup_id = ?';
 
-        $sql = "UPDATE plugin_git_post_receive_notification_ugroup
-                SET ugroup_id = $new_ugroup_id
-                WHERE ugroup_id = $old_ugroup_id";
-
-        return $this->update($sql);
+        $this->getDB()->run($sql, $old_ugroup_id, $new_ugroup_id);
     }
 
     public function insert($repository_id, $ugroup_id)
     {
-        $repository_id = $this->da->escapeInt($repository_id);
-        $ugroup_id     = $this->da->escapeInt($ugroup_id);
+        $sql = 'REPLACE INTO plugin_git_post_receive_notification_ugroup(repository_id, ugroup_id)
+                VALUES (?, ?)';
 
-        $sql = "REPLACE INTO plugin_git_post_receive_notification_ugroup(repository_id, ugroup_id)
-                VALUES ($repository_id, $ugroup_id)";
+        try {
+            $this->getDB()->run($sql, $repository_id, $ugroup_id);
+        } catch (\PDOException $ex) {
+            return false;
+        }
 
-        return $this->update($sql);
+        return true;
     }
 }

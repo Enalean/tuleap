@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2017. All rights reserved.
+ * Copyright Enalean (c) 2017-2018. All rights reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,58 +20,58 @@
 
 namespace Tuleap\Git\Notifications;
 
-use DataAccessObject;
+use Tuleap\DB\DataAccessObject;
 
 class UsersToNotifyDao extends DataAccessObject
 {
     public function searchUsersByRepositoryId($repository_id)
     {
-        $repository_id = $this->da->escapeInt($repository_id);
-
         $sql = "SELECT user.*
                 FROM plugin_git_post_receive_notification_user AS notif
                     INNER JOIN user
                     ON (
                         user.user_id = notif.user_id
-                        AND notif.repository_id = $repository_id
+                        AND notif.repository_id = ?
                         AND user.status IN ('A', 'R')
                     )";
 
-        return $this->retrieve($sql);
+        return $this->getDB()->run($sql, $repository_id);
     }
 
     public function delete($repository_id, $user_id)
     {
-        $repository_id = $this->da->escapeInt($repository_id);
-        $user_id       = $this->da->escapeInt($user_id);
-
-        $sql = "DELETE
+        $sql = 'DELETE
                 FROM plugin_git_post_receive_notification_user
-                WHERE repository_id = $repository_id
-                  AND user_id = $user_id";
+                WHERE repository_id = ?
+                  AND user_id = ?';
 
-        return $this->update($sql);
+        try {
+            $this->getDB()->run($sql, $repository_id, $user_id);
+        } catch (\PDOException $ex) {
+            return false;
+        }
+        return true;
     }
 
     public function deleteByRepositoryId($repository_id)
     {
-        $repository_id = $this->da->escapeInt($repository_id);
-
-        $sql = "DELETE
+        $sql = 'DELETE
                 FROM plugin_git_post_receive_notification_user
-                WHERE repository_id = $repository_id";
+                WHERE repository_id = ?';
 
-        return $this->update($sql);
+        $this->getDB()->run($sql, $repository_id);
     }
 
     public function insert($repository_id, $user_id)
     {
-        $repository_id = $this->da->escapeInt($repository_id);
-        $user_id       = $this->da->escapeInt($user_id);
+        $sql = 'REPLACE INTO plugin_git_post_receive_notification_user(repository_id, user_id)
+                VALUES (?, ?)';
 
-        $sql = "REPLACE INTO plugin_git_post_receive_notification_user(repository_id, user_id)
-                VALUES ($repository_id, $user_id)";
-
-        return $this->update($sql);
+        try {
+            $this->getDB()->run($sql, $repository_id, $user_id);
+        } catch (\PDOException $ex) {
+            return false;
+        }
+        return true;
     }
 }
