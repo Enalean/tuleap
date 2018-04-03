@@ -22,6 +22,6 @@ import french_translations from './po/fr.po';
 
 const gettext_provider = new Gettext();
 gettext_provider.addTranslations('fr_FR', 'charts-builders', french_translations);
-gettext_provider.setTextDomain('burnup-chart');
+gettext_provider.setTextDomain('charts-builders');
 
 export { gettext_provider };
