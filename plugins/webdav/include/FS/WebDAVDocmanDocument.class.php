@@ -171,7 +171,12 @@ class WebDAVDocmanDocument extends Sabre_DAV_File {
         header('Content-Length: '. $fileSize);
         ob_clean();
         flush();
-        readfile($path);
+        $file = fopen($path, "r");
+        while (! feof($file)) {
+            print fread($file, 30*1024);
+            flush();
+        }
+        fclose($file);
         exit;
     }
 

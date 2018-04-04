@@ -507,9 +507,21 @@ class FRSFile {
         set_time_limit(0);
 
         // Now transfer the file to the client
-        $read_bytes = readfile($file_location);
+        flush();
+        $file = fopen($file_location, "r");
+        while (! feof($file)) {
+            $content = fread($file, 30*1024);
 
-        return $read_bytes !== false;
+            if (! $content) {
+                return false;
+            }
+
+            print $content;
+            flush();
+        }
+        fclose($file);
+
+        return true;
     }
     
     /**
