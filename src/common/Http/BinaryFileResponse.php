@@ -56,7 +56,13 @@ class BinaryFileResponse
         if (ob_get_level()) {
             ob_end_clean();
         }
-        readfile($this->file_path);
+        flush();
+        $file = fopen($this->file_path, "r");
+        while (! feof($file)) {
+            print fread($file, 30*1024);
+            flush();
+        }
+        fclose($file);
         exit();
     }
 

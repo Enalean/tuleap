@@ -550,7 +550,13 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
                 if (ob_get_level()) {
                     ob_end_clean();
                 }
-                readfile($fileinfo->getPath());
+                flush();
+                $file = fopen($fileinfo->getPath(), "r");
+                while (! feof($file)) {
+                    print fread($file, 30*1024);
+                    flush();
+                }
+                fclose($file);
             }
         }
         exit();

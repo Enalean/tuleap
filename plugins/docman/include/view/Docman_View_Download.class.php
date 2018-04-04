@@ -49,7 +49,14 @@ class Docman_View_Download extends Docman_View_View {
                 if (ob_get_level()) {
                     ob_end_clean();
                 }
-                readfile($version->getPath());
+
+                flush();
+                $file = fopen($version->getPath(), "r");
+                while (! feof($file)) {
+                    print fread($file, 30*1024);
+                    flush();
+                }
+                fclose($file);
             } else {
                 $this->_controller->feedback->log('error', 'The file cannot be found.');
                 $v = new Docman_View_DocmanError($this->_controller);
