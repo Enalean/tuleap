@@ -339,8 +339,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
                 array(
                     array(
                         'title'     => $GLOBALS['Language']->getText('plugin_tracker', 'trackers'),
-                        'url'       => TRACKER_BASE_URL.'/?group_id='. $project->group_id,
-                        'classname' => 'trackers',
+                        'url'       => TRACKER_BASE_URL.'/?group_id='. $project->group_id
                     )
                 ),
                 $breadcrumbs

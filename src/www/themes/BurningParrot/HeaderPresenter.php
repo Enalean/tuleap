@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,12 +20,13 @@
 
 namespace Tuleap\Theme\BurningParrot;
 
-use PFUser;
-use ThemeVariantColor;
-use Tuleap\Layout\SidebarPresenter;
-use Tuleap\Theme\BurningParrot\Navbar\Presenter as NavbarPresenter;
 use Codendi_HTMLPurifier;
 use Feedback;
+use PFUser;
+use ThemeVariantColor;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbPresenter;
+use Tuleap\Layout\SidebarPresenter;
+use Tuleap\Theme\BurningParrot\Navbar\Presenter as NavbarPresenter;
 
 class HeaderPresenter
 {
@@ -80,15 +81,14 @@ class HeaderPresenter
     /** @var string */
     public $motd;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     public $breadcrumbs;
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     public $has_breadcrumbs;
+
+    /** @var string */
+    public $user_locale;
 
     public function __construct(
         PFUser $user,
@@ -120,15 +120,15 @@ class HeaderPresenter
         $this->current_project_navbar_info_presenter = $current_project_navbar_info_presenter;
         $this->unicode_icons                         = $unicode_icons;
         $this->toolbar                               = $toolbar;
-        $this->has_toolbar                           = count($toolbar) > 0;
         $this->motd                                  = $motd;
         $this->has_motd                              = ! empty($motd);
         $this->breadcrumbs                           = $breadcrumbs;
 
         $this->buildFeedbacks($feedback_logs);
 
-        $this->has_feedbacks   = count($this->feedbacks) > 0;
-        $this->has_breadcrumbs = count($this->breadcrumbs) > 0;
+        $this->has_toolbar              = count($toolbar) > 0;
+        $this->has_feedbacks            = count($this->feedbacks) > 0;
+        $this->has_breadcrumbs          = count($this->breadcrumbs) > 0;
     }
 
     private function buildFeedbacks($feedback_logs)
