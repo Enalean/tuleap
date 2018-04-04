@@ -4,11 +4,16 @@
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0",
   "private": true,
-  "engines": {
-    "node": "> 0.12.18"
+  "dependencies": {
+    "babel-polyfill": "^6.26.0"
   },
-  "dependencies": {},
   "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.3",
+    "babel-plugin-istanbul": "^4.1.5",
+    "babel-plugin-rewire-exports": "^0.3.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
     "del": "^2.2.1",
     "eslint": "^4.18.1",
     "eslint-plugin-cypress": "^2.0.1",
@@ -18,20 +23,28 @@
     "gulp-rev": "^7.1.2",
     "gulp-sass": "^3.1.0",
     "gulp-scss-lint": "^0.4.0",
+    "json-loader": "^0.5.7",
     "lodash.map": "4.6.0",
     "lodash.partialright": "^4.2.1",
     "lodash.spread": "^4.2.1",
     "merge2": "1.0.2",
+    "po-gettext-loader": "^0.1.1",
     "pump": "^1.0.2",
+    "raw-loader": "^0.5.1",
     "read-pkg": "2.0.0",
-    "run-sequence": "^2.1.0"
+    "run-sequence": "^2.1.0",
+    "vue-loader": "^14.2.2",
+    "vue-loader-options-plugin": "^0.1.1",
+    "vue-template-compiler": "^2.5.16",
+    "webpack": "^3.11.0",
+    "webpack-assets-manifest": "^1.0.0"
   },
   "scripts": {
     "angular-apps": "gulp angular-apps",
     "build": "gulp build",
     "components": "gulp components",
     "core": "gulp core",
-    "eslint": "eslint --config .eslintrc --no-eslintrc  --report-unused-disable-directives",
+    "eslint": "eslint --config .eslintrc --no-eslintrc --report-unused-disable-directives",
     "js": "gulp js",
     "sass": "gulp sass",
     "scss-lint": "gulp scss-lint",
