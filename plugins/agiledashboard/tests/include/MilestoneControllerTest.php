@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -29,11 +29,13 @@ class Planning_MilestoneController4Tests extends Planning_MilestoneController {
     }
 }
 
-class MilestoneController_BreadcrumbsTest extends TuleapTestCase {
+class MilestoneController_BreadcrumbsTest extends TuleapTestCase
+{
     private $plugin_path;
     private $product;
     private $release;
     private $sprint;
+    private $nomilestone;
 
     public function setUp() {
         parent::setUp();
@@ -62,11 +64,12 @@ class MilestoneController_BreadcrumbsTest extends TuleapTestCase {
         parent::tearDown();
     }
 
-    public function itHasNoBreadCrumbWhenThereIsNoMilestone() {
+    public function itHasOnlyTheServiceBreadCrumbWhenThereIsNoMilestone()
+    {
         stub($this->milestone_factory)->getBareMilestone()->returns($this->nomilestone);
 
         $breadcrumbs = $this->getBreadcrumbs();
-        $this->assertIsA($breadcrumbs, 'BreadCrumb_NoCrumb');
+        $this->assertIsA($breadcrumbs, 'BreadCrumb_AgileDashboard');
     }
 
     public function itIncludesBreadcrumbsForParentMilestones() {
@@ -93,8 +96,10 @@ class MilestoneController_BreadcrumbsTest extends TuleapTestCase {
         return $controller->getBreadcrumbs($this->plugin_path);
     }
 
-    public function assertEqualToBreadCrumbWithAllMilestones($breadcrumbs) {
+    public function assertEqualToBreadCrumbWithAllMilestones($breadcrumbs)
+    {
         $expected_crumbs = new BreadCrumb_Merger(
+            new BreadCrumb_AgileDashboard($this->plugin_path, $this->project),
             new BreadCrumb_VirtualTopMilestone($this->plugin_path, $this->project),
             new BreadCrumb_Milestone($this->plugin_path, $this->product),
             new BreadCrumb_Milestone($this->plugin_path, $this->release),
@@ -103,6 +108,3 @@ class MilestoneController_BreadcrumbsTest extends TuleapTestCase {
         $this->assertEqual($expected_crumbs, $breadcrumbs);
     }
 }
-
-
-?>

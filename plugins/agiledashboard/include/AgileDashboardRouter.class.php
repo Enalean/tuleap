@@ -483,15 +483,20 @@ class AgileDashboardRouter {
             );
         }
 
-        $no_breadcrumbs = new BreadCrumb_NoCrumb();
         $controller     = $this->milestone_controller_factory->getVirtualTopMilestoneController($request);
         $header_options = array_merge(
             array('body_class' => array('agiledashboard_planning')),
             $controller->getHeaderOptions()
         );
+        $breadcrumbs = $controller->getBreadcrumbs($this->plugin->getPluginPath());
 
         $top_planning_rendered = $this->executeAction($controller, 'showTop', array());
-        $service->displayHeader($this->getHeaderTitle($request, 'showTop'), $no_breadcrumbs, $toolbar, $header_options);
+        $service->displayHeader(
+            $this->getHeaderTitle($request, 'showTop'),
+            $breadcrumbs->getCrumbs(),
+            $toolbar,
+            $header_options
+        );
         echo $top_planning_rendered;
         $this->displayFooter($request);
     }

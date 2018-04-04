@@ -10,6 +10,9 @@ msgstr ""
 msgid "Add to project dashboard"
 msgstr ""
 
+msgid "Agile Dashboard"
+msgstr ""
+
 msgid "Agiledashboard plannings"
 msgstr ""
 

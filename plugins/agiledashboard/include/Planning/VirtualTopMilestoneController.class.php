@@ -122,4 +122,16 @@ class Planning_VirtualTopMilestoneController extends MVC2_PluginController {
             $this->project
         );
     }
+
+    /**
+     * @return BreadCrumb_BreadCrumbGenerator
+     */
+    public function getBreadcrumbs($plugin_path)
+    {
+        $breadcrumbs_merger = new BreadCrumb_Merger();
+        $breadcrumbs_merger->push(new BreadCrumb_AgileDashboard($plugin_path, $this->project));
+        $breadcrumbs_merger->push(new BreadCrumb_VirtualTopMilestone($plugin_path, $this->project));
+
+        return $breadcrumbs_merger;
+    }
 }
