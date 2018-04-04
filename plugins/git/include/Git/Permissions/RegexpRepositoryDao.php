@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,37 +21,31 @@
 
 namespace Tuleap\Git\Permissions;
 
-use DataAccessObject;
+use Tuleap\DB\DataAccessObject;
 
 class RegexpRepositoryDao extends DataAccessObject
 {
     public function areRegexpActivatedForRepository($repository_id)
     {
-        $repository_id = $this->da->escapeInt($repository_id);
+        $sql = 'SELECT COUNT(*) FROM plugin_git_repository_fine_grained_regexp_enabled
+                  WHERE repository_id = ?';
 
-        $sql = "SELECT * FROM plugin_git_repository_fine_grained_regexp_enabled
-                  WHERE repository_id = $repository_id";
-
-        return $this->retrieve($sql)->count() > 0;
+        return $this->getDB()->single($sql, [$repository_id]) > 0;
     }
 
     public function enable($repository_id)
     {
-        $repository_id = $this->da->escapeInt($repository_id);
+        $sql = 'INSERT INTO plugin_git_repository_fine_grained_regexp_enabled (repository_id)
+                  VALUES (?)';
 
-        $sql = "INSERT INTO plugin_git_repository_fine_grained_regexp_enabled (repository_id)
-                  VALUES ($repository_id)";
-
-        return $this->update($sql);
+        $this->getDB()->run($sql, $repository_id);
     }
 
     public function disable($repository_id)
     {
-        $repository_id = $this->da->escapeInt($repository_id);
+        $sql = 'DELETE FROM plugin_git_repository_fine_grained_regexp_enabled
+                  WHERE repository_id = ?';
 
-        $sql = "DELETE FROM plugin_git_repository_fine_grained_regexp_enabled
-                  WHERE repository_id = $repository_id";
-
-        return $this->update($sql);
+        $this->getDB()->run($sql, $repository_id);
     }
 }

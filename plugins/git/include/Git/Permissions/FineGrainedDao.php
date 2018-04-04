@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,485 +21,400 @@
 
 namespace Tuleap\Git\Permissions;
 
-use DataAccessObject;
+use ParagonIE\EasyDB\EasyStatement;
 use ProjectUGroup;
+use Tuleap\DB\DataAccessObject;
 
 class FineGrainedDao extends DataAccessObject
 {
     public function enableRepository($repository_id)
     {
-        $repository_id = $this->da->escapeInt($repository_id);
+        $sql = 'REPLACE INTO plugin_git_repository_fine_grained_permissions_enabled (repository_id)
+                VALUES (?)';
 
-        $sql = "REPLACE INTO plugin_git_repository_fine_grained_permissions_enabled (repository_id)
-                VALUES ($repository_id)";
-
-        return $this->update($sql);
+        $this->getDB()->run($sql, $repository_id);
     }
 
     public function disableRepository($repository_id)
     {
-        $repository_id = $this->da->escapeInt($repository_id);
+        $sql = 'DELETE FROM plugin_git_repository_fine_grained_permissions_enabled
+                WHERE repository_id = ?';
 
-        $sql = "DELETE FROM plugin_git_repository_fine_grained_permissions_enabled
-                WHERE repository_id = $repository_id";
-
-        return $this->update($sql);
+        $this->getDB()->run($sql, $repository_id);
     }
 
-    public function replicateFineGrainedPermissionsEnabledFromDefault(
-        $project_id,
-        $repository_id
-    ) {
-        $project_id    = $this->da->escapeInt($project_id);
-        $repository_id = $this->da->escapeInt($repository_id);
-
-        $sql = "INSERT INTO plugin_git_repository_fine_grained_permissions_enabled (repository_id)
-                SELECT $repository_id
+    public function replicateFineGrainedPermissionsEnabledFromDefault($project_id, $repository_id)
+    {
+        $sql = 'INSERT INTO plugin_git_repository_fine_grained_permissions_enabled (repository_id)
+                SELECT ?
                 FROM plugin_git_default_fine_grained_permissions_enabled
-                WHERE project_id = $project_id";
+                WHERE project_id = ?';
 
-        return $this->update($sql);
+        $this->getDB()->run($sql, $repository_id, $project_id);
     }
 
-    public function replicateFineGrainedPermissionsEnabledFromRepository(
-        $source_repository_id,
-        $repository_id
-    ) {
-        $source_repository_id = $this->da->escapeInt($source_repository_id);
-        $repository_id        = $this->da->escapeInt($repository_id);
-
-        $sql = "INSERT INTO plugin_git_repository_fine_grained_permissions_enabled (repository_id)
-                SELECT $repository_id
+    public function replicateFineGrainedPermissionsEnabledFromRepository($source_repository_id, $repository_id)
+    {
+        $sql = 'INSERT INTO plugin_git_repository_fine_grained_permissions_enabled (repository_id)
+                SELECT ?
                 FROM plugin_git_repository_fine_grained_permissions_enabled
-                WHERE repository_id = $source_repository_id";
+                WHERE repository_id = ?';
 
-        return $this->update($sql);
+        $this->getDB()->run($sql, $source_repository_id, $repository_id);
     }
 
     public function searchRepositoryUseFineGrainedPermissions($repository_id)
     {
-        $repository_id = $this->da->escapeInt($repository_id);
-
-        $sql = "SELECT repository_id
+        $sql = 'SELECT repository_id
                 FROM plugin_git_repository_fine_grained_permissions_enabled
-                WHERE repository_id = $repository_id";
+                WHERE repository_id = ?';
 
-        return $this->retrieveFirstRow($sql);
+        return $this->getDB()->row($sql, $repository_id);
     }
 
     public function searchBranchesFineGrainedPermissionsForRepository($repository_id)
     {
-        $repository_id = $this->da->escapeInt($repository_id);
-
         $sql = "SELECT *
                 FROM plugin_git_repository_fine_grained_permissions
-                WHERE repository_id = $repository_id
+                WHERE repository_id = ?
                 AND pattern LIKE 'refs/heads/%'";
 
-        return $this->retrieve($sql);
+        return $this->getDB()->run($sql, $repository_id);
     }
 
     public function searchTagsFineGrainedPermissionsForRepository($repository_id)
     {
-        $repository_id = $this->da->escapeInt($repository_id);
-
         $sql = "SELECT *
                 FROM plugin_git_repository_fine_grained_permissions
-                WHERE repository_id = $repository_id
+                WHERE repository_id = ?
                 AND pattern LIKE 'refs/tags/%'";
 
-        return $this->retrieve($sql);
+        return $this->getDB()->run($sql, $repository_id);
     }
 
     public function searchWriterUgroupIdsForFineGrainedPermissions($permission_id)
     {
-        $permission_id = $this->da->escapeInt($permission_id);
-
-        $sql = "SELECT ugroup_id
+        $sql = 'SELECT ugroup_id
                 FROM plugin_git_repository_fine_grained_permissions_writers
-                WHERE permission_id = $permission_id";
+                WHERE permission_id = ?';
 
-        return $this->retrieve($sql);
+        return $this->getDB()->run($sql, $permission_id);
     }
 
     public function searchRewinderUgroupIdsForFineGrainePermissions($permission_id)
     {
-        $permission_id = $this->da->escapeInt($permission_id);
-
-        $sql = "SELECT ugroup_id
+        $sql = 'SELECT ugroup_id
                 FROM plugin_git_repository_fine_grained_permissions_rewinders
-                WHERE permission_id = $permission_id";
+                WHERE permission_id = ?';
 
-        return $this->retrieve($sql);
+        return $this->getDB()->run($sql, $permission_id);
     }
 
     public function save($repository_id, $pattern, array $writer_ids, array $rewinder_ids)
     {
-        $this->da->startTransaction();
+        $this->getDB()->beginTransaction();
 
-        $permission_id = $this->createPermission($repository_id, $pattern);
-        if (! $permission_id) {
-            $this->da->rollback();
+        try {
+            $permission_id = $this->createPermission($repository_id, $pattern);
+            $this->saveWriters($permission_id, $writer_ids);
+            $this->saveRewinders($permission_id, $rewinder_ids);
+        } catch (\PDOException $ex) {
+            $this->getDB()->rollBack();
             return false;
         }
 
-        if (! $this->saveWriters($permission_id, $writer_ids) || ! $this->saveRewinders($permission_id, $rewinder_ids)) {
-            $this->da->rollback();
-            return false;
-        }
-
-        return $this->da->commit();
+        return $this->getDB()->commit();
     }
 
     private function createPermission($repository_id, $pattern)
     {
-        $repository_id = $this->da->escapeInt($repository_id);
-        $pattern       = $this->da->quoteSmart($pattern);
+        $sql = 'INSERT INTO plugin_git_repository_fine_grained_permissions (repository_id, pattern)
+                VALUES (?, ?)';
 
-        $sql = "INSERT INTO plugin_git_repository_fine_grained_permissions (repository_id, pattern)
-                VALUES ($repository_id, $pattern)";
+        $this->getDB()->run($sql, $repository_id, $pattern);
 
-        return $this->updateAndGetLastId($sql);
+        return $this->getDB()->lastInsertId();
     }
 
     private function saveWriters($permission_id, array $writer_ids)
     {
         if (count($writer_ids) === 0) {
-            return true;
+            return;
         }
 
-        $permission_id = $this->da->escapeInt($permission_id);
-
-        $values = array();
+        $data_to_insert = [];
         foreach ($writer_ids as $writer_id) {
-            $writer_id = $this->da->escapeInt($writer_id);
-            $values[]  = "($permission_id, $writer_id)";
+            $data_to_insert[] = ['permission_id' => $permission_id, 'ugroup_id' => $writer_id];
         }
 
-        $sql = "INSERT INTO plugin_git_repository_fine_grained_permissions_writers (permission_id, ugroup_id)
-                VALUES " . implode(',', $values);
-
-        return $this->update($sql);
+        $this->getDB()->insertMany('plugin_git_repository_fine_grained_permissions_writers', $data_to_insert);
     }
 
     private function saveRewinders($permission_id, array $rewinder_ids)
     {
         if (count($rewinder_ids) === 0) {
-            return true;
+            return;
         }
 
-        $permission_id = $this->da->escapeInt($permission_id);
-
-        $values = array();
+        $data_to_insert = [];
         foreach ($rewinder_ids as $rewinder_id) {
-            $rewinder_id = $this->da->escapeInt($rewinder_id);
-            $values[]    = "($permission_id, $rewinder_id)";
+            $data_to_insert[] = ['permission_id' => $permission_id, 'ugroup_id' => $rewinder_id];
         }
 
-        $sql = "INSERT INTO plugin_git_repository_fine_grained_permissions_rewinders (permission_id, ugroup_id)
-                VALUES " . implode(',', $values);
-
-        return $this->update($sql);
+        $this->getDB()->insertMany('plugin_git_repository_fine_grained_permissions_rewinders', $data_to_insert);
     }
 
     public function getPermissionIdByPatternForRepository($repository_id, $pattern)
     {
-        $repository_id = $this->da->escapeInt($repository_id);
-        $pattern       = $this->da->quoteSmart($pattern);
-
-        $sql = "SELECT id
+        $sql = 'SELECT id
                 FROM plugin_git_repository_fine_grained_permissions
-                WHERE pattern = $pattern
-                    AND repository_id = $repository_id";
+                WHERE pattern = ?
+                    AND repository_id = ?';
 
-        return $this->retrieveIds($sql);
+        return $this->getDB()->run($sql, $pattern, $repository_id);
     }
 
     public function enableProject($project_id)
     {
-        $project_id = $this->da->escapeInt($project_id);
+        $sql = 'REPLACE INTO plugin_git_default_fine_grained_permissions_enabled (project_id)
+                VALUES (?)';
 
-        $sql = "REPLACE INTO plugin_git_default_fine_grained_permissions_enabled (project_id)
-                VALUES ($project_id)";
-
-        return $this->update($sql);
+        $this->getDB()->run($sql, $project_id);
     }
 
     public function disableProject($project_id)
     {
-        $project_id = $this->da->escapeInt($project_id);
+        $sql = 'DELETE FROM plugin_git_default_fine_grained_permissions_enabled
+                WHERE project_id = ?';
 
-        $sql = "DELETE FROM plugin_git_default_fine_grained_permissions_enabled
-                WHERE project_id = $project_id";
-
-        return $this->update($sql);
+        $this->getDB()->run($sql, $project_id);
     }
 
     public function searchProjectUseFineGrainedPermissions($project_id)
     {
-        $project_id = $this->da->escapeInt($project_id);
-
-        $sql = "SELECT project_id
+        $sql = 'SELECT project_id
                 FROM plugin_git_default_fine_grained_permissions_enabled
-                WHERE project_id = $project_id";
+                WHERE project_id = ?';
 
-        return $this->retrieveFirstRow($sql);
+        return $this->getDB()->row($sql, $project_id);
     }
 
     public function searchDefaultBranchesFineGrainedPermissions($project_id)
     {
-        $project_id = $this->da->escapeInt($project_id);
-
         $sql = "SELECT *
                 FROM plugin_git_default_fine_grained_permissions
-                WHERE project_id = $project_id
+                WHERE project_id = ?
                 AND pattern LIKE 'refs/heads/%'";
 
-        return $this->retrieve($sql);
+        return $this->getDB()->run($sql, $project_id);
     }
 
     public function searchDefaultTagsFineGrainedPermissions($project_id)
     {
-        $project_id = $this->da->escapeInt($project_id);
-
         $sql = "SELECT *
                 FROM plugin_git_default_fine_grained_permissions
-                WHERE project_id = $project_id
+                WHERE project_id = ?
                 AND pattern LIKE 'refs/tags/%'";
 
-        return $this->retrieve($sql);
+        return $this->getDB()->run($sql, $project_id);
     }
 
     public function searchDefaultWriterUgroupIdsForFineGrainedPermissions($permission_id)
     {
-        $permission_id = $this->da->escapeInt($permission_id);
-
-        $sql = "SELECT ugroup_id
+        $sql = 'SELECT ugroup_id
                 FROM plugin_git_default_fine_grained_permissions_writers
-                WHERE permission_id = $permission_id";
+                WHERE permission_id = ?';
 
-        return $this->retrieve($sql);
+        return $this->getDB()->run($sql, $permission_id);
     }
 
     public function searchDefaultRewinderUgroupIdsForFineGrainePermissions($permission_id)
     {
-        $permission_id = $this->da->escapeInt($permission_id);
-
-        $sql = "SELECT ugroup_id
+        $sql = 'SELECT ugroup_id
                 FROM plugin_git_default_fine_grained_permissions_rewinders
-                WHERE permission_id = $permission_id";
+                WHERE permission_id = ?';
 
-        return $this->retrieve($sql);
+        return $this->getDB()->run($sql, $permission_id);
     }
 
     public function getPermissionIdByPatternForProject($project_id, $pattern)
     {
-        $project_id = $this->da->escapeInt($project_id);
-        $pattern    = $this->da->quoteSmart($pattern);
-
-        $sql = "SELECT id
+        $sql = 'SELECT id
                 FROM plugin_git_default_fine_grained_permissions
-                WHERE pattern = $pattern
-                    AND project_id = $project_id";
+                WHERE pattern = ?
+                    AND project_id = ?';
 
-        return $this->retrieveIds($sql);
+        return $this->getDB()->run($sql, $pattern, $project_id);
     }
 
     public function saveDefault($project_id, $pattern, array $writer_ids, array $rewinder_ids)
     {
-        $this->da->startTransaction();
+        $this->getDB()->beginTransaction();
 
-        $permission_id = $this->createDefaultPermission($project_id, $pattern);
-        if (! $permission_id) {
-            $this->da->rollback();
+        try {
+            $permission_id = $this->createDefaultPermission($project_id, $pattern);
+            $this->saveDefaultWriters($permission_id, $writer_ids);
+            $this->saveDefaultRewinders($permission_id, $rewinder_ids);
+        } catch (\PDOException $ex) {
+            $this->getDB()->rollBack();
             return false;
         }
 
-        if (! $this->saveDefaultWriters($permission_id, $writer_ids) ||
-            ! $this->saveDefaultRewinders($permission_id, $rewinder_ids)
-        ) {
-            $this->da->rollback();
-            return false;
-        }
-
-        return $this->da->commit();
+        return $this->getDB()->commit();
     }
 
     private function createDefaultPermission($project_id, $pattern)
     {
-        $project_id = $this->da->escapeInt($project_id);
-        $pattern    = $this->da->quoteSmart($pattern);
+        $sql = 'INSERT INTO plugin_git_default_fine_grained_permissions (project_id, pattern)
+                VALUES (?, ?)';
 
-        $sql = "INSERT INTO plugin_git_default_fine_grained_permissions (project_id, pattern)
-                VALUES ($project_id, $pattern)";
+        $this->getDB()->run($sql, $project_id, $pattern);
 
-        return $this->updateAndGetLastId($sql);
+        return $this->getDB()->lastInsertId();
     }
 
     private function saveDefaultWriters($permission_id, array $writer_ids)
     {
         if (count($writer_ids) === 0) {
-            return true;
+            return;
         }
 
-        $permission_id = $this->da->escapeInt($permission_id);
-
-        $values = array();
+        $data_to_insert = [];
         foreach ($writer_ids as $writer_id) {
-            $writer_id = $this->da->escapeInt($writer_id);
-            $values[]  = "($permission_id, $writer_id)";
+            $data_to_insert[] = ['permission_id' => $permission_id, 'ugroup_id' => $writer_id];
         }
 
-        $sql = "INSERT INTO plugin_git_default_fine_grained_permissions_writers (permission_id, ugroup_id)
-                VALUES " . implode(',', $values);
-
-        return $this->update($sql);
+        $this->getDB()->insertMany('plugin_git_default_fine_grained_permissions_writers', $data_to_insert);
     }
 
     private function saveDefaultRewinders($permission_id, array $rewinder_ids)
     {
         if (count($rewinder_ids) === 0) {
-            return true;
+            return;
         }
 
-        $permission_id = $this->da->escapeInt($permission_id);
-
-        $values = array();
+        $data_to_insert = [];
         foreach ($rewinder_ids as $rewinder_id) {
-            $rewinder_id = $this->da->escapeInt($rewinder_id);
-            $values[]    = "($permission_id, $rewinder_id)";
+            $data_to_insert[] = ['permission_id' => $permission_id, 'ugroup_id' => $rewinder_id];
         }
 
-        $sql = "INSERT INTO plugin_git_default_fine_grained_permissions_rewinders (permission_id, ugroup_id)
-                VALUES " . implode(',', $values);
-
-        return $this->update($sql);
+        $this->getDB()->insertMany('plugin_git_default_fine_grained_permissions_rewinders', $data_to_insert);
     }
 
     public function deleteUgroupPermissions($ugroup_id, $project_id)
     {
-        $ugroup_id  = $this->da->escapeInt($ugroup_id);
-        $project_id = $this->da->escapeInt($project_id);
-
-        $this->da->startTransaction();
-
-        $delete_01 = "DELETE dr
+        $delete_01 = 'DELETE dr
                         FROM plugin_git_default_fine_grained_permissions_rewinders AS dr
                             INNER JOIN plugin_git_default_fine_grained_permissions AS perm ON (dr.permission_id = perm.id)
-                        WHERE dr.ugroup_id = $ugroup_id
-                            AND perm.project_id = $project_id";
+                        WHERE dr.ugroup_id = ?
+                            AND perm.project_id = ?';
 
-        $delete_02 = "DELETE dw
+        $delete_02 = 'DELETE dw
                         FROM plugin_git_default_fine_grained_permissions_writers AS dw
                             INNER JOIN plugin_git_default_fine_grained_permissions AS perm ON (dw.permission_id = perm.id)
-                        WHERE dw.ugroup_id = $ugroup_id
-                            AND perm.project_id = $project_id";
+                        WHERE dw.ugroup_id = ?
+                            AND perm.project_id = ?';
 
-        $delete_03 = "DELETE rr
+        $delete_03 = 'DELETE rr
                         FROM plugin_git_repository_fine_grained_permissions_rewinders AS rr
                             INNER JOIN plugin_git_repository_fine_grained_permissions AS perm ON (rr.permission_id = perm.id)
                             INNER JOIN plugin_git ON (perm.repository_id = plugin_git.repository_id)
-                        WHERE rr.ugroup_id = $ugroup_id
-                            AND plugin_git.project_id = $project_id";
+                        WHERE rr.ugroup_id = ?
+                            AND plugin_git.project_id = ?';
 
-        $delete_04 = "DELETE rw
+        $delete_04 = 'DELETE rw
                         FROM plugin_git_repository_fine_grained_permissions_writers AS rw
                             INNER JOIN plugin_git_repository_fine_grained_permissions AS perm ON (rw.permission_id = perm.id)
                             INNER JOIN plugin_git ON (perm.repository_id = plugin_git.repository_id)
-                        WHERE rw.ugroup_id = $ugroup_id
-                            AND plugin_git.project_id = $project_id";
+                        WHERE rw.ugroup_id = ?
+                            AND plugin_git.project_id = ?';
 
-        if (! $this->update($delete_01) ||
-            ! $this->update($delete_02) ||
-            ! $this->update($delete_03) ||
-            ! $this->update($delete_04)
-        ) {
-            $this->da->rollback();
-            return false;
+        $this->getDB()->beginTransaction();
+
+        try {
+            $this->getDB()->run($delete_01, $ugroup_id, $project_id);
+            $this->getDB()->run($delete_02, $ugroup_id, $project_id);
+            $this->getDB()->run($delete_03, $ugroup_id, $project_id);
+            $this->getDB()->run($delete_04, $ugroup_id, $project_id);
+        } catch (\PDOException $ex) {
+            $this->getDB()->rollBack();
+            throw $ex;
         }
 
-        return $this->da->commit();
+        $this->getDB()->commit();
     }
 
     public function updateAllAnonymousAccessToRegistered()
     {
-        return $this->updateAllPermissions(ProjectUGroup::ANONYMOUS, ProjectUGroup::REGISTERED);
+        $this->updateAllPermissions(ProjectUGroup::ANONYMOUS, ProjectUGroup::REGISTERED);
     }
 
     public function updateAllAuthenticatedAccessToRegistered()
     {
-        return $this->updateAllPermissions(ProjectUGroup::AUTHENTICATED, ProjectUGroup::REGISTERED);
+        $this->updateAllPermissions(ProjectUGroup::AUTHENTICATED, ProjectUGroup::REGISTERED);
     }
 
     private function updateAllPermissions($old_ugroup_id, $new_ugroup_id)
     {
-        $old_ugroup_id = $this->da->escapeInt($old_ugroup_id);
-        $new_ugroup_id = $this->da->escapeInt($new_ugroup_id);
+        $update_01 = 'UPDATE IGNORE plugin_git_default_fine_grained_permissions_writers
+                      SET ugroup_id = ?
+                      WHERE ugroup_id = ?';
 
-        $this->da->startTransaction();
+        $update_02 = 'UPDATE IGNORE plugin_git_default_fine_grained_permissions_rewinders
+                      SET ugroup_id = ?
+                      WHERE ugroup_id = ?';
 
-        $update_01 = "UPDATE IGNORE plugin_git_default_fine_grained_permissions_writers
-                      SET ugroup_id = $new_ugroup_id
-                      WHERE ugroup_id = $old_ugroup_id";
+        $update_03 = 'UPDATE IGNORE plugin_git_repository_fine_grained_permissions_writers
+                      SET ugroup_id = ?
+                      WHERE ugroup_id = ?';
 
-        $update_02 = "UPDATE IGNORE plugin_git_default_fine_grained_permissions_rewinders
-                      SET ugroup_id = $new_ugroup_id
-                      WHERE ugroup_id = $old_ugroup_id";
+        $update_04 = 'UPDATE IGNORE plugin_git_repository_fine_grained_permissions_rewinders
+                      SET ugroup_id = ?
+                      WHERE ugroup_id = ?';
 
-        $update_03 = "UPDATE IGNORE plugin_git_repository_fine_grained_permissions_writers
-                      SET ugroup_id = $new_ugroup_id
-                      WHERE ugroup_id = $old_ugroup_id";
+        $delete_01 = 'DELETE FROM plugin_git_default_fine_grained_permissions_writers
+                      WHERE ugroup_id = ?';
 
-        $update_04 = "UPDATE IGNORE plugin_git_repository_fine_grained_permissions_rewinders
-                      SET ugroup_id = $new_ugroup_id
-                      WHERE ugroup_id = $old_ugroup_id";
+        $delete_02 = 'DELETE FROM plugin_git_default_fine_grained_permissions_rewinders
+                      WHERE ugroup_id = ?';
 
-        $delete_01 = "DELETE FROM plugin_git_default_fine_grained_permissions_writers
-                      WHERE ugroup_id = $old_ugroup_id";
+        $delete_03 = 'DELETE FROM plugin_git_repository_fine_grained_permissions_writers
+                      WHERE ugroup_id = ?';
 
-        $delete_02 = "DELETE FROM plugin_git_default_fine_grained_permissions_rewinders
-                      WHERE ugroup_id = $old_ugroup_id";
+        $delete_04 = 'DELETE FROM plugin_git_repository_fine_grained_permissions_rewinders
+                      WHERE ugroup_id = ?';
 
-        $delete_03 = "DELETE FROM plugin_git_repository_fine_grained_permissions_writers
-                      WHERE ugroup_id = $old_ugroup_id";
+        $this->getDB()->beginTransaction();
 
-        $delete_04 = "DELETE FROM plugin_git_repository_fine_grained_permissions_rewinders
-                      WHERE ugroup_id = $old_ugroup_id";
-
-        if (! $this->update($update_01) ||
-            ! $this->update($update_02) ||
-            ! $this->update($update_03) ||
-            ! $this->update($update_04) ||
-            ! $this->update($delete_01) ||
-            ! $this->update($delete_02) ||
-            ! $this->update($delete_03) ||
-            ! $this->update($delete_04)
-        ) {
-            $this->da->rollback();
-            return false;
+        try {
+            $this->getDB()->run($update_01, $new_ugroup_id, $old_ugroup_id);
+            $this->getDB()->run($update_02, $new_ugroup_id, $old_ugroup_id);
+            $this->getDB()->run($update_03, $new_ugroup_id, $old_ugroup_id);
+            $this->getDB()->run($update_04, $new_ugroup_id, $old_ugroup_id);
+            $this->getDB()->run($delete_01, $old_ugroup_id);
+            $this->getDB()->run($delete_02, $old_ugroup_id);
+            $this->getDB()->run($delete_03, $old_ugroup_id);
+            $this->getDB()->run($delete_04, $old_ugroup_id);
+        } catch (\PDOException $ex) {
+            $this->getDB()->rollBack();
         }
 
-        return $this->da->commit();
+        $this->getDB()->commit();
     }
 
-    public function duplicateDefaultFineGrainedPermissionsEnabled(
-        $template_project_id,
-        $new_project_id
-    ) {
-        $template_project_id = $this->da->escapeInt($template_project_id);
-        $new_project_id      = $this->da->escapeInt($new_project_id);
-
-        $sql = "INSERT INTO plugin_git_default_fine_grained_permissions_enabled (project_id)
-                SELECT $new_project_id
+    public function duplicateDefaultFineGrainedPermissionsEnabled($template_project_id, $new_project_id)
+    {
+        $sql = 'INSERT INTO plugin_git_default_fine_grained_permissions_enabled (project_id)
+                SELECT ?
                 FROM plugin_git_default_fine_grained_permissions_enabled
-                WHERE project_id = $template_project_id";
+                WHERE project_id = ?';
 
-        return $this->update($sql);
+        $this->getDB()->run($sql, $template_project_id, $new_project_id);
     }
 
     public function disableAnonymousRegisteredAuthenticated($project_id)
     {
-        return $this->updatePermissions(
+        $this->updatePermissions(
             $project_id,
             ProjectUGroup::PROJECT_MEMBERS,
             array(ProjectUGroup::ANONYMOUS, ProjectUGroup::REGISTERED, ProjectUGroup::AUTHENTICATED)
@@ -508,7 +423,7 @@ class FineGrainedDao extends DataAccessObject
 
     public function disableAuthenticated($project_id)
     {
-        return $this->updatePermissions(
+        $this->updatePermissions(
             $project_id,
             ProjectUGroup::REGISTERED,
             array(ProjectUGroup::AUTHENTICATED)
@@ -517,265 +432,238 @@ class FineGrainedDao extends DataAccessObject
 
     private function updatePermissions($project_id, $new_project_ugroup_id, array $old_ugroup_ids)
     {
-        $this->da->startTransaction();
-
-        if (! $this->updateDefaultWritersPermission($project_id, $new_project_ugroup_id, $old_ugroup_ids) ||
-            ! $this->updateDefaultRewindersPermission($project_id, $new_project_ugroup_id, $old_ugroup_ids) ||
-            ! $this->updateRepositoryWritersPermission($project_id, $new_project_ugroup_id, $old_ugroup_ids) ||
-            ! $this->updateRepositoryRewindersPermission($project_id, $new_project_ugroup_id, $old_ugroup_ids)
-        ) {
-            $this->da->rollback();
-            return false;
+        $this->getDB()->beginTransaction();
+        try {
+            $this->updateDefaultWritersPermission($project_id, $new_project_ugroup_id, $old_ugroup_ids);
+            $this->updateDefaultRewindersPermission($project_id, $new_project_ugroup_id, $old_ugroup_ids);
+            $this->updateRepositoryWritersPermission($project_id, $new_project_ugroup_id, $old_ugroup_ids);
+            $this->updateRepositoryRewindersPermission($project_id, $new_project_ugroup_id, $old_ugroup_ids);
+        } catch (\PDOException $ex) {
+            $this->getDB()->rollBack();
+            throw $ex;
         }
-
-        return $this->da->commit();
+        $this->getDB()->commit();
     }
 
     public function deleteDefaultPermissions($project_id, $permission_id_to_delete)
     {
-        $permission_id_to_delete = $this->da->escapeInt($permission_id_to_delete);
-        $project_id              = $this->da->escapeInt($project_id);
-
-        $this->da->startTransaction();
-
-        $delete_01 = "DELETE dr
+        $delete_01 = 'DELETE dr
                       FROM plugin_git_default_fine_grained_permissions_rewinders AS dr
                         JOIN plugin_git_default_fine_grained_permissions AS perm ON (dr.permission_id = perm.id)
-                      WHERE dr.permission_id = $permission_id_to_delete
-                        AND perm.project_id = $project_id";
+                      WHERE dr.permission_id = ?
+                        AND perm.project_id = ?';
 
-        $delete_02 = "DELETE dw
+        $delete_02 = 'DELETE dw
                       FROM plugin_git_default_fine_grained_permissions_writers AS dw
                         JOIN plugin_git_default_fine_grained_permissions AS perm ON (dw.permission_id = perm.id)
-                      WHERE dw.permission_id = $permission_id_to_delete
-                        AND perm.project_id = $project_id";
+                      WHERE dw.permission_id = ?
+                        AND perm.project_id = ?';
 
-        $delete_03 = "DELETE FROM plugin_git_default_fine_grained_permissions
-                      WHERE id = $permission_id_to_delete
-                        AND project_id = $project_id";
+        $delete_03 = 'DELETE FROM plugin_git_default_fine_grained_permissions
+                      WHERE id = ?
+                        AND project_id = ?';
 
-        if (! $this->update($delete_01) ||
-            ! $this->update($delete_02) ||
-            ! $this->update($delete_03)
-        ) {
-            $this->da->rollback();
+        $this->getDB()->beginTransaction();
+
+        try {
+            $this->getDB()->run($delete_01, $permission_id_to_delete, $project_id);
+            $this->getDB()->run($delete_02, $permission_id_to_delete, $project_id);
+            $this->getDB()->run($delete_03, $permission_id_to_delete, $project_id);
+        } catch (\PDOException $ex) {
+            $this->getDB()->rollBack();
             return false;
         }
 
-        return $this->da->commit();
+        return $this->getDB()->commit();
     }
 
     private function updateDefaultWritersPermission($project_id, $new_project_ugroup_id, array $old_ugroup_ids)
     {
-        $project_id            = $this->da->escapeInt($project_id);
-        $new_project_ugroup_id = $this->da->escapeInt($new_project_ugroup_id);
-        $old_ugroup_ids        = $this->da->escapeIntImplode($old_ugroup_ids);
+        $old_ugroup_ids_in_condition = EasyStatement::open()->in('?*', $old_ugroup_ids);
 
         $update = "UPDATE IGNORE plugin_git_default_fine_grained_permissions_writers AS dw
                     JOIN plugin_git_default_fine_grained_permissions AS perm ON (dw.permission_id = perm.id)
-                    SET dw.ugroup_id = $new_project_ugroup_id
-                    WHERE dw.ugroup_id IN ($old_ugroup_ids)
-                        AND perm.project_id = $project_id";
+                    SET dw.ugroup_id = ?
+                    WHERE dw.ugroup_id IN ($old_ugroup_ids_in_condition)
+                        AND perm.project_id = ?";
+        $update_params   = [$new_project_ugroup_id];
+        $update_params   = array_merge($update_params, $old_ugroup_ids_in_condition->values());
+        $update_params[] = $project_id;
+        $this->getDB()->safeQuery($update, $update_params);
 
         $delete = "DELETE dw
                     FROM plugin_git_default_fine_grained_permissions_writers AS dw
                       JOIN plugin_git_default_fine_grained_permissions AS perm ON (dw.permission_id = perm.id)
-                    WHERE dw.ugroup_id IN ($old_ugroup_ids)
-                      AND perm.project_id = $project_id";
-
-        return $this->update($update) && $this->update($delete);
+                    WHERE dw.ugroup_id IN ($old_ugroup_ids_in_condition)
+                      AND perm.project_id = ?";
+        $delete_params   = $old_ugroup_ids_in_condition->values();
+        $delete_params[] = $project_id;
+        $this->getDB()->safeQuery($delete, $delete_params);
     }
 
     private function updateDefaultRewindersPermission($project_id, $new_project_ugroup_id, array $old_ugroup_ids)
     {
-        $project_id            = $this->da->escapeInt($project_id);
-        $new_project_ugroup_id = $this->da->escapeInt($new_project_ugroup_id);
-        $old_ugroup_ids        = $this->da->escapeIntImplode($old_ugroup_ids);
+        $old_ugroup_ids_in_condition = EasyStatement::open()->in('?*', $old_ugroup_ids);
 
         $update = "UPDATE IGNORE plugin_git_default_fine_grained_permissions_rewinders AS dr
                     JOIN plugin_git_default_fine_grained_permissions AS perm ON (dr.permission_id = perm.id)
-                    SET dr.ugroup_id = $new_project_ugroup_id
-                    WHERE dr.ugroup_id IN ($old_ugroup_ids)
-                        AND perm.project_id = $project_id";
+                    SET dr.ugroup_id = ?
+                    WHERE dr.ugroup_id IN ($old_ugroup_ids_in_condition)
+                        AND perm.project_id = ?";
+        $update_params   = [$new_project_ugroup_id];
+        $update_params   = array_merge($update_params, $old_ugroup_ids_in_condition->values());
+        $update_params[] = $project_id;
+        $this->getDB()->safeQuery($update, $update_params);
 
         $delete = "DELETE dr
                     FROM plugin_git_default_fine_grained_permissions_rewinders AS dr
                       JOIN plugin_git_default_fine_grained_permissions AS perm ON (dr.permission_id = perm.id)
-                    WHERE dr.ugroup_id IN ($old_ugroup_ids)
-                      AND perm.project_id = $project_id";
-
-        return $this->update($update) && $this->update($delete);
+                    WHERE dr.ugroup_id IN ($old_ugroup_ids_in_condition)
+                      AND perm.project_id = ?";
+        $delete_params   = $old_ugroup_ids_in_condition->values();
+        $delete_params[] = $project_id;
+        $this->getDB()->safeQuery($delete, $delete_params);
     }
 
     private function updateRepositoryWritersPermission($project_id, $new_project_ugroup_id, array $old_ugroup_ids)
     {
-        $project_id            = $this->da->escapeInt($project_id);
-        $new_project_ugroup_id = $this->da->escapeInt($new_project_ugroup_id);
-        $old_ugroup_ids        = $this->da->escapeIntImplode($old_ugroup_ids);
+        $old_ugroup_ids_in_condition = EasyStatement::open()->in('?*', $old_ugroup_ids);
 
         $update = "UPDATE IGNORE plugin_git_repository_fine_grained_permissions_writers AS rw
                     JOIN plugin_git_repository_fine_grained_permissions AS perm ON (rw.permission_id = perm.id)
                     JOIN plugin_git ON (perm.repository_id = plugin_git.repository_id)
-                    SET rw.ugroup_id = $new_project_ugroup_id
-                    WHERE rw.ugroup_id IN ($old_ugroup_ids)
-                        AND plugin_git.project_id = $project_id";
+                    SET rw.ugroup_id = ?
+                    WHERE rw.ugroup_id IN ($old_ugroup_ids_in_condition)
+                        AND plugin_git.project_id = ?";
+        $update_params   = [$new_project_ugroup_id];
+        $update_params   = array_merge($update_params, $old_ugroup_ids_in_condition->values());
+        $update_params[] = $project_id;
+        $this->getDB()->safeQuery($update, $update_params);
 
         $delete = "DELETE rw
                     FROM plugin_git_repository_fine_grained_permissions_writers AS rw
                       JOIN plugin_git_repository_fine_grained_permissions AS perm ON (rw.permission_id = perm.id)
                       JOIN plugin_git ON (perm.repository_id = plugin_git.repository_id)
-                    WHERE rw.ugroup_id IN ($old_ugroup_ids)
-                      AND plugin_git.project_id = $project_id";
-
-        return $this->update($update) && $this->update($delete);
+                    WHERE rw.ugroup_id IN ($old_ugroup_ids_in_condition)
+                      AND plugin_git.project_id = ?";
+        $delete_params   = $old_ugroup_ids_in_condition->values();
+        $delete_params[] = $project_id;
+        $this->getDB()->safeQuery($delete, $delete_params);
     }
 
     private function updateRepositoryRewindersPermission($project_id, $new_project_ugroup_id, array $old_ugroup_ids)
     {
-        $project_id            = $this->da->escapeInt($project_id);
-        $new_project_ugroup_id = $this->da->escapeInt($new_project_ugroup_id);
-        $old_ugroup_ids        = $this->da->escapeIntImplode($old_ugroup_ids);
+        $old_ugroup_ids_in_condition = EasyStatement::open()->in('?*', $old_ugroup_ids);
 
         $update = "UPDATE IGNORE plugin_git_repository_fine_grained_permissions_rewinders AS rr
                     JOIN plugin_git_repository_fine_grained_permissions AS perm ON (rr.permission_id = perm.id)
                     JOIN plugin_git ON (perm.repository_id = plugin_git.repository_id)
-                    SET rr.ugroup_id = $new_project_ugroup_id
-                    WHERE rr.ugroup_id IN ($old_ugroup_ids)
-                        AND plugin_git.project_id = $project_id";
+                    SET rr.ugroup_id = ?
+                    WHERE rr.ugroup_id IN ($old_ugroup_ids_in_condition)
+                        AND plugin_git.project_id = ?";
+        $update_params   = [$new_project_ugroup_id];
+        $update_params   = array_merge($update_params, $old_ugroup_ids_in_condition->values());
+        $update_params[] = $project_id;
+        $this->getDB()->safeQuery($update, $update_params);
 
         $delete = "DELETE rr
                     FROM plugin_git_repository_fine_grained_permissions_rewinders AS rr
                       JOIN plugin_git_repository_fine_grained_permissions AS perm ON (rr.permission_id = perm.id)
                       JOIN plugin_git ON (perm.repository_id = plugin_git.repository_id)
-                    WHERE rr.ugroup_id IN ($old_ugroup_ids)
-                      AND plugin_git.project_id = $project_id";
-
-        return $this->update($update) && $this->update($delete);
+                    WHERE rr.ugroup_id IN ($old_ugroup_ids_in_condition)
+                      AND plugin_git.project_id = ?";
+        $delete_params   = $old_ugroup_ids_in_condition->values();
+        $delete_params[] = $project_id;
+        $this->getDB()->safeQuery($delete, $delete_params);
     }
 
     public function deleteRepositoryPermissions($repository_id, $permission_id_to_delete)
     {
-        $permission_id_to_delete = $this->da->escapeInt($permission_id_to_delete);
-        $repository_id           = $this->da->escapeInt($repository_id);
-
-        $this->da->startTransaction();
-
-        $delete_01 = "DELETE rr
+        $delete_01 = 'DELETE rr
                       FROM plugin_git_repository_fine_grained_permissions_rewinders AS rr
                         JOIN plugin_git_repository_fine_grained_permissions AS perm ON (perm.id = rr.permission_id)
-                      WHERE rr.permission_id = $permission_id_to_delete
-                        AND perm.repository_id = $repository_id";
+                      WHERE rr.permission_id = ?
+                        AND perm.repository_id = ?';
 
-        $delete_02 = "DELETE rw
+        $delete_02 = 'DELETE rw
                       FROM plugin_git_repository_fine_grained_permissions_writers AS rw
                         JOIN plugin_git_repository_fine_grained_permissions AS perm ON (perm.id = rw.permission_id)
-                      WHERE rw.permission_id = $permission_id_to_delete
-                        AND perm.repository_id = $repository_id";
+                      WHERE rw.permission_id = ?
+                        AND perm.repository_id = ?';
 
-        $delete_03 = "DELETE FROM plugin_git_repository_fine_grained_permissions
-                      WHERE id = $permission_id_to_delete
-                        AND repository_id = $repository_id";
+        $delete_03 = 'DELETE FROM plugin_git_repository_fine_grained_permissions
+                      WHERE id = ?
+                        AND repository_id = ?';
 
-        if (! $this->update($delete_01) ||
-            ! $this->update($delete_02) ||
-            ! $this->update($delete_03)
-        ) {
-            $this->da->rollback();
+        $this->getDB()->beginTransaction();
+
+        try {
+            $this->getDB()->run($delete_01, $permission_id_to_delete, $repository_id);
+            $this->getDB()->run($delete_02, $permission_id_to_delete, $repository_id);
+            $this->getDB()->run($delete_03, $permission_id_to_delete, $repository_id);
+        } catch (\PDOException $ex) {
+            $this->getDB()->rollBack();
             return false;
         }
 
-        return $this->da->commit();
+        return $this->getDB()->commit();
     }
 
     public function updateRepositoryPermission($permission_id, array $writer_ids, array $rewinder_ids)
     {
-        $this->da->startTransaction();
-
-        if (! $this->updatePermissionWriters($permission_id, $writer_ids) ||
-            ! $this->updatePermissionRewinders($permission_id, $rewinder_ids)
-        ) {
-            $this->da->rollback();
+        $this->getDB()->beginTransaction();
+        try {
+            $this->updatePermissionWriters($permission_id, $writer_ids);
+            $this->updatePermissionRewinders($permission_id, $rewinder_ids);
+        } catch (\PDOException $ex) {
+            $this->getDB()->rollBack();
             return false;
         }
-
-        return $this->da->commit();
+        return $this->getDB()->commit();
     }
 
     private function updatePermissionWriters($permission_id, array $writer_ids)
     {
-        $permission_id = $this->da->escapeInt($permission_id);
-
-        $delete = "DELETE FROM plugin_git_repository_fine_grained_permissions_writers
-                   WHERE permission_id = $permission_id";
-
-        $deleted = $this->update($delete);
-
-        if ($deleted && count($writer_ids) > 0) {
-            return $this->saveWriters($permission_id, $writer_ids);
-        }
-
-        return $deleted;
+        $delete = 'DELETE FROM plugin_git_repository_fine_grained_permissions_writers
+                   WHERE permission_id = ?';
+        $this->getDB()->run($delete, $permission_id);
+        $this->saveWriters($permission_id, $writer_ids);
     }
 
     private function updatePermissionRewinders($permission_id, array $rewinders_ids)
     {
-        $permission_id = $this->da->escapeInt($permission_id);
-
-        $delete = "DELETE FROM plugin_git_repository_fine_grained_permissions_rewinders
-                   WHERE permission_id = $permission_id";
-
-        $deleted = $this->update($delete);
-
-        if ($deleted && count($rewinders_ids) > 0) {
-            return $this->saveRewinders($permission_id, $rewinders_ids);
-        }
-
-        return $deleted;
+        $delete = 'DELETE FROM plugin_git_repository_fine_grained_permissions_rewinders
+                   WHERE permission_id = ?';
+        $this->getDB()->run($delete, $permission_id);
+        $this->saveRewinders($permission_id, $rewinders_ids);
     }
 
     public function updateDefaultPermission($permission_id, array $writer_ids, array $rewinder_ids)
     {
-        $this->da->startTransaction();
-
-        if (! $this->updateDefaultPermissionWriters($permission_id, $writer_ids) ||
-            ! $this->updateDefaultPermissionRewinders($permission_id, $rewinder_ids)
-        ) {
-            $this->da->rollback();
+        $this->getDB()->beginTransaction();
+        try {
+            $this->updateDefaultPermissionWriters($permission_id, $writer_ids);
+            $this->updateDefaultPermissionRewinders($permission_id, $rewinder_ids);
+        } catch (\PDOException $ex) {
+            $this->getDB()->rollBack();
             return false;
         }
-
-        return $this->da->commit();
+        return $this->getDB()->commit();
     }
 
     private function updateDefaultPermissionWriters($permission_id, array $writer_ids)
     {
-        $permission_id = $this->da->escapeInt($permission_id);
-
-        $delete = "DELETE FROM plugin_git_default_fine_grained_permissions_writers
-                   WHERE permission_id = $permission_id";
-
-        $deleted = $this->update($delete);
-
-        if ($deleted && count($writer_ids) > 0) {
-            return $this->saveDefaultWriters($permission_id, $writer_ids);
-        }
-
-        return $deleted;
+        $delete = 'DELETE FROM plugin_git_default_fine_grained_permissions_writers
+                   WHERE permission_id = ?';
+        $this->getDB()->run($delete, $permission_id);
+        $this->saveDefaultWriters($permission_id, $writer_ids);
     }
 
     private function updateDefaultPermissionRewinders($permission_id, array $rewinders_ids)
     {
-        $permission_id = $this->da->escapeInt($permission_id);
-
-        $delete = "DELETE FROM plugin_git_default_fine_grained_permissions_rewinders
-                   WHERE permission_id = $permission_id";
-
-        $deleted = $this->update($delete);
-
-        if ($deleted && count($rewinders_ids) > 0) {
-            return $this->saveDefaultRewinders($permission_id, $rewinders_ids);
-        }
-
-        return $deleted;
+        $delete = 'DELETE FROM plugin_git_default_fine_grained_permissions_rewinders
+                   WHERE permission_id = ?';
+        $this->getDB()->run($delete, $permission_id);
+        $this->saveDefaultRewinders($permission_id, $rewinders_ids);
     }
 }

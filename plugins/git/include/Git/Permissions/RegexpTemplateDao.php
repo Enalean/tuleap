@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,37 +21,31 @@
 
 namespace Tuleap\Git\Permissions;
 
-use DataAccessObject;
+use Tuleap\DB\DataAccessObject;
 
 class RegexpTemplateDao extends DataAccessObject
 {
     public function areRegexpActivatedForTemplate($project_id)
     {
-        $project_id = $this->da->escapeInt($project_id);
+        $sql = 'SELECT COUNT(*) FROM plugin_git_default_fine_grained_regexp_enabled
+                  WHERE project_id = ?';
 
-        $sql = "SELECT * FROM plugin_git_default_fine_grained_regexp_enabled
-                  WHERE project_id = $project_id";
-
-        return $this->retrieve($sql)->count() > 0;
+        return $this->getDB()->single($sql, [$project_id]) > 0;
     }
 
     public function enable($project_id)
     {
-        $project_id = $this->da->escapeInt($project_id);
+        $sql = 'INSERT INTO plugin_git_default_fine_grained_regexp_enabled (project_id)
+                  VALUES (?)';
 
-        $sql = "INSERT INTO plugin_git_default_fine_grained_regexp_enabled (project_id)
-                  VALUES ($project_id)";
-
-        return $this->update($sql);
+        $this->getDB()->run($sql, $project_id);
     }
 
     public function disable($project_id)
     {
-        $project_id = $this->da->escapeInt($project_id);
+        $sql = 'DELETE FROM plugin_git_default_fine_grained_regexp_enabled
+                  WHERE project_id = ?';
 
-        $sql = "DELETE FROM plugin_git_default_fine_grained_regexp_enabled
-                  WHERE project_id = $project_id";
-
-        return $this->update($sql);
+        $this->getDB()->run($sql, $project_id);
     }
 }
