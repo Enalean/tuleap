@@ -62,7 +62,6 @@ class AgileDashboardControllerTest extends TuleapTestCase {
             $this->kanban_factory,
             $this->config_manager,
             $this->tracker_factory,
-            mock('AgileDashboard_PermissionsManager'),
             mock('Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker'),
             $this->event_manager
         );
@@ -92,7 +91,6 @@ class AgileDashboardControllerTest extends TuleapTestCase {
             $this->kanban_factory,
             $this->config_manager,
             $this->tracker_factory,
-            mock('AgileDashboard_PermissionsManager'),
             mock('Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker'),
             $this->event_manager
         );
@@ -122,7 +120,6 @@ class AgileDashboardControllerTest extends TuleapTestCase {
             $this->kanban_factory,
             $this->config_manager,
             $this->tracker_factory,
-            mock('AgileDashboard_PermissionsManager'),
             mock('Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker'),
             $this->event_manager
         );
