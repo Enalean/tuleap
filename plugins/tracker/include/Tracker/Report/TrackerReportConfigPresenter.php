@@ -49,6 +49,7 @@ class TrackerReportConfigPresenter
         $this->report_config_pane_title = $GLOBALS['Language']->getText('plugin_tracker_report_config', 'report_config_pane_title');
         $this->report_config_desc       = $GLOBALS['Language']->getText('plugin_tracker_report_config', 'report_config_desc');
         $this->query_limit_label        = $GLOBALS['Language']->getText('plugin_tracker_report_config', 'query_limit_label');
+        $this->artifacts_deletion_label = dgettext('tuleap-tracker', 'Artifacts deletion');
         $this->save_conf                = $GLOBALS['Language']->getText('admin_main', 'save_conf');
 
         $this->sections = new SectionsPresenter();

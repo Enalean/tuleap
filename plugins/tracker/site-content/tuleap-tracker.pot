@@ -50,6 +50,12 @@ msgstr ""
 msgid "Artifact links types"
 msgstr ""
 
+msgid "Artifacts deletion"
+msgstr ""
+
+msgid "Artifacts deletion configuration"
+msgstr ""
+
 msgid ""
 "As a tracker administrator, you can provide email addresses to which new "
 "Artifact submissions (and possibly updates) will be systematically sent."
@@ -124,6 +130,9 @@ msgid "Renderer id"
 msgstr ""
 
 msgid "Save"
+msgstr ""
+
+msgid "Section under construction"
 msgstr ""
 
 msgid ""
@@ -396,6 +405,9 @@ msgid "Tracker renderer"
 msgstr ""
 
 msgid "Tracker service is disabled."
+msgstr ""
+
+msgid "Trackers"
 msgstr ""
 
 msgid "Use"

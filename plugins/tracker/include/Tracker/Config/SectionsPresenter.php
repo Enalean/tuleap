@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -29,6 +29,8 @@ class SectionsPresenter
     public $natures_url;
     public $report_config_url;
 
+    public $artifacts_deletion_url;
+
     public function __construct()
     {
         $this->emailgateway        = $GLOBALS['Language']->getText('plugin_tracker_config', 'email_gateway');
@@ -42,7 +44,11 @@ class SectionsPresenter
             'action'   => 'natures'
         ));
         $this->report_config_url = TRACKER_BASE_URL .'/config.php?'. http_build_query(array(
-                'action' => 'report-config'
-            ));
+            'action' => 'report-config'
+        ));
+
+        $this->artifacts_deletion_url = TRACKER_BASE_URL . '/config.php?' . http_build_query([
+            'action' => 'artifacts-deletion'
+        ]);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,6 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigController;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureConfigController;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureCreator;
@@ -87,6 +88,9 @@ if ($plugin && $plugin_manager->isPluginAvailable($plugin)) {
             new TrackerReportConfig(
                 new TrackerReportConfigDao()
             ),
+            $admin_page_renderer
+        ),
+        new ArtifactsDeletionConfigController(
             $admin_page_renderer
         )
     );
