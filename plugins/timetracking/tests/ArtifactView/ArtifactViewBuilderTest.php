@@ -20,6 +20,9 @@
 
 namespace Tuleap\Timetracking\ArtifactView;
 
+use Project;
+use timetrackingPlugin;
+use Tracker;
 use Tuleap\Timetracking\Time\DateFormatter;
 use Tuleap\Timetracking\Time\TimePresenterBuilder;
 use TuleapTestCase;
@@ -40,16 +43,21 @@ class ArtifactViewBuilderTest extends TuleapTestCase
         $this->user     = aUser()->withId(101)->build();
         $this->request  = aRequest()->build();
 
-        $project        = aMockProject()->withId(201)->build();
-        $this->tracker  = aMockTracker()->withProject($project)->build();
-        $this->artifact = aMockArtifact()->withTracker($this->tracker)->build();
+        $project = \Mockery::spy(Project::class);
+        $project->allows()->getID()->andReturns(201);
 
-        $this->plugin                 = mock('timetrackingPlugin');
-        $this->enabler                = mock('Tuleap\Timetracking\Admin\TimetrackingEnabler');
-        $this->permissions_retriever  = mock('Tuleap\Timetracking\Permissions\PermissionsRetriever');
-        $this->time_retriever         = mock('Tuleap\Timetracking\Time\TimeRetriever');
+        $this->tracker = \Mockery::spy(Tracker::class);
+        $this->tracker->allows()->getProject()->andReturns($project);
+
+        $this->artifact = \Mockery::spy(\Tracker_Artifact::class);
+        $this->artifact->allows()->getTracker()->andReturns($this->tracker);
+
+        $this->plugin                 = \Mockery::spy(timetrackingPlugin::class);
+        $this->enabler                = \Mockery::spy(\Tuleap\Timetracking\Admin\TimetrackingEnabler::class);
+        $this->permissions_retriever  = \Mockery::spy(\Tuleap\Timetracking\Permissions\PermissionsRetriever::class);
+        $this->time_retriever         = \Mockery::spy(\Tuleap\Timetracking\Time\TimeRetriever::class);
         $this->date_formatter         = new DateFormatter();
-        $this->time_presenter_builder = new TimePresenterBuilder($this->date_formatter, mock('UserManager'));
+        $this->time_presenter_builder = new TimePresenterBuilder($this->date_formatter, \Mockery::spy(\UserManager::class));
 
         $this->builder = new ArtifactViewBuilder(
             $this->plugin,
@@ -63,11 +71,10 @@ class ArtifactViewBuilderTest extends TuleapTestCase
 
     public function itBuildsTheArtifactView()
     {
-        stub($this->plugin)->isAllowed(201)->returns(true);
-        stub($this->enabler)->isTimetrackingEnabledForTracker($this->tracker)->returns(true);
-        stub($this->permissions_retriever)->userCanAddTimeInTracker($this->user, $this->tracker)->returns(true);
-        stub($this->permissions_retriever)->userCanAddTimeInTracker($this->user, $this->tracker)->returns(true);
-        stub($this->time_retriever)->getTimesForUser($this->user, $this->artifact)->returns(array());
+        $this->plugin->allows()->isAllowed(201)->andReturns(true);
+        $this->enabler->allows()->isTimetrackingEnabledForTracker($this->tracker)->andReturns(true);
+        $this->permissions_retriever->allows()->userCanAddTimeInTracker($this->user, $this->tracker)->andReturns(true);
+        $this->time_retriever->allows()->getTimesForUser($this->user, $this->artifact)->andReturns([]);
 
         $view = $this->builder->build($this->user, $this->request, $this->artifact);
 
@@ -76,7 +83,7 @@ class ArtifactViewBuilderTest extends TuleapTestCase
 
     public function itReturnsNullIfPluginNotAvailableForProject()
     {
-        stub($this->plugin)->isAllowed(201)->returns(false);
+        $this->plugin->allows()->isAllowed(201)->andReturns(false);
 
         $view = $this->builder->build($this->user, $this->request, $this->artifact);
 
@@ -85,8 +92,8 @@ class ArtifactViewBuilderTest extends TuleapTestCase
 
     public function itReturnsNullIfTimetrackingNotActivatedForTracker()
     {
-        stub($this->plugin)->isAllowed(201)->returns(true);
-        stub($this->enabler)->isTimetrackingEnabledForTracker($this->tracker)->returns(false);
+        $this->plugin->allows()->isAllowed(201)->andReturns(true);
+        $this->enabler->allows()->isTimetrackingEnabledForTracker($this->tracker)->andReturns(false);
 
         $view = $this->builder->build($this->user, $this->request, $this->artifact);
 
@@ -95,10 +102,9 @@ class ArtifactViewBuilderTest extends TuleapTestCase
 
     public function itReturnsNullIfUserIsNeitherReaderNorWriter()
     {
-        stub($this->plugin)->isAllowed(201)->returns(true);
-        stub($this->enabler)->isTimetrackingEnabledForTracker($this->tracker)->returns(true);
-        stub($this->permissions_retriever)->userCanAddTimeInTracker($this->user, $this->tracker)->returns(false);
-        stub($this->permissions_retriever)->userCanAddTimeInTracker($this->user, $this->tracker)->returns(false);
+        $this->plugin->allows()->isAllowed(201)->andReturns(true);
+        $this->enabler->allows()->isTimetrackingEnabledForTracker($this->tracker)->andReturns(true);
+        $this->permissions_retriever->allows()->userCanAddTimeInTracker($this->user, $this->tracker)->andReturns(false);
 
         $view = $this->builder->build($this->user, $this->request, $this->artifact);
 
