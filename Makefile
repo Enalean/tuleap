@@ -198,6 +198,7 @@ dev-setup: .env deploy-githooks ## Setup environment for Docker Compose (should 
 	@echo "RABBITMQ_DEFAULT_PASS=`env LC_CTYPE=C tr -dc 'a-zA-Z0-9' < /dev/urandom | head -c 32`" >> .env
 	@echo RABBITMQ_DEFAULT_USER=tuleap >> .env
 	@echo VIRTUAL_HOST=tuleap-web.tuleap-aio-dev.docker >> .env
+	@echo "REALTIME_KEY=$(head -c 64 /dev/urandom | base64 --wrap=88)" >> .env
 
 show-passwords: ## Display passwords generated for Docker Compose environment
 	@$(DOCKER_COMPOSE) exec web cat /data/root/.tuleap_passwd
@@ -211,9 +212,9 @@ dev-clear-cache: ## Clear caches in Docker Compose environment
 start-php56 start: ## Start Tuleap web with php56 & nginx
 	@echo "Start Tuleap in PHP 5.6"
 	@./tools/docker/migrate_to_volume.sh
-	@$(DOCKER_COMPOSE) -f docker-compose.yml up -d web
-	@echo -n "tuleap-web ip address: "
-	@$(DOCKER) inspect -f '{{.NetworkSettings.Networks.tuleap_default.IPAddress}}' tuleap-web
+	@$(DOCKER_COMPOSE) -f docker-compose.yml up -d reverse-proxy
+	@echo -n "Update tuleap-web.tuleap-aio-dev.docker in /etc/hosts with: "
+	@$(DOCKER) inspect -f '{{.NetworkSettings.Networks.tuleap_default.IPAddress}}' reverse-proxy
 
 start-distlp:
 	@echo "Start Tuleap with reverse-proxy, backend web and backend svn"
