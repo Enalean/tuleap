@@ -1,4 +1,4 @@
-/**
+/*!
  * Copyright Enalean (c) 2018. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
@@ -21,6 +21,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.velocity-chart-bar {
-    fill: $tlp-theme-color;
+@import 'velocity-chart';
+
+.misconfigured-semantic-display-comma:last-child {
+    display: none;
 }
