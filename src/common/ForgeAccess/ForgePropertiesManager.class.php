@@ -18,11 +18,13 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
+use Tuleap\ForgeAccess\UnknownForgeAccessValueException;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\User\UserGroup\NameTranslator;
 
 class ForgeAccess_ForgePropertiesManager
 {
+    const POSSIBLE_ACCESS_VALUES = [ForgeAccess::ANONYMOUS, ForgeAccess::REGULAR, ForgeAccess::RESTRICTED];
 
     /**
      * @var EventManager
@@ -63,10 +65,17 @@ class ForgeAccess_ForgePropertiesManager
         $this->frs_permission_creator = $frs_permission_creator;
     }
 
+    /**
+     * @throws UnknownForgeAccessValueException
+     */
     public function updateAccess($new_value, $old_value)
     {
         if ($new_value === $old_value) {
             return;
+        }
+
+        if (! in_array($new_value, self::POSSIBLE_ACCESS_VALUES, true)) {
+            throw new UnknownForgeAccessValueException($new_value, self::POSSIBLE_ACCESS_VALUES);
         }
 
         $property_name = ForgeAccess::CONFIG;

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,16 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\ForgeAccess\UnknownForgeAccessValueException;
+use Tuleap\FRS\FRSPermissionCreator;
+use Tuleap\FRS\FRSPermissionDao;
+
 $tuleap_short_options = 'hvcr';
-$tuleap_long_options  = array('help', 'version', 'clear-caches', 'restore-caches');
+$tuleap_long_options  = array('help', 'version', 'clear-caches', 'restore-caches', 'platform-access-control::');
 
 $commands = array();
 
-if (version_compare(phpversion(), '5.3', '>=')) {
-    $options = getopt($tuleap_short_options, $tuleap_long_options);
-} else {
-    $options = getopt($tuleap_short_options);
-}
+$options = getopt($tuleap_short_options, $tuleap_long_options);
+
 foreach ($options as $option => $value) {
     switch ($option) {
         case 'h':
@@ -49,6 +50,10 @@ foreach ($options as $option => $value) {
         case 'r':
         case 'restore-caches':
             $commands[] = 'restore-caches';
+            break;
+
+        case 'platform-access-control':
+            $commands[] = 'platform-access-control';
             break;
     }
 }
@@ -77,6 +82,10 @@ foreach ($commands as $command) {
             show_version();
             break;
 
+        case 'platform-access-control':
+            process_platform_access_control($options[$command]);
+            break;
+
         default:
             show_usage();
     }
@@ -90,14 +99,42 @@ Tuleap administration command line
 
 Options:
 
-    -h, --help          Print usage
-    -v, --version       Tuleap version
-    -c, --clear-caches      Clear caches
-    -r, --restore-caches    Recreate cache directories if needed
+    -h, --help                   Print usage
+    -v, --version                Tuleap version
+    -c, --clear-caches           Clear caches
+    -r, --restore-caches         Recreate cache directories if needed
+    --platform-access-control    Show or set the platform access control
 
 EOT;
 }
 
 function show_version() {
     echo trim(file_get_contents(ForgeConfig::get('codendi_dir').DIRECTORY_SEPARATOR.'VERSION')).PHP_EOL;
+}
+
+function process_platform_access_control($value) {
+    $current_platform_access_value = ForgeConfig::get(ForgeAccess::CONFIG);
+    if ($value === false) {
+        echo $current_platform_access_value . PHP_EOL;
+        return;
+    }
+
+    $forge_access_properties_manager = new ForgeAccess_ForgePropertiesManager(
+        new ConfigDao(),
+        ProjectManager::instance(),
+        PermissionsManager::instance(),
+        EventManager::instance(),
+        new FRSPermissionCreator(
+            new FRSPermissionDao(),
+            new UGroupDao()
+        )
+    );
+
+    try {
+        $forge_access_properties_manager->updateAccess($value, $current_platform_access_value);
+    } catch (UnknownForgeAccessValueException $e) {
+        $logger = new Log_ConsoleLogger();
+        $logger->error($e->getMessage());
+        exit(1);
+    }
 }
