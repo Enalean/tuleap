@@ -211,7 +211,6 @@ dev-clear-cache: ## Clear caches in Docker Compose environment
 
 start-php56 start: ## Start Tuleap web with php56 & nginx
 	@echo "Start Tuleap in PHP 5.6"
-	@./tools/docker/migrate_to_volume.sh
 	@$(DOCKER_COMPOSE) -f docker-compose.yml up --build -d reverse-proxy
 	@echo -n "Update tuleap-web.tuleap-aio-dev.docker in /etc/hosts with: "
 	@rp_id=`$(DOCKER_COMPOSE) ps -q reverse-proxy`; \
@@ -219,7 +218,6 @@ start-php56 start: ## Start Tuleap web with php56 & nginx
 
 start-distlp:
 	@echo "Start Tuleap with reverse-proxy, backend web and backend svn"
-	@./tools/docker/migrate_to_volume.sh
 	-@$(DOCKER_COMPOSE) stop
 	@$(DOCKER_COMPOSE) -f docker-compose-distlp.yml up -d reverse-proxy-distlp
 	@rp_id=`$(DOCKER_COMPOSE) ps -q reverse-proxy-distlp`; \
