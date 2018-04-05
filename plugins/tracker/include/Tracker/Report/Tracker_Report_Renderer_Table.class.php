@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -119,7 +119,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                 }
             }
             $sort = $this->_sort;
-            if ($store_in_session) {
+            if ($store_in_session && isset($this->report_session)) {
                 foreach($sort as $field_id => $properties) {
                     $this->report_session->set("{$this->id}.sort.{$field_id}.is_desc", $properties['is_desc']);
                     $this->report_session->set("{$this->id}.sort.{$field_id}.rank", $properties['rank']);
@@ -239,8 +239,12 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             }
         }
     }
-    public function getAggregates() {
-        $session_renderer_table_functions = &$this->report_session->get("{$this->id}.aggregates");
+    public function getAggregates()
+    {
+        $session_renderer_table_functions = null;
+        if (isset($this->report_session)) {
+            $session_renderer_table_functions = &$this->report_session->get("{$this->id}.aggregates");
+        }
         if ( $session_renderer_table_functions ) {
             $aggregates = $session_renderer_table_functions;
             $ff = $this->report->getFormElementFactory();
@@ -266,9 +270,11 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                     }
                 }
             }
-            $aggregates = $this->_aggregates;
-            foreach($aggregates as $field_id => $agg) {
-                $this->report_session->set("{$this->id}.aggregates.{$field_id}", $agg);
+            if (isset($this->report_session)) {
+                $aggregates = $this->_aggregates;
+                foreach($aggregates as $field_id => $agg) {
+                    $this->report_session->set("{$this->id}.aggregates.{$field_id}", $agg);
+                }
             }
 
         }

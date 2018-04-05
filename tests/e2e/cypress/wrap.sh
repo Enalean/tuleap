@@ -34,5 +34,6 @@ wait_until_tests_are_executed
 $DOCKERCOMPOSE logs backend-web > "$test_results_folder/backend-web.log"
 $DOCKERCOMPOSE logs backend-svn > "$test_results_folder/backend-svn.log"
 $DOCKERCOMPOSE logs test > "$test_results_folder/test.log"
+docker cp "$($DOCKERCOMPOSE ps -q backend-web)":/var/opt/rh/rh-php56/log/php-fpm/error.log "$test_results_folder/php-fpm-error.log"
 
 clean_env
