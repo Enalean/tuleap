@@ -8,6 +8,8 @@ NameVirtualHost *:80
     ServerAlias www.%sys_default_domain%
     ServerAlias lists.%sys_default_domain%
 
+    RequestHeader edit Destination ^https http early
+
     # Include all configuration files from conf.d (php, subversion, etc.)
     Include conf.d/tuleap-aliases/*.conf
 
