@@ -222,12 +222,14 @@ if ($request->isAjax()) {
             }
             break;
         default:
-            $event_manager->processEvent('ajax_reference_tooltip', array(
-                'reference'=> $ref,
-                'keyword'  => $keyword,
-                'group_id' => $group_id,
-                'val'      => $request->get('val')
-            ));
+            $event = new \Tuleap\Reference\ReferenceGetTooltipContentEvent($ref, $project, $request->getCurrentUser(), $keyword, $request->get('val'));
+            $event_manager->processEvent($event);
+            $output = $event->getOutput();
+            if ($output) {
+                echo $output;
+            } elseif ($ref->getNature() === ReferenceManager::REFERENCE_NATURE_OTHER) {
+                echo (new \Tuleap\Reference\ReferenceOpenGraph($html_purifier, $ref))->getContent();
+            }
             break;
     }
 } else {
@@ -236,9 +238,3 @@ if ($request->isAjax()) {
     header($location);
     exit;
 }
-
-// For emacs users
-// Local Variables:
-// mode: php
-// End:
-?>
