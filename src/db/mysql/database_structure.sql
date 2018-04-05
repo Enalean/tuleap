@@ -1132,7 +1132,8 @@ CREATE TABLE ugroup (
   description text NOT NULL,
   source_id INT(11) DEFAULT NULL,
   group_id int(11) NULL,
-  PRIMARY KEY  (ugroup_id)
+  PRIMARY KEY (ugroup_id),
+  INDEX idx_ugroup_project_id (group_id)
 );
 
 

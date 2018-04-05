@@ -82,6 +82,11 @@ class ProjectMembersController
      */
     private $user_importer;
 
+    /**
+     * @var MinimalUGroupPresenter[]
+     */
+    private $ugroup_presenters = [];
+
     public function __construct(
         ProjectMembersDAO     $members_dao,
         CSRFSynchronizerToken $csrf_token,
@@ -240,12 +245,26 @@ class ProjectMembersController
 
         $ugroups_ids = explode(',', $member['ugroups_ids']);
         foreach ($ugroups_ids as $ugroup_id) {
-            $ugroups[] = new MinimalUGroupPresenter(
-                $this->ugroup_manager->getUGroup($project, $ugroup_id)
-            );
+            $ugroups[] = $this->getMinimalUGroupPresenter($project, $ugroup_id);
         }
 
         return $ugroups;
+    }
+
+    /**
+     * @return MinimalUGroupPresenter
+     */
+    private function getMinimalUGroupPresenter(Project $project, $ugroup_id)
+    {
+        if (! isset($this->ugroup_presenters[$ugroup_id])) {
+            $ugroup_presenter = new MinimalUGroupPresenter(
+                $this->ugroup_manager->getUGroup($project, $ugroup_id)
+            );
+
+            $this->ugroup_presenters[$ugroup_id] = $ugroup_presenter;
+        }
+
+        return $this->ugroup_presenters[$ugroup_id];
     }
 
     public function importMembers()
