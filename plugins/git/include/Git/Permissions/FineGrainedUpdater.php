@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -40,26 +40,26 @@ class FineGrainedUpdater
 
     public function enableRepository(GitRepository $repository)
     {
-        return $this->dao->enableRepository($repository->getId());
+        $this->dao->enableRepository($repository->getId());
     }
 
     public function disableRepository(GitRepository $repository)
     {
-        return $this->dao->disableRepository($repository->getId());
+        $this->dao->disableRepository($repository->getId());
     }
 
     public function enableProject(Project $project)
     {
-        return $this->dao->enableProject($project->getID());
+        $this->dao->enableProject($project->getID());
     }
 
     public function disableProject(Project $project)
     {
-        return $this->dao->disableProject($project->getID());
+        $this->dao->disableProject($project->getID());
     }
 
     public function deleteUgroupPermissions(User_UGroup $ugroup, $project_id)
     {
-        return $this->dao->deleteUgroupPermissions($ugroup->getId(), $project_id);
+        $this->dao->deleteUgroupPermissions($ugroup->getId(), $project_id);
     }
 }

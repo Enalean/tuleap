@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,28 +21,40 @@
 
 namespace Tuleap\Git\Permissions;
 
-use DataAccessObject;
+use Tuleap\DB\DataAccessObject;
 
 class RegexpFineGrainedDao extends DataAccessObject
 {
     public function areRegexpActivatedAtSiteLevel()
     {
-        $sql = "SELECT * FROM plugin_git_fine_grained_regexp_enabled";
+        $sql = 'SELECT COUNT(*) FROM plugin_git_fine_grained_regexp_enabled';
 
-        return $this->retrieve($sql)->count() > 0;
+        return $this->getDB()->single($sql) > 0;
     }
 
     public function enable()
     {
-        $sql = "INSERT INTO plugin_git_fine_grained_regexp_enabled (enabled) VALUES (1)";
+        $sql = 'INSERT INTO plugin_git_fine_grained_regexp_enabled (enabled) VALUES (1)';
 
-        return $this->update($sql);
+        try {
+            $this->getDB()->run($sql);
+        } catch (\PDOException $ex) {
+            return false;
+        }
+
+        return true;
     }
 
     public function disable()
     {
-        $sql = "DELETE FROM plugin_git_fine_grained_regexp_enabled";
+        $sql = 'DELETE FROM plugin_git_fine_grained_regexp_enabled';
 
-        return $this->update($sql);
+        try {
+            $this->getDB()->run($sql);
+        } catch (\PDOException $ex) {
+            return false;
+        }
+
+        return true;
     }
 }
