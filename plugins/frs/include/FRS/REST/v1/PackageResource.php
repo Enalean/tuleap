@@ -137,7 +137,7 @@ class PackageResource extends AuthenticatedResource
     /**
      * @url OPTION {id}
      */
-    public function optionsId()
+    public function optionsId($id)
     {
         $this->sendOptionsHeadersForGetId();
     }
@@ -189,7 +189,7 @@ class PackageResource extends AuthenticatedResource
     /**
      * @url OPTION {id}/frs_releases
      */
-    public function optionsReleases()
+    public function optionsReleases($id)
     {
         $this->sendOptionsHeadersForReleases();
     }

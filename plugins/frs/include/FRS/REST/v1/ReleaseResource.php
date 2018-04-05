@@ -258,7 +258,7 @@ class ReleaseResource extends AuthenticatedResource
     /**
      * @url OPTIONS {id}
      */
-    public function optionsId()
+    public function optionsId($id)
     {
         $this->sendAllowOptionsForRelease();
     }
@@ -266,7 +266,7 @@ class ReleaseResource extends AuthenticatedResource
     /**
      * @url OPTIONS {id}/frs_files
      */
-    public function optionsFiles()
+    public function optionsFiles($id)
     {
         $this->sendAllowOptionsForFiles();
     }
