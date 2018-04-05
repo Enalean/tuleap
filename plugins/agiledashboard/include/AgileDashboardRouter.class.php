@@ -480,17 +480,6 @@ class AgileDashboardRouter {
             );
         }
 
-        $toolbar     = array();
-        if ($this->userIsAdmin($request)) {
-            $toolbar[] = array(
-                'title' => $GLOBALS['Language']->getText('global', 'Admin'),
-                'url'   => AGILEDASHBOARD_BASE_URL .'/?'. http_build_query(array(
-                    'group_id' => $request->get('group_id'),
-                    'action'   => 'admin',
-                ))
-            );
-        }
-
         $controller     = $this->milestone_controller_factory->getVirtualTopMilestoneController($request);
         $header_options = array_merge(
             array('body_class' => array('agiledashboard_planning')),
@@ -501,8 +490,8 @@ class AgileDashboardRouter {
         $top_planning_rendered = $this->executeAction($controller, 'showTop', array());
         $service->displayHeader(
             $this->getHeaderTitle($request, 'showTop'),
-            $breadcrumbs->getCrumbs(),
-            $toolbar,
+            $breadcrumbs,
+            [],
             $header_options
         );
         echo $top_planning_rendered;
