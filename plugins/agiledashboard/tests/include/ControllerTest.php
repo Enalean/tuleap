@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\AdminController;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
 
 require_once(dirname(__FILE__).'/../../../tracker/tests/builders/all.php');
@@ -76,7 +77,7 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase {
         stub($configuration_manager)->scrumIsActivatedForProject()->returns(true);
         stub($configuration_manager)->kanbanIsActivatedForProject()->returns(true);
 
-        $this->controller = new AgileDashboard_Controller(
+        $this->controller = new AdminController(
             $this->request,
             $this->planning_factory,
             mock('AgileDashboard_KanbanManager'),

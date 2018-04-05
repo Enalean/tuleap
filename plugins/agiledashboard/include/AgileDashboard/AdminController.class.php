@@ -18,11 +18,48 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\AgileDashboard;
+
+use AdminKanbanPresenter;
+use AdminScrumPresenter;
+use AgileDashboard_ConfigurationManager;
+use AgileDashboard_FirstKanbanCreator;
+use AgileDashboard_FirstScrumCreator;
+use AgileDashboard_KanbanFactory;
+use AgileDashboard_KanbanManager;
+use AgileDashboardConfigurationResponse;
+use AgileDashboardKanbanConfigurationUpdater;
+use AgileDashboardScrumConfigurationUpdater;
+use ArtifactTypeFactory;
+use BreadCrumb_AgileDashboard;
+use BreadCrumb_BreadCrumbGenerator;
+use BreadCrumb_Merger;
+use Codendi_Request;
+use CSRFSynchronizerToken;
+use EventManager;
+use Feedback;
+use FRSLog;
+use MVC2_PluginController;
+use PFUser;
+use Planning_PlanningAdminPresenter;
+use Planning_PlanningOutOfHierarchyAdminPresenter;
+use PlanningFactory;
+use Project;
+use ProjectCreator;
+use ProjectHistoryDao;
+use ProjectManager;
+use ProjectXMLImporter;
+use ProjectXMLImporterLogger;
+use ReferenceManager;
+use ServiceManager;
+use Tracker_ReportFactory;
+use TrackerFactory;
+use TrackerXmlImport;
 use Tuleap\AgileDashboard\Event\GetAdditionalScrumAdminPaneContent;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportDao;
 use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportUpdater;
+use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
+use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDisabler;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneEnabler;
 use Tuleap\Dashboard\Project\ProjectDashboardDao;
@@ -32,20 +69,28 @@ use Tuleap\Dashboard\Project\ProjectDashboardSaver;
 use Tuleap\Dashboard\Project\ProjectDashboardXMLImporter;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
+use Tuleap\FRS\FRSPermissionCreator;
+use Tuleap\FRS\FrsPermissionDao;
 use Tuleap\FRS\UploadedLinksDao;
 use Tuleap\FRS\UploadedLinksUpdater;
 use Tuleap\Project\Label\LabelDao;
-use Tuleap\FRS\FRSPermissionCreator;
-use Tuleap\FRS\FrsPermissionDao;
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\Project\UserRemover;
 use Tuleap\Project\UserRemoverDao;
 use Tuleap\Service\ServiceCreator;
 use Tuleap\Widget\WidgetFactory;
+use UGroupBinding;
+use UGroupDao;
+use UGroupManager;
+use UGroupUserDao;
+use User_ForgeUserGroupPermissionsDao;
+use User_ForgeUserGroupPermissionsManager;
+use UserManager;
+use XML_RNGValidator;
+use XMLImportHelper;
 
-require_once 'common/mvc2/PluginController.class.php';
-
-class AgileDashboard_Controller extends MVC2_PluginController {
+class AdminController extends MVC2_PluginController
+{
 
     /** @var AgileDashboard_KanbanFactory */
     private $kanban_factory;
@@ -72,14 +117,14 @@ class AgileDashboard_Controller extends MVC2_PluginController {
     private $project;
 
     public function __construct(
-        Codendi_Request                     $request,
-        PlanningFactory                     $planning_factory,
-        AgileDashboard_KanbanManager        $kanban_manager,
-        AgileDashboard_KanbanFactory        $kanban_factory,
+        Codendi_Request $request,
+        PlanningFactory $planning_factory,
+        AgileDashboard_KanbanManager $kanban_manager,
+        AgileDashboard_KanbanFactory $kanban_factory,
         AgileDashboard_ConfigurationManager $config_manager,
-        TrackerFactory                      $tracker_factory,
-        ScrumForMonoMilestoneChecker        $scrum_mono_milestone_checker,
-        EventManager                        $event_manager
+        TrackerFactory $tracker_factory,
+        ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker,
+        EventManager $event_manager
     ) {
         parent::__construct('agiledashboard', $request);
 
@@ -99,10 +144,16 @@ class AgileDashboard_Controller extends MVC2_PluginController {
      */
     public function getBreadcrumbs($plugin_path)
     {
-        return new BreadCrumb_AgileDashboard($plugin_path, $this->project);
+        $breadcrumbs = new BreadCrumb_Merger(
+            new BreadCrumb_AgileDashboard($plugin_path, $this->project),
+            new AdminBreadCrumb($plugin_path, $this->project)
+        );
+
+        return $breadcrumbs;
     }
 
-    public function adminScrum() {
+    public function adminScrum()
+    {
         return $this->renderToString(
             'admin-scrum',
             $this->getAdminScrumPresenter(
@@ -112,7 +163,8 @@ class AgileDashboard_Controller extends MVC2_PluginController {
         );
     }
 
-    public function adminKanban() {
+    public function adminKanban()
+    {
         return $this->renderToString(
             'admin-kanban',
             $this->getAdminKanbanPresenter(
@@ -127,12 +179,13 @@ class AgileDashboard_Controller extends MVC2_PluginController {
         $can_create_planning         = true;
         $tracker_uri                 = '';
         $root_planning_name          = '';
-        $potential_planning_trackers = array();
+        $potential_planning_trackers = [];
         $root_planning               = $this->planning_factory->getRootPlanning($user, $group_id);
         $scrum_activated             = $this->config_manager->scrumIsActivatedForProject($group_id);
 
         if ($root_planning) {
-            $can_create_planning         = count($this->planning_factory->getAvailablePlanningTrackers($user, $group_id)) > 0;
+            $can_create_planning = count($this->planning_factory->getAvailablePlanningTrackers($user, $group_id)) > 0;
+
             $tracker_uri                 = $root_planning->getPlanningTracker()->getUri();
             $root_planning_name          = $root_planning->getName();
             $potential_planning_trackers = $this->planning_factory->getPotentialPlanningTrackers($user, $group_id);
@@ -160,7 +213,10 @@ class AgileDashboard_Controller extends MVC2_PluginController {
             return $can_create_planning;
         }
 
-        return $this->scrum_mono_milestone_checker->doesScrumMonoMilestoneConfigurationAllowsPlanningCreation($user, $project_id);
+        return $this->scrum_mono_milestone_checker->doesScrumMonoMilestoneConfigurationAllowsPlanningCreation(
+            $user,
+            $project_id
+        );
     }
 
     private function isScrumMonoMilestoneEnable($project_id)
@@ -188,9 +244,10 @@ class AgileDashboard_Controller extends MVC2_PluginController {
         return $event->getAdditionalContent();
     }
 
-    private function getPlanningAdminPresenterList(PFUser $user, $group_id, $root_planning_name) {
-        $plannings                 = array();
-        $planning_out_of_hierarchy = array();
+    private function getPlanningAdminPresenterList(PFUser $user, $group_id, $root_planning_name)
+    {
+        $plannings                 = [];
+        $planning_out_of_hierarchy = [];
         foreach ($this->planning_factory->getPlanningsOutOfRootPlanningHierarchy($user, $group_id) as $planning) {
             $planning_out_of_hierarchy[$planning->getId()] = true;
         }
@@ -201,6 +258,7 @@ class AgileDashboard_Controller extends MVC2_PluginController {
                 $plannings[] = new Planning_PlanningAdminPresenter($planning);
             }
         }
+
         return $plannings;
     }
 
@@ -342,14 +400,15 @@ class AgileDashboard_Controller extends MVC2_PluginController {
         return $updater->updateConfiguration();
     }
 
-    public function createKanban() {
+    public function createKanban()
+    {
         $kanban_name = $this->request->get('kanban-name');
         $tracker_id  = $this->request->get('tracker-kanban');
         $tracker     = $this->tracker_factory->getTrackerById($tracker_id);
         $user        = $this->request->getCurrentUser();
 
         if (! $user->isAdmin($this->group_id)) {
-             $GLOBALS['Response']->addFeedback(
+            $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
                 $GLOBALS['Language']->getText('global', 'perm_denied')
             );
@@ -364,6 +423,7 @@ class AgileDashboard_Controller extends MVC2_PluginController {
             );
 
             $this->redirectToHome();
+
             return;
         }
 
@@ -374,27 +434,31 @@ class AgileDashboard_Controller extends MVC2_PluginController {
             );
 
             $this->redirectToHome();
+
             return;
         }
 
         if ($this->kanban_manager->createKanban($kanban_name, $tracker_id)) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::INFO,
-                $GLOBALS['Language']->getText('plugin_agiledashboard', 'kanban_created', array($kanban_name))
+                $GLOBALS['Language']->getText('plugin_agiledashboard', 'kanban_created', [$kanban_name])
             );
         } else {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
-                $GLOBALS['Language']->getText('plugin_agiledashboard', 'kanban_creation_error', array($kanban_name))
+                $GLOBALS['Language']->getText('plugin_agiledashboard', 'kanban_creation_error', [$kanban_name])
             );
         }
 
         $this->redirectToHome();
     }
 
-    private function redirectToHome() {
-        $this->redirect(array(
-            'group_id' => $this->group_id
-        ));
+    private function redirectToHome()
+    {
+        $this->redirect(
+            [
+                'group_id' => $this->group_id
+            ]
+        );
     }
 }
