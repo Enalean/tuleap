@@ -19,18 +19,18 @@
 
 namespace Tuleap\AgileDashboard\REST\v1;
 
+use AgileDashboard_MilestonesCardwallRepresentation;
+use Planning_Milestone;
+use PlanningFactory;
 use TrackerFactory;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\Project\REST\ProjectReference;
+use Tuleap\REST\JsonCast;
 use Tuleap\REST\v1\MilestoneRepresentationBase;
-use Planning_Milestone;
-use Tuleap\Tracker\REST\TrackerReference;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
 use Tuleap\Tracker\REST\Artifact\BurndownRepresentation;
-use Tuleap\REST\JsonCast;
-use PlanningFactory;
-use AgileDashboard_MilestonesCardwallRepresentation;
+use Tuleap\Tracker\REST\TrackerReference;
 
 /**
  * Representation of a milestone
@@ -135,6 +135,9 @@ class MilestoneRepresentation extends MilestoneRepresentationBase {
                 'trackers' => $this->getContentTrackersRepresentation($milestone)
             )
         );
+        $this->resources['siblings'] = [
+            'uri' => $this->uri . '/siblings'
+        ];
     }
 
     private function getContentTrackersRepresentation(Planning_Milestone $milestone) {
