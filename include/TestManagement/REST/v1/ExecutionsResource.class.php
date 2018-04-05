@@ -143,14 +143,14 @@ class ExecutionsResource
     /**
      * @url OPTIONS {id}/presences
      */
-    public function optionsPresences() {
+    public function optionsPresences($id) {
         Header::allowOptionsPatch();
     }
 
     /**
      * @url OPTIONS {id}/issues
      */
-    public function optionsIssues() {
+    public function optionsIssues($id) {
         Header::allowOptionsPatch();
     }
 
