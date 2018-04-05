@@ -35,6 +35,7 @@
 $kanban-column-closed-width: 60px;
 $kanban-column-header-height: 50px;
 $kanban-column-footer-height: 50px;
+$breadcrumb-height: 75px;
 
 @keyframes loadingItems {
     0% {
@@ -49,11 +50,11 @@ $kanban-column-footer-height: 50px;
 .kanban {
     display: flex;
     flex-direction: column;
-    height: calc(100vh - #{$navbar-height});
+    height: calc(100vh - #{$navbar-height} - #{$breadcrumb-height});
 }
 
 .kanban-admin {
-    height: calc(100vh - (#{$navbar-height} * 2));
+    height: calc(100vh - (#{$navbar-height} * 2) - #{$breadcrumb-height});
 }
 
 kanban-filtered-updated-alert > .tlp-alert-warning:last-child {
