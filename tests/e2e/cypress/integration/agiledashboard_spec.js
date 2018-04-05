@@ -17,14 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-Cypress.Commands.add("login", () => {
-    cy.visit('/');
-    cy.get('#form_loginname').type('alice');
-    cy.get('#form_pw').type('Correct Horse Battery Staple{enter}');
-});
+describe("Agiledashboard", () => {
+    it("should start scrum", () => {
+        cy.login();
+        cy.visit('/plugins/agiledashboard/?group_id=103');
 
-Cypress.Commands.add("projectMemberLogin", () => {
-    cy.visit('/');
-    cy.get('#form_loginname').type('bob');
-    cy.get('#form_pw').type('Correct Horse Battery Staple{enter}');
+        cy.get('[data-test=start-scrum]').click();
+
+        cy.get('[data-test=feedback]').contains('We created an initial scrum configuration for you. Enjoy!');
+    });
 });

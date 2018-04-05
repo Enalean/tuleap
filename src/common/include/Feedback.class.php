@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,7 +27,7 @@ class Feedback {
     public $logs;
 
     /**
-     * @var FeebackFormatter
+     * @var FeedbackFormatter
      */
     private $formatter;
 
@@ -93,7 +93,7 @@ class Feedback {
     }
 
     public function htmlContent() {
-        return '<div id="feedback">'.$this->fetch().'</div>';
+        return '<div id="feedback" data-test="feedback">'.$this->fetch().'</div>';
     }
 
     function hasWarningsOrErrors() {

@@ -13,7 +13,7 @@ function exit_error($title, $text = '') {
     // if the error comes from the SOAP API, we don't display the site_header and footer, but a soap fault (xml).
     if (substr($_SERVER['SCRIPT_NAME'], 1, 4) != "soap") {
         site_header(array('title'=>$Language->getText('include_exit','exit_error')));
-        echo '<p>',$text,'</p>';
+        echo '<p data-test="feedback">',$text,'</p>';
 	    $HTML->footer(array('showfeedback' => false));
     } else {
         exit_display_soap_error();
