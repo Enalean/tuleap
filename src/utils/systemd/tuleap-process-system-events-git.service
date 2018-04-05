@@ -1,0 +1,10 @@
+[Unit]
+Description=Tuleap git system events
+
+[Service]
+Type=simple
+User=codendiadm
+ExecStart=/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/src/utils/process_system_events.php git
+
+[Install]
+WantedBy=multi-user.target

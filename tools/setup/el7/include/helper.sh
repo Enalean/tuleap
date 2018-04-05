@@ -9,8 +9,10 @@ _usageSetup() {
     ${printf} "%s\n"   "  --disable-auto-passwd          do not automaticaly generate random passwords"
     ${printf} "%s\n"   "  --disable-mysql-conf           do not modify my.cnf"
     ${printf} "%s\n\n" "  --disable-check-server-name    do not check server name"
+    ${printf} "%s\n\n" "  -c, --configure                configure new plugins installed"
+    ${printf} "%s\n\n" "  -r, --reinstall                reinstall tuleap"
+    ${printf} "%s\n\n" "  -y, --assumeyes                your answer is 'yes' for any questions (default: no)"
     ${printf} "%s\n\n" "  -d, --debug                    enable xtrace"
-    ${printf} "%s\n\n" "  -h, --help                     display this help and exit"
-    ${printf} "%s\n"   "  -y, --assumeyes                your answer is 'yes' for any questions (default: no)"
+    ${printf} "%s\n"   "  -h, --help                     display this help and exit"
     exit 1
 }
