@@ -25,6 +25,7 @@ use CSRFSynchronizerToken;
 use ProjectManager;
 use HTTPRequest;
 use Tuleap\Request\Dispatchable;
+use Tuleap\Request\NotFoundException;
 use UserManager;
 use EventManager;
 use ForgeConfig;
@@ -54,6 +55,10 @@ use Tuleap\Widget\WidgetFactory;
 
 class Home implements Dispatchable
 {
+    /**
+     * @param array $args
+     * @throws NotFoundException
+     */
     public function process(array $args)
     {
         $request = HTTPRequest::instance();
@@ -159,10 +164,7 @@ class Home implements Dispatchable
                 }
             }
         } else {
-            header("HTTP/1.0 404 Not Found");
-            if (! $request->isAjax()) {
-                exit_no_group();
-            }
+            throw new NotFoundException(_('Project does not exist'));
         }
     }
 }

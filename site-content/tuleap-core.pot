@@ -497,6 +497,9 @@ msgstr ""
 msgid "Not categorized"
 msgstr ""
 
+msgid "Not found"
+msgstr ""
+
 msgid "Ooops an error occured"
 msgstr ""
 
@@ -595,6 +598,9 @@ msgstr ""
 msgid ""
 "Project admins can't be removed from project. You must remove them from "
 "Project administrators group first."
+msgstr ""
+
+msgid "Project does not exist"
 msgstr ""
 
 msgid "Project hierarchy"
@@ -764,6 +770,9 @@ msgid "The name is missing for creating a dashboard."
 msgstr ""
 
 msgid "The name is missing for editing the dashboard."
+msgstr ""
+
+msgid "The page you are looking for does not exist"
 msgstr ""
 
 msgid ""

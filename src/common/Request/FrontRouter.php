@@ -24,6 +24,8 @@ namespace Tuleap\Request;
 use EventManager;
 use FastRoute;
 use HTTPRequest;
+use ThemeManager;
+use Tuleap\Layout\ErrorRendering;
 use Tuleap\Layout\SiteHomepageController;
 use Tuleap\Layout\BaseLayout;
 
@@ -33,33 +35,64 @@ class FrontRouter
      * @var EventManager
      */
     private $event_manager;
+    /**
+     * @var ThemeManager
+     */
+    private $theme_manager;
 
-    public function __construct(EventManager $event_manager)
+    public function __construct(EventManager $event_manager, ThemeManager $theme_manager)
     {
         $this->event_manager = $event_manager;
+        $this->theme_manager = $theme_manager;
     }
 
     public function route(HTTPRequest $request, BaseLayout $layout)
     {
         try {
             $route_info = $this->getRouteInfo();
-            if ($route_info[0] === FastRoute\Dispatcher::FOUND) {
-                if (is_callable($route_info[1])) {
-                    $handler = $route_info[1]();
-                    if ($handler instanceof Dispatchable) {
-                        $handler->process($route_info[2]);
-                    } elseif ($handler instanceof DispatchableWithRequest) {
-                        $handler->process($request, $layout, $route_info[2]);
+            switch ($route_info[0]) {
+                case FastRoute\Dispatcher::NOT_FOUND:
+                    throw new NotFoundException(_('The page you are looking for does not exist'));
+                    break;
+                case FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
+                    throw new \RuntimeException('This route does not support '.$_SERVER['REQUEST_METHOD'], 405);
+                    break;
+                case FastRoute\Dispatcher::FOUND:
+                    if (is_callable($route_info[1])) {
+                        $handler = $route_info[1]();
+                        if ($handler instanceof Dispatchable) {
+                            $handler->process($route_info[2]);
+                        } elseif ($handler instanceof DispatchableWithRequest) {
+                            $handler->process($request, $layout, $route_info[2]);
+                        } else {
+                            throw new \RuntimeException('No valid handler associated to route');
+                        }
                     } else {
                         throw new \RuntimeException('No valid handler associated to route');
                     }
-                } else {
-                    throw new \RuntimeException('No valid handler associated to route');
-                }
+                    break;
             }
+        } catch (NotFoundException $exception) {
+            (new ErrorRendering(
+                $request,
+                $this->theme_manager->getBurningParrot($request->getCurrentUser()),
+                404,
+                _('Not found'),
+                $exception->getMessage()
+            ))->rendersError();
         } catch (\Exception $exception) {
-            (new \BackendLogger())->error('Unable to route', $exception);
-            $layout->rendersError500($exception);
+            $code = 500;
+            if ($exception->getCode() !== 0) {
+                $code = $exception->getCode();
+            }
+            (new \BackendLogger())->error('Caught exception', $exception);
+            (new ErrorRendering(
+                $request,
+                $this->theme_manager->getBurningParrot($request->getCurrentUser()),
+                $code,
+                _('Internal server error'),
+                _('We are sorry you caught an error, something meaningful was logged for site administrators. You may want got get in touch with them.')
+            ))->rendersErrorWithException($exception);
         }
     }
 

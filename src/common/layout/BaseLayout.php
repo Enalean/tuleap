@@ -523,25 +523,4 @@ abstract class BaseLayout extends Response
 
         return ob_get_clean();
     }
-
-    public function rendersError500(\Exception $exception)
-    {
-        header('HTTP/1.0 500 Internal server error', true, 500);
-        $this->header(
-            [
-                'title'        => _('Internal server error'),
-                'main_classes' => ['tlp-framed'],
-            ]
-        );
-        $presenter = ['development' => false];
-        if (ForgeConfig::get('DEBUG_MODE') == 1) {
-            $presenter = [
-                'development'   => true,
-                'error_message' => 'Caught '.get_class($exception).': '.$exception->getMessage(),
-            ];
-        }
-        $renderer = \TemplateRendererFactory::build()->getRenderer(__DIR__.'/../../templates/common');
-        $renderer->renderToPage('http_error', $presenter);
-        $this->footer([]);
-    }
 }

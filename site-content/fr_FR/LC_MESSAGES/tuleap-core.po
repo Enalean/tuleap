@@ -531,6 +531,9 @@ msgstr "Aucune catégorie de projet"
 msgid "Not categorized"
 msgstr "Non catégorisé"
 
+msgid "Not found"
+msgstr "Page non trouvée"
+
 msgid "Ooops an error occured"
 msgstr "Ouuups une erreur est survenue"
 
@@ -637,6 +640,9 @@ msgid ""
 msgstr ""
 "Les administrateurs ne peuvent pas être retirés du projet. Vous devez "
 "d'abord les retirer du groupe Administrateurs du projet."
+
+msgid "Project does not exist"
+msgstr "Le projet n'existe pas"
 
 msgid "Project hierarchy"
 msgstr "Hierarchie de projets"
@@ -813,6 +819,9 @@ msgstr "Il manque le nom pour créer un tableau de bord."
 
 msgid "The name is missing for editing the dashboard."
 msgstr "Il manque le nom pour éditer le tableau de bord."
+
+msgid "The page you are looking for does not exist"
+msgstr "La page demandée n'existe pas"
 
 msgid ""
 "The password must not be considered as compromised due to his presence in "
