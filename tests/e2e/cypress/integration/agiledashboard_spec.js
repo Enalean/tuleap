@@ -24,6 +24,8 @@ describe("Agiledashboard", () => {
 
         cy.get('[data-test=start-scrum]').click();
 
-        cy.get('[data-test=feedback]').contains('We created an initial scrum configuration for you. Enjoy!');
+        cy.get('[data-test=feedback]').contains('We created an initial scrum configuration for you. Enjoy!', {
+            timeout: 20000
+        });
     });
 });
