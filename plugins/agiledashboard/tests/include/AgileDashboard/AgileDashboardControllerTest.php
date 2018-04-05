@@ -19,6 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\AgileDashboard\AdminController;
+
 require_once dirname(__FILE__).'/../../bootstrap.php';
 
 class AgileDashboardControllerTest extends TuleapTestCase {
@@ -55,7 +57,7 @@ class AgileDashboardControllerTest extends TuleapTestCase {
         stub($this->request)->getCurrentUser()->returns($user);
         stub($this->user_manager)->getCurrentUser()->returns($user);
 
-        $controller = new AgileDashboard_Controller(
+        $controller = new AdminController(
             $this->request,
             $this->planning_factory,
             $this->kanban_manager,
@@ -84,7 +86,7 @@ class AgileDashboardControllerTest extends TuleapTestCase {
         stub($this->planning_factory)->getPlanningsByBacklogTracker($tracker)->returns(array());
         stub($this->user_manager)->getCurrentUser()->returns($admin_user);
 
-        $controller = new AgileDashboard_Controller(
+        $controller = new AdminController(
             $this->request,
             $this->planning_factory,
             $this->kanban_manager,
@@ -113,7 +115,7 @@ class AgileDashboardControllerTest extends TuleapTestCase {
         stub($this->planning_factory)->getPlanningByPlanningTracker($tracker)->returns(array());
         stub($this->user_manager)->getCurrentUser()->returns($admin_user);
 
-        $controller = new AgileDashboard_Controller(
+        $controller = new AdminController(
             $this->request,
             $this->planning_factory,
             $this->kanban_manager,

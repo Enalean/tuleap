@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\AdminController;
 use Tuleap\Agiledashboard\FormElement\BurnupCacheGenerator;
 use Tuleap\AgileDashboard\FormElement\FormElementController;
 use Tuleap\AgileDashboard\Kanban\ShowKanbanController;
@@ -377,7 +378,7 @@ class AgileDashboardRouter {
     }
 
     protected function buildController(Codendi_Request $request) {
-        return new AgileDashboard_Controller(
+        return new AdminController(
             $request,
             $this->planning_factory,
             $this->kanban_manager,
