@@ -1,6 +1,6 @@
 <?php
 /**
-  * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
+  * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
   *
   * This file is a part of Tuleap.
   *
@@ -19,6 +19,7 @@
   */
 
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\ForgeAccess\UnknownForgeAccessValueException;
 use Tuleap\User\UserGroup\NameTranslator;
 
 class ForgeAccess_AdminController
@@ -131,27 +132,20 @@ class ForgeAccess_AdminController
 
     /** @return bool true if updated */
     private function updateAccessValue() {
-        $validator = new Valid_WhiteList(
-            self::ACCESS_KEY,
-            array(
-                ForgeAccess::ANONYMOUS,
-                ForgeAccess::REGULAR,
-                ForgeAccess::RESTRICTED,
-            )
-        );
-        $validator->required();
-
-        if (! $this->request->valid($validator)) {
+        $new_access_value = $this->request->get(self::ACCESS_KEY);
+        try {
+            $this->updateAccess($new_access_value);
+        } catch (UnknownForgeAccessValueException $exception) {
             return false;
         }
-
-        $new_access_value = $this->request->get(self::ACCESS_KEY);
-        $this->updateAccess($new_access_value);
         $this->updateLabels($new_access_value);
 
         return true;
     }
 
+    /**
+     * @throws UnknownForgeAccessValueException
+     */
     private function updateAccess($new_access_value) {
         $old_access_value = ForgeConfig::get(ForgeAccess::CONFIG);
         $this->manager->updateAccess($new_access_value, $old_access_value);
