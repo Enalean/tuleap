@@ -61,6 +61,12 @@ msgid ""
 "Artifact submissions (and possibly updates) will be systematically sent."
 msgstr ""
 
+msgid ""
+"Be careful: The limit you define here is the number of artifacts users can "
+"delete from the REST API on a 24 hours sliding window. This action is hardly "
+"reversible. Choose wisely."
+msgstr ""
+
 msgid "Burndown is under calculation. It will be available in a few minutes."
 msgstr ""
 
