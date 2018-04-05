@@ -21,13 +21,7 @@
     "sprintf-js": "^1.1.1"
   },
   "devDependencies": {
-    "angular-gettext-loader": "^1.0.1",
     "angular-mocks": "^1.6.9",
-    "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.2",
-    "babel-plugin-istanbul": "^4.1.5",
-    "babel-polyfill": "^6.26.0",
-    "babel-preset-env": "^1.6.0",
     "concurrently": "^3.4.0",
     "gulp": "^3.9.1",
     "gulp-angular-gettext": "^2.2.0",
@@ -42,9 +36,7 @@
     "karma-jasmine": "^1.1.0",
     "karma-junit-reporter": "^1.2.0",
     "karma-webpack": "^2.0.3",
-    "ng-cache-loader": "^0.0.26",
-    "webpack": "^3.0.0",
-    "webpack-assets-manifest": "^1.0.0"
+    "webpack": "^3.11.0"
   },
   "scripts": {
     "build": "rm -rf ./dist/* && NODE_ENV=production webpack --optimize-minimize --bail",

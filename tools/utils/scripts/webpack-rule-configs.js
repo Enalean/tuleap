@@ -22,21 +22,27 @@ const BabelPluginObjectRestSpread = require('babel-plugin-transform-object-rest-
 const BabelPluginRewireExports = require('babel-plugin-rewire-exports').default;
 const BabelPluginIstanbul = require('babel-plugin-istanbul').default;
 
-const babel_preset_env_ie_config = [BabelPresetEnv, {
-    targets: {
-        ie: 11
-    },
-    modules: false
-}];
+const babel_preset_env_ie_config = [
+    BabelPresetEnv,
+    {
+        targets: {
+            ie: 11
+        },
+        modules: false
+    }
+];
 
-const babel_preset_env_chrome_config = [BabelPresetEnv, {
-    targets: {
-        browsers: ['last 2 Chrome versions']
-    },
-    modules: false,
-    useBuiltIns: true,
-    shippedProposals: true
-}];
+const babel_preset_env_chrome_config = [
+    BabelPresetEnv,
+    {
+        targets: {
+            browsers: ['last 2 Chrome versions']
+        },
+        modules: false,
+        useBuiltIns: true,
+        shippedProposals: true
+    }
+];
 
 const babel_options_ie11 = {
     presets: [babel_preset_env_ie_config],
@@ -56,9 +62,12 @@ const babel_options_karma = {
             plugins: [
                 BabelPluginObjectRestSpread,
                 BabelPluginRewireExports,
-                [BabelPluginIstanbul, {
-                    exclude: ['**/*.spec.js']
-                }]
+                [
+                    BabelPluginIstanbul,
+                    {
+                        exclude: ['**/*.spec.js']
+                    }
+                ]
             ]
         }
     }
@@ -79,6 +88,7 @@ function configureBabelRule(babel_options) {
 
 const rule_vue_loader = {
     test: /\.vue$/,
+    exclude: /node_modules/,
     use: [
         {
             loader: 'vue-loader',
@@ -95,16 +105,35 @@ const rule_vue_loader = {
 const rule_po_files = {
     test: /\.po$/,
     exclude: /node_modules/,
-    use: [
-        { loader: 'json-loader' },
-        { loader: 'po-gettext-loader' }
-    ]
+    use: [{ loader: 'json-loader' }, { loader: 'po-gettext-loader' }]
 };
 
 const rule_mustache_files = {
     test: /\.mustache$/,
     exclude: /node_modules/,
     use: { loader: 'raw-loader' }
+};
+
+const rule_ng_cache_loader = {
+    test: /\.html$/,
+    exclude: /node_modules/,
+    use: [
+        {
+            loader: 'ng-cache-loader',
+            query: '-url'
+        }
+    ]
+};
+
+const rule_angular_gettext_loader = {
+    test: /\.po$/,
+    exclude: /node_modules/,
+    use: [
+        {
+            loader: 'angular-gettext-loader',
+            query: 'browserify=true'
+        }
+    ]
 };
 
 module.exports = {
@@ -114,4 +143,6 @@ module.exports = {
     rule_po_files,
     rule_mustache_files,
     rule_vue_loader,
+    rule_ng_cache_loader,
+    rule_angular_gettext_loader
 };
