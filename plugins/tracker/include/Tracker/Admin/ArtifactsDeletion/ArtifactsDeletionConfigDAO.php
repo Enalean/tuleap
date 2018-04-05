@@ -24,32 +24,28 @@
 
 namespace Tuleap\Tracker\Admin\ArtifactDeletion;
 
-use CSRFSynchronizerToken;
-use Tuleap\Tracker\Config\SectionsPresenter;
+use Tuleap\DB\DataAccessObject;
 
-class ArtifactsDeletionConfigPresenter
+class ArtifactsDeletionConfigDAO extends DataAccessObject
 {
-    /**
-     * @var SectionsPresenter
-     */
-    public $sections;
+    const CONFIG_NAME = 'artifacts_deletion_limit';
 
-    /**
-     * @var CSRFSynchronizerToken
-     */
-    public $csrf_token;
+    public function searchDeletableArtifactsLimit()
+    {
+        $sql = "SELECT *
+                FROM plugin_tracker_config
+                WHERE name = ?
+        ";
 
-    /**
-     * @var int
-     */
-    public $artifacts_limit;
+        return $this->getDB()->run($sql, self::CONFIG_NAME);
+    }
 
-    public function __construct(
-        CSRFSynchronizerToken $csrf,
-        $artifacts_limit
-    ) {
-        $this->sections        = new SectionsPresenter();
-        $this->csrf_token      = $csrf;
-        $this->artifacts_limit = $artifacts_limit;
+    public function updateDeletableArtifactsLimit($new_artifacts_limit)
+    {
+        $sql= "REPLACE INTO plugin_tracker_config (name, value)
+                VALUES (?, ?)
+        ";
+
+        return $this->getDB()->run($sql, self::CONFIG_NAME, $new_artifacts_limit);
     }
 }

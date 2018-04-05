@@ -19,7 +19,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfig;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigController;
+use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigDAO;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureConfigController;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureCreator;
@@ -50,6 +52,7 @@ if ($plugin && $plugin_manager->isPluginAvailable($plugin)) {
     $nature_validator        = new NatureValidator($nature_dao);
     $admin_page_renderer     = new AdminPageRenderer();
     $artifact_link_usage_dao = new ArtifactLinksUsageDao();
+    $artifact_deletion_dao   = new ArtifactsDeletionConfigDAO();
 
     $router = new ConfigRouter(
         new CSRFSynchronizerToken($_SERVER['SCRIPT_NAME']),
@@ -91,7 +94,11 @@ if ($plugin && $plugin_manager->isPluginAvailable($plugin)) {
             $admin_page_renderer
         ),
         new ArtifactsDeletionConfigController(
-            $admin_page_renderer
+            $admin_page_renderer,
+            new ArtifactsDeletionConfig(
+                $artifact_deletion_dao
+            ),
+            $artifact_deletion_dao
         )
     );
     $router->process($request, $GLOBALS['HTML'], $current_user);

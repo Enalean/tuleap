@@ -24,6 +24,11 @@
 
 namespace Tuleap\Tracker\Admin\ArtifactDeletion;
 
+use Codendi_Request;
+use CSRFSynchronizerToken;
+use Feedback;
+use http\Exception;
+use Response;
 use Tuleap\Admin\AdminPageRenderer;
 
 class ArtifactsDeletionConfigController
@@ -32,21 +37,54 @@ class ArtifactsDeletionConfigController
      * @var AdminPageRenderer
      */
     private $admin_page_renderer;
+    /**
+     * @var ArtifactsDeletionConfig
+     */
+    private $config;
 
-    public function __construct(AdminPageRenderer $admin_page_renderer)
-    {
+    /**
+     * @var ArtifactsDeletionConfigDAO
+     */
+    private $dao;
+
+    public function __construct(
+        AdminPageRenderer $admin_page_renderer,
+        ArtifactsDeletionConfig $config,
+        ArtifactsDeletionConfigDAO $dao
+    ) {
         $this->admin_page_renderer = $admin_page_renderer;
+        $this->config              = $config;
+        $this->dao                 = $dao;
     }
 
-    public function index()
+    public function index(CSRFSynchronizerToken $csrf)
     {
-        $title = $GLOBALS['Language']->getText('plugin_tracker_config', 'title');
+        $title           = $GLOBALS['Language']->getText('plugin_tracker_config', 'title');
+        $artifacts_limit = $this->config->getArtifactsDeletionLimit();
 
         $this->admin_page_renderer->renderANoFramedPresenter(
             $title,
             TRACKER_TEMPLATE_DIR,
             'siteadmin-config/artifacts-deletion',
-            new ArtifactsDeletionConfigPresenter()
+            new ArtifactsDeletionConfigPresenter($csrf, $artifacts_limit)
         );
+    }
+
+    public function update(Codendi_Request $request, Response $response)
+    {
+        $new_artifacts_limit = intval($request->get('artifacts_limit'));
+
+        if ($new_artifacts_limit >= 0) {
+            try {
+                $this->dao->updateDeletableArtifactsLimit($new_artifacts_limit);
+                $response->addFeedback(Feedback::INFO, dgettext("tuleap-tracker", "Limit successfully updated."));
+            } catch (Exception $e) {
+                $response->addFeedback(Feedback::ERROR, dgettext("tuleap-tracker", "Something went wrong."));
+            }
+        } else {
+            $response->addFeedback(Feedback::ERROR, dgettext("tuleap-tracker", "Please provide a valid limit."));
+        }
+
+        $response->redirect($_SERVER['REQUEST_URI']);
     }
 }

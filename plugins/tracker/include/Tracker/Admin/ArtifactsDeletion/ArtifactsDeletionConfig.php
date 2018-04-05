@@ -22,34 +22,37 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+
 namespace Tuleap\Tracker\Admin\ArtifactDeletion;
 
-use CSRFSynchronizerToken;
-use Tuleap\Tracker\Config\SectionsPresenter;
-
-class ArtifactsDeletionConfigPresenter
+class ArtifactsDeletionConfig
 {
     /**
-     * @var SectionsPresenter
+     * @var ArtifactsDeletionConfigDAO
      */
-    public $sections;
-
-    /**
-     * @var CSRFSynchronizerToken
-     */
-    public $csrf_token;
+    private $dao;
 
     /**
      * @var int
      */
-    public $artifacts_limit;
+    private $cache_artifacts_limit;
 
     public function __construct(
-        CSRFSynchronizerToken $csrf,
-        $artifacts_limit
+        ArtifactsDeletionConfigDAO $dao
     ) {
-        $this->sections        = new SectionsPresenter();
-        $this->csrf_token      = $csrf;
-        $this->artifacts_limit = $artifacts_limit;
+        $this->dao = $dao;
+    }
+
+    public function getArtifactsDeletionLimit()
+    {
+        if (! isset($this->cache_artifacts_limit)) {
+            $row = $this->dao->searchDeletableArtifactsLimit();
+
+            $this->cache_artifacts_limit = (count($row) > 0)
+                ? $row[0]['value']
+                : 0;
+        }
+
+        return $this->cache_artifacts_limit;
     }
 }

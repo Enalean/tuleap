@@ -109,6 +109,12 @@ msgstr[1] ""
 msgid "Hierarchy"
 msgstr ""
 
+msgid "Limit"
+msgstr ""
+
+msgid "Limit successfully updated."
+msgstr ""
+
 msgid "No element selected."
 msgstr ""
 
@@ -127,6 +133,9 @@ msgstr ""
 msgid "On all updates?"
 msgstr ""
 
+msgid "Please provide a valid limit."
+msgstr ""
+
 msgid ""
 "Please reactivate the \"_is_child\" artifact link type to be able to define "
 "the tracker hierarchy."
@@ -138,11 +147,11 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
-msgid "Section under construction"
-msgstr ""
-
 msgid ""
 "Some selected values was not saved because they are used in another semantic."
+msgstr ""
+
+msgid "Something went wrong."
 msgstr ""
 
 #, php-format

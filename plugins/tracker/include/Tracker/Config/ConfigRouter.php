@@ -109,7 +109,11 @@ class ConfigRouter
                 $this->report_config_controller->update($request, $response);
                 break;
             case 'artifacts-deletion':
-                $this->deletion_controller->index();
+                $this->deletion_controller->index($this->csrf);
+                break;
+            case 'artifacts-deletion-update-limit':
+                $this->csrf->check();
+                $this->deletion_controller->update($request, $response);
                 break;
             case 'emailgateway':
             default:
