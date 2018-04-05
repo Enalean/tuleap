@@ -1,21 +1,22 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 /**
@@ -67,7 +68,8 @@ class ServiceDao extends DataAccessObject
         return $dar->rowCount() === 1;
     }
 
-    public function updateServiceUsage($project_id, $short_name, $is_used) {
+    public function updateServiceUsageByShortName($project_id, $short_name, $is_used)
+    {
         $project_id = $this->da->escapeInt($project_id);
         $short_name = $this->da->quoteSmart($short_name);
         $is_used    = $this->da->escapeInt($is_used);
@@ -77,6 +79,19 @@ class ServiceDao extends DataAccessObject
                 WHERE short_name = $short_name
                 AND group_id = $project_id";
         return $this->update($sql);
+    }
+
+    public function updateServiceUsageByServiceID($project_id, $service_id, $is_used)
+    {
+        $project_id = $this->da->escapeInt($project_id);
+        $service_id = $this->da->escapeInt($service_id);
+        $is_used    = $this->da->escapeInt($is_used);
+
+        $sql = "UPDATE service
+                SET is_used = $is_used
+                WHERE service_id = $service_id
+                AND group_id = $project_id";
+        $this->update($sql);
     }
 
     public function delete($project_id, $id)
