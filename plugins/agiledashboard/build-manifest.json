@@ -21,7 +21,7 @@
         },
         "BurningParrot": {
             "files": [
-                "www/themes/FlamingParrot/css/burnup-chart.scss",
+                "www/themes/BurningParrot/css/burnup-chart.scss",
                 "www/themes/BurningParrot/css/kanban-blue.scss",
                 "www/themes/BurningParrot/css/kanban-blue-condensed.scss",
                 "www/themes/BurningParrot/css/kanban-green.scss",
