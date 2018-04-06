@@ -22,20 +22,21 @@ use Admin_Homepage_Dao;
 use CSRFSynchronizerToken;
 use Event;
 use EventManager;
-use Tuleap\Layout\BaseLayout;
+use ForgeConfig;
+use HTTPRequest;
+use PFUser;
 use Project;
 use ProjectManager;
+use TemplateRendererFactory;
+use Tuleap\Layout\BaseLayout;
+use Tuleap\layout\BreadCrumbDropdown\BreadCrumbPresenterBuilder;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\SidebarPresenter;
+use Tuleap\Theme\BurningParrot\Navbar\PresenterBuilder as NavbarPresenterBuilder;
 use URLRedirect;
 use User_LoginPresenterBuilder;
 use UserManager;
 use Widget_Static;
-use TemplateRendererFactory;
-use HTTPRequest;
-use PFUser;
-use ForgeConfig;
-use Tuleap\Theme\BurningParrot\Navbar\PresenterBuilder as NavbarPresenterBuilder;
-use Tuleap\Layout\IncludeAssets;
 
 class BurningParrotTheme extends BaseLayout
 {
@@ -64,7 +65,11 @@ class BurningParrotTheme extends BaseLayout
         $this->event_manager   = EventManager::instance();
         $this->request         = HTTPRequest::instance();
         $this->renderer        = TemplateRendererFactory::build()->getRenderer($this->getTemplateDir());
-        $tlp_include_assets    = new IncludeAssets(ForgeConfig::get('tuleap_dir') . '/src/www/themes/common/tlp/dist', '/themes/common/tlp/dist');
+
+        $tlp_include_assets = new IncludeAssets(
+            ForgeConfig::get('tuleap_dir') . '/src/www/themes/common/tlp/dist',
+            '/themes/common/tlp/dist'
+        );
         $this->includeFooterJavascriptFile($tlp_include_assets->getFileURL('tlp.' . $user->getLocale() . '.min.js'));
         $this->includeFooterJavascriptFile($this->include_asset->getFileURL('burning-parrot.js'));
     }
@@ -91,6 +96,11 @@ class BurningParrotTheme extends BaseLayout
         $body_classes                = $this->getArrayOfClassnamesForBodyTag($params, $sidebar);
         $current_project_navbar_info = $this->getCurrentProjectNavbarInfo($params);
 
+        $breadcrumb_presenter_builder = new BreadCrumbPresenterBuilder(
+            $this->uri_sanitizer
+        );
+        $breadcrumbs = $breadcrumb_presenter_builder->buildArrayOfStrings($this->breadcrumbs);
+
         $header_presenter = $header_presenter_builder->build(
             new NavbarPresenterBuilder(),
             $this->request,
@@ -105,7 +115,7 @@ class BurningParrotTheme extends BaseLayout
             $this->getListOfIconUnicodes(),
             $url_redirect,
             $this->toolbar,
-            $this->breadcrumbs,
+            $breadcrumbs,
             $this->getMOTD()
         );
 

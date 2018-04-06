@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Glyph\GlyphFinder;
+use Tuleap\layout\BreadCrumbDropdown\BreadCrumbPresenterBuilder;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\OpenGraph\NoOpenGraphPresenter;
 
@@ -352,8 +353,13 @@ class FlamingParrot_Theme extends Layout {
             $sidebar_collapsable = (! $current_user->isAnonymous() && $current_user->isLoggedIn()) ? true : false;
         }
 
+        $breadcrumb_presenter_builder = new BreadCrumbPresenterBuilder(
+            $this->uri_sanitizer
+        );
+        $breadcrumbs = $breadcrumb_presenter_builder->buildArrayOfStrings($this->breadcrumbs);
+
         $this->render('container', new FlamingParrot_ContainerPresenter(
-            $this->breadcrumbs,
+            $breadcrumbs,
             $this->force_breadcrumbs,
             $this->toolbar,
             $project_name,

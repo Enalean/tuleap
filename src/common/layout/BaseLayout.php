@@ -30,6 +30,8 @@ use Project;
 use ProjectManager;
 use Response;
 use Toggler;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbItem;
 use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\Sanitizer\URISanitizer;
 use UserManager;
@@ -63,7 +65,7 @@ abstract class BaseLayout extends Response
     protected $is_rendered_through_service = false;
 
     /**
-     * @var array
+     * @var BreadCrumbCollection
      */
     protected $breadcrumbs;
 
@@ -83,7 +85,7 @@ abstract class BaseLayout extends Response
         $this->root    = $root;
         $this->imgroot = $root . '/images/';
 
-        $this->breadcrumbs = array();
+        $this->breadcrumbs = new BreadCrumbCollection();
         $this->toolbar     = array();
 
         $this->include_asset = new IncludeAssets(ForgeConfig::get('codendi_dir').'/src/www/assets', '/assets');
@@ -426,18 +428,11 @@ abstract class BaseLayout extends Response
 
     public function addBreadcrumbs($breadcrumbs)
     {
-        $purifier = Codendi_HTMLPurifier::instance();
         foreach ($breadcrumbs as $breadcrumb) {
-            $classname = '';
-            if (isset($breadcrumb['classname'])) {
-                $classname = 'class="breadcrumb-step-' . $purifier->purify($breadcrumb['classname']) . '"';
-            }
-            $this->addBreadcrumb(
-                '<a href="' .
-                $this->uri_sanitizer->sanitizeForHTMLAttribute($purifier->purify($breadcrumb['url'])) .
-                '" ' . $classname . '>' .
-                $purifier->purify($breadcrumb['title']) . '</a>'
-            );
+            $this->breadcrumbs->addBreadCrumb(new BreadCrumbItem(
+                $breadcrumb['title'],
+                $breadcrumb['url']
+            ));
         }
     }
 
@@ -476,13 +471,6 @@ abstract class BaseLayout extends Response
     public function setRenderedThroughservice($value)
     {
         $this->is_rendered_through_service = $value;
-    }
-
-    protected function addBreadcrumb($step)
-    {
-        $this->breadcrumbs[] = $step;
-
-        return $this;
     }
 
     protected function getProjectSidebar($params, $project)
