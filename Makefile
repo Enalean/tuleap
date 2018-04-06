@@ -116,12 +116,12 @@ npm-build:
 	npm run build
 
 redeploy-nginx: ## Redeploy nginx configuration
-	@$(DOCKER) exec tuleap-web /usr/share/tuleap/tools/utils/php56/run.php --module=nginx
-	@$(DOCKER) exec tuleap-web service nginx restart
+	@$(DOCKER_COMPOSE) exec web /usr/share/tuleap/tools/utils/php56/run.php --module=nginx
+	@$(DOCKER_COMPOSE) exec web service nginx restart
 
 restart-services: redeploy-nginx ## Restart nginx, apache and fpm
-	@$(DOCKER) exec tuleap-web service rh-php56-php-fpm restart
-	@$(DOCKER) exec tuleap-web service httpd restart
+	@$(DOCKER_COMPOSE) exec web service rh-php56-php-fpm restart
+	@$(DOCKER_COMPOSE) exec web service httpd restart
 
 generate-po: ## Generate translatable strings
 	@tools/utils/generate-po.php `pwd`
@@ -204,30 +204,32 @@ show-passwords: ## Display passwords generated for Docker Compose environment
 	@$(DOCKER_COMPOSE) exec web cat /data/root/.tuleap_passwd
 
 dev-forgeupgrade: ## Run forgeupgrade in Docker Compose environment
-	@$(DOCKER) exec tuleap-web /usr/lib/forgeupgrade/bin/forgeupgrade --config=/etc/tuleap/forgeupgrade/config.ini update
+	@$(DOCKER_COMPOSE) exec web /usr/lib/forgeupgrade/bin/forgeupgrade --config=/etc/tuleap/forgeupgrade/config.ini update
 
 dev-clear-cache: ## Clear caches in Docker Compose environment
-	@$(DOCKER) exec tuleap-web /usr/share/tuleap/src/utils/tuleap --clear-caches
+	@$(DOCKER_COMPOSE) exec web /usr/share/tuleap/src/utils/tuleap --clear-caches
 
 start-php56 start: ## Start Tuleap web with php56 & nginx
 	@echo "Start Tuleap in PHP 5.6"
 	@./tools/docker/migrate_to_volume.sh
-	@$(DOCKER_COMPOSE) -f docker-compose.yml up -d reverse-proxy
+	@$(DOCKER_COMPOSE) -f docker-compose.yml up --build -d reverse-proxy
 	@echo -n "Update tuleap-web.tuleap-aio-dev.docker in /etc/hosts with: "
-	@$(DOCKER) inspect -f '{{.NetworkSettings.Networks.tuleap_default.IPAddress}}' reverse-proxy
+	@rp_id=`$(DOCKER_COMPOSE) ps -q reverse-proxy`; \
+	    $(DOCKER) inspect -f '{{.NetworkSettings.Networks.tuleap_default.IPAddress}}' $$rp_id
 
 start-distlp:
 	@echo "Start Tuleap with reverse-proxy, backend web and backend svn"
 	@./tools/docker/migrate_to_volume.sh
 	-@$(DOCKER_COMPOSE) stop
-	@$(DOCKER_COMPOSE) -f docker-compose-distlp.yml up -d reverse-proxy
-	@ip=`$(DOCKER) inspect -f '{{.NetworkSettings.Networks.tuleap_default.IPAddress}}' tuleap_reverse-proxy_1`; \
+	@$(DOCKER_COMPOSE) -f docker-compose-distlp.yml up -d reverse-proxy-distlp
+	@rp_id=`$(DOCKER_COMPOSE) ps -q reverse-proxy-distlp`; \
+	    ip=`$(DOCKER) inspect -f '{{.NetworkSettings.Networks.tuleap_default.IPAddress}}' $$rp_id`; \
 		echo "Add '$$ip tuleap-web.tuleap-aio-dev.docker' to /etc/hosts"; \
 		echo "Ensure $$ip is configured as sys_trusted_proxies in /etc/tuleap/conf/local.inc"
 	@echo "You can access :"
-	@echo "* Reverse proxy with: docker exec -ti tuleap_reverse-proxy_1 bash"
-	@echo "* Backend web with: docker exec -ti tuleap_backend-web_1 bash"
-	@echo "* Backend SVN with: docker exec -ti tuleap_backend-svn_1 bash"
+	@echo "* Reverse proxy with: docker-compose -f docker-compose.yml -f -f docker-compose-distlp.yml reverse-proxy-distlp bash"
+	@echo "* Backend web with: docker-compose -f docker-compose.yml -f -f docker-compose-distlp.yml backend-web bash"
+	@echo "* Backend SVN with: docker-compose -f docker-compose.yml -f -f docker-compose-distlp.yml backend-svn bash"
 
 stop-distlp:
 	@$(SUDO) docker-compose -f docker-compose-distlp.yml stop

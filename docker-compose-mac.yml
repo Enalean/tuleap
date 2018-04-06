@@ -5,6 +5,8 @@ services:
     environment:
       - DO_NOT_LAUNCH_FORGEUPGRADE=true
     ports:
+     - "2222:22"
+  reverse-proxy:
+    ports:
      - "80:80"
      - "443:443"
-     - "2222:22"

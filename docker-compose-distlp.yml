@@ -1,7 +1,7 @@
 version: "2"
 
 services:
-  reverse-proxy:
+  reverse-proxy-distlp:
     image: enalean/tuleap-reverseproxy:distlp-1.1
     command: /tuleap/tools/distlp/reverse-proxy/run.sh
     volumes:

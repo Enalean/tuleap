@@ -12,7 +12,6 @@ done
 echo "Tuleap Realtime certificate has been found. Adding to the CA bundle."
 update-ca-trust enable
 update-ca-trust extract
-service nginx restart
 
 replacement=`echo $REALTIME_KEY | sed "s|/|\\\\\/|g"`
 sed -e "s/\$nodejs_server_jwt_private_key = '';/\$nodejs_server_jwt_private_key = '$replacement';/" \
