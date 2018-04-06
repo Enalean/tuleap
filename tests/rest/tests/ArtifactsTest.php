@@ -29,7 +29,7 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
 {
     public function testOptionsArtifactId() {
         $response = $this->getResponse($this->client->options('artifacts/9'));
-        $this->assertEquals(array('OPTIONS', 'GET', 'PUT'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(array('OPTIONS', 'GET', 'PUT', 'DELETE'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testOptionsArtifacts() {

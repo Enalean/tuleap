@@ -20,7 +20,6 @@
 
 namespace Tuleap\Tracker\REST\v1;
 
-use Tracker;
 use Tuleap\REST\JsonDecoder;
 use \Tuleap\REST\ProjectAuthorization;
 use \Tuleap\REST\Header;
@@ -30,6 +29,11 @@ use \Tracker_ArtifactFactory;
 use \Tracker_Artifact;
 use Tuleap\REST\QueryParameterException;
 use Tuleap\REST\QueryParameterParser;
+use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfig;
+use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigDAO;
+use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionDAO;
+use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionLimitReachedException;
+use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionManager;
 use Tuleap\Tracker\Exception\SemanticTitleNotDefinedException;
 use Tuleap\Tracker\REST\Artifact\ArtifactBatchQueryConverter;
 use Tuleap\Tracker\REST\Artifact\MalformedArtifactBatchQueryConverterException;
@@ -86,6 +90,16 @@ class ArtifactsResource extends AuthenticatedResource {
     /** @var MovedArtifactValueBuilder  */
     private $moved_value_builder;
 
+    /**
+     * @var ArtifactsDeletionManager
+     */
+    private $artifacts_deletion_manager;
+
+    /**
+     * @var ArtifactsDeletionConfig
+     */
+    private $artifacts_deletion_config;
+
     public function __construct()
     {
         $this->tracker_factory     = TrackerFactory::instance();
@@ -97,6 +111,15 @@ class ArtifactsResource extends AuthenticatedResource {
             new NatureDao()
         );
         $this->moved_value_builder = new MovedArtifactValueBuilder();
+
+        $this->artifacts_deletion_config = new ArtifactsDeletionConfig(
+            new ArtifactsDeletionConfigDAO()
+        );
+
+        $this->artifacts_deletion_manager = new ArtifactsDeletionManager(
+            $this->artifacts_deletion_config,
+            new ArtifactsDeletionDAO()
+        );
     }
 
     /**
@@ -575,6 +598,44 @@ class ArtifactsResource extends AuthenticatedResource {
         }
     }
 
+    /**
+     * Delete an artifact given its id
+     *
+     * @url DELETE {id}
+     *
+     * @throws 401 Unauthorized
+     * @throws 403 Forbidden
+     * @throws 404 Artifact Not found
+     * @throws 429 Too Many Requests (rate limit exceeded)
+     *
+     * @access hybrid
+     * @param int $id Id of the artifact
+     */
+    public function deleteArtifact($id)
+    {
+        $this->checkAccess();
+
+        $user                  = UserManager::instance()->getCurrentUser();
+        $artifact              = $this->getArtifactById($user, $id);
+        $is_user_tracker_admin = $artifact->getTracker()->userIsAdmin($user);
+
+        if (! $is_user_tracker_admin) {
+            throw new RestException(403);
+        }
+
+        $remaining_deletions = 0;
+        $limit               = $this->artifacts_deletion_config->getArtifactsDeletionLimit();
+
+        try {
+            $remaining_deletions = $this->artifacts_deletion_manager->deleteArtifact($artifact, $user);
+        } catch (ArtifactsDeletionLimitReachedException $limit_reached_exception) {
+            throw new RestException(429, $limit_reached_exception->getMessage());
+        } finally {
+            Header::sendRateLimitHeaders($limit, $remaining_deletions);
+            $this->sendAllowHeadersForArtifact();
+        }
+    }
+
     private function getTrackerById(PFUser $user, $tracker_id)
     {
         $tracker  = $this->tracker_factory->getTrackerById($tracker_id);
@@ -622,7 +683,7 @@ class ArtifactsResource extends AuthenticatedResource {
     }
 
     private function sendAllowHeadersForArtifact() {
-        Header::allowOptionsGetPut();
+        Header::allowOptionsGetPutDelete();
     }
 
     private function sendLastModifiedHeader(Tracker_Artifact $artifact) {
