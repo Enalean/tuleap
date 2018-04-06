@@ -1,7 +1,7 @@
 <li class="user">
     <img class="avatar" src="{{ avatar }}" />
     {{# has_directory_uri }}
-        <a class="realname only" href="{{{ directory_uri }}}">{{ real_name }}</a>
+        <a class="realname only" href="{{ directory_uri }}">{{ real_name }}</a>
     {{/ has_directory_uri }}
     {{^ has_directory_uri }}
         <p class="realname only">{{ real_name }}</p>
