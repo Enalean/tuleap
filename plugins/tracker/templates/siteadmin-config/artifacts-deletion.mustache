@@ -25,14 +25,36 @@
                             | Be careful: The limit you define here is the number of artifacts users can delete from the REST API on a 24 hours sliding window. This action is hardly reversible. Choose wisely.
                         {{/ dgettext }}
                     </div>
-                    <div class="empty-page">
-                        <span class="empty-page-text">
-                            {{# dgettext }}
-                                tuleap-tracker
-                                | Section under construction
-                            {{/ dgettext }}
-                        </span>
-                    </div>
+                    <form method="POST" action="">
+                        <input type="hidden" name="action" value="artifacts-deletion-update-limit" />
+                        {{# csrf_token }}
+                            {{> csrf_token_input }}
+                        {{/ csrf_token }}
+
+                        <div class="tlp-form-element">
+                            <label class="tlp-label" for="input-artifacts-limit">
+                                {{# dgettext }}
+                                    tuleap-tracker
+                                    | Limit
+                                {{/ dgettext }}
+                            </label>
+                            <input type="number"
+                                   id="input-artifacts-limit"
+                                   class="tlp-input"
+                                   name="artifacts_limit"
+                                   placeholder="0"
+                                   size="5"
+                                   value="{{ artifacts_limit }}"
+                                   min="0"
+                            />
+                        </div>
+
+                        <div class="tlp-pane-section-submit">
+                            <button type="submit" class="tlp-button-primary"><i class="fa fa-save tlp-button-icon"></i>
+                                 {{# gettext }}Save configuration{{/ gettext }}
+                            </button>
+                        </div>
+                    </form>
                 </section>
             </div>
         </section>
