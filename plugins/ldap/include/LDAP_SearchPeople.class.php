@@ -75,10 +75,23 @@ class LDAP_SearchPeople extends Search_SearchPeople {
         return new LDAP_SearchPeopleResultPresenter($ldap_result->getCommonName(), PFUser::DEFAULT_AVATAR_URL, $directory_uri);
     }
 
-    private function buildLinkToDirectory(LDAPResult $lr, $value) {
+    private function buildLinkToDirectory(LDAPResult $lr, $value)
+    {
         include_once($GLOBALS['Language']->getContent('directory_redirect', 'en_US', 'ldap'));
-        if(function_exists('custom_build_link_to_directory')) {
-            return custom_build_link_to_directory($lr, $value);
+        if (function_exists('custom_build_link_to_directory')) {
+            $html_tag_from_custom_file = custom_build_link_to_directory($lr, $value);
+
+            $dom = new DOMDocument();
+            @$dom->loadHTML($html_tag_from_custom_file);
+
+            $a_tag = $dom->getElementsByTagName("a")->item(0);
+
+            if ($a_tag === null) {
+                return '';
+            }
+
+            return $a_tag->getAttribute("href");
+
         }
         return '';
     }
