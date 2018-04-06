@@ -33,28 +33,22 @@ class PermissionsManagerPerfTest extends TuleapTestCase {
     {
         parent::setUp();
 
-        $this->user     = mock('PFUser');
-        $this->docmanPm = partial_mock(
-            'Docman_PermissionsManager',
-            array('_getPermissionManagerInstance', '_isUserDocmanAdmin', '_itemIsLockedForUser')
-        );
-        $this->docmanPm->setReturnValue('_itemIsLockedForUser', false);
+        $this->user     = \Mockery::spy(PFUser::class);
+        $this->docmanPm = \Mockery::mock(Docman_PermissionsManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->docmanPm->allows(['_itemIsLockedForUser' => false]);
         $this->refOnNull = null;
     }
 
     function testSuperAdminHasAllAccess() {
-        $this->docmanPm->setReturnValue('_isUserDocmanAdmin', false);
-        $this->user->setReturnValue('isSuperUser', true);
-
+        $this->user->allows(['isSuperUser' => true]);
 
         // no _isUserDocmanAdmin call
-        $this->docmanPm->expectNever('_isUserDocmanAdmin');
+        $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->never();
 
         // no userHasPerms call
-        $pm = mock('PermissionsManager');
-        $pm->setReturnValue('userHasPermission', false);
-        $pm->expectNever('userHasPermission');
-        $this->docmanPm->setReturnReference('_getPermissionManagerInstance', $pm);
+        $pm = \Mockery::spy(PermissionsManager::class);
+        $pm->expects()->userHasPermission()->never();
+        $this->docmanPm->allows(['_getPermissionManagerInstance' => $pm]);
 
         $this->docmanPm->userCanRead($this->user, 32432413);
         $this->docmanPm->userCanWrite($this->user, 324324234313);
@@ -64,18 +58,16 @@ class PermissionsManagerPerfTest extends TuleapTestCase {
 
     public function testProjectAdminHasAllAccess()
     {
-        $this->docmanPm->setReturnValue('_isUserDocmanAdmin', false);
-        $this->user->setReturnValue('isSuperUser', false);
-        $this->user->setReturnValue('isAdmin', true);
+        $this->user->allows(['isSuperUser' => false]);
+        $this->user->allows(['isAdmin' => true]);
 
         // no _isUserDocmanAdmin call
-        $this->docmanPm->expectNever('_isUserDocmanAdmin');
+        $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->never();
 
         // no userHasPerms call
-        $pm = mock('PermissionsManager');
-        $pm->setReturnValue('userHasPermission', false);
-        $pm->expectNever('userHasPermission');
-        $this->docmanPm->setReturnReference('_getPermissionManagerInstance', $pm);
+        $pm = \Mockery::spy(PermissionsManager::class);
+        $pm->expects()->userHasPermission()->never();
+        $this->docmanPm->allows(['_getPermissionManagerInstance' => $pm]);
 
         $this->docmanPm->userCanRead($this->user, 32432413);
         $this->docmanPm->userCanWrite($this->user, 324324234313);
@@ -84,18 +76,15 @@ class PermissionsManagerPerfTest extends TuleapTestCase {
     }
 
     function testDocmanAdminHasAllAccess() {
-        $this->docmanPm->setReturnValue('_isUserDocmanAdmin', true);
-        $this->user->setReturnValue('isSuperUser', false);
-
+        $this->user->allows(['isSuperUser' => false]);
 
         // one _isUserDocmanAdmin call
-        $this->docmanPm->expectCallCount('_isUserDocmanAdmin', 1);
+        $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->once()->andReturns(true);
 
         // no userHasPerms call
-        $pm = mock('PermissionsManager');
-        $pm->setReturnValue('userHasPermission', false);
-        $pm->expectNever('userHasPermission');
-        $this->docmanPm->setReturnReference('_getPermissionManagerInstance', $pm);
+        $pm = \Mockery::spy(PermissionsManager::class);
+        $pm->expects()->userHasPermission()->never();
+        $this->docmanPm->allows(['_getPermissionManagerInstance' => $pm]);
 
         $this->docmanPm->userCanRead($this->user, 32432413);
         $this->docmanPm->userCanWrite($this->user, 324324234313);
@@ -104,21 +93,19 @@ class PermissionsManagerPerfTest extends TuleapTestCase {
     }
 
     function testManageRightGivesReadAndWriteRights() {
-        // user is not docman admin
-        $this->docmanPm->setReturnValue('_isUserDocmanAdmin', false);
         // user is not super admin
-        $this->user->setReturnValue('isSuperUser', false);
+        $this->user->allows(['isSuperUser' => false]);
+        $this->user->allows(['getUgroups' => ['test']]);
 
         $itemId = 78903;
 
         // one _isUserDocmanAdmin call
-        $this->docmanPm->expectCallCount('_isUserDocmanAdmin', 1);
+        $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->once()->andReturns(false);
 
         // 1 userHasPerm call
-        $pm = mock('PermissionsManager');
-        $pm->setReturnValue('userHasPermission', true);
-        $pm->expectCallCount('userHasPermission', 1);
-        $this->docmanPm->setReturnReference('_getPermissionManagerInstance', $pm);
+        $pm = \Mockery::spy(PermissionsManager::class);
+        $pm->shouldReceive('userHasPermission')->once()->andReturns(true);
+        $this->docmanPm->allows(['_getPermissionManagerInstance' => $pm]);
 
         // test manage
         $this->docmanPm->userCanManage($this->user, $itemId);
@@ -131,20 +118,18 @@ class PermissionsManagerPerfTest extends TuleapTestCase {
     }
 
     function testWriteRightGivesReadRights() {
-        // user is not docman admin
-        $this->docmanPm->setReturnValue('_isUserDocmanAdmin', false);
         // user is not super admin
-        $this->user->setReturnValue('isSuperUser', false);
+        $this->user->allows(['isSuperUser' => false]);
+        $this->user->allows(['getUgroups' => ['test']]);
 
         $itemId = 78903;
 
-        $this->docmanPm->expectCallCount('_isUserDocmanAdmin', 1);
+        $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->once()->andReturns(false);
 
         // 2 userHasPerm call
-        $pm = mock('PermissionsManager');
-        $pm->setReturnValue('userHasPermission', true);
-        $pm->expectCallCount('userHasPermission', 1);
-        $this->docmanPm->setReturnReference('_getPermissionManagerInstance', $pm);
+        $pm = \Mockery::spy(PermissionsManager::class);
+        $pm->shouldReceive('userHasPermission')->once()->andReturns(true);
+        $this->docmanPm->allows(['_getPermissionManagerInstance' => $pm]);
 
         // test write
         $this->docmanPm->userCanWrite($this->user, $itemId);
@@ -154,20 +139,18 @@ class PermissionsManagerPerfTest extends TuleapTestCase {
     }
 
     function testOnReadTestManageRightGivesReadAndWriteRights() {
-        // user is not docman admin
-        $this->docmanPm->setReturnValue('_isUserDocmanAdmin', false);
+        $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->once()->andReturns(false);
+
         // user is not super admin
-        $this->user->setReturnValue('isSuperUser', false);
-        $this->user->setReturnValue('getUgroups', 'test');
+        $this->user->allows(['isSuperUser' => false]);
+        $this->user->allows(['getUgroups' => ['test']]);
 
         $itemId = 78903;
 
-        $this->docmanPm->expectCallCount('_isUserDocmanAdmin', 1);
-
-        $pm = mock('PermissionsManager');
-        $pm->setReturnValue('userHasPermission', true, array($itemId, 'PLUGIN_DOCMAN_MANAGE', 'test'));
-        $pm->expectCallCount('userHasPermission', 3);
-        $this->docmanPm->setReturnReference('_getPermissionManagerInstance', $pm);
+        $pm = \Mockery::spy(PermissionsManager::class);
+        $pm->shouldReceive('userHasPermission')->with($itemId, 'PLUGIN_DOCMAN_MANAGE', ['test'])->once()->andReturns(true);
+        $pm->shouldReceive('userHasPermission')->times(2);
+        $this->docmanPm->allows(['_getPermissionManagerInstance' => $pm]);
 
         // test read
         $this->docmanPm->userCanRead($this->user, $itemId);
@@ -181,14 +164,12 @@ class PermissionsManagerPerfTest extends TuleapTestCase {
 
     function testOnReadTestWriteRightGivesReadAndWriteRights() {
         // user is not docman admin
-        $this->docmanPm->setReturnValue('_isUserDocmanAdmin', false);
+        $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->once()->andReturns(false);
         // user is not super admin
-        $this->user->setReturnValue('isSuperUser', false);
-        $this->user->setReturnValue('getUgroups', 'test');
+        $this->user->allows(['isSuperUser' => false]);
+        $this->user->allows(['getUgroups' => ['test']]);
 
         $itemId = 78903;
-
-        $this->docmanPm->expectCallCount('_isUserDocmanAdmin', 1);
 
         // 3 userHasPerm call:
         // userCanRead:
@@ -197,10 +178,10 @@ class PermissionsManagerPerfTest extends TuleapTestCase {
         //    write perm (not lock).
         // userCanWrite
         // 3. one for WRITE (and eventually lock, but not in this test).
-        $pm = mock('PermissionsManager');
-        $pm->setReturnValue('userHasPermission', true, array($itemId, 'PLUGIN_DOCMAN_WRITE', 'test'));
-        $pm->expectCallCount('userHasPermission', 3);
-        $this->docmanPm->setReturnReference('_getPermissionManagerInstance', $pm);
+        $pm = \Mockery::spy(PermissionsManager::class);
+        $pm->shouldReceive('userHasPermission')->with($itemId, 'PLUGIN_DOCMAN_WRITE', ['test'])->once()->andReturns(true);
+        $pm->shouldReceive('userHasPermission')->times(3);
+        $this->docmanPm->allows(['_getPermissionManagerInstance' => $pm]);
 
         // test read
         $this->docmanPm->userCanRead($this->user, $itemId);
@@ -211,20 +192,18 @@ class PermissionsManagerPerfTest extends TuleapTestCase {
 
     function testOnWriteTestManageRightGivesReadAndWriteRights() {
         // user is not docman admin
-        $this->docmanPm->setReturnValue('_isUserDocmanAdmin', false);
+        $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->once()->andReturns(false);
         // user is not super admin
-        $this->user->setReturnValue('isSuperUser', false);
-        $this->user->setReturnValue('getUgroups', 'test');
+        $this->user->allows(['isSuperUser' => false]);
+        $this->user->allows(['getUgroups' => ['test']]);
 
         $itemId = 78903;
 
-        $this->docmanPm->expectCallCount('_isUserDocmanAdmin', 1);
-
         // 2 userHasPerm call
-        $pm = mock('PermissionsManager');
-        $pm->setReturnValue('userHasPermission', true, array($itemId, 'PLUGIN_DOCMAN_MANAGE', 'test'));
-        $pm->expectCallCount('userHasPermission', 2);
-        $this->docmanPm->setReturnReference('_getPermissionManagerInstance', $pm);
+        $pm = \Mockery::spy(PermissionsManager::class);
+        $pm->shouldReceive('userHasPermission')->with($itemId, 'PLUGIN_DOCMAN_MANAGE', ['test'])->once()->andReturns(true);
+        $pm->shouldReceive('userHasPermission')->once();
+        $this->docmanPm->allows(['_getPermissionManagerInstance' => $pm]);
 
         // test write
         $this->docmanPm->userCanWrite($this->user, $itemId);

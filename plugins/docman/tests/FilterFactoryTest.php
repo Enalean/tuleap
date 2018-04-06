@@ -21,17 +21,11 @@
 
 require_once 'bootstrap.php';
 
-Mock::generate('Docman_MetadataFactory');
-Mock::generate('Docman_FilterItemType');
-
-
-Mock::generatePartial('Docman_FilterFactory', 'Docman_FilterFactoryTestVersion', array('getGlobalSearchMetadata', 'getItemTypeSearchMetadata', 'cloneFilterValues', 'getFilterFactory', 'createFilter', 'createFromMetadata'));
-
 class Docman_FilterFactoryTest extends TuleapTestCase {
 
     function testCloneFilter() {
-        $mdFactory =  new MockDocman_MetadataFactory();
-        $mdFactory->setReturnValue('isRealMetadata', false);
+        $mdFactory =  \Mockery::spy(Docman_MetadataFactory::class);
+        $mdFactory->allows(['isRealMetadata' => false]);
 
         $md = new Docman_ListMetadata();
         $md->setLabel('item_type');
@@ -40,25 +34,25 @@ class Docman_FilterFactoryTest extends TuleapTestCase {
         $dstReport = new Docman_Report();
         $dstReport->setGroupId(123);
 
-        $filterFactory = new Docman_FilterFactoryTestVersion($this);
+        $filterFactory = \Mockery::mock(Docman_FilterFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $gsMd = new Docman_Metadata();
-        $filterFactory->setReturnValue('getGlobalSearchMetadata', $gsMd);
+        $filterFactory->allows(['getGlobalSearchMetadata' => $gsMd]);
         $gsMd->setLabel('global_txt');
         $itMd = new Docman_ListMetadata();
-        $filterFactory->setReturnValue('getItemTypeSearchMetadata', $itMd);
+        $filterFactory->allows(['getItemTypeSearchMetadata' => $itMd]);
         $itMd->setLabel('item_type');
 
         $itMd->setUseIt(PLUGIN_DOCMAN_METADATA_USED);
         $metadataMapping = array('md' => array(), 'love' => array());
-        $dstFilterFactory = new Docman_FilterFactoryTestVersion($this);
+        $dstFilterFactory = \Mockery::mock(Docman_FilterFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
+        $filterFactory->shouldReceive('getFilterFactory')->andReturns($dstFilterFactory);
+        $filterFactory->shouldReceive('cloneFilterValues')->once();
 
-        $filterFactory->setReturnValue('getFilterFactory', $dstFilterFactory);
+        $dstFilterFactory->shouldReceive('createFromMetadata')->once();
+        $dstFilterFactory->shouldReceive('createFilter')->once();
 
         $filterFactory->cloneFilter($srcFilter, $dstReport, $metadataMapping);
-        $dstFilterFactory->expectOnce('createFromMetadata');
-        $filterFactory->expectOnce('cloneFilterValues');
-        $dstFilterFactory->expectOnce('createFilter');
     }
 
 }

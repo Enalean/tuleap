@@ -71,5 +71,6 @@
 /usr/share/tuleap/tests/simpletest/common/dao/UserDaoTest.php
 /usr/share/tuleap/tests/simpletest/common/encoding/SupportedXmlCharEncodingTest.php
 /usr/share/tuleap/tests/simpletest/SimpleTestSampleTest.php
+/usr/share/tuleap/tests/simpletest/MockeryExamplesTest.php
 /usr/share/tuleap/tests/simpletest/www/include/UtilsHTTPTest.php
 /usr/share/tuleap/tests/simpletest/www/include/JsonTest.php

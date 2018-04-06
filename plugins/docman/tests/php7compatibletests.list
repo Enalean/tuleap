@@ -1,4 +1,7 @@
+/usr/share/tuleap/plugins/docman/tests/PermissionsManagerPerfTest.php
+/usr/share/tuleap/plugins/docman/tests/SqlFilterChoiceTest.php
 /usr/share/tuleap/plugins/docman/tests/bin/DocmanImport/DateParserTest.php
+/usr/share/tuleap/plugins/docman/tests/bin/DocmanImport/TreesTest.php
 /usr/share/tuleap/plugins/docman/tests/MetadataListOfValuesElementFactoryTest.php
 /usr/share/tuleap/plugins/docman/tests/FilterFactoryTest.php
 /usr/share/tuleap/plugins/docman/tests/TokenTest.php

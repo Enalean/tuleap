@@ -25,18 +25,16 @@
 
 require_once 'bootstrap.php';
 
-Mock::generatePartial('Docman_SqlFilter', 'Docman_SqlFilterTestVersion', array());
-
 class SqlFilterChoiceTest extends TuleapTestCase
 {
     public function setUp()
     {
         parent::setUp();
-        $data_access = partial_mock('DataAccess', array('quoteSmart'));
-        stub($data_access)->quoteSmart('%codex%')->returns('"%codex%"');
-        stub($data_access)->quoteSmart('%c*od*ex%')->returns('"%c*od*ex%"');
-        stub($data_access)->quoteSmart('%codex')->returns('"%codex"');
-        stub($data_access)->quoteSmart('%*codex')->returns('"%*codex"');
+        $data_access = \Mockery::mock(DataAccess::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $data_access->allows()->quoteSmart('%codex%')->andReturns('"%codex%"');
+        $data_access->allows()->quoteSmart('%c*od*ex%')->andReturns('"%c*od*ex%"');
+        $data_access->allows()->quoteSmart('%codex')->andReturns('"%codex"');
+        $data_access->allows()->quoteSmart('%*codex')->andReturns('"%*codex"');
         CodendiDataAccess::setInstance($data_access);
     }
 
@@ -48,7 +46,7 @@ class SqlFilterChoiceTest extends TuleapTestCase
 
     public function itTestSqlFilterChoicePerPattern()
     {
-        $docmanSf = new Docman_SqlFilterTestVersion($this);
+        $docmanSf = \Mockery::mock(Docman_SqlFilter::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
         $this->assertEqual($docmanSf->getSearchType('*codex*')   , array('like' => true, 'pattern' =>'"%codex%"'));
         $this->assertEqual($docmanSf->getSearchType('*c*od*ex*') , array('like' => true, 'pattern' =>'"%c*od*ex%"'));

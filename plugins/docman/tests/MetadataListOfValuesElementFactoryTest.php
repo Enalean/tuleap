@@ -23,17 +23,12 @@
 
 require_once 'bootstrap.php';
 
-Mock::generate('Docman_MetadataListOfValuesElementFactory');
-Mock::generate('Docman_MetadataListOfValuesElement');
-
-Mock::generatePartial('Docman_MetadataListOfValuesElementFactory', 'MetadataListOfValuesElementFactoryMocked', array('getListByFieldId', 'getMetadataListOfValuesElementFactory'));
-
 class MetadataListOfValuesElementFactoryTest extends TuleapTestCase {
 
     function testCloneValues()
     {
         // Factory to test
-        $srcLoveF = new MetadataListOfValuesElementFactoryMocked($this);
+        $srcLoveF = \Mockery::mock(Docman_MetadataListOfValuesElementFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
         // Parameters
         $srcMd = new Docman_ListMetadata();
@@ -43,22 +38,19 @@ class MetadataListOfValuesElementFactoryTest extends TuleapTestCase {
         $dstMd->setId(321);
 
         // List of src elements
-        $loveArray[0] = new MockDocman_MetadataListOfValuesElement($this);
-        $loveArray[0]->setReturnValue('getId', 100);
-        $loveArray[1] = new MockDocman_MetadataListOfValuesElement($this);
-        $loveArray[1]->setReturnValue('getId', 101);
-        $loveArray[2] = new MockDocman_MetadataListOfValuesElement($this);
-        $loveArray[2]->setReturnValue('getId', 102);
-        $srcLoveF->setReturnValue('getListByFieldId', $loveArray);
-        $srcLoveF->expectOnce('getListByFieldId', array(123, 'field_123', false));
+        $loveArray[0] = \Mockery::spy(Docman_MetadataListOfValuesElement::class);
+        $loveArray[0]->allows(['getId' => 100]);
+        $loveArray[1] = \Mockery::spy(Docman_MetadataListOfValuesElement::class);
+        $loveArray[1]->allows(['getId' => 101]);
+        $loveArray[2] = \Mockery::spy(Docman_MetadataListOfValuesElement::class);
+        $loveArray[2]->allows(['getId' => 102]);
+        $srcLoveF->expects()->getListByFieldId(123, 'field_123', false)->andReturns($loveArray);
 
         // Actions in the dst factory
-        $dstLoveF = new MockDocman_MetadataListOfValuesElementFactory($this);
-        $dstLoveF->expectCallCount('create', 2);
-        $dstLoveF->setReturnValueAt(0, 'create', 201);
-        $dstLoveF->setReturnValueAt(1, 'create', 202);
-        $srcLoveF->setReturnReference('getMetadataListOfValuesElementFactory', $dstLoveF);
-        $srcLoveF->expectOnce('getMetadataListOfValuesElementFactory', array(321));
+        $dstLoveF = \Mockery::spy(Docman_MetadataListOfValuesElementFactory::class);
+        $dstLoveF->shouldReceive('create')->andReturns(201)->once();
+        $dstLoveF->shouldReceive('create')->andReturns(202)->once();
+        $srcLoveF->expects()->getMetadataListOfValuesElementFactory(321)->andReturns($dstLoveF);
 
         // Run the test
         $valuesMapping = $srcLoveF->cloneValues($srcMd, $dstMd);
@@ -73,7 +65,7 @@ class MetadataListOfValuesElementFactoryTest extends TuleapTestCase {
     function testExportValuesWithEmptyDest()
     {
         // Factory to test
-        $srcLoveF = new MetadataListOfValuesElementFactoryMocked($this);
+        $srcLoveF = \Mockery::mock(Docman_MetadataListOfValuesElementFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
         // Parameters
         $valuesMapping = array();
@@ -84,18 +76,17 @@ class MetadataListOfValuesElementFactoryTest extends TuleapTestCase {
         $dstMd->setId(321);
 
         // Src elements
-        $loveArray[0] = new MockDocman_MetadataListOfValuesElement($this);
-        $loveArray[0]->setReturnValue('getId', 100);
-        $loveArray[1] = new MockDocman_MetadataListOfValuesElement($this);
-        $loveArray[1]->setReturnValue('getId', 101);
-        $loveArray[2] = new MockDocman_MetadataListOfValuesElement($this);
-        $loveArray[2]->setReturnValue('getId', 102);
-        $srcLoveF->setReturnValue('getListByFieldId', $loveArray);
-        $srcLoveF->expectOnce('getListByFieldId');
+        $loveArray[0] = \Mockery::spy(Docman_MetadataListOfValuesElement::class);
+        $loveArray[0]->allows(['getId' => 100]);
+        $loveArray[1] = \Mockery::spy(Docman_MetadataListOfValuesElement::class);
+        $loveArray[1]->allows(['getId' => 101]);
+        $loveArray[2] = \Mockery::spy(Docman_MetadataListOfValuesElement::class);
+        $loveArray[2]->allows(['getId' => 102]);
+        $srcLoveF->shouldReceive('getListByFieldId')->andReturns($loveArray);
 
-        $dstLoveF = new MockDocman_MetadataListOfValuesElementFactory($this);
-        $dstLoveF->expectCallCount('create', 2);
-        $srcLoveF->setReturnReference('getMetadataListOfValuesElementFactory', $dstLoveF);
+        $dstLoveF = \Mockery::spy(Docman_MetadataListOfValuesElementFactory::class);
+        $dstLoveF->shouldReceive('create')->times(2);
+        $srcLoveF->allows(['getMetadataListOfValuesElementFactory' => $dstLoveF]);
 
         $srcLoveF->exportValues($srcMd, $dstMd, $valuesMapping);
     }
@@ -107,7 +98,7 @@ class MetadataListOfValuesElementFactoryTest extends TuleapTestCase {
     function testExportValuesWithNonEmptyDest()
     {
         // Factory to test
-        $srcLoveF = new MetadataListOfValuesElementFactoryMocked($this);
+        $srcLoveF = \Mockery::mock(Docman_MetadataListOfValuesElementFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
         // Parameters
         $valuesMapping = array(101 => 201);
@@ -118,19 +109,18 @@ class MetadataListOfValuesElementFactoryTest extends TuleapTestCase {
         $dstMd->setId(321);
 
         // Src elements
-        $loveArray[0] = new MockDocman_MetadataListOfValuesElement($this);
-        $loveArray[0]->setReturnValue('getId', 100);
-        $loveArray[1] = new MockDocman_MetadataListOfValuesElement($this);
-        $loveArray[1]->setReturnValue('getId', 101);
-        $loveArray[2] = new MockDocman_MetadataListOfValuesElement($this);
-        $loveArray[2]->setReturnValue('getId', 102);
-        $srcLoveF->setReturnValue('getListByFieldId', $loveArray);
-        $srcLoveF->expectOnce('getListByFieldId');
+        $loveArray[0] = \Mockery::spy(Docman_MetadataListOfValuesElement::class);
+        $loveArray[0]->allows(['getId' => 100]);
+        $loveArray[1] = \Mockery::spy(Docman_MetadataListOfValuesElement::class);
+        $loveArray[1]->allows(['getId' => 101]);
+        $loveArray[2] = \Mockery::spy(Docman_MetadataListOfValuesElement::class);
+        $loveArray[2]->allows(['getId' => 102]);
+        $srcLoveF->shouldReceive('getListByFieldId')->andReturns($loveArray);
 
-        $dstLoveF = new MockDocman_MetadataListOfValuesElementFactory($this);
-        $dstLoveF->expectCallCount('create', 1);
-        $dstLoveF->expectCallCount('update', 1);
-        $srcLoveF->setReturnReference('getMetadataListOfValuesElementFactory', $dstLoveF);
+        $dstLoveF = \Mockery::spy(Docman_MetadataListOfValuesElementFactory::class);
+        $dstLoveF->shouldReceive('create')->once();
+        $dstLoveF->shouldReceive('update')->once();
+        $srcLoveF->allows(['getMetadataListOfValuesElementFactory' => $dstLoveF]);
 
         $srcLoveF->exportValues($srcMd, $dstMd, $valuesMapping);
     }

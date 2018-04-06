@@ -83,7 +83,7 @@ class Docman_MetadataListOfValuesElementDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    function prepareRanking($metadataId, $rank) {
+    protected function prepareLoveRanking($metadataId, $rank) {
         // Build the list of values needed in following queries.
         $sql = sprintf('SELECT value_id '.
                         ' FROM plugin_docman_metadata_love_md AS lovemd'.
@@ -171,7 +171,7 @@ class Docman_MetadataListOfValuesElementDao extends DataAccessObject {
     }
 
     function create($metadataId, $name, $description, $rank, $status) {
-        $rank = $this->prepareRanking($metadataId, $rank);
+        $rank = $this->prepareLoveRanking($metadataId, $rank);
         if($rank !== false) {
             $elementId = $this->createElement($name, $description, $rank, $status);
             if($elementId !== false) {
@@ -202,7 +202,7 @@ class Docman_MetadataListOfValuesElementDao extends DataAccessObject {
 
         $rankStmt = false;
         if($rank != '--') {
-            $r = $this->prepareRanking($metadataId, $rank);
+            $r = $this->prepareLoveRanking($metadataId, $rank);
             if($r !== false) {
                 $rankStmt = '  , love.rank = '.$r;
             }
