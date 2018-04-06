@@ -78,7 +78,7 @@ class DynamicCredentialsResource
     /**
      * @url OPTIONS {username}
      */
-    public function optionsUsername()
+    public function optionsUsername($username)
     {
         Header::allowOptionsDelete();
     }
