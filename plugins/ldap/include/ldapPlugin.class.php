@@ -476,7 +476,9 @@ class LdapPlugin extends Plugin {
         if ($this->isLdapAuthType() && $this->isLDAPUserManagementEnabled()) {
             $lri  = $this->getLdap()->searchLogin($event->getLoginName());
             $user = $this->getLdapUserManager()->getUserFromLdapIterator($lri);
-            $event->setUser($user);
+            if ($user !== null) {
+                $event->setUser($user);
+            }
         }
     }
 
