@@ -67,7 +67,7 @@ class AgileDashboardCrumbBuilder
             dgettext('tuleap-agiledashboard', 'Agile Dashboard'),
             $service_url
         );
-        $agile_breadcrumb->setIconName('fa-table');
+        $agile_breadcrumb->setIconName('fa-table icon-table');
         $agile_breadcrumb->setSubItems($service_dropdown_items);
 
         return $agile_breadcrumb;

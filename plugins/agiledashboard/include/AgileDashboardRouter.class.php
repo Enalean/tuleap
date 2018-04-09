@@ -105,6 +105,10 @@ class AgileDashboardRouter {
      * @var AgileDashboardJSONPermissionsRetriever
      */
     private $permissions_retriever;
+    /**
+     * @var AgileDashboardCrumbBuilder
+     */
+    private $crumb_builder;
 
     public function __construct(
         Plugin $plugin,
@@ -120,7 +124,8 @@ class AgileDashboardRouter {
         AgileDashboard_HierarchyChecker $hierarchy_checker,
         ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker,
         ScrumPlanningFilter $planning_filter,
-        AgileDashboardJSONPermissionsRetriever $permissions_retriever
+        AgileDashboardJSONPermissionsRetriever $permissions_retriever,
+        AgileDashboardCrumbBuilder $crumb_builder
     ) {
         $this->plugin                       = $plugin;
         $this->milestone_factory            = $milestone_factory;
@@ -136,6 +141,7 @@ class AgileDashboardRouter {
         $this->scrum_mono_milestone_checker = $scrum_mono_milestone_checker;
         $this->planning_filter              = $planning_filter;
         $this->permissions_retriever        = $permissions_retriever;
+        $this->crumb_builder                = $crumb_builder;
     }
 
     /**
@@ -228,7 +234,7 @@ class AgileDashboardRouter {
                     $this->kanban_factory,
                     TrackerFactory::instance(),
                     new AgileDashboard_PermissionsManager(),
-                    new AgileDashboardCrumbBuilder($plugin_path),
+                    $this->crumb_builder,
                     new BreadCrumbBuilder($plugin_path)
                 );
                 $this->renderAction($controller, 'showKanban', $request, array(), $header_options);
@@ -374,7 +380,8 @@ class AgileDashboardRouter {
      *
      * @return Planning_Controller
      */
-    protected function buildPlanningController(Codendi_Request $request) {
+    protected function buildPlanningController(Codendi_Request $request)
+    {
         return new Planning_Controller(
             $request,
             $this->planning_factory,
@@ -391,7 +398,8 @@ class AgileDashboardRouter {
             $this->scrum_mono_milestone_checker,
             $this->planning_filter,
             TrackerFactory::instance(),
-            Tracker_FormElementFactory::instance()
+            Tracker_FormElementFactory::instance(),
+            $this->crumb_builder
         );
     }
 

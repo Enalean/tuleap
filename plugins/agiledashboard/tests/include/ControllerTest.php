@@ -65,7 +65,8 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase {
             $this->mono_milestone_checker,
             $this->scrum_planning_filter,
             mock('TrackerFactory'),
-            mock('Tracker_FormElementFactory')
+            mock('Tracker_FormElementFactory'),
+            mock(\Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder::class)
         );
 
 
@@ -210,7 +211,8 @@ class Planning_ControllerNewTest extends TuleapTestCase {
             $scrum_mono_milestone_checker,
             new ScrumPlanningFilter($scrum_mono_milestone_checker, $this->planning_factory),
             mock('TrackerFactory'),
-            mock('Tracker_FormElementFactory')
+            mock('Tracker_FormElementFactory'),
+            mock(\Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder::class)
         );
 
         $GLOBALS['Language'] = new MockBaseLanguage_Planning_ControllerNewTest();
@@ -357,7 +359,8 @@ class Planning_Controller_EditTest extends Planning_Controller_BaseTest {
                 mock('Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker'),
                 $planning_filter,
                 mock('TrackerFactory'),
-                mock('Tracker_FormElementFactory')
+                mock('Tracker_FormElementFactory'),
+                mock(\Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder::class)
             )
         );
 

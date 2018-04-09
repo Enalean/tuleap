@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\FormElement\Burnup;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\Planning\AdditionalPlanningConfigurationWarningsRetriever;
@@ -34,6 +35,7 @@ use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\FRS\UploadedLinksDao;
 use Tuleap\FRS\UploadedLinksUpdater;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\Project\UserRemover;
@@ -104,8 +106,14 @@ class Planning_Controller extends MVC2_PluginController {
      * @var Tracker_FormElementFactory
      */
     private $tracker_form_element_factory;
-    /** @var Project */
+    /**
+     * @var Project
+     */
     private $project;
+    /**
+     * @var AgileDashboardCrumbBuilder
+     */
+    private $crumb_builder;
 
     public function __construct(
         Codendi_Request $request,
@@ -123,7 +131,8 @@ class Planning_Controller extends MVC2_PluginController {
         ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker,
         ScrumPlanningFilter $scrum_planning_filter,
         TrackerFactory $tracker_factory,
-        Tracker_FormElementFactory $tracker_form_element_factory
+        Tracker_FormElementFactory $tracker_form_element_factory,
+        AgileDashboardCrumbBuilder $crumb_builder
     ) {
         parent::__construct('agiledashboard', $request);
 
@@ -144,6 +153,7 @@ class Planning_Controller extends MVC2_PluginController {
         $this->scrum_planning_filter        = $scrum_planning_filter;
         $this->tracker_factory              = $tracker_factory;
         $this->tracker_form_element_factory = $tracker_form_element_factory;
+        $this->crumb_builder                = $crumb_builder;
     }
 
     public function index() {
@@ -689,11 +699,20 @@ class Planning_Controller extends MVC2_PluginController {
     }
 
     /**
-     * @return BreadCrumb_BreadCrumbGenerator
+     * @return BreadCrumbCollection
      */
     public function getBreadcrumbs($plugin_path)
     {
-        return new BreadCrumb_AgileDashboard($plugin_path, $this->project);
+        $breadcrumbs = new BreadCrumbCollection();
+        $breadcrumbs->addBreadCrumb(
+            $this->crumb_builder->build(
+                $this->getCurrentUser(),
+                $this->project,
+                $plugin_path
+            )
+        );
+
+        return $breadcrumbs;
     }
 
     private function getPlanning() {

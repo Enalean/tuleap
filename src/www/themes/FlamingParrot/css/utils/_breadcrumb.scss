@@ -17,20 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$step-background: $tlp-ui-white;
+$tlp-spacing: 20px;
+$step-background: $white;
 $step-color: #838487;
-$step-border: $tlp-ui-border-normal;
-$step-border-chevron: #dadce3;
-$step-active-color: $tlp-theme-color;
-$step-active-border: transparentize($tlp-theme-color, .5);
-$step-clicked-background: $tlp-theme-color;
-$step-clicked-border: $tlp-theme-color;
-$step-clicked-color: $tlp-ui-white;
+$step-border: #e3e3e3;
+$step-border-chevron: #d5d5d5;
+$step-active-color: $main;
+$step-active-border: transparentize($main, .5);
+$step-clicked-background: $main;
+$step-clicked-border: $main;
+$step-clicked-color: $white;
 
 $switch-menu-background: $step-background;
 $switch-menu-border: $step-border;
 $switch-menu-item-color: $step-color;
-$switch-menu-item-hover-background: $tlp-ui-border-light;
+$switch-menu-item-hover-background: $light-grey;
 $switch-menu-item-hover-color: $step-active-color;
 $switch-menu-item-active-background: $step-active-color;
 $switch-menu-item-active-color: $step-clicked-color;
@@ -51,7 +52,7 @@ $switch-menu-item-active-color: $step-clicked-color;
 
 .breadcrumb {
     display: flex;
-    padding: $tlp-spacing $tlp-spacing 0;
+    padding: 12px;
 }
 
 .breadcrumb-item {
@@ -137,10 +138,10 @@ $switch-menu-item-active-color: $step-clicked-color;
     }
 
     &::after {
-        content: '\f0d7'; // fa-caret-down
+        content: '\f0d7'; // icon-caret-down
         position: absolute;
         z-index: 1;
-        top: 12px;
+        top: 8px;
         right: 7px;
         transition: opacity 100ms;
         opacity: .25;
