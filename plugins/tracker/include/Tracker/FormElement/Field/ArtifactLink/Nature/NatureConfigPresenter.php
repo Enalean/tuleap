@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,7 +21,7 @@
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature;
 
-use Tuleap\Tracker\Config\SectionsPresenter;
+use Tuleap\Tracker\Config\ArtifactLinkTypePresenter;
 use CSRFSynchronizerToken;
 
 class NatureConfigPresenter
@@ -82,7 +82,7 @@ class NatureConfigPresenter
         $this->delete_modal_content     = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'delete_modal_content');
         $this->shortname_pattern        = NatureValidator::SHORTNAME_PATTERN;
 
-        $this->sections = new SectionsPresenter();
+        $this->sections = new ArtifactLinkTypePresenter();
 
         $this->title         = $title;
         $this->natures_usage = $natures_usage;

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 — 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 — 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,6 +22,7 @@
 namespace Tuleap\Tracker\Artifact\MailGateway;
 
 use Tracker\FormElement\Field\ArtifactLink\Nature\NatureConfigPresenter;
+use Tuleap\Tracker\Config\EmailGateWayPresenter;
 use Tuleap\Tracker\Config\SectionsPresenter;
 use CSRFSynchronizerToken;
 
@@ -67,7 +68,7 @@ class MailGatewayConfigPresenter {
         $this->insecure_desc            = $GLOBALS['Language']->getText('plugin_tracker_config', 'insecure_desc');
         $this->save_conf                = $GLOBALS['Language']->getText('admin_main', 'save_conf');
 
-        $this->sections = new SectionsPresenter();
+        $this->sections = new EmailGateWayPresenter();
 
         $this->is_localinc_obsolete      = $this->isLocalIncObsolete($localinc_path);
         $this->localinc_obsolete_message = $GLOBALS['Language']->getText(
