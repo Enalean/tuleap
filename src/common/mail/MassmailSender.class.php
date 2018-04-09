@@ -34,9 +34,10 @@ class MassmailSender {
      * @param string $html_body
      * @param PFUser[] $receivers
      */
-    public function sendMassmail(Project $project, PFUser $user, $subject, $html_body, array $receivers) {
+    public function sendMassmail(Project $project, PFUser $user, $subject, $html_body, array $receivers)
+    {
         $hp             = Codendi_HTMLPurifier::instance();
-        $project_name   = $project->getPublicName();
+        $project_name   = $project->getUnconvertedPublicName();
 
         $sys_max_number_of_emailed_people = ForgeConfig::get('sys_max_number_of_emailed_people');
         if (count($receivers) > $sys_max_number_of_emailed_people && !$user->isSuperUser()) {
@@ -47,6 +48,7 @@ class MassmailSender {
         $mail = new Codendi_Mail();
         $mail->setFrom(ForgeConfig::get('sys_noreply'));
         $mail->setTo($user->getEmail());
+        $mail->addAdditionalHeader('Reply-To', $user->getEmail());
         $mail->setBccUser($receivers);
         $mail->setSubject("[".$GLOBALS['sys_name']."] [".$project_name. "] ". $subject);
         $mail->setBodyText($hp->purify($html_body, CODENDI_PURIFIER_STRIP_HTML));
