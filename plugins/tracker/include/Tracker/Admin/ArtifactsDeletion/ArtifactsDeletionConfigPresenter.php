@@ -25,6 +25,7 @@
 namespace Tuleap\Tracker\Admin\ArtifactDeletion;
 
 use CSRFSynchronizerToken;
+use Tuleap\Tracker\Config\ArtifactsDeletionPresenter;
 use Tuleap\Tracker\Config\SectionsPresenter;
 
 class ArtifactsDeletionConfigPresenter
@@ -48,7 +49,7 @@ class ArtifactsDeletionConfigPresenter
         CSRFSynchronizerToken $csrf,
         $artifacts_limit
     ) {
-        $this->sections        = new SectionsPresenter();
+        $this->sections        = new ArtifactsDeletionPresenter();
         $this->csrf_token      = $csrf;
         $this->artifacts_limit = $artifacts_limit;
     }

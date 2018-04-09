@@ -1,14 +1,6 @@
 <div class="tlp-framed-vertically">
-    <h1 class="tlp-framed-horizontally">{{ title }}</h1>
 
-    {{# sections }}
-        <nav class="tlp-tabs">
-            <a class="tlp-tab tlp-tab-active" href="{{ emailgateway_url }}">{{ emailgateway }}</a>
-            <a class="tlp-tab" href="{{ natures_url }}">{{ natures }}</a>
-            <a class="tlp-tab" href="{{ report_config_url }}">{{ report_config_panel }}</a>
-            <a class="tlp-tab" href="{{ artifacts_deletion_url }}">{{# dgettext }} tuleap-tracker | Artifacts deletion {{/ dgettext }}</a>
-        </nav>
-    {{/ sections }}
+    {{> siteadmin-config/site-admin-navbar }}
 
     <div class="tlp-framed-horizontally">
         {{# is_localinc_obsolete }}
