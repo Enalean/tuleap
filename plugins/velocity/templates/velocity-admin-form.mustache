@@ -10,6 +10,9 @@
             {{# dgettext }}tuleap-velocity | The <i>velocity</i> of this tracker will be represented in the Agile Dashboard by the field{{/ dgettext }}
         {{/ has_velocity_field }}
         <select name="velocity_field">
+            {{^ has_a_selected_field }}
+                <option value="" selected="selected"> {{# dgettext }} tuleap-velocity | Choose a field{{/ dgettext }} </option>
+            {{/ has_a_selected_field }}
             {{# possible_velocity_field }}
                 <option value="{{ id }}" {{# is_selected }} selected="selected"{{/ is_selected }}> {{ name }} </option>
             {{/ possible_velocity_field }}

@@ -52,6 +52,9 @@ msgstr[1] ""
 "La vélocité de l'artéfact sera toujours sauvegardée à 0, parce qu'aucun "
 "élément du backlog n'a les sémantiques :"
 
+msgid "Choose a field"
+msgstr "Choisissez un champ"
+
 msgid "Define the field to use to compute velocity."
 msgstr "Définissez le champ à utiliser pour calculer la vélocité"
 
@@ -62,8 +65,12 @@ msgid ""
 "Following artifact won't be displayed because it doesn't have a start date:"
 msgid_plural ""
 "Following artifacts won't be displayed because they don't have a start date:"
-msgstr[0] "L'artéfact suivant ne sera pas affiché parce qu'il n'a pas de date de départ :"
-msgstr[1] "Les artéfacts suivants ne seront pas affichés parce qu'ils n'ont pas de date de départ :"
+msgstr[0] ""
+"L'artéfact suivant ne sera pas affiché parce qu'il n'a pas de date de "
+"départ :"
+msgstr[1] ""
+"Les artéfacts suivants ne seront pas affichés parce qu'ils n'ont pas de date "
+"de départ :"
 
 msgid "Following tracker should have <b>velocity</b> semantic:"
 msgid_plural "Following trackers should have <b>velocity</b> semantic:"
@@ -89,6 +96,9 @@ msgstr "La sémantique finie n'est pas définie"
 
 msgid "Semantic updated successfully."
 msgstr "La sémantique a été correctement sauvegardée"
+
+msgid "Semantic velocity unset with success"
+msgstr "La sémantique vélocité a été réinitialisée avec succès"
 
 msgid ""
 "The <i>velocity</i> of this tracker will be represented in the Agile "
@@ -117,7 +127,9 @@ msgstr ""
 "configuration."
 
 msgid "The velocity chart only displays the last 7 artifacts found."
-msgstr "Le graphique de vélocité affiche seulement les 7 artéfacts les plus récents trouvés."
+msgstr ""
+"Le graphique de vélocité affiche seulement les 7 artéfacts les plus récents "
+"trouvés."
 
 msgid "This tracker does not have a <i>velocity</i> field yet."
 msgstr "Cet outil de suivi n'a pas encore de champ <i>vélocité</i>."
@@ -135,8 +147,11 @@ msgid ""
 "Velocity chart represents the sum of <b>initial effort</b> of <b>done</b> "
 "backlog elements of %s."
 msgstr ""
-"Le graphique de vélocité represente la somme de l'<b>effort inital</b> des "
+"Le graphique de vélocité represente la somme de l'<b>effort initial</b> des "
 "elements du backlog <b>fini</b> de %s."
+
+msgid "Velocity semantic successfully updated."
+msgstr "La sémantique vélocité a été mis à jour avec succès"
 
 msgid "go back to semantic overview"
 msgstr "retour à l'administration de la sémantique"

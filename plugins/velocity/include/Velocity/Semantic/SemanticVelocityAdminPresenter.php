@@ -85,6 +85,10 @@ class SemanticVelocityAdminPresenter
      * @var array
      */
     public $semantics_not_correctly_set;
+    /**
+     * @var bool
+     */
+    public $has_a_selected_field;
 
     public function __construct(
         array $possible_velocity_field,
@@ -100,6 +104,7 @@ class SemanticVelocityAdminPresenter
             $possible_velocity_field,
             $selected_velocity_field_id
         );
+        $this->has_a_selected_field      = $selected_velocity_field_id != 0;
         $this->csrf_token                = $csrf_token;
         $this->has_semantic_done_defined = $has_semantic_done_defined;
         $this->has_velocity_field        = $selected_velocity_field_id !== null;

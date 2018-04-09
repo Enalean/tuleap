@@ -26,6 +26,9 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
+msgid "Choose a field"
+msgstr ""
+
 msgid "Define the field to use to compute velocity."
 msgstr ""
 
@@ -59,6 +62,9 @@ msgid "Semantic done is not defined."
 msgstr ""
 
 msgid "Semantic updated successfully."
+msgstr ""
+
+msgid "Semantic velocity unset with success"
 msgstr ""
 
 msgid ""
@@ -101,6 +107,9 @@ msgstr ""
 msgid ""
 "Velocity chart represents the sum of <b>initial effort</b> of <b>done</b> "
 "backlog elements of %s."
+msgstr ""
+
+msgid "Velocity semantic successfully updated."
 msgstr ""
 
 msgid "go back to semantic overview"
