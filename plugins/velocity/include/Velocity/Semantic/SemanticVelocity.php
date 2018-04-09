@@ -158,7 +158,7 @@ class SemanticVelocity extends Tracker_Semantic
                     Feedback::WARN,
                     dgettext('tuleap-velocity', 'Semantic done is not defined.')
                 );
-            } elseif (isset($values)) {
+            } elseif (isset($values) && (int)$values !== 0) {
                 $this->getSemanticDao()->addField($this->getTracker()->getId(), $values);
                 $GLOBALS['Response']->addFeedback(
                     Feedback::INFO,
@@ -170,6 +170,8 @@ class SemanticVelocity extends Tracker_Semantic
                     dgettext('tuleap-velocity', 'The request is not valid.')
                 );
             }
+
+            $this->redirectToVelocityAdmin($request->get('tracker'));
         }
 
         if ($request->exist('delete')) {
@@ -177,6 +179,13 @@ class SemanticVelocity extends Tracker_Semantic
             $csrf->check();
 
             $this->getSemanticDao()->removeField($this->getTracker()->getId());
+
+            $GLOBALS['Response']->addFeedback(
+                Feedback::INFO,
+                dgettext('tuleap-velocity', 'Semantic velocity unset with success')
+            );
+
+            $this->redirectToVelocityAdmin($request->get('tracker'));
         }
 
         $this->displayAdmin($sm, $tracker_manager, $request, $current_user);
@@ -216,6 +225,11 @@ class SemanticVelocity extends Tracker_Semantic
     public function save()
     {
         $this->getSemanticDao()->addField($this->getTracker()->getId(), $this->getFieldId());
+
+        $GLOBALS['Response']->addFeedback(
+            Feedback::INFO,
+            dgettext('tuleap-velocity', 'Velocity semantic successfully updated.')
+        );
     }
 
     protected static $_instances;
@@ -282,5 +296,18 @@ class SemanticVelocity extends Tracker_Semantic
     private function getBacklogRetriever()
     {
         return new BacklogRetriever(PlanningFactory::build());
+    }
+
+    private function redirectToVelocityAdmin($tracker_id)
+    {
+        $GLOBALS['Response']->redirect(
+            TRACKER_BASE_URL . "?" . http_build_query(
+                [
+                    "semantic" => "velocity",
+                    "func"     => "admin-semantic",
+                    "tracker"  => $tracker_id
+                ]
+            )
+        );
     }
 }
