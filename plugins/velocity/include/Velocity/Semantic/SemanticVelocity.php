@@ -283,7 +283,7 @@ class SemanticVelocity extends Tracker_Semantic
     }
 
     /**
-     * @return mixed
+     * @return Tracker_FormElement_Field|null
      */
     public function getVelocityField()
     {
