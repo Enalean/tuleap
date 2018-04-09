@@ -7,7 +7,6 @@ tests/simpletest/common/include/_fixtures/big_file
 .vagrant
 *.box
 nbproject
-plugins/maillog
 *.mo
 *.po~
 *.css
