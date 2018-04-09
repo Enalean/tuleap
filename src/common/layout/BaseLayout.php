@@ -428,6 +428,11 @@ abstract class BaseLayout extends Response
 
     public function addBreadcrumbs($breadcrumbs)
     {
+        if ($breadcrumbs instanceof BreadCrumbCollection) {
+            $this->breadcrumbs = $breadcrumbs;
+            return;
+        }
+
         foreach ($breadcrumbs as $breadcrumb) {
             $this->breadcrumbs->addBreadCrumb(new BreadCrumbItem(
                 $breadcrumb['title'],

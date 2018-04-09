@@ -99,7 +99,7 @@ class BurningParrotTheme extends BaseLayout
         $breadcrumb_presenter_builder = new BreadCrumbPresenterBuilder(
             $this->uri_sanitizer
         );
-        $breadcrumbs = $breadcrumb_presenter_builder->buildArrayOfStrings($this->breadcrumbs);
+        $breadcrumbs = $breadcrumb_presenter_builder->build($this->breadcrumbs);
 
         $header_presenter = $header_presenter_builder->build(
             new NavbarPresenterBuilder(),

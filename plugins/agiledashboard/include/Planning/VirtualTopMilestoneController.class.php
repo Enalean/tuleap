@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
+use Tuleap\AgileDashboard\BreadCrumbDropdown\VirtualTopMilestoneCrumbBuilder;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
+
 require_once 'common/mvc2/PluginController.class.php';
 
 /**
@@ -124,14 +128,22 @@ class Planning_VirtualTopMilestoneController extends MVC2_PluginController {
     }
 
     /**
-     * @return BreadCrumb_BreadCrumbGenerator
+     * @param string $plugin_path
+     * @return BreadCrumbCollection
      */
     public function getBreadcrumbs($plugin_path)
     {
-        $breadcrumbs_merger = new BreadCrumb_Merger();
-        $breadcrumbs_merger->push(new BreadCrumb_AgileDashboard($plugin_path, $this->project));
-        $breadcrumbs_merger->push(new BreadCrumb_VirtualTopMilestone($plugin_path, $this->project));
+        $breadcrumb_dropdowns = new BreadCrumbCollection();
+        $agiledashboard_crumb_builder = new AgileDashboardCrumbBuilder();
+        $top_milestone_crumb_builder = new VirtualTopMilestoneCrumbBuilder();
 
-        return $breadcrumbs_merger;
+        $breadcrumb_dropdowns->addBreadCrumb(
+            $agiledashboard_crumb_builder->build($this->getCurrentUser(), $this->project, $plugin_path)
+        );
+        $breadcrumb_dropdowns->addBreadCrumb(
+            $top_milestone_crumb_builder->build($this->project, $plugin_path)
+        );
+
+        return $breadcrumb_dropdowns;
     }
 }

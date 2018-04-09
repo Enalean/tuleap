@@ -20,10 +20,20 @@
 
 namespace Tuleap\Layout\BreadCrumbDropdown;
 
-interface BreadCrumb extends BreadCrumbSubItem
+interface BreadCrumbSubItem
 {
     /**
-     * @return BreadCrumbSubItemCollection
+     * @return string
      */
-    public function getSubItems();
+    public function getLabel();
+
+    /**
+     * @return string
+     */
+    public function getUrl();
+
+    /**
+     * @return string
+     */
+    public function getIconName();
 }

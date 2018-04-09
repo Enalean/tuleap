@@ -1,0 +1,28 @@
+<nav class="breadcrumb">
+    {{# breadcrumbs }}
+        {{^ has_sub_items }}
+            <span class="breadcrumb-item">
+                <a class="breadcrumb-link" href="{{ url }}">
+                    {{# has_icon }}<i class="breadcrumb-link-icon fa fa-fw {{ icon_name }}"></i>{{/ has_icon }}{{ label }}
+                </a>
+            </span>
+        {{/ has_sub_items }}
+
+        {{# has_sub_items }}
+            <div class="breadcrumb-switchable breadcrumb-item">
+                <a class="breadcrumb-link" href="{{ url }}">
+                    {{# has_icon }}<i class="breadcrumb-link-icon fa fa-fw {{ icon_name }}"></i>{{/ has_icon }}{{ label }}
+                </a>
+                <nav class="breadcrumb-switch-menu">
+                    {{# sub_items }}
+                        <span class="breadcrumb-dropdown-item">
+                            <a class="breadcrumb-dropdown-link" href="{{ url }}">
+                                {{# has_icon }}<i class="breadcrumb-link-icon fa fa-fw {{ icon_name }}"></i>{{/ has_icon }}{{ label }}
+                            </a>
+                        </span>
+                    {{/ sub_items }}
+                </nav>
+            </div>
+        {{/ has_sub_items }}
+    {{/ breadcrumbs }}
+</nav>

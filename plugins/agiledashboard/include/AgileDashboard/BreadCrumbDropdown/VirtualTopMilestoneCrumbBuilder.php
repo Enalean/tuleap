@@ -18,12 +18,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Layout\BreadCrumbDropdown;
+namespace Tuleap\AgileDashboard\BreadCrumbDropdown;
 
-interface BreadCrumb extends BreadCrumbSubItem
+use Project;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbItem;
+
+class VirtualTopMilestoneCrumbBuilder
 {
     /**
-     * @return BreadCrumbSubItemCollection
+     * @param Project $project
+     * @param string $plugin_path
+     * @return BreadCrumbItem
      */
-    public function getSubItems();
+    public function build(Project $project, $plugin_path)
+    {
+        $url_top_parameters = array(
+            'action'   => 'show-top',
+            'pane'     => 'topplanning-v2',
+            'group_id' => (int) $project->getGroupId()
+        );
+        return new BreadCrumbItem(
+            $GLOBALS['Language']->getText('plugin_agiledashboard', 'top_planning_link'),
+            $plugin_path .'/?'. http_build_query($url_top_parameters)
+        );
+    }
 }

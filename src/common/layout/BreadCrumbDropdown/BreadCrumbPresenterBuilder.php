@@ -35,6 +35,26 @@ class BreadCrumbPresenterBuilder
 
     /**
      * @param BreadCrumbCollection $collection
+     * @return BreadCrumbPresenter[]
+     */
+    public function build(BreadCrumbCollection $collection)
+    {
+        $presenters = [];
+        foreach ($collection->getBreadcrumbs() as $breadcrumb) {
+            $item_presenter = new BreadCrumbPresenter($breadcrumb);
+            $sub_items      = [];
+            foreach ($breadcrumb->getSubItems()->getItems() as $sub_item) {
+                $sub_items[] = new BreadCrumbPresenter($sub_item);
+            }
+            $item_presenter->setSubItems($sub_items);
+            $presenters[] = $item_presenter;
+        }
+
+        return $presenters;
+    }
+
+    /**
+     * @param BreadCrumbCollection $collection
      * @return string[]
      */
     public function buildArrayOfStrings(BreadCrumbCollection $collection)
