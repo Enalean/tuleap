@@ -1,6 +1,6 @@
-
-
-{{> velocity-status-type-error }}
+{{# can_status_semantic_have_multiple_values }}
+    {{> velocity-status-type-error }}
+{{/ can_status_semantic_have_multiple_values }}
 
 {{^ can_status_semantic_have_multiple_values }}
     {{^ has_semantic_done_defined }}
@@ -21,49 +21,10 @@
 
         {{> velocity-children-without-velocity-semantic }}
 
-        {{> velocity-missing-done-semantics }}
+        {{> velocity-backlog-configuration-problems }}
 
-        <form action="" method="POST">
-        {{# csrf_token }}
-            {{> csrf_token_input }}
-        {{/ csrf_token }}
-
-        <p>
-            {{^ has_velocity_field }}
-                {{# dgettext }} tuleap-velocity | This tracker does not have a <i>velocity</i> field yet.{{/ dgettext }}
-            {{/ has_velocity_field }}
-            {{# has_velocity_field }}
-                {{# dgettext }}tuleap-velocity | The <i>velocity</i> of this tracker will be represented in the Agile Dashboard by the field{{/ dgettext }}
-            {{/ has_velocity_field }}
-            <select name="velocity_field">
-                {{# possible_velocity_field }}
-                    <option value="{{ id }}" {{# is_selected }} selected="selected"{{/ is_selected }}> {{ name }} </option>
-                {{/ possible_velocity_field }}
-            </select>
-        </p>
-        <p>
-            {{# dgettext }}
-                tuleap-velocity |
-                Only integers and float fields are listed. By choosing one of these fields, it will be automatically computed in order to give you the velocity value.
-            {{/ dgettext }}
-        </p>
-        <p>
-            <input type="submit"
-                   class="btn btn-primary"
-                   name="submit"
-                   value="{{# dgettext }} tuleap-velocity | Save your change{{/ dgettext }}"/>
-            {{# dgettext }} tuleap-velocity | or {{/ dgettext }}
-            <input
-                    type="submit"
-                    class="btn btn-danger"
-                    name="delete"
-                    value="{{# dgettext }} tuleap-velocity | Unset this semantic{{/ dgettext }}"/>
-        </p>
-
-    </form>
+        {{> velocity-admin-form }}
     {{/ has_semantic_done_defined }}
 {{/ can_status_semantic_have_multiple_values }}
 
-{{# has_semantic_done_defined }}
-    <p><a href="{{ back_url }}">&laquo; {{# dgettext }} tuleap-velocity | go back to semantic overview{{/ dgettext }}</a></p>
-{{/ has_semantic_done_defined }}
+<p><a href="{{ back_url }}">&laquo; {{# dgettext }} tuleap-velocity | go back to semantic overview{{/ dgettext }}</a></p>

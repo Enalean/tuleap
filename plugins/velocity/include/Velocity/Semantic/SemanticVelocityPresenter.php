@@ -38,29 +38,13 @@ class SemanticVelocityPresenter
      */
     public $velocity_field_label;
     /**
-     * @var bool
-     */
-    public $has_backlog_trackers_without_done_semantic;
-    /**
      * @var string
      */
     public $tracker_name;
     /**
-     * @var bool
-     */
-    public $are_all_backlog_trackers_missconfigured;
-    /**
      * @var array
      */
     public $backlog_trackers;
-    /**
-     * @var int
-     */
-    public $nb_semantic_misconfigured;
-    /**
-     * @var array
-     */
-    public $misconfigured_semantics;
     /**
      * @var bool
      */
@@ -68,42 +52,74 @@ class SemanticVelocityPresenter
     /**
      * @var Tracker[]
      */
-    public $children_trackers_without_velocity_semantic;
+    public $children_misconfigured_semantic;
     /**
      * @var bool
      */
-    public $has_children_trackers_without_velocity_semantic;
+    public $has_at_least_one_well_configured_children;
     /**
      * @var int
      */
-    public $nb_children_trackers_without_velocity_semantic;
+    public $nb_children_without_velocity_semantic;
+    /**
+     * @var Tracker[]
+     */
+    public $backlog_misconfigured_semantics;
+    /**
+     * @var bool
+     */
+    public $are_all_backlog_trackers_misconfigured;
+    /**
+     * @var bool
+     */
+    public $has_at_least_one_tracker_correctly_configured;
+    /**
+     * @var int
+     */
+    public $nb_semantic_misconfigured;
+    /**
+     * @var array
+     */
+    public $semantics_not_correctly_set;
 
     public function __construct(
         $semantic_done_is_defined,
-        array $incorrect_backlog_trackers,
-        array $backlog_trackers,
         Tracker $tracker,
-        array $misconfigured_semantics_for_all_trackers,
-        $are_all_backlog_trackers_missconfigured,
         $can_status_semantic_have_multiple_values,
-        array $children_trackers_without_velocity_semantic,
+        BacklogRequiredTrackerCollection $backlog_required_tracker_collection,
+        ChildrenRequiredTrackerCollection $children_required_tracker_collection,
+        $has_at_least_one_tracker_correctly_configured,
         Tracker_FormElement_Field $velocity_field = null
     ) {
-        $this->semantic_done_is_defined                   = $semantic_done_is_defined;
-        $this->velocity_field                             = $velocity_field;
-        $this->velocity_field_label                       = ($velocity_field !== null) ? $velocity_field->getLabel(
-        ) : "";
-        $this->backlog_trackers                           = $backlog_trackers;
-        $this->has_backlog_trackers_without_done_semantic = count($incorrect_backlog_trackers) > 0;
-        $this->tracker_name                               = $tracker->getName();
+        $this->semantic_done_is_defined = $semantic_done_is_defined;
+        $this->velocity_field           = $velocity_field;
+        $this->velocity_field_label     = ($velocity_field !== null) ? $velocity_field->getLabel() : "";
+        $this->tracker_name             = $tracker->getName();
 
-        $this->nb_semantic_misconfigured                       = count($misconfigured_semantics_for_all_trackers);
-        $this->are_all_backlog_trackers_missconfigured         = $are_all_backlog_trackers_missconfigured;
-        $this->misconfigured_semantics                         = $misconfigured_semantics_for_all_trackers;
-        $this->are_all_backlog_trackers_missconfigured         = $are_all_backlog_trackers_missconfigured;
-        $this->can_status_semantic_have_multiple_values        = $can_status_semantic_have_multiple_values;
-        $this->children_trackers_without_velocity_semantic     = $children_trackers_without_velocity_semantic;
-        $this->has_children_trackers_without_velocity_semantic = count($children_trackers_without_velocity_semantic) > 0;
-        $this->nb_children_trackers_without_velocity_semantic  = count($children_trackers_without_velocity_semantic);
+        $this->can_status_semantic_have_multiple_values = $can_status_semantic_have_multiple_values;
+
+        $this->children_misconfigured_semantic           = $children_required_tracker_collection->getChildrenMisconfiguredTrackers();
+        $this->has_at_least_one_well_configured_children = $children_required_tracker_collection->hasAtLeastOneChildrenWithVelocitySemanticForBacklogTrackers();
+        $this->nb_children_without_velocity_semantic     = $children_required_tracker_collection->getNbTrackersWithoutVelocitySemantic();
+
+        $this->backlog_trackers                       = $backlog_required_tracker_collection->getBacklogRequiredTrackers();
+        $this->backlog_misconfigured_semantics        = $backlog_required_tracker_collection->getMisconfiguredBacklogTrackers();
+        $this->are_all_backlog_trackers_misconfigured = $backlog_required_tracker_collection->areAllBacklogTrackersMisconfigured();
+
+        $this->has_at_least_one_tracker_correctly_configured = $has_at_least_one_tracker_correctly_configured;
+        $this->nb_semantic_misconfigured = $children_required_tracker_collection->getNbTrackersWithoutVelocitySemantic()
+            + $backlog_required_tracker_collection->getNbMisconfiguredTrackers();
+        $this->semantics_not_correctly_set = $this->getMisconfiguredSemantics($backlog_required_tracker_collection);
+    }
+
+    private function getMisconfiguredSemantics(BacklogRequiredTrackerCollection $backlog_required_tracker_collection)
+    {
+        $misconfigured_semantics = $backlog_required_tracker_collection->getSemanticMisconfiguredForAllTrackers();
+
+        if (! $this->has_at_least_one_well_configured_children) {
+            $misconfigured_semantics[] =  dgettext('tuleap-velocity', 'Velocity');
+        }
+
+        return $misconfigured_semantics;
     }
 }
