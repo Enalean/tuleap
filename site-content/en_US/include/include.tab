@@ -68,6 +68,7 @@ include_exit	project_status_I	This project is incomplete
 include_exit	project_status_P	This project is pending
 include_exit	project_status_H	This project is holding
 include_exit	project_status_s	This is a system project
+include_exit	project_status_	This project is incomplete
 #
 #-----------------------------------------------
 # Script: SF/www/include/features_boxes.php

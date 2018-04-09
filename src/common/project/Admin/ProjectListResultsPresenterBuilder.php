@@ -94,6 +94,10 @@ class ProjectListResultsPresenterBuilder
                 $status_label = $GLOBALS['Language']->getText('admin_projectlist', 'deleted');
                 $status_class = 'tlp-badge-danger tlp-badge-outline';
                 break;
+            default:
+                $status_label = $GLOBALS['Language']->getText('admin_projectlist', 'incomplete');
+                $status_class = 'tlp-badge-warning';
+                break;
         }
 
         return array($status_label, $status_class);
