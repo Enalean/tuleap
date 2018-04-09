@@ -26,6 +26,7 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\PermissionsPerGroup\AgileDashboardJSONPermissionsRetriever;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 
 require_once 'common/plugin/Plugin.class.php';
 
@@ -333,6 +334,17 @@ class AgileDashboardRouter {
                 ))
             );
         }
+
+        if ($breadcrumbs instanceof BreadCrumbCollection) {
+            $service->displayHeader(
+                $title,
+                $breadcrumbs,
+                [],
+                $header_options
+            );
+            return;
+        }
+
         $service->displayHeader($title, $breadcrumbs->getCrumbs(), $toolbar, $header_options);
     }
 

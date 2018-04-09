@@ -21,10 +21,10 @@
 namespace Tuleap\AgileDashboard\Kanban;
 
 use AgileDashboard_Kanban;
-use BreadCrumb_BreadCrumbGenerator;
 use Project;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbItem;
 
-class BreadCrumb implements BreadCrumb_BreadCrumbGenerator
+class BreadCrumbBuilder
 {
     /**
      * @var string
@@ -42,8 +42,8 @@ class BreadCrumb implements BreadCrumb_BreadCrumbGenerator
     /**
      * BreadCrumb constructor.
      *
-     * @param string                $plugin_path
-     * @param Project               $project
+     * @param string $plugin_path
+     * @param Project $project
      * @param AgileDashboard_Kanban $kanban
      */
     public function __construct($plugin_path, Project $project, AgileDashboard_Kanban $kanban)
@@ -53,7 +53,10 @@ class BreadCrumb implements BreadCrumb_BreadCrumbGenerator
         $this->kanban      = $kanban;
     }
 
-    public function getCrumbs()
+    /**
+     * @return BreadCrumbItem
+     */
+    public function build()
     {
         $url = $this->plugin_path . '/?' .
             http_build_query(
@@ -64,12 +67,9 @@ class BreadCrumb implements BreadCrumb_BreadCrumbGenerator
                 ]
             );
 
-
-        return [
-            [
-                'url'   => $url,
-                'title' => $this->kanban->getName()
-            ]
-        ];
+        return new BreadCrumbItem(
+            $this->kanban->getName(),
+            $url
+        );
     }
 }

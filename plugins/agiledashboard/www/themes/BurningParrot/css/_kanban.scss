@@ -53,10 +53,6 @@ $breadcrumb-height: 75px;
     height: calc(100vh - #{$navbar-height} - #{$breadcrumb-height});
 }
 
-.kanban-admin {
-    height: calc(100vh - (#{$navbar-height} * 2) - #{$breadcrumb-height});
-}
-
 kanban-filtered-updated-alert > .tlp-alert-warning:last-child {
     margin: $tlp-spacing;
 }
