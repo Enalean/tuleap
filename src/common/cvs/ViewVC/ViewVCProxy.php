@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -30,16 +30,14 @@ use Codendi_HTMLPurifier;
 
 class ViewVCProxy
 {
-    private function displayViewVcHeader(HTTPRequest $request)
+    private function displayViewVcHeader($request_uri)
     {
-        $request_uri = $request->getFromServer('REQUEST_URI');
-
         if (strpos($request_uri, "annotate=") !== false) {
             return true;
         }
 
         if (strpos($request_uri, "view=patch") !== false ||
-            strpos($request_uri, "view=graphimg") !== false ||
+            $this->isAGraphImageRequest($request_uri) ||
             strpos($request_uri, "view=redirect_path") !== false ||
             // ViewVC will redirect URLs with "&rev=" to "&revision=". This is needed by Hudson.
             strpos($request_uri, "&rev=") !== false ) {
@@ -56,6 +54,11 @@ class ViewVCProxy
         }
 
         return true;
+    }
+
+    private function isAGraphImageRequest($request_uri)
+    {
+        return strpos($request_uri, "view=graphimg") !== false;
     }
 
     private function buildQueryString(HTTPRequest $request)
@@ -179,9 +182,15 @@ class ViewVCProxy
             $GLOBALS['Response']->redirect($viewvc_location);
         }
 
-        $parse = $this->displayViewVcHeader($request);
+        $request_uri = $request->getFromServer('REQUEST_URI');
+
+        $parse = $this->displayViewVcHeader($request_uri);
         if ($parse) {
             $this->display($project, $body);
+        } elseif ($this->isAGraphImageRequest($request_uri)) {
+            header('Content-Type: image/png');
+            echo $body;
+            exit();
         } else {
             header('Content-Type: application/octet-stream');
             header('X-Content-Type-Options: nosniff');
