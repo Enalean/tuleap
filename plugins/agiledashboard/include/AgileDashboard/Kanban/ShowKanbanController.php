@@ -33,6 +33,8 @@ use KanbanPresenter;
 use MVC2_PluginController;
 use Project;
 use TrackerFactory;
+use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 
 class ShowKanbanController extends MVC2_PluginController
 {
@@ -68,17 +70,28 @@ class ShowKanbanController extends MVC2_PluginController
     }
 
     /**
-     * @return BreadCrumb_BreadCrumbGenerator
+     * @param string $plugin_path
+     * @return BreadCrumbCollection
      */
     public function getBreadcrumbs($plugin_path)
     {
         $kanban_id   = $this->request->get('id');
         $user        = $this->request->getCurrentUser();
-        $breadcrumbs = new BreadCrumb_Merger(new BreadCrumb_AgileDashboard($plugin_path, $this->project));
+
+        $breadcrumbs = new BreadCrumbCollection();
+        $agiledashboard_crumb_builder = new AgileDashboardCrumbBuilder();
+        $breadcrumbs->addBreadCrumb(
+            $agiledashboard_crumb_builder->build(
+                $this->getCurrentUser(),
+                $this->project,
+                $plugin_path
+            )
+        );
 
         try {
             $kanban = $this->kanban_factory->getKanban($user, $kanban_id);
-            $breadcrumbs->push(new BreadCrumb($plugin_path, $this->project, $kanban));
+            $kanban_crumb_builder = new BreadCrumbBuilder($plugin_path, $this->project, $kanban);
+            $breadcrumbs->addBreadCrumb($kanban_crumb_builder->build());
         } catch (AgileDashboard_KanbanNotFoundException $exception) {
             // ignore, it will be catch in showKanban
         } catch (AgileDashboard_KanbanCannotAccessException $exception) {
