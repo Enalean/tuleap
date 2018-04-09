@@ -36,6 +36,9 @@ services:
     env_file:
       - .env
 
+  mailhog:
+    image: mailhog/mailhog
+
   ldap:
     image: enalean/ldap
     env_file:
@@ -79,7 +82,6 @@ services:
     volumes:
       - redis-data:/data
     command: redis-server --appendonly yes
-
 
 volumes:
   tuleap-data:

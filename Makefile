@@ -229,6 +229,20 @@ start-distlp:
 	@echo "* Backend web with: docker-compose -f docker-compose.yml -f -f docker-compose-distlp.yml backend-web bash"
 	@echo "* Backend SVN with: docker-compose -f docker-compose.yml -f -f docker-compose-distlp.yml backend-svn bash"
 
+start-mailhog: # Start mailhog to catch emails sent by your Tuleap dev platform
+	@echo "Start mailhog to catch emails sent by your Tuleap dev platform"
+	$(DOCKER_COMPOSE) up -d mailhog
+	$(DOCKER_COMPOSE) exec web make -C /usr/share/tuleap deploy-mailhog-conf
+	@mailhogip=`$(DOCKER_COMPOSE) ps -q mailhog | xargs  docker inspect -f '{{.NetworkSettings.Networks.tuleap_default.IPAddress}}'`; \
+		echo "Open your browser at http://$$mailhogip:8025"
+
+deploy-mailhog-conf:
+	@if ! grep -q -F -e '^relayhost = mailhog:1025' /etc/postfix/main.cf; then \
+	    sed -i -e 's/^\(transport_maps.*\)$$/#\1/' /etc/postfix/main.cf && \
+	    echo 'relayhost = mailhog:1025' >> /etc/postfix/main.cf; \
+	    service postfix restart; \
+	 fi
+
 stop-distlp:
 	@$(SUDO) docker-compose -f docker-compose-distlp.yml stop
 
