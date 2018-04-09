@@ -26,8 +26,8 @@ require_once 'common/mvc2/PluginController.class.php';
 /**
  * Handles the HTTP actions related to a planning milestone.
  */
-class Planning_VirtualTopMilestoneController extends MVC2_PluginController {
-
+class Planning_VirtualTopMilestoneController extends MVC2_PluginController
+{
     /** @var Planning_MilestoneFactory */
     private $milestone_factory;
 
@@ -40,26 +40,39 @@ class Planning_VirtualTopMilestoneController extends MVC2_PluginController {
     /** @var Planning_VirtualTopMilestonePaneFactory */
     private $top_milestone_pane_factory;
 
+    /** @var AgileDashboardCrumbBuilder */
+    private $agile_dashboard_crumb_builder;
+
+    /** @var VirtualTopMilestoneCrumbBuilder */
+    private $top_milestone_crumb_builder;
+
     /**
      * Instanciates a new controller.
      *
      * TODO:
      *   - pass $request to actions (e.g. show).
      *
-     * @param Codendi_Request           $request
-     * @param PlanningFactory           $planning_factory
+     * @param Codendi_Request $request
      * @param Planning_MilestoneFactory $milestone_factory
+     * @param ProjectManager $project_manager
+     * @param Planning_VirtualTopMilestonePaneFactory $top_milestone_pane_factory
+     * @param AgileDashboardCrumbBuilder $agile_dashboard_crumb_builder
+     * @param VirtualTopMilestoneCrumbBuilder $top_milestone_crumb_builder
      */
     public function __construct(
         Codendi_Request $request,
         Planning_MilestoneFactory $milestone_factory,
         ProjectManager $project_manager,
-        Planning_VirtualTopMilestonePaneFactory $top_milestone_pane_factory
+        Planning_VirtualTopMilestonePaneFactory $top_milestone_pane_factory,
+        AgileDashboardCrumbBuilder $agile_dashboard_crumb_builder,
+        VirtualTopMilestoneCrumbBuilder $top_milestone_crumb_builder
     ) {
         parent::__construct('agiledashboard', $request);
-        $this->milestone_factory              = $milestone_factory;
-        $this->top_milestone_pane_factory     = $top_milestone_pane_factory;
-        $this->project = $project_manager->getProject($request->get('group_id'));
+        $this->milestone_factory             = $milestone_factory;
+        $this->top_milestone_pane_factory    = $top_milestone_pane_factory;
+        $this->project                       = $project_manager->getProject($request->get('group_id'));
+        $this->agile_dashboard_crumb_builder = $agile_dashboard_crumb_builder;
+        $this->top_milestone_crumb_builder   = $top_milestone_crumb_builder;
     }
 
     public function showTop() {
@@ -134,14 +147,11 @@ class Planning_VirtualTopMilestoneController extends MVC2_PluginController {
     public function getBreadcrumbs($plugin_path)
     {
         $breadcrumb_dropdowns = new BreadCrumbCollection();
-        $agiledashboard_crumb_builder = new AgileDashboardCrumbBuilder();
-        $top_milestone_crumb_builder = new VirtualTopMilestoneCrumbBuilder();
-
         $breadcrumb_dropdowns->addBreadCrumb(
-            $agiledashboard_crumb_builder->build($this->getCurrentUser(), $this->project, $plugin_path)
+            $this->agile_dashboard_crumb_builder->build($this->getCurrentUser(), $this->project)
         );
         $breadcrumb_dropdowns->addBreadCrumb(
-            $top_milestone_crumb_builder->build($this->project, $plugin_path)
+            $this->top_milestone_crumb_builder->build($this->project)
         );
 
         return $breadcrumb_dropdowns;

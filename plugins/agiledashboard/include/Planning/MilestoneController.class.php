@@ -18,7 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
+use Tuleap\AgileDashboard\BreadCrumbDropdown\MilestoneCrumbBuilder;
+use Tuleap\AgileDashboard\BreadCrumbDropdown\VirtualTopMilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 
 require_once 'common/mvc2/PluginController.class.php';
 
@@ -48,27 +52,51 @@ class Planning_MilestoneController extends MVC2_PluginController
     private $project;
 
     /**
+     * @var AgileDashboardCrumbBuilder
+     */
+    private $agile_dashboard_crumb_builder;
+    /**
+     * @var VirtualTopMilestoneCrumbBuilder
+     */
+    private $top_milestone_crumb_builder;
+    /**
+     * @var MilestoneCrumbBuilder
+     */
+    private $milestone_crumb_builder;
+
+    /**
      * Instanciates a new controller.
      *
      * TODO:
      *   - pass $request to actions (e.g. show).
      *
-     * @param Codendi_Request           $request
-     * @param PlanningFactory           $planning_factory
+     * @param Codendi_Request $request
      * @param Planning_MilestoneFactory $milestone_factory
+     * @param ProjectManager $project_manager
+     * @param Planning_MilestonePaneFactory $pane_factory
+     * @param AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory $pane_presenter_builder_factory
+     * @param AgileDashboardCrumbBuilder $agile_dashboard_crumb_builder
+     * @param VirtualTopMilestoneCrumbBuilder $top_milestone_crumb_builder
+     * @param MilestoneCrumbBuilder $milestone_crumb_builder
      */
     public function __construct(
         Codendi_Request $request,
         Planning_MilestoneFactory $milestone_factory,
         ProjectManager $project_manager,
         Planning_MilestonePaneFactory $pane_factory,
-        AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory $pane_presenter_builder_factory
+        AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory $pane_presenter_builder_factory,
+        AgileDashboardCrumbBuilder $agile_dashboard_crumb_builder,
+        VirtualTopMilestoneCrumbBuilder $top_milestone_crumb_builder,
+        MilestoneCrumbBuilder $milestone_crumb_builder
     ) {
         parent::__construct('agiledashboard', $request);
         $this->milestone_factory              = $milestone_factory;
         $this->pane_factory                   = $pane_factory;
         $this->pane_presenter_builder_factory = $pane_presenter_builder_factory;
-        $this->project = $project_manager->getProject($request->get('group_id'));
+        $this->project                        = $project_manager->getProject($request->get('group_id'));
+        $this->agile_dashboard_crumb_builder  = $agile_dashboard_crumb_builder;
+        $this->top_milestone_crumb_builder    = $top_milestone_crumb_builder;
+        $this->milestone_crumb_builder        = $milestone_crumb_builder;
     }
 
     public function show()
@@ -122,25 +150,29 @@ class Planning_MilestoneController extends MVC2_PluginController
     }
 
     /**
-     * @return BreadCrumb_BreadCrumbGenerator
+     * @param string $plugin_path
+     * @return BreadCrumbCollection
      */
     public function getBreadcrumbs($plugin_path)
     {
         $this->generateBareMilestone();
-        $service_breadcrumb = new BreadCrumb_AgileDashboard($plugin_path, $this->project);
+
+        $breadcrumbs            = new BreadCrumbCollection();
+        $breadcrumbs->addBreadCrumb(
+            $this->agile_dashboard_crumb_builder->build($this->getCurrentUser(), $this->project, $plugin_path)
+        );
+        $breadcrumbs->addBreadCrumb(
+            $this->top_milestone_crumb_builder->build($this->project, $plugin_path)
+        );
 
         if ($this->milestone->getArtifact()) {
-            $breadcrumbs_merger = new BreadCrumb_Merger();
-            $breadcrumbs_merger->push($service_breadcrumb);
-            $breadcrumbs_merger->push(new BreadCrumb_VirtualTopMilestone($plugin_path, $this->project));
             foreach (array_reverse($this->milestone->getAncestors()) as $milestone) {
-                $breadcrumbs_merger->push(new BreadCrumb_Milestone($plugin_path, $milestone));
+                $breadcrumbs->addBreadCrumb($this->milestone_crumb_builder->build($milestone));
             }
-            $breadcrumbs_merger->push(new BreadCrumb_Milestone($plugin_path, $this->milestone));
-            return $breadcrumbs_merger;
+            $breadcrumbs->addBreadCrumb($this->milestone_crumb_builder->build($this->milestone));
         }
 
-        return $service_breadcrumb;
+        return $breadcrumbs;
     }
 
     public function solveInconsistencies() {

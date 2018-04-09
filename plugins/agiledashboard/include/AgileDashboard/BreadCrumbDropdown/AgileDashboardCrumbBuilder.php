@@ -27,13 +27,23 @@ use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbSubItemCollection;
 
 class AgileDashboardCrumbBuilder
 {
+    /** @var string */
+    private $plugin_path;
+
+    /**
+     * @param string $plugin_path
+     */
+    public function __construct($plugin_path)
+    {
+        $this->plugin_path = $plugin_path;
+    }
+
     /**
      * @param PFUser $user
      * @param Project $project
-     * @param string $plugin_path
      * @return BreadCrumbItem
      */
-    public function build(PFUser $user, Project $project, $plugin_path)
+    public function build(PFUser $user, Project $project)
     {
         $service_dropdown_items = new BreadCrumbSubItemCollection();
         if ($user->isAdmin($project->getID())) {
@@ -52,7 +62,7 @@ class AgileDashboardCrumbBuilder
             );
         }
 
-        $service_url      = $plugin_path . '/? ' . http_build_query(['group_id' => $project->getID()]);
+        $service_url      = $this->plugin_path . '/?' . http_build_query(['group_id' => $project->getID()]);
         $agile_breadcrumb = new BreadCrumbItem(
             dgettext('tuleap-agiledashboard', 'Agile Dashboard'),
             $service_url
