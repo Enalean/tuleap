@@ -19,6 +19,9 @@
  */
 
 use Tuleap\AgileDashboard\BacklogItem\RemainingEffortValueRetriever;
+use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
+use Tuleap\AgileDashboard\BreadCrumbDropdown\MilestoneCrumbBuilder;
+use Tuleap\AgileDashboard\BreadCrumbDropdown\VirtualTopMilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\FormElement\BurnupFieldRetriever;
 use Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
@@ -32,12 +35,13 @@ use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
 use Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentationFactory;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRepresentationBuilder;
 
-class AgileDashboardRouterBuilder {
-
+class AgileDashboardRouterBuilder
+{
     /** PluginFactory */
     private $plugin_factory;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->plugin_factory = PluginFactory::instance();
     }
 
@@ -46,7 +50,8 @@ class AgileDashboardRouterBuilder {
      *
      * @return AgileDashboardRouter
      */
-    public function build(Codendi_Request $request) {
+    public function build(Codendi_Request $request)
+    {
         $plugin = $this->plugin_factory->getPluginByName(
             AgileDashboardPlugin::PLUGIN_NAME
         );
@@ -98,7 +103,10 @@ class AgileDashboardRouterBuilder {
             $hierarchy_factory,
             $pane_presenter_builder_factory,
             $pane_factory,
-            $top_milestone_pane_factory
+            $top_milestone_pane_factory,
+            new AgileDashboardCrumbBuilder($plugin->getPluginPath()),
+            new VirtualTopMilestoneCrumbBuilder($plugin->getPluginPath()),
+            new MilestoneCrumbBuilder($plugin->getPluginPath())
         );
 
         $mono_milestone_checker = new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory);

@@ -19,8 +19,10 @@
  */
 
 use Tuleap\AgileDashboard\AdminController;
+use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\Agiledashboard\FormElement\BurnupCacheGenerator;
 use Tuleap\AgileDashboard\FormElement\FormElementController;
+use Tuleap\AgileDashboard\Kanban\BreadCrumbBuilder;
 use Tuleap\AgileDashboard\Kanban\ShowKanbanController;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
@@ -219,11 +221,15 @@ class AgileDashboardRouter {
                     Layout::INCLUDE_FAT_COMBINED => false,
                 );
 
+                $plugin_path = $this->plugin->getPluginPath();
+
                 $controller = new ShowKanbanController(
                     $request,
                     $this->kanban_factory,
                     TrackerFactory::instance(),
-                    new AgileDashboard_PermissionsManager()
+                    new AgileDashboard_PermissionsManager(),
+                    new AgileDashboardCrumbBuilder($plugin_path),
+                    new BreadCrumbBuilder($plugin_path)
                 );
                 $this->renderAction($controller, 'showKanban', $request, array(), $header_options);
                 break;

@@ -30,45 +30,33 @@ class BreadCrumbBuilder
      * @var string
      */
     private $plugin_path;
-    /**
-     * @var Project
-     */
-    private $project;
-    /**
-     * @var AgileDashboard_Kanban
-     */
-    private $kanban;
 
     /**
      * BreadCrumb constructor.
      *
      * @param string $plugin_path
-     * @param Project $project
-     * @param AgileDashboard_Kanban $kanban
      */
-    public function __construct($plugin_path, Project $project, AgileDashboard_Kanban $kanban)
+    public function __construct($plugin_path)
     {
         $this->plugin_path = $plugin_path;
-        $this->project     = $project;
-        $this->kanban      = $kanban;
     }
 
     /**
      * @return BreadCrumbItem
      */
-    public function build()
+    public function build(Project $project, AgileDashboard_Kanban $kanban)
     {
         $url = $this->plugin_path . '/?' .
             http_build_query(
                 [
-                    'group_id' => $this->project->getID(),
+                    'group_id' => $project->getID(),
                     'action'   => 'showKanban',
-                    'id'       => $this->kanban->getId()
+                    'id'       => $kanban->getId()
                 ]
             );
 
         return new BreadCrumbItem(
-            $this->kanban->getName(),
+            $kanban->getName(),
             $url
         );
     }

@@ -34,6 +34,7 @@ use MVC2_PluginController;
 use Project;
 use TrackerFactory;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
+use Tuleap\AgileDashboard\BreadCrumbDropdown\VirtualTopMilestoneCrumbBuilder;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 
 class ShowKanbanController extends MVC2_PluginController
@@ -54,19 +55,31 @@ class ShowKanbanController extends MVC2_PluginController
      * @var Project
      */
     private $project;
+    /**
+     * @var AgileDashboardCrumbBuilder
+     */
+    private $agile_dashboard_crumb_builder;
+    /**
+     * @var BreadCrumbBuilder
+     */
+    private $kanban_crumb_builder;
 
     public function __construct(
         Codendi_Request $request,
         AgileDashboard_KanbanFactory $kanban_factory,
         TrackerFactory $tracker_factory,
-        AgileDashboard_PermissionsManager $permissions_manager
+        AgileDashboard_PermissionsManager $permissions_manager,
+        AgileDashboardCrumbBuilder $agile_dashboard_crumb_builder,
+        BreadCrumbBuilder $kanban_crumb_builder
     ) {
         parent::__construct('agiledashboard', $request);
 
-        $this->project             = $this->request->getProject();
-        $this->kanban_factory      = $kanban_factory;
-        $this->tracker_factory     = $tracker_factory;
-        $this->permissions_manager = $permissions_manager;
+        $this->project                       = $this->request->getProject();
+        $this->kanban_factory                = $kanban_factory;
+        $this->tracker_factory               = $tracker_factory;
+        $this->permissions_manager           = $permissions_manager;
+        $this->agile_dashboard_crumb_builder = $agile_dashboard_crumb_builder;
+        $this->kanban_crumb_builder          = $kanban_crumb_builder;
     }
 
     /**
@@ -79,9 +92,8 @@ class ShowKanbanController extends MVC2_PluginController
         $user        = $this->request->getCurrentUser();
 
         $breadcrumbs = new BreadCrumbCollection();
-        $agiledashboard_crumb_builder = new AgileDashboardCrumbBuilder();
         $breadcrumbs->addBreadCrumb(
-            $agiledashboard_crumb_builder->build(
+            $this->agile_dashboard_crumb_builder->build(
                 $this->getCurrentUser(),
                 $this->project,
                 $plugin_path
@@ -90,8 +102,7 @@ class ShowKanbanController extends MVC2_PluginController
 
         try {
             $kanban = $this->kanban_factory->getKanban($user, $kanban_id);
-            $kanban_crumb_builder = new BreadCrumbBuilder($plugin_path, $this->project, $kanban);
-            $breadcrumbs->addBreadCrumb($kanban_crumb_builder->build());
+            $breadcrumbs->addBreadCrumb($this->kanban_crumb_builder->build($this->project, $kanban));
         } catch (AgileDashboard_KanbanNotFoundException $exception) {
             // ignore, it will be catch in showKanban
         } catch (AgileDashboard_KanbanCannotAccessException $exception) {
