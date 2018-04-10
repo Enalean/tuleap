@@ -46,6 +46,9 @@ class Header {
     const X_DISK_USAGE                = 'X-DISK-USAGE';
     const X_UPLOAD_MAX_FILE_CHUNKSIZE = 'X-UPLOAD-MAX-FILE-CHUNKSIZE';
 
+    const X_RATELIMIT_REMAINING = "X-RateLimit-Remaining";
+    const X_RATELIMIT_LIMIT     = "X-RateLimit-Limit";
+
     const RFC1123 = 'D, d M Y H:i:s \G\M\T';
 
     /**
@@ -178,6 +181,12 @@ class Header {
 
     public static function sendMaxFileChunkSizeHeaders($size) {
         self::sendHeader(self::X_UPLOAD_MAX_FILE_CHUNKSIZE, $size);
+    }
+
+    public static function sendRateLimitHeaders($rate_limit, $remaining_calls)
+    {
+        self::sendHeader(self::X_RATELIMIT_LIMIT, $rate_limit);
+        self::sendHeader(self::X_RATELIMIT_REMAINING, $remaining_calls);
     }
 
     public function sendQuotaHeader($quota) {

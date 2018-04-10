@@ -94,6 +94,7 @@ DROP TABLE IF EXISTS plugin_tracker_notification_assigned_to;
 DROP TABLE IF EXISTS plugin_tracker_recently_visited;
 DROP TABLE IF EXISTS plugin_tracker_projects_use_artifactlink_types;
 DROP TABLE IF EXISTS plugin_tracker_projects_unused_artifactlink_types;
+DROP TABLE IF EXISTS plugin_tracker_deleted_artifacts;
 
 DROP TABLE IF EXISTS tracker_report_criteria_comment_value;
 
