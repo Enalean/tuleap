@@ -108,13 +108,15 @@ var Droppables = {
   },
 
   fire: function(event, element) {
+
     if(!this.last_active) return;
     Position.prepare();
-    
-    if(Draggables.supportsTouch) {
-    	var pointer = Draggables._lastPointer; 
+
+    if(event.touches) {
+      var pointer = Draggables._lastPointer;
+      event.preventDefault();
     } else {
-    	var pointer = [Event.pointerX(event), Event.pointerY(event)];
+      var pointer = [Event.pointerX(event), Event.pointerY(event)];
     }
 
     if (this.isAffected(pointer, element, this.last_active))
@@ -142,13 +144,12 @@ var Draggables = {
       this.eventMouseMove = this.updateDrag.bindAsEventListener(this);
       this.eventKeypress  = this.keyPress.bindAsEventListener(this);
 
-      if(Draggables.supportsTouch) {
-    	  Event.observe(document, "touchend", this.eventMouseUp);
-    	  Event.observe(document, "touchmove", this.eventMouseMove);
-      } else {
-    	  Event.observe(document, "mouseup", this.eventMouseUp);
-    	  Event.observe(document, "mousemove", this.eventMouseMove);
+      if (Draggables.supportsTouch) {
+        Event.observe(document, "touchend", this.eventMouseUp);
+        Event.observe(document, "touchmove", this.eventMouseMove);
       }
+      Event.observe(document, "mouseup", this.eventMouseUp);
+      Event.observe(document, "mousemove", this.eventMouseMove);
       Event.observe(document, "keypress", this.eventKeypress);
     }
     this.drags.push(draggable);
@@ -157,13 +158,12 @@ var Draggables = {
   unregister: function(draggable) {
     this.drags = this.drags.reject(function(d) { return d==draggable });
     if(this.drags.length == 0) {
-    	if(Draggables.supportsTouch) {
-    		Event.stopObserving(document, "touchend", this.eventMouseUp);
-    		Event.stopObserving(document, "touchmove", this.eventMouseMove);
-    	} else {
-    		Event.stopObserving(document, "mouseup", this.eventMouseUp);
-    		Event.stopObserving(document, "mousemove", this.eventMouseMove);
-    	}
+      if(Draggables.supportsTouch) {
+        Event.stopObserving(document, "touchend", this.eventMouseUp);
+        Event.stopObserving(document, "touchmove", this.eventMouseMove);
+      }
+      Event.stopObserving(document, "mouseup", this.eventMouseUp);
+      Event.stopObserving(document, "mousemove", this.eventMouseMove);
       Event.stopObserving(document, "keypress", this.eventKeypress);
     }
   },
@@ -301,13 +301,12 @@ var Draggable = Class.create({
 
     this.eventMouseDown = this.initDrag.bindAsEventListener(this);
     if(Draggables.supportsTouch) {
-    	Event.observe(this.handle, "touchstart", this.eventMouseDown);
-    } else {
-    	Event.observe(this.handle, "mousedown", this.eventMouseDown);
+      Event.observe(this.handle, "touchstart", this.eventMouseDown);
     }
+    Event.observe(this.handle, "mousedown", this.eventMouseDown);
 
     Draggables.register(this);
-	
+
 	// Display fix for IE6
 	// Source : https://prototype.lighthouseapp.com/projects/8887/tickets/40-drag-drop-fix-for-ie6
 	new Effect.Opacity(element, {duration:0.2, from:element._opacity, to:0.7});
@@ -316,10 +315,9 @@ var Draggable = Class.create({
 
   destroy: function() {
     if(Draggables.supportsTouch) {
-        Event.stopObserving(this.handle, "touchstart", this.eventMouseDown);
-    } else {
-        Event.stopObserving(this.handle, "mousedown", this.eventMouseDown);
+      Event.stopObserving(this.handle, "touchstart", this.eventMouseDown);
     }
+    Event.stopObserving(this.handle, "mousedown", this.eventMouseDown);
     Draggables.unregister(this);
   },
 
@@ -791,13 +789,13 @@ var Sortable = {
       if(dropon.previousSibling != element) {
         var oldParentNode = element.parentNode;
         element.style.visibility = "hidden"; // fix gecko rendering
-        
+
         Sortable.createGuide(element);
         dropon.parentNode.insertBefore(element, dropon);
         dropon.parentNode.insertBefore(Sortable._guide, element);
         Sortable.markEmptyPlace(element);
-        
-        if(dropon.parentNode!=oldParentNode) 
+
+        if(dropon.parentNode!=oldParentNode)
           Sortable.options(oldParentNode).onChange(element);
         Sortable.options(dropon.parentNode).onChange(element);
       }
@@ -849,7 +847,7 @@ var Sortable = {
       dropon.insertBefore(element, child);
       dropon.insertBefore(Sortable._guide, element);
       Sortable.markEmptyPlace(element);
-      
+
       Sortable.options(oldParentNode).onChange(element);
       droponOptions.onChange(element);
     }
@@ -857,12 +855,12 @@ var Sortable = {
 
   unmark: function() {
     if(Sortable._marker) Sortable._marker.hide();
-    
+
     if(Sortable._guide && Sortable._guide.parentNode) {
         Sortable._guide.parentNode.removeChild(Sortable._guide);
     }
     if(Sortable._emptyPlaceMarker) Element.hide(Sortable._emptyPlaceMarker);
-    
+
   },
 
   mark: function(dropon, position) {
@@ -1000,7 +998,7 @@ var Sortable = {
       Sortable._guide.style.height = '0px';
       Sortable._guide.style.cssFloat = 'left';
       Sortable._guide.id = 'guide';
-      
+
       document.getElementsByTagName("body").item(0).appendChild(Sortable._guide);
     }
   },
@@ -1012,16 +1010,16 @@ var Sortable = {
       Sortable._emptyPlaceMarker.style.position = 'absolute';
       document.getElementsByTagName("body").item(0).appendChild(Sortable._emptyPlaceMarker);
     }
-    
+
     var pos = Position.cumulativeOffset(Sortable._guide);
     Sortable._emptyPlaceMarker.style.left = (pos[0] + 5)+ 'px';
     Sortable._emptyPlaceMarker.style.top = (pos[1] + 5) + 'px';
-    
+
     var dim = {};
     dim.width = (Element.getDimensions(element).width-5) + 'px';
     dim.height = (Element.getDimensions(element).height-5) + 'px';
     Sortable._emptyPlaceMarker.setStyle(dim);
-    
+
     var mg = Element.getStyle(element, 'margin');
     if(mg && mg != '') {
       Sortable._emptyPlaceMarker.setStyle({margin : mg});
