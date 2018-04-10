@@ -1,3 +1,5 @@
+import { moveBreadCrumbs } from './move-breadcrumb.js';
+
 export default TestManagementCtrl;
 
 TestManagementCtrl.$inject = [
@@ -41,5 +43,7 @@ function TestManagementCtrl(
         const language = testmanagement_init_data.language;
         amMoment.changeLocale(language);
         gettextCatalog.setCurrentLanguage(language);
+
+        moveBreadCrumbs();
     };
 }

@@ -289,7 +289,6 @@ class testmanagementPlugin extends Plugin
             );
 
             $params['javascript_files'][] = $test_management_include_assets->getFileURL('testmanagement.js');
-            $params['javascript_files'][] = $this->getPluginPath() . '/scripts/move-breadcrumb.js';
         }
     }
 
