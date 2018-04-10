@@ -21,7 +21,7 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\BurningParrotCompatiblePageEvent;
-use Tuleap\Dashboard\User\AtUserCreationDefaultWidgetsCreator;;
+use Tuleap\Dashboard\User\AtUserCreationDefaultWidgetsCreator;
 use Tuleap\Glyph\GlyphLocation;
 use Tuleap\Glyph\GlyphLocationsCollector;
 use Tuleap\Project\Admin\TemplatePresenter;
@@ -32,6 +32,8 @@ use Tuleap\Request\CurrentPage;
 use Tuleap\Service\ServiceCreator;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDuplicator;
+use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionDAO;
+use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionRemover;
 use Tuleap\Tracker\Artifact\LatestHeartbeatsCollector;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
@@ -822,6 +824,8 @@ class trackerPlugin extends Plugin {
             SystemEvent::OWNER_APP
         );
 
+        $this->dailyCleanup();
+
         return $trackerManager->sendDateReminder();
     }
 
@@ -1518,5 +1522,11 @@ class trackerPlugin extends Plugin {
         )->getRank();
 
         $event->addPane($admin_permission_pane, $rank_in_project);
+    }
+
+    private function dailyCleanup()
+    {
+        $deletions_remover = new ArtifactsDeletionRemover(new ArtifactsDeletionDAO());
+        $deletions_remover->deleteOutdatedArtifactsDeletions();
     }
 }

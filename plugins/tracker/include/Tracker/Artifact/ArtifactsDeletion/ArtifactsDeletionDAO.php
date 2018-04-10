@@ -53,4 +53,13 @@ class ArtifactsDeletionDAO extends DataAccessObject
 
         $this->getDB()->run($sql, $timestamp, $user_id);
     }
+
+    public function deleteOutdatedArtifactsDeletions($limit_timestamp)
+    {
+        $sql = "DELETE FROM plugin_tracker_deleted_artifacts
+                WHERE timestamp <= ?
+        ";
+
+        $this->getDB()->run($sql, $limit_timestamp);
+    }
 }
