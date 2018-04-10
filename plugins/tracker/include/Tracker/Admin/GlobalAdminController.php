@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -83,9 +83,9 @@ class GlobalAdminController
 
     public function displayGlobalAdministration(Project $project, Tracker_IDisplayTrackerLayout $layout)
     {
-        $toolbar     = $this->getToolbar($project);
-        $params      = array();
-        $breadcrumbs = $this->getAdditionalBreadcrumbs($project);
+        $toolbar     = [];
+        $params      = [];
+        $breadcrumbs = [];
 
         $layout->displayHeader(
             $project,
@@ -188,14 +188,6 @@ class GlobalAdminController
                 'url'   => $this->getTrackerGlobalAdministrationURL($project)
             )
         );
-    }
-
-    /**
-     * @return array
-     */
-    private function getAdditionalBreadcrumbs(Project $project)
-    {
-        return $this->getToolbar($project);
     }
 
     /**
