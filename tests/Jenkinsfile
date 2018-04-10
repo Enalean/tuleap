@@ -73,6 +73,10 @@ pipeline {
                     """
                     junit 'results/ut-simpletest-php-56/unit_tests_report.xml'
                 },
+                'UT SimpleTest PHP 7.0': {
+                    sh "make -C $WORKSPACE/sources simpletest-70-ci"
+                    junit 'results/ut-simpletest-php-70/results.xml'
+                },
                 'UT PHPUnit PHP 5.6': {
                     sh "make -C $WORKSPACE/sources phpunit-ci-56"
                     junit 'results/ut-phpunit-php-56/phpunit_tests_results.xml'

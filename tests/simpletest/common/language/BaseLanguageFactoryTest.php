@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011. All Rights Reserved.
+ * Copyright (c) Enalean, 2011-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,12 +27,13 @@ class BaseLanguageFactoryTest extends TuleapTestCase {
         parent::setUp();
         ForgeConfig::store();
         ForgeConfig::loadFromFile(dirname(__FILE__).'/_fixtures/local.inc');
+        ForgeConfig::set('codendi_cache_dir', $this->getTmpDir());
         $this->supportedLanguages = ForgeConfig::get('sys_supported_languages');
         $this->oldLocale = setlocale(LC_ALL, "0");
         setlocale(LC_ALL, 'fr_FR');
-        $GLOBALS['tmp_dir']           = dirname(__FILE__) . '/_fixtures/var/tmp';
-        $GLOBALS['sys_custom_incdir'] = $GLOBALS['tmp_dir'];
-        $GLOBALS['sys_incdir']        = $GLOBALS['tmp_dir'];
+        $GLOBALS['tmp_dir']           = '/tmp/tuleap_cache';
+        $GLOBALS['sys_custom_incdir'] = $this->getTmpDir();
+        $GLOBALS['sys_incdir']        = $this->getTmpDir();
     }
     
     public function tearDown()
