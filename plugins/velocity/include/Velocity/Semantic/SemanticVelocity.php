@@ -124,7 +124,6 @@ class SemanticVelocity extends Tracker_Semantic
         $builder = new SemanticVelocityAdminPresenterBuilder(
             $this->getMissingRequirementRetriever(),
             $this->getBacklogRetriever(),
-            Tracker_FormElementFactory::instance(),
             new VelocitySemanticChecker()
         );
 
@@ -133,6 +132,7 @@ class SemanticVelocity extends Tracker_Semantic
             $this->getTracker(),
             $this->getCSRFSynchronizerToken(),
             $this->semantic_done,
+            $this->getPossibleFields(),
             $this->getFieldId()
         );
 
@@ -158,8 +158,9 @@ class SemanticVelocity extends Tracker_Semantic
                     Feedback::WARN,
                     dgettext('tuleap-velocity', 'Semantic done is not defined.')
                 );
-            } elseif (isset($values) && (int)$values !== 0) {
+            } elseif ($this->checkFieldIdIsValidForTracker($values)) {
                 $this->getSemanticDao()->addField($this->getTracker()->getId(), $values);
+
                 $GLOBALS['Response']->addFeedback(
                     Feedback::INFO,
                     dgettext('tuleap-velocity', 'Semantic updated successfully.')
@@ -309,5 +310,28 @@ class SemanticVelocity extends Tracker_Semantic
                 ]
             )
         );
+    }
+
+    /**
+     * @return Tracker_FormElement_Field[]
+     */
+    private function getPossibleFields()
+    {
+        return Tracker_FormElementFactory::instance()->getUsedFormElementsByType(
+            $this->getTracker(),
+            array('int', 'float')
+        );
+    }
+
+    private function checkFieldIdIsValidForTracker($field_id)
+    {
+        foreach ($this->getPossibleFields() as $field) {
+            if ((int) $field->getId() === (int) $field_id) {
+                return true;
+            }
+        }
+
+
+        return false;
     }
 }

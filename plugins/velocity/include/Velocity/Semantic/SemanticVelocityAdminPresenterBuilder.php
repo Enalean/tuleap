@@ -36,10 +36,6 @@ class SemanticVelocityAdminPresenterBuilder
      */
     private $backlog_retriever;
     /**
-     * @var Tracker_FormElementFactory
-     */
-    private $form_element_factory;
-    /**
      * @var VelocitySemanticChecker
      */
     private $semantic_checker;
@@ -47,12 +43,10 @@ class SemanticVelocityAdminPresenterBuilder
     public function __construct(
         MissingRequirementRetriever $missing_requirement_retriever,
         BacklogRetriever $backlog_retriever,
-        Tracker_FormElementFactory $form_element_factory,
         VelocitySemanticChecker $semantic_checker
     ) {
         $this->missing_requirement_retriever = $missing_requirement_retriever;
         $this->backlog_retriever             = $backlog_retriever;
-        $this->form_element_factory          = $form_element_factory;
         $this->semantic_checker              = $semantic_checker;
     }
 
@@ -60,10 +54,9 @@ class SemanticVelocityAdminPresenterBuilder
         Tracker $tracker,
         CSRFSynchronizerToken $csrf,
         SemanticDone $semantic_done,
+        array $possible_fields,
         $semantic_velocity_field_id
     ) {
-        $possible_fields = $this->form_element_factory->getUsedFormElementsByType($tracker, array('int', 'float'));
-
         $backlog_trackers = $this->backlog_retriever->getBacklogTrackers($tracker);
         $backlog_required_trackers_collection = $this->missing_requirement_retriever->buildCollectionFromBacklogTrackers(
             $backlog_trackers
