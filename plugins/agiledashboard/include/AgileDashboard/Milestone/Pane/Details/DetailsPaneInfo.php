@@ -20,10 +20,10 @@
 
 namespace Tuleap\AgileDashboard\Milestone\Pane\Details;
 
-use AgileDashboard_PaneInfo;
+use Tuleap\AgileDashboard\Milestone\Pane\PaneInfo;
 use Planning_Milestone;
 
-class DetailsPaneInfo extends AgileDashboard_PaneInfo
+class DetailsPaneInfo extends PaneInfo
 {
     const IDENTIFIER = 'details';
 
@@ -50,5 +50,10 @@ class DetailsPaneInfo extends AgileDashboard_PaneInfo
     public function getTitle()
     {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'details_pane_title');
+    }
+
+    public function getIconName()
+    {
+        return 'fa-bar-chart icon-bar-chart';
     }
 }

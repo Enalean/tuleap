@@ -18,12 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\Milestone\Pane\PaneInfo;
+use Tuleap\AgileDashboard\Milestone\Pane\PanePresenterData;
 use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
+use Tuleap\AgileDashboard\Milestone\Pane\TopPlanning\TopPlanningV2PaneInfo;
 
 /**
  * I build panes for a Planning_Milestone
  */
-class Planning_VirtualTopMilestonePaneFactory {
+class Planning_VirtualTopMilestonePaneFactory
+{
     const TOP_MILESTONE_DUMMY_ARTIFACT_ID = "ABC";
 
     /**
@@ -35,7 +39,7 @@ class Planning_VirtualTopMilestonePaneFactory {
     const PRELOAD_PAGINATION_OFFSET       = 0;
     const PRELOAD_PAGINATION_ORDER        = 'desc';
 
-    /** @var AgileDashboard_PaneInfo[] */
+    /** @var PaneInfo[] */
     private $list_of_pane_info = array();
 
     /** @var AgileDashboard_Pane */
@@ -74,8 +78,9 @@ class Planning_VirtualTopMilestonePaneFactory {
         $this->paginated_backlog_items_representations_builder = $paginated_backlog_items_representations_builder;
     }
 
-    /** @return AgileDashboard_Milestone_Pane_PresenterData */
-    public function getPanePresenterData(Planning_Milestone $milestone) {
+    /** @return PanePresenterData */
+    public function getPanePresenterData(Planning_Milestone $milestone)
+    {
         $active_pane = $this->getActivePane($milestone);//This needs to be run first!
         $milestone_artifact_id = $this->getMilestoneArtifactId();
 
@@ -83,7 +88,7 @@ class Planning_VirtualTopMilestonePaneFactory {
                 (isset($this->available_milestones[$milestone_artifact_id])) ?
                 $this->available_milestones[$milestone_artifact_id] : array();
 
-        return new AgileDashboard_Milestone_Pane_PresenterData(
+        return new PanePresenterData(
             $active_pane,
             $this->getListOfPaneInfo($milestone),
             $available_milestones
@@ -144,7 +149,7 @@ class Planning_VirtualTopMilestonePaneFactory {
             return;
         }
 
-        $pane_info = new AgileDashboard_Milestone_Pane_TopPlanning_TopPlanningV2PaneInfo($milestone, $this->theme_path, $milestone_tracker);
+        $pane_info = new TopPlanningV2PaneInfo($milestone, $this->theme_path, $milestone_tracker);
         $pane_info->setActive(true);
         $this->active_pane[$milestone_artifact_id] = new AgileDashboard_Milestone_Pane_Planning_PlanningV2Pane(
             $pane_info,

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,14 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\Milestone\Pane\PanePresenterData;
+
 require_once 'common/TreeNode/TreeNodeMapper.class.php';
 
 /**
  * This presenter build the top view of a milestone (milestone title + switch on another milestone).
- * It delegates the displaye to an AgileDashboardPane for the content
+ * It delegates the display to an AgileDashboardPane for the content
  * @see AgileDashboard_Pane
  */
-class AgileDashboard_MilestonePresenter {
+class AgileDashboard_MilestonePresenter
+{
     /**
      * @var Planning_Milestone
      */
@@ -47,17 +50,17 @@ class AgileDashboard_MilestonePresenter {
     private $planning_redirect_to_new;
 
     /**
-     * @var AgileDashboard_Milestone_Pane_PresenterData 
+     * @var PanePresenterData
      */
     private $presenter_data;
 
     public function __construct(
-            Planning_Milestone $milestone,
-            PFUser $current_user,
-            Codendi_Request $request,
-            AgileDashboard_Milestone_Pane_PresenterData $presenter_data,
-            $planning_redirect_to_new
-            ) {
+        Planning_Milestone $milestone,
+        PFUser $current_user,
+        Codendi_Request $request,
+        PanePresenterData $presenter_data,
+        $planning_redirect_to_new
+    ) {
         $this->milestone                = $milestone;
         $this->current_user             = $current_user;
         $this->request                  = $request;
@@ -149,5 +152,3 @@ class AgileDashboard_MilestonePresenter {
         return date($GLOBALS['Language']->getText('system', 'datefmt_day_and_month'), $date);
     }
 }
-
-?>

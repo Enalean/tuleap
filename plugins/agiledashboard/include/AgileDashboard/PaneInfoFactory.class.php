@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2PaneInfo;
 use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
 
 /**
@@ -54,6 +55,6 @@ class AgileDashboard_PaneInfoFactory {
             return;
         }
 
-        return new AgileDashboard_Milestone_Pane_Planning_PlanningV2PaneInfo($milestone, $this->theme_path, $submilestone_tracker);
+        return new PlanningV2PaneInfo($milestone, $this->theme_path, $submilestone_tracker);
     }
 }

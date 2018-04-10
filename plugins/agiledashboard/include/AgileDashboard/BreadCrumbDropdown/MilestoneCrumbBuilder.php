@@ -22,15 +22,20 @@ namespace Tuleap\AgileDashboard\BreadCrumbDropdown;
 
 use Planning_Milestone;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbItem;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbSubItemCollection;
 
 class MilestoneCrumbBuilder
 {
     /** @var string */
     private $plugin_path;
 
-    public function __construct($plugin_path)
+    /** @var \Planning_MilestonePaneFactory */
+    private $pane_factory;
+
+    public function __construct($plugin_path, \Planning_MilestonePaneFactory $pane_factory)
     {
-        $this->plugin_path = $plugin_path;
+        $this->plugin_path  = $plugin_path;
+        $this->pane_factory = $pane_factory;
     }
 
     /**
@@ -39,19 +44,54 @@ class MilestoneCrumbBuilder
      */
     public function build(Planning_Milestone $milestone)
     {
-        $url = $this->plugin_path . '/?' . http_build_query(
-            [
-                'planning_id' => $milestone->getPlanningId(),
-                'pane'        => 'planning-v2',
-                'action'      => 'show',
-                'group_id'    => $milestone->getGroupId(),
-                'aid'         => $milestone->getArtifactId()
-            ]
-        );
+        $sub_items = new BreadCrumbSubItemCollection();
+        $panes     = $this->pane_factory->getListOfPaneInfo($milestone);
 
-        return new BreadCrumbItem(
-            $milestone->getArtifactTitle(),
-            $url
+        foreach ($panes as $pane) {
+            $pane_breadcrumb = new BreadCrumbItem(
+                $pane->getTitle(),
+                $pane->getUri()
+            );
+            $pane_breadcrumb->setIconName($pane->getIconName());
+
+            $sub_items->addBreadCrumb($pane_breadcrumb);
+        }
+        $artifact_breadcrumb = new BreadCrumbItem(
+            $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'artifact'),
+            $this->getArtifactUrl($milestone)
         );
+        $artifact_breadcrumb->setIconName('fa-list-ol icon-list-ol');
+
+        $sub_items->addBreadCrumb($artifact_breadcrumb);
+
+        $milestone_breadcrumb = new BreadCrumbItem(
+            $milestone->getArtifactTitle(),
+            $this->getPlanningUrl($milestone)
+        );
+        $milestone_breadcrumb->setSubItems($sub_items);
+
+        return $milestone_breadcrumb;
+    }
+
+    private function getPlanningUrl(Planning_Milestone $milestone)
+    {
+        return $this->plugin_path . '/?' .
+            http_build_query(
+                [
+                    'planning_id' => $milestone->getPlanningId(),
+                    'pane'        => 'planning-v2',
+                    'action'      => 'show',
+                    'group_id'    => $milestone->getGroupId(),
+                    'aid'         => $milestone->getArtifactId()
+                ]
+            );
+    }
+
+    private function getArtifactUrl(Planning_Milestone $milestone)
+    {
+        return '/plugins/tracker/?' .
+            http_build_query(
+                ['aid' => $milestone->getArtifactId()]
+            );
     }
 }

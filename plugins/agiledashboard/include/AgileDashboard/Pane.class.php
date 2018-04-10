@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,30 +18,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\Milestone\Pane\PaneInfo;
+
 /**
  * Base interface to display a content pane in the agiledashboard next to a
  * milestone
  */
-abstract class AgileDashboard_Pane {
-
+abstract class AgileDashboard_Pane
+{
     /**
-     * @see AgileDashboard_PaneInfo::getUriForMilestone()
+     * @see PaneInfo::getUriForMilestone()
      * @return string URI of the pane for a given milestone
      */
-    public abstract function getUriForMilestone(Planning_Milestone $milestone);
+    abstract public function getUriForMilestone(Planning_Milestone $milestone);
 
     /**
-     * @see AgileDashboard_PaneInfo::getIdentifier()
+     * @see PaneInfo::getIdentifier()
      * @return string eg: 'cardwall'
      */
-    public abstract function getIdentifier();
+    abstract public function getIdentifier();
 
     /**
      * Return the content when displayed as a Pane
      *
      * @return string eg: '<a href="">customize</a> <table>...</table>'
      */
-    public abstract function getFullContent();
+    abstract public function getFullContent();
 
     /**
      * Return the content when displayed on the agile dashboard front page
@@ -49,7 +51,5 @@ abstract class AgileDashboard_Pane {
      *
      * @return string eg: '<table>...</table>'
      */
-    public abstract function getMinimalContent();
-
+    abstract public function getMinimalContent();
 }
-?>
