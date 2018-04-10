@@ -68,8 +68,6 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
 
     var $feeds;
 
-    protected $force_breadcrumbs = false;
-
     /**
      * Store custom css added on the fly
      *

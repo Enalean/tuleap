@@ -95,6 +95,7 @@ class AgileDashboardRouterBuilder
             $paginated_backlog_items_representations_builder
         );
 
+        $service_crumb_builder        = new AgileDashboardCrumbBuilder($plugin->getPluginPath());
         $milestone_controller_factory = new Planning_MilestoneControllerFactory(
             $plugin,
             ProjectManager::instance(),
@@ -104,7 +105,7 @@ class AgileDashboardRouterBuilder
             $pane_presenter_builder_factory,
             $pane_factory,
             $top_milestone_pane_factory,
-            new AgileDashboardCrumbBuilder($plugin->getPluginPath()),
+            $service_crumb_builder,
             new VirtualTopMilestoneCrumbBuilder($plugin->getPluginPath()),
             new MilestoneCrumbBuilder($plugin->getPluginPath())
         );
@@ -140,7 +141,8 @@ class AgileDashboardRouterBuilder
                         )
                     )
                 )
-            )
+            ),
+            $service_crumb_builder
         );
     }
 

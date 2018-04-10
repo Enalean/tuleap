@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -356,11 +356,10 @@ class FlamingParrot_Theme extends Layout {
         $breadcrumb_presenter_builder = new BreadCrumbPresenterBuilder(
             $this->uri_sanitizer
         );
-        $breadcrumbs = $breadcrumb_presenter_builder->buildArrayOfStrings($this->breadcrumbs);
+        $breadcrumbs = $breadcrumb_presenter_builder->build($this->breadcrumbs);
 
         $this->render('container', new FlamingParrot_ContainerPresenter(
             $breadcrumbs,
-            $this->force_breadcrumbs,
             $this->toolbar,
             $project_name,
             $project_link,

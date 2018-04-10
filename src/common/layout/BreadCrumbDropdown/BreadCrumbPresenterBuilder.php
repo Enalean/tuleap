@@ -52,22 +52,4 @@ class BreadCrumbPresenterBuilder
 
         return $presenters;
     }
-
-    /**
-     * @param BreadCrumbCollection $collection
-     * @return string[]
-     */
-    public function buildArrayOfStrings(BreadCrumbCollection $collection)
-    {
-        $purifier = Codendi_HTMLPurifier::instance();
-
-        $breadcrumbs = [];
-        foreach ($collection->getBreadcrumbs() as $breadcrumb) {
-            $breadcrumbs[] = '<a href="' . $this->uri_sanitizer->sanitizeForHTMLAttribute(
-                $purifier->purify($breadcrumb->getUrl())
-            ) . '">' . $purifier->purify($breadcrumb->getLabel()) . '</a>';
-        }
-
-        return $breadcrumbs;
-    }
 }
