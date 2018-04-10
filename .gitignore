@@ -35,9 +35,6 @@ nbproject
 !src/www/themes/common/css/font-awesome.css
 !src/www/themes/common/css/animate.min.css
 !src/www/themes/BurningParrot/vendor/**/*.css
-!tools/plugins/datagenerator/*.css
-!tools/plugins/languages/*.css
-!tools/plugins/plugincreationwizard/*.css
 src/vendor/
 plugins/*/vendor/
 /.idea/
