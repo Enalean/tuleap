@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Artifact_XMLExport {
+class Tracker_Artifact_XMLExport
+{
 
     const ARTIFACTS_RNG_PATH = '/www/resources/artifacts.rng';
     const THRESHOLD          = 9000;
@@ -53,19 +54,16 @@ class Tracker_Artifact_XMLExport {
         $this->user_xml_exporter    = $user_xml_exporter;
     }
 
-    public function export(Tracker $tracker, SimpleXMLElement $xml_content, PFUser $user, Tuleap\Project\XML\Export\ArchiveInterface $archive) {
-        $artifacts_node = $xml_content->addChild('artifacts');
-
+    public function export(
+        Tracker $tracker,
+        SimpleXMLElement $xml_content,
+        PFUser $user,
+        Tuleap\Project\XML\Export\ArchiveInterface $archive
+    ) {
         $all_artifacts = $this->artifact_factory->getArtifactsByTrackerId($tracker->getId());
         $this->checkThreshold(count($all_artifacts));
-        foreach ($all_artifacts as $artifact) {
-            $artifact->exportToXML($artifacts_node, $user, $archive, $this->user_xml_exporter);
-        }
 
-        $this->rng_validator->validate(
-            $artifacts_node,
-            realpath(dirname(TRACKER_BASE_DIR) . self::ARTIFACTS_RNG_PATH)
-        );
+        $this->exportBunchOfArtifacts($all_artifacts, $xml_content, $user, $archive);
     }
 
     private function checkThreshold($nb_artifacts) {
@@ -78,5 +76,23 @@ class Tracker_Artifact_XMLExport {
                 "Too many artifacts: $nb_artifacts (IT'S OVER ".self::THRESHOLD."!)"
             );
         }
+    }
+
+    public function exportBunchOfArtifacts(
+        array $artifacts,
+        SimpleXMLElement $xml_content,
+        PFUser $user,
+        Tuleap\Project\XML\Export\ArchiveInterface $archive
+    ) {
+        $artifacts_node = $xml_content->addChild('artifacts');
+
+        foreach ($artifacts as $artifact) {
+            $artifact->exportToXML($artifacts_node, $user, $archive, $this->user_xml_exporter);
+        }
+
+        $this->rng_validator->validate(
+            $artifacts_node,
+            realpath(dirname(TRACKER_BASE_DIR) . self::ARTIFACTS_RNG_PATH)
+        );
     }
 }
