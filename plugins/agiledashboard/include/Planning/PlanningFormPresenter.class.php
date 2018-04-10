@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,8 +19,10 @@
  */
 
 
-class Planning_FormPresenter extends PlanningPresenter {
+use Tuleap\AgileDashboard\Planning\Presenters\PlanningWarningPossibleMisconfigurationPresenter;
 
+class Planning_FormPresenter extends PlanningPresenter
+{
     /**
      * @var PlanningPermissionsManager
      */
@@ -35,12 +37,7 @@ class Planning_FormPresenter extends PlanningPresenter {
      * @var int
      */
     public $group_id;
-    
-    /**
-     * @var Planning
-     */
-    public $planning;
-    
+
     /**
      * @var Planning_TrackerPresenter[]
      */
@@ -65,13 +62,22 @@ class Planning_FormPresenter extends PlanningPresenter {
      * @var String
      */
     public $planning_allows_assignment_to;
+    /**
+     * @var bool
+     */
+    public $has_warning;
+    /**
+     * @var PlanningWarningPossibleMisconfigurationPresenter[]
+     */
+    public $warning_list;
 
     public function __construct(
         PlanningPermissionsManager $planning_permissions_manager,
         Planning $planning,
         array $available_backlog_trackers,
         array $available_planning_trackers,
-        $cardwall_admin
+        $cardwall_admin,
+        array $warning_list
     ) {
         parent::__construct($planning);
         
@@ -91,6 +97,9 @@ class Planning_FormPresenter extends PlanningPresenter {
             'plugin_agiledashboard',
             'planning-allows-assignment-to'
         );
+
+        $this->warning_list = $warning_list;
+        $this->has_warning  = count($warning_list) > 0;
     }
 
     public function adminTitle() {

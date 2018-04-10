@@ -60,6 +60,9 @@ msgstr ""
 msgid "Burnup Chart"
 msgstr "Diagramme Burn-Up"
 
+msgid "Burnup field"
+msgstr "Champ burnup"
+
 msgid "Burnup is under calculation. It will be available in few minutes."
 msgstr ""
 "Le burn-up est en cours de calcul. Il sera disponible dans quelques minutes."
@@ -104,6 +107,9 @@ msgstr "Élément"
 
 msgid "Item is not linked to this milestone"
 msgstr "L'élément n'est pas lié à ce jalon"
+
+msgid "Make sure to check their configuration."
+msgstr "Merci de vérifier leur configuration."
 
 msgid "Parent item"
 msgstr "Parent"
@@ -164,12 +170,6 @@ msgstr ""
 "La sémantique statut ne peut être supprimée car la sémantique fini est "
 "définie."
 
-#, php-format
-msgid "The tracker %s uses a Burnup field. Please check its configuration."
-msgstr ""
-"L'outil de suivi %s utilise un champ de type Burnup. Veuillez vérifier sa "
-"configuration."
-
 msgid "There is no content <br> you can see"
 msgstr "Il n’y a aucun élément <br> visible"
 
@@ -188,6 +188,9 @@ msgstr "Cet outil de suivi n'est pas un outil de suivi lié à un planning"
 
 msgid "Tracker semantic done"
 msgstr "Sémantique fini"
+
+msgid "Update of planning assignment may lead to errors in:"
+msgstr "La mise à jour des plannings peut causer des erreurs dans :"
 
 msgid ""
 "You can't add values in this semantic because all possible values are "
