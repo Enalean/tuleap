@@ -39,7 +39,7 @@ Requires: rh-php56-php, rh-php56-php-mysql, rh-php56-php-xml, rh-php56-php-mbstr
 
 Requires: highlight, forgeupgrade, ckeditor, jpgraph-tuleap, nginx
 
-Requires: php-ZendFramework2-Loader, php-ZendFramework2-Mail, php-markdown
+Requires: php-ZendFramework2-Mail
 
 # Unit file
 Requires: systemd
@@ -121,7 +121,7 @@ Group: Development/Tools
 Version: @@PLUGIN_GIT_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
 AutoReqProv: no
-#Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, git19-git, php-Smarty, php-markdown, gitolite3, gitphp-tuleap >= 0.2.5-15
+#Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, git19-git, php-Smarty, gitolite3, gitphp-tuleap >= 0.2.5-15
 #Requires: geshi, php-guzzle-Guzzle, sudo
 %description plugin-git
 Integration of git distributed software configuration management tool together
