@@ -120,6 +120,9 @@ msgstr ""
 msgid "Beyond 3 columns, each column<br>will have the same size."
 msgstr ""
 
+msgid "Block usage of passwords known as compromised"
+msgstr ""
+
 msgid "CVS"
 msgstr ""
 
@@ -171,6 +174,9 @@ msgid "Close"
 msgstr ""
 
 msgid "Color"
+msgstr ""
+
+msgid "Compromised password"
 msgstr ""
 
 msgid "Configure services"
@@ -367,6 +373,11 @@ msgstr ""
 msgid "Homepage"
 msgstr ""
 
+msgid ""
+"If your instance can not access the Internet, it is preferable to disable "
+"the verification to avoid a slowness during password compliance check."
+msgstr ""
+
 msgid "Image"
 msgstr ""
 
@@ -534,6 +545,9 @@ msgid "Page permissions are not listed."
 msgstr ""
 
 msgid "Parent project"
+msgstr ""
+
+msgid "Password policy"
 msgstr ""
 
 msgid "People in this group will be able to manage project members."
@@ -833,6 +847,11 @@ msgid ""
 "            without explicit permissions granted)."
 msgstr ""
 
+msgid ""
+"This feature allows you to prevent the usage of passwords commonly found in "
+"known data breaches as these passwords are privileged targets."
+msgstr ""
+
 msgid "This group does not have any members yet."
 msgstr ""
 
@@ -882,6 +901,11 @@ msgid "This will remove this service from all projects."
 msgstr ""
 
 msgid "Title"
+msgstr ""
+
+msgid ""
+"To determine if a password is compromised, the Have I Been Pwned service is "
+"used."
 msgstr ""
 
 msgid "Today"

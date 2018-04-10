@@ -145,6 +145,9 @@ msgstr "Le service qui gère des trucs"
 msgid "Beyond 3 columns, each column<br>will have the same size."
 msgstr "Au-delà de 3 colonnes, chaque colonne<br>aura la même taille."
 
+msgid "Block usage of passwords known as compromised"
+msgstr "Bloquer l'utilisation des mots de passe connus comme compromis"
+
 msgid "CVS"
 msgstr "CVS"
 
@@ -202,6 +205,9 @@ msgstr "Fermer"
 
 msgid "Color"
 msgstr "Couleur"
+
+msgid "Compromised password"
+msgstr "Mot de passe compromis"
 
 msgid "Configure services"
 msgstr "Configurer les services"
@@ -399,6 +405,14 @@ msgstr "Historique"
 msgid "Homepage"
 msgstr "Page d'accueil"
 
+msgid ""
+"If your instance can not access the Internet, it is preferable to disable "
+"the verification to avoid a slowness during password compliance check."
+msgstr ""
+"Si votre instance ne peut pas accèder à Internet, il est préférable de "
+"désactiver ce contrôle afin d'éviter de ralentir la vérification de la "
+"conformité d'un mot de passe avec les politiques de sécurité."
+
 msgid "Image"
 msgstr "Image"
 
@@ -569,6 +583,9 @@ msgstr "Les permissions par page ne sont pas listées."
 
 msgid "Parent project"
 msgstr "Projet parent"
+
+msgid "Password policy"
+msgstr "Politique des mots de passe"
 
 msgid "People in this group will be able to manage project members."
 msgstr ""
@@ -891,6 +908,14 @@ msgstr ""
 "administrateurs d'un projet parent pourraient avoir automatiquement accès à "
 "l'administration de tous les sous-projets)."
 
+msgid ""
+"This feature allows you to prevent the usage of passwords commonly found in "
+"known data breaches as these passwords are privileged targets."
+msgstr ""
+"Cette fonctionnalité vous permet d'empêcher l'utilisation de mots de passe "
+"fréquemment présent dans des fuites d'information, ces mots de passe étant "
+"considérés comme faible."
+
 msgid "This group does not have any members yet."
 msgstr "Ce groupe n'a pas encore de membres."
 
@@ -946,6 +971,13 @@ msgstr "Ceci supprimera ce service de tous les projets."
 
 msgid "Title"
 msgstr "Titre"
+
+msgid ""
+"To determine if a password is compromised, the Have I Been Pwned service is "
+"used."
+msgstr ""
+"Pour déterminer si un mot de passe est compromis, le service Have I Been "
+"Pwned est utilisé."
 
 msgid "Today"
 msgstr "Aujourd'hui"

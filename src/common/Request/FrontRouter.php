@@ -28,6 +28,9 @@ use ThemeManager;
 use Tuleap\Layout\ErrorRendering;
 use Tuleap\Layout\SiteHomepageController;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\password\Administration\PasswordPolicyDisplayController;
+use Tuleap\password\Configuration\PasswordConfigurationDAO;
+use Tuleap\password\Configuration\PasswordConfigurationRetriever;
 
 class FrontRouter
 {
@@ -120,6 +123,13 @@ class FrontRouter
             });
             $r->addRoute(['GET', 'POST'], '/projects/{name}[/]', function () {
                 return new \Tuleap\Project\Home();
+            });
+            $r->get('/admin/password_policy/', function () {
+                return new PasswordPolicyDisplayController(
+                    new \Tuleap\Admin\AdminPageRenderer,
+                    \TemplateRendererFactory::build(),
+                    new PasswordConfigurationRetriever(new PasswordConfigurationDAO)
+                );
             });
 
             $collect_routes = new CollectRoutesEvent($r);
