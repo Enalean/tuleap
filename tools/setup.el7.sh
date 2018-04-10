@@ -47,6 +47,7 @@ _checkLogFile
 _optionsSelected "${@}"
 _checkMandatoryOptions "${@}"
 _infoMessage "Start Tuleap installation"
+_infoMessage "All credentials are saved into /root/.tuleap_passwd"
 _checkOsVersion
 _infoMessage "Checking all command line tools"
 _checkCommand
