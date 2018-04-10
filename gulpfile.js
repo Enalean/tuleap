@@ -18,7 +18,6 @@ const fat_combined_files = [
         'src/www/scripts/scriptaculous/dragdrop.js',
         'src/www/scripts/scriptaculous/controls.js',
         'src/www/scripts/scriptaculous/slider.js',
-        'src/www/scripts/scriptaculous/sound.js',
         'src/www/scripts/jquery/jquery-1.9.1.min.js',
         'src/www/scripts/jquery/jquery-ui.min.js',
         'src/www/scripts/jquery/jquery-noconflict.js',
