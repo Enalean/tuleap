@@ -31,15 +31,11 @@ use AgileDashboardConfigurationResponse;
 use AgileDashboardKanbanConfigurationUpdater;
 use AgileDashboardScrumConfigurationUpdater;
 use ArtifactTypeFactory;
-use BreadCrumb_AgileDashboard;
-use BreadCrumb_BreadCrumbGenerator;
-use BreadCrumb_Merger;
 use Codendi_Request;
 use CSRFSynchronizerToken;
 use EventManager;
 use Feedback;
 use FRSLog;
-use MVC2_PluginController;
 use PFUser;
 use Planning_PlanningAdminPresenter;
 use Planning_PlanningOutOfHierarchyAdminPresenter;
@@ -55,6 +51,7 @@ use ServiceManager;
 use Tracker_ReportFactory;
 use TrackerFactory;
 use TrackerXmlImport;
+use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\Event\GetAdditionalScrumAdminPaneContent;
 use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportDao;
 use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportUpdater;
@@ -73,6 +70,8 @@ use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FrsPermissionDao;
 use Tuleap\FRS\UploadedLinksDao;
 use Tuleap\FRS\UploadedLinksUpdater;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbItem;
 use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\Project\UserRemover;
@@ -89,7 +88,7 @@ use UserManager;
 use XML_RNGValidator;
 use XMLImportHelper;
 
-class AdminController extends MVC2_PluginController
+class AdminController extends BaseController
 {
 
     /** @var AgileDashboard_KanbanFactory */
@@ -115,6 +114,10 @@ class AdminController extends MVC2_PluginController
 
     /** @var Project */
     private $project;
+    /**
+     * @var AgileDashboardCrumbBuilder
+     */
+    private $crumb_builder;
 
     public function __construct(
         Codendi_Request $request,
@@ -124,7 +127,8 @@ class AdminController extends MVC2_PluginController
         AgileDashboard_ConfigurationManager $config_manager,
         TrackerFactory $tracker_factory,
         ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker,
-        EventManager $event_manager
+        EventManager $event_manager,
+        AgileDashboardCrumbBuilder $crumb_builder
     ) {
         parent::__construct('agiledashboard', $request);
 
@@ -137,16 +141,34 @@ class AdminController extends MVC2_PluginController
         $this->tracker_factory              = $tracker_factory;
         $this->scrum_mono_milestone_checker = $scrum_mono_milestone_checker;
         $this->event_manager                = $event_manager;
+        $this->crumb_builder                = $crumb_builder;
     }
 
     /**
-     * @return BreadCrumb_BreadCrumbGenerator
+     * @return BreadCrumbCollection
      */
-    public function getBreadcrumbs($plugin_path)
+    public function getBreadcrumbs()
     {
-        $breadcrumbs = new BreadCrumb_Merger(
-            new BreadCrumb_AgileDashboard($plugin_path, $this->project),
-            new AdminBreadCrumb($plugin_path, $this->project)
+        $breadcrumbs = new BreadCrumbCollection();
+        $breadcrumbs->addBreadCrumb(
+            $this->crumb_builder->build(
+                $this->getCurrentUser(),
+                $this->project
+            )
+        );
+
+        $admin_url = AGILEDASHBOARD_BASE_URL . '/?' .
+            http_build_query(
+                [
+                    'group_id' => $this->project->getID(),
+                    'action'   => 'admin',
+                ]
+            );
+        $breadcrumbs->addBreadCrumb(
+            new BreadCrumbItem(
+                $GLOBALS['Language']->getText('global', 'Administration'),
+                $admin_url
+            )
         );
 
         return $breadcrumbs;

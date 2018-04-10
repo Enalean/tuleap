@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\AgileDashboard\BaseController;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\VirtualTopMilestoneCrumbBuilder;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
@@ -26,7 +28,7 @@ require_once 'common/mvc2/PluginController.class.php';
 /**
  * Handles the HTTP actions related to a planning milestone.
  */
-class Planning_VirtualTopMilestoneController extends MVC2_PluginController
+class Planning_VirtualTopMilestoneController extends BaseController
 {
     /** @var Planning_MilestoneFactory */
     private $milestone_factory;
@@ -141,10 +143,9 @@ class Planning_VirtualTopMilestoneController extends MVC2_PluginController
     }
 
     /**
-     * @param string $plugin_path
      * @return BreadCrumbCollection
      */
-    public function getBreadcrumbs($plugin_path)
+    public function getBreadcrumbs()
     {
         $breadcrumb_dropdowns = new BreadCrumbCollection();
         $breadcrumb_dropdowns->addBreadCrumb(

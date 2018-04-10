@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\BaseController;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\FormElement\Burnup;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
@@ -47,8 +48,8 @@ use Tuleap\Widget\WidgetFactory;
 /**
  * Handles the HTTP actions related to a planning.
  */
-class Planning_Controller extends MVC2_PluginController {
-
+class Planning_Controller extends BaseController
+{
     const AGILE_DASHBOARD_TEMPLATE_NAME = 'agile_dashboard_template.xml';
     const PAST_PERIOD   = 'past';
     const FUTURE_PERIOD = 'future';
@@ -701,14 +702,13 @@ class Planning_Controller extends MVC2_PluginController {
     /**
      * @return BreadCrumbCollection
      */
-    public function getBreadcrumbs($plugin_path)
+    public function getBreadcrumbs()
     {
         $breadcrumbs = new BreadCrumbCollection();
         $breadcrumbs->addBreadCrumb(
             $this->crumb_builder->build(
                 $this->getCurrentUser(),
-                $this->project,
-                $plugin_path
+                $this->project
             )
         );
 

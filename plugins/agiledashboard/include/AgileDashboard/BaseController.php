@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,11 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\AgileDashboard;
 
-class BreadCrumb_NoCrumb implements BreadCrumb_BreadCrumbGenerator {
-    public function getCrumbs() {
-        return array();
-    }
+use MVC2_PluginController;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
+
+abstract class BaseController extends MVC2_PluginController
+{
+    /**
+     * @return BreadCrumbCollection
+     */
+    abstract public function getBreadcrumbs();
 }
-
-?>

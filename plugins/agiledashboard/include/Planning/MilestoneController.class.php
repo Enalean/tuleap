@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\BaseController;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\MilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\VirtualTopMilestoneCrumbBuilder;
@@ -29,7 +30,7 @@ require_once 'common/mvc2/PluginController.class.php';
 /**
  * Handles the HTTP actions related to a planning milestone.
  */
-class Planning_MilestoneController extends MVC2_PluginController
+class Planning_MilestoneController extends BaseController
 {
     /**
      * @var Planning_MilestoneFactory
@@ -150,19 +151,18 @@ class Planning_MilestoneController extends MVC2_PluginController
     }
 
     /**
-     * @param string $plugin_path
      * @return BreadCrumbCollection
      */
-    public function getBreadcrumbs($plugin_path)
+    public function getBreadcrumbs()
     {
         $this->generateBareMilestone();
 
         $breadcrumbs            = new BreadCrumbCollection();
         $breadcrumbs->addBreadCrumb(
-            $this->agile_dashboard_crumb_builder->build($this->getCurrentUser(), $this->project, $plugin_path)
+            $this->agile_dashboard_crumb_builder->build($this->getCurrentUser(), $this->project)
         );
         $breadcrumbs->addBreadCrumb(
-            $this->top_milestone_crumb_builder->build($this->project, $plugin_path)
+            $this->top_milestone_crumb_builder->build($this->project)
         );
 
         if ($this->milestone->getArtifact()) {
