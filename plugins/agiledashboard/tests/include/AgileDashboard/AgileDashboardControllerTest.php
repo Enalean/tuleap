@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -38,6 +38,7 @@ class AgileDashboardControllerTest extends TuleapTestCase {
         $this->tracker_factory  = mock('TrackerFactory');
         $this->kanban_factory   = mock('AgileDashboard_KanbanFactory');
         $this->event_manager    = mock('EventManager');
+        $this->crumb_builder    = mock(\Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder::class);
 
         UserManager::setInstance($this->user_manager);
     }
@@ -65,7 +66,8 @@ class AgileDashboardControllerTest extends TuleapTestCase {
             $this->config_manager,
             $this->tracker_factory,
             mock('Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker'),
-            $this->event_manager
+            $this->event_manager,
+            $this->crumb_builder
         );
 
         expect($this->config_manager)->updateConfiguration()->never();
@@ -94,7 +96,8 @@ class AgileDashboardControllerTest extends TuleapTestCase {
             $this->config_manager,
             $this->tracker_factory,
             mock('Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker'),
-            $this->event_manager
+            $this->event_manager,
+            $this->crumb_builder
         );
 
         expect($this->kanban_manager)->createKanban()->never();
@@ -123,7 +126,8 @@ class AgileDashboardControllerTest extends TuleapTestCase {
             $this->config_manager,
             $this->tracker_factory,
             mock('Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker'),
-            $this->event_manager
+            $this->event_manager,
+            $this->crumb_builder
         );
 
         expect($this->kanban_manager)->createKanban()->never();

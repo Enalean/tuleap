@@ -24,20 +24,16 @@ use AgileDashboard_KanbanCannotAccessException;
 use AgileDashboard_KanbanFactory;
 use AgileDashboard_KanbanNotFoundException;
 use AgileDashboard_PermissionsManager;
-use BreadCrumb_AgileDashboard;
-use BreadCrumb_BreadCrumbGenerator;
-use BreadCrumb_Merger;
 use Codendi_Request;
 use Feedback;
 use KanbanPresenter;
-use MVC2_PluginController;
 use Project;
 use TrackerFactory;
+use Tuleap\AgileDashboard\BaseController;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
-use Tuleap\AgileDashboard\BreadCrumbDropdown\VirtualTopMilestoneCrumbBuilder;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 
-class ShowKanbanController extends MVC2_PluginController
+class ShowKanbanController extends BaseController
 {
     /**
      * @var AgileDashboard_KanbanFactory
@@ -83,10 +79,9 @@ class ShowKanbanController extends MVC2_PluginController
     }
 
     /**
-     * @param string $plugin_path
      * @return BreadCrumbCollection
      */
-    public function getBreadcrumbs($plugin_path)
+    public function getBreadcrumbs()
     {
         $kanban_id   = $this->request->get('id');
         $user        = $this->request->getCurrentUser();
@@ -95,8 +90,7 @@ class ShowKanbanController extends MVC2_PluginController
         $breadcrumbs->addBreadCrumb(
             $this->agile_dashboard_crumb_builder->build(
                 $this->getCurrentUser(),
-                $this->project,
-                $plugin_path
+                $this->project
             )
         );
 

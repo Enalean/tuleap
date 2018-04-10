@@ -19,6 +19,7 @@
  */
 
 use Tuleap\AgileDashboard\AdminController;
+use Tuleap\AgileDashboard\BaseController;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\Agiledashboard\FormElement\BurnupCacheGenerator;
 use Tuleap\AgileDashboard\FormElement\FormElementController;
@@ -316,14 +317,17 @@ class AgileDashboardRouter {
     /**
      * Renders the top banner + navigation for all Agile Dashboard pages.
      *
-     * @param MVC2_Controller $controller The controller instance
+     * @param BaseController  $controller The controller instance
      * @param Codendi_Request $request    The request
      * @param string          $title      The page title
+     * @param array           $header_options
      */
-    private function displayHeader(MVC2_Controller $controller,
-                                   Codendi_Request $request,
-                                                   $title,
-                                             array $header_options = array()) {
+    private function displayHeader(
+        BaseController $controller,
+        Codendi_Request $request,
+        $title,
+        array $header_options = []
+    ) {
         $service = $this->getService($request);
         if (! $service) {
             exit_error(
@@ -335,29 +339,7 @@ class AgileDashboardRouter {
             );
         }
 
-        $toolbar     = array();
-        $breadcrumbs = $controller->getBreadcrumbs($this->plugin->getPluginPath());
-        if ($this->userIsAdmin($request)) {
-            $toolbar[] = array(
-                'title' => $GLOBALS['Language']->getText('global', 'Admin'),
-                'url'   => AGILEDASHBOARD_BASE_URL .'/?'. http_build_query(array(
-                    'group_id' => $request->get('group_id'),
-                    'action'   => 'admin',
-                ))
-            );
-        }
-
-        if ($breadcrumbs instanceof BreadCrumbCollection) {
-            $service->displayHeader(
-                $title,
-                $breadcrumbs,
-                [],
-                $header_options
-            );
-            return;
-        }
-
-        $service->displayHeader($title, $breadcrumbs->getCrumbs(), $toolbar, $header_options);
+        $service->displayHeader($title, $controller->getBreadcrumbs(), [], $header_options);
     }
 
     private function userIsAdmin(Codendi_Request $request) {
@@ -412,7 +394,8 @@ class AgileDashboardRouter {
             $this->config_manager,
             TrackerFactory::instance(),
             new ScrumForMonoMilestoneChecker( new ScrumForMonoMilestoneDao(), $this->planning_factory),
-            EventManager::instance()
+            EventManager::instance(),
+            $this->crumb_builder
         );
     }
 

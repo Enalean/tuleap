@@ -43,13 +43,33 @@ abstract class Planning_Presenter_MilestoneSummaryPresenterAbstract {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'cardwall');
     }
 
-    public function breadcrumbs() {
-        $breadcrumbs_merger = new BreadCrumb_Merger();
-        foreach(array_reverse($this->milestone->getAncestors()) as $milestone) {
-            $breadcrumbs_merger->push(new BreadCrumb_Milestone($this->plugin_path, $milestone));
+    public function breadcrumbs()
+    {
+        $breadcrumbs = [];
+        foreach (array_reverse($this->milestone->getAncestors()) as $milestone) {
+            $breadcrumbs[] = $this->getMilestoneBreadcrumb($milestone);
         }
 
-        return $breadcrumbs_merger->getCrumbs();
+        return $breadcrumbs;
+    }
+
+    private function getMilestoneBreadcrumb(Planning_Milestone $milestone)
+    {
+        $hp             = Codendi_HTMLPurifier::instance();
+        $tracker        = $milestone->getArtifact()->getTracker();
+        $url_parameters = [
+            'planning_id' => $milestone->getPlanningId(),
+            'pane'        => 'planning-v2',
+            'action'      => 'show',
+            'group_id'    => $milestone->getGroupId(),
+            'aid'         => $milestone->getArtifactId()
+        ];
+
+        return [
+            'url'          => $this->plugin_path . '/?' . http_build_query($url_parameters),
+            'title'        => $hp->purify($milestone->getArtifactTitle()),
+            'default_name' => $hp->purify($tracker->getName() . ' #' . $milestone->getArtifactId()),
+        ];
     }
 
     public function milestone_title() {

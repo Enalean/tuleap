@@ -49,6 +49,8 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase {
         $this->planning_factory       = new MockPlanningFactory();
         $this->mono_milestone_checker = mock('Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker');
         $this->scrum_planning_filter  = mock('Tuleap\AgileDashboard\Planning\ScrumPlanningFilter');
+        $crumb_builder                = mock(\Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder::class);
+
         $this->planning_controller    = new Planning_Controller(
             $this->request,
             $this->planning_factory,
@@ -66,7 +68,7 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase {
             $this->scrum_planning_filter,
             mock('TrackerFactory'),
             mock('Tracker_FormElementFactory'),
-            mock(\Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder::class)
+            $crumb_builder
         );
 
 
@@ -86,7 +88,8 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase {
             $configuration_manager,
             mock('TrackerFactory'),
             $this->mono_milestone_checker,
-            $this->event_manager
+            $this->event_manager,
+            $crumb_builder
         );
 
         stub($this->mono_milestone_checker)->isMonoMilestoneEnabled()->returns(false);
