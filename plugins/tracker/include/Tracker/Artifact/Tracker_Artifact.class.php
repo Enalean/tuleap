@@ -42,6 +42,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     const STATUS_OPEN       = 'open';
     const STATUS_CLOSED     = 'closed';
 
+    const PROJECT_HISTORY_DELETED = 'tracker_artifact_delete';
+
     /**
      * Allow listeners to add custom action buttons alongside [Enable notifications]
      *
@@ -1877,6 +1879,13 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $this->getPriorityManager()->deletePriority($this);
         $this->getDao()->delete($this->getId());
         $this->getDao()->commit();
+
+        $project_history_dao = new ProjectHistoryDao();
+        $project_history_dao->groupAddHistory(
+            self::PROJECT_HISTORY_DELETED,
+            '#' . $this->getId() . ' tracker #' . $this->getTrackerId() . ' (' . $this->getTracker()->getName() . ')',
+            $this->getProjectId()
+        );
 
         EventManager::instance()->processEvent(
             TRACKER_EVENT_ARTIFACT_DELETE,

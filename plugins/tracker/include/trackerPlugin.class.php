@@ -839,7 +839,8 @@ class trackerPlugin extends Plugin {
             'tracker_date_reminder_edit',
             'tracker_date_reminder_delete',
             'tracker_date_reminder_sent',
-            Tracker_FormElement::PROJECT_HISTORY_UPDATE
+            Tracker_FormElement::PROJECT_HISTORY_UPDATE,
+            Tracker_Artifact::PROJECT_HISTORY_DELETED
         );
     }
 
