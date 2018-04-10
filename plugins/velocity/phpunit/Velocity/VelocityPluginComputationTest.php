@@ -94,7 +94,8 @@ class VelocityPluginComputationTest extends PHPUnit_Framework_TestCase
         $this->semantic_velocity = Mockery::mock(SemanticVelocity::class);
 
         $velocity_field = Mockery::mock(Tracker_FormElement_Field::class);
-        $this->semantic_velocity->shouldReceive('getVelocityField')->andReturn($velocity_field);
+        $velocity_field->shouldReceive('getId')->andReturn(100);
+        $this->semantic_velocity->shouldReceive('getFieldId')->andReturn($velocity_field);
         $velocity_field->shouldReceive('userCanRead')->andReturn(false);
         $velocity_field->shouldReceive('getId')->andReturn(1);
     }
@@ -112,6 +113,9 @@ class VelocityPluginComputationTest extends PHPUnit_Framework_TestCase
         $this->artifact->shouldReceive('getLastChangeset')->andReturn($artifact_changeset);
         $artifact_changeset->shouldReceive('getId')->andReturn($changeset_id);
 
+        $velocity_field = Mockery::mock(Tracker_FormElement_Field::class);
+        $velocity_field->shouldReceive('userCanRead')->andReturn(false);
+        $this->semantic_velocity->shouldReceive('getVelocityField')->andReturn($velocity_field);
         $this->velocity_computation_checker->shouldReceive('shouldComputeCapacity')->andReturn(true);
         $this->velocity_calculator->shouldReceive('calculate')->andReturn(20);
         $before_event->shouldReceive('getUser')->andReturn($this->user);

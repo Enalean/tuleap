@@ -57,8 +57,6 @@ class VelocityComputation
             return;
         }
 
-        $field = $semantic_velocity->getVelocityField();
-
         $artifact_id  = $before_event->getArtifact()->getId();
         $changeset    = $before_event->getArtifact()->getLastChangeset();
         $changeset_id = $changeset ? $changeset->getId() : 0;
@@ -69,14 +67,14 @@ class VelocityComputation
             $already_computed_velocity[$artifact_id][$changeset_id] = $computed_velocity;
         }
 
-        $before_event->forceFieldData($field->getId(), $already_computed_velocity[$artifact_id][$changeset_id]);
+        $before_event->forceFieldData($semantic_velocity->getFieldId(), $already_computed_velocity[$artifact_id][$changeset_id]);
     }
 
     private function getComputedVelocity(BeforeEvent $before_event, SemanticVelocity $semantic_velocity)
     {
         $computed_velocity = $this->calculator->calculate($before_event->getArtifact());
 
-        $this->displayUpdateMessageForUserWhoCanReadField($semantic_velocity->getVelocityField(), $before_event->getUser(), $computed_velocity);
+        $this->displayUpdateMessageForUserWhoCanReadField($before_event->getUser(), $computed_velocity, $semantic_velocity->getVelocityField());
 
         return $computed_velocity;
     }
@@ -86,11 +84,11 @@ class VelocityComputation
      * @param $computed_velocity
      */
     private function displayUpdateMessageForUserWhoCanReadField(
-        Tracker_FormElement_Field $field,
         PFUser $user,
-        $computed_velocity
+        $computed_velocity,
+        Tracker_FormElement_Field $field = null
     ) {
-        if ($field->userCanRead($user)) {
+        if ($field && $field->userCanRead($user)) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::INFO,
                 sprintf(
