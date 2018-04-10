@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\password\Configuration\PasswordConfiguration;
 use Tuleap\password\HaveIBeenPwned\PwnedPasswordChecker;
 use Tuleap\password\HaveIBeenPwned\PwnedPasswordRangeRetriever;
 use Tuleap\password\PasswordCompromiseValidator;
@@ -34,11 +35,12 @@ class PasswordStrategy {
     /**
     * Constructor
     */
-    function PasswordStrategy() {
+    public function __construct(PasswordConfiguration $password_configuration)
+    {
         $this->validators = array();
         $this->errors     = array();
 
-        if (ForgeConfig::get('reject_compromised_password')) {
+        if ($password_configuration->isBreachedPasswordVerificationEnabled()) {
             $pwned_password_range_retriever = new PwnedPasswordRangeRetriever(new Http_Client(), new BackendLogger());
             $pwned_password_checker         = new PwnedPasswordChecker($pwned_password_range_retriever);
             $password_compromise_validator  = new PasswordCompromiseValidator($pwned_password_checker);

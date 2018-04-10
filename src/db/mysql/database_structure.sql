@@ -1610,6 +1610,11 @@ CREATE TABLE forgeconfig (
     PRIMARY KEY idx(name(10))
 );
 
+DROP TABLE IF EXISTS password_configuration;
+CREATE TABLE password_configuration (
+    breached_password_enabled BOOL NOT NULL
+);
+
 DROP TABLE IF EXISTS user_dashboards;
 CREATE TABLE user_dashboards (
   id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
