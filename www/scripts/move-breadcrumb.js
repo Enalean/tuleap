@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean SAS - 2014-2017. All rights reserved
+ * Copyright (c) Enalean SAS - 2014-2018. All rights reserved
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@
             $('main').prepend(origin);
             origin.removeAttr('id');
 
-            if ($('.breadcrumb > a').length === 0) {
+            if ($('.breadcrumb > span').length === 0) {
                 $('.breadcrumb').remove();
             }
 
