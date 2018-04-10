@@ -53,8 +53,7 @@ Requires: jpgraph-%{PKG_NAME}
 Requires: ckeditor >= 4.3.2
 
 Requires: curl
-Requires: php-ZendFramework2-Loader, php-ZendFramework2-Mail
-Requires: php-markdown
+Requires: php-ZendFramework2-Mail
 Requires: tuleap-core-subversion
 
 # PHPWiki
@@ -82,7 +81,7 @@ Requires(post): policycoreutils-python
 # Bind utils
 Requires: bind-utils
 
-Obsoletes: php-restler, php-amqplib-amqplib
+Obsoletes: php-restler, php-amqplib-amqplib, php-markdown
 
 %description
 Tuleap is a web based application that address all the aspects of product development.
@@ -180,7 +179,7 @@ Group: Development/Tools
 Version: @@PLUGIN_GIT_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
 AutoReqProv: no
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, git > 1.7.4, php-Smarty, php-markdown, gitolite = 2.3.1, gitphp-tuleap >= 0.2.5-15
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, git > 1.7.4, php-Smarty, gitolite = 2.3.1, gitphp-tuleap >= 0.2.5-15
 Requires: geshi, php-guzzle-Guzzle, sudo
 Provides: tuleap-plugin-git = %{version}
 Conflicts: tuleap-plugin-git-gitolite3
@@ -195,7 +194,7 @@ Group: Development/Tools
 Version: @@PLUGIN_GIT_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
 AutoReqProv: no
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, rh-git29-git, php-Smarty, php-markdown, gitolite3, gitphp-tuleap >= 0.2.5-15
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, rh-git29-git, php-Smarty, gitolite3, gitphp-tuleap >= 0.2.5-15
 Requires: geshi, php-guzzle-Guzzle, sudo
 Provides: tuleap-plugin-git = %{version}
 Conflicts: tuleap-plugin-git

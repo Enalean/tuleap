@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,29 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-function get_markdown_path() {
-    $potential_paths = array(
-        '/usr/share/php-markdown',
-        '/usr/share/php', // php55 from remi repo has a different php path
-    );
+// Zend Mail
+require_once '/usr/share/php/Zend/autoload.php';
 
-    foreach($potential_paths as $path) {
-        $path .= '/Michelf/';
-        if (is_dir($path)) {
-            return $path;
-        }
-    }
-}
-
-require_once('/usr/share/php/Zend/Loader/StandardAutoloader.php');
-$loader = new Zend\Loader\StandardAutoloader(
-    array(
-        'autoregister_zf' => true,
-        'namespaces' => array(
-            'Michelf' => get_markdown_path()
-        )
-    )
-);
-$loader->register();
-
-require_once('vendor/autoload.php');
+// Composer
+require_once __DIR__.'/../vendor/autoload.php';
