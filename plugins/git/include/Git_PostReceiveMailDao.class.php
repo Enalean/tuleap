@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2011. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -19,18 +19,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/dao/include/DataAccessObject.class.php');
-
 /**
  *  Data Access Object for Git_PostReceiveMail
  */
-class Git_PostReceiveMailDao extends DataAccessObject
+class Git_PostReceiveMailDao extends \Tuleap\DB\DataAccessObject
 {
-
-    public function __construct() {
-        parent::__construct(CodendiDataAccess::instance());
-    }
-
     /**
      * Searches Git_PostReceiveMailDao by repository_id
      * @param Integer $repositoryId
@@ -39,33 +32,19 @@ class Git_PostReceiveMailDao extends DataAccessObject
      */
     public function searchByRepositoryId($repositoryId)
     {
-        $repository_id = $this->da->escapeInt($repositoryId);
-        $sql = "
+        $sql = '
             SELECT recipient_mail
             FROM plugin_git_post_receive_mail
-            WHERE repository_id = $repository_id";
+            WHERE repository_id = ?';
 
-        return $this->retrieve($sql);
+        return $this->getDB()->run($sql, $repositoryId);
     }
 
-    /**
-     * Create new entry for email Git repository notification
-     *
-     * @param Integer $repositoryId Id of the watched Git repository
-     * @param String  $recipient email adress to notify
-     *
-     * @return Boolean
-     */
-    function createNotification($repositoryId, $recipient) {
-        $sql = sprintf(
-            'INSERT INTO plugin_git_post_receive_mail'.
-            ' (recipient_mail, repository_id)'.
-            ' VALUES'.
-            ' (%s, %d)',
-        $this->da->quoteSmart($recipient),
-        $repositoryId);
+    public function createNotification($repositoryId, $recipient)
+    {
+        $sql = 'INSERT INTO plugin_git_post_receive_mail (recipient_mail, repository_id) VALUES (?, ?)';
 
-        return $this->update($sql);
+        $this->getDB()->run($sql, $recipient, $repositoryId);
     }
 
     /**
@@ -76,15 +55,20 @@ class Git_PostReceiveMailDao extends DataAccessObject
      *
      * @return Boolean
      */
-    function removeNotification($repositoryId, $recipient) {
-        $criteria = null;
+    public function removeNotification($repositoryId, $recipient)
+    {
+        $where_statement = \ParagonIE\EasyDB\EasyStatement::open()->with('repository_id = ?', $repositoryId);
         if ($recipient !== null) {
-            $criteria = ' AND recipient_mail = '.$this->da->quoteSmart($recipient);
+            $where_statement->andWith('recipient_mail = ?', $recipient);
         }
-        $sql = 'DELETE FROM plugin_git_post_receive_mail '.
-            'WHERE repository_id = '.$repositoryId.$criteria;
+        $sql = "DELETE FROM plugin_git_post_receive_mail WHERE $where_statement";
 
-        return $this->update($sql);
+        try {
+            $this->getDB()->safeQuery($sql, $where_statement->values());
+        } catch (PDOException $ex) {
+            return false;
+        }
+        return true;
     }
 
 }
