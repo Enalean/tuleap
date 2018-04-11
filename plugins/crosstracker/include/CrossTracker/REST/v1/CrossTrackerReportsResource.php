@@ -42,6 +42,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchablesCollectionBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\CrossTrackerExpertQueryReportDao;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\Date;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\Users;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\BetweenComparisonFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\EqualComparisonFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\GreaterThanComparisonFromWhereBuilder;
@@ -194,7 +195,8 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                     $date_value_extractor,
                     $date_time_value_rounder,
                     $last_update_date_alias_field
-                )
+                ),
+                new Users\EqualComparisonFromWhereBuilder()
             ),
             new NotEqualComparisonFromWhereBuilder(
                 new Title\NotEqualComparisonFromWhereBuilder(),
@@ -209,7 +211,8 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                     $date_value_extractor,
                     $date_time_value_rounder,
                     $last_update_date_alias_field
-                )
+                ),
+                new Users\EqualComparisonFromWhereBuilder()
             ),
             new GreaterThanComparisonFromWhereBuilder(
                 new Date\GreaterThanComparisonFromWhereBuilder(

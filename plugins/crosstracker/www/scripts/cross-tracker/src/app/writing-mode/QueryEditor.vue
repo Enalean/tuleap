@@ -45,70 +45,72 @@
                 <option value="@status">{{ status_semantic_label }}</option>
                 <option value="@submitted_on">{{ submitted_on_label }}</option>
                 <option value="@last_update_date">{{ lud_label }}</option>
+                <option value="@submitted_by">{{ submitted_by_label }}</option>
             </select>
         </div>
     </div>
 </template>)
 (<script>
-    import { gettext_provider } from '../gettext-provider.js';
-    import {
-        TQL_cross_tracker_autocomplete_keywords,
-        TQL_cross_tracker_mode_definition
-    } from './tql-configuration.js';
-    import {
-        insertAllowedFieldInCodeMirror
-    } from 'plugin-tracker-TQL/allowed-field-inserter.js';
-    import {
-        initializeTQLMode,
-        codeMirrorify
-    } from 'plugin-tracker-TQL/builder.js';
+import { gettext_provider } from '../gettext-provider.js';
+import {
+    TQL_cross_tracker_autocomplete_keywords,
+    TQL_cross_tracker_mode_definition
+} from './tql-configuration.js';
+import { insertAllowedFieldInCodeMirror } from 'plugin-tracker-TQL/allowed-field-inserter.js';
+import {
+    initializeTQLMode,
+    codeMirrorify
+} from 'plugin-tracker-TQL/builder.js';
 
-    export default {
-        name: 'QueryEditor',
-        props: [
-            'writingCrossTrackerReport'
-        ],
-        data() {
-            return {
-                code_mirror_instance: null
-            };
-        },
-        computed: {
-            query_label               : () => gettext_provider.gettext("Query"),
-            allowed_fields_label      : () => gettext_provider.gettext("Allowed fields"),
-            title_semantic_label      : () => gettext_provider.gettext("Title"),
-            description_semantic_label: () => gettext_provider.gettext("Description"),
-            status_semantic_label     : () => gettext_provider.gettext("Status"),
-            submitted_on_label        : () => gettext_provider.gettext("Submitted on"),
-            lud_label                 : () => gettext_provider.gettext("Last update date"),
-            placeholder               : () => gettext_provider.gettext("Example: @title = 'value'"),
-            tql_tips                  : () => gettext_provider.gettext("You can use: AND, OR, parenthesis. Autocomplete is activated with Ctrl + Space."),
-        },
-        methods: {
-            insertSelectedField(event) {
-                insertAllowedFieldInCodeMirror(event, this.code_mirror_instance);
-            },
-            search() {
-                this.$emit('triggerSearch');
-            }
-        },
-        created() {
-            initializeTQLMode(TQL_cross_tracker_mode_definition);
-        },
-        mounted() {
-            const submitFormCallback = () => {
-                this.search();
-            };
+export default {
+    name: 'QueryEditor',
+    props: {
+        'writingCrossTrackerReport': Object
+    },
+    data() {
+        return {
+            code_mirror_instance: null
+        };
+    },
+    computed: {
+        query_label                      : () => gettext_provider.gettext('Query'),
+        allowed_fields_label             : () => gettext_provider.gettext('Allowed fields'),
+        title_semantic_label             : () => gettext_provider.gettext('Title'),
+        description_semantic_label       : () => gettext_provider.gettext('Description'),
+        status_semantic_label            : () => gettext_provider.gettext('Status'),
+        submitted_on_label               : () => gettext_provider.gettext('Submitted on'),
+        lud_label                        : () => gettext_provider.gettext('Last update date'),
+        submitted_by_label               : () => gettext_provider.gettext('Submitted by'),
+        placeholder                      : () => gettext_provider.gettext("Example: @title = 'value'"),
+        tql_tips                         : () => gettext_provider.gettext(
+            'You can use: AND, OR, parenthesis. Autocomplete is activated with Ctrl + Space.'
+        )
+    },
+    created() {
+        initializeTQLMode(TQL_cross_tracker_mode_definition);
+    },
+    mounted() {
+        const submitFormCallback = () => {
+            this.search();
+        };
 
-            this.code_mirror_instance = codeMirrorify({
-                textarea_element: this.$refs.query_textarea,
-                autocomplete_keywords: TQL_cross_tracker_autocomplete_keywords,
-                submitFormCallback
-            });
+        this.code_mirror_instance = codeMirrorify({
+            textarea_element: this.$refs.query_textarea,
+            autocomplete_keywords: TQL_cross_tracker_autocomplete_keywords,
+            submitFormCallback
+        });
 
-            this.code_mirror_instance.on('change', () => {
-                this.writingCrossTrackerReport.expert_query = this.code_mirror_instance.getValue();
-            });
+        this.code_mirror_instance.on('change', () => {
+            this.writingCrossTrackerReport.expert_query = this.code_mirror_instance.getValue();
+        });
+    },
+    methods: {
+        insertSelectedField(event) {
+            insertAllowedFieldInCodeMirror(event, this.code_mirror_instance);
+        },
+        search() {
+            this.$emit('triggerSearch');
         }
-    };
+    }
+};
 </script>)
