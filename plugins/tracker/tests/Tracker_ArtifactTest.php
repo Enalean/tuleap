@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -804,9 +804,28 @@ class Tracker_Artifact_ParentAndAncestorsTest extends TuleapTestCase {
     }
 }
 
-class Tracker_Artifact_DeleteArtifactTest extends TuleapTestCase {
+class Tracker_Artifact_DeleteArtifactTest extends TuleapTestCase
+{
+    /**
+     * @var PFUser
+     */
+    private $user;
+    /**
+     * @var int
+     */
+    private $group_id;
+    /**
+     * @var int
+     */
+    private $artifact_id;
 
-    public function setUp() {
+    /**
+     * @var Tracker_Artifact
+     */
+    private $artifact;
+
+    public function setUp()
+    {
         parent::setUp();
 
         $this->group_id    = 687;
@@ -815,8 +834,16 @@ class Tracker_Artifact_DeleteArtifactTest extends TuleapTestCase {
 
         $this->artifact = partial_mock(
             'Tracker_Artifact',
-            array('getChangesets', 'getDao', 'getPermissionsManager', 'getCrossReferenceManager', 'getPriorityManager'),
-            array($this->artifact_id, null, null, null, null)
+            [
+                'getChangesets',
+                'getDao',
+                'getPermissionsManager',
+                'getCrossReferenceManager',
+                'getPriorityManager',
+                'getHistoryDao',
+                'getArtifactWithTrackerStructureExporter'
+            ],
+            [$this->artifact_id, null, null, null, null]
         );
         $this->artifact->setTracker($tracker);
 
@@ -830,6 +857,10 @@ class Tracker_Artifact_DeleteArtifactTest extends TuleapTestCase {
         $changeset_2->expectOnce('delete', array($this->user));
         $changeset_3 = mock('Tracker_Artifact_Changeset');
         $changeset_3->expectOnce('delete', array($this->user));
+
+        $artifact_with_structure_exporter = mock('Tuleap\Tracker\Artifact\ArtifactWithTrackerStructureExporter');
+        stub($this->artifact)->getArtifactWithTrackerStructureExporter()->returns($artifact_with_structure_exporter);
+        stub($this->artifact)->getHistoryDao()->returns(mock('ProjectHistoryDao'));
 
         stub($this->artifact)->getChangesets()->returns(array($changeset_1, $changeset_2, $changeset_3));
 

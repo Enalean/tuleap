@@ -25,9 +25,14 @@
 
 require_once(dirname(__FILE__).'/../../constants.php');
 
+use Tuleap\Project\XML\Export\ZipArchive;
+use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
+use Tuleap\Tracker\Artifact\ArtifactWithTrackerStructureExporter;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetFieldsWithoutRequiredValidationValidator;
 use Tuleap\Tracker\Artifact\PermissionsCache;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationDetector;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
@@ -1867,7 +1872,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         );
     }
 
-    public function delete(PFUser $user) {
+    public function delete(PFUser $user)
+    {
+        $this->getArtifactWithTrackerStructureExporter()->exportArtifactAndTrackerStructureToXML($user, $this);
+
         $this->getDao()->startTransaction();
         foreach($this->getChangesets() as $changeset) {
             $changeset->delete($user);
@@ -1880,7 +1888,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $this->getDao()->delete($this->getId());
         $this->getDao()->commit();
 
-        $project_history_dao = new ProjectHistoryDao();
+        $project_history_dao = $this->getHistoryDao();
         $project_history_dao->groupAddHistory(
             self::PROJECT_HISTORY_DELETED,
             '#' . $this->getId() . ' tracker #' . $this->getTrackerId() . ' (' . $this->getTracker()->getName() . ')',
@@ -1893,6 +1901,16 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 'artifact' => $this,
             )
         );
+    }
+
+    /**
+     * for testing purpose
+     *
+     * @return ProjectHistoryDao
+     */
+    protected function getHistoryDao()
+    {
+        return  new ProjectHistoryDao();
     }
 
     /**
@@ -2035,7 +2053,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     /**
      * @return Tracker_XML_Exporter_ArtifactAttachmentExporter
      */
-    private function getArtifactAttachmentExporter() {
+    private function getArtifactAttachmentExporter()
+    {
         return new Tracker_XML_Exporter_ArtifactAttachmentExporter($this->getFormElementFactory());
     }
 
@@ -2107,5 +2126,42 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             $types[$linked_artifact_id] = Tracker_FormElement_Field_ArtifactLink::NO_NATURE;
         }
         return $types;
+    }
+
+    /**
+     * protected for testing purpose
+     *
+     * @return ArtifactWithTrackerStructureExporter
+     */
+    protected function getArtifactWithTrackerStructureExporter()
+    {
+        $rng_validator = new XML_RNGValidator();
+
+        $user_xml_exporter = new UserXMLExporter(
+            UserManager::instance(), new UserXMLExportedCollection($rng_validator, new XML_SimpleXMLCDATAFactory())
+        );
+
+        $artifact_links_usage_dao = new ArtifactLinksUsageDao();
+
+        $logger = new WorkflowBackendLogger(new BackendLogger());
+
+        $exporter = new TrackerXmlExport(
+            TrackerFactory::instance(),
+            new Tracker_Workflow_Trigger_RulesManager(
+                new Tracker_Workflow_Trigger_RulesDao(),
+                $this->getFormElementFactory(),
+                new Tracker_Workflow_Trigger_RulesProcessor(new Tracker_Workflow_WorkflowUser(), $logger),
+                $logger,
+                new Tracker_Workflow_Trigger_RulesBuilderFactory($this->getFormElementFactory())
+            ),
+            $rng_validator,
+            new Tracker_Artifact_XMLExport($rng_validator, $this->getArtifactFactory(), false, $user_xml_exporter),
+            $user_xml_exporter,
+            $this->getEventManager(),
+            new NaturePresenterFactory(new NatureDao(), $artifact_links_usage_dao),
+            $artifact_links_usage_dao
+        );
+
+        return new ArtifactWithTrackerStructureExporter($exporter, new \Tuleap\XMLConvertor(), $this->getEventManager());
     }
 }
