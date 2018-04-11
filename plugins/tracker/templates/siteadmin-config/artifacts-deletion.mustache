@@ -14,9 +14,28 @@
                         <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>&nbsp;
                         {{# dgettext }}
                             tuleap-tracker
-                            | Be careful: The limit you define here is the number of artifacts users can delete from the REST API on a 24 hours sliding window. This action is hardly reversible. Choose wisely.
+                            | Be careful: The limit you define here is the number of artifacts users can delete from the REST API on a 24 hours sliding window. An artifact deletion is an action hardly reversible. Choose wisely.
                         {{/ dgettext }}
                     </div>
+
+                    {{# is_archiving_enabled }}
+                        <div class="tlp-alert-info">
+                            <i class="fa fa-info-circle" aria-hidden="true"></i>&nbsp;
+                            {{# dgettext }}
+                                tuleap-tracker
+                                |  Archive deleted items plugin is enabled. Each deleted artifact will be archived in the folder defined in the plugin configuration.
+                            {{/ dgettext }}
+                        </div>
+                    {{/ is_archiving_enabled }}
+                    {{^ is_archiving_enabled }}
+                        <div class="tlp-alert-info">
+                            <i class="fa fa-info-circle" aria-hidden="true"></i>&nbsp;
+                            {{# dgettext }}
+                                tuleap-tracker
+                                |  Archive deleted items plugin is not installed or enabled. Each deleted artifact will be exported and placed in the temporary folder defined in the local.inc file. They will be purged automatically accordingly to the settings of the machine on which the server is running.
+                            {{/ dgettext }}
+                        </div>
+                    {{/is_archiving_enabled}}
                     <form method="POST" action="">
                         <input type="hidden" name="action" value="artifacts-deletion-update-limit" />
                         {{# csrf_token }}

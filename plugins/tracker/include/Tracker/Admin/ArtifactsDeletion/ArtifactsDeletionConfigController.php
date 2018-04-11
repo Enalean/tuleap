@@ -28,6 +28,7 @@ use Codendi_Request;
 use CSRFSynchronizerToken;
 use Feedback;
 use http\Exception;
+use PluginManager;
 use Response;
 use Tuleap\Admin\AdminPageRenderer;
 
@@ -47,26 +48,41 @@ class ArtifactsDeletionConfigController
      */
     private $dao;
 
+    /**
+     * @var PluginManager
+     */
+    private $plugin_manager;
+
     public function __construct(
         AdminPageRenderer $admin_page_renderer,
         ArtifactsDeletionConfig $config,
-        ArtifactsDeletionConfigDAO $dao
+        ArtifactsDeletionConfigDAO $dao,
+        PluginManager $plugin_manager
     ) {
         $this->admin_page_renderer = $admin_page_renderer;
         $this->config              = $config;
         $this->dao                 = $dao;
+        $this->plugin_manager      = $plugin_manager;
     }
 
     public function index(CSRFSynchronizerToken $csrf)
     {
-        $title           = $GLOBALS['Language']->getText('plugin_tracker_config', 'title');
-        $artifacts_limit = $this->config->getArtifactsDeletionLimit();
+        $title                            = $GLOBALS['Language']->getText('plugin_tracker_config', 'title');
+        $artifacts_limit                  = $this->config->getArtifactsDeletionLimit();
+        $archive_deleted_items_plugin     = $this->plugin_manager->getPluginByName('archivedeleteditems');
+        $is_archive_deleted_items_enabled = ($archive_deleted_items_plugin)
+            ? $this->plugin_manager->isPluginAvailable($archive_deleted_items_plugin)
+            : false;
 
         $this->admin_page_renderer->renderANoFramedPresenter(
             $title,
             TRACKER_TEMPLATE_DIR,
             'siteadmin-config/artifacts-deletion',
-            new ArtifactsDeletionConfigPresenter($csrf, $artifacts_limit)
+            new ArtifactsDeletionConfigPresenter(
+                $csrf,
+                $artifacts_limit,
+                $is_archive_deleted_items_enabled
+            )
         );
     }
 
