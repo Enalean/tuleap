@@ -98,7 +98,8 @@ if ($plugin && $plugin_manager->isPluginAvailable($plugin)) {
             new ArtifactsDeletionConfig(
                 $artifact_deletion_dao
             ),
-            $artifact_deletion_dao
+            $artifact_deletion_dao,
+            $plugin_manager
         )
     );
     $router->process($request, $GLOBALS['HTML'], $current_user);
