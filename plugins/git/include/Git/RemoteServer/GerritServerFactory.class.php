@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -63,7 +63,7 @@ class Git_RemoteServer_GerritServerFactory {
      * @throws Git_RemoteServer_NotFoundException
      */
     public function getServerById($id) {
-        $row = $this->dao->searchById($id)->getRow();
+        $row = $this->dao->getById($id);
         if ($row) {
             return $this->instantiateFromRow($row);
         }
@@ -203,9 +203,15 @@ class Git_RemoteServer_GerritServerFactory {
      * @param PFUser $user
      * @return Git_RemoteServer_GerritServer[]
      */
-    public function getRemoteServersForUser(PFUser $user) {
-        return $this->dao->searchAllRemoteServersForUserId($user->getId())
-            ->instanciateWith(array($this, 'instantiateFromRow'));
+    public function getRemoteServersForUser(PFUser $user)
+    {
+        $gerrit_servers = [];
+
+        foreach ($this->dao->searchAllRemoteServersForUserId($user->getId()) as $row) {
+            $gerrit_servers[] = $this->instantiateFromRow($row);
+        }
+
+        return $gerrit_servers;
     }
 
     /**
@@ -236,6 +242,6 @@ class Git_RemoteServer_GerritServerFactory {
      * @return boolean
      */
     public function hasRemotesSetUp() {
-        return $this->dao->searchAll()->count() > 0;
+        return count($this->dao->searchAll()) > 0;
     }
 }

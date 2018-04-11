@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -35,7 +35,7 @@ class ServerPermissionManager {
     public function isUserAllowedToListServers(PFUser $user) {
         $rows = $this->dao->searchProjectIdsUserIsGitAdmin($user->getId());
 
-        return $rows && $rows->rowCount() > 0;
+        return count($rows) > 0;
     }
 
 }

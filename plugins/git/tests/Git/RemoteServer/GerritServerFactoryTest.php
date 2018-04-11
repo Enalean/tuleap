@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -85,9 +85,9 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
         $this->dao = mock('Git_RemoteServer_Dao');
         $this->system_event_manager = mock('Git_SystemEventManager');
 
-        stub($this->dao)->searchAll()->returnsDar($this->dar_1, $this->dar_2);
-        stub($this->dao)->searchById($this->server_id)->returnsDar($this->dar_1);
-        stub($this->dao)->searchById()->returnsEmptyDar();
+        stub($this->dao)->searchAll()->returns([$this->dar_1, $this->dar_2]);
+        stub($this->dao)->getById($this->server_id)->returns($this->dar_1);
+        stub($this->dao)->getById()->returns([]);
 
         $this->project_manager = mock('ProjectManager');
 
@@ -155,7 +155,7 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
         stub($this->project_manager)->getChildProjects()->returns(array());
         $project = stub('Project')->getId()->returns(458);
         expect($this->dao)->searchAllByProjectId(458)->once();
-        stub($this->dao)->searchAllByProjectId()->returnsDar($this->dar_1);
+        stub($this->dao)->searchAllByProjectId()->returns([$this->dar_1]);
         $servers = $this->factory->getServersForProject($project);
         $this->assertIsA($servers[$this->server_id], 'Git_RemoteServer_GerritServer');
     }
@@ -168,9 +168,9 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
         stub($this->project_manager)->getChildProjects(369)->returns(array($child1, $child2));
         stub($this->project_manager)->getChildProjects()->returns(array());
 
-        stub($this->dao)->searchAllByProjectId(933)->returnsDar($this->dar_1);
-        stub($this->dao)->searchAllByProjectId(934)->returnsDar($this->dar_2);
-        stub($this->dao)->searchAllByProjectId()->returnsEmptyDar();
+        stub($this->dao)->searchAllByProjectId(933)->returns([$this->dar_1]);
+        stub($this->dao)->searchAllByProjectId(934)->returns([$this->dar_2]);
+        stub($this->dao)->searchAllByProjectId()->returns([]);
 
         $servers = $this->factory->getServersForProject($parent);
         $this->assertCount($servers, 2);
@@ -190,7 +190,7 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
         stub($this->project_manager)->getChildProjects(933)->returns(array($grandchild));
         stub($this->project_manager)->getChildProjects()->returns(array());
 
-        stub($this->dao)->searchAllByProjectId()->returnsEmptyDar();
+        stub($this->dao)->searchAllByProjectId()->returns([]);
         expect($this->dao)->searchAllByProjectId()->count(4);
         expect($this->dao)->searchAllByProjectId(369)->at(0);
         expect($this->dao)->searchAllByProjectId(933)->at(1);
@@ -207,8 +207,8 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
         stub($this->project_manager)->getChildProjects(369)->returns(array($child));
         stub($this->project_manager)->getChildProjects()->returns(array());
 
-        stub($this->dao)->searchAllByProjectId(369)->returnsDar($this->dar_1);
-        stub($this->dao)->searchAllByProjectId(933)->returnsDar($this->dar_1);
+        stub($this->dao)->searchAllByProjectId(369)->returns([$this->dar_1]);
+        stub($this->dao)->searchAllByProjectId(933)->returns([$this->dar_1]);
 
         $servers = $this->factory->getServersForProject($parent);
         $this->assertCount($servers, 1);
