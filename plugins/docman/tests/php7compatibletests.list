@@ -1,0 +1,11 @@
+/usr/share/tuleap/plugins/docman/tests/bin/DocmanImport/DateParserTest.php
+/usr/share/tuleap/plugins/docman/tests/MetadataListOfValuesElementFactoryTest.php
+/usr/share/tuleap/plugins/docman/tests/FilterFactoryTest.php
+/usr/share/tuleap/plugins/docman/tests/TokenTest.php
+/usr/share/tuleap/plugins/docman/tests/MetadataTest.php
+/usr/share/tuleap/plugins/docman/tests/PermissionsManagerLockTest.php
+/usr/share/tuleap/plugins/docman/tests/RenameProjectTest.php
+/usr/share/tuleap/plugins/docman/tests/MetadataListOfValuesElementDaoTest.php
+/usr/share/tuleap/plugins/docman/tests/ApprovalTableTest.php
+/usr/share/tuleap/plugins/docman/tests/Docman_MIMETypeDetectorTest.php
+/usr/share/tuleap/plugins/docman/tests/ApprovalTableNotificationCycleTest.php

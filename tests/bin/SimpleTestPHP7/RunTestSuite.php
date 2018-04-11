@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  *
+ * @codingStandardsIgnoreFile
  */
 
 class RunTestSuite
@@ -24,8 +25,8 @@ class RunTestSuite
     public function mainWithCompatibilityListJunit(array $argv)
     {
         $test_suite = new TestSuite();
-        foreach (file(FindCompatibleTests::COMPATIBLE_TESTS_FILE) as $test_file) {
-            $test_suite->addFile(trim($test_file));
+        foreach ($this->getCompatibleTestFiles() as $test_file) {
+            $test_suite->addFile($test_file);
         }
         $reporter = new JUnitXMLReporter();
         $test_suite->run($reporter);
@@ -35,10 +36,29 @@ class RunTestSuite
     public function mainWithCompatibilityList()
     {
         $test_suite = new TestSuite();
-        foreach (file(FindCompatibleTests::COMPATIBLE_TESTS_FILE) as $test_file) {
-            $test_suite->addFile(trim($test_file));
+        foreach ($this->getCompatibleTestFiles() as $test_file) {
+            $test_suite->addFile($test_file);
         }
         $this->run($test_suite, new ColorTextReporter());
+    }
+
+    private function getCompatibleTestFiles()
+    {
+        foreach (file(__DIR__.'/../../'.FindCompatibleTests::COMPATIBLE_TESTS_FILE) as $file) {
+            yield trim($file);
+        }
+        $directory_iterator = new \DirectoryIterator(__DIR__.'/../../../plugins');
+        foreach ($directory_iterator as $directory) {
+            if ($directory->isDot()) {
+                continue;
+            }
+            $compatibility_file = $directory->getPathname().'/tests/'.FindCompatibleTests::COMPATIBLE_TESTS_FILE;
+            if (is_file($compatibility_file)) {
+                foreach (file($compatibility_file) as $file) {
+                    yield trim($file);
+                }
+            }
+        }
     }
 
     public function mainWithOneFile(array $argv)

@@ -1,0 +1,3 @@
+/usr/share/tuleap/plugins/ldap/tests/LDAP_UserDaoTest.php
+/usr/share/tuleap/plugins/ldap/tests/LDAP_UserSyncTest.php
+/usr/share/tuleap/plugins/ldap/tests/LdapEscapeTest.php

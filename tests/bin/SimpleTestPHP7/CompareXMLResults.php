@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  *
+ * @codingStandardsIgnoreFile
  */
 
 class CompareXMLResults
@@ -34,6 +35,9 @@ class CompareXMLResults
             exit(0);
         } else {
             echo "*** ERROR: PHP 7.0 and PHP 5.6 test suites differs\n";
+            echo "Tests: {$php70['tests']} 7.0 vs {$php56['tests']} 5.6\n";
+            echo "Failures: {$php70['failures']} 7.0 vs {$php56['failures']} 5.6\n";
+            echo "Errors: {$php70['errors']} 7.0 vs {$php56['errors']} 5.6\n";
             exit(1);
         }
     }
