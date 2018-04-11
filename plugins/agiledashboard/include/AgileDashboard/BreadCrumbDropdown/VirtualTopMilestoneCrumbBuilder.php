@@ -21,7 +21,8 @@
 namespace Tuleap\AgileDashboard\BreadCrumbDropdown;
 
 use Project;
-use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbItem;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 
 class VirtualTopMilestoneCrumbBuilder
 {
@@ -38,18 +39,22 @@ class VirtualTopMilestoneCrumbBuilder
 
     /**
      * @param Project $project
-     * @return BreadCrumbItem
+     *
+     * @return BreadCrumb
      */
     public function build(Project $project)
     {
-        $url_top_parameters = array(
+        $url_top_parameters = [
             'action'   => 'show-top',
             'pane'     => 'topplanning-v2',
             'group_id' => (int) $project->getGroupId()
-        );
-        return new BreadCrumbItem(
-            $GLOBALS['Language']->getText('plugin_agiledashboard', 'top_planning_link'),
-            $this->plugin_path .'/?'. http_build_query($url_top_parameters)
+        ];
+
+        return new BreadCrumb(
+            new BreadCrumbLink(
+                $GLOBALS['Language']->getText('plugin_agiledashboard', 'top_planning_link'),
+                $this->plugin_path . '/?' . http_build_query($url_top_parameters)
+            )
         );
     }
 }

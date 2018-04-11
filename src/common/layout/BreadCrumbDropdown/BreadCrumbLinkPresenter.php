@@ -20,27 +20,32 @@
 
 namespace Tuleap\Layout\BreadCrumbDropdown;
 
-class BreadCrumbPresenter
+class BreadCrumbLinkPresenter
 {
-    /** @var SubItemsSectionPresenter[] */
-    public $sections;
-
-    /** @var bool */
-    public $has_sub_items;
-
-    /** @var BreadCrumbLinkPresenter */
-    public $link;
-
     /**
-     * BreadCrumbPresenter constructor.
-     *
-     * @param BreadCrumbLinkPresenter    $link
-     * @param SubItemsSectionPresenter[] $sections
+     * @var string
      */
-    public function __construct(BreadCrumbLinkPresenter $link, array $sections)
+    public $label;
+    /**
+     * @var string
+     */
+    public $url;
+    /**
+     * @var bool
+     */
+    public $has_icon;
+    /**
+     * @var string
+     */
+    public $icon_name;
+
+    public function __construct(BreadCrumbLink $link)
     {
-        $this->link          = $link;
-        $this->sections      = $sections;
-        $this->has_sub_items = count($this->sections) > 0;
+        $this->label = $link->getLabel();
+        $this->url   = $link->getUrl();
+
+        $icon_name       = $link->getIconName();
+        $this->has_icon  = ($icon_name !== '');
+        $this->icon_name = ($this->has_icon) ? $icon_name : "";
     }
 }

@@ -21,7 +21,8 @@
 namespace Tuleap\AgileDashboard\BreadCrumbDropdown;
 
 use Project;
-use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbItem;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 
 class AdministrationCrumbBuilder
 {
@@ -46,9 +47,11 @@ class AdministrationCrumbBuilder
                 ]
             );
 
-        return new BreadCrumbItem(
-            $GLOBALS['Language']->getText('global', 'Administration'),
-            $admin_url
+        return new BreadCrumb(
+            new BreadCrumbLink(
+                $GLOBALS['Language']->getText('global', 'Administration'),
+                $admin_url
+            )
         );
     }
 }

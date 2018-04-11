@@ -353,9 +353,8 @@ class FlamingParrot_Theme extends Layout {
             $sidebar_collapsable = (! $current_user->isAnonymous() && $current_user->isLoggedIn()) ? true : false;
         }
 
-        $breadcrumb_presenter_builder = new BreadCrumbPresenterBuilder(
-            $this->uri_sanitizer
-        );
+        $breadcrumb_presenter_builder = new BreadCrumbPresenterBuilder();
+
         $breadcrumbs = $breadcrumb_presenter_builder->build($this->breadcrumbs);
 
         $this->render('container', new FlamingParrot_ContainerPresenter(

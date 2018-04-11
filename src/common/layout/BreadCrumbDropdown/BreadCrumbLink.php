@@ -20,7 +20,7 @@
 
 namespace Tuleap\Layout\BreadCrumbDropdown;
 
-class BreadCrumbItem implements BreadCrumb
+class BreadCrumbLink
 {
     /** @var string */
     private $label;
@@ -31,16 +31,13 @@ class BreadCrumbItem implements BreadCrumb
     /** @var string */
     private $icon_name;
 
-    /** @var BreadCrumbSubItemCollection */
-    private $sub_items;
-
     public function __construct(
         $label,
         $url
     ) {
         $this->label     = $label;
         $this->url       = $url;
-        $this->sub_items = new BreadCrumbSubItemCollection();
+        $this->icon_name = '';
     }
 
     /**
@@ -73,21 +70,5 @@ class BreadCrumbItem implements BreadCrumb
     public function setIconName($icon_name)
     {
         $this->icon_name = $icon_name;
-    }
-
-    /**
-     * @return BreadCrumbSubItemCollection
-     */
-    public function getSubItems()
-    {
-        return $this->sub_items;
-    }
-
-    /**
-     * @param BreadCrumbSubItemCollection $sub_items
-     */
-    public function setSubItems(BreadCrumbSubItemCollection $sub_items)
-    {
-        $this->sub_items = $sub_items;
     }
 }

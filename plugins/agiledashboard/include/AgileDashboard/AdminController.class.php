@@ -72,7 +72,6 @@ use Tuleap\FRS\FrsPermissionDao;
 use Tuleap\FRS\UploadedLinksDao;
 use Tuleap\FRS\UploadedLinksUpdater;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
-use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbItem;
 use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\Project\UserRemover;

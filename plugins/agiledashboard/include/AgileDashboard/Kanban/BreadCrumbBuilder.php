@@ -22,7 +22,8 @@ namespace Tuleap\AgileDashboard\Kanban;
 
 use AgileDashboard_Kanban;
 use Project;
-use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbItem;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 
 class BreadCrumbBuilder
 {
@@ -42,7 +43,7 @@ class BreadCrumbBuilder
     }
 
     /**
-     * @return BreadCrumbItem
+     * @return BreadCrumb
      */
     public function build(Project $project, AgileDashboard_Kanban $kanban)
     {
@@ -55,9 +56,8 @@ class BreadCrumbBuilder
                 ]
             );
 
-        return new BreadCrumbItem(
-            $kanban->getName(),
-            $url
+        return new BreadCrumb(
+            new BreadCrumbLink($kanban->getName(), $url)
         );
     }
 }

@@ -2,25 +2,37 @@
     {{# breadcrumbs }}
         {{^ has_sub_items }}
             <span class="breadcrumb-item">
-                <a class="breadcrumb-link" href="{{ url }}" title="{{ label }}">
-                    {{# has_icon }}<i class="breadcrumb-link-icon fa fa-fw {{ icon_name }}"></i>{{/ has_icon }}{{ label }}
-                </a>
+                {{# link }}
+                    <a class="breadcrumb-link" href="{{ url }}" title="{{ label }}">
+                        {{# has_icon }}<i class="breadcrumb-link-icon fa fa-fw {{ icon_name }}"></i>{{/ has_icon }}{{ label }}
+                    </a>
+                {{/ link }}
             </span>
         {{/ has_sub_items }}
 
         {{# has_sub_items }}
             <div class="breadcrumb-switchable breadcrumb-item">
-                <a class="breadcrumb-link" href="{{ url }}" title="{{ label }}">
-                    {{# has_icon }}<i class="breadcrumb-link-icon fa fa-fw {{ icon_name }}"></i>{{/ has_icon }}{{ label }}
-                </a>
+                {{# link }}
+                    <a class="breadcrumb-link" href="{{ url }}" title="{{ label }}">
+                        {{# has_icon }}<i class="breadcrumb-link-icon fa fa-fw {{ icon_name }}"></i>{{/ has_icon }}{{ label }}
+                    </a>
+                {{/ link }}
                 <nav class="breadcrumb-switch-menu">
-                    {{# sub_items }}
-                        <span class="breadcrumb-dropdown-item">
-                            <a class="breadcrumb-dropdown-link" href="{{ url }}" title="{{ label }}">
-                                {{# has_icon }}<i class="breadcrumb-link-icon fa fa-fw {{ icon_name }}"></i>{{/ has_icon }}{{ label }}
-                            </a>
-                        </span>
-                    {{/ sub_items }}
+                    {{# sections }}
+                        {{# has_label }}
+                            <div class="breadcrumb-dropdown-section-title">{{ label }}</div>
+                        {{/ has_label }}
+                        {{^ has_label }}
+                            <div class="breadcrumb-dropdown-separator"></div>
+                        {{/ has_label }}
+                        {{# links }}
+                            <span class="breadcrumb-dropdown-item">
+                                <a class="breadcrumb-dropdown-link" href="{{ url }}" title="{{ label }}">
+                                    {{# has_icon }}<i class="breadcrumb-link-icon fa fa-fw {{ icon_name }}"></i>{{/ has_icon }}{{ label }}
+                                </a>
+                            </span>
+                        {{/ links }}
+                    {{/ sections }}
                 </nav>
             </div>
         {{/ has_sub_items }}

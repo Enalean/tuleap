@@ -20,34 +20,46 @@
 
 namespace Tuleap\layout\BreadCrumbDropdown;
 
-use Codendi_HTMLPurifier;
-use Tuleap\Sanitizer\URISanitizer;
-
 class BreadCrumbPresenterBuilder
 {
-    /** @var URISanitizer */
-    private $uri_sanitizer;
-
-    public function __construct(URISanitizer $uri_sanitizer)
-    {
-        $this->uri_sanitizer = $uri_sanitizer;
-    }
-
     /**
      * @param BreadCrumbCollection $collection
+     *
      * @return BreadCrumbPresenter[]
      */
     public function build(BreadCrumbCollection $collection)
     {
         $presenters = [];
         foreach ($collection->getBreadcrumbs() as $breadcrumb) {
-            $item_presenter = new BreadCrumbPresenter($breadcrumb);
-            $sub_items      = [];
-            foreach ($breadcrumb->getSubItems()->getItems() as $sub_item) {
-                $sub_items[] = new BreadCrumbPresenter($sub_item);
-            }
-            $item_presenter->setSubItems($sub_items);
+            $item_presenter = new BreadCrumbPresenter(
+                new BreadCrumbLinkPresenter($breadcrumb->getLink()),
+                $this->getSectionsPresenters($breadcrumb->getSubItems())
+            );
+
             $presenters[] = $item_presenter;
+        }
+
+        return $presenters;
+    }
+
+    private function getSectionsPresenters(BreadCrumbSubItems $sub_items)
+    {
+        $presenters = [];
+        foreach ($sub_items->getSections() as $section) {
+            $presenters[] = new SubItemsSectionPresenter(
+                $section->getLabel(),
+                $this->getLinksPresenters($section)
+            );
+        }
+
+        return $presenters;
+    }
+
+    private function getLinksPresenters(SubItemsSection $section)
+    {
+        $presenters = [];
+        foreach ($section->getLinks() as $link) {
+            $presenters[] = new BreadCrumbLinkPresenter($link);
         }
 
         return $presenters;
