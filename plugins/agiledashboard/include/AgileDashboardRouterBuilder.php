@@ -109,7 +109,7 @@ class AgileDashboardRouterBuilder
             $top_milestone_pane_factory,
             $service_crumb_builder,
             new VirtualTopMilestoneCrumbBuilder($plugin->getPluginPath()),
-            new MilestoneCrumbBuilder($plugin->getPluginPath(), $pane_factory)
+            new MilestoneCrumbBuilder($plugin->getPluginPath(), $pane_factory, $milestone_factory)
         );
 
         $mono_milestone_checker = new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory);

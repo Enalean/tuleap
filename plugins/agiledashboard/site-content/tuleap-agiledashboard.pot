@@ -83,6 +83,12 @@ msgstr ""
 msgid "Make sure to check their configuration."
 msgstr ""
 
+#, php-format
+msgid "Other %s"
+msgid_plural "Other %s"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Parent item"
 msgstr ""
 
