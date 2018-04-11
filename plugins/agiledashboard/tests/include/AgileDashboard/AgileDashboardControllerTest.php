@@ -20,36 +20,77 @@
  */
 
 use Tuleap\AgileDashboard\AdminController;
+use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
+use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
+use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 
 require_once dirname(__FILE__).'/../../bootstrap.php';
 
-class AgileDashboardControllerTest extends TuleapTestCase {
+class AgileDashboardControllerTest extends TuleapTestCase
+{
+    /** @var UserManager */
+    private $user_manager;
 
-    public function setUp() {
+    /** @var Codendi_Request */
+    private $request;
+
+    /** @var PlanningFactory */
+    private $planning_factory;
+
+    /** @var AgileDashboard_KanbanManager */
+    private $kanban_manager;
+
+    /** @var AgileDashboard_ConfigurationManager */
+    private $config_manager;
+
+    /** @var TrackerFactory */
+    private $tracker_factory;
+
+    /** @var AgileDashboard_KanbanFactory */
+    private $kanban_factory;
+
+    /** @var EventManager */
+    private $event_manager;
+
+    /** @var AgileDashboardCrumbBuilder */
+    private $service_crumb_builder;
+
+    /** @var AdministrationCrumbBuilder */
+    private $admin_crumb_builder;
+
+    /** @var ScrumForMonoMilestoneChecker */
+    private $scrum_mono_milestone_checker;
+
+    public function setUp()
+    {
         parent::setUp();
         ForgeConfig::store();
         ForgeConfig::set('codendi_dir', AGILEDASHBOARD_BASE_DIR .'/../../..');
 
-        $this->user_manager     = mock('UserManager');
-        $this->request          = mock('Codendi_Request');
-        $this->planning_factory = mock('PlanningFactory');
-        $this->kanban_manager   = mock('AgileDashboard_KanbanManager');
-        $this->config_manager   = mock('AgileDashboard_ConfigurationManager');
-        $this->tracker_factory  = mock('TrackerFactory');
-        $this->kanban_factory   = mock('AgileDashboard_KanbanFactory');
-        $this->event_manager    = mock('EventManager');
-        $this->crumb_builder    = mock(\Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder::class);
+        $this->user_manager                 = mock('UserManager');
+        $this->request                      = mock('Codendi_Request');
+        $this->planning_factory             = mock('PlanningFactory');
+        $this->kanban_manager               = mock('AgileDashboard_KanbanManager');
+        $this->config_manager               = mock('AgileDashboard_ConfigurationManager');
+        $this->tracker_factory              = mock('TrackerFactory');
+        $this->kanban_factory               = mock('AgileDashboard_KanbanFactory');
+        $this->event_manager                = mock('EventManager');
+        $this->service_crumb_builder        = mock(AgileDashboardCrumbBuilder::class);
+        $this->admin_crumb_builder          = mock(AdministrationCrumbBuilder::class);
+        $this->scrum_mono_milestone_checker = mock(ScrumForMonoMilestoneChecker::class);
 
         UserManager::setInstance($this->user_manager);
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         ForgeConfig::restore();
         UserManager::clearInstance();
         parent::tearDown();
     }
 
-    public function itDoesNothingIfIsUserNotAdmin() {
+    public function itDoesNothingIfIsUserNotAdmin()
+    {
         $user = stub('PFUser')->isAdmin(123)->returns(false);
 
         stub($this->request)->exist('activate-ad-service')->returns(true);
@@ -65,9 +106,10 @@ class AgileDashboardControllerTest extends TuleapTestCase {
             $this->kanban_factory,
             $this->config_manager,
             $this->tracker_factory,
-            mock('Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker'),
+            $this->scrum_mono_milestone_checker,
             $this->event_manager,
-            $this->crumb_builder
+            $this->service_crumb_builder,
+            $this->admin_crumb_builder
         );
 
         expect($this->config_manager)->updateConfiguration()->never();
@@ -75,7 +117,8 @@ class AgileDashboardControllerTest extends TuleapTestCase {
         $controller->updateConfiguration();
     }
 
-    public function itDoesNotCreateAKanbanIfTrackerIsUsedInScrumBacklog() {
+    public function itDoesNotCreateAKanbanIfTrackerIsUsedInScrumBacklog()
+    {
         $tracker    = mock('Tracker');
         $admin_user = stub('PFUser')->isAdmin(789)->returns(true);
 
@@ -95,9 +138,10 @@ class AgileDashboardControllerTest extends TuleapTestCase {
             $this->kanban_factory,
             $this->config_manager,
             $this->tracker_factory,
-            mock('Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker'),
+            $this->scrum_mono_milestone_checker,
             $this->event_manager,
-            $this->crumb_builder
+            $this->service_crumb_builder,
+            $this->admin_crumb_builder
         );
 
         expect($this->kanban_manager)->createKanban()->never();
@@ -105,7 +149,8 @@ class AgileDashboardControllerTest extends TuleapTestCase {
         $controller->createKanban();
     }
 
-    public function itDoesNotCreateAKanbanIfTrackerIsUsedInScrumPlanning() {
+    public function itDoesNotCreateAKanbanIfTrackerIsUsedInScrumPlanning()
+    {
         $tracker    = mock('Tracker');
         $admin_user = stub('PFUser')->isAdmin(789)->returns(true);
 
@@ -125,14 +170,14 @@ class AgileDashboardControllerTest extends TuleapTestCase {
             $this->kanban_factory,
             $this->config_manager,
             $this->tracker_factory,
-            mock('Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker'),
+            $this->scrum_mono_milestone_checker,
             $this->event_manager,
-            $this->crumb_builder
+            $this->service_crumb_builder,
+            $this->admin_crumb_builder
         );
 
         expect($this->kanban_manager)->createKanban()->never();
 
         $controller->createKanban();
     }
-
 }

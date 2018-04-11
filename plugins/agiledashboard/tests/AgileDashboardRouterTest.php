@@ -23,9 +23,10 @@ require_once dirname(__FILE__).'/../../tracker/include/constants.php';
 require_once AGILEDASHBOARD_BASE_DIR.'/autoload.php';
 require_once TRACKER_BASE_DIR.'/autoload.php';
 
-class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase {
-
-    public function setUp() {
+class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase
+{
+    public function setUp()
+    {
         parent::setUp();
         ForgeConfig::store();
         ForgeConfig::set('codendi_dir', AGILEDASHBOARD_BASE_DIR .'/../../..');
@@ -55,7 +56,8 @@ class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase {
             mock('Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker'),
             mock('Tuleap\AgileDashboard\Planning\ScrumPlanningFilter'),
             mock('Tuleap\AgileDashboard\PermissionsPerGroup\AgileDashboardJSONPermissionsRetriever'),
-            mock(\Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder::class)
+            mock(\Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder::class),
+            mock(\Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder::class)
         );
 
         stub($this->router)->buildPlanningController()->returns($this->planning_controller);

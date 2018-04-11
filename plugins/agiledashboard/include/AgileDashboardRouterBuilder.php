@@ -19,6 +19,7 @@
  */
 
 use Tuleap\AgileDashboard\BacklogItem\RemainingEffortValueRetriever;
+use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\MilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\VirtualTopMilestoneCrumbBuilder;
@@ -96,6 +97,7 @@ class AgileDashboardRouterBuilder
         );
 
         $service_crumb_builder        = new AgileDashboardCrumbBuilder($plugin->getPluginPath());
+        $admin_crumb_builder          = new AdministrationCrumbBuilder($plugin->getPluginPath());
         $milestone_controller_factory = new Planning_MilestoneControllerFactory(
             $plugin,
             ProjectManager::instance(),
@@ -142,7 +144,8 @@ class AgileDashboardRouterBuilder
                     )
                 )
             ),
-            $service_crumb_builder
+            $service_crumb_builder,
+            $admin_crumb_builder
         );
     }
 
