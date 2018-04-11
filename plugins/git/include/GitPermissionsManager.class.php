@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -127,7 +127,7 @@ class GitPermissionsManager
         }
     }
 
-    private function queueProjectsConfigurationUpdate(DataAccessResult $dar) {
+    private function queueProjectsConfigurationUpdate(array $dar) {
         $projects_ids = array();
         if (count($dar) > 0) {
             foreach ($dar as $row) {
