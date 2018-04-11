@@ -19,6 +19,7 @@
  */
 
 use Tuleap\AgileDashboard\BaseController;
+use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\FormElement\Burnup;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
@@ -37,6 +38,7 @@ use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\FRS\UploadedLinksDao;
 use Tuleap\FRS\UploadedLinksUpdater;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbItem;
 use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\Project\UserRemover;
@@ -114,7 +116,10 @@ class Planning_Controller extends BaseController
     /**
      * @var AgileDashboardCrumbBuilder
      */
-    private $crumb_builder;
+    private $service_crumb_builder;
+
+    /** @var AdministrationCrumbBuilder */
+    private $admin_crumb_builder;
 
     public function __construct(
         Codendi_Request $request,
@@ -133,7 +138,8 @@ class Planning_Controller extends BaseController
         ScrumPlanningFilter $scrum_planning_filter,
         TrackerFactory $tracker_factory,
         Tracker_FormElementFactory $tracker_form_element_factory,
-        AgileDashboardCrumbBuilder $crumb_builder
+        AgileDashboardCrumbBuilder $service_crumb_builder,
+        AdministrationCrumbBuilder $admin_crumb_builder
     ) {
         parent::__construct('agiledashboard', $request);
 
@@ -154,7 +160,8 @@ class Planning_Controller extends BaseController
         $this->scrum_planning_filter        = $scrum_planning_filter;
         $this->tracker_factory              = $tracker_factory;
         $this->tracker_form_element_factory = $tracker_form_element_factory;
-        $this->crumb_builder                = $crumb_builder;
+        $this->service_crumb_builder        = $service_crumb_builder;
+        $this->admin_crumb_builder          = $admin_crumb_builder;
     }
 
     public function index() {
@@ -706,11 +713,16 @@ class Planning_Controller extends BaseController
     {
         $breadcrumbs = new BreadCrumbCollection();
         $breadcrumbs->addBreadCrumb(
-            $this->crumb_builder->build(
+            $this->service_crumb_builder->build(
                 $this->getCurrentUser(),
                 $this->project
             )
         );
+        if ($this->request->existAndNonEmpty('action')) {
+            $breadcrumbs->addBreadCrumb(
+                $this->admin_crumb_builder->build($this->project)
+            );
+        }
 
         return $breadcrumbs;
     }

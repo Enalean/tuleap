@@ -19,6 +19,8 @@
  */
 
 use Tuleap\AgileDashboard\AdminController;
+use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
+use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
 
 require_once(dirname(__FILE__).'/../../../tracker/tests/builders/all.php');
@@ -35,9 +37,10 @@ Mock::generatePartial('Planning_Controller', 'MockPlanning_Controller', array('r
 Mock::generate('ProjectManager');
 Mock::generate('Project');
 
-abstract class Planning_Controller_BaseTest extends TuleapTestCase {
-
-    public function setUp() {
+abstract class Planning_Controller_BaseTest extends TuleapTestCase
+{
+    public function setUp()
+    {
         parent::setUp();
         ForgeConfig::store();
         ForgeConfig::set('codendi_dir', AGILEDASHBOARD_BASE_DIR .'/../../..');
@@ -45,11 +48,15 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase {
         $this->project                = stub('Project')->getID()->returns($this->group_id);
         $this->project_manager        = stub('ProjectManager')->getProject($this->group_id)->returns($this->project);
         $this->current_user           = stub('PFUser')->getId()->returns(666);
-        $this->request                = aRequest()->withProjectManager($this->project_manager)->with('group_id', "$this->group_id")->withUser($this->current_user)->build();
+        $this->request                = aRequest()->withProjectManager($this->project_manager)->with(
+            'group_id',
+            "$this->group_id"
+        )->withUser($this->current_user)->build();
         $this->planning_factory       = new MockPlanningFactory();
         $this->mono_milestone_checker = mock('Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker');
         $this->scrum_planning_filter  = mock('Tuleap\AgileDashboard\Planning\ScrumPlanningFilter');
-        $crumb_builder                = mock(\Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder::class);
+        $service_crumb_builder        = mock(AgileDashboardCrumbBuilder::class);
+        $admin_crumb_builder          = mock(AdministrationCrumbBuilder::class);
 
         $this->planning_controller    = new Planning_Controller(
             $this->request,
@@ -68,7 +75,8 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase {
             $this->scrum_planning_filter,
             mock('TrackerFactory'),
             mock('Tracker_FormElementFactory'),
-            $crumb_builder
+            $service_crumb_builder,
+            $admin_crumb_builder
         );
 
 
@@ -89,7 +97,8 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase {
             mock('TrackerFactory'),
             $this->mono_milestone_checker,
             $this->event_manager,
-            $crumb_builder
+            $service_crumb_builder,
+            $admin_crumb_builder
         );
 
         stub($this->mono_milestone_checker)->isMonoMilestoneEnabled()->returns(false);
@@ -215,7 +224,8 @@ class Planning_ControllerNewTest extends TuleapTestCase {
             new ScrumPlanningFilter($scrum_mono_milestone_checker, $this->planning_factory),
             mock('TrackerFactory'),
             mock('Tracker_FormElementFactory'),
-            mock(\Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder::class)
+            mock(AgileDashboardCrumbBuilder::class),
+            mock(AdministrationCrumbBuilder::class)
         );
 
         $GLOBALS['Language'] = new MockBaseLanguage_Planning_ControllerNewTest();
@@ -363,7 +373,8 @@ class Planning_Controller_EditTest extends Planning_Controller_BaseTest {
                 $planning_filter,
                 mock('TrackerFactory'),
                 mock('Tracker_FormElementFactory'),
-                mock(\Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder::class)
+                mock(AgileDashboardCrumbBuilder::class),
+                mock(AdministrationCrumbBuilder::class)
             )
         );
 

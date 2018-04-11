@@ -20,6 +20,7 @@
 
 use Tuleap\AgileDashboard\AdminController;
 use Tuleap\AgileDashboard\BaseController;
+use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\Agiledashboard\FormElement\BurnupCacheGenerator;
 use Tuleap\AgileDashboard\FormElement\FormElementController;
@@ -29,7 +30,6 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\PermissionsPerGroup\AgileDashboardJSONPermissionsRetriever;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
-use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 
 require_once 'common/plugin/Plugin.class.php';
 
@@ -41,8 +41,8 @@ require_once 'common/plugin/Plugin.class.php';
  *
  * TODO: Layout management should be extracted and moved to controllers or views.
  */
-class AgileDashboardRouter {
-
+class AgileDashboardRouter
+{
     /**
      * @var Plugin
      */
@@ -109,7 +109,11 @@ class AgileDashboardRouter {
     /**
      * @var AgileDashboardCrumbBuilder
      */
-    private $crumb_builder;
+    private $service_crumb_builder;
+    /**
+     * @var AdministrationCrumbBuilder
+     */
+    private $admin_crumb_builder;
 
     public function __construct(
         Plugin $plugin,
@@ -126,7 +130,8 @@ class AgileDashboardRouter {
         ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker,
         ScrumPlanningFilter $planning_filter,
         AgileDashboardJSONPermissionsRetriever $permissions_retriever,
-        AgileDashboardCrumbBuilder $crumb_builder
+        AgileDashboardCrumbBuilder $service_crumb_builder,
+        AdministrationCrumbBuilder $admin_crumb_builder
     ) {
         $this->plugin                       = $plugin;
         $this->milestone_factory            = $milestone_factory;
@@ -142,7 +147,8 @@ class AgileDashboardRouter {
         $this->scrum_mono_milestone_checker = $scrum_mono_milestone_checker;
         $this->planning_filter              = $planning_filter;
         $this->permissions_retriever        = $permissions_retriever;
-        $this->crumb_builder                = $crumb_builder;
+        $this->service_crumb_builder        = $service_crumb_builder;
+        $this->admin_crumb_builder          = $admin_crumb_builder;
     }
 
     /**
@@ -235,7 +241,7 @@ class AgileDashboardRouter {
                     $this->kanban_factory,
                     TrackerFactory::instance(),
                     new AgileDashboard_PermissionsManager(),
-                    $this->crumb_builder,
+                    $this->service_crumb_builder,
                     new BreadCrumbBuilder($plugin_path)
                 );
                 $this->renderAction($controller, 'showKanban', $request, array(), $header_options);
@@ -381,11 +387,13 @@ class AgileDashboardRouter {
             $this->planning_filter,
             TrackerFactory::instance(),
             Tracker_FormElementFactory::instance(),
-            $this->crumb_builder
+            $this->service_crumb_builder,
+            $this->admin_crumb_builder
         );
     }
 
-    protected function buildController(Codendi_Request $request) {
+    protected function buildController(Codendi_Request $request)
+    {
         return new AdminController(
             $request,
             $this->planning_factory,
@@ -393,9 +401,10 @@ class AgileDashboardRouter {
             $this->kanban_factory,
             $this->config_manager,
             TrackerFactory::instance(),
-            new ScrumForMonoMilestoneChecker( new ScrumForMonoMilestoneDao(), $this->planning_factory),
+            new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $this->planning_factory),
             EventManager::instance(),
-            $this->crumb_builder
+            $this->service_crumb_builder,
+            $this->admin_crumb_builder
         );
     }
 
@@ -494,7 +503,7 @@ class AgileDashboardRouter {
             array('body_class' => array('agiledashboard_planning')),
             $controller->getHeaderOptions()
         );
-        $breadcrumbs = $controller->getBreadcrumbs($this->plugin->getPluginPath());
+        $breadcrumbs = $controller->getBreadcrumbs();
 
         $top_planning_rendered = $this->executeAction($controller, 'showTop', array());
         $service->displayHeader(

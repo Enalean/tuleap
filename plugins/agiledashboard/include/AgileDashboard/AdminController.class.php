@@ -51,6 +51,7 @@ use ServiceManager;
 use Tracker_ReportFactory;
 use TrackerFactory;
 use TrackerXmlImport;
+use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\Event\GetAdditionalScrumAdminPaneContent;
 use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportDao;
@@ -114,10 +115,12 @@ class AdminController extends BaseController
 
     /** @var Project */
     private $project;
-    /**
-     * @var AgileDashboardCrumbBuilder
-     */
-    private $crumb_builder;
+
+    /** @var AgileDashboardCrumbBuilder */
+    private $service_crumb_builder;
+
+    /** @var AdministrationCrumbBuilder */
+    private $admin_crumb_builder;
 
     public function __construct(
         Codendi_Request $request,
@@ -128,7 +131,8 @@ class AdminController extends BaseController
         TrackerFactory $tracker_factory,
         ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker,
         EventManager $event_manager,
-        AgileDashboardCrumbBuilder $crumb_builder
+        AgileDashboardCrumbBuilder $service_crumb_builder,
+        AdministrationCrumbBuilder $admin_crumb_builder
     ) {
         parent::__construct('agiledashboard', $request);
 
@@ -141,7 +145,8 @@ class AdminController extends BaseController
         $this->tracker_factory              = $tracker_factory;
         $this->scrum_mono_milestone_checker = $scrum_mono_milestone_checker;
         $this->event_manager                = $event_manager;
-        $this->crumb_builder                = $crumb_builder;
+        $this->service_crumb_builder        = $service_crumb_builder;
+        $this->admin_crumb_builder          = $admin_crumb_builder;
     }
 
     /**
@@ -151,24 +156,13 @@ class AdminController extends BaseController
     {
         $breadcrumbs = new BreadCrumbCollection();
         $breadcrumbs->addBreadCrumb(
-            $this->crumb_builder->build(
+            $this->service_crumb_builder->build(
                 $this->getCurrentUser(),
                 $this->project
             )
         );
-
-        $admin_url = AGILEDASHBOARD_BASE_URL . '/?' .
-            http_build_query(
-                [
-                    'group_id' => $this->project->getID(),
-                    'action'   => 'admin',
-                ]
-            );
         $breadcrumbs->addBreadCrumb(
-            new BreadCrumbItem(
-                $GLOBALS['Language']->getText('global', 'Administration'),
-                $admin_url
-            )
+            $this->admin_crumb_builder->build($this->project)
         );
 
         return $breadcrumbs;
