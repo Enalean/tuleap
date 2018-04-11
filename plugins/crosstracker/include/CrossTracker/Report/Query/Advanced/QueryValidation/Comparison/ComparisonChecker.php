@@ -45,10 +45,17 @@ class ComparisonChecker implements ValueWrapperVisitor
      * @var DateFormatValidator
      */
     protected $date_validator;
+    /**
+     * @var ListValueValidator
+     */
+    private $list_value_validator;
 
-    public function __construct(DateFormatValidator $date_validator)
-    {
+    public function __construct(
+        DateFormatValidator $date_validator,
+        ListValueValidator $list_value_validator
+    ) {
         $this->date_validator = $date_validator;
+        $this->list_value_validator = $list_value_validator;
     }
 
     /**
@@ -61,9 +68,13 @@ class ComparisonChecker implements ValueWrapperVisitor
         try {
             $comparison->getValueWrapper()->accept($this, new MetadataValueWrapperParameters($metadata));
         } catch (DateToStringException $exception) {
-            throw new DateToStringComparisonException($metadata, $exception->getSubmittedValue());
+            throw new ToStringComparisonException($metadata, $exception->getSubmittedValue());
         } catch (DateToEmptyStringException $exception) {
-            throw new DateToEmptyStringComparisonException($metadata, static::OPERATOR);
+            throw new EmptyStringComparisonException($metadata, static::OPERATOR);
+        } catch (NonExistentListValueException $exception) {
+            throw new ToStringComparisonException($metadata, $exception->getSubmittedValue());
+        } catch (ListToEmptyStringException $exception) {
+            throw new EmptyStringComparisonException($metadata, static::OPERATOR);
         }
     }
 
@@ -83,6 +94,10 @@ class ComparisonChecker implements ValueWrapperVisitor
 
         if (in_array($metadata->getName(), AllowedMetadata::DATES)) {
             $this->date_validator->checkValueIsValid($value_wrapper->getValue());
+        }
+
+        if (in_array($metadata->getName(), AllowedMetadata::USERS)) {
+            $this->list_value_validator->checkValueIsValid($value_wrapper->getValue());
         }
     }
 

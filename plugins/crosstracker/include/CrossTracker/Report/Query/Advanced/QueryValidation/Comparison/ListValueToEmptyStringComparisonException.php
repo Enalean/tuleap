@@ -23,12 +23,12 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\InvalidQueryException;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
-class DateToEmptyStringComparisonException extends InvalidQueryException
+class ListValueToEmptyStringComparisonException extends InvalidQueryException
 {
     public function __construct(Metadata $metadata, $operator)
     {
         $message = sprintf(
-            dgettext("tuleap-crosstracker", "%s cannot be compared to the empty string with %s operator."),
+            dgettext('tuleap-crosstracker', "%s cannot be compared to the empty string with %s operator."),
             $metadata->getName(),
             $operator
         );
