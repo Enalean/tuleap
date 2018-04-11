@@ -23,6 +23,7 @@ use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
+use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
 
 require_once 'common/TreeNode/TreeNodeMapper.class.php';
 require_once 'common/templating/TemplateRendererFactory.class.php';
@@ -33,7 +34,7 @@ require_once 'common/templating/TemplateRendererFactory.class.php';
 class Cardwall_Pane extends AgileDashboard_Pane {
 
     /**
-     * @var Cardwall_PaneInfo
+     * @var CardwallPaneInfo
      */
     private $info;
 
@@ -78,7 +79,7 @@ class Cardwall_Pane extends AgileDashboard_Pane {
     private $planning_factory;
 
     public function __construct(
-        Cardwall_PaneInfo $info,
+        CardwallPaneInfo $info,
         Planning_Milestone $milestone,
         Cardwall_OnTop_Config $config,
         PFUser $user,

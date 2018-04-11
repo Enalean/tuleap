@@ -22,6 +22,8 @@ use Tuleap\AgileDashboard\BaseController;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\MilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\VirtualTopMilestoneCrumbBuilder;
+use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2PaneInfo;
+use Tuleap\AgileDashboard\Milestone\Pane\PanePresenterData;
 use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 
@@ -137,7 +139,7 @@ class Planning_MilestoneController extends BaseController
         );
     }
 
-    private function getMilestonePresenter(AgileDashboard_Milestone_Pane_PresenterData $presenter_data)
+    private function getMilestonePresenter(PanePresenterData $presenter_data)
     {
         $redirect_parameter = new Planning_MilestoneRedirectParameter();
 
@@ -219,14 +221,14 @@ class Planning_MilestoneController extends BaseController
     }
 
     /**
-     * @param AgileDashboard_Milestone_Pane_PresenterData $presenter_data
+     * @param PanePresenterData $presenter_data
      * @return string
      */
-    private function getTemplateName(AgileDashboard_Milestone_Pane_PresenterData $presenter_data)
+    private function getTemplateName(PanePresenterData $presenter_data)
     {
         $current_pane_identifier = $presenter_data->getActivePane()->getIdentifier();
         if ($current_pane_identifier === DetailsPaneInfo::IDENTIFIER ||
-            $current_pane_identifier === AgileDashboard_Milestone_Pane_Planning_PlanningV2PaneInfo::IDENTIFIER
+            $current_pane_identifier === PlanningV2PaneInfo::IDENTIFIER
         ) {
             return 'show';
         }

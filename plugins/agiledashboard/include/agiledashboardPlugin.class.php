@@ -51,6 +51,7 @@ use Tuleap\AgileDashboard\Widget\WidgetKanbanDao;
 use Tuleap\AgileDashboard\Widget\WidgetKanbanDeletor;
 use Tuleap\AgileDashboard\Widget\WidgetKanbanRetriever;
 use Tuleap\BurningParrotCompatiblePageEvent;
+use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\RealTime\NodeJSClient;
@@ -335,7 +336,7 @@ class AgileDashboardPlugin extends Plugin {
     public function tracker_event_include_css_file($params)
     {
         $request = HTTPRequest::instance();
-        if ($request->get('pane') === Cardwall_PaneInfo::IDENTIFIER || $this->isHomepageURL($request)) {
+        if ($request->get('pane') === CardwallPaneInfo::IDENTIFIER || $this->isHomepageURL($request)) {
             $params['include_tracker_css_file'] = true;
         }
     }

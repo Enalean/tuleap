@@ -18,7 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_Milestone_Pane_Planning_PlanningV2PaneInfo extends AgileDashboard_PaneInfo {
+namespace Tuleap\AgileDashboard\Milestone\Pane\Planning;
+
+use Planning_Milestone;
+use Tracker;
+use Tuleap\AgileDashboard\Milestone\Pane\PaneInfo;
+
+class PlanningV2PaneInfo extends PaneInfo
+{
     const IDENTIFIER = 'planning-v2';
 
     /** @var Tracker */
@@ -27,21 +34,29 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningV2PaneInfo extends AgileDas
     /** @var string */
     private $theme_path;
 
-    public function __construct(Planning_Milestone $milestone, $theme_path, Tracker $submilestone_tracker) {
+    public function __construct(Planning_Milestone $milestone, $theme_path, Tracker $submilestone_tracker)
+    {
         parent::__construct($milestone);
         $this->theme_path           = $theme_path;
         $this->submilestone_tracker = $submilestone_tracker;
     }
 
-    public function getIdentifier() {
+    public function getIdentifier()
+    {
         return self::IDENTIFIER;
     }
 
-    public function getTitle() {
+    public function getTitle()
+    {
         return $GLOBALS['Language']->getText(
             'plugin_agiledashboard',
             'milestone_planning_pane_title',
             $this->submilestone_tracker->getName()
         );
+    }
+
+    public function getIconName()
+    {
+        return 'fa-sign-in icon-signin';
     }
 }

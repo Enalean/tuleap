@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,17 +18,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_PaneInfoIdentifier {
+use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2PaneInfo;
+use Tuleap\AgileDashboard\Milestone\Pane\TopPlanning\TopPlanningV2PaneInfo;
 
+class AgileDashboard_PaneInfoIdentifier
+{
     /**
      * @param string $pane_info_identifier
      *
      * @return boolean
      */
-    public function isPaneAPlanningV2($pane_info_identifier) {
+    public function isPaneAPlanningV2($pane_info_identifier)
+    {
         return in_array($pane_info_identifier, array(
-            AgileDashboard_Milestone_Pane_Planning_PlanningV2PaneInfo::IDENTIFIER,
-            AgileDashboard_Milestone_Pane_TopPlanning_TopPlanningV2PaneInfo::IDENTIFIER
+            PlanningV2PaneInfo::IDENTIFIER,
+            TopPlanningV2PaneInfo::IDENTIFIER
         ));
     }
 }

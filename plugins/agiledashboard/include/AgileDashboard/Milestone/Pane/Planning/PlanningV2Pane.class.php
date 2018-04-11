@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,20 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2PaneInfo;
+
 /**
  * I facilitate the association of Backlog Elements with sub-milestones
  *
  */
-class AgileDashboard_Milestone_Pane_Planning_PlanningV2Pane extends AgileDashboard_Pane {
-
-    /** @var AgileDashboard_Milestone_Pane_Planning_PlanningV2PaneInfo */
+class AgileDashboard_Milestone_Pane_Planning_PlanningV2Pane extends AgileDashboard_Pane
+{
+    /** @var PlanningV2PaneInfo */
     private $info;
 
     /** @var AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter */
     private $presenter;
 
     public function __construct(
-        AgileDashboard_Milestone_Pane_Planning_PlanningV2PaneInfo $info,
+        PlanningV2PaneInfo $info,
         AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter $presenter
     ) {
         $this->info      = $info;

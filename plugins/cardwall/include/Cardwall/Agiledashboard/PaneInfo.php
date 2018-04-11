@@ -18,7 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Cardwall_PaneInfo extends AgileDashboard_PaneInfo {
+namespace Tuleap\Cardwall\Agiledashboard;
+
+use Planning_Milestone;
+use Tuleap\AgileDashboard\Milestone\Pane\PaneInfo;
+
+class CardwallPaneInfo extends PaneInfo
+{
     const IDENTIFIER = 'cardwall';
 
     /**
@@ -26,7 +32,8 @@ class Cardwall_PaneInfo extends AgileDashboard_PaneInfo {
      */
     private $plugin_theme_path;
 
-    public function __construct(Planning_Milestone $milestone, $plugin_theme_path) {
+    public function __construct(Planning_Milestone $milestone, $plugin_theme_path)
+    {
         parent::__construct($milestone);
         $this->plugin_theme_path = $plugin_theme_path;
     }
@@ -34,14 +41,21 @@ class Cardwall_PaneInfo extends AgileDashboard_PaneInfo {
     /**
      * @see AgileDashboard_Pane::getIdentifier()
      */
-    public function getIdentifier() {
+    public function getIdentifier()
+    {
         return self::IDENTIFIER;
     }
 
     /**
      * @see AgileDashboard_Pane::getTitle()
      */
-    public function getTitle() {
+    public function getTitle()
+    {
         return 'Card Wall';
+    }
+
+    public function getIconName()
+    {
+        return 'fa-table icon-table';
     }
 }

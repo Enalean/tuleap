@@ -22,11 +22,13 @@ require_once 'common/plugin/Plugin.class.php';
 require_once 'constants.php';
 require_once 'autoload.php';
 
+use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
+
 /**
  * CardwallPlugin
  */
-class cardwallPlugin extends Plugin {
-
+class cardwallPlugin extends Plugin
+{
     /**
      * @var Cardwall_OnTop_ConfigFactory
      */
@@ -303,7 +305,7 @@ class cardwallPlugin extends Plugin {
             return;
         }
 
-        if ($params['request']->get('pane') == Cardwall_PaneInfo::IDENTIFIER) {
+        if ($params['request']->get('pane') == CardwallPaneInfo::IDENTIFIER) {
             $pane_info->setActive(true);
             $params['active_pane'] = $this->getCardwallPane($pane_info, $params['milestone'], $params['user'], $params['milestone_factory']);
         }
@@ -317,18 +319,18 @@ class cardwallPlugin extends Plugin {
             return;
         }
 
-        return new Cardwall_PaneInfo($milestone, $this->getThemePath());
+        return new CardwallPaneInfo($milestone, $this->getThemePath());
     }
 
     public function agiledashboard_event_index_page($params) {
         // Only display a cardwall if there is something to display
         if ($params['milestone'] && $params['milestone']->getPlannedArtifacts() && count($params['milestone']->getPlannedArtifacts()->getChildren()) > 0) {
-            $pane_info = new Cardwall_PaneInfo($params['milestone'], $this->getThemePath());
+            $pane_info = new CardwallPaneInfo($params['milestone'], $this->getThemePath());
             $params['pane'] = $this->getCardwallPane($pane_info, $params['milestone'], $params['user'], $params['milestone_factory']);
         }
     }
 
-    protected function getCardwallPane(Cardwall_PaneInfo $info, Planning_Milestone $milestone, PFUser $user, Planning_MilestoneFactory $milestone_factory) {
+    protected function getCardwallPane(CardwallPaneInfo $info, Planning_Milestone $milestone, PFUser $user, Planning_MilestoneFactory $milestone_factory) {
         $config = $this->getConfigFactory()->getOnTopConfigByPlanning($milestone->getPlanning());
         if ($config) {
             return new Cardwall_Pane(

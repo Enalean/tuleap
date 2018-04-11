@@ -21,9 +21,9 @@
 namespace Tuleap\FRS;
 
 use Planning_Milestone;
-use AgileDashboard_PaneInfo;
+use Tuleap\AgileDashboard\Milestone\Pane\PaneInfo;
 
-class AgileDashboardPaneInfo extends AgileDashboard_PaneInfo
+class AgileDashboardPaneInfo extends PaneInfo
 {
     private $release_id;
 
@@ -33,21 +33,25 @@ class AgileDashboardPaneInfo extends AgileDashboard_PaneInfo
         $this->release_id = $release_id;
     }
 
-    /** @see AgileDashboard_PaneInfo::getIdentifier */
+    /** @see PaneInfo::getIdentifier */
     public function getIdentifier()
     {
         return 'frs';
     }
 
-    /** @see AgileDashboard_PaneInfo::getTitle */
+    /** @see PaneInfo::getTitle */
     public function getTitle()
     {
-        return $GLOBALS['Language']->getText('plugin_frs', 'File_release')
-            . ' <i class="icon-external-link"></i>';
+        return $GLOBALS['Language']->getText('plugin_frs', 'File_release');
     }
 
     public function getUri()
     {
         return '/file/shownotes.php?release_id=' . (int)$this->release_id;
+    }
+
+    public function getIconName()
+    {
+        return 'fa-files-o icon-copy';
     }
 }

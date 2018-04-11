@@ -18,6 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\AgileDashboard\Milestone\Pane;
+
+use Planning_Milestone;
+
 /**
  * An agile dashboard can have several panes (MilestonePlanning, Burndown, Cardwall)
  * Each Pane is associated to a PaneInfo that describe the Pane (it's used to
@@ -25,8 +29,8 @@
  * It's meant to be as lightweight as possible as it is required to build the view
  * regardless of what we want to display.
  */
-abstract class AgileDashboard_PaneInfo {
-
+abstract class PaneInfo
+{
     const ACTION = 'show';
 
     /**
@@ -41,7 +45,8 @@ abstract class AgileDashboard_PaneInfo {
 
     protected $action = self::ACTION;
 
-    public function __construct(Planning_Milestone $milestone) {
+    public function __construct(Planning_Milestone $milestone)
+    {
         $this->milestone = $milestone;
     }
 
@@ -50,7 +55,8 @@ abstract class AgileDashboard_PaneInfo {
      *
      * @return bool
      */
-    public function isActive() {
+    public function isActive()
+    {
         return $this->is_active;
     }
 
@@ -59,8 +65,9 @@ abstract class AgileDashboard_PaneInfo {
      *
      * @param bool $state
      */
-    public function setActive($state) {
-        $this->is_active = (bool)$state;
+    public function setActive($state)
+    {
+        $this->is_active = (bool) $state;
     }
 
     /**
@@ -68,7 +75,8 @@ abstract class AgileDashboard_PaneInfo {
      *
      * @return string
      */
-    public function getUri() {
+    public function getUri()
+    {
         return $this->getUriForMilestone($this->milestone);
     }
 
@@ -79,11 +87,13 @@ abstract class AgileDashboard_PaneInfo {
      *
      * @return string
      */
-    public function getUriForMilestone(Planning_Milestone $milestone) {
-        return '?'. http_build_query($this->getUriParametersForMilestone($milestone));
+    public function getUriForMilestone(Planning_Milestone $milestone)
+    {
+        return '?' . http_build_query($this->getUriParametersForMilestone($milestone));
     }
 
-    protected function getUriParametersForMilestone(Planning_Milestone $milestone) {
+    protected function getUriParametersForMilestone(Planning_Milestone $milestone)
+    {
         return array(
             'group_id'    => $milestone->getGroupId(),
             'planning_id' => $milestone->getPlanningId(),
@@ -98,10 +108,15 @@ abstract class AgileDashboard_PaneInfo {
      *
      * @return string eg: 'cardwall'
      */
-    public abstract function getIdentifier();
+    abstract public function getIdentifier();
 
     /**
      * @return string eg: 'Card Wall'
      */
-    public abstract function getTitle();
+    abstract public function getTitle();
+
+    /**
+     * @return string eg: 'fa-table'
+     */
+    abstract public function getIconName();
 }
