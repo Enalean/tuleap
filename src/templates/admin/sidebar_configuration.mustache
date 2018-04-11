@@ -6,6 +6,7 @@
     <nav class="admin-sidebar-section-nav">
         <a href="/admin/forgeaccess.php" class="admin-sidebar-section-nav-item">{{ configuration_nav_global_access_rights }}</a>
         <a href="/admin/homepage.php" class="admin-sidebar-section-nav-item">{{ configuration_nav_homepage }}</a>
+        <a href="/admin/password_policy/" class="admin-sidebar-section-nav-item">{{# gettext }}Password policy{{/ gettext }}</a>
 
         {{# are_trove_categories_enabled }}
             <a href="/admin/trove/trove_cat_list.php" class="admin-sidebar-section-nav-item">{{ configuration_nav_categories }}</a>
