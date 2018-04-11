@@ -169,6 +169,28 @@ phpunit-docker-70:
 phpunit:
 	src/vendor/bin/phpunit -c tests/phpunit/phpunit.xml
 
+simpletest-70-ci:
+	@mkdir -p $(WORKSPACE)/results/ut-simpletest-php-70
+	@docker run --rm -v $(CURDIR):/tuleap:ro -v $(WORKSPACE)/results/ut-simpletest-php-70:/output:rw -u $(id -u):$(id -g) enalean/tuleap-simpletest:c6-php70 /opt/rh/rh-php70/root/usr/bin/php /tuleap/tests/bin/php7-run.php run-juint /output/results.xml
+
+simpletest-70:
+	@docker run --rm -v $(CURDIR):/tuleap:ro -u $(id -u):$(id -g) enalean/tuleap-simpletest:c6-php70 /opt/rh/rh-php70/root/usr/bin/php /tuleap/tests/bin/php7-run.php run
+
+simpletest-70-update-compatibility-list:
+	@echo "Collect tests"
+	@docker run --rm -v $(CURDIR):/tuleap:rw -u $(id -u):$(id -g) -w /tuleap enalean/tuleap-simpletest:c6-php70 /opt/rh/rh-php70/root/usr/bin/php /tuleap/tests/bin/php7-run.php collect tests/simpletest
+	@echo "Execute tests PHP 7.0"
+	@docker run --rm -v $(CURDIR):/tuleap:ro -v $(CURDIR):/output:rw -u $(id -u):$(id -g) enalean/tuleap-simpletest:c6-php70 /opt/rh/rh-php70/root/usr/bin/php /tuleap/tests/bin/php7-run.php run-juint /output/ut-simpletest-php-70-results.xml
+	@echo "Execute tests PHP 5.6"
+	@docker run --rm -v $(CURDIR):/tuleap:ro -u $(id -u):$(id -g) enalean/tuleap-simpletest:c6-php56 --nodb -x /tuleap/tests/php7compatibletests.list > ut-simpletest-php-56-results.xml
+	@echo "Compare results"
+	@docker run --rm -v $(CURDIR):/tuleap:ro -u $(id -u):$(id -g) -w /tuleap enalean/tuleap-simpletest:c6-php70 /opt/rh/rh-php70/root/usr/bin/php /tuleap/tests/bin/php7-run.php compare-results ut-simpletest-php-70-results.xml ut-simpletest-php-56-results.xml
+	@rm -f ut-simpletest-php-56-results.xml ut-simpletest-php-70-results.xml
+
+#
+# Dev setup
+#
+
 deploy-githooks:
 	@if [ -e .git/hooks/pre-commit ]; then\
 		echo "pre-commit hook already exists";\

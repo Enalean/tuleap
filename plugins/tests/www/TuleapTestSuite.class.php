@@ -17,7 +17,13 @@ class TuleapTestSuite extends TestSuite {
         if (is_dir($dir)) {
             $this->collect($dir, new TuleapTestCollector());
         } else {
-            $this->addFile($dir);
+            if (substr($dir, -8) === 'Test.php') {
+                $this->addFile($dir);
+            } else {
+                foreach (file($dir) as $file) {
+                    $this->addFile(trim($file));
+                }
+            }
         }
     }
 
@@ -32,7 +38,7 @@ class TuleapTestCollector extends SimpleCollector {
     public function collect($testSuite, $path) {
         $rii = new FilterTestCase(
             new RecursiveIteratorIterator(
-                new FilterDirectoryLikeASir(
+                new FilterTestDirectory(
                     new RecursiveDirectoryIterator($path)
                 ),
                 RecursiveIteratorIterator::SELF_FIRST
@@ -41,51 +47,5 @@ class TuleapTestCollector extends SimpleCollector {
         foreach ($rii as $file) {
             $this->_handle($testSuite, $file->getPathname());
         }
-    }
-}
-
-class FilterTestCase extends FilterIterator {
-    public function accept() {
-        $file = $this->getInnerIterator()->current();
-        if ($this->fileCanBeSelectedIntoTestSuite($file)) {
-            return true;
-        }
-        return false;
-    }
-
-    private function fileCanBeSelectedIntoTestSuite($file) {
-        return (strpos($file->getPathname(), '/_') === false &&
-               $this->isNotATestsRestDirectory($file->getPathname()) &&
-               $this->isNotATestsSoapDirectory($file->getPathname()) &&
-               $this->isNotAVendorDirectory($file->getPathname()) &&
-               (preg_match('/Test.php$/', $file->getFilename()))
-        );
-    }
-
-    private function isNotATestsRestDirectory($pathName) {
-        return !(preg_match("/^.*\/tests\/rest(\/.+|$)$/", $pathName));
-    }
-
-    private function isNotATestsSoapDirectory($pathName) {
-        return !(preg_match("/^.*\/tests\/soap(\/.+|$)$/", $pathName));
-    }
-
-    private function isNotAVendorDirectory($pathName)
-    {
-        return !(preg_match("/^.*\/vendor(\/.+|$)$/", $pathName));
-    }
-}
-
-class FilterDirectoryLikeASir extends RecursiveFilterIterator {
-    public function accept() {
-        $file = $this->getInnerIterator()->current();
-        if ($this->isForbiddenForSimpleTest($file)) {
-            return false;
-        }
-        return true;
-    }
-
-    private function isForbiddenForSimpleTest($file) {
-        return file_exists($file->getPathname() . '/.simpletest_skip');
     }
 }
