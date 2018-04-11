@@ -26,7 +26,7 @@ class FRSPermissionPerGroupURLBuilder
 {
     public function getGlobalAdminLink(Project $project)
     {
-        return FRS_BASE_URL . "/admin/?" . http_build_query(
+        return '/file/admin/?' . http_build_query(
             [
                 "group_id" => $project->getID(),
                 "action"   => "edit-permissions"
