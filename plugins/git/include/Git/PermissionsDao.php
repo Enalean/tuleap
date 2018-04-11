@@ -72,7 +72,7 @@ class Git_PermissionsDao extends \Tuleap\DB\DataAccessObject
 
     private function updatePermissionsForDefaultGitAccessRights($project_id, array $old_ugroup_ids, $new_ugroup_id)
     {
-        $git_permission_type_in_condition = EasyStatement::open()->in('?*', Git::allPermissionTypes());
+        $git_permission_type_in_condition = EasyStatement::open()->in('?*', Git::allDefaultPermissionTypes());
         $old_ugroup_ids_in_condition      = EasyStatement::open()->in('?*', $old_ugroup_ids);
 
         $sql = "UPDATE permissions
