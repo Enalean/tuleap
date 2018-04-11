@@ -847,6 +847,9 @@ msgstr ""
 "Le mot de passe ne doit pas être considéré comme compromis en raison de sa "
 "présence dans des fuites d'information connues."
 
+msgid "The password policy has been successfully updated."
+msgstr "La politique des mots de passe a correctement été mise à jour."
+
 msgid "The requested dashboard does not exist."
 msgstr "Le tableau de bord demandé n’existe pas."
 

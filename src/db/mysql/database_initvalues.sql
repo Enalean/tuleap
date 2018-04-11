@@ -601,6 +601,8 @@ Venez planifier, suivre, développer & collaborer sur vos projets logiciels.');
 
 INSERT INTO forgeconfig (name, value) VALUES ('access_mode', 'anonymous');
 
+INSERT INTO password_configuration (breached_password_enabled) VALUES (1);
+
 --
 -- Email gateway salt
 --
