@@ -1,21 +1,22 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2011. All Rights Reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 
@@ -43,7 +44,7 @@ class Git_PostReceiveMailManager {
     function addMail($repositoryId, $mail) {
         try {
             $this->dao->createNotification($repositoryId, $mail);
-        } catch (GitDaoException $e) {
+        } catch (PDOException $e) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git', 'dao_error_create_notification'));
             return false;
         }
@@ -94,10 +95,8 @@ class Git_PostReceiveMailManager {
         $dar = $this->dao->searchByRepositoryId($repositoryId);
 
         $mailList = array();
-        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
-            foreach ($dar as $row ) {
-                $mailList [] = $row['recipient_mail'];
-            }
+        foreach ($dar as $row) {
+            $mailList [] = $row['recipient_mail'];
         }
         return $mailList;
     }
@@ -109,7 +108,7 @@ class Git_PostReceiveMailManager {
      */
     function _getDao() {
         if (!$this->dao) {
-            $this->dao = new Git_PostReceiveMailDao(CodendiDataAccess::instance());
+            $this->dao = new Git_PostReceiveMailDao();
         }
         return  $this->dao;
     }
