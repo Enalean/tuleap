@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,6 +26,8 @@ use DateTime;
 
 class GitPhpAccessLogger
 {
+    private $dao;
+
     public function __construct(Dao $dao)
     {
         $this->dao = $dao;
@@ -36,9 +38,6 @@ class GitPhpAccessLogger
         $request_time = new DateTime('@'.$_SERVER['REQUEST_TIME']);
         $day          = $request_time->format('Ymd');
 
-        if ($this->dao->hasAccessForTheDay($day, $repository->getId(), $user->getId())) {
-            return $this->dao->addGitReadAccess($day, $repository->getId(), $user->getId(), 1);
-        }
-        return $this->dao->insertGitReadAccess($day, $repository->getId(), $user->getId(), 1);
+        $this->dao->addGitReadAccess($day, $repository->getId(), $user->getId(), 1);
     }
 }

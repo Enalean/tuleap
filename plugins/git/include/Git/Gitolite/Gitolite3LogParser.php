@@ -207,32 +207,12 @@ class Gitolite3LogParser
         foreach ($this->access_cache as $day => $repositories) {
             foreach ($repositories as $repository_id => $users) {
                 foreach ($users as $user_id => $count) {
-                    if ($this->hasRecord($repository_id, $user_id, $day)) {
-                        $this->history_dao->addGitReadAccess($day, $repository_id, $user_id, $count);
-                    } else {
-                        $this->history_dao->insertGitReadAccess($day, $repository_id, $user_id, $count);
-                    }
+                    $this->history_dao->addGitReadAccess($day, $repository_id, $user_id, $count);
                 }
             }
         }
         $this->history_dao->commit();
         $this->resetCaches();
-    }
-
-    private function hasRecord($repository_id, $user_id, $day)
-    {
-        $this->cacheAccessPerDay($day);
-        return isset($this->day_accesses_cache[$day][$repository_id][$user_id]);
-    }
-
-    private function cacheAccessPerDay($day)
-    {
-        if (! isset($this->day_accesses_cache[$day])) {
-            $dar = $this->history_dao->searchAccessPerDay($day);
-            foreach ($dar as $row) {
-                $this->day_accesses_cache[$day][$row['repository_id']][$row['user_id']] = 1;
-            }
-        }
     }
 
     private function isAReadAccess(array $line)
