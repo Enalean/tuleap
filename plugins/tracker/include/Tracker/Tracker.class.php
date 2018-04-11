@@ -21,6 +21,7 @@
 
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
+use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletorBuilder;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
@@ -823,7 +824,8 @@ class Tracker implements Tracker_Dispatchable_Interface
                     if ($request->exist('confirm')) {
                         $artifact = $this->getTrackerArtifactFactory()->getArtifactById($request->get('id'));
                         if ($artifact && $artifact->getTrackerId() == $this->getId()) {
-                            $artifact->delete($current_user);
+                            $artifact_deletor = ArtifactDeletorBuilder::build();
+                            $artifact_deletor->delete($artifact, $current_user);
                             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin', 'clean_info_deleted', array($request->get('id'))));
                         } else {
                             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'clean_error_noart', array($request->get('id'))));
