@@ -334,23 +334,49 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
     }
 
     public function displayHeader($project, $title, $breadcrumbs, $toolbar, array $params) {
-        if (count($breadcrumbs)) {
-            $breadcrumbs = array_merge(
-                array(
-                    array(
-                        'title'     => $GLOBALS['Language']->getText('plugin_tracker', 'trackers'),
-                        'url'       => TRACKER_BASE_URL.'/?group_id='. $project->group_id
-                    )
-                ),
-                $breadcrumbs
-            );
-        } else {
-            $breadcrumbs = array();
-        }
+        $breadcrumbs = array_merge(
+            [
+                $this->getServiceTrackerBreadcrumb($project)
+            ],
+            $breadcrumbs
+        );
+
         if ($service = $project->getService('plugin_tracker')) {
             $service->displayHeader($title, $breadcrumbs, $toolbar, $params);
             echo '<div id="submit-new-by-mail-popover-container"></div>';
         }
+    }
+
+    private function getServiceTrackerBreadcrumb(Project $project)
+    {
+        $service_tracker_breadcrumb = [
+            'title'     => $GLOBALS['Language']->getText('plugin_tracker', 'trackers'),
+            'url'       => TRACKER_BASE_URL . '/?group_id=' . $project->getID(),
+            'icon_name' => 'fa-list-ol icon-list-ol'
+        ];
+
+        if ($this->getCurrentUser()->isAdmin($project->getID())) {
+            $admin_url = TRACKER_BASE_URL . '/?' . http_build_query(
+                    [
+                        'func'     => 'global-admin',
+                        'group_id' => $project->getID()
+                    ]
+                );
+
+            $service_tracker_breadcrumb['sub_items'] = [
+                [
+                    'title' => $GLOBALS['Language']->getText('global', 'Administration'),
+                    'url'   => $admin_url
+                ]
+            ];
+        }
+
+        return $service_tracker_breadcrumb;
+    }
+
+    private function getCurrentUser()
+    {
+        return UserManager::instance()->getCurrentUser();
     }
 
     public function displayFooter($project) {
@@ -435,8 +461,8 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
                 'url'   => TRACKER_BASE_URL.'/?group_id='. $project->group_id .'&amp;func=create'
             )
         );
-        $toolbar = $this->getGlobalAdminController($project)->getToolbar($project);
-        $params  = array();
+        $toolbar = [];
+        $params  = [];
         $this->displayHeader($project, 'Trackers', $breadcrumbs, $toolbar, $params);
 
         $hp = Codendi_HTMLPurifier::instance();
@@ -734,10 +760,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         $html        = '';
         $trackers    = $this->getTrackerFactory()->getTrackersByGroupId($project->group_id);
 
-        $toolbar = array();
-        if ($user->isAdmin($project->getID())) {
-            $toolbar = $this->getGlobalAdminController($project)->getToolbar($project);
-        }
+        $toolbar = [];
 
         if (HTTPRequest::instance()->isAjax()) {
             $http_content = '';

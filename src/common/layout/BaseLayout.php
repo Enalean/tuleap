@@ -32,6 +32,7 @@ use Response;
 use Toggler;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbItem;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbSubItemCollection;
 use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\Sanitizer\URISanitizer;
 use UserManager;
@@ -434,11 +435,38 @@ abstract class BaseLayout extends Response
         }
 
         foreach ($breadcrumbs as $breadcrumb) {
-            $this->breadcrumbs->addBreadCrumb(new BreadCrumbItem(
-                $breadcrumb['title'],
-                $breadcrumb['url']
-            ));
+            $this->breadcrumbs->addBreadCrumb($this->getBreadCrumbItem($breadcrumb));
         }
+    }
+
+    /**
+     * @param array $breadcrumb
+     *
+     * @return BreadCrumbItem
+     */
+    private function getBreadCrumbItem(array $breadcrumb)
+    {
+        $item = new BreadCrumbItem(
+            $breadcrumb['title'],
+            $breadcrumb['url']
+        );
+        if (isset($breadcrumb['icon_name'])) {
+            $item->setIconName($breadcrumb['icon_name']);
+        }
+        if (isset($breadcrumb['sub_items'])) {
+            $item->setSubItems($this->getSubItems($breadcrumb['sub_items']));
+        }
+
+        return $item;
+    }
+
+    private function getSubItems(array $sub_items)
+    {
+        $collection = new BreadCrumbSubItemCollection();
+        foreach ($sub_items as $sub_item) {
+            $collection->addBreadCrumb($this->getBreadCrumbItem($sub_item));
+        }
+        return $collection;
     }
 
     /**
