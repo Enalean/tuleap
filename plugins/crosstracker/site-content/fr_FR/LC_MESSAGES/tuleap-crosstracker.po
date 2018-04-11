@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.8.7.1\n"
+"X-Generator: Poedit 2.0.6\n"
 
 #, php-format
 msgid "%s cannot be compared to '%s'."
@@ -145,14 +145,6 @@ msgstr "Permet la recherche d'artefacts à travers plusieurs outils de suivi"
 
 msgid "Search into multiple trackers and multiple projects."
 msgstr "Rechercher dans plusieurs outils de suivi et plusieurs projets."
-
-#, php-format
-msgid ""
-"The %s comparison is not supported for cross-tracker search. Please refer to "
-"the documentation for the allowed comparisons."
-msgstr ""
-"La comparaison %s n'est pas supportée pour la recherche multi trackers. "
-"Merci de vous référer à la documentation pour les comparaisons autorisées."
 
 msgid "You cannot access all projects of the search"
 msgstr "Vous ne pouvez pas accéder à tous les projets de cette recherche"

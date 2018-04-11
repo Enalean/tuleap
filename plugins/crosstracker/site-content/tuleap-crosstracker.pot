@@ -102,12 +102,6 @@ msgstr ""
 msgid "Search into multiple trackers and multiple projects."
 msgstr ""
 
-#, php-format
-msgid ""
-"The %s comparison is not supported for cross-tracker search. Please refer to "
-"the documentation for the allowed comparisons."
-msgstr ""
-
 msgid "You cannot access all projects of the search"
 msgstr ""
 

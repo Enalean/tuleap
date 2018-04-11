@@ -58,9 +58,11 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\Between
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\Equal\EqualComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\GreaterThan\GreaterThanComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\GreaterThan\GreaterThanOrEqualComparisonChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\In\InComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\LesserThan\LesserThanComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\LesserThan\LesserThanOrEqualComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\NotEqual\NotEqualComparisonChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\NotIn\NotInComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataUsageChecker;
 use Tuleap\REST\AuthenticatedResource;
@@ -167,7 +169,9 @@ class CrossTrackerReportsResource extends AuthenticatedResource
             new GreaterThanOrEqualComparisonChecker($date_validator),
             new LesserThanComparisonChecker($date_validator),
             new LesserThanOrEqualComparisonChecker($date_validator),
-            new BetweenComparisonChecker($date_validator)
+            new BetweenComparisonChecker($date_validator),
+            new InComparisonChecker($date_validator),
+            new NotInComparisonChecker($date_validator)
         );
 
         $submitted_on_alias_field     = 'tracker_artifact.submitted_on';
