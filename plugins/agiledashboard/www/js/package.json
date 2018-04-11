@@ -18,17 +18,7 @@
     "vue": "^2.5.13"
   },
   "devDependencies": {
-    "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.2",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-preset-env": "^1.6.1",
-    "json-loader": "^0.5.7",
-    "po-gettext-loader": "^0.1.1",
-    "vue-loader": "^14.1.1",
-    "vue-loader-options-plugin": "^0.1.1",
-    "vue-template-compiler": "^2.5.13",
-    "webpack": "^3.10.0",
-    "webpack-assets-manifest": "^1.0.0"
+    "webpack": "^3.11.0"
   },
   "scripts": {
     "build": "NODE_ENV=production webpack --optimize-minimize --bail",

@@ -8,6 +8,7 @@
     "babel-polyfill": "^6.26.0"
   },
   "devDependencies": {
+    "angular-gettext-loader": "^1.0.1",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.3",
     "babel-plugin-istanbul": "^4.1.5",
@@ -28,6 +29,7 @@
     "lodash.partialright": "^4.2.1",
     "lodash.spread": "^4.2.1",
     "merge2": "1.0.2",
+    "ng-cache-loader": "0.0.26",
     "po-gettext-loader": "^0.1.1",
     "pump": "^1.0.2",
     "raw-loader": "^0.5.1",

@@ -38,7 +38,7 @@ function getManifestPlugin() {
 
 function getMomentLocalePlugin() {
     // This ensure we only load moment's fr locale. Otherwise, every single locale is included !
-    return new webpack.ContextReplacementPlugin(/moment[\\]locale$/, /fr/);
+    return new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /fr/);
 }
 
 function configureOutput(assets_dir_path) {

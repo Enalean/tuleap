@@ -1,54 +1,16 @@
-const path                        = require('path');
-const webpack                     = require('webpack');
-const WebpackAssetsManifest       = require('webpack-assets-manifest');
-const BabelPresetEnv              = require('babel-preset-env');
-const BabelPluginObjectRestSpread = require('babel-plugin-transform-object-rest-spread');
-const VueLoaderOptionsPlugin      = require('vue-loader-options-plugin');
+const path = require('path');
+const webpack = require('webpack');
+const webpack_configurator = require('../../../../tools/utils/scripts/webpack-configurator.js');
 
-const manifest_data   = Object.create(null);
 const assets_dir_path = path.resolve(__dirname, '../assets');
-
-
-const babel_preset_env_ie_config = [BabelPresetEnv, {
-    targets: {
-        ie: 11
-    },
-    modules: false
-}];
-
-const babel_options = {
-    presets: [babel_preset_env_ie_config],
-    plugins: [BabelPluginObjectRestSpread]
-};
-
-const babel_rule = {
-    test: /\.js$/,
-    exclude: /node_modules/,
-    use: [
-        {
-            loader: 'babel-loader',
-            options: babel_options
-        }
-    ]
-};
-
-const po_rule = {
-    test: /\.po$/,
-    exclude: /node_modules/,
-    use: [
-        { loader: 'json-loader' },
-        { loader: 'po-gettext-loader' }
-    ]
-};
+const manifest_plugin = webpack_configurator.getManifestPlugin();
 
 const webpack_config_for_charts = {
-    entry : {
+    entry: {
         'burnup-chart': './burnup-chart/src/burnup-chart.js'
     },
-    output: {
-        path    : assets_dir_path,
-        filename: '[name]-[chunkhash].js'
-    },
+    context: path.resolve(__dirname),
+    output: webpack_configurator.configureOutput(assets_dir_path),
     resolve: {
         modules: [
             path.resolve(__dirname, 'node_modules'),
@@ -58,16 +20,14 @@ const webpack_config_for_charts = {
         }
     },
     module: {
-        rules: [babel_rule, po_rule]
+        rules: [
+            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
+            webpack_configurator.rule_po_files
+        ]
     },
     plugins: [
-        new WebpackAssetsManifest({
-            output: 'manifest.json',
-            assets: manifest_data,
-            merge: true
-        }),
-        // This ensure we only load moment's fr locale. Otherwise, every single locale is included !
-        new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /fr/)
+        manifest_plugin,
+        webpack_configurator.getMomentLocalePlugin()
     ]
 };
 
@@ -75,13 +35,11 @@ const path_to_badge = path.resolve(__dirname, '../../../../src/www/scripts/proje
 
 const webpack_config_for_overview_and_vue = {
     entry: {
-        'overview'            : './scrum-header.js',
+        'overview': './scrum-header.js',
         'permission-per-group': './permissions-per-group/src/index.js'
     },
-    output: {
-        path    : assets_dir_path,
-        filename: '[name]-[chunkhash].js'
-    },
+    context: path.resolve(__dirname),
+    output: webpack_configurator.configureOutput(assets_dir_path),
     externals: {
         tlp: 'tlp'
     },
@@ -92,36 +50,16 @@ const webpack_config_for_overview_and_vue = {
     },
     module: {
         rules: [
-            babel_rule,
-            po_rule,
-            {
-                test: /\.vue$/,
-                use: [
-                    {
-                        loader: 'vue-loader',
-                        options: {
-                            loaders: {
-                                js: 'babel-loader'
-                            },
-                            esModule: true
-                        }
-                    }
-                ]
-            }
+            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
+            webpack_configurator.rule_po_files,
+            webpack_configurator.rule_vue_loader
         ]
     },
     plugins: [
-        new WebpackAssetsManifest({
-            output: 'manifest.json',
-            assets: manifest_data,
-            merge: true,
-            writeToDisk: true
-        }),
-        new VueLoaderOptionsPlugin({
-            babel: babel_options
-        })
+        manifest_plugin,
+        webpack_configurator.getVueLoaderOptionsPlugin(webpack_configurator.babel_options_ie11)
     ]
-}
+};
 
 if (process.env.NODE_ENV === 'production') {
     const optimized_configs = [
@@ -132,7 +70,7 @@ if (process.env.NODE_ENV === 'production') {
         config.plugins = config.plugins.concat([
             new webpack.optimize.ModuleConcatenationPlugin()
         ])
-    })
+    });
     webpack_config_for_overview_and_vue.plugins = webpack_config_for_overview_and_vue.plugins.concat([
         new webpack.DefinePlugin({
             'process.env': {
