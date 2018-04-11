@@ -27,9 +27,11 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\Compari
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\Equal\EqualComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\GreaterThan\GreaterThanComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\GreaterThan\GreaterThanOrEqualComparisonChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\In\InComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\LesserThan\LesserThanComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\LesserThan\LesserThanOrEqualComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\NotEqual\NotEqualComparisonChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\NotIn\NotInComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\ICheckMetadataForAComparison;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataChecker;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
@@ -75,10 +77,15 @@ class InvalidComparisonCollectorVisitor implements Visitor
 
     /** @var LesserThanOrEqualComparisonChecker */
     private $lesser_than_or_equal_comparison_checker;
-    /**
-     * @var BetweenComparisonChecker
-     */
+
+    /** @var BetweenComparisonChecker */
     private $between_comparison_checker;
+
+    /** @var InComparisonChecker */
+    private $in_comparison_checker;
+
+    /** @var NotInComparisonChecker */
+    private $not_in_comparison_checker;
 
     public function __construct(
         InvalidSearchableCollectorVisitor $invalid_searchable_collector_visitor,
@@ -89,7 +96,9 @@ class InvalidComparisonCollectorVisitor implements Visitor
         GreaterThanOrEqualComparisonChecker $greater_than_or_equal_comparison_checker,
         LesserThanComparisonChecker $lesser_than_comparison_checker,
         LesserThanOrEqualComparisonChecker $lesser_than_or_equal_comparison_checker,
-        BetweenComparisonChecker $between_comparison_checker
+        BetweenComparisonChecker $between_comparison_checker,
+        InComparisonChecker $in_comparison_checker,
+        NotInComparisonChecker $not_in_comparison_checker
     ) {
         $this->invalid_searchable_collector_visitor     = $invalid_searchable_collector_visitor;
         $this->metadata_checker                         = $metadata_checker;
@@ -100,6 +109,8 @@ class InvalidComparisonCollectorVisitor implements Visitor
         $this->lesser_than_comparison_checker           = $lesser_than_comparison_checker;
         $this->lesser_than_or_equal_comparison_checker  = $lesser_than_or_equal_comparison_checker;
         $this->between_comparison_checker               = $between_comparison_checker;
+        $this->in_comparison_checker                    = $in_comparison_checker;
+        $this->not_in_comparison_checker                = $not_in_comparison_checker;
     }
 
     /**
@@ -192,12 +203,22 @@ class InvalidComparisonCollectorVisitor implements Visitor
 
     public function visitInComparison(InComparison $comparison, InvalidComparisonCollectorParameters $parameters)
     {
-        $this->addUnsupportedComparisonError($parameters, "IN");
+        $this->visitComparison(
+            $comparison,
+            $this->metadata_checker,
+            $this->in_comparison_checker,
+            $parameters
+        );
     }
 
     public function visitNotInComparison(NotInComparison $comparison, InvalidComparisonCollectorParameters $parameters)
     {
-        $this->addUnsupportedComparisonError($parameters, "NOT IN");
+        $this->visitComparison(
+            $comparison,
+            $this->metadata_checker,
+            $this->not_in_comparison_checker,
+            $parameters
+        );
     }
 
     private function visitComparison(
@@ -213,19 +234,6 @@ class InvalidComparisonCollectorVisitor implements Visitor
                 $metadata_checker,
                 $comparison_checker,
                 $comparison
-            )
-        );
-    }
-
-    private function addUnsupportedComparisonError(InvalidComparisonCollectorParameters $parameters, $comparison_name)
-    {
-        $parameters->getInvalidSearchablesCollection()->addInvalidSearchableError(
-            sprintf(
-                dgettext(
-                    "tuleap-crosstracker",
-                    "The %s comparison is not supported for cross-tracker search. Please refer to the documentation for the allowed comparisons."
-                ),
-                $comparison_name
             )
         );
     }
