@@ -202,6 +202,9 @@ msgstr ""
 msgid "Something went wrong."
 msgstr "Quelque chose s'est mal passé."
 
+msgid "That tracker does not exist."
+msgstr "Cet outil de suivi n'existe pas."
+
 #, php-format
 msgid "The @comments metadata cannot be compared to MYSELF()."
 msgstr "@comments ne peut pas être comparé à MYSELF()."

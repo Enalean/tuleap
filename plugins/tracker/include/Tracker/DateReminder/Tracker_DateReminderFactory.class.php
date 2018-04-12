@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
  * Copyright (c) STMicroelectronics 2012. All rights reserved
  *
  * Tuleap is free software; you can redistribute it and/or modify
@@ -31,7 +32,7 @@ class Tracker_DateReminderFactory {
      */
     public function __construct(Tracker $tracker) {
         $this->tracker = $tracker;
-        $this->csrf    = new CSRFSynchronizerToken(TRACKER_BASE_URL.'/?func=admin-notifications&tracker='.$this->tracker->id);
+        $this->csrf    = new CSRFSynchronizerToken(TRACKER_BASE_URL . '/notifications/' . urlencode($this->getTracker()->getId()) . '/');
     }
 
     /**
@@ -93,7 +94,7 @@ class Tracker_DateReminderFactory {
             $this->isReminderBeforeOpenDate($fieldId, $notificationType);
         } catch (Tracker_DateReminderException $e) {
             $GLOBALS['Response']->addFeedback('error', $e->getMessage());
-            $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?func=admin-notifications&tracker='.$this->getTracker()->getId());
+            $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/notifications/' . urlencode($this->getTracker()->getId()) . '/');
         }
         $reminder = $this->getDao()->addDateReminder($trackerId, $fieldId, $ugroups, $roles, $notificationType, $distance);
         if ($reminder) {
@@ -174,7 +175,7 @@ class Tracker_DateReminderFactory {
             }
         } catch (Tracker_DateReminderException $e) {
             $GLOBALS['Response']->addFeedback('error', $e->getMessage());
-            $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?func=admin-notifications&tracker='.$this->getTracker()->id);
+            $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/notifications/' . urlencode($this->getTracker()->getId()) . '/');
         }
         $updateReminder = $this->getDao()->updateDateReminder($reminderId, $ugroups, $roles, $notificationType, $distance, $status);
         if ($updateReminder) {

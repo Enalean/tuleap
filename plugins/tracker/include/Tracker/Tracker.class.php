@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -642,28 +642,6 @@ class Tracker implements Tracker_Dispatchable_Interface
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
                 }
                 break;
-            case 'admin-notifications':
-                if ($this->userIsAdmin($current_user)) {
-                    $this->getDateReminderManager()->processReminder($layout, $request, $current_user);
-                    $this->getNotificationsManager()->process($layout, $request, $current_user);
-                } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
-                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
-                }
-                break;
-            case 'notifications':
-            // you just need to be registered to have access to this part
-                if ($current_user->isLoggedIn()) {
-                    $this->getDateReminderManager()->processReminder($layout, $request, $current_user);
-                    $this->getNotificationsManager()->process($layout, $request, $current_user);
-                } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
-                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
-                }
-                break;
-            case 'display_reminder_form':
-                print $this->getDateReminderManager()->getDateReminderRenderer()->getNewDateReminderForm();
-                break;
             case 'admin-canned':
             // TODO : project members can access this part ?
                 if ($this->userIsAdmin($current_user)) {
@@ -1301,7 +1279,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         if (UserManager::instance()->getCurrentUser()->isLoggedIn()) {
             $toolbar[] = array(
                     'title' => $GLOBALS['Language']->getText('plugin_tracker', 'notifications'),
-                    'url'   => TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=notifications',
+                    'url'   => TRACKER_BASE_URL.'/notifications/' . urlencode($this->id) . '/',
             );
         }
         if ($this->userIsAdmin()) {
@@ -1376,7 +1354,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                         'img'         => $GLOBALS['HTML']->getImagePath('ic/48/tracker-canned.png'),
                 ),
                 'editnotifications' => array(
-                        'url'         => TRACKER_BASE_URL.'/?tracker='. $this->id .'&func=notifications',
+                        'url'         => TRACKER_BASE_URL.'/notifications/' . urlencode($this->id) . '/',
                         'short_title' => $GLOBALS['Language']->getText('plugin_tracker_include_type','mail_notif'),
                         'title'       => $GLOBALS['Language']->getText('plugin_tracker_include_type','mail_notif'),
                         'description' => $GLOBALS['Language']->getText('plugin_tracker_include_type','define_notif'),
@@ -2138,13 +2116,6 @@ EOS;
             UserManager::instance(),
             new UGroupManager()
         );
-    }
-
-    /**
-     * @return Tracker_DateReminderManager
-     */
-    public function getDateReminderManager() {
-        return new Tracker_DateReminderManager($this);
     }
 
     /**

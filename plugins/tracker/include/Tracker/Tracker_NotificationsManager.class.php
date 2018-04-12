@@ -185,7 +185,7 @@ class Tracker_NotificationsManager {
 
     protected function displayAdminNotifications(TrackerManager $tracker_manager, $request, $current_user) {
         $this->tracker->displayAdminItemHeader($tracker_manager, 'editnotifications');
-        echo '<fieldset><form id="tracker-admin-notifications-form" action="'.TRACKER_BASE_URL.'/?tracker='. (int)$this->tracker->id .'&amp;func=admin-notifications" method="POST">';
+        echo '<fieldset><form id="tracker-admin-notifications-form" method="POST">';
 
         $this->displayAdminNotifications_Toggle();
         $this->displayAdminNotificationAssignedToMeFlag();
@@ -460,7 +460,7 @@ class Tracker_NotificationsManager {
 
     private function redirectOnNotifications()
     {
-        $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->tracker->getId() . '&func=notifications');
+        $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/notifications/' . urlencode($this->tracker->getId()) . '/');
     }
 
     private function addFeedbackCorrectlySaved()

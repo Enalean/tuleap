@@ -53,6 +53,7 @@ use Tuleap\Tracker\Notifications\CollectionOfUserToBeNotifiedPresenterBuilder;
 use Tuleap\Tracker\Notifications\GlobalNotificationsAddressesBuilder;
 use Tuleap\Tracker\Notifications\NotificationListBuilder;
 use Tuleap\Tracker\Notifications\NotificationsForProjectMemberCleaner;
+use Tuleap\Tracker\Notifications\Settings\NotificationsSettingsController;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyDao;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyUpdater;
 use Tuleap\Tracker\Notifications\UsersToNotifyDao;
@@ -159,6 +160,8 @@ class trackerPlugin extends Plugin {
 
         $this->addHook(WorkerEvent::NAME);
         $this->addHook(PermissionPerGroupPaneCollector::NAME);
+
+        $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
     }
 
     public function getHooksAndCallbacks() {
@@ -667,9 +670,11 @@ class trackerPlugin extends Plugin {
         }
     }
 
-    public function url_verification_instance($params) {
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            include_once 'Tracker/Tracker_URLVerification.class.php';
+    public function url_verification_instance($params)
+    {
+        $request_uri = $_SERVER['REQUEST_URI'];
+        if (strpos($request_uri, $this->getPluginPath()) === 0 &&
+            strpos($request_uri, $this->getPluginPath().'/notifications/') !== 0) {
             $params['url_verification'] = new Tracker_URLVerification();
         }
     }
@@ -1529,5 +1534,22 @@ class trackerPlugin extends Plugin {
     {
         $deletions_remover = new ArtifactsDeletionRemover(new ArtifactsDeletionDAO());
         $deletions_remover->deleteOutdatedArtifactsDeletions();
+    }
+
+    public function collectRoutesEvent(\Tuleap\Request\CollectRoutesEvent $event)
+    {
+        $plugin = $this;
+        $event->getRouteCollector()->addGroup(TRACKER_BASE_URL, function(FastRoute\RouteCollector $r) use ($plugin) {
+            $r->addRoute(['GET', 'POST'],'[/[index.php]]',  function () {
+                return new \Tuleap\Tracker\TrackerPluginDefaultController(new TrackerManager);
+            });
+            $r->addRoute(['GET', 'POST'], '/notifications/{id:\d+}/', function () use ($plugin)  {
+                return new  NotificationsSettingsController(
+                    $plugin->getTrackerFactory(),
+                    new TrackerManager,
+                    $plugin->getUserManager()
+                );
+            });
+        });
     }
 }

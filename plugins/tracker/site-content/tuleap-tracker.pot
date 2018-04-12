@@ -166,6 +166,9 @@ msgstr ""
 msgid "Something went wrong."
 msgstr ""
 
+msgid "That tracker does not exist."
+msgstr ""
+
 #, php-format
 msgid "The @comments metadata cannot be compared to MYSELF()."
 msgstr ""

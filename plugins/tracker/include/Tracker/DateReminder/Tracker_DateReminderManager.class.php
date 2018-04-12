@@ -99,7 +99,8 @@ class Tracker_DateReminderManager {
                 $do_redirect = true;
             } elseif ($request->get('confirm_delete') && $action == 'confirm_delete_reminder') {
                 $this->getDateReminderRenderer()->getDateReminderFactory()->deleteTrackerReminder($request->get('reminder_id'));
-                $feedback = 'tracker_date_reminder_deleted';
+                $feedback    = 'tracker_date_reminder_deleted';
+                $do_redirect = true;
             }
             if ($feedback) {
                 $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_date_reminder',$feedback));
@@ -108,7 +109,7 @@ class Tracker_DateReminderManager {
             $GLOBALS['Response']->addFeedback('error', $e->getMessage());
         }
         if ($do_redirect || $request->get('cancel_delete_reminder')) {
-            $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?func=admin-notifications&tracker='.$this->getTracker()->getId());
+            $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/notifications/' . urlencode($this->getTracker()->getId()) . '/');
         }
     }
 
