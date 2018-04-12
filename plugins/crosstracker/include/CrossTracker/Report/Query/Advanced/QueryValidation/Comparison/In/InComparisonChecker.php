@@ -33,7 +33,9 @@ class InComparisonChecker extends ComparisonChecker
         InValueWrapper $value_wrapper,
         ValueWrapperParameters $parameters
     ) {
-        $metadata = $parameters->getMetadata();
-        throw new OperatorNotAllowedForMetadataException($metadata, static::OPERATOR);
+        $values = $value_wrapper->getValueWrappers();
+        foreach ($values as $value) {
+            $this->list_value_validator->checkValueIsValid($value->getValue());
+        }
     }
 }

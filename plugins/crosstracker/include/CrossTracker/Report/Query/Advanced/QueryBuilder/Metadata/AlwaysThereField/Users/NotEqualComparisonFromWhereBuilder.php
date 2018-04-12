@@ -63,7 +63,8 @@ class NotEqualComparisonFromWhereBuilder implements FromWhereBuilder
      */
     public function getFromWhere(Metadata $metadata, Comparison $comparison, array $trackers)
     {
-        $value            = $this->extractor->getValue($comparison);
+        $values           = $this->extractor->extractCollectionOfValues($comparison);
+        $value            = $values[0];
         $where            = '1';
         $where_parameters = [];
 
