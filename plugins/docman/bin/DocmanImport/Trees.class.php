@@ -131,13 +131,13 @@ class Trees {
      * Merge two trees and tag the nodes with the information: IN_FIRST, IN_SECOND, IN_BOTH
      */
     public static function mergeTag(array $array1, array $array2) {
-        $root1 = array_pop(array_keys($array1));
-        $root2 = array_pop(array_keys($array2));
+        $array1_keys = array_keys($array1);
+        $root1 = array_pop($array1_keys);
+        $array2_keys = array_keys($array2);
+        $root2 = array_pop($array2_keys);
     
         $res['(root)'] =  self::mergeTagRec($array1[$root1], $array2[$root2]);
         
         return $res;
     }
 }
-
-?>

@@ -26,7 +26,7 @@
 require_once 'bootstrap.php';
 
 Mock::generate('DataAccess');
-Mock::generatePartial('Docman_MetadataListOfValuesElementDao', 'MetadataListOfValuesElementDaoTestVersion', array('update', 'retreive', 'prepareRanking'));
+Mock::generatePartial('Docman_MetadataListOfValuesElementDao', 'MetadataListOfValuesElementDaoTestVersion', array('update', 'retreive', 'prepareLoveRanking'));
 
 class MetadataListOfValuesElementDaoTest extends TuleapTestCase {
 
@@ -41,7 +41,7 @@ class MetadataListOfValuesElementDaoTest extends TuleapTestCase {
 
          // Setup
         $dao = new MetadataListOfValuesElementDaoTestVersion($this);
-        $dao->setReturnValue('prepareRanking', 15);
+        $dao->setReturnValue('prepareLoveRanking', 15);
         $dao->setReturnValue('update', true);
         $dao->da = new MockDataAccess($this);
         $dao->da->setReturnValue('quoteSmart', "'$name'", array($name));

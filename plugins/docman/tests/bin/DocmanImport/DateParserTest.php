@@ -1,6 +1,6 @@
 <?php
 
-require_once(dirname(__FILE__).'/../../../bin/DocmanImport/DateParser.class.php');
+require_once(__DIR__.'/../../../bin/DocmanImport/DateParser.class.php');
 
 class DateParserTest extends TuleapTestCase {
 
@@ -29,5 +29,3 @@ class DateParserTest extends TuleapTestCase {
         $this->assertEqual(DateParser::parseIso8601($date3), DateParser::parseIso8601($date4));
     }
 }
-
-?>
