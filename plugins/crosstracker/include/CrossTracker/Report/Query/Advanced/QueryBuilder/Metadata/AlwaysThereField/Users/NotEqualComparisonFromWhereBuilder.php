@@ -21,13 +21,40 @@
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\Users;
 
 use Tracker;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\ListValueExtractor;
 use Tuleap\CrossTracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 use Tuleap\CrossTracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
+use UserManager;
 
 class NotEqualComparisonFromWhereBuilder implements FromWhereBuilder
 {
+    /** @var ListValueExtractor */
+    private $extractor;
+
+    /** @var UserManager */
+    private $user_manager;
+
+    /** @var string */
+    private $alias_field;
+
+    /**
+     * EqualComparisonFromWhereBuilder constructor.
+     * @param ListValueExtractor $extractor
+     * @param UserManager $user_manager
+     * @param string $alias_field
+     */
+    public function __construct(
+        ListValueExtractor $extractor,
+        UserManager $user_manager,
+        $alias_field
+    ) {
+        $this->extractor    = $extractor;
+        $this->user_manager = $user_manager;
+        $this->alias_field = $alias_field;
+    }
+
     /**
      * @param Metadata $metadata
      * @param Comparison $comparison
@@ -36,6 +63,16 @@ class NotEqualComparisonFromWhereBuilder implements FromWhereBuilder
      */
     public function getFromWhere(Metadata $metadata, Comparison $comparison, array $trackers)
     {
-        return new ParametrizedFromWhere('', '0', [], []);
+        $value            = $this->extractor->getValue($comparison);
+        $where            = '1';
+        $where_parameters = [];
+
+        if ($value !== '') {
+            $user             = $this->user_manager->getUserByUserName($value);
+            $where_parameters = [$user->getId()];
+            $where            = "{$this->alias_field} != ?";
+        }
+
+        return new ParametrizedFromWhere('', $where, [], $where_parameters);
     }
 }

@@ -222,7 +222,11 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                     $date_time_value_rounder,
                     $last_update_date_alias_field
                 ),
-                new Users\NotEqualComparisonFromWhereBuilder()
+                new Users\NotEqualComparisonFromWhereBuilder(
+                    $list_value_extractor,
+                    $this->user_manager,
+                    $submitted_by_alias_field
+                )
             ),
             new GreaterThanComparisonFromWhereBuilder(
                 new Date\GreaterThanComparisonFromWhereBuilder(
