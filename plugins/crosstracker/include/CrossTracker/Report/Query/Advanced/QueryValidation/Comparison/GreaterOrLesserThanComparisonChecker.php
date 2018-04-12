@@ -49,9 +49,9 @@ abstract class GreaterOrLesserThanComparisonChecker extends ComparisonChecker
         try {
             $comparison->getValueWrapper()->accept($this, new MetadataValueWrapperParameters($metadata));
         } catch (DateToEmptyStringException $e) {
-            throw new DateToEmptyStringComparisonException($metadata, static::OPERATOR);
+            throw new EmptyStringComparisonException($metadata, static::OPERATOR);
         } catch (DateToStringException $e) {
-            throw new DateToStringComparisonException($metadata, $comparison->getValueWrapper()->getValue());
+            throw new ToStringComparisonException($metadata, $comparison->getValueWrapper()->getValue());
         }
     }
 

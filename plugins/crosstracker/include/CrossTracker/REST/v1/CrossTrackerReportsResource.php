@@ -49,6 +49,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\GreaterThanC
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\GreaterThanOrEqualComparisonFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\LesserThanComparisonFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\LesserThanOrEqualComparisonFromWhereBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\ListValueExtractor;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\NotEqualComparisonFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\Description;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\Status;
@@ -62,6 +63,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\Greater
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\In\InComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\LesserThan\LesserThanComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\LesserThan\LesserThanOrEqualComparisonChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ListValueValidator;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\NotEqual\NotEqualComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\NotIn\NotInComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataChecker;
@@ -77,6 +79,7 @@ use Tuleap\Tracker\Report\Query\Advanced\ExpertQueryValidator;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parser;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFormatValidator;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringAllowed;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringForbidden;
 use Tuleap\Tracker\Report\Query\Advanced\LimitSizeIsExceededException;
 use Tuleap\Tracker\Report\Query\Advanced\ParserCacheProxy;
@@ -152,7 +155,8 @@ class CrossTrackerReportsResource extends AuthenticatedResource
             new SizeValidatorVisitor($report_config->getExpertQueryLimit())
         );
 
-        $date_validator = new DateFormatValidator(new EmptyStringForbidden(), DateFormat::DATETIME);
+        $date_validator       = new DateFormatValidator(new EmptyStringForbidden(), DateFormat::DATETIME);
+        $list_value_validator = new ListValueValidator(new EmptyStringAllowed(), $this->user_manager);
 
         $this->invalid_comparisons_collector = new InvalidComparisonCollectorVisitor(
             new InvalidSearchableCollectorVisitor(),
@@ -164,22 +168,24 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                     new Tracker_Semantic_StatusDao()
                 )
             ),
-            new EqualComparisonChecker($date_validator),
-            new NotEqualComparisonChecker($date_validator),
-            new GreaterThanComparisonChecker($date_validator),
-            new GreaterThanOrEqualComparisonChecker($date_validator),
-            new LesserThanComparisonChecker($date_validator),
-            new LesserThanOrEqualComparisonChecker($date_validator),
-            new BetweenComparisonChecker($date_validator),
-            new InComparisonChecker($date_validator),
-            new NotInComparisonChecker($date_validator)
+            new EqualComparisonChecker($date_validator, $list_value_validator),
+            new NotEqualComparisonChecker($date_validator, $list_value_validator),
+            new GreaterThanComparisonChecker($date_validator, $list_value_validator),
+            new GreaterThanOrEqualComparisonChecker($date_validator, $list_value_validator),
+            new LesserThanComparisonChecker($date_validator, $list_value_validator),
+            new LesserThanOrEqualComparisonChecker($date_validator, $list_value_validator),
+            new BetweenComparisonChecker($date_validator, $list_value_validator),
+            new InComparisonChecker($date_validator, $list_value_validator),
+            new NotInComparisonChecker($date_validator, $list_value_validator)
         );
 
         $submitted_on_alias_field     = 'tracker_artifact.submitted_on';
         $last_update_date_alias_field = 'last_changeset.submitted_on';
+        $submitted_by_alias_field     = 'tracker_artifact.submitted_by';
 
         $date_value_extractor    = new Date\DateValueExtractor();
         $date_time_value_rounder = new DateTimeValueRounder();
+        $list_value_extractor    = new ListValueExtractor();
         $query_builder_visitor   = new QueryBuilderVisitor(
             new SearchableVisitor(),
             new EqualComparisonFromWhereBuilder(
@@ -196,7 +202,11 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                     $date_time_value_rounder,
                     $last_update_date_alias_field
                 ),
-                new Users\EqualComparisonFromWhereBuilder()
+                new Users\EqualComparisonFromWhereBuilder(
+                    $list_value_extractor,
+                    $this->user_manager,
+                    $submitted_by_alias_field
+                )
             ),
             new NotEqualComparisonFromWhereBuilder(
                 new Title\NotEqualComparisonFromWhereBuilder(),
@@ -212,7 +222,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                     $date_time_value_rounder,
                     $last_update_date_alias_field
                 ),
-                new Users\EqualComparisonFromWhereBuilder()
+                new Users\NotEqualComparisonFromWhereBuilder()
             ),
             new GreaterThanComparisonFromWhereBuilder(
                 new Date\GreaterThanComparisonFromWhereBuilder(
