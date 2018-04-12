@@ -40,13 +40,19 @@ class ArtifactsDeletionManager
      * @var SystemEventDao
      */
     private $dao;
+    /**
+     * @var ArtifactDeletor
+     */
+    private $artifact_deletor;
 
     public function __construct(
         ArtifactsDeletionConfig $config,
-        ArtifactsDeletionDAO $dao
+        ArtifactsDeletionDAO $dao,
+        ArtifactDeletor $artifact_deletor
     ) {
-        $this->config = $config;
-        $this->dao    = $dao;
+        $this->config           = $config;
+        $this->dao              = $dao;
+        $this->artifact_deletor = $artifact_deletor;
     }
 
     /**
@@ -68,7 +74,7 @@ class ArtifactsDeletionManager
             throw new ArtifactsDeletionLimitReachedException();
         }
 
-        $artifact->delete($user);
+        $this->artifact_deletor->delete($artifact, $user);
         $this->dao->recordDeletionForUser($user->getId(), time());
 
         return $limit - ($nb_artifacts_deleted + 1);

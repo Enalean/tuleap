@@ -20,8 +20,6 @@
 
 namespace Tuleap\Tracker\Artifact;
 
-use EventManager;
-use ForgeConfig;
 use PFUser;
 use TrackerXmlExport;
 use Tuleap\Project\XML\Export\ZipArchive;
@@ -37,23 +35,15 @@ class ArtifactWithTrackerStructureExporter
      * @var XMLConvertor
      */
     private $convertor;
-    /**
-     * @var EventManager
-     */
-    private $event_manager;
 
-    public function __construct(TrackerXmlExport $exporter, XMLConvertor $convertor, EventManager $event_manager)
+    public function __construct(TrackerXmlExport $exporter, XMLConvertor $convertor)
     {
         $this->exporter      = $exporter;
         $this->convertor     = $convertor;
-        $this->event_manager = $event_manager;
     }
 
-    public function exportArtifactAndTrackerStructureToXML(PFUser $user, \Tracker_Artifact $artifact)
+    public function exportArtifactAndTrackerStructureToXML(PFUser $user, \Tracker_Artifact $artifact, ZipArchive $archive)
     {
-        $archive_path = ForgeConfig::get('tmp_dir') . '/artifact_' . $artifact->getId();
-        $archive      = new ZipArchive($archive_path);
-
         $xml_element = $this->exporter->exportSingleTrackerBunchOfArtifactsToXml(
             $artifact->getTracker()->getId(),
             $user,
@@ -62,20 +52,5 @@ class ArtifactWithTrackerStructureExporter
         );
 
         $archive->addFromString("artifact.xml", $this->convertor->convertToXml($xml_element));
-        $archive->close();
-
-        $status = true;
-        $error  = null;
-        $params = array(
-            'source_path'     => $archive->getArchivePath(),
-            'archive_prefix'  => 'deleted_',
-            'status'          => &$status,
-            'error'           => &$error,
-            'skip_duplicated' => false
-        );
-
-        $this->event_manager->processEvent('archive_deleted_item', $params);
-
-        unlink($archive->getArchivePath());
     }
 }

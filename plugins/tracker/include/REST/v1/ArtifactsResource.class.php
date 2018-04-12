@@ -31,6 +31,7 @@ use Tuleap\REST\QueryParameterException;
 use Tuleap\REST\QueryParameterParser;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfig;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigDAO;
+use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletorBuilder;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionDAO;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionLimitReachedException;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionManager;
@@ -118,7 +119,8 @@ class ArtifactsResource extends AuthenticatedResource {
 
         $this->artifacts_deletion_manager = new ArtifactsDeletionManager(
             $this->artifacts_deletion_config,
-            new ArtifactsDeletionDAO()
+            new ArtifactsDeletionDAO(),
+            ArtifactDeletorBuilder::build()
         );
     }
 

@@ -32,6 +32,7 @@ use Tuleap\Request\CurrentPage;
 use Tuleap\Service\ServiceCreator;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDuplicator;
+use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletor;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionDAO;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionRemover;
 use Tuleap\Tracker\Artifact\LatestHeartbeatsCollector;
@@ -844,7 +845,7 @@ class trackerPlugin extends Plugin {
             'tracker_date_reminder_delete',
             'tracker_date_reminder_sent',
             Tracker_FormElement::PROJECT_HISTORY_UPDATE,
-            Tracker_Artifact::PROJECT_HISTORY_DELETED
+            ArtifactDeletor::PROJECT_HISTORY_ARTIFACT_DELETED
         );
     }
 
