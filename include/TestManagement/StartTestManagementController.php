@@ -77,7 +77,8 @@ class StartTestManagementController
         return $this->getRenderer()->renderToString(
             'misconfiguration',
             new StartTestManagementPresenter(
-                $is_user_admin
+                $is_user_admin,
+                $this->csrf_token
             )
         );
     }
