@@ -1,6 +1,11 @@
 <nav class="tlp-tabs">
     {{# getPaneInfoList }}
-        <a href="{{ getUri }}" class="tlp-tab {{# isActive }}tlp-tab-active{{/ isActive }}">{{{ getTitle }}}</a>
+        <a href="{{ getUri }}" class="tlp-tab {{# isActive }}tlp-tab-active{{/ isActive }}">
+            {{{ getTitle }}}
+            {{# isExternalLink }}
+                <i class="fa fa-external-link tlp-tab-icon"></i>
+            {{/ isExternalLink }}
+        </a>
     {{/ getPaneInfoList }}
     <a href="/plugins/tracker/?aid={{ milestoneId }}" class="tlp-tab">
         {{ artifact }}

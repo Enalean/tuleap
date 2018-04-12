@@ -39,6 +39,11 @@ class AgileDashboardPaneInfo extends PaneInfo
         return 'frs';
     }
 
+    public function isExternalLink()
+    {
+        return true;
+    }
+
     /** @see PaneInfo::getTitle */
     public function getTitle()
     {
