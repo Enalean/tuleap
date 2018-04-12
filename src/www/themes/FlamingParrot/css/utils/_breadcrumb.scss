@@ -229,6 +229,7 @@ $switch-menu-item-active-color: $step-clicked-color;
     font-weight: 600;
     letter-spacing: 1px;
     text-transform: uppercase;
+    white-space: nowrap;
 
     &:first-child {
         margin: 0;

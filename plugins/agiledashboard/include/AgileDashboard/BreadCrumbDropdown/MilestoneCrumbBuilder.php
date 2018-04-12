@@ -20,12 +20,17 @@
 
 namespace Tuleap\AgileDashboard\BreadCrumbDropdown;
 
+use PFUser;
 use Planning_Milestone;
+use Planning_MilestoneFactory;
+use Planning_MilestonePaneFactory;
+use Tuleap\AgileDashboard\Milestone\Criterion\StatusOpen;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkWithIcon;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbSubItems;
+use Tuleap\Layout\BreadCrumbDropdown\SubItemsSection;
 use Tuleap\Layout\BreadCrumbDropdown\SubItemsUnlabelledSection;
 
 class MilestoneCrumbBuilder
@@ -33,21 +38,29 @@ class MilestoneCrumbBuilder
     /** @var string */
     private $plugin_path;
 
-    /** @var \Planning_MilestonePaneFactory */
+    /** @var Planning_MilestonePaneFactory */
     private $pane_factory;
 
-    public function __construct($plugin_path, \Planning_MilestonePaneFactory $pane_factory)
-    {
-        $this->plugin_path  = $plugin_path;
-        $this->pane_factory = $pane_factory;
+    /** @var Planning_MilestoneFactory */
+    private $milestone_factory;
+
+    public function __construct(
+        $plugin_path,
+        Planning_MilestonePaneFactory $pane_factory,
+        Planning_MilestoneFactory $milestone_factory
+    ) {
+        $this->plugin_path       = $plugin_path;
+        $this->pane_factory      = $pane_factory;
+        $this->milestone_factory = $milestone_factory;
     }
 
     /**
+     * @param PFUser             $user
      * @param Planning_Milestone $milestone
      *
      * @return BreadCrumb
      */
-    public function build(Planning_Milestone $milestone)
+    public function build(PFUser $user, Planning_Milestone $milestone)
     {
         $milestone_breadcrumb = new BreadCrumb(
             new BreadCrumbLink(
@@ -55,7 +68,7 @@ class MilestoneCrumbBuilder
                 $this->getPlanningUrl($milestone)
             )
         );
-        $milestone_breadcrumb->setSubItems($this->getSubItems($milestone));
+        $milestone_breadcrumb->setSubItems($this->getSubItems($user, $milestone));
 
         return $milestone_breadcrumb;
     }
@@ -83,11 +96,26 @@ class MilestoneCrumbBuilder
     }
 
     /**
+     * @param PFUser             $user
      * @param Planning_Milestone $milestone
      *
      * @return BreadCrumbSubItems
      */
-    private function getSubItems(Planning_Milestone $milestone)
+    private function getSubItems(PFUser $user, Planning_Milestone $milestone)
+    {
+
+        $sub_items = new BreadCrumbSubItems();
+        $this->addDefaultSection($milestone, $sub_items);
+        $this->addSiblingsSection($user, $milestone, $sub_items);
+
+        return $sub_items;
+    }
+
+    /**
+     * @param Planning_Milestone $milestone
+     * @param BreadCrumbSubItems $sub_items
+     */
+    private function addDefaultSection(Planning_Milestone $milestone, BreadCrumbSubItems $sub_items)
     {
         $links = [];
         $panes = $this->pane_factory->getListOfPaneInfo($milestone);
@@ -103,14 +131,69 @@ class MilestoneCrumbBuilder
             $this->getArtifactUrl($milestone),
             'fa-list-ol icon-list-ol'
         );
-
-        $sub_items = new BreadCrumbSubItems();
         $sub_items->addSection(
             new SubItemsUnlabelledSection(
                 new BreadCrumbLinkCollection($links)
             )
         );
+    }
 
-        return $sub_items;
+    /**
+     * @param PFUser             $user
+     * @param Planning_Milestone $milestone
+     * @param BreadCrumbSubItems $sub_items
+     */
+    private function addSiblingsSection(PFUser $user, Planning_Milestone $milestone, BreadCrumbSubItems $sub_items)
+    {
+        $links = $this->getFirstTenOpenSiblings($user, $milestone);
+
+        if (empty($links)) {
+            return;
+        }
+
+        $sub_items->addSection(
+            new SubItemsSection(
+                sprintf(
+                    dngettext('tuleap-agiledashboard', 'Other %s', 'Other %s', count($links)),
+                    $milestone->getArtifact()->getTracker()->getName()
+                ),
+                new BreadCrumbLinkCollection($links)
+            )
+        );
+    }
+
+    /**
+     * @param PFUser             $user
+     * @param Planning_Milestone $milestone
+     *
+     * @return array
+     */
+    private function getFirstTenOpenSiblings(PFUser $user, Planning_Milestone $milestone)
+    {
+        $links     = [];
+        $criterion = new StatusOpen();
+        $limit     = 10;
+        $offset    = 0;
+        do {
+            $paginated_milestones = $this->milestone_factory->getPaginatedSiblingMilestones(
+                $user,
+                $milestone,
+                $criterion,
+                $limit,
+                $offset
+            );
+            foreach ($paginated_milestones->getMilestones() as $sibling) {
+                $links[] = new BreadCrumbLink(
+                    $sibling->getArtifactTitle(),
+                    $this->getPlanningUrl($sibling)
+                );
+                if (count($links) === 10) {
+                    return $links;
+                }
+            }
+            $offset += $limit;
+        } while ($offset < $paginated_milestones->getTotalSize());
+
+        return $links;
     }
 }

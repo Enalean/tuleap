@@ -169,9 +169,9 @@ class Planning_MilestoneController extends BaseController
 
         if ($this->milestone->getArtifact()) {
             foreach (array_reverse($this->milestone->getAncestors()) as $milestone) {
-                $breadcrumbs->addBreadCrumb($this->milestone_crumb_builder->build($milestone));
+                $breadcrumbs->addBreadCrumb($this->milestone_crumb_builder->build($this->getCurrentUser(), $milestone));
             }
-            $breadcrumbs->addBreadCrumb($this->milestone_crumb_builder->build($this->milestone));
+            $breadcrumbs->addBreadCrumb($this->milestone_crumb_builder->build($this->getCurrentUser(), $this->milestone));
         }
 
         return $breadcrumbs;

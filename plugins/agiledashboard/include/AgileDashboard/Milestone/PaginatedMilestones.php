@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,10 +22,10 @@
 class AgileDashboard_Milestone_PaginatedMilestones {
 
     /** @var Planning_Milestone[] */
-    public $milestones;
+    private $milestones;
 
     /** @var int */
-    public $total_size;
+    private $total_size;
 
 
     public function __construct(array $milestones, $total_size) {

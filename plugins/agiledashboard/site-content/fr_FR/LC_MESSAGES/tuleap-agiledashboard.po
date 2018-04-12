@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 1.8.7.1\n"
 
 msgid "Add Kanban to dashboard"
 msgstr "Ajouter Kanban au tableau de bord"
@@ -110,6 +110,12 @@ msgstr "L'élément n'est pas lié à ce jalon"
 
 msgid "Make sure to check their configuration."
 msgstr "Merci de vérifier leur configuration."
+
+#, php-format
+msgid "Other %s"
+msgid_plural "Other %s"
+msgstr[0] "Autre %s"
+msgstr[1] "Autres %s"
 
 msgid "Parent item"
 msgstr "Parent"
