@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,9 +21,9 @@
 namespace Tuleap\TestManagement;
 
 use Planning_Milestone;
-use AgileDashboard_PaneInfo;
+use Tuleap\AgileDashboard\Milestone\Pane\PaneInfo;
 
-class AgileDashboardPaneInfo extends AgileDashboard_PaneInfo
+class AgileDashboardPaneInfo extends PaneInfo
 {
     /** @var int */
     private $project_id;
@@ -40,29 +40,16 @@ class AgileDashboardPaneInfo extends AgileDashboard_PaneInfo
         $this->milestone_id = $artifact->getId();
     }
 
-    /** @see AgileDashboard_PaneInfo::getIdentifier */
+    /** @see PaneInfo::getIdentifier */
     public function getIdentifier()
     {
         return 'testmgmt';
     }
 
-    /** @see AgileDashboard_PaneInfo::getTitle */
+    /** @see PaneInfo::getTitle */
     public function getTitle()
     {
-        return $GLOBALS['Language']->getText('plugin_testmanagement', 'plugin_tab_title')
-            . ' <i class="icon-external-link"></i>';
-    }
-
-    /** @see AgileDashboard_PaneInfo::getIcon */
-    protected function getIcon()
-    {
-        return '';
-    }
-
-    /** @see AgileDashboard_PaneInfo::getIconTitle */
-    protected function getIconTitle()
-    {
-        return '';
+        return $GLOBALS['Language']->getText('plugin_testmanagement', 'plugin_tab_title');
     }
 
     public function getUri()
@@ -70,6 +57,11 @@ class AgileDashboardPaneInfo extends AgileDashboard_PaneInfo
         $uri = TESTMANAGEMENT_BASE_URL . '/?group_id=' . (int)$this->project_id
              . '&milestone_id=' . (int)$this->milestone_id;
         return $uri;
+    }
+
+    public function getIconName()
+    {
+        return 'fa-check icon-check';
     }
 }
 
