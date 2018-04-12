@@ -21,8 +21,12 @@
 namespace Tuleap\AgileDashboard\BreadCrumbDropdown;
 
 use Planning_Milestone;
-use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbItem;
-use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbSubItemCollection;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkWithIcon;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbSubItems;
+use Tuleap\Layout\BreadCrumbDropdown\SubItemsUnlabelledSection;
 
 class MilestoneCrumbBuilder
 {
@@ -40,35 +44,18 @@ class MilestoneCrumbBuilder
 
     /**
      * @param Planning_Milestone $milestone
-     * @return BreadCrumbItem
+     *
+     * @return BreadCrumb
      */
     public function build(Planning_Milestone $milestone)
     {
-        $sub_items = new BreadCrumbSubItemCollection();
-        $panes     = $this->pane_factory->getListOfPaneInfo($milestone);
-
-        foreach ($panes as $pane) {
-            $pane_breadcrumb = new BreadCrumbItem(
-                $pane->getTitle(),
-                $pane->getUri()
-            );
-            $pane_breadcrumb->setIconName($pane->getIconName());
-
-            $sub_items->addBreadCrumb($pane_breadcrumb);
-        }
-        $artifact_breadcrumb = new BreadCrumbItem(
-            $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'artifact'),
-            $this->getArtifactUrl($milestone)
+        $milestone_breadcrumb = new BreadCrumb(
+            new BreadCrumbLink(
+                $milestone->getArtifactTitle(),
+                $this->getPlanningUrl($milestone)
+            )
         );
-        $artifact_breadcrumb->setIconName('fa-list-ol icon-list-ol');
-
-        $sub_items->addBreadCrumb($artifact_breadcrumb);
-
-        $milestone_breadcrumb = new BreadCrumbItem(
-            $milestone->getArtifactTitle(),
-            $this->getPlanningUrl($milestone)
-        );
-        $milestone_breadcrumb->setSubItems($sub_items);
+        $milestone_breadcrumb->setSubItems($this->getSubItems($milestone));
 
         return $milestone_breadcrumb;
     }
@@ -93,5 +80,37 @@ class MilestoneCrumbBuilder
             http_build_query(
                 ['aid' => $milestone->getArtifactId()]
             );
+    }
+
+    /**
+     * @param Planning_Milestone $milestone
+     *
+     * @return BreadCrumbSubItems
+     */
+    private function getSubItems(Planning_Milestone $milestone)
+    {
+        $links = [];
+        $panes = $this->pane_factory->getListOfPaneInfo($milestone);
+        foreach ($panes as $pane) {
+            $links[] = new BreadCrumbLinkWithIcon(
+                $pane->getTitle(),
+                $pane->getUri(),
+                $pane->getIconName()
+            );
+        }
+        $links[] = new BreadCrumbLinkWithIcon(
+            $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'artifact'),
+            $this->getArtifactUrl($milestone),
+            'fa-list-ol icon-list-ol'
+        );
+
+        $sub_items = new BreadCrumbSubItems();
+        $sub_items->addSection(
+            new SubItemsUnlabelledSection(
+                new BreadCrumbLinkCollection($links)
+            )
+        );
+
+        return $sub_items;
     }
 }

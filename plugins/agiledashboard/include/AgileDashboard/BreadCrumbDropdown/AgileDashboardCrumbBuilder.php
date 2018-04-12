@@ -22,8 +22,12 @@ namespace Tuleap\AgileDashboard\BreadCrumbDropdown;
 
 use PFUser;
 use Project;
-use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbItem;
-use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbSubItemCollection;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkWithIcon;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbSubItems;
+use Tuleap\Layout\BreadCrumbDropdown\SubItemsUnlabelledSection;
 
 class AgileDashboardCrumbBuilder
 {
@@ -39,37 +43,56 @@ class AgileDashboardCrumbBuilder
     }
 
     /**
-     * @param PFUser $user
+     * @param PFUser  $user
      * @param Project $project
-     * @return BreadCrumbItem
+     *
+     * @return BreadCrumb
      */
     public function build(PFUser $user, Project $project)
     {
-        $service_dropdown_items = new BreadCrumbSubItemCollection();
+        $agile_breadcrumb = new BreadCrumb(
+            new BreadCrumbLinkWithIcon(
+                dgettext('tuleap-agiledashboard', 'Agile Dashboard'),
+                $this->plugin_path . '/?' . http_build_query(['group_id' => $project->getID()]),
+                'fa-table icon-table'
+            )
+        );
+
         if ($user->isAdmin($project->getID())) {
-            $admin_url = AGILEDASHBOARD_BASE_URL . '/?' . http_build_query(
+            $this->addAdministrationLink($user, $project, $agile_breadcrumb);
+        }
+
+        return $agile_breadcrumb;
+    }
+
+    /**
+     * @param PFUser     $user
+     * @param Project    $project
+     * @param BreadCrumb $agile_breadcrumb
+     */
+    private function addAdministrationLink(PFUser $user, Project $project, BreadCrumb $agile_breadcrumb)
+    {
+        $admin_url = AGILEDASHBOARD_BASE_URL . '/?' .
+            http_build_query(
                 [
                     'group_id' => $project->getID(),
                     'action'   => 'admin',
                 ]
             );
 
-            $service_dropdown_items->addBreadCrumb(
-                new BreadCrumbItem(
-                    $GLOBALS['Language']->getText('global', 'Administration'),
-                    $admin_url
+        $sub_items = new BreadCrumbSubItems();
+        $sub_items->addSection(
+            new SubItemsUnlabelledSection(
+                new BreadCrumbLinkCollection(
+                    [
+                        new BreadCrumbLink(
+                            $GLOBALS['Language']->getText('global', 'Administration'),
+                            $admin_url
+                        )
+                    ]
                 )
-            );
-        }
-
-        $service_url      = $this->plugin_path . '/?' . http_build_query(['group_id' => $project->getID()]);
-        $agile_breadcrumb = new BreadCrumbItem(
-            dgettext('tuleap-agiledashboard', 'Agile Dashboard'),
-            $service_url
+            )
         );
-        $agile_breadcrumb->setIconName('fa-table icon-table');
-        $agile_breadcrumb->setSubItems($service_dropdown_items);
-
-        return $agile_breadcrumb;
+        $agile_breadcrumb->setSubItems($sub_items);
     }
 }

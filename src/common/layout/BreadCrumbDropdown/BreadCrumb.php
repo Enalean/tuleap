@@ -20,10 +20,44 @@
 
 namespace Tuleap\Layout\BreadCrumbDropdown;
 
-interface BreadCrumb extends BreadCrumbSubItem
+class BreadCrumb
 {
     /**
-     * @return BreadCrumbSubItemCollection
+     * @var BreadCrumbLink
      */
-    public function getSubItems();
+    private $link;
+    /**
+     * @var BreadCrumbSubItems
+     */
+    private $sub_items;
+
+    public function __construct(BreadCrumbLink $link)
+    {
+        $this->link      = $link;
+        $this->sub_items = new BreadCrumbSubItems();
+    }
+
+    /**
+     * @return BreadCrumbLink
+     */
+    public function getLink()
+    {
+        return $this->link;
+    }
+
+    /**
+     * @return BreadCrumbSubItems
+     */
+    public function getSubItems()
+    {
+        return $this->sub_items;
+    }
+
+    /**
+     * @param BreadCrumbSubItems $sub_items
+     */
+    public function setSubItems(BreadCrumbSubItems $sub_items)
+    {
+        $this->sub_items = $sub_items;
+    }
 }

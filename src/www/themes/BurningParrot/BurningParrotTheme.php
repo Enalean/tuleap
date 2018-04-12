@@ -96,9 +96,8 @@ class BurningParrotTheme extends BaseLayout
         $body_classes                = $this->getArrayOfClassnamesForBodyTag($params, $sidebar);
         $current_project_navbar_info = $this->getCurrentProjectNavbarInfo($params);
 
-        $breadcrumb_presenter_builder = new BreadCrumbPresenterBuilder(
-            $this->uri_sanitizer
-        );
+        $breadcrumb_presenter_builder = new BreadCrumbPresenterBuilder();
+
         $breadcrumbs = $breadcrumb_presenter_builder->build($this->breadcrumbs);
 
         $header_presenter = $header_presenter_builder->build(

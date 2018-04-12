@@ -170,7 +170,7 @@ $switch-menu-item-active-color: $step-clicked-color;
     top: 35px;
     left: 0;
     min-width: 100%;
-    max-width: 150%;
+    max-width: 200%;
     padding: 0;
     border: 1px solid $switch-menu-border;
     border-top: 0;
@@ -197,11 +197,11 @@ $switch-menu-item-active-color: $step-clicked-color;
 
 .breadcrumb-dropdown-link {
     display: block;
-    padding: 0 15px;
+    padding: 10px 20px;
     overflow: hidden;
     color: $switch-menu-item-color;
     font-size: 12px;
-    line-height: 30px;
+    line-height: 12px;
     text-overflow: ellipsis;
     white-space: nowrap;
 
@@ -210,18 +210,29 @@ $switch-menu-item-active-color: $step-clicked-color;
     }
 }
 
-.breadcrumb-separator {
-    height: 1px;
+.breadcrumb-dropdown-separator {
+    display: block;
     margin: 10px 0;
-    background: $switch-menu-border;
+    border-top: 1px solid #f3f3f3;
+
+    &:first-child {
+        display: none;
+    }
 }
 
-.breadcrumb-subtitle {
-    padding: 0 15px 5px;
-    color: $switch-menu-item-color;
+.breadcrumb-dropdown-section-title {
+    margin: 10px 0 0;
+    padding: 20px 20px 10px;
+    border-top: 1px solid #f3f3f3;
+    color: #747474;
     font-size: 12px;
     font-weight: 600;
-    line-height: 30px;
+    letter-spacing: 1px;
     text-transform: uppercase;
-    white-space: nowrap;
+
+    &:first-child {
+        margin: 0;
+        padding: 10px 20px;
+        border-top: 0;
+    }
 }

@@ -30,9 +30,12 @@ use Project;
 use ProjectManager;
 use Response;
 use Toggler;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
-use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbItem;
-use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbSubItemCollection;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbSubItems;
+use Tuleap\Layout\BreadCrumbDropdown\SubItemsUnlabelledSection;
 use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\Sanitizer\URISanitizer;
 use UserManager;
@@ -134,7 +137,8 @@ abstract class BaseLayout extends Response
     {
         $motd      = '';
         $motd_file = $GLOBALS['Language']->getContent('others/motd');
-        if (! strpos($motd_file, "empty.txt")) { # empty.txt returned when no motd file found
+        if (! strpos($motd_file, "empty.txt")) {
+            # empty.txt returned when no motd file found
             ob_start();
             include($motd_file);
             $motd = ob_get_clean();
@@ -442,17 +446,13 @@ abstract class BaseLayout extends Response
     /**
      * @param array $breadcrumb
      *
-     * @return BreadCrumbItem
+     * @return BreadCrumb
      */
     private function getBreadCrumbItem(array $breadcrumb)
     {
-        $item = new BreadCrumbItem(
-            $breadcrumb['title'],
-            $breadcrumb['url']
-        );
-        if (isset($breadcrumb['icon_name'])) {
-            $item->setIconName($breadcrumb['icon_name']);
-        }
+        $link = $this->getLink($breadcrumb);
+
+        $item = new BreadCrumb($link);
         if (isset($breadcrumb['sub_items'])) {
             $item->setSubItems($this->getSubItems($breadcrumb['sub_items']));
         }
@@ -460,13 +460,40 @@ abstract class BaseLayout extends Response
         return $item;
     }
 
+    /**
+     * @param array $sub_items
+     *
+     * @return BreadCrumbSubItems
+     */
     private function getSubItems(array $sub_items)
     {
-        $collection = new BreadCrumbSubItemCollection();
+        $links = [];
         foreach ($sub_items as $sub_item) {
-            $collection->addBreadCrumb($this->getBreadCrumbItem($sub_item));
+            $links[] = $this->getLink($sub_item);
         }
+        $collection = new BreadCrumbSubItems();
+        $collection->addSection(
+            new SubItemsUnlabelledSection(
+                new BreadCrumbLinkCollection($links)
+            )
+        );
+
         return $collection;
+    }
+
+    /**
+     * @param array $breadcrumb
+     *
+     * @return BreadCrumbLink
+     */
+    private function getLink(array $breadcrumb)
+    {
+        $link = new BreadCrumbLink($breadcrumb['title'], $breadcrumb['url']);
+        if (isset($breadcrumb['icon_name'])) {
+            $link->setIconName($breadcrumb['icon_name']);
+        }
+
+        return $link;
     }
 
     /**

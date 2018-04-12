@@ -20,26 +20,12 @@
 
 namespace Tuleap\Layout\BreadCrumbDropdown;
 
-class BreadCrumbSubItemCollection
+use ArrayObject;
+
+class BreadCrumbLinkCollection extends ArrayObject
 {
-    /** @var BreadCrumbSubItem[] */
-    private $items;
-
-    public function __construct()
+    public function add(BreadCrumbLink $link)
     {
-        $this->items = [];
-    }
-
-    public function addBreadCrumb(BreadCrumbSubItem $item)
-    {
-        $this->items[] = $item;
-    }
-
-    /**
-     * @return BreadCrumbSubItem[]
-     */
-    public function getItems()
-    {
-        return $this->items;
+        $this->append($link);
     }
 }

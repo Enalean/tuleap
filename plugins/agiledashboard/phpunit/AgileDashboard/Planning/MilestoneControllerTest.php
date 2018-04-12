@@ -32,7 +32,7 @@ use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\MilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\VirtualTopMilestoneCrumbBuilder;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
-use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbItem;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 
 class MilestoneControllerTest extends TestCase
 {
@@ -127,13 +127,11 @@ class MilestoneControllerTest extends TestCase
         $this->top_milestone_crumb_builder   = Mockery::mock(VirtualTopMilestoneCrumbBuilder::class);
         $this->milestone_crumb_builder       = Mockery::mock(MilestoneCrumbBuilder::class);
 
-        $this->service_breadcrumb     = new BreadCrumbItem(
-            'Agile Dashboard',
-            '/fake_url'
+        $this->service_breadcrumb     = new BreadCrumb(
+            new BreadCrumbLink('Agile Dashboard', '/fake_url')
         );
-        $this->top_backlog_breadcrumb = new BreadCrumbItem(
-            'Top backlog',
-            '/fake_url'
+        $this->top_backlog_breadcrumb = new BreadCrumb(
+            new BreadCrumbLink('Top backlog', '/fake_url')
         );
 
         $this->milestone_controller = new Planning_MilestoneController(
@@ -170,9 +168,9 @@ class MilestoneControllerTest extends TestCase
 
     public function testItIncludesBreadcrumbsForParentMilestones()
     {
-        $product_breadcrumb = new BreadCrumbItem('Product X', 'fake_url');
-        $release_breadcrumb = new BreadCrumbItem('Release 1.0', 'fake_url');
-        $sprint_breadcrumb  = new BreadCrumbItem('Sprint 1', 'fake_url');
+        $product_breadcrumb = new BreadCrumb(new BreadCrumbLink('Product X', 'fake_url'));
+        $release_breadcrumb = new BreadCrumb(new BreadCrumbLink('Release 1.0', 'fake_url'));
+        $sprint_breadcrumb  = new BreadCrumb(new BreadCrumbLink('Sprint 1', 'fake_url'));
 
         $this->sprint->shouldReceive('getAncestors')->andReturn([$this->release, $this->product]);
         $this->milestone_factory->shouldReceive('getBareMilestone')->andReturn($this->sprint);

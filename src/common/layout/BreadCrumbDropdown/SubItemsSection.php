@@ -20,20 +20,36 @@
 
 namespace Tuleap\Layout\BreadCrumbDropdown;
 
-interface BreadCrumbSubItem
+class SubItemsSection
 {
     /**
-     * @return string
+     * @var string
      */
-    public function getLabel();
+    private $label;
+    /**
+     * @var BreadCrumbLinkCollection
+     */
+    private $links;
+
+    public function __construct($label, BreadCrumbLinkCollection $links)
+    {
+        $this->label = $label;
+        $this->links = $links;
+    }
 
     /**
      * @return string
      */
-    public function getUrl();
+    public function getLabel()
+    {
+        return $this->label;
+    }
 
     /**
-     * @return string
+     * @return BreadCrumbLinkCollection
      */
-    public function getIconName();
+    public function getLinks()
+    {
+        return $this->links;
+    }
 }
