@@ -18,25 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\password\Configuration;
+namespace Tuleap\Password\Administration;
 
-class PasswordConfiguration
+class PasswordPolicyPresenter
 {
+    /**
+     * @var \CSRFSynchronizerToken
+     */
+    public $csrf_token;
     /**
      * @var bool
      */
-    private $is_breached_password_verification_enabled;
+    public $is_password_compromised_check_enabled;
 
-    public function __construct($is_breached_password_verification_enabled)
+    public function __construct(\CSRFSynchronizerToken $csrf_token, $is_password_compromised_check_enabled)
     {
-        $this->is_breached_password_verification_enabled = $is_breached_password_verification_enabled;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isBreachedPasswordVerificationEnabled()
-    {
-        return $this->is_breached_password_verification_enabled;
+        $this->csrf_token                            = $csrf_token;
+        $this->is_password_compromised_check_enabled = $is_password_compromised_check_enabled;
     }
 }

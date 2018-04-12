@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\password\HaveIBeenPwned;
+namespace Tuleap\Password\HaveIBeenPwned;
 
 use PHPUnit\Framework\TestCase;
 

@@ -18,14 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\password\Administration;
+namespace Tuleap\Password\Administration;
 
 use HTTPRequest;
 use TemplateRenderer;
 use TemplateRendererFactory;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\password\Configuration\PasswordConfigurationRetriever;
+use Tuleap\Password\Configuration\PasswordConfigurationRetriever;
 use Tuleap\Request\DispatchableWithRequest;
 
 class PasswordPolicyDisplayController implements DispatchableWithRequest

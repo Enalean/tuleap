@@ -18,25 +18,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\password;
+namespace Tuleap\Password\Configuration;
 
-use Tuleap\password\HaveIBeenPwned\PwnedPasswordChecker;
-
-class PasswordCompromiseValidator extends \PasswordValidator
+class PasswordConfigurationRetriever
 {
     /**
-     * @var PwnedPasswordChecker
+     * @var PasswordConfigurationDAO
      */
-    private $pwned_password_checker;
+    private $password_configuration_dao;
 
-    public function __construct(PwnedPasswordChecker $pwned_password_checker)
+    public function __construct(PasswordConfigurationDAO $password_configuration_dao)
     {
-        parent::__construct(_('The password must not be considered as compromised due to his presence in known data breaches.'));
-        $this->pwned_password_checker = $pwned_password_checker;
+        $this->password_configuration_dao = $password_configuration_dao;
     }
 
-    public function validate($password)
+    /**
+     * @return PasswordConfiguration
+     */
+    public function getPasswordConfiguration()
     {
-        return !$this->pwned_password_checker->isPasswordCompromised($password);
+        $row = $this->password_configuration_dao->getPasswordConfiguration();
+
+        $is_breached_password_configuration_enabled = isset($row['breached_password_enabled']) && $row['breached_password_enabled'];
+
+        return new PasswordConfiguration($is_breached_password_configuration_enabled);
     }
 }

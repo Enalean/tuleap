@@ -23,8 +23,8 @@
  */
 
 use Tuleap\Layout\IncludeAssets;
-use Tuleap\password\Configuration\PasswordConfigurationDAO;
-use Tuleap\password\Configuration\PasswordConfigurationRetriever;
+use Tuleap\Password\Configuration\PasswordConfigurationDAO;
+use Tuleap\Password\Configuration\PasswordConfigurationRetriever;
 use Tuleap\User\Admin\UserChangePasswordPresenter;
 use Tuleap\User\Admin\UserDetailsAccessPresenter;
 use Tuleap\user\Admin\UserDetailsFormatter;

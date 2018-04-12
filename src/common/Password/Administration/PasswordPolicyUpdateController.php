@@ -18,11 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\password\Administration;
+namespace Tuleap\Password\Administration;
 
 use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\password\Configuration\PasswordConfigurationSaver;
+use Tuleap\Password\Configuration\PasswordConfigurationSaver;
 use Tuleap\Request\DispatchableWithRequest;
 
 class PasswordPolicyUpdateController implements DispatchableWithRequest

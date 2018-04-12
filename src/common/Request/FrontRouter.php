@@ -28,11 +28,11 @@ use ThemeManager;
 use Tuleap\Layout\ErrorRendering;
 use Tuleap\Layout\SiteHomepageController;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\password\Administration\PasswordPolicyDisplayController;
-use Tuleap\password\Administration\PasswordPolicyUpdateController;
-use Tuleap\password\Configuration\PasswordConfigurationDAO;
-use Tuleap\password\Configuration\PasswordConfigurationRetriever;
-use Tuleap\password\Configuration\PasswordConfigurationSaver;
+use Tuleap\Password\Administration\PasswordPolicyDisplayController;
+use Tuleap\Password\Administration\PasswordPolicyUpdateController;
+use Tuleap\Password\Configuration\PasswordConfigurationDAO;
+use Tuleap\Password\Configuration\PasswordConfigurationRetriever;
+use Tuleap\Password\Configuration\PasswordConfigurationSaver;
 
 class FrontRouter
 {
