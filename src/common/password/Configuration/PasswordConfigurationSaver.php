@@ -20,28 +20,20 @@
 
 namespace Tuleap\password\Configuration;
 
-use Tuleap\DB\DataAccessObject;
-
-class PasswordConfigurationDAO extends DataAccessObject
+class PasswordConfigurationSaver
 {
-    public function getPasswordConfiguration()
+    /**
+     * @var PasswordConfigurationDAO
+     */
+    private $dao;
+
+    public function __construct(PasswordConfigurationDAO $dao)
     {
-        return $this->getDB()->row('SELECT * FROM password_configuration');
+        $this->dao = $dao;
     }
 
-    public function savePasswordConfiguration($is_breached_password_enabled)
+    public function save($is_breached_password_enabled)
     {
-        $this->getDB()->beginTransaction();
-        try {
-            $this->getDB()->run('DELETE FROM password_configuration');
-            $this->getDB()->insert(
-                'password_configuration',
-                ['breached_password_enabled'=> $is_breached_password_enabled]
-            );
-        } catch (\PDOException $ex) {
-            $this->getDB()->rollBack();
-            throw $ex;
-        }
-        $this->getDB()->commit();
+        $this->dao->savePasswordConfiguration((bool) $is_breached_password_enabled);
     }
 }

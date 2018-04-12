@@ -794,6 +794,9 @@ msgid ""
 "known data breaches."
 msgstr ""
 
+msgid "The password policy has been successfully updated."
+msgstr ""
+
 msgid "The requested dashboard does not exist."
 msgstr ""
 

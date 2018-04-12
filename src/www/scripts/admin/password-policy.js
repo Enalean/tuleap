@@ -1,8 +1,5 @@
-<?php
 /**
  * Copyright (c) Enalean, 2018. All Rights Reserved.
- *
- * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,22 +15,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\password\Administration;
-
-class PasswordPolicyPresenter
-{
-    /**
-     * @var \CSRFSynchronizerToken
-     */
-    public $csrf_token;
-    /**
-     * @var bool
-     */
-    public $is_password_compromised_check_enabled;
-
-    public function __construct(\CSRFSynchronizerToken $csrf_token, $is_password_compromised_check_enabled)
-    {
-        $this->csrf_token                            = $csrf_token;
-        $this->is_password_compromised_check_enabled = $is_password_compromised_check_enabled;
+document.addEventListener('DOMContentLoaded', () => {
+    const blockBreachedPasswordCheckbox = document.getElementById('block-breached-password-checkbox');
+    if (blockBreachedPasswordCheckbox) {
+        blockBreachedPasswordCheckbox.addEventListener('change', () => {
+            document.getElementById('form-breached-password').submit();
+        });
     }
-}
+});

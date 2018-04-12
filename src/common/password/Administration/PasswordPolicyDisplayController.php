@@ -59,10 +59,13 @@ class PasswordPolicyDisplayController implements DispatchableWithRequest
     {
         $request->checkUserIsSuperUser();
 
+        $layout->includeFooterJavascriptFile('/scripts/admin/password-policy.js');
+
         $this->admin_page_renderer->header('Password requirements');
         $this->template_renderer->renderToPage(
             'password_policy',
             new PasswordPolicyPresenter(
+                new \CSRFSynchronizerToken($request->getFromServer('REQUEST_URI')),
                 $this->password_configuration_retriever->getPasswordConfiguration()->isBreachedPasswordVerificationEnabled()
             )
         );
