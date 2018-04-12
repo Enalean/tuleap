@@ -27,8 +27,8 @@ require_once __DIR__.'/SimpleTestPHP7/RunTestSuite.php';
 require_once __DIR__.'/SimpleTestPHP7/CompareXMLResults.php';
 
 // Tests are like gods, they can run an infinite time, eat all the memory and kill kittens
-ini_set('max_execution_time', 0);
-ini_set('memory_limit', -1);
+ini_set('max_execution_time', '0');
+ini_set('memory_limit', '-1');
 ini_set('display_errors', 'on');
 date_default_timezone_set('Europe/Paris');
 
@@ -41,9 +41,8 @@ require_once __DIR__.'/../../src/etc/local.inc.dist';
 
 switch ($argv[1]) {
     case 'collect':
-        array_shift($argv);
         $exec = new FindCompatibleTests();
-        $exec->main($argv);
+        $exec->main();
         break;
 
     case 'blind-exec':

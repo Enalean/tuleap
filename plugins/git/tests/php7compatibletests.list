@@ -1,0 +1,5 @@
+/usr/share/tuleap/plugins/git/tests/PathJoinUtilTest.php
+/usr/share/tuleap/plugins/git/tests/Git/Permissions/FineGrainedPermissionSorterTest.php
+/usr/share/tuleap/plugins/git/tests/Git/Permissions/FineGrainedRegexpValidatorTest.php
+/usr/share/tuleap/plugins/git/tests/Git/Permissions/FineGrainedPatternValidatorTest.php
+/usr/share/tuleap/plugins/git/tests/Git_ExecTest.php

@@ -17,12 +17,26 @@ class TuleapTestSuite extends TestSuite {
         if (is_dir($dir)) {
             $this->collect($dir, new TuleapTestCollector());
         } else {
-            if (substr($dir, -8) === 'Test.php') {
-                $this->addFile($dir);
-            } else {
-                foreach (file($dir) as $file) {
-                    $this->addFile(trim($file));
+            if ($dir === 'php7compatibletests.list') {
+                $this->addTestFilesFromFile(__DIR__.'/../../../tests/php7compatibletests.list');
+                $directory_iterator = new DirectoryIterator(__DIR__.'/../../');
+                foreach ($directory_iterator as $directory) {
+                    if ($directory->isDot()) {
+                        continue;
+                    }
+                    $this->addTestFilesFromFile($directory->getPathname().'/tests/php7compatibletests.list');
                 }
+            } else {
+                $this->addFile($dir);
+            }
+        }
+    }
+
+    private function addTestFilesFromFile($filepath)
+    {
+        if (is_file($filepath)) {
+            foreach (file($filepath) as $file) {
+                $this->addFile(trim($file));
             }
         }
     }

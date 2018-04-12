@@ -1,5 +1,6 @@
 /usr/share/tuleap/tests/simpletest/common/tracker/ArtifactRulesManagerTest.php
 /usr/share/tuleap/tests/simpletest/common/Glyph/GlyphLocationTest.php
+/usr/share/tuleap/tests/simpletest/common/Cryptography/KeyFactoryTest.php
 /usr/share/tuleap/tests/simpletest/common/Cryptography/KeyTest.php
 /usr/share/tuleap/tests/simpletest/common/Cryptography/Asymmetric/SignatureSecretKeyTest.php
 /usr/share/tuleap/tests/simpletest/common/Cryptography/Asymmetric/SignaturePublicKeyTest.php
@@ -18,11 +19,14 @@
 /usr/share/tuleap/tests/simpletest/common/language/Gettext/POTEntryCollectionTest.php
 /usr/share/tuleap/tests/simpletest/common/language/Gettext/POTFileDumperTest.php
 /usr/share/tuleap/tests/simpletest/common/language/BaseLanguageFactoryTest.php
+/usr/share/tuleap/tests/simpletest/common/Request/CurrentPageTest.php
 /usr/share/tuleap/tests/simpletest/common/REST/JsonCastTest.php
 /usr/share/tuleap/tests/simpletest/common/REST/QueryParameterParserTest.php
 /usr/share/tuleap/tests/simpletest/common/project/XML/Import/ZipArchiveTest.php
+/usr/share/tuleap/tests/simpletest/common/project/UGroupBindingTest.php
 /usr/share/tuleap/tests/simpletest/common/project/Webhook/Log/StatusTest.php
 /usr/share/tuleap/tests/simpletest/common/project/Webhook/WebhookTest.php
+/usr/share/tuleap/tests/simpletest/common/backend/BackendLoggerTest.php
 /usr/share/tuleap/tests/simpletest/common/backend/BackendMailingListTest.php
 /usr/share/tuleap/tests/simpletest/common/backend/BackendSystemTest.php
 /usr/share/tuleap/tests/simpletest/common/backend/FileExtensionFilterIteratorTest.php
@@ -30,6 +34,7 @@
 /usr/share/tuleap/tests/simpletest/common/widget/Rule_Widget_OwnerTest.php
 /usr/share/tuleap/tests/simpletest/common/html/HTML_TableTest.php
 /usr/share/tuleap/tests/simpletest/common/html/HTML_Table_BootstrapTest.php
+/usr/share/tuleap/tests/simpletest/common/html/HTML_Element_SelectboxTest.php
 /usr/share/tuleap/tests/simpletest/common/TreeNode/InjectSpanPaddingWithADepthOf3Test.php
 /usr/share/tuleap/tests/simpletest/common/TreeNode/InjectSpanPaddingWith2ChildrenAndTheFirstWith2ChildrenTest.php
 /usr/share/tuleap/tests/simpletest/common/TreeNode/InjectSpanPaddingWith2ChildrenAndTheFirstWithOneChildTest.php
@@ -38,12 +43,16 @@
 /usr/share/tuleap/tests/simpletest/common/TreeNode/InjectSpanPaddingWith3ChildrenAtRootFirstWithOneChildLastWith2ChildrenTest.php
 /usr/share/tuleap/tests/simpletest/common/TreeNode/InjectSpanPaddingInTreeNodeVisitorTest.php
 /usr/share/tuleap/tests/simpletest/common/date/TimeIntervalTest.php
+/usr/share/tuleap/tests/simpletest/common/plugin/PluginTest.php
+/usr/share/tuleap/tests/simpletest/common/plugin/PluginProxyTest.php
 /usr/share/tuleap/tests/simpletest/common/URI/URIModifierTest.php
 /usr/share/tuleap/tests/simpletest/common/mail/LogoRetrieverTest.php
 /usr/share/tuleap/tests/simpletest/common/valid/Rule_IntTest.php
 /usr/share/tuleap/tests/simpletest/common/valid/Rule_ArrayTest.php
 /usr/share/tuleap/tests/simpletest/common/valid/Rule_RegexpTest.php
+/usr/share/tuleap/tests/simpletest/common/valid/Rule_ProjectFullNameTest.php
 /usr/share/tuleap/tests/simpletest/common/valid/Rule_DateTest.php
+/usr/share/tuleap/tests/simpletest/common/valid/Rule_ProjectNameTest.php
 /usr/share/tuleap/tests/simpletest/common/valid/Rule_NumericalTest.php
 /usr/share/tuleap/tests/simpletest/common/valid/Rule_StringTest.php
 /usr/share/tuleap/tests/simpletest/common/valid/Rule_ProjectNameIntegrationTest.php

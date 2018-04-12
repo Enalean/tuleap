@@ -1,0 +1,3 @@
+/usr/share/tuleap/plugins/webdav/tests/WebDAVFRSFileTest.php
+/usr/share/tuleap/plugins/webdav/tests/WebDAVDocmanFolderTest.php
+/usr/share/tuleap/plugins/webdav/tests/WebDAVDocmanDocumentTest.php

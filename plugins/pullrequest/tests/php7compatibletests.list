@@ -1,0 +1,3 @@
+/usr/share/tuleap/plugins/pullrequest/tests/FileUniDiffBuilderTest.php
+/usr/share/tuleap/plugins/pullrequest/tests/InlineComment/InlineCommentUpdaterTest.php
+/usr/share/tuleap/plugins/pullrequest/tests/GitExecTest.php
