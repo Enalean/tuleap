@@ -437,6 +437,9 @@ class CrossTrackerReportsResource extends AuthenticatedResource
             $current_user    = $this->user_manager->getCurrentUser();
             $report          = $this->getReport($id);
             $trackers        = $this->getTrackersFromRoute($query, $report);
+            if (count($trackers) === 0) {
+                return ["artifacts" => []];
+            }
             $expert_query    = $this->getExpertQueryFromRoute($query, $report);
             $expected_report = new CrossTrackerReport($report->getId(), $expert_query, $trackers);
 
@@ -449,11 +452,11 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                 $offset
             );
         } catch (CrossTrackerReportNotFoundException $exception) {
-            throw new RestException(404, "Report not found");
+            throw new RestException(404, null, array('i18n_error_message' => "Report not found"));
         } catch (TrackerNotFoundException $exception) {
-            throw new RestException(400, $exception->getMessage());
+            throw new RestException(400, null, array('i18n_error_message' => $exception->getMessage()));
         } catch (TrackerDuplicateException $exception) {
-            throw new RestException(400, $exception->getMessage());
+            throw new RestException(400, null, array('i18n_error_message' => $exception->getMessage()));
         } catch (SyntaxError $exception) {
             throw new RestException(
                 400,
@@ -588,6 +591,8 @@ class CrossTrackerReportsResource extends AuthenticatedResource
     /**
      * @param                    $query
      * @param CrossTrackerReport $report
+     *
+     * @throws 400
      *
      * @return array
      */

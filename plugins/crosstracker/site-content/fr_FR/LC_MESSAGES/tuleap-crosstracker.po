@@ -196,6 +196,14 @@ msgstr[1] ""
 "titre définie. Merci de modifier votre requête ou de vérifier la "
 "configuration des outils de suivi."
 
+#, php-format
+msgid "One tracker or more are not found: %s"
+msgstr "Un tracker ou plus n'a pas été trouvé : %s"
+
+#, php-format
+msgid "One tracker or more is duplicated in list: %s"
+msgstr "Un tracker ou plus est dupliqué : %s"
+
 msgid "Search artifacts that are in different trackers"
 msgstr "Permet la recherche d'artefacts à travers plusieurs outils de suivi"
 
