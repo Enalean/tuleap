@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2017. All rights reserved
+ * Copyright (c) Enalean, 2016-2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -73,9 +73,8 @@ class Gitolite3LogParserTest extends \TuleapTestCase
     {
         stub($this->factory)->getFromFullPath()->returns($this->repository);
         stub($this->user_manager)->getUserByUserName()->returns($this->user);
-        stub($this->history_dao)->searchAccessPerDay()->returnsEmptyDar();
 
-        expect($this->history_dao)->insertGitReadAccess(20161004, 1, 101, 2)->once();
+        expect($this->history_dao)->addGitReadAccess(20161004, 1, 101, 2)->once();
         $this->parser->parseLogs(dirname(__FILE__) . '/_fixtures/gitolite-2016-10.log');
     }
 
@@ -83,9 +82,8 @@ class Gitolite3LogParserTest extends \TuleapTestCase
     {
         stub($this->factory)->getFromFullPath()->returns($this->repository);
         stub($this->user_manager)->getUserByUserName()->returns($this->user);
-        stub($this->history_dao)->searchAccessPerDay()->returnsEmptyDar();
 
-        expect($this->history_dao)->insertGitReadAccess(20161004, 1, 101, 2)->once();
+        expect($this->history_dao)->addGitReadAccess(20161004, 1, 101, 2)->once();
         $this->parser->parseLogs(dirname(__FILE__) . '/_fixtures/gitolite-2016-11.log');
     }
 
@@ -95,7 +93,7 @@ class Gitolite3LogParserTest extends \TuleapTestCase
         stub($this->user_manager)->getUserByUserName()->returns($this->user);
         stub($this->file_logs_dao)->getLastReadLine()->returns(array('end_line' => 2259));
 
-        $this->history_dao->expectCallCount('insertGitReadAccess', 0);
+        $this->history_dao->expectCallCount('addGitReadAccess', 0);
         $this->parser->parseLogs(dirname(__FILE__) . '/_fixtures/gitolite-2016-10.log');
     }
 
@@ -104,7 +102,7 @@ class Gitolite3LogParserTest extends \TuleapTestCase
         stub($this->factory)->getFromFullPath()->returns(null);
         stub($this->user_manager)->getUserByUserName()->returns($this->user);
 
-        $this->history_dao->expectCallCount('insertGitReadAccess', 0);
+        $this->history_dao->expectCallCount('addGitReadAccess', 0);
         $this->parser->parseLogs(dirname(__FILE__) . '/_fixtures/gitolite-2016-10.log');
     }
 
@@ -114,7 +112,7 @@ class Gitolite3LogParserTest extends \TuleapTestCase
         stub($this->file_logs_dao)->getLastReadLine()->returns(array('end_line' => 1362));
         stub($this->user_manager)->getUserByUserName()->returns($this->user);
 
-        $this->history_dao->expectCallCount('insertGitReadAccess', 0);
+        $this->history_dao->expectCallCount('addGitReadAccess', 0);
         $this->parser->parseLogs(dirname(__FILE__) . '/_fixtures/gitolite-2016-10.log');
     }
 
@@ -122,9 +120,8 @@ class Gitolite3LogParserTest extends \TuleapTestCase
     {
         stub($this->factory)->getFromFullPath()->returns($this->repository);
         stub($this->user_manager)->getUserByUserName()->returns(null);
-        stub($this->history_dao)->searchAccessPerDay()->returnsEmptyDar();
 
-        expect($this->history_dao)->insertGitReadAccess(20161004, 1, 0, 2)->once();
+        expect($this->history_dao)->addGitReadAccess(20161004, 1, 0, 2)->once();
 
         $this->parser->parseLogs(dirname(__FILE__) . '/_fixtures/gitolite-2016-10.log');
     }
@@ -133,11 +130,7 @@ class Gitolite3LogParserTest extends \TuleapTestCase
     {
         stub($this->factory)->getFromFullPath()->returns($this->repository);
         stub($this->user_manager)->getUserByUserName()->returns($this->user);
-        stub($this->history_dao)->searchAccessPerDay(20161004)->returnsDar(
-            array('repository_id' => 1, 'user_id' => 101)
-        );
 
-        expect($this->history_dao)->insertGitReadAccess()->never();
         expect($this->history_dao)->addGitReadAccess(20161004, 1, 101, 2)->once();
         $this->parser->parseLogs(dirname(__FILE__) . '/_fixtures/gitolite-2016-10.log');
     }
