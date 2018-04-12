@@ -27,17 +27,23 @@ class AllowedMetadata
     const STATUS           = '@status';
     const SUBMITTED_ON     = '@submitted_on';
     const LAST_UPDATE_DATE = '@last_update_date';
+    const SUBMITTED_BY     = '@submitted_by';
 
     const NAMES = [
         self::TITLE,
         self::DESCRIPTION,
         self::STATUS,
         self::SUBMITTED_ON,
-        self::LAST_UPDATE_DATE
+        self::LAST_UPDATE_DATE,
+        self::SUBMITTED_BY
     ];
 
     const DATES = [
         self::SUBMITTED_ON,
         self::LAST_UPDATE_DATE
+    ];
+
+    const USERS = [
+        self::SUBMITTED_BY
     ];
 }
