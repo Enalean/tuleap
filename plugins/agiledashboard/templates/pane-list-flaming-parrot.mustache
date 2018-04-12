@@ -1,7 +1,12 @@
 <ul class="nav nav-tabs">
     {{# getPaneInfoList }}
         <li class="{{# isActive }}active{{/ isActive }}">
-            <a href="{{ getUri }}">{{{ getTitle }}}</a>
+            <a href="{{ getUri }}">
+                {{{ getTitle }}}
+                {{# isExternalLink }}
+                    <i class="icon-external-link"></i>
+                {{/ isExternalLink }}
+            </a>
         </li>
     {{/ getPaneInfoList }}
     <li>
