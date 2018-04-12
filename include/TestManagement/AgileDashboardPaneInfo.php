@@ -40,6 +40,11 @@ class AgileDashboardPaneInfo extends PaneInfo
         $this->milestone_id = $artifact->getId();
     }
 
+    public function isExternalLink()
+    {
+        return true;
+    }
+
     /** @see PaneInfo::getIdentifier */
     public function getIdentifier()
     {
