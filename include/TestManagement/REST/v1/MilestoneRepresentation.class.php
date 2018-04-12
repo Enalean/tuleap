@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,17 +16,17 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
 namespace Tuleap\TestManagement\REST\v1;
 
+use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
 use Tuleap\REST\JsonCast;
 
 /**
  * Minimal representation of a milestone
  */
-class MilestoneRepresentation {
-
-    const ROUTE = '/plugins/agiledashboard/?pane=planning-v2&action=show';
-
+class MilestoneRepresentation
+{
     /** @var int */
     public $id;
 
@@ -39,12 +39,19 @@ class MilestoneRepresentation {
     /** @var String */
     public $uri;
 
-    public function __construct(\Planning_Milestone $milestone) {
-        $this->id     = JsonCast::toInt($milestone->getArtifactId());
-        $this->label  = $milestone->getArtifactTitle();
-        $this->uri    = self::ROUTE
-                      . '&group_id='.JsonCast::toInt($milestone->getGroupId())
-                      . '&planning_id='.JsonCast::toInt($milestone->getPlanningId())
-                      . '&aid='.$this->id;
+    public function __construct(\Planning_Milestone $milestone)
+    {
+        $this->id    = JsonCast::toInt($milestone->getArtifactId());
+        $this->label = $milestone->getArtifactTitle();
+        $this->uri   = AGILEDASHBOARD_BASE_URL . '/?' .
+            http_build_query(
+                [
+                    'pane'        => DetailsPaneInfo::IDENTIFIER,
+                    'action'      => 'show',
+                    'group_id'    => $milestone->getGroupId(),
+                    'planning_id' => $milestone->getPlanningId(),
+                    'aid'         => $this->id
+                ]
+            );
     }
 }
