@@ -18,8 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-abstract class Planning_Presenter_MilestoneSummaryPresenterAbstract {
+use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
 
+abstract class Planning_Presenter_MilestoneSummaryPresenterAbstract
+{
     /** @var Planning_Milestone */
     public $milestone;
 
@@ -29,17 +31,20 @@ abstract class Planning_Presenter_MilestoneSummaryPresenterAbstract {
     /** @var string */
     public $has_cardwall;
 
-    public function __construct(Planning_Milestone $milestone, $plugin_path, $has_cardwall) {
+    public function __construct(Planning_Milestone $milestone, $plugin_path, $has_cardwall)
+    {
         $this->milestone    = $milestone;
         $this->plugin_path  = $plugin_path;
         $this->has_cardwall = $has_cardwall;
     }
 
-    public function content() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard','details_pane_title');
+    public function content()
+    {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'details_pane_title');
     }
 
-    public function cardwall() {
+    public function cardwall()
+    {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'cardwall');
     }
 
@@ -59,7 +64,7 @@ abstract class Planning_Presenter_MilestoneSummaryPresenterAbstract {
         $tracker        = $milestone->getArtifact()->getTracker();
         $url_parameters = [
             'planning_id' => $milestone->getPlanningId(),
-            'pane'        => 'planning-v2',
+            'pane'        => DetailsPaneInfo::IDENTIFIER,
             'action'      => 'show',
             'group_id'    => $milestone->getGroupId(),
             'aid'         => $milestone->getArtifactId()
@@ -72,22 +77,25 @@ abstract class Planning_Presenter_MilestoneSummaryPresenterAbstract {
         ];
     }
 
-    public function milestone_title() {
+    public function milestone_title()
+    {
         return $this->milestone->getArtifactTitle();
     }
 
     public abstract function has_burndown();
 
-    public function planning_id() {
+    public function planning_id()
+    {
         return $this->milestone->getPlanningId();
     }
 
-    public function artifact_id() {
+    public function artifact_id()
+    {
         return $this->milestone->getArtifactId();
     }
 
-    public function edit_base_link() {
+    public function edit_base_link()
+    {
         return '/plugins/tracker/?aid=';
     }
 }
-?>
