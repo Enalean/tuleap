@@ -48,15 +48,6 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningV2Pane extends AgileDashboa
     }
 
     /**
-     *
-     * @param Planning_Milestone $milestone
-     * @return string
-     */
-    public function getUriForMilestone(Planning_Milestone $milestone) {
-        return $this->info->getUriForMilestone($milestone);
-    }
-
-    /**
      * @see AgileDashboard_Pane::getFullContent()
      */
     public function getFullContent() {

@@ -27,12 +27,6 @@ use Tuleap\AgileDashboard\Milestone\Pane\PaneInfo;
 abstract class AgileDashboard_Pane
 {
     /**
-     * @see PaneInfo::getUriForMilestone()
-     * @return string URI of the pane for a given milestone
-     */
-    abstract public function getUriForMilestone(Planning_Milestone $milestone);
-
-    /**
      * @see PaneInfo::getIdentifier()
      * @return string eg: 'cardwall'
      */

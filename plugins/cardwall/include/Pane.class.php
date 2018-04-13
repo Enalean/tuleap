@@ -100,11 +100,6 @@ class Cardwall_Pane extends AgileDashboard_Pane {
         return $this->info->getIdentifier();
     }
 
-    public function getUriForMilestone(Planning_Milestone $milestone) {
-        return $this->info->getUriForMilestone($milestone);
-    }
-
-
     /**
      * @see AgileDashboard_Pane::getFullContent()
      */

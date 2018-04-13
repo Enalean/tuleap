@@ -81,24 +81,6 @@ class AgileDashboard_MilestonePresenter
         return $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'artifact');
     }
 
-    /**
-     * @return array of (id, title, selected)
-     */
-    public function selectableArtifacts() {
-        $hp             = Codendi_HTMLPurifier::instance();
-        $artifacts_data = array();
-        $selected_id    = $this->milestone->getArtifactId();
-
-        foreach ($this->presenter_data->getAvailableMilestones() as $milestone) {
-            $artifacts_data[] = array(
-                'title'    => $hp->purify($milestone->getArtifactTitle()),
-                'selected' => ($milestone->getArtifactId() == $selected_id) ? 'selected="selected"' : '',
-                'url'      => $this->presenter_data->getActivePane()->getUriForMilestone($milestone)
-            );
-        }
-        return $artifacts_data;
-    }
-
     public function editArtifact() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'edit_item_dropdown', array($this->milestoneTitle()));
     }

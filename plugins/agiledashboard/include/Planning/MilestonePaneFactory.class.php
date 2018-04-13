@@ -49,9 +49,6 @@ class Planning_MilestonePaneFactory
     /** @var AgileDashboard_Pane */
     private $active_pane = array();
 
-    /** @var Planning_Milestone[] */
-    private $available_milestones = array();
-
     /** @var Codendi_Request */
     private $request;
 
@@ -96,8 +93,7 @@ class Planning_MilestonePaneFactory
     {
         return new PanePresenterData(
             $this->getActivePane($milestone),
-            $this->getListOfPaneInfo($milestone),
-            $this->available_milestones[$milestone->getArtifactId()]
+            $this->getListOfPaneInfo($milestone)
         );
     }
 
@@ -139,7 +135,6 @@ class Planning_MilestonePaneFactory
         if (! $this->active_pane[$milestone->getArtifactId()]) {
             $this->buildDefaultPane($milestone);
         }
-        $this->available_milestones[$milestone->getArtifactId()] = $this->getAvailableMilestones($milestone);
     }
 
     private function getDetailsPaneInfo(Planning_Milestone $milestone) {
@@ -259,18 +254,6 @@ class Planning_MilestonePaneFactory
                 )
             );
         }
-    }
-
-    protected function getAvailableMilestones(Planning_Milestone $milestone) {
-        if ($milestone->hasAncestors()) {
-            return $this->milestone_factory->getSiblingMilestones($this->request->getCurrentUser(), $milestone);
-        } else {
-            return $this->getAllMilestonesOfCurrentPlanning($milestone);
-        }
-    }
-
-    private function getAllMilestonesOfCurrentPlanning(Planning_Milestone $milestone) {
-        return $this->milestone_factory->getAllBareMilestones($this->request->getCurrentUser(), $milestone->getPlanning());
     }
 
     private function getDetailsPresenterBuilder() {

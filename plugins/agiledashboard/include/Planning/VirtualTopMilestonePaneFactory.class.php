@@ -45,9 +45,6 @@ class Planning_VirtualTopMilestonePaneFactory
     /** @var AgileDashboard_Pane */
     private $active_pane = array();
 
-    /** @var Planning_Milestone[] */
-    private $available_milestones = array();
-
     /** @var Codendi_Request */
     private $request;
 
@@ -82,16 +79,10 @@ class Planning_VirtualTopMilestonePaneFactory
     public function getPanePresenterData(Planning_Milestone $milestone)
     {
         $active_pane = $this->getActivePane($milestone);//This needs to be run first!
-        $milestone_artifact_id = $this->getMilestoneArtifactId();
-
-        $available_milestones =
-                (isset($this->available_milestones[$milestone_artifact_id])) ?
-                $this->available_milestones[$milestone_artifact_id] : array();
 
         return new PanePresenterData(
             $active_pane,
-            $this->getListOfPaneInfo($milestone),
-            $available_milestones
+            $this->getListOfPaneInfo($milestone)
         );
     }
 

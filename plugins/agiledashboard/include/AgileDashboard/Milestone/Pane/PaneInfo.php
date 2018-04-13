@@ -77,30 +77,16 @@ abstract class PaneInfo
      */
     public function getUri()
     {
-        return $this->getUriForMilestone($this->milestone);
-    }
-
-    /**
-     * Return the URI of the pane in another milestone (ie. I want the cardwall of Sprint 6)
-     *
-     * @param Planning_Milestone $milestone
-     *
-     * @return string
-     */
-    public function getUriForMilestone(Planning_Milestone $milestone)
-    {
-        return '?' . http_build_query($this->getUriParametersForMilestone($milestone));
-    }
-
-    protected function getUriParametersForMilestone(Planning_Milestone $milestone)
-    {
-        return array(
-            'group_id'    => $milestone->getGroupId(),
-            'planning_id' => $milestone->getPlanningId(),
-            'action'      => $this->action,
-            'aid'         => $milestone->getArtifactId(),
-            'pane'        => $this->getIdentifier()
-        );
+        return '?' .
+            http_build_query(
+                [
+                    'group_id'    => $this->milestone->getGroupId(),
+                    'planning_id' => $this->milestone->getPlanningId(),
+                    'action'      => $this->action,
+                    'aid'         => $this->milestone->getArtifactId(),
+                    'pane'        => $this->getIdentifier()
+                ]
+            );
     }
 
     /**
