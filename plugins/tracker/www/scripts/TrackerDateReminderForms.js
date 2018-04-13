@@ -23,7 +23,7 @@
  * reminder creation request and delegate process ot the right function within tracker class.
  */
 
-(function($, codendi) {
+(function($) {
     $(document).ready(function () {
 
         var tracker_reminder_element = $('#tracker_reminder');
@@ -31,11 +31,9 @@
         if (tracker_reminder_element !== undefined) {
             tracker_reminder_element.show();
             $('#add_reminder').click(function () {
-                var add_reminder_value = $(this).val(),
-                    url_value          = codendi.tracker.base_url +'?func=display_reminder_form&tracker='+add_reminder_value;
 
                 $.ajax({
-                    url: url_value,
+                    url: '?func=display_reminder_form',
                     type: 'get',
                     success: function(html_form){
                         tracker_reminder_element.html(html_form);
