@@ -19,10 +19,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\password\Configuration\PasswordConfiguration;
-use Tuleap\password\HaveIBeenPwned\PwnedPasswordChecker;
-use Tuleap\password\HaveIBeenPwned\PwnedPasswordRangeRetriever;
-use Tuleap\password\PasswordCompromiseValidator;
+use Tuleap\Password\Configuration\PasswordConfiguration;
+use Tuleap\Password\HaveIBeenPwned\PwnedPasswordChecker;
+use Tuleap\Password\HaveIBeenPwned\PwnedPasswordRangeRetriever;
+use Tuleap\Password\PasswordCompromiseValidator;
 
 /**
 * PasswordStrategy

@@ -18,29 +18,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\password\Configuration;
+namespace Tuleap\Password\Configuration;
 
-class PasswordConfigurationRetriever
+class PasswordConfiguration
 {
     /**
-     * @var PasswordConfigurationDAO
+     * @var bool
      */
-    private $password_configuration_dao;
+    private $is_breached_password_verification_enabled;
 
-    public function __construct(PasswordConfigurationDAO $password_configuration_dao)
+    public function __construct($is_breached_password_verification_enabled)
     {
-        $this->password_configuration_dao = $password_configuration_dao;
+        $this->is_breached_password_verification_enabled = $is_breached_password_verification_enabled;
     }
 
     /**
-     * @return PasswordConfiguration
+     * @return bool
      */
-    public function getPasswordConfiguration()
+    public function isBreachedPasswordVerificationEnabled()
     {
-        $row = $this->password_configuration_dao->getPasswordConfiguration();
-
-        $is_breached_password_configuration_enabled = isset($row['breached_password_enabled']) && $row['breached_password_enabled'];
-
-        return new PasswordConfiguration($is_breached_password_configuration_enabled);
+        return $this->is_breached_password_verification_enabled;
     }
 }

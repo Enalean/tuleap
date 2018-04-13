@@ -17,8 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Tuleap\password\Configuration\PasswordConfigurationDAO;
-use Tuleap\password\Configuration\PasswordConfigurationRetriever;
+use Tuleap\Password\Configuration\PasswordConfigurationDAO;
+use Tuleap\Password\Configuration\PasswordConfigurationRetriever;
 
 class Account_RegisterPresenter {
 

@@ -10,8 +10,8 @@
 // adduser.php - All the forms and functions to manage unix users
 //
 
-use Tuleap\password\Configuration\PasswordConfigurationDAO;
-use Tuleap\password\Configuration\PasswordConfigurationRetriever;
+use Tuleap\Password\Configuration\PasswordConfigurationDAO;
+use Tuleap\Password\Configuration\PasswordConfigurationRetriever;
 
 // ***** function account_pwvalid()
 // ***** check for valid password

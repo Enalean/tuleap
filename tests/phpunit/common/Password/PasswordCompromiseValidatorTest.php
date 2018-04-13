@@ -18,10 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\password;
+namespace Tuleap\Password;
 
 use PHPUnit\Framework\TestCase;
-use Tuleap\password\HaveIBeenPwned\PwnedPasswordChecker;
+use Tuleap\Password\HaveIBeenPwned\PwnedPasswordChecker;
 
 class PasswordCompromiseValidatorTest extends TestCase
 {
