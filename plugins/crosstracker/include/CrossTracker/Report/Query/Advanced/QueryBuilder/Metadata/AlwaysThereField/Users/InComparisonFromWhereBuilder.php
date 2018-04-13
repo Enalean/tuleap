@@ -20,6 +20,7 @@
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\Users;
 
+use ParagonIE\EasyDB\EasyStatement;
 use Tracker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\ListValueExtractor;
 use Tuleap\CrossTracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
@@ -28,7 +29,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use UserManager;
 
-class EqualComparisonFromWhereBuilder implements FromWhereBuilder
+class InComparisonFromWhereBuilder implements FromWhereBuilder
 {
     /** @var ListValueExtractor */
     private $extractor;
@@ -50,7 +51,7 @@ class EqualComparisonFromWhereBuilder implements FromWhereBuilder
         UserManager $user_manager,
         $alias_field
     ) {
-        $this->extractor    = $extractor;
+        $this->extractor = $extractor;
         $this->user_manager = $user_manager;
         $this->alias_field = $alias_field;
     }
@@ -63,17 +64,22 @@ class EqualComparisonFromWhereBuilder implements FromWhereBuilder
      */
     public function getFromWhere(Metadata $metadata, Comparison $comparison, array $trackers)
     {
-        $values           = $this->extractor->extractCollectionOfValues($comparison);
-        $value            = $values[0];
-        $where            = '0';
-        $where_parameters = [];
+        $values = $this->extractor->extractCollectionOfValues($comparison);
+        $in_condition = EasyStatement::open()->in(
+            "{$this->alias_field} IN (?*)",
+            $this->getUserIdsByUserNames($values)
+        );
 
-        if ($value !== '') {
-            $user             = $this->user_manager->getUserByUserName($value);
-            $where_parameters = [$user->getId()];
-            $where            = "{$this->alias_field} = ?";
+        return new ParametrizedFromWhere('', $in_condition, [], $in_condition->values());
+    }
+
+    private function getUserIdsByUserNames($values)
+    {
+        $user_ids = [];
+        foreach ($values as $username) {
+            $user_ids[] = $this->user_manager->getUserByUserName($username)->getId();
         }
 
-        return new ParametrizedFromWhere('', $where, [], $where_parameters);
+        return $user_ids;
     }
 }

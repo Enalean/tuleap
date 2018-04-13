@@ -47,6 +47,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\BetweenCompa
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\EqualComparisonFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\GreaterThanComparisonFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\GreaterThanOrEqualComparisonFromWhereBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\InComparisonFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\LesserThanComparisonFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\LesserThanOrEqualComparisonFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\ListValueExtractor;
@@ -155,8 +156,9 @@ class CrossTrackerReportsResource extends AuthenticatedResource
             new SizeValidatorVisitor($report_config->getExpertQueryLimit())
         );
 
-        $date_validator       = new DateFormatValidator(new EmptyStringForbidden(), DateFormat::DATETIME);
-        $list_value_validator = new ListValueValidator(new EmptyStringAllowed(), $this->user_manager);
+        $date_validator                 = new DateFormatValidator(new EmptyStringForbidden(), DateFormat::DATETIME);
+        $list_value_validator           = new ListValueValidator(new EmptyStringAllowed(), $this->user_manager);
+        $list_value_validator_not_empty = new ListValueValidator(new EmptyStringForbidden(), $this->user_manager);
 
         $this->invalid_comparisons_collector = new InvalidComparisonCollectorVisitor(
             new InvalidSearchableCollectorVisitor(),
@@ -175,8 +177,8 @@ class CrossTrackerReportsResource extends AuthenticatedResource
             new LesserThanComparisonChecker($date_validator, $list_value_validator),
             new LesserThanOrEqualComparisonChecker($date_validator, $list_value_validator),
             new BetweenComparisonChecker($date_validator, $list_value_validator),
-            new InComparisonChecker($date_validator, $list_value_validator),
-            new NotInComparisonChecker($date_validator, $list_value_validator)
+            new InComparisonChecker($date_validator, $list_value_validator_not_empty),
+            new NotInComparisonChecker($date_validator, $list_value_validator_not_empty)
         );
 
         $submitted_on_alias_field     = 'tracker_artifact.submitted_on';
@@ -286,6 +288,13 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                     $date_value_extractor,
                     $date_time_value_rounder,
                     $last_update_date_alias_field
+                )
+            ),
+            new InComparisonFromWhereBuilder(
+                new Users\InComparisonFromWhereBuilder(
+                    $list_value_extractor,
+                    $this->user_manager,
+                    $submitted_by_alias_field
                 )
             )
         );

@@ -48,7 +48,7 @@ class ComparisonChecker implements ValueWrapperVisitor
     /**
      * @var ListValueValidator
      */
-    private $list_value_validator;
+    protected $list_value_validator;
 
     public function __construct(
         DateFormatValidator $date_validator,

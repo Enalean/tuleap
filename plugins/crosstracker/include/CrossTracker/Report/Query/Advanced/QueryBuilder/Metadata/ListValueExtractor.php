@@ -34,9 +34,13 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 
 class ListValueExtractor implements ValueWrapperVisitor
 {
-    public function getValue(Comparison $comparison)
+    /**
+     * @param Comparison $comparison
+     * @return array
+     */
+    public function extractCollectionOfValues(Comparison $comparison)
     {
-        return $comparison->getValueWrapper()->accept($this, new NoValueWrapperParameters());
+        return (array) $comparison->getValueWrapper()->accept($this, new NoValueWrapperParameters());
     }
 
     public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
@@ -48,7 +52,12 @@ class ListValueExtractor implements ValueWrapperVisitor
         InValueWrapper $collection_of_value_wrappers,
         ValueWrapperParameters $parameters
     ) {
-        throw new RuntimeException('Should not end there');
+        $values = [];
+        foreach ($collection_of_value_wrappers->getValueWrappers() as $value_wrapper) {
+            $values[] = $value_wrapper->accept($this, $parameters);
+        }
+
+        return $values;
     }
 
     public function visitStatusOpenValueWrapper(
