@@ -20,13 +20,9 @@
 
 namespace Tuleap\Tracker\Notifications\Settings;
 
-use HTTPRequest;
+use Tracker;
 use Tracker_DateReminderManager;
 use Tracker_NotificationsManager;
-use TrackerFactory;
-use TrackerManager;
-use Tuleap\Layout\BaseLayout;
-use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Tracker\Notifications\CollectionOfUgroupToBeNotifiedPresenterBuilder;
 use Tuleap\Tracker\Notifications\CollectionOfUserToBeNotifiedPresenterBuilder;
@@ -38,54 +34,19 @@ use UGroupDao;
 use UGroupManager;
 use UserManager;
 
-class NotificationsSettingsController implements DispatchableWithRequest
+trait NotificationsSettingsControllerCommon
 {
     /**
-     * @var TrackerFactory
+     * @return \Tracker
+     * @throws NotFoundException
      */
-    private $tracker_factory;
-    /**
-     * @var TrackerManager
-     */
-    private $tracker_manager;
-    /**
-     * @var UserManager
-     */
-    private $user_manager;
-
-    public function __construct(TrackerFactory $tracker_factory, TrackerManager $tracker_manager, UserManager $user_manager)
+    private function getTrackerFromTrackerID(\TrackerFactory $tracker_factory, $id)
     {
-        $this->tracker_factory = $tracker_factory;
-        $this->tracker_manager = $tracker_manager;
-        $this->user_manager    = $user_manager;
-    }
-
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
-    {
-        $tracker = $this->tracker_factory->getTrackerById($variables['id']);
+        $tracker = $tracker_factory->getTrackerById($id);
         if ($tracker === null) {
             throw new NotFoundException(dgettext('tuleap-tracker', 'That tracker does not exist.'));
         }
-
-        $current_user = $request->getCurrentUser();
-        if (! $current_user->isLoggedIn()) {
-            $layout->addFeedback(\Feedback::ERROR, $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
-            $layout->redirect(TRACKER_BASE_URL . '/?tracker=' . urlencode($tracker->getId()));
-        }
-        if ($request->isPost() && ! $tracker->userIsAdmin($current_user)) {
-            $layout->addFeedback(\Feedback::ERROR, $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
-            $layout->redirect(TRACKER_BASE_URL.'/?tracker='. $tracker->getId());
-        }
-
-        $tracker_date_reminder_manager = $this->getDateReminderManager($tracker);
-
-        if ($request->get('func') === 'display_reminder_form') {
-            print $tracker_date_reminder_manager->getDateReminderRenderer()->getNewDateReminderForm();
-            return;
-        }
-
-        $tracker_date_reminder_manager->processReminder($this->tracker_manager, $request, $current_user);
-        $this->getNotificationsManager($tracker)->process($this->tracker_manager, $request, $current_user);
+        return $tracker;
     }
 
     /**
@@ -99,7 +60,7 @@ class NotificationsSettingsController implements DispatchableWithRequest
     /**
      * @return Tracker_NotificationsManager
      */
-    private function getNotificationsManager(\Tracker $tracker)
+    private function getNotificationsManager(UserManager $user_manager, \Tracker $tracker)
     {
         $user_to_notify_dao        = new UsersToNotifyDao();
         $ugroup_to_notify_dao      = new UgroupsToNotifyDao();
@@ -114,8 +75,21 @@ class NotificationsSettingsController implements DispatchableWithRequest
             $user_to_notify_dao,
             $ugroup_to_notify_dao,
             new GlobalNotificationsAddressesBuilder(),
-            $this->user_manager,
+            $user_manager,
             new UGroupManager()
         );
+    }
+
+    /**
+     * @return \CSRFSynchronizerToken
+     */
+    private function getCSRFToken(Tracker $tracker)
+    {
+        return new \CSRFSynchronizerToken($this->getURL($tracker));
+    }
+
+    private function getURL(Tracker $tracker)
+    {
+        return TRACKER_BASE_URL.'/notifications/' . urlencode($tracker->getId()) . '/';
     }
 }

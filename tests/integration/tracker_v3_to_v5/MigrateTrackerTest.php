@@ -618,7 +618,7 @@ class MigrateTracker_TaskTrackerDateReminder_startDateTest extends MigrateDefaul
         parent::setUp();
         $this->start_date_field = $this->form_element_factory->getFormElementByName(self::$task_tracker_id, 'start_date');
 
-        $factory = new Tracker_DateReminderFactory($this->task_tracker);
+        $factory = new Tracker_DateReminderFactory($this->task_tracker, new Tracker_DateReminderRenderer($this->task_tracker));
         $this->reminders = $factory->getTrackerReminders();
     }
 
@@ -662,7 +662,7 @@ class MigrateTracker_TaskTrackerDateReminder_endDateTest extends MigrateDefaultT
         $submitterRole = new Tracker_DateReminder_Role_Submitter();
         $this->notified_roles = array($submitterRole);
 
-        $factory = new Tracker_DateReminderFactory($this->task_tracker);
+        $factory = new Tracker_DateReminderFactory($this->task_tracker, new Tracker_DateReminderRenderer($this->task_tracker));
         $this->reminders = $factory->getTrackerReminders();
     }
 
@@ -697,7 +697,7 @@ class MigrateTracker_TaskTrackerDateReminder_dueDateTest extends MigrateDefaultT
         $submitterRole = new Tracker_DateReminder_Role_Submitter();
         $this->notified_roles = array($submitterRole);
 
-        $factory = new Tracker_DateReminderFactory($this->task_tracker);
+        $factory = new Tracker_DateReminderFactory($this->task_tracker, new Tracker_DateReminderRenderer($this->task_tracker));
         $this->reminders = $factory->getTrackerReminders();
     }
 
