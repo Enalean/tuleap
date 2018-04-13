@@ -25,6 +25,7 @@ use Planning_Milestone;
 use Planning_MilestoneFactory;
 use Planning_MilestonePaneFactory;
 use Tuleap\AgileDashboard\Milestone\Criterion\StatusOpen;
+use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
@@ -65,7 +66,7 @@ class MilestoneCrumbBuilder
         $milestone_breadcrumb = new BreadCrumb(
             new BreadCrumbLink(
                 $milestone->getArtifactTitle(),
-                $this->getPlanningUrl($milestone)
+                $this->getOverviewUrl($milestone)
             )
         );
         $milestone_breadcrumb->setSubItems($this->getSubItems($user, $milestone));
@@ -73,13 +74,13 @@ class MilestoneCrumbBuilder
         return $milestone_breadcrumb;
     }
 
-    private function getPlanningUrl(Planning_Milestone $milestone)
+    private function getOverviewUrl(Planning_Milestone $milestone)
     {
         return $this->plugin_path . '/?' .
             http_build_query(
                 [
                     'planning_id' => $milestone->getPlanningId(),
-                    'pane'        => 'planning-v2',
+                    'pane'        => DetailsPaneInfo::IDENTIFIER,
                     'action'      => 'show',
                     'group_id'    => $milestone->getGroupId(),
                     'aid'         => $milestone->getArtifactId()
@@ -185,7 +186,7 @@ class MilestoneCrumbBuilder
             foreach ($paginated_milestones->getMilestones() as $sibling) {
                 $links[] = new BreadCrumbLink(
                     $sibling->getArtifactTitle(),
-                    $this->getPlanningUrl($sibling)
+                    $this->getOverviewUrl($sibling)
                 );
                 if (count($links) === 10) {
                     return $links;

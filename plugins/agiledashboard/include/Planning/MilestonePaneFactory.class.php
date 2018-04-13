@@ -159,27 +159,26 @@ class Planning_MilestonePaneFactory
         );
     }
 
-    private function buildDefaultPane(Planning_Milestone $milestone) {
+    private function buildDefaultPane(Planning_Milestone $milestone)
+    {
         if (! isset($this->list_of_default_pane_info[$milestone->getArtifactId()])) {
             $pane_info                                                    = $this->pane_info_factory->getDetailsPaneInfo($milestone);
-            $this->active_pane[$milestone->getArtifactId()]               = $this->getDetailsPane($pane_info, $milestone);
             $this->list_of_default_pane_info[$milestone->getArtifactId()] = $pane_info;
         } else {
             $pane_info = $this->list_of_default_pane_info[$milestone->getArtifactId()];
             $pane_info->setActive(true);
-            $this->active_pane[$milestone->getArtifactId()] = $this->getPlanningV2Pane($pane_info, $milestone);
         }
-
+        $this->active_pane[$milestone->getArtifactId()] = $this->getDetailsPane($pane_info, $milestone);
     }
 
-    private function getPlanningV2PaneInfo(Planning_Milestone $milestone) {
+    private function getPlanningV2PaneInfo(Planning_Milestone $milestone)
+    {
         $submilestone_tracker = $this->submilestone_finder->findFirstSubmilestoneTracker($milestone);
         if (! $submilestone_tracker) {
             return;
         }
 
         $pane_info = $this->pane_info_factory->getPlanningV2PaneInfo($milestone);
-        $this->list_of_default_pane_info[$milestone->getArtifactId()] = $pane_info;
         if ($this->request->get('pane') == PlanningV2PaneInfo::IDENTIFIER) {
             $pane_info->setActive(true);
             $this->active_pane[$milestone->getArtifactId()] = $this->getPlanningV2Pane($pane_info, $milestone);
