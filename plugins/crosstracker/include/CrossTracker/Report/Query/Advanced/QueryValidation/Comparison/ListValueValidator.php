@@ -41,6 +41,8 @@ class ListValueValidator
     {
         if ($this->empty_string_checker->isEmptyStringAProblem($value)) {
             throw new ListToEmptyStringException();
+        } elseif ($value === '') {
+            return;
         }
 
         $user = $this->user_manager->getUserByUserName($value);
