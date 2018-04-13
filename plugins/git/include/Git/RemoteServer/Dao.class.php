@@ -115,7 +115,7 @@ class Git_RemoteServer_Dao extends \Tuleap\DB\DataAccessObject {
                 WHERE ugroup_user.user_id = ?
                     AND user.ldap_id IS NOT NULL
                     AND user.ldap_id != ''";
-        return $this->getDB()->run($sql, $user_id);
+        return $this->getDB()->run($sql, $user_id, $user_id);
     }
 
     public function searchAllByUGroupId($project_id, $ugroup_id)
