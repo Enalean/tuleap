@@ -231,6 +231,7 @@ function PlanningController(
 
     function showEditSubmilestoneModal($event, submilestone) {
         $event.stopPropagation();
+        $event.preventDefault();
 
         NewTuleapArtifactModalService.showEdition(
             self.user_id,
