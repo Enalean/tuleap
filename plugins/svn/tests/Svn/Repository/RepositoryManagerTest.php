@@ -1,6 +1,6 @@
 <?php
 /**
-* Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+* Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
 *
 * This file is a part of Tuleap.
 *
@@ -22,6 +22,8 @@ namespace Tuleap\Svn\Repository;
 
 use Backend;
 use EventManager;
+use HTTPRequest;
+use ProjectManager;
 use TuleapTestCase;
 
 require_once __DIR__ .'/../../bootstrap.php';
@@ -29,10 +31,18 @@ require_once __DIR__ .'/../../bootstrap.php';
 class RepositoryManagerTest extends TuleapTestCase
 {
 
+    /**
+     * @var RepositoryManager
+     */
     private $manager;
+
     private $project_manager;
     private $dao;
 
+    /**
+     * @var HTTPRequest
+     */
+    private $request;
 
     public function setUp()
     {
@@ -58,10 +68,13 @@ class RepositoryManagerTest extends TuleapTestCase
             $backend,
             $access_file_history_factory
         );
-        $project               = stub("Project")->getId()->returns(101);
 
-        stub($this->project_manager)->getProjectByUnixName('projectname')->returns($project);
-        stub($this->dao)->searchRepositoryByName($project, 'repositoryname')->returns(
+        $this->project = stub("Project")->getID()->returns(101);
+
+        stub($this->project_manager)->getProjectByUnixName('projectname')->returns($this->project);
+        stub($this->project_manager)->getProject(101)->returns($this->project);
+
+        stub($this->dao)->searchRepositoryByName($this->project, 'repositoryname')->returns(
             array(
                 'id'                       => 1,
                 'name'                     => 'repositoryname',
@@ -69,34 +82,55 @@ class RepositoryManagerTest extends TuleapTestCase
                 'backup_path'              => ''
             )
         );
+
+        ProjectManager::setInstance($this->project_manager);
+
+        $this->request = new HTTPRequest();
+        $this->request->set('group_id', 101);
     }
 
     public function tearDown()
     {
         EventManager::clearInstance();
         Backend::clearInstances();
+        ProjectManager::clearInstance();
 
         parent::tearDown();
     }
 
-    public function itReturnsRepositoryFromAPublicPath(){
-        $public_path = 'projectname/repositoryname';
+    public function itReturnsRepositoryFromAPublicPath()
+    {
+        stub($this->project)->getUnixNameMixedCase()->returns('projectname');
+        $this->request->set('root', 'projectname/repositoryname');
 
-        $repository = $this->manager->getRepositoryFromPublicPath($public_path);
+        $repository = $this->manager->getRepositoryFromPublicPath($this->request);
         $this->assertEqual($repository->getName(), 'repositoryname');
     }
 
-    public function itThrowsAnExceptionWhenRepositoryNameNotFound(){
-        $public_path = 'projectname/repositoryko';
+    public function itThrowsAnExceptionWhenRepositoryNameNotFound()
+    {
+        stub($this->project)->getUnixNameMixedCase()->returns('projectname');
+        $this->request->set('root', 'projectname/repositoryko');
 
         $this->expectException('Tuleap\Svn\Repository\Exception\CannotFindRepositoryException');
-        $this->manager->getRepositoryFromPublicPath($public_path);
+        $this->manager->getRepositoryFromPublicPath($this->request);
     }
 
-    public function itThrowsAnExceptionWhenProjectNameNotFound(){
-        $public_path = 'projectnameko/repositoryname';
+    public function itThrowsAnExceptionWhenProjectNameNotFound()
+    {
+        stub($this->project)->getUnixNameMixedCase()->returns('projectname');
+        $this->request->set('root', 'projectnameko/repositoryname');
 
         $this->expectException('Tuleap\Svn\Repository\Exception\CannotFindRepositoryException');
-        $this->manager->getRepositoryFromPublicPath($public_path);
+        $this->manager->getRepositoryFromPublicPath($this->request);
+    }
+
+    public function itReturnsRepositoryFromAPublicPathWithLegacyAndNoMoreValidUnixName()
+    {
+        stub($this->project)->getUnixNameMixedCase()->returns('0abcd');
+        $this->request->set('root', '0abcd/repositoryname');
+
+        $repository = $this->manager->getRepositoryFromPublicPath($this->request);
+        $this->assertEqual($repository->getName(), 'repositoryname');
     }
 }

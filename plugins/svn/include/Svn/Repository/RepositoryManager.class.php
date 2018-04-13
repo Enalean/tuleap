@@ -1,6 +1,6 @@
 <?php
-/**
- * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
+/*8
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,6 +24,7 @@ use Backend;
 use EventManager;
 use Exception;
 use ForgeConfig;
+use HTTPRequest;
 use Logger;
 use Project;
 use ProjectManager;
@@ -190,14 +191,16 @@ class RepositoryManager
         return $this->getRepositoryIfProjectIsValid($project, $matches[2]);
     }
 
-    public function getRepositoryFromPublicPath($path) {
-         if (! preg_match('/^('.Rule_ProjectName::PATTERN_PROJECT_NAME.')\/('.RuleName::PATTERN_REPOSITORY_NAME.')$/', $path, $matches)) {
+    public function getRepositoryFromPublicPath(HTTPRequest $request)
+    {
+        $path    = $request->get('root');
+        $project = $request->getProject();
+
+        if (! preg_match('/^'.preg_quote($project->getUnixNameMixedCase(), '/').'\/('.RuleName::PATTERN_REPOSITORY_NAME.')$/', $path, $matches)) {
             throw new CannotFindRepositoryException();
         }
 
-        $project = $this->project_manager->getProjectByUnixName($matches[1]);
-
-        return $this->getRepositoryIfProjectIsValid($project, $matches[2]);
+        return $this->getRepositoryIfProjectIsValid($project, $matches[1]);
     }
 
     private function getRepositoryIfProjectIsValid($project, $repository_name) {

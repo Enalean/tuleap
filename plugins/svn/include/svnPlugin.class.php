@@ -471,6 +471,8 @@ class SvnPlugin extends Plugin
         }
 
         $project_id = $project->getId();
+        $request->set('group_id', $project_id);
+
         if (! PluginManager::instance()->isPluginAllowedForProject($this, $project_id)) {
             $GLOBALS['Response']->addFeedback(
                 'error',

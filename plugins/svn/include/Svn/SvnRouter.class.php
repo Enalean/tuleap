@@ -227,9 +227,8 @@ class SvnRouter {
 
     private function useAViewVcRoadIfRootValid(HTTPRequest $request) {
         if ($request->get('root')) {
-            $repository = $this->repository_manager->getRepositoryFromPublicPath($request->get('root'));
+            $repository = $this->repository_manager->getRepositoryFromPublicPath($request);
 
-            $request->set("group_id", $repository->getProject()->getId());
             $request->set("repo_id", $repository->getId());
 
             $this->display_controller->displayRepository($this->getService($request), $request);
