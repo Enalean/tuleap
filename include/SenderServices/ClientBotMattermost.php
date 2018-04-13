@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,31 +20,25 @@
 
 namespace Tuleap\BotMattermost\SenderServices;
 
-use Guzzle\Http\Client;
-
-require_once '/usr/share/php/Guzzle/autoload.php';
-
 class ClientBotMattermost
 {
-    private $client;
+    private $http_client;
 
     public function __construct()
     {
-        $this->client = new Client('', array(
-            Client::CURL_OPTIONS => array(
-                CURLOPT_SSLVERSION     => 1,
-                CURLOPT_SSL_VERIFYPEER => false
-        )));
+        $this->http_client = new \Http_Client;
     }
 
     public function sendMessage($post_string, $url)
     {
-        $request = $this->client->post(
-            $url,
-            array('Content-type' => 'application/json'),
-            $post_string
-        );
+        $options = [
+            CURLOPT_POST       => true,
+            CURLOPT_URL        => $url,
+            CURLOPT_HTTPHEADER => ['Content-type: application/json'],
+            CURLOPT_POSTFIELDS => $post_string
+        ];
+        $this->http_client->addOptions($options);
+        $this->http_client->doRequest();
 
-        $request->send();
     }
 }
