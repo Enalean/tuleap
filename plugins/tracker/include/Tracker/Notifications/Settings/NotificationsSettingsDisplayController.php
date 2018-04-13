@@ -69,7 +69,11 @@ class NotificationsSettingsDisplayController implements DispatchableWithRequest
         }
 
         $tracker->displayAdminItemHeader($this->tracker_manager, 'editnotifications');
-        $this->getNotificationsManager($this->user_manager, $tracker)->display($request, $current_user, $csrf_token);
+        if ($tracker->userIsAdmin($current_user)) {
+            $this->getNotificationsManager($this->user_manager, $tracker)->displayTrackerAdministratorSettings($request, $csrf_token);
+        } else {
+            echo dgettext('tuleap-tracker', 'Notifications management is coming soon.');
+        }
         $tracker->displayFooter($this->tracker_manager);
     }
 }

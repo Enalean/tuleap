@@ -578,9 +578,6 @@ plugin_tracker_include_type	notification_customisation_title	Personnalisation du
 plugin_tracker_include_type	assigned_to_me	Assigné à moi même
 plugin_tracker_include_type	assigned_to_me_description	Inclure un marqueur [Assigné à moi même] dans le sujet pour les personnes étant assignées à l'artefact
 plugin_tracker_include_type	global_mail_notif	Notification e-mail globale
-plugin_tracker_include_type	admin_conf	<P>L'administrateur de l'outil de suivi a spécifié que les adresses e-mails suivantes reçoivent les notifications de soumissions (et éventuellement de modification) d'artefacts.<P><u>Destinataires</u>&nbsp;:
-plugin_tracker_include_type	send_all_or_not	(Envoyer à chaque modification&nbsp;: $1)
-plugin_tracker_include_type	admin_not_conf	<P>L'administrateur de l'outil de suivi n'a pas encore spécifié d'adresses e-mail qui recevront systématiquement une notification par e-mail des nouveaux artefacts soumis.
 plugin_tracker_include_type	perso_mail_notif	Notification e-mail personnelle
 plugin_tracker_include_type	users_to_watch	Utilisateurs à suivre
 plugin_tracker_include_type	backup_person	Vous pouvez demander à recevoir une copie de toutes les notifications envoyées à un ou plusieurs utilisateurs. Donner la liste des noms de login des utilisateurs à suivre, séparés par des virgules.</b>
