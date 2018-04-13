@@ -25,28 +25,6 @@
 
 require_once 'bootstrap.php';
 
-Mock::generatePartial('Docman_CloneItemsVisitor',
-                      'Docman_CloneItemsVisitorTest',
-                      array('_getItemFactory',
-                            '_getPermissionsManager',
-                            '_getFileStorage',
-                            '_getVersionFactory',
-                            '_getMetadataValueFactory',
-                            '_getMetadataFactory',
-                            '_getSettingsBo',
-                     ));
-
-Mock::generate('Docman_SettingsBo');
-Mock::generate('Docman_ItemFactory');
-Mock::generate('Docman_PermissionsManager');
-Mock::generate('Docman_MetadataValueFactory');
-Mock::generate('Docman_MetadataFactory');
-Mock::generate('Docman_Link');
-Mock::generate('Docman_Folder');
-Mock::generate('Iterator');
-
-Mock::generate('PFUser');
-
 /**
  * Test how items are copied.
  *
@@ -67,46 +45,44 @@ class CopyItemsTest extends TuleapTestCase {
     function testDocumentCopyWithinTheSameProject() {
         $srcGroupId = $dstGroupId = 1789;
 
-        $item_to_clone = new MockDocman_Link();
-        $item_to_clone->setReturnValue('getId', 25);
-        $item_to_clone->setReturnValue('getGroupId', $srcGroupId);
-        $item_to_clone->setReturnReference('getMetadataIterator', new MockIterator());
+        $item_to_clone = \Mockery::spy(Docman_Link::class);
+        $item_to_clone->shouldReceive('getId')->andReturns(25);
+        $item_to_clone->shouldReceive('getGroupId')->andReturns($srcGroupId);
+        $item_to_clone->shouldReceive('getMetadataIterator')->andReturns(\Mockery::spy('Iterator'));
 
         $new_id = 52;
 
-        $dest_folder = new MockDocman_Folder();
-        $dest_folder->setReturnValue('getId', 33);
+        $dest_folder = \Mockery::spy(Docman_Folder::class);
+        $dest_folder->shouldReceive('getId')->andReturns(33);
 
-        $cloneItemsVisitor = new Docman_CloneItemsVisitorTest($this);
+        $cloneItemsVisitor = \Mockery::mock(Docman_CloneItemsVisitor::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
         // expectations
         // - create new item
-        $itemFactory = new MockDocman_ItemFactory($this);
-        $itemFactory->setReturnValue('rawCreate', $new_id);
-        $cloneItemsVisitor->setReturnReference('_getItemFactory', $itemFactory);
+        $itemFactory = \Mockery::spy(Docman_ItemFactory::class);
+        $itemFactory->shouldReceive('rawCreate')->andReturns($new_id);
+        $cloneItemsVisitor->shouldReceive('_getItemFactory')->andReturns($itemFactory);
         // - apply perms
-        $dPm = new MockDocman_PermissionsManager($this);
-        $dPm->expectNever('setDefaultItemPermissions');
-        $dPm->expectOnce('cloneItemPermissions', array($item_to_clone->getId(), $new_id, $dstGroupId));
-        $cloneItemsVisitor->setReturnReference('_getPermissionsManager', $dPm);
+        $dPm = \Mockery::spy(Docman_PermissionsManager::class);
+        $dPm->shouldReceive('setDefaultItemPermissions')->never();
+        $dPm->shouldReceive('cloneItemPermissions')->with($item_to_clone->getId(), $new_id, $dstGroupId)->once();
+        $cloneItemsVisitor->shouldReceive('_getPermissionsManager')->andReturns($dPm);
 
-        $newMdvFactory = new MockDocman_MetadataValueFactory($this);
-        $oldMdvFactory = new MockDocman_MetadataValueFactory($this);
+        $newMdvFactory = \Mockery::spy(Docman_MetadataValueFactory::class);
 
-        $cloneItemsVisitor->setReturnReferenceAt(0, '_getMetadataValueFactory', $newMdvFactory);
-        $cloneItemsVisitor->setReturnReferenceAt(1, '_getMetadataValueFactory', $oldMdvFactory);
+        $cloneItemsVisitor->shouldReceive('_getMetadataValueFactory')->once()->andReturns($newMdvFactory);
 
-        $oldMdFactory = new MockDocman_MetadataFactory($this);
-        $oldMdFactory->expectOnce('appendItemMetadataList');
-        $cloneItemsVisitor->setReturnReference('_getMetadataFactory', $oldMdFactory);
+        $oldMdFactory = \Mockery::spy(Docman_MetadataFactory::class);
+        $oldMdFactory->shouldReceive('appendItemMetadataList')->once();
+        $cloneItemsVisitor->shouldReceive('_getMetadataFactory')->andReturns($oldMdFactory);
 
-        $srcSettingsBo = new MockDocman_SettingsBo($this);
-        $srcSettingsBo->setReturnValue('getMetadataUsage', true);
-        $cloneItemsVisitor->setReturnReference('_getSettingsBo', $srcSettingsBo, array($srcGroupId));
+        $srcSettingsBo = \Mockery::spy(Docman_SettingsBo::class);
+        $srcSettingsBo->shouldReceive('getMetadataUsage')->andReturns(true);
+        $cloneItemsVisitor->shouldReceive('_getSettingsBo')->with($srcGroupId)->andReturns($srcSettingsBo);
 
-        $dstSettingsBo = new MockDocman_SettingsBo($this);
-        $dstSettingsBo->setReturnValue('getMetadataUsage', true);
-        $cloneItemsVisitor->setReturnReference('_getSettingsBo', $dstSettingsBo, array($dstGroupId));
+        $dstSettingsBo = \Mockery::spy(Docman_SettingsBo::class);
+        $dstSettingsBo->shouldReceive('getMetadataUsage')->andReturns(true);
+        $cloneItemsVisitor->shouldReceive('_getSettingsBo')->with($dstGroupId)->andReturns($dstSettingsBo);
 
         $cloneItemsVisitor->Docman_CloneItemsVisitor($dstGroupId);
         $cloneItemsVisitor->visitLink($item_to_clone, array(

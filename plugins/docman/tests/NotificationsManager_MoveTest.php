@@ -242,49 +242,36 @@ class NotificationsManager_MoveTest extends TuleapTestCase
         $user_manager->setReturnReference('getUserById', $listener, array($listener->getId()));
 
         $permissions_manager = new MockDocman_PermissionsManager();
-        $permissions_manager->setReturnValue('userCanRead',   true, array(&$listener, $a->getId()));
-        $permissions_manager->setReturnValue('userCanAccess', true, array(&$listener, $a->getId()));
-        $permissions_manager->setReturnValue('userCanRead',   $cr, array(&$listener, $c->getId()));
-        $permissions_manager->setReturnValue('userCanAccess', $cr, array(&$listener, $c->getId()));
-        $permissions_manager->setReturnValue('userCanRead',   $br, array(&$listener, $b->getId()));
-        $permissions_manager->setReturnValue('userCanAccess', $br, array(&$listener, $b->getId()));
-        $permissions_manager->setReturnValue('userCanRead',   $dr, array(&$listener, $d->getId()));
-        $permissions_manager->setReturnValue('userCanAccess', $dr && $br, array(&$listener, $d->getId()));
+        $permissions_manager->setReturnValue('userCanRead',   true, array($listener, $a->getId()));
+        $permissions_manager->setReturnValue('userCanAccess', true, array($listener, $a->getId()));
+        $permissions_manager->setReturnValue('userCanRead',   $cr, array($listener, $c->getId()));
+        $permissions_manager->setReturnValue('userCanAccess', $cr, array($listener, $c->getId()));
+        $permissions_manager->setReturnValue('userCanRead',   $br, array($listener, $b->getId()));
+        $permissions_manager->setReturnValue('userCanAccess', $br, array($listener, $b->getId()));
+        $permissions_manager->setReturnValue('userCanRead',   $dr, array($listener, $d->getId()));
+        $permissions_manager->setReturnValue('userCanAccess', $dr && $br, array($listener, $d->getId()));
 
-        $dar_d = new MockDataAccessResult();
+        $dao = mock('Tuleap\Docman\Notifications\UsersToNotifyDao');
+
         if ($ld) {
-            $dar_d->setReturnValueAt(0, 'valid', true);
-            $dar_d->setReturnValueAt(1, 'valid', false);
-            $dar_d->setReturnValue('current', array('user_id' => $listener->getId(), 'item_id' => $d->getId()));
+            stub($dao)->searchUserIdByObjectIdAndType($d->getId(), 'plugin_docman')->returnsDar(array('user_id' => $listener->getId(), 'item_id' => $d->getId()));
         } else {
-            $dar_d->setReturnValue('valid', false);
+            stub($dao)->searchUserIdByObjectIdAndType($d->getId(), 'plugin_docman')->returnsEmptyDar();
         }
 
-        $dar_c = new MockDataAccessResult();
         if ($lc) {
-            $dar_c->setReturnValueAt(0, 'valid', true);
-            $dar_c->setReturnValueAt(1, 'valid', false);
-            $dar_c->setReturnValue('current', array('user_id' => $listener->getId(), 'item_id' => $c->getId()));
+            stub($dao)->searchUserIdByObjectIdAndType($c->getId(), 'plugin_docman')->returnsDar(array('user_id' => $listener->getId(), 'item_id' => $c->getId()));
         } else {
-            $dar_c->setReturnValue('valid', false);
+            stub($dao)->searchUserIdByObjectIdAndType($c->getId(), 'plugin_docman')->returnsEmptyDar();
         }
 
-        $dar_b = new MockDataAccessResult();
         if ($lb) {
-            $dar_b->setReturnValueAt(0, 'valid', true);
-            $dar_b->setReturnValueAt(1, 'valid', false);
-            $dar_b->setReturnValue('current', array('user_id' => $listener->getId(), 'item_id' => $b->getId()));
+            stub($dao)->searchUserIdByObjectIdAndType($b->getId(), 'plugin_docman')->returnsDar(array('user_id' => $listener->getId(), 'item_id' => $b->getId()));
         } else {
-            $dar_b->setReturnValue('valid', false);
+            stub($dao)->searchUserIdByObjectIdAndType($b->getId(), 'plugin_docman')->returnsEmptyDar();
         }
 
         $docman_path = new MockDocman_Path();
-
-        $dao = mock('Tuleap\Docman\Notifications\UsersToNotifyDao');
-        stub($dao)->searchUserIdByObjectIdAndType($d->getId(), 'plugin_docman')->returns($dar_d);
-        $dao->setReturnValue('searchUserIdByObjectIdAndType', $dar_d, array($d->getId(), 'plugin_docman'));
-        $dao->setReturnValue('searchUserIdByObjectIdAndType', $dar_c, array($c->getId(), 'plugin_docman'));
-        $dao->setReturnValue('searchUserIdByObjectIdAndType', $dar_b, array($b->getId(), 'plugin_docman'));
 
         $dnmm = new Docman_NotificationsManager_MoveTestVersion();
         $dnmm->setReturnReference('_groupGetObject', $project);

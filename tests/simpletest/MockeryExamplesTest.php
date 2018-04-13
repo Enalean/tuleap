@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  *
+ * @codingStandardsIgnoreFile
  */
 
 namespace Tuleap\Test;
@@ -26,6 +27,11 @@ class FooBar
     public function add($arg1, $arg2)
     {
         return null;
+    }
+
+    public function getRow()
+    {
+        return ['a'];
     }
 }
 
@@ -130,5 +136,28 @@ class MockeryExamplesTest extends \TuleapTestCase
         $this->assertEqual($foo_bar->add(1, 2), 3);
         $this->assertEqual($foo_bar->add(4, 6), 10);
         $this->assertEqual($foo_bar->add(4, 6), 20);
+    }
+
+    public function itAcceptsParametersInAnyOrder()
+    {
+        $foo_bar = \Mockery::mock(FooBar::class);
+
+        $foo_bar->shouldReceive('add')->andReturns(3)->once()->with(1, 2);
+
+        $this->assertEqual($foo_bar->add(1, 2), 3);
+    }
+
+
+    public function itStuff()
+    {
+        $foo_bar = \Mockery::mock(FooBar::class);
+
+        $foo_bar->shouldReceive('getRow')->once()->andReturns(3);
+        $foo_bar->shouldReceive('getRow')->once()->andReturns(4);
+        $foo_bar->shouldReceive('getRow')->once()->andReturns(false);
+
+        $this->assertEqual($foo_bar->getRow(), 3);
+        $this->assertEqual($foo_bar->getRow(), 4);
+        $this->assertEqual($foo_bar->getRow(), false);
     }
 }

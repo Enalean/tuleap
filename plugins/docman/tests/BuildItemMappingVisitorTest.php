@@ -23,12 +23,6 @@
 
 require_once 'bootstrap.php';
 
-Mock::generate('DataAccessResult');
-Mock::generate('Docman_ItemDao');
-Mock::generate('Docman_PermissionsManager');
-Mock::generate('PFUser');
-Mock::generatePartial('Docman_BuildItemMappingVisitor', 'BuildItemMappingVisitorTestVersion', array('getItemDao', 'getPermissionsManager', 'getCurrentUser'));
-
 class BuildItemMappingVisitorTest extends TuleapTestCase {
 
     function testCompareFolderChildrenOk() {
@@ -178,49 +172,52 @@ class BuildItemMappingVisitorTest extends TuleapTestCase {
         $fld112->addItem($fld113);
 
         // Fake DB results
-        $mockDao = new MockDocman_ItemDao($this);
+        $mockDao = \Mockery::spy(Docman_ItemDao::class);
 
         // Init
-        $mockDar0 = new MockDataAccessResult($this);
-        $mockDar0->setReturnValue('rowCount', 1);
-        $mockDar0->setReturnValueAt(0, 'getRow', array('item_id' => 35, 'title' => 'Project documentation', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 0));
-        $mockDao->setReturnReference('searchByTitle', $mockDar0, array(array('Project documentation'), 569, 0));
+        $mockDar0 = \Mockery::spy(DataAccessResult::class);
+        $mockDar0->shouldReceive('rowCount')->andReturns(1);
+        $mockDar0->shouldReceive('getRow')->once()->andReturns(array('item_id' => 35, 'title' => 'Project documentation', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 0));
+        $mockDao->shouldReceive('searchByTitle')->with(array('Project documentation'), 569, 0)->andReturns($mockDar0);
 
         // Children of 35
-        $mockDar35 = new MockDataAccessResult($this);
-        $mockDar35->setReturnValue('rowCount', 2);
-        $mockDar35->setReturnValueAt(0, 'getRow', array('item_id' => 36, 'title' => 'Folder 1', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 1));
-        $mockDar35->setReturnValueAt(1, 'getRow', array('item_id' => 40, 'title' => 'Folder 2', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 2));
-        $mockDao->setReturnReference('searchByTitle', $mockDar35, array(array('Folder 1', 'Folder 2'), 569, 35));
+        $mockDar35 = \Mockery::spy(DataAccessResult::class);
+        $mockDar35->shouldReceive('rowCount')->andReturns(2);
+        $mockDar35->shouldReceive('getRow')->once()->andReturns(array('item_id' => 36, 'title' => 'Folder 1', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 1));
+        $mockDar35->shouldReceive('getRow')->once()->andReturns(array('item_id' => 40, 'title' => 'Folder 2', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 2));
+        $mockDar35->shouldReceive('getRow')->once()->andReturns(false);
+        $mockDao->shouldReceive('searchByTitle')->with(array('Folder 1', 'Folder 2'), 569, 35)->andReturns($mockDar35);
 
         // Children of 36
-        $mockDar36 = new MockDataAccessResult($this);
-        $mockDar36->setReturnValue('rowCount', 1);
-        $mockDar36->setReturnValueAt(0, 'getRow', array('item_id' => 37, 'title' => 'Folder 1.1', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => -2));
-        $mockDao->setReturnReference('searchByTitle', $mockDar36, array(array('Folder 1.1', 'Folder 1.2'), 569, 36));
+        $mockDar36 = \Mockery::spy(DataAccessResult::class);
+        $mockDar36->shouldReceive('rowCount')->andReturns(1);
+        $mockDar36->shouldReceive('getRow')->once()->andReturns(array('item_id' => 37, 'title' => 'Folder 1.1', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => -2));
+        $mockDar36->shouldReceive('getRow')->once()->andReturns(false);
+        $mockDao->shouldReceive('searchByTitle')->with(array('Folder 1.1', 'Folder 1.2'), 569, 36)->andReturns($mockDar36);
 
         // Children of 37
-        $mockDar37 = new MockDataAccessResult($this);
-        $mockDar37->setReturnValue('rowCount', 1);
-        $mockDar37->setReturnValueAt(0, 'getRow', array('item_id' => 38, 'title' => 'Folder 1.1.1', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 0));
-        $mockDao->setReturnReference('searchByTitle', $mockDar37, array(array('Folder 1.1.1'), 569, 37));
+        $mockDar37 = \Mockery::spy(DataAccessResult::class);
+        $mockDar37->shouldReceive('rowCount')->andReturns(1);
+        $mockDar37->shouldReceive('getRow')->once()->andReturns(array('item_id' => 38, 'title' => 'Folder 1.1.1', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 0));
+        $mockDar37->shouldReceive('getRow')->once()->andReturns(false);
+        $mockDao->shouldReceive('searchByTitle')->with(array('Folder 1.1.1'), 569, 37)->andReturns($mockDar37);
 
         //
         // Permissions mock
-        $mockDPM  = new MockDocman_PermissionsManager();
-        $mockDPM->setReturnValue('userCanRead', true);
-        $mockUser = mock('PFUser');
+        $mockDPM  = \Mockery::spy(Docman_PermissionsManager::class);
+        $mockDPM->shouldReceive('userCanRead')->andReturns(true);
+        $mockUser = \Mockery::spy(PFUser::class);
 
 
-        $itemMappingVisitor = new BuildItemMappingVisitorTestVersion($this);
+        $itemMappingVisitor = \Mockery::mock(Docman_BuildItemMappingVisitor::class)->makePartial()->shouldAllowMockingProtectedMethods();
         // Need to init by hand because of fake constructor.
         $itemMappingVisitor->groupId = 569;
         $itemMappingVisitor->itemMapping = array();
 
         // Attach mocks
-        $itemMappingVisitor->setReturnReference('getItemDao', $mockDao);
-        $itemMappingVisitor->setReturnReference('getPermissionsManager', $mockDPM);
-        $itemMappingVisitor->setReturnReference('getCurrentUser', $mockUser);
+        $itemMappingVisitor->shouldReceive('getItemDao')->andReturns($mockDao);
+        $itemMappingVisitor->shouldReceive('getPermissionsManager')->andReturns($mockDPM);
+        $itemMappingVisitor->shouldReceive('getCurrentUser')->andReturns($mockUser);
 
         $fld140->accept($itemMappingVisitor);
         $itemMapping = $itemMappingVisitor->getItemMapping();
@@ -252,51 +249,56 @@ class BuildItemMappingVisitorTest extends TuleapTestCase {
         $fld112->addItem($fld113);
 
         // Fake DB results
-        $mockDao = new MockDocman_ItemDao($this);
+        $mockDao = \Mockery::spy(Docman_ItemDao::class);
 
         // Init
-        $mockDar0 = new MockDataAccessResult($this);
-        $mockDar0->setReturnValue('rowCount', 1);
-        $mockDar0->setReturnValueAt(0, 'getRow', array('item_id' => 35, 'title' => 'Project documentation', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 0));
-        $mockDao->setReturnReference('searchByTitle', $mockDar0, array(array('Project documentation'), 569, 0));
+        $mockDar0 = \Mockery::spy(DataAccessResult::class);
+        $mockDar0->shouldReceive('rowCount')->andReturns(1);
+        $mockDar0->shouldReceive('getRow')->once()->andReturns(array('item_id' => 35, 'title' => 'Project documentation', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 0));
+        $mockDao->shouldReceive('searchByTitle')->with(array('Project documentation'), 569, 0)->andReturns($mockDar0);
 
         // Children of 35
-        $mockDar35 = new MockDataAccessResult($this);
-        $mockDar35->setReturnValue('rowCount', 2);
-        $mockDar35->setReturnValueAt(0, 'getRow', array('item_id' => 36, 'title' => 'Folder 1', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 1));
-        $mockDar35->setReturnValueAt(1, 'getRow', array('item_id' => 40, 'title' => 'Folder 2', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 2));
-        $mockDao->setReturnReference('searchByTitle', $mockDar35, array(array('Folder 1', 'Folder 2'), 569, 35));
+        $mockDar35 = \Mockery::spy(DataAccessResult::class);
+        $mockDar35->shouldReceive('rowCount')->andReturns(2);
+        $mockDar35->shouldReceive('getRow')->once()->andReturns(array('item_id' => 36, 'title' => 'Folder 1', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 1));
+        $mockDar35->shouldReceive('getRow')->once()->andReturns(array('item_id' => 40, 'title' => 'Folder 2', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 2));
+        $mockDar35->shouldReceive('getRow')->once()->andReturns(false);
+        $mockDao->shouldReceive('searchByTitle')->with(array('Folder 1', 'Folder 2'), 569, 35)->andReturns($mockDar35);
 
         // Children of 36
-        $mockDar36 = new MockDataAccessResult($this);
-        $mockDar36->setReturnValue('rowCount', 1);
-        $mockDar36->setReturnValueAt(0, 'getRow', array('item_id' => 37, 'title' => 'Folder 1.1', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => -2));
-        $mockDao->setReturnReference('searchByTitle', $mockDar36, array(array('Folder 1.1', 'Folder 1.2'), 569, 36));
+        $mockDar36 = \Mockery::spy(DataAccessResult::class);
+        $mockDar36->shouldReceive('rowCount')->andReturns(1);
+        $mockDar36->shouldReceive('getRow')->once()->andReturns(array('item_id' => 37, 'title' => 'Folder 1.1', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => -2));
+        $mockDar36->shouldReceive('getRow')->once()->andReturns(false);
+        $mockDao->shouldReceive('searchByTitle')->with(array('Folder 1.1', 'Folder 1.2'), 569, 36)->andReturns($mockDar36);
 
         // Children of 37
-        $mockDar37 = new MockDataAccessResult($this);
-        $mockDar37->setReturnValue('rowCount', 1);
-        $mockDar37->setReturnValueAt(0, 'getRow', array('item_id' => 38, 'title' => 'Folder 1.1.1', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 0));
-        $mockDao->setReturnReference('searchByTitle', $mockDar37, array(array('Folder 1.1.1'), 569, 37));
+        $mockDar37 = \Mockery::spy(DataAccessResult::class);
+        $mockDar37->shouldReceive('rowCount')->andReturns(1);
+        $mockDar37->shouldReceive('getRow')->once()->andReturns(array('item_id' => 38, 'title' => 'Folder 1.1.1', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 0));
+        $mockDar37->shouldReceive('getRow')->once()->andReturns(false);
+        $mockDao->shouldReceive('searchByTitle')->with(array('Folder 1.1.1'), 569, 37)->andReturns($mockDar37);
 
         //
         // Permissions mock
-        $mockUser = mock('PFUser');
-        $mockDPM  = new MockDocman_PermissionsManager();
-        // Item 40 is unreadable
-        $mockDPM->setReturnValue('userCanRead', false, array($mockUser, 40));
+        $mockUser = \Mockery::spy(PFUser::class);
+        $mockDPM  = \Mockery::spy(Docman_PermissionsManager::class);
         // other items are readable
-        $mockDPM->setReturnValue('userCanRead', true);
+        $mockDPM->shouldReceive('userCanRead')->with($mockUser, 35)->once()->andReturns(true);
+        $mockDPM->shouldReceive('userCanRead')->with($mockUser, 36)->once()->andReturns(true);
+        $mockDPM->shouldReceive('userCanRead')->with($mockUser, 40)->once()->andReturns(false);
+        $mockDPM->shouldReceive('userCanRead')->with($mockUser, 37)->once()->andReturns(true);
+        $mockDPM->shouldReceive('userCanRead')->with($mockUser, 38)->once()->andReturns(true);
 
-        $itemMappingVisitor = new BuildItemMappingVisitorTestVersion($this);
+        $itemMappingVisitor = \Mockery::mock(Docman_BuildItemMappingVisitor::class)->makePartial()->shouldAllowMockingProtectedMethods();
         // Need to init by hand because of fake constructor.
         $itemMappingVisitor->groupId = 569;
         $itemMappingVisitor->itemMapping = array();
 
         // Attach mocks
-        $itemMappingVisitor->setReturnReference('getItemDao', $mockDao);
-        $itemMappingVisitor->setReturnReference('getPermissionsManager', $mockDPM);
-        $itemMappingVisitor->setReturnReference('getCurrentUser', $mockUser);
+        $itemMappingVisitor->shouldReceive('getItemDao')->andReturns($mockDao);
+        $itemMappingVisitor->shouldReceive('getPermissionsManager')->andReturns($mockDPM);
+        $itemMappingVisitor->shouldReceive('getCurrentUser')->andReturns($mockUser);
 
         $fld140->accept($itemMappingVisitor);
         $itemMapping = $itemMappingVisitor->getItemMapping();
@@ -331,48 +333,51 @@ class BuildItemMappingVisitorTest extends TuleapTestCase {
         $fld135->addItem($fld173);
 
         // Fake DB results
-        $mockDao = new MockDocman_ItemDao($this);
+        $mockDao = \Mockery::spy(Docman_ItemDao::class);
 
         // Init
-        $mockDar0 = new MockDataAccessResult($this);
-        $mockDar0->setReturnValue('rowCount', 1);
-        $mockDar0->setReturnValueAt(0, 'getRow', array('item_id' => 35, 'title' => 'Project documentation', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 0));
-        $mockDao->setReturnReference('searchByTitle', $mockDar0, array(array('Project documentation'), 569, 0));
+        $mockDar0 = \Mockery::spy(DataAccessResult::class);
+        $mockDar0->shouldReceive('rowCount')->andReturns(1);
+        $mockDar0->shouldReceive('getRow')->once()->andReturns(array('item_id' => 35, 'title' => 'Project documentation', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 0));
+        $mockDao->shouldReceive('searchByTitle')->with(array('Project documentation'), 569, 0)->andReturns($mockDar0);
 
         // Children of 35
-        $mockDar35 = new MockDataAccessResult($this);
-        $mockDar35->setReturnValue('rowCount', 2);
-        $mockDar35->setReturnValueAt(0, 'getRow', array('item_id' => 36, 'title' => 'Folder 1', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 1));
-        $mockDar35->setReturnValueAt(1, 'getRow', array('item_id' => 40, 'title' => 'Folder 1', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 2));
-        $mockDao->setReturnReference('searchByTitle', $mockDar35, array(array('Folder 1', 'Folder 1'), 569, 35));
+        $mockDar35 = \Mockery::spy(DataAccessResult::class);
+        $mockDar35->shouldReceive('rowCount')->andReturns(2);
+        $mockDar35->shouldReceive('getRow')->once()->andReturns(array('item_id' => 36, 'title' => 'Folder 1', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 1));
+        $mockDar35->shouldReceive('getRow')->once()->andReturns(array('item_id' => 40, 'title' => 'Folder 1', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 2));
+        $mockDar35->shouldReceive('getRow')->once()->andReturns(false);
+        $mockDao->shouldReceive('searchByTitle')->with(array('Folder 1', 'Folder 1'), 569, 35)->andReturns($mockDar35);
 
         // Children of 36
-        $mockDar36 = new MockDataAccessResult($this);
-        $mockDar36->setReturnValue('rowCount', 1);
-        $mockDar36->setReturnValueAt(0, 'getRow', array('item_id' => 37, 'title' => 'Folder 1.1', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => -2));
-        $mockDao->setReturnReference('searchByTitle', $mockDar36, array(array('Folder 1.1'), 569, 36));
+        $mockDar36 = \Mockery::spy(DataAccessResult::class);
+        $mockDar36->shouldReceive('rowCount')->andReturns(1);
+        $mockDar36->shouldReceive('getRow')->once()->andReturns(array('item_id' => 37, 'title' => 'Folder 1.1', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => -2));
+        $mockDar36->shouldReceive('getRow')->once()->andReturns(false);
+        $mockDao->shouldReceive('searchByTitle')->with(array('Folder 1.1'), 569, 36)->andReturns($mockDar36);
 
         // Children of 40
-        $mockDar37 = new MockDataAccessResult($this);
-        $mockDar37->setReturnValue('rowCount', 1);
-        $mockDar37->setReturnValueAt(0, 'getRow', array('item_id' => 56, 'title' => 'Folder test', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 0));
-        $mockDao->setReturnReference('searchByTitle', $mockDar37, array(array('Folder test'), 569, 40));
+        $mockDar37 = \Mockery::spy(DataAccessResult::class);
+        $mockDar37->shouldReceive('rowCount')->andReturns(1);
+        $mockDar37->shouldReceive('getRow')->once()->andReturns(array('item_id' => 56, 'title' => 'Folder test', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 0));
+        $mockDar37->shouldReceive('getRow')->once()->andReturns(false);
+        $mockDao->shouldReceive('searchByTitle')->with(array('Folder test'), 569, 40)->andReturns($mockDar37);
 
         //
         // Permissions mock
-        $mockDPM  = new MockDocman_PermissionsManager();
-        $mockDPM->setReturnValue('userCanRead', true);
-        $mockUser = mock('PFUser');
+        $mockDPM  = \Mockery::spy(Docman_PermissionsManager::class);
+        $mockDPM->shouldReceive('userCanRead')->andReturns(true);
+        $mockUser = \Mockery::spy(PFUser::class);
 
-        $itemMappingVisitor = new BuildItemMappingVisitorTestVersion($this);
+        $itemMappingVisitor = \Mockery::mock(Docman_BuildItemMappingVisitor::class)->makePartial()->shouldAllowMockingProtectedMethods();
         // Need to init by hand because of fake constructor.
         $itemMappingVisitor->groupId = 569;
         $itemMappingVisitor->itemMapping = array();
 
         // Attach mocks
-        $itemMappingVisitor->setReturnReference('getItemDao', $mockDao);
-        $itemMappingVisitor->setReturnReference('getPermissionsManager', $mockDPM);
-        $itemMappingVisitor->setReturnReference('getCurrentUser', $mockUser);
+        $itemMappingVisitor->shouldReceive('getItemDao')->andReturns($mockDao);
+        $itemMappingVisitor->shouldReceive('getPermissionsManager')->andReturns($mockDPM);
+        $itemMappingVisitor->shouldReceive('getCurrentUser')->andReturns($mockUser);
 
         $fld140->accept($itemMappingVisitor);
         $itemMapping = $itemMappingVisitor->getItemMapping();

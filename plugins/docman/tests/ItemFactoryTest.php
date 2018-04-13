@@ -25,7 +25,6 @@ require_once 'bootstrap.php';
 
 Mock::generate('EventManager');
 
-Mock::generate('DataAccessResult');
 Mock::generate('Docman_ItemDao');
 Mock::generate('Docman_Folder');
 Mock::generate('Docman_File');
@@ -422,15 +421,11 @@ class Docman_ItemFactoryTest extends TuleapTestCase
     function testPurgeDeletedItemsWithNoItems() {
         $itemFactory = new Docman_ItemFactoryTestVersion($this);
 
-        $dar = new MockDataAccessResult($this);
-        $dar->setReturnValue('isError', false);
-        $dar->setReturnValue('getRow', false);
-        $dar->setReturnValue('valid', false);
-        $dar->setReturnValue('rowCount', 0);
-
-        $dao = new MockDocman_ItemDao($this);
+        $dao = mock('Docman_ItemDao');
+        expect($dao)->listItemsToPurge()->once();
+        stub($dao)->listItemsToPurge()->returnsEmptyDar();
         $dao->expectOnce('listItemsToPurge');
-        $dao->setReturnValue('listItemsToPurge', $dar);
+
         $itemFactory->setReturnValue('_getItemDao', $dao);
 
         $itemFactory->expectNever('purgeDeletedItem');
@@ -441,27 +436,24 @@ class Docman_ItemFactoryTest extends TuleapTestCase
     function testPurgeDeletedItems() {
         $itemFactory = new Docman_ItemFactoryTestVersion($this);
 
-        $dar = new MockDataAccessResult($this);
-        $dar->setReturnValue('isError', false);
-        $dar->setReturnValue('current', array('id'               => null,
-                                              'title'            => null,
-                                              'description'      => null,
-                                              'createDate'       => null,
-                                              'updateDate'       => null,
-                                              'deleteDate'       => null,
-                                              'rank'             => null,
-                                              'parentId'         => null,
-                                              'groupId'          => null,
-                                              'ownerId'          => null,
-                                              'status'           => null,
-                                              'obsolescenceDate' => null));
-        $dar->setReturnValueAt(0, 'valid', true);
-        $dar->setReturnValueAt(1, 'valid', false);
-        $dar->setReturnValue('rowCount', 1);
-
-        $dao = new MockDocman_ItemDao($this);
-        $dao->expectOnce('listItemsToPurge');
-        $dao->setReturnValue('listItemsToPurge', $dar);
+        $dao = mock('Docman_ItemDao');
+        expect($dao)->listItemsToPurge()->once();
+        stub($dao)->listItemsToPurge()->returnsDar(
+            array(
+                'id'               => null,
+                'title'            => null,
+                'description'      => null,
+                'createDate'       => null,
+                'updateDate'       => null,
+                'deleteDate'       => null,
+                'rank'             => null,
+                'parentId'         => null,
+                'groupId'          => null,
+                'ownerId'          => null,
+                'status'           => null,
+                'obsolescenceDate' => null
+            )
+        );
         $itemFactory->setReturnValue('_getItemDao', $dao);
 
         $itemFactory->expectOnce('purgeDeletedItem');
