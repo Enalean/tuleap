@@ -75,6 +75,7 @@ class MetadataUsageChecker
      * @throws SubmittedOnIsMissingInAtLeastOneTrackerException
      * @throws TitleIsMissingInAtLeastOneTrackerException
      * @throws LastUpdateDateIsMissingInAtLeastOneTrackerException
+     * @throws SubmittedByIsMissingInAtLeastOneTrackerException
      */
     public function checkMetadataIsUsedByAllTrackers(
         Metadata $metadata,
@@ -97,6 +98,12 @@ class MetadataUsageChecker
                 break;
             case AllowedMetadata::SUBMITTED_ON:
                 $this->checkSubmittedOnIsUsedByAllTrackers(
+                    $collector_parameters->getTrackers(),
+                    $collector_parameters->getUser()
+                );
+                break;
+            case AllowedMetadata::SUBMITTED_BY:
+                $this->checkSubmittedByIsUsedByAllTracker(
                     $collector_parameters->getTrackers(),
                     $collector_parameters->getUser()
                 );
@@ -169,6 +176,14 @@ class MetadataUsageChecker
         $count = $this->getNumberOfReadableFieldByType($trackers, $user, 'lud');
         if ($count > 0) {
             throw new LastUpdateDateIsMissingInAtLeastOneTrackerException($count);
+        }
+    }
+
+    private function checkSubmittedByIsUsedByAllTracker(array $trackers, PFUser $user)
+    {
+        $count = $this->getNumberOfReadableFieldByType($trackers, $user, 'subby');
+        if ($count > 0) {
+            throw new SubmittedByIsMissingInAtLeastOneTrackerException($count);
         }
     }
 
