@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,6 +21,7 @@
 namespace Tuleap\TestManagement\REST\v1;
 
 use \Tracker_Artifact;
+use Tracker_Artifact_Changeset;
 use \Tracker_FormElementFactory;
 use \PFUser;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
@@ -43,9 +44,10 @@ class DefinitionRepresentation extends MinimalDefinitionRepresentation
         Tracker_Artifact $artifact,
         Tracker_FormElementFactory $form_element_factory,
         PFUser $user,
+        Tracker_Artifact_Changeset $changeset = null,
         Tracker_Artifact $requirement = null
     ) {
-        parent::build($artifact, $form_element_factory, $user);
+        parent::build($artifact, $form_element_factory, $user, $changeset);
 
         $this->description = $this->getFieldValue(self::FIELD_DESCRIPTION)->getText();
 

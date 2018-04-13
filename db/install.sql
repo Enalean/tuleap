@@ -12,6 +12,11 @@ CREATE TABLE IF NOT EXISTS plugin_testmanagement_campaign(
     encrypted_job_token BLOB DEFAULT NULL
 );
 
+CREATE TABLE IF NOT EXISTS plugin_testmanagement_execution(
+    execution_artifact_id INT(11) NOT NULL PRIMARY KEY,
+    definition_changeset_id INT(11) NOT NULL
+);
+
 -- Enable service for project 1 and 100
 INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES ( 100 , 'plugin_testmanagement:service_lbl_key' , 'plugin_testmanagement:service_desc_key' , 'plugin_testmanagement', '/plugins/testmanagement/?group_id=$group_id', 1 , 1 , 'system',  250 );
 INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES ( 1   , 'plugin_testmanagement:service_lbl_key' , 'plugin_testmanagement:service_desc_key' , 'plugin_testmanagement', '/plugins/testmanagement/?group_id=1', 1 , 1 , 'system',  250 );

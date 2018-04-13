@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,10 +20,10 @@
 
 namespace Tuleap\TestManagement\REST\v1;
 
-use Tuleap\TestManagement\ConfigConformanceValidator;
-use Tracker_Artifact;
 use PFUser;
+use Tracker_Artifact;
 use Tracker_FormElementFactory;
+use Tuleap\TestManagement\ConfigConformanceValidator;
 use UserManager;
 
 class DefinitionRepresentationBuilder
@@ -33,11 +33,6 @@ class DefinitionRepresentationBuilder
      * @var UserManager
      */
     private $user_manager;
-
-    /**
-     * @var AssignedToRepresentationBuilder
-     */
-    private $assigned_to_representation_builder;
 
     /**
      * @var Tracker_FormElementFactory
@@ -73,9 +68,16 @@ class DefinitionRepresentationBuilder
         }
 
         $requirement = $this->requirement_retriever->getRequirementForDefinition($definition_artifact, $user);
+        $changeset   = null;
 
         $definition_representation = new DefinitionRepresentation();
-        $definition_representation->build($definition_artifact, $this->tracker_form_element_factory, $user, $requirement);
+        $definition_representation->build(
+            $definition_artifact,
+            $this->tracker_form_element_factory,
+            $user,
+            $changeset,
+            $requirement
+        );
 
         return $definition_representation;
     }
@@ -86,8 +88,15 @@ class DefinitionRepresentationBuilder
             return null;
         }
 
+        $changeset = null;
+
         $definition_representation = new MinimalDefinitionRepresentation();
-        $definition_representation->build($artifact, $this->tracker_form_element_factory, $user);
+        $definition_representation->build(
+            $artifact,
+            $this->tracker_form_element_factory,
+            $user,
+            $changeset
+        );
 
         return $definition_representation;
     }

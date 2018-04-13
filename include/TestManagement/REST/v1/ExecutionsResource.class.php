@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,6 +27,7 @@ use Tuleap\REST\Header;
 use Luracast\Restler\RestException;
 use Tracker_ArtifactFactory;
 use Tracker_Artifact;
+use Tuleap\TestManagement\Campaign\Execution\ExecutionDao;
 use Tuleap\TestManagement\RealTime\RealTimeMessageSender;
 use Tuleap\Tracker\REST\TrackerReference;
 use Tuleap\TestManagement\ArtifactDao;
@@ -119,7 +120,8 @@ class ExecutionsResource
             $this->assigned_to_representation_builder,
             new ArtifactDao(),
             $this->artifact_factory,
-            $retriever
+            $retriever,
+            new ExecutionDao()
         );
 
         $this->node_js_client         = new NodeJSClient();

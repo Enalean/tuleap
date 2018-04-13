@@ -63,6 +63,7 @@ use Tuleap\TestManagement\Campaign\Campaign;
 use Tuleap\TestManagement\Campaign\CampaignDao;
 use Tuleap\TestManagement\Campaign\CampaignRetriever;
 use Tuleap\TestManagement\Campaign\CampaignSaver;
+use Tuleap\TestManagement\Campaign\Execution\ExecutionDao;
 use Tuleap\TestManagement\Campaign\JobConfiguration;
 use Tuleap\TestManagement\Config;
 use Tuleap\TestManagement\ConfigConformanceValidator;
@@ -165,7 +166,8 @@ class CampaignsResource
             $assigned_to_representation_builder,
             $artifact_dao,
             $this->artifact_factory,
-            $retriever
+            $retriever,
+            new ExecutionDao()
         );
 
         $campaign_dao = new CampaignDao();

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,10 +20,11 @@
 
 namespace Tuleap\TestManagement\REST\v1;
 
-use \Tuleap\REST\JsonCast;
-use \Tracker_Artifact;
-use \Tracker_FormElementFactory;
-use \PFUser;
+use PFUser;
+use Tracker_Artifact;
+use Tracker_Artifact_Changeset;
+use Tracker_FormElementFactory;
+use Tuleap\REST\JsonCast;
 
 
 class MinimalDefinitionRepresentation
@@ -73,34 +74,54 @@ class MinimalDefinitionRepresentation
      */
     private $user;
 
+    /**
+     * @var Tracker_Artifact_Changeset|null
+     */
+    private $changeset;
 
-    public function build(Tracker_Artifact $artifact, Tracker_FormElementFactory $form_element_factory, PFUser $user) {
+    public function build(
+        Tracker_Artifact $artifact,
+        Tracker_FormElementFactory $form_element_factory,
+        PFUser $user,
+        Tracker_Artifact_Changeset $changeset = null
+    ) {
         $this->form_element_factory = $form_element_factory;
         $this->artifact             = $artifact;
         $this->tracker_id           = $artifact->getTrackerId();
         $this->user                 = $user;
-
         $this->id                   = JsonCast::toInt($artifact->getId());
         $this->uri                  = self::ROUTE . '/' . $this->id;
-        $this->summary              = $this->getFieldValue(self::FIELD_SUMMARY)->getText();
-        $this->category             = $this->getCategory();
+
+        $this->changeset            = $changeset ?: $artifact->getLastChangeset();
+
+        $this->summary  = $this->getFieldValue(self::FIELD_SUMMARY)->getText();
+        $this->category = $this->getCategory();
     }
 
-    protected function getFieldValue($field_shortname) {
-        $field = $this->form_element_factory->getUsedFieldByNameForUser($this->tracker_id, $field_shortname, $this->user);
+    protected function getFieldValue($field_shortname)
+    {
+        $field = $this->form_element_factory->getUsedFieldByNameForUser(
+            $this->tracker_id,
+            $field_shortname,
+            $this->user
+        );
 
-        return $this->artifact->getValue($field);
+        return $this->artifact->getValue($field, $this->changeset);
     }
 
-    private function getCategory() {
-        $field_status = $this->form_element_factory->getUsedFieldByNameForUser($this->tracker_id, self::FIELD_CATEGORY, $this->user);
+    private function getCategory()
+    {
+        /** @var \Tracker_FormElement_Field_List $field_status */
+        $field_status = $this->form_element_factory->getUsedFieldByNameForUser(
+            $this->tracker_id,
+            self::FIELD_CATEGORY,
+            $this->user
+        );
 
         if (! $field_status) {
             return null;
         }
 
-        $last_changeset = $this->artifact->getLastChangeset();
-
-        return $field_status->getFirstValueFor($last_changeset);
+        return $field_status->getFirstValueFor($this->changeset);
     }
 }
