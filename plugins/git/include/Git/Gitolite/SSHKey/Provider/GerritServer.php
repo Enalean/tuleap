@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,7 +27,7 @@ use Tuleap\Git\Gitolite\SSHKey\Key;
 class GerritServer implements IProvideKey
 {
     /**
-     * @var \DataAccessResult
+     * @var \ArrayIterator
      */
     private $gerrit_server_access_result;
 
@@ -36,8 +36,9 @@ class GerritServer implements IProvideKey
      */
     public function __construct(Git_RemoteServer_Dao $gerrit_server_dao)
     {
-        $this->gerrit_server_access_result = $gerrit_server_dao->searchAllServersWithSSHKey();
-        if ($this->gerrit_server_access_result === false) {
+        try {
+            $this->gerrit_server_access_result = (new \ArrayObject($gerrit_server_dao->searchAllServersWithSSHKey()))->getIterator();
+        } catch (\PDOException $ex) {
             throw new AccessException('Could not access Gerrit server keys');
         }
     }

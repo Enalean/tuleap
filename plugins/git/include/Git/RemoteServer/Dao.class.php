@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,60 +18,58 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Git_RemoteServer_Dao extends DataAccessObject {
+class Git_RemoteServer_Dao extends \Tuleap\DB\DataAccessObject {
 
     /**
      * @var StandardPasswordHandler
      */
     private $password_handler;
 
-    public function __construct(DataAccess $da = null)
+    public function __construct()
     {
-        parent::__construct($da);
+        parent::__construct();
         $this->password_handler = PasswordHandlerFactory::getPasswordHandler();
     }
 
-    public function searchById($id) {
-        $id = $this->da->escapeInt($id);
-        $sql = "SELECT *
+    public function getById($id)
+    {
+        $sql = 'SELECT *
                 FROM plugin_git_remote_servers
-                WHERE id = $id";
-        return $this->retrieve($sql);
+                WHERE id = ?';
+
+        return $this->getDB()->row($sql, $id);
     }
 
-    public function searchAll() {
-        $sql = "SELECT * FROM plugin_git_remote_servers";
-        return $this->retrieve($sql);
+    public function searchAll()
+    {
+        return $this->getDB()->run('SELECT * FROM plugin_git_remote_servers');
     }
 
     public function searchAllUnrestricted()
     {
-        $sql = "SELECT plugin_git_remote_servers.*
+        $sql = 'SELECT plugin_git_remote_servers.*
                 FROM plugin_git_remote_servers
                   LEFT JOIN plugin_git_restricted_gerrit_servers
                     ON (plugin_git_remote_servers.id = plugin_git_restricted_gerrit_servers.gerrit_server_id)
-                WHERE gerrit_server_id IS NULL";
+                WHERE gerrit_server_id IS NULL';
 
-        return $this->retrieve($sql);
+        return $this->getDB()->run($sql);
     }
 
     public function searchAllServersWithSSHKey()
     {
-        $sql = 'SELECT * FROM plugin_git_remote_servers WHERE ssh_key IS NOT NULL AND ssh_key != ""';
-        return $this->retrieve($sql);
+        return $this->getDB()->run('SELECT * FROM plugin_git_remote_servers WHERE ssh_key IS NOT NULL AND ssh_key != ""');
     }
 
     public function searchAvailableServersForProject($project_id)
     {
-        $project_id = $this->da->escapeInt($project_id);
-
-        $sql = "SELECT plugin_git_remote_servers.*
+        $sql = 'SELECT plugin_git_remote_servers.*
                 FROM plugin_git_remote_servers
                   INNER JOIN plugin_git_restricted_gerrit_servers
                     ON (plugin_git_remote_servers.id = plugin_git_restricted_gerrit_servers.gerrit_server_id)
                   INNER JOIN plugin_git_restricted_gerrit_servers_allowed_projects
                     USING (gerrit_server_id)
-                WHERE plugin_git_restricted_gerrit_servers_allowed_projects.project_id = $project_id
+                WHERE plugin_git_restricted_gerrit_servers_allowed_projects.project_id = ?
 
                 UNION
 
@@ -79,31 +77,32 @@ class Git_RemoteServer_Dao extends DataAccessObject {
                 FROM plugin_git_remote_servers
                   LEFT JOIN plugin_git_restricted_gerrit_servers
                     ON (plugin_git_remote_servers.id = plugin_git_restricted_gerrit_servers.gerrit_server_id)
-                WHERE gerrit_server_id IS NULL";
+                WHERE gerrit_server_id IS NULL';
 
-        return $this->retrieve($sql);
+        return $this->getDB()->run($sql, $project_id);
     }
 
     /**
      * This sql request returns for a given project all the servers
      * where its git repositories are migrated
      */
-    public function searchAllByProjectId($project_id) {
-        $project_id = $this->da->escapeInt($project_id);
-        $sql = "SELECT plugin_git_remote_servers.*
+    public function searchAllByProjectId($project_id)
+    {
+        $sql = 'SELECT plugin_git_remote_servers.*
                 FROM plugin_git_remote_servers INNER JOIN plugin_git
                     ON (plugin_git_remote_servers.id = plugin_git.remote_server_id
-                        AND project_id = $project_id)";
-        return $this->retrieve($sql);
+                        AND project_id = ?)';
+        return $this->getDB()->run($sql, $project_id);
     }
 
-    public function searchAllRemoteServersForUserId($user_id) {
+    public function searchAllRemoteServersForUserId($user_id)
+    {
         $sql = "SELECT DISTINCT pgrs.*
                 FROM plugin_git_remote_servers pgrs
                     INNER JOIN plugin_git ON (remote_server_id = pgrs.id)
                     INNER JOIN user_group ON (user_group.group_id = plugin_git.project_id)
                     INNER JOIN user ON (user_group.user_id = user.user_id)
-                WHERE user_group.user_id = $user_id
+                WHERE user_group.user_id = ?
                     AND user.ldap_id IS NOT NULL
                     AND user.ldap_id != ''
                 UNION
@@ -113,21 +112,20 @@ class Git_RemoteServer_Dao extends DataAccessObject {
                     INNER JOIN ugroup ON (ugroup.group_id = plugin_git.project_id)
                     INNER JOIN ugroup_user ON (ugroup_user.ugroup_id = ugroup.ugroup_id)
                     INNER JOIN user ON (ugroup_user.user_id = user.user_id)
-                WHERE ugroup_user.user_id = $user_id
+                WHERE ugroup_user.user_id = ?
                     AND user.ldap_id IS NOT NULL
                     AND user.ldap_id != ''";
-        return $this->retrieve($sql);
+        return $this->getDB()->run($sql, $user_id);
     }
 
-    public function searchAllByUGroupId($project_id, $ugroup_id) {
-        $project_id = $this->da->escapeInt($project_id);
-        $ugroup_id  = $this->da->escapeInt($ugroup_id);
-        $sql = "SELECT plugin_git_remote_servers.*
+    public function searchAllByUGroupId($project_id, $ugroup_id)
+    {
+        $sql = 'SELECT plugin_git_remote_servers.*
                 FROM plugin_git_remote_servers INNER JOIN plugin_git_remote_ugroups
                     ON (plugin_git_remote_servers.id = plugin_git_remote_ugroups.remote_server_id
-                        AND group_id = $project_id AND ugroup_id = $ugroup_id)";
+                        AND group_id = ? AND ugroup_id = ?)';
 
-        return $this->retrieve($sql);
+        return $this->getDB()->run($sql, $project_id, $ugroup_id);
     }
 
     public function save(
@@ -143,101 +141,58 @@ class Git_RemoteServer_Dao extends DataAccessObject {
         $http_password,
         $auth_type
     ) {
-        $id                   = $this->da->escapeInt($id);
-        $host                 = $this->da->quoteSmart($host);
-        $ssh_port             = $this->da->escapeInt($ssh_port);
-        $http_port            = $this->da->escapeInt($http_port, CODENDI_DB_NULL);
-        $login                = $this->da->quoteSmart($login);
-        $identity_file        = $this->da->quoteSmart($identity_file);
-        $replication_key      = $this->da->quoteSmart($replication_key);
-        $use_ssl              = $this->da->escapeInt($use_ssl);
-        $gerrit_version       = $this->da->quoteSmart($gerrit_version);
-        $http_password        = $this->da->quoteSmart($http_password);
-        $auth_type            = $this->da->quoteSmart($auth_type);
-
         if ($id == 0) {
-            $sql = "INSERT INTO plugin_git_remote_servers (
-                id,
-                host,
-                ssh_port,
-                http_port,
-                login,
-                identity_file,
-                ssh_key,
-                use_ssl,
-                gerrit_version,
-                http_password,
-                replication_password,
-                auth_type
-            )
-            VALUES (
-                $id,
-                $host,
-                $ssh_port,
-                $http_port,
-                $login,
-                $identity_file,
-                $replication_key,
-                $use_ssl,
-                $gerrit_version,
-                $http_password,
-                '',
-                $auth_type
-            )";
+            $this->getDB()->insert(
+                'plugin_git_remote_servers',
+                [
+                    'host'                 => $host,
+                    'ssh_port'             => $ssh_port,
+                    'http_port'            => $http_port,
+                    'login'                => $login,
+                    'identity_file'        => $identity_file,
+                    'ssh_key'              => $replication_key,
+                    'use_ssl'              => $use_ssl,
+                    'gerrit_version'       => $gerrit_version,
+                    'http_password'        => $http_password,
+                    'replication_password' => '',
+                    'auth_type'            => $auth_type
+                ]
+            );
         } else {
-            $sql = "REPLACE INTO plugin_git_remote_servers (
-                id,
-                host,
-                ssh_port,
-                http_port,
-                login,
-                identity_file,
-                ssh_key,
-                use_ssl,
-                gerrit_version,
-                http_password,
-                auth_type,
-                replication_password
-            )
-            SELECT
-                $id,
-                $host,
-                $ssh_port,
-                $http_port,
-                $login,
-                $identity_file,
-                $replication_key,
-                $use_ssl,
-                $gerrit_version,
-                $http_password,
-                $auth_type,
-                replication_password
-            FROM plugin_git_remote_servers
-            WHERE id = $id";
+            $this->getDB()->update(
+                'plugin_git_remote_servers',
+                [
+                    'host'           => $host,
+                    'ssh_port'       => $ssh_port,
+                    'http_port'      => $http_port,
+                    'login'          => $login,
+                    'identity_file'  => $identity_file,
+                    'ssh_key'        => $replication_key,
+                    'use_ssl'        => $use_ssl,
+                    'gerrit_version' => $gerrit_version,
+                    'http_password'  => $http_password,
+                    'auth_type'      => $auth_type
+                ],
+                ['id' => $id]
+            );
         }
 
-        return $this->updateAndGetLastId($sql);
+        return $this->getDB()->lastInsertId();
     }
 
-    public function delete($id) {
-        $id  = $this->da->escapeInt($id);
-        $sql = "DELETE FROM plugin_git_remote_servers
-                where ID = $id";
-
-        return $this->update($sql);
+    public function delete($id)
+    {
+        $this->getDB()->run('DELETE FROM plugin_git_remote_servers WHERE id = ?', $id);
     }
 
     public function updateReplicationPassword($id, $replication_password)
     {
-        $id                   = $this->da->escapeInt($id);
-        $replication_password = $this->da->quoteSmart(
-            $this->password_handler->computeHashPassword($replication_password)
-        );
+        $password_hashed_replication_password = $this->password_handler->computeHashPassword($replication_password);
 
-        $sql = "UPDATE plugin_git_remote_servers
-                SET replication_password = $replication_password
-                WHERE id = $id";
+        $sql = 'UPDATE plugin_git_remote_servers
+                SET replication_password = ?
+                WHERE id = ?';
 
-        return $this->update($sql);
+        $this->getDB()->run($sql, $password_hashed_replication_password, $id);
     }
 }
