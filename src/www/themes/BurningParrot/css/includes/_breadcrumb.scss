@@ -17,37 +17,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+$step-transition-duration: 75ms;
+
 $step-background: $tlp-ui-white;
-$step-color: #838487;
+$step-color: $tlp-ui-dimmed;
 $step-border: $tlp-ui-border-normal;
-$step-border-chevron: #dadce3;
 $step-active-color: $tlp-theme-color;
 $step-active-border: transparentize($tlp-theme-color, .5);
 $step-clicked-background: $tlp-theme-color;
 $step-clicked-border: $tlp-theme-color;
 $step-clicked-color: $tlp-ui-white;
 
-$switch-menu-background: $step-background;
-$switch-menu-border: $step-border;
-$switch-menu-item-color: $step-color;
+$switch-menu-background: $tlp-ui-white;
+$switch-menu-border: $tlp-ui-border-normal;
+$switch-menu-item-color: $tlp-theme-color;
 $switch-menu-item-hover-background: $tlp-ui-border-light;
-$switch-menu-item-hover-color: $step-active-color;
-$switch-menu-item-active-background: $step-active-color;
-$switch-menu-item-active-color: $step-clicked-color;
-
-@keyframes menuIn {
-    from {
-        z-index: -1;
-        transform: translate3d(0, -10%, 0);
-        opacity: 0;
-    }
-
-    to {
-        z-index: 0;
-        transform: none;
-        opacity: 1;
-    }
-}
+$switch-menu-item-hover-color: $tlp-theme-color;
 
 .breadcrumb {
     display: flex;
@@ -57,7 +42,7 @@ $switch-menu-item-active-color: $step-clicked-color;
 .breadcrumb-item {
     display: inline-block;
     position: relative;
-    float: left;
+    margin: 0 0 0 -1px;
 
     &:first-child > .breadcrumb-link {
         padding-left: $tlp-spacing;
@@ -98,6 +83,7 @@ $switch-menu-item-active-color: $step-clicked-color;
     position: relative;
     padding: 0 10px 0 30px;
     float: left;
+    transition: border $step-transition-duration;
     border: 1px solid $step-border;
     background: $step-background;
     color: $step-color;
@@ -117,10 +103,10 @@ $switch-menu-item-active-color: $step-clicked-color;
         width: 33px;
         height: 33px;
         transform: rotate(-45deg) scale(.73);
-        transition: box-shadow 150ms;
+        transition: box-shadow $step-transition-duration;
         border-radius: 50px 0 0;
         background: $step-background;
-        box-shadow: 1.5px 1.5px 0 $step-border-chevron;
+        box-shadow: 1.5px 1.5px 0 $step-border;
     }
 }
 
@@ -142,51 +128,50 @@ $switch-menu-item-active-color: $step-clicked-color;
         z-index: 1;
         top: 12px;
         right: 7px;
-        transition: opacity 100ms;
-        opacity: .25;
-        color: $step-color;
+        transition: color $step-transition-duration;
+        color: $tlp-ui-border-dark;
         font-family: 'FontAwesome';
         font-size: 10px;
     }
 
     &:hover {
         > .breadcrumb-switch-menu {
-            display: inline-block;
-            z-index: 1;
-            animation: 100ms menuIn;
+            transform: translateY(0);
+            opacity: 1;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, .175);
+            pointer-events: auto;
         }
 
         &::after {
-            opacity: 1;
             color: $step-active-color;
         }
     }
 }
 
 .breadcrumb-switch-menu {
-    display: none;
     position: absolute;
+    z-index: 10000;
     top: 35px;
     left: 0;
     min-width: 100%;
-    max-width: 200%;
     padding: 0;
+    transform: translateY(-10px);
+    transition: opacity $step-transition-duration,
+    transform $step-transition-duration,
+    box-shadow $step-transition-duration;
     border: 1px solid $switch-menu-border;
     border-top: 0;
     border-radius: 0 0 3px 3px;
+    opacity: 0;
     background: $switch-menu-background;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, .05);
+    box-shadow: none;
+    pointer-events: none;
 }
 
 .breadcrumb-dropdown-item {
     &:hover > .breadcrumb-dropdown-link {
         background: $switch-menu-item-hover-background;
         color: $switch-menu-item-hover-color;
-
-        &:active {
-            background: $switch-menu-item-active-background;
-            color: $switch-menu-item-active-color;
-        }
     }
 
     &:last-child > .breadcrumb-dropdown-link {
