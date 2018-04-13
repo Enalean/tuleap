@@ -63,6 +63,7 @@ class MilestoneCrumbBuilder
      */
     public function build(PFUser $user, Planning_Milestone $milestone)
     {
+        $this->milestone_factory->addMilestoneAncestors($user, $milestone);
         $milestone_breadcrumb = new BreadCrumb(
             new BreadCrumbLink(
                 $milestone->getArtifactTitle(),
@@ -104,7 +105,6 @@ class MilestoneCrumbBuilder
      */
     private function getSubItems(PFUser $user, Planning_Milestone $milestone)
     {
-
         $sub_items = new BreadCrumbSubItems();
         $this->addDefaultSection($milestone, $sub_items);
         $this->addSiblingsSection($user, $milestone, $sub_items);
