@@ -21,7 +21,6 @@
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\NotIn;
 
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ComparisonChecker;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\OperatorNotAllowedForMetadataException;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\InValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
 
@@ -33,7 +32,9 @@ class NotInComparisonChecker extends ComparisonChecker
         InValueWrapper $value_wrapper,
         ValueWrapperParameters $parameters
     ) {
-        $metadata = $parameters->getMetadata();
-        throw new OperatorNotAllowedForMetadataException($metadata, static::OPERATOR);
+        $values = $value_wrapper->getValueWrappers();
+        foreach ($values as $value) {
+            $this->list_value_validator->checkValueIsValid($value->getValue());
+        }
     }
 }
