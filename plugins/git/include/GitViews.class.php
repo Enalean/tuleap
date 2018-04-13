@@ -674,9 +674,9 @@ class GitViews extends PluginViews {
             $dao = new Git_LogDao();
             foreach ($params['repository_list'] as $repository) {
                 $id  = $repository['repository_id'];
-                $dar = $dao->searchLastPushForRepository($id);
-                if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
-                    $lastPushes[$id] = $dar->getRow();
+                $row = $dao->getLastPushForRepository($id);
+                if (! empty($row)) {
+                    $lastPushes[$id] = $row;
                 }
             }
             $strategy = new GitViewsRepositoriesTraversalStrategy_Tree($lastPushes, $this->url_manager);

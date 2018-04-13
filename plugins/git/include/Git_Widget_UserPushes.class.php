@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2012. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -73,15 +73,15 @@ class Git_Widget_UserPushes extends Widget {
         $content = '';
         $project = '';
         $dh      = new DateHelper();
-        if ($result && ! $result->isError() && $result->count() > 0) {
+        if (count($result) > 0) {
             foreach ($result as $entry) {
                 if (! empty($entry['repository_namespace'])) {
                     $namespace = $entry['repository_namespace']."/";
                 } else {
                     $namespace = '';
                 }
-                $dar = $dao->getLastPushesByUser($user->getId(), $entry['repository_id'], $this->offset, $date);
-                if ($dar && ! $dar->isError() && $dar->rowCount() > 0) {
+                $rows = $dao->getLastPushesByUser($user->getId(), $entry['repository_id'], $this->offset, $date);
+                if (count($rows) > 0) {
                     if ($project != $entry['group_name']) {
                         if (! empty($project)) {
                             $content .= '</fieldset>';
@@ -118,7 +118,7 @@ class Git_Widget_UserPushes extends Widget {
                         <tbody>';
                     $i   = 0;
                     $hp  = Codendi_HTMLPurifier::instance();
-                    foreach ($dar as $row) {
+                    foreach ($rows as $row) {
                         $content .= '<tr class="'.html_get_alt_row_color(++$i).'">
                                          <td><span title="'.$dh->timeAgoInWords($row['push_date'], true).'">'.$hp->purify(format_date($GLOBALS['Language']->getText('system', 'datefmt'), $row['push_date'])).'</span></td>
                                          <td>

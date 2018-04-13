@@ -362,22 +362,20 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
         $gitRepo[]    = $GLOBALS['Language']->getText('plugin_statistics', 'scm_git_repositories');
 
         $gitLogDao = new Git_LogDao();
-        $dar       = $gitLogDao->totalPushes($formatter->startDate, $formatter->endDate, $formatter->groupId);
-        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
-            foreach ($dar as $row) {
-                $gitIndex[]   = $row['month']." ".$row['year'];
-                $gitPushes[]  = intval($row['pushes_count']);
-                $gitCommits[] = intval($row['commits_count']);
-                $gitUsers[]   = intval($row['users']);
-                $gitRepo[]    = intval($row['repositories']);
-            }
-            $formatter->addLine($gitIndex);
-            $formatter->addLine($gitPushes);
-            $formatter->addLine($gitCommits);
-            $formatter->addLine($gitUsers);
-            $formatter->addLine($gitRepo);
-            $formatter->addEmptyLine();
+        $rows      = $gitLogDao->totalPushes($formatter->startDate, $formatter->endDate, $formatter->groupId);
+        foreach ($rows as $row) {
+            $gitIndex[]   = $row['month']." ".$row['year'];
+            $gitPushes[]  = intval($row['pushes_count']);
+            $gitCommits[] = intval($row['commits_count']);
+            $gitUsers[]   = intval($row['users']);
+            $gitRepo[]    = intval($row['repositories']);
         }
+        $formatter->addLine($gitIndex);
+        $formatter->addLine($gitPushes);
+        $formatter->addLine($gitCommits);
+        $formatter->addLine($gitUsers);
+        $formatter->addLine($gitRepo);
+        $formatter->addEmptyLine();
     }
 
     private function retrieveReadAccessStatistics(Statistics_Formatter $formatter)
