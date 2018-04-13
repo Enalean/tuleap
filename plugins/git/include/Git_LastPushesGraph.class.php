@@ -194,10 +194,9 @@ class Git_LastPushesGraph {
         $pushes    = array();
         $gitLogDao = new Git_LogDao();
         foreach ($this->weekNum as $key => $w) {
-            $res = $gitLogDao->getRepositoryPushesByWeek($repository->getId(), $w, $this->year[$key]);
-            if ($res && !$res->isError() && $res->valid()) {
-                $row          = $res->getRow();
-                $pushes[$key] = intval($row['pushes']);
+            $rows = $gitLogDao->getRepositoryPushesByWeek($repository->getId(), $w, $this->year[$key]);
+            foreach ($rows as $row) {
+                $pushes[$key] = (int) $row['pushes'];
                 if ($pushes[$key] > 0) {
                     $this->displayChart = true;
                     $this->legend       = $repository->getFullName();

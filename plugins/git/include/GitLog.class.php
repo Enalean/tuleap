@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2012. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -46,7 +46,7 @@ class GitLog {
     function logsDaily($params)
     {
         $params['logs'][] = array(
-            'sql'   => $this->_dao->getSqlStatementForLogsDaily(
+            'sql'   => $this->getSqlStatementForLogsDaily(
                 $params['group_id'],
                 $params['logs_cond'],
                 $this->getGitReadLogFilter($params['group_id'], $params['who'], $params['span'])
@@ -54,6 +54,41 @@ class GitLog {
             'field' => $GLOBALS['Language']->getText('plugin_git', 'logsdaily_field'),
             'title' => $GLOBALS['Language']->getText('plugin_git', 'logsdaily_title')
         );
+    }
+
+    /**
+     * Return the SQL Statement for logs daily pushs
+     *
+     * @param Integer $project_id  Id of the project
+     * @param String  $condition Condition
+     *
+     * @return String
+     */
+    private function getSqlStatementForLogsDaily($project_id, $condition, $full_history_condition)
+    {
+        $project_id = CodendiDataAccess::instance()->escapeInt($project_id);
+
+        return "SELECT UNIX_TIMESTAMP(day) AS time,
+                  'read' AS type,
+                  user.user_name AS user_name,
+                  user.realname AS realname, user.email AS email,
+                  git.repository_name AS title
+                FROM plugin_git_log_read_daily AS log
+                    INNER JOIN user USING (user_id)
+                    INNER JOIN plugin_git AS git USING (repository_id)
+                WHERE $full_history_condition
+                  AND git.project_id = $project_id
+                UNION
+                SELECT log.push_date AS time,
+                    'write' AS type,
+                    user.user_name AS user_name,
+                    user.realname AS realname, user.email AS email,
+                    r.repository_name AS title
+                FROM (SELECT *, push_date AS time from plugin_git_log) AS log, user, plugin_git AS r
+                WHERE $condition
+                  AND r.project_id = $project_id
+                  AND log.repository_id = r.repository_id
+                ORDER BY time DESC";
     }
 
     /**

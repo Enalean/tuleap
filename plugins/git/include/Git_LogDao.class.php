@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,25 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/dao/include/DataAccessObject.class.php';
 
-class Git_LogDao extends DataAccessObject {
-
-    /**
-     * Return the last push of a given repository
-     *
-     * @param Integer $repositoryId Id of the repository
-     *
-     * @return DataAccessResult
-     */
-    function searchLastPushForRepository($repositoryId) {
-        $repositoryId = $this->da->escapeInt($repositoryId);
-        $sql = "SELECT log.*
+class Git_LogDao extends \Tuleap\DB\DataAccessObject
+{
+    public function getLastPushForRepository($repositoryId)
+    {
+        $sql = 'SELECT log.*
                 FROM plugin_git_log log 
-                WHERE repository_id = $repositoryId
+                WHERE repository_id = ?
                 ORDER BY push_date DESC
-                LIMIT 1";
-        return $this->retrieve($sql);
+                LIMIT 1';
+        return $this->getDB()->row($sql, $repositoryId);
     }
 
     /**
@@ -46,23 +38,21 @@ class Git_LogDao extends DataAccessObject {
      * @param Integer $week         Number of the week
      * @param Integer $year         Year corresponding to the week
      *
-     * @return DataAccessResult
      */
-    function getRepositoryPushesByWeek($repositoryId, $week, $year) {
-        $repositoryId = $this->da->escapeInt($repositoryId);
-        $week         = $this->da->escapeInt($week);
-        $year         = $this->da->escapeInt($year);
-        $sql          = "SELECT COUNT(*) AS pushes,
+    public function getRepositoryPushesByWeek($repositoryId, $week, $year)
+    {
+        $sql          = 'SELECT COUNT(*) AS pushes,
                              repository_id AS repo,
                              WEEK(FROM_UNIXTIME(push_date), 3) AS week,
                              YEAR(FROM_UNIXTIME(push_date)) AS year,
                              SUM(commits_number) AS commits
                          FROM plugin_git_log
-                         WHERE repository_id = $repositoryId
-                           AND WEEK(FROM_UNIXTIME(push_date), 3) = $week
-                           AND YEAR(FROM_UNIXTIME(push_date))= $year
-                         GROUP BY year, week, repo";
-        return $this->retrieve($sql);
+                         WHERE repository_id = ?
+                           AND WEEK(FROM_UNIXTIME(push_date), 3) = ?
+                           AND YEAR(FROM_UNIXTIME(push_date))= ?
+                         GROUP BY year, week, repo';
+
+        return $this->getDB()->run($sql, $repositoryId, $week, $year);
     }
 
     /**
@@ -73,32 +63,38 @@ class Git_LogDao extends DataAccessObject {
      * @param Integer $offset Offset of the search
      * @param Integer $date   Date from which we start collecting logs
      *
-     * @return DataAccessResult
+     * @return array
      */
-    function getLastPushesByUser($userId, $repoId, $offset, $date) {
+    public function getLastPushesByUser($userId, $repoId, $offset, $date)
+    {
+        $repository_id_filter = \ParagonIE\EasyDB\EasyStatement::open();
         if ($repoId) {
-            $condition = "AND l.repository_id = ".$this->da->escapeInt($repoId);
-        } else {
-            $condition = "";
+            $repository_id_filter->andWith('AND l.repository_id = ?', $repoId);
         }
+
+        $limit = 10;
         if ($offset) {
-            $limit = "LIMIT ".$this->da->escapeInt($offset);
-        } else {
-            $limit = "LIMIT 10";
+            $limit = $offset;
         }
+
         $sql = "SELECT g.group_name, r.repository_name, l.push_date, SUM(l.commits_number) AS commits_number
                 FROM plugin_git_log l
                 JOIN plugin_git r ON l.repository_id = r.repository_id
                 JOIN groups g ON g.group_id = r.project_id
-                WHERE l.user_id = ".$this->da->escapeInt($userId)."
+                WHERE l.user_id = ?
                   AND r.repository_deletion_date  = '0000-00-00 00:00:00'
                   AND g.status = 'A'
-                  AND l.push_date > ".$this->da->escapeInt($date)."
-                  ".$condition."
+                  AND l.push_date > ?
+                  $repository_id_filter
                 GROUP BY l.push_date
                 ORDER BY g.group_name, r.repository_name, l.push_date DESC
-                ".$limit;
-        return $this->retrieve($sql);
+                LIMIT ?";
+
+        $params   = [$userId, $date];
+        $params   = array_merge($params, $repository_id_filter->values());
+        $params[] = $limit;
+
+        return $this->getDB()->safeQuery($sql, $params);
     }
 
     /**
@@ -109,66 +105,31 @@ class Git_LogDao extends DataAccessObject {
      *
      * @return DataAccessResult
      */
-    function getLastPushesRepositories($userId, $date) {
+    public function getLastPushesRepositories($userId, $date)
+    {
         $sql = "SELECT DISTINCT(r.repository_id), g.group_name, r.repository_name, r.repository_namespace, g.group_id
                 FROM plugin_git_log l
                 JOIN plugin_git r ON l.repository_id = r.repository_id
                 JOIN groups g ON g.group_id = r.project_id
-                WHERE l.user_id = ".$this->da->escapeInt($userId)."
+                WHERE l.user_id = ?
                   AND r.repository_deletion_date  = '0000-00-00 00:00:00'
                   AND g.status = 'A'
-                  AND l.push_date > ".$this->da->escapeInt($date)."
+                  AND l.push_date > ?
                 ORDER BY g.group_id, r.repository_id, l.push_date DESC";
-        return $this->retrieve($sql);
+
+        return $this->getDB()->run($sql, $userId, $date);
     }
 
     public function hasRepositoriesUpdatedAfterGivenDate($project_id, $date)
     {
-        $project_id = $this->da->escapeInt($project_id);
-        $date       = $this->da->escapeInt($date);
-
-        $sql = "SELECT NULL
+        $sql = "SELECT COUNT(*)
                 FROM plugin_git_log l
                 INNER JOIN plugin_git r USING(repository_id)
-                WHERE r.project_id = $project_id
+                WHERE r.project_id = ?
                   AND r.repository_deletion_date  = '0000-00-00 00:00:00'
-                  AND l.push_date > $date";
+                  AND l.push_date > ?";
 
-        return $this->retrieve($sql)->count() > 0;
-    }
-
-    /**
-     * Return the SQL Statement for logs daily pushs
-     *
-     * @param Integer $project_id  Id of the project
-     * @param String  $condition Condition
-     *
-     * @return String
-     */
-    function getSqlStatementForLogsDaily($project_id, $condition, $full_history_condition) {
-        $project_id = $this->da->escapeInt($project_id);
-
-        return "SELECT UNIX_TIMESTAMP(day) AS time,
-                  'read' AS type,
-                  user.user_name AS user_name,
-                  user.realname AS realname, user.email AS email,
-                  git.repository_name AS title
-                FROM plugin_git_log_read_daily AS log
-                    INNER JOIN user USING (user_id)
-                    INNER JOIN plugin_git AS git USING (repository_id)
-                WHERE $full_history_condition
-                  AND git.project_id = $project_id
-                UNION
-                SELECT log.push_date AS time,
-                    'write' AS type,
-                    user.user_name AS user_name,
-                    user.realname AS realname, user.email AS email,
-                    r.repository_name AS title
-                FROM (SELECT *, push_date AS time from plugin_git_log) AS log, user, plugin_git AS r
-                WHERE $condition
-                  AND r.project_id = $project_id
-                  AND log.repository_id = r.repository_id
-                ORDER BY time DESC";
+        return $this->getDB()->single($sql, [$project_id, $date]) > 0;
     }
 
     /**
@@ -178,15 +139,14 @@ class Git_LogDao extends DataAccessObject {
      * @param String  $endDate   Period end date
      * @param Integer $projectId Id of the project we want to retrieve its git stats
      *
-     * @return DataAccessResult
+     * @return array
      */
-    function totalPushes($startDate, $endDate, $projectId = null) {
-        $startDate     = $this->da->quoteSmart($startDate);
-        $endDate       = $this->da->quoteSmart($endDate);
-        $projectId     = $this->da->escapeInt($projectId);
-        $projectFilter = "";
-        if (!empty($projectId)) {
-            $projectFilter = " AND project_id = ".$projectId;
+    public function totalPushes($startDate, $endDate, $projectId = null)
+    {
+        $projectFilter = \ParagonIE\EasyDB\EasyStatement::open();
+
+        if ($projectId !== null) {
+            $projectFilter->andWith('AND project_id = ?', $projectId);
         }
         $sql = "SELECT DATE_FORMAT(FROM_UNIXTIME(push_date), '%M') AS month,
                     YEAR(FROM_UNIXTIME(push_date)) AS year, 
@@ -195,29 +155,29 @@ class Git_LogDao extends DataAccessObject {
                     SUM(commits_number) AS commits_count, 
                     COUNT(DISTINCT(user_id)) AS users
                 FROM plugin_git_log JOIN plugin_git USING(repository_id)
-                WHERE push_date BETWEEN UNIX_TIMESTAMP(".$startDate.") AND UNIX_TIMESTAMP(".$endDate.")
-                  ".$projectFilter."
+                WHERE push_date BETWEEN UNIX_TIMESTAMP(?) AND UNIX_TIMESTAMP(?)
+                  $projectFilter
                 GROUP BY year, month
                 ORDER BY year, STR_TO_DATE(month,'%M')";
-        return $this->retrieve($sql);
+
+        $params = [$startDate, $endDate];
+        $params = array_merge($params, $projectFilter->values());
+        return $this->getDB()->safeQuery($sql, $params);
     }
 
     public function searchLatestPushesInProject($project_id, $nb_max)
     {
-        $project_id = $this->da->escapeInt($project_id);
-        $nb_max     = $this->da->escapeInt($nb_max);
-
         $sql = "SELECT log.*
                 FROM plugin_git_log AS log
                     INNER JOIN plugin_git AS repo ON (
                         log.repository_id = repo.repository_id
-                        AND repo.project_id = $project_id
+                        AND repo.project_id = ?
                         AND repo.repository_scope = 'P'
                         AND repo.repository_deletion_date IS NULL
                     )
                 ORDER BY log.push_date DESC
-                LIMIT $nb_max";
+                LIMIT ?";
 
-        return $this->retrieve($sql);
+        return $this->getDB()->run($sql, $project_id, $nb_max);
     }
 }
