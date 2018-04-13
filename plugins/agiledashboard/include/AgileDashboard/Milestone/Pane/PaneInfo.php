@@ -61,6 +61,14 @@ abstract class PaneInfo
     }
 
     /**
+     * @return bool
+     */
+    public function isExternalLink()
+    {
+        return false;
+    }
+
+    /**
      * Set activation
      *
      * @param bool $state
