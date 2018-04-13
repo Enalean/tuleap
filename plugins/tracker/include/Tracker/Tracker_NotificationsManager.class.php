@@ -75,7 +75,16 @@ class Tracker_NotificationsManager {
         $this->notification_list_builder     = $notification_list_builder;
     }
 
-    public function process(TrackerManager $tracker_manager, HTTPRequest $request, $current_user)
+    public function display(HTTPRequest $request, PFUser $current_user, CSRFSynchronizerToken $csrf_token)
+    {
+        $this->displayAdminNotifications($csrf_token);
+
+        if ($this->tracker->userIsAdmin($current_user)) {
+            (new Tracker_DateReminderRenderer($this->tracker))->displayDateReminders($request, $csrf_token);
+        }
+    }
+
+    public function processUpdate(HTTPRequest $request)
     {
         if ($request->exist('stop_notification')) {
             if ($this->tracker->stop_notification != $request->get('stop_notification')) {
@@ -87,15 +96,12 @@ class Tracker_NotificationsManager {
             }
         }
 
-        if ($request->isPost())
-        {
-            $config_notification_assigned_to = new ConfigNotificationAssignedTo(new ConfigNotificationAssignedToDao());
+        $config_notification_assigned_to = new ConfigNotificationAssignedTo(new ConfigNotificationAssignedToDao());
 
-            if ($request->exist('enable-assigned-to-me')) {
-                $config_notification_assigned_to->enableAssignedToInSubject($this->tracker);
-            } else {
-                $config_notification_assigned_to->disableAssignedToInSubject($this->tracker);
-            }
+        if ($request->exist('enable-assigned-to-me')) {
+            $config_notification_assigned_to->enableAssignedToInSubject($this->tracker);
+        } else {
+            $config_notification_assigned_to->disableAssignedToInSubject($this->tracker);
         }
 
         $new_global_notification = $request->get('new_global_notification');
@@ -105,23 +111,11 @@ class Tracker_NotificationsManager {
 
         if ($remove_global) {
             $this->deleteGlobalNotification($remove_global);
-            $this->redirectOnNotifications();
         } else if ($new_global_notification && $new_global_notification['addresses']) {
             $this->createNewGlobalNotification($new_global_notification);
-            $this->redirectOnNotifications();
         } else if ($global_notification && $notification_id) {
             $this->updateGlobalNotification($notification_id, $global_notification[$notification_id]);
-            $this->redirectOnNotifications();
         }
-
-        $this->displayAdminNotifications($tracker_manager, $request, $current_user);
-        $reminderRenderer = new Tracker_DateReminderRenderer($this->tracker);
-
-        if ($this->tracker->userIsAdmin($current_user)) {
-            $reminderRenderer->displayDateReminders($request);
-        }
-
-        $reminderRenderer->displayFooter($tracker_manager);
     }
 
     private function createNewGlobalNotification($global_notification_data)
@@ -183,13 +177,13 @@ class Tracker_NotificationsManager {
         }
     }
 
-    protected function displayAdminNotifications(TrackerManager $tracker_manager, $request, $current_user) {
-        $this->tracker->displayAdminItemHeader($tracker_manager, 'editnotifications');
-        echo '<fieldset><form id="tracker-admin-notifications-form" method="POST">';
+    private function displayAdminNotifications(CSRFSynchronizerToken $csrf_token)
+    {
+        echo '<fieldset><form id="tracker-admin-notifications-form" method="POST">' . $csrf_token->fetchHTMLInput();
 
         $this->displayAdminNotifications_Toggle();
         $this->displayAdminNotificationAssignedToMeFlag();
-        $this->displayAdminNotifications_Global($request);
+        $this->displayAdminNotifications_Global();
 
         echo '</form></fieldset>';
     }
@@ -225,7 +219,8 @@ class Tracker_NotificationsManager {
         );
     }
 
-    protected function displayAdminNotifications_Global(HTTPRequest $request) {
+    private function displayAdminNotifications_Global()
+    {
         echo '<h3><a name="GlobalEmailNotification"></a>'.$GLOBALS['Language']->getText('plugin_tracker_include_type','global_mail_notif').' '.
         help_button('tracker.html#e-mail-notification').'</h3>';
 
@@ -456,11 +451,6 @@ class Tracker_NotificationsManager {
         $ugroups = $autocompleter->getUgroups();
         $users   = $autocompleter->getUsers();
         return empty($emails) && empty($ugroups) && empty($users);
-    }
-
-    private function redirectOnNotifications()
-    {
-        $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/notifications/' . urlencode($this->tracker->getId()) . '/');
     }
 
     private function addFeedbackCorrectlySaved()

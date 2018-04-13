@@ -53,7 +53,8 @@ use Tuleap\Tracker\Notifications\CollectionOfUserToBeNotifiedPresenterBuilder;
 use Tuleap\Tracker\Notifications\GlobalNotificationsAddressesBuilder;
 use Tuleap\Tracker\Notifications\NotificationListBuilder;
 use Tuleap\Tracker\Notifications\NotificationsForProjectMemberCleaner;
-use Tuleap\Tracker\Notifications\Settings\NotificationsSettingsController;
+use Tuleap\Tracker\Notifications\Settings\NotificationsSettingsDisplayController;
+use Tuleap\Tracker\Notifications\Settings\NotificationsSettingsUpdateController;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyDao;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyUpdater;
 use Tuleap\Tracker\Notifications\UsersToNotifyDao;
@@ -1538,16 +1539,21 @@ class trackerPlugin extends Plugin {
 
     public function collectRoutesEvent(\Tuleap\Request\CollectRoutesEvent $event)
     {
-        $plugin = $this;
-        $event->getRouteCollector()->addGroup(TRACKER_BASE_URL, function(FastRoute\RouteCollector $r) use ($plugin) {
+        $event->getRouteCollector()->addGroup(TRACKER_BASE_URL, function(FastRoute\RouteCollector $r) {
             $r->addRoute(['GET', 'POST'],'[/[index.php]]',  function () {
                 return new \Tuleap\Tracker\TrackerPluginDefaultController(new TrackerManager);
             });
-            $r->addRoute(['GET', 'POST'], '/notifications/{id:\d+}/', function () use ($plugin)  {
-                return new  NotificationsSettingsController(
-                    $plugin->getTrackerFactory(),
+            $r->get('/notifications/{id:\d+}/', function () {
+                return new  NotificationsSettingsDisplayController(
+                    $this->getTrackerFactory(),
                     new TrackerManager,
-                    $plugin->getUserManager()
+                    $this->getUserManager()
+                );
+            });
+            $r->post('/notifications/{id:\d+}/', function () {
+                return new  NotificationsSettingsUpdateController(
+                    $this->getTrackerFactory(),
+                    $this->getUserManager()
                 );
             });
         });

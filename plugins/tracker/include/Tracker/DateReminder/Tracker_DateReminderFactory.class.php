@@ -22,6 +22,10 @@ require_once 'common/date/DateHelper.class.php';
 class Tracker_DateReminderFactory {
 
     protected $tracker;
+    /**
+     * @var Tracker_DateReminderRenderer
+     */
+    private $date_reminder_renderer;
 
     /**
      * Constructor of the class
@@ -30,9 +34,10 @@ class Tracker_DateReminderFactory {
      *
      * @return Void
      */
-    public function __construct(Tracker $tracker) {
-        $this->tracker = $tracker;
-        $this->csrf    = new CSRFSynchronizerToken(TRACKER_BASE_URL . '/notifications/' . urlencode($this->getTracker()->getId()) . '/');
+    public function __construct(Tracker $tracker, Tracker_DateReminderRenderer $date_reminder_renderer)
+    {
+        $this->tracker                = $tracker;
+        $this->date_reminder_renderer = $date_reminder_renderer;
     }
 
     /**
@@ -74,17 +79,16 @@ class Tracker_DateReminderFactory {
      *
      * @return Boolean
      */
-    public function addNewReminder(HTTPRequest $request) {
-        $this->csrf->check();
-        $reminderRenderer = new Tracker_DateReminderRenderer($this->getTracker());
+    public function addNewReminder(HTTPRequest $request)
+    {
         try {
-            $trackerId        = $reminderRenderer->validateTrackerId($request);
-            $fieldId          = $reminderRenderer->validateFieldId($request);
-            $notificationType = $reminderRenderer->validateNotificationType($request);
-            $distance         = $reminderRenderer->validateDistance($request);
-            $notified         = $reminderRenderer->scindReminderNotifiedPeople($request);
-            $ugroups          = $reminderRenderer->validateReminderUgroups($notified[0]);
-            $roles            = $reminderRenderer->validateReminderRoles($notified[1]);
+            $trackerId        = $this->date_reminder_renderer->validateTrackerId($request);
+            $fieldId          = $this->date_reminder_renderer->validateFieldId($request);
+            $notificationType = $this->date_reminder_renderer->validateNotificationType($request);
+            $distance         = $this->date_reminder_renderer->validateDistance($request);
+            $notified         = $this->date_reminder_renderer->scindReminderNotifiedPeople($request);
+            $ugroups          = $this->date_reminder_renderer->validateReminderUgroups($notified[0]);
+            $roles            = $this->date_reminder_renderer->validateReminderRoles($notified[1]);
             if (!empty ($ugroups)) {
                 $ugroups          = join(",", $ugroups);
             } else {
@@ -152,23 +156,22 @@ class Tracker_DateReminderFactory {
      *
      * @return Boolean
      */
-    public function editTrackerReminder($request) {
-        $this->csrf->check();
-        $reminderRenderer   = new Tracker_DateReminderRenderer($this->getTracker());
+    public function editTrackerReminder(HTTPRequest $request)
+    {
         try {
-            $reminderId       = $reminderRenderer->validateReminderId($request);
-            $notificationType = $reminderRenderer->validateNotificationType($request);
-            $distance         = $reminderRenderer->validateDistance($request);
-            $status           = $reminderRenderer->validateStatus($request);
-            $notified         = $reminderRenderer->scindReminderNotifiedPeople($request);
-            $ugroups          = $reminderRenderer->validateReminderUgroups($notified[0]);
-            $roles            = $reminderRenderer->validateReminderRoles($notified[1]);
+            $reminderId       = $this->date_reminder_renderer->validateReminderId($request);
+            $notificationType = $this->date_reminder_renderer->validateNotificationType($request);
+            $distance         = $this->date_reminder_renderer->validateDistance($request);
+            $status           = $this->date_reminder_renderer->validateStatus($request);
+            $notified         = $this->date_reminder_renderer->scindReminderNotifiedPeople($request);
+            $ugroups          = $this->date_reminder_renderer->validateReminderUgroups($notified[0]);
+            $roles            = $this->date_reminder_renderer->validateReminderRoles($notified[1]);
             if (!empty($ugroups)) {
                 $ugroups      = join(",", $ugroups);
             } else {
                 $ugroups = "";
             }
-            $fieldId          = $reminderRenderer->validateFieldId($request);
+            $fieldId          = $this->date_reminder_renderer->validateFieldId($request);
             if ($status == 1) {
                 $this->checkDuplicatedReminders($this->getTracker()->getId(), $fieldId, $notificationType, $distance, $reminderId);
                 $this->isReminderBeforeOpenDate($fieldId, $notificationType);

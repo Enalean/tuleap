@@ -75,41 +75,27 @@ class Tracker_DateReminderManager {
         }
     }
 
-    /**
-     * Process date reminder requests
-     *
-     * @param TrackerManager $trackerManager
-     * @param HTTPRequest    $request
-     * @param PFUser           $currentUser
-     *
-     * @return Void
-     */
-    public function processReminder(TrackerManager $trackerManager, HTTPRequest $request, $currentUser) {
+    public function processReminderUpdate(HTTPRequest $request)
+    {
         $action      = $request->get('action');
-        $do_redirect = false;
         $feedback    = false;
         try {
             if ($request->get('submit') && $action == 'new_reminder') {
                 $this->getDateReminderRenderer()->getDateReminderFactory()->addNewReminder($request);
                 $feedback    = 'tracker_date_reminder_added';
-                $do_redirect = true;
             } elseif ($request->get('submit') && $action == 'update_reminder') {
-                $this->getDateReminderRenderer()->getDateReminderFactory()->editTrackerReminder($request);
+                $date_reminder_renderer = $this->getDateReminderRenderer();
+                $date_reminder_renderer->getDateReminderFactory()->editTrackerReminder($request);
                 $feedback    = 'tracker_date_reminder_updated';
-                $do_redirect = true;
             } elseif ($request->get('confirm_delete') && $action == 'confirm_delete_reminder') {
                 $this->getDateReminderRenderer()->getDateReminderFactory()->deleteTrackerReminder($request->get('reminder_id'));
                 $feedback    = 'tracker_date_reminder_deleted';
-                $do_redirect = true;
             }
             if ($feedback) {
                 $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_date_reminder',$feedback));
             }
         } catch (Tracker_DateReminderException $e) {
             $GLOBALS['Response']->addFeedback('error', $e->getMessage());
-        }
-        if ($do_redirect || $request->get('cancel_delete_reminder')) {
-            $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/notifications/' . urlencode($this->getTracker()->getId()) . '/');
         }
     }
 
