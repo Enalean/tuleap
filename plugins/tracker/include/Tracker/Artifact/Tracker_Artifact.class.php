@@ -103,9 +103,6 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     private $artifact_factory;
 
     /** @var Tracker_Artifact[] */
-    private $siblings;
-
-    /** @var Tracker_Artifact[] */
     private $siblings_without_permission_checking;
 
     /** @var Tracker_Artifact */
@@ -1741,29 +1738,6 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
     public function setParentWithoutPermissionChecking($parent) {
         $this->parent_without_permission_checking = $parent;
-    }
-
-    /**
-     * Get artifacts that share same parent that mine (sista & bro)
-     *
-     * @param PFUser $user
-     *
-     * @return Tracker_Artifact[]
-     */
-    public function getSiblings(PFUser $user) {
-        if (! isset($this->siblings)) {
-            $this->siblings = array();
-            foreach ($this->getSiblingsWithoutPermissionChecking() as $artifact) {
-                if ($artifact->userCanView($user)) {
-                    $this->siblings[] = $artifact;
-                }
-            }
-        }
-        return $this->siblings;
-    }
-
-    public function setSiblings(array $artifacts) {
-        $this->siblings = $artifacts;
     }
 
     /**

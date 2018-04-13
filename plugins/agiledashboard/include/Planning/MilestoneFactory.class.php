@@ -770,29 +770,6 @@ class Planning_MilestoneFactory
     }
 
     /**
-     * Get all milestones that share the same parent than given milestone.
-     *
-     * @param PFUser $user
-     * @param Planning_Milestone $milestone
-     *
-     * @return Array of Planning_Milestone
-     */
-    public function getSiblingMilestones(PFUser $user, Planning_Milestone $milestone) {
-        $sibling_milestones = array();
-        $milestone_artifact = $milestone->getArtifact();
-        if ($milestone_artifact) {
-            foreach($milestone_artifact->getSiblings($user) as $sibling) {
-                if ($sibling->getId() == $milestone_artifact->getId()) {
-                    $sibling_milestones[] = $milestone;
-                } else {
-                    $sibling_milestones[] = $this->getMilestoneFromArtifact($sibling);
-                }
-            }
-        }
-        return $sibling_milestones;
-    }
-
-    /**
      * Get the top most recent milestone (last created artifact in planning tracker)
      *
      * @param PFUser    $user

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -573,49 +573,6 @@ class MilestoneFactory_GetMilestoneWithAncestorsTest extends TuleapTestCase {
 
         $milestones = $this->milestone_factory->getMilestoneAncestors($this->current_user, $this->sprint_milestone);
         $this->assertEqual($milestones, array());
-    }
-}
-
-class MilestoneFactory_GetSiblingsMilestonesTest extends TuleapTestCase {
-    private $current_user;
-    private $milestone_factory;
-    private $sprint_1_artifact;
-    private $sprint_1_milestone;
-
-    public function setUp() {
-        parent::setUp();
-        $this->current_user      = aUser()->build();
-        $this->milestone_factory = partial_mock('Planning_MilestoneFactory', array('getMilestoneFromArtifact'));
-
-        $this->sprint_1_artifact   = aMockArtifact()->withId(1)->build();
-        $this->sprint_1_milestone  = aMilestone()->withArtifact($this->sprint_1_artifact)->build();
-    }
-
-    public function itReturnsEmptyArrayWhenThereAreNoArtifacts() {
-        $empty_milestone = new Planning_NoMilestone(mock('Project'), mock('Planning'));
-
-        $milestones = $this->milestone_factory->getSiblingMilestones($this->current_user, $empty_milestone);
-        $this->assertEqual($milestones, array());
-    }
-
-    public function itReturnsTheMilestoneWhenThereAreNoSiblings() {
-        stub($this->sprint_1_artifact)->getSiblings($this->current_user)->returns(array($this->sprint_1_artifact));
-
-        $milestones = $this->milestone_factory->getSiblingMilestones($this->current_user, $this->sprint_1_milestone);
-
-        $this->assertEqual($milestones, array($this->sprint_1_milestone));
-    }
-
-    public function itReturnsAnArrayWithTheMilestonesWhenOneSibling() {
-        $sprint_2_artifact = aMockArtifact()->withId(2)->build();
-        stub($this->sprint_1_artifact)->getSiblings($this->current_user)->returns(array($this->sprint_1_artifact, $sprint_2_artifact));
-
-        $sprint_2_milestone = aMilestone()->withArtifact($sprint_2_artifact)->build();
-        stub($this->milestone_factory)->getMilestoneFromArtifact($sprint_2_artifact)->returns($sprint_2_milestone);
-
-        $milestones = $this->milestone_factory->getSiblingMilestones($this->current_user, $this->sprint_1_milestone);
-
-        $this->assertEqual($milestones, array($this->sprint_1_milestone, $sprint_2_milestone));
     }
 }
 

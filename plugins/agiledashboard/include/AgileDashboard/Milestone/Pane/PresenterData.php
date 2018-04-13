@@ -25,7 +25,6 @@
 namespace Tuleap\AgileDashboard\Milestone\Pane;
 
 use AgileDashboard_Pane;
-use Planning_Milestone;
 
 /**
  * I carry data between MilestonePane factories and MilestonePresenter
@@ -38,14 +37,10 @@ class PanePresenterData
     /** @var PaneInfo[] */
     private $list_of_pane_info;
 
-    /** @var Planning_Milestone[] */
-    private $available_milestones;
-
-    public function __construct(AgileDashboard_Pane $active_pane, array $list_of_pane_info, array $available_milestones)
+    public function __construct(AgileDashboard_Pane $active_pane, array $list_of_pane_info)
     {
-        $this->active_pane          = $active_pane;
-        $this->list_of_pane_info    = $list_of_pane_info;
-        $this->available_milestones = $available_milestones;
+        $this->active_pane       = $active_pane;
+        $this->list_of_pane_info = $list_of_pane_info;
     }
 
     /** @return AgileDashboard_Pane */
@@ -58,11 +53,5 @@ class PanePresenterData
     public function getListOfPaneInfo()
     {
         return $this->list_of_pane_info;
-    }
-
-    /** @return Planning_Milestone[] */
-    public function getAvailableMilestones()
-    {
-        return $this->available_milestones;
     }
 }
