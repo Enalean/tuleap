@@ -63,7 +63,6 @@ class Tracker_DateReminderRenderer {
     {
         $output = '<form method="post" id="date_field_reminder_form" class="form-inline"> ';
         $output .= '<input type="hidden" name="action" value="new_reminder">';
-        $output .= '<input type="hidden" name="tracker_id" value="'.$this->tracker->id.'">';
         $output .= $csrf_token->fetchHTMLInput();
         $output .= '<table border="0" cellpadding="5"><tr>';
         $output .= '<td><label>'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_send_to').':</label></td>';
@@ -247,24 +246,6 @@ class Tracker_DateReminderRenderer {
     }
 
     /**
-     * Validate tracker id param used for tracker reminder.
-     *
-     * @param HTTPRequest $request HTTP request
-     *
-     * @return Integer
-     */
-    public function validateTrackerId(HTTPRequest $request) {
-        $validTrackerId = new Valid_UInt('tracker_id');
-        $validTrackerId->required();
-        if ($request->valid($validTrackerId)) {
-            return $request->get('tracker_id');
-        } else {
-            $errorMessage = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_invalid_Tracker', array($request->get('tracker_id')));
-            throw new Tracker_DateReminderException($errorMessage);
-        }
-    }
-
-    /**
      * Validate notification type param used for tracker reminder.
      *
      * @param HTTPRequest $request HTTP request
@@ -296,24 +277,6 @@ class Tracker_DateReminderRenderer {
             return $request->get('notif_status');
         } else {
             $errorMessage = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_invalid_status', array($request->get('notif_status')));
-            throw new Tracker_DateReminderException($errorMessage);
-        }
-    }
-
-    /**
-     * Validate date Reminder Id.
-     *
-     * @param HTTPRequest $request HTTP request
-     *
-     * @return Integer
-     */
-    public function validateReminderId(HTTPRequest $request) {
-        $validReminderId = new Valid_UInt('reminder_id');
-        $validReminderId->required();
-        if ($request->valid($validReminderId)) {
-           return $request->get('reminder_id');
-        } else {
-            $errorMessage = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_invalid_reminder', array($request->get('reminder_id')));
             throw new Tracker_DateReminderException($errorMessage);
         }
     }
