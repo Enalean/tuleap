@@ -83,6 +83,6 @@ class ListValueExtractor implements ValueWrapperVisitor
         CurrentUserValueWrapper $value_wrapper,
         ValueWrapperParameters $parameters
     ) {
-        throw new RuntimeException('Should not end there');
+        return $value_wrapper->getValue();
     }
 }

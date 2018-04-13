@@ -27,6 +27,7 @@ const TQL_cross_tracker_autocomplete_keywords = [
     'BETWEEN(',
     'IN(',
     'NOT',
+    'MYSELF()',
     '@title',
     '@description',
     '@status',
