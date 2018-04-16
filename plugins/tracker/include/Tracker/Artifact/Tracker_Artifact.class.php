@@ -799,6 +799,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 if ($request->isAjax()) {
                     echo $this->fetchTooltip($current_user);
                 } else {
+                    header("Cache-Control: no-store, no-cache, must-revalidate");
                     $renderer = new Tracker_Artifact_ReadOnlyRenderer(
                         $this->getEventManager(),
                         $this, $this->getFormElementFactory(),
