@@ -117,7 +117,10 @@ class ComparisonChecker implements ValueWrapperVisitor
         CurrentUserValueWrapper $value_wrapper,
         ValueWrapperParameters $parameters
     ) {
-        throw new ToMyselfComparisonException($parameters->getMetadata());
+        $metadata = $parameters->getMetadata();
+        if (! in_array($metadata->getName(), AllowedMetadata::USERS)) {
+            throw new ToMyselfComparisonException($metadata);
+        }
     }
 
     public function visitStatusOpenValueWrapper(
