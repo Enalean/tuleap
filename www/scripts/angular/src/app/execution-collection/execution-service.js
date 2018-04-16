@@ -23,6 +23,7 @@ function ExecutionService(
         loadExecutions,
         getAllRemoteExecutions,
         getExecutionsByDefinitionId,
+        updateExecutionToUseLatestVersionOfDefinition,
         addPresenceCampaign,
         updateCampaign,
         addTestExecution,
@@ -119,6 +120,10 @@ function ExecutionService(
               return remote_executions;
           }
         });
+    }
+
+    function updateExecutionToUseLatestVersionOfDefinition(execution_id) {
+        ExecutionRestService.updateExecutionToUseLatestVersionOfDefinition(execution_id);
     }
 
     function groupExecutionsByCategory(campaign_id, executions) {

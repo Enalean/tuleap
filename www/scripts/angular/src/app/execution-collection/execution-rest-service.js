@@ -29,7 +29,8 @@ function ExecutionRestService(
         linkIssue,
         linkIssueWithoutComment,
         getLinkedArtifacts,
-        getExecution
+        getExecution,
+        updateExecutionToUseLatestVersionOfDefinition
     });
 
     function setRestangularConfig(RestangularConfigurer) {
@@ -76,6 +77,14 @@ function ExecutionRestService(
             })
             .then(function (response) {
                 return response.data;
+            });
+    }
+
+    function updateExecutionToUseLatestVersionOfDefinition(execution_id) {
+        rest
+            .one('testmanagement_executions', execution_id)
+            .patch({
+                force_use_latest_definition_version: true
             });
     }
 

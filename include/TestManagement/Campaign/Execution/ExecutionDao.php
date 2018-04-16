@@ -39,4 +39,12 @@ class ExecutionDao extends DataAccessObject
             $statement->values()
         );
     }
+
+    public function updateExecutionToUseLatestVersionOfDefinition($execution_id, $definition_changeset_id)
+    {
+        $sql = 'REPLACE INTO plugin_testmanagement_execution (execution_artifact_id, definition_changeset_id)
+                VALUES (?, ?)';
+
+        $this->getDB()->run($sql, $execution_id, $definition_changeset_id);
+    }
 }

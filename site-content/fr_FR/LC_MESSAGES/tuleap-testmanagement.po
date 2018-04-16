@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-03-14 18:40+0100\n"
+"PO-Revision-Date: 2018-04-16 17:05+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr_FR\n"
@@ -26,6 +26,9 @@ msgstr ""
 
 msgid "Job URL is invalid"
 msgstr "L'URL du job n'est pas valide"
+
+msgid "Permission denied"
+msgstr "Permission refusée"
 
 #, php-format
 msgid ""

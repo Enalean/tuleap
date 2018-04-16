@@ -8,6 +8,9 @@ msgstr ""
 msgid "Job URL is invalid"
 msgstr ""
 
+msgid "Permission denied"
+msgstr ""
+
 #, php-format
 msgid ""
 "Service %s cannot be activated because the artifact link type \"%s\" is not "
