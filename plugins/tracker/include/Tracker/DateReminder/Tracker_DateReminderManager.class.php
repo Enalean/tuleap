@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics 2012. All rights reserved
- * Copyright (c) Enalean 2017. All rights reserved
+ * Copyright (c) Enalean 2017-2018. All rights reserved
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -77,25 +77,55 @@ class Tracker_DateReminderManager {
 
     public function processReminderUpdate(HTTPRequest $request)
     {
-        $action      = $request->get('action');
-        $feedback    = false;
+        if (! $request->get('submit') && ! $request->get('confirm_delete')) {
+            return;
+        }
         try {
-            if ($request->get('submit') && $action == 'new_reminder') {
-                $this->getDateReminderRenderer()->getDateReminderFactory()->addNewReminder($request);
-                $feedback    = 'tracker_date_reminder_added';
-            } elseif ($request->get('submit') && $action == 'update_reminder') {
-                $date_reminder_renderer = $this->getDateReminderRenderer();
-                $date_reminder_renderer->getDateReminderFactory()->editTrackerReminder($request);
-                $feedback    = 'tracker_date_reminder_updated';
-            } elseif ($request->get('confirm_delete') && $action == 'confirm_delete_reminder') {
-                $this->getDateReminderRenderer()->getDateReminderFactory()->deleteTrackerReminder($request->get('reminder_id'));
-                $feedback    = 'tracker_date_reminder_deleted';
-            }
-            if ($feedback) {
-                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_date_reminder',$feedback));
+            switch ($request->get('action')) {
+                case 'new_reminder':
+                    $this->getDateReminderRenderer()->getDateReminderFactory()->addNewReminder($request);
+                    $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'tracker_date_reminder_added'));
+                    break;
+                case 'update_reminder':
+                    $reminder = $this->getReminderFromRequestId($request->get('reminder_id'));
+                    $this->getDateReminderRenderer()->getDateReminderFactory()->editTrackerReminder($reminder, $request);
+                    $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'tracker_date_reminder_updated'));
+                    break;
+                case 'confirm_delete_reminder':
+                    $reminder = $this->getReminderFromRequestId($request->get('reminder_id'));
+                    $this->getDateReminderRenderer()->getDateReminderFactory()->deleteTrackerReminder($reminder);
+                    $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'tracker_date_reminder_deleted'));
+                    break;
             }
         } catch (Tracker_DateReminderException $e) {
             $GLOBALS['Response']->addFeedback('error', $e->getMessage());
+        }
+    }
+
+    /**
+     * @return Tracker_DateReminder
+     * @throws Tracker_DateReminderException
+     */
+    private function getReminderFromRequestId($reminder_id)
+    {
+        $date_reminder_renderer = $this->getDateReminderRenderer();
+        $reminder_factory       = $date_reminder_renderer->getDateReminderFactory();
+        $reminder               = $reminder_factory->getReminder($reminder_id);
+        $this->checkReminderMatchTracker($reminder);
+
+        return $reminder;
+    }
+
+    /**
+     * @throws Tracker_DateReminderException
+     */
+    private function checkReminderMatchTracker(Tracker_DateReminder $reminder = null)
+    {
+        if ($reminder === null || $reminder->getTrackerId() !== $this->getTracker()->getId()) {
+            $reminder_id  = $reminder === null ? '' : $reminder->getId();
+            throw new Tracker_DateReminderException(
+                $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_invalid_reminder', [$reminder_id])
+            );
         }
     }
 
