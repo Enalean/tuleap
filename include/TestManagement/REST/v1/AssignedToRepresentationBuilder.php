@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -71,6 +71,10 @@ class AssignedToRepresentationBuilder {
             ExecutionRepresentation::FIELD_ASSIGNED_TO,
             $user
         );
+
+        if ($assigned_to_field === null) {
+            return [];
+        }
 
         $changeset_value = $execution->getValue($assigned_to_field);
         if (! $changeset_value) {
