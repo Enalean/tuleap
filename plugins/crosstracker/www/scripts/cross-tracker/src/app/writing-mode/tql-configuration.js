@@ -30,8 +30,9 @@ const TQL_cross_tracker_autocomplete_keywords = [
     '@title',
     '@description',
     '@status',
-    '@submitted_on',
     '@last_update_date',
+    '@last_update_by',
+    '@submitted_on',
     '@submitted_by'
 ];
 
@@ -40,8 +41,9 @@ const cross_tracker_allowed_keywords = {
         '@title',
         '@description',
         '@status',
-        '@submitted_on',
         '@last_update_date',
+        '@last_update_by',
+        '@submitted_on',
         '@submitted_by'
     ]
 };
