@@ -21,18 +21,12 @@
 
 namespace Tuleap\CreateTestEnv\REST;
 
+use Tuleap\CreateTestEnv\Notifier;
 use Tuleap\REST\Header;
-use Tuleap\CreateTestEnv\MattermostNotifier;
 use Tuleap\CreateTestEnv\NotificationBotDao;
 use Tuleap\CreateTestEnv\CreateTestEnvironment;
 use Tuleap\CreateTestEnv\Exception\CreateTestEnvException;
 use Tuleap\CreateTestEnv\Exception\InvalidInputException;
-use Tuleap\BotMattermost\Bot\BotDao;
-use Tuleap\BotMattermost\Bot\BotFactory;
-use Tuleap\BotMattermost\BotMattermostLogger;
-use Tuleap\BotMattermost\SenderServices\ClientBotMattermost;
-use Tuleap\BotMattermost\SenderServices\EncoderMessage;
-use Tuleap\BotMattermost\SenderServices\Sender;
 use Luracast\Restler\RestException;
 
 class CreateTestEnvResource
@@ -41,15 +35,7 @@ class CreateTestEnvResource
 
     public function __construct()
     {
-        $this->notifier = new MattermostNotifier(
-            new BotFactory(new BotDao()),
-            new NotificationBotDao(),
-            new Sender(
-                new EncoderMessage(),
-                new ClientBotMattermost(),
-                new BotMattermostLogger()
-            )
-        );
+        $this->notifier = new Notifier(new NotificationBotDao());
     }
 
     /**
@@ -70,6 +56,8 @@ class CreateTestEnvResource
      *
      * @access public
      *
+     * @url POST
+     * @status 201
      * @return TestEnvironmentRepresentation
      *
      * @throws 403 RestException You are not authorized to use this route
