@@ -18,8 +18,13 @@
  */
 
 (function($) {
+    let currentRequest = null;
+
     function checkPassword() {
-        $.post(
+        if (currentRequest !== null) {
+            currentRequest.abort();
+        }
+        currentRequest = $.post(
             '/include/check_pw.php',
             {
                 form_pw:$(this).val()
@@ -30,7 +35,8 @@
             } else {
                 setRobustnessToGood();
             }
-        })
+            currentRequest = null;
+        });
     }
 
     function toggleErrorMessages(data) {
