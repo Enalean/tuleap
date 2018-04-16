@@ -34,10 +34,11 @@ function register_valid(Codendi_Request $request, CSRFSynchronizerToken $csrf_to
         $GLOBALS['Response']->addFeedback('error', $Language->getText('admin_user_changepw','error_passwd'));
         return false;
     }
-    $errors = array();
-    if (! account_pwvalid($request->get('form_pw'), $errors)) {
-        foreach($errors as $e) {
-            $GLOBALS['Response']->addFeedback('error', $e);
+
+    $password_sanity_checker = \Tuleap\Password\PasswordSanityChecker::build();
+    if (! $password_sanity_checker->check($request->get('form_pw'))) {
+        foreach($password_sanity_checker->getErrors() as $error) {
+            $GLOBALS['Response']->addFeedback('error', $error);
         }
         return false;
     }

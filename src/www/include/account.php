@@ -13,18 +13,6 @@
 use Tuleap\Password\Configuration\PasswordConfigurationDAO;
 use Tuleap\Password\Configuration\PasswordConfigurationRetriever;
 
-// ***** function account_pwvalid()
-// ***** check for valid password
-function account_pwvalid($pw, &$errors) {
-    $password_configuration_retriever = new PasswordConfigurationRetriever(new PasswordConfigurationDAO());
-    $password_configuration           = $password_configuration_retriever->getPasswordConfiguration();
-    $password_strategy                = new PasswordStrategy($password_configuration);
-    include($GLOBALS['Language']->getContent('account/password_strategy'));
-    $valid = $password_strategy->validate($pw);
-    $errors = $password_strategy->errors;
-    return $valid;
-}
-
 // Add user to an existing project
 function account_add_user_to_group ($group_id, &$user_unix_name)
 {

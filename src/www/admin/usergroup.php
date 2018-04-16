@@ -238,12 +238,12 @@ if ($request->isPost()) {
             $GLOBALS['Response']->redirect('/admin/usergroup.php?user_id='.$user->getId());
         }
 
-        $errors = array();
-        if (! account_pwvalid($request->get('form_pw'), $errors)) {
-            foreach($errors as $e) {
-                $GLOBALS['Response']->addFeedback(Feedback::ERROR, $e);
-                $GLOBALS['Response']->redirect('/admin/usergroup.php?user_id='.$user->getId());
+        $password_sanity_checker = \Tuleap\Password\PasswordSanityChecker::build();
+        if (! $password_sanity_checker->check($request->get('form_pw'))) {
+            foreach($password_sanity_checker->getErrors() as $error) {
+                $GLOBALS['Response']->addFeedback(Feedback::ERROR, $error);
             }
+            $GLOBALS['Response']->redirect('/admin/usergroup.php?user_id='.$user->getId());
         }
 
         $password_csrf->check();

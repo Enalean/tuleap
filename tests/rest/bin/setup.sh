@@ -65,6 +65,14 @@ setup_database() {
     mysql -e "GRANT SELECT ON $MYSQL_DBNAME.user_group to dbauthuser@'localhost';"
     mysql -e "GRANT SELECT,UPDATE ON $MYSQL_DBNAME.svn_token to dbauthuser@'localhost';"
     mysql -e "FLUSH PRIVILEGES;"
+
+    echo "Execute additional setup scripts"
+    for setup_script in $(find /usr/share/tuleap/plugins/*/tests/rest/setup_db.sh -maxdepth 1 -type f)
+    do
+        if [ -x "$setup_script" ]; then
+            $setup_script "$MYSQL" "$MYSQL_DBNAME"
+        fi
+    done
 }
 
 load_project() {

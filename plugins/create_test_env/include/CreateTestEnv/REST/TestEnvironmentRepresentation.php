@@ -50,11 +50,6 @@ class TestEnvironmentRepresentation
      */
     public $user_login;
 
-    /**
-     * @var string Created user password
-     */
-    public $user_password;
-
     public function build(\Project $project, $base_url, \PFUser $user)
     {
         $this->id                = JsonCast::toInt($project->getID());
@@ -62,7 +57,6 @@ class TestEnvironmentRepresentation
         $this->project_realname  = $project->getUnconvertedPublicName();
         $this->project_url       = $base_url.'/projects/'.$project->getUnixNameLowerCase();
         $this->user_login        = $user->getUserName();
-        $this->user_password     = $user->getPassword();
         return $this;
     }
 }
