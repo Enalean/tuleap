@@ -307,6 +307,11 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                     $list_value_extractor,
                     $this->user_manager,
                     $submitted_by_alias_field
+                ),
+                new Users\InComparisonFromWhereBuilder(
+                    $list_value_extractor,
+                    $this->user_manager,
+                    $last_update_by_alias_field
                 )
             ),
             new NotInComparisonFromWhereBuilder(
@@ -314,6 +319,11 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                     $list_value_extractor,
                     $this->user_manager,
                     $submitted_by_alias_field
+                ),
+                new Users\NotInComparisonFromWhereBuilder(
+                    $list_value_extractor,
+                    $this->user_manager,
+                    $last_update_by_alias_field
                 )
             )
         );

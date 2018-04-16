@@ -30,10 +30,17 @@ class NotInComparisonFromWhereBuilder implements FromWhereBuilder
 {
     /** @var AlwaysThereField\Users\FromWhereBuilder */
     private $submitted_by_builder;
+    /**
+     * @var AlwaysThereField\Users\FromWhereBuilder
+     */
+    private $last_update_by_builder;
 
-    public function __construct(AlwaysThereField\Users\FromWhereBuilder $submitted_by_builder)
-    {
-        $this->submitted_by_builder = $submitted_by_builder;
+    public function __construct(
+        AlwaysThereField\Users\FromWhereBuilder $submitted_by_builder,
+        AlwaysThereField\Users\FromWhereBuilder $last_update_by_builder
+    ) {
+        $this->submitted_by_builder   = $submitted_by_builder;
+        $this->last_update_by_builder = $last_update_by_builder;
     }
 
     /**
@@ -47,6 +54,9 @@ class NotInComparisonFromWhereBuilder implements FromWhereBuilder
         switch ($metadata->getName()) {
             case AllowedMetadata::SUBMITTED_BY:
                 return $this->submitted_by_builder->getFromWhere($metadata, $comparison, $trackers);
+                break;
+            case AllowedMetadata::LAST_UPDATE_BY:
+                return $this->last_update_by_builder->getFromWhere($metadata, $comparison, $trackers);
                 break;
         }
     }
