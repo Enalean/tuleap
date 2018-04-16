@@ -171,6 +171,9 @@ msgstr "La notification a été supprimée"
 msgid "Notification successfully saved."
 msgstr "Notification enregistrée avec succès."
 
+msgid "Notifications management is coming soon."
+msgstr "La gestion des notifications sera prochainement disponible."
+
 msgid "Notified people"
 msgstr "Personnes notifiées"
 

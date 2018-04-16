@@ -139,6 +139,9 @@ msgstr ""
 msgid "Notification successfully saved."
 msgstr ""
 
+msgid "Notifications management is coming soon."
+msgstr ""
+
 msgid "Notified people"
 msgstr ""
 

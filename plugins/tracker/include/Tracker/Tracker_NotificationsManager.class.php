@@ -75,13 +75,10 @@ class Tracker_NotificationsManager {
         $this->notification_list_builder     = $notification_list_builder;
     }
 
-    public function display(HTTPRequest $request, PFUser $current_user, CSRFSynchronizerToken $csrf_token)
+    public function displayTrackerAdministratorSettings(HTTPRequest $request, CSRFSynchronizerToken $csrf_token)
     {
         $this->displayAdminNotifications($csrf_token);
-
-        if ($this->tracker->userIsAdmin($current_user)) {
-            (new Tracker_DateReminderRenderer($this->tracker))->displayDateReminders($request, $csrf_token);
-        }
+        (new Tracker_DateReminderRenderer($this->tracker))->displayDateReminders($request, $csrf_token);
     }
 
     public function processUpdate(HTTPRequest $request)
@@ -188,22 +185,15 @@ class Tracker_NotificationsManager {
         echo '</form></fieldset>';
     }
 
-    protected function displayAdminNotifications_Toggle() {
-        if ($this->tracker->userIsAdmin()) {
-            echo '<h3><a name="ToggleEmailNotification"></a>'.$GLOBALS['Language']->getText('plugin_tracker_include_type','toggle_notification').' '.
+    protected function displayAdminNotifications_Toggle()
+    {
+        echo '<h3><a name="ToggleEmailNotification"></a>'.$GLOBALS['Language']->getText('plugin_tracker_include_type','toggle_notification').' '.
             help_button('tracker.html#e-mail-notification').'</h3>';
-            echo '
+        echo '
                 <p>'.$GLOBALS['Language']->getText('plugin_tracker_include_type','toggle_notif_note').'<br>
                 <br><input type="hidden" name="stop_notification" value="0" /> 
                 <label class="checkbox"><input id="toggle_stop_notification" type="checkbox" name="stop_notification" value="1" '.(($this->tracker->stop_notification)?'checked="checked"':'').' /> '.
-                $GLOBALS['Language']->getText('plugin_tracker_include_type','stop_notification') .'</label>';
-        } else if ($this->tracker->stop_notification) {
-            echo '<h3><a name="ToggleEmailNotification"></a>'.$GLOBALS['Language']->getText('plugin_tracker_include_type','notification_suspended').' '.
-            help_button('tracker.html#e-mail-notification').'</h3>';
-            echo '
-            <P><b>'.$GLOBALS['Language']->getText('plugin_tracker_include_type','toggle_notif_warn').'</b><BR>';
-        }
-
+            $GLOBALS['Language']->getText('plugin_tracker_include_type','stop_notification') .'</label>';
         echo '<input class="btn" type="submit" value="'.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','submit').'"/>';
     }
 
@@ -224,39 +214,16 @@ class Tracker_NotificationsManager {
         echo '<h3><a name="GlobalEmailNotification"></a>'.$GLOBALS['Language']->getText('plugin_tracker_include_type','global_mail_notif').' '.
         help_button('tracker.html#e-mail-notification').'</h3>';
 
-        $notifs    = $this->getGlobalNotifications();
-        $nb_notifs = count($notifs);
-        if ($this->tracker->userIsAdmin()) {
-            $renderer = $this->getNotificationsRenderer();
-            $renderer->renderToPage(
-                'notifications',
-                new PaneNotificationListPresenter(
-                    $this->tracker->getGroupId(),
-                    $this->notification_list_builder->getNotificationsPresenter($notifs, $this->addresses_builder)
-                )
-            );
-            $GLOBALS['Response']->includeFooterJavascriptFile('/scripts/tuleap/user-and-ugroup-autocompleter.js');
-        } else {
-            $ok = false;
-            if ( $nb_notifs ) {
-                reset($notifs);
-                while(!$ok && (list($id,) = each($notifs))) {
-                    $ok = $notifs[$id]->getAddresses();
-                }
-            }
-            if ($ok) {
-                echo $GLOBALS['Language']->getText('plugin_tracker_include_type','admin_conf');
-                foreach($notifs as $key => $nop) {
-                    if ($notifs[$key]->getAddresses()) {
-                        echo '<div>'. $notifs[$key]->getAddresses() .'&nbsp;&nbsp;&nbsp; ';
-                        echo $GLOBALS['Language']->getText('plugin_tracker_include_type','send_all_or_not',($notifs[$key]->isAllUpdates()?$GLOBALS['Language']->getText('global','yes'):$GLOBALS['Language']->getText('global','no')));
-                        echo '</div>';
-                    }
-                }
-            } else {
-                echo $GLOBALS['Language']->getText('plugin_tracker_include_type','admin_not_conf');
-            }
-        }
+        $notifs   = $this->getGlobalNotifications();
+        $renderer = $this->getNotificationsRenderer();
+        $renderer->renderToPage(
+            'notifications',
+            new PaneNotificationListPresenter(
+                $this->tracker->getGroupId(),
+                $this->notification_list_builder->getNotificationsPresenter($notifs, $this->addresses_builder)
+            )
+        );
+        $GLOBALS['Response']->includeFooterJavascriptFile('/scripts/tuleap/user-and-ugroup-autocompleter.js');
     }
 
     /**
