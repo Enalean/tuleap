@@ -21,6 +21,8 @@
 
 namespace Tuleap\CreateTestEnv;
 
+use Tuleap\Password\PasswordSanityChecker;
+
 class CreateTestEnvironment
 {
     private $output_dir;
@@ -36,17 +38,23 @@ class CreateTestEnvironment
      * @var Notifier
      */
     private $notifier;
+    /**
+     * @var PasswordSanityChecker
+     */
+    private $password_sanity_checker;
 
-    public function __construct(Notifier $notifier, $output_dir)
+    public function __construct(Notifier $notifier, PasswordSanityChecker $password_sanity_checker, $output_dir)
     {
-        $this->notifier   = $notifier;
-        $this->output_dir = $output_dir;
+        $this->notifier                = $notifier;
+        $this->password_sanity_checker = $password_sanity_checker;
+        $this->output_dir              = $output_dir;
     }
 
     /**
      * @param $firstname
      * @param $lastname
      * @param $email
+     *
      * @throws Exception\EmailNotUniqueException
      * @throws Exception\InvalidProjectFullNameException
      * @throws Exception\InvalidProjectUnixNameException
@@ -55,9 +63,14 @@ class CreateTestEnvironment
      * @throws Exception\ProjectNotCreatedException
      * @throws Exception\UnableToCreateTemporaryDirectoryException
      * @throws Exception\UnableToWriteFileException
+     * @throws Exception\InvalidPasswordException
      */
-    public function main($firstname, $lastname, $email)
+    public function main($firstname, $lastname, $email, $password)
     {
+        if (! $this->password_sanity_checker->check($password)) {
+            throw new Exception\InvalidPasswordException($this->password_sanity_checker->getErrors());
+        }
+
         $create_test_user = new CreateTestUser($firstname, $lastname, $email);
         $this->serializeXmlIntoFile($create_test_user->generateXML(), 'users.xml');
 
@@ -68,7 +81,7 @@ class CreateTestEnvironment
 
         $user_manager = \UserManager::instance();
         $this->user   = $user_manager->getUserByUserName($create_test_user->getUserName());
-        $this->user->setPassword((new \RandomNumberGenerator())->getNumber());
+        $this->user->setPassword($password);
         $this->user->setExpiryDate(strtotime('+3 week'));
         $user_manager->updateDb($this->user);
 

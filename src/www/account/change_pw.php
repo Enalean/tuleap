@@ -71,9 +71,11 @@ function register_valid($user_id, CSRFSynchronizerToken $csrf, EventManager $eve
         $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('account_change_pw', 'identical_password'));
         return 0;
     }
-	if (!account_pwvalid($request->get('form_pw'), $errors)) {
-        foreach($errors as $e) {
-            $GLOBALS['Response']->addFeedback('error', $e);
+
+    $password_sanity_checker = \Tuleap\Password\PasswordSanityChecker::build();
+	if (! $password_sanity_checker->check($request->get('form_pw'))) {
+        foreach($password_sanity_checker->getErrors() as $error) {
+            $GLOBALS['Response']->addFeedback('error', $error);
         }
 		return 0;
 	}

@@ -96,13 +96,16 @@ function register_valid($mail_confirm_code, array &$errors)	{
         $errors['form_pw'] = $Language->getText('account_register', 'err_passwd');
         return 0;
     }
-    if (!account_pwvalid($request->get('form_pw'), $errors)) {
-        foreach($errors as $e) {
-            $GLOBALS['Response']->addFeedback('error', $e);
+
+    $password_sanity_checker = \Tuleap\Password\PasswordSanityChecker::build();
+    if (! $password_sanity_checker->check($request->get('form_pw'))) {
+        foreach($password_sanity_checker->getErrors() as $error) {
+            $GLOBALS['Response']->addFeedback('error', $error);
         }
         $errors['form_pw'] = 'Error';
         return 0;
     }
+
     $expiry_date = 0;
     if ($request->exist('form_expiry') && $request->get('form_expiry')!='' && ! preg_match("/[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}/", $request->get('form_expiry'))) {
         $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('account_register', 'data_not_parsed'));

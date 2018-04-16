@@ -2,11 +2,10 @@
 
 header("Cache-Control: no-cache, no-store, must-revalidate");
 
-require_once('pre.php');
-require_once('account.php');
+require_once 'pre.php';
 
-$request =& HTTPRequest::instance();
-account_pwvalid($request->get('form_pw'), $errors);
-echo '['. implode(', ', array_keys($errors)) .']';
+$request = HTTPRequest::instance();
+$password_sanity_checker = \Tuleap\Password\PasswordSanityChecker::build();
+$password_sanity_checker->check($request->get('form_pw'));
 
-?>
+echo '['. implode(', ', array_keys($password_sanity_checker->getErrors())) .']';
