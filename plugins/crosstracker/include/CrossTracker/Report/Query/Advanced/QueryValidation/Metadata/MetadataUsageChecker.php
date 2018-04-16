@@ -76,6 +76,7 @@ class MetadataUsageChecker
      * @throws TitleIsMissingInAtLeastOneTrackerException
      * @throws LastUpdateDateIsMissingInAtLeastOneTrackerException
      * @throws SubmittedByIsMissingInAtLeastOneTrackerException
+     * @throws LastUpdateByIsMissingInAtLeastOneTrackerException
      */
     public function checkMetadataIsUsedByAllTrackers(
         Metadata $metadata,
@@ -102,14 +103,20 @@ class MetadataUsageChecker
                     $collector_parameters->getUser()
                 );
                 break;
+            case AllowedMetadata::LAST_UPDATE_DATE:
+                $this->checkLastUpdateDateIsUsedByAllTrackers(
+                    $collector_parameters->getTrackers(),
+                    $collector_parameters->getUser()
+                );
+                break;
             case AllowedMetadata::SUBMITTED_BY:
                 $this->checkSubmittedByIsUsedByAllTracker(
                     $collector_parameters->getTrackers(),
                     $collector_parameters->getUser()
                 );
                 break;
-            case AllowedMetadata::LAST_UPDATE_DATE:
-                $this->checkLastUpdateDateIsUsedByAllTrackers(
+            case AllowedMetadata::LAST_UPDATE_BY:
+                $this->checkLastUpdateByIsUsedByAllTracker(
                     $collector_parameters->getTrackers(),
                     $collector_parameters->getUser()
                 );
@@ -186,6 +193,15 @@ class MetadataUsageChecker
             throw new SubmittedByIsMissingInAtLeastOneTrackerException($count);
         }
     }
+
+    private function checkLastUpdateByIsUsedByAllTracker(array $trackers, PFUser $user)
+    {
+        $count = $this->getNumberOfReadableFieldByType($trackers, $user, 'luby');
+        if ($count > 0) {
+            throw new LastUpdateByIsMissingInAtLeastOneTrackerException($count);
+        }
+    }
+
 
     /**
      * @param \Tracker_FormElement[] $fields
