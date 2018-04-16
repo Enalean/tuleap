@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,6 +23,7 @@ namespace Tuleap\Tracker\Artifact\Changeset\Notification;
 
 use Logger;
 use Tuleap\Queue\Worker;
+use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
 use WrapperLogger;
 use Tracker;
 use Tracker_FormElementFactory;
@@ -118,7 +119,8 @@ class Notifier
             UserHelper::instance(),
             new RecipientsManager(
                 Tracker_FormElementFactory::instance(),
-                UserManager::instance()
+                UserManager::instance(),
+                new UnsubscribersNotificationDAO
             ),
             new MailSender(),
             new NotifierDao()

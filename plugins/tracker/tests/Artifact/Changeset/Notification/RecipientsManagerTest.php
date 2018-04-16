@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,6 +21,8 @@
 
 namespace Tuleap\Tracker\Artifact\Changeset\Notification;
 
+use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
+
 require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
 class RecipientsManagerTest extends \TuleapTestCase
@@ -37,16 +39,22 @@ class RecipientsManagerTest extends \TuleapTestCase
      * @var \Tracker_FormElementFactory
      */
     private $formelement_factory;
+    /**
+     * @var UnsubscribersNotificationDAO
+     */
+    private $unsubscribers_notification_dao;
 
     public function setUp()
     {
         parent::setUp();
 
-        $this->user_manager        = mock('\UserManager');
-        $this->formelement_factory = mock('\Tracker_FormElementFactory');
-        $this->recipients_manager  = new RecipientsManager(
+        $this->user_manager                   = mock('\UserManager');
+        $this->formelement_factory            = mock('\Tracker_FormElementFactory');
+        $this->unsubscribers_notification_dao = mock(UnsubscribersNotificationDAO::class);
+        $this->recipients_manager             = new RecipientsManager(
             $this->formelement_factory,
-            $this->user_manager
+            $this->user_manager,
+            $this->unsubscribers_notification_dao
         );
 
         stub($this->user_manager)->getUserByUserName('recipient1')->returns(
@@ -75,7 +83,7 @@ class RecipientsManagerTest extends \TuleapTestCase
         ));
 
         $artifact = stub('\Tracker_Artifact')->getCommentators()->returns(array());
-        stub($artifact)->getUnsubscribersIds()->returns(array());
+        stub($this->unsubscribers_notification_dao)->searchUserIDHavingUnsubcribedFromNotificationByTrackerOrArtifactID()->returns([]);
         stub($changeset)->getArtifact()->returns(
             $artifact
         );
@@ -107,7 +115,7 @@ class RecipientsManagerTest extends \TuleapTestCase
         ));
 
         $artifact = stub('\Tracker_Artifact')->getCommentators()->returns(array('recipient2'));
-        stub($artifact)->getUnsubscribersIds()->returns(array());
+        stub($this->unsubscribers_notification_dao)->searchUserIDHavingUnsubcribedFromNotificationByTrackerOrArtifactID()->returns([]);
         stub($changeset)->getArtifact()->returns(
             $artifact
         );
@@ -139,7 +147,7 @@ class RecipientsManagerTest extends \TuleapTestCase
         ));
 
         $artifact = stub('\Tracker_Artifact')->getCommentators()->returns(array());
-        stub($artifact)->getUnsubscribersIds()->returns(array());
+        stub($this->unsubscribers_notification_dao)->searchUserIDHavingUnsubcribedFromNotificationByTrackerOrArtifactID()->returns([]);
         stub($changeset)->getArtifact()->returns(
             $artifact
         );
@@ -177,7 +185,7 @@ class RecipientsManagerTest extends \TuleapTestCase
         ));
 
         $artifact = stub('\Tracker_Artifact')->getCommentators()->returns(array('recipient2'));
-        stub($artifact)->getUnsubscribersIds()->returns(array());
+        stub($this->unsubscribers_notification_dao)->searchUserIDHavingUnsubcribedFromNotificationByTrackerOrArtifactID()->returns([]);
         stub($changeset)->getArtifact()->returns(
             $artifact
         );
@@ -211,7 +219,7 @@ class RecipientsManagerTest extends \TuleapTestCase
         ));
 
         $artifact = stub('\Tracker_Artifact')->getCommentators()->returns(array('recipient2'));
-        stub($artifact)->getUnsubscribersIds()->returns(array(102));
+        stub($this->unsubscribers_notification_dao)->searchUserIDHavingUnsubcribedFromNotificationByTrackerOrArtifactID()->returns([102]);
         stub($changeset)->getArtifact()->returns(
             $artifact
         );
