@@ -46,6 +46,7 @@
                 <option value="@submitted_on">{{ submitted_on_label }}</option>
                 <option value="@last_update_date">{{ lud_label }}</option>
                 <option value="@submitted_by">{{ submitted_by_label }}</option>
+                <option value="@last_update_by">{{ luby_label }}</option>
             </select>
         </div>
     </div>
@@ -81,6 +82,7 @@ export default {
         submitted_on_label               : () => gettext_provider.gettext('Submitted on'),
         lud_label                        : () => gettext_provider.gettext('Last update date'),
         submitted_by_label               : () => gettext_provider.gettext('Submitted by'),
+        luby_label                       : () => gettext_provider.gettext('Last update by'),
         placeholder                      : () => gettext_provider.gettext("Example: @title = 'value'"),
         tql_tips                         : () => gettext_provider.gettext(
             'You can use: AND, OR, parenthesis. Autocomplete is activated with Ctrl + Space.'

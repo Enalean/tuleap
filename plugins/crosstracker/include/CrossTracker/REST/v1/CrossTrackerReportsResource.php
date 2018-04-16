@@ -185,6 +185,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
         $submitted_on_alias_field     = 'tracker_artifact.submitted_on';
         $last_update_date_alias_field = 'last_changeset.submitted_on';
         $submitted_by_alias_field     = 'tracker_artifact.submitted_by';
+        $last_update_by_alias_field   = 'last_changeset.submitted_by';
 
         $date_value_extractor    = new Date\DateValueExtractor();
         $date_time_value_rounder = new DateTimeValueRounder();
@@ -209,6 +210,11 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                     $list_value_extractor,
                     $this->user_manager,
                     $submitted_by_alias_field
+                ),
+                new Users\EqualComparisonFromWhereBuilder(
+                    $list_value_extractor,
+                    $this->user_manager,
+                    $last_update_by_alias_field
                 )
             ),
             new NotEqualComparisonFromWhereBuilder(
@@ -229,6 +235,11 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                     $list_value_extractor,
                     $this->user_manager,
                     $submitted_by_alias_field
+                ),
+                new Users\NotEqualComparisonFromWhereBuilder(
+                    $list_value_extractor,
+                    $this->user_manager,
+                    $last_update_by_alias_field
                 )
             ),
             new GreaterThanComparisonFromWhereBuilder(

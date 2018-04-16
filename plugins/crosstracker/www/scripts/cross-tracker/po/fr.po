@@ -43,6 +43,9 @@ msgstr "Erreur à la récupération de la liste des outils de suivi de ce projet
 msgid "Example: @title = 'value'"
 msgstr "Exemple : @title = 'valeur'"
 
+msgid "Last update by"
+msgstr "Mis à jour par"
+
 msgid "Last update date"
 msgstr "Mis à jour le"
 
