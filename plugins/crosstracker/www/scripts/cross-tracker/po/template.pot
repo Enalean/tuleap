@@ -28,6 +28,9 @@ msgstr ""
 msgid "Example: @title = 'value'"
 msgstr ""
 
+msgid "Last update by"
+msgstr ""
+
 msgid "Last update date"
 msgstr ""
 
