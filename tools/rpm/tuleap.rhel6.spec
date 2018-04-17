@@ -462,6 +462,15 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
 %description plugin-bugzilla-reference
 %{summary}.
 
+%package plugin-create-test-env
+Summary: Create test environment on a Tuleap server
+Group: Development/Tools
+Version: @@PLUGIN_CREATE_TEST_ENV_VERSION@@
+Release: @@VERSION@@_@@RELEASE@@%{?dist}
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+%description plugin-create-test-env
+%{summary}.
+
 %package api-explorer
 Summary: Web API Explorer
 Group: Development/Tools
@@ -525,7 +534,6 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/timetracking
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/dynamic_credentials
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/velocity
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/create_test_env
 # Remove development tools and utility files
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/composer.json
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/composer.lock
@@ -701,6 +709,9 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 
 # Plugin im
 %{__install} plugins/IM/etc/05-im.conf.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-aliases/05-im.conf
+
+# Plugin create_test_env
+%{__install} plugins/create_test_env/etc/sudoers.d/tuleap_plugin_create_test_env $RPM_BUILD_ROOT/%{_sysconfdir}/sudoers.d
 
 # Symlink for compatibility with older version
 %{__ln_s} %{APP_DIR} $RPM_BUILD_ROOT/%{OLD_APP_DIR}
@@ -1294,6 +1305,11 @@ fi
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/bugzilla_reference
 %attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_bugzilla_reference
+
+%files plugin-create-test-env
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/create_test_env
+%attr(00400,root,root) %{_sysconfdir}/sudoers.d/tuleap_plugin_create_test_env
 
 %files api-explorer
 %defattr(-,%{APP_USER},%{APP_USER},-)
