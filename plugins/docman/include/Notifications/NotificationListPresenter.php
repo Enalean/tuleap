@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,7 +23,7 @@ namespace Tuleap\Docman\Notifications;
 use Codendi_HTMLPurifier;
 use Docman_Item;
 use Tuleap\Notifications\UgroupToBeNotifiedPresenter;
-use Tuleap\Notifications\UserToBeNotifiedPresenter;
+use Tuleap\Notifications\UserInvolvedInNotificationPresenter;
 use UserManager;
 
 class NotificationListPresenter
@@ -70,7 +70,7 @@ class NotificationListPresenter
             $users_to_notify[] = array(
                 'can_be_deleted' => $monitored_item == $item,
                 'item_title'     => $item->getTitle(),
-                'user'           => new UserToBeNotifiedPresenter(
+                'user'           => new UserInvolvedInNotificationPresenter(
                     $user->getId(),
                     $user->getName(),
                     $user->getRealName(),

@@ -18,27 +18,52 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Git\Notifications;
+namespace Tuleap\Tracker\Notifications;
 
-use GitRepository;
+use Iterator;
+use Tracker;
+use Tracker_GlobalNotification;
 use Tuleap\Notifications\UserInvolvedInNotificationPresenter;
 
-class CollectionOfUserToBeNotifiedPresenterBuilder
+class CollectionOfUserInvolvedInNotificationPresenterBuilder
 {
     /**
      * @var UsersToNotifyDao
      */
-    private $dao;
+    private $users_to_notify_dao;
+    /**
+     * @var UnsubscribersNotificationDAO
+     */
+    private $unsubscribers_notification_dao;
 
-    public function __construct(UsersToNotifyDao $dao)
+    public function __construct(UsersToNotifyDao $users_to_notify_dao, UnsubscribersNotificationDAO $unsubscribers_notification_dao)
     {
-        $this->dao = $dao;
+        $this->users_to_notify_dao            = $users_to_notify_dao;
+        $this->unsubscribers_notification_dao = $unsubscribers_notification_dao;
     }
 
-    public function getCollectionOfUserToBeNotifiedPresenter(GitRepository $repository)
+    public function getCollectionOfUserToBeNotifiedPresenter(Tracker_GlobalNotification $notification)
     {
-        $presenters = array();
-        foreach ($this->dao->searchUsersByRepositoryId($repository->getId()) as $row) {
+        $user_rows = $this->users_to_notify_dao->searchUsersByNotificationId($notification->getId());
+        return $this->getCollectionOfUserPresenters($user_rows);
+    }
+
+    /**
+     * @return UserInvolvedInNotificationPresenter[]
+     */
+    public function getCollectionOfNotificationUnsubscribersPresenter(Tracker $tracker)
+    {
+        $user_rows = $this->unsubscribers_notification_dao->searchUsersUnsubcribedFromNotificationByTrackerID($tracker->getId());
+        return $this->getCollectionOfUserPresenters(new \ArrayIterator($user_rows));
+    }
+
+    /**
+     * @return UserInvolvedInNotificationPresenter[]
+     */
+    private function getCollectionOfUserPresenters(Iterator $user_rows)
+    {
+        $presenters = [];
+        foreach ($user_rows as $row) {
             $presenters[] = new UserInvolvedInNotificationPresenter(
                 $row['user_id'],
                 $row['user_name'],

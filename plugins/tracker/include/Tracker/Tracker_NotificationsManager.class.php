@@ -24,6 +24,7 @@ use Tuleap\Tracker\Notifications\NotificationCustomisationSettingsPresenter;
 use Tuleap\Tracker\Notifications\NotificationListBuilder;
 use Tuleap\Tracker\Notifications\PaneNotificationListPresenter;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyDao;
+use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
 use Tuleap\Tracker\Notifications\UsersToNotifyDao;
 use Tuleap\User\InvalidEntryInAutocompleterCollection;
 use Tuleap\User\RequestFromAutocompleter;
@@ -56,23 +57,29 @@ class Tracker_NotificationsManager {
      * @var NotificationListBuilder
      */
     private $notification_list_builder;
+    /**
+     * @var UnsubscribersNotificationDAO
+     */
+    private $unsubscribers_notification_dao;
 
     public function __construct(
         $tracker,
         NotificationListBuilder $notification_list_builder,
         UsersToNotifyDao $user_to_notify_dao,
         UgroupsToNotifyDao $ugroup_to_notify_dao,
+        UnsubscribersNotificationDAO $unsubscribers_notification_dao,
         GlobalNotificationsAddressesBuilder $addresses_builder,
         UserManager $user_manager,
         UGroupManager $ugroup_manager
     ) {
-        $this->tracker                       = $tracker;
-        $this->user_to_notify_dao            = $user_to_notify_dao;
-        $this->ugroup_to_notify_dao          = $ugroup_to_notify_dao;
-        $this->addresses_builder             = $addresses_builder;
-        $this->user_manager                  = $user_manager;
-        $this->ugroup_manager                = $ugroup_manager;
-        $this->notification_list_builder     = $notification_list_builder;
+        $this->tracker                        = $tracker;
+        $this->user_to_notify_dao             = $user_to_notify_dao;
+        $this->ugroup_to_notify_dao           = $ugroup_to_notify_dao;
+        $this->unsubscribers_notification_dao = $unsubscribers_notification_dao;
+        $this->addresses_builder              = $addresses_builder;
+        $this->user_manager                   = $user_manager;
+        $this->ugroup_manager                 = $ugroup_manager;
+        $this->notification_list_builder      = $notification_list_builder;
     }
 
     public function displayTrackerAdministratorSettings(HTTPRequest $request, CSRFSynchronizerToken $csrf_token)
@@ -181,6 +188,7 @@ class Tracker_NotificationsManager {
         $this->displayAdminNotifications_Toggle();
         $this->displayAdminNotificationAssignedToMeFlag();
         $this->displayAdminNotifications_Global();
+        $this->displayAdminNotificationUnsubcribers();
 
         echo '</form></fieldset>';
     }
@@ -224,6 +232,13 @@ class Tracker_NotificationsManager {
             )
         );
         $GLOBALS['Response']->includeFooterJavascriptFile('/scripts/tuleap/user-and-ugroup-autocompleter.js');
+    }
+
+    private function displayAdminNotificationUnsubcribers()
+    {
+        $unsubscriber_list_presenter = $this->notification_list_builder->getUnsubscriberListPresenter($this->tracker);
+        $renderer                    = $this->getNotificationsRenderer();
+        $renderer->renderToPage('admin-notifications-unsubscribers', $unsubscriber_list_presenter);
     }
 
     /**

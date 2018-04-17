@@ -526,6 +526,9 @@ msgstr "Le service tracker est désactivé."
 msgid "Trackers"
 msgstr "Trackers"
 
+msgid "Unsubscribers"
+msgstr "Désabonnés"
+
 msgid "Use"
 msgstr "Utiliser"
 
@@ -537,6 +540,9 @@ msgstr[1] "Les utilisateurs '%s' n'ont pas pu être ajoutés"
 
 msgid "User, group, email"
 msgstr "Utilisateur, groupe, email"
+
+msgid "Users having unsubscribed from the notifications"
+msgstr "Utilisateurs s'étant désabonné des notifications"
 
 msgid "Wait a minute..."
 msgstr "Attendez une minute..."

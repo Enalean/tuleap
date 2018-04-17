@@ -30,7 +30,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionB
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationDetector;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
 use Tuleap\Tracker\Notifications\CollectionOfUgroupToBeNotifiedPresenterBuilder;
-use Tuleap\Tracker\Notifications\CollectionOfUserToBeNotifiedPresenterBuilder;
+use Tuleap\Tracker\Notifications\CollectionOfUserInvolvedInNotificationPresenterBuilder;
 use Tuleap\Tracker\Notifications\GlobalNotificationsAddressesBuilder;
 use Tuleap\Tracker\Notifications\GlobalNotificationsEmailRetriever;
 use Tuleap\Tracker\Notifications\NotificationListBuilder;
@@ -2100,11 +2100,12 @@ EOS;
      * @return Tracker_NotificationsManager
      */
     public function getNotificationsManager() {
-        $user_to_notify_dao        = new UsersToNotifyDao();
-        $ugroup_to_notify_dao      = new UgroupsToNotifyDao();
-        $notification_list_builder = new NotificationListBuilder(
+        $user_to_notify_dao             = new UsersToNotifyDao();
+        $unsubscribers_notification_dao = new \Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
+        $ugroup_to_notify_dao           = new UgroupsToNotifyDao();
+        $notification_list_builder      = new NotificationListBuilder(
             new UGroupDao(),
-            new CollectionOfUserToBeNotifiedPresenterBuilder($user_to_notify_dao),
+            new CollectionOfUserInvolvedInNotificationPresenterBuilder($user_to_notify_dao, $unsubscribers_notification_dao),
             new CollectionOfUgroupToBeNotifiedPresenterBuilder($ugroup_to_notify_dao)
         );
         return new Tracker_NotificationsManager(
@@ -2112,6 +2113,7 @@ EOS;
             $notification_list_builder,
             $user_to_notify_dao,
             $ugroup_to_notify_dao,
+            $unsubscribers_notification_dao,
             new GlobalNotificationsAddressesBuilder(),
             UserManager::instance(),
             new UGroupManager()

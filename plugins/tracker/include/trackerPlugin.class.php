@@ -49,7 +49,7 @@ use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_GENERATE;
 use Tuleap\Tracker\Import\Spotter;
 use Tuleap\Tracker\Legacy\Inheritor;
 use Tuleap\Tracker\Notifications\CollectionOfUgroupToBeNotifiedPresenterBuilder;
-use Tuleap\Tracker\Notifications\CollectionOfUserToBeNotifiedPresenterBuilder;
+use Tuleap\Tracker\Notifications\CollectionOfUserInvolvedInNotificationPresenterBuilder;
 use Tuleap\Tracker\Notifications\GlobalNotificationsAddressesBuilder;
 use Tuleap\Tracker\Notifications\NotificationListBuilder;
 use Tuleap\Tracker\Notifications\NotificationsForProjectMemberCleaner;
@@ -1410,11 +1410,12 @@ class trackerPlugin extends Plugin {
      * @return Tracker_NotificationsManager
      */
     private function getTrackerNotificationManager() {
-        $user_to_notify_dao   = $this->getUserToNotifyDao();
-        $ugroup_to_notify_dao = $this->getUgroupToNotifyDao();
-        $notification_list_builder = new NotificationListBuilder(
+        $user_to_notify_dao             = $this->getUserToNotifyDao();
+        $unsubscribers_notification_dao = new \Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
+        $ugroup_to_notify_dao           = $this->getUgroupToNotifyDao();
+        $notification_list_builder      = new NotificationListBuilder(
             new UGroupDao(),
-            new CollectionOfUserToBeNotifiedPresenterBuilder($user_to_notify_dao),
+            new CollectionOfUserInvolvedInNotificationPresenterBuilder($user_to_notify_dao, $unsubscribers_notification_dao),
             new CollectionOfUgroupToBeNotifiedPresenterBuilder($ugroup_to_notify_dao)
         );
         return new Tracker_NotificationsManager(
@@ -1422,6 +1423,7 @@ class trackerPlugin extends Plugin {
             $notification_list_builder,
             $user_to_notify_dao,
             $ugroup_to_notify_dao,
+            $unsubscribers_notification_dao,
             new GlobalNotificationsAddressesBuilder(),
             UserManager::instance(),
             new UGroupManager()

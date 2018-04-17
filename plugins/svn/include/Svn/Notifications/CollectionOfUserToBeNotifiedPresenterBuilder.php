@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2017. All rights reserved.
+ * Copyright Enalean (c) 2017-2018. All rights reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,7 @@
 
 namespace Tuleap\Svn\Notifications;
 
-use Tuleap\Notifications\UserToBeNotifiedPresenter;
+use Tuleap\Notifications\UserInvolvedInNotificationPresenter;
 use Tuleap\Svn\Admin\MailNotification;
 
 class CollectionOfUserToBeNotifiedPresenterBuilder
@@ -39,7 +39,7 @@ class CollectionOfUserToBeNotifiedPresenterBuilder
     {
         $presenters = array();
         foreach ($this->dao->searchUsersByNotificationId($notification->getId()) as $row) {
-            $presenters[] = new UserToBeNotifiedPresenter(
+            $presenters[] = new UserInvolvedInNotificationPresenter(
                 $row['user_id'],
                 $row['user_name'],
                 $row['realname'],
@@ -54,7 +54,7 @@ class CollectionOfUserToBeNotifiedPresenterBuilder
 
     private function sortUsersAlphabetically(&$presenters)
     {
-        usort($presenters, function (UserToBeNotifiedPresenter $a, UserToBeNotifiedPresenter $b) {
+        usort($presenters, function (UserInvolvedInNotificationPresenter $a, UserInvolvedInNotificationPresenter $b) {
             return strnatcasecmp($a->label, $b->label);
         });
     }
