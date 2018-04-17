@@ -55,6 +55,7 @@ class PreRevPropChangeTest extends TuleapTestCase {
         parent::setUp();
 
         $repo                        = safe_mock('Tuleap\Svn\Repository\Repository');
+        stub($repo)->getProject()->returns(aMockProject()->build());
         $this->repo_manager          = safe_mock('Tuleap\Svn\Repository\RepositoryManager');
         $this->hook_config           = safe_mock('Tuleap\Svn\Repository\HookConfig');
         $this->hook_config_retriever = mock('Tuleap\Svn\Repository\HookConfigRetriever');
@@ -97,6 +98,7 @@ class PreRevPropChangeTest extends TuleapTestCase {
 
     public function itAllowsPropChangeIfNotAllowed() {
         $ref_manager = safe_mock('ReferenceManager');
+        stub($ref_manager)->stringContainsReferences()->returns(true);
         stub($this->hook_config)->getHookConfig(HookConfig::COMMIT_MESSAGE_CAN_CHANGE)->returns(true);
         stub($this->hook_config)->getHookConfig(HookConfig::MANDATORY_REFERENCE)->returns(false);
 
