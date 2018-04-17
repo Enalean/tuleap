@@ -142,8 +142,8 @@ class Planning_Controller extends BaseController
     ) {
         parent::__construct('agiledashboard', $request);
 
-        $this->group_id                     = (int) $request->get('group_id');
         $this->project                      = $this->request->getProject();
+        $this->group_id                     = $this->project->getID();
         $this->planning_factory             = $planning_factory;
         $this->milestone_factory            = $milestone_factory;
         $this->project_manager              = $project_manager;
