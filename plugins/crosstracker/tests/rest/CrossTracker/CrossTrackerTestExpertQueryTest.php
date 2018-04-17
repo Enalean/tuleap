@@ -181,6 +181,35 @@ class CrossTrackerTestExpertQueryTest extends RestBase
         $this->getMatchingEpicArtifactByIds([]);
     }
 
+    public function testLastUpdateByNotEmpty()
+    {
+        $params = [
+            "trackers_id"  => [ $this->epic_tracker_id ],
+            "expert_query" => ' @last_update_by = "rest_api_tester_1"'
+        ];
+
+        $response = $this->getResponse($this->client->put('cross_tracker_reports/1', null, $params));
+        $this->assertEquals($response->getStatusCode(), 201);
+
+        $cross_tracker_report = $response->json();
+
+        $this->assertEquals(
+            $cross_tracker_report["expert_query"],
+            '@last_update_by = "rest_api_tester_1"'
+        );
+
+        $this->getMatchingEpicArtifactByIds([
+            $this->epic_artifact_ids[8],
+            $this->epic_artifact_ids[7],
+            $this->epic_artifact_ids[6],
+            $this->epic_artifact_ids[5],
+            $this->epic_artifact_ids[4],
+            $this->epic_artifact_ids[3],
+            $this->epic_artifact_ids[2],
+            $this->epic_artifact_ids[1]
+        ]);
+    }
+
     private function getMatchingArtifactsFromJson()
     {
         $response = $this->getResponse($this->client->get('cross_tracker_reports/1/content?limit=50&offset=0'));
