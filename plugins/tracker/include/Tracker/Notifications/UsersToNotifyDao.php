@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2017. All rights reserved.
+ * Copyright Enalean (c) 2017-2018. All rights reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -38,7 +38,15 @@ class UsersToNotifyDao extends DataAccessObject
                         user.user_id = notification.user_id
                         AND notification.notification_id = $notification_id
                         AND user.status IN ($status_active, $status_restricted)
-                    )";
+                    )
+                    JOIN tracker_global_notification ON (
+                        notification.notification_id = tracker_global_notification.id
+                    )
+                    LEFT JOIN tracker_global_notification_unsubscribers ON (
+                        tracker_global_notification.tracker_id = tracker_global_notification_unsubscribers.tracker_id
+                        AND notification.user_id = tracker_global_notification_unsubscribers.user_id
+                    )
+                WHERE tracker_global_notification_unsubscribers.user_id IS NULL";
 
         return $this->retrieve($sql);
     }

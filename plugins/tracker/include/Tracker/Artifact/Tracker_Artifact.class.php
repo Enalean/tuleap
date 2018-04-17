@@ -31,6 +31,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetrie
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationDetector;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
+use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
 use Tuleap\Tracker\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
 
@@ -398,7 +399,12 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         return $html;
     }
 
-    private function fetchNotificationButton() {
+    private function fetchNotificationButton()
+    {
+        if ($this->doesUserHaveUnsubscribedFromTrackerNotification($this->getCurrentUser())) {
+            return '';
+        }
+
         $alternate_text = $this->getUnsubscribeButtonAlternateText();
 
         $html  = '<button type="button" class="btn btn-default tracker-artifact-notification" title="' . $alternate_text . '">';
@@ -411,7 +417,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     private function getUnsubscribeButtonLabel() {
         $user = $this->getCurrentUser();
 
-        if ($this->doesUserHaveUnsubscribedFromNotification($user)) {
+        if ($this->doesUserHaveUnsubscribedFromArtifactNotification($user)) {
             return $GLOBALS['Language']->getText('plugin_tracker', 'enable_notifications');
         }
 
@@ -442,15 +448,27 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     private function getUnsubscribeButtonAlternateText() {
         $user = $this->getCurrentUser();
 
-        if ($this->doesUserHaveUnsubscribedFromNotification($user)) {
+        if ($this->doesUserHaveUnsubscribedFromArtifactNotification($user)) {
             return $GLOBALS['Language']->getText('plugin_tracker', 'enable_notifications_alternate_text');
         }
 
         return $GLOBALS['Language']->getText('plugin_tracker', 'disable_notifications_alternate_text');
     }
 
-    private function doesUserHaveUnsubscribedFromNotification(PFUser $user) {
-        return $this->getDao()->doesUserHaveUnsubscribedFromNotifications($this->id, $user->getId());
+    private function doesUserHaveUnsubscribedFromArtifactNotification(PFUser $user)
+    {
+        return $this->getDao()->doesUserHaveUnsubscribedFromArtifactNotifications($this->id, $user->getId());
+    }
+
+    /**
+     * @return bool
+     */
+    private function doesUserHaveUnsubscribedFromTrackerNotification(PFUser $user)
+    {
+        return $this->getUnsubscribersNotificationDao()->doesUserIDHaveUnsubscribedFromTrackerNotifications(
+            $user->getId(),
+            $this->getTrackerId()
+        );
     }
 
     public function fetchHiddenTrackerId() {
@@ -784,9 +802,13 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 $renderer->display($request, $current_user);
                 break;
             case 'manage-subscription':
+                if ($this->doesUserHaveUnsubscribedFromTrackerNotification($this->getCurrentUser())) {
+                    break;
+                }
+
                 $artifact_subscriber = new Tracker_ArtifactNotificationSubscriber($this, $this->getDao());
 
-                if ($this->doesUserHaveUnsubscribedFromNotification($current_user)) {
+                if ($this->doesUserHaveUnsubscribedFromArtifactNotification($current_user)) {
                     $artifact_subscriber->subscribeUser($current_user, $request);
                     break;
                 }
@@ -1450,19 +1472,6 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     }
 
     /**
-     * Returns ids of user who unsubscribed to artifact notification
-     *
-     * @return array
-     */
-    public function getUnsubscribersIds() {
-        $unsubscribers_ids = array();
-        foreach ($this->getDao()->getUnsubscribersIds($this->id) as $row) {
-            $unsubscribers_ids[] = $row['user_id'];
-        }
-        return $unsubscribers_ids;
-    }
-
-    /**
      * Return Workflow the artifact should respect
      *
      * @return Workflow
@@ -1887,6 +1896,14 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
     protected function getDao() {
         return new Tracker_ArtifactDao();
+    }
+
+    /**
+     * @return UnsubscribersNotificationDAO
+     */
+    private function getUnsubscribersNotificationDao()
+    {
+        return new UnsubscribersNotificationDAO;
     }
 
     protected function getCrossReferenceFactory() {

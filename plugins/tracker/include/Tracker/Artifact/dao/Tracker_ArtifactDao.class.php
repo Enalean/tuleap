@@ -1188,16 +1188,8 @@ class Tracker_ArtifactDao extends DataAccessObject {
         return array();
     }
 
-    public function getUnsubscribersIds($artifact_id) {
-        $artifact_id = $this->da->escapeInt($artifact_id);
-        $sql = "SELECT user_id
-                FROM tracker_artifact_unsubscribe
-                WHERE artifact_id = $artifact_id";
-
-        return $this->retrieve($sql);
-    }
-
-    public function doesUserHaveUnsubscribedFromNotifications($artifact_id, $user_id) {
+    public function doesUserHaveUnsubscribedFromArtifactNotifications($artifact_id, $user_id)
+    {
         $artifact_id = $this->da->escapeInt($artifact_id);
         $user_id     = $this->da->escapeInt($user_id);
 

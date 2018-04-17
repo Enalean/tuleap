@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,6 +23,7 @@ namespace Tuleap\Tracker\Artifact\Changeset\Notification;
 
 use Tracker_Artifact_Changeset;
 use Tracker_FormElementFactory;
+use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
 use UserManager;
 use PFUser;
 
@@ -36,11 +37,19 @@ class RecipientsManager
      * @var UserManager
      */
     private $user_manager;
+    /**
+     * @var UnsubscribersNotificationDAO
+     */
+    private $unsubscribers_notification_dao;
 
-    public function __construct(Tracker_FormElementFactory $form_element_factory, UserManager $user_manager)
-    {
-        $this->form_element_factory = $form_element_factory;
-        $this->user_manager         = $user_manager;
+    public function __construct(
+        Tracker_FormElementFactory $form_element_factory,
+        UserManager $user_manager,
+        UnsubscribersNotificationDAO $unsubscribers_notification_dao
+    ) {
+        $this->form_element_factory           = $form_element_factory;
+        $this->user_manager                   = $user_manager;
+        $this->unsubscribers_notification_dao = $unsubscribers_notification_dao;
     }
 
     /**
@@ -83,7 +92,7 @@ class RecipientsManager
             }
         }
         $this->removeRecipientsThatMayReceiveAnEmptyNotification($changeset, $tablo);
-        $this->removeRecipientsThatHaveUnsubscribedArtifactNotification($changeset, $tablo);
+        $this->removeRecipientsThatHaveUnsubcribedFromNotification($changeset, $tablo);
 
         return $tablo;
     }
@@ -119,10 +128,14 @@ class RecipientsManager
         return false;
     }
 
-
-    private function removeRecipientsThatHaveUnsubscribedArtifactNotification(Tracker_Artifact_Changeset $changeset, array &$recipients)
+    private function removeRecipientsThatHaveUnsubcribedFromNotification(Tracker_Artifact_Changeset $changeset, array &$recipients)
     {
-        $unsubscribers = $changeset->getArtifact()->getUnsubscribersIds();
+        $tracker       = $changeset->getTracker();
+        $artifact      = $changeset->getArtifact();
+        $unsubscribers = $this->unsubscribers_notification_dao->searchUserIDHavingUnsubcribedFromNotificationByTrackerOrArtifactID(
+            $tracker->getId(),
+            $artifact->getId()
+        );
 
         foreach ($recipients as $recipient => $check_perms) {
             $user = $this->getUserFromRecipientName($recipient);
