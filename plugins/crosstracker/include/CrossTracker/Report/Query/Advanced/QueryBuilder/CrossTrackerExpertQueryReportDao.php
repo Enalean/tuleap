@@ -42,6 +42,7 @@ class CrossTrackerExpertQueryReportDao extends DataAccessObject
 
         $sql = "SELECT
                   SQL_CALC_FOUND_ROWS
+                  DISTINCT
                   tracker_artifact.tracker_id,
                   tracker_artifact.id,
                   tracker_changeset_value_title.value AS title
