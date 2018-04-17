@@ -199,8 +199,12 @@ class ExecutionRepresentationBuilder
         return new PaginatedExecutions($executions, $total_size, $definitions_changeset_ids);
     }
 
-    public function getDefinitionsChangesetIdsForExecutions(array $executions_ids)
+    private function getDefinitionsChangesetIdsForExecutions(array $executions_ids)
     {
+        if (empty($executions_ids)) {
+            return [];
+        }
+
         $definitions_changeset_ids = [];
 
         $rows = $this->execution_dao->searchDefinitionsChangesetIdsForExecution($executions_ids);
