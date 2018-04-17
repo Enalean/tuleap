@@ -1,5 +1,6 @@
+<?php
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,35 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-@import 'reading-mode';
-@import 'writing-mode';
 
-.dashboard-widget-content-crosstrackersearch {
-    margin: 0;
-}
+namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\AssignedTo;
 
-.dashboard-widget-content-cross-tracker {
-    margin: 0 0 $tlp-spacing;
-}
-
-.cross-tracker-loader {
-    height: 100px;
-    background: url('/themes/BurningParrot/images/spinner.gif') no-repeat center center;
-}
-
-.cross-tracker-artifacts-table {
-    margin: $tlp-spacing $tlp-spacing 0;
-}
-
-.cross-tracker-list-bind-user:not(:last-child)::after {
-    content: ', ';
-}
-
-.link-to-tracker-badge {
-    margin: 0 5px 0 0;
-}
-
-.cross-tracker-report-error,
-.cross-tracker-report-success {
-    margin: $tlp-spacing;
+interface FromWhereBuilder extends \Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\FromWhereBuilder
+{
 }

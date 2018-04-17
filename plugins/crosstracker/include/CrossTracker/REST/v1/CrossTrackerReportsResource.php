@@ -53,6 +53,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\LesserThanOr
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\ListValueExtractor;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\NotEqualComparisonFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\NotInComparisonFromWhereBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\AssignedTo;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\Description;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\Status;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\Title;
@@ -215,6 +216,10 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                     $list_value_extractor,
                     $this->user_manager,
                     $last_update_by_alias_field
+                ),
+                new AssignedTo\EqualComparisonFromWhereBuilder(
+                    $list_value_extractor,
+                    $this->user_manager
                 )
             ),
             new NotEqualComparisonFromWhereBuilder(
@@ -240,6 +245,10 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                     $list_value_extractor,
                     $this->user_manager,
                     $last_update_by_alias_field
+                ),
+                new AssignedTo\NotEqualComparisonFromWhereBuilder(
+                    $list_value_extractor,
+                    $this->user_manager
                 )
             ),
             new GreaterThanComparisonFromWhereBuilder(
