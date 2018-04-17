@@ -56,6 +56,10 @@ abstract class ComparisonFromWhereBuilder implements FromWhereBuilder
      * @var AlwaysThereField\Users\FromWhereBuilder
      */
     private $last_update_by_builder;
+    /**
+     * @var AlwaysThereField\Users\FromWhereBuilder
+     */
+    private $assigned_to_builder;
 
     public function __construct(
         Semantic\Title\FromWhereBuilder $title_builder,
@@ -64,7 +68,8 @@ abstract class ComparisonFromWhereBuilder implements FromWhereBuilder
         AlwaysThereField\Date\FromWhereBuilder $submitted_on_builder,
         AlwaysThereField\Date\FromWhereBuilder $last_update_date_builder,
         AlwaysThereField\Users\FromWhereBuilder $submitted_by_builder,
-        AlwaysThereField\Users\FromWhereBuilder $last_update_by_builder
+        AlwaysThereField\Users\FromWhereBuilder $last_update_by_builder,
+        Semantic\AssignedTo\FromWhereBuilder $assigned_to_builder
     ) {
         $this->title_builder            = $title_builder;
         $this->description_builder      = $description_builder;
@@ -73,6 +78,7 @@ abstract class ComparisonFromWhereBuilder implements FromWhereBuilder
         $this->last_update_date_builder = $last_update_date_builder;
         $this->submitted_by_builder     = $submitted_by_builder;
         $this->last_update_by_builder   = $last_update_by_builder;
+        $this->assigned_to_builder      = $assigned_to_builder;
     }
 
     /**
@@ -101,6 +107,9 @@ abstract class ComparisonFromWhereBuilder implements FromWhereBuilder
                 break;
             case AllowedMetadata::LAST_UPDATE_BY:
                 return $this->last_update_by_builder->getFromWhere($metadata, $comparison, $trackers);
+                break;
+            case AllowedMetadata::ASSIGNED_TO:
+                return $this->assigned_to_builder->getFromWhere($metadata, $comparison, $trackers);
                 break;
         }
     }

@@ -29,6 +29,7 @@ class AllowedMetadata
     const LAST_UPDATE_DATE = '@last_update_date';
     const SUBMITTED_BY     = '@submitted_by';
     const LAST_UPDATE_BY   = '@last_update_by';
+    const ASSIGNED_TO      = '@assigned_to';
 
     const NAMES = [
         self::TITLE,
@@ -37,7 +38,8 @@ class AllowedMetadata
         self::SUBMITTED_ON,
         self::LAST_UPDATE_DATE,
         self::SUBMITTED_BY,
-        self::LAST_UPDATE_BY
+        self::LAST_UPDATE_BY,
+        self::ASSIGNED_TO
     ];
 
     const DATES = [
@@ -47,6 +49,7 @@ class AllowedMetadata
 
     const USERS = [
         self::SUBMITTED_BY,
-        self::LAST_UPDATE_BY
+        self::LAST_UPDATE_BY,
+        self::ASSIGNED_TO
     ];
 }

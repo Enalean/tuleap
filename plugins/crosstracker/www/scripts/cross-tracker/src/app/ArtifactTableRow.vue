@@ -29,19 +29,26 @@
         <td>{{ artifact.project.label }}</td>
         <td>{{ artifact.status }}</td>
         <td>{{ artifact.formatted_last_update_date }}</td>
-        <td><a v-bind:href="artifact.submitted_by.user_url">{{ artifact.submitted_by.display_name }}</a></td>
-        <td><a v-bind:href="artifact.user_url" v-if="artifact.assigned_to === true">{{ artifact.display_name }}</a></td>
+        <td><list-bind-user v-bind:user="artifact.submitted_by" /></td>
+        <td><list-bind-user v-for="user in artifact.assigned_to"
+                            v-bind:user="user"
+                            v-bind:key="user.id" />
+        </td>
     </tr>
 </template>
-
 (<script>
-    export default {
-        name: 'ArtifactTableRow',
-        props: [ 'artifact' ],
-        computed: {
-            badge_color() {
-                return 'tlp-badge-' + this.artifact.badge.color;
-            }
+import ListBindUser from './ListBindUser.vue';
+
+export default {
+    name: 'ArtifactTableRow',
+    components: { ListBindUser },
+    props: {
+        artifact: Object
+    },
+    computed: {
+        badge_color() {
+            return 'tlp-badge-' + this.artifact.badge.color;
         }
-    };
+    }
+};
 </script>)
