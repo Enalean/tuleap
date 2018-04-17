@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -71,6 +71,34 @@ class Tracker_XML_Exporter_ChangesetValuesXMLExporterTest extends TuleapTestCase
             $this->changeset_xml,
             $this->artifact,
             $this->values
+        );
+    }
+
+    public function itDoesNotCrashWhenExportingASnapshotIfAChangesetValueIsNull()
+    {
+        expect($this->visitor)->export()->count(2);
+        expect($this->visitor)->export($this->artifact_xml, $this->changeset_xml, $this->artifact, $this->int_changeset_value)->at(0);
+        expect($this->visitor)->export($this->artifact_xml, $this->changeset_xml, $this->artifact, $this->float_changeset_value)->at(1);
+
+        $this->values_exporter->exportSnapshot(
+            $this->artifact_xml,
+            $this->changeset_xml,
+            $this->artifact,
+            array_merge([null], $this->values)
+        );
+    }
+
+    public function itDoesNotCrashWhenExportingChangedFieldsIfAChangesetValueIsNull()
+    {
+        expect($this->visitor)->export()->count(2);
+        expect($this->visitor)->export($this->artifact_xml, $this->changeset_xml, $this->artifact, $this->int_changeset_value)->at(0);
+        expect($this->visitor)->export($this->artifact_xml, $this->changeset_xml, $this->artifact, $this->float_changeset_value)->at(1);
+
+        $this->values_exporter->exportChangedFields(
+            $this->artifact_xml,
+            $this->changeset_xml,
+            $this->artifact,
+            array_merge([null], $this->values)
         );
     }
 }

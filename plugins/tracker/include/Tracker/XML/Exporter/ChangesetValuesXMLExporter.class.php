@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -49,16 +49,7 @@ class Tracker_XML_Exporter_ChangesetValuesXMLExporter {
         Tracker_Artifact $artifact,
         array $changeset_values
     ) {
-        $params = array(
-            self::ARTIFACT_KEY      => $artifact,
-            self::ARTIFACT_XML_KEY  => $artifact_xml,
-            self::CHANGESET_XML_KEY => $changeset_xml,
-            self::EXPORT_MODE_KEY   => self::EXPORT_SNAPSHOT
-        );
-
-        foreach ($changeset_values as $changeset_value) {
-            $this->exportValue($changeset_value, $params);
-        }
+        $this->exportValues($artifact_xml, $changeset_xml, $artifact, $changeset_values, self::EXPORT_SNAPSHOT);
     }
 
     public function exportChangedFields(
@@ -67,14 +58,27 @@ class Tracker_XML_Exporter_ChangesetValuesXMLExporter {
         Tracker_Artifact $artifact,
         array $changeset_values
     ) {
+        $this->exportValues($artifact_xml, $changeset_xml, $artifact, $changeset_values, self::EXPORT_CHANGES);
+    }
+
+    private function exportValues(
+        SimpleXMLElement $artifact_xml,
+        SimpleXMLElement $changeset_xml,
+        Tracker_Artifact $artifact,
+        array $changeset_values,
+        $export_mode
+    ) {
         $params = array(
             self::ARTIFACT_KEY      => $artifact,
             self::ARTIFACT_XML_KEY  => $artifact_xml,
             self::CHANGESET_XML_KEY => $changeset_xml,
-            self::EXPORT_MODE_KEY   => self::EXPORT_CHANGES
+            self::EXPORT_MODE_KEY   => $export_mode
         );
 
         foreach ($changeset_values as $changeset_value) {
+            if ($changeset_value === null) {
+                continue;
+            }
             $this->exportValue($changeset_value, $params);
         }
     }
