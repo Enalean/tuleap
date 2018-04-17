@@ -20,20 +20,21 @@
  */
 
 
-class GitLog {
-
+class GitLog
+{
     /**
-     * @var Git_LogDao
+     * @var CodendiDataAccess
      */
-    private $_dao;
+    private $data_access;
 
     /**
      * Constructor of the class
      *
      * @return Void
      */
-    public function __construct() {
-         $this->_dao = new Git_LogDao();
+    public function __construct()
+    {
+        $this->data_access = CodendiDataAccess::instance();
     }
 
     /**
@@ -66,7 +67,7 @@ class GitLog {
      */
     private function getSqlStatementForLogsDaily($project_id, $condition, $full_history_condition)
     {
-        $project_id = CodendiDataAccess::instance()->escapeInt($project_id);
+        $project_id = $this->data_access->escapeInt($project_id);
 
         return "SELECT UNIX_TIMESTAMP(day) AS time,
                   'read' AS type,
@@ -113,7 +114,7 @@ class GitLog {
         }
 
         $project = ProjectManager::instance()->getProject($group_id);
-        $users   = $this->_dao->da->escapeIntImplode($project->getMembersId());
+        $users   = $this->data_access->escapeIntImplode($project->getMembersId());
         if ($who === 'members') {
             return "user.user_id IN ($users)";
         }
@@ -128,6 +129,6 @@ class GitLog {
         $start_date = new DateTime();
         $start_date->sub(new DateInterval('P'.$span.'D'));
 
-        return 'log.day >= '.$this->_dao->da->quoteSmart($start_date->format('Ymd'));
+        return 'log.day >= '.$this->data_access->quoteSmart($start_date->format('Ymd'));
     }
 }
