@@ -352,7 +352,7 @@ class ExecutionsResource
         $campaign = $this->testmanagement_artifact_factory->getCampaignForExecution($artifact);
         $this->realtime_message_sender->sendPresences($campaign, $artifact, $user, $uuid, $remove_from);
 
-        $this->optionsPresences();
+        $this->optionsPresences($id);
     }
 
     /**
@@ -410,7 +410,7 @@ class ExecutionsResource
             throw new RestException(500, $exception->getMessage());
         }
 
-        $this->optionsIssues();
+        $this->optionsIssues($id);
     }
 
     private function getArtifactUpdater()
