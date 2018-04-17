@@ -24,26 +24,32 @@ require_once __DIR__.'/../../bootstrap.php';
 
 class Tracker_REST_Artifact_ArtifactRepresentationBuilder_BasicTest extends TuleapTestCase {
 
+    /**
+     * @var Tracker_REST_Artifact_ArtifactRepresentationBuilder
+     */
+    protected $builder;
+
     public function setUp() {
         parent::setUp();
-        $project        = stub('Project')->getId()->returns(1478);
+        $this->setUpGlobalsMockery();
+        $project        = mockery_stub(Project::class)->getID()->returns(1478);
         $this->tracker  = aTracker()->withId(888)->withProject($project)->build();
         $this->user     = aUser()->withId(111)->build();
-        $formelement_factory = mock('Tracker_FormElementFactory');
+        $formelement_factory = \Mockery::spy(Tracker_FormElementFactory::class);
         stub($formelement_factory)->getUsedFieldsForREST($this->tracker)->returns(array());
         $this->builder  = new Tracker_REST_Artifact_ArtifactRepresentationBuilder(
             $formelement_factory,
-            mock('Tracker_ArtifactFactory'),
-            mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao')
+            \Mockery::spy(\Tracker_ArtifactFactory::class),
+            \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao::class)
         );
 
         UserHelper::clearInstance();
-        UserHelper::setInstance(mock('UserHelper'));
+        UserHelper::setInstance(\Mockery::spy(\UserHelper::class));
 
-        $user_submitter  = mock('PFUser');
-        $this->changeset = mock('Tracker_Artifact_Changeset');
+        $user_submitter  = \Mockery::spy(PFUser::class);
+        $this->changeset = \Mockery::spy(Tracker_Artifact_Changeset::class);
 
-        $this->artifact = mock('Tracker_Artifact');
+        $this->artifact = \Mockery::spy(Tracker_Artifact::class);
         stub($this->artifact)->getId()->returns(12);
         stub($this->artifact)->getTracker()->returns($this->tracker);
         stub($this->artifact)->getSubmittedBy()->returns(777);
@@ -51,7 +57,7 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder_BasicTest extends Tule
         stub($this->artifact)->getLastChangeset()->returns($this->changeset);
         stub($this->artifact)->getSubmittedByUser()->returns($user_submitter);
         stub($this->artifact)->getUri()->returns('/plugins/tracker/?aid=12');
-        stub($this->artifact)->getXref()->returns('Tracker_Artifact #12');
+        stub($this->artifact)->getXRef()->returns('Tracker_Artifact #12');
         stub($this->artifact)->getAssignedTo()->returns(array($this->user));
     }
 
@@ -83,29 +89,35 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder_BasicTest extends Tule
 
 class Tracker_REST_Artifact_ArtifactRepresentationBuilder_FieldsTest extends TuleapTestCase {
 
+    /**
+     * @var Tracker_REST_Artifact_ArtifactRepresentationBuilder
+     */
+    protected $builder;
+
     public function setUp() {
         parent::setUp();
-        $project        = stub('Project')->getId()->returns(1478);
+        $this->setUpGlobalsMockery();
+        $project        = mockery_stub(Project::class)->getID()->returns(1478);
         $this->tracker  = aTracker()->withId(888)->withProject($project)->build();
         $this->user     = aUser()->withId(111)->build();
-        $this->changeset = mock('Tracker_Artifact_Changeset');
-        $user_submitter  = mock('PFUser');
+        $this->changeset = \Mockery::spy(Tracker_Artifact_Changeset::class);
+        $user_submitter  = \Mockery::spy(PFUser::class);
 
         UserHelper::clearInstance();
-        UserHelper::setInstance(mock('UserHelper'));
+        UserHelper::setInstance(\Mockery::spy(\UserHelper::class));
 
-        $this->artifact = mock('Tracker_Artifact');
+        $this->artifact = \Mockery::spy(Tracker_Artifact::class);
         stub($this->artifact)->getTracker()->returns($this->tracker);
         stub($this->artifact)->getLastChangeset()->returns($this->changeset);
         stub($this->artifact)->getSubmittedByUser()->returns($user_submitter);
-        stub($this->artifact)->getXref()->returns('Tracker_Artifact #12');
+        stub($this->artifact)->getXRef()->returns('Tracker_Artifact #12');
         stub($this->artifact)->getAssignedTo()->returns(array($this->user));
 
-        $this->formelement_factory = mock('Tracker_FormElementFactory');
+        $this->formelement_factory = \Mockery::spy(Tracker_FormElementFactory::class);
         $this->builder = new Tracker_REST_Artifact_ArtifactRepresentationBuilder(
             $this->formelement_factory,
-            mock('Tracker_ArtifactFactory'),
-            mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao')
+            \Mockery::spy(\Tracker_ArtifactFactory::class),
+            \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao::class)
         );
     }
 
@@ -116,8 +128,7 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder_FieldsTest extends Tul
     }
 
     public function itGetsTheFieldsFromTheFactory() {
-        expect($this->formelement_factory)->getUsedFieldsForREST($this->tracker)->once();
-        stub($this->formelement_factory)->getUsedFieldsForREST()->returns(array());
+        stub($this->formelement_factory)->getUsedFieldsForREST()->returns(array())->once();
         $this->builder->getArtifactRepresentationWithFieldValues($this->user, $this->artifact);
     }
 
@@ -129,9 +140,10 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder_FieldsTest extends Tul
     }
 
     public function itDoesntIncludeFieldsTheUserCannotView() {
-        $field1 = aMockField()->withId(1)->build();
-        $field2 = aMockField()->withId(2)->build();
-        $field3 = aMockField()->withId(3)->build();
+        $field1 = aMockField(true)->withId(1)->build();
+
+        $field2 = aMockField(true)->withId(2)->build();
+        $field3 = aMockField(true)->withId(3)->build();
         stub($field1)->userCanRead($this->user)->returns(false);
         stub($field2)->userCanRead($this->user)->returns(true);
         stub($field3)->userCanRead($this->user)->returns(false);
@@ -146,9 +158,9 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder_FieldsTest extends Tul
     }
 
     public function itReturnsValuesOnlyForFieldsWithValues() {
-        $field1 = aMockField()->withId(1)->build();
-        $field2 = aMockField()->withId(2)->build();
-        $field3 = aMockField()->withId(3)->build();
+        $field1 = aMockField(true)->withId(1)->build();
+        $field2 = aMockField(true)->withId(2)->build();
+        $field3 = aMockField(true)->withId(3)->build();
         stub($field2)->userCanRead($this->user)->returns(true);
         stub($field2)->getRESTValue()->returns('whatever');
 
@@ -161,9 +173,9 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder_FieldsTest extends Tul
     }
 
     public function itReturnsSimpleValuesOnlyForFieldsWithValues() {
-        $field1 = stub('Tracker_FormElement_Field_Integer')->getId()->returns(1);
-        $field2 = stub('Tracker_FormElement_Field_String')->getId()->returns(2);
-        $field3 = stub('Tracker_FormElement_Field_Float')->getId()->returns(3);
+        $field1 = mockery_stub(Tracker_FormElement_Field_Integer::class)->getId()->returns(1);
+        $field2 = mockery_stub(Tracker_FormElement_Field_String::class)->getId()->returns(2);
+        $field3 = mockery_stub(Tracker_FormElement_Field_Float::class)->getId()->returns(3);
         stub($field1)->userCanRead($this->user)->returns(true);
         stub($field2)->userCanRead($this->user)->returns(true);
         stub($field1)->getName()->returns('field01');
@@ -186,9 +198,9 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder_FieldsTest extends Tul
     }
 
     public function itReturnsBothFormatForFieldsWithValues() {
-        $field1 = stub('Tracker_FormElement_Field_Integer')->getId()->returns(1);
-        $field2 = stub('Tracker_FormElement_Field_String')->getId()->returns(2);
-        $field3 = stub('Tracker_FormElement_Field_Float')->getId()->returns(3);
+        $field1 = mockery_stub(Tracker_FormElement_Field_Integer::class)->getId()->returns(1);
+        $field2 = mockery_stub(Tracker_FormElement_Field_String::class)->getId()->returns(2);
+        $field3 = mockery_stub(Tracker_FormElement_Field_Float::class)->getId()->returns(3);
         stub($field1)->userCanRead($this->user)->returns(true);
         stub($field2)->userCanRead($this->user)->returns(true);
         stub($field1)->getName()->returns('field01');
@@ -217,15 +229,16 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder_ChangesetsTest extends
 
     public function setUp() {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
         $this->user     = aUser()->withId(111)->build();
         $this->artifact = anArtifact()
-            ->withTracker(aMockTracker()->build())
+            ->withTracker(aMockeryTracker()->build())
             ->build();
         $this->builder = new Tracker_REST_Artifact_ArtifactRepresentationBuilder(
-            mock('Tracker_FormElementFactory'),
-            mock('Tracker_ArtifactFactory'),
-            mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao')
+            \Mockery::spy(\Tracker_FormElementFactory::class),
+            \Mockery::spy(\Tracker_ArtifactFactory::class),
+            \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao::class)
         );
     }
 
@@ -239,7 +252,7 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder_ChangesetsTest extends
     }
 
     public function itBuildsHistoryOutOfChangeset() {
-        $changeset1 = mock('Tracker_Artifact_Changeset');
+        $changeset1 = \Mockery::spy(Tracker_Artifact_Changeset::class);
         expect($changeset1)->getRESTValue($this->user, Tracker_Artifact_Changeset::FIELDS_ALL)->once();
 
         $this->artifact->setChangesets(array($changeset1));
@@ -248,8 +261,8 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder_ChangesetsTest extends
     }
 
     public function itDoesntExportEmptyChanges() {
-        $changeset1 = mock('Tracker_Artifact_Changeset');
-        $changeset2 = mock('Tracker_Artifact_Changeset');
+        $changeset1 = \Mockery::spy(Tracker_Artifact_Changeset::class);
+        $changeset2 = \Mockery::spy(Tracker_Artifact_Changeset::class);
 
         stub($changeset1)->getRESTValue()->returns(null);
         stub($changeset2)->getRESTValue()->returns('whatever');
@@ -263,8 +276,8 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder_ChangesetsTest extends
     }
 
     public function itPaginatesResults() {
-        $changeset1 = mock('Tracker_Artifact_Changeset');
-        $changeset2 = mock('Tracker_Artifact_Changeset');
+        $changeset1 = \Mockery::spy(Tracker_Artifact_Changeset::class);
+        $changeset2 = \Mockery::spy(Tracker_Artifact_Changeset::class);
 
         stub($changeset1)->getRESTValue()->returns('result 1');
         stub($changeset2)->getRESTValue()->returns('result 2');
@@ -278,8 +291,8 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder_ChangesetsTest extends
     }
 
     public function itReturnsTheTotalCountOfResults() {
-        $changeset1 = mock('Tracker_Artifact_Changeset');
-        $changeset2 = mock('Tracker_Artifact_Changeset');
+        $changeset1 = \Mockery::spy(Tracker_Artifact_Changeset::class);
+        $changeset2 = \Mockery::spy(Tracker_Artifact_Changeset::class);
 
         stub($changeset1)->getRESTValue()->returns('result 1');
         stub($changeset2)->getRESTValue()->returns('result 2');
@@ -293,8 +306,8 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder_ChangesetsTest extends
     }
 
     public function itReturnsTheChangesetsInReverseOrde() {
-        $changeset1 = mock('Tracker_Artifact_Changeset');
-        $changeset2 = mock('Tracker_Artifact_Changeset');
+        $changeset1 = \Mockery::spy(Tracker_Artifact_Changeset::class);
+        $changeset2 = \Mockery::spy(Tracker_Artifact_Changeset::class);
 
         stub($changeset1)->getRESTValue()->returns('result 1');
         stub($changeset2)->getRESTValue()->returns('result 2');

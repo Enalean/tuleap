@@ -17,8 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once __DIR__.'/../../bootstrap.php';
 
+require_once __DIR__.'/../../bootstrap.php';
 
 class Tracker_Action_CreateArtifact_ProtectedToPublic extends Tracker_Action_CreateArtifact {
 
@@ -43,14 +43,14 @@ abstract class Tracker_Action_CreateArtifactTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
 
-        $this->event_manager = mock('EventManager');
+        $this->event_manager = \Mockery::spy(\EventManager::class);
         EventManager::setInstance($this->event_manager);
         
-        $this->tracker             = mock('Tracker');
-        $this->artifact_factory    = mock('Tracker_ArtifactFactory');
-        $this->tracker_factory     = mock('TrackerFactory');
-        $this->formelement_factory = mock('Tracker_FormElementFactory');
-        $this->request             = mock('Codendi_Request');
+        $this->tracker             = \Mockery::spy(\Tracker::class);
+        $this->artifact_factory    = \Mockery::spy(\Tracker_ArtifactFactory::class);
+        $this->tracker_factory     = \Mockery::spy(\TrackerFactory::class);
+        $this->formelement_factory = \Mockery::spy(\Tracker_FormElementFactory::class);
+        $this->request             = \Mockery::spy(\Codendi_Request::class);
 
         $this->action = new Tracker_Action_CreateArtifact_ProtectedToPublic(
             $this->tracker,
@@ -116,13 +116,13 @@ class Tracker_Action_CreateArtifact_RedirectToParentCreationTest extends Tracker
         $this->current_user = aUser()->build();
         $this->new_artifact = aMockArtifact()->withId(123)->build();
 
-        $this->hierarchy = mock('Tracker_Hierarchy');
+        $this->hierarchy = \Mockery::spy(\Tracker_Hierarchy::class);
 
         stub($this->tracker)->getId()->returns($this->tracker_id);
 
         $this->parent_tracker        = aTracker()->withId(666)->build();
-        $this->parent_art_link_field = mock('Tracker_FormElement_Field_ArtifactLink');
-        $this->art_link_field        = mock('Tracker_FormElement_Field_ArtifactLink');
+        $this->parent_art_link_field = \Mockery::spy(\Tracker_FormElement_Field_ArtifactLink::class);
+        $this->art_link_field        = \Mockery::spy(\Tracker_FormElement_Field_ArtifactLink::class);
 
         $this->redirect = new Tracker_Artifact_Redirect();
     }

@@ -1163,6 +1163,7 @@ class Tracker_Artifact_getSoapValueTest extends TuleapTestCase {
 class Tracker_Artifact_getSoapValueWithFieldValuesTest extends TuleapTestCase {
     private $artifact;
     private $user;
+    private $field;
 
     public function setUp() {
         parent::setUp();
@@ -1202,8 +1203,7 @@ class Tracker_Artifact_getSoapValueWithFieldValuesTest extends TuleapTestCase {
     public function itHasAValueFromField() {
         stub($this->formelement_factory)->getUsedFieldsForSoap()->returns(array($this->field));
 
-        expect($this->field)->getSoapValue($this->user, $this->last_changeset)->once();
-        stub($this->field)->getSoapValue()->returns('whatever');
+        stub($this->field)->getSoapValue($this->user, $this->last_changeset)->returns('whatever')->once();
 
         $soap_value = $this->artifact->getSoapValue($this->user);
         $this->assertEqual($soap_value['value'][0], 'whatever');

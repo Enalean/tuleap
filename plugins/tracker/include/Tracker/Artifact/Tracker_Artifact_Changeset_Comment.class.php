@@ -19,8 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/encoding/SupportedXmlCharEncoding.class.php';
-
 class Tracker_Artifact_Changeset_Comment {
 
     /**

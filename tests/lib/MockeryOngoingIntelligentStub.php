@@ -61,7 +61,13 @@ class MockeryOngoingIntelligentStub
         }
 
         $this->method    = $name;
-        $this->arguments = $arguments;
+        foreach ($arguments as $arg) {
+            if ($arg === '*') {
+                $this->arguments[] = \Mockery::any();
+            } else {
+                $this->arguments[] = $arg;
+            }
+        }
 
         $this->setShouldReceive();
 
@@ -172,5 +178,15 @@ class MockeryOngoingIntelligentStub
     public function returnsDarWithErrors()
     {
         return $this->returns(\TestHelper::errorDar());
+    }
+
+    public function returnsAt($timing, $value)
+    {
+        throw new \Exception("returnsAt not supported, you should rewrite the test using with()->once() or ordered()");
+    }
+
+    public function throwsAt($timing, \Exception $e)
+    {
+        throw new \Exception("throwsAt not supported, you should rewrite the test using with()->once() or ordered()");
     }
 }

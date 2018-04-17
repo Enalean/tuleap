@@ -18,6 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once('bootstrap.php');
 
 class Tracker_FormElement_StaticField_SeparatorTest extends TuleapTestCase {
     
@@ -44,4 +45,3 @@ class Tracker_FormElement_StaticField_SeparatorTest extends TuleapTestCase {
     }
 
 }
-?>

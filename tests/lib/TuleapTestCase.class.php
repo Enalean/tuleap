@@ -71,6 +71,13 @@ abstract class TuleapTestCase extends UnitTestCase {
         $GLOBALS['Response'] = $GLOBALS['HTML'];
     }
 
+    protected function setUpGlobalsMockery()
+    {
+        $GLOBALS['Language'] = \Mockery::spy(BaseLanguage::class);
+        $GLOBALS['HTML']     = \Mockery::spy(Layout::class);
+        $GLOBALS['Response'] = $GLOBALS['HTML'];
+    }
+
     /**
      * tearDown a test (called after each test)
      */

@@ -19,85 +19,80 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once('bootstrap.php');
-Mock::generatePartial('Tracker_FormElement_Field_String', 'Tracker_FormElement_Field_StringTestVersion', array('getRuleString', 'getRuleNoCr', 'getProperty'));
 
-Mock::generate('Tracker_Artifact');
+class Tracker_FormElement_Field_StringTest extends TuleapTestCase
+{
 
-require_once('common/valid/Rule.class.php');
-Mock::generate('Rule_String');
-Mock::generate('Rule_NoCr');
-
-require_once('common/include/Response.class.php');
-Mock::generate('Response');
-
-class Tracker_FormElement_Field_StringTest extends TuleapTestCase {
-
-    function setUp() {
-        $GLOBALS['Response'] = new MockResponse();
-        $GLOBALS['Language'] = new MockBaseLanguage();
+    function setUp()
+    {
+        parent::setUp();
+        $this->setUpGlobalsMockery();
     }
 
-    function tearDrop() {
-        unset($GLOBALS['Response']);
-    }
-
-    function testNoDefaultValue() {
-        $str_field = new Tracker_FormElement_Field_StringTestVersion();
+    function testNoDefaultValue()
+    {
+        $str_field = \Mockery::mock(\Tracker_FormElement_Field_String::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $str_field->shouldReceive('getProperty')->andReturn(null);
         $this->assertFalse($str_field->hasDefaultValue());
     }
 
-    function testDefaultValue() {
-        $str_field = new Tracker_FormElement_Field_StringTestVersion();
-        $str_field->setReturnValue('getProperty', 'foo', array('default_value'));
+
+    function testDefaultValue()
+    {
+        $str_field = \Mockery::mock(\Tracker_FormElement_Field_String::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $str_field->shouldReceive('getProperty')->with('default_value')->andReturns('foo');
         $this->assertTrue($str_field->hasDefaultValue());
         $this->assertEqual($str_field->getDefaultValue(), 'foo');
     }
 
-    function testIsValid() {
-        $artifact = new MockTracker_Artifact();
+    function testIsValid()
+    {
+        $artifact = \Mockery::spy(\Tracker_Artifact::class);
 
-        $rule_string = new MockRule_String();
-        $rule_string->setReturnValue('isValid', true);
+        $rule_string = \Mockery::spy(\Rule_String::class);
+        $rule_string->shouldReceive('isValid')->andReturns(true);
 
-        $rule_nocr = new MockRule_NoCr();
-        $rule_nocr->setReturnValue('isValid', true);
+        $rule_nocr = \Mockery::spy(\Rule_NoCr::class);
+        $rule_nocr->shouldReceive('isValid')->andReturns(true);
 
-        $string = new Tracker_FormElement_Field_StringTestVersion();
-        $string->setReturnReference('getRuleString', $rule_string);
-        $string->setReturnReference('getRuleNoCr', $rule_nocr);
+        $string = \Mockery::mock(\Tracker_FormElement_Field_String::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $string->shouldReceive('getRuleString')->andReturns($rule_string);
+        $string->shouldReceive('getRuleNoCr')->andReturns($rule_nocr);
+        $string->shouldReceive('getProperty')->andReturns(null);
 
         $this->assertTrue($string->isValid($artifact, "Du texte"));
     }
 
     function testIsValid_cr() {
-        $artifact = new MockTracker_Artifact();
+        $artifact = \Mockery::spy(\Tracker_Artifact::class);
 
-        $rule_string = new MockRule_String();
-        $rule_string->setReturnValue('isValid', true);
+        $rule_string = \Mockery::spy(\Rule_String::class);
+        $rule_string->shouldReceive('isValid')->andReturns(true);
 
-        $rule_nocr = new MockRule_NoCr();
-        $rule_nocr->setReturnValue('isValid', false);
+        $rule_nocr = \Mockery::spy(\Rule_NoCr::class);
+        $rule_nocr->shouldReceive('isValid')->andReturns(false);
 
-        $string = new Tracker_FormElement_Field_StringTestVersion();
-        $string->setReturnReference('getRuleString', $rule_string);
-        $string->setReturnReference('getRuleNoCr', $rule_nocr);
+        $string = \Mockery::mock(\Tracker_FormElement_Field_String::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $string->shouldReceive('getRuleString')->andReturns($rule_string);
+        $string->shouldReceive('getRuleNoCr')->andReturns($rule_nocr);
+        $string->shouldReceive('getProperty')->andReturns(null);
 
         $this->assertFalse($string->isValid($artifact, "Du texte \n sur plusieurs lignes"));
     }
 
     public function itAcceptsStringRespectingMaxCharsProperty()
     {
-        $artifact = new MockTracker_Artifact();
+        $artifact = \Mockery::spy(\Tracker_Artifact::class);
 
-        $rule_string = new MockRule_String();
-        $rule_string->setReturnValue('isValid', true);
+        $rule_string = \Mockery::spy(\Rule_String::class);
+        $rule_string->shouldReceive('isValid')->andReturns(true);
 
-        $rule_nocr = new MockRule_NoCr();
-        $rule_nocr->setReturnValue('isValid', true);
+        $rule_nocr = \Mockery::spy(\Rule_NoCr::class);
+        $rule_nocr->shouldReceive('isValid')->andReturns(true);
 
-        $string = new Tracker_FormElement_Field_StringTestVersion();
-        $string->setReturnReference('getRuleString', $rule_string);
-        $string->setReturnReference('getRuleNoCr', $rule_nocr);
+        $string = \Mockery::mock(\Tracker_FormElement_Field_String::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $string->shouldReceive('getRuleString')->andReturns($rule_string);
+        $string->shouldReceive('getRuleNoCr')->andReturns($rule_nocr);
         stub($string)->getProperty('maxchars')->returns(6);
 
         $this->assertTrue($string->isValid($artifact, 'Tuleap'));
@@ -105,17 +100,17 @@ class Tracker_FormElement_Field_StringTest extends TuleapTestCase {
 
     public function itAcceptsStringWhenMaxCharsPropertyIsNotDefined()
     {
-        $artifact = new MockTracker_Artifact();
+        $artifact = \Mockery::spy(\Tracker_Artifact::class);
 
-        $rule_string = new MockRule_String();
-        $rule_string->setReturnValue('isValid', true);
+        $rule_string = \Mockery::spy(\Rule_String::class);
+        $rule_string->shouldReceive('isValid')->andReturns(true);
 
-        $rule_nocr = new MockRule_NoCr();
-        $rule_nocr->setReturnValue('isValid', true);
+        $rule_nocr = \Mockery::spy(\Rule_NoCr::class);
+        $rule_nocr->shouldReceive('isValid')->andReturns(true);
 
-        $string = new Tracker_FormElement_Field_StringTestVersion();
-        $string->setReturnReference('getRuleString', $rule_string);
-        $string->setReturnReference('getRuleNoCr', $rule_nocr);
+        $string = \Mockery::mock(\Tracker_FormElement_Field_String::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $string->shouldReceive('getRuleString')->andReturns($rule_string);
+        $string->shouldReceive('getRuleNoCr')->andReturns($rule_nocr);
         stub($string)->getProperty('maxchars')->returns(0);
 
         $this->assertTrue($string->isValid($artifact, 'Tuleap'));
@@ -123,29 +118,29 @@ class Tracker_FormElement_Field_StringTest extends TuleapTestCase {
 
     public function itRejectsStringNotRespectingMaxCharsProperty()
     {
-        $artifact = new MockTracker_Artifact();
+        $artifact = \Mockery::spy(\Tracker_Artifact::class);
 
-        $rule_string = new MockRule_String();
-        $rule_string->setReturnValue('isValid', true);
+        $rule_string = \Mockery::spy(\Rule_String::class);
+        $rule_string->shouldReceive('isValid')->andReturns(true);
 
-        $rule_nocr = new MockRule_NoCr();
-        $rule_nocr->setReturnValue('isValid', true);
+        $rule_nocr = \Mockery::spy(\Rule_NoCr::class);
+        $rule_nocr->shouldReceive('isValid')->andReturns(true);
 
-        $string = new Tracker_FormElement_Field_StringTestVersion();
-        $string->setReturnReference('getRuleString', $rule_string);
-        $string->setReturnReference('getRuleNoCr', $rule_nocr);
+        $string = \Mockery::mock(\Tracker_FormElement_Field_String::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $string->shouldReceive('getRuleString')->andReturns($rule_string);
+        $string->shouldReceive('getRuleNoCr')->andReturns($rule_nocr);
         stub($string)->getProperty('maxchars')->returns(1);
 
         $this->assertFalse($string->isValid($artifact, 'Tuleap'));
     }
 
     function testSoapAvailableValues() {
-        $f = new Tracker_FormElement_Field_StringTestVersion();
+        $f = \Mockery::mock(\Tracker_FormElement_Field_String::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->assertNull($f->getSoapAvailableValues());
     }
 
     function testGetFieldData() {
-        $f = new Tracker_FormElement_Field_StringTestVersion();
+        $f = \Mockery::mock(\Tracker_FormElement_Field_String::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->assertEqual('this is a string value', $f->getFieldData('this is a string value'));
     }
 
@@ -153,7 +148,7 @@ class Tracker_FormElement_Field_StringTest extends TuleapTestCase {
      * @see https://tuleap.net/plugins/tracker?aid=6449
      */
     function itIsEmptyWhenThereIsNoContent() {
-        $artifact = new MockTracker_Artifact();
+        $artifact = \Mockery::spy(\Tracker_Artifact::class);
         $field    = aStringField()->build();
         $this->assertTrue($field->isEmpty('', $artifact));
     }
@@ -162,7 +157,7 @@ class Tracker_FormElement_Field_StringTest extends TuleapTestCase {
      * @see https://tuleap.net/plugins/tracker?aid=6449
      */
     function itIsEmptyWhenThereIsOnlyWhitespaces() {
-        $artifact = new MockTracker_Artifact();
+        $artifact = \Mockery::spy(\Tracker_Artifact::class);
         $field    = aStringField()->build();
         $this->assertTrue($field->isEmpty('  ', $artifact));
     }
@@ -171,7 +166,7 @@ class Tracker_FormElement_Field_StringTest extends TuleapTestCase {
      * @see https://tuleap.net/plugins/tracker?aid=6449
      */
     function itIsNotEmptyWhenThereIsContent() {
-        $artifact = new MockTracker_Artifact();
+        $artifact = \Mockery::spy(\Tracker_Artifact::class);
         $field    = aStringField()->build();
         $this->assertFalse($field->isEmpty('sdf', $artifact));
     }
@@ -194,20 +189,21 @@ class Tracker_FormElement_Field_String_Changes extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
         $this->field = aStringField()->build();
-        $this->previous_value = stub('Tracker_Artifact_ChangesetValue_String')->getText()->returns('1');
+        $this->previous_value = mockery_stub(\Tracker_Artifact_ChangesetValue_String::class)->getText()->returns('1');
     }
 
     public function itReturnsTrueIfThereIsAChange() {
         $new_value = '1.0';
 
-        $this->assertTrue($this->field->hasChanges(mock('Tracker_Artifact'), $this->previous_value, $new_value));
+        $this->assertTrue($this->field->hasChanges(\Mockery::spy(\Tracker_Artifact::class), $this->previous_value, $new_value));
     }
 
     public function itReturnsFalseIfThereIsNoChange() {
         $new_value = '1';
 
-        $this->assertFalse($this->field->hasChanges(mock('Tracker_Artifact'), $this->previous_value, $new_value));
+        $this->assertFalse($this->field->hasChanges(\Mockery::spy(\Tracker_Artifact::class), $this->previous_value, $new_value));
     }
 }

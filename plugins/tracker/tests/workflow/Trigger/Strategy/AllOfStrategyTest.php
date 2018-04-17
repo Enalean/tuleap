@@ -36,14 +36,15 @@ abstract class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategy_BaseTest  e
 
     public function setUp() {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
         $this->story_tracker = aTracker()->withId(888)->build();
         $this->task_tracker = aTracker()->withId(899)->build();
 
-        $this->parent = mock('Tracker_Artifact');
+        $this->parent = \Mockery::spy(\Tracker_Artifact::class);
         stub($this->parent)->getTracker()->returns($this->story_tracker);
 
-        $this->artifact = anArtifact()->withChangesets(array(mock('Tracker_Artifact_Changeset')))->withParentWithoutPermissionChecking($this->parent)->withTracker($this->task_tracker)->build();
+        $this->artifact = anArtifact()->withChangesets(array(\Mockery::spy(\Tracker_Artifact_Changeset::class)))->withParentWithoutPermissionChecking($this->parent)->withTracker($this->task_tracker)->build();
 
         $this->target_field_id = 569;
         $this->target_field    = aSelectBoxField()->withId($this->target_field_id)->withTracker($this->story_tracker)->build();
@@ -77,6 +78,7 @@ class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategy_OneRuleTest extends 
 
     public function setUp() {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
         $this->bug_tracker  = aTracker()->withId(901)->build();
 
@@ -97,7 +99,7 @@ class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategy_OneRuleTest extends 
     }
 
     public function itSetTheValueIfOneSameTypeSiblingHasCorrectValue() {
-        $sibling = mock('Tracker_Artifact');
+        $sibling = \Mockery::spy(\Tracker_Artifact::class);
         stub($sibling)->getId()->returns(112);
         stub($sibling)->getTracker()->returns($this->task_tracker);
         stub($sibling)->getValue($this->trigger_field)->returns(aChangesetValueList()->withValues(array($this->trigger_value))->build());
@@ -107,12 +109,12 @@ class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategy_OneRuleTest extends 
     }
 
     public function itDoesntSetTheValueIfOneSameTypeSiblingHasIncorrectValue() {
-        $sibling_1 = mock('Tracker_Artifact');
+        $sibling_1 = \Mockery::spy(\Tracker_Artifact::class);
         stub($sibling_1)->getId()->returns(112);
         stub($sibling_1)->getTracker()->returns($this->task_tracker);
         stub($sibling_1)->getValue($this->trigger_field)->returns(aChangesetValueList()->withValues(array($this->trigger_value))->build());
 
-        $sibling_2 = mock('Tracker_Artifact');
+        $sibling_2 = \Mockery::spy(\Tracker_Artifact::class);
         stub($sibling_2)->getId()->returns(113);
         stub($sibling_2)->getTracker()->returns($this->task_tracker);
         stub($sibling_2)->getValue($this->trigger_field)->returns(aChangesetValueList()->withValues(array(aBindStaticValue()->withId('whatever')->build()))->build());
@@ -129,6 +131,7 @@ class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategy_SeveralRulesTest ext
 
     public function setUp() {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
         $this->bug_tracker  = aTracker()->withId(901)->build();
 
@@ -161,12 +164,12 @@ class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategy_SeveralRulesTest ext
     }
 
     public function itSetTheValueIfDifferentTypeSiblingHaveLegitValue() {
-        $sibling_1 = mock('Tracker_Artifact');
+        $sibling_1 = \Mockery::spy(\Tracker_Artifact::class);
         stub($sibling_1)->getId()->returns(112);
         stub($sibling_1)->getTracker()->returns($this->task_tracker);
         stub($sibling_1)->getValue($this->trigger_field)->returns(aChangesetValueList()->withValues(array($this->trigger_value))->build());
 
-        $sibling_2 = mock('Tracker_Artifact');
+        $sibling_2 = \Mockery::spy(\Tracker_Artifact::class);
         stub($sibling_2)->getId()->returns(113);
         stub($sibling_1)->getTracker()->returns($this->bug_tracker);
         stub($sibling_2)->getValue($this->trigger_field)->returns(aChangesetValueList()->withValues(array($this->trigger_value_2))->build());
@@ -177,12 +180,12 @@ class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategy_SeveralRulesTest ext
     }
 
     public function itDoesntSetTheValueIfOneOfTheChildDoesntApply() {
-        $sibling_1 = mock('Tracker_Artifact');
+        $sibling_1 = \Mockery::spy(\Tracker_Artifact::class);
         stub($sibling_1)->getId()->returns(112);
         stub($sibling_1)->getTracker()->returns($this->task_tracker);
         stub($sibling_1)->getValue($this->trigger_field)->returns(aChangesetValueList()->withValues(array($this->trigger_value))->build());
 
-        $sibling_2 = mock('Tracker_Artifact');
+        $sibling_2 = \Mockery::spy(\Tracker_Artifact::class);
         stub($sibling_2)->getId()->returns(113);
         stub($sibling_2)->getTracker()->returns($this->bug_tracker);
         stub($sibling_2)->getValue($this->trigger_field)->returns(aChangesetValueList()->withValues(array(aBindStaticValue()->withId('whatever')->build()))->build());

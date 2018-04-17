@@ -18,13 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'bootstrap.php';
+
 class Tracker_Artifact_ChangesetValue_String_RESTTest extends TuleapTestCase {
 
     public function itReturnsTheRESTValue() {
-        $field = stub('Tracker_FormElement_Field_String')->getName()->returns('field_string');
+        $field = mockery_stub(\Tracker_FormElement_Field_String::class)->getName()->returns('field_string');
         $user  = aUser()->withId(101)->build();
 
-        $changeset = new Tracker_Artifact_ChangesetValue_String(111, mock('Tracker_Artifact_Changeset'), $field, true, 'myxedemic enthymematic', 'text');
+        $changeset = new Tracker_Artifact_ChangesetValue_String(111, \Mockery::spy(\Tracker_Artifact_Changeset::class), $field, true, 'myxedemic enthymematic', 'text');
         $representation = $changeset->getRESTValue($user, $changeset);
 
         $this->assertEqual($representation->value, 'myxedemic enthymematic');

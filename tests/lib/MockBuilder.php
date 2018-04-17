@@ -68,7 +68,7 @@ function stub($classname_or_simpletest_mock) {
  */
 function mockery_stub($classname_or_simpletest_mock) {
     if (is_string($classname_or_simpletest_mock)) {
-        return stub(safe_mock($classname_or_simpletest_mock));
+        return stub(\Mockery::spy($classname_or_simpletest_mock));
     }
     return null;
 }

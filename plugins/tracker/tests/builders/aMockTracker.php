@@ -17,13 +17,15 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 require_once __DIR__.'/../bootstrap.php';
+
 class MockTrackerBuilder {
     
     private $id;
     
-    public function __construct() {
-        $this->tracker = mock('Tracker');
+    public function __construct($tracker) {
+        $this->tracker = $tracker;
     }
     
     public function withId($id) {
@@ -79,7 +81,12 @@ class MockTrackerBuilder {
     }
 }
 
-function aMockTracker() {
-    return new MockTrackerBuilder();
+function aMockTracker()
+{
+    return new MockTrackerBuilder(mock(Tracker::class));
 }
-?>
+
+function aMockeryTracker()
+{
+    return new MockTrackerBuilder(\Mockery::spy(Tracker::class));
+}

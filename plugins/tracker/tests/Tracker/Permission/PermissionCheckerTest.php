@@ -35,14 +35,15 @@ class Tracker_Permission_PermissionCheckerTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
-        $project = mock('Project');
+        $project = \Mockery::spy(\Project::class);
         stub($project)->getID()->returns(120);
         stub($project)->isPublic()->returns(true);
 
-        $this->user_manager       = mock('UserManager');
-        $this->project_manager    = mock('ProjectManager');
-        $this->project_manager->setReturnValue('checkRestrictedAccess', true);
+        $this->user_manager       = \Mockery::spy(\UserManager::class);
+        $this->project_manager    = \Mockery::spy(\ProjectManager::class);
+        $this->project_manager->shouldReceive('checkRestrictedAccess')->andReturns(true);
 
         $this->permission_checker = new Tracker_Permission_PermissionChecker($this->user_manager, $this->project_manager);
 
@@ -50,75 +51,75 @@ class Tracker_Permission_PermissionCheckerTest extends TuleapTestCase {
         // $submitter and $u_sub are in the same ugroup (UgroupSub - ugroup_id=102)
         // $other and $u are neither in UgroupAss nor in UgroupSub
 
-        $this->user = mock('PFUser');
-        $this->user->setReturnValue('getId', 120);
-        $this->user->setReturnValue('isMemberOfUgroup',false);
-        $this->user->setReturnValue('isSuperUser', false);
-        $this->user->setReturnValue('isMember', true, array(12));
+        $this->user = \Mockery::spy(\PFUser::class);
+        $this->user->shouldReceive('getId')->andReturns(120);
+        $this->user->shouldReceive('isMemberOfUGroup')->andReturns(false);
+        $this->user->shouldReceive('isSuperUser')->andReturns(false);
+        $this->user->shouldReceive('isMember')->with(12)->andReturns(true);
 
-        $this->assignee = mock('PFUser');
-        $this->assignee->setReturnValue('getId', 121);
-        $this->assignee->setReturnValue('isMemberOfUgroup', true,  array(101, 222));
-        $this->assignee->setReturnValue('isMemberOfUgroup', false, array(102, 222));
-        $this->assignee->setReturnValue('isSuperUser', false);
-        $this->assignee->setReturnValue('isMember', true, array(12));
+        $this->assignee = \Mockery::spy(\PFUser::class);
+        $this->assignee->shouldReceive('getId')->andReturns(121);
+        $this->assignee->shouldReceive('isMemberOfUGroup')->with(101, 222)->andReturns(true);
+        $this->assignee->shouldReceive('isMemberOfUGroup')->with(102, 222)->andReturns(false);
+        $this->assignee->shouldReceive('isSuperUser')->andReturns(false);
+        $this->assignee->shouldReceive('isMember')->with(12)->andReturns(true);
 
-        $this->u_ass = mock('PFUser');
-        $this->u_ass->setReturnValue('getId', 122);
-        $this->u_ass->setReturnValue('isMemberOfUgroup', true,  array(101, 222));
-        $this->u_ass->setReturnValue('isMemberOfUgroup', false, array(102, 222));
-        $this->u_ass->setReturnValue('isSuperUser', false);
-        $this->u_ass->setReturnValue('isMember', true, array(12));
+        $this->u_ass = \Mockery::spy(\PFUser::class);
+        $this->u_ass->shouldReceive('getId')->andReturns(122);
+        $this->u_ass->shouldReceive('isMemberOfUGroup')->with(101, 222)->andReturns(true);
+        $this->u_ass->shouldReceive('isMemberOfUGroup')->with(102, 222)->andReturns(false);
+        $this->u_ass->shouldReceive('isSuperUser')->andReturns(false);
+        $this->u_ass->shouldReceive('isMember')->with(12)->andReturns(true);
 
-        $this->submitter = mock('PFUser');
-        $this->submitter->setReturnValue('getId', 123);
-        $this->submitter->setReturnValue('isMemberOfUgroup', false, array(101, 222));
-        $this->submitter->setReturnValue('isMemberOfUgroup', true,  array(102, 222));
-        $this->submitter->setReturnValue('isSuperUser', false);
-        $this->submitter->setReturnValue('isMember', true, array(12));
+        $this->submitter = \Mockery::spy(\PFUser::class);
+        $this->submitter->shouldReceive('getId')->andReturns(123);
+        $this->submitter->shouldReceive('isMemberOfUGroup')->with(101, 222)->andReturns(false);
+        $this->submitter->shouldReceive('isMemberOfUGroup')->with(102, 222)->andReturns(true);
+        $this->submitter->shouldReceive('isSuperUser')->andReturns(false);
+        $this->submitter->shouldReceive('isMember')->with(12)->andReturns(true);
 
-        $this->u_sub = mock('PFUser');
-        $this->u_sub->setReturnValue('getId', 124);
-        $this->u_sub->setReturnValue('isMemberOfUgroup', false, array(101, 222));
-        $this->u_sub->setReturnValue('isMemberOfUgroup', true,  array(102, 222));
-        $this->u_sub->setReturnValue('isSuperUser', false);
-        $this->u_sub->setReturnValue('isMember', true, array(12));
+        $this->u_sub = \Mockery::spy(\PFUser::class);
+        $this->u_sub->shouldReceive('getId')->andReturns(124);
+        $this->u_sub->shouldReceive('isMemberOfUGroup')->with(101, 222)->andReturns(false);
+        $this->u_sub->shouldReceive('isMemberOfUGroup')->with(102, 222)->andReturns(true);
+        $this->u_sub->shouldReceive('isSuperUser')->andReturns(false);
+        $this->u_sub->shouldReceive('isMember')->with(12)->andReturns(true);
 
-        $this->other = mock('PFUser');
-        $this->other->setReturnValue('getId', 125);
-        $this->other->setReturnValue('isMemberOfUgroup', false);
-        $this->other->setReturnValue('isSuperUser', false);
-        $this->other->setReturnValue('isMember', true, array(12));
+        $this->other = \Mockery::spy(\PFUser::class);
+        $this->other->shouldReceive('getId')->andReturns(125);
+        $this->other->shouldReceive('isMemberOfUGroup')->andReturns(false);
+        $this->other->shouldReceive('isSuperUser')->andReturns(false);
+        $this->other->shouldReceive('isMember')->with(12)->andReturns(true);
 
-        $this->restricted = mock('PFUser');
-        $this->restricted->setReturnValue('getId', 126);
-        $this->restricted->setReturnValue('isMemberOfUgroup', true);
-        $this->restricted->setReturnValue('isSuperUser', false);
-        $this->restricted->setReturnValue('isRestricted', true);
+        $this->restricted = \Mockery::spy(\PFUser::class);
+        $this->restricted->shouldReceive('getId')->andReturns(126);
+        $this->restricted->shouldReceive('isMemberOfUGroup')->andReturns(true);
+        $this->restricted->shouldReceive('isSuperUser')->andReturns(false);
+        $this->restricted->shouldReceive('isRestricted')->andReturns(true);
 
-        $this->user_manager->setReturnReference('getUserById', $this->user, array(120));
-        $this->user_manager->setReturnReference('getUserById', $this->assignee, array(121));
-        $this->user_manager->setReturnReference('getUserById', $this->u_ass, array(122));
-        $this->user_manager->setReturnReference('getUserById', $this->submitter, array(123));
-        $this->user_manager->setReturnReference('getUserById', $this->u_sub, array(124));
-        $this->user_manager->setReturnReference('getUserById', $this->other, array(125));
-        $this->user_manager->setReturnReference('getUserById', $this->restricted, array(126));
+        $this->user_manager->shouldReceive('getUserById')->with(120)->andReturns($this->user);
+        $this->user_manager->shouldReceive('getUserById')->with(121)->andReturns($this->assignee);
+        $this->user_manager->shouldReceive('getUserById')->with(122)->andReturns($this->u_ass);
+        $this->user_manager->shouldReceive('getUserById')->with(123)->andReturns($this->submitter);
+        $this->user_manager->shouldReceive('getUserById')->with(124)->andReturns($this->u_sub);
+        $this->user_manager->shouldReceive('getUserById')->with(125)->andReturns($this->other);
+        $this->user_manager->shouldReceive('getUserById')->with(126)->andReturns($this->restricted);
 
-        $this->tracker = mock('Tracker');
-        $this->tracker->setReturnValue('getId', 666);
-        $this->tracker->setReturnValue('getGroupId', 222);
-        $this->tracker->setReturnValue('getProject', $project);
+        $this->tracker = \Mockery::spy(\Tracker::class);
+        $this->tracker->shouldReceive('getId')->andReturns(666);
+        $this->tracker->shouldReceive('getGroupId')->andReturns(222);
+        $this->tracker->shouldReceive('getProject')->andReturns($project);
     }
 
     public function testRestrictedUserCanSeeTrackerBecauseTrackerDoesNotCheckRestrictedAccess() {
-        $project_manager = stub('ProjectManager')->checkRestrictedAccess()->returns(false);
+        $project_manager = mockery_stub(\ProjectManager::class)->checkRestrictedAccess()->returns(false);
 
         $permissions = array('PLUGIN_TRACKER_ACCESS_FULL' => array(0 => ProjectUGroup::REGISTERED));
-        $this->tracker->setReturnReference('getAuthorizedUgroupsByPermissionType', $permissions);
+        $this->tracker->shouldReceive('getAuthorizedUgroupsByPermissionType')->andReturns($permissions);
 
-        $artifact = mock('Tracker_Artifact');
-        $artifact->setReturnReference('getTracker', $this->tracker);
-        $artifact->setReturnValue('useArtifactPermissions', false);
+        $artifact = \Mockery::spy(\Tracker_Artifact::class);
+        $artifact->shouldReceive('getTracker')->andReturns($this->tracker);
+        $artifact->shouldReceive('useArtifactPermissions')->andReturns(false);
 
         $permission_checker = new Tracker_Permission_PermissionChecker(
             $this->user_manager,
@@ -138,12 +139,12 @@ class Tracker_Permission_PermissionCheckerTest extends TuleapTestCase {
 
 
         $permissions = array("PLUGIN_TRACKER_ACCESS_SUBMITTER" => array(0 => $ugroup_sub));
-        $this->tracker->setReturnReference('getAuthorizedUgroupsByPermissionType', $permissions);
+        $this->tracker->shouldReceive('getAuthorizedUgroupsByPermissionType')->andReturns($permissions);
 
-        $artifact = mock('Tracker_Artifact');
-        $artifact->setReturnReference('getTracker', $this->tracker);
-        $artifact->setReturnValue('useArtifactPermissions', false);
-        $artifact->setReturnValue('getSubmittedBy', 123);
+        $artifact = \Mockery::spy(\Tracker_Artifact::class);
+        $artifact->shouldReceive('getTracker')->andReturns($this->tracker);
+        $artifact->shouldReceive('useArtifactPermissions')->andReturns(false);
+        $artifact->shouldReceive('getSubmittedBy')->andReturns(123);
 
         $this->assertTrue($this->permission_checker->userCanView($this->submitter, $artifact));
         $this->assertTrue($this->permission_checker->userCanView($this->u_sub, $artifact));
@@ -162,18 +163,18 @@ class Tracker_Permission_PermissionCheckerTest extends TuleapTestCase {
         // $assignee and $u_ass should have the right to see it.
         // $other, $submitter, $u_sub and $u should not have the right to see it
         $permissions = array("PLUGIN_TRACKER_ACCESS_ASSIGNEE" => array(0 => $ugroup_ass));
-        $this->tracker->setReturnReference('getAuthorizedUgroupsByPermissionType', $permissions);
+        $this->tracker->shouldReceive('getAuthorizedUgroupsByPermissionType')->andReturns($permissions);
 
         $contributor_field = aMockField()->build();
-        $this->tracker->setReturnReference('getContributorField', $contributor_field);
-        $artifact_assignee = mock('Tracker_Artifact');
-        $artifact_assignee->setReturnReference('getTracker', $this->tracker);
-        $artifact_assignee->setReturnValue('useArtifactPermissions', false);
-        $artifact_assignee->setReturnValue('getSubmittedBy', 120);
-        $user_changeset_value = mock('Tracker_Artifact_ChangesetValue');
+        $this->tracker->shouldReceive('getContributorField')->andReturns($contributor_field);
+        $artifact_assignee = \Mockery::spy(\Tracker_Artifact::class);
+        $artifact_assignee->shouldReceive('getTracker')->andReturns($this->tracker);
+        $artifact_assignee->shouldReceive('useArtifactPermissions')->andReturns(false);
+        $artifact_assignee->shouldReceive('getSubmittedBy')->andReturns(120);
+        $user_changeset_value = \Mockery::spy(\Tracker_Artifact_ChangesetValue::class);
         $contributors = array(121);
-        $user_changeset_value->setReturnReference('getValue', $contributors);
-        $artifact_assignee->setReturnReference('getValue', $user_changeset_value, array($contributor_field));
+        $user_changeset_value->shouldReceive('getValue')->andReturns($contributors);
+        $artifact_assignee->shouldReceive('getValue')->with($contributor_field)->andReturns($user_changeset_value);
 
         $this->assertTrue ($this->permission_checker->userCanView($this->assignee, $artifact_assignee));
         $this->assertTrue ($this->permission_checker->userCanView($this->u_ass, $artifact_assignee));
@@ -194,18 +195,18 @@ class Tracker_Permission_PermissionCheckerTest extends TuleapTestCase {
         $permissions = array("PLUGIN_TRACKER_ACCESS_ASSIGNEE"  => array(0 => $ugroup_ass),
                              "PLUGIN_TRACKER_ACCESS_SUBMITTER" => array(0 => $ugroup_sub)
                             );
-        $this->tracker->setReturnReference('getAuthorizedUgroupsByPermissionType', $permissions);
+        $this->tracker->shouldReceive('getAuthorizedUgroupsByPermissionType')->andReturns($permissions);
 
         $contributor_field = aMockField()->build();
-        $this->tracker->setReturnReference('getContributorField', $contributor_field);
-        $artifact_subass = mock('Tracker_Artifact');
-        $artifact_subass->setReturnReference('getTracker', $this->tracker);
-        $artifact_subass->setReturnValue('useArtifactPermissions', false);
-        $artifact_subass->setReturnValue('getSubmittedBy', 123);
-        $user_changeset_value = new MockTracker_Artifact_ChangesetValue();
+        $this->tracker->shouldReceive('getContributorField')->andReturns($contributor_field);
+        $artifact_subass = \Mockery::spy(\Tracker_Artifact::class);
+        $artifact_subass->shouldReceive('getTracker')->andReturns($this->tracker);
+        $artifact_subass->shouldReceive('useArtifactPermissions')->andReturns(false);
+        $artifact_subass->shouldReceive('getSubmittedBy')->andReturns(123);
+        $user_changeset_value = Mockery::spy(Tracker_Artifact_ChangesetValue::class);
         $contributors = array(121);
-        $user_changeset_value->setReturnReference('getValue', $contributors);
-        $artifact_subass->setReturnReference('getValue', $user_changeset_value, array($contributor_field));
+        $user_changeset_value->shouldReceive('getValue')->andReturns($contributors);
+        $artifact_subass->shouldReceive('getValue')->with($contributor_field)->andReturns($user_changeset_value);
 
         $this->assertTrue($this->permission_checker->userCanView($this->submitter, $artifact_subass));
         $this->assertTrue($this->permission_checker->userCanView($this->u_sub, $artifact_subass));
@@ -225,57 +226,57 @@ class Tracker_Permission_PermissionCheckerTest extends TuleapTestCase {
         // $u is in (UgroupFul - ugroup_id=103);
         // $other do not belong to any ugroup
         //
-        $u = mock('PFUser');
-        $u->setReturnValue('getId', 120);
-        $u->setReturnValue('isMemberOfUgroup', true,  array(103, 222));
-        $u->setReturnValue('isMemberOfUgroup', false, array(101, 222));
-        $u->setReturnValue('isMemberOfUgroup', false, array(102, 222));
-        $u->setReturnValue('isSuperUser', false);
+        $u = \Mockery::spy(\PFUser::class);
+        $u->shouldReceive('getId')->andReturns(120);
+        $u->shouldReceive('isMemberOfUGroup')->with(103, 222)->andReturns(true);
+        $u->shouldReceive('isMemberOfUGroup')->with(101, 222)->andReturns(false);
+        $u->shouldReceive('isMemberOfUGroup')->with(102, 222)->andReturns(false);
+        $u->shouldReceive('isSuperUser')->andReturns(false);
 
         //
-        $assignee = mock('PFUser');
-        $assignee->setReturnValue('getId', 121);
-        $assignee->setReturnValue('isMemberOfUgroup', true,  array(101, 222));
-        $assignee->setReturnValue('isMemberOfUgroup', false, array(102, 222));
-        $assignee->setReturnValue('isMemberOfUgroup', false, array(103, 222));
-        $assignee->setReturnValue('isSuperUser', false);
+        $assignee = \Mockery::spy(\PFUser::class);
+        $assignee->shouldReceive('getId')->andReturns(121);
+        $assignee->shouldReceive('isMemberOfUGroup')->with(101, 222)->andReturns(true);
+        $assignee->shouldReceive('isMemberOfUGroup')->with(102, 222)->andReturns(false);
+        $assignee->shouldReceive('isMemberOfUGroup')->with(103, 222)->andReturns(false);
+        $assignee->shouldReceive('isSuperUser')->andReturns(false);
         //
-        $submitter = mock('PFUser');
-        $submitter->setReturnValue('getId', 122);
-        $submitter->setReturnValue('isMemberOfUgroup', false, array(101, 222));
-        $submitter->setReturnValue('isMemberOfUgroup', true,  array(102, 222));
-        $submitter->setReturnValue('isMemberOfUgroup', false,  array(103, 222));
-        $submitter->setReturnValue('isSuperUser', false);
+        $submitter = \Mockery::spy(\PFUser::class);
+        $submitter->shouldReceive('getId')->andReturns(122);
+        $submitter->shouldReceive('isMemberOfUGroup')->with(101, 222)->andReturns(false);
+        $submitter->shouldReceive('isMemberOfUGroup')->with(102, 222)->andReturns(true);
+        $submitter->shouldReceive('isMemberOfUGroup')->with(103, 222)->andReturns(false);
+        $submitter->shouldReceive('isSuperUser')->andReturns(false);
         //
-        $other = mock('PFUser');
-        $other->setReturnValue('getId', 123);
-        $other->setReturnValue('isMemberOfUgroup', false);
-        $other->setReturnValue('isSuperUser', false);
+        $other = \Mockery::spy(\PFUser::class);
+        $other->shouldReceive('getId')->andReturns(123);
+        $other->shouldReceive('isMemberOfUGroup')->andReturns(false);
+        $other->shouldReceive('isSuperUser')->andReturns(false);
 
-        $user_manager = mock('UserManager');
-        $user_manager->setReturnReference('getUserById', $u, array(120));
-        $user_manager->setReturnReference('getUserById', $assignee, array(121));
-        $user_manager->setReturnReference('getUserById', $submitter, array(122));
-        $user_manager->setReturnReference('getUserById', $other, array(123));
+        $user_manager = \Mockery::spy(\UserManager::class);
+        $user_manager->shouldReceive('getUserById')->with(120)->andReturns($u);
+        $user_manager->shouldReceive('getUserById')->with(121)->andReturns($assignee);
+        $user_manager->shouldReceive('getUserById')->with(122)->andReturns($submitter);
+        $user_manager->shouldReceive('getUserById')->with(123)->andReturns($other);
 
-        $project_manager = mock('ProjectManager');
+        $project_manager = \Mockery::spy(\ProjectManager::class);
 
         // $artifact_subass has been submitted by $submitter and assigned to $assignee
         // $u should have the right to see it.
         // $other, $submitter and assigned should not have the right to see it
         $permissions = array("PLUGIN_TRACKER_ACCESS_FULL" => array(0 => $ugroup_ful));
-        $this->tracker->setReturnReference('getAuthorizedUgroupsByPermissionType', $permissions);
+        $this->tracker->shouldReceive('getAuthorizedUgroupsByPermissionType')->andReturns($permissions);
 
         $contributor_field = aMockField()->build();
-        $this->tracker->setReturnReference('getContributorField', $contributor_field);
-        $artifact_subass = mock('Tracker_Artifact');
-        $artifact_subass->setReturnReference('getTracker', $this->tracker);
-        $artifact_subass->setReturnValue('useArtifactPermissions', false);
-        $artifact_subass->setReturnValue('getSubmittedBy', 123);
-        $user_changeset_value = new MockTracker_Artifact_ChangesetValue();
+        $this->tracker->shouldReceive('getContributorField')->andReturns($contributor_field);
+        $artifact_subass = \Mockery::spy(\Tracker_Artifact::class);
+        $artifact_subass->shouldReceive('getTracker')->andReturns($this->tracker);
+        $artifact_subass->shouldReceive('useArtifactPermissions')->andReturns(false);
+        $artifact_subass->shouldReceive('getSubmittedBy')->andReturns(123);
+        $user_changeset_value = Mockery::spy(Tracker_Artifact_ChangesetValue::class);
         $contributors = array(121);
-        $user_changeset_value->setReturnReference('getValue', $contributors);
-        $artifact_subass->setReturnReference('getValue', $user_changeset_value, array($contributor_field));
+        $user_changeset_value->shouldReceive('getValue')->andReturns($contributors);
+        $artifact_subass->shouldReceive('getValue')->with($contributor_field)->andReturns($user_changeset_value);
 
 
         $permission_checker = new Tracker_Permission_PermissionChecker($user_manager, $project_manager);
@@ -299,37 +300,38 @@ abstract class Tracker_Permission_PermissionChecker_SubmitterOnlyBaseTest extend
 
     public function setUp() {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
-        $project = mock('Project');
+        $project = \Mockery::spy(\Project::class);
         stub($project)->getID()->returns(120);
         stub($project)->isPublic()->returns(true);
 
-        $this->user_manager       = mock('UserManager');
-        $this->project_manager    = mock('ProjectManager');
+        $this->user_manager       = \Mockery::spy(\UserManager::class);
+        $this->project_manager    = \Mockery::spy(\ProjectManager::class);
         $this->permission_checker = new Tracker_Permission_PermissionChecker($this->user_manager, $this->project_manager);
 
-        $this->tracker = mock('Tracker');
-        $this->tracker->setReturnValue('getId', 666);
-        $this->tracker->setReturnValue('getGroupId', 222);
-        $this->tracker->setReturnValue('getProject',$project);
+        $this->tracker = \Mockery::spy(\Tracker::class);
+        $this->tracker->shouldReceive('getId')->andReturns(666);
+        $this->tracker->shouldReceive('getGroupId')->andReturns(222);
+        $this->tracker->shouldReceive('getProject')->andReturns($project);
 
         $this->ugroup_id_submitter_only = 112;
 
-        $this->user = mock('PFUser');
+        $this->user = \Mockery::spy(\PFUser::class);
         stub($this->user)->getId()->returns(120);
-        $this->user->setReturnValue('isMember', true, array(12));
+        $this->user->shouldReceive('isMember')->with(12)->andReturns(true);
 
 
-        $this->submitter = mock('PFUser');
+        $this->submitter = \Mockery::spy(\PFUser::class);
         stub($this->submitter)->getId()->returns(250);
-        stub($this->submitter)->isMemberOfUgroup($this->ugroup_id_submitter_only, 222)->returns(true);
-        $this->submitter->setReturnValue('isMember', true, array(12));
+        stub($this->submitter)->isMemberOfUGroup($this->ugroup_id_submitter_only, 222)->returns(true);
+        $this->submitter->shouldReceive('isMember')->with(12)->andReturns(true);
 
 
         stub($this->user_manager)->getUserById(120)->returns($this->user);
         stub($this->user_manager)->getUserById(250)->returns($this->submitter);
 
-        $this->artifact = mock('Tracker_Artifact');
+        $this->artifact = \Mockery::spy(\Tracker_Artifact::class);
         stub($this->artifact)->getTracker()->returns($this->tracker);
     }
 }
@@ -338,6 +340,7 @@ class Tracker_Permission_PermissionChecker_SubmitterOnlyTest extends Tracker_Per
 
     public function setUp() {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
         stub($this->tracker)->getAuthorizedUgroupsByPermissionType()->returns(
             array(
@@ -371,6 +374,7 @@ class Tracker_Permission_PermissionChecker_SubmitterOnlyAndAdminTest extends Tra
 
     public function setUp() {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
         stub($this->tracker)->getAuthorizedUgroupsByPermissionType()->returns(
             array(
@@ -386,36 +390,36 @@ class Tracker_Permission_PermissionChecker_SubmitterOnlyAndAdminTest extends Tra
             )
         );
 
-        $this->restricted_user = mock('PFUser');
-        $this->restricted_user->setReturnValue('getId', 249);
-        $this->restricted_user->setReturnValue('isMemberOfUgroup',true, array(114, 223));
-        $this->restricted_user->setReturnValue('isSuperUser', false);
-        $this->restricted_user->setReturnValue('isMember', true, array(223));
-        $this->restricted_user->setReturnValue('isMember', false, array(222));
-        $this->restricted_user->setReturnValue('isRestricted', true);
+        $this->restricted_user = \Mockery::spy(\PFUser::class);
+        $this->restricted_user->shouldReceive('getId')->andReturns(249);
+        $this->restricted_user->shouldReceive('isMemberOfUGroup')->with(114, 223)->andReturns(true);
+        $this->restricted_user->shouldReceive('isSuperUser')->andReturns(false);
+        $this->restricted_user->shouldReceive('isMember')->with(223)->andReturns(true);
+        $this->restricted_user->shouldReceive('isMember')->with(222)->andReturns(false);
+        $this->restricted_user->shouldReceive('isRestricted')->andReturns(true);
 
-        $this->not_member = mock('PFUser');
-        $this->not_member->setReturnValue('getId', 250);
-        $this->not_member->setReturnValue('isMemberOfUgroup',false);
-        $this->not_member->setReturnValue('isSuperUser', false);
-        $this->not_member->setReturnValue('isMember', false);
-        $this->not_member->setReturnValue('isRestricted', false);
+        $this->not_member = \Mockery::spy(\PFUser::class);
+        $this->not_member->shouldReceive('getId')->andReturns(250);
+        $this->not_member->shouldReceive('isMemberOfUGroup')->andReturns(false);
+        $this->not_member->shouldReceive('isSuperUser')->andReturns(false);
+        $this->not_member->shouldReceive('isMember')->andReturns(false);
+        $this->not_member->shouldReceive('isRestricted')->andReturns(false);
 
-        $this->maintainer = mock('PFUser');
+        $this->maintainer = \Mockery::spy(\PFUser::class);
         stub($this->maintainer)->getId()->returns(251);
-        stub($this->maintainer)->isMemberOfUgroup($this->ugroup_id_maintainers, 222)->returns(true);
+        stub($this->maintainer)->isMemberOfUGroup($this->ugroup_id_maintainers, 222)->returns(true);
 
-        $this->tracker_admin = mock('PFUser');
+        $this->tracker_admin = \Mockery::spy(\PFUser::class);
         stub($this->tracker)->userIsAdmin($this->tracker_admin)->returns(true);
 
-        $this->project_admin = mock('PFUser');
+        $this->project_admin = \Mockery::spy(\PFUser::class);
         stub($this->project_admin)->getId()->returns(253);
         stub($this->project_admin)->isMember(222, 'A')->returns(true);
 
         stub($this->artifact)->getSubmittedBy()->returns(250);
 
-        $private_project            = stub('Project')->isPublic()->returns(false);
-        $tracker_in_private_project = stub('Tracker')->getProject()->returns($private_project);
+        $private_project            = mockery_stub(\Project::class)->isPublic()->returns(false);
+        $tracker_in_private_project = mockery_stub(\Tracker::class)->getProject()->returns($private_project);
 
         stub($private_project)->getID()->returns(223);
         stub($tracker_in_private_project)->getGroupId()->returns(223);
@@ -427,7 +431,7 @@ class Tracker_Permission_PermissionChecker_SubmitterOnlyAndAdminTest extends Tra
             )
         );
 
-        $this->artifact2 = stub('Tracker_Artifact')->getTracker()->returns($tracker_in_private_project);
+        $this->artifact2 = mockery_stub(\Tracker_Artifact::class)->getTracker()->returns($tracker_in_private_project);
     }
 
     public function itDoesntSeeArtifactSubmittedByOthers() {
@@ -445,7 +449,7 @@ class Tracker_Permission_PermissionChecker_SubmitterOnlyAndAdminTest extends Tra
     public function itSeesArtifactBecauseHeIsTrackerAdmin() {
         $this->assertTrue($this->permission_checker->userCanView($this->tracker_admin, $this->artifact));
     }
-    
+
     public function itSeesArtifactBecauseHeIsProjectAdmin() {
         $this->assertTrue($this->permission_checker->userCanView($this->project_admin, $this->artifact));
     }

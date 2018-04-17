@@ -57,7 +57,7 @@ class QueryBuilderVisitorTest extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
-        CodendiDataAccess::setInstance(mock('CodendiDataAccess'));
+        CodendiDataAccess::setInstance(\Mockery::spy(\CodendiDataAccess::class));
 
         $this->tracker         = aTracker()->withId(101)->build();
         $this->parameters      = new QueryBuilderParameters($this->tracker);
@@ -65,10 +65,10 @@ class QueryBuilderVisitorTest extends TuleapTestCase
         $this->int_field       = anIntegerField()->withName('int')->withId(102)->build();
         $this->float_field     = aFloatField()->withName('float')->withId(103)->build();
         $this->date_field      = aMockDateWithoutTimeField()->withName('date')->withId(104)->build();
-        $this->bind            = mock('Tracker_FormElement_Field_List_Bind_Static');
+        $this->bind            = \Mockery::spy(\Tracker_FormElement_Field_List_Bind_Static::class);
         $this->selectbox_field = aSelectBoxField()->withName('sb')->withId(105)->withBind($this->bind)->build();
 
-        $formelement_factory = stub('Tracker_FormElementFactory')->getUsedFieldByName(101, 'field')->returns($this->field_text);
+        $formelement_factory = mockery_stub(\Tracker_FormElementFactory::class)->getUsedFieldByName(101, 'field')->returns($this->field_text);
         stub($formelement_factory)->getUsedFieldByName(101, 'int')->returns($this->int_field);
         stub($formelement_factory)->getUsedFieldByName(101, 'float')->returns($this->float_field);
         stub($formelement_factory)->getUsedFieldByName(101, 'date')->returns($this->date_field);
@@ -106,7 +106,7 @@ class QueryBuilderVisitorTest extends TuleapTestCase
     public function itRetrievesInAndExpressionTheExpertFromAndWhereClausesOfTheSubexpression()
     {
         $from_where = new FromWhere("le_from", "le_where");
-        $comparison = stub("Tuleap\\Tracker\\Report\\Query\\Advanced\\Grammar\\EqualComparison")
+        $comparison = mockery_stub(\Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison::class)
             ->accept($this->query_builder, $this->parameters)
             ->returns($from_where);
 
@@ -121,10 +121,10 @@ class QueryBuilderVisitorTest extends TuleapTestCase
     {
         $from_where_expression = new FromWhere("le_from", "le_where");
         $from_where_tail       = new FromWhere("le_from_tail", "le_where_tail");
-        $comparison = stub("Tuleap\\Tracker\\Report\\Query\\Advanced\\Grammar\\EqualComparison")
+        $comparison = mockery_stub(\Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison::class)
             ->accept($this->query_builder, $this->parameters)
             ->returns($from_where_expression);
-        $tail = stub("Tuleap\\Tracker\\Report\\Query\\Advanced\\Grammar\\AndOperand")
+        $tail = mockery_stub(\Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand::class)
             ->accept($this->query_builder, $this->parameters)
             ->returns($from_where_tail);
 
@@ -139,7 +139,7 @@ class QueryBuilderVisitorTest extends TuleapTestCase
     public function itRetrievesInAndOperandTheExpertFromAndWhereClausesOfTheSubexpression()
     {
         $from_where = new FromWhere("le_from", "le_where");
-        $comparison = stub("Tuleap\\Tracker\\Report\\Query\\Advanced\\Grammar\\EqualComparison")
+        $comparison = mockery_stub(\Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison::class)
             ->accept($this->query_builder, $this->parameters)
             ->returns($from_where);
 
@@ -154,10 +154,10 @@ class QueryBuilderVisitorTest extends TuleapTestCase
     {
         $from_where_operand = new FromWhere("le_from", "le_where");
         $from_where_tail    = new FromWhere("le_from_tail", "le_where_tail");
-        $comparison = stub("Tuleap\\Tracker\\Report\\Query\\Advanced\\Grammar\\EqualComparison")
+        $comparison = mockery_stub(\Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison::class)
             ->accept($this->query_builder, $this->parameters)
             ->returns($from_where_operand);
-        $tail = stub("Tuleap\\Tracker\\Report\\Query\\Advanced\\Grammar\\AndOperand")
+        $tail = mockery_stub(\Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand::class)
             ->accept($this->query_builder, $this->parameters)
             ->returns($from_where_tail);
 
@@ -172,7 +172,7 @@ class QueryBuilderVisitorTest extends TuleapTestCase
     public function itRetrievesInOrOperandTheExpertFromAndWhereClausesOfTheOperand()
     {
         $from_where = new FromWhere("le_from", "le_where");
-        $expression = stub("Tuleap\\Tracker\\Report\\Query\\Advanced\\Grammar\\AndExpression")
+        $expression = mockery_stub(\Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression::class)
             ->accept($this->query_builder, $this->parameters)
             ->returns($from_where);
 
@@ -187,10 +187,10 @@ class QueryBuilderVisitorTest extends TuleapTestCase
     {
         $from_where_operand = new FromWhere("le_from", "le_where");
         $from_where_tail    = new FromWhere("le_from_tail", "le_where_tail");
-        $expression = stub("Tuleap\\Tracker\\Report\\Query\\Advanced\\Grammar\\AndExpression")
+        $expression = mockery_stub(\Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression::class)
             ->accept($this->query_builder, $this->parameters)
             ->returns($from_where_operand);
-        $tail = stub("Tuleap\\Tracker\\Report\\Query\\Advanced\\Grammar\\OrOperand")
+        $tail = mockery_stub(\Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand::class)
             ->accept($this->query_builder, $this->parameters)
             ->returns($from_where_tail);
 
@@ -205,7 +205,7 @@ class QueryBuilderVisitorTest extends TuleapTestCase
     public function itRetrievesInOrExpressionTheExpertFromAndWhereClausesOfTheOperand()
     {
         $from_where = new FromWhere("le_from", "le_where");
-        $expression = stub("Tuleap\\Tracker\\Report\\Query\\Advanced\\Grammar\\AndExpression")
+        $expression = mockery_stub(\Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression::class)
             ->accept($this->query_builder, $this->parameters)
             ->returns($from_where);
 
@@ -220,10 +220,10 @@ class QueryBuilderVisitorTest extends TuleapTestCase
     {
         $from_where_operand = new FromWhere("le_from", "le_where");
         $from_where_tail    = new FromWhere("le_from_tail", "le_where_tail");
-        $expression = stub("Tuleap\\Tracker\\Report\\Query\\Advanced\\Grammar\\AndExpression")
+        $expression = mockery_stub(\Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression::class)
             ->accept($this->query_builder, $this->parameters)
             ->returns($from_where_operand);
-        $tail = stub("Tuleap\\Tracker\\Report\\Query\\Advanced\\Grammar\\OrOperand")
+        $tail = mockery_stub(\Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand::class)
             ->accept($this->query_builder, $this->parameters)
             ->returns($from_where_tail);
 
