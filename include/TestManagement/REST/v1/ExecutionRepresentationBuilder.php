@@ -25,6 +25,7 @@ use Tracker_Artifact;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use Tuleap\TestManagement\ArtifactDao;
+use Tuleap\TestManagement\Campaign\Execution\DefinitionForExecutionRetriever;
 use Tuleap\TestManagement\Campaign\Execution\ExecutionDao;
 use Tuleap\TestManagement\Campaign\Execution\PaginatedExecutions;
 use Tuleap\TestManagement\ConfigConformanceValidator;
@@ -72,6 +73,10 @@ class ExecutionRepresentationBuilder
      * @var ExecutionDao
      */
     private $execution_dao;
+    /**
+     * @var DefinitionForExecutionRetriever
+     */
+    private $definition_retriever;
 
     public function __construct(
         UserManager $user_manager,
@@ -81,6 +86,7 @@ class ExecutionRepresentationBuilder
         ArtifactDao $artifact_dao,
         Tracker_ArtifactFactory $artifact_factory,
         RequirementRetriever $requirement_retriever,
+        DefinitionForExecutionRetriever $definition_retriever,
         ExecutionDao $execution_dao
     ) {
         $this->user_manager                       = $user_manager;
@@ -90,6 +96,7 @@ class ExecutionRepresentationBuilder
         $this->artifact_dao                       = $artifact_dao;
         $this->artifact_factory                   = $artifact_factory;
         $this->requirement_retriever              = $requirement_retriever;
+        $this->definition_retriever               = $definition_retriever;
         $this->execution_dao                      = $execution_dao;
     }
 
@@ -209,25 +216,21 @@ class ExecutionRepresentationBuilder
         Tracker_Artifact $execution,
         array $definitions_changeset_ids
     ) {
-        $art_links = $execution->getLinkedArtifacts($user);
-        foreach ($art_links as $art_link) {
-            if ($this->conformance_validator->isArtifactAnExecutionOfDefinition($execution, $art_link)) {
-                $requirement = $this->requirement_retriever->getRequirementForDefinition($art_link, $user);
-
-                $definition_representation = new DefinitionRepresentation();
-                $definition_representation->build(
-                    $art_link,
-                    $this->tracker_form_element_factory,
-                    $user,
-                    $this->getSpecificDefinitionChangesetForExecution($execution, $art_link, $definitions_changeset_ids),
-                    $requirement
-                );
-
-                return $definition_representation;
-            }
+        $definition = $this->definition_retriever->getDefinitionRepresentationForExecution($user, $execution);
+        if (! $definition) {
+            return null;
         }
 
-        return null;
+        $definition_representation = new DefinitionRepresentation();
+        $definition_representation->build(
+            $definition,
+            $this->tracker_form_element_factory,
+            $user,
+            $this->getSpecificDefinitionChangesetForExecution($execution, $definition, $definitions_changeset_ids),
+            $this->requirement_retriever->getRequirementForDefinition($definition, $user)
+        );
+
+        return $definition_representation;
     }
 
     /**

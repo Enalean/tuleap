@@ -20,38 +20,39 @@
 
 namespace Tuleap\TestManagement\REST\v1;
 
-use Tracker_FormElement_InvalidFieldValueException;
-use Tracker_REST_Artifact_ArtifactCreator;
-use Tuleap\REST\ProjectAuthorization;
-use Tuleap\REST\Header;
 use Luracast\Restler\RestException;
-use Tracker_ArtifactFactory;
-use Tracker_Artifact;
-use Tuleap\TestManagement\Campaign\Execution\ExecutionDao;
-use Tuleap\TestManagement\RealTime\RealTimeMessageSender;
-use Tuleap\Tracker\REST\TrackerReference;
-use Tuleap\TestManagement\ArtifactDao;
-use Tuleap\TestManagement\ArtifactFactory;
-use UserManager;
 use PFUser;
+use Tracker_Artifact;
+use Tracker_Artifact_ChangesetValue_Text;
+use Tracker_ArtifactFactory;
+use Tracker_Exception;
+use Tracker_FormElement_InvalidFieldException;
+use Tracker_FormElement_InvalidFieldValueException;
 use Tracker_FormElementFactory;
+use Tracker_NoChangeException;
+use Tracker_Permission_PermissionRetrieveAssignee;
+use Tracker_Permission_PermissionsSerializer;
+use Tracker_REST_Artifact_ArtifactCreator;
 use Tracker_REST_Artifact_ArtifactUpdater;
 use Tracker_REST_Artifact_ArtifactValidator;
-use Tracker_FormElement_InvalidFieldException;
-use Tracker_Exception;
-use Tracker_NoChangeException;
-use TrackerFactory;
 use Tracker_URLVerification;
-use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
-use Tuleap\Tracker\REST\ChangesetCommentRepresentation;
-use Tracker_Artifact_ChangesetValue_Text;
+use TrackerFactory;
 use Tuleap\RealTime\NodeJSClient;
-use Tracker_Permission_PermissionsSerializer;
-use Tracker_Permission_PermissionRetrieveAssignee;
-use Tuleap\TestManagement\ConfigConformanceValidator;
+use Tuleap\REST\Header;
+use Tuleap\REST\ProjectAuthorization;
+use Tuleap\TestManagement\ArtifactDao;
+use Tuleap\TestManagement\ArtifactFactory;
+use Tuleap\TestManagement\Campaign\Execution\DefinitionForExecutionRetriever;
+use Tuleap\TestManagement\Campaign\Execution\ExecutionDao;
 use Tuleap\TestManagement\Config;
+use Tuleap\TestManagement\ConfigConformanceValidator;
 use Tuleap\TestManagement\Dao;
+use Tuleap\TestManagement\RealTime\RealTimeMessageSender;
+use Tuleap\Tracker\REST\ChangesetCommentRepresentation;
+use Tuleap\Tracker\REST\TrackerReference;
+use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 use Tuleap\User\REST\UserRepresentation;
+use UserManager;
 
 class ExecutionsResource
 {
@@ -89,6 +90,12 @@ class ExecutionsResource
     /** @var RealTimeMessageSender  */
     private $realtime_message_sender;
 
+    /** @var ExecutionDao */
+    private $execution_dao;
+
+    /** @var DefinitionForExecutionRetriever */
+    private $definition_retriever;
+
     public function __construct()
     {
         $this->config          = new Config(new Dao());
@@ -111,8 +118,10 @@ class ExecutionsResource
             $this->user_manager
         );
 
-        $retriever = new RequirementRetriever($this->artifact_factory, $artifact_dao, $this->config);
+        $requirement_retriever = new RequirementRetriever($this->artifact_factory, $artifact_dao, $this->config);
 
+        $this->definition_retriever             = new DefinitionForExecutionRetriever($conformance_validator);
+        $this->execution_dao                    = new ExecutionDao();
         $this->execution_representation_builder = new ExecutionRepresentationBuilder(
             $this->user_manager,
             $this->formelement_factory,
@@ -120,8 +129,9 @@ class ExecutionsResource
             $this->assigned_to_representation_builder,
             new ArtifactDao(),
             $this->artifact_factory,
-            $retriever,
-            new ExecutionDao()
+            $requirement_retriever,
+            $this->definition_retriever,
+            $this->execution_dao
         );
 
         $this->node_js_client         = new NodeJSClient();
@@ -238,7 +248,43 @@ class ExecutionsResource
     }
 
     /**
-     * Update a test exception
+     * Update part of a test execution
+     *
+     * @url PATCH {id}
+     *
+     * @param string                       $id   Id of the execution artifact
+     * @param PATCHExecutionRepresentation $body Actions to performs on the execution {@from body}
+     *
+     * @throws 403
+     * @throws 404
+     * @throws 500
+     */
+    public function patchId($id, PATCHExecutionRepresentation $body)
+    {
+        $user               = UserManager::instance()->getCurrentUser();
+        $execution_artifact = $this->getArtifactById($user, $id);
+        if (! $execution_artifact->userCanUpdate($user)) {
+            throw new RestException(403);
+        }
+
+        if ($body->force_use_latest_definition_version) {
+            $definition_artifact = $this->definition_retriever->getDefinitionRepresentationForExecution(
+                $user,
+                $execution_artifact
+            );
+            if (! $definition_artifact) {
+                throw new RestException(500, 'The execution is not linked to a definition');
+            }
+
+            $this->execution_dao->updateExecutionToUseLatestVersionOfDefinition(
+                $id,
+                $definition_artifact->getLastChangeset()->getId()
+            );
+        }
+    }
+
+    /**
+     * Update a test execution
      *
      * @url PUT {id}
      *

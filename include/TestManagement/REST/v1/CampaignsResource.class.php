@@ -63,6 +63,7 @@ use Tuleap\TestManagement\Campaign\Campaign;
 use Tuleap\TestManagement\Campaign\CampaignDao;
 use Tuleap\TestManagement\Campaign\CampaignRetriever;
 use Tuleap\TestManagement\Campaign\CampaignSaver;
+use Tuleap\TestManagement\Campaign\Execution\DefinitionForExecutionRetriever;
 use Tuleap\TestManagement\Campaign\Execution\ExecutionDao;
 use Tuleap\TestManagement\Campaign\JobConfiguration;
 use Tuleap\TestManagement\Config;
@@ -157,7 +158,8 @@ class CampaignsResource
             $this->user_manager
         );
 
-        $retriever = new RequirementRetriever($this->artifact_factory, $artifact_dao, $this->config);
+        $requirement_retriever = new RequirementRetriever($this->artifact_factory, $artifact_dao, $this->config);
+        $definition_retriever  = new DefinitionForExecutionRetriever($this->conformance_validator);
 
         $this->execution_representation_builder = new ExecutionRepresentationBuilder(
             $this->user_manager,
@@ -166,7 +168,8 @@ class CampaignsResource
             $assigned_to_representation_builder,
             $artifact_dao,
             $this->artifact_factory,
-            $retriever,
+            $requirement_retriever,
+            $definition_retriever,
             new ExecutionDao()
         );
 
