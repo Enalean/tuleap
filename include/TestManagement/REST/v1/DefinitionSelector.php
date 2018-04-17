@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -75,71 +75,70 @@ class DefinitionSelector
         $this->tracker_report_factory           = $tracker_report_factory;
     }
 
-    public function selectDefinitionIds(PFUser $user, Project $project, $selector, $milestone_id = 0, $report_id = 0)
+    public function selectDefinitions(PFUser $user, Project $project, $selector, $milestone_id = 0, $report_id = 0)
     {
         switch ($selector) {
             case self::ALL:
-                $definition_ids = $this->selectAllDefinitionIds($user, $project);
+                $definitions = $this->selectAllDefinitions($user, $project);
                 break;
 
             case self::MILESTONE:
-                $definition_ids = $this->selectDefinitionIdsFromMilestone($user, $project, $milestone_id);
+                $definitions = $this->selectDefinitionsFromMilestone($user, $project, $milestone_id);
                 break;
 
             case self::REPORT:
-                $definition_ids = $this->selectDefinitionIdsFromReport($user, $report_id);
+                $definitions = $this->selectDefinitionsFromReport($user, $report_id);
                 break;
 
             default:
-                $definition_ids = $this->selectNoDefinitionIds();
+                $definitions = $this->selectNoDefinitions();
                 break;
         }
-        return $definition_ids;
+        return $definitions;
     }
 
-    public function selectNoDefinitionIds()
+    public function selectNoDefinitions()
     {
-        return array();
+        return [];
     }
 
-    public function selectAllDefinitionIds(PFUser $user, Project $project)
+    public function selectAllDefinitions(PFUser $user, Project $project)
     {
         $tracker_id = $this->config->getTestDefinitionTrackerId($project);
-        $artifacts  = $this->tracker_artifact_factory->getArtifactsByTrackerIdUserCanView(
+
+        return $this->tracker_artifact_factory->getArtifactsByTrackerIdUserCanView(
             $user,
             $tracker_id
         );
-        return $this->getDefinitionIds($artifacts);
     }
 
-    public function selectDefinitionIdsFromMilestone(PFUser $user, Project $project, $milestone_id)
+    public function selectDefinitionsFromMilestone(PFUser $user, Project $project, $milestone_id)
     {
-        $cover_definitions = $this->milestone_items_artifact_factory->getCoverTestDefinitionsUserCanViewForMilestone(
+        return $this->milestone_items_artifact_factory->getCoverTestDefinitionsUserCanViewForMilestone(
             $user,
             $project,
             $milestone_id
         );
-        return $this->getDefinitionIds($cover_definitions);
     }
 
-    public function selectDefinitionIdsFromReport(PFUser $user, $report_id)
+    public function selectDefinitionsFromReport(PFUser $user, $report_id)
     {
         $report       = $this->getReportById($user, $report_id);
         $matching_ids = $report->getMatchingIds();
 
         if (! $matching_ids['id']) {
-            return array();
+            return [];
         }
-        return explode(',', $matching_ids['id']);
-    }
 
-    private function getDefinitionIds($definitions)
-    {
-        $ids = array();
-        foreach ($definitions as $definition) {
-            $ids[] = $definition->getId();
+        $artifacts = [];
+        foreach (explode(',', $matching_ids['id']) as $artifact_id) {
+            $artifact = $this->artifact_factory->getArtifactById($artifact_id);
+            if ($artifact) {
+                $artifacts[] = $artifact;
+            }
         }
-        return $ids;
+
+        return $artifacts;
     }
 
     private function getReportById(PFUser $user, $id)

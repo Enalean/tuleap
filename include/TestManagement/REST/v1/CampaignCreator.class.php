@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,15 +21,15 @@
 namespace Tuleap\TestManagement\REST\v1;
 
 use Luracast\Restler\RestException;
-use ProjectManager;
 use PFUser;
-use TrackerFactory;
+use ProjectManager;
 use Tracker_FormElementFactory;
 use Tracker_REST_Artifact_ArtifactCreator;
-use Tuleap\Tracker\REST\TrackerReference;
-use Tuleap\Tracker\REST\Artifact\ArtifactReference;
-use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
+use TrackerFactory;
 use Tuleap\TestManagement\Config;
+use Tuleap\Tracker\REST\Artifact\ArtifactReference;
+use Tuleap\Tracker\REST\TrackerReference;
+use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
 class CampaignCreator
 {
@@ -113,9 +113,9 @@ class CampaignCreator
         $milestone_id,
         $report_id
     ) {
-        $execution_ids  = array();
-        $project        = $this->project_manager->getProject($project_id);
-        $definition_ids = $this->definition_selector->selectDefinitionIds(
+        $execution_ids = [];
+        $project       = $this->project_manager->getProject($project_id);
+        $definitions   = $this->definition_selector->selectDefinitions(
             $user,
             $project,
             $test_selector,
@@ -123,11 +123,11 @@ class CampaignCreator
             $report_id
         );
 
-        foreach ($definition_ids as $definition_id) {
+        foreach ($definitions as $definition) {
             $execution = $this->execution_creator->createTestExecution(
                 $project_id,
                 $user,
-                $definition_id
+                $definition
             );
             $execution_ids[] = array('id' => $execution->id);
         }

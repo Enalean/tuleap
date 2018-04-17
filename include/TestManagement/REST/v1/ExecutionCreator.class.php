@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,15 +21,17 @@
 namespace Tuleap\TestManagement\REST\v1;
 
 use Luracast\Restler\RestException;
-use Tracker_FormElementFactory;
-use ProjectManager;
 use PFUser;
-use Tuleap\TestManagement\Config;
-use TrackerFactory;
-use Tuleap\Tracker\REST\TrackerReference;
-use Tuleap\Tracker\REST\Artifact\ArtifactReference;
-use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
+use ProjectManager;
+use Tracker_Artifact;
+use Tracker_FormElementFactory;
 use Tracker_REST_Artifact_ArtifactCreator;
+use TrackerFactory;
+use Tuleap\TestManagement\Campaign\Execution\ExecutionDao;
+use Tuleap\TestManagement\Config;
+use Tuleap\Tracker\REST\Artifact\ArtifactReference;
+use Tuleap\Tracker\REST\TrackerReference;
+use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
 class ExecutionCreator {
 
@@ -48,28 +50,39 @@ class ExecutionCreator {
     /** @var Tracker_REST_Artifact_ArtifactCreator */
     private $artifact_creator;
 
+    /** @var ExecutionDao */
+    private $execution_dao;
+
     public function __construct(
         Tracker_FormElementFactory $formelement_factory,
         Config $config,
         ProjectManager $project_manager,
         TrackerFactory $tracker_factory,
-        Tracker_REST_Artifact_ArtifactCreator $artifact_creator
+        Tracker_REST_Artifact_ArtifactCreator $artifact_creator,
+        ExecutionDao $execution_dao
     ) {
         $this->formelement_factory = $formelement_factory;
         $this->config              = $config;
         $this->project_manager     = $project_manager;
         $this->tracker_factory     = $tracker_factory;
         $this->artifact_creator    = $artifact_creator;
+        $this->execution_dao       = $execution_dao;
     }
 
     /**
      * @return ArtifactReference
      */
-    public function createTestExecution($project_id, PFUser $user, $definition_id) {
+    public function createTestExecution($project_id, PFUser $user, Tracker_Artifact $definition) {
         $tracker = $this->getExecutionTrackerReferenceForProject($project_id);
-        $values  = $this->getFieldValuesForExecutionArtifactCreation($tracker, $user, $definition_id);
+        $values  = $this->getFieldValuesForExecutionArtifactCreation($tracker, $user, $definition->getId());
 
-        return $this->artifact_creator->create($user, $tracker, $values);
+        $execution = $this->artifact_creator->create($user, $tracker, $values);
+        $this->execution_dao->updateExecutionToUseLatestVersionOfDefinition(
+            $execution->getArtifact()->getId(),
+            $definition->getLastChangeset()->getId()
+        );
+
+        return $execution;
     }
 
     private function getExecutionTrackerReferenceForProject($project_id) {

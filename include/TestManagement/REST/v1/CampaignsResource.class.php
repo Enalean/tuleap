@@ -130,9 +130,6 @@ class CampaignsResource
     /** @var ExecutionDao */
     private $execution_dao;
 
-    /** @var DefinitionForExecutionRetriever */
-    private $definition_retriever;
-
     public function __construct()
     {
         $this->project_manager       = ProjectManager::instance();
@@ -164,8 +161,8 @@ class CampaignsResource
             $this->user_manager
         );
 
-        $requirement_retriever      = new RequirementRetriever($this->artifact_factory, $artifact_dao, $this->config);
-        $this->definition_retriever = new DefinitionForExecutionRetriever($this->conformance_validator);
+        $requirement_retriever = new RequirementRetriever($this->artifact_factory, $artifact_dao, $this->config);
+        $definition_retriever  = new DefinitionForExecutionRetriever($this->conformance_validator);
 
         $this->execution_dao                    = new ExecutionDao();
         $this->execution_representation_builder = new ExecutionRepresentationBuilder(
@@ -176,7 +173,7 @@ class CampaignsResource
             $artifact_dao,
             $this->artifact_factory,
             $requirement_retriever,
-            $this->definition_retriever,
+            $definition_retriever,
             $this->execution_dao
         );
 
@@ -207,7 +204,8 @@ class CampaignsResource
             $this->config,
             $this->project_manager,
             $this->tracker_factory,
-            $artifact_creator
+            $artifact_creator,
+            $this->execution_dao
         );
 
         $definition_selector = new DefinitionSelector(
@@ -367,10 +365,14 @@ class CampaignsResource
         $executions_to_add = [];
 
         foreach ($definition_ids_to_add as $definition_id) {
+            $definition = $this->artifact_factory->getArtifactById($definition_id);
+            if (! $definition) {
+                throw new RestException(400, 'Invalid definition id '. (int) $definition_id);
+            }
             $new_execution_ref   = $this->execution_creator->createTestExecution(
                 $project_id,
                 $user,
-                $definition_id
+                $definition
             );
             $new_execution_ids[] = $new_execution_ref->id;
             $executions_to_add[] = $new_execution_ref->getArtifact();
@@ -392,17 +394,6 @@ class CampaignsResource
         }
 
         foreach ($executions_to_add as $execution) {
-            $definition = $this->definition_retriever->getDefinitionRepresentationForExecution(
-                $user,
-                $execution
-            );
-            if ($definition) {
-                $this->execution_dao->updateExecutionToUseLatestVersionOfDefinition(
-                    $id,
-                    $definition->getLastChangeset()->getId()
-                );
-            }
-
             $this->realtime_message_sender->sendExecutionCreated($user, $artifact, $execution);
         }
 

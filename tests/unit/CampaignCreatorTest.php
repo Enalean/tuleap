@@ -129,7 +129,7 @@ class CampaignCreatorTest extends TuleapTestCase
     public function itCreatesACampaignWithTheGivenName()
     {
         $this->stubCampaignTracker();
-        stub($this->definition_selector)->selectDefinitionIds()->returns(array());
+        stub($this->definition_selector)->selectDefinitions()->returns(array());
 
         $campaign_artifact = $this->stubCampaignArtifact();
         $expected_label    = 'Campaign Name';
@@ -173,7 +173,7 @@ class CampaignCreatorTest extends TuleapTestCase
     public function itCreatesAnArtifactLinkToMilestoneWhenGivenAMilestoneId()
     {
         $this->stubCampaignTracker();
-        stub($this->definition_selector)->selectDefinitionIds()->returns(array());
+        stub($this->definition_selector)->selectDefinitions()->returns(array());
         stub($this->formelement_factory)->getUsedFieldByNameForUser()->returns(aMockField()->build());
 
         $campaign_artifact = $this->stubCampaignArtifact();
@@ -197,11 +197,17 @@ class CampaignCreatorTest extends TuleapTestCase
 
     public function itCreatesTestExecutionsForSelectedDefinitions()
     {
-        $test_definitions = array("1", "2", "3");
+        $definition_1 = \Mockery::mock(\Tracker_Artifact::class);
+        $definition_1->allows()->getId()->andReturn("1");
+        $definition_2 = \Mockery::mock(\Tracker_Artifact::class);
+        $definition_2->allows()->getId()->andReturn("2");
+        $definition_3 = \Mockery::mock(\Tracker_Artifact::class);
+        $definition_3->allows()->getId()->andReturn("3");
+        $test_definitions = array($definition_1, $definition_2, $definition_3);
 
         $this->stubCampaignTracker();
         $this->stubCampaignArtifact();
-        stub($this->definition_selector)->selectDefinitionIds()->returns($test_definitions);
+        stub($this->definition_selector)->selectDefinitions()->returns($test_definitions);
         stub($this->formelement_factory)->getUsedFieldByNameForUser()->returns(aMockField()->build());
         stub($this->execution_creator)->createTestExecution()->returns(aMockArtifact()->build());
 
