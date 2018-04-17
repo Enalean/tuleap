@@ -47,4 +47,11 @@ class ExecutionDao extends DataAccessObject
 
         $this->getDB()->run($sql, $execution_id, $definition_changeset_id);
     }
+
+    public function removeExecution($execution_id)
+    {
+        $this->getDB()->delete('plugin_testmanagement_execution', [
+            'execution_artifact_id' => $execution_id
+        ]);
+    }
 }

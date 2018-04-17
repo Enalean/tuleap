@@ -127,6 +127,12 @@ class CampaignsResource
     /** @var CampaignRetriever */
     private $campaign_retriever;
 
+    /** @var ExecutionDao */
+    private $execution_dao;
+
+    /** @var DefinitionForExecutionRetriever */
+    private $definition_retriever;
+
     public function __construct()
     {
         $this->project_manager       = ProjectManager::instance();
@@ -158,9 +164,10 @@ class CampaignsResource
             $this->user_manager
         );
 
-        $requirement_retriever = new RequirementRetriever($this->artifact_factory, $artifact_dao, $this->config);
-        $definition_retriever  = new DefinitionForExecutionRetriever($this->conformance_validator);
+        $requirement_retriever      = new RequirementRetriever($this->artifact_factory, $artifact_dao, $this->config);
+        $this->definition_retriever = new DefinitionForExecutionRetriever($this->conformance_validator);
 
+        $this->execution_dao                    = new ExecutionDao();
         $this->execution_representation_builder = new ExecutionRepresentationBuilder(
             $this->user_manager,
             $this->formelement_factory,
@@ -169,8 +176,8 @@ class CampaignsResource
             $artifact_dao,
             $this->artifact_factory,
             $requirement_retriever,
-            $definition_retriever,
-            new ExecutionDao()
+            $this->definition_retriever,
+            $this->execution_dao
         );
 
         $campaign_dao = new CampaignDao();
@@ -380,10 +387,22 @@ class CampaignsResource
         );
 
         foreach ($executions_to_remove as $execution) {
+            $this->execution_dao->removeExecution($execution->getId());
             $this->realtime_message_sender->sendExecutionDeleted($user, $artifact, $execution);
         }
 
         foreach ($executions_to_add as $execution) {
+            $definition = $this->definition_retriever->getDefinitionRepresentationForExecution(
+                $user,
+                $execution
+            );
+            if ($definition) {
+                $this->execution_dao->updateExecutionToUseLatestVersionOfDefinition(
+                    $id,
+                    $definition->getLastChangeset()->getId()
+                );
+            }
+
             $this->realtime_message_sender->sendExecutionCreated($user, $artifact, $execution);
         }
 
