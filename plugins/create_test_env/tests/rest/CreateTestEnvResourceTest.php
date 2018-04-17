@@ -42,11 +42,12 @@ class CreateTestEnvResourceTest extends \RestBase
             null,
             json_encode(
                 [
-                    'secret'    => 'a78e62ee64d594d99a800e5489c052d98cce84a54bb571bccc29b0dcd7ef4441',
+                    'secret' => 'a78e62ee64d594d99a800e5489c052d98cce84a54bb571bccc29b0dcd7ef4441',
                     'firstname' => 'John',
-                    'lastname'  => 'Doe',
-                    'email'     => 'jd@example.com',
-                    'password'  => 'Welcome0',
+                    'lastname' => 'Doe',
+                    'email' => 'jd@example.com',
+                    'password' => 'Welcome0',
+                    'login' => 'john-doe',
                 ],
                 true
             )
@@ -59,7 +60,6 @@ class CreateTestEnvResourceTest extends \RestBase
         $this->assertEquals('test-for-john-doe', $return['project_shortname']);
         $this->assertEquals('https://localhost/projects/test-for-john-doe', $return['project_url']);
         $this->assertStringStartsWith('Test project for ', $return['project_realname']);
-        $this->assertEquals('john-doe', $return['user_login']);
     }
 
     public function testCreateProjectRefuseBadPassword()
@@ -78,6 +78,7 @@ class CreateTestEnvResourceTest extends \RestBase
                         'lastname'  => 'Doe',
                         'email'     => 'jd@example.com',
                         'password'  => 'azerty',
+                        'login'     => 'jdoe',
                     ],
                     true
                 )

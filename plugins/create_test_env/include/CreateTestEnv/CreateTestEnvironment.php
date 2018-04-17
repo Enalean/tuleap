@@ -64,14 +64,15 @@ class CreateTestEnvironment
      * @throws Exception\UnableToCreateTemporaryDirectoryException
      * @throws Exception\UnableToWriteFileException
      * @throws Exception\InvalidPasswordException
+     * @throws Exception\InvalidLoginException
      */
-    public function main($firstname, $lastname, $email, $password)
+    public function main($firstname, $lastname, $email, $login, $password)
     {
         if (! $this->password_sanity_checker->check($password)) {
             throw new Exception\InvalidPasswordException($this->password_sanity_checker->getErrors());
         }
 
-        $create_test_user = new CreateTestUser($firstname, $lastname, $email);
+        $create_test_user = new CreateTestUser($firstname, $lastname, $email, $login);
         $this->serializeXmlIntoFile($create_test_user->generateXML(), 'users.xml');
 
         $create_test_project = new CreateTestProject($create_test_user->getUserName(), $create_test_user->getRealName());
@@ -92,11 +93,6 @@ class CreateTestEnvironment
 
         $base_url = \HTTPRequest::instance()->getServerUrl();
         $this->notifier->notify("New project created for {$this->user->getRealName()} ({$this->user->getEmail()}): $base_url/projects/{$this->project->getUnixNameLowerCase()}. #{$this->user->getUnixName()}");
-    }
-
-    public function getUser()
-    {
-        return $this->user;
     }
 
     public function getProject()

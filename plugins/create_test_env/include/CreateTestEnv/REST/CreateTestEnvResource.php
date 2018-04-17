@@ -55,6 +55,7 @@ class CreateTestEnvResource
      * @param string $firstname {@from body} User firstname
      * @param string $lastname {@from body} User lastname
      * @param string $email {@from body} User email
+     * @param string $login {@from body} User login
      * @param string $password {@from body} User password
      *
      * @access public
@@ -67,7 +68,7 @@ class CreateTestEnvResource
      * @throws 400 RestException Invalid request
      * @throws 500 RestException Server error
      */
-    public function post($secret, $firstname, $lastname, $email, $password)
+    public function post($secret, $firstname, $lastname, $email, $login, $password)
     {
         $tmp_name = null;
         try {
@@ -79,12 +80,11 @@ class CreateTestEnvResource
                 PasswordSanityChecker::build(),
                 $tmp_name
             );
-            $test_env->main($firstname, $lastname, $email, $password);
+            $test_env->main($firstname, $lastname, $email, $login, $password);
 
             return (new TestEnvironmentRepresentation())->build(
                 $test_env->getProject(),
-                \HTTPRequest::instance()->getServerUrl(),
-                $test_env->getUser()
+                \HTTPRequest::instance()->getServerUrl()
             );
         } catch (InvalidPasswordException $exception) {
             $this->notifier->notify('Client error at environment creation: '.$exception->getMessage());

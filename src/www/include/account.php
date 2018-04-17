@@ -10,9 +10,6 @@
 // adduser.php - All the forms and functions to manage unix users
 //
 
-use Tuleap\Password\Configuration\PasswordConfigurationDAO;
-use Tuleap\Password\Configuration\PasswordConfigurationRetriever;
-
 // Add user to an existing project
 function account_add_user_to_group ($group_id, &$user_unix_name)
 {
