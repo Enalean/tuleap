@@ -23,24 +23,44 @@ namespace Tuleap\CreateTestEnv;
 
 class CreateTestUser
 {
-    private $firstname;
-    private $lastname;
     private $email;
 
     private $realname;
     private $login;
 
-    public function __construct($firstname, $lastname, $email)
+    /**
+     * CreateTestUser constructor.
+     * @param $firstname
+     * @param $lastname
+     * @param $email
+     * @param $login
+     * @throws Exception\InvalidLoginException
+     * @throws Exception\InvalidRealNameException
+     */
+    public function __construct($firstname, $lastname, $email, $login)
     {
-        $this->firstname = trim($firstname);
-        $this->lastname  = trim($lastname);
-        $this->email     = trim($email);
+        $this->email = trim($email);
+
+        $realname = trim($firstname).' '.trim($lastname);
+        $valid = new \Valid_RealNameFormat();
+        if (! $valid->validate($realname)) {
+            throw new Exception\InvalidRealNameException("Invalid realname $realname");
+        }
+        $this->realname = $realname;
+
+        $login = trim($login);
+        $valid = new \Valid_UserNameFormat();
+        if (! $valid->validate($login)) {
+            throw new Exception\InvalidLoginException("Submitted login is not valid");
+        }
+        $this->login = $login;
     }
 
     /**
      * @return \SimpleXMLElement
      * @throws Exception\EmailNotUniqueException
      * @throws Exception\InvalidRealNameException
+     * @throws Exception\InvalidLoginException
      */
     public function generateXML()
     {
@@ -62,50 +82,19 @@ class CreateTestUser
         $dom->appendChild($dom->ownerDocument->createCDATASection($value));
     }
 
+    /**
+     * @return string
+     */
     public function getUserName()
     {
-        if ($this->login === null) {
-            $this->login = $this->generateLogin($this->firstname.'_'.$this->lastname);
-        }
         return $this->login;
-    }
-
-    private function generateLogin($uid)
-    {
-        $account_name = $this->getLoginFromString($uid);
-        $uid = $account_name;
-        $i=2;
-        $valid = new \Valid_UserNameFormat();
-        while (! $valid->validate($uid)) {
-            $uid = $account_name.$i;
-            $i++;
-        }
-        return $uid;
-    }
-
-    public function getLoginFromString($string)
-    {
-        $string = str_replace([' ', '_'], '-', $string);
-        $string = preg_replace('/[^A-Za-z0-9\-]/', '', $string);
-        $string = trim($string, '-');
-        $string = substr($string, 0, 28);
-        return strtolower($string);
     }
 
     /**
      * @return string
-     * @throws Exception\InvalidRealNameException
      */
     public function getRealName()
     {
-        if ($this->realname === null) {
-            $realname = $this->firstname.' '.$this->lastname;
-            $valid = new \Valid_RealNameFormat();
-            if (! $valid->validate($realname)) {
-                throw new Exception\InvalidRealNameException("Invalid realname $realname");
-            }
-            $this->realname = $realname;
-        }
         return $this->realname;
     }
 
