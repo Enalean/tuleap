@@ -3274,7 +3274,7 @@ select[name='add_notempty_condition[]'] {
     margin: 0;
 }
 
-#global_notifs {
+.tracker-admin-notification-table {
     max-width: 1200px;
     margin-bottom: 15px;
 }
@@ -3350,7 +3350,7 @@ td.tracker-global-notifications-checkbox-cell {
     display: none;
 }
 
-#global_notifs td {
+.tracker-admin-notification-table td {
     vertical-align: middle;
 }
 

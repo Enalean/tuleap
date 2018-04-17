@@ -25,10 +25,11 @@ use Tracker_DateReminderManager;
 use Tracker_NotificationsManager;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Tracker\Notifications\CollectionOfUgroupToBeNotifiedPresenterBuilder;
-use Tuleap\Tracker\Notifications\CollectionOfUserToBeNotifiedPresenterBuilder;
+use Tuleap\Tracker\Notifications\CollectionOfUserInvolvedInNotificationPresenterBuilder;
 use Tuleap\Tracker\Notifications\GlobalNotificationsAddressesBuilder;
 use Tuleap\Tracker\Notifications\NotificationListBuilder;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyDao;
+use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
 use Tuleap\Tracker\Notifications\UsersToNotifyDao;
 use UGroupDao;
 use UGroupManager;
@@ -62,11 +63,12 @@ trait NotificationsSettingsControllerCommon
      */
     private function getNotificationsManager(UserManager $user_manager, \Tracker $tracker)
     {
-        $user_to_notify_dao        = new UsersToNotifyDao();
-        $ugroup_to_notify_dao      = new UgroupsToNotifyDao();
-        $notification_list_builder = new NotificationListBuilder(
+        $user_to_notify_dao             = new UsersToNotifyDao();
+        $unsubscribers_notification_dao = new UnsubscribersNotificationDAO;
+        $ugroup_to_notify_dao           = new UgroupsToNotifyDao();
+        $notification_list_builder      = new NotificationListBuilder(
             new UGroupDao(),
-            new CollectionOfUserToBeNotifiedPresenterBuilder($user_to_notify_dao),
+            new CollectionOfUserInvolvedInNotificationPresenterBuilder($user_to_notify_dao, $unsubscribers_notification_dao),
             new CollectionOfUgroupToBeNotifiedPresenterBuilder($ugroup_to_notify_dao)
         );
         return new Tracker_NotificationsManager(
@@ -74,6 +76,7 @@ trait NotificationsSettingsControllerCommon
             $notification_list_builder,
             $user_to_notify_dao,
             $ugroup_to_notify_dao,
+            $unsubscribers_notification_dao,
             new GlobalNotificationsAddressesBuilder(),
             $user_manager,
             new UGroupManager()

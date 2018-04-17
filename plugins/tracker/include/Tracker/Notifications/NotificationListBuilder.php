@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2017. All rights reserved.
+ * Copyright Enalean (c) 2017-2018. All rights reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,14 +21,15 @@
 namespace Tuleap\Tracker\Notifications;
 
 use ProjectUGroup;
+use Tracker;
 use UGroupDao;
 
 class NotificationListBuilder
 {
     /**
-     * @var CollectionOfUserToBeNotifiedPresenterBuilder
+     * @var CollectionOfUserInvolvedInNotificationPresenterBuilder
      */
-    private $user_to_be_notified_builder;
+    private $user_involved_in_notification_presenter_builder;
     /**
      * @var CollectionOfUgroupToBeNotifiedPresenterBuilder
      */
@@ -40,12 +41,12 @@ class NotificationListBuilder
 
     public function __construct(
         UGroupDao $ugroup_dao,
-        CollectionOfUserToBeNotifiedPresenterBuilder $user_to_be_notified_builder,
+        CollectionOfUserInvolvedInNotificationPresenterBuilder $user_involved_in_notification_presenter_builder,
         CollectionOfUgroupToBeNotifiedPresenterBuilder $ugroup_to_be_notified_builder
     ) {
-        $this->ugroup_dao                    = $ugroup_dao;
-        $this->user_to_be_notified_builder   = $user_to_be_notified_builder;
-        $this->ugroup_to_be_notified_builder = $ugroup_to_be_notified_builder;
+        $this->ugroup_dao                                      = $ugroup_dao;
+        $this->user_involved_in_notification_presenter_builder = $user_involved_in_notification_presenter_builder;
+        $this->ugroup_to_be_notified_builder                   = $ugroup_to_be_notified_builder;
     }
 
     public function getNotificationsPresenter(array $notifications, GlobalNotificationsAddressesBuilder $addresses_builder)
@@ -55,7 +56,7 @@ class NotificationListBuilder
             $emails_to_be_notified = $addresses_builder->transformNotificationAddressesStringAsArray(
                 $notification->getAddresses()
             );
-            $user_presenters   = $this->user_to_be_notified_builder->getCollectionOfUserToBeNotifiedPresenter($notification);
+            $user_presenters   = $this->user_involved_in_notification_presenter_builder->getCollectionOfUserToBeNotifiedPresenter($notification);
             $ugroup_presenters = $this->ugroup_to_be_notified_builder->getCollectionOfUgroupToBeNotifiedPresenter($notification);
             $notifications_presenters[] = new PaneNotificationPresenter(
                 $notification,
@@ -68,6 +69,18 @@ class NotificationListBuilder
             );
         }
         return $notifications_presenters;
+    }
+
+    /**
+     * @return UnsubscriberListPresenter
+     */
+    public function getUnsubscriberListPresenter(Tracker $tracker)
+    {
+        $unsubscribers = $this->user_involved_in_notification_presenter_builder->getCollectionOfNotificationUnsubscribersPresenter(
+            $tracker
+        );
+
+        return new UnsubscriberListPresenter(...$unsubscribers);
     }
 
     private function transformUgroupsData($ugroups_to_be_notified)

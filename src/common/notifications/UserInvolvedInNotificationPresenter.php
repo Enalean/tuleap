@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2017. All rights reserved.
+ * Copyright Enalean (c) 2017-2018. All rights reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,7 +22,7 @@ namespace Tuleap\Notifications;
 
 use UserHelper;
 
-class UserToBeNotifiedPresenter
+class UserInvolvedInNotificationPresenter
 {
     public $has_avatar;
     public $avatar_url;

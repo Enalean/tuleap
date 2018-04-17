@@ -443,6 +443,9 @@ msgstr ""
 msgid "Trackers"
 msgstr ""
 
+msgid "Unsubscribers"
+msgstr ""
+
 msgid "Use"
 msgstr ""
 
@@ -453,6 +456,9 @@ msgstr[0] ""
 msgstr[1] ""
 
 msgid "User, group, email"
+msgstr ""
+
+msgid "Users having unsubscribed from the notifications"
 msgstr ""
 
 msgid "Wait a minute..."

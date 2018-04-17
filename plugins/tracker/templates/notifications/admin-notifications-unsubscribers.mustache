@@ -1,0 +1,22 @@
+{{# has_unsubscribers }}
+<h3>{{# dgettext }} tuleap-tracker | Users having unsubscribed from the notifications {{/ dgettext }}</h3>
+<table class="table tracker-admin-notification-table">
+    <thead>
+    <tr>
+        <th>{{# dgettext }} tuleap-tracker | Unsubscribers {{/ dgettext }}</th>
+    </tr>
+    </thead>
+    {{# unsubscribers }}
+    <tr>
+        <td>
+            <span class="tracker-notification-email-list-entry">
+                <div class="avatar tracker-notification-user-avatar">
+                    {{# has_avatar }}<img src="{{ avatar_url }}" />{{/ has_avatar }}
+                </div>
+                {{ label }}
+            </span>
+        </td>
+    </tr>
+    {{/ unsubscribers }}
+</table>
+{{/ has_unsubscribers }}
