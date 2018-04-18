@@ -27,6 +27,8 @@ require_once 'constants.php';
 
 class hudsonPlugin extends Plugin
 {
+    const ICONS_PATH = '/plugins/hudson/themes/default/images/ic/';
+
     public function __construct($id)
     {
         parent::__construct($id);

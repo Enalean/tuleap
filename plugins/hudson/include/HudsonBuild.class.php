@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All rights reserved
+ * Copyright (c) Enalean, 2016-2018. All rights reserved
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -42,12 +42,6 @@ class HudsonBuild {
         $this->http_client      = $http_client;
 
         $this->buildBuildObject();
-
-        $controler = $this->getHudsonControler();
-        $this->icons_path = $controler->getIconsPath();
-    }
-    function getHudsonControler() {
-        return new hudson();
     }
     
     public function buildBuildObject(){
@@ -107,6 +101,6 @@ class HudsonBuild {
         } else if ($this->getResult() == 'UNSTABLE') {
             $color = 'yellow';
         }
-        return $this->icons_path .'status_'. $color .'.png';
+        return hudsonPlugin::ICONS_PATH .'status_'. $color .'.png';
     }
 }

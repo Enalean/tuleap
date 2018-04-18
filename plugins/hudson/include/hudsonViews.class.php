@@ -304,18 +304,18 @@ class hudsonViews extends Views {
                     } else {
                         echo '  <td>&nbsp;</td>';
                     }
-                    echo '  <td align="center"><a href="'.$purifier->purify($job->getUrl()).'/rssAll"><img src="'.$this->getControler()->getIconsPath().'rss_feed.png" alt="'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson','rss_feed', array($row['name']))).'" title="'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson','rss_feed', array($row['name']))).'"></a></td>';
+                    echo '  <td align="center"><a href="'.$purifier->purify($job->getUrl()).'/rssAll"><img src="'.hudsonPlugin::ICONS_PATH.'rss_feed.png" alt="'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson','rss_feed', array($row['name']))).'" title="'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson','rss_feed', array($row['name']))).'"></a></td>';
 
                     if ($project->usesSVN()) {
                         if ($row['use_svn_trigger'] == 1) {
-                            echo '  <td align="center"><img src="'.$purifier->purify($this->getControler()->getIconsPath()).'server_lightning.png" alt="'.$GLOBALS['Language']->getText('plugin_hudson','alt_svn_trigger').'" title="'.$GLOBALS['Language']->getText('plugin_hudson','alt_svn_trigger').'"></td>';
+                            echo '  <td align="center"><img src="'.$purifier->purify(hudsonPlugin::ICONS_PATH).'server_lightning.png" alt="'.$GLOBALS['Language']->getText('plugin_hudson','alt_svn_trigger').'" title="'.$GLOBALS['Language']->getText('plugin_hudson','alt_svn_trigger').'"></td>';
                         } else {
                             echo '  <td>&nbsp;</td>';
                         }
                     }
                     if ($project->usesCVS()) {
                         if ($row['use_cvs_trigger'] == 1) {
-                            echo '  <td align="center"><img src="'.$purifier->purify($this->getControler()->getIconsPath()).'server_lightning.png" alt="'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson','alt_cvs_trigger')).'" title="'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson','alt_cvs_trigger')).'"></td>';
+                            echo '  <td align="center"><img src="'.$purifier->purify(hudsonPlugin::ICONS_PATH).'server_lightning.png" alt="'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson','alt_cvs_trigger')).'" title="'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson','alt_cvs_trigger')).'"></td>';
                         } else {
                             echo '  <td>&nbsp;</td>';
                         }
@@ -323,14 +323,14 @@ class hudsonViews extends Views {
                     if (!empty($services)) {
                         foreach ($services as $service) {
                             if (isset($service['used'][$job_id]) && $service['used'][$job_id] == true) {
-                                echo '  <td align="center"><img src="'.$purifier->purify($this->getControler()->getIconsPath()).'server_lightning.png" alt="'.$purifier->purify($service['title']).'" title="'.$purifier->purify($service['title']).'"></td>';
+                                echo '  <td align="center"><img src="'.$purifier->purify(hudsonPlugin::ICONS_PATH).'server_lightning.png" alt="'.$purifier->purify($service['title']).'" title="'.$purifier->purify($service['title']).'"></td>';
                             } else {
                                 echo '  <td>&nbsp;</td>';
                             }
                         }
                     }
                 } catch (Exception $e) {
-                    echo '  <td><img src="'.$purifier->purify($this->getControler()->getIconsPath()).'link_error.png" alt="'.$purifier->purify($e->getMessage()).'" title="'.$purifier->purify($e->getMessage()).'" /></td>';
+                    echo '  <td><img src="'.$purifier->purify(hudsonPlugin::ICONS_PATH).'link_error.png" alt="'.$purifier->purify($e->getMessage()).'" title="'.$purifier->purify($e->getMessage()).'" /></td>';
                     $nb_columns = 2;
                     if ($project->usesSVN()) { $nb_columns++; }
                     if ($project->usesCVS()) { $nb_columns++; }

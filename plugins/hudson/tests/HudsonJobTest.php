@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -24,16 +24,8 @@ require_once('bootstrap.php');
 Mock::generatePartial(
     'HudsonJob',
     'HudsonJobTestVersion',
-    array('_getXMLObject', 'getIconsPath', 'getHudsonControler')
+    array('_getXMLObject')
 );
-Mock::generatePartial(
-    'HudsonJob',
-    'HudsonJobTestColorVersion',
-    array('getColor')
-);
-Mock::generate('hudson');
-
-Mock::generate('BaseLanguage');
 
 class HudsonJobTest extends TuleapTestCase {
 
@@ -41,40 +33,36 @@ class HudsonJobTest extends TuleapTestCase {
 
     public function setUp()
     {
-        $GLOBALS['Language'] = new MockBaseLanguage($this);
+        parent::setUp();
         $this->http_client = mock('Http_Client');
     }
-    public function tearDown()
+
+    public function testMalformedURL()
     {
-        unset($GLOBALS['Language']);
+        $this->expectException('HudsonJobURLMalformedException');
+        new HudsonJob("toto", $this->http_client);
     }
 
-    function testMalformedURL() {
+    public function testMissingSchemeURL()
+    {
         $this->expectException('HudsonJobURLMalformedException');
-        $j = new HudsonJob("toto", $this->http_client);
-    }
-    function testMissingSchemeURL() {
-        $this->expectException('HudsonJobURLMalformedException');
-        $j = new HudsonJob("code4:8080/hudson/jobs/Codendi", $this->http_client);
-    }
-    function testMissingHostURL() {
-        $this->expectException('HudsonJobURLMalformedException');
-	// See http://php.net/parse_url
-        if (version_compare(PHP_VERSION, '5.3.3', '<')) {
-            $this->expectError();
-        }
-        $j = new HudsonJob("http://", $this->http_client);
+        new HudsonJob("code4:8080/hudson/jobs/Codendi", $this->http_client);
     }
 
-    function testURLWithBuildWithParams() {
-        $job = partial_mock('HudsonJob', array('getHudsonControler'));
-        stub($job)->getHudsonControler()->returns(mock('hudson'));
-        $job->__construct('http://shunt.cro.enalean.com:8080/job/build_params/buildWithParameters?Stuff=truc', $this->http_client);
+    public function testMissingHostURL()
+    {
+        $this->expectException('HudsonJobURLMalformedException');
+        new HudsonJob("http://", $this->http_client);
+    }
+
+    public function testURLWithBuildWithParams()
+    {
+        $job = new HudsonJob('http://shunt.cro.enalean.com:8080/job/build_params/buildWithParameters?Stuff=truc', $this->http_client);
         $this->assertEqual($job->getJobUrl(), 'http://shunt.cro.enalean.com:8080/job/build_params/api/xml');
-        $this->assertEqual($job->getDoBuildUrl(), 'http://shunt.cro.enalean.com:8080/job/build_params/buildWithParameters?Stuff=truc');
     }
 
-    function testSimpleJob() {
+    public function testSimpleJob()
+    {
         $xmlstr = <<<XML
 <?xml version='1.0' standalone='yes'?>
 <freeStyleProject>
@@ -122,37 +110,27 @@ class HudsonJobTest extends TuleapTestCase {
 XML;
         
         $xmldom = new SimpleXMLElement($xmlstr);
-        //var_dump($xmldom);
-        
+
         $j = new HudsonJobTestVersion($this);
         $j->setReturnValue('_getXMLObject', $xmldom);
-        $mh = new Mockhudson($this);
-        $mh->setReturnValue('getIconsPath', '');
-        $j->setReturnValue('getHudsonControler', $mh);
-        $j->setReturnValue('getIconsPath', '');
-        
+
         $j->__construct("http://myCIserver/jobs/myCIjob", $this->http_client);
         
-        $this->assertEqual($j->getProjectStyle(), "freeStyleProject");
         $this->assertEqual($j->getName(), "Codendi");
         $this->assertEqual($j->getUrl(), "http://code4.grenoble.xrce.xerox.com:8080/hudson/job/Codendi/");
-        $this->assertEqual($j->getColor(), "yellow");
-        $this->assertEqual($j->getStatusIcon(), "status_yellow.png");
+        $this->assertEqual($j->getStatusIcon(), hudsonPlugin::ICONS_PATH."status_yellow.png");
         
         $this->assertEqual($j->getLastBuildNumber(), "60");
         $this->assertEqual($j->getLastSuccessfulBuildNumber(), "60");
         $this->assertEqual($j->getLastFailedBuildNumber(), "30");
-        $this->assertEqual($j->getNextBuildNumber(), "61");
         $this->assertTrue($j->hasBuilds());
-        $this->assertTrue($j->isBuildable());
-        
-        $this->assertEqual($j->getHealthScores(), array('79', '98'));
-        $this->assertEqual($j->getHealthAverageScore(), '88');
-        $this->assertEqual($j->getWeatherReportIcon(), "health_80_plus.gif");
+
+        $this->assertEqual($j->getWeatherReportIcon(), hudsonPlugin::ICONS_PATH."health_80_plus.gif");
         
     }
     
-    function testJobFromAnotherJob() {
+    public function testJobFromAnotherJob()
+    {
         $xmlstr = <<<XML
 <?xml version='1.0' standalone='yes'?>
 <freeStyleProject>
@@ -194,33 +172,24 @@ XML;
         
         $j = new HudsonJobTestVersion($this);
         $j->setReturnValue('_getXMLObject', $xmldom);
-        $mh = new Mockhudson($this);
-        $mh->setReturnValue('getIconsPath', '');
-        $j->setReturnValue('getHudsonControler', $mh);
-        $j->setReturnValue('getIconsPath', '');
-        
+
         $j->__construct("http://myCIserver/jobs/myCIjob", $this->http_client);
         
-        $this->assertEqual($j->getProjectStyle(), "freeStyleProject");
         $this->assertEqual($j->getName(), "TestProjectExistingJob");
         $this->assertEqual($j->getUrl(), "http://code4.grenoble.xrce.xerox.com:8080/hudson/job/TestProjectExistingJob/");
-        $this->assertEqual($j->getColor(), "red");
-        $this->assertEqual($j->getStatusIcon(), "status_red.png");
+        $this->assertEqual($j->getStatusIcon(), hudsonPlugin::ICONS_PATH."status_red.png");
         
         $this->assertEqual($j->getLastBuildNumber(), "1");
         $this->assertNull($j->getLastSuccessfulBuildNumber());
         $this->assertEqual($j->getLastFailedBuildNumber(), "1");
-        $this->assertEqual($j->getNextBuildNumber(), "2");
         $this->assertTrue($j->hasBuilds());
-        $this->assertTrue($j->isBuildable());
-        
-        $this->assertEqual($j->getHealthScores(), array('0'));
-        $this->assertEqual($j->getHealthAverageScore(), '0');
-        $this->assertEqual($j->getWeatherReportIcon(), "health_00_to_19.gif");
+
+        $this->assertEqual($j->getWeatherReportIcon(), hudsonPlugin::ICONS_PATH."health_00_to_19.gif");
         
     }
     
-    function testJobFromExternalJob() {
+    public function testJobFromExternalJob()
+    {
         $xmlstr = <<<XML
 <?xml version='1.0' standalone='yes'?>
 <externalJob>
@@ -239,32 +208,22 @@ XML;
         
         $j = new HudsonJobTestVersion($this);
         $j->setReturnValue('_getXMLObject', $xmldom);
-        $mh = new Mockhudson($this);
-        $mh->setReturnValue('getIconsPath', '');
-        $j->setReturnValue('getHudsonControler', $mh);
-        $j->setReturnValue('getIconsPath', '');
-        
+
         $j->__construct("http://myCIserver/jobs/myCIjob", $this->http_client);
         
-        $this->assertEqual($j->getProjectStyle(), "externalJob");
         $this->assertEqual($j->getName(), "TestProjectExternalJob");
         $this->assertEqual($j->getUrl(), "http://code4.grenoble.xrce.xerox.com:8080/hudson/job/TestProjectExternalJob/");
-        $this->assertEqual($j->getColor(), "grey");
-        $this->assertEqual($j->getStatusIcon(), "status_grey.png");
+        $this->assertEqual($j->getStatusIcon(), hudsonPlugin::ICONS_PATH."status_grey.png");
         
         $this->assertNull($j->getLastBuildNumber());
         $this->assertNull($j->getLastSuccessfulBuildNumber());
         $this->assertNull($j->getLastFailedBuildNumber());
-        $this->assertEqual($j->getNextBuildNumber(), "1");
         $this->assertFalse($j->hasBuilds());
-        $this->assertFalse($j->isBuildable());
-        
-        $this->assertEqual($j->getHealthScores(), array());
-        $this->assertEqual($j->getHealthAverageScore(), '0');
-        
+
     }
     
-    function testJobFromMaven2Job() {
+    public function testJobFromMaven2Job()
+    {
         $xmlstr = <<<XML
 <?xml version='1.0' standalone='yes'?>
 <mavenModuleSet>
@@ -283,32 +242,22 @@ XML;
         
         $j = new HudsonJobTestVersion($this);
         $j->setReturnValue('_getXMLObject', $xmldom);
-        $mh = new Mockhudson($this);
-        $mh->setReturnValue('getIconsPath', '');
-        $j->setReturnValue('getHudsonControler', $mh);
-        $j->setReturnValue('getIconsPath', '');
-        
+
         $j->__construct("http://myCIserver/jobs/myCIjob", $this->http_client);
         
-        $this->assertEqual($j->getProjectStyle(), "mavenModuleSet");
         $this->assertEqual($j->getName(), "TestProjectMaven2");
         $this->assertEqual($j->getUrl(), "http://code4.grenoble.xrce.xerox.com:8080/hudson/job/TestProjectMaven2/");
-        $this->assertEqual($j->getColor(), "grey");
-        $this->assertEqual($j->getStatusIcon(), "status_grey.png");
+        $this->assertEqual($j->getStatusIcon(), hudsonPlugin::ICONS_PATH."status_grey.png");
         
         $this->assertNull($j->getLastBuildNumber());
         $this->assertNull($j->getLastSuccessfulBuildNumber());
         $this->assertNull($j->getLastFailedBuildNumber());
-        $this->assertEqual($j->getNextBuildNumber(), "1");
         $this->assertFalse($j->hasBuilds());
-        $this->assertTrue($j->isBuildable());
-        
-        $this->assertEqual($j->getHealthScores(), array());
-        $this->assertEqual($j->getHealthAverageScore(), '0');
-        
+
     }
     
-    function testJobFromMultiConfiguration() {
+    public function testJobFromMultiConfiguration()
+    {
         $xmlstr = <<<XML
 <?xml version='1.0' standalone='yes'?>
 <matrixProject>
@@ -327,52 +276,16 @@ XML;
         
         $j = new HudsonJobTestVersion($this);
         $j->setReturnValue('_getXMLObject', $xmldom);
-        $mh = new Mockhudson($this);
-        $mh->setReturnValue('getIconsPath', '');
-        $j->setReturnValue('getHudsonControler', $mh);
-        $j->setReturnValue('getIconsPath', '');
-        
+
         $j->__construct("http://myCIserver/jobs/myCIjob", $this->http_client);
         
-        $this->assertEqual($j->getProjectStyle(), "matrixProject");
         $this->assertEqual($j->getName(), "TestProjectMultiConfiguration");
         $this->assertEqual($j->getUrl(), "http://code4.grenoble.xrce.xerox.com:8080/hudson/job/TestProjectMultiConfiguration/");
-        $this->assertEqual($j->getColor(), "grey");
-        $this->assertEqual($j->getStatusIcon(), "status_grey.png");
+        $this->assertEqual($j->getStatusIcon(), hudsonPlugin::ICONS_PATH."status_grey.png");
         
         $this->assertNull($j->getLastBuildNumber());
         $this->assertNull($j->getLastSuccessfulBuildNumber());
         $this->assertNull($j->getLastFailedBuildNumber());
-        $this->assertEqual($j->getNextBuildNumber(), "1");
         $this->assertFalse($j->hasBuilds());
-        $this->assertTrue($j->isBuildable());
-        
-        $this->assertEqual($j->getHealthScores(), array());
-        $this->assertEqual($j->getHealthAverageScore(), '0');
-        
     }
-    
-    function testColorNoAnime1() {
-        $j = new HudsonJobTestColorVersion($this);
-        $j->setReturnValue('getColor', "blue");
-        $this->assertEqual($j->getColorNoAnime(), "blue");
-    }  
-    function testColorNoAnime2() {
-        $j = new HudsonJobTestColorVersion($this);
-        $j->setReturnValue('getColor', "blue_anime");
-        $this->assertEqual($j->getColorNoAnime(), "blue");
-    }
-    function testColorNoAnime3() {
-        $j = new HudsonJobTestColorVersion($this);        
-        $j->setReturnValue('getColor', "grey");
-        $this->assertEqual($j->getColorNoAnime(), "grey");
-    }
-    function testColorNoAnime4() {
-        $j = new HudsonJobTestColorVersion($this);  
-        $j->setReturnValue('getColor', "grey_anime");
-        $this->assertEqual($j->getColorNoAnime(), "grey");
-    }
-    
 }
-
-?>

@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,10 +24,8 @@ require_once('bootstrap.php');
 Mock::generatePartial(
     'HudsonTestResult',
     'HudsonTestResultTestVersion',
-    array('_getXMLObject', 'getHudsonControler', 'getIconsPath')
+    array('_getXMLObject')
 );
-Mock::generate('hudson');
-Mock::generate('BaseLanguage');
 
 class HudsonTestResultTest extends TuleapTestCase {
 
@@ -41,7 +39,6 @@ class HudsonTestResultTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
 
-        $GLOBALS['Language'] = new MockBaseLanguage($this);
         $this->xml_security  = new XML_Security();
         $this->xml_security->enableExternalLoadOfEntities();
         $this->http_client = mock('Http_Client');
@@ -78,11 +75,7 @@ class HudsonTestResultTest extends TuleapTestCase {
         
         $j = new HudsonTestResultTestVersion($this);
         $j->setReturnValue('_getXMLObject', $xmldom);
-        $mh = new Mockhudson($this);
-        $mh->setReturnValue('getIconsPath', '');
-        $j->setReturnValue('getHudsonControler', $mh);
-        $j->setReturnValue('getIconsPath', '');
-        
+
         $j->__construct("http://myCIserver/jobs/myCIjob/lastBuild/testReport/", $this->http_client);
         
         $this->assertEqual($j->getFailCount(), 5);
