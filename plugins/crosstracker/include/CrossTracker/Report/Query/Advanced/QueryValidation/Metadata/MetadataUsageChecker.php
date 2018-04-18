@@ -23,6 +23,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata;
 use PFUser;
 use Tracker;
 use Tracker_FormElementFactory;
+use Tracker_Semantic_ContributorDao;
 use Tracker_Semantic_DescriptionDao;
 use Tracker_Semantic_StatusDao;
 use Tracker_Semantic_TitleDao;
@@ -52,17 +53,23 @@ class MetadataUsageChecker
      * @var Tracker_Semantic_StatusDao
      */
     private $status_dao;
+    /**
+     * @var Tracker_Semantic_ContributorDao
+     */
+    private $assigned_to_dao;
 
     public function __construct(
         Tracker_FormElementFactory $form_element_factory,
         Tracker_Semantic_TitleDao $title_dao,
         Tracker_Semantic_DescriptionDao $description_dao,
-        Tracker_Semantic_StatusDao $status_dao
+        Tracker_Semantic_StatusDao $status_dao,
+        Tracker_Semantic_ContributorDao $assigned_to_dao
     ) {
         $this->form_element_factory = $form_element_factory;
         $this->title_dao            = $title_dao;
         $this->description_dao      = $description_dao;
         $this->status_dao           = $status_dao;
+        $this->assigned_to_dao      = $assigned_to_dao;
 
         $this->cache_already_checked = array();
     }
@@ -77,6 +84,7 @@ class MetadataUsageChecker
      * @throws LastUpdateDateIsMissingInAtLeastOneTrackerException
      * @throws SubmittedByIsMissingInAtLeastOneTrackerException
      * @throws LastUpdateByIsMissingInAtLeastOneTrackerException
+     * @throws AssignedToIsMissingInAtLeastOneTrackerException
      */
     public function checkMetadataIsUsedByAllTrackers(
         Metadata $metadata,
@@ -119,6 +127,11 @@ class MetadataUsageChecker
                 $this->checkLastUpdateByIsUsedByAllTracker(
                     $collector_parameters->getTrackers(),
                     $collector_parameters->getUser()
+                );
+                break;
+            case AllowedMetadata::ASSIGNED_TO:
+                $this->checkAssignedToIsUsedByAllTracker(
+                    $collector_parameters->getTrackerIds()
                 );
                 break;
         }
@@ -199,6 +212,18 @@ class MetadataUsageChecker
         $count = $this->getNumberOfReadableFieldByType($trackers, $user, 'luby');
         if ($count > 0) {
             throw new LastUpdateByIsMissingInAtLeastOneTrackerException($count);
+        }
+    }
+
+    /**
+     * @param array $trackers
+     * @throws AssignedToIsMissingInAtLeastOneTrackerException
+     */
+    private function checkAssignedToIsUsedByAllTracker(array $trackers)
+    {
+        $count = $this->assigned_to_dao->getNbOfTrackerWithoutSemanticContributorDefined($trackers);
+        if ($count > 0) {
+            throw new AssignedToIsMissingInAtLeastOneTrackerException($count);
         }
     }
 

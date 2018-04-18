@@ -26,6 +26,7 @@ use PFUser;
 use ProjectManager;
 use Tracker;
 use Tracker_FormElementFactory;
+use Tracker_Semantic_ContributorDao;
 use Tracker_Semantic_DescriptionDao;
 use Tracker_Semantic_StatusDao;
 use Tracker_Semantic_TitleDao;
@@ -169,7 +170,8 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                     Tracker_FormElementFactory::instance(),
                     new Tracker_Semantic_TitleDao(),
                     new Tracker_Semantic_DescriptionDao(),
-                    new Tracker_Semantic_StatusDao()
+                    new Tracker_Semantic_StatusDao(),
+                    new Tracker_Semantic_ContributorDao()
                 )
             ),
             new EqualComparisonChecker($date_validator, $list_value_validator),
