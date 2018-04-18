@@ -70,7 +70,7 @@ Group: Development/Tools
 Version: @@CORE_CVS_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
 #Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, xinetd, rcs, cvsgraph, perl-CGI
-#Requires: viewvc, viewvc-theme-tuleap >= 1.0.4
+#Requires: viewvc, viewvc-theme-tuleap >= 1.0.6
 #Requires: cvs-tuleap
 %description core-cvs
 Manage dependencies for Tuleap CVS integration
@@ -82,7 +82,7 @@ Group: Development/Tools
 Version: 1.2
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, mod_dav_svn
-Requires: viewvc, viewvc-theme-tuleap >= 1.0.4
+Requires: viewvc, viewvc-theme-tuleap >= 1.0.6
 Requires: python, MySQL-python
 Requires: mod_perl, perl-Digest-SHA, perl-DBI, perl-DBD-MySQL
 Requires: tuleap-theme-flamingparrot
