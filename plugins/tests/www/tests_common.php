@@ -52,7 +52,5 @@ require_once dirname(__FILE__).'/../include/simpletest/collector.php';
 require_once dirname(__FILE__).'/../../../tests/lib/autoload.php';
 require_once dirname(__FILE__).'/../../../tests/lib/constants.php';
 
-//require_once dirname(__FILE__).'/../include/TestHelper.class.php';
-//require_once 'TuleapTestCase.class.php';
-//require_once 'TuleapDbTestCase.class.php';
-//require_once 'MockBuilder.php';
+require_once __DIR__.'/../../../src/www/include/utils.php';
+require_once __DIR__.'/../../../src/www/project/admin/permissions.php';

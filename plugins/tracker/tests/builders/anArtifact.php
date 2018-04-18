@@ -41,9 +41,15 @@ class Test_Artifact_Builder {
     private $submitted_by;
     private $submitted_on;
     private $submitted_by_user;
+    private $status;
 
     public function withId($id) {
         $this->id = $id;
+        return $this;
+    }
+
+    public function withStatus($status) {
+        $this->status = $status;
         return $this;
     }
 
@@ -140,6 +146,9 @@ class Test_Artifact_Builder {
         }
         if ($this->submitted_by_user) {
             $artifact->setSubmittedByUser($this->submitted_by_user);
+        }
+        if ($this->status) {
+            $artifact->setStatus($this->status);
         }
         return $artifact;
     }

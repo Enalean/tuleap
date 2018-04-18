@@ -199,7 +199,8 @@ class Planning_ControllerNewTest extends TuleapTestCase {
         ForgeConfig::store();
         ForgeConfig::set('codendi_dir', TRACKER_BASE_DIR .'/../../..');
         $this->group_id               = 123;
-        $this->request                = aRequest()->with('group_id', "$this->group_id")->build();
+        $project_manager              = Mockery::spy(ProjectManager::class, ['getProject' => aMockProject()->withId($this->group_id)->build()]);
+        $this->request                = aRequest()->withProjectManager($project_manager)->with('group_id', "$this->group_id")->build();
         $this->planning_factory       = mock('PlanningFactory');
         $this->tracker_factory        = mock('TrackerFactory');
         $hierarchy_checker            = mock('AgileDashboard_HierarchyChecker');
@@ -343,8 +344,12 @@ class Planning_Controller_EditTest extends Planning_Controller_BaseTest {
         $planning_id      = 456;
         $planning         = aPlanning()->withGroupId($group_id)
                                        ->withId($planning_id)->build();
-        $request          = aRequest()->with('planning_id', $planning_id)
-                                      ->with('action', 'edit')->build();
+        $project_manager              = Mockery::spy(ProjectManager::class, ['getProject' => aMockProject()->withId($group_id)->build()]);
+        $request          = aRequest()
+            ->withProjectManager($project_manager)
+            ->with('planning_id', $planning_id)
+            ->with('action', 'edit')
+            ->build();
         $planning_factory = mock('PlanningFactory');
         $planning_filter  = mock('Tuleap\AgileDashboard\Planning\ScrumPlanningFilter');
         stub($planning_factory)->getPlanning($planning_id)->returns($planning);
