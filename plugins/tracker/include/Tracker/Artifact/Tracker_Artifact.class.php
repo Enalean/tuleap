@@ -545,7 +545,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     public function getAssignedTo(PFUser $user) {
         $assigned_to_field = Tracker_Semantic_Contributor::load($this->getTracker())->getField();
-        if ($assigned_to_field && $assigned_to_field->userCanRead($user)) {
+        if ($assigned_to_field && $assigned_to_field->userCanRead($user) && $this->getLastChangeset()) {
             $field_value = $this->getLastChangeset()->getValue($assigned_to_field);
             if ($field_value) {
                 $user_manager   = $this->getUserManager();

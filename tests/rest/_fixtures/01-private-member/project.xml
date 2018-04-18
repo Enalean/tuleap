@@ -215,7 +215,7 @@
                         </items>
                     </bind>
                 </formElement>
-                <formElement type="sb" ID="F26" rank="371" use_it="0">
+                <formElement type="sb" ID="F26" rank="371">
                     <name>assigned_to</name>
                     <label>Assigned to</label>
                     <description>Who is in charge of solving the artifact</description>
@@ -322,6 +322,12 @@
                         <open_value REF="V101"/>
                     </open_values>
                 </semantic>
+                <semantic type="contributor">
+                    <shortname>contributor</shortname>
+                    <label>Contributor/assignee</label>
+                    <description>Define the contributor/assignee of an artifact</description>
+                    <field REF="F26"/>
+                </semantic>
                 <semantic type="tooltip">
                     <field REF="F2"/>
                     <field REF="F8"/>
@@ -394,6 +400,9 @@
                 <permission scope="field" REF="F18" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
                 <permission scope="field" REF="F18" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
                 <permission scope="field" REF="F20" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F26" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F26" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+                <permission scope="field" REF="F26" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
             </permissions>
             <artifacts>
                 <artifact id="3">
@@ -432,6 +441,9 @@
                         </field_change>
                         <field_change field_name="status" type="list" bind="static">
                             <value format="id">103</value>
+                        </field_change>
+                        <field_change field_name="assigned_to" type="list" bind="users">
+                            <value format="ldap">tester1</value>
                         </field_change>
                     </changeset>
                 </artifact>
