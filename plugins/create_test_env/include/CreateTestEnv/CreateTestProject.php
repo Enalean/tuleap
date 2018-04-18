@@ -23,17 +23,20 @@ namespace Tuleap\CreateTestEnv;
 
 class CreateTestProject
 {
+    const DEFAULT_ARCHIVE = 'sample-project';
 
     private $user_name;
     private $user_realname;
 
     private $full_name;
     private $unix_name;
+    private $archive_dir_name;
 
-    public function __construct($user_name, $user_realname)
+    public function __construct($user_name, $user_realname, $archive_dir_name)
     {
-        $this->user_name     = $user_name;
-        $this->user_realname = $user_realname;
+        $this->user_name        = $user_name;
+        $this->user_realname    = $user_realname;
+        $this->archive_dir_name = basename($archive_dir_name);
     }
 
     /**
@@ -45,7 +48,7 @@ class CreateTestProject
     {
         $engine = new \Mustache_Engine();
         $xml_str = $engine->render(
-            file_get_contents(__DIR__.'/../../resources/sample-project/project.xml'),
+            file_get_contents($this->getProjectXMLFilePath()),
             new CreateTestProjectPresenter(
                 $this->getProjectUnixName(),
                 $this->getProjectFullName(),
@@ -54,6 +57,17 @@ class CreateTestProject
             )
         );
         return simplexml_load_string($xml_str);
+    }
+
+    public function getProjectXMLFilePath()
+    {
+        $etc_base_dir = \ForgeConfig::get('sys_custompluginsroot').'/'.\create_test_envPlugin::NAME.'/resources';
+        $project_xml_path = $etc_base_dir.'/'.$this->archive_dir_name.'/project.xml';
+        if (file_exists($project_xml_path)) {
+            return $project_xml_path;
+        }
+
+        return __DIR__.'/../../resources/sample-project/project.xml';
     }
 
     /**
