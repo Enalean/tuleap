@@ -229,6 +229,10 @@ msgstr ""
 msgid "Pre-select tests from a tracker report"
 msgstr ""
 
+#: src/app/execution/execution-detail.tpl.html
+msgid "Reload the test"
+msgstr ""
+
 #: src/app/campaign/campaign-edit.tpl.html
 msgid "Save changes"
 msgstr ""
@@ -267,6 +271,10 @@ msgstr ""
 
 #: src/app/execution/execution-list-header/execution-list-header-controller.js
 msgid "The job at URL {{ job_url }} has been succesfully launched."
+msgstr ""
+
+#: src/app/execution/execution-detail.tpl.html
+msgid "The test has been changed by someone else. You should reload the test before executing it."
 msgstr ""
 
 #: src/app/campaign/campaign-list.tpl.html

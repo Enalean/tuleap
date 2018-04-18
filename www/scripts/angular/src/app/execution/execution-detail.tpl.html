@@ -125,7 +125,7 @@
                 </textarea>
                 <timer class="tlp-form-element tlp-form-element-append current-test-counter" ng-model="timer.execution_time"></timer>
             </div>
-            <div class="current-test-results">
+            <div class="current-test-results" ng-if="! execution.userCanReloadTestBecauseDefinitionIsUpdated">
                 <button id="test-result-passed" type="button" class="current-test-result tlp-button-large tlp-button-success" title="{{ 'Passed' | translate }}" ng-click="pass(execution)" ng-disabled="execution.saving">
                     <i class="fa fa-fw fa-check-circle"></i>
                 </button>
@@ -137,6 +137,12 @@
                 </button>
                 <button id="test-result-notrun" type="button" class="current-test-result tlp-button-large tlp-button-secondary" title="{{ 'Not run' | translate }}" ng-click="notrun(execution)" ng-disabled="execution.saving">
                     <i class="fa fa-fw fa-question-circle"></i>
+                </button>
+            </div>
+            <div class="tlp-alert-warning current-test-should-be-reloaded-warning" ng-if="execution.userCanReloadTestBecauseDefinitionIsUpdated">
+                <span translate>The test has been changed by someone else. You should reload the test before executing it.</span>
+                <button type="button" class="tlp-button-warning tlp-button-outline current-test-should-be-reloaded-button" ng-click="execution.userCanReloadTestBecauseDefinitionIsUpdated()">
+                    <i class="fa fa-fw fa-refresh tlp-button-icon"></i> <span translate>Reload the test</span>
                 </button>
             </div>
         </section>

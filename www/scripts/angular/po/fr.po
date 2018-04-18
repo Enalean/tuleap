@@ -244,6 +244,10 @@ msgstr "Merci de sélectionner un test"
 msgid "Pre-select tests from a tracker report"
 msgstr "Pré-sélectionner les tests d'un rapport"
 
+#: src/app/execution/execution-detail.tpl.html
+msgid "Reload the test"
+msgstr "Recharger le test"
+
 #: src/app/campaign/campaign-edit.tpl.html
 msgid "Save changes"
 msgstr "Enregistrer les changements"
@@ -283,6 +287,14 @@ msgstr "L’id saisi est incorrect."
 #: src/app/execution/execution-list-header/execution-list-header-controller.js
 msgid "The job at URL {{ job_url }} has been succesfully launched."
 msgstr "Le projet à l'URL {{ job_url }} a été lancé avec succès."
+
+#: src/app/execution/execution-detail.tpl.html
+msgid ""
+"The test has been changed by someone else. You should reload the test before "
+"executing it."
+msgstr ""
+"Le test a été changé par quelqu'un d'autre. Vous devez recharger la dernière "
+"version du test avant de pouvoir l’exécuter."
 
 #: src/app/campaign/campaign-list.tpl.html
 msgid "There are no campaigns"

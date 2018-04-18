@@ -470,3 +470,12 @@ $toolbar-height: 46px;
 .linked-issues-dropdown-content-badge {
     margin: 0 5px 0 0;
 }
+
+.current-test-should-be-reloaded-warning {
+    width: 100%;
+}
+
+.current-test-should-be-reloaded-button {
+    margin: 0 0 0 $tlp-half-spacing;
+    vertical-align: baseline;
+}

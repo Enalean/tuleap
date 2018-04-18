@@ -165,7 +165,7 @@ function SocketService(
     function listenToExecutionUpdated() {
         SocketFactory.on('testmanagement_execution:update', ({ artifact_id, user, previous_user }) => {
             ExecutionRestService.getExecution(artifact_id).then(execution => {
-                ExecutionService.updateTestExecution(execution);
+                ExecutionService.updateTestExecution(execution, user);
                 ExecutionService.updatePresenceOnCampaign(user);
 
                 if (previous_user) {
