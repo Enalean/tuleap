@@ -162,8 +162,14 @@ msgstr "Limite mise à jour avec succès."
 msgid "No element selected."
 msgstr "Aucun élément sélectionné."
 
+msgid "No global notifications"
+msgstr "Pas de notification globale"
+
 msgid "No notification set"
 msgstr "Aucune notification n'a été définie"
+
+msgid "No notifications at all"
+msgstr "Aucune notification"
 
 msgid "Notification successfully deleted."
 msgstr "La notification a été supprimée"
@@ -171,11 +177,14 @@ msgstr "La notification a été supprimée"
 msgid "Notification successfully saved."
 msgstr "Notification enregistrée avec succès."
 
-msgid "Notifications management is coming soon."
-msgstr "La gestion des notifications sera prochainement disponible."
-
 msgid "Notified people"
 msgstr "Personnes notifiées"
+
+msgid "Notify me on every change"
+msgstr "Me notifier à chaque changement"
+
+msgid "Notify me when artifacts are created"
+msgstr "Me notifier lors de la création d'un nouveau artéfact"
 
 msgid "On all updates?"
 msgstr "À chaque modification ?"
@@ -204,6 +213,9 @@ msgstr ""
 
 msgid "Something went wrong."
 msgstr "Quelque chose s'est mal passé."
+
+msgid "Submit Changes"
+msgstr "Valider"
 
 msgid "That tracker does not exist."
 msgstr "Cet outil de suivi n'existe pas."
@@ -567,6 +579,11 @@ msgid "You are about to remove the notification. Please confirm your action."
 msgstr ""
 "Vous êtes sur le point de supprimer la notification. Merci de confirmer "
 "votre action."
+
+msgid "You can choose the notification mode you wish for this tracker."
+msgstr ""
+"Vous pouvez sélectionner le mode de notification que vous préférez pour ce "
+"tracker."
 
 msgid "You don't have permissions to see user groups."
 msgstr "Vous n'avez pas la permission de consulter les groupes d'utilisateur."

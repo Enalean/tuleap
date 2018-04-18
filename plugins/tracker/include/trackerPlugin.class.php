@@ -55,8 +55,10 @@ use Tuleap\Tracker\Notifications\NotificationListBuilder;
 use Tuleap\Tracker\Notifications\NotificationsForProjectMemberCleaner;
 use Tuleap\Tracker\Notifications\Settings\NotificationsSettingsDisplayController;
 use Tuleap\Tracker\Notifications\Settings\NotificationsSettingsUpdateController;
+use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsRetriever;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyDao;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyUpdater;
+use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
 use Tuleap\Tracker\Notifications\UsersToNotifyDao;
 use Tuleap\Tracker\PermissionsPerGroup\ProjectAdminPermissionPerGroupPresenterBuilder;
 use Tuleap\Tracker\ProjectDeletion;
@@ -1547,9 +1549,12 @@ class trackerPlugin extends Plugin {
             });
             $r->get('/notifications/{id:\d+}/', function () {
                 return new  NotificationsSettingsDisplayController(
+                    TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR . '/notifications/'),
                     $this->getTrackerFactory(),
                     new TrackerManager,
-                    $this->getUserManager()
+                    $this->getUserManager(),
+                    new UserNotificationSettingsRetriever(new Tracker_GlobalNotificationDao, new UnsubscribersNotificationDAO)
+
                 );
             });
             $r->post('/notifications/{id:\d+}/', function () {

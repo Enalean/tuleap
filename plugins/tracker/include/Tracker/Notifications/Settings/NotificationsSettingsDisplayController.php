@@ -21,6 +21,8 @@
 namespace Tuleap\Tracker\Notifications\Settings;
 
 use HTTPRequest;
+use TemplateRenderer;
+use TemplateRendererFactory;
 use TrackerFactory;
 use TrackerManager;
 use Tuleap\Layout\BaseLayout;
@@ -31,6 +33,10 @@ class NotificationsSettingsDisplayController implements DispatchableWithRequest
 {
     use NotificationsSettingsControllerCommon;
 
+    /**
+     * @var TemplateRenderer
+     */
+    private $template_renderer;
     /**
      * @var TrackerFactory
      */
@@ -43,12 +49,23 @@ class NotificationsSettingsDisplayController implements DispatchableWithRequest
      * @var UserManager
      */
     private $user_manager;
+    /**
+     * @var UserNotificationSettingsRetriever
+     */
+    private $user_notification_settings_retriever;
 
-    public function __construct(TrackerFactory $tracker_factory, TrackerManager $tracker_manager, UserManager $user_manager)
-    {
-        $this->tracker_factory = $tracker_factory;
-        $this->tracker_manager = $tracker_manager;
-        $this->user_manager    = $user_manager;
+    public function __construct(
+        TemplateRenderer $template_renderer,
+        TrackerFactory $tracker_factory,
+        TrackerManager $tracker_manager,
+        UserManager $user_manager,
+        UserNotificationSettingsRetriever $user_notification_settings_retriever
+    ) {
+        $this->template_renderer                    = $template_renderer;
+        $this->tracker_factory                      = $tracker_factory;
+        $this->tracker_manager                      = $tracker_manager;
+        $this->user_manager                         = $user_manager;
+        $this->user_notification_settings_retriever = $user_notification_settings_retriever;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
@@ -72,7 +89,14 @@ class NotificationsSettingsDisplayController implements DispatchableWithRequest
         if ($tracker->userIsAdmin($current_user)) {
             $this->getNotificationsManager($this->user_manager, $tracker)->displayTrackerAdministratorSettings($request, $csrf_token);
         } else {
-            echo dgettext('tuleap-tracker', 'Notifications management is coming soon.');
+            $user_notification_settings = $this->user_notification_settings_retriever->getUserNotificationSettings(
+                $current_user,
+                $tracker
+            );
+            $this->template_renderer->renderToPage(
+                'user-notification-settings',
+                new UserNotificationSettingsPresenter($csrf_token, $user_notification_settings)
+            );
         }
         $tracker->displayFooter($this->tracker_manager);
     }

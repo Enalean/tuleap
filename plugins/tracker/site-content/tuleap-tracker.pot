@@ -130,7 +130,13 @@ msgstr ""
 msgid "No element selected."
 msgstr ""
 
+msgid "No global notifications"
+msgstr ""
+
 msgid "No notification set"
+msgstr ""
+
+msgid "No notifications at all"
 msgstr ""
 
 msgid "Notification successfully deleted."
@@ -139,10 +145,13 @@ msgstr ""
 msgid "Notification successfully saved."
 msgstr ""
 
-msgid "Notifications management is coming soon."
+msgid "Notified people"
 msgstr ""
 
-msgid "Notified people"
+msgid "Notify me on every change"
+msgstr ""
+
+msgid "Notify me when artifacts are created"
 msgstr ""
 
 msgid "On all updates?"
@@ -167,6 +176,9 @@ msgid ""
 msgstr ""
 
 msgid "Something went wrong."
+msgstr ""
+
+msgid "Submit Changes"
 msgstr ""
 
 msgid "That tracker does not exist."
@@ -475,6 +487,9 @@ msgstr[0] ""
 msgstr[1] ""
 
 msgid "You are about to remove the notification. Please confirm your action."
+msgstr ""
+
+msgid "You can choose the notification mode you wish for this tracker."
 msgstr ""
 
 msgid "You don't have permissions to see user groups."
