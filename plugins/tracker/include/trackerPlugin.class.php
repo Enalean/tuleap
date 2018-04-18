@@ -55,6 +55,7 @@ use Tuleap\Tracker\Notifications\NotificationListBuilder;
 use Tuleap\Tracker\Notifications\NotificationsForProjectMemberCleaner;
 use Tuleap\Tracker\Notifications\Settings\NotificationsSettingsDisplayController;
 use Tuleap\Tracker\Notifications\Settings\NotificationsSettingsUpdateController;
+use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsDAO;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsRetriever;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyDao;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyUpdater;
@@ -1560,7 +1561,8 @@ class trackerPlugin extends Plugin {
             $r->post('/notifications/{id:\d+}/', function () {
                 return new  NotificationsSettingsUpdateController(
                     $this->getTrackerFactory(),
-                    $this->getUserManager()
+                    $this->getUserManager(),
+                    new UserNotificationSettingsDAO
                 );
             });
         });

@@ -588,6 +588,9 @@ msgstr ""
 msgid "You don't have permissions to see user groups."
 msgstr "Vous n'avez pas la permission de consulter les groupes d'utilisateur."
 
+msgid "Your notification settings have been successfully updated"
+msgstr "Vos paramètres de notification ont été mis à jour avec succès"
+
 msgid ""
 "changed. (But text is too long, we are unable to compute the differences in "
 "a reasonable amount of time.)"
