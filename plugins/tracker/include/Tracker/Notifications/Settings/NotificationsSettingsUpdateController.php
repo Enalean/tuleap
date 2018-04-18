@@ -38,11 +38,19 @@ class NotificationsSettingsUpdateController implements DispatchableWithRequest
      * @var UserManager
      */
     private $user_manager;
+    /**
+     * @var UserNotificationSettingsDAO
+     */
+    private $user_notification_settings_dao;
 
-    public function __construct(TrackerFactory $tracker_factory, UserManager $user_manager)
-    {
-        $this->tracker_factory = $tracker_factory;
-        $this->user_manager    = $user_manager;
+    public function __construct(
+        TrackerFactory $tracker_factory,
+        UserManager $user_manager,
+        UserNotificationSettingsDAO $user_notification_settings_dao
+    ) {
+        $this->tracker_factory                = $tracker_factory;
+        $this->user_manager                   = $user_manager;
+        $this->user_notification_settings_dao = $user_notification_settings_dao;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
@@ -50,16 +58,43 @@ class NotificationsSettingsUpdateController implements DispatchableWithRequest
         $tracker      = $this->getTrackerFromTrackerID($this->tracker_factory, $variables['id']);
         $current_user = $request->getCurrentUser();
 
-        if (! $tracker->userIsAdmin($current_user)) {
-            $layout->addFeedback(\Feedback::ERROR, $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
-            $layout->redirect(TRACKER_BASE_URL.'/?tracker='. $tracker->getId());
-        }
-
         $this->getCSRFToken($tracker)->check();
 
-        $this->getDateReminderManager($tracker)->processReminderUpdate($request);
-        $this->getNotificationsManager($this->user_manager, $tracker)->processUpdate($request);
+        if ($tracker->userIsAdmin($current_user)) {
+            $this->processAdminUpdate($request, $tracker);
+        } else if ($current_user->isLoggedIn() && $tracker->userCanView($current_user)) {
+            $this->processRegularUserUpdate($request, $layout, $tracker, $current_user);
+        }
 
         $layout->redirect($this->getURL($tracker));
+    }
+
+    private function processAdminUpdate(HTTPRequest $request, \Tracker $tracker)
+    {
+        $this->getDateReminderManager($tracker)->processReminderUpdate($request);
+        $this->getNotificationsManager($this->user_manager, $tracker)->processUpdate($request);
+    }
+
+    private function processRegularUserUpdate(HTTPRequest $request, BaseLayout $layout, \Tracker $tracker, \PFUser $user)
+    {
+        switch ($request->get('notification-mode')) {
+            case 'no-notification':
+                $this->user_notification_settings_dao->enableNoNotificationAtAllMode($user->getId(), $tracker->getId());
+                break;
+            case 'no-global-notification':
+                $this->user_notification_settings_dao->enableNoGlobalNotificationMode($user->getId(), $tracker->getId());
+                break;
+            case 'notify-me-on-create':
+                $this->user_notification_settings_dao->enableNotifyOnArtifactCreationMode($user->getId(), $tracker->getId());
+                break;
+            case 'notify-me-every-change':
+                $this->user_notification_settings_dao->enableNotifyOnEveryChangeMode($user->getId(), $tracker->getId());
+                break;
+        }
+
+        $layout->addFeedback(
+            \Feedback::INFO,
+            dgettext('tuleap-tracker', 'Your notification settings have been successfully updated')
+        );
     }
 }
