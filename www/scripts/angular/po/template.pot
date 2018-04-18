@@ -285,6 +285,10 @@ msgstr ""
 msgid "You are disconnected from real time. Please reload your page."
 msgstr ""
 
+#: src/app/execution/execution-detail-just-updated-component.js
+msgid "You have just updated the test definition, so it has been reset. Please start over."
+msgstr ""
+
 #: src/app/artifact-links-graph/artifact-links-graph.tpl.html
 #: src/app/graph/graph.tpl.html
 msgid "Zoom in"

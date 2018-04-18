@@ -2,6 +2,7 @@ import _ from 'lodash';
 
 import './execution-link-issue.tpl.html';
 import ExecutionLinkIssueCtrl from './execution-link-issue-controller.js';
+import { theTestHasJustBeenUpdated } from "./execution-detail-just-updated-state.js";
 
 export default ExecutionDetailCtrl;
 
@@ -178,6 +179,7 @@ function ExecutionDetailCtrl(
             var executions = ExecutionService.getExecutionsByDefinitionId(artifact_id);
             ExecutionService.updateExecutionToUseLatestVersionOfDefinition($scope.execution.id);
             notrun($scope.execution);
+            theTestHasJustBeenUpdated();
 
             return DefinitionService.getDefinitionById(artifact_id).then(function(definition) {
                 _(executions).forEach(function(execution) {

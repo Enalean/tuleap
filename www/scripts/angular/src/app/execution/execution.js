@@ -14,12 +14,13 @@ import artifact_links_module       from '../artifact-links-graph/artifact-links-
 import socket_module               from '../socket/socket.js';
 import campaign_module             from '../campaign/campaign.js';
 
-import ExecutionConfig         from './execution-config.js';
-import ExecutionListCtrl       from './execution-list-controller.js';
-import ExecutionDetailCtrl     from './execution-detail-controller.js';
-import ExecutionTimerDirective from './timer/execution-timer-directive.js';
-import ExecutionListFilter     from './execution-list-filter.js';
-import ExecutionListHeader     from './execution-list-header/execution-list-header-component.js';
+import ExecutionConfig            from './execution-config.js';
+import ExecutionListCtrl          from './execution-list-controller.js';
+import ExecutionDetailCtrl        from './execution-detail-controller.js';
+import ExecutionTimerDirective    from './timer/execution-timer-directive.js';
+import ExecutionListFilter        from './execution-list-filter.js';
+import ExecutionListHeader        from './execution-list-header/execution-list-header-component.js';
+import ExecutionDetailJustUpdated from './execution-detail-just-updated-component.js';
 
 export default angular.module('execution', [
     'gettext',
@@ -38,6 +39,7 @@ export default angular.module('execution', [
 .controller('ExecutionListCtrl', ExecutionListCtrl)
 .controller('ExecutionDetailCtrl', ExecutionDetailCtrl)
 .directive('timer', ExecutionTimerDirective)
+.component('executionDetailJustUpdated', ExecutionDetailJustUpdated)
 .component('executionListHeader', ExecutionListHeader)
 .filter('ExecutionListFilter', ExecutionListFilter)
 .name;
