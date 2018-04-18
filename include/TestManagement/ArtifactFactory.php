@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -90,14 +90,14 @@ class ArtifactFactory
     public function getPaginatedOpenArtifactsByTrackerIdUserCanView(PFUser $user, $tracker_id, $milestone_id, $limit, $offset)
     {
         $artifacts = array();
-        foreach ($this->dao->searchPaginatedOpenByTrackerId($tracker_id, $milestone_id, $limit, $offset) as $row) {
+        $rows      = $this->dao->searchPaginatedOpenByTrackerId($tracker_id, $milestone_id, $limit, $offset);
+        $size      = (int) $this->dao->foundRows();
+        foreach ($rows as $row) {
             $artifact = $this->tracker_artifact_factory->getInstanceFromRow($row);
             if ($artifact->userCanView($user)) {
                 $artifacts[$row['id']] = $artifact;
             }
         }
-
-        $size = (int) $this->dao->foundRows();
 
         return new Tracker_Artifact_PaginatedArtifacts($artifacts, $size);
     }
@@ -114,13 +114,14 @@ class ArtifactFactory
     public function getPaginatedClosedArtifactsByTrackerIdUserCanView(PFUser $user, $tracker_id, $milestone_id, $limit, $offset)
     {
         $artifacts = array();
-        foreach ($this->dao->searchPaginatedClosedByTrackerId($tracker_id, $milestone_id, $limit, $offset) as $row) {
+        $rows      = $this->dao->searchPaginatedClosedByTrackerId($tracker_id, $milestone_id, $limit, $offset);
+        $size      = (int) $this->dao->foundRows();
+        foreach ($rows as $row) {
             $artifact = $this->tracker_artifact_factory->getInstanceFromRow($row);
             if ($artifact->userCanView($user)) {
                 $artifacts[$row['id']] = $artifact;
             }
         }
-        $size = (int) $this->dao->foundRows();
 
         return new Tracker_Artifact_PaginatedArtifacts($artifacts, $size);
     }
@@ -138,14 +139,14 @@ class ArtifactFactory
     public function getPaginatedArtifactsByTrackerIdUserCanView(PFUser $user, $tracker_id, $milestone_id, $limit, $offset, $reverse_order)
     {
         $artifacts = array();
-        foreach ($this->dao->searchPaginatedByTrackerId($tracker_id, $milestone_id, $limit, $offset, $reverse_order) as $row) {
+        $rows      = $this->dao->searchPaginatedByTrackerId($tracker_id, $milestone_id, $limit, $offset, $reverse_order);
+        $size      = (int) $this->dao->foundRows();
+        foreach ($rows as $row) {
             $artifact = $this->tracker_artifact_factory->getInstanceFromRow($row);
             if ($artifact->userCanView($user)) {
                 $artifacts[$row['id']] = $artifact;
             }
         }
-
-        $size = (int) $this->dao->foundRows();
 
         return new Tracker_Artifact_PaginatedArtifacts($artifacts, $size);
     }
