@@ -11,13 +11,6 @@ if (version_compare(PHP_VERSION, '5.3.0', '>=')) {
     error_reporting(E_ALL);
 }
 
-if (PHP_INT_SIZE == 4 && extension_loaded('runkit')) {
-    require_once(dirname(__FILE__) .'/../include/simpletest/mock_functions.php');
-    define('MOCKFUNCTION_AVAILABLE', true);
-} else {
-    define('MOCKFUNCTION_AVAILABLE', false);
-}
-
 // Base dir:
 $basedir      = realpath(dirname(__FILE__).'/../../..');
 $src_path     = $basedir.'/src';
