@@ -48,6 +48,7 @@ class CreateTestEnvResourceTest extends \RestBase
                     'email' => 'jd@example.com',
                     'password' => 'Welcome0',
                     'login' => 'john-doe',
+                    'archive' => 'sample-project',
                 ],
                 true
             )
@@ -79,6 +80,7 @@ class CreateTestEnvResourceTest extends \RestBase
                         'email'     => 'jd@example.com',
                         'password'  => 'azerty',
                         'login'     => 'jdoe',
+                        'archive'   => 'foo',
                     ],
                     true
                 )

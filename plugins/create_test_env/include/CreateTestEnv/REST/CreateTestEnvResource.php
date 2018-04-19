@@ -57,6 +57,7 @@ class CreateTestEnvResource
      * @param string $email {@from body} User email
      * @param string $login {@from body} User login
      * @param string $password {@from body} User password
+     * @param string $archive {@from body} Archive to use for import (set 'sample-project' if you don't know what to use)
      *
      * @access public
      *
@@ -68,7 +69,7 @@ class CreateTestEnvResource
      * @throws 400 RestException Invalid request
      * @throws 500 RestException Server error
      */
-    public function post($secret, $firstname, $lastname, $email, $login, $password)
+    public function post($secret, $firstname, $lastname, $email, $login, $password, $archive)
     {
         $tmp_name = null;
         try {
@@ -80,7 +81,7 @@ class CreateTestEnvResource
                 PasswordSanityChecker::build(),
                 $tmp_name
             );
-            $test_env->main($firstname, $lastname, $email, $login, $password);
+            $test_env->main($firstname, $lastname, $email, $login, $password, $archive);
 
             return (new TestEnvironmentRepresentation())->build(
                 $test_env->getProject(),
