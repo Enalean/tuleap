@@ -18,8 +18,8 @@ class CollectionTestCase extends TuleapTestCase {
      * Constructor of the test. Can be ommitted.
      * Usefull to set the name of the test
      */
-    function CollectionTestCase($name = 'Collection test', $collection_class_name = 'you_must_define_classname') {
-        $this->UnitTestCase($name);
+    function __construct($name = 'Collection test', $collection_class_name = 'you_must_define_classname') {
+        parent::__construct($name);
         $this->collection_class_name = $collection_class_name;
     }
 
@@ -204,6 +204,6 @@ class CollectionTestCase extends TuleapTestCase {
     }
 }
 //We just tells SimpleTest to always ignore this testcase
-SimpleTestOptions::ignore('CollectionTestCase');
+SimpleTest::ignore('CollectionTestCase');
 
 ?>

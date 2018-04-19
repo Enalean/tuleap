@@ -171,24 +171,31 @@ phpunit:
 
 simpletest-70-ci:
 	@mkdir -p $(WORKSPACE)/results/ut-simpletest-php-70
-	@docker run --rm -v $(CURDIR):/tuleap:ro -v $(WORKSPACE)/results/ut-simpletest-php-70:/output:rw -u $(id -u):$(id -g) enalean/tuleap-simpletest:c6-php70 /opt/rh/rh-php70/root/usr/bin/php /tuleap/tests/bin/php7-run.php run-juint /output/results.xml
+	@docker run --rm -v $(CURDIR):/tuleap:ro -v $(WORKSPACE)/results/ut-simpletest-php-70:/output:rw -u $(id -u):$(id -g) enalean/tuleap-simpletest:c6-php70 /opt/rh/rh-php70/root/usr/bin/php /tuleap/tests/bin/simpletest11x.php --log-junit=/output/results.xml run
 
-simpletest-70:
-	@docker run --rm -v $(CURDIR):/tuleap:ro -u $(id -u):$(id -g) enalean/tuleap-simpletest:c6-php70 /opt/rh/rh-php70/root/usr/bin/php /tuleap/tests/bin/php7-run.php run
+simpletest-70: ## Run SimpleTest with PHP 7.0
+	@docker run --rm -v $(CURDIR):/tuleap:ro -u $(id -u):$(id -g) enalean/tuleap-simpletest:c6-php70 /opt/rh/rh-php70/root/usr/bin/php /tuleap/tests/bin/simpletest11x.php run
 
-simpletest-70-file:
-	@docker run --rm -v $(CURDIR):/tuleap:ro -u $(id -u):$(id -g) enalean/tuleap-simpletest:c6-php70 /opt/rh/rh-php70/root/usr/bin/php /tuleap/tests/bin/php7-run.php run-file $(FILE)
+simpletest-70-file: ## Run SimpleTest with PHP 7.0 on a given file or directory with FILE variable
+	@docker run --rm -v $(CURDIR):/tuleap:ro -u $(id -u):$(id -g) enalean/tuleap-simpletest:c6-php70 /opt/rh/rh-php70/root/usr/bin/php /tuleap/tests/bin/simpletest11x.php run $(FILE)
 
-simpletest-70-update-compatibility-list:
+simpletest-70-update-compatibility-list: ## Run this to update the list of PHP7 ready tests
 	@echo "Collect tests"
-	@docker run --rm -v $(CURDIR):/tuleap:rw -u $(id -u):$(id -g) -w /tuleap enalean/tuleap-simpletest:c6-php70 /opt/rh/rh-php70/root/usr/bin/php /tuleap/tests/bin/php7-run.php collect
+	@docker run --rm -v $(CURDIR):/tuleap:rw -u $(id -u):$(id -g) -w /tuleap enalean/tuleap-simpletest:c6-php70 /opt/rh/rh-php70/root/usr/bin/php /tuleap/tests/bin/simpletest11x.php collect
 	@echo "Execute tests PHP 7.0"
-	@docker run --rm -v $(CURDIR):/tuleap:ro -v $(CURDIR):/output:rw -u $(id -u):$(id -g) enalean/tuleap-simpletest:c6-php70 /opt/rh/rh-php70/root/usr/bin/php /tuleap/tests/bin/php7-run.php run-juint /output/ut-simpletest-php-70-results.xml
+	@docker run --rm -v $(CURDIR):/tuleap:ro -v $(CURDIR):/output:rw -u $(id -u):$(id -g) enalean/tuleap-simpletest:c6-php70 /opt/rh/rh-php70/root/usr/bin/php /tuleap/tests/bin/simpletest11x.php --log-junit=/output/ut-simpletest-php-70-results.xml run
 	@echo "Execute tests PHP 5.6"
 	@docker run --rm -v $(CURDIR):/tuleap:ro -u $(id -u):$(id -g) enalean/tuleap-simpletest:c6-php56 --nodb -x php7compatibletests.list > ut-simpletest-php-56-results.xml
 	@echo "Compare results"
-	@docker run --rm -v $(CURDIR):/tuleap:ro -u $(id -u):$(id -g) -w /tuleap enalean/tuleap-simpletest:c6-php70 /opt/rh/rh-php70/root/usr/bin/php /tuleap/tests/bin/php7-run.php compare-results ut-simpletest-php-70-results.xml ut-simpletest-php-56-results.xml
+	@docker run --rm -v $(CURDIR):/tuleap:ro -u $(id -u):$(id -g) -w /tuleap enalean/tuleap-simpletest:c6-php70 /opt/rh/rh-php70/root/usr/bin/php /tuleap/tests/bin/simpletest11x.php compare-results ut-simpletest-php-70-results.xml ut-simpletest-php-56-results.xml
 	@rm -f ut-simpletest-php-56-results.xml ut-simpletest-php-70-results.xml
+
+simpletest11x-56-ci:
+	@mkdir -p $(WORKSPACE)/results/ut-simpletest11x-php-56
+	@docker run --rm -v $(CURDIR):/tuleap:ro -v $(WORKSPACE)/results/ut-simpletest11x-php-56:/output:rw --entrypoint "" enalean/tuleap-simpletest:c6-php56 /opt/rh/rh-php56/root/usr/bin/php /tuleap/tests/bin/simpletest11x.php --log-junit=/output/results.xml run /tuleap/tests/simpletest /tuleap/plugins/docman/tests
+
+simpletest11x-56: ## Run SimpleTest 1.1.x with PHP 5.6 tests in CLI
+	@docker run --rm -v $(CURDIR):/tuleap:ro --entrypoint "" enalean/tuleap-simpletest:c6-php56 /opt/rh/rh-php56/root/usr/bin/php /tuleap/tests/bin/simpletest11x.php run /tuleap/tests/simpletest /tuleap/plugins/docman/tests
 
 #
 # Dev setup

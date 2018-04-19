@@ -18,31 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/frs/FRSPackageFactory.class.php');
-Mock::generatePartial(
-    'FRSPackageFactory',
-    'FRSPackageFactoryTestVersion',
-    array(
-        '_getFRSPackageDao',
-        'getUserManager',
-        'getPermissionsManager',
-        'getFRSPermissionManager',
-        'getProjectManager',
-        'getFRSPackagesFromDb',
-        'delete_package'
-    )
-);
-require_once('common/dao/include/DataAccess.class.php');
-require_once('common/dao/include/DataAccessResult.class.php');
-Mock::generate('DataAccessResult');
-require_once('common/dao/FRSPackageDao.class.php');
-Mock::generatePartial('FRSPackageDao', 'FRSPackageDaoTestVersion', array('retrieve'));
-
-Mock::generate('PFUser');
-Mock::generate('UserManager');
-Mock::generate('PermissionsManager');
-Mock::generate('FRSPackage');
-
 class FRSPackageFactoryTest extends TuleapTestCase
 {
     protected $group_id   = 12;
@@ -57,12 +32,13 @@ class FRSPackageFactoryTest extends TuleapTestCase
 
     public function setUp()
     {
-        $this->user                   = mock('PFUser');
-        $this->frs_package_factory    = new FRSPackageFactoryTestVersion($this);
-        $this->user_manager           = new MockUserManager($this);
-        $this->permission_manager     = new MockPermissionsManager($this);
-        $this->frs_permission_manager = mock('Tuleap\FRS\FRSPermissionManager');
-        $this->project_manager        = mock('ProjectManager');
+        parent::setUp();
+        $this->user                   = \Mockery::spy(PFUser::class);
+        $this->frs_package_factory    = \Mockery::mock(FRSPackageFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->user_manager           = \Mockery::spy(UserManager::class);
+        $this->permission_manager     = \Mockery::spy(PermissionsManager::class);
+        $this->frs_permission_manager = \Mockery::spy(Tuleap\FRS\FRSPermissionManager::class);
+        $this->project_manager        = \Mockery::spy(ProjectManager::class, ['getProject' => \Mockery::spy(Project::class)]);
 
         stub($this->user_manager)->getUserById()->returns($this->user);
         stub($this->frs_package_factory)->getUserManager()->returns($this->user_manager);
@@ -84,12 +60,6 @@ class FRSPackageFactoryTest extends TuleapTestCase
                                'error_message'    => null
                                );
         $package1 = FRSPackageFactory::getFRSPackageFromArray($packageArray1);
-        $dar1 = new MockDataAccessResult($this);
-        $dar1->setReturnValue('isError', false);
-        $dar1->setReturnValue('current', $packageArray1);
-        $dar1->setReturnValueAt(0, 'valid', true);
-        $dar1->setReturnValueAt(1, 'valid', false);
-        $dar1->setReturnValue('rowCount', 1);
 
         $packageArray2 = array('package_id'       => 2,
                                'group_id'         => 2,
@@ -103,28 +73,15 @@ class FRSPackageFactoryTest extends TuleapTestCase
                                'error_message'    => null
                                );
         $package2 = FRSPackageFactory::getFRSPackageFromArray($packageArray2);
-        $dar2 = new MockDataAccessResult($this);
-        $dar2->setReturnValue('isError', false);
-        $dar2->setReturnValue('current', $packageArray2);
-        $dar2->setReturnValueAt(0, 'valid', true);
-        $dar2->setReturnValueAt(1, 'valid', false);
-        $dar2->setReturnValue('rowCount', 1);
 
-        $dar3 = new MockDataAccessResult($this);
-        $dar3->setReturnValue('isError', false);
-        $dar3->setReturnValue('current', array());
-        $dar3->setReturnValueAt(0, 'valid', true);
-        $dar3->setReturnValueAt(1, 'valid', false);
-        $dar3->setReturnValue('rowCount', 0);
-
-        $dao = new FRSPackageDaoTestVersion();
+        $dao = \Mockery::mock(FRSPackageDao::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $dao->da = TestHelper::getPartialMock('DataAccess', array('DataAccess'));
-        $dao->setReturnValue('retrieve', $dar1, array('SELECT p.*  FROM frs_package AS p  WHERE  p.package_id = 1  ORDER BY rank DESC LIMIT 1'));
-        $dao->setReturnValue('retrieve', $dar2, array('SELECT p.*  FROM frs_package AS p  WHERE  p.package_id = 2  AND p.status_id != 0  ORDER BY rank DESC LIMIT 1'));
-        $dao->setReturnValue('retrieve', $dar3);
+        stub($dao)->retrieve('SELECT p.*  FROM frs_package AS p  WHERE  p.package_id = 1  ORDER BY rank DESC LIMIT 1')->returnsDar($packageArray1);
+        stub($dao)->retrieve('SELECT p.*  FROM frs_package AS p  WHERE  p.package_id = 2  AND p.status_id != 0  ORDER BY rank DESC LIMIT 1')->returnsDar($packageArray2);
+        stub($dao)->retrieve()->returnsDar([]);
 
-        $PackageFactory = new FRSPackageFactoryTestVersion();
-        $PackageFactory->setReturnValue('_getFRSPackageDao', $dao);
+        $PackageFactory = \Mockery::mock(FRSPackageFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $PackageFactory->shouldReceive('_getFRSPackageDao')->andReturns($dao);
         $this->assertEqual($PackageFactory->getFRSPackageFromDb(1, null, 0x0001), $package1);
         $this->assertEqual($PackageFactory->getFRSPackageFromDb(2), $package2);
     }
@@ -140,14 +97,11 @@ class FRSPackageFactoryTest extends TuleapTestCase
     {
         stub($this->frs_permission_manager)->userCanRead()->returns(true);
         stub($this->frs_permission_manager)->isAdmin()->returns(false);
+        $this->user->shouldReceive('getUgroups')->with($this->group_id, array())->once()->andReturns(array(1,2,76));
 
-        $this->user->expectOnce('getUgroups', array($this->group_id, array()));
-        $this->user->setReturnValue('getUgroups', array(1,2,76));
-
-        $this->permission_manager->setReturnValue('isPermissionExist', true);
-        $this->permission_manager->expectOnce('userHasPermission', array($this->package_id, 'PACKAGE_READ', array(1,2,76)));
-        $this->permission_manager->setReturnValue('userHasPermission', $can_read_package);
-        $this->frs_package_factory->setReturnValue('getPermissionsManager', $this->permission_manager);
+        $this->permission_manager->shouldReceive('isPermissionExist')->andReturns(true);
+        $this->permission_manager->shouldReceive('userHasPermission')->with($this->package_id, 'PACKAGE_READ', array(1,2,76))->once()->andReturns($can_read_package);
+        $this->frs_package_factory->shouldReceive('getPermissionsManager')->andReturns($this->permission_manager);
 
         return $this->frs_package_factory;
     }
@@ -170,15 +124,12 @@ class FRSPackageFactoryTest extends TuleapTestCase
     public function testUserCanReadWhenNoPermissionsSet()
     {
         stub($this->frs_permission_manager)->userCanRead()->returns(true);
-        $this->user->expectOnce('getUgroups', array($this->group_id, array()));
-        $this->user->setReturnValue('getUgroups', array(1,2,76));
+        $this->user->shouldReceive('getUgroups')->with($this->group_id, array())->once()->andReturns(array(1,2,76));
 
-        $this->permission_manager = new MockPermissionsManager($this);
-        $this->permission_manager->expectOnce('isPermissionExist', array($this->package_id, 'PACKAGE_READ'));
-        $this->permission_manager->setReturnValue('isPermissionExist', false);
-        $this->permission_manager->expectOnce('userHasPermission', array($this->package_id, 'PACKAGE_READ', array(1,2,76)));
-        $this->permission_manager->setReturnValue('userHasPermission', false);
-        $this->frs_package_factory->setReturnValue('getPermissionsManager', $this->permission_manager);
+        $this->permission_manager = \Mockery::spy(PermissionsManager::class);
+        $this->permission_manager->shouldReceive('isPermissionExist')->with($this->package_id, 'PACKAGE_READ')->once()->andReturns(false);
+        $this->permission_manager->shouldReceive('userHasPermission')->with($this->package_id, 'PACKAGE_READ', array(1,2,76))->once()->andReturns(false);
+        $this->frs_package_factory->shouldReceive('getPermissionsManager')->andReturns($this->permission_manager);
         
         $this->assertTrue($this->frs_package_factory->userCanRead($this->group_id, $this->package_id, $this->user_id));
     }
@@ -209,25 +160,23 @@ class FRSPackageFactoryTest extends TuleapTestCase
 
     public function testDeleteProjectPackagesFail()
     {
-        $packageFactory = new FRSPackageFactoryTestVersion();
-        $package = new MockFRSPackage();
-        $packageFactory->setReturnValue('getFRSPackagesFromDb', array($package, $package, $package));
-        $packageFactory->setReturnValueAt(0, 'delete_package', true);
-        $packageFactory->setReturnValueAt(1, 'delete_package', false);
-        $packageFactory->setReturnValueAt(2, 'delete_package', true);
-        $packageFactory->expectCallCount('delete_package', 3);
+        $packageFactory = \Mockery::mock(FRSPackageFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $package = \Mockery::spy(FRSPackage::class);
+        $packageFactory->shouldReceive('getFRSPackagesFromDb')->andReturns(array($package, $package, $package));
+        $packageFactory->shouldReceive('delete_package')->once()->andReturns(true);
+        $packageFactory->shouldReceive('delete_package')->once()->andReturns(false);
+        $packageFactory->shouldReceive('delete_package')->once()->andReturns(true);
         $this->assertFalse($packageFactory->deleteProjectPackages(1));
     }
 
     public function testDeleteProjectPackagesSuccess()
     {
-        $packageFactory = new FRSPackageFactoryTestVersion();
-        $package = new MockFRSPackage();
-        $packageFactory->setReturnValue('getFRSPackagesFromDb', array($package, $package, $package));
-        $packageFactory->setReturnValueAt(0, 'delete_package', true);
-        $packageFactory->setReturnValueAt(1, 'delete_package', true);
-        $packageFactory->setReturnValueAt(2, 'delete_package', true);
-        $packageFactory->expectCallCount('delete_package', 3);
+        $packageFactory = \Mockery::mock(FRSPackageFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $package = \Mockery::spy(FRSPackage::class);
+        $packageFactory->shouldReceive('getFRSPackagesFromDb')->andReturns(array($package, $package, $package));
+        $packageFactory->shouldReceive('delete_package')->once()->andReturns(true);
+        $packageFactory->shouldReceive('delete_package')->once()->andReturns(true);
+        $packageFactory->shouldReceive('delete_package')->once()->andReturns(true);
         $this->assertTrue($packageFactory->deleteProjectPackages(1));
     }
 }

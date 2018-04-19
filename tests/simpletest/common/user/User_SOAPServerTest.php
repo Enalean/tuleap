@@ -93,15 +93,19 @@ class User_SOAPServerTest extends TuleapTestCase {
 }
 
 class UserManagerAsserter {
-    
-    public function __construct(User_SOAPServer $server, $asserter) {
+
+    private $server;
+    private $asserter;
+
+    public function __construct(User_SOAPServer $server, TuleapTestCase $asserter) {
         $this->server   = $server;
         $this->asserter = $asserter;
     }
     
-    public function thenLoginAsReturns($expected) {
-        $this->asserter->assertIdentical($this->server->loginAs(null, null), $expected);
+    public function thenLoginAsReturns(SoapFault $expected) {
+        $returned = $this->server->loginAs(null, null);
+        $this->asserter->assertIsA($returned, 'SoapFault');
+        $this->asserter->assertEqual($returned->getCode(), $expected->getCode());
+        $this->asserter->assertEqual($returned->getMessage(), $expected->getMessage());
     }
 }
-
-?>

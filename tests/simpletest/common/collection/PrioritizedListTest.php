@@ -14,8 +14,8 @@ class PrioritizedListTest extends LinkedListTestCase {
      * Constructor of the test. Can be ommitted.
      * Usefull to set the name of the test
      */
-    function PrioritizedListTest($name = 'PrioritizedList test') {
-        $this->LinkedListTestCase($name, 'PrioritizedList');
+    function __construct($name = 'PrioritizedList test') {
+        parent::__construct($name, 'PrioritizedList');
     }
     
     function testSimplePriority() {

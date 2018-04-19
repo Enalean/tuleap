@@ -9,8 +9,8 @@ require_once('SanitizerTestCase.class.php');
  * abstract
  */
 class SimpleSanitizerTestCase extends SanitizerTestCase {
-    function SimpleSanitizerTest($test_name = false) {
-        $this->UnitTestCase($test_name);
+    function __construct($test_name = false) {
+        parent::__construct($test_name);
     }
 
     function setUp() {
@@ -24,10 +24,11 @@ class SimpleSanitizerTestCase extends SanitizerTestCase {
         $bad_tag   = "<tag";
         $html      = "Lorem ipsum dolor sit amet,".$bad_tag." consectetuer adipiscing elit.";
         $result    = $this->sanitizer->sanitize($html);
-        $this->assertNoUnwantedPattern("/".$bad_tag."/",$result);
+
+        $this->assertNoPattern("/".$bad_tag."/",$result);
     }    
 }
 
 //We just tells SimpleTest to always ignore this testcase
-SimpleTestOptions::ignore('SimpleSanitizerTestCase');
+SimpleTest::ignore('SimpleSanitizerTestCase');
 ?>

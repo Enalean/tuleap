@@ -21,10 +21,12 @@
 
 require_once __DIR__.'/../../src/common/autoload.php';
 require_once __DIR__.'/../../src/common/autoload_libs.php';
-require_once __DIR__.'/SimpleTestPHP7/TuleapTestCase.php';
-require_once __DIR__.'/SimpleTestPHP7/FindCompatibleTests.php';
-require_once __DIR__.'/SimpleTestPHP7/RunTestSuite.php';
-require_once __DIR__.'/SimpleTestPHP7/CompareXMLResults.php';
+require_once __DIR__.'/SimpleTest11x/TuleapTestCase.php';
+require_once __DIR__.'/SimpleTest11x/TuleapColorTextReporter.php';
+require_once __DIR__.'/SimpleTest11x/TuleapJunitXMLReporter.php';
+require_once __DIR__.'/SimpleTest11x/FindCompatibleTests.php';
+require_once __DIR__.'/SimpleTest11x/RunTestSuite.php';
+require_once __DIR__.'/SimpleTest11x/CompareXMLResults.php';
 
 // Tests are like gods, they can run an infinite time, eat all the memory and kill kittens
 ini_set('max_execution_time', '0');
@@ -39,38 +41,34 @@ ini_set('include_path', ini_get('include_path').':'.$src_path.':'.$include_path)
 
 require_once __DIR__.'/../../src/etc/local.inc.dist';
 
-switch ($argv[1]) {
+$cli_args = $argv;
+array_shift($cli_args);
+
+$options = getopt('', ['log-junit:', 'quiet']);
+foreach ($options as $opt) {
+    array_shift($cli_args);
+}
+
+$command = $cli_args[0];
+array_shift($cli_args);
+
+switch ($command) {
     case 'collect':
         $exec = new FindCompatibleTests();
         $exec->main();
         break;
 
-    case 'blind-exec':
-        array_shift($argv);
-        $exec = new RunTestSuite();
-        $exec->mainWithoutOutput($argv);
-        break;
-
     case 'run':
-        $exec = new RunTestSuite();
-        $exec->mainWithCompatibilityList();
-        break;
-
-    case 'run-juint':
-        array_shift($argv);
-        $exec = new RunTestSuite();
-        $exec->mainWithCompatibilityListJunit($argv);
-        break;
-
-    case 'run-file':
-        array_shift($argv);
-        $exec = new RunTestSuite();
-        $exec->mainWithOneFile($argv);
+        $exec = new RunTestSuite($cli_args, $options);
+        $exec->main();
         break;
 
     case 'compare-results':
-        array_shift($argv);
         $exec = new CompareXMLResults();
-        $exec->main($argv);
+        $exec->main($cli_args);
         break;
+
+    default:
+        fwrite(STDERR, "Unknown option ".$command."\n");
+        exit(255);
 }

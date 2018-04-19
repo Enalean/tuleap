@@ -297,7 +297,7 @@ class Project_SOAPServerGenericUserTest extends TuleapTestCase {
         $this->session_key = '123';
         $this->password    = 'pwd';
 
-        $this->user = mock('PFUser');
+        $this->user = mock('GenericUser');
         $this->user->setReturnValue('isLoggedIn', true);
 
         $this->admin  = mock('PFUser');

@@ -19,11 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/dao/SystemEventsFollowersDao.class.php';
-require_once 'common/mail/Mail.class.php';
-require_once 'common/event/EventManager.class.php';
-require_once 'SystemEventMissingParameterException.class.php';
-
 /**
  * System Event class
  *

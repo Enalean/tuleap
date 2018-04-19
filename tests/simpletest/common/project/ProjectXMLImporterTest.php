@@ -29,7 +29,6 @@ class ProjectXMLImporterTest extends TuleapTestCase {
     private $ugroup_manager;
     private $xml_file_path;
     private $xml_file_path_with_ugroups;
-    private $xml_content;
     private $user_manager;
     private $logger;
     private $configuration;
@@ -40,7 +39,7 @@ class ProjectXMLImporterTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
 
-        $this->event_manager     = mock('EventManager');
+        $this->event_manager     = \Mockery::spy(EventManager::class);
         $this->project_manager   = mock('ProjectManager');
         $this->project           = stub('Project')->getID()->returns(122);
         $this->ugroup_manager    = mock('UGroupManager');
@@ -69,7 +68,7 @@ class ProjectXMLImporterTest extends TuleapTestCase {
             $this->user_manager,
             new XML_RNGValidator(),
             $this->ugroup_manager,
-            new XMLImportHelper($this->user_manager),
+            $this->user_finder,
             mock('ServiceManager'),
             $this->logger,
             $this->ugroup_duplicator,
@@ -84,28 +83,21 @@ class ProjectXMLImporterTest extends TuleapTestCase {
         $this->xml_file_path_with_ugroups = dirname(__FILE__).'/_fixtures/fake_project_with_ugroups.xml';
         $this->xml_file_path_with_members = dirname(__FILE__).'/_fixtures/fake_project_with_project_members.xml';
 
-        $this->xml_content = new SimpleXMLElement(file_get_contents($this->xml_file_path));
-
-        $this->mapping_registery = new MappingsRegistry();
-
         $this->configuration = new Import\ImportConfig();
     }
 
     public function itAsksToPluginToImportInformationsFromTheGivenXml() {
         stub($this->project_manager)->getValidProjectByShortNameOrId()->returns($this->project);
 
-        expect($this->event_manager)->processEvent(
-            Event::IMPORT_XML_PROJECT,
-            array(
-                'logger'              => $this->logger,
-                'project'             => $this->project,
-                'xml_content'         => $this->xml_content,
-                'extraction_path'     => '',
-                'user_finder'         => $this->user_finder,
-                'mappings_registery'  => $this->mapping_registery,
-                'configuration'       => $this->configuration,
-            )
-        )->once();
+        $this->event_manager->shouldReceive('processEvent')->once()->with(Event::IMPORT_XML_PROJECT, \Mockery::on(function ($args) {
+            return $args['logger'] === $this->logger &&
+                $args['project'] === $this->project &&
+                $args['extraction_path'] === '' &&
+                $args['user_finder'] === $this->user_finder &&
+                $args['configuration'] === $this->configuration &&
+                $args['mappings_registery'] instanceof MappingsRegistry &&
+                $args['xml_content'] instanceof SimpleXMLElement;
+        }));
 
         $this->xml_importer->import($this->configuration, 369, $this->xml_file_path);
     }

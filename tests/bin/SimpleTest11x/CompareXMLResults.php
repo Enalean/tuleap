@@ -24,8 +24,8 @@ class CompareXMLResults
 {
     public function main(array $argv)
     {
-        $php70 = simplexml_load_file($argv[1]);
-        $php56 = simplexml_load_file($argv[2]);
+        $php70 = simplexml_load_file($argv[0]);
+        $php56 = simplexml_load_file($argv[1]);
 
         if ((int) $php70['tests'] === (int) $php56['tests'] &&
         (int) $php70['failures'] === (int) $php56['failures'] &&
