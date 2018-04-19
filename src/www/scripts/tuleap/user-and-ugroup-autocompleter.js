@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -91,6 +91,7 @@ var tuleap = tuleap || {};
                     return {
                         return_type                        : 'json_for_select_2',
                         'with-groups-of-user-in-project-id': input.dataset.projectId,
+                        'additional-information'           : input.dataset.additionalInfo,
                         name: term
                     };
                 },

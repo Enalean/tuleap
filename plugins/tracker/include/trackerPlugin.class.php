@@ -51,6 +51,7 @@ use Tuleap\Tracker\Legacy\Inheritor;
 use Tuleap\Tracker\Notifications\CollectionOfUgroupToBeNotifiedPresenterBuilder;
 use Tuleap\Tracker\Notifications\CollectionOfUserInvolvedInNotificationPresenterBuilder;
 use Tuleap\Tracker\Notifications\GlobalNotificationsAddressesBuilder;
+use Tuleap\Tracker\Notifications\GlobalNotificationSubscribersFilter;
 use Tuleap\Tracker\Notifications\NotificationListBuilder;
 use Tuleap\Tracker\Notifications\NotificationsForProjectMemberCleaner;
 use Tuleap\Tracker\Notifications\Settings\NotificationsSettingsDisplayController;
@@ -164,6 +165,8 @@ class trackerPlugin extends Plugin {
 
         $this->addHook(WorkerEvent::NAME);
         $this->addHook(PermissionPerGroupPaneCollector::NAME);
+
+        $this->addHook(\Tuleap\user\UserAutocompletePostSearchEvent::NAME);
 
         $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
     }
@@ -1413,11 +1416,12 @@ class trackerPlugin extends Plugin {
      * @return Tracker_NotificationsManager
      */
     private function getTrackerNotificationManager() {
-        $user_to_notify_dao        = $this->getUserToNotifyDao();
-        $ugroup_to_notify_dao      = $this->getUgroupToNotifyDao();
-        $notification_list_builder = new NotificationListBuilder(
+        $user_to_notify_dao             = $this->getUserToNotifyDao();
+        $ugroup_to_notify_dao           = $this->getUgroupToNotifyDao();
+        $unsubscribers_notification_dao = new UnsubscribersNotificationDAO;
+        $notification_list_builder      = new NotificationListBuilder(
             new UGroupDao(),
-            new CollectionOfUserInvolvedInNotificationPresenterBuilder($user_to_notify_dao, new UnsubscribersNotificationDAO),
+            new CollectionOfUserInvolvedInNotificationPresenterBuilder($user_to_notify_dao, $unsubscribers_notification_dao),
             new CollectionOfUgroupToBeNotifiedPresenterBuilder($ugroup_to_notify_dao)
         );
         return new Tracker_NotificationsManager(
@@ -1428,7 +1432,8 @@ class trackerPlugin extends Plugin {
             new UserNotificationSettingsDAO,
             new GlobalNotificationsAddressesBuilder(),
             UserManager::instance(),
-            new UGroupManager()
+            new UGroupManager(),
+            new GlobalNotificationSubscribersFilter($unsubscribers_notification_dao)
         );
     }
 
@@ -1539,6 +1544,42 @@ class trackerPlugin extends Plugin {
     {
         $deletions_remover = new ArtifactsDeletionRemover(new ArtifactsDeletionDAO());
         $deletions_remover->deleteOutdatedArtifactsDeletions();
+    }
+
+    /**
+     * @see \Tuleap\user\UserAutocompletePostSearchEvent
+     */
+    public function userAutocompletePostSearch(\Tuleap\user\UserAutocompletePostSearchEvent $event)
+    {
+        $additional_information = $event->getAdditionalInformation();
+        if (! isset($additional_information['tracker_id'])) {
+            return;
+        }
+        $tracker_factory = TrackerFactory::instance();
+        $tracker         = $tracker_factory->getTrackerById($additional_information['tracker_id']);
+        if ($tracker === null) {
+            return;
+        }
+
+        $autocompleted_user_list                = $event->getUserList();
+        $autocompleted_user_id_list             = [];
+        foreach ($autocompleted_user_list as $autocompleted_user) {
+            $autocompleted_user_id_list[] = $autocompleted_user['user_id'];
+        }
+        $global_notification_subscribers_filter = new GlobalNotificationSubscribersFilter(new UnsubscribersNotificationDAO);
+        $autocompleted_user_id_list_filtered    = $global_notification_subscribers_filter->filterInvalidUserIDs(
+            $tracker,
+            $autocompleted_user_id_list
+        );
+
+        $autocompleted_user_list_filtered = [];
+        foreach ($autocompleted_user_list as $autocompleted_user) {
+            if (in_array($autocompleted_user['user_id'], $autocompleted_user_id_list_filtered)) {
+                $autocompleted_user_list_filtered[] = $autocompleted_user;
+            }
+        }
+
+        $event->setUserList($autocompleted_user_list_filtered);
     }
 
     public function collectRoutesEvent(\Tuleap\Request\CollectRoutesEvent $event)

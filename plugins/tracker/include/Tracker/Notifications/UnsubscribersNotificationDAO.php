@@ -33,6 +33,13 @@ class UnsubscribersNotificationDAO extends DataAccessObject
         return $this->getDB()->column($sql, [$tracker_id, $artifact_id]);
     }
 
+    public function searchUserIDHavingUnsubcribedFromNotificationByTrackerID($tracker_id)
+    {
+        $sql = 'SELECT user_id FROM tracker_global_notification_unsubscribers WHERE tracker_id = ?';
+
+        return $this->getDB()->column($sql, [$tracker_id]);
+    }
+
     public function doesUserIDHaveUnsubscribedFromTrackerNotifications($user_id, $tracker_id)
     {
         $sql = 'SELECT COUNT(*) FROM tracker_global_notification_unsubscribers WHERE user_id = ? AND tracker_id = ?';
