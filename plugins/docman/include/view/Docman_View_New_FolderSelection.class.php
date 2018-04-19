@@ -1,30 +1,31 @@
 <?php
 /**
  * Copyright © STMicroelectronics, 2007. All Rights Reserved.
+ * Copyright © Enalean, 2018. All Rights Reserved.
  *
  * Originally written by Manuel VACELET, 2007.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi; if not, write to the Free Software
+ * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
 require_once('Docman_View_ParentsTree.class.php');
 
-class Docman_View_New_FolderSelection
-extends Docman_View_Docman {
+class Docman_View_New_FolderSelection extends Docman_View_Docman
+{
 
     function _title($params) {
         // No title in printer version
@@ -34,7 +35,8 @@ extends Docman_View_Docman {
         echo '<h2>'.$GLOBALS['Language']->getText('plugin_docman', 'new_fldsel_title').'</h2>';
     }
 
-    function _content($params) {
+    function _content($params)
+    {
         $html = '';
 
         $html .= '<div class="docman_new_item">'."\n";
@@ -57,7 +59,7 @@ extends Docman_View_Docman {
         $html .= '<h3>'.$GLOBALS['Language']->getText('plugin_docman', 'new_fldsel_type').'</h3>';
         $html .= '<p>'.$GLOBALS['Language']->getText('plugin_docman', 'new_fldsel_typehelp').'</p>';
         $html .= '<p>';
-        $html .= '<select name="item_type">';
+        $html .= '<select name="item_type" data-test="document_type">';
         $html .= '<option value="-1">'.$GLOBALS['Language']->getText('plugin_docman', 'new_fldsel_createdoc').'</option>';
         $html .= '<option value="'.PLUGIN_DOCMAN_ITEM_TYPE_FOLDER.'">'.$GLOBALS['Language']->getText('plugin_docman', 'new_fldsel_createfolder').'</option>';
         $html .= '</select>';
@@ -65,11 +67,8 @@ extends Docman_View_Docman {
 
         // Form params
         $html .= '<p>';
-        /*        if ($this->token) {
-            $html .= '<input type="hidden" name="token" value="'. $this->token .'" />';
-        }*/
         $html .= '<input type="hidden" name="action" value="newDocument" />';
-        $html .= '<input type="submit" tabindex="2" name="confirm" value="'. $GLOBALS['Language']->getText('global', 'next') .'" />';
+        $html .= '<input type="submit" tabindex="2" name="confirm" data-test="create_document_next" value="'. $GLOBALS['Language']->getText('global', 'next') .'" />';
         $html .= ' ';
         $html .= '<input type="submit" tabindex="1" name="cancel" value="'. $GLOBALS['Language']->getText('global', 'btn_cancel') .'" />';
         $html .= '</p>';
@@ -80,5 +79,3 @@ extends Docman_View_Docman {
         echo $html;
     }
 }
-
-?>

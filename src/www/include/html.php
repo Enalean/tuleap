@@ -102,7 +102,7 @@ function html_build_list_table_top ($title_arr,$links_arr=false,$mass_change=fal
 	*/
     $purifier = Codendi_HTMLPurifier::instance();
 	$return   = '
-       <TABLE ';
+       <TABLE data-test="table-test"';
         if ($full_width) $return.='WIDTH="100%" ';
         if($id) $return .='id="'.$purifier->purify($id).'"';
         if($class) $return .=' class="'.$purifier->purify($class).'" ';

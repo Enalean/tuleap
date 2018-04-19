@@ -59,7 +59,7 @@ class Docman_View_Table extends Docman_View_Browse {
         // Generate table header 
         $ci = $params['filter']->getColumnIterator();
         $ci->rewind();
-        $table = '<table border="0" cellspacing="1" cellpadding="2" width="100%">';
+        $table = '<table border="0" cellspacing="1" cellpadding="2" width="100%" data-test="docman_report_table">';
         $table .= '<tr class="boxtable">';
         while($ci->valid()) {
             $column = $ci->current();

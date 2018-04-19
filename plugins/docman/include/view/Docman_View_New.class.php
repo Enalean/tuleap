@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +18,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-abstract class Docman_View_New extends Docman_View_Display /* implements Visitor */ {
+abstract class Docman_View_New extends Docman_View_Display /* implements Visitor */
+{
     var $newItem;
 
     /* protected abstract */ function _getEnctype() {
@@ -206,15 +207,16 @@ abstract class Docman_View_New extends Docman_View_Display /* implements Visitor
         return $html;
     }
 
-    function _content($params) {
+    public function _content($params)
+    {
         $params['form_name'] = 'new_item';
 
         $this->setupNewItem($params);
 
         $html  = '';
-        $html .= '<form name="'.$params['form_name'].'" id="docman_new_form" action="'. $params['default_url'] .'" method="POST" '. $this->_getEnctype() .' class="docman_form">';
+        $html .= '<form name="'.$params['form_name'].'" data-test="docman_new_form" id="docman_new_form" action="'. $params['default_url'] .'" method="POST" '. $this->_getEnctype() .' class="docman_form">';
 
-        $html .= '<div class="docman_new_item">'."\n";
+        $html .= '<div class="docman_new_item" data-test="docman_new_item">'."\n";
 
         $html .= $this->_getGeneralPropertiesFieldset($params);
         $html .= $this->_getDefaultValuesFieldset($params);
@@ -227,11 +229,11 @@ abstract class Docman_View_New extends Docman_View_Display /* implements Visitor
         if (isset($params['token']) && $params['token']) {
             $html .= '<input type="hidden" name="token" value="'. $params['token'] .'" />';
         }
-        $html .= '<input type="submit" value="'. $this->_getActionText() .'" />';
+        $html .= '<input type="submit" data-test="docman_create" value="'. $this->_getActionText() .'" />';
         $html .= '<input type="submit" name="cancel" value="'. $GLOBALS['Language']->getText('global', 'btn_cancel') .'" />';
         $html .= '</div>'."\n";
 
-        $html .= '</div>'."\n"; // "docman_new_item"
+        $html .= '</div>'."\n";
 
         $html .= '</form>';
         $html .= '<br />';

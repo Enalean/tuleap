@@ -14,6 +14,9 @@ setup_user() {
         uid=1000
         gid=1000
     fi
+    groupmod -g 11007 node
+    usermod -u 11007 node
+
     groupadd -g $gid runner
     useradd -g $gid -u $uid -m runner
 }

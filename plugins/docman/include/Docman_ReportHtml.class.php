@@ -1,39 +1,42 @@
 <?php
-/*
+/**
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
+ * Copyright (c) Tuleap, 2018. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2007
  * 
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Docman_ReportHtml {
+class Docman_ReportHtml
+{
     var $report;
     var $view;
     var $defaultUrl;
+    /**
+     * @var Codendi_HTMLPurifier
+     */
     var $hp;
 
-    /**
-     *
-     */
-    function Docman_ReportHtml($report, $view, $defaultUrl) {
-        $this->report = $report;
-        $this->view   = $view;
+    public function __construct($report, $view, $defaultUrl)
+    {
+        $this->report     = $report;
+        $this->view       = $view;
         $this->defaultUrl = $defaultUrl;
-        $this->hp = Codendi_HTMLPurifier::instance();
+        $this->hp         = Codendi_HTMLPurifier::instance();
     }
 
     /**
@@ -118,7 +121,7 @@ class Docman_ReportHtml {
     function getSelectedFilters($params, &$displayedFilters) {
         $html = '';
 
-        $html .= '<table class="docman_form">';
+        $html .= '<table class="docman_form" data-test="docman_form_table">';
         $fi = $this->report->getFilterIterator();
         $trashLinkBase = $this->view->_buildSearchUrl($params, array('del_filter' => ''));
 
@@ -280,12 +283,12 @@ class Docman_ReportHtml {
     /**
      * Entry point
      */
-    function toHtml($params) {
+    public function toHtml($params) {
         $html = '';
         
         $html .= $this->getReportSelector($params['item']);
         
-        $toggleIc = '<img src="'.util_get_image_theme("ic/toggle_minus.png").'" id="docman_toggle_filters" >';
+        $toggleIc = '<img src="'.util_get_image_theme("ic/toggle_minus.png").'" id="docman_toggle_filters" data-test="docman_report_search">';
         $toggle   = '<a href="#" title="'.$GLOBALS['Language']->getText('plugin_docman', 'report_toggle_tooltip').'">'.$toggleIc.'</a>';
         $title    = $GLOBALS['Language']->getText('plugin_docman', 'filters');
        
@@ -301,13 +304,14 @@ class Docman_ReportHtml {
         $html .= $toggle;
         $html .= ' '.$title.' ';
         $html .= $hidden_fields;
-        $html .= '<input type="text" 
-        				 class="text_field" 
-        				 title="'. $GLOBALS['Language']->getText('plugin_docman', 'filters_global_txt') .'" 
-        				 value="'. $global_txt .'" 
-        				 name="global_txt" 
-        				 />';
-        $html .= '<input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_apply') .'" name="global_filtersubmit" />';
+        $html .= '<input type="text"
+                        class="text_field"
+                        title="'. $GLOBALS['Language']->getText('plugin_docman', 'filters_global_txt') .'"
+                        value="'. $global_txt .'"
+                        name="global_txt"
+                        data-test="docman_search"
+                        />';
+        $html .= '<input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_apply') .'" name="global_filtersubmit" data-test="docman_search_button" />';
         $html .= '</form>';
         $html .= "</div>\n";
 
