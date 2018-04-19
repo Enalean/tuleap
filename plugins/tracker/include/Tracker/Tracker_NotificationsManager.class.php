@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright Enalean (c) 2017. All rights reserved.
+ * Copyright Enalean (c) 2017-2018. All rights reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,6 +23,7 @@ use Tuleap\Tracker\Notifications\GlobalNotificationsAddressesBuilder;
 use Tuleap\Tracker\Notifications\NotificationCustomisationSettingsPresenter;
 use Tuleap\Tracker\Notifications\NotificationListBuilder;
 use Tuleap\Tracker\Notifications\PaneNotificationListPresenter;
+use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsDAO;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyDao;
 use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
 use Tuleap\Tracker\Notifications\UsersToNotifyDao;
@@ -58,16 +59,16 @@ class Tracker_NotificationsManager {
      */
     private $notification_list_builder;
     /**
-     * @var UnsubscribersNotificationDAO
+     * @var UserNotificationSettingsDAO
      */
-    private $unsubscribers_notification_dao;
+    private $user_notification_settings_dao;
 
     public function __construct(
         $tracker,
         NotificationListBuilder $notification_list_builder,
         UsersToNotifyDao $user_to_notify_dao,
         UgroupsToNotifyDao $ugroup_to_notify_dao,
-        UnsubscribersNotificationDAO $unsubscribers_notification_dao,
+        UserNotificationSettingsDAO $user_notification_settings_dao,
         GlobalNotificationsAddressesBuilder $addresses_builder,
         UserManager $user_manager,
         UGroupManager $ugroup_manager
@@ -75,7 +76,7 @@ class Tracker_NotificationsManager {
         $this->tracker                        = $tracker;
         $this->user_to_notify_dao             = $user_to_notify_dao;
         $this->ugroup_to_notify_dao           = $ugroup_to_notify_dao;
-        $this->unsubscribers_notification_dao = $unsubscribers_notification_dao;
+        $this->user_notification_settings_dao = $user_notification_settings_dao;
         $this->addresses_builder              = $addresses_builder;
         $this->user_manager                   = $user_manager;
         $this->ugroup_manager                 = $ugroup_manager;
@@ -119,6 +120,11 @@ class Tracker_NotificationsManager {
             $this->createNewGlobalNotification($new_global_notification);
         } else if ($global_notification && $notification_id) {
             $this->updateGlobalNotification($notification_id, $global_notification[$notification_id]);
+        }
+
+        $unsubscribers = $request->get('remove_unsubscribers');
+        if ($unsubscribers !== false) {
+            $this->deleteUnsubscribers($unsubscribers);
         }
     }
 
@@ -178,6 +184,13 @@ class Tracker_NotificationsManager {
     {
         foreach ($remove_global as $notification_id => $value) {
             $this->removeGlobalNotification($notification_id);
+        }
+    }
+
+    private function deleteUnsubscribers(array $unsubscribers)
+    {
+        foreach ($unsubscribers as $user_id => $value) {
+            $this->user_notification_settings_dao->enableNoGlobalNotificationMode($user_id, $this->tracker->getId());
         }
     }
 

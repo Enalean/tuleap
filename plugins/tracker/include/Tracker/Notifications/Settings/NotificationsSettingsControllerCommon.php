@@ -63,12 +63,11 @@ trait NotificationsSettingsControllerCommon
      */
     private function getNotificationsManager(UserManager $user_manager, \Tracker $tracker)
     {
-        $user_to_notify_dao             = new UsersToNotifyDao();
-        $unsubscribers_notification_dao = new UnsubscribersNotificationDAO;
-        $ugroup_to_notify_dao           = new UgroupsToNotifyDao();
-        $notification_list_builder      = new NotificationListBuilder(
+        $user_to_notify_dao        = new UsersToNotifyDao();
+        $ugroup_to_notify_dao      = new UgroupsToNotifyDao();
+        $notification_list_builder = new NotificationListBuilder(
             new UGroupDao(),
-            new CollectionOfUserInvolvedInNotificationPresenterBuilder($user_to_notify_dao, $unsubscribers_notification_dao),
+            new CollectionOfUserInvolvedInNotificationPresenterBuilder($user_to_notify_dao, new UnsubscribersNotificationDAO),
             new CollectionOfUgroupToBeNotifiedPresenterBuilder($ugroup_to_notify_dao)
         );
         return new Tracker_NotificationsManager(
@@ -76,7 +75,7 @@ trait NotificationsSettingsControllerCommon
             $notification_list_builder,
             $user_to_notify_dao,
             $ugroup_to_notify_dao,
-            $unsubscribers_notification_dao,
+            new UserNotificationSettingsDAO(),
             new GlobalNotificationsAddressesBuilder(),
             $user_manager,
             new UGroupManager()

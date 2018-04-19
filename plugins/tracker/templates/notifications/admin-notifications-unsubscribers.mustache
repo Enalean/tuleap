@@ -4,6 +4,7 @@
     <thead>
     <tr>
         <th>{{# dgettext }} tuleap-tracker | Unsubscribers {{/ dgettext }}</th>
+        <th></th>
     </tr>
     </thead>
     {{# unsubscribers }}
@@ -15,6 +16,33 @@
                 </div>
                 {{ label }}
             </span>
+        </td>
+        <td class="tracker-notification-edit tracker-unsubscriber-actions">
+            <a href="javascript:;"
+               class="tracker-notification-delete"
+               data-toggle="popover"
+               data-trigger="click"
+               data-placement="left"
+               data-html="true"
+               data-popover-id="tracker-unsubscriber-delete-{{ user_id }}-popover"
+            >
+                <i class="icon-trash"></i>
+                Delete
+            </a>
+            <div id="tracker-unsubscriber-delete-{{ user_id }}-popover"
+                 data-title="{{# dgettext }} tuleap-tracker | Wait a minute... {{/ dgettext }}"
+                 class="tracker-notification-delete-popover">
+                <p>{{# dgettext }} tuleap-tracker | You are about to remove the user from the unsubscriber list. Please confirm your action. {{/ dgettext }}</p>
+
+                <div class="tracker-notification-delete-popover-actions">
+                    <button type="button" class="btn btn-small btn-default dismiss-popover">{{# gettext }} Cancel {{/ gettext }}</button>
+                    <button type="submit"
+                            name="remove_unsubscribers[{{ user_id }}]"
+                            value="1"
+                            class="btn btn-small btn-danger">{{# dgettext }} tuleap-tracker | Confirm deletion {{/ dgettext }}
+                    </button>
+                </div>
+            </div>
         </td>
     </tr>
     {{/ unsubscribers }}
