@@ -15,18 +15,9 @@
     "node-gettext": "^2.0.0",
     "sprintf-js": "^1.1.1"
   },
-  "devDependencies": {
-    "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.4",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-preset-env": "^1.6.1",
-    "json-loader": "^0.5.7",
-    "po-gettext-loader": "^0.1.1",
-    "webpack": "^3.10.0",
-    "webpack-assets-manifest": "^1.0.0"
-  },
+  "devDependencies": {},
   "scripts": {
-    "build": "rm -rf ../../../../src/www/assets/velocity/scripts && NODE_ENV=production webpack --optimize-minimize --bail",
-    "watch": "NODE_ENV=watch webpack --watch"
+    "build": "rm -rf ../../../../src/www/assets/velocity/scripts && NODE_ENV=production ../../../../node_modules/.bin/webpack --optimize-minimize --bail",
+    "watch": "NODE_ENV=watch ../../../../node_modules/.bin/webpack --watch"
   }
 }

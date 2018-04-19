@@ -1,7 +1,8 @@
 const path = require('path');
 const webpack = require('webpack');
 const WebpackAssetsManifest = require('webpack-assets-manifest');
-const polyfills_for_fetch = require('../../../../../tools/utils/scripts/ie11-polyfill-names.js').polyfills_for_fetch;
+const polyfills_for_fetch = require('../../../../../tools/utils/scripts/ie11-polyfill-names.js')
+    .polyfills_for_fetch;
 const webpack_configurator = require('../../../../../tools/utils/scripts/webpack-configurator.js');
 
 const webpack_config = {
@@ -27,7 +28,11 @@ const webpack_config = {
         }
     },
     module: {
-        rules: [webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11)]
+        rules: [
+            webpack_configurator.configureBabelRule(
+                webpack_configurator.babel_options_ie11
+            )
+        ]
     },
     plugins: [
         new WebpackAssetsManifest({
@@ -36,9 +41,9 @@ const webpack_config = {
             writeToDisk: true,
             customize: function(key, value) {
                 return {
-                    key  : `tlp.${key}`,
+                    key: `tlp.${key}`,
                     value: value
-                }
+                };
             }
         })
     ]

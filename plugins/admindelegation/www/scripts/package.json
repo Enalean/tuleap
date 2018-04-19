@@ -3,14 +3,12 @@
   "name": "tuleap-admindelegation",
   "version": "1.0.0",
   "homepage": "https://www.enalean.com",
-  "license": "MIT",
+  "license": "GPL-2.0+",
   "private": true,
   "dependencies": {},
-  "devDependencies": {
-    "webpack": "^3.10.0"
-  },
+  "devDependencies": {},
   "scripts": {
-    "build": "rm -rf ../../../../src/www/assets/admindelegation/scripts/ && NODE_ENV=production webpack --optimize-minimize --bail",
-    "watch": "webpack --watch"
+    "build": "rm -rf ../../../../src/www/assets/admindelegation/scripts/ && NODE_ENV=production ../../../../node_modules/.bin/webpack --optimize-minimize --bail",
+    "watch": "../../../../node_modules/.bin/webpack --watch"
   }
 }

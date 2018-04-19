@@ -1,138 +1,56 @@
-const path                        = require('path');
-const webpack                     = require('webpack');
-const WebpackAssetsManifest       = require('webpack-assets-manifest');
-const BabelPresetEnv              = require('babel-preset-env');
-const BabelPluginIstanbul         = require('babel-plugin-istanbul').default;
-const BabelPluginRewireExports    = require('babel-plugin-rewire-exports').default;
-const BabelPluginObjectRestSpread = require('babel-plugin-transform-object-rest-spread');
-const VueLoaderOptionsPlugin      = require('vue-loader-options-plugin');
+const path = require('path');
+const webpack = require('webpack');
+const webpack_configurator = require('../../../../tools/utils/scripts/webpack-configurator.js');
 
 const assets_dir_path = path.resolve(__dirname, '../assets');
+const manifest_plugin = webpack_configurator.getManifestPlugin();
 
-const babel_preset_env_ie_config = [BabelPresetEnv, {
-    targets: {
-        ie: 11
-    },
-    modules: false
-}];
-
-const babel_preset_env_chrome_config = [BabelPresetEnv, {
-    targets: {
-        browsers: ['last 2 Chrome versions']
-    },
-    modules: false,
-    useBuiltIns: true,
-    shippedProposals: true
-}];
-
-const babel_options   = {
-    env: {
-        watch: {
-            presets: [babel_preset_env_ie_config],
-            plugins: [BabelPluginObjectRestSpread]
-        },
-        production: {
-            presets: [babel_preset_env_ie_config],
-            plugins: [BabelPluginObjectRestSpread]
-        },
-        test: {
-            presets: [babel_preset_env_chrome_config],
-            plugins: [
-                BabelPluginObjectRestSpread,
-                BabelPluginRewireExports
-            ]
-        },
-        coverage: {
-            presets: [babel_preset_env_chrome_config],
-            plugins: [
-                BabelPluginObjectRestSpread,
-                BabelPluginRewireExports,
-                [BabelPluginIstanbul, {
-                    exclude: ['**/*.spec.js']
-                }]
-            ]
-        }
-    }
-};
-
-const babel_rule = {
-    test: /\.js$/,
-    exclude: /node_modules/,
-    use: [
-        {
-            loader: 'babel-loader',
-            options: babel_options
-        }
-    ]
-};
-
-const po_rule = {
-    test: /\.po$/,
-    exclude: /node_modules/,
-    use: [
-        { loader: 'json-loader' },
-        { loader: 'po-gettext-loader' }
-    ]
-};
-
-const path_to_tlp = path.resolve(__dirname, '../../../../src/www/themes/common/tlp/');
+const path_to_tlp = path.resolve(
+    __dirname,
+    '../../../../src/www/themes/common/tlp/'
+);
 
 const webpack_config_for_trackers = {
     entry: {
-        'tracker-report-expert-mode'   : './report/index.js',
+        'tracker-report-expert-mode': './report/index.js',
         'tracker-permissions-per-group': './permissions-per-group/src/index.js'
     },
-    output: {
-        path    : assets_dir_path,
-        filename: '[name]-[chunkhash].js',
-    },
+    context: path.resolve(__dirname),
+    output: webpack_configurator.configureOutput(assets_dir_path),
     externals: {
-        codendi: 'codendi',
+        codendi: 'codendi'
     },
     resolve: {
         alias: {
             // TLP is not included in FlamingParrot
-            'tlp-fetch'       : path.join(path_to_tlp, 'src/js/fetch-wrapper.js'),
-            'permission-badge': path.resolve(__dirname, '../../../../src/www/scripts/project/admin/permissions-per-group/')
+            'tlp-fetch': path.join(path_to_tlp, 'src/js/fetch-wrapper.js'),
+            'permission-badge': path.resolve(
+                __dirname,
+                '../../../../src/www/scripts/project/admin/permissions-per-group/'
+            )
         }
     },
     module: {
         rules: [
-            babel_rule,
-            po_rule,
-            {
-                test: /\.vue$/,
-                use: [
-                    {
-                        loader: 'vue-loader',
-                        options: {
-                            loaders: {
-                                js: 'babel-loader'
-                            },
-                            esModule: true
-                        }
-                    }
-                ]
-            }
+            webpack_configurator.configureBabelRule(
+                webpack_configurator.babel_options_karma
+            ),
+            webpack_configurator.rule_po_files,
+            webpack_configurator.rule_vue_loader
         ]
     },
     plugins: [
-        new WebpackAssetsManifest({
-            output: 'manifest.json',
-            merge: true
-        }),
-        new VueLoaderOptionsPlugin({
-            babel: babel_options
-        })
+        manifest_plugin,
+        webpack_configurator.getVueLoaderOptionsPlugin(
+            webpack_configurator.babel_options_karma
+        )
     ]
 };
 
 const webpack_config_for_artifact_modal = {
     entry: './angular-artifact-modal/index.js',
-    output  : {
-        path    : assets_dir_path,
-        filename: '[name]-[chunkhash].js',
-    },
+    context: path.resolve(__dirname),
+    output: webpack_configurator.configureOutput(assets_dir_path),
     externals: {
         tlp: 'tlp'
     },
@@ -149,62 +67,40 @@ const webpack_config_for_artifact_modal = {
     },
     module: {
         rules: [
-            babel_rule,
-            {
-                test: /\.html$/,
-                exclude: /node_modules/,
-                use: [
-                    { loader: 'ng-cache-loader' }
-                ]
-            }, {
-                test: /\.po$/,
-                exclude: /node_modules/,
-                use: [
-                    {
-                        loader: 'angular-gettext-loader',
-                        query: 'browserify=true'
-                    }
-                ]
-            }
+            webpack_configurator.configureBabelRule(
+                webpack_configurator.babel_options_karma
+            ),
+            webpack_configurator.rule_ng_cache_loader,
+            webpack_configurator.rule_angular_gettext_loader
         ]
     },
-    plugins: [
-        // This ensure we only load moment's fr locale. Otherwise, every single locale is included !
-        new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /fr/)
-    ]
+    plugins: [webpack_configurator.getMomentLocalePlugin()]
 };
 
 const webpack_config_for_burndown_chart = {
     entry: {
-        'burndown-chart': './burndown-chart/src/burndown-chart.js',
+        'burndown-chart': './burndown-chart/src/burndown-chart.js'
     },
-    output: {
-        path    : assets_dir_path,
-        filename: '[name]-[chunkhash].js',
-    },
+    context: path.resolve(__dirname),
+    output: webpack_configurator.configureOutput(assets_dir_path),
     resolve: {
-        modules: [
-            path.resolve(__dirname, 'node_modules'),
-        ],
+        modules: [path.resolve(__dirname, 'node_modules')],
         alias: {
-            'charts-builders': path.resolve(__dirname, '../../../../src/www/scripts/charts-builders/')
+            'charts-builders': path.resolve(
+                __dirname,
+                '../../../../src/www/scripts/charts-builders/'
+            )
         }
     },
     module: {
         rules: [
-            babel_rule,
-            po_rule
+            webpack_configurator.configureBabelRule(
+                webpack_configurator.babel_options_karma
+            ),
+            webpack_configurator.rule_po_files
         ]
     },
-    plugins: [
-        new WebpackAssetsManifest({
-            output: 'manifest.json',
-            merge: true,
-            writeToDisk: true
-        }),
-        // This ensure we only load moment's fr locale. Otherwise, every single locale is included !
-        new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /fr/)
-    ]
+    plugins: [manifest_plugin, webpack_configurator.getMomentLocalePlugin()]
 };
 
 if (process.env.NODE_ENV === 'watch' || process.env.NODE_ENV === 'test') {
@@ -224,13 +120,15 @@ if (process.env.NODE_ENV === 'production') {
         ]);
     });
 
-    webpack_config_for_trackers.plugins = webpack_config_for_trackers.plugins.concat([
-        new webpack.DefinePlugin({
-            'process.env': {
-                NODE_ENV: '"production"'
-            }
-        })
-    ]);
+    webpack_config_for_trackers.plugins = webpack_config_for_trackers.plugins.concat(
+        [
+            new webpack.DefinePlugin({
+                'process.env': {
+                    NODE_ENV: '"production"'
+                }
+            })
+        ]
+    );
 
     module.exports = [
         webpack_config_for_trackers,

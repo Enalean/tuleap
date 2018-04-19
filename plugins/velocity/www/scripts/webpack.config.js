@@ -20,79 +20,48 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-const path                        = require('path');
-const webpack                     = require('webpack');
-const WebpackAssetsManifest       = require('webpack-assets-manifest');
-const BabelPresetEnv              = require('babel-preset-env');
-const BabelPluginObjectRestSpread = require('babel-plugin-transform-object-rest-spread');
+const path = require('path');
+const webpack = require('webpack');
+const webpack_configurator = require('../../../../tools/utils/scripts/webpack-configurator.js');
 
-const assets_dir_path = path.resolve(__dirname, '../../../../src/www/assets/velocity/scripts');
-
-const babel_preset_env_ie_config = [BabelPresetEnv, {
-    targets: {
-        ie: 11
-    },
-    modules: false
-}];
-
-const babel_options = {
-    presets: [babel_preset_env_ie_config],
-    plugins: [BabelPluginObjectRestSpread]
-};
-
-const babel_rule = {
-    test: /\.js$/,
-    exclude: /node_modules/,
-    use: [
-        {
-            loader: 'babel-loader',
-            options: babel_options
-        }
-    ]
-};
-
-const po_rule = {
-    test: /\.po$/,
-    exclude: /node_modules/,
-    use: [
-        { loader: 'json-loader' },
-        { loader: 'po-gettext-loader' }
-    ]
-};
+const assets_dir_path = path.resolve(
+    __dirname,
+    '../../../../src/www/assets/velocity/scripts'
+);
 
 const webpack_config_for_charts = {
-    entry : {
+    entry: {
         'velocity-chart': './velocity-chart/src/index.js'
     },
-    output: {
-        path    : assets_dir_path,
-        filename: '[name]-[chunkhash].js'
-    },
+    context: path.resolve(__dirname),
+    output: webpack_configurator.configureOutput(assets_dir_path),
     resolve: {
-        modules: [
-            path.resolve(__dirname, 'node_modules'),
-        ],
+        modules: [path.resolve(__dirname, 'node_modules')],
         alias: {
-            'charts-builders': path.resolve(__dirname, '../../../../src/www/scripts/charts-builders/')
+            'charts-builders': path.resolve(
+                __dirname,
+                '../../../../src/www/scripts/charts-builders/'
+            )
         }
     },
     module: {
-        rules: [babel_rule, po_rule]
+        rules: [
+            webpack_configurator.configureBabelRule(
+                webpack_configurator.babel_options_ie11
+            ),
+            webpack_configurator.rule_po_files
+        ]
     },
     plugins: [
-        new WebpackAssetsManifest({
-            output: 'manifest.json',
-            merge      : true,
-            writeToDisk: true
-        }),
-        new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /fr/)
+        webpack_configurator.getManifestPlugin(),
+        webpack_configurator.getMomentLocalePlugin()
     ]
 };
 
 if (process.env.NODE_ENV === 'production') {
-    webpack_config_for_charts.plugins = webpack_config_for_charts.plugins.concat([
-        new webpack.optimize.ModuleConcatenationPlugin()
-    ]);
+    webpack_config_for_charts.plugins = webpack_config_for_charts.plugins.concat(
+        [new webpack.optimize.ModuleConcatenationPlugin()]
+    );
 }
 
 module.exports = webpack_config_for_charts;

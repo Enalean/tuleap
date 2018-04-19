@@ -28,15 +28,7 @@
     "vue": "^2.5.13"
   },
   "devDependencies": {
-    "angular-gettext-loader": "^1.0.1",
     "angular-mocks": "^1.3.20",
-    "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.2",
-    "babel-plugin-istanbul": "^4.1.5",
-    "babel-plugin-rewire-exports": "^0.3.0",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-polyfill": "^6.26.0",
-    "babel-preset-env": "^1.6.1",
     "concurrently": "^3.5.1",
     "gulp": "^3.9.1",
     "gulp-angular-gettext": "^2.2.0",
@@ -48,19 +40,12 @@
     "karma-coverage": "^1.1.1",
     "karma-jasmine": "^1.1.1",
     "karma-junit-reporter": "^1.2.0",
-    "karma-webpack": "^2.0.9",
-    "ng-cache-loader": "0.0.23",
-    "po-gettext-loader": "^0.1.1",
-    "vue-loader": "^14.1.1",
-    "vue-loader-options-plugin": "^0.1.1",
-    "vue-template-compiler": "^2.5.13",
-    "webpack": "^3.10.0",
-    "webpack-assets-manifest": "^1.0.0"
+    "karma-webpack": "^2.0.9"
   },
   "scripts": {
-    "build": "NODE_ENV=production webpack --optimize-minimize --bail",
+    "build": "NODE_ENV=production ../../../../node_modules/.bin/webpack --optimize-minimize --bail",
     "coverage": "rm -rf ./coverage/* && NODE_ENV=coverage karma start ./karma.conf.js && http-server -os -a 0.0.0.0 -p 9000 coverage/",
     "test": "NODE_ENV=test karma start ./karma.conf.js",
-    "watch": "NODE_ENV=watch concurrently --raw --kill-others 'gulp watch' 'webpack --watch' 'karma start ./karma.conf.js'"
+    "watch": "NODE_ENV=watch concurrently --raw --kill-others 'gulp watch' '../../../../node_modules/.bin/webpack --watch' 'karma start ./karma.conf.js'"
   }
 }

@@ -21,14 +21,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const path                 = require('path');
-const webpack              = require('webpack');
+const path = require('path');
+const webpack = require('webpack');
 const webpack_configurator = require('../../../../tools/utils/scripts/webpack-configurator.js');
 
-const assets_dir_path = path.resolve(__dirname, '../../../../src/www/assets/admindelegation/scripts');
+const assets_dir_path = path.resolve(
+    __dirname,
+    '../../../../src/www/assets/admindelegation/scripts'
+);
 
 const webpack_config = {
-    entry : {
+    entry: {
         'admin-delegation': './admindelegation.js'
     },
     context: path.resolve(__dirname),
@@ -42,11 +45,13 @@ const webpack_config = {
         }
     },
     module: {
-        rules: [webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11)]
+        rules: [
+            webpack_configurator.configureBabelRule(
+                webpack_configurator.babel_options_ie11
+            )
+        ]
     },
-    plugins: [
-        webpack_configurator.getManifestPlugin()
-    ]
+    plugins: [webpack_configurator.getManifestPlugin()]
 };
 
 if (process.env.NODE_ENV === 'production') {

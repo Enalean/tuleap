@@ -17,11 +17,9 @@
     "striptags": "^2.2.1",
     "vue": "^2.5.13"
   },
-  "devDependencies": {
-    "webpack": "^3.11.0"
-  },
+  "devDependencies": {},
   "scripts": {
-    "build": "NODE_ENV=production webpack --optimize-minimize --bail",
-    "watch": "NODE_ENV=watch webpack --watch"
+    "build": "NODE_ENV=production ../../../../node_modules/.bin/webpack --optimize-minimize --bail",
+    "watch": "NODE_ENV=watch ../../../../node_modules/.bin/webpack --watch"
   }
 }

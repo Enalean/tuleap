@@ -1,5 +1,5 @@
 /*
- * Copyright Enalean (c) 2017. All rights reserved.
+ * Copyright Enalean (c) 2017 - 2018. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -21,21 +21,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-var path                  = require('path');;
-var WebpackAssetsManifest = require('webpack-assets-manifest');
-var BabelPresetEnv        = require('babel-preset-env');
+const path = require('path');
+const webpack = require('webpack');
+const webpack_configurator = require('../../../../tools/utils/scripts/webpack-configurator.js');
 
-var assets_dir_path = path.resolve(__dirname, '../assets');
+const assets_dir_path = path.resolve(__dirname, '../assets');
 
-module.exports = {
-    entry : {
+const webpack_config = {
+    entry: {
         'project-admin-members': './project-admin/project-admin-members.js',
         'project-admin-ugroups': './project-admin/project-admin-ugroups.js'
     },
-    output: {
-        path    : assets_dir_path,
-        filename: '[name]-[chunkhash].js',
-    },
+    context: path.resolve(__dirname),
+    output: webpack_configurator.configureOutput(assets_dir_path),
     externals: {
         tlp: 'tlp'
     },
@@ -46,47 +44,20 @@ module.exports = {
     },
     module: {
         rules: [
-            {
-                test: /\.mustache$/,
-                use: { loader: 'raw-loader' }
-            },
-            {
-                test: /\.po$/,
-                exclude: /node_modules/,
-                use: [
-                    { loader: 'json-loader' },
-                    { loader: 'po-gettext-loader' }
-                ]
-            },
-            {
-                test: /\.js$/,
-                exclude: /node_modules/,
-                use: [
-                    {
-                        loader: 'babel-loader',
-                        options: {
-                            presets: [
-                                [BabelPresetEnv, {
-                                    targets: {
-                                        ie: 11
-                                    },
-                                    modules: false
-                                }]
-                            ],
-                            plugins: [
-                                "babel-plugin-transform-object-rest-spread"
-                            ]
-                        }
-                    }
-                ]
-            }
+            webpack_configurator.configureBabelRule(
+                webpack_configurator.babel_options_ie11
+            ),
+            webpack_configurator.rule_mustache_files,
+            webpack_configurator.rule_po_files
         ]
     },
-    plugins: [
-        new WebpackAssetsManifest({
-            output: 'manifest.json',
-            merge: false,
-            writeToDisk: true
-        })
-    ]
+    plugins: [webpack_configurator.getManifestPlugin()]
 };
+
+if (process.env.NODE_ENV === 'production') {
+    webpack_config.plugins = webpack_config.plugins.concat([
+        new webpack.optimize.ModuleConcatenationPlugin()
+    ]);
+}
+
+module.exports = webpack_config;
