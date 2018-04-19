@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,9 +24,8 @@ require_once('bootstrap.php');
 Mock::generatePartial(
     'HudsonBuild',
     'HudsonBuildTestVersion',
-    array('_getXMLObject', 'getHudsonControler')
+    array('_getXMLObject')
 );
-Mock::generate('hudson');
 Mock::generate('BaseLanguage');
 
 class HudsonBuildTest extends TuleapTestCase {
@@ -73,12 +72,9 @@ class HudsonBuildTest extends TuleapTestCase {
         $build_file = dirname(__FILE__).'/resources/jobbuild.xml';
         $xmldom = simplexml_load_file($build_file);
         
-        $h = new Mockhudson($this);
-        
         $b = new HudsonBuildTestVersion($this);
         $b->setReturnValue('_getXMLObject', $xmldom);
-        $b->setReturnValue('getHudsonControler', $h);
-        
+
         $b->__construct("http://myCIserver/jobs/myCIjob/lastBuild/", $this->http_client);
         
         $this->assertEqual($b->getBuildStyle(), "freeStyleBuild");

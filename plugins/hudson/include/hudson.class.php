@@ -24,21 +24,8 @@ require_once('hudsonViews.class.php');
 require_once('hudsonActions.class.php');
 /**
  * hudson */
-class hudson extends Controler {
-
-    private $themePath;
-
-    function hudson() {
-        $p = PluginFactory::instance()->getPluginByName('hudson');
-        $this->themePath = $p->getThemePath();
-    }
-
-    function getThemePath() {
-        return $this->themePath;
-    }
-    function getIconsPath() {
-        return $this->themePath . "/images/ic/";
-    }
+class hudson extends Controler
+{
 
     function request() {
         $request =& HTTPRequest::instance();
