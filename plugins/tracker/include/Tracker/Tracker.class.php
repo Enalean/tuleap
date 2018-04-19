@@ -34,7 +34,9 @@ use Tuleap\Tracker\Notifications\CollectionOfUserInvolvedInNotificationPresenter
 use Tuleap\Tracker\Notifications\GlobalNotificationsAddressesBuilder;
 use Tuleap\Tracker\Notifications\GlobalNotificationsEmailRetriever;
 use Tuleap\Tracker\Notifications\NotificationListBuilder;
+use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsDAO;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyDao;
+use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
 use Tuleap\Tracker\Notifications\UsersToNotifyDao;
 use Tuleap\Tracker\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
@@ -2099,13 +2101,13 @@ EOS;
     /**
      * @return Tracker_NotificationsManager
      */
-    public function getNotificationsManager() {
-        $user_to_notify_dao             = new UsersToNotifyDao();
-        $unsubscribers_notification_dao = new \Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
-        $ugroup_to_notify_dao           = new UgroupsToNotifyDao();
-        $notification_list_builder      = new NotificationListBuilder(
+    public function getNotificationsManager()
+    {
+        $user_to_notify_dao        = new UsersToNotifyDao();
+        $ugroup_to_notify_dao      = new UgroupsToNotifyDao();
+        $notification_list_builder = new NotificationListBuilder(
             new UGroupDao(),
-            new CollectionOfUserInvolvedInNotificationPresenterBuilder($user_to_notify_dao, $unsubscribers_notification_dao),
+            new CollectionOfUserInvolvedInNotificationPresenterBuilder($user_to_notify_dao, new UnsubscribersNotificationDAO),
             new CollectionOfUgroupToBeNotifiedPresenterBuilder($ugroup_to_notify_dao)
         );
         return new Tracker_NotificationsManager(
@@ -2113,7 +2115,7 @@ EOS;
             $notification_list_builder,
             $user_to_notify_dao,
             $ugroup_to_notify_dao,
-            $unsubscribers_notification_dao,
+            new UserNotificationSettingsDAO,
             new GlobalNotificationsAddressesBuilder(),
             UserManager::instance(),
             new UGroupManager()

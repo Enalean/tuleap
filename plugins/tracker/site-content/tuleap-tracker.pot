@@ -489,6 +489,11 @@ msgstr[1] ""
 msgid "You are about to remove the notification. Please confirm your action."
 msgstr ""
 
+msgid ""
+"You are about to remove the user from the unsubscriber list. Please confirm "
+"your action."
+msgstr ""
+
 msgid "You can choose the notification mode you wish for this tracker."
 msgstr ""
 

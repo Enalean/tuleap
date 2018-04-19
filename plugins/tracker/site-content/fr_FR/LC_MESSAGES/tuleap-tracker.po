@@ -580,6 +580,13 @@ msgstr ""
 "Vous êtes sur le point de supprimer la notification. Merci de confirmer "
 "votre action."
 
+msgid ""
+"You are about to remove the user from the unsubscriber list. Please confirm "
+"your action."
+msgstr ""
+"Vous êtes sur le point de supprimer l'utilisateur de la liste des désabonnements."
+"Merci de confirmer votre action."
+
 msgid "You can choose the notification mode you wish for this tracker."
 msgstr ""
 "Vous pouvez sélectionner le mode de notification que vous préférez pour ce "

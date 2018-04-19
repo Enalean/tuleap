@@ -1413,12 +1413,11 @@ class trackerPlugin extends Plugin {
      * @return Tracker_NotificationsManager
      */
     private function getTrackerNotificationManager() {
-        $user_to_notify_dao             = $this->getUserToNotifyDao();
-        $unsubscribers_notification_dao = new \Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
-        $ugroup_to_notify_dao           = $this->getUgroupToNotifyDao();
-        $notification_list_builder      = new NotificationListBuilder(
+        $user_to_notify_dao        = $this->getUserToNotifyDao();
+        $ugroup_to_notify_dao      = $this->getUgroupToNotifyDao();
+        $notification_list_builder = new NotificationListBuilder(
             new UGroupDao(),
-            new CollectionOfUserInvolvedInNotificationPresenterBuilder($user_to_notify_dao, $unsubscribers_notification_dao),
+            new CollectionOfUserInvolvedInNotificationPresenterBuilder($user_to_notify_dao, new UnsubscribersNotificationDAO),
             new CollectionOfUgroupToBeNotifiedPresenterBuilder($ugroup_to_notify_dao)
         );
         return new Tracker_NotificationsManager(
@@ -1426,7 +1425,7 @@ class trackerPlugin extends Plugin {
             $notification_list_builder,
             $user_to_notify_dao,
             $ugroup_to_notify_dao,
-            $unsubscribers_notification_dao,
+            new UserNotificationSettingsDAO,
             new GlobalNotificationsAddressesBuilder(),
             UserManager::instance(),
             new UGroupManager()
