@@ -20,12 +20,8 @@
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\NotIn;
 
-use Tuleap\CrossTracker\Report\Query\Advanced\AllowedMetadata;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ComparisonChecker;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\OperatorNotAllowedForMetadataException;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\InValueWrapper;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
 
 class NotInComparisonChecker extends ComparisonChecker
@@ -40,14 +36,5 @@ class NotInComparisonChecker extends ComparisonChecker
         foreach ($values as $value) {
             $this->list_value_validator->checkValueIsValid($value->getValue());
         }
-    }
-
-    public function checkComparisonIsValid(Metadata $metadata, Comparison $comparison)
-    {
-        if ($metadata->getName() === AllowedMetadata::ASSIGNED_TO) {
-            throw new OperatorNotAllowedForMetadataException($metadata, self::OPERATOR);
-        }
-
-        parent::checkComparisonIsValid($metadata, $comparison);
     }
 }
