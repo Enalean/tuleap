@@ -1,5 +1,4 @@
 const path = require('path');
-const webpack = require('webpack');
 const webpack_configurator = require('../../../../tools/utils/scripts/webpack-configurator.js');
 
 const assets_dir_path = path.resolve(__dirname, '../assets');
@@ -59,27 +58,6 @@ const webpack_config_for_overview_and_vue = {
     },
     plugins: [manifest_plugin, webpack_configurator.getVueLoaderPlugin()]
 };
-
-if (process.env.NODE_ENV === 'production') {
-    const optimized_configs = [
-        webpack_config_for_charts,
-        webpack_config_for_overview_and_vue
-    ];
-    optimized_configs.forEach(config => {
-        config.plugins = config.plugins.concat([
-            new webpack.optimize.ModuleConcatenationPlugin()
-        ])
-    });
-    webpack_config_for_overview_and_vue.plugins = webpack_config_for_overview_and_vue.plugins.concat([
-        new webpack.DefinePlugin({
-            'process.env': {
-                NODE_ENV: '"production"'
-            }
-        })
-    ]);
-} else if (process.env.NODE_ENV === 'watch') {
-    webpack_config_for_overview_and_vue.devtool = 'eval';
-}
 
 module.exports = [
     webpack_config_for_charts,

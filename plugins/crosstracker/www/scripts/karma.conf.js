@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,6 +21,7 @@ const path               = require('path');
 const webpack_config     = require('./webpack.config.js');
 const karma_configurator = require('../../../../tools/utils/scripts/karma-configurator.js');
 
+webpack_config.mode = 'development';
 webpack_config.entry = null;
 
 module.exports = function(config) {

@@ -11,8 +11,11 @@
     "sprintf-js": "^1.1.1"
   },
   "devDependencies": {},
+  "config": {
+    "bin": "../../../../node_modules/.bin"
+  },
   "scripts": {
-    "build": "rm -rf ../assets/* && ../../../../node_modules/.bin/webpack --optimize-minimize --bail",
-    "watch": "../../../../node_modules/.bin/webpack --watch"
+    "build": "rm -rf ../assets/* && $npm_package_config_bin/webpack --mode=production",
+    "watch": "$npm_package_config_bin/webpack --watch --mode=development"
   }
 }

@@ -1,5 +1,4 @@
 const path = require('path');
-const webpack = require('webpack');
 const webpack_configurator = require('../../../../../tools/utils/scripts/webpack-configurator.js');
 
 const assets_dir_path = path.resolve(__dirname, './dist');
@@ -52,12 +51,6 @@ const webpack_config_for_angular = {
         manifest_plugin
     ]
 };
-
-if (process.env.NODE_ENV === 'production') {
-    webpack_config_for_kanban.plugins = webpack_config_for_kanban.plugins.concat([
-        new webpack.optimize.ModuleConcatenationPlugin()
-    ]);
-}
 
 module.exports = [
     webpack_config_for_kanban,

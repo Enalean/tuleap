@@ -1,6 +1,8 @@
 const path               = require('path');
 const webpack_config     = require('./webpack.config.js');
-const karma_configurator = require('../../../../../tools/utils/scripts/karma-configurator.js');
+const karma_configurator = require('../../../../tools/utils/scripts/karma-configurator.js');
+
+webpack_config.mode = 'development';
 
 module.exports = function(config) {
     const coverage_dir = path.resolve(__dirname, './coverage');
@@ -13,6 +15,7 @@ module.exports = function(config) {
     Object.assign(base_config, {
         files  : [
             karma_configurator.jasmine_promise_matchers_path,
+            'node_modules/jquery/dist/jquery.js',
             'src/app/app.spec.js'
         ],
         preprocessors: {

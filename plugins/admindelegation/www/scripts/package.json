@@ -7,8 +7,11 @@
   "private": true,
   "dependencies": {},
   "devDependencies": {},
+  "config": {
+    "bin": "../../../../node_modules/.bin"
+  },
   "scripts": {
-    "build": "rm -rf ../../../../src/www/assets/admindelegation/scripts/ && NODE_ENV=production ../../../../node_modules/.bin/webpack --optimize-minimize --bail",
-    "watch": "../../../../node_modules/.bin/webpack --watch"
+    "build": "rm -rf ../../../../src/www/assets/admindelegation/scripts/ && NODE_ENV=production $npm_package_config_bin/webpack --mode=production",
+    "watch": "$npm_package_config_bin/webpack --watch --mode=development"
   }
 }

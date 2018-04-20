@@ -1,5 +1,4 @@
 const path = require('path');
-const webpack = require('webpack');
 const webpack_configurator = require('../../../../tools/utils/scripts/webpack-configurator.js');
 
 const assets_dir_path = path.resolve(__dirname, '../assets');
@@ -104,27 +103,6 @@ if (process.env.NODE_ENV === 'watch' || process.env.NODE_ENV === 'test') {
 }
 
 if (process.env.NODE_ENV === 'production') {
-    const optimized_configs = [
-        webpack_config_for_trackers,
-        webpack_config_for_burndown_chart
-    ];
-
-    optimized_configs.forEach(config => {
-        config.plugins.concat([
-            new webpack.optimize.ModuleConcatenationPlugin()
-        ]);
-    });
-
-    webpack_config_for_trackers.plugins = webpack_config_for_trackers.plugins.concat(
-        [
-            new webpack.DefinePlugin({
-                'process.env': {
-                    NODE_ENV: '"production"'
-                }
-            })
-        ]
-    );
-
     module.exports = [
         webpack_config_for_trackers,
         webpack_config_for_burndown_chart

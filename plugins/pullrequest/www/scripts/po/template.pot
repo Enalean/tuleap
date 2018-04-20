@@ -4,174 +4,168 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Project-Id-Version: \n"
 
-#: src/app/overview/overview.tpl.html:101
-#: src/app/overview/overview.tpl.html:111
-#: src/app/overview/overview.tpl.html:76
-#: src/app/overview/overview.tpl.html:88
+#: src/app/overview/overview.tpl.html
 msgid "Abandon"
 msgstr ""
 
-#: src/app/dashboard/pull-request-summary/pull-request-summary.tpl.html:26
-#: src/app/overview/overview.tpl.html:115
+#: src/app/dashboard/pull-request-summary/pull-request-summary.tpl.html
+#: src/app/overview/overview.tpl.html
 msgid "Abandoned"
 msgstr ""
 
-#: src/app/overview/overview.tpl.html:118
+#: src/app/overview/overview.tpl.html
 msgid "Already merged"
 msgstr ""
 
-#: src/app/error-modal/error-modal.tpl.html:6
+#: src/app/error-modal/error-modal.tpl.html
 msgid "An error occured while doing one of your last actions."
 msgstr ""
 
-#: src/app/file-diff/file-diff.tpl.html:4
+#: src/app/file-diff/file-diff.tpl.html
 msgid "Binary file"
 msgstr ""
 
-#: src/app/overview/merge-modal/merge-modal.tpl.html:12
-#: src/app/overview/overview.tpl.html:22
+#: src/app/overview/merge-modal/merge-modal.tpl.html
+#: src/app/overview/overview.tpl.html
 msgid "Cancel"
 msgstr ""
 
-#: src/app/overview/overview.tpl.html:47
+#: src/app/overview/overview.tpl.html
 msgid "Changes"
 msgstr ""
 
-#: src/app/overview/timeline/timeline.tpl.html:43
+#: src/app/overview/timeline/timeline.tpl.html
 msgid "Comment"
 msgstr ""
 
-#: src/app/overview/overview.tpl.html:40
+#: src/app/overview/overview.tpl.html
 msgid "Date"
 msgstr ""
 
-#: src/app/overview/overview.tpl.html:17
+#: src/app/overview/overview.tpl.html
 msgid "Description"
 msgstr ""
 
-#: src/app/overview/overview.tpl.html:2
+#: src/app/overview/overview.tpl.html
 msgid "Details"
 msgstr ""
 
-#: src/app/overview/timeline/timeline.tpl.html:2
+#: src/app/overview/timeline/timeline.tpl.html
 msgid "Discussion"
 msgstr ""
 
-#: src/app/overview/timeline/timeline.tpl.html:5
+#: src/app/overview/timeline/timeline.tpl.html
 msgid "Discussion has not started yet"
 msgstr ""
 
-#: src/app/overview/overview.tpl.html:9
+#: src/app/overview/overview.tpl.html
 msgid "Edit message"
 msgstr ""
 
-#: src/app/error-modal/error-modal.tpl.html:11
+#: src/app/error-modal/error-modal.tpl.html
 msgid "Error details"
 msgstr ""
 
-#: src/app/overview/overview.tpl.html:59
+#: src/app/overview/overview.tpl.html
 msgid "Failure on {{ overview.pull_request.last_build_date | amDateFormat: 'YYYY-MM-DD HH:mm' }}"
 msgstr ""
 
-#: src/app/pull-request/pull-request.tpl.html:8
+#: src/app/pull-request/pull-request.tpl.html
 msgid "Files"
 msgstr ""
 
-#: src/app/dashboard/dashboard.tpl.html:36
+#: src/app/dashboard/dashboard.tpl.html
 msgid "Hide closed pull requests"
 msgstr ""
 
-#: src/app/overview/overview.tpl.html:54
+#: src/app/overview/overview.tpl.html
 msgid "Last CI Status"
 msgstr ""
 
-#: src/app/dashboard/dashboard.tpl.html:30
+#: src/app/dashboard/dashboard.tpl.html
 msgid "Load closed pull requests"
 msgstr ""
 
-#: src/app/overview/overview.tpl.html:108
-#: src/app/overview/overview.tpl.html:73
-#: src/app/overview/overview.tpl.html:85
-#: src/app/overview/overview.tpl.html:98
+#: src/app/overview/overview.tpl.html
 msgid "Merge"
 msgstr ""
 
-#: src/app/dashboard/pull-request-summary/pull-request-summary.tpl.html:31
+#: src/app/dashboard/pull-request-summary/pull-request-summary.tpl.html
 msgid "Merged"
 msgstr ""
 
-#: src/app/files/files.tpl.html:2
+#: src/app/files/files.tpl.html
 msgid "Modified Files"
 msgstr ""
 
-#: src/app/overview/merge-modal/merge-modal.tpl.html:3
+#: src/app/overview/merge-modal/merge-modal.tpl.html
 msgid "Non fast-forward merge"
 msgstr ""
 
-#: src/app/error-modal/error-modal.tpl.html:17
+#: src/app/error-modal/error-modal.tpl.html
 msgid "OK"
 msgstr ""
 
-#: src/app/error-modal/error-modal.tpl.html:2
+#: src/app/error-modal/error-modal.tpl.html
 msgid "Oh snap!"
 msgstr ""
 
-#: src/app/overview/merge-modal/merge-modal.tpl.html:11
+#: src/app/overview/merge-modal/merge-modal.tpl.html
 msgid "Proceed with merge"
 msgstr ""
 
-#: src/app/pull-request/pull-request.tpl.html:5
+#: src/app/pull-request/pull-request.tpl.html
 msgid "Pull Request Details"
 msgstr ""
 
-#: src/app/overview/overview.tpl.html:82
+#: src/app/overview/overview.tpl.html
 msgid "Pull request can not be merged automatically due to conflicts with destination. Resolve conflicts on the command line and update the pull request."
 msgstr ""
 
-#: src/app/overview/merge-modal/merge-modal.tpl.html:7
+#: src/app/overview/merge-modal/merge-modal.tpl.html
 msgid "Pull request destination has diverged. Merge will not resolve in a fast-forward. You can proceed with the merge, or cancel and update your pull request."
 msgstr ""
 
-#: src/app/overview/overview.tpl.html:95
+#: src/app/overview/overview.tpl.html
 msgid "Pull request mergeability with destination is not determined. You can merge on the command line and push to destination."
 msgstr ""
 
-#: src/app/dashboard/dashboard.tpl.html:2
+#: src/app/dashboard/dashboard.tpl.html
 msgid "Pull requests"
 msgstr ""
 
-#: src/app/overview/overview.tpl.html:36
+#: src/app/overview/overview.tpl.html
 msgid "Requester"
 msgstr ""
 
-#: src/app/overview/overview.tpl.html:19
+#: src/app/overview/overview.tpl.html
 msgid "Save changes"
 msgstr ""
 
-#: src/app/overview/timeline/timeline.tpl.html:42
+#: src/app/overview/timeline/timeline.tpl.html
 msgid "Say something…"
 msgstr ""
 
-#: src/app/error-modal/error-modal.tpl.html:8
+#: src/app/error-modal/error-modal.tpl.html
 msgid "Show details"
 msgstr ""
 
-#: src/app/overview/overview.tpl.html:56
+#: src/app/overview/overview.tpl.html
 msgid "Success on {{ overview.pull_request.last_build_date | amDateFormat: 'YYYY-MM-DD HH:mm' }}"
 msgstr ""
 
-#: src/app/dashboard/dashboard.tpl.html:27
+#: src/app/dashboard/dashboard.tpl.html
 msgid "There are no closed pull requests"
 msgstr ""
 
-#: src/app/dashboard/dashboard.tpl.html:22
+#: src/app/dashboard/dashboard.tpl.html
 msgid "There are no open pull requests"
 msgstr ""
 
-#: src/app/overview/overview.tpl.html:16
+#: src/app/overview/overview.tpl.html
 msgid "Title"
 msgstr ""
 
-#: src/app/overview/overview.tpl.html:62
+#: src/app/overview/overview.tpl.html
 msgid "Unknown"
 msgstr ""

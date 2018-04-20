@@ -20,7 +20,7 @@
 import Gettext             from 'node-gettext';
 import french_translations from '../po/fr.po';
 
-const gettext_provider = new Gettext();
+const gettext_provider = new Gettext({ debug: false });
 gettext_provider.addTranslations('fr_FR', 'timetracking', french_translations);
 gettext_provider.setTextDomain('timetracking');
 

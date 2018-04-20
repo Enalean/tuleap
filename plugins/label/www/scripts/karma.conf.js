@@ -20,6 +20,8 @@ const path               = require('path');
 const webpack_config     = require('./webpack.config.js');
 const karma_configurator = require('../../../../tools/utils/scripts/karma-configurator.js');
 
+webpack_config.mode = 'development';
+
 module.exports = function(config) {
     const coverage_dir = path.resolve(__dirname, './coverage');
     const base_config  = karma_configurator.setupBaseKarmaConfig(

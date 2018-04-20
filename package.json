@@ -8,8 +8,8 @@
     "babel-polyfill": "^6.26.0"
   },
   "devDependencies": {
-    "angular-gettext-extract-loader": "^0.5.0",
     "angular-gettext-loader": "^1.0.1",
+    "angular-gettext-plugin": "^1.0.1",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.3",
     "babel-plugin-istanbul": "^4.1.5",
@@ -49,8 +49,9 @@
     "run-sequence": "^2.1.0",
     "vue-loader": "^15.0.0",
     "vue-template-compiler": "^2.5.16",
-    "webpack": "^3.11.0",
-    "webpack-assets-manifest": "^1.0.0"
+    "webpack": "^4.9.1",
+    "webpack-assets-manifest": "^3.0.1",
+    "webpack-cli": "^2.1.4"
   },
   "scripts": {
     "angular-apps": "gulp angular-apps",
