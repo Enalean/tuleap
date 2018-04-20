@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Dashboard\Project\ProjectDashboardController;
+use Tuleap\Hudson\HudsonJobBuilder;
 
 require_once('HudsonOverviewWidget.class.php');
 require_once('common/user/UserManager.class.php');
@@ -32,23 +33,27 @@ class hudson_Widget_ProjectJobsOverview extends HudsonOverviewWidget
 
     var $plugin;
     var $group_id;
+    /**
+     * @var HudsonJobBuilder
+     */
+    private $job_builder;
 
     /**
      * @param Int              $group_id The owner id
      * @param hudsonPlugin     $plugin The plugin
-     * @param HudsonJobFactory $factory The HudsonJob factory
+     * @param MinimalHudsonJobFactory $factory The HudsonJob factory
      *
      * @return void
      */
-    public function __construct($group_id, hudsonPlugin $plugin, HudsonJobFactory $factory)
+    public function __construct($group_id, hudsonPlugin $plugin, MinimalHudsonJobFactory $factory, HudsonJobBuilder $job_builder)
     {
         parent::__construct('plugin_hudson_project_jobsoverview', $factory);
         $this->setOwner($group_id, ProjectDashboardController::LEGACY_DASHBOARD_TYPE);
         $this->plugin = $plugin;
 
-        $request        = HTTPRequest::instance();
-        $this->group_id = $request->get('group_id');
-
+        $request           = HTTPRequest::instance();
+        $this->group_id    = $request->get('group_id');
+        $this->job_builder = $job_builder;
     }
 
     public function getTitle()
@@ -66,15 +71,16 @@ class hudson_Widget_ProjectJobsOverview extends HudsonOverviewWidget
     }
 
     public function getContent() {
-        $purifier = Codendi_HTMLPurifier::instance();
-        $jobs     = $this->getJobsByGroup($this->group_id);
+        $purifier     = Codendi_HTMLPurifier::instance();
+        $minimal_jobs = $this->getJobsByGroup($this->group_id);
         $html     = '';
-        if (sizeof($jobs) > 0) {
+        if (sizeof($minimal_jobs) > 0) {
             $html .= '<table style="width:100%">';
             $cpt = 1;
 
-            foreach ($jobs as $job_id => $job) {
+            foreach ($minimal_jobs as $job_id => $minimal_job) {
                 try {
+                    $job = $this->job_builder->getHudsonJob($minimal_job);
 
                     $html .= '<tr class="'. util_get_alt_row_color($cpt) .'">';
                     $html .= ' <td>';

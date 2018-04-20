@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -20,22 +20,31 @@
  */
 
 use Tuleap\Dashboard\User\UserDashboardController;
+use Tuleap\Hudson\HudsonJobBuilder;
 
 class hudson_Widget_JobLastArtifacts extends HudsonJobWidget
 {
+    /**
+     * @var HudsonJob
+     */
+    private $job;
     var $build;
     var $last_build_url;
+    /**
+     * @var HudsonJobBuilder
+     */
+    private $job_builder;
 
     /**
      * Constructor
      *
      * @param String           $owner_type The owner type
      * @param Int              $owner_id   The owner id
-     * @param HudsonJobFactory $factory    The HudsonJob factory
+     * @param MinimalHudsonJobFactory $factory    The HudsonJob factory
      *
      * @return void
      */
-    public function __construct($owner_type, $owner_id, HudsonJobFactory $factory)
+    public function __construct($owner_type, $owner_id, MinimalHudsonJobFactory $factory, HudsonJobBuilder $job_builder)
     {
         $request = HTTPRequest::instance();
         if ($owner_type == UserDashboardController::LEGACY_DASHBOARD_TYPE) {
@@ -48,6 +57,7 @@ class hudson_Widget_JobLastArtifacts extends HudsonJobWidget
         parent::__construct($this->widget_id, $factory);
 
         $this->setOwner($owner_id, $owner_type);
+        $this->job_builder = $job_builder;
     }
 
     public function getTitle() {
@@ -81,12 +91,11 @@ class hudson_Widget_JobLastArtifacts extends HudsonJobWidget
 
             if (array_key_exists($this->job_id, $jobs)) {
                 try {
-                    $used_job      = $jobs[$this->job_id];
-                    $this->job_url = $used_job->getUrl();
-                    $this->job     = $used_job;
+                    $used_job  = $jobs[$this->job_id];
+                    $this->job = $this->job_builder->getHudsonJob($used_job);
 
                     $http_client          = new Http_Client();
-                    $this->last_build_url = $this->job_url . '/lastBuild/';
+                    $this->last_build_url = $this->job->getUrl() . '/lastBuild/';
                     $this->build          = new HudsonBuild($this->last_build_url, $http_client);
                 } catch (Exception $e) {
                     $this->job   = null;

@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean 2017,. All rights reserved
+ * Copyright (c) Enalean 2017-2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -22,20 +22,16 @@
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\User\UserDashboardController;
 
-require_once('common/widget/Widget.class.php');
-require_once('PluginHudsonJobDao.class.php');
-require_once('HudsonJobFactory.class.php');
-
 abstract class HudsonWidget extends Widget {
 
     /**
-     * @var HudsonJobFactory
+     * @var MinimalHudsonJobFactory
      */
-    protected $hudsonJobFactory;
+    private $minimal_hudson_job_factory;
 
-    public function __construct($widget_id, HudsonJobFactory $factory) {
+    public function __construct($widget_id, MinimalHudsonJobFactory $factory) {
         parent::__construct($widget_id);
-        $this->hudsonJobFactory = $factory;
+        $this->minimal_hudson_job_factory = $factory;
     }
 
     function getCategory() {
@@ -50,34 +46,15 @@ abstract class HudsonWidget extends Widget {
             $owner_id = $this->group_id;
         }
 
-        return $this->getHudsonJobFactory()->getAvailableJobs($this->owner_type, $owner_id);
+        return $this->minimal_hudson_job_factory->getAvailableJobs($this->owner_type, $owner_id);
     }
 
     protected function getJobsByGroup($group_id)
     {
-        return $this->getHudsonJobFactory()->getAvailableJobs(
+        return $this->minimal_hudson_job_factory->getAvailableJobs(
             ProjectDashboardController::LEGACY_DASHBOARD_TYPE,
             $group_id
         );
-    }
-
-    protected function getJobsByUser($user_id)
-    {
-        return $this->getHudsonJobFactory()->getAvailableJobs(
-            ProjectDashboardController::LEGACY_DASHBOARD_TYPE,
-            $user_id
-        );
-    }
-
-    protected function getHudsonJobFactory() {
-        if (!$this->hudsonJobFactory) {
-            $this->hudsonJobFactory = new HudsonJobFactory();
-        }
-        return $this->hudsonJobFactory;
-    }
-
-    public function setHudsonJobFactory(HudsonJobFactory $factory) {
-        $this->hudsonJobFactory = $factory;
     }
 
     function isAjax() {

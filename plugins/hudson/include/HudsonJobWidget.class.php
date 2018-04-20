@@ -29,8 +29,6 @@ abstract class HudsonJobWidget extends HudsonWidget {
     var $widget_id;
     var $group_id;
 
-    var $job;
-    var $job_url;
     var $job_id;
 
     function isUnique() {

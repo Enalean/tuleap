@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -21,6 +21,7 @@
 
 
 use Tuleap\Dashboard\User\UserDashboardController;
+use Tuleap\Hudson\HudsonJobBuilder;
 
 require_once('HudsonOverviewWidget.class.php');
 require_once('common/user/UserManager.class.php');
@@ -34,15 +35,16 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget
     var $plugin;
 
     var $_not_monitored_jobs;
-
     /**
-     * @param Int              $user_id    The owner id
-     * @param hudsonPlugin     $plugin     The plugin
-     * @param HudsonJobFactory $factory    The HudsonJob factory
-     *
-     * @return void
+     * @var MinimalHudsonJobFactory
      */
-    public function __construct($user_id, hudsonPlugin $plugin, HudsonJobFactory $factory)
+    private $factory;
+    /**
+     * @var HudsonJobBuilder
+     */
+    private $job_builder;
+
+    public function __construct($user_id, hudsonPlugin $plugin, MinimalHudsonJobFactory $factory, HudsonJobBuilder $job_builder)
     {
         parent::__construct('plugin_hudson_my_jobs', $factory);
         $this->setOwner($user_id, UserDashboardController::LEGACY_DASHBOARD_TYPE);
@@ -54,6 +56,8 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget
         } else {
             $this->_not_monitored_jobs = explode(",", $this->_not_monitored_jobs);
         }
+        $this->factory     = $factory;
+        $this->job_builder = $job_builder;
     }
 
     public function getTitle()
@@ -148,12 +152,12 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget
 	                    $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
 	                    $dar = $job_dao->searchByJobID($monitored_job);
 	                    if ($dar->valid()) {
-                            $http_client = new Http_Client();
                             $row         = $dar->current();
                             $job_url     = $row['job_url'];
                             $job_id      = $row['job_id'];
                             $group_id    = $row['group_id'];
-                            $job         = new HudsonJob($job_url, $http_client);
+                            $minimal_job = $this->factory->getMinimalHudsonJob($job_url, '');
+                            $job         = $this->job_builder->getHudsonJob($minimal_job);
 
 	                        $html .= '<tr class="'. $purifier->purify(util_get_alt_row_color($cpt)) .'">';
 	                        $html .= ' <td>';
