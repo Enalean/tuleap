@@ -6,6 +6,7 @@ describe ('ExecutionService - ', () => {
     let $q,
         $rootScope,
         ExecutionRestService,
+        SharedPropertiesService,
         ExecutionService;
 
     beforeEach(() => {
@@ -15,12 +16,14 @@ describe ('ExecutionService - ', () => {
             _$q_,
             _$rootScope_,
             _ExecutionRestService_,
+            _SharedPropertiesService_,
             _ExecutionService_,
         ) {
-            $q                   = _$q_;
-            $rootScope           = _$rootScope_;
-            ExecutionRestService = _ExecutionRestService_;
-            ExecutionService     = _ExecutionService_;
+            $q                      = _$q_;
+            $rootScope              = _$rootScope_;
+            ExecutionRestService    = _ExecutionRestService_;
+            SharedPropertiesService = _SharedPropertiesService_;
+            ExecutionService        = _ExecutionService_;
         });
     });
 
@@ -454,6 +457,67 @@ describe ('ExecutionService - ', () => {
 
             expect(ExecutionService.campaign).not.toEqual(campaign_copy);
             expect(Object.keys(ExecutionService.campaign).length).toEqual(Object.keys(campaign_copy).length);
+        });
+
+        it("Given that user is on a test that has just been updated by someone else, it postpone the update of the execution", () => {
+            const current_user = {
+                id: 101,
+                uri: 'users/101',
+                uuid: 'uuid-101'
+            };
+            spyOn(SharedPropertiesService, 'getCurrentUser').and.returnValue(
+                current_user
+            );
+
+            const campaign = {
+                id: "6",
+                label: "Release 1",
+                status: "Open",
+                nb_of_passed: 0,
+                nb_of_failed: 0,
+                nb_of_notrun: 0,
+                nb_of_blocked: 1,
+                total: 1
+            };
+
+            const executions = {
+                4: {
+                    id: 4,
+                    previous_result: {
+                        status: "blocked"
+                    },
+                    definition: {
+                        description: 'Version A'
+                    },
+                    viewed_by: [current_user]
+                }
+            };
+
+            const execution_to_save = {
+                id: 4,
+                status: "notrun",
+                definition: {
+                    description: 'Version B'
+                }
+            };
+
+            const updated_by = {
+                id: 102,
+                uri: 'users/102',
+                uuid: 'uuid-102'
+            };
+
+            ExecutionService.campaign   = campaign;
+            ExecutionService.executions = executions;
+            ExecutionService.updateTestExecution(execution_to_save, updated_by);
+
+            expect(ExecutionService.executions[4].definition.description).toEqual('Version A');
+            expect(ExecutionService.executions[4].userCanReloadTestBecauseDefinitionIsUpdated).toBeTruthy();
+
+            ExecutionService.executions[4].userCanReloadTestBecauseDefinitionIsUpdated();
+
+            expect(ExecutionService.executions[4].definition.description).toEqual('Version B');
+            expect(ExecutionService.executions[4].userCanReloadTestBecauseDefinitionIsUpdated).toBeFalsy();
         });
     });
 

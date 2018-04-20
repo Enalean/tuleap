@@ -262,7 +262,7 @@ function ExecutionDetailCtrl(
             execution_time = execution.time;
         }
         ExecutionRestService.putTestExecution(execution.id, new_status, execution_time, execution.results).then(function(data) {
-            ExecutionService.updateTestExecution(data);
+            ExecutionService.updateTestExecution(data, SharedPropertiesService.getCurrentUser());
             resetTimer();
         }).catch(function(response) {
             ExecutionService.displayError(execution, response);

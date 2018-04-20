@@ -7,6 +7,7 @@ ExecutionService.$inject = [
     '$rootScope',
     'ExecutionConstants',
     'ExecutionRestService',
+    'SharedPropertiesService',
 ];
 
 function ExecutionService(
@@ -14,6 +15,7 @@ function ExecutionService(
     $rootScope,
     ExecutionConstants,
     ExecutionRestService,
+    SharedPropertiesService
 ) {
     var self = this;
 
@@ -193,14 +195,40 @@ function ExecutionService(
         delete self.executions[execution_to_remove_id];
     }
 
-    function updateTestExecution(execution_updated) {
-        var execution       = self.executions[execution_updated.id];
-        var previous_status = execution.previous_result.status;
-        var status          = execution_updated.status;
-
-        if (execution) {
-            _.assign(execution, execution_updated);
+    function updateTestExecution(execution_updated, updated_by) {
+        const execution = self.executions[execution_updated.id];
+        if (isCurrentUserViewingExecution(execution)
+            && hasDefinitionChanged(execution, execution_updated)
+            && ! isCurrentUserOriginatorOfTheUpdate(updated_by)
+        ) {
+            execution.userCanReloadTestBecauseDefinitionIsUpdated = () => {
+                delete execution.userCanReloadTestBecauseDefinitionIsUpdated;
+                updateTestExecutionNow(execution, execution_updated);
+            };
+        } else {
+            updateTestExecutionNow(execution, execution_updated);
         }
+    }
+
+    function hasDefinitionChanged(execution, execution_updated) {
+        return execution.definition.summary !== execution_updated.definition.summary
+            || execution.definition.description !== execution_updated.definition.description;
+    }
+
+    function isCurrentUserOriginatorOfTheUpdate(updated_by) {
+        return updated_by.id === SharedPropertiesService.getCurrentUser().id;
+    }
+
+    function isCurrentUserViewingExecution(execution) {
+        return execution.viewed_by
+            && execution.viewed_by.find(user => user.uuid === SharedPropertiesService.getCurrentUser().uuid);
+    }
+
+    function updateTestExecutionNow(execution, execution_updated) {
+        const previous_status = execution.previous_result.status;
+        const status          = execution_updated.status;
+
+        Object.assign(execution, execution_updated);
 
         execution.previous_result.has_been_run_at_least_once = true;
 
@@ -270,6 +298,9 @@ function ExecutionService(
             _.remove(self.executions[execution_id].viewed_by, function(user) {
                 return user.id === user_to_remove.id && user.uuid === user_to_remove.uuid;
             });
+            if (self.executions[execution_id].userCanReloadTestBecauseDefinitionIsUpdated) {
+                self.executions[execution_id].userCanReloadTestBecauseDefinitionIsUpdated();
+            }
         }
     }
 
