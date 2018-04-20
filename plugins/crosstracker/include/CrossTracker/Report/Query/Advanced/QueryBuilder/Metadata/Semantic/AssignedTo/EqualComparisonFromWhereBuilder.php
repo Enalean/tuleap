@@ -53,45 +53,35 @@ class EqualComparisonFromWhereBuilder implements FromWhereBuilder
         $values = $this->extractor->extractCollectionOfValues($comparison);
         $value  = $values[0];
 
-        $tracker_ids = array_map(
-            function (Tracker $tracker) {
-                return $tracker->getId();
-            },
-            $trackers
-        );
-        $tracker_ids_condition = EasyStatement::open()->in('field.tracker_id IN (?*)', $tracker_ids);
-
-        $from = "LEFT JOIN (
-            tracker_changeset_value AS changeset_value_assigned_to
-            INNER JOIN (
-               SELECT DISTINCT field_id
-               FROM tracker_semantic_contributor AS field
-               WHERE $tracker_ids_condition
-            ) AS equal_assigned_to_field ON (equal_assigned_to_field.field_id = changeset_value_assigned_to.field_id)
-            INNER JOIN tracker_changeset_value_list AS tracker_changeset_value_assigned_to
-            ON (
-                tracker_changeset_value_assigned_to.changeset_value_id = changeset_value_assigned_to.id
-            )
-        ) ON (
-            changeset_value_assigned_to.changeset_id = tracker_artifact.last_changeset_id
-        )";
-        $from_parameters = $tracker_ids_condition->values();
-
         if ($value !== '') {
-            return $this->getFromWhereForNonEmptyCondition($from, $from_parameters, $value);
+            return $this->getFromWhereForNonEmptyCondition($value);
         }
 
-        return $this->getFromWhereForEmptyCondition($from, $from_parameters);
+        return $this->getFromWhereForEmptyCondition();
     }
 
     /**
      *
-     * @param string $from
-     * @param array $from_parameters
      * @return ParametrizedFromWhere
      */
-    private function getFromWhereForEmptyCondition($from, array $from_parameters)
+    private function getFromWhereForEmptyCondition()
     {
+        $from = 'INNER JOIN tracker_semantic_contributor AS empty_assigned_to_field
+            ON (
+                empty_assigned_to_field.tracker_id = tracker_artifact.tracker_id
+            )
+            LEFT JOIN (
+                tracker_changeset_value AS changeset_value_assigned_to
+                INNER JOIN tracker_changeset_value_list AS tracker_changeset_value_assigned_to
+                ON (
+                    tracker_changeset_value_assigned_to.changeset_value_id = changeset_value_assigned_to.id
+                )
+            ) ON (
+                changeset_value_assigned_to.changeset_id = tracker_artifact.last_changeset_id
+                AND changeset_value_assigned_to.field_id = empty_assigned_to_field.field_id
+            )';
+        $from_parameters = [];
+
         $where = 'changeset_value_assigned_to.changeset_id IS NULL
             OR tracker_changeset_value_assigned_to.bindvalue_id = ?';
         $where_parameters = [\Tracker_FormElement_Field_List::NONE_VALUE];
@@ -105,17 +95,29 @@ class EqualComparisonFromWhereBuilder implements FromWhereBuilder
     }
 
     /**
-     * @param string $from
-     * @param array $from_parameters
      * @param string $value
      * @return ParametrizedFromWhere
      */
-    private function getFromWhereForNonEmptyCondition($from, array $from_parameters, $value)
+    private function getFromWhereForNonEmptyCondition($value)
     {
+        $from = 'INNER JOIN tracker_semantic_contributor AS equal_assigned_to_field
+            ON (
+                equal_assigned_to_field.tracker_id = tracker_artifact.tracker_id
+            )';
+        $from_parameters = [];
+
         $user = $this->user_manager->getUserByUserName($value);
 
-        $where = 'changeset_value_assigned_to.changeset_id IS NOT NULL
-            AND tracker_changeset_value_assigned_to.bindvalue_id = ?';
+        $where = 'tracker_artifact.last_changeset_id IN (
+            SELECT changeset_value_assigned_to.changeset_id
+            FROM tracker_changeset_value AS changeset_value_assigned_to
+            INNER JOIN tracker_changeset_value_list AS tracker_changeset_value_assigned_to
+            ON (
+                tracker_changeset_value_assigned_to.changeset_value_id = changeset_value_assigned_to.id
+            )
+            WHERE tracker_changeset_value_assigned_to.bindvalue_id = ?
+              AND changeset_value_assigned_to.field_id = equal_assigned_to_field.field_id
+        )';
         $where_parameters = [$user->getId()];
 
         return new ParametrizedFromWhere(

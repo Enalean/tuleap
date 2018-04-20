@@ -22,11 +22,8 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\N
 
 use Tuleap\CrossTracker\Report\Query\Advanced\AllowedMetadata;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ComparisonChecker;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\OperatorNotAllowedForMetadataException;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\OperatorToNowComparisonException;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
 
 class NotEqualComparisonChecker extends ComparisonChecker
@@ -43,14 +40,5 @@ class NotEqualComparisonChecker extends ComparisonChecker
         }
 
         parent::visitCurrentDateTimeValueWrapper($value_wrapper, $parameters);
-    }
-
-    public function checkComparisonIsValid(Metadata $metadata, Comparison $comparison)
-    {
-        // Disallow @assigned_to != anything while it's not implemented
-        if ($metadata->getName() === AllowedMetadata::ASSIGNED_TO) {
-            throw new OperatorNotAllowedForMetadataException($metadata, self::OPERATOR);
-        }
-        parent::checkComparisonIsValid($metadata, $comparison);
     }
 }
