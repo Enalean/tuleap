@@ -24,6 +24,7 @@ use PFUser;
 use Tracker;
 use Tracker_FormElement_Field_SubmittedOn;
 use Tracker_FormElementFactory;
+use Tracker_Semantic_ContributorDao;
 use Tracker_Semantic_DescriptionDao;
 use Tracker_Semantic_StatusDao;
 use Tracker_Semantic_TitleDao;
@@ -37,6 +38,10 @@ require_once __DIR__ . '/../../../../../bootstrap.php';
 
 class MetadataUsageCheckerTest extends \PHPUnit\Framework\TestCase
 {
+    /**
+     * @var Tracker_Semantic_ContributorDao
+     */
+    private $assigned_to;
     /**
      * @var Tracker[]
      */
@@ -106,6 +111,7 @@ class MetadataUsageCheckerTest extends \PHPUnit\Framework\TestCase
         $this->title_dao            = $this->createMock(Tracker_Semantic_TitleDao::class);
         $this->description_dao      = $this->createMock(Tracker_Semantic_DescriptionDao::class);
         $this->status_dao           = $this->createMock(Tracker_Semantic_StatusDao::class);
+        $this->assigned_to           = $this->createMock(Tracker_Semantic_ContributorDao::class);
 
         $this->user = $this->createMock(PFUser::class);
 
@@ -113,7 +119,8 @@ class MetadataUsageCheckerTest extends \PHPUnit\Framework\TestCase
             $this->form_element_factory,
             $this->title_dao,
             $this->description_dao,
-            $this->status_dao
+            $this->status_dao,
+            $this->assigned_to
         );
 
         $GLOBALS = $initial_global_state;
