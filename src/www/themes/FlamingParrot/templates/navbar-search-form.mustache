@@ -1,6 +1,6 @@
 {{# user_can_search }}
     {{# search_form_presenter}}
-        <form action="/search/" method="post" class="navbar-search pull-left">
+        <form action="/search/" method="get" class="navbar-search pull-left">
             {{# hidden_fields }}
                 <input type="hidden" name="{{ name }}" value="{{ value }}" />
             {{/ hidden_fields }}
