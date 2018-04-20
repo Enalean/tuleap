@@ -30,9 +30,8 @@ function DashboardController(
         init
     });
 
-    self.init();
-
     let closed_pull_requests_hidden;
+    self.init();
 
     function init() {
         self.loading_pull_requests  = true;

@@ -35,13 +35,12 @@
     "karma-coverage": "^1.1.1",
     "karma-jasmine": "^1.1.0",
     "karma-junit-reporter": "^1.2.0",
-    "karma-webpack": "^2.0.3",
-    "webpack": "^3.11.0"
+    "karma-webpack": "^2.0.3"
   },
   "scripts": {
-    "build": "rm -rf ./dist/* && NODE_ENV=production webpack --optimize-minimize --bail",
+    "build": "rm -rf ./dist/* && NODE_ENV=production ../../../../../node_modules/.bin/webpack --optimize-minimize --bail",
     "coverage": "rm -rf ./coverage/* && NODE_ENV=coverage karma start ./karma.conf.js && http-server -os -a 0.0.0.0 -p 9000 coverage/",
     "test": "NODE_ENV=test karma start ./karma.conf.js",
-    "watch": "NODE_ENV=watch concurrently --raw --kill-others 'webpack --watch' 'gulp watch' 'karma start ./karma.conf.js'"
+    "watch": "NODE_ENV=watch concurrently --raw --kill-others '../../../../../node_modules/.bin/webpack --watch' 'gulp watch' 'karma start ./karma.conf.js'"
   }
 }

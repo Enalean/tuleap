@@ -3,7 +3,7 @@
   "name": "tuleap-frs",
   "version": "0.0.1",
   "homepage": "https://www.enalean.com",
-  "license": "GPL-2.0",
+  "license": "GPL-2.0+",
   "private": true,
   "dependencies": {
     "angular": "~1.4.14",
@@ -14,14 +14,7 @@
     "ng-showdown": "^1.1.0"
   },
   "devDependencies": {
-    "angular-gettext-extract-loader": "^0.5.0",
-    "angular-gettext-loader": "^1.0.1",
     "angular-mocks": "~1.4.10",
-    "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.2",
-    "babel-plugin-istanbul": "^4.1.5",
-    "babel-polyfill": "^6.26.0",
-    "babel-preset-env": "^1.6.1",
     "bower": "^1.8.2",
     "concurrently": "^3.5.1",
     "gulp": "^3.9.1",
@@ -34,16 +27,13 @@
     "karma-coverage": "^1.1.1",
     "karma-jasmine": "^1.1.1",
     "karma-junit-reporter": "^1.2.0",
-    "karma-webpack": "^2.0.9",
-    "ng-cache-loader": "0.0.23",
-    "webpack": "^3.10.0",
-    "webpack-assets-manifest": "^1.0.0"
+    "karma-webpack": "^2.0.9"
   },
   "scripts": {
     "bower": "bower install --allow-root --config.interactive=false",
-    "build": "rm -rf ../../assets/* && gulp build && NODE_ENV=production webpack --optimize-minimize --bail",
+    "build": "rm -rf ../../assets/* && gulp build && NODE_ENV=production ../../../../../node_modules/.bin/webpack --optimize-minimize --bail",
     "coverage": "rm -rf ./coverage && NODE_ENV=coverage karma start ./karma.config.js && http-server -os -a 0.0.0.0 -p 9000 coverage/",
     "test": "NODE_ENV=test karma start ./karma.config.js",
-    "watch": "NODE_ENV=watch concurrently --raw --kill-others 'webpack --watch' 'karma start ./karma.config.js'"
+    "watch": "NODE_ENV=watch concurrently --raw --kill-others '../../../../../node_modules/.bin/webpack --watch' 'karma start ./karma.config.js'"
   }
 }

@@ -76,7 +76,7 @@ const babel_options_karma = {
 function configureBabelRule(babel_options) {
     return {
         test: /\.js$/,
-        exclude: /node_modules/,
+        exclude: [/node_modules/, /vendor/, /bower_components/],
         use: [
             {
                 loader: 'babel-loader',
@@ -116,7 +116,7 @@ const rule_mustache_files = {
 
 const rule_ng_cache_loader = {
     test: /\.html$/,
-    exclude: /node_modules/,
+    exclude: [/node_modules/, /vendor/, /bower_components/],
     use: [
         {
             loader: 'ng-cache-loader',
@@ -127,11 +127,22 @@ const rule_ng_cache_loader = {
 
 const rule_angular_gettext_loader = {
     test: /\.po$/,
-    exclude: /node_modules/,
+    exclude: [/node_modules/, /vendor/, /bower_components/],
     use: [
         {
             loader: 'angular-gettext-loader',
             query: 'browserify=true'
+        }
+    ]
+};
+
+const rule_angular_gettext_extract_loader = {
+    test: /src.*\.(js|html)$/,
+    exclude: [/node_modules/, /vendor/, /bower_components/],
+    use: [
+        {
+            loader: 'angular-gettext-extract-loader',
+            query: 'pofile=po/template.pot'
         }
     ]
 };
@@ -144,5 +155,6 @@ module.exports = {
     rule_mustache_files,
     rule_vue_loader,
     rule_ng_cache_loader,
-    rule_angular_gettext_loader
+    rule_angular_gettext_loader,
+    rule_angular_gettext_extract_loader
 };

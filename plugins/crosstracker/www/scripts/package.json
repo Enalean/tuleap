@@ -13,33 +13,20 @@
     "vue": "^2.5.9"
   },
   "devDependencies": {
-    "babel-core": "^6.25.0",
-    "babel-loader": "^7.0.0",
-    "babel-plugin-istanbul": "^4.1.5",
-    "babel-plugin-rewire-exports": "^0.3.0",
-    "babel-polyfill": "^6.26.0",
-    "babel-preset-env": "^1.6.1",
     "concurrently": "^3.5.0",
     "http-server": "^0.10.0",
     "jasmine-core": "^2.8.0",
-    "json-loader": "^0.5.7",
     "karma": "^1.7.1",
     "karma-chrome-launcher": "^2.2.0",
     "karma-coverage": "^1.1.1",
     "karma-jasmine": "^1.1.0",
     "karma-junit-reporter": "^1.2.0",
-    "karma-webpack": "^2.0.5",
-    "po-gettext-loader": "^0.1.1",
-    "vue-loader": "^13.4.0",
-    "vue-loader-options-plugin": "^0.1.0",
-    "vue-template-compiler": "^2.5.9",
-    "webpack": "^3.8.1",
-    "webpack-assets-manifest": "^1.0.0"
+    "karma-webpack": "^2.0.5"
   },
   "scripts": {
-    "build": "rm -rf ../assets/* && NODE_ENV=production webpack --optimize-minimize --bail",
+    "build": "rm -rf ../assets/* && NODE_ENV=production ../../../../node_modules/.bin/webpack --optimize-minimize --bail",
     "coverage": "rm -rf ./coverage/* && NODE_ENV=coverage karma start ./karma.conf.js && http-server -os -a 0.0.0.0 -p 9000 coverage/",
     "test": "NODE_ENV=test karma start ./karma.conf.js",
-    "watch": "NODE_ENV=watch concurrently --raw --kill-others 'webpack --watch' 'karma start ./karma.conf.js'"
+    "watch": "NODE_ENV=watch concurrently --raw --kill-others '../../../../node_modules/.bin/webpack --watch' 'karma start ./karma.conf.js'"
   }
 }

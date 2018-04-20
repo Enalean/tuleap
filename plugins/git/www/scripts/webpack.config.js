@@ -16,57 +16,23 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-const path                        = require('path');
-const webpack                     = require('webpack');
-const WebpackAssetsManifest       = require('webpack-assets-manifest');
-const babel_preset_env            = require('babel-preset-env');
-const VueLoaderOptionsPlugin      = require('vue-loader-options-plugin');
-const BabelPluginObjectRestSpread = require('babel-plugin-transform-object-rest-spread');
+const path = require('path');
+const webpack = require('webpack');
+const webpack_configurator = require('../../../../tools/utils/scripts/webpack-configurator.js');
 
-var assets_dir_path = path.resolve(__dirname, '../assets');
+const assets_dir_path = path.resolve(__dirname, '../assets');
 
-const babel_preset_env_ie_config = [babel_preset_env, {
-    targets: {
-        ie: 11
-    },
-    modules: false
-}];
-
-const babel_options = {
-    env: {
-        watch: {
-            presets: [babel_preset_env_ie_config]
-        },
-        production: {
-            presets: [babel_preset_env_ie_config]
-        }
-    },
-    plugins: [
-        BabelPluginObjectRestSpread
-    ]
-};
-
-const babel_rule = {
-    test: /\.js$/,
-    exclude: /node_modules/,
-    use: [
-        {
-            loader: 'babel-loader',
-            options: babel_options
-        }
-    ]
-};
-
-const path_to_badge = path.resolve(__dirname, '../../../../src/www/scripts/project/admin/permissions-per-group/');
+const path_to_badge = path.resolve(
+    __dirname,
+    '../../../../src/www/scripts/project/admin/permissions-per-group/'
+);
 
 const webpack_config = {
-    entry : {
-        'permission-per-group' : './permissions-per-group/src/index.js'
+    entry: {
+        'permission-per-group': './permissions-per-group/src/index.js'
     },
-    output: {
-        path    : assets_dir_path,
-        filename: '[name]-[chunkhash].js'
-    },
+    context: path.resolve(__dirname),
+    output: webpack_configurator.configureOutput(assets_dir_path),
     externals: {
         tlp: 'tlp'
     },
@@ -77,39 +43,18 @@ const webpack_config = {
     },
     module: {
         rules: [
-            babel_rule,
-            {
-                test: /\.po$/,
-                exclude: /node_modules/,
-                use: [
-                    { loader: 'json-loader' },
-                    { loader: 'po-gettext-loader' }
-                ]
-            }, {
-                test: /\.vue$/,
-                use: [
-                    {
-                        loader: 'vue-loader',
-                        options: {
-                            loaders: {
-                                js: 'babel-loader'
-                            },
-                            esModule: true
-                        }
-                    }
-                ]
-            }
+            webpack_configurator.configureBabelRule(
+                webpack_configurator.babel_options_ie11
+            ),
+            webpack_configurator.rule_po_files,
+            webpack_configurator.rule_vue_loader
         ]
     },
     plugins: [
-        new WebpackAssetsManifest({
-            output: 'manifest.json',
-            merge: true,
-            writeToDisk: true
-        }),
-        new VueLoaderOptionsPlugin({
-            babel: babel_options
-        })
+        webpack_configurator.getManifestPlugin(),
+        webpack_configurator.getVueLoaderOptionsPlugin(
+            webpack_configurator.babel_options_ie11
+        )
     ]
 };
 
