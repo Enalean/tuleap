@@ -21,6 +21,7 @@
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata;
 
 use Tracker;
+use Tuleap\AgileDashboard\Semantic\SemanticDone;
 use Tuleap\CrossTracker\Report\Query\Advanced\AllowedMetadata;
 use Tuleap\CrossTracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
@@ -30,17 +31,21 @@ class InComparisonFromWhereBuilder implements FromWhereBuilder
 {
     /** @var AlwaysThereField\Users\FromWhereBuilder */
     private $submitted_by_builder;
-    /**
-     * @var AlwaysThereField\Users\FromWhereBuilder
-     */
+
+    /** @var AlwaysThereField\Users\FromWhereBuilder */
     private $last_update_by_builder;
+
+    /** @var Semantic\AssignedTo\FromWhereBuilder */
+    private $assigned_to_builder;
 
     public function __construct(
         AlwaysThereField\Users\FromWhereBuilder $submitted_by_builder,
-        AlwaysThereField\Users\FromWhereBuilder $last_update_by_builder
+        AlwaysThereField\Users\FromWhereBuilder $last_update_by_builder,
+        Semantic\AssignedTo\FromWhereBuilder $assigned_to_builder
     ) {
         $this->submitted_by_builder   = $submitted_by_builder;
         $this->last_update_by_builder = $last_update_by_builder;
+        $this->assigned_to_builder    = $assigned_to_builder;
     }
 
     /**
@@ -57,6 +62,9 @@ class InComparisonFromWhereBuilder implements FromWhereBuilder
                 break;
             case AllowedMetadata::LAST_UPDATE_BY:
                 return $this->last_update_by_builder->getFromWhere($metadata, $comparison, $trackers);
+                break;
+            case AllowedMetadata::ASSIGNED_TO:
+                return $this->assigned_to_builder->getFromWhere($metadata, $comparison, $trackers);
                 break;
         }
     }

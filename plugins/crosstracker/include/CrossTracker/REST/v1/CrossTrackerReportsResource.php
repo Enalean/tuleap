@@ -323,6 +323,10 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                     $list_value_extractor,
                     $this->user_manager,
                     $last_update_by_alias_field
+                ),
+                new AssignedTo\InComparisonFromWhereBuilder(
+                    $list_value_extractor,
+                    $this->user_manager
                 )
             ),
             new NotInComparisonFromWhereBuilder(
