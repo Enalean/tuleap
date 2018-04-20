@@ -27,6 +27,7 @@ use Tuleap\Request\NotFoundException;
 use Tuleap\Tracker\Notifications\CollectionOfUgroupToBeNotifiedPresenterBuilder;
 use Tuleap\Tracker\Notifications\CollectionOfUserInvolvedInNotificationPresenterBuilder;
 use Tuleap\Tracker\Notifications\GlobalNotificationsAddressesBuilder;
+use Tuleap\Tracker\Notifications\GlobalNotificationSubscribersFilter;
 use Tuleap\Tracker\Notifications\NotificationListBuilder;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyDao;
 use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
@@ -63,11 +64,12 @@ trait NotificationsSettingsControllerCommon
      */
     private function getNotificationsManager(UserManager $user_manager, \Tracker $tracker)
     {
-        $user_to_notify_dao        = new UsersToNotifyDao();
-        $ugroup_to_notify_dao      = new UgroupsToNotifyDao();
-        $notification_list_builder = new NotificationListBuilder(
+        $user_to_notify_dao             = new UsersToNotifyDao();
+        $ugroup_to_notify_dao           = new UgroupsToNotifyDao();
+        $unsubscribers_notification_dao = new UnsubscribersNotificationDAO;
+        $notification_list_builder      = new NotificationListBuilder(
             new UGroupDao(),
-            new CollectionOfUserInvolvedInNotificationPresenterBuilder($user_to_notify_dao, new UnsubscribersNotificationDAO),
+            new CollectionOfUserInvolvedInNotificationPresenterBuilder($user_to_notify_dao, $unsubscribers_notification_dao),
             new CollectionOfUgroupToBeNotifiedPresenterBuilder($ugroup_to_notify_dao)
         );
         return new Tracker_NotificationsManager(
@@ -78,7 +80,8 @@ trait NotificationsSettingsControllerCommon
             new UserNotificationSettingsDAO(),
             new GlobalNotificationsAddressesBuilder(),
             $user_manager,
-            new UGroupManager()
+            new UGroupManager(),
+            new GlobalNotificationSubscribersFilter($unsubscribers_notification_dao)
         );
     }
 

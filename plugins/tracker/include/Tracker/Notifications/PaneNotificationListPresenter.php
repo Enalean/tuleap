@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2017. All rights reserved.
+ * Copyright Enalean (c) 2017-2018. All rights reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -38,13 +38,15 @@ class PaneNotificationListPresenter
     public $remove_notif_title;
     public $remove_notif_confirm;
     public $project_id;
+    public $additional_information_for_autocompleter;
 
-    public function __construct($project_id, array $notifications)
+    public function __construct($project_id, $tracker_id, array $notifications)
     {
-        $this->project_id         = $project_id;
-        $this->notifications      = $notifications;
-        $this->empty_notification = dgettext('tuleap-tracker', 'No notification set');
-        $this->has_notifications  = (bool)(count($notifications) > 0);
+        $this->project_id                               = $project_id;
+        $this->additional_information_for_autocompleter = json_encode(['tracker_id' => $tracker_id]);
+        $this->notifications                            = $notifications;
+        $this->empty_notification                       = dgettext('tuleap-tracker', 'No notification set');
+        $this->has_notifications                        = (bool)(count($notifications) > 0);
 
         $this->admin_note      = dgettext(
             'tuleap-tracker',

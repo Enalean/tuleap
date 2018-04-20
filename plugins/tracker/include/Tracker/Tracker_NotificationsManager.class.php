@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Tracker\Notifications\GlobalNotificationsAddressesBuilder;
+use Tuleap\Tracker\Notifications\GlobalNotificationSubscribersFilter;
 use Tuleap\Tracker\Notifications\NotificationCustomisationSettingsPresenter;
 use Tuleap\Tracker\Notifications\NotificationListBuilder;
 use Tuleap\Tracker\Notifications\PaneNotificationListPresenter;
@@ -62,6 +63,10 @@ class Tracker_NotificationsManager {
      * @var UserNotificationSettingsDAO
      */
     private $user_notification_settings_dao;
+    /**
+     * @var GlobalNotificationSubscribersFilter
+     */
+    private $subscribers_filter;
 
     public function __construct(
         $tracker,
@@ -71,7 +76,8 @@ class Tracker_NotificationsManager {
         UserNotificationSettingsDAO $user_notification_settings_dao,
         GlobalNotificationsAddressesBuilder $addresses_builder,
         UserManager $user_manager,
-        UGroupManager $ugroup_manager
+        UGroupManager $ugroup_manager,
+        GlobalNotificationSubscribersFilter $subscribers_filter
     ) {
         $this->tracker                        = $tracker;
         $this->user_to_notify_dao             = $user_to_notify_dao;
@@ -81,6 +87,7 @@ class Tracker_NotificationsManager {
         $this->user_manager                   = $user_manager;
         $this->ugroup_manager                 = $ugroup_manager;
         $this->notification_list_builder      = $notification_list_builder;
+        $this->subscribers_filter             = $subscribers_filter;
     }
 
     public function displayTrackerAdministratorSettings(HTTPRequest $request, CSRFSynchronizerToken $csrf_token)
@@ -241,6 +248,7 @@ class Tracker_NotificationsManager {
             'notifications',
             new PaneNotificationListPresenter(
                 $this->tracker->getGroupId(),
+                $this->tracker->getId(),
                 $this->notification_list_builder->getNotificationsPresenter($notifs, $this->addresses_builder)
             )
         );
@@ -307,6 +315,18 @@ class Tracker_NotificationsManager {
     {
         $users           = $autocompleter->getUsers();
         $users_not_added = array();
+        $user_ids        = [];
+        foreach ($users as $user) {
+            $user_ids[] = $user->getId();
+        }
+        $user_ids_filtered = $this->subscribers_filter->filterInvalidUserIDs($this->tracker, $user_ids);
+        array_filter($users, function (PFUser $user) use ($user_ids_filtered, &$users_not_added) {
+            if (! in_array($user->getId(), $user_ids_filtered)) {
+                $users_not_added[] = $user;
+                return false;
+            }
+            return true;
+        });
         foreach ($users as $user) {
             if (! $this->user_to_notify_dao->insert($notification_id, $user->getId())) {
                 $users_not_added[] = $user->getName();
