@@ -82,8 +82,8 @@ class EqualComparisonFromWhereBuilder implements FromWhereBuilder
             )';
         $from_parameters = [];
 
-        $where = 'changeset_value_assigned_to.changeset_id IS NULL
-            OR tracker_changeset_value_assigned_to.bindvalue_id = ?';
+        $where = '(changeset_value_assigned_to.changeset_id IS NULL
+            OR tracker_changeset_value_assigned_to.bindvalue_id = ? )';
         $where_parameters = [\Tracker_FormElement_Field_List::NONE_VALUE];
 
         return new ParametrizedFromWhere(
