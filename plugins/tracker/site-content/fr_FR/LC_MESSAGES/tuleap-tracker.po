@@ -171,6 +171,9 @@ msgstr "Aucune notification n'a été définie"
 msgid "No notifications at all"
 msgstr "Aucune notification"
 
+msgid "No users have unsubscribed."
+msgstr "Aucun utilisateur ne s'est désabonné."
+
 msgid "Notification successfully deleted."
 msgstr "La notification a été supprimée"
 
@@ -510,6 +513,9 @@ msgstr "Le champ texte '%s' ne peut pas être comparé à OPEN()."
 msgid "The tracker hierarchy cannot be defined."
 msgstr "La hiérarchie entre outils de suivi ne peut être définie."
 
+msgid "The unsubscribe list has been successfully updated."
+msgstr "La liste des désabonnements ont été mise à jour avec succès."
+
 #, php-format
 msgid "The value '%s' doesn't exist for the list field '%s'."
 msgstr "La valeur '%s' n’existe pas pour le champ liste ‘%s’."
@@ -538,6 +544,9 @@ msgstr "Le service tracker est désactivé."
 msgid "Trackers"
 msgstr "Trackers"
 
+msgid "Unsubscribe a user"
+msgstr "Désabonner un utilisateur"
+
 msgid "Unsubscribers"
 msgstr "Désabonnés"
 
@@ -552,6 +561,9 @@ msgstr[1] "Les utilisateurs '%s' n'ont pas pu être ajoutés"
 
 msgid "User, group, email"
 msgstr "Utilisateur, groupe, email"
+
+msgid "User..."
+msgstr "Utilisateur..."
 
 msgid "Users having unsubscribed from the notifications"
 msgstr "Utilisateurs s'étant désabonné des notifications"
@@ -584,8 +596,8 @@ msgid ""
 "You are about to remove the user from the unsubscriber list. Please confirm "
 "your action."
 msgstr ""
-"Vous êtes sur le point de supprimer l'utilisateur de la liste des désabonnements."
-"Merci de confirmer votre action."
+"Vous êtes sur le point de supprimer l'utilisateur de la liste des "
+"désabonnements.Merci de confirmer votre action."
 
 msgid "You can choose the notification mode you wish for this tracker."
 msgstr ""

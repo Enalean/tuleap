@@ -129,9 +129,13 @@ class Tracker_NotificationsManager {
             $this->updateGlobalNotification($notification_id, $global_notification[$notification_id]);
         }
 
-        $unsubscribers = $request->get('remove_unsubscribers');
-        if ($unsubscribers !== false) {
-            $this->deleteUnsubscribers($unsubscribers);
+        $new_unsubscribers = $request->get('new_unsubscriber');
+        if ($new_unsubscribers !== false) {
+            $this->addUnsubscribers($new_unsubscribers);
+        }
+        $remove_unsubscribers = $request->get('remove_unsubscribers');
+        if ($remove_unsubscribers !== false) {
+            $this->deleteUnsubscribers($remove_unsubscribers);
         }
     }
 
@@ -194,11 +198,39 @@ class Tracker_NotificationsManager {
         }
     }
 
+    private function addUnsubscribers($new_unsubcribers)
+    {
+        $invalid_entries = new InvalidEntryInAutocompleterCollection();
+        $autocompleter   = $this->getAutocompleter($new_unsubcribers, $invalid_entries);
+        $invalid_entries->generateWarningMessageForInvalidEntries();
+
+        $users_to_add_as_unsubcribers = $autocompleter->getUsers();
+        if (empty($users_to_add_as_unsubcribers)) {
+            return;
+        }
+
+        foreach ($users_to_add_as_unsubcribers as $new_unsubcriber) {
+            $this->user_notification_settings_dao->enableNoNotificationAtAllMode(
+                $new_unsubcriber->getId(),
+                $this->tracker->getId()
+            );
+        }
+
+        $GLOBALS['Response']->addFeedback(
+            Feedback::INFO,
+            dgettext('tuleap-tracker', 'The unsubscribe list has been successfully updated.')
+        );
+    }
+
     private function deleteUnsubscribers(array $unsubscribers)
     {
         foreach ($unsubscribers as $user_id => $value) {
             $this->user_notification_settings_dao->enableNoGlobalNotificationMode($user_id, $this->tracker->getId());
         }
+        $GLOBALS['Response']->addFeedback(
+            Feedback::INFO,
+            dgettext('tuleap-tracker', 'The unsubscribe list has been successfully updated.')
+        );
     }
 
     private function displayAdminNotifications(CSRFSynchronizerToken $csrf_token)

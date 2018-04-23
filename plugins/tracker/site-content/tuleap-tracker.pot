@@ -139,6 +139,9 @@ msgstr ""
 msgid "No notifications at all"
 msgstr ""
 
+msgid "No users have unsubscribed."
+msgstr ""
+
 msgid "Notification successfully deleted."
 msgstr ""
 
@@ -429,6 +432,9 @@ msgstr ""
 msgid "The tracker hierarchy cannot be defined."
 msgstr ""
 
+msgid "The unsubscribe list has been successfully updated."
+msgstr ""
+
 #, php-format
 msgid "The value '%s' doesn't exist for the list field '%s'."
 msgstr ""
@@ -455,6 +461,9 @@ msgstr ""
 msgid "Trackers"
 msgstr ""
 
+msgid "Unsubscribe a user"
+msgstr ""
+
 msgid "Unsubscribers"
 msgstr ""
 
@@ -468,6 +477,9 @@ msgstr[0] ""
 msgstr[1] ""
 
 msgid "User, group, email"
+msgstr ""
+
+msgid "User..."
 msgstr ""
 
 msgid "Users having unsubscribed from the notifications"

@@ -3283,7 +3283,7 @@ select[name='add_notempty_condition[]'] {
     border-left: none;
 }
 
-input.tracker-global-notification-email {
+input.tracker-global-notification-email, input.tracker-unsubscriber {
     width: 100%;
     box-sizing: border-box;
     height: 30px;
@@ -3346,8 +3346,14 @@ td.tracker-global-notifications-checkbox-cell {
 
 .tracker-global-notifications-add-hidden,
 .tracker-global-notifications-row-add-hidden,
-.tracker-global-notifications-checkbox-cell-hidden {
+.tracker-global-notifications-checkbox-cell-hidden,
+.tracker-unsubcriber-add-hidden,
+.tracker-unsubscriber-row-add-hidden {
     display: none;
+}
+
+#tracker-unsubscriber-select {
+    width: 100%;
 }
 
 .tracker-admin-notification-table td {
