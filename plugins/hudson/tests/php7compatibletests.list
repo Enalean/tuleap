@@ -1,1 +1,4 @@
+/usr/share/tuleap/plugins/hudson/tests/HudsonTestResultTest.php
 /usr/share/tuleap/plugins/hudson/tests/SVNPathsUpdaterTest.php
+/usr/share/tuleap/plugins/hudson/tests/HudsonJobTest.php
+/usr/share/tuleap/plugins/hudson/tests/HudsonBuildTest.php
