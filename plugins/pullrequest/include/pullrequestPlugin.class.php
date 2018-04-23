@@ -127,13 +127,6 @@ class pullrequestPlugin extends Plugin
     public function javascript_file()
     {
         if ($this->isAPullrequestRequest()) {
-            $include_asset_core = new IncludeAssets(
-                ForgeConfig::get('tuleap_dir').'/src/www/assets',
-                '/assets'
-            );
-
-            echo $include_asset_core->getHTMLSnippet('labels-box.js');
-
             $include_asset_pullrequest = new IncludeAssets(
                 PULLREQUEST_BASE_DIR . '/www/assets',
                 $this->getPluginPath() . '/assets'

@@ -1,13 +1,13 @@
+import { create } from 'labels-box';
+
 export default LabelsController;
 
 LabelsController.$inject = [
-    '$window',
     '$element',
     'SharedPropertiesService'
 ];
 
 function LabelsController(
-    $window,
     $element,
     SharedPropertiesService
 ) {
@@ -33,7 +33,7 @@ function LabelsController(
     }
 
     function createLabelsBox(pull_request_id, project_id, user_can_update_labels) {
-        $window.LabelsBox.create(
+        create(
             $element[0],
             '/api/v1/pull_requests/' + pull_request_id + '/labels',
             '/api/v1/projects/' + project_id + '/labels',

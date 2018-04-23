@@ -1,5 +1,4 @@
 import { get, patch } from 'tlp-fetch';
-import { sanitize }   from 'dompurify';
 import jQuery         from 'jquery';
 
 export async function create(container, labels_endpoint, available_labels_endpoint, is_update_allowed) {

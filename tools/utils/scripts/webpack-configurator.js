@@ -19,8 +19,9 @@
 
 const webpack = require('webpack');
 const WebpackAssetsManifest = require('webpack-assets-manifest');
-const rule_configurations = require('./webpack-rule-configs.js');
 const { VueLoaderPlugin } = require('vue-loader');
+const rule_configurations = require('./webpack-rule-configs.js');
+const aliases = require('./webpack-aliases.js');
 
 function getManifestPlugin() {
     return new WebpackAssetsManifest({
@@ -52,6 +53,6 @@ const configurator = {
     getVueLoaderPlugin,
     configureOutput
 };
-Object.assign(configurator, rule_configurations);
+Object.assign(configurator, rule_configurations, aliases);
 
 module.exports = configurator;

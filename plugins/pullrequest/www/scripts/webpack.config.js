@@ -11,17 +11,23 @@ const webpack_config = {
     },
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path),
+    externals: {
+        jquery: 'jQuery'
+    },
     resolve: {
         modules: ['node_modules', 'bower_components'],
-        alias: {
-            'tuleap-pullrequest-module': path.resolve(
-                __dirname,
-                './src/app/app.js'
-            ),
-            'angular-ui-bootstrap-templates':
-                'angular-ui-bootstrap-bower/ui-bootstrap-tpls.js',
-            'angular-ui-select': 'ui-select/dist/select.js'
-        }
+        alias: webpack_configurator.extendAliases(
+            {
+                'tuleap-pullrequest-module': path.resolve(
+                    __dirname,
+                    './src/app/app.js'
+                ),
+                'angular-ui-bootstrap-templates':
+                    'angular-ui-bootstrap-bower/ui-bootstrap-tpls.js',
+                'angular-ui-select': 'ui-select/dist/select.js'
+            },
+            webpack_configurator.flaming_parrot_labels_box_aliases
+        )
     },
     module: {
         rules: [
