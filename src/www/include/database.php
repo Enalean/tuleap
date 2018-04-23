@@ -250,25 +250,6 @@ function db_ei_implode($val) {
 
 /**
  * @deprecated
- */
-function db_begin(){
-	echo "db_begin()\n";
-}
-/**
- * @deprecated
- */
-function db_commit(){
-	echo "db_commit()\n";
-}
-/**
- * @deprecated
- */
-function db_rollback(){
-	echo "db_rollback()\n";
-}
-
-/**
- * @deprecated
  * @return bool
  */
 function db_select($database_name) {
