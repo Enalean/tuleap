@@ -14,6 +14,9 @@
 <div id="siteadmin-user">
     <div id="siteadmin-user-details">
         <form action="" method="POST" class="tlp-pane" >
+            {{# csrf_token }}
+                {{> csrf_token_input }}
+            {{/ csrf_token }}
             <input type="hidden" name="action" value="update_user">
             <input type="hidden" name="user_id" value="{{ id }}">
 

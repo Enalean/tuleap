@@ -78,9 +78,11 @@ if ($request->valid($vAction)) {
     $action = '';
 }
 
-$password_csrf = new CSRFSynchronizerToken('/admin/usergroup.php?user_id='.$user->getId());
+$user_administration_csrf = new CSRFSynchronizerToken('/admin/usergroup.php?user_id='.$user->getId());
 
 if ($request->isPost()) {
+    $user_administration_csrf->check();
+
     if ($action == 'update_user') {
         /*
          * Update the user
@@ -246,8 +248,6 @@ if ($request->isPost()) {
             $GLOBALS['Response']->redirect('/admin/usergroup.php?user_id='.$user->getId());
         }
 
-        $password_csrf->check();
-
         $user = $user_manager->getUserById($request->get('user_id'));
 
         if ($user === null) {
@@ -314,10 +314,11 @@ $siteadmin->renderAPresenter(
         new UserDetailsAccessPresenter($user, $um->getUserAccessInfo($user)),
         new UserChangePasswordPresenter(
             $user,
-            $password_csrf,
+            $user_administration_csrf,
             $additional_password_messages,
             $passwords_validators
         ),
+        $user_administration_csrf,
         $additional_details,
         $details_formatter->getMore($user),
         $details_formatter->getShells($user),
