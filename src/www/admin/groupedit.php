@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright 1999-2000 (c) The SourceForge Crew
- * Copyright (c) Enalean, 2016 - 2017. All rights reserved
+ * Copyright (c) Enalean, 2016 - 2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -40,7 +40,10 @@ if (!$group || $group->isError()) {
     $GLOBALS['Response']->redirect('/admin');
 }
 
+$csrf_token = new CSRFSynchronizerToken('/admin/groupedit.php?group_id='.urlencode($group_id));
+
 if ($request->exist('update')) {
+    $csrf_token->check();
     $new_name = $request->get('new_name');
     if ($new_name && $new_name !== $group->getUnixNameMixedCase()) {
         if (SystemEventManager::instance()->canRenameProject($group)) {
@@ -111,5 +114,5 @@ $renderer->renderANoFramedPresenter(
     $Language->getText('admin_groupedit', 'title'),
     ForgeConfig::get('codendi_dir') . '/src/templates/admin/projects/',
     'project-info',
-    new ProjectDetailsPresenter($group, $all_custom_fields, new ProjectAccessPresenter($group->getAccess()))
+    new ProjectDetailsPresenter($group, $all_custom_fields, new ProjectAccessPresenter($group->getAccess()), $csrf_token)
 );

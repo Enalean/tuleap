@@ -14,6 +14,9 @@
         <div id="siteadmin-project-information-details">
             <section class="tlp-pane">
                 <form action="?" method="POST" class="tlp-pane-container">
+                    {{# csrf_token }}
+                        {{> csrf_token_input }}
+                    {{/ csrf_token }}
                     <input type="hidden" name="group_id" value="{{ id }}">
                     <div class="tlp-pane-header">
                         <h1 class="tlp-pane-title">

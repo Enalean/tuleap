@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All rights reserved
+ * Copyright (c) Enalean, 2016 - 2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -72,9 +72,17 @@ class ProjectDetailsPresenter
      * @var ProjectAccessPresenter
      */
     public $access_presenter;
+    /**
+     * @var \CSRFSynchronizerToken
+     */
+    public $csrf_token;
 
-    public function __construct(Project $project, $all_custom_fields, ProjectAccessPresenter $access_presenter)
-    {
+    public function __construct(
+        Project $project,
+        $all_custom_fields,
+        ProjectAccessPresenter $access_presenter,
+        \CSRFSynchronizerToken $csrf_token
+    ) {
         $this->id          = $project->getID();
         $this->public_name = $project->getUnconvertedPublicName();
         $this->unix_name   = $project->getUnixNameMixedCase();
@@ -122,6 +130,7 @@ class ProjectDetailsPresenter
         $this->send_email_label      = $GLOBALS['Language']->getText('admin_project', 'send_email_label');
         $this->instructions_desc     = $GLOBALS['Language']->getText('admin_project', 'instructions_desc');
         $this->access_presenter      = $access_presenter;
+        $this->csrf_token            = $csrf_token;
     }
 
     private function getTypes(Project $project)
