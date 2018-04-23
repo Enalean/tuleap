@@ -11,13 +11,6 @@ require_once('common/collection/Collection.class.php');
  * Test the class Map
  */
 class MapTest extends TuleapTestCase {
-    /**
-     * Constructor of the test. Can be ommitted.
-     * Usefull to set the name of the test
-     */
-    function MapTest($name = 'Map test') {
-        $this->UnitTestCase($name);
-    }
 
     function testEmptyMap() {
         $m =& new Map();

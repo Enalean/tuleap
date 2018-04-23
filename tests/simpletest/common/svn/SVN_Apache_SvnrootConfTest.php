@@ -28,7 +28,7 @@ class SVN_Apache_SvnrootConfTestEventManager extends EventManager {
 
 require_once 'common/svn/SVN_Apache_SvnrootConf.class.php';
 
-mock::generate('EventManager');
+Mock::generate('EventManager');
 
 class SVN_Apache_SvnrootConfTest extends TuleapTestCase {
 

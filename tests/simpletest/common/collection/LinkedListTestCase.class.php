@@ -9,8 +9,8 @@ require_once('CollectionTestCase.class.php');
  */
 class LinkedListTestCase extends CollectionTestCase {
     
-    function LinkedListTestCase($name = 'Collection test', $collection_class_name = 'you_must_define_classname') {
-        $this->CollectionTestCase($name, $collection_class_name);
+    function __construct($name = 'Collection test', $collection_class_name = 'you_must_define_classname') {
+        parent::__construct($name, $collection_class_name);
     }
     
     function testOrder() {
@@ -46,6 +46,6 @@ class LinkedListTestCase extends CollectionTestCase {
 
 }
 //We just tells SimpleTest to always ignore this testcase
-SimpleTestOptions::ignore('LinkedListTestCase');
+SimpleTest::ignore('LinkedListTestCase');
 
 ?>

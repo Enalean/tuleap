@@ -29,7 +29,8 @@ class SVN_Svnlook_getDirectoryListingTest extends TuleapTestCase {
         parent::__construct();
         $this->svn_prefix = $this->tempdir();
         $project_name = 'svnrepo';
-        $this->project = stub('Project')->getSVNRootPath()->returns($this->svn_prefix . '/' . $project_name);
+        $this->project = \Mockery::spy(Project::class);
+        stub($this->project)->getSVNRootPath()->returns($this->svn_prefix . '/' . $project_name);
         $this->svnrepo = $this->svn_prefix . '/' . $project_name;
         exec("svnadmin create $this->svnrepo");
         exec("svn mkdir --username donald_duck --parents -m 'this is 1.0' file://$this->svnrepo/tags/1.0");

@@ -26,10 +26,12 @@ class PreCommitSHA1CollisionTest extends \TuleapTestCase
 {
     public function itAcceptsCommitThatDoesNotContainSHA1Collision()
     {
-        $svnlook                 = mock('SVN_Svnlook');
-        $sha1_collision_detector = mock('Tuleap\\Svn\\SHA1CollisionDetector');
+        $svn_hook                = \Mockery::spy(\SVN_Hooks::class)->shouldAllowMockingProtectedMethods();
+        $svn_hook->shouldReceive('getProjectFromRepositoryPath')->andReturns(aMockProject()->build());
+        $svnlook                 = \Mockery::spy(\SVN_Svnlook::class);
+        $sha1_collision_detector = \Mockery::spy(\Tuleap\Svn\SHA1CollisionDetector::class);
         $pre_commit_hook         = new SVN_Hook_PreCommit(
-            mock('SVN_Hooks'),
+            $svn_hook,
             mock('SVN_CommitMessageValidator'),
             $svnlook,
             mock('SVN_Immutable_Tags_Handler'),
@@ -39,18 +41,19 @@ class PreCommitSHA1CollisionTest extends \TuleapTestCase
 
         stub($svnlook)->getTransactionPath()->returns(array('D   trunk/f1', 'A   trunk/f2'));
         stub($svnlook)->getContent()->returns(popen('', 'rb'));
-        stub($sha1_collision_detector)->isColliding()->returns(false);
 
-        $sha1_collision_detector->expectOnce('isColliding');
+        $sha1_collision_detector->shouldReceive('isColliding')->once()->andReturns(false);
         $pre_commit_hook->assertCommitDoesNotContainSHA1Collision('', '');
     }
 
     public function itRejectsCommitContainingSHA1Collision()
     {
-        $svnlook                 = mock('SVN_Svnlook');
-        $sha1_collision_detector = mock('Tuleap\\Svn\\SHA1CollisionDetector');
+        $svn_hook                = \Mockery::spy(\SVN_Hooks::class)->shouldAllowMockingProtectedMethods();
+        $svn_hook->shouldReceive('getProjectFromRepositoryPath')->andReturns(aMockProject()->build());
+        $svnlook                 = \Mockery::spy(\SVN_Svnlook::class);
+        $sha1_collision_detector = \Mockery::spy(\Tuleap\Svn\SHA1CollisionDetector::class);
         $pre_commit_hook         = new SVN_Hook_PreCommit(
-            mock('SVN_Hooks'),
+            $svn_hook,
             mock('SVN_CommitMessageValidator'),
             $svnlook,
             mock('SVN_Immutable_Tags_Handler'),

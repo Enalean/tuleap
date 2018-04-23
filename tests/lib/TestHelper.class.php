@@ -19,9 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'common/dao/include/DataAccessResult.class.php';
-
-Mock::generate('DataAccessResult');
+require_once __DIR__.'/../../src/common/dao/include/DataAccessResult.class.php';
 
 /**
  * Various tools to assist test in her duty
@@ -59,19 +57,12 @@ class TestHelper {
     }
     
     public static function errorDar() {
-        $dar = new MockDataAccessResult();
-        $dar->setReturnValue('valid',    false);
-        $dar->setReturnValue('current',  false);
-        $dar->setReturnValue('rowCount', 0);
-        $dar->setReturnValue('isError',  true);
-        $dar->setReturnValue('getRow',   false);
-        return $dar;
+        return new ErrorDataAccessResult();
     }
 }
 
 class FakeDataAccessResult extends DataAccessResult {
     private $data;
-    
 
     public function __construct(array $data) {
         $this->data = $data;
@@ -97,5 +88,37 @@ class FakeDataAccessResult extends DataAccessResult {
     }
 
     public function freeMemory() {
+    }
+}
+
+class ErrorDataAccessResult extends DataAccessResult
+{
+    public function __construct()
+    {
+    }
+
+    public function valid()
+    {
+        return false;
+    }
+
+    public function current()
+    {
+        return false;
+    }
+
+    public function rowCount()
+    {
+        return 0;
+    }
+
+    public function isError()
+    {
+        return true;
+    }
+
+    public function getRow()
+    {
+        return false;
     }
 }

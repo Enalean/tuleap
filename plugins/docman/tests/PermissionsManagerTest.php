@@ -83,7 +83,7 @@ class Docman_PermissionsManagerTest extends TuleapTestCase {
         $this->docmanPm->setReturnValue('_isUserDocmanAdmin', false);
         // user is not super admin
         $this->user->setReturnValue('isSuperUser', false);
-        $this->user->setReturnValue('getUgroups', 'test');
+        $this->user->setReturnValue('getUgroups', ['test']);
 
         $itemId = 1515;
 
@@ -92,7 +92,7 @@ class Docman_PermissionsManagerTest extends TuleapTestCase {
         //
 
         $pm = new MockPermissionsManager($this);
-        $pm->setReturnValue('userHasPermission', true, array($itemId, 'PLUGIN_DOCMAN_MANAGE', 'test'));
+        $pm->setReturnValue('userHasPermission', true, array($itemId, 'PLUGIN_DOCMAN_MANAGE', ['test']));
         $this->docmanPm->setReturnReference('_getPermissionManagerInstance', $pm);
 
         $this->assertTrue($this->docmanPm->userCanManage($this->user, $itemId));
@@ -114,7 +114,7 @@ class Docman_PermissionsManagerTest extends TuleapTestCase {
         // user is not super admin
         $this->user->setReturnValue('isSuperUser', false);
 
-        $this->user->setReturnValue('getUgroups', 'test');
+        $this->user->setReturnValue('getUgroups', ['test']);
 
         $itemId = 1515;
 
@@ -123,7 +123,7 @@ class Docman_PermissionsManagerTest extends TuleapTestCase {
         //
 
         $pm = new MockPermissionsManager($this);
-        $pm->setReturnValue('userHasPermission', true, array($itemId, 'PLUGIN_DOCMAN_WRITE', 'test'));
+        $pm->setReturnValue('userHasPermission', true, array($itemId, 'PLUGIN_DOCMAN_WRITE', ['test']));
         $this->docmanPm->setReturnReference('_getPermissionManagerInstance', $pm);
 
         $this->assertFalse($this->docmanPm->userCanManage($this->user, $itemId));
@@ -144,7 +144,7 @@ class Docman_PermissionsManagerTest extends TuleapTestCase {
         // user is not super admin
         $this->user->setReturnValue('isSuperUser', false);
 
-        $this->user->setReturnValue('getUgroups', 'test');
+        $this->user->setReturnValue('getUgroups', ['test']);
 
         $itemId = 1515;
 
@@ -153,7 +153,7 @@ class Docman_PermissionsManagerTest extends TuleapTestCase {
         //
 
         $pm = new MockPermissionsManager($this);
-        $pm->setReturnValue('userHasPermission', true, array($itemId, 'PLUGIN_DOCMAN_READ', 'test'));
+        $pm->setReturnValue('userHasPermission', true, array($itemId, 'PLUGIN_DOCMAN_READ', ['test']));
         $this->docmanPm->setReturnReference('_getPermissionManagerInstance', $pm);
 
         $this->assertFalse($this->docmanPm->userCanManage($this->user, $itemId));
@@ -169,7 +169,7 @@ class Docman_PermissionsManagerTest extends TuleapTestCase {
         // user is not super admin
         $this->user->setReturnValue('isSuperUser', false);
 
-        $this->user->setReturnValue('getUgroups', 'test');
+        $this->user->setReturnValue('getUgroups', ['test']);
 
         $itemId = 1515;
 
@@ -195,13 +195,13 @@ class Docman_PermissionsManagerTest extends TuleapTestCase {
         // user is not super admin
         $this->user->setReturnValue('isSuperUser', false);
 
-        $this->user->setReturnValue('getUgroups', 'test');
+        $this->user->setReturnValue('getUgroups', ['test']);
 
         $itemId = 1515;
 
         // User has write permission
         $pm = new MockPermissionsManager($this);
-        $pm->setReturnValue('userHasPermission', true, array($itemId, 'PLUGIN_DOCMAN_WRITE', 'test'));
+        $pm->setReturnValue('userHasPermission', true, array($itemId, 'PLUGIN_DOCMAN_WRITE', ['test']));
         $this->docmanPm->setReturnReference('_getPermissionManagerInstance', $pm);
 
         $this->assertTrue($this->docmanPm->userCanRead($this->user, $itemId));
@@ -216,7 +216,7 @@ class Docman_PermissionsManagerTest extends TuleapTestCase {
         // user is not super admin
         $this->user->setReturnValue('isSuperUser', false);
 
-        $this->user->setReturnValue('getUgroups', 'test');
+        $this->user->setReturnValue('getUgroups', ['test']);
 
         $itemId = 1515;
 
@@ -227,9 +227,9 @@ class Docman_PermissionsManagerTest extends TuleapTestCase {
         $pm = new MockPermissionsManager($this);
         $pm->setReturnValue('userHasPermission', false);
         $pm->expectCallCount('userHasPermission', 3);
-        $pm->expectAt(0, 'userHasPermission', array($itemId, 'PLUGIN_DOCMAN_READ', 'test'));
-        $pm->expectAt(1, 'userHasPermission', array($itemId, 'PLUGIN_DOCMAN_WRITE', 'test'));
-        $pm->expectAt(2, 'userHasPermission', array($itemId, 'PLUGIN_DOCMAN_MANAGE', 'test'));
+        $pm->expectAt(0, 'userHasPermission', array($itemId, 'PLUGIN_DOCMAN_READ', ['test']));
+        $pm->expectAt(1, 'userHasPermission', array($itemId, 'PLUGIN_DOCMAN_WRITE', ['test']));
+        $pm->expectAt(2, 'userHasPermission', array($itemId, 'PLUGIN_DOCMAN_MANAGE', ['test']));
 
         $this->docmanPm->setReturnReference('_getPermissionManagerInstance', $pm);
 
@@ -243,7 +243,7 @@ class Docman_PermissionsManagerTest extends TuleapTestCase {
         // user is not super admin
         $this->user->setReturnValue('isSuperUser', false);
 
-        $this->user->setReturnValue('getUgroups', 'test');
+        $this->user->setReturnValue('getUgroups', ['test']);
 
         $itemId = 1515;
 
@@ -254,8 +254,8 @@ class Docman_PermissionsManagerTest extends TuleapTestCase {
         $pm = new MockPermissionsManager($this);
         $pm->setReturnValue('userHasPermission', false);
         $pm->expectCallCount('userHasPermission', 2);
-        $pm->expectAt(0, 'userHasPermission', array($itemId, 'PLUGIN_DOCMAN_WRITE', 'test'));
-        $pm->expectAt(1, 'userHasPermission', array($itemId, 'PLUGIN_DOCMAN_MANAGE', 'test'));
+        $pm->expectAt(0, 'userHasPermission', array($itemId, 'PLUGIN_DOCMAN_WRITE', ['test']));
+        $pm->expectAt(1, 'userHasPermission', array($itemId, 'PLUGIN_DOCMAN_MANAGE', ['test']));
 
         $this->docmanPm->setReturnReference('_getPermissionManagerInstance', $pm);
 
@@ -269,7 +269,7 @@ class Docman_PermissionsManagerTest extends TuleapTestCase {
         // user is not super admin
         $this->user->setReturnValue('isSuperUser', false);
 
-        $this->user->setReturnValue('getUgroups', 'test');
+        $this->user->setReturnValue('getUgroups', ['test']);
 
         $itemId = 1515;
 
@@ -280,7 +280,7 @@ class Docman_PermissionsManagerTest extends TuleapTestCase {
         $pm = new MockPermissionsManager($this);
         $pm->setReturnValue('userHasPermission', false);
         $pm->expectCallCount('userHasPermission', 1);
-        $pm->expectAt(0, 'userHasPermission', array($itemId, 'PLUGIN_DOCMAN_MANAGE', 'test'));
+        $pm->expectAt(0, 'userHasPermission', array($itemId, 'PLUGIN_DOCMAN_MANAGE', ['test']));
 
         $this->docmanPm->setReturnReference('_getPermissionManagerInstance', $pm);
 
@@ -294,6 +294,7 @@ class Docman_PermissionsManagerTest extends TuleapTestCase {
         $this->docmanPm->setReturnValue('_isUserDocmanAdmin', false);
         // user is not super admin
         $this->user->setReturnValue('isSuperUser', false);
+        $this->user->setReturnValue('getUgroups', []);
 
         $this->docmanPm->setReturnReference('_getPermissionManagerInstance', $this->refOnNull);
 
@@ -344,6 +345,7 @@ class Docman_PermissionsManagerTest extends TuleapTestCase {
         $this->docmanPm->setReturnValue('_isUserDocmanAdmin', false);
         // user is not super admin
         $this->user->setReturnValue('isSuperUser', false);
+        $this->user->setReturnValue('getUgroups', []);
 
         $this->docmanPm->setReturnReference('_getPermissionManagerInstance', $this->refOnNull);
 
@@ -393,6 +395,7 @@ class Docman_PermissionsManagerTest extends TuleapTestCase {
         $this->docmanPm->setReturnValue('_isUserDocmanAdmin', false);
         // user is not super admin
         $this->user->setReturnValue('isSuperUser', false);
+        $this->user->setReturnValue('getUgroups', []);
 
         $this->docmanPm->setReturnReference('_getPermissionManagerInstance', $this->refOnNull);
 
@@ -515,12 +518,12 @@ class Docman_PermissionsManagerTest extends TuleapTestCase {
     function testSetUserCanWriteAfterCanRead() {
         $this->docmanPm->setReturnValue('_isUserDocmanAdmin', false);
         $this->user->setReturnValue('isSuperUser', false);
-        $this->user->setReturnValue('getUgroups', 'test');
+        $this->user->setReturnValue('getUgroups', ['test']);
 
         $itemId = 1515;
 
         $pm = new MockPermissionsManager($this);
-        $pm->setReturnValue('userHasPermission', true, array($itemId, 'PLUGIN_DOCMAN_WRITE', 'test'));
+        $pm->setReturnValue('userHasPermission', true, array($itemId, 'PLUGIN_DOCMAN_WRITE', ['test']));
         $this->docmanPm->setReturnReference('_getPermissionManagerInstance', $pm);
 
         $this->docmanPm->_setCanRead($this->user->getId(), $itemId, true);
@@ -532,12 +535,12 @@ class Docman_PermissionsManagerTest extends TuleapTestCase {
     function testSetUserCanManageAfterCanRead() {
         $this->docmanPm->setReturnValue('_isUserDocmanAdmin', false);
         $this->user->setReturnValue('isSuperUser', false);
-        $this->user->setReturnValue('getUgroups', 'test');
+        $this->user->setReturnValue('getUgroups', ['test']);
 
         $itemId = 1515;
 
         $pm = new MockPermissionsManager($this);
-        $pm->setReturnValue('userHasPermission', true, array($itemId, 'PLUGIN_DOCMAN_MANAGE', 'test'));
+        $pm->setReturnValue('userHasPermission', true, array($itemId, 'PLUGIN_DOCMAN_MANAGE', ['test']));
         $this->docmanPm->setReturnReference('_getPermissionManagerInstance', $pm);
 
         $this->docmanPm->_setCanRead($this->user->getId(), $itemId, true);

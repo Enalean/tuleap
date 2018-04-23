@@ -71,8 +71,6 @@ class SVN_SOAPServer_GetSvnPathWithLogDetails_Test extends SVN_SOAPServerBaseTes
     public function itDoesNotThrowSoapFaultIfRepositoryIsEmpty() {
         $svn_soap = new SVN_SOAPServer($this->soap_request_valid, $this->svn_repository_listing);
         $svn_soap->getSvnPathsWithLogDetails($this->session_key, $this->group_id, $this->svn_path, $this->order);
-
-        $this->assertNoErrors();
     }
 }
 ?>

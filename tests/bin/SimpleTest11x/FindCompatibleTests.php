@@ -49,7 +49,7 @@ class FindCompatibleTests
         foreach ($this->collectFiles($dirname) as $file) {
             $output       = [];
             $return_value = null;
-            exec('/opt/rh/rh-php70/root/usr/bin/php /tuleap/tests/bin/php7-run.php blind-exec '.$file->getPathname().' 2>&1 >/dev/null', $output, $return_value);
+            exec('/opt/rh/rh-php70/root/usr/bin/php /tuleap/tests/bin/simpletest11x.php --quiet run '.$file->getPathname().' 2>&1 >/dev/null', $output, $return_value);
             if ($return_value == '0') {
                 $compatible_files[] = realpath($file->getPathname());
             }
@@ -60,7 +60,7 @@ class FindCompatibleTests
         }
     }
 
-    private function collectFiles(string $path)
+    private function collectFiles($path)
     {
         $rii = new FilterTestCase(
             new RecursiveIteratorIterator(
