@@ -7,5 +7,6 @@
     "screenshotsFolder": "/output/screenshots",
     "videosFolder": "/output/videos",
     "videoRecording": false,
-    "pluginsFile": false
+    "pluginsFile": false,
+    "pageLoadTimeout": 120000
 }
