@@ -210,6 +210,28 @@ class CrossTrackerTestExpertQueryTest extends RestBase
         ]);
     }
 
+    public function testAssignedToNotEmpty()
+    {
+        $params = [
+            "trackers_id"  => [ $this->epic_tracker_id ],
+            "expert_query" => ' @assigned_to = "rest_api_tester_1"'
+        ];
+
+        $response = $this->getResponse($this->client->put('cross_tracker_reports/1', null, $params));
+        $this->assertEquals($response->getStatusCode(), 201);
+
+        $cross_tracker_report = $response->json();
+
+        $this->assertEquals(
+            $cross_tracker_report["expert_query"],
+            '@assigned_to = "rest_api_tester_1"'
+        );
+
+        $this->getMatchingEpicArtifactByIds([
+            $this->epic_artifact_ids[3]
+        ]);
+    }
+
     private function getMatchingArtifactsFromJson()
     {
         $response = $this->getResponse($this->client->get('cross_tracker_reports/1/content?limit=50&offset=0'));
