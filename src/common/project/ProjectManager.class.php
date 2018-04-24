@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -280,7 +280,7 @@ class ProjectManager {
         }
         else {
             // Give it a try with only the given name
-            $dar = $dao->searchByUnixGroupName($name);
+            $dar = $dao->searchByCaseInsensitiveUnixGroupName($name);
         }
 
         if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
