@@ -132,6 +132,9 @@ msgstr "Configurer les trackers"
 msgid "Confirm deletion"
 msgstr "Confirmer la suppression"
 
+msgid "Default tracker notifications"
+msgstr "Notifications par défaut de l'outil de suivi"
+
 msgid "Delete"
 msgstr "Supprimer"
 
@@ -164,9 +167,6 @@ msgstr "Limite mise à jour avec succès."
 
 msgid "No element selected."
 msgstr "Aucun élément sélectionné."
-
-msgid "No global notifications"
-msgstr "Pas de notification globale"
 
 msgid "No notification set"
 msgstr "Aucune notification n'a été définie"
