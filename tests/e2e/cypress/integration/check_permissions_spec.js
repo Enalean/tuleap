@@ -17,61 +17,44 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-describe("project admin page", () => {
-    it("should raise an error when user try to access to project admin page", () => {
+describe("Permissions", () => {
+    before(() => {
+        cy.clearCookie("__Host-TULEAP_session_hash");
         cy.projectMemberLogin();
+    });
 
+    beforeEach(() => {
+        Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
+    });
+
+    it("should raise an error when user try to access to project admin page", () => {
         cy.visit('/project/admin/?group_id=103');
 
         cy.get('[data-test=feedback]').contains('You do not have permission to view this page');
     });
-});
 
-describe("docman admin page", () => {
     it("should raise an error when user try to access to docman admin page", () => {
-        cy.projectMemberLogin();
-
         cy.visit('/plugins/docman/?group_id=103&action=admin');
 
         cy.get('[data-test=feedback]').contains('You do not have sufficient access rights to administrate the document manager.');
     });
-});
 
-describe("wiki admin page", () => {
     it("should raise an error when user try to access to wiki admin page", () => {
-        cy.projectMemberLogin();
-
         cy.visit('/wiki/admin/index.php?group_id=103&view=wikiPerms');
 
         cy.get('[data-test=feedback]').contains('You are not granted sufficient permission to perform this operation.');
     });
-});
 
-describe("SVN admin page", () => {
     it("should raise an error when user try to access to plugin SVN admin page", () => {
-        cy.projectMemberLogin();
-
         cy.visit('/plugins/svn/?group_id=103&action=admin-groups');
 
         cy.get('[data-test=feedback]').contains('Permission Denied');
     });
-});
 
-describe("files admin page", () => {
     it("should raise an error when user try to access to plugin files admin page", () => {
-        cy.projectMemberLogin();
-
         cy.visit('/file/admin/?group_id=103&action=edit-permissions');
 
         cy.get('[data-test=feedback]').contains('You are not granted sufficient permission to perform this operation.');
-    });
-});
-
-
-describe("Project members should never be able to access administrator pages", () => {
-
-    beforeEach(() => {
-        cy.projectMemberLogin();
     });
 
     it("should raise an error when user try to access to plugin Tracker admin page", () => {
