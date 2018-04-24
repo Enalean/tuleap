@@ -15,5 +15,8 @@ msgstr ""
 msgid "Remaining effort: %s"
 msgstr ""
 
+msgid "ddd DD"
+msgstr ""
+
 msgid "n/k"
 msgstr ""

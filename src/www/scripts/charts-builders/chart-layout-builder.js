@@ -17,21 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import moment                   from 'moment';
-import { sprintf }              from 'sprintf-js';
 import { select }               from 'd3-selection';
 import { axisLeft, axisBottom } from 'd3-axis';
-import { gettext_provider }     from './gettext-provider.js';
-import {
-    getBadgeProperties,
-    getElementsWidth,
-    getElementSpacing,
-    getYAxisTicksSize
-} from './chart-layout-service.js';
+import { getYAxisTicksSize }    from './chart-layout-service.js';
 
 export { buildChartLayout };
-
-const day_date_format = gettext_provider.gettext('ddd DD');
 
 function buildChartLayout(
     chart_container,
@@ -40,29 +30,16 @@ function buildChartLayout(
         graph_height,
         margins,
     },
-    scales,
-    legend_config,
-    badge_data
+    scales
 ) {
-    gettext_provider.setLocale(document.body.dataset.userLocale);
-
     const layout = drawSVG(chart_container, graph_width, graph_height);
     const axes   = initAxis(
         graph_width,
         margins,
         scales
     );
-    drawAxis(layout, axes, graph_height, margins);
 
-    if (legend_config) {
-        addLegend(
-            layout,
-            graph_width,
-            margins,
-            badge_data,
-            legend_config
-        );
-    }
+    drawAxis(layout, axes, graph_height, margins);
 
     return layout;
 }
@@ -113,7 +90,7 @@ function drawAxis(
 
     layout.append('g')
         .attr('class', 'chart-x-axis')
-        .attr('transform', `translate(0, ${y_position})`)
+        .attr('transform', `translate(0, ${ y_position })`)
         .call(x_axis);
 
     layout.append('g')
@@ -123,89 +100,4 @@ function drawAxis(
 
     layout.selectAll('.domain').remove();
     layout.selectAll('.chart-x-axis > .tick > line').remove();
-}
-
-function addLegend(
-    layout,
-    graph_width,
-    margins,
-    badge_data,
-    graph_legends
-) {
-    const legend_y_position = margins.top * 0.5;
-    const current_date      = moment(badge_data.date).format(day_date_format);
-    const badge_value       = badge_data.value;
-
-    const legend = layout.append('g')
-        .attr('class', 'chart-legend chart-text-grey');
-
-    const left_legend = legend.append('g')
-        .attr('class', 'legend-left');
-
-    left_legend.append('text')
-        .attr('y', legend_y_position)
-        .text(sprintf(graph_legends.title, current_date));
-
-    appendBadge(
-        left_legend,
-        badge_value,
-        legend_y_position
-    );
-
-    const right_legend = legend.append('g')
-        .attr('class', 'legend-right');
-
-    right_legend.selectAll('text')
-        .data(graph_legends.bullets)
-        .enter()
-            .append('g')
-            .attr('class', 'legend-item')
-                .append('text')
-                .attr('class', 'chart-curve-label')
-                .text(({ label }) => label);
-
-    const widths = getElementsWidth(right_legend.selectAll('.chart-curve-label'));
-
-    right_legend.selectAll('.legend-item')
-        .each(function(label, index) {
-            const previous_label_width = getElementSpacing(widths, index, 30, 20);
-
-            select(this)
-                .attr('transform', `translate(${previous_label_width}, 0)`);
-        });
-
-    right_legend.selectAll('circle')
-        .data(graph_legends.bullets)
-        .enter()
-            .append('circle')
-            .attr('class', ({ classname }) => classname)
-            .attr('cy', -4)
-            .attr('cx', ((data, index) => getElementSpacing(widths, index, 30, 10)))
-            .attr('r', 5);
-
-    const right_legend_length = graph_width - right_legend.node().getBBox().width - margins.right;
-
-    right_legend.attr('transform', `translate(${ right_legend_length }, ${ legend_y_position })`);
-}
-
-function appendBadge(container, badge_value, legend_y_position) {
-    const { width } = container.node().getBBox();
-    const badge     = container.append('g')
-        .attr('transform', `translate(${ width + 10 }, ${ legend_y_position })`)
-        .attr('class', 'chart-badge');
-
-    badge.append('text')
-        .attr('id', 'chart-badge-value')
-        .attr('x', 10)
-        .text(badge_value);
-
-    const badge_props = getBadgeProperties(badge.select('#chart-badge-value'), 10, 2);
-
-    badge.append('rect')
-        .attr('width', badge_props.width)
-        .attr('height', badge_props.height)
-        .attr('y', badge_props.y)
-        .attr('x', badge_props.x)
-        .attr('rx', badge_props.height / 2)
-        .attr('ry', badge_props.height / 2);
 }

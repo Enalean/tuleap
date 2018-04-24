@@ -22,5 +22,8 @@ msgstr ""
 msgid "Total effort: %s"
 msgstr ""
 
+msgid "ddd DD"
+msgstr ""
+
 msgid "n/k"
 msgstr ""

@@ -36,9 +36,12 @@ document.addEventListener('DOMContentLoaded', () => {
     moment.locale(locale);
 
     const chart_props = {
-        graph_width        : container_width,
-        graph_height       : container_width / 1.33,
-        tooltip_date_format: gettext_provider.gettext('MM/DD'),
+        graph_width            : container_width,
+        graph_height           : container_width / 1.33,
+        tooltip_date_format    : gettext_provider.gettext('MM/DD'),
+        left_legend_title      : gettext_provider.gettext('%s - Team effort'),
+        left_legend_date_format: gettext_provider.gettext('ddd DD'),
+        legend_badge_default   : gettext_provider.gettext('n/k'),
         margins: {
             top   : 50,
             right : 80,
@@ -47,21 +50,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    const chart_legends = {
-        title  : gettext_provider.gettext('%s - Team effort'),
-        bullets: [
-            {
-                label: gettext_provider.gettext('Ideal burnup'),
-                classname: 'chart-plot-ideal-burnup'
-            }, {
-                label    : gettext_provider.gettext('Team effort'),
-                classname: 'chart-plot-team-effort'
-            }, {
-                label    : gettext_provider.gettext('Total effort'),
-                classname: 'chart-plot-total-effort'
-            }
-        ]
-    };
+    const chart_legends = [
+        {
+            label: gettext_provider.gettext('Ideal burnup'),
+            classname: 'chart-plot-ideal-burnup'
+        }, {
+            label    : gettext_provider.gettext('Team effort'),
+            classname: 'chart-plot-team-effort'
+        }, {
+            label    : gettext_provider.gettext('Total effort'),
+            classname: 'chart-plot-total-effort'
+        }
+    ];
 
     createBurnupChart({chart_container, chart_props, chart_legends, burnup_data});
 });
