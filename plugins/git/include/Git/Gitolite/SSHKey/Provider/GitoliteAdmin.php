@@ -26,7 +26,9 @@ use Tuleap\Git\Gitolite\SSHKey\Key;
 class GitoliteAdmin extends ArrayIterator implements IProvideKey
 {
     const GITOLITE_ADMIN_KEY_NAME = 'id_rsa_gl-adm';
-    const GITOLITE_ADMIN_KEY_PATH = '/home/codendiadm/.ssh/id_rsa_gl-adm.pub';
+    const GITOLITE_ADMIN_KEY_FILE = 'id_rsa_gl-adm.pub';
+    const EL6_HOME                = '/home/codendiadm';
+    const EL7_HOME                = '/var/lib/tuleap';
 
     public function __construct()
     {
@@ -40,11 +42,27 @@ class GitoliteAdmin extends ArrayIterator implements IProvideKey
      */
     private function getGitoliteAdminKey()
     {
-        $key = file_get_contents(self::GITOLITE_ADMIN_KEY_PATH);
+        $key = file_get_contents($this->getFile([self::EL7_HOME, self::EL6_HOME]));
         if ($key === false) {
             throw new AccessException('Could not read Gitolite admin key');
         }
 
         return new Key(self::GITOLITE_ADMIN_KEY_NAME, $key);
+    }
+
+    /**
+     * @param array $paths
+     * @return string
+     * @throws AccessException
+     */
+    private function getFile(array $paths)
+    {
+        foreach ($paths as $path) {
+            $file_path = $path . '/.ssh/' . self::GITOLITE_ADMIN_KEY_FILE;
+            if (is_file($file_path)) {
+                return $file_path;
+            }
+        }
+        throw new AccessException("No valid ".self::GITOLITE_ADMIN_KEY_FILE." found");
     }
 }
