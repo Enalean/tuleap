@@ -36,7 +36,7 @@ use UGroupDao;
 use UGroupManager;
 use UserManager;
 
-trait NotificationsSettingsControllerCommon
+trait NotificationsAdminSettingsControllerCommon
 {
     /**
      * @return \Tracker

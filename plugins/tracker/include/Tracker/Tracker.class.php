@@ -1282,7 +1282,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         if (UserManager::instance()->getCurrentUser()->isLoggedIn()) {
             $toolbar[] = array(
                     'title' => $GLOBALS['Language']->getText('plugin_tracker', 'notifications'),
-                    'url'   => TRACKER_BASE_URL.'/notifications/' . urlencode($this->id) . '/',
+                    'url'   => TRACKER_BASE_URL.'/notifications/my/' . urlencode($this->id) . '/',
             );
         }
         if ($this->userIsAdmin()) {

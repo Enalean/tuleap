@@ -24,20 +24,14 @@ use HTTPRequest;
 use TrackerFactory;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
-use UserManager;
+use Tuleap\Request\NotFoundException;
 
-class NotificationsSettingsUpdateController implements DispatchableWithRequest
+class NotificationsUserSettingsUpdateController implements DispatchableWithRequest
 {
-    use NotificationsSettingsControllerCommon;
-
     /**
      * @var TrackerFactory
      */
     private $tracker_factory;
-    /**
-     * @var UserManager
-     */
-    private $user_manager;
     /**
      * @var UserNotificationSettingsDAO
      */
@@ -45,37 +39,33 @@ class NotificationsSettingsUpdateController implements DispatchableWithRequest
 
     public function __construct(
         TrackerFactory $tracker_factory,
-        UserManager $user_manager,
         UserNotificationSettingsDAO $user_notification_settings_dao
     ) {
         $this->tracker_factory                = $tracker_factory;
-        $this->user_manager                   = $user_manager;
         $this->user_notification_settings_dao = $user_notification_settings_dao;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
-        $tracker      = $this->getTrackerFromTrackerID($this->tracker_factory, $variables['id']);
-        $current_user = $request->getCurrentUser();
-
-        $this->getCSRFToken($tracker)->check();
-
-        if ($tracker->userIsAdmin($current_user)) {
-            $this->processAdminUpdate($request, $tracker);
-        } else if ($current_user->isLoggedIn() && $tracker->userCanView($current_user)) {
-            $this->processRegularUserUpdate($request, $layout, $tracker, $current_user);
+        $tracker = $this->tracker_factory->getTrackerById($variables['id']);
+        if ($tracker === null) {
+            throw new NotFoundException(dgettext('tuleap-tracker', 'That tracker does not exist.'));
         }
 
-        $layout->redirect($this->getURL($tracker));
+        $current_uri = $request->getFromServer('REQUEST_URI');
+
+        (new \CSRFSynchronizerToken($current_uri))->check();
+
+        $current_user = $request->getCurrentUser();
+
+        if ($current_user->isLoggedIn() && $tracker->userCanView($current_user)) {
+            $this->processUpdate($request, $layout, $tracker, $current_user);
+        }
+
+        $layout->redirect($current_uri);
     }
 
-    private function processAdminUpdate(HTTPRequest $request, \Tracker $tracker)
-    {
-        $this->getDateReminderManager($tracker)->processReminderUpdate($request);
-        $this->getNotificationsManager($this->user_manager, $tracker)->processUpdate($request);
-    }
-
-    private function processRegularUserUpdate(HTTPRequest $request, BaseLayout $layout, \Tracker $tracker, \PFUser $user)
+    private function processUpdate(HTTPRequest $request, BaseLayout $layout, \Tracker $tracker, \PFUser $user)
     {
         switch ($request->get('notification-mode')) {
             case 'no-notification':

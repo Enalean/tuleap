@@ -54,8 +54,8 @@ use Tuleap\Tracker\Notifications\GlobalNotificationsAddressesBuilder;
 use Tuleap\Tracker\Notifications\GlobalNotificationSubscribersFilter;
 use Tuleap\Tracker\Notifications\NotificationListBuilder;
 use Tuleap\Tracker\Notifications\NotificationsForProjectMemberCleaner;
-use Tuleap\Tracker\Notifications\Settings\NotificationsSettingsDisplayController;
-use Tuleap\Tracker\Notifications\Settings\NotificationsSettingsUpdateController;
+use Tuleap\Tracker\Notifications\Settings\NotificationsAdminSettingsDisplayController;
+use Tuleap\Tracker\Notifications\Settings\NotificationsAdminSettingsUpdateController;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsDAO;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsRetriever;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyDao;
@@ -1589,19 +1589,31 @@ class trackerPlugin extends Plugin {
                 return new \Tuleap\Tracker\TrackerPluginDefaultController(new TrackerManager);
             });
             $r->get('/notifications/{id:\d+}/', function () {
-                return new  NotificationsSettingsDisplayController(
-                    TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR . '/notifications/'),
+                return new  NotificationsAdminSettingsDisplayController(
                     $this->getTrackerFactory(),
                     new TrackerManager,
-                    $this->getUserManager(),
-                    new UserNotificationSettingsRetriever(new Tracker_GlobalNotificationDao, new UnsubscribersNotificationDAO)
+                    $this->getUserManager()
 
                 );
             });
             $r->post('/notifications/{id:\d+}/', function () {
-                return new  NotificationsSettingsUpdateController(
+                return new  NotificationsAdminSettingsUpdateController(
                     $this->getTrackerFactory(),
-                    $this->getUserManager(),
+                    $this->getUserManager()
+                );
+            });
+            $r->get('/notifications/my/{id:\d+}/', function () {
+                return new  \Tuleap\Tracker\Notifications\Settings\NotificationsUserSettingsDisplayController(
+                    TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR . '/notifications/'),
+                    $this->getTrackerFactory(),
+                    new TrackerManager,
+                    new UserNotificationSettingsRetriever(new Tracker_GlobalNotificationDao, new UnsubscribersNotificationDAO)
+
+                );
+            });
+            $r->post('/notifications/my/{id:\d+}/', function () {
+                return new  \Tuleap\Tracker\Notifications\Settings\NotificationsUserSettingsUpdateController(
+                    $this->getTrackerFactory(),
                     new UserNotificationSettingsDAO
                 );
             });
