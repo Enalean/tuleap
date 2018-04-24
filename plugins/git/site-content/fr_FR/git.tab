@@ -542,7 +542,8 @@ plugin_git	history_regexp_template	Expression régulières $1 pour le projet $2.
 plugin_git	enabled	activées
 plugin_git	disabled	désactivées
 
-plugin_git	view_repo_ci_token	Jeton pour les outils d'intégration continues
+plugin_git	view_repo_ci_token	Jeton
+plugin_git	view_repo_ci_token_title	Jeton pour les outils d'intégration continues
 plugin_git	regenerate_ci_token	Regénérer le jeton
 plugin_git	no_ci_token	Aucun jeton défini
 plugin_git	ci_token_description	Ce jeton est utilisé pour authentifier les outils d'intégration continues comme Jenkins lors de l'utilisation des API de mise à jour des statuts de construction des branches et commits Git
