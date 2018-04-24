@@ -40,6 +40,10 @@ class UserDetailsPresenter
     public $account_details;
     public $current_projects;
     public $change_passwd;
+    /**
+     * @var \CSRFSynchronizerToken
+     */
+    public $csrf_token;
     public $projects;
     public $has_projects;
     public $is_admin;
@@ -68,6 +72,7 @@ class UserDetailsPresenter
         array $projects,
         UserDetailsAccessPresenter $access,
         UserChangePasswordPresenter $change_password,
+        \CSRFSynchronizerToken $csrf_token,
         array $additional_details,
         array $more,
         array $shells,
@@ -84,6 +89,7 @@ class UserDetailsPresenter
 
         $this->access             = $access;
         $this->change_password    = $change_password;
+        $this->csrf_token         = $csrf_token;
         $this->additional_details = $additional_details;
         $this->shells             = $shells;
         $this->unix_status        = $unix_status;
