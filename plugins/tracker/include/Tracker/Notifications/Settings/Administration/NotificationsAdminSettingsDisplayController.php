@@ -29,14 +29,10 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 use UserManager;
 
-class NotificationsSettingsDisplayController implements DispatchableWithRequest
+class NotificationsAdminSettingsDisplayController implements DispatchableWithRequest
 {
-    use NotificationsSettingsControllerCommon;
+    use NotificationsAdminSettingsControllerCommon;
 
-    /**
-     * @var TemplateRenderer
-     */
-    private $template_renderer;
     /**
      * @var TrackerFactory
      */
@@ -49,23 +45,15 @@ class NotificationsSettingsDisplayController implements DispatchableWithRequest
      * @var UserManager
      */
     private $user_manager;
-    /**
-     * @var UserNotificationSettingsRetriever
-     */
-    private $user_notification_settings_retriever;
 
     public function __construct(
-        TemplateRenderer $template_renderer,
         TrackerFactory $tracker_factory,
         TrackerManager $tracker_manager,
-        UserManager $user_manager,
-        UserNotificationSettingsRetriever $user_notification_settings_retriever
+        UserManager $user_manager
     ) {
-        $this->template_renderer                    = $template_renderer;
-        $this->tracker_factory                      = $tracker_factory;
-        $this->tracker_manager                      = $tracker_manager;
-        $this->user_manager                         = $user_manager;
-        $this->user_notification_settings_retriever = $user_notification_settings_retriever;
+        $this->tracker_factory = $tracker_factory;
+        $this->tracker_manager = $tracker_manager;
+        $this->user_manager    = $user_manager;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
@@ -73,7 +61,7 @@ class NotificationsSettingsDisplayController implements DispatchableWithRequest
         $tracker = $this->getTrackerFromTrackerID($this->tracker_factory, $variables['id']);
 
         $current_user = $request->getCurrentUser();
-        if (! $current_user->isLoggedIn()) {
+        if (! $tracker->userIsAdmin($current_user)) {
             $layout->addFeedback(\Feedback::ERROR, $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
             $layout->redirect(TRACKER_BASE_URL . '/?tracker=' . urlencode($tracker->getId()));
         }
@@ -86,18 +74,7 @@ class NotificationsSettingsDisplayController implements DispatchableWithRequest
         }
 
         $tracker->displayAdminItemHeader($this->tracker_manager, 'editnotifications');
-        if ($tracker->userIsAdmin($current_user)) {
-            $this->getNotificationsManager($this->user_manager, $tracker)->displayTrackerAdministratorSettings($request, $csrf_token);
-        } else {
-            $user_notification_settings = $this->user_notification_settings_retriever->getUserNotificationSettings(
-                $current_user,
-                $tracker
-            );
-            $this->template_renderer->renderToPage(
-                'user-notification-settings',
-                new UserNotificationSettingsPresenter($csrf_token, $user_notification_settings)
-            );
-        }
+        $this->getNotificationsManager($this->user_manager, $tracker)->displayTrackerAdministratorSettings($request, $csrf_token);
         $tracker->displayFooter($this->tracker_manager);
     }
 }

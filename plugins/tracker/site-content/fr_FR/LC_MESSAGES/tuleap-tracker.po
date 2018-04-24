@@ -138,6 +138,9 @@ msgstr "Supprimer"
 msgid "Edit"
 msgstr "Éditer"
 
+msgid "Email Notifications Settings"
+msgstr "Options de notification"
+
 msgid "Error during parsing expert query"
 msgstr "Erreur pendant l'analyse de la requête experte"
 

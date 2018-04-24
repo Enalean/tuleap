@@ -106,6 +106,9 @@ msgstr ""
 msgid "Edit"
 msgstr ""
 
+msgid "Email Notifications Settings"
+msgstr ""
+
 msgid "Error during parsing expert query"
 msgstr ""
 
