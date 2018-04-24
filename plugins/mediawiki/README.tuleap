@@ -77,7 +77,6 @@ SystemEventManager::fetchEvents() => not used
 *database_pforole.sql
 *codendi_aliases.conf.dist -> Include /usr/share/codendi/plugins/mediawiki/etc/plugin-mediawiki.inc
 *local.inc.dist ->  $master_path $mwdata_path $mw_dbtype  $projects_path $config_path $src_path
-*database.php -> db_query_from_file (+ db_begin, db_commit, db_rollback qui ne font rien)
 *src/www/include/env.inc.php (vide)
 *src/www/include/plugins_utils.php
 */src/www/include/preplugins.php (vide)
