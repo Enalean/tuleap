@@ -4,7 +4,7 @@ services:
   test:
     container_name: ${BUILD_TAG}tuleap_runtests_test-e2e
     image: cypress/base:6
-    command: /tuleap/tests/e2e/cypress/run.sh
+    command: /tuleap/tests/e2e/distlp/cypress/run.sh
     volumes:
       - .:/tuleap
       - ${TEST_RESULT_OUTPUT}:/output

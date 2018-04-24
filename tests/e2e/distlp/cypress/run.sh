@@ -34,4 +34,4 @@ setup_user
 is_server_ready
 
 su -c 'npm install cypress && `npm bin`/cypress verify' -l runner
-su -c '`npm bin`/cypress run --project /tuleap/tests/e2e' -l runner
+su -c '`npm bin`/cypress run --project /tuleap/tests/e2e/distlp' -l runner

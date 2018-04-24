@@ -32,5 +32,5 @@ setup_user
 
 is_server_ready
 
-su -c '/tuleap/src/vendor/bin/phpunit --log-junit=/output/distlp-svn-cli.xml /tuleap/tests/e2e/distlp-svn-cli/tests/' \
+su -c '/tuleap/src/vendor/bin/phpunit --log-junit=/output/distlp-svn-cli.xml /tuleap/tests/e2e/distlp/tests/' \
     -l runner

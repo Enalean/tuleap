@@ -112,7 +112,7 @@ pipeline {
                 'Whole distrubuted platform SVN CLI integration': {
                     dir ('sources') {
                         sh """
-                        tests/e2e/distlp-svn-cli/wrap.sh "$WORKSPACE/results/distlp-integration"
+                        tests/e2e/distlp/wrap.sh "$WORKSPACE/results/distlp-integration"
                         """
                     }
                     junit 'results/distlp-integration/distlp-svn-cli.xml'
@@ -120,7 +120,7 @@ pipeline {
                 'Cypress': {
                     dir ('sources') {
                         sh """
-                        tests/e2e/cypress/wrap.sh "$WORKSPACE/results/cypress"
+                        tests/e2e/distlp/cypress/wrap.sh "$WORKSPACE/results/cypress"
                         """
                     }
                     junit 'results/cypress/*.xml'
