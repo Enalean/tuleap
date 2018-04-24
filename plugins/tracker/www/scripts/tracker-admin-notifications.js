@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,10 +18,12 @@
  */
 
 document.addEventListener('DOMContentLoaded', function () {
-    var add_button = document.getElementById('tracker-global-notifications-add'),
-        add_row    = document.getElementById('tracker-global-notifications-row-add');
+    var add_button_global_notif = document.getElementById('tracker-global-notifications-add'),
+        add_row_global_notif    = document.getElementById('tracker-global-notifications-row-add'),
+        add_button_unsubscriber = document.getElementById('tracker-unsubcriber-add'),
+        add_row_unsubscriber    = document.getElementById('tracker-unsubscriber-row-add');
 
-    if (! add_button || ! add_row) {
+    if (! add_button_global_notif || ! add_row_global_notif || ! add_button_unsubscriber || ! add_row_unsubscriber) {
         return;
     }
 
@@ -36,15 +38,25 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     initializeAutocompleter('#add_email');
+    initializeAutocompleter('#add_unsubscriber');
     initializeAutocompleter('.edit_email');
     initializeAddNotification();
+    initializeAddUnsubscriber();
 
     function initializeAddNotification() {
-        add_button.addEventListener('click', function () {
+        add_button_global_notif.addEventListener('click', function () {
             hideEditMode();
-            add_row.classList.remove('tracker-global-notifications-row-add-hidden');
-            add_button.classList.add('tracker-global-notifications-add-hidden');
+            add_row_global_notif.classList.remove('tracker-global-notifications-row-add-hidden');
+            add_button_global_notif.classList.add('tracker-global-notifications-add-hidden');
             tuleap.resetPlaceholder('#add_email');
+        });
+    }
+
+    function initializeAddUnsubscriber() {
+        add_button_unsubscriber.addEventListener('click', function () {
+            add_row_unsubscriber.classList.remove('tracker-unsubscriber-row-add-hidden');
+            add_button_unsubscriber.classList.add('tracker-unsubcriber-add-hidden');
+            tuleap.resetPlaceholder('#add_unsubscriber');
         });
     }
 
@@ -61,8 +73,10 @@ document.addEventListener('DOMContentLoaded', function () {
         [].forEach.call(edit_cells, function (cell) {
             cell.classList.add('tracker-global-notifications-checkbox-cell-hidden');
         });
-        add_row.classList.add('tracker-global-notifications-row-add-hidden');
-        add_button.classList.remove('tracker-global-notifications-add-hidden');
+        add_row_global_notif.classList.add('tracker-global-notifications-row-add-hidden');
+        add_button_global_notif.classList.remove('tracker-global-notifications-add-hidden');
+        add_row_unsubscriber.classList.add('tracker-unsubscriber-row-add-hidden');
+        add_button_unsubscriber.classList.remove('tracker-unsubcriber-add-hidden');
     }
 
     function showEditMode() {

@@ -80,7 +80,7 @@ class NotificationListBuilder
             $tracker
         );
 
-        return new UnsubscriberListPresenter(...$unsubscribers);
+        return new UnsubscriberListPresenter($tracker, ...$unsubscribers);
     }
 
     private function transformUgroupsData($ugroups_to_be_notified)
