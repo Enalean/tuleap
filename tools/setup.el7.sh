@@ -36,6 +36,7 @@ declare -r include="${tools_dir}/setup/el7/include"
 . ${include}/mysqlcli.sh
 . ${include}/sql.sh
 . ${include}/services.sh
+. ${include}/plugins.sh
 
 # Main
 ###############################################################################
@@ -45,93 +46,106 @@ fi
 
 _checkLogFile
 _optionsSelected "${@}"
-_checkMandatoryOptions "${@}"
-_infoMessage "Start Tuleap installation"
-_infoMessage "All credentials are saved into /root/.tuleap_passwd"
-_checkOsVersion
-_infoMessage "Checking all command line tools"
-_checkCommand
-_checkSeLinux
-_optionMessages "${@}"
-_checkWebServerIp
-_checkFilePassword
+_serviceMask "rh-php56-php-fpm.service"
+_checkIfTuleapInstalled
 
-if [ "${mysql_password:-NULL}" = "NULL" -a "${mysql_server,,}" = "localhost" ] || \
-    [ "${mysql_password:-NULL}" = "NULL" -a "${mysql_server}" = "127.0.0.1" ]; then
+if [ ${tuleap_installed:-false} = "false" ] || \
+    [ ${reinstall:-false} = "true" ]; then
+    _checkMandatoryOptions "${@}"
+    _infoMessage "Start Tuleap installation"
+    _infoMessage "All credentials are saved into /root/.tuleap_passwd"
+    _checkOsVersion
+    _infoMessage "Checking all command line tools"
+    _checkCommand
+    _checkSeLinux
+    _optionMessages "${@}"
+    _checkWebServerIp
+    _checkFilePassword
 
-    if ! ${mysql} ${my_opt} --host=${mysql_server} \
-        --user=${mysql_user} --execute=";" 2> >(_logCatcher); then
-        _errorMessage "Your database already have a password"
-        _errorMessage "You need to use the '--mysql-password' option"
-        exit 1
+    if [ "${mysql_password:-NULL}" = "NULL" -a "${mysql_server,,}" = "localhost" ] || \
+        [ "${mysql_password:-NULL}" = "NULL" -a "${mysql_server}" = "127.0.0.1" ]; then
+
+        if ! ${mysql} ${my_opt} --host=${mysql_server} \
+            --user=${mysql_user} --execute=";" 2> >(_logCatcher); then
+            _errorMessage "Your database already have a password"
+            _errorMessage "You need to use the '--mysql-password' option"
+            exit 1
+        fi
+
+        _infoMessage "Generate MySQL password"
+        mysql_password=$(_setupRandomPassword)
+        _infoMessage "Set MySQL password for ${mysql_user}"
+        _setupMysqlPassword "${mysql_user}" ${mysql_password}
+        _logPassword "MySQL system user password (${mysql_user}): ${mysql_password}"
+    else
+        _checkMysqlStatus "${mysql_user}" "${mysql_password}"
     fi
 
-    _infoMessage "Generate MySQL password"
-    mysql_password=$(_setupRandomPassword)
-    _infoMessage "Set MySQL password for ${mysql_user}"
-    _setupMysqlPassword "${mysql_user}" ${mysql_password}
-    _logPassword "MySQL system user password (${mysql_user}): ${mysql_password}"
-else
-    _checkMysqlStatus "${mysql_user}" "${mysql_password}"
-fi
+    admin_password=$(_setupRandomPassword)
+    sys_db_password=$(_setupRandomPassword)
+    _setupMysqlPrivileges "${mysql_user}" "${mysql_password}" \
+        "${sys_db_user}"  "${sys_db_password}"
 
-admin_password=$(_setupRandomPassword)
-sys_db_password=$(_setupRandomPassword)
-_setupMysqlPrivileges "${mysql_user}" "${mysql_password}" \
-    "${sys_db_user}"  "${sys_db_password}"
+    _logPassword "MySQL system user password (${sys_db_user}): ${sys_db_password}"
+    _logPassword "Site admin password (${project_admin}): ${admin_password}"
+    _checkMysqlMode "${mysql_user}" "${mysql_password}"
+    _checkDatabase "${mysql_user}" "${mysql_password}" "${sys_db_name}"
+    _setupDatabase "${mysql_user}" "${mysql_password}" "${sys_db_name}" "${db_exist}"
+    _infoMessage "Populating the tuleap database..."
 
-_logPassword "MySQL system user password (${sys_db_user}): ${sys_db_password}"
-_logPassword "Site admin password (${project_admin}): ${admin_password}"
-_checkMysqlMode "${mysql_user}" "${mysql_password}"
-_checkDatabase "${mysql_user}" "${mysql_password}" "${sys_db_name}"
-_setupDatabase "${mysql_user}" "${mysql_password}" "${sys_db_name}" "${db_exist}"
-_infoMessage "Populating the tuleap database..."
+    for file_sql in "${sql_structure}" "${sql_forgeupgrade}"; do
+        _setupSourceDb "${mysql_user}" "${mysql_password}" "${sys_db_name}" \
+            "${file_sql}"
+    done
 
-for file_sql in "${sql_structure}" "${sql_forgeupgrade}"; do
-    _setupSourceDb "${mysql_user}" "${mysql_password}" "${sys_db_name}" \
-        "${file_sql}"
-done
+    _setupInitValues $(_phpPasswordHasher "${admin_password}") "${server_name}" \
+        "${sql_init}" | \
+        $(_mysqlConnectDb "${mysql_user}" "${mysql_password}" "${sys_db_name}")
 
-_setupInitValues $(_phpPasswordHasher "${admin_password}") "${server_name}" \
-    "${sql_init}" | \
-    $(_mysqlConnectDb "${mysql_user}" "${mysql_password}" "${sys_db_name}")
+    for directory in ${tuleap_conf} ${tuleap_plugins} ${pluginsadministration}; do
+        if [ ! -d ${directory} ]; then
+            _setupDirectory "${tuleap_unix_user}" "${tuleap_unix_user}" "0755" \
+                "${directory}"
+        fi
+    done
 
-for directory in ${tuleap_conf} ${tuleap_plugins} ${pluginsadministration}; do
-    if [ ! -d ${directory} ]; then
-        _setupDirectory "${tuleap_unix_user}" "${tuleap_unix_user}" "0755" \
-            "${directory}"
+    if [ "${assumeyes}" = "true" ]; then
+        _setupLocalInc
+    else
+        _infoMessage "Saving ${local_inc} file"
+        ${mv} "${tuleap_conf}/${local_inc}" \
+            "${tuleap_conf}/${local_inc}.$(date +%Y-%m-%d_%H-%M-%S)"
+        _setupLocalInc
     fi
-done
 
-if [ ! -e "${tuleap_conf}/${local_inc}" ] || [ "${assumeyes}" = "true" ]; then
-    _setupLocalInc
-else
-    _infoMessage "Saving ${local_inc} file"
-    ${mv} "${tuleap_conf}/${local_inc}" \
-        "${tuleap_conf}/${local_inc}.$(date +%Y-%m-%d_%H-%M-%S)"
-    _setupLocalInc
+    if [ "${assumeyes}" = "true" ]; then
+        _setupDatabaseInc
+    else
+        _infoMessage "Saving ${database_inc} file"
+        ${mv} "${tuleap_conf}/${database_inc}" \
+            "${tuleap_conf}/${database_inc}.$(date +%Y-%m-%d_%H-%M-%S)"
+        _setupDatabaseInc
+    fi
+
+    _setupForgeupgrade
+    _phpActivePlugin "tracker" "${tuleap_unix_user}"
+    _phpImportTrackerTemplate
+    _phpForgeupgrade "record-only"
+    _serviceEnable "${timers[@]}"
+    _serviceStart "${timers[@]}"
+    _phpConfigureModule "nginx,fpm"
+    _serviceRestart "nginx" "tuleap"
+
+    for pwd in mysql_password dbpasswd admin_password; do
+        unset ${pwd}
+    done
+
+    _endMessage
 fi
 
-if [ ! -e "${tuleap_conf}/${database_inc}" ] || [ "${assumeyes}" = "true" ]; then
-    _setupDatabaseInc
-else
-    _infoMessage "Saving ${database_inc} file"
-    ${mv} "${tuleap_conf}/${database_inc}" \
-        "${tuleap_conf}/${database_inc}.$(date +%Y-%m-%d_%H-%M-%S)"
-    _setupDatabaseInc
+if [ ${configure:-false} = "true" ]; then
+    _checkInstalledPlugins
+    _checkPluginsConfiguration
+    _phpConfigureModule "nginx"
+    _serviceReload "nginx"
 fi
-
-_setupForgeupgrade
-_phpActivePlugin "tracker" "${tuleap_unix_user}"
-_phpImportTrackerTemplate
-_phpForgeupgrade "record-only"
-_serviceEnable "${timers[@]}"
-_serviceStart "${timers[@]}"
-_phpConfigureModule "nginx,fpm"
-_serviceRestart "nginx" "tuleap"
-
-for pwd in mysql_password dbpasswd admin_password; do
-    unset ${pwd}
-done
-
-_endMessage

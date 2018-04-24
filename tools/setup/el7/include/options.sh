@@ -3,8 +3,8 @@ _optionsSelected() {
                           'mysql-port:,' 'mysql-user:,' 'mysql-password:,'
                           'debug,' 'disable-check-server-name,'
                           'disable-auto-passwd,' 'disable-mysql-configuration,'
-                          'help,' 'assumeyes,')
-    local options=$(${getopt} --options hyd --longoptions \
+                          'reinstall', 'configure', 'help,' 'assumeyes,')
+    local options=$(${getopt} --options hydcr --longoptions \
                   $(${printf} "%s" ${longOptions[@]}) -- ${@})
 
     eval set -- "${options}"
@@ -61,6 +61,14 @@ _optionsSelected() {
                 ;;
             --disable-check-server-name)
                 disable_check_server_name="true"
+                shift 1
+                ;;
+            -r | --reinstall)
+                reinstall="true"
+                shift 1
+                ;;
+            -c | --configure)
+                configure="true"
                 shift 1
                 ;;
             -d | --debug)

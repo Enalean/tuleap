@@ -9,7 +9,7 @@ _checkArgument() {
 }
 
 _checkCommand() {
-    for c in ${cmd[@]}; do
+    for c in ${@}; do
         if [ ! -f ${c} ]; then
             _errorMessage "${c}: command not found"
             exit 1
@@ -34,6 +34,18 @@ _checkFilePassword() {
     fi
 }
 
+_checkIfTuleapInstalled() {
+    if [ -f ${tuleap_conf}/${local_inc} ] && \
+        [ -f ${tuleap_conf}/${database_inc} ]; then
+        tuleap_installed="true"
+    fi
+}
+
+_checkInstalledPlugins() {
+    installed_plugins=($(rpm -aq tuleap-plugin-\* | \
+        ${awk} -F"-" '!/pluginsadministration/ {print $3}'))
+}
+
 _checkLogFile() {
     if [ -f ${tuleap_log} ]; then
         ${mv} ${tuleap_log} ${tuleap_log}.$(${date} +%Y-%m-%d_%H-%M-%S)
@@ -41,8 +53,8 @@ _checkLogFile() {
 }
 
 _checkMandatoryOptions() {
-    if [ "${mysql_password:-NULL}" = "NULL" -a "${mysql_server,,}" = "localhost" ] || \
-        [ "${mysql_password:-NULL}" = "NULL" -a "${mysql_server}" = "127.0.0.1" ]; then
+    if [ "${mysql_password:-NULL}" = "NULL" -a "${mysql_server:-localhost}" = "localhost" ] || \
+        [ "${mysql_password:-NULL}" = "NULL" -a "${mysql_server:-127.0.0.1}" = "127.0.0.1" ]; then
         local -a mandatoryOptions=('\--server-name=' '\--mysql-server=')
     else
         local -a mandatoryOptions=('\--server-name=' '\--mysql-server='
@@ -100,6 +112,14 @@ _checkOsVersion() {
         _errorMessage "Sorry, Tuleap is running only on RedHat/CentOS"
         exit 1
     fi
+}
+
+_checkPluginsConfiguration() {
+    for plugin in ${installed_plugins[@]}; do
+        case ${plugin} in
+            git) _pluginGit;;
+        esac
+    done
 }
 
 _checkSeLinux() {

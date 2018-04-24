@@ -1,19 +1,25 @@
 _serviceEnable() {
     # ${@}: services name
 
-    ${systemctl} enable ${@}
+    ${systemctl} --quiet enable ${@}
 }
 
 _serviceMask() {
     # ${@}: services name
 
-    ${systemctl} mask ${@}
+    ${systemctl} --quiet mask ${@}
 }
 
 _serviceStart() {
     # ${@}: services name
 
     ${systemctl} start ${@}
+}
+
+_serviceReload() {
+    # ${@}: services name
+
+    ${systemctl} reload ${@}
 }
 
 _serviceRestart() {
