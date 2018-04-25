@@ -5,7 +5,7 @@
 # This file is a copy/modify/paste of mailman equivalent. Thanks to
 # them!
 #
-# Copyright (c) Enalean, 2016. All Rights Reserved.
+# Copyright (c) Enalean, 2016-2018. All Rights Reserved.
 # Copyright (C) 2001-2003 by the Free Software Foundation, Inc.
 #
 # This program is free software; you can redistribute it and/or
@@ -27,6 +27,8 @@
 #
 # On RedHat, and derivatives, install with "chkconfig --add codendi"
 
+# chkconfig:   - 86 14
+# description:  Tuleap background service
 
 CODENDI_HOME=/usr/share/codendi
 
