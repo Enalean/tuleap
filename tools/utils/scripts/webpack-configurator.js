@@ -18,15 +18,9 @@
  */
 
 const webpack = require('webpack');
-const VueLoaderOptionsPlugin = require('vue-loader-options-plugin');
 const WebpackAssetsManifest = require('webpack-assets-manifest');
 const rule_configurations = require('./webpack-rule-configs.js');
-
-function getVueLoaderOptionsPlugin(babel_options) {
-    return new VueLoaderOptionsPlugin({
-        babel: babel_options
-    });
-}
+const { VueLoaderPlugin } = require('vue-loader');
 
 function getManifestPlugin() {
     return new WebpackAssetsManifest({
@@ -48,10 +42,14 @@ function configureOutput(assets_dir_path) {
     };
 }
 
+function getVueLoaderPlugin() {
+    return new VueLoaderPlugin();
+}
+
 const configurator = {
-    getVueLoaderOptionsPlugin,
     getManifestPlugin,
     getMomentLocalePlugin,
+    getVueLoaderPlugin,
     configureOutput
 };
 Object.assign(configurator, rule_configurations);

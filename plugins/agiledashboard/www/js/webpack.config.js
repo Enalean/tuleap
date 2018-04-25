@@ -35,7 +35,7 @@ const path_to_badge = path.resolve(__dirname, '../../../../src/www/scripts/proje
 
 const webpack_config_for_overview_and_vue = {
     entry: {
-        'overview': './scrum-header.js',
+        overview: './scrum-header.js',
         'permission-per-group': './permissions-per-group/src/index.js'
     },
     context: path.resolve(__dirname),
@@ -50,15 +50,14 @@ const webpack_config_for_overview_and_vue = {
     },
     module: {
         rules: [
-            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
+            webpack_configurator.configureBabelRule(
+                webpack_configurator.babel_options_ie11
+            ),
             webpack_configurator.rule_po_files,
             webpack_configurator.rule_vue_loader
         ]
     },
-    plugins: [
-        manifest_plugin,
-        webpack_configurator.getVueLoaderOptionsPlugin(webpack_configurator.babel_options_ie11)
-    ]
+    plugins: [manifest_plugin, webpack_configurator.getVueLoaderPlugin()]
 };
 
 if (process.env.NODE_ENV === 'production') {
