@@ -103,6 +103,9 @@
                                 </span>
                                 {{ execution.definition.summary}}
                             </span>
+                            <i class="fa fa-cogs test-automated-icon"
+                               ng-if="execution.definition.automated_tests !== ''"
+                               title="{{ 'This is an automated test' | translate }}"></i>
                             <i class="fa fa-check-circle test-status-icon passed"
                                ng-if="execution.status === 'passed'"
                                title="{{ 'Passed' | translate }}"></i>

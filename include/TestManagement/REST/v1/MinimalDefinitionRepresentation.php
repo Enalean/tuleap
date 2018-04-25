@@ -31,8 +31,9 @@ class MinimalDefinitionRepresentation
 {
     const ROUTE = 'testmanagement_definitions';
 
-    const FIELD_SUMMARY  = 'summary';
-    const FIELD_CATEGORY = 'category';
+    const FIELD_SUMMARY         = 'summary';
+    const FIELD_CATEGORY        = 'category';
+    const FIELD_AUTOMATED_TESTS = 'automated_tests';
 
     /**
      * @var int ID of the artifact
@@ -53,6 +54,11 @@ class MinimalDefinitionRepresentation
      * @var String
      */
     public $category;
+
+    /**
+     * @var string
+     */
+    public $automated_tests;
 
     /**
      * @var Tracker_FormElementFactory
@@ -94,19 +100,37 @@ class MinimalDefinitionRepresentation
 
         $this->changeset            = $changeset ?: $artifact->getLastChangeset();
 
-        $this->summary  = $this->getFieldValue(self::FIELD_SUMMARY)->getText();
-        $this->category = $this->getCategory();
+        $this->summary         = $this->getTextFieldValue(self::FIELD_SUMMARY);
+        $this->category        = $this->getCategory();
+        $this->automated_tests = $this->getTextFieldValue(self::FIELD_AUTOMATED_TESTS);
     }
 
-    protected function getFieldValue($field_shortname)
+    /**
+     * @param $shortname
+     *
+     * @return string
+     */
+    protected function getTextFieldValue($field_shortname)
     {
+        // We assume that the given field will always be type = text|string
+        /** @var \Tracker_FormElement_Field_Text $field */
         $field = $this->form_element_factory->getUsedFieldByNameForUser(
             $this->tracker_id,
             $field_shortname,
             $this->user
         );
 
-        return $this->artifact->getValue($field, $this->changeset);
+        if (! $field) {
+            return '';
+        }
+
+        /** @var \Tracker_Artifact_ChangesetValue_Text $field_value */
+        $field_value = $this->artifact->getValue($field, $this->changeset);
+        if (! $field_value) {
+            return '';
+        }
+
+        return $field_value->getText();
     }
 
     private function getCategory()

@@ -308,6 +308,10 @@ msgstr "Il n’existe pas de campagne ouverte"
 msgid "This artifact is already linked to this test."
 msgstr "Cet artéfact est déjà lié à ce test."
 
+#: src/app/execution/execution-list.tpl.html
+msgid "This is an automated test"
+msgstr "Ceci est un test automatisé"
+
 #: src/app/socket/socket-disconnect.tpl.html
 msgid "You are disconnected from real time. Please reload your page."
 msgstr "Vous êtes déconnecté du temps réel. Rechargez votre page."

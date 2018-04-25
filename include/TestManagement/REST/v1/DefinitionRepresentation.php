@@ -49,7 +49,7 @@ class DefinitionRepresentation extends MinimalDefinitionRepresentation
     ) {
         parent::build($artifact, $form_element_factory, $user, $changeset);
 
-        $this->description = $this->getFieldValue(self::FIELD_DESCRIPTION)->getText();
+        $this->description = $this->getTextFieldValue(self::FIELD_DESCRIPTION);
 
         $artifact_representation = null;
 
