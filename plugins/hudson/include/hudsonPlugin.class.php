@@ -21,6 +21,7 @@
 
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\User\UserDashboardController;
+use Tuleap\Hudson\HudsonJobBuilder;
 
 require_once 'autoload.php';
 require_once 'constants.php';
@@ -117,9 +118,9 @@ class hudsonPlugin extends Plugin
 
     protected $hudsonJobFactory = null;
 
-    protected function getHudsonJobFactory() {
+    protected function getMinimalHudsonJobFactory() {
         if (!$this->hudsonJobFactory) {
-            $this->hudsonJobFactory = new HudsonJobFactory();
+            $this->hudsonJobFactory = new MinimalHudsonJobFactory();
         }
         return $this->hudsonJobFactory;
     }
@@ -127,60 +128,61 @@ class hudsonPlugin extends Plugin
     public function widgetInstance(\Tuleap\Widget\Event\GetWidget $get_widget_event) {
         $request = HTTPRequest::instance();
 
-        $user = UserManager::instance()->getCurrentUser();
-        $hf   = $this->getHudsonJobFactory();
+        $user        = UserManager::instance()->getCurrentUser();
+        $hf          = $this->getMinimalHudsonJobFactory();
+        $job_builder = new HudsonJobBuilder(new Http_Client());
 
         switch($get_widget_event->getName()) {
             // MY
             case 'plugin_hudson_my_jobs':
                 require_once('hudson_Widget_MyMonitoredJobs.class.php');
-                $get_widget_event->setWidget(new hudson_Widget_MyMonitoredJobs($user->getId(), $this, $hf));
+                $get_widget_event->setWidget(new hudson_Widget_MyMonitoredJobs($user->getId(), $this, $hf, $job_builder));
                 break;
             case 'plugin_hudson_my_joblastbuilds':
                 require_once('hudson_Widget_JobLastBuilds.class.php');
-                $get_widget_event->setWidget(new hudson_Widget_JobLastBuilds(UserDashboardController::LEGACY_DASHBOARD_TYPE, $user->getId(), $hf));
+                $get_widget_event->setWidget(new hudson_Widget_JobLastBuilds(UserDashboardController::LEGACY_DASHBOARD_TYPE, $user->getId(), $hf, $job_builder));
                 break;
             case 'plugin_hudson_my_jobtestresults':
                 require_once('hudson_Widget_JobTestResults.class.php');
-                $get_widget_event->setWidget(new hudson_Widget_JobTestResults(UserDashboardController::LEGACY_DASHBOARD_TYPE, $user->getId(), $hf));
+                $get_widget_event->setWidget(new hudson_Widget_JobTestResults(UserDashboardController::LEGACY_DASHBOARD_TYPE, $user->getId(), $hf, $job_builder));
                 break;
             case 'plugin_hudson_my_jobtesttrend':
                 require_once('hudson_Widget_JobTestTrend.class.php');
-                $get_widget_event->setWidget(new hudson_Widget_JobTestTrend(UserDashboardController::LEGACY_DASHBOARD_TYPE, $user->getId(), $hf));
+                $get_widget_event->setWidget(new hudson_Widget_JobTestTrend(UserDashboardController::LEGACY_DASHBOARD_TYPE, $user->getId(), $hf, $job_builder));
                 break;
             case 'plugin_hudson_my_jobbuildhistory':
                 require_once('hudson_Widget_JobBuildHistory.class.php');
-                $get_widget_event->setWidget(new hudson_Widget_JobBuildHistory(UserDashboardController::LEGACY_DASHBOARD_TYPE, $user->getId(), $hf));
+                $get_widget_event->setWidget(new hudson_Widget_JobBuildHistory(UserDashboardController::LEGACY_DASHBOARD_TYPE, $user->getId(), $hf, $job_builder));
                 break;
             case 'plugin_hudson_my_joblastartifacts':
                 require_once('hudson_Widget_JobLastArtifacts.class.php');
-                $get_widget_event->setWidget(new hudson_Widget_JobLastArtifacts(UserDashboardController::LEGACY_DASHBOARD_TYPE, $user->getId(), $hf));
+                $get_widget_event->setWidget(new hudson_Widget_JobLastArtifacts(UserDashboardController::LEGACY_DASHBOARD_TYPE, $user->getId(), $hf, $job_builder));
                 break;
 
             // PROJECT
             case 'plugin_hudson_project_jobsoverview':
                 require_once('hudson_Widget_ProjectJobsOverview.class.php');
-                $get_widget_event->setWidget(new hudson_Widget_ProjectJobsOverview($request->get('group_id'), $this, $hf));
+                $get_widget_event->setWidget(new hudson_Widget_ProjectJobsOverview($request->get('group_id'), $this, $hf, $job_builder));
                 break;
             case 'plugin_hudson_project_joblastbuilds':
                 require_once('hudson_Widget_JobLastBuilds.class.php');
-                $get_widget_event->setWidget(new hudson_Widget_JobLastBuilds(ProjectDashboardController::LEGACY_DASHBOARD_TYPE, $request->get('group_id'), $hf));
+                $get_widget_event->setWidget(new hudson_Widget_JobLastBuilds(ProjectDashboardController::LEGACY_DASHBOARD_TYPE, $request->get('group_id'), $hf, $job_builder));
                 break;
             case 'plugin_hudson_project_jobtestresults':
                 require_once('hudson_Widget_JobTestResults.class.php');
-                $get_widget_event->setWidget(new hudson_Widget_JobTestResults(ProjectDashboardController::LEGACY_DASHBOARD_TYPE, $request->get('group_id'), $hf));
+                $get_widget_event->setWidget(new hudson_Widget_JobTestResults(ProjectDashboardController::LEGACY_DASHBOARD_TYPE, $request->get('group_id'), $hf, $job_builder));
                 break;
             case 'plugin_hudson_project_jobtesttrend':
                 require_once('hudson_Widget_JobTestTrend.class.php');
-                $get_widget_event->setWidget(new hudson_Widget_JobTestTrend(ProjectDashboardController::LEGACY_DASHBOARD_TYPE, $request->get('group_id'), $hf));
+                $get_widget_event->setWidget(new hudson_Widget_JobTestTrend(ProjectDashboardController::LEGACY_DASHBOARD_TYPE, $request->get('group_id'), $hf, $job_builder));
                 break;
             case 'plugin_hudson_project_jobbuildhistory':
                 require_once('hudson_Widget_JobBuildHistory.class.php');
-                $get_widget_event->setWidget(new hudson_Widget_JobBuildHistory(ProjectDashboardController::LEGACY_DASHBOARD_TYPE, $request->get('group_id'), $hf));
+                $get_widget_event->setWidget(new hudson_Widget_JobBuildHistory(ProjectDashboardController::LEGACY_DASHBOARD_TYPE, $request->get('group_id'), $hf, $job_builder));
                 break;
             case 'plugin_hudson_project_joblastartifacts':
                 require_once('hudson_Widget_JobLastArtifacts.class.php');
-                $get_widget_event->setWidget(new hudson_Widget_JobLastArtifacts(ProjectDashboardController::LEGACY_DASHBOARD_TYPE, $request->get('group_id'), $hf));
+                $get_widget_event->setWidget(new hudson_Widget_JobLastArtifacts(ProjectDashboardController::LEGACY_DASHBOARD_TYPE, $request->get('group_id'), $hf, $job_builder));
                 break;
         }
     }
@@ -271,8 +273,11 @@ class hudsonPlugin extends Plugin
                 if ($dar->valid()) {
                     $row = $dar->current();
                     try {
-                        $http_client = new Http_Client();
-                        $job         = new HudsonJob($row['job_url'], $http_client);
+                        $minimal_job_factory = $this->getMinimalHudsonJobFactory();
+                        $job_builder         = new HudsonJobBuilder(new Http_Client());
+                        $job                 = $job_builder->getHudsonJob(
+                            $minimal_job_factory->getMinimalHudsonJob($row['job_url'], '')
+                        );
                         $job_id      = $row['job_id'];
 
                         $html  = '';
@@ -350,8 +355,11 @@ class hudsonPlugin extends Plugin
                 if ($dar->valid()) {
                     $row = $dar->current();
                     try {
-                        $http_client         = new Http_Client();
-                        $job                 = new HudsonJob($row['job_url'], $http_client);
+                        $minimal_job_factory = $this->getMinimalHudsonJobFactory();
+                        $job_builder         = new HudsonJobBuilder(new Http_Client());
+                        $job                 = $job_builder->getHudsonJob(
+                            $minimal_job_factory->getMinimalHudsonJob($row['job_url'], '')
+                        );
                         $params['sparkline'] = $job->getStatusIcon();
                     } catch (Exception $e) {
                     }

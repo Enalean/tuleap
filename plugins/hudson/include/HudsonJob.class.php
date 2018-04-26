@@ -21,104 +21,43 @@
  
 class HudsonJob
 {
-    const API_XML    = '/api/xml';
-
-    private $hudson_job_url;
-    private $hudson_dobuild_url;
-    private $dom_job;
-    /**
-     * @var Http_Client
-     */
-    private $http_client;
     /**
      * @var null|string
      */
     private $name;
-
     /**
-     * Construct an Hudson job from a job URL
+     * @var SimpleXMLElement
      */
-    public function __construct($hudson_job_url, Http_Client $http_client, $name = null)
+    private $xml_content;
+
+    public function __construct($name, SimpleXMLElement $xml_content)
     {
-        $parsed_url = parse_url($hudson_job_url);
-        
-        if ( ! $parsed_url || ! array_key_exists('scheme', $parsed_url) ) {
-            throw new HudsonJobURLMalformedException($GLOBALS['Language']->getText('plugin_hudson','wrong_job_url', array($hudson_job_url)));
-        }
-
-        $this->setJobUrl($hudson_job_url);
-
         $this->name        = $name;
-        $this->http_client = $http_client;
-    }
-
-    private function setJobUrl($url) {
-        $matches = array();
-        if (preg_match(Jenkins_Client::BUILD_WITH_PARAMETERS_REGEXP, $url, $matches)) {
-            $this->hudson_job_url     = $matches['job_url'] . self::API_XML;
-            $this->hudson_dobuild_url = $url;
-        } else {
-            $this->hudson_job_url     = $url . self::API_XML;
-            $this->hudson_dobuild_url = $url . "/build";
-        }
-    }
-
-    public function getJobUrl() {
-        return $this->hudson_job_url;
-    }
-
-    protected function getDomJob() {
-        if (!$this->dom_job) {
-            $this->buildJobObject();
-        }
-        return $this->dom_job;
-    }
-
-    private function buildJobObject()
-    {
-         $this->dom_job = $this->_getXMLObject($this->hudson_job_url);
-    }
-    
-    protected function _getXMLObject($hudson_job_url)
-    {
-        $this->http_client->setOption(CURLOPT_URL, $hudson_job_url);
-        $this->http_client->doRequest();
-
-        $xmlstr = $this->http_client->getLastResponse();
-        if ($xmlstr !== false) {
-            $xmlobj = simplexml_load_string($xmlstr);
-            if ($xmlobj !== false) {
-                return $xmlobj;
-            } else {
-                throw new HudsonJobURLFileException($GLOBALS['Language']->getText('plugin_hudson', 'job_url_file_error',
-                    array($hudson_job_url)));
-            }
-        } else {
-            throw new HudsonJobURLFileNotFoundException($GLOBALS['Language']->getText('plugin_hudson',
-                'job_url_file_not_found', array($hudson_job_url)));
-        }
+        $this->xml_content = $xml_content;
     }
 
     public function getName()
     {
-        try {
-            if ($this->name === null) {
-                $this->name = $this->getDomJob()->name;
-            }
-        } catch (Exception $e) {
-
+        if (! $this->name && isset($this->xml_content->name)) {
+            $this->name = (string) $this->xml_content->name;
         }
         return $this->name;
     }
 
     public function getUrl()
     {
-        return $this->getDomJob()->url;
+        if (isset($this->xml_content->url)) {
+            return (string) $this->xml_content->url;
+        }
+        return '';
     }
 
     private function getColor()
     {
-        return $this->getDomJob()->color;
+        if (isset($this->xml_content->color)) {
+            return (string) $this->xml_content->color;
+        }
+        return '';
     }
 
     public function getStatus()
@@ -207,56 +146,70 @@ class HudsonJob
     
     public function hasBuilds()
     {
-        return ((int)$this->getLastBuildNumber() !== 0); 
+        return $this->getLastBuildNumber() !== 0;
     }
     
     public function getLastBuildNumber()
     {
-        return $this->getDomJob()->lastBuild->number;
+        if ($this->xml_content->lastBuild->number) {
+            return (int) $this->xml_content->lastBuild->number;
+        }
+        return 0;
     }
     
     public function getLastSuccessfulBuildNumber()
     {
-        return $this->getDomJob()->lastSuccessfulBuild->number;
+        if (isset($this->xml_content->lastSuccessfulBuild->number)) {
+            return (int) $this->xml_content->lastSuccessfulBuild->number;
+        }
+        return 0;
     }
 
     public function getLastSuccessfulBuildUrl()
     {
-        return $this->getDomJob()->lastSuccessfulBuild->url;
+        if (isset($this->xml_content->lastSuccessfulBuild->url)) {
+            return (string) $this->xml_content->lastSuccessfulBuild->url;
+        }
+        return '';
     }
     
     public function getLastFailedBuildNumber()
     {
-        return $this->getDomJob()->lastFailedBuild->number;
+        if ($this->xml_content !== null) {
+            return (int) $this->xml_content->lastFailedBuild->number;
+        }
+        return 0;
     }
 
     public function getLastFailedBuildUrl()
     {
-        return $this->getDomJob()->lastFailedBuild->url;
+        if (isset($this->xml_content->lastFailedBuild->url)) {
+            return (string) $this->xml_content->lastFailedBuild->url;
+        }
+        return '';
     }
     
     private function getHealthScores()
     {
+        if (! isset($this->xml_content->healthReport)) {
+            return [];
+        }
         $scores = array();
-        foreach ($this->getDomJob()->healthReport as $health_report) {
-            $scores[] = $health_report->score;
+        foreach ($this->xml_content->healthReport as $health_report) {
+            if (isset($health_report->score)) {
+                $scores[] = (int) $health_report->score;
+            }
         }
         return $scores;
     }
 
     private function getHealthAverageScore()
     {
-        $arr = $this->getHealthScores();
-        $sum = 0;
-        foreach ($arr as $score) {
-            $sum += (int)$score;
-        }
-        $num = sizeof($arr);
-        if ($num != 0) {
-            return floor($sum/$num);
-        } else {
+        $health_scores = $this->getHealthScores();
+        if (count($health_scores) <= 0) {
             return 0;
         }
+        return floor(array_sum($health_scores)/count($health_scores));
     }
     
     public function getWeatherReportIcon()

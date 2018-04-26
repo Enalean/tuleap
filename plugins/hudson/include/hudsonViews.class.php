@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Hudson\HudsonJobBuilder;
+
 require_once 'www/include/help.php';
 
 class hudsonViews extends Views {
@@ -279,7 +281,9 @@ class hudsonViews extends Views {
             }
             echo ' </tr></thead>';
             echo '<tbody>';
-            $cpt = 1;
+            $cpt                 = 1;
+            $minimal_job_factory = new MinimalHudsonJobFactory();
+            $job_builder         = new HudsonJobBuilder(new Http_Client());
             while ($dar->valid()) {
                 $row = $dar->current();
                 $job_id = $row['job_id'];
@@ -287,19 +291,20 @@ class hudsonViews extends Views {
                 echo ' <tr>';
 
                 try {
-                    $http_client = new Http_Client();
-                    $job         = new HudsonJob($row['job_url'], $http_client);
+                    $job = $job_builder->getHudsonJob(
+                        $minimal_job_factory->getMinimalHudsonJob($row['job_url'], '')
+                    );
 
                     echo '<td>';
                     echo '<img src="'.$purifier->purify($job->getStatusIcon()).'" alt="'.$purifier->purify($job->getStatus()).'" title="'.$purifier->purify($job->getStatus()).'" /> ';
                     echo '<a href="'.$purifier->purify($job->getUrl()).'" title="'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson','show_job', array($row['name']))).'">'.$purifier->purify($row['name']).'</a>';
                     echo '</td>';
-                    if ($job->getLastSuccessfulBuildNumber() != '') {
+                    if ($job->getLastSuccessfulBuildNumber() !== 0) {
                         echo '  <td><a href="'.$purifier->purify($job->getLastSuccessfulBuildUrl()).'" title="'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson','show_build', array($job->getLastSuccessfulBuildNumber(), $row['name']))).'">'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson','build').' #'.$job->getLastSuccessfulBuildNumber()).'</a></td>';
                     } else {
                         echo '  <td>&nbsp;</td>';
                     }
-                    if ($job->getLastFailedBuildNumber() != '') {
+                    if ($job->getLastFailedBuildNumber() !== 0) {
                         echo '  <td><a href="'.$purifier->purify($job->getLastFailedBuildUrl()).'" title="'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson','show_build', array($job->getLastFailedBuildNumber(), $row['name']))).'">'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson','build').' #'.$job->getLastFailedBuildNumber()).'</a></td>';
                     } else {
                         echo '  <td>&nbsp;</td>';

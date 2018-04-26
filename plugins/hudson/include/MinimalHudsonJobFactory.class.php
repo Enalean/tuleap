@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,13 +20,15 @@
  */
 
 use Tuleap\Dashboard\User\UserDashboardController;
-
+use Tuleap\Hudson\MinimalHudsonJob;
 
 /**
  * Fetch and distribute HudsonJob (and keep them in cache).
  */
-class HudsonJobFactory
+class MinimalHudsonJobFactory // @codingStandardsIgnoreLine
 {
+    const API_XML = '/api/xml';
+
     private $jobs = array();
 
     /**
@@ -34,11 +36,12 @@ class HudsonJobFactory
      *
      * @param String $owner_type
      * @param Integer $owner_id
-     * 
-     * @return Array of HudsonJob
+     *
+     * @return MinimalHudsonJob[]
      */
-    public function getAvailableJobs($owner_type, $owner_id) {
-        if (!isset($this->jobs[$owner_type][$owner_id])) {
+    public function getAvailableJobs($owner_type, $owner_id)
+    {
+        if (! isset($this->jobs[$owner_type][$owner_id])) {
             if ($owner_type == UserDashboardController::LEGACY_DASHBOARD_TYPE) {
                 $this->jobs[$owner_type][$owner_id] = $this->getJobsByUser($owner_id);
             } else {
@@ -48,12 +51,13 @@ class HudsonJobFactory
         return $this->jobs[$owner_type][$owner_id];
     }
 
-    public function getJobsByGroup($group_id) {
+    private function getJobsByGroup($group_id)
+    {
         $dar = $this->getDao()->searchByGroupID($group_id);
         $jobs = array();
         foreach ($dar as $row) {
             try {
-                $jobs[$row['job_id']] = $this->getHudsonJob($row['job_url'], $row['name']);
+                $jobs[$row['job_id']] = $this->getMinimalHudsonJob($row['job_url'], $row['name']);
             } catch (Exception $e) {
                 // Do not add unvalid jobs
             }
@@ -61,12 +65,17 @@ class HudsonJobFactory
         return $jobs;
     }
 
-    public function getJobsByUser($user_id) {
+    /**
+     * @param $user_id
+     * @return MinimalHudsonJob[]
+     */
+    private function getJobsByUser($user_id)
+    {
         $dar = $this->getDao()->searchByUserID($user_id);
         $jobs = array();
         foreach ($dar as $row) {
             try {
-                $jobs[$row['job_id']] = $this->getHudsonJob($row['job_url'], $row['name']);
+                $jobs[$row['job_id']] = $this->getMinimalHudsonJob($row['job_url'], $row['name']);
             } catch (Exception $e) {
                 // Do not add unvalid jobs
             }
@@ -74,16 +83,36 @@ class HudsonJobFactory
         return $jobs;
     }
 
-    protected function getDao() {
+    private function getDao()
+    {
         return new PluginHudsonJobDao(CodendiDataAccess::instance());
     }
 
     /**
-     * @return HudsonJob
+     * @return MinimalHudsonJob
+     * @throws HudsonJobURLMalformedException
      */
-    private function getHudsonJob($url, $name)
+    public function getMinimalHudsonJob($url, $name)
     {
-        $http_client = new Http_Client();
-        return new HudsonJob($url, $http_client, $name);
+        return new MinimalHudsonJob($name, $this->getJobUrl($url));
+    }
+
+    /**
+     * @return string
+     * @throws HudsonJobURLMalformedException
+     */
+    private function getJobUrl($url)
+    {
+        $parsed_url = parse_url($url);
+
+        if (! $parsed_url || ! array_key_exists('scheme', $parsed_url)) {
+            throw new HudsonJobURLMalformedException($GLOBALS['Language']->getText('plugin_hudson', 'wrong_job_url', [$url]));
+        }
+
+        $matches = array();
+        if (preg_match(Jenkins_Client::BUILD_WITH_PARAMETERS_REGEXP, $url, $matches)) {
+             return $matches['job_url'] . self::API_XML;
+        }
+        return  $url . self::API_XML;
     }
 }
