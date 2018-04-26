@@ -6,9 +6,9 @@
 set -ex
 
 MAX_TEST_EXECUTION_TIME='30m'
-DOCKERCOMPOSE="docker-compose -f docker-compose-e2e-tests.yml -p e2e-tests-${BUILD_TAG}"
+DOCKERCOMPOSE="docker-compose -f docker-compose-e2e-full-tests.yml -p e2e-tests-${BUILD_TAG}"
 
-test_results_folder='./test_results_e2e'
+test_results_folder='./test_results_e2e_full'
 if [ -n "$1" ]; then
     test_results_folder="$1"
 fi

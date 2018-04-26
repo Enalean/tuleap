@@ -2,11 +2,9 @@ version: "2"
 
 services:
   test:
-    container_name: ${BUILD_TAG}tuleap_runtests_test
-    image: tuleap-run-tests-v2
-    build:
-      context: tests/e2e/distlp/DockerImage
-    command: /tuleap/tests/e2e/distlp/run.sh
+    container_name: ${BUILD_TAG}tuleap_runtests_test-e2e
+    image: cypress/base:6
+    command: /tuleap/tests/e2e/full/run.sh
     volumes:
       - .:/tuleap
       - ${TEST_RESULT_OUTPUT}:/output
@@ -17,7 +15,7 @@ services:
       - external-connectivity
 
   reverse-proxy:
-    container_name: ${BUILD_TAG}tuleap_runtests_reverse-proxy
+    container_name: ${BUILD_TAG}tuleap_runtests_reverse-proxy-e2e
     image: enalean/tuleap-reverseproxy:distlp-1.1
     command: /tuleap/tools/distlp/reverse-proxy/run.sh
     volumes:
@@ -30,7 +28,7 @@ services:
       - tuleap
 
   backend-web:
-    container_name: ${BUILD_TAG}tuleap_runtests_backend-web
+    container_name: ${BUILD_TAG}tuleap_runtests_backend-web-e2e
     image: enalean/tuleap-aio-dev:c6-php56-nginx18-v1.7
     environment:
       RUN_COMMAND: "php /usr/share/tuleap/tools/distlp/backend-web/run.php test"
@@ -48,7 +46,7 @@ services:
       - tuleap
 
   backend-svn:
-    container_name: ${BUILD_TAG}tuleap_runtests_backend-svn
+    container_name: ${BUILD_TAG}tuleap_runtests_backend-svn-e2e
     image: enalean/tuleap-dev:1.5
     command: /usr/share/tuleap/tools/distlp/backend-svn/backend-svn.sh
     volumes:
@@ -64,7 +62,7 @@ services:
       - tuleap
 
   ldap:
-    container_name: ${BUILD_TAG}tuleap_runtests_ldap
+    container_name: ${BUILD_TAG}tuleap_runtests_ldap-e2e
     image: enalean/ldap
     environment:
       LDAP_ROOT_PASSWORD: DumpPass4Tests
@@ -75,7 +73,7 @@ services:
       - tuleap
 
   db:
-    container_name: ${BUILD_TAG}tuleap_runtests_db
+    container_name: ${BUILD_TAG}tuleap_runtests_db-e2e
     image: mysql:5.5
     environment:
       MYSQL_ROOT_PASSWORD: DumpPass4Tests
@@ -85,7 +83,7 @@ services:
       - tuleap
 
   rabbitmq:
-    container_name: ${BUILD_TAG}tuleap_runtests_rabbitmq
+    container_name: ${BUILD_TAG}tuleap_runtests_rabbitmq-e2e
     image: rabbitmq:3.6
     volumes:
       - tests-rabbitmq-data:/var/lib/rabbitmq
