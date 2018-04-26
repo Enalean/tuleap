@@ -248,6 +248,8 @@ class GitPlugin extends Plugin
 
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
+
+        $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
     }
 
     public function getHooksAndCallbacks()
@@ -690,13 +692,6 @@ class GitPlugin extends Plugin
         return new Git_Backend_Gitolite($this->getGitoliteDriver(), $this->getLogger());
     }
 
-    public function process()
-    {
-        $router_chain = $this->getChainOfRouters();
-
-        $router_chain->process(HTTPRequest::instance());
-    }
-
     private function getChainOfRouters()
     {
         $repository_retriever = new RepositoryFromRequestRetriever(
@@ -750,14 +745,11 @@ class GitPlugin extends Plugin
         );
     }
 
-    /**
-     * We expect that the check fo access right to this method has already been done by the caller
-     */
-    public function processAdmin(Codendi_Request $request) {
+    private function getAdminRouter() {
         $project_manager             = ProjectManager::instance();
         $gerrit_ressource_restrictor = new GerritServerResourceRestrictor(new RestrictedGerritServerDao());
 
-        $admin = new Git_AdminRouter(
+        return new Git_AdminRouter(
             $this->getGerritServerFactory(),
             new CSRFSynchronizerToken('/plugins/git/admin/'),
             $this->getMirrorDataMapper(),
@@ -782,9 +774,6 @@ class GitPlugin extends Plugin
             ),
             $this->getManagementDetector()
         );
-
-        $admin->process($request);
-        $admin->display($request);
     }
 
     private function getRegexpFineGrainedEnabler()
@@ -2490,5 +2479,17 @@ class GitPlugin extends Plugin
     private function getPermissionsPerGroupController()
     {
         return new PermissionPerGroupController($this->getJSONRepositoriesRetriever());
+    }
+
+    public function collectRoutesEvent(\Tuleap\Request\CollectRoutesEvent $event)
+    {
+        $event->getRouteCollector()->addGroup(GIT_BASE_URL, function (FastRoute\RouteCollector $r) {
+            $r->addRoute(['GET', 'POST'], '/admin[/[index.php]]', function () {
+                return $this->getAdminRouter();
+            });
+            $r->addRoute(['GET', 'POST'], '/{path:.*}', function () {
+                return new \Tuleap\Git\GitPluginDefaultController($this->getChainOfRouters());
+            });
+        });
     }
 }

@@ -334,6 +334,9 @@ msgstr ""
 msgid "Filter by name"
 msgstr ""
 
+msgid "Forbidden"
+msgstr ""
+
 msgid "Forums"
 msgstr ""
 
@@ -1040,6 +1043,9 @@ msgstr ""
 msgid ""
 "You are about to delete the widget \"%s\".\n"
 "                This action is irreversible. Please confirm this deletion."
+msgstr ""
+
+msgid "You are not allowed to access this resource"
 msgstr ""
 
 msgid "You are not the user who asked for email change"
