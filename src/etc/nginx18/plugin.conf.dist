@@ -15,7 +15,7 @@ location ^~ /plugins/%name% {
         fastcgi_param SCRIPT_FILENAME $request_filename;
     }
 
-    location ~ /assets {
+    location ^~ /plugins/%name%/assets {
         expires 12h;
     }
 }
