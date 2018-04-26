@@ -309,8 +309,12 @@ class trackerPlugin extends Plugin {
             $this->isInDashboard() ||
             $this->isInTrackerGlobalAdmin()
         ) {
-            $variant = $params['variant'];
-            $params['stylesheets'][] = $this->getThemePath() .'/css/style-'. $variant->getName() .'.css';
+            $theme_include_assets    = new IncludeAssets(
+                __DIR__ . '/../www/themes/BurningParrot/assets',
+                $this->getThemePath() . '/assets'
+            );
+            $variant                 = $params['variant'];
+            $params['stylesheets'][] = $theme_include_assets->getFileURL('style-' . $variant->getName() . '.css');
         }
     }
 
