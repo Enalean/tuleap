@@ -1,12 +1,25 @@
 version: "2"
 
 services:
-  test:
+  test-cli:
     container_name: ${BUILD_TAG}tuleap_runtests_test
     image: tuleap-run-tests-v2
     build:
       context: tests/e2e/distlp/DockerImage
     command: /tuleap/tests/e2e/distlp/run.sh
+    volumes:
+      - .:/tuleap
+      - ${TEST_RESULT_OUTPUT}:/output
+    depends_on:
+      - reverse-proxy
+    networks:
+      - tuleap
+      - external-connectivity
+
+  test-cypress:
+    container_name: ${BUILD_TAG}tuleap_runtests_test-e2e
+    image: cypress/base:6
+    command: /tuleap/tests/e2e/distlp/cypress/run.sh
     volumes:
       - .:/tuleap
       - ${TEST_RESULT_OUTPUT}:/output

@@ -109,21 +109,14 @@ pipeline {
                     """
                     junit 'results/api-soap/soap_tests.xml'
                 },
-                'Whole distrubuted platform SVN CLI integration': {
+                'Distributed SVN integration': {
                     dir ('sources') {
                         sh """
                         tests/e2e/distlp/wrap.sh "$WORKSPACE/results/distlp-integration"
                         """
                     }
                     junit 'results/distlp-integration/distlp-svn-cli.xml'
-                },
-                'Cypress': {
-                    dir ('sources') {
-                        sh """
-                        tests/e2e/distlp/cypress/wrap.sh "$WORKSPACE/results/cypress"
-                        """
-                    }
-                    junit 'results/cypress/*.xml'
+                    junit 'results/distlp-integration/results.xml'
                 },
                 'Build and run CentOS 6': {
                     dir ('sources') {
