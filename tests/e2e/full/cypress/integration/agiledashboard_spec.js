@@ -20,7 +20,7 @@
 describe("Agiledashboard", () => {
     it("should start scrum", () => {
         cy.login();
-        cy.visit('/plugins/agiledashboard/?group_id=103');
+        cy.visit('/plugins/agiledashboard/?group_id=101');
 
         cy.get('[data-test=start-scrum]').click();
 

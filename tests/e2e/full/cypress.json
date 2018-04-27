@@ -1,5 +1,5 @@
 {
-    "baseUrl": "https://reverse-proxy",
+    "baseUrl": "https://tuleap",
     "reporter": "junit",
     "reporterOptions": {
         "mochaFile": "/output/results.xml"
