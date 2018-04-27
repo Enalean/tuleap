@@ -55,4 +55,8 @@ chown ftpadmin:ftpadmin \
     /data/lib/tuleap/ftp/incoming \
     /data/lib/tuleap/ftp/pub
 
+find /data/lib/tuleap/ftp/tuleap \
+    -type f \
+    -exec chown codendiadm.ftpadmin {} \;
+
 echo "DONE !"
