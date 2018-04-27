@@ -23,22 +23,16 @@
     "bower": "^1.8.2",
     "concurrently": "^3.5.1",
     "gulp": "^3.9.1",
-    "gulp-sass": "^3.1.0",
-    "http-server": "^0.11.1",
-    "jasmine-core": "^2.4.1",
-    "jasmine-promise-matchers": "^2.4.0",
-    "karma": "^0.13.22",
-    "karma-chrome-launcher": "^2.2.0",
-    "karma-coverage": "^0.5.5",
-    "karma-jasmine": "^0.3.8",
-    "karma-junit-reporter": "^0.4.2",
-    "karma-webpack": "^2.0.9"
+    "gulp-sass": "^3.1.0"
+  },
+  "config": {
+    "bin": "../../../../node_modules/.bin/"
   },
   "scripts": {
     "bower": "bower install --allow-root --config.interactive=false",
-    "build": "rm -rf ../assets/* && gulp build && NODE_ENV=production ../../../../node_modules/.bin/webpack --optimize-minimize --bail",
-    "coverage": "rm -rf ./coverage && NODE_ENV=coverage karma start ./karma.config.js && http-server -os -a 0.0.0.0 -p 9000 coverage/",
-    "test": "NODE_ENV=test karma start ./karma.config.js",
-    "watch": "NODE_ENV=watch concurrently --raw --kill-others '../../../../node_modules/.bin/webpack --watch' 'karma start ./karma.config.js'"
+    "build": "rm -rf ../assets/* && gulp build && NODE_ENV=production $npm_package_config_bin/webpack --optimize-minimize --bail",
+    "coverage": "rm -rf ./coverage && NODE_ENV=coverage $npm_package_config_bin/karma start ./karma.config.js && $npm_package_config_bin/http-server -os -a 0.0.0.0 -p 9000 coverage/",
+    "test": "NODE_ENV=test $npm_package_config_bin/karma start ./karma.config.js",
+    "watch": "NODE_ENV=watch concurrently --raw --kill-others '$npm_package_config_bin/webpack --watch' '$npm_package_config_bin/karma start ./karma.config.js'"
   }
 }
