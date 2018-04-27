@@ -1,8 +1,7 @@
 <?php
 /**
  * Copyright (c) Enalean, 2018. All Rights Reserved.
- * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * 
+ *
  * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
@@ -18,11 +17,5 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-class PluginsAdministrationPluginInfo extends PluginInfo
-{
-    public function __construct(PluginsAdministrationPlugin $plugin)
-    {
-        parent::__construct($plugin);
-        $this->setPluginDescriptor(new PluginsAdministrationPluginDescriptor());
-    }
-}
+
+require_once __DIR__ . '/../include/autoload.php';

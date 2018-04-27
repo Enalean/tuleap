@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,19 +19,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\PluginsAdministration\PluginDisablerVerifier;
 
-class PluginsAdministrationActions extends Actions {
+class PluginsAdministrationActions extends Actions
+{
 
     /** @var PluginManager */
     private $plugin_manager;
 
     /** @var PluginDependencySolver */
     private $dependency_solver;
+    /**
+     * @var PluginDisablerVerifier
+     */
+    private $plugin_disabler_verifier;
 
     public function __construct(&$controler, $view = null) {
         $this->Actions($controler);
-        $this->plugin_manager = PluginManager::instance();
-        $this->dependency_solver = new PluginDependencySolver($this->plugin_manager);
+        $this->plugin_manager           = PluginManager::instance();
+        $this->dependency_solver        = new PluginDependencySolver($this->plugin_manager);
+        $plugin_administration          = $this->plugin_manager->getPluginByName('pluginsadministration');
+        $this->plugin_disabler_verifier = new PluginDisablerVerifier(
+            $plugin_administration,
+            ForgeConfig::get('sys_plugins_that_can_not_be_disabled_from_the_web_ui')
+        );
     }
 
     function available() {
@@ -89,7 +100,7 @@ class PluginsAdministrationActions extends Actions {
         $this->checkSynchronizerToken('/plugins/pluginsadministration/');
         $request = HTTPRequest::instance();
         $plugin_data = $this->_getPluginFromRequest();
-        if ($plugin_data) {
+        if ($plugin_data && $this->plugin_disabler_verifier->canPluginBeDisabled($plugin_data['plugin'])) {
             $plugin_manager = $this->plugin_manager;
             $dependencies = $this->dependency_solver->getAvailableDependencies($plugin_data['plugin']);
             if ($dependencies) {
@@ -117,7 +128,7 @@ class PluginsAdministrationActions extends Actions {
     function uninstall() {
         $this->checkSynchronizerToken('/plugins/pluginsadministration/');
         $plugin = $this->_getPluginFromRequest();
-        if ($plugin) {
+        if ($plugin && $this->plugin_disabler_verifier->canPluginBeDisabled($plugin['plugin'])) {
             $plugin_manager = $this->plugin_manager;
             $uninstalled = $plugin_manager->uninstallPlugin($plugin['plugin']);
             if (!$uninstalled) {
