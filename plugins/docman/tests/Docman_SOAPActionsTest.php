@@ -62,12 +62,6 @@ class Docman_SOAPActionsTest extends TuleapTestCase {
     private $fileStorage;
     private $lockFactory;
 
-    function getPartialMock($className, $methods) {
-        $partialName = $className.'Partial'.uniqid();
-        Mock::generatePartial($className, $partialName, $methods);
-        return new $partialName($this);
-    }
-
     public function setUp()
     {
         parent::setUp();
@@ -344,7 +338,7 @@ class Docman_SOAPActionsTest extends TuleapTestCase {
 
         $this->itemFactory->expectOnce('create');
 
-        $item = $this->getPartialMock('Docman_Item', array('getEventManager'));
+        $item = partial_mock('Docman_Item', array('getEventManager'));
         $item->setReturnValue('getEventManager', $action->event_manager);
         $this->itemFactory->setReturnValue('getItemFromDb', $item);
 
@@ -379,7 +373,7 @@ class Docman_SOAPActionsTest extends TuleapTestCase {
 
         $this->itemFactory->setReturnValue('create', 128002);
 
-        $item = $this->getPartialMock('Docman_Item', array('getEventManager'));
+        $item = partial_mock('Docman_Item', array('getEventManager'));
         $item->setReturnValue('getEventManager', $action->event_manager);
         $this->itemFactory->setReturnValue('getItemFromDb', $item);
 

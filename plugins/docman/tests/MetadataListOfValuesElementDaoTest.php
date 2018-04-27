@@ -25,9 +25,6 @@
 
 require_once 'bootstrap.php';
 
-Mock::generate('DataAccess');
-Mock::generatePartial('Docman_MetadataListOfValuesElementDao', 'MetadataListOfValuesElementDaoTestVersion', array('update', 'retreive', 'prepareLoveRanking'));
-
 class MetadataListOfValuesElementDaoTest extends TuleapTestCase {
 
     function testUpdate() {
@@ -40,13 +37,12 @@ class MetadataListOfValuesElementDaoTest extends TuleapTestCase {
         $status = 'A';
 
          // Setup
-        $dao = new MetadataListOfValuesElementDaoTestVersion($this);
-        $dao->setReturnValue('prepareLoveRanking', 15);
-        $dao->setReturnValue('update', true);
-        $dao->da = new MockDataAccess($this);
-        $dao->da->setReturnValue('quoteSmart', "'$name'", array($name));
-        $dao->da->setReturnValue('quoteSmart', "'$description'", array($description));
-        $dao->da->setReturnValue('quoteSmart', "'$status'", array($status));
+        $dao = \Mockery::mock(Docman_MetadataListOfValuesElementDao::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $dao->shouldReceive('prepareLoveRanking')->andReturns(15);
+        $dao->da = \Mockery::spy(DataAccess::class);
+        $dao->da->shouldReceive('quoteSmart')->with($name)->andReturns("'$name'");
+        $dao->da->shouldReceive('quoteSmart')->with($description)->andReturns("'$description'");
+        $dao->da->shouldReceive('quoteSmart')->with($status)->andReturns("'$status'");
 
         $sql_update = "UPDATE plugin_docman_metadata_love AS love".
             " SET love.name = '".$name."'".
@@ -54,7 +50,7 @@ class MetadataListOfValuesElementDaoTest extends TuleapTestCase {
             "  , love.rank = 15".
             "  , love.status = '".$status."'".
             " WHERE love.value_id = ".$valueId;
-        $dao->expectOnce('update', array($sql_update));
+        $dao->shouldReceive('update')->with($sql_update)->once()->andReturns(true);
 
         $val = $dao->updateElement($metadataId, $valueId, $name, $description, $rank, $status);
         $this->assertTrue($val);
@@ -66,12 +62,10 @@ class MetadataListOfValuesElementDaoTest extends TuleapTestCase {
         $metadataId = 1444;
 
          // Setup
-        $dao = new MetadataListOfValuesElementDaoTestVersion($this);
-        $dao->da = new MockDataAccess($this);
-
-        $dao->setReturnValue('update', true);
+        $dao = \Mockery::mock(Docman_MetadataListOfValuesElementDao::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $dao->da = \Mockery::spy(DataAccess::class);
         $sql_update = "UPDATE plugin_docman_metadata_love AS love SET status = 'D' WHERE value_id IN (  SELECT value_id   FROM plugin_docman_metadata_love_md AS lovemd   WHERE lovemd.field_id = ".$metadataId."     AND lovemd.value_id > 100  )";
-        $dao->expectOnce('update', array($sql_update));
+        $dao->shouldReceive('update')->with($sql_update)->once()->andReturns(true);
 
         $val = $dao->deleteByMetadataId($metadataId);
         $this->assertTrue($val);

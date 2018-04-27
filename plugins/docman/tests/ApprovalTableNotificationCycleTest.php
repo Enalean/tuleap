@@ -24,17 +24,6 @@
 
 require_once 'bootstrap.php';
 
-// Generic
-Mock::generatePartial('Docman_ApprovalTableNotificationCycle', 'Docman_ApprovalTableNotificationCycleTest', array('_getReviewerDao', '_getMail', '_getUserManager', '_getUserById', 'getReviewUrl'));
-
-// For  testLastReviewerApprove
-
-
-Mock::generate('PFUser');
-Mock::generate('Mail');
-Mock::generate('Docman_ApprovalReviewer');
-Mock::generate('Docman_ApprovalTable');
-
 
 class ApprovalTableNotificationCycleTest extends TuleapTestCase {
 
@@ -44,21 +33,21 @@ class ApprovalTableNotificationCycleTest extends TuleapTestCase {
      * last: approve
      */
     function testGetTableStateReject() {
-        $reviewers[0] = new MockDocman_ApprovalReviewer($this);
-        $reviewers[0]->setReturnValue('getState', PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED);
+        $reviewers[0] = \Mockery::spy(Docman_ApprovalReviewer::class);
+        $reviewers[0]->shouldReceive('getState')->andReturns(PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED);
 
-        $reviewers[1] = new MockDocman_ApprovalReviewer($this);
-        $reviewers[1]->setReturnValue('getState', PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED);
+        $reviewers[1] = \Mockery::spy(Docman_ApprovalReviewer::class);
+        $reviewers[1]->shouldReceive('getState')->andReturns(PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED);
 
-        $reviewers[2] = new MockDocman_ApprovalReviewer($this);
-        $reviewers[2]->setReturnValue('getState', PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED);
+        $reviewers[2] = \Mockery::spy(Docman_ApprovalReviewer::class);
+        $reviewers[2]->shouldReceive('getState')->andReturns(PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED);
 
         $reviewerIterator = new ArrayIterator($reviewers);
 
-        $table = new MockDocman_ApprovalTable($this);
-        $table->setReturnReference('getReviewerIterator', $reviewerIterator);
+        $table = \Mockery::spy(Docman_ApprovalTable::class);
+        $table->shouldReceive('getReviewerIterator')->andReturns($reviewerIterator);
 
-        $cycle = new Docman_ApprovalTableNotificationCycleTest($this);
+        $cycle = \Mockery::mock(Docman_ApprovalTableNotificationCycle::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $cycle->setTable($table);
 
         $this->assertEqual($cycle->getTableState(), PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED);
@@ -70,21 +59,21 @@ class ApprovalTableNotificationCycleTest extends TuleapTestCase {
      * last: approve
      */
     function testGetTableStateNotYet() {
-        $reviewers[0] = new MockDocman_ApprovalReviewer($this);
-        $reviewers[0]->setReturnValue('getState', PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED);
+        $reviewers[0] = \Mockery::spy(Docman_ApprovalReviewer::class);
+        $reviewers[0]->shouldReceive('getState')->andReturns(PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED);
 
-        $reviewers[1] = new MockDocman_ApprovalReviewer($this);
-        $reviewers[1]->setReturnValue('getState', PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET);
+        $reviewers[1] = \Mockery::spy(Docman_ApprovalReviewer::class);
+        $reviewers[1]->shouldReceive('getState')->andReturns(PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET);
 
-        $reviewers[2] = new MockDocman_ApprovalReviewer($this);
-        $reviewers[2]->setReturnValue('getState', PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED);
+        $reviewers[2] = \Mockery::spy(Docman_ApprovalReviewer::class);
+        $reviewers[2]->shouldReceive('getState')->andReturns(PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED);
 
         $reviewerIterator = new ArrayIterator($reviewers);
 
-        $table = new MockDocman_ApprovalTable($this);
-        $table->setReturnReference('getReviewerIterator', $reviewerIterator);
+        $table = \Mockery::spy(Docman_ApprovalTable::class);
+        $table->shouldReceive('getReviewerIterator')->andReturns($reviewerIterator);
 
-        $cycle = new Docman_ApprovalTableNotificationCycleTest($this);
+        $cycle = \Mockery::mock(Docman_ApprovalTableNotificationCycle::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $cycle->setTable($table);
 
         $this->assertEqual($cycle->getTableState(), PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET);
@@ -96,39 +85,33 @@ class ApprovalTableNotificationCycleTest extends TuleapTestCase {
      * last: approve
      */
     function testGetTableStateWillNotReview() {
-        $reviewers[0] = new MockDocman_ApprovalReviewer($this);
-        $reviewers[0]->setReturnValue('getState', PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED);
+        $reviewers[0] = \Mockery::spy(Docman_ApprovalReviewer::class);
+        $reviewers[0]->shouldReceive('getState')->andReturns(PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED);
 
-        $reviewers[1] = new MockDocman_ApprovalReviewer($this);
-        $reviewers[1]->setReturnValue('getState', PLUGIN_DOCMAN_APPROVAL_STATE_DECLINED);
+        $reviewers[1] = \Mockery::spy(Docman_ApprovalReviewer::class);
+        $reviewers[1]->shouldReceive('getState')->andReturns(PLUGIN_DOCMAN_APPROVAL_STATE_DECLINED);
 
-        $reviewers[2] = new MockDocman_ApprovalReviewer($this);
-        $reviewers[2]->setReturnValue('getState', PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED);
+        $reviewers[2] = \Mockery::spy(Docman_ApprovalReviewer::class);
+        $reviewers[2]->shouldReceive('getState')->andReturns(PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED);
 
         $reviewerIterator = new ArrayIterator($reviewers);
 
-        $table = new MockDocman_ApprovalTable($this);
-        $table->setReturnReference('getReviewerIterator', $reviewerIterator);
+        $table = \Mockery::spy(Docman_ApprovalTable::class);
+        $table->shouldReceive('getReviewerIterator')->andReturns($reviewerIterator);
 
-        $cycle = new Docman_ApprovalTableNotificationCycleTest($this);
+        $cycle = \Mockery::mock(Docman_ApprovalTableNotificationCycle::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $cycle->setTable($table);
 
         $this->assertEqual($cycle->getTableState(), PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED);
     }
 
-    function testLastReviewerApprove() {
-        Mock::generatePartial('Docman_ApprovalTableNotificationCycle', 'Docman_ApprovalTableNotificationCycleTest2', array('_getReviewerDao', '_getMail', '_getUserManager', '_getUserById', 'getReviewUrl', 'sendNotifTableApproved', 'notifyNextReviewer'));
-        $cycle = new Docman_ApprovalTableNotificationCycleTest2($this);
-
-        $mail = new MockMail($this);
-        //php5: this will works without having to explicitly return reference.
-        //$mail->expectOnce('send');
-        $cycle->setReturnReference('sendNotifTableApproved', $mail);
-
-        $cycle->expectOnce('sendNotifTableApproved');
-        $cycle->expectNever('notifyNextReviewer');
-
-        $reviewer = new MockDocman_ApprovalReviewer($this);
+    function testLastReviewerApprove()
+    {
+        $cycle = \Mockery::mock(Docman_ApprovalTableNotificationCycle::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $mail = \Mockery::spy(Mail::class);
+        $cycle->shouldReceive('sendNotifTableApproved')->once()->andReturns($mail);
+        $cycle->shouldReceive('notifyNextReviewer')->never();
+        $reviewer = \Mockery::spy(Docman_ApprovalReviewer::class);
         $isLastReviewer = true;
         $withComments = "";
         $cycle->reviewerApprove($reviewer, $isLastReviewer, $withComments);
