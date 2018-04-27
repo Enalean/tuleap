@@ -50,7 +50,13 @@ const jasmine_promise_matchers_path = path.resolve(
     '../../../node_modules/jasmine-promise-matchers/dist/jasmine-promise-matchers.js'
 );
 
+const jasmine_fixtures_path = path.resolve(
+    __dirname,
+    '../../../node_modules/jasmine-fixture/dist/jasmine-fixture.js'
+);
+
 module.exports = {
     getBaseConfig,
-    jasmine_promise_matchers_path
+    jasmine_promise_matchers_path,
+    jasmine_fixtures_path
 };
