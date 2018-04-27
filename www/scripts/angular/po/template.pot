@@ -289,6 +289,10 @@ msgstr ""
 msgid "This artifact is already linked to this test."
 msgstr ""
 
+#: src/app/execution/execution-list.tpl.html
+msgid "This is an automated test"
+msgstr ""
+
 #: src/app/socket/socket-disconnect.tpl.html
 msgid "You are disconnected from real time. Please reload your page."
 msgstr ""
