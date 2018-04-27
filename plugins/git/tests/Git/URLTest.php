@@ -215,48 +215,6 @@ class Git_URL_InvalidURITest extends Git_URLTest {
 
 class Git_URL_GitSmartHTTPTest extends Git_URLTest {
 
-    public function itIsSmartHTTPForInfoRefs() {
-        $url = $this->getUrl('/plugins/git/gpig/device/generic/goldfish/info/refs?service=git-upload-pack');
-        $this->assertFalse($url->isFriendly());
-        $this->assertFalse($url->isStandard());
-        $this->assertTrue($url->isSmartHTTP());
-    }
-
-    public function itIsSmartHTTPForGitUploadPack() {
-        $url = $this->getUrl('/plugins/git/gpig/device/generic/goldfish/git-upload-pack');
-        $this->assertFalse($url->isFriendly());
-        $this->assertFalse($url->isStandard());
-        $this->assertTrue($url->isSmartHTTP());
-    }
-
-    public function itIsSmartHTTPForGitReceivePack() {
-        $url = $this->getUrl('/plugins/git/gpig/device/generic/goldfish/git-receive-pack');
-        $this->assertFalse($url->isFriendly());
-        $this->assertFalse($url->isStandard());
-        $this->assertTrue($url->isSmartHTTP());
-    }
-
-    public function itIsSmartHTTPForHEAD() {
-        $url = $this->getUrl('/plugins/git/gpig/device/generic/goldfish/HEAD');
-        $this->assertFalse($url->isFriendly());
-        $this->assertFalse($url->isStandard());
-        $this->assertTrue($url->isSmartHTTP());
-    }
-
-    public function itIsSmartHTTPForObjects() {
-        $url = $this->getUrl('/plugins/git/gpig/device/generic/goldfish/objects/f5/30d381822b12f76923bfba729fead27b378bec');
-        $this->assertFalse($url->isFriendly());
-        $this->assertFalse($url->isStandard());
-        $this->assertTrue($url->isSmartHTTP());
-    }
-
-    public function itIsSmartHTTPWithAPointInRepoName() {
-        $url = $this->getUrl('/plugins/git/gpig/apache-2.5/HEAD');
-        $this->assertFalse($url->isFriendly());
-        $this->assertFalse($url->isStandard());
-        $this->assertTrue($url->isSmartHTTP());
-    }
-
     public function itRetrievesTheRepository() {
         $url = $this->getUrl('/plugins/git/gpig/device/generic/goldfish/info/refs?service=git-upload-pack');
 
@@ -312,13 +270,6 @@ class Git_URL_GitSmartHTTPTest extends Git_URLTest {
     public function itDetectsGitPushWhenURIIsGitReceivePack() {
         $url = $this->getUrl('/plugins/git/gpig/device/generic/goldfish/git-receive-pack');
         $this->assertTrue($url->isGitPush());
-    }
-
-    public function itIsSmartHTTPForInfoRefsWithExplicityDotGit() {
-        $url = $this->getUrl('/plugins/git/gpig/device/generic/goldfish.git/info/refs?service=git-upload-pack');
-        $this->assertFalse($url->isFriendly());
-        $this->assertFalse($url->isStandard());
-        $this->assertTrue($url->isSmartHTTP());
     }
 
     public function itRetrievesTheRepositoryWithExplicityDotGit() {

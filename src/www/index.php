@@ -18,7 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+define('DISABLE_URL_VERIFICATION', true);
+
 require_once 'pre.php';
 
-$router = new \Tuleap\Request\FrontRouter($event_manager, $theme_manager);
+$router = new \Tuleap\Request\FrontRouter($event_manager, $theme_manager, new URLVerificationFactory($event_manager));
 $router->route($request, $HTML);

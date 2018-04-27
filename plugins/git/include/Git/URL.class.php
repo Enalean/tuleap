@@ -118,10 +118,6 @@ class Git_URL {
         return $this->is_standard;
     }
 
-    public function isSmartHTTP() {
-        return $this->is_smart_http;
-    }
-
     /**
      * @return Project|null
      */
