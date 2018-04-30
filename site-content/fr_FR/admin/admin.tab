@@ -499,6 +499,9 @@ admin_userlist	name	Nom
 admin_userlist	login	Login
 admin_userlist	filter_name	Email, nom, id
 admin_userlist	pending_users_text	Pour votre information, <a href="$1">$2 utilisateurs attendent d'être validés</a>.
+admin_userlist	email	Adresse email
+admin_userlist	last_access_date	Dernier accès
+admin_userlist	never_logged	Jamais connecté
 
 #
 #-----------------------------------------------
