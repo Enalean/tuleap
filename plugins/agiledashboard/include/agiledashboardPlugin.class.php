@@ -157,6 +157,7 @@ class AgileDashboardPlugin extends Plugin {
             $this->addHook(MessageFetcherAdditionalWarnings::NAME);
             $this->addHook(Event::IMPORT_XML_PROJECT_TRACKER_DONE);
             $this->addHook(PermissionPerGroupPaneCollector::NAME);
+            $this->addHook(TRACKER_EVENT_ARTIFACT_DELETE);
         }
 
         if (defined('CARDWALL_BASE_URL')) {
@@ -1588,5 +1589,13 @@ class AgileDashboardPlugin extends Plugin {
         $rank_in_project = $project->getService($this->getServiceShortname())->getRank();
 
         $event->addPane($admin_permission_pane, $rank_in_project);
+    }
+
+    public function tracker_event_artifact_delete(array $params)
+    {
+        $burnup_cache_dao = new BurnupCacheDao();
+        $artifact         = $params['artifact'];
+
+        $burnup_cache_dao->deleteArtifactCacheValue($artifact->getId());
     }
 }

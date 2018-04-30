@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -403,6 +403,15 @@ class Tracker_FormElement_Field_ComputedDao extends Tracker_FormElement_Specific
         $sql         = "DELETE FROM tracker_field_computed_cache
                           WHERE artifact_id = $artifact_id
                           AND field_id      = $field_id";
+
+        return $this->update($sql);
+    }
+
+    public function deleteAllArtifactCacheValues($artifact_id)
+    {
+        $artifact_id = $this->da->escapeInt($artifact_id);
+        $sql         = "DELETE FROM tracker_field_computed_cache
+                        WHERE artifact_id = $artifact_id";
 
         return $this->update($sql);
     }

@@ -30,6 +30,8 @@ use Tracker_Artifact_PriorityManager;
 use Tracker_Artifact_XMLExport;
 use Tracker_ArtifactDao;
 use Tracker_ArtifactFactory;
+use Tracker_FormElement_Field_ComputedDao;
+use Tracker_FormElement_Field_ComputedDaoCache;
 use Tracker_FormElementFactory;
 use Tracker_Workflow_Trigger_RulesBuilderFactory;
 use Tracker_Workflow_Trigger_RulesDao;
@@ -42,6 +44,7 @@ use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\ArtifactWithTrackerStructureExporter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
+use Tuleap\Tracker\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\XMLConvertor;
 use UserXMLExportedCollection;
 use UserXMLExporter;
@@ -98,7 +101,9 @@ class ArtifactDeletorBuilder
             $artifact_priority_manager,
             new ProjectHistoryDao(),
             $event_manager,
-            new ArtifactWithTrackerStructureExporter($exporter, new XMLConvertor())
+            new ArtifactWithTrackerStructureExporter($exporter, new XMLConvertor()),
+            new Tracker_FormElement_Field_ComputedDaoCache(new Tracker_FormElement_Field_ComputedDao()),
+            new RecentlyVisitedDao()
         );
     }
 }

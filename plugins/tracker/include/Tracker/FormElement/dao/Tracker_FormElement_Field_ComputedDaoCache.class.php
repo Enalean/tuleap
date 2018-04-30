@@ -71,4 +71,9 @@ class Tracker_FormElement_Field_ComputedDaoCache {
     {
         return $this->dao->deleteArtifactCacheValue($artifact_id, $field_id);
     }
+
+    public function deleteAllArtifactCacheValues(Tracker_Artifact $artifact)
+    {
+        return $this->dao->deleteAllArtifactCacheValues($artifact->getId());
+    }
 }
