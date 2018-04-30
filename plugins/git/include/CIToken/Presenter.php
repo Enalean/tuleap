@@ -35,7 +35,7 @@ class Presenter
 
     public function __construct($token, $project_id, $repository_id)
     {
-        $this->title           = $GLOBALS['Language']->getText('plugin_git', 'view_repo_ci_token');
+        $this->title           = $GLOBALS['Language']->getText('plugin_git', 'view_repo_ci_token_title');
         $this->token           = $token;
         $this->project_id      = $project_id;
         $this->repository_id   = $repository_id;

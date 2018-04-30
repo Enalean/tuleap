@@ -55,6 +55,11 @@ abstract class Pane
         return true;
     }
 
+    public function getLabel()
+    {
+        return $this->getTitle();
+    }
+
     /**
      * @return string eg: 'perms'
      */

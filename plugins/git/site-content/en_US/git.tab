@@ -548,6 +548,7 @@ plugin_git	enabled	enabled
 plugin_git	disabled	disabled
 
 plugin_git	view_repo_ci_token	CI Token
+plugin_git	view_repo_ci_token_title	Token for Continuous Integration
 plugin_git	regenerate_ci_token	Reset token
 plugin_git	no_ci_token	No CI Token
 plugin_git	ci_token_description	This token is used to authenticate CIs like Jenkins when calling the build status update APIs

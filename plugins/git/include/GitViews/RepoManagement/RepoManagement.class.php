@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -208,7 +208,7 @@ class GitViews_RepoManagement {
         echo '</div>';
     }
 
-    private function displayTab($pane) {
+    private function displayTab(Pane\Pane $pane) {
         echo '<li class="'. ($this->current_pane == $pane->getIdentifier() ? 'active' : '') .'">';
         $url = GIT_BASE_URL .'/?'. http_build_query(
             array(
@@ -218,7 +218,9 @@ class GitViews_RepoManagement {
                 'pane'     => $pane->getIdentifier(),
             )
         );
-        echo '<a href="'. $url .'">'. $pane->getTitle() .'</a></li>';
+        $purifier = Codendi_HTMLPurifier::instance();
+
+        echo '<a href="'. $url .'" title="'. $purifier->purify($pane->getTitle()) .'">'. $purifier->purify($pane->getLabel()) .'</a></li>';
     }
 }
 ?>

@@ -43,6 +43,11 @@ class GitViewsRepoManagementPaneCIToken extends Pane
      */
     public function getTitle()
     {
+        return $GLOBALS['Language']->getText('plugin_git', 'view_repo_ci_token_title');
+    }
+
+    public function getLabel()
+    {
         return $GLOBALS['Language']->getText('plugin_git', 'view_repo_ci_token');
     }
 
