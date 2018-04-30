@@ -54,16 +54,17 @@ class TrackerReportBuilder
         $filters_tracker_report = array();
         $reports                = $this->tracker_report_factory->getReportsByTrackerId($this->kanban->getTrackerId(), null);
         foreach ($reports as $report) {
+            $report_id             = (int) $report->getId();
             $filter_tracker_report = array(
-                'id'   => (int) $report->getId(),
+                'id'   => $report_id,
                 'name' => $report->getName()
             );
 
-            if (in_array($report->getId(), $selectable_report_ids)) {
+            if (in_array($report_id, $selectable_report_ids)) {
                 $filter_tracker_report['selectable'] = true;
             }
 
-            if ($report->getId() === $selected_tracker_report_id) {
+            if ($report_id === (int) $selected_tracker_report_id) {
                 $filter_tracker_report['selected'] = true;
             }
 

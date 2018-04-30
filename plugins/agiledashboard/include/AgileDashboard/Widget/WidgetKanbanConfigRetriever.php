@@ -1,6 +1,10 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright Enalean (c) 2018. All rights reserved.
+ *
+ * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Enalean SAS. All other trademarks or names are properties of their respective
+ * owners.
  *
  * This file is a part of Tuleap.
  *
@@ -17,37 +21,26 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace Tuleap\AgileDashboard\Widget;
 
-class WidgetKanbanDeletor
+class WidgetKanbanConfigRetriever
 {
-    /**
-     * @var WidgetKanbanDao
-     */
-    private $widget_kanban_dao;
-
     /**
      * @var WidgetKanbanConfigDAO
      */
-    private $widget_config_dao;
+    private $config_dao;
 
-    public function __construct(WidgetKanbanDao $widget_kanban_dao, WidgetKanbanConfigDAO $widget_config_dao)
+    public function __construct(WidgetKanbanConfigDAO $config_dao)
     {
-        $this->widget_kanban_dao = $widget_kanban_dao;
-        $this->widget_config_dao = $widget_config_dao;
+        $this->config_dao = $config_dao;
     }
 
-    public function delete($id, $owner_id, $owner_type)
+    /**
+     * @param int $widget_id
+     */
+    public function getWidgetReportId($widget_id)
     {
-        $this->widget_kanban_dao->delete($id, $owner_id, $owner_type);
-
-        if ($this->isWidgetFiltered($id)) {
-            $this->widget_config_dao->deleteConfigForWidgetId($id);
-        }
-    }
-
-    private function isWidgetFiltered($id)
-    {
-        return $this->widget_config_dao->searchKanbanTrackerReportId($id) !== null;
+        return $this->config_dao->searchKanbanTrackerReportId($widget_id);
     }
 }

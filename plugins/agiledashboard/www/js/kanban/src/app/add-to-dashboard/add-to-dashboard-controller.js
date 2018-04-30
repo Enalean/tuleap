@@ -11,16 +11,19 @@ function AddToDashboardController(
     $element,
     SharedPropertiesService
 ) {
-    var self = this;
+    const self = this;
 
-    self.dashboard_dropdown = SharedPropertiesService.getDashboardDropdown();
+    Object.assign(self, {
+        $onInit           : init,
+        dashboard_dropdown: SharedPropertiesService.getDashboardDropdown(),
+        report_id         : SharedPropertiesService.getSelectedTrackerReportId(),
 
-    self.showProjectDashboards = showProjectDashboards;
-    self.showDashboardDropdown = showDashboardDropdown;
-    self.$onInit               = init;
+        showProjectDashboards,
+        showDashboardDropdown
+    });
 
     function init() {
-        var dashboard_dropdown = $element[0].querySelector('#dashboard-dropdown-button');
+        const dashboard_dropdown = $element[0].querySelector('#dashboard-dropdown-button');
         if (dashboard_dropdown) {
             dropdown(dashboard_dropdown);
         }

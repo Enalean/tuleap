@@ -8,7 +8,7 @@
         <div class="dashboard-dropdown-menu">
             <span class="tlp-dropdown-menu-title dashboard-dropdown-menu-title" role="menuitem">{{ add_to_dashboard.dashboard_dropdown.my_dashboard }}</span>
             <a ng-repeat="user_dashboard in add_to_dashboard.dashboard_dropdown.user_dashboards"
-               href="{{ add_to_dashboard.dashboard_dropdown.my_dashboard_url }}&dashboard-id={{ user_dashboard.id }}"
+               href="{{ add_to_dashboard.dashboard_dropdown.my_dashboard_url }}&dashboard-id={{ user_dashboard.id }}&tracker_report_id={{ add_to_dashboard.report_id }}"
                class="tlp-dropdown-menu-item"
                role="menuitem"
             >
@@ -20,7 +20,7 @@
                         {{ add_to_dashboard.dashboard_dropdown.project_dashboard }}
                     </span>
                 <a ng-repeat="project_dashboard in add_to_dashboard.dashboard_dropdown.project_dashboards"
-                   href="{{ add_to_dashboard.dashboard_dropdown.project_dashboard_url }}&dashboard-id={{ project_dashboard.id }}"
+                   href="{{ add_to_dashboard.dashboard_dropdown.project_dashboard_url }}&dashboard-id={{ project_dashboard.id }}&tracker_report_id={{ add_to_dashboard.report_id }}"
                    class="tlp-dropdown-menu-item"
                    role="menuitem"
                 >

@@ -42,6 +42,14 @@ function MainCtrl(
         const tracker_reports = Object.values(JSON.parse(kanban_init_data.trackerReports));
         FilterTrackerReportService.initTrackerReports(tracker_reports);
 
+        let selected_report = tracker_reports.find(({ selected }) => selected === true);
+
+        if (! selected_report) {
+            selected_report = tracker_reports.find(({ name }) => name === 'Default');
+        }
+
+        SharedPropertiesService.setSelectedTrackerReportId(selected_report.id);
+
         const language = kanban_init_data.language;
         gettextCatalog.setCurrentLanguage(language);
         amMoment.changeLocale(language);
