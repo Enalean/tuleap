@@ -1222,6 +1222,16 @@ class Tracker_ArtifactDao extends DataAccessObject {
         $this->update($sql);
     }
 
+    public function deleteUnsubscribeNotificationForArtifact($artifact_id)
+    {
+        $artifact_id = $this->da->escapeInt($artifact_id);
+
+        $sql = "DELETE FROM tracker_artifact_unsubscribe
+                WHERE artifact_id = $artifact_id";
+
+        $this->update($sql);
+    }
+
     public function searchLatestUpdatedArtifactsInProject($project_id, $nb_max)
     {
         $project_id = $this->da->escapeInt($project_id);

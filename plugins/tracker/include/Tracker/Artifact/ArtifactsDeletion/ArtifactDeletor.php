@@ -27,8 +27,10 @@ use PermissionsManager;
 use ProjectHistoryDao;
 use Tracker_Artifact_PriorityManager;
 use Tracker_ArtifactDao;
+use Tracker_FormElement_Field_ComputedDaoCache;
 use Tuleap\Project\XML\Export\ZipArchive;
 use Tuleap\Tracker\Artifact\ArtifactWithTrackerStructureExporter;
+use Tuleap\Tracker\RecentlyVisited\RecentlyVisitedDao;
 
 class ArtifactDeletor
 {
@@ -62,6 +64,14 @@ class ArtifactDeletor
      * @var ArtifactWithTrackerStructureExporter
      */
     private $artifact_with_tracker_structure_exporter;
+    /**
+     * @var Tracker_FormElement_Field_ComputedDaoCache
+     */
+    private $computed_dao_cache;
+    /**
+     * @var RecentlyVisitedDao
+     */
+    private $recently_visited_dao;
 
     public function __construct(
         Tracker_ArtifactDao $dao,
@@ -70,7 +80,9 @@ class ArtifactDeletor
         Tracker_Artifact_PriorityManager $tracker_artifact_priority_manager,
         ProjectHistoryDao $project_history_dao,
         EventManager $event_manager,
-        ArtifactWithTrackerStructureExporter $artifact_with_tracker_structure_exporter
+        ArtifactWithTrackerStructureExporter $artifact_with_tracker_structure_exporter,
+        Tracker_FormElement_Field_ComputedDaoCache $computed_dao_cache,
+        RecentlyVisitedDao $recently_visited_dao
     ) {
         $this->dao                                      = $dao;
         $this->permissions_manager                      = $permissions_manager;
@@ -79,8 +91,9 @@ class ArtifactDeletor
         $this->project_history_dao                      = $project_history_dao;
         $this->event_manager                            = $event_manager;
         $this->artifact_with_tracker_structure_exporter = $artifact_with_tracker_structure_exporter;
+        $this->computed_dao_cache                       = $computed_dao_cache;
+        $this->recently_visited_dao                     = $recently_visited_dao;
     }
-
 
     public function delete(\Tracker_Artifact $artifact, \PFUser $user)
     {
@@ -93,8 +106,11 @@ class ArtifactDeletor
         $this->permissions_manager->clearPermission(\Tracker_Artifact::PERMISSION_ACCESS, $artifact->getId());
         $this->cross_reference_manager->deleteEntity($artifact->getId(), \Tracker_Artifact::REFERENCE_NATURE, $artifact->getTracker()->getGroupId());
         $this->dao->deleteArtifactLinkReference($artifact->getId());
+        $this->dao->deleteUnsubscribeNotificationForArtifact($artifact->getId());
         // We do not keep trace of the history change here because it doesn't have any sense
         $this->tracker_artifact_priority_manager->deletePriority($artifact);
+        $this->computed_dao_cache->deleteAllArtifactCacheValues($artifact);
+        $this->recently_visited_dao->deleteVisitByArtifactId($artifact->getId());
         $this->dao->delete($artifact->getId());
         $this->dao->commit();
 

@@ -90,4 +90,14 @@ class RecentlyVisitedDao extends DataAccessObject
 
         $this->update($sql);
     }
+
+    public function deleteVisitByArtifactId($artifact_id)
+    {
+        $artifact_id = $this->da->escapeInt($artifact_id);
+
+        $sql = "DELETE FROM plugin_tracker_recently_visited
+                WHERE artifact_id = $artifact_id";
+
+        $this->update($sql);
+    }
 }

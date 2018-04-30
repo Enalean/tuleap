@@ -25,9 +25,11 @@ require_once __DIR__ . '/../../../bootstrap.php';
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tracker_FormElement_Field_ComputedDaoCache;
 use Tuleap\Tracker\Artifact\ArtifactWithTrackerStructureExporter;
+use Tuleap\Tracker\RecentlyVisited\RecentlyVisitedDao;
 
-class ArtifactDeletorTests extends TestCase
+class ArtifactDeletorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -69,6 +71,7 @@ class ArtifactDeletorTests extends TestCase
         $artifact_dao = Mockery::mock(\Tracker_ArtifactDao::class);
         $artifact_dao->shouldReceive('startTransaction')->once();
         $artifact_dao->shouldReceive('deleteArtifactLinkReference')->once();
+        $artifact_dao->shouldReceive('deleteUnsubscribeNotificationForArtifact')->once();
         $artifact_dao->shouldReceive('delete')->once();
         $artifact_dao->shouldReceive('commit')->once();
 
@@ -90,6 +93,12 @@ class ArtifactDeletorTests extends TestCase
         $artifact_with_tracker_structure_exporter = Mockery::mock(ArtifactWithTrackerStructureExporter::class);
         $artifact_with_tracker_structure_exporter->shouldReceive('exportArtifactAndTrackerStructureToXML');
 
+        $computed_cache_dao = Mockery::mock(Tracker_FormElement_Field_ComputedDaoCache::class);
+        $computed_cache_dao->shouldReceive('deleteAllArtifactCacheValues')->once();
+
+        $recently_visited_dao = Mockery::mock(RecentlyVisitedDao::class);
+        $recently_visited_dao->shouldReceive('deleteVisitByArtifactId')->once();
+
         $artifact_deletor = new ArtifactDeletor(
             $artifact_dao,
             $permissions_manager,
@@ -97,8 +106,11 @@ class ArtifactDeletorTests extends TestCase
             $tracker_artifact_priority_manager,
             $project_history_dao,
             $event_manager,
-            $artifact_with_tracker_structure_exporter
+            $artifact_with_tracker_structure_exporter,
+            $computed_cache_dao,
+            $recently_visited_dao
         );
+
         $artifact_deletor->delete($artifact, $user);
     }
 }
