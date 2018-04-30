@@ -507,6 +507,9 @@ admin_userlist	name	Name
 admin_userlist	login	Login
 admin_userlist	filter_name	Email, name, id
 admin_userlist	pending_users_text	For your information, there are <a href="$1">$2 users waiting for validation</a>.
+admin_userlist	email	Email address
+admin_userlist	last_access_date	Last access date
+admin_userlist	never_logged	Never logged
 
 #
 #-----------------------------------------------

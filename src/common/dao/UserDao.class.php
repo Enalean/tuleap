@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -637,7 +637,8 @@ class UserDao extends DataAccessObject {
      *
      * @return Array
      */
-    function listAllUsers ($group_id, $pattern, $offset, $limit, $sort_header, $sort_order, $status_values) {
+    public function listAllUsers ($group_id, $pattern, $offset, $limit, $sort_header, $sort_order, $status_values)
+    {
         $group_id = $this->da->escapeInt($group_id);
         $offset   = $this->da->escapeInt($offset);
         $limit    = $this->da->escapeInt($limit);
@@ -669,8 +670,9 @@ class UserDao extends DataAccessObject {
             $from .= " INNER JOIN user_group ON (user.user_id = user_group.user_id AND user_group.group_id = $group_id)";
         }
 
-        $sql = "SELECT SQL_CALC_FOUND_ROWS user.*, admin_of.nb AS admin_of, member_of.nb AS member_of
-            $from
+        $sql = "SELECT SQL_CALC_FOUND_ROWS user.*, admin_of.nb AS admin_of, member_of.nb AS member_of, user_access.last_access_date
+                $from
+                INNER JOIN user_access USING (user_id)
                 LEFT JOIN (
                     SELECT count(admin_flags) as nb, user_id
                     FROM user_group

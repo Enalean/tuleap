@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -25,11 +26,16 @@ class Admin_UserListExporter {
     /**
      * @var array
      */
-    private $col_list;
-
-    public function __construct() {
-        $this->col_list = array('user_id', 'login_name', 'real_name', 'member_of', 'admin_of', 'status');
-    }
+    private $col_list = [
+        'user_id',
+        'login_name',
+        'real_name',
+        'email',
+        'member_of',
+        'admin_of',
+        'status',
+        'last_access_date',
+    ];
 
     /**
      * Export user list in csv format
@@ -39,17 +45,22 @@ class Admin_UserListExporter {
      * @param String $sort_order
      *
      */
-    public function exportUserList($user_name_search, $current_sort_header, $sort_order, $status_values) {
+    public function exportUserList($user_name_search, $current_sort_header, $sort_order, $status_values)
+    {
         global $Language;
         header ('Content-Type: text/csv');
         header ('Content-Disposition:attachment; filename=users_list.csv');
         $eol = "\n";
-        $documents_title = array ('user_id'    => $Language->getText('admin_userlist', 'id_user'),
-                                  'login_name' => $Language->getText('include_user_home', 'login_name'),
-                                  'real_name'  => $Language->getText('include_user_home', 'real_name'),
-                                  'member_of'  => $Language->getText('admin_userlist', 'member_of'),
-                                  'admin_of'   => $Language->getText('admin_userlist', 'admin_of'),
-                                  'status'     => $Language->getText('admin_userlist', 'status'));
+        $documents_title = [
+            'user_id'          => $Language->getText('admin_userlist', 'id_user'),
+            'login_name'       => $Language->getText('include_user_home', 'login_name'),
+            'real_name'        => $Language->getText('include_user_home', 'real_name'),
+            'email'            => $Language->getText('admin_userlist', 'email'),
+            'member_of'        => $Language->getText('admin_userlist', 'member_of'),
+            'admin_of'         => $Language->getText('admin_userlist', 'admin_of'),
+            'status'           => $Language->getText('admin_userlist', 'status'),
+            'last_access_date' => $Language->getText('admin_userlist', 'last_access_date'),
+        ];
         echo build_csv_header($this->col_list, $documents_title).$eol;
         $dao = new UserDao(CodendiDataAccess::instance());
         $result = $dao->listAllUsers(0, $user_name_search, 0, 0, $current_sort_header, $sort_order, $status_values);
@@ -63,19 +74,34 @@ class Admin_UserListExporter {
      * @param array $users
      *
      */
-    private function buildCsvBody($users) {
+    private function buildCsvBody($users)
+    {
         $csv_body = "";
         $hp = Codendi_HTMLPurifier::instance();
         foreach ($users as $user) {
-            $documents_body = array ('user_id'    => $user['user_id'],
-                                     'login_name' => $hp->purify($user['user_name']),
-                                     'real_name'  => $hp->purify($user['realname']),
-                                     'member_of'  => $user['member_of'],
-                                     'admin_of'   => $user['admin_of'],
-                                     'status'     => $this->getUserStatus($user['status']));
+            $documents_body = [
+                'user_id'          => $user['user_id'],
+                'login_name'       => $hp->purify($user['user_name']),
+                'real_name'        => $hp->purify($user['realname']),
+                'email'            => $hp->purify($user['email']),
+                'member_of'        => $user['member_of'],
+                'admin_of'         => $user['admin_of'],
+                'status'           => $this->getUserStatus($user['status']),
+                'last_access_date' => $this->getLastAccessDate($user['last_access_date']),
+            ];
             $csv_body .= build_csv_record($this->col_list, $documents_body)."\n";
         }
+
         return $csv_body;
+    }
+
+    private function getLastAccessDate($last_access_date_timestamp)
+    {
+        if ((int) $last_access_date_timestamp === 0) {
+            return $GLOBALS['Language']->getText('admin_userlist', 'never_logged');
+        }
+
+        return date('Y M d H:i', $last_access_date_timestamp);
     }
 
     /**
@@ -112,4 +138,3 @@ class Admin_UserListExporter {
         return $status;
     }
 }
-?>
