@@ -366,6 +366,9 @@ msgstr "Rempli"
 msgid "Filter by name"
 msgstr "Filtrer par nom"
 
+msgid "Forbidden"
+msgstr "Interdit"
+
 msgid "Forums"
 msgstr "Forums"
 
@@ -1133,6 +1136,9 @@ msgid ""
 msgstr ""
 "Vous êtes sur le point de supprimer le widget \"%s\". Cette action est "
 "irréversible. Merci de confirmer cette suppression."
+
+msgid "You are not allowed to access this resource"
+msgstr "Vous n'avez pas l'autorisation d'accéder à cette resource"
 
 msgid "You are not the user who asked for email change"
 msgstr ""

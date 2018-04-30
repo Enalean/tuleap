@@ -19,21 +19,41 @@
  *
  */
 
-namespace Tuleap\Request;
+namespace Tuleap\Git;
 
 use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Request\DispatchableWithRequest;
+use Tuleap\Git\RouterLink;
 
-interface DispatchableWithRequest
+class GitPluginDefaultController implements DispatchableWithRequest
 {
+
+    /**
+     * @var \Tuleap\Git\RouterLink
+     */
+    private $router_link;
+
+    public function __construct(RouterLink $router_link)
+    {
+        $this->router_link = $router_link;
+    }
+
     /**
      * Is able to process a request routed by FrontRouter
      *
      * @param HTTPRequest $request
      * @param array $variables
-     * @throws NotFoundException
-     * @throws ForbiddenException
      * @return void
      */
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables);
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    {
+        // hack to make sure that pseudo-nice urls don't bypass the restricted user check
+        $matches = [];
+        if (preg_match_all('/^\/plugins\/git\/index.php\/(\d+)\/([^\/][a-zA-Z]+)\/([a-zA-Z\-\_0-9]+)\/\?{0,1}.*/', $_SERVER['REQUEST_URI'], $matches)) {
+            $_REQUEST['group_id'] = $_GET['group_id'] = $matches[1][0];
+        }
+
+        $this->router_link->process($request);
+    }
 }

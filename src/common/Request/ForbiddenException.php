@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,15 +16,21 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-require_once 'pre.php';
+namespace Tuleap\Request;
 
-$p = $plugin_manager->getPluginByName('git');
-if ($p && $plugin_manager->isPluginAvailable($p) && $request->getCurrentUser()->isSuperUser()) {
-    $p->processAdmin($request);
-} else {
-    header('Location: '.get_server_url());
+use Throwable;
+
+class ForbiddenException extends \Exception
+{
+
+    public function __construct($message = null, $code = 0, Throwable $previous = null)
+    {
+        if ($message === null) {
+            $message = _('You are not allowed to access this resource');
+        }
+        parent::__construct($message, $code, $previous);
+    }
 }
-
-?>

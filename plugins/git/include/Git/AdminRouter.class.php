@@ -31,8 +31,8 @@ use Tuleap\Git\RemoteServer\Gerrit\Restrictor;
 /**
  * This routes site admin part of Git
  */
-class Git_AdminRouter {
-
+class Git_AdminRouter implements \Tuleap\Request\DispatchableWithRequest
+{
     /** @var Git_RemoteServer_GerritServerFactory */
     private $gerrit_server_factory;
 
@@ -116,15 +116,13 @@ class Git_AdminRouter {
         $this->management_detector            = $management_detector;
     }
 
-    public function process(Codendi_Request $request) {
+    public function process(HTTPRequest $request, \Tuleap\Layout\BaseLayout $layout, array $variables) {
+        if (! $request->getCurrentUser()->isSuperUser()) {
+            throw new \Tuleap\Request\ForbiddenException();
+        }
         $controller = $this->getControllerFromRequest($request);
 
         $controller->process($request);
-    }
-
-    public function display(Codendi_Request $request) {
-        $controller = $this->getControllerFromRequest($request);
-
         $controller->display($request);
     }
 

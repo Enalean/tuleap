@@ -85,6 +85,14 @@ class FrontRouter
                 _('Not found'),
                 $exception->getMessage()
             ))->rendersError();
+        } catch (ForbiddenException $exception) {
+            (new ErrorRendering(
+                $request,
+                $this->theme_manager->getBurningParrot($request->getCurrentUser()),
+                403,
+                _('Forbidden'),
+                $exception->getMessage()
+            ))->rendersError();
         } catch (\Exception $exception) {
             $code = 500;
             if ($exception->getCode() !== 0) {
