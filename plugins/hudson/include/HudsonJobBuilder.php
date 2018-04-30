@@ -27,6 +27,8 @@ use SimpleXMLElement;
 
 class HudsonJobBuilder
 {
+    const MAX_BATCH_EXECUTION_TIME = 5;
+
     /**
      * @var \Http_Client
      */
@@ -49,6 +51,34 @@ class HudsonJobBuilder
             $minimal_hudson_job->getName(),
             $this->getXMLContent($minimal_hudson_job->getJobUrl())
         );
+    }
+
+    /**
+     * @param MinimalHudsonJob[]
+     * @return HudsonJobLazyExceptionHandler[]
+     */
+    public function getHudsonJobsWithException(array $minimal_hudson_jobs)
+    {
+        $start_time  = time();
+        $hudson_jobs = [];
+        foreach ($minimal_hudson_jobs as $id => $minimal_hudson_job) {
+            if ((time() - $start_time) >= self::MAX_BATCH_EXECUTION_TIME) {
+                $hudson_jobs[$id] = new HudsonJobLazyExceptionHandler(
+                    null,
+                    new HudsonJobRetrievalTooLongException(
+                        dgettext('tuleap-hudson', 'Jobs retrieval took too long, this job has been ignored')
+                    )
+                );
+                continue;
+            }
+            try {
+                $hudson_jobs[$id] = new HudsonJobLazyExceptionHandler($this->getHudsonJob($minimal_hudson_job), null);
+            } catch (\Exception $exception) {
+                $hudson_jobs[$id] = new HudsonJobLazyExceptionHandler(null, $exception);
+            }
+        }
+
+        return $hudson_jobs;
     }
 
     /**
