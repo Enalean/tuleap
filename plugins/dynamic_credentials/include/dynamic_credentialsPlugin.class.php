@@ -70,7 +70,7 @@ class dynamic_credentialsPlugin extends Plugin // @codingStandardsIgnoreLine
     {
         $credential_retriever = $this->getCredentialRetriever();
         if (session_status() === PHP_SESSION_NONE) {
-            session_start();
+            PHP_Session::start();
         }
         $support_session = new DynamicCredentialSession($_SESSION, $credential_retriever);
         try {
@@ -96,6 +96,14 @@ class dynamic_credentialsPlugin extends Plugin // @codingStandardsIgnoreLine
         }
 
         $credential_retriever = $this->getCredentialRetriever();
+
+        if (session_status() === PHP_SESSION_NONE) {
+            PHP_Session::start();
+            if (defined('IS_SCRIPT') && IS_SCRIPT) {
+                session_write_close();
+            }
+        }
+
         $dynamic_session      = new DynamicCredentialSession($_SESSION, $credential_retriever);
         $user_realname        = $this->getPluginInfo()->getPropertyValueForName('dynamic_user_realname');
 
