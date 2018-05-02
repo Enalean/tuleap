@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,7 +27,11 @@ use AgileDashboard_PermissionsManager;
 use Codendi_Request;
 use KanbanPresenter;
 use TemplateRendererFactory;
+use Tracker_Report;
+use Tracker_ReportFactory;
 use TrackerFactory;
+use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportBuilder;
+use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportDao;
 use Tuleap\AgileDashboard\KanbanJavascriptDependenciesProvider;
 use Widget;
 
@@ -66,6 +70,15 @@ abstract class Kanban extends Widget
      */
     private $widget_kanban_config_retriever;
 
+    /**
+     * @var \TemplateRenderer
+     */
+    private $renderer;
+    /**
+     * @var WidgetKanbanConfigUpdater
+     */
+    private $widget_kanban_config_updater;
+
     public function __construct(
         $id,
         $owner_id,
@@ -76,7 +89,8 @@ abstract class Kanban extends Widget
         AgileDashboard_KanbanFactory $kanban_factory,
         TrackerFactory $tracker_factory,
         AgileDashboard_PermissionsManager $permissions_manager,
-        WidgetKanbanConfigRetriever $widget_kanban_config_retriever
+        WidgetKanbanConfigRetriever $widget_kanban_config_retriever,
+        WidgetKanbanConfigUpdater $widget_kanban_config_updater
     ) {
         parent::__construct($id);
         $this->owner_id                       = $owner_id;
@@ -88,6 +102,11 @@ abstract class Kanban extends Widget
         $this->tracker_factory                = $tracker_factory;
         $this->permissions_manager            = $permissions_manager;
         $this->widget_kanban_config_retriever = $widget_kanban_config_retriever;
+        $this->widget_kanban_config_updater   = $widget_kanban_config_updater;
+
+        $this->renderer = TemplateRendererFactory::build()->getRenderer(
+            AGILEDASHBOARD_TEMPLATE_DIR . '/widgets'
+        );
     }
 
     public function create(Codendi_Request $request)
@@ -97,7 +116,21 @@ abstract class Kanban extends Widget
 
     public function getTitle()
     {
-        return $this->kanban_title ? : 'Kanban';
+        $kanban_name     = $this->kanban_title ? : 'Kanban';
+        $selected_report = $this->getSelectedReport();
+
+        if ($this->tracker_report_id
+            && $selected_report
+            && $this->isCurrentReportSelectable($selected_report)
+        ) {
+            return sprintf(
+                '%s - %s',
+                $kanban_name,
+                $selected_report->getName()
+            );
+        }
+
+        return $kanban_name;
     }
 
     public function getDescription()
@@ -207,5 +240,54 @@ abstract class Kanban extends Widget
         $provider = new KanbanJavascriptDependenciesProvider();
 
         return $provider->getDependencies();
+    }
+
+    public function hasPreferences($widget_id)
+    {
+        return true;
+    }
+
+    public function getPreferences($widget_id)
+    {
+        $tracker_reports_builder = new TrackerReportBuilder(
+            Tracker_ReportFactory::instance(),
+            $this->kanban_factory->getKanban($this->getCurrentUser(), $this->kanban_id),
+            new TrackerReportDao()
+        );
+
+        $widget_tracker_reports = $tracker_reports_builder->build(
+            $this->tracker_report_id
+        );
+
+        return $this->renderer->renderToString(
+            'widget-kanban-report-selector',
+            new WidgetKanbanReportSelectorPresenter(
+                $widget_tracker_reports
+            )
+        );
+    }
+
+    public function updatePreferences(&$request)
+    {
+        $this->widget_kanban_config_updater->updateConfiguration(
+            $this->content_id,
+            $request->get('kanban-report-filter')
+        );
+    }
+
+    private function getSelectedReport()
+    {
+        return Tracker_ReportFactory::instance()->getReportById(
+            $this->tracker_report_id,
+            $this->getCurrentUser()->getId()
+        );
+    }
+
+    private function isCurrentReportSelectable(Tracker_Report $report)
+    {
+        $tracker_report_dao = new TrackerReportDao();
+        $selectable_reports = $tracker_report_dao->searchReportIdsForKanban($this->kanban_id);
+
+        return in_array($report->getId(), $selectable_reports);
     }
 }

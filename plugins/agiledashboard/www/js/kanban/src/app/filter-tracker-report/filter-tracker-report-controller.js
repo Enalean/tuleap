@@ -2,12 +2,14 @@ export default FilterTrackerReportController;
 
 FilterTrackerReportController.$inject = [
     '$window',
-    'FilterTrackerReportService'
+    'FilterTrackerReportService',
+    'SharedPropertiesService'
 ];
 
 function FilterTrackerReportController(
     $window,
-    FilterTrackerReportService
+    FilterTrackerReportService,
+    SharedPropertiesService
 ) {
     const self = this;
 
@@ -35,6 +37,7 @@ function FilterTrackerReportController(
     }
 
     function displaySelectbox() {
-        return (self.getSelectableReports().length > 0);
+        return (self.getSelectableReports().length > 0)
+            && (SharedPropertiesService.getWidgetId() === 0);
     }
 }

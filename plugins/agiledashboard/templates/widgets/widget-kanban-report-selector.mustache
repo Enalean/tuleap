@@ -1,0 +1,31 @@
+<div class="tlp-form-element">
+    <label class="tlp-label" for="kanban-reports-list">
+        {{# dgettext }}
+            tuleap-agiledashboard
+            | Filter:
+        {{/ dgettext}}
+        <i class="fa fa-asterisk"></i>
+    </label>
+    <select id="kanban-reports-list"
+            class="tlp-select"
+            name="kanban-report-filter"
+            required
+    >
+        <option value="0">
+            {{# dgettext }}
+                tuleap-agiledashboard
+                | None
+            {{/ dgettext }}
+        </option>
+
+        {{# widget_tracker_reports }}
+            {{# selectable }}
+                <option value="{{ id }}"
+                        {{# selected }}selected{{/ selected }}
+                >
+                    {{ name }}
+                </option>
+            {{/selectable}}
+        {{/ widget_tracker_reports }}
+    </select>
+</div>
