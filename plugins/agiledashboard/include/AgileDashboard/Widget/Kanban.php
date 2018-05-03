@@ -35,7 +35,8 @@ abstract class Kanban extends Widget
 {
     protected $kanban_id;
     protected $kanban_title;
-    protected $tracker_report_id;
+
+    private $tracker_report_id;
     /**
      * @var WidgetKanbanCreator
      */
@@ -60,6 +61,10 @@ abstract class Kanban extends Widget
      * @var WidgetKanbanDeletor
      */
     private $widget_kanban_deletor;
+    /**
+     * @var WidgetKanbanConfigRetriever
+     */
+    private $widget_kanban_config_retriever;
 
     public function __construct(
         $id,
@@ -71,18 +76,18 @@ abstract class Kanban extends Widget
         AgileDashboard_KanbanFactory $kanban_factory,
         TrackerFactory $tracker_factory,
         AgileDashboard_PermissionsManager $permissions_manager,
-        $tracker_report_id
+        WidgetKanbanConfigRetriever $widget_kanban_config_retriever
     ) {
         parent::__construct($id);
-        $this->owner_id                = $owner_id;
-        $this->owner_type              = $owner_type;
-        $this->widget_kanban_creator   = $widget_kanban_creator;
-        $this->widget_kanban_retriever = $widget_kanban_retriever;
-        $this->widget_kanban_deletor   = $widget_kanban_deletor;
-        $this->kanban_factory          = $kanban_factory;
-        $this->tracker_factory         = $tracker_factory;
-        $this->permissions_manager     = $permissions_manager;
-        $this->tracker_report_id       = $tracker_report_id;
+        $this->owner_id                       = $owner_id;
+        $this->owner_type                     = $owner_type;
+        $this->widget_kanban_creator          = $widget_kanban_creator;
+        $this->widget_kanban_retriever        = $widget_kanban_retriever;
+        $this->widget_kanban_deletor          = $widget_kanban_deletor;
+        $this->kanban_factory                 = $kanban_factory;
+        $this->tracker_factory                = $tracker_factory;
+        $this->permissions_manager            = $permissions_manager;
+        $this->widget_kanban_config_retriever = $widget_kanban_config_retriever;
     }
 
     public function create(Codendi_Request $request)
@@ -113,10 +118,11 @@ abstract class Kanban extends Widget
         }
 
         try {
-            $this->content_id   = $id;
-            $this->kanban_id    = $widget['kanban_id'];
-            $kanban             = $this->kanban_factory->getKanban($this->getCurrentUser(), $this->kanban_id);
-            $this->kanban_title = $kanban->getName();
+            $this->content_id        = $id;
+            $this->kanban_id         = $widget['kanban_id'];
+            $this->tracker_report_id = $this->widget_kanban_config_retriever->getWidgetReportId($id);
+            $kanban                  = $this->kanban_factory->getKanban($this->getCurrentUser(), $this->kanban_id);
+            $this->kanban_title      = $kanban->getName();
         } catch (AgileDashboard_KanbanCannotAccessException $e) {
         }
     }

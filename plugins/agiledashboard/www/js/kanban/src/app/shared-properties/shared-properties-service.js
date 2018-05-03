@@ -43,6 +43,8 @@ function SharedPropertiesService() {
         setWidgetId(widget_id) { property.widget_id = widget_id; },
         getWidgetId() { return property.widget_id; },
         getKanbanUrl() { return property.kanban_url; },
-        setKanbanUrl(kanban_url) { property.kanban_url = kanban_url; }
+        setKanbanUrl(kanban_url) { property.kanban_url = kanban_url; },
+        setSelectedTrackerReportId(report_id) { property.selected_tracker_report_id = report_id },
+        getSelectedTrackerReportId() { return property.selected_tracker_report_id }
     };
 }

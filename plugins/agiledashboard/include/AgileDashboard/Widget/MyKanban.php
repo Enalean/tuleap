@@ -37,7 +37,7 @@ class MyKanban extends Kanban
         AgileDashboard_KanbanFactory $kanban_factory,
         TrackerFactory $tracker_factory,
         AgileDashboard_PermissionsManager $permissions_manager,
-        $tracker_report_id
+        WidgetKanbanConfigRetriever $widget_kanban_config_retriever
     ) {
         parent::__construct(
             self::NAME,
@@ -49,7 +49,7 @@ class MyKanban extends Kanban
             $kanban_factory,
             $tracker_factory,
             $permissions_manager,
-            $tracker_report_id
+            $widget_kanban_config_retriever
         );
     }
 }

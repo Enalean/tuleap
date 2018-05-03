@@ -46,6 +46,8 @@ use Tuleap\AgileDashboard\Semantic\SemanticDoneFactory;
 use Tuleap\AgileDashboard\Semantic\SemanticDoneValueChecker;
 use Tuleap\AgileDashboard\Widget\MyKanban;
 use Tuleap\AgileDashboard\Widget\ProjectKanban;
+use Tuleap\AgileDashboard\Widget\WidgetKanbanConfigDAO;
+use Tuleap\AgileDashboard\Widget\WidgetKanbanConfigRetriever;
 use Tuleap\AgileDashboard\Widget\WidgetKanbanCreator;
 use Tuleap\AgileDashboard\Widget\WidgetKanbanDao;
 use Tuleap\AgileDashboard\Widget\WidgetKanbanDeletor;
@@ -411,16 +413,24 @@ class AgileDashboardPlugin extends Plugin {
             return;
         }
 
-        $widget_kanban_dao       = new WidgetKanbanDao();
-        $widget_kanban_creator   = new WidgetKanbanCreator(
-            $widget_kanban_dao
+        $widget_kanban_dao        = new WidgetKanbanDao();
+        $widget_kanban_config_dao = new WidgetKanbanConfigDAO();
+        $widget_kanban_creator    = new WidgetKanbanCreator(
+            $widget_kanban_dao,
+            $widget_kanban_config_dao
         );
         $widget_kanban_retriever = new WidgetKanbanRetriever(
             $widget_kanban_dao
         );
         $widget_kanban_deletor   = new WidgetKanbanDeletor(
-            $widget_kanban_dao
+            $widget_kanban_dao,
+            $widget_kanban_config_dao
         );
+
+        $widget_config_retriever = new WidgetKanbanConfigRetriever(
+            $widget_kanban_config_dao
+        );
+
         $permission_manager      = new AgileDashboard_PermissionsManager();
         $kanban_factory          = new AgileDashboard_KanbanFactory(
             TrackerFactory::instance(),
@@ -429,9 +439,6 @@ class AgileDashboardPlugin extends Plugin {
 
         switch ($event->getName()) {
             case MyKanban::NAME:
-                $request           = HTTPRequest::instance();
-                $tracker_report_id = $request->get('tracker_report_id');
-
                 $event->setWidget(
                     new MyKanban(
                         $widget_kanban_creator,
@@ -440,14 +447,11 @@ class AgileDashboardPlugin extends Plugin {
                         $kanban_factory,
                         TrackerFactory::instance(),
                         $permission_manager,
-                        $tracker_report_id
+                        $widget_config_retriever
                     )
                 );
                 break;
             case ProjectKanban::NAME:
-                $request           = HTTPRequest::instance();
-                $tracker_report_id = $request->get('tracker_report_id');
-
                 $event->setWidget(
                     new ProjectKanban(
                         $widget_kanban_creator,
@@ -456,7 +460,7 @@ class AgileDashboardPlugin extends Plugin {
                         $kanban_factory,
                         TrackerFactory::instance(),
                         $permission_manager,
-                        $tracker_report_id
+                        $widget_config_retriever
                     )
                 );
                 break;
