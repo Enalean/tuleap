@@ -4,6 +4,18 @@ _serviceEnable() {
     ${systemctl} --quiet enable ${@}
 }
 
+_serviceIsActive() {
+    # ${@}: services name
+
+    ${systemctl} --quiet is-active ${@}
+}
+
+_serviceIsEnabled() {
+    # ${@}: services name
+
+    ${systemctl} --quiet is-enabled ${@}
+}
+
 _serviceMask() {
     # ${@}: services name
 
