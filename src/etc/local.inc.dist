@@ -224,6 +224,8 @@ $sys_extra_plugin_path = '';
 // / ! \ it is really not recommended to enable it.
 $sys_plugins_editable_configuration = 1;
 
+$sys_plugins_that_can_not_be_disabled_from_the_web_ui = '';
+
 // Themeing related paths
 $sys_themeroot = $codendi_dir . '/src/www/themes/';
 $sys_custom_themeroot = $sys_custom_dir . '/themes';

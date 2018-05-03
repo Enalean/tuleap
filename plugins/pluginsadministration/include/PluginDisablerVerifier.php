@@ -1,8 +1,7 @@
 <?php
 /**
  * Copyright (c) Enalean, 2018. All Rights Reserved.
- * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * 
+ *
  * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
@@ -18,11 +17,29 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-class PluginsAdministrationPluginInfo extends PluginInfo
+
+namespace Tuleap\PluginsAdministration;
+
+class PluginDisablerVerifier
 {
-    public function __construct(PluginsAdministrationPlugin $plugin)
+    /**
+     * @var string[]
+     */
+    private $untouchable_plugins_name;
+
+    public function __construct(\PluginsAdministrationPlugin $plugin, $plugins_that_can_not_be_disabled_option)
     {
-        parent::__construct($plugin);
-        $this->setPluginDescriptor(new PluginsAdministrationPluginDescriptor());
+        $this->untouchable_plugins_name   = array_filter(
+            array_map(
+                'trim',
+                explode(',', $plugins_that_can_not_be_disabled_option)
+            )
+        );
+        $this->untouchable_plugins_name[] = $plugin->getName();
+    }
+
+    public function canPluginBeDisabled(\Plugin $plugin)
+    {
+        return ! in_array($plugin->getName(), $this->untouchable_plugins_name, true);
     }
 }

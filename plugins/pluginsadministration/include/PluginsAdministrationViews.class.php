@@ -25,6 +25,7 @@
 
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\PluginsAdministration\AvailablePluginsPresenter;
+use Tuleap\PluginsAdministration\PluginDisablerVerifier;
 use Tuleap\PluginsAdministration\PluginPropertiesPresenter;
 
 require_once('bootstrap.php');
@@ -40,12 +41,22 @@ class PluginsAdministrationViews extends Views {
     /** @var TemplateRendererFactory */
     private $renderer;
 
+    /**
+     * @var PluginDisablerVerifier
+     */
+    private $plugin_disabler_verifier;
+
     function PluginsAdministrationViews(&$controler, $view=null) {
         $this->View($controler, $view);
-        $this->plugin_manager    = PluginManager::instance();
-        $this->dependency_solver = new PluginDependencySolver($this->plugin_manager);
-        $this->renderer          = TemplateRendererFactory::build()->getRenderer(
+        $this->plugin_manager           = PluginManager::instance();
+        $this->dependency_solver        = new PluginDependencySolver($this->plugin_manager);
+        $this->renderer                 = TemplateRendererFactory::build()->getRenderer(
             PLUGINSADMINISTRATION_TEMPLATE_DIR
+        );
+        $plugin_administration          = $this->plugin_manager->getPluginByName('pluginsadministration');
+        $this->plugin_disabler_verifier = new PluginDisablerVerifier(
+            $plugin_administration,
+            ForgeConfig::get('sys_plugins_that_can_not_be_disabled_from_the_web_ui')
         );
     }
 
@@ -264,7 +275,7 @@ class PluginsAdministrationViews extends Views {
                 if (strlen(trim($name)) === 0) {
                     $name = get_class($plugin);
                 }
-                $dont_touch    = (strcasecmp(get_class($plugin), 'PluginsAdministrationPlugin') === 0);
+                $dont_touch    = ! $this->plugin_disabler_verifier->canPluginBeDisabled($plugin);
                 $dont_restrict = $plugin->getScope() !== Plugin::SCOPE_PROJECT;
 
                 $this->_plugins[] = array(
