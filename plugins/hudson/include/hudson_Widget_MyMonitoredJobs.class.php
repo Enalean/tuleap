@@ -137,49 +137,72 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget
         $purifier = Codendi_HTMLPurifier::instance();
         $html     = '';
 
-    	$user = UserManager::instance()->getCurrentUser();
-        $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
-        $dar = $job_dao->searchByUserID($user->getId());
+        $user             = UserManager::instance()->getCurrentUser();
+        $job_dao          = new PluginHudsonJobDao(CodendiDataAccess::instance());
+        $dar              = $job_dao->searchByUserID($user->getId());
+        $nb_jobs_in_error = 0;
     	if ($dar->rowCount() > 0) {
 	        $monitored_jobs = $this->_getMonitoredJobsByUser();
 	        if (sizeof($monitored_jobs) > 0) {
 	            $html .= '<table style="width:100%">';
 	            $cpt = 1;
 
-	            foreach ($monitored_jobs as $monitored_job) {
-	                try {
+                $job_dao             = new PluginHudsonJobDao(CodendiDataAccess::instance());
+                $minimal_hudson_jobs = [];
+                $group_id_by_job_id  = [];
 
-	                    $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
-	                    $dar = $job_dao->searchByJobID($monitored_job);
-	                    if ($dar->valid()) {
-                            $row         = $dar->current();
-                            $job_url     = $row['job_url'];
-                            $job_id      = $row['job_id'];
-                            $group_id    = $row['group_id'];
-                            $minimal_job = $this->factory->getMinimalHudsonJob($job_url, '');
-                            $job         = $this->job_builder->getHudsonJob($minimal_job);
+                foreach ($monitored_jobs as $monitored_job_id) {
+                    $dar = $job_dao->searchByJobID($monitored_job_id);
+                    if ($dar !== false && $dar->valid()) {
+                        $row                          = $dar->current();
+                        $job_url                      = $row['job_url'];
+                        $job_id                       = $row['job_id'];
+                        try {
+                            $minimal_hudson_jobs[$job_id] = $this->factory->getMinimalHudsonJob($job_url, '');
+                            $group_id_by_job_id[$job_id]  = $row['group_id'];
+                        } catch (HudsonJobURLMalformedException $ex) {
+                            $nb_jobs_in_error++;
+                        }
+                    }
+                }
 
-	                        $html .= '<tr class="'. $purifier->purify(util_get_alt_row_color($cpt)) .'">';
-	                        $html .= ' <td>';
-	                        $html .= ' <img class="widget-jenkins-job-icon" src="'.$purifier->purify($job->getStatusIcon()).'" title="'.$purifier->purify($job->getStatus()).'" >';
-	                        $html .= ' </td>';
-	                        $html .= ' <td style="width:99%">';
-	                        $html .= '  <a class="widget-jenkins-job" href="/plugins/hudson/?action=view_job&group_id='.urlencode($group_id).'&job_id='.urlencode($job_id).'">'.$purifier->purify($job->getName()).'</a><br />';
-	                        $html .= ' </td>';
-	                        $html .= '</tr>';
+                $hudson_jobs_with_exception = $this->job_builder->getHudsonJobsWithException($minimal_hudson_jobs);
+                foreach ($hudson_jobs_with_exception as $job_id => $hudson_job_with_exception) {
+                    try {
+                        $group_id = $group_id_by_job_id[$job_id];
+                        $job      = $hudson_job_with_exception->getHudsonJob();
 
-	                        $cpt++;
-	                    }
-	                } catch (Exception $e) {
-	                    // Do not display wrong jobs
-	                }
-	            }
+                        $html .= '<tr class="' . $purifier->purify(util_get_alt_row_color($cpt)) . '">';
+                        $html .= ' <td>';
+                        $html .= ' <img class="widget-jenkins-job-icon" src="' . $purifier->purify($job->getStatusIcon()) . '" title="' . $purifier->purify($job->getStatus()) . '" >';
+                        $html .= ' </td>';
+                        $html .= ' <td style="width:99%">';
+                        $html .= '  <a class="widget-jenkins-job" href="/plugins/hudson/?action=view_job&group_id=' . urlencode($group_id) . '&job_id=' . urlencode($job_id) . '">' . $purifier->purify($job->getName()) . '</a><br />';
+                        $html .= ' </td>';
+                        $html .= '</tr>';
+
+                        $cpt++;
+                    } catch (Exception $e) {
+                        $nb_jobs_in_error++;
+                    }
+                }
 	            $html .= '</table>';
 	        } else {
 	        	$html .= $GLOBALS['Language']->getText('plugin_hudson', 'widget_no_monitoredjob_my');
 	        }
         } else {
         	$html .= $GLOBALS['Language']->getText('plugin_hudson', 'widget_no_job_my');
+        }
+        if ($nb_jobs_in_error > 0) {
+            $html_error_string  = '<div class="tlp-alert-warning"><i class="fa fa-warning tlp-alert-icon"></i>';
+            $html_error_string .= dngettext(
+                'tuleap-hudson',
+                'An issue have been encountered while retrieving information, a job can not be displayed',
+                'Issues have been encountered while retrieving information, some jobs can not be displayed',
+                $nb_jobs_in_error
+            );
+            $html_error_string .= '</div>';
+            $html               = $html_error_string . $html;
         }
         return $html;
     }

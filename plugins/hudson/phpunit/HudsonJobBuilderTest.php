@@ -91,4 +91,27 @@ class HudsonJobBuilderTest extends TestCase
 
         $this->assertInstanceOf(\HudsonJob::class, $job);
     }
+
+    public function testBatchRetrievalTriesToRetrieveAllJobs()
+    {
+        $minimal_job0 = \Mockery::mock(MinimalHudsonJob::class);
+        $minimal_job0->shouldReceive('getName');
+        $minimal_job0->shouldReceive('getJobUrl');
+        $minimal_job1 = \Mockery::mock(MinimalHudsonJob::class);
+        $minimal_job1->shouldReceive('getName');
+        $minimal_job1->shouldReceive('getJobUrl');
+        $minimal_job2 = \Mockery::mock(MinimalHudsonJob::class);
+        $minimal_job2->shouldReceive('getName');
+        $minimal_job2->shouldReceive('getJobUrl');
+
+        $http_client = \Mockery::mock(\Http_Client::class);
+        $http_client->shouldReceive('setOption');
+        $http_client->shouldReceive('doRequest');
+        $http_client->shouldReceive('getLastResponse')->andReturns('<_/>')->times(3);
+
+        $job_builder         = new HudsonJobBuilder($http_client);
+        $jobs_with_exception = $job_builder->getHudsonJobsWithException([$minimal_job0, $minimal_job1, $minimal_job2]);
+
+        $this->assertCount(3, $jobs_with_exception);
+    }
 }

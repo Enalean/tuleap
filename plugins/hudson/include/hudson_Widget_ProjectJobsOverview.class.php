@@ -71,16 +71,19 @@ class hudson_Widget_ProjectJobsOverview extends HudsonOverviewWidget
     }
 
     public function getContent() {
-        $purifier     = Codendi_HTMLPurifier::instance();
-        $minimal_jobs = $this->getJobsByGroup($this->group_id);
-        $html     = '';
+        $purifier         = Codendi_HTMLPurifier::instance();
+        $minimal_jobs     = $this->getJobsByGroup($this->group_id);
+        $nb_jobs_in_error = 0;
+        $html             = '';
         if (sizeof($minimal_jobs) > 0) {
             $html .= '<table style="width:100%">';
             $cpt = 1;
 
-            foreach ($minimal_jobs as $job_id => $minimal_job) {
+            $hudson_jobs_with_exception = $this->job_builder->getHudsonJobsWithException($minimal_jobs);
+
+            foreach ($hudson_jobs_with_exception as $job_id => $job_with_exception) {
                 try {
-                    $job = $this->job_builder->getHudsonJob($minimal_job);
+                    $job = $job_with_exception->getHudsonJob();
 
                     $html .= '<tr class="'. util_get_alt_row_color($cpt) .'">';
                     $html .= ' <td>';
@@ -94,12 +97,23 @@ class hudson_Widget_ProjectJobsOverview extends HudsonOverviewWidget
                     $cpt++;
 
                 } catch (Exception $e) {
-                    // Do not display wrong jobs
+                    $nb_jobs_in_error++;
                 }
             }
             $html .= '</table>';
         } else {
             $html .= $GLOBALS['Language']->getText('plugin_hudson', 'widget_no_job_project', $purifier->purify($this->group_id));
+        }
+        if ($nb_jobs_in_error > 0) {
+            $html_error_string  = '<div class="tlp-alert-warning"><i class="fa fa-warning tlp-alert-icon"></i>';
+            $html_error_string .= dngettext(
+                'tuleap-hudson',
+                'An issue have been encountered while retrieving information, a job can not be displayed',
+                'Issues have been encountered while retrieving information, some jobs can not be displayed',
+                $nb_jobs_in_error
+            );
+            $html_error_string .= '</div>';
+            $html               = $html_error_string . $html;
         }
         return $html;
     }

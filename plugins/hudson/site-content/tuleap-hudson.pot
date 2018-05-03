@@ -1,0 +1,11 @@
+msgid ""
+"An issue have been encountered while retrieving information, a job can not "
+"be displayed"
+msgid_plural ""
+"Issues have been encountered while retrieving information, some jobs can not "
+"be displayed"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Jobs retrieval took too long, this job has been ignored"
+msgstr ""

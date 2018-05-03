@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -33,6 +33,9 @@ class hudsonPlugin extends Plugin
     public function __construct($id)
     {
         parent::__construct($id);
+
+        bindtextdomain('tuleap-hudson', __DIR__.'/../site-content');
+
         $this->addHook('javascript_file', 'jsFile', false);
         $this->addHook('cssfile', 'cssFile', false);
         $this->addHook(Event::SERVICE_ICON);
