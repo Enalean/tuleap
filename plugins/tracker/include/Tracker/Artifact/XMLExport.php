@@ -63,7 +63,8 @@ class Tracker_Artifact_XMLExport
         $all_artifacts = $this->artifact_factory->getArtifactsByTrackerId($tracker->getId());
         $this->checkThreshold(count($all_artifacts));
 
-        $this->exportBunchOfArtifacts($all_artifacts, $xml_content, $user, $archive);
+        $is_in_archive_context = false;
+        $this->exportBunchOfArtifacts($all_artifacts, $xml_content, $user, $archive, $is_in_archive_context);
     }
 
     private function checkThreshold($nb_artifacts) {
@@ -78,21 +79,61 @@ class Tracker_Artifact_XMLExport
         }
     }
 
-    public function exportBunchOfArtifacts(
+    private function exportBunchOfArtifacts(
         array $artifacts,
         SimpleXMLElement $xml_content,
         PFUser $user,
-        Tuleap\Project\XML\Export\ArchiveInterface $archive
+        Tuleap\Project\XML\Export\ArchiveInterface $archive,
+        $is_in_archive_context
     ) {
         $artifacts_node = $xml_content->addChild('artifacts');
 
         foreach ($artifacts as $artifact) {
-            $artifact->exportToXML($artifacts_node, $user, $archive, $this->user_xml_exporter);
+            $artifact->exportToXML(
+                $artifacts_node,
+                $archive,
+                $this->getArtifactXMLExporter($user, $is_in_archive_context)
+            );
         }
 
         $this->rng_validator->validate(
             $artifacts_node,
             realpath(dirname(TRACKER_BASE_DIR) . self::ARTIFACTS_RNG_PATH)
+        );
+    }
+
+    public function exportBunchOfArtifactsForArchive(
+        array $artifacts,
+        SimpleXMLElement $xml_content,
+        PFUser $user,
+        Tuleap\Project\XML\Export\ArchiveInterface $archive
+    ) {
+        $is_in_archive_context = true;
+
+        $this->exportBunchOfArtifacts(
+            $artifacts,
+            $xml_content,
+            $user,
+            $archive,
+            $is_in_archive_context
+        );
+    }
+
+    /**
+     * @return Tracker_XML_Exporter_ArtifactXMLExporter
+     */
+    private function getArtifactXMLExporter(PFUser $current_user, $is_in_archive_context)
+    {
+        $builder                = new Tracker_XML_Exporter_ArtifactXMLExporterBuilder();
+        $children_collector     = new Tracker_XML_Exporter_NullChildrenCollector();
+        $file_path_xml_exporter = new Tracker_XML_Exporter_InArchiveFilePathXMLExporter();
+
+        return $builder->build(
+            $children_collector,
+            $file_path_xml_exporter,
+            $current_user,
+            $this->user_xml_exporter,
+            $is_in_archive_context
         );
     }
 }

@@ -1962,22 +1962,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     public function exportToXML(
         SimpleXMLElement $artifacts_node,
-        PFUser $user,
         Tuleap\Project\XML\Export\ArchiveInterface $archive,
-        UserXMLExporter $user_xml_exporter
+        Tracker_XML_Exporter_ArtifactXMLExporter $artifact_xml_exporter
     ) {
 
         if (count($this->getChangesets() > 0)) {
-            $children_collector     = new Tracker_XML_Exporter_NullChildrenCollector();
-            $file_path_xml_exporter = new Tracker_XML_Exporter_InArchiveFilePathXMLExporter();
-
-            $artifact_xml_exporter = $this->getArtifactXMLExporter(
-                $children_collector,
-                $file_path_xml_exporter,
-                $user,
-                $user_xml_exporter
-            );
-
             $artifact_xml_exporter->exportFullHistory($artifacts_node, $this);
 
             $attachment_exporter = $this->getArtifactAttachmentExporter();
@@ -1992,17 +1981,6 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     private function getArtifactAttachmentExporter()
     {
         return new Tracker_XML_Exporter_ArtifactAttachmentExporter($this->getFormElementFactory());
-    }
-
-    private function getArtifactXMLExporter(
-        Tracker_XML_ChildrenCollector $children_collector,
-        Tracker_XML_Exporter_FilePathXMLExporter $file_path_xml_exporter,
-        PFUser $current_user,
-        UserXMLExporter $user_xml_exporter
-    ) {
-        $builder = new Tracker_XML_Exporter_ArtifactXMLExporterBuilder();
-
-        return $builder->build($children_collector, $file_path_xml_exporter, $current_user, $user_xml_exporter);
     }
 
     /** @return string */

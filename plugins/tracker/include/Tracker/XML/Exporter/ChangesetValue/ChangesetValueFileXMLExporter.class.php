@@ -72,26 +72,6 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporter extends 
         );
     }
 
-    private function isCurrentChangesetTheLastChangeset(
-        Tracker_Artifact $artifact,
-        Tracker_Artifact_ChangesetValue $current_changeset_value
-    ) {
-        $file_field     = $current_changeset_value->getField();
-        $last_changeset = $artifact->getLastChangeset();
-
-        if (! $last_changeset) {
-            return false;
-        }
-
-        $last_changeset_value = $last_changeset->getValue($file_field);
-
-        if (! $last_changeset_value) {
-            return false;
-        }
-
-        return ($last_changeset_value->getId() === $current_changeset_value->getId());
-    }
-
     private function appendFileToFieldChangeNode(
         Tracker_FileInfo $file_info,
         $index,

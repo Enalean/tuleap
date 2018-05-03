@@ -47,7 +47,7 @@ class Tracker_XML_Exporter_ChangesetValuesXMLExporterTest extends TuleapTestCase
         $this->artifact_xml    = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifact />');
         $this->changeset_xml   = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><changeset />');
         $this->visitor         = mock('Tracker_XML_Exporter_ChangesetValueXMLExporterVisitor');
-        $this->values_exporter = new Tracker_XML_Exporter_ChangesetValuesXMLExporter($this->visitor);
+        $this->values_exporter = new Tracker_XML_Exporter_ChangesetValuesXMLExporter($this->visitor, false);
 
         $changeset = mock('Tracker_Artifact_Changeset');
 

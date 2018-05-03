@@ -1293,9 +1293,20 @@ class Tracker_Artifact_ExportToXMLTest extends TuleapTestCase {
 
         $archive = mock('Tuleap\Project\XML\Export\ArchiveInterface');
 
-        $user_xml_exporter = new UserXmlExporter($this->user_manager, mock('UserXMLExportedCollection'));
+        $user_xml_exporter      = new UserXmlExporter($this->user_manager, mock('UserXMLExportedCollection'));
+        $builder                = new Tracker_XML_Exporter_ArtifactXMLExporterBuilder();
+        $children_collector     = new Tracker_XML_Exporter_NullChildrenCollector();
+        $file_path_xml_exporter = new Tracker_XML_Exporter_InArchiveFilePathXMLExporter();
 
-        $artifact->exportToXML($artifacts_node, $user, $archive, $user_xml_exporter);
+        $artifact_xml_exporter =  $builder->build(
+            $children_collector,
+            $file_path_xml_exporter,
+            $user,
+            $user_xml_exporter,
+            false
+        );
+
+        $artifact->exportToXML($artifacts_node, $archive, $artifact_xml_exporter);
 
         $this->assertEqual($artifacts_node->artifact['id'], 101);
     }

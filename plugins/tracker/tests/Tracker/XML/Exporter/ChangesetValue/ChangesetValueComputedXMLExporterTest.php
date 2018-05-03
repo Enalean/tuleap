@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,6 +21,7 @@
 namespace Tuleap\Tracker\XML\Exporter\ChangesetValue;
 
 use SimpleXMLElement;
+use Tracker_Artifact_Changeset;
 use Tuleap\Tracker\Artifact\ChangesetValueComputed;
 
 require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
@@ -56,11 +57,12 @@ class ChangesetValueComputedXMLExporterTest extends \TuleapTestCase
         $this->artifact_xml        = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifact />');
         $this->changeset_value_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><changeset />');
         $this->changeset           = mock('Tracker_Artifact_Changeset');
+        $this->user                = aUser()->withId(101)->build();
     }
 
     public function itCreatesAComputedNode()
     {
-        $exporter        = new ChangesetValueComputedXMLExporter();
+        $exporter        = new ChangesetValueComputedXMLExporter($this->user, false);
         $changeset_value = new ChangesetValueComputed(1, $this->changeset, $this->field, true, 1, false);
 
         $exporter->export($this->artifact_xml, $this->changeset_value_xml, $this->artifact, $changeset_value);
@@ -72,7 +74,7 @@ class ChangesetValueComputedXMLExporterTest extends \TuleapTestCase
 
     public function itExportsAFieldInAutocomputeMode()
     {
-        $exporter        = new ChangesetValueComputedXMLExporter();
+        $exporter        = new ChangesetValueComputedXMLExporter($this->user, false);
         $changeset_value = new ChangesetValueComputed(1, $this->changeset, $this->field, true, null, false);
 
         $exporter->export($this->artifact_xml, $this->changeset_value_xml, $this->artifact, $changeset_value);
@@ -82,9 +84,57 @@ class ChangesetValueComputedXMLExporterTest extends \TuleapTestCase
         $this->assertFalse(isset($field_change->manual_value));
     }
 
+    public function itExportsLastChangesetAsAManualValueInArchiveMode()
+    {
+        $exporter        = new ChangesetValueComputedXMLExporter($this->user, true);
+        $changeset_value = new ChangesetValueComputed(1, $this->changeset, $this->field, true, null, false);
+
+        stub($this->artifact)->getLastChangeset()->returns($this->changeset);
+        stub($this->artifact)->getChangesets()->returns([$this->changeset]);
+        stub($this->changeset)->getValue()->returns($changeset_value);
+        stub($this->field)->getComputedValue()->returns(1.5);
+
+        $exporter->export($this->artifact_xml, $this->changeset_value_xml, $this->artifact, $changeset_value);
+
+        $field_change = $this->changeset_value_xml->field_change;
+        $this->assertEqual($field_change->manual_value, 1.5);
+        $this->assertFalse(isset($field_change->is_autocomputed));
+    }
+
+    public function itOnlyExportsLastChangesetAsAManualValueInArchiveMode()
+    {
+        $current_changeset = mock(Tracker_Artifact_Changeset::class);
+        $exporter          = new ChangesetValueComputedXMLExporter($this->user, true);
+        $changeset_value   = new ChangesetValueComputed(1, $current_changeset, $this->field, true, null, false);
+
+        stub($this->artifact)->getLastChangeset()->returns($this->changeset);
+        stub($this->artifact)->getChangesets()->returns([$current_changeset, $this->changeset]);
+
+        $exporter->export($this->artifact_xml, $this->changeset_value_xml, $this->artifact, $changeset_value);
+
+        $field_change = $this->changeset_value_xml->field_change;
+        $this->assertTrue($field_change->is_autocomputed);
+        $this->assertFalse(isset($field_change->manual_value));
+    }
+
+    public function itDoesNotExportLastChangesetInArchiveModeIfAlreadyInManualMode()
+    {
+        $previous_changeset = mock(Tracker_Artifact_Changeset::class);
+        $exporter           = new ChangesetValueComputedXMLExporter($this->user, true);
+        $changeset_value    = new ChangesetValueComputed(1, $this->changeset, $this->field, true, 1, true);
+
+        stub($this->artifact)->getLastChangeset()->returns($this->changeset);
+        stub($this->artifact)->getChangesets()->returns([$previous_changeset, $this->changeset]);
+        stub($this->changeset)->getValue()->returns($changeset_value);
+
+        $exporter->export($this->artifact_xml, $this->changeset_value_xml, $this->artifact, $changeset_value);
+
+        $this->assertFalse(isset($this->changeset_value_xml->field_change));
+    }
+
     public function itExportsFieldWithAManualValue()
     {
-        $exporter        = new ChangesetValueComputedXMLExporter();
+        $exporter        = new ChangesetValueComputedXMLExporter($this->user, false);
         $changeset_value = new ChangesetValueComputed(1, $this->changeset, $this->field, true, 1.5, true);
 
         $exporter->export($this->artifact_xml, $this->changeset_value_xml, $this->artifact, $changeset_value);
@@ -96,7 +146,7 @@ class ChangesetValueComputedXMLExporterTest extends \TuleapTestCase
 
     public function itExportsFieldWithAManualValueSetTo0()
     {
-        $exporter        = new ChangesetValueComputedXMLExporter();
+        $exporter        = new ChangesetValueComputedXMLExporter($this->user, false);
         $changeset_value = new ChangesetValueComputed(1, $this->changeset, $this->field, true, 0, true);
 
         $exporter->export($this->artifact_xml, $this->changeset_value_xml, $this->artifact, $changeset_value);

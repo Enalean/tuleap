@@ -196,10 +196,9 @@ class TrackerXmlExport
         if ($tracker->isActive()) {
             $xml_content = $xml_content->addChild('trackers');
             $this->exportMapping($xml_content, $tracker);
+            $this->validateExport($xml_content);
             $this->artifact_xml_export->export($tracker, $xml_content, $user, $archive);
         }
-
-        $this->validateExport($xml_content);
 
         return $xml_content;
     }
@@ -208,7 +207,7 @@ class TrackerXmlExport
         $tracker_id,
         PFUser $user,
         Tuleap\Project\XML\Export\ArchiveInterface $archive,
-         array $artifacts
+        array $artifacts
     ) {
         $tracker = $this->tracker_factory->getTrackerById($tracker_id);
         $xml_content = new SimpleXMLElement(
@@ -219,7 +218,7 @@ class TrackerXmlExport
 
         $this->validateExport($xml_content);
 
-        $this->artifact_xml_export->exportBunchOfArtifacts($artifacts, $xml_content, $user, $archive);
+        $this->artifact_xml_export->exportBunchOfArtifactsForArchive($artifacts, $xml_content, $user, $archive);
 
         return $xml_content;
     }

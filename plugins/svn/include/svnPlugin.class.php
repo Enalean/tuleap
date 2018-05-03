@@ -180,10 +180,9 @@ class SvnPlugin extends Plugin
 
     public function export_xml_project($params)
     {
-        if (! isset($params['options']['all'])) {
+        if (! isset($params['options']['all']) || $params['options']['all'] === false) {
             return;
         }
-
 
         $this->getSvnExporter($params['project'])->exportToXml(
             $params['into_xml'],

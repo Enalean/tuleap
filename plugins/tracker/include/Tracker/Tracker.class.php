@@ -3149,7 +3149,7 @@ EOS;
      /**
      * Get UserManager instance
      *
-     * @return Tracker_ArtifactFactory
+     * @return UserManager
      */
     protected function getUserManager() {
         return UserManager::instance();
@@ -3552,10 +3552,17 @@ EOS;
         Tracker_XML_Exporter_FilePathXMLExporter $file_path_xml_exporter,
         PFUser $current_user
     ) {
-        $builder           = new Tracker_XML_Exporter_ArtifactXMLExporterBuilder();
-        $user_xml_exporter = $this->getUserXMLExporter();
+        $builder               = new Tracker_XML_Exporter_ArtifactXMLExporterBuilder();
+        $user_xml_exporter     = $this->getUserXMLExporter();
+        $is_in_archive_context = false;
 
-        return $builder->build($children_collector, $file_path_xml_exporter, $current_user, $user_xml_exporter);
+        return $builder->build(
+            $children_collector,
+            $file_path_xml_exporter,
+            $current_user,
+            $user_xml_exporter,
+            $is_in_archive_context
+        );
     }
 
     private function getUserXMLExporter() {

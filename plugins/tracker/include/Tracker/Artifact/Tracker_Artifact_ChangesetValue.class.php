@@ -171,6 +171,14 @@ abstract class Tracker_Artifact_ChangesetValue
     public abstract function getValue();
 
     /**
+     * @return Tracker_Artifact_Changeset
+     */
+    public function getChangeset()
+    {
+        return $this->changeset;
+    }
+
+    /**
      * By default, changeset values are returned as string in 'value' field
      */
     protected function encapsulateRawSoapValue($value) {
