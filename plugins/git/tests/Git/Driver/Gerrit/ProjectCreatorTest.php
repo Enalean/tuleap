@@ -332,6 +332,18 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
         $this->assertNoPattern('/Registered Users/', file_get_contents("$this->gerrit_tmpdir/project.config"));
     }
 
+    public function itSetsPermsLabelCodeReviewOnceIfUserCanReadANdWrite() {
+        stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_READ)->returns(array(ProjectUGroup::PROJECT_MEMBERS));
+        stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_WRITE)->returns(array(ProjectUGroup::PROJECT_MEMBERS));
+        stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_WPLUS)->returns(array());
+
+        $this->project_creator->createGerritProject($this->server, $this->repository_with_registered, $this->migrate_access_rights);
+        $this->project_creator->finalizeGerritProjectCreation($this->server, $this->repository, $this->template_id);
+
+        $this->assertNoPattern('/label-Code-Review = -1..+1/', file_get_contents("$this->gerrit_tmpdir/project.config"));
+        $this->assertPattern('/label-Code-Review = -2..+2/', file_get_contents("$this->gerrit_tmpdir/project.config"));
+    }
+
     public function itSetsPermsOnRegisteredUsersIfRepoHasReadForRegistered() {
         stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_READ)->returns(array(ProjectUGroup::REGISTERED));
         stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_WRITE)->returns(array());

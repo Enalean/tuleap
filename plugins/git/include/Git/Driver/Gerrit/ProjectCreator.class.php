@@ -334,7 +334,9 @@ class Git_Driver_Gerrit_ProjectCreator {
 
         foreach ($ugroups_read as $ugroup_read) {
             $this->addToSection('refs/heads', 'read', "group $ugroup_read");
-            $this->addToSection('refs/heads', 'label-Code-Review', "-1..+1 group $ugroup_read");
+            if(!in_array($ugroup_read, $ugroups_write)) {
+                $this->addToSection('refs/heads', 'label-Code-Review', "-1..+1 group $ugroup_read");
+            }
         }
         foreach ($ugroups_write as $ugroup_write) {
             $this->addToSection('refs/heads', 'read', "group $ugroup_write");
