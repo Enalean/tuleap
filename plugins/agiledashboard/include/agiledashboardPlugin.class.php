@@ -65,6 +65,7 @@ use Tuleap\Tracker\Artifact\Event\ArtifactsReordered;
 use Tuleap\Tracker\FormElement\Event\MessageFetcherAdditionalWarnings;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\CanValueBeHiddenStatementsCollection;
 use Tuleap\Tracker\Report\Event\TrackerReportDeleted;
+use Tuleap\Tracker\Report\Event\TrackerReportSetToPrivate;
 use Tuleap\Tracker\Semantic\SemanticStatusCanBeDeleted;
 use Tuleap\Tracker\Semantic\SemanticStatusGetDisabledValues;
 
@@ -154,6 +155,7 @@ class AgileDashboardPlugin extends Plugin {
             $this->addHook(ArtifactsReordered::NAME);
             $this->addHook(TRACKER_EVENT_ARTIFACT_POST_UPDATE);
             $this->addHook(TrackerReportDeleted::NAME);
+            $this->addHook(TrackerReportSetToPrivate::NAME);
             $this->addHook(Tracker_FormElementFactory::GET_CLASSNAMES);
             $this->addHook(Event::GET_SYSTEM_EVENT_CLASS);
             $this->addHook('codendi_daily_start');
@@ -1410,6 +1412,26 @@ class AgileDashboardPlugin extends Plugin {
         $updater = new TrackerReportUpdater(new TrackerReportDao());
 
         $updater->deleteAllForReport($report);
+
+        $this->deleteReportConfigForKanbanWidget(
+            $event->getReport()
+        );
+    }
+
+    public function trackerReportSetToPrivate(TrackerReportSetToPrivate $event)
+    {
+        $this->deleteReportConfigForKanbanWidget(
+            $event->getReport()
+        );
+    }
+
+    private function deleteReportConfigForKanbanWidget(Tracker_Report $report)
+    {
+        $widget_kanban_config_updater = new WidgetKanbanConfigUpdater(
+            new WidgetKanbanConfigDAO()
+        );
+
+        $widget_kanban_config_updater->deleteConfigurationForWidgetMatchingReportId($report);
     }
 
     public function codendi_daily_start($params)
