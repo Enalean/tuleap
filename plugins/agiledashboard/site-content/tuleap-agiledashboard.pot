@@ -68,6 +68,9 @@ msgstr ""
 msgid "Done values successfully updated."
 msgstr ""
 
+msgid "Filter:"
+msgstr ""
+
 msgid "Force cache regeneration"
 msgstr ""
 
@@ -81,6 +84,9 @@ msgid "Item is not linked to this milestone"
 msgstr ""
 
 msgid "Make sure to check their configuration."
+msgstr ""
+
+msgid "None"
 msgstr ""
 
 #, php-format

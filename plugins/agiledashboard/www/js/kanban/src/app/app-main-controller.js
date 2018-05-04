@@ -45,7 +45,7 @@ function MainCtrl(
         let selected_report = tracker_reports.find(({ selected }) => selected === true);
 
         if (! selected_report) {
-            selected_report = tracker_reports.find(({ name }) => name === 'Default');
+            selected_report = { id: 0 };
         }
 
         SharedPropertiesService.setSelectedTrackerReportId(selected_report.id);

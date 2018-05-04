@@ -29,6 +29,7 @@ use Tuleap\AgileDashboard\FormElement\SystemEvent\SystemEvent_BURNUP_GENERATE;
 use Tuleap\AgileDashboard\Kanban\KanbanXmlImporter;
 use Tuleap\AgileDashboard\Kanban\RealTime\KanbanArtifactMessageBuilder;
 use Tuleap\AgileDashboard\Kanban\RealTime\KanbanArtifactMessageSender;
+use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportBuilder;
 use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportDao;
 use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportUpdater;
 use Tuleap\AgileDashboard\KanbanJavascriptDependenciesProvider;
@@ -48,6 +49,7 @@ use Tuleap\AgileDashboard\Widget\MyKanban;
 use Tuleap\AgileDashboard\Widget\ProjectKanban;
 use Tuleap\AgileDashboard\Widget\WidgetKanbanConfigDAO;
 use Tuleap\AgileDashboard\Widget\WidgetKanbanConfigRetriever;
+use Tuleap\AgileDashboard\Widget\WidgetKanbanConfigUpdater;
 use Tuleap\AgileDashboard\Widget\WidgetKanbanCreator;
 use Tuleap\AgileDashboard\Widget\WidgetKanbanDao;
 use Tuleap\AgileDashboard\Widget\WidgetKanbanDeletor;
@@ -437,6 +439,10 @@ class AgileDashboardPlugin extends Plugin {
             new AgileDashboard_KanbanDao()
         );
 
+        $widget_kanban_config_updater = new WidgetKanbanConfigUpdater(
+            $widget_kanban_config_dao
+        );
+
         switch ($event->getName()) {
             case MyKanban::NAME:
                 $event->setWidget(
@@ -447,7 +453,8 @@ class AgileDashboardPlugin extends Plugin {
                         $kanban_factory,
                         TrackerFactory::instance(),
                         $permission_manager,
-                        $widget_config_retriever
+                        $widget_config_retriever,
+                        $widget_kanban_config_updater
                     )
                 );
                 break;
@@ -460,7 +467,8 @@ class AgileDashboardPlugin extends Plugin {
                         $kanban_factory,
                         TrackerFactory::instance(),
                         $permission_manager,
-                        $widget_config_retriever
+                        $widget_config_retriever,
+                        $widget_kanban_config_updater
                     )
                 );
                 break;
