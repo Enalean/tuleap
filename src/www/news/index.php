@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
  * Copyright 1999-2000 (c) The SourceForge Crew
  *
  * This file is a part of Tuleap.
@@ -88,7 +88,6 @@ if ($rows < 1) {
 	echo '</H2>';
 	echo '
 		<P>'.$Language->getText('news_index','no_items_found');
-	echo db_error();
 } else {
 	echo '<table WIDTH="100%" border=0>
 		<TR><TD VALIGN="TOP">';

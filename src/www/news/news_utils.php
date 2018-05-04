@@ -149,7 +149,6 @@ function news_show_latest($group_id = '', $limit = 10, $show_projectname = true,
         }
         if (! $news_item_displayed) {
             $return .= '<b>'.$Language->getText('news_utils','no_news_item_found').'</b>';
-            $return .= db_error();
         }
     }
     if ($group_id != $sys_news_group) {
