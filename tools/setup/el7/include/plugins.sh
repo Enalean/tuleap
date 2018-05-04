@@ -63,8 +63,8 @@ _pluginGit() {
         exit 1
     fi
 
-    if ! $(${su} --command "${ssh} ${git_user}@gl-adm info" \
-        --login ${tuleap_unix_user} 2>&1 >>/dev/null); then
+    if ! ${su} --command "${ssh} -q ${git_user}@gl-adm info" \
+        --login ${tuleap_unix_user} 2>&1 >/dev/null; then
         ${cp} --force "${tuleap_data}/.ssh/id_rsa_gl-adm.pub" /tmp
         ${su} --command "${gitolite} setup --pubkey /tmp/id_rsa_gl-adm.pub" \
         --login ${git_user}
@@ -75,13 +75,13 @@ _pluginGit() {
     fi
 
     for user in ${git_user} ${tuleap_unix_user}; do
-        if [ $(${su} --command "${git} config user.name" --login ${user}) != "${user}" ]; then
+        if [ "$(${su} --command "${git} config user.name" --login ${user})" != "${user}" ]; then
             ${su} --command \
                 "${git} config --global user.name ${user}" --login ${user}
             plugin_git_configured="true"
         fi
 
-        if [ $(${su} --command "${git} config user.email" --login ${user}) != "${user}@localhost" ]; then
+        if [ "$(${su} --command "${git} config user.email" --login ${user})" != "${user}@localhost" ]; then
             ${su} --command \
                 "${git} config --global user.email ${user}@localhost" \
                 --login ${user}
@@ -102,17 +102,13 @@ _pluginGit() {
         plugin_git_configured="true"
     fi
 
-    if ${grep} --quiet "#0,#0,#0,7\|# GROUPLIST_PGM\|^ssh-authkeys" \
-        ${git_home}/.gitolite.rc; then 
-        ${awk} '{ gsub("# GROUPLIST_PGM", "GROUPLIST_PGM");
-                  gsub(""'"ssh-authkeys"'"","#"'"ssh-authkeys"'",");
-                  gsub("#0,#0,#0,7", "0007"); print}' \
-                ${tuleap_src_plugins}/git/etc/gitolite3.rc.dist > \
-                ${git_home}/.gitolite.rc
-        ${chown} ${git_user}:${git_group} ${git_home}/.gitolite.rc
-        ${chmod} 640 ${git_home}/.gitolite.rc
-        plugin_git_configured="true"
-    fi
+    ${awk} '{ gsub("# GROUPLIST_PGM", "GROUPLIST_PGM");
+              gsub(""'"ssh-authkeys"'"","#"'"ssh-authkeys"'",");
+              gsub("#0,#0,#0,7", "0007"); print}' \
+            ${tuleap_src_plugins}/git/etc/gitolite3.rc.dist > \
+            ${git_home}/.gitolite.rc
+    ${chown} ${git_user}:${git_group} ${git_home}/.gitolite.rc
+    ${chmod} 640 ${git_home}/.gitolite.rc
 
     if [ ! -f "${git_home}/.profile" ]; then
         ${printf} "source /opt/rh/rh-git29/enable" > ${git_home}/.profile
@@ -129,12 +125,19 @@ _pluginGit() {
         plugin_git_configured="true"
     fi
 
-    if [ -d "${tuleap_data}/gitolite/repositories/testing.git" ]; then
+    if ! ${su} --command '/opt/rh/rh-git29/root/usr/bin/git \
+        --git-dir="/var/lib/tuleap/gitolite/admin/.git"  \
+        cat-file -e origin/master:conf/gitolite.conf' \
+        --login ${tuleap_unix_user}; then
         ${su} --command \
             "cd ${tuleap_data}/gitolite/admin && \
             ${git} add conf/gitolite.conf && \
             ${git} commit --message='Remove testing' && \
             ${git} push origin master" --login ${tuleap_unix_user}
+        plugin_git_configured="true"
+    fi
+
+    if [ -d "${tuleap_data}/gitolite/repositories/testing.git" ]; then
         ${rm} --force --recursive \
             "${tuleap_data}/gitolite/repositories/testing.git"
         plugin_git_configured="true"
