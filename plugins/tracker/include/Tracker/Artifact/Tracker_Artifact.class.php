@@ -1610,6 +1610,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         if ($artifact_link_field && $last_changeset) {
             $artifact_links = $artifact_link_field->getLinkedArtifacts($last_changeset, $user);
         }
+
         return $artifact_links;
     }
 
