@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright 1999-2000 (c) The SourceForge Crew
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -110,7 +110,9 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && (user_ismember($grou
     
     echo '<H3>'.$Language->getText('news_admin_index','news_admin').'</H3>';
     echo '<a href="/news/admin/choose_items.php?project_id='.$group_id.'">'.$Language->getText('news_admin_index','choose_display').'</a>';
-    
+
+    $purifier = Codendi_HTMLPurifier::instance();
+
 	if (!$request->get('post_changes') && $request->get('approve')) {
 		/*
 			Show the submit form
@@ -135,13 +137,13 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && (user_ismember($grou
 		}    
 
 		echo '
-        <H3>'.$Language->getText('news_admin_index','approve_for',$pm->getProject($group_id)->getPublicName()).'</H3>
+        <H3>'.$purifier->purify($Language->getText('news_admin_index','approve_for',$pm->getProject($group_id)->getUnconvertedPublicName())).'</H3>
 		<P>
 		<FORM ACTION="" METHOD="POST">
-		<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.db_result($result,0,'group_id').'">
-		<INPUT TYPE="HIDDEN" NAME="id" VALUE="'.db_result($result,0,'id').'">
+		<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$purifier->purify(db_result($result,0,'group_id')).'">
+		<INPUT TYPE="HIDDEN" NAME="id" VALUE="'.$purifier->purify(db_result($result,0,'id')).'">
 
-		<B>'.$Language->getText('news_admin_index','submitted_by').':</B> <a href="/users/'.$username.'">'.$username.'</a><BR>
+		<B>'.$Language->getText('news_admin_index','submitted_by').':</B> <a href="/users/'.$purifier->purify($username).'">'.$purifier->purify($username).'</a><BR>
 		<INPUT TYPE="HIDDEN" NAME="approve" VALUE="1">
 		<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="1">
 
@@ -154,10 +156,10 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && (user_ismember($grou
 		<INPUT TYPE="RADIO" NAME="is_private" VALUE="1" '.$check_private.'> '.$Language->getText('news_submit','private_news').'<BR>
 		
 		<B>'.$Language->getText('news_admin_index','subject').':</B><BR>
-		<INPUT TYPE="TEXT" NAME="summary" VALUE="'.db_result($result,0,'summary').'"><BR>
+		<INPUT TYPE="TEXT" NAME="summary" VALUE="'.$purifier->purify(db_result($result,0,'summary')).'"><BR>
 		<B>'.$Language->getText('news_admin_index','details').':</B><BR>
-		<TEXTAREA NAME="details" ROWS="8" COLS="50" WRAP="SOFT">'.db_result($result,0,'details').'</TEXTAREA><P>
-		<B>'.$Language->getText('news_admin_index','if_edit_delete',$GLOBALS['sys_name']).'</B><BR>
+		<TEXTAREA NAME="details" ROWS="8" COLS="50" WRAP="SOFT">' . $purifier->purify(db_result($result,0,'details')) . '</TEXTAREA><P>
+		<B>'.$purifier->purify($Language->getText('news_admin_index','if_edit_delete',$GLOBALS['sys_name'])).'</B><BR>
 		<INPUT TYPE="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'">
 		</FORM>';
 
@@ -171,16 +173,16 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && (user_ismember($grou
 		$rows=db_numrows($result);
 		if ($rows < 1) {
 			echo '
-                <H4>'.$Language->getText('news_admin_index','no_queued_item_found_for',$pm->getProject($group_id)->getPublicName()).'</H1>';
+                <H4>'.$purifier->purify($Language->getText('news_admin_index','no_queued_item_found_for',$pm->getProject($group_id)->getUnconvertedPublicName())).'</H1>';
 		} else {
 			echo '
-                <H4>'.$Language->getText('news_admin_index','new_items',$pm->getProject($group_id)->getPublicName()).'</H4>
+                <H4>'.$purifier->purify($Language->getText('news_admin_index','new_items',$pm->getProject($group_id)->getUnconvertedPublicName())).'</H4>
 				<P>';
 			for ($i=0; $i<$rows; $i++) {
 				echo '
-				<A HREF="/news/admin/?approve=1&id='.db_result($result,$i,'id').'&group_id='.
-					db_result($result,$i,'group_id').'">'.
-					db_result($result,$i,'summary').'</A><BR>';
+				<A HREF="/news/admin/?approve=1&id='.$purifier->purify(db_result($result,$i,'id')).'&group_id='.
+                    $purifier->purify(db_result($result,$i,'group_id')).'">'.
+                    $purifier->purify(db_result($result,$i,'summary')).'</A><BR>';
 			}
 		}
 
