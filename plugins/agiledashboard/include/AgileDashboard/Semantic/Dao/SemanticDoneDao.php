@@ -70,7 +70,7 @@ class SemanticDoneDao extends DataAccessObject
         return $this->update($sql);
     }
 
-    private function addForTracker($tracker_id, array $selected_values)
+    public function addForTracker($tracker_id, array $selected_values)
     {
         $tracker_id = $this->da->escapeInt($tracker_id);
 
