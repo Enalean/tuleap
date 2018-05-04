@@ -823,6 +823,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
             foreach($previous_changesetvalue as $previous_attachment) {
                 if (empty($value['delete']) || !in_array($previous_attachment->getId(), $value['delete'])) {
                     $previous_fileinfo_ids[] = $previous_attachment->getId();
+                }  elseif (! empty($value['delete']) && in_array($previous_attachment->getId(), $value['delete'])) {
+                    $previous_attachment->delete();
                 }
             }
             if (count($previous_fileinfo_ids)) {
