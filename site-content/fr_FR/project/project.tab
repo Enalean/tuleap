@@ -478,7 +478,7 @@ project_export_artifact_deps_export	no_deps_found	Aucune dépendance disponible.
 project_export_artifact_deps_export	db_access_err	Erreur lors de l'accès à la base de données des dépendances. Veuillez informer l'administrateur $1 de cette erreur.
 project_export_artifact_deps_export	deps_export_format	Format d'exportation des dépendances
 project_export_artifact_deps_export	deps_export_format_msg	Le format d'exportation des dépendances comprend les champs suivants. Les valeurs données en exemple indique le type des données.
-project_export_artifact_deps_export	create_proj_err	Erreur à la création de la table $2 pour le projet $1
+project_export_artifact_deps_export	create_proj_err	Erreur à la création de la table $1
 project_export_artifact_deps_export	security_violation	VIOLATION DE SECURITE !!! Nom de base de données non autorisé&nbsp;: $1
 project_export_artifact_deps_export	art_id_desc	Identifiant unique de l'artefact
 project_export_artifact_deps_export	depend_on_art	Dépend du/des artefacts

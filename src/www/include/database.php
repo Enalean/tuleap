@@ -247,11 +247,3 @@ function db_ei($val, $null = CODENDI_DB_NOT_NULL) {
 function db_ei_implode($val) {
     return implode(',', array_map('db_ei', $val));
 }
-
-/**
- * @deprecated
- * @return bool
- */
-function db_select($database_name) {
-	return @mysql_select_db($database_name);
-}

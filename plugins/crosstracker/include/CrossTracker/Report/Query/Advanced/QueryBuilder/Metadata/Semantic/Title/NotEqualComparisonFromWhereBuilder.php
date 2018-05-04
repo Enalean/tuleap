@@ -44,7 +44,7 @@ class NotEqualComparisonFromWhereBuilder implements FromWhereBuilder
                 "(tracker_changeset_value_title.value IS NULL
                     OR tracker_changeset_value_title.value NOT LIKE ?)",
                 [],
-                ['%' . DBFactory::instance()->escapeLikeValue($value) . '%']
+                ['%' . DBFactory::getMainTuleapDB()->escapeLikeValue($value) . '%']
             );
         }
     }

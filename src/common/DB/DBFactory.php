@@ -24,25 +24,28 @@ use ParagonIE\EasyDB\Factory;
 
 class DBFactory
 {
-    private static $db;
+    private static $connections = [];
 
-    public static function instance()
+    public static function getMainTuleapDB()
     {
-        if (self::$db !== null) {
-            return self::$db;
-        }
-
-        self::$db = Factory::create(
-            self::getDSN(),
-            \ForgeConfig::get('sys_dbuser'),
-            \ForgeConfig::get('sys_dbpasswd')
-        );
-
-        return self::$db;
+        return self::getDB(\ForgeConfig::get('sys_dbname'));
     }
 
-    private static function getDSN()
+    public static function getDB($database_name)
     {
-        return 'mysql:host=' . \ForgeConfig::get('sys_dbhost') . ';dbname=' . \ForgeConfig::get('sys_dbname');
+        if (! isset(self::$connections[$database_name])) {
+            self::$connections[$database_name] = Factory::create(
+                self::getDSN($database_name),
+                \ForgeConfig::get('sys_dbuser'),
+                \ForgeConfig::get('sys_dbpasswd')
+            );
+        }
+
+        return self::$connections[$database_name];
+    }
+
+    private static function getDSN($database_name)
+    {
+        return 'mysql:host=' . \ForgeConfig::get('sys_dbhost') . ';dbname=' . $database_name;
     }
 }

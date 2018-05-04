@@ -31,7 +31,7 @@ class DataAccessObject
 
     public function __construct()
     {
-        $this->db = DBFactory::instance();
+        $this->db = DBFactory::getMainTuleapDB();
     }
 
     /**
