@@ -427,7 +427,7 @@ class ArtifactsResource extends AuthenticatedResource {
         $user     = UserManager::instance()->getCurrentUser();
         $artifact = $this->getArtifactById($user, $id);
 
-        $this->sendAllowHeadersForArtifact($artifact);
+        $this->sendAllowHeadersForArtifact();
         try {
             $updater = new Tracker_REST_Artifact_ArtifactUpdater(
                 new Tracker_REST_Artifact_ArtifactValidator(
@@ -638,6 +638,61 @@ class ArtifactsResource extends AuthenticatedResource {
         }
     }
 
+    /**
+     * Artifact partial update
+     *
+     * Partial update of an artifact.
+     * <br/>
+     *
+     * This partial update allows user to move an artifact from one tracker to another. This route does nothing for now.
+     *
+     * <pre>
+     * /!\ REST route under construction and subject to changes /!\
+     * </pre>
+     *
+     * <br/>
+     * To move an Artifact:
+     * <pre>
+     * {<br>
+     * &nbsp;"move": {<br/>
+     * &nbsp;&nbsp;"tracker_id": 1<br/>
+     * &nbsp;}<br/>
+     * }
+     * </pre>
+     * <br/>
+     * Limitation: User must be admin of both source and target trackers in order to be able to move an artifact.
+     *
+     * @url PATCH {id}
+     *
+     * @access protected
+     *
+     * @param int                 $id   Id of the artifact
+     * @param MoveRepresentation  $move Tracker in which the artifact must be created {@from body}
+     *
+     * @throws 401 Unauthorized
+     * @throws 404 Artifact Not found
+     */
+    protected function patchArtifact($id, MoveRepresentation $move)
+    {
+        $this->checkAccess();
+
+        $this->sendAllowHeadersForArtifact();
+
+        $user     = UserManager::instance()->getCurrentUser();
+        $artifact = $this->getArtifactById($user, $id);
+
+        $source_tracker = $artifact->getTracker();
+        $target_tracker = $this->tracker_factory->getTrackerById($move->tracker_id);
+
+        if (! $target_tracker || $target_tracker->isDeleted()) {
+            throw new RestException(404, "Target tracker not found");
+        }
+
+        if (! $source_tracker->userIsAdmin($user) || ! $target_tracker->userIsAdmin($user)) {
+            throw new RestException(401, "User must be admin of both trackers");
+        }
+    }
+
     private function getTrackerById(PFUser $user, $tracker_id)
     {
         $tracker  = $this->tracker_factory->getTrackerById($tracker_id);
@@ -685,7 +740,7 @@ class ArtifactsResource extends AuthenticatedResource {
     }
 
     private function sendAllowHeadersForArtifact() {
-        Header::allowOptionsGetPutDelete();
+        Header::allowOptionsGetPutDeletePatch();
     }
 
     private function sendLastModifiedHeader(Tracker_Artifact $artifact) {

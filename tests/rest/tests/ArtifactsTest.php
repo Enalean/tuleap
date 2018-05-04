@@ -27,17 +27,20 @@ use Tuleap\REST\ArtifactBase;
  */
 class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
 {
-    public function testOptionsArtifactId() {
+    public function testOptionsArtifactId()
+    {
         $response = $this->getResponse($this->client->options('artifacts/9'));
-        $this->assertEquals(array('OPTIONS', 'GET', 'PUT', 'DELETE'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(array('OPTIONS', 'GET', 'PUT', 'DELETE', 'PATCH'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
-    public function testOptionsArtifacts() {
+    public function testOptionsArtifacts()
+    {
         $response = $this->getResponse($this->client->options('artifacts'));
         $this->assertEquals(array('OPTIONS', 'GET', 'POST'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
-    public function testPostArtifact() {
+    public function testPostArtifact()
+    {
         $summary_field_label = 'Summary';
         $summary_field_value = "This is a new epic";
         $post_resource = json_encode(array(
@@ -276,7 +279,8 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
     /**
      * @depends testPostArtifact
      */
-    public function testGetArtifact() {
+    public function testGetArtifact()
+    {
         $test_put_return = func_get_args();
         $artifact_id = $test_put_return[0];
 
@@ -307,8 +311,8 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
         $this->assertTrue(is_array($artifact['project']));
         $this->assertTrue(is_array($artifact['submitted_by_user']));
 
-        foreach($fields as $field) {
-            switch($field['type']) {
+        foreach ($fields as $field) {
+            switch ($field['type']) {
                 case 'string':
                     $this->assertTrue(is_string($field['label']));
                     $this->assertTrue(is_string($field['value']));
@@ -325,7 +329,7 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
                     $this->assertTrue(is_string($field['label']));
                     $this->assertTrue(is_string($field['value']));
                     $this->assertTrue(is_string($field['format']));
-                    $this->assertTrue($field['format'] == 'text'|| $field['format'] == 'html' );
+                    $this->assertTrue($field['format'] == 'text'|| $field['format'] == 'html');
                     break;
                 case 'sb':
                     $this->assertTrue(is_string($field['label']));
@@ -349,11 +353,11 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
                     break;
                 case 'lud':
                     $this->assertTrue(is_string($field['label']));
-                    $this->assertTrue(DateTime::createFromFormat('Y-m-d\TH:i:sT' , $field['value']) !== false);
+                    $this->assertTrue(DateTime::createFromFormat('Y-m-d\TH:i:sT', $field['value']) !== false);
                     break;
                 case 'subon':
                     $this->assertTrue(is_string($field['label']));
-                    $this->assertTrue(DateTime::createFromFormat('Y-m-d\TH:i:sT' , $field['value']) !== false);
+                    $this->assertTrue(DateTime::createFromFormat('Y-m-d\TH:i:sT', $field['value']) !== false);
                     break;
                 default:
                     throw new Exception('You need to update this test for the field: '.print_r($field, true));
@@ -392,7 +396,8 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
     /**
      * @depends testPostArtifact
      */
-    public function testPutArtifactId() {
+    public function testPutArtifactId()
+    {
         $test_post_return = func_get_args();
         $artifact_id = $test_post_return[0];
         $field_label =  'Summary';
@@ -418,7 +423,8 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
     /**
      * @depends testPutArtifactId
      */
-    public function testPutIsIdempotent() {
+    public function testPutIsIdempotent()
+    {
         $test_post_return = func_get_args();
         $artifact_id = $test_post_return[0];
 
@@ -451,7 +457,8 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
     /**
      * @depends testPutIsIdempotent
      */
-    public function testPutArtifactIdWithValidIfUnmodifiedSinceHeader() {
+    public function testPutArtifactIdWithValidIfUnmodifiedSinceHeader()
+    {
         $test_post_return = func_get_args();
         $artifact_id = $test_post_return[0];
 
@@ -484,7 +491,8 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
     /**
      * @depends testPutArtifactIdWithValidIfUnmodifiedSinceHeader
      */
-    public function testPutArtifactIdWithValidIfMatchHeader() {
+    public function testPutArtifactIdWithValidIfMatchHeader()
+    {
         $test_post_return = func_get_args();
         $artifact_id = $test_post_return[0];
 
@@ -517,7 +525,8 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
     /**
      * @depends testPutArtifactIdWithValidIfMatchHeader
      */
-    public function testPutArtifactIdWithInvalidIfUnmodifiedSinceHeader() {
+    public function testPutArtifactIdWithInvalidIfUnmodifiedSinceHeader()
+    {
         $test_post_return = func_get_args();
         $artifact_id = $test_post_return[0];
 
@@ -546,7 +555,8 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
     /**
      * @depends testPutArtifactIdWithValidIfMatchHeader
      */
-    public function testPutArtifactIdWithInvalidIfMatchHeader() {
+    public function testPutArtifactIdWithInvalidIfMatchHeader()
+    {
         $test_post_return = func_get_args();
         $artifact_id = $test_post_return[0];
 
@@ -575,7 +585,8 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
     /**
      * @depends testPutArtifactId
      */
-    public function testPutArtifactComment() {
+    public function testPutArtifactComment()
+    {
         $test_post_return = func_get_args();
         $artifact_id = $test_post_return[0];
 
@@ -651,7 +662,8 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
         return $artifact_id;
     }
 
-    public function testAnonymousGETArtifact() {
+    public function testAnonymousGETArtifact()
+    {
         try {
             $this->client->get('artifacts/'.$this->story_artifact_ids[1])->send();
         } catch (Exception $e) {
@@ -659,17 +671,20 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
         }
     }
 
-    private function getFieldIdForFieldLabel($artifact_id, $field_label) {
+    private function getFieldIdForFieldLabel($artifact_id, $field_label)
+    {
         $value = $this->getFieldByFieldLabel($artifact_id, $field_label);
         return $value['field_id'];
     }
 
-    private function getFieldValueForFieldLabel($artifact_id, $field_label) {
+    private function getFieldValueForFieldLabel($artifact_id, $field_label)
+    {
         $value = $this->getFieldByFieldLabel($artifact_id, $field_label);
         return $value['value'];
     }
 
-    private function getFieldByFieldLabel($artifact_id, $field_label) {
+    private function getFieldByFieldLabel($artifact_id, $field_label)
+    {
         $artifact = $this->getArtifact($artifact_id);
         foreach ($artifact['values'] as $value) {
             if ($value['label'] == $field_label) {
@@ -678,7 +693,8 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
         }
     }
 
-    private function getArtifact($artifact_id) {
+    private function getArtifact($artifact_id)
+    {
         $response = $this->getResponse($this->client->get('artifacts/'.$artifact_id));
         $this->assertNotNull($response->getHeader('Last-Modified'));
         $this->assertNotNull($response->getHeader('Etag'));
@@ -686,7 +702,8 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
         return $response->json();
     }
 
-    private function getSubmitTextValue($tracker_id, $field_label, $field_value) {
+    private function getSubmitTextValue($tracker_id, $field_label, $field_value)
+    {
         $field_def = $this->getFieldDefByFieldLabel($tracker_id, $field_label);
         return array(
             'field_id' => $field_def['field_id'],
@@ -694,7 +711,8 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
         );
     }
 
-    private function getSubmitListValue($tracker_id, $field_label, $field_value) {
+    private function getSubmitListValue($tracker_id, $field_label, $field_value)
+    {
         $field_def = $this->getFieldDefByFieldLabel($tracker_id, $field_label);
         return array(
             'field_id'       => $field_def['field_id'],
@@ -704,7 +722,8 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
         );
     }
 
-    private function getFieldDefByFieldLabel($tracker_id, $field_label) {
+    private function getFieldDefByFieldLabel($tracker_id, $field_label)
+    {
         $tracker = $this->getTracker($tracker_id);
         foreach ($tracker['fields'] as $field) {
             if ($field['label'] == $field_label) {
@@ -713,7 +732,8 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
         }
     }
 
-    private function getTracker($tracker_id) {
+    private function getTracker($tracker_id)
+    {
         $response = $this->getResponse($this->client->get('trackers/'.$tracker_id));
         return $response->json();
     }

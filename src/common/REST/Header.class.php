@@ -114,6 +114,11 @@ class Header {
         self::sendAllowHeaders(array(self::OPTIONS, self::GET, self::PUT, self::DELETE));
     }
 
+    public static function allowOptionsGetPutDeletePatch()
+    {
+        self::sendAllowHeaders(array(self::OPTIONS, self::GET, self::PUT, self::DELETE, self::PATCH));
+    }
+
     public static function allowOptionsPut() {
         self::sendAllowHeaders(array(self::OPTIONS, self::PUT));
     }
