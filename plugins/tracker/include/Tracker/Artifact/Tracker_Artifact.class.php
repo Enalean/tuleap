@@ -1615,6 +1615,23 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     }
 
     /**
+     * Get artifacts linked to the current artifact and reverse linked artifacts
+     *
+     * @return Tracker_Artifact[]
+     */
+    public function getLinkedAndReverseArtifacts(PFUser $user) {
+        $linked_and_reverse_artifacts = [];
+        $artifact_link_field          = $this->getAnArtifactLinkField($user);
+        $last_changeset               = $this->getLastChangeset();
+
+        if ($artifact_link_field && $last_changeset) {
+            $linked_and_reverse_artifacts = $artifact_link_field->getLinkedAndReverseArtifacts($last_changeset, $user);
+        }
+
+        return $linked_and_reverse_artifacts;
+    }
+
+    /**
      * Get artifacts linked to the current artifact
      *
      * @see Tracker_FormElement_Field_ArtifactLink::getSlicedLinkedArtifacts()

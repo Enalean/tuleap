@@ -672,7 +672,7 @@ class ArtifactsResource extends AuthenticatedResource {
      * @param int                 $id   Id of the artifact
      * @param MoveRepresentation  $move Tracker in which the artifact must be created {@from body}
      *
-     * @throws 401 Unauthorized
+     * @throws 400
      * @throws 404 Artifact Not found
      */
     protected function patchArtifact($id, MoveRepresentation $move)
@@ -692,7 +692,11 @@ class ArtifactsResource extends AuthenticatedResource {
         }
 
         if (! $source_tracker->userIsAdmin($user) || ! $target_tracker->userIsAdmin($user)) {
-            throw new RestException(401, "User must be admin of both trackers");
+            throw new RestException(400, "User must be admin of both trackers");
+        }
+
+        if (count($artifact->getLinkedAndReverseArtifacts($user)) > 0) {
+            throw new RestException(400, "An artifact with linked artifacts or reverse linked artifacts cannot be moved");
         }
     }
 
