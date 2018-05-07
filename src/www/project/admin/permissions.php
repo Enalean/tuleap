@@ -469,11 +469,17 @@ function permission_get_field_tracker_ugroups_permissions($group_id, $atid, $fie
 function permission_get_tracker_ugroups_permissions($group_id, $object_id) {
   return permission_get_ugroups_permissions($group_id, $object_id, array('TRACKER_ACCESS_FULL','TRACKER_ACCESS_ASSIGNEE','TRACKER_ACCESS_SUBMITTER'), false);
 }
+
 /**
  * @returns array the permissions for the ugroups
  */
 function permission_get_ugroups_permissions($group_id, $object_id, $permission_types, $use_default_permissions = true) {
-   
+    $cache = Tuleap\Project\UgroupsPermissionsCache::instance();
+    $cached_value = $cache->get($group_id, $object_id, $permission_types, $use_default_permissions);
+    if ($cached_value !== null) {
+        return $cached_value;
+    }
+
     //We retrive ugroups (user defined)
     $object_id = db_es($object_id);
     $sql="SELECT u.ugroup_id, u.name, p.permission_type ".
@@ -491,6 +497,7 @@ function permission_get_ugroups_permissions($group_id, $object_id, $permission_t
     $sql .= ")";
     $res = db_query($sql);
     if (!$res) {
+        $cache->set($group_id, $object_id, $permission_types, $use_default_permissions, false);
         return false;
     } else {
         $return = array();
@@ -583,6 +590,7 @@ function permission_get_ugroups_permissions($group_id, $object_id, $permission_t
                 }
             }
         }
+        $cache->set($group_id, $object_id, $permission_types, $use_default_permissions, $return);
         return $return;
     }
 }
