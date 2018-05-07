@@ -130,7 +130,7 @@ class ArtifactDeletor
 
     private function tryToArchiveArtifact(\Tracker_Artifact $artifact, \PFUser $user)
     {
-        $archive_path = ForgeConfig::get('tmp_dir') . '/artifact_' . $artifact->getId();
+        $archive_path = ForgeConfig::get('tmp_dir') . '/artifact_' . $artifact->getId() . '.zip';
         $archive      = new ZipArchive($archive_path);
         $this->artifact_with_tracker_structure_exporter->exportArtifactAndTrackerStructureToXML($user, $artifact, $archive);
         $archive->close();
