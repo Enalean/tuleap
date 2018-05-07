@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -54,6 +54,16 @@ class WidgetKanbanCreator
         $kanban_title      = $kanban['title'];
         $tracker_report_id = (int) $request->get('tracker_report_id');
 
+        return $this->createKanbanWidget($owner_id, $owner_type, $kanban_id, $kanban_title, $tracker_report_id);
+    }
+
+    public function createKanbanWidget(
+        $owner_id,
+        $owner_type,
+        $kanban_id,
+        $kanban_title,
+        $tracker_report_id
+    ) {
         $widget_id = $this->widget_kanban_dao->create(
             $owner_id,
             $owner_type,

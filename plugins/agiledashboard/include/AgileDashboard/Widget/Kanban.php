@@ -20,12 +20,14 @@
 
 namespace Tuleap\AgileDashboard\Widget;
 
+use AgileDashboard_Kanban;
 use AgileDashboard_KanbanCannotAccessException;
 use AgileDashboard_KanbanFactory;
 use AgileDashboard_KanbanNotFoundException;
 use AgileDashboard_PermissionsManager;
 use Codendi_Request;
 use KanbanPresenter;
+use Project;
 use TemplateRendererFactory;
 use Tracker_Report;
 use Tracker_ReportFactory;
@@ -250,7 +252,7 @@ abstract class Kanban extends Widget
     public function getPreferences($widget_id)
     {
         $tracker_reports_builder = new TrackerReportBuilder(
-            Tracker_ReportFactory::instance(),
+            $this->getTrackerReportFactory(),
             $this->kanban_factory->getKanban($this->getCurrentUser(), $this->kanban_id),
             new TrackerReportDao()
         );
@@ -277,7 +279,7 @@ abstract class Kanban extends Widget
 
     private function getSelectedReport()
     {
-        return Tracker_ReportFactory::instance()->getReportById(
+        return $this->getTrackerReportFactory()->getReportById(
             $this->tracker_report_id,
             $this->getCurrentUser()->getId()
         );
@@ -289,5 +291,95 @@ abstract class Kanban extends Widget
         $selectable_reports = $tracker_report_dao->searchReportIdsForKanban($this->kanban_id);
 
         return in_array($report->getId(), $selectable_reports);
+    }
+
+    /**
+     * cloneContent
+     *
+     * Take the content of a widget, clone it and return the id of the new content
+     */
+    public function cloneContent(
+        Project $template_project,
+        Project $new_project,
+        $id,
+        $owner_id,
+        $owner_type
+    ) {
+        $this->loadContent($id);
+
+        $new_kanban    = $this->findClonedKanbanInProject($new_project);
+        $new_report_id = 0;
+
+        if ($this->tracker_report_id) {
+            $new_report_id = (int) $this->findClonedTrackerReportForKanban($new_kanban)->getId();
+        }
+
+        return $this->widget_kanban_creator->createKanbanWidget(
+            $owner_id,
+            $owner_type,
+            $new_kanban->getId(),
+            $new_kanban->getName(),
+            $new_report_id
+        );
+    }
+
+    private function findClonedKanbanInProject(Project $project)
+    {
+        $kanban = $this->kanban_factory->getKanban(
+            $this->getCurrentUser(),
+            $this->kanban_id
+        );
+
+        $kanbans           = $this->kanban_factory->getListOfKanbansForProject($this->getCurrentUser(), $project->getID());
+        $tracker_shortname = $this->getKanbanTrackerShortname($kanban);
+
+        $cloned_kanban = array_filter(
+            $kanbans,
+            function (AgileDashboard_Kanban $cloned_kanban) use ($tracker_shortname) {
+                return $this->getKanbanTrackerShortname($cloned_kanban)=== $tracker_shortname;
+            }
+        )[0];
+
+        return $cloned_kanban;
+    }
+
+    private function getKanbanTrackerShortname(AgileDashboard_Kanban $kanban)
+    {
+        return $this->tracker_factory->getTrackerById(
+            $kanban->getTrackerId()
+        )->getItemName();
+    }
+
+    private function findClonedTrackerReportForKanban(AgileDashboard_Kanban $new_kanban)
+    {
+        $new_tracker_reports = $this->getTrackerReportFactory()
+            ->getReportsByTrackerId(
+                $new_kanban->getTrackerId(),
+                $this->getCurrentUser()->getId()
+            );
+
+        $kanban_report = $this->getTrackerReportFactory()
+            ->getReportById(
+                $this->tracker_report_id,
+                $this->getCurrentUser()
+            );
+
+        $new_report = array_filter(
+            $new_tracker_reports,
+            function (Tracker_Report $new_report) use ($kanban_report) {
+                return $new_report->getName() === $kanban_report->getName();
+            }
+        );
+
+        if (count($new_report) === 1) {
+            return array_values($new_report)[0];
+        }
+
+        return 0;
+    }
+
+    private function getTrackerReportFactory()
+    {
+        return Tracker_ReportFactory::instance();
     }
 }
