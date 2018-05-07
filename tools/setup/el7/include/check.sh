@@ -118,6 +118,7 @@ _checkPluginsConfiguration() {
     for plugin in ${installed_plugins[@]}; do
         case ${plugin} in
             git) _pluginGit;;
+            svn) _pluginSVN;;
         esac
     done
 }
