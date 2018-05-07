@@ -57,14 +57,20 @@ class ArtifactsDeletionManager
 
     /**
      * @return int The remaining number of artifacts allowed to delete
+     *
      * @throws ArtifactsDeletionLimitReachedException
+     * @throws DeletionOfArtifactsIsNotAllowedException
      */
     public function deleteArtifact(
         Tracker_artifact $artifact,
         PFUser $user
     ) {
+        $limit = $this->config->getArtifactsDeletionLimit();
+        if (! $limit) {
+            throw new DeletionOfArtifactsIsNotAllowedException();
+        }
+
         $window_start         = new DateTimeImmutable('-1day');
-        $limit                = $this->config->getArtifactsDeletionLimit();
         $nb_artifacts_deleted = (int) $this->dao->searchNumberOfArtifactsDeletionsForUserInTimePeriod(
             $user->getId(),
             $window_start->getTimestamp()

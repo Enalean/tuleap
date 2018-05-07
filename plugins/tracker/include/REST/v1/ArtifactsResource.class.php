@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -35,6 +35,7 @@ use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletorBuilder;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionDAO;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionLimitReachedException;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionManager;
+use Tuleap\Tracker\Artifact\ArtifactsDeletion\DeletionOfArtifactsIsNotAllowedException;
 use Tuleap\Tracker\Exception\SemanticTitleNotDefinedException;
 use Tuleap\Tracker\REST\Artifact\ArtifactBatchQueryConverter;
 use Tuleap\Tracker\REST\Artifact\MalformedArtifactBatchQueryConverterException;
@@ -630,6 +631,8 @@ class ArtifactsResource extends AuthenticatedResource {
 
         try {
             $remaining_deletions = $this->artifacts_deletion_manager->deleteArtifact($artifact, $user);
+        } catch (DeletionOfArtifactsIsNotAllowedException $exception) {
+            throw new RestException(403, $exception->getMessage());
         } catch (ArtifactsDeletionLimitReachedException $limit_reached_exception) {
             throw new RestException(429, $limit_reached_exception->getMessage());
         } finally {
