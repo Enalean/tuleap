@@ -21,6 +21,7 @@
 namespace Tuleap\AgileDashboard\Widget;
 
 use PFUser;
+use Tracker_Report;
 use Tracker_ReportFactory;
 
 class WidgetKanbanConfigUpdater
@@ -48,5 +49,10 @@ class WidgetKanbanConfigUpdater
             $widget_id,
             $tracker_report_id
         );
+    }
+
+    public function deleteConfigurationForWidgetMatchingReportId(Tracker_Report $report)
+    {
+        $this->config_dao->deleteConfigurationForWidgetMatchingReportId($report->getId());
     }
 }

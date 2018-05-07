@@ -30,6 +30,7 @@ use Tuleap\Tracker\Report\AdditionalCriteria\CommentCriterionValueRetriever;
 use Tuleap\Tracker\Report\AdditionalCriteria\CommentCriterionValueSaver;
 use Tuleap\Tracker\Report\AdditionalCriteria\CommentDao;
 use Tuleap\Tracker\Report\Event\trackerReportDeleted;
+use Tuleap\Tracker\Report\Event\TrackerReportSetToPrivate;
 use Tuleap\Tracker\Report\ExpertModePresenter;
 use Tuleap\Tracker\Report\Query\Advanced\ExpertQueryValidator;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parser;
@@ -1372,14 +1373,20 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
             case self::ACTION_SCOPE:
                 if ($this->getTracker()->userIsAdmin($current_user) && (!$this->user_id || $this->user_id == $current_user->getId())) {
                     if ($request->exist('report_scope_public')) {
+                        $is_scope_public = $request->get('report_scope_public');
                         $old_user_id = $this->user_id;
-                        if ($request->get('report_scope_public') && $this->user_id == $current_user->getId()) {
+                        if ($is_scope_public && $this->user_id == $current_user->getId()) {
                             $this->user_id = null;
-                        } else if (!$request->get('report_scope_public') && !$this->user_id) {
+                        } else if (! $is_scope_public && !$this->user_id) {
                             $this->user_id = $current_user->getId();
                         }
                         if ($this->user_id != $old_user_id) {
                             Tracker_ReportFactory::instance()->save($this);
+
+                            if (! $is_scope_public) {
+                                $event = new TrackerReportSetToPrivate($this);
+                                EventManager::instance()->processEvent($event);
+                            }
                         }
                     }
                 }

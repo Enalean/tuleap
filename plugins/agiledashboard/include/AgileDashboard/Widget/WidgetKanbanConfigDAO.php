@@ -58,4 +58,14 @@ class WidgetKanbanConfigDAO extends DataAccessObject
 
         $this->getDB()->run($sql, $widget_id);
     }
+
+    public function deleteConfigurationForWidgetMatchingReportId($report_id)
+    {
+        $sql = "
+            DELETE FROM plugin_agiledashboard_kanban_widget_config
+            WHERE tracker_report_id = ?
+        ";
+
+        $this->getDB()->run($sql, $report_id);
+    }
 }
