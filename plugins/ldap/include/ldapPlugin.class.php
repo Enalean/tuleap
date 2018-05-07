@@ -28,6 +28,7 @@ require_once 'constants.php';
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\LDAP\Exception\IdentifierTypeNotFoundException;
 use Tuleap\LDAP\Exception\IdentifierTypeNotRecognizedException;
+use Tuleap\LDAP\LdapLogger;
 use Tuleap\LDAP\LinkModalContentPresenter;
 use Tuleap\LDAP\NonUniqueUidRetriever;
 use Tuleap\Project\Admin\ProjectMembers\MembersEditProcessAction;
@@ -190,10 +191,11 @@ class LdapPlugin extends Plugin {
     }
 
     /**
-     * @return TruncateLevelLogger
+     * @return LdapLogger
      */
-    public function getLogger() {
-        return new TruncateLevelLogger(new BackendLogger(), ForgeConfig::get('sys_logger_level'));
+    public function getLogger()
+    {
+        return new LdapLogger();
     }
 
     /**
@@ -367,7 +369,7 @@ class LdapPlugin extends Plugin {
             } catch (LDAP_UserNotFoundException $exception) {
                 $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
             } catch (LDAP_AuthenticationFailedException $exception) {
-                $logger = new BackendLogger();
+                $logger = $this->getLogger();
                 $logger->info("[LDAP] User ".$params['loginname']." failed to authenticate");
             }
         }

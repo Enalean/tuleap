@@ -622,8 +622,15 @@ done
 #
 ## Plugin hudson_svn
 #%{__install} plugins/hudson_svn/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_hudson_svn
-# Plugin create_test_env
+#
+## Plugin create_test_env
 #%{__install} plugins/create_test_env/etc/sudoers.d/tuleap_plugin_create_test_env $RPM_BUILD_ROOT/%{_sysconfdir}/sudoers.d
+#
+# Plugin LDAP
+%{__install} plugins/ldap/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_ldap
+%{__perl} -pi -e "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_ldap
+%{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_ldap
+
 ## Symlink for compatibility with older version
 #%{__ln_s} %{APP_DIR} $RPM_BUILD_ROOT/%{OLD_APP_DIR}
 #%{__ln_s} %{APP_LIB_DIR} $RPM_BUILD_ROOT/%{OLD_APP_LIB_DIR}
@@ -962,6 +969,8 @@ fi
 %files plugin-ldap
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/ldap
+%attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_ldap
+%config(noreplace) /etc/logrotate.d/%{APP_NAME}_ldap
 
 %files plugin-hudson
 %defattr(-,root,root,-)

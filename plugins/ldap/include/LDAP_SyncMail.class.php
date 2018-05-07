@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -25,8 +25,9 @@ class LDAP_SyncMail {
     private $projectManager;
     private $logger;
 
-    function __construct(ProjectManager $projectManager){
-        $this->logger         = new BackendLogger();
+    function __construct(ProjectManager $projectManager)
+    {
+        $this->logger         = new \Tuleap\LDAP\LdapLogger();
         $this->projectManager = $projectManager;
     }
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -83,4 +83,13 @@ class TruncateLevelLogger implements Logger {
        }
     }
 
+    public function createLogFileForAppUser($file_path)
+    {
+        if (! is_file($file_path)) {
+            $http_user = ForgeConfig::get('sys_http_user');
+            touch($file_path);
+            chown($file_path, $http_user);
+            chgrp($file_path, $http_user);
+        }
+    }
 }

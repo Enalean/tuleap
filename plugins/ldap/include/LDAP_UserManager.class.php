@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2008. All Rights Reserved.
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2008
  *
@@ -495,7 +495,7 @@ class LDAP_UserManager {
         }
         $percentage_users_to_suspend = ($nbr_users_to_suspend / $nbr_all_users) *100;
         $threshold_users_suspension  = $this->ldap->getLDAPParam('threshold_users_suspension');
-        $logger = new BackendLogger();
+        $logger = new \Tuleap\LDAP\LdapLogger();
         if($percentage_users_to_suspend <= $threshold_users_suspension) {
             $logger->info("[LDAP] Percentage of suspended users is ( ".$percentage_users_to_suspend."% ) and threshold is ( ".$threshold_users_suspension."% )");
             $logger->info("[LDAP] Number of suspended users is ( ".$nbr_users_to_suspend." ) and number of active users is ( ".$nbr_all_users." )");
