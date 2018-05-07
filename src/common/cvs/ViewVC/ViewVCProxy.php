@@ -151,7 +151,7 @@ class ViewVCProxy
             }
         }
 
-        $command = 'HTTP_COOKIE='.$this->escapeStringFromServer($request, 'HTTP_COOKIE').' '.
+        $command = 'REMOTE_USER_ID=' . escapeshellarg($user->getId()) . ' '.
             'REMOTE_USER=' . escapeshellarg($user->getUserName()) . ' '.
             'PATH_INFO='.$this->setLocaleOnFileName($path).' '.
             'QUERY_STRING='.escapeshellarg($this->buildQueryString($request)).' '.

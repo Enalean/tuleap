@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  * Copyright 1999-2000 (c) The SourceForge Crew
  *
  * This file is a part of Tuleap.
@@ -37,7 +37,7 @@ if (user_isloggedin()) {
     }
     $group_id = $project->getID();
 
-    $viewvc_proxy = new ViewVCProxy();
+    $viewvc_proxy = new ViewVCProxy(EventManager::instance());
     $viewvc_proxy->displayContent($project, $request);
 } else {
     exit_not_logged_in();

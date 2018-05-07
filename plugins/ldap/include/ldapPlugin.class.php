@@ -35,6 +35,7 @@ use Tuleap\Project\Admin\ProjectMembers\ProjectMembersAdditionalModalCollectionP
 use Tuleap\LDAP\Project\UGroup\Binding\AdditionalModalPresenterBuilder;
 use Tuleap\Project\Admin\ProjectUGroup\BindingAdditionalModalPresenterCollection;
 use Tuleap\Project\Admin\ProjectUGroup\UGroupEditProcessAction;
+use Tuleap\svn\Event\GetSVNLoginNameEvent;
 use Tuleap\User\Admin\UserDetailsPresenter;
 use Tuleap\Project\UserRemover;
 use Tuleap\Project\UserRemoverDao;
@@ -129,6 +130,7 @@ class LdapPlugin extends Plugin {
         // Backend SVN
         $this->addHook('backend_factory_get_svn', 'backend_factory_get_svn', false);
         $this->addHook(Event::SVN_APACHE_AUTH,    'svn_apache_auth',         false);
+        $this->addHook(GetSVNLoginNameEvent::NAME);
 
         // Daily codendi job
         $this->addHook('codendi_daily_start', 'codendi_daily_start', false);
@@ -909,6 +911,27 @@ class LdapPlugin extends Plugin {
                     $params['project_info']
                 );
             }
+        }
+    }
+
+    /**
+     * @see \Tuleap\svn\Event\GetSVNLoginNameEvent
+     */
+    public function getSvnLoginName(GetSVNLoginNameEvent $event)
+    {
+        if (! $this->isLdapAuthType()) {
+            return;
+        }
+        $ldap_project_manager = new LDAP_ProjectManager();
+        if (! $ldap_project_manager->hasSVNLDAPAuth($event->getProject()->getID())) {
+            return;
+        }
+
+        $ldap_result_iterator = $this->getLdap()->searchLogin($event->getUsername());
+        if ($ldap_result_iterator && count($ldap_result_iterator) === 1) {
+            $event->setUsername($ldap_result_iterator->current()->getLogin());
+        } else {
+            $event->setUsername('');
         }
     }
 
