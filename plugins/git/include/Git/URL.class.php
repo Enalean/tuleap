@@ -105,20 +105,6 @@ class Git_URL {
     }
 
     /**
-     * @return bool
-     */
-    public function isFriendly() {
-        return $this->is_friendly;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isStandard() {
-        return $this->is_standard;
-    }
-
-    /**
      * @return Project|null
      */
     public function getProject() {
@@ -243,5 +229,19 @@ class Git_URL {
      */
     private function getProjectFromStandardURL() {
         return $this->project_manager->getProject($this->matches['project_id']);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isADownload(Codendi_Request $request)
+    {
+        $action_type = $request->get('a');
+        return $request->get('noheader') == 1 ||
+            $action_type === 'snapshot' ||
+            $action_type === 'atom' ||
+            $action_type === 'rss' ||
+            $action_type === 'commitdiff_plain' ||
+            $action_type === 'blob_plain';
     }
 }

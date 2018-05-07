@@ -15,7 +15,7 @@ get_list_of_files() {
 
 get_initial_commit() {
     local file=$1
-    git log --diff-filter=A --format=format:%H "${file}"
+    git log --diff-filter=A --format=format:%H "${file}" | tail -1
 }
 
 get_reference_source_file() {

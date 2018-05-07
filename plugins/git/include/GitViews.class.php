@@ -113,28 +113,8 @@ class GitViews extends PluginViews {
     }
 
     public function header() {
-        $title = $GLOBALS['Language']->getText('plugin_git','title');
-
-        $this->getToolbar();
-
-        $GLOBALS['HTML']->header(array(
-            'title'      => $title,
-            'group'      => $this->groupId,
-            'toptab'     => 'plugin_git',
-            'body_class' => $this->getAdditionalBodyClasses()
-        ));
-    }
-
-    private function getAdditionalBodyClasses() {
-        $classes = array();
-        $params  = array(
-            'request' => $this->request,
-            'classes' => &$classes
-        );
-
-        EventManager::instance()->processEvent(GIT_ADDITIONAL_BODY_CLASSES, $params);
-
-        return $classes;
+        $headers = new \Tuleap\Git\GitViews\GitViewHeader(EventManager::instance(), $this->git_permissions_manager);
+        $headers->header($this->request, $this->user, $GLOBALS['HTML'], $this->project);
     }
 
     public function footer() {
@@ -143,16 +123,6 @@ class GitViews extends PluginViews {
 
     public function getText($key, $params=array() ) {
         return $GLOBALS['Language']->getText('plugin_git', $key, $params);
-    }
-
-    protected function getToolbar() {
-        $GLOBALS['HTML']->addToolbarItem($this->linkTo($this->getText('bread_crumb_home'), '/plugins/git/?group_id='.$this->groupId));
-        $GLOBALS['HTML']->addToolbarItem($this->linkTo($this->getText('fork_repositories'), '/plugins/git/?group_id='.$this->groupId .'&action=fork_repositories'));
-        $GLOBALS['HTML']->addToolbarItem($this->linkTo($this->getText('bread_crumb_help'), 'javascript:help_window(\'/doc/'.$this->user->getShortLocale().'/user-guide/git.html\')'));
-
-        if ($this->git_permissions_manager->userIsGitAdmin($this->user, $this->project)) {
-            $GLOBALS['HTML']->addToolbarItem($this->linkTo($this->getText('bread_crumb_admin'), '/plugins/git/?group_id='.$this->groupId .'&action=admin'));
-        }
     }
 
     /**
@@ -210,28 +180,6 @@ class GitViews extends PluginViews {
                 default:
                     break;
             }
-        }
-
-    /**
-     * REPO VIEW
-     */
-    public function view() {
-        $params     = $this->getData();
-        $repository = $params['repository'];
-        $request    = $this->controller->getRequest();
-
-        $index_view = new GitViews_ShowRepo(
-            $repository,
-            $this->controller,
-            $this->url_manager,
-            $this->controller->getRequest(),
-            $params['driver_factory'],
-            $params['gerrit_usermanager'],
-            $params['gerrit_servers'],
-            $this->mirror_data_mapper,
-            $this->access_loger
-        );
-        $index_view->display();
     }
 
     /**
