@@ -10,17 +10,17 @@
                     <h1 class="tlp-pane-title"><i class="fa fa-trash-o tlp-pane-title-icon"></i>{{# dgettext }} tuleap-tracker | Artifacts deletion configuration {{/ dgettext }}</h1>
                 </div>
                 <section class="tlp-pane-section">
-                    <div class="tlp-alert-danger">
-                        <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>&nbsp;
+                    <div class="tlp-alert-warning">
+                        <i class="fa fa-exclamation-triangle tlp-alert-icon" aria-hidden="true"></i>
                         {{# dgettext }}
                             tuleap-tracker
-                            | Be careful: The limit you define here is the number of artifacts users can delete from the REST API on a 24 hours sliding window. An artifact deletion is an action hardly reversible. Choose wisely.
+                            | Be careful: An artifact deletion is an action hardly reversible. Choose wisely.
                         {{/ dgettext }}
                     </div>
 
                     {{# is_archiving_enabled }}
                         <div class="tlp-alert-info">
-                            <i class="fa fa-info-circle" aria-hidden="true"></i>&nbsp;
+                            <i class="fa fa-info-circle tlp-alert-icon" aria-hidden="true"></i>
                             {{# dgettext }}
                                 tuleap-tracker
                                 |  Archive deleted items plugin is enabled. Each deleted artifact will be archived in the folder defined in the plugin configuration.
@@ -29,13 +29,14 @@
                     {{/ is_archiving_enabled }}
                     {{^ is_archiving_enabled }}
                         <div class="tlp-alert-info">
-                            <i class="fa fa-info-circle" aria-hidden="true"></i>&nbsp;
+                            <i class="fa fa-info-circle tlp-alert-icon" aria-hidden="true"></i>
                             {{# dgettext }}
                                 tuleap-tracker
                                 |  Archive deleted items plugin is not installed or enabled. Each deleted artifact will be exported and placed in the temporary folder defined in the local.inc file. They will be purged automatically accordingly to the settings of the machine on which the server is running.
                             {{/ dgettext }}
                         </div>
                     {{/is_archiving_enabled}}
+
                     <form method="POST" action="">
                         <input type="hidden" name="action" value="artifacts-deletion-update-limit" />
                         {{# csrf_token }}
@@ -58,6 +59,12 @@
                                    value="{{ artifacts_limit }}"
                                    min="0"
                             />
+                            <p class="tlp-text-info">
+                                {{# dgettext }}
+                                    tuleap-tracker
+                                    | Maximum number of artifacts users can delete from the REST API on a 24 hours sliding window.
+                                {{/ dgettext }}
+                            </p>
                         </div>
 
                         <div class="tlp-pane-section-submit">
