@@ -413,7 +413,7 @@ class SemanticDone extends Tracker_Semantic
             return true;
         }
 
-        return $this->dao->updateForTracker(
+        return $this->dao->addForTracker(
             $this->tracker->getId(),
             $done_values_ids
         );

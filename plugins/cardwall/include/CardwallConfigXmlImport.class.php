@@ -87,6 +87,7 @@ class CardwallConfigXmlImport {
         $rng_path = realpath(CARDWALL_BASE_DIR.'/../www/resources/xml_project_cardwall.rng');
         $this->xml_validator->validate($xml_input->{CardwallConfigXml::NODE_CARDWALL}, $rng_path);
 
+        $this->cardwall_ontop_dao->startTransaction();
         $this->importCardwalls($xml_input->{CardwallConfigXml::NODE_CARDWALL});
 
         $this->event_manager->processEvent(
@@ -97,6 +98,7 @@ class CardwallConfigXmlImport {
                 'mapping'     => $this->mapping
             )
         );
+        $this->cardwall_ontop_dao->commit();
     }
 
     private function importCardwalls(SimpleXMLElement $cardwalls) {
