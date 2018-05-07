@@ -1249,8 +1249,8 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         );
     }
 
-
-    private function getReverseLinks($artifact_id) {
+    private function getReverseLinks($artifact_id)
+    {
         $links_data = $this->getValueDao()->searchReverseLinksById($artifact_id);
 
         return $this->getArtifactLinkInfos($links_data);
@@ -1649,6 +1649,27 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
                 $this->addArtifactUserCanViewFromId($artifacts, $id, $user);
             }
         }
+        return $artifacts;
+    }
+
+    /**
+     * Retrieve linked artifacts and reverse linked artifacts according to user's permissions
+     *
+     * @return Tracker_Artifact[]
+     */
+    public function getLinkedAndReverseArtifacts(Tracker_Artifact_Changeset $changeset, PFUser $user) {
+        $artifacts        = [];
+        $changeset_value  = $changeset->getValue($this);
+        $all_artifact_ids = $this->getReverseLinks($changeset->getArtifact());
+
+        if ($changeset_value) {
+            $all_artifact_ids = array_unique(array_merge($all_artifact_ids, $changeset_value->getArtifactIds()));
+        }
+
+        foreach ($all_artifact_ids as $id) {
+            $this->addArtifactUserCanViewFromId($artifacts, $id, $user);
+        }
+
         return $artifacts;
     }
 
