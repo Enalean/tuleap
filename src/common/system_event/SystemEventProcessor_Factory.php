@@ -94,7 +94,7 @@ class SystemEventProcessor_Factory
             Backend::instance('SVN'),
             Backend::instance('System'),
             new SiteCache($this->logger),
-            new ApacheConfGenerator(new System_Command(), Backend::instance('SVN'))
+            ApacheConfGenerator::build()
         );
     }
 }

@@ -327,7 +327,7 @@ class SvnPlugin extends Plugin
 
     private function getApacheConfGenerator()
     {
-        return new ApacheConfGenerator(new System_Command(), Backend::instance(Backend::SVN));
+        return ApacheConfGenerator::build();
     }
 
     /** @return Tuleap\Svn\Repository\RepositoryManager */

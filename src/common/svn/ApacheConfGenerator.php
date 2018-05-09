@@ -24,26 +24,38 @@
 
 namespace Tuleap\Svn;
 
-use System_Command;
 use Backend;
+use BackendSVN;
+use Tuleap\System\ApacheServiceControl;
+use Tuleap\System\ServiceControl;
 
 class ApacheConfGenerator
 {
-
-    private $cmd;
+    /**
+     * @var ApacheServiceControl
+     */
+    private $service_control;
+    /**
+     * @var BackendSVN
+     */
     private $backend_svn;
 
     public function __construct(
-        System_Command $cmd,
-        Backend $backend_svn
+        ApacheServiceControl $service_control,
+        BackendSVN $backend_svn
     ) {
-        $this->cmd         = $cmd;
-        $this->backend_svn = $backend_svn;
+        $this->service_control = $service_control;
+        $this->backend_svn     = $backend_svn;
+    }
+
+    public static function build()
+    {
+        return new self(new ApacheServiceControl(new ServiceControl()), Backend::instance(Backend::SVN));
     }
 
     public function generate()
     {
         $this->backend_svn->generateSVNApacheConf();
-        $this->cmd->exec('/sbin/service httpd graceful');
+        $this->service_control->reload();
     }
 }

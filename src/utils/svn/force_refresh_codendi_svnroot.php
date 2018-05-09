@@ -1,4 +1,4 @@
-#!/usr/share/codendi/src/utils/php-launcher.sh
+#!/usr/share/tuleap/src/utils/php-launcher.sh
 <?php
 /**
  * Copyright (c) Enalean, 2016. All Rights Reserved.
@@ -23,5 +23,4 @@ require_once('pre.php');
 
 use Tuleap\Svn\ApacheConfGenerator;
 
-$generator = new ApacheConfGenerator(new System_Command(), Backend::instance(Backend::SVN));
-$generator->generate();
+ApacheConfGenerator::build()->generate();
