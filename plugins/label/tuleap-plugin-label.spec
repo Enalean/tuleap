@@ -1,6 +1,6 @@
 Name:		tuleap-plugin-label
 Version:	@@VERSION@@
-Release:	@@TULEAP_VERSION@@_@@RELEASE@@%{?dist}
+Release:	@@TULEAP_VERSION@@_@@RELEASE@@
 BuildArch:	noarch
 Summary:	Label widget
 
@@ -10,7 +10,7 @@ URL:		https://enalean.com
 Source0:	%{name}-%{version}.tar.gz
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root
-Requires:	php(language) >= 5.3, tuleap = @@TULEAP_VERSION@@-@@RELEASE@@%{?dist}
+Requires:	rh-php56-php, tuleap = @@TULEAP_VERSION@@-@@RELEASE@@
 
 %description
 %{summary}.

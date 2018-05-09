@@ -7,19 +7,18 @@ VERSION=$(shell LANG=C cat VERSION)
 ifeq ($(RELEASE),)
 	RELEASE=1
 endif
-DIST=
 BASE_DIR=$(shell pwd)
-RPMBUILD=rpmbuild --define "_topdir $(RPM_TMP)" --define "dist $(DIST)"
+RPMBUILD=rpmbuild --define "_topdir $(RPM_TMP)"
 
 NAME_VERSION=$(PKG_NAME)-$(VERSION)
 
 all:
-	$(MAKE) DIST=.el6 rpm
+	$(MAKE) rpm
 
-rpm: $(RPM_TMP)/RPMS/noarch/$(NAME_VERSION)-$(RELEASE)$(DIST).noarch.rpm
+rpm: $(RPM_TMP)/RPMS/noarch/$(NAME_VERSION)-$(RELEASE).noarch.rpm
 	@echo "Results: $^"
 
-$(RPM_TMP)/RPMS/noarch/$(NAME_VERSION)-$(RELEASE)$(DIST).noarch.rpm: $(RPM_TMP)/SOURCES/$(NAME_VERSION).tar.gz $(RPM_TMP)/SPECS/$(PKG_NAME).spec
+$(RPM_TMP)/RPMS/noarch/$(NAME_VERSION)-$(RELEASE).noarch.rpm: $(RPM_TMP)/SOURCES/$(NAME_VERSION).tar.gz $(RPM_TMP)/SPECS/$(PKG_NAME).spec
 	$(RPMBUILD) -bb $(RPM_TMP)/SPECS/$(PKG_NAME).spec
 
 $(RPM_TMP)/SPECS/$(PKG_NAME).spec: $(BASE_DIR)/$(PKG_NAME).spec
