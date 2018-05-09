@@ -50,8 +50,16 @@ class PullRequestUpdaterTest extends TuleapDbTestCase
         parent::setUp();
         $this->mysqlLoadFile('plugins/pullrequest/db/install.sql');
 
+        $sys_dbhost   = ForgeConfig::get('sys_dbhost');
+        $sys_dbname   = ForgeConfig::get('sys_dbname');
+        $sys_dbuser   = ForgeConfig::get('sys_dbuser');
+        $sys_dbpasswd = ForgeConfig::get('sys_dbpasswd');
         ForgeConfig::store();
         ForgeConfig::set('codendi_cache_dir', '/tmp/');
+        ForgeConfig::set('sys_dbhost', $sys_dbhost);
+        ForgeConfig::set('sys_dbname', $sys_dbname);
+        ForgeConfig::set('sys_dbuser', $sys_dbuser);
+        ForgeConfig::set('sys_dbpasswd', $sys_dbpasswd);
 
         $reference_manager = mock('ReferenceManager');
 

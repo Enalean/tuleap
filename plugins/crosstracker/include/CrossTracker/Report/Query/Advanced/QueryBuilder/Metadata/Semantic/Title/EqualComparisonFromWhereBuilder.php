@@ -36,7 +36,7 @@ class EqualComparisonFromWhereBuilder implements FromWhereBuilder
             $matches_value = " = ''";
         } else {
             $matches_value     = " LIKE ?";
-            $where_parameters[] = '%' . DBFactory::instance()->escapeLikeValue($value) . '%';
+            $where_parameters[] = '%' . DBFactory::getMainTuleapDB()->escapeLikeValue($value) . '%';
         }
 
         $from = "";

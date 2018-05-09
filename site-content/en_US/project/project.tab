@@ -479,7 +479,7 @@ project_export_artifact_deps_export	no_deps_found	No dependencies  found. Could 
 project_export_artifact_deps_export	db_access_err	Error while accessing your dependencies database. Please report the error to the $1 Administrator
 project_export_artifact_deps_export	deps_export_format	Dependencies Export Format
 project_export_artifact_deps_export	deps_export_format_msg	The dependencies export provides you with the following fields. The sample values indicate what the field data types are.
-project_export_artifact_deps_export	create_proj_err	Error in Create project $1 table: $2
+project_export_artifact_deps_export	create_proj_err	Error in Create project table: $1
 project_export_artifact_deps_export	security_violation	SECURITY VIOLATION!!! Unauthorized database name: $1
 project_export_artifact_deps_export	art_id_desc	Unique artifact identifier
 project_export_artifact_deps_export	depend_on_art	Depend on Artifact

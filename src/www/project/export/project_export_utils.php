@@ -1,10 +1,23 @@
 <?php
-//
-// Codendi
-// Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-// http://www.codendi.com
-//
-// 
+/**
+ * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 $datetime_fmt = 'Y-m-d H:i:s';
 $datetime_msg = 'yyyy-mm-dd hh:mm:ss';
@@ -91,11 +104,7 @@ function insert_record_in_table($dbname, $tbl_name, $col_list, $record) {
     $values = substr($values,0,-1);
     
     $sql_insert = "INSERT INTO $tbl_name VALUES ( $values )";
-    $res_insert = db_project_query($dbname,$sql_insert);
-    
-    if (!$res_insert) {
-	$feedback .= $Language->getText('project_export_utils','ins_err',array($tbl_name,db_error()))." - ";
-    }
+    db_project_query($dbname,$sql_insert);
 
 }
 
@@ -398,27 +407,20 @@ echo '
 </table>';
 }
 
+/**
+ * @deprecated
+ */
 function db_project_query($dbname,$qstring,$print=0) {
   global $Language;
 	if ($print) print '<br>'.$Language->getText('project_export_utils','query_is',array($dbname,$qstring)).'<br>';
 
-	// Changes by SL Enhance access to databases and project data
-	// mysql_db_query is now deprecated and has been replaced by 
-	//mysql_select_db then mysql_query
-	//
-	// Select the project database
-	$db = db_select($dbname);
-	if (!$db){
-		die('Can\'t connect to ' . $dbname . 'database' . db_error());
-	} else{
-	$GLOBALS['db_project_qhandle'] = db_query($qstring);
-	
-	// Switch back to system database
-	$dbname = $GLOBALS['sys_dbname']; 
-	$db = db_select($dbname);
-	if (!$db) die ('Can\'t switch back to system database'. db_error());
-	}
-	return $GLOBALS['db_project_qhandle'];
+	try {
+	    $db = \Tuleap\DB\DBFactory::getDB($dbname);
+        $db->run($qstring);
+    } catch (PDOException $ex) {
+	    return false;
+    }
+	return true;
 }
 
 
