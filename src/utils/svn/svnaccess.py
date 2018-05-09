@@ -34,28 +34,6 @@ import group
 import MySQLdb
 import include
 
-# Check if ldap plugin is installed and available
-def ldap_plugin_is_enabled():
-    cursor = include.dbh.cursor(cursorclass=MySQLdb.cursors.DictCursor)
-    res    = cursor.execute('SELECT NULL'+ 
-                            ' FROM plugin'+
-                            ' WHERE name="ldap"'+
-                            ' AND available=1')
-    return (cursor.rowcount == 1)
-
-# Specific to LDAP plugin: if the current repository is handled by LDAP
-# authentication we must check user access with it's ldap name instead of codex
-# name because they can be different (ldap login: 'john doe' => 'john_doe')
-def get_name_for_svn_access(svnrepo, username):
-    if ldap_plugin_is_enabled():
-        import codendildap
-        if codendildap.project_has_ldap_auth(svnrepo):
-            return codendildap.get_login_from_username(username)
-        else:
-            return username.lower()
-    else:
-       return username.lower() 
-
 def get_group_name_from_plugin_svnrepo_path(svnrepo):
     path_elements   = string.split(svnrepo,'/')
     repository_name = MySQLdb.escape_string(path_elements[len(path_elements)-1])
@@ -90,9 +68,6 @@ def get_group_from_svnrepo_path(svnrepo):
     return group_name
 
 def check_read_access(username, svnrepo, svnpath):
-    # make sure that usernames are lowercase
-    username = get_name_for_svn_access(svnrepo, username)
-
     if user.user_is_super_user():
         return True
     if user.user_is_restricted():
@@ -101,6 +76,8 @@ def check_read_access(username, svnrepo, svnpath):
         if not user.user_is_member(group_id):
             return False
 
+    # make sure that usernames are lowercase
+    username = username.lower()
     return __check_read_access_with_epel_viewvc(username, svnrepo, svnpath)
 
 def __check_read_access_with_epel_viewvc(username, svnrepo, svnpath):

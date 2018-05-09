@@ -124,35 +124,3 @@ def user_getid():
         return session.G_USER['user_id']
     else:
         return 0
-
-def user_getname(user_id=0):
-
-    global USER_NAMES
-    
-    # use current user if one is not passed in
-    if user_id == 0:
-        if session.G_USER.has_key('user_name'):
-            return session.G_USER['user_name']
-        else:
-            return "NA"
-        
-    # else must lookup name
-    else:
-        user_key = "user_"+str(user_id)
-        if USER_NAMES.has_key(user_key):
-            # user name was fetched previously
-            return USER_NAMES[user_key]
-        else:
-            # fetch the user name and store it for future reference
-            cursor = include.dbh.cursor(cursorclass=MySQLdb.cursors.DictCursor)
-            cursor.execute('SELECT user_id,user_name FROM user WHERE user_id='+str(user_id)+"'")
-            row = cursor.fetchone()
-            cursor.close()
-  
-            if row is None:
-                USER_NAMES[user_key] = "<B>Invalid User ID</B>"
-            else:
-                USER_NAMES[user_key] = row['user_name']
-
-            return USER_NAMES[user_key]
-

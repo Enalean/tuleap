@@ -142,7 +142,7 @@ Summary: Tuleap plugin to manage LDAP integration
 Group: Development/Tools
 Version: @@PLUGIN_LDAP_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
-Requires: rh-php56-php-ldap, perl-LDAP, python-ldap
+Requires: rh-php56-php-ldap, perl-LDAP
 %description plugin-ldap
 LDAP Plugin for Tuleap. Provides LDAP information, LDAP
 authentication, user and group management.

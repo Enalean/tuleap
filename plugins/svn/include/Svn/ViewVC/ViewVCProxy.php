@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2017. All rights reserved
+ * Copyright (c) Enalean, 2015-2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,9 @@
 
 namespace Tuleap\Svn\ViewVC;
 
+use EventManager;
 use HTTPRequest;
+use Tuleap\svn\Event\GetSVNLoginNameEvent;
 use Tuleap\Svn\Repository\RepositoryManager;
 use ProjectManager;
 use Project;
@@ -38,15 +40,21 @@ class ViewVCProxy
     private $access_history_saver;
     private $repository_manager;
     private $project_manager;
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
 
     public function __construct(
         RepositoryManager $repository_manager,
         ProjectManager $project_manager,
-        AccessHistorySaver $access_history_saver
+        AccessHistorySaver $access_history_saver,
+        EventManager $event_manager
     ) {
         $this->repository_manager   = $repository_manager;
         $this->project_manager      = $project_manager;
         $this->access_history_saver = $access_history_saver;
+        $this->event_manager        = $event_manager;
     }
 
     private function displayViewVcHeader(HTTPRequest $request)
@@ -154,6 +162,27 @@ class ViewVCProxy
         return Codendi_HTMLPurifier::instance();
     }
 
+    /**
+     * @return string
+     */
+    private function getUsername(\PFUser $user, Project $project)
+    {
+        $event = new GetSVNLoginNameEvent($user, $project);
+        $this->event_manager->processEvent($event);
+        return $event->getUsername();
+    }
+
+    /**
+     * @return string
+     */
+    private function getPythonLauncher()
+    {
+        if (file_exists('/opt/rh/python27/root/usr/bin/python')) {
+            return "LD_LIBRARY_PATH='/opt/rh/python27/root/usr/lib64' /opt/rh/python27/root/usr/bin/python";
+        }
+        return '/usr/bin/python';
+    }
+
     public function getContent(HTTPRequest $request)
     {
         $user = $request->getCurrentUser();
@@ -169,8 +198,8 @@ class ViewVCProxy
         //this is very important. default path must be /
         $path = $request->getPathInfoFromFCGI();
 
-        $command = 'HTTP_COOKIE='.$this->escapeStringFromServer($request, 'HTTP_COOKIE').' '.
-            'REMOTE_USER=' . escapeshellarg($user->getUserName()) . ' '.
+        $command = 'REMOTE_USER_ID=' . escapeshellarg($user->getId()) . ' '.
+            'REMOTE_USER=' . escapeshellarg($this->getUsername($user, $project)) . ' '.
             'PATH_INFO='.$this->setLocaleOnFileName($path).' '.
             'QUERY_STRING='.escapeshellarg($this->buildQueryString($request)).' '.
             'SCRIPT_NAME='.$this->escapeStringFromServer($request, 'SCRIPT_NAME').' '.
@@ -179,7 +208,7 @@ class ViewVCProxy
             'TULEAP_PROJECT_NAME='.escapeshellarg($repository->getProject()->getUnixNameMixedCase()).' '.
             'TULEAP_REPO_NAME='.escapeshellarg($repository->getName()).' '.
             'TULEAP_REPO_PATH='.escapeshellarg($repository->getSystemPath()).' '.
-            ForgeConfig::get('tuleap_dir').'/'.SVN_BASE_URL.'/bin/viewvc-epel.cgi 2>&1';
+            $this->getPythonLauncher() . ' ' . ForgeConfig::get('tuleap_dir').'/'.SVN_BASE_URL.'/bin/viewvc-epel.cgi 2>&1';
 
         $content = $this->setLocaleOnCommand($command, $return_var);
 

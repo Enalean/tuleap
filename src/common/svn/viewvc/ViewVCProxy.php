@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,9 +27,20 @@ use ForgeConfig;
 use HTTPRequest;
 use Project;
 use Codendi_HTMLPurifier;
+use Tuleap\svn\Event\GetSVNLoginNameEvent;
 
 class ViewVCProxy
 {
+    /**
+     * @var \EventManager
+     */
+    private $event_manager;
+
+    public function __construct(\EventManager $event_manager)
+    {
+        $this->event_manager = $event_manager;
+    }
+
     private function displayViewVcHeader(HTTPRequest $request)
     {
         $request_uri = $request->getFromServer('REQUEST_URI');
@@ -130,6 +141,27 @@ class ViewVCProxy
         return false;
     }
 
+    /**
+     * @return string
+     */
+    private function getUsername(\PFUser $user, Project $project)
+    {
+        $event = new GetSVNLoginNameEvent($user, $project);
+        $this->event_manager->processEvent($event);
+        return $event->getUsername();
+    }
+
+    /**
+     * @return string
+     */
+    private function getPythonLauncher()
+    {
+        if (file_exists('/opt/rh/python27/root/usr/bin/python')) {
+            return "LD_LIBRARY_PATH='/opt/rh/python27/root/usr/lib64' /opt/rh/python27/root/usr/bin/python";
+        }
+        return '/usr/bin/python';
+    }
+
     public function displayContent(Project $project, HTTPRequest $request)
     {
         $user = $request->getCurrentUser();
@@ -158,8 +190,8 @@ class ViewVCProxy
             }
         }
 
-        $command = 'HTTP_COOKIE='.$this->escapeStringFromServer($request, 'HTTP_COOKIE').' '.
-            'REMOTE_USER=' . escapeshellarg($user->getUserName()) . ' '.
+        $command = 'REMOTE_USER_ID=' . escapeshellarg($user->getId()) . ' '.
+            'REMOTE_USER=' . escapeshellarg($this->getUsername($user, $project)) . ' '.
             'PATH_INFO='.$this->setLocaleOnFileName($path).' '.
             'QUERY_STRING='.escapeshellarg($this->buildQueryString($request)).' '.
             'SCRIPT_NAME='.$this->escapeStringFromServer($request, 'SCRIPT_NAME').' '.
@@ -168,7 +200,7 @@ class ViewVCProxy
             'TULEAP_PROJECT_NAME='.escapeshellarg($project->getUnixNameMixedCase()).' '.
             'TULEAP_REPO_NAME='.escapeshellarg($project->getUnixNameMixedCase()).' '.
             'TULEAP_REPO_PATH='.escapeshellarg($project->getSVNRootPath()).' '.
-            ForgeConfig::get('tuleap_dir').'/src/common/svn/viewvc/viewvc-epel.cgi 2>&1';
+            $this->getPythonLauncher() . ' ' . ForgeConfig::get('tuleap_dir').'/src/common/svn/viewvc/viewvc-epel.cgi 2>&1';
 
         $content = $this->setLocaleOnCommand($command, $return_var);
 

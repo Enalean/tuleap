@@ -613,7 +613,8 @@ class SvnPlugin extends Plugin
                 new ViewVCProxy(
                     $repository_manager,
                     ProjectManager::instance(),
-                    new AccessHistorySaver(new AccessHistoryDao())
+                    new AccessHistorySaver(new AccessHistoryDao()),
+                    EventManager::instance()
                 ),
                 EventManager::instance()
             ),
