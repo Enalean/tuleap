@@ -32,8 +32,17 @@ class Tracker_XML_Exporter_ChangesetValuesXMLExporter {
      */
     private $visitor;
 
-    public function __construct(Tracker_XML_Exporter_ChangesetValueXMLExporterVisitor $visitor) {
-        $this->visitor = $visitor;
+    /**
+     * @var bool
+     */
+    private $is_in_archive_context;
+
+    public function __construct(
+        Tracker_XML_Exporter_ChangesetValueXMLExporterVisitor $visitor,
+        $is_in_archive_context
+    ) {
+        $this->visitor               = $visitor;
+        $this->is_in_archive_context = $is_in_archive_context;
     }
 
     /**
@@ -83,10 +92,11 @@ class Tracker_XML_Exporter_ChangesetValuesXMLExporter {
         }
     }
 
-    private function exportValue(Tracker_Artifact_ChangesetValue $changeset_value,
+    private function exportValue(
+        Tracker_Artifact_ChangesetValue $changeset_value,
         array $params
     ) {
-        if ($this->isFieldChangeExportable($params[self::EXPORT_MODE_KEY], $changeset_value)) {
+        if ($this->isFieldChangeExportable($changeset_value, $params[self::EXPORT_MODE_KEY])) {
             $this->visitor->export(
                 $params[self::ARTIFACT_XML_KEY],
                 $params[self::CHANGESET_XML_KEY],
@@ -96,8 +106,18 @@ class Tracker_XML_Exporter_ChangesetValuesXMLExporter {
         }
     }
 
-    private function isFieldChangeExportable($export_mode, Tracker_Artifact_ChangesetValue $changeset_value) {
+    private function isFieldChangeExportable(
+        Tracker_Artifact_ChangesetValue $changeset_value,
+        $export_mode
+    ) {
         if ($export_mode === self::EXPORT_SNAPSHOT) {
+            return true;
+        }
+
+        if ($this->is_in_archive_context &&
+            $this->isComputedField($changeset_value) &&
+            $changeset_value->getChangeset()->isLastChangesetOfArtifact()
+        ) {
             return true;
         }
 
@@ -116,5 +136,12 @@ class Tracker_XML_Exporter_ChangesetValuesXMLExporter {
         $field = $changeset_value->getField();
 
         return is_a($field, 'Tracker_FormElement_Field_File');
+    }
+
+    private function isComputedField(Tracker_Artifact_ChangesetValue $changeset_value)
+    {
+        $field = $changeset_value->getField();
+
+        return is_a($field, Tracker_FormElement_Field_Computed::class);
     }
 }

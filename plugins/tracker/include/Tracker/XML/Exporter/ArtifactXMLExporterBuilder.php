@@ -27,7 +27,8 @@ class Tracker_XML_Exporter_ArtifactXMLExporterBuilder {
         Tracker_XML_ChildrenCollector $children_collector,
         Tracker_XML_Exporter_FilePathXMLExporter $file_path_xml_exporter,
         PFUser $current_user,
-        UserXMLExporter $user_xml_exporter
+        UserXMLExporter $user_xml_exporter,
+        $is_in_archive_context
     ) {
         $visitor = new Tracker_XML_Exporter_ChangesetValueXMLExporterVisitor(
             new Tracker_XML_Exporter_ChangesetValue_ChangesetValueDateXMLExporter(),
@@ -45,10 +46,10 @@ class Tracker_XML_Exporter_ArtifactXMLExporterBuilder {
                 $children_collector,
                 $current_user
             ),
-            new ChangesetValueComputedXMLExporter(),
+            new ChangesetValueComputedXMLExporter($current_user, $is_in_archive_context),
             new Tracker_XML_Exporter_ChangesetValue_ChangesetValueUnknownXMLExporter()
         );
-        $values_exporter    = new Tracker_XML_Exporter_ChangesetValuesXMLExporter($visitor);
+        $values_exporter    = new Tracker_XML_Exporter_ChangesetValuesXMLExporter($visitor, $is_in_archive_context);
         $changeset_exporter = new Tracker_XML_Exporter_ChangesetXMLExporter(
             $values_exporter,
             $user_xml_exporter

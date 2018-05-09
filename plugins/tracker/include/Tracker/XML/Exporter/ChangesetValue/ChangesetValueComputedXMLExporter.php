@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,7 @@
 
 namespace Tuleap\Tracker\XML\Exporter\ChangesetValue;
 
+use PFUser;
 use Tracker_XML_Exporter_ChangesetValue_ChangesetValueFloatXMLExporter;
 use SimpleXMLElement;
 use Tracker_Artifact;
@@ -28,6 +29,21 @@ use XML_SimpleXMLCDATAFactory;
 
 class ChangesetValueComputedXMLExporter extends Tracker_XML_Exporter_ChangesetValue_ChangesetValueFloatXMLExporter
 {
+    /**
+     * @var PFUser
+     */
+    private $current_user;
+
+    /**
+     * @var bool
+     */
+    private $is_in_archive_context;
+
+    public function __construct(PFUser $current_user, $is_in_archive_context)
+    {
+        $this->current_user          = $current_user;
+        $this->is_in_archive_context = $is_in_archive_context;
+    }
 
     protected function getFieldChangeType()
     {
@@ -40,16 +56,86 @@ class ChangesetValueComputedXMLExporter extends Tracker_XML_Exporter_ChangesetVa
         Tracker_Artifact $artifact,
         Tracker_Artifact_ChangesetValue $changeset_value
     ) {
-        $field_change = $this->createFieldChangeNodeInChangesetNode(
+        if ($this->isCurrentChangesetTheLastChangeset($artifact, $changeset_value)) {
+            $this->exportLastChangeset($changeset_xml, $artifact, $changeset_value);
+        } else {
+            $this->exportInGlobalContext($changeset_xml, $changeset_value);
+        }
+    }
+
+    private function exportLastChangeset(
+        SimpleXMLElement $changeset_xml,
+        Tracker_Artifact $artifact,
+        Tracker_Artifact_ChangesetValue $changeset_value
+    ) {
+        if ($this->is_in_archive_context) {
+            $this->exportLastChangesetInArchiveContext($changeset_xml, $artifact, $changeset_value);
+        } else {
+            $this->exportInGlobalContext($changeset_xml, $changeset_value);
+        }
+    }
+
+    /**
+     * @return SimpleXMLElement
+     */
+    private function createFieldChangeTag(
+        SimpleXMLElement $changeset_xml,
+        Tracker_Artifact_ChangesetValue $changeset_value
+    ) {
+        return $this->createFieldChangeNodeInChangesetNode(
             $changeset_value,
             $changeset_xml
         );
+    }
 
-        if ($changeset_value->getValue() === null) {
-            $field_change->addChild('is_autocomputed', true);
-        } else {
-            $cdata_factory = new XML_SimpleXMLCDATAFactory();
-            $cdata_factory->insert($field_change, 'manual_value', $changeset_value->getValue());
+    private function exportLastChangesetInArchiveContext(
+        SimpleXMLElement $changeset_xml,
+        Tracker_Artifact $artifact,
+        Tracker_Artifact_ChangesetValue $changeset_value
+    ) {
+        $number_of_changeset = count($artifact->getChangesets());
+
+        if ($number_of_changeset === 1 ||
+            ($number_of_changeset > 1 && ! $changeset_value->isManualValue())
+        ) {
+            $field_change = $this->createFieldChangeTag($changeset_xml, $changeset_value);
+            $this->exportManualValue($field_change, $this->getLastComputedValue($artifact, $changeset_value));
         }
+    }
+
+    private function exportInGlobalContext(
+        SimpleXMLElement $changeset_xml,
+        Tracker_Artifact_ChangesetValue $changeset_value
+    ) {
+        $field_change = $this->createFieldChangeTag($changeset_xml, $changeset_value);
+
+        if ($changeset_value->isManualValue()) {
+            $this->exportManualValue($field_change, $changeset_value->getValue());
+        } else {
+            $field_change->addChild('is_autocomputed', true);
+        }
+    }
+
+    /**
+     * @return float
+     */
+    private function getLastComputedValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $changeset_value)
+    {
+        $computed_value = $changeset_value->getField()->getComputedValue(
+            $this->current_user,
+            $artifact
+        );
+
+        if ($computed_value === null) {
+            $computed_value = 0;
+        }
+
+        return $computed_value;
+    }
+
+    private function exportManualValue(\SimpleXMLElement $field_change, $manual_value)
+    {
+        $cdata_factory = new XML_SimpleXMLCDATAFactory();
+        $cdata_factory->insert($field_change, 'manual_value', $manual_value);
     }
 }

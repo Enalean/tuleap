@@ -853,4 +853,18 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
     public function getUri() {
         return  TRACKER_BASE_URL.'/?aid='.$this->getArtifact()->getId().'#followup_'.$this->getId();
     }
+
+    /**
+     * @return bool
+     */
+    public function isLastChangesetOfArtifact()
+    {
+        $artifact_last_changeset = $this->artifact->getLastChangeset();
+
+        if (! $artifact_last_changeset) {
+            return false;
+        }
+
+        return $this->id === $artifact_last_changeset->getId();
+    }
 }
