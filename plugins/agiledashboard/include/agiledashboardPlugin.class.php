@@ -419,15 +419,13 @@ class AgileDashboardPlugin extends Plugin {
         $widget_kanban_dao        = new WidgetKanbanDao();
         $widget_kanban_config_dao = new WidgetKanbanConfigDAO();
         $widget_kanban_creator    = new WidgetKanbanCreator(
-            $widget_kanban_dao,
-            $widget_kanban_config_dao
+            $widget_kanban_dao
         );
         $widget_kanban_retriever = new WidgetKanbanRetriever(
             $widget_kanban_dao
         );
         $widget_kanban_deletor   = new WidgetKanbanDeletor(
-            $widget_kanban_dao,
-            $widget_kanban_config_dao
+            $widget_kanban_dao
         );
 
         $widget_config_retriever = new WidgetKanbanConfigRetriever(

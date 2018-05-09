@@ -29,23 +29,15 @@ class WidgetKanbanCreator
      */
     private $widget_kanban_dao;
 
-    /**
-     * @var WidgetKanbanConfigDAO
-     */
-    private $widget_config_dao;
-
-    public function __construct(WidgetKanbanDao $widget_kanban_dao, WidgetKanbanConfigDAO $widget_config_dao)
+    public function __construct(WidgetKanbanDao $widget_kanban_dao)
     {
         $this->widget_kanban_dao = $widget_kanban_dao;
-        $this->widget_config_dao = $widget_config_dao;
     }
 
     /**
      * @param Codendi_Request $request
      * @param $owner_id
      * @param $owner_type
-     * @return int
-     * @throws \RuntimeException
      */
     public function create(Codendi_Request $request, $owner_id, $owner_type)
     {
@@ -64,17 +56,12 @@ class WidgetKanbanCreator
         $kanban_title,
         $tracker_report_id
     ) {
-        $widget_id = $this->widget_kanban_dao->create(
+        return $this->widget_kanban_dao->createKanbanWidget(
             $owner_id,
             $owner_type,
             $kanban_id,
-            $kanban_title
+            $kanban_title,
+            $tracker_report_id
         );
-
-        if ($widget_id && $tracker_report_id) {
-            $this->widget_config_dao->createNewConfigForWidgetId($widget_id, $tracker_report_id);
-        }
-
-        return $widget_id;
     }
 }
