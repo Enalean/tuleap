@@ -117,6 +117,14 @@ class AgileDashboard_KanbanDao extends DataAccessObject {
 
         $this->update($sql);
 
+        $sql = "DELETE config.*
+                FROM plugin_agiledashboard_kanban_widget_config AS config
+                INNER JOIN plugin_agiledashboard_kanban_widget  AS kanban_widget
+                    ON config.widget_id = kanban_widget.id
+                WHERE kanban_widget.kanban_id = $kanban_id";
+
+        $this->update($sql);
+
         $sql = "DELETE FROM plugin_agiledashboard_kanban_widget WHERE kanban_id = $kanban_id";
         $this->update($sql);
 
