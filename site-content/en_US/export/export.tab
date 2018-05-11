@@ -33,7 +33,6 @@ export_nitf_sfforums	g_id_err	ERROR: This URL must be called with a valid group_
 # Script: SF/www/export/rss_sfnewreleases.php
 #
 export_rss_sfnewreleases	copyright	Copyright (c) $1, $2 Team, 2001-$3. All Rights Reserved
-export_rss_sfnewreleases	new_releases	$1 New Releases
 #
 #-----------------------------------------------
 # Script: SF/www/export/rss_sfnews.php

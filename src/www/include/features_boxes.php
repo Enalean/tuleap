@@ -23,7 +23,6 @@ function show_features_boxes() {
 
     $w = new Widget_Static($Language->getText('include_features_boxes','newest_releases'));
     $w->setContent(show_newest_releases());
-    $w->setRssUrl('/export/rss_sfnewreleases.php');
     $w->display();
 
     $w = new Widget_Static($Language->getText('include_features_boxes','newest_projects'));

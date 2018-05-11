@@ -16,9 +16,6 @@ $HTML->header(array(title=>$Language->getText('export_index','exports_available'
 <LI><A href="rss_sfnews.php"><?php print $GLOBALS['sys_name']; ?> <?php print $Language->getText('export_index','front_p_news'); ?></A>
 (<A href="http://my.netscape.com/publish/formats/rss-spec-0.91.html">RSS 0.91</A>,
 <A href="http://my.netscape.com/publish/formats/rss-0.91.dtd">&lt;rss-0.91.dtd&gt;</A>)
-<LI><A href="rss_sfnewreleases.php"><?php print $GLOBALS['sys_name']; ?> <?php print $Language->getText('export_index','new_releases'); ?></A>
-(<A href="http://my.netscape.com/publish/formats/rss-spec-0.91.html">RSS 0.91</A>,
-<A href="http://my.netscape.com/publish/formats/rss-0.91.dtd">&lt;rss-0.91.dtd&gt;</A>)
 <LI><A href="rss_sfprojects.php?type=rss&option=newest"><?php print $GLOBALS['sys_name']; ?> <?php print $Language->getText('export_index','newest_projects'); ?> - <?php print $Language->getText('export_index','rss_format'); ?></A>
 (<A href="http://my.netscape.com/publish/formats/rss-spec-0.91.html">RSS 0.91</A>,
 <A href="http://my.netscape.com/publish/formats/rss-0.91.dtd">&lt;rss-0.91.dtd&gt;</A>)

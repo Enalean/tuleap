@@ -28,7 +28,6 @@ export_nitf_sfforums	g_id_err	ERREUR&nbsp;: Cette URL doit être appelée avec u
 # Script: SF/www/export/rss_sfnewreleases.php
 #
 export_rss_sfnewreleases	copyright	Copyright (c) $1, Equipe $2, 2001-$3. Tous droits réservés.
-export_rss_sfnewreleases	new_releases	Nouvelles versions de $1
 #
 #-----------------------------------------------
 # Script: SF/www/export/rss_sfnews.php

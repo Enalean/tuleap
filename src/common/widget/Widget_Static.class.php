@@ -29,7 +29,6 @@ require_once "Widget.class.php";
  * <pre>
  * $w = new StaticWidget("Title");
  * $w->setContent("Meaningful stuff, I hope so");
- * $w->setRss('/export/rss_sfnewreleases.php');
  * $w->display();
  * </pre>
  */
