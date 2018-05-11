@@ -338,7 +338,8 @@ class Tracker_Artifact_XMLImport {
             array(),
             $submitted_by,
             $this->getSubmittedOn($xml_changeset),
-            false);
+            false
+        );
     }
 
     private function importRemainingChangeset(
@@ -384,6 +385,9 @@ class Tracker_Artifact_XMLImport {
         }
     }
 
+    /**
+     * @return \PFUser
+     */
     private function getSubmittedBy(SimpleXMLElement $xml_changeset) {
         return $this->user_finder->getUser($xml_changeset->submitted_by);
     }
@@ -394,5 +398,25 @@ class Tracker_Artifact_XMLImport {
             return $time;
         }
         throw new Tracker_Artifact_Exception_XMLImportException("Invalid date format not ISO8601: ".(string)$xml_changeset->submitted_on);
+    }
+
+    public function importArtifactWithAllDataFromXMLContent(
+        Tracker $tracker,
+        SimpleXMLElement $xml_artifact
+    ) {
+        if (count($xml_artifact->changeset) > 0) {
+            $changesets      = array_values($this->getSortedBySubmittedOn($xml_artifact->changeset));
+            $first_changeset = count($changesets) ? $changesets[0] : null;
+            $artifact = $this->artifact_creator->createBareWithAllData(
+                $tracker,
+                (int) $xml_artifact['id'],
+                $this->getSubmittedOn($first_changeset),
+                $this->getSubmittedBy($first_changeset)->getId()
+            );
+
+            if ($artifact) {
+                $this->importFakeFirstChangeset($artifact, $xml_artifact->changeset);
+            }
+        }
     }
 }

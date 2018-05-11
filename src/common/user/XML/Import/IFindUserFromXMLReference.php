@@ -24,7 +24,7 @@ use SimpleXMLElement;
 interface IFindUserFromXMLReference {
 
     /**
-     * @return PFUser
+     * @return \PFUser
      */
     public function getUser(SimpleXMLElement $xml_element);
 }

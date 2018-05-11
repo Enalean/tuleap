@@ -135,4 +135,14 @@ class Tracker_XML_Updater_ChangesetXMLUpdaterTest extends TuleapTestCase {
 
         $this->updater->update($this->tracker, $this->artifact_xml, $this->submitted_values, $this->user, time());
     }
+
+    public function itRemovesTheAllThefieldChangeTagsInMoveAction()
+    {
+        $this->updater->updateForMoveAction($this->tracker, $this->artifact_xml, $this->user, time());
+
+        $this->assertEqual((string)$this->artifact_xml->changeset->submitted_on, date('c', time()));
+        $this->assertEqual((int)$this->artifact_xml->changeset->submitted_by, $this->user->getId());
+
+        $this->assertFalse($this->artifact_xml->changeset->field_change);
+    }
 }

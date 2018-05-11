@@ -1,0 +1,107 @@
+<?php
+/**
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+namespace Tuleap\Tracker\Action;
+
+use PFUser;
+use SimpleXMLElement;
+use Tracker;
+use Tracker_Artifact;
+use Tracker_Artifact_XMLImport;
+use Tracker_XML_Exporter_ArtifactXMLExporter;
+use Tracker_XML_Updater_ChangesetXMLUpdater;
+use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionManager;
+
+class MoveArtifact
+{
+
+    /**
+     * @var ArtifactsDeletionManager
+     */
+    private $artifacts_deletion_manager;
+
+    /**
+     * @var Tracker_XML_Exporter_ArtifactXMLExporter
+     */
+    private $xml_exporter;
+
+    /**
+     * @var Tracker_XML_Updater_ChangesetXMLUpdater
+     */
+    private $xml_updater;
+
+    /**
+     * @var Tracker_Artifact_XMLImport
+     */
+    private $xml_import;
+
+    public function __construct(
+        ArtifactsDeletionManager $artifacts_deletion_manager,
+        Tracker_XML_Exporter_ArtifactXMLExporter $xml_exporter,
+        Tracker_XML_Updater_ChangesetXMLUpdater $xml_updater,
+        Tracker_Artifact_XMLImport $xml_import
+    ) {
+        $this->artifacts_deletion_manager = $artifacts_deletion_manager;
+        $this->xml_exporter               = $xml_exporter;
+        $this->xml_updater                = $xml_updater;
+        $this->xml_import                 = $xml_import;
+    }
+
+    /**
+     * @throws \Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionLimitReachedException
+     * @throws \Tuleap\Tracker\Artifact\ArtifactsDeletion\DeletionOfArtifactsIsNotAllowedException
+     */
+    public function move(Tracker_Artifact $artifact, Tracker $target_tracker, PFUser $user)
+    {
+        $limit = $this->artifacts_deletion_manager->deleteArtifact($artifact, $user);
+
+        $xml_artifacts = $this->getXMLRootNode();
+
+        $xml_artifacts = $this->xml_exporter->exportSnapshotWithoutComments(
+            $xml_artifacts,
+            $artifact->getLastChangeset()
+        );
+
+        $this->xml_updater->updateForMoveAction(
+            $target_tracker,
+            $xml_artifacts->artifact,
+            $user,
+            $artifact->getSubmittedOn()
+        );
+
+        $this->processMove($xml_artifacts->artifact, $target_tracker);
+
+        return $limit;
+    }
+
+    private function processMove(SimpleXMLElement $artifact_xml, Tracker $tracker)
+    {
+        $tracker->getWorkflow()->disable();
+
+        $this->xml_import->importArtifactWithAllDataFromXMLContent($tracker, $artifact_xml);
+    }
+
+    private function getXMLRootNode()
+    {
+        $xml = '<?xml version="1.0" encoding="UTF-8"?><artifacts />';
+
+        return new SimpleXMLElement($xml);
+    }
+}
