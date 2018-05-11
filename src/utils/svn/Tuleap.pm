@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 ##
-## Copyright (c) Enalean, 2015-2017. All Rights Reserved.
+## Copyright (c) Enalean, 2015-2018. All Rights Reserved.
 ## Copyright (c) Xerox Corporation, Codendi Team, 2001-2010. All rights reserved
 ##
 ## Tuleap is free software; you can redistribute it and/or modify
@@ -38,6 +38,7 @@ use DBI qw(:sql_types);
 use Net::LDAP;
 use Net::LDAP::Util qw(escape_filter_value);
 use Digest::SHA qw(sha512);
+use Crypt::Eksblowfish::Bcrypt qw(bcrypt);
 
 my @directives = (
     {
@@ -385,7 +386,7 @@ sub is_valid_user_database {
     my ($dbh, $username, $user_secret) = @_;
 
     my $query = << 'EOF';
-    SELECT unix_pw
+    SELECT password
     FROM user
     WHERE user_name=?;
 EOF
@@ -395,12 +396,33 @@ EOF
 
     my ($row_secret) = $statement->fetchrow_array();
 
-    my $is_authenticated = compare_string_constant_time(crypt($user_secret, $row_secret), $row_secret);
-
     $statement->finish();
     undef $statement;
 
-    return $is_authenticated;
+    if (!defined $row_secret || substr($row_secret, 0, 4) ne '$2y$') {
+        return 0;
+    }
+
+    my $submitted_password_hashed = bcrypt_password_hash($user_secret, $row_secret);
+    if (defined $submitted_password_hashed) {
+        return compare_string_constant_time($submitted_password_hashed, $row_secret);
+    }
+
+    return 0;
+}
+
+sub bcrypt_password_hash {
+    my ($submitted_plaintext_password, $existing_hashed_password) = @_;
+
+    if ($existing_hashed_password =~ m/^\$2y\$(\d{2})\$([A-Za-z0-9+\\\.\/]{22})/) {
+        # 2a, 2b and 2y are equivalent in Perl but 2b and 2y identifiers are not accepted
+        my $hashed_password_settings = q/$2a$/ . $1 . q/$/ . $2;
+        my $submitted_password_hashed = bcrypt($submitted_plaintext_password, $hashed_password_settings);
+        $submitted_password_hashed =~ s/^\$2a/\$2y/;
+        return $submitted_password_hashed;
+    }
+
+    return undef;
 }
 
 sub get_tuleap_username_from_ldap_uid {

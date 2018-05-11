@@ -27,7 +27,7 @@ services:
       - rabbitmq
 
   backend-svn:
-    image: enalean/tuleap-dev:1.5
+    image: enalean/tuleap-dev:1.6
     command: /usr/share/tuleap/tools/distlp/backend-svn/backend-svn.sh
     volumes:
       - .:/usr/share/tuleap
