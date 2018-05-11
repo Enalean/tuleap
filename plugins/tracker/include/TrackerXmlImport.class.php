@@ -166,7 +166,8 @@ class TrackerXmlImport
             new XML_RNGValidator(),
             $tracker_factory->getTriggerRulesManager(),
             $builder->build(
-                $user_finder
+                $user_finder,
+                $logger
             ),
             $user_finder,
             new UGroupManager(),

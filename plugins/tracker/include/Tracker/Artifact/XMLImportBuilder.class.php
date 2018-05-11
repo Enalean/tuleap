@@ -31,7 +31,8 @@ class Tracker_Artifact_XMLImportBuilder {
      * @return Tracker_Artifact_XMLImport
      */
     public function build(
-        User\XML\Import\IFindUserFromXMLReference $user_finder
+        User\XML\Import\IFindUserFromXMLReference $user_finder,
+        Logger $logger
     ) {
         $artifact_factory      = Tracker_ArtifactFactory::instance();
         $formelement_factory   = Tracker_FormElementFactory::instance();
@@ -39,7 +40,6 @@ class Tracker_Artifact_XMLImportBuilder {
         $visit_recorder        = new VisitRecorder(new RecentlyVisitedDao());
         $changeset_dao         = new Tracker_Artifact_ChangesetDao();
         $changeset_comment_dao = new Tracker_Artifact_Changeset_CommentDao();
-        $logger                = new Log_ConsoleLogger();
         $send_notifications    = false;
 
         $artifact_creator = new Tracker_ArtifactCreator(

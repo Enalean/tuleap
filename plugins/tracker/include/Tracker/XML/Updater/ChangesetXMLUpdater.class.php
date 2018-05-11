@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -45,8 +45,7 @@ class Tracker_XML_Updater_ChangesetXMLUpdater {
         PFUser $user,
         $submitted_on
     ) {
-        $artifact_xml->changeset->submitted_on = date('c', $submitted_on);
-        $artifact_xml->changeset->submitted_by = $user->getId();
+        $this->addSubmittedInformation($artifact_xml, $user, $submitted_on);
 
         foreach ($artifact_xml->changeset->field_change as $field_change) {
             $field_name = (string)$field_change['field_name'];
@@ -60,5 +59,24 @@ class Tracker_XML_Updater_ChangesetXMLUpdater {
                 $this->visitor->update($field_change, $field, $submitted_value);
             }
         }
+    }
+
+    public function updateForMoveAction(
+        Tracker $tracker,
+        SimpleXMLElement $artifact_xml,
+        PFUser $user,
+        $submitted_on
+    ) {
+        $artifact_xml['tracker_id'] = $tracker->getId();
+
+        $this->addSubmittedInformation($artifact_xml, $user, $submitted_on);
+
+        unset($artifact_xml->changeset->field_change);
+    }
+
+    private function addSubmittedInformation(SimpleXMLElement $artifact_xml, PFUser $user, $submitted_on)
+    {
+        $artifact_xml->changeset->submitted_on = date('c', $submitted_on);
+        $artifact_xml->changeset->submitted_by = $user->getId();
     }
 }

@@ -407,6 +407,26 @@ class Tracker_ArtifactDao extends DataAccessObject {
 
     public function create($tracker_id, $submitted_by, $submitted_on, $use_artifact_permissions)
     {
+        $id_sharing  = new TrackerIdSharingDao();
+        $artifact_id = $id_sharing->generateArtifactId();
+
+        return $this->createWithId(
+            $artifact_id,
+            $tracker_id,
+            $submitted_by,
+            $submitted_on,
+            $use_artifact_permissions
+        );
+    }
+
+    public function createWithId(
+        $artifact_id,
+        $tracker_id,
+        $submitted_by,
+        $submitted_on,
+        $use_artifact_permissions
+    ) {
+        $artifact_id              = $this->da->escapeInt($artifact_id);
         $tracker_id               = $this->da->escapeInt($tracker_id);
         $use_artifact_permissions = $this->da->escapeInt($use_artifact_permissions);
         $submitted_on             = $this->da->escapeInt($submitted_on);
@@ -420,17 +440,15 @@ class Tracker_ArtifactDao extends DataAccessObject {
             $row            = $this->retrieveFirstRow($sql);
             $per_tracker_id = $row['per_tracker_artifact_id'];
 
-            $id_sharing = new TrackerIdSharingDao();
-            $id         = $id_sharing->generateArtifactId();
-            if ($id && $this->getPriorityDao()->putArtifactAtTheEndWithoutTransaction($id)) {
+            if ($artifact_id && $this->getPriorityDao()->putArtifactAtTheEndWithoutTransaction($artifact_id)) {
                 // We do not keep trace of the history change here because it doesn't have any sense to say
                 // the newly created artifact has less priority than the one at the bottom of the priority chain.
                 $sql = "INSERT INTO $this->table_name
                     (id, tracker_id, per_tracker_artifact_id, submitted_by, submitted_on, use_artifact_permissions)
-                    VALUES ($id, $tracker_id, $per_tracker_id, $submitted_by, $submitted_on, $use_artifact_permissions)";
+                    VALUES ($artifact_id, $tracker_id, $per_tracker_id, $submitted_by, $submitted_on, $use_artifact_permissions)";
                 if ($this->update($sql)) {
                     $this->commit();
-                    return $id;
+                    return $artifact_id;
                 }
             }
             $this->rollBack();

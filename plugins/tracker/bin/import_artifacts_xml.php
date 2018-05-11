@@ -28,7 +28,8 @@ try {
     if ($tracker) {
         $xml_import_builder = new Tracker_Artifact_XMLImportBuilder();
         $xml_import = $xml_import_builder->build(
-            new XMLImportHelper($user_manager)
+            new XMLImportHelper($user_manager),
+            new Log_ConsoleLogger()
         );
 
         $zip = new ZipArchive();

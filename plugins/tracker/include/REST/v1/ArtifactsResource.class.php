@@ -21,6 +21,22 @@
 namespace Tuleap\Tracker\REST\v1;
 
 use EventManager;
+use Log_NoopLogger;
+use Tracker_Artifact_XMLImportBuilder;
+use Tracker_XML_Exporter_ArtifactXMLExporterBuilder;
+use Tracker_XML_Exporter_LocalAbsoluteFilePathXMLExporter;
+use Tracker_XML_Exporter_NullChildrenCollector;
+use Tracker_XML_Updater_ChangesetXMLUpdater;
+use Tracker_XML_Updater_FieldChange_FieldChangeDateXMLUpdater;
+use Tracker_XML_Updater_FieldChange_FieldChangeFloatXMLUpdater;
+use Tracker_XML_Updater_FieldChange_FieldChangeIntegerXMLUpdater;
+use Tracker_XML_Updater_FieldChange_FieldChangeListXMLUpdater;
+use Tracker_XML_Updater_FieldChange_FieldChangeOpenListXMLUpdater;
+use Tracker_XML_Updater_FieldChange_FieldChangePermissionsOnArtifactXMLUpdater;
+use Tracker_XML_Updater_FieldChange_FieldChangeStringXMLUpdater;
+use Tracker_XML_Updater_FieldChange_FieldChangeTextXMLUpdater;
+use Tracker_XML_Updater_FieldChange_FieldChangeUnknownXMLUpdater;
+use Tracker_XML_Updater_FieldChangeXMLUpdaterVisitor;
 use Tuleap\REST\JsonDecoder;
 use \Tuleap\REST\ProjectAuthorization;
 use \Tuleap\REST\Header;
@@ -30,6 +46,7 @@ use \Tracker_ArtifactFactory;
 use \Tracker_Artifact;
 use Tuleap\REST\QueryParameterException;
 use Tuleap\REST\QueryParameterParser;
+use Tuleap\Tracker\Action\MoveArtifact;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfig;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigDAO;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletorBuilder;
@@ -42,6 +59,7 @@ use Tuleap\Tracker\REST\Artifact\ArtifactBatchQueryConverter;
 use Tuleap\Tracker\REST\Artifact\MalformedArtifactBatchQueryConverterException;
 use Tuleap\Tracker\REST\Artifact\MovedArtifactValueBuilder;
 use Tuleap\Tracker\REST\v1\Event\ArtifactPartialUpdate;
+use Tuleap\Tracker\XML\Updater\FieldChange\FieldChangeComputedXMLUpdater;
 use \UserManager;
 use \PFUser;
 use \Tracker_REST_Artifact_ArtifactRepresentationBuilder;
@@ -63,6 +81,11 @@ use \Tracker_URLVerification;
 use \Tracker_Artifact_Changeset as Changeset;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tracker_Artifact_Attachment_AlreadyLinkedToAnotherArtifactException;
+use UserXMLExportedCollection;
+use UserXMLExporter;
+use XML_RNGValidator;
+use XML_SimpleXMLCDATAFactory;
+use XMLImportHelper;
 
 class ArtifactsResource extends AuthenticatedResource {
     const MAX_LIMIT          = 50;
@@ -672,7 +695,11 @@ class ArtifactsResource extends AuthenticatedResource {
      * }
      * </pre>
      * <br/>
-     * Limitation: User must be admin of both source and target trackers in order to be able to move an artifact.
+     * Limitation:
+     * <ul>
+     * <li>User must be admin of both source and target trackers in order to be able to move an artifact.</li>
+     * <li>Artifact must not be linked to a FRS release.</li>
+     * </ul>
      *
      * @url PATCH {id}
      *
@@ -688,8 +715,6 @@ class ArtifactsResource extends AuthenticatedResource {
     {
         $this->checkAccess();
 
-        $this->sendAllowHeadersForArtifact();
-
         $user     = UserManager::instance()->getCurrentUser();
         $artifact = $this->getArtifactById($user, $id);
 
@@ -704,6 +729,10 @@ class ArtifactsResource extends AuthenticatedResource {
             throw new RestException(400, "User must be admin of both trackers");
         }
 
+        if ($artifact->getTrackerId() === $target_tracker->getId()) {
+            throw new RestException(400, "An artifact cannot be moved in the same tracker");
+        }
+
         if (count($artifact->getLinkedAndReverseArtifacts($user)) > 0) {
             throw new RestException(400, "An artifact with linked artifacts or reverse linked artifacts cannot be moved");
         }
@@ -715,6 +744,63 @@ class ArtifactsResource extends AuthenticatedResource {
             throw new RestException(400, $event->getNotUpdatableMessage());
         }
 
+        $remaining_deletions = 0;
+        $limit               = $this->artifacts_deletion_config->getArtifactsDeletionLimit();
+        $move_action         = $this->getMoveAction($user);
+
+        try {
+            $remaining_deletions = $move_action->move($artifact, $target_tracker, $user);
+        } catch (DeletionOfArtifactsIsNotAllowedException $exception) {
+            throw new RestException(403, $exception->getMessage());
+        } catch (ArtifactsDeletionLimitReachedException $limit_reached_exception) {
+            throw new RestException(429, $limit_reached_exception->getMessage());
+        } finally {
+            Header::sendRateLimitHeaders($limit, $remaining_deletions);
+            $this->sendAllowHeadersForArtifact();
+        }
+    }
+
+    /**
+     * @return MoveArtifact
+     */
+    private function getMoveAction(PFUser $user)
+    {
+        $builder                = new Tracker_XML_Exporter_ArtifactXMLExporterBuilder();
+        $children_collector     = new Tracker_XML_Exporter_NullChildrenCollector();
+        $file_path_xml_exporter = new Tracker_XML_Exporter_LocalAbsoluteFilePathXMLExporter();
+
+        $visitor = new Tracker_XML_Updater_FieldChangeXMLUpdaterVisitor(
+            new Tracker_XML_Updater_FieldChange_FieldChangeDateXMLUpdater(),
+            new Tracker_XML_Updater_FieldChange_FieldChangeFloatXMLUpdater(),
+            new Tracker_XML_Updater_FieldChange_FieldChangeIntegerXMLUpdater(),
+            new Tracker_XML_Updater_FieldChange_FieldChangeTextXMLUpdater(),
+            new Tracker_XML_Updater_FieldChange_FieldChangeStringXMLUpdater(),
+            new Tracker_XML_Updater_FieldChange_FieldChangePermissionsOnArtifactXMLUpdater(),
+            new Tracker_XML_Updater_FieldChange_FieldChangeListXMLUpdater(),
+            new Tracker_XML_Updater_FieldChange_FieldChangeOpenListXMLUpdater(),
+            new FieldChangeComputedXMLUpdater(),
+            new Tracker_XML_Updater_FieldChange_FieldChangeUnknownXMLUpdater()
+        );
+
+        $user_xml_exporter = new UserXMLExporter(
+            UserManager::instance(),
+            new UserXMLExportedCollection(new XML_RNGValidator(), new XML_SimpleXMLCDATAFactory())
+        );
+
+        $xml_import_builder = new Tracker_Artifact_XMLImportBuilder();
+
+        return new MoveArtifact(
+            $this->artifacts_deletion_manager,
+            $builder->build($children_collector, $file_path_xml_exporter, $user, $user_xml_exporter, false),
+            new Tracker_XML_Updater_ChangesetXMLUpdater(
+                $visitor,
+                $this->formelement_factory
+            ),
+            $xml_import_builder->build(
+                new XMLImportHelper(UserManager::instance()),
+                new Log_NoopLogger()
+            )
+        );
     }
 
     private function getTrackerById(PFUser $user, $tracker_id)
