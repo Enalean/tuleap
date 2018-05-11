@@ -67,8 +67,7 @@ class SystemEvent_SVN_RESTORE_REPOSITORY extends SystemEvent
         $repository_manager = $this->getRepositoryManager();
         $repository_manager->restoreRepository($repository);
 
-        $generator = new ApacheConfGenerator(new System_Command(), Backend::instance(Backend::SVN));
-        $generator->generate();
+        ApacheConfGenerator::build()->generate();
 
         $this->done();
         return true;

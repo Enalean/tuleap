@@ -26,10 +26,10 @@
 class BackendService {
 
     public function start() {
-        exec('service codendi start');
+        (new \Tuleap\System\ServiceControl())->execute('tuleap', 'start');
     }
 
     public function stop() {
-        exec('service codendi stop');
+        (new \Tuleap\System\ServiceControl())->execute('tuleap', 'stop');
     }
 }

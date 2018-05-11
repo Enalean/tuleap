@@ -23,9 +23,10 @@ namespace Tuleap\Svn;
 
 use Backend;
 use ForgeConfig;
-use System_Command;
 use Logger;
 use Tuleap\Queue\QueueFactory;
+use Tuleap\System\ApacheServiceControl;
+use Tuleap\System\ServiceControl;
 use WrapperLogger;
 use Exception;
 
@@ -66,10 +67,14 @@ class SvnrootUpdater
 
         $generate = function () {
             ForgeConfig::set('svn_root_file', '/etc/httpd/conf.d/svnroot.conf');
-            $backend_svn = Backend::instance('SVN');
-            $backend_svn->generateSVNApacheConf();
-            $command = new System_Command();
-            $command->exec('/sbin/httpd -k graceful');
+
+            $apache_conf_generator = new ApacheConfGenerator(
+                (new ApacheServiceControl(
+                    new ServiceControl()
+                ))->disableInitUsage(),
+                Backend::instance('SVN')
+            );
+            $apache_conf_generator->generate();
         };
 
         $generate();
