@@ -85,7 +85,6 @@ if [ ${tuleap_installed:-false} = "false" ] || \
     sys_db_password=$(_setupRandomPassword)
     _setupMysqlPrivileges "${mysql_user}" "${mysql_password}" \
         "${sys_db_user}"  "${sys_db_password}"
-
     _logPassword "MySQL system user password (${sys_db_user}): ${sys_db_password}"
     _logPassword "Site admin password (${project_admin}): ${admin_password}"
     _checkMysqlMode "${mysql_user}" "${mysql_password}"
@@ -135,17 +134,20 @@ if [ ${tuleap_installed:-false} = "false" ] || \
     _serviceStart "${timers[@]}"
     _phpConfigureModule "nginx,fpm"
     _serviceRestart "nginx" "tuleap"
-
-    for pwd in mysql_password dbpasswd admin_password; do
-        unset ${pwd}
-    done
-
     _endMessage
 fi
 
 if [ ${configure:-false} = "true" ]; then
     _checkInstalledPlugins
     _checkPluginsConfiguration
-    _phpConfigureModule "nginx"
-    _serviceReload "nginx"
+    if ${printf} '%s' ${plugins_configured[@]:-false} | \
+        ${grep} --quiet "true"; then
+        _phpConfigureModule "nginx"
+        _serviceReload "nginx"
+        _serviceRestart "tuleap.service"
+    fi
 fi
+
+for pwd in mysql_password dbpasswd admin_password; do
+    unset ${pwd}
+done

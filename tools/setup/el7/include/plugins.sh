@@ -11,7 +11,6 @@ _pluginGit() {
     _checkCommand ${git} ${ssh} ${sshkeygen}
 
     if [ ! -d "${tuleap_data}/gitolite/admin" ]; then
-
         ${install} --directory \
                    --group=${tuleap_unix_user} \
                    --owner=${tuleap_unix_user} \
@@ -19,7 +18,6 @@ _pluginGit() {
                    ${tuleap_data}/gitolite/admin
         plugin_git_configured="true"
     fi
-
 
     if [ ! -L "${git_home}/repositories" ]; then
         ${rm} --force --recursive ${git_home}/repositories
@@ -173,8 +171,86 @@ _pluginGit() {
 
     if [ ${plugin_git_configured} = "true" ]; then
         _infoMessage "Plugin Git is configured"
-        _serviceRestart "tuleap.service"
+        plugins_configured+=('true')
     else
         _infoMessage "Plugin Git is already configured"
+    fi
+}
+
+_pluginSVN() {
+    local -r httpd_conf="/etc/httpd/conf/httpd.conf"
+    local -r httpd_conf_ssl="/etc/httpd/conf.d/ssl.conf"
+    local -r httpd_vhost="/etc/httpd/conf.d/tuleap-vhost.conf"
+    local -r httpd_logrotate="/etc/logrotate.d/httpd"
+    local plugin_svn_configured="false"
+
+    if ${grep} --quiet "%sys_dbauth_passwd%" "${tuleap_conf}/${local_inc}"; then
+        if [ ${mysql_user:-NULL} != "NULL" ] && \
+           [ ${mysql_password:-NULL} != "NULL" ]; then
+            dbauthuser_password=$(_setupRandomPassword)
+            _mysqlExecute "${mysql_user}" "${mysql_password:-NULL}" \
+                "$(_sqlDbauthuserPrivileges ${web_server_ip:-localhost} \
+                ${dbauthuser_password})"
+            ${sed} --in-place \
+                "s@sys_dbauth_passwd.*@sys_dbauth_passwd = '${dbauthuser_password}';@g" \
+                "${tuleap_conf}/${local_inc}"
+            _logPassword \
+                "MySQL dbauth user password (dbauthuser): ${dbauthuser_password}"
+            plugin_svn_configured="true"
+        else
+            _errorMessage "You must enter your MySQL user and password"
+            exit 1
+        fi
+    fi
+
+    ${awk} '{ gsub("%service_restart%",
+    "'"${systemctl} reload httpd.service > /dev/null 2>/dev/null || true"'");
+    print }' "${tuleap_src}/etc/el7/httpd/logrotate" > ${httpd_logrotate}
+
+    if [ ! -f ${httpd_vhost} ]; then
+        server_name=$(${awk} --field-separator="'" \
+            '/^\$sys_default_domain/ {print $2}' ${tuleap_conf}/local.inc)
+        ${awk} '{ gsub("%sys_default_domain%", "'"${server_name}"'");
+                  gsub("*:80$", "127.0.0.1:8080");
+                  gsub("*:80>", "127.0.0.1:8080>");
+                  print }' \
+                    "${tuleap_src}/etc/tuleap-vhost.conf.dist" > ${httpd_vhost}
+        ${sed} --in-place '/Include.*configuration\|tuleap-aliases/d' \
+             ${httpd_vhost}
+        plugin_svn_configured="true"
+    fi
+
+    if ! ${grep} --quiet "^User.*${tuleap_unix_user}" ${httpd_conf}; then
+        ${sed} --in-place "s@^User.*@User ${tuleap_unix_user}@g" ${httpd_conf}
+        plugin_svn_configured="true"
+    fi
+
+    if ! ${grep} --quiet "^Group.*${tuleap_unix_user}" ${httpd_conf}; then
+        ${sed} --in-place "s@^Group.*@Group ${tuleap_unix_user}@g" ${httpd_conf}
+        plugin_svn_configured="true"
+    fi
+
+    if ! ${grep} --quiet "Listen.*:8080" ${httpd_conf}; then
+        _phpConfigureModule "apache"
+        plugin_svn_configured="true"
+    fi
+
+    if [ -f ${httpd_conf_ssl} ] && \
+        ${grep} --quiet "SSLEngine.*on" ${httpd_conf_ssl}; then
+        ${sed} --in-place "s@^SSLEngine.*on@SSLEngine off@g" ${httpd_conf_ssl}
+        plugin_svn_configured="true"
+    fi
+
+    if ${grep} --quiet "^Listen" ${httpd_conf_ssl}; then
+        ${sed} --in-place "s@^Listen@#Listen@g" ${httpd_conf_ssl}
+        plugin_svn_configured="true"
+    fi
+
+    if [ ${plugin_svn_configured} = "true" ]; then
+        _serviceRestart "httpd.service"
+        _infoMessage "Plugin SVN is configured"
+        plugins_configured+=('true')
+    else
+        _infoMessage "Plugin SVN is already configured"
     fi
 }

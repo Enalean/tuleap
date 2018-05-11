@@ -37,7 +37,7 @@ AutoReqProv: no
 # Php and web related stuff
 Requires: rh-php56-php, rh-php56-php-mysql, rh-php56-php-xml, rh-php56-php-mbstring, rh-php56-php-gd, rh-php56-php-soap, rh-php56-php-pear, rh-php56-php-intl, rh-php56-php-process, rh-php56-php-opcache, rh-php56-php-fpm, rh-mysql57-mysql
 
-Requires: highlight, forgeupgrade, ckeditor, jpgraph-tuleap, nginx
+Requires: highlight, forgeupgrade, ckeditor, jpgraph-tuleap, nginx, logrotate
 
 Requires: php-ZendFramework2-Mail
 
