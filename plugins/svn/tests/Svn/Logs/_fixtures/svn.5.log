@@ -1,0 +1,4 @@
+127.0.0.1 - vaceletm [21/Mar/2017:11:09:20 +0000] /svnplugin/scrum-08/zorglub/!svn/rvr/0 207 "get-dir / r0 text"
+127.0.0.1 - alice [11/Nov/2016:11:22:43 +0000] /svnroot/scrum-08 200 "commit r1"
+127.0.0.1 - vaceletm [21/Mar/2017:11:09:21 +0000] /svnroot/scrum-08/!svn/rvr/0 207 "get-dir / r0 text"
+127.0.0.1 - alice [11/Nov/2016:11:22:44 +0000] /svnplugin/scrum-08/zorglub 200 "commit r1"

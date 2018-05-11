@@ -26,6 +26,7 @@ use \DateTime;
 class Parser
 {
     const BASE_URL = '/svnplugin/';
+    const CORE_URL = '/svnroot/';
 
     public function parse($file)
     {
@@ -51,14 +52,8 @@ class Parser
             trim($line);
             $matches = array();
             if (preg_match($parse_regexp, $line, $matches) === 1) {
-                list($project_name, $repo_name) = $this->parseURL($matches['url']);
-                $log_cache->add(
-                    $project_name,
-                    $repo_name,
-                    $matches['username'],
-                    $this->getActionType($matches['svncommand']),
-                    new DateTime($matches['date'])
-                );
+                $this->parsePluginURL($log_cache, $matches);
+                $this->parseCoreURL($log_cache, $matches);
             }
         }
         fclose($file_handler);
@@ -66,12 +61,34 @@ class Parser
         return $log_cache;
     }
 
-    private function parseURL($url)
+    private function parsePluginURL(LogCache $log_cache, array $matches)
     {
-        if (strpos($url, self::BASE_URL) === 0) {
-            $url_without_base = substr($url, strlen(self::BASE_URL));
+        if (strpos($matches['url'], self::BASE_URL) === 0) {
+            $url_without_base = substr($matches['url'], strlen(self::BASE_URL));
             $url_parts = explode('/', $url_without_base);
-            return array($url_parts[0], $url_parts[1]);
+
+            $log_cache->add(
+                $url_parts[0],
+                $url_parts[1],
+                $matches['username'],
+                $this->getActionType($matches['svncommand']),
+                new DateTime($matches['date'])
+            );
+        }
+    }
+
+    private function parseCoreURL(LogCache $log_cache, array $matches)
+    {
+        if (strpos($matches['url'], self::CORE_URL) === 0) {
+            $url_without_base = substr($matches['url'], strlen(self::CORE_URL));
+            $url_parts = explode('/', $url_without_base);
+
+            $log_cache->addCore(
+                $url_parts[0],
+                $matches['username'],
+                $this->getActionType($matches['svncommand']),
+                new DateTime($matches['date'])
+            );
         }
     }
 

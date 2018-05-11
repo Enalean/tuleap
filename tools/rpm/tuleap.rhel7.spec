@@ -466,7 +466,6 @@ done
 %{__install} -d $RPM_BUILD_ROOT/%{_unitdir}
 %{__install} src/utils/systemd/tuleap.service $RPM_BUILD_ROOT/%{_unitdir}
 %{__install} src/utils/systemd/tuleap-svn-updater.service $RPM_BUILD_ROOT/%{_unitdir}
-%{__install} src/utils/systemd/tuleap-svn-log-parser.service $RPM_BUILD_ROOT/%{_unitdir}
 %{__install} src/utils/systemd/tuleap-php-fpm.service $RPM_BUILD_ROOT/%{_unitdir}
 %{__install} src/utils/systemd/tuleap-process-system-events-default.timer $RPM_BUILD_ROOT/%{_unitdir}
 %{__install} src/utils/systemd/tuleap-process-system-events-default.service $RPM_BUILD_ROOT/%{_unitdir}
@@ -725,10 +724,10 @@ if [ $1 -eq 1 ]; then
 fi
 
 %post core-subversion
+/usr/bin/systemctl daemon-reload &>/dev/null || :
 if [ $1 -eq 1 ]; then
     /usr/bin/systemctl enable \
-        tuleap-svn-updater.service \
-        tuleap-svn-log-parser.service &>/dev/null || :
+        tuleap-svn-updater.service &>/dev/null || :
 fi
 
 # In any cases fix the context
@@ -757,8 +756,7 @@ if [ $1 -eq 0 ]; then
     /usr/bin/systemctl stop tuleap.service &>/dev/null || :
 
     /usr/bin/systemctl disable \
-        tuleap-svn-updater.service \
-        tuleap-svn-log-parser.service &>/dev/null || :
+        tuleap-svn-updater.service &>/dev/null || :
 fi
 
 %postun
@@ -769,8 +767,7 @@ fi
 /usr/bin/systemctl daemon-reload &>/dev/null || :
 if [ $1 -eq 1 ]; then
     /usr/bin/systemctl restart \
-        tuleap-svn-updater.service \
-        tuleap-svn-log-parser.service &>/dev/null || :
+        tuleap-svn-updater.service&>/dev/null || :
 fi
 
 %clean
@@ -918,7 +915,6 @@ fi
 %defattr(-,root,root,-)
 %{perl_vendorlib}/Apache/Tuleap.pm
 %attr(00644,root,root) %{_unitdir}/tuleap-svn-updater.service
-%attr(00644,root,root) %{_unitdir}/tuleap-svn-log-parser.service
 
 %files core-cvs
 %defattr(-,root,root,-)

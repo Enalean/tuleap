@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,30 +19,32 @@
  *
  */
 
-namespace Tuleap\Httpd;
+namespace Tuleap\Svn\Logs;
 
-use Tuleap\Event\Dispatchable;
-use Logger;
+use UserManager;
 
-/**
- * Event emitted after HTTP log rotation
- */
-class PostRotateEvent implements Dispatchable
+class DBWriterUserCache
 {
-    const NAME = 'httpdPostRotate';
-
     /**
-     * @var Logger
+     * @var UserManager
      */
-    private $logger;
+    private $user_manager;
+    private $users_cache = array();
 
-    public function __construct(Logger $logger)
+    public function __construct(UserManager $user_manager)
     {
-        $this->logger = $logger;
+        $this->user_manager = $user_manager;
     }
 
-    public function getLogger()
+    public function getUserId($user_name)
     {
-        return $this->logger;
+        if (! isset($this->users_cache[$user_name])) {
+            $this->users_cache[$user_name] = 0;
+            $user = $this->user_manager->findUser($user_name);
+            if ($user !== null) {
+                $this->users_cache[$user_name] = $user->getId();
+            }
+        }
+        return $this->users_cache[$user_name];
     }
 }

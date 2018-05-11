@@ -29,6 +29,7 @@ class LogCache
     const READ  = 'read';
 
     private $cache         = array();
+    private $cache_core    = array();
     private $project_names = array();
     private $user_names    = array();
     private $last_access_date_cache = array();
@@ -48,6 +49,19 @@ class LogCache
         $this->user_names[$user_name] = 1;
     }
 
+    public function addCore($project_name, $user_name, $action_type, DateTime $date)
+    {
+        $this->updateLastDate($user_name, $date);
+        $day = $this->getDay($date);
+        if (! isset($this->cache_core[$project_name][$user_name][$day])) {
+            $this->cache_core[$project_name][$user_name][$day] = [
+                self::READ  => 0,
+                self::WRITE => 0,
+            ];
+        }
+        $this->cache_core[$project_name][$user_name][$day][$action_type]++;
+    }
+
     private function getDay(DateTime $date)
     {
         return $date->format('Ymd');
@@ -56,6 +70,16 @@ class LogCache
     public function getProjects()
     {
         return $this->cache;
+    }
+
+    public function getCoreProjects()
+    {
+        return $this->cache_core;
+    }
+
+    public function getCoreProjectNames()
+    {
+        return array_keys($this->cache_core);
     }
 
     public function getProjectNames()
