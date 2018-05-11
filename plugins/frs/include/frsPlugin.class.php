@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -32,6 +32,7 @@ use Tuleap\FRS\REST\v1\ReleaseRepresentation;
 use Tuleap\FRS\UploadedLinksDao;
 use Tuleap\FRS\UploadedLinksRetriever;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Tracker\REST\v1\Event\ArtifactPartialUpdate;
 
 class frsPlugin extends \Plugin
 {
@@ -67,6 +68,7 @@ class frsPlugin extends \Plugin
 
         if (defined('TRACKER_BASE_URL')) {
             $this->addHook(Tracker_Artifact_EditRenderer::EVENT_ADD_VIEW_IN_COLLECTION);
+            $this->addHook(ArtifactPartialUpdate::NAME);
         }
 
         if (defined('AGILEDASHBOARD_BASE_DIR')) {
@@ -286,5 +288,15 @@ class frsPlugin extends \Plugin
     private function isAFRSrequest()
     {
         return strpos($_SERVER['REQUEST_URI'], FRS_BASE_URL . '/') === 0;
+    }
+
+    public function artifactPartialUpdate(ArtifactPartialUpdate $event)
+    {
+        $artifact   = $event->getArtifact();
+        $release_id = $this->getLinkRetriever()->getLinkedReleaseId($artifact);
+
+        if ($release_id !== null) {
+            $event->setNotUpdatable('Artifact linked to a FRS release cannot be moved');
+        }
     }
 }

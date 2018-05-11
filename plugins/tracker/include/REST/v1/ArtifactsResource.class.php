@@ -20,6 +20,7 @@
 
 namespace Tuleap\Tracker\REST\v1;
 
+use EventManager;
 use Tuleap\REST\JsonDecoder;
 use \Tuleap\REST\ProjectAuthorization;
 use \Tuleap\REST\Header;
@@ -40,6 +41,7 @@ use Tuleap\Tracker\Exception\SemanticTitleNotDefinedException;
 use Tuleap\Tracker\REST\Artifact\ArtifactBatchQueryConverter;
 use Tuleap\Tracker\REST\Artifact\MalformedArtifactBatchQueryConverterException;
 use Tuleap\Tracker\REST\Artifact\MovedArtifactValueBuilder;
+use Tuleap\Tracker\REST\v1\Event\ArtifactPartialUpdate;
 use \UserManager;
 use \PFUser;
 use \Tracker_REST_Artifact_ArtifactRepresentationBuilder;
@@ -102,6 +104,11 @@ class ArtifactsResource extends AuthenticatedResource {
      */
     private $artifacts_deletion_config;
 
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
+
     public function __construct()
     {
         $this->tracker_factory     = TrackerFactory::instance();
@@ -123,6 +130,8 @@ class ArtifactsResource extends AuthenticatedResource {
             new ArtifactsDeletionDAO(),
             ArtifactDeletorBuilder::build()
         );
+
+        $this->event_manager = EventManager::instance();
     }
 
     /**
@@ -698,6 +707,14 @@ class ArtifactsResource extends AuthenticatedResource {
         if (count($artifact->getLinkedAndReverseArtifacts($user)) > 0) {
             throw new RestException(400, "An artifact with linked artifacts or reverse linked artifacts cannot be moved");
         }
+
+        $event = new ArtifactPartialUpdate($artifact);
+        $this->event_manager->processEvent($event);
+
+        if (! $event->isArtifactUpdatable()) {
+            throw new RestException(400, $event->getNotUpdatableMessage());
+        }
+
     }
 
     private function getTrackerById(PFUser $user, $tracker_id)
