@@ -98,6 +98,17 @@ class Tracker_Artifact_PriorityDao extends DataAccessObject
         return $this->update($sql);
     }
 
+    public function putArtifactAtAGivenRank($artifact_id, $rank)
+    {
+        $artifact_id = $this->da->escapeInt($artifact_id);
+        $rank        = $this->da->escapeInt($rank);
+
+        $sql = "REPLACE INTO tracker_artifact_priority_rank (artifact_id, rank)
+                VALUES ($artifact_id, $rank)";
+
+        $this->update($sql);
+    }
+
     /**
      * Remove an item from the linked list
      */

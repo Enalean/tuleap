@@ -24,6 +24,7 @@ use PFUser;
 use SimpleXMLElement;
 use Tracker;
 use Tracker_Artifact;
+use Tracker_Artifact_PriorityManager;
 use Tracker_Artifact_XMLImport;
 use Tracker_XML_Exporter_ArtifactXMLExporter;
 use Tracker_XML_Updater_ChangesetXMLUpdater;
@@ -51,17 +52,23 @@ class MoveArtifact
      * @var Tracker_Artifact_XMLImport
      */
     private $xml_import;
+    /**
+     * @var Tracker_Artifact_PriorityManager
+     */
+    private $artifact_priority_manager;
 
     public function __construct(
         ArtifactsDeletionManager $artifacts_deletion_manager,
         Tracker_XML_Exporter_ArtifactXMLExporter $xml_exporter,
         Tracker_XML_Updater_ChangesetXMLUpdater $xml_updater,
-        Tracker_Artifact_XMLImport $xml_import
+        Tracker_Artifact_XMLImport $xml_import,
+        Tracker_Artifact_PriorityManager $artifact_priority_manager
     ) {
         $this->artifacts_deletion_manager = $artifacts_deletion_manager;
         $this->xml_exporter               = $xml_exporter;
         $this->xml_updater                = $xml_updater;
         $this->xml_import                 = $xml_import;
+        $this->artifact_priority_manager  = $artifact_priority_manager;
     }
 
     /**
@@ -70,10 +77,10 @@ class MoveArtifact
      */
     public function move(Tracker_Artifact $artifact, Tracker $target_tracker, PFUser $user)
     {
-        $limit = $this->artifacts_deletion_manager->deleteArtifact($artifact, $user);
+        $global_rank = $this->artifact_priority_manager->getGlobalRank($artifact->getId());
+        $limit       = $this->artifacts_deletion_manager->deleteArtifact($artifact, $user);
 
         $xml_artifacts = $this->getXMLRootNode();
-
         $xml_artifacts = $this->xml_exporter->exportSnapshotWithoutComments(
             $xml_artifacts,
             $artifact->getLastChangeset()
@@ -86,16 +93,20 @@ class MoveArtifact
             $artifact->getSubmittedOn()
         );
 
-        $this->processMove($xml_artifacts->artifact, $target_tracker);
+        $this->processMove($xml_artifacts->artifact, $target_tracker, $global_rank);
 
         return $limit;
     }
 
-    private function processMove(SimpleXMLElement $artifact_xml, Tracker $tracker)
+    private function processMove(SimpleXMLElement $artifact_xml, Tracker $tracker, $global_rank)
     {
         $tracker->getWorkflow()->disable();
 
-        $this->xml_import->importArtifactWithAllDataFromXMLContent($tracker, $artifact_xml);
+        $moved_artifact = $this->xml_import->importArtifactWithAllDataFromXMLContent($tracker, $artifact_xml);
+
+        if ($moved_artifact) {
+            $this->artifact_priority_manager->putArtifactAtAGivenRank($moved_artifact, $global_rank);
+        }
     }
 
     private function getXMLRootNode()

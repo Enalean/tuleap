@@ -22,6 +22,9 @@ namespace Tuleap\Tracker\REST\v1;
 
 use EventManager;
 use Log_NoopLogger;
+use Tracker_Artifact_PriorityDao;
+use Tracker_Artifact_PriorityHistoryDao;
+use Tracker_Artifact_PriorityManager;
 use Tracker_Artifact_XMLImportBuilder;
 use Tracker_XML_Exporter_ArtifactXMLExporterBuilder;
 use Tracker_XML_Exporter_LocalAbsoluteFilePathXMLExporter;
@@ -155,6 +158,7 @@ class ArtifactsResource extends AuthenticatedResource {
         );
 
         $this->event_manager = EventManager::instance();
+        $this->user_manager  = UserManager::instance();
     }
 
     /**
@@ -193,7 +197,7 @@ class ArtifactsResource extends AuthenticatedResource {
             throw new RestException(403, 'No more than '. self::MAX_ARTIFACT_BATCH .' artifacts can be requested at once.');
         }
 
-        $user                     = UserManager::instance()->getCurrentUser();
+        $user                     = $this->user_manager->getCurrentUser();
         $artifact_representations = array();
 
         $artifacts = $this->artifact_factory->getArtifactsByArtifactIdList(
@@ -271,7 +275,7 @@ class ArtifactsResource extends AuthenticatedResource {
     public function getId($id, $values_format = self::VALUES_DEFAULT) {
         $this->checkAccess();
 
-        $user     = UserManager::instance()->getCurrentUser();
+        $user     = $this->user_manager->getCurrentUser();
         $artifact = $this->getArtifactById($user, $id);
         $this->sendAllowHeadersForArtifact();
         $this->sendLastModifiedHeader($artifact);
@@ -303,7 +307,7 @@ class ArtifactsResource extends AuthenticatedResource {
     {
         $this->checkAccess();
 
-        $user     = UserManager::instance()->getCurrentUser();
+        $user     = $this->user_manager->getCurrentUser();
         $artifact = $this->getArtifactById($user, $id);
 
         $artifact_link_representation = new ArtifactLinkRepresentation();
@@ -351,7 +355,7 @@ class ArtifactsResource extends AuthenticatedResource {
     ) {
         $this->checkAccess();
 
-        $user     = UserManager::instance()->getCurrentUser();
+        $user     = $this->user_manager->getCurrentUser();
         $artifact = $this->getArtifactById($user, $id);
 
         $linked_artifacts = $this->builder->getArtifactRepresentationCollection(
@@ -413,7 +417,7 @@ class ArtifactsResource extends AuthenticatedResource {
         $order  = self::ORDER_ASC
     ) {
         $this->checkAccess();
-        $user          = UserManager::instance()->getCurrentUser();
+        $user          = $this->user_manager->getCurrentUser();
         $artifact      = $this->getArtifactById($user, $id);
         $reverse_order = (bool) (strtolower($order) === self::ORDER_DESC);
         $changesets    = $this->builder->getArtifactChangesetsRepresentation($user, $artifact, $fields, $offset, $limit, $reverse_order);
@@ -457,7 +461,7 @@ class ArtifactsResource extends AuthenticatedResource {
      *
      */
     protected function putId($id, array $values, ChangesetCommentRepresentation $comment = null) {
-        $user     = UserManager::instance()->getCurrentUser();
+        $user     = $this->user_manager->getCurrentUser();
         $artifact = $this->getArtifactById($user, $id);
 
         $this->sendAllowHeadersForArtifact();
@@ -586,7 +590,7 @@ class ArtifactsResource extends AuthenticatedResource {
         $this->checkThatThereIsOnlyOneSourceOfValuesToCreateArtifact($values, $values_by_field, $from_artifact);
 
         try {
-            $user = UserManager::instance()->getCurrentUser();
+            $user = $this->user_manager->getCurrentUser();
 
             if (! empty($from_artifact)) {
                 $source_artifact = $this->getArtifactById($user, $from_artifact->id);
@@ -650,7 +654,7 @@ class ArtifactsResource extends AuthenticatedResource {
     {
         $this->checkAccess();
 
-        $user                  = UserManager::instance()->getCurrentUser();
+        $user                  = $this->user_manager->getCurrentUser();
         $artifact              = $this->getArtifactById($user, $id);
         $is_user_tracker_admin = $artifact->getTracker()->userIsAdmin($user);
 
@@ -715,7 +719,7 @@ class ArtifactsResource extends AuthenticatedResource {
     {
         $this->checkAccess();
 
-        $user     = UserManager::instance()->getCurrentUser();
+        $user     = $this->user_manager->getCurrentUser();
         $artifact = $this->getArtifactById($user, $id);
 
         $source_tracker = $artifact->getTracker();
@@ -783,7 +787,7 @@ class ArtifactsResource extends AuthenticatedResource {
         );
 
         $user_xml_exporter = new UserXMLExporter(
-            UserManager::instance(),
+            $this->user_manager,
             new UserXMLExportedCollection(new XML_RNGValidator(), new XML_SimpleXMLCDATAFactory())
         );
 
@@ -797,8 +801,14 @@ class ArtifactsResource extends AuthenticatedResource {
                 $this->formelement_factory
             ),
             $xml_import_builder->build(
-                new XMLImportHelper(UserManager::instance()),
+                new XMLImportHelper($this->user_manager),
                 new Log_NoopLogger()
+            ),
+            new Tracker_Artifact_PriorityManager(
+                new Tracker_Artifact_PriorityDao(),
+                new Tracker_Artifact_PriorityHistoryDao(),
+                $this->user_manager,
+                $this->artifact_factory
             )
         );
     }

@@ -400,6 +400,9 @@ class Tracker_Artifact_XMLImport {
         throw new Tracker_Artifact_Exception_XMLImportException("Invalid date format not ISO8601: ".(string)$xml_changeset->submitted_on);
     }
 
+    /**
+     * @return Tracker_Artifact|null
+     */
     public function importArtifactWithAllDataFromXMLContent(
         Tracker $tracker,
         SimpleXMLElement $xml_artifact
@@ -416,7 +419,10 @@ class Tracker_Artifact_XMLImport {
 
             if ($artifact) {
                 $this->importFakeFirstChangeset($artifact, $xml_artifact->changeset);
+                return $artifact;
             }
         }
+
+        return null;
     }
 }
