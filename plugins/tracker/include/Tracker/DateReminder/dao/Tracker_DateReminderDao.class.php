@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
  * Copyright (c) STMicroelectronics 2012. All rights reserved
  *
  * Tuleap is free software; you can redistribute it and/or modify
@@ -18,17 +19,8 @@
 
 require_once('common/dao/include/DataAccessObject.class.php');
 
-class Tracker_DateReminderDao extends DataAccessObject {
-
-    /**
-     * Constructor of the class
-     *
-     * @return Void
-     */
-    public function __construct() {
-        parent::__construct();
-        $this->tableName = 'tracker_reminder';
-    }
+class Tracker_DateReminderDao extends DataAccessObject
+{
 
     /**
      * Get date reminders
@@ -42,11 +34,12 @@ class Tracker_DateReminderDao extends DataAccessObject {
         $condition = "";
         $trackerId = $this->da->escapeInt($trackerId);
         if ($checkReminders) {
-            $condition = " AND status = 1";
+            $condition = " AND tracker_reminder.status = 1";
         }
-        $sql = "SELECT *
-                FROM ".$this->tableName."
-                WHERE tracker_id = $trackerId
+        $sql = "SELECT tracker_reminder.*
+                FROM tracker_reminder
+                JOIN tracker_field ON tracker_reminder.field_id = tracker_field.id
+                WHERE tracker_reminder.tracker_id = $trackerId AND tracker_field.use_it = 1
                 $condition
                 ORDER BY reminder_id";
         return $this->retrieve($sql);
@@ -57,10 +50,12 @@ class Tracker_DateReminderDao extends DataAccessObject {
      *
      * @return DataAccessResult
      */
-    public function getTrackersHavingDateReminders() {
-        $sql = "SELECT DISTINCT(tracker_id)
-                FROM ".$this->tableName."
-                WHERE status = 1
+    public function getTrackersHavingDateReminders()
+    {
+        $sql = "SELECT DISTINCT(tracker_reminder.tracker_id)
+                FROM tracker_reminder
+                JOIN tracker_field ON tracker_reminder.field_id = tracker_field.id
+                WHERE tracker_reminder.status = 1
                 ORDER BY reminder_id";
         return $this->retrieve($sql);
     }
@@ -111,7 +106,7 @@ class Tracker_DateReminderDao extends DataAccessObject {
         $ugroups          = $this->da->quoteSmart($ugroups);
         $notificationType = $this->da->escapeInt($notificationType);
         $distance         = $this->da->escapeInt($distance);
-        $sql = "INSERT INTO ".$this->tableName."
+        $sql = "INSERT INTO tracker_reminder
                 (
                 tracker_id,
                 field_id,
@@ -152,7 +147,7 @@ class Tracker_DateReminderDao extends DataAccessObject {
         $notificationType = $this->da->escapeInt($notificationType);
         $distance         = $this->da->escapeInt($distance);
         $status           = $this->da->escapeInt($status);
-        $sql = "Update ".$this->tableName."
+        $sql = "Update tracker_reminder
                 SET
                 ugroups           = ".$ugroups.",
                 notification_type = ".$notificationType.",
@@ -182,8 +177,9 @@ class Tracker_DateReminderDao extends DataAccessObject {
     public function searchById($reminderId) {
         $reminderId = $this->da->escapeInt($reminderId);
         $sql = "SELECT *
-                FROM $this->tableName
-                WHERE reminder_id = $reminderId";
+                FROM tracker_reminder
+                JOIN tracker_field ON tracker_reminder.field_id = tracker_field.id
+                WHERE reminder_id = $reminderId AND tracker_field.use_it = 1";
         return $this->retrieve($sql);
     }
 
@@ -209,12 +205,14 @@ class Tracker_DateReminderDao extends DataAccessObject {
             $condition = " AND reminder_id <>  ".$reminderId ;
         }
         $sql = "SELECT *
-                FROM $this->tableName
-                WHERE tracker_id        = $trackerId
-                  AND field_id          = $fieldId
-                  AND notification_type = $notificationType
-                  AND distance          = $distance
-                  AND status            = 1
+                FROM tracker_reminder
+                JOIN tracker_field ON tracker_reminder.field_id = tracker_field.id
+                WHERE tracker_reminder.tracker_id = $trackerId
+                  AND field_id                    = $fieldId
+                  AND notification_type           = $notificationType
+                  AND distance                    = $distance
+                  AND tracker_reminder.status     = 1
+                  AND tracker_field.use_it        = 1
                   ".$condition;
         return $this->retrieve($sql);
     }
@@ -228,7 +226,7 @@ class Tracker_DateReminderDao extends DataAccessObject {
      */
     public function deleteReminder($reminderId) {
         $reminder = $this->da->escapeInt($reminderId);
-        $sql = "DELETE FROM $this->tableName
+        $sql = "DELETE FROM tracker_reminder
                 WHERE reminder_id = $reminder";
         if ($this->update($sql)) {
              $sql = "DELETE FROM tracker_reminder_notified_roles
