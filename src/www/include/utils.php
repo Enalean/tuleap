@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  * Copyright 1999-2000 (c) The SourceForge Crew
  *
  * This file is a part of Tuleap.
@@ -514,7 +514,7 @@ function get_priority_color ($index) {
     return $GLOBALS['HTML']->getPriorityColor($index);
 }
 
-Function  ShowResultSet($result,$title="Untitled",$linkify=false,$showheaders=true)  {
+Function  ShowResultSet($result,$title="Untitled",$linkify=false)  {
 	global $group_id,$HTML;
 	/*
 		Very simple, plain way to show a generic result set
@@ -534,15 +534,6 @@ Function  ShowResultSet($result,$title="Untitled",$linkify=false,$showheaders=tr
 		echo '
 		<TR class="boxtitle">
 		<TD COLSPAN="'.$cols.'" class="boxitem"><B>'.$title.'</B></TD></TR>';
-
-		if ($showheaders) {
-                    /*  Create  the  headers  */
-                    echo '<tr>';
-                    for ($i=0; $i < $cols; $i++) {
-			echo '<td><B>'.db_fieldname($result,  $i).'</B></TD>';
-                    }
-                    echo '</tr>';
-                }
 
 		/*  Create the rows  */
 		for ($j = 0; $j < $rows; $j++) {

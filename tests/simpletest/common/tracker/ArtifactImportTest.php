@@ -71,7 +71,6 @@ class ArtifactImportTest extends TuleapTestCase {
         $this->dar = mock('DataAccessResult');
         stub($this->da)->query()->returns($this->dar);
         CodendiDataAccess::setInstance($this->da);
-        db_connect();
     }
 
     public function tearDown() {

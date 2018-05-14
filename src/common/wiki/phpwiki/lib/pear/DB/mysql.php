@@ -111,70 +111,9 @@ class DB_mysql extends DB_common
      */
     function connect($dsninfo, $persistent = false)
     {
-        /// ++ MV add for Codendi: re-use codendi DB connexion
-        global $conn;
-        $this->_db = $GLOBALS['sys_dbname'];
-        $this->dsn = $dsninfo;
-        $this->connection = $conn->db;
-        return DB_OK;
-        /// -- MV add
-
-        if (!DB::assertExtension('mysql')) {
-            return $this->raiseError(DB_ERROR_EXTENSION_NOT_FOUND);
-        }
-        $this->dsn = $dsninfo;
-        if ($dsninfo['protocol'] && $dsninfo['protocol'] == 'unix') {
-            $dbhost = ':' . $dsninfo['socket'];
-        } else {
-            $dbhost = $dsninfo['hostspec'] ? $dsninfo['hostspec'] : 'localhost';
-            if ($dsninfo['port']) {
-                $dbhost .= ':' . $dsninfo['port'];
-            }
-        }
-
-        $connect_function = $persistent ? 'mysql_pconnect' : 'mysql_connect';
-
-        if ($dbhost && $dsninfo['username'] && isset($dsninfo['password'])) {
-            $conn = @$connect_function($dbhost, $dsninfo['username'],
-                                       $dsninfo['password']);
-        } elseif ($dbhost && $dsninfo['username']) {
-            $conn = @$connect_function($dbhost, $dsninfo['username']);
-        } elseif ($dbhost) {
-            $conn = @$connect_function($dbhost);
-        } else {
-            $conn = false;
-        }
-        if (!$conn) {
-            if (($err = @mysql_error()) != '') {
-                return $this->raiseError(DB_ERROR_CONNECT_FAILED, null, null,
-                                         null, $err);
-            } elseif (empty($php_errormsg)) {
-                return $this->raiseError(DB_ERROR_CONNECT_FAILED);
-            } else {
-                return $this->raiseError(DB_ERROR_CONNECT_FAILED, null, null,
-                                         null, $php_errormsg);
-            }
-        }
-
-        if ($dsninfo['database']) {
-            if (!@mysql_select_db($dsninfo['database'], $conn)) {
-               switch(mysql_errno($conn)) {
-                        case 1049:
-                            return $this->raiseError(DB_ERROR_NOSUCHDB, null, null,
-                                                     null, @mysql_error($conn));
-                        case 1044:
-                             return $this->raiseError(DB_ERROR_ACCESS_VIOLATION, null, null,
-                                                      null, @mysql_error($conn));
-                        default:
-                            return $this->raiseError(DB_ERROR, null, null,
-                                                     null, @mysql_error($conn));
-                    }
-            }
-            // fix to allow calls to different databases in the same script
-            $this->_db = $dsninfo['database'];
-        }
-
-        $this->connection = $conn;
+        $this->_db        = ForgeConfig::get('sys_dbname');
+        $this->dsn        = $dsninfo;
+        $this->connection = CodendiDataAccess::instance()->db;
         return DB_OK;
     }
 

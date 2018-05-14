@@ -33,9 +33,8 @@ class DataAccessResult implements IProvideDataAccessResult {
     
     /**
      * $result stores a resultset
-     * TODO: remove legacy code database.php and put this attribute in the protected scope !
      */
-    public $result;
+    protected $result;
 
     protected $_current;
     protected $_row;

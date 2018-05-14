@@ -1,6 +1,6 @@
 <?php
 
-// Copyright 2014 (c) Enalean SAS
+// Copyright 2014-2018 (c) Enalean SAS
 // This file is part of Tuleap
 //
 // SourceForge: Breaking Down the Barriers to Open Source Development
@@ -136,7 +136,7 @@ if ($group_id && user_ismember($group_id, 'A')) {
         include($Language->getContent('mail/addlist_intro'));
 
         $result = db_query("SELECT list_name FROM mail_group_list WHERE group_id='$group_id'");
-        ShowResultSet($result, $Language->getText('mail_admin_index', 'existing_mail_list'), false, false);
+        ShowResultSet($result, $Language->getText('mail_admin_index', 'existing_mail_list'), false);
 
         echo '<P>
             <FORM METHOD="POST" ACTION="?">
