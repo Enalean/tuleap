@@ -24,7 +24,9 @@ use CrossReferenceManager;
 use EventManager;
 use ForgeConfig;
 use PermissionsManager;
+use PFUser;
 use ProjectHistoryDao;
+use Tracker_Artifact;
 use Tracker_Artifact_PriorityManager;
 use Tracker_ArtifactDao;
 use Tracker_FormElement_Field_ComputedDaoCache;
@@ -95,16 +97,32 @@ class ArtifactDeletor
         $this->recently_visited_dao                     = $recently_visited_dao;
     }
 
-    public function delete(\Tracker_Artifact $artifact, \PFUser $user)
+    public function delete(Tracker_Artifact $artifact, PFUser $user)
     {
         $this->tryToArchiveArtifact($artifact, $user);
-
         $this->dao->startTransaction();
+        $this->processDelete($artifact, $user);
+        $this->dao->commit();
+        $this->addProjectHistory($artifact);
+        $this->processEvent($artifact);
+    }
+
+    public function deleteWithoutTransaction(Tracker_Artifact $artifact, PFUser $user)
+    {
+        $this->tryToArchiveArtifact($artifact, $user);
+        $this->processDelete($artifact, $user);
+        $this->addProjectHistory($artifact);
+        $this->processEvent($artifact);
+    }
+
+    private function processDelete(Tracker_Artifact $artifact, PFUser $user)
+    {
         foreach ($artifact->getChangesets() as $changeset) {
             $changeset->delete($user);
         }
-        $this->permissions_manager->clearPermission(\Tracker_Artifact::PERMISSION_ACCESS, $artifact->getId());
-        $this->cross_reference_manager->deleteEntity($artifact->getId(), \Tracker_Artifact::REFERENCE_NATURE, $artifact->getTracker()->getGroupId());
+
+        $this->permissions_manager->clearPermission(Tracker_Artifact::PERMISSION_ACCESS, $artifact->getId());
+        $this->cross_reference_manager->deleteEntity($artifact->getId(), Tracker_Artifact::REFERENCE_NATURE, $artifact->getTracker()->getGroupId());
         $this->dao->deleteArtifactLinkReference($artifact->getId());
         $this->dao->deleteUnsubscribeNotificationForArtifact($artifact->getId());
         // We do not keep trace of the history change here because it doesn't have any sense
@@ -112,23 +130,9 @@ class ArtifactDeletor
         $this->computed_dao_cache->deleteAllArtifactCacheValues($artifact);
         $this->recently_visited_dao->deleteVisitByArtifactId($artifact->getId());
         $this->dao->delete($artifact->getId());
-        $this->dao->commit();
-
-        $this->project_history_dao->groupAddHistory(
-            self::PROJECT_HISTORY_ARTIFACT_DELETED,
-            '#' . $artifact->getId() . ' tracker #' . $artifact->getTrackerId() . ' (' . $artifact->getTracker()->getName() . ')',
-            $artifact->getTracker()->getGroupId()
-        );
-
-        $this->event_manager->processEvent(
-            TRACKER_EVENT_ARTIFACT_DELETE,
-            array(
-                'artifact' => $artifact,
-            )
-        );
     }
 
-    private function tryToArchiveArtifact(\Tracker_Artifact $artifact, \PFUser $user)
+    private function tryToArchiveArtifact(Tracker_Artifact $artifact, PFUser $user)
     {
         $archive_path = ForgeConfig::get('tmp_dir') . '/artifact_' . $artifact->getId() . '.zip';
         $archive      = new ZipArchive($archive_path);
@@ -145,5 +149,24 @@ class ArtifactDeletor
         if (file_exists($archive_path)) {
             unlink($archive_path);
         }
+    }
+
+    private function processEvent(Tracker_Artifact $artifact)
+    {
+        $this->event_manager->processEvent(
+            TRACKER_EVENT_ARTIFACT_DELETE,
+            array(
+                'artifact' => $artifact,
+            )
+        );
+    }
+
+    private function addProjectHistory(Tracker_Artifact $artifact)
+    {
+        $this->project_history_dao->groupAddHistory(
+            self::PROJECT_HISTORY_ARTIFACT_DELETED,
+            '#' . $artifact->getId() . ' tracker #' . $artifact->getTrackerId() . ' (' . $artifact->getTracker()->getName() . ')',
+            $artifact->getTracker()->getGroupId()
+        );
     }
 }
