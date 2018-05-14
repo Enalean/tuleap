@@ -207,4 +207,8 @@ class Tracker_Artifact_PriorityManager {
         $this->priority_history_dao->deletePriorityChangesHistory($artifact->getId());
     }
 
+    public function putArtifactAtAGivenRank(Tracker_Artifact $artifact, $rank)
+    {
+        $this->priority_dao->putArtifactAtAGivenRank($artifact->getId(), $rank);
+    }
 }
