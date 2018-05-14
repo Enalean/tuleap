@@ -159,6 +159,6 @@ class ChangesetValue extends Tracker_Artifact_ChangesetValue
      */
     public function accept(Tracker_Artifact_ChangesetValueVisitor $visitor)
     {
-        return new Tracker_XML_Exporter_ChangesetValue_ChangesetValueUnknownXMLExporter();
+        return $visitor->visitExternalField($this);
     }
 }

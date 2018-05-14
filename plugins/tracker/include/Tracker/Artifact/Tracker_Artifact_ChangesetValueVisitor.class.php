@@ -37,4 +37,5 @@ interface Tracker_Artifact_ChangesetValueVisitor {
     public function visitString(Tracker_Artifact_ChangesetValue_String $changeset_value);
     public function visitText(Tracker_Artifact_ChangesetValue_Text $changeset_value);
     public function visitComputed(ChangesetValueComputed $changeset_value);
+    public function visitExternalField(Tracker_Artifact_ChangesetValue $changeset_value);
 }

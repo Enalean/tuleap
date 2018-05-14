@@ -563,7 +563,7 @@ class Tracker_FormElementFactory {
 
     /**
      * @param Tracker $tracker
-     * @return array of Tracker_FormElement - All fields used and  unused by the tracker
+     * @return Tracker_FormElement_Field[] - All fields used and  unused by the tracker
      */
     public function getFields($tracker) {
         $field_classnames = array_merge($this->classnames, $this->special_classnames);
