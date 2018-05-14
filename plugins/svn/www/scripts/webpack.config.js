@@ -43,9 +43,7 @@ const webpack_config = {
     },
     plugins: [
         webpack_configurator.getManifestPlugin(),
-        webpack_configurator.getVueLoaderOptionsPlugin(
-            webpack_configurator.babel_options_ie11
-        )
+        webpack_configurator.getVueLoaderPlugin()
     ]
 };
 

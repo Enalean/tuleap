@@ -89,17 +89,7 @@ function configureBabelRule(babel_options) {
 const rule_vue_loader = {
     test: /\.vue$/,
     exclude: /node_modules/,
-    use: [
-        {
-            loader: 'vue-loader',
-            options: {
-                loaders: {
-                    js: 'babel-loader'
-                },
-                esModule: true
-            }
-        }
-    ]
+    use: [{ loader: 'vue-loader' }]
 };
 
 const rule_po_files = {

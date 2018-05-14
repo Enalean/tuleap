@@ -123,7 +123,7 @@ const webpack_config_for_burning_parrot_code = {
 const webpack_config_for_vue_components = {
     entry: {
         'news-permissions': './news/permissions-per-group/index.js',
-        'frs-permissions' : './frs/permissions-per-group/index.js'
+        'frs-permissions': './frs/permissions-per-group/index.js'
     },
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path),
@@ -132,15 +132,14 @@ const webpack_config_for_vue_components = {
     },
     module: {
         rules: [
-            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
+            webpack_configurator.configureBabelRule(
+                webpack_configurator.babel_options_ie11
+            ),
             webpack_configurator.rule_po_files,
             webpack_configurator.rule_vue_loader
         ]
     },
-    plugins: [
-        manifest_plugin,
-        webpack_configurator.getVueLoaderOptionsPlugin(webpack_configurator.babel_options_ie11)
-    ]
+    plugins: [manifest_plugin, webpack_configurator.getVueLoaderPlugin()]
 };
 
 if (process.env.NODE_ENV === 'production') {

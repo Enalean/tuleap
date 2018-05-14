@@ -39,12 +39,7 @@ const webpack_config_for_trackers = {
             webpack_configurator.rule_vue_loader
         ]
     },
-    plugins: [
-        manifest_plugin,
-        webpack_configurator.getVueLoaderOptionsPlugin(
-            webpack_configurator.babel_options_karma
-        )
-    ]
+    plugins: [manifest_plugin, webpack_configurator.getVueLoaderPlugin()]
 };
 
 const webpack_config_for_artifact_modal = {
