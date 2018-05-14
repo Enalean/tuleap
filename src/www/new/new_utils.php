@@ -21,34 +21,6 @@ function new_utils_get_new_projects ($start_time,$offset,$limit) {
 }
 
 function new_utils_get_new_releases_short($start_time) {
-  new_utils_get_new_releases($start_time,$select,$from,$where);
-  $group = "GROUP BY frs_release.release_id "
-	. "ORDER BY frs_release.release_date DESC";
-  return $select.$from.$where.$group;
-}
-
-function new_utils_get_new_releases_long($start_time, $offset, $limit) {
-  new_utils_get_new_releases($start_time,$select,$from,$where);
-  $select .= ", groups.short_description AS short_description, "
-	. "groups.license AS license, "
-	. "user.user_name AS user_name, "
-        . "frs_release.released_by AS released_by,"
-        . "frs_package.name AS module_name, "
-        . "frs_dlstats_grouptotal_agg.downloads AS downloads ";
-
-  $from .= ",user,frs_dlstats_grouptotal_agg ";
-  
-  $where .= "AND frs_release.released_by = user.user_id "
-	  . "AND frs_package.group_id = frs_dlstats_grouptotal_agg.group_id "
-          . "AND groups.type=1 ";  //don't include templates or test projects
-
-  $group = "GROUP BY frs_release.release_id "
-	 . "ORDER BY frs_release.release_date DESC LIMIT ".db_ei($offset).",".db_ei($limit);
-
-  return $select.$from.$where.$group;
-}
-
-function new_utils_get_new_releases($start_time,&$select,&$from,&$where ) {
     $frsrf = new FRSReleaseFactory();
 
   $select = "SELECT groups.group_name AS group_name, "
@@ -66,7 +38,8 @@ function new_utils_get_new_releases($start_time,&$select,&$from,&$where ) {
 	 . "AND frs_package.group_id = groups.group_id "
          . "AND frs_release.status_id=".$frsrf->STATUS_ACTIVE." "
          . "AND groups.access != '".db_es(Project::ACCESS_PRIVATE)."'";
+
+    $group = "GROUP BY frs_release.release_id "
+        . "ORDER BY frs_release.release_date DESC";
+    return $select.$from.$where.$group;
 }
-
-
-?>

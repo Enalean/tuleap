@@ -624,10 +624,6 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
             '/export/rss_sfnews.php'
         );
         echo $this->getRssFeed(
-            $hp->purify($GLOBALS['sys_name']. ' - ' .$GLOBALS['Language']->getText('include_layout','newest_releases_rss'), CODENDI_PURIFIER_CONVERT_HTML),
-            '/export/rss_sfnewreleases.php'
-        );
-        echo $this->getRssFeed(
             $hp->purify($GLOBALS['sys_name']. ' - ' .$GLOBALS['Language']->getText('include_layout','newest_projects_rss'), CODENDI_PURIFIER_CONVERT_HTML),
             '/export/rss_sfprojects.php?type=rss&option=newest'
         );
