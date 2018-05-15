@@ -71,10 +71,9 @@ use Tuleap\Widget\Event\GetPublicAreas;
 use Tuleap\Tracker\Artifact\Changeset\Notification\AsynchronousSupervisor;
 use Tuleap\Tracker\Artifact\Changeset\Notification\NotifierDao;
 
-require_once('common/plugin/Plugin.class.php');
-require_once 'constants.php';
-require_once 'autoload.php';
-require_once dirname(__FILE__) . '/../include/manual_autoload.php';
+require_once __DIR__ . '/constants.php';
+require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../include/manual_autoload.php';
 
 /**
  * trackerPlugin

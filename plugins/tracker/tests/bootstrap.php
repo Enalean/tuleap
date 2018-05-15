@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2016. All rights reserved
+ * Copyright (c) Enalean, 2013 - 2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,5 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-require_once(dirname(__FILE__) . '/../include/autoload.php');
-require_once(dirname(__FILE__) . '/../include/manual_autoload.php');
-require_once 'builders/all.php';
+require_once __DIR__ . '/../include/trackerPlugin.class.php';
+require_once __DIR__ . '/builders/all.php';

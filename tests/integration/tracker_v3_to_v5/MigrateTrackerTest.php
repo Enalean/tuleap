@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,11 +19,7 @@
  */
 
 require_once 'common/tracker/ArtifactType.class.php';
-require_once dirname(__FILE__).'/../../../plugins/tracker/include/autoload.php';
-require_once dirname(__FILE__).'/../../../plugins/tracker/include/manual_autoload.php';
-require_once dirname(__FILE__).'/../../../plugins/tracker/include/constants.php';
-require_once TRACKER_BASE_DIR.'/Tracker/TrackerManager.class.php';
-require_once TRACKER_BASE_DIR.'/Tracker/Migration/V3.class.php';
+require_once __DIR__ . '/../../../plugins/tracker/include/trackerPlugin.class.php';
 
 abstract class MigrateDefaultTrackersTest extends TuleapDbTestCase {
     private static $defect_tracker_converted = false;

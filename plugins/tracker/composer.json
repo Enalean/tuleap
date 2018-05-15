@@ -1,0 +1,9 @@
+{
+  "autoload": {
+    "psr-4": {
+      "Tuleap\\Tracker\\": ["include/", "include/Tracker/"]
+    },
+    "classmap": ["include/"],
+    "exclude-from-classmap": ["include/Tracker/Report/Query/Advanced/Grammar/Parser.php"]
+  }
+}
