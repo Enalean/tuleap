@@ -127,7 +127,8 @@ foreach (glob("$basedir/src/www/scripts/*", GLOB_ONLYDIR) as $path) {
             $po       = escapeshellarg("$path/${gettext['po']}");
             $template = escapeshellarg("$path/${gettext['po']}/template.pot");
             executeCommandAndExitIfStderrNotEmpty("find $src \
-                        \( -name '*.js' -o -name '*.vue'  \) \
+                        \( -name '*.js' -o -name '*.vue' \) \
+                        -not \( -path '**/node_modules/*' -o -path '**/coverage/*' \) \
                     | xargs xgettext \
                         --language=JavaScript \
                         --default-domain=core \
@@ -237,8 +238,10 @@ EOS;
                 $src      = escapeshellarg("$path/${gettext['src']}");
                 $po       = escapeshellarg("$path/${gettext['po']}");
                 $template = escapeshellarg("$path/${gettext['po']}/template.pot");
+
                 executeCommandAndExitIfStderrNotEmpty("find $src \
                         \( -name '*.js' -o -name '*.vue' \) \
+                        -not \( -path '**/node_modules/*' -o -path '**/coverage/*' \) \
                     | xargs xgettext \
                         --language=JavaScript \
                         --default-domain=core \
