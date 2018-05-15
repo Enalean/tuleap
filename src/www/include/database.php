@@ -18,40 +18,13 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-$GLOBALS['DEBUG_DBPHP_QUERY_COUNT'] = 0;
 if(!defined('CODENDI_DB_NULL')) define('CODENDI_DB_NULL', 0);
 if(!defined('CODENDI_DB_NOT_NULL')) define('CODENDI_DB_NOT_NULL', 1);
-
-$conn = null;
-/**
- * @deprecated
- */
-function db_connect() {
-    global $conn;
-    $conn = CodendiDataAccess::instance();
-}
-
-/**
- * Returns the connection object, or null if there is no connection
- *
- * @deprecated
- *
- * @return {resource} the connection, or null if no connection
- */
-function getConnection() {
-    global $conn;
-    if (isset($conn) && $conn) {
-        return $conn;
-    } else {
-        return null;
-    }
-}
 
 /**
  * @deprecated
  */
 function db_query($sql,$print=0) {
-    global $conn;
     if ($print) {
         print "<br>Query is: $sql<br>";
     }
@@ -62,8 +35,7 @@ function db_query($sql,$print=0) {
  * @deprecated
  */
 function db_query_params($sql, $params) {
-    global $conn;
-	$dar = $conn->query($sql, $params);
+	$dar = CodendiDataAccess::instance()->query($sql, $params);
     $GLOBALS['db_qhandle'] = $dar->getResult();
     if (db_numrows($GLOBALS['db_qhandle'])) {
         db_reset_result($GLOBALS['db_qhandle']);
@@ -75,13 +47,11 @@ function db_query_params($sql, $params) {
  * @deprecated
  */
 function db_numrows($qhandle) {
-    global $conn;
 	// return only if qhandle exists, otherwise 0
 	if ($qhandle) {
-                return @$conn->numRows($qhandle);
-	} else {
-		return 0;
+	    return @CodendiDataAccess::instance()->numRows($qhandle);
 	}
+	return 0;
 }
 
 /**
@@ -108,27 +78,19 @@ function db_numfields($lhandle) {
 /**
  * @deprecated
  */
-function db_fieldname($lhandle,$fnumber) {
-           return @mysql_field_name($lhandle,$fnumber);
-}
-
-/**
- * @deprecated
- */
 function db_affected_rows($qhandle) {
-	return @mysql_affected_rows();
+    return @CodendiDataAccess::instance()->affectedRows();
 }
 
 /**
  * @deprecated
  */
 function db_fetch_array($qhandle = 0) {
-    global $conn;
 	if ($qhandle) {
-		return @$conn->fetchArray($qhandle);
+	    return CodendiDataAccess::instance()->fetchArray($qhandle);
 	} else {
 		if ($GLOBALS['db_qhandle']) {
-			return @$conn->fetchArray($GLOBALS['db_qhandle']);
+			return CodendiDataAccess::instance()->fetchArray($GLOBALS['db_qhandle']);
 		} else {
 			return (array());
 		}
@@ -139,12 +101,7 @@ function db_fetch_array($qhandle = 0) {
  * @deprecated
  */
 function db_insertid($qhandle) {
-	global $conn;
-    if (isset($conn) && $conn) {
-        return @mysql_insert_id($conn->db);
-    } else {
-        return @mysql_insert_id();
-    }
+	return CodendiDataAccess::instance()->lastInsertId();
 }
 
 /**
@@ -155,11 +112,7 @@ function db_insertid($qhandle) {
  * @return String 
  */
 function db_error() {
-    $error = @mysql_error();
-    if ($error && !ForgeConfig::get('DEBUG_MODE')) {
-        $error = 'DB error';
-    }
-    return $error;
+    return CodendiDataAccess::instance()->isError();
 }
 
 /**
@@ -173,23 +126,14 @@ function db_error() {
  * @deprecated
  */
 function db_reset_result($qhandle,$row=0) {
-    global $conn;
-    return $conn->dataSeek($qhandle,$row);
+    return CodendiDataAccess::instance()->dataSeek($qhandle,$row);
 }
 
 /**
  * @deprecated
  */
 function db_escape_string($string,$qhandle=false) {
-  if (function_exists('mysql_real_escape_string')) {
-    if ($qhandle) {
-      return mysql_real_escape_string($string,$qhandle);
-    } else {
-      return mysql_real_escape_string($string);
-    }
-  } else {
-    return mysql_escape_string($string);
-  }
+    return substr(CodendiDataAccess::instance()->quoteSmart($string), 1, -1);
 }
 
 /**

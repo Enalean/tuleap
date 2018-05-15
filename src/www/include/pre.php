@@ -181,7 +181,6 @@ require_once('utils.php');
 
 //database abstraction
 require_once('database.php');
-db_connect();
 
 //security library
 require_once('session.php');

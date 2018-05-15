@@ -49,7 +49,6 @@ abstract class TuleapDbTestCase extends TuleapTestCase {
             $this->initDb();
         }
         $this->mysqli->select_db($GLOBALS['sys_dbname']);
-        db_connect();
     }
 
     public function skip() {
