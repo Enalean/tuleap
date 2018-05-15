@@ -84,7 +84,7 @@ Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, mod_dav_svn
 Requires: viewvc, viewvc-theme-tuleap >= 1.0.6
 Requires: python, MySQL-python
-Requires: mod_perl, perl-Digest-SHA, perl-DBI, perl-DBD-MySQL
+Requires: mod_perl, perl-Digest-SHA, perl-DBI, perl-DBD-MySQL, perl(Crypt::Eksblowfish::Bcrypt)
 Requires: tuleap-theme-flamingparrot
 Requires: sha1collisiondetector
 %description core-subversion
