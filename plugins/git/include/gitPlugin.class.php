@@ -221,7 +221,6 @@ class GitPlugin extends Plugin
 
         $this->addHook(Event::REGISTER_PROJECT_CREATION);
         $this->addHook(Event::GET_PROJECTID_FROM_URL);
-        $this->addHook('anonymous_access_to_script_allowed');
         $this->addHook(Event::IS_SCRIPT_HANDLED_FOR_RESTRICTED);
         $this->addHook(Event::GET_SERVICES_ALLOWED_FOR_RESTRICTED);
         $this->addHook(Event::PROJECT_ACCESS_CHANGE);
@@ -692,7 +691,7 @@ class GitPlugin extends Plugin
         return new Git_Backend_Gitolite($this->getGitoliteDriver(), $this->getLogger());
     }
 
-    private function getChainOfRouters()
+    protected function getChainOfRouters()
     {
         $repository_retriever = new RepositoryFromRequestRetriever(
             $this->getRepositoryFactory(),
@@ -1808,7 +1807,7 @@ class GitPlugin extends Plugin
         return new Git_Driver_Gerrit_GerritDriverFactory($this->getLogger());
     }
 
-    private function getPermissionsManager() {
+    protected function getPermissionsManager() {
         return PermissionsManager::instance();
     }
 
@@ -1951,26 +1950,10 @@ class GitPlugin extends Plugin
                 $this->getRepositoryFactory(),
                 $_SERVER['REQUEST_URI']
             );
-            if ($url->isSmartHTTP()) {
-                return;
-            }
 
             $project = $url->getProject();
             if ($project && ! $project->isError()) {
                 $params['project_id'] = $url->getProject()->getId();
-            }
-        }
-    }
-
-    public function anonymous_access_to_script_allowed($params) {
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            $url = new Git_URL(
-                ProjectManager::instance(),
-                $this->getRepositoryFactory(),
-                $_SERVER['REQUEST_URI']
-            );
-            if ($url->isSmartHTTP()) {
-                $params['anonymous_allowed'] = true;
             }
         }
     }
@@ -2486,6 +2469,15 @@ class GitPlugin extends Plugin
         $event->getRouteCollector()->addGroup(GIT_BASE_URL, function (FastRoute\RouteCollector $r) {
             $r->addRoute(['GET', 'POST'], '/admin[/[index.php]]', function () {
                 return $this->getAdminRouter();
+            });
+            $r->addRoute(['GET', 'POST'], '/{project_name}/{path:.*\.git|.*}/{smart_http:HEAD|info/refs\??.*|git-upload-pack|git-receive-pack|objects/info[^/]+|objects/[0-9a-f]{2}/[0-9a-f]{38}|pack/pack-[0-9a-f]{40}\.pack|pack/pack-[0-9a-f]{40}\.idx}', function () {
+                return new \Tuleap\Git\HTTP\HTTPController(
+                    $this->getLogger(),
+                    $this->getProjectManager(),
+                    $this->getRepositoryFactory(),
+                    $this->getGerritServerFactory(),
+                    $this->getPermissionsManager()
+                );
             });
             $r->addRoute(['GET', 'POST'], '/{path:.*}', function () {
                 return new \Tuleap\Git\GitPluginDefaultController($this->getChainOfRouters());

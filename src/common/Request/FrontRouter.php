@@ -33,6 +33,7 @@ use Tuleap\Password\Administration\PasswordPolicyUpdateController;
 use Tuleap\Password\Configuration\PasswordConfigurationDAO;
 use Tuleap\Password\Configuration\PasswordConfigurationRetriever;
 use Tuleap\Password\Configuration\PasswordConfigurationSaver;
+use URLVerificationFactory;
 
 class FrontRouter
 {
@@ -44,11 +45,16 @@ class FrontRouter
      * @var ThemeManager
      */
     private $theme_manager;
+    /**
+     * @var URLVerificationFactory
+     */
+    private $url_verification_factory;
 
-    public function __construct(EventManager $event_manager, ThemeManager $theme_manager)
+    public function __construct(EventManager $event_manager, ThemeManager $theme_manager, URLVerificationFactory $url_verification_factory)
     {
-        $this->event_manager = $event_manager;
-        $this->theme_manager = $theme_manager;
+        $this->event_manager            = $event_manager;
+        $this->theme_manager            = $theme_manager;
+        $this->url_verification_factory = $url_verification_factory;
     }
 
     public function route(HTTPRequest $request, BaseLayout $layout)
@@ -65,12 +71,23 @@ class FrontRouter
                 case FastRoute\Dispatcher::FOUND:
                     if (is_callable($route_info[1])) {
                         $handler = $route_info[1]();
-                        if ($handler instanceof Dispatchable) {
-                            $handler->process($route_info[2]);
-                        } elseif ($handler instanceof DispatchableWithRequest) {
-                            $handler->process($request, $layout, $route_info[2]);
+                        $url_verification = $this->url_verification_factory->getURLVerification($_SERVER);
+                        if ($handler instanceof DispatchableWithRequestNoAuthz) {
+                            if ($handler->userCanAccess($url_verification, $request, $route_info[2])) {
+                                $handler->process($request, $layout, $route_info[2]);
+                            } else {
+                                throw new ForbiddenException();
+                            }
                         } else {
-                            throw new \RuntimeException('No valid handler associated to route');
+                            $url_verification->assertValidUrl($_SERVER, $request);
+
+                            if ($handler instanceof Dispatchable) {
+                                $handler->process($route_info[2]);
+                            } elseif ($handler instanceof DispatchableWithRequest) {
+                                $handler->process($request, $layout, $route_info[2]);
+                            } else {
+                                throw new \RuntimeException('No valid handler associated to route');
+                            }
                         }
                     } else {
                         throw new \RuntimeException('No valid handler associated to route');

@@ -239,9 +239,11 @@ $HTML = $theme_manager->getTheme($current_user);
 // Check URL for valid hostname and valid protocol
 
 if (!IS_SCRIPT) {
-    $urlVerifFactory = new URLVerificationFactory();
-    $urlVerif = $urlVerifFactory->getURLVerification($_SERVER);
-    $urlVerif->assertValidUrl($_SERVER, $request);
+    if (! defined('DISABLE_URL_VERIFICATION')) {
+        $urlVerifFactory = new URLVerificationFactory($event_manager);
+        $urlVerif = $urlVerifFactory->getURLVerification($_SERVER);
+        $urlVerif->assertValidUrl($_SERVER, $request);
+    }
 
     if (! $current_user->isAnonymous()) {
         header('X-Tuleap-Username: '.$current_user->getUserName());

@@ -10,7 +10,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.3\n"
 
 #, php-format
 msgid "%s commit was pushed on %s"
@@ -72,6 +71,9 @@ msgstr "Personnes notifiées"
 msgid "Permission"
 msgstr "Permission"
 
+msgid "Repository does not exist"
+msgstr "Le dépôt n'existe pas"
+
 #, php-format
 msgid "User \"%s\" successfully added to notifications"
 msgstr "L'utilisateur \"%s\" a été ajouté aux notifications"
@@ -79,6 +81,9 @@ msgstr "L'utilisateur \"%s\" a été ajouté aux notifications"
 #, php-format
 msgid "User %s has been removed from notifications"
 msgstr "L'utilisateur %s a été supprimé des notifications"
+
+msgid "User cannot access repository"
+msgstr "L'utilisateur ne peut pas accèder au dépôt"
 
 #, php-format
 msgid "User group \"%s\" has been removed from notifications"

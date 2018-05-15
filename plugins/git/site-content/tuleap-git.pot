@@ -58,12 +58,18 @@ msgstr ""
 msgid "Permission"
 msgstr ""
 
+msgid "Repository does not exist"
+msgstr ""
+
 #, php-format
 msgid "User \"%s\" successfully added to notifications"
 msgstr ""
 
 #, php-format
 msgid "User %s has been removed from notifications"
+msgstr ""
+
+msgid "User cannot access repository"
 msgstr ""
 
 #, php-format

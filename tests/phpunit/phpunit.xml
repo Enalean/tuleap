@@ -3,6 +3,7 @@
          failOnRisky="true" beStrictAboutChangesToGlobalState="true" beStrictAboutTestsThatDoNotTestAnything="true">
     <php>
         <ini name="date.timezone" value="Europe/Paris"/>
+        <ini name="memory_limit" value="256M" /><!-- Needed for code coverage generation in PHP 5.6 -->
     </php>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
