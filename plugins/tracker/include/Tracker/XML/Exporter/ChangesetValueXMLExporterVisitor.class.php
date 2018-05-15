@@ -166,4 +166,9 @@ class Tracker_XML_Exporter_ChangesetValueXMLExporterVisitor implements Tracker_A
     {
         return $this->computed_exporter;
     }
+
+    public function visitExternalField(Tracker_Artifact_ChangesetValue $changeset_value)
+    {
+        return $this->unknown_exporter;
+    }
 }
