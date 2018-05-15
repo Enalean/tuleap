@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,18 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\ArchiveDeletedItems;
+namespace Tuleap\LDAP;
 
 use BackendLogger;
 use ForgeConfig;
 use TruncateLevelLogger;
 
-class ArchiveLogger extends TruncateLevelLogger
+class LdapLogger extends TruncateLevelLogger
 {
 
     public function __construct()
     {
-        $file_path = ForgeConfig::get('codendi_log') .'/archive_deleted_item.log';
+        $file_path = ForgeConfig::get('codendi_log') .'/ldap_syslog';
 
         $this->createLogFileForAppUser($file_path);
 
