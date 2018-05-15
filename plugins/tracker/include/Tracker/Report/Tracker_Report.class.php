@@ -618,6 +618,9 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
             if ($dropdown_type === self::TYPE_CRITERIA && ! $field->canBeUsedAsReportCriterion()) {
                 continue;
             }
+            if ($dropdown_type === self::TYPE_TABLE && ! $field->canBeUsedAsReportColumn()) {
+                continue;
+            }
 
             if ($field->userCanRead() && $field->isUsed()) {
                 $fields_for_criteria[$field->getId()] = $field;

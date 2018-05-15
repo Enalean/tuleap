@@ -1436,7 +1436,13 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     ) {
     }
 
-    public function canBeUsedAsReportCriterion() {
+    public function canBeUsedAsReportCriterion()
+    {
+        return true;
+    }
+
+    public function canBeUsedAsReportColumn()
+    {
         return true;
     }
 
