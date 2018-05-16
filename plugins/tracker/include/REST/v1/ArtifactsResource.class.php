@@ -59,6 +59,7 @@ use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionLimitReachedExcep
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionManager;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\DeletionOfArtifactsIsNotAllowedException;
 use Tuleap\Tracker\Exception\MoveArtifactNotDoneException;
+use Tuleap\Tracker\Exception\MoveArtifactSemanticTitleMissingException;
 use Tuleap\Tracker\Exception\SemanticTitleNotDefinedException;
 use Tuleap\Tracker\REST\Artifact\ArtifactBatchQueryConverter;
 use Tuleap\Tracker\REST\Artifact\MalformedArtifactBatchQueryConverterException;
@@ -708,6 +709,7 @@ class ArtifactsResource extends AuthenticatedResource {
      * <ul>
      * <li>User must be admin of both source and target trackers in order to be able to move an artifact.</li>
      * <li>Artifact must not be linked to a FRS release.</li>
+     * <li>Both trackers must have the title semantic defined and the artifact must have a title set</li>
      * </ul>
      *
      * @url PATCH {id}
@@ -764,13 +766,22 @@ class ArtifactsResource extends AuthenticatedResource {
         } catch (ArtifactsDeletionLimitReachedException $limit_reached_exception) {
             throw new RestException(429, $limit_reached_exception->getMessage());
         } catch (MoveArtifactNotDoneException $exception) {
-            $number_of_deletions = $this->user_deletion_retriever->getNumberOfArtifactsDeletionsForUserInTimePeriod($user);
-            $remaining_deletions = (int) ($limit - $number_of_deletions);
+            $remaining_deletions = $this->getRemainingNumberOfDeletion($user, $limit);
             throw new RestException(500, $exception->getMessage());
+        } catch (MoveArtifactSemanticTitleMissingException $exception) {
+            $remaining_deletions = $this->getRemainingNumberOfDeletion($user, $limit);
+            throw new RestException(400, $exception->getMessage());
         } finally {
             Header::sendRateLimitHeaders($limit, $remaining_deletions);
             $this->sendAllowHeadersForArtifact();
         }
+    }
+
+    private function getRemainingNumberOfDeletion(PFUser $user, $limit)
+    {
+        $number_of_deletions = $this->user_deletion_retriever->getNumberOfArtifactsDeletionsForUserInTimePeriod($user);
+
+        return (int)($limit - $number_of_deletions);
     }
 
     /**
@@ -896,15 +907,16 @@ class ArtifactsResource extends AuthenticatedResource {
         array $values,
         array $values_by_field,
         $from_artifact
-    ) {
+    )
+    {
         $nb_sources_to_create_artifact = 0;
-        if (! empty($values)) {
+        if (!empty($values)) {
             $nb_sources_to_create_artifact++;
         }
-        if (! empty($values_by_field)) {
+        if (!empty($values_by_field)) {
             $nb_sources_to_create_artifact++;
         }
-        if (! empty($from_artifact)) {
+        if (!empty($from_artifact)) {
             $nb_sources_to_create_artifact++;
         }
         if ($nb_sources_to_create_artifact > 1) {

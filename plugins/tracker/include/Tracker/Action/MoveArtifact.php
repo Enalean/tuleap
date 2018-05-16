@@ -30,6 +30,8 @@ use Tracker_XML_Exporter_ArtifactXMLExporter;
 use Tracker_XML_Updater_ChangesetXMLUpdater;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionManager;
 use Tuleap\Tracker\Exception\MoveArtifactNotDoneException;
+use Tuleap\Tracker\Exception\MoveArtifactSemanticTitleMissingException;
+use Tuleap\Tracker\Exception\MoveArtifactSemanticTitleValueMissingException;
 
 class MoveArtifact
 {
@@ -76,10 +78,17 @@ class MoveArtifact
      * @throws \Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionLimitReachedException
      * @throws \Tuleap\Tracker\Artifact\ArtifactsDeletion\DeletionOfArtifactsIsNotAllowedException
      * @throws MoveArtifactNotDoneException
+     * @throws MoveArtifactSemanticTitleMissingException
      */
     public function move(Tracker_Artifact $artifact, Tracker $target_tracker, PFUser $user)
     {
         $this->artifact_priority_manager->startTransaction();
+
+        $source_tracker = $artifact->getTracker();
+        if (! $source_tracker->hasSemanticsTitle() || ! $target_tracker->hasSemanticsTitle()) {
+            $this->artifact_priority_manager->rollback();
+            throw new MoveArtifactSemanticTitleMissingException();
+        }
 
         $xml_artifacts = $this->getXMLRootNode();
         $xml_artifacts = $this->xml_exporter->exportSnapshotWithoutComments(
@@ -91,6 +100,7 @@ class MoveArtifact
         $limit       = $this->artifacts_deletion_manager->deleteArtifactBeforeMoveOperation($artifact, $user);
 
         $this->xml_updater->updateForMoveAction(
+            $source_tracker,
             $target_tracker,
             $xml_artifacts->artifact,
             $user,

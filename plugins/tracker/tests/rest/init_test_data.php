@@ -27,5 +27,4 @@ use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigDAO;
 require_once __DIR__ . '/../../include/autoload.php';
 
 $config_dao = new ArtifactsDeletionConfigDAO();
-
-$config_dao->updateDeletableArtifactsLimit(1);
+$config_dao->updateDeletableArtifactsLimit(2);

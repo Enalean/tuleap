@@ -22,27 +22,63 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Tracker\Tests\REST\ArtifactsDeletion;
+namespace Tuleap\Tracker\Tests\REST\ArtifactsActions;
 
-use Guzzle\Http\Exception\ClientErrorResponseException;
-use RestBase;
+use Tuleap\Tracker\Tests\REST\TrackerBase;
 
-class ArtifactsDeletionTest extends RestBase
+require_once __DIR__.'/../bootstrap.php';
+
+class ArtifactsActionsTest extends TrackerBase
 {
-    public function setUp()
+    public function testMoveArtifact()
     {
-        parent::setUp();
-    }
+        $artifact_id = end($this->base_artifact_ids);
+        $body        = json_encode(
+            [
+                "move" => [
+                    "tracker_id" => $this->move_tracker_id
+                ]
+            ]
+        );
 
-    public function testDeleteArtifacts()
-    {
-        $response = $this->performArtifactDeletion(3);
+        $response = $this->getResponse(
+            $this->client->patch("artifacts/$artifact_id", null, $body)
+        );
 
         $this->assertEquals($response->getStatusCode(), 200);
 
         $this->assertEquals(
             $response->getHeader('x-ratelimit-limit')->toArray()[0],
+            "2"
+        );
+
+        $this->assertEquals(
+            $response->getHeader('x-ratelimit-remaining')->toArray()[0],
             "1"
+        );
+
+        $artifact_response = $this->getResponse(
+            $this->client->get("artifacts/$artifact_id")
+        );
+
+        $this->assertEquals($artifact_response->getStatusCode(), 200);
+        $artifact_json = $artifact_response->json();
+
+        $this->assertEquals($artifact_json['tracker']['id'], $this->move_tracker_id);
+    }
+
+    /**
+     * @depends testMoveArtifact
+     */
+    public function testDeleteArtifacts()
+    {
+        $response = $this->performArtifactDeletion($this->delete_artifact_ids[1]);
+
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $this->assertEquals(
+            $response->getHeader('x-ratelimit-limit')->toArray()[0],
+            "2"
         );
 
         $this->assertEquals(
@@ -59,7 +95,7 @@ class ArtifactsDeletionTest extends RestBase
         $this->expectExceptionCode(429);
         $this->expectExceptionMessage('Too many requests: The limit of artifacts deletions has been reached for the previous 24 hours.');
 
-        $this->performArtifactDeletion(4);
+        $this->performArtifactDeletion($this->delete_artifact_ids[2]);
     }
 
     private function performArtifactDeletion($artifact_id)
