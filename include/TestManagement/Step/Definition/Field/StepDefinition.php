@@ -38,6 +38,7 @@ use UserManager;
 class StepDefinition extends Tracker_FormElement_Field implements TrackerFormElementExternalField
 {
     const START_RANK = 1;
+    const TYPE       = 'ttmstepdef';
 
     public function accept(Tracker_FormElement_FieldVisitor $visitor)
     {
@@ -74,6 +75,11 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
     public static function getFactoryIconCreate()
     {
         return TESTMANAGEMENT_BASE_URL . '/themes/default/images/ic/tick-white--plus.png';
+    }
+
+    public static function getFactoryUniqueField()
+    {
+        return true;
     }
 
     /**

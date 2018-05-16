@@ -27,6 +27,7 @@ use Tuleap\TestManagement\FirstConfigCreator;
 use Tuleap\TestManagement\Nature\NatureCoveredByOverrider;
 use Tuleap\TestManagement\Nature\NatureCoveredByPresenter;
 use Tuleap\TestManagement\REST\ResourcesInjector;
+use Tuleap\TestManagement\Step\Definition\Field\StepDefinition;
 use Tuleap\TestManagement\TestManagementPluginInfo;
 use Tuleap\TestManagement\UserIsNotAdministratorException;
 use Tuleap\TestManagement\XMLImport;
@@ -36,14 +37,12 @@ use Tuleap\Tracker\Events\ArtifactLinkTypeCanBeUnused;
 use Tuleap\Tracker\Events\GetEditableTypesInProject;
 use Tuleap\Tracker\Events\XMLImportArtifactLinkTypeCanBeDisabled;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
+use Tuleap\Tracker\FormElement\View\Admin\FilterFormElementsThatCanBeCreatedForTracker;
 
 require_once 'constants.php';
 
 class testmanagementPlugin extends Plugin
 {
-    /**
-     * Plugin constructor
-     */
     public function __construct($id)
     {
         parent::__construct($id);
@@ -85,6 +84,7 @@ class testmanagementPlugin extends Plugin
             $this->addHook(ArtifactLinkTypeCanBeUnused::NAME);
             $this->addHook(XMLImportArtifactLinkTypeCanBeDisabled::NAME);
             $this->addHook(Tracker_FormElementFactory::GET_CLASSNAMES);
+            $this->addHook(FilterFormElementsThatCanBeCreatedForTracker::NAME);
         }
 
         return parent::getHooksAndCallbacks();
@@ -116,7 +116,7 @@ class testmanagementPlugin extends Plugin
     /** @see Tracker_FormElementFactory::GET_CLASSNAMES */
     public function tracker_formelement_get_classnames($params)
     {
-        $params['fields']['ttmstepdef'] = \Tuleap\TestManagement\Step\Definition\Field\StepDefinition::class;
+        $params['fields'][StepDefinition::TYPE] = StepDefinition::class;
     }
 
     public function isUsedByProject(Project $project)
@@ -442,6 +442,14 @@ class testmanagementPlugin extends Plugin
             $event->setTypeIsUnusable();
         } else {
             $event->setMessage(NatureCoveredByPresenter::NATURE_COVERED_BY . " type is forced because the service testmanagement is used.");
+        }
+    }
+
+    public function filterFormElementsThatCanBeCreatedForTracker(FilterFormElementsThatCanBeCreatedForTracker $event)
+    {
+        $project = $event->getTracker()->getProject();
+        if (! $project->usesService($this->getServiceShortname())) {
+            $event->removeByType(StepDefinition::TYPE);
         }
     }
 }
