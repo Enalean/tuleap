@@ -20,16 +20,28 @@
 
 namespace Tuleap\TestManagement\Step;
 
+use Project;
+
 class StepPresenter
 {
     public $id;
-    public $description;
+    public $raw_description;
+    public $purified_description;
     public $rank;
 
-    public function __construct(Step $step)
+    public function __construct(Step $step, Project $project)
     {
-        $this->id          = $step->getId();
-        $this->description = $step->getDescription();
-        $this->rank        = $step->getRank();
+
+        $this->id              = $step->getId();
+        $this->rank            = $step->getRank();
+        $this->raw_description = $step->getDescription();
+
+        $purifier = \Codendi_HTMLPurifier::instance();
+
+        $this->purified_description = $purifier->purify(
+            $step->getDescription(),
+            CODENDI_PURIFIER_BASIC,
+            $project->getID()
+        );
     }
 }

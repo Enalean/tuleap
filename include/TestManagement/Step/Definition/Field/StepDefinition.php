@@ -21,6 +21,7 @@
 namespace Tuleap\TestManagement\Step\Definition\Field;
 
 use DataAccessObject;
+use ReferenceManager;
 use TemplateRendererFactory;
 use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
@@ -31,6 +32,7 @@ use Tracker_Report_Criteria;
 use Tuleap\TestManagement\Step\Step;
 use Tuleap\TestManagement\Step\StepPresenter;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
+use UserManager;
 
 class StepDefinition extends Tracker_FormElement_Field implements TrackerFormElementExternalField
 {
@@ -369,7 +371,22 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         $value,
         Tracker_Artifact_ChangesetValue $previous_changesetvalue = null
     ) {
-        return $this->getValueDao()->create($changeset_value_id, $value);
+        return $this->getValueDao()->create($changeset_value_id, $value) &&
+            $this->extractCrossRefs($artifact, $value);
+    }
+
+    private function extractCrossRefs(Tracker_Artifact $artifact, array $submitted_steps)
+    {
+        $concatenated_descriptions = implode(PHP_EOL, $submitted_steps['description']);
+
+        return ReferenceManager::instance()->extractCrossRef(
+            $concatenated_descriptions,
+            $artifact->getId(),
+            Tracker_Artifact::REFERENCE_NATURE,
+            $this->getTracker()->getGroupID(),
+            $this->getCurrentUser()->getId(),
+            $this->getTracker()->getItemName()
+        );
     }
 
     /**
@@ -428,7 +445,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
 
         return array_map(
             function (Step $step) {
-                return new StepPresenter($step);
+                return new StepPresenter($step, $this->getTracker()->getProject());
             },
             $steps
         );
