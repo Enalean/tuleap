@@ -293,6 +293,10 @@ msgstr ""
 msgid "This is an automated test"
 msgstr ""
 
+#: src/app/execution/execution-detail.tpl.html
+msgid "This test has no description. Please edit it."
+msgstr ""
+
 #: src/app/socket/socket-disconnect.tpl.html
 msgid "You are disconnected from real time. Please reload your page."
 msgstr ""

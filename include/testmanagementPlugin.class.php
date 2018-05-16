@@ -89,6 +89,11 @@ class testmanagementPlugin extends Plugin
         return parent::getHooksAndCallbacks();
     }
 
+    public function getDependencies()
+    {
+        return ['tracker'];
+    }
+
     public function getServiceShortname() {
         return 'plugin_testmanagement';
     }

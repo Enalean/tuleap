@@ -114,6 +114,10 @@
         <section class="tlp-pane-section current-test-content">
             <execution-detail-just-updated></execution-detail-just-updated>
             <h2>Steps</h2>
+            <p class="current-test-description-empty-state"
+                ng-if="execution.definition.description.length === 0"
+                translate
+            >This test has no description. Please edit it.</p>
             <div ng-bind-html="execution.definition.description"></div>
         </section>
 

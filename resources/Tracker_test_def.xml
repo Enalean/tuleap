@@ -17,7 +17,7 @@
           <description><![CDATA[One line description of the artifact]]></description>
           <properties maxchars="150" size="80"/>
         </formElement>
-        <formElement type="text" ID="F6818" rank="1" required="1">
+        <formElement type="text" ID="F6818" rank="1">
           <name>details</name>
           <label><![CDATA[Description]]></label>
           <description><![CDATA[A full description of the artifact]]></description>
