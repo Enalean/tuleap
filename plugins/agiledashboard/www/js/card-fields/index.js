@@ -1,7 +1,5 @@
-import angular              from 'angular';
-import ngSanitize           from 'angular-sanitize';
-import 'angular-gettext';
-import 'angular-moment';
+import angular from 'angular';
+import ngSanitize from 'angular-sanitize';
 
 import HighlightFilter            from './highlight-filter.js';
 import CardFieldsDirective        from './card-fields-directive.js';
@@ -11,11 +9,7 @@ import tuleapCardLinkDirective    from './tuleap-card-link-directive.js';
 import cardComputedFieldDirective from './card-computed-field/card-computed-field-directive.js';
 import cardTextFieldDirective     from './card-text-field/card-text-field-directive.js';
 
-export default angular.module('card-fields', [
-    ngSanitize,
-    'gettext',
-    'angularMoment',
-])
+export default angular.module('card-fields', [ngSanitize])
 .service('CardFieldsService', CardFieldsService)
 .directive('cardFields', CardFieldsDirective)
 .directive('tuleapSimpleField', tuleapSimpleFieldDirective)
