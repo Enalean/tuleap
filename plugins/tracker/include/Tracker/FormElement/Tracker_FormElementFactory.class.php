@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Tracker\FormElement\Field\Shareable\PropagatePropertiesDao;
+use Tuleap\Tracker\FormElement\View\Admin\FilterFormElementsThatCanBeCreatedForTracker;
 
 require_once TRACKER_BASE_DIR . '/tracker_permissions.php';
 require_once('common/widget/Widget_Static.class.php');
@@ -1388,31 +1389,33 @@ class Tracker_FormElementFactory {
         $w->display();
     }
 
-    protected function fetchFactoryButtons($klasses, $tracker) {
+    private function fetchFactoryButtons(array $klasses, Tracker $tracker)
+    {
+        $event = new FilterFormElementsThatCanBeCreatedForTracker($klasses, $tracker);
+        $this->getEventManager()->processEvent($event);
+
         $html = '';
         $html .= '<div class="tracker-admin-palette-content">';
-        $i = 0;
-        foreach($klasses as $type => $klass) {
+        foreach($event->getKlasses() as $type => $klass) {
             $html .= $this->getFactoryButton($klass, 'create-formElement['.  urlencode($type) .']', $tracker);
-            ++$i;
         }
         $html .= '</div>';
+
         return $html;
     }
 
-    public function getFactoryButton($klass, $name, $tracker, $label = null, $description = null, $icon = null, $isUnique = null) {
+    public function getFactoryButton($klass, $name, Tracker $tracker, $label = null, $description = null, $icon = null, $isUnique = null) {
         $hp = Codendi_HTMLPurifier::instance();
-        //Waiting for PHP5.3 and $klass::staticMethod() and Late Static Binding
         $button = '';
         $button_class = 'button';
         if (!$label) {
-            eval("\$label = $klass::getFactoryLabel();");
+            $label = $klass::getFactoryLabel();
         }
         if ($description === null) {
-            eval("\$description = $klass::getFactoryDescription();");
+            $description = $klass::getFactoryDescription();
         }
         if (!$icon) {
-            eval("\$icon = $klass::getFactoryIconCreate();");
+            $icon = $klass::getFactoryIconCreate();
         }
         if ($this->isFieldUniqueAndAlreadyUsed($klass, $tracker, $isUnique)) {
             $button_class = 'button_disabled';
