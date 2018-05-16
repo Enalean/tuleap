@@ -106,14 +106,29 @@ class MinimalDefinitionRepresentation
     }
 
     /**
-     * @param $shortname
+     * @param string $field_shortname
      *
      * @return string
      */
     protected function getTextFieldValue($field_shortname)
     {
         // We assume that the given field will always be type = text|string
-        /** @var \Tracker_FormElement_Field_Text $field */
+        /** @var \Tracker_Artifact_ChangesetValue_Text $field_value */
+        $field_value = $this->getFieldValue($field_shortname);
+        if (! $field_value) {
+            return '';
+        }
+
+        return $field_value->getText();
+    }
+
+    /**
+     * @param string $field_shortname
+     *
+     * @return \Tracker_Artifact_ChangesetValue|null
+     */
+    protected function getFieldValue($field_shortname)
+    {
         $field = $this->form_element_factory->getUsedFieldByNameForUser(
             $this->tracker_id,
             $field_shortname,
@@ -121,16 +136,10 @@ class MinimalDefinitionRepresentation
         );
 
         if (! $field) {
-            return '';
+            return null;
         }
 
-        /** @var \Tracker_Artifact_ChangesetValue_Text $field_value */
-        $field_value = $this->artifact->getValue($field, $this->changeset);
-        if (! $field_value) {
-            return '';
-        }
-
-        return $field_value->getText();
+        return $this->artifact->getValue($field, $this->changeset);
     }
 
     private function getCategory()

@@ -20,20 +20,27 @@
 
 namespace Tuleap\TestManagement\REST\v1;
 
-use \Tracker_Artifact;
+use PFUser;
+use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
-use \Tracker_FormElementFactory;
-use \PFUser;
+use Tracker_FormElementFactory;
+use Tuleap\TestManagement\Step\Definition\Field\StepDefinitionChangesetValue;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
 
 class DefinitionRepresentation extends MinimalDefinitionRepresentation
 {
     const FIELD_DESCRIPTION = 'details';
+    const FIELD_STEPS       = 'steps';
 
     /**
      * @var String
      */
     public $description;
+
+    /**
+     * @var array {@type Tuleap\TestManagement\REST\v1\StepDefinitionRepresentation}
+     */
+    public $steps;
 
     /**
      * @var ArtifactRepresentation|null
@@ -59,5 +66,17 @@ class DefinitionRepresentation extends MinimalDefinitionRepresentation
         }
 
         $this->requirement = $artifact_representation;
+
+        $this->steps = [];
+        /** @var StepDefinitionChangesetValue $value */
+        $value = $this->getFieldValue(self::FIELD_STEPS);
+        if ($value) {
+            foreach ($value->getValue() as $step) {
+                $representation = new StepDefinitionRepresentation();
+                $representation->build($step);
+
+                $this->steps[] = $representation;
+            }
+        }
     }
 }
