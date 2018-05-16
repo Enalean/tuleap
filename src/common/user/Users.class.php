@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,15 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
+
 /**
  * First class collection of users
  */
 class Users {
 
-    /** @var DataAccessResult */
+    /** @var LegacyDataAccessResultInterface */
     private $dar;
 
-    public function __construct(DataAccessResult $dar = null) {
+    public function __construct(LegacyDataAccessResultInterface $dar = null) {
         $this->dar = $dar;
     }
 

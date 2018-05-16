@@ -1,6 +1,6 @@
 <?php
 #
-# Copyright (c) Enalean, 2012-2017. All Rights Reserved.
+# Copyright (c) Enalean, 2012-2018. All Rights Reserved.
 # Copyright (c) STMicroelectronics, 2005. All Rights Reserved.
 
  # Originally written by Jean-Philippe Giola, 2005
@@ -49,7 +49,7 @@ function plugin_forumml_get_message_headers($id_message) {
 }
 
 // Display search results
-function plugin_forumml_show_search_results($p, DataAccessResult $result,$group_id,$list_id)
+function plugin_forumml_show_search_results($p, \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface $result,$group_id,$list_id)
 {
 	
 	echo "<table width='100%'>

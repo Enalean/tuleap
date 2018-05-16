@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2018. All rights reserved
  * Copyright (c) STMicroelectronics 2011. All rights reserved
  *
  * Tuleap is free software; you can redistribute it and/or modify
@@ -16,8 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('include/DataAccessObject.class.php');
-
 /**
  *  Data Access Object for Project history
  */
@@ -26,7 +25,7 @@ class ProjectHistoryDao extends DataAccessObject {
     /**
      * Constructor of the class
      *
-     * @param DataAccess $da instance of the DataAccess class
+     * @param \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface $da instance of the DataAccess class
      *
      * @return void
      */

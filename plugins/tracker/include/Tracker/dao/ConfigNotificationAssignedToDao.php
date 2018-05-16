@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,9 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface;
+
 class ConfigNotificationAssignedToDao extends DataAccessObject
 {
-    public function __construct(DataAccess $da = null)
+    public function __construct(LegacyDataAccessInterface $da = null)
     {
         parent::__construct($da);
         $this->enableExceptionsOnError();

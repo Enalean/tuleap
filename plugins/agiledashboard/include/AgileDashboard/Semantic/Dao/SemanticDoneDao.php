@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright Enalean (c) 2017. All rights reserved.
+ * Copyright Enalean (c) 2017-2018. All rights reserved.
  *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
  * owners.
  *
@@ -24,13 +24,13 @@
 
 namespace Tuleap\AgileDashboard\Semantic\Dao;
 
-use DataAccess;
 use DataAccessException;
 use DataAccessObject;
+use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface;
 
 class SemanticDoneDao extends DataAccessObject
 {
-    public function __construct(DataAccess $da = null)
+    public function __construct(LegacyDataAccessInterface $da = null)
     {
         parent::__construct($da);
         $this->enableExceptionsOnError();

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All rights reserved
+ * Copyright (c) Enalean, 2016-2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -20,18 +20,18 @@
 
 namespace Tuleap\Tracker\Artifact\Attachment;
 
-use DataAccessResult;
+use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 
 class PaginatedTemporaryFiles {
 
     private $total_count;
 
     /**
-     * @var DataAccessResult
+     * @var LegacyDataAccessResultInterface
      */
     private $files;
 
-    public function __construct(DataAccessResult $files, $total_count) {
+    public function __construct(LegacyDataAccessResultInterface $files, $total_count) {
         $this->files       = $files;
         $this->total_count = $total_count;
     }

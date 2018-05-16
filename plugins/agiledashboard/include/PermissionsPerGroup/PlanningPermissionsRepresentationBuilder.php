@@ -20,12 +20,12 @@
 
 namespace Tuleap\AgileDashboard\PermissionsPerGroup;
 
-use DataAccessResult;
 use PermissionsManager;
 use Planning;
 use PlanningPermissionsManager;
 use Project;
 use ProjectUGroup;
+use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRepresentationBuilder;
 
 class PlanningPermissionsRepresentationBuilder
@@ -106,7 +106,7 @@ class PlanningPermissionsRepresentationBuilder
         return $planning_prioritizers;
     }
 
-    private function extractDefaultPermissions(DataAccessResult $default_granted_ugroups)
+    private function extractDefaultPermissions(LegacyDataAccessResultInterface $default_granted_ugroups)
     {
         $default_granted_ugroups_list = array();
 

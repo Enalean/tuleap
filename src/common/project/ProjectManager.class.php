@@ -18,6 +18,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\Project\Webhook\Log\StatusLogger as WebhookStatusLogger;
@@ -783,7 +784,7 @@ class ProjectManager {
         return $this->getPaginatedProjects($matching_projects, $total_size);
     }
 
-    private function getPaginatedProjects(DataAccessResult $result, $total_size)
+    private function getPaginatedProjects(LegacyDataAccessResultInterface $result, $total_size)
     {
         $projects = array();
         foreach ($result as $row) {

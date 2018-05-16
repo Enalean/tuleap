@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,11 +20,11 @@
 
 namespace Tuleap\Bugzilla\Reference;
 
-use DataAccess;
+use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface;
 
 class Dao extends \DataAccessObject
 {
-    public function __construct(DataAccess $da = null)
+    public function __construct(LegacyDataAccessInterface $da = null)
     {
         parent::__construct($da);
         $this->enableExceptionsOnError();

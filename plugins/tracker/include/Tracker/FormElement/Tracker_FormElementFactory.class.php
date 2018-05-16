@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 use Tuleap\Tracker\FormElement\Field\Shareable\PropagatePropertiesDao;
 
 require_once TRACKER_BASE_DIR . '/tracker_permissions.php';
@@ -924,7 +925,8 @@ class Tracker_FormElementFactory {
      *
      * @return array All text formElements used by the tracker
      */
-    protected function getCachedInstancesFromDAR(DataAccessResult $dar) {
+    protected function getCachedInstancesFromDAR(LegacyDataAccessResultInterface $dar)
+    {
         $form_elements = array();
         foreach($dar as $row) {
             $form_elements[] = $this->getCachedInstanceFromRow($row);

@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright Enalean (c) 2018. All rights reserved.
  * Copyright (c) STMicroelectronics 2012. All rights reserved
  *
  * Tuleap is free software; you can redistribute it and/or modify
@@ -16,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface;
+
 /**
  * DAO class for CVS statistics
  */
@@ -26,12 +29,12 @@ class Statistics_ScmCvsDao extends DataAccessObject {
     /**
      * Constructor of the class
      *
-     * @param DataAccess $da      Data access details
-     * @param Integer    $groupId Project Id
+     * @param LegacyDataAccessInterface $da Data access details
+     * @param Integer $groupId Project Id
      *
      * @return void
      */
-    function __construct(DataAccess $da, $groupId = null) {
+    function __construct(LegacyDataAccessInterface $da, $groupId = null) {
         parent::__construct($da);
         if ($groupId) {
             $this->groupFilter = ' AND group_id='.$this->da->escapeInt($groupId);

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All rights reserved
+ * Copyright (c) Enalean, 2017-2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -20,10 +20,10 @@
 
 namespace Tuleap\Dashboard\Widget;
 
-use DataAccess;
 use DataAccessObject;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\User\UserDashboardController;
+use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface;
 use Tuleap\Widget\WidgetFactory;
 
 class DashboardWidgetDao extends DataAccessObject
@@ -40,7 +40,7 @@ class DashboardWidgetDao extends DataAccessObject
 
     public function __construct(
         WidgetFactory $widget_factory,
-        DataAccess $da = null
+        LegacyDataAccessInterface $da = null
     ) {
         parent::__construct($da);
         $this->enableExceptionsOnError();

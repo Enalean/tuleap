@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 
 class Search_SearchForum {
     const NAME = 'forums';
@@ -42,7 +44,7 @@ class Search_SearchForum {
         return $this->getSearchForumResultPresenter($dao_results, $query->getWords(), $maybe_more_results);
     }
 
-    private function getSearchForumResultPresenter(DataAccessResult $results, $words, $maybe_more_results) {
+    private function getSearchForumResultPresenter(LegacyDataAccessResultInterface $results, $words, $maybe_more_results) {
         return new Search_SearchResultsPresenter(
             new Search_SearchResultsIntroPresenter($results, $words),
             $this->getResultsPresenters($results),
@@ -51,7 +53,7 @@ class Search_SearchForum {
         );
     }
 
-    private function getResultsPresenters(DataAccessResult $results) {
+    private function getResultsPresenters(LegacyDataAccessResultInterface $results) {
         $results_presenters = array();
 
         foreach ($results as $result) {
