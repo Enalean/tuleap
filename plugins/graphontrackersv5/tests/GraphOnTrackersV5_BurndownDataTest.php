@@ -1,6 +1,6 @@
 <?php
 /**
- *  Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ *  Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  *   This file is a part of Tuleap.
  *
@@ -25,8 +25,8 @@ use TimePeriodWithoutWeekEnd;
 use Tracker_Chart_Burndown;
 use TuleapTestCase;
 
-require_once(dirname(__FILE__) . '/../include/autoload.php');
-require_once(dirname(__FILE__) . '/../../tracker/include/autoload.php');
+require_once __DIR__ . '/../include/autoload.php';
+require_once __DIR__ . '/../../tracker/include/trackerPlugin.class.php';
 
 class GraphOnTrackersV5BurndownDataTest extends TuleapTestCase
 {

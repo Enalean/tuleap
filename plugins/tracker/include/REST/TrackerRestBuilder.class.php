@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -194,7 +194,7 @@ class Tracker_REST_TrackerRestBuilder {
             if ($field instanceof Tracker_FormElement_Field_Date) {
                 $field_representation = new Tracker_REST_FieldDateRepresentation();
             } elseif ($field instanceof Tracker_FormElement_Field_OpenList) {
-                $field_representation = new Tracker_REST_FieldOPenListRepresentation();
+                $field_representation = new Tracker_REST_FieldOpenListRepresentation();
             } else {
                 $field_representation = new Tracker_REST_FieldRepresentation();
             }

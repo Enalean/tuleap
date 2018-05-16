@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,7 +19,7 @@
  */
 
 require_once dirname(__FILE__) .'/../include/autoload.php';
-require_once TRACKER_BASE_DIR .'/../include/autoload.php';
+require_once __DIR__ .'/../../tracker/include/trackerPlugin.class.php';
 
 class SystemEvent_FULLTEXTSEARCH_TRACKER_REINDEXTest extends TuleapTestCase {
 

@@ -43,7 +43,7 @@ autoload:
 	@for path in `ls plugins | egrep -v "$(AUTOLOAD_EXCLUDES)"`; do \
 		test -f "plugins/$$path/composer.json" && continue; \
 		echo "Generate plugin $$path"; \
-		(cd "plugins/$$path/include"; phpab -q --compat -o autoload.php $$(cat phpab-options.txt 2> /dev/null) .) \
+		(cd "plugins/$$path/include"; phpab -q --compat -o autoload.php .) \
         done;
 
 autoload-with-userid:
@@ -56,7 +56,7 @@ autoload-with-userid:
 	@for path in `ls plugins | egrep -v "$(AUTOLOAD_EXCLUDES)"`; do \
 		test -f "plugins/$$path/composer.json" && continue; \
 		echo "Generate plugin $$path"; \
-		(cd "plugins/$$path/include"; phpab -q --compat -o autoload.php $$(cat phpab-options.txt 2> /dev/null) .; chown $(USER_ID):$(USER_ID) autoload.php) \
+		(cd "plugins/$$path/include"; phpab -q --compat -o autoload.php .; chown $(USER_ID):$(USER_ID) autoload.php) \
         done;
 
 autoload-docker: ## Generate autoload files

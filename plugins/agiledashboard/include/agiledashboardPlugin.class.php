@@ -98,7 +98,6 @@ class AgileDashboardPlugin extends Plugin {
     {
         // Do not load the plugin if tracker is not installed & active
         if (defined('TRACKER_BASE_URL')) {
-            require_once dirname(__FILE__) .'/../../tracker/include/autoload.php';
             $this->addHook('cssfile', 'cssfile', false);
             $this->addHook('javascript_file');
             $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);

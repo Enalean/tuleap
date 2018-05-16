@@ -20,5 +20,4 @@
 
 require_once __DIR__ . '/../include/constants.php';
 require_once __DIR__ . '/../include/autoload.php';
-require_once __DIR__ . '/../../tracker/include/constants.php';
-require_once __DIR__ . '/../../tracker/include/autoload.php';
+require_once __DIR__ . '/../../tracker/include/trackerPlugin.class.php';

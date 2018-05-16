@@ -24,7 +24,7 @@
 
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigDAO;
 
-require_once __DIR__ . '/../../include/autoload.php';
+require_once __DIR__ . '/../../include/trackerPlugin.class.php';
 
 $config_dao = new ArtifactsDeletionConfigDAO();
 
