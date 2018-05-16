@@ -23,7 +23,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced;
 use ForgeConfig;
 use TuleapTestCase;
 
-require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
+require_once __DIR__.'/../../../../bootstrap.php';
 
 class UgroupLabelConverterTest extends TuleapTestCase
 {

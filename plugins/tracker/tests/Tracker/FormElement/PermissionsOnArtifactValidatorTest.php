@@ -24,7 +24,7 @@ use ProjectUGroup;
 use Tracker_FormElement_Field_PermissionsOnArtifact;
 use TuleapTestCase;
 
-require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
+require_once __DIR__.'/../../bootstrap.php';
 
 class PermissionsOnArtifactValidatorTest extends TuleapTestCase
 {

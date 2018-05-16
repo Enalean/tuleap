@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
+require_once __DIR__.'/../bootstrap.php';
 
 function aCIBuildPostAction() {
     return new Test_Transition_PostAction_CIBuild_Builder();

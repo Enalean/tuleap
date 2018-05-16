@@ -23,7 +23,7 @@
 // For further information about the Test Data Builder pattern
 // @see http://nat.truemesh.com/archives/000727.html
 
-require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
+require_once __DIR__.'/../bootstrap.php';
 function aTracker() {
     return new Test_Tracker_Builder();
 }

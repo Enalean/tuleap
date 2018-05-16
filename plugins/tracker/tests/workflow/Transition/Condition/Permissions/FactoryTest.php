@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
+require_once __DIR__.'/../../../../bootstrap.php';
 class Workflow_Transition_Condition_Permissions_FactoryTest extends TuleapTestCase {
 
     private $xml_mapping = array();

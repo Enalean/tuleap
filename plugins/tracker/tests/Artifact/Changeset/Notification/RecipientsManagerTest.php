@@ -23,7 +23,7 @@ namespace Tuleap\Tracker\Artifact\Changeset\Notification;
 
 use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
 
-require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
+require_once __DIR__.'/../../../bootstrap.php';
 
 class RecipientsManagerTest extends \TuleapTestCase
 {

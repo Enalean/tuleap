@@ -21,7 +21,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
 use TuleapTestCase;
 
-require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
+require_once __DIR__.'/../../../../../bootstrap.php';
 
 class ParserTest extends TuleapTestCase
 {

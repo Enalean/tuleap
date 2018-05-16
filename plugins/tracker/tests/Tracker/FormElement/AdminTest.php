@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
+require_once __DIR__.'/../../bootstrap.php';
 require_once('common/layout/Layout.class.php');
 Mock::generate('Tracker');
 Mock::generate('Project');
