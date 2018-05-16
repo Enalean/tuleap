@@ -1660,7 +1660,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     public function getLinkedAndReverseArtifacts(Tracker_Artifact_Changeset $changeset, PFUser $user) {
         $artifacts        = [];
         $changeset_value  = $changeset->getValue($this);
-        $all_artifact_ids = $this->getReverseLinks($changeset->getArtifact());
+        $all_artifact_ids = $this->getReverseLinks($changeset->getArtifact()->getId());
 
         if ($changeset_value) {
             $all_artifact_ids = array_unique(array_merge($all_artifact_ids, $changeset_value->getArtifactIds()));

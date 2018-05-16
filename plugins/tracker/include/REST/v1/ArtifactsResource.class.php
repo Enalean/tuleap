@@ -52,11 +52,13 @@ use Tuleap\REST\QueryParameterParser;
 use Tuleap\Tracker\Action\MoveArtifact;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfig;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigDAO;
+use Tuleap\Tracker\Admin\ArtifactsDeletion\UserDeletionRetriever;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletorBuilder;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionDAO;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionLimitReachedException;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionManager;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\DeletionOfArtifactsIsNotAllowedException;
+use Tuleap\Tracker\Exception\MoveArtifactNotDoneException;
 use Tuleap\Tracker\Exception\SemanticTitleNotDefinedException;
 use Tuleap\Tracker\REST\Artifact\ArtifactBatchQueryConverter;
 use Tuleap\Tracker\REST\Artifact\MalformedArtifactBatchQueryConverterException;
@@ -151,10 +153,13 @@ class ArtifactsResource extends AuthenticatedResource {
             new ArtifactsDeletionConfigDAO()
         );
 
+        $artifacts_deletion_dao           = new ArtifactsDeletionDAO();
+        $this->user_deletion_retriever    = new UserDeletionRetriever($artifacts_deletion_dao);
         $this->artifacts_deletion_manager = new ArtifactsDeletionManager(
             $this->artifacts_deletion_config,
-            new ArtifactsDeletionDAO(),
-            ArtifactDeletorBuilder::build()
+            $artifacts_deletion_dao,
+            ArtifactDeletorBuilder::build(),
+            $this->user_deletion_retriever
         );
 
         $this->event_manager = EventManager::instance();
@@ -758,6 +763,10 @@ class ArtifactsResource extends AuthenticatedResource {
             throw new RestException(403, $exception->getMessage());
         } catch (ArtifactsDeletionLimitReachedException $limit_reached_exception) {
             throw new RestException(429, $limit_reached_exception->getMessage());
+        } catch (MoveArtifactNotDoneException $exception) {
+            $number_of_deletions = $this->user_deletion_retriever->getNumberOfArtifactsDeletionsForUserInTimePeriod($user);
+            $remaining_deletions = (int) ($limit - $number_of_deletions);
+            throw new RestException(500, $exception->getMessage());
         } finally {
             Header::sendRateLimitHeaders($limit, $remaining_deletions);
             $this->sendAllowHeadersForArtifact();

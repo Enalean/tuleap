@@ -29,6 +29,7 @@ use Tracker_Artifact_XMLImport;
 use Tracker_XML_Exporter_ArtifactXMLExporter;
 use Tracker_XML_Updater_ChangesetXMLUpdater;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionManager;
+use Tuleap\Tracker\Exception\MoveArtifactNotDoneException;
 
 class MoveArtifact
 {
@@ -74,17 +75,20 @@ class MoveArtifact
     /**
      * @throws \Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionLimitReachedException
      * @throws \Tuleap\Tracker\Artifact\ArtifactsDeletion\DeletionOfArtifactsIsNotAllowedException
+     * @throws MoveArtifactNotDoneException
      */
     public function move(Tracker_Artifact $artifact, Tracker $target_tracker, PFUser $user)
     {
-        $global_rank = $this->artifact_priority_manager->getGlobalRank($artifact->getId());
-        $limit       = $this->artifacts_deletion_manager->deleteArtifact($artifact, $user);
+        $this->artifact_priority_manager->startTransaction();
 
         $xml_artifacts = $this->getXMLRootNode();
         $xml_artifacts = $this->xml_exporter->exportSnapshotWithoutComments(
             $xml_artifacts,
             $artifact->getLastChangeset()
         );
+
+        $global_rank = $this->artifact_priority_manager->getGlobalRank($artifact->getId());
+        $limit       = $this->artifacts_deletion_manager->deleteArtifactBeforeMoveOperation($artifact, $user);
 
         $this->xml_updater->updateForMoveAction(
             $target_tracker,
@@ -93,8 +97,12 @@ class MoveArtifact
             $artifact->getSubmittedOn()
         );
 
-        $this->processMove($xml_artifacts->artifact, $target_tracker, $global_rank);
+        if (! $this->processMove($xml_artifacts->artifact, $target_tracker, $global_rank)) {
+            $this->artifact_priority_manager->rollback();
+            throw new MoveArtifactNotDoneException();
+        }
 
+        $this->artifact_priority_manager->commit();
         return $limit;
     }
 
@@ -104,9 +112,12 @@ class MoveArtifact
 
         $moved_artifact = $this->xml_import->importArtifactWithAllDataFromXMLContent($tracker, $artifact_xml);
 
-        if ($moved_artifact) {
-            $this->artifact_priority_manager->putArtifactAtAGivenRank($moved_artifact, $global_rank);
+        if (! $moved_artifact) {
+            return false;
         }
+
+        $this->artifact_priority_manager->putArtifactAtAGivenRank($moved_artifact, $global_rank);
+        return true;
     }
 
     private function getXMLRootNode()

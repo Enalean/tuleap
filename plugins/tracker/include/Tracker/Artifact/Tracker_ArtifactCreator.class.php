@@ -186,6 +186,10 @@ class Tracker_ArtifactCreator {
         return true;
     }
 
+    /**
+     * @throws DataAccessException
+     * @throws DataAccessQueryException
+     */
     private function insertArtifactWithAllData(
         Tracker $tracker,
         Tracker_Artifact $artifact,
@@ -204,17 +208,18 @@ class Tracker_ArtifactCreator {
     }
 
     /**
-     * @return Tracker_Artifact or false if an error occured
+     * @return Tracker_Artifact|false if an error occured
      */
     public function createBareWithAllData(Tracker $tracker, $artifact_id, $submitted_on, $submitted_by)
     {
-        $artifact = $this->getBareArtifact($tracker, $submitted_on, $submitted_by, $artifact_id);
-        $success  = $this->insertArtifactWithAllData($tracker, $artifact, $submitted_on, $submitted_by);
-        if (! $success) {
+        try {
+            $artifact = $this->getBareArtifact($tracker, $submitted_on, $submitted_by, $artifact_id);
+            $this->insertArtifactWithAllData($tracker, $artifact, $submitted_on, $submitted_by);
+
+            return $artifact;
+        } catch (DataAccessException $exception) {
             return false;
         }
-
-        return $artifact;
     }
 
     private function getBareArtifact(Tracker $tracker, $submitted_on, $submitted_by, $artifact_id) {
