@@ -61,31 +61,6 @@ const webpack_config_for_flaming_parrot_code = {
     plugins: [manifest_plugin]
 };
 
-const webpack_config_for_labels = {
-    entry: {
-        'labels-box': './labels/labels-box.js'
-    },
-    context: path.resolve(__dirname),
-    output: {
-        path: assets_dir_path,
-        filename: '[name]-[chunkhash].js',
-        library: 'LabelsBox'
-    },
-    externals: {
-        jquery: 'jQuery'
-    },
-    resolve: {
-        alias: {
-            // labels-box needs this because TLP is not included in FlamingParrot
-            'tlp-fetch': path.resolve(__dirname, '../themes/common/tlp/src/js/fetch-wrapper.js')
-        }
-    },
-    module: {
-        rules: [webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11)]
-    },
-    plugins: [manifest_plugin]
-};
-
 const webpack_config_for_burning_parrot_code = {
     entry: {
         'burning-parrot'                         : './BurningParrot/index.js',
@@ -145,7 +120,6 @@ const webpack_config_for_vue_components = {
 if (process.env.NODE_ENV === 'production') {
     const optimized_configs = [
         webpack_config_for_dashboards,
-        webpack_config_for_labels,
         webpack_config_for_flaming_parrot_code,
         webpack_config_for_burning_parrot_code,
         webpack_config_for_vue_components
@@ -168,7 +142,6 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = [
     webpack_config_for_dashboards,
-    webpack_config_for_labels,
     webpack_config_for_flaming_parrot_code,
     webpack_config_for_burning_parrot_code,
     webpack_config_for_vue_components

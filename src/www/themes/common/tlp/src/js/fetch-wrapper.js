@@ -26,7 +26,7 @@ export {
     options
 };
 
-const get = async (input, init = {}) => {
+async function get(input, init = {}) {
     const method = 'GET';
     const {
         credentials = 'same-origin',
@@ -44,7 +44,7 @@ const get = async (input, init = {}) => {
         ...init
     });
     return checkResponse(response);
-};
+}
 
 const encodeAllParamsToURI = (params) => {
     let url_params = '';
@@ -63,7 +63,7 @@ const encodeParamToURI = ([key, value]) => {
     return encodeURIComponent(key) + '=' + encodeURIComponent(value);
 };
 
-const recursiveGet = async (input, init = {}) => {
+async function recursiveGet(input, init = {}) {
     const {
         params,
         getCollectionCallback = (json) => [].concat(json)
@@ -102,35 +102,35 @@ const recursiveGet = async (input, init = {}) => {
 
     const second_response = await recursiveGet(input, new_init);
     return results.concat(second_response);
-};
+}
 
-const put = (input, init = {}) => {
+function put(input, init = {}) {
     const method = 'PUT',
         { credentials = 'same-origin' } = init;
 
     return fetch(input, { method, credentials, ...init }).then(checkResponse);
-};
+}
 
-const patch = (input, init = {}) => {
+function patch (input, init = {}) {
     const method = 'PATCH',
         { credentials = 'same-origin' } = init;
 
     return fetch(input, { method, credentials, ...init }).then(checkResponse);
-};
+}
 
-const post = (input, init = {}) => {
+function post(input, init = {}) {
     const method = 'POST',
         { credentials = 'same-origin' } = init;
 
     return fetch(input, { method, credentials, ...init }).then(checkResponse);
-};
+}
 
-const options = (input, init = {}) => {
+function options(input, init = {}) {
     const method = 'OPTIONS',
         { credentials = 'same-origin' } = init;
 
     return fetch(input, { method, credentials, ...init }).then(checkResponse);
-};
+}
 
 function checkResponse(response) {
     if (response.ok) {
