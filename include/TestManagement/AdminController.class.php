@@ -25,6 +25,7 @@ use CSRFSynchronizerToken;
 use EventManager;
 use Feedback;
 use TrackerFactory;
+use Tuleap\TestManagement\Administration\StepFieldUsageDetector;
 use Tuleap\TestManagement\Breadcrumbs\AdmininistrationBreadcrumbs;
 
 class AdminController extends TestManagementController
@@ -34,27 +35,40 @@ class AdminController extends TestManagementController
      */
     private $csrf_token;
 
+    /**
+     * @var StepFieldUsageDetector
+     */
+    private $step_field_usage_detector;
+
     public function __construct(
         Codendi_Request $request,
         Config $config,
         TrackerFactory $tracker_factory,
         EventManager $event_manager,
-        CSRFSynchronizerToken $csrf_token
+        CSRFSynchronizerToken $csrf_token,
+        StepFieldUsageDetector $step_field_usage_detector
     ) {
         parent::__construct($request, $config, $tracker_factory, $event_manager);
-        $this->csrf_token = $csrf_token;
+        $this->csrf_token                = $csrf_token;
+        $this->step_field_usage_detector = $step_field_usage_detector;
     }
 
     public function admin()
     {
+        $test_definition_tracker_id = $this->config->getTestDefinitionTrackerId($this->project);
+        $is_definition_disabled = $this->step_field_usage_detector->isStepDefinitionFieldUsed(
+            $test_definition_tracker_id
+        );
+
         return $this->renderToString(
             'admin',
             new AdminPresenter(
                 $this->config->getCampaignTrackerId($this->project),
-                $this->config->getTestDefinitionTrackerId($this->project),
+                $test_definition_tracker_id,
                 $this->config->getTestExecutionTrackerId($this->project),
                 $this->config->getIssueTrackerId($this->project),
-                $this->csrf_token
+                $this->csrf_token,
+                $is_definition_disabled
             )
         );
     }
@@ -77,11 +91,7 @@ class AdminController extends TestManagementController
                 $this->config->getCampaignTrackerId($this->project),
                 $project_tracker_ids
             ),
-            $this->checkTrackerIdForProject(
-                $this->request->get('test_definition_tracker_id'),
-                $this->config->getTestDefinitionTrackerId($this->project),
-                $project_tracker_ids
-            ),
+            $this->getValidDefinitionTrackerId($project_tracker_ids),
             $this->checkTrackerIdForProject(
                 $this->request->get('test_execution_tracker_id'),
                 $this->config->getTestExecutionTrackerId($this->project),
@@ -92,6 +102,27 @@ class AdminController extends TestManagementController
                 $this->config->getIssueTrackerId($this->project),
                 $project_tracker_ids
             )
+        );
+    }
+
+    /**
+     * @param int[] $project_tracker_ids
+     * @return array
+     */
+    private function getValidDefinitionTrackerId(array $project_tracker_ids)
+    {
+        $current_tracker_id = $this->config->getTestDefinitionTrackerId($this->project);
+
+        // If StepDefinition field is used, we cannot change the Definition tracker
+        // Form input is disabled so we should not get there, but never trust the user's data!
+        if ($this->step_field_usage_detector->isStepDefinitionFieldUsed($current_tracker_id)) {
+            return $current_tracker_id;
+        }
+
+        return $this->checkTrackerIdForProject(
+            $this->request->get('test_definition_tracker_id'),
+            $current_tracker_id,
+            $project_tracker_ids
         );
     }
 
@@ -112,7 +143,8 @@ class AdminController extends TestManagementController
         return $is_valid_project_tracker_id ? $submitted_id : $original_id;
     }
 
-    public function getBreadcrumbs() {
+    public function getBreadcrumbs()
+    {
         return new AdmininistrationBreadcrumbs();
     }
 }

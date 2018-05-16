@@ -29,6 +29,7 @@ use Project;
 use ProjectManager;
 use TrackerFactory;
 use TrackerXmlImport;
+use Tuleap\TestManagement\Administration\StepFieldUsageDetector;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use UserManager;
 use XMLImportHelper;
@@ -73,6 +74,11 @@ class Router {
      */
     private $artifact_links_usage_updater;
 
+    /**
+     * @var StepFieldUsageDetector
+     */
+    private $step_field_usage_detector;
+
     public function __construct(
         Plugin $plugin,
         Config $config,
@@ -80,7 +86,8 @@ class Router {
         ProjectManager $project_manager,
         UserManager $user_manager,
         EventManager $event_manager,
-        ArtifactLinksUsageUpdater $artifact_links_usage_updater
+        ArtifactLinksUsageUpdater $artifact_links_usage_updater,
+        StepFieldUsageDetector $step_field_usage_detector
     ) {
         $this->config                       = $config;
         $this->plugin                       = $plugin;
@@ -89,6 +96,7 @@ class Router {
         $this->user_manager                 = $user_manager;
         $this->event_manager                = $event_manager;
         $this->artifact_links_usage_updater = $artifact_links_usage_updater;
+        $this->step_field_usage_detector    = $step_field_usage_detector;
     }
 
     public function route(Codendi_Request $request)
@@ -99,12 +107,26 @@ class Router {
         switch ($request->get('action')) {
             case 'admin':
                 $this->checkUserCanAdministrate($request->getProject(), $this->user_manager->getCurrentUser());
-                $controller = new AdminController($request, $this->config, $this->tracker_factory, $this->event_manager, $csrf_token);
+                $controller = new AdminController(
+                    $request,
+                    $this->config,
+                    $this->tracker_factory,
+                    $this->event_manager,
+                    $csrf_token,
+                    $this->step_field_usage_detector
+                );
                 $this->renderAction($controller, 'admin', $request);
                 break;
             case 'admin-update':
                 $this->checkUserCanAdministrate($request->getProject(), $this->user_manager->getCurrentUser());
-                $controller = new AdminController($request, $this->config, $this->tracker_factory, $this->event_manager, $csrf_token);
+                $controller = new AdminController(
+                    $request,
+                    $this->config,
+                    $this->tracker_factory,
+                    $this->event_manager,
+                    $csrf_token,
+                    $this->step_field_usage_detector
+                );
                 $this->executeAction($controller, 'update');
                 $this->renderIndex($request);
                 break;

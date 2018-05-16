@@ -21,12 +21,14 @@
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\project\Event\ProjectServiceBeforeActivation;
+use Tuleap\TestManagement\Administration\StepFieldUsageDetector;
 use Tuleap\TestManagement\Config;
 use Tuleap\TestManagement\Dao;
 use Tuleap\TestManagement\FirstConfigCreator;
 use Tuleap\TestManagement\Nature\NatureCoveredByOverrider;
 use Tuleap\TestManagement\Nature\NatureCoveredByPresenter;
 use Tuleap\TestManagement\REST\ResourcesInjector;
+use Tuleap\TestManagement\Step\Definition\Field\StepDefinition;
 use Tuleap\TestManagement\TestManagementPluginInfo;
 use Tuleap\TestManagement\UserIsNotAdministratorException;
 use Tuleap\TestManagement\XMLImport;
@@ -116,7 +118,7 @@ class testmanagementPlugin extends Plugin
     /** @see Tracker_FormElementFactory::GET_CLASSNAMES */
     public function tracker_formelement_get_classnames($params)
     {
-        $params['fields']['ttmstepdef'] = \Tuleap\TestManagement\Step\Definition\Field\StepDefinition::class;
+        $params['fields'][StepDefinition::TYPE] = StepDefinition::class;
     }
 
     public function isUsedByProject(Project $project)
@@ -318,12 +320,19 @@ class testmanagementPlugin extends Plugin
         }
     }
 
-    public function process(Codendi_Request $request) {
-        $config          = new Config(new Dao());
-        $tracker_factory = TrackerFactory::instance();
-        $project_manager = ProjectManager::instance();
-        $user_manager    = UserManager::instance();
-        $event_manager   = EventManager::instance();
+    public function process(Codendi_Request $request)
+    {
+        $config               = new Config(new Dao());
+        $tracker_factory      = TrackerFactory::instance();
+        $project_manager      = ProjectManager::instance();
+        $user_manager         = UserManager::instance();
+        $event_manager        = EventManager::instance();
+        $form_element_factory = Tracker_FormElementFactory::instance();
+
+        $step_field_usage_detector = new StepFieldUsageDetector(
+            $tracker_factory,
+            $form_element_factory
+        );
 
         $router = new Tuleap\TestManagement\Router(
             $this,
@@ -332,7 +341,8 @@ class testmanagementPlugin extends Plugin
             $project_manager,
             $user_manager,
             $event_manager,
-            $this->getArtifactLinksUsageUpdater()
+            $this->getArtifactLinksUsageUpdater(),
+            $step_field_usage_detector
         );
 
         try {
