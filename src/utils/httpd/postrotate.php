@@ -1,7 +1,7 @@
 #!/usr/share/tuleap/src/utils/php-launcher.sh
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,21 +19,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\System\ApacheServiceControl;
+use Tuleap\System\ServiceControl;
+
 require_once 'pre.php';
 
-
-if (! isset($argv[1])) {
-    fwrite(STDERR, "*** ERROR missing log file as argument\n");
-    exit(1);
-}
-
-$logger = new TruncateLevelLogger(
-    new BackendLogger('/var/log/tuleap/syslog'),
-    ForgeConfig::get('sys_logger_level')
+$logger = new WrapperLogger(
+    BackendLogger::getDefaultLogger(),
+    'httpd.postrotate'
 );
 
-$queue = new \Tuleap\Httpd\PostRotateEvent($logger);
+$logger->info("Restart apache");
+(new ApacheServiceControl(new ServiceControl()))->reload();
+$logger->info("Restart apache completed");
 
-$queue->push($argv[1]);
-
-exit(0);
+$event_manager->processEvent(new \Tuleap\Httpd\PostRotateEvent($logger));

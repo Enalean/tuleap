@@ -79,28 +79,11 @@ class BackendSVN
             if (file_exists($httpd_logrotate)) {
                 unlink($httpd_logrotate);
             }
-            $this->replacePlaceHolderInto(
-                '/usr/share/tuleap/src/etc/el7/httpd/logrotate',
-                $httpd_logrotate,
-                array(
-                    '%service_restart%'
-                ),
-                array(
-                    $this->getServiceRestartCommand()
-                )
-            );
+            copy('/usr/share/tuleap/src/etc/logrotate.httpd.conf', $httpd_logrotate);
             chmod($httpd_logrotate, 0644);
         } else {
             $this->logger->warn('Logrotate contains reference to postrotate.php, skip configuration');
         }
-    }
-
-    private function getServiceRestartCommand()
-    {
-        if ($this->pidOne == DistributedSVN::PID_ONE_SYSTEMD) {
-            return '/bin/systemctl reload httpd.service > /dev/null 2>/dev/null || true';
-        }
-        return 'pkill -U 0 -USR1 httpd';
     }
 
     private function fileContains($filepath, $needle)
@@ -116,17 +99,5 @@ class BackendSVN
         if (! file_exists($file.'.orig')) {
             copy($file, $file.'.orig');
         }
-    }
-
-    private function replacePlaceHolderInto($template_path, $target_path, array $variables, array $values)
-    {
-        file_put_contents(
-            $target_path,
-            str_replace(
-                $variables,
-                $values,
-                file_get_contents($template_path)
-            )
-        );
     }
 }

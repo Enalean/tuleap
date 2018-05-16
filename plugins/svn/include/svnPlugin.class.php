@@ -23,6 +23,7 @@ require_once 'constants.php';
 use Tuleap\CVS\DiskUsage\Collector as CVSCollector;
 use Tuleap\CVS\DiskUsage\FullHistoryDao;
 use Tuleap\CVS\DiskUsage\Retriever as CVSRetriever;
+use Tuleap\Httpd\PostRotateEvent;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
 use Tuleap\project\Admin\Navigation\NavigationDropdownQuickLinksCollector;
@@ -63,6 +64,7 @@ use Tuleap\Svn\EventRepository\SystemEvent_SVN_RESTORE_REPOSITORY;
 use Tuleap\Svn\Explorer\ExplorerController;
 use Tuleap\Svn\Explorer\RepositoryBuilder;
 use Tuleap\Svn\Explorer\RepositoryDisplayController;
+use Tuleap\Svn\Logs\DBWriter;
 use Tuleap\Svn\Logs\QueryBuilder;
 use Tuleap\Svn\Migration\RepositoryCopier;
 use Tuleap\SVN\Notifications\CollectionOfUgroupToBeNotifiedPresenterBuilder;
@@ -176,6 +178,8 @@ class SvnPlugin extends Plugin
 
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
+
+        $this->addHook(PostRotateEvent::NAME);
     }
 
     public function export_xml_project($params)
@@ -1163,5 +1167,10 @@ class SvnPlugin extends Plugin
     private function isInProjectAdmin()
     {
         return strpos($_SERVER['REQUEST_URI'], '/project/admin/permission_per_group') === 0;
+    }
+
+    public function httpdPostRotate(PostRotateEvent $event)
+    {
+        DBWriter::build($event->getLogger())->postrotate();
     }
 }

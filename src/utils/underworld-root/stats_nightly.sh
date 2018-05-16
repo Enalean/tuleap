@@ -40,17 +40,7 @@ echo "--- Beginning of $script ---"
 #
 ./db_stats_cvs_history.pl $*
 
-# Feed the database with Subversion statistics extracted
-# from daily Subversion log files
-#
-./db_stats_svn_history.pl $*
-
 ./db_stats_projects_nightly.pl $*
-
-if [ -f /usr/share/tuleap/plugins/svn/bin/db_stats_svn_plugin_history.pl ]
-then
-    /usr/share/tuleap/plugins/svn/bin/db_stats_svn_plugin_history.pl $*
-fi
 
 ##
 ## END order sensitive section

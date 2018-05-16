@@ -21,7 +21,7 @@
 
 namespace Tuleap\Svn\Logs;
 
-class DBWriterDao extends \DataAccessObject
+class DBWriterPluginDao extends \DataAccessObject
 {
 
     public function searchRepositoriesForProjects(array $project_names)
@@ -69,18 +69,6 @@ class DBWriterDao extends \DataAccessObject
         $nb_write      = $this->da->escapeInt($nb_write);
         $sql = "INSERT INTO plugin_svn_full_history (repository_id, user_id, day, svn_write_operations, svn_read_operations)
                VALUES ($repository_id, $user_id, $day, $nb_write, $nb_read)";
-        return $this->update($sql);
-    }
-
-    public function updateLastAccessDate($user_id, $timestamp)
-    {
-        $user_id   = $this->da->escapeInt($user_id);
-        $timestamp = $this->da->escapeInt($timestamp);
-
-        $sql = "UPDATE user_access
-                SET last_access_date = $timestamp
-                WHERE user_id = $user_id
-                    AND last_access_date < $timestamp";
         return $this->update($sql);
     }
 }
