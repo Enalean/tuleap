@@ -128,16 +128,16 @@ class URLVerificationTest extends URLVerificationBaseTest {
         $urlVerification->setReturnValue('getEventManager', $em);
         $GLOBALS['Language']->setReturnValue('getContent', $this->fixtures.'/empty.txt');
 
-        $this->assertTrue($urlVerification->isScriptAllowedForAnonymous(array('SCRIPT_NAME' => '/current_css.php')));
-        $this->assertTrue($urlVerification->isScriptAllowedForAnonymous(array('SCRIPT_NAME' => '/account/login.php')));
-        $this->assertTrue($urlVerification->isScriptAllowedForAnonymous(array('SCRIPT_NAME' => '/account/register.php')));
-        $this->assertTrue($urlVerification->isScriptAllowedForAnonymous(array('SCRIPT_NAME' => '/account/change_pw.php')));
-        $this->assertTrue($urlVerification->isScriptAllowedForAnonymous(array('SCRIPT_NAME' => '/include/check_pw.php')));
-        $this->assertTrue($urlVerification->isScriptAllowedForAnonymous(array('SCRIPT_NAME' => '/account/lostpw.php')));
-        $this->assertTrue($urlVerification->isScriptAllowedForAnonymous(array('SCRIPT_NAME' => '/account/lostlogin.php')));
-        $this->assertTrue($urlVerification->isScriptAllowedForAnonymous(array('SCRIPT_NAME' => '/account/lostpw-confirm.php')));
+        $this->assertTrue($urlVerification->isScriptAllowedForAnonymous(array('REQUEST_URI' => '/current_css.php', 'SCRIPT_NAME' => '/current_css.php')));
+        $this->assertTrue($urlVerification->isScriptAllowedForAnonymous(array('REQUEST_URI' => '/account/login.php', 'SCRIPT_NAME' => '/account/login.php')));
+        $this->assertTrue($urlVerification->isScriptAllowedForAnonymous(array('REQUEST_URI' => '/account/register.php', 'SCRIPT_NAME' => '/account/register.php')));
+        $this->assertTrue($urlVerification->isScriptAllowedForAnonymous(array('REQUEST_URI' => '/account/change_pw.php', 'SCRIPT_NAME' => '/account/change_pw.php')));
+        $this->assertTrue($urlVerification->isScriptAllowedForAnonymous(array('REQUEST_URI' => '/include/check_pw.php', 'SCRIPT_NAME' => '/include/check_pw.php')));
+        $this->assertTrue($urlVerification->isScriptAllowedForAnonymous(array('REQUEST_URI' => '/account/lostpw.php', 'SCRIPT_NAME' => '/account/lostpw.php')));
+        $this->assertTrue($urlVerification->isScriptAllowedForAnonymous(array('REQUEST_URI' => '/account/lostlogin.php', 'SCRIPT_NAME' => '/account/lostlogin.php')));
+        $this->assertTrue($urlVerification->isScriptAllowedForAnonymous(array('REQUEST_URI' => '/account/lostpw-confirm.php', 'SCRIPT_NAME' => '/account/lostpw-confirm.php')));
 
-        $this->assertFalse($urlVerification->isScriptAllowedForAnonymous(array('SCRIPT_NAME' => '/foobar')));
+        $this->assertFalse($urlVerification->isScriptAllowedForAnonymous(array('REQUEST_URI' => '/foobar', 'SCRIPT_NAME' => '/foobar')));
     }
 
     function itDoesNotTreatRegularUrlsAsExceptions() {
@@ -177,18 +177,7 @@ class URLVerificationTest extends URLVerificationBaseTest {
         $urlVerification->setReturnValue('getEventManager', $em);
         $GLOBALS['Language']->setReturnValue('getContent', $this->fixtures.'/empty.txt');
 
-        $this->assertTrue($urlVerification->isScriptAllowedForAnonymous(array('SCRIPT_NAME' => '/foobar')));
-    }
-
-    function testIsScriptAllowedForAnonymousFromSiteContent() {
-        $urlVerification = partial_mock('URLVerification', array('getCurrentUser', 'getEventManager'));
-        $em = new MockEM4Anonymous($this);
-        $em->setReturnValue('processEvent', array('anonymous_allowed' => false));
-        $urlVerification->setReturnValue('getEventManager', $em);
-
-        $GLOBALS['Language']->setReturnValue('getContent', $this->fixtures.'/allowed_url_anonymous.txt');
-
-        $this->assertTrue($urlVerification->isScriptAllowedForAnonymous(array('SCRIPT_NAME' => '/foobar')));
+        $this->assertTrue($urlVerification->isScriptAllowedForAnonymous(array('REQUEST_URI' => '/foobar', 'SCRIPT_NAME' => '/foobar')));
     }
 
     public function testVerifyProtocolHTTPAndHTTPSIsAvailable()

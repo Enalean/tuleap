@@ -22,6 +22,9 @@ class ForgeAccess {
     const PROJECT_ADMIN_CAN_CHOOSE_VISIBILITY = 'project_admin_can_choose_visibility';
     const SUPER_PUBLIC_PROJECTS               = 'super_public_projects';
 
+    const ANONYMOUS_CAN_SEE_SITE_HOMEPAGE = 'anonymous_can_see_site_homepage';
+    const ANONYMOUS_CAN_SEE_CONTACT       = 'anonymous_can_see_contact';
+
     const CONFIG     = 'access_mode';
     const ANONYMOUS  = 'anonymous';
     const REGULAR    = 'regular';

@@ -62,6 +62,14 @@
             $(this)[0].form.submit();
         });
 
+        $('#toggle-anonymous-can-see-site-homepage').change(function () {
+            $(this)[0].form.submit();
+        });
+
+        $('#toggle-anonymous-can-see-contact').change(function () {
+            $(this)[0].form.submit();
+        });
+
         function enableSubmitButton() {
             form.find('[type=submit]').prop('disabled', false);
         }
