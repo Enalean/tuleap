@@ -2,6 +2,16 @@
     "name": "testmanagement",
     "dependencies": ["tracker"],
     "themes": {
+        "FlamingParrot": {
+            "files": [
+                "www/themes/FlamingParrot/css/style.scss"
+            ],
+            "includes": [
+                "../../src/www/themes/FlamingParrot/css/utils"
+            ],
+            "target_dir": "www/themes/FlamingParrot/assets",
+            "is_revisioned": true
+        },
         "BurningParrot": {
             "files": [
                 "www/themes/BurningParrot/css/style-blue.scss",

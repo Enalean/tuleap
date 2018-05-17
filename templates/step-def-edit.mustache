@@ -1,16 +1,19 @@
 {{# steps }}
-    #{{ rank }}
-    <p class="text-warning">
-        <i class="icon-warning-sign"></i>
-        {{# dgettext }}tuleap-testmanagement | Please note that HTML format is not supported yet{{/ dgettext }}
-    </p>
-    <input type="hidden" name="artifact[{{ field_id }}][id][]" value="{{ id }}">
-    <textarea id="field_new_description_0_{{ field_id }}"
-        name="artifact[{{ field_id }}][description][]"
-        rows="10"
-        cols="50"
-    >{{ raw_description }}</textarea>
-    <hr>
+    <div class="ttm-definition-step">
+        <div class="ttm-definition-step-rank">{{ rank }}</div>
+        <div class="ttm-definition-step-description">
+            <p class="text-warning">
+                <i class="icon-warning-sign"></i>
+                {{# dgettext }}tuleap-testmanagement | Please note that HTML format is not supported yet{{/ dgettext }}
+            </p>
+            <input type="hidden" name="artifact[{{ field_id }}][id][]" value="{{ id }}">
+            <textarea id="field_new_description_0_{{ field_id }}"
+                name="artifact[{{ field_id }}][description][]"
+                rows="10"
+                cols="50"
+            >{{ raw_description }}</textarea>
+        </div>
+    </div>
 {{/ steps }}
 {{^ steps }}
     <p class="text-warning">

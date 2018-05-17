@@ -1,0 +1,83 @@
+@mixin definitions($main, $white) {
+    .ttm-definition-step {
+        display: flex;
+        align-items: flex-start;
+        padding: 10px 0;
+
+        &:last-child {
+            padding: 10px 0 0;
+        }
+    }
+
+    .ttm-definition-step-rank {
+        padding: 0 6px;
+        background: $main;
+        color: $white;
+        border-radius: 10px;
+    }
+
+    .ttm-definition-step-description {
+        flex: 1 0 auto;
+        margin: 0 0 0 10px;
+    }
+}
+
+body {
+    @import 'variables-orange';
+    @include definitions($main, $white);
+
+    &.FlamingParrot_Blue {
+        @import 'variables-blue';
+        @include definitions($main, $white);
+    }
+
+    &.FlamingParrot_Green {
+        @import 'variables-green';
+        @include definitions($main, $white);
+    }
+
+    &.FlamingParrot_BlueGrey {
+        @import 'variables-bluegrey';
+        @include definitions($main, $white);
+    }
+
+    &.FlamingParrot_Purple {
+        @import 'variables-purple';
+        @include definitions($main, $white);
+    }
+
+    &.FlamingParrot_Red {
+        @import 'variables-red';
+        @include definitions($main, $white);
+    }
+
+    &.FlamingParrot_DarkOrange {
+        @import 'variables-darkorange';
+        @include definitions($main, $white);
+    }
+
+    &.FlamingParrot_DarkBlue {
+        @import 'variables-darkblue';
+        @include definitions($main, $white);
+    }
+
+    &.FlamingParrot_DarkGreen {
+        @import 'variables-darkgreen';
+        @include definitions($main, $white);
+    }
+
+    &.FlamingParrot_DarkBlueGrey {
+        @import 'variables-darkbluegrey';
+        @include definitions($main, $white);
+    }
+
+    &.FlamingParrot_DarkPurple {
+        @import 'variables-darkpurple';
+        @include definitions($main, $white);
+    }
+
+    &.FlamingParrot_DarkRed {
+        @import 'variables-darkred';
+        @include definitions($main, $white);
+    }
+}
