@@ -329,15 +329,6 @@ class Git extends PluginController {
         $this->access_loger               = $access_loger;
         $this->detector                   = $detector;
 
-        Tuleap\Instrument\Collect::increment('service.project.plugin_git.accessed');
-        $url = new Git_URL(
-            $this->projectManager,
-            $this->factory,
-            $_SERVER['REQUEST_URI']
-        );
-        $this->routeUsingFriendlyURLs($url);
-        $this->routeUsingStandardURLs($url);
-
         $valid = new Valid_GroupId('group_id');
         $valid->required();
         if ($this->request->valid($valid)) {
@@ -401,77 +392,6 @@ class Git extends PluginController {
             $this->regexp_retriever,
             $this->gerrit_server_factory
         );
-    }
-
-    private function routeUsingFriendlyURLs(Git_URL $url) {
-        if (! $this->getPlugin()->areFriendlyUrlsActivated()) {
-            return;
-        }
-
-        if (! $url->isFriendly()) {
-            return;
-        }
-
-        $repository = $url->getRepository();
-        if (! $repository) {
-            return;
-        }
-
-        $this->request->set('action', 'view');
-        $this->request->set('group_id', $repository->getProjectId());
-        $this->request->set('repo_id', $repository->getId());
-
-        $this->addUrlParametersToRequest($url);
-    }
-
-    private function addUrlParametersToRequest(Git_URL $url) {
-        $url_parameters_as_string = $url->getParameters();
-        if (! $url_parameters_as_string) {
-            return;
-        }
-
-        parse_str($url_parameters_as_string, $_GET);
-        parse_str($url_parameters_as_string, $_REQUEST);
-
-        parse_str($url_parameters_as_string, $url_parameters);
-        foreach ($url_parameters as $key => $value) {
-            $this->request->set($key, $value);
-        }
-    }
-
-    private function routeUsingStandardURLs(Git_URL $url) {
-        if (! $url->isStandard()) {
-            return;
-        }
-
-        $repository = $url->getRepository();
-        if (! $repository) {
-            $this->addError('Bad request');
-            $this->redirect('/');
-            return;
-        }
-
-        $project = $url->getProject();
-        $this->redirectIfTryingToViewRepositoryAndUserFriendlyURLsActivated($project, $repository, $url->getParameters());
-
-        $this->request->set('group_id', $project->getId());
-        $this->request->set('action', 'view');
-        $this->request->set('repo_id', $repository->getId());
-    }
-
-    private function redirectIfTryingToViewRepositoryAndUserFriendlyURLsActivated(
-        Project $project,
-        GitRepository $repository,
-        $parameters
-    ) {
-        if (! $this->getPlugin()->areFriendlyUrlsActivated()) {
-            return;
-        }
-
-        $request_parameters = $parameters ? '?'.$parameters : '';
-        $redirecting_url    = GIT_BASE_URL .'/'. $project->getUnixName() .'/'. $repository->getFullName() . $request_parameters;
-
-        header("Location: $redirecting_url", TRUE, 301);
     }
 
     public function setPermissionsManager(GitPermissionsManager $permissions_manager) {
@@ -637,11 +557,6 @@ class Git extends PluginController {
     public function _dispatchActionAndView($action, /* GitRepository */ $repository, $repo_id, $repositoryName, $user) {
         $pane = $this->request->get('pane');
         switch ($action) {
-            #admin
-            case 'view':
-                $this->addAction( 'getRepositoryDetails', array($this->groupId, $repository->getId()));
-                $this->addView('view');
-                break;
              #DELETE a repository
             case 'del':
                 $this->addAction( 'deleteRepository', array($this->groupId, $repository->getId()));

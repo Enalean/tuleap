@@ -28,12 +28,6 @@ class GitViews_ShowRepo {
     protected $repository;
 
     /**
-     *
-     * @var Git
-     */
-    protected $controller;
-
-    /**
      * @var Codendi_Request
      */
     protected $request;
@@ -58,20 +52,27 @@ class GitViews_ShowRepo {
 
     /** @var Git_Mirror_MirrorDataMapper */
     private $mirror_data_mapper;
+    /**
+     * @var GitPermissionsManager
+     */
+    private $permissions_manager;
+    private $gitphp_path;
+    private $master_location_name;
 
     public function __construct(
         GitRepository $repository,
-        Git $controller,
         Git_GitRepositoryUrlManager $url_manager,
         Codendi_Request $request,
         Git_Driver_Gerrit_GerritDriverFactory $driver_factory,
         Git_Driver_Gerrit_UserAccountManager $gerrit_usermanager,
         array $gerrit_servers,
         Git_Mirror_MirrorDataMapper $mirror_data_mapper,
-        GitPhpAccessLogger $access_loger
+        GitPhpAccessLogger $access_loger,
+        GitPermissionsManager $permissions_manager,
+        $gitphp_path,
+        $master_location_name
     ) {
         $this->repository         = $repository;
-        $this->controller         = $controller;
         $this->request            = $request;
         $this->driver_factory     = $driver_factory;
         $this->gerrit_usermanager = $gerrit_usermanager;
@@ -79,15 +80,17 @@ class GitViews_ShowRepo {
         $this->url_manager        = $url_manager;
         $this->mirror_data_mapper = $mirror_data_mapper;
         $this->access_loger       = $access_loger;
+        $this->permissions_manager  = $permissions_manager;
+        $this->gitphp_path          = $gitphp_path;
+        $this->master_location_name = $master_location_name;
     }
 
-
-    public function display() {
+    public function display(Git_URL $url) {
         $git_php_viewer = new GitViews_GitPhpViewer(
             $this->repository,
-            $this->controller->getPlugin()->getConfigurationParameter('gitphp_path')
+            $this->gitphp_path
         );
-        if ($this->controller->isADownload()) {
+        if ($url->isADownload($this->request)) {
             $view = new GitViews_ShowRepo_Download($git_php_viewer);
         } else {
             $view = new GitViews_ShowRepo_Content(
@@ -95,14 +98,14 @@ class GitViews_ShowRepo {
                 $git_php_viewer,
                 $this->request,
                 $this->request->getCurrentUser(),
-                $this->controller,
                 $this->url_manager,
                 $this->driver_factory,
                 $this->gerrit_usermanager,
                 $this->mirror_data_mapper,
                 $this->access_loger,
+                $this->permissions_manager,
                 $this->gerrit_servers,
-                $this->controller->getPlugin()->getThemePath()
+                $this->master_location_name
             );
         }
         $view->display();

@@ -71,40 +71,44 @@ class GitViews_ShowRepo_Content {
     /**
      * @var string
      */
-    private $theme_path;
+    private $master_location_name;
 
     /** @var Git_GitRepositoryUrlManager */
     private $url_manager;
 
     /** @var Git_Mirror_MirrorDataMapper */
     private $mirror_data_mapper;
+    /**
+     * @var GitPermissionsManager
+     */
+    private $permissions_manager;
 
     public function __construct(
         GitRepository $repository,
         GitViews_GitPhpViewer $gitphp_viewer,
         Codendi_Request $request,
         PFUser $current_user,
-        Git $controller,
         Git_GitRepositoryUrlManager $url_manager,
         Git_Driver_Gerrit_GerritDriverFactory $driver_factory,
         Git_Driver_Gerrit_UserAccountManager $gerrit_usermanager,
         Git_Mirror_MirrorDataMapper $mirror_data_mapper,
         GitPhpAccessLogger $access_loger,
+        GitPermissionsManager $permissions_manager,
         array $gerrit_servers,
-        $theme_path
+        $master_location_name
     ) {
         $this->repository         = $repository;
         $this->gitphp_viewer      = $gitphp_viewer;
         $this->request            = $request;
         $this->current_user       = $current_user;
-        $this->controller         = $controller;
         $this->driver_factory     = $driver_factory;
         $this->gerrit_usermanager = $gerrit_usermanager;
         $this->gerrit_servers     = $gerrit_servers;
         $this->mirror_data_mapper = $mirror_data_mapper;
-        $this->theme_path         = $theme_path;
         $this->url_manager        = $url_manager;
         $this->access_loger       = $access_loger;
+        $this->permissions_manager  = $permissions_manager;
+        $this->master_location_name = $master_location_name;
     }
 
     public function display() {
@@ -285,7 +289,7 @@ class GitViews_ShowRepo_Content {
             $this->repository,
             $this->getAccessURLs(),
             $mirrors,
-            $this->controller->isAPermittedAction('repo_management'),
+            $this->permissions_manager->userIsGitAdmin($this->request->getCurrentUser(), $this->repository->getProject()),
             $this->getMasterLocationName(),
             $additional_actions,
             $additional_help_text
@@ -322,7 +326,7 @@ class GitViews_ShowRepo_Content {
     }
 
     private function getMasterLocationName() {
-        $name = $this->controller->getPlugin()->getConfigurationParameter('master_location_name');
+        $name = $this->master_location_name;
         if (! $name) {
             $name = $GLOBALS['Language']->getText('plugin_git', 'default_location');
         }

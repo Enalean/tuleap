@@ -162,4 +162,10 @@ class Response {
         echo json_encode($message);
         exit;
     }
+
+    public function permanentRedirect($redirect_url)
+    {
+        header("Location: $redirect_url", true, 301);
+        exit;
+    }
 }

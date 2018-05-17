@@ -145,6 +145,8 @@ class GitPlugin extends Plugin
 
     private static $FREQUENCIES_GIT_READ = 'git';
 
+    const INSTRUMENTATION_KEY = 'service.project.plugin_git.accessed';
+
     public function __construct($id)
     {
         parent::__construct($id);
@@ -808,7 +810,7 @@ class GitPlugin extends Plugin
         return new RegexpRepositoryDao();
     }
 
-    private function getMirrorDataMapper() {
+    protected function getMirrorDataMapper() {
         return new Git_Mirror_MirrorDataMapper(
             new Git_Mirror_MirrorDao(),
             UserManager::instance(),
@@ -1811,7 +1813,7 @@ class GitPlugin extends Plugin
         return PermissionsManager::instance();
     }
 
-    private function getGitPermissionsManager() {
+    protected function getGitPermissionsManager() {
         return new GitPermissionsManager(
             new Git_PermissionsDao(),
             $this->getGitSystemEventManager(),
@@ -2302,7 +2304,7 @@ class GitPlugin extends Plugin
     /**
      * @return GitPhpAccessLogger
      */
-    private function getGitPhpAccessLogger()
+    protected function getGitPhpAccessLogger()
     {
         $dao = new HistoryDao();
 
@@ -2470,6 +2472,11 @@ class GitPlugin extends Plugin
             $r->addRoute(['GET', 'POST'], '/admin[/[index.php]]', function () {
                 return $this->getAdminRouter();
             });
+            $r->addRoute(['GET'], '/index.php/{project_id:\d+}/view/{repository_id:\d+}/[{args}]', function () {
+                return new \Tuleap\Git\GitLegacyURLRedirectController(
+                    $this->getRepositoryFactory()
+                );
+            });
             $r->addRoute(['GET', 'POST'], '/{project_name}/{path:.*\.git|.*}/{smart_http:HEAD|info/refs\??.*|git-upload-pack|git-receive-pack|objects/info[^/]+|objects/[0-9a-f]{2}/[0-9a-f]{38}|pack/pack-[0-9a-f]{40}\.pack|pack/pack-[0-9a-f]{40}\.idx}', function () {
                 return new \Tuleap\Git\HTTP\HTTPController(
                     $this->getLogger(),
@@ -2477,6 +2484,21 @@ class GitPlugin extends Plugin
                     $this->getRepositoryFactory(),
                     $this->getGerritServerFactory(),
                     $this->getPermissionsManager()
+                );
+            });
+            $r->addRoute(['GET', 'POST'], '/{project_name}/{path:.*}', function () {
+                return new \Tuleap\Git\GitRepositoryBrowserController(
+                    $this->getRepositoryFactory(),
+                    $this->getProjectManager(),
+                    $this->getGerritServerFactory(),
+                    $this->getGitRepositoryUrlManager(),
+                    $this->getGerritDriverFactory(),
+                    new Git_Driver_Gerrit_UserAccountManager($this->getGerritDriverFactory(), $this->getGerritServerFactory()),
+                    $this->getMirrorDataMapper(),
+                    $this->getGitPhpAccessLogger(),
+                    $this->getGitPermissionsManager(),
+                    $this->getConfigurationParameter('gitphp_path'),
+                    $this->getConfigurationParameter('master_location_name')
                 );
             });
             $r->addRoute(['GET', 'POST'], '/{path:.*}', function () {
