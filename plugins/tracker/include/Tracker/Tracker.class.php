@@ -29,6 +29,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetrie
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationDetector;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
+use Tuleap\Tracker\FormElement\View\Admin\DisplayAdminFormElementsWarningsEvent;
 use Tuleap\Tracker\Notifications\CollectionOfUgroupToBeNotifiedPresenterBuilder;
 use Tuleap\Tracker\Notifications\CollectionOfUserInvolvedInNotificationPresenterBuilder;
 use Tuleap\Tracker\Notifications\GlobalNotificationsAddressesBuilder;
@@ -1822,7 +1823,7 @@ EOS;
 
     public function displayAdminFormElements(Tracker_IDisplayTrackerLayout $layout, $request, $current_user) {
         $hp = Codendi_HTMLPurifier::instance();
-        $this->displayWarningArtifactByEmailRequiredFields();
+        $this->displayAdminFormElementsWarnings();
         $items = $this->getAdminItems();
         $title = $items['editformElements']['title'];
         $this->displayAdminFormElementsHeader($layout, $title, array());
@@ -2824,7 +2825,14 @@ EOS;
         }
     }
 
-    public function displayWarningArtifactByEmailRequiredFields() {
+    private function displayAdminFormElementsWarnings()
+    {
+        $this->displayWarningArtifactByEmailRequiredFields();
+        $event = new DisplayAdminFormElementsWarningsEvent($this, $GLOBALS['Response']);
+        EventManager::instance()->processEvent($event);
+    }
+
+    private function displayWarningArtifactByEmailRequiredFields() {
         $artifactbyemail_status = $this->getArtifactByMailStatus();
 
         if (! $artifactbyemail_status->isRequiredFieldsConfigured($this)) {
