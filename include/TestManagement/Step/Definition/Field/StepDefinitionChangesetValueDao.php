@@ -66,7 +66,7 @@ class StepDefinitionChangesetValueDao extends Tracker_FormElement_Field_ValueDao
             return $this->update($sql);
         }
 
-        return false;
+        return true;
     }
 
     public function createNoneValue($tracker_id, $field_id)
