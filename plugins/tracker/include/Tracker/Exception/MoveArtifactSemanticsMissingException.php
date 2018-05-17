@@ -22,10 +22,10 @@ namespace Tuleap\Tracker\Exception;
 
 use Exception;
 
-class MoveArtifactSemanticTitleMissingException extends Exception
+class MoveArtifactSemanticsMissingException extends Exception
 {
     public function __construct()
     {
-        parent::__construct('Both trackers must have the semantic title defined.');
+        parent::__construct('Both trackers must have either the title semantic or the description semantic defined.');
     }
 }

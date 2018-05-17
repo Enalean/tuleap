@@ -19,5 +19,4 @@
  */
 
 require_once __DIR__.'/../../../../tests/lib/autoload.php';
-require_once __DIR__ . '/../../include/autoload.php';
 require_once __DIR__.'/TrackerBase.php';

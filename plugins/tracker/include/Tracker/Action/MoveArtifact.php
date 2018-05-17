@@ -30,8 +30,7 @@ use Tracker_XML_Exporter_ArtifactXMLExporter;
 use Tracker_XML_Updater_ChangesetXMLUpdater;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionManager;
 use Tuleap\Tracker\Exception\MoveArtifactNotDoneException;
-use Tuleap\Tracker\Exception\MoveArtifactSemanticTitleMissingException;
-use Tuleap\Tracker\Exception\MoveArtifactSemanticTitleValueMissingException;
+use Tuleap\Tracker\Exception\MoveArtifactSemanticsMissingException;
 
 class MoveArtifact
 {
@@ -55,39 +54,47 @@ class MoveArtifact
      * @var Tracker_Artifact_XMLImport
      */
     private $xml_import;
+
     /**
      * @var Tracker_Artifact_PriorityManager
      */
     private $artifact_priority_manager;
+
+    /**
+     * @var MoveSemanticChecker
+     */
+    private $move_semantic_checker;
 
     public function __construct(
         ArtifactsDeletionManager $artifacts_deletion_manager,
         Tracker_XML_Exporter_ArtifactXMLExporter $xml_exporter,
         Tracker_XML_Updater_ChangesetXMLUpdater $xml_updater,
         Tracker_Artifact_XMLImport $xml_import,
-        Tracker_Artifact_PriorityManager $artifact_priority_manager
+        Tracker_Artifact_PriorityManager $artifact_priority_manager,
+        MoveSemanticChecker $move_semantic_checker
     ) {
         $this->artifacts_deletion_manager = $artifacts_deletion_manager;
         $this->xml_exporter               = $xml_exporter;
         $this->xml_updater                = $xml_updater;
         $this->xml_import                 = $xml_import;
         $this->artifact_priority_manager  = $artifact_priority_manager;
+        $this->move_semantic_checker      = $move_semantic_checker;
     }
 
     /**
      * @throws \Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionLimitReachedException
      * @throws \Tuleap\Tracker\Artifact\ArtifactsDeletion\DeletionOfArtifactsIsNotAllowedException
      * @throws MoveArtifactNotDoneException
-     * @throws MoveArtifactSemanticTitleMissingException
+     * @throws MoveArtifactSemanticsMissingException
      */
     public function move(Tracker_Artifact $artifact, Tracker $target_tracker, PFUser $user)
     {
         $this->artifact_priority_manager->startTransaction();
 
         $source_tracker = $artifact->getTracker();
-        if (! $source_tracker->hasSemanticsTitle() || ! $target_tracker->hasSemanticsTitle()) {
+        if (! $this->move_semantic_checker->areSemanticsAligned($source_tracker, $target_tracker)) {
             $this->artifact_priority_manager->rollback();
-            throw new MoveArtifactSemanticTitleMissingException();
+            throw new MoveArtifactSemanticsMissingException();
         }
 
         $xml_artifacts = $this->getXMLRootNode();
