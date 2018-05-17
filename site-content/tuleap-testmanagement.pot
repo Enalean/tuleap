@@ -5,10 +5,13 @@ msgid ""
 "Current campaign does not have any job configured to launch automated tests"
 msgstr ""
 
-msgid "Definition of a step"
+msgid ""
+"Current tracker is not configured to be a test definition tracker in "
+"TestManagement, but is using a \"Step definition\" field: you may remove the "
+"field from the tracker."
 msgstr ""
 
-msgid "Description"
+msgid "Definition of a step"
 msgstr ""
 
 msgid "Job URL is invalid"
@@ -35,7 +38,10 @@ msgstr ""
 msgid "TestManagement config is not fully set up,"
 msgstr ""
 
-msgid "This test does not have any steps yet."
+msgid ""
+"The tracker is using a field \"Step definition\" that is only available in "
+"the context of Test Management. However this service is not enabled in the "
+"project: you may remove the field from the tracker."
 msgstr ""
 
 msgid ""
