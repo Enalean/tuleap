@@ -58,7 +58,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\NotEqualComparisonCheck
 use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\NotInComparisonChecker;
 use TuleapTestCase;
 
-require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
+require_once __DIR__.'/../../../../bootstrap.php';
 
 class InvalidSearchablesCollectorVisitorTest extends TuleapTestCase
 {

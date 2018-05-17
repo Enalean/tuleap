@@ -20,7 +20,7 @@
 
 use Tuleap\User\REST\MinimalUserRepresentation;
 
-require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
+require_once __DIR__.'/../../bootstrap.php';
 
 class Tracker_REST_Artifact_ArtifactRepresentationBuilder_BasicTest extends TuleapTestCase {
 

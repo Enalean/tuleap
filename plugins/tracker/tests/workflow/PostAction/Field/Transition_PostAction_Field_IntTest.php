@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
+require_once __DIR__.'/../../../bootstrap.php';
 Mock::generatePartial('Transition_PostAction_Field_Int', 'Transition_PostAction_Field_IntTestVersion', array('getDao', 'addFeedback', 'getFormElementFactory', 'isDefined', 'getFieldIdOfPostActionToUpdate'));
 
 class Transition_PostAction_Field_IntTest extends TuleapTestCase {

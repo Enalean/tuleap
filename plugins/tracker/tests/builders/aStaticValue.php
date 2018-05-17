@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
+require_once __DIR__.'/../bootstrap.php';
 
 function aBindStaticValue() {
     return new Test_Tracker_FormElement_List_Bind_StaticValue_Builder('Tracker_FormElement_Field_List_Bind_Static');
