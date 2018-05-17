@@ -1,33 +1,13 @@
-<table class="table">
-    <thead>
-    <tr>
-        <th>#</th>
-        <th style="width: 100%">
-            {{# dgettext }}
-                tuleap-testmanagement |
-                Description
-            {{/ dgettext }}
-        </th>
-    </tr>
-    </thead>
-    <tbody>
+<div class="ttm-definition-steps">
     {{^ steps }}
-        <tr>
-            <td colspan="2" class="tlp-table-cell-empty">
-            {{# dgettext }}
-                tuleap-testmanagement |
-                This test does not have any steps yet.
-            {{/ dgettext }}
-            </td>
-        </tr>
+        {{{ purified_no_value_label }}}
     {{/ steps }}
     {{# steps }}
-        <tr>
-            <td style="vertical-align: top;">{{ rank }}</td>
-            <td style="vertical-align: top;">
+        <div class="ttm-definition-step">
+            <div class="ttm-definition-step-rank">{{ rank }}</div>
+            <div class="ttm-definition-step-description">
                 {{{ purified_description }}}
-            </td>
-        </tr>
+            </div>
+        </div>
     {{/ steps }}
-    </tbody>
-</table>
+</div>

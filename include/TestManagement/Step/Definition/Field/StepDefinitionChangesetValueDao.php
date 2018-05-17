@@ -49,7 +49,12 @@ class StepDefinitionChangesetValueDao extends Tracker_FormElement_Field_ValueDao
         $values             = [];
         $rank               = StepDefinition::START_RANK;
         foreach ($steps['description'] as $description) {
-            $description   = $this->da->quoteSmart($description);
+            $description = trim($description);
+            if (! $description) {
+                continue;
+            }
+            $description = $this->da->quoteSmart($description);
+
             $values[] = "($changeset_value_id, $description, $rank)";
             $rank++;
         }

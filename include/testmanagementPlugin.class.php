@@ -73,6 +73,7 @@ class testmanagementPlugin extends Plugin
         }
 
         if (defined('TRACKER_BASE_URL')) {
+            $this->addHook('cssfile');
             $this->addHook(TRACKER_EVENT_COMPLEMENT_REFERENCE_INFORMATION);
             $this->addHook(TRACKER_EVENT_ARTIFACT_LINK_NATURE_REQUESTED);
             $this->addHook(TRACKER_EVENT_PROJECT_CREATION_TRACKERS_REQUIRED);
@@ -87,6 +88,20 @@ class testmanagementPlugin extends Plugin
         }
 
         return parent::getHooksAndCallbacks();
+    }
+
+    public function cssfile()
+    {
+        if (strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL) === 0) {
+            $include_assets = new IncludeAssets(
+                TESTMANAGEMENT_BASE_DIR . '/www/themes/FlamingParrot/assets',
+                TESTMANAGEMENT_BASE_URL . '/themes/FlamingParrot/assets'
+            );
+
+            $style_css_url = $include_assets->getFileURL('style.css');
+
+            echo '<link rel="stylesheet" type="text/css" href="'.$style_css_url.'" />';
+        }
     }
 
     public function getDependencies()

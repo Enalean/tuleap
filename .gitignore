@@ -2,6 +2,7 @@ www/scripts/angular/*.sw*
 www/scripts/angular/*~
 www/scripts/angular/bin/
 www/scripts/angular/node_modules/
+www/themes/*/assets
 *.css
 *.mo
 *.po~

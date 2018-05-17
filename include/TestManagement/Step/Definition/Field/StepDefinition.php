@@ -20,6 +20,7 @@
 
 namespace Tuleap\TestManagement\Step\Definition\Field;
 
+use Codendi_HTMLPurifier;
 use DataAccessObject;
 use ReferenceManager;
 use TemplateRendererFactory;
@@ -224,10 +225,14 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
     ) {
         $renderer = TemplateRendererFactory::build()->getRenderer(TESTMANAGEMENT_BASE_DIR . '/templates');
 
+        $purifier       = Codendi_HTMLPurifier::instance();
+        $no_value_label = $this->getNoValueLabel();
+
         return $renderer->renderToString(
             'step-def-readonly',
             [
-                'steps' => $this->getStepsPresentersFromChangesetValue($value)
+                'steps'                   => $this->getStepsPresentersFromChangesetValue($value),
+                'purified_no_value_label' => $purifier->purify($no_value_label, CODENDI_PURIFIER_FULL)
             ]
         );
     }
