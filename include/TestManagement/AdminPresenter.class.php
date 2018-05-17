@@ -63,18 +63,32 @@ class AdminPresenter
      */
     public $csrf_token;
 
+    /** @var bool */
+    public $is_definition_disabled;
+
+    /** @var string */
+    public $definition_admin_url;
+
     public function __construct(
         $campaign_tracker_id,
         $test_definition_tracker_id,
         $test_execution_tracker_id,
         $issue_tracker_id,
-        CSRFSynchronizerToken $csrf_token
+        CSRFSynchronizerToken $csrf_token,
+        $is_definition_disabled
     ) {
         $this->campaign_tracker_id        = $campaign_tracker_id;
         $this->test_definition_tracker_id = $test_definition_tracker_id;
         $this->test_execution_tracker_id  = $test_execution_tracker_id;
         $this->issue_tracker_id           = $issue_tracker_id;
         $this->csrf_token                 = $csrf_token;
+        $this->is_definition_disabled     = $is_definition_disabled;
+        $this->definition_admin_url       = TRACKER_BASE_URL . '?' . http_build_query(
+            [
+                'tracker' => $test_definition_tracker_id,
+                'func'    => 'admin-formElements'
+            ]
+        );
 
         $this->title       = $GLOBALS['Language']->getText('global', 'Administration');
         $this->campaigns   = $GLOBALS['Language']->getText('plugin_testmanagement', 'admin_campaign_tracker');

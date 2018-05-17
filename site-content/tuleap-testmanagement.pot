@@ -5,10 +5,19 @@ msgid ""
 "Current campaign does not have any job configured to launch automated tests"
 msgstr ""
 
+msgid "Definition of a step"
+msgstr ""
+
+msgid "Description"
+msgstr ""
+
 msgid "Job URL is invalid"
 msgstr ""
 
 msgid "Permission denied"
+msgstr ""
+
+msgid "Please note that HTML format is not supported yet"
 msgstr ""
 
 #, php-format
@@ -20,7 +29,19 @@ msgstr ""
 msgid "Start TestManagement"
 msgstr ""
 
+msgid "Step definition"
+msgstr ""
+
 msgid "TestManagement config is not fully set up,"
+msgstr ""
+
+msgid "This test does not have any steps yet."
+msgstr ""
+
+msgid ""
+"This tracker uses the Step definition field, which can only be used with\n"
+"                        TestManagement. Please <a href=\"%s\">remove the "
+"field</a> before choosing another tracker."
 msgstr ""
 
 msgid "come back later."

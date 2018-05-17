@@ -21,6 +21,7 @@
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\project\Event\ProjectServiceBeforeActivation;
+use Tuleap\TestManagement\Administration\StepFieldUsageDetector;
 use Tuleap\TestManagement\Config;
 use Tuleap\TestManagement\Dao;
 use Tuleap\TestManagement\FirstConfigCreator;
@@ -318,12 +319,19 @@ class testmanagementPlugin extends Plugin
         }
     }
 
-    public function process(Codendi_Request $request) {
-        $config          = new Config(new Dao());
-        $tracker_factory = TrackerFactory::instance();
-        $project_manager = ProjectManager::instance();
-        $user_manager    = UserManager::instance();
-        $event_manager   = EventManager::instance();
+    public function process(Codendi_Request $request)
+    {
+        $config               = new Config(new Dao());
+        $tracker_factory      = TrackerFactory::instance();
+        $project_manager      = ProjectManager::instance();
+        $user_manager         = UserManager::instance();
+        $event_manager        = EventManager::instance();
+        $form_element_factory = Tracker_FormElementFactory::instance();
+
+        $step_field_usage_detector = new StepFieldUsageDetector(
+            $tracker_factory,
+            $form_element_factory
+        );
 
         $router = new Tuleap\TestManagement\Router(
             $this,
@@ -332,7 +340,8 @@ class testmanagementPlugin extends Plugin
             $project_manager,
             $user_manager,
             $event_manager,
-            $this->getArtifactLinksUsageUpdater()
+            $this->getArtifactLinksUsageUpdater(),
+            $step_field_usage_detector
         );
 
         try {
