@@ -1,5 +1,6 @@
 @mixin definitions($main, $white) {
-    .ttm-definition-step {
+    .ttm-definition-step,
+    .ttm-execution-step {
         display: flex;
         align-items: flex-start;
         padding: 10px 0;
@@ -9,7 +10,8 @@
         }
     }
 
-    .ttm-definition-step-rank {
+    .ttm-definition-step-rank,
+    .ttm-execution-step-rank {
         padding: 0 6px;
         background: $main;
         color: $white;
@@ -19,6 +21,15 @@
     .ttm-definition-step-description {
         flex: 1 0 auto;
         margin: 0 0 0 10px;
+    }
+
+    .ttm-execution-step-description {
+        flex: 0 0 auto;
+        margin: 0 0 0 10px;
+    }
+
+    .ttm-execution-step-status {
+        margin: 0 0 0 20px;
     }
 }
 

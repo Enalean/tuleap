@@ -29,6 +29,7 @@ use Tuleap\TestManagement\Nature\NatureCoveredByOverrider;
 use Tuleap\TestManagement\Nature\NatureCoveredByPresenter;
 use Tuleap\TestManagement\REST\ResourcesInjector;
 use Tuleap\TestManagement\Step\Definition\Field\StepDefinition;
+use Tuleap\TestManagement\Step\Execution\Field\StepExecution;
 use Tuleap\TestManagement\TestManagementPluginInfo;
 use Tuleap\TestManagement\UserIsNotAdministratorException;
 use Tuleap\TestManagement\XMLImport;
@@ -120,6 +121,7 @@ class testmanagementPlugin extends Plugin
     public function tracker_formelement_get_classnames($params)
     {
         $params['fields'][StepDefinition::TYPE] = StepDefinition::class;
+        $params['fields'][StepExecution::TYPE]  = StepExecution::class;
     }
 
     public function isUsedByProject(Project $project)

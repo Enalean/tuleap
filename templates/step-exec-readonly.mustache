@@ -1,33 +1,18 @@
-<table class="table">
-    <thead>
-    <tr>
-        <th>#</th>
-        <th style="width: 50%">Actions</th>
-        <th style="width: 50%">Expected results</th>
-        <th>Status</th>
-    </tr>
-    </thead>
-    <tbody>
+<div class="ttm-execution-steps">
     {{^ steps }}
-        <tr>
-            <td colspan="4" class="tlp-table-cell-empty">
-                No steps have been setup for this test
-            </td>
-        </tr>
+        {{{ purified_no_value_label }}}
     {{/ steps }}
     {{# steps }}
-        <tr>
-            <td style="vertical-align: top;">{{ getStep.getId }}</td>
-            <td style="vertical-align: top;">
-                {{{ getStep.getAction }}} <!-- :scream: -->
-            </td>
-            <td style="vertical-align: top;">
-                {{{ getStep.getExpected }}} <!-- :scream: -->
-            </td>
-            <td style="vertical-align: top;">
-                {{ getStatus }}
-            </td>
-        </tr>
+        <div class="ttm-execution-step">
+            {{# step }}
+                <div class="ttm-execution-step-rank">{{ rank }}</div>
+                <div class="ttm-execution-step-description">
+                    {{{ purified_description }}}
+                </div>
+            {{/ step }}
+            <div class="ttm-execution-step-status">
+                <span class="label">{{ status }}</span>
+            </div>
+        </div>
     {{/ steps }}
-    </tbody>
-</table>
+</div>
