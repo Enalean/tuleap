@@ -1,4 +1,23 @@
 <?php
+/**
+ * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 require_once('bootstrap.php');
 Mock::generate('Tracker_RuleDao');
@@ -9,13 +28,7 @@ Mock::generate('DataAccessResult');
 Mock::generate('Tracker');
 
 Mock::generate('Tracker_FormElement_Field_List');
-/**
- * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- *
- *
- *
- * Tests the class ArtifactRuleFactory
- */
+
 class Tracker_RuleFactoryTest extends TuleapTestCase {
 
     public function testImportListRules() {
@@ -93,12 +106,12 @@ XML;
         $rule1 = $date_rules->addChild('rule');
         $rule1->addChild('source_field')->addAttribute('REF', 'F28');
         $rule1->addChild('target_field')->addAttribute('REF', 'F25');
-        $rule1->addChild('comparator')->addAttribute('type', Tracker_rule_date::COMPARATOR_NOT_EQUALS);
+        $rule1->addChild('comparator')->addAttribute('type', Tracker_Rule_Date::COMPARATOR_NOT_EQUALS);
         
         $rule2 = $date_rules->addChild('rule');
         $rule2->addChild('source_field')->addAttribute('REF', 'F29');
         $rule2->addChild('target_field')->addAttribute('REF', 'F30');
-        $rule2->addChild('comparator')->addAttribute('type', Tracker_rule_date::COMPARATOR_LESS_THAN_OR_EQUALS);
+        $rule2->addChild('comparator')->addAttribute('type', Tracker_Rule_Date::COMPARATOR_LESS_THAN_OR_EQUALS);
 
         $tracker = mock('Tracker');
         stub($tracker)->getId()->returns(900);
@@ -119,13 +132,13 @@ XML;
         $rules = $rule_factory->getInstanceFromXML($xml, $array_xml_mapping, $tracker);
 
         $date_rule_expected  = new Tracker_Rule_Date();
-        $date_rule_expected->setComparator(Tracker_rule_date::COMPARATOR_NOT_EQUALS)
+        $date_rule_expected->setComparator(Tracker_Rule_Date::COMPARATOR_NOT_EQUALS)
                 ->setTrackerId($tracker->getId())
                 ->setSourceField($array_xml_mapping['F28'])
                 ->setTargetField($array_xml_mapping['F25']);
         
         $date_rule_expected2 = new Tracker_Rule_Date();
-        $date_rule_expected2->setComparator(Tracker_rule_date::COMPARATOR_LESS_THAN_OR_EQUALS)
+        $date_rule_expected2->setComparator(Tracker_Rule_Date::COMPARATOR_LESS_THAN_OR_EQUALS)
                 ->setTrackerId($tracker->getId())
                 ->setSourceField($array_xml_mapping['F29'])
                 ->setTargetField($array_xml_mapping['F30']);
