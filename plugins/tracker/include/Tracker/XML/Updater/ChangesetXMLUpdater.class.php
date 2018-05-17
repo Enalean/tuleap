@@ -81,18 +81,31 @@ class Tracker_XML_Updater_ChangesetXMLUpdater {
         $artifact_xml->changeset->submitted_by = $user->getId();
     }
 
+    /**
+     * Parse the SimpleXMLElement field_change nodes to prepare the move action.
+     *
+     * The parse is done in reverse order to be able to delete a SimpleXMLElement without any issues.
+     */
     private function parseFieldChangeNodesInReverseOrder(
         Tracker $source_tracker,
         Tracker $target_tracker,
         SimpleXMLElement $artifact_xml
     ) {
-        $source_title_field = $source_tracker->getTitleField()->getName();
-        $last_index         = count($artifact_xml->changeset->field_change) - 1;
-        for ($i = $last_index; $i >= 0; $i--) {
-            if ($this->isFieldChangeCorrespondingToTitleField($artifact_xml, $source_title_field, $i)) {
-                $this->useTargetTrackerFieldName($artifact_xml, $target_tracker, $i);
+        $target_title_field       = $target_tracker->getTitleField();
+        $target_description_field = $target_tracker->getDescriptionField();
+
+        $last_index = count($artifact_xml->changeset->field_change) - 1;
+        for ($index = $last_index; $index >= 0; $index--) {
+            if ($target_title_field &&
+                $this->isFieldChangeCorrespondingToTitleSemanticField($artifact_xml, $source_tracker, $index)
+            ) {
+                $this->useTargetTrackerFieldName($artifact_xml, $target_title_field, $index);
+            } elseif ($target_description_field &&
+                $this->isFieldChangeCorrespondingToDescriptionSemanticField($artifact_xml, $source_tracker, $index)
+            ) {
+                $this->useTargetTrackerFieldName($artifact_xml, $target_description_field, $index);
             } else {
-                $this->deleteFieldChangeNode($artifact_xml, $i);
+                $this->deleteFieldChangeNode($artifact_xml, $index);
             }
         }
     }
@@ -102,15 +115,49 @@ class Tracker_XML_Updater_ChangesetXMLUpdater {
         unset($artifact_xml->changeset->field_change[$index]);
     }
 
-    private function isFieldChangeCorrespondingToTitleField(SimpleXMLElement $artifact_xml, $source_title_field, $index)
-    {
-        $field_change = $artifact_xml->changeset->field_change[$index];
+    private function isFieldChangeCorrespondingToTitleSemanticField(
+        SimpleXMLElement $artifact_xml,
+        Tracker $source_tracker,
+        $index
+    ) {
+        $source_title_field = $source_tracker->getTitleField();
+        if ($source_title_field && $this->isFieldChangeCorrespondingToField($artifact_xml, $source_title_field, $index)) {
+            return true;
+        }
 
-        return (string)$field_change['field_name'] === $source_title_field;
+        return false;
     }
 
-    private function useTargetTrackerFieldName(SimpleXMLElement $artifact_xml, Tracker $target_tracker, $index)
-    {
-        $artifact_xml->changeset->field_change[$index]['field_name'] = $target_tracker->getTitleField()->getName();
+    private function isFieldChangeCorrespondingToDescriptionSemanticField(
+        SimpleXMLElement $artifact_xml,
+        Tracker $source_tracker,
+        $index
+    ) {
+        $source_description_field = $source_tracker->getDescriptionField();
+        if ($source_description_field &&
+            $this->isFieldChangeCorrespondingToField($artifact_xml, $source_description_field, $index)
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private function isFieldChangeCorrespondingToField(
+        SimpleXMLElement $artifact_xml,
+        Tracker_FormElement_Field $source_field,
+        $index
+    ) {
+        $field_change = $artifact_xml->changeset->field_change[$index];
+
+        return (string)$field_change['field_name'] === $source_field->getName();
+    }
+
+    private function useTargetTrackerFieldName(
+        SimpleXMLElement $artifact_xml,
+        Tracker_FormElement_Field $target_field,
+        $index
+    ) {
+        $artifact_xml->changeset->field_change[$index]['field_name'] = $target_field->getName();
     }
 }

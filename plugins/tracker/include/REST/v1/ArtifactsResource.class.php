@@ -50,6 +50,7 @@ use \Tracker_Artifact;
 use Tuleap\REST\QueryParameterException;
 use Tuleap\REST\QueryParameterParser;
 use Tuleap\Tracker\Action\MoveArtifact;
+use Tuleap\Tracker\Action\MoveSemanticChecker;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfig;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigDAO;
 use Tuleap\Tracker\Admin\ArtifactsDeletion\UserDeletionRetriever;
@@ -59,7 +60,7 @@ use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionLimitReachedExcep
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionManager;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\DeletionOfArtifactsIsNotAllowedException;
 use Tuleap\Tracker\Exception\MoveArtifactNotDoneException;
-use Tuleap\Tracker\Exception\MoveArtifactSemanticTitleMissingException;
+use Tuleap\Tracker\Exception\MoveArtifactSemanticsMissingException;
 use Tuleap\Tracker\Exception\SemanticTitleNotDefinedException;
 use Tuleap\Tracker\REST\Artifact\ArtifactBatchQueryConverter;
 use Tuleap\Tracker\REST\Artifact\MalformedArtifactBatchQueryConverterException;
@@ -768,7 +769,7 @@ class ArtifactsResource extends AuthenticatedResource {
         } catch (MoveArtifactNotDoneException $exception) {
             $remaining_deletions = $this->getRemainingNumberOfDeletion($user, $limit);
             throw new RestException(500, $exception->getMessage());
-        } catch (MoveArtifactSemanticTitleMissingException $exception) {
+        } catch (MoveArtifactSemanticsMissingException $exception) {
             $remaining_deletions = $this->getRemainingNumberOfDeletion($user, $limit);
             throw new RestException(400, $exception->getMessage());
         } finally {
@@ -829,7 +830,8 @@ class ArtifactsResource extends AuthenticatedResource {
                 new Tracker_Artifact_PriorityHistoryDao(),
                 $this->user_manager,
                 $this->artifact_factory
-            )
+            ),
+            new MoveSemanticChecker()
         );
     }
 

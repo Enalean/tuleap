@@ -297,6 +297,12 @@
           <description>Define the contributor/assignee of an artifact</description>
           <field REF="F94"/>
         </semantic>
+        <semantic type="description">
+          <shortname>description</shortname>
+          <label>Description</label>
+          <description>Définir la description d'un artéfact</description>
+          <field REF="F91"/>
+        </semantic>
         <semantic type="tooltip">
           <field REF="F84"/>
           <field REF="F90"/>
@@ -373,7 +379,7 @@
         </artifact>
       </artifacts>
     </tracker>
-    <tracker id="T221" parent_id="0" instantiate_for_new_projects="1">
+    <tracker id="T221" parent_id="0" instantiate_for_new_projects="0">
       <name><![CDATA[ToMoveArtifacts]]></name>
       <item_name>ToMoveArtifacts</item_name>
       <description><![CDATA[ToMoveArtifacts]]></description>
@@ -385,6 +391,11 @@
           <label><![CDATA[title]]></label>
           <properties size="30"/>
         </formElement>
+        <formElement type="text" ID="F18644" rank="1">
+          <name>desc</name>
+          <label><![CDATA[desc]]></label>
+          <properties rows="10" cols="50"/>
+        </formElement>
       </formElements>
       <semantics>
         <semantic type="title">
@@ -392,6 +403,12 @@
           <label>Titre</label>
           <description>Définir le titre d'un artéfact</description>
           <field REF="F18643"/>
+        </semantic>
+        <semantic type="description">
+          <shortname>description</shortname>
+          <label>Description</label>
+          <description>Définir la description d'un artéfact</description>
+          <field REF="F18644"/>
         </semantic>
         <semantic type="tooltip"/>
         <semantic type="plugin_cardwall_card_fields"/>
@@ -419,6 +436,9 @@
         <permission scope="field" REF="F18643" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
         <permission scope="field" REF="F18643" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
         <permission scope="field" REF="F18643" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F18644" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F18644" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F18644" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
       </permissions>
     </tracker>
   </trackers>
