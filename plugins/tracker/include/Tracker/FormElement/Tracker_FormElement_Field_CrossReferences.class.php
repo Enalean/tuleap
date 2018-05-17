@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -168,7 +168,8 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
         return '<input type="text" name="criteria['. $this->id .']" value="'. $hp->purify($this->getCriteriaValue($criteria), CODENDI_PURIFIER_CONVERT_HTML) .'" />';
     }
 
-    public function fetchArtifactForOverlay(Tracker_Artifact $artifact) {
+    public function fetchArtifactForOverlay(Tracker_Artifact $artifact, $submitted_values = [])
+    {
         return '';
     }
 
