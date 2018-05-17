@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -76,13 +76,13 @@ class Tracker_XML_Updater_ChangesetXMLUpdaterTest extends TuleapTestCase {
         $this->formelement_factory = mock('Tracker_FormElementFactory');
         $this->updater             = new Tracker_XML_Updater_ChangesetXMLUpdater($this->visitor, $this->formelement_factory);
         $this->user                = aUser()->withId($this->user_id)->build();
-        $this->tracker             = aTracker()->withId($this->tracker_id)->build();
+        $this->tracker             = aMockTracker()->withId($this->tracker_id)->build();
         $this->submitted_values    = array(
             1001 => 'Content of summary field',
             1002 => '123'
         );
 
-        $this->field_summary = aStringField()->withId(1001)->build();
+        $this->field_summary = aStringField()->withId(1001)->withName('summary')->build();
         $this->field_effort  = aStringField()->withId(1002)->build();
         $this->field_details = aStringField()->withId(1003)->build();
         stub($this->formelement_factory)
@@ -136,13 +136,22 @@ class Tracker_XML_Updater_ChangesetXMLUpdaterTest extends TuleapTestCase {
         $this->updater->update($this->tracker, $this->artifact_xml, $this->submitted_values, $this->user, time());
     }
 
-    public function itRemovesTheAllThefieldChangeTagsInMoveAction()
+    public function itUpdatesTheTitleFieldChangeTagsInMoveAction()
     {
-        $this->updater->updateForMoveAction($this->tracker, $this->artifact_xml, $this->user, time());
+        $target_title_field = aMockField()->withName('title2')->build();
+        $target_tracker     = aMockTracker()->withId(201)->build();
 
+        stub($this->tracker)->getTitleField()->returns($this->field_summary);
+        stub($target_tracker)->getTitleField()->returns($target_title_field);
+
+        $this->updater->updateForMoveAction($this->tracker, $target_tracker, $this->artifact_xml, $this->user, time());
+
+        $this->assertEqual((int)$this->artifact_xml['tracker_id'], 201);
         $this->assertEqual((string)$this->artifact_xml->changeset->submitted_on, date('c', time()));
         $this->assertEqual((int)$this->artifact_xml->changeset->submitted_by, $this->user->getId());
 
-        $this->assertFalse($this->artifact_xml->changeset->field_change);
+        $this->assertEqual(count($this->artifact_xml->changeset->field_change), 1);
+        $this->assertTrue($this->artifact_xml->changeset->field_change[0]['field_name'], 'title2');
+        $this->assertEqual((string)$this->artifact_xml->changeset->field_change[0]->value, 'Initial summary value');
     }
 }

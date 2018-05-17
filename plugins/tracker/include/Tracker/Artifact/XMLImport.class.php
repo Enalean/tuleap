@@ -322,7 +322,8 @@ class Tracker_Artifact_XMLImport {
             $fields_data,
             $submitted_by,
             $this->getSubmittedOn($xml_changeset),
-            false);
+            false
+        );
     }
 
     private function importFakeFirstChangeset(
@@ -418,7 +419,15 @@ class Tracker_Artifact_XMLImport {
             );
 
             if ($artifact) {
-                $this->importFakeFirstChangeset($artifact, $xml_artifact->changeset);
+                $fields_data_builder = $this->createFieldsDataBuilder(
+                    $tracker,
+                    $xml_artifact,
+                    '',
+                    new TrackerXmlFieldsMapping_InSamePlatform(),
+                    new Tracker_XML_Importer_ArtifactImportedMapping()
+                );
+
+                $this->importFirstChangeset($artifact, $xml_artifact->changeset, $fields_data_builder);
                 return $artifact;
             }
         }

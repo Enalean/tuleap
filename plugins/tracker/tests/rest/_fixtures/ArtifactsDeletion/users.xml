@@ -25,9 +25,9 @@
 <users>
   <user>
     <id>102</id>
-    <username>rest_api_delete_artifacts_1</username>
-    <realname><![CDATA[Delete artifacts User 1]]></realname>
-    <email><![CDATA[delete_artifacts_user_1@example.com]]></email>
-    <ldapid>deleteartifacts1</ldapid>
+    <username>rest_api_tester_1</username>
+    <realname><![CDATA[Test User 1]]></realname>
+    <email><![CDATA[test_user_1@example.com]]></email>
+    <ldapid>tester1</ldapid>
   </user>
 </users>

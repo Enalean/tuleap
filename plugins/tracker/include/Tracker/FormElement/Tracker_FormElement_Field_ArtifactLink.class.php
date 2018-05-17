@@ -1256,6 +1256,24 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         return $this->getArtifactLinkInfos($links_data);
     }
 
+    /**
+     * @return array
+     */
+    private function getReverseLinksIds($artifact_id)
+    {
+        $reverse_links_infos = $this->getReverseLinks($artifact_id);
+
+        $reverse_links_ids = [];
+        foreach ($reverse_links_infos as $reverse_link_info) {
+            $reverse_links_ids[] = $reverse_link_info->getArtifactId();
+        }
+
+        return $reverse_links_ids;
+    }
+
+    /**
+     * @return Tracker_ArtifactLinkInfo[]
+     */
     private function getArtifactLinkInfos($data) {
         $artifact_links = array();
         while ($row = $data->getRow()) {
@@ -1660,7 +1678,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     public function getLinkedAndReverseArtifacts(Tracker_Artifact_Changeset $changeset, PFUser $user) {
         $artifacts        = [];
         $changeset_value  = $changeset->getValue($this);
-        $all_artifact_ids = $this->getReverseLinks($changeset->getArtifact()->getId());
+        $all_artifact_ids = $this->getReverseLinksIds($changeset->getArtifact()->getId());
 
         if ($changeset_value) {
             $all_artifact_ids = array_unique(array_merge($all_artifact_ids, $changeset_value->getArtifactIds()));

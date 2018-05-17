@@ -62,21 +62,55 @@ class Tracker_XML_Updater_ChangesetXMLUpdater {
     }
 
     public function updateForMoveAction(
-        Tracker $tracker,
+        Tracker $source_tracker,
+        Tracker $target_tracker,
         SimpleXMLElement $artifact_xml,
         PFUser $user,
         $submitted_on
     ) {
-        $artifact_xml['tracker_id'] = $tracker->getId();
+        $artifact_xml['tracker_id'] = $target_tracker->getId();
 
         $this->addSubmittedInformation($artifact_xml, $user, $submitted_on);
 
-        unset($artifact_xml->changeset->field_change);
+        $this->parseFieldChangeNodesInReverseOrder($source_tracker, $target_tracker, $artifact_xml);
     }
 
     private function addSubmittedInformation(SimpleXMLElement $artifact_xml, PFUser $user, $submitted_on)
     {
         $artifact_xml->changeset->submitted_on = date('c', $submitted_on);
         $artifact_xml->changeset->submitted_by = $user->getId();
+    }
+
+    private function parseFieldChangeNodesInReverseOrder(
+        Tracker $source_tracker,
+        Tracker $target_tracker,
+        SimpleXMLElement $artifact_xml
+    ) {
+        $source_title_field = $source_tracker->getTitleField()->getName();
+        $last_index         = count($artifact_xml->changeset->field_change) - 1;
+        for ($i = $last_index; $i >= 0; $i--) {
+            if ($this->isFieldChangeCorrespondingToTitleField($artifact_xml, $source_title_field, $i)) {
+                $this->useTargetTrackerFieldName($artifact_xml, $target_tracker, $i);
+            } else {
+                $this->deleteFieldChangeNode($artifact_xml, $i);
+            }
+        }
+    }
+
+    private function deleteFieldChangeNode(SimpleXMLElement $artifact_xml, $index)
+    {
+        unset($artifact_xml->changeset->field_change[$index]);
+    }
+
+    private function isFieldChangeCorrespondingToTitleField(SimpleXMLElement $artifact_xml, $source_title_field, $index)
+    {
+        $field_change = $artifact_xml->changeset->field_change[$index];
+
+        return (string)$field_change['field_name'] === $source_title_field;
+    }
+
+    private function useTargetTrackerFieldName(SimpleXMLElement $artifact_xml, Tracker $target_tracker, $index)
+    {
+        $artifact_xml->changeset->field_change[$index]['field_name'] = $target_tracker->getTitleField()->getName();
     }
 }

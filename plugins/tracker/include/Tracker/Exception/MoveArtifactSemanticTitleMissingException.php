@@ -1,10 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2018. All rights reserved.
- *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
- * Enalean SAS. All other trademarks or names are properties of their respective
- * owners.
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,9 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigDAO;
+namespace Tuleap\Tracker\Exception;
 
-require_once __DIR__ . '/../../include/trackerPlugin.class.php';
+use Exception;
 
-$config_dao = new ArtifactsDeletionConfigDAO();
-$config_dao->updateDeletableArtifactsLimit(2);
+class MoveArtifactSemanticTitleMissingException extends Exception
+{
+    public function __construct()
+    {
+        parent::__construct('Both trackers must have the semantic title defined.');
+    }
+}
