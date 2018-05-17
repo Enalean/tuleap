@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -297,7 +297,8 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         return $this->getFieldDataBuilder()->getDataLikeWebUI($new_values, $removed_values, $submitted_values);
     }
 
-    public function fetchArtifactForOverlay(Tracker_Artifact $artifact) {
+    public function fetchArtifactForOverlay(Tracker_Artifact $artifact, $submitted_values = [])
+    {
         $user_manager   = UserManager::instance();
         $user           = $user_manager->getCurrentUser();
         $parent_tracker = $this->getTracker()->getParent();
