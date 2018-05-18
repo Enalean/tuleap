@@ -242,3 +242,66 @@
     color: $tlp-ui-dimmed;
     font-style: italic;
 }
+
+
+.steps {
+    flex: 1 1 auto;
+    overflow-y: auto;
+
+    execution-detail-just-updated > .feedback-info {
+        margin: 20px;
+    }
+}
+
+.steps-maindescription {
+    margin: $tlp-spacing 0 0;
+    padding: 0 $tlp-spacing $tlp-spacing;
+    border-bottom: 1px solid $tlp-ui-border-light;
+}
+
+.steps-step {
+    display: flex;
+    align-items: baseline;
+    border-bottom: 1px solid $tlp-ui-border-light;
+
+    &.passed {
+        background: transparentize($tlp-ui-success, .96);
+
+        > .steps-step-description > .steps-step-expected > i {
+            color: $tlp-ui-success;
+        }
+    }
+
+    &.failed {
+        background: transparentize($tlp-ui-danger, .96);
+
+        > .steps-step-description > .steps-step-expected > i {
+            color: $tlp-ui-danger;
+        }
+    }
+
+    &.blocked {
+        background: transparentize($tlp-ui-info, .96);
+
+        > .steps-step-description > .steps-step-expected > i {
+            color: $tlp-ui-info;
+        }
+    }
+
+    &.notrun {
+        background: transparent;
+
+        > .steps-step-description > .steps-step-expected > i {
+            color: $tlp-ui-dimmed;
+        }
+    }
+}
+
+.steps-step-number {
+    margin: $tlp-spacing;
+}
+
+.steps-step-description {
+    margin: $tlp-spacing 0;
+    flex-grow: 1;
+}

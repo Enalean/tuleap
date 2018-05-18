@@ -111,7 +111,7 @@
             </div>
         </section>
 
-        <section class="tlp-pane-section current-test-content">
+        <section class="tlp-pane-section current-test-content" ng-if="! execution.definition.steps.length">
             <execution-detail-just-updated></execution-detail-just-updated>
             <h2>Steps</h2>
             <p class="current-test-description-empty-state"
@@ -119,6 +119,19 @@
                 translate
             >This test has no description. Please edit it.</p>
             <div ng-bind-html="execution.definition.description"></div>
+        </section>
+
+        <section ng-if="execution.definition.steps.length" class="steps">
+            <execution-detail-just-updated></execution-detail-just-updated>
+            <div ng-bind-html="execution.definition.description"
+                 ng-if="execution.definition.description.length"
+                 class="steps-maindescription"></div>
+            <div ng-repeat="step in execution.definition.steps | orderBy:'rank'" class="steps-step notrun">
+                <div class="steps-step-number">
+                    <span class="tlp-badge-secondary">{{ step.rank }}</span>
+                </div>
+                <div class="steps-step-description" ng-bind-html="step.description"></div>
+            </div>
         </section>
 
         <section class="tlp-pane-section current-test-footer">
