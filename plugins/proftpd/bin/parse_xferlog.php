@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -30,6 +30,7 @@ if ($plugin && $plugin_manager->isPluginAvailable($plugin)) {
         new Tuleap\ProFTPd\Xferlog\Parser(),
         UserManager::instance(),
         ProjectManager::instance(),
+        new UserDao(),
         $plugin->getPluginInfo()->getPropVal('proftpd_base_directory')
     );
 

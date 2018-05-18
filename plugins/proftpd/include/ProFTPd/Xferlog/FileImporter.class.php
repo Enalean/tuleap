@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,9 +23,11 @@ namespace Tuleap\ProFTPd\Xferlog;
 use \Exception;
 use \PFUser;
 use \ProjectManager;
+use UserDao;
 use \UserManager;
 
-class FileImporter {
+class FileImporter
+{
 
     /** @var Dao */
     private $dao;
@@ -48,30 +50,53 @@ class FileImporter {
     /** @var string */
     private $base_dir;
 
-    public function __construct(Dao $dao, Parser $parser, UserManager $user_manager, ProjectManager $project_manager, $base_dir) {
+    /**
+     * @var UserDao
+     */
+    private $user_dao;
+
+    /**
+     * @var array
+     */
+    private $user_last_access_cache = [];
+
+    public function __construct(
+        Dao $dao,
+        Parser $parser,
+        UserManager $user_manager,
+        ProjectManager $project_manager,
+        UserDao $user_dao,
+        $base_dir
+    ) {
         $this->dao             = $dao;
         $this->parser          = $parser;
         $this->user_manager    = $user_manager;
         $this->project_manager = $project_manager;
         $this->base_dir        = $base_dir;
+        $this->user_dao        = $user_dao;
     }
 
-    public function getNbImportedLines() {
+    public function getNbImportedLines()
+    {
         return $this->nb_lines_imported;
     }
 
-    public function getErrors() {
+    public function getErrors()
+    {
         return $this->errors;
     }
 
-    public function import($filepath) {
+    public function import($filepath)
+    {
         $latest_timestamp = $this->dao->searchLatestEntryTimestamp();
         $this->parseFile($filepath, $latest_timestamp);
+        $this->updateLastAccessDates();
     }
 
-    private function parseFile($filepath, $latest_timestamp) {
+    private function parseFile($filepath, $latest_timestamp)
+    {
         $this->nb_lines_imported = 0;
-        $fd = fopen($filepath, 'r');
+        $fd                      = fopen($filepath, 'r');
         if ($fd) {
             while (($line = fgets($fd)) !== false) {
                 if ($this->parseLine($line, $latest_timestamp)) {
@@ -82,12 +107,14 @@ class FileImporter {
         fclose($fd);
     }
 
-    private function parseLine($line, $latest_timestamp) {
+    private function parseLine($line, $latest_timestamp)
+    {
         try {
             $entry = $this->parser->extract(trim($line));
             if ($entry->current_time >= $latest_timestamp) {
                 $user_id    = $this->getUserId($entry, $line);
                 $project_id = $this->getProjectId($entry, $line);
+                $this->cacheUserLastAccessDate($user_id, $entry->current_time);
                 return $this->dao->store($user_id, $project_id, $entry);
             }
         } catch (InvalidEntryException $exception) {
@@ -96,16 +123,18 @@ class FileImporter {
         return false;
     }
 
-    private function getUserId(Entry $entry, $line) {
+    private function getUserId(Entry $entry, $line)
+    {
         $user = $this->user_manager->getUserByUserName($entry->username);
         if ($user) {
             return $user->getId();
         }
-        $this->errors[] = 'Unable to identify user in log line: '.$line;
+        $this->errors[] = 'Unable to identify user in log line: ' . $line;
         return 0;
     }
 
-    private function getProjectId(Entry $entry, $line) {
+    private function getProjectId(Entry $entry, $line)
+    {
         $project_name = $this->getProjectUnixName($entry);
         if ($project_name) {
             $project = $this->project_manager->getProjectByUnixName($project_name);
@@ -113,11 +142,12 @@ class FileImporter {
                 return $project->getId();
             }
         }
-        $this->errors[] = 'Unable to identify project in log line: '.$line;
+        $this->errors[] = 'Unable to identify project in log line: ' . $line;
         return 0;
     }
 
-    private function getProjectUnixName(Entry $entry) {
+    private function getProjectUnixName(Entry $entry)
+    {
         if (strpos($entry->filename, $this->base_dir) === 0) {
             $entry->filename = substr($entry->filename, strlen($this->base_dir));
 
@@ -125,6 +155,22 @@ class FileImporter {
         $matches = array();
         if (preg_match('%^/([^/]+)/.*%', $entry->filename, $matches)) {
             return $matches[1];
+        }
+    }
+
+    private function cacheUserLastAccessDate($user_id, $timestamp)
+    {
+        if (isset($this->user_last_access_cache[$user_id]) && $this->user_last_access_cache[$user_id] >= $timestamp) {
+            return;
+        }
+
+        $this->user_last_access_cache[$user_id] = $timestamp;
+    }
+
+    private function updateLastAccessDates()
+    {
+        foreach ($this->user_last_access_cache as $user_id => $timestamp) {
+            $this->user_dao->storeLastAccessDate($user_id, $timestamp);
         }
     }
 }
