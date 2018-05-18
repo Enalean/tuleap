@@ -1605,9 +1605,8 @@ CREATE TABLE homepage_headline (
 
 DROP TABLE IF EXISTS forgeconfig;
 CREATE TABLE forgeconfig (
-    name VARCHAR(255) NOT NULL,
-    value VARCHAR(255) NOT NULL DEFAULT '',
-    PRIMARY KEY idx(name(10))
+    name VARCHAR(255) PRIMARY KEY,
+    value VARCHAR(255) NOT NULL DEFAULT ''
 );
 
 DROP TABLE IF EXISTS password_configuration;

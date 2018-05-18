@@ -96,6 +96,9 @@ executeCommandAndExitIfStderrNotEmpty("find $core_src -name '*.php' \
     | sed '/^msgctxt/d' \
     > $template");
 
+info("[core] Ensure .pot strings uniquness");
+executeCommandAndExitIfStderrNotEmpty("msguniq --sort-output --use-first -o $template $template");
+
 info("[core] Generating .pot file for .mustache files");
 $mustache_template = "$basedir/site-content/tuleap-core.mustache.pot";
 $gettext_in_mustache_extractor->extract(

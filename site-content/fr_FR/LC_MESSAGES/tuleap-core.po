@@ -10,7 +10,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.8.7.1\n"
 
 #, php-format
 msgid ""
@@ -211,6 +210,9 @@ msgstr "Mot de passe compromis"
 
 msgid "Configure services"
 msgstr "Configurer les services"
+
+msgid "Contact (help menu)"
+msgstr "Contact (menu \"Aide\")"
 
 msgid "Could not commit repository initial layout"
 msgstr "Impossible de commiter la structure initiale du dépôt"
@@ -581,6 +583,9 @@ msgstr "Propriétaire"
 msgid "PHPWiki"
 msgstr "PHPWiki"
 
+msgid "Page accessible to anonymous"
+msgstr "Pages accessible aux anonymes"
+
 msgid "Page permissions are not listed."
 msgstr "Les permissions par page ne sont pas listées."
 
@@ -771,6 +776,9 @@ msgstr "Liste des raccourcis"
 
 msgid "Sidebar (project)"
 msgstr "Barre de service (projet)"
+
+msgid "Site homepage"
+msgstr "Page d'accueil"
 
 msgid "Start by choosing a widget"
 msgstr "Commencez par choisir un widget"
@@ -1144,6 +1152,13 @@ msgid "You are not the user who asked for email change"
 msgstr ""
 "Vous n'etes pas l'utilisateur à l'origine de la demande de changement d'e-"
 "mail"
+
+msgid ""
+"You can configure some pages to be accessible by anyone, even if the "
+"platform would forbid it."
+msgstr ""
+"Vous pouvez rendre accessible aux anonymes les pages ci-dessous même si la "
+"plateforme force l'authentification"
 
 msgid ""
 "You can delegate to this group several permissions. All the members of this\n"

@@ -1,9 +1,0 @@
-<?php
-
-// Allow nonymous user to access to following list of URLs
-
-// to disable this feature even if the list is not empty
-$enable_anonymous_url = false;
-
-// Select Allowed URLs
-$allowed_scripts = array();

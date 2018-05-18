@@ -99,4 +99,14 @@ class ForgeAccess_ForgePropertiesManager
         $this->config_dao->save(NameTranslator::CONFIG_AUTHENTICATED_LABEL, $authenticated_label);
         $this->config_dao->save(NameTranslator::CONFIG_REGISTERED_LABEL, $registered_label);
     }
+
+    public function updateAnonymousCanSeeSiteHomePage($new_value)
+    {
+        return $this->config_dao->save(ForgeAccess::ANONYMOUS_CAN_SEE_SITE_HOMEPAGE, $new_value);
+    }
+
+    public function updateAnonymousCanSeeContact($new_value)
+    {
+        return $this->config_dao->save(ForgeAccess::ANONYMOUS_CAN_SEE_CONTACT, $new_value);
+    }
 }

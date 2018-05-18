@@ -86,6 +86,12 @@ class ForgeAccess_AdminPresenter {
     /** @var string */
     public $platform_access_control_label;
 
+    /** @var string */
+    public $anonymous_can_see_site_homepage;
+
+    /** @var string */
+    public $anonymous_can_see_contact;
+
     public function __construct(
         CSRFSynchronizerToken $csrf,
         $title,
@@ -94,14 +100,18 @@ class ForgeAccess_AdminPresenter {
         $nb_restricted_users,
         $ugroup_authenticated_users,
         $ugroup_registered_users,
-        $project_admin_can_choose
+        $project_admin_can_choose,
+        $anonymous_can_see_site_homepage,
+        $anonymous_can_see_contact
     ) {
-        $this->title                    = $title;
-        $this->csrf_token               = $csrf;
-        $this->localinc_path            = $localinc_path;
-        $this->current_access_mode      = $current_access_mode;
-        $this->nb_restricted_users      = $nb_restricted_users;
-        $this->project_admin_can_choose = $project_admin_can_choose;
+        $this->title                           = $title;
+        $this->csrf_token                      = $csrf;
+        $this->localinc_path                   = $localinc_path;
+        $this->current_access_mode             = $current_access_mode;
+        $this->nb_restricted_users             = $nb_restricted_users;
+        $this->project_admin_can_choose        = $project_admin_can_choose;
+        $this->anonymous_can_see_site_homepage = $anonymous_can_see_site_homepage;
+        $this->anonymous_can_see_contact       = $anonymous_can_see_contact;
 
         $this->is_localinc_obsolete = $this->isLocalIncObsolete();
 

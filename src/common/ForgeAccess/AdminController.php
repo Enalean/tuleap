@@ -90,7 +90,9 @@ class ForgeAccess_AdminController
             count($this->user_dao->searchByStatus(PFUser::STATUS_RESTRICTED)),
             ForgeConfig::get(NameTranslator::CONFIG_AUTHENTICATED_LABEL),
             ForgeConfig::get(NameTranslator::CONFIG_REGISTERED_LABEL),
-            ForgeConfig::get(ForgeAccess::PROJECT_ADMIN_CAN_CHOOSE_VISIBILITY)
+            ForgeConfig::get(ForgeAccess::PROJECT_ADMIN_CAN_CHOOSE_VISIBILITY),
+            ForgeConfig::get(ForgeAccess::ANONYMOUS_CAN_SEE_SITE_HOMEPAGE),
+            ForgeConfig::get(ForgeAccess::ANONYMOUS_CAN_SEE_CONTACT)
         );
 
         $admin_page->renderAPresenter(
@@ -166,21 +168,65 @@ class ForgeAccess_AdminController
 
     /** @return bool true if updated */
     private function updateProjectAdminValue() {
+        $new_value = $this->getToggleValue(ForgeAccess::PROJECT_ADMIN_CAN_CHOOSE_VISIBILITY);
+        if ($new_value !== -1) {
+            return $this->manager->updateProjectAdminVisibility($new_value);
+        }
+        return false;
+    }
+
+    public function updateAnonymousAccess() {
+        $this->csrf->check();
+
+        $updated  = false;
+        $updated |= $this->updateAnonymousForSiteHomePage();
+        $updated |= $this->updateAnonymousForContact();
+
+        if ($updated) {
+            $this->response->addFeedback(
+                Feedback::INFO,
+                $GLOBALS['Language']->getText('admin_main', 'successfully_updated')
+            );
+        }
+        $this->redirectToIndex();
+    }
+
+    private function updateAnonymousForSiteHomePage()
+    {
+
+        $new_value = $this->getToggleValue(ForgeAccess::ANONYMOUS_CAN_SEE_SITE_HOMEPAGE);
+        if ($new_value !== -1) {
+            return $this->manager->updateAnonymousCanSeeSiteHomePage($new_value);
+        }
+        return false;
+    }
+
+    private function updateAnonymousForContact()
+    {
+        $new_value = $this->getToggleValue(ForgeAccess::ANONYMOUS_CAN_SEE_CONTACT);
+        if ($new_value !== -1) {
+            return $this->manager->updateAnonymousCanSeeContact($new_value);
+        }
+        return false;
+    }
+
+    private function getToggleValue($key)
+    {
         $validator = new Valid_WhiteList(
-            self::PROJECT_ADMIN_KEY,
+            $key,
             array("0", "1")
         );
         if (! $this->request->valid($validator)) {
-            return false;
+            return -1;
         }
 
-        $new_value = $this->request->get(self::PROJECT_ADMIN_KEY);
-        $old_value = ForgeConfig::get(ForgeAccess::PROJECT_ADMIN_CAN_CHOOSE_VISIBILITY);
+        $new_value = $this->request->get($key);
+        $old_value = ForgeConfig::get($key);
 
         if ($new_value == $old_value) {
-            return false;
+            return -1;
         }
 
-        return $this->manager->updateProjectAdminVisibility($new_value, $old_value);
+        return $new_value;
     }
 }

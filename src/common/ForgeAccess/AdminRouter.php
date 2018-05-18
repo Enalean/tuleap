@@ -43,6 +43,8 @@ class ForgeAccess_AdminRouter {
             $this->controller->notSiteAdmin($this->request);
         } elseif ($this->request->get('update')) {
             $this->controller->update();
+        } elseif ($this->request->get('update-anonymous-access')) {
+            $this->controller->updateAnonymousAccess();
         } else {
             $this->controller->index();
         }

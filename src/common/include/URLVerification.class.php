@@ -93,8 +93,11 @@ class URLVerification {
             return true;
         }
 
-        // Site admin configuration
-        if ($this->isUrlAllowedBySiteContent($server)) {
+        if ($server['REQUEST_URI'] === '/' && ForgeConfig::get(ForgeAccess::ANONYMOUS_CAN_SEE_SITE_HOMEPAGE) === '1') {
+            return true;
+        }
+
+        if ($server['REQUEST_URI'] === '/contact.php' && ForgeConfig::get(ForgeAccess::ANONYMOUS_CAN_SEE_CONTACT) === '1') {
             return true;
         }
 
@@ -104,28 +107,6 @@ class URLVerification {
         $this->getEventManager()->processEvent('anonymous_access_to_script_allowed', $params);
 
         return $anonymousAllowed;
-    }
-
-    /**
-     * Allow to define whitlist URLs for anonymous by site admin in configuration
-     *
-     * @param Array $server
-     *
-     * @return Boolean
-     */
-    protected function isUrlAllowedBySiteContent($server) {
-        $enable_anonymous_url = false;
-        $allowed_scripts      = array();
-
-        include($GLOBALS['Language']->getContent('include/allowed_url_anonymously','en_US'));
-        if ($enable_anonymous_url) {
-            foreach ($allowed_scripts as $script) {
-                if (strcmp($server['SCRIPT_NAME'], $script) === 0) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     /**
