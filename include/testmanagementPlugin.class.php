@@ -463,6 +463,7 @@ class testmanagementPlugin extends Plugin
         $project = $event->getTracker()->getProject();
         if (! $project->usesService($this->getServiceShortname())) {
             $event->removeByType(StepDefinition::TYPE);
+            $event->removeByType(StepExecution::TYPE);
         }
     }
 

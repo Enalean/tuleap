@@ -77,6 +77,11 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
         return TESTMANAGEMENT_BASE_URL . '/themes/default/images/ic/tick-circle--plus.png';
     }
 
+    public static function getFactoryUniqueField()
+    {
+        return true;
+    }
+
     /**
      * Display the html f in the admin ui
      *
