@@ -68,6 +68,12 @@ msgid ""
 "field</a> before choosing another tracker."
 msgstr ""
 
+msgid ""
+"This tracker uses the Step execution field, which can only be used with\n"
+"                        TestManagement. Please <a href=\"%s\">remove the "
+"field</a> before choosing another tracker."
+msgstr ""
+
 msgid "come back later."
 msgstr ""
 

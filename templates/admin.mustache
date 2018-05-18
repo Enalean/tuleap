@@ -48,7 +48,9 @@
                 </p>
             {{/ is_definition_disabled }}
         </div>
-        <div class="tlp-form-element">
+        <div class="tlp-form-element
+            {{# is_execution_disabled }} tlp-form-element-disabled {{/ is_execution_disabled }}
+        ">
             <label class="tlp-label" for="test_execution_id">
                 {{ executions }}
                 <i class="fa fa-asterisk"></i>
@@ -61,7 +63,17 @@
                 size="20"
                 placeholder="{{ placeholder }}"
                 required
+               {{# is_execution_disabled }}disabled{{/ is_execution_disabled }}
             />
+            {{# is_execution_disabled }}
+                <p class="tlp-text-info">
+                    {{# dgettext }}
+                        tuleap-testmanagement | This tracker uses the Step execution field, which can only be used with
+                        TestManagement. Please <a href="%s">remove the field</a> before choosing another tracker.
+                        | {{ execution_admin_url }}
+                    {{/ dgettext }}
+                </p>
+            {{/ is_execution_disabled }}
         </div>
         <div class="tlp-form-element">
             <label class="tlp-label" for="issue_id">

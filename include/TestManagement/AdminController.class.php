@@ -60,15 +60,21 @@ class AdminController extends TestManagementController
             $test_definition_tracker_id
         );
 
+        $test_execution_tracker_id = $this->config->getTestExecutionTrackerId($this->project);
+        $is_execution_disabled = $this->step_field_usage_detector->isStepExecutionFieldUsed(
+            $test_execution_tracker_id
+        );
+
         return $this->renderToString(
             'admin',
             new AdminPresenter(
                 $this->config->getCampaignTrackerId($this->project),
                 $test_definition_tracker_id,
-                $this->config->getTestExecutionTrackerId($this->project),
+                $test_execution_tracker_id,
                 $this->config->getIssueTrackerId($this->project),
                 $this->csrf_token,
-                $is_definition_disabled
+                $is_definition_disabled,
+                $is_execution_disabled
             )
         );
     }
