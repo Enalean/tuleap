@@ -133,8 +133,8 @@ msgid "Limit successfully updated."
 msgstr ""
 
 msgid ""
-"Maximum number of artifacts users can delete from the REST API on a 24 hours "
-"sliding window."
+"Maximum number of artifacts users can delete or move from the REST API on a "
+"24 hours sliding window."
 msgstr ""
 
 msgid "No element selected."
