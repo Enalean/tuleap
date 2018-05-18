@@ -124,7 +124,7 @@ class GitRoutingTest extends TestCase
                 'getRepositoryFactory'      => \Mockery::mock(GitRepositoryFactory::class),
                 'getChainOfRouters'         => \Mockery::mock(RouterLink::class),
                 'getLogger'                 => \Mockery::mock(Logger::class),
-                'getGerritServerFactory'    => \Mockery::mock(Git_RemoteServer_GerritServerFactory::class),
+                'getGerritServerFactory'    => \Mockery::mock(Git_RemoteServer_GerritServerFactory::class, ['getServers' => []]),
                 'getPermissionsManager'     => \Mockery::mock(PermissionsManager::class),
                 'getMirrorDataMapper'       => \Mockery::mock(Git_Mirror_MirrorDataMapper::class),
                 'getGitPhpAccessLogger'     => \Mockery::mock(GitPhpAccessLogger::class),

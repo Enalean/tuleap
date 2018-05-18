@@ -26,63 +26,30 @@ class GitViews_ShowRepo {
      * @var GitRepository
      */
     protected $repository;
-
     /**
      * @var Codendi_Request
      */
     protected $request;
-
-    /**
-     * @var Git_Driver_Gerrit
-     */
-    private $driver_factory;
-
-    /**
-     * @var Git_Driver_Gerrit_UserAccountManager $gerrit_usermanager
-     */
-    private $gerrit_usermanager;
-
-    /**
-     * @var array
-     */
-    private $gerrit_servers;
-
-    /** @var Git_GitRepositoryUrlManager */
-    private $url_manager;
-
     /** @var Git_Mirror_MirrorDataMapper */
     private $mirror_data_mapper;
     /**
-     * @var GitPermissionsManager
+     * @var GitPhpAccessLogger
      */
-    private $permissions_manager;
+    private $access_logger;
     private $gitphp_path;
-    private $master_location_name;
 
     public function __construct(
         GitRepository $repository,
-        Git_GitRepositoryUrlManager $url_manager,
-        Codendi_Request $request,
-        Git_Driver_Gerrit_GerritDriverFactory $driver_factory,
-        Git_Driver_Gerrit_UserAccountManager $gerrit_usermanager,
-        array $gerrit_servers,
+        HTTPRequest $request,
         Git_Mirror_MirrorDataMapper $mirror_data_mapper,
-        GitPhpAccessLogger $access_loger,
-        GitPermissionsManager $permissions_manager,
-        $gitphp_path,
-        $master_location_name
+        GitPhpAccessLogger $access_logger,
+        $gitphp_path
     ) {
         $this->repository         = $repository;
         $this->request            = $request;
-        $this->driver_factory     = $driver_factory;
-        $this->gerrit_usermanager = $gerrit_usermanager;
-        $this->gerrit_servers     = $gerrit_servers;
-        $this->url_manager        = $url_manager;
         $this->mirror_data_mapper = $mirror_data_mapper;
-        $this->access_loger       = $access_loger;
-        $this->permissions_manager  = $permissions_manager;
-        $this->gitphp_path          = $gitphp_path;
-        $this->master_location_name = $master_location_name;
+        $this->access_logger      = $access_logger;
+        $this->gitphp_path        = $gitphp_path;
     }
 
     public function display(Git_URL $url) {
@@ -97,15 +64,8 @@ class GitViews_ShowRepo {
                 $this->repository,
                 $git_php_viewer,
                 $this->request,
-                $this->request->getCurrentUser(),
-                $this->url_manager,
-                $this->driver_factory,
-                $this->gerrit_usermanager,
                 $this->mirror_data_mapper,
-                $this->access_loger,
-                $this->permissions_manager,
-                $this->gerrit_servers,
-                $this->master_location_name
+                $this->access_logger
             );
         }
         $view->display();
