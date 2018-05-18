@@ -365,10 +365,16 @@ class UserDao extends DataAccessObject {
      * @param  $time    Integer
      * @return Boolean
      */
-    function storeLastAccessDate($user_id, $time) {
-        $sql = 'UPDATE user_access
-                SET last_access_date  = '.$this->da->escapeInt($time).'
-                WHERE user_id = '. $this->da->escapeInt($user_id);
+    public function storeLastAccessDate($user_id, $time)
+    {
+        $user_id = $this->da->escapeInt($user_id);
+        $time    = $this->da->escapeInt($time);
+
+        $sql = "UPDATE user_access
+                SET last_access_date = $time
+                WHERE user_id = $user_id
+                  AND last_access_date < $time";
+
         return $this->update($sql);
     }
 

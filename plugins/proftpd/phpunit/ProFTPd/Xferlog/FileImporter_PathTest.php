@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,18 +24,26 @@ class FileImporter_PathTest extends PHPUnit_Framework_TestCase {
 
     protected function setUp() {
         parent::setUp();
-        $this->dao    = $this->getMockBuilder('Tuleap\ProFTPd\Xferlog\Dao')->disableOriginalConstructor()->getMock();
-        $this->parser = new Tuleap\ProFTPd\Xferlog\Parser();
-        $this->user_manager = $this->getMockBuilder('UserManager')->disableOriginalConstructor()->getMock();
+
+        $this->dao             = $this->getMockBuilder('Tuleap\ProFTPd\Xferlog\Dao')->disableOriginalConstructor()->getMock();
+        $this->parser          = new Tuleap\ProFTPd\Xferlog\Parser();
+        $this->user_manager    = $this->getMockBuilder('UserManager')->disableOriginalConstructor()->getMock();
         $this->project_manager = $this->getMockBuilder('ProjectManager')->disableOriginalConstructor()->getMock();
+        $this->user_dao        = $this->getMockBuilder(UserDao::class)->disableOriginalConstructor()->getMock();
 
         $user    = $this->getMockBuilder('PFUser')->disableOriginalConstructor()->getMock();
         $this->project = $this->getMockBuilder('Project')->disableOriginalConstructor()->getMock();
 
         $this->user_manager->expects($this->any())->method('getUserByUserName')->will($this->returnValue($user));
 
-
-        $this->file_importer = new Tuleap\ProFTPd\Xferlog\FileImporter($this->dao, $this->parser, $this->user_manager, $this->project_manager, '/mnt/bigfile');
+        $this->file_importer = new Tuleap\ProFTPd\Xferlog\FileImporter(
+            $this->dao,
+            $this->parser,
+            $this->user_manager,
+            $this->project_manager,
+            $this->user_dao,
+            '/mnt/bigfile'
+        );
     }
 
     public function testItFetchTheProjectNameWhenPathIsRelative() {
