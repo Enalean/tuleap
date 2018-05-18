@@ -22,8 +22,11 @@
 namespace Tuleap\Git\HTTP;
 
 use Logger;
+use PermissionsManager;
+use PFUser;
 use User_LoginManager;
 use Tuleap\Git\Gerrit\ReplicationHTTPUserAuthenticator;
+use UserDao;
 
 class HTTPAccessControl
 {
@@ -31,25 +34,39 @@ class HTTPAccessControl
      * @var Logger
      */
     private $logger;
+
     /**
      * @var User_LoginManager
      */
     private $login_manager;
+
     /**
      * @var ReplicationHTTPUserAuthenticator
      */
     private $authenticator;
+
     /**
-     * @var \PermissionsManager
+     * @var PermissionsManager
      */
     private $permissions_manager;
 
-    public function __construct(Logger $logger, User_LoginManager $login_manager, ReplicationHTTPUserAuthenticator $authenticator, \PermissionsManager $permissions_manager)
-    {
+    /**
+     * @var UserDao
+     */
+    private $user_dao;
+
+    public function __construct(
+        Logger $logger,
+        User_LoginManager $login_manager,
+        ReplicationHTTPUserAuthenticator $authenticator,
+        PermissionsManager $permissions_manager,
+        UserDao $user_dao
+    ) {
         $this->logger              = $logger;
         $this->login_manager       = $login_manager;
         $this->authenticator       = $authenticator;
         $this->permissions_manager = $permissions_manager;
+        $this->user_dao            = $user_dao;
     }
 
     public function getUser(\URLVerification $url_verification, \GitRepository $repository, \Git_URL $url)
@@ -128,6 +145,7 @@ class HTTPAccessControl
                 try {
                     $user = $this->login_manager->authenticate($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
                     $this->logger->debug("LOGGED AS ".$user->getUnixName());
+                    $this->updateLastAccessDateForUser($user);
                     return $user;
                 } catch (\Exception $exception) {
                     $this->logger->debug('LOGIN ERROR ' . $exception->getMessage());
@@ -137,5 +155,10 @@ class HTTPAccessControl
 
             return false;
         }
+    }
+
+    private function updateLastAccessDateForUser(PFUser $user)
+    {
+        $this->user_dao->storeLastAccessDate($user->getId(), time());
     }
 }
