@@ -474,9 +474,10 @@ class testmanagementPlugin extends Plugin
             Tracker_FormElementFactory::instance()
         );
 
-        $tracker = $event->getTracker();
+        $tracker  = $event->getTracker();
         $response = $event->getResponse();
         $this->displayStepDefinitionBadUsageWarnings($step_field_usage, $tracker, $response);
+        $this->displayStepExecutionBadUsageWarnings($step_field_usage, $tracker, $response);
     }
 
     /**
@@ -515,6 +516,39 @@ class testmanagementPlugin extends Plugin
                 dgettext(
                     'tuleap-testmanagement',
                     'Current tracker is not configured to be a test definition tracker in TestManagement, but is using a "Step definition" field: you may remove the field from the tracker.'
+                )
+            );
+        }
+    }
+
+    private function displayStepExecutionBadUsageWarnings(
+        StepFieldUsageDetector $step_field_usage,
+        Tracker $tracker,
+        Response $response
+    ) {
+        if (! $step_field_usage->isStepExecutionFieldUsed($tracker->getId())) {
+            return;
+        }
+
+        $project = $tracker->getProject();
+        if (! $project->usesService($this->getServiceShortname())) {
+            $response->addFeedback(
+                Feedback::WARN,
+                dgettext(
+                    'tuleap-testmanagement',
+                    'The tracker is using a field "Step execution" that is only available in the context of Test Management. However this service is not enabled in the project: you may remove the field from the tracker.'
+                )
+            );
+
+            return;
+        }
+
+        if ((int) $this->getConfig()->getTestExecutionTrackerId($project) !== (int) $tracker->getId()) {
+            $response->addFeedback(
+                Feedback::WARN,
+                dgettext(
+                    'tuleap-testmanagement',
+                    'Current tracker is not configured to be a test execution tracker in TestManagement, but is using a "Step execution" field: you may remove the field from the tracker.'
                 )
             );
         }

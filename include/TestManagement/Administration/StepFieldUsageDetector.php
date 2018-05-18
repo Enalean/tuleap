@@ -23,6 +23,7 @@ namespace Tuleap\TestManagement\Administration;
 use Tracker_FormElementFactory;
 use TrackerFactory;
 use Tuleap\TestManagement\Step\Definition\Field\StepDefinition;
+use Tuleap\TestManagement\Step\Execution\Field\StepExecution;
 
 class StepFieldUsageDetector
 {
@@ -33,7 +34,7 @@ class StepFieldUsageDetector
     private $form_element_factory;
 
     /**
-     * @param TrackerFactory $tracker_factory
+     * @param TrackerFactory             $tracker_factory
      * @param Tracker_FormElementFactory $form_element_factory
      */
     public function __construct(TrackerFactory $tracker_factory, Tracker_FormElementFactory $form_element_factory)
@@ -44,13 +45,25 @@ class StepFieldUsageDetector
 
     public function isStepDefinitionFieldUsed($tracker_id)
     {
-        $test_definition_tracker    = $this->tracker_factory->getTrackerById($tracker_id);
+        return $this->isFieldUsed($tracker_id, StepDefinition::TYPE);
+    }
 
-        $step_definition_field  = $this->form_element_factory->getUsedFormElementsByType(
-            $test_definition_tracker,
-            StepDefinition::TYPE
-        );
+    public function isStepExecutionFieldUsed($tracker_id)
+    {
+        return $this->isFieldUsed($tracker_id, StepExecution::TYPE);
+    }
 
-        return ! empty($step_definition_field);
+    /**
+     * @param int    $tracker_id
+     * @param string $type
+     *
+     * @return bool
+     */
+    private function isFieldUsed($tracker_id, $type)
+    {
+        $tracker = $this->tracker_factory->getTrackerById($tracker_id);
+        $field   = $this->form_element_factory->getUsedFormElementsByType($tracker, $type);
+
+        return ! empty($field);
     }
 }
