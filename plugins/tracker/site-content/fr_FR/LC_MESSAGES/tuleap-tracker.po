@@ -163,10 +163,10 @@ msgid "Limit successfully updated."
 msgstr "Limite mise à jour avec succès."
 
 msgid ""
-"Maximum number of artifacts users can delete from the REST API on a 24 hours "
-"sliding window."
+"Maximum number of artifacts users can delete or move from the REST API on a "
+"24 hours sliding window."
 msgstr ""
-"Nombre maximum d'artéfacts que les utilisateurs peuvent supprimer depuis "
+"Nombre maximum d'artéfacts que les utilisateurs peuvent supprimer ou déplacer depuis "
 "l'API REST sur une période de 24 heures."
 
 msgid "No element selected."
