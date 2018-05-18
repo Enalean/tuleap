@@ -39,6 +39,7 @@ use Tuleap\Tracker\Events\GetEditableTypesInProject;
 use Tuleap\Tracker\Events\XMLImportArtifactLinkTypeCanBeDisabled;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\FormElement\View\Admin\FilterFormElementsThatCanBeCreatedForTracker;
+use Tuleap\Tracker\FormElement\View\Admin\DisplayAdminFormElementsWarningsEvent;
 
 require_once 'constants.php';
 
@@ -86,6 +87,7 @@ class testmanagementPlugin extends Plugin
             $this->addHook(XMLImportArtifactLinkTypeCanBeDisabled::NAME);
             $this->addHook(Tracker_FormElementFactory::GET_CLASSNAMES);
             $this->addHook(FilterFormElementsThatCanBeCreatedForTracker::NAME);
+            $this->addHook(DisplayAdminFormElementsWarningsEvent::NAME);
         }
 
         return parent::getHooksAndCallbacks();
@@ -218,7 +220,7 @@ class testmanagementPlugin extends Plugin
      */
     public function tracker_event_project_creation_trackers_required(array $params)
     {
-        $config = new Config(new Dao());
+        $config  = $this->getConfig();
         $project = ProjectManager::instance()->getProject($params['project_id']);
 
         $plugin_testmanagement_is_used = $project->usesService($this->getServiceShortname());
@@ -244,7 +246,7 @@ class testmanagementPlugin extends Plugin
      */
     public function tracker_event_trackers_duplicated(array $params)
     {
-        $config = new Config(new Dao());
+        $config       = $this->getConfig();
         $from_project = ProjectManager::instance()->getProject($params['source_project_id']);
         $to_project = ProjectManager::instance()->getProject($params['group_id']);
 
@@ -321,7 +323,7 @@ class testmanagementPlugin extends Plugin
 
     public function process(Codendi_Request $request)
     {
-        $config               = new Config(new Dao());
+        $config               = $this->getConfig();
         $tracker_factory      = TrackerFactory::instance();
         $project_manager      = ProjectManager::instance();
         $user_manager         = UserManager::instance();
@@ -459,6 +461,59 @@ class testmanagementPlugin extends Plugin
         $project = $event->getTracker()->getProject();
         if (! $project->usesService($this->getServiceShortname())) {
             $event->removeByType(StepDefinition::TYPE);
+        }
+    }
+
+    public function displayAdminFormElementsWarningsEvent(DisplayAdminFormElementsWarningsEvent $event)
+    {
+        $step_field_usage = new StepFieldUsageDetector(
+            TrackerFactory::instance(),
+            Tracker_FormElementFactory::instance()
+        );
+
+        $tracker = $event->getTracker();
+        $response = $event->getResponse();
+        $this->displayStepDefinitionBadUsageWarnings($step_field_usage, $tracker, $response);
+    }
+
+    /**
+     * @return Config
+     */
+    private function getConfig()
+    {
+        return new Config(new Dao());
+    }
+
+    private function displayStepDefinitionBadUsageWarnings(
+        StepFieldUsageDetector $step_field_usage,
+        Tracker $tracker,
+        Response $response
+    ) {
+        if (! $step_field_usage->isStepDefinitionFieldUsed($tracker->getId())) {
+            return;
+        }
+
+        $project = $tracker->getProject();
+        if (! $project->usesService($this->getServiceShortname())) {
+            $response->addFeedback(
+                Feedback::WARN,
+                dgettext(
+                    'tuleap-testmanagement',
+                    'The tracker is using a field "Step definition" that is only available in the context of Test Management. However this service is not enabled in the project: you may remove the field from the tracker.'
+                )
+            );
+
+            return;
+        }
+
+        if ((int) $this->getConfig()->getTestDefinitionTrackerId($project) !== (int) $tracker->getId()) {
+            $response->addFeedback(
+                Feedback::WARN,
+                dgettext(
+                    'tuleap-testmanagement',
+                    'Current tracker is not configured to be a test definition tracker in TestManagement, but is using a "Step definition" field: you may remove the field from the tracker.'
+                )
+            );
         }
     }
 }
