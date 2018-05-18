@@ -119,10 +119,20 @@ class ExecutionRepresentationBuilder
     /**
      * @return \Tuleap\TestManagement\REST\v1\ExecutionRepresentation
      */
-    public function getExecutionRepresentation(
+    public function getExecutionRepresentation(PFUser $user, Tracker_Artifact $execution)
+    {
+        $definitions_changeset_ids = $this->getDefinitionsChangesetIdsForExecutions([$execution->getId()]);
+
+        return $this->getExecutionRepresentationWithSpecificChangesetForDefinition($user, $execution, $definitions_changeset_ids);
+    }
+
+    /**
+     * @return \Tuleap\TestManagement\REST\v1\ExecutionRepresentation
+     */
+    private function getExecutionRepresentationWithSpecificChangesetForDefinition(
         PFUser $user,
         Tracker_Artifact $execution,
-        array $definitions_changeset_ids = []
+        array $definitions_changeset_ids
     ) {
         $previous_result_representation = $this->getPreviousResultRepresentationForExecution($user, $execution);
         $definition_representation      = $this->getDefinitionRepresentationForExecution($user, $execution, $definitions_changeset_ids);
@@ -154,7 +164,7 @@ class ExecutionRepresentationBuilder
         $definitions_changeset_ids  = $executions->getDefinitionsChangesetIds();
 
         foreach ($executions->getArtifacts() as $execution) {
-            $executions_representations[] = $this->getExecutionRepresentation(
+            $executions_representations[] = $this->getExecutionRepresentationWithSpecificChangesetForDefinition(
                 $user,
                 $execution,
                 $definitions_changeset_ids
