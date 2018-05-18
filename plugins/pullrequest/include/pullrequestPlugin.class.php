@@ -21,6 +21,7 @@
 require_once 'autoload.php';
 require_once 'constants.php';
 
+use Tuleap\Git\GitAdditionalActionEvent;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Glyph\GlyphLocation;
 use Tuleap\Glyph\GlyphLocationsCollector;
@@ -89,12 +90,11 @@ class pullrequestPlugin extends Plugin
             $this->addHook(GIT_ADDITIONAL_ACTIONS);
             $this->addHook(GIT_ADDITIONAL_BODY_CLASSES);
             $this->addHook(GIT_ADDITIONAL_PERMITTED_ACTIONS);
-            $this->addHook(GIT_HANDLE_ADDITIONAL_ACTION);
             $this->addHook(GIT_ADDITIONAL_HELP_TEXT);
-            $this->addHook(GIT_VIEW);
             $this->addHook(GIT_HOOK_POSTRECEIVE_REF_UPDATE, 'gitHookPostReceive');
             $this->addHook(REST_GIT_BUILD_STATUS, 'gitRestBuildStatus');
             $this->addHook(GitRepositoryDeletionEvent::NAME);
+            $this->addHook(GitAdditionalActionEvent::NAME);
         }
     }
 
@@ -289,22 +289,24 @@ class pullrequestPlugin extends Plugin
         }
     }
 
-    /**
-     * @see GIT_HANDLE_ADDITIONAL_ACTION
-     */
-    public function git_handle_additional_action($params)
+    public function gitAdditionalAction(GitAdditionalActionEvent $event)
     {
-        $git_controller = $params['git_controller'];
-        $repository     = $params['repository'];
-
-        if ($params['action'] === 'pull-requests') {
-            $params['handled'] = true;
-
+        if ($event->getRequest()->get('action') === 'pull-requests') {
+            $repository = $event->getRepositoryFactory()->getRepositoryById($event->getRequest()->getValidated('repo_id', 'uint', 0));
             if ($repository) {
-                $git_controller->addAction('getRepositoryDetails', array($repository->getProjectId(), $repository->getId()));
-                $git_controller->addView('view');
+                $nb_pull_requests = $this->getPullRequestFactory()->getPullRequestCount($repository);
+                $renderer         = $this->getTemplateRenderer();
+                $user             = $event->getRequest()->getCurrentUser();
+                $presenter        = new PullRequestPresenter($repository->getId(), $user->getId(), $user->getShortLocale(), $nb_pull_requests);
+
+                $event->getRepoHeader()->display($event->getRequest(), $event->getLayout(), $repository);
+
+                $renderer->renderToPage($presenter->getTemplateName(), $presenter);
+
+                $event->getLayout()->footer([]);
+                exit;
             } else {
-                $git_controller->redirectNoRepositoryError();
+                throw new \Tuleap\Request\NotFoundException();
             }
         }
     }
@@ -321,24 +323,6 @@ class pullrequestPlugin extends Plugin
             $presenter = new AdditionalHelpTextPresenter();
 
             $params['html'] = $renderer->renderToString($presenter->getTemplateName(), $presenter);
-        }
-    }
-
-    /**
-     * @see GIT_VIEW
-     */
-    public function git_view($params)
-    {
-        $repository = $params['repository'];
-        $user       = $params['user'];
-        $request    = $params['request'];
-
-        if ($request->get('action') === 'pull-requests') {
-            $nb_pull_requests = $this->getPullRequestFactory()->getPullRequestCount($repository);
-            $renderer         = $this->getTemplateRenderer();
-            $presenter        = new PullRequestPresenter($repository->getId(), $user->getId(), $user->getShortLocale(), $nb_pull_requests);
-
-            $params['view'] = $renderer->renderToString($presenter->getTemplateName(), $presenter);
         }
     }
 

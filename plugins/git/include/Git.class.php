@@ -1026,21 +1026,17 @@ class Git extends PluginController {
                 break;
             #LIST
             default:
-                $handled = $this->handleAdditionalAction($repository, $action);
+                $user_id = null;
+                $valid_url   = new Valid_UInt('user');
+                $valid_url->required();
 
-                if (! $handled) {
-                    $user_id = null;
-                    $valid_url   = new Valid_UInt('user');
-                    $valid_url->required();
-
-                    if($this->request->valid($valid_url)) {
-                        $user_id = $this->request->get('user');
-                        $this->addData(array('user' => $user_id));
-                    }
-
-                    $this->addAction( 'getProjectRepositoryList', array($this->groupId, $user_id) );
-                    $this->addView('index');
+                if($this->request->valid($valid_url)) {
+                    $user_id = $this->request->get('user');
+                    $this->addData(array('user' => $user_id));
                 }
+
+                $this->addAction( 'getProjectRepositoryList', array($this->groupId, $user_id) );
+                $this->addView('index');
 
                 break;
         }
@@ -1095,20 +1091,6 @@ class Git extends PluginController {
             'adminDefaultSettings',
             array($this->areMirrorsEnabledForProject(), $pane)
         );
-    }
-
-    private function handleAdditionalAction(/* GitRepository */ $repository, $action) {
-        $handled = false;
-        $params  = array(
-            'git_controller' => $this,
-            'repository'     => $repository,
-            'action'         => $action,
-            'handled'        => &$handled
-        );
-
-        EventManager::instance()->processEvent(GIT_HANDLE_ADDITIONAL_ACTION, $params);
-
-        return $handled;
     }
 
     private function getValidatedGerritTemplateId($repository) {

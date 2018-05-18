@@ -2466,6 +2466,19 @@ class GitPlugin extends Plugin
         return new PermissionPerGroupController($this->getJSONRepositoriesRetriever());
     }
 
+    private function getRepoHeader()
+    {
+        return new Tuleap\Git\GitViews\ShowRepo\RepoHeader(
+            $this->getGitRepositoryUrlManager(),
+            $this->getGerritDriverFactory(),
+            new Git_Driver_Gerrit_UserAccountManager($this->getGerritDriverFactory(), $this->getGerritServerFactory()),
+            $this->getMirrorDataMapper(),
+            $this->getGitPermissionsManager(),
+            $this->getGerritServerFactory()->getServers(),
+            $this->getConfigurationParameter('master_location_name')
+        );
+    }
+
     public function collectRoutesEvent(\Tuleap\Request\CollectRoutesEvent $event)
     {
         $event->getRouteCollector()->addGroup(GIT_BASE_URL, function (FastRoute\RouteCollector $r) {
@@ -2490,19 +2503,19 @@ class GitPlugin extends Plugin
                 return new \Tuleap\Git\GitRepositoryBrowserController(
                     $this->getRepositoryFactory(),
                     $this->getProjectManager(),
-                    $this->getGerritServerFactory(),
-                    $this->getGitRepositoryUrlManager(),
-                    $this->getGerritDriverFactory(),
-                    new Git_Driver_Gerrit_UserAccountManager($this->getGerritDriverFactory(), $this->getGerritServerFactory()),
                     $this->getMirrorDataMapper(),
                     $this->getGitPhpAccessLogger(),
-                    $this->getGitPermissionsManager(),
-                    $this->getConfigurationParameter('gitphp_path'),
-                    $this->getConfigurationParameter('master_location_name')
+                    $this->getRepoHeader(),
+                    $this->getConfigurationParameter('gitphp_path')
                 );
             });
             $r->addRoute(['GET', 'POST'], '/{path:.*}', function () {
-                return new \Tuleap\Git\GitPluginDefaultController($this->getChainOfRouters());
+                return new \Tuleap\Git\GitPluginDefaultController(
+                    $this->getChainOfRouters(),
+                    $this->getRepositoryFactory(),
+                    EventManager::instance(),
+                    $this->getRepoHeader()
+                );
             });
         });
     }

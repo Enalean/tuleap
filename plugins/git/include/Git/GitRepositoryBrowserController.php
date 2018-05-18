@@ -22,7 +22,6 @@
 namespace Tuleap\Git;
 
 use HTTPRequest;
-use Tuleap\Git\GitViews\GitViewHeader;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
@@ -39,60 +38,33 @@ class GitRepositoryBrowserController implements DispatchableWithRequest
      */
     private $project_manager;
     /**
-     * @var \Git_RemoteServer_GerritServerFactory
-     */
-    private $gerrit_server_factory;
-    /**
-     * @var \Git_GitRepositoryUrlManager
-     */
-    private $url_manager;
-    /**
-     * @var \Git_Driver_Gerrit_GerritDriverFactory
-     */
-    private $gerrit_driver_factory;
-    /**
-     * @var \Git_Driver_Gerrit_UserAccountManager
-     */
-    private $gerrit_usermanager;
-    /**
      * @var \Git_Mirror_MirrorDataMapper
      */
     private $mirror_data_mapper;
     /**
-     * @var \Tuleap\Git\History\GitPhpAccessLogger
+     * @var History\GitPhpAccessLogger
      */
-    private $access_loger;
+    private $access_logger;
     /**
-     * @var \GitPermissionsManager
+     * @var GitViews\ShowRepo\RepoHeader
      */
-    private $permissions_manager;
+    private $repo_header;
     private $gitphp_path;
-    private $master_location_name;
 
     public function __construct(
         \GitRepositoryFactory $repository_factory,
         \ProjectManager $project_manager,
-        \Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
-        \Git_GitRepositoryUrlManager $url_manager,
-        \Git_Driver_Gerrit_GerritDriverFactory $gerrit_driver_factory,
-        \Git_Driver_Gerrit_UserAccountManager $gerrit_usermanager,
         \Git_Mirror_MirrorDataMapper $mirror_data_mapper,
-        \Tuleap\Git\History\GitPhpAccessLogger $access_loger,
-        \GitPermissionsManager $permissions_manager,
-        $gitphp_path,
-        $master_location_name
+        History\GitPhpAccessLogger $access_logger,
+        GitViews\ShowRepo\RepoHeader $repo_header,
+        $gitphp_path
     ) {
-        $this->repository_factory = $repository_factory;
-        $this->project_manager    = $project_manager;
-        $this->gerrit_server_factory = $gerrit_server_factory;
-        $this->url_manager = $url_manager;
-        $this->gerrit_driver_factory = $gerrit_driver_factory;
-        $this->gerrit_usermanager = $gerrit_usermanager;
-        $this->mirror_data_mapper = $mirror_data_mapper;
-        $this->access_loger = $access_loger;
-        $this->permissions_manager = $permissions_manager;
-        $this->gitphp_path = $gitphp_path;
-        $this->master_location_name = $master_location_name;
+        $this->repository_factory  = $repository_factory;
+        $this->project_manager     = $project_manager;
+        $this->mirror_data_mapper  = $mirror_data_mapper;
+        $this->access_logger       = $access_logger;
+        $this->repo_header         = $repo_header;
+        $this->gitphp_path         = $gitphp_path;
     }
 
     /**
@@ -128,22 +100,15 @@ class GitRepositoryBrowserController implements DispatchableWithRequest
 
         $index_view = new \GitViews_ShowRepo(
             $repository,
-            $this->url_manager,
             $request,
-            $this->gerrit_driver_factory,
-            $this->gerrit_usermanager,
-            $this->gerrit_server_factory->getServers(),
             $this->mirror_data_mapper,
-            $this->access_loger,
-            $this->permissions_manager,
-            $this->gitphp_path,
-            $this->master_location_name
+            $this->access_logger,
+            $this->gitphp_path
         );
 
-        $headers = new GitViewHeader(\EventManager::instance(), $this->permissions_manager);
 
         if (! $url->isADownload($request)) {
-            $headers->header($request, $request->getCurrentUser(), $layout, $repository->getProject());
+            $this->repo_header->display($request, $layout, $repository);
         }
 
         $index_view->display($url);

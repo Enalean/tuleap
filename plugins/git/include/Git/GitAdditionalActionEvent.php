@@ -21,61 +21,68 @@
 
 namespace Tuleap\Git;
 
-use EventManager;
 use GitRepositoryFactory;
 use HTTPRequest;
 use Tuleap\Git\GitViews\ShowRepo\RepoHeader;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Request\DispatchableWithRequest;
 
-class GitPluginDefaultController implements DispatchableWithRequest
+class GitAdditionalActionEvent implements \Tuleap\Event\Dispatchable
 {
-
+    const NAME =  'gitAdditionalAction';
     /**
-     * @var \Tuleap\Git\RouterLink
+     * @var HTTPRequest
      */
-    private $router_link;
-    /**
-     * @var EventManager
-     */
-    private $event_manager;
+    private $request;
     /**
      * @var GitRepositoryFactory
      */
     private $repository_factory;
     /**
+     * @var BaseLayout
+     */
+    private $layout;
+    /**
      * @var RepoHeader
      */
     private $repo_header;
 
-    public function __construct(RouterLink $router_link, GitRepositoryFactory $repository_factory, EventManager $event_manager, RepoHeader $repo_header)
+    public function __construct(HTTPRequest $request, BaseLayout $layout, GitRepositoryFactory $repository_factory, RepoHeader $repo_header)
     {
-        $this->router_link        = $router_link;
-        $this->event_manager      = $event_manager;
+        $this->request            = $request;
+        $this->layout             = $layout;
         $this->repository_factory = $repository_factory;
         $this->repo_header        = $repo_header;
     }
 
     /**
-     * Is able to process a request routed by FrontRouter
-     *
-     * @param HTTPRequest $request
-     * @param array $variables
-     * @return void
+     * @return HTTPRequest
      */
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function getRequest()
     {
-        \Tuleap\Instrument\Collect::increment(\GitPlugin::INSTRUMENTATION_KEY);
+        return $this->request;
+    }
 
-        $this->event_manager->processEvent(
-            new GitAdditionalActionEvent(
-                $request,
-                $layout,
-                $this->repository_factory,
-                $this->repo_header
-            )
-        );
+    /**
+     * @return GitRepositoryFactory
+     */
+    public function getRepositoryFactory()
+    {
+        return $this->repository_factory;
+    }
 
-        $this->router_link->process($request);
+    /**
+     * @return BaseLayout
+     */
+    public function getLayout()
+    {
+        return $this->layout;
+    }
+
+    /**
+     * @return RepoHeader
+     */
+    public function getRepoHeader()
+    {
+        return $this->repo_header;
     }
 }
