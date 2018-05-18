@@ -717,13 +717,13 @@ class ArtifactsResource extends AuthenticatedResource {
      *
      * @access protected
      *
-     * @param int                 $id   Id of the artifact
-     * @param MoveRepresentation  $move Tracker in which the artifact must be created {@from body}
+     * @param int                         $id    Id of the artifact
+     * @param ArtifactPatchRepresentation $patch Tracker in which the artifact must be created {@from body} {@type \Tuleap\Tracker\REST\v1\ArtifactPatchRepresentation}
      *
      * @throws 400
      * @throws 404 Artifact Not found
      */
-    protected function patchArtifact($id, MoveRepresentation $move)
+    protected function patchArtifact($id, ArtifactPatchRepresentation $patch)
     {
         $this->checkAccess();
 
@@ -731,7 +731,7 @@ class ArtifactsResource extends AuthenticatedResource {
         $artifact = $this->getArtifactById($user, $id);
 
         $source_tracker = $artifact->getTracker();
-        $target_tracker = $this->tracker_factory->getTrackerById($move->tracker_id);
+        $target_tracker = $this->tracker_factory->getTrackerById($patch->move->tracker_id);
 
         if (! $target_tracker || $target_tracker->isDeleted()) {
             throw new RestException(404, "Target tracker not found");
