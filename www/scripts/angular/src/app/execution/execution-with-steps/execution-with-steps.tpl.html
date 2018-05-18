@@ -1,0 +1,20 @@
+<section class="steps">
+    <execution-detail-just-updated></execution-detail-just-updated>
+    <div ng-bind-html="$ctrl.execution.definition.description"
+         ng-if="$ctrl.execution.definition.description.length"
+         class="steps-maindescription"
+    ></div>
+    <div ng-repeat="step in $ctrl.steps track by step.id"
+         ng-class="['steps-step', step.status]"
+    >
+        <div class="steps-step-number">
+            <span ng-class="{
+                'tlp-badge-success': step.status == 'passed',
+                'tlp-badge-danger': step.status == 'failed',
+                'tlp-badge-info': step.status == 'blocked',
+                'tlp-badge-secondary': step.status == 'notrun'
+            }">{{ step.rank }}</span>
+        </div>
+        <div class="steps-step-description" ng-bind-html="step.description"></div>
+    </div>
+</section>

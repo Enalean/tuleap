@@ -21,6 +21,7 @@ import ExecutionTimerDirective    from './timer/execution-timer-directive.js';
 import ExecutionListFilter        from './execution-list-filter.js';
 import ExecutionListHeader        from './execution-list-header/execution-list-header-component.js';
 import ExecutionDetailJustUpdated from './execution-detail-just-updated-component.js';
+import ExecutionWithSteps         from './execution-with-steps/execution-with-steps-component.js';
 
 export default angular.module('execution', [
     'gettext',
@@ -41,6 +42,7 @@ export default angular.module('execution', [
 .directive('timer', ExecutionTimerDirective)
 .component('executionDetailJustUpdated', ExecutionDetailJustUpdated)
 .component('executionListHeader', ExecutionListHeader)
+.component('executionWithSteps', ExecutionWithSteps)
 .filter('ExecutionListFilter', ExecutionListFilter)
 .name;
 
