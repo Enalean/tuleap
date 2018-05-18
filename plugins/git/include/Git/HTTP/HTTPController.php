@@ -29,6 +29,7 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
+use UserDao;
 
 class HTTPController implements DispatchableWithRequestNoAuthz
 {
@@ -72,7 +73,8 @@ class HTTPController implements DispatchableWithRequestNoAuthz
         \ProjectManager $project_manager,
         \GitRepositoryFactory $repository_factory,
         \Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
-        \PermissionsManager $permissions_manager
+        \PermissionsManager $permissions_manager,
+        UserDao $user_dao
     ) {
         $this->project_manager       = $project_manager;
         $this->repository_factory    = $repository_factory;
@@ -92,7 +94,8 @@ class HTTPController implements DispatchableWithRequestNoAuthz
                 $gerrit_server_factory,
                 new HttpUserValidator()
             ),
-            $permissions_manager
+            $permissions_manager,
+            $user_dao
         );
 
         $this->http_command_factory = new \Git_HTTP_CommandFactory(

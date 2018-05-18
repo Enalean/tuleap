@@ -35,6 +35,7 @@ use Tuleap\Git\History\GitPhpAccessLogger;
 use Tuleap\Request\CollectRoutesEvent;
 use FastRoute;
 use Mockery;
+use UserDao;
 
 /**
  * @group GitRoutingTest
@@ -129,6 +130,7 @@ class GitRoutingTest extends TestCase
                 'getMirrorDataMapper'       => \Mockery::mock(Git_Mirror_MirrorDataMapper::class),
                 'getGitPhpAccessLogger'     => \Mockery::mock(GitPhpAccessLogger::class),
                 'getGitPermissionsManager'  => \Mockery::mock(GitPermissionsManager::class),
+                'getUserDao'                => \Mockery::mock(UserDao::class),
                 'getConfigurationParameter' => 'foo',
             ]);
 

@@ -2336,7 +2336,8 @@ class GitPlugin extends Plugin
             new HistoryDao(),
             $this->getRepositoryFactory(),
             UserManager::instance(),
-            new GitoliteFileLogsDao()
+            new GitoliteFileLogsDao(),
+            $this->getUserDao()
         );
     }
 
@@ -2479,6 +2480,14 @@ class GitPlugin extends Plugin
         );
     }
 
+    /**
+     * @return UserDao
+     */
+    protected function getUserDao()
+    {
+        return new UserDao();
+    }
+
     public function collectRoutesEvent(\Tuleap\Request\CollectRoutesEvent $event)
     {
         $event->getRouteCollector()->addGroup(GIT_BASE_URL, function (FastRoute\RouteCollector $r) {
@@ -2496,7 +2505,8 @@ class GitPlugin extends Plugin
                     $this->getProjectManager(),
                     $this->getRepositoryFactory(),
                     $this->getGerritServerFactory(),
-                    $this->getPermissionsManager()
+                    $this->getPermissionsManager(),
+                    $this->getUserDao()
                 );
             });
             $r->addRoute(['GET', 'POST'], '/{project_name}/{path:.*}', function () {
