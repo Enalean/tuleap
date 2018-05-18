@@ -1189,7 +1189,8 @@ class LdapPlugin extends Plugin {
         return new LDAP_ProjectGroupManager(
             $this->getLdap(),
             $this->getLdapUserManager(),
-            $this->getLdapProjectGroupDao()
+            $this->getLdapProjectGroupDao(),
+            ProjectManager::instance()
         );
     }
 
