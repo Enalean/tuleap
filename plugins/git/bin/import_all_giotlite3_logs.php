@@ -1,7 +1,7 @@
 #!/usr/share/tuleap/src/utils/php-launcher.sh
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -47,7 +47,8 @@ $gitolite_parser = new Gitolite3LogParser(
     new Dao(),
     new GitRepositoryFactory(new GitDao(), ProjectManager::instance()),
     UserManager::instance(),
-    new GitoliteFileLogsDao()
+    new GitoliteFileLogsDao(),
+    new UserDao()
 );
 $gitolite_parser->parseAllLogs(GITOLITE3_LOGS_PATH);
 

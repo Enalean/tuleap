@@ -23,6 +23,7 @@ namespace Tuleap\Git\Gitolite;
 require_once dirname(__FILE__) . '/../../bootstrap.php';
 
 use GitBackendLogger;
+use UserDao;
 
 class Gitolite3LogParserTest extends \TuleapTestCase
 {
@@ -53,6 +54,7 @@ class Gitolite3LogParserTest extends \TuleapTestCase
         $this->history_dao    = mock('Tuleap\Git\History\Dao');
         $this->user_validator = new \Tuleap\Git\RemoteServer\Gerrit\HttpUserValidator;
         $this->file_logs_dao  = mock('Tuleap\Git\Gitolite\GitoliteFileLogsDao');
+        $this->user_dao       = mock(UserDao::class);
         $this->parser         = new Gitolite3LogParser(
             $this->logger,
             mock('System_Command'),
@@ -60,7 +62,8 @@ class Gitolite3LogParserTest extends \TuleapTestCase
             $this->history_dao,
             $this->factory,
             $this->user_manager,
-            $this->file_logs_dao
+            $this->file_logs_dao,
+            $this->user_dao
         );
 
         $this->repository = mock('GitRepository');
@@ -139,5 +142,25 @@ class Gitolite3LogParserTest extends \TuleapTestCase
     {
         stub($this->factory)->getFromFullPath()->returns($this->repository);
         $this->parser->parseLogs(__DIR__ . '/_fixtures/gitolite-2017-11-broken.log');
+    }
+
+    public function itUpdatesLastAccessDateForUser()
+    {
+        stub($this->factory)->getFromFullPath()->returns($this->repository);
+        stub($this->user_manager)->getUserByUserName()->returns($this->user);
+
+        expect($this->user_dao)->storeLastAccessDate(101, '*')->once();
+
+        $this->parser->parseLogs(dirname(__FILE__) . '/_fixtures/gitolite-2016-10.log');
+    }
+
+    public function itDoesNotUpdateLastAccessDateForAnonymousUser()
+    {
+        stub($this->factory)->getFromFullPath()->returns($this->repository);
+        stub($this->user_manager)->getUserByUserName()->returns(null);
+
+        expect($this->user_dao)->storeLastAccessDate()->never();
+
+        $this->parser->parseLogs(dirname(__FILE__) . '/_fixtures/gitolite-2016-10.log');
     }
 }
