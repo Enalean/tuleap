@@ -38,6 +38,9 @@
                         <td class="siteadmin-description-fields-description-column">{{{ purified_description }}}</td>
                         <td>
                             <form id="description-field-form-required-{{ id }}" action="" method="POST">
+                                {{# csrf_token }}
+                                    {{> csrf_token_input }}
+                                {{/ csrf_token }}
                                 {{# required_value }}
                                     <input type="hidden" name="remove_required_desc_id" value="{{ id }}">
                                 {{/ required_value }}

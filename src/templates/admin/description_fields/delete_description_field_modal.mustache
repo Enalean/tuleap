@@ -1,4 +1,7 @@
 <form action="" method="POST">
+    {{# csrf_token }}
+        {{> csrf_token_input }}
+    {{/ csrf_token }}
     <div id="delete-description-field-modal-{{ id }}"
         class="tlp-modal tlp-modal-danger"
         role="dialog"
