@@ -29,6 +29,7 @@ use Tuleap\TestManagement\Campaign\Execution\DefinitionForExecutionRetriever;
 use Tuleap\TestManagement\Campaign\Execution\ExecutionDao;
 use Tuleap\TestManagement\Campaign\Execution\PaginatedExecutions;
 use Tuleap\TestManagement\ConfigConformanceValidator;
+use Tuleap\TestManagement\Step\Execution\StepResult;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 use Tuleap\User\REST\UserRepresentation;
 use UserManager;
@@ -146,7 +147,8 @@ class ExecutionRepresentationBuilder
             $previous_result_representation,
             $definition_representation,
             $this->getLinkedBugsRepresentationForExecution($user, $execution),
-            $this->getExecutionTime($user, $execution)
+            $this->getExecutionTime($user, $execution),
+            $this->getStepsResultsRepresentations($user, $execution)
         );
 
         return $execution_representation;
@@ -286,10 +288,9 @@ class ExecutionRepresentationBuilder
         return $bug_representations;
     }
 
-    private function getExecutionResult(PFUser $user, Tracker_Artifact $execution) {
-        $results_field = $this->tracker_form_element_factory->getUsedFieldByNameForUser($execution->getTrackerId(), ExecutionRepresentation::FIELD_RESULTS, $user);
-
-        $changeset_value = $execution->getValue($results_field);
+    private function getExecutionResult(PFUser $user, Tracker_Artifact $execution)
+    {
+        $changeset_value = $this->getFieldChangeValue($user, $execution, ExecutionRepresentation::FIELD_RESULTS);
         if (! $changeset_value) {
             return '';
         }
@@ -297,13 +298,9 @@ class ExecutionRepresentationBuilder
         return $changeset_value->getValue();
     }
 
-    private function getExecutionTime(PFUser $user, Tracker_Artifact $execution) {
-        $results_field = $this->tracker_form_element_factory->getUsedFieldByNameForUser($execution->getTrackerId(), ExecutionRepresentation::FIELD_TIME, $user);
-        if (! $results_field) {
-            return '';
-        }
-
-        $changeset_value = $execution->getValue($results_field);
+    private function getExecutionTime(PFUser $user, Tracker_Artifact $execution)
+    {
+        $changeset_value = $this->getFieldChangeValue($user, $execution, ExecutionRepresentation::FIELD_TIME);
         if (! $changeset_value) {
             return '';
         }
@@ -337,4 +334,64 @@ class ExecutionRepresentationBuilder
 
         return $previous_result_representation;
     }
+
+    /**
+     * @param PFUser           $user
+     * @param Tracker_Artifact $execution
+     *
+     * @return StepResult[]
+     */
+    private function getStepsResultsRepresentations(PFUser $user, Tracker_Artifact $execution)
+    {
+        return array_reduce(
+            $this->getStepsResults($user, $execution),
+            function (array $representations, StepResult $step_result) {
+                $id = $step_result->getStep()->getId();
+
+                $representations[$id] = new StepResultRepresentation();
+                $representations[$id]->build($step_result);
+
+                return $representations;
+            },
+            []
+        );
+    }
+
+    /**
+     * @param PFUser           $user
+     * @param Tracker_Artifact $execution
+     * @param  string          $field_name
+     *
+     * @return null|\Tracker_Artifact_ChangesetValue
+     */
+    private function getFieldChangeValue(PFUser $user, Tracker_Artifact $execution, $field_name)
+    {
+        $results_field = $this->tracker_form_element_factory->getUsedFieldByNameForUser(
+            $execution->getTrackerId(),
+            $field_name,
+            $user
+        );
+        if (! $results_field) {
+            return null;
+        }
+
+        return $execution->getValue($results_field);
+
+    }
+
+    /**
+     * @param PFUser           $user
+     * @param Tracker_Artifact $execution
+     *
+     * @return array|string
+     */
+    private function getStepsResults(PFUser $user, Tracker_Artifact $execution)
+    {
+        $changeset_value = $this->getFieldChangeValue($user, $execution, ExecutionRepresentation::FIELD_STEPS_RESULTS);
+        if (! $changeset_value) {
+            return [];
+        }
+
+        return $changeset_value->getValue();
+}
 }
