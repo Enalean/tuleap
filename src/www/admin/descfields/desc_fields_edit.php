@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -31,10 +31,16 @@ use Tuleap\Project\Admin\DescriptionFields\DescriptionFieldAdminPresenterBuilder
 $request = HTTPRequest::instance();
 $request->checkUserIsSuperUser();
 
+$is_an_update_request = $request->isPost();
+$csrf_token           = new CSRFSynchronizerToken('/admin/descfields/desc_fields_edit.php');
+if ($is_an_update_request) {
+    $csrf_token->check();
+}
+
 $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tuleap/admin-description-fields.js');
 
 $delete_desc_id = $request->get('delete_group_desc_id');
-if ($delete_desc_id) {
+if ($delete_desc_id && $is_an_update_request) {
     $sql    = "DELETE FROM group_desc where group_desc_id='" . db_ei($delete_desc_id) . "'";
     $result = db_query($sql);
 
@@ -58,7 +64,7 @@ if ($delete_desc_id) {
 
 $make_required_desc_id   = $request->get('make_required_desc_id');
 $remove_required_desc_id = $request->get('remove_required_desc_id');
-if ($make_required_desc_id) {
+if ($make_required_desc_id && $is_an_update_request) {
     $sql    = "UPDATE group_desc SET desc_required='1' where group_desc_id='" . db_ei($make_required_desc_id) . "'";
     $result = db_query($sql);
     if (!$result) {
@@ -71,7 +77,7 @@ if ($make_required_desc_id) {
     $GLOBALS['Response']->redirect('/admin/descfields/desc_fields_edit.php');
 }
 
-if ($remove_required_desc_id) {
+if ($remove_required_desc_id && $is_an_update_request) {
     $sql    = "UPDATE group_desc SET desc_required='0' where group_desc_id='" . db_ei($remove_required_desc_id) . "'";
     $result = db_query($sql);
     if (!$result) {
@@ -92,7 +98,7 @@ $desc_type        = $request->get('form_type');
 $desc_rank        = $request->get('form_rank');
 $desc_required    = $request->get('form_required');
 
-if ($add_desc || $update) {
+if (($add_desc || $update) && $is_an_update_request) {
     //data validation
     $valid_data = 1;
     if (!trim($desc_name) || !trim($desc_description)) {
@@ -157,7 +163,8 @@ $title = $Language->getText('admin_desc_fields', 'title');
 
 $custom_project_fields_list_presenter = new FieldsListPresenter(
     $title,
-    $field_presenters
+    $field_presenters,
+    $csrf_token
 );
 
 $admin_page = new AdminPageRenderer();
