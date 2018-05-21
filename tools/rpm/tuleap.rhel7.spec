@@ -370,7 +370,7 @@ Summary: Create test environment on a Tuleap server
 Group: Development/Tools
 Version: @@PLUGIN_CREATE_TEST_ENV_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-botmattermost
 %description plugin-create-test-env
 %{summary}.
 
