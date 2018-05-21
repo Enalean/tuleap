@@ -14,6 +14,9 @@ msgstr ""
 msgid "Definition of a step"
 msgstr ""
 
+msgid "Execution result of a step"
+msgstr ""
+
 msgid "Job URL is invalid"
 msgstr ""
 
@@ -33,6 +36,9 @@ msgid "Start TestManagement"
 msgstr ""
 
 msgid "Step definition"
+msgstr ""
+
+msgid "Step execution"
 msgstr ""
 
 msgid "TestManagement config is not fully set up,"

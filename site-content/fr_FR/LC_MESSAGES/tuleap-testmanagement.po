@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-05-18 10:24+0200\n"
+"PO-Revision-Date: 2018-05-17 17:38+0200\n"
 "Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: \n"
 "Language: fr_FR\n"
@@ -36,6 +36,9 @@ msgstr ""
 msgid "Definition of a step"
 msgstr "Définition d'une étape"
 
+msgid "Execution result of a step"
+msgstr "Résultat d'exécution d'une étape"
+
 msgid "Job URL is invalid"
 msgstr "L'URL du job n'est pas valide"
 
@@ -58,6 +61,9 @@ msgstr "Démarrer TestManagement"
 
 msgid "Step definition"
 msgstr "Définition d'étapes"
+
+msgid "Step execution"
+msgstr "Exécution d'étapes"
 
 msgid "TestManagement config is not fully set up,"
 msgstr "La configuration de TestManagement est incomplète,"

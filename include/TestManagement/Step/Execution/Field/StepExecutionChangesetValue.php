@@ -18,19 +18,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\TestManagement\Step\Definition\Field;
+namespace Tuleap\TestManagement\Step\Execution\Field;
 
 use PFUser;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue;
 use Tracker_Artifact_ChangesetValueVisitor;
 use Tuleap;
-use Tuleap\TestManagement\Step\Step;
+use Tuleap\TestManagement\Step\Execution\StepResult;
 
-class StepDefinitionChangesetValue extends Tracker_Artifact_ChangesetValue
+class StepExecutionChangesetValue extends \Tracker_Artifact_ChangesetValue
 {
     /**
-     * @var Step[]
+     * @var StepResult[]
      */
     private $steps;
 
@@ -39,57 +39,37 @@ class StepDefinitionChangesetValue extends Tracker_Artifact_ChangesetValue
      *
      * @param int                        $id
      * @param Tracker_Artifact_Changeset $changeset
-     * @param StepDefinition             $field
+     * @param StepExecution              $field
      * @param bool                       $has_changed
-     * @param Step[]                     $steps
+     * @param StepResult[]               $step_results
      */
     public function __construct(
         $id,
         Tracker_Artifact_Changeset $changeset,
-        StepDefinition $field,
+        StepExecution $field,
         $has_changed,
-        array $steps
+        array $step_results
     ) {
         parent::__construct($id, $changeset, $field, $has_changed);
-        $this->steps = $steps;
+        $this->steps = $step_results;
     }
 
     /**
      * Returns a diff between current changeset value and changeset value in param
      *
      * @param Tracker_Artifact_ChangesetValue $changeset_value The changeset value to compare to this changeset value
-     * @param string                          $format          The format of the diff (html, text, ...)
-     * @param PFUser                          $user            The user or null
-     * @param boolean                         $ignore_perms
+     * @param string $format                                   The format of the diff (html, text, ...)
+     * @param PFUser $user                                     The user or null
+     * @param boolean $ignore_perms
      *
      * @return string The difference between another $changeset_value, false if no differences
      */
     public function diff($changeset_value, $format = 'html', PFUser $user = null, $ignore_perms = false)
     {
-        /** @var Step[] $previous_steps */
-        $previous_steps = array_values($changeset_value->getValue());
-        /** @var Step[] $current_steps */
-        $current_steps = array_values($this->steps);
-        if (count($current_steps) !== count($previous_steps)) {
-            if (empty($current_steps)) {
-                return 'cleared';
-            }
-
-            return 'changed';
-        }
-
-        foreach ($current_steps as $key => $step) {
-            if ($step->getDescription() !== $previous_steps[$key]->getDescription()) {
-                return 'changed';
-            }
-        }
     }
 
     public function nodiff($format = 'html')
     {
-        if (count($this->steps)) {
-            return 'added';
-        }
     }
 
     /**
