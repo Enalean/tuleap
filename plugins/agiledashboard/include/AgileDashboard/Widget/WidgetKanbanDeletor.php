@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,28 +26,19 @@ class WidgetKanbanDeletor
      */
     private $widget_kanban_dao;
 
-    /**
-     * @var WidgetKanbanConfigDAO
-     */
-    private $widget_config_dao;
-
-    public function __construct(WidgetKanbanDao $widget_kanban_dao, WidgetKanbanConfigDAO $widget_config_dao)
+    public function __construct(WidgetKanbanDao $widget_kanban_dao)
     {
         $this->widget_kanban_dao = $widget_kanban_dao;
-        $this->widget_config_dao = $widget_config_dao;
     }
 
+    /**
+     * @param $id
+     * @param $owner_id
+     * @param $owner_type
+     * @throws \Exception
+     */
     public function delete($id, $owner_id, $owner_type)
     {
-        $this->widget_kanban_dao->delete($id, $owner_id, $owner_type);
-
-        if ($this->isWidgetFiltered($id)) {
-            $this->widget_config_dao->deleteConfigForWidgetId($id);
-        }
-    }
-
-    private function isWidgetFiltered($id)
-    {
-        return $this->widget_config_dao->searchKanbanTrackerReportId($id) !== null;
+        $this->widget_kanban_dao->deleteKanbanWidget($id, $owner_id, $owner_type);
     }
 }

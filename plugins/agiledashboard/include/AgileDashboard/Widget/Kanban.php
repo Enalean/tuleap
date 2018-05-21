@@ -154,7 +154,7 @@ abstract class Kanban extends Widget
 
         try {
             $this->content_id        = $id;
-            $this->kanban_id         = $widget['kanban_id'];
+            $this->kanban_id         = $widget[0]['kanban_id'];
             $this->tracker_report_id = $this->widget_kanban_config_retriever->getWidgetReportId($id);
             $kanban                  = $this->kanban_factory->getKanban($this->getCurrentUser(), $this->kanban_id);
             $this->kanban_title      = $kanban->getName();

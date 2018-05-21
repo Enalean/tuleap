@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,49 +20,98 @@
 
 namespace Tuleap\AgileDashboard\Widget;
 
-use DataAccessObject;
+use Exception;
+use Tuleap\DB\DataAccessObject;
 
 class WidgetKanbanDao extends DataAccessObject
 {
-    public function create($owner_id, $owner_type, $kanban_id, $kanban_title)
+    public function createKanbanWidget($owner_id, $owner_type, $kanban_id, $kanban_title, $tracker_report_id)
     {
-        $owner_id     = $this->da->escapeInt($owner_id);
-        $owner_type   = $this->da->quoteSmart($owner_type);
-        $kanban_id    = $this->da->escapeInt($kanban_id);
-        $kanban_title = $this->da->quoteSmart($kanban_title);
+        $widget_id = 0;
 
+        try {
+            $this->getDB()->beginTransaction();
+
+            $widget_id = $this->create($owner_id, $owner_type, $kanban_id, $kanban_title);
+
+            if ($widget_id && $tracker_report_id) {
+                $this->createConfigForWidgetId($widget_id, $tracker_report_id);
+            }
+
+            $this->getDB()->commit();
+        } catch (Exception $error) {
+            $this->getDB()->rollBack();
+
+            throw $error;
+        }
+
+        return $widget_id;
+    }
+
+    private function create($owner_id, $owner_type, $kanban_id, $kanban_title)
+    {
         $sql = "INSERT INTO plugin_agiledashboard_kanban_widget(owner_id, owner_type, title, kanban_id)
-                VALUES ($owner_id, $owner_type, $kanban_title, $kanban_id)";
+                VALUES (?, ?, ?, ?)";
 
-        return $this->updateAndGetLastId($sql);
+        $this->getDB()->run($sql, $owner_id, $owner_type, $kanban_title, $kanban_id);
+
+        return $this->getDB()->lastInsertId();
+    }
+
+    private function createConfigForWidgetId($widget_id, $tracker_report_id)
+    {
+        $sql = "
+            REPLACE INTO plugin_agiledashboard_kanban_widget_config(widget_id, tracker_report_id)
+            VALUES (?, ?)
+        ";
+
+        $this->getDB()->run($sql, $widget_id, $tracker_report_id);
     }
 
     public function searchWidgetById($id, $owner_id, $owner_type)
     {
-        $owner_id   = $this->da->escapeInt($owner_id);
-        $owner_type = $this->da->quoteSmart($owner_type);
-        $id         = $this->da->escapeInt($id);
-
         $sql = "SELECT *
                 FROM plugin_agiledashboard_kanban_widget
-                WHERE owner_id = $owner_id
-                  AND owner_type = $owner_type
-                  AND id = $id";
+                WHERE owner_id = ?
+                  AND owner_type = ?
+                  AND id = ?";
 
-        return $this->retrieveFirstRow($sql);
+        return $this->getDB()->run($sql, $owner_id, $owner_type, $id);
     }
 
-    public function delete($id, $owner_id, $owner_type)
+    public function deleteKanbanWidget($id, $owner_id, $owner_type)
     {
-        $owner_id   = $this->da->escapeInt($owner_id);
-        $owner_type = $this->da->quoteSmart($owner_type);
-        $id         = $this->da->escapeInt($id);
+        try {
+            $this->getDB()->beginTransaction();
 
+            $this->deleteConfigForWidgetId($id);
+            $this->delete($id, $owner_id, $owner_type);
+
+            $this->getDB()->commit();
+        } catch (Exception $error) {
+            $this->getDB()->rollBack();
+
+            throw $error;
+        }
+    }
+
+    private function delete($id, $owner_id, $owner_type)
+    {
         $sql = "DELETE FROM plugin_agiledashboard_kanban_widget
-                WHERE id = $id
-                  AND owner_id = $owner_id
-                  AND owner_type = $owner_type";
+                WHERE id = ?
+                  AND owner_id = ?
+                  AND owner_type = ?";
 
-        return $this->update($sql);
+        return $this->getDB()->run($sql, $id, $owner_id, $owner_type);
+    }
+
+    private function deleteConfigForWidgetId($widget_id)
+    {
+        $sql = "
+            DELETE FROM plugin_agiledashboard_kanban_widget_config
+            WHERE widget_id = ?
+        ";
+
+        $this->getDB()->run($sql, $widget_id);
     }
 }
