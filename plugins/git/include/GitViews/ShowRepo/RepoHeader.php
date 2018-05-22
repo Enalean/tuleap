@@ -207,11 +207,14 @@ class RepoHeader
         $additional_actions   = $this->getAdditionalActions();
         $additional_help_text = $this->getAdditionalHelpText();
 
-        $presenter = new RepositoryClonePresenter(
+        $is_admin = $this->permissions_manager->userIsGitAdmin($this->current_user, $this->repository->getProject()) ||
+            $this->repository->belongsTo($this->current_user);
+
+        $presenter     = new RepositoryClonePresenter(
             $this->repository,
             $this->getAccessURLs(),
             $mirrors,
-            $this->permissions_manager->userIsGitAdmin($this->request->getCurrentUser(), $this->repository->getProject()),
+            $is_admin,
             $this->getMasterLocationName(),
             $additional_actions,
             $additional_help_text
