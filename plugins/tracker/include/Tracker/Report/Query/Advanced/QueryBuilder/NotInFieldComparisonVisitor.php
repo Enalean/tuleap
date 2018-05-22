@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -137,7 +137,7 @@ class NotInFieldComparisonVisitor implements
             new CollectionOfListValuesExtractor(),
             new FromWhereNotEqualComparisonListFieldBuilder()
         );
-        $ugroups_bind_builder = new NotInComparison\ForListBindUgroups(
+        $ugroups_bind_builder = new NotInComparison\ForListBindUGroups(
             new CollectionOfListValuesExtractor(),
             new FromWhereNotEqualComparisonListFieldBindUgroupsBuilder(),
             new UgroupLabelConverter(
