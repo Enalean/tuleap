@@ -120,6 +120,9 @@ class testmanagementPlugin extends Plugin
     /** @see Tracker_FormElementFactory::GET_CLASSNAMES */
     public function tracker_formelement_get_classnames($params)
     {
+        // Disabled feature
+        return;
+
         $params['fields'][StepDefinition::TYPE] = StepDefinition::class;
         $params['fields'][StepExecution::TYPE]  = StepExecution::class;
     }
