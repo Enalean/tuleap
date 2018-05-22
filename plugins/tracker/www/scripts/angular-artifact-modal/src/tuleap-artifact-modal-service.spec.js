@@ -10,11 +10,15 @@ import {
 
 import {
     rewire$getArtifactFieldValues,
-    rewire$getFileUploadRules,
     rewire$getTracker,
     rewire$getUserPreference,
     restore as restoreRest
 } from './rest/rest-service.js';
+
+import {
+    rewire$updateFileUploadRulesWhenNeeded,
+    restore as restoreFile
+} from './tuleap-artifact-modal-fields/file-field/file-upload-rules-state.js';
 
 describe("NewTuleapArtifactModalService", () => {
     let NewTuleapArtifactModalService,
@@ -26,9 +30,9 @@ describe("NewTuleapArtifactModalService", () => {
         setCreationMode,
         isInCreationMode,
         getTracker,
-        getFileUploadRules,
         getUserPreference,
-        getArtifactFieldValues;
+        getArtifactFieldValues,
+        updateFileUploadRulesWhenNeeded;
 
     beforeEach(() => {
         angular.mock.module(artifact_modal_module, function($provide) {
@@ -90,30 +94,22 @@ describe("NewTuleapArtifactModalService", () => {
 
         getTracker = jasmine.createSpy("getTracker");
         rewire$getTracker(getTracker);
-        getFileUploadRules = jasmine.createSpy("getFileUploadRules");
-        rewire$getFileUploadRules(getFileUploadRules);
         getUserPreference = jasmine.createSpy("getUserPreference");
         rewire$getUserPreference(getUserPreference);
         getArtifactFieldValues = jasmine.createSpy("getArtifactFieldValues");
         rewire$getArtifactFieldValues(getArtifactFieldValues);
+        updateFileUploadRulesWhenNeeded = jasmine.createSpy("updateFileUploadRulesWhenNeeded");
+        rewire$updateFileUploadRulesWhenNeeded(updateFileUploadRulesWhenNeeded);
     });
 
     afterEach(() => {
         restoreCreationMode();
         restoreRest();
+        restoreFile();
     });
 
     describe("", () => {
-        let tracker,
-            file_upload_rules;
-
-        beforeEach(() => {
-            file_upload_rules = {
-                disk_quota    : 64,
-                disk_usage    : 57,
-                max_chunk_size: 96
-            };
-        });
+        let tracker;
 
         describe("initCreationModalModel() -", () => {
             let tracker_id, parent_artifact_id;
@@ -132,13 +128,13 @@ describe("NewTuleapArtifactModalService", () => {
                     parent    : null
                 };
                 getTracker.and.returnValue($q.when(tracker));
-                getFileUploadRules.and.returnValue($q.when(file_upload_rules));
+                updateFileUploadRulesWhenNeeded.and.returnValue($q.when());
 
                 const promise = NewTuleapArtifactModalService.initCreationModalModel(tracker_id, parent_artifact_id);
 
                 expect(promise).toBeResolved();
                 expect(getTracker).toHaveBeenCalledWith(tracker_id);
-                expect(getFileUploadRules).toHaveBeenCalled();
+                expect(updateFileUploadRulesWhenNeeded).toHaveBeenCalled();
                 expect(TuleapArtifactFieldValuesService.getSelectedValues).toHaveBeenCalledWith({}, tracker);
                 expect(TuleapArtifactModalTrackerTransformerService.transform).toHaveBeenCalledWith(tracker, true);
                 expect(TuleapArtifactModalFormTreeBuilderService.buildFormTree).toHaveBeenCalledWith(tracker);
@@ -194,7 +190,7 @@ describe("NewTuleapArtifactModalService", () => {
                         workflow
                     };
                     getTracker.and.returnValue($q.when(tracker));
-                    getFileUploadRules.and.returnValue($q.when(file_upload_rules));
+                    updateFileUploadRulesWhenNeeded.and.returnValue($q.when());
 
                     const promise = NewTuleapArtifactModalService.initCreationModalModel(tracker_id);
 
@@ -224,7 +220,7 @@ describe("NewTuleapArtifactModalService", () => {
                         workflow
                     };
                     getTracker.and.returnValue($q.when(tracker));
-                    getFileUploadRules.and.returnValue($q.when(file_upload_rules));
+                    updateFileUploadRulesWhenNeeded.and.returnValue($q.when());
 
                     const promise = NewTuleapArtifactModalService.initCreationModalModel(tracker_id);
 
@@ -249,7 +245,7 @@ describe("NewTuleapArtifactModalService", () => {
                         workflow
                     };
                     getTracker.and.returnValue($q.when(tracker));
-                    getFileUploadRules.and.returnValue($q.when(file_upload_rules));
+                    updateFileUploadRulesWhenNeeded.and.returnValue($q.when());
 
                     var promise = NewTuleapArtifactModalService.initCreationModalModel(tracker_id);
 
@@ -284,12 +280,6 @@ describe("NewTuleapArtifactModalService", () => {
                     value: 'html'
                 };
 
-                file_upload_rules = {
-                    disk_quota    : 51,
-                    disk_usage    : 17,
-                    max_chunk_size: 57
-                };
-
                 user_id         = 102;
                 tracker_id      = 93;
                 artifact_id     = 250;
@@ -300,7 +290,7 @@ describe("NewTuleapArtifactModalService", () => {
                         return $q.when(text_format_preference);
                     }
                 });
-                getFileUploadRules.and.returnValue($q.when(file_upload_rules));
+                updateFileUploadRulesWhenNeeded.and.returnValue($q.when());
             });
 
             describe("", () => {
@@ -329,7 +319,7 @@ describe("NewTuleapArtifactModalService", () => {
                     expect(getTracker).toHaveBeenCalledWith(tracker_id);
                     expect(getArtifactFieldValues).toHaveBeenCalledWith(artifact_id);
                     expect(getUserPreference).toHaveBeenCalledWith(user_id, 'tracker_comment_invertorder_93');
-                    expect(getFileUploadRules).toHaveBeenCalled();
+                    expect(updateFileUploadRulesWhenNeeded).toHaveBeenCalled();
                     expect(TuleapArtifactFieldValuesService.getSelectedValues).toHaveBeenCalledWith(artifact_values, tracker);
                     expect(TuleapArtifactModalTrackerTransformerService.transform).toHaveBeenCalledWith(tracker, false);
                     expect(TuleapArtifactModalTrackerTransformerService.addFieldValuesToTracker).toHaveBeenCalledWith(artifact_values, tracker);

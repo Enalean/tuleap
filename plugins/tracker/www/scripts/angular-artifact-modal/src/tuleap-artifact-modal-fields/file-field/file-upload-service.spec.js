@@ -7,23 +7,21 @@ import {
     rewire$uploadAdditionalChunk,
     restore
 } from '../../rest/rest-service.js';
+import { file_upload_rules } from './file-upload-rules-state.js';
 
 describe("TuleapArtifactModalFileUploadService", () => {
     let $q,
-        TuleapArtifactModalFileUploadService,
-        TuleapArtifactModalFileUploadRules;
+        TuleapArtifactModalFileUploadService;
 
     beforeEach(() => {
         angular.mock.module(file_field_module);
 
         angular.mock.inject(function(
             _$q_,
-            _TuleapArtifactModalFileUploadService_,
-            _TuleapArtifactModalFileUploadRules_
+            _TuleapArtifactModalFileUploadService_
         ) {
             $q                                   = _$q_;
             TuleapArtifactModalFileUploadService = _TuleapArtifactModalFileUploadService_;
-            TuleapArtifactModalFileUploadRules   = _TuleapArtifactModalFileUploadRules_;
         });
 
         installPromiseMatchers();
@@ -99,7 +97,7 @@ describe("TuleapArtifactModalFileUploadService", () => {
 
         describe("Given that the max chunk size that can be sent is 128 bytes", () => {
             beforeEach(() => {
-                TuleapArtifactModalFileUploadRules.max_chunk_size = 128;
+                file_upload_rules.max_chunk_size = 128;
             });
 
             it("and given an object with a 128 bytes file and a description property, when I upload this file to my temporary list, then the only chunk will be sent using the POST REST route and a promise will be resolved with the new temporary file's id", () => {
@@ -167,10 +165,11 @@ describe("TuleapArtifactModalFileUploadService", () => {
     });
 
     function generateRandomBase64(length) {
-        var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz".split("");
-        var random_string = [];
-        for (var i = length - 1; i >= 0; i--) {
-            random_string.push(_.sample(chars));
+        const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
+        const random_string = [];
+        for (let i = length - 1; i >= 0; i--) {
+            const random_int = Math.floor(Math.random() * chars.length);
+            random_string.push(chars[random_int]);
         }
         return random_string.join("");
     }

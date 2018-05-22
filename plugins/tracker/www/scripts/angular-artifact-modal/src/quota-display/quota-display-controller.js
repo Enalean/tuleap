@@ -1,33 +1,26 @@
+import { file_upload_rules } from '../tuleap-artifact-modal-fields/file-field/file-upload-rules-state.js';
+
 export default TuleapArtifactModalQuotaDisplayController;
 
-TuleapArtifactModalQuotaDisplayController.$inject = [
-    '$scope',
-    'TuleapArtifactModalFileUploadRules'
-];
+TuleapArtifactModalQuotaDisplayController.$inject = [];
 
-function TuleapArtifactModalQuotaDisplayController(
-    $scope,
-    TuleapArtifactModalFileUploadRules
-) {
-    var self = this;
-    self.file_upload_rules      = TuleapArtifactModalFileUploadRules;
-    self.getDiskUsagePercentage = getDiskUsagePercentage;
-    self.init                   = init;
-    self.isDiskUsageEmpty       = isDiskUsageEmpty;
-
-    init();
-
-    function init() {
-        $scope.$watch(self.isDiskUsageEmpty, function(new_value) {
-            self.disk_usage_empty = new_value;
-        });
-    }
+function TuleapArtifactModalQuotaDisplayController() {
+    const self = this;
+    Object.assign(self, {
+        file_upload_rules,
+        getDiskUsagePercentage,
+        isDiskUsageEmpty
+    });
 
     function isDiskUsageEmpty() {
         return self.file_upload_rules.disk_usage === 0;
     }
 
     function getDiskUsagePercentage() {
-        return (self.file_upload_rules.disk_usage / self.file_upload_rules.disk_quota) * 100;
+        return (
+            self.file_upload_rules.disk_usage /
+            self.file_upload_rules.disk_quota *
+            100
+        );
     }
 }

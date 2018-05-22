@@ -1,14 +1,15 @@
-import _                    from 'lodash';
+import _ from 'lodash';
 import { isInCreationMode } from './modal-creation-mode-state.js';
-import {
-    hasError,
-    getErrorMessage
-} from './rest/rest-error-state.js';
+import { hasError, getErrorMessage } from './rest/rest-error-state.js';
 import {
     createArtifact,
     editArtifact,
     getFollowupsComments
 } from './rest/rest-service.js';
+import {
+    getAllFileFields,
+    isThereAtLeastOneFileField
+} from './tuleap-artifact-modal-fields/file-field/file-field-detector.js';
 
 export default ArtifactModalController;
 
@@ -46,7 +47,6 @@ function ArtifactModalController(
         artifact_id        : modal_model.artifact_id,
         color              : formatColor(modal_model.color),
         creation_mode      : isInCreationMode(),
-        is_disk_usage_empty: true,
         ordered_fields     : modal_model.ordered_fields,
         parent             : null,
         parent_artifact_id : modal_model.parent_artifact_id,
@@ -67,7 +67,7 @@ function ArtifactModalController(
         isDisabled,
         isFollowupCommentFormDisplayed,
         isNewParentAlertShown,
-        isThereAtLeastOneFileField,
+        isThereAtLeastOneFileField: () => isThereAtLeastOneFileField(Object.values(self.values)),
         setupTooltips,
         submit,
         toggleFieldset,
@@ -188,20 +188,10 @@ function ArtifactModalController(
         });
     }
 
-    function getAllFileFields() {
-        return _.filter(self.values, function(field_value) {
-            return field_value.type === "file";
-        });
-    }
-
-    function isThereAtLeastOneFileField() {
-        return (getAllFileFields().length > 0);
-    }
-
     function uploadAllFileFields() {
-        var promises = _.map(getAllFileFields(), function(file_field_value) {
-            return uploadFileField(file_field_value);
-        });
+        const promises = getAllFileFields(Object.values(self.values)).map(
+            file_field_value => uploadFileField(file_field_value)
+        );
 
         return $q.all(promises);
     }
