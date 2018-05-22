@@ -86,6 +86,10 @@ class GitRepositoryBrowserController implements DispatchableWithRequest
             throw new NotFoundException("Repository does not exist");
         }
 
+        if (! $repository->userCanRead($request->getCurrentUser())) {
+            throw new ForbiddenException();
+        }
+
         $url = new \Git_URL(
             $this->project_manager,
             $this->repository_factory,
