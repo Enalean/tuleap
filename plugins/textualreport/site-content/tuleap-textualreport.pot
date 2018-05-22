@@ -1,0 +1,5 @@
+msgid "Allows users to download a tracker report as a single page document."
+msgstr ""
+
+msgid "Textual Report"
+msgstr ""
