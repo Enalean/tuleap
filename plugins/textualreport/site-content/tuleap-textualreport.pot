@@ -1,5 +1,13 @@
 msgid "Allows users to download a tracker report as a single page document."
 msgstr ""
 
+msgid "Export as single page document"
+msgstr ""
+
+msgid ""
+"Export matching artifacts in a single page document using title and "
+"description semantics"
+msgstr ""
+
 msgid "Textual Report"
 msgstr ""

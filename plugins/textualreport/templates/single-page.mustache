@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>{{{ stylesheets }}}</style>
+<body class="tlp-framed">
+{{# artifacts }}
+    <section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">
+                    <a href="{{ href }}">{{ xref }}</a>
+                    {{ title }}
+                </h1>
+            </div>
+            <section class="tlp-pane-section">
+                <div>
+                    {{{ purified_description }}}
+                </div>
+            </section>
+        </div>
+    </section>
+{{/ artifacts }}
+</body>
