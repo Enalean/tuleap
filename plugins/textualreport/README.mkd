@@ -1,0 +1,5 @@
+Textual Report
+==============
+
+This plugin allow users to download a tracker report as a single page document,
+useful to have a list of requirements in a single document for example.
