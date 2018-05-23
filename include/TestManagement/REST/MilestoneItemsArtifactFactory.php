@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,7 +25,7 @@ use Project;
 use PFUser;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_ArtifactLink;
-use DataAccessResult;
+use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 use Tuleap\TestManagement\Nature\NatureCoveredByPresenter;
 use Tuleap\TestManagement\Event\GetItemsFromMilestone;
 
@@ -96,7 +96,7 @@ class MilestoneItemsArtifactFactory
         $this->appendArtifactsUserCanView($user, $test_definitions, $results);
     }
 
-    private function appendArtifactsUserCanView(PFUser $user, array &$test_definitions, DataAccessResult $results)
+    private function appendArtifactsUserCanView(PFUser $user, array &$test_definitions, LegacyDataAccessResultInterface $results)
     {
         foreach ($results as $row) {
             $test_def_artifact = $this->tracker_artifact_factory->getInstanceFromRow($row);

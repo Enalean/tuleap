@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,8 +23,8 @@ namespace Tuleap\TestManagement\REST\v1;
 use Tracker_Artifact;
 use PFUser;
 use Tracker_ArtifactDao;
-use DataAccessResult;
 use Tracker_ResourceDoesntExistException;
+use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 
 class ArtifactNodeBuilder {
 
@@ -106,7 +106,7 @@ class ArtifactNodeBuilder {
         return array_values($links);
     }
 
-    private function appendNodeReferenceRepresentations(array &$links, DataAccessResult $dar, PFUser $user, $id, array &$nodes, array &$artifact_ids) {
+    private function appendNodeReferenceRepresentations(array &$links, LegacyDataAccessResultInterface $dar, PFUser $user, $id, array &$nodes, array &$artifact_ids) {
         foreach ($this->getArtifactIdsUserCanSee($user, $dar, $links) as $id) {
             $link = new NodeReferenceRepresentation();
             $this->buildNode($link, $id, $nodes);
@@ -115,7 +115,7 @@ class ArtifactNodeBuilder {
         }
     }
 
-    private function getArtifactIdsUserCanSee(PFUser $user, DataAccessResult $dar, array $already_linked_ids) {
+    private function getArtifactIdsUserCanSee(PFUser $user, LegacyDataAccessResultInterface $dar, array $already_linked_ids) {
         $artifact_ids = array();
         foreach ($dar as $row) {
             try {
