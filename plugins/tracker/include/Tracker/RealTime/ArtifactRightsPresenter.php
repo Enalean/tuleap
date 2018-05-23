@@ -1,7 +1,6 @@
 <?php
-
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,13 +16,14 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-namespace Tuleap\AgileDashboard;
 
-use Tracker_Artifact;
-use Tracker_Permission_PermissionsSerializer;
+namespace Tuleap\Tracker\RealTime;
+
 use Tuleap\RealTime\MessageRightsPresenter;
+use Tracker_Permission_PermissionsSerializer;
+use Tracker_Artifact;
 
-class KanbanArtifactRightsPresenter implements MessageRightsPresenter
+class ArtifactRightsPresenter implements MessageRightsPresenter
 {
     public $submitter_id;
     public $submitter_can_view;
@@ -35,8 +35,7 @@ class KanbanArtifactRightsPresenter implements MessageRightsPresenter
     public function __construct(
         Tracker_Artifact $artifact,
         Tracker_Permission_PermissionsSerializer $permission_serializer
-    )
-    {
+    ) {
         $this->submitter_id       = intval($artifact->getSubmittedByUser()->getId());
         $this->submitter_can_view = $artifact->userCanView($artifact->getSubmittedByUser());
         $this->submitter_only     = $permission_serializer->getLiteralizedUserGroupsSubmitterOnly($artifact);

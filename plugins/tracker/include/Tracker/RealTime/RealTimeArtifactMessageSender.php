@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,13 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard\RealTime;
+namespace Tuleap\Tracker\RealTime;
 
-use BackendLogger;
 use PFUser;
 use Tracker_Artifact;
 use Tracker_Permission_PermissionsSerializer;
-use Tuleap\AgileDashboard\KanbanArtifactRightsPresenter;
 use Tuleap\RealTime\MessageDataPresenter;
 use Tuleap\RealTime\NodeJSClient;
 
@@ -33,15 +31,11 @@ class RealTimeArtifactMessageSender
     const HTTP_CLIENT_UUID = 'HTTP_X_CLIENT_UUID';
 
     /** @var  NodeJSClient */
-    protected $node_js_client;
+    private $node_js_client;
     /**
      * @var Tracker_Permission_PermissionsSerializer
      */
-    protected $permissions_serializer;
-    /**
-     * @var BackendLogger
-     */
-    protected $backend_logger;
+    private $permissions_serializer;
 
     public function __construct(
         NodeJSClient $node_js_client,
@@ -58,7 +52,7 @@ class RealTimeArtifactMessageSender
         $event_name,
         $room_id
     ) {
-        $rights  = new KanbanArtifactRightsPresenter($artifact, $this->permissions_serializer);
+        $rights  = new ArtifactRightsPresenter($artifact, $this->permissions_serializer);
         $message = new MessageDataPresenter(
             $user->getId(),
             isset($_SERVER[self::HTTP_CLIENT_UUID]) ? $_SERVER[self::HTTP_CLIENT_UUID] : null,

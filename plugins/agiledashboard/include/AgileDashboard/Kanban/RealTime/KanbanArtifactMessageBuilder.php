@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,7 +25,7 @@ use Tracker_Artifact;
 use Tracker_Artifact_ChangesetFactory;
 use Tracker_Semantic_Status;
 use Tuleap\AgileDashboard\Kanban\ColumnIdentifier;
-use Tuleap\AgileDashboard\RealTime\RealTimeArtifactMessageException;
+use Tuleap\Tracker\RealTime\RealTimeArtifactMessageException;
 
 class KanbanArtifactMessageBuilder
 {
