@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,6 +16,8 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
+use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 
 class DocmanV1_XMLExportData {
 
@@ -148,7 +150,7 @@ class DocmanV1_XMLExportData {
         }
     }
 
-    private function getDocumentPermissions(DataAccessResult $results) {
+    private function getDocumentPermissions(LegacyDataAccessResultInterface $results) {
         $perms = $this->minimal_permissions;
         foreach($results as $row) {
             if ($row['id'] < ProjectUGroup::PROJECT_ADMIN || $row['id'] > ProjectUGroup::NONE) {

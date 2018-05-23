@@ -1,6 +1,6 @@
 <?php
 /**
-  * Copyright (c) Enalean, 2016 - 2017. All rights reserved
+  * Copyright (c) Enalean, 2016 - 2018. All rights reserved
   *
   * This file is a part of Tuleap.
   *
@@ -20,9 +20,10 @@
 
 namespace Tuleap\Svn\Repository;
 
+use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface;
 
 class RepositoryRegexpBuilder {
-    public function generateRegexpFromPath($path, \DataAccess $data_access)
+    public function generateRegexpFromPath($path, LegacyDataAccessInterface $data_access)
     {
         # Split a given path into subpathes according to depth, then build a regular expression like below:
         # Path: '/trunk/src/common/' =>

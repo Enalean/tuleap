@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,6 +21,8 @@
  * @codingStandardsIgnoreFile
  */
 
+use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface;
+
 class Statistics_ServicesUsageDao extends DataAccessObject {
 
     private $end_date;
@@ -29,13 +31,13 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
     /**
      * Constructor
      *
-     * @param DataAccess $da Data access details
+     * @param LegacyDataAccessInterface $da Data access details
      * @param String $start_date
      * @param String $end_date
      *
      * @return Statistics_DiskUsageDao
      */
-    public function __construct(DataAccess $da, $start_date, $end_date) {
+    public function __construct(LegacyDataAccessInterface $da, $start_date, $end_date) {
         parent::__construct($da);
         $this->start_date = strtotime($start_date);
         $this->end_date   = strtotime($end_date);

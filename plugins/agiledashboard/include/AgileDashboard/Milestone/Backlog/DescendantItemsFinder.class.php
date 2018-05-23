@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 
 class AgileDashboard_Milestone_Backlog_DescendantItemsFinder
 {
@@ -211,7 +213,7 @@ class AgileDashboard_Milestone_Backlog_DescendantItemsFinder
     /**
      * @return AgileDashboard_Milestone_Backlog_DescendantItemsCollection
      */
-    private function getItemsForUser(PFUser $user, DataAccessResult $result, $found_rows) {
+    private function getItemsForUser(PFUser $user, LegacyDataAccessResultInterface $result, $found_rows) {
         $items = new AgileDashboard_Milestone_Backlog_DescendantItemsCollection();
         foreach ($result as $row) {
             $item = $this->artifact_factory->getInstanceFromRow($row);

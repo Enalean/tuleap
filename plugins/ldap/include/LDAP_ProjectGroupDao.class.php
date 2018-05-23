@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2008. All Rights Reserved.
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2008
  *
@@ -21,6 +21,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface;
 use Tuleap\Project\UserRemover;
 
 /**
@@ -34,14 +35,7 @@ class LDAP_ProjectGroupDao extends DataAccessObject
      */
     private $user_removal;
 
-    /**
-     * Constructor
-     *
-     * @param DataAccess $da Data access details
-     * 
-     * @return LDAP_UserDao
-     */
-    public function __construct(DataAccess $da, UserRemover $user_removal)
+    public function __construct(LegacyDataAccessInterface $da, UserRemover $user_removal)
     {
         parent::__construct($da);
 

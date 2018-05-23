@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 
 class AgileDashboard_Milestone_MilestoneStatusCounter {
 
@@ -88,7 +90,7 @@ class AgileDashboard_Milestone_MilestoneStatusCounter {
         );
     }
 
-    private function getIdsUserCanView(PFUser $user, DataAccessResult $dar) {
+    private function getIdsUserCanView(PFUser $user, LegacyDataAccessResultInterface $dar) {
         $artifact_ids = array();
         foreach ($dar as $row) {
             $artifact = $this->artifact_factory->getArtifactById($row['id']);

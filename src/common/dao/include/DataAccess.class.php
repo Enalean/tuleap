@@ -25,7 +25,8 @@ if(!defined('CODENDI_DB_NOT_NULL')) define('CODENDI_DB_NOT_NULL', 1);
 /**
  *  @deprecated See \Tuleap\DB\DBFactory
  */
-class DataAccess {
+class DataAccess implements \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface
+{
     /**
      * Max number of reconnect attempt when client loose connexion to server
      */
@@ -117,7 +118,7 @@ class DataAccess {
      * Fetches a query resources and stores it in a local member
      * @param $sql string the database query to run
      * @deprecated
-     * @return object DataAccessResult
+     * @return object MySQLDataAccessResultInterface
      */
     public function query($sql, $params = array()) {
         $time = microtime(1);
@@ -154,7 +155,7 @@ class DataAccess {
      * Example: mysql_query_params( "SELECT * FROM my_table WHERE col1=$1 AND col2=$2", array( 42, "It's ok" ) );
      * @deprecated
      */
-    function mysql_query_params($sql, $params) {
+    private function mysql_query_params($sql, $params) {
 	if(!empty($params)) {
 		for ($i=1 ; $i <= count($params) ; $i++) {
 	   		$args[] = "$". $i;	
@@ -266,7 +267,7 @@ class DataAccess {
      * @deprecated
      * @static
      */
-    function quoteSmartImplode($glue, $pieces, $params = array()) {
+    public function quoteSmartImplode($glue, $pieces, $params = array()) {
         $lem = array_keys($pieces);
         $str='';
         $after_first=false;

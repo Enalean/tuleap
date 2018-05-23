@@ -19,6 +19,7 @@
  */
 
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
+use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 
 /**
  * Loads planning milestones from the persistence layer.
@@ -492,7 +493,7 @@ class Planning_MilestoneFactory
         return new AgileDashboard_Milestone_PaginatedMilestones($top_milestones, $total_size);
     }
 
-    private function convertDARToArrayOfMilestones(PFUser $user, Planning_Milestone $milestone, DataAccessResult $sub_milestone_artifacts) {
+    private function convertDARToArrayOfMilestones(PFUser $user, Planning_Milestone $milestone, LegacyDataAccessResultInterface $sub_milestone_artifacts) {
         $sub_milestones          = array();
         $sub_milestone_artifacts = $sub_milestone_artifacts->instanciateWith(
             array($this->artifact_factory, 'getInstanceFromRow')

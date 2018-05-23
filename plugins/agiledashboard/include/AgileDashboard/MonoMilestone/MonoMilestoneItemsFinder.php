@@ -21,9 +21,9 @@
 namespace Tuleap\AgileDashboard\MonoMilestone;
 
 use AgileDashboard_Milestone_Backlog_DescendantItemsCollection;
-use DataAccessResult;
 use PFUser;
 use Tracker_ArtifactFactory;
+use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 
 class MonoMilestoneItemsFinder
 {
@@ -63,7 +63,7 @@ class MonoMilestoneItemsFinder
     /**
      * @return AgileDashboard_Milestone_Backlog_DescendantItemsCollection
      */
-    private function getItemsForUser(PFUser $user, DataAccessResult $result, $found_rows)
+    private function getItemsForUser(PFUser $user, LegacyDataAccessResultInterface $result, $found_rows)
     {
         $items = new AgileDashboard_Milestone_Backlog_DescendantItemsCollection();
         foreach ($result as $row) {

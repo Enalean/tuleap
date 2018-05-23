@@ -19,10 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'DataAccess.class.php';
-require_once 'DataAccessResult.class.php';
-require_once 'DataAccessResultEmpty.class.php';
-require_once 'DataAccessQueryException.class.php';
+use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface;
+use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 
 /**
  * @deprecated See \Tuleap\DB\DataAccessObject
@@ -31,7 +29,7 @@ class DataAccessObject {
     /**
      * Private
      * $da stores data access object
-     * @var DataAccess
+     * @var LegacyDataAccessInterface
      * @deprecated
      */
     var $da;
@@ -42,12 +40,13 @@ class DataAccessObject {
     private $throw_exception_on_errors = false;
 
     //! A constructor
+
     /**
-    * Constructs the Dao
-    * @param $da DataAccess
+     * Constructs the Dao
+     * @param $da LegacyDataAccessInterface
      * @deprecated
-    */
-    public function __construct(DataAccess $da = null) {
+     */
+    public function __construct(LegacyDataAccessInterface $da = null) {
         $this->table_name = 'CLASSNAME_MUST_BE_DEFINE_FOR_EACH_CLASS';
         $this->da = $da ? $da : CodendiDataAccess::instance();
     }
@@ -93,7 +92,7 @@ class DataAccessObject {
 
     /**
      * @deprecated
-     * @return DataAccess
+     * @return LegacyDataAccessInterface
      */
     public function getDa() {
         return $this->da;
@@ -165,7 +164,7 @@ class DataAccessObject {
      *
      * @return array of string
      */
-    private function extractIds(DataAccessResult $dar) {
+    private function extractIds(LegacyDataAccessResultInterface $dar) {
         $ids = array();
         foreach ($dar as $row) {
             $ids[] = (int)$row['id'];
@@ -192,7 +191,7 @@ class DataAccessObject {
     /**
      * @deprecated
      */
-    private function handleError(DataAccessResult $dar, $sql) {
+    private function handleError(LegacyDataAccessResultInterface $dar, $sql) {
         if ($dar->isError()) {
             if ($this->throw_exception_on_errors) {
                 throw new DataAccessQueryException($this->getErrorMessage($dar, $sql));
@@ -208,7 +207,7 @@ class DataAccessObject {
     /**
      * @deprecated
      */
-    private function getErrorMessage(DataAccessResult $dar, $sql) {
+    private function getErrorMessage(LegacyDataAccessResultInterface $dar, $sql) {
         $trace = debug_backtrace();
         $i     = isset($trace[1]) ? 1 : 0;
         return $dar->isError() .' ==> '. $sql ." @@ ". $trace[$i]['file'] .' at line '. $trace[$i]['line'];

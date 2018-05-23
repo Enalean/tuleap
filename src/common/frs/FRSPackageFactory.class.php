@@ -24,6 +24,7 @@ require_once('common/dao/FRSPackageDao.class.php');
 require_once('FRSReleaseFactory.class.php');
 require_once ('common/frs/FRSLog.class.php');
 
+use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 use Tuleap\FRS\FRSPackagePaginatedCollection;
 use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\FRS\FRSPermissionFactory;
@@ -164,7 +165,7 @@ class FRSPackageFactory {
     /**
      * @return FRSPackage[]
      */
-    private function instantiateActivePackagesForUserFromDar($group_id, PFUser $user, DataAccessResult $dar)
+    private function instantiateActivePackagesForUserFromDar($group_id, PFUser $user, LegacyDataAccessResultInterface $dar)
     {
         $packages = array();
         if ($dar && !$dar->isError()) {

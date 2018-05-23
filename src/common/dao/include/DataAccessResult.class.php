@@ -19,12 +19,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'IProvideDataAccessResult.class.php';
+use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 
 /**
  * @deprecated See \Tuleap\DB\DataAccessObject
  */
-class DataAccessResult implements IProvideDataAccessResult {
+class DataAccessResult implements LegacyDataAccessResultInterface
+{
     /**
      * $da stores data access object
      * @deprecated
@@ -67,7 +68,7 @@ class DataAccessResult implements IProvideDataAccessResult {
      *
      * @deprecated
      *
-     * @return \DataAccessResult
+     * @return LegacyDataAccessResultInterface
      */
     public function instanciateWith($instance_callback) {
         $this->instance_callback = $instance_callback;

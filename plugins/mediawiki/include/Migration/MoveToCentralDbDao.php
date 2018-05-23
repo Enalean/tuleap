@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,13 +21,12 @@
 
 namespace Tuleap\Mediawiki\Migration;
 
-use DataAccess;
 use DataAccessObject;
 
 class MoveToCentralDbDao extends DataAccessObject
 {
     /**
-     * @var DataAccess
+     * @var string
      */
     private $central_database_name;
 

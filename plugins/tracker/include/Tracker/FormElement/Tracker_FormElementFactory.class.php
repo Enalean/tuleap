@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 use Tuleap\Tracker\FormElement\Field\Shareable\PropagatePropertiesDao;
 use Tuleap\Tracker\FormElement\View\Admin\FilterFormElementsThatCanBeCreatedForTracker;
 
@@ -925,7 +926,8 @@ class Tracker_FormElementFactory {
      *
      * @return array All text formElements used by the tracker
      */
-    protected function getCachedInstancesFromDAR(DataAccessResult $dar) {
+    protected function getCachedInstancesFromDAR(LegacyDataAccessResultInterface $dar)
+    {
         $form_elements = array();
         foreach($dar as $row) {
             $form_elements[] = $this->getCachedInstanceFromRow($row);

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,11 +20,11 @@
 
 namespace Tuleap\Label;
 
-use DataAccessResult;
+use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 
 class PaginatedCollectionsOfLabelsBuilder
 {
-    public function build(DataAccessResult $result, $total_size)
+    public function build(LegacyDataAccessResultInterface $result, $total_size)
     {
         $labels = array();
         foreach ($result as $row) {

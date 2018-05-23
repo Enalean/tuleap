@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,14 +20,14 @@
 
 namespace Tuleap\Project\Admin;
 
-use DataAccessResult;
 use Project;
 use TemplateSingleton;
+use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 
 class ProjectListResultsPresenterBuilder
 {
     public function build(
-        DataAccessResult $projects,
+        LegacyDataAccessResultInterface $projects,
         $nb_matching_projects,
         $group_name_search,
         $status_values,

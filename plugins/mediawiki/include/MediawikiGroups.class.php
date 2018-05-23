@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,6 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
+
 class MediawikiGroups {
     private $added_removed = array(
         'added'   => array(),
@@ -29,7 +31,7 @@ class MediawikiGroups {
 
     private $original_groups = array();
 
-    public function __construct(DataAccessResult $original_groups) {
+    public function __construct(LegacyDataAccessResultInterface $original_groups) {
         foreach ($original_groups as $row) {
             $this->original_groups[$row['ug_group']] = true;
         }

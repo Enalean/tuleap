@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -20,12 +21,8 @@
  */
 
 
-class LDAP_DirectoryCleanUpDao extends DataAccessObject{
-
-    public function __construct(DataAccess $da) {
-        parent::__construct($da);
-    }
-
+class LDAP_DirectoryCleanUpDao extends DataAccessObject
+{
     /**
      * Create forecast deletion date for suspended user
      *

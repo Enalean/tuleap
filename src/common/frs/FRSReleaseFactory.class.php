@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 use Tuleap\FRS\FRSReleasePaginatedCollection;
 use Tuleap\FRS\UploadedLinkDeletor;
 use Tuleap\FRS\UploadedLinksDao;
@@ -134,7 +135,7 @@ class FRSReleaseFactory {
     /**
      * @return FRSRelease[]
      */
-    private function instantiateActivePackagesFromDar($package_id, $group_id, DataAccessResult $dar, PFUser $user)
+    private function instantiateActivePackagesFromDar($package_id, $group_id, LegacyDataAccessResultInterface $dar, PFUser $user)
     {
         $releases = array();
         foreach ($dar as $data_array) {
