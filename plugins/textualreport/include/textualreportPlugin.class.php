@@ -20,6 +20,7 @@
 
 use Tuleap\DB\DBFactory;
 use Tuleap\TextualReport\ArtifactsPresentersBuilder;
+use Tuleap\TextualReport\DocumentCanBeDownloadedChecker;
 use Tuleap\TextualReport\ExportOptionsMenuItemsAppender;
 use Tuleap\TextualReport\SinglePageExporter;
 use Tuleap\TextualReport\SinglePagePresenterBuilder;
@@ -64,7 +65,7 @@ class textualreportPlugin extends Plugin // @codingStandardsIgnoreLine
 
     public function getExportOptionsMenuItems(GetExportOptionsMenuItemsEvent $event)
     {
-        $appender = new ExportOptionsMenuItemsAppender($this->getRenderer());
+        $appender = new ExportOptionsMenuItemsAppender($this->getRenderer(), new DocumentCanBeDownloadedChecker());
         $appender->appendTextualReportDownloadLink($event);
     }
 
@@ -72,6 +73,26 @@ class textualreportPlugin extends Plugin // @codingStandardsIgnoreLine
     {
         if (! $event->hasKeyInParameters(ExportOptionsMenuItemsAppender::EXPORT_SINGLE_PAGE)) {
             return;
+        }
+
+        $document_can_be_downloaded_checker = new DocumentCanBeDownloadedChecker();
+        if (! $document_can_be_downloaded_checker->hasMatchingArtifacts($event->getReport())) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                dgettext(
+                    "tuleap-textualreport",
+                    "There aren't any artifacts that are matching your query, we cannot generate requested document."
+                )
+            );
+            $GLOBALS['Response']->redirect(
+                TRACKER_BASE_URL . '/?' .
+                http_build_query(
+                    [
+                        'report'   => $event->getReport()->getId(),
+                        'renderer' => $event->getRendererTable()->getId()
+                    ]
+                )
+            );
         }
 
         $matching_ids = $event->getReport()->getMatchingIds();

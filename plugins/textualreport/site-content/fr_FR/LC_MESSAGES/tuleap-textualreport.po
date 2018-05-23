@@ -27,5 +27,15 @@ msgstr ""
 "Exporter des artéfacts sous la forme d'un unique document en utilisant les "
 "sémantiques titre et description"
 
+msgid "Please refine your query."
+msgstr "Merci de modifier votre requête."
+
 msgid "Textual Report"
 msgstr "Rapport Textuels"
+
+msgid ""
+"There aren't any artifacts that are matching your query, we cannot generate "
+"requested document."
+msgstr ""
+"Il n'y a aucun artéfact qui correspond à votre requête, nous ne pouvons pas "
+"produire le document demandé."

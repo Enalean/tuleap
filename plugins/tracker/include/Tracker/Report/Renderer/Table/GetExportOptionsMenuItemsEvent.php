@@ -37,12 +37,17 @@ class GetExportOptionsMenuItemsEvent implements Dispatchable
      * @var string
      */
     private $export_items_as_html;
+    /**
+     * @var string
+     */
+    private $additional_content;
 
     public function __construct(\Tracker_Report_Renderer_Table $renderer_table)
     {
         $this->renderer_table       = $renderer_table;
         $this->report               = $renderer_table->report;
         $this->export_items_as_html = '';
+        $this->additional_content   = '';
     }
 
     public function addExportItem($item_as_html)
@@ -72,5 +77,15 @@ class GetExportOptionsMenuItemsEvent implements Dispatchable
     public function getItems()
     {
         return $this->export_items_as_html;
+    }
+
+    public function addAdditionalContentThatGoesOutsideOfTheMenu($additional_content_as_html)
+    {
+        $this->additional_content .= $additional_content_as_html;
+    }
+
+    public function getAdditionalContentThatGoesOutsideOfTheMenu()
+    {
+        return $this->additional_content;
     }
 }

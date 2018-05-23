@@ -9,5 +9,13 @@ msgid ""
 "description semantics"
 msgstr ""
 
+msgid "Please refine your query."
+msgstr ""
+
 msgid "Textual Report"
+msgstr ""
+
+msgid ""
+"There aren't any artifacts that are matching your query, we cannot generate "
+"requested document."
 msgstr ""

@@ -1,7 +1,13 @@
 <li class="divider"></li>
 <li>
-    <a href="{{ export_single_page_url }}"
-       title="{{# dgettext }}
+    <a {{# can_be_downloaded }}
+            href="{{ export_single_page_url }}"
+        {{/ can_be_downloaded }}
+        {{^ can_be_downloaded }}
+            href="#textualreport-cannot-download-modal"
+            data-toggle="modal"
+        {{/ can_be_downloaded }}
+        title="{{# dgettext }}
             tuleap-textualreport
             | Export matching artifacts in a single page document using title and description semantics
         {{/ dgettext }}"

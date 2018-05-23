@@ -1,0 +1,31 @@
+<div id="textualreport-cannot-download-modal"
+     class="modal hide fade"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="textualreport-cannot-download-modal-title"
+     aria-hidden="true"
+>
+    <div class="modal-header modal-header-error">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="textualreport-cannot-download-modal-title">
+            {{# dgettext }} tuleap-textualreport | Export as single page document {{/ dgettext }}
+        </h3>
+    </div>
+    <div class="modal-body">
+        <p>
+            {{# dgettext }}
+                tuleap-textualreport
+                | There aren't any artifacts that are matching your query, we cannot generate requested document.
+            {{/ dgettext }}
+        </p>
+        <p>
+            {{# dgettext }}
+                tuleap-textualreport
+                | Please refine your query.
+            {{/ dgettext }}
+        </p>
+    </div>
+    <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+    </div>
+</div>
