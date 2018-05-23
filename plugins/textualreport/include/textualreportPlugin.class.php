@@ -20,6 +20,7 @@
 
 use Tuleap\DB\DBFactory;
 use Tuleap\TextualReport\ArtifactsPresentersBuilder;
+use Tuleap\TextualReport\ExportOptionsMenuItemsAppender;
 use Tuleap\TextualReport\SinglePageExporter;
 use Tuleap\TextualReport\SinglePagePresenterBuilder;
 use Tuleap\Tracker\Report\Renderer\Table\GetExportOptionsMenuItemsEvent;
@@ -29,8 +30,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 class textualreportPlugin extends Plugin // @codingStandardsIgnoreLine
 {
-    const NAME               = 'textualreport';
-    const EXPORT_SINGLE_PAGE = 'export_single_page';
+    const NAME = 'textualreport';
 
     public function __construct($id)
     {
@@ -64,37 +64,13 @@ class textualreportPlugin extends Plugin // @codingStandardsIgnoreLine
 
     public function getExportOptionsMenuItems(GetExportOptionsMenuItemsEvent $event)
     {
-        $export_single_page_url = TRACKER_BASE_URL . '/?' .
-            http_build_query(
-                [
-                    'report'         => $event->getReport()->id,
-                    'renderer'       => $event->getRendererTable()->getId(),
-                    'func'           => 'renderer',
-                    'renderer_table' => [
-                        'export'                 => 1,
-                        self::EXPORT_SINGLE_PAGE => 1,
-                    ],
-                ]
-            );
-
-        $title = dgettext(
-            'tuleap-textualreport',
-            'Export matching artifacts in a single page document using title and description semantics'
-        );
-
-        $single_page_link = '<li>';
-        $single_page_link .= '<a href="' . $export_single_page_url . '" title="' . $title . '">';
-        $single_page_link .= dgettext('tuleap-textualreport', 'Export as single page document');
-        $single_page_link .= '</a>';
-        $single_page_link .= '</li>';
-
-        $event->addExportItem('<li class="divider"></li>');
-        $event->addExportItem($single_page_link);
+        $appender = new ExportOptionsMenuItemsAppender($this->getRenderer());
+        $appender->appendTextualReportDownloadLink($event);
     }
 
     public function processExport(ProcessExportEvent $event)
     {
-        if (! $event->hasKeyInParameters(self::EXPORT_SINGLE_PAGE)) {
+        if (! $event->hasKeyInParameters(ExportOptionsMenuItemsAppender::EXPORT_SINGLE_PAGE)) {
             return;
         }
 
@@ -114,7 +90,7 @@ class textualreportPlugin extends Plugin // @codingStandardsIgnoreLine
             new SinglePagePresenterBuilder(
                 new ArtifactsPresentersBuilder(Tracker_ArtifactFactory::instance())
             ),
-            TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates')
+            $this->getRenderer()
         );
         $single_page_exporter->exportAsSinglePage(
             $event->getReport()->getTracker(),
@@ -122,5 +98,13 @@ class textualreportPlugin extends Plugin // @codingStandardsIgnoreLine
             $event->getCurrentUser(),
             $event->getServerUrl()
         );
+    }
+
+    /**
+     * @return TemplateRenderer
+     */
+    private function getRenderer()
+    {
+        return TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates');
     }
 }
