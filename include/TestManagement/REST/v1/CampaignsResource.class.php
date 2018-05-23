@@ -72,6 +72,7 @@ use Tuleap\TestManagement\Dao;
 use Tuleap\TestManagement\LabelFieldNotFoundException;
 use Tuleap\TestManagement\MilestoneItemsArtifactFactory;
 use Tuleap\TestManagement\RealTime\RealTimeMessageSender;
+use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
 use Tuleap\Tracker\REST\v1\ArtifactLinkUpdater;
 use UserManager;
 
@@ -250,11 +251,16 @@ class CampaignsResource
         $permissions_serializer = new Tracker_Permission_PermissionsSerializer(
             new Tracker_Permission_PermissionRetrieveAssignee(UserManager::instance())
         );
+        $artifact_message_sender = new RealTimeArtifactMessageSender(
+            $node_js_client,
+            $permissions_serializer
+        );
 
         $this->realtime_message_sender = new RealTimeMessageSender(
             $node_js_client,
             $permissions_serializer,
-            $this->testmanagement_artifact_factory
+            $this->testmanagement_artifact_factory,
+            $artifact_message_sender
         );
 
         $http_client = new \Http_Client();

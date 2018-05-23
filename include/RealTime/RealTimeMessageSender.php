@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,14 +26,21 @@ use Tracker_Permission_PermissionsSerializer;
 use Tuleap\RealTime\MessageDataPresenter;
 use Tuleap\RealTime\NodeJSClient;
 use Tuleap\TestManagement\ArtifactFactory;
-use Tuleap\TestManagement\ArtifactRightsPresenter;
 use Tuleap\TestManagement\REST\v1\BugRepresentation;
+use Tuleap\Tracker\RealTime\ArtifactRightsPresenter;
+use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 use Tuleap\User\REST\UserRepresentation;
 
 class RealTimeMessageSender
 {
-    const HTTP_CLIENT_UUID = 'HTTP_X_CLIENT_UUID';
+    const HTTP_CLIENT_UUID             = 'HTTP_X_CLIENT_UUID';
+    const EVENT_NAME_EXECUTION_CREATED = 'testmanagement_execution:create';
+    const EVENT_NAME_EXECUTION_DELETED = 'testmanagement_execution:delete';
+    const EVENT_NAME_EXECUTION_UPDATED = 'testmanagement_execution:update';
+    const EVENT_NAME_ARTIFACT_LINKED   = 'testmanagement_execution:link_artifact';
+    const EVENT_NAME_CAMPAIGN_UPDATED  = 'testmanagement_campaign:update';
+    const EVENT_NAME_USER_PRESENCE     = 'testmanagement_user:presence';
 
     /** @var  NodeJSClient */
     private $node_js_client;
@@ -45,15 +52,21 @@ class RealTimeMessageSender
      * @var ArtifactFactory
      */
     private $testmanagement_artifact_factory;
+    /**
+     * @var RealTimeArtifactMessageSender
+     */
+    private $artifact_message_sender;
 
     public function __construct(
         NodeJSClient $node_js_client,
         Tracker_Permission_PermissionsSerializer $permissions_serializer,
-        ArtifactFactory $testmanagement_artifact_factory
+        ArtifactFactory $testmanagement_artifact_factory,
+        RealTimeArtifactMessageSender $artifact_message_sender
     ) {
-        $this->node_js_client                   = $node_js_client;
-        $this->permissions_serializer           = $permissions_serializer;
-        $this->testmanagement_artifact_factory  = $testmanagement_artifact_factory;
+        $this->node_js_client                  = $node_js_client;
+        $this->permissions_serializer          = $permissions_serializer;
+        $this->testmanagement_artifact_factory = $testmanagement_artifact_factory;
+        $this->artifact_message_sender         = $artifact_message_sender;
     }
 
     public function sendExecutionCreated(
@@ -61,13 +74,17 @@ class RealTimeMessageSender
         Tracker_Artifact $campaign,
         Tracker_Artifact $artifact
     ) {
+        if ($this->doesNotHaveHTTPClientUUID()) {
+            return;
+        }
+
         $user_representation = new UserRepresentation();
         $user_representation->build($user);
         $data = array(
             'artifact_id' => $artifact->getId(),
             'user'        => $user_representation,
         );
-        $this->sendExecution($user, $campaign, $artifact, 'testmanagement_execution:create', $data);
+        $this->sendExecution($user, $campaign, $artifact, self::EVENT_NAME_EXECUTION_CREATED, $data);
     }
 
     public function sendExecutionDeleted(
@@ -75,13 +92,17 @@ class RealTimeMessageSender
         Tracker_Artifact $campaign,
         Tracker_Artifact $artifact
     ) {
+        if ($this->doesNotHaveHTTPClientUUID()) {
+            return;
+        }
+
         $user_representation = new UserRepresentation();
         $user_representation->build($user);
         $data = array(
             'artifact_id' => $artifact->getId(),
             'user'        => $user_representation,
         );
-        $this->sendExecution($user, $campaign, $artifact, 'testmanagement_execution:delete', $data);
+        $this->sendExecution($user, $campaign, $artifact, self::EVENT_NAME_EXECUTION_DELETED, $data);
     }
 
     public function sendExecutionUpdated(
@@ -101,7 +122,7 @@ class RealTimeMessageSender
             'user'            => $user_representation,
             'previous_user'   => $previous_user
         );
-        $this->sendExecution($user, $campaign, $artifact, 'testmanagement_execution:update', $data);
+        $this->sendExecution($user, $campaign, $artifact, self::EVENT_NAME_EXECUTION_UPDATED, $data);
     }
 
     public function sendArtifactLinkAdded(
@@ -110,70 +131,61 @@ class RealTimeMessageSender
         Tracker_Artifact $execution_artifact,
         Tracker_Artifact $linked_artifact
     ) {
-        if (! isset($_SERVER[self::HTTP_CLIENT_UUID])
-            || ! $_SERVER[self::HTTP_CLIENT_UUID]
-        ) {
+        if ($this->doesNotHaveHTTPClientUUID()) {
             return;
         }
 
-        $user_representation = new UserRepresentation();
-        $user_representation->build($user);
         $data = array(
             'artifact_id'         => $execution_artifact->getId(),
             'added_artifact_link' => $this->buildArtifactLinkRepresentation($linked_artifact)
         );
 
-        $rights   = new ArtifactRightsPresenter($linked_artifact, $this->permissions_serializer);
-        $message  = new MessageDataPresenter(
-            $user->getId(),
-            $_SERVER[self::HTTP_CLIENT_UUID],
-            'testmanagement_' . $campaign->getId(),
-            $rights,
-            'testmanagement_execution:link_artifact',
-            $data
+        $this->artifact_message_sender->sendMessage(
+            $user,
+            $linked_artifact,
+            $data,
+            self::EVENT_NAME_ARTIFACT_LINKED,
+            'testmanagement_' . $campaign->getId()
         );
-
-        $this->node_js_client->sendMessage($message);
     }
 
     public function sendCampaignUpdated(
         PFUser $user,
         Tracker_Artifact $artifact
     ) {
-        if (! isset($_SERVER[self::HTTP_CLIENT_UUID])
-            || ! $_SERVER[self::HTTP_CLIENT_UUID]
-        ) {
+        if ($this->doesNotHaveHTTPClientUUID()) {
             return;
         }
+
         $user_representation = new UserRepresentation();
         $user_representation->build($user);
         $data = array(
             'artifact_id' => $artifact->getId(),
             'user'        => $user_representation,
         );
-        $rights  = new ArtifactRightsPresenter($artifact, $this->permissions_serializer);
-        $message = new MessageDataPresenter(
-            $user->getId(),
-            $_SERVER[self::HTTP_CLIENT_UUID],
-            'testmanagement_' . $artifact->getId(),
-            $rights,
-            'testmanagement_campaign:update',
-            $data
+        $this->artifact_message_sender->sendMessage(
+            $user,
+            $artifact,
+            $data,
+            self::EVENT_NAME_CAMPAIGN_UPDATED,
+            'testmanagement_' . $artifact->getId()
         );
-
-        $this->node_js_client->sendMessage($message);
     }
 
-    public function sendPresences(Tracker_Artifact $campaign, Tracker_Artifact $artifact, PFUser $user, $uuid, $remove_from)
-    {
-        if (! isset($_SERVER[self::HTTP_CLIENT_UUID])
-            || ! $_SERVER[self::HTTP_CLIENT_UUID]
-        ) {
+    public function sendPresences(
+        Tracker_Artifact $campaign,
+        Tracker_Artifact $artifact,
+        PFUser $user,
+        $uuid,
+        $remove_from
+    ) {
+        if ($this->doesNotHaveHTTPClientUUID()) {
             return;
         }
+
         $user_representation = new UserRepresentation();
         $user_representation->build($user);
-        $data = array(
+        $data    = array(
             'presence' => array(
                 'execution_id' => $artifact->getId(),
                 'uuid'         => $uuid,
@@ -187,7 +199,7 @@ class RealTimeMessageSender
             $_SERVER[self::HTTP_CLIENT_UUID],
             'testmanagement_' . $campaign->getId(),
             $rights,
-            'testmanagement_user:presence',
+            self::EVENT_NAME_USER_PRESENCE,
             $data
         );
 
@@ -205,23 +217,24 @@ class RealTimeMessageSender
         return $artifact_link_representation;
     }
 
-    private function sendExecution(PFUser $user, Tracker_Artifact $campaign, Tracker_Artifact $artifact, $event_name, $data)
-    {
-        if (! isset($_SERVER[self::HTTP_CLIENT_UUID])
-            || ! $_SERVER[self::HTTP_CLIENT_UUID]
-        ) {
-            return;
-        }
-        $rights  = new ArtifactRightsPresenter($artifact, $this->permissions_serializer);
-        $message = new MessageDataPresenter(
-            $user->getId(),
-            $_SERVER[self::HTTP_CLIENT_UUID],
-            'testmanagement_' . $campaign->getId(),
-            $rights,
+    private function sendExecution(
+        PFUser $user,
+        Tracker_Artifact $campaign,
+        Tracker_Artifact $artifact,
+        $event_name,
+        array $data
+    ) {
+        $this->artifact_message_sender->sendMessage(
+            $user,
+            $artifact,
+            $data,
             $event_name,
-            $data
+            'testmanagement_' . $campaign->getId()
         );
+    }
 
-        $this->node_js_client->sendMessage($message);
+    private function doesNotHaveHTTPClientUUID()
+    {
+        return ! isset($_SERVER[self::HTTP_CLIENT_UUID]) || ! $_SERVER[self::HTTP_CLIENT_UUID];
     }
 }

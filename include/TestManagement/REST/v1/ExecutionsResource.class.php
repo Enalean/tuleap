@@ -48,6 +48,7 @@ use Tuleap\TestManagement\Config;
 use Tuleap\TestManagement\ConfigConformanceValidator;
 use Tuleap\TestManagement\Dao;
 use Tuleap\TestManagement\RealTime\RealTimeMessageSender;
+use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
 use Tuleap\Tracker\REST\ChangesetCommentRepresentation;
 use Tuleap\Tracker\REST\TrackerReference;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
@@ -138,10 +139,16 @@ class ExecutionsResource
         $this->permissions_serializer = new Tracker_Permission_PermissionsSerializer(
             new Tracker_Permission_PermissionRetrieveAssignee(UserManager::instance())
         );
+        $artifact_message_sender = new RealTimeArtifactMessageSender(
+            $this->node_js_client,
+            $this->permissions_serializer
+        );
+
         $this->realtime_message_sender = new RealTimeMessageSender(
             $this->node_js_client,
             $this->permissions_serializer,
-            $this->testmanagement_artifact_factory
+            $this->testmanagement_artifact_factory,
+            $artifact_message_sender
         );
     }
 
@@ -181,14 +188,19 @@ class ExecutionsResource
      * @url GET {id}
      *
      * @param int $id Id of the execution
-     *
      * @return ExecutionRepresentation
+     * @throws RestException
      */
-    protected function getId($id) {
+    protected function getId($id)
+    {
         $this->optionsId($id);
 
         $user     = $this->user_manager->getCurrentUser();
         $artifact = $this->artifact_factory->getArtifactByIdUserCanView($user, $id);
+
+        if (! $artifact) {
+            throw new RestException(404);
+        }
 
         return $this->execution_representation_builder->getExecutionRepresentation($user, $artifact);
     }
