@@ -1,8 +1,9 @@
 #!/bin/bash
 # eslint pre-commit hook for git
-readonly COMMIT_INTRODUCING_ESLINT='a4633b648b959a1f0258069b463da622787de365'
+readonly COMMIT_INTRODUCING_ESLINT='a06b5597d4b37647912556b5b8a767173c29bf7b'
 readonly TMP_STAGING_DIR=$(mktemp -d)
 readonly ESLINT_CONFIG_FILE='.eslintrc'
+readonly PRETTIER_CONFIG_FILE='.prettierrc'
 
 cleanup_temporary_directory() {
     rm -rf "${TMP_STAGING_DIR}"
@@ -60,6 +61,7 @@ get_list_of_mandatory_js_files() {
 
 # eslint glob-based overrides only apply to relative directory, so we copy the eslint config in the TMP dir
 get_path_to_config() {
+    cp ${PRETTIER_CONFIG_FILE} ${TMP_STAGING_DIR}/${PRETTIER_CONFIG_FILE}
     cp ${ESLINT_CONFIG_FILE} ${TMP_STAGING_DIR}/${ESLINT_CONFIG_FILE}
     echo "${TMP_STAGING_DIR}/${ESLINT_CONFIG_FILE}"
 }
@@ -79,6 +81,11 @@ main() {
         if [ ${status} -ne 0 ]
         then
             echo "$eslint_output" | less
+            echo
+            echo "You can run the following command to let Prettier and ESLint fix a part of the errors for you:"
+            echo
+            echo "npm run eslint --silent -- --fix $files_list" | tr '\n' ' '
+            echo
         fi
 
         cleanup_temporary_directory
