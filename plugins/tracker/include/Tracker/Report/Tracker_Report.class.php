@@ -29,7 +29,7 @@ use Tuleap\Tracker\Report\AdditionalCriteria\CommentCriterionPresenter;
 use Tuleap\Tracker\Report\AdditionalCriteria\CommentCriterionValueRetriever;
 use Tuleap\Tracker\Report\AdditionalCriteria\CommentCriterionValueSaver;
 use Tuleap\Tracker\Report\AdditionalCriteria\CommentDao;
-use Tuleap\Tracker\Report\Event\trackerReportDeleted;
+use Tuleap\Tracker\Report\Event\TrackerReportDeleted;
 use Tuleap\Tracker\Report\Event\TrackerReportSetToPrivate;
 use Tuleap\Tracker\Report\ExpertModePresenter;
 use Tuleap\Tracker\Report\Query\Advanced\ExpertQueryValidator;
