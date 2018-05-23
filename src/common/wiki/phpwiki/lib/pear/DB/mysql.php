@@ -113,7 +113,7 @@ class DB_mysql extends DB_common
     {
         $this->_db        = ForgeConfig::get('sys_dbname');
         $this->dsn        = $dsninfo;
-        $this->connection = CodendiDataAccess::instance()->db;
+        $this->connection = CodendiDataAccess::getDataAccessUsingOriginalMySQLDriverInstance()->db;
         return DB_OK;
     }
 

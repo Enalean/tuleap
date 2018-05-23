@@ -68,6 +68,10 @@ class ProjectImportTest extends TuleapDbTestCase
         $GLOBALS['ftp_anon_dir_prefix'] = '/tmp';
         $GLOBALS['sys_default_domain'] = '';
         $GLOBALS['sys_cookie_prefix'] = '';
+        $sys_dbhost   = ForgeConfig::get('sys_dbhost');
+        $sys_dbuser   = ForgeConfig::get('sys_dbuser');
+        $sys_dbpasswd = ForgeConfig::get('sys_dbpasswd');
+        $sys_dbname   = ForgeConfig::get('sys_dbname');
         ForgeConfig::store();
         $this->old_sys_pluginsroot = $GLOBALS['sys_pluginsroot'];
         $this->old_sys_custompluginsroot = $GLOBALS['sys_custompluginsroot'];
@@ -75,6 +79,10 @@ class ProjectImportTest extends TuleapDbTestCase
         $GLOBALS['sys_custompluginsroot'] = "/tmp";
         ForgeConfig::set('tuleap_dir', __DIR__ . '/../../');
         ForgeConfig::set('codendi_log', "/tmp/");
+        ForgeConfig::set('sys_dbhost', $sys_dbhost);
+        ForgeConfig::set('sys_dbuser', $sys_dbuser);
+        ForgeConfig::set('sys_dbpasswd', $sys_dbpasswd);
+        ForgeConfig::set('sys_dbname', $sys_dbname);
         /**
          * HACK
          */

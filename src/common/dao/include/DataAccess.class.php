@@ -424,7 +424,7 @@ class DataAccess implements \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterfa
      * @deprecated
      */
     public function startTransaction() {
-        return $this->query('START TRANSACTION');
+        return (bool) $this->query('START TRANSACTION');
     }
 
     /**
@@ -432,7 +432,7 @@ class DataAccess implements \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterfa
      * @deprecated
      */
     public function rollback() {
-        return $this->query('ROLLBACK');
+        return (bool) $this->query('ROLLBACK');
     }
 
     /**
@@ -440,6 +440,6 @@ class DataAccess implements \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterfa
      * @deprecated
      */
     public function commit() {
-        return $this->query('COMMIT');
+        return (bool) $this->query('COMMIT');
     }
 }

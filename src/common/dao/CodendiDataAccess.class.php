@@ -21,7 +21,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\DB\Compat\Legacy2018\CompatPDODataAccess;
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface;
+use Tuleap\DB\DBFactory;
 
 class CodendiDataAccess extends DataAccess {
     
@@ -49,9 +51,25 @@ class CodendiDataAccess extends DataAccess {
     public static function instance()
     {
         if (self::$_instance === null) {
-            self::$_instance = new CodendiDataAccess();
+            if (ForgeConfig::get('enable_experimental_compat_pdo_mode')) {
+                self::$_instance = new CompatPDODataAccess(DBFactory::getMainTuleapDB());
+            } else {
+                self::$_instance = self::getDataAccessUsingOriginalMySQLDriverInstance();
+            }
         }
         return self::$_instance;
+    }
+
+    /**
+     * @deprecated
+     */
+    public static function getDataAccessUsingOriginalMySQLDriverInstance()
+    {
+        static $data_access_mysql_instance = null;
+        if ($data_access_mysql_instance === null) {
+            $data_access_mysql_instance = new CodendiDataAccess();
+        }
+        return $data_access_mysql_instance;
     }
 
     /**

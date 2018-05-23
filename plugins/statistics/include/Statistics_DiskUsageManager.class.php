@@ -580,8 +580,8 @@ class Statistics_DiskUsageManager {
     {
         $start          = microtime(true);
         $mmArchivesPath = '/var/lib/mailman/archives/private';
-        $sql            = db_query('START TRANSACTION');
         $dao            = $this->_getDao();
+        $dao->startTransaction();
         $dar            = $dao->searchAllLists();
         $previous       = -1;
         $sMailman       = 0;
@@ -603,7 +603,7 @@ class Statistics_DiskUsageManager {
             $dao->addGroup($previous, 'mailman', $sMailman, $_SERVER['REQUEST_TIME']);
         }
         //We commit all the DB modification
-        $sql = db_query('COMMIT');
+        $dao->commit();
 
         $end  = microtime(true);
         $time = $end - $start;
@@ -613,8 +613,8 @@ class Statistics_DiskUsageManager {
 
     public function collectUsers() {
         if (ForgeConfig::areUnixUsersAvailableOnSystem()) {
-            $sql = db_query('START TRANSACTION');
             $dao = $this->_getDao();
+            $dao->startTransaction();
             $dar = $dao->searchAllUsers();
             foreach ($dar as $row) {
                 $this->storeForUser(
@@ -622,19 +622,19 @@ class Statistics_DiskUsageManager {
                     ForgeConfig::get('homedir_prefix') . "/" . $row['user_name']
                 );
             }
-            $sql = db_query('COMMIT');
+            $dao->commit();
         }
     }
 
     // dfMYSQL, LOG, backup
     public function collectSite() {
-        $sql = db_query('START TRANSACTION');
+        $this->_getDao()->startTransaction();
         $this->storeForSite('mysql', '/var/lib/mysql');
         $this->storeForSite('codendi_log', '/var/log/codendi');
         $this->storeForSite('backup', '/var/lib/codendi/backup');
         $this->storeForSite('backup_old', '/var/lib/codendi/backup/old');
         $this->storeDf();
-        $sql = db_query('COMMIT');
+        $this->_getDao()->commit();
 
     }
 
