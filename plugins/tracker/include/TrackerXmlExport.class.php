@@ -96,8 +96,10 @@ class TrackerXmlExport
         $params = array(
             'user'        => $user,
             'xml_content' => &$xml_content,
-            'group_id'    => $project->getID()
+            'group_id'    => $project->getID(),
+            'archive'     => &$archive
         );
+
         $this->event_manager->processEvent(TRACKER_EVENT_EXPORT_FULL_XML, $params);
 
         $this->exportTriggers($xml_trackers, $xml_field_mapping, $exported_trackers);
