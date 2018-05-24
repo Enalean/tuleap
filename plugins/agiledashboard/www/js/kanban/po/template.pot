@@ -234,7 +234,7 @@ msgstr ""
 msgid "Tracker report filters"
 msgstr ""
 
-#: src/app/socket/socket-disconnect.tpl.html
+#: src/app/socket/socket-service.js
 msgid "You are disconnected from real time. Please reload your page."
 msgstr ""
 

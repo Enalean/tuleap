@@ -46,6 +46,7 @@ import WipPopoverDirective                 from './wip-popover/wip-popover-direc
 import KanbanColumnController              from './kanban-column/kanban-column-controller.js';
 import KanbanDirective                     from './kanban-directive.js';
 import ColumnWipHeaderDirective            from './kanban-column/column-wip-header/column-wip-header-directive.js';
+import FeedbackComponent                   from './feedback-component.js';
 
 export default angular.module('kanban', [
     'angular-locker',
@@ -93,6 +94,7 @@ export default angular.module('kanban', [
 .directive('columnWipHeader', ColumnWipHeaderDirective)
 .value('KanbanFilterValue', KanbanFilterValue)
 .filter('InPropertiesFilter', InPropertiesFilter)
+.component('feedbackMessage', FeedbackComponent)
 .name;
 
 var kanban_elements = document.getElementsByClassName('widget-kanban');
