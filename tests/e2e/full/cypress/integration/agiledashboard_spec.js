@@ -18,9 +18,14 @@
  */
 
 describe("Agiledashboard", () => {
-    it("should start scrum", () => {
+    beforeEach(function () {
+        cy.loadProjectConfig();
+    });
+
+    it("should start scrum", function() {
         cy.login();
-        cy.visit('/plugins/agiledashboard/?group_id=101');
+
+        cy.visit('/plugins/agiledashboard/?group_id=' +  this.projects.permission_project_id);
 
         cy.get('[data-test=start-scrum]').click();
 
