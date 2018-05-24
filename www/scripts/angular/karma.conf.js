@@ -38,7 +38,7 @@ module.exports = function(config) {
     Object.assign(base_config, {
         files  : [
             karma_configurator.jasmine_promise_matchers_path,
-            'src/app/tlp-mock.spec.js',
+            'node_modules/jquery/dist/jquery.js',
             'src/app/app.spec.js'
         ],
         preprocessors: {

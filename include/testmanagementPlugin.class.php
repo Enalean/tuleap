@@ -325,9 +325,6 @@ class testmanagementPlugin extends Plugin
             $GLOBALS['HTML']->includeFooterJavascriptSnippet('window.CKEDITOR_BASEPATH = "'. $ckeditor_path .'";');
             $params['javascript_files'][] = $ckeditor_path .'ckeditor.js';
 
-            $params['javascript_files'][] = '/scripts/codendi/Tooltip.js';
-            $params['javascript_files'][] = '/scripts/codendi/Tooltip-loader.js';
-
             $test_management_include_assets = new IncludeAssets(
                 TESTMANAGEMENT_BASE_DIR . '/www/scripts/angular/bin/assets',
                 TESTMANAGEMENT_BASE_URL . '/scripts/angular/bin/assets'

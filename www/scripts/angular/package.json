@@ -30,7 +30,8 @@
     "angular-mocks": "^1.6.8",
     "concurrently": "^3.5.0",
     "gulp": "3.9.1",
-    "gulp-angular-gettext": "^2.2.0"
+    "gulp-angular-gettext": "^2.2.0",
+    "jquery": "^3.3.1"
   },
   "config": {
     "bin": "../../../../../node_modules/.bin/"

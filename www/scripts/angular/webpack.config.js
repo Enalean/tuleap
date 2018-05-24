@@ -19,10 +19,10 @@ const webpack_config = {
             path.resolve(__dirname, 'node_modules'),
             'node_modules'
         ],
-        alias: {
-            'angular-artifact-modal': path.resolve(__dirname, '../../../../tracker/www/scripts/angular-artifact-modal'),
-            'angular-tlp'           : path.resolve(__dirname, '../../../../../src/www/themes/common/tlp/angular-tlp'),
-        }
+        alias: webpack_configurator.extendAliases(
+            {},
+            webpack_configurator.angular_artifact_modal_aliases
+        )
     },
     module: {
         rules: [
