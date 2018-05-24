@@ -19,3 +19,8 @@ msgid ""
 "There aren't any artifacts that are matching your query, we cannot generate "
 "requested document."
 msgstr ""
+
+msgid ""
+"This tracker does not have required semantic (title and description), we "
+"cannot generate requested document."
+msgstr ""

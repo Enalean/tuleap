@@ -95,6 +95,25 @@ class textualreportPlugin extends Plugin // @codingStandardsIgnoreLine
             );
         }
 
+        if (! $document_can_be_downloaded_checker->hasNeededSemantics($event->getReport()->getTracker())) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                dgettext(
+                    "tuleap-textualreport",
+                    "This tracker does not have required semantic (title and description), we cannot generate requested document."
+                )
+            );
+            $GLOBALS['Response']->redirect(
+                TRACKER_BASE_URL . '/?' .
+                http_build_query(
+                    [
+                        'report'   => $event->getReport()->getId(),
+                        'renderer' => $event->getRendererTable()->getId()
+                    ]
+                )
+            );
+        }
+
         $matching_ids = $event->getReport()->getMatchingIds();
         $columns      = $event->getRendererTable()->getColumns();
 
