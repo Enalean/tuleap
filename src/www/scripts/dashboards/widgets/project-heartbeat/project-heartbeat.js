@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,7 +21,8 @@ import { get } from 'tlp';
 import { render } from 'mustache';
 import { sanitize } from 'dompurify';
 import moment from 'moment';
-import phptomoment from "phptomoment";
+import phptomoment from 'phptomoment';
+import { loadTooltips } from '../../../codendi/Tooltip.js';
 
 export default init;
 
@@ -51,7 +52,7 @@ function displayActivities(widget_content, entries) {
     const rendered_activities = render(template, getGroupedEntries(widget_content, entries));
     insertRenderedActivitiesInDOM(rendered_activities, activities);
 
-    window.codendi.Tooltip.load(activities);
+    loadTooltips();
     activities.classList.add('shown');
 }
 

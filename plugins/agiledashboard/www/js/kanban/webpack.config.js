@@ -12,8 +12,9 @@ const webpack_config_for_kanban = {
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path),
     externals: {
-        tlp:     'tlp',
-        angular: 'angular'
+        tlp: 'tlp',
+        angular: 'angular',
+        jquery: 'jQuery'
     },
     resolve: {
         modules: [
@@ -21,13 +22,17 @@ const webpack_config_for_kanban = {
             path.resolve(__dirname, 'node_modules'),
             'node_modules'
         ],
-        alias: {
-            // Our own components and their dependencies
-            'angular-artifact-modal' : path.resolve(__dirname, '../../../../tracker/www/scripts/angular-artifact-modal/index.js'),
-            'cumulative-flow-diagram': path.resolve(__dirname, '../cumulative-flow-diagram/index.js'),
-            'angular-tlp'            : path.join(path_to_tlp, 'angular-tlp'),
-            'card-fields'            : path.resolve(__dirname, '../card-fields')
-        }
+        alias: webpack_configurator.extendAliases(
+            webpack_configurator.angular_artifact_modal_aliases,
+            {
+                'cumulative-flow-diagram': path.resolve(
+                    __dirname,
+                    '../cumulative-flow-diagram/index.js'
+                ),
+                'card-fields': path.resolve(__dirname, '../card-fields'),
+                'angular-tlp': path.join(path_to_tlp, 'angular-tlp')
+            }
+        )
     },
     module: {
         rules: [

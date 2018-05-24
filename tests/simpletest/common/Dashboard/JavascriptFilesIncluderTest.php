@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -44,12 +44,10 @@ class JavascriptFilesIncluderTest extends TuleapTestCase
         );
     }
 
-    public function itAlwaysIncludesTooltipAndDashboardJs()
+    public function itAlwaysIncludesDashboardJs()
     {
-        expect($GLOBALS['Response'])->includeFooterJavascriptFile()->count(3);
-        expect($GLOBALS['Response'])->includeFooterJavascriptFile('/scripts/codendi/Tooltip.js')->at(0);
-        expect($GLOBALS['Response'])->includeFooterJavascriptFile('/scripts/codendi/Tooltip-loader.js')->at(1);
-        expect($GLOBALS['Response'])->includeFooterJavascriptFile('dashboard.js')->at(2);
+        expect($GLOBALS['Response'])->includeFooterJavascriptFile()->count(1);
+        expect($GLOBALS['Response'])->includeFooterJavascriptFile('dashboard.js')->at(0);
 
         $this->includer->includeJavascriptFiles(array());
     }
@@ -88,24 +86,24 @@ class JavascriptFilesIncluderTest extends TuleapTestCase
     {
         $dashboard = $this->getDashboardWithWidgets(array('first_widget', 'second_widget'));
 
-        expect($GLOBALS['Response'])->includeFooterJavascriptFile()->count(7);
+        expect($GLOBALS['Response'])->includeFooterJavascriptFile()->count(5);
         expect($GLOBALS['Response'])->includeFooterJavascriptSnippet()->count(1);
         //first widget
-        expect($GLOBALS['Response'])->includeFooterJavascriptFile('dashboard.js')->at(2);
-        expect($GLOBALS['Response'])->includeFooterJavascriptFile('dependency_one')->at(3);
+        expect($GLOBALS['Response'])->includeFooterJavascriptFile('dashboard.js')->at(0);
+        expect($GLOBALS['Response'])->includeFooterJavascriptFile('dependency_one')->at(1);
         expect($GLOBALS['Response'])->includeFooterJavascriptSnippet('dependency_two')->at(0);
-        expect($GLOBALS['Response'])->includeFooterJavascriptFile('dependency_three')->at(4);
+        expect($GLOBALS['Response'])->includeFooterJavascriptFile('dependency_three')->at(2);
         // second widget
-        expect($GLOBALS['Response'])->includeFooterJavascriptFile('dependency_one')->at(5);
-        expect($GLOBALS['Response'])->includeFooterJavascriptFile('dependency_four')->at(6);
+        expect($GLOBALS['Response'])->includeFooterJavascriptFile('dependency_one')->at(3);
+        expect($GLOBALS['Response'])->includeFooterJavascriptFile('dependency_four')->at(4);
 
         $this->includer->includeJavascriptFiles(array($dashboard));
     }
 
     private function expectDependenciesScriptsWillNOTBeIncluded()
     {
-        expect($GLOBALS['Response'])->includeFooterJavascriptFile()->count(3);
-        expect($GLOBALS['Response'])->includeFooterJavascriptFile('dashboard.js')->at(2);
+        expect($GLOBALS['Response'])->includeFooterJavascriptFile()->count(1);
+        expect($GLOBALS['Response'])->includeFooterJavascriptFile('dashboard.js')->at(0);
 
         expect($GLOBALS['Response'])->includeFooterJavascriptSnippet()->never();
     }

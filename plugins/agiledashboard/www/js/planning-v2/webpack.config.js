@@ -2,7 +2,6 @@ const path = require('path');
 const webpack_configurator = require('../../../../../tools/utils/scripts/webpack-configurator.js');
 
 const assets_dir_path = path.resolve(__dirname, './dist');
-const path_to_tlp = path.resolve(__dirname, '../../../../../src/www/themes/common/tlp/');
 
 const webpack_config = {
     entry : {
@@ -11,7 +10,8 @@ const webpack_config = {
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path),
     externals: {
-        tlp: 'tlp'
+        tlp: 'tlp',
+        jquery: 'jQuery'
     },
     resolve: {
         modules: [
@@ -19,12 +19,9 @@ const webpack_config = {
             path.resolve(__dirname, 'node_modules'),
             'node_modules'
         ],
-        alias: {
-            'angular-artifact-modal': path.resolve(__dirname, '../../../../tracker/www/scripts/angular-artifact-modal/index.js'),
-            'angular-tlp'           : path.join(path_to_tlp, 'angular-tlp/index.js'),
-            'tlp-mocks'             : path.join(path_to_tlp, 'mocks/index.js'),
+        alias: webpack_configurator.extendAliases({
             'card-fields'           : path.resolve(__dirname, '../card-fields')
-        }
+        }, webpack_configurator.angular_artifact_modal_aliases)
     },
     module: {
         rules: [

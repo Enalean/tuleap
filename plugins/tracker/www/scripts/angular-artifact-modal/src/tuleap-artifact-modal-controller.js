@@ -10,6 +10,7 @@ import {
     getAllFileFields,
     isThereAtLeastOneFileField
 } from './tuleap-artifact-modal-fields/file-field/file-field-detector.js';
+import { loadTooltips } from 'tuleap-core/codendi/Tooltip.js';
 
 export default ArtifactModalController;
 
@@ -17,7 +18,6 @@ ArtifactModalController.$inject = [
     '$q',
     '$scope',
     '$timeout',
-    '$window',
     'modal_instance',
     'modal_model',
     'displayItemCallback',
@@ -31,7 +31,6 @@ function ArtifactModalController(
     $q,
     $scope,
     $timeout,
-    $window,
     modal_instance,
     modal_model,
     displayItemCallback,
@@ -141,7 +140,7 @@ function ArtifactModalController(
 
     function setupTooltips() {
         $timeout(function() {
-            $window.codendi.Tooltip.load($window.document.body);
+            loadTooltips();
         }, 0);
     }
 

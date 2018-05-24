@@ -40,8 +40,6 @@ class JavascriptFilesIncluder
      */
     public function includeJavascriptFiles(array $dashboards_presenter)
     {
-        $GLOBALS['Response']->includeFooterJavascriptFile('/scripts/codendi/Tooltip.js');
-        $GLOBALS['Response']->includeFooterJavascriptFile('/scripts/codendi/Tooltip-loader.js');
         $GLOBALS['Response']->includeFooterJavascriptFile($this->include_assets->getFileURL('dashboard.js'));
         $this->includeJavascriptFilesNeededByWidgets($dashboards_presenter);
     }

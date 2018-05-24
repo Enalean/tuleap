@@ -1,6 +1,6 @@
 /**
 * Copyright (c) Xerox Corporation, Codendi Team, 2001-2008. All rights reserved
-* Copyright (c) Enalean, 2011-2015. All Rights Reserved.
+* Copyright (c) Enalean, 2011-2018. All Rights Reserved.
 *
 * This file is a part of Tuleap.
 *
@@ -18,10 +18,22 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-var codendi = codendi || { };
+var codendi;
 
-(function ($, codendi) {
+if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+    var jQuery = require('jquery');
+    codendi = {};
+    tooltipModule(jQuery, codendi);
 
+    module.exports = {
+        loadTooltips: codendi.Tooltip.load
+    };
+} else {
+    codendi = window.codendi || {};
+    tooltipModule(window.jQuery, codendi);
+}
+
+function tooltipModule($, codendi) {
     codendi.Tooltips = [];
 
     codendi.Tooltip = function (element, url, options) {
@@ -166,5 +178,4 @@ var codendi = codendi || { };
             });
         }
     }
-
-})(jQuery, codendi || { });
+}
