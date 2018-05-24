@@ -374,6 +374,15 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-botmattermost
 %description plugin-create-test-env
 %{summary}.
 
+%package plugin-docman
+Summary: Docman plugin for Tuleap
+Group: Development/Tools
+Version: @@PLUGIN_DOCMAN_VERSION@@
+Release: @@VERSION@@_@@RELEASE@@%{?dist}
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+%description plugin-docman
+Share your data with project members.
+
 %package api-explorer
 Summary: Web API Explorer
 Group: Development/Tools
@@ -853,7 +862,6 @@ fi
 # Plugins dir
 %dir %{APP_DIR}/plugins
 %{APP_DIR}/plugins/admindelegation
-%{APP_DIR}/plugins/docman
 %{APP_DIR}/plugins/graphontrackers
 %{APP_DIR}/plugins/pluginsadministration
 %{APP_DIR}/plugins/projectlinks
@@ -1089,6 +1097,10 @@ fi
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/create_test_env
 #%attr(00400,root,root) %{_sysconfdir}/sudoers.d/tuleap_plugin_create_test_env
+
+%files plugin-docman
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/docman
 
 %files api-explorer
 %defattr(-,root,root,-)
