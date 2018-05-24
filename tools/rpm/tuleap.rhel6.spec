@@ -1250,6 +1250,7 @@ fi
 %files plugin-agiledashboard
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/agiledashboard
+%{APP_DIR}/src/www/assets/agiledashboard
 %attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_agiledashboard
 %config(noreplace) /etc/logrotate.d/%{APP_NAME}_agiledashboard
 

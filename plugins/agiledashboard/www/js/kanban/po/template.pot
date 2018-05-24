@@ -214,6 +214,14 @@ msgstr ""
 msgid "The deletion of a Kanban is irreversible. Please be certain before doing it."
 msgstr ""
 
+#: src/app/app-kanban-controller.js
+msgid "There was an error while loading the Edit Kanban modal. Please check your network connection."
+msgstr ""
+
+#: src/app/app-kanban-controller.js
+msgid "There was an error while loading the Reports modal. Please check your network connection."
+msgstr ""
+
 #: src/app/reports-modal/reports-modal.tpl.html
 msgid "Timeframe:"
 msgstr ""
