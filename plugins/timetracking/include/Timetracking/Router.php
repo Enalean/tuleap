@@ -66,43 +66,130 @@ class Router
 
     public function route(Codendi_Request $request)
     {
-        $user       = $request->getCurrentUser();
-        $action     = $request->get('action');
+        $user   = $request->getCurrentUser();
+        $action = $request->get('action');
 
-        switch ($action) {
-            case "admin-timetracking":
-                $tracker = $this->getTrackerFromRequest($request, $user);
 
-                $this->admin_controller->displayAdminForm($tracker);
+        try {
+            switch ($action) {
+                case "admin-timetracking":
+                    $tracker = $this->getTrackerFromRequest($request, $user);
 
-                break;
-            case "edit-timetracking":
-                $tracker = $this->getTrackerFromRequest($request, $user);
+                    $this->admin_controller->displayAdminForm($tracker);
 
-                $this->admin_controller->editTimetrackingAdminSettings($tracker, $request);
+                    break;
+                case "edit-timetracking":
+                    $tracker = $this->getTrackerFromRequest($request, $user);
 
-                $this->redirectToTimetrackingAdminPage($tracker);
-                break;
-            case "add-time":
-                $artifact = $this->getArtifactFromRequest($request, $user);
-                $this->time_controller->addTimeForUser($request, $user, $artifact);
+                    $this->admin_controller->editTimetrackingAdminSettings($tracker, $request);
 
-                break;
-            case "delete-time":
-                $artifact = $this->getArtifactFromRequest($request, $user);
-                $this->time_controller->deleteTimeForUser($request, $user, $artifact);
+                    $this->redirectToTimetrackingAdminPage($tracker);
 
-                break;
-            case "edit-time":
-                $artifact = $this->getArtifactFromRequest($request, $user);
-                $this->time_controller->editTimeForUser($request, $user, $artifact);
+                    break;
+                case "add-time":
+                        $artifact = $this->getArtifactFromRequest($request, $user);
 
-                break;
-            default:
-                $this->redirectToTuleapHomepage();
+                    $this->time_controller->addTimeForUser($request, $user, $artifact);
 
-                break;
+                    $GLOBALS['Response']->addFeedback(
+                        Feedback::INFO,
+                        dgettext('tuleap-timetracking', "Time successfully added.")
+                    );
+
+                    $this->redirectToArtifactViewInTimetrackingPane($artifact);
+
+                    break;
+                case "delete-time":
+                    $artifact = $this->getArtifactFromRequest($request, $user);
+                    $this->time_controller->deleteTimeForUser($request, $user, $artifact);
+
+                    $GLOBALS['Response']->addFeedback(
+                        Feedback::INFO,
+                        dgettext('tuleap-timetracking', "Time successfully deleted.")
+                    );
+
+                    $this->redirectToArtifactViewInTimetrackingPane($artifact);
+
+                    break;
+                case "edit-time":
+                    $artifact = $this->getArtifactFromRequest($request, $user);
+                    $this->time_controller->editTimeForUser($request, $user, $artifact);
+
+                    $GLOBALS['Response']->addFeedback(
+                        Feedback::INFO,
+                        dgettext('tuleap-timetracking', "Time successfully updated.")
+                    );
+
+                    $this->redirectToArtifactViewInTimetrackingPane($artifact);
+
+                    break;
+                default:
+                    $this->redirectToTuleapHomepage();
+
+                    break;
+            }
+        } catch (TimeTrackingExistingDateException $e) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::WARN,
+                $e->getMessage()
+            );
+            $this->redirectToArtifactViewInTimetrackingPane($artifact);
+        } catch (TimeTrackingMissingTimeException $e) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                $e->getMessage()
+            );
+            $this->redirectToArtifactViewInTimetrackingPane($artifact);
+        } catch (TimeTrackingNotAllowedToAddException $e) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                $e->getMessage()
+            );
+            $this->redirectToArtifactView($artifact);
+        } catch (TimeTrackingNotAllowedToEditException $e) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                $e->getMessage()
+            );
+            $this->redirectToArtifactView($artifact);
+        } catch (TimeTrackingNotAllowedToDeleteException $e) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                $e->getMessage()
+            );
+            $this->redirectToArtifactView($artifact);
+        } catch (TimeTrackingNoTimeException $e) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                $e->getMessage()
+            );
+            $this->redirectToArtifactViewInTimetrackingPane($artifact);
+        } catch (TimeTrackingNotBelongToUserException $e) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                $e->getMessage()
+            );
+            $this->redirectToArtifactViewInTimetrackingPane($artifact);
         }
+    }
+
+    private function redirectToArtifactViewInTimetrackingPane(Tracker_Artifact $artifact)
+    {
+        $url = TRACKER_BASE_URL . '/?' . http_build_query(array(
+                'aid'  => $artifact->getId(),
+                'view' => 'timetracking'
+            ));
+
+        $GLOBALS['Response']->redirect($url);
+    }
+
+    private function redirectToArtifactView(Tracker_Artifact $artifact)
+    {
+        $url = TRACKER_BASE_URL . '/?' . http_build_query(array(
+                'aid'  => $artifact->getId()
+            ));
+
+        $GLOBALS['Response']->redirect($url);
     }
 
     /**
