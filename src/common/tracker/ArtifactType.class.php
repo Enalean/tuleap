@@ -969,7 +969,7 @@ class ArtifactType {
 		if ($watchees) {
 			//echo "watchees";
    			$res_watch = true;
-            $arr_user_names = split('[,;]', $watchees);
+            $arr_user_names = preg_split('/[,;]/D', $watchees);
 			$arr_user_ids = array();
 			while (list(,$user_name) = each($arr_user_names)) {
 			    $user_ident = util_user_finder($user_name, true);
@@ -1402,7 +1402,7 @@ class ArtifactType {
 	
 	    $arr_cc_changes = array();
 	    if (isset($changes['CC']['add'])) {
-			$arr_cc_changes = split('[,;]',$changes['CC']['add']);
+			$arr_cc_changes = preg_split('/[,;]/D',$changes['CC']['add']);
 		}
 	    $arr_cc_changes[] = isset($changes['CC']['del']) ? $changes['CC']['del'] : null;
 	    $is_user_in_cc_changes = in_array($user_name,$arr_cc_changes);    

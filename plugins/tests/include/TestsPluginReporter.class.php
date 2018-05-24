@@ -356,7 +356,7 @@ class ColorTextReporter extends SimpleReporter {
         $breadcrumb = $this->getTestList();
         array_shift($breadcrumb);
         $trace = "";
-        foreach(split("\n", $exception->getTraceAsString()) as $line) {
+        foreach(preg_split("/\n/D", $exception->getTraceAsString()) as $line) {
             $trace .= "\tin $line\n";
         }
         error_log("Exception: \n\033[1;31m\t" . $this->getExceptionCount() . ") ".get_class($exception).' '. $exception->getMessage() ."\033[0m\n". $trace);

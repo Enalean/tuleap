@@ -1634,7 +1634,7 @@ function ValidateMail($email, $noconnect=false) {
     if ($noconnect)
       return array(true,sprintf(_("E-Mail address '%s' is properly formatted"), $email));
 
-    list ( $Username, $Domain ) = split ("@", $email);
+    list ( $Username, $Domain ) = preg_split ("/@/D", $email);
     //Todo: getmxrr workaround on windows or manual input field to verify it manually
     if (!isWindows() and getmxrr($Domain, $MXHost)) { // avoid warning on Windows. 
         $ConnectAddress = $MXHost[0];
@@ -1643,7 +1643,7 @@ function ValidateMail($email, $noconnect=false) {
     }
     $Connect = @fsockopen ( $ConnectAddress, 25 );
     if ($Connect) {
-        if (ereg("^220", $Out = fgets($Connect, 1024))) {
+        if (preg_match("/^220/D", $Out = fgets($Connect, 1024))) {
             fputs ($Connect, "HELO $HTTP_HOST\r\n");
             $Out = fgets ( $Connect, 1024 );
             fputs ($Connect, "MAIL FROM: <".$email.">\r\n");
@@ -1652,12 +1652,12 @@ function ValidateMail($email, $noconnect=false) {
             $To = fgets ($Connect, 1024);
             fputs ($Connect, "QUIT\r\n");
             fclose($Connect);
-            if (!ereg ("^250", $From)) {
+            if (!preg_match ("/^250/D", $From)) {
                 $result[0]=false;
                 $result[1]="Server rejected address: ". $From;
                 return $result;
             }
-            if (!ereg ( "^250", $To )) {
+            if (!preg_match ( "/^250/D", $To )) {
                 $result[0]=false;
                 $result[1]="Server rejected address: ". $To;
                 return $result;

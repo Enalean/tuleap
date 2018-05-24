@@ -73,7 +73,7 @@ extends WikiPlugin
 	if ($info == 'pagename' and isa($GLOBALS['WikiTheme'], 'wikilens'))
 	    $info .= ",top3recs";
         if ($info)
-            $info = split(',', $info);
+            $info = preg_split('/,/D', $info);
         else
             $info = array();
 

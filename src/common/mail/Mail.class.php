@@ -156,7 +156,7 @@ class Mail implements Codendi_Mail_Interface {
      * @return list of email separated by ,
      */
     function _validateRecipient($list) {
-        $recipArray = split('[;,]', $list);
+        $recipArray = preg_split('/[;,]/D', $list);
         $retArray = array();
         $user_dao = $this->_getUserDao();
         foreach($recipArray as $email) {

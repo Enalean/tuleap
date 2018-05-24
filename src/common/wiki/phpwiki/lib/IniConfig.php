@@ -707,7 +707,7 @@ function fixup_dynamic_configs($file) {
                 define('USE_PATH_INFO', false);
                 break;
             default:
-                define('USE_PATH_INFO', ereg('\.(php3?|cgi)$', SCRIPT_NAME));
+                define('USE_PATH_INFO', preg_match('/\.(php3?|cgi)$/D', SCRIPT_NAME));
                 break;
             }
         }

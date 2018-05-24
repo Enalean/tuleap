@@ -88,9 +88,9 @@ class XmlParser {
         $node = new XmlElement($this->_tag);
         if (is_string($attrs) and !empty($attrs)) {
             // lowercase attr names
-            foreach(split(' ',$attrs) as $pair) {
+            foreach(preg_split('/ /D',$attrs) as $pair) {
             	if (strstr($pair,"=")) {
-                    list($key,$val) = split('=',$pair);
+                    list($key,$val) = preg_split('/=/D',$pair);
                     $key = strtolower(trim($key));
                     $val = str_replace(array('"',"'"),'',trim($val));
                     $node->_attr[$key] = $val;

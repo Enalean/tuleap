@@ -105,8 +105,8 @@ extends WikiPlugin
                 if (preg_match('/%%\w+%%/', $initial_content)) {
                     $var = array();
                     if (!empty($vars)) {
-                        foreach (split("&",$vars) as $pair) {
-                            list($key,$val) = split("=",$pair);
+                        foreach (preg_split("/&/D",$vars) as $pair) {
+                            list($key,$val) = preg_split("/=/D",$pair);
                             $var[$key] = $val;
                         }
                     }

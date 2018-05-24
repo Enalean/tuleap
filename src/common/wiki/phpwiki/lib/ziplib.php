@@ -748,10 +748,10 @@ function ParseMimeifiedPerm($string) {
         return '';
     }
     $hash = array();
-    foreach (split(";",trim($string)) as $accessgroup) {
-        list($access,$groupstring) = split(":",trim($accessgroup));
+    foreach (preg_split("/;/D",trim($string)) as $accessgroup) {
+        list($access,$groupstring) = preg_split("/:/D",trim($accessgroup));
         $access = trim($access);
-        $groups = split(",",trim($groupstring));
+        $groups = preg_split("/,/D",trim($groupstring));
         foreach ($groups as $group) {
             $group = trim($group);
             $bool = (boolean) (substr($group,0,1) != '-');

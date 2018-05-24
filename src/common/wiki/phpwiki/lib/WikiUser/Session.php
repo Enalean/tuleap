@@ -34,7 +34,7 @@ extends _PassUser
             $this->_userid = $sess;
         } elseif (strstr(AUTH_SESS_USER,"->")) {
             // object "user->id" (no objects inside hashes supported!)
-            list($obj,$key) = split("->",AUTH_SESS_USER);
+            list($obj,$key) = preg_split("/->/D",AUTH_SESS_USER);
             $this->_userid = $sess[$obj]->$key;
         } else {
             $this->_userid = $sess[AUTH_SESS_USER];

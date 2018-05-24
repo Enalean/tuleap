@@ -486,7 +486,7 @@ class WikiDB_backend
      */
     function limit($limit) {
         if (strstr($limit, ','))
-            return split(',', $limit);
+            return preg_split('/,/D', $limit);
         else
             return array(0, $limit);
     }

@@ -115,7 +115,7 @@ function register_valid($mail_confirm_code, array &$errors)	{
     $vDate = new Valid_String();
     $vDate->required();
     if ($request->exist('form_expiry') && $vDate->validate($request->get('form_expiry'))) {
-        $date_list = split("-", $request->get('form_expiry'), 3);
+        $date_list = preg_split("/-/D", $request->get('form_expiry'), 3);
         $unix_expiry_time = mktime(0, 0, 0, $date_list[1], $date_list[2], $date_list[0]);
         $expiry_date = $unix_expiry_time;
 

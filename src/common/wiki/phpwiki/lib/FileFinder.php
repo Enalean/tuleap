@@ -156,8 +156,8 @@ class FileFinder
      * @return bool True if path is absolute. 
      */
     function _is_abs($path) {
-        if (ereg('^/', $path)) return true;
-        elseif (isWindows() and (eregi('^[a-z]:[/\\]', $path))) return true;
+        if (preg_match('#^/#D', $path)) return true;
+        elseif (isWindows() and (preg_match('#^[a-z]:[/\\]#Di', $path))) return true;
         else return false;
     }
 

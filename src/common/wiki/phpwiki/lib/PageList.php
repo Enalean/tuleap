@@ -1135,7 +1135,7 @@ class PageList {
     function limit($limit) {
     	if (is_array($limit)) return $limit;
         if (strstr($limit, ','))
-            return split(',', $limit);
+            return preg_split('/,/D', $limit);
         else
             return array(0, $limit);
     }

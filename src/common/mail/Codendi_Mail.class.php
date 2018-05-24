@@ -139,7 +139,7 @@ class Codendi_Mail implements Codendi_Mail_Interface {
      * @return Array of real_name and mail
      */
     private function validateCommaSeparatedListOfAddresses($comma_separeted_addresses) {
-        return $this->recipient_list_builder->getValidRecipientsFromAddresses(split('[;,]', $comma_separeted_addresses));
+        return $this->recipient_list_builder->getValidRecipientsFromAddresses(preg_split('/[;,]/D', $comma_separeted_addresses));
     }
 
     /**

@@ -391,7 +391,7 @@ function LinkImage($url, $alt = false) {
         // support new syntax: [image.jpg size=50% border=n]
         if (!preg_match("/\.(".$force_img.")/i", $url))
             $ori_url = $url;
-        $arr = split(' ',$url);
+        $arr = preg_split('/ /D',$url);
         if (count($arr) > 1) {
             $url = $arr[0];
         }
@@ -475,7 +475,7 @@ function LinkImage($url, $alt = false) {
  */
 function ImgObject($img, $url) {
     // get the url args: data="sample.svgz" type="image/svg+xml" width="400" height="300"
-    $args = split(' ', $url);
+    $args = preg_split('/ /D', $url);
     if (count($args) >= 1) {
         $url = array_shift($args);
         foreach ($args as $attr) {
@@ -539,7 +539,7 @@ class Stack {
 function SplitQueryArgs ($query_args = '') 
 {
     // FIXME: use the arg-seperator which might not be &
-    $split_args = split('&', $query_args);
+    $split_args = preg_split('/&/D', $query_args);
     $args = array();
     while (list($key, $val) = each($split_args))
         if (preg_match('/^ ([^=]+) =? (.*) /x', $val, $m))
@@ -652,7 +652,7 @@ class WikiPageName
         if (is_string($name)) {
             $this->shortName = $name;
             if (strstr($name, ':')) {
-                list($moniker, $this->shortName) = split (":", $name, 2);
+                list($moniker, $this->shortName) = preg_split ("/:/D", $name, 2);
 	  	$map = getInterwikiMap(); // allow overrides to custom maps
                 if (isset($map->_map[$moniker])) {
                     $url = $map->_map[$moniker];
@@ -1029,7 +1029,7 @@ function ConvertOldMarkup ($text, $markup_type = "block") {
  * @return string
  */
 function expand_tabs($str, $tab_width = 8) {
-    $split = split("\t", $str);
+    $split = preg_split("/\t/D", $str);
     $tail = array_pop($split);
     $expanded = "\n";
     foreach ($split as $hunk) {

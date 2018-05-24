@@ -281,7 +281,7 @@ extends Rule {
     function isValid($val) {
         if($this->separator !== null) {
             // If separator is defined, split the string and check each email.
-            $emails = split($this->separator, $val);
+            $emails = preg_split('/' . $this->separator . '/D', $val);
             $valid = true;
             while((list($key,$email) = each($emails)) && $valid) {
                 $valid = $valid & $this->validEmail(trim(rtrim($email)));

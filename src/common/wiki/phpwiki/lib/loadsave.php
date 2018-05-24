@@ -53,7 +53,7 @@ function StartLoadDump(&$request, $title, $html = '')
     $tmpl = Template('html', array('TITLE' => $title,
                                    'HEADER' => $title,
                                    'CONTENT' => $html ? $html : '%BODY%'));
-    echo ereg_replace('%BODY%.*', '', $tmpl->getExpansion($html));
+    echo preg_replace('/%BODY%.*/D', '', $tmpl->getExpansion($html));
     $request->chunkOutput();
     
     // set marker for sendPageChangeNotification()
