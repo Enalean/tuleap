@@ -17,5 +17,15 @@ msgstr ""
 "Permet aux utilisateurs de télécharger un rapport d'outil de suivi sous la "
 "forme d'un document."
 
+msgid "Export as single page document"
+msgstr "Exporter comme document"
+
+msgid ""
+"Export matching artifacts in a single page document using title and "
+"description semantics"
+msgstr ""
+"Exporter des artéfacts sous la forme d'un unique document en utilisant les "
+"sémantiques titre et description"
+
 msgid "Textual Report"
 msgstr "Rapport Textuels"

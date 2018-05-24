@@ -25,6 +25,8 @@ use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureSelectorPresenter;
+use Tuleap\Tracker\Report\Renderer\Table\GetExportOptionsMenuItemsEvent;
+use Tuleap\Tracker\Report\Renderer\Table\ProcessExportEvent;
 use Tuleap\Tracker\Report\WidgetAdditionalButtonPresenter;
 
 class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements Tracker_Report_Renderer_ArtifactLinkable {
@@ -523,6 +525,11 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $my_items['export'] .= $GLOBALS['Language']->getText('plugin_tracker_include_report', 'export_all_columns');
         $my_items['export'] .= '</a>';
         $my_items['export'] .= '</li>';
+
+        $event = new GetExportOptionsMenuItemsEvent($this);
+        EventManager::instance()->processEvent($event);
+        $my_items['export'] .= $event->getItems();
+
         $my_items['export'] .= '</ul>';
         $my_items['export'] .= '</div>';
 
@@ -1456,17 +1463,21 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
      *
      * @return array of sql queries
      */
-    protected function buildOrderedQuery($matching_ids, $columns, $aggregates = false, $store_in_session = true)
+    public function buildOrderedQuery($matching_ids, $columns, $aggregates = false, $store_in_session = true)
     {
         if ($aggregates) {
             $select = " SELECT 1 ";
         } else {
             $select = " SELECT a.id AS id, c.id AS changeset_id ";
         }
+        $da = CodendiDataAccess::instance();
+
+        $artifact_ids  = $da->escapeIntImplode(explode(',', $matching_ids['id']));
+        $changeset_ids = $da->escapeIntImplode(explode(',', $matching_ids['last_changeset_id']));
 
         $from   = " FROM tracker_artifact AS a INNER JOIN tracker_changeset AS c ON (c.artifact_id = a.id) ";
-        $where  = " WHERE a.id IN (". $matching_ids['id'] .")
-                      AND c.id IN (". $matching_ids['last_changeset_id'] .") ";
+        $where  = " WHERE a.id IN (". $artifact_ids .")
+                      AND c.id IN (". $changeset_ids .") ";
         if ($aggregates) {
             $group_by = '';
             $ordering = false;
@@ -1874,6 +1885,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
             //export
             if (isset($renderer_parameters['export'])) {
+                $event = new ProcessExportEvent($renderer_parameters, $this, $request->getCurrentUser(), $request->getServerUrl());
+                EventManager::instance()->processEvent($event);
                 $only_columns = isset($renderer_parameters['export_only_displayed_fields']) && $renderer_parameters['export_only_displayed_fields'];
                 $this->exportToCSV($only_columns);
             }

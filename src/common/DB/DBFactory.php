@@ -26,11 +26,17 @@ class DBFactory
 {
     private static $connections = [];
 
+    /**
+     * @return \ParagonIE\EasyDB\EasyDB
+     */
     public static function getMainTuleapDB()
     {
         return self::getDB(\ForgeConfig::get('sys_dbname'));
     }
 
+    /**
+     * @return \ParagonIE\EasyDB\EasyDB
+     */
     public static function getDB($database_name)
     {
         if (! isset(self::$connections[$database_name])) {
