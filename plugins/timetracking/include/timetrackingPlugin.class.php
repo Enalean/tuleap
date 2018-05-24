@@ -150,7 +150,8 @@ class timetrackingPlugin extends Plugin // @codingStandardsIgnoreLine
         return new TimeController(
             $this->getPermissionsRetriever(),
             new TimeUpdater(new TimeDao()),
-            new TimeRetriever(new TimeDao(), $this->getPermissionsRetriever())
+            new TimeRetriever(new TimeDao(), $this->getPermissionsRetriever()),
+            new \Tuleap\Timetracking\Time\TimeChecker(new TimeRetriever(new TimeDao(), $this->getPermissionsRetriever()))
         );
     }
 

@@ -21,11 +21,17 @@
 namespace Tuleap\Timetracking\Time;
 
 use Codendi_Request;
-use CSRFSynchronizerToken;
-use Feedback;
 use PFUser;
+use CSRFSynchronizerToken;
 use Tracker_Artifact;
 use Tuleap\Timetracking\Permissions\PermissionsRetriever;
+use Tuleap\Timetracking\TimeTrackingExistingDateException;
+use Tuleap\Timetracking\TimeTrackingMissingTimeException;
+use Tuleap\Timetracking\TimeTrackingNotAllowedToDeleteException;
+use Tuleap\Timetracking\TimeTrackingNotAllowedToAddException;
+use Tuleap\Timetracking\TimeTrackingNotAllowedToEditException;
+use Tuleap\Timetracking\TimeTrackingNotBelongToUserException;
+use Tuleap\Timetracking\TimeTrackingNoTimeException;
 
 class TimeController
 {
@@ -40,6 +46,11 @@ class TimeController
     private $time_updater;
 
     /**
+     * @var TimeChecker
+     */
+    private $time_checker;
+
+    /**
      * @var TimeRetriever
      */
     private $time_retriever;
@@ -47,11 +58,13 @@ class TimeController
     public function __construct(
         PermissionsRetriever $permissions_retriever,
         TimeUpdater $time_updater,
-        TimeRetriever $time_retriever
+        TimeRetriever $time_retriever,
+        TimeChecker $time_checker
     ) {
         $this->permissions_retriever = $permissions_retriever;
         $this->time_updater          = $time_updater;
         $this->time_retriever        = $time_retriever;
+        $this->time_checker          = $time_checker;
     }
 
     public function addTimeForUser(Codendi_Request $request, PFUser $user, Tracker_Artifact $artifact)
@@ -59,35 +72,18 @@ class TimeController
         $this->checkCsrf($artifact);
 
         if (! $this->permissions_retriever->userCanAddTimeInTracker($user, $artifact->getTracker())) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::ERROR,
-                dgettext('tuleap-timetracking', "You are not allowed to add a time.")
-            );
-
-            $this->redirectToArtifactView($artifact);
+            throw new TimeTrackingNotAllowedToAddException(dgettext('tuleap-timetracking', "You are not allowed to add a time."));
         }
 
         $added_step = $request->get('timetracking-new-time-step');
         $added_time = $request->get('timetracking-new-time-time');
         $added_date = $request->get('timetracking-new-time-date') ?: date('Y-m-d', $_SERVER['REQUEST_TIME']);
 
-        $this->checkMandatoryTimeValue($artifact, $added_time);
+        $this->checkMandatoryTimeValue($added_time);
 
         $this->checkExistingTimeForUserInArtifactAtGivenDate($user, $artifact, $added_date);
 
         $this->time_updater->addTimeForUserInArtifact($user, $artifact, $added_date, $added_time, $added_step);
-
-        $GLOBALS['Response']->addFeedback(
-            Feedback::INFO,
-            dgettext('tuleap-timetracking', "Time successfully added.")
-        );
-
-        $this->redirectToArtifactViewInTimetrackingPane($artifact);
-    }
-
-    private function getExistingTimeForUserInArtifactAtGivenDate(PFUser $user, Tracker_Artifact $artifact, $date)
-    {
-        return $this->time_retriever->getExistingTimeForUserInArtifactAtGivenDate($user, $artifact, $date);
     }
 
     public function deleteTimeForUser(Codendi_Request $request, PFUser $user, Tracker_Artifact $artifact)
@@ -95,26 +91,14 @@ class TimeController
         $this->checkCsrf($artifact);
 
         if (! $this->permissions_retriever->userCanAddTimeInTracker($user, $artifact->getTracker())) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::ERROR,
-                dgettext('tuleap-timetracking', "You are not allowed to delete a time.")
-            );
-
-            $this->redirectToArtifactView($artifact);
+            throw new TimeTrackingNotAllowedToDeleteException(dgettext('tuleap-timetracking', "You are not allowed to delete a time."));
         }
 
-        $time = $this->getTimeFromRequest($request, $user, $artifact);
+        $time = $this->getTimeFromRequest($request, $user);
 
-        $this->checkTimeBelongsToUser($time, $user, $artifact);
+        $this->checkTimeBelongsToUser($time, $user);
 
         $this->time_updater->deleteTime($time);
-
-        $GLOBALS['Response']->addFeedback(
-            Feedback::INFO,
-            dgettext('tuleap-timetracking', "Time successfully deleted.")
-        );
-
-        $this->redirectToArtifactViewInTimetrackingPane($artifact);
     }
 
     public function editTimeForUser(Codendi_Request $request, PFUser $user, Tracker_Artifact $artifact)
@@ -122,121 +106,67 @@ class TimeController
         $this->checkCsrf($artifact);
 
         if (! $this->permissions_retriever->userCanAddTimeInTracker($user, $artifact->getTracker())) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::ERROR,
-                dgettext('tuleap-timetracking', "You are not allowed to edit this time.")
-            );
-
-            $this->redirectToArtifactView($artifact);
+            throw new TimeTrackingNotAllowedToEditException(dgettext('tuleap-timetracking', "You are not allowed to edit this time."));
         }
+        $time = $this->getTimeFromRequest($request, $user);
 
-        $time = $this->getTimeFromRequest($request, $user, $artifact);
-
-        $this->checkTimeBelongsToUser($time, $user, $artifact);
+        $this->checkTimeBelongsToUser($time, $user);
 
         $updated_step = $request->get('timetracking-edit-time-step');
         $updated_time = $request->get('timetracking-edit-time-time');
         $updated_date = $request->get('timetracking-edit-time-date') ?: date('Y-m-d', $_SERVER['REQUEST_TIME']);
 
-        $this->checkMandatoryTimeValue($artifact, $updated_time);
+        $this->checkMandatoryTimeValue($updated_time);
 
         if ($time->getDay() !== $updated_date) {
             $this->checkExistingTimeForUserInArtifactAtGivenDate($user, $artifact, $updated_date);
         }
 
         $this->time_updater->updateTime($time, $updated_date, $updated_time, $updated_step);
-
-        $GLOBALS['Response']->addFeedback(
-            Feedback::INFO,
-            dgettext('tuleap-timetracking', "Time successfully updated.")
-        );
-
-        $this->redirectToArtifactViewInTimetrackingPane($artifact);
     }
 
     /**
+     * @param Codendi_Request $request
+     * @param PFUser $user
      * @return Time
+     * @throws TimeTrackingNoTimeException
      */
-    private function getTimeFromRequest(Codendi_Request $request, PFUser $user, Tracker_Artifact $artifact)
+    private function getTimeFromRequest(Codendi_Request $request, PFUser $user)
     {
         $time_id = $request->get('time-id');
         $time    = $this->time_retriever->getTimeByIdForUser($user, $time_id);
 
         if (! $time) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::ERROR,
-                dgettext('tuleap-timetracking', "Time not found.")
-            );
-
-            $this->redirectToArtifactViewInTimetrackingPane($artifact);
+            throw new TimeTrackingNoTimeException(dgettext('tuleap-timetracking', "Time not found."));
         }
 
         return $time;
+    }
+
+    private function checkExistingTimeForUserInArtifactAtGivenDate(PFUser $user, Tracker_Artifact $artifact, $date)
+    {
+        if ($this->time_checker->getExistingTimeForUserInArtifactAtGivenDate($user, $artifact, $date)) {
+            throw new TimeTrackingExistingDateException(sprintf(dgettext('tuleap-timetracking', "A time already exists for the day %s. Skipping."), $date));
+        }
+    }
+
+    private function checkMandatoryTimeValue($time_value)
+    {
+        if (! $this->time_checker->checkMandatoryTimeValue($time_value)) {
+            throw new TimeTrackingMissingTimeException(dgettext('tuleap-timetracking', "The time is missing"));
+        }
+    }
+
+    private function checkTimeBelongsToUser(Time $time, PFUser $user)
+    {
+        if ($this->time_checker->doesTimeBelongsToUser($time, $user)) {
+            throw new TimeTrackingNotBelongToUserException(dgettext('tuleap-timetracking', "This time does not belong to you."));
+        }
     }
 
     private function checkCsrf(Tracker_Artifact $artifact)
     {
         $csrf = new CSRFSynchronizerToken($artifact->getUri());
         $csrf->check();
-    }
-
-    private function checkMandatoryTimeValue(Tracker_Artifact $artifact, $time_value)
-    {
-        if (! $time_value) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::ERROR,
-                dgettext('tuleap-timetracking', "The time is missing")
-            );
-
-            $this->redirectToArtifactViewInTimetrackingPane($artifact);
-        }
-    }
-
-    private function redirectToArtifactViewInTimetrackingPane(Tracker_Artifact $artifact)
-    {
-        $url = TRACKER_BASE_URL . '/?' . http_build_query(array(
-            'aid'  => $artifact->getId(),
-            'view' => 'timetracking'
-        ));
-
-        $GLOBALS['Response']->redirect($url);
-    }
-
-    private function redirectToArtifactView(Tracker_Artifact $artifact)
-    {
-        $url = TRACKER_BASE_URL . '/?' . http_build_query(array(
-            'aid'  => $artifact->getId()
-        ));
-
-        $GLOBALS['Response']->redirect($url);
-    }
-
-    private function checkExistingTimeForUserInArtifactAtGivenDate(PFUser $user, Tracker_Artifact $artifact, $date)
-    {
-        $existing_time = $this->getExistingTimeForUserInArtifactAtGivenDate($user, $artifact, $date);
-
-        if ($existing_time) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::WARN,
-                sprintf(
-                    dgettext('tuleap-timetracking', "A time already exists for the day %s. Skipping."),
-                    $existing_time->getDay()
-                )
-            );
-
-            $this->redirectToArtifactViewInTimetrackingPane($artifact);
-        }
-    }
-
-    private function checkTimeBelongsToUser(Time $time, PFUser $user, Tracker_Artifact $artifact)
-    {
-        if ($time->getUserId() !== (int) $user->getId()) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::ERROR,
-                dgettext('tuleap-timetracking', "This time does not belong to you.")
-            );
-
-            $this->redirectToArtifactViewInTimetrackingPane($artifact);
-        }
     }
 }
