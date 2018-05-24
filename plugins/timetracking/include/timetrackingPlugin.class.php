@@ -28,6 +28,7 @@ use Tuleap\Timetracking\Admin\TimetrackingUgroupRetriever;
 use Tuleap\Timetracking\Admin\TimetrackingUgroupSaver;
 use Tuleap\Timetracking\ArtifactView\ArtifactViewBuilder;
 use Tuleap\Timetracking\Permissions\PermissionsRetriever;
+use Tuleap\Timetracking\Plugin\TimetrackingPluginInfo;
 use Tuleap\Timetracking\REST\ResourcesInjector;
 use Tuleap\Timetracking\Time\DateFormatter;
 use Tuleap\Timetracking\Time\TimeController;
@@ -35,12 +36,11 @@ use Tuleap\Timetracking\Time\TimeDao;
 use Tuleap\Timetracking\Time\TimePresenterBuilder;
 use Tuleap\Timetracking\Time\TimeRetriever;
 use Tuleap\Timetracking\Time\TimeUpdater;
-use Tuleap\Timetracking\TimetrackingPluginInfo;
 use Tuleap\Timetracking\Router;
 use Tuleap\Timetracking\Widget\UserWidget;
 
-require_once 'autoload.php';
 require_once 'constants.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 class timetrackingPlugin extends Plugin // @codingStandardsIgnoreLine
 {

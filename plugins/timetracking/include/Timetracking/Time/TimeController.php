@@ -25,13 +25,13 @@ use PFUser;
 use CSRFSynchronizerToken;
 use Tracker_Artifact;
 use Tuleap\Timetracking\Permissions\PermissionsRetriever;
-use Tuleap\Timetracking\TimeTrackingExistingDateException;
-use Tuleap\Timetracking\TimeTrackingMissingTimeException;
-use Tuleap\Timetracking\TimeTrackingNotAllowedToDeleteException;
-use Tuleap\Timetracking\TimeTrackingNotAllowedToAddException;
-use Tuleap\Timetracking\TimeTrackingNotAllowedToEditException;
-use Tuleap\Timetracking\TimeTrackingNotBelongToUserException;
-use Tuleap\Timetracking\TimeTrackingNoTimeException;
+use Tuleap\Timetracking\Exceptions\TimeTrackingExistingDateException;
+use Tuleap\Timetracking\Exceptions\TimeTrackingMissingTimeException;
+use Tuleap\Timetracking\Exceptions\TimeTrackingNotAllowedToDeleteException;
+use Tuleap\Timetracking\Exceptions\TimeTrackingNotAllowedToAddException;
+use Tuleap\Timetracking\Exceptions\TimeTrackingNotAllowedToEditException;
+use Tuleap\Timetracking\Exceptions\TimeTrackingNotBelongToUserException;
+use Tuleap\Timetracking\Exceptions\TimeTrackingNoTimeException;
 
 class TimeController
 {
@@ -67,6 +67,11 @@ class TimeController
         $this->time_checker          = $time_checker;
     }
 
+    /**
+     * @throws TimeTrackingExistingDateException
+     * @throws TimeTrackingMissingTimeException
+     * @throws TimeTrackingNotAllowedToAddException
+     */
     public function addTimeForUser(Codendi_Request $request, PFUser $user, Tracker_Artifact $artifact)
     {
         $this->checkCsrf($artifact);
@@ -86,6 +91,11 @@ class TimeController
         $this->time_updater->addTimeForUserInArtifact($user, $artifact, $added_date, $added_time, $added_step);
     }
 
+    /**
+     * @throws TimeTrackingNoTimeException
+     * @throws TimeTrackingNotAllowedToDeleteException
+     * @throws TimeTrackingNotBelongToUserException
+     */
     public function deleteTimeForUser(Codendi_Request $request, PFUser $user, Tracker_Artifact $artifact)
     {
         $this->checkCsrf($artifact);
@@ -101,6 +111,13 @@ class TimeController
         $this->time_updater->deleteTime($time);
     }
 
+    /**
+     * @throws TimeTrackingExistingDateException
+     * @throws TimeTrackingMissingTimeException
+     * @throws TimeTrackingNoTimeException
+     * @throws TimeTrackingNotAllowedToEditException
+     * @throws TimeTrackingNotBelongToUserException
+     */
     public function editTimeForUser(Codendi_Request $request, PFUser $user, Tracker_Artifact $artifact)
     {
         $this->checkCsrf($artifact);

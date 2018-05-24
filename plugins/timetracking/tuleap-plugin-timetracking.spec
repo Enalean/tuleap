@@ -22,7 +22,7 @@ Requires:	php(language) >= 5.3, tuleap = @@TULEAP_VERSION@@-@@RELEASE@@%{?dist}
 %{__rm} -rf $RPM_BUILD_ROOT
 
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/timetracking
-%{__cp} -ar db include site-content templates README.mkd VERSION www $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/timetracking
+%{__cp} -ar db include site-content templates vendor README.mkd VERSION www $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/timetracking
 
 %clean
 %{__rm} -rf $RPM_BUILD_ROOT

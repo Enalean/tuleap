@@ -28,6 +28,13 @@ use Tracker_Artifact;
 use Tracker_ArtifactFactory;
 use TrackerFactory;
 use Tuleap\Timetracking\Admin\AdminController;
+use Tuleap\Timetracking\Exceptions\TimeTrackingExistingDateException;
+use Tuleap\Timetracking\Exceptions\TimeTrackingMissingTimeException;
+use Tuleap\Timetracking\Exceptions\TimeTrackingNotAllowedToAddException;
+use Tuleap\Timetracking\Exceptions\TimeTrackingNotAllowedToDeleteException;
+use Tuleap\Timetracking\Exceptions\TimeTrackingNotAllowedToEditException;
+use Tuleap\Timetracking\Exceptions\TimeTrackingNotBelongToUserException;
+use Tuleap\Timetracking\Exceptions\TimeTrackingNoTimeException;
 use Tuleap\Timetracking\Time\TimeController;
 
 class Router

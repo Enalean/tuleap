@@ -21,15 +21,14 @@
 namespace Tuleap\Timetracking\Time;
 
 use Codendi_Request;
-use Feedback;
 use Tracker;
-use Tuleap\Timetracking\TimeTrackingExistingDateException;
-use Tuleap\Timetracking\TimeTrackingMissingTimeException;
-use Tuleap\Timetracking\TimeTrackingNotAllowedToAddException;
-use Tuleap\Timetracking\TimeTrackingNotAllowedToDeleteException;
-use Tuleap\Timetracking\TimeTrackingNotAllowedToEditException;
-use Tuleap\Timetracking\TimeTrackingNotBelongToUserException;
-use Tuleap\Timetracking\TimeTrackingNoTimeException;
+use Tuleap\Timetracking\Exceptions\TimeTrackingExistingDateException;
+use Tuleap\Timetracking\Exceptions\TimeTrackingMissingTimeException;
+use Tuleap\Timetracking\Exceptions\TimeTrackingNotAllowedToAddException;
+use Tuleap\Timetracking\Exceptions\TimeTrackingNotAllowedToDeleteException;
+use Tuleap\Timetracking\Exceptions\TimeTrackingNotAllowedToEditException;
+use Tuleap\Timetracking\Exceptions\TimeTrackingNotBelongToUserException;
+use Tuleap\Timetracking\Exceptions\TimeTrackingNoTimeException;
 use TuleapTestCase;
 
 require_once __DIR__ . '/../bootstrap.php';
