@@ -21,6 +21,7 @@
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\project\Event\ProjectServiceBeforeActivation;
+use Tuleap\Project\XML\Export\ArchiveInterface;
 use Tuleap\TestManagement\Administration\StepFieldUsageDetector;
 use Tuleap\TestManagement\Config;
 use Tuleap\TestManagement\Dao;
@@ -32,6 +33,7 @@ use Tuleap\TestManagement\Step\Definition\Field\StepDefinition;
 use Tuleap\TestManagement\Step\Execution\Field\StepExecution;
 use Tuleap\TestManagement\TestManagementPluginInfo;
 use Tuleap\TestManagement\UserIsNotAdministratorException;
+use Tuleap\TestManagement\XML\Exporter;
 use Tuleap\TestManagement\XMLImport;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
@@ -89,6 +91,7 @@ class testmanagementPlugin extends Plugin
             $this->addHook(Tracker_FormElementFactory::GET_CLASSNAMES);
             $this->addHook(FilterFormElementsThatCanBeCreatedForTracker::NAME);
             $this->addHook(DisplayAdminFormElementsWarningsEvent::NAME);
+            $this->addHook(TRACKER_EVENT_EXPORT_FULL_XML);
         }
 
         return parent::getHooksAndCallbacks();
@@ -555,5 +558,40 @@ class testmanagementPlugin extends Plugin
                 )
             );
         }
+    }
+
+    public function tracker_event_export_full_xml($params)
+    {
+        $project_id = $params['group_id'];
+        $project    = ProjectManager::instance()->getProject($project_id);
+
+        if (! $project || ! $project->usesService($this->getServiceShortname())) {
+            return;
+        }
+
+        $exporter    = new Exporter($this->getConfig(), new XML_RNGValidator());
+        $xml_content = $exporter->exportToXML($project);
+
+        if ($xml_content) {
+            $this->addXMLFileIntoArchive($xml_content, $project, $params['archive']);
+        }
+    }
+
+    private function getTmpDir()
+    {
+        return rtrim(ForgeConfig::get('codendi_cache_dir'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+    }
+
+    /**
+     * @param $params
+     * @param $xml_content
+     */
+    private function addXMLFileIntoArchive(SimpleXMLElement $xml_content, Project $project, ArchiveInterface $archive)
+    {
+        $temporaray_file = 'export_ttm_' . $project->getID() . time() . '.xml';
+        $temporary_path  = $this->getTmpDir() . "/$temporaray_file";
+
+        file_put_contents($temporary_path, $xml_content->asXML());
+        $archive->addFile('testmanagement.xml', $temporary_path);
     }
 }
