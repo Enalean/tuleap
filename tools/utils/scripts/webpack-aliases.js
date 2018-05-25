@@ -41,6 +41,10 @@ const flaming_parrot_labels_box_aliases = Object.assign(
     flaming_parrot_labels_box_alias
 );
 
+const easygettext_loader_alias = {
+    'easygettext-loader': path.resolve(__dirname, './easygettext-loader.js')
+}
+
 function extendAliases(...aliases) {
     return Object.assign({}, ...aliases);
 }
@@ -48,5 +52,6 @@ function extendAliases(...aliases) {
 module.exports = {
     extendAliases,
     tlp_fetch_alias,
-    flaming_parrot_labels_box_aliases
+    flaming_parrot_labels_box_aliases,
+    easygettext_loader_alias
 };

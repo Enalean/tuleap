@@ -25,9 +25,9 @@
             "target_dir": "www/themes/BurningParrot/css"
         }
     },
-    "gettext-js": {
+    "gettext-vue": {
         "labeled-items": {
-            "src": "www/scripts/project-labeled-items/src",
+            "scripts": "www/scripts/",
             "po": "www/scripts/project-labeled-items/po"
         }
     },

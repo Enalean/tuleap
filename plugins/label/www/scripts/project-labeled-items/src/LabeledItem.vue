@@ -4,7 +4,7 @@
         <div class="labeled-item-content" v-html="purified_title"></div>
     </a>
 </template>
-(<script>
+<script>
     import { sanitize } from 'dompurify';
 
     export default {
@@ -21,4 +21,4 @@
             }
         }
     };
-</script>)
+</script>

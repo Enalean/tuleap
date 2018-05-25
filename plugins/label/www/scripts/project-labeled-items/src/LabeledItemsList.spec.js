@@ -46,7 +46,7 @@ describe('LabeledItemsList', () => {
 
         vm.$mount();
 
-        expect(vm.error).toEqual('Please select one or more labels by editing this widget');
+        expect(vm.error).toBe(true);
     });
 
     it('Should display an error when REST route fails', async () => {
@@ -67,6 +67,7 @@ describe('LabeledItemsList', () => {
 
         vm.$mount();
 
+        await Vue.nextTick();
         await Vue.nextTick();
         expect(vm.error).toEqual('404 Not Found');
     });
