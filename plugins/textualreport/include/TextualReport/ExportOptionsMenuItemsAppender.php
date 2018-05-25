@@ -45,6 +45,10 @@ class ExportOptionsMenuItemsAppender
 
     public function appendTextualReportDownloadLink(GetExportOptionsMenuItemsEvent $event)
     {
+        if (! $this->document_can_be_downloaded_checker->hasNeededSemantics($event->getReport()->getTracker())) {
+            return;
+        }
+
         $export_single_page_url = TRACKER_BASE_URL . '/?' .
             http_build_query(
                 [

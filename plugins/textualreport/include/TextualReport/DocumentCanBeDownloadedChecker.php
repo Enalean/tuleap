@@ -20,7 +20,10 @@
 
 namespace Tuleap\TextualReport;
 
+use Tracker;
 use Tracker_Report;
+use Tracker_Semantic_Description;
+use Tracker_Semantic_Title;
 
 class DocumentCanBeDownloadedChecker
 {
@@ -29,5 +32,11 @@ class DocumentCanBeDownloadedChecker
         $matching_ids = $report->getMatchingIds();
 
         return isset($matching_ids['id']) && count($matching_ids['id']) > 0;
+    }
+
+    public function hasNeededSemantics(Tracker $tracker)
+    {
+        return Tracker_Semantic_Title::load($tracker)->getField()
+            && Tracker_Semantic_Description::load($tracker)->getField();
     }
 }
