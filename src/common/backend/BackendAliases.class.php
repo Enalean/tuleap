@@ -24,20 +24,7 @@ class BackendAliases extends Backend {
     const ALIAS_ENTRY_FORMAT = "%-50s%-10s";
 
     protected $need_update=false;   
-    protected $userdao = null;
     protected $mailinglistdao = null;
-
-    /**
-     * Get the user dao
-     * 
-     * @return UserDao
-     */
-    protected function getUserDao() {
-        if (!$this->userdao) {
-            $this->userdao = new UserDao(CodendiDataAccess::instance());
-        }
-        return $this->userdao;
-    }
 
     /**
      * Get the mainling list dao
@@ -90,7 +77,6 @@ class BackendAliases extends Backend {
 
         if ((! $this->writeGenericAliases($fp))
             || (! $this->writeListAliases($fp))
-            || (! $this->writeUserAliases($fp))
             || (! $this->writeOtherAliases($fp))
         ) {
             $this->log("Can't write aliases to $alias_file_new", Backend::LOG_ERROR);
@@ -130,32 +116,6 @@ class BackendAliases extends Backend {
         fwrite($fp, "noreply:                 \"|".$GLOBALS['codendi_bin_prefix']."/gotohell\"\n");
         fwrite($fp, "undisclosed-recipients:  \"|".$GLOBALS['codendi_bin_prefix']."/gotohell\"\n"); // for phpWiki notifications...
         fwrite($fp, "webmaster:               codendi-admin\n");
-        return fwrite($fp, "\n\n");
-    }
-
-    /** 
-     * User aliases for addresses like user@codendi.server.name
-     * 
-     * @param resource $fp A file system pointer resource that is typically created using fopen().
-     * 
-     * @return bool
-     *
-     * @todo This must be removed with Tuleap 10.1
-     */
-    protected function writeUserAliases($fp)
-    {
-        if (! ForgeConfig::get('accept_security_risk_and_enable_user_aliases')) {
-            return true;
-        }
-        fwrite($fp, "### Begin User Aliases ###\n\n");
-
-        $allowed_statuses=array('A', 'R'); // Active and restricted users
-        $dar = $this->getUserDao()->searchByStatus($allowed_statuses);
-        foreach ($dar as $row) {
-            if ($row['email'] && $row['user_name']) {
-                $this->writeAlias($fp, new System_Alias($row['user_name'], $row['email']));
-            }
-        }
         return fwrite($fp, "\n\n");
     }
 
