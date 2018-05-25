@@ -93,7 +93,7 @@ class ProjectXMLExporterTest extends TuleapTestCase {
             '*'
         )->once();
 
-        $xml       = $this->xml_exporter->export($this->project, $this->options, $this->user, $this->archive,  $this->export_dir);
+        $xml       = $this->xml_exporter->export($this->project, $this->options, $this->user, $this->archive, $this->export_dir);
         $xml_objet = simplexml_load_string($xml);
 
         $this->assertNotNull($xml_objet->ugroups);
