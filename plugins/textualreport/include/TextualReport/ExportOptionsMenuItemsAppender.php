@@ -30,10 +30,17 @@ class ExportOptionsMenuItemsAppender
      * @var TemplateRenderer
      */
     private $renderer;
+    /**
+     * @var DocumentCanBeDownloadedChecker
+     */
+    private $document_can_be_downloaded_checker;
 
-    public function __construct(TemplateRenderer $renderer)
-    {
-        $this->renderer = $renderer;
+    public function __construct(
+        TemplateRenderer $renderer,
+        DocumentCanBeDownloadedChecker $document_can_be_downloaded_checker
+    ) {
+        $this->renderer                           = $renderer;
+        $this->document_can_be_downloaded_checker = $document_can_be_downloaded_checker;
     }
 
     public function appendTextualReportDownloadLink(GetExportOptionsMenuItemsEvent $event)
@@ -51,13 +58,25 @@ class ExportOptionsMenuItemsAppender
                 ]
             );
 
+        $has_matching_artifacts = $this->document_can_be_downloaded_checker->hasMatchingArtifacts($event->getReport());
+
         $event->addExportItem(
             $this->renderer->renderToString(
                 'export-options-menu-items',
                 [
+                    'can_be_downloaded'      => $has_matching_artifacts,
                     'export_single_page_url' => $export_single_page_url,
                 ]
             )
         );
+
+        if (! $has_matching_artifacts) {
+            $event->addAdditionalContentThatGoesOutsideOfTheMenu(
+                $this->renderer->renderToString(
+                    'error-modal',
+                    []
+                )
+            );
+        }
     }
 }
