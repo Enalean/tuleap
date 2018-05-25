@@ -18,20 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Timetracking;
+namespace Tuleap\Timetracking\Plugin;
 
-use PluginDescriptor;
+use Plugin;
+use PluginInfo;
 
-class TimetrackingPluginDescriptor extends PluginDescriptor
+class TimetrackingPluginInfo extends PluginInfo
 {
-    public function __construct()
+    public function __construct(Plugin $plugin)
     {
-        parent::__construct(
-            dgettext('tuleap-timetracking', 'Time tracking'),
-            false,
-            dgettext('tuleap-timetracking', 'Time tracking for Tuleap artifacts')
-        );
+        parent::__construct($plugin);
 
-        $this->setVersionFromFile(dirname(__FILE__).'/../VERSION');
+        $this->setPluginDescriptor(new TimetrackingPluginDescriptor());
     }
 }
