@@ -20,12 +20,15 @@
 
 namespace Tuleap\Timetracking\Time;
 
-use TuleapTestCase;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 
 require_once __DIR__.'/../bootstrap.php';
 
-class DateFormatterTest extends TuleapTestCase
+class DateFormatterTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /**
      * @var DateFormatter
      */
@@ -38,33 +41,33 @@ class DateFormatterTest extends TuleapTestCase
         $this->formatter = new DateFormatter();
     }
 
-    public function itAlwaysReturnsTwoCharsForHoursAndForMinutes()
+    public function testItAlwaysReturnsTwoCharsForHoursAndForMinutes()
     {
         $minutes = 0;
-        $this->assertEqual("00:00", $this->formatter->formatMinutes($minutes));
+        $this->assertEquals("00:00", $this->formatter->formatMinutes($minutes));
 
         $minutes = 1;
-        $this->assertEqual("00:01", $this->formatter->formatMinutes($minutes));
+        $this->assertEquals("00:01", $this->formatter->formatMinutes($minutes));
 
         $minutes = 59;
-        $this->assertEqual("00:59", $this->formatter->formatMinutes($minutes));
+        $this->assertEquals("00:59", $this->formatter->formatMinutes($minutes));
 
         $minutes = 61;
-        $this->assertEqual("01:01", $this->formatter->formatMinutes($minutes));
+        $this->assertEquals("01:01", $this->formatter->formatMinutes($minutes));
 
         $minutes = 119;
-        $this->assertEqual("01:59", $this->formatter->formatMinutes($minutes));
+        $this->assertEquals("01:59", $this->formatter->formatMinutes($minutes));
 
         $minutes = 601;
-        $this->assertEqual("10:01", $this->formatter->formatMinutes($minutes));
+        $this->assertEquals("10:01", $this->formatter->formatMinutes($minutes));
 
         $minutes = 659;
-        $this->assertEqual("10:59", $this->formatter->formatMinutes($minutes));
+        $this->assertEquals("10:59", $this->formatter->formatMinutes($minutes));
     }
 
-    public function itCanReturnsMoreThan24Hours()
+    public function testItCanReturnsMoreThan24Hours()
     {
         $minutes = 26*60 + 59;
-        $this->assertEqual("26:59", $this->formatter->formatMinutes($minutes));
+        $this->assertEquals("26:59", $this->formatter->formatMinutes($minutes));
     }
 }

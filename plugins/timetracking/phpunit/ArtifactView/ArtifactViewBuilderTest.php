@@ -20,17 +20,20 @@
 
 namespace Tuleap\Timetracking\ArtifactView;
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 use Project;
 use timetrackingPlugin;
 use Tracker;
 use Tuleap\Timetracking\Time\DateFormatter;
 use Tuleap\Timetracking\Time\TimePresenterBuilder;
-use TuleapTestCase;
 
 require_once __DIR__.'/../bootstrap.php';
 
-class ArtifactViewBuilderTest extends TuleapTestCase
+class ArtifactViewBuilderTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /**
      * @var ArtifactViewBuilder
      */
@@ -40,8 +43,10 @@ class ArtifactViewBuilderTest extends TuleapTestCase
     {
         parent::setUp();
 
-        $this->user     = aUser()->withId(101)->build();
-        $this->request  = aRequest()->build();
+        $this->user = \Mockery::spy(\PFUser::class);
+        $this->user->allows()->getId()->andReturns(101);
+
+        $this->request = \Mockery::spy(\HTTPRequest::class);
 
         $project = \Mockery::spy(Project::class);
         $project->allows()->getID()->andReturns(201);
@@ -69,7 +74,7 @@ class ArtifactViewBuilderTest extends TuleapTestCase
         );
     }
 
-    public function itBuildsTheArtifactView()
+    public function testItBuildsTheArtifactView()
     {
         $this->plugin->allows()->isAllowed(201)->andReturns(true);
         $this->enabler->allows()->isTimetrackingEnabledForTracker($this->tracker)->andReturns(true);
@@ -81,7 +86,7 @@ class ArtifactViewBuilderTest extends TuleapTestCase
         $this->assertNotNull($view);
     }
 
-    public function itReturnsNullIfPluginNotAvailableForProject()
+    public function testItReturnsNullIfPluginNotAvailableForProject()
     {
         $this->plugin->allows()->isAllowed(201)->andReturns(false);
 
@@ -90,7 +95,7 @@ class ArtifactViewBuilderTest extends TuleapTestCase
         $this->assertNull($view);
     }
 
-    public function itReturnsNullIfTimetrackingNotActivatedForTracker()
+    public function testItReturnsNullIfTimetrackingNotActivatedForTracker()
     {
         $this->plugin->allows()->isAllowed(201)->andReturns(true);
         $this->enabler->allows()->isTimetrackingEnabledForTracker($this->tracker)->andReturns(false);
@@ -100,7 +105,7 @@ class ArtifactViewBuilderTest extends TuleapTestCase
         $this->assertNull($view);
     }
 
-    public function itReturnsNullIfUserIsNeitherReaderNorWriter()
+    public function testItReturnsNullIfUserIsNeitherReaderNorWriter()
     {
         $this->plugin->allows()->isAllowed(201)->andReturns(true);
         $this->enabler->allows()->isTimetrackingEnabledForTracker($this->tracker)->andReturns(true);

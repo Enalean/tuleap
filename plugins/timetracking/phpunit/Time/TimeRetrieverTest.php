@@ -20,13 +20,16 @@
 
 namespace Tuleap\Timetracking\Time;
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 use Tracker;
-use TuleapTestCase;
 
 require_once __DIR__.'/../bootstrap.php';
 
-class TimeRetrieverTest extends TuleapTestCase
+class TimeRetrieverTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /**
      * @var TimeRetriever
      */
@@ -41,7 +44,9 @@ class TimeRetrieverTest extends TuleapTestCase
 
         $this->retriever = new TimeRetriever($this->dao, $this->permissions_retriever);
 
-        $this->user     = aUser()->withId(102)->build();
+        $this->user = \Mockery::spy(\PFUser::class);
+        $this->user->allows()->getId()->andReturns(102);
+
         $this->tracker  = \Mockery::spy(Tracker::class);
         $this->artifact = \Mockery::spy(\Tracker_Artifact::class);
 
@@ -51,14 +56,7 @@ class TimeRetrieverTest extends TuleapTestCase
         ]);
     }
 
-    public function tearDown()
-    {
-        \Mockery::close();
-
-        parent::tearDown();
-    }
-
-    public function itReturnsAnEmptyArrayIfUserIsNotAbleToReadTimes()
+    public function testItReturnsAnEmptyArrayIfUserIsNotAbleToReadTimes()
     {
         $this->permissions_retriever->allows()->userCanSeeAggregatedTimesInTracker($this->user, $this->tracker)->andReturns(false);
         $this->permissions_retriever->allows()->userCanAddTimeInTracker($this->user, $this->tracker)->andReturns(false);
@@ -66,10 +64,10 @@ class TimeRetrieverTest extends TuleapTestCase
         $this->dao->shouldNotReceive('getTimesAddedInArtifactByUser');
         $this->dao->shouldNotReceive('getAllTimesAddedInArtifact');
 
-        $this->assertArrayEmpty($this->retriever->getTimesForUser($this->user, $this->artifact));
+        $this->assertEmpty($this->retriever->getTimesForUser($this->user, $this->artifact));
     }
 
-    public function itRetrievesTimesIfTheUserIsWriter()
+    public function testItRetrievesTimesIfTheUserIsWriter()
     {
         $this->permissions_retriever->allows()->userCanSeeAggregatedTimesInTracker($this->user, $this->tracker)->andReturns(false);
         $this->permissions_retriever->allows()->userCanAddTimeInTracker($this->user, $this->tracker)->andReturns(true);
@@ -82,7 +80,7 @@ class TimeRetrieverTest extends TuleapTestCase
         $this->retriever->getTimesForUser($this->user, $this->artifact);
     }
 
-    public function itRetrievesTimesIfTheUserIsGlobalReader()
+    public function testItRetrievesTimesIfTheUserIsGlobalReader()
     {
         $this->permissions_retriever->allows()->userCanSeeAggregatedTimesInTracker($this->user, $this->tracker)->andReturns(true);
         $this->permissions_retriever->allows()->userCanAddTimeInTracker($this->user, $this->tracker)->andReturns(false);
