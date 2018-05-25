@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
 
 require_once('common/dao/UGroupDao.class.php');
 
@@ -789,7 +788,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         return $project_groups;
     }
 
-    public function getFieldDataFromRESTValueByField($value, Tracker_Artifact $artifact = null) {
+    public function getFieldDataFromRESTValueByField(array $value, Tracker_Artifact $artifact = null) {
         throw new Tracker_FormElement_RESTValueByField_NotImplementedException();
     }
 

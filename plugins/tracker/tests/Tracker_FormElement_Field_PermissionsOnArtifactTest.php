@@ -47,7 +47,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifactTest extends TuleapTestCase
     {
         $this->expectException('Tracker_FormElement_RESTValueByField_NotImplementedException');
 
-        $value = 'some_value';
+        $value = ['some_value'];
         $this->field->getFieldDataFromRESTValueByField($value);
     }
 
