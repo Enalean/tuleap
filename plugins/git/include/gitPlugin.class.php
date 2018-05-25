@@ -44,6 +44,7 @@ use Tuleap\Git\Gitolite\SSHKey\Provider\User;
 use Tuleap\Git\Gitolite\SSHKey\Provider\WholeInstanceKeysAggregator;
 use Tuleap\Git\Gitolite\SSHKey\SystemEvent\MigrateToTuleapSSHKeyManagement;
 use Tuleap\Git\Gitolite\VersionDetector;
+use Tuleap\Git\GitXmlExporter;
 use Tuleap\Git\GlobalParameterDao;
 use Tuleap\Git\History\Dao as HistoryDao;
 use Tuleap\Git\History\GitPhpAccessLogger;
@@ -52,16 +53,6 @@ use Tuleap\Git\Notifications\NotificationsForProjectMemberCleaner;
 use Tuleap\Git\Notifications\UgroupsToNotifyDao;
 use Tuleap\Git\Notifications\UgroupToNotifyUpdater;
 use Tuleap\Git\Notifications\UsersToNotifyDao;
-use Tuleap\Git\PermissionsPerGroup\AdminUrlBuilder;
-use Tuleap\Git\PermissionsPerGroup\CollectionOfUGroupRepresentationBuilder;
-use Tuleap\Git\PermissionsPerGroup\CollectionOfUgroupsFormatter;
-use Tuleap\Git\PermissionsPerGroup\CollectionOfUGroupsRepresentationFormatter;
-use Tuleap\Git\PermissionsPerGroup\GitJSONPermissionsRetriever;
-use Tuleap\Git\PermissionsPerGroup\GitPaneSectionCollector;
-use Tuleap\Git\PermissionsPerGroup\PermissionPerGroupController;
-use Tuleap\Git\PermissionsPerGroup\PermissionPerGroupGitSectionBuilder;
-use Tuleap\Git\PermissionsPerGroup\RepositoryFineGrainedRepresentationBuilder;
-use Tuleap\Git\PermissionsPerGroup\RepositorySimpleRepresentationBuilder;
 use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\DefaultFineGrainedPermissionReplicator;
 use Tuleap\Git\Permissions\FineGrainedDao;
@@ -87,6 +78,16 @@ use Tuleap\Git\Permissions\RegexpRepositoryDao;
 use Tuleap\Git\Permissions\RegexpTemplateDao;
 use Tuleap\Git\Permissions\TemplateFineGrainedPermissionSaver;
 use Tuleap\Git\Permissions\TemplatePermissionsUpdater;
+use Tuleap\Git\PermissionsPerGroup\AdminUrlBuilder;
+use Tuleap\Git\PermissionsPerGroup\CollectionOfUGroupRepresentationBuilder;
+use Tuleap\Git\PermissionsPerGroup\CollectionOfUgroupsFormatter;
+use Tuleap\Git\PermissionsPerGroup\CollectionOfUGroupsRepresentationFormatter;
+use Tuleap\Git\PermissionsPerGroup\GitJSONPermissionsRetriever;
+use Tuleap\Git\PermissionsPerGroup\GitPaneSectionCollector;
+use Tuleap\Git\PermissionsPerGroup\PermissionPerGroupController;
+use Tuleap\Git\PermissionsPerGroup\PermissionPerGroupGitSectionBuilder;
+use Tuleap\Git\PermissionsPerGroup\RepositoryFineGrainedRepresentationBuilder;
+use Tuleap\Git\PermissionsPerGroup\RepositorySimpleRepresentationBuilder;
 use Tuleap\Git\RemoteServer\Gerrit\HttpUserValidator;
 use Tuleap\Git\RemoteServer\Gerrit\Restrictor;
 use Tuleap\Git\Repository\DescriptionUpdater;
@@ -100,6 +101,7 @@ use Tuleap\Git\Repository\Settings\WebhookRouter;
 use Tuleap\Git\RestrictedGerritServerDao;
 use Tuleap\Git\Webhook\WebhookDao;
 use Tuleap\Git\XmlUgroupRetriever;
+use Tuleap\GitBundle;
 use Tuleap\Glyph\GlyphLocation;
 use Tuleap\Glyph\GlyphLocationsCollector;
 use Tuleap\Layout\IncludeAssets;
@@ -107,16 +109,14 @@ use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
 use Tuleap\project\Admin\Navigation\NavigationDropdownQuickLinksCollector;
-use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
+use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRepresentationBuilder;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRetriever;
 use Tuleap\Project\Admin\ProjectUGroup\UserBecomesProjectAdmin;
 use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerProjectAdmin;
 use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Project\HierarchyDisplayer;
-use Tuleap\Git\GitXmlExporter;
-use Tuleap\GitBundle;
 use Tuleap\Request\RestrictedUsersAreHandledByPluginEvent;
 
 require_once 'constants.php';
@@ -289,6 +289,7 @@ class GitPlugin extends Plugin
 
     private function getGitExporter(Project $project)
     {
+        $user_manager = UserManager::instance();
         return new GitXmlExporter(
             $project,
             $this->getGitPermissionsManager(),
@@ -296,7 +297,13 @@ class GitPlugin extends Plugin
             $this->getRepositoryFactory(),
             $this->getLogger(),
             new System_Command(),
-            new GitBundle(new System_Command(), $this->getLogger())
+            new GitBundle(new System_Command(), $this->getLogger()),
+            new Git_LogDao(),
+            $user_manager,
+            new UserXMLExporter(
+                $user_manager,
+                new UserXMLExportedCollection(new XML_RNGValidator(), new XML_SimpleXMLCDATAFactory())
+            )
         );
     }
 
@@ -2328,7 +2335,9 @@ class GitPlugin extends Plugin
             new XmlUgroupRetriever(
                 $logger,
                 $this->getUGroupManager()
-            )
+            ),
+            new GitDao(),
+            new XMLImportHelper(UserManager::instance())
         );
 
         $importer->import(

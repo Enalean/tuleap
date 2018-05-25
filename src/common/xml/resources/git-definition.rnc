@@ -29,9 +29,28 @@ git = element repository {
                 references
             }?
         )
-    )
+    ) &
+    element last-push-date  {
+        element user { user_last_push_date } &
+        attribute push_date { xsd:string } &
+        attribute commits_number { xsd:string } &
+        attribute refname { xsd:string } &
+        attribute operation_type { xsd:string } &
+        attribute refname_type { xsd:string }
+    } ?
 }* &
 
 element ugroups-admin {
     element ugroup { xsd:string }*
 }?
+
+user_last_push_date =
+(
+    (
+        attribute format { "username" | "ldap" | "id" | "email" }
+    ) | (
+        attribute format { "email" },
+        attribute is_anonymous { xsd:boolean }
+    )
+),
+xsd:string

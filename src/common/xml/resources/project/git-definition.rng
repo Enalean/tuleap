@@ -132,6 +132,30 @@
                 </optional>
               </interleave>
             </choice>
+            <optional>
+              <element name="last-push-date">
+                <interleave>
+                  <element name="user">
+                    <ref name="user_last_push_date"/>
+                  </element>
+                  <attribute name="push_date">
+                    <data type="string"/>
+                  </attribute>
+                  <attribute name="commits_number">
+                    <data type="string"/>
+                  </attribute>
+                  <attribute name="refname">
+                    <data type="string"/>
+                  </attribute>
+                  <attribute name="operation_type">
+                    <data type="string"/>
+                  </attribute>
+                  <attribute name="refname_type">
+                    <data type="string"/>
+                  </attribute>
+                </interleave>
+              </element>
+            </optional>
           </interleave>
         </element>
       </zeroOrMore>
@@ -145,5 +169,26 @@
         </element>
       </optional>
     </interleave>
+  </define>
+  <define name="user_last_push_date">
+    <choice>
+      <attribute name="format">
+        <choice>
+          <value>username</value>
+          <value>ldap</value>
+          <value>id</value>
+          <value>email</value>
+        </choice>
+      </attribute>
+      <group>
+        <attribute name="format">
+          <value>email</value>
+        </attribute>
+        <attribute name="is_anonymous">
+          <data type="boolean"/>
+        </attribute>
+      </group>
+    </choice>
+    <data type="string"/>
   </define>
 </grammar>

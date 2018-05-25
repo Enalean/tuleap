@@ -32,6 +32,14 @@ use TuleapTestCase;
 class GitXMLExporterTest extends TuleapTestCase
 {
     /**
+     * @var \UserManager
+     */
+    private $user_manager;
+    /**
+     * @var \Git_LogDao
+     */
+    private $git_log_dao;
+    /**
      * @var GitXmlExporter
      */
     private $xml_exporter;
@@ -109,6 +117,10 @@ class GitXMLExporterTest extends TuleapTestCase
             array($repository, $forked_repository, $empty_repository)
         );
 
+        $this->user_manager = mock(\UserManager::class);
+
+        $this->git_log_dao = mock('Git_LogDao');
+
         $this->xml_exporter = new GitXmlExporter(
             mock('Project'),
             $this->permission_manager,
@@ -116,7 +128,13 @@ class GitXMLExporterTest extends TuleapTestCase
             $repository_factory,
             mock('Logger'),
             mock('System_Command'),
-            mock('Tuleap\GitBundle')
+            mock('Tuleap\GitBundle'),
+            $this->git_log_dao,
+            $this->user_manager,
+            new \UserXMLExporter(
+                $this->user_manager,
+                new \UserXMLExportedCollection(new \XML_RNGValidator(), new \XML_SimpleXMLCDATAFactory())
+            )
         );
 
         $data           = '<?xml version="1.0" encoding="UTF-8"?>
@@ -241,5 +259,30 @@ class GitXMLExporterTest extends TuleapTestCase
 
         $wplus = $this->xml_tree->git->repository->wplus->ugroup;
         $this->assertEqual((string) $wplus, null);
+    }
+
+    public function itExportGitLastPushDateData()
+    {
+        stub($this->git_log_dao)->getLastPushForRepository()->returns([
+            'repository_id'  => 2,
+            'user_id'        => 102,
+            'push_date'      => 1527145976,
+            'commits_number' => 1,
+            'refname'        => "refs/heads/master",
+            'operation_type' => "create",
+            'refname_type'   => "branch"
+        ]);
+
+        stub($this->user_manager)->getUserById()->returns(aUser()->withUserName('my user name')->build());
+
+        $this->xml_exporter->exportToXml($this->xml_tree, $this->zip, '');
+
+        $this->assertEqual(count($this->xml_tree->git->repository), 2);
+
+        $exported_repository = $this->xml_tree->git->repository[0];
+        $last_push_date      = $exported_repository->{'last-push-date'};
+        $attrs               = $last_push_date->attributes();
+        $this->assertEqual((string)$last_push_date->user, 'my user name');
+        $this->assertEqual((string)$attrs['push_date'], 1527145976);
     }
 }
