@@ -197,9 +197,7 @@ class TrackerXmlExport
 
         if ($tracker->isActive()) {
             $xml_content = $xml_content->addChild('trackers');
-            $this->exportMapping($xml_content, $tracker);
-            $this->validateExport($xml_content);
-            $this->artifact_xml_export->export($tracker, $xml_content, $user, $archive);
+            $this->exportTrackerAndArtifacts($user, $archive, $xml_content, $tracker);
         }
 
         return $xml_content;
@@ -216,9 +214,10 @@ class TrackerXmlExport
             '<?xml version="1.0" encoding="UTF-8"?>
                                          <trackers />'
         );
-        $this->exportMapping($xml_content, $tracker);
 
-        $this->validateExport($xml_content);
+        if ($tracker->isActive()) {
+            $this->exportTrackerAndArtifacts($user, $archive, $xml_content, $tracker);
+        }
 
         $this->artifact_xml_export->exportBunchOfArtifactsForArchive($artifacts, $xml_content, $user, $archive);
 
@@ -230,14 +229,18 @@ class TrackerXmlExport
         $this->rng_validator->validate($xml_trackers, dirname(TRACKER_BASE_DIR) . '/www/resources/trackers.rng');
     }
 
-    private function exportMapping(SimpleXMLElement $xml_trackers, Tracker $tracker)
+    private function exportMapping(SimpleXMLElement $tracker_xml, Tracker $tracker)
     {
         $xml_field_mapping = array();
 
-        if ($tracker->isActive()) {
-            $tracker_xml = $xml_trackers->addChild('tracker');
+        $tracker->exportToXMLInProjectExportContext($tracker_xml, $this->user_xml_exporter, $xml_field_mapping);
+    }
 
-            $tracker->exportToXMLInProjectExportContext($tracker_xml, $this->user_xml_exporter, $xml_field_mapping);
-        }
+    private function exportTrackerAndArtifacts(PFUser $user, ArchiveInterface $archive, SimpleXMLElement $xml_content, Tracker $tracker)
+    {
+        $tracker_xml_node = $xml_content->addChild('tracker');
+        $this->exportMapping($tracker_xml_node, $tracker);
+        $this->artifact_xml_export->export($tracker, $tracker_xml_node, $user, $archive);
+        $this->validateExport($xml_content);
     }
 }
