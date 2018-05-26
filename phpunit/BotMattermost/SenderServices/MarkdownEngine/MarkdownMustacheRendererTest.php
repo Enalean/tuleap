@@ -20,11 +20,16 @@
 
 namespace Tuleap\BotMattermost\SenderServices\MarkdownEngine;
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+
 require_once __DIR__ . '/../../../bootstrap.php';
 
-class MarkdownMustacheRendererTest extends \TuleapTestCase
+class MarkdownMustacheRendererTest extends TestCase
 {
-    public function itVerifiesThatMarkdownEngineConvertSpecialCharactersIntoHtmlEntities()
+    use MockeryPHPUnitIntegration;
+
+    public function testItVerifiesThatMarkdownEngineConvertSpecialCharactersIntoHtmlEntities()
     {
         $renderer = new MarkdownMustacheRenderer(
             \Mockery::spy(\Tuleap\Templating\TemplateCache::class),
@@ -37,7 +42,7 @@ class MarkdownMustacheRendererTest extends \TuleapTestCase
             array('text' => $text)
         );
 
-        $this->assertEqual(
+        $this->assertEquals(
             $result,
             '&#33;&#91;my&#93;&#40;text&#41;&#124;&#123;&#126;&#125;&#92;&#42;&#43;&#45;&#46;&#95;&#36;&#62;&#96;'
         );

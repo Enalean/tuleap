@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,6 +21,7 @@
 namespace Tuleap\BotMattermost\Controller;
 
 
+use BaseLanguage;
 use EventManager;
 use Exception;
 use HTTPRequest;
@@ -29,6 +30,7 @@ use Feedback;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\BotMattermost\BotMattermostDeleted;
 use Tuleap\BotMattermost\Presenter\AdminPresenter;
+use Tuleap\Theme\BurningParrot\BurningParrotTheme;
 use Valid_HTTPURI;
 use Tuleap\BotMattermost\Bot\BotFactory;
 use Tuleap\BotMattermost\Exception\CannotCreateBotException;
@@ -46,11 +48,28 @@ class AdminController
     private $bot_factory;
     private $event_manager;
 
-    public function __construct(CSRFSynchronizerToken $csrf, BotFactory $bot_factory, EventManager $event_manager)
-    {
-        $this->csrf          = $csrf;
-        $this->bot_factory   = $bot_factory;
-        $this->event_manager = $event_manager;
+    /**
+     * @var BurningParrotTheme
+     */
+    private $burning_parrot_theme;
+
+    /**
+     * @var BaseLanguage
+     */
+    private $language;
+
+    public function __construct(
+        CSRFSynchronizerToken $csrf,
+        BotFactory $bot_factory,
+        EventManager $event_manager,
+        BurningParrotTheme $burning_parrot_theme,
+        BaseLanguage $language
+    ) {
+        $this->csrf                 = $csrf;
+        $this->bot_factory          = $bot_factory;
+        $this->event_manager        = $event_manager;
+        $this->burning_parrot_theme = $burning_parrot_theme;
+        $this->language             = $language;
     }
 
     public function displayIndex()
@@ -81,11 +100,11 @@ class AdminController
                     $request->get('webhook_url'),
                     $request->get('avatar_url')
                 );
-                $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_botmattermost', 'alert_success_add_bot'));
+                $this->burning_parrot_theme->addFeedback(Feedback::INFO, $this->language->getText('plugin_botmattermost', 'alert_success_add_bot'));
             } catch (CannotCreateBotException $e) {
-                $GLOBALS['Response']->addFeedback(Feedback::ERROR, $e->getMessage());
+                $this->burning_parrot_theme->addFeedback(Feedback::ERROR, $e->getMessage());
             } catch (BotAlreadyExistException $e) {
-                $GLOBALS['Response']->addFeedback(Feedback::ERROR, $e->getMessage());
+                $this->burning_parrot_theme->addFeedback(Feedback::ERROR, $e->getMessage());
             }
         }
         $this->redirectToIndex();
@@ -101,9 +120,9 @@ class AdminController
                 $event = new BotMattermostDeleted($bot);
                 $this->bot_factory->deleteBotById($bot->getId());
                 $this->event_manager->processEvent($event);
-                $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_botmattermost','alert_success_delete_bot'));
+                $this->burning_parrot_theme->addFeedback(Feedback::INFO, $this->language->getText('plugin_botmattermost','alert_success_delete_bot'));
             } catch (CannotDeleteBotException $e) {
-                $GLOBALS['Response']->addFeedback(Feedback::ERROR, $e->getMessage());
+                $this->burning_parrot_theme->addFeedback(Feedback::ERROR, $e->getMessage());
             }
         }
         $this->redirectToIndex();
@@ -121,9 +140,9 @@ class AdminController
                     $request->get('avatar_url'),
                     $id
                 );
-                $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_botmattermost', 'alert_success_edit_bot'));
+                $this->burning_parrot_theme->addFeedback(Feedback::INFO, $this->language->getText('plugin_botmattermost', 'alert_success_edit_bot'));
             } catch (CannotUpdateBotException $e) {
-                $GLOBALS['Response']->addFeedback(Feedback::ERROR, $e->getMessage());
+                $this->burning_parrot_theme->addFeedback(Feedback::ERROR, $e->getMessage());
             }
         }
         $this->redirectToIndex();
@@ -132,7 +151,7 @@ class AdminController
     private function validPostArgument(HTTPRequest $request)
     {
         if (! $request->existAndNonEmpty('bot_name') || ! $request->existAndNonEmpty('webhook_url')) {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_botmattermost', 'alert_error_empty_input'));
+            $this->burning_parrot_theme->addFeedback(Feedback::ERROR, $this->language->getText('plugin_botmattermost', 'alert_error_empty_input'));
             return false;
         }
 
@@ -156,7 +175,7 @@ class AdminController
         if ($valid_url->validate($url)) {
             return true;
         } else {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_botmattermost', 'alert_error_invalid_url'));
+            $this->burning_parrot_theme->addFeedback(Feedback::ERROR, $this->language->getText('plugin_botmattermost', 'alert_error_invalid_url'));
             return false;
         }
     }
@@ -167,19 +186,19 @@ class AdminController
         if ($this->bot_factory->getBotById($id)) {
             return true;
         } else {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_botmattermost', 'alert_error_invalid_id'));
+            $this->burning_parrot_theme->addFeedback(Feedback::ERROR, $this->language->getText('plugin_botmattermost', 'alert_error_invalid_id'));
             return false;
         }
     }
 
     private function redirectToAdminSectionWithErrorFeedback(Exception $e)
     {
-        $GLOBALS['Response']->addFeedback(Feedback::ERROR, $e->getMessage());
-        $GLOBALS['Response']->redirect('/admin/');
+        $this->burning_parrot_theme->addFeedback(Feedback::ERROR, $e->getMessage());
+        $this->burning_parrot_theme->redirect('/admin/');
     }
 
     private function redirectToIndex()
     {
-        $GLOBALS['Response']->redirect(BOT_MATTERMOST_BASE_URL.'/admin/');
+        $this->burning_parrot_theme->redirect(BOT_MATTERMOST_BASE_URL.'/admin/');
     }
 }

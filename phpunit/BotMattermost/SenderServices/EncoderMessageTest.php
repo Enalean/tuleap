@@ -22,11 +22,13 @@ namespace Tuleap\BotMattermost\SenderServices;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 use Tuleap\BotMattermostGit\SenderServices\Attachment;
-use TuleapTestCase;
 
-class EncoderMessageTest extends TuleapTestCase
+class EncoderMessageTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
 
     /**
      * @var EncoderMessage
@@ -46,7 +48,7 @@ class EncoderMessageTest extends TuleapTestCase
         ]);
     }
 
-    public function itVerifiesThatGeneratedMessageWithTextReturnsPostFormatForMattermost()
+    public function testItVerifiesThatGeneratedMessageWithTextReturnsPostFormatForMattermost()
     {
         $message = new Message();
         $message->setText("text");
@@ -54,13 +56,13 @@ class EncoderMessageTest extends TuleapTestCase
         $channel = "channel";
         $result  = $this->encoder_message->generateJsonMessage($this->bot, $message, $channel);
 
-        $this->assertEqual(
+        $this->assertEquals(
             $result,
             '{"username":"toto","channel":"channel","icon_url":"https:\/\/avatar_url.com","text":"text"}'
         );
     }
 
-    public function itVerifiesThatGeneratedMessageWithAttachmentReturnsPostFormatForMattermost()
+    public function testItVerifiesThatGeneratedMessageWithAttachmentReturnsPostFormatForMattermost()
     {
         $message    = new Message();
         $attachment = new Attachment('pre-text', 'title', 'https://www.example.com', 'description');
@@ -69,7 +71,7 @@ class EncoderMessageTest extends TuleapTestCase
         $message->addAttachment($attachment);
 
         $result = $this->encoder_message->generateJsonMessage($this->bot, $message, $channel);
-        $this->assertEqual(
+        $this->assertEquals(
             $result,
             '{"username":"toto","channel":"channel","icon_url":"https:\/\/avatar_url.com","attachments":[{"color":"#36a64f","pretext":"pre-text","title":"title","title_link":"https:\/\/www.example.com","text":"description"}]}'
         );

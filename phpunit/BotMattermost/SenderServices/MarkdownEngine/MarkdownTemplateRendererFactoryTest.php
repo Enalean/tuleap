@@ -20,15 +20,20 @@
 
 namespace Tuleap\BotMattermost\SenderServices\MarkdownEngine;
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+
 require_once __DIR__ . '/../../../bootstrap.php';
 
-class MarkdownTemplateRendererFactoryTest extends \TuleapTestCase
+class MarkdownTemplateRendererFactoryTest extends TestCase
 {
-    public function itGetsAMarkdownRenderer()
+    use MockeryPHPUnitIntegration;
+
+    public function testItGetsAMarkdownRenderer()
     {
-        $this->assertIsA(
-            MarkdownTemplateRendererFactory::build(),
-            \Tuleap\BotMattermost\SenderServices\MarkdownEngine\MarkdownTemplateRendererFactory::class
+        $this->assertInstanceOf(
+            \Tuleap\BotMattermost\SenderServices\MarkdownEngine\MarkdownTemplateRendererFactory::class,
+            MarkdownTemplateRendererFactory::build()
         );
     }
 }

@@ -22,10 +22,13 @@ namespace Tuleap\BotMattermost\SenderServices;
 
 require_once __DIR__.'/../../bootstrap.php';
 
-use TuleapTestCase;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 
-class SenderTest extends TuleapTestCase
+class SenderTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /**
      * @var Sender
      */
@@ -49,7 +52,7 @@ class SenderTest extends TuleapTestCase
         );
     }
 
-    public function itVerifiedThatPushNotificationForEachChannels()
+    public function testItVerifiedThatPushNotificationForEachChannels()
     {
         $message  = new Message();
         $channels = array('channel1', 'channel2');

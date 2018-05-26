@@ -22,14 +22,18 @@ namespace Tuleap\BotMattermost\Controller;
 
 require_once __DIR__ . '/../bootstrap.php';
 
+use BaseLanguage;
 use CSRFSynchronizerToken;
 use EventManager;
 use HTTPRequest;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 use Tuleap\BotMattermost\Bot\Bot;
-use TuleapTestCase;
+use Tuleap\Theme\BurningParrot\BurningParrotTheme;
 
-class AdminControllerTest extends TuleapTestCase
+class AdminControllerTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
 
     /**
      * @var AdminController
@@ -44,10 +48,20 @@ class AdminControllerTest extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->csrf             = \Mockery::spy(CSRFSynchronizerToken::class);
-        $this->bot_factory      = \Mockery::spy(\Tuleap\BotMattermost\Bot\BotFactory::class);
-        $this->event_manager    = \Mockery::spy(EventManager::class);
-        $this->admin_controller = new AdminController($this->csrf, $this->bot_factory, $this->event_manager);
+
+        $this->csrf                 = \Mockery::spy(CSRFSynchronizerToken::class);
+        $this->bot_factory          = \Mockery::spy(\Tuleap\BotMattermost\Bot\BotFactory::class);
+        $this->event_manager        = \Mockery::spy(EventManager::class);
+        $this->burning_parrot_theme = \Mockery::spy(BurningParrotTheme::class);
+        $this->language             = \Mockery::spy(BaseLanguage::class);
+        $this->admin_controller     = new AdminController(
+            $this->csrf,
+            $this->bot_factory,
+            $this->event_manager,
+            $this->burning_parrot_theme,
+            $this->language
+        );
+
         $this->http_request     = \Mockery::spy(HTTPRequest::class);
 
         HTTPRequest::setInstance($this->http_request);
@@ -56,6 +70,7 @@ class AdminControllerTest extends TuleapTestCase
     public function tearDown()
     {
         HTTPRequest::clearInstance();
+
         parent::tearDown();
     }
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2016. All rights reserved.
+ * Copyright Enalean (c) 2016 - 2018. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -24,3 +24,4 @@
 
 require_once(dirname(__FILE__) . '/../include/autoload.php');
 require_once(dirname(__FILE__) . '/../include/constants.php');
+require_once(dirname(__FILE__) . '/../../../src/common/constants.php');
