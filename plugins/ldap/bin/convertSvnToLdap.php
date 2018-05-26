@@ -100,7 +100,7 @@ function svn_utils_convert_access_file_to_ldap(LDAP_UserManager $ldapUm, $srcFil
                         $group = $matches[1];
                         $users = $matches[2];
 
-                        $uarray = array_map('trim', split(",", strtolower($users)));
+                        $uarray = array_map('trim', explode(",", strtolower($users)));
                         $ldapLogins = array();
                         foreach($uarray as $user) {
                             if (strpos($user, '@') === 0) {

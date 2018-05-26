@@ -181,7 +181,7 @@ class LDAP_UserManager {
      */
     function getUserIdsFromUserList($userList) {
         $userIds = array();
-        $userList = array_map('trim', split('[,;]', $userList));
+        $userList = array_map('trim', preg_split('/[,;]/', $userList));
         foreach($userList as $u) {
             $user = $this->getUserManager()->findUser($u);
             if($user) {
@@ -521,7 +521,7 @@ class LDAP_UserManager {
         $attributes = $this->user_sync->getSyncAttributes($this->ldap);
         $ldapSearch = false;
 
-        foreach (split(';', $this->ldap->getLDAPParam('people_dn')) as $people_dn) {
+        foreach (explode(';', $this->ldap->getLDAPParam('people_dn')) as $people_dn) {
             $ldapSearch = $this->ldap->search($people_dn, $ldap_query, LDAP::SCOPE_ONELEVEL, $attributes);
             if (count($ldapSearch) == 1 && $ldapSearch != false) {
                 break;
