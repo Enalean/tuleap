@@ -93,7 +93,7 @@ class DynamicCredentialsResource
      */
     public function deleteUsername($username, $signature)
     {
-        $this->optionsUsername();
+        $this->optionsUsername($username);
         $request_signature_verifier = $this->getRequestSignatureVerifier();
         if (! $request_signature_verifier->isSignatureValid($signature, $username)) {
             throw new RestException(403, 'Invalid signature');
