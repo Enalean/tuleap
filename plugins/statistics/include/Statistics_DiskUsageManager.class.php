@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2009. All Rights Reserved.
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -428,7 +428,7 @@ class Statistics_DiskUsageManager {
             $output = array();
             exec("nice -n 19 du -s --block-size=1 $dir", $output, $returnValue);
             if ($returnValue === 0) {
-                $size = split("\t", $output[0]);
+                $size = explode("\t", $output[0]);
                 return $size[0];
             }
         }
