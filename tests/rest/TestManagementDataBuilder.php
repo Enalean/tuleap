@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2017. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -39,52 +39,10 @@ class TestManagementDataBuilder extends REST_TestDataBuilder
 
     public function setUp()
     {
-        echo 'Setup TestManagement REST tests configuration';
-
-        $this->installPlugin();
-        $this->activatePlugin('testmanagement');
+        echo 'Setup TestManagement REST tests configuration' . PHP_EOL;
 
         $user = $this->user_manager->getUserByUserName(self::USER_TESTER_NAME);
         $user->setPassword(self::USER_TESTER_PASS);
         $this->user_manager->updateDb($user);
-
-        $project  = $this->project_manager->getProjectByUnixName(self::PROJECT_TEST_MGMT_SHORTNAME);
-        $trackers = $this->tracker_factory->getTrackersByGroupId($project->getID());
-
-        foreach ($trackers as $tracker) {
-            if ($tracker->getItemName() === 'campaign') {
-                $campaign_tracker_id = $tracker->getId();
-            } elseif ($tracker->getItemName() === 'test_def') {
-                $test_def_tracker_id = $tracker->getId();
-            } elseif ($tracker->getItemName() === 'test_exec') {
-                $test_exec_tracker_id = $tracker->getId();
-            } elseif ($tracker->getItemName() === 'bugs') {
-                $issue_tracker_id = $tracker->getId();
-            }
-        }
-
-        $this->configureTestManagementPluginForProject(
-            $project,
-            $campaign_tracker_id,
-            $test_def_tracker_id,
-            $test_exec_tracker_id,
-            $issue_tracker_id
-        );
-    }
-
-    private function configureTestManagementPluginForProject(
-        Project $project,
-        $campaign_tracker_id,
-        $test_def_tracker_id,
-        $test_exec_tracker_id,
-        $issue_tracker_id
-    ) {
-        $config = new Config(new Dao());
-        $config->setProjectConfiguration($project, $campaign_tracker_id, $test_def_tracker_id, $test_exec_tracker_id, $issue_tracker_id);
-    }
-
-    private function installPlugin() {
-        $dbtables = new DBTablesDAO();
-        $dbtables->updateFromFile(dirname(__FILE__).'/../../db/install.sql');
     }
 }
