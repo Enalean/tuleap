@@ -48,8 +48,8 @@ if ($request->exist('wsdl')) {
     require_once TRACKER_BASE_DIR.'/wsdl.php';
 
     // Call the service method to initiate the transaction and send the response
-    $HTTP_RAW_POST_DATA = isset($HTTP_RAW_POST_DATA) ? $HTTP_RAW_POST_DATA : '';
-    $server->service($HTTP_RAW_POST_DATA);
+    $post_data = file_get_contents("php://input") ?: '';
+    $server->service($post_data);
 
 } else {
     require_once TRACKER_BASE_DIR.'/Tracker/SOAPServer.class.php';
