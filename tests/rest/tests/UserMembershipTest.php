@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,14 +24,20 @@ require_once dirname(__FILE__).'/../lib/autoload.php';
 /**
  * @group UserMembershipTests
  */
-class UserMembershipsTest extends RestBase {
+class UserMembershipsTest extends RestBase
+{
 
-    protected function getResponse($request) {
-        return parent::getResponse($request, REST_TestDataBuilder::ADMIN_USER_NAME);
+    protected function getResponse($request, $user_name = REST_TestDataBuilder::TEST_USER_1_NAME)
+    {
+        return parent::getResponse($request, $user_name);
     }
 
-    public function testGET() {
-        $response = $this->getResponse($this->client->get('users_memberships/?query=with_ssh_key&limit=3&offset=0'));
+    public function testGET()
+    {
+        $response = $this->getResponse(
+            $this->client->get('users_memberships/?query=with_ssh_key&limit=3&offset=0'),
+            REST_TestDataBuilder::ADMIN_USER_NAME
+        );
 
         $user2_groups = array(
             "site_active",
@@ -45,8 +51,9 @@ class UserMembershipsTest extends RestBase {
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
-    public function testOptions() {
-        $response = $this->getResponse($this->client->options('users_memberships'));
+    public function testOptions()
+    {
+        $response = $this->getResponse($this->client->options('users_memberships'), REST_TestDataBuilder::ADMIN_USER_NAME);
 
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals($response->getStatusCode(), 200);
