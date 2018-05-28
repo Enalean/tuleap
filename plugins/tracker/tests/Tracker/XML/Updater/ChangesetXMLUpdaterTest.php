@@ -186,7 +186,7 @@ class Tracker_XML_Updater_ChangesetXMLUpdaterTest extends TuleapTestCase {
 
         $this->assertEqual((int)$artifact_xml['tracker_id'], 201);
         $this->assertEqual((string)$artifact_xml->changeset->submitted_on, date('c', time()));
-        $this->assertEqual((int)$artifact_xml->changeset->submitted_by, $this->user->getId());
+        $this->assertEqual((int)$artifact_xml->changeset->submitted_by, 101);
 
         $this->assertEqual(count($artifact_xml->changeset->field_change), 1);
         $this->assertEqual($artifact_xml->changeset->field_change[0]['field_name'], 'v2desc');

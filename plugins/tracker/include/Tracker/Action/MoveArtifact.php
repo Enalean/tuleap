@@ -110,7 +110,7 @@ class MoveArtifact
             $source_tracker,
             $target_tracker,
             $xml_artifacts->artifact,
-            $user,
+            $artifact->getSubmittedByUser(),
             $artifact->getSubmittedOn()
         );
 
