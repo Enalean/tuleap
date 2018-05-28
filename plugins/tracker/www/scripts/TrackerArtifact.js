@@ -1,6 +1,6 @@
 /**
+* Copyright (c) Enalean, 2016-2018. All Rights Reserved.
 * Copyright (c) Xerox Corporation, Codendi Team, 2001-2008. All rights reserved
-* Copyright (c) Enalean, 2016-2017. All Rights Reserved.
 *
 * Originally written by Nicolas Terray, 2008
 *
@@ -120,14 +120,19 @@ document.observe('dom:loaded', function () {
     });
 
     $$('.tracker_artifact_field  textarea').each(function (element) {
-        var html_id     = element.id;
-        var id          = html_id.match(/_(\d+)$/)[1];
-        var name        = 'artifact['+ id +'][format]';
-        var html_format = true;
-        var body_format = $('artifact['+id+']_body_format');
+        var html_id  = element.id;
+        var field_id = html_id.match(/_(\d+)$/)[1];
+        var name     = element.dataset.formatName || 'artifact[' + field_id + '][format]';
+        var is_html  = true;
 
-        if (body_format === null || body_format.value == 'text') {
-            html_format = false;
+        if (element.dataset.format) {
+            is_html = element.dataset.format !== 'text';
+        } else {
+            var body_format = $('artifact[' + field_id + ']_body_format');
+
+            if (body_format === null || body_format.value == 'text') {
+                is_html = false;
+            }
         }
 
         new tuleap.textarea.RTE(
@@ -135,9 +140,9 @@ document.observe('dom:loaded', function () {
             {
                 toggle: true,
                 default_in_html: false,
-                id: id,
+                id: html_id,
                 name: name,
-                htmlFormat: html_format
+                htmlFormat: is_html
             }
         );
     });
