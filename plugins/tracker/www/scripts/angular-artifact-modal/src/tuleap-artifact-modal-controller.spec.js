@@ -1,5 +1,5 @@
 import artifact_modal_module from './tuleap-artifact-modal.js';
-import angular               from 'angular';
+import angular from 'angular';
 import 'angular-mocks';
 
 import BaseModalController from './tuleap-artifact-modal-controller.js';
@@ -14,6 +14,10 @@ import {
     rewire$getFollowupsComments,
     restore as restoreRest
 } from './rest/rest-service.js';
+import {
+    rewire$getAllFileFields,
+    restore as restoreFile
+} from './tuleap-artifact-modal-fields/file-field/file-field-detector.js';
 
 describe("TuleapArtifactModalController", () => {
     let $scope,
@@ -30,7 +34,8 @@ describe("TuleapArtifactModalController", () => {
         isInCreationMode,
         getFollowupsComments,
         createArtifact,
-        editArtifact;
+        editArtifact,
+        getAllFileFields;
 
     beforeEach(() => {
         angular.mock.module(artifact_modal_module, function($provide) {
@@ -112,11 +117,14 @@ describe("TuleapArtifactModalController", () => {
         rewire$createArtifact(createArtifact);
         editArtifact = jasmine.createSpy("editArtifact");
         rewire$editArtifact(editArtifact);
+        getAllFileFields = jasmine.createSpy("getAllFileFields");
+        rewire$getAllFileFields(getAllFileFields);
     });
 
     afterEach(() => {
         restoreCreationMode();
         restoreRest();
+        restoreFile();
     });
 
     describe("init() -", function() {
@@ -154,39 +162,10 @@ describe("TuleapArtifactModalController", () => {
         });
     });
 
-    describe("isThereAtLeastOneFileField() -", function() {
-        beforeEach(function() {
-            ArtifactModalController = $controller(BaseModalController, controller_params);
-        });
-
-        it("Given that there were two file fields in the model's field values, when I check if there is at least one file field, then it will return true", function() {
-            var values = [
-                { field_id: 95, type: "file" },
-                { field_id: 72, type: "int" },
-                { field_id: 64, type: "file" }
-            ];
-            ArtifactModalController.values = values;
-
-            var result = ArtifactModalController.isThereAtLeastOneFileField();
-
-            expect(result).toBeTruthy();
-        });
-
-        it("Given that there was no file field in the model's field values, when I check if there is at least one file field, then it will return false", function() {
-            var values = [
-                { field_id: 62, type: "int" }
-            ];
-            ArtifactModalController.values = values;
-
-            var result = ArtifactModalController.isThereAtLeastOneFileField();
-
-            expect(result).toBeFalsy();
-        });
-    });
-
     describe("submit() - Given a tracker id, field values, a callback function", () => {
         beforeEach(() => {
             TuleapArtifactModalValidateService.validateArtifactFieldsValues.and.callFake(values => values);
+            getAllFileFields.and.returnValue([]);
         });
 
         it("and no artifact_id, when I submit the modal to Tuleap, then the field values will be validated, the artifact will be created , the modal will be closed and the callback will be called", () => {
@@ -273,6 +252,7 @@ describe("TuleapArtifactModalController", () => {
             editArtifact.and.returnValue(edit_request.promise);
             var values = [first_file_field_value, second_file_field_value];
             ArtifactModalController.values = values;
+            getAllFileFields.and.returnValue(values);
 
             ArtifactModalController.submit();
             first_upload.resolve([47]);
@@ -289,6 +269,7 @@ describe("TuleapArtifactModalController", () => {
         it("and given the server responded an error, when I submit the modal to Tuleap, then the modal will not be closed and the callback won't be called", () => {
             editArtifact.and.returnValue($q.reject());
             ArtifactModalController = $controller(BaseModalController, controller_params);
+            ArtifactModalController.values = [];
 
             ArtifactModalController.submit();
             $scope.$apply();

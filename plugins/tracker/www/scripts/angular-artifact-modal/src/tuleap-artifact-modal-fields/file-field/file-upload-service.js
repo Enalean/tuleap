@@ -2,24 +2,18 @@ import {
     uploadTemporaryFile as uploadFile,
     uploadAdditionalChunk
 } from '../../rest/rest-service.js';
+import { file_upload_rules } from './file-upload-rules-state.js';
 
 export default FileUploadService;
 
-FileUploadService.$inject = [
-    '$q',
-    'TuleapArtifactModalFileUploadRules'
-];
+FileUploadService.$inject = ['$q'];
 
-function FileUploadService(
-    $q,
-    TuleapArtifactModalFileUploadRules
-) {
+function FileUploadService($q) {
     const self = this;
     Object.assign(self, {
         uploadAllTemporaryFiles,
         uploadTemporaryFile
     });
-    var file_upload_rules = TuleapArtifactModalFileUploadRules;
 
     function uploadAllTemporaryFiles(temporary_files) {
         var promises = temporary_files.map(function(file) {

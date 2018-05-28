@@ -8,10 +8,10 @@ import {
 } from './modal-creation-mode-state.js';
 import {
     getArtifactFieldValues,
-    getFileUploadRules,
     getTracker,
     getUserPreference
 } from './rest/rest-service.js';
+import { updateFileUploadRulesWhenNeeded } from './tuleap-artifact-modal-fields/file-field/file-upload-rules-state.js';
 
 export default ArtifactModalService;
 
@@ -23,8 +23,7 @@ ArtifactModalService.$inject = [
     'TuleapArtifactModalFormTreeBuilderService',
     'TuleapArtifactFieldValuesService',
     'TuleapArtifactModalWorkflowService',
-    'TuleapArtifactModalFieldDependenciesService',
-    'TuleapArtifactModalFileUploadRules'
+    'TuleapArtifactModalFieldDependenciesService'
 ];
 
 function ArtifactModalService(
@@ -35,8 +34,7 @@ function ArtifactModalService(
     TuleapArtifactModalFormTreeBuilderService,
     TuleapArtifactFieldValuesService,
     TuleapArtifactModalWorkflowService,
-    TuleapArtifactModalFieldDependenciesService,
-    TuleapArtifactModalFileUploadRules
+    TuleapArtifactModalFieldDependenciesService
 ) {
     const self = this;
     Object.assign(self, {
@@ -126,8 +124,7 @@ function ArtifactModalService(
             applyFieldDependencies(transformed_tracker, modal_model.values);
             modal_model.ordered_fields = TuleapArtifactModalFormTreeBuilderService.buildFormTree(transformed_tracker);
 
-            var file_upload_rules_promise = updateFileUploadRules();
-
+            const file_upload_rules_promise = $q.when(updateFileUploadRulesWhenNeeded(transformed_tracker.fields));
             return file_upload_rules_promise;
         }).then(function() {
             return modal_model;
@@ -152,10 +149,10 @@ function ArtifactModalService(
             modal_model.ordered_fields = transformed_tracker.ordered_fields;
             modal_model.color          = transformed_tracker.color_name;
 
-            var get_values_promise                = getArtifactValues(artifact_id),
+            const get_values_promise              = getArtifactValues(artifact_id),
                 comment_order_preference_promise  = getFollowupsCommentsOrderUserPreference(user_id, tracker_id, modal_model),
                 comment_format_preference_promise = getTextFieldsFormatUserPreference(user_id, modal_model),
-                file_upload_rules_promise         = updateFileUploadRules();
+                file_upload_rules_promise         = $q.when(updateFileUploadRulesWhenNeeded(transformed_tracker.fields));
 
             return $q.all([
                 get_values_promise,
@@ -254,17 +251,6 @@ function ArtifactModalService(
         };
 
         TuleapArtifactModalFieldDependenciesService.setUpFieldDependenciesActions(tracker, filterTargetFieldValues);
-    }
-
-    function updateFileUploadRules() {
-        var promise = $q.when(getFileUploadRules())
-            .then(function(data) {
-                TuleapArtifactModalFileUploadRules.disk_quota     = data.disk_quota;
-                TuleapArtifactModalFileUploadRules.disk_usage     = data.disk_usage;
-                TuleapArtifactModalFileUploadRules.max_chunk_size = data.max_chunk_size;
-            });
-
-        return promise;
     }
 
     function mapPrefillsToFieldValues(prefill_values, tracker_fields) {
