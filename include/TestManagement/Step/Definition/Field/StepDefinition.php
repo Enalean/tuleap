@@ -22,18 +22,19 @@ namespace Tuleap\TestManagement\Step\Definition\Field;
 
 use Codendi_HTMLPurifier;
 use DataAccessObject;
+use PFUser;
 use ReferenceManager;
 use TemplateRendererFactory;
 use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue;
+use Tracker_Artifact_ChangesetValue_Text;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_FieldVisitor;
 use Tracker_Report_Criteria;
 use Tuleap\TestManagement\Step\Step;
 use Tuleap\TestManagement\Step\StepPresenter;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
-use UserManager;
 
 class StepDefinition extends Tracker_FormElement_Field implements TrackerFormElementExternalField
 {
@@ -202,10 +203,22 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         return $renderer->renderToString(
             'step-def-edit',
             [
-                'field_id' => $this->id,
-                'steps'    => $this->getStepsPresentersFromChangesetValue($value)
+                'field_id'       => $this->id,
+                'steps'          => $this->getStepsPresentersFromChangesetValue($value),
+                'default_format' => $this->getDefaultFormat($this->getCurrentUser())
             ]
         );
+    }
+
+    private function getDefaultFormat(PFUser $user)
+    {
+        $user_preference = $user->getPreference(PFUser::EDITION_DEFAULT_FORMAT);
+
+        if (! $user_preference || $user_preference === Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT) {
+            return Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT;
+        }
+
+        return Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT;
     }
 
     public function fetchArtifactValueWithEditionFormIfEditable(
@@ -255,7 +268,8 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         return $renderer->renderToString(
             'step-def-submit',
             [
-                'id' => $this->id,
+                'id'             => $this->id,
+                'default_format' => $this->getDefaultFormat($this->getCurrentUser())
             ]
         );
     }
@@ -329,7 +343,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
     protected function validate(Tracker_Artifact $artifact, $value)
     {
         $rule = new \Rule_String();
-        foreach ($value['description'] as $submitted_step_description) {
+        foreach ($value['description'] as $key => $submitted_step_description) {
             if (! $rule->isValid($submitted_step_description)) {
                 $GLOBALS['Response']->addFeedback(
                     \Feedback::ERROR,
@@ -340,6 +354,17 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
                     )
                 );
 
+                return false;
+            }
+
+            if (! isset($value['description_format'][$key])) {
+                return false;
+            }
+
+            if (! in_array(
+                $value['description_format'][$key],
+                [Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT, Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT]
+            )) {
                 return false;
             }
         }
@@ -358,7 +383,16 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         $submitted_steps = [];
         $rank            = self::START_RANK;
         foreach ($new_value['description'] as $key => $submitted_step_description) {
-            $submitted_steps[] = new Step($new_value['id'][$key], $submitted_step_description, $rank);
+            $submitted_description_format = Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT;
+            if (isset($new_value['description_format'][$key])) {
+                $submitted_description_format = $new_value['description_format'][$key];
+            }
+            $submitted_steps[] = new Step(
+                $new_value['id'][$key],
+                $submitted_step_description,
+                $submitted_description_format,
+                $rank
+            );
             $rank++;
         }
 
@@ -382,8 +416,30 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         $value,
         Tracker_Artifact_ChangesetValue $previous_changesetvalue = null
     ) {
-        return $this->getValueDao()->create($changeset_value_id, $value) &&
+        $steps = $this->transformSubmittedValuesIntoArrayOfStructuredSteps($value);
+
+        return $this->getValueDao()->create($changeset_value_id, $steps) &&
             $this->extractCrossRefs($artifact, $value);
+    }
+
+    private function transformSubmittedValuesIntoArrayOfStructuredSteps(array $submitted_values)
+    {
+        $steps = [];
+        $rank  = StepDefinition::START_RANK;
+        foreach ($submitted_values['description'] as $key => $description) {
+            $description = trim($description);
+            if (! $description) {
+                continue;
+            }
+            if (! isset($submitted_values['description_format'][$key])) {
+                continue;
+            }
+            $description_format = $submitted_values['description_format'][$key];
+
+            $steps[] = new Step(0, $description, $description_format, $rank);
+        }
+
+        return $steps;
     }
 
     private function extractCrossRefs(Tracker_Artifact $artifact, array $submitted_steps)
@@ -414,7 +470,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         $steps = [];
         $rank  = self::START_RANK;
         foreach ($this->getValueDao()->searchById($value_id) as $row) {
-            $steps[] = new Step($row['id'], $row['description'], $rank);
+            $steps[] = new Step($row['id'], $row['description'], $row['description_format'], $rank);
             $rank++;
         }
 

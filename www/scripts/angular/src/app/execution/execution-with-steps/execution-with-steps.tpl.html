@@ -15,6 +15,13 @@
                 'tlp-badge-secondary': step.status == 'notrun'
             }">{{ step.rank }}</span>
         </div>
-        <div class="steps-step-description" ng-bind-html="step.description"></div>
+        <div class="steps-step-description"
+             ng-bind-html="step.description"
+             ng-if="step.description_format === 'html'"
+        ></div>
+        <div class="steps-step-description steps-step-description-text"
+             ng-bind="step.description"
+             ng-if="step.description_format !== 'html'"
+        ></div>
     </div>
 </section>

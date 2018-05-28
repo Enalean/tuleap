@@ -26,14 +26,17 @@ class Step
     private $id;
     /** @var string */
     private $description;
+    /** @var string */
+    private $description_format;
     /** @var int */
     private $rank;
 
-    public function __construct($id, $description, $rank)
+    public function __construct($id, $description, $description_format, $rank)
     {
-        $this->id          = $id;
-        $this->description = $description;
-        $this->rank        = $rank;
+        $this->id                 = $id;
+        $this->description        = $description;
+        $this->description_format = $description_format;
+        $this->rank               = $rank;
     }
 
     /**
@@ -53,6 +56,14 @@ class Step
     }
 
     /**
+     * @return string
+     */
+    public function getDescriptionFormat()
+    {
+        return $this->description_format;
+    }
+
+    /**
      * @return int
      */
     public function getRank()
@@ -65,6 +76,6 @@ class Step
      */
     public function __toString()
     {
-        return json_encode([$this->id, $this->description, $this->rank]);
+        return json_encode([$this->id, $this->description, $this->description_format, $this->rank]);
     }
 }

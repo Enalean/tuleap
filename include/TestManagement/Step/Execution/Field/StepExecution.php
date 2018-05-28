@@ -320,7 +320,7 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
     {
         $steps = [];
         foreach ($this->getValueDao()->searchById($value_id) as $row) {
-            $step = new Step($row['id'], $row['description'], $row['rank']);
+            $step = new Step($row['id'], $row['description'], $row['description_format'], $row['rank']);
             $steps[] = new StepResult($step, $row['status']);
         }
 

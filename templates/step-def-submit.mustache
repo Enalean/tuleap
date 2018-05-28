@@ -1,9 +1,7 @@
-<p class="text-warning">
-    <i class="icon-warning-sign"></i>
-    {{# dgettext }}tuleap-testmanagement | Please note that HTML format is not supported yet{{/ dgettext }}
-</p>
 <textarea id="field_new_action_0_{{ id }}"
     name="artifact[{{ id }}][description][]"
     rows="10"
     cols="50"
+    data-format="{{ default_format }}"
+    data-format-name="artifact[{{ id }}][description_format][]"
 ></textarea>

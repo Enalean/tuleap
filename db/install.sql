@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS plugin_testmanagement_changeset_value_stepdef(
     id INT(11) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     changeset_value_id INT(11) NOT NULL,
     description TEXT,
+    description_format VARCHAR(10) NOT NULL DEFAULT 'text',
     rank INT(11) UNSIGNED NOT NULL,
     INDEX cvid_idx(changeset_value_id, rank)
 );

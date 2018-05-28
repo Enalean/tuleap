@@ -20,28 +20,35 @@
 
 namespace Tuleap\TestManagement\Step;
 
+use Codendi_HTMLPurifier;
 use Project;
+use Tracker_Artifact_ChangesetValue_Text;
 
 class StepPresenter
 {
     public $id;
     public $raw_description;
+    public $description_format;
     public $purified_description;
     public $rank;
 
     public function __construct(Step $step, Project $project)
     {
 
-        $this->id              = $step->getId();
-        $this->rank            = $step->getRank();
-        $this->raw_description = $step->getDescription();
+        $this->id                   = $step->getId();
+        $this->rank                 = $step->getRank();
+        $this->raw_description      = $step->getDescription();
+        $this->description_format   = $step->getDescriptionFormat();
+        $this->purified_description = $this->getPurifiedDescription($step, $project);
+    }
 
-        $purifier = \Codendi_HTMLPurifier::instance();
+    private function getPurifiedDescription(Step $step, Project $project)
+    {
+        $purifier = Codendi_HTMLPurifier::instance();
+        if ($step->getDescriptionFormat() === Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT) {
+            return $purifier->purifyHTMLWithReferences($step->getDescription(), $project->getID());
+        }
 
-        $this->purified_description = $purifier->purify(
-            $step->getDescription(),
-            CODENDI_PURIFIER_BASIC,
-            $project->getID()
-        );
+        return $purifier->purifyTextWithReferences($step->getDescription(), $project->getID());
     }
 }
