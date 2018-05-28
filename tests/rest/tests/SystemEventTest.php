@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -32,14 +32,14 @@ require_once dirname(__FILE__).'/../lib/autoload.php';
 class SystemEventTest extends RestBase
 {
 
-    protected function getResponse($request)
+    protected function getResponse($request, $user_name = REST_TestDataBuilder::TEST_USER_1_NAME)
     {
-        return parent::getResponse($request, REST_TestDataBuilder::ADMIN_USER_NAME);
+        return parent::getResponse($request, $user_name);
     }
 
     public function testGET()
     {
-        $response      = $this->getResponse($this->client->get('system_event'));
+        $response      = $this->getResponse($this->client->get('system_event'), REST_TestDataBuilder::ADMIN_USER_NAME);
         $response_json = $response->json();
 
         $system_event_01 = $response_json[0];
@@ -50,7 +50,7 @@ class SystemEventTest extends RestBase
 
     public function testOptions()
     {
-        $response = $this->getResponse($this->client->options('system_event'));
+        $response = $this->getResponse($this->client->options('system_event'), REST_TestDataBuilder::ADMIN_USER_NAME);
 
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals($response->getStatusCode(), 200);
