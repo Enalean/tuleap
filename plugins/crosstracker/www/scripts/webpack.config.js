@@ -1,5 +1,4 @@
 const path = require('path');
-const webpack = require('webpack');
 const webpack_configurator = require('../../../../tools/utils/scripts/webpack-configurator.js');
 
 const assets_dir_path = path.resolve(__dirname, '../assets');
@@ -37,16 +36,7 @@ const webpack_config = {
     ]
 };
 
-if (process.env.NODE_ENV === 'production') {
-    webpack_config.plugins = webpack_config.plugins.concat([
-        new webpack.DefinePlugin({
-            'process.env': {
-                NODE_ENV: '"production"'
-            }
-        }),
-        new webpack.optimize.ModuleConcatenationPlugin()
-    ]);
-} else if (
+if (
     process.env.NODE_ENV === 'test' ||
     process.env.NODE_ENV === 'watch'
 ) {

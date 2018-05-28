@@ -21,7 +21,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 const path = require('path');
-const webpack = require('webpack');
 const webpack_configurator = require('../../../../tools/utils/scripts/webpack-configurator.js');
 
 const assets_dir_path = path.resolve(
@@ -57,11 +56,5 @@ const webpack_config_for_charts = {
         webpack_configurator.getMomentLocalePlugin()
     ]
 };
-
-if (process.env.NODE_ENV === 'production') {
-    webpack_config_for_charts.plugins = webpack_config_for_charts.plugins.concat(
-        [new webpack.optimize.ModuleConcatenationPlugin()]
-    );
-}
 
 module.exports = webpack_config_for_charts;

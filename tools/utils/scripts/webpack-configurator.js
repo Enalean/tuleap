@@ -19,6 +19,7 @@
 
 const webpack = require('webpack');
 const WebpackAssetsManifest = require('webpack-assets-manifest');
+const AngularGettextPlugin = require('angular-gettext-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
 const rule_configurations = require('./webpack-rule-configs.js');
 const aliases = require('./webpack-aliases.js');
@@ -47,11 +48,22 @@ function getVueLoaderPlugin() {
     return new VueLoaderPlugin();
 }
 
+function getAngularGettextPlugin() {
+    return new AngularGettextPlugin({
+        extractStrings: {
+            input: "src/**/*.+(js|html)",
+            lineNumbers: false,
+            destination: 'po/template.pot'
+        }
+    });
+}
+
 const configurator = {
+    configureOutput,
+    getAngularGettextPlugin,
     getManifestPlugin,
     getMomentLocalePlugin,
     getVueLoaderPlugin,
-    configureOutput
 };
 Object.assign(configurator, rule_configurations, aliases);
 

@@ -1,5 +1,4 @@
 const path = require('path');
-const webpack = require('webpack');
 const WebpackAssetsManifest = require('webpack-assets-manifest');
 const polyfills_for_fetch = require('../../../../../tools/utils/scripts/ie11-polyfill-names.js')
     .polyfills_for_fetch;
@@ -39,20 +38,14 @@ const webpack_config = {
             output: 'manifest.json',
             merge: true,
             writeToDisk: true,
-            customize: function(key, value) {
+            customize(entry) {
                 return {
-                    key: `tlp.${key}`,
-                    value: value
+                    key: `tlp.${entry.key}`,
+                    value: entry.value
                 };
             }
         })
     ]
 };
-
-if (process.env.NODE_ENV === 'production') {
-    webpack_config.plugins = webpack_config.plugins.concat([
-        new webpack.optimize.ModuleConcatenationPlugin()
-    ]);
-}
 
 module.exports = webpack_config;

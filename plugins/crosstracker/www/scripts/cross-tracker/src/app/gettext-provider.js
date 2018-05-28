@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,7 @@
 import Gettext             from 'node-gettext';
 import french_translations from '../../po/fr.po';
 
-const gettext_provider = new Gettext();
+const gettext_provider = new Gettext({ debug: false });
 gettext_provider.addTranslations('fr_FR', 'cross-tracker', french_translations);
 gettext_provider.setTextDomain('cross-tracker');
 

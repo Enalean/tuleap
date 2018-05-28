@@ -1,5 +1,4 @@
 const path = require('path');
-const webpack = require('webpack');
 const webpack_configurator = require('../../../../../tools/utils/scripts/webpack-configurator.js');
 
 const assets_dir_path = path.resolve(__dirname, './dist');
@@ -39,13 +38,5 @@ const webpack_config = {
         webpack_configurator.getMomentLocalePlugin()
     ]
 };
-
-if (process.env.NODE_ENV === 'production') {
-    webpack_config.plugins = webpack_config.plugins.concat([
-        new webpack.optimize.ModuleConcatenationPlugin()
-    ]);
-} else if (process.env.NODE_ENV === 'watch' || process.env.NODE_ENV === 'test') {
-    webpack_config.devtool = 'eval';
-}
 
 module.exports = webpack_config;

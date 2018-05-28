@@ -23,8 +23,11 @@
     "gulp-scss-lint": "^0.5.0",
     "run-sequence": "^1.2.2"
   },
+  "config": {
+    "bin": "../../../../../node_modules/.bin"
+  },
   "scripts": {
-    "build": "NODE_ENV=production gulp build && ../../../../../node_modules/.bin/webpack --optimize-minimize --bail",
-    "watch": "NODE_ENV=watch concurrently --raw --kill-others '../../../../../node_modules/.bin/webpack --watch' 'gulp watch'"
+    "build": "NODE_ENV=production gulp build && $npm_package_config_bin/webpack --mode=production",
+    "watch": "NODE_ENV=watch concurrently --raw --kill-others '$npm_package_config_bin/webpack --watch --mode=development' 'gulp watch'"
   }
 }

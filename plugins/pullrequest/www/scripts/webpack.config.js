@@ -1,5 +1,4 @@
 const path = require('path');
-const webpack = require('webpack');
 const webpack_configurator = require('../../../../tools/utils/scripts/webpack-configurator.js');
 
 const assets_dir_path = path.resolve(__dirname, '../assets');
@@ -44,17 +43,8 @@ const webpack_config = {
     ]
 };
 
-if (process.env.NODE_ENV === 'production') {
-    webpack_config.plugins.push(
-        new webpack.optimize.ModuleConcatenationPlugin()
-    );
-} else if (process.env.NODE_ENV === 'watch') {
-    webpack_config.devtool = 'eval';
-    webpack_config.module.rules.push(
-        webpack_configurator.rule_angular_gettext_extract_loader
-    );
-} else if (process.env.NODE_ENV === 'test') {
-    webpack_config.devtool = 'eval';
+if (process.env.NODE_ENV === 'watch') {
+    webpack_config.plugins.push(webpack_configurator.getAngularGettextPlugin());
 }
 
 module.exports = webpack_config;

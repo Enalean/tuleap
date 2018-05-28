@@ -22,7 +22,6 @@
  */
 
 const path = require('path');
-const webpack = require('webpack');
 const webpack_configurator = require('../../../../tools/utils/scripts/webpack-configurator.js');
 
 const assets_dir_path = path.resolve(__dirname, '../assets');
@@ -53,11 +52,5 @@ const webpack_config = {
     },
     plugins: [webpack_configurator.getManifestPlugin()]
 };
-
-if (process.env.NODE_ENV === 'production') {
-    webpack_config.plugins = webpack_config.plugins.concat([
-        new webpack.optimize.ModuleConcatenationPlugin()
-    ]);
-}
 
 module.exports = webpack_config;
