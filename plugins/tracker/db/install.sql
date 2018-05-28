@@ -524,11 +524,13 @@ DROP TABLE IF EXISTS  tracker_field_list_bind_decorator;
 CREATE TABLE tracker_field_list_bind_decorator(
     field_id INT(11) NOT NULL,
     value_id INT(11) NOT NULL,
-    red TINYINT UNSIGNED NOT NULL,
-    green TINYINT UNSIGNED NOT NULL,
-    blue TINYINT UNSIGNED NOT NULL,
+    red TINYINT UNSIGNED NULL,
+    green TINYINT UNSIGNED NULL,
+    blue TINYINT UNSIGNED NULL,
+    tlp_color_name VARCHAR (30) NULL,
     PRIMARY KEY idx(field_id, value_id)
 ) ENGINE=InnoDB;
+
 
 DROP TABLE IF EXISTS  tracker_artifact;
 CREATE TABLE tracker_artifact(
