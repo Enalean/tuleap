@@ -176,6 +176,19 @@ class Tracker_XML_Updater_ChangesetXMLUpdaterTest extends TuleapTestCase {
             . '      <value>Content of details</value>'
             . '    </field_change>'
             . '  </changeset>'
+            .'  <changeset>'
+            . '    <submitted_on>2015</submitted_on>'
+            . '    <submitted_by>123</submitted_by>'
+            . '    <field_change field_name="summary">'
+            . '      <value>Second summary value</value>'
+            . '    </field_change>'
+            . '    <field_change field_name="desc">'
+            . '      <value format="html"><![CDATA[<p><strong>Description v2</strong></p>]]></value>'
+            . '    </field_change>'
+            . '    <field_change field_name="details">'
+            . '      <value>Content of details v2</value>'
+            . '    </field_change>'
+            . '  </changeset>'
             . '</artifact>'
         );
 
@@ -185,12 +198,78 @@ class Tracker_XML_Updater_ChangesetXMLUpdaterTest extends TuleapTestCase {
         $this->updater->updateForMoveAction($this->tracker, $target_tracker, $artifact_xml, $this->user, time());
 
         $this->assertEqual((int)$artifact_xml['tracker_id'], 201);
-        $this->assertEqual((string)$artifact_xml->changeset->submitted_on, date('c', time()));
-        $this->assertEqual((int)$artifact_xml->changeset->submitted_by, 101);
+        $this->assertEqual((string)$artifact_xml->changeset[0]->submitted_on, date('c', time()));
+        $this->assertEqual((int)$artifact_xml->changeset[0]->submitted_by, 101);
 
-        $this->assertEqual(count($artifact_xml->changeset->field_change), 1);
-        $this->assertEqual($artifact_xml->changeset->field_change[0]['field_name'], 'v2desc');
-        $this->assertEqual((string)$artifact_xml->changeset->field_change[0]->value, '<p><strong>Description</strong></p>');
-        $this->assertEqual((string)$artifact_xml->changeset->field_change[0]->value['format'], 'html');
+        $this->assertEqual(count($artifact_xml->changeset), 2);
+        $this->assertEqual($artifact_xml->changeset[0]->field_change[0]['field_name'], 'v2desc');
+        $this->assertEqual((string)$artifact_xml->changeset[0]->field_change[0]->value, '<p><strong>Description</strong></p>');
+        $this->assertEqual((string)$artifact_xml->changeset[0]->field_change[0]->value['format'], 'html');
+        $this->assertEqual($artifact_xml->changeset[1]->field_change[0]['field_name'], 'v2desc');
+        $this->assertEqual((string)$artifact_xml->changeset[1]->field_change[0]->value, '<p><strong>Description v2</strong></p>');
+        $this->assertEqual((string)$artifact_xml->changeset[1]->field_change[0]->value['format'], 'html');
+    }
+
+    public function itDoesNotRemoveFirstChangesetTagInMoveAction()
+    {
+        $source_description_field = aMockField()->withName('desc')->build();
+        $target_description_field = aMockField()->withName('v2desc')->build();
+        $target_tracker           = aMockTracker()->withId(201)->build();
+
+        $artifact_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>'
+            . '<artifact>'
+            . '  <changeset>'
+            . '    <submitted_on>2013</submitted_on>'
+            . '    <submitted_by>123</submitted_by>'
+            . '    <field_change field_name="details">'
+            . '      <value>Content of details</value>'
+            . '    </field_change>'
+            . '  </changeset>'
+            . '  <changeset>'
+            . '    <submitted_on>2014</submitted_on>'
+            . '    <submitted_by>123</submitted_by>'
+            . '    <field_change field_name="summary">'
+            . '      <value>Initial summary value</value>'
+            . '    </field_change>'
+            . '    <field_change field_name="desc">'
+            . '      <value format="html"><![CDATA[<p><strong>Description</strong></p>]]></value>'
+            . '    </field_change>'
+            . '    <field_change field_name="details">'
+            . '      <value>Content of details v2</value>'
+            . '    </field_change>'
+            . '  </changeset>'
+            .'  <changeset>'
+            . '    <submitted_on>2015</submitted_on>'
+            . '    <submitted_by>123</submitted_by>'
+            . '    <field_change field_name="summary">'
+            . '      <value>Second summary value</value>'
+            . '    </field_change>'
+            . '    <field_change field_name="desc">'
+            . '      <value format="html"><![CDATA[<p><strong>Description v2</strong></p>]]></value>'
+            . '    </field_change>'
+            . '    <field_change field_name="details">'
+            . '      <value>Content of details v3</value>'
+            . '    </field_change>'
+            . '  </changeset>'
+            . '</artifact>'
+        );
+
+        stub($this->tracker)->getDescriptionField()->returns($source_description_field);
+        stub($target_tracker)->getDescriptionField()->returns($target_description_field);
+
+        $this->updater->updateForMoveAction($this->tracker, $target_tracker, $artifact_xml, $this->user, time());
+
+        $this->assertEqual((int)$artifact_xml['tracker_id'], 201);
+        $this->assertEqual((string)$artifact_xml->changeset[0]->submitted_on, date('c', time()));
+        $this->assertEqual((int)$artifact_xml->changeset[0]->submitted_by, 101);
+
+        $this->assertEqual(count($artifact_xml->changeset), 3);
+        $this->assertNull($artifact_xml->changeset[0]->field_change[0]);
+        $this->assertEqual($artifact_xml->changeset[1]->field_change[0]['field_name'], 'v2desc');
+        $this->assertEqual((string)$artifact_xml->changeset[1]->field_change[0]->value, '<p><strong>Description</strong></p>');
+        $this->assertEqual((string)$artifact_xml->changeset[1]->field_change[0]->value['format'], 'html');
+        $this->assertEqual($artifact_xml->changeset[2]->field_change[0]['field_name'], 'v2desc');
+        $this->assertEqual((string)$artifact_xml->changeset[2]->field_change[0]->value, '<p><strong>Description v2</strong></p>');
+        $this->assertEqual((string)$artifact_xml->changeset[2]->field_change[0]->value['format'], 'html');
     }
 }
