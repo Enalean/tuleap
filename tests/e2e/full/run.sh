@@ -1,8 +1,8 @@
-#!/bin/sh
+#!/bin/bash
 
 # This script will execute all the tests once the platform is ready to accept them
 
-set -ex
+set -euxo pipefail
 
 setup_user() {
     if [ -d /output ]; then
@@ -17,21 +17,24 @@ setup_user() {
     groupmod -g 11007 node
     usermod -u 11007 node
 
-    groupadd -g $gid runner
-    useradd -g $gid -u $uid -m runner
+    if ! id runner 2>&1 >/dev/null; then
+        groupadd -g $gid runner
+        useradd -g $gid -u $uid -m runner
+    fi
 }
 
 is_server_ready() {
-    code=$(curl -k -s -o /dev/null -w "%{http_code}"  https://reverse-proxy/svnplugin/svn-project-01/sample || true)
-    while [ $code -ne 401 ]; do
+    code=$(curl -k -s -o /dev/null -w "%{http_code}"  https://tuleap || true)
+    while [ $code -ne 200 ]; do
         sleep 1
-        code=$(curl -k -s -o /dev/null -w "%{http_code}"  https://reverse-proxy/svnplugin/svn-project-01/sample || true)
+        code=$(curl -k -s -o /dev/null -w "%{http_code}"  https://tuleap || true)
     done
 }
 
 setup_user
 
+su -c 'npm install cypress && `npm bin`/cypress verify' -l runner
+
 is_server_ready
 
-su -c 'npm install cypress && `npm bin`/cypress verify' -l runner
 su -c '`npm bin`/cypress run --project /tuleap/tests/e2e/full' -l runner
