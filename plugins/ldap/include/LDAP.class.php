@@ -147,7 +147,7 @@ class LDAP {
 
     private function authenticatedBindConnect($servers, $binddn, $bindpwd) {
         $ds = false;
-        foreach (split('[,;]', $servers) as $ldap_server) {
+        foreach (preg_split('/[,;]/', $servers) as $ldap_server) {
             $ds = ldap_connect($ldap_server);
             if ($ds) {
                 // Force protocol to LDAPv3 (for AD & recent version of OpenLDAP)
