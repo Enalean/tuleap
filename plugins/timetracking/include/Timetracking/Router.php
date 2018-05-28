@@ -21,6 +21,7 @@
 namespace Tuleap\Timetracking;
 
 use Codendi_Request;
+use CSRFSynchronizerToken;
 use Feedback;
 use PFUser;
 use Tracker;
@@ -94,9 +95,9 @@ class Router
 
                     break;
                 case "add-time":
-                        $artifact = $this->getArtifactFromRequest($request, $user);
+                    $artifact = $this->getArtifactFromRequest($request, $user);
 
-                    $this->time_controller->addTimeForUser($request, $user, $artifact);
+                    $this->time_controller->addTimeForUser($request, $user, $artifact, $this->getCSRFForArtifact($artifact));
 
                     $GLOBALS['Response']->addFeedback(
                         Feedback::INFO,
@@ -108,7 +109,10 @@ class Router
                     break;
                 case "delete-time":
                     $artifact = $this->getArtifactFromRequest($request, $user);
-                    $this->time_controller->deleteTimeForUser($request, $user, $artifact);
+
+                    $this->getCSRFForArtifact($artifact);
+
+                    $this->time_controller->deleteTimeForUser($request, $user, $artifact, $this->getCSRFForArtifact($artifact));
 
                     $GLOBALS['Response']->addFeedback(
                         Feedback::INFO,
@@ -120,7 +124,10 @@ class Router
                     break;
                 case "edit-time":
                     $artifact = $this->getArtifactFromRequest($request, $user);
-                    $this->time_controller->editTimeForUser($request, $user, $artifact);
+
+                    $this->getCSRFForArtifact($artifact);
+
+                    $this->time_controller->editTimeForUser($request, $user, $artifact, $this->getCSRFForArtifact($artifact));
 
                     $GLOBALS['Response']->addFeedback(
                         Feedback::INFO,
@@ -265,5 +272,13 @@ class Router
         );
 
         $GLOBALS['Response']->redirect('/');
+    }
+
+    /**
+     * @return CSRFSynchronizerToken
+     */
+    private function getCSRFForArtifact(Tracker_Artifact $artifact)
+    {
+        return new CSRFSynchronizerToken($artifact->getUri());
     }
 }

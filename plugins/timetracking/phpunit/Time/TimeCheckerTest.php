@@ -20,17 +20,14 @@
 
 namespace Tuleap\Timetracking\Time;
 
-use TuleapTestCase;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 
 require_once __DIR__.'/../bootstrap.php';
 
-
-class TimeCheckerTest extends TuleapTestCase
+class TimeCheckerTest extends TestCase
 {
-    /*
-     * TimeController
-     */
-    private $time_controller;
+    use MockeryPHPUnitIntegration;
 
     /*
     * TimeChecker
@@ -41,7 +38,9 @@ class TimeCheckerTest extends TuleapTestCase
     {
         parent::setUp();
 
-        $this->user            = aUser()->withId(102)->build();
+        $this->user = \Mockery::spy(\PFUser::class);
+        $this->user->allows()->getId()->andReturns(102);
+
         $this->time_retriever  = \Mockery::spy(TimeRetriever::class);
         $this->time_checker    = new TimeChecker($this->time_retriever);
 
@@ -53,35 +52,36 @@ class TimeCheckerTest extends TuleapTestCase
         ]);
     }
 
-    public function itReturnFalseIfEqual()
+
+    public function testItReturnFalseIfEqual()
     {
         $this->time->allows()->getUserId()->andReturns(102);
         $this->assertFalse($this->time_checker->doesTimeBelongsToUser($this->time, $this->user));
     }
 
-    public function itReturnTrueIfNotEqual()
+    public function testItReturnTrueIfNotEqual()
     {
         $this->time->allows()->getUserId()->andReturns(103);
         $this->assertTrue($this->time_checker->doesTimeBelongsToUser($this->time, $this->user));
     }
 
-    public function itReturnTrueIfTimeNotNull()
+    public function testItReturnTrueIfTimeNotNull()
     {
         $this->assertTrue($this->time_checker->checkMandatoryTimeValue('01:21'));
     }
 
-    public function itReturnFalseIfTimeNull()
+    public function testItReturnFalseIfTimeNull()
     {
         $this->assertFalse($this->time_checker->checkMandatoryTimeValue(null));
     }
 
-    public function itReturnTimeIfExistingTime()
+    public function testItReturnTimeIfExistingTime()
     {
         $this->time_retriever->allows()->getExistingTimeForUserInArtifactAtGivenDate($this->user, $this->artifact, '2018-04-04')->andReturns($this->time);
-        $this->assertEqual($this->time, $this->time_checker->getExistingTimeForUserInArtifactAtGivenDate($this->user, $this->artifact, '2018-04-04'));
+        $this->assertEquals($this->time, $this->time_checker->getExistingTimeForUserInArtifactAtGivenDate($this->user, $this->artifact, '2018-04-04'));
     }
 
-    public function itReturnNullIfExistingTime()
+    public function testItReturnNullIfExistingTime()
     {
         $this->time_retriever->allows()->getExistingTimeForUserInArtifactAtGivenDate($this->user, $this->artifact, '2018-04-04')->andReturns(null);
         $this->assertNull($this->time_checker->getExistingTimeForUserInArtifactAtGivenDate($this->user, $this->artifact, '2018-04-04'));
