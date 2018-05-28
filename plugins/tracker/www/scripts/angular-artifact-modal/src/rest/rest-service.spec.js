@@ -34,9 +34,7 @@ describe("rest-service", () => {
             id   : 84,
             label: "Functionize recklessly"
         });
-        expect(tlp.get).toHaveBeenCalledWith('/api/v1/trackers/84', {
-            cache: 'force-cache'
-        });
+        expect(tlp.get).toHaveBeenCalledWith('/api/v1/trackers/84');
     });
 
     it("getArtifact() - Given an artifact id, when I get the artifact, then a promise will be resolved with an artifact object", async () => {

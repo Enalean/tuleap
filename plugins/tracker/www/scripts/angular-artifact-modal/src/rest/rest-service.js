@@ -32,9 +32,8 @@ const headers = {
 };
 
 function getTracker(tracker_id) {
-    return get(`/api/v1/trackers/${ tracker_id }`, {
-        cache: 'force-cache'
-    }).then(responseHandler, errorHandler);
+    return get(`/api/v1/trackers/${ tracker_id }`)
+        .then(responseHandler, errorHandler);
 }
 
 function getArtifact(artifact_id) {
