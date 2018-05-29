@@ -690,11 +690,22 @@ class ArtifactsResource extends AuthenticatedResource {
      * Partial update of an artifact.
      * <br/>
      *
-     * This partial update allows user to move an artifact from one tracker to another. This route does nothing for now.
-     *
      * <pre>
      * /!\ REST route under construction and subject to changes /!\
      * </pre>
+     * <br/>
+     *
+     * This partial update allows user to move an artifact from one tracker to another.
+     * <br/>
+     * This route moves an artifact from one tracker to another keeping:
+     * <br/>
+     * <ul>
+     * <li> Artifact ID </li>
+     * <li> Submitter user </li>
+     * <li> Submitted on date </li>
+     * <li> Semantic title</li>
+     * <li> Semantic descprition</li>
+     * </ul>
      *
      * <br/>
      * To move an Artifact:
@@ -706,11 +717,13 @@ class ArtifactsResource extends AuthenticatedResource {
      * }
      * </pre>
      * <br/>
-     * Limitation:
+     * Limitations:
      * <ul>
      * <li>User must be admin of both source and target trackers in order to be able to move an artifact.</li>
      * <li>Artifact must not be linked to a FRS release.</li>
-     * <li>Both trackers must have the title semantic defined and the artifact must have a title set</li>
+     * <li>Both trackers must have the title and description semantic aligned
+     * (traget tracker must have at least one semantic used in source tracker)
+     * </li>
      * </ul>
      *
      * @url PATCH {id}
@@ -763,7 +776,7 @@ class ArtifactsResource extends AuthenticatedResource {
         try {
             $remaining_deletions = $move_action->move($artifact, $target_tracker, $user);
         } catch (DeletionOfArtifactsIsNotAllowedException $exception) {
-            throw new RestException(403, $exception->getMessage());
+            throw new RestException(403, "The artifact limit is exceeded. The move operation is not possible. Aborting.");
         } catch (ArtifactsDeletionLimitReachedException $limit_reached_exception) {
             throw new RestException(429, $limit_reached_exception->getMessage());
         } catch (MoveArtifactNotDoneException $exception) {
