@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,8 +23,8 @@ namespace Tuleap\AgileDashboard\Kanban\RealTime;
 use BackendLogger;
 use PFUser;
 use Tracker_Artifact;
-use Tuleap\AgileDashboard\RealTime\RealTimeArtifactMessageException;
-use Tuleap\AgileDashboard\RealTime\RealTimeArtifactMessageSender;
+use Tuleap\Tracker\RealTime\RealTimeArtifactMessageException;
+use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
 
 class KanbanArtifactMessageSender
 {
