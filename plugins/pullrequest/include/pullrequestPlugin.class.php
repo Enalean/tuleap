@@ -18,8 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'autoload.php';
 require_once 'constants.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 use Tuleap\Git\GitAdditionalActionEvent;
 use Tuleap\Glyph\GlyphFinder;
@@ -48,7 +48,7 @@ use Tuleap\PullRequest\Dao;
 use Tuleap\PullRequest\PullRequestUpdater;
 use Tuleap\PullRequest\PullRequestMerger;
 use Tuleap\PullRequest\PullRequestCloser;
-use Tuleap\PullRequest\FileUnidiffBuilder;
+use Tuleap\PullRequest\FileUniDiffBuilder;
 use Tuleap\PullRequest\InlineComment\InlineCommentUpdater;
 use Tuleap\PullRequest\InlineComment\Dao as InlineCommentDao;
 use Tuleap\PullRequest\Timeline\Dao as TimelineDao;
@@ -344,7 +344,7 @@ class pullrequestPlugin extends Plugin
                     new PullRequestMerger($this->getRepositoryFactory()),
                     new InlineCommentDao(),
                     new InlineCommentUpdater(),
-                    new FileUnidiffBuilder(),
+                    new FileUniDiffBuilder(),
                     $this->getTimelineEventCreator(),
                     $this->getRepositoryFactory()
                 );
