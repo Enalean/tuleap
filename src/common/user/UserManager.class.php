@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -941,7 +941,7 @@ class UserManager {
     function checkUserAccountValidity() {
         // All rules applies at midnight
         $current_date = format_date('Y-m-d', $_SERVER['REQUEST_TIME']);
-        $date_list    = split("-", $current_date, 3);
+        $date_list    = explode("-", $current_date, 3);
         $midnightTime = mktime(0, 0, 0, $date_list[1], $date_list[2], $date_list[0]);
 
         $this->suspendExpiredAccounts($midnightTime);

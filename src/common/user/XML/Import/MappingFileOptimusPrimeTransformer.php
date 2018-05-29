@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace User\XML\Import;
 
 use UserManager;
@@ -123,7 +124,7 @@ class MappingFileOptimusPrimeTransformer {
     ) {
         $argument = null;
         if (strpos($action, ':') !== false) {
-            list($action, $argument) = split(':', $action);
+            list($action, $argument) = explode(':', $action);
         }
 
         if (! in_array($action, self::$ALLOWED_ACTIONS)) {
