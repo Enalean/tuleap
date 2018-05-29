@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -58,11 +58,15 @@ if (! $project->isActive()) {
     $GLOBALS['Response']->redirect('/admin/groupedit.php?group_id=' . (int) $group_id);
 }
 
+$csrf_token = new CSRFSynchronizerToken('/admin/show_pending_documents.php?group_id=' . urlencode($group_id));
+
 switch ($func) {
     case 'confirm_restore_frs_file':
+        $csrf_token->check();
         frs_file_restore_process($request, $group_id);
         break;
     case 'confirm_restore_wiki_attachment':
+        $csrf_token->check();
         wiki_attachment_restore_process($request, $group_id);
         break;
 }
@@ -76,14 +80,15 @@ $idArray   = array();
 $nomArray  = array();
 $htmlArray = array();
 
-frs_file_restore_view($group_id, $idArray, $nomArray, $htmlArray);
-wiki_attachment_restore_view($group_id, $idArray, $nomArray, $htmlArray);
+frs_file_restore_view($group_id, $csrf_token, $idArray, $nomArray, $htmlArray);
+wiki_attachment_restore_view($group_id, $csrf_token, $idArray, $nomArray, $htmlArray);
 
-$params = array('group_id' => $group_id,
-                'id'       => &$idArray,
-                'nom'      => &$nomArray,
-                'focus'    => $focus,
-                'html'     => &$htmlArray
+$params = array('group_id'   => $group_id,
+                'id'         => &$idArray,
+                'nom'        => &$nomArray,
+                'focus'      => $focus,
+                'html'       => &$htmlArray,
+                'csrf_token' => $csrf_token
 );
 $em->processEvent('show_pending_documents', $params);
 
@@ -111,8 +116,6 @@ $renderer->header($GLOBALS['Language']->getText('admin_groupedit', 'title'), fal
         </a>
     </nav>
 
-<form action="?" method="POST" class="tlp-framed-horizontally">
-<input type="hidden" name="group_id" value="<?php print (int)$group_id; ?>">
 <?php
     $project = $pm->getProject($group_id,false,true);
     echo '<div class="tlp-alert-info">'.$GLOBALS['Language']->getText('admin_show_pending_documents','delay_info', array($GLOBALS['sys_file_deletion_delay'])).'</div>';
@@ -125,7 +128,6 @@ $renderer->header($GLOBALS['Language']->getText('admin_groupedit', 'title'), fal
         echo $html;
     }
 ?>
-</form>
 </div>
 <?php
 $renderer->footer();
@@ -134,7 +136,7 @@ $renderer->footer();
  * Functions
  */
 
-function frs_file_restore_view($group_id, &$idArray, &$nomArray, &$htmlArray)
+function frs_file_restore_view($group_id, CSRFSynchronizerToken $csrf_token, &$idArray, &$nomArray, &$htmlArray)
 {
     $fileFactory       = new FRSFileFactory();
     $files             = $fileFactory->listPendingFiles($group_id, 0, 0);
@@ -176,19 +178,16 @@ function frs_file_restore_view($group_id, &$idArray, &$nomArray, &$htmlArray)
                 ) . '</a></td>';
             $html .= '<td>' . html_time_ago($file['delete_date']) . '</td>';
             $html .= '<td>' . format_date($GLOBALS['Language']->getText('system', 'datefmt'), $purgeDate) . '</td>';
-            $html .= '<td class="tlp-table-cell-actions">
-                <a href="?group_id=' . urlencode($group_id) . '&func=confirm_restore_frs_file&id=' . urlencode(
-                    $file['file_id']
-                ) . '"
-                    class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline"
-                    onClick="return confirm(\'' . $GLOBALS['Language']->getText(
-                    'admin_show_pending_documents', 'frs_confirm_message'
-                ) . '\')"
-                >
-                    <i class="fa fa-repeat tlp-button-icon"></i> ' . $GLOBALS['Language']->getText(
-                    'admin_show_pending_documents', 'frs_restore'
-                ) . '
-                </td>';
+            $html .= '<td class="tlp-table-cell-actions">';
+            $html .= '<form method="post" onsubmit="return confirm(\'' . $GLOBALS['Language']->getText(
+                            'admin_show_pending_documents', 'frs_confirm_message'
+                        ) . '\')">';
+            $html .= $csrf_token->fetchHTMLInput();
+            $html .= '<input type="hidden" name="func" value="confirm_restore_frs_file">';
+            $html .= '<input type="hidden" name="id" value="' . $purifier->purify($file['file_id']) . '">';
+            $html .= '<button class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline">
+                        <i class="fa fa-repeat tlp-button-icon"></i> ' . $GLOBALS['Language']->getText('admin_show_pending_documents', 'frs_restore') . '</button>';
+            $html .= '</form></td>';
             $html .= '</tr>';
         }
     } else {
@@ -319,7 +318,7 @@ function frs_file_restore_process($request, $group_id)
     $GLOBALS['Response']->redirect('?group_id=' . (int)$group_id);
 }
 
-function wiki_attachment_restore_view($group_id, &$idArray, &$nomArray, &$htmlArray) {
+function wiki_attachment_restore_view($group_id, CSRFSynchronizerToken $csrf_token, &$idArray, &$nomArray, &$htmlArray) {
     $wikiAttachment = new WikiAttachment($group_id);
     $attachments    = $wikiAttachment->listPendingAttachments($group_id, 0, 0);
     $purifier       = Codendi_HTMLPurifier::instance();
@@ -359,12 +358,13 @@ function wiki_attachment_restore_view($group_id, &$idArray, &$nomArray, &$htmlAr
                         <i class="fa fa-repeat tlp-button-icon"></i> '. $GLOBALS['Language']->getText('admin_show_pending_documents', 'wiki_restore') .'
                     </button>';
             } else {
-                $tabbed_content .= '<a href="?group_id='.urlencode($group_id).'&func=confirm_restore_wiki_attachment&id='.urlencode($wiki_attachment['id']).'"
-                        class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline"
-                        onClick="return confirm(\'Confirm restore of this attachment\')"
-                    >
-                        <i class="fa fa-repeat tlp-button-icon"></i> '. $GLOBALS['Language']->getText('admin_show_pending_documents', 'wiki_restore') .'
-                    </a>';
+                $tabbed_content .= '<form method="POST" onsubmit="return confirm(\'Confirm restore of this attachment\');">
+                        <input type="hidden" name="func" value="confirm_restore_wiki_attachment">
+                        <input type="hidden" name="id" value="' . $purifier->purify($wiki_attachment['id']) . '">
+                        <button class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline">
+                        <i class="fa fa-repeat tlp-button-icon"></i> ' . $GLOBALS['Language']->getText('admin_show_pending_documents', 'wiki_restore') . '</button>';
+                $tabbed_content .= $csrf_token->fetchHTMLInput();
+                $tabbed_content .='</form>';
             }
             $tabbed_content .= '</td>';
             $tabbed_content .= '</tr>';

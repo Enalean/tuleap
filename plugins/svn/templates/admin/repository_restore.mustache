@@ -18,12 +18,17 @@
                             <td>{{ getName }}</td>
                             <td>{{ getDeletionDateHumanReadable }}</td>
                             <td class="tlp-table-cell-actions">
-                                <a href="/plugins/svn/?action=restore&group_id={{ project_id }}&repo_id={{ getId }}"
-                                    class="tlp-table-cell-actions-button tlp-button-small tlp-button-outline tlp-button-primary"
-                                    onClick="return confirm('{{ restore_confirm }} {{ getName }}.')"
-                                >
-                                    <i class="fa fa-repeat tlp-button-icon"></i> Restore
-                                </a>
+                                <form method="post" action="/plugins/svn/" onsubmit="return confirm('{{ restore_confirm }} {{ getName }}.')">
+                                    {{# csrf_token }}
+                                        {{> csrf_token_input }}
+                                    {{/ csrf_token }}
+                                    <input type="hidden" name="action" value="restore">
+                                    <input type="hidden" name="group_id" value="{{ project_id }}">
+                                    <input type="hidden" name="repo_id" value="{{ getId }}">
+                                    <button class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline">
+                                        <i class="fa fa-repeat tlp-button-icon"></i> Restore
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                     {{/ repositories }}

@@ -716,7 +716,7 @@ class SvnPlugin extends Plugin
         $archived_repositories = $this->getRepositoryManager()->getRestorableRepositoriesByProject($project);
 
         $restore_controller = new RestoreController($this->getRepositoryManager());
-        $tab_content        = $restore_controller->displayRestorableRepositories($archived_repositories, $project_id);
+        $tab_content        = $restore_controller->displayRestorableRepositories($params['csrf_token'], $archived_repositories, $project_id);
         $params['html'][]   = $tab_content;
     }
 
