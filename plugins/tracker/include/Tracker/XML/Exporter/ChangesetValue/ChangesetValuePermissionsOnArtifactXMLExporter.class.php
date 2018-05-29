@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -36,7 +36,7 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValuePermissionsOnArtifactXML
         );
         $field_change->addAttribute('use_perm', (int)$this->isUsed($changeset_value));
 
-        $ugroup_names = $changeset_value->getUgroupNamesFromPerms();
+        $ugroup_names = array_filter($changeset_value->getUgroupNamesFromPerms());
 
         array_walk(
             $ugroup_names,
