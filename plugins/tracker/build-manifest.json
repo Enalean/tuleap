@@ -13,7 +13,8 @@
             "files": [
                 "www/themes/FlamingParrot/css/style.scss",
                 "www/themes/FlamingParrot/css/print.scss",
-                "www/themes/FlamingParrot/css/burndown-chart.scss"
+                "www/themes/FlamingParrot/css/burndown-chart.scss",
+                "www/themes/FlamingParrot/css/colorpicker.scss"
             ],
             "includes": [
                 "../../src/www/themes/FlamingParrot/css/utils"
@@ -54,7 +55,6 @@
         "www/scripts/TrackerBinds.js",
         "www/scripts/ReorderColumns.js",
         "www/scripts/TrackerTextboxLists.js",
-        "www/scripts/TrackerAdminFields.js",
         "www/scripts/TrackerArtifact.js",
         "www/scripts/TrackerArtifactEmailActions.js",
         "www/scripts/TrackerArtifactLink.js",

@@ -1818,6 +1818,23 @@ EOS;
         $breadcrumbs = array_merge(array(
                 $items['editformElements']
                 ), $breadcrumbs);
+
+        $include_assets = new \Tuleap\Layout\IncludeAssets(
+            __DIR__ . '/../../www/assets',
+            TRACKER_BASE_URL . '/assets'
+        );
+
+        $include_assets_css = new \Tuleap\Layout\IncludeAssets(
+            __DIR__ . '/../../www/themes/FlamingParrot/assets',
+            TRACKER_BASE_URL . '/themes/FlamingParrot/assets'
+        );
+
+        $GLOBALS['HTML']->addStylesheet(
+            $include_assets_css->getFileURL('colorpicker.css')
+        );
+
+        $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('TrackerAdminFields.js'));
+
         $this->displayAdminHeader($layout, $title, $breadcrumbs);
     }
 
