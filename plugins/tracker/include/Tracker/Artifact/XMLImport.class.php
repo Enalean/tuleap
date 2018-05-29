@@ -1,8 +1,6 @@
 <?php
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
-
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,6 +17,8 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 
 class Tracker_Artifact_XMLImport {
 
@@ -427,7 +427,7 @@ class Tracker_Artifact_XMLImport {
                     new Tracker_XML_Importer_ArtifactImportedMapping()
                 );
 
-                $this->importFirstChangeset($artifact, $xml_artifact->changeset, $fields_data_builder);
+                $this->importAllChangesetsBySubmitionDate($artifact, $xml_artifact->changeset, $fields_data_builder);
                 return $artifact;
             }
         }

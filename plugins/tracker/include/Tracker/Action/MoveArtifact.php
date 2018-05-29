@@ -98,9 +98,9 @@ class MoveArtifact
         }
 
         $xml_artifacts = $this->getXMLRootNode();
-        $xml_artifacts = $this->xml_exporter->exportSnapshotWithoutComments(
+        $this->xml_exporter->exportFullHistory(
             $xml_artifacts,
-            $artifact->getLastChangeset()
+            $artifact
         );
 
         $global_rank = $this->artifact_priority_manager->getGlobalRank($artifact->getId());
