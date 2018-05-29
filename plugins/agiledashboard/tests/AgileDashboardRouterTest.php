@@ -18,8 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../include/constants.php';
-require_once AGILEDASHBOARD_BASE_DIR.'/autoload.php';
+require_once __DIR__ . '/bootstrap.php';
 require_once __DIR__.'/../../tracker/include/trackerPlugin.class.php';
 
 class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase

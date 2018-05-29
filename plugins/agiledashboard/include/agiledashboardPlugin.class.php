@@ -19,12 +19,12 @@
  */
 
 use Tuleap\AgileDashboard\BacklogItem\RemainingEffortValueRetriever;
-use Tuleap\Agiledashboard\FormElement\BurnupCacheDao;
-use Tuleap\Agiledashboard\FormElement\BurnupCacheDateRetriever;
+use Tuleap\AgileDashboard\FormElement\BurnupCacheDao;
+use Tuleap\AgileDashboard\FormElement\BurnupCacheDateRetriever;
 use Tuleap\AgileDashboard\FormElement\BurnupCalculator;
 use Tuleap\AgileDashboard\FormElement\BurnupDao;
 use Tuleap\AgileDashboard\FormElement\MessageFetcher;
-use Tuleap\Agiledashboard\FormElement\SystemEvent\SystemEvent_BURNUP_DAILY;
+use Tuleap\AgileDashboard\FormElement\SystemEvent\SystemEvent_BURNUP_DAILY;
 use Tuleap\AgileDashboard\FormElement\SystemEvent\SystemEvent_BURNUP_GENERATE;
 use Tuleap\AgileDashboard\Kanban\KanbanXmlImporter;
 use Tuleap\AgileDashboard\Kanban\RealTime\KanbanArtifactMessageBuilder;
@@ -68,8 +68,7 @@ use Tuleap\Tracker\Report\Event\TrackerReportSetToPrivate;
 use Tuleap\Tracker\Semantic\SemanticStatusCanBeDeleted;
 use Tuleap\Tracker\Semantic\SemanticStatusGetDisabledValues;
 
-require_once 'common/plugin/Plugin.class.php';
-require_once 'autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 require_once 'constants.php';
 
 /**
@@ -1433,7 +1432,7 @@ class AgileDashboardPlugin extends Plugin {
     public function codendi_daily_start($params)
     {
         SystemEventManager::instance()->createEvent(
-            'Tuleap\\Agiledashboard\\FormElement\\SystemEvent\\' . SystemEvent_BURNUP_DAILY::NAME,
+            SystemEvent_BURNUP_DAILY::class,
             "",
             SystemEvent::PRIORITY_MEDIUM,
             SystemEvent::OWNER_APP
@@ -1444,8 +1443,8 @@ class AgileDashboardPlugin extends Plugin {
     public function get_system_event_class($params)
     {
         switch ($params['type']) {
-            case 'Tuleap\\Agiledashboard\\FormElement\\SystemEvent\\' . SystemEvent_BURNUP_DAILY::NAME:
-                $params['class']        = 'Tuleap\\Agiledashboard\\FormElement\\SystemEvent\\' . SystemEvent_BURNUP_DAILY::NAME;
+            case SystemEvent_BURNUP_DAILY::class:
+                $params['class']        = SystemEvent_BURNUP_DAILY::class;
                 $params['dependencies'] = array(
                     $this->getBurnupDao(),
                     $this->getBurnupCalculator(),
@@ -1454,8 +1453,8 @@ class AgileDashboardPlugin extends Plugin {
                     new BurnupCacheDateRetriever()
                 );
                 break;
-            case 'Tuleap\\Agiledashboard\\FormElement\\SystemEvent\\' . SystemEvent_BURNUP_GENERATE::NAME:
-                $params['class']        = 'Tuleap\\Agiledashboard\\FormElement\\SystemEvent\\' . SystemEvent_BURNUP_GENERATE::NAME;
+            case SystemEvent_BURNUP_GENERATE::class:
+                $params['class']        = SystemEvent_BURNUP_GENERATE::class;
                 $params['dependencies'] = array(
                     new BurnupDao(),
                     $this->getBurnupCalculator(),
@@ -1471,8 +1470,8 @@ class AgileDashboardPlugin extends Plugin {
 
     public function system_event_get_types_for_default_queue($params)
     {
-        $params['types'][] = 'Tuleap\\Agiledashboard\\FormElement\\SystemEvent\\' . SystemEvent_BURNUP_DAILY::NAME;
-        $params['types'][] = 'Tuleap\\Agiledashboard\\FormElement\\SystemEvent\\' . SystemEvent_BURNUP_GENERATE::NAME;
+        $params['types'][] = SystemEvent_BURNUP_DAILY::class;
+        $params['types'][] = SystemEvent_BURNUP_GENERATE::class;
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Agiledashboard\FormElement;
+namespace Tuleap\AgileDashboard\FormElement;
 
 use SystemEvent;
 use SystemEventManager;
@@ -40,7 +40,7 @@ class BurnupCacheGenerator
     public function isCacheBurnupAlreadyAsked(Tracker_Artifact $artifact)
     {
         return $this->system_event_manager->areThereMultipleEventsQueuedMatchingFirstParameter(
-            'Tuleap\\Agiledashboard\\FormElement\\SystemEvent\\' . SystemEvent_BURNUP_GENERATE::NAME,
+            SystemEvent_BURNUP_GENERATE::class,
             $artifact->getId()
         );
     }
@@ -51,7 +51,7 @@ class BurnupCacheGenerator
             return;
         }
         $this->system_event_manager->createEvent(
-            'Tuleap\\Agiledashboard\\FormElement\\SystemEvent\\' . SystemEvent_BURNUP_GENERATE::NAME,
+            SystemEvent_BURNUP_GENERATE::class,
             $artifact->getId(),
             SystemEvent::PRIORITY_MEDIUM,
             SystemEvent::OWNER_APP

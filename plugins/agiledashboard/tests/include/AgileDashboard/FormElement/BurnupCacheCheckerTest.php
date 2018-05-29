@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Agiledashboard\FormElement;
+namespace Tuleap\AgileDashboard\FormElement;
 
 use Tuleap\Tracker\FormElement\ChartCachedDaysComparator;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueChecker;
@@ -60,10 +60,10 @@ class BurnupCacheCheckerTest extends \TuleapTestCase
     {
         parent::setUp();
 
-        $this->cache_generator       = mock('Tuleap\Agiledashboard\FormElement\BurnupCacheGenerator');
-        $this->chart_value_checker   = mock('Tuleap\Tracker\FormElement\ChartConfigurationValueChecker');
-        $burnup_cache_dao            = mock('Tuleap\Agiledashboard\FormElement\BurnupCacheDao');
-        $this->cache_days_comparator = mock('Tuleap\Tracker\FormElement\ChartCachedDaysComparator');
+        $this->cache_generator       = mock(BurnupCacheGenerator::class);
+        $this->chart_value_checker   = mock(ChartConfigurationValueChecker::class);
+        $burnup_cache_dao            = mock(BurnupCacheDao::class);
+        $this->cache_days_comparator = mock(ChartCachedDaysComparator::class);
         $this->burnup_cache_Checker  = new BurnupCacheChecker(
             $this->cache_generator,
             $this->chart_value_checker,

@@ -18,20 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Agiledashboard\FormElement\SystemEvent;
+namespace Tuleap\AgileDashboard\FormElement\SystemEvent;
 
 use BackendLogger;
 use SystemEvent;
 use TimePeriodWithoutWeekEnd;
-use Tuleap\Agiledashboard\FormElement\BurnupCacheDao;
-use Tuleap\Agiledashboard\FormElement\BurnupCacheDateRetriever;
+use Tuleap\AgileDashboard\FormElement\BurnupCacheDao;
+use Tuleap\AgileDashboard\FormElement\BurnupCacheDateRetriever;
 use Tuleap\AgileDashboard\FormElement\BurnupCalculator;
 use Tuleap\AgileDashboard\FormElement\BurnupDao;
 
 class SystemEvent_BURNUP_DAILY extends SystemEvent // @codingStandardsIgnoreLine
 {
-    const NAME = 'SystemEvent_BURNUP_DAILY';
-
     /**
      * @var BurnupDao
      */

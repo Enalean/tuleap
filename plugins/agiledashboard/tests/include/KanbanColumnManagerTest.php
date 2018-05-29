@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,7 @@
 
 use Tuleap\AgileDashboard\REST\v1\Kanban\KanbanColumnPATCHRepresentation;
 
-require_once dirname(__FILE__).'/../common.php';
+require_once __DIR__ . '/../bootstrap.php';
 
 class AgileDashboard_KanbanColumnManagerTest extends TuleapTestCase {
 
