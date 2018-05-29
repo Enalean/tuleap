@@ -210,6 +210,61 @@ class Tracker_XML_Updater_ChangesetXMLUpdaterTest extends TuleapTestCase {
         $this->assertEqual((string)$artifact_xml->changeset[1]->field_change[0]->value['format'], 'html');
     }
 
+    public function itDealsWithCommentTagsInMoveAction()
+    {
+        $source_description_field = aMockField()->withName('desc')->build();
+        $target_description_field = aMockField()->withName('v2desc')->build();
+        $target_tracker           = aMockTracker()->withId(201)->build();
+
+        $artifact_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>'
+            . '<artifact>'
+            . '  <changeset>'
+            . '    <submitted_on>2014</submitted_on>'
+            . '    <submitted_by>123</submitted_by>'
+            . '    <field_change field_name="summary">'
+            . '      <value>Initial summary value</value>'
+            . '    </field_change>'
+            . '    <field_change field_name="desc">'
+            . '      <value format="html"><![CDATA[<p><strong>Description</strong></p>]]></value>'
+            . '    </field_change>'
+            . '    <field_change field_name="details">'
+            . '      <value>Content of details</value>'
+            . '    </field_change>'
+            . '    <comments/>'
+            . '  </changeset>'
+            .'  <changeset>'
+            . '    <submitted_on>2015</submitted_on>'
+            . '    <submitted_by>123</submitted_by>'
+            . '    <field_change field_name="summary">'
+            . '      <value>Second summary value</value>'
+            . '    </field_change>'
+            . '    <field_change field_name="desc">'
+            . '      <value format="html"><![CDATA[<p><strong>Description v2</strong></p>]]></value>'
+            . '    </field_change>'
+            . '    <field_change field_name="details">'
+            . '      <value>Content of details v2</value>'
+            . '    </field_change>'
+            . '    <comments>
+                        <comment>
+                            <submitted_by format="id">123</submitted_by>
+                            <submitted_on format="ISO8601">2014</submitted_on>
+                            <body format="text"><![CDATA[My comment]]></body>
+                        </comment>
+                    </comments>'
+            . '  </changeset>'
+            . '</artifact>'
+        );
+
+        stub($this->tracker)->getDescriptionField()->returns($source_description_field);
+        stub($target_tracker)->getDescriptionField()->returns($target_description_field);
+
+        $this->updater->updateForMoveAction($this->tracker, $target_tracker, $artifact_xml, $this->user, time());
+
+        $this->assertEqual(count($artifact_xml->changeset), 2);
+        $this->assertNull($artifact_xml->changeset[0]->comments[0]);
+        $this->assertEqual((string)$artifact_xml->changeset[1]->comments->comment[0]->body, 'My comment');
+    }
+
     public function itDoesNotRemoveFirstChangesetTagInMoveAction()
     {
         $source_description_field = aMockField()->withName('desc')->build();

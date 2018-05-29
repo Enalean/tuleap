@@ -379,7 +379,13 @@
           <changeset>
             <submitted_by format="username">rest_api_tester_1</submitted_by>
             <submitted_on format="ISO8601">2016-11-17T11:35:06+01:00</submitted_on>
-            <comments/>
+            <comments>
+              <comment>
+                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                <submitted_on format="ISO8601">2016-11-17T11:35:06+01:00</submitted_on>
+                <body format="text"><![CDATA[API 1 comment]]></body>
+              </comment>
+            </comments>
             <field_change field_name="status" type="list" bind="static">
               <value format="id">174</value>
             </field_change>
@@ -387,7 +393,13 @@
           <changeset>
             <submitted_by format="username">rest_api_tester_1</submitted_by>
             <submitted_on format="ISO8601">2016-11-17T11:36:06+01:00</submitted_on>
-            <comments/>
+            <comments>
+              <comment>
+                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                <submitted_on format="ISO8601">2016-11-17T11:36:06+01:00</submitted_on>
+                <body format="text"><![CDATA[API 2 comment]]></body>
+              </comment>
+            </comments>
             <field_change field_name="summary_1" type="string">
               <value><![CDATA[To be moved v2]]></value>
             </field_change>

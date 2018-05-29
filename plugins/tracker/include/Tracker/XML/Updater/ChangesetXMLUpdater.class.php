@@ -100,7 +100,7 @@ class Tracker_XML_Updater_ChangesetXMLUpdater {
                 $artifact_xml->changeset[$index]
             );
 
-            if (count($artifact_xml->changeset[$index]->field_change) === 0 && $index > 0) {
+            if ($this->isChangesetNodeDeletable($artifact_xml, $index)) {
                 $this->deleteChangesetNode($artifact_xml, $index);
             }
 
@@ -108,6 +108,16 @@ class Tracker_XML_Updater_ChangesetXMLUpdater {
                 $this->addSubmittedInformation($artifact_xml->changeset[$index], $submitted_by, $submitted_on);
             }
         }
+    }
+
+    /**
+     * @return bool
+     */
+    private function isChangesetNodeDeletable(SimpleXMLElement $artifact_xml, $index)
+    {
+        return count($artifact_xml->changeset[$index]->field_change) === 0 &&
+            count($artifact_xml->changeset[$index]->comments) === 0 &&
+            $index > 0;
     }
 
     /**
@@ -123,7 +133,7 @@ class Tracker_XML_Updater_ChangesetXMLUpdater {
         $target_title_field       = $target_tracker->getTitleField();
         $target_description_field = $target_tracker->getDescriptionField();
 
-        $this->deleteCommentsNode($changeset_xml);
+        $this->deleteEmptyCommentsNode($changeset_xml);
 
         $last_index = count($changeset_xml->field_change) - 1;
         for ($index = $last_index; $index >= 0; $index--) {
@@ -151,9 +161,23 @@ class Tracker_XML_Updater_ChangesetXMLUpdater {
         unset($changeset_xml->field_change[$index]);
     }
 
-    private function deleteCommentsNode(SimpleXMLElement $changeset_xml)
+    private function deleteEmptyCommentsNode(SimpleXMLElement $changeset_xml)
     {
-        unset($changeset_xml->comments);
+        $this->deleteEmptyCommentNodes($changeset_xml->comments);
+
+        if (count($changeset_xml->comments->comment) === 0) {
+            unset($changeset_xml->comments);
+        }
+    }
+
+    private function deleteEmptyCommentNodes(SimpleXMLElement $comments_xml)
+    {
+        $last_index = count($comments_xml->comment) - 1;
+        for ($index = $last_index; $index >= 0; $index--) {
+            if ((string) $comments_xml->comment[$index]->body === '') {
+                unset($comments_xml->comment[$index]);
+            }
+        }
     }
 
     private function isFieldChangeCorrespondingToTitleSemanticField(

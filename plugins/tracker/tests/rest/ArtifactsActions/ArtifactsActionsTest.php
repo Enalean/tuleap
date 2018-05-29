@@ -68,6 +68,17 @@ class ArtifactsActionsTest extends TrackerBase
         $this->assertEquals($artifact_json['tracker']['id'], $this->move_tracker_id);
         $this->assertEquals($artifact_json['values_by_field']['title']['value'], "To be moved v2");
         $this->assertEquals($artifact_json['values_by_field']['desc']['value'], "Artifact that will be moved in another tracker");
+
+        $changeset_response = $this->getResponse(
+            $this->client->get("artifacts/$artifact_id/changesets?fields=comments&limit=5")
+        );
+
+        $this->assertEquals($changeset_response->getStatusCode(), 200);
+        $changeset_json = $changeset_response->json();
+
+        $this->assertEquals(count($changeset_json), 2);
+        $this->assertEquals($changeset_json[0]['last_comment']['body'], "API 1 comment");
+        $this->assertEquals($changeset_json[1]['last_comment']['body'], "API 2 comment");
     }
 
     /**
