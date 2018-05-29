@@ -3,6 +3,12 @@ import _ from 'lodash';
 import './execution-link-issue.tpl.html';
 import ExecutionLinkIssueCtrl from './execution-link-issue-controller.js';
 import { theTestHasJustBeenUpdated } from "./execution-detail-just-updated-state.js";
+import {
+    PASSED_STATUS,
+    FAILED_STATUS,
+    BLOCKED_STATUS,
+    NOT_RUN_STATUS
+} from './execution-constants.js';
 
 export default ExecutionDetailCtrl;
 
@@ -190,6 +196,7 @@ function ExecutionDetailCtrl(
                     $scope.execution.definition.summary = definition.summary;
 
                     updateExecution(definition, old_category);
+                    resetStepsResultsToNotRun(execution);
                 });
 
                 retrieveCurrentExecution();
@@ -231,21 +238,21 @@ function ExecutionDetailCtrl(
 
     function pass(execution) {
         updateTime(execution);
-        setNewStatus(execution, "passed");
+        setNewStatus(execution, PASSED_STATUS);
     }
 
     function fail(execution) {
         updateTime(execution);
-        setNewStatus(execution, "failed");
+        setNewStatus(execution, FAILED_STATUS);
     }
 
     function block(execution) {
         updateTime(execution);
-        setNewStatus(execution, "blocked");
+        setNewStatus(execution, BLOCKED_STATUS);
     }
 
     function notrun(execution) {
-        setNewStatus(execution, "notrun");
+        setNewStatus(execution, NOT_RUN_STATUS);
     }
 
     function updateTime(execution) {
@@ -305,6 +312,13 @@ function ExecutionDetailCtrl(
                 label: category_updated,
                 executions: [$scope.execution]
             };
+        }
+    }
+
+    function resetStepsResultsToNotRun(execution) {
+        const steps_results = Object.values(execution.steps_results);
+        for (const result of steps_results) {
+            result.status = NOT_RUN_STATUS;
         }
     }
 

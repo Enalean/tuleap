@@ -1,0 +1,91 @@
+.steps execution-detail-just-updated > .feedback-info {
+    margin: 20px;
+}
+
+.steps-maindescription {
+    margin: $tlp-spacing 0 0;
+    padding: 0 $tlp-spacing $tlp-spacing;
+    border-bottom: 1px solid $tlp-ui-border-light;
+}
+
+.steps-step {
+    display: flex;
+    align-items: baseline;
+    border-bottom: 1px solid $tlp-ui-border-light;
+
+    &.passed {
+        background: transparentize($tlp-ui-success, .96);
+
+        > .steps-step-description > .steps-step-expected > i {
+            color: $tlp-ui-success;
+        }
+    }
+
+    &.failed {
+        background: transparentize($tlp-ui-danger, .96);
+
+        > .steps-step-description > .steps-step-expected > i {
+            color: $tlp-ui-danger;
+        }
+    }
+
+    &.blocked {
+        background: transparentize($tlp-ui-info, .96);
+
+        > .steps-step-description > .steps-step-expected > i {
+            color: $tlp-ui-info;
+        }
+    }
+
+    &.notrun {
+        background: transparent;
+
+        > .steps-step-description > .steps-step-expected > i {
+            color: $tlp-ui-dimmed;
+        }
+    }
+}
+
+.steps-step-number {
+    margin: $tlp-spacing;
+}
+
+.steps-step-description {
+    flex-grow: 1;
+    margin: $tlp-spacing 0;
+}
+
+.steps-step-description-text {
+    white-space: pre;
+}
+
+.steps-step-action {
+    margin: 0 $tlp-spacing 0 0;
+}
+
+.steps-step-action-pass {
+    width: 60px;
+    border-radius: 3px 0 0 3px;
+}
+
+.steps-step-action-dropdown {
+    width: 26px;
+    padding: 0 5px;
+    text-overflow: clip;
+}
+
+.steps-step-action-fail {
+    color: $tlp-ui-danger;
+}
+
+.steps-step-action-block {
+    color: $tlp-ui-info;
+}
+
+.steps-step-action-notrun {
+    color: $tlp-ui-dimmed;
+}
+
+.steps-step-action-disabled {
+    color: $tlp-ui-dimmed;
+}

@@ -45,6 +45,7 @@ function ExecutionService(
         displayErrorMessage,
         executionsForCampaign,
         addArtifactLink,
+        updateStepStatus,
     });
 
     initialization();
@@ -363,5 +364,13 @@ function ExecutionService(
         const execution = self.executions[execution_id];
 
         execution.linked_bugs.push(artifact_link);
+    }
+
+    function updateStepStatus(execution, step) {
+        const execution_id = execution.id;
+        if (typeof self.executions[execution_id] === 'undefined') {
+            return;
+        }
+        self.executions[execution_id].steps_results[step.id].status = step.status;
     }
 }

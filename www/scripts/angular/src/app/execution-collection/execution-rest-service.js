@@ -2,12 +2,14 @@ export default ExecutionRestService;
 
 ExecutionRestService.$inject = [
     '$http',
+    '$q',
     'Restangular',
     'SharedPropertiesService'
 ];
 
 function ExecutionRestService(
     $http,
+    $q,
     Restangular,
     SharedPropertiesService
 ) {
@@ -30,7 +32,8 @@ function ExecutionRestService(
         linkIssueWithoutComment,
         getLinkedArtifacts,
         getExecution,
-        updateExecutionToUseLatestVersionOfDefinition
+        updateExecutionToUseLatestVersionOfDefinition,
+        updateStepStatus
     });
 
     function setRestangularConfig(RestangularConfigurer) {
@@ -164,5 +167,24 @@ function ExecutionRestService(
             return response.data;
         });
     }
-}
 
+   function updateStepStatus(test_execution, step_id, step_status) {
+        const { id: execution_id } = test_execution;
+        return $http.patch(
+            `/api/v1/testmanagement_executions/${execution_id}`,
+            {
+                steps_results: [
+                    {
+                        step_id,
+                        status: step_status
+                    }
+                ]
+            },
+            {
+                headers: {
+                    'X-Client-UUID': SharedPropertiesService.getUUID()
+                }
+            }
+        ).catch(response => $q.reject(response.data.error.message));
+    }
+}

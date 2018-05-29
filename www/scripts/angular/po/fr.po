@@ -43,12 +43,21 @@ msgid ""
 msgstr ""
 "Un jeton d'authentification qui autorise Tuleap à déclencher ce build Jenkins"
 
+#: src/app/execution/execution-with-steps/step/step-controller.js
+msgid ""
+"An error occurred while executing this step. Please try again later. "
+"{{ error }}"
+msgstr ""
+"Une erreur s'est produite pendant l'exécution de cette étape. Veuillez "
+"réessayer plus tard. {{ error }}"
+
 #: src/app/campaign/campaign-edit.tpl.html
 msgid "Authentication Token"
 msgstr "Jeton d'authentification"
 
 #: src/app/execution/execution-detail.tpl.html
 #: src/app/execution/execution-list.tpl.html
+#: src/app/execution/execution-with-steps/step/step.tpl.html
 msgid "Blocked"
 msgstr "Bloqué"
 
@@ -153,6 +162,7 @@ msgstr "Erreur pendant la récupération des bugs liés"
 
 #: src/app/execution/execution-detail.tpl.html
 #: src/app/execution/execution-list.tpl.html
+#: src/app/execution/execution-with-steps/step/step.tpl.html
 msgid "Failed"
 msgstr "Échoué"
 
@@ -228,11 +238,13 @@ msgstr "Aucun test"
 
 #: src/app/execution/execution-detail.tpl.html
 #: src/app/execution/execution-list.tpl.html
+#: src/app/execution/execution-with-steps/step/step.tpl.html
 msgid "Not run"
 msgstr "Non exécuté"
 
 #: src/app/execution/execution-detail.tpl.html
 #: src/app/execution/execution-list.tpl.html
+#: src/app/execution/execution-with-steps/step/step.tpl.html
 msgid "Passed"
 msgstr "Succès"
 

@@ -4,24 +4,9 @@
          ng-if="$ctrl.execution.definition.description.length"
          class="steps-maindescription"
     ></div>
-    <div ng-repeat="step in $ctrl.steps track by step.id"
-         ng-class="['steps-step', step.status]"
-    >
-        <div class="steps-step-number">
-            <span ng-class="{
-                'tlp-badge-success': step.status == 'passed',
-                'tlp-badge-danger': step.status == 'failed',
-                'tlp-badge-info': step.status == 'blocked',
-                'tlp-badge-secondary': step.status == 'notrun'
-            }">{{ step.rank }}</span>
-        </div>
-        <div class="steps-step-description"
-             ng-bind-html="step.description"
-             ng-if="step.description_format === 'html'"
-        ></div>
-        <div class="steps-step-description steps-step-description-text"
-             ng-bind="step.description"
-             ng-if="step.description_format !== 'html'"
-        ></div>
-    </div>
+    <step ng-repeat="step in $ctrl.steps track by step.id"
+        step="step"
+        step-result="$ctrl.steps_results[step.id]"
+        execution="$ctrl.execution"
+    ></step>
 </section>

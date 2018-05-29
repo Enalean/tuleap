@@ -3,9 +3,8 @@ import angular          from 'angular';
 import 'angular-mocks';
 
 describe('ExecutionRestService - ', () => {
-    let mockBackend,
-        ExecutionRestService,
-        SharedPropertiesService;
+    let mockBackend, ExecutionRestService, SharedPropertiesService;
+    const UUID = '123';
 
     beforeEach(() => {
         angular.mock.module(execution_module);
@@ -20,7 +19,7 @@ describe('ExecutionRestService - ', () => {
             SharedPropertiesService = _SharedPropertiesService_;
         });
 
-        spyOn(SharedPropertiesService, "getUUID").and.returnValue('123');
+        spyOn(SharedPropertiesService, 'getUUID').and.returnValue(UUID);
     });
 
     afterEach(() => {
@@ -198,6 +197,48 @@ describe('ExecutionRestService - ', () => {
 
         promise.then(result => {
             expect(result).toEqual(artifact);
-        })
+        });
+    });
+
+    describe('updateStepStatus()', () => {
+        it('Given an execution id, a step id and a status, then the REST route will be called', () => {
+            const test_execution = { id: 26 };
+            const step_id = 96;
+            const status = 'failed';
+            mockBackend
+                .expectPATCH(
+                    '/api/v1/testmanagement_executions/26',
+                    {
+                        steps_results: [{ step_id, status }]
+                    },
+                    headers => headers['X-Client-UUID'] === UUID
+                )
+                .respond(200);
+
+            const promise = ExecutionRestService.updateStepStatus(test_execution, step_id, status);
+            mockBackend.flush();
+
+            promise.catch(() => fail());
+        });
+
+        it('Given there is a REST error, then a promise will be rejected with the error message', done => {
+            const test_execution = { id: 21 };
+            const step_id = 38;
+            const status = 'blocked';
+            mockBackend.whenPATCH('/api/v1/testmanagement_executions/21').respond(403, {
+                error: { message: 'This user cannot update the execution' }
+            });
+
+            const promise = ExecutionRestService.updateStepStatus(test_execution, step_id, status);
+
+            promise.then(
+                () => fail(),
+                error => {
+                    expect(error).toEqual('This user cannot update the execution');
+                    done();
+                }
+            );
+            mockBackend.flush();
+        });
     });
 });

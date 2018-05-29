@@ -7,7 +7,6 @@ import BaseController from './execution-detail-controller.js';
 describe("ExecutionDetailController -", () => {
     let $scope,
         $q,
-        ExecutionDetailController,
         SharedPropertiesService,
         ExecutionService,
         TlpModalService,
@@ -52,7 +51,7 @@ describe("ExecutionDetailController -", () => {
 
         spyOn(ExecutionService, "loadExecutions");
 
-        ExecutionDetailController = $controller(BaseController, {
+        $controller(BaseController, {
             $scope,
             ExecutionService,
             TlpModalService,
@@ -120,6 +119,119 @@ describe("ExecutionDetailController -", () => {
             expect($scope.linkedIssueId).toBe(artifact.id);
             expect($scope.linkedIssueAlertVisible).toBe(true);
             expect(ExecutionService.addArtifactLink).toHaveBeenCalledWith($scope.execution.id, artifact);
+        });
+    });
+
+    describe('Status updates', () => {
+        const user = { id: 626 };
+        const execution = {
+            id: 8,
+            status: 'notrun',
+            time: '',
+            results: 'psychoanalyzer rupture solidish'
+        };
+        const time = 570;
+
+        beforeEach(() => {
+            spyOn(SharedPropertiesService, 'getCurrentUser').and.returnValue(user);
+            spyOn(ExecutionService, 'updateTestExecution');
+            spyOn(ExecutionRestService, 'putTestExecution').and.returnValue(
+                $q.when(execution)
+            );
+            $scope.execution = execution;
+            $scope.timer = { execution_time: time };
+        });
+
+        describe('pass()', () => {
+            it("Then the status will be saved to 'passed' and the timer will be reset", () => {
+                $scope.pass(execution);
+                $scope.$apply();
+
+                expect(ExecutionRestService.putTestExecution).toHaveBeenCalledWith(
+                    execution.id,
+                    'passed',
+                    null,
+                    execution.results
+                );
+                expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(
+                    execution,
+                    user
+                );
+                expect($scope.timer.execution_time).toEqual(0);
+            });
+
+            it('When there is a problem with the update, then the error will be shown on the execution', () => {
+                const error = { status: 500 };
+                ExecutionRestService.putTestExecution.and.returnValue(
+                    $q.reject(error)
+                );
+                spyOn(ExecutionService, 'displayError');
+
+                $scope.pass(execution);
+                $scope.$apply();
+
+                expect(ExecutionService.displayError).toHaveBeenCalledWith(
+                    execution,
+                    error
+                );
+            });
+        });
+
+        describe('fail()', () => {
+            it("Then the status will be saved to 'failed' and the timer will be reset", () => {
+                $scope.fail(execution);
+                $scope.$apply();
+
+                expect(ExecutionRestService.putTestExecution).toHaveBeenCalledWith(
+                    execution.id,
+                    'failed',
+                    null,
+                    execution.results
+                );
+                expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(
+                    execution,
+                    user
+                );
+                expect($scope.timer.execution_time).toEqual(0);
+            });
+        });
+
+        describe('block()', () => {
+            it("Then the status will be saved to 'blocked' and the timer will be reset", () => {
+                $scope.block(execution);
+                $scope.$apply();
+
+                expect(ExecutionRestService.putTestExecution).toHaveBeenCalledWith(
+                    execution.id,
+                    'blocked',
+                    null,
+                    execution.results
+                );
+                expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(
+                    execution,
+                    user
+                );
+                expect($scope.timer.execution_time).toEqual(0);
+            });
+        });
+
+        describe('notrun()', () => {
+            it("Then the status will be saved to 'notrun' and the timer will be reset", () => {
+                $scope.notrun(execution);
+                $scope.$apply();
+
+                expect(ExecutionRestService.putTestExecution).toHaveBeenCalledWith(
+                    execution.id,
+                    'notrun',
+                    null,
+                    execution.results
+                );
+                expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(
+                    execution,
+                    user
+                );
+                expect($scope.timer.execution_time).toEqual(0);
+            });
         });
     });
 });
