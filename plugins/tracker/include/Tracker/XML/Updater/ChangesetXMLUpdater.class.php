@@ -65,12 +65,12 @@ class Tracker_XML_Updater_ChangesetXMLUpdater {
         Tracker $source_tracker,
         Tracker $target_tracker,
         SimpleXMLElement $artifact_xml,
-        PFUser $user,
+        PFUser $submitted_by,
         $submitted_on
     ) {
         $artifact_xml['tracker_id'] = $target_tracker->getId();
 
-        $this->addSubmittedInformation($artifact_xml, $user, $submitted_on);
+        $this->addSubmittedInformation($artifact_xml, $submitted_by, $submitted_on);
 
         $this->parseFieldChangeNodesInReverseOrder($source_tracker, $target_tracker, $artifact_xml);
     }

@@ -64,6 +64,7 @@ class ArtifactsActionsTest extends TrackerBase
         $this->assertEquals($artifact_response->getStatusCode(), 200);
         $artifact_json = $artifact_response->json();
 
+        $this->assertEquals($artifact_json['submitted_by_user']['username'], \REST_TestDataBuilder::TEST_USER_2_NAME);
         $this->assertEquals($artifact_json['tracker']['id'], $this->move_tracker_id);
         $this->assertEquals($artifact_json['values_by_field']['title']['value'], "To be moved");
         $this->assertEquals($artifact_json['values_by_field']['desc']['value'], "Artifact that will be moved in another tracker");
