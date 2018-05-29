@@ -15,4 +15,11 @@ fi
 DOCKERIMAGE=build-plugin-label
 
 docker build -t "$DOCKERIMAGE" rpm
-docker run --rm -e "RELEASE=$RELEASE" -v "$TULEAP_PATH":/tuleap:ro -v "$WORKSPACE":/output -e UID="$(id -u)" -e GID="$(id -g)" "$DOCKERIMAGE"
+docker run --rm \
+           -e DIST="${DIST:-el6}" \
+           -e "RELEASE=$RELEASE" \
+           -v "$TULEAP_PATH":/tuleap:ro \
+           -v "$WORKSPACE":/output \
+           -e UID="$(id -u)" \
+           -e GID="$(id -g)" \
+           "$DOCKERIMAGE"
