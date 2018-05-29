@@ -42,7 +42,7 @@ plugin_cardwall	search_cardwall_placeholder	Recherchez : personnes, titre, …
 plugin_cardwall	column_autostack	Empiler automatiquement les cartes dans cette colonne
 plugin_cardwall	cell_stack	Empiler les cartes
 plugin_cardwall	cell_unstack	Dépiler les cartes
-plugin_cardwall	semantic_cardFields_label	Champs des cartes
+plugin_cardwall	semantic_cardFields_label	Sémantique carte
 plugin_cardwall	semantic_cardFields_description	Gérer les champs devant être affichés sur les cartes
 plugin_cardwall	semantic_cardFields_no_fields_defined	Aucun champ n'est ajouté aux cartes pour l'instant
 plugin_cardwall	semantic_cardFields_fields	Les champs suivants sont ajoutés aux cartes:
