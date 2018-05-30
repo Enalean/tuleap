@@ -167,7 +167,7 @@ class PageType_interwikimap extends PageType
     }
 
     function link ($link, $linktext = false) {
-        list ($moniker, $page) = split (":", $link, 2);
+        list ($moniker, $page) = preg_split ("/:/D", $link, 2);
         
         if (!isset($this->_map[$moniker])) {
             return HTML::span(array('class' => 'bad-interwiki'),

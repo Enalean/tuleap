@@ -314,7 +314,7 @@ function show_commitslist(
 			<TR class="'. util_get_alt_row_color($i) .'">'.
 			'<TD class="small"><b><A HREF="?func=detailcommit&group_id='.$group_id.$id_link.$filter_str.'">'.$id_str.
 		  '</b></A></TD>'.
-			'<TD class="small">'.util_make_links(join('<br>', split("\n",db_result($result, $i, 'description'))),$group_id).$id_sublink.'</TD>'.
+			'<TD class="small">'.util_make_links(join('<br>', preg_split("/\n/D",db_result($result, $i, 'description'))),$group_id).$id_sublink.'</TD>'.
 			##'<TD class="small">'.$commits_url.'</TD>'.
 			'<TD class="small">'.uniformat_date($GLOBALS['Language']->getText('system', 'datefmt'), db_result($result, $i, 'c_when')).'</TD>'.
 			## '<TD class="small">'.util_user_link(db_result($result,$i,'assigned_to_user')).'</TD>'.

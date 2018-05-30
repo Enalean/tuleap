@@ -620,7 +620,7 @@ function svn_utils_parse_access_file($project_svnroot) {
         if ($m) {
           $group = $matches[1];
           $users = $matches[2];
-          $SVNGROUPS[strtolower($group)] = array_map('trim', split(",", strtolower($users)));
+          $SVNGROUPS[strtolower($group)] = array_map('trim', preg_split("/,/D", strtolower($users)));
         }
       } else if ($state == $ST_PATH) {
         $m = preg_match($perm_pat, $line, $matches);

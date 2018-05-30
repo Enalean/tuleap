@@ -167,7 +167,7 @@ if ( $func == 'gotoid' ) {
                         
                         // CC
                         $add_cc = $request->get('add_cc');
-                        $array_add_cc = split('[,;]', $add_cc);
+                        $array_add_cc = preg_split('/[,;]/D', $add_cc);
 			if ($add_cc && !util_validateCCList($array_add_cc, $message)) {
                         exit_error($Language->getText('tracker_index','cc_list_invalid'), $message);
 			}
@@ -253,7 +253,7 @@ if ( $func == 'gotoid' ) {
                         
                         // CC
                         $add_cc = $request->get('add_cc');
-                        $array_add_cc = split('[,;]', $add_cc);
+                        $array_add_cc = preg_split('/[,;]/D', $add_cc);
 			if ($add_cc && !util_validateCCList($array_add_cc, $message)) {
                         exit_error($Language->getText('tracker_index','cc_list_invalid'), $message);
 			}
@@ -491,7 +491,7 @@ if ( $func == 'gotoid' ) {
                         
                         // CC
                         $add_cc = $request->get('add_cc');
-                        $array_add_cc = split('[,;]', $add_cc);
+                        $array_add_cc = preg_split('/[,;]/D', $add_cc);
                     if ($add_cc && !util_validateCCList($array_add_cc, $message)) {
                         exit_error($Language->getText('tracker_index','cc_list_invalid'), $message);
                     }
@@ -596,7 +596,7 @@ if ( $func == 'gotoid' ) {
                         
                 // CC
                 $add_cc = $request->get('add_cc');
-                $array_add_cc = split('[,;]', $add_cc);
+                $array_add_cc = preg_split('/[,;]/D', $add_cc);
 		if ($add_cc && !util_validateCCList($array_add_cc, $message)) {
 		  exit_error($Language->getText('tracker_index','cc_list_invalid'), $message);
 		}
