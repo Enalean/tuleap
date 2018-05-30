@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,11 +27,11 @@
                 > .select2-selection__choice {
                     color: $tlp-theme-color;
 
-                    @for $i from 1 through length($tlp-swatch-color-names) {
-                        &.select-item-label-color-#{nth($tlp-swatch-color-names, $i)} {
+                    @each $color-name, $colors in $tlp-swatch-color-map {
+                        &.select-item-label-color-#{$color-name} {
                             color: #ffffff;
-                            border-color: nth($tlp-swatch-color-primaries, $i);
-                            background: nth($tlp-swatch-color-primaries, $i);
+                            border-color: map-get($colors, 'primary');
+                            background: map-get($colors, 'primary');
 
                             > .select2-selection__choice__remove {
                                 &::before {
@@ -41,11 +41,11 @@
 
                             &.select-item-label-outline {
                                 background: transparent;
-                                color: nth($tlp-swatch-color-primaries, $i);
+                                color: map-get($colors, 'primary');
 
                                 > .select2-selection__choice__remove {
                                     &::before {
-                                        color: nth($tlp-swatch-color-primaries, $i);
+                                        color: map-get($colors, 'primary');
                                     }
                                 }
                             }
@@ -64,18 +64,18 @@
 // scss-lint:disable all
 .item-labels-box-select2-results > .select2-results {
     > .select2-results__options > .select2-results__option {
-        @for $i from 1 through length($tlp-swatch-color-names) {
-            &.select-item-label-color-#{nth($tlp-swatch-color-names, $i)} {
-                color: nth($tlp-swatch-color-primaries, $i);
+        @each $color-name, $colors in $tlp-swatch-color-map {
+            &.select-item-label-color-#{$color-name} {
+                color: map-get($colors, 'primary');
             }
         }
 
         &.select2-results__option--highlighted {
             background: $tlp-theme-color;
 
-            @for $i from 1 through length($tlp-swatch-color-names) {
-                &.select-item-label-color-#{nth($tlp-swatch-color-names, $i)} {
-                    background: nth($tlp-swatch-color-primaries, $i);
+            @each $color-name, $colors in $tlp-swatch-color-map {
+                &.select-item-label-color-#{$color-name} {
+                    background: map-get($colors, 'primary');
                     color: #ffffff;
                 }
             }

@@ -1,0 +1,10 @@
+<p>To iterate on those colors, use the following SCSS snippet:</p>
+<pre class="code">
+@each $color-name, $colors in $tlp-swatch-color-map {
+    // This will create classes like .inca-silver, .deep-blue, etc.
+    &.#{$color-name} {
+        border-bottom-color: map-get($colors, 'primary');
+        // You can also use the 'secondary' color
+    }
+}
+</pre>

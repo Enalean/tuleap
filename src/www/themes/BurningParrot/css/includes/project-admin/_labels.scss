@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,14 +22,14 @@
     height: 25px;
     border-radius: 3px;
 
-    @for $i from 1 through length($tlp-swatch-color-names) {
-        &.#{nth($tlp-swatch-color-names, $i)} {
-            border-color: nth($tlp-swatch-color-primaries, $i);
-            background: nth($tlp-swatch-color-primaries, $i);
+    @each $color-name, $colors in $tlp-swatch-color-map {
+        &.#{$color-name} {
+            border-color: map-get($colors, 'primary');
+            background: map-get($colors, 'primary');
 
             &:hover:not(:disabled):not(.disabled):not(:active) {
-                border-color: darken(nth($tlp-swatch-color-primaries, $i), 5%);
-                background: darken(nth($tlp-swatch-color-primaries, $i), 5%);
+                border-color: darken(map-get($colors, 'primary'), 5%);
+                background: darken(map-get($colors, 'primary'), 5%);
             }
         }
     }
@@ -43,9 +43,9 @@
 .project-labels-table-name-icon {
     margin: 0 5px 0 0;
 
-    @for $i from 1 through length($tlp-swatch-color-names) {
-        &.project-labels-table-name-icon-#{nth($tlp-swatch-color-names, $i)} {
-            color: nth($tlp-swatch-color-primaries, $i);
+    @each $color-name, $colors in $tlp-swatch-color-map {
+        &.project-labels-table-name-icon-#{$color-name} {
+            color: map-get($colors, 'primary');
         }
     }
 }

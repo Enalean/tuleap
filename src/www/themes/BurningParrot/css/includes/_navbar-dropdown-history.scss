@@ -188,8 +188,8 @@
     white-space: normal;
 }
 
-@for $i from 1 through length($tlp-swatch-color-names) {
-    .history-item-icon-#{nth($tlp-swatch-color-names, $i)} > svg {
-        fill: transparentize(nth($tlp-swatch-color-primaries, $i), .7);
+@each $color-name, $colors in $tlp-swatch-color-map {
+    .history-item-icon-#{$color-name} > svg {
+        fill: transparentize(map-get($colors, 'primary'), .7);
     }
 }
