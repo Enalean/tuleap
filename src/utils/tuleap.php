@@ -21,6 +21,14 @@
 require_once 'pre.php';
 
 use Tuleap\CLI\Application;
+use Tuleap\CLI\Command\UserPasswordCommand;
+use Tuleap\Password\PasswordSanityChecker;
 
 $application = new Application();
+$application->add(
+    new UserPasswordCommand(
+        UserManager::instance(),
+        PasswordSanityChecker::build()
+    )
+);
 $application->run();
