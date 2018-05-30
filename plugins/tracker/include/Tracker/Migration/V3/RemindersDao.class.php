@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,6 +24,10 @@ class Tracker_Migration_V3_RemindersDao extends DataAccessObject {
         $tv3_id = $this->da->escapeInt($tv3_id);
         $tv5_id = $this->da->escapeInt($tv5_id);
 
+        if (! $this->isPluginInstalled()) {
+            return;
+        }
+
         $sql = "SELECT tracker_field.id as field_id, notified_people, notification_type, notification_start, recurse, frequency
                 FROM artifact_date_reminder_settings
                     INNER JOIN tracker_field ON (old_id = field_id AND tracker_id = $tv5_id AND formElement_type = 'date')
@@ -43,6 +47,13 @@ class Tracker_Migration_V3_RemindersDao extends DataAccessObject {
 
             $this->createReminderList($nb_emails, $tv5_id, $field_id, $ugroups, $roles, $notification_type, $start, $frequency);
         }
+    }
+
+    private function isPluginInstalled()
+    {
+        $sql_v3 = "SHOW TABLES LIKE 'artifact_date_reminder_settings'";
+
+        return count($this->retrieve($sql_v3)) > 0;
     }
 
     private function getStart($old_date_reminder) {
