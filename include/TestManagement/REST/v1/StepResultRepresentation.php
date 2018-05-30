@@ -26,11 +26,11 @@ use Tuleap\TestManagement\Step\Execution\StepResult;
 class StepResultRepresentation
 {
     /**
-     * @var int
+     * @var int {@required true}
      */
     public $step_id;
     /**
-     * @var string
+     * @var string {@choice notrun,passed,failed,blocked} {@required true}
      */
     public $status;
 

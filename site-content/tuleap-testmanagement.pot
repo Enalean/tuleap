@@ -20,6 +20,11 @@ msgstr ""
 msgid "Definition of a step"
 msgstr ""
 
+msgid ""
+"Direct edition of steps results is not allowed. Please use TestManagement "
+"service instead."
+msgstr ""
+
 msgid "Execution result of a step"
 msgstr ""
 
@@ -27,9 +32,6 @@ msgid "Job URL is invalid"
 msgstr ""
 
 msgid "Permission denied"
-msgstr ""
-
-msgid "Please note that HTML format is not supported yet"
 msgstr ""
 
 #, php-format
