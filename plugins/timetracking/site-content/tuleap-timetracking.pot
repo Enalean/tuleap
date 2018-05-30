@@ -1,7 +1,3 @@
-#, php-format
-msgid "A time already exists for the day %s. Skipping."
-msgstr ""
-
 msgid "Access denied. You don't have permissions to perform this action."
 msgstr ""
 

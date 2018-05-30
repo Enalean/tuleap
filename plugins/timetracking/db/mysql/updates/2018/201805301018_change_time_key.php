@@ -17,12 +17,23 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-namespace Tuleap\Timetracking\Exceptions;
-
-use Exception;
-
-class TimeTrackingExistingDateException extends Exception
+class b201805301018_change_time_key extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
 {
+    public function description()
+    {
+        return 'Change index for plugin_timetracking_times';
+    }
 
+    public function preUp()
+    {
+        $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
+    }
+    public function up()
+    {
+        $sql = "ALTER TABLE plugin_timetracking_times DROP INDEX user_id , ADD INDEX time (user_id, artifact_id)";
+        $res = $this->db->dbh->exec($sql);
+        if ($res === false) {
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Drop the old Index and add a new did not work.');
+        }
+    }
 }

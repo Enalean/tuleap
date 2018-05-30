@@ -74,16 +74,4 @@ class TimeCheckerTest extends TestCase
     {
         $this->assertFalse($this->time_checker->checkMandatoryTimeValue(null));
     }
-
-    public function testItReturnTimeIfExistingTime()
-    {
-        $this->time_retriever->allows()->getExistingTimeForUserInArtifactAtGivenDate($this->user, $this->artifact, '2018-04-04')->andReturns($this->time);
-        $this->assertEquals($this->time, $this->time_checker->getExistingTimeForUserInArtifactAtGivenDate($this->user, $this->artifact, '2018-04-04'));
-    }
-
-    public function testItReturnNullIfExistingTime()
-    {
-        $this->time_retriever->allows()->getExistingTimeForUserInArtifactAtGivenDate($this->user, $this->artifact, '2018-04-04')->andReturns(null);
-        $this->assertNull($this->time_checker->getExistingTimeForUserInArtifactAtGivenDate($this->user, $this->artifact, '2018-04-04'));
-    }
 }

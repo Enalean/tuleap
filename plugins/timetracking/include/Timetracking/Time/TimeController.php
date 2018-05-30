@@ -90,8 +90,6 @@ class TimeController
 
         $this->checkMandatoryTimeValue($added_time);
 
-        $this->checkExistingTimeForUserInArtifactAtGivenDate($user, $artifact, $added_date);
-
         $this->time_updater->addTimeForUserInArtifact($user, $artifact, $added_date, $added_time, $added_step);
     }
 
@@ -147,10 +145,6 @@ class TimeController
 
         $this->checkMandatoryTimeValue($updated_time);
 
-        if ($time->getDay() !== $updated_date) {
-            $this->checkExistingTimeForUserInArtifactAtGivenDate($user, $artifact, $updated_date);
-        }
-
         $this->time_updater->updateTime($time, $updated_date, $updated_time, $updated_step);
     }
 
@@ -170,16 +164,6 @@ class TimeController
         }
 
         return $time;
-    }
-
-    /**
-     * @throws TimeTrackingExistingDateException
-     */
-    private function checkExistingTimeForUserInArtifactAtGivenDate(PFUser $user, Tracker_Artifact $artifact, $date)
-    {
-        if ($this->time_checker->getExistingTimeForUserInArtifactAtGivenDate($user, $artifact, $date)) {
-            throw new TimeTrackingExistingDateException(sprintf(dgettext('tuleap-timetracking', "A time already exists for the day %s. Skipping."), $date));
-        }
     }
 
     /**

@@ -44,9 +44,4 @@ class TimeChecker
     {
         return ($time_value != null);
     }
-
-    public function getExistingTimeForUserInArtifactAtGivenDate(PFUser $user, Tracker_Artifact $artifact, $date)
-    {
-        return $this->time_retriever->getExistingTimeForUserInArtifactAtGivenDate($user, $artifact, $date);
-    }
 }
