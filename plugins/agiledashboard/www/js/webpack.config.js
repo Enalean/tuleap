@@ -26,7 +26,8 @@ const webpack_config_for_charts = {
     },
     plugins: [
         manifest_plugin,
-        webpack_configurator.getMomentLocalePlugin()
+        webpack_configurator.getMomentLocalePlugin(),
+        webpack_configurator.getUglifyJSPlugin()
     ]
 };
 

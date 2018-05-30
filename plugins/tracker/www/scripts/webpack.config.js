@@ -94,7 +94,11 @@ const webpack_config_for_burndown_chart = {
             webpack_configurator.rule_po_files
         ]
     },
-    plugins: [manifest_plugin, webpack_configurator.getMomentLocalePlugin()]
+    plugins: [
+        manifest_plugin,
+        webpack_configurator.getMomentLocalePlugin(),
+        webpack_configurator.getUglifyJSPlugin()
+    ]
 };
 
 if (process.env.NODE_ENV === 'watch' || process.env.NODE_ENV === 'test') {
