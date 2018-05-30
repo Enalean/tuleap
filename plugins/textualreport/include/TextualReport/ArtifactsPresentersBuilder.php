@@ -42,11 +42,14 @@ class ArtifactsPresentersBuilder
      * @param array  $ordered_artifact_rows
      * @param PFUser $current_user
      * @param string $server_url
+     * @param int    $hard_limit
      *
      * @return array
      */
-    public function getArtifactsPresenters(array $ordered_artifact_rows, PFUser $current_user, $server_url)
+    public function getArtifactsPresenters(array $ordered_artifact_rows, PFUser $current_user, $server_url, $hard_limit)
     {
+        array_splice($ordered_artifact_rows, $hard_limit);
+
         $artifacts = [];
         foreach ($ordered_artifact_rows as $row) {
             $artifact = $this->artifact_factory->getArtifactByIdUserCanView($current_user, $row['id']);

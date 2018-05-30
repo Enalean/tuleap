@@ -19,4 +19,15 @@
         </div>
     </section>
 {{/ artifacts }}
+{{# is_hard_limit_reached }}
+    <div class="tlp-alert-warning">
+        {{# dgettext }}
+            tuleap-textualreport
+            | There are too many matching artifacts (%s), for performance
+              reasons we cannot generate a document with more than %s artifacts.
+            | {{ nb_matching_artifacts }}
+            | {{ hard_limit }}
+        {{/ dgettext }}
+    </div>
+{{/ is_hard_limit_reached }}
 </body>
