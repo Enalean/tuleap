@@ -33,7 +33,7 @@ is_server_ready() {
 
 setup_user
 
-su -c 'npm install cypress && `npm bin`/cypress verify' -l runner
+su -c 'npm install cypress@^2.1.0 && `npm bin`/cypress verify' -l runner
 
 is_server_ready
 
