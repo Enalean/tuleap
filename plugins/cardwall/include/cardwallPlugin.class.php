@@ -34,6 +34,13 @@ class cardwallPlugin extends Plugin
      */
     private $config_factory;
 
+    public function __construct($id)
+    {
+        parent::__construct($id);
+
+        bindTextDomain('tuleap-cardwall', CARDWALL_BASE_DIR . '/../site-content');
+    }
+
     public function getConfigFactory() {
         if (!$this->config_factory) {
             $tracker_factory  = TrackerFactory::instance();

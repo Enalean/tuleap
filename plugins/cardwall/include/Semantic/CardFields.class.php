@@ -1,6 +1,6 @@
 <?php
 /**
-* Copyright Enalean (c) 2013-2016. All rights reserved.
+ * Copyright Enalean (c) 2013-2018. All rights reserved.
 * Tuleap and Enalean names and logos are registrated trademarks owned by
 * Enalean SAS. All other trademarks or names are properties of their respective
 * owners.
@@ -21,8 +21,15 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class Cardwall_Semantic_CardFields extends Tracker_Semantic {
+use Tuleap\Cardwall\Semantic\BackgroundColorSelectorPresenter;
+
+class Cardwall_Semantic_CardFields extends Tracker_Semantic
+{
     const NAME = 'plugin_cardwall_card_fields';
+    /**
+     * @var Codendi_HTMLPurifier
+     */
+    private $html_purifier;
 
     /** @var Tracker_FormElement_Field[] */
     private $card_fields = array();
@@ -37,11 +44,12 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic {
 
     public function __construct(Tracker $tracker) {
         parent::__construct($tracker);
+
+        $this->html_purifier = Codendi_HTMLPurifier::instance();
     }
 
     public function display() {
         $html   = '';
-        $html_purifier     = Codendi_HTMLPurifier::instance();
         $fields = $this->getFields();
         $html .= '<p>';
         if (!count($fields)) {
@@ -50,7 +58,7 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic {
             $html .= $GLOBALS['Language']->getText('plugin_cardwall','semantic_cardFields_fields');
             $html .= '<ul>';
             foreach($fields as $field) {
-                $html .=  '<li><strong>'. $html_purifier->purify($field->getLabel(), CODENDI_PURIFIER_CONVERT_HTML) .'</strong></li>';
+                $html .= '<li><strong>' . $this->html_purifier->purify($field->getLabel(), CODENDI_PURIFIER_CONVERT_HTML) . '</strong></li>';
             }
             $html .= '</ul>';
         }
@@ -76,61 +84,27 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic {
         $this->card_fields = $fields;
     }
 
-    public function displayAdmin(Tracker_SemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user) {
-        $html_purifier = Codendi_HTMLPurifier::instance();
+    public function displayAdmin(
+        Tracker_SemanticManager $semantic_manager,
+        TrackerManager $tracker_manager,
+        Codendi_Request $request,
+        PFUser $current_user
+    ) {
+
         $semantic_manager->displaySemanticHeader($this, $tracker_manager);
 
-
-        $html = '';
         $fields = $this->getFields();
-        if (!count($fields)) {
-            $html .= $GLOBALS['Language']->getText('plugin_cardwall','semantic_cardFields_no_fields_defined');
-        } else {
-            $html .= $GLOBALS['Language']->getText('plugin_cardwall','semantic_cardFields_fields');
-            $html .= '<blockquote>';
-            $html .= '<table>';
-            foreach($fields as $field) {
-                $html .= '<tr><td>';
-                $html .=  $html_purifier->purify($field->getLabel(), CODENDI_PURIFIER_CONVERT_HTML) ;
-                $html .= '</td><td>';
-                $html .= '<form method="post" id="tracker-semantic-removal-action" action="'. $html_purifier->purify($this->getUrl()) .'">';
-                $html .= $this->getCSRFToken()->fetchHTMLInput();
-                $html .= '<input type="hidden" name="remove" value="' . $html_purifier->purify($field->getId()) .  '">';
-                $html .= '<button type="submit" class="btn btn-link">';
-                $html .= $GLOBALS['HTML']->getimage(
-                    'ic/cross.png',
-                    array(
-                        'alt' => $GLOBALS['Language']->getText('plugin_cardwall','semantic_cardFields_fields')
-                    )
-                );
-                $html .= '</button>';
-                $html .= '</form>';
-                $html .= '</a>';
-                $html .= '</td></tr>';
-            }
-            $html .= '</table>';
-            $html .= '</blockquote>';
-        }
-        $options = '';
-        foreach($this->tracker->getFormElements() as $formElement) {
-            $options .= $formElement->fetchAddTooltip($fields);
-        }
-        if ($options) {
-            $html .= '<form action="'. $this->getUrl() .'" method="POST">';
-            $html .= $this->getCSRFToken()->fetchHTMLInput();
-            $html .= '<p>'. $GLOBALS['Language']->getText('plugin_cardwall','semantic_card_fields_add_field');
-            $html .= '<select name="field">';
-            $html .= $options;
-            $html .= '</select>';
-            $html .= '<input type="submit" name="add" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
-            $html .= '</p>';
-            $html .= '</form>';
-        } else {
-            $html .= '<em>' . $GLOBALS['Language']->getText('plugin_cardwall','semantic_card_fields_no_more_field') . '</em>';
-        }
+
+        $html = "<h3>" . dgettext('tuleap-cardwall', 'Fields') . "</h3>";
+        $html .= $this->fetchFormDisplayedFieldForCard($fields);
+        $html .= $this->fetchFormAddFieldToCard($fields);
+
+        $html .= $this->fetchFormChooseBackgroundField();
 
         $html .= '<p><a href="'.TRACKER_BASE_URL.'/?tracker='. $this->tracker->getId() .'&amp;func=admin-semantic">&laquo; ' . $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','go_back_overview') . '</a></p>';
+
         echo $html;
+
         $semantic_manager->displaySemanticFooter($this, $tracker_manager);
     }
 
@@ -255,5 +229,102 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic {
      */
     public function instantiateFieldFromRow(array $row) {
         return Tracker_FormElementFactory::instance()->getFieldById($row['field_id']);
+    }
+
+    /**
+     * @param Tracker_FormElement_Field[]
+     *
+     * @return array
+     */
+    private function fetchFormDisplayedFieldForCard(array $fields)
+    {
+        $html = '';
+        if (! count($fields)) {
+            $html .= $GLOBALS['Language']->getText('plugin_cardwall', 'semantic_cardFields_no_fields_defined');
+        } else {
+            $html .= $GLOBALS['Language']->getText('plugin_cardwall', 'semantic_cardFields_fields');
+            $html .= '<blockquote>';
+            $html .= '<table>';
+            foreach ($fields as $field) {
+                $html .= '<tr><td>';
+                $html .= $this->html_purifier->purify($field->getLabel(), CODENDI_PURIFIER_CONVERT_HTML);
+                $html .= '</td><td>';
+                $html .= '<form method="post" id="tracker-semantic-removal-action" action="' . $this->html_purifier->purify($this->getUrl()) . '">';
+                $html .= $this->getCSRFToken()->fetchHTMLInput();
+                $html .= '<input type="hidden" name="remove" value="' . $this->html_purifier->purify($field->getId()) . '">';
+                $html .= '<button type="submit" class="btn btn-link">';
+                $html .= $GLOBALS['HTML']->getimage(
+                    'ic/cross.png',
+                    [
+                        'alt' => $GLOBALS['Language']->getText('plugin_cardwall', 'semantic_cardFields_fields')
+                    ]
+                );
+                $html .= '</button>';
+                $html .= '</form>';
+                $html .= '</a>';
+                $html .= '</td></tr>';
+            }
+            $html .= '</table>';
+            $html .= '</blockquote>';
+        }
+        return $html;
+    }
+
+    /**
+     * @param $fields
+     * @param $html
+     *
+     * @return string
+     */
+    private function fetchFormAddFieldToCard(array $fields)
+    {
+        $html    = '';
+        $options = '';
+        foreach ($this->tracker->getFormElements() as $formElement) {
+            $options .= $formElement->fetchAddTooltip($fields);
+        }
+        if ($options) {
+            $html .= '<form action="' . $this->getUrl() . '" method="POST">';
+            $html .= $this->getCSRFToken()->fetchHTMLInput();
+            $html .= '<p>' . $GLOBALS['Language']->getText('plugin_cardwall', 'semantic_card_fields_add_field');
+            $html .= '<select name="field">';
+            $html .= $options;
+            $html .= '</select>';
+            $html .= '<input type="submit" name="add" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" />';
+            $html .= '</p>';
+            $html .= '</form>';
+        } else {
+            $html .= '<em>' . $GLOBALS['Language']->getText('plugin_cardwall', 'semantic_card_fields_no_more_field') . '</em>';
+        }
+        return $html;
+    }
+
+    /**
+     * @return String
+     */
+    private function fetchFormChooseBackgroundField()
+    {
+        $presenter = new BackgroundColorSelectorPresenter(
+            $this->getTrackerFields(),
+            $this->getCSRFToken(),
+            $this->getUrl()
+        );
+        $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(CARDWALL_BASE_DIR) . '/templates');
+
+        return $renderer->renderToString('semantic-card-background-selector', $presenter);
+    }
+
+    private function getTrackerFields()
+    {
+        $formatted_field = [];
+
+        foreach ($this->tracker->getFormElementFields() as $field) {
+            $formatted_field[] = [
+                "id"   => $field->getId(),
+                "name" => $field->getLabel()
+            ];
+        }
+
+        return $formatted_field;
     }
 }
