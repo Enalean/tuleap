@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -46,19 +46,20 @@ class RestoreController
             return false;
         }
 
+        $url = '/admin/show_pending_documents.php?'. http_build_query(['group_id' => $project_id]);
+        (new \CSRFSynchronizerToken($url))->check();
+
         $repository = $this->repository_manager->getByIdAndProject($repository_id, $project);
         if ($repository !== null) {
             $this->repository_manager->queueRepositoryRestore($repository, SystemEventManager::instance());
         }
 
-        $GLOBALS['Response']->redirect('/admin/show_pending_documents.php?'. http_build_query(
-            array('group_id' => $project_id)
-        ));
+        $GLOBALS['Response']->redirect($url);
     }
 
-    public function displayRestorableRepositories(array $repositories, $project_id)
+    public function displayRestorableRepositories(\CSRFSynchronizerToken $csrf_token, array $repositories, $project_id)
     {
-        $presenter = new RestorePresenter($repositories, $project_id);
+        $presenter = new RestorePresenter($csrf_token, $repositories, $project_id);
         $renderer  = TemplateRendererFactory::build()->getRenderer(SVN_TEMPLATE_DIR);
         return $renderer->renderToString('repository_restore', $presenter);
     }

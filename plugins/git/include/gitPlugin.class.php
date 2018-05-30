@@ -2189,20 +2189,25 @@ class GitPlugin extends Plugin
                     </thead>
                     <tbody>';
         if (count($archived_repositories)) {
+            $html_purifier = Codendi_HTMLPurifier::instance();
             foreach($archived_repositories as $archived_repository) {
                 $tab_content .= '<tr>';
-                $tab_content .= '<td>'.$archived_repository->getName().'</td>';
-                $tab_content .= '<td>'.$archived_repository->getCreationDate().'</td>';
-                $tab_content .= '<td>'.$archived_repository->getCreator()->getName().'</td>';
-                $tab_content .= '<td>'.$archived_repository->getDeletionDate().'</td>';
+                $tab_content .= '<td>'.$html_purifier->purify($archived_repository->getName()).'</td>';
+                $tab_content .= '<td>'.$html_purifier->purify($archived_repository->getCreationDate()).'</td>';
+                $tab_content .= '<td>'.$html_purifier->purify($archived_repository->getCreator()->getName()).'</td>';
+                $tab_content .= '<td>'.$html_purifier->purify($archived_repository->getDeletionDate()).'</td>';
                 $tab_content .= '<td class="tlp-table-cell-actions">
-                    <a href="/plugins/git/?action=restore&group_id='.$group_id.'&repo_id='.$archived_repository->getId().'"
-                        class="tlp-table-cell-actions-button tlp-button-small tlp-button-outline tlp-button-primary"
-                        onClick="return confirm(\''.$GLOBALS['Language']->getText('plugin_git', 'restore_confirmation').'\')"
-                    >
-                        <i class="fa fa-repeat tlp-button-icon"></i> '.$GLOBALS['Language']->getText('plugin_git', 'archived_repositories_restore').'
-                    </a>
-                </td>';
+                                    <form method="post" action="/plugins/git/"
+                                    onsubmit="return confirm(\'' . $html_purifier->purify($GLOBALS['Language']->getText('plugin_git', 'restore_confirmation'), CODENDI_PURIFIER_JS_QUOTE).'\')">
+                                        ' . $params['csrf_token']->fetchHTMLInput() . '
+                                        <input type="hidden" name="action" value="restore">
+                                        <input type="hidden" name="group_id" value="'. $html_purifier->purify($group_id) .'">
+                                        <input type="hidden" name="repo_id" value="'. $html_purifier->purify($archived_repository->getId()) .'">
+                                        <button class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline">
+                                            <i class="fa fa-repeat tlp-button-icon"></i> '. $html_purifier->purify($GLOBALS['Language']->getText('plugin_git', 'archived_repositories_restore')) .'
+                                        </button>
+                                    </form>
+                                 </td>';
                 $tab_content .= '</tr>';
             }
         } else {

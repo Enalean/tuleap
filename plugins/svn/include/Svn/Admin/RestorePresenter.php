@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,14 +27,20 @@ class RestorePresenter
     public $restore_confirm;
     public $project_id;
     public $title;
+    /**
+     * @var \CSRFSynchronizerToken
+     */
+    public $csrf_token;
 
     public function __construct(
+        \CSRFSynchronizerToken $csrf_token,
         array $repositories,
         $project_id
     ) {
         $this->title             = $GLOBALS['Language']->getText('plugin_svn', 'archived_repositories');
         $this->repositories      = $repositories;
         $this->project_id        = $project_id;
+        $this->csrf_token        = $csrf_token;
         $this->restore_not_found = $GLOBALS['Language']->getText('plugin_svn', 'restore_no_repo_found');
         $this->restore_confirm   = $GLOBALS['Language']->getText('plugin_svn', 'restore_confirmation');
         $this->repository_name   = $GLOBALS['Language']->getText('plugin_svn', 'repository_name');

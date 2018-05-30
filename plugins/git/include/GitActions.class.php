@@ -1,7 +1,7 @@
 <?php
 /**
   * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-  * Copyright (c) Enalean, 2011 - 2016. All Rights Reserved.
+  * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
   *
   * This file is a part of Tuleap.
   *
@@ -1307,7 +1307,8 @@ class GitActions extends PluginActions
 
     public function restoreRepository($repo_id, $project_id) {
         $repository = $this->factory->getDeletedRepository($repo_id);
-        $url        = '/admin/show_pending_documents.php?group_id='.$project_id.'&focus=git_repository';
+        $url        = '/admin/show_pending_documents.php?group_id='.$project_id;
+        (new CSRFSynchronizerToken($url))->check();
 
         if (! $repository) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git', 'restore_invalid_id'));
@@ -1321,7 +1322,7 @@ class GitActions extends PluginActions
             $this->git_system_event_manager->queueRepositoryRestore($repository);
             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_git', 'restore_event_created').' : '.$repository->getName());
         }
-        $GLOBALS['Response']->redirect($url);
+        $GLOBALS['Response']->redirect($url . '&focus=git_repository');
     }
 
     public function updateDefaultMirroring(Project $project, array $selected_mirror_ids) {
