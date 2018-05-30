@@ -1,0 +1,8 @@
+{
+  "autoload": {
+    "psr-4": {
+      "Tuleap\\PullRequest\\": ["include/", "include/PullRequest/"]
+    },
+    "classmap": ["include/"]
+  }
+}
