@@ -30,24 +30,6 @@ class BackendAliasesTest extends TuleapTestCase {
         $GLOBALS['alias_file'] = $this->getTmpDir() . '/aliases.codendi';
         $this->alias_file      = $GLOBALS['alias_file'];
 
-        $udao = mock('UserDao');
-        stub($udao)
-            ->searchByStatus()
-            ->returnsDar(
-                array(
-                    "user_name"=> "user1",
-                    "email"    => "user1@domain1.com"
-                ),
-                array(
-                    "user_name"=> "user2",
-                    "email"    => "user1@domain2.com"
-                ),
-                array(
-                    "user_name"=> "user3",
-                    "email"    => "user1@domain3.com"
-                )
-            );
-
         $listdao = mock('MailingListDao');
         stub($listdao)
             ->searchAllActiveML()
@@ -63,12 +45,10 @@ class BackendAliasesTest extends TuleapTestCase {
         $this->backend = partial_mock(
             'BackendAliases',
             array(
-                'getUserDao',
                 'getMailingListDao',
                 'system'
             )
         );
-        stub($this->backend)->getUserDao()->returns($udao);
         stub($this->backend)->getMailingListDao()->returns($listdao);
         stub($this->backend)->system()->returns(true);
 
@@ -118,21 +98,6 @@ class BackendAliasesTest extends TuleapTestCase {
         $this->assertPattern('/"list1-bounces":/', $aliases, "ML aliases not set");
         $this->assertPattern('/"listwithanunexpectedquote":/', $aliases);
         $this->assertPattern('/"listwithanunexpectednewline":/', $aliases);
-    }
-
-    public function itGeneratesUserAliasesWhenExplicitelyEnabled()
-    {
-        ForgeConfig::set('accept_security_risk_and_enable_user_aliases', 1);
-        $this->backend->update();
-        $aliases = file_get_contents($this->alias_file);
-        $this->assertPattern('/"user3":/', $aliases, "User aliases not set");
-    }
-
-    public function itDoesNotGenerateUserAliasesByDefault()
-    {
-        $this->backend->update();
-        $aliases = file_get_contents($this->alias_file);
-        $this->assertNoPattern('/"user3":/', $aliases, "User aliases not set");
     }
 
     public function itGeneratesUserAliasesGivenByPlugins() {
