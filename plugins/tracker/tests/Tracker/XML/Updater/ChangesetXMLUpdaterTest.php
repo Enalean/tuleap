@@ -144,10 +144,11 @@ class Tracker_XML_Updater_ChangesetXMLUpdaterTest extends TuleapTestCase {
         stub($this->tracker)->getTitleField()->returns($this->field_summary);
         stub($target_tracker)->getTitleField()->returns($target_title_field);
 
-        $this->updater->updateForMoveAction($this->tracker, $target_tracker, $this->artifact_xml, $this->user, time());
+        $time = time();
+        $this->updater->updateForMoveAction($this->tracker, $target_tracker, $this->artifact_xml, $this->user, $time);
 
         $this->assertEqual((int)$this->artifact_xml['tracker_id'], 201);
-        $this->assertEqual((string)$this->artifact_xml->changeset->submitted_on, date('c', time()));
+        $this->assertEqual((string)$this->artifact_xml->changeset->submitted_on, date('c', $time));
         $this->assertEqual((int)$this->artifact_xml->changeset->submitted_by, $this->user->getId());
 
         $this->assertEqual(count($this->artifact_xml->changeset->field_change), 1);
@@ -195,10 +196,11 @@ class Tracker_XML_Updater_ChangesetXMLUpdaterTest extends TuleapTestCase {
         stub($this->tracker)->getDescriptionField()->returns($source_description_field);
         stub($target_tracker)->getDescriptionField()->returns($target_description_field);
 
-        $this->updater->updateForMoveAction($this->tracker, $target_tracker, $artifact_xml, $this->user, time());
+        $time = time();
+        $this->updater->updateForMoveAction($this->tracker, $target_tracker, $artifact_xml, $this->user, $time);
 
         $this->assertEqual((int)$artifact_xml['tracker_id'], 201);
-        $this->assertEqual((string)$artifact_xml->changeset[0]->submitted_on, date('c', time()));
+        $this->assertEqual((string)$artifact_xml->changeset[0]->submitted_on, date('c', $time));
         $this->assertEqual((int)$artifact_xml->changeset[0]->submitted_by, 101);
 
         $this->assertEqual(count($artifact_xml->changeset), 2);
@@ -312,10 +314,11 @@ class Tracker_XML_Updater_ChangesetXMLUpdaterTest extends TuleapTestCase {
         stub($this->tracker)->getDescriptionField()->returns($source_description_field);
         stub($target_tracker)->getDescriptionField()->returns($target_description_field);
 
-        $this->updater->updateForMoveAction($this->tracker, $target_tracker, $artifact_xml, $this->user, time());
+        $time = time();
+        $this->updater->updateForMoveAction($this->tracker, $target_tracker, $artifact_xml, $this->user, $time);
 
         $this->assertEqual((int)$artifact_xml['tracker_id'], 201);
-        $this->assertEqual((string)$artifact_xml->changeset[0]->submitted_on, date('c', time()));
+        $this->assertEqual((string)$artifact_xml->changeset[0]->submitted_on, date('c', $time));
         $this->assertEqual((int)$artifact_xml->changeset[0]->submitted_by, 101);
 
         $this->assertEqual(count($artifact_xml->changeset), 3);
