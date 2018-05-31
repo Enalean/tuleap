@@ -1,0 +1,16 @@
+msgid "Background color"
+msgstr ""
+
+msgid "Choose a field to define card background color"
+msgstr ""
+
+msgid "Fields"
+msgstr ""
+
+msgid ""
+"No field can be choosen for card color background. Only selectbox and "
+"radiobutton bind on static values can be used."
+msgstr ""
+
+msgid "Submit"
+msgstr ""
