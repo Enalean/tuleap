@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -43,35 +43,6 @@ $tlp-ui-black : #000000;
 
 $tlp-typo-default-text-color: #333333;
 
-$tlp-swatch-color-names: 'inca-silver', 'chrome-silver', 'fiesta-red', 'teddy-brown', 'clockwork-orange',
-'red-wine', 'acid-green', 'army-green', 'sherwood-green', 'ocean-turquoise', 'daphne-blue', 'lake-placid-blue',
-'deep-blue', 'plum-crazy', 'peggy-pink', 'flamingo-pink';
-$tlp-swatch-color-primaries: #767676, #a5a5a5, #dc2f2f, #9b6542, #ff9400,
-#9e1919, #92c71e, #7f9a42, #28c43a, #28c4a0, #0fd8d8, #33c0ea,
-#2b6cdc, #890de1, #e10dcb, #ff87c4;
-$tlp-swatch-color-secondaries: #eeeeee, #fafafa, #ffdfdf, #f9ebe1, #fff0dc,
-#f7e8e8, #ecf4d9, #e5f2c8, #e9ffeb, #d3fcf2, #e3ffff, #dff5ff,
-#deeaff, #f3e2ff, #ffe9fd, #fff2f8;
-
-$tlp-swatch-color-map: (
-    'inca-silver': (primary: #767676, secondary: #eeeeee),
-    'chrome-silver': (primary: #a5a5a5, secondary: #fafafa),
-    'fiesta-red': (primary: #dc2f2f, secondary: #ffdfdf),
-    'teddy-brown': (primary: #9b6542, secondary: #f9ebe1),
-    'clockwork-orange': (primary: #ff9400, secondary: #fff0dc),
-    'red-wine': (primary: #9e1919, secondary: #f7e8e8),
-    'acid-green': (primary: #92c71e, secondary: #ecf4d9),
-    'army-green': (primary: #7f9a42, secondary: #e5f2c8),
-    'sherwood-green': (primary: #28c43a, secondary: #e9ffeb),
-    'ocean-turquoise': (primary: #28c4a0, secondary: #d3fcf2),
-    'daphne-blue': (primary: #0fd8d8, secondary: #e3ffff),
-    'lake-placid-blue': (primary: #33c0ea, secondary: #dff5ff),
-    'deep-blue': (primary: #2b6cdc, secondary: #deeaff),
-    'plum-crazy': (primary: #890de1, secondary: #f3e2ff),
-    'peggy-pink': (primary: #e10dcb, secondary: #ffe9fd),
-    'flamingo-pink': (primary: #ff87c4, secondary: #fff2f8),
-);
-
 // Business colors - Primaries
 $tlp-swatch-inca-silver               : #767676;
 $tlp-swatch-chrome-silver             : #a5a5a5;
@@ -107,3 +78,70 @@ $tlp-swatch-deep-blue-secondary       : #deeaff;
 $tlp-swatch-plum-crazy-secondary      : #f3e2ff;
 $tlp-swatch-peggy-pink-secondary      : #ffe9fd;
 $tlp-swatch-flamingo-pink-secondary   : #fff2f8;
+
+$tlp-swatch-color-map: (
+    'inca-silver': (
+        primary: $tlp-swatch-inca-silver,
+        secondary: $tlp-swatch-inca-silver-secondary
+    ),
+    'chrome-silver': (
+        primary: $tlp-swatch-chrome-silver,
+        secondary: $tlp-swatch-chrome-silver-secondary
+    ),
+    'fiesta-red': (
+        primary: $tlp-swatch-fiesta-red,
+        secondary: $tlp-swatch-fiesta-red-secondary
+    ),
+    'teddy-brown': (
+        primary: $tlp-swatch-teddy-brown,
+        secondary: $tlp-swatch-teddy-brown-secondary
+    ),
+    'clockwork-orange': (
+        primary: $tlp-swatch-clockwork-orange,
+        secondary: $tlp-swatch-clockwork-orange-secondary
+    ),
+    'red-wine': (
+        primary: $tlp-swatch-red-wine,
+        secondary: $tlp-swatch-red-wine-secondary
+    ),
+    'acid-green': (
+        primary: $tlp-swatch-acid-green,
+        secondary: $tlp-swatch-acid-green-secondary
+    ),
+    'army-green': (
+        primary: $tlp-swatch-army-green,
+        secondary: $tlp-swatch-army-green-secondary
+    ),
+    'sherwood-green': (
+        primary: $tlp-swatch-sherwood-green,
+        secondary: $tlp-swatch-sherwood-green-secondary
+    ),
+    'ocean-turquoise': (
+        primary: $tlp-swatch-ocean-turquoise,
+        secondary: $tlp-swatch-ocean-turquoise-secondary
+    ),
+    'daphne-blue': (
+        primary: $tlp-swatch-daphne-blue,
+        secondary: $tlp-swatch-daphne-blue-secondary
+    ),
+    'lake-placid-blue': (
+        primary: $tlp-swatch-lake-placid-blue,
+        secondary: $tlp-swatch-lake-placid-blue-secondary
+    ),
+    'deep-blue': (
+        primary: $tlp-swatch-deep-blue,
+        secondary: $tlp-swatch-deep-blue-secondary
+    ),
+    'plum-crazy': (
+        primary: $tlp-swatch-plum-crazy,
+        secondary: $tlp-swatch-plum-crazy-secondary
+    ),
+    'peggy-pink': (
+        primary: $tlp-swatch-peggy-pink,
+        secondary: $tlp-swatch-peggy-pink-secondary
+    ),
+    'flamingo-pink': (
+        primary: $tlp-swatch-flamingo-pink,
+        secondary: $tlp-swatch-flamingo-pink-secondary
+    )
+);

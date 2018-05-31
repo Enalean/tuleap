@@ -31,11 +31,9 @@
     background: $tlp-ui-white;
     cursor: move;
 
-    @for $i from 1 through length($tlp-swatch-color-names) {
-        &.#{nth($tlp-swatch-color-names, $i)} {
-            > .backlog-item-details-type-border {
-                border-left-color: nth($tlp-swatch-color-primaries, $i);
-            }
+    @each $color-name, $colors in $tlp-swatch-color-map {
+        &.#{$color-name} > .backlog-item-details-type-border {
+            border-left-color: map-get($colors, 'primary');
         }
     }
 

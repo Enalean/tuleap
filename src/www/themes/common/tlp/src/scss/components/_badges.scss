@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -129,17 +129,17 @@ $tlp-badge-secondary-outline-color: $tlp-ui-dimmed;
     }
 }
 
-@for $i from 1 through length($tlp-swatch-color-names) {
-    .tlp-badge-#{nth($tlp-swatch-color-names, $i)} {
+@each $color-name, $colors in $tlp-swatch-color-map {
+    .tlp-badge-#{$color-name} {
         @extend %tlp-badge;
 
-        border: 1px solid nth($tlp-swatch-color-primaries, $i);
-        background: nth($tlp-swatch-color-primaries, $i);
+        border: 1px solid map-get($colors, 'primary');
+        background: map-get($colors, 'primary');
 
         &.tlp-badge-outline {
-            border: 1px solid nth($tlp-swatch-color-primaries, $i);
+            border: 1px solid map-get($colors, 'primary');
             background: transparent;
-            color: nth($tlp-swatch-color-primaries, $i);
+            color: map-get($colors, 'primary');
         }
     }
 }
