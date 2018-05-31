@@ -194,13 +194,9 @@ function Graph(
                         .enter()
                         .append('circle')
                         .attrs({
-                            'class': function(d) {
-                                if (d.id) {
-                                    return d.color.replace('_', '-') + " circle_" + d.id;
-                                } else {
-                                    return d.color.replace('_', '-');
-                                }
-                            },
+                            'class': d => d.id
+                                ? normalizeColor(d.color) + " circle_" + d.id
+                                : normalizeColor(d.color),
                             'r': 8
                         })
                         .call(
@@ -850,5 +846,11 @@ function Graph(
         point.y = y;
 
         return point.matrixTransform(element_coordinate_system_inverse);
+    }
+
+    function normalizeColor(color) {
+        const all_underscores = /_/g;
+
+        return color.replace(all_underscores, '-');
     }
 }
