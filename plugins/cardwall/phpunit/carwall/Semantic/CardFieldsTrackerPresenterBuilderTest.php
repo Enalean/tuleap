@@ -30,6 +30,7 @@ use PHPUnit\Framework\TestCase;
 use Tracker_FormElement_Field_List_Bind;
 use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElement_Field_List_Bind_Users;
+use Tracker_FormElement_Field_List_BindDecorator;
 use Tracker_FormElementFactory;
 
 class CardFieldsTrackerPresenterBuilderTest extends TestCase
@@ -61,11 +62,23 @@ class CardFieldsTrackerPresenterBuilderTest extends TestCase
         $user_bind = Mockery::mock(Tracker_FormElement_Field_List_Bind::class);
         $user_bind->shouldReceive('getType')->andReturn(Tracker_FormElement_Field_List_Bind_Users::TYPE);
 
+        $color_bind = Mockery::mock(Tracker_FormElement_Field_List_Bind::class);
+        $color_bind->shouldReceive('getType')->andReturn(Tracker_FormElement_Field_List_Bind_Static::TYPE);
+
         $tracker_fields = [
             aSelectBoxField()->withId(100)->withLabel('selectbox')->withBind($selectbox_bind)->build(),
             aStringField()->withId(101)->withLabel('string')->build(),
-            aSelectBoxField()->withId(102)->withLabel('userlist')->withBind($user_bind)->build()
+            aSelectBoxField()->withId(102)->withLabel('userlist')->withBind($user_bind)->build(),
+            aSelectBoxField()->withId(103)->withLabel('oldpalet')->withBind($color_bind)->build(),
         ];
+
+        $selectbox_decorator   = new Tracker_FormElement_Field_List_BindDecorator(100, 1, null, null, null);
+        $new_palette_decorator = new Tracker_FormElement_Field_List_BindDecorator(103, 2, null, null, null);
+        $old_palette_decorator = new Tracker_FormElement_Field_List_BindDecorator(103, 2, 255, 255, 255);
+
+        $selectbox_bind->shouldReceive('getDecorators')->andReturn([$selectbox_decorator]);
+        $user_bind->shouldReceive('getDecorators')->andReturn([]);
+        $color_bind->shouldReceive('getDecorators')->andReturn([$new_palette_decorator, $old_palette_decorator]);
 
         $this->form_element_factory->shouldReceive('getType')->andReturn('sb', 'string', 'sb');
 

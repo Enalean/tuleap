@@ -30,7 +30,7 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
     /**
      * @var CardFieldsTrackerPresenterBuilder
      */
-    private $trackers_builder;
+    private $card_fields_tracker_presenter_builder;
     /**
      * @var Codendi_HTMLPurifier
      */
@@ -50,8 +50,8 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
     public function __construct(Tracker $tracker) {
         parent::__construct($tracker);
 
-        $this->html_purifier    = Codendi_HTMLPurifier::instance();
-        $this->trackers_builder = new CardFieldsTrackerPresenterBuilder(Tracker_FormElementFactory::instance());
+        $this->html_purifier                         = Codendi_HTMLPurifier::instance();
+        $this->card_fields_tracker_presenter_builder = new CardFieldsTrackerPresenterBuilder(Tracker_FormElementFactory::instance());
     }
 
     public function display() {
@@ -312,7 +312,7 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
     private function fetchFormChooseBackgroundField()
     {
         $presenter = new BackgroundColorSelectorPresenter(
-            $this->trackers_builder->getTrackerFields($this->tracker->getFormElementFields()),
+            $this->card_fields_tracker_presenter_builder->getTrackerFields($this->tracker->getFormElementFields()),
             $this->getCSRFToken(),
             $this->getUrl()
         );
