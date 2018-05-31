@@ -29,9 +29,6 @@ msgstr ""
 msgid "Permission denied"
 msgstr ""
 
-msgid "Please note that HTML format is not supported yet"
-msgstr ""
-
 #, php-format
 msgid ""
 "Service %s cannot be activated because the artifact link type \"%s\" is not "

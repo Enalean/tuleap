@@ -54,9 +54,6 @@ msgstr "L'URL du job n'est pas valide"
 msgid "Permission denied"
 msgstr "Permission refusée"
 
-msgid "Please note that HTML format is not supported yet"
-msgstr "Veuillez noter que le format HTML n'est pas encore supporté ici"
-
 #, php-format
 msgid ""
 "Service %s cannot be activated because the artifact link type \"%s\" is not "
