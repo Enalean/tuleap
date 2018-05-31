@@ -29,6 +29,8 @@ use Tuleap\Layout\IncludeAssets;
 
 class SinglePagePresenterBuilder
 {
+    const HARD_LIMIT = 1000;
+
     /**
      * @var ArtifactsPresentersBuilder
      */
@@ -51,16 +53,23 @@ class SinglePagePresenterBuilder
         PFUser $current_user,
         $server_url
     ) {
+        $nb_matching_artifacts = count($ordered_artifact_rows);
+        $is_hard_limit_reached = $nb_matching_artifacts > self::HARD_LIMIT;
+
         $artifacts   = $this->presenters_builder->getArtifactsPresenters(
             $ordered_artifact_rows,
             $current_user,
-            $server_url
+            $server_url,
+            self::HARD_LIMIT
         );
         $stylesheets = $this->getStylesheetsToEmbed($current_user);
 
         return [
-            'artifacts'   => $artifacts,
-            'stylesheets' => $stylesheets
+            'artifacts'             => $artifacts,
+            'is_hard_limit_reached' => $is_hard_limit_reached,
+            'hard_limit'            => self::HARD_LIMIT,
+            'nb_matching_artifacts' => $nb_matching_artifacts,
+            'stylesheets'           => $stylesheets
         ];
     }
 

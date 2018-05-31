@@ -16,6 +16,12 @@ msgid "Textual Report"
 msgstr ""
 
 msgid ""
+"There are too many matching artifacts (%s), for performance\n"
+"              reasons we cannot generate a document with more than %s "
+"artifacts."
+msgstr ""
+
+msgid ""
 "There aren't any artifacts that are matching your query, we cannot generate "
 "requested document."
 msgstr ""
