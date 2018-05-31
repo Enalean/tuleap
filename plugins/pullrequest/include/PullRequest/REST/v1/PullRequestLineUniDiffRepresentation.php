@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -44,11 +44,20 @@ class PullRequestLineUniDiffRepresentation
      */
     public $content;
 
-    public function __construct(UniDiffLine $line)
+    public function __construct(UniDiffLine $line, $charset)
     {
         $this->unidiff_offset = $line->getUniDiffOffset();
         $this->old_offset     = $line->getOldOffset();
         $this->new_offset     = $line->getNewOffset();
-        $this->content        = $line->getContent();
+        $this->content        = $this->getUTF8Content($line, $charset);
+    }
+
+    private function getUTF8Content(UniDiffLine $line, $charset)
+    {
+        if (strtolower($charset) === 'utf-8') {
+            return $line->getContent();
+        }
+
+        return utf8_encode($line->getContent());
     }
 }

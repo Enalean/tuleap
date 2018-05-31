@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,6 +19,7 @@
  */
 
 namespace Tuleap\PullRequest\REST\v1;
+
 use Tuleap\PullRequest\FileUniDiff;
 
 class PullRequestFileUniDiffRepresentation
@@ -53,12 +54,12 @@ class PullRequestFileUniDiffRepresentation
         $this->lines[] = $line;
     }
 
-    static public function build(FileUniDiff $diff, array $inline_comments, $mime_type, $charset)
+    public static function build(FileUniDiff $diff, array $inline_comments, $mime_type, $charset)
     {
         $new_instance = new PullRequestFileUniDiffRepresentation();
         foreach ($diff->getLines() as $line) {
             $new_instance->addLine(
-                new PullRequestLineUniDiffRepresentation($line)
+                new PullRequestLineUniDiffRepresentation($line, $charset)
             );
         }
         $new_instance->inline_comments = $inline_comments;
