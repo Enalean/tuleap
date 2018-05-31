@@ -77,6 +77,7 @@ class testmanagementPlugin extends Plugin
         }
 
         if (defined('TRACKER_BASE_URL')) {
+            $this->addHook('javascript_file');
             $this->addHook('cssfile');
             $this->addHook(TRACKER_EVENT_COMPLEMENT_REFERENCE_INFORMATION);
             $this->addHook(TRACKER_EVENT_ARTIFACT_LINK_NATURE_REQUESTED);
@@ -97,9 +98,19 @@ class testmanagementPlugin extends Plugin
         return parent::getHooksAndCallbacks();
     }
 
+    public function javascript_file() {
+        if ($this->isArtifactURL()) {
+            $include_assets = new \Tuleap\Layout\IncludeAssets(
+                __DIR__ . '/../www/assets',
+                TESTMANAGEMENT_BASE_URL . '/assets'
+            );
+            echo $include_assets->getHTMLSnippet('step-definition-field.js');
+        }
+    }
+
     public function cssfile()
     {
-        if (strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL) === 0) {
+        if ($this->isTrackerURL()) {
             $include_assets = new IncludeAssets(
                 TESTMANAGEMENT_BASE_DIR . '/www/themes/FlamingParrot/assets',
                 TESTMANAGEMENT_BASE_URL . '/themes/FlamingParrot/assets'
@@ -590,5 +601,17 @@ class testmanagementPlugin extends Plugin
 
         file_put_contents($temporary_path, $xml_content->asXML());
         $archive->addFile('testmanagement.xml', $temporary_path);
+    }
+
+    private function isTrackerURL()
+    {
+        return strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL) === 0;
+    }
+
+    private function isArtifactURL()
+    {
+        $request = HTTPRequest::instance();
+
+        return $this->isTrackerURL() && $request->get('aid');
     }
 }

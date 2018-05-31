@@ -200,12 +200,15 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
     ) {
         $renderer = TemplateRendererFactory::build()->getRenderer(TESTMANAGEMENT_BASE_DIR . '/templates');
 
+        $steps = $this->getStepsPresentersFromChangesetValue($value);
+
         return $renderer->renderToString(
             'step-def-edit',
             [
-                'field_id'       => $this->id,
-                'steps'          => $this->getStepsPresentersFromChangesetValue($value),
-                'default_format' => $this->getDefaultFormat($this->getCurrentUser())
+                'field_id'           => $this->id,
+                'has_steps'          => count($steps) > 0,
+                'json_encoded_steps' => json_encode($steps),
+                'default_format'     => $this->getDefaultFormat($this->getCurrentUser())
             ]
         );
     }

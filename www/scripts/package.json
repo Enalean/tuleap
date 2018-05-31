@@ -1,0 +1,20 @@
+{
+  "author": "Enalean Team",
+  "name": "tuleap-testmanagement",
+  "version": "0.0.1",
+  "homepage": "https://www.enalean.com",
+  "description": "Tuleap TestManagement plugin",
+  "license": "GPL-2.0+",
+  "private": true,
+  "dependencies": {
+    "vue": "^2.5.13"
+  },
+  "devDependencies": {},
+  "config": {
+    "bin": "../../../../node_modules/.bin/"
+  },
+  "scripts": {
+    "build": "NODE_ENV=production $npm_package_config_bin/webpack --mode=production",
+    "watch": "NODE_ENV=watch $npm_package_config_bin/webpack --watch --mode=development"
+  }
+}

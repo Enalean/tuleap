@@ -41,6 +41,7 @@
         }
     },
     "components": [
-        "plugins/testmanagement/www/scripts/angular"
+        "plugins/testmanagement/www/scripts/angular",
+        "plugins/testmanagement/www/scripts"
     ]
 }
