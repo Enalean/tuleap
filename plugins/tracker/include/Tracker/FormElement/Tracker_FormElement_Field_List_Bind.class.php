@@ -686,7 +686,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements
         return intval($value);
     }
 
-    public function addValue() {
+    public function addValue($new_value) {
         return;
     }
 
