@@ -18,7 +18,8 @@
                     <option value="{{ id }}">{{ name }}</option>
                 {{/ form_elements }}
             </select>
-            <input type="submit" disabled value="{{# dgettext }} tuleap-cardwall | Submit {{/ dgettext }}"/>
+            <input type="submit" class="btn btn-primary btn-submit-semantic-card" disabled
+                   value="{{# dgettext }} tuleap-cardwall | Submit {{/ dgettext }}"/>
          </p>
     </form>
 {{/ has_at_least_one_field_selectable_for_color }}
