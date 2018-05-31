@@ -28,3 +28,7 @@ Cypress.Commands.add("projectMemberLogin", () => {
     cy.get('#form_loginname').type('bob');
     cy.get('#form_pw').type('Correct Horse Battery Staple{enter}');
 });
+
+Cypress.Commands.add("loadProjectConfig", () => {
+    cy.fixture('project_config.json').as('projects');
+});
