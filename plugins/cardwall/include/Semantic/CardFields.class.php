@@ -296,7 +296,8 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
             $html .= '<select name="field">';
             $html .= $options;
             $html .= '</select>';
-            $html .= '<input type="submit" name="add" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" />';
+            $html .= '<input type="submit" class="btn btn-primary btn-submit-semantic-card" name="add" value="' .
+                $GLOBALS['Language']->getText('global', 'btn_submit') . '" />';
             $html .= '</p>';
             $html .= '</form>';
         } else {
