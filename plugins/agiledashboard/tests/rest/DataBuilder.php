@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -132,7 +132,7 @@ class DataBuilder extends REST_TestDataBuilder
 
         $artifacts = $this->tracker_artifact_factory->getArtifactsByTrackerId($tracker->getId());
         $this->system_event_manager->createEvent(
-            'Tuleap\\Agiledashboard\\FormElement\\SystemEvent\\' . SystemEvent_BURNUP_GENERATE::NAME,
+            SystemEvent_BURNUP_GENERATE::class,
             reset($artifacts)->getId(),
             SystemEvent::PRIORITY_MEDIUM,
             SystemEvent::OWNER_APP

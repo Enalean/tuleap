@@ -24,15 +24,13 @@ use BackendLogger;
 use DateTime;
 use SystemEvent;
 use TimePeriodWithoutWeekEnd;
-use Tuleap\Agiledashboard\FormElement\BurnupCacheDao;
-use Tuleap\Agiledashboard\FormElement\BurnupCacheDateRetriever;
+use Tuleap\AgileDashboard\FormElement\BurnupCacheDao;
+use Tuleap\AgileDashboard\FormElement\BurnupCacheDateRetriever;
 use Tuleap\AgileDashboard\FormElement\BurnupCalculator;
 use Tuleap\AgileDashboard\FormElement\BurnupDao;
 
 class SystemEvent_BURNUP_GENERATE extends SystemEvent // @codingStandardsIgnoreLine
 {
-    const NAME = 'SystemEvent_BURNUP_GENERATE';
-
     /**
      * @var BurnupCalculator
      */

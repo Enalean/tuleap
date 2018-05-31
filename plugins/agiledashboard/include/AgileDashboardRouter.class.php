@@ -22,7 +22,7 @@ use Tuleap\AgileDashboard\AdminController;
 use Tuleap\AgileDashboard\BaseController;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
-use Tuleap\Agiledashboard\FormElement\BurnupCacheGenerator;
+use Tuleap\AgileDashboard\FormElement\BurnupCacheGenerator;
 use Tuleap\AgileDashboard\FormElement\FormElementController;
 use Tuleap\AgileDashboard\Kanban\BreadCrumbBuilder;
 use Tuleap\AgileDashboard\Kanban\ShowKanbanController;

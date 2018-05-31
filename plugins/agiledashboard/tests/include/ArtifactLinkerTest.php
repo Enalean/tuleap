@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,10 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../include/autoload.php';
-require_once dirname(__FILE__).'/../../../tracker/include/constants.php';
-require_once dirname(__FILE__).'/../builders/aPlanning.php';
-require_once dirname(__FILE__).'/../../include/Planning/ArtifactLinker.class.php';
+require_once __DIR__ . '/../bootstrap.php';
+require_once __DIR__ . '/../../../tracker/include/constants.php';
 require_once TRACKER_BASE_DIR.'/../tests/builders/all.php';
 
 class Planning_ArtifactLinkerTest extends TuleapTestCase {
