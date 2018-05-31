@@ -3,6 +3,8 @@
     unix-name="test-mgmt" full-name="TestManagement" description="For test" access="public">
     <long-description>A test project</long-description>
     <services>
+        <service shortname="plugin_tracker" enabled="true" />
+        <service shortname="plugin_testmanagement" enabled="true" />
     </services>
     <ugroups>
         <ugroup name="project_members" description="">
