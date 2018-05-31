@@ -20,6 +20,7 @@
 
 namespace Tuleap\Cardwall\Semantic;
 
+use Tracker;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElementFactory;
@@ -30,10 +31,15 @@ class CardFieldsTrackerPresenterBuilder
      * @var Tracker_FormElementFactory
      */
     private $form_element_factory;
+    /**
+     * @var BackgroundColorDao
+     */
+    private $dao;
 
-    public function __construct(Tracker_FormElementFactory $form_element_factory)
+    public function __construct(Tracker_FormElementFactory $form_element_factory, BackgroundColorDao $dao)
     {
         $this->form_element_factory = $form_element_factory;
+        $this->dao                  = $dao;
     }
 
     /**
@@ -41,15 +47,18 @@ class CardFieldsTrackerPresenterBuilder
      *
      * @return array
      */
-    public function getTrackerFields(array $form_elements_fields)
+    public function getTrackerFields(array $form_elements_fields, Tracker $tracker)
     {
         $formatted_field = [];
+
+        $selected_field_id = $this->dao->searchBackgroundColor($tracker->getId());
 
         foreach ($form_elements_fields as $field) {
             if ($this->isFieldAListBoundToStaticValues($field)) {
                 $formatted_field[] = [
-                    "id"   => $field->getId(),
-                    "name" => $field->getLabel()
+                    "id"          => $field->getId(),
+                    "name"        => $field->getLabel(),
+                    "is_selected" => (int) $field->getId() === (int) $selected_field_id
                 ];
             }
         }
@@ -60,10 +69,9 @@ class CardFieldsTrackerPresenterBuilder
     private function isFieldAListBoundToStaticValues(Tracker_FormElement_Field $field)
     {
         return ($this->form_element_factory->getType($field) === 'sb'
-            || $this->form_element_factory->getType($field) === 'rb')
+                || $this->form_element_factory->getType($field) === 'rb')
             && $field->getBind()->getType() === Tracker_FormElement_Field_List_Bind_Static::TYPE
-            && $this->doesNotHaveAValueBoundToOldColorPicker($field)
-        ;
+            && $this->doesNotHaveAValueBoundToOldColorPicker($field);
     }
 
     /**

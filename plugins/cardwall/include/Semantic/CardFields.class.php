@@ -21,12 +21,19 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Tuleap\Cardwall\Semantic\BackgroundColorDao;
+use Tuleap\Cardwall\Semantic\BackgroundColorFieldSaver;
 use Tuleap\Cardwall\Semantic\BackgroundColorSelectorPresenter;
 use Tuleap\Cardwall\Semantic\CardFieldsTrackerPresenterBuilder;
 
 class Cardwall_Semantic_CardFields extends Tracker_Semantic
 {
     const NAME = 'plugin_cardwall_card_fields';
+    /**
+     * @var BackgroundColorFieldSaver
+     */
+    private $background_field_saver;
+
     /**
      * @var CardFieldsTrackerPresenterBuilder
      */
@@ -51,7 +58,17 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
         parent::__construct($tracker);
 
         $this->html_purifier                         = Codendi_HTMLPurifier::instance();
-        $this->card_fields_tracker_presenter_builder = new CardFieldsTrackerPresenterBuilder(Tracker_FormElementFactory::instance());
+        $background_color_dao                        = new BackgroundColorDao();
+        $this->card_fields_tracker_presenter_builder = new CardFieldsTrackerPresenterBuilder
+        (
+            Tracker_FormElementFactory::instance(),
+            $background_color_dao
+        );
+        $tracker_form_element_factory                = Tracker_FormElementFactory::instance();
+        $this->background_field_saver                = new BackgroundColorFieldSaver(
+            $tracker_form_element_factory,
+            $background_color_dao
+        );
     }
 
     public function display() {
@@ -163,6 +180,9 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
         } else if ( (int) $request->get('remove') ) {
             $this->getCSRFToken()->check();
             $this->removeField($request->get('remove'));
+        } else if ($request->get('choose-color-field')) {
+            $this->getCSRFToken()->check();
+            $this->background_field_saver->chooseBackgroundColorField($this->tracker->getId(), $request->get('choose-color-field'));
         }
         $this->displayAdmin($semantic_manager, $tracker_manager, $request, $current_user);
     }
@@ -312,7 +332,10 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
     private function fetchFormChooseBackgroundField()
     {
         $presenter = new BackgroundColorSelectorPresenter(
-            $this->card_fields_tracker_presenter_builder->getTrackerFields($this->tracker->getFormElementFields()),
+            $this->card_fields_tracker_presenter_builder->getTrackerFields(
+                $this->tracker->getFormElementFields(),
+                $this->tracker
+            ),
             $this->getCSRFToken(),
             $this->getUrl()
         );

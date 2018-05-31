@@ -15,10 +15,10 @@
         <p> {{# dgettext }} tuleap-cardwall | Choose a field to define card background color {{/ dgettext }}
             <select name="choose-color-field">
                 {{# form_elements }}
-                    <option value="{{ id }}">{{ name }}</option>
+                    <option value="{{ id }}" {{# is_selected }}selected="selected"{{/ is_selected }}>{{ name }}</option>
                 {{/ form_elements }}
             </select>
-            <input type="submit" class="btn btn-primary btn-submit-semantic-card" disabled
+            <input type="submit" class="btn btn-primary btn-submit-semantic-card"
                    value="{{# dgettext }} tuleap-cardwall | Submit {{/ dgettext }}"/>
          </p>
     </form>
