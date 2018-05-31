@@ -22,10 +22,15 @@
 */
 
 use Tuleap\Cardwall\Semantic\BackgroundColorSelectorPresenter;
+use Tuleap\Cardwall\Semantic\CardFieldsTrackerPresenterBuilder;
 
 class Cardwall_Semantic_CardFields extends Tracker_Semantic
 {
     const NAME = 'plugin_cardwall_card_fields';
+    /**
+     * @var CardFieldsTrackerPresenterBuilder
+     */
+    private $trackers_builder;
     /**
      * @var Codendi_HTMLPurifier
      */
@@ -45,7 +50,8 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
     public function __construct(Tracker $tracker) {
         parent::__construct($tracker);
 
-        $this->html_purifier = Codendi_HTMLPurifier::instance();
+        $this->html_purifier    = Codendi_HTMLPurifier::instance();
+        $this->trackers_builder = new CardFieldsTrackerPresenterBuilder(Tracker_FormElementFactory::instance());
     }
 
     public function display() {
@@ -234,7 +240,7 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
     /**
      * @param Tracker_FormElement_Field[]
      *
-     * @return array
+     * @return String
      */
     private function fetchFormDisplayedFieldForCard(array $fields)
     {
@@ -305,26 +311,12 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
     private function fetchFormChooseBackgroundField()
     {
         $presenter = new BackgroundColorSelectorPresenter(
-            $this->getTrackerFields(),
+            $this->trackers_builder->getTrackerFields($this->tracker->getFormElementFields()),
             $this->getCSRFToken(),
             $this->getUrl()
         );
         $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(CARDWALL_BASE_DIR) . '/templates');
 
         return $renderer->renderToString('semantic-card-background-selector', $presenter);
-    }
-
-    private function getTrackerFields()
-    {
-        $formatted_field = [];
-
-        foreach ($this->tracker->getFormElementFields() as $field) {
-            $formatted_field[] = [
-                "id"   => $field->getId(),
-                "name" => $field->getLabel()
-            ];
-        }
-
-        return $formatted_field;
     }
 }

@@ -19,9 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-require_once('common/include/Codendi_Diff.class.php');
-
 class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum {
 
     public $default_properties = array(
