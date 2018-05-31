@@ -36,9 +36,10 @@ use Tuleap\TestManagement\Step\Step;
 use Tuleap\TestManagement\Step\StepPresenter;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 
-class StepExecution extends Tracker_FormElement_Field implements TrackerFormElementExternalField, \Tracker_FormElement_Field_ReadOnly
+class StepExecution extends Tracker_FormElement_Field implements TrackerFormElementExternalField
 {
-    const TYPE = 'ttmstepexec';
+    const TYPE             = 'ttmstepexec';
+    const UPDATE_VALUE_KEY = 'steps_results';
 
     public function accept(Tracker_FormElement_FieldVisitor $visitor)
     {
@@ -109,7 +110,9 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
 
     /**
      * Display the field value as a criteria
+     *
      * @param Tracker_ReportCriteria $criteria
+     *
      * @return string
      * @see fetchCriteria
      */
@@ -120,7 +123,9 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
 
     /**
      * Fetch the value
+     *
      * @param mixed $value the value of the field
+     *
      * @return string
      */
     public function fetchRawValue($value)
@@ -132,7 +137,9 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
      * Get the "from" statement to allow search with this field
      * You can join on 'c' which is a pseudo table used to retrieve
      * the last changeset of all artifacts.
+     *
      * @param Tracker_ReportCriteria $criteria
+     *
      * @return string
      */
     public function getCriteriaFrom($criteria)
@@ -142,7 +149,9 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
 
     /**
      * Get the "where" statement to allow search with this field
+     *
      * @param Tracker_ReportCriteria $criteria
+     *
      * @return string
      * @see getCriteriaFrom
      */
@@ -168,24 +177,31 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
     /**
      * Fetch the html code to display the field value in artifact
      *
-     * @param Tracker_Artifact $artifact             The artifact
-     * @param Tracker_Artifact_ChangesetValue $value The actual value of the field
-     * @param array $submitted_values                The value already submitted by the user
+     * @param Tracker_Artifact                $artifact         The artifact
+     * @param Tracker_Artifact_ChangesetValue $value            The actual value of the field
+     * @param array                           $submitted_values The value already submitted by the user
      *
      * @return string
      */
     protected function fetchArtifactValue(
         Tracker_Artifact $artifact,
         Tracker_Artifact_ChangesetValue $value = null,
-        $submitted_values = array()
+        $submitted_values = []
     ) {
+        return '<div class="alert">'
+            . dgettext(
+                'tuleap-testmanagement',
+                'Direct edition of steps results is not allowed. Please use TestManagement service instead.'
+            )
+            . '</div>'
+            . $this->fetchArtifactValueReadOnly($artifact, $value);
     }
 
     /**
      * Fetch the html code to display the field value in artifact in read only
      *
-     * @param Tracker_Artifact $artifact             The artifact
-     * @param Tracker_Artifact_ChangesetValue $value The actual value of the field
+     * @param Tracker_Artifact                $artifact The artifact
+     * @param Tracker_Artifact_ChangesetValue $value    The actual value of the field
      *
      * @return string
      */
@@ -195,16 +211,25 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
     ) {
         $renderer = TemplateRendererFactory::build()->getRenderer(TESTMANAGEMENT_BASE_DIR . '/templates');
 
-        $purifier = Codendi_HTMLPurifier::instance();
+        $purifier       = Codendi_HTMLPurifier::instance();
         $no_value_label = $this->getNoValueLabel();
 
         return $renderer->renderToString(
             'step-exec-readonly',
             [
-                'steps' => $this->getStepResultPresentersFromChangesetValue($value),
+                'steps'                   => $this->getStepResultPresentersFromChangesetValue($value),
                 'purified_no_value_label' => $purifier->purify($no_value_label, CODENDI_PURIFIER_FULL)
             ]
         );
+    }
+
+    public function fetchArtifactValueWithEditionFormIfEditable(
+        Tracker_Artifact $artifact,
+        Tracker_Artifact_ChangesetValue $value = null,
+        $submitted_values = []
+    ) {
+        return $this->fetchArtifactValueReadOnly($artifact, $value) .
+            $this->getHiddenArtifactValueForEdition($artifact, $value, $submitted_values);
     }
 
     /**
@@ -227,8 +252,10 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
 
     /**
      * Fetch the html code to display the field value in tooltip
-     * @param Tracker_Artifact $artifact
+     *
+     * @param Tracker_Artifact                $artifact
      * @param Tracker_Artifact_ChangesetValue $value The changeset value of the field
+     *
      * @return string
      */
     protected function fetchTooltipValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null)
@@ -241,6 +268,9 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
         return '';
     }
 
+    /**
+     * @return StepExecutionChangesetValueDao
+     */
     protected function getValueDao()
     {
         return new StepExecutionChangesetValueDao();
@@ -248,9 +278,11 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
 
     /**
      * Fetch the value to display changes in followups
+     *
      * @param Tracker_ $artifact
-     * @param array $from the value(s) *before*
-     * @param array $to   the value(s) *after*
+     * @param array    $from the value(s) *before*
+     * @param array    $to   the value(s) *after*
+     *
      * @return string
      */
     public function fetchFollowUp($artifact, $from, $to)
@@ -260,7 +292,9 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
 
     /**
      * Fetch the value in a specific changeset
+     *
      * @param Tracker_Artifact_Changeset $changeset
+     *
      * @return string
      */
     public function fetchRawValueFromChangeset($changeset)
@@ -272,29 +306,37 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
      * Validate a value
      *
      * @param Tracker_Artifact $artifact The artifact
-     * @param mixed $value               data coming from the request. May be string or array.
+     * @param mixed            $value    data coming from the request. May be string or array.
      *
      * @return bool true if the value is considered ok
      */
     protected function validate(Tracker_Artifact $artifact, $value)
     {
+        return true;
     }
 
     public function hasChanges(
         Tracker_Artifact $artifact,
-        Tracker_Artifact_ChangesetValue $previous_changesetvalue,
+        Tracker_Artifact_ChangesetValue $old_value,
         $new_value
     ) {
-        // No update yet
-        return false;
+        $old_values = [];
+        /** @var StepResult[] $old_steps */
+        $old_steps = $old_value->getValue();
+        foreach ($old_steps as $step_result) {
+            $old_values[$step_result->getStep()->getId()] = $step_result->getStatus();
+        }
+        $new_values = $new_value[self::UPDATE_VALUE_KEY];
+
+        return array_diff_assoc($new_values, $old_values) !== [] || array_diff_assoc($old_values, $new_values) !== [];
     }
 
     /**
      * Save the value and return the id
      *
-     * @param Tracker_Artifact $artifact                               The artifact
-     * @param int $changeset_value_id                                  The id of the changeset_value
-     * @param mixed $value                                             The value submitted by the user
+     * @param Tracker_Artifact                $artifact                The artifact
+     * @param int                             $changeset_value_id      The id of the changeset_value
+     * @param mixed                           $value                   The value submitted by the user
      * @param Tracker_Artifact_ChangesetValue $previous_changesetvalue The data previously stored in the db
      *
      * @return int or array of int
@@ -305,14 +347,15 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
         $value,
         Tracker_Artifact_ChangesetValue $previous_changesetvalue = null
     ) {
+        return $this->getValueDao()->create($changeset_value_id, $value[self::UPDATE_VALUE_KEY]);
     }
 
     /**
      * Get the value of this field
      *
-     * @param Tracker_Artifact_Changeset $changeset The changeset (needed in only few cases like 'lud' field)
-     * @param int $value_id                         The id of the value
-     * @param boolean $has_changed                  If the changeset value has changed from the rpevious one
+     * @param Tracker_Artifact_Changeset $changeset   The changeset (needed in only few cases like 'lud' field)
+     * @param int                        $value_id    The id of the value
+     * @param boolean                    $has_changed If the changeset value has changed from the rpevious one
      *
      * @return Tracker_Artifact_ChangesetValue or null if not found
      */
@@ -320,7 +363,7 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
     {
         $steps = [];
         foreach ($this->getValueDao()->searchById($value_id) as $row) {
-            $step = new Step($row['id'], $row['description'], $row['description_format'], $row['rank']);
+            $step    = new Step($row['id'], $row['description'], $row['description_format'], $row['rank']);
             $steps[] = new StepResult($step, $row['status']);
         }
 
@@ -330,10 +373,12 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
     /**
      * Display the field as a Changeset value.
      * Used in report table
-     * @param int $artifact_id  the corresponding artifact id
-     * @param int $changeset_id the corresponding changeset
-     * @param mixed $value      the value of the field
-     * @param int $report_id    the id of the calling report
+     *
+     * @param int   $artifact_id  the corresponding artifact id
+     * @param int   $changeset_id the corresponding changeset
+     * @param mixed $value        the value of the field
+     * @param int   $report_id    the id of the calling report
+     *
      * @return string
      */
     public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report_id = null, $from_aid = null)
@@ -348,6 +393,7 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
 
     /**
      * @param Tracker_Artifact_ChangesetValue|null $value
+     *
      * @return StepResultPresenter[]
      */
     private function getStepResultPresentersFromChangesetValue(Tracker_Artifact_ChangesetValue $value = null)
@@ -360,6 +406,7 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
         return array_map(
             function (StepResult $step_result) {
                 $step_presenter = new StepPresenter($step_result->getStep(), $this->getTracker()->getProject());
+
                 return new StepResultPresenter($step_presenter, $step_result);
             },
             $step_results

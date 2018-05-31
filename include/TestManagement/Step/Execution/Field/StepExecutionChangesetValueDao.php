@@ -42,6 +42,26 @@ class StepExecutionChangesetValueDao extends \Tracker_FormElement_Field_ValueDao
         return $this->retrieve($sql);
     }
 
+    public function create($changeset_value_id, array $steps)
+    {
+        $changeset_value_id = $this->da->escapeInt($changeset_value_id);
+        $values             = [];
+        foreach ($steps as $id => $status) {
+            $id       = $this->da->escapeInt($id);
+            $status   = $this->da->quoteSmart($status);
+            $values[] = "($changeset_value_id, $id, $status)";
+        }
+        if ($values) {
+            $values = implode(',', $values);
+            $sql    = "INSERT INTO plugin_testmanagement_changeset_value_stepexec(changeset_value_id, stepdef_id, status)
+                    VALUES $values";
+
+            return $this->update($sql);
+        }
+
+        return false;
+    }
+
     public function createNoneValue($tracker_id, $field_id)
     {
         $this->createNoneChangesetValue($tracker_id, $field_id);

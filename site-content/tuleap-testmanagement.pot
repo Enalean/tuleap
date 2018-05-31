@@ -20,6 +20,11 @@ msgstr ""
 msgid "Definition of a step"
 msgstr ""
 
+msgid ""
+"Direct edition of steps results is not allowed. Please use TestManagement "
+"service instead."
+msgstr ""
+
 msgid "Execution result of a step"
 msgstr ""
 

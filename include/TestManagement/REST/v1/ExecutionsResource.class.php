@@ -97,6 +97,15 @@ class ExecutionsResource
     /** @var DefinitionForExecutionRetriever */
     private $definition_retriever;
 
+    /** @var Tracker_REST_Artifact_ArtifactUpdater */
+    private $artifact_updater;
+
+    /** @var UserManager */
+    private $user_manager;
+
+    /** @var StepsResultsUpdater */
+    private $steps_results_updater;
+
     public function __construct()
     {
         $this->config          = new Config(new Dao());
@@ -149,6 +158,17 @@ class ExecutionsResource
             $this->permissions_serializer,
             $this->testmanagement_artifact_factory,
             $artifact_message_sender
+        );
+
+        $this->artifact_updater = new Tracker_REST_Artifact_ArtifactUpdater(
+            new Tracker_REST_Artifact_ArtifactValidator(
+                $this->formelement_factory
+            )
+        );
+
+        $this->steps_results_updater = new StepsResultsUpdater(
+            $this->artifact_updater,
+            new StepsResultsChangesBuilder($this->formelement_factory, $this->execution_dao)
         );
     }
 
@@ -267,6 +287,7 @@ class ExecutionsResource
      * @param string                       $id   Id of the execution artifact
      * @param PATCHExecutionRepresentation $body Actions to performs on the execution {@from body}
      *
+     * @throws 400
      * @throws 403
      * @throws 404
      * @throws 500
@@ -279,18 +300,21 @@ class ExecutionsResource
             throw new RestException(403);
         }
 
-        if ($body->force_use_latest_definition_version) {
-            $definition_artifact = $this->definition_retriever->getDefinitionRepresentationForExecution(
-                $user,
-                $execution_artifact
-            );
-            if (! $definition_artifact) {
-                throw new RestException(500, 'The execution is not linked to a definition');
-            }
+        $definition_artifact = $this->getDefinitionOfExecution($user, $execution_artifact);
 
+        if ($body->force_use_latest_definition_version) {
             $this->execution_dao->updateExecutionToUseLatestVersionOfDefinition(
                 $id,
                 $definition_artifact->getLastChangeset()->getId()
+            );
+        }
+
+        if ($body->steps_results) {
+            $this->steps_results_updater->updateStepsResults(
+                $user,
+                $execution_artifact,
+                $definition_artifact,
+                $body->steps_results
             );
         }
     }
@@ -318,9 +342,8 @@ class ExecutionsResource
             $changes         = $this->getChanges($status, $time, $results, $artifact, $user);
             $previous_status = $this->getPreviousStatus($artifact);
             $previous_user   = $this->getPreviousSubmittedBy($artifact);
-            $updater         = $this->getArtifactUpdater();
 
-            $updater->update($user, $artifact, $changes);
+            $this->artifact_updater->update($user, $artifact, $changes);
         } catch (Tracker_FormElement_InvalidFieldException $exception) {
             throw new RestException(400, $exception->getMessage());
         } catch (Tracker_NoChangeException $exception) {
@@ -409,8 +432,7 @@ class ExecutionsResource
         );
 
         try {
-            $updater = $this->getArtifactUpdater();
-            $updater->update($user, $issue_artifact, array(), $comment);
+            $this->artifact_updater->update($user, $issue_artifact, array(), $comment);
         } catch (Tracker_FormElement_InvalidFieldException $exception) {
             throw new RestException(400, $exception->getMessage());
         } catch (Tracker_NoChangeException $exception) {
@@ -423,15 +445,6 @@ class ExecutionsResource
         }
 
         $this->optionsIssues($id);
-    }
-
-    private function getArtifactUpdater()
-    {
-        return new Tracker_REST_Artifact_ArtifactUpdater(
-            new Tracker_REST_Artifact_ArtifactValidator(
-                $this->formelement_factory
-            )
-        );
     }
 
     /** @return array */
@@ -673,4 +686,25 @@ class ExecutionsResource
         Header::allowOptionsPost();
         Header::lastModified($date);
     }
+
+    /**
+     *
+     * @param PFUser           $user
+     * @param Tracker_Artifact $execution_artifact
+     *
+     * @return Tracker_Artifact
+     * @throws RestException
+     */
+    private function getDefinitionOfExecution(PFUser $user, Tracker_Artifact $execution_artifact)
+    {
+        $definition_artifact = $this->definition_retriever->getDefinitionRepresentationForExecution(
+            $user,
+            $execution_artifact
+        );
+        if (! $definition_artifact) {
+            throw new RestException(500, 'The execution is not linked to a definition');
+        }
+
+        return $definition_artifact;
+}
 }

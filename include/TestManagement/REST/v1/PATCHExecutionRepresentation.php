@@ -26,4 +26,9 @@ class PATCHExecutionRepresentation
      * @var bool True to update the execution to use latest version of definition {@required false}
      */
     public $force_use_latest_definition_version;
+
+    /**
+     * @var array Results of steps {@type \Tuleap\TestManagement\REST\v1\StepResultRepresentation} {@required false} {@min 1}
+     */
+    public $steps_results;
 }
