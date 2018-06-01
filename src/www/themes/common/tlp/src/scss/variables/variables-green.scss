@@ -17,18 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// UI colors
-$tlp-ui-info         : #4db3d0;
-$tlp-ui-success      : #427d4f;
-$tlp-ui-warning      : #f3b13a;
-$tlp-ui-danger       : #da5353;
-
-$tlp-ui-border-light : #f3f3f3;
-$tlp-ui-border-normal: #e3e5ed;
-$tlp-ui-border-dark  : #d4d7e1;
-
-$tlp-theme-color                   : $tlp-theme-green;
-$tlp-theme-background-color        : $tlp-theme-background-green;
-$tlp-theme-sidebar-background-color: $tlp-theme-sidebar-background-green;
-
-@import './names';
+@import 'density';
+@import 'colors/common-colors';
+@import 'colors/green-colors';
+@import 'margins';
+@import 'names';
