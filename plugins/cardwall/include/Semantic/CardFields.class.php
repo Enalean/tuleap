@@ -190,9 +190,12 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
         } else if ( (int) $request->get('remove') ) {
             $this->getCSRFToken()->check();
             $this->removeField($request->get('remove'));
+        } else if ($request->get('unset-background-color-semantic')) {
+            $this->getCSRFToken()->check();
+            $this->background_field_saver->unsetBackgroundColorSemantic($this->tracker);
         } else if ($request->get('choose-color-field')) {
             $this->getCSRFToken()->check();
-            $this->background_field_saver->chooseBackgroundColorField($this->tracker->getId(), $request->get('choose-color-field'));
+            $this->background_field_saver->chooseBackgroundColorField($this->tracker, $request->get('choose-color-field'));
         }
         $this->displayAdmin($semantic_manager, $tracker_manager, $request, $current_user);
     }

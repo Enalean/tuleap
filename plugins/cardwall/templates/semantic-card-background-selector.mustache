@@ -15,13 +15,20 @@
             {{/ csrf_token }}
             <p> {{# dgettext }} tuleap-cardwall | Choose a field to define card background color {{/ dgettext }}
                 <select name="choose-color-field">
+                    <option>{{# dgettext }} tuleap-cardwall | Choose a field... {{/ dgettext }}</option>
                     {{# form_elements }}
                         <option value="{{ id }}" {{# is_selected }}selected="selected"{{/ is_selected }}>{{ name }}</option>
                     {{/ form_elements }}
                 </select>
-                <input type="submit" class="btn btn-primary btn-submit-semantic-card"
-                       value="{{# dgettext }} tuleap-cardwall | Submit {{/ dgettext }}"/>
             </p>
+            <input type="submit"
+                   class="btn btn-primary"
+                   value="{{# dgettext }} tuleap-cardwall | Submit {{/ dgettext }}"/>
+            {{# dgettext }} tuleap-cardwall | or {{/ dgettext }}
+            <input type="submit"
+                   class="btn btn-danger"
+                   name="unset-background-color-semantic"
+                   value="{{# dgettext }} tuleap-cardwall | Remove background color {{/ dgettext }}"/>
         </form>
     {{/ has_at_least_one_field_selectable_for_color }}
 {{/ background_color_presenter }}
