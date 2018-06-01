@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Git\PostInitGitRepositoryWithDataEvent;
 
 require_once 'common/system_event/SystemEvent.class.php';
 
@@ -57,6 +59,7 @@ class SystemEvent_GIT_REPO_FORK extends SystemEvent {
 
         $backend = $old_repository->getBackend();
         $backend->forkOnFilesystem($old_repository, $new_repository);
+        $this->getEventManager()->processEvent(new PostInitGitRepositoryWithDataEvent($new_repository));
         $this->done();
     }
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -47,7 +47,8 @@ class GitRepositoryManager_DeleteAllRepositoriesTest extends TuleapTestCase {
             $this->mirror_data_mapper,
             mock('Tuleap\Git\Permissions\FineGrainedPermissionReplicator'),
             mock('ProjectHistoryDao'),
-            mock('Tuleap\Git\Permissions\HistoryValueFormatter')
+            mock('Tuleap\Git\Permissions\HistoryValueFormatter'),
+            mock(EventManager::class)
         );
     }
 
@@ -115,7 +116,8 @@ class GitRepositoryManager_IsRepositoryNameAlreadyUsedTest extends TuleapTestCas
             $this->mirror_data_mapper,
             mock('Tuleap\Git\Permissions\FineGrainedPermissionReplicator'),
             mock('ProjectHistoryDao'),
-            mock('Tuleap\Git\Permissions\HistoryValueFormatter')
+            mock('Tuleap\Git\Permissions\HistoryValueFormatter'),
+            mock(EventManager::class)
         );
     }
 
@@ -207,7 +209,8 @@ class GitRepositoryManager_CreateTest extends TuleapTestCase {
                 $this->mirror_data_mapper,
                 mock('Tuleap\Git\Permissions\FineGrainedPermissionReplicator'),
                 mock('ProjectHistoryDao'),
-                mock('Tuleap\Git\Permissions\HistoryValueFormatter')
+                mock('Tuleap\Git\Permissions\HistoryValueFormatter'),
+                mock(EventManager::class)
             )
         );
     }
@@ -314,7 +317,8 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
                 $this->mirror_data_mapper,
                 mock('Tuleap\Git\Permissions\FineGrainedPermissionReplicator'),
                 mock('ProjectHistoryDao'),
-                mock('Tuleap\Git\Permissions\HistoryValueFormatter')
+                mock('Tuleap\Git\Permissions\HistoryValueFormatter'),
+                mock(EventManager::class)
             )
         );
 
