@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,7 +26,7 @@ use HTTPRequest;
 use Project;
 use TemplateRendererFactory;
 use Tuleap\Label\CollectionOfLabelableDao;
-use Tuleap\Label\ColorPresenterFactory;
+use Tuleap\Color\ColorPresenterFactory;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 

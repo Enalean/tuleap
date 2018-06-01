@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,7 +26,7 @@ use Exception;
 use HTTPRequest;
 use Project;
 use ProjectHistoryDao;
-use Tuleap\Label\AllowedColorsCollection;
+use Tuleap\Color\AllowedColorsCollection;
 use Tuleap\Label\CollectionOfLabelableDao;
 
 class EditController

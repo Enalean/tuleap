@@ -21,7 +21,7 @@
 namespace Tuleap\Project\Label;
 
 use Codendi_HTMLPurifier;
-use Tuleap\Label\ColorPresenter;
+use Tuleap\Color\ColorPresenter;
 
 class LabelPresenter
 {
