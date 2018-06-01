@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,7 +24,7 @@ use CSRFSynchronizerToken;
 use Exception;
 use HTTPRequest;
 use ProjectHistoryDao;
-use Tuleap\Label\AllowedColorsCollection;
+use Tuleap\Color\AllowedColorsCollection;
 
 class AddController
 {

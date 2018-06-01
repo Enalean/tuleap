@@ -18,10 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Label\AllowedColorsCollection;
+use Tuleap\Color\AllowedColorsCollection;
 use Tuleap\Label\CanProjectUseLabels;
 use Tuleap\Label\CollectionOfLabelableDao;
-use Tuleap\Label\ColorPresenterFactory;
+use Tuleap\Color\ColorPresenterFactory;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Label\AddController;
 use Tuleap\Project\Label\DeleteController;

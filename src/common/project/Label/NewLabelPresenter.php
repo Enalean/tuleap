@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,8 +20,8 @@
 
 namespace Tuleap\Project\Label;
 
-use Tuleap\Label\AllowedColorsCollection;
-use Tuleap\Label\ColorPresenterFactory;
+use Tuleap\Color\AllowedColorsCollection;
+use Tuleap\Color\ColorPresenterFactory;
 
 class NewLabelPresenter extends LabelPresenter
 {

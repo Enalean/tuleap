@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Label;
+namespace Tuleap\Color;
 
 class AllowedColorsCollection
 {
@@ -27,18 +27,26 @@ class AllowedColorsCollection
     private $colors = array(
         'inca-silver',
         'chrome-silver',
+        'firemist-silver',
+        'red-wine',
         'fiesta-red',
+        'coral-pink',
         'teddy-brown',
         'clockwork-orange',
-        'red-wine',
-        'acid-green',
+        'graffiti-yellow',
         'army-green',
+        'neon-green',
+        'acid-green',
         'sherwood-green',
         'ocean-turquoise',
-        'daphne-blue',
-        'lake-placid-blue',
+        'surf-green',
         'deep-blue',
+        'lake-placid-blue',
+        'daphne-blue',
         'plum-crazy',
+        'ultra-violet',
+        'lilac-purple',
+        'panther-pink',
         'peggy-pink',
         'flamingo-pink'
     );
