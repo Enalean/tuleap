@@ -22,6 +22,8 @@ require_once 'constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use Tuleap\Git\GitAdditionalActionEvent;
+use Tuleap\Git\Permissions\GetProtectedGitReferences;
+use Tuleap\Git\Permissions\ProtectedReferencePermission;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Glyph\GlyphLocation;
 use Tuleap\Glyph\GlyphLocationsCollector;
@@ -80,6 +82,7 @@ class pullrequestPlugin extends Plugin
         $this->addHook(LabeledItemCollection::NAME);
         $this->addHook(GlyphLocationsCollector::NAME);
         $this->addHook(CanProjectUseLabels::NAME);
+        $this->addHook(GetProtectedGitReferences::NAME);
 
         if (defined('GIT_BASE_URL')) {
             $this->addHook('cssfile');
@@ -556,5 +559,10 @@ class pullrequestPlugin extends Plugin
         if ($event->getProject()->usesService(GitPlugin::SERVICE_SHORTNAME)) {
             $event->projectCanUseLabels();
         }
+    }
+
+    public function getProtectedGitReferences(GetProtectedGitReferences $event)
+    {
+        $event->addProtectedReference(new ProtectedReferencePermission('refs/tlpr/*'));
     }
 }

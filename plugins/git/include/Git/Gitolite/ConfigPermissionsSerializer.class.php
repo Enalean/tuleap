@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2016. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,8 @@
 
 use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
-use Tuleap\Git\Permissions\FineGrainedPermission;
+use Tuleap\Git\Permissions\GetProtectedGitReferences;
+use Tuleap\Git\Permissions\Permission;
 use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
 
 class Git_Gitolite_ConfigPermissionsSerializer {
@@ -62,6 +63,10 @@ class Git_Gitolite_ConfigPermissionsSerializer {
      * @var RegexpFineGrainedRetriever
      */
     private $regexp_retriever;
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
 
     public function __construct(
         Git_Mirror_MirrorDataMapper $data_mapper,
@@ -69,7 +74,8 @@ class Git_Gitolite_ConfigPermissionsSerializer {
         $etc_templates_path,
         FineGrainedRetriever $fine_grained_retriever,
         FineGrainedPermissionFactory $fine_grained_factory,
-        RegexpFineGrainedRetriever $regexp_retriever
+        RegexpFineGrainedRetriever $regexp_retriever,
+        EventManager $event_manager
     ) {
         $this->data_mapper   = $data_mapper;
         $this->gerrit_status = $gerrit_status;
@@ -83,6 +89,7 @@ class Git_Gitolite_ConfigPermissionsSerializer {
         $this->fine_grained_retriever = $fine_grained_retriever;
         $this->fine_grained_factory   = $fine_grained_factory;
         $this->regexp_retriever       = $regexp_retriever;
+        $this->event_manager          = $event_manager;
     }
 
     public function getGitoliteDotConf(array $project_names) {
@@ -129,6 +136,7 @@ class Git_Gitolite_ConfigPermissionsSerializer {
         $repo_config = '';
         $repo_config .= $this->fetchConfigPermissions($project, $repository, Git::PERM_READ);
         $repo_config .= $this->formatPermission(Git::PERM_READ, $this->getMirrorUserNames($repository));
+        $repo_config .= $this->getExternalProtectedReferencesFormattedPermissions($repository);
         if ($this->isMigrationToGerritCompletedWithSuccess($repository)) {
             $key = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
             $key->setGerritHostId($repository->getRemoteServerId());
@@ -142,6 +150,23 @@ class Git_Gitolite_ConfigPermissionsSerializer {
         return $repo_config;
     }
 
+    /**
+     * @return string
+     */
+    private function getExternalProtectedReferencesFormattedPermissions(GitRepository $repository)
+    {
+        $protected_git_references_event = new GetProtectedGitReferences();
+        $this->event_manager->processEvent($protected_git_references_event);
+
+        $permissions = '';
+
+        foreach ($protected_git_references_event->getPermissions() as $permission) {
+            $permissions .= $this->formatSpecificPermission($repository, $permission);
+        }
+
+        return $permissions;
+    }
+
     private function getFineGrainedFormattedPermissions(GitRepository $repository)
     {
         $config = '';
@@ -150,13 +175,13 @@ class Git_Gitolite_ConfigPermissionsSerializer {
             $this->fine_grained_factory->getTagsFineGrainedPermissionsForRepository($repository);
 
         foreach ($all_permissions as $permission) {
-            $config .= $this->formatFineGrainedPermission($repository, $permission);
+            $config .= $this->formatSpecificPermission($repository, $permission);
         }
 
         return $config;
     }
 
-    private function getPatternInGitoliteFormat(FineGrainedPermission $permission, GitRepository $repository)
+    private function getPatternInGitoliteFormat(Permission $permission, GitRepository $repository)
     {
         $formatted_pattern = str_replace('*', '.*', $permission->getPattern());
         $formatted_pattern = $this->addEndPatternCharacterWhenPermissionDoesntUseRegexp($repository, $formatted_pattern);
@@ -173,7 +198,7 @@ class Git_Gitolite_ConfigPermissionsSerializer {
         return $pattern;
     }
 
-    private function formatFineGrainedPermission(GitRepository $repository, FineGrainedPermission $permission)
+    private function formatSpecificPermission(GitRepository $repository, Permission $permission)
     {
         $pattern_config       = '';
         $pattern_for_gitolite = $this->getPatternInGitoliteFormat($permission, $repository);
