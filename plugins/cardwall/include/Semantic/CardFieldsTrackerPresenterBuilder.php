@@ -62,6 +62,32 @@ class CardFieldsTrackerPresenterBuilder
         return ($this->form_element_factory->getType($field) === 'sb'
             || $this->form_element_factory->getType($field) === 'rb')
             && $field->getBind()->getType() === Tracker_FormElement_Field_List_Bind_Static::TYPE
+            && $this->doesNotHaveAValueBoundToOldColorPicker($field)
         ;
+    }
+
+    /**
+     * @param Tracker_FormElement_Field $field
+     *
+     * @return bool
+     */
+    private function doesNotHaveAValueBoundToOldColorPicker(Tracker_FormElement_Field $field)
+    {
+        /**
+         * @var \Tracker_FormElement_Field_List_BindDecorator[] $decorators
+         */
+        $decorators = $field->getBind()->getDecorators();
+
+        if (count($decorators) === 0) {
+            return true;
+        }
+
+        foreach ($decorators as $decorator) {
+            if ($decorator->isUsingOldPalette()) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

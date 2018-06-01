@@ -19,20 +19,36 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/layout/ColorHelper.class.php';
-
-class Tracker_FormElement_Field_List_BindDecorator {
+class Tracker_FormElement_Field_List_BindDecorator
+{
+    /**
+     * @var int
+     */
     public $field_id;
+    /**
+     * @var int
+     */
     public $value_id;
+    /**
+     * @var int
+     */
     public $r;
+    /**
+     * @var int
+     */
     public $g;
+    /**
+     * @var int
+     */
     public $b;
-    public function __construct($field_id, $value_id, $r, $g, $b) {
-        $this->field_id = $field_id;
-        $this->value_id = $value_id;
-        $this->r        = $r;
-        $this->g        = $g;
-        $this->b        = $b;
+
+    public function __construct($field_id, $value_id, $r, $g, $b)
+    {
+        $this->field_id       = $field_id;
+        $this->value_id       = $value_id;
+        $this->r              = $r;
+        $this->g              = $g;
+        $this->b              = $b;
     }
 
     /**
@@ -178,5 +194,9 @@ class Tracker_FormElement_Field_List_BindDecorator {
         }
         return false;
     }
+
+    public function isUsingOldPalette()
+    {
+        return $this->r !== null && $this->g !== null && $this->b !== null;
+    }
 }
-?>
