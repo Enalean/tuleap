@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,10 +21,7 @@
 
 namespace Tuleap\Git\Permissions;
 
-use Tuleap\User\UserGroup\NameTranslator;
-use User_ForgeUGroup;
-
-class FineGrainedPermission
+class FineGrainedPermission implements Permission
 {
 
     /**
@@ -72,28 +69,6 @@ class FineGrainedPermission
     public function getRewindersUgroup()
     {
         return $this->rewinders_ugroups;
-    }
-
-    public function getWriterNames()
-    {
-        $ugroup_names = array();
-
-        foreach ($this->writers_ugroups as $ugroup) {
-            $ugroup_names[] = NameTranslator::getUserGroupDisplayName($ugroup->getName());
-        }
-
-        return implode(', ', $ugroup_names);
-    }
-
-    public function getRewinderNames()
-    {
-        $ugroup_names = array();
-
-        foreach ($this->rewinders_ugroups as $ugroup) {
-            $ugroup_names[] = NameTranslator::getUserGroupDisplayName($ugroup->getName());
-        }
-
-        return implode(', ', $ugroup_names);
     }
 
     public function getPatternWithoutPrefix()

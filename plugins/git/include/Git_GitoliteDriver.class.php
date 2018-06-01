@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -154,7 +154,8 @@ class Git_GitoliteDriver {
                 $git_plugin->getEtcTemplatesPath(),
                 $git_plugin->getFineGrainedRetriever(),
                 $git_plugin->getFineGrainedFactory(),
-                $git_plugin->getRegexpFineGrainedRetriever()
+                $git_plugin->getRegexpFineGrainedRetriever(),
+                EventManager::instance()
             );
         } else {
             $this->permissions_serializer = $permissions_serializer;

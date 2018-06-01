@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) Enalean, 2011. All Rights Reserved.
+ * Copyright (c) Enalean, 2011-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -99,7 +99,8 @@ abstract class Git_GitoliteTestCase extends TuleapTestCase {
             'whatever',
             mock('Tuleap\Git\Permissions\FineGrainedRetriever'),
             mock('Tuleap\Git\Permissions\FineGrainedPermissionFactory'),
-            mock('Tuleap\Git\Permissions\RegexpFineGrainedRetriever')
+            mock('Tuleap\Git\Permissions\RegexpFineGrainedRetriever'),
+            mock(EventManager::class)
 
         );
 

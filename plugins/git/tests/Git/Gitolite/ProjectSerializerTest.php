@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All rights reserved
+ * Copyright (c) Enalean, 2015-2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -60,7 +60,8 @@ class ProjectSerializerTest extends TuleapTestCase {
             'whatever',
             mock('Tuleap\Git\Permissions\FineGrainedRetriever'),
             mock('Tuleap\Git\Permissions\FineGrainedPermissionFactory'),
-            mock('Tuleap\Git\Permissions\RegexpFineGrainedRetriever')
+            mock('Tuleap\Git\Permissions\RegexpFineGrainedRetriever'),
+            mock(EventManager::class)
         );
 
         $this->logger = mock('Logger');

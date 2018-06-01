@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -58,7 +58,8 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
             'whatever',
             mock('Tuleap\Git\Permissions\FineGrainedRetriever'),
             mock('Tuleap\Git\Permissions\FineGrainedPermissionFactory'),
-            mock('Tuleap\Git\Permissions\RegexpFineGrainedRetriever')
+            mock('Tuleap\Git\Permissions\RegexpFineGrainedRetriever'),
+            mock(EventManager::class)
         );
 
         $this->a_gitolite_project_serializer = new Git_Gitolite_ProjectSerializer(

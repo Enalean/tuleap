@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2011-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -58,7 +58,8 @@ class Git_Gitolite_ConfigPermissionsSerializerTest extends TuleapTestCase {
             'whatever',
             mock('Tuleap\Git\Permissions\FineGrainedRetriever'),
             mock('Tuleap\Git\Permissions\FineGrainedPermissionFactory'),
-            mock('Tuleap\Git\Permissions\RegexpFineGrainedRetriever')
+            mock('Tuleap\Git\Permissions\RegexpFineGrainedRetriever'),
+            mock(EventManager::class)
         );
     }
 
@@ -149,7 +150,8 @@ class Git_Gitolite_ConfigPermissionsSerializer_MirrorsTest extends TuleapTestCas
             'whatever',
             mock('Tuleap\Git\Permissions\FineGrainedRetriever'),
             mock('Tuleap\Git\Permissions\FineGrainedPermissionFactory'),
-            mock('Tuleap\Git\Permissions\RegexpFineGrainedRetriever')
+            mock('Tuleap\Git\Permissions\RegexpFineGrainedRetriever'),
+            mock(EventManager::class)
         );
 
         $this->project    = stub('Project')->getUnixName()->returns('foo');
@@ -229,7 +231,8 @@ class Git_Gitolite_ConfigPermissionsSerializer_GitoliteConfTest extends TuleapTe
             'whatever',
             mock('Tuleap\Git\Permissions\FineGrainedRetriever'),
             mock('Tuleap\Git\Permissions\FineGrainedPermissionFactory'),
-            mock('Tuleap\Git\Permissions\RegexpFineGrainedRetriever')
+            mock('Tuleap\Git\Permissions\RegexpFineGrainedRetriever'),
+            mock(EventManager::class)
         );
 
         $this->assertEqual(
@@ -246,7 +249,8 @@ class Git_Gitolite_ConfigPermissionsSerializer_GitoliteConfTest extends TuleapTe
             dirname(__FILE__).'/_fixtures/etc_templates',
             mock('Tuleap\Git\Permissions\FineGrainedRetriever'),
             mock('Tuleap\Git\Permissions\FineGrainedPermissionFactory'),
-            mock('Tuleap\Git\Permissions\RegexpFineGrainedRetriever')
+            mock('Tuleap\Git\Permissions\RegexpFineGrainedRetriever'),
+            mock(EventManager::class)
         );
 
         $this->assertEqual(
@@ -263,7 +267,8 @@ class Git_Gitolite_ConfigPermissionsSerializer_GitoliteConfTest extends TuleapTe
             'whatever',
             mock('Tuleap\Git\Permissions\FineGrainedRetriever'),
             mock('Tuleap\Git\Permissions\FineGrainedPermissionFactory'),
-            mock('Tuleap\Git\Permissions\RegexpFineGrainedRetriever')
+            mock('Tuleap\Git\Permissions\RegexpFineGrainedRetriever'),
+            mock(EventManager::class)
         );
         $this->assertEqual(
             file_get_contents(dirname(__FILE__).'/_fixtures/mirrors_gitolite.conf'),
@@ -304,7 +309,8 @@ class Git_Gitolite_ConfigPermissionsSerializer_GerritTest extends TuleapTestCase
             'whatever',
             mock('Tuleap\Git\Permissions\FineGrainedRetriever'),
             mock('Tuleap\Git\Permissions\FineGrainedPermissionFactory'),
-            mock('Tuleap\Git\Permissions\RegexpFineGrainedRetriever')
+            mock('Tuleap\Git\Permissions\RegexpFineGrainedRetriever'),
+            mock(EventManager::class)
         );
     }
 
@@ -402,7 +408,8 @@ class Git_Gitolite_ConfigPermissionsSerializer_GerritAndMirrorsTest extends Tule
             'whatever',
             mock('Tuleap\Git\Permissions\FineGrainedRetriever'),
             mock('Tuleap\Git\Permissions\FineGrainedPermissionFactory'),
-            mock('Tuleap\Git\Permissions\RegexpFineGrainedRetriever')
+            mock('Tuleap\Git\Permissions\RegexpFineGrainedRetriever'),
+            mock(EventManager::class)
         );
     }
 
@@ -498,7 +505,8 @@ class Git_Gitolite_ConfigPermissionsSerializer_FineGrainedPermissionsTest extend
             'whatever',
             $this->retriever,
             $this->factory,
-            $this->regexp_retriever
+            $this->regexp_retriever,
+            mock(EventManager::class)
         );
 
         $this->project    = mock('Project');
