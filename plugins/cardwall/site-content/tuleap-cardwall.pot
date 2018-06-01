@@ -4,6 +4,9 @@ msgstr ""
 msgid "Choose a field to define card background color"
 msgstr ""
 
+msgid "Field not found"
+msgstr ""
+
 msgid "Fields"
 msgstr ""
 
@@ -13,4 +16,8 @@ msgid ""
 msgstr ""
 
 msgid "Submit"
+msgstr ""
+
+#, php-format
+msgid "The field used to determine background color is now %s"
 msgstr ""

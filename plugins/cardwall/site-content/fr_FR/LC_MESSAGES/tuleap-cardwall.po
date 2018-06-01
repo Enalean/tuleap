@@ -19,6 +19,9 @@ msgstr "Couleur de fond"
 msgid "Choose a field to define card background color"
 msgstr "Choisissez un champ pour définir la couleur de fond des cartes"
 
+msgid "Field not found"
+msgstr "Champ non trouvé"
+
 msgid "Fields"
 msgstr "Champs"
 
@@ -32,3 +35,9 @@ msgstr ""
 
 msgid "Submit"
 msgstr "Soumettre"
+
+#, php-format
+msgid "The field used to determine background color is now %s"
+msgstr ""
+"Le champs choisi pour déterminer la couleur du fond des cartes est "
+"maintenant %s"

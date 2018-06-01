@@ -36,6 +36,10 @@ use Tracker_FormElementFactory;
 class CardFieldsTrackerPresenterBuilderTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+    /**
+     * @var BackgroundColorDao
+     */
+    private $background_color_dao;
 
     /**
      * @var Tracker_FormElementFactory
@@ -51,7 +55,11 @@ class CardFieldsTrackerPresenterBuilderTest extends TestCase
         parent::setUp();
 
         $this->form_element_factory = Mockery::mock(Tracker_FormElementFactory::class);
-        $this->builder              = new CardFieldsTrackerPresenterBuilder($this->form_element_factory);
+        $this->background_color_dao = Mockery::mock(BackgroundColorDao::class);
+        $this->builder              = new CardFieldsTrackerPresenterBuilder(
+            $this->form_element_factory,
+            $this->background_color_dao
+        );
     }
 
     public function testItBuildAnArrayOfStaticListField()
@@ -82,10 +90,12 @@ class CardFieldsTrackerPresenterBuilderTest extends TestCase
 
         $this->form_element_factory->shouldReceive('getType')->andReturn('sb', 'string', 'sb');
 
-        $formatted_fields = $this->builder->getTrackerFields($tracker_fields);
+        $this->background_color_dao->shouldReceive('searchBackgroundColor')->andReturn([]);
+
+        $formatted_fields = $this->builder->getTrackerFields($tracker_fields, aTracker()->withId(36)->build());
 
         $export_formatted_field_values = [
-            ['id' => 100, 'name' => 'selectbox']
+            ['id' => 100, 'name' => 'selectbox', 'is_selected' => false]
         ];
 
         $this->assertEquals($export_formatted_field_values, $formatted_fields);

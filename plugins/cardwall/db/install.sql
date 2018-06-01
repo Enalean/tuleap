@@ -46,3 +46,9 @@ CREATE TABLE IF NOT EXISTS plugin_cardwall_semantic_cardfields(
     rank int(11) NOT NULL,
     PRIMARY KEY id_cardfields(tracker_id, field_id)
 ) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS plugin_cardwall_background_color_card_field (
+  tracker_id INT(11) NOT NULL,
+  field_id INT(11) NOT NULL,
+  PRIMARY KEY (tracker_id)
+) ENGINE=InnoDB;
