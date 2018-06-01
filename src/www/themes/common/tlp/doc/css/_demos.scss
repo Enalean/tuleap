@@ -37,11 +37,11 @@
 
             .tlp-framed-vertically::before,
             .tlp-framed-vertically::after {
+                content: '';
                 position: absolute;
                 left: 0;
                 width: 100%;
                 height: 20px;
-                content: '';
             }
 
             .tlp-framed-vertically::before {
@@ -54,11 +54,11 @@
 
             .tlp-framed-horizontally::before,
             .tlp-framed-horizontally::after {
+                content: '';
                 position: absolute;
                 top: 0;
                 width: 20px;
                 height: 100%;
-                content: '';
             }
 
             .tlp-framed-horizontally::before {
@@ -75,11 +75,11 @@
         .tlp-modal {
             display: flex;
             position: relative;
+            z-index: 1;
             width: auto;
             margin: 0;
             transform: unset;
             opacity: 1;
-            z-index: 1;
 
             > .tlp-modal-body {
                 border: 1px solid transparent;
@@ -131,16 +131,20 @@
     .doc-table-color {
         table-layout: fixed;
 
+        %size {
+            font-size: 13px;
+        }
+
         .doc-color-name {
-            width: 300px;
+            width: 250px;
         }
 
         .doc-color-variable {
-            width: 400px;
+            width: 350px;
         }
 
         .code-inline {
-            font-size: 13px;
+            @extend %size;
         }
 
         .doc-color {
@@ -157,25 +161,40 @@
             &.doc-color-grey             { background-color: $tlp-theme-grey;   }
             &.doc-color-purple           { background-color: $tlp-theme-purple; }
             &.doc-color-red              { background-color: $tlp-theme-red;    }
+        }
 
-            &.doc-color-inca-silver      { border: 3px solid $tlp-swatch-inca-silver;      background-color: $tlp-swatch-inca-silver-secondary;      }
-            &.doc-color-chrome-silver    { border: 3px solid $tlp-swatch-chrome-silver;    background-color: $tlp-swatch-chrome-silver-secondary;    }
-            &.doc-color-fiesta-red       { border: 3px solid $tlp-swatch-fiesta-red;       background-color: $tlp-swatch-fiesta-red-secondary;       }
-            &.doc-color-teddy-brown      { border: 3px solid $tlp-swatch-teddy-brown;      background-color: $tlp-swatch-teddy-brown-secondary;      }
-            &.doc-color-clockwork-orange { border: 3px solid $tlp-swatch-clockwork-orange; background-color: $tlp-swatch-clockwork-orange-secondary; }
-            &.doc-color-red-wine         { border: 3px solid $tlp-swatch-red-wine;         background-color: $tlp-swatch-red-wine-secondary;         }
-            &.doc-color-acid-green       { border: 3px solid $tlp-swatch-acid-green;       background-color: $tlp-swatch-acid-green-secondary;       }
-            &.doc-color-army-green       { border: 3px solid $tlp-swatch-army-green;       background-color: $tlp-swatch-army-green-secondary;       }
-            &.doc-color-sherwood-green   { border: 3px solid $tlp-swatch-sherwood-green;   background-color: $tlp-swatch-sherwood-green-secondary;   }
-            &.doc-color-ocean-turquoise  { border: 3px solid $tlp-swatch-ocean-turquoise;  background-color: $tlp-swatch-ocean-turquoise-secondary;  }
-            &.doc-color-daphne-blue      { border: 3px solid $tlp-swatch-daphne-blue;      background-color: $tlp-swatch-daphne-blue-secondary;      }
-            &.doc-color-lake-placid-blue { border: 3px solid $tlp-swatch-lake-placid-blue; background-color: $tlp-swatch-lake-placid-blue-secondary; }
-            &.doc-color-deep-blue        { border: 3px solid $tlp-swatch-deep-blue;        background-color: $tlp-swatch-deep-blue-secondary;        }
-            &.doc-color-plum-crazy       { border: 3px solid $tlp-swatch-plum-crazy;       background-color: $tlp-swatch-plum-crazy-secondary;       }
-            &.doc-color-peggy-pink       { border: 3px solid $tlp-swatch-peggy-pink;       background-color: $tlp-swatch-peggy-pink-secondary;       }
-            &.doc-color-flamingo-pink    { border: 3px solid $tlp-swatch-flamingo-pink;    background-color: $tlp-swatch-flamingo-pink-secondary;    }
+        @each $color-name, $colors in $tlp-swatch-color-map {
+            .doc-color-#{$color-name} {
+                border: 3px solid map-get($colors, 'primary');
+                background-color: map-get($colors, 'secondary');
+            }
+
+            .doc-color-code-#{$color-name}-primary {
+                @extend %size;
+                color: map-get($colors, 'primary');
+            }
+
+            .doc-color-code-#{$color-name}-secondary {
+                @extend %size;
+                background-color: map-get($colors, 'secondary');
+            }
+
+            .doc-color-code-#{$color-name}-border {
+                @extend %size;
+                border: 2px solid map-get($colors, 'border');
+            }
+
+            .doc-color-#{$color-name}-pattern {
+                width: 30px;
+                height: 30px;
+                background: url(map-get($colors, 'pattern'));
+            }
         }
     }
+}
+
+.doc-example-badges {
+    line-height: 30px;
 }
 
 @media (max-width: 1200px) {
