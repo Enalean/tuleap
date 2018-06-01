@@ -1,4 +1,4 @@
 {
   "label": "Business Colors",
-  "shortcode": "$tlp-swatch-[name][-secondary]"
+  "shortcode": "$tlp-swatch-[name]"
 }

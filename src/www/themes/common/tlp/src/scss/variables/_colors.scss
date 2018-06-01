@@ -44,104 +44,274 @@ $tlp-ui-black : #000000;
 $tlp-typo-default-text-color: #333333;
 
 // Business colors - Primaries
-$tlp-swatch-inca-silver               : #767676;
-$tlp-swatch-chrome-silver             : #a5a5a5;
-$tlp-swatch-fiesta-red                : #dc2f2f;
-$tlp-swatch-teddy-brown               : #9b6542;
-$tlp-swatch-clockwork-orange          : #ff9400;
-$tlp-swatch-red-wine                  : #9e1919;
-$tlp-swatch-acid-green                : #92c71e;
-$tlp-swatch-army-green                : #7f9a42;
-$tlp-swatch-sherwood-green            : #28c43a;
-$tlp-swatch-ocean-turquoise           : #28c4a0;
-$tlp-swatch-daphne-blue               : #0fd8d8;
-$tlp-swatch-lake-placid-blue          : #33c0ea;
-$tlp-swatch-deep-blue                 : #2b6cdc;
-$tlp-swatch-plum-crazy                : #890de1;
-$tlp-swatch-peggy-pink                : #e10dcb;
-$tlp-swatch-flamingo-pink             : #ff87c4;
+$tlp-swatch-inca-silver: #5d5d5d;
+$tlp-swatch-chrome-silver: #8f8f8f;
+$tlp-swatch-firemist-silver: #c5c5c5;
+$tlp-swatch-red-wine: #a10202;
+$tlp-swatch-fiesta-red: #f02727;
+$tlp-swatch-coral-pink: #ff8a8a;
+$tlp-swatch-teddy-brown: #9a600d;
+$tlp-swatch-clockwork-orange: #f18e06;
+$tlp-swatch-graffiti-yellow: #ffd300;
+$tlp-swatch-army-green: #5f8347;
+$tlp-swatch-neon-green: #6abf1d;
+$tlp-swatch-acid-green: #b9e45d;
+$tlp-swatch-sherwood-green: #009465;
+$tlp-swatch-ocean-turquoise: #28c4a0;
+$tlp-swatch-surf-green: #75e4bf;
+$tlp-swatch-deep-blue: #0480bf;
+$tlp-swatch-lake-placid-blue: #1ebade;
+$tlp-swatch-daphne-blue: #87dbef;
+$tlp-swatch-plum-crazy: #7c2db3;
+$tlp-swatch-ultra-violet: #a44ee1;
+$tlp-swatch-lilac-purple: #ce91fa;
+$tlp-swatch-panther-pink: #c42887;
+$tlp-swatch-peggy-pink: #e560b2;
+$tlp-swatch-flamingo-pink: #edacd4;
 
 // Business colors - Secondaries
-$tlp-swatch-inca-silver-secondary     : #eeeeee;
-$tlp-swatch-chrome-silver-secondary   : #fafafa;
-$tlp-swatch-fiesta-red-secondary      : #ffdfdf;
-$tlp-swatch-teddy-brown-secondary     : #f9ebe1;
-$tlp-swatch-clockwork-orange-secondary: #fff0dc;
-$tlp-swatch-red-wine-secondary        : #f7e8e8;
-$tlp-swatch-acid-green-secondary      : #ecf4d9;
-$tlp-swatch-army-green-secondary      : #e5f2c8;
-$tlp-swatch-sherwood-green-secondary  : #e9ffeb;
-$tlp-swatch-ocean-turquoise-secondary : #d3fcf2;
-$tlp-swatch-daphne-blue-secondary     : #e3ffff;
-$tlp-swatch-lake-placid-blue-secondary: #dff5ff;
-$tlp-swatch-deep-blue-secondary       : #deeaff;
-$tlp-swatch-plum-crazy-secondary      : #f3e2ff;
-$tlp-swatch-peggy-pink-secondary      : #ffe9fd;
-$tlp-swatch-flamingo-pink-secondary   : #fff2f8;
+$tlp-swatch-inca-silver-secondary: #ededed;
+$tlp-swatch-chrome-silver-secondary: #f4f4f4;
+$tlp-swatch-firemist-silver-secondary: #fafafa;
+$tlp-swatch-red-wine-secondary: #f4dbdb;
+$tlp-swatch-fiesta-red-secondary: #ffe5e5;
+$tlp-swatch-coral-pink-secondary: #fff2f2;
+$tlp-swatch-teddy-brown-secondary: #f8eccc;
+$tlp-swatch-clockwork-orange-secondary: #fff5db;
+$tlp-swatch-graffiti-yellow-secondary: #fffbe7;
+$tlp-swatch-army-green-secondary: #edf3db;
+$tlp-swatch-neon-green-secondary: #f4f8e9;
+$tlp-swatch-acid-green-secondary: #f8fbf3;
+$tlp-swatch-sherwood-green-secondary: #e3f6f0;
+$tlp-swatch-ocean-turquoise-secondary: #ecfaf6;
+$tlp-swatch-surf-green-secondary: #f5fffc;
+$tlp-swatch-deep-blue-secondary: #e1f2fa;
+$tlp-swatch-lake-placid-blue-secondary: #eef7fb;
+$tlp-swatch-daphne-blue-secondary: #f4fcff;
+$tlp-swatch-plum-crazy-secondary: #f1e9f8;
+$tlp-swatch-ultra-violet-secondary: #f6f3f9;
+$tlp-swatch-lilac-purple-secondary: #faf7fd;
+$tlp-swatch-panther-pink-secondary: #feeaf1;
+$tlp-swatch-peggy-pink-secondary: #fff1f6;
+$tlp-swatch-flamingo-pink-secondary: #fff7fa;
+
+// Business colors - Borders
+$tlp-swatch-inca-silver-border: #8f8f8f;
+$tlp-swatch-chrome-silver-border: #8f8f8f;
+$tlp-swatch-firemist-silver-border: #8f8f8f;
+$tlp-swatch-red-wine-border: #f02727;
+$tlp-swatch-fiesta-red-border: #f02727;
+$tlp-swatch-coral-pink-border: #f02727;
+$tlp-swatch-teddy-brown-border: #f18e06;
+$tlp-swatch-clockwork-orange-border: #f18e06;
+$tlp-swatch-graffiti-yellow-border: #f18e06;
+$tlp-swatch-army-green-border: #6abf1d;
+$tlp-swatch-neon-green-border: #6abf1d;
+$tlp-swatch-acid-green-border: #6abf1d;
+$tlp-swatch-sherwood-green-border: #28c4a0;
+$tlp-swatch-ocean-turquoise-border: #28c4a0;
+$tlp-swatch-surf-green-border: #28c4a0;
+$tlp-swatch-deep-blue-border: #1ebade;
+$tlp-swatch-lake-placid-blue-border: #1ebade;
+$tlp-swatch-daphne-blue-border: #1ebade;
+$tlp-swatch-plum-crazy-border: #a44ee1;
+$tlp-swatch-ultra-violet-border: #a44ee1;
+$tlp-swatch-lilac-purple-border: #a44ee1;
+$tlp-swatch-panther-pink-border: #e560b2;
+$tlp-swatch-peggy-pink-border: #e560b2;
+$tlp-swatch-flamingo-pink-border: #e560b2;
 
 $tlp-swatch-color-map: (
-    'inca-silver': (
-        primary: $tlp-swatch-inca-silver,
-        secondary: $tlp-swatch-inca-silver-secondary
-    ),
-    'chrome-silver': (
-        primary: $tlp-swatch-chrome-silver,
-        secondary: $tlp-swatch-chrome-silver-secondary
-    ),
-    'fiesta-red': (
-        primary: $tlp-swatch-fiesta-red,
-        secondary: $tlp-swatch-fiesta-red-secondary
-    ),
-    'teddy-brown': (
-        primary: $tlp-swatch-teddy-brown,
-        secondary: $tlp-swatch-teddy-brown-secondary
-    ),
-    'clockwork-orange': (
-        primary: $tlp-swatch-clockwork-orange,
-        secondary: $tlp-swatch-clockwork-orange-secondary
-    ),
-    'red-wine': (
-        primary: $tlp-swatch-red-wine,
-        secondary: $tlp-swatch-red-wine-secondary
-    ),
-    'acid-green': (
-        primary: $tlp-swatch-acid-green,
-        secondary: $tlp-swatch-acid-green-secondary
-    ),
-    'army-green': (
-        primary: $tlp-swatch-army-green,
-        secondary: $tlp-swatch-army-green-secondary
-    ),
-    'sherwood-green': (
-        primary: $tlp-swatch-sherwood-green,
-        secondary: $tlp-swatch-sherwood-green-secondary
-    ),
-    'ocean-turquoise': (
-        primary: $tlp-swatch-ocean-turquoise,
-        secondary: $tlp-swatch-ocean-turquoise-secondary
-    ),
-    'daphne-blue': (
-        primary: $tlp-swatch-daphne-blue,
-        secondary: $tlp-swatch-daphne-blue-secondary
-    ),
-    'lake-placid-blue': (
-        primary: $tlp-swatch-lake-placid-blue,
-        secondary: $tlp-swatch-lake-placid-blue-secondary
-    ),
-    'deep-blue': (
-        primary: $tlp-swatch-deep-blue,
-        secondary: $tlp-swatch-deep-blue-secondary
-    ),
-    'plum-crazy': (
-        primary: $tlp-swatch-plum-crazy,
-        secondary: $tlp-swatch-plum-crazy-secondary
-    ),
-    'peggy-pink': (
-        primary: $tlp-swatch-peggy-pink,
-        secondary: $tlp-swatch-peggy-pink-secondary
-    ),
-    'flamingo-pink': (
-        primary: $tlp-swatch-flamingo-pink,
-        secondary: $tlp-swatch-flamingo-pink-secondary
-    )
+    'inca-silver':
+        (
+            primary: $tlp-swatch-inca-silver,
+            secondary: $tlp-swatch-inca-silver-secondary,
+            border: $tlp-swatch-inca-silver-border,
+            pattern:
+                'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAO0lEQVQoU2NkIBIwYlH3HyqGIoeuEKYIph8uj6wQXRGKYphCXIrgiklWCNJJlNUwK4jyDLpivMGDM/gBpiMIC2fsGi0AAAAASUVORK5CYII='
+        ),
+    'chrome-silver':
+        (
+            primary: $tlp-swatch-chrome-silver,
+            secondary: $tlp-swatch-chrome-silver-secondary,
+            border: $tlp-swatch-chrome-silver-border,
+            pattern:
+                'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAN0lEQVQoU2NkIBIwEqmOAZvC/1DNKHLoCmGKYBbB5ZEVoitCUUyWQpAJRFkNs4ooz+AMLaLDEQDzRQYLoXGuIgAAAABJRU5ErkJggg=='
+        ),
+    'firemist-silver':
+        (
+            primary: $tlp-swatch-firemist-silver,
+            secondary: $tlp-swatch-firemist-silver-secondary,
+            border: $tlp-swatch-firemist-silver-border,
+            pattern:
+                'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAALklEQVQoU2NkIBIwEqmOgSKF/xkYMA1ANxGkCAZQ5LBZTZSJOP1GkWewmkq0iQC0cwMLy6sC+AAAAABJRU5ErkJggg=='
+        ),
+    'red-wine':
+        (
+            primary: $tlp-swatch-red-wine,
+            secondary: $tlp-swatch-red-wine-secondary,
+            border: $tlp-swatch-red-wine-border,
+            pattern:
+                'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAKCAYAAAB8OZQwAAAAFElEQVQYV2NkgID/UBpEMTIOZUEAOBkKC6eV9MQAAAAASUVORK5CYII='
+        ),
+    'fiesta-red':
+        (
+            primary: $tlp-swatch-fiesta-red,
+            secondary: $tlp-swatch-fiesta-red-secondary,
+            border: $tlp-swatch-fiesta-red-border,
+            pattern:
+                'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAKCAYAAAB8OZQwAAAAE0lEQVQYV2NkQID/UCYj41AWBAAQQQoLL2tcTwAAAABJRU5ErkJggg=='
+        ),
+    'coral-pink':
+        (
+            primary: $tlp-swatch-coral-pink,
+            secondary: $tlp-swatch-coral-pink-secondary,
+            border: $tlp-swatch-coral-pink-border,
+            pattern:
+                'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAKCAYAAAB8OZQwAAAAGElEQVQYV2NkQID/DAwMjCAumICCIScIABBpCgsKzidJAAAAAElFTkSuQmCC'
+        ),
+    'teddy-brown':
+        (
+            primary: $tlp-swatch-teddy-brown,
+            secondary: $tlp-swatch-teddy-brown-secondary,
+            border: $tlp-swatch-teddy-brown-border,
+            pattern:
+                'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAJklEQVQoU2NkYGD4z0AEYKSJQiIsZmAAWU0UoI0biQ4eot1IlEIAK5wGBTsO21kAAAAASUVORK5CYII='
+        ),
+    'clockwork-orange':
+        (
+            primary: $tlp-swatch-clockwork-orange,
+            secondary: $tlp-swatch-clockwork-orange-secondary,
+            border: $tlp-swatch-clockwork-orange-border,
+            pattern:
+                'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAICAYAAADA+m62AAAAJklEQVQoU2NkYGD4z0AEYCRFIRHmMTCATCQKkGQ10Z4h2mqiFAIAecMEBZ+4TpwAAAAASUVORK5CYII='
+        ),
+    'graffiti-yellow':
+        (
+            primary: $tlp-swatch-graffiti-yellow,
+            secondary: $tlp-swatch-graffiti-yellow-secondary,
+            border: $tlp-swatch-graffiti-yellow-border,
+            pattern:
+                'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAICAYAAADA+m62AAAAG0lEQVQoU2NkYGD4z0AEYCRCDVgJbRQOdjcCAOk3AgdaYQEOAAAAAElFTkSuQmCC'
+        ),
+    'army-green':
+        (
+            primary: $tlp-swatch-army-green,
+            secondary: $tlp-swatch-army-green-secondary,
+            border: $tlp-swatch-army-green-border,
+            pattern:
+                'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAJCAYAAAD+WDajAAAANUlEQVQoU2NkwAT/YUKMaHJwCQYGBkZkSRQJkCaYJIYETBKrBFE6YW7CaSdWBeheASmCmwAAqgwJCNMDfv0AAAAASUVORK5CYII='
+        ),
+    'neon-green':
+        (
+            primary: $tlp-swatch-neon-green,
+            secondary: $tlp-swatch-neon-green-secondary,
+            border: $tlp-swatch-neon-green-border,
+            pattern:
+                'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAJCAYAAAD+WDajAAAAMklEQVQoU2NkwAT/oUKMjGhycAmQOLIkigSyJIYETBKrBFE6YW7CaSdWBeheASmCmwAAqxIJCmDTh/IAAAAASUVORK5CYII='
+        ),
+    'acid-green':
+        (
+            primary: $tlp-swatch-acid-green,
+            secondary: $tlp-swatch-acid-green-secondary,
+            border: $tlp-swatch-acid-green-border,
+            pattern:
+                'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAJCAYAAAD+WDajAAAAM0lEQVQoU2NkwAT/GRgYGEHCYAIJwCXQJVEkkCUxJGCSWCWI0glzD047sSpA9wpIEdwEAKs2CQpUckTQAAAAAElFTkSuQmCC'
+        ),
+    'sherwood-green':
+        (
+            primary: $tlp-swatch-sherwood-green,
+            secondary: $tlp-swatch-sherwood-green-secondary,
+            border: $tlp-swatch-sherwood-green-border,
+            pattern:
+                'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAKElEQVQoU2NkIBIwQtX9J6CekWyFMI0wC2A2YZg4gApxeZ50XxMMdgDcMAwL/F/cwAAAAABJRU5ErkJggg=='
+        ),
+    'ocean-turquoise':
+        (
+            primary: $tlp-swatch-ocean-turquoise,
+            secondary: $tlp-swatch-ocean-turquoise-secondary,
+            border: $tlp-swatch-ocean-turquoise-border,
+            pattern:
+                'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAK0lEQVQoU2NkIBIwEqmOAVnhfxyawGrQFaLbANI82BRi8w+GG/GGFNHhCAARkQoLuHVJTgAAAABJRU5ErkJggg=='
+        ),
+    'surf-green':
+        (
+            primary: $tlp-swatch-surf-green,
+            secondary: $tlp-swatch-surf-green-secondary,
+            border: $tlp-swatch-surf-green-border,
+            pattern:
+                'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAMUlEQVQoU2NkIBIwEqmOgWyF/9FsgBuEbiJIIUwMmY1hNUkKkW3HaTXOQCDb1zhNBADbdQYL29YF0gAAAABJRU5ErkJggg=='
+        ),
+    'deep-blue':
+        (
+            primary: $tlp-swatch-deep-blue,
+            secondary: $tlp-swatch-deep-blue-secondary,
+            border: $tlp-swatch-deep-blue-border,
+            pattern:
+                'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAARklEQVQoU2NkwAT/oUKMyFIoHAYGBpgimBq4PLJCdEUoimEKkRVhFQMJYlMEMw0uR5JCkG6irMawBi3EwG4mK3jQTUYxBABt4w4JizXljwAAAABJRU5ErkJggg=='
+        ),
+    'lake-placid-blue':
+        (
+            primary: $tlp-swatch-lake-placid-blue,
+            secondary: $tlp-swatch-lake-placid-blue-secondary,
+            border: $tlp-swatch-lake-placid-blue-border,
+            pattern:
+                'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAP0lEQVQoU2NkIBIwYlH3HyqGIoeuEKYIph8uj6wQ3SQUPkwhVusYGBjg4iQrBLmJKKthjifKM+iK8QYPzuAHALSADAvR5e1eAAAAAElFTkSuQmCC'
+        ),
+    'daphne-blue':
+        (
+            primary: $tlp-swatch-daphne-blue,
+            secondary: $tlp-swatch-daphne-blue-secondary,
+            border: $tlp-swatch-daphne-blue-border,
+            pattern:
+                'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAO0lEQVQoU2NkIBIwEqmOAZvC/1DNKHLoCkGKYGLIbBQTUSSgpsLFkE0kWiHIEKKshgUAUZ7BGVpEhyMAAbEKCyJQyzEAAAAASUVORK5CYII='
+        ),
+    'plum-crazy':
+        (
+            primary: $tlp-swatch-plum-crazy,
+            secondary: $tlp-swatch-plum-crazy-secondary,
+            border: $tlp-swatch-plum-crazy-border,
+            pattern:
+                'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAMklEQVQoU2NkIBIwQtX9R1KPVYwihdgcwwgzESaJ7ASQGFyeZIXoJqFbD7ea+r4mGOwA3DAMC2da0w8AAAAASUVORK5CYII='
+        ),
+    'ultra-violet':
+        (
+            primary: $tlp-swatch-ultra-violet,
+            secondary: $tlp-swatch-ultra-violet-secondary,
+            border: $tlp-swatch-ultra-violet-border,
+            pattern:
+                'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAL0lEQVQoU2NkIBIwEqmOAVnhf6gmmBgKnyyFMFegmwwWx+ZGggpp50asIUZ0OAIAEZEKC7CvpQsAAAAASUVORK5CYII='
+        ),
+    'lilac-purple':
+        (
+            primary: $tlp-swatch-lilac-purple,
+            secondary: $tlp-swatch-lilac-purple-secondary,
+            border: $tlp-swatch-lilac-purple-border,
+            pattern:
+                'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAMUlEQVQoU2NkIBIwEqmOgWyF/xkYwJphNNxCbCZiKAKpRldIkolY/Ue2Z3CGFtEmAgB0kQULqk3wPgAAAABJRU5ErkJggg=='
+        ),
+    'panther-pink':
+        (
+            primary: $tlp-swatch-panther-pink,
+            secondary: $tlp-swatch-panther-pink-secondary,
+            border: $tlp-swatch-panther-pink-border,
+            pattern:
+                'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAFklEQVQYV2NkwAEYiZH4j6wIWQeFEgDL2QQDnNTt9AAAAABJRU5ErkJggg=='
+        ),
+    'peggy-pink':
+        (
+            primary: $tlp-swatch-peggy-pink,
+            secondary: $tlp-swatch-peggy-pink-secondary,
+            border: $tlp-swatch-peggy-pink-border,
+            pattern:
+                'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAFCAYAAABmWJ3mAAAAF0lEQVQYV2NkwAEYKZb4DzWBEd0ouAQALOQCBtacyWUAAAAASUVORK5CYII='
+        ),
+    'flamingo-pink':
+        (
+            primary: $tlp-swatch-flamingo-pink,
+            secondary: $tlp-swatch-flamingo-pink-secondary,
+            border: $tlp-swatch-flamingo-pink-border,
+            pattern:
+                'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAFCAYAAABmWJ3mAAAAFElEQVQYV2NkwAEYaSvxn4GBgREABvABBqnItn8AAAAASUVORK5CYII='
+        )
 );
