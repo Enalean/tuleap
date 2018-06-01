@@ -8,6 +8,7 @@
   "private": true,
   "dependencies": {
     "dompurify": "^1.0.4",
+    "uuid": "^3.2.1",
     "vue": "^2.5.13",
     "vue-gettext": "^2.0.31"
   },

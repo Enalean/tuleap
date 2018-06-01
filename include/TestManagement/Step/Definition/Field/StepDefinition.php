@@ -202,13 +202,15 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
 
         $steps = $this->getStepsPresentersFromChangesetValue($value);
 
+        $default_format = $this->getDefaultFormat($this->getCurrentUser());
+        $empty_step     = new Step(0, '', $default_format, 0);
+
         return $renderer->renderToString(
             'step-def-edit',
             [
-                'field_id'           => $this->id,
-                'has_steps'          => count($steps) > 0,
-                'json_encoded_steps' => json_encode($steps),
-                'default_format'     => $this->getDefaultFormat($this->getCurrentUser())
+                'field_id'                => $this->id,
+                'json_encoded_steps'      => json_encode($steps),
+                'json_encoded_empty_step' => json_encode($this->getStepPresenter($empty_step))
             ]
         );
     }
@@ -515,9 +517,14 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
 
         return array_map(
             function (Step $step) {
-                return new StepPresenter($step, $this->getTracker()->getProject());
+                return $this->getStepPresenter($step);
             },
             $steps
         );
+    }
+
+    private function getStepPresenter(Step $step)
+    {
+        return new StepPresenter($step, $this->getTracker()->getProject());
     }
 }

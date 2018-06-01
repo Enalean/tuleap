@@ -1,16 +1,5 @@
-{{# has_steps }}
-    <div class="ttm-definition-step-mount-point"
-         data-steps="{{ json_encoded_steps }}"
-         data-field-id="{{ field_id }}"
-    ></div>
-{{/ has_steps }}
-{{^ has_steps }}
-    <input type="hidden" name="artifact[{{ field_id }}][id][]" value="0">
-    <textarea id="field_new_description_0_{{ field_id }}"
-        name="artifact[{{ field_id }}][description][]"
-        rows="10"
-        cols="50"
-        data-format="{{ default_format }}"
-        data-format-name="artifact[{{ field_id }}][description_format][]"
-    ></textarea>
-{{/ has_steps }}
+<div class="ttm-definition-step-mount-point"
+     data-steps="{{ json_encoded_steps }}"
+     data-field-id="{{ field_id }}"
+     data-empty-step="{{ json_encoded_empty_step }}"
+></div>

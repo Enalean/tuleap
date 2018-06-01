@@ -38,7 +38,8 @@ document.addEventListener('DOMContentLoaded', () => {
         new StepDefinitionFieldComponent({
             propsData: {
                 steps: JSON.parse(mount_point.dataset.steps),
-                fieldId: JSON.parse(mount_point.dataset.fieldId)
+                fieldId: JSON.parse(mount_point.dataset.fieldId),
+                emptyStep: JSON.parse(mount_point.dataset.emptyStep)
             }
         }).$mount(mount_point);
     }

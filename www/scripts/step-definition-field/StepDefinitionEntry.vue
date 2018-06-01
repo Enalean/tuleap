@@ -37,7 +37,7 @@
                 v-bind:value="step.id">
             <textarea
                 ref="description"
-                v-bind:id="'field_new_description_' + step.rank + '_' + fieldId"
+                v-bind:id="'field_new_description_' + step.uuid + '_' + fieldId"
                 v-bind:name="'artifact[' + fieldId + '][description][]'"
                 rows="10"
                 cols="50"

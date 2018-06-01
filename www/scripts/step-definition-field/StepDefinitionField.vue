@@ -21,24 +21,46 @@
     <div>
         <step-definition-entry
             v-for="(step, index) in steps"
-            v-bind:key="step.id"
+            v-bind:key="step.uuid"
             v-bind:dynamicRank="index + 1"
             v-bind:step="step"
             v-bind:fieldId="fieldId"
             v-bind:deleteStep="deleteStep"
         ></step-definition-entry>
+        <p v-if="! isThereAtLeastOneStep">
+            <translate>There isn't any step defined yet. Start by adding one.</translate>
+        </p>
+        <button
+            type="button"
+            class="btn"
+            v-on:click="addStep"
+        >
+            <i class="icon-plus"></i> <translate>Add step</translate>
+        </button>
     </div>
 </template>
 
 <script>
     import StepDefinitionEntry from "./StepDefinitionEntry.vue";
+    import uuid                from 'uuid/v4';
 
     export default {
         name: "StepDefinitionField",
         components: {StepDefinitionEntry},
         props: {
             steps: Array,
-            fieldId: Number
+            fieldId: Number,
+            emptyStep: Object
+        },
+        created() {
+            for (const step of this.steps) {
+                step.uuid = uuid();
+            }
+        },
+        computed: {
+            isThereAtLeastOneStep() {
+                return this.steps.length !== 0;
+            }
         },
         methods: {
             deleteStep(step) {
@@ -46,6 +68,12 @@
                 if (index > -1) {
                     this.steps.splice(index, 1);
                 }
+            },
+            addStep() {
+                const step = JSON.parse(JSON.stringify(this.emptyStep));
+                step.uuid = uuid();
+
+                this.steps.push(step);
             }
         }
     }
