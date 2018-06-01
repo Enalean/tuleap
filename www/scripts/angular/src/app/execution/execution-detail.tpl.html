@@ -121,7 +121,8 @@
             <div ng-bind-html="execution.definition.description"></div>
         </section>
 
-        <execution-with-steps ng-if="execution.definition.steps.length"
+        <execution-with-steps class="current-test-content"
+            ng-if="execution.definition.steps.length"
             execution="execution"
         ></execution-with-steps>
 

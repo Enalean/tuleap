@@ -33,12 +33,17 @@ msgstr ""
 msgid "An authentication token that authorizes Tuleap to trigger this Jenkins job"
 msgstr ""
 
+#: src/app/execution/execution-with-steps/step/step-controller.js
+msgid "An error occurred while executing this step. Please try again later. {{ error }}"
+msgstr ""
+
 #: src/app/campaign/campaign-edit.tpl.html
 msgid "Authentication Token"
 msgstr ""
 
 #: src/app/execution/execution-detail.tpl.html
 #: src/app/execution/execution-list.tpl.html
+#: src/app/execution/execution-with-steps/step/step.tpl.html
 msgid "Blocked"
 msgstr ""
 
@@ -138,6 +143,7 @@ msgstr ""
 
 #: src/app/execution/execution-detail.tpl.html
 #: src/app/execution/execution-list.tpl.html
+#: src/app/execution/execution-with-steps/step/step.tpl.html
 msgid "Failed"
 msgstr ""
 
@@ -213,11 +219,13 @@ msgstr ""
 
 #: src/app/execution/execution-detail.tpl.html
 #: src/app/execution/execution-list.tpl.html
+#: src/app/execution/execution-with-steps/step/step.tpl.html
 msgid "Not run"
 msgstr ""
 
 #: src/app/execution/execution-detail.tpl.html
 #: src/app/execution/execution-list.tpl.html
+#: src/app/execution/execution-with-steps/step/step.tpl.html
 msgid "Passed"
 msgstr ""
 

@@ -1,0 +1,66 @@
+<div ng-class="['steps-step', $ctrl.step_result.status]">
+    <div class="steps-step-number">
+        <span ng-class="{
+            'tlp-badge-success': $ctrl.isPassed(),
+            'tlp-badge-danger': $ctrl.isFailed(),
+            'tlp-badge-info': $ctrl.isBlocked(),
+            'tlp-badge-secondary': $ctrl.isNotRun()
+        }">{{ $ctrl.step.rank }}</span>
+    </div>
+    <div class="steps-step-description"
+         ng-bind-html="$ctrl.step.description"
+         ng-if="$ctrl.step.description_format === 'html'"
+    ></div>
+    <div class="steps-step-description steps-step-description-text"
+         ng-bind="$ctrl.step.description"
+         ng-if="$ctrl.step.description_format !== 'html'"
+    ></div>
+    <div class="tlp-dropdown steps-step-action"
+        ng-hide="$ctrl.execution.userCanReloadTestBecauseDefinitionIsUpdated"
+    >
+        <div class="tlp-form-element-append">
+            <button class="tlp-button-success tlp-button-outline steps-step-action-pass"
+                type="button"
+                ng-click="$ctrl.setToPassed()"
+                ng-disabled="$ctrl.saving"
+                ng-attr-title="{{:: 'Passed' | translate }}"
+            >
+                <i class="fa tlp-button-icon"
+                    ng-class="{
+                        'fa-spinner fa-spin': $ctrl.saving,
+                        'fa-check-circle': ! $ctrl.saving
+                    }"
+                ></i>
+            </button>
+            <button class="tlp-button-success tlp-button-outline tlp-append steps-step-action-dropdown"
+                ng-disabled="$ctrl.saving"
+                ng-click="$ctrl.openDropdown()"
+            >
+                <i class="fa fa-caret-down tlp-button-icon"></i>
+            </button>
+        </div>
+        <div class="tlp-dropdown-menu tlp-dropdown-menu-right" role="menu">
+            <a class="tlp-dropdown-menu-item steps-step-action-fail"
+                ng-class="{ 'steps-step-action-disabled': $ctrl.saving }"
+                role="menuitem"
+                ng-click="$ctrl.setToFailed()"
+            >
+                <i class="fa fa-fw fa-times-circle"></i> {{::'Failed' | translate }}
+            </a>
+            <a class="tlp-dropdown-menu-item steps-step-action-block"
+                ng-class="{ 'steps-step-action-disabled': $ctrl.saving }"
+                role="menuitem"
+                ng-click="$ctrl.setToBlocked()"
+            >
+                <i class="fa fa-fw fa-exclamation-circle"></i> {{::'Blocked' | translate }}
+            </a>
+            <a class="tlp-dropdown-menu-item steps-step-action-notrun"
+                ng-class="{ 'steps-step-action-disabled': $ctrl.saving }"
+                role="menuitem"
+                ng-click="$ctrl.setToNotRun()"
+            >
+                <i class="fa fa-fw fa-question-circle"></i> {{::'Not run' | translate }}
+            </a>
+        </div>
+    </div>
+</div>

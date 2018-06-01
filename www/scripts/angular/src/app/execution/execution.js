@@ -22,6 +22,7 @@ import ExecutionListFilter        from './execution-list-filter.js';
 import ExecutionListHeader        from './execution-list-header/execution-list-header-component.js';
 import ExecutionDetailJustUpdated from './execution-detail-just-updated-component.js';
 import ExecutionWithSteps         from './execution-with-steps/execution-with-steps-component.js';
+import Step                       from './execution-with-steps/step/step-component.js';
 
 export default angular.module('execution', [
     'gettext',
@@ -43,6 +44,7 @@ export default angular.module('execution', [
 .component('executionDetailJustUpdated', ExecutionDetailJustUpdated)
 .component('executionListHeader', ExecutionListHeader)
 .component('executionWithSteps', ExecutionWithSteps)
+.component('step', Step)
 .filter('ExecutionListFilter', ExecutionListFilter)
 .name;
 

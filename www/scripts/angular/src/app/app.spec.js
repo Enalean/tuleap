@@ -7,6 +7,7 @@ import './execution-collection/execution-service.spec.js';
 import './execution/execution-detail-controller.spec.js';
 import './execution/execution-link-issue-controller.spec.js';
 import './execution/execution-list-filter.spec.js';
-import './socket/socket-service.spec.js';
 import './execution/execution-list-header/execution-list-header-controller.spec.js';
 import './execution/execution-with-steps/execution-with-steps-controller.spec.js';
+import './execution/execution-with-steps/step/step-controller.spec.js';
+import './socket/socket-service.spec.js';

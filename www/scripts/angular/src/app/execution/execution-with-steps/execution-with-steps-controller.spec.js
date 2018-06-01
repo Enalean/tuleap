@@ -19,7 +19,7 @@ describe('ExecutionWithStepsController -', () => {
     });
 
     describe('init() -', () => {
-        it('Given an execution, when the controller inits, then the steps data will be formatted and sorted by rank for easier display', () => {
+        it('Given an execution, when the controller inits, then the steps data will be sorted by rank for easier display', () => {
             const execution = {
                 id: 802,
                 definition: {
@@ -58,45 +58,15 @@ describe('ExecutionWithStepsController -', () => {
                 {
                     id: 44,
                     description: 'acroamatics tragicness malleate bissextile',
-                    rank: 8,
-                    status: 'passed'
+                    rank: 8
                 },
                 {
                     id: 12,
                     description: 'apodema Canarsee Onmun toaster Rosamond',
-                    rank: 9,
-                    status: 'notrun'
+                    rank: 9
                 }
             ]);
-        });
-
-        it("Given a step definition without execution, then its status will default to 'notrun'", () => {
-            const execution = {
-                id: 35,
-                definition: {
-                    id: 34,
-                    steps: [
-                        {
-                            id: 40,
-                            description: 'microlepidopterist',
-                            rank: 94
-                        }
-                    ]
-                },
-                steps_results: {}
-            };
-            ExecutionWithStepsController.execution = execution;
-
-            ExecutionWithStepsController.$onInit();
-
-            expect(ExecutionWithStepsController.steps).toEqual([
-                {
-                    id: 40,
-                    description: 'microlepidopterist',
-                    rank: 94,
-                    status: 'notrun'
-                }
-            ]);
+            expect(ExecutionWithStepsController.steps_results).toBe(execution.steps_results);
         });
     });
 });
