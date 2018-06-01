@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,13 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-var gulp = require("gulp");
-var sass = require("gulp-sass");
-var rev = require("gulp-rev");
-var path = require("path");
-var del = require("del");
-var merge = require("merge2");
-var pump = require("pump");
+const gulp = require("gulp");
+const sass = require("gulp-sass");
+const rev = require("gulp-rev");
+const path = require("path");
+const del = require("del");
+const pump = require("pump");
 
 function cleanSass(base_dir, scss_files) {
     var css_files = scss_files.map(function(file) {
@@ -76,35 +75,32 @@ function buildSass(base_dir, scss_hash, callback) {
     );
 }
 
-function cleanAndBuildSass(sass_task_name, base_dir, scss_hash, dependent_tasks) {
-    var all_theme_names = Object.keys(scss_hash.themes);
-    var clean_task_name = "clean-" + sass_task_name;
+function buildCleanTask(base_dir, theme) {
+    return () => {
+        if (!theme.is_revisioned) {
+            return cleanSass(base_dir, theme.files);
+        }
 
-    gulp.task(clean_task_name, function() {
-        var promises = all_theme_names.map(function(theme_name) {
-            var theme = scss_hash.themes[theme_name];
+        return del(path.resolve(base_dir, theme.target_dir));
+    };
+}
 
-            if (!theme.is_revisioned) {
-                return cleanSass(base_dir, theme.files);
-            }
+function getSassTasks(sass_task_name, base_dir, scss_hash) {
+    const all_theme_names = Object.keys(scss_hash.themes);
 
-            return del(path.resolve(base_dir, theme.target_dir));
-        });
+    const tasks = all_theme_names.map(theme_name => {
+        const theme = scss_hash.themes[theme_name];
+        const cleanTask = buildCleanTask(base_dir, theme);
+        cleanTask.displayName = `clean-${sass_task_name}-${theme_name}`;
 
-        return Promise.all(promises);
+        const buildSassTask = callback => buildSass(base_dir, theme, callback);
+        buildSassTask.displayName = `${sass_task_name}-${theme_name}`;
+        return gulp.series(cleanTask, buildSassTask);
     });
 
-    var dependent_tasks_array = dependent_tasks || [];
-    var dependencies = [clean_task_name].concat(dependent_tasks_array);
-    gulp.task(sass_task_name, dependencies, function(callback) {
-        var streams = all_theme_names.map(function(theme) {
-            return buildSass(base_dir, scss_hash.themes[theme], callback);
-        });
-
-        return merge(streams);
-    });
+    return gulp.series(...tasks);
 }
 
 module.exports = {
-    cleanAndBuildSass: cleanAndBuildSass
+    getSassTasks
 };

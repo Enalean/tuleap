@@ -17,10 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const gulp = require("gulp");
+const { series, watch } = require("gulp");
 const path = require("path");
 const del = require("del");
-const runSequence = require("run-sequence");
 
 const tuleap = require("./tools/utils/scripts/tuleap-gulp-build");
 const component_builder = require("./tools/utils/scripts/component-builder.js");
@@ -90,8 +89,7 @@ const fat_combined_files = [
         "src/www/scripts/tuleap/tuleap-mention.js",
         "src/www/scripts/tuleap/project-privacy-tooltip.js",
         "src/www/scripts/tuleap/massmail_project_members.js",
-        "src/www/scripts/tuleap/tuleap-ckeditor-toolbar.js",
-        "src/www/scripts/tuleap/project-visibility.js"
+        "src/www/scripts/tuleap/tuleap-ckeditor-toolbar.js"
     ],
     subset_combined_files = [
         "src/www/scripts/jquery/jquery-2.1.1.min.js",
@@ -117,29 +115,25 @@ const fat_combined_files = [
                 target_dir: "src/www/scripts/select2"
             }
         }
-    },
-    asset_dir = "www/assets";
-
-tuleap.declare_plugin_tasks(asset_dir);
+    };
+const asset_dir = "www/assets";
 const base_dir = ".";
-component_builder.installAndBuildNpmComponents(
-    base_dir,
-    core_build_manifest.components,
-    "components-core",
-    ["clean-js-core"]
-);
-sass_builder.cleanAndBuildSass("sass-core-select2", base_dir, select2_scss);
-sass_builder.cleanAndBuildSass("sass-core-themes", base_dir, core_build_manifest);
 
-/**
- * Javascript
- */
-
-gulp.task("clean-js-core", function() {
+function cleanCoreJs() {
     return del("src/" + asset_dir + "/*");
-});
+}
 
-gulp.task("js-core", function() {
+const { all_plugins_tasks, sass_tasks } = tuleap.getPluginTasks(asset_dir);
+
+const pluginsTask = all_plugins_tasks;
+const pluginsSassTask = sass_tasks;
+
+const buildCoreComponents = component_builder.getComponentsBuildTasks(
+    base_dir,
+    core_build_manifest.components
+);
+
+function coreJsTask() {
     const target_dir = path.join("src", asset_dir);
     const files_hash = {
         tuleap: fat_combined_files,
@@ -149,44 +143,38 @@ gulp.task("js-core", function() {
         )
     };
 
-    return tuleap.concat_core_js(files_hash, target_dir);
-});
+    return tuleap.concatCoreJs(files_hash, target_dir);
+}
 
-gulp.task("js", ["js-core", "js-plugins"]);
+const select2Task = sass_builder.getSassTasks("sass-core-select2", base_dir, select2_scss);
+const coreThemeTask = sass_builder.getSassTasks("sass-core-themes", base_dir, core_build_manifest);
 
-gulp.task("sass-core", ["sass-core-select2", "sass-core-themes"]);
+const coreSassTask = series(select2Task, coreThemeTask);
 
-gulp.task("sass", ["sass-core", "sass-plugins"]);
+const buildAllSass = series(coreSassTask, pluginsSassTask);
+const coreTask = series(coreJsTask, coreSassTask);
 
-gulp.task("components", ["components-core", "components-plugins"]);
-
-/**
- * Global
- */
-
-gulp.task("watch", function() {
-    gulp.watch(
+function watchTask() {
+    watch(
         fat_combined_files
             .concat(subset_combined_files)
             .concat(subset_combined_flamingparrot_files),
-        ["js-core"]
+        coreJsTask
     );
 
-    gulp.watch(
-        core_build_manifest.themes.common.files
-            .concat(select2_scss.themes.common.files)
-            .concat(core_build_manifest.themes.BurningParrot.files)
-            .concat(core_build_manifest.themes.BurningParrot.watched_includes),
-        ["sass-core"]
+    watch(
+        core_build_manifest.themes.common.files.concat(select2_scss.themes.common.files),
+        coreSassTask
     );
 
-    tuleap.watch_plugins();
-});
+    tuleap.getPluginsWatchTasks(asset_dir);
+}
 
-gulp.task("core", ["js-core", "sass-core"]);
+const buildTask = series(cleanCoreJs, buildCoreComponents, coreTask, pluginsTask);
 
-gulp.task("build", [], callback => {
-    runSequence("components-core", "core", "plugins", callback);
-});
-
-gulp.task("default", ["build"]);
+module.exports = {
+    default: buildTask,
+    build: buildTask,
+    sass: buildAllSass,
+    watch: watchTask
+};
