@@ -13,6 +13,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
+msgid "Add a field to the cards"
+msgstr "Ajouter un champ aux cartes"
+
 msgid "Background color"
 msgstr "Couleur de fond"
 
@@ -41,3 +44,15 @@ msgid "The field used to determine background color is now %s"
 msgstr ""
 "Le champs choisi pour déterminer la couleur du fond des cartes est "
 "maintenant %s"
+
+msgid "The following fields are added to the cards"
+msgstr "Les champs suivants sont ajoutés aux cartes"
+
+msgid "There aren't any fields added to cards yet."
+msgstr "Aucun champ n'est ajouté aux cartes pour l'instant"
+
+msgid "There is no more field that can be added to the cards."
+msgstr "Il n'y a plus de champs pouveant être ajoutés aux cartes"
+
+msgid "go back to semantic overview"
+msgstr "retour à l'administration de la sémantique"

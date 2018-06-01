@@ -21,10 +21,7 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-use Tuleap\Cardwall\Semantic\BackgroundColorDao;
-use Tuleap\Cardwall\Semantic\BackgroundColorFieldSaver;
-use Tuleap\Cardwall\Semantic\CardFieldsTrackerPresenterBuilder;
-use Tuleap\Cardwall\Semantic\FieldUsedInSemanticObjectChecker;
+use Tuleap\Cardwall\Semantic\CardFieldXmlExtractor;
 
 class Cardwall_Semantic_CardFieldsFactory implements Tracker_Semantic_IRetrieveSemantic {
 
@@ -62,36 +59,12 @@ class Cardwall_Semantic_CardFieldsFactory implements Tracker_Semantic_IRetrieveS
      *
      * @return Cardwall_Semantic_CardFields The semantic object
      */
-    public function getInstanceFromXML($xml, &$xml_mapping, $tracker) {
-        $background_color_dao                  = new BackgroundColorDao();
-        $card_fields_tracker_presenter_builder = new CardFieldsTrackerPresenterBuilder
-        (
-            Tracker_FormElementFactory::instance(),
-            $background_color_dao
-        );
-        $tracker_form_element_factory = Tracker_FormElementFactory::instance();
-        $background_field_saver       = new BackgroundColorFieldSaver(
-            $tracker_form_element_factory,
-            $background_color_dao
-        );
+    public function getInstanceFromXML($xml, &$xml_mapping, $tracker)
+    {
+        $extractor = new CardFieldXmlExtractor();
+        $fields    = $extractor->extractFieldFromXml($xml, $xml_mapping);
 
-        $field_used_in_semantic_object_checker = new FieldUsedInSemanticObjectChecker(
-            $background_color_dao
-        );
-
-        $fields = array();
-        foreach ($xml->field as $field) {
-            $att = $field->attributes();
-            $fields[] = $xml_mapping[(string)$att['REF']];
-        }
-
-        $semantic = new Cardwall_Semantic_CardFields(
-            $tracker,
-            $field_used_in_semantic_object_checker,
-            $card_fields_tracker_presenter_builder,
-            $background_field_saver
-        );
-
+        $semantic = Cardwall_Semantic_CardFields::load($tracker);
         $semantic->setFields($fields);
 
         return $semantic;
@@ -119,6 +92,4 @@ class Cardwall_Semantic_CardFieldsFactory implements Tracker_Semantic_IRetrieveS
         $duplicator = new Tracker_Semantic_CollectionOfFieldsDuplicator($this->getDao());
         $duplicator->duplicate($from_tracker_id, $to_tracker_id, $field_mapping);
     }
-
 }
-?>

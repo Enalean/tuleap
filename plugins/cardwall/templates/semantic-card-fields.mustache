@@ -1,0 +1,59 @@
+{{# fields_presenter }}
+    <h3> {{# dgettext }} tuleap-cardwall | Fields {{/ dgettext }}</h3>
+
+    {{^ has_field }}
+        {{# dgettext }} tuleap-cardwall | There aren't any fields added to cards yet.{{/ dgettext }}
+    {{/ has_field }}
+
+    {{# has_field }}
+        {{# dgettext }} tuleap-cardwall | The following fields are added to the cards{{/ dgettext }}
+    {{/ has_field }}
+
+    <blockquote>
+        <table>
+            {{# card_fields }}
+                <tr>
+                    <td> {{ name }} </td>
+                    <td>
+                        <form method="post" id="tracker-semantic-removal-action" action="{{ semantic_url }}">
+                            {{# csrf_token }}
+                                {{> csrf_token_input }}
+                            {{/ csrf_token }}
+                            <input type="hidden" name="remove" value="{{ id }}">
+                            <button type="submit" class="btn btn-link">
+                                <img
+                                        src="/themes/FlamingParrot/images/ic/cross.png"
+                                        alt="{{# dgettext }} tuleap-cardwall | The following fields are added to the cards{{/ dgettext }}"
+                                        border="0"/>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            {{/ card_fields }}
+        </table>
+    </blockquote>
+
+    {{^ has_at_least_one_field_selectabe_for_card }}
+        <em>{{# dgettext }} tuleap-cardwall | There is no more field that can be added to the cards.{{/ dgettext }}</em>
+    {{/has_at_least_one_field_selectabe_for_card}}
+
+    {{# has_at_least_one_field_selectabe_for_card }}
+
+        <form action="{{ semantic_url }}" method="POST">
+            {{# csrf_token }}
+                {{> csrf_token_input }}
+            {{/ csrf_token }}
+            <p> {{# dgettext }} tuleap-cardwall | Add a field to the cards{{/ dgettext }}
+                <select name="field">
+                    {{# possible_fields }}
+                        {{{ . }}}
+                    {{/ possible_fields }}
+                </select>
+                <input type="submit"
+                       class="btn btn-primary btn-submit-semantic-card"
+                       name="add"
+                       value="{{# dgettext }} tuleap-cardwall | Submit{{/ dgettext }}"/>
+            </p>
+        </form>
+    {{/has_at_least_one_field_selectabe_for_card}}
+{{/ fields_presenter }}

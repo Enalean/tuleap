@@ -25,7 +25,7 @@ use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElementFactory;
 
-class CardFieldsTrackerPresenterBuilder
+class BackgroundColorPresenterBuilder
 {
     /**
      * @var Tracker_FormElementFactory
@@ -42,12 +42,19 @@ class CardFieldsTrackerPresenterBuilder
         $this->dao                  = $dao;
     }
 
+    public function build(array $form_elements_fields, Tracker $tracker)
+    {
+        return new BackgroundColorSelectorPresenter(
+            $this->getTrackerFields($form_elements_fields, $tracker)
+        );
+    }
+
     /**
      * @param Tracker_FormElement_Field[] $form_elements_fields
      *
      * @return array
      */
-    public function getTrackerFields(array $form_elements_fields, Tracker $tracker)
+    private function getTrackerFields(array $form_elements_fields, Tracker $tracker)
     {
         $formatted_field = [];
 

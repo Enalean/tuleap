@@ -46,8 +46,6 @@ plugin_cardwall	semantic_cardFields_label	Cards semantic
 plugin_cardwall	semantic_cardFields_description	Manage the Fields to be displayed on cards
 plugin_cardwall	semantic_cardFields_no_fields_defined	There aren't any fields added to cards yet.
 plugin_cardwall	semantic_cardFields_fields	The following fields are added to the cards:
-plugin_cardwall	semantic_card_fields_add_field	Add a field to the cards:
-plugin_cardwall	semantic_card_fields_no_more_field	There is no more field that can be added to the cards.
 plugin_cardwall	semantic_card_fields_remove_field	Remove this field from the cards.
 plugin_cardwall	milestone_go_to_fullscreen	Fullscreen
 plugin_cardwall	milestone_no_date_info	The start date and the duration are not defined
