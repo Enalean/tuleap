@@ -27,6 +27,7 @@ class SOAPBase extends PHPUnit_Framework_TestCase {
     protected $server_port;
     protected $login;
     protected $password;
+    protected $context;
 
     /** @var SoapClient */
     protected $soap_base;
@@ -45,7 +46,7 @@ class SOAPBase extends PHPUnit_Framework_TestCase {
         $this->server_name        = 'localhost';
         $this->server_port        = '443';
 
-        $context = stream_context_create([
+        $this->context = stream_context_create([
             'ssl' => [
                 // set some SSL/TLS specific options
                 'verify_peer' => false,
@@ -57,13 +58,13 @@ class SOAPBase extends PHPUnit_Framework_TestCase {
         // Connecting to the soap's tracker client
         $this->soap_base = new SoapClient(
             $this->server_base_url,
-            array('cache_wsdl' => WSDL_CACHE_NONE, 'exceptions' => 1, 'trace' => 1, 'stream_context' => $context)
+            array('cache_wsdl' => WSDL_CACHE_NONE, 'exceptions' => 1, 'trace' => 1, 'stream_context' => $this->context)
         );
 
         // Connecting to the soap's tracker client
         $this->soap_project = new SoapClient(
             $this->server_project_url,
-            array('cache_wsdl' => WSDL_CACHE_NONE, 'stream_context' => $context)
+            array('cache_wsdl' => WSDL_CACHE_NONE, 'stream_context' => $this->context)
         );
     }
 

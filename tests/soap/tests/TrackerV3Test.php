@@ -86,7 +86,8 @@ class TrackerV3Test extends SOAPBase {
             $extra_fields
         );
 
-        $this->assertEquals(1, $response);
+        $expected_artifact_id = 2;
+        $this->assertEquals($expected_artifact_id, $response);
 
         return $tracker_v3_id;
     }
@@ -124,8 +125,7 @@ class TrackerV3Test extends SOAPBase {
         );
 
         $this->assertEquals(1, $response->total_artifacts_number);
-        $this->assertEquals(1, $response->artifacts[0]->artifact_id);
+        $this->assertEquals(2, $response->artifacts[0]->artifact_id);
         $this->assertNotNull($response->artifacts[0]->fields);
     }
-
 }
