@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,53 +18,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class FlamingParrot_BodyPresenter {
-
+class FlamingParrot_BodyPresenter
+{
     /** @var string */
-    private $nav;
-
-    /** @var string */
-    private $request;
-
-    /** @var string */
-    private $title;
-
-    /** @var string */
-    private $img_root;
-
-    /** @var string or boolean */
-    private $selected_top_tab;
-
-    /** @var string */
-    private $notifications_placeholder;
+    public $notifications_placeholder;
 
     /** @var array */
-    private $body_class;
+    public $body_class;
+
+    /** @var string */
+    public $user_locale;
 
     function __construct(
-        $request,
-        $title,
-        $img_root,
-        $selected_top_tab,
+        PFUser $user,
         $notifications_placeholder,
         $body_class
     ) {
-        $this->request                   = $request;
-        $this->title                     = $title;
-        $this->img_root                  = $img_root;
-        $this->selected_top_tab          = $selected_top_tab;
+        $this->user_locale               = $user->getLocale();
         $this->notifications_placeholder = $notifications_placeholder;
         $this->body_class                = $body_class;
     }
-
-    public function notificationsPlaceholder() {
-        return $this->notifications_placeholder;
-    }
-
-    public function body_class() {
-        return $this->body_class;
-    }
-
 }
-
-?>
