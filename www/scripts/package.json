@@ -7,7 +7,9 @@
   "license": "GPL-2.0+",
   "private": true,
   "dependencies": {
-    "vue": "^2.5.13"
+    "dompurify": "^1.0.4",
+    "vue": "^2.5.13",
+    "vue-gettext": "^2.0.31"
   },
   "devDependencies": {},
   "config": {
@@ -15,6 +17,7 @@
   },
   "scripts": {
     "build": "NODE_ENV=production $npm_package_config_bin/webpack --mode=production",
-    "watch": "NODE_ENV=watch $npm_package_config_bin/webpack --watch --mode=development"
+    "watch": "NODE_ENV=watch $npm_package_config_bin/webpack --watch --mode=development",
+    "extract-gettext-cli": "$npm_package_config_bin/gettext-extract step-definition-field/*.vue"
   }
 }

@@ -13,9 +13,9 @@
     .ttm-definition-step-rank,
     .ttm-execution-step-rank {
         padding: 0 6px;
-        background: $main;
-        color: $white;
+        border: 1px solid $main;
         border-radius: 10px;
+        color: $main;
     }
 
     .ttm-definition-step-description {
@@ -30,6 +30,12 @@
 
     .ttm-execution-step-status {
         margin: 0 0 0 20px;
+    }
+
+    .ttm-definition-step-description-header {
+        display: flex;
+        justify-content: space-between;
+        margin: 0 0 10px;
     }
 }
 

@@ -20,10 +20,12 @@
 <template>
     <div>
         <step-definition-entry
-            v-for="step in steps"
+            v-for="(step, index) in steps"
             v-bind:key="step.id"
+            v-bind:dynamicRank="index + 1"
             v-bind:step="step"
             v-bind:fieldId="fieldId"
+            v-bind:deleteStep="deleteStep"
         ></step-definition-entry>
     </div>
 </template>
@@ -37,6 +39,14 @@
         props: {
             steps: Array,
             fieldId: Number
+        },
+        methods: {
+            deleteStep(step) {
+                const index = this.steps.indexOf(step);
+                if (index > -1) {
+                    this.steps.splice(index, 1);
+                }
+            }
         }
     }
 </script>

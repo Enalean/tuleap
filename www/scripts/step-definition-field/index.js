@@ -18,11 +18,22 @@
  */
 
 import Vue                 from 'vue';
+import GetTextPlugin       from 'vue-gettext';
+import french_translations from './po/fr.po';
 import StepDefinitionField from './StepDefinitionField.vue';
 
 const StepDefinitionFieldComponent = Vue.extend(StepDefinitionField);
 
 document.addEventListener('DOMContentLoaded', () => {
+    Vue.use(GetTextPlugin, {
+        translations: {
+            fr: french_translations.messages
+        },
+        silent: true
+    });
+
+    Vue.config.language = document.body.dataset.userLocale;
+
     for (const mount_point of document.querySelectorAll('.ttm-definition-step-mount-point')) {
         new StepDefinitionFieldComponent({
             propsData: {

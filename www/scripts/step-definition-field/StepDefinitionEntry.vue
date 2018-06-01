@@ -19,8 +19,18 @@
 
 <template>
     <div class="ttm-definition-step">
-        <div class="ttm-definition-step-rank">{{ step.rank }}</div>
+        <div class="ttm-definition-step-rank">{{ dynamicRank }}</div>
         <div class="ttm-definition-step-description">
+            <div class="ttm-definition-step-description-header">
+                <div>{{ abstract() }}</div>
+                <button
+                    class="btn"
+                    type="button"
+                    v-on:click="deleteStep(step)"
+                >
+                    <i class="icon-trash"></i> <translate>Delete</translate>
+                </button>
+            </div>
             <input
                 type="hidden"
                 v-bind:name="'artifact[' + fieldId + '][id][]'"
@@ -37,13 +47,16 @@
 </template>
 
 <script>
-    import { textarea } from 'tuleap';
+    import {textarea} from 'tuleap';
+    import {sanitize} from 'dompurify';
 
     export default {
         name: "StepDefinitionEntry",
         props: {
             step: Object,
-            fieldId: Number
+            dynamicRank: Number,
+            fieldId: Number,
+            deleteStep: Function
         },
         mounted() {
             this.loadRTE();
@@ -62,6 +75,19 @@
                         htmlFormat: this.step.description_format !== 'text'
                     }
                 );
+            },
+            abstract() {
+                const max_length = 100;
+
+                const text_without_html_tags    = sanitize(this.step.raw_description, {ALLOWED_TAGS: []});
+                const text_without_extra_spaces = text_without_html_tags.replace(/\s+/g, ' ');
+
+                let abstract = text_without_extra_spaces.substring(0, max_length);
+                if (text_without_extra_spaces.length > max_length) {
+                    abstract += '…';
+                }
+
+                return abstract;
             }
         }
     }

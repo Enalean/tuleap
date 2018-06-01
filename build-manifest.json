@@ -43,5 +43,11 @@
     "components": [
         "plugins/testmanagement/www/scripts/angular",
         "plugins/testmanagement/www/scripts"
-    ]
+    ],
+    "gettext-vue": {
+        "step-definition-field": {
+            "scripts": "www/scripts/step-definition-field",
+            "po": "www/scripts/step-definition-field/po"
+        }
+    }
 }
