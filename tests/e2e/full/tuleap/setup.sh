@@ -101,6 +101,7 @@ seed_data() {
     sed -i -e 's#/var/lib/codendi#/var/lib/tuleap#g' /etc/tuleap/plugins/docman/etc/docman.inc
 
     load_project /usr/share/tuleap/tests/e2e/_fixtures/permission_project_02
+    load_project /usr/share/tuleap/tests/e2e/_fixtures/docman_project_03
 
     chown -R codendiadm:codendiadm /var/log/tuleap
 }
