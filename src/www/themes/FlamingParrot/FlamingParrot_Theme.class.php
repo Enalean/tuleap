@@ -198,10 +198,7 @@ class FlamingParrot_Theme extends Layout {
         $body_class[] = $sidebar_state;
 
         $this->render('body', new FlamingParrot_BodyPresenter(
-            $_SERVER['REQUEST_URI'],
-            $params['title'],
-            $this->imgroot,
-            $selected_top_tab,
+            $current_user,
             $this->getNotificationPlaceholder(),
             $body_class
         ));
