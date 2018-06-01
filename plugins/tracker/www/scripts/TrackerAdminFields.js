@@ -1,6 +1,6 @@
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Tuleap, 2017. All rights reserved
+ * Copyright (c) Tuleap, 2017 - 2018. All rights reserved
  *
  * This file is a part of Codendi.
  *
@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
+
+import { createOldColorPicker } from './colorpicker/index.js';
 
 document.observe('dom:loaded', function () {
 
@@ -238,8 +240,8 @@ document.observe('dom:loaded', function () {
                             //Put here the javascript stuff you need to call once the content of the modal dialog is loaded
 
                             //Color picker
-                            selected_element.select('.colorpicker').each(function (element) {
-                                    codendi.colorpicker.colorpickers[element.identify()] = new codendi.colorpicker.Colorpicker(element);
+                            selected_element.select('.vue-mount-point').each(function (element) {
+                                    createOldColorPicker(element);
                                 }
                             );
 

@@ -12,7 +12,8 @@ const path_to_tlp = path.resolve(
 const webpack_config_for_trackers = {
     entry: {
         'tracker-report-expert-mode': './report/index.js',
-        'tracker-permissions-per-group': './permissions-per-group/src/index.js'
+        'tracker-permissions-per-group': './permissions-per-group/src/index.js',
+        'TrackerAdminFields': './TrackerAdminFields.js'
     },
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path),

@@ -1,21 +1,22 @@
 <?php
 /**
- * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved.
+ * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 require_once 'common/layout/ColorHelper.class.php';
@@ -33,10 +34,10 @@ class Tracker_FormElement_Field_List_BindDecorator {
         $this->g        = $g;
         $this->b        = $b;
     }
-    
+
     /**
      * Decorate a value.
-     * @param string $value The value to decorate Don't forget to html-purify. 
+     * @param string $value The value to decorate Don't forget to html-purify.
      * @param boolean $full false if you want only the decoration
      * @return string html
      */
@@ -51,14 +52,14 @@ class Tracker_FormElement_Field_List_BindDecorator {
         }
         return $html;
     }
-    
+
     public function decorateSelectOption() {
         return 'border-left: 16px solid '. ColorHelper::RGBToHexa($this->r, $this->g, $this->b) .';';
     }
-    
+
     /**
      * Display the color and allow the user to edit it
-     * @param string $value The value to decorate Don't forget to html-purify. 
+     * @param string $value The value to decorate Don't forget to html-purify.
      * @param boolean $full false if you want only the decoration
      * @return string html
      */
@@ -66,25 +67,35 @@ class Tracker_FormElement_Field_List_BindDecorator {
         $html = '';
         $hexa = ColorHelper::RGBToHexa($this->r, $this->g, $this->b);
         $id   = 'decorator_'. $this->field_id .'_'. $this->value_id;
-        $html .= self::fetchSquareColor($id, $hexa, 'colorpicker', $this->r, $this->g, $this->b);
-        $html .= '<input id="'. $id .'_field" type="text" size="6" autocomplete="off" name="bind[decorator]['. $this->value_id .']" value="'. $hexa .'" />';
+        $html .= self::getColorPickerMountPoint($id, $this->value_id, $hexa);
+
         return $html;
     }
-    
+
+    private static function getColorPickerMountPoint($decorator_id, $value_id, $hexa_color)
+    {
+        return '
+            <div class="vue-mount-point"
+                data-decorator-id="'. $decorator_id .'"
+                data-value-id="'. $value_id .'"
+                data-color-hexa="'. $hexa_color . '"
+            ></div>
+        ';
+    }
+
     /**
      * Display the transparent color and allow the user to edit it
-     * @param string $value The value to decorate Don't forget to html-purify. 
+     * @param string $value The value to decorate Don't forget to html-purify.
      * @param boolean $full false if you want only the decoration
      * @return string html
      */
     public static function noDecoratorEdit($field_id, $value_id) {
         $html = '';
         $id   = 'decorator_'. $field_id .'_'. $value_id;
-        $html .= self::fetchSquareColor($id, 'transparent', 'colorpicker', null, null, null, 'ic/layer-transparent.png');
-        $html .= '<input id="'. $id .'_field" type="text" size="6" autocomplete="off" name="bind[decorator]['. $value_id .']" value="" />';
+        $html .= self::getColorPickerMountPoint($id, $value_id, null);
         return $html;
     }
-    
+
     protected static function fetchSquareColor($id, $title, $classname, $r, $g, $b, $img = 'blank16x16.png') {
         $html = '';
         $bgcolor = '';
@@ -101,7 +112,7 @@ class Tracker_FormElement_Field_List_BindDecorator {
         ));
         return $html;
     }
-    
+
     /**
      * @return string the internal structure of  the decorator as JSON
      */
@@ -116,7 +127,7 @@ class Tracker_FormElement_Field_List_BindDecorator {
             )
         );
     }
-    
+
     /**
      * Save a decorator
      */
@@ -125,7 +136,7 @@ class Tracker_FormElement_Field_List_BindDecorator {
         list($r, $g, $b) = ColorHelper::HexaToRGB($hexacolor);
         $dao->save($field_id, $value_id, $r, $g, $b);
     }
-    
+
     /**
      * Delete a decorator
      */
@@ -136,7 +147,7 @@ class Tracker_FormElement_Field_List_BindDecorator {
 
     /**
      * Transforms Bind into a SimpleXMLElement
-     * 
+     *
      * @param SimpleXMLElement $root the node to which the Bind is attached (passed by reference)
      * @param int $val the id indentifing the value in the XML (different form $this->value_id)
      */
