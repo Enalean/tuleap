@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.8.7.1\n"
+"X-Generator: Poedit 2.0.7\n"
 
 #, php-format
 msgid "%s has been created"
@@ -166,8 +166,8 @@ msgid ""
 "Maximum number of artifacts users can delete or move from the REST API on a "
 "24 hours sliding window."
 msgstr ""
-"Nombre maximum d'artéfacts que les utilisateurs peuvent supprimer ou déplacer depuis "
-"l'API REST sur une période de 24 heures."
+"Nombre maximum d'artéfacts que les utilisateurs peuvent supprimer ou "
+"déplacer depuis l'API REST sur une période de 24 heures."
 
 msgid "No element selected."
 msgstr "Aucun élément sélectionné."
@@ -226,6 +226,12 @@ msgstr "Quelque chose s'est mal passé."
 
 msgid "Submit Changes"
 msgstr "Valider"
+
+msgid "Switch to default color picker"
+msgstr "Passer à la palette par défaut"
+
+msgid "Switch to old color picker"
+msgstr "Passer à l'ancienne palette"
 
 msgid "That tracker does not exist."
 msgstr "Cet outil de suivi n'existe pas."

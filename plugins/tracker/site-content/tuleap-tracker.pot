@@ -191,6 +191,12 @@ msgstr ""
 msgid "Submit Changes"
 msgstr ""
 
+msgid "Switch to default color picker"
+msgstr ""
+
+msgid "Switch to old color picker"
+msgstr ""
+
 msgid "That tracker does not exist."
 msgstr ""
 

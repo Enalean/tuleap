@@ -18,28 +18,23 @@
   -->
 
 <template>
-        <table class="old-colorpicker-palette">
-            <template v-for="(shades, index) in palette">
-                <old-color-picker-palette-row v-bind:shades="shades" v-bind:key="index" v-on:color-update="colorChanged"/>
-            </template>
-        </table>
+    <div class="colorpicker-palette">
+        <template v-for="(colors, index) in tlp_colors">
+            <color-picker-palette-row v-bind:colors="colors" v-bind:key="index"/>
+        </template>
+    </div>
 </template>
 
 <script>
-    import colors                   from './old-color-palette.js';
-    import OldColorPickerPaletteRow from "./OldColorPickerPaletteRow.vue";
+    import tlp_colors            from "./new-color-palette.js";
+    import ColorPickerPaletteRow from "./ColorPickerPaletteRow.vue";
 
     export default {
-        name: "OldColorPickerPalette",
-        components: { OldColorPickerPaletteRow },
+        name: "ColorPickerPalette",
+        components: { ColorPickerPaletteRow },
         data() {
             return {
-                palette: colors
-            }
-        },
-        methods: {
-            colorChanged(color) {
-                this.$emit('color-update', color);
+                tlp_colors
             }
         }
     }
