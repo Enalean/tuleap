@@ -28,6 +28,10 @@
             v-bind:deleteStep="deleteStep"
         ></step-definition-entry>
         <p v-if="! isThereAtLeastOneStep">
+            <input
+                type="hidden"
+                v-bind:name="'artifact[' + fieldId + '][no_steps]'"
+                value="1">
             <translate>There isn't any step defined yet. Start by adding one.</translate>
         </p>
         <button

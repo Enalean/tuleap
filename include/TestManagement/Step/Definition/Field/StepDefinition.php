@@ -347,6 +347,10 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
      */
     protected function validate(Tracker_Artifact $artifact, $value)
     {
+        if ($this->doesUserWantToRemoveAllSteps($value)) {
+            return true;
+        }
+
         $rule = new \Rule_String();
         foreach ($value['description'] as $key => $submitted_step_description) {
             if (! $rule->isValid($submitted_step_description)) {
@@ -377,6 +381,10 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         return true;
     }
 
+    private function doesUserWantToRemoveAllSteps(array $value) {
+        return isset($value['no_steps']) && $value['no_steps'];
+    }
+
     /**
      * @see Tracker_FormElement_Field::hasChanges()
      */
@@ -385,6 +393,11 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         Tracker_Artifact_ChangesetValue $previous_changesetvalue,
         $new_value
     ) {
+        $existing_steps = $previous_changesetvalue->getValue();
+        if ($this->doesUserWantToRemoveAllSteps($new_value)) {
+            return ! empty($existing_steps);
+        }
+
         $submitted_steps = [];
         $rank            = self::START_RANK;
         foreach ($new_value['description'] as $key => $submitted_step_description) {
@@ -401,8 +414,8 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
             $rank++;
         }
 
-        return array_diff($submitted_steps, $previous_changesetvalue->getValue()) !== [] ||
-            array_diff($previous_changesetvalue->getValue(), $submitted_steps) !== [];
+        return array_diff($submitted_steps, $existing_steps) !== [] ||
+            array_diff($existing_steps, $submitted_steps) !== [];
     }
 
     /**
@@ -429,6 +442,10 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
 
     private function transformSubmittedValuesIntoArrayOfStructuredSteps(array $submitted_values)
     {
+        if ($this->doesUserWantToRemoveAllSteps($submitted_values)) {
+            return [];
+        }
+
         $steps = [];
         $rank  = StepDefinition::START_RANK;
         foreach ($submitted_values['description'] as $key => $description) {
@@ -449,6 +466,10 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
 
     private function extractCrossRefs(Tracker_Artifact $artifact, array $submitted_steps)
     {
+        if (! isset($submitted_steps['description'])) {
+            return true;
+        }
+
         $concatenated_descriptions = implode(PHP_EOL, $submitted_steps['description']);
 
         return ReferenceManager::instance()->extractCrossRef(
