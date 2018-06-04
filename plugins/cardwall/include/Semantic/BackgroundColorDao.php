@@ -38,4 +38,11 @@ class BackgroundColorDao extends DataAccessObject
 
         $this->getDB()->run($sql, $tracker_id, $field_id);
     }
+
+    public function isFieldUsedAsBackgroundColor($field_id)
+    {
+        $sql = "SELECT COUNT(*) FROM plugin_cardwall_background_color_card_field WHERE field_id = ?";
+
+        return $this->getDB()->single($sql, [ $field_id ]) > 0;
+    }
 }
