@@ -27,20 +27,28 @@ class WidgetKanbanDao extends DataAccessObject
 {
     public function createKanbanWidget($owner_id, $owner_type, $kanban_id, $kanban_title, $tracker_report_id)
     {
-        $widget_id = 0;
+        // The creation of a kanban widget can happen in two contexts: requested by a user and during a project creation
+        // The former might leads to a nested transaction issue if the whole is running with PDO instead of deprecated
+        // mysql_* API
+        $does_transaction_needs_to_be_started = $this->getDB()->inTransaction() === false;
+        if ($does_transaction_needs_to_be_started) {
+            $this->getDB()->beginTransaction();
+        }
 
         try {
-            $this->getDB()->beginTransaction();
-
             $widget_id = $this->create($owner_id, $owner_type, $kanban_id, $kanban_title);
 
             if ($widget_id && $tracker_report_id) {
                 $this->createConfigForWidgetId($widget_id, $tracker_report_id);
             }
 
-            $this->getDB()->commit();
+            if ($does_transaction_needs_to_be_started) {
+                $this->getDB()->commit();
+            }
         } catch (Exception $error) {
-            $this->getDB()->rollBack();
+            if ($does_transaction_needs_to_be_started) {
+                $this->getDB()->rollBack();
+            }
 
             throw $error;
         }

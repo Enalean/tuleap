@@ -58,21 +58,36 @@ function db_numrows($qhandle) {
  * @deprecated
  */
 function db_free_result($qhandle) {
-	return @mysql_free_result($qhandle);
+    if ($qhandle instanceof \Tuleap\DB\Compat\Legacy2018\CompatPDODataAccessResult) {
+        $qhandle->freeMemory();
+        return;
+    }
+    @mysql_free_result($qhandle);
 }
 
 /**
  * @deprecated
  */
 function db_result($qhandle,$row,$field) {
-	return @mysql_result($qhandle,$row,$field);
+    if ($qhandle instanceof \Tuleap\DB\Compat\Legacy2018\CompatPDODataAccessResult) {
+        $qhandle->seek($row);
+        $row = $qhandle->current();
+        if (isset($row[$field])) {
+            return $row[$field];
+        }
+        return false;
+    }
+    return @mysql_result($qhandle,$row,$field);
 }
 
 /**
  * @deprecated
  */
 function db_numfields($lhandle) {
-	return @mysql_num_fields($lhandle);
+    if ($lhandle instanceof \Tuleap\DB\Compat\Legacy2018\CompatPDODataAccessResult) {
+        return $lhandle->columnCount();
+    }
+    return @mysql_num_fields($lhandle);
 }
 
 /**

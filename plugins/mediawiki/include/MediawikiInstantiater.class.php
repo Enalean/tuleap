@@ -1,7 +1,7 @@
 <?php
 /*
  * Copyright (C) 2010  Olaf Lenz
- * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
  *
  * This file is part of FusionForge.
  *
@@ -213,47 +213,47 @@ class MediaWikiInstantiater {
     }
 
     private function createDatabase($mediawiki_path) {
-        db_query('START TRANSACTION;');
-
+        $this->logger->info('Creating database ');
         try {
-            $this->logger->info('Creating database ');
-            $main_db      = ForgeConfig::get('sys_dbname');
-            $database     = $this->dao->getDatabaseNameForCreation($this->project);
+            $database = $this->dao->getDatabaseNameForCreation($this->project);
+        } catch (Exception $exception) {
+            $this->logger->error($exception->getMessage());
+            return;
+        }
 
+        $this->logger->info('Using database: ' . $database);
+        $mediawiki_db_connection = \Tuleap\DB\DBFactory::getDB($database);
+        try {
             $this->logger->info('Updating mediawiki database.');
             $table_file   = $mediawiki_path . '/maintenance/tables.sql';
             if (! file_exists($table_file)) {
                 throw new Exception('Error: Couldn\'t find Mediawiki Database Creation File ' . $table_file);
             }
 
-            $this->logger->info('Using database: ' . $database);
-            $use_new_database = db_query('USE ' . $database);
-            if (!$use_new_database) {
-                throw new Exception('Error: DB Query Failed: ' . db_error());
-            }
+            $mediawiki_db_connection->beginTransaction();
+            $this->dao->startTransaction();
 
             $this->logger->info('Creating tables from tables.sql');
             $table_prefix = $this->dao->getTablePrefixForCreation($this->project);
-            $add_tables = $this->createTablesFromFile($table_file, $table_prefix);
-            if (!$add_tables) {
-                throw new Exception('Error: Mediawiki Database Creation Failed: ' . db_error());
+            $add_tables = $this->createTablesFromFile($mediawiki_db_connection, $table_file, $table_prefix);
+            if (! $add_tables) {
+                throw new Exception('Error: Mediawiki Database Creation Failed');
             }
 
             $this->logger->info('Updating list of mediawiki databases (' . $database . ')');
-            db_query('USE '.$main_db);
             $update = $this->dao->addDatabase($database, $this->project_id);
             if (! $update) {
                 throw new Exception('Error: Mediawiki Database list update failed: ' . db_error());
             }
         } catch (Exception $e) {
-             db_query('ROLLBACK;');
+             $this->dao->rollBack();
+             $mediawiki_db_connection->rollBack();
+
             $this->logger->error($e->getMessage());
         }
 
-        db_query('COMMIT;');
-
-        $this->logger->info('Using database: ' . $main_db);
-        db_query('USE '.$main_db);
+        $this->dao->commit();
+        $mediawiki_db_connection->commit();
     }
 
     /**
@@ -263,7 +263,7 @@ class MediaWikiInstantiater {
      *  @param string $table_prefix Prefix for tables
      *  @return int result set handle.
      */
-    private function createTablesFromFile($file, $table_prefix)
+    private function createTablesFromFile(\ParagonIE\EasyDB\EasyDB $db, $file, $table_prefix)
     {
         // inspired from /usr/share/mediawiki115/includes/db/Database.php
         $fp = fopen( $file, 'r' );
@@ -310,12 +310,11 @@ class MediaWikiInstantiater {
                 $cmd = preg_replace(":/\*_\*/:",$table_prefix,$cmd );
                 // TOCHECK WITH CHRISTIAN: Do not change indexes for mediawiki (doesn't seems well supported)
                 //$cmd = preg_replace(":/\*i\*/:","mw",$cmd );
-                $res = db_query( $cmd );
-
-                if (!$res) {
+                try {
+                    $db->query($cmd);
+                } catch (PDOException $ex) {
                     $this->logger->error('SQL: ' . preg_replace('/\n\t+/', ' ',$cmd));
-                    $this->logger->error('SQL> ' . db_error());
-                    return $res;
+                    throw $ex;
                 }
 
                 $cmd = '';

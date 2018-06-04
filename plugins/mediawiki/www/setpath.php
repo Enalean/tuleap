@@ -1,5 +1,6 @@
 <?php
 
+require_once __DIR__ . '/../../../src/vendor/autoload.php';
 spl_autoload_register(function ($class_with_namespace) {
     $iterator = new AppendIterator();
     $iterator->append(
