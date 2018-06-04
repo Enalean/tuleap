@@ -1,6 +1,6 @@
 <?php
 /**
-* Copyright Enalean (c) 2013. All rights reserved.
+* Copyright Enalean (c) 2013 - 2018. All rights reserved.
 * Tuleap and Enalean names and logos are registrated trademarks owned by
 * Enalean SAS. All other trademarks or names are properties of their respective
 * owners.
@@ -20,6 +20,11 @@
 * You should have received a copy of the GNU General Public License
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
+
+use Tuleap\Cardwall\Semantic\BackgroundColorDao;
+use Tuleap\Cardwall\Semantic\BackgroundColorFieldSaver;
+use Tuleap\Cardwall\Semantic\CardFieldsTrackerPresenterBuilder;
+use Tuleap\Cardwall\Semantic\FieldUsedInSemanticObjectChecker;
 
 class Cardwall_Semantic_CardFieldsFactory implements Tracker_Semantic_IRetrieveSemantic {
 
@@ -58,13 +63,35 @@ class Cardwall_Semantic_CardFieldsFactory implements Tracker_Semantic_IRetrieveS
      * @return Cardwall_Semantic_CardFields The semantic object
      */
     public function getInstanceFromXML($xml, &$xml_mapping, $tracker) {
+        $background_color_dao                  = new BackgroundColorDao();
+        $card_fields_tracker_presenter_builder = new CardFieldsTrackerPresenterBuilder
+        (
+            Tracker_FormElementFactory::instance(),
+            $background_color_dao
+        );
+        $tracker_form_element_factory = Tracker_FormElementFactory::instance();
+        $background_field_saver       = new BackgroundColorFieldSaver(
+            $tracker_form_element_factory,
+            $background_color_dao
+        );
+
+        $field_used_in_semantic_object_checker = new FieldUsedInSemanticObjectChecker(
+            $background_color_dao
+        );
+
         $fields = array();
         foreach ($xml->field as $field) {
             $att = $field->attributes();
             $fields[] = $xml_mapping[(string)$att['REF']];
         }
 
-        $semantic = new Cardwall_Semantic_CardFields($tracker);
+        $semantic = new Cardwall_Semantic_CardFields(
+            $tracker,
+            $field_used_in_semantic_object_checker,
+            $card_fields_tracker_presenter_builder,
+            $background_field_saver
+        );
+
         $semantic->setFields($fields);
 
         return $semantic;

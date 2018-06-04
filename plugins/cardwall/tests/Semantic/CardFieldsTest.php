@@ -1,6 +1,6 @@
 <?php
 /**
-* Copyright Enalean (c) 2013 - 2015. All rights reserved.
+* Copyright Enalean (c) 2013 - 2018. All rights reserved.
 * Tuleap and Enalean names and logos are registrated trademarks owned by
 * Enalean SAS. All other trademarks or names are properties of their respective
 * owners.
@@ -21,31 +21,44 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Tuleap\Cardwall\Semantic\BackgroundColorFieldSaver;
+use Tuleap\Cardwall\Semantic\CardFieldsTrackerPresenterBuilder;
+use Tuleap\Cardwall\Semantic\FieldUsedInSemanticObjectChecker;
+
 require_once dirname(__FILE__) .'/../bootstrap.php';
 
-class Cardwall_Semantic_CardFieldsTest extends TuleapTestCase {
+class Cardwall_Semantic_CardFieldsTest extends TuleapTestCase
+{
 
     /** @var XML_Security */
     protected $xml_security;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->xml_security = new XML_Security();
         $this->xml_security->enableExternalLoadOfEntities();
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         $this->xml_security->disableExternalLoadOfEntities();
 
         parent::tearDown();
     }
 
-    public function itExportsInXMLFormat() {
+    public function itExportsInXMLFormat()
+    {
         $tracker  = mock('Tracker');
         $field_1  = stub('Tracker_FormElement_Field_Text')->getId()->returns(102);
         $field_2  = stub('Tracker_FormElement_Field_Text')->getId()->returns(103);
-        $semantic = new Cardwall_Semantic_CardFields($tracker);
+
+        $checker = \Mockery::spy(FieldUsedInSemanticObjectChecker::class);
+        $builder = \Mockery::spy(CardFieldsTrackerPresenterBuilder::class);
+        $saver   = \Mockery::spy(BackgroundColorFieldSaver::class);
+
+        $semantic = new Cardwall_Semantic_CardFields($tracker, $checker, $builder, $saver);
         $semantic->setFields(array($field_1, $field_2));
 
         $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
@@ -57,5 +70,4 @@ class Cardwall_Semantic_CardFieldsTest extends TuleapTestCase {
         $this->assertEqual((string)$xml->field[0]['REF'], (string)$root->semantic->field[0]['REF']);
         $this->assertEqual((string)$xml->field[1]['REF'], (string)$root->semantic->field[1]['REF']);
     }
-
 }
