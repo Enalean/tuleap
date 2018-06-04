@@ -60,23 +60,18 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
     /** @var Cardwall_Semantic_Dao_CardFieldsDao */
     private $dao;
 
-    public function __construct(Tracker $tracker) {
+    public function __construct(
+        Tracker $tracker,
+        FieldUsedInSemanticObjectChecker $field_used_in_semantic_object_checker,
+        CardFieldsTrackerPresenterBuilder $card_fields_tracker_presenter_builder,
+        BackgroundColorFieldSaver $background_color_field_saver
+    ) {
         parent::__construct($tracker);
 
         $this->html_purifier                         = Codendi_HTMLPurifier::instance();
-        $background_color_dao                        = new BackgroundColorDao();
-        $this->card_fields_tracker_presenter_builder = new CardFieldsTrackerPresenterBuilder
-        (
-            Tracker_FormElementFactory::instance(),
-            $background_color_dao
-        );
-        $tracker_form_element_factory                = Tracker_FormElementFactory::instance();
-        $this->background_field_saver                = new BackgroundColorFieldSaver(
-            $tracker_form_element_factory,
-            $background_color_dao
-        );
-
-        $this->semantic_field_checker = new FieldUsedInSemanticObjectChecker($background_color_dao);
+        $this->semantic_field_checker                = $field_used_in_semantic_object_checker;
+        $this->card_fields_tracker_presenter_builder = $card_fields_tracker_presenter_builder;
+        $this->background_field_saver                = $background_color_field_saver;
     }
 
     public function display() {
@@ -232,8 +227,31 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
      */
     public static function load(Tracker $tracker) {
         if (!isset(self::$_instances[$tracker->getId()])) {
-            self::$_instances[$tracker->getId()] = new Cardwall_Semantic_CardFields($tracker);
+
+            $background_color_dao                  = new BackgroundColorDao();
+            $card_fields_tracker_presenter_builder = new CardFieldsTrackerPresenterBuilder
+            (
+                Tracker_FormElementFactory::instance(),
+                $background_color_dao
+            );
+            $tracker_form_element_factory = Tracker_FormElementFactory::instance();
+            $background_field_saver       = new BackgroundColorFieldSaver(
+                $tracker_form_element_factory,
+                $background_color_dao
+            );
+
+            $field_used_in_semantic_object_checker = new FieldUsedInSemanticObjectChecker(
+                $background_color_dao
+            );
+
+            self::$_instances[$tracker->getId()] = new Cardwall_Semantic_CardFields(
+                $tracker,
+                $field_used_in_semantic_object_checker,
+                $card_fields_tracker_presenter_builder,
+                $background_field_saver
+            );
         }
+
         return self::$_instances[$tracker->getId()];
     }
 
