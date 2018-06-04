@@ -17,13 +17,37 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<template functional>
+<template>
     <div class="colorpicker-row">
         <span class="colorpicker-circular-color"
-              v-for="color_name in props.colors"
+              v-for="color_name in colors"
               v-bind:key="color_name"
-              v-bind:class="'colorpicker-circular-color-' + color_name"
+              v-bind:class="[
+                  'colorpicker-circular-color-' + color_name,
+                  {
+                      'icon-ok': isCurrentColor(color_name)
+                  }
+              ]"
               v-bind:title="color_name"
+              v-on:click="updateColor(color_name)"
         ></span>
     </div>
 </template>
+
+<script>
+    export default {
+        name: "ColorPickerPaletteRow",
+        props: {
+            colors       : Array,
+            selectedColor: String
+        },
+        methods: {
+            updateColor(color) {
+                this.$emit('color-update', color);
+            },
+            isCurrentColor(color_name) {
+                return this.selectedColor === color_name;
+            }
+        }
+    }
+</script>

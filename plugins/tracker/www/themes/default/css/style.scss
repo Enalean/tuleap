@@ -1,6 +1,7 @@
 @import '../../../scripts/node_modules/codemirror/lib/codemirror';
 @import '../../../scripts/node_modules/codemirror/addon/hint/show-hint';
 @import 'includes/cards';
+@import 'includes/field-bound-colors';
 
 /* {{{ New trackers */
 button[name=tracker_query_submit] {
@@ -3438,6 +3439,6 @@ td.tracker-unsubscriber-actions {
     margin: 0 0 20px;
 }
 
-.tracker-old-colorpicker {
+.tracker-colorpicker {
     display: inline-block;
 }

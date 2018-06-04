@@ -20,7 +20,11 @@
 <template>
     <div class="colorpicker-palette">
         <template v-for="(colors, index) in tlp_colors">
-            <color-picker-palette-row v-bind:colors="colors" v-bind:key="index"/>
+            <color-picker-palette-row v-bind:colors="colors"
+                v-bind:selected-color="currentColor"
+                v-bind:key="index"
+                v-on:color-update="updateColor"
+            />
         </template>
     </div>
 </template>
@@ -32,9 +36,17 @@
     export default {
         name: "ColorPickerPalette",
         components: { ColorPickerPaletteRow },
+        props: {
+            currentColor: String
+        },
         data() {
             return {
                 tlp_colors
+            }
+        },
+        methods: {
+            updateColor(color) {
+                this.$emit('color-update', color);
             }
         }
     }

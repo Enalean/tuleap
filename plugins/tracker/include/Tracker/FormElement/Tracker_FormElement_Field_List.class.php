@@ -424,8 +424,10 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         //Field values
         foreach($this->getBind()->getAllValues() as $id => $value) {
             $selected = in_array($id, $criteria_value) ? 'selected="selected"' : '';
-            $style = $this->getBind()->getSelectOptionInlineStyle($id);
-            $html .= '<option value="'. $id .'"  title="'. $this->getBind()->formatCriteriaValue($id) .'" '. $selected .' style="'. $style .'">';
+
+            $styles = $this->getBind()->getSelectOptionStyles($id);
+
+            $html .= '<option value="'. $id .'"  title="'. $this->getBind()->formatCriteriaValue($id) .'" '. $selected .' style="'. $styles['inline-styles'] . '" class="' . $styles['classes'] . '"' . '">';
             $html .= $this->getBind()->formatCriteriaValue($id);
             $html .= '</option>';
         }
@@ -890,9 +892,12 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         } else {
             $label = $this->getBind()->formatArtifactValue($id);
         }
-        $style    = $this->getBind()->getSelectOptionInlineStyle($id);
+
+        $styles = $this->getBind()->getSelectOptionStyles($id);
+
         $selected = $is_selected ? 'selected="selected"' : '';
-        return '<option value="'. $id .'" '. $selected .' title="'. $label .'" style="'. $style .'">'. $label .'</option>';
+
+        return '<option value="'. $id .'" '. $selected .' title="'. $label .'" style="'. $styles['inline-styles'] . '" class="' .  $styles['classes'] .' ">'. $label .'</option>';
     }
 
     protected function fetchFieldContainerEnd() {
@@ -927,8 +932,9 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
 
         foreach($this->getBind()->getAllValues() as $id => $value) {
                     if (!$value->isHidden()) {
-                        $style = $this->getBind()->getSelectOptionInlineStyle($id);
-                        $html .= '<option value="'. $id .'" title="'. $this->getBind()->formatArtifactValue($id) .'" style="'. $style .'">';
+                        $styles  = $this->getBind()->getSelectOptionStyles($id);
+
+                        $html .= '<option value="'. $id .'" title="'. $this->getBind()->formatArtifactValue($id) .'" style="'. $styles['inline-styles'] . '" classe="' . $styles['classes'] .'">';
                         $html .= $this->getBind()->formatArtifactValue($id);
                         $html .= '</option>';
                     }

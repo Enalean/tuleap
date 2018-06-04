@@ -19,7 +19,7 @@
 
 @import '../../../../../../src/www/themes/common/tlp/src/scss/variables/colors';
 
-.color-picker-preview {
+.old-color-picker-preview {
     width: 16px;
     height: 16px;
     border: 0;
@@ -47,10 +47,10 @@
 }
 
 .colorpicker-squared-shade {
+    content: ' ';
     height: 15px;
     padding: 0;
     border: 1px solid #000000;
-    content: ' ';
     cursor: pointer;
 }
 
@@ -60,13 +60,28 @@
     height: 15px;
     margin: 12px;
     border-radius: 50%;
+    vertical-align: middle;
     cursor: pointer;
+}
+
+.colorpicker-circular-color::before {
+    vertical-align: middle;
 }
 
 @each $color-name, $colors in $tlp-swatch-color-map {
     .colorpicker-circular-color-#{$color-name} {
         border: 3px solid map-get($colors, 'primary');
         background-color: map-get($colors, 'secondary');
+        color: map-get($colors, 'primary');
+    }
+
+    &.color-picker-preview-#{$color-name} {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        margin: 0;
+        background-color: map-get($colors, 'primary');
+        vertical-align: middle;
     }
 }
 
