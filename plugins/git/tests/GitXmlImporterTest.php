@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -102,7 +102,8 @@ class GitXmlImporterTest extends TuleapTestCase {
             $this->mirror_data_mapper,
             mock('Tuleap\Git\Permissions\FineGrainedPermissionReplicator'),
             mock('ProjectHistoryDao'),
-            mock('Tuleap\Git\Permissions\HistoryValueFormatter')
+            mock('Tuleap\Git\Permissions\HistoryValueFormatter'),
+            $this->event_manager
         );
 
         $restricted_plugin_dao = mock('RestrictedPluginDao');
@@ -392,7 +393,7 @@ XML;
 XML;
         stub($this->ugroup_dao)->searchByGroupIdAndName()->returnsEmptyDar();
 
-        expect($this->event_manager)->processEvent()->once();
+        expect($this->event_manager)->processEvent()->count(2);
 
         $this->import(new SimpleXMLElement($xml));
     }

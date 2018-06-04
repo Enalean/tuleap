@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,7 @@
 
 use Tuleap\Git\Permissions\FineGrainedPermissionReplicator;
 use Tuleap\Git\Permissions\HistoryValueFormatter;
+use Tuleap\Git\PostInitGitRepositoryWithDataEvent;
 
 require_once 'PathJoinUtil.php';
 
@@ -79,6 +80,10 @@ class GitRepositoryManager {
      * @var System_Command
      */
     private $system_command;
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
 
     /**
      * @param GitRepositoryFactory $repository_factory
@@ -94,7 +99,8 @@ class GitRepositoryManager {
         Git_Mirror_MirrorDataMapper $mirror_data_mapper,
         FineGrainedPermissionReplicator $fine_grained_replicator,
         ProjectHistoryDao $history_dao,
-        HistoryValueFormatter $history_value_formatter
+        HistoryValueFormatter $history_value_formatter,
+        EventManager $event_manager
     ) {
         $this->repository_factory       = $repository_factory;
         $this->git_system_event_manager = $git_system_event_manager;
@@ -106,6 +112,7 @@ class GitRepositoryManager {
         $this->fine_grained_replicator  = $fine_grained_replicator;
         $this->history_dao              = $history_dao;
         $this->history_value_formatter  = $history_value_formatter;
+        $this->event_manager            = $event_manager;
     }
 
     /**
@@ -160,6 +167,8 @@ class GitRepositoryManager {
         $this->system_command->exec("sudo -u gitolite /usr/share/tuleap/plugins/git/bin/gl-clone-bundle.sh $bundle_path_arg $repository_full_path_arg");
 
         $this->git_system_event_manager->queueRepositoryUpdate($repository);
+
+        $this->event_manager->processEvent(new PostInitGitRepositoryWithDataEvent($repository));
     }
 
     private function forkUniqueRepository(GitRepository $repository, Project $to_project, PFUser $user, $namespace, $scope, array $forkPermissions) {

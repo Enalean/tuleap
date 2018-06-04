@@ -1816,7 +1816,8 @@ class GitPlugin extends Plugin
             $this->getMirrorDataMapper(),
             $this->getFineGrainedPermissionReplicator(),
             new ProjectHistoryDao(),
-            $this->getHistoryValueFormatter()
+            $this->getHistoryValueFormatter(),
+            EventManager::instance()
         );
     }
 

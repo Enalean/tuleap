@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -43,6 +43,11 @@ class Git_Exec {
         if (self::isGit29Installed()) {
             $this->git_cmd = self::GIT29_PATH.'/usr/bin/git';
         }
+    }
+
+    public static function buildFromRepository(GitRepository $repository)
+    {
+        return new static($repository->getFullPath(), $repository->getFullPath());
     }
 
     public static function isGit29Installed()

@@ -24,6 +24,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 use Tuleap\Git\GitAdditionalActionEvent;
 use Tuleap\Git\Permissions\GetProtectedGitReferences;
 use Tuleap\Git\Permissions\ProtectedReferencePermission;
+use Tuleap\Git\PostInitGitRepositoryWithDataEvent;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Glyph\GlyphLocation;
 use Tuleap\Glyph\GlyphLocationsCollector;
@@ -33,6 +34,8 @@ use Tuleap\Git\GitRepositoryDeletionEvent;
 use Tuleap\Label\LabeledItemCollection;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
+use Tuleap\PullRequest\GitReference\GitPullRequestReference;
+use Tuleap\PullRequest\GitReference\GitPullRequestReferenceRemover;
 use Tuleap\PullRequest\Label\LabeledItemCollector;
 use Tuleap\PullRequest\Label\PullRequestLabelDao;
 use Tuleap\PullRequest\Reference\HTMLURLBuilder;
@@ -83,6 +86,7 @@ class pullrequestPlugin extends Plugin
         $this->addHook(GlyphLocationsCollector::NAME);
         $this->addHook(CanProjectUseLabels::NAME);
         $this->addHook(GetProtectedGitReferences::NAME);
+        $this->addHook(PostInitGitRepositoryWithDataEvent::NAME);
 
         if (defined('GIT_BASE_URL')) {
             $this->addHook('cssfile');
@@ -563,6 +567,11 @@ class pullrequestPlugin extends Plugin
 
     public function getProtectedGitReferences(GetProtectedGitReferences $event)
     {
-        $event->addProtectedReference(new ProtectedReferencePermission('refs/tlpr/*'));
+        $event->addProtectedReference(new ProtectedReferencePermission(GitPullRequestReference::PR_NAMESPACE . '*'));
+    }
+
+    public function postInitGitRepositoryWithDataEvent(PostInitGitRepositoryWithDataEvent $event)
+    {
+        (new GitPullRequestReferenceRemover)->removeAll(GitExec::buildFromRepository($event->getRepository()));
     }
 }

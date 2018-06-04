@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -234,6 +234,22 @@ class GitExec extends Git_Exec
             return false;
         }
         return true;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getReferencesFromPattern($pattern)
+    {
+        $output = [];
+        $this->gitCmdWithOutput('for-each-ref --format="%(refname)" ' . escapeshellarg($pattern), $output);
+        return $output;
+    }
+
+    public function removeReference($reference)
+    {
+        $output = null;
+        $this->execAsGitoliteGroup('update-ref -d ' . escapeshellarg($reference), $output);
     }
 
     private function parseDiffNumStatOutput($output) {
