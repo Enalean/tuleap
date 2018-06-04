@@ -3,9 +3,9 @@ const path        = require('path');
 const del         = require('del');
 const runSequence = require('run-sequence');
 
-const tuleap            = require('./tools/utils/tuleap-gulp-build');
-const component_builder = require('./tools/utils/component-builder.js');
-const sass_builder      = require('./tools/utils/sass-builder.js');
+const tuleap            = require('./tools/utils/scripts/tuleap-gulp-build');
+const component_builder = require('./tools/utils/scripts/component-builder.js');
+const sass_builder      = require('./tools/utils/scripts/sass-builder.js');
 
 const core_build_manifest = require('./build-manifest.json');
 
@@ -185,8 +185,8 @@ gulp.task('watch', function() {
 
 gulp.task('core', ['js-core', 'sass-core']);
 
-gulp.task('build', ['components-core', 'bower-apps'], function(callback) {
-    runSequence('core', 'plugins', callback);
+gulp.task('build', [], callback => {
+    runSequence('components-core', 'bower-apps', 'core', 'plugins', callback);
 });
 
 gulp.task('default', ['build']);

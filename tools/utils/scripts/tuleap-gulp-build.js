@@ -1,17 +1,15 @@
-'use strict';
+const gulp        = require('gulp');
+const merge       = require('merge2');
+const map         = require('lodash.map');
+const concat      = require('gulp-concat');
+const rev         = require('gulp-rev');
+const del         = require('del');
+const fs          = require('fs');
+const path        = require('path');
+const runSequence = require('run-sequence');
 
-var gulp        = require('gulp'),
-    merge       = require('merge2'),
-    map         = require('lodash.map'),
-    concat      = require('gulp-concat'),
-    rev         = require('gulp-rev'),
-    del         = require('del'),
-    fs          = require('fs'),
-    path        = require('path'),
-    runSequence = require('run-sequence');
-
-var component_builder = require('./component-builder.js');
-var sass_builder      = require('./sass-builder.js');
+const component_builder = require('./component-builder.js');
+const sass_builder      = require('./sass-builder.js');
 
 runSequence.options.ignoreUndefinedTasks = true;
 
@@ -53,24 +51,25 @@ function concat_core_js(files_hash, target_dir) {
 }
 
 function declare_plugin_tasks(asset_dir) {
-    var javascript_tasks = [],
-        sass_tasks       = [],
-        scss_lint_tasks  = [],
-        all_plugins_tasks    = [],
-        components_tasks = [];
+    const javascript_tasks  = [];
+    const sass_tasks        = [];
+    const scss_lint_tasks   = [];
+    const all_plugins_tasks = [];
+    const components_tasks  = [];
 
     get_all_plugins_from_manifests().forEach(function (plugin) {
         var name     = plugin.name;
         var base_dir = path.join('plugins', name);
 
         var plugin_tasks        = [];
-        var plugin_dependencies = [];
         var plugin_component_task_name;
 
         if ('dependencies' in plugin) {
             plugin.dependencies.forEach(function (dependency_plugin) {
-                var dependency_plugin_task_name = 'build-plugin-' + dependency_plugin;
-                plugin_dependencies.push(dependency_plugin_task_name);
+                const dependency_plugin_task_name = 'build-plugin-' + dependency_plugin;
+                // Add this plugin's dependencies before it in the task list
+                // It is deduplicated afterward
+                all_plugins_tasks.push(dependency_plugin_task_name);
             });
         }
 
@@ -119,7 +118,7 @@ function declare_plugin_tasks(asset_dir) {
             sass_tasks.push(sass_task_name);
         }
 
-        gulp.task('build-plugin-' + name, plugin_dependencies, function(callback) {
+        gulp.task('build-plugin-' + name, function(callback) {
             runSequence(
                 plugin_component_task_name,
                 plugin_tasks,
@@ -133,7 +132,10 @@ function declare_plugin_tasks(asset_dir) {
     gulp.task('js-plugins', javascript_tasks);
     gulp.task('sass-plugins', sass_tasks);
     gulp.task('scss-lint-plugins', scss_lint_tasks);
-    gulp.task('plugins', all_plugins_tasks);
+    gulp.task('plugins', callback => {
+        const unique_plugins_task = all_plugins_tasks.filter((value, index, array) => array.indexOf(value) === index);
+        runSequence(...unique_plugins_task, callback);
+    });
 }
 
 function concat_files_plugin(base_dir, name, files, asset_dir) {
