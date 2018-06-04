@@ -25,10 +25,16 @@ use Tuleap\Cardwall\Semantic\BackgroundColorDao;
 use Tuleap\Cardwall\Semantic\BackgroundColorFieldSaver;
 use Tuleap\Cardwall\Semantic\BackgroundColorSelectorPresenter;
 use Tuleap\Cardwall\Semantic\CardFieldsTrackerPresenterBuilder;
+use Tuleap\Cardwall\Semantic\FieldUsedInSemanticObjectChecker;
 
 class Cardwall_Semantic_CardFields extends Tracker_Semantic
 {
     const NAME = 'plugin_cardwall_card_fields';
+
+    /**
+     * @var FieldUsedInSemanticObjectChecker
+     */
+    private $semantic_field_checker;
     /**
      * @var BackgroundColorFieldSaver
      */
@@ -69,6 +75,8 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
             $tracker_form_element_factory,
             $background_color_dao
         );
+
+        $this->semantic_field_checker = new FieldUsedInSemanticObjectChecker($background_color_dao);
     }
 
     public function display() {
@@ -161,16 +169,9 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
         return self::NAME;
     }
 
-    public function isUsedInSemantics($field) {
-        $card_fields = $this->getFields();
-
-        foreach ($card_fields as $card_field) {
-            if ($card_field->getId() == $field->getId()) {
-                return true;
-            }
-        }
-
-        return false;
+    public function isUsedInSemantics($field)
+    {
+        return $this->semantic_field_checker->isUsedInSemantic($field, $this->getFields());
     }
 
     public function process(Tracker_SemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user) {
