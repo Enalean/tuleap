@@ -21,6 +21,7 @@
 
 require_once('common/include/Codendi_HTTPPurifier.class.php');
 
+use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
@@ -1320,7 +1321,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             if ($field->hasCustomFormatForAggregateResults()) {
                 $html .= $field->formatAggregateResult($function, $result);
             } else {
-                if (is_a($result, 'DataAccessResult')) {
+                if ($result instanceof LegacyDataAccessResultInterface) {
                     if ($row = $result->getRow()) {
                         if (isset($row[$result_key])) {
                             //this case is for multiple selectbox/count
