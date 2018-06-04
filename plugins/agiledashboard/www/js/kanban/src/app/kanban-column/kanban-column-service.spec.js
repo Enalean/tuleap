@@ -2,15 +2,15 @@ import kanban_module from '../app.js';
 import angular from 'angular';
 import 'angular-mocks';
 
-describe("KanbanColumnService -", function() {
-    var $filter,
+describe("KanbanColumnService -", () => {
+    let $filter,
         $q,
         $rootScope,
         KanbanItemRestService,
         KanbanColumnService,
         KanbanFilterValue;
 
-    beforeEach(function() {
+    beforeEach(() => {
         angular.mock.module(kanban_module, function($provide) {
             $provide.decorator('$filter', function() {
                 return jasmine.createSpy("$filter").and.callFake(function() {
@@ -599,6 +599,99 @@ describe("KanbanColumnService -", function() {
             $rootScope.$apply();
             expect(source_column.content).toEqual([]);
             expect(destination_column.content.map(item => item.id)).toEqual([46, 50, 37, 62]);
+        });
+    });
+
+    describe("updateItemContent()", () => {
+        it("Given an original item and an updated item, then the original item will only have some of its properties changed", () => {
+            const item = {
+                id: 17,
+                background_color_name: 'avocado_featherback',
+                color: 'hedging_enteria',
+                item_name: 'avicide',
+                label: 'Squamscot',
+                card_fields: [
+                    { field_id: 60, label: 'Marssonina', value: '' }
+                ],
+                in_column: 'archive',
+                is_collapsed: true,
+                updating: true,
+                timeinfo: {}
+            };
+
+            const updated_item = {
+                id: 17,
+                background_color_name: 'cheddaring_permutability',
+                color: 'executionist_holosteum',
+                item_name: 'sort',
+                label: 'wheem',
+                in_column: 'archive',
+                card_fields: [
+                    { field_id: 60, label: 'Marssonina', value: 'downgrowth'},
+                    { field_id: 57, label: 'suffect', value: 51 }
+                ]
+            };
+
+            KanbanColumnService.updateItemContent(item, updated_item);
+
+            expect(item).toEqual({
+                id: 17,
+                background_color_name: 'cheddaring_permutability',
+                color: 'executionist_holosteum',
+                item_name: 'sort',
+                label: 'wheem',
+                card_fields: [
+                    { field_id: 60, label: 'Marssonina', value: 'downgrowth'},
+                    { field_id: 57, label: 'suffect', value: 51 }
+                ],
+                in_column: 'archive',
+                is_collapsed: true,
+                updating: true,
+                timeinfo: {
+                    archive: jasmine.any(Date)
+                }
+            });
+        });
+
+        it("When the item is moved from the backlog, then its time info will be updated", () => {
+            const item = {
+                id: 30,
+                in_column: 'backlog',
+                timeinfo: {}
+            };
+
+            const updated_item = {
+                id: 30,
+                in_column: 28
+            };
+
+            KanbanColumnService.updateItemContent(item, updated_item);
+
+            expect(item.in_column).toEqual(28);
+            expect(item.timeinfo).toEqual({
+                kanban: jasmine.any(Date),
+                28: jasmine.any(Date)
+            });
+        });
+
+        it("When the item is moved from any other column, then its time info will be updated", () => {
+            const item = {
+                id: 10,
+                in_column: 45,
+                timeinfo: {}
+            };
+
+            const updated_item = {
+                id: 10,
+                in_column: 'backlog'
+            };
+
+            KanbanColumnService.updateItemContent(item, updated_item);
+
+            expect(item.in_column).toEqual('backlog');
+            expect(item.timeinfo).toEqual({
+                backlog: jasmine.any(Date)
+            });
         });
     });
 });

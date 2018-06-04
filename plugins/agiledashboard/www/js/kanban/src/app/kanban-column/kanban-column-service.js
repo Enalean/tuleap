@@ -18,8 +18,8 @@ function KanbanColumnService(
     KanbanItemRestService,
     SharedPropertiesService
 ) {
-    var self = this;
-    _.extend(self, {
+    const self = this;
+    Object.assign(self, {
         addItem,
         updateItemContent,
         filterItems,
@@ -128,16 +128,20 @@ function KanbanColumnService(
     }
 
     function updateItemContent(item, item_updated) {
-        var updated_item = _.pick(item_updated, function (value, key) {
-            return _.contains([
-                'color',
-                'item_name',
-                'label',
-                'card_fields'
-            ], key);
+        const {
+            background_color_name,
+            color,
+            item_name,
+            label,
+            card_fields
+        } = item_updated;
+        Object.assign(item, {
+            background_color_name,
+            color,
+            item_name,
+            label,
+            card_fields
         });
-
-        _.extend(item, updated_item);
 
         updateItem(item, item_updated.in_column);
     }
