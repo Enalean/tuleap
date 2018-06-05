@@ -2721,7 +2721,7 @@ EOS;
                         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'error_in_csv_file', array($i)));
                         $is_valid = false;
                     } else {
-                        $lines[] = $line;
+                        $lines[] = $this->getCSVLine($line, $i);
                     }
                     $i++;
                 }
@@ -2829,6 +2829,20 @@ EOS;
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'file_not_found'));
             $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. (int)$this->getId() .'&func=admin-csvimport');
         }
+    }
+
+    /**
+     * @return array
+     */
+    private function getCSVLine(array $line, $index)
+    {
+        $bom = (chr(0xEF) . chr(0xBB) . chr(0xBF));
+
+        if ($index === 0 && strpos($line[0], $bom) === 0) {
+            $line[0] = substr($line[0], strlen($bom));
+        }
+
+        return $line;
     }
 
     public function displayWarningArtifactByEmailSemantic() {
