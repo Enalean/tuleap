@@ -20,7 +20,6 @@
 
 namespace Tuleap\Cardwall\Semantic;
 
-use CSRFSynchronizerToken;
 use Tracker_FormElement;
 
 class BackgroundColorSelectorPresenter
@@ -34,10 +33,15 @@ class BackgroundColorSelectorPresenter
      * @var Tracker_FormElement[]
      */
     public $form_elements;
+    /**
+     * @var bool
+     */
+    public $has_background_field_defined;
 
-    public function __construct(array $form_elements)
+    public function __construct(array $form_elements, $has_background_field_defined)
     {
         $this->has_at_least_one_field_selectable_for_color = count($form_elements) > 0;
         $this->form_elements                               = $form_elements;
+        $this->has_background_field_defined                = $has_background_field_defined;
     }
 }

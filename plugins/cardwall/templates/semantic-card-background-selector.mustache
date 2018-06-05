@@ -21,14 +21,17 @@
                     {{/ form_elements }}
                 </select>
             </p>
+
             <input type="submit"
                    class="btn btn-primary"
                    value="{{# dgettext }} tuleap-cardwall | Submit {{/ dgettext }}"/>
-            {{# dgettext }} tuleap-cardwall | or {{/ dgettext }}
-            <input type="submit"
-                   class="btn btn-danger"
-                   name="unset-background-color-semantic"
-                   value="{{# dgettext }} tuleap-cardwall | Remove background color {{/ dgettext }}"/>
+            {{# has_background_field_defined }}
+                {{# dgettext }} tuleap-cardwall | or {{/ dgettext }}
+                <input type="submit"
+                       class="btn btn-danger"
+                       name="unset-background-color-semantic"
+                       value="{{# dgettext }} tuleap-cardwall | Remove background color {{/ dgettext }}"/>
+            {{/ has_background_field_defined }}
         </form>
     {{/ has_at_least_one_field_selectable_for_color }}
 {{/ background_color_presenter }}

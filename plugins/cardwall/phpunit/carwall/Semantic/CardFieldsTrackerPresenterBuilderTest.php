@@ -90,14 +90,15 @@ class CardFieldsTrackerPresenterBuilderTest extends TestCase
 
         $this->form_element_factory->shouldReceive('getType')->andReturn('sb', 'string', 'sb');
 
-        $this->background_color_dao->shouldReceive('searchBackgroundColor')->andReturn([]);
+        $this->background_color_dao->shouldReceive('searchBackgroundColor')->andReturn(false);
 
         $background_color_presenter = $this->builder->build($tracker_fields, aTracker()->withId(36)->build());
 
         $export_formatted_field_values = new BackgroundColorSelectorPresenter(
             [
                 ['id' => 100, 'name' => 'selectbox', 'is_selected' => false]
-            ]
+            ],
+            false
         );
 
         $this->assertEquals($export_formatted_field_values, $background_color_presenter);

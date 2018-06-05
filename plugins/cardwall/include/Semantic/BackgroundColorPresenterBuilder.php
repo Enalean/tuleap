@@ -44,21 +44,23 @@ class BackgroundColorPresenterBuilder
 
     public function build(array $form_elements_fields, Tracker $tracker)
     {
+        $selected_field_id = $this->dao->searchBackgroundColor($tracker->getId());
+
         return new BackgroundColorSelectorPresenter(
-            $this->getTrackerFields($form_elements_fields, $tracker)
+            $this->getTrackerFields($form_elements_fields, $selected_field_id),
+            $selected_field_id
         );
     }
 
     /**
      * @param Tracker_FormElement_Field[] $form_elements_fields
+     * @param                             $selected_field_id
      *
      * @return array
      */
-    private function getTrackerFields(array $form_elements_fields, Tracker $tracker)
+    private function getTrackerFields(array $form_elements_fields, $selected_field_id)
     {
         $formatted_field = [];
-
-        $selected_field_id = $this->dao->searchBackgroundColor($tracker->getId());
 
         foreach ($form_elements_fields as $field) {
             if ($this->isFieldAListBoundToStaticValues($field)) {
