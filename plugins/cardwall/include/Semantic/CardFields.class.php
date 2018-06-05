@@ -27,12 +27,17 @@ use Tuleap\Cardwall\Semantic\BackgroundColorFieldSaver;
 use Tuleap\Cardwall\Semantic\BackgroundColorPresenterBuilder;
 use Tuleap\Cardwall\Semantic\BackgroundColorSemanticFieldNotFoundException;
 use Tuleap\Cardwall\Semantic\CardFieldsPresenterBuilder;
+use Tuleap\Cardwall\Semantic\CardFieldXmlExporter;
 use Tuleap\Cardwall\Semantic\FieldUsedInSemanticObjectChecker;
 use Tuleap\Cardwall\Semantic\SemanticCardPresenter;
 
 class Cardwall_Semantic_CardFields extends Tracker_Semantic
 {
     const NAME = 'plugin_cardwall_card_fields';
+    /**
+     * @var Tracker_FormElement_Field|null
+     */
+    private $background_color_field = null;
 
     /**
      * @var FieldUsedInSemanticObjectChecker
@@ -66,9 +71,17 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
 
     /** @var Cardwall_Semantic_Dao_CardFieldsDao */
     private $dao;
+    /**
+     * @var CardFieldXmlExporter
+     */
+    private $xml_exporter;
 
     /** @var BackgroundColorFieldRetriever */
     private $background_field_retriever;
+    /**
+     * @var BackgroundColorDao
+     */
+    private $background_color_dao;
 
     public function __construct(
         Tracker $tracker,
@@ -76,7 +89,9 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
         BackgroundColorPresenterBuilder $background_color_presenter_builder,
         BackgroundColorFieldSaver $background_color_field_saver,
         CardFieldsPresenterBuilder $field_builder,
-        BackgroundColorFieldRetriever $background_field_retriever
+        BackgroundColorFieldRetriever $background_field_retriever,
+        CardFieldXmlExporter $xml_exporter,
+        BackgroundColorDao $background_color_dao
     ) {
         parent::__construct($tracker);
 
@@ -86,6 +101,8 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
         $this->background_field_saver             = $background_color_field_saver;
         $this->field_builder                      = $field_builder;
         $this->background_field_retriever         = $background_field_retriever;
+        $this->xml_exporter                       = $xml_exporter;
+        $this->background_color_dao               = $background_color_dao;
     }
 
     public function display() {
@@ -163,14 +180,9 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
      *
      * @return void
      */
-    public function exportToXml(SimpleXMLElement $root, $xml_mapping) {
-        $child = $root->addChild('semantic');
-        $child->addAttribute('type', $this->getShortName());
-        foreach($this->getFields() as $field) {
-            if (in_array($field->getId(), $xml_mapping)) {
-                $child->addChild('field')->addAttribute('REF', array_search($field->getId(), $xml_mapping));
-            }
-        }
+    public function exportToXml(SimpleXMLElement $root, $xml_mapping)
+    {
+        $this->xml_exporter->exportToXml($root, $xml_mapping, $this);
     }
 
     public function getDescription() {
@@ -228,12 +240,18 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
     }
 
 
-    public function save() {
+    public function save()
+    {
         $dao = $this->getDao();
         foreach ($this->card_fields as $field) {
             $dao->add($this->tracker->getId(), $field->getId(), 'end');
         }
-        $this->card_fields = array();
+        $this->card_fields = [];
+
+        try {
+            $this->background_color_dao->save($this->tracker->getId(), $this->getBackgroundColorField()->getId());
+        } catch (BackgroundColorSemanticFieldNotFoundException $exception) {
+        }
     }
 
     private function getDao() {
@@ -274,13 +292,17 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
                 $background_color_dao
             );
 
+            $xml_exporter = new CardFieldXmlExporter($background_color_dao);
+
             self::$_instances[$tracker->getId()] = new Cardwall_Semantic_CardFields(
                 $tracker,
                 $field_used_in_semantic_object_checker,
                 $background_color_presenter_builder,
                 $background_field_saver,
                 $field_builder,
-                $background_field_retriever
+                $background_field_retriever,
+                $xml_exporter,
+                $background_color_dao
             );
         }
 
@@ -314,6 +336,15 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
      */
     public function getBackgroundColorField()
     {
-        return $this->background_field_retriever->getField($this->tracker);
+        if (! $this->background_color_field) {
+            return $this->background_field_retriever->getField($this->tracker);
+        }
+
+        return $this->background_color_field;
+    }
+
+    public function setBackgroundColorField(Tracker_FormElement_Field $background_color_field = null)
+    {
+        $this->background_color_field = $background_color_field;
     }
 }

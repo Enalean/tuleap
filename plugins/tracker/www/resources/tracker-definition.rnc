@@ -363,7 +363,10 @@ tracker =
                 attribute type { "plugin_cardwall_card_fields" },
                 element field {
                     attribute REF { xsd:IDREF }
-                }*
+                }*,
+                element background-color {
+                    attribute REF { xsd:IDREF }
+                }?
             )
         |
             (

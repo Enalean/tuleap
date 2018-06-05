@@ -2,4 +2,5 @@
 <semantic type="plugin_cardwall_card_fields">
  <field REF="F13"/>
  <field REF="F14"/>
+ <background-color REF="F14" />
 </semantic>
