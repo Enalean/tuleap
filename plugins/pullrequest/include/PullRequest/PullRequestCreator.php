@@ -21,13 +21,12 @@
 namespace Tuleap\PullRequest;
 
 use EventManager;
-use GitRepositoryFactory;
 use GitRepository;
-use UserManager;
 use Tuleap\PullRequest\Exception\PullRequestCannotBeCreatedException;
 use Tuleap\PullRequest\Exception\PullRequestRepositoryMigratedOnGerritException;
 use Tuleap\PullRequest\Exception\PullRequestAlreadyExistsException;
 use Tuleap\PullRequest\Exception\PullRequestAnonymousUserException;
+use Tuleap\PullRequest\GitReference\GitPullRequestReferenceCreator;
 
 class PullRequestCreator
 {
@@ -41,18 +40,32 @@ class PullRequestCreator
      * @var Dao
      */
     private $pull_request_dao;
+    /**
+     * @var PullRequestMerger
+     */
+    private $pull_request_merger;
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
+    /**
+     * @var GitPullRequestReferenceCreator
+     */
+    private $git_pull_request_reference_creator;
 
 
     public function __construct(
         Factory $pull_request_factory,
         Dao $pull_request_dao,
         PullRequestMerger $pull_request_merger,
-        EventManager $event_manager
+        EventManager $event_manager,
+        GitPullRequestReferenceCreator $git_pull_request_reference_creator
     ) {
-        $this->pull_request_factory = $pull_request_factory;
-        $this->pull_request_dao     = $pull_request_dao;
-        $this->pull_request_merger  = $pull_request_merger;
-        $this->event_manager        = $event_manager;
+        $this->pull_request_factory               = $pull_request_factory;
+        $this->pull_request_dao                   = $pull_request_dao;
+        $this->pull_request_merger                = $pull_request_merger;
+        $this->event_manager                      = $event_manager;
+        $this->git_pull_request_reference_creator = $git_pull_request_reference_creator;
     }
 
     public function generatePullRequest(
@@ -121,6 +134,13 @@ class PullRequestCreator
 
         $event = new GetCreatePullRequest($pull_request, $creator, $repository_dest->getProject());
         $this->event_manager->processEvent($event);
+
+        $this->git_pull_request_reference_creator->createPullRequestReference(
+            $pull_request,
+            $executor,
+            GitExec::buildFromRepository($repository_dest),
+            $repository_dest
+        );
 
         return $result;
     }

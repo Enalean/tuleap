@@ -18,6 +18,13 @@ CREATE TABLE IF NOT EXISTS plugin_pullrequest_review (
     INDEX idx_pr_repository_id(repository_id)
 );
 
+CREATE TABLE IF NOT EXISTS plugin_pullrequest_git_reference (
+    pr_id INT(11) PRIMARY KEY,
+    reference_id INT(11) NOT NULL,
+    repository_dest_id INT(11) NOT NULL,
+    UNIQUE (repository_dest_id, reference_id)
+);
+
 CREATE TABLE IF NOT EXISTS plugin_pullrequest_comments (
     id INT(11) PRIMARY KEY AUTO_INCREMENT,
     pull_request_id INT(11) NOT NULL,
