@@ -1,5 +1,13 @@
-{{> semantic-card-fields }}
+<div class="semantic-card-administration-form">
+    <div>
+        {{> semantic-card-fields }}
 
-{{> semantic-card-background-selector }}
+        {{> semantic-card-background-selector }}
+    </div>
+
+    <div class="semantic-card-administration-preview">
+        {{> semantic-card-preview }}
+    </div>
+</div>
 
 <p><a href="{{ back_url }}">&laquo; {{# dgettext }} tuleap-cardwall | go back to semantic overview {{/ dgettext }}</a></p>

@@ -10,6 +10,9 @@ msgstr ""
 msgid "Choose a field..."
 msgstr ""
 
+msgid "Example"
+msgstr ""
+
 msgid "Field not found"
 msgstr ""
 
@@ -19,6 +22,9 @@ msgstr ""
 msgid ""
 "No field can be choosen for card color background. Only selectbox and "
 "radiobutton bind on static values can be used."
+msgstr ""
+
+msgid "Preview of the card"
 msgstr ""
 
 msgid "Remove background color"

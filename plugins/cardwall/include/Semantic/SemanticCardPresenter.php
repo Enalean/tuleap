@@ -44,6 +44,10 @@ class SemanticCardPresenter
      * @var string
      */
     public $semantic_url;
+    /**
+     * @var string
+     */
+    public $tracker_shortname;
 
     public function __construct(
         FieldPresenter $fields_presenter,
@@ -52,11 +56,11 @@ class SemanticCardPresenter
         \CSRFSynchronizerToken $token,
         $form_url
     ) {
-
         $this->background_color_presenter = $background_color_presenter;
         $this->fields_presenter           = $fields_presenter;
         $this->csrf_token                 = $token;
         $this->semantic_url               = $form_url;
+        $this->tracker_shortname          = $tracker->getItemName();
         $this->back_url                   = TRACKER_BASE_URL . http_build_query(
             [
                 'tracker' => $tracker->getId(),

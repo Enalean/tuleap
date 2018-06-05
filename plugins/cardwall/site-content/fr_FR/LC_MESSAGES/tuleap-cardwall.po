@@ -25,6 +25,9 @@ msgstr "Choisissez un champ pour définir la couleur de fond des cartes"
 msgid "Choose a field..."
 msgstr "Coisissez un champ..."
 
+msgid "Example"
+msgstr "Exemple"
+
 msgid "Field not found"
 msgstr "Champ non trouvé"
 
@@ -38,6 +41,9 @@ msgstr ""
 "Aucun champ ne peut être choisi comme couleur de fond. Seules les listes "
 "déroulante et les boutons radio basés sur des valeurs statiques peuvent être "
 "utilisés."
+
+msgid "Preview of the card"
+msgstr "Aperçu des cartes"
 
 msgid "Remove background color"
 msgstr "Supprimer la couleur de fond"
