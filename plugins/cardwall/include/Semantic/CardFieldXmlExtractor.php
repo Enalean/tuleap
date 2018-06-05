@@ -20,24 +20,17 @@
 
 namespace Tuleap\Cardwall\Semantic;
 
-use CSRFSynchronizerToken;
-use Tracker_FormElement;
+use SimpleXMLElement;
 
-class BackgroundColorSelectorPresenter
+class CardFieldXmlExtractor
 {
-    /**
-     * @var bool
-     */
-    public $has_at_least_one_field_selectable_for_color;
-
-    /**
-     * @var Tracker_FormElement[]
-     */
-    public $form_elements;
-
-    public function __construct(array $form_elements)
+    public function extractFieldFromXml(SimpleXMLElement $xml, array &$xml_mapping)
     {
-        $this->has_at_least_one_field_selectable_for_color = count($form_elements) > 0;
-        $this->form_elements                               = $form_elements;
+        $fields = [];
+        foreach ($xml->field as $field) {
+            $att      = $field->attributes();
+            $fields[] = $xml_mapping[(string)$att['REF']];
+        }
+        return $fields;
     }
 }

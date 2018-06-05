@@ -46,8 +46,6 @@ plugin_cardwall	semantic_cardFields_label	Sémantique carte
 plugin_cardwall	semantic_cardFields_description	Gérer les champs devant être affichés sur les cartes
 plugin_cardwall	semantic_cardFields_no_fields_defined	Aucun champ n'est ajouté aux cartes pour l'instant
 plugin_cardwall	semantic_cardFields_fields	Les champs suivants sont ajoutés aux cartes:
-plugin_cardwall	semantic_card_fields_add_field	Ajouter un champ aux cartes:
-plugin_cardwall	semantic_card_fields_no_more_field	Il n'y a plus de champ pouvant être ajouté aux cartes.
 plugin_cardwall	semantic_card_fields_remove_field	Retirer ce champ des cartes.
 plugin_cardwall	milestone_go_to_fullscreen	Plein écran
 plugin_cardwall	milestone_no_date_info	La date de début et la durée ne sont pas définies

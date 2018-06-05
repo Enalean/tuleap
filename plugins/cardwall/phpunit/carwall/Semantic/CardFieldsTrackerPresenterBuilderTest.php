@@ -46,7 +46,7 @@ class CardFieldsTrackerPresenterBuilderTest extends TestCase
      */
     private $form_element_factory;
     /**
-     * @var  CardFieldsTrackerPresenterBuilder
+     * @var  BackgroundColorPresenterBuilder
      */
     private $builder;
 
@@ -56,7 +56,7 @@ class CardFieldsTrackerPresenterBuilderTest extends TestCase
 
         $this->form_element_factory = Mockery::mock(Tracker_FormElementFactory::class);
         $this->background_color_dao = Mockery::mock(BackgroundColorDao::class);
-        $this->builder              = new CardFieldsTrackerPresenterBuilder(
+        $this->builder              = new BackgroundColorPresenterBuilder(
             $this->form_element_factory,
             $this->background_color_dao
         );
@@ -92,12 +92,14 @@ class CardFieldsTrackerPresenterBuilderTest extends TestCase
 
         $this->background_color_dao->shouldReceive('searchBackgroundColor')->andReturn([]);
 
-        $formatted_fields = $this->builder->getTrackerFields($tracker_fields, aTracker()->withId(36)->build());
+        $background_color_presenter = $this->builder->build($tracker_fields, aTracker()->withId(36)->build());
 
-        $export_formatted_field_values = [
-            ['id' => 100, 'name' => 'selectbox', 'is_selected' => false]
-        ];
+        $export_formatted_field_values = new BackgroundColorSelectorPresenter(
+            [
+                ['id' => 100, 'name' => 'selectbox', 'is_selected' => false]
+            ]
+        );
 
-        $this->assertEquals($export_formatted_field_values, $formatted_fields);
+        $this->assertEquals($export_formatted_field_values, $background_color_presenter);
     }
 }

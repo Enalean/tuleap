@@ -1,3 +1,6 @@
+msgid "Add a field to the cards"
+msgstr ""
+
 msgid "Background color"
 msgstr ""
 
@@ -20,4 +23,16 @@ msgstr ""
 
 #, php-format
 msgid "The field used to determine background color is now %s"
+msgstr ""
+
+msgid "The following fields are added to the cards"
+msgstr ""
+
+msgid "There aren't any fields added to cards yet."
+msgstr ""
+
+msgid "There is no more field that can be added to the cards."
+msgstr ""
+
+msgid "go back to semantic overview"
 msgstr ""

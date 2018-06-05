@@ -23,9 +23,10 @@
 
 use Tuleap\Cardwall\Semantic\BackgroundColorDao;
 use Tuleap\Cardwall\Semantic\BackgroundColorFieldSaver;
-use Tuleap\Cardwall\Semantic\BackgroundColorSelectorPresenter;
-use Tuleap\Cardwall\Semantic\CardFieldsTrackerPresenterBuilder;
+use Tuleap\Cardwall\Semantic\BackgroundColorPresenterBuilder;
+use Tuleap\Cardwall\Semantic\CardFieldsPresenterBuilder;
 use Tuleap\Cardwall\Semantic\FieldUsedInSemanticObjectChecker;
+use Tuleap\Cardwall\Semantic\SemanticCardPresenter;
 
 class Cardwall_Semantic_CardFields extends Tracker_Semantic
 {
@@ -41,9 +42,13 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
     private $background_field_saver;
 
     /**
-     * @var CardFieldsTrackerPresenterBuilder
+     * @var CardFieldsPresenterBuilder
      */
-    private $card_fields_tracker_presenter_builder;
+    private $field_builder;
+    /**
+     * @var BackgroundColorPresenterBuilder
+     */
+    private $background_color_presenter_builder;
     /**
      * @var Codendi_HTMLPurifier
      */
@@ -63,15 +68,17 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
     public function __construct(
         Tracker $tracker,
         FieldUsedInSemanticObjectChecker $field_used_in_semantic_object_checker,
-        CardFieldsTrackerPresenterBuilder $card_fields_tracker_presenter_builder,
-        BackgroundColorFieldSaver $background_color_field_saver
+        BackgroundColorPresenterBuilder $background_color_presenter_builder,
+        BackgroundColorFieldSaver $background_color_field_saver,
+        CardFieldsPresenterBuilder $field_builder
     ) {
         parent::__construct($tracker);
 
-        $this->html_purifier                         = Codendi_HTMLPurifier::instance();
-        $this->semantic_field_checker                = $field_used_in_semantic_object_checker;
-        $this->card_fields_tracker_presenter_builder = $card_fields_tracker_presenter_builder;
-        $this->background_field_saver                = $background_color_field_saver;
+        $this->html_purifier                      = Codendi_HTMLPurifier::instance();
+        $this->semantic_field_checker             = $field_used_in_semantic_object_checker;
+        $this->background_color_presenter_builder = $background_color_presenter_builder;
+        $this->background_field_saver             = $background_color_field_saver;
+        $this->field_builder                      = $field_builder;
     }
 
     public function display() {
@@ -116,20 +123,27 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
         Codendi_Request $request,
         PFUser $current_user
     ) {
-
         $semantic_manager->displaySemanticHeader($this, $tracker_manager);
 
-        $fields = $this->getFields();
+        $fields_presenter = $this->field_builder->build(
+            $this->getFields(),
+            $this->tracker->getFormElements()
+        );
 
-        $html = "<h3>" . dgettext('tuleap-cardwall', 'Fields') . "</h3>";
-        $html .= $this->fetchFormDisplayedFieldForCard($fields);
-        $html .= $this->fetchFormAddFieldToCard($fields);
+        $semantic_presenter = new SemanticCardPresenter(
+            $fields_presenter,
+            $this->background_color_presenter_builder->build(
+                $this->tracker->getFormElementFields(),
+                $this->tracker
+            ),
+            $this->tracker,
+            $this->getCSRFToken(),
+            $this->getUrl()
+        );
 
-        $html .= $this->fetchFormChooseBackgroundField();
+        $renderer = TemplateRendererFactory::build()->getRenderer(dirname(CARDWALL_BASE_DIR) . '/templates');
 
-        $html .= '<p><a href="'.TRACKER_BASE_URL.'/?tracker='. $this->tracker->getId() .'&amp;func=admin-semantic">&laquo; ' . $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','go_back_overview') . '</a></p>';
-
-        echo $html;
+        echo $renderer->renderToString('semantic-card', $semantic_presenter);
 
         $semantic_manager->displaySemanticFooter($this, $tracker_manager);
     }
@@ -228,14 +242,14 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
     public static function load(Tracker $tracker) {
         if (!isset(self::$_instances[$tracker->getId()])) {
 
-            $background_color_dao                  = new BackgroundColorDao();
-            $card_fields_tracker_presenter_builder = new CardFieldsTrackerPresenterBuilder
+            $background_color_dao               = new BackgroundColorDao();
+            $background_color_presenter_builder = new BackgroundColorPresenterBuilder
             (
                 Tracker_FormElementFactory::instance(),
                 $background_color_dao
             );
-            $tracker_form_element_factory = Tracker_FormElementFactory::instance();
-            $background_field_saver       = new BackgroundColorFieldSaver(
+            $tracker_form_element_factory       = Tracker_FormElementFactory::instance();
+            $background_field_saver             = new BackgroundColorFieldSaver(
                 $tracker_form_element_factory,
                 $background_color_dao
             );
@@ -244,11 +258,14 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
                 $background_color_dao
             );
 
+            $field_builder = new CardFieldsPresenterBuilder($tracker_form_element_factory);
+
             self::$_instances[$tracker->getId()] = new Cardwall_Semantic_CardFields(
                 $tracker,
                 $field_used_in_semantic_object_checker,
-                $card_fields_tracker_presenter_builder,
-                $background_field_saver
+                $background_color_presenter_builder,
+                $background_field_saver,
+                $field_builder
             );
         }
 
@@ -274,92 +291,5 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
      */
     public function instantiateFieldFromRow(array $row) {
         return Tracker_FormElementFactory::instance()->getFieldById($row['field_id']);
-    }
-
-    /**
-     * @param Tracker_FormElement_Field[]
-     *
-     * @return String
-     */
-    private function fetchFormDisplayedFieldForCard(array $fields)
-    {
-        $html = '';
-        if (! count($fields)) {
-            $html .= $GLOBALS['Language']->getText('plugin_cardwall', 'semantic_cardFields_no_fields_defined');
-        } else {
-            $html .= $GLOBALS['Language']->getText('plugin_cardwall', 'semantic_cardFields_fields');
-            $html .= '<blockquote>';
-            $html .= '<table>';
-            foreach ($fields as $field) {
-                $html .= '<tr><td>';
-                $html .= $this->html_purifier->purify($field->getLabel(), CODENDI_PURIFIER_CONVERT_HTML);
-                $html .= '</td><td>';
-                $html .= '<form method="post" id="tracker-semantic-removal-action" action="' . $this->html_purifier->purify($this->getUrl()) . '">';
-                $html .= $this->getCSRFToken()->fetchHTMLInput();
-                $html .= '<input type="hidden" name="remove" value="' . $this->html_purifier->purify($field->getId()) . '">';
-                $html .= '<button type="submit" class="btn btn-link">';
-                $html .= $GLOBALS['HTML']->getimage(
-                    'ic/cross.png',
-                    [
-                        'alt' => $GLOBALS['Language']->getText('plugin_cardwall', 'semantic_cardFields_fields')
-                    ]
-                );
-                $html .= '</button>';
-                $html .= '</form>';
-                $html .= '</a>';
-                $html .= '</td></tr>';
-            }
-            $html .= '</table>';
-            $html .= '</blockquote>';
-        }
-        return $html;
-    }
-
-    /**
-     * @param $fields
-     * @param $html
-     *
-     * @return string
-     */
-    private function fetchFormAddFieldToCard(array $fields)
-    {
-        $html    = '';
-        $options = '';
-        foreach ($this->tracker->getFormElements() as $formElement) {
-            $options .= $formElement->fetchAddTooltip($fields);
-        }
-        if ($options) {
-            $html .= '<form action="' . $this->getUrl() . '" method="POST">';
-            $html .= $this->getCSRFToken()->fetchHTMLInput();
-            $html .= '<p>' . $GLOBALS['Language']->getText('plugin_cardwall', 'semantic_card_fields_add_field');
-            $html .= '<select name="field">';
-            $html .= $options;
-            $html .= '</select>';
-            $html .= '<input type="submit" class="btn btn-primary btn-submit-semantic-card" name="add" value="' .
-                $GLOBALS['Language']->getText('global', 'btn_submit') . '" />';
-            $html .= '</p>';
-            $html .= '</form>';
-        } else {
-            $html .= '<em>' . $GLOBALS['Language']->getText('plugin_cardwall', 'semantic_card_fields_no_more_field') . '</em>';
-        }
-        return $html;
-    }
-
-    /**
-     * @return String
-     */
-    private function fetchFormChooseBackgroundField()
-    {
-        $presenter = new BackgroundColorSelectorPresenter(
-            $this->card_fields_tracker_presenter_builder->getTrackerFields(
-                $this->tracker->getFormElementFields(),
-                $this->tracker
-            ),
-            $this->getCSRFToken(),
-            $this->getUrl()
-        );
-        $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(CARDWALL_BASE_DIR) . '/templates');
-
-        return $renderer->renderToString('semantic-card-background-selector', $presenter);
     }
 }

@@ -22,7 +22,8 @@
 */
 
 use Tuleap\Cardwall\Semantic\BackgroundColorFieldSaver;
-use Tuleap\Cardwall\Semantic\CardFieldsTrackerPresenterBuilder;
+use Tuleap\Cardwall\Semantic\BackgroundColorPresenterBuilder;
+use Tuleap\Cardwall\Semantic\CardFieldsPresenterBuilder;
 use Tuleap\Cardwall\Semantic\FieldUsedInSemanticObjectChecker;
 
 require_once dirname(__FILE__) .'/../bootstrap.php';
@@ -54,11 +55,12 @@ class Cardwall_Semantic_CardFieldsTest extends TuleapTestCase
         $field_1  = stub('Tracker_FormElement_Field_Text')->getId()->returns(102);
         $field_2  = stub('Tracker_FormElement_Field_Text')->getId()->returns(103);
 
-        $checker = \Mockery::spy(FieldUsedInSemanticObjectChecker::class);
-        $builder = \Mockery::spy(CardFieldsTrackerPresenterBuilder::class);
-        $saver   = \Mockery::spy(BackgroundColorFieldSaver::class);
+        $checker       = Mockery::spy(FieldUsedInSemanticObjectChecker::class);
+        $builder       = Mockery::spy(BackgroundColorPresenterBuilder::class);
+        $saver         = Mockery::spy(BackgroundColorFieldSaver::class);
+        $field_builder = Mockery::spy(CardFieldsPresenterBuilder::class);
 
-        $semantic = new Cardwall_Semantic_CardFields($tracker, $checker, $builder, $saver);
+        $semantic = new Cardwall_Semantic_CardFields($tracker, $checker, $builder, $saver, $field_builder);
         $semantic->setFields(array($field_1, $field_2));
 
         $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
