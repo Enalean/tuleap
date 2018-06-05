@@ -56,11 +56,11 @@
 }
 
 .steps-step-description-text {
-    white-space: pre;
+    white-space: pre-line;
 }
 
 .steps-step-action {
-    margin: 0 $tlp-spacing 0 0;
+    margin: 0 $tlp-spacing;
 }
 
 .steps-step-action-pass {
