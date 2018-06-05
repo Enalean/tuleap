@@ -7,6 +7,9 @@ msgstr ""
 msgid "Choose a field to define card background color"
 msgstr ""
 
+msgid "Choose a field..."
+msgstr ""
+
 msgid "Field not found"
 msgstr ""
 
@@ -18,7 +21,14 @@ msgid ""
 "radiobutton bind on static values can be used."
 msgstr ""
 
+msgid "Remove background color"
+msgstr ""
+
 msgid "Submit"
+msgstr ""
+
+msgid ""
+"The field used to determine background color has been removed with success."
 msgstr ""
 
 #, php-format
@@ -35,4 +45,7 @@ msgid "There is no more field that can be added to the cards."
 msgstr ""
 
 msgid "go back to semantic overview"
+msgstr ""
+
+msgid "or"
 msgstr ""

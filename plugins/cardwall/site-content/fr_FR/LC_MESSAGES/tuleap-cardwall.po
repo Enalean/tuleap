@@ -22,6 +22,9 @@ msgstr "Couleur de fond"
 msgid "Choose a field to define card background color"
 msgstr "Choisissez un champ pour définir la couleur de fond des cartes"
 
+msgid "Choose a field..."
+msgstr "Coisissez un champ..."
+
 msgid "Field not found"
 msgstr "Champ non trouvé"
 
@@ -36,8 +39,17 @@ msgstr ""
 "déroulante et les boutons radio basés sur des valeurs statiques peuvent être "
 "utilisés."
 
+msgid "Remove background color"
+msgstr "Supprimer la couleur de fond"
+
 msgid "Submit"
 msgstr "Soumettre"
+
+msgid ""
+"The field used to determine background color has been removed with success."
+msgstr ""
+"Le champs choisi pour déterminer la couleur du fond des cartes a été "
+"supprimé avec succès."
 
 #, php-format
 msgid "The field used to determine background color is now %s"
@@ -56,3 +68,6 @@ msgstr "Il n'y a plus de champs pouveant être ajoutés aux cartes"
 
 msgid "go back to semantic overview"
 msgstr "retour à l'administration de la sémantique"
+
+msgid "or"
+msgstr "ou"

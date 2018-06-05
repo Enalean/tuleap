@@ -43,6 +43,13 @@ class BackgroundColorDao extends DataAccessObject
     {
         $sql = "SELECT COUNT(*) FROM plugin_cardwall_background_color_card_field WHERE field_id = ?";
 
-        return $this->getDB()->single($sql, [ $field_id ]) > 0;
+        return $this->getDB()->single($sql, [$field_id]) > 0;
+    }
+
+    public function unsetBackgroundColorSemantic($tracker_id)
+    {
+        $sql = "DELETE FROM plugin_cardwall_background_color_card_field WHERE tracker_id = ?";
+
+        $this->getDB()->run($sql, $tracker_id);
     }
 }

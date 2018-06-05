@@ -21,6 +21,7 @@
 namespace Tuleap\Cardwall\Semantic;
 
 use Feedback;
+use Tracker;
 use Tracker_FormElementFactory;
 
 class BackgroundColorFieldSaver
@@ -40,10 +41,7 @@ class BackgroundColorFieldSaver
         $this->dao                          = $dao;
     }
 
-    /**
-     * @param int $field_id
-     */
-    public function chooseBackgroundColorField($tracker_id, $field_id)
+    public function chooseBackgroundColorField(Tracker $tracker, $field_id)
     {
         $field = $this->tracker_form_element_factory->getFieldById($field_id);
         if (! $field) {
@@ -55,7 +53,7 @@ class BackgroundColorFieldSaver
             return;
         }
 
-        $this->dao->save($tracker_id, $field_id);
+        $this->dao->save($tracker->getId(), $field_id);
 
         $GLOBALS['Response']->addFeedback(
             Feedback::INFO,
@@ -63,6 +61,16 @@ class BackgroundColorFieldSaver
                 dgettext('tuleap-cardwall', 'The field used to determine background color is now %s'),
                 $field->getLabel()
             )
+        );
+    }
+
+    public function unsetBackgroundColorSemantic(Tracker $tracker)
+    {
+        $this->dao->unsetBackgroundColorSemantic($tracker->getId());
+
+        $GLOBALS['Response']->addFeedback(
+            Feedback::INFO,
+            dgettext('tuleap-cardwall', 'The field used to determine background color has been removed with success.')
         );
     }
 }
