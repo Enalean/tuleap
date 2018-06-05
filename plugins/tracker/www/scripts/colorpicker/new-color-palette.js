@@ -17,13 +17,38 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue         from 'vue';
-import ColorPicker from "./ColorPicker.vue";
-
-const ColorPickerComponent = Vue.extend(ColorPicker);
-
-export function createColorPicker(mount_point) {
-    new ColorPickerComponent({
-        propsData: mount_point.dataset
-    }).$mount(mount_point);
-}
+export default [
+    [
+        'inca-silver',
+        'chrome-silver',
+        'firemist-silver'
+    ], [
+        'red-wine',
+        'fiesta-red',
+        'coral-pink'
+    ], [
+        'teddy-brown',
+        'clockwork-orange',
+        'graffiti-yellow'
+    ], [
+        'army-green',
+        'neon-green',
+        'acid-green'
+    ], [
+        'sherwood-green',
+        'ocean-turquoise',
+        'surf-green'
+    ], [
+        'deep-blue',
+        'lake-placid-blue',
+        'daphne-blue'
+    ], [
+        'plum-crazy',
+        'ultra-violet',
+        'lilac-purple'
+    ], [
+        'panther-pink',
+        'peggy-pink',
+        'flamingo-pink',
+    ]
+];

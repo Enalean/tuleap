@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@import '../../../../../../src/www/themes/common/tlp/src/scss/variables/colors';
+
 .color-picker-preview {
     width: 16px;
     height: 16px;
@@ -29,8 +31,19 @@
     cursor: pointer;
 }
 
-.colorpicker-palette {
+.colorpicker-row {
+    line-height: 0;
+    text-align: center;
+}
+
+.old-colorpicker-palette {
     width: 250px;
+    margin: 10px 10px 0;
+}
+
+.colorpicker-palette {
+    width: 200px;
+    padding: 15px 0;
 }
 
 .colorpicker-squared-shade {
@@ -39,4 +52,27 @@
     border: 1px solid #000000;
     content: ' ';
     cursor: pointer;
+}
+
+.colorpicker-circular-color {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    margin: 12px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+@each $color-name, $colors in $tlp-swatch-color-map {
+    .colorpicker-circular-color-#{$color-name} {
+        border: 3px solid map-get($colors, 'primary');
+        background-color: map-get($colors, 'secondary');
+    }
+}
+
+.colorpicker-switch {
+    margin: 5px 0 0;
+    padding: 10px 10px 5px;
+    border-top: 1px solid #ededed;
+    text-align: center;
 }

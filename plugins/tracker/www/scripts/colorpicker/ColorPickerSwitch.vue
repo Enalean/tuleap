@@ -18,28 +18,31 @@
   -->
 
 <template>
-        <table class="old-colorpicker-palette">
-            <template v-for="(shades, index) in palette">
-                <old-color-picker-palette-row v-bind:shades="shades" v-bind:key="index" v-on:color-update="colorChanged"/>
-            </template>
-        </table>
+    <div class="colorpicker-switch">
+        <a href="javascript:;" v-on:click="switchPalette">
+            <i class="icon-random"></i>
+            <span v-if="isOldPaletteShown">
+                {{ switchDefaultPaletteLabel }}
+            </span>
+            <span v-else>
+                {{ switchOldPaletteLabel }}
+            </span>
+        </a>
+    </div>
 </template>
 
 <script>
-    import colors                   from './old-color-palette.js';
-    import OldColorPickerPaletteRow from "./OldColorPickerPaletteRow.vue";
-
     export default {
-        name: "OldColorPickerPalette",
-        components: { OldColorPickerPaletteRow },
-        data() {
-            return {
-                palette: colors
-            }
+        name: "ColorPickerSwitch",
+        props: {
+            isOldPaletteShown          : Boolean,
+            switchDefaultPaletteLabel  : String,
+            switchOldPaletteLabel      : String,
         },
         methods: {
-            colorChanged(color) {
-                this.$emit('color-update', color);
+            switchPalette(event) {
+                event.stopPropagation();
+                this.$emit('switch-palette')
             }
         }
     }

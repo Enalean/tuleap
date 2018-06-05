@@ -90,11 +90,16 @@ class Tracker_FormElement_Field_List_BindDecorator
 
     private static function getColorPickerMountPoint($decorator_id, $value_id, $hexa_color)
     {
+        $switch_old_palette_label     = dgettext('tuleap-tracker', 'Switch to old color picker');
+        $switch_default_palette_label = dgettext('tuleap-tracker', 'Switch to default color picker');
+
         return '
-            <div class="vue-mount-point"
+            <div class="vue-colorpicker-mount-point"
                 data-decorator-id="'. $decorator_id .'"
                 data-value-id="'. $value_id .'"
                 data-color-hexa="'. $hexa_color . '"
+                data-switch-default-palette-label="' . $switch_default_palette_label . '"
+                data-switch-old-palette-label="' . $switch_old_palette_label . '"
             ></div>
         ';
     }

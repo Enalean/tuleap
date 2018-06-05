@@ -18,7 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createOldColorPicker } from './colorpicker/index.js';
+import { createColorPicker } from './colorpicker/index.js';
 
 document.observe('dom:loaded', function () {
 
@@ -240,8 +240,8 @@ document.observe('dom:loaded', function () {
                             //Put here the javascript stuff you need to call once the content of the modal dialog is loaded
 
                             //Color picker
-                            selected_element.select('.vue-mount-point').each(function (element) {
-                                    createOldColorPicker(element);
+                            selected_element.select('.vue-colorpicker-mount-point').each(function (element) {
+                                    createColorPicker(element);
                                 }
                             );
 
