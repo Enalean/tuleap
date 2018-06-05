@@ -142,6 +142,9 @@ final class CompatPDODataAccessResult implements LegacyDataAccessResultInterface
      */
     public function current()
     {
+        if ($this->result_iterator === null) {
+            return -1;
+        }
         if ($this->instance_callback) {
             return call_user_func_array($this->instance_callback, array($this->result_iterator->current()));
         }
@@ -170,6 +173,9 @@ final class CompatPDODataAccessResult implements LegacyDataAccessResultInterface
      */
     public function valid()
     {
+        if ($this->result_iterator === null) {
+            return false;
+        }
         return $this->result_iterator->valid();
     }
 
