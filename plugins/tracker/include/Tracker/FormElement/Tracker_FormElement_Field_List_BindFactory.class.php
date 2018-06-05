@@ -1,28 +1,28 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-
 
 require_once('common/html/HTML_Element_Input_Radio.class.php');
 
-class Tracker_FormElement_Field_List_BindFactory {
+class Tracker_FormElement_Field_List_BindFactory
+{
     const STATIK  = 'static';
     const USERS   = 'users';
     const UGROUPS = 'ugroups';
@@ -66,11 +66,14 @@ class Tracker_FormElement_Field_List_BindFactory {
         $decorators = array();
         $dao = new Tracker_FormElement_Field_List_BindDecoratorDao();
         foreach($dao->searchByFieldId($field->id) as $row) {
-            $decorators[$row['value_id']] = new Tracker_FormElement_Field_List_BindDecorator($row['field_id'],
-                                                                                  $row['value_id'],
-                                                                                  $row['red'],
-                                                                                  $row['green'],
-                                                                                  $row['blue']);
+            $decorators[$row['value_id']] = new Tracker_FormElement_Field_List_BindDecorator(
+                $row['field_id'],
+                $row['value_id'],
+                $row['red'],
+                $row['green'],
+                $row['blue'],
+                $row['tlp_color_name']
+            );
         }
 
         $bind = new Tracker_FormElement_Field_List_Bind_Null($field);
@@ -227,7 +230,13 @@ class Tracker_FormElement_Field_List_BindFactory {
             foreach ($xml->decorators->decorator as $deco) {
                 $ID = (string)$deco['REF'];
                 $row['decorators'][$ID] = $this->getDecoratorInstance(
-                       $field, $ID, (int)$deco['r'], (int)$deco['g'], (int)$deco['b']);
+                    $field,
+                    $ID,
+                    (int) $deco['r'],
+                    (int) $deco['g'],
+                    (int) $deco['b'],
+                    (string) $deco['tlp_color_name']
+                );
             }
         }
         $type = (string)$xml['type'];
@@ -326,12 +335,15 @@ class Tracker_FormElement_Field_List_BindFactory {
     }
 
     /**
-     * Buil an instance of decorator
+     * Build an instance of decorator
      *
      * @return Tracker_FormElement_Field_List_BindDecorator
      */
-    function getDecoratorInstance($field, $id, $r, $g, $b) {
-        return new Tracker_FormElement_Field_List_BindDecorator($field, $id, $r, $g, $b);
+    function getDecoratorInstance($field, $id, $r, $g, $b, $tlp_color_name)
+    {
+        return new Tracker_FormElement_Field_List_BindDecorator(
+            $field, $id, $r, $g, $b, $tlp_color_name
+        );
     }
 
     /**
@@ -420,4 +432,3 @@ class Tracker_FormElement_Field_List_BindFactory {
                 );
     }
 }
-?>

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,51 +17,178 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace Tuleap\AgileDashboard\REST\v1\Kanban;
 
 use AgileDashboard_KanbanItemManager;
+use Cardwall_Semantic_CardFields;
+use EventManager;
+use PFUser;
 use Tracker_Artifact;
 use Tuleap\AgileDashboard\Kanban\ColumnIdentifier;
+use Tuleap\Cardwall\Semantic\BackgroundColorSemanticFieldNotFoundException;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorColorRetriever;
+use UserManager;
 
 class ItemRepresentationBuilder
 {
-    /**
-     * @var AgileDashboard_KanbanItemManager
-     */
+    /** @var AgileDashboard_KanbanItemManager */
     private $kanban_item_manager;
-    /**
-     * @var TimeInfoFactory
-     */
+    /** @var TimeInfoFactory */
     private $time_info_factory;
+    /** @var BindDecoratorColorRetriever */
+    private $decorator_color_retriever;
+    /** @var UserManager */
+    private $user_manager;
+    /** @var EventManager */
+    private $event_manager;
 
-    public function __construct(AgileDashboard_KanbanItemManager $kanban_item_manager, TimeInfoFactory $time_info_factory)
-    {
-        $this->kanban_item_manager = $kanban_item_manager;
-        $this->time_info_factory   = $time_info_factory;
+    public function __construct(
+        AgileDashboard_KanbanItemManager $kanban_item_manager,
+        TimeInfoFactory $time_info_factory,
+        UserManager $user_manager,
+        EventManager $event_manager,
+        BindDecoratorColorRetriever $decorator_color_retriever
+    ) {
+        $this->kanban_item_manager       = $kanban_item_manager;
+        $this->time_info_factory         = $time_info_factory;
+        $this->decorator_color_retriever = $decorator_color_retriever;
+        $this->user_manager              = $user_manager;
+        $this->event_manager             = $event_manager;
     }
 
+    /**
+     * @param Tracker_Artifact $artifact
+     * @return KanbanItemRepresentation
+     */
     public function buildItemRepresentation(Tracker_Artifact $artifact)
     {
-        $item_representation = new KanbanItemRepresentation();
-
         $item_in_backlog = $this->kanban_item_manager->isKanbanItemInBacklog($artifact);
         $in_column       = ($item_in_backlog) ? ColumnIdentifier::BACKLOG_COLUMN : null;
 
         if (! $in_column) {
             $item_in_archive = $this->kanban_item_manager->isKanbanItemInArchive($artifact);
-            $in_column = ($item_in_archive) ? ColumnIdentifier::ARCHIVE_COLUMN : null;
+            $in_column       = ($item_in_archive) ? ColumnIdentifier::ARCHIVE_COLUMN : null;
         }
 
         if (! $in_column) {
             $in_column = $this->kanban_item_manager->getColumnIdOfKanbanItem($artifact);
         }
 
-        $item_representation->build(
+        $item_representation = $this->buildItem(
+            new ColumnIdentifier($in_column),
             $artifact,
-            $this->time_info_factory->getTimeInfo($artifact),
-            $in_column
+            $this->time_info_factory->getTimeInfo($artifact)
         );
 
         return $item_representation;
+    }
+
+    /**
+     * @param ColumnIdentifier $column_identifier
+     * @param Tracker_Artifact $artifact
+     * @return KanbanItemRepresentation
+     */
+    public function buildItemRepresentationInColumn(ColumnIdentifier $column_identifier, Tracker_Artifact $artifact)
+    {
+        $time_info = $column_identifier->isBacklog() ? [] : $this->time_info_factory->getTimeInfo($artifact);
+
+        return $this->buildItem($column_identifier, $artifact, $time_info);
+    }
+
+    /**
+     * @param ColumnIdentifier $column_identifier
+     * @param Tracker_Artifact $artifact
+     * @param $time_info
+     * @return KanbanItemRepresentation
+     */
+    private function buildItem(ColumnIdentifier $column_identifier, Tracker_Artifact $artifact, array $time_info)
+    {
+        $current_user          = $this->user_manager->getCurrentUser();
+        $card_fields_semantic  = $this->getCardFieldsSemantic($artifact);
+        $card_fields           = $this->getCardFields($card_fields_semantic, $artifact, $current_user);
+        $background_color_name = $this->getBackgroundColor($card_fields_semantic, $artifact, $current_user);
+
+        $item_representation = new KanbanItemRepresentation();
+        $item_representation->build(
+            $artifact,
+            $time_info,
+            $column_identifier->getColumnId(),
+            $card_fields,
+            $background_color_name
+        );
+        return $item_representation;
+    }
+
+    /**
+     * @param Cardwall_Semantic_CardFields $card_fields_semantic
+     * @param Tracker_Artifact $artifact
+     * @param PFUser $current_user
+     * @return array
+     */
+    private function getCardFields(
+        Cardwall_Semantic_CardFields $card_fields_semantic,
+        Tracker_Artifact $artifact,
+        PFUser $current_user
+    ) {
+        $card_fields = [];
+
+        foreach ($card_fields_semantic->getFields() as $field) {
+            if ($field->userCanRead($current_user)) {
+                $value = $field->getFullRESTValue($current_user, $artifact->getLastChangeset());
+
+                if ($value) {
+                    $card_fields[] = $value;
+                }
+            }
+        }
+
+        return $card_fields;
+    }
+
+    /**
+     * @param Cardwall_Semantic_CardFields $card_fields_semantic
+     * @param Tracker_Artifact $artifact
+     * @param PFUser $current_user
+     * @return string
+     */
+    private function getBackgroundColor(
+        Cardwall_Semantic_CardFields $card_fields_semantic,
+        Tracker_Artifact $artifact,
+        PFUser $current_user
+    ) {
+        try {
+            $background_color_field = $card_fields_semantic->getBackgroundColorField();
+        } catch (BackgroundColorSemanticFieldNotFoundException $e) {
+            // Ignore, there won't be a background color
+            return '';
+        }
+        if (! $background_color_field->userCanRead($current_user)) {
+            return '';
+        }
+
+        return $this->decorator_color_retriever->getCurrentDecoratorColor(
+            $background_color_field,
+            $artifact
+        );
+    }
+
+    /**
+     * @param Tracker_Artifact $artifact
+     * @return Cardwall_Semantic_CardFields|null
+     */
+    private function getCardFieldsSemantic(Tracker_Artifact $artifact)
+    {
+        $card_fields_semantic = null;
+
+        $this->event_manager->processEvent(
+            AGILEDASHBOARD_EVENT_GET_CARD_FIELDS,
+            array(
+                'tracker'              => $artifact->getTracker(),
+                'card_fields_semantic' => &$card_fields_semantic
+            )
+        );
+
+        return $card_fields_semantic;
     }
 }

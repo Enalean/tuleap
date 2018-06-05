@@ -80,9 +80,9 @@ class CardFieldsTrackerPresenterBuilderTest extends TestCase
             aSelectBoxField()->withId(103)->withLabel('oldpalet')->withBind($color_bind)->build(),
         ];
 
-        $selectbox_decorator   = new Tracker_FormElement_Field_List_BindDecorator(100, 1, null, null, null);
-        $new_palette_decorator = new Tracker_FormElement_Field_List_BindDecorator(103, 2, null, null, null);
-        $old_palette_decorator = new Tracker_FormElement_Field_List_BindDecorator(103, 2, 255, 255, 255);
+        $selectbox_decorator   = new Tracker_FormElement_Field_List_BindDecorator(100, 1, null, null, null, null);
+        $new_palette_decorator = new Tracker_FormElement_Field_List_BindDecorator(103, 2, null, null, null, null);
+        $old_palette_decorator = new Tracker_FormElement_Field_List_BindDecorator(103, 2, 255, 255, 255, null);
 
         $selectbox_bind->shouldReceive('getDecorators')->andReturn([$selectbox_decorator]);
         $user_bind->shouldReceive('getDecorators')->andReturn([]);

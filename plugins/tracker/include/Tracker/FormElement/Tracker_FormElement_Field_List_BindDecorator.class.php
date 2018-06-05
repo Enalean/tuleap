@@ -42,13 +42,17 @@ class Tracker_FormElement_Field_List_BindDecorator
      */
     public $b;
 
-    public function __construct($field_id, $value_id, $r, $g, $b)
+    /** @var string */
+    public $tlp_color_name;
+
+    public function __construct($field_id, $value_id, $r, $g, $b, $tlp_color_name)
     {
         $this->field_id       = $field_id;
         $this->value_id       = $value_id;
         $this->r              = $r;
         $this->g              = $g;
         $this->b              = $b;
+        $this->tlp_color_name = $tlp_color_name;
     }
 
     /**
