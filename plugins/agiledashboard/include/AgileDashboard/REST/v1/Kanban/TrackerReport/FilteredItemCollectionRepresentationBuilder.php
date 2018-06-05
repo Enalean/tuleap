@@ -21,14 +21,12 @@
 namespace Tuleap\AgileDashboard\REST\v1\Kanban\TrackerReport;
 
 use PFUser;
-use Tracker_Artifact;
 use Tracker_Artifact_PriorityDao;
 use Tracker_Report;
 use Tuleap\AgileDashboard\Kanban\ColumnIdentifier;
 use Tuleap\AgileDashboard\Kanban\TrackerReport\ReportFilterFromWhereBuilder;
 use Tuleap\AgileDashboard\REST\v1\Kanban\ItemCollectionRepresentation;
-use Tuleap\AgileDashboard\REST\v1\Kanban\KanbanItemRepresentation;
-use Tuleap\AgileDashboard\REST\v1\Kanban\TimeInfoFactory;
+use Tuleap\AgileDashboard\REST\v1\Kanban\ItemRepresentationBuilder;
 use Tuleap\Tracker\REST\v1\ArtifactMatchingReportCollection;
 use Tuleap\Tracker\REST\v1\ReportArtifactFactory;
 
@@ -38,21 +36,21 @@ class FilteredItemCollectionRepresentationBuilder
     private $report_artifact_factory;
     /** @var ReportFilterFromWhereBuilder */
     private $from_where_builder;
-    /** @var TimeInfoFactory */
-    private $time_info_factory;
     /** @var Tracker_Artifact_PriorityDao */
     private $priority_dao;
+    /** @var ItemRepresentationBuilder */
+    private $item_representation_builder;
 
     public function __construct(
         ReportFilterFromWhereBuilder $from_where_builder,
         ReportArtifactFactory $report_artifact_factory,
-        TimeInfoFactory $time_info_factory,
-        Tracker_Artifact_PriorityDao $priority_dao
+        Tracker_Artifact_PriorityDao $priority_dao,
+        ItemRepresentationBuilder $item_representation_builder
     ) {
-        $this->report_artifact_factory = $report_artifact_factory;
-        $this->from_where_builder      = $from_where_builder;
-        $this->time_info_factory       = $time_info_factory;
-        $this->priority_dao            = $priority_dao;
+        $this->report_artifact_factory     = $report_artifact_factory;
+        $this->from_where_builder          = $from_where_builder;
+        $this->priority_dao                = $priority_dao;
+        $this->item_representation_builder = $item_representation_builder;
     }
 
     public function build(
@@ -92,7 +90,10 @@ class FilteredItemCollectionRepresentationBuilder
                 continue;
             }
 
-            $item_representation = $this->getItemRepresentation($column_identifier, $artifact);
+            $item_representation = $this->item_representation_builder->buildItemRepresentationInColumn(
+                $column_identifier,
+                $artifact
+            );
 
             $id                   = $artifact->getId();
             $artifact_ids[]       = $id;
@@ -104,20 +105,6 @@ class FilteredItemCollectionRepresentationBuilder
         }
 
         return $this->sort($item_collection, $artifact_ids);
-    }
-
-    private function getItemRepresentation(ColumnIdentifier $column_identifier, Tracker_Artifact $artifact)
-    {
-        $time_info = $column_identifier->isBacklog() ? [] : $this->time_info_factory->getTimeInfo($artifact);
-
-        $item_representation = new KanbanItemRepresentation();
-        $item_representation->build(
-            $artifact,
-            $time_info,
-            $column_identifier->getColumnId()
-        );
-
-        return $item_representation;
     }
 
     private function sort(array $item_collection, array $artifact_ids)

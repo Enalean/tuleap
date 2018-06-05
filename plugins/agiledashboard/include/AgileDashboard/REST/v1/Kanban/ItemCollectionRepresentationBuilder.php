@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -32,17 +32,17 @@ class ItemCollectionRepresentationBuilder
     private $kanban_item_dao;
     /** @var Tracker_ArtifactFactory */
     private $artifact_factory;
-    /** @var TimeInfoFactory */
-    private $time_info_factory;
+    /** @var ItemRepresentationBuilder */
+    private $item_representation_builder;
 
     public function __construct(
         AgileDashboard_KanbanItemDao $kanban_item_dao,
         Tracker_ArtifactFactory $artifact_factory,
-        TimeInfoFactory $time_info_factory
+        ItemRepresentationBuilder $item_representation_builder
     ) {
-        $this->kanban_item_dao   = $kanban_item_dao;
-        $this->artifact_factory  = $artifact_factory;
-        $this->time_info_factory = $time_info_factory;
+        $this->kanban_item_dao             = $kanban_item_dao;
+        $this->artifact_factory            = $artifact_factory;
+        $this->item_representation_builder = $item_representation_builder;
     }
 
     public function build(
@@ -81,16 +81,10 @@ class ItemCollectionRepresentationBuilder
                 continue;
             }
 
-            $time_info = $column_identifier->isBacklog() ? array() : $this->time_info_factory->getTimeInfo($artifact);
-
-            $item_representation = new KanbanItemRepresentation();
-            $item_representation->build(
-                $artifact,
-                $time_info,
-                $column_identifier->getColumnId()
+            $collection[] = $this->item_representation_builder->buildItemRepresentationInColumn(
+                $column_identifier,
+                $artifact
             );
-
-            $collection[] = $item_representation;
         }
 
         return new ItemCollectionRepresentation($collection, $total_size);

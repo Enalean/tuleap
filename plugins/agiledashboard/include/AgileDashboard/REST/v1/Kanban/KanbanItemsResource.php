@@ -36,6 +36,7 @@ use AgileDashboardStatisticsAggregator;
 use TrackerFactory;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorColorRetriever;
 use UserManager;
 use Tracker;
 use PFUser;
@@ -110,9 +111,13 @@ class KanbanItemsResource extends AuthenticatedResource {
         $kanban_item_dao                   = new AgileDashboard_KanbanItemDao();
         $this->time_info_factory           = new TimeInfoFactory($kanban_item_dao);
         $this->statistics_aggregator       = new AgileDashboardStatisticsAggregator();
+        $bind_decorator_color_retriever    = new BindDecoratorColorRetriever();
         $this->item_representation_builder = new ItemRepresentationBuilder(
             new AgileDashboard_KanbanItemManager($kanban_item_dao),
-            $this->time_info_factory
+            $this->time_info_factory,
+            UserManager::instance(),
+            \EventManager::instance(),
+            $bind_decorator_color_retriever
         );
     }
 
