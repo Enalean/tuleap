@@ -29,7 +29,8 @@ class BacklogItemRepresentation extends BacklogItemRepresentationBase
 {
     public function build(
         \AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item,
-        array $card_fields
+        array $card_fields,
+        $background_color_name
     ) {
         $this->id               = JsonCast::toInt($backlog_item->id());
         $this->label            = $backlog_item->title();
@@ -59,6 +60,8 @@ class BacklogItemRepresentation extends BacklogItemRepresentationBase
         if ($card_fields) {
             $this->card_fields = $card_fields;
         }
+
+        $this->background_color_name = $background_color_name;
     }
 
     private function addAllowedSubItemTypes(\AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item) {

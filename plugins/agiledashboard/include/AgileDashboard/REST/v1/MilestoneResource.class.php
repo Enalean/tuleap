@@ -58,6 +58,7 @@ use Tuleap\AgileDashboard\REST\QueryToCriterionConverter;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorColorRetriever;
 use Tuleap\Tracker\REST\v1\ArtifactLinkUpdater;
 use URLVerification;
 use UserManager;
@@ -1170,7 +1171,12 @@ class MilestoneResource extends AuthenticatedResource {
 
     private function getBacklogItemRepresentationFactory()
     {
-        return new BacklogItemRepresentationFactory();
+        $color_retriever = new BindDecoratorColorRetriever();
+        return new BacklogItemRepresentationFactory(
+            $color_retriever,
+            UserManager::instance(),
+            $this->event_manager
+        );
     }
 
     private function sendAllowHeaderForSiblings()

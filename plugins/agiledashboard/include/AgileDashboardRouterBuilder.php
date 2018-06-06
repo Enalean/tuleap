@@ -35,6 +35,7 @@ use Tuleap\AgileDashboard\PermissionsPerGroup\PlanningPermissionsRepresentationB
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
 use Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentationFactory;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRepresentationBuilder;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorColorRetriever;
 
 class AgileDashboardRouterBuilder
 {
@@ -317,9 +318,17 @@ class AgileDashboardRouterBuilder
         );
     }
 
-    private function getPaginatedBacklogItemsRepresentationsBuilder() {
+    private function getPaginatedBacklogItemsRepresentationsBuilder()
+    {
+        $color_retriever = new BindDecoratorColorRetriever();
+        $item_factory    = new BacklogItemRepresentationFactory(
+            $color_retriever,
+            UserManager::instance(),
+            EventManager::instance()
+        );
+
         return new AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder(
-            new BacklogItemRepresentationFactory(),
+            $item_factory,
             $this->getBacklogItemCollectionFactory(),
             $this->getBacklogFactory()
         );

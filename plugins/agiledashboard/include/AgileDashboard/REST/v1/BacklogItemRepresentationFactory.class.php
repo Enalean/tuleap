@@ -19,48 +19,123 @@
 
 namespace Tuleap\AgileDashboard\REST\v1;
 
-use \AgileDashboard_Milestone_Backlog_IBacklogItem;
+use AgileDashboard_Milestone_Backlog_IBacklogItem;
+use Cardwall_Semantic_CardFields;
+use EventManager;
 use PFUser;
-use \UserManager;
-use \EventManager;
+use Tracker_Artifact;
+use Tuleap\Cardwall\Semantic\BackgroundColorSemanticFieldNotFoundException;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorColorRetriever;
+use UserManager;
 
 class BacklogItemRepresentationFactory
 {
+    /** @var BindDecoratorColorRetriever */
+    private $decorator_color_retriever;
+
+    /** @var UserManager */
+    private $user_manager;
+
+    /** @var EventManager */
+    private $event_manager;
+
+    public function __construct(
+        BindDecoratorColorRetriever $decorator_color_retriever,
+        UserManager $user_manager,
+        EventManager $event_manager
+    ) {
+        $this->decorator_color_retriever = $decorator_color_retriever;
+        $this->user_manager              = $user_manager;
+        $this->event_manager             = $event_manager;
+    }
+
     public function createBacklogItemRepresentation(AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item)
     {
+        $artifact              = $backlog_item->getArtifact();
+        $current_user          = $this->user_manager->getCurrentUser();
+        $card_fields_semantic  = $this->getCardFieldsSemantic($artifact);
+        $card_fields           = $this->getCardFields($card_fields_semantic, $artifact, $current_user);
+        $background_color_name = $this->getBackgroundColor(
+            $card_fields_semantic,
+            $artifact,
+            $current_user
+        );
+
         $backlog_item_representation = new BacklogItemRepresentation();
-        $current_user = UserManager::instance()->getCurrentUser();
         $backlog_item_representation->build(
             $backlog_item,
-            $this->getBacklogItemCardFields($backlog_item, $current_user)
+            $card_fields,
+            $background_color_name
         );
 
         return $backlog_item_representation;
     }
 
-    private function getBacklogItemCardFields(
-        AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item,
+    /**
+     * @param Cardwall_Semantic_CardFields $card_fields_semantic
+     * @param Tracker_Artifact $artifact
+     * @param PFUser $current_user
+     * @return array
+     */
+    private function getCardFields(
+        Cardwall_Semantic_CardFields $card_fields_semantic,
+        Tracker_Artifact $artifact,
         PFUser $current_user
     ) {
-        $card_fields_semantic = $this->getCardFieldsSemantic($backlog_item);
-        $card_fields          = array();
+        $card_fields = [];
 
         foreach ($card_fields_semantic->getFields() as $field) {
             if ($field->userCanRead($current_user)) {
-                $card_fields[] = $field->getFullRESTValue($current_user, $backlog_item->getArtifact()->getLastChangesetWithFieldValue($field));
+                $value = $field->getFullRESTValue($current_user, $artifact->getLastChangeset());
+
+                if ($value) {
+                    $card_fields[] = $value;
+                }
             }
         }
 
         return $card_fields;
     }
 
-    private function getCardFieldsSemantic($backlog_item) {
+    /**
+     * @param Cardwall_Semantic_CardFields $card_fields_semantic
+     * @param Tracker_Artifact $artifact
+     * @param PFUser $current_user
+     * @return string
+     */
+    private function getBackgroundColor(
+        Cardwall_Semantic_CardFields $card_fields_semantic,
+        Tracker_Artifact $artifact,
+        PFUser $current_user
+    ) {
+        try {
+            $background_color_field = $card_fields_semantic->getBackgroundColorField();
+        } catch (BackgroundColorSemanticFieldNotFoundException $e) {
+            // Ignore, there won't be a background color
+            return '';
+        }
+        if (! $background_color_field->userCanRead($current_user)) {
+            return '';
+        }
+
+        return $this->decorator_color_retriever->getCurrentDecoratorColor(
+            $background_color_field,
+            $artifact
+        );
+    }
+
+    /**
+     * @param Tracker_Artifact $artifact
+     * @return Cardwall_Semantic_CardFields
+     */
+    private function getCardFieldsSemantic(Tracker_Artifact $artifact)
+    {
         $card_fields_semantic = null;
 
-        EventManager::instance()->processEvent(
+        $this->event_manager->processEvent(
             AGILEDASHBOARD_EVENT_GET_CARD_FIELDS,
             array(
-                'tracker'              => $backlog_item->getArtifact()->getTracker(),
+                'tracker'              => $artifact->getTracker(),
                 'card_fields_semantic' => &$card_fields_semantic
             )
         );

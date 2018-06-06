@@ -58,6 +58,11 @@ class BacklogItemRepresentationBase
     public $color;
 
     /**
+     * @var String
+     */
+    public $background_color_name;
+
+    /**
      * @var Float
      */
     public $initial_effort;
@@ -89,4 +94,9 @@ class BacklogItemRepresentationBase
      * @var array
      */
     public $accept;
+
+    /**
+     * @var array
+     */
+    public $card_fields;
 }
