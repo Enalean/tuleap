@@ -92,6 +92,8 @@ function CardFieldsService(
         function getValueRendered(value) {
             if (value.color) {
                 return getValueRenderedWithColor(value, filter_terms);
+            } else if (value.tlp_color) {
+                return getValueRenderedWithTlpColor(value, filter_terms);
             } else if (value.avatar_url) {
                 return getCardFieldUserValue(value, filter_terms);
             }
@@ -105,6 +107,12 @@ function CardFieldsService(
                 style="background: rgb(${ r }, ${ g }, ${ b })"></span>`;
 
             return color + highlight(value.label, filter_terms);
+        }
+
+        function getValueRenderedWithTlpColor({ label, tlp_color }, filter_terms) {
+            const color = `<span class="extra-card-field-color card-field-${ tlp_color }"></span>`;
+
+            return color + highlight(label, filter_terms);
         }
 
         return $sce.trustAsHtml(values.map(getValueRendered).join(', '));

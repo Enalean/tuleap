@@ -56,41 +56,26 @@ class CardFieldsTrackerPresenterBuilderTest extends TestCase
 
         $this->form_element_factory = Mockery::mock(Tracker_FormElementFactory::class);
         $this->background_color_dao = Mockery::mock(BackgroundColorDao::class);
-        $this->builder              = new BackgroundColorPresenterBuilder(
+        $this->builder = new BackgroundColorPresenterBuilder(
             $this->form_element_factory,
             $this->background_color_dao
         );
     }
 
-    public function testItBuildAnArrayOfStaticListField()
+    public function testItAddsTheFieldInPresentersWhenNoColorIsChosen()
     {
         $selectbox_bind = Mockery::mock(Tracker_FormElement_Field_List_Bind::class);
         $selectbox_bind->shouldReceive('getType')->andReturn(Tracker_FormElement_Field_List_Bind_Static::TYPE);
 
-        $user_bind = Mockery::mock(Tracker_FormElement_Field_List_Bind::class);
-        $user_bind->shouldReceive('getType')->andReturn(Tracker_FormElement_Field_List_Bind_Users::TYPE);
+        $selectbox_decorator = new Tracker_FormElement_Field_List_BindDecorator(100, 1, null, null, null, null);
+        $selectbox_bind->shouldReceive('getDecorators')->andReturn([$selectbox_decorator]);
 
-        $color_bind = Mockery::mock(Tracker_FormElement_Field_List_Bind::class);
-        $color_bind->shouldReceive('getType')->andReturn(Tracker_FormElement_Field_List_Bind_Static::TYPE);
+        $this->form_element_factory->shouldReceive('getType')->andReturn('sb');
+        $this->background_color_dao->shouldReceive('searchBackgroundColor')->andReturn(false);
 
         $tracker_fields = [
-            aSelectBoxField()->withId(100)->withLabel('selectbox')->withBind($selectbox_bind)->build(),
-            aStringField()->withId(101)->withLabel('string')->build(),
-            aSelectBoxField()->withId(102)->withLabel('userlist')->withBind($user_bind)->build(),
-            aSelectBoxField()->withId(103)->withLabel('oldpalet')->withBind($color_bind)->build(),
+            aSelectBoxField()->withId(100)->withLabel('selectbox')->withBind($selectbox_bind)->build()
         ];
-
-        $selectbox_decorator   = new Tracker_FormElement_Field_List_BindDecorator(100, 1, null, null, null, null);
-        $new_palette_decorator = new Tracker_FormElement_Field_List_BindDecorator(103, 2, null, null, null, 'fiesta-red');
-        $old_palette_decorator = new Tracker_FormElement_Field_List_BindDecorator(103, 2, 255, 255, 255, null);
-
-        $selectbox_bind->shouldReceive('getDecorators')->andReturn([$selectbox_decorator]);
-        $user_bind->shouldReceive('getDecorators')->andReturn([]);
-        $color_bind->shouldReceive('getDecorators')->andReturn([$new_palette_decorator, $old_palette_decorator]);
-
-        $this->form_element_factory->shouldReceive('getType')->andReturn('sb', 'string', 'sb');
-
-        $this->background_color_dao->shouldReceive('searchBackgroundColor')->andReturn(false);
 
         $background_color_presenter = $this->builder->build($tracker_fields, aTracker()->withId(36)->build());
 
@@ -100,6 +85,94 @@ class CardFieldsTrackerPresenterBuilderTest extends TestCase
             ],
             false
         );
+
+        $this->assertEquals($export_formatted_field_values, $background_color_presenter);
+    }
+
+
+    public function testItDoesNotAddDecoratorWhenFieldIsNotASelectBoxOrARadioButton()
+    {
+        $this->form_element_factory->shouldReceive('getType')->andReturn('string');
+        $this->background_color_dao->shouldReceive('searchBackgroundColor')->andReturn(false);
+
+        $tracker_fields = [
+            aStringField()->withId(103)->withLabel('imastring')->build(),
+        ];
+
+        $background_color_presenter = $this->builder->build($tracker_fields, aTracker()->withId(36)->build());
+
+        $export_formatted_field_values = new BackgroundColorSelectorPresenter([], false);
+
+        $this->assertEquals($export_formatted_field_values, $background_color_presenter);
+    }
+
+    public function testItDoesNotAddSelectboxFieldsWhenTheyAreNonStatic()
+    {
+        $selectbox_bind = Mockery::mock(Tracker_FormElement_Field_List_Bind::class);
+        $selectbox_bind->shouldReceive('getType')->andReturn(Tracker_FormElement_Field_List_Bind_Users::TYPE);
+
+        $this->form_element_factory->shouldReceive('getType')->andReturn('sb');
+        $this->background_color_dao->shouldReceive('searchBackgroundColor')->andReturn(false);
+
+        $tracker_fields = [
+            aSelectBoxField()->withId(100)->withLabel('ihaveusers')->withBind($selectbox_bind)->build()
+        ];
+
+        $background_color_presenter = $this->builder->build($tracker_fields, aTracker()->withId(36)->build());
+
+        $export_formatted_field_values = new BackgroundColorSelectorPresenter(
+            [],
+            false
+        );
+
+        $this->assertEquals($export_formatted_field_values, $background_color_presenter);
+    }
+
+    public function testItAddsTheFieldInPresentersWhenTheColorIsATlpColor()
+    {
+        $user_bind = Mockery::mock(Tracker_FormElement_Field_List_Bind::class);
+        $user_bind->shouldReceive('getType')->andReturn(Tracker_FormElement_Field_List_Bind_Static::TYPE);
+
+        $new_palette_decorator = new Tracker_FormElement_Field_List_BindDecorator(101, 2, null, null, null, 'fiesta-red');
+        $user_bind->shouldReceive('getDecorators')->andReturn([$new_palette_decorator]);
+
+        $this->form_element_factory->shouldReceive('getType')->andReturn('sb');
+        $this->background_color_dao->shouldReceive('searchBackgroundColor')->andReturn(false);
+
+        $tracker_fields = [
+            aSelectBoxField()->withId(101)->withLabel('selectbox')->withBind($user_bind)->build()
+        ];
+
+        $background_color_presenter = $this->builder->build($tracker_fields, aTracker()->withId(36)->build());
+
+        $export_formatted_field_values = new BackgroundColorSelectorPresenter(
+            [
+                ['id' => 101, 'name' => 'selectbox', 'is_selected' => false]
+            ],
+            false
+        );
+
+        $this->assertEquals($export_formatted_field_values, $background_color_presenter);
+    }
+
+    public function testItDoesNotAddTheFieldInPresentersWhenTheColorIsALegacyColor()
+    {
+        $color_bind = Mockery::mock(Tracker_FormElement_Field_List_Bind::class);
+        $color_bind->shouldReceive('getType')->andReturn(Tracker_FormElement_Field_List_Bind_Static::TYPE);
+
+        $old_palette_decorator = new Tracker_FormElement_Field_List_BindDecorator(103, 2, 255, 255, 255, null);
+        $color_bind->shouldReceive('getDecorators')->andReturn([$old_palette_decorator]);
+
+        $this->form_element_factory->shouldReceive('getType')->andReturn('sb');
+        $this->background_color_dao->shouldReceive('searchBackgroundColor')->andReturn(false);
+
+        $tracker_fields = [
+            aSelectBoxField()->withId(103)->withLabel('oldpalet')->withBind($color_bind)->build(),
+        ];
+
+        $background_color_presenter = $this->builder->build($tracker_fields, aTracker()->withId(36)->build());
+
+        $export_formatted_field_values = new BackgroundColorSelectorPresenter([], false);
 
         $this->assertEquals($export_formatted_field_values, $background_color_presenter);
     }

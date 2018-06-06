@@ -51,6 +51,12 @@ card-fields {
     height: 9px;
     margin: 0 3px 0 0;
     border-radius: 50%;
+
+    @each $color-name, $colors in $tlp-swatch-color-map {
+        &.card-field-#{$color-name} {
+            background-color: map-get($colors, 'primary');
+        }
+    }
 }
 
 .extra-card-field-list-item:not(:last-child)::after {
