@@ -74,7 +74,7 @@
                 }
             },
             addStep() {
-                const step = JSON.parse(JSON.stringify(this.emptyStep));
+                const step = Object.assign({}, this.emptyStep);
                 step.uuid = uuid();
 
                 this.steps.push(step);
