@@ -1,21 +1,22 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 class Tracker_FormElement_Field_List_BindDecoratorDao extends DataAccessObject {
@@ -38,7 +39,7 @@ class Tracker_FormElement_Field_List_BindDecoratorDao extends DataAccessObject {
                 FROM $this->table_name
                 WHERE field_id = $from_field_id";
         $this->update($sql);
-        
+
         foreach($value_mapping as $from => $to) {
             $from  = $this->da->escapeInt($from);
             $to    = $this->da->escapeInt($to);
@@ -55,14 +56,25 @@ class Tracker_FormElement_Field_List_BindDecoratorDao extends DataAccessObject {
         $red       = $this->da->escapeInt($red);
         $green     = $this->da->escapeInt($green);
         $blue      = $this->da->escapeInt($blue);
-        
+
         $sql = "REPLACE INTO $this->table_name (field_id, value_id, red, green, blue)
             SELECT field_id, id, $red, $green, $blue
             FROM tracker_field_list_bind_static_value
             WHERE original_value_id = $value_id OR id = $value_id";
         return $this->update($sql);
     }
-    
+
+    public function saveTlpColor($value_id, $tlp_color)
+    {
+        $tlp_color = $this->da->quoteSmart($tlp_color);
+
+        $sql = "REPLACE INTO $this->table_name (field_id, value_id, red, green, blue, tlp_color_name)
+            SELECT field_id, id, 0, 0, 0, $tlp_color
+            FROM tracker_field_list_bind_static_value
+            WHERE original_value_id = $value_id OR id = $value_id";
+        return $this->update($sql);
+    }
+
     public function delete($field_id, $value_id) {
         $field_id  = $this->da->escapeInt($field_id);
         $value_id  = $this->da->escapeInt($value_id);

@@ -56,6 +56,15 @@ class Tracker_FormElement_Field_List_BindDecorator
     }
 
     /**
+     * @param string $color
+     * @return bool
+     */
+    private static function isHexaColor($color)
+    {
+        return strpos($color, '#') !== false;
+    }
+
+    /**
      * Decorate a value.
      * @param string $value The value to decorate Don't forget to html-purify.
      * @param boolean $full false if you want only the decoration
@@ -66,15 +75,34 @@ class Tracker_FormElement_Field_List_BindDecorator
         if ($full) {
             $html .= '<span style="white-space:nowrap;">';
         }
-        $html .= self::fetchSquareColor('', $value, '', $this->r, $this->g, $this->b);
+
+        if ($this->tlp_color_name) {
+            $html .= self::fetchSquareImage('blank16x16.png', [
+                'title' => $value,
+                'class' => 'colorpicker-preview-' . $this->tlp_color_name
+            ]);
+        } else {
+            $html .= self::fetchSquareColor('', $value, '', $this->r, $this->g, $this->b);
+        }
+
         if ($full) {
             $html .= ' '. $value .'</span>';
         }
         return $html;
     }
 
-    public function decorateSelectOption() {
-        return 'border-left: 16px solid '. ColorHelper::RGBToHexa($this->r, $this->g, $this->b) .';';
+    public function decorateSelectOptionWithStyles() {
+        if ($this->tlp_color_name) {
+            return [
+                'classes'       => 'select-option-colored-' . $this->tlp_color_name,
+                'inline-styles' => ''
+            ];
+        }
+
+        return [
+            'classes'       => '',
+            'inline-styles' => 'border-left: 16px solid '. ColorHelper::RGBToHexa($this->r, $this->g, $this->b) .';'
+        ];
     }
 
     /**
@@ -84,15 +112,15 @@ class Tracker_FormElement_Field_List_BindDecorator
      * @return string html
      */
     public function decorateEdit() {
-        $html = '';
-        $hexa = ColorHelper::RGBToHexa($this->r, $this->g, $this->b);
-        $id   = 'decorator_'. $this->field_id .'_'. $this->value_id;
-        $html .= self::getColorPickerMountPoint($id, $this->value_id, $hexa);
+        $html  = '';
+        $color = $this->getCurrentColor();
+        $id    = 'decorator_'. $this->field_id .'_'. $this->value_id;
+        $html .= self::getColorPickerMountPoint($id, $this->value_id, $color);
 
         return $html;
     }
 
-    private static function getColorPickerMountPoint($decorator_id, $value_id, $hexa_color)
+    private static function getColorPickerMountPoint($decorator_id, $value_id, $current_color)
     {
         $switch_old_palette_label     = dgettext('tuleap-tracker', 'Switch to old color picker');
         $switch_default_palette_label = dgettext('tuleap-tracker', 'Switch to default color picker');
@@ -101,7 +129,7 @@ class Tracker_FormElement_Field_List_BindDecorator
             <div class="vue-colorpicker-mount-point"
                 data-decorator-id="'. $decorator_id .'"
                 data-value-id="'. $value_id .'"
-                data-color-hexa="'. $hexa_color . '"
+                data-current-color="'. $current_color . '"
                 data-switch-default-palette-label="' . $switch_default_palette_label . '"
                 data-switch-old-palette-label="' . $switch_old_palette_label . '"
             ></div>
@@ -124,18 +152,25 @@ class Tracker_FormElement_Field_List_BindDecorator
     protected static function fetchSquareColor($id, $title, $classname, $r, $g, $b, $img = 'blank16x16.png') {
         $html = '';
         $bgcolor = '';
+
         if ($r !== null && $g !== null && $b !== null ) {
             $bgcolor .= "background-color:rgb($r, $g, $b);";
         }
-        $html .= $GLOBALS['HTML']->getImage($img, array(
+
+        $html .= self::fetchSquareImage($img, [
             'id'     => $id,
             'width'  => '16px',
             'height' => '16px',
             'style'  => 'vertical-align:middle; '. $bgcolor,
             'title'  => $title,
-            'class'  => $classname,
-        ));
+            'class'  => $classname
+        ]);
         return $html;
+    }
+
+    private static function fetchSquareImage($image, array $image_styles)
+    {
+        return $GLOBALS['HTML']->getImage($image, $image_styles);
     }
 
     /**
@@ -156,9 +191,14 @@ class Tracker_FormElement_Field_List_BindDecorator
     /**
      * Save a decorator
      */
-    public static function save($field_id, $value_id, $hexacolor) {
+    public static function save($field_id, $value_id, $color) {
         $dao = new Tracker_FormElement_Field_List_BindDecoratorDao();
-        list($r, $g, $b) = ColorHelper::HexaToRGB($hexacolor);
+
+        if (! self::isHexaColor($color)) {
+            return $dao->saveTlpColor($value_id, $color);
+        }
+
+        list($r, $g, $b) = ColorHelper::HexaToRGB($color);
         $dao->save($field_id, $value_id, $r, $g, $b);
     }
 
@@ -207,5 +247,14 @@ class Tracker_FormElement_Field_List_BindDecorator
     public function isUsingOldPalette()
     {
         return $this->r !== null && $this->g !== null && $this->b !== null;
+    }
+
+    private function getCurrentColor()
+    {
+        if ($this->tlp_color_name) {
+            return $this->tlp_color_name;
+        }
+
+        return ColorHelper::RGBToHexa($this->r, $this->g, $this->b);
     }
 }

@@ -18,16 +18,22 @@
   -->
 
 <template>
-    <div class="dropdown tracker-old-colorpicker">
+    <div class="dropdown tracker-colorpicker">
         <a class="dropdown-toggle"
            href="javascript:;"
            data-target="#"
            data-toggle="dropdown"
         >
-            <old-color-picker-preview v-bind:color="color"/>
+            <old-color-picker-preview v-if="show_old_preview" v-bind:color="color"/>
+            <color-picker-preview v-else v-bind:color="color"/>
         </a>
+
         <div class="dropdown-menu" role="menu">
-            <color-picker-palette v-if="! is_old_palette_shown" />
+            <color-picker-palette v-if="! is_old_palette_shown"
+                v-on:color-update="setColor"
+                v-bind:current-color="color"
+            />
+
 
             <old-color-picker-palette v-if="is_old_palette_shown"
                 v-on:color-update="setColor"
@@ -60,31 +66,43 @@
 
     import OldColorPickerPreview from "./OldColorPickerPreview.vue";
     import OldColorPickerPalette from "./OldColorPickerPalette.vue";
+    import ColorPickerPreview    from "./ColorPickerPreview.vue";
 
     export default {
         name: "ColorPicker",
         components: {
             ColorPickerSwitch,
             ColorPickerPalette,
+            ColorPickerPreview,
             OldColorPickerPalette,
             OldColorPickerPreview
         },
         props: {
             decoratorId                : String,
             valueId                    : String,
-            colorHexa                  : String,
+            currentColor               : String,
             switchDefaultPaletteLabel  : String,
             switchOldPaletteLabel      : String
         },
         data() {
+            const show_old_preview = this.currentColor.length === 0 || this.currentColor.includes('#');
+
             return {
-                color               : this.colorHexa,
-                is_old_palette_shown: true
+                color               : this.currentColor,
+                is_old_palette_shown: false,
+                show_old_preview
             };
+        },
+        computed: {
+            isHexaColor() {
+                return this.color.includes('#');
+            }
         },
         methods: {
             setColor(color) {
                 this.color = color;
+
+                this.show_old_preview = this.isHexaColor;
             },
             switchPalettes() {
                 this.is_old_palette_shown = ! this.is_old_palette_shown;

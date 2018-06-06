@@ -408,15 +408,19 @@ abstract class Tracker_FormElement_Field_List_Bind implements
         return $html;
     }
 
-    public function getSelectOptionInlineStyle($value_id) {
+    public function getSelectOptionStyles($value_id) {
+        $default_styles = ['classes' => '', 'inline-styles' => ''];
+
         if (count($this->decorators)) {
             if (isset($this->decorators[$value_id])) {
-                return $this->decorators[$value_id]->decorateSelectOption();
+                return $this->decorators[$value_id]->decorateSelectOptionWithStyles();
             } else {
-                return 'padding-left: 16px;';
+                $default_styles[ 'classes' ] = 'select-option-not-colored';
+
+                return $default_styles;
             }
         } else {
-            return '';
+            return $default_styles;
         }
     }
 

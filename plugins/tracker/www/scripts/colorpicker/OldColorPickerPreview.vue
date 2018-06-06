@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <img class="color-picker-preview"
+    <img class="old-color-picker-preview"
          v-bind:src="previewImage"
          v-bind:style="{'background-color': color }"
          v-on:click="setTransparent"
