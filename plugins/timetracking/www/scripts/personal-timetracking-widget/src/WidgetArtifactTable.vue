@@ -96,7 +96,7 @@
                 is_loading_more  : false,
                 total_times      : 0,
                 pagination_offset: 0,
-                pagination_limit : 10
+                pagination_limit : 50
             }
         },
         computed: {
