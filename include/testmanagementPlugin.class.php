@@ -99,7 +99,7 @@ class testmanagementPlugin extends Plugin
     }
 
     public function javascript_file() {
-        if ($this->isArtifactURL()) {
+        if ($this->canIncludeStepDefinitionAssets()) {
             $include_assets = new \Tuleap\Layout\IncludeAssets(
                 __DIR__ . '/../www/assets',
                 TESTMANAGEMENT_BASE_URL . '/assets'
@@ -608,10 +608,39 @@ class testmanagementPlugin extends Plugin
         return strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL) === 0;
     }
 
-    private function isArtifactURL()
+    private function canIncludeStepDefinitionAssets()
     {
+        if (! $this->isTrackerURL()) {
+            return false;
+        }
+
         $request = HTTPRequest::instance();
 
-        return $this->isTrackerURL() && $request->get('aid');
+        $artifact_id = $request->get('aid');
+        if ($artifact_id) {
+            $artifact = Tracker_ArtifactFactory::instance()->getArtifactById($artifact_id);
+
+            return $artifact && $this->isTrackerUsingStepDefinitionField($artifact->getTracker());
+        }
+
+        $is_submit_artifact_url = in_array($request->get('func'), ['new-artifact', 'submit-artifact']);
+        if ($is_submit_artifact_url) {
+            $tracker_id = $request->get('tracker');
+            $tracker    = TrackerFactory::instance()->getTrackerById($tracker_id);
+
+            return $this->isTrackerUsingStepDefinitionField($tracker);
+        }
+
+        return false;
+    }
+
+    private function isTrackerUsingStepDefinitionField(Tracker $tracker)
+    {
+        $used_step_definition_fields = Tracker_FormElementFactory::instance()->getUsedFormElementsByType(
+            $tracker,
+            StepDefinition::TYPE
+        );
+
+        return ! empty($used_step_definition_fields);
     }
 }

@@ -198,21 +198,9 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         Tracker_Artifact_ChangesetValue $value = null,
         $submitted_values = []
     ) {
-        $renderer = TemplateRendererFactory::build()->getRenderer(TESTMANAGEMENT_BASE_DIR . '/templates');
-
         $steps = $this->getStepsPresentersFromChangesetValue($value);
 
-        $default_format = $this->getDefaultFormat($this->getCurrentUser());
-        $empty_step     = new Step(0, '', $default_format, 0);
-
-        return $renderer->renderToString(
-            'step-def-edit',
-            [
-                'field_id'                => $this->id,
-                'json_encoded_steps'      => json_encode($steps),
-                'json_encoded_empty_step' => json_encode($this->getStepPresenter($empty_step))
-            ]
-        );
+        return $this->renderStepEditionToString($steps);
     }
 
     private function getDefaultFormat(PFUser $user)
@@ -268,15 +256,9 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
      */
     protected function fetchSubmitValue()
     {
-        $renderer = TemplateRendererFactory::build()->getRenderer(TESTMANAGEMENT_BASE_DIR . '/templates');
+        $steps = [];
 
-        return $renderer->renderToString(
-            'step-def-submit',
-            [
-                'id'             => $this->id,
-                'default_format' => $this->getDefaultFormat($this->getCurrentUser())
-            ]
-        );
+        return $this->renderStepEditionToString($steps);
     }
 
     /**
@@ -381,7 +363,8 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         return true;
     }
 
-    private function doesUserWantToRemoveAllSteps(array $value) {
+    private function doesUserWantToRemoveAllSteps(array $value)
+    {
         return isset($value['no_steps']) && $value['no_steps'];
     }
 
@@ -547,5 +530,37 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
     private function getStepPresenter(Step $step)
     {
         return new StepPresenter($step, $this->getTracker()->getProject());
+    }
+
+    /**
+     * @return StepPresenter
+     */
+    private function getEmptyStepPresenter()
+    {
+        $default_format = $this->getDefaultFormat($this->getCurrentUser());
+        $empty_step     = new Step(0, '', $default_format, 0);
+
+        return $this->getStepPresenter($empty_step);
+    }
+
+    /**
+     * @param StepPresenter[] $steps_presenters
+     *
+     * @return String
+     */
+    protected function renderStepEditionToString(array $steps_presenters)
+    {
+        $renderer = TemplateRendererFactory::build()->getRenderer(TESTMANAGEMENT_BASE_DIR . '/templates');
+
+        $empty_step_presenter = $this->getEmptyStepPresenter();
+
+        return $renderer->renderToString(
+            'step-def-edit',
+            [
+                'field_id'                => $this->id,
+                'json_encoded_steps'      => json_encode($steps_presenters),
+                'json_encoded_empty_step' => json_encode($empty_step_presenter)
+            ]
+        );
     }
 }
