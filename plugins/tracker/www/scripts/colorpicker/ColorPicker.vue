@@ -52,10 +52,13 @@
                 v-bind:switch-old-palette-label="switchOldPaletteLabel"
             />
         </div>
-        <input v-bind:id="decoratorId + '_field'"
-               type="hidden"
-               v-bind:name="'bind[decorator][' + valueId + ']'"
+        <input class="colorpicker-input"
+               v-bind:id="inputId"
+               v-bind:name="inputName"
                v-bind:value="color"
+               type="text"
+               size="6"
+               autocomplete="off"
         />
     </div>
 </template>
@@ -78,11 +81,11 @@
             OldColorPickerPreview
         },
         props: {
-            decoratorId                : String,
-            valueId                    : String,
-            currentColor               : String,
-            switchDefaultPaletteLabel  : String,
-            switchOldPaletteLabel      : String
+            inputName                : String,
+            inputId                  : String,
+            currentColor             : String,
+            switchDefaultPaletteLabel: String,
+            switchOldPaletteLabel    : String
         },
         data() {
             const show_old_preview = this.currentColor.length === 0 || this.currentColor.includes('#');
