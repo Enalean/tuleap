@@ -1,4 +1,5 @@
 DROP TABLE IF EXISTS plugin_pullrequest_review;
+DROP TABLE IF EXISTS plugin_pullrequest_git_reference;
 DROP TABLE IF EXISTS plugin_pullrequest_comments;
 DROP TABLE IF EXISTS plugin_pullrequest_inline_comments;
 DROP TABLE IF EXISTS plugin_pullrequest_timeline_event;

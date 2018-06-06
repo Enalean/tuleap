@@ -42,6 +42,8 @@ use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\Comment\Dao as CommentDao;
 use Tuleap\PullRequest\Comment\Factory as CommentFactory;
 use Tuleap\PullRequest\Exception\UserCannotReadGitRepositoryException;
+use Tuleap\PullRequest\GitReference\GitPullRequestReferenceCreator;
+use Tuleap\PullRequest\GitReference\GitPullRequestReferenceDAO;
 use Tuleap\PullRequest\InlineComment\Dao as InlineCommentDao;
 use Tuleap\PullRequest\Exception\PullRequestCannotBeAbandoned;
 use Tuleap\PullRequest\Exception\PullRequestCannotBeMerged;
@@ -178,7 +180,8 @@ class PullRequestsResource extends AuthenticatedResource
             $this->pull_request_factory,
             $pull_request_dao,
             $this->pull_request_merger,
-            $this->event_manager
+            $this->event_manager,
+            new GitPullRequestReferenceCreator(new GitPullRequestReferenceDAO)
         );
         $this->pull_request_closer  = new PullRequestCloser($this->pull_request_factory, $this->pull_request_merger);
         $this->logger               = new BackendLogger();

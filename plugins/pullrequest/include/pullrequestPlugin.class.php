@@ -35,6 +35,8 @@ use Tuleap\Label\LabeledItemCollection;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
 use Tuleap\PullRequest\GitReference\GitPullRequestReference;
+use Tuleap\PullRequest\GitReference\GitPullRequestReferenceCreator;
+use Tuleap\PullRequest\GitReference\GitPullRequestReferenceDAO;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceRemover;
 use Tuleap\PullRequest\Label\LabeledItemCollector;
 use Tuleap\PullRequest\Label\PullRequestLabelDao;
@@ -162,7 +164,8 @@ class pullrequestPlugin extends Plugin
             $this->getPullRequestFactory(),
             new Dao(),
             $pull_request_merger,
-            $event_manager
+            $event_manager,
+            new GitPullRequestReferenceCreator(new GitPullRequestReferenceDAO)
         );
 
         $router = new Router($pull_request_creator, $git_repository_factory, $user_manager);
