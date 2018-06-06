@@ -20,10 +20,10 @@
 
 namespace Tuleap\PullRequest;
 
+use Tuleap\PullRequest\GitReference\GitPullRequestReferenceUpdater;
 use \TuleapDbTestCase;
 use \GitRepository;
 use \ForgeConfig;
-use \Tuleap\PullRequest\FileUniDiffBuilder;
 
 require_once 'bootstrap.php';
 
@@ -73,7 +73,8 @@ class PullRequestUpdaterTest extends TuleapDbTestCase
             mock('Tuleap\PullRequest\InlineComment\InlineCommentUpdater'),
             new FileUniDiffBuilder(),
             mock('Tuleap\PullRequest\Timeline\TimelineEventCreator'),
-            $this->git_repository_factory
+            $this->git_repository_factory,
+            mock(GitPullRequestReferenceUpdater::class)
         );
 
         $this->git_exec = mock('\Tuleap\PullRequest\GitExec');
@@ -99,6 +100,8 @@ class PullRequestUpdaterTest extends TuleapDbTestCase
 
         stub($this->inline_comments_dao)->searchUpToDateByPullRequestId()->returns(array());
 
+        stub($this->git_repository_factory)->getRepositoryById()->returns(mock(GitRepository::class));
+
         $this->pull_request_updater->updatePullRequests($this->user, $this->git_exec, $git_repo, 'dev', 'sha1new');
 
         $pr1 = $this->dao->searchByPullRequestId($pr1_id);
@@ -119,6 +122,8 @@ class PullRequestUpdaterTest extends TuleapDbTestCase
         stub($git_repo)->getId()->returns(1);
 
         stub($this->inline_comments_dao)->searchUpToDateByPullRequestId()->returns(array());
+
+        stub($this->git_repository_factory)->getRepositoryById()->returns(mock(GitRepository::class));
 
         $this->pull_request_updater->updatePullRequests($this->user, $this->git_exec, $git_repo, 'dev', 'sha1new');
 
@@ -141,6 +146,8 @@ class PullRequestUpdaterTest extends TuleapDbTestCase
         stub($git_repo)->getId()->returns(1);
 
         stub($this->inline_comments_dao)->searchUpToDateByPullRequestId()->returns(array());
+
+        stub($this->git_repository_factory)->getRepositoryById()->returns(mock(GitRepository::class));
 
         $this->pull_request_updater->updatePullRequests($this->user, $this->git_exec, $git_repo, 'dev', 'sha1new');
 

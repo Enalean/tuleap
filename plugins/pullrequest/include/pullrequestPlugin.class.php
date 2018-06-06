@@ -38,6 +38,7 @@ use Tuleap\PullRequest\GitReference\GitPullRequestReference;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceCreator;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceDAO;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceRemover;
+use Tuleap\PullRequest\GitReference\GitPullRequestReferenceUpdater;
 use Tuleap\PullRequest\Label\LabeledItemCollector;
 use Tuleap\PullRequest\Label\PullRequestLabelDao;
 use Tuleap\PullRequest\Reference\HTMLURLBuilder;
@@ -349,6 +350,8 @@ class pullrequestPlugin extends Plugin
             if ($new_rev == '0000000000000000000000000000000000000000') {
                 $this->abandonFromSourceBranch($user, $repository, $branch_name);
             } else {
+                $git_reference_dao = new GitPullRequestReferenceDAO;
+
                 $pull_request_updater = new PullRequestUpdater(
                     $this->getPullRequestFactory(),
                     new PullRequestMerger($this->getRepositoryFactory()),
@@ -356,7 +359,11 @@ class pullrequestPlugin extends Plugin
                     new InlineCommentUpdater(),
                     new FileUniDiffBuilder(),
                     $this->getTimelineEventCreator(),
-                    $this->getRepositoryFactory()
+                    $this->getRepositoryFactory(),
+                    new GitPullRequestReferenceUpdater(
+                        $git_reference_dao,
+                        new GitPullRequestReferenceCreator($git_reference_dao)
+                    )
                 );
                 $pull_request_updater->updatePullRequests($user, $git_exec, $repository, $branch_name, $new_rev);
             }
