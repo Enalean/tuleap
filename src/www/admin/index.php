@@ -237,7 +237,7 @@ if ($GLOBALS['sys_user_approval'] == 1) {
     ');
 }
 
-if ($GLOBALS['sys_project_approval'] == 1) {
+if (ForgeConfig::get('sys_project_approval') == 1) {
     $groups_pending       = '<p class="siteadmin-homepage-no-validation">'.$Language->getText('admin_main', 'review_pending_projects_empty').'</p>';
     $groups_pending_class = '';
 
@@ -277,7 +277,7 @@ echo '<div id="siteadmin-homepage-container">';
 echo '<div class="siteadmin-homepage-column">';
 
 $display_user_approval_block    = $GLOBALS['sys_user_approval'] == 1 && $pending_users > 0;
-$display_project_approval_block = $GLOBALS['sys_project_approval'] == 1 && $pending_projects > 0;
+$display_project_approval_block = ForgeConfig::get('sys_project_approval') == 1 && $pending_projects > 0;
 
 if ($display_user_approval_block || $display_project_approval_block) {
     echo '<div class="siteadmin-homepage-row">';

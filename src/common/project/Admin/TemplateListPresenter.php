@@ -20,6 +20,8 @@
 
 namespace Tuleap\Project\Admin;
 
+use Tuleap\Admin\ProjectCreationNavBarPresenter;
+
 class TemplateListPresenter
 {
     public $title;
@@ -27,11 +29,14 @@ class TemplateListPresenter
     public $unix_group_name_header;
     public $services_button_label;
     public $templates;
+    public $navbar;
 
     public function __construct(
+        ProjectCreationNavBarPresenter $navbar,
         $title,
         array $templates_presenters
     ) {
+        $this->navbar    = $navbar;
         $this->title     = $title;
         $this->templates = $templates_presenters;
 

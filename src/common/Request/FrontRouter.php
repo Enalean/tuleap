@@ -25,6 +25,9 @@ use EventManager;
 use FastRoute;
 use HTTPRequest;
 use ThemeManager;
+use Tuleap\Admin\ProjectCreationModerationDisplayController;
+use Tuleap\Admin\ProjectCreationModerationUpdateController;
+use Tuleap\Admin\ProjectTemplatesController;
 use Tuleap\Layout\ErrorRendering;
 use Tuleap\Layout\SiteHomepageController;
 use Tuleap\Layout\BaseLayout;
@@ -163,6 +166,15 @@ class FrontRouter
                     return new PasswordPolicyUpdateController(
                         new PasswordConfigurationSaver(new PasswordConfigurationDAO)
                     );
+                });
+                $r->get('/project-creation/moderation', function () {
+                    return new ProjectCreationModerationDisplayController();
+                });
+                $r->post('/project-creation/moderation', function () {
+                    return new ProjectCreationModerationUpdateController();
+                });
+                $r->get('/project-creation/templates', function () {
+                    return new ProjectTemplatesController();
                 });
             });
 

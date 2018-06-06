@@ -187,6 +187,10 @@ class ProjectResource extends AuthenticatedResource {
     {
         $this->checkAccess();
 
+        if (! $this->project_manager->userCanCreateProject($this->user_manager->getCurrentUser())) {
+            throw new RestException(429, 'Too many projects were created');
+        }
+
         $data = array(
             'project' => array(
                 'form_short_description' => $description,

@@ -600,6 +600,7 @@ Here you plan, track, code, and collaborate on software projects.'),
 Venez planifier, suivre, développer & collaborer sur vos projets logiciels.');
 
 INSERT INTO forgeconfig (name, value) VALUES ('access_mode', 'anonymous');
+INSERT INTO forgeconfig (name, value) VALUES ('sys_project_approval', '1');
 
 INSERT INTO password_configuration (breached_password_enabled) VALUES (1);
 
