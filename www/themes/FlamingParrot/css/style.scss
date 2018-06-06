@@ -19,6 +19,7 @@
     }
 
     .ttm-definition-step-description {
+        width: 100%;
         margin: 0 0 0 10px;
     }
 
@@ -30,10 +31,21 @@
         margin: 0 0 0 20px;
     }
 
-    .ttm-definition-step-description-header {
-        display: flex;
-        justify-content: space-between;
-        margin: 0 0 10px;
+    .ttm-definition-step-description-delete {
+        margin: 0 0 0 20px;
+        float: right;
+    }
+
+    .ttm-definition-step-description-deleted {
+        text-decoration: line-through;
+    }
+
+    .ttm-definition-step-description-text {
+        white-space: pre-line;
+    }
+
+    .ttm-definition-step-description-textarea {
+        width: calc(100% - 15px);
     }
 }
 
