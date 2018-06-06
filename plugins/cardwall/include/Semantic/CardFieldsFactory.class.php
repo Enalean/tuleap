@@ -61,11 +61,13 @@ class Cardwall_Semantic_CardFieldsFactory implements Tracker_Semantic_IRetrieveS
      */
     public function getInstanceFromXML($xml, &$xml_mapping, $tracker)
     {
-        $extractor = new CardFieldXmlExtractor();
-        $fields    = $extractor->extractFieldFromXml($xml, $xml_mapping);
+        $extractor        = new CardFieldXmlExtractor();
+        $fields           = $extractor->extractFieldFromXml($xml, $xml_mapping);
+        $background_color = $extractor->extractBackgroundColorFromXml($xml, $xml_mapping);
 
         $semantic = Cardwall_Semantic_CardFields::load($tracker);
         $semantic->setFields($fields);
+        $semantic->setBackgroundColorField($background_color);
 
         return $semantic;
     }

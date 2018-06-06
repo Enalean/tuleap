@@ -24,7 +24,7 @@ use SimpleXMLElement;
 
 class CardFieldXmlExtractor
 {
-    public function extractFieldFromXml(SimpleXMLElement $xml, array &$xml_mapping)
+    public function extractFieldFromXml(SimpleXMLElement $xml, array $xml_mapping)
     {
         $fields = [];
         foreach ($xml->field as $field) {
@@ -32,5 +32,16 @@ class CardFieldXmlExtractor
             $fields[] = $xml_mapping[(string)$att['REF']];
         }
         return $fields;
+    }
+
+    public function extractBackgroundColorFromXml(SimpleXMLElement $xml, array $xml_mapping)
+    {
+        $background_color_field = $xml->{ 'background-color' };
+        if (! $background_color_field) {
+            return null;
+        }
+        $att = $background_color_field->attributes();
+
+        return $xml_mapping[(string)$att['REF']];
     }
 }

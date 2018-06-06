@@ -839,6 +839,13 @@
             </attribute>
           </element>
         </zeroOrMore>
+        <optional>
+          <element name="background-color">
+            <attribute name="REF">
+              <data type="IDREF"/>
+            </attribute>
+          </element>
+        </optional>
       </group>
       <group>
         <attribute name="type">

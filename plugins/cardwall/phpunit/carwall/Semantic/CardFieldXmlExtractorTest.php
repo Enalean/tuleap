@@ -55,7 +55,7 @@ class CardFieldXmlExtractorTest extends TestCase
 
     public function testItImportsACardFieldsSemanticFromXMLFormat()
     {
-        $xml = simplexml_load_file(dirname(__FILE__) . '/../../../tests/Semantic/_fixtures/ImportCardwallSemanticCardFields.xml');
+        $xml = simplexml_load_file(__DIR__ . '/_fixtures/ImportCardwallSemanticCardFields.xml');
 
         $mapping   = [
             'F13' => 102,
@@ -66,5 +66,27 @@ class CardFieldXmlExtractorTest extends TestCase
 
         $this->assertTrue(in_array(102, $fields));
         $this->assertTrue(in_array(103, $fields));
+    }
+
+    public function testItImportsBackgroundColorSemanticFromXMLFormat()
+    {
+        $xml = simplexml_load_file(__DIR__ . '/_fixtures/ImportCardwallSemanticCardFields.xml');
+
+        $status = \Mockery::spy('Tracker_FormElement_Field');
+        $status->shouldReceive('getId')->andReturn(101);
+        $status->shouldReceive('getLabel')->andReturn('status');
+
+        $severity = \Mockery::spy('Tracker_FormElement_Field');
+        $severity->shouldReceive('getId')->andReturn(102);
+        $severity->shouldReceive('getLabel')->andReturn('severity');
+
+        $mapping   = [
+            'F13' => $status,
+            'F14' => $severity
+        ];
+        $extractor = new CardFieldXmlExtractor();
+        $background_color_field = $extractor->extractBackgroundColorFromXml($xml, $mapping);
+
+        $this->assertEquals(102, $background_color_field->getId());
     }
 }
