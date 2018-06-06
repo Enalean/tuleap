@@ -63,8 +63,8 @@ use Tuleap\Tracker\Notifications\UgroupsToNotifyUpdater;
 use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
 use Tuleap\Tracker\Notifications\UsersToNotifyDao;
 use Tuleap\Tracker\PermissionsPerGroup\ProjectAdminPermissionPerGroupPresenterBuilder;
-use Tuleap\Tracker\ProjectDeletion;
 use Tuleap\Tracker\ProjectDeletionEvent;
+use Tuleap\Tracker\Reference\ReferenceCreator;
 use Tuleap\Tracker\Service\ServiceActivator;
 use Tuleap\User\History\HistoryRetriever;
 use Tuleap\Widget\Event\GetPublicAreas;
@@ -789,8 +789,22 @@ class trackerPlugin extends Plugin {
     public function project_registration_activate_service(ProjectRegistrationActivateService $event)
     {
         $this->getServiceActivator()->forceUsageOfService($event->getProject(), $event->getTemplate(), $event->getLegacy());
+        $this->getReferenceCreator()->insertArtifactsReferencesFromLegacy($event->getProject());
     }
 
+    /**
+     * @return ReferenceCreator
+     */
+    private function getReferenceCreator()
+    {
+        return new ReferenceCreator(
+            ServiceManager::instance(), TrackerV3::instance(), new ReferenceDao()
+        );
+    }
+
+    /**
+     * @return ServiceActivator
+     */
     private function getServiceActivator()
     {
         return new ServiceActivator(ServiceManager::instance(), TrackerV3::instance(), new ServiceCreator());

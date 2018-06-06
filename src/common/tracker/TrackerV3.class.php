@@ -18,7 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class TrackerV3 {
+class TrackerV3
+{
+    const REFERENCE_NATURE = 'artifact';
 
     /**
      * @var ArtifactDao
@@ -35,14 +37,16 @@ class TrackerV3 {
      */
     private $available = null;
 
-    public function __construct(ArtifactDao $dao) {
+    public function __construct(ArtifactDao $dao)
+    {
         $this->dao = $dao;
     }
 
     /**
      * @return TrackerV3
      */
-    public static function instance() {
+    public static function instance()
+    {
         if (! self::$instance) {
             self::$instance = new TrackerV3(new ArtifactDao);
         }
@@ -54,7 +58,8 @@ class TrackerV3 {
      *
      * @return boolean
      */
-    public function available() {
+    public function available()
+    {
         if ($this->available === null) {
             $this->available = $this->dao->artifactTableExists();
         }
