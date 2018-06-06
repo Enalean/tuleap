@@ -22,6 +22,7 @@ namespace Tuleap\AgileDashboard\REST\v1;
 
 use AgileDashboard_Milestone_Backlog_BacklogItem;
 use AgileDashBoard_Semantic_InitialEffort;
+use EventManager;
 use Luracast\Restler\RestException;
 use PFUser;
 use Tracker_Artifact;
@@ -41,6 +42,7 @@ use TrackerFactory;
 use Tuleap\AgileDashboard\BacklogItem\RemainingEffortValueRetriever;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorColorRetriever;
 use Tuleap\Tracker\REST\v1\ArtifactLinkUpdater;
 use UserManager;
 
@@ -440,6 +442,11 @@ class BacklogItemResource extends AuthenticatedResource
 
     private function getBacklogItemRepresentationFactory()
     {
-        return new BacklogItemRepresentationFactory();
+        $color_retriever = new BindDecoratorColorRetriever();
+        return new BacklogItemRepresentationFactory(
+            $color_retriever,
+            $this->user_manager,
+            EventManager::instance()
+        );
     }
 }

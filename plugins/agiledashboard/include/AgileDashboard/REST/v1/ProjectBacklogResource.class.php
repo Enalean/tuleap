@@ -44,6 +44,7 @@ use Tuleap\REST\Header;
 use Tracker_Artifact_PriorityDao;
 use Tracker_Artifact_PriorityManager;
 use Tracker_Artifact_PriorityHistoryDao;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorColorRetriever;
 use UserManager;
 use Tuleap\REST\v1\OrderRepresentationBase;
 use PlanningPermissionsManager;
@@ -54,7 +55,8 @@ use Tuleap\Tracker\REST\v1\ArtifactLinkUpdater;
 /**
  * Wrapper for backlog related REST methods
  */
-class ProjectBacklogResource {
+class ProjectBacklogResource
+{
     const MAX_LIMIT = 100;
     const TOP_BACKLOG_IDENTIFIER = AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider::TOP_BACKLOG_IDENTIFIER;
 
@@ -85,10 +87,13 @@ class ProjectBacklogResource {
     /** @var AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder */
     private $paginated_backlog_item_representation_builder;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->planning_factory             = PlanningFactory::build();
         $tracker_artifact_factory           = Tracker_ArtifactFactory::instance();
         $tracker_form_element_factory       = Tracker_FormElementFactory::instance();
+        $event_manager                      = \EventManager::instance();
+        $user_manager                       = UserManager::instance();
         $this->planning_permissions_manager = new PlanningPermissionsManager();
         $status_counter                     = new AgileDashboard_Milestone_MilestoneStatusCounter(
             new AgileDashboard_BacklogItemDao(),
@@ -151,7 +156,7 @@ class ProjectBacklogResource {
         $priority_manager = new Tracker_Artifact_PriorityManager(
             new Tracker_Artifact_PriorityDao(),
             new Tracker_Artifact_PriorityHistoryDao(),
-            UserManager::instance(),
+            $user_manager,
             $tracker_artifact_factory
         );
 
@@ -161,11 +166,18 @@ class ProjectBacklogResource {
             $this->artifactlink_updater,
             $tracker_artifact_factory,
             $priority_manager,
-            \EventManager::instance()
+            $event_manager
+        );
+
+        $color_retriever = new BindDecoratorColorRetriever();
+        $item_factory    = new BacklogItemRepresentationFactory(
+            $color_retriever,
+            $user_manager,
+            $event_manager
         );
 
         $this->paginated_backlog_item_representation_builder = new AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder(
-            new BacklogItemRepresentationFactory(),
+            $item_factory,
             $this->backlog_item_collection_factory,
             $this->backlog_factory
         );
