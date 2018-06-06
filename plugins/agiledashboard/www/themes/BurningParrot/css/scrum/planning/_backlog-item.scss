@@ -43,6 +43,16 @@
         }
     }
 
+    &.detailed-view {
+        > .backlog-item-details > .backlog-item-details-content > .card-accessibility {
+            position: absolute;
+            top: 40px;
+            right: 9px;
+            height: calc(100% - 40px);
+
+        }
+    }
+
     // We must use the child combinator because backlog-item can have children backlog-items
     &:first-child {
         > .backlog-item-details > .backlog-item-details-moves > .backlog-item-details-move:first-child {

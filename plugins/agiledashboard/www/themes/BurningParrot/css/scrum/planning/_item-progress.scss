@@ -18,8 +18,8 @@
  */
 
 item-progress {
-    position: relative;
-    top: 1px;
+    position: absolute;
+    bottom: -1px;
     width: 100%;
 }
 

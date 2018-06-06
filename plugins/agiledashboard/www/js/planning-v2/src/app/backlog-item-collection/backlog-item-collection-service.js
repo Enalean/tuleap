@@ -28,6 +28,7 @@ function BacklogItemCollectionService(
 
         return BacklogItemService.getBacklogItem(backlog_item_id).then(({ backlog_item }) => {
             const {
+                background_color_name,
                 label,
                 initial_effort,
                 remaining_effort,
@@ -38,6 +39,7 @@ function BacklogItemCollectionService(
             } = backlog_item;
 
             Object.assign(self.items[backlog_item_id], {
+                background_color_name,
                 label,
                 initial_effort,
                 remaining_effort,
