@@ -67,7 +67,14 @@ final class CompatPDODataAccess implements LegacyDataAccessInterface
                 throw new \DataAccessException('Unable to access the database . Please contact your administrator.');
             }
         }
-        return new CompatPDODataAccessResult($this->latest_statement);
+
+        try {
+            $this->db->getPdo()->setAttribute(\PDO::ATTR_STRINGIFY_FETCHES, true);
+            $data_access_result = new CompatPDODataAccessResult($this->latest_statement);
+        } finally {
+            $this->db->getPdo()->setAttribute(\PDO::ATTR_STRINGIFY_FETCHES, false);
+        }
+        return $data_access_result;
     }
 
     /**
