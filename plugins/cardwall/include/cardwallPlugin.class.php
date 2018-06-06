@@ -23,6 +23,8 @@ require_once 'constants.php';
 require_once 'autoload.php';
 
 use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
+use Tuleap\Cardwall\Semantic\BackgroundColorDao;
+use Tuleap\Cardwall\Semantic\BackgroundColorSemanticFactory;
 
 /**
  * CardwallPlugin
@@ -263,6 +265,7 @@ class cardwallPlugin extends Plugin
      */
     public function tracker_event_get_semantic_factories($params) {
         $params['factories'][] = Cardwall_Semantic_CardFieldsFactory::instance();
+        $params['factories'][] = new BackgroundColorSemanticFactory(new BackgroundColorDao());
     }
 
     private function isAgileDashboardOrTrackerUrl() {
@@ -587,9 +590,4 @@ class cardwallPlugin extends Plugin
         $injector = new Cardwall_REST_ResourcesInjector();
         $injector->populate($params['restler']);
     }
-
-    private function getIncFile() {
-        return $this->getPluginEtcRoot() . '/config.inc';
-    }
-
 }
