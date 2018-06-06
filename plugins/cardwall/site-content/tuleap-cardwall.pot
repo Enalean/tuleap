@@ -10,9 +10,6 @@ msgstr ""
 msgid "Choose a field..."
 msgstr ""
 
-msgid "Example"
-msgstr ""
-
 msgid "Field not found"
 msgstr ""
 
