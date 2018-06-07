@@ -198,7 +198,11 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         Tracker_Artifact_ChangesetValue $value = null,
         $submitted_values = []
     ) {
-        $steps = $this->getStepsPresentersFromChangesetValue($value);
+        $submitted_values = $submitted_values[0] ?: [];
+        $steps            = $this->getStepsPresentersFromSubmittedValues($submitted_values);
+        if (empty($steps)) {
+            $steps = $this->getStepsPresentersFromChangesetValue($value);
+        }
 
         return $this->renderStepEditionToString($steps);
     }
@@ -254,9 +258,11 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
      *
      * @return string html
      */
-    protected function fetchSubmitValue()
+    protected function fetchSubmitValue($submitted_values = [])
     {
-        $steps = [];
+        $submitted_values = $submitted_values ?: [];
+
+        $steps = $this->getStepsPresentersFromSubmittedValues($submitted_values);
 
         return $this->renderStepEditionToString($steps);
     }
@@ -562,5 +568,27 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
                 'json_encoded_empty_step' => json_encode($empty_step_presenter)
             ]
         );
+    }
+
+    /**
+     * @param array $submitted_values
+     *
+     * @return StepPresenter[]
+     */
+    private function getStepsPresentersFromSubmittedValues(array $submitted_values)
+    {
+        $steps = [];
+
+        $submitted_steps = $this->getValueFromSubmitOrDefault($submitted_values);
+        if ($submitted_steps) {
+            $steps = array_map(
+                function (Step $step) {
+                    return $this->getStepPresenter($step);
+                },
+                $this->transformSubmittedValuesIntoArrayOfStructuredSteps($submitted_steps)
+            );
+        }
+
+        return $steps;
     }
 }
