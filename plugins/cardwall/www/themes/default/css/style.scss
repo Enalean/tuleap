@@ -624,8 +624,64 @@ body.fullscreen {
 }
 
 .card-preview {
-    border-radius: 5px;
-    background: #FFFFBB;
-    border: 1px solid #CACACA;
-    box-shadow: 0px 1px 0px 0px rgba(217, 217, 217, 0.50);
+    overflow: hidden;
+    display: flex;
+    position: relative;
+    width: 360px;
+    margin: 0 0 10px;
+    border: 1px solid #E3E5ED;
+    border-radius: 3px;
+    background: #FFF;
+    cursor: pointer;
+}
+
+.card-preview-type {
+    flex: 0 0 auto;
+    width: 4px;
+    border-top-left-radius: 2px;
+    border-bottom-left-radius: 2px;
+    background: #5d5d5d;
+}
+
+.card-preview-content {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.card-preview-blindness {
+    position: absolute;
+    flex: 0 0 auto;
+    align-self: stretch;
+    right: 6px;
+    top: 40px;
+    width: 20px;
+    height: 100%;
+}
+
+.card-preview-id {
+    flex: 0 0 auto;
+    display: block;
+    padding: 10px;
+    color: #747474;
+    font-size: 12px;
+}
+
+.fa.card-preview-fa-clock-o {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #747474;
+    font-size: 12px;
+}
+
+.card-preview-title {
+    flex: 1 1 auto;
+    display: block;
+    margin: 0 0 30px;
+    padding: 10px 10px 10px 0;
+    font-size: 16px;
+    line-height: 18px;
+    text-align: center;
 }
