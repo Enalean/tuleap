@@ -99,10 +99,10 @@
             }
         },
         methods: {
-            setColor(color) {
+            setColor(color = '') {
                 this.color = color;
 
-                this.show_old_preview = this.isHexaColor;
+                this.show_old_preview = ! color.length || this.isHexaColor;
             },
             switchPalettes() {
                 this.is_old_palette_shown = ! this.is_old_palette_shown;

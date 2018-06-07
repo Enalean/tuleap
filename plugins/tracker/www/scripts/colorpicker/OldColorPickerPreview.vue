@@ -37,7 +37,7 @@
             previewImage() {
                 const base_url = '/themes/FlamingParrot/images/';
 
-                if (this.color) {
+                if (this.color.length) {
                     return base_url + 'blank16x16.png';
                 }
 
@@ -46,11 +46,11 @@
         },
         methods: {
             setTransparent() {
-                if (this.color) {
+                if (this.color.length) {
                     return;
                 }
 
-                this.$emit('color-update', null);
+                this.$emit('color-update');
             }
         }
     };
