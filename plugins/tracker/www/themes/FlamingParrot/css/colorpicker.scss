@@ -27,6 +27,7 @@
 }
 
 .colorpicker-transparent-preview {
+    display: block;
     margin: 10px 10px 5px;
     cursor: pointer;
 }
@@ -95,5 +96,6 @@
     margin: 5px 0 0;
     padding: 10px 10px 5px;
     border-top: 1px solid #ededed;
+    font-weight: normal;
     text-align: center;
 }

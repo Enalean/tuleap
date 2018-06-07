@@ -2,6 +2,7 @@
 @import '../../../scripts/node_modules/codemirror/addon/hint/show-hint';
 @import 'includes/cards';
 @import 'includes/field-bound-colors';
+@import "includes/columns-colors";
 
 /* {{{ New trackers */
 button[name=tracker_query_submit] {

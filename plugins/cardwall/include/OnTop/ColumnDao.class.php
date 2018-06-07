@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -63,7 +63,8 @@ class Cardwall_OnTop_ColumnDao extends DataAccessObject {
                 SET label = $label,
                     bg_red = $red,
                     bg_green = $green,
-                    bg_blue = $blue
+                    bg_blue = $blue,
+                    tlp_color_name = null
                 WHERE tracker_id = $tracker_id
                   AND id = $id";
         if ($this->update($sql)) {
@@ -101,5 +102,24 @@ class Cardwall_OnTop_ColumnDao extends DataAccessObject {
             }
         }
     }
+
+    public function saveTlpColor($tracker_id, $id, $label, $tlp_color_name)
+    {
+        $id             = $this->da->escapeInt($id);
+        $tracker_id     = $this->da->escapeInt($tracker_id);
+        $label          = $this->da->quoteSmart($label);
+        $tlp_color_name = $this->da->quoteSmart($tlp_color_name);
+
+        $sql = "UPDATE plugin_cardwall_on_top_column
+                SET label = $label,
+                    bg_red = null,
+                    bg_green = null,
+                    bg_blue = null,
+                    tlp_color_name = $tlp_color_name
+                WHERE tracker_id = $tracker_id
+                  AND id = $id";
+        if ($this->update($sql)) {
+            return $this->da->affectedRows();
+        }
+    }
 }
-?>

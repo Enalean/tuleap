@@ -20,9 +20,11 @@
 
 require_once dirname(__FILE__) .'/../../bootstrap.php';
 
-class Cardwall_OnTop_Config_ColumnFactoryTest extends TuleapTestCase {
+class Cardwall_OnTop_Config_ColumnFactoryTest extends TuleapTestCase
+{
 
-    public function setUp() {
+    public function setUp()
+    {
         $values = array();
         foreach (array('new', 'verified', 'fixed') as $i => $value) {
             $$value = mock('Tracker_FormElement_Field_List_Bind_StaticValue');
@@ -40,36 +42,49 @@ class Cardwall_OnTop_Config_ColumnFactoryTest extends TuleapTestCase {
         $this->factory      = new Cardwall_OnTop_Config_ColumnFactory($this->dao, $this->on_top_dao);
     }
 
-    public function itBuildColumnsFromTheDataStorage() {
+    public function itBuildColumnsFromTheDataStorage()
+    {
         stub($this->tracker)->getStatusField()->returns($this->status_field);
         stub($this->dao)->searchColumnsByTrackerId(42)->returnsDar(
-            array(
-                'id'       => 1,
-                'label'    => 'Todo',
-                'bg_red'   => '123',
-                'bg_green' => '12',
-                'bg_blue'  => '10',
-            ),
-            array(
-                'id'    => 2,
-                'label' => 'On Going',
-                'bg_red'   => null,
-                'bg_green' => null,
-                'bg_blue'  => null,
-            )
+            [
+                'id'             => 1,
+                'label'          => 'Todo',
+                'bg_red'         => '123',
+                'bg_green'       => '12',
+                'bg_blue'        => '10',
+                'tlp_color_name' => null
+            ], [
+                'id'             => 2,
+                'label'          => 'On Going',
+                'bg_red'         => null,
+                'bg_green'       => null,
+                'bg_blue'        => null,
+                'tlp_color_name' => null
+            ], [
+                'id'             => 2,
+                'label'          => 'Review',
+                'bg_red'         => null,
+                'bg_green'       => null,
+                'bg_blue'        => null,
+                'tlp_color_name' => 'peggy-pink'
+            ]
         );
         $columns = $this->factory->getDashboardColumns($this->tracker);
 
         $this->assertIsA($columns, 'Cardwall_OnTop_Config_ColumnFreestyleCollection');
-        $this->assertEqual(2, count($columns));
+        $this->assertEqual(3, count($columns));
         $this->assertEqual("On Going", $columns[1]->getLabel());
         $this->assertEqual("rgb(123, 12, 10)", $columns[0]->getBgcolor());
         $this->assertEqual("rgb(255,255,255)", $columns[0]->getFgcolor());
         $this->assertEqual("rgb(248,248,248)", $columns[1]->getBgcolor());
         $this->assertEqual("rgb(0,0,0)", $columns[1]->getFgcolor());
+
+        $this->assertEqual("Review", $columns[2]->getLabel());
+        $this->assertEqual("peggy-pink", $columns[2]->getBgcolor());
     }
 
-    public function itBuildsAnEmptyFreestyleCollection() {
+    public function itBuildsAnEmptyFreestyleCollection()
+    {
         stub($this->tracker)->getStatusField()->returns(null);
         stub($this->dao)->searchColumnsByTrackerId(42)->returnsEmptyDar();
         $columns = $this->factory->getDashboardColumns($this->tracker);
@@ -78,4 +93,3 @@ class Cardwall_OnTop_Config_ColumnFactoryTest extends TuleapTestCase {
         $this->assertEqual(0, count($columns));
     }
 }
-?>

@@ -38,6 +38,7 @@ use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\FRS\UploadedLinksDao;
 use Tuleap\FRS\UploadedLinksUpdater;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\Project\UserRemover;
@@ -615,6 +616,22 @@ class Planning_Controller extends BaseController
             $available_trackers,
             $planning
         );
+
+        $include_assets = new IncludeAssets(
+            __DIR__ . '/../../www/assets',
+            AGILEDASHBOARD_BASE_URL . '/assets'
+        );
+
+        $include_assets_css = new IncludeAssets(
+            __DIR__ . '/../../www/themes/FlamingParrot/assets',
+            AGILEDASHBOARD_BASE_URL . '/themes/FlamingParrot/assets'
+        );
+
+        $GLOBALS['HTML']->addStylesheet(
+            $include_assets_css->getFileURL('planning-admin-colorpicker.css')
+        );
+
+        $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('planning-admin.js'));
 
         return new Planning_FormPresenter(
             $this->planning_permissions_manager,

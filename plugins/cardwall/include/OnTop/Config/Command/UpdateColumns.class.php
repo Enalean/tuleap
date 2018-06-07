@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -42,18 +42,30 @@ class Cardwall_OnTop_Config_Command_UpdateColumns extends Cardwall_OnTop_Config_
         if ($request->get('column')) {
             foreach ($request->get('column') as $id => $column_definition) {
                 $column_label    = $column_definition['label'];
-                $column_bg_red   = 255;
-                $column_bg_green = 255;
-                $column_bg_blue  = 255;
-                if ( !empty($column_definition['bgcolor'])) {
-                    list($column_bg_red, $column_bg_green, $column_bg_blue) = ColorHelper::HexatoRGB($column_definition['bgcolor']);
-                }
 
-                if ( !empty($column_label) && $this->dao->save($this->tracker->getId(), $id, $column_label, $column_bg_red, $column_bg_green, $column_bg_blue)) {
+                $success = $this->saveColors($column_definition, $column_label, $id);
+
+                if ($success) {
                     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_column_changed', array($column_label)));
                 }
             }
         }
     }
+
+    private function saveColors($column_definition, $column_label, $id)
+    {
+        if (! isset($column_definition['bgcolor']) || ! isset($column_label)) {
+            return;
+        }
+
+        $color = $column_definition['bgcolor'];
+
+        if (Tracker_FormElement_Field_List_BindDecorator::isHexaColor($color)) {
+            list($column_bg_red, $column_bg_green, $column_bg_blue) = ColorHelper::HexatoRGB($color);
+
+            return $this->dao->save($this->tracker->getId(), $id, $column_label, $column_bg_red, $column_bg_green, $column_bg_blue);
+        }
+
+        return $this->dao->saveTlpColor($this->tracker->getId(), $id, $column_label, $color);
+    }
 }
-?>
