@@ -61,7 +61,7 @@ class SemanticCardPresenter
         $this->csrf_token                 = $token;
         $this->semantic_url               = $form_url;
         $this->tracker_shortname          = $tracker->getItemName();
-        $this->back_url                   = TRACKER_BASE_URL . http_build_query(
+        $this->back_url                   = TRACKER_BASE_URL . '/?' . http_build_query(
             [
                 'tracker' => $tracker->getId(),
                 'func'    => 'admin-semantic'
