@@ -1,4 +1,4 @@
-<div class="backlog-item-details-type-border"></div>
+<div class="backlog-item-details-type-border {{ details.backlog_item.color }}"></div>
 
 <div class="backlog-item-details-content">
     <div ng-if="details.backlog_item.accept.trackers.length > 0"
@@ -53,6 +53,8 @@
         url="{{ '/plugins/tracker/?aid=' + details.backlog_item.parent.id }}"
         filter-terms="{{ details.backlog_filter.terms }}"
     ></tuleap-card-link>
+
+    <div class="card-accessibility {{ details.backlog_item.background_color_name }}"></div>
 
     <div class="backlog-item-details-effort-container">
         <span ng-if="details.backlog_item.initial_effort"
