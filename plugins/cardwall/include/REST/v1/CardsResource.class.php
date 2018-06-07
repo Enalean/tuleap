@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,24 +19,26 @@
  */
 namespace Tuleap\Cardwall\REST\v1;
 
-use \Tuleap\REST\ProjectAuthorization;
-use \Tuleap\REST\Header;
-use \Luracast\Restler\RestException;
-use \Cardwall_SingleCardBuilder;
-use \Cardwall_OnTop_ConfigFactory;
-use \Cardwall_CardFields;
-use \TrackerFactory;
-use \Tracker_FormElementFactory;
-use \Tracker_ArtifactFactory;
-use \Tracker_Exception;
-use \Tracker_FormElement_InvalidFieldException;
-use \PlanningFactory;
-use \UserManager;
-use \PFUser;
-use \CardControllerBuilderRequestIdException;
-use \CardControllerBuilderRequestDataException;
-use \CardControllerBuilderRequestPlanningIdException;
-use \URLVerification;
+use CardControllerBuilderRequestDataException;
+use CardControllerBuilderRequestIdException;
+use CardControllerBuilderRequestPlanningIdException;
+use Cardwall_CardFields;
+use Cardwall_OnTop_ConfigFactory;
+use Cardwall_SingleCardBuilder;
+use Luracast\Restler\RestException;
+use PFUser;
+use PlanningFactory;
+use Tracker_ArtifactFactory;
+use Tracker_Exception;
+use Tracker_FormElement_InvalidFieldException;
+use Tracker_FormElementFactory;
+use TrackerFactory;
+use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
+use Tuleap\REST\Header;
+use Tuleap\REST\ProjectAuthorization;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorColorRetriever;
+use URLVerification;
+use UserManager;
 
 class CardsResource {
 
@@ -52,7 +54,8 @@ class CardsResource {
     /** @var Cardwall_SingleCardBuilder */
     private $single_card_builder;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->user_manager        = UserManager::instance();
         $this->formelement_factory = Tracker_FormElementFactory::instance();
         $this->config_factory      = new Cardwall_OnTop_ConfigFactory(
@@ -67,7 +70,10 @@ class CardsResource {
                 $this->formelement_factory
             ),
             Tracker_ArtifactFactory::instance(),
-            PlanningFactory::build()
+            PlanningFactory::build(),
+            new BackgroundColorBuilder(
+                new BindDecoratorColorRetriever()
+            )
         );
     }
 

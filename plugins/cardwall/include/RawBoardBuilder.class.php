@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorColorRetriever;
 
 /**
  * I'm responsible for building Cardwall_Board regardless of it's future use
@@ -53,11 +55,13 @@ class Cardwall_RawBoardBuilder {
         $column_autostack->setAutostack($columns, $column_preferences);
 
         $mapping_collection = $this->getMappingCollection($planning, $columns, $field_provider, $config);
+        $background_color_builder = new BackgroundColorBuilder(new BindDecoratorColorRetriever());
         $presenter_builder = new Cardwall_CardInCellPresenterBuilder(
             new Cardwall_CardInCellPresenterFactory($field_provider, $mapping_collection),
             new Cardwall_CardFields(UserManager::instance(), Tracker_FormElementFactory::instance()),
             $this->getDisplayPreferences($milestone, $user),
-            $user
+            $user,
+            $background_color_builder
         );
 
         $swimline_factory       = new Cardwall_SwimlineFactory($config, $field_provider);

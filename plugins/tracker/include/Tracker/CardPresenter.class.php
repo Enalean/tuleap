@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,8 +21,8 @@
 /**
  * A presenter of card linked to card.mustache
  */
-interface Tracker_CardPresenter {
-    
+interface Tracker_CardPresenter
+{
     /**
      * @return int
      */
@@ -32,7 +32,7 @@ interface Tracker_CardPresenter {
      * @var string
      */
     public function getTitle();
-    
+
     /**
      * @var array
      */
@@ -91,5 +91,11 @@ interface Tracker_CardPresenter {
      * @return string css compatible color
      */
     public function getAccentColor();
+
+    /**
+     * The value of the list field defined by the Card semantic
+     *
+     * @return string TLP color name
+     */
+    public function getBackgroundColorName();
 }
-?>

@@ -7,6 +7,9 @@
                 "www/themes/default/css/ieStyle.scss",
                 "www/themes/default/css/print.scss"
             ],
+            "watched_includes": [
+                "www/themes/default/css/**/_*.scss"
+            ],
             "target_dir": "www/themes/default/css"
         },
         "FlamingParrot": {

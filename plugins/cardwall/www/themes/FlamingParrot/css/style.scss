@@ -1,0 +1,86 @@
+/**
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+@import '../../default/css/style';
+
+@mixin definitions($main, $main-background) {
+    .cardwall-cell-header {
+        background-color: $main-background;
+    }
+}
+
+body {
+    @import 'variables-orange';
+    @include definitions($main, $main-background);
+
+    //scss-lint:disable SelectorFormat
+    &.FlamingParrot_Blue {
+        @import 'variables-blue';
+        @include definitions($main, $main-background);
+    }
+
+    &.FlamingParrot_Green {
+        @import 'variables-green';
+        @include definitions($main, $main-background);
+    }
+
+    &.FlamingParrot_BlueGrey {
+        @import 'variables-bluegrey';
+        @include definitions($main, $main-background);
+    }
+
+    &.FlamingParrot_Purple {
+        @import 'variables-purple';
+        @include definitions($main, $main-background);
+    }
+
+    &.FlamingParrot_Red {
+        @import 'variables-red';
+        @include definitions($main, $main-background);
+    }
+
+    &.FlamingParrot_DarkOrange {
+        @import 'variables-darkorange';
+        @include definitions($main, $main-background);
+    }
+
+    &.FlamingParrot_DarkBlue {
+        @import 'variables-darkblue';
+        @include definitions($main, $main-background);
+    }
+
+    &.FlamingParrot_DarkGreen {
+        @import 'variables-darkgreen';
+        @include definitions($main, $main-background);
+    }
+
+    &.FlamingParrot_DarkBlueGrey {
+        @import 'variables-darkbluegrey';
+        @include definitions($main, $main-background);
+    }
+
+    &.FlamingParrot_DarkPurple {
+        @import 'variables-darkpurple';
+        @include definitions($main, $main-background);
+    }
+
+    &.FlamingParrot_DarkRed {
+        @import 'variables-darkred';
+        @include definitions($main, $main-background);
+    }
+}

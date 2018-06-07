@@ -25,6 +25,7 @@ require_once 'autoload.php';
 use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
 use Tuleap\Cardwall\Semantic\BackgroundColorDao;
 use Tuleap\Cardwall\Semantic\BackgroundColorSemanticFactory;
+use Tuleap\Layout\IncludeAssets;
 
 /**
  * CardwallPlugin
@@ -199,21 +200,28 @@ class cardwallPlugin extends Plugin
         return $this->pluginInfo;
     }
 
-    public function cssfile($params) {
-        if ($this->canIncludeStylsheets()) {
-            echo '<link rel="stylesheet" type="text/css" href="'. $this->getThemePath() .'/css/style.css" />';
+    public function cssfile($params)
+    {
+        if ($this->canIncludeStylesheets()) {
+            $theme_include_assets = new IncludeAssets(
+                __DIR__ . '/../../../src/www/assets/cardwall/FlamingParrot',
+                '/assets/cardwall/FlamingParrot'
+            );
+            $css_file_url         = $theme_include_assets->getFileURL('style.css');
+
+            echo '<link rel="stylesheet" type="text/css" href="' . $css_file_url . '" />';
         }
     }
 
     /** @see \Event::BURNING_PARROT_GET_STYLESHEETS */
     public function burning_parrot_get_stylesheets(array $params)
     {
-        if ($this->canIncludeStylsheets()) {
+        if ($this->canIncludeStylesheets()) {
             $params['stylesheets'][] = $this->getThemePath().'/css/style.css';
         }
     }
 
-    private function canIncludeStylsheets()
+    private function canIncludeStylesheets()
     {
         return $this->isAgileDashboardOrTrackerUrl()
             || strpos($_SERVER['REQUEST_URI'], '/my/') === 0

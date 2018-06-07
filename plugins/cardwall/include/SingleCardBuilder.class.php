@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2013. All rights reserved.
+ * Copyright Enalean (c) 2013 - 2018. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -22,8 +22,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Cardwall_SingleCardBuilder {
+use Tuleap\Cardwall\BackgroundColor\BackgroundColor;
+use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
+use Tuleap\Cardwall\Semantic\BackgroundColorFieldRetriever;
 
+class Cardwall_SingleCardBuilder
+{
     /** @var Cardwall_OnTop_ConfigFactory */
     private $config_factory;
 
@@ -35,17 +39,23 @@ class Cardwall_SingleCardBuilder {
 
     /** @var Tracker_ArtifactFactory */
     private $artifact_factory;
+    /**
+     * @var BackgroundColorFieldRetriever
+     */
+    private $background_color_builder;
 
     public function __construct(
         Cardwall_OnTop_ConfigFactory $config_factory,
         Cardwall_CardFields $card_fields,
         Tracker_ArtifactFactory $artifact_factory,
-        PlanningFactory $planning_factory
-        ) {
-        $this->config_factory      = $config_factory;
-        $this->card_fields         = $card_fields;
-        $this->artifact_factory    = $artifact_factory;
-        $this->planning_factory    = $planning_factory;
+        PlanningFactory $planning_factory,
+        BackgroundColorBuilder $background_color_builder
+    ) {
+        $this->config_factory           = $config_factory;
+        $this->card_fields              = $card_fields;
+        $this->artifact_factory         = $artifact_factory;
+        $this->planning_factory         = $planning_factory;
+        $this->background_color_builder = $background_color_builder;
     }
 
     /**
@@ -53,20 +63,37 @@ class Cardwall_SingleCardBuilder {
      *
      * @param Codendi_Request $request
      *
-     * @return Cardwall_CardController
+     * @return Cardwall_SingleCard
      *
      * @throws Exception
      */
-    public function getSingleCard(PFUser $user, $artifact_id, $planning_id) {
-        $card_artifact   = $this->getArtifact($artifact_id);
-        $config          = $this->getConfig($planning_id);
-        $field_provider  = $this->getFieldRetriever($config);
-        $columns         = $config->getDashboardColumns();
-        $display_preferences = new Cardwall_UserPreferences_UserPreferencesDisplayUser(Cardwall_UserPreferences_UserPreferencesDisplayUser::DISPLAY_AVATARS);
+    public function getSingleCard(PFUser $user, $artifact_id, $planning_id)
+    {
+        $card_artifact       = $this->getArtifact($artifact_id);
+        $config              = $this->getConfig($planning_id);
+        $field_provider      = $this->getFieldRetriever($config);
+        $columns             = $config->getDashboardColumns();
+        $display_preferences = new Cardwall_UserPreferences_UserPreferencesDisplayUser(
+            Cardwall_UserPreferences_UserPreferencesDisplayUser::DISPLAY_AVATARS
+        );
+
+        $semantic_card_fields = Cardwall_Semantic_CardFields::load($card_artifact->getTracker());
+        $background_color     = $this->background_color_builder->build(
+            $semantic_card_fields,
+            $card_artifact,
+            $user
+        );
 
         $presenter_factory = $this->getCardInCellPresenterFactory($config, $card_artifact, $field_provider, $columns);
 
-        $card_in_cell_presenter = $this->getCardInCellPresenter($presenter_factory, $user, $card_artifact, $this->card_fields, $display_preferences);
+        $card_in_cell_presenter = $this->getCardInCellPresenter(
+            $presenter_factory,
+            $user,
+            $card_artifact,
+            $this->card_fields,
+            $display_preferences,
+            $background_color
+        );
 
         return new Cardwall_SingleCard(
             $card_in_cell_presenter,
@@ -80,14 +107,29 @@ class Cardwall_SingleCardBuilder {
     /**
      * @return Cardwall_CardInCellPresenter
      */
-    protected function getCardInCellPresenter($presenter_factory, PFUser $user, Tracker_Artifact $artifact, Cardwall_CardFields $card_fields, Cardwall_UserPreferences_UserPreferencesDisplayUser $display_preferences) {
-        return $presenter_factory->getCardInCellPresenter($this->getCardPresenter($user, $artifact, $card_fields, $display_preferences));
+    protected function getCardInCellPresenter(
+        Cardwall_CardInCellPresenterFactory $presenter_factory,
+        PFUser $user,
+        Tracker_Artifact $artifact,
+        Cardwall_CardFields $card_fields,
+        Cardwall_UserPreferences_UserPreferencesDisplayUser $display_preferences,
+        BackgroundColor $background_color
+    ) {
+        return $presenter_factory->getCardInCellPresenter(
+            $this->getCardPresenter($user, $artifact, $card_fields, $display_preferences, $background_color)
+        );
     }
 
     /**
      * @return Cardwall_CardPresenter
      */
-    private function getCardPresenter(PFUser $user, Tracker_Artifact $artifact, Cardwall_CardFields $card_fields, Cardwall_UserPreferences_UserPreferencesDisplayUser $display_preferences) {
+    private function getCardPresenter(
+        PFUser $user,
+        Tracker_Artifact $artifact,
+        Cardwall_CardFields $card_fields,
+        Cardwall_UserPreferences_UserPreferencesDisplayUser $display_preferences,
+        BackgroundColor $background_color
+    ) {
         $parent_artifact = $artifact->getParent($user);
 
         return new Cardwall_CardPresenter(
@@ -97,6 +139,7 @@ class Cardwall_SingleCardBuilder {
             $display_preferences,
             null,
             $artifact->getAllowedChildrenTypesForUser($user),
+            $background_color,
             $parent_artifact
         );
     }
@@ -141,6 +184,14 @@ class Cardwall_SingleCardBuilder {
         );
     }
 
+    /**
+     * @param Cardwall_OnTop_Config                                $config
+     * @param Tracker_Artifact                                     $artifact
+     * @param Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider
+     * @param Cardwall_OnTop_Config_ColumnCollection               $columns
+     *
+     * @return Cardwall_CardInCellPresenterFactory
+     */
     private function getCardInCellPresenterFactory(Cardwall_OnTop_Config $config, Tracker_Artifact $artifact, Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider, Cardwall_OnTop_Config_ColumnCollection $columns) {
         $field = $field_provider->getField($artifact->getTracker());
         $status_fields[$field->getId()] = $field;
@@ -150,5 +201,3 @@ class Cardwall_SingleCardBuilder {
         );
     }
 }
-
-?>
