@@ -168,7 +168,11 @@ class ExecutionsResource
 
         $this->steps_results_updater = new StepsResultsUpdater(
             $this->artifact_updater,
-            new StepsResultsChangesBuilder($this->formelement_factory, $this->execution_dao)
+            new StepsResultsChangesBuilder(
+                $this->formelement_factory,
+                $this->execution_dao,
+                new TestStatusAccordingToStepsStatusChangesBuilder()
+            )
         );
     }
 

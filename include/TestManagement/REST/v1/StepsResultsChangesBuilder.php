@@ -40,13 +40,19 @@ class StepsResultsChangesBuilder
      * @var ExecutionDao
      */
     private $execution_dao;
+    /**
+     * @var TestStatusAccordingToStepsStatusChangesBuilder
+     */
+    private $test_status_changes_builder;
 
     public function __construct(
         Tracker_FormElementFactory $form_element_factory,
-        ExecutionDao $execution_dao
+        ExecutionDao $execution_dao,
+        TestStatusAccordingToStepsStatusChangesBuilder $test_status_changes_builder
     ) {
-        $this->form_element_factory = $form_element_factory;
-        $this->execution_dao        = $execution_dao;
+        $this->form_element_factory        = $form_element_factory;
+        $this->execution_dao               = $execution_dao;
+        $this->test_status_changes_builder = $test_status_changes_builder;
     }
 
     /**
@@ -89,7 +95,9 @@ class StepsResultsChangesBuilder
         }
 
         $changeset_value = $definition_artifact->getValue($definition_field, $definition_changeset);
-        if (! $changeset_value || count($changeset_value->getValue()) === 0) {
+        /** @var Step[] $steps_defined_in_test */
+        $steps_defined_in_test = $changeset_value ? $changeset_value->getValue() : [];
+        if (count($steps_defined_in_test) === 0) {
             throw new RestException(
                 400,
                 "There isn't any steps defined in the test"
@@ -99,25 +107,34 @@ class StepsResultsChangesBuilder
         $submitted_steps_results = $this->getSubmittedStepsResultsIndexedById($submitted_steps_results);
         $existing_steps_results  = $this->getExistingStepsResultsIndexedById($execution_artifact, $execution_field);
 
-        $changes = [];
-        /** @var Step $step */
-        foreach ($changeset_value->getValue() as $step) {
+        $steps_changes = [];
+        foreach ($steps_defined_in_test as $step) {
             $id = $step->getId();
             if (isset($existing_steps_results[$id])) {
-                $changes[$id] = $existing_steps_results[$id]->getStatus();
+                $steps_changes[$id] = $existing_steps_results[$id]->getStatus();
             }
             if (isset($submitted_steps_results[$id])) {
-                $changes[$id] = $submitted_steps_results[$id];
+                $steps_changes[$id] = $submitted_steps_results[$id];
             }
         }
 
         $value_representation           = new ArtifactValuesRepresentation();
         $value_representation->field_id = (int) $execution_field->getId();
         $value_representation->value    = [
-            StepExecution::UPDATE_VALUE_KEY => $changes
+            StepExecution::UPDATE_VALUE_KEY => $steps_changes
         ];
 
-        return [$value_representation];
+        $changes = [$value_representation];
+
+        $this->enforceTestStatusAccordingToStepsStatus(
+            $execution_artifact,
+            $user,
+            $changes,
+            $steps_defined_in_test,
+            $steps_changes
+        );
+
+        return $changes;
     }
 
     /**
@@ -178,6 +195,15 @@ class StepsResultsChangesBuilder
         );
     }
 
+    private function getStatusField(Tracker_Artifact $execution_artifact, PFUser $user)
+    {
+        return $this->form_element_factory->getUsedFieldByNameForUser(
+            $execution_artifact->getTrackerId(),
+            ExecutionRepresentation::FIELD_STATUS,
+            $user
+        );
+    }
+
     private function getDefinitionChangeset(Tracker_Artifact $execution_artifact, Tracker_Artifact $definition_artifact)
     {
         $rows = $this->execution_dao->searchDefinitionsChangesetIdsForExecution([$execution_artifact->getId()]);
@@ -188,5 +214,25 @@ class StepsResultsChangesBuilder
         }
 
         return $definition_changeset;
+    }
+
+    private function enforceTestStatusAccordingToStepsStatus(
+        Tracker_Artifact $execution_artifact,
+        PFUser $user,
+        array &$changes,
+        array $steps_defined_in_test,
+        array $steps_changes
+    ) {
+        $status_field = $this->getStatusField($execution_artifact, $user);
+        if (! $status_field) {
+            return;
+        }
+
+        $this->test_status_changes_builder->enforceTestStatusAccordingToStepsStatus(
+            $status_field,
+            $changes,
+            $steps_defined_in_test,
+            $steps_changes
+        );
     }
 }

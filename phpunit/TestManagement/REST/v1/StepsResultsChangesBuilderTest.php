@@ -26,6 +26,7 @@ use PFUser;
 use PHPUnit\Framework\TestCase;
 use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
+use Tracker_FormElement_Field_List;
 use Tracker_FormElementFactory;
 use Tuleap\TestManagement\Campaign\Execution\ExecutionDao;
 use Tuleap\TestManagement\Step\Definition\Field\StepDefinition;
@@ -53,6 +54,9 @@ class StepsResultsChangesBuilderTest extends TestCase
     private $definition_changeset;
     private $definition_changeset_value;
 
+    private $test_status_builder;
+    private $execution_status_field;
+
     public function setUp()
     {
         $this->user                       = $this->createMock(PFUser::class);
@@ -61,12 +65,15 @@ class StepsResultsChangesBuilderTest extends TestCase
         $this->form_element_factory       = $this->createMock(Tracker_FormElementFactory::class);
         $this->execution_dao              = $this->createMock(ExecutionDao::class);
         $this->execution_field            = $this->createMock(StepExecution::class);
+        $this->execution_status_field     = $this->createMock(Tracker_FormElement_Field_List::class);
         $this->definition_field           = $this->createMock(StepDefinition::class);
         $this->definition_changeset       = $this->createMock(Tracker_Artifact_Changeset::class);
         $this->definition_changeset_value = $this->createMock(StepDefinitionChangesetValue::class);
+        $this->test_status_builder        = $this->createMock(TestStatusAccordingToStepsStatusChangesBuilder::class);
         $this->builder                    = new StepsResultsChangesBuilder(
             $this->form_element_factory,
-            $this->execution_dao
+            $this->execution_dao,
+            $this->test_status_builder
         );
 
         $this->execution_artifact->method('getTrackerId')->willReturn($this->execution_tracker_id);
@@ -111,6 +118,39 @@ class StepsResultsChangesBuilderTest extends TestCase
 
         $expected = [$value_representation];
         $this->assertEquals($expected, $this->getChanges($submitted_steps_results));
+    }
+
+    public function testThatTestStatusBuilderIsCalled()
+    {
+        $map = [
+            [$this->execution_tracker_id, 'steps_results', $this->user, $this->execution_field],
+            [$this->execution_tracker_id, 'status', $this->user, $this->execution_status_field],
+            [$this->definition_tracker_id, 'steps', $this->user, $this->definition_field]
+        ];
+
+        $this->form_element_factory->method('getUsedFieldByNameForUser')->will($this->returnValueMap($map));
+
+        $this->execution_dao->method('searchDefinitionsChangesetIdsForExecution')->willReturn([]);
+
+        $this->definition_artifact->method('getLastChangeset')->willReturn($this->definition_changeset);
+
+        $value_map = [
+            [$this->definition_field, $this->definition_changeset, $this->definition_changeset_value]
+        ];
+        $this->definition_artifact->method('getValue')->will($this->returnValueMap($value_map));
+
+        $step1 = $this->getStep(1);
+        $step2 = $this->getStep(2);
+        $this->definition_changeset_value->method('getValue')->willReturn([$step1, $step2]);
+
+        $submitted_steps_results = [
+            $this->getStepResultRepresentation(1, 'passed'),
+            $this->getStepResultRepresentation(2, 'blocked'),
+        ];
+
+        $this->test_status_builder->expects($this->once())->method('enforceTestStatusAccordingToStepsStatus');
+
+        $this->getChanges($submitted_steps_results);
     }
 
     public function testItIgnoresSubmittedStepsThatAreNotPartOfDefinition()
