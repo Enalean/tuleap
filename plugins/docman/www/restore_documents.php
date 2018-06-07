@@ -36,6 +36,11 @@ if ($p && $pm->isPluginAvailable($p)) {
     $GLOBALS['Response']->redirect('/');
 }
 
+$current_user = $request->getCurrentUser();
+if (! $current_user->isSuperUser()) {
+    $GLOBALS['Response']->redirect('/');
+}
+
 $func    = $request->getValidated('func', new Valid_WhiteList('func', array('confirm_restore_item', 'confirm_restore_version')));
 $groupId = $request->getValidated('group_id', 'uint', 0);
 $id      = $request->getValidated('id', 'uint', 0);
