@@ -73,7 +73,7 @@ if ($action == 'activate') {
 
 $fields_factory  = new DescriptionFieldsFactory(new DescriptionFieldsDao());
 $field_builder   = new ProjectDescriptionFieldBuilder($fields_factory);
-$project_builder = new PendingProjectBuilder($project_manager, UserManager::instance(), $field_builder);
+$project_builder = new PendingProjectBuilder($project_manager, UserManager::instance(), $field_builder, new \Tuleap\Trove\TroveCatCollectionRetriever(new TroveCatDao()));
 $project_list    = $project_builder->build();
 
 $siteadmin = new AdminPageRenderer();

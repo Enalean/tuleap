@@ -58,6 +58,19 @@
                                 </p>
                             </div>
                         {{/ access_presenter }}
+                        {{# trovecats }}
+                            {{# has_categories }}
+                            <div class="tlp-property pending-project-trovecats">
+                                <label class="tlp-label">{{# gettext }}Trove categories{{/ gettext }}</label>
+                                <p>
+                                    <i class="fa fa-tags softwaremap-list-results-trovecat-icon"></i>
+                                    {{# categories }}
+                                        {{ name }}{{^ is_last }}, {{/ is_last }}
+                                    {{/categories}}
+                                </p>
+                            </div>
+                            {{/ has_categories }}
+                        {{/ trovecats }}
                     </section>
                     {{# has_custom_fields }}
                         <section class="tlp-pane-section">
@@ -78,12 +91,14 @@
                             <div class="tlp-property">
                                 <label class="tlp-label">{{ submitted_by_label }}</label>
                                 <div class="pending-project-name-and-avatar">
+                                    <a href="/admin/usergroup.php?user_id={{ user_id }}">
                                     <div class="tlp-avatar pending-project-avatar">
                                         {{# user_has_avatar }}
                                             <img src="{{ user_avatar }}">
                                         {{/ user_has_avatar }}
                                     </div>
                                     {{ user_name }}
+                                    </a>
                                 </div>
                             </div>
                             <div class="tlp-property">

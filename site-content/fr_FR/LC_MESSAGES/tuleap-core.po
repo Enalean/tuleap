@@ -10,6 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 2.0.6\n"
 
 #, php-format
 msgid ""
@@ -1001,6 +1002,9 @@ msgstr "Suivi"
 
 msgid "Trackers v3 import"
 msgstr "Import outils de suivi v3"
+
+msgid "Trove categories"
+msgstr "Catégories"
 
 msgid "Unable to fetch the latest activities of the project"
 msgstr "Impossible de récupérer les dernières activités du projet"
