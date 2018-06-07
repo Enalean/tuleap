@@ -211,7 +211,7 @@ final class CompatPDODataAccessResult implements LegacyDataAccessResultInterface
      */
     public function key()
     {
-        return $this->result_iterator->current();
+        return $this->result_iterator->key();
     }
 
     /**
