@@ -45,9 +45,10 @@ class TroveCatListPresenter
     public $delete_trove_cat;
     public $alert_description_delete_modal;
     public $alert_description_delete_modal_next;
+    public $navbar;
 
 
-    public function __construct(array $trovecats, CSRFSynchronizerToken $csrf_token)
+    public function __construct($navbar, array $trovecats, CSRFSynchronizerToken $csrf_token)
     {
         $this->title                    = $GLOBALS['Language']->getText('admin_trove_cat_list', 'title');
         $this->header_name              = $GLOBALS['Language']->getText('admin_trove_cat_list', 'header_name');
@@ -82,5 +83,6 @@ class TroveCatListPresenter
 
         $this->trovecats  = $trovecats;
         $this->csrf_token = $csrf_token;
+        $this->navbar = $navbar;
     }
 }

@@ -20,6 +20,8 @@
 
 namespace Tuleap\Project\Admin;
 
+use Tuleap\Admin\ProjectCreationNavBarPresenter;
+
 class WebhooksPresenter
 {
     public $title;
@@ -56,9 +58,11 @@ class WebhooksPresenter
     public $update_webhook;
     public $button_delete;
     public $delete_webhook;
+    public $navbar;
 
-    public function __construct($title, array $webhooks, \CSRFSynchronizerToken $csrf_token)
+    public function __construct(ProjectCreationNavBarPresenter $navbar, $title, array $webhooks, \CSRFSynchronizerToken $csrf_token)
     {
+        $this->navbar = $navbar;
         $this->title = $title;
 
         $this->webhooks     = $webhooks;

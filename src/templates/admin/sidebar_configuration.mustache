@@ -6,20 +6,6 @@
     <nav class="admin-sidebar-section-nav">
         <a href="/admin/forgeaccess.php" class="admin-sidebar-section-nav-item">{{ configuration_nav_global_access_rights }}</a>
         <a href="/admin/homepage.php" class="admin-sidebar-section-nav-item">{{ configuration_nav_homepage }}</a>
-        <a href="/admin/password_policy/" class="admin-sidebar-section-nav-item">{{# gettext }}Password policy{{/ gettext }}</a>
-
-        {{# are_trove_categories_enabled }}
-            <a href="/admin/trove/trove_cat_list.php" class="admin-sidebar-section-nav-item">{{ configuration_nav_categories }}</a>
-        {{/ are_trove_categories_enabled }}
-
-        <a href="/admin/descfields/desc_fields_edit.php" class="admin-sidebar-section-nav-item">{{ configuration_nav_project_fields }}</a>
-        <a href="/admin/project-creation/moderation" class="admin-sidebar-section-nav-item">{{# gettext }}Project creation settings{{/ gettext }}</a>
-        <a href="/project/admin/reference.php?group_id=100" class="admin-sidebar-section-nav-item">{{ configuration_nav_predefined_references }}</a>
-
-        {{# additional_tracker_entries }}
-            {{{ . }}}
-        {{/ additional_tracker_entries }}
-
         <a href="/admin/svn/index.php?pane=index" class="admin-sidebar-section-nav-item">{{ configuration_nav_svn }}</a>
     </nav>
 </section>

@@ -6,7 +6,8 @@
         </h1>
         <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">&times;</div>
     </div>
-    <form action="/admin/trove/trove_cat_list.php?action=delete" method="POST">
+    <form method="post">
+        <input type="hidden" name="action" value="delete">
         {{# csrf_token }}
             {{> csrf_token_input }}
         {{/ csrf_token }}

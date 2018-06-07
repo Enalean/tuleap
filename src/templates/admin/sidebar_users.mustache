@@ -13,6 +13,7 @@
     <nav class="admin-sidebar-section-nav">
         <a href="/admin/userlist.php" class="admin-sidebar-section-nav-item">{{ users_nav_all_users }}</a>
         <a href="/admin/register_admin.php?page=admin_creation" class="admin-sidebar-section-nav-item">{{ users_nav_new_user }}</a>
+        <a href="/admin/password_policy/" class="admin-sidebar-section-nav-item">{{# gettext }}Password policy{{/ gettext }}</a>
         {{# users_need_approval}}
             <a href="/admin/approve_pending_users.php?page=pending" class="admin-sidebar-section-nav-item {{# isTherePendingUsers }}tlp-text-warning{{/ isTherePendingUsers }}">
                 {{ users_nav_pending_users }}

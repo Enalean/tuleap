@@ -20,6 +20,8 @@
 
 namespace Tuleap\Project\Admin\DescriptionFields;
 
+use Tuleap\Admin\ProjectCreationNavBarPresenter;
+
 class FieldsListPresenter
 {
     const TEMPLATE = 'description_fields_list';
@@ -44,10 +46,12 @@ class FieldsListPresenter
     public $csrf_token;
 
     public function __construct(
+        ProjectCreationNavBarPresenter $navbar,
         $title,
         array $description_fields,
         \CSRFSynchronizerToken $csrf_token
     ) {
+        $this->navbar             = $navbar;
         $this->title              = $title;
         $this->description_fields = $description_fields;
 

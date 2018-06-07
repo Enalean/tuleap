@@ -21,19 +21,36 @@
 
 namespace Tuleap\Admin;
 
+use Exception;
+
 class ProjectCreationNavBarPresenter
 {
     public $moderation_is_active = false;
     public $templates_is_active  = false;
+    public $webhooks_is_active   = false;
+    public $fields_is_active     = false;
+    public $categories_is_active = false;
+
+    public $are_trove_categories_enabled = false;
 
     public function __construct($who_is_active)
     {
+        $this->are_trove_categories_enabled = \ForgeConfig::get('sys_use_trove') != 0;
         switch ($who_is_active) {
             case 'moderation':
                 $this->moderation_is_active = true;
                 break;
             case 'templates':
                 $this->templates_is_active = true;
+                break;
+            case 'webhooks':
+                $this->webhooks_is_active = true;
+                break;
+            case 'fields':
+                $this->fields_is_active = true;
+                break;
+            case 'categories':
+                $this->categories_is_active = true;
                 break;
             default:
                 throw new Exception('Must be implemented');

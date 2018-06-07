@@ -592,9 +592,9 @@ admin_desc_fields	desc_line	Chaîne de caractères
 admin_desc_fields	desc_text	Zone de texte
 admin_desc_fields	rank	Rang
 admin_desc_fields	rank_on_screen	Rang à l'écran
-admin_desc_fields	ins_desc_field_fail	L'ajout du champ a echoué. Veuillez contacter admin@$1 $2.
-admin_desc_fields	del_desc_field_fail	La suppression du champ a échoué. Veuillez contacter admin@$1 $2.
-admin_desc_fields	update_required_desc_field_fail	La mise à jour du champ a echoué. Veuillez contacter admin@$1 $2.
+admin_desc_fields	ins_desc_field_fail	L'ajout du champ a echoué.
+admin_desc_fields	del_desc_field_fail	La suppression du champ a échoué.
+admin_desc_fields	update_required_desc_field_fail	La mise à jour du champ a echoué.
 admin_desc_fields	update_desc_field_fail	La mise à jour du champ a echoué ou aucune donnée n'a été modifiée. $1.
 admin_desc_fields	info_missed	Informations manquantes. Veuillez remplir tous les champs obligatoires.
 admin_desc_fields	info_rank_noint	Le rang doit être une valeur numérique.
