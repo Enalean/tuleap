@@ -24,19 +24,24 @@ use GitRepository;
 use Tuleap\PullRequest\GitExec;
 use Tuleap\PullRequest\PullRequest;
 
-class GitPullRequestReferenceCreator
+class GitPullRequestReferenceUpdater
 {
     /**
      * @var GitPullRequestReferenceDAO
      */
     private $dao;
+    /**
+     * @var GitPullRequestReferenceCreator
+     */
+    private $reference_creator;
 
-    public function __construct(GitPullRequestReferenceDAO $dao)
+    public function __construct(GitPullRequestReferenceDAO $dao, GitPullRequestReferenceCreator $reference_creator)
     {
-        $this->dao = $dao;
+        $this->dao               = $dao;
+        $this->reference_creator = $reference_creator;
     }
 
-    public function createPullRequestReference(
+    public function updatePullRequestReference(
         PullRequest $pull_request,
         GitExec $executor_repository_source,
         GitExec $executor_repository_destination,
@@ -46,22 +51,20 @@ class GitPullRequestReferenceCreator
             throw new \LogicException('Destination repository ID does not match the one of the PR');
         }
 
-        $reference_id = $this->dao->createGitReferenceForPullRequest($pull_request->getId());
-        while ($this->isReferenceAlreadyTaken($executor_repository_destination, $reference_id)) {
-            $reference_id = $this->dao->updateGitReferenceToNextAvailableOne($pull_request->getId());
+        $reference_row = $this->dao->getReferenceByPullRequestId($pull_request->getId());
+        if (empty($reference_row)) {
+            $this->reference_creator->createPullRequestReference(
+                $pull_request,
+                $executor_repository_source,
+                $executor_repository_destination,
+                $repository_destination
+            );
+            return;
         }
 
         $executor_repository_source->push(
-            escapeshellarg('gitolite@gl-adm:' . $repository_destination->getPath()) . ' ' .
-                escapeshellarg($pull_request->getSha1Src()) . ':' . escapeshellarg(GitPullRequestReference::PR_NAMESPACE . $reference_id . '/head')
+            '--force ' . escapeshellarg('gitolite@gl-adm:' . $repository_destination->getPath()) . ' ' .
+            escapeshellarg($pull_request->getSha1Src()) . ':' . escapeshellarg(GitPullRequestReference::PR_NAMESPACE . $reference_row['reference_id'] . '/head')
         );
-    }
-
-    /**
-     * @return bool
-     */
-    private function isReferenceAlreadyTaken(GitExec $executor, $reference_id)
-    {
-        return count($executor->getReferencesFromPattern(GitPullRequestReference::PR_NAMESPACE . $reference_id)) > 0;
     }
 }
