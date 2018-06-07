@@ -932,6 +932,9 @@ msgstr ""
 msgid "Trackers v3 import"
 msgstr ""
 
+msgid "Trove categories"
+msgstr ""
+
 msgid "Unable to fetch the latest activities of the project"
 msgstr ""
 

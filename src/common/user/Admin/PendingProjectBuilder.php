@@ -25,6 +25,7 @@ use Project;
 use ProjectManager;
 use Tuleap\Project\Admin\DescriptionFields\ProjectDescriptionFieldBuilder;
 use Tuleap\Project\ProjectAccessPresenter;
+use Tuleap\Trove\TroveCatCollectionRetriever;
 use UserManager;
 
 class PendingProjectBuilder
@@ -41,15 +42,21 @@ class PendingProjectBuilder
      * @var ProjectDescriptionFieldBuilder
      */
     private $field_builder;
+    /**
+     * @var TroveCatCollectionRetriever
+     */
+    private $trove_cat_collection_retriever;
 
     public function __construct(
         ProjectManager $project_manager,
         UserManager $user_manager,
-        ProjectDescriptionFieldBuilder $field_builder
+        ProjectDescriptionFieldBuilder $field_builder,
+        TroveCatCollectionRetriever $trove_cat_collection_retriever
     ) {
-        $this->project_manager = $project_manager;
-        $this->user_manager    = $user_manager;
-        $this->field_builder   = $field_builder;
+        $this->project_manager                = $project_manager;
+        $this->user_manager                   = $user_manager;
+        $this->field_builder                  = $field_builder;
+        $this->trove_cat_collection_retriever = $trove_cat_collection_retriever;
     }
 
     /**
@@ -63,6 +70,7 @@ class PendingProjectBuilder
         foreach ($this->project_manager->getAllPendingProjects() as $project) {
             $admin         = $this->getProjectAdminWhichIsFirstProjectMember($project);
             $custom_fields = $this->field_builder->build($project);
+            $trovecats     = $this->trove_cat_collection_retriever->getCollection($project->getID());
 
             $project_list[] = array(
                 'project_id'          => $project->getID(),
@@ -71,13 +79,15 @@ class PendingProjectBuilder
                 'project_is_public'   => $project->isPublic(),
                 'project_get_access'  => $project->getAccess(),
                 'project_description' => $project->getDescription(),
+                'user_id'             => $admin->getId(),
                 'user_name'           => $admin->getRealName(),
                 'user_has_avatar'     => $admin->hasAvatar(),
                 'user_avatar'         => $admin->getAvatarUrl(),
                 'date_creation'       => DateHelper::formatForLanguage($GLOBALS['Language'], $project->getStartDate()),
                 'project_fields'      => $custom_fields,
-                'has_custom_fields'   => $this-> hasCustomFields($custom_fields),
-                'access_presenter'    => new ProjectAccessPresenter($project->getAccess())
+                'has_custom_fields'   => $this->hasCustomFields($custom_fields),
+                'access_presenter'    => new ProjectAccessPresenter($project->getAccess()),
+                'trovecats'           => $trovecats,
             );
 
             $projects_id[] = $project->getID();
