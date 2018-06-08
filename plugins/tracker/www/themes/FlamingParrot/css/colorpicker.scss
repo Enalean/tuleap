@@ -34,16 +34,19 @@
 .colorpicker-row {
     line-height: 0;
     text-align: center;
+
+    > .colorpicker-circular-color:first-child {
+        margin: 12px 12px 12px 0;
+    }
+
+    > .colorpicker-circular-color:last-child {
+        margin: 12px 0 12px 12px;
+    }
 }
 
 .old-colorpicker-palette {
     width: 250px;
     margin: 10px 10px 0;
-}
-
-.colorpicker-palette {
-    width: 200px;
-    padding: 15px 0;
 }
 
 .colorpicker-squared-shade {
@@ -60,12 +63,15 @@
     height: 15px;
     margin: 12px;
     border-radius: 50%;
+    text-align: center;
     vertical-align: middle;
     cursor: pointer;
 }
 
 .colorpicker-circular-color::before {
-    vertical-align: middle;
+    display: inline-block;
+    position: relative;
+    top: 1px;
 }
 
 @each $color-name, $colors in $tlp-swatch-color-map {

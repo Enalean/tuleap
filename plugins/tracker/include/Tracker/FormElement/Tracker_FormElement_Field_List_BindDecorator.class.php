@@ -122,8 +122,8 @@ class Tracker_FormElement_Field_List_BindDecorator
 
     private static function getColorPickerMountPoint($decorator_id, $value_id, $current_color)
     {
-        $switch_old_palette_label     = dgettext('tuleap-tracker', 'Switch to old color picker');
-        $switch_default_palette_label = dgettext('tuleap-tracker', 'Switch to default color picker');
+        $switch_old_palette_label     = dgettext('tuleap-tracker', 'Switch to old colors');
+        $switch_default_palette_label = dgettext('tuleap-tracker', 'Switch to default colors');
 
         return '
             <div class="vue-colorpicker-mount-point"
