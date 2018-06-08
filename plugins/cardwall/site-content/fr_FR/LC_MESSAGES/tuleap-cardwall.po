@@ -25,9 +25,6 @@ msgstr "Choisissez un champ pour définir la couleur de fond des cartes"
 msgid "Choose a field..."
 msgstr "Coisissez un champ..."
 
-msgid "Example"
-msgstr "Exemple"
-
 msgid "Field not found"
 msgstr "Champ non trouvé"
 

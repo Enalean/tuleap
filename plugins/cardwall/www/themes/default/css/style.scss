@@ -679,9 +679,30 @@ body.fullscreen {
 .card-preview-title {
     flex: 1 1 auto;
     display: block;
-    margin: 0 0 30px;
+    margin: 0 0 30px 20px;
     padding: 10px 10px 10px 0;
     font-size: 16px;
     line-height: 18px;
-    text-align: center;
+}
+
+.card-content-fields {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+}
+
+.card-preview-fields {
+    padding: 0 40px 0 10px;
+    font-size: 12px;
+
+    > .card-preview-field-label {
+        display: inline-block;
+        margin: 0 3px 10px 0;
+        color: #747474;
+    }
+
+    > .card-preview-field-value {
+        display: inline-block;
+        margin: 0 10px 10px 0;
+    }
 }
