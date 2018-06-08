@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -1404,13 +1404,15 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
 
     /**
      *
-     * @param Array $formElement_data
+     * @param array $form_element_data
+     * @param bool $tracker_is_empty
      */
-    public function afterCreate($formElement_data=array()) {
-        //update the last changeset of all artifacts, and create a None value
-        $tracker_id = $this->getTrackerId();
-        if ( $valueDao   = $this->getValueDao() ) {
-                $valueDao->createNoneValue($tracker_id, $this->id);
+    public function afterCreate(array $form_element_data, $tracker_is_empty) {
+        if (! $tracker_is_empty) {
+            $value_dao = $this->getValueDao();
+            if ($value_dao) {
+                $value_dao->createNoneValue($this->getTrackerId(), $this->id);
+            }
         }
     }
 

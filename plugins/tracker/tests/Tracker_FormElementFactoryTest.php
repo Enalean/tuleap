@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -74,7 +74,7 @@ class Tracker_FormElementFactoryTest extends Tracker_FormElementFactoryAbstract 
         $tff = new Tracker_FormElementFactoryTestVersion();
         $tff->setReturnValue('createFormElement', 66);
         
-        $this->assertEqual($tff->saveObject($tracker, $a_formelement, 0, $user), 66);
+        $this->assertEqual($tff->saveObject($tracker, $a_formelement, 0, $user, false), 66);
     }
     
     public function testImportFormElement() {

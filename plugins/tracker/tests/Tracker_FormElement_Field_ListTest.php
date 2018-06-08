@@ -426,7 +426,7 @@ class Tracker_FormElement_Field_ListTest extends TuleapTestCase {
         
         $dao->expect('save', array(66, 'users'));
         
-        $f->afterSaveObject($tracker);
+        $f->afterSaveObject($tracker, false, false);
     }
     
     public function testIsValidRequired() {

@@ -696,7 +696,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     public function fetchRawValue($value) {
     }
 
-    public function afterCreate() {
+    public function afterCreate(array $form_element_data, $tracker_is_empty) {
     }
 
     public function fetchFollowUp($artifact, $from, $to) {

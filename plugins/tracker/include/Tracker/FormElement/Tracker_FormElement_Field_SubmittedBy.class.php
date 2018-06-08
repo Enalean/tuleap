@@ -147,19 +147,19 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
     /**
      * Hook called after a creation of a field
      *
-     * @param array $data The data used to create the field
-     *
+     * @param array $form_element_data
+     * @param bool $tracker_is_empty
      * @return void
      */
-    public function afterCreate($formElement_data) {
+    public function afterCreate(array $form_element_data, $tracker_is_empty) {
         //force the bind
-        $formElement_data['bind-type'] = 'users';
-        $formElement_data['bind'] = array(
+        $form_element_data['bind-type'] = 'users';
+        $form_element_data['bind'] = array(
             'value_function' => array(
                 'artifact_submitters',
             )
         );
-        parent::afterCreate($formElement_data);
+        parent::afterCreate($form_element_data, $tracker_is_empty);
     }
 
     public function fetchSubmit($submitted_values = array()) {

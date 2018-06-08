@@ -1,5 +1,6 @@
 <?php
-/** Copyright (c) Enalean, 2015-2018. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -32,14 +33,14 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
         return '';
     }
 
-    public function afterCreate($formElement_data) {
-        $formElement_data['bind-type'] = 'users';
-        $formElement_data['bind'] = array(
+    public function afterCreate(array $form_element_data, $tracker_is_empty) {
+        $form_element_data['bind-type'] = 'users';
+        $form_element_data['bind'] = array(
             'value_function' => array(
                 'artifact_modifiers',
             )
         );
-        parent::afterCreate($formElement_data);
+        parent::afterCreate($form_element_data, $tracker_is_empty);
     }
 
     public function getCriteriaWhere($criteria) {

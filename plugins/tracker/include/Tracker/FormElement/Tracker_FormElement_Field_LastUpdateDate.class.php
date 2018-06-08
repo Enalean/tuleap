@@ -323,7 +323,7 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
         return $html;
     }
 
-    public function afterCreate() {
+    public function afterCreate(array $form_element_data, $tracker_is_empty) {
         
     }
 

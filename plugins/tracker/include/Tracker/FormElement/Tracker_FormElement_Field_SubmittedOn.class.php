@@ -329,7 +329,7 @@ class Tracker_FormElement_Field_SubmittedOn extends Tracker_FormElement_Field_Da
         return $html;
     }
 
-    public function afterCreate($formElement_data=array()) {
+    public function afterCreate(array $form_element_data, $tracker_is_empty) {
 
     }
 
