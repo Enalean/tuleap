@@ -755,7 +755,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     }
 
     /**
-     * @return array of BindValues
+     * @return Tracker_FormElement_Field_List_BindValue[]
      */
     public function getAllValues() {
         return $this->getBind()->getAllValues();

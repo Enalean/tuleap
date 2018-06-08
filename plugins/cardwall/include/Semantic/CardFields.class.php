@@ -28,9 +28,10 @@ use Tuleap\Cardwall\Semantic\BackgroundColorPresenterBuilder;
 use Tuleap\Cardwall\Semantic\BackgroundColorSemanticFieldNotFoundException;
 use Tuleap\Cardwall\Semantic\CardFieldsPresenterBuilder;
 use Tuleap\Cardwall\Semantic\CardFieldXmlExporter;
-use Tuleap\Cardwall\Semantic\CardPreviewDetailsBuilder;
+use Tuleap\Cardwall\Semantic\CardsPreviewBuilder;
 use Tuleap\Cardwall\Semantic\FieldUsedInSemanticObjectChecker;
 use Tuleap\Cardwall\Semantic\SemanticCardPresenter;
+use Tuleap\Cardwall\Semantic\SingleCardPreviewDetailsBuilder;
 
 class Cardwall_Semantic_CardFields extends Tracker_Semantic
 {
@@ -84,9 +85,9 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
      */
     private $background_color_dao;
     /**
-     * @var CardPreviewDetailsBuilder
+     * @var CardsPreviewBuilder
      */
-    private $card_preview_detail_builder;
+    private $cards_preview_builder;
 
     public function __construct(
         Tracker $tracker,
@@ -97,7 +98,7 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
         BackgroundColorFieldRetriever $background_field_retriever,
         CardFieldXmlExporter $xml_exporter,
         BackgroundColorDao $background_color_dao,
-        CardPreviewDetailsBuilder $card_preview_detail_builder
+        CardsPreviewBuilder $cards_preview_builder
     ) {
         parent::__construct($tracker);
 
@@ -109,7 +110,7 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
         $this->background_field_retriever         = $background_field_retriever;
         $this->xml_exporter                       = $xml_exporter;
         $this->background_color_dao               = $background_color_dao;
-        $this->card_preview_detail_builder        = $card_preview_detail_builder;
+        $this->cards_preview_builder              = $cards_preview_builder;
     }
 
     public function display() {
@@ -161,7 +162,7 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
             $this->tracker->getFormElements()
         );
 
-        $card_preview_details = $this->card_preview_detail_builder->build($this);
+        $card_preview_details = $this->cards_preview_builder->build($this);
 
         $semantic_presenter = new SemanticCardPresenter(
             $fields_presenter,
@@ -304,10 +305,12 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
 
             $xml_exporter = new CardFieldXmlExporter($background_color_dao);
 
-            $card_preview_details = new CardPreviewDetailsBuilder(
+            $single_card_preview_details_builder = new SingleCardPreviewDetailsBuilder(
                 Tracker_ArtifactFactory::instance(),
                 new Cardwall_UserPreferences_UserPreferencesDisplayUser(true)
             );
+
+            $card_preview_builder = new CardsPreviewBuilder($single_card_preview_details_builder);
 
             self::$_instances[$tracker->getId()] = new Cardwall_Semantic_CardFields(
                 $tracker,
@@ -318,7 +321,7 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
                 $background_field_retriever,
                 $xml_exporter,
                 $background_color_dao,
-                $card_preview_details
+                $card_preview_builder
             );
         }
 

@@ -1,12 +1,12 @@
 <h3> {{# dgettext }} tuleap-cardwall | Preview of the card {{/ dgettext }}</h3>
 
 {{# card_preview }}
-    <div class="card-preview">
+    <div class="card-preview card-style-{{ background }}">
         <div class="card-preview-type"></div>
         <div class="card-preview-content-fields">
             <div class="card-preview-content">
                 <span class="card-preview-id">{{ tracker_shortname }} #{{ artifact_id }}</span><i class="far fa-clock card-preview-fa-clock-o"></i>
-                <span class="card-preview-title">{{ artifact_description }}</span>
+                <span class="card-preview-title"> {{ artifact_description }}</span>
                 <div class="card-preview-blindness a"></div>
             </div>
             <div class="card-preview-fields">
