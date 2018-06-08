@@ -21,27 +21,40 @@
     <div class="ttm-definition-step">
         <div class="ttm-definition-step-rank">{{ dynamicRank }}</div>
         <div class="ttm-definition-step-description">
-            <div class="ttm-definition-step-description-header">
-                <div>{{ abstract() }}</div>
+            <div class="ttm-definition-step-description-deleted" v-show="is_marked_as_deleted">
                 <button
-                    class="btn"
+                    class="btn ttm-definition-step-description-delete"
                     type="button"
-                    v-on:click="deleteStep(step)"
+                    v-on:click="unmarkDeletion()"
                 >
-                    <i class="icon-trash"></i> <translate>Delete</translate>
+                    <i class="icon-undo"></i>
+                    <translate>Undo deletion</translate>
                 </button>
+                <div v-html="sanitized_description"
+                     v-bind:class="{'ttm-definition-step-description-text': is_description_format_text}"
+                ></div>
             </div>
-            <input
-                type="hidden"
-                v-bind:name="'artifact[' + fieldId + '][id][]'"
-                v-bind:value="step.id">
-            <textarea
-                ref="description"
-                v-bind:id="'field_new_description_' + step.uuid + '_' + fieldId"
-                v-bind:name="'artifact[' + fieldId + '][description][]'"
-                rows="10"
-                cols="50"
-            >{{ step.raw_description }}</textarea>
+            <div v-show="! is_marked_as_deleted">
+                <input
+                        type="hidden"
+                        v-bind:name="'artifact[' + fieldId + '][id][]'"
+                        v-bind:value="step.id">
+                <button
+                        class="btn ttm-definition-step-description-delete"
+                        type="button"
+                        v-on:click="markAsDeleted()"
+                >
+                    <i class="icon-trash"></i>
+                    <translate>Delete</translate>
+                </button>
+                <textarea
+                    ref="description"
+                    class="ttm-definition-step-description-textarea"
+                    v-bind:id="'field_new_description_' + step.uuid + '_' + fieldId"
+                    v-bind:name="'artifact[' + fieldId + '][description][]'"
+                    rows="4"
+                >{{ step.raw_description }}</textarea>
+            </div>
         </div>
     </div>
 </template>
@@ -52,6 +65,11 @@
 
     export default {
         name: "StepDefinitionEntry",
+        data() {
+            return {
+                is_marked_as_deleted: false
+            }
+        },
         props: {
             step: Object,
             dynamicRank: Number,
@@ -60,6 +78,15 @@
         },
         mounted() {
             this.loadRTE();
+            this.removeDeletedStepsOnFormSubmission();
+        },
+        computed: {
+            sanitized_description() {
+                return sanitize(this.step.raw_description);
+            },
+            is_description_format_text() {
+                return this.step.description_format === 'text';
+            }
         },
         methods: {
             loadRTE() {
@@ -76,18 +103,23 @@
                     }
                 );
             },
-            abstract() {
-                const max_length = 100;
-
-                const text_without_html_tags    = sanitize(this.step.raw_description, {ALLOWED_TAGS: []});
-                const text_without_extra_spaces = text_without_html_tags.replace(/\s+/g, ' ');
-
-                let abstract = text_without_extra_spaces.substring(0, max_length);
-                if (text_without_extra_spaces.length > max_length) {
-                    abstract += '…';
+            markAsDeleted() {
+                if (this.step.raw_description.length === 0) {
+                    this.deleteStep(this.step);
+                } else {
+                    this.is_marked_as_deleted = true;
                 }
-
-                return abstract;
+            },
+            unmarkDeletion() {
+                this.is_marked_as_deleted = false;
+            },
+            removeDeletedStepsOnFormSubmission() {
+                const form = this.$refs.description.form;
+                form.addEventListener('submit', () => {
+                    if (this.is_marked_as_deleted) {
+                        this.deleteStep(this.step);
+                    }
+                })
             }
         }
     }
