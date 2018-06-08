@@ -103,8 +103,11 @@ class ExecutionsResource
     /** @var UserManager */
     private $user_manager;
 
-    /** @var StepsResultsUpdater */
-    private $steps_results_updater;
+    /** @var ExecutionStatusUpdater */
+    private $execution_status_updater;
+
+    /** @var StepsResultsChangesBuilder */
+    private $steps_results_changes_builder;
 
     public function __construct()
     {
@@ -166,13 +169,14 @@ class ExecutionsResource
             )
         );
 
-        $this->steps_results_updater = new StepsResultsUpdater(
+        $this->steps_results_changes_builder = new StepsResultsChangesBuilder(
+            $this->formelement_factory,
+            $this->execution_dao,
+            new TestStatusAccordingToStepsStatusChangesBuilder()
+        );
+
+        $this->execution_status_updater = new ExecutionStatusUpdater(
             $this->artifact_updater,
-            new StepsResultsChangesBuilder(
-                $this->formelement_factory,
-                $this->execution_dao,
-                new TestStatusAccordingToStepsStatusChangesBuilder()
-            ),
             $this->testmanagement_artifact_factory,
             $this->realtime_message_sender,
             $this->user_manager
@@ -317,11 +321,15 @@ class ExecutionsResource
         }
 
         if ($body->steps_results) {
-            $this->steps_results_updater->updateStepsResults(
-                $user,
+            $this->execution_status_updater->update(
                 $execution_artifact,
-                $definition_artifact,
-                $body->steps_results
+                $this->steps_results_changes_builder->getStepsChanges(
+                    $body->steps_results,
+                    $execution_artifact,
+                    $definition_artifact,
+                    $user
+                ),
+                $user
             );
         }
     }
@@ -340,36 +348,19 @@ class ExecutionsResource
      * @throws 400
      * @throws 500
      */
-    protected function putId($id, $status, $time = 0, $results = '') {
-        $previous_status = '';
-        $previous_user   = '';
-        try {
-            $user            = UserManager::instance()->getCurrentUser();
-            $artifact        = $this->getArtifactById($user, $id);
-            $changes         = $this->getChanges($status, $time, $results, $artifact, $user);
-            $previous_status = $this->getPreviousStatus($artifact);
-            $previous_user   = $this->getPreviousSubmittedBy($artifact);
-
-            $this->artifact_updater->update($user, $artifact, $changes);
-        } catch (Tracker_FormElement_InvalidFieldException $exception) {
-            throw new RestException(400, $exception->getMessage());
-        } catch (Tracker_NoChangeException $exception) {
-            // Do nothing
-        } catch (Tracker_Exception $exception) {
-            if ($GLOBALS['Response']->feedbackHasErrors()) {
-                throw new RestException(500, $GLOBALS['Response']->getRawFeedback());
-            }
-            throw new RestException(500, $exception->getMessage());
-        }
-
-        $execution_representation = $this->execution_representation_builder->getExecutionRepresentation($user, $artifact);
-
-        $campaign = $this->testmanagement_artifact_factory->getCampaignForExecution($artifact);
-        $this->realtime_message_sender->sendExecutionUpdated($user, $campaign, $artifact, $status, $previous_status, $previous_user);
+    protected function putId($id, $status, $time = 0, $results = '')
+    {
+        $user     = UserManager::instance()->getCurrentUser();
+        $artifact = $this->getArtifactById($user, $id);
+        $this->execution_status_updater->update(
+            $artifact,
+            $this->getChanges($status, $time, $results, $artifact, $user),
+            $user
+        );
 
         $this->sendAllowHeadersForExecutionPut($artifact);
 
-        return $execution_representation;
+        return $this->execution_representation_builder->getExecutionRepresentation($user, $artifact);
     }
 
     /**
@@ -589,30 +580,6 @@ class ExecutionsResource
             return $artifact;
         }
         throw new RestException(404);
-    }
-
-    /** @return string */
-    private function getPreviousStatus(Tracker_Artifact $artifact) {
-        $last_changeset = $artifact->getLastChangeset();
-        if (! $last_changeset) {
-            return null;
-        }
-
-        return $artifact->getStatusForChangeset($last_changeset);
-    }
-
-    /** @return UserRepresentation */
-    private function getPreviousSubmittedBy(Tracker_Artifact $artifact) {
-        $last_changeset = $artifact->getLastChangeset();
-        if (! $last_changeset) {
-            return null;
-        }
-
-        $submitted_by = $this->user_manager->getUserById($last_changeset->getSubmittedBy());
-        $user_representation = new UserRepresentation();
-        $user_representation->build($submitted_by);
-
-        return $user_representation;
     }
 
     /** @return array */

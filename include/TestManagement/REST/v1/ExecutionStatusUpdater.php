@@ -32,16 +32,12 @@ use Tuleap\TestManagement\RealTime\RealTimeMessageSender;
 use Tuleap\User\REST\UserRepresentation;
 use UserManager;
 
-class StepsResultsUpdater
+class ExecutionStatusUpdater
 {
     /**
      * @var Tracker_REST_Artifact_ArtifactUpdater
      */
     private $artifact_updater;
-    /**
-     * @var StepsResultsChangesBuilder
-     */
-    private $changes_builder;
     /**
      * @var ArtifactFactory
      */
@@ -57,42 +53,31 @@ class StepsResultsUpdater
 
     public function __construct(
         Tracker_REST_Artifact_ArtifactUpdater $artifact_updater,
-        StepsResultsChangesBuilder $changes_builder,
         ArtifactFactory $testmanagement_artifact_factory,
         RealTimeMessageSender $realtime_message_sender,
         UserManager $user_manager
     ) {
         $this->artifact_updater                = $artifact_updater;
-        $this->changes_builder                 = $changes_builder;
         $this->testmanagement_artifact_factory = $testmanagement_artifact_factory;
         $this->realtime_message_sender         = $realtime_message_sender;
         $this->user_manager                    = $user_manager;
     }
 
     /**
-     * @param PFUser                     $user
-     * @param Tracker_Artifact           $execution_artifact
-     * @param Tracker_Artifact           $definition_artifact
-     * @param StepResultRepresentation[] $submitted_steps_results
+     * @param Tracker_Artifact $execution_artifact
+     * @param array            $changes
+     * @param PFUser           $user
      *
      * @throws RestException
      */
-    public function updateStepsResults(
-        PFUser $user,
+    public function update(
         Tracker_Artifact $execution_artifact,
-        Tracker_Artifact $definition_artifact,
-        array $submitted_steps_results
+        array $changes,
+        PFUser $user
     ) {
         try {
             $previous_status = $this->getCurrentStatus($execution_artifact);
             $previous_user   = $this->getCurrentSubmittedBy($execution_artifact);
-
-            $changes = $this->changes_builder->getStepsChanges(
-                $submitted_steps_results,
-                $execution_artifact,
-                $definition_artifact,
-                $user
-            );
 
             $this->artifact_updater->update($user, $execution_artifact, $changes);
 
