@@ -125,10 +125,13 @@ class Tracker_FormElement_Field_List_BindDecorator
         $switch_old_palette_label     = dgettext('tuleap-tracker', 'Switch to old color picker');
         $switch_default_palette_label = dgettext('tuleap-tracker', 'Switch to default color picker');
 
+        $input_name = "bind[decorator]['$value_id']";
+        $input_id   = $decorator_id . '_field';
+
         return '
             <div class="vue-colorpicker-mount-point"
-                data-decorator-id="'. $decorator_id .'"
-                data-value-id="'. $value_id .'"
+                data-input-name="'. $input_name .'"
+                data-input-id="'. $input_id .'"
                 data-current-color="'. $current_color . '"
                 data-switch-default-palette-label="' . $switch_default_palette_label . '"
                 data-switch-old-palette-label="' . $switch_old_palette_label . '"

@@ -3442,3 +3442,7 @@ td.tracker-unsubscriber-actions {
 .tracker-colorpicker {
     display: inline-block;
 }
+
+.tracker-colorpicker > .colorpicker-input {
+    display: none;
+}
