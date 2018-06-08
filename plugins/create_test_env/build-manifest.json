@@ -1,6 +1,16 @@
 {
     "name": "create_test_env",
     "themes": {
+        "FlamingParrot": {
+            "files": [
+                "themes/FlamingParrot/css/style.scss"
+            ],
+            "includes": [
+                "../../src/www/themes/FlamingParrot/css/utils"
+            ],
+            "target_dir": "../../src/www/assets/create_test_env/FlamingParrot",
+            "is_revisioned": true
+        },
         "BurningParrot": {
             "files": [
                 "themes/BurningParrot/css/create-test-env-blue.scss",

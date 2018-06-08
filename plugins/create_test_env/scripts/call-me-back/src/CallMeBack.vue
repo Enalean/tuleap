@@ -19,7 +19,7 @@
 <template>
     <div class="call-me-back">
         <button class="call-me-back-button tlp-button-primary tlp-button-large">
-            <i class="fa fa-coffee"></i>
+            <i class="fa fa-coffee icon-coffee"></i>
         </button>
     </div>
 </template>

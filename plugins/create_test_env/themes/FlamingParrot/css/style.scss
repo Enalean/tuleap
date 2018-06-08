@@ -1,0 +1,153 @@
+/**
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+@import "../../../../../src/www/themes/common/css/utils/colors";
+@import "../../../../../src/www/themes/FlamingParrot/css/utils/badge-colors";
+
+@mixin change-button-color($color) {
+    border-color: $color;
+    background: $color;
+    transition: box-shadow 75ms ease-in-out, background 75ms ease-in-out, border-color 75ms ease-in-out;
+
+    &:hover {
+        transition: box-shadow 75ms ease-in-out, background 75ms ease-in-out, border-color 75ms ease-in-out;
+        border-color: darken($color, 5%);
+        background: darken($color, 5%);
+        box-shadow: none;
+    }
+
+    &:active,
+    &:focus {
+        transition: box-shadow 75ms ease-in-out, background 75ms ease-in-out, border-color 75ms ease-in-out;
+        border-color: darken($color, 10%);
+        background: darken($color, 10%);
+        box-shadow: none;
+    }
+}
+
+@mixin definitions($main, $color-name) {
+    .call-me-back {
+        position: fixed;
+        z-index: 10000;
+        right: 40px;
+        bottom: 40px;
+    }
+
+    .call-me-back-button {
+        width: 85px;
+        height: 85px;
+        overflow: visible;
+        border-radius: 50%;
+        box-shadow: 0 3px 9px 0 rgba(0, 0, 0, .29);
+        color: #ffffff;
+        font-size: 30px;
+
+        @if $color-name == 'blue' {
+            @include change-button-color(#f57c13);
+        } @else if $color-name == 'green' {
+            @include change-button-color(#bd2626);
+        } @else if $color-name == 'grey' {
+            @include change-button-color(#f57c13);
+        } @else if $color-name == 'orange' {
+            @include change-button-color(#1593c4);
+        } @else if $color-name == 'purple' {
+            @include change-button-color(#f57c13);
+        } @else if $color-name == 'red' {
+            @include change-button-color(#67af45);
+        }
+
+        > .fa {
+            position: relative;
+            top: -1px;
+        }
+    }
+}
+
+body {
+    &.FlamingParrot_Orange {
+        @import "variables-orange";
+
+        @include definitions($main, $color-name);
+    }
+
+    &.FlamingParrot_Blue {
+        @import "variables-blue";
+
+        @include definitions($main, $color-name);
+    }
+
+    &.FlamingParrot_Green {
+        @import "variables-green";
+
+        @include definitions($main, $color-name);
+    }
+
+    &.FlamingParrot_BlueGrey {
+        @import "variables-bluegrey";
+
+        @include definitions($main, $color-name);
+    }
+
+    &.FlamingParrot_Purple {
+        @import "variables-purple";
+
+        @include definitions($main, $color-name);
+    }
+
+    &.FlamingParrot_Red {
+        @import "variables-red";
+
+        @include definitions($main, $color-name);
+    }
+
+    &.FlamingParrot_DarkOrange {
+        @import "variables-darkorange";
+
+        @include definitions($main, $color-name);
+    }
+
+    &.FlamingParrot_DarkBlue {
+        @import "variables-darkblue";
+
+        @include definitions($main, $color-name);
+    }
+
+    &.FlamingParrot_DarkGreen {
+        @import "variables-darkgreen";
+
+        @include definitions($main, $color-name);
+    }
+
+    &.FlamingParrot_DarkBlueGrey {
+        @import "variables-darkbluegrey";
+
+        @include definitions($main, $color-name);
+    }
+
+    &.FlamingParrot_DarkPurple {
+        @import "variables-darkpurple";
+
+        @include definitions($main, $color-name);
+    }
+
+    &.FlamingParrot_DarkRed {
+        @import "variables-darkred";
+
+        @include definitions($main, $color-name);
+    }
+}
