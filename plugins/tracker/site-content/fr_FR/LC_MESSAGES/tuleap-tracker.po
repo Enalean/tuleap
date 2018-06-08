@@ -227,11 +227,11 @@ msgstr "Quelque chose s'est mal passé."
 msgid "Submit Changes"
 msgstr "Valider"
 
-msgid "Switch to default color picker"
-msgstr "Passer à la palette par défaut"
+msgid "Switch to default colors"
+msgstr "Passer aux couleurs par défaut"
 
-msgid "Switch to old color picker"
-msgstr "Passer à l'ancienne palette"
+msgid "Switch to old colors"
+msgstr "Passer aux anciennes couleurs"
 
 msgid "That tracker does not exist."
 msgstr "Cet outil de suivi n'existe pas."
