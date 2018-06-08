@@ -43,6 +43,6 @@ class Project_OneStepRegistration_OneStepRegistrationPresenterFactory {
     }
 
     private function projectsMustBeApprovedByAdmin() {
-        return ForgeConfig::get('sys_project_approval', 1) == 1;
+        return ForgeConfig::get(\ProjectManager::CONFIG_PROJECT_APPROVAL, 1) == 1;
     }
 }

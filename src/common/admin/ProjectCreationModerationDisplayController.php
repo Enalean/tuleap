@@ -50,7 +50,7 @@ class ProjectCreationModerationDisplayController implements DispatchableWithRequ
         $presenter = new ProjectCreationModerationPresenter(
             new ProjectCreationNavBarPresenter('moderation'),
             new CSRFSynchronizerToken('/admin/project-creation/moderation'),
-            ForgeConfig::get('sys_project_approval', true),
+            ForgeConfig::get(\ProjectManager::CONFIG_PROJECT_APPROVAL, true),
             ForgeConfig::get(\ProjectManager::CONFIG_NB_PROJECTS_WAITING_FOR_VALIDATION, -1),
             ForgeConfig::get(\ProjectManager::CONFIG_NB_PROJECTS_WAITING_FOR_VALIDATION_PER_USER, -1),
             $this->isSysProjectApprovalStillInLocalInc()

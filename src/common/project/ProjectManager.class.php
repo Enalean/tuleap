@@ -30,6 +30,7 @@ use Tuleap\Webhook\Emitter;
 
 class ProjectManager
 {
+    const CONFIG_PROJECT_APPROVAL                            = 'sys_project_approval';
     const CONFIG_NB_PROJECTS_WAITING_FOR_VALIDATION          = 'nb_projects_waiting_for_validation';
     const CONFIG_NB_PROJECTS_WAITING_FOR_VALIDATION_PER_USER = 'nb_projects_waiting_for_validation_per_user';
 
@@ -936,7 +937,7 @@ class ProjectManager
 
     public function userCanCreateProject(PFUser $requester)
     {
-        if (ForgeConfig::get('sys_project_approval', 1) == 1) {
+        if (ForgeConfig::get(self::CONFIG_PROJECT_APPROVAL, 1) == 1) {
             return $this->numberOfProjectsWaitingForValidationBelowThreshold() &&
                 $this->numberOfProjectsWaitingForValidationPerUserBelowThreshold($requester);
         }

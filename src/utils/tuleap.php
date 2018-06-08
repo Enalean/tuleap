@@ -21,6 +21,8 @@
 require_once 'pre.php';
 
 use Tuleap\CLI\Application;
+use Tuleap\CLI\Command\ConfigGetCommand;
+use Tuleap\CLI\Command\ConfigSetCommand;
 use Tuleap\CLI\Command\UserPasswordCommand;
 use Tuleap\Password\PasswordSanityChecker;
 
@@ -31,4 +33,13 @@ $application->add(
         PasswordSanityChecker::build()
     )
 );
+$application->add(
+    new ConfigGetCommand()
+);
+$application->add(
+    new ConfigSetCommand(
+        new ConfigDao()
+    )
+);
+
 $application->run();
