@@ -1,13 +1,12 @@
 <h3> {{# dgettext }} tuleap-cardwall | Preview of the card {{/ dgettext }}</h3>
 
-<div class="card card-preview">
-    <div class="card-container">
-        <div class="card-actions">
-            <a href="#" class="dropdown-toggle"
-               data-toggle="dropdown">{{ tracker_shortname }} #XXX</a>
-        </div>
-        <div class="card-title">
-            {{# dgettext }} tuleap-cardwall | Example {{/ dgettext }}
+<div class="card-preview">
+    <div class="card-preview-type"></div>
+    <div class="card-preview-content-fields">
+        <div class="card-preview-content">
+            <span class="card-preview-id">{{ tracker_shortname }} #XXX</span><i class="far fa-clock card-preview-fa-clock-o"></i>
+            <span class="card-preview-title">{{# dgettext }} tuleap-cardwall | Example {{/ dgettext }}</span>
+            <div class="card-preview-blindness a"></div>
         </div>
     </div>
 </div>
