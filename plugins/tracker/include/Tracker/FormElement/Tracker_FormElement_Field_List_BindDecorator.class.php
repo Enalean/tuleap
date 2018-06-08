@@ -125,7 +125,7 @@ class Tracker_FormElement_Field_List_BindDecorator
         $switch_old_palette_label     = dgettext('tuleap-tracker', 'Switch to old colors');
         $switch_default_palette_label = dgettext('tuleap-tracker', 'Switch to default colors');
 
-        $input_name = "bind[decorator]['$value_id']";
+        $input_name = "bind[decorator][$value_id]";
         $input_id   = $decorator_id . '_field';
 
         return '
