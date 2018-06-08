@@ -172,7 +172,10 @@ class ExecutionsResource
                 $this->formelement_factory,
                 $this->execution_dao,
                 new TestStatusAccordingToStepsStatusChangesBuilder()
-            )
+            ),
+            $this->testmanagement_artifact_factory,
+            $this->realtime_message_sender,
+            $this->user_manager
         );
     }
 

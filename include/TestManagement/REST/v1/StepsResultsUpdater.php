@@ -27,6 +27,10 @@ use Tracker_Exception;
 use Tracker_FormElement_InvalidFieldException;
 use Tracker_NoChangeException;
 use Tracker_REST_Artifact_ArtifactUpdater;
+use Tuleap\TestManagement\ArtifactFactory;
+use Tuleap\TestManagement\RealTime\RealTimeMessageSender;
+use Tuleap\User\REST\UserRepresentation;
+use UserManager;
 
 class StepsResultsUpdater
 {
@@ -38,13 +42,31 @@ class StepsResultsUpdater
      * @var StepsResultsChangesBuilder
      */
     private $changes_builder;
+    /**
+     * @var ArtifactFactory
+     */
+    private $testmanagement_artifact_factory;
+    /**
+     * @var RealTimeMessageSender
+     */
+    private $realtime_message_sender;
+    /**
+     * @var UserManager
+     */
+    private $user_manager;
 
     public function __construct(
         Tracker_REST_Artifact_ArtifactUpdater $artifact_updater,
-        StepsResultsChangesBuilder $changes_builder
+        StepsResultsChangesBuilder $changes_builder,
+        ArtifactFactory $testmanagement_artifact_factory,
+        RealTimeMessageSender $realtime_message_sender,
+        UserManager $user_manager
     ) {
-        $this->artifact_updater = $artifact_updater;
-        $this->changes_builder  = $changes_builder;
+        $this->artifact_updater                = $artifact_updater;
+        $this->changes_builder                 = $changes_builder;
+        $this->testmanagement_artifact_factory = $testmanagement_artifact_factory;
+        $this->realtime_message_sender         = $realtime_message_sender;
+        $this->user_manager                    = $user_manager;
     }
 
     /**
@@ -62,6 +84,9 @@ class StepsResultsUpdater
         array $submitted_steps_results
     ) {
         try {
+            $previous_status = $this->getCurrentStatus($execution_artifact);
+            $previous_user   = $this->getCurrentSubmittedBy($execution_artifact);
+
             $changes = $this->changes_builder->getStepsChanges(
                 $submitted_steps_results,
                 $execution_artifact,
@@ -70,6 +95,8 @@ class StepsResultsUpdater
             );
 
             $this->artifact_updater->update($user, $execution_artifact, $changes);
+
+            $new_status = $this->getCurrentStatus($execution_artifact);
         } catch (Tracker_FormElement_InvalidFieldException $exception) {
             throw new RestException(400, $exception->getMessage());
         } catch (Tracker_NoChangeException $exception) {
@@ -80,5 +107,41 @@ class StepsResultsUpdater
             }
             throw new RestException(500, $exception->getMessage());
         }
+
+        $campaign = $this->testmanagement_artifact_factory->getCampaignForExecution($execution_artifact);
+        $this->realtime_message_sender->sendExecutionUpdated(
+            $user,
+            $campaign,
+            $execution_artifact,
+            $new_status,
+            $previous_status,
+            $previous_user
+        );
+    }
+
+    /** @return string */
+    private function getCurrentStatus(Tracker_Artifact $artifact)
+    {
+        $last_changeset = $artifact->getLastChangeset();
+        if (! $last_changeset) {
+            return null;
+        }
+
+        return $artifact->getStatusForChangeset($last_changeset);
+    }
+
+    /** @return UserRepresentation */
+    private function getCurrentSubmittedBy(Tracker_Artifact $artifact)
+    {
+        $last_changeset = $artifact->getLastChangeset();
+        if (! $last_changeset) {
+            return null;
+        }
+
+        $submitted_by        = $this->user_manager->getUserById($last_changeset->getSubmittedBy());
+        $user_representation = new UserRepresentation();
+        $user_representation->build($submitted_by);
+
+        return $user_representation;
     }
 }
