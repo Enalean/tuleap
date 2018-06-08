@@ -19,7 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_FormElement_Field_List_BindDecoratorDao extends DataAccessObject {
+class Tracker_FormElement_Field_List_BindDecoratorDao extends DataAccessObject
+{
     function __construct() {
         parent::__construct();
         $this->table_name = 'tracker_field_list_bind_decorator';
@@ -31,25 +32,30 @@ class Tracker_FormElement_Field_List_BindDecoratorDao extends DataAccessObject {
                 WHERE field_id = $field_id ";
         return $this->retrieve($sql);
     }
-    public function duplicate($from_field_id, $to_field_id, $value_mapping) {
-        $from_field_id  = $this->da->escapeInt($from_field_id);
-        $to_field_id    = $this->da->escapeInt($to_field_id);
-        $sql = "INSERT INTO $this->table_name (field_id, value_id, red, green, blue)
-                SELECT $to_field_id, value_id, red, green, blue
+
+    public function duplicate($from_field_id, $to_field_id, $value_mapping)
+    {
+        $from_field_id = $this->da->escapeInt($from_field_id);
+        $to_field_id   = $this->da->escapeInt($to_field_id);
+        $sql
+                       = "INSERT INTO $this->table_name (field_id, value_id, red, green, blue, tlp_color_name)
+                SELECT $to_field_id, value_id, red, green, blue, tlp_color_name
                 FROM $this->table_name
                 WHERE field_id = $from_field_id";
         $this->update($sql);
 
-        foreach($value_mapping as $from => $to) {
-            $from  = $this->da->escapeInt($from);
-            $to    = $this->da->escapeInt($to);
-            $sql = "UPDATE $this->table_name 
+        foreach ($value_mapping as $from => $to) {
+            $from = $this->da->escapeInt($from);
+            $to   = $this->da->escapeInt($to);
+            $sql
+                  = "UPDATE $this->table_name
                     SET value_id = $to
                     WHERE field_id = $to_field_id
                       AND value_id = $from";
             $this->update($sql);
         }
     }
+
     public function save($field_id, $value_id, $red, $green, $blue) {
         $field_id  = $this->da->escapeInt($field_id);
         $value_id  = $this->da->escapeInt($value_id);
@@ -84,4 +90,3 @@ class Tracker_FormElement_Field_List_BindDecoratorDao extends DataAccessObject {
         return $this->update($sql);
     }
 }
-?>
