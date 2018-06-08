@@ -57,8 +57,8 @@ class Tracker_FormElement_Field_List_BindDecoratorDao extends DataAccessObject {
         $green     = $this->da->escapeInt($green);
         $blue      = $this->da->escapeInt($blue);
 
-        $sql = "REPLACE INTO $this->table_name (field_id, value_id, red, green, blue)
-            SELECT field_id, id, $red, $green, $blue
+        $sql = "REPLACE INTO $this->table_name (field_id, value_id, red, green, blue, tlp_color_name)
+            SELECT field_id, id, $red, $green, $blue, null
             FROM tracker_field_list_bind_static_value
             WHERE original_value_id = $value_id OR id = $value_id";
         return $this->update($sql);
@@ -69,7 +69,7 @@ class Tracker_FormElement_Field_List_BindDecoratorDao extends DataAccessObject {
         $tlp_color = $this->da->quoteSmart($tlp_color);
 
         $sql = "REPLACE INTO $this->table_name (field_id, value_id, red, green, blue, tlp_color_name)
-            SELECT field_id, id, 0, 0, 0, $tlp_color
+            SELECT field_id, id, null, null, null, $tlp_color
             FROM tracker_field_list_bind_static_value
             WHERE original_value_id = $value_id OR id = $value_id";
         return $this->update($sql);
