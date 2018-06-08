@@ -517,15 +517,12 @@
               <attribute name="REF">
                 <data type="IDREF"/>
               </attribute>
-              <attribute name="r">
-                <data type="long"/>
-              </attribute>
-              <attribute name="g">
-                <data type="long"/>
-              </attribute>
-              <attribute name="b">
-                <data type="long"/>
-              </attribute>
+              <choice>
+                <ref name="decorator_legacy_color"/>
+                <attribute name="tlp_color_name">
+                  <data type="string"/>
+                </attribute>
+              </choice>
             </element>
           </zeroOrMore>
         </element>
@@ -545,6 +542,17 @@
         </element>
       </optional>
     </element>
+  </define>
+  <define name="decorator_legacy_color">
+    <attribute name="r">
+      <data type="long"/>
+    </attribute>
+    <attribute name="g">
+      <data type="long"/>
+    </attribute>
+    <attribute name="b">
+      <data type="long"/>
+    </attribute>
   </define>
   <define name="transitionContent">
     <element name="from_id">

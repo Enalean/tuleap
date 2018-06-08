@@ -219,12 +219,18 @@ class Tracker_FormElement_Field_List_BindDecorator
      * @param SimpleXMLElement $root the node to which the Bind is attached (passed by reference)
      * @param int $val the id indentifing the value in the XML (different form $this->value_id)
      */
-    public function exportToXML ($root, $val) {
+    public function exportToXML(SimpleXMLElement $root, $val)
+    {
         $child = $root->addChild('decorator');
         $child->addAttribute('REF', $val);
-        $child->addAttribute('r', $this->r);
-        $child->addAttribute('g', $this->g);
-        $child->addAttribute('b', $this->b);
+
+        if ($this->isUsingOldPalette()) {
+            $child->addAttribute('r', $this->r);
+            $child->addAttribute('g', $this->g);
+            $child->addAttribute('b', $this->b);
+        } else {
+            $child->addAttribute('tlp_color_name', $this->tlp_color_name);
+        }
     }
 
     /**
