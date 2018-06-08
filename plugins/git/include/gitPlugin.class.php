@@ -116,6 +116,7 @@ use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Project\HierarchyDisplayer;
 use Tuleap\Git\GitXmlExporter;
 use Tuleap\GitBundle;
+use Tuleap\Request\RestrictedUsersAreHandledByPluginEvent;
 
 require_once 'constants.php';
 require_once 'autoload.php';
@@ -225,7 +226,7 @@ class GitPlugin extends Plugin
 
         $this->addHook(Event::REGISTER_PROJECT_CREATION);
         $this->addHook(Event::GET_PROJECTID_FROM_URL);
-        $this->addHook(Event::IS_SCRIPT_HANDLED_FOR_RESTRICTED);
+        $this->addHook(RestrictedUsersAreHandledByPluginEvent::NAME);
         $this->addHook(Event::GET_SERVICES_ALLOWED_FOR_RESTRICTED);
         $this->addHook(Event::PROJECT_ACCESS_CHANGE);
         $this->addHook(Event::SITE_ACCESS_CHANGE);
@@ -2226,10 +2227,10 @@ class GitPlugin extends Plugin
         $params['html'][]= $tab_content;
     }
 
-    public function is_script_handled_for_restricted($params) {
-        $uri = $params['uri'];
-        if (strpos($uri, $this->getPluginPath()) === 0) {
-            $params['allow_restricted'] = true;
+    public function restrictedUsersAreHandledByPluginEvent(RestrictedUsersAreHandledByPluginEvent $event)
+    {
+        if (strpos($event->getUri(), $this->getPluginPath()) === 0) {
+            $event->setPluginHandleRestricted();
         }
     }
 

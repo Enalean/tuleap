@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Project\Admin\MembershipDelegationDao;
+use Tuleap\Request\RestrictedUsersAreHandledByPluginEvent;
 
 /**
  * Check the URL validity (protocol, host name, query) regarding server constraints
@@ -252,7 +253,7 @@ class URLVerification {
         $user = $this->getCurrentUser();
         if ($user->isRestricted()) {
             $url = $this->getUrl();
-            if (!$this->restrictedUserCanAccessUrl($user, $url, $server['REQUEST_URI'], $server['SCRIPT_NAME'])) {
+            if (!$this->restrictedUserCanAccessUrl($user, $url, $server['REQUEST_URI'])) {
                 $this->displayRestrictedUserError($url);
             }
         }
@@ -261,14 +262,12 @@ class URLVerification {
     /**
      * Test if given url is restricted for user
      *
-     * @param PFUser  $user
-     * @param Url   $url
-     * @param Array $request_uri
-     * @param Array $script_name
-     * 
+     * @param PFUser $user
+     * @param Url $url
+     * @param String $request_uri
      * @return Boolean False if user not allowed to see the content
      */
-    protected function restrictedUserCanAccessUrl($user, $url, $request_uri, $script_name) {
+    protected function restrictedUserCanAccessUrl($user, $url, $request_uri) {
         // This assume that we already checked that project is accessible to restricted prior to function call.
         // Hence, summary page is ALWAYS accessible
         if (strpos($request_uri, '/projects/') !== false) {
@@ -339,11 +338,8 @@ class URLVerification {
         }
 
         // Welcome page
-        if (!$allow_welcome_page) {
-            $sc_name='/'.trim($script_name, "/");
-            if ($sc_name == '/index.php') {
-                return false;
-            }
+        if (! $allow_welcome_page && $request_uri === '/') {
+            return false;
         }
 
         //Forbid search unless it's on a tracker
@@ -415,14 +411,9 @@ class URLVerification {
         }
 
         if (! $user_is_allowed) {
-            $this->getEventManager()->processEvent(
-                Event::IS_SCRIPT_HANDLED_FOR_RESTRICTED,
-                array(
-                    'allow_restricted' => &$user_is_allowed,
-                    'user'             => $user,
-                    'uri'              => $script_name
-                )
-            );
+            $event = new RestrictedUsersAreHandledByPluginEvent($request_uri);
+            $this->getEventManager()->processEvent($event);
+            $user_is_allowed = $event->getPluginHandleRestricted();
         }
 
         if ($group_id && ! $user_is_allowed) {
@@ -555,7 +546,8 @@ class URLVerification {
         } elseif ($this->getPermissionsOverriderManager()->doesOverriderAllowUserToAccessProject($user, $project)) {
             return true;
         } elseif ($user->isRestricted()) {
-            if ( ! $project->allowsRestricted() || ! $this->restrictedUserCanAccessUrl($user, $this->getUrl(), $_SERVER['REQUEST_URI'], $_SERVER['SCRIPT_NAME'])) {
+            if ( ! $project->allowsRestricted() || ! $this->restrictedUserCanAccessUrl($user, $this->getUrl(),
+                    $_SERVER['REQUEST_URI'])) {
                 throw new Project_AccessRestrictedException();
             }
             return true;

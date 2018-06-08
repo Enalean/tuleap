@@ -47,6 +47,7 @@ use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerProjectAdmin;
 use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerWikiAdmin;
 use Tuleap\MediaWiki\MediawikiMaintenanceWrapper;
 use Tuleap\MediaWiki\XMLMediaWikiExporter;
+use Tuleap\Request\RestrictedUsersAreHandledByPluginEvent;
 
 require_once 'common/plugin/Plugin.class.php';
 require_once 'constants.php';
@@ -84,7 +85,7 @@ class MediaWikiPlugin extends Plugin {
         $this->addHook('project_admin_remove_user_from_project_ugroups');
         $this->addHook('project_admin_ugroup_deletion');
         $this->addHook(Event::HAS_USER_BEEN_DELEGATED_ACCESS, 'has_user_been_delegated_access');
-        $this->addHook(Event::IS_SCRIPT_HANDLED_FOR_RESTRICTED);
+        $this->addHook(RestrictedUsersAreHandledByPluginEvent::NAME);
         $this->addHook(Event::GET_SERVICES_ALLOWED_FOR_RESTRICTED);
 
         // Search
@@ -415,13 +416,10 @@ class MediaWikiPlugin extends Plugin {
         );
     }
 
-    /**
-     * @see Event::IS_SCRIPT_HANDLED_FOR_RESTRICTED
-     */
-    public function is_script_handled_for_restricted($params) {
-        $uri = $params['uri'];
-        if (strpos($uri, $this->getPluginPath()) === 0) {
-            $params['allow_restricted'] = true;
+    public function restrictedUsersAreHandledByPluginEvent(RestrictedUsersAreHandledByPluginEvent $event)
+    {
+        if (strpos($event->getUri(), $this->getPluginPath()) === 0) {
+            $event->setPluginHandleRestricted();
         }
     }
 
