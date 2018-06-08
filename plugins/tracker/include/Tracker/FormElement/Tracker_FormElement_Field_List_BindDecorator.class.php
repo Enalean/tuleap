@@ -76,7 +76,7 @@ class Tracker_FormElement_Field_List_BindDecorator
             $html .= '<span style="white-space:nowrap;">';
         }
 
-        if ($this->tlp_color_name) {
+        if (! $this->isUsingOldPalette()) {
             $html .= self::fetchSquareImage('blank16x16.png', [
                 'title' => $value,
                 'class' => 'colorpicker-preview-' . $this->tlp_color_name
@@ -92,7 +92,7 @@ class Tracker_FormElement_Field_List_BindDecorator
     }
 
     public function decorateSelectOptionWithStyles() {
-        if ($this->tlp_color_name) {
+        if (! $this->isUsingOldPalette()) {
             return [
                 'classes'       => 'select-option-colored-' . $this->tlp_color_name,
                 'inline-styles' => ''
@@ -186,7 +186,7 @@ class Tracker_FormElement_Field_List_BindDecorator
                 'value_id' => $this->value_id,
                 'r'        => $this->r,
                 'g'        => $this->g,
-                'b'        => $this->b,
+                'b'        => $this->b
             )
         );
     }
@@ -249,12 +249,12 @@ class Tracker_FormElement_Field_List_BindDecorator
 
     public function isUsingOldPalette()
     {
-        return $this->r !== null && $this->g !== null && $this->b !== null;
+        return $this->tlp_color_name === null && $this->r !== null && $this->g !== null && $this->b !== null;
     }
 
     private function getCurrentColor()
     {
-        if ($this->tlp_color_name) {
+        if (! $this->isUsingOldPalette()) {
             return $this->tlp_color_name;
         }
 
