@@ -41,6 +41,9 @@ class GitPullRequestReferenceUpdater
         $this->reference_creator = $reference_creator;
     }
 
+    /**
+     * @throws \Git_Command_Exception
+     */
     public function updatePullRequestReference(
         PullRequest $pull_request,
         GitExec $executor_repository_source,

@@ -35,12 +35,14 @@ use Tuleap\Label\LabeledItemCollection;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
 use Tuleap\PullRequest\GitReference\GitPullRequestReference;
+use Tuleap\PullRequest\GitReference\GitPullRequestReferenceBulkConverter;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceCreator;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceDAO;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceRemover;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceUpdater;
 use Tuleap\PullRequest\Label\LabeledItemCollector;
 use Tuleap\PullRequest\Label\PullRequestLabelDao;
+use Tuleap\PullRequest\Logger;
 use Tuleap\PullRequest\Reference\HTMLURLBuilder;
 use Tuleap\PullRequest\Router;
 use Tuleap\PullRequest\PullRequestCreator;
@@ -83,6 +85,7 @@ class pullrequestPlugin extends Plugin
         $this->addHook(Event::GET_REFERENCE);
         $this->addHook(Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES);
         $this->addHook(Event::GET_AVAILABLE_REFERENCE_NATURE);
+        $this->addHook('codendi_daily_start', 'dailyExecution');
         $this->addHook(\Tuleap\Reference\ReferenceGetTooltipContentEvent::NAME);
         $this->addHook(CollectionOfLabelableDao::NAME);
         $this->addHook(LabeledItemCollection::NAME);
@@ -583,5 +586,21 @@ class pullrequestPlugin extends Plugin
     public function postInitGitRepositoryWithDataEvent(PostInitGitRepositoryWithDataEvent $event)
     {
         (new GitPullRequestReferenceRemover)->removeAll(GitExec::buildFromRepository($event->getRepository()));
+    }
+
+    public function dailyExecution()
+    {
+        $pull_request_git_reference_dao            = new GitPullRequestReferenceDAO;
+        $pull_request_git_reference_bulk_converter = new GitPullRequestReferenceBulkConverter(
+            $pull_request_git_reference_dao,
+            new GitPullRequestReferenceUpdater(
+                $pull_request_git_reference_dao,
+                new GitPullRequestReferenceCreator($pull_request_git_reference_dao)
+            ),
+            $this->getPullRequestFactory(),
+            $this->getRepositoryFactory(),
+            new Logger()
+        );
+        $pull_request_git_reference_bulk_converter->convertAllPullRequestsWithoutAGitReference();
     }
 }
