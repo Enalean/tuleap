@@ -42,7 +42,10 @@
         border: 1px dashed #3a87ad;
         background: url('/themes/common/images/backstripes.gif');
     }
+}
 
+.card,
+.card-preview {
     @each $color-name, $colors in $tlp-swatch-color-map {
         &.card-style-#{$color-name} {
             border-color: mix($tlp-ui-white, map-get($colors, 'border'), 70%);

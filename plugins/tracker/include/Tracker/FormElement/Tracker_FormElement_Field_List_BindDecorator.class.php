@@ -258,7 +258,7 @@ class Tracker_FormElement_Field_List_BindDecorator
         return $this->tlp_color_name === null && $this->r !== null && $this->g !== null && $this->b !== null;
     }
 
-    private function getCurrentColor()
+    public function getCurrentColor()
     {
         if (! $this->isUsingOldPalette()) {
             return $this->tlp_color_name;

@@ -82,6 +82,9 @@ abstract class Tracker_FormElement_Field_List_Bind implements
         return $rest_array;
     }
 
+    /**
+     * @return Tracker_FormElement_Field_List_BindDecorator[]
+     */
     public function getDecorators() {
         return $this->decorators;
     }

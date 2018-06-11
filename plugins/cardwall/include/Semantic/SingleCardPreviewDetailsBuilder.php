@@ -26,7 +26,7 @@ use Tracker_Artifact;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field;
 
-class CardPreviewDetailsBuilder
+class SingleCardPreviewDetailsBuilder
 {
     /**
      * @var Tracker_ArtifactFactory
@@ -45,7 +45,7 @@ class CardPreviewDetailsBuilder
         $this->card_preferences = $card_preferences;
     }
 
-    public function build(Cardwall_Semantic_CardFields $semantic_card)
+    public function build(Cardwall_Semantic_CardFields $semantic_card, array $possible_background)
     {
         $card_preview         = [];
         $artifact_id          = "XXX";
@@ -54,10 +54,10 @@ class CardPreviewDetailsBuilder
         $artifact = $this->getARandomArtifactFromTracker($semantic_card);
 
         if ($artifact) {
-            $artifact_id          = $artifact->getId();
+            $artifact_id          = "123";
             $artifact_description = $artifact->getTitle();
         }
-        $fields_details = $this->extractDetailsFields($semantic_card, $artifact);
+        $fields_details = $this->extractDetailsFields($semantic_card, $possible_background, $artifact);
 
         $card_preview['artifact_id']          = $artifact_id;
         $card_preview['artifact_description'] = $artifact_description;
@@ -86,32 +86,35 @@ class CardPreviewDetailsBuilder
 
     private function extractArtifactValueForField(
         Tracker_FormElement_Field $used_field,
+        array $possible_background,
         Tracker_Artifact $artifact = null
     ) {
-        $value = "XXX";
-
-        if ($artifact && $artifact->getLastChangeset()) {
-            $value = $used_field->fetchCardValue($artifact, $this->card_preferences);
+        if ($possible_background['field_id'] === $used_field->getId()) {
+            return $possible_background['decorated_value'];
         }
 
-        return $value;
+        if ($artifact) {
+            return $used_field->fetchCardValue($artifact, $this->card_preferences);
+        }
+
+        return "XXX";
     }
 
-    /**
-     * @param Cardwall_Semantic_CardFields $semantic_card
-     * @param                              $artifact
-     *
-     * @return array
-     */
     private function extractDetailsFields(
         Cardwall_Semantic_CardFields $semantic_card,
+        array $possible_background,
         Tracker_Artifact $artifact = null
     ) {
         $fields_details = [];
         foreach ($semantic_card->getFields() as $used_field) {
             $fields_details[] = [
                 'field_label'         => $used_field->getLabel(),
-                'escaped_field_value' => $this->extractArtifactValueForField($used_field, $artifact)
+                'escaped_field_value' => $this->extractArtifactValueForField(
+                    $used_field,
+                    $possible_background,
+                    $artifact
+                ),
+                'background'          => $possible_background['background_color']
             ];
         }
         return $fields_details;
