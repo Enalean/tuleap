@@ -55,6 +55,7 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\REST\MalformedQueryParameterException;
 use Tuleap\AgileDashboard\REST\QueryToCriterionConverter;
+use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
@@ -1171,9 +1172,9 @@ class MilestoneResource extends AuthenticatedResource {
 
     private function getBacklogItemRepresentationFactory()
     {
-        $color_retriever = new BindDecoratorColorRetriever();
+        $color_builder = new BackgroundColorBuilder(new BindDecoratorColorRetriever());
         return new BacklogItemRepresentationFactory(
-            $color_retriever,
+            $color_builder,
             UserManager::instance(),
             $this->event_manager
         );

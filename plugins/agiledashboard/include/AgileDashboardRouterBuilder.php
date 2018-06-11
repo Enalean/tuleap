@@ -34,6 +34,7 @@ use Tuleap\AgileDashboard\PermissionsPerGroup\AgileDashboardPermissionsRepresent
 use Tuleap\AgileDashboard\PermissionsPerGroup\PlanningPermissionsRepresentationBuilder;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
 use Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentationFactory;
+use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRepresentationBuilder;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorColorRetriever;
 
@@ -320,9 +321,9 @@ class AgileDashboardRouterBuilder
 
     private function getPaginatedBacklogItemsRepresentationsBuilder()
     {
-        $color_retriever = new BindDecoratorColorRetriever();
-        $item_factory    = new BacklogItemRepresentationFactory(
-            $color_retriever,
+        $color_builder = new BackgroundColorBuilder(new BindDecoratorColorRetriever());
+        $item_factory  = new BacklogItemRepresentationFactory(
+            $color_builder,
             UserManager::instance(),
             EventManager::instance()
         );

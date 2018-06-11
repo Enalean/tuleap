@@ -19,37 +19,38 @@
 
 namespace Tuleap\AgileDashboard\REST\v1\Kanban;
 
-use Luracast\Restler\RestException;
-use Tuleap\REST\Header;
-use Tuleap\REST\AuthenticatedResource;
-use AgileDashboard_PermissionsManager;
+use AgileDashboard_Kanban;
+use AgileDashboard_KanbanActionsChecker;
+use AgileDashboard_KanbanCannotAccessException;
+use AgileDashboard_KanbanColumnDao;
+use AgileDashboard_KanbanColumnFactory;
+use AgileDashboard_KanbanColumnManager;
 use AgileDashboard_KanbanDao;
 use AgileDashboard_KanbanFactory;
-use AgileDashboard_KanbanNotFoundException;
-use AgileDashboard_KanbanCannotAccessException;
-use AgileDashboard_Kanban;
-use AgileDashboard_KanbanColumnFactory;
-use AgileDashboard_KanbanColumnDao;
-use AgileDashboard_KanbanColumnManager;
 use AgileDashboard_KanbanItemDao;
-use AgileDashboardStatisticsAggregator;
-use TrackerFactory;
-use Tracker_ArtifactFactory;
-use Tracker_FormElementFactory;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorColorRetriever;
-use UserManager;
-use Tracker;
-use PFUser;
-use Tracker_FormElement_Field_List;
-use Tracker_Semantic_Status;
-use Tracker_REST_Artifact_ArtifactCreator                 as ArtifactCreator;
-use Tracker_REST_Artifact_ArtifactValidator               as ArtifactValidator;
-use Tuleap\Tracker\REST\TrackerReference                  as TrackerReference;
-use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation   as ArtifactValuesRepresentation;
-use AgileDashboard_KanbanUserPreferences;
 use AgileDashboard_KanbanItemManager;
-use AgileDashboard_KanbanActionsChecker;
+use AgileDashboard_KanbanNotFoundException;
+use AgileDashboard_KanbanUserPreferences;
+use AgileDashboard_PermissionsManager;
+use AgileDashboardStatisticsAggregator;
+use Luracast\Restler\RestException;
+use PFUser;
+use Tracker;
+use Tracker_ArtifactFactory;
+use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Static_ValueDao;
+use Tracker_FormElementFactory;
+use Tracker_REST_Artifact_ArtifactCreator as ArtifactCreator;
+use Tracker_REST_Artifact_ArtifactValidator as ArtifactValidator;
+use Tracker_Semantic_Status;
+use TrackerFactory;
+use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
+use Tuleap\REST\AuthenticatedResource;
+use Tuleap\REST\Header;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorColorRetriever;
+use Tuleap\Tracker\REST\TrackerReference as TrackerReference;
+use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation as ArtifactValuesRepresentation;
+use UserManager;
 
 class KanbanItemsResource extends AuthenticatedResource {
 
@@ -111,13 +112,13 @@ class KanbanItemsResource extends AuthenticatedResource {
         $kanban_item_dao                   = new AgileDashboard_KanbanItemDao();
         $this->time_info_factory           = new TimeInfoFactory($kanban_item_dao);
         $this->statistics_aggregator       = new AgileDashboardStatisticsAggregator();
-        $bind_decorator_color_retriever    = new BindDecoratorColorRetriever();
+        $color_builder                     = new BackgroundColorBuilder(new BindDecoratorColorRetriever());
         $this->item_representation_builder = new ItemRepresentationBuilder(
             new AgileDashboard_KanbanItemManager($kanban_item_dao),
             $this->time_info_factory,
             UserManager::instance(),
             \EventManager::instance(),
-            $bind_decorator_color_retriever
+            $color_builder
         );
     }
 

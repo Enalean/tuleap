@@ -40,6 +40,7 @@ use Tracker_SemanticManager;
 use Tracker_SlicedArtifactsBuilder;
 use TrackerFactory;
 use Tuleap\AgileDashboard\BacklogItem\RemainingEffortValueRetriever;
+use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorColorRetriever;
@@ -442,9 +443,9 @@ class BacklogItemResource extends AuthenticatedResource
 
     private function getBacklogItemRepresentationFactory()
     {
-        $color_retriever = new BindDecoratorColorRetriever();
+        $color_builder = new BackgroundColorBuilder(new BindDecoratorColorRetriever());
         return new BacklogItemRepresentationFactory(
-            $color_retriever,
+            $color_builder,
             $this->user_manager,
             EventManager::instance()
         );

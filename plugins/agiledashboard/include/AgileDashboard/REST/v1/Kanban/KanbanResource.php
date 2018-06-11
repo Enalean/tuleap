@@ -75,6 +75,7 @@ use Tuleap\AgileDashboard\REST\v1\Kanban\TrackerReport\FilteredItemCollectionRep
 use Tuleap\AgileDashboard\REST\v1\OrderRepresentation;
 use Tuleap\AgileDashboard\REST\v1\OrderValidator;
 use Tuleap\AgileDashboard\REST\v1\ResourcesPatcher;
+use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\RealTime\MessageDataPresenter;
 use Tuleap\RealTime\NodeJSClient;
 use Tuleap\REST\AuthenticatedResource;
@@ -232,13 +233,13 @@ class KanbanResource extends AuthenticatedResource
             $this->kanban_item_dao
         );
 
-        $bind_decorator_color_retriever    = new BindDecoratorColorRetriever();
+        $color_builder                     = new BackgroundColorBuilder(new BindDecoratorColorRetriever());
         $this->item_representation_builder = $item_representation_builder = new ItemRepresentationBuilder(
             $this->kanban_item_manager,
             $this->time_info_factory,
             UserManager::instance(),
             \EventManager::instance(),
-            $bind_decorator_color_retriever
+            $color_builder
         );
 
         $this->item_collection_builder = new ItemCollectionRepresentationBuilder(

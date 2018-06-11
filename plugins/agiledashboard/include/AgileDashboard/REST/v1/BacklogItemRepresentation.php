@@ -19,6 +19,7 @@
 
 namespace Tuleap\AgileDashboard\REST\v1;
 
+use Tuleap\Cardwall\BackgroundColor\BackgroundColor;
 use Tuleap\REST\JsonCast;
 use Tuleap\REST\v1\BacklogItemRepresentationBase;
 use Tuleap\Project\REST\ProjectReference;
@@ -30,7 +31,7 @@ class BacklogItemRepresentation extends BacklogItemRepresentationBase
     public function build(
         \AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item,
         array $card_fields,
-        $background_color_name
+        BackgroundColor $background_color
     ) {
         $this->id               = JsonCast::toInt($backlog_item->id());
         $this->label            = $backlog_item->title();
@@ -61,7 +62,7 @@ class BacklogItemRepresentation extends BacklogItemRepresentationBase
             $this->card_fields = $card_fields;
         }
 
-        $this->background_color_name = $background_color_name;
+        $this->background_color_name = $background_color->getBackgroundColorName();
     }
 
     private function addAllowedSubItemTypes(\AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item) {

@@ -20,37 +20,38 @@
 
 namespace Tuleap\AgileDashboard\REST\v1;
 
+use AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder;
+use AgileDashboard_BacklogItemDao;
+use AgileDashboard_Milestone_Backlog_BacklogFactory;
+use AgileDashboard_Milestone_Backlog_BacklogItemBuilder;
+use AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
+use AgileDashboard_Milestone_MilestoneDao;
+use AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider;
+use AgileDashboard_Milestone_MilestoneStatusCounter;
+use Luracast\Restler\RestException;
 use PFUser;
-use Project;
+use Planning_MilestoneFactory;
 use PlanningFactory;
+use PlanningPermissionsManager;
+use Project;
+use Tracker_Artifact_PriorityDao;
+use Tracker_Artifact_PriorityHistoryDao;
+use Tracker_Artifact_PriorityManager;
+use Tracker_ArtifactDao;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use TrackerFactory;
-use Planning_MilestoneFactory;
-use AgileDashboard_Milestone_Backlog_BacklogFactory;
-use AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
-use AgileDashboard_Milestone_Backlog_BacklogItemBuilder;
-use AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider;
-use AgileDashboard_BacklogItemDao;
-use AgileDashboard_Milestone_MilestoneStatusCounter;
-use Tracker_ArtifactDao;
-use Luracast\Restler\RestException;
 use Tuleap\AgileDashboard\BacklogItem\RemainingEffortValueRetriever;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
+use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\REST\Header;
-use Tracker_Artifact_PriorityDao;
-use Tracker_Artifact_PriorityManager;
-use Tracker_Artifact_PriorityHistoryDao;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorColorRetriever;
-use UserManager;
 use Tuleap\REST\v1\OrderRepresentationBase;
-use PlanningPermissionsManager;
-use AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder;
-use AgileDashboard_Milestone_MilestoneDao;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorColorRetriever;
 use Tuleap\Tracker\REST\v1\ArtifactLinkUpdater;
+use UserManager;
 
 /**
  * Wrapper for backlog related REST methods
@@ -169,9 +170,9 @@ class ProjectBacklogResource
             $event_manager
         );
 
-        $color_retriever = new BindDecoratorColorRetriever();
-        $item_factory    = new BacklogItemRepresentationFactory(
-            $color_retriever,
+        $color_builder = new BackgroundColorBuilder(new BindDecoratorColorRetriever());
+        $item_factory  = new BacklogItemRepresentationFactory(
+            $color_builder,
             $user_manager,
             $event_manager
         );

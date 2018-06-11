@@ -19,6 +19,7 @@
 
 namespace Tuleap\AgileDashboard\REST\v1\Kanban;
 
+use Tuleap\Cardwall\BackgroundColor\BackgroundColor;
 use Tuleap\REST\JsonCast;
 use Tracker_Artifact;
 use UserManager;
@@ -72,7 +73,7 @@ class KanbanItemRepresentation
         $timeinfo,
         $in_column,
         array $card_fields,
-        $background_color_name
+        BackgroundColor $background_color
     ) {
         $this->id                    = JsonCast::toInt($artifact->getId());
         $this->item_name             = $artifact->getTracker()->getItemName();
@@ -81,6 +82,6 @@ class KanbanItemRepresentation
         $this->timeinfo              = $timeinfo;
         $this->in_column             = $in_column;
         $this->card_fields           = $card_fields;
-        $this->background_color_name = $background_color_name;
+        $this->background_color_name = $background_color->getBackgroundColorName();
     }
 }
