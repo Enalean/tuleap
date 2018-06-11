@@ -17,8 +17,9 @@ msgid "Fields"
 msgstr ""
 
 msgid ""
-"No field can be choosen for card color background. Only selectbox and "
-"radiobutton bind on static values can be used."
+"No field can be chosen for card color background. Only selectbox and "
+"radiobutton bind on static values with no value linked to the old color "
+"picker can be used."
 msgstr ""
 
 msgid "Preview of the card"
