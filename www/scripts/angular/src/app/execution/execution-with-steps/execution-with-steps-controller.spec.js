@@ -66,7 +66,6 @@ describe('ExecutionWithStepsController -', () => {
                     rank: 9
                 }
             ]);
-            expect(ExecutionWithStepsController.steps_results).toBe(execution.steps_results);
         });
     });
 });
