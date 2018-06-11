@@ -13,6 +13,10 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
+#, php-format
+msgid "<b>%s</b> field will determine background color."
+msgstr "Le champ <b>%s</b> va définir la couleur de fond des cartes."
+
 msgid "Add a field to the cards"
 msgstr "Ajouter un champ aux cartes"
 
@@ -40,6 +44,16 @@ msgstr ""
 "déroulante et les boutons radio basés sur des valeurs statiques qui n'ont "
 "aucune de leur valeurs liées à l'ancienne palette de couleur peuvent être "
 "utilisés."
+
+msgid "No field is chosen to determine backgorund color"
+msgstr "Aucun champ n'a été choisi pour définir la couleur de fond des cartes."
+
+msgid ""
+"Only static fields with values bound to new color picker can be chosen as "
+"background color"
+msgstr ""
+"Seuls les champs statiques avec des valeurs liées à la nouvelle palette de "
+"couleur peuvent être choisis comme couleur de fond des cartes"
 
 msgid "Preview of the card"
 msgstr "Aperçu des cartes"
