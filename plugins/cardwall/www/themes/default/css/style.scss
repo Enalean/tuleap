@@ -53,7 +53,7 @@
     display: none;
 }
 
-.cardwall_board .card {
+.card {
     cursor: move;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
@@ -66,32 +66,16 @@
 }
 
 .cardwall_board .nodrag .card {
-    cursor: auto;
-    background: #ffffff;
     height: 100%;
-    -moz-box-shadow: none;
-    -webkit-box-shadow: none;
-    box-shadow: none;
-}
-
-.cardwall_board .nodrag .card {
-    background: #ffffff;
-    -webkit-border-top-right-radius: 5px;
-    -webkit-border-bottom-right-radius: 5px;
-    -moz-border-radius-topright: 5px;
-    -moz-border-radius-bottomright: 5px;
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
-}
+    box-shadow: none;
+    cursor: auto;
 
-.cardwall_board .nodrag .card > .card-container {
-    background: #ffffff;
-    -webkit-border-top-right-radius: 3px;
-    -webkit-border-bottom-right-radius: 3px;
-    -moz-border-radius-topright: 3px;
-    -moz-border-radius-bottomright: 3px;
-    border-top-right-radius: 3px;
-    border-bottom-right-radius: 3px;
+    > .card-container {
+        border-top-right-radius: 3px;
+        border-bottom-right-radius: 3px;
+    }
 }
 
 .dashboard-widget .cardwall_board .card,

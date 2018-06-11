@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,12 +17,13 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 
 /**
  * Builds instances of CardInCellPresenterNode
  */
-class Cardwall_CardInCellPresenterBuilder {
-
+class Cardwall_CardInCellPresenterBuilder
+{
     /** @var Cardwall_CardInCellPresenterFactory */
     private $card_in_cell_presenter_factory;
 
@@ -35,16 +36,21 @@ class Cardwall_CardInCellPresenterBuilder {
     /** @var PFUser */
     private $user;
 
-    function __construct(
+    /** @var Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder */
+    private $background_color_builder;
+
+    public function __construct(
         Cardwall_CardInCellPresenterFactory $card_in_cell_presenter_factory,
         Cardwall_CardFields $card_fields,
         Cardwall_UserPreferences_UserPreferencesDisplayUser $display_preferences,
-        PFUser $user
+        PFUser $user,
+        BackgroundColorBuilder $background_color_builder
     ) {
         $this->card_in_cell_presenter_factory = $card_in_cell_presenter_factory;
         $this->card_fields                    = $card_fields;
         $this->display_preferences            = $display_preferences;
         $this->user                           = $user;
+        $this->background_color_builder       = $background_color_builder;
     }
 
     /**
@@ -69,8 +75,11 @@ class Cardwall_CardInCellPresenterBuilder {
         return $presenters;
     }
 
-    private function getCardPresenter(Tracker_Artifact $artifact, $swimline_id) {
-        $color = $artifact->getCardAccentColor($this->user);
+    private function getCardPresenter(Tracker_Artifact $artifact, $swimline_id)
+    {
+        $color                = $artifact->getCardAccentColor($this->user);
+        $card_fields_semantic = Cardwall_Semantic_CardFields::load($artifact->getTracker());
+        $background_color     = $this->background_color_builder->build($card_fields_semantic, $artifact, $this->user);
 
         return new Cardwall_CardPresenter(
             $artifact,
@@ -79,9 +88,8 @@ class Cardwall_CardInCellPresenterBuilder {
             $this->display_preferences,
             $swimline_id,
             $artifact->getAllowedChildrenTypesForUser($this->user),
+            $background_color,
             $artifact->getParent($this->user)
         );
     }
 }
-
-?>

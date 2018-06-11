@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+@import '../../../../../../../src/www/themes/common/tlp/src/scss/variables/colors';
 
 .cards {
     margin: 0;
@@ -30,6 +31,7 @@
 .card {
     position: relative;
     min-width: 200px;
+    height: 100%;
     margin-bottom: 1em;
     padding: 0 0 0 5px;
     border: 1px solid #b2b39d;
@@ -40,11 +42,45 @@
         border: 1px dashed #3a87ad;
         background: url('/themes/common/images/backstripes.gif');
     }
+
+    @each $color-name, $colors in $tlp-swatch-color-map {
+        &.card-style-#{$color-name} {
+            border-color: mix($tlp-ui-white, map-get($colors, 'border'), 70%);
+            background: map-get($colors, 'secondary');
+
+            > .card-container {
+                background: map-get($colors, 'secondary');
+            }
+
+            .card-accessibility {
+                opacity: .5;
+                background-color: map-get($colors, 'border');
+                // scss-lint:disable VendorPrefix
+                -webkit-mask-image: url(map-get($colors, 'pattern'));
+                mask-image: url(map-get($colors, 'pattern'));
+
+                @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+                    background-color: transparent;
+                    background-image: url(map-get($colors, 'pattern'));
+                }
+            }
+        }
+    }
+}
+
+.card-accessibility {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 20px;
+    height: 100%;
 }
 
 .card-container {
+    position: relative;
+    height: 100%;
     min-height: 50px;
-    padding: .25em .5em;
+    padding: .25em 20px .25em .5em;
     border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;
     background: #ffffbb;

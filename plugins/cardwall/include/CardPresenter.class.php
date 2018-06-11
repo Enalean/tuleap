@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,8 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Cardwall_CardPresenter implements Tracker_CardPresenter {
+use Tuleap\Cardwall\BackgroundColor\BackgroundColor;
 
+class Cardwall_CardPresenter implements Tracker_CardPresenter
+{
     /**
      * @var Tracker_Artifact
      */
@@ -43,7 +45,25 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter {
 
     private $swimline_id;
 
-    public function __construct(Tracker_Artifact $artifact, Cardwall_CardFields $card_fields, $accent_color, Cardwall_UserPreferences_UserPreferencesDisplayUser $display_preferences, $swimline_id, array $allowed_children, Tracker_Artifact $parent = null) {
+    /** @var string */
+    public $details;
+
+    /** @var Cardwall_UserPreferences_UserPreferencesDisplayUser */
+    private $display_preferences;
+
+    /** @var BackgroundColor */
+    private $background_color;
+
+    public function __construct(
+        Tracker_Artifact $artifact,
+        Cardwall_CardFields $card_fields,
+        $accent_color,
+        Cardwall_UserPreferences_UserPreferencesDisplayUser $display_preferences,
+        $swimline_id,
+        array $allowed_children,
+        BackgroundColor $background_color,
+        Tracker_Artifact $parent = null
+    ) {
         $this->artifact            = $artifact;
         $this->parent              = $parent;
         $this->details             = $GLOBALS['Language']->getText('plugin_cardwall', 'details');
@@ -52,6 +72,7 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter {
         $this->display_preferences = $display_preferences;
         $this->allowed_children    = $allowed_children;
         $this->swimline_id         = $swimline_id;
+        $this->background_color    = $background_color;
     }
 
     /**
@@ -154,5 +175,14 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter {
     public function allowedChildrenTypes() {
         return $this->allowed_children;
     }
+
+    /**
+     * @see Tracker_CardPresenter
+     *
+     * @return string TLP color name
+     */
+    public function getBackgroundColorName()
+    {
+        return $this->background_color->getBackgroundColorName();
+    }
 }
-?>
