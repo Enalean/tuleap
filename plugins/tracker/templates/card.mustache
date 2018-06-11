@@ -1,6 +1,6 @@
 {{#getCardPresenter}}
-<div class="card {{# getBackgroundColorName }}card-style-{{ getBackgroundColorName }}{{/ getBackgroundColorName }}"
-     style="background-color: {{getAccentColor}};"
+<div class="card{{ getCssClasses }}"
+     {{# hasLegacyAccentColor }}style="background-color: {{ getAccentColor }}"{{/ hasLegacyAccentColor }}
      data-artifact-id="{{getId}}"
 >
     <div class="card-container">

@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Cardwall\AccentColor\AccentColorBuilder;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 
 /**
@@ -36,21 +38,26 @@ class Cardwall_CardInCellPresenterBuilder
     /** @var PFUser */
     private $user;
 
-    /** @var Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder */
+    /** @var BackgroundColorBuilder */
     private $background_color_builder;
+
+    /** @var AccentColorBuilder */
+    private $accent_color_builder;
 
     public function __construct(
         Cardwall_CardInCellPresenterFactory $card_in_cell_presenter_factory,
         Cardwall_CardFields $card_fields,
         Cardwall_UserPreferences_UserPreferencesDisplayUser $display_preferences,
         PFUser $user,
-        BackgroundColorBuilder $background_color_builder
+        BackgroundColorBuilder $background_color_builder,
+        AccentColorBuilder $accent_color_builder
     ) {
         $this->card_in_cell_presenter_factory = $card_in_cell_presenter_factory;
         $this->card_fields                    = $card_fields;
         $this->display_preferences            = $display_preferences;
         $this->user                           = $user;
         $this->background_color_builder       = $background_color_builder;
+        $this->accent_color_builder           = $accent_color_builder;
     }
 
     /**
@@ -77,7 +84,7 @@ class Cardwall_CardInCellPresenterBuilder
 
     private function getCardPresenter(Tracker_Artifact $artifact, $swimline_id)
     {
-        $color                = $artifact->getCardAccentColor($this->user);
+        $color                = $this->accent_color_builder->build($artifact, $this->user);
         $card_fields_semantic = Cardwall_Semantic_CardFields::load($artifact->getTracker());
         $background_color     = $this->background_color_builder->build($card_fields_semantic, $artifact, $this->user);
 

@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Cardwall\AccentColor\AccentColor;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColor;
 
 require_once dirname(__FILE__) .'/bootstrap.php';
@@ -87,7 +88,7 @@ class Cardwall_ArtifactNodeTreeProviderTest extends TuleapTestCase {
                 new Cardwall_CardPresenter(
                     $artifact4,
                     mock('Cardwall_CardFields'),
-                    '*',
+                    mock(AccentColor::class),
                     mock('Cardwall_UserPreferences_UserPreferencesDisplayUser'),
                     0,
                     array(),
@@ -101,7 +102,7 @@ class Cardwall_ArtifactNodeTreeProviderTest extends TuleapTestCase {
                 new Cardwall_CardPresenter(
                     $artifact5,
                     mock('Cardwall_CardFields'),
-                    '*',
+                    mock(AccentColor::class),
                     mock('Cardwall_UserPreferences_UserPreferencesDisplayUser'),
                     0,
                     array(),
@@ -115,7 +116,7 @@ class Cardwall_ArtifactNodeTreeProviderTest extends TuleapTestCase {
                 new Cardwall_CardPresenter(
                     $artifact6,
                     mock('Cardwall_CardFields'),
-                    '*',
+                    mock(AccentColor::class),
                     mock('Cardwall_UserPreferences_UserPreferencesDisplayUser'),
                     0,
                     array(),

@@ -93,6 +93,13 @@ interface Tracker_CardPresenter
     public function getAccentColor();
 
     /**
+     * True when the accent color of the card is a css compatible color
+     * False when it's a TLP color name
+     * @return bool
+     */
+    public function hasLegacyAccentColor();
+
+    /**
      * The value of the list field defined by the Card semantic
      *
      * @return string TLP color name

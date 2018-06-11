@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011-2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2011-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,14 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Cardwall\AccentColor\AccentColorBuilder;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorColorRetriever;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\Tracker\Report\WidgetAdditionalButtonPresenter;
 
 require_once 'common/TreeNode/TreeNodeMapper.class.php';
 require_once 'common/templating/TemplateRendererFactory.class.php';
 
-class Cardwall_Renderer extends Tracker_Report_Renderer {
+class Cardwall_Renderer extends Tracker_Report_Renderer
+{
     /**
      * @var Plugin
      */
@@ -130,7 +133,6 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
         if (! $field) {
             $board = new Cardwall_Board(array(), new Cardwall_OnTop_Config_ColumnCollection(), new Cardwall_MappingCollection());
         } else {
-
             $field_provider      = new Cardwall_FieldProviders_CustomFieldRetriever($field);
             $column_preferences  = new Cardwall_UserPreferences_Autostack_AutostackRenderer($user, $this->report);
             $columns             = $this->config->getRendererColumns($field, $column_preferences);
@@ -143,12 +145,17 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
                 $columns
             );
             $background_color_builder = new BackgroundColorBuilder(new BindDecoratorColorRetriever());
+            $accent_color_builder = new AccentColorBuilder(
+                $this->getFormElementFactory(),
+                new BindDecoratorRetriever()
+            );
             $presenter_builder = new Cardwall_CardInCellPresenterBuilder(
                 new Cardwall_CardInCellPresenterFactory($field_provider, $mapping_collection),
                 new Cardwall_CardFields(UserManager::instance(), Tracker_FormElementFactory::instance()),
                 $display_preferences,
                 $user,
-                $background_color_builder
+                $background_color_builder,
+                $accent_color_builder
             );
 
             $swimline_factory = new Cardwall_SwimlineFactory($this->config, $field_provider);

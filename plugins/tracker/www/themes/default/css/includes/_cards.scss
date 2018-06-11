@@ -71,6 +71,13 @@
     }
 }
 
+@each $color-name, $colors in $tlp-swatch-color-map {
+    // Specificity added to win over .card.card-style-$color
+    div.card.card-accent-#{$color-name} {
+        background: map-get($colors, 'primary');
+    }
+}
+
 .card-accessibility {
     position: absolute;
     top: 0;

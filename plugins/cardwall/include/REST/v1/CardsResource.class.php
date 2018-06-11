@@ -33,10 +33,12 @@ use Tracker_Exception;
 use Tracker_FormElement_InvalidFieldException;
 use Tracker_FormElementFactory;
 use TrackerFactory;
+use Tuleap\Cardwall\AccentColor\AccentColorBuilder;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorColorRetriever;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use URLVerification;
 use UserManager;
 
@@ -71,9 +73,8 @@ class CardsResource {
             ),
             Tracker_ArtifactFactory::instance(),
             PlanningFactory::build(),
-            new BackgroundColorBuilder(
-                new BindDecoratorColorRetriever()
-            )
+            new BackgroundColorBuilder(new BindDecoratorColorRetriever()),
+            new AccentColorBuilder($this->formelement_factory, new BindDecoratorRetriever())
         );
     }
 
