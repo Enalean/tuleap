@@ -8,6 +8,10 @@ import {
     rewire$resetError,
     restore as restoreFeedback
 } from '../../../feedback-state.js';
+import {
+    rewire$updateStatusWithStepResults,
+    restore as restoreUpdater
+} from './execution-with-steps-updater.js';
 
 describe('StepController', () => {
     let $q,
@@ -15,7 +19,8 @@ describe('StepController', () => {
         StepController,
         ExecutionRestService,
         setError,
-        resetError;
+        resetError,
+        updateStatusWithStepResults;
     const $element = angular.element('<div></div>');
     const fake_dropdown_object = jasmine.createSpyObj('dropdown', ['hide', 'show']);
     const mockDropdown = jasmine.createSpy('dropdown').and.returnValue(fake_dropdown_object);
@@ -27,6 +32,10 @@ describe('StepController', () => {
         rewire$setError(setError);
         resetError = jasmine.createSpy('resetError');
         rewire$resetError(resetError);
+
+        updateStatusWithStepResults = jasmine.createSpy('updateStatusWithStepResults');
+        rewire$updateStatusWithStepResults(updateStatusWithStepResults);
+
 
         angular.mock.module(execution_module);
 
@@ -51,6 +60,7 @@ describe('StepController', () => {
 
     afterEach(() => {
         restoreFeedback();
+        restoreUpdater();
     });
 
     describe('openDropdown()', () => {

@@ -9,5 +9,6 @@ import './execution/execution-link-issue-controller.spec.js';
 import './execution/execution-list-filter.spec.js';
 import './execution/execution-list-header/execution-list-header-controller.spec.js';
 import './execution/execution-with-steps/execution-with-steps-controller.spec.js';
+import './execution/execution-with-steps/step/execution-with-steps-updater.spec.js';
 import './execution/execution-with-steps/step/step-controller.spec.js';
 import './socket/socket-service.spec.js';

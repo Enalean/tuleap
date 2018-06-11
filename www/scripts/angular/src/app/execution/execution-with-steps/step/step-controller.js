@@ -6,6 +6,7 @@ import {
 } from '../../execution-constants.js';
 import { dropdown } from 'tlp';
 import { setError, resetError } from '../../../feedback-state.js';
+import { updateStatusWithStepResults } from './execution-with-steps-updater.js';
 
 controller.$inject = [
     '$element',
@@ -70,6 +71,7 @@ export default function controller(
             .then(
                 () => {
                     self.step_result.status = status;
+                    updateStatusWithStepResults(self.execution);
                 },
                 error =>
                     setError(
