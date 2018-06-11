@@ -82,6 +82,15 @@ class ExecutionStatusUpdater
             $this->artifact_updater->update($user, $execution_artifact, $changes);
 
             $new_status = $this->getCurrentStatus($execution_artifact);
+            $campaign = $this->testmanagement_artifact_factory->getCampaignForExecution($execution_artifact);
+            $this->realtime_message_sender->sendExecutionUpdated(
+                $user,
+                $campaign,
+                $execution_artifact,
+                $new_status,
+                $previous_status,
+                $previous_user
+            );
         } catch (Tracker_FormElement_InvalidFieldException $exception) {
             throw new RestException(400, $exception->getMessage());
         } catch (Tracker_NoChangeException $exception) {
@@ -92,16 +101,6 @@ class ExecutionStatusUpdater
             }
             throw new RestException(500, $exception->getMessage());
         }
-
-        $campaign = $this->testmanagement_artifact_factory->getCampaignForExecution($execution_artifact);
-        $this->realtime_message_sender->sendExecutionUpdated(
-            $user,
-            $campaign,
-            $execution_artifact,
-            $new_status,
-            $previous_status,
-            $previous_user
-        );
     }
 
     /** @return string */
