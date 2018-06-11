@@ -109,4 +109,16 @@ class GitPullRequestReferenceDAO extends DataAccessObject
     {
         return $this->getDB()->row('SELECT * FROM plugin_pullrequest_git_reference WHERE pr_id = ?', $pull_request_id);
     }
+
+    /**
+     * @return array
+     */
+    public function searchPullRequestsByReferenceStatus($status)
+    {
+        $sql = 'SELECT plugin_pullrequest_review.*
+                FROM plugin_pullrequest_review
+                JOIN plugin_pullrequest_git_reference ON (plugin_pullrequest_review.id = plugin_pullrequest_git_reference.pr_id)
+                WHERE plugin_pullrequest_git_reference.status = ?';
+        return $this->getDB()->run($sql, $status);
+    }
 }
