@@ -46,15 +46,25 @@ class GitPullRequestReferenceCreator
             throw new \LogicException('Destination repository ID does not match the one of the PR');
         }
 
-        $reference_id = $this->dao->createGitReferenceForPullRequest($pull_request->getId());
+        $reference_id = $this->dao->createGitReferenceForPullRequest(
+            $pull_request->getId(),
+            GitPullRequestReference::STATUS_NOT_YET_CREATED
+        );
         while ($this->isReferenceAlreadyTaken($executor_repository_destination, $reference_id)) {
             $reference_id = $this->dao->updateGitReferenceToNextAvailableOne($pull_request->getId());
         }
 
-        $executor_repository_source->push(
-            escapeshellarg('gitolite@gl-adm:' . $repository_destination->getPath()) . ' ' .
-                escapeshellarg($pull_request->getSha1Src()) . ':' . escapeshellarg(GitPullRequestReference::PR_NAMESPACE . $reference_id . '/head')
-        );
+        $reference = new GitPullRequestReference($reference_id, GitPullRequestReference::STATUS_NOT_YET_CREATED);
+        try {
+            $executor_repository_source->push(
+                escapeshellarg('gitolite@gl-adm:' . $repository_destination->getPath()) . ' ' .
+                escapeshellarg($pull_request->getSha1Src()) . ':' . escapeshellarg($reference->getGitHeadReference())
+            );
+        } catch (\Git_Command_Exception $ex) {
+            $this->dao->updateStatusByPullRequestId($pull_request->getId(), GitPullRequestReference::STATUS_BROKEN);
+            throw $ex;
+        }
+        $this->dao->updateStatusByPullRequestId($pull_request->getId(), GitPullRequestReference::STATUS_OK);
     }
 
     /**

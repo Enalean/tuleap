@@ -42,6 +42,7 @@ class GitPullRequestReferenceCreatorTest extends TestCase
         $repository_destination = \Mockery::mock(\GitRepository::class);
 
         $dao->shouldReceive('createGitReferenceForPullRequest')->andReturns(1)->once();
+        $dao->shouldReceive('updateStatusByPullRequestId')->once();
         $executor_destination->shouldReceive('getReferencesFromPattern')->andReturns([])->once();
         $executor_source->shouldReceive('push')->once();
 
@@ -54,7 +55,7 @@ class GitPullRequestReferenceCreatorTest extends TestCase
         $reference_creator->createPullRequestReference($pull_request, $executor_source, $executor_destination, $repository_destination);
     }
 
-    public function testPullRequestReferenceIsCreatedWithFirstAvailabelOneWhenTheInitialOneIsAlreadyTaken()
+    public function testPullRequestReferenceIsCreatedWithFirstAvailableOneWhenTheInitialOneIsAlreadyTaken()
     {
         $dao               = \Mockery::mock(GitPullRequestReferenceDAO::class);
         $reference_creator = new GitPullRequestReferenceCreator($dao);
@@ -66,6 +67,7 @@ class GitPullRequestReferenceCreatorTest extends TestCase
 
         $dao->shouldReceive('createGitReferenceForPullRequest')->andReturns(1)->once();
         $dao->shouldReceive('updateGitReferenceToNextAvailableOne')->andReturns(2, 3)->twice();
+        $dao->shouldReceive('updateStatusByPullRequestId')->once();
         $executor_destination->shouldReceive('getReferencesFromPattern')->andReturns(
             ['refs/tlpr/1/head'],
             ['refs/tlpr/2/head'],
@@ -97,6 +99,33 @@ class GitPullRequestReferenceCreatorTest extends TestCase
 
         $pull_request->shouldReceive('getRepoDestId')->andReturns(1);
         $repository_destination->shouldReceive('getId')->andReturns(2);
+
+        $reference_creator->createPullRequestReference($pull_request, $executor_source, $executor_destination, $repository_destination);
+    }
+
+    /**
+     * @expectedException \Git_Command_Exception
+     */
+    public function testGitReferenceIsMarkedAsBrokenWhenItCannotBeCreated()
+    {
+        $dao               = \Mockery::mock(GitPullRequestReferenceDAO::class);
+        $reference_creator = new GitPullRequestReferenceCreator($dao);
+
+        $pull_request           = \Mockery::mock(PullRequest::class);
+        $executor_source        = \Mockery::mock(GitExec::class);
+        $executor_destination   = \Mockery::mock(GitExec::class);
+        $repository_destination = \Mockery::mock(\GitRepository::class);
+
+        $dao->shouldReceive('createGitReferenceForPullRequest')->andReturns(1)->once();
+        $dao->shouldReceive('updateStatusByPullRequestId')->with(1, GitPullRequestReference::STATUS_BROKEN)->once();
+        $executor_destination->shouldReceive('getReferencesFromPattern')->andReturns([])->once();
+        $executor_source->shouldReceive('push')->once()->andThrow(\Mockery::mock(\Git_Command_Exception::class));
+
+        $pull_request->shouldReceive('getId')->andReturns(1);
+        $pull_request->shouldReceive('getRepoDestId')->andReturns(1);
+        $pull_request->shouldReceive('getSha1Src')->andReturns('38762cf7f55934b34d179ae6a4c80cadccbb7f0a');
+        $repository_destination->shouldReceive('getId')->andReturns(1);
+        $repository_destination->shouldReceive('getPath')->andReturns('/path');
 
         $reference_creator->createPullRequestReference($pull_request, $executor_source, $executor_destination, $repository_destination);
     }

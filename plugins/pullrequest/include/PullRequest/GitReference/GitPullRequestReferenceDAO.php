@@ -24,7 +24,7 @@ use Tuleap\DB\DataAccessObject;
 
 class GitPullRequestReferenceDAO extends DataAccessObject
 {
-    public function createGitReferenceForPullRequest($pull_request_id)
+    public function createGitReferenceForPullRequest($pull_request_id, $status)
     {
         $repository_dest_id = $this->getRepositoryIdFromPullRequest($pull_request_id);
         $this->getDB()->beginTransaction();
@@ -36,7 +36,8 @@ class GitPullRequestReferenceDAO extends DataAccessObject
                 [
                     'repository_dest_id' => $repository_dest_id,
                     'reference_id'       => $reference_id,
-                    'pr_id'              => $pull_request_id
+                    'pr_id'              => $pull_request_id,
+                    'status'             => $status
                 ]
             );
             $this->getDB()->commit();
@@ -67,6 +68,15 @@ class GitPullRequestReferenceDAO extends DataAccessObject
         }
 
         return $reference_id;
+    }
+
+    public function updateStatusByPullRequestId($pull_request_id, $status)
+    {
+        $this->getDB()->run(
+            'UPDATE plugin_pullrequest_git_reference SET status = ? WHERE pr_id = ?',
+            $status,
+            $pull_request_id
+        );
     }
 
     /**
