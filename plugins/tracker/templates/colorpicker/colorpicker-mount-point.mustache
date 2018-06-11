@@ -1,0 +1,21 @@
+<div class="vue-colorpicker-mount-point"
+    data-input-name="{{ input_name }}"
+    data-input-id="{{ input_id }}"
+    data-current-color="{{ current_color }}"
+    data-switch-default-palette-label="
+        {{# dgettext }}
+            tuleap-tracker
+            | Switch to default colors
+        {{/ dgettext }}"
+    data-switch-old-palette-label="
+        {{# dgettext }}
+            tuleap-tracker
+            | Switch to old colors
+        {{/ dgettext }}"
+    data-switch-disabled-title="
+        {{# dgettext }}
+            tuleap-tracker
+            | You can't switch to old colors because the field is currently being used by the card background color semantic
+        {{/ dgettext }}"
+    data-is-switch-disabled="{{ is_switch_disabled }}"
+></div>

@@ -642,6 +642,13 @@ msgstr ""
 "Vous pouvez sélectionner le mode de notification que vous préférez pour ce "
 "tracker."
 
+msgid ""
+"You can't switch to old colors because the field is currently being used by "
+"the card background color semantic"
+msgstr ""
+"Vous ne pouvez pas passer à l'ancienne palette car le champ est actuellement "
+"utilisé par la sémantique couleur de fond des cartes"
+
 msgid "You don't have permissions to see user groups."
 msgstr "Vous n'avez pas la permission de consulter les groupes d'utilisateur."
 

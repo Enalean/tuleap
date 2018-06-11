@@ -35,7 +35,8 @@ use Tuleap\Cardwall\Semantic\SingleCardPreviewDetailsBuilder;
 
 class Cardwall_Semantic_CardFields extends Tracker_Semantic
 {
-    const NAME = 'plugin_cardwall_card_fields';
+    const NAME                  = 'plugin_cardwall_card_fields';
+    const BACKGROUND_COLOR_NAME = 'plugin_cardwell_card_fields_background_color';
     /**
      * @var Tracker_FormElement_Field|null
      */

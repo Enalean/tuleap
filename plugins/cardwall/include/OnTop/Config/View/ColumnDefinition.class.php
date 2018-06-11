@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Colorpicker\ColorpickerMountPointPresenter;
+
 require_once 'common/layout/ColorHelper.class.php';
 
 class Cardwall_OnTop_Config_View_ColumnDefinition {
@@ -215,9 +217,6 @@ class Cardwall_OnTop_Config_View_ColumnDefinition {
 
     private function decorateEdit(Cardwall_Column $column)
     {
-        $switch_old_palette_label     = dgettext('tuleap-tracker', 'Switch to old colors');
-        $switch_default_palette_label = dgettext('tuleap-tracker', 'Switch to default colors');
-
         $current_color = ($column->isBackgroundATLPColor())
             ? $column->getBgcolor()
             : ColorHelper::CssRGBToHexa($column->getBgcolor());
@@ -225,15 +224,19 @@ class Cardwall_OnTop_Config_View_ColumnDefinition {
         $input_id   = 'column_'. $column->id .'_field';
         $input_name = "column[$column->id][bgcolor]";
 
-        return '
-            <div class="vue-colorpicker-mount-point"
-                data-input-name="'. $input_name .'"
-                data-input-id="'. $input_id .'"
-                data-current-color="'. $current_color . '"
-                data-switch-default-palette-label="' . $switch_default_palette_label . '"
-                data-switch-old-palette-label="' . $switch_old_palette_label . '"
-            ></div>
-        ';
+        $renderer = TemplateRendererFactory::build()->getRenderer(
+            TRACKER_TEMPLATE_DIR  . '/colorpicker/'
+        );
+
+        return $renderer->renderToString(
+            'colorpicker-mount-point',
+            new ColorpickerMountPointPresenter(
+                $current_color,
+                $input_name,
+                $input_id,
+                false
+            )
+        );
     }
 
     private function fetchSquareColor($id, $title, $classname, $img = 'blank16x16.png') {
