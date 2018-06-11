@@ -224,7 +224,7 @@ class TrackerFactory {
                     $row['deletion_date'],
                     $row['instantiate_for_new_projects'],
                     $row['log_priority_changes'],
-                    $row['stop_notification'],
+                    $row['notifications_level'],
                     $row['color'],
                     $row['enable_emailgateway']
         );
@@ -723,7 +723,7 @@ class TrackerFactory {
                 '',
                 $tracker->instantiate_for_new_projects,
                 $tracker->log_priority_changes,
-                $tracker->stop_notification,
+                $tracker->getNotificationsLevel(),
                 $tracker->color,
                 $tracker->isEmailgatewayEnabled()
         );

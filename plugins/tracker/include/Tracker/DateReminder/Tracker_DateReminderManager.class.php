@@ -54,7 +54,7 @@ class Tracker_DateReminderManager {
      */
     public function process() {
         $logger = new BackendLogger();
-        if ($this->tracker->stop_notification==0) {
+        if (! $this->tracker->isNotificationStopped()) {
             $remiderFactory = $this->getDateReminderRenderer()->getDateReminderFactory();
             $reminders      = $remiderFactory->getTrackerReminders(false);
             foreach ($reminders as $reminder) {
