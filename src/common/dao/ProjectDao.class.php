@@ -59,6 +59,21 @@ class ProjectDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    public function countByStatusAndUser($user_id, $status)
+    {
+        $user_id = $this->da->escapeInt($user_id);
+        $status  = $this->da->quoteSmart($status);
+
+        $sql = "SELECT SQL_CALC_FOUND_ROWS 1
+                FROM groups g
+                  JOIN user_group ug USING (group_id)
+                WHERE g.status = $status
+                  AND ug.user_id = $user_id
+                  AND ug.admin_flags = 'A'";
+        $this->retrieve($sql);
+        return (int) $this->foundRows();
+    }
+
     public function searchByUnixGroupName($unixGroupName){
         $unixGroupName= $this->da->quoteSmart($unixGroupName);
         $sql = "SELECT *

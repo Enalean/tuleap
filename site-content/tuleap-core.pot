@@ -179,6 +179,9 @@ msgstr ""
 msgid "Compromised password"
 msgstr ""
 
+msgid "Configure how project creation is controlled by administrators"
+msgstr ""
+
 msgid "Configure services"
 msgstr ""
 
@@ -442,6 +445,14 @@ msgstr ""
 msgid "Lists"
 msgstr ""
 
+msgid "Maximum number of projects waiting for validation (-1 means no limits)"
+msgstr ""
+
+msgid ""
+"Maximum number of projects waiting for validation for one requester (-1 "
+"means no limits)"
+msgstr ""
+
 msgid "Meaningful description of the group"
 msgstr ""
 
@@ -464,6 +475,9 @@ msgid "Membership management"
 msgstr ""
 
 msgid "Missing Information. PLEASE fill in all required information."
+msgstr ""
+
+msgid "Moderation"
 msgstr ""
 
 msgid "My personnal page"
@@ -609,6 +623,9 @@ msgstr ""
 msgid "Project"
 msgstr ""
 
+msgid "Project Creation request is disabled"
+msgstr ""
+
 msgid "Project Data Export"
 msgstr ""
 
@@ -623,10 +640,22 @@ msgid ""
 "Project administrators group first."
 msgstr ""
 
+msgid "Project creation moderation"
+msgstr ""
+
+msgid "Project creation moderation settings"
+msgstr ""
+
+msgid "Project creation settings"
+msgstr ""
+
 msgid "Project does not exist"
 msgstr ""
 
 msgid "Project hierarchy"
+msgstr ""
+
+msgid "Project must be approved by administrators"
 msgstr ""
 
 msgid "Project name"
@@ -698,6 +727,9 @@ msgstr ""
 msgid "Save modifications"
 msgstr ""
 
+msgid "Save settings"
+msgstr ""
+
 msgid "Scope"
 msgstr ""
 
@@ -717,6 +749,9 @@ msgid "Service permissions"
 msgstr ""
 
 msgid "Services"
+msgstr ""
+
+msgid "Settings saved"
 msgstr ""
 
 msgid "Short description"
@@ -755,6 +790,9 @@ msgid "System groups"
 msgstr ""
 
 msgid "Template used by project"
+msgstr ""
+
+msgid "Templates"
 msgstr ""
 
 #, php-format
@@ -828,6 +866,11 @@ msgid "There are no projects in this category"
 msgstr ""
 
 msgid "There are no widgets here."
+msgstr ""
+
+msgid ""
+"There are too many projects being requested at the moment. Please try again "
+"later on."
 msgstr ""
 
 msgid "There is no users group bound to this one."
@@ -1130,6 +1173,12 @@ msgstr ""
 msgid ""
 "You should remove user from news administrators before being able to remove "
 "him from writers."
+msgstr ""
+
+msgid ""
+"You still have <code>$sys_project_approval</code> variable defined in local."
+"inc. It's now stored in DB, you should remove it from the file to avoid "
+"confusion."
 msgstr ""
 
 msgid ""

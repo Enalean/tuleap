@@ -1,49 +1,54 @@
-<h1>{{ title }}</h1>
+<div class="tlp-framed-vertically">
 
-<section class="tlp-pane">
-    <div class="tlp-pane-container">
-        <div class="tlp-pane-header">
-            <h1 class="tlp-pane-title">
-                <i class="tlp-pane-title-icon fa fa-archive"></i>
-                {{ title }}
-            </h1>
-        </div>
-        <section class="tlp-pane-section">
-            <table class="tlp-table" id="siteadmin-templates">
-                <thead>
-                    <tr>
-                        <th class="siteadmin-templates-name">{{ project_name_header }}</th>
-                        <th class="siteadmin-templates-name">{{ unix_group_name_header }}</th>
-                        <th></th>
-                    </tr>
-                </thead>
+    {{> creation-settings-tabs }}
 
-                <tbody>
-                    {{# templates }}
-                        <tr>
-                            <td class="tlp-table-cell-filterable siteadmin-templates-name">
-                                <a href="/admin/groupedit.php?group_id={{ id }}">{{ name }}</a>
-                            </td>
-                            <td class="tlp-table-cell-filterable siteadmin-templates-name">
-                                {{ unix_name }}
-                            </td>
-                            <td class="tlp-table-cell-actions">
-                                <a href="/project/admin/servicebar.php?group_id={{ id }}" class="tlp-table-cell-actions-button tlp-button-primary tlp-button-small tlp-button-outline">
-                                    <i class="fa fa-cog tlp-button-icon"></i> {{ services_button_label }}
-                                </a>
-                                {{# additional_buttons }}
-                                    <a href="{{# is_disabled }}javascript:;{{/ is_disabled }}{{^ is_disabled }}{{ uri }}{{/ is_disabled }}"
-                                       class="tlp-table-cell-actions-button tlp-button-primary tlp-button-small tlp-button-outline {{# is_disabled }}disabled{{/ is_disabled }}"
-                                       {{# title }}title="{{ title }}"{{/ title }}
-                                    >
-                                        <i class="fa {{ icon }} tlp-button-icon"></i> {{ label }}
-                                    </a>
-                                {{/ additional_buttons }}
-                            </td>
-                        </tr>
-                    {{/ templates }}
-                </tbody>
-            </table>
+    <div class="tlp-framed-horizontally">
+        <section class="tlp-pane">
+            <div class="tlp-pane-container">
+                <div class="tlp-pane-header">
+                    <h1 class="tlp-pane-title">
+                        <i class="tlp-pane-title-icon fa fa-archive"></i>
+                        {{ title }}
+                    </h1>
+                </div>
+                <section class="tlp-pane-section">
+                    <table class="tlp-table" id="siteadmin-templates">
+                        <thead>
+                            <tr>
+                                <th class="siteadmin-templates-name">{{ project_name_header }}</th>
+                                <th class="siteadmin-templates-name">{{ unix_group_name_header }}</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {{# templates }}
+                                <tr>
+                                    <td class="tlp-table-cell-filterable siteadmin-templates-name">
+                                        <a href="/admin/groupedit.php?group_id={{ id }}">{{ name }}</a>
+                                    </td>
+                                    <td class="tlp-table-cell-filterable siteadmin-templates-name">
+                                        {{ unix_name }}
+                                    </td>
+                                    <td class="tlp-table-cell-actions">
+                                        <a href="/project/admin/servicebar.php?group_id={{ id }}" class="tlp-table-cell-actions-button tlp-button-primary tlp-button-small tlp-button-outline">
+                                            <i class="fa fa-cog tlp-button-icon"></i> {{ services_button_label }}
+                                        </a>
+                                        {{# additional_buttons }}
+                                            <a href="{{# is_disabled }}javascript:;{{/ is_disabled }}{{^ is_disabled }}{{ uri }}{{/ is_disabled }}"
+                                               class="tlp-table-cell-actions-button tlp-button-primary tlp-button-small tlp-button-outline {{# is_disabled }}disabled{{/ is_disabled }}"
+                                               {{# title }}title="{{ title }}"{{/ title }}
+                                            >
+                                                <i class="fa {{ icon }} tlp-button-icon"></i> {{ label }}
+                                            </a>
+                                        {{/ additional_buttons }}
+                                    </td>
+                                </tr>
+                            {{/ templates }}
+                        </tbody>
+                    </table>
+                </section>
+            </div>
         </section>
-    </div>
-</section>
+    </section>
+</div>

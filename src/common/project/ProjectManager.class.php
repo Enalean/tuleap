@@ -28,10 +28,10 @@ use Tuleap\Project\Webhook\WebhookDao;
 use Tuleap\Project\Webhook\Retriever;
 use Tuleap\Webhook\Emitter;
 
-/**
- * Provide access to projects
- */
-class ProjectManager {
+class ProjectManager
+{
+    const CONFIG_NB_PROJECTS_WAITING_FOR_VALIDATION          = 'nb_projects_waiting_for_validation';
+    const CONFIG_NB_PROJECTS_WAITING_FOR_VALIDATION_PER_USER = 'nb_projects_waiting_for_validation_per_user';
 
     /**
      * The Projects dao used to fetch data
@@ -190,11 +190,15 @@ class ProjectManager {
         return $projects;
     }
 
+    /**
+     * @param $status
+     * @return int
+     */
     public function countProjectsByStatus($status)
     {
         $dar = $this->_getDao()->searchByStatus($status);
 
-        return $this->_getDao()->foundRows();
+        return (int) $this->_getDao()->foundRows();
     }
 
     /**
@@ -929,6 +933,33 @@ class ProjectManager {
             $forum_dao = new ForumDao(CodendiDataAccess::instance());
             return $forum_dao->updatePublicForumToPrivate($group_id);
     }
-}
 
-?>
+    public function userCanCreateProject(PFUser $requester)
+    {
+        if (ForgeConfig::get('sys_project_approval', 1) == 1) {
+            return $this->numberOfProjectsWaitingForValidationBelowThreshold() &&
+                $this->numberOfProjectsWaitingForValidationPerUserBelowThreshold($requester);
+        }
+        return true;
+    }
+
+    private function numberOfProjectsWaitingForValidationBelowThreshold()
+    {
+        $max_nb_projects_waiting_for_validation = (int) ForgeConfig::get(self::CONFIG_NB_PROJECTS_WAITING_FOR_VALIDATION, -1);
+        if ($max_nb_projects_waiting_for_validation < 0) {
+            return true;
+        }
+        $current_nb_projects_waiting_for_validation = $this->countProjectsByStatus(Project::STATUS_PENDING);
+        return $current_nb_projects_waiting_for_validation < $max_nb_projects_waiting_for_validation;
+    }
+
+    private function numberOfProjectsWaitingForValidationPerUserBelowThreshold(PFUser $requester)
+    {
+        $max_per_user = (int) ForgeConfig::get(self::CONFIG_NB_PROJECTS_WAITING_FOR_VALIDATION_PER_USER, -1);
+        if ($max_per_user < 0) {
+            return true;
+        }
+        $current_per_user = $this->_getDao()->countByStatusAndUser($requester->getId(), Project::STATUS_PENDING);
+        return $current_per_user < $max_per_user;
+    }
+}

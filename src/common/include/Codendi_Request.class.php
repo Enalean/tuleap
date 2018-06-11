@@ -211,6 +211,14 @@ class Codendi_Request {
         return $is_valid ? $this->get($variable) : $default_value;
     }
 
+    public function getToggleVariable($variable)
+    {
+        if ($this->exist($variable) && (int) $this->get($variable) === 1) {
+            return 1;
+        }
+        return 0;
+    }
+
     /**
      * Return the authenticated current user if any (null otherwise)
      *

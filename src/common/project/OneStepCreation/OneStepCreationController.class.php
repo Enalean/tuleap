@@ -93,7 +93,11 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
      */
     public function index() {
         $GLOBALS['HTML']->header(array('title'=> $GLOBALS['Language']->getText('register_index','project_registration')));
-        $this->render('register', $this->presenter);
+        if ($this->project_manager->userCanCreateProject($this->request->getCurrentUser())) {
+            $this->render('register', $this->presenter);
+        } else {
+            $this->render('register-disabled', []);
+        }
         $GLOBALS['HTML']->footer(array());
         exit;
     }
@@ -102,11 +106,17 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
      * Create the project if request is valid
      */
     public function create() {
-        $this->csrf_token->check();
-        $this->validate();
-        $project = $this->doCreate();
-        $this->notifySiteAdmin($project);
-        $this->postCreate($project);
+        if ($this->project_manager->userCanCreateProject($this->request->getCurrentUser())) {
+            $this->csrf_token->check();
+            $this->validate();
+            $project = $this->doCreate();
+            $this->notifySiteAdmin($project);
+            $this->postCreate($project);
+        } else {
+            $GLOBALS['HTML']->header(array('title'=> $GLOBALS['Language']->getText('register_index','project_registration')));
+            $this->render('register-disabled', []);
+            $GLOBALS['HTML']->footer(array());
+        }
     }
 
     private function validate() {
@@ -198,9 +208,5 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
         $GLOBALS['HTML']->header(array('title'=> $GLOBALS['Language']->getText('register_confirmation', 'registration_complete')));
         $this->render('confirmation', $one_step_registration_factory->create());
         $GLOBALS['HTML']->footer(array());
-    }
-
-    private function projectsMustBeApprovedByAdmin() {
-        return ForgeConfig::get('sys_project_approval', 1) === 1;
     }
 }

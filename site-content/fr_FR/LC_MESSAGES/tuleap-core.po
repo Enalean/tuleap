@@ -209,6 +209,10 @@ msgstr "Couleur"
 msgid "Compromised password"
 msgstr "Mot de passe compromis"
 
+msgid "Configure how project creation is controlled by administrators"
+msgstr ""
+"Paramètrage du contrôle de la création de projets par les administrateurs"
+
 msgid "Configure services"
 msgstr "Configurer les services"
 
@@ -479,6 +483,18 @@ msgstr "Liens"
 msgid "Lists"
 msgstr "Listes"
 
+msgid "Maximum number of projects waiting for validation (-1 means no limits)"
+msgstr ""
+"Nombre maximum de projets dans la file d'attente de validation (-1 pour pas "
+"de limites)"
+
+msgid ""
+"Maximum number of projects waiting for validation for one requester (-1 "
+"means no limits)"
+msgstr ""
+"Nombre maximum de projets dans la file d'attente de validation pour un "
+"utilisateur (-1 pour pas de limites)"
+
 msgid "Meaningful description of the group"
 msgstr "Description du groupe"
 
@@ -502,6 +518,9 @@ msgstr "Gestion des membres"
 
 msgid "Missing Information. PLEASE fill in all required information."
 msgstr "Information manquante. Veuillez saisir les informations demandées."
+
+msgid "Moderation"
+msgstr "Moderation"
 
 msgid "My personnal page"
 msgstr "Ma page personnelle"
@@ -651,6 +670,9 @@ msgstr "Veuillez utiliser un lien http:// ou https://"
 msgid "Project"
 msgstr "Projet"
 
+msgid "Project Creation request is disabled"
+msgstr "La création de projects est désactivé"
+
 msgid "Project Data Export"
 msgstr "Export des données"
 
@@ -667,11 +689,23 @@ msgstr ""
 "Les administrateurs ne peuvent pas être retirés du projet. Vous devez "
 "d'abord les retirer du groupe Administrateurs du projet."
 
+msgid "Project creation moderation"
+msgstr "Modération de la création de projets"
+
+msgid "Project creation moderation settings"
+msgstr "Paramètres de création de projets"
+
+msgid "Project creation settings"
+msgstr "Paramètres de création de projets"
+
 msgid "Project does not exist"
 msgstr "Le projet n'existe pas"
 
 msgid "Project hierarchy"
 msgstr "Hierarchie de projets"
+
+msgid "Project must be approved by administrators"
+msgstr "Les projets doivent être approuvés par les administrateurs"
 
 msgid "Project name"
 msgstr "Nom du projet"
@@ -742,6 +776,9 @@ msgstr "Enregistrer les informations"
 msgid "Save modifications"
 msgstr "Enregistrer les modifications"
 
+msgid "Save settings"
+msgstr "Enregister"
+
 msgid "Scope"
 msgstr "Portée"
 
@@ -762,6 +799,9 @@ msgstr "Permissions des services"
 
 msgid "Services"
 msgstr "Services"
+
+msgid "Settings saved"
+msgstr "Paramètres enregistrés"
 
 msgid "Short description"
 msgstr "Description courte"
@@ -803,6 +843,10 @@ msgstr "Groupes système"
 
 msgid "Template used by project"
 msgstr "Patron utilisé par ce projet"
+
+#, fuzzy
+msgid "Templates"
+msgstr "Patrons de projet"
 
 #, php-format
 msgid "The dashboard \"%s\" already exists."
@@ -882,6 +926,13 @@ msgstr "Aucun projet dans cette catégorie"
 
 msgid "There are no widgets here."
 msgstr "Il n’y a aucun widget."
+
+msgid ""
+"There are too many projects being requested at the moment. Please try again "
+"later on."
+msgstr ""
+"Il y a trop de projets en attente de validation. Merci de re-tenter un peu "
+"plus tard."
 
 msgid "There is no users group bound to this one."
 msgstr "Il n'y a pas de groupe lié à celui-ci."
@@ -1250,6 +1301,12 @@ msgid ""
 msgstr ""
 "Vous devez supprimer l'utilisateur des administrateurs d'annonces avant de "
 "pouvoir l'enlever des rédacteurs"
+
+msgid ""
+"You still have <code>$sys_project_approval</code> variable defined in local."
+"inc. It's now stored in DB, you should remove it from the file to avoid "
+"confusion."
+msgstr "La variable <code>$sys_project_approval</code> est toujours présente"
 
 msgid ""
 "Your email change is complete. Your new email address is <strong>%s</strong>."
