@@ -62,7 +62,7 @@ class FieldUsedInSemanticObjectChecker
         return false;
     }
 
-    private function isUsedInBackgroundColorSemantic(Tracker_FormElement_Field $field)
+    public function isUsedInBackgroundColorSemantic(Tracker_FormElement_Field $field)
     {
         return $this->color_dao->isFieldUsedAsBackgroundColor($field->getId());
     }
