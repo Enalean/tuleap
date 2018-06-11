@@ -1,7 +1,8 @@
 {
   "autoload": {
     "psr-4": {
-      "Tuleap\\CreateTestEnv\\": "include/CreateTestEnv/"
+      "Tuleap\\CreateTestEnv\\": "include/CreateTestEnv/",
+      "Tuleap\\CallMeBack\\": "include/CallMeBack/"
     }
   }
 }

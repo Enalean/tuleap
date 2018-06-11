@@ -10,6 +10,13 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 2.0.8\n"
+
+msgid "An error occurred during the update of the email"
+msgstr "Une erreur est survenue lors de la mise à jour de l’email"
+
+msgid "An error occurred during the update of the messages"
+msgstr "Une erreur est survenue lors de la mise à jour des messages"
 
 msgid "Automate creation of test users and environments"
 msgstr "Automatise la création d'utilisateurs et d'environments de test"
@@ -17,14 +24,23 @@ msgstr "Automatise la création d'utilisateurs et d'environments de test"
 msgid "Bot list"
 msgstr "Liste des bots"
 
-msgid "Configure a mattermost bot that will receive notification about people tests."
-msgstr "Selectionnez un bot mattermost qui recevra les notifications de tests des utilisateurs"
+msgid "Call me back"
+msgstr "Rappelle-moi"
+
+msgid "Call me back configuration"
+msgstr "Configuration de Rappelle-moi"
+
+msgid "Call me back configuration updated"
+msgstr "La configuration de Rappelle-moi a été mise à jour"
+
+msgid ""
+"Configure a mattermost bot that will receive notification about people tests."
+msgstr ""
+"Selectionnez un bot mattermost qui recevra les notifications de tests des "
+"utilisateurs"
 
 msgid "Create test environment"
 msgstr "Création d'environment de test"
-
-msgid "Create test environment - Notification configuration"
-msgstr "Création d'environment de test - Configuration des notifications"
 
 msgid "Mattermost"
 msgstr "Mattermost"
@@ -35,8 +51,20 @@ msgstr "Notification mattermost ajoutée"
 msgid "Mattermost notifications removed"
 msgstr "Notification mattermost supprimée"
 
+msgid "Message"
+msgstr "Message"
+
+msgid "Notification bot"
+msgstr "Bot de notification"
+
 msgid "Save"
 msgstr "Enregistrer"
 
+msgid "This is my message"
+msgstr "Ceci est mon message"
+
 msgid "You should be site administrator to access this page"
 msgstr "Vous devez être administrateur site pour accèder à cette page"
+
+msgid "jdoe@example.com"
+msgstr "jdoe@example.com"
