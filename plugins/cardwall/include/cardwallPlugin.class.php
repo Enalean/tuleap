@@ -23,9 +23,12 @@ require_once 'constants.php';
 require_once 'autoload.php';
 
 use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
+use Tuleap\Cardwall\AllowedFieldRetriever;
 use Tuleap\Cardwall\Semantic\BackgroundColorDao;
 use Tuleap\Cardwall\Semantic\BackgroundColorSemanticFactory;
+use Tuleap\Cardwall\Semantic\FieldUsedInSemanticObjectChecker;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Tracker\Events\AllowedFieldTypeChangesRetriever;
 
 /**
  * CardwallPlugin
@@ -68,6 +71,7 @@ class cardwallPlugin extends Plugin
             $this->addHook(TRACKER_EVENT_REDIRECT_AFTER_ARTIFACT_CREATION_OR_UPDATE);
             $this->addHook(Event::JAVASCRIPT);
             $this->addHook(Event::IMPORT_XML_PROJECT_TRACKER_DONE);
+            $this->addHook(AllowedFieldTypeChangesRetriever::NAME);
             $this->addHook(TRACKER_EVENT_MANAGE_SEMANTICS);
             $this->addHook(TRACKER_EVENT_SEMANTIC_FROM_XML);
             $this->addHook(TRACKER_EVENT_GET_SEMANTIC_FACTORIES);
@@ -597,5 +601,16 @@ class cardwallPlugin extends Plugin
     public function agiledashboard_event_rest_resources($params) {
         $injector = new Cardwall_REST_ResourcesInjector();
         $injector->populate($params['restler']);
+    }
+
+    public function semanticAllowedFieldTypeRetriever(AllowedFieldTypeChangesRetriever $event_retriever)
+    {
+        $retriever     = new AllowedFieldRetriever(
+            Tracker_FormElementFactory::instance(),
+            new FieldUsedInSemanticObjectChecker(new BackgroundColorDao())
+        );
+        $allowed_types = $retriever->retrieveAllowedFieldType($event_retriever->getField());
+
+        $event_retriever->setAllowedTypes($allowed_types);
     }
 }
