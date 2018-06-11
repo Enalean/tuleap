@@ -179,12 +179,11 @@ tracker =
             }?,
             element decorators {
                 element decorator {
-                    attribute REF { xsd:IDREF },
-                    attribute r { xsd:long },
-                    attribute g { xsd:long },
-                    attribute b { xsd:long }
+                   attribute REF { xsd:IDREF },
+                   (decorator_legacy_color | attribute tlp_color_name { xsd:string })
                 }*
             }?,
+
             element default_values {
                 element value {
                     (
@@ -194,6 +193,12 @@ tracker =
                 }*
             }?
         }
+
+
+    decorator_legacy_color =
+        attribute r { xsd:long },
+        attribute g { xsd:long },
+        attribute b { xsd:long }
 
     transitionContent =
         element from_id {

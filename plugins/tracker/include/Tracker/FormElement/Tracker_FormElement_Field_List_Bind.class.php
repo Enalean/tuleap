@@ -41,6 +41,9 @@ abstract class Tracker_FormElement_Field_List_Bind implements
     protected $default_value_dao;
 
     protected $default_values;
+    /**
+     * @var Tracker_FormElement_Field_List_BindDecorator
+     */
     protected $decorators;
 
     /** @var Tracker_FormElement_Field */
@@ -590,9 +593,10 @@ abstract class Tracker_FormElement_Field_List_Bind implements
      *
      * @return void
      */
-    public function saveObject() {
+    public function saveObject()
+    {
         if (is_array($this->default_values)) {
-            $t = array();
+            $t = [];
             foreach ($this->default_values as $value) {
                 $t[$value->getId()] = $value;
             }
@@ -603,11 +607,21 @@ abstract class Tracker_FormElement_Field_List_Bind implements
             }
         }
 
-        if (is_array($this->decorators) && !empty($this->decorators)) {
+        if (is_array($this->decorators) && ! empty($this->decorators)) {
             $values = $this->getBindValues();
-            foreach ( $this->decorators as $decorator) {
-                $hexacolor = ColorHelper::RGBtoHexa($decorator->r, $decorator->g, $decorator->b);
-                Tracker_FormElement_Field_List_BindDecorator::save($this->field->getId(), $values[$decorator->value_id]->getId(), $hexacolor);
+            foreach ($this->decorators as $decorator) {
+
+                if (! $decorator->isUsingOldPalette()) {
+                    $color = $decorator->tlp_color_name;
+                } else {
+                    $color = ColorHelper::RGBtoHexa($decorator->r, $decorator->g, $decorator->b);
+                }
+
+                Tracker_FormElement_Field_List_BindDecorator::save(
+                    $this->field->getId(),
+                    $values[$decorator->value_id]->getId(),
+                    $color
+                );
             }
         }
     }
