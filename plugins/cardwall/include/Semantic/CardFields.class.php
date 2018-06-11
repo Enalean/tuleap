@@ -112,21 +112,38 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
         $this->card_preview_detail_builder        = $card_preview_detail_builder;
     }
 
-    public function display() {
+    public function display()
+    {
         $html   = '';
         $fields = $this->getFields();
-        $html .= '<p>';
-        if (!count($fields)) {
-            $html .= $GLOBALS['Language']->getText('plugin_cardwall','semantic_cardFields_no_fields_defined');
+        $html   .= '<p>';
+        if (! count($fields)) {
+            $html .= $GLOBALS['Language']->getText('plugin_cardwall', 'semantic_cardFields_no_fields_defined');
         } else {
-            $html .= $GLOBALS['Language']->getText('plugin_cardwall','semantic_cardFields_fields');
+            $html .= $GLOBALS['Language']->getText('plugin_cardwall', 'semantic_cardFields_fields');
             $html .= '<ul>';
-            foreach($fields as $field) {
+            foreach ($fields as $field) {
                 $html .= '<li><strong>' . $this->html_purifier->purify($field->getLabel(), CODENDI_PURIFIER_CONVERT_HTML) . '</strong></li>';
             }
             $html .= '</ul>';
         }
+
+        $html .= "</p><p>" . dgettext('tuleap-cardwall', 'Only static fields with values bound to new color picker can be chosen as background color');
+
+        try {
+            $html .= "</p><p>" . sprintf(
+                    dgettext(
+                        'tuleap-cardwall',
+                        '<b>%s</b> field will determine background color.'
+                    ),
+                    $this->getBackgroundColorField()->getLabel()
+                );
+        } catch (BackgroundColorSemanticFieldNotFoundException $exception) {
+            $html .= "</p><p>" . dgettext('tuleap-cardwall', 'No field is chosen to determine backgorund color');
+        }
+
         $html .= '</p>';
+
         echo $html;
     }
 

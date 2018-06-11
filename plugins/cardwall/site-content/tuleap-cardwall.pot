@@ -1,3 +1,7 @@
+#, php-format
+msgid "<b>%s</b> field will determine background color."
+msgstr ""
+
 msgid "Add a field to the cards"
 msgstr ""
 
@@ -20,6 +24,14 @@ msgid ""
 "No field can be chosen for card color background. Only selectbox and "
 "radiobutton bind on static values with no value linked to the old color "
 "picker can be used."
+msgstr ""
+
+msgid "No field is chosen to determine backgorund color"
+msgstr ""
+
+msgid ""
+"Only static fields with values bound to new color picker can be chosen as "
+"background color"
 msgstr ""
 
 msgid "Preview of the card"
