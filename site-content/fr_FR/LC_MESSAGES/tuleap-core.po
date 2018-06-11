@@ -361,6 +361,9 @@ msgstr "Sort d'un champ de texte, ferme les listes déroulantes et les modales"
 msgid "FRS"
 msgstr "FRS"
 
+msgid "Fields"
+msgstr "Champs personnalisés"
+
 msgid "Files"
 msgstr "Fichiers"
 
@@ -1124,6 +1127,9 @@ msgstr "Impossible de trouver comment éditer le widget requis."
 
 msgid "We cannot find any widgets."
 msgstr "Impossible de trouver des widgets."
+
+msgid "Webhooks"
+msgstr "Webhooks"
 
 msgid "Welcome aboard"
 msgstr "Bienvenue à bord"

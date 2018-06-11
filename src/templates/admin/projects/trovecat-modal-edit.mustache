@@ -7,7 +7,8 @@
         <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">&times;</div>
     </div>
 
-    <form action="/admin/trove/trove_cat_list.php?action=update" method="POST" name="form-trove-cat-edit">
+    <form method="post" name="form-trove-cat-edit">
+        <input type="hidden" name="action" value="update">
         {{# csrf_token }}
             {{> csrf_token_input }}
         {{/ csrf_token }}

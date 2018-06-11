@@ -328,6 +328,9 @@ msgstr ""
 msgid "FRS"
 msgstr ""
 
+msgid "Fields"
+msgstr ""
+
 msgid "Files"
 msgstr ""
 
@@ -1039,6 +1042,9 @@ msgid "We cannot find any edition information for the requested widget."
 msgstr ""
 
 msgid "We cannot find any widgets."
+msgstr ""
+
+msgid "Webhooks"
 msgstr ""
 
 msgid "Welcome aboard"

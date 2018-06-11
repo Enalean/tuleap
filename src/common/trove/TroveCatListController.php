@@ -23,8 +23,12 @@ namespace Tuleap\Trove;
 use HTTPRequest;
 use TroveCatDao;
 use TroveCatFactory;
+use Tuleap\Layout\BaseLayout;
+use Tuleap\Request\DispatchableWithRequest;
+use Tuleap\Request\ForbiddenException;
+use Tuleap\Request\NotFoundException;
 
-class TroveCatListController
+class TroveCatListController implements DispatchableWithRequest
 {
     /**
      * @var TroveCatDao
@@ -39,17 +43,47 @@ class TroveCatListController
      */
     private $trove_cat_retriever;
 
-    public function __construct(
-        TroveCatDao $trove_cat_dao,
-        TroveCatFactory $trove_cat_factory,
-        TroveCatHierarchyRetriever $trove_cat_retriever
-    ) {
-        $this->trove_cat_dao       = $trove_cat_dao;
-        $this->trove_cat_factory   = $trove_cat_factory;
-        $this->trove_cat_retriever = $trove_cat_retriever;
+    public function __construct()
+    {
+        $this->trove_cat_dao       = new TroveCatDao();
+        $this->trove_cat_factory   = new TroveCatFactory($this->trove_cat_dao);
+        $this->trove_cat_retriever = new TroveCatHierarchyRetriever($this->trove_cat_dao);
     }
 
-    public function add(HTTPRequest $request)
+    /**
+     * Is able to process a request routed by FrontRouter
+     *
+     * @param HTTPRequest $request
+     * @param BaseLayout $layout
+     * @param array $variables
+     * @throws NotFoundException
+     * @throws ForbiddenException
+     * @return void
+     */
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    {
+        if (! $request->getCurrentUser()->isSuperUser()) {
+            throw new ForbiddenException();
+        }
+
+        $csrf_token = new \CSRFSynchronizerToken('/admin/project-creation/categories');
+        $csrf_token->check();
+
+        switch ($request->get('action')) {
+            case "update":
+                $this->update($request);
+                break;
+            case "add":
+                $this->add($request);
+                break;
+            case "delete":
+                $this->delete($request);
+                break;
+        }
+        $layout->redirect('/admin/project-creation/categories');
+    }
+
+    private function add(HTTPRequest $request)
     {
         $trove_category = $this->formatTroveCategoriesFromRequest($request);
         $this->trove_cat_dao->add(
@@ -85,7 +119,7 @@ class TroveCatListController
         return $display;
     }
 
-    public function update(HTTPRequest $request)
+    private function update(HTTPRequest $request)
     {
         $current_trove_category = $this->formatTroveCategoriesFromRequest($request);
 
@@ -201,7 +235,7 @@ class TroveCatListController
         return $trove_categories;
     }
 
-    public function delete(HTTPRequest $request)
+    private function delete(HTTPRequest $request)
     {
         $trove_cat_id            = $request->get('trove_cat_id');
         $last_parent             = array();

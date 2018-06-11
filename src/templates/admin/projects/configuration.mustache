@@ -1,194 +1,192 @@
-<div class="tlp-framed">
-    <h1>{{ title }}</h1>
-</div>
+<div class="tlp-framed-vertically">
 
-<nav class="tlp-tabs">
-    <a href="#" class="tlp-tab tlp-tab-active">{{ tab_title }}</a>
-</nav>
+    {{> creation-settings-tabs }}
 
-<div class="tlp-framed-horizontally">
-    <section class="tlp-pane">
-        <div class="tlp-pane-container">
-            <div class="tlp-pane-header">
-                <h1 class="tlp-pane-title"><i class="tlp-pane-title-icon fa fa-list"></i>{{ pane_title }}</h1>
-            </div>
-
-            <section class="tlp-pane-section">
-                <p>{{ project_creation_description }}</p>
-                <div class="tlp-table-actions">
-                    <button class="add-modal-button tlp-button-primary project-webhook-modal" data-modal-id="add-project-webhook">
-                        <i class="fa fa-plus tlp-button-icon"></i> {{ add_webhook }}
-                    </button>
+    <div class="tlp-framed-horizontally">
+        <section class="tlp-pane">
+            <div class="tlp-pane-container">
+                <div class="tlp-pane-header">
+                    <h1 class="tlp-pane-title"><i class="tlp-pane-title-icon fa fa-list"></i>{{ pane_title }}</h1>
                 </div>
-                <table class="tlp-table">
-                    <thead><tr>
-                        <th>{{ name_label }}</th>
-                        <th>{{ url_label }}</th>
-                        <th>{{ last_push_date }}</th>
-                        <th>{{ last_push_status }}</th>
-                        <th></th>
-                    </tr></thead>
-                    <tbody>
-                    {{# has_webhooks }}
-                        {{# webhooks }}
-                            <tr>
-                                <td>{{ name }}</td>
-                                <td>
-                                    <span class="siteadmin-project-webhook-url">
-                                        {{ url }}
-                                    </span>
-                                    <span class="siteadmin-project-webhook-url-tooltip tlp-tooltip tlp-tooltip-top"
-                                          data-tlp-tooltip="{{ url }}"
-                                    >
-                                        <i class="fa fa-ellipsis-h"></i>
-                                    </span>
-                                </td>
-                                <td>{{# lastStatus }} {{ getDate }} {{/ lastStatus }}</td>
-                                <td>{{# lastStatus }}
-                                    <span class="{{# isInError }}tlp-badge-warning{{/ isInError }}{{^ isInError }}tlp-badge-success tlp-badge-outline{{/ isInError }}">
-                                        {{ getStatus }}
-                                    </span>
-                                {{/ lastStatus }}</td>
-                                <td class="tlp-table-cell-actions siteadmin-project-webhook-actions">
-                                    {{# lastStatus }}
-                                        <button class="tlp-table-cell-actions-button tlp-button-primary tlp-button-outline tlp-button-small project-webhook-modal" data-modal-id="logs-modal-{{ id }}">
-                                            <i class="fa fa-list tlp-button-icon"></i> {{ button_show_logs }}
+
+                <section class="tlp-pane-section">
+                    <p>{{ project_creation_description }}</p>
+                    <div class="tlp-table-actions">
+                        <button class="add-modal-button tlp-button-primary project-webhook-modal" data-modal-id="add-project-webhook">
+                            <i class="fa fa-plus tlp-button-icon"></i> {{ add_webhook }}
+                        </button>
+                    </div>
+                    <table class="tlp-table">
+                        <thead><tr>
+                            <th>{{ name_label }}</th>
+                            <th>{{ url_label }}</th>
+                            <th>{{ last_push_date }}</th>
+                            <th>{{ last_push_status }}</th>
+                            <th></th>
+                        </tr></thead>
+                        <tbody>
+                        {{# has_webhooks }}
+                            {{# webhooks }}
+                                <tr>
+                                    <td>{{ name }}</td>
+                                    <td>
+                                        <span class="siteadmin-project-webhook-url">
+                                            {{ url }}
+                                        </span>
+                                        <span class="siteadmin-project-webhook-url-tooltip tlp-tooltip tlp-tooltip-top"
+                                              data-tlp-tooltip="{{ url }}"
+                                        >
+                                            <i class="fa fa-ellipsis-h"></i>
+                                        </span>
+                                    </td>
+                                    <td>{{# lastStatus }} {{ getDate }} {{/ lastStatus }}</td>
+                                    <td>{{# lastStatus }}
+                                        <span class="{{# isInError }}tlp-badge-warning{{/ isInError }}{{^ isInError }}tlp-badge-success tlp-badge-outline{{/ isInError }}">
+                                            {{ getStatus }}
+                                        </span>
+                                    {{/ lastStatus }}</td>
+                                    <td class="tlp-table-cell-actions siteadmin-project-webhook-actions">
+                                        {{# lastStatus }}
+                                            <button class="tlp-table-cell-actions-button tlp-button-primary tlp-button-outline tlp-button-small project-webhook-modal" data-modal-id="logs-modal-{{ id }}">
+                                                <i class="fa fa-list tlp-button-icon"></i> {{ button_show_logs }}
+                                            </button>
+                                            <div id="logs-modal-{{ id }}" class="tlp-modal" role="dialog" aria-labelledby="logs-modal-{{ id }}-label">
+                                                <div class="tlp-modal-header">
+                                                    <h1 id="logs-modal-{{ id }}-label" class="tlp-modal-title"><i class="fa fa-list tlp-modal-title-icon"></i> {{ show_logs_title }}</h1>
+                                                    <div class="tlp-modal-close" data-dismiss="modal" aria-label="{{ close_modal }}">&times;</div>
+                                                </div>
+                                                <div class="tlp-modal-body">
+                                                    <table class="tlp-table">
+                                                        <thead><tr>
+                                                            <th>{{ date_modal }}</th>
+                                                            <th>{{ status_modal }}</th>
+                                                        </tr></thead>
+                                                        <tbody>
+                                                        {{# status}}
+                                                            <tr>
+                                                                <td>{{ getDate }}</td>
+                                                                <td>
+                                                                    <span class="{{# isInError }}tlp-badge-warning{{/ isInError }}{{^ isInError }}tlp-badge-success tlp-badge-outline{{/ isInError }}">
+                                                                        {{ getStatus }}
+                                                                    </span>
+                                                                </td>
+                                                            </tr>
+                                                        {{/status}}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="tlp-modal-footer">
+                                                    <button class="tlp-button-primary tlp-modal-action" type="button" data-dismiss="modal">{{ close_modal }}</button>
+                                                </div>
+                                            </div>
+                                        {{/ lastStatus }}
+                                        <button class="tlp-table-cell-actions-button tlp-button-primary tlp-button-outline tlp-button-small project-webhook-modal" data-modal-id="edit-modal-{{ id }}">
+                                            <i class="fa fa-pencil tlp-button-icon"></i> {{ button_edit }}
                                         </button>
-                                        <div id="logs-modal-{{ id }}" class="tlp-modal" role="dialog" aria-labelledby="logs-modal-{{ id }}-label">
+                                        <form id="edit-modal-{{ id }}" class="tlp-modal" role="dialog" aria-labelledby="edit-modal-label-{{ id }}" method="post">
                                             <div class="tlp-modal-header">
-                                                <h1 id="logs-modal-{{ id }}-label" class="tlp-modal-title"><i class="fa fa-list tlp-modal-title-icon"></i> {{ show_logs_title }}</h1>
-                                                <div class="tlp-modal-close" data-dismiss="modal" aria-label="{{ close_modal }}">&times;</div>
+                                                <h1 class="tlp-modal-title" id="edit-modal-label-{{ id }}"><i class="fa fa-pencil tlp-modal-title-icon"></i> {{ update_title }}</h1>
+                                                <div class="tlp-modal-close" data-dismiss="modal" aria-label="{{ cancel_modal }}">&times;</div>
                                             </div>
                                             <div class="tlp-modal-body">
-                                                <table class="tlp-table">
-                                                    <thead><tr>
-                                                        <th>{{ date_modal }}</th>
-                                                        <th>{{ status_modal }}</th>
-                                                    </tr></thead>
-                                                    <tbody>
-                                                    {{# status}}
-                                                        <tr>
-                                                            <td>{{ getDate }}</td>
-                                                            <td>
-                                                                <span class="{{# isInError }}tlp-badge-warning{{/ isInError }}{{^ isInError }}tlp-badge-success tlp-badge-outline{{/ isInError }}">
-                                                                    {{ getStatus }}
-                                                                </span>
-                                                            </td>
-                                                        </tr>
-                                                    {{/status}}
-                                                    </tbody>
-                                                </table>
+                                                <div class="tlp-form-element">
+                                                    <label class="tlp-label" for="edit-name-{{ id }}">{{ name_label }}<i class="fa fa-asterisk"></i></label>
+                                                    <input id="edit-name-{{ id }}" type="text" class="tlp-input" name="name" placeholder="{{ name_placeholder_modal }}" value="{{ name }}" required>
+                                                </div>
+                                                <div class="tlp-form-element">
+                                                    <label class="tlp-label" for="edit-url-{{ id }}">{{ url_label }}<i class="fa fa-asterisk"></i></label>
+                                                    <input id="edit-url-{{ id }}" type="url" pattern="https?://.+" class="tlp-input" name="url" placeholder="https://" value="{{ url }}" required>
+                                                </div>
                                             </div>
                                             <div class="tlp-modal-footer">
-                                                <button class="tlp-button-primary tlp-modal-action" type="button" data-dismiss="modal">{{ close_modal }}</button>
+                                                <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">{{ cancel_modal }}</button>
+                                                <button type="submit" class="tlp-button-primary tlp-modal-action">
+                                                    <i class="fa fa-save tlp-button-icon"></i> {{ update_webhook }}
+                                                </button>
                                             </div>
-                                        </div>
-                                    {{/ lastStatus }}
-                                    <button class="tlp-table-cell-actions-button tlp-button-primary tlp-button-outline tlp-button-small project-webhook-modal" data-modal-id="edit-modal-{{ id }}">
-                                        <i class="fa fa-pencil tlp-button-icon"></i> {{ button_edit }}
-                                    </button>
-                                    <form id="edit-modal-{{ id }}" class="tlp-modal" role="dialog" aria-labelledby="edit-modal-label-{{ id }}" method="post">
-                                        <div class="tlp-modal-header">
-                                            <h1 class="tlp-modal-title" id="edit-modal-label-{{ id }}"><i class="fa fa-pencil tlp-modal-title-icon"></i> {{ update_title }}</h1>
-                                            <div class="tlp-modal-close" data-dismiss="modal" aria-label="{{ cancel_modal }}">&times;</div>
-                                        </div>
-                                        <div class="tlp-modal-body">
-                                            <div class="tlp-form-element">
-                                                <label class="tlp-label" for="edit-name-{{ id }}">{{ name_label }}<i class="fa fa-asterisk"></i></label>
-                                                <input id="edit-name-{{ id }}" type="text" class="tlp-input" name="name" placeholder="{{ name_placeholder_modal }}" value="{{ name }}" required>
+                                            <input type="hidden" name="id" value="{{ id }}">
+                                            <input type="hidden" name="action" value="update">
+                                            {{# csrf_token }}
+                                                {{> csrf_token_input }}
+                                            {{/ csrf_token }}
+                                        </form>
+                                        <button class="tlp-table-cell-actions-button tlp-button-danger tlp-button-outline tlp-button-small project-webhook-modal" data-modal-id="delete-modal-{{ id }}">
+                                            <i class="fa fa-trash-o tlp-button-icon"></i> {{ button_delete }}
+                                        </button>
+                                        <form id="delete-modal-{{ id }}" class="tlp-modal tlp-modal-danger" role="dialog" aria-labelledby="delete-modal-label-{{ id }}" method="post">
+                                            <div class="tlp-modal-header">
+                                                <h1 class="tlp-modal-title" id="delete-modal-label-{{ id }}"><i class="fa fa-trash-o tlp-modal-title-icon"></i> {{ delete_title }}</h1>
+                                                <div class="tlp-modal-close" data-dismiss="modal" aria-label="{{ cancel_modal }}">&times;</div>
                                             </div>
-                                            <div class="tlp-form-element">
-                                                <label class="tlp-label" for="edit-url-{{ id }}">{{ url_label }}<i class="fa fa-asterisk"></i></label>
-                                                <input id="edit-url-{{ id }}" type="url" pattern="https?://.+" class="tlp-input" name="url" placeholder="https://" value="{{ url }}" required>
+                                            <div class="tlp-modal-body">
+                                                <p>{{ delete_warning }}</p>
                                             </div>
-                                        </div>
-                                        <div class="tlp-modal-footer">
-                                            <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">{{ cancel_modal }}</button>
-                                            <button type="submit" class="tlp-button-primary tlp-modal-action">
-                                                <i class="fa fa-save tlp-button-icon"></i> {{ update_webhook }}
-                                            </button>
-                                        </div>
-                                        <input type="hidden" name="id" value="{{ id }}">
-                                        <input type="hidden" name="action" value="update">
-                                        {{# csrf_token }}
-                                            {{> csrf_token_input }}
-                                        {{/ csrf_token }}
-                                    </form>
-                                    <button class="tlp-table-cell-actions-button tlp-button-danger tlp-button-outline tlp-button-small project-webhook-modal" data-modal-id="delete-modal-{{ id }}">
-                                        <i class="fa fa-trash-o tlp-button-icon"></i> {{ button_delete }}
-                                    </button>
-                                    <form id="delete-modal-{{ id }}" class="tlp-modal tlp-modal-danger" role="dialog" aria-labelledby="delete-modal-label-{{ id }}" method="post">
-                                        <div class="tlp-modal-header">
-                                            <h1 class="tlp-modal-title" id="delete-modal-label-{{ id }}"><i class="fa fa-trash-o tlp-modal-title-icon"></i> {{ delete_title }}</h1>
-                                            <div class="tlp-modal-close" data-dismiss="modal" aria-label="{{ cancel_modal }}">&times;</div>
-                                        </div>
-                                        <div class="tlp-modal-body">
-                                            <p>{{ delete_warning }}</p>
-                                        </div>
-                                        <div class="tlp-modal-footer">
-                                            <button type="button" class="tlp-button-danger tlp-button-outline tlp-modal-action" data-dismiss="modal">{{ cancel_modal }}</button>
-                                            <button type="submit" class="tlp-button-danger tlp-modal-action">
-                                                <i class="fa fa-trash-o tlp-button-icon"></i> {{ delete_webhook }}
-                                            </button>
-                                        </div>
-                                        <input type="hidden" name="id" value="{{ id }}">
-                                        <input type="hidden" name="action" value="delete">
-                                        {{# csrf_token }}
-                                            {{> csrf_token_input }}
-                                        {{/ csrf_token }}
-                                    </form>
-                                </td>
-                            </tr>
-                        {{/ webhooks }}
-                    {{/ has_webhooks }}
-                    {{^ has_webhooks }}
-                        <tr><td colspan="4" class="tlp-table-cell-empty">{{ no_webhooks }}</td></tr>
-                    {{/has_webhooks}}
-                    </tbody>
-                </table>
-            </section>
+                                            <div class="tlp-modal-footer">
+                                                <button type="button" class="tlp-button-danger tlp-button-outline tlp-modal-action" data-dismiss="modal">{{ cancel_modal }}</button>
+                                                <button type="submit" class="tlp-button-danger tlp-modal-action">
+                                                    <i class="fa fa-trash-o tlp-button-icon"></i> {{ delete_webhook }}
+                                                </button>
+                                            </div>
+                                            <input type="hidden" name="id" value="{{ id }}">
+                                            <input type="hidden" name="action" value="delete">
+                                            {{# csrf_token }}
+                                                {{> csrf_token_input }}
+                                            {{/ csrf_token }}
+                                        </form>
+                                    </td>
+                                </tr>
+                            {{/ webhooks }}
+                        {{/ has_webhooks }}
+                        {{^ has_webhooks }}
+                            <tr><td colspan="4" class="tlp-table-cell-empty">{{ no_webhooks }}</td></tr>
+                        {{/has_webhooks}}
+                        </tbody>
+                    </table>
+                </section>
+            </div>
+        </section>
+    </div>
+
+
+    <form id="add-project-webhook" class="tlp-modal" role="dialog" aria-labelledby="add-modal-label" method="post">
+        <div class="tlp-modal-header">
+            <h1 class="tlp-modal-title" id="add-modal-label"><i class="fa fa-plus tlp-modal-title-icon"></i> {{ add_webhook }}</h1>
+            <div class="tlp-modal-close" data-dismiss="modal" aria-label="{{ cancel_modal }}">&times;</div>
         </div>
-    </section>
+        <div class="tlp-modal-body">
+            <p>{{ add_webhook_description_modal }}</p>
+            <pre class="project-webhook-payload"><code>{
+      "created_at": "2017-01-01T10:00:00+00:00",
+      "updated_at": "2017-01-01T11:00:00+00:00",
+      "event_name": "project_create",
+      "name": "Project public name",
+      "owner_id": 102,
+      "owner_email": "john.doe@example.com",
+      "owner_name": "John Doe",
+      "path": "projectshortname",
+      "path_with_namespace": "projectshortname",
+      "project_id": 126,
+      "project_visibility": "public"
+    }</code></pre>
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="name">{{ name_label }}<i class="fa fa-asterisk"></i></label>
+                <input type="text" class="tlp-input" id="name" name="name" placeholder="{{ name_placeholder_modal }}" required>
+            </div>
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="url">{{ url_label }}<i class="fa fa-asterisk"></i></label>
+                <input type="url" pattern="https?://.+" class="tlp-input" id="url" name="url" placeholder="https://" required>
+            </div>
+        </div>
+        <input type="hidden" name="action" value="add">
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
+        <div class="tlp-modal-footer">
+            <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">{{ cancel_modal }}</button>
+            <button type="submit" class="tlp-button-primary tlp-modal-action">
+                <i class="fa fa-plus tlp-button-icon"></i> {{ add_webhook_modal }}
+            </button>
+        </div>
+    </form>
+
 </div>
-
-
-<form id="add-project-webhook" class="tlp-modal" role="dialog" aria-labelledby="add-modal-label" method="post">
-    <div class="tlp-modal-header">
-        <h1 class="tlp-modal-title" id="add-modal-label"><i class="fa fa-plus tlp-modal-title-icon"></i> {{ add_webhook }}</h1>
-        <div class="tlp-modal-close" data-dismiss="modal" aria-label="{{ cancel_modal }}">&times;</div>
-    </div>
-    <div class="tlp-modal-body">
-        <p>{{ add_webhook_description_modal }}</p>
-        <pre class="project-webhook-payload"><code>{
-  "created_at": "2017-01-01T10:00:00+00:00",
-  "updated_at": "2017-01-01T11:00:00+00:00",
-  "event_name": "project_create",
-  "name": "Project public name",
-  "owner_id": 102,
-  "owner_email": "john.doe@example.com",
-  "owner_name": "John Doe",
-  "path": "projectshortname",
-  "path_with_namespace": "projectshortname",
-  "project_id": 126,
-  "project_visibility": "public"
-}</code></pre>
-        <div class="tlp-form-element">
-            <label class="tlp-label" for="name">{{ name_label }}<i class="fa fa-asterisk"></i></label>
-            <input type="text" class="tlp-input" id="name" name="name" placeholder="{{ name_placeholder_modal }}" required>
-        </div>
-        <div class="tlp-form-element">
-            <label class="tlp-label" for="url">{{ url_label }}<i class="fa fa-asterisk"></i></label>
-            <input type="url" pattern="https?://.+" class="tlp-input" id="url" name="url" placeholder="https://" required>
-        </div>
-    </div>
-    <input type="hidden" name="action" value="add">
-    {{# csrf_token }}
-        {{> csrf_token_input }}
-    {{/ csrf_token }}
-    <div class="tlp-modal-footer">
-        <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">{{ cancel_modal }}</button>
-        <button type="submit" class="tlp-button-primary tlp-modal-action">
-            <i class="fa fa-plus tlp-button-icon"></i> {{ add_webhook_modal }}
-        </button>
-    </div>
-</form>

@@ -25,6 +25,11 @@ use EventManager;
 use FastRoute;
 use HTTPRequest;
 use ThemeManager;
+use Tuleap\Admin\ProjectCreation\ProjectCategoriesDisplayController;
+use Tuleap\Admin\ProjectCreation\ProjectFieldsDisplayController;
+use Tuleap\Admin\ProjectCreation\ProjectFieldsUpdateController;
+use Tuleap\Admin\ProjectCreation\WebhooksDisplayController;
+use Tuleap\Admin\ProjectCreation\WebhooksUpdateController;
 use Tuleap\Admin\ProjectCreationModerationDisplayController;
 use Tuleap\Admin\ProjectCreationModerationUpdateController;
 use Tuleap\Admin\ProjectTemplatesController;
@@ -36,6 +41,7 @@ use Tuleap\Password\Administration\PasswordPolicyUpdateController;
 use Tuleap\Password\Configuration\PasswordConfigurationDAO;
 use Tuleap\Password\Configuration\PasswordConfigurationRetriever;
 use Tuleap\Password\Configuration\PasswordConfigurationSaver;
+use Tuleap\Trove\TroveCatListController;
 use URLVerificationFactory;
 
 class FrontRouter
@@ -175,6 +181,24 @@ class FrontRouter
                 });
                 $r->get('/project-creation/templates', function () {
                     return new ProjectTemplatesController();
+                });
+                $r->get('/project-creation/webhooks', function () {
+                    return new WebhooksDisplayController();
+                });
+                $r->post('/project-creation/webhooks', function () {
+                    return new WebhooksUpdateController();
+                });
+                $r->get('/project-creation/fields', function () {
+                    return new ProjectFieldsDisplayController();
+                });
+                $r->post('/project-creation/fields', function () {
+                    return new ProjectFieldsUpdateController();
+                });
+                $r->get('/project-creation/categories', function () {
+                    return new ProjectCategoriesDisplayController();
+                });
+                $r->post('/project-creation/categories', function () {
+                    return new TroveCatListController();
                 });
             });
 

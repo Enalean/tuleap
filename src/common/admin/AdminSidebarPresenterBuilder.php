@@ -61,7 +61,6 @@ class AdminSidebarPresenterBuilder
             $this->allProjectsCount(),
             $this->pendingProjectsCount(),
             $this->pendingNewsCount(),
-            $this->areTroveCategoriesEnabled(),
             $this->getAdditionalTrackerEntries(),
             $this->getPlugins()
         );
@@ -93,11 +92,6 @@ class AdminSidebarPresenterBuilder
     private function usersNeedApproval()
     {
         return $GLOBALS['sys_user_approval'] == 1;
-    }
-
-    private function areTroveCategoriesEnabled()
-    {
-        return $GLOBALS['sys_use_trove'] != 0;
     }
 
     private function pendingUsersCount()

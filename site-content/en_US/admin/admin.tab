@@ -600,9 +600,9 @@ admin_desc_fields	desc_line	String
 admin_desc_fields	desc_text	Text area
 admin_desc_fields	rank	Rank
 admin_desc_fields	rank_on_screen	Rank on screen
-admin_desc_fields	ins_desc_field_fail	Inserting description failed. Please report to admin@$1 $2.
-admin_desc_fields	del_desc_field_fail	Deleting description failed. Please report to admin@$1 $2.
-admin_desc_fields	update_required_desc_field_fail	Updating description failed. Please report to admin@$1 $2.
+admin_desc_fields	ins_desc_field_fail	Inserting description failed.
+admin_desc_fields	del_desc_field_fail	Deleting description failed.
+admin_desc_fields	update_required_desc_field_fail	Updating description failed.
 admin_desc_fields	update_desc_field_fail	Update failed or no data changed.
 admin_desc_fields	info_missed	Missing Information. Please fill in all required information.
 admin_desc_fields	info_rank_noint	Rank must be an integer value.

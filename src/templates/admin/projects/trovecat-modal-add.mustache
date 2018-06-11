@@ -5,11 +5,12 @@
         </h1>
         <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">&times;</div>
     </div>
-    <form action="/admin/trove/trove_cat_list.php?action=add" method="POST">
+    <form method="post">
         {{# csrf_token }}
             {{> csrf_token_input }}
         {{/ csrf_token }}
         <input type="hidden" name="id">
+        <input type="hidden" name="action" value="add">
         <div class="tlp-modal-body">
             <div class="trove-cats-general-properties">
                 <div class="trove-cats-general-property">

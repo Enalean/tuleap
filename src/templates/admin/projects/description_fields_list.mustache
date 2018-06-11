@@ -1,0 +1,101 @@
+<div class="tlp-framed-vertically">
+
+    {{> creation-settings-tabs }}
+
+    <div class="tlp-framed-horizontally">
+        <section class="tlp-pane">
+            <div class="tlp-pane-container">
+                <div class="tlp-pane-header">
+                    <h2 class="tlp-pane-title">
+                        <i class="tlp-pane-title-icon fa fa-list"></i>
+                        {{ description_fields_header }}
+                    </h2>
+                </div>
+                <section class="tlp-pane-section">
+                    <div class="tlp-table-actions">
+                        <button type="button" id="add-description-field-button" class="tlp-button-primary tlp-table-actions-element">
+                            <i class="tlp-button-icon fa fa-plus"></i> {{ btn_add_field }}
+                        </button>
+
+                        {{> add_description_field_modal }}
+                    </div>
+                    <table class="tlp-table">
+                        <thead>
+                            <tr>
+                                <th>{{ name_header }}</th>
+                                <th>{{ description_header }}</th>
+                                <th>{{ require_header }}</th>
+                                <th>{{ type_header }}</th>
+                                <th
+                                    class="tlp-table-cell-numeric tlp-tooltip tlp-tooltip-right"
+                                    data-tlp-tooltip="{{ rank_tooltip }}"
+
+                                >{{ rank_header }}</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{# description_fields }}
+                            <tr>
+                                <td class="siteadmin-description-fields-name-column">{{ name }}</td>
+                                <td class="siteadmin-description-fields-description-column">{{{ purified_description }}}</td>
+                                <td>
+                                    <form id="description-field-form-required-{{ id }}" action="" method="POST">
+                                        {{# csrf_token }}
+                                            {{> csrf_token_input }}
+                                        {{/ csrf_token }}
+                                        {{# required_value }}
+                                            <input type="hidden" name="remove_required_desc_id" value="{{ id }}">
+                                        {{/ required_value }}
+                                        {{^ required_value }}
+                                            <input type="hidden" name="make_required_desc_id" value="{{ id }}">
+                                        {{/ required_value }}
+
+                                        <div class="tlp-switch">
+                                            <input type="checkbox"
+                                                id="description-field-required-switch-{{ id }}"
+                                                class="tlp-switch-checkbox description-field-required-switch"
+                                                data-form-id="description-field-form-required-{{ id }}"
+                                                {{# required_value }}checked{{/ required_value }}
+                                            >
+                                            <label for="description-field-required-switch-{{ id }}" class="tlp-switch-button">{{ required_label }}</label>
+                                        </div>
+                                    </form>
+                                </td>
+                                <td class="siteadmin-description-fields-type-column">{{ type_label }}</td>
+                                <td class="tlp-table-cell-numeric">{{ rank_on_screen }}</td>
+                                <td class="tlp-table-cell-actions">
+                                    <button
+                                        type="button"
+                                        class="tlp-button-primary tlp-button-small tlp-button-outline tlp-table-cell-actions-button edit-description-field-button"
+                                        data-modal-id="edit-description-field-modal-{{ id }}"
+                                    >
+                                        <i class="tlp-button-icon fa fa-pencil"></i> {{ edit_btn }}
+                                    </button>
+                                    <button
+                                        type="button"
+                                        class="tlp-button-danger tlp-button-small tlp-button-outline tlp-table-cell-actions-button delete-description-field-button"
+                                        data-modal-id="delete-description-field-modal-{{ id }}"
+                                    >
+                                        <i class="tlp-button-icon fa fa-trash-o"></i> {{ delete_btn }}
+                                    </button>
+
+                                    {{> edit_description_field_modal }}
+                                    {{> delete_description_field_modal }}
+                                </td>
+                            </tr>
+                            {{/ description_fields }}
+                            {{^ description_fields }}
+                                <tr>
+                                    <td colspan="6" class="tlp-table-cell-empty">
+                                        {{ no_description_fields }}
+                                    </td>
+                                </tr>
+                            {{/ description_fields }}
+                        </tbody>
+                    </table>
+                </section>
+            </div>
+        </section>
+    </div>
+</div>
