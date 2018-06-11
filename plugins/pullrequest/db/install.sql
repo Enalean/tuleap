@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS plugin_pullrequest_git_reference (
     pr_id INT(11) PRIMARY KEY,
     reference_id INT(11) NOT NULL,
     repository_dest_id INT(11) NOT NULL,
+    status INT(11) NOT NULL,
     UNIQUE (repository_dest_id, reference_id)
 );
 

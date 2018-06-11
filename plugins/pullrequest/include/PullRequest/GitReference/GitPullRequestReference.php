@@ -23,4 +23,48 @@ namespace Tuleap\PullRequest\GitReference;
 class GitPullRequestReference
 {
     const PR_NAMESPACE = 'refs/tlpr/';
+
+    const STATUS_OK              = 0;
+    const STATUS_NOT_YET_CREATED = 1;
+    const STATUS_BROKEN          = 2;
+
+    /**
+     * @var int
+     */
+    private $git_reference_id;
+    /**
+     * @var int
+     */
+    private $status;
+
+    public function __construct($git_reference_id, $status)
+    {
+        switch ($status) {
+            case self::STATUS_OK:
+            case self::STATUS_NOT_YET_CREATED:
+            case self::STATUS_BROKEN:
+                break;
+            default:
+                throw new \DomainException("Git pull reference status $status is unknown.");
+        }
+
+        $this->git_reference_id = $git_reference_id;
+        $this->status           = $status;
+    }
+
+    /**
+     * @return string
+     */
+    public function getGitHeadReference()
+    {
+        return self::PR_NAMESPACE . $this->git_reference_id . '/head';
+    }
+
+    /**
+     * @return bool
+     */
+    public function isGitReferenceUpdatable()
+    {
+        return $this->status === self::STATUS_OK || $this->status === self::STATUS_NOT_YET_CREATED;
+    }
 }

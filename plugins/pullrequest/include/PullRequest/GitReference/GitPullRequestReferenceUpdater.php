@@ -61,10 +61,20 @@ class GitPullRequestReferenceUpdater
             );
             return;
         }
+        $reference = new GitPullRequestReference($reference_row['reference_id'], $reference_row['status']);
+        if (! $reference->isGitReferenceUpdatable()) {
+            return;
+        }
 
-        $executor_repository_source->push(
-            '--force ' . escapeshellarg('gitolite@gl-adm:' . $repository_destination->getPath()) . ' ' .
-            escapeshellarg($pull_request->getSha1Src()) . ':' . escapeshellarg(GitPullRequestReference::PR_NAMESPACE . $reference_row['reference_id'] . '/head')
-        );
+        try {
+            $executor_repository_source->push(
+                '--force ' . escapeshellarg('gitolite@gl-adm:' . $repository_destination->getPath()) . ' ' .
+                escapeshellarg($pull_request->getSha1Src()) . ':' . escapeshellarg($reference->getGitHeadReference())
+            );
+        } catch (\Git_Command_Exception $ex) {
+            $this->dao->updateStatusByPullRequestId($pull_request->getId(), GitPullRequestReference::STATUS_BROKEN);
+            throw $ex;
+        }
+        $this->dao->updateStatusByPullRequestId($pull_request->getId(), GitPullRequestReference::STATUS_OK);
     }
 }
