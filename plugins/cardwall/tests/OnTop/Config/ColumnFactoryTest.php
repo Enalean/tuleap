@@ -22,7 +22,6 @@ require_once dirname(__FILE__) .'/../../bootstrap.php';
 
 class Cardwall_OnTop_Config_ColumnFactoryTest extends TuleapTestCase
 {
-
     public function setUp()
     {
         $values = array();
@@ -74,13 +73,11 @@ class Cardwall_OnTop_Config_ColumnFactoryTest extends TuleapTestCase
         $this->assertIsA($columns, 'Cardwall_OnTop_Config_ColumnFreestyleCollection');
         $this->assertEqual(3, count($columns));
         $this->assertEqual("On Going", $columns[1]->getLabel());
-        $this->assertEqual("rgb(123, 12, 10)", $columns[0]->getBgcolor());
-        $this->assertEqual("rgb(255,255,255)", $columns[0]->getFgcolor());
-        $this->assertEqual("rgb(248,248,248)", $columns[1]->getBgcolor());
-        $this->assertEqual("rgb(0,0,0)", $columns[1]->getFgcolor());
+        $this->assertEqual("rgb(123, 12, 10)", $columns[0]->getHeadercolor());
+        $this->assertEqual("rgb(248,248,248)", $columns[1]->getHeadercolor());
 
         $this->assertEqual("Review", $columns[2]->getLabel());
-        $this->assertEqual("peggy-pink", $columns[2]->getBgcolor());
+        $this->assertEqual("peggy-pink", $columns[2]->getHeadercolor());
     }
 
     public function itBuildsAnEmptyFreestyleCollection()

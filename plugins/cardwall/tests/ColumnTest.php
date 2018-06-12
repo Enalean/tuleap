@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,8 +22,8 @@
 require_once dirname(__FILE__) .'/bootstrap.php';
 
 class Cardwall_Column_isInColumnTest extends TuleapTestCase {
-    
-    
+
+
     //TODO move this to the configTest file
     public function setUp() {
         parent::setUp();
@@ -41,13 +41,13 @@ class Cardwall_Column_isInColumnTest extends TuleapTestCase {
         $tracker_mapping_factory = mock('Cardwall_OnTop_Config_TrackerMappingFactory');
         $this->config = new Cardwall_OnTop_Config($tracker, $dao, $column_factory, $tracker_mapping_factory);
     }
-    
+
     public function itIsInTheCellIfTheLabelMatches() {
         stub($this->field)->getFirstValueFor($this->artifact->getLastChangeset())->returns('ongoing');
         $column   = $this->newCardwall_Column(0, 'ongoing');
         $this->assertIn($column);
     }
-    
+
     public function itIsNotInTheCellIfTheLabelDoesntMatch() {
         stub($this->field)->getFirstValueFor($this->artifact->getLastChangeset())->returns('ongoing');
         $column   = $this->newCardwall_Column(0, 'done');
@@ -77,16 +77,16 @@ class Cardwall_Column_isInColumnTest extends TuleapTestCase {
     private function assertIn($column) {
          $this->assertTrue($this->config->isInColumn($this->artifact, $this->field_provider, $column));
     }
-    
+
     private function assertNotIn($column) {
          $this->assertFalse($this->config->isInColumn($this->artifact, $this->field_provider, $column));
     }
 
     public function newCardwall_Column($id, $label) {
-        $bgcolor = $fgcolor = 0;
-        return new Cardwall_Column($id, $label, $bgcolor, $fgcolor);
+        $header_color = 0;
+        return new Cardwall_Column($id, $label, $header_color);
     }
-    
+
 }
 
 class Cardwall_Column_canContainStatusTest extends TuleapTestCase {
@@ -97,8 +97,8 @@ class Cardwall_Column_canContainStatusTest extends TuleapTestCase {
         parent::setUp();
 
         $id = 100;
-        $label = $bgcolor = $fgcolor = 'whatever';
-        $this->column = new Cardwall_Column($id, $label, $bgcolor, $fgcolor);
+        $label = $header_color = 'whatever';
+        $this->column = new Cardwall_Column($id, $label, $header_color);
     }
 
     public function itReturnsTrueOnNoneColumnIfStatusIsNone() {

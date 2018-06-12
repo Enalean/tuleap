@@ -112,9 +112,9 @@ class CardwallConfigXmlExport {
         $bg_red   = null;
         $bg_blue  = null;
 
-        $bg_colors = $column->getBgcolor();
+        $bg_colors = $column->getHeadercolor();
 
-        if ($column->isBackgroundATLPColor()) {
+        if ($column->isHeaderATLPColor()) {
             $column_node->addAttribute(CardwallConfigXml::ATTRIBUTE_COLUMN_TLP_COLOR_NAME, $bg_colors);
             return;
         }

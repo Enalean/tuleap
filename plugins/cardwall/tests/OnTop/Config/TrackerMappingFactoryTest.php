@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -59,9 +59,9 @@ class Cardwall_OnTop_Config_TrackerMappingFactoryTest extends TuleapTestCase {
 
         $this->columns = new Cardwall_OnTop_Config_ColumnFreestyleCollection(
             array(
-                new Cardwall_Column(1, 'Todo', 'white', 'black'),
-                new Cardwall_Column(2, 'On Going', 'white', 'black'),
-                new Cardwall_Column(3, 'Done', 'white', 'black'),
+                new Cardwall_Column(1, 'Todo', 'white'),
+                new Cardwall_Column(2, 'On Going', 'white'),
+                new Cardwall_Column(3, 'Done', 'white'),
             )
         );
 

@@ -36,12 +36,7 @@ class Cardwall_Column {
     /**
      * @var string
      */
-    public $bgcolor;
-
-    /**
-     * @var string
-     */
-    public $fgcolor;
+    public $header_color;
 
     /**
      * @var Boolean
@@ -56,17 +51,15 @@ class Cardwall_Column {
     /**
      * @var bool
      */
-    private $is_bg_a_tlp_color;
+    private $is_header_a_tlp_color;
 
-    public function __construct($id, $label, $bgcolor, $fgcolor)
-    {
-        $this->id      = $id;
-        $this->label   = $label;
-        $this->bgcolor = $bgcolor;
-        $this->fgcolor = $fgcolor;
+    public function __construct($id, $label, $header_color) {
+        $this->id           = $id;
+        $this->label        = $label;
+        $this->header_color = $header_color;
 
-        $this->is_bg_a_tlp_color = strpos($bgcolor, 'rgb') === false
-            && strpos($bgcolor, '#') === false;
+        $this->is_header_a_tlp_color = strpos($header_color, 'rgb') === false
+            && strpos($header_color, '#') === false;
     }
 
     public function setAutostack($value) {
@@ -142,22 +135,15 @@ class Cardwall_Column {
     /**
      * @return string
      */
-    public function getBgcolor() {
-        return $this->bgcolor;
-    }
-
-    /**
-     * @return string
-     */
-    public function getFgcolor() {
-        return $this->fgcolor;
+    public function getHeadercolor() {
+        return $this->header_color;
     }
 
     /**
      * @return bool
      */
-    public function isBackgroundATLPColor()
+    public function isHeaderATLPColor()
     {
-        return $this->is_bg_a_tlp_color;
+        return $this->is_header_a_tlp_color;
     }
 }

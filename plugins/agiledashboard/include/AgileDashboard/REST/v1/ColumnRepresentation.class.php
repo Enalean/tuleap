@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) Enalean, 2013-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -35,6 +35,8 @@ class AgileDashboard_ColumnRepresentation {
     public function build(Cardwall_Column $column) {
         $this->id    = JsonCast::toInt($column->getId());
         $this->label = $column->getLabel();
-        $this->color = ColorHelper::CssRGBToHexa($column->getBgcolor());
+        $this->color = ($column->isHeaderATLPColor())
+            ? $column->getHeadercolor()
+            : ColorHelper::CssRGBToHexa($column->getHeadercolor());
     }
 }

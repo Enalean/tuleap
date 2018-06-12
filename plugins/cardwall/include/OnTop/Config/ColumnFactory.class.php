@@ -22,9 +22,7 @@ require_once dirname(__FILE__). '/../../constants.php';
 
 class Cardwall_OnTop_Config_ColumnFactory {
 
-    const DEFAULT_BGCOLOR = 'rgb(248,248,248)';
-    const LIGHT_FGCOLOR   = 'rgb(255,255,255)';
-    const DARK_FGCOLOR    = 'rgb(0,0,0)';
+    const DEFAULT_HEADER_COLOR = 'rgb(248,248,248)';
 
     /**
      * @var Cardwall_OnTop_ColumnDao
@@ -64,8 +62,8 @@ class Cardwall_OnTop_Config_ColumnFactory {
     private function fillColumnsFor(&$columns, $field) {
         $decorators = $field->getDecorators();
         foreach($field->getVisibleValuesPlusNoneIfAny() as $value) {
-            list($bgcolor, $fgcolor) = $this->getCardwallColumnColors($value, $decorators);
-            $columns[] = new Cardwall_Column($value->getId(), $value->getLabel(), $bgcolor, $fgcolor);
+            $header_color = $this->getColumnHeaderColor($value, $decorators);
+            $columns[]    = new Cardwall_Column($value->getId(), $value->getLabel(), $header_color);
         }
     }
 
@@ -88,28 +86,26 @@ class Cardwall_OnTop_Config_ColumnFactory {
     private function getColumnsFromDao(Tracker $tracker) {
         $columns = new Cardwall_OnTop_Config_ColumnFreestyleCollection();
         foreach ($this->dao->searchColumnsByTrackerId($tracker->getId()) as $row) {
-            list($bgcolor, $fgcolor) = $this->getColumnColorsFromRow($row);
-            $columns[] = new Cardwall_Column($row['id'], $row['label'], $bgcolor, $fgcolor);
+            $header_color = $this->getColumnHeaderColorFromRow($row);
+            $columns[]    = new Cardwall_Column($row['id'], $row['label'], $header_color);
         }
         return $columns;
     }
 
-    private function getCardwallColumnColors($value, $decorators) {
-        $id      = (int)$value->getId();
-        $bgcolor = self::DEFAULT_BGCOLOR;
-        $fgcolor = self::DARK_FGCOLOR;
+    private function getColumnHeaderColor($value, $decorators) {
+        $id           = (int)$value->getId();
+        $header_color = self::DEFAULT_HEADER_COLOR;
+
         if (isset($decorators[$id])) {
-            $bgcolor = $decorators[$id]->getCurrentColor();
-            //choose a text color to have right contrast (black on dark colors is quite useless)
-            $fgcolor = $decorators[$id]->isDark($fgcolor) ? self::LIGHT_FGCOLOR : self::DARK_FGCOLOR;
+            $header_color = $decorators[$id]->getCurrentColor();
         }
-        return array($bgcolor, $fgcolor);
+
+        return $header_color;
     }
 
-    private function getColumnColorsFromRow(array $row)
+    private function getColumnHeaderColorFromRow(array $row)
     {
-        $bgcolor = self::DEFAULT_BGCOLOR;
-        $fgcolor = self::DARK_FGCOLOR;
+        $header_color = self::DEFAULT_HEADER_COLOR;
 
         $r              = $row['bg_red'];
         $g              = $row['bg_green'];
@@ -117,20 +113,11 @@ class Cardwall_OnTop_Config_ColumnFactory {
         $tlp_color_name = $row['tlp_color_name'];
 
         if ($tlp_color_name) {
-            $bgcolor = $tlp_color_name;
+            $header_color = $tlp_color_name;
         } else if ($r !== null && $g !== null && $b !== null) {
-            $bgcolor = "rgb($r, $g, $b)";
-            $fgcolor = $this->isDark($r, $g, $b) ? self::LIGHT_FGCOLOR : self::DARK_FGCOLOR;
+            $header_color = "rgb($r, $g, $b)";
         }
 
-        return array($bgcolor, $fgcolor);
-    }
-
-    /**
-     * @todo: DRY (@see Decorator class)
-     * @return bool
-     */
-    public function isDark($r, $g, $b) {
-        return (0.3 * $r + 0.59 * $g + 0.11 * $b) < 128;
+        return $header_color;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -54,7 +54,7 @@ class Cardwall_OnTop_Config_getMappingForTest extends TuleapTestCase {
     public function itReturnsTheCorrespondingMapping() {
         $tracker                 = aTracker()->withId(1)->build();
         $mapping_tracker         = aTracker()->withId(99)->build();
-        
+
         $dao                     = mock('Cardwall_OnTop_Dao');
         $column_factory          = mock('Cardwall_OnTop_Config_ColumnFactory');
         $mapping = mock('Cardwall_OnTop_Config_TrackerMapping');
@@ -102,7 +102,7 @@ class Cardwall_OnTop_Config_IsInColumnTest extends TuleapTestCase {
     public function itIsNotInColumnWhenNoFieldAndNoMapping() {
         stub($this->config)->getMappingFor()->returns(null);
         $field_provider = mock('Cardwall_FieldProviders_CustomFieldRetriever');
-        $column         = new Cardwall_Column(10, 'In ', '', '');
+        $column         = new Cardwall_Column(10, 'In ', '');
 
         $this->assertFalse($this->config->isInColumn($this->artifact, $field_provider, $column));
     }
@@ -112,7 +112,7 @@ class Cardwall_OnTop_Config_IsInColumnTest extends TuleapTestCase {
 
         $field          = stub('Tracker_FormElement_Field_List')->getFirstValueFor()->returns('In Progress');
         $field_provider = stub('Cardwall_FieldProviders_CustomFieldRetriever')->getField()->returns($field);
-        $column         = new Cardwall_Column(11, 'Ongoing', '', '');
+        $column         = new Cardwall_Column(11, 'Ongoing', '');
 
         $this->assertTrue($this->config->isInColumn($this->artifact, $field_provider, $column));
     }
@@ -122,7 +122,7 @@ class Cardwall_OnTop_Config_IsInColumnTest extends TuleapTestCase {
 
         $field          = stub('Tracker_FormElement_Field_List')->getFirstValueFor()->returns('Todo');
         $field_provider = stub('Cardwall_FieldProviders_CustomFieldRetriever')->getField()->returns($field);
-        $column         = new Cardwall_Column(11, 'Ongoing', '', '');
+        $column         = new Cardwall_Column(11, 'Ongoing', '');
 
         $this->assertFalse($this->config->isInColumn($this->artifact, $field_provider, $column));
     }
@@ -132,7 +132,7 @@ class Cardwall_OnTop_Config_IsInColumnTest extends TuleapTestCase {
 
         $field          = stub('Tracker_FormElement_Field_List')->getFirstValueFor()->returns(null);
         $field_provider = stub('Cardwall_FieldProviders_CustomFieldRetriever')->getField()->returns($field);
-        $column         = new Cardwall_Column(10, 'Todo', '', '');
+        $column         = new Cardwall_Column(10, 'Todo', '');
 
         $this->assertTrue($this->config->isInColumn($this->artifact, $field_provider, $column));
     }
@@ -142,7 +142,7 @@ class Cardwall_OnTop_Config_IsInColumnTest extends TuleapTestCase {
 
         $field          = stub('Tracker_FormElement_Field_List')->getFirstValueFor()->returns('Ongoing');
         $field_provider = stub('Cardwall_FieldProviders_CustomFieldRetriever')->getField()->returns($field);
-        $column         = new Cardwall_Column(11, 'Ongoing', '', '');
+        $column         = new Cardwall_Column(11, 'Ongoing', '');
 
         $this->assertTrue($this->config->isInColumn($this->artifact, $field_provider, $column));
     }
@@ -152,7 +152,7 @@ class Cardwall_OnTop_Config_IsInColumnTest extends TuleapTestCase {
 
         $field          = stub('Tracker_FormElement_Field_List')->getFirstValueFor()->returns(null);
         $field_provider = stub('Cardwall_FieldProviders_CustomFieldRetriever')->getField()->returns($field);
-        $column         = new Cardwall_Column(100, 'Ongoing', '', '');
+        $column         = new Cardwall_Column(100, 'Ongoing', '');
 
         $this->assertTrue($this->config->isInColumn($this->artifact, $field_provider, $column));
     }
