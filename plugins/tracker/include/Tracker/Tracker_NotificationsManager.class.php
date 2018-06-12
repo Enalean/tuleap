@@ -26,13 +26,13 @@ use Tuleap\Tracker\Notifications\NotificationListBuilder;
 use Tuleap\Tracker\Notifications\PaneNotificationListPresenter;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsDAO;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyDao;
-use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
 use Tuleap\Tracker\Notifications\UsersToNotifyDao;
 use Tuleap\User\InvalidEntryInAutocompleterCollection;
 use Tuleap\User\RequestFromAutocompleter;
 
 class Tracker_NotificationsManager {
 
+    /** @var Tracker */
     protected $tracker;
 
     /**
@@ -98,10 +98,13 @@ class Tracker_NotificationsManager {
 
     public function processUpdate(HTTPRequest $request)
     {
-        if ($request->exist('stop_notification')) {
-            if ($this->tracker->stop_notification != $request->get('stop_notification')) {
-                $this->tracker->stop_notification = $request->get('stop_notification') ? 1 : 0;
-                $dao                              = new TrackerDao();
+        if ($request->exist('notifications_level')) {
+            if ((int) $this->tracker->getNotificationsLevel() !== (int) $request->get('notifications_level')) {
+                $new_notifications_level = $request->get('notifications_level')
+                    ? Tracker::NOTIFICATIONS_LEVEL_DISABLED
+                    : Tracker::NOTIFICATIONS_LEVEL_DEFAULT;
+                $this->tracker->setNotificationsLevel($new_notifications_level);
+                $dao = new TrackerDao();
                 if ($dao->save($this->tracker)) {
                     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin_notification', 'successfully_updated'));
                 }
@@ -251,8 +254,8 @@ class Tracker_NotificationsManager {
             help_button('tracker.html#e-mail-notification').'</h3>';
         echo '
                 <p>'.$GLOBALS['Language']->getText('plugin_tracker_include_type','toggle_notif_note').'<br>
-                <br><input type="hidden" name="stop_notification" value="0" /> 
-                <label class="checkbox"><input id="toggle_stop_notification" type="checkbox" name="stop_notification" value="1" '.(($this->tracker->stop_notification)?'checked="checked"':'').' /> '.
+                <br><input type="hidden" name="notifications_level" value="0" />
+                <label class="checkbox"><input id="toggle_stop_notification" type="checkbox" name="notifications_level" value="1" '.($this->tracker->isNotificationStopped()?'checked="checked"':'').' /> '.
             $GLOBALS['Language']->getText('plugin_tracker_include_type','stop_notification') .'</label>';
         echo '<input class="btn" type="submit" value="'.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','submit').'"/>';
     }

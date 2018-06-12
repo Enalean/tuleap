@@ -38,7 +38,7 @@ class Tracker_Migration_V3_Dao extends DataAccessObject {
         $description = $this->da->quoteSmart($description);
         $itemname    = $this->da->quoteSmart($itemname);
         $sql = "INSERT INTO tracker ( id, group_id, name, description, item_name, allow_copy, submit_instructions, browse_instructions,
-                                      status, deletion_date, instantiate_for_new_projects, stop_notification, from_tv3_id)
+                                      status, deletion_date, instantiate_for_new_projects, notifications_level, from_tv3_id)
                 SELECT $id, $project_id, $name, $description, $itemname, allow_copy, submit_instructions, browse_instructions,
                        status, deletion_date, instantiate_for_new_projects, stop_notification, $tv3_id
                 FROM artifact_group_list

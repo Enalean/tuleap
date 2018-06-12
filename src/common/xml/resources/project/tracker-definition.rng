@@ -98,7 +98,16 @@
       </attribute>
     </optional>
     <optional>
-      <!-- default is false -->
+      <!-- default is false (deprecated, use notifications_level instead) -->
+      <attribute name="notifications_level">
+        <choice>
+          <value>0</value>
+          <value>1</value>
+        </choice>
+      </attribute>
+    </optional>
+    <optional>
+      <!-- default is 0 -->
       <attribute name="is_folder">
         <data type="boolean"/>
       </attribute>

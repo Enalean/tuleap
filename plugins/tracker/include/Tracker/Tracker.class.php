@@ -59,6 +59,9 @@ class Tracker implements Tracker_Dispatchable_Interface
     const PERMISSION_NONE                = 'PLUGIN_TRACKER_NONE';
     const PERMISSION_SUBMITTER_ONLY      = 'PLUGIN_TRACKER_ACCESS_SUBMITTER_ONLY';
 
+    const NOTIFICATIONS_LEVEL_DEFAULT  = 0;
+    const NOTIFICATIONS_LEVEL_DISABLED = 1;
+
     const REMAINING_EFFORT_FIELD_NAME = "remaining_effort";
     const ASSIGNED_TO_FIELD_NAME      = "assigned_to";
     const IMPEDIMENT_FIELD_NAME       = "impediment";
@@ -83,7 +86,7 @@ class Tracker implements Tracker_Dispatchable_Interface
     public $deletion_date;
     public $instantiate_for_new_projects;
     public $log_priority_changes;
-    public $stop_notification;
+    private $notifications_level;
     private $formElementFactory;
     private $sharedFormElementFactory;
     private $project;
@@ -100,21 +103,23 @@ class Tracker implements Tracker_Dispatchable_Interface
     public $reports = array();
     public $workflow;
 
-    public function __construct($id,
-            $group_id,
-            $name,
-            $description,
-            $item_name,
-            $allow_copy,
-            $submit_instructions,
-            $browse_instructions,
-            $status,
-            $deletion_date,
-            $instantiate_for_new_projects,
-            $log_priority_changes,
-            $stop_notification,
-            $color,
-            $enable_emailgateway) {
+    public function __construct(
+        $id,
+        $group_id,
+        $name,
+        $description,
+        $item_name,
+        $allow_copy,
+        $submit_instructions,
+        $browse_instructions,
+        $status,
+        $deletion_date,
+        $instantiate_for_new_projects,
+        $log_priority_changes,
+        $notifications_level,
+        $color,
+        $enable_emailgateway
+    ) {
         $this->id                           = $id;
         $this->group_id                     = $group_id;
         $this->name                         = $name;
@@ -127,7 +132,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         $this->deletion_date                = $deletion_date;
         $this->instantiate_for_new_projects = $instantiate_for_new_projects;
         $this->log_priority_changes         = $log_priority_changes;
-        $this->stop_notification            = $stop_notification;
+        $this->notifications_level          = $notifications_level;
         $this->enable_emailgateway          = $enable_emailgateway;
         $this->formElementFactory           = Tracker_FormElementFactory::instance();
         $this->sharedFormElementFactory     = new Tracker_SharedFormElementFactory($this->formElementFactory, new Tracker_FormElement_Field_List_BindFactory());
@@ -276,8 +281,18 @@ class Tracker implements Tracker_Dispatchable_Interface
      *
      * @return boolean true is notifications are stopped for this tracker, false otherwise
      */
-    function isNotificationStopped() {
-        return $this->stop_notification == 1;
+    public function isNotificationStopped() {
+        return (int) $this->notifications_level === self::NOTIFICATIONS_LEVEL_DISABLED;
+    }
+
+    public function getNotificationsLevel()
+    {
+        return $this->notifications_level;
+    }
+
+    public function setNotificationsLevel($notifications_level)
+    {
+        $this->notifications_level = $notifications_level;
     }
 
     /**
@@ -2527,8 +2542,8 @@ EOS;
         if ($this->log_priority_changes) {
             $xmlElem->addAttribute('log_priority_changes', $this->log_priority_changes);
         }
-        if ($this->stop_notification) {
-            $xmlElem->addAttribute('stop_notification', $this->stop_notification);
+        if ($this->notifications_level) {
+            $xmlElem->addAttribute('notifications_level', $this->notifications_level);
         }
 
         // these will not be used at the import

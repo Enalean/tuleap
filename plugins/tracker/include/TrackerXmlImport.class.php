@@ -27,7 +27,6 @@ use Tuleap\XML\PHPCast;
 
 class TrackerXmlImport
 {
-
     /**
      * Add attributes to tracker
      *
@@ -40,6 +39,8 @@ class TrackerXmlImport
     const ADD_PROPERTY_TO_TRACKER = 'add_property_to_tracker';
 
     const XML_PARENT_ID_EMPTY = "0";
+
+    const DEFAULT_NOTIFICATIONS_LEVEL = 0;
 
     /** @var TrackerFactory */
     private $tracker_factory;
@@ -616,8 +617,7 @@ class TrackerXmlImport
             (int) $att['instantiate_for_new_projects'] : 0;
         $row['log_priority_changes'] = isset($att['log_priority_changes']) ?
             (int) $att['log_priority_changes'] : 0;
-        $row['stop_notification'] = isset($att['stop_notification']) ?
-            (int) $att['stop_notification'] : 0;
+        $row['notifications_level'] = $this->getNotificationsLevel($att);
 
         $tracker = $this->tracker_factory->getInstanceFromRow($row);
 
@@ -808,4 +808,22 @@ class TrackerXmlImport
             $this->hierarchy_dao->updateChildren($parent_id, $hierarchy);
         }
     }
+
+    /**
+     * @param $att
+     *
+     * @return int
+     */
+    protected function getNotificationsLevel($att)
+    {
+        $deprecated_stop_notification = isset($att['stop_notification'])
+            ? (int) $att['stop_notification']
+            : self::DEFAULT_NOTIFICATIONS_LEVEL;
+
+        $notifications_level = isset($att['notifications_level'])
+            ? (int) $att['notifications_level']
+            : $deprecated_stop_notification;
+
+        return $notifications_level;
+}
 }

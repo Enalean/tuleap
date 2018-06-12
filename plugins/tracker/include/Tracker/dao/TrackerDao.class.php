@@ -147,7 +147,7 @@ class TrackerDao extends DataAccessObject {
                         submit_instructions,
                         browse_instructions,
                         status,
-                        stop_notification,
+                        notifications_level,
                         color,
                         enable_emailgateway)
                     SELECT
@@ -162,7 +162,7 @@ class TrackerDao extends DataAccessObject {
                         submit_instructions,
                         browse_instructions,
                         status,
-                        stop_notification,
+                        notifications_level,
                         color,
                         enable_emailgateway
                     FROM $this->table_name
@@ -186,7 +186,7 @@ class TrackerDao extends DataAccessObject {
         $deletion_date,
         $instantiate_for_new_projects,
         $log_priority_changes,
-        $stop_notification,
+        $notifications_level,
         $color,
         $enable_emailgateway
     ) {
@@ -202,7 +202,7 @@ class TrackerDao extends DataAccessObject {
         $deletion_date                = $deletion_date ? $this->da->escapeInt($deletion_date) : 'NULL';
         $instantiate_for_new_projects = $this->da->quoteSmart($instantiate_for_new_projects);
         $log_priority_changes         = $this->da->quoteSmart($log_priority_changes);
-        $stop_notification            = $this->da->escapeInt($stop_notification);
+        $notifications_level          = $this->da->escapeInt($notifications_level);
         $color                        = $this->da->quoteSmart($color);
 
         $id_sharing = new TrackerIdSharingDao();
@@ -221,7 +221,7 @@ class TrackerDao extends DataAccessObject {
                         deletion_date,
                         instantiate_for_new_projects,
                         log_priority_changes,
-                        stop_notification,
+                        notifications_level,
                         color,
                         enable_emailgateway)
                     VALUES ($id,
@@ -236,7 +236,7 @@ class TrackerDao extends DataAccessObject {
                         $deletion_date,
                         $instantiate_for_new_projects,
                         $log_priority_changes,
-                        $stop_notification,
+                        $notifications_level,
                         $color,
                         $enable_emailgateway)";
             if ($this->update($sql)) {
@@ -246,7 +246,7 @@ class TrackerDao extends DataAccessObject {
         return false;
     }
 
-    function save($tracker) {
+    function save(Tracker $tracker) {
         $id                  = $this->da->escapeInt($tracker->id);
         $group_id                     = $this->da->escapeInt($tracker->group_id);
         $name                         = $this->da->quoteSmart($tracker->name);
@@ -261,7 +261,7 @@ class TrackerDao extends DataAccessObject {
         $deletion_date                = $tracker->deletion_date ? $this->da->escapeInt($tracker->deletion_date) : 'NULL';
         $instantiate_for_new_projects = $this->da->quoteSmart($tracker->instantiate_for_new_projects);
         $log_priority_changes         = $this->da->quoteSmart($tracker->log_priority_changes);
-        $stop_notification            = $this->da->escapeInt($tracker->stop_notification);
+        $notifications_level          = $this->da->escapeInt($tracker->getNotificationsLevel());
         $sql = "UPDATE $this->table_name SET
                    group_id                     = $group_id,
                    name                         = $name,
@@ -275,7 +275,7 @@ class TrackerDao extends DataAccessObject {
                    deletion_date                = $deletion_date,
                    instantiate_for_new_projects = $instantiate_for_new_projects,
                    log_priority_changes         = $log_priority_changes,
-                   stop_notification            = $stop_notification,
+                   notifications_level          = $notifications_level,
                    enable_emailgateway          = $enable_emailgateway
                 WHERE id = $id ";
         return $this->update($sql);

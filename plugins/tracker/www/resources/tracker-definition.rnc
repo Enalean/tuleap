@@ -28,7 +28,8 @@ tracker =
         attribute enable_emailgateway { "0" | "1" }?, # default is false
         attribute instantiate_for_new_projects { "0" | "1" }?, # default is false
         attribute log_priority_changes { "0" | "1" }?, # default is false
-        attribute stop_notification { "0" | "1" }?, # default is false
+        attribute stop_notification { "0" | "1" }?, # default is false (deprecated, use notifications_level instead)
+        attribute notifications_level { "0" | "1" }?, # default is 0
         attribute is_folder { xsd:boolean }?,
 
         # these elements are not used, they are provided by the user during the import
