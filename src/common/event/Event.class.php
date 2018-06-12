@@ -963,23 +963,6 @@ class Event {
     const HAS_USER_BEEN_DELEGATED_ACCESS = 'has_user_been_delegated_access';
 
     /**
-     * Sends-out an event to see if the service handles access for
-     * restricted users to its resources independently.
-     * resources
-     * E.g. a git repo can be configured to specifically allow access
-     * to all users including restricted users
-     *
-     * Parameters:
-     *    'allow_restricted' => boolean
-     *    'user'             => PFUser
-     *    'uri'              => string
-     *
-     * Expected result:
-     *    'allow_restricted' => boolean
-     */
-    const IS_SCRIPT_HANDLED_FOR_RESTRICTED = 'is_script_handled_for_restricted';
-
-    /**
      * Sends-out an event to get all services that handle independently restricted users
      *
      * Parameters:

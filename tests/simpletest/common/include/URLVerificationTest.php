@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Request\RestrictedUsersAreHandledByPluginEvent;
+
 require_once('common/user/User.class.php');
 Mock::generate('PFUser');
 require_once('common/project/Project.class.php');
@@ -605,23 +607,26 @@ class URLVerification_RedirectionTests extends URLVerificationBaseTest {
         $urlVerification->checkRestrictedAccess($server, 'stuff');
     }
 
-    public function testRestrictedUserCanAccessPluginManagedScripts() {
-        $user = new MockPFUser();
+    public function testRestrictedUserCanAccessPluginManagedScripts()
+    {
+        $user = Mockery::spy(PFUser::class);
 
-        $url_verification = TestHelper::getPartialMock('TestURL_VERIFACTION', array('getUrl', 'getCurrentUser', 'displayRestrictedUserError'));
-        $url_verification->setReturnValue('getUrl', '/plugins/lamas');
+        $url_verification = Mockery::mock(TestURL_VERIFACTION::class)->makePartial();
 
-        EventManager::instance()->addListener(
-            Event::IS_SCRIPT_HANDLED_FOR_RESTRICTED,
-            new URL_VERIFACTION_FakeLamaPlugin(),
-            'hook',
-            false
-        );
+        $url = Mockery::mock(URL::class);
+        $url->shouldReceive('getGroupIdFromUrl')->andReturn(101);
 
-        $url = mock('URL');
-        stub($GLOBALS['Language'])->getContent()->returns(dirname(__FILE__) . '/_fixtures/empty.txt');
+        $event_manager = Mockery::mock(EventManager::class);
+        $event_manager->shouldReceive('processEvent')->with(Mockery::on(function (RestrictedUsersAreHandledByPluginEvent $event) {
+            $event->setPluginHandleRestricted();
+            return true;
+        }));
 
-        $this->assertTrue($url_verification->restrictedUserCanAccessUrl($user, $url, '/blah', 'blah'));
+        $url_verification->shouldReceive('getEventManager')->andReturn($event_manager);
+
+        stub($GLOBALS['Language'])->getContent()->returns(__DIR__ . '/_fixtures/empty.txt');
+
+        $this->assertTrue($url_verification->restrictedUserCanAccessUrl($user, $url, '/blah'));
     }
 
     public function testRestrictedUserCanNotAccessProjectWhichDoesntAllowResticted() {
@@ -673,15 +678,8 @@ class URLVerification_RedirectionTests extends URLVerificationBaseTest {
 }
 
 class TestURL_VERIFACTION extends URLVerification {
-    public function restrictedUserCanAccessUrl($user, $url, $request_uri, $script_name) {
-        return parent::restrictedUserCanAccessUrl($user, $url, $request_uri, $script_name);
-    }
-}
-
-class URL_VERIFACTION_FakeLamaPlugin {
-
-    public function hook($params) {
-        $params['allow_restricted'] = true;
+    public function restrictedUserCanAccessUrl($user, $url, $request_uri) {
+        return parent::restrictedUserCanAccessUrl($user, $url, $request_uri);
     }
 }
 

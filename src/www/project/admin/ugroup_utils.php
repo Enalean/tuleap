@@ -13,6 +13,7 @@
 // Define various functions for user group management
 //
 use Tuleap\Project\Admin\ProjectUGroup\CannotCreateUGroupException;
+use Tuleap\Request\RestrictedUsersAreHandledByPluginEvent;
 
 require_once 'utils.php';
 require_once 'project_admin_utils.php';
@@ -218,8 +219,7 @@ function ugroup_get_name_from_id($ugroup_id) {
  * @return true if user is member of the ugroup, false otherwise.
  */
 function ugroup_user_is_member($user_id, $ugroup_id, $group_id, $atid=0) {
-    $um = ugroup_get_user_manager();
-    $user =& $um->getUserById($user_id);
+    $user = UserManager::instance()->getUserById($user_id);
     // Special Cases
     if ($ugroup_id==$GLOBALS['UGROUP_NONE']) { 
         // Empty group
@@ -234,19 +234,9 @@ function ugroup_user_is_member($user_id, $ugroup_id, $group_id, $atid=0) {
         // Registered user
         return $user_id != 0;
     } else if ($ugroup_id==$GLOBALS['UGROUP_REGISTERED'] && ForgeConfig::areRestrictedUsersAllowed()) {
-        $user                             = UserManager::instance()->getUserById($user_id);
-        $called_script_handles_restricted = false;
-        $event_manager                    = EventManager::instance();
-        $script                           = isset($_SERVER['SCRIPT_NAME']) ? $_SERVER['SCRIPT_NAME'] : '';
-
-        $event_manager->processEvent(
-            Event::IS_SCRIPT_HANDLED_FOR_RESTRICTED,
-            array(
-                'allow_restricted' => &$called_script_handles_restricted,
-                'user'             => $user,
-                'uri'              => $script
-            )
-        );
+        $event = new RestrictedUsersAreHandledByPluginEvent($_SERVER['REQUEST_URI']);
+        EventManager::instance()->processEvent($event);
+        $called_script_handles_restricted = $event->getPluginHandleRestricted();
 
         // Non-restricted user or restricted member in service that doesn't yet handle restricted users independently
         return ! $user->isAnonymous() && (! $user->isRestricted() || ! $called_script_handles_restricted);
@@ -674,6 +664,7 @@ function ugroup_delete($group_id, $ugroup_id) {
 /**
  * Wrapper for tests
  *
+ * @deprecated
  * @return UserManager
  */
 function ugroup_get_user_manager() {
