@@ -1,0 +1,2 @@
+msgid "The pull request is not accessible anymore"
+msgstr ""

@@ -67,4 +67,17 @@ class GitPullRequestReference
     {
         return $this->status === self::STATUS_OK || $this->status === self::STATUS_NOT_YET_CREATED;
     }
+
+    /**
+     * @return bool
+     */
+    public function isGitReferenceBroken()
+    {
+        return $this->status === self::STATUS_BROKEN;
+    }
+
+    public function isGitReferenceNeedToBeUpdated()
+    {
+        return $this->status === self::STATUS_NOT_YET_CREATED;
+    }
 }

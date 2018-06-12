@@ -42,8 +42,12 @@ use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\Comment\Dao as CommentDao;
 use Tuleap\PullRequest\Comment\Factory as CommentFactory;
 use Tuleap\PullRequest\Exception\UserCannotReadGitRepositoryException;
+use Tuleap\PullRequest\GitReference\GitPullRequestReference;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceCreator;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceDAO;
+use Tuleap\PullRequest\GitReference\GitPullRequestReferenceNotFoundException;
+use Tuleap\PullRequest\GitReference\GitPullRequestReferenceRetriever;
+use Tuleap\PullRequest\GitReference\GitPullRequestReferenceUpdater;
 use Tuleap\PullRequest\InlineComment\Dao as InlineCommentDao;
 use Tuleap\PullRequest\Exception\PullRequestCannotBeAbandoned;
 use Tuleap\PullRequest\Exception\PullRequestCannotBeMerged;
@@ -56,6 +60,7 @@ use Tuleap\PullRequest\Exception\UnknownBranchNameException;
 use Tuleap\PullRequest\Exception\UnknownReferenceException;
 use Tuleap\PullRequest\Label\PullRequestLabelDao;
 use Tuleap\PullRequest\Label\LabelsCurlyCoatedRetriever;
+use Tuleap\PullRequest\PullRequestWithGitReference;
 use Tuleap\PullRequest\Timeline\Factory as TimelineFactory;
 use Tuleap\PullRequest\Dao as PullRequestDao;
 use Tuleap\PullRequest\Factory as PullRequestFactory;
@@ -146,6 +151,14 @@ class PullRequestsResource extends AuthenticatedResource
      * @var AccessControlVerifier
      */
     private $access_control_verifier;
+    /**
+     * @var GitPullRequestReferenceRetriever
+     */
+    private $git_pull_request_reference_retriever;
+    /**
+     * @var GitPullRequestReferenceUpdater
+     */
+    private $git_pull_request_reference_updater;
 
     public function __construct()
     {
@@ -205,6 +218,13 @@ class PullRequestsResource extends AuthenticatedResource
         $this->permission_checker = new PullRequestPermissionChecker(
             $this->git_repository_factory,
             new URLVerification()
+        );
+
+        $git_pull_request_reference_dao       = new GitPullRequestReferenceDAO;
+        $this->git_pull_request_reference_retriever = new GitPullRequestReferenceRetriever($git_pull_request_reference_dao);
+        $this->git_pull_request_reference_updater   = new GitPullRequestReferenceUpdater(
+            $git_pull_request_reference_dao,
+            new GitPullRequestReferenceCreator($git_pull_request_reference_dao)
         );
     }
 
@@ -956,6 +976,8 @@ class PullRequestsResource extends AuthenticatedResource
             $pull_request = $this->pull_request_factory->getPullRequestById($id);
             $current_user = $this->user_manager->getCurrentUser();
             $this->permission_checker->checkPullRequestIsReadableByUser($pull_request, $current_user);
+
+            $git_reference = $this->git_pull_request_reference_retriever->getGitReferenceFromPullRequest($pull_request);
         } catch (PullRequestNotFoundException $exception) {
             throw new RestException(404);
         } catch (\GitRepoNotFoundException $exception) {
@@ -966,9 +988,35 @@ class PullRequestsResource extends AuthenticatedResource
             throw new RestException(403, $exception->getMessage());
         } catch (UserCannotReadGitRepositoryException $exception) {
             throw new RestException(403, 'User is not able to READ the git repository');
+        } catch (GitPullRequestReferenceNotFoundException $exception) {
+            throw new RestException(404);
         }
 
+        if ($git_reference->isGitReferenceBroken()) {
+            throw new RestException(
+                410,
+                dgettext('tuleap-pullrequest', 'The pull request is not accessible anymore')
+            );
+        }
+
+        $this->updateGitReferenceIfNeeded($pull_request, $git_reference);
+
         return $pull_request;
+    }
+
+    private function updateGitReferenceIfNeeded(PullRequest $pull_request, GitPullRequestReference $git_reference)
+    {
+        if (! $git_reference->isGitReferenceNeedToBeUpdated()) {
+            return;
+        }
+        $repository_source      = $this->getRepository($pull_request->getRepositoryId());
+        $repository_destination = $this->getRepository($pull_request->getRepoDestId());
+        $this->git_pull_request_reference_updater->updatePullRequestReference(
+            $pull_request,
+            GitExec::buildFromRepository($repository_source),
+            GitExec::buildFromRepository($repository_destination),
+            $repository_destination
+        );
     }
 
     private function getRepository($repository_id)
