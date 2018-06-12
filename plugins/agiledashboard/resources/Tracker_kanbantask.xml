@@ -60,6 +60,21 @@
                 </items>
               </bind>
             </formElement>
+            <formElement type="sb" ID="F17455" rank="1">
+              <name>urgency</name>
+              <label>
+                <![CDATA[ Urgency ]]>
+              </label>
+              <bind type="static" is_rank_alpha="0">
+                <items>
+                  <item ID="V6932" label="Expedite" is_hidden="0"/>
+                  <item ID="V6933" label="Regular" is_hidden="0"/>
+                </items>
+                <decorators>
+                  <decorator REF="V6932" tlp_color_name="fiesta-red"/>
+                </decorators>
+              </bind>
+            </formElement>
             <formElement type="sb" ID="F932" rank="2">
               <name>type</name>
               <label><![CDATA[Type]]></label>
@@ -160,6 +175,7 @@
     </semantic>
     <semantic type="plugin_cardwall_card_fields">
       <field REF="F929"/>
+      <background-color REF="F17455"/>
     </semantic>
   </semantics>
   <rules>
@@ -216,5 +232,8 @@
     <permission scope="field" REF="F939" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
     <permission scope="field" REF="F941" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
     <permission scope="field" REF="F942" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F17455" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F17455" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="F17455" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
   </permissions>
 </tracker>
