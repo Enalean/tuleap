@@ -700,7 +700,7 @@ class ProjectCreator {
     //Verify if the approbation of the new project is automatic or not
     private function autoActivateProject($group)
     {
-        $auto_approval = ForgeConfig::get('sys_project_approval', 1) ? PROJECT_APPROVAL_BY_ADMIN : PROJECT_APPROVAL_AUTO;
+        $auto_approval = ForgeConfig::get(\ProjectManager::CONFIG_PROJECT_APPROVAL, 1) ? PROJECT_APPROVAL_BY_ADMIN : PROJECT_APPROVAL_AUTO;
 
         if ($this->force_activation || $auto_approval == PROJECT_APPROVAL_AUTO) {
             if ($this->send_notifications) {

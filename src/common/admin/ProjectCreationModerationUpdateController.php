@@ -53,7 +53,7 @@ class ProjectCreationModerationUpdateController implements DispatchableWithReque
         $nb_max_per_user  = $this->getInputNotLowerThanMinusOne($request, 'nb_max_projects_waiting_for_validation_per_user');
 
         $config_dao = new \ConfigDao();
-        $config_dao->save('sys_project_approval', $project_approval);
+        $config_dao->save(\ProjectManager::CONFIG_PROJECT_APPROVAL, $project_approval);
         $config_dao->save(\ProjectManager::CONFIG_NB_PROJECTS_WAITING_FOR_VALIDATION, $nb_max_global);
         $config_dao->save(\ProjectManager::CONFIG_NB_PROJECTS_WAITING_FOR_VALIDATION_PER_USER, $nb_max_per_user);
 

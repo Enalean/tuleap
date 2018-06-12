@@ -122,7 +122,7 @@ class Project_OneStepCreation_OneStepCreationPresenter {
      * @return bool
      */
     public function isProjectApprovalEnabled() {
-        return ForgeConfig::get('sys_project_approval');
+        return ForgeConfig::get(\ProjectManager::CONFIG_PROJECT_APPROVAL);
     }
 
     /**

@@ -62,10 +62,15 @@ class ForgeConfig {
      * @return mixed
      */
     public static function get($name, $default = false) {
-        if (isset(self::$conf_stack[0][$name])) {
+        if (self::exists($name)) {
             return self::$conf_stack[0][$name];
         }
         return $default;
+    }
+
+    public static function exists($name)
+    {
+        return isset(self::$conf_stack[0][$name]);
     }
 
     public static function getSuperPublicProjectsFromRestrictedFile() {
