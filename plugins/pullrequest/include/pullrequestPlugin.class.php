@@ -79,6 +79,7 @@ class pullrequestPlugin extends Plugin
     {
         parent::__construct($id);
         $this->setScope(self::SCOPE_SYSTEM);
+        bindtextdomain('tuleap-pullrequest',  __DIR__ . '/../site-content/');
 
         $this->addHook(Event::SERVICE_CLASSNAMES);
         $this->addHook(Event::REST_RESOURCES);
