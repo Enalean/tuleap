@@ -74,10 +74,15 @@ class SingleCardPreviewDetailsBuilder
     private function getARandomArtifactFromTracker(Cardwall_Semantic_CardFields $semantic_card)
     {
         $artifact  = null;
-        $artifacts = $this->artifact_factory->getArtifactsByTrackerId($semantic_card->getTracker()->getId());
+        $artifacts = $this->artifact_factory->getPaginatedArtifactsByTrackerId(
+            $semantic_card->getTracker()->getId(),
+            1,
+            0,
+            false
+        );
 
-        if ($artifacts) {
-            $artifact = array_shift(array_values($artifacts));
+        if ($artifacts->getTotalSize() > 0) {
+            $artifact = array_shift(array_values($artifacts->getArtifacts()));
         }
 
         return $artifact;
