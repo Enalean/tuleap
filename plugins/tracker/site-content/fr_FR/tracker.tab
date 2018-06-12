@@ -569,11 +569,8 @@ plugin_tracker_include_type	no_active_val	---- AUCUNE VALEUR ACTIVE ----
 plugin_tracker_include_type	active_val	---- VALEURS ACTIVES ----
 plugin_tracker_include_type	no_hidden_val	---- AUCUNE VALEUR CACHÉE ----
 plugin_tracker_include_type	hidden_val	---- VALEURS CACHÉES ----
-plugin_tracker_include_type	toggle_notification	Suspension des notifications
 plugin_tracker_include_type	notification_suspended	Notifications Suspendues
-plugin_tracker_include_type	toggle_notif_note	En tant qu'administrateur de l'outil de suivi, vous pouvez temporairement suspendre toutes les notifications par e-mail de cet outil de suivi, quels que soient les paramètres de notification spécifiés ci-dessous.
 plugin_tracker_include_type	toggle_notif_warn	L'administrateur de l'outi de suivi a temporairement suspendu les notifications par e-mail de cet outil de suivi. Les paramètres ci-dessous ne sont donc pas pris en compte.
-plugin_tracker_include_type	stop_notification	Suspendre les notifications par e-mail
 plugin_tracker_include_type	notification_customisation_title	Personnalisation du sujet de l'email
 plugin_tracker_include_type	assigned_to_me	Assigné à moi même
 plugin_tracker_include_type	assigned_to_me_description	Inclure un marqueur [Assigné à moi même] dans le sujet pour les personnes étant assignées à l'artefact

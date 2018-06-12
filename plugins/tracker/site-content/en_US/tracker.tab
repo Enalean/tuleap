@@ -578,10 +578,7 @@ plugin_tracker_include_type	no_active_val	---- NO ACTIVE VALUES ----
 plugin_tracker_include_type	active_val	---- ACTIVE VALUES ----
 plugin_tracker_include_type	no_hidden_val	---- NO HIDDEN VALUES ----
 plugin_tracker_include_type	hidden_val	---- HIDDEN VALUES ----
-plugin_tracker_include_type	toggle_notification	Toggle Email Notification
-plugin_tracker_include_type	toggle_notif_note	As a tracker administrator, you can temporarily suspend all the e-mail notifications in this tracker, regardless of the notification settings below.
 plugin_tracker_include_type	toggle_notif_warn	The tracker administrator has temporarily suspended email notifications in this tracker. The notification settings below are now ignored.
-plugin_tracker_include_type	stop_notification	Suspend Email Notification
 plugin_tracker_include_type	notification_customisation_title	Email subject customisation
 plugin_tracker_include_type	assigned_to_me	Assigned to me
 plugin_tracker_include_type	assigned_to_me_description	Include [Assigned to me] flag in subject for people who are assigned to the artifact
