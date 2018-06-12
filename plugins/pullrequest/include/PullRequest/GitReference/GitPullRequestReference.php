@@ -53,6 +53,22 @@ class GitPullRequestReference
     }
 
     /**
+     * @return GitPullRequestReference
+     */
+    public static function buildReferenceWithUpdatedId($new_git_reference_id, self $existing_reference)
+    {
+        return new self($new_git_reference_id, $existing_reference->status);
+    }
+
+    /**
+     * @return int
+     */
+    public function getGitReferenceId()
+    {
+        return $this->git_reference_id;
+    }
+
+    /**
      * @return string
      */
     public function getGitHeadReference()
@@ -76,7 +92,7 @@ class GitPullRequestReference
         return $this->status === self::STATUS_BROKEN;
     }
 
-    public function isGitReferenceNeedToBeUpdated()
+    public function isGitReferenceNeedToBeCreatedInRepository()
     {
         return $this->status === self::STATUS_NOT_YET_CREATED;
     }

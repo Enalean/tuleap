@@ -45,6 +45,7 @@ use Tuleap\PullRequest\Exception\UserCannotReadGitRepositoryException;
 use Tuleap\PullRequest\GitReference\GitPullRequestReference;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceCreator;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceDAO;
+use Tuleap\PullRequest\GitReference\GitPullRequestReferenceNamespaceAvailabilityChecker;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceNotFoundException;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceRetriever;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceUpdater;
@@ -194,7 +195,10 @@ class PullRequestsResource extends AuthenticatedResource
             $pull_request_dao,
             $this->pull_request_merger,
             $this->event_manager,
-            new GitPullRequestReferenceCreator(new GitPullRequestReferenceDAO)
+            new GitPullRequestReferenceCreator(
+                new GitPullRequestReferenceDAO,
+                new GitPullRequestReferenceNamespaceAvailabilityChecker
+            )
         );
         $this->pull_request_closer  = new PullRequestCloser($this->pull_request_factory, $this->pull_request_merger);
         $this->logger               = new BackendLogger();
@@ -220,11 +224,13 @@ class PullRequestsResource extends AuthenticatedResource
             new URLVerification()
         );
 
-        $git_pull_request_reference_dao       = new GitPullRequestReferenceDAO;
+        $git_pull_request_reference_dao             = new GitPullRequestReferenceDAO;
+        $git_namespace_availability_checker         = new GitPullRequestReferenceNamespaceAvailabilityChecker;
         $this->git_pull_request_reference_retriever = new GitPullRequestReferenceRetriever($git_pull_request_reference_dao);
         $this->git_pull_request_reference_updater   = new GitPullRequestReferenceUpdater(
             $git_pull_request_reference_dao,
-            new GitPullRequestReferenceCreator($git_pull_request_reference_dao)
+            new GitPullRequestReferenceCreator($git_pull_request_reference_dao, $git_namespace_availability_checker),
+            $git_namespace_availability_checker
         );
     }
 
@@ -1006,7 +1012,7 @@ class PullRequestsResource extends AuthenticatedResource
 
     private function updateGitReferenceIfNeeded(PullRequest $pull_request, GitPullRequestReference $git_reference)
     {
-        if (! $git_reference->isGitReferenceNeedToBeUpdated()) {
+        if (! $git_reference->isGitReferenceNeedToBeCreatedInRepository()) {
             return;
         }
         $repository_source      = $this->getRepository($pull_request->getRepositoryId());
