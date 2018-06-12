@@ -42,6 +42,17 @@ class Cardwall_OnTop_ColumnDao extends DataAccessObject {
         return $this->updateAndGetLastId($sql);
     }
 
+    public function createWithTLPColor($tracker_id, $label, $tlp_color_name) {
+        $tracker_id     = $this->da->escapeInt($tracker_id);
+        $label          = $this->da->quoteSmart($label);
+        $tlp_color_name = $this->da->quoteSmart($tlp_color_name);
+
+        $sql = "INSERT INTO plugin_cardwall_on_top_column (tracker_id, label, bg_red, bg_green, bg_blue, tlp_color_name)
+                VALUES ($tracker_id, $label, null, null, null, $tlp_color_name)";
+
+        return $this->updateAndGetLastId($sql);
+    }
+
     public function create($tracker_id, $label) {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $label      = $this->da->quoteSmart($label);

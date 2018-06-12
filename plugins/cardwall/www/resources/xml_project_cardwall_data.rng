@@ -19,21 +19,14 @@
                   <attribute name="label">
                     <data type="string"/>
                   </attribute>
-                  <optional>
-                    <attribute name="bg_red">
-                      <data type="long"/>
-                    </attribute>
-                  </optional>
-                  <optional>
-                    <attribute name="bg_green">
-                      <data type="long"/>
-                    </attribute>
-                  </optional>
-                  <optional>
-                    <attribute name="bg_blue">
-                      <data type="long"/>
-                    </attribute>
-                  </optional>
+                  <choice>
+                    <ref name="legacy_columns_headers_color"/>
+                    <optional>
+                      <attribute name="tlp_color_name">
+                        <data type="string"/>
+                      </attribute>
+                    </optional>
+                  </choice>
                 </element>
               </zeroOrMore>
             </element>
@@ -69,5 +62,22 @@
         </element>
       </zeroOrMore>
     </element>
+  </define>
+  <define name="legacy_columns_headers_color">
+    <optional>
+      <attribute name="bg_red">
+        <data type="long"/>
+      </attribute>
+    </optional>
+    <optional>
+      <attribute name="bg_green">
+        <data type="long"/>
+      </attribute>
+    </optional>
+    <optional>
+      <attribute name="bg_blue">
+        <data type="long"/>
+      </attribute>
+    </optional>
   </define>
 </grammar>

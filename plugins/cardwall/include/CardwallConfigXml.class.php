@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -29,11 +29,12 @@ class CardwallConfigXml {
     const NODE_VALUES   = 'values';
     const NODE_VALUE    = 'value';
 
-    const ATTRIBUTE_COLUMN_LABEL    = 'label';
-    const ATTRIBUTE_COLUMN_ID       = 'id';
-    const ATTRIBUTE_COLUMN_BG_RED   = 'bg_red';
-    const ATTRIBUTE_COLUMN_BG_GREEN = 'bg_green';
-    const ATTRIBUTE_COLUMN_BG_BLUE  = 'bg_blue';
+    const ATTRIBUTE_COLUMN_LABEL          = 'label';
+    const ATTRIBUTE_COLUMN_ID             = 'id';
+    const ATTRIBUTE_COLUMN_BG_RED         = 'bg_red';
+    const ATTRIBUTE_COLUMN_BG_GREEN       = 'bg_green';
+    const ATTRIBUTE_COLUMN_BG_BLUE        = 'bg_blue';
+    const ATTRIBUTE_COLUMN_TLP_COLOR_NAME = 'tlp_color_name';
 
     const ATTRIBUTE_TRACKER_ID = 'id';
 }
