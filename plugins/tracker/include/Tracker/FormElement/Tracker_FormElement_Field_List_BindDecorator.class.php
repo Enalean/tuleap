@@ -59,7 +59,7 @@ class Tracker_FormElement_Field_List_BindDecorator
      * @param string $color
      * @return bool
      */
-    private static function isHexaColor($color)
+    public static function isHexaColor($color)
     {
         return strpos($color, '#') !== false;
     }

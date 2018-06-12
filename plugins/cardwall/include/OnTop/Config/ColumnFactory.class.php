@@ -1,7 +1,6 @@
 <?php
-
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -44,7 +43,7 @@ class Cardwall_OnTop_Config_ColumnFactory {
 
     /**
      * Get columns for Cardwall_OnTop
-     * 
+     *
      * @return Cardwall_OnTop_Config_ColumnCollection
      */
     public function getDashboardColumns(Tracker $tracker) {
@@ -61,7 +60,7 @@ class Cardwall_OnTop_Config_ColumnFactory {
         $this->fillColumnsFor($columns, $field);
         return $columns;
     }
-    
+
     private function fillColumnsFor(&$columns, $field) {
         $decorators = $field->getDecorators();
         foreach($field->getVisibleValuesPlusNoneIfAny() as $value) {
@@ -100,23 +99,30 @@ class Cardwall_OnTop_Config_ColumnFactory {
         $bgcolor = self::DEFAULT_BGCOLOR;
         $fgcolor = self::DARK_FGCOLOR;
         if (isset($decorators[$id])) {
-            $bgcolor = $decorators[$id]->css($bgcolor);
+            $bgcolor = $decorators[$id]->getCurrentColor();
             //choose a text color to have right contrast (black on dark colors is quite useless)
             $fgcolor = $decorators[$id]->isDark($fgcolor) ? self::LIGHT_FGCOLOR : self::DARK_FGCOLOR;
         }
         return array($bgcolor, $fgcolor);
     }
 
-    private function getColumnColorsFromRow($row) {
+    private function getColumnColorsFromRow(array $row)
+    {
         $bgcolor = self::DEFAULT_BGCOLOR;
         $fgcolor = self::DARK_FGCOLOR;
-        $r = $row['bg_red'];
-        $g = $row['bg_green'];
-        $b = $row['bg_blue'];
-        if ($r !== null && $g !== null && $b !== null) {
+
+        $r              = $row['bg_red'];
+        $g              = $row['bg_green'];
+        $b              = $row['bg_blue'];
+        $tlp_color_name = $row['tlp_color_name'];
+
+        if ($tlp_color_name) {
+            $bgcolor = $tlp_color_name;
+        } else if ($r !== null && $g !== null && $b !== null) {
             $bgcolor = "rgb($r, $g, $b)";
             $fgcolor = $this->isDark($r, $g, $b) ? self::LIGHT_FGCOLOR : self::DARK_FGCOLOR;
         }
+
         return array($bgcolor, $fgcolor);
     }
 
@@ -127,9 +133,4 @@ class Cardwall_OnTop_Config_ColumnFactory {
     public function isDark($r, $g, $b) {
         return (0.3 * $r + 0.59 * $g + 0.11 * $b) < 128;
     }
-
-    
-
-
 }
-?>

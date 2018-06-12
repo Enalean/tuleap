@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -49,13 +49,19 @@ class Cardwall_OnTop_Config_View_ColumnDefinition {
         return $html;
     }
 
-    private function fetchMappings() {
+    private function fetchMappings()
+    {
         $html  = '';
         $html .= '<table class="cardwall_admin_ontop_mappings"><thead><tr valign="top">';
         $html .= '<td></td>';
         foreach ($this->config->getDashboardColumns() as $column) {
             $html .= '<th>';
-            $html .= '<div class="cardwall-column-header-color" style="background-color: '. $column->bgcolor .'; color: '. $column->fgcolor .';"></div>';
+            if ($column->isBackgroundATLPColor()) {
+                $html .= '<div class="cardwall-column-header-color cardwall-column-header-color-'. $column->getBgcolor() . '"></div>';
+            } else {
+                $html .= '<div class="cardwall-column-header-color" style="background-color: '. $column->getBgcolor() .'"></div>';
+            }
+
             $html .= $this->fetchColumnHeader($column);
             $html .= '</th>';
         }
@@ -175,7 +181,7 @@ class Cardwall_OnTop_Config_View_ColumnDefinition {
             $html .= '<select name="mapping_field['. (int)$mapping_tracker->getId() .'][values]['. $column_id .'][]" multiple="multiple" size="'. count($field_values) .'">';
             foreach ($field_values as $value) {
                 $selected = '';
-                
+
                 //TODO rather use the TrackerMapping and ask it some question, cannot rely on the fact that this array is indexed
                 // on value->getId(), for instance in the case of status mappings it ain't!
                 if (isset($mapping_values[$value->getId()]) && $mapping_values[$value->getId()]->getColumnId() == $column_id) {
@@ -207,12 +213,27 @@ class Cardwall_OnTop_Config_View_ColumnDefinition {
         return $html;
     }
 
-    private function decorateEdit($column) {
-        $id   = 'column_'. $column->id .'_field';
-        $hexa = ColorHelper::CssRGBToHexa($column->bgcolor);
-        $html = $this->fetchSquareColor('column_'.$column->id, $column->bgcolor, 'colorpicker');
-        $html .= '<input id="'.$id .'" type="text" size="6" autocomplete="off" name="column['. $column->id .'][bgcolor]" value="'. $hexa .'" />';
-        return $html;
+    private function decorateEdit(Cardwall_Column $column)
+    {
+        $switch_old_palette_label     = dgettext('tuleap-tracker', 'Switch to old colors');
+        $switch_default_palette_label = dgettext('tuleap-tracker', 'Switch to default colors');
+
+        $current_color = ($column->isBackgroundATLPColor())
+            ? $column->getBgcolor()
+            : ColorHelper::CssRGBToHexa($column->getBgcolor());
+
+        $input_id   = 'column_'. $column->id .'_field';
+        $input_name = "column[$column->id][bgcolor]";
+
+        return '
+            <div class="vue-colorpicker-mount-point"
+                data-input-name="'. $input_name .'"
+                data-input-id="'. $input_id .'"
+                data-current-color="'. $current_color . '"
+                data-switch-default-palette-label="' . $switch_default_palette_label . '"
+                data-switch-old-palette-label="' . $switch_old_palette_label . '"
+            ></div>
+        ';
     }
 
     private function fetchSquareColor($id, $title, $classname, $img = 'blank16x16.png') {
@@ -267,4 +288,3 @@ class Cardwall_OnTop_Config_View_ColumnDefinition {
         return $GLOBALS['Language']->getText($page, $category, $args);
     }
 }
-?>

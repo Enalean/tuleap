@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS plugin_cardwall_on_top_column(
     bg_red TINYINT UNSIGNED NULL,
     bg_green TINYINT UNSIGNED NULL,
     bg_blue TINYINT UNSIGNED NULL,
+    tlp_color_name VARCHAR (30) NULL,
     INDEX idx_tracker_id(tracker_id)
 );
 

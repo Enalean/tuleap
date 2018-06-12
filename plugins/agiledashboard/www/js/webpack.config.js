@@ -36,7 +36,8 @@ const path_to_badge = path.resolve(__dirname, '../../../../src/www/scripts/proje
 const webpack_config_for_overview_and_vue = {
     entry: {
         overview: './scrum-header.js',
-        'permission-per-group': './permissions-per-group/src/index.js'
+        'permission-per-group': './permissions-per-group/src/index.js',
+        'planning-admin'      : './planning-admin.js'
     },
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path),

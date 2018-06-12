@@ -11,7 +11,8 @@
         "FlamingParrot": {
             "files": [
                 "www/themes/FlamingParrot/css/style.scss",
-                "www/themes/FlamingParrot/css/burnup-chart.scss"
+                "www/themes/FlamingParrot/css/burnup-chart.scss",
+                "www/themes/FlamingParrot/css/planning-admin-colorpicker.scss"
             ],
             "includes": [
                 "../../src/www/themes/FlamingParrot/css/utils"
