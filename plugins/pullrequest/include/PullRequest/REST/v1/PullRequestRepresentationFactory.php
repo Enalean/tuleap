@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,25 +26,27 @@ use Tuleap\PullRequest\PullRequest;
 
 class PullRequestRepresentationFactory
 {
-
-    /**
-     * @var GitExec;
-     */
-    private $executor;
     /**
      * @var AccessControlVerifier
      */
     private $access_control_verifier;
 
-    public function __construct(GitExec $executor, AccessControlVerifier $access_control_verifier)
+    public function __construct(AccessControlVerifier $access_control_verifier)
     {
-        $this->executor                = $executor;
         $this->access_control_verifier = $access_control_verifier;
     }
 
-    public function getPullRequestRepresentation($pull_request, $repository_src, $repository_dest, $user)
-    {
-        $short_stat        = $this->executor->getShortStat($pull_request->getSha1Dest(), $pull_request->getSha1Src());
+    public function getPullRequestRepresentation(
+        PullRequest $pull_request,
+        \GitRepository $repository_src,
+        \GitRepository $repository_dest,
+        GitExec $executor_repository_destination,
+        \PFUser $user
+    ) {
+        $short_stat        = $executor_repository_destination->getShortStat(
+            $pull_request->getSha1Dest(),
+            $pull_request->getSha1Src()
+        );
         $short_stat_repres = new PullRequestShortStatRepresentation();
         $short_stat_repres->build($short_stat);
 
