@@ -34,7 +34,8 @@ class GitPullRequestReferenceCreatorTest extends TestCase
     public function testPullRequestReferenceIsCreatedDirectlyWhenReferenceIsAvailable()
     {
         $dao               = \Mockery::mock(GitPullRequestReferenceDAO::class);
-        $reference_creator = new GitPullRequestReferenceCreator($dao);
+        $namespace_checker = \Mockery::mock(GitPullRequestReferenceNamespaceAvailabilityChecker::class);
+        $reference_creator = new GitPullRequestReferenceCreator($dao, $namespace_checker);
 
         $pull_request           = \Mockery::mock(PullRequest::class);
         $executor_source        = \Mockery::mock(GitExec::class);
@@ -43,7 +44,7 @@ class GitPullRequestReferenceCreatorTest extends TestCase
 
         $dao->shouldReceive('createGitReferenceForPullRequest')->andReturns(1)->once();
         $dao->shouldReceive('updateStatusByPullRequestId')->once();
-        $executor_destination->shouldReceive('getReferencesFromPattern')->andReturns([])->once();
+        $namespace_checker->shouldReceive('isAvailable')->andReturns(true);
         $executor_source->shouldReceive('push')->once();
 
         $pull_request->shouldReceive('getId')->andReturns(1);
@@ -58,7 +59,8 @@ class GitPullRequestReferenceCreatorTest extends TestCase
     public function testPullRequestReferenceIsCreatedWithFirstAvailableOneWhenTheInitialOneIsAlreadyTaken()
     {
         $dao               = \Mockery::mock(GitPullRequestReferenceDAO::class);
-        $reference_creator = new GitPullRequestReferenceCreator($dao);
+        $namespace_checker = \Mockery::mock(GitPullRequestReferenceNamespaceAvailabilityChecker::class);
+        $reference_creator = new GitPullRequestReferenceCreator($dao, $namespace_checker);
 
         $pull_request           = \Mockery::mock(PullRequest::class);
         $executor_source        = \Mockery::mock(GitExec::class);
@@ -68,11 +70,7 @@ class GitPullRequestReferenceCreatorTest extends TestCase
         $dao->shouldReceive('createGitReferenceForPullRequest')->andReturns(1)->once();
         $dao->shouldReceive('updateGitReferenceToNextAvailableOne')->andReturns(2, 3)->twice();
         $dao->shouldReceive('updateStatusByPullRequestId')->once();
-        $executor_destination->shouldReceive('getReferencesFromPattern')->andReturns(
-            ['refs/tlpr/1/head'],
-            ['refs/tlpr/2/head'],
-            []
-        );
+        $namespace_checker->shouldReceive('isAvailable')->andReturns(false, false, true);
         $executor_source->shouldReceive('push')->once();
 
         $pull_request->shouldReceive('getId')->andReturns(1);
@@ -90,7 +88,8 @@ class GitPullRequestReferenceCreatorTest extends TestCase
     public function testExpectedDestinationRepositoryIsGiven()
     {
         $dao               = \Mockery::mock(GitPullRequestReferenceDAO::class);
-        $reference_creator = new GitPullRequestReferenceCreator($dao);
+        $namespace_checker = \Mockery::mock(GitPullRequestReferenceNamespaceAvailabilityChecker::class);
+        $reference_creator = new GitPullRequestReferenceCreator($dao, $namespace_checker);
 
         $pull_request           = \Mockery::mock(PullRequest::class);
         $executor_source        = \Mockery::mock(GitExec::class);
@@ -109,7 +108,8 @@ class GitPullRequestReferenceCreatorTest extends TestCase
     public function testGitReferenceIsMarkedAsBrokenWhenItCannotBeCreated()
     {
         $dao               = \Mockery::mock(GitPullRequestReferenceDAO::class);
-        $reference_creator = new GitPullRequestReferenceCreator($dao);
+        $namespace_checker = \Mockery::mock(GitPullRequestReferenceNamespaceAvailabilityChecker::class);
+        $reference_creator = new GitPullRequestReferenceCreator($dao, $namespace_checker);
 
         $pull_request           = \Mockery::mock(PullRequest::class);
         $executor_source        = \Mockery::mock(GitExec::class);
@@ -118,7 +118,7 @@ class GitPullRequestReferenceCreatorTest extends TestCase
 
         $dao->shouldReceive('createGitReferenceForPullRequest')->andReturns(1)->once();
         $dao->shouldReceive('updateStatusByPullRequestId')->with(1, GitPullRequestReference::STATUS_BROKEN)->once();
-        $executor_destination->shouldReceive('getReferencesFromPattern')->andReturns([])->once();
+        $namespace_checker->shouldReceive('isAvailable')->andReturns(true);
         $executor_source->shouldReceive('push')->once()->andThrow(\Mockery::mock(\Git_Command_Exception::class));
 
         $pull_request->shouldReceive('getId')->andReturns(1);

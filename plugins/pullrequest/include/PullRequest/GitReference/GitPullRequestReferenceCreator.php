@@ -30,10 +30,17 @@ class GitPullRequestReferenceCreator
      * @var GitPullRequestReferenceDAO
      */
     private $dao;
+    /**
+     * @var GitPullRequestReferenceNamespaceAvailabilityChecker
+     */
+    private $namespace_availability_checker;
 
-    public function __construct(GitPullRequestReferenceDAO $dao)
-    {
-        $this->dao = $dao;
+    public function __construct(
+        GitPullRequestReferenceDAO $dao,
+        GitPullRequestReferenceNamespaceAvailabilityChecker $namespace_availability_checker
+    ) {
+        $this->dao                            = $dao;
+        $this->namespace_availability_checker = $namespace_availability_checker;
     }
 
     public function createPullRequestReference(
@@ -50,7 +57,7 @@ class GitPullRequestReferenceCreator
             $pull_request->getId(),
             GitPullRequestReference::STATUS_NOT_YET_CREATED
         );
-        while ($this->isReferenceAlreadyTaken($executor_repository_destination, $reference_id)) {
+        while (! $this->namespace_availability_checker->isAvailable($executor_repository_destination, $reference_id)) {
             $reference_id = $this->dao->updateGitReferenceToNextAvailableOne($pull_request->getId());
         }
 
@@ -65,13 +72,5 @@ class GitPullRequestReferenceCreator
             throw $ex;
         }
         $this->dao->updateStatusByPullRequestId($pull_request->getId(), GitPullRequestReference::STATUS_OK);
-    }
-
-    /**
-     * @return bool
-     */
-    private function isReferenceAlreadyTaken(GitExec $executor, $reference_id)
-    {
-        return count($executor->getReferencesFromPattern(GitPullRequestReference::PR_NAMESPACE . $reference_id)) > 0;
     }
 }

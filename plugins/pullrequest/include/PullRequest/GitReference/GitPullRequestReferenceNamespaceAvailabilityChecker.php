@@ -20,25 +20,12 @@
 
 namespace Tuleap\PullRequest\GitReference;
 
-require_once __DIR__ . '/../bootstrap.php';
+use Tuleap\PullRequest\GitExec;
 
-use PHPUnit\Framework\TestCase;
-
-class GitPullRequestReferenceTest extends TestCase
+class GitPullRequestReferenceNamespaceAvailabilityChecker
 {
-    /**
-     * @expectedException \DomainException
-     */
-    public function testInvalidStatusIsRejected()
+    public function isAvailable(GitExec $executor, $reference_id)
     {
-        new GitPullRequestReference(1, 99999999999999999);
-    }
-
-    public function testBuildReferenceWithUpdatedId()
-    {
-        $reference         = new GitPullRequestReference(1, GitPullRequestReference::STATUS_OK);
-        $updated_reference = GitPullRequestReference::buildReferenceWithUpdatedId(2, $reference);
-
-        $this->assertEquals(2, $updated_reference->getGitReferenceId());
+        return count($executor->getReferencesFromPattern(GitPullRequestReference::PR_NAMESPACE . $reference_id)) === 0;
     }
 }

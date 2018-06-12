@@ -34,11 +34,19 @@ class GitPullRequestReferenceUpdater
      * @var GitPullRequestReferenceCreator
      */
     private $reference_creator;
+    /**
+     * @var GitPullRequestReferenceNamespaceAvailabilityChecker
+     */
+    private $namespace_availability_checker;
 
-    public function __construct(GitPullRequestReferenceDAO $dao, GitPullRequestReferenceCreator $reference_creator)
-    {
-        $this->dao               = $dao;
-        $this->reference_creator = $reference_creator;
+    public function __construct(
+        GitPullRequestReferenceDAO $dao,
+        GitPullRequestReferenceCreator $reference_creator,
+        GitPullRequestReferenceNamespaceAvailabilityChecker $namespace_availability_checker
+    ) {
+        $this->dao                            = $dao;
+        $this->reference_creator              = $reference_creator;
+        $this->namespace_availability_checker = $namespace_availability_checker;
     }
 
     /**
@@ -70,6 +78,13 @@ class GitPullRequestReferenceUpdater
         }
 
         try {
+            if ($reference->isGitReferenceNeedToBeCreatedInRepository()) {
+                $reference = $this->ensureAvailabilityGitReferenceNamespace(
+                    $pull_request,
+                    $executor_repository_destination,
+                    $reference
+                );
+            }
             $executor_repository_source->push(
                 '--force ' . escapeshellarg('gitolite@gl-adm:' . $repository_destination->getPath()) . ' ' .
                 escapeshellarg($pull_request->getSha1Src()) . ':' . escapeshellarg($reference->getGitHeadReference())
@@ -79,5 +94,20 @@ class GitPullRequestReferenceUpdater
             throw $ex;
         }
         $this->dao->updateStatusByPullRequestId($pull_request->getId(), GitPullRequestReference::STATUS_OK);
+    }
+
+    /**
+     * @return GitPullRequestReference
+     */
+    private function ensureAvailabilityGitReferenceNamespace(
+        PullRequest $pull_request,
+        GitExec $executor_repository,
+        GitPullRequestReference $reference
+    ) {
+        $reference_id = $reference->getGitReferenceId();
+        while (! $this->namespace_availability_checker->isAvailable($executor_repository, $reference_id)) {
+            $reference_id = $this->dao->updateGitReferenceToNextAvailableOne($pull_request->getId());
+        }
+        return GitPullRequestReference::buildReferenceWithUpdatedId($reference_id, $reference);
     }
 }
