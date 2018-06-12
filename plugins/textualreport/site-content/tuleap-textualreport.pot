@@ -5,8 +5,11 @@ msgid "Export as single page document"
 msgstr ""
 
 msgid ""
-"Export matching artifacts in a single page document using title and "
+"Export matching artifacts in a single page document using only title and "
 "description semantics"
+msgstr ""
+
+msgid "Partial export as single page document"
 msgstr ""
 
 msgid "Please refine your query."
