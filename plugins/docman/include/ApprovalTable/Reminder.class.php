@@ -160,6 +160,7 @@ class Docman_ApprovalTableReminder {
         $mailMgr   = new MailManager();
         $mailPrefs = $mailMgr->getMailPreferencesByUser($reviewer);
 
+        $html_body = '';
         if ($mailPrefs == Codendi_Mail_Interface::FORMAT_HTML) {
                 $html_body = $this->getBodyHtml($table, $docmanItem);
 
