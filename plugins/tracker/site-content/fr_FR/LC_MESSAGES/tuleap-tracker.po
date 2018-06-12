@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.7\n"
+"X-Generator: Poedit 1.8.7.1\n"
 
 #, php-format
 msgid "%s has been created"
@@ -101,6 +101,15 @@ msgstr ""
 "soumission (et éventuellement de modification) d'artefacts."
 
 msgid ""
+"As a tracker administrator, you can temporarily suspend all the e-mail "
+"notifications in this tracker,\n"
+"          regardless of the notification settings below."
+msgstr ""
+"En tant qu'administrateur de l'outil de suivi, vous pouvez temporairement "
+"suspendre toutes les notifications par e-mail de cet outil de suivi, quels "
+"que soient les paramètres de notification spécifiés ci-dessous."
+
+msgid ""
 "Be careful: An artifact deletion is an action hardly reversible. Choose "
 "wisely."
 msgstr ""
@@ -128,6 +137,13 @@ msgstr "Configurer les trackers"
 
 msgid "Confirm deletion"
 msgstr "Confirmer la suppression"
+
+msgid ""
+"Default Tuleap notifications (people will get notified when they are "
+"submitter, assignee, commenter or CC)"
+msgstr ""
+"Notifications par défaut (les gens sont notifiés lorsqu'ils ont soumis, sont "
+"assignés, ont commenté ou sont en CC)"
 
 msgid "Default tracker notifications"
 msgstr "Notifications par défaut de l'outil de suivi"
@@ -175,6 +191,9 @@ msgstr "Aucun élément sélectionné."
 msgid "No notification set"
 msgstr "Aucune notification n'a été définie"
 
+msgid "No notifications"
+msgstr "Aucune notification"
+
 msgid "No notifications at all"
 msgstr "Aucune notification"
 
@@ -186,6 +205,9 @@ msgstr "La notification a été supprimée"
 
 msgid "Notification successfully saved."
 msgstr "Notification enregistrée avec succès."
+
+msgid "Notifications"
+msgstr "Notifications"
 
 msgid "Notified people"
 msgstr "Personnes notifiées"
@@ -223,6 +245,9 @@ msgstr ""
 
 msgid "Something went wrong."
 msgstr "Quelque chose s'est mal passé."
+
+msgid "Submit"
+msgstr "Valider"
 
 msgid "Submit Changes"
 msgstr "Valider"

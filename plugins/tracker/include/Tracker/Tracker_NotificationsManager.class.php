@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  * Copyright Enalean (c) 2017-2018. All rights reserved.
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -250,14 +250,17 @@ class Tracker_NotificationsManager {
 
     protected function displayAdminNotifications_Toggle()
     {
-        echo '<h3><a name="ToggleEmailNotification"></a>'.$GLOBALS['Language']->getText('plugin_tracker_include_type','toggle_notification').' '.
-            help_button('tracker.html#e-mail-notification').'</h3>';
-        echo '
-                <p>'.$GLOBALS['Language']->getText('plugin_tracker_include_type','toggle_notif_note').'<br>
-                <br><input type="hidden" name="notifications_level" value="0" />
-                <label class="checkbox"><input id="toggle_stop_notification" type="checkbox" name="notifications_level" value="1" '.($this->tracker->isNotificationStopped()?'checked="checked"':'').' /> '.
-            $GLOBALS['Language']->getText('plugin_tracker_include_type','stop_notification') .'</label>';
-        echo '<input class="btn" type="submit" value="'.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','submit').'"/>';
+        $renderer = $this->getNotificationsRenderer();
+        $notifications_level = $this->tracker->getNotificationsLevel();
+        $renderer->renderToPage(
+            'admin-notifications-level',
+            [
+                'disabled_value' => Tracker::NOTIFICATIONS_LEVEL_DISABLED,
+                'default_value'  => Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
+                'is_default'     => $notifications_level === Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
+                'is_disabled'    => $notifications_level === Tracker::NOTIFICATIONS_LEVEL_DISABLED
+            ]
+        );
     }
 
     private function displayAdminNotificationAssignedToMeFlag()

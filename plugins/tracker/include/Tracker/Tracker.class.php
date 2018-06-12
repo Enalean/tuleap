@@ -132,7 +132,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         $this->deletion_date                = $deletion_date;
         $this->instantiate_for_new_projects = $instantiate_for_new_projects;
         $this->log_priority_changes         = $log_priority_changes;
-        $this->notifications_level          = $notifications_level;
+        $this->notifications_level          = (int) $notifications_level;
         $this->enable_emailgateway          = $enable_emailgateway;
         $this->formElementFactory           = Tracker_FormElementFactory::instance();
         $this->sharedFormElementFactory     = new Tracker_SharedFormElementFactory($this->formElementFactory, new Tracker_FormElement_Field_List_BindFactory());
@@ -285,14 +285,17 @@ class Tracker implements Tracker_Dispatchable_Interface
         return (int) $this->notifications_level === self::NOTIFICATIONS_LEVEL_DISABLED;
     }
 
+    /**
+     * @return int
+     */
     public function getNotificationsLevel()
     {
-        return $this->notifications_level;
+        return (int) $this->notifications_level;
     }
 
     public function setNotificationsLevel($notifications_level)
     {
-        $this->notifications_level = $notifications_level;
+        $this->notifications_level = (int) $notifications_level;
     }
 
     /**
