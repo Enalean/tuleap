@@ -20,7 +20,6 @@
 
 use Tuleap\Cardwall\AccentColor\AccentColorBuilder;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorColorRetriever;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\Tracker\Report\WidgetAdditionalButtonPresenter;
 
@@ -144,7 +143,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
                 array($field->getId() => $field),
                 $columns
             );
-            $background_color_builder = new BackgroundColorBuilder(new BindDecoratorColorRetriever());
+            $background_color_builder = new BackgroundColorBuilder(new BindDecoratorRetriever());
             $accent_color_builder = new AccentColorBuilder(
                 $this->getFormElementFactory(),
                 new BindDecoratorRetriever()

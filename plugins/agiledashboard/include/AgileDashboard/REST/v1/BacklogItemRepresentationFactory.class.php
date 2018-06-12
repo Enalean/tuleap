@@ -25,12 +25,11 @@ use EventManager;
 use PFUser;
 use Tracker_Artifact;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorColorRetriever;
 use UserManager;
 
 class BacklogItemRepresentationFactory
 {
-    /** @var BindDecoratorColorRetriever */
+    /** @var BackgroundColorBuilder */
     private $background_color_builder;
 
     /** @var UserManager */

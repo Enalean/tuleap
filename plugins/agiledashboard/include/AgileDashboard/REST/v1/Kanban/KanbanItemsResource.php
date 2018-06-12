@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -47,7 +47,7 @@ use TrackerFactory;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorColorRetriever;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\Tracker\REST\TrackerReference as TrackerReference;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation as ArtifactValuesRepresentation;
 use UserManager;
@@ -112,7 +112,7 @@ class KanbanItemsResource extends AuthenticatedResource {
         $kanban_item_dao                   = new AgileDashboard_KanbanItemDao();
         $this->time_info_factory           = new TimeInfoFactory($kanban_item_dao);
         $this->statistics_aggregator       = new AgileDashboardStatisticsAggregator();
-        $color_builder                     = new BackgroundColorBuilder(new BindDecoratorColorRetriever());
+        $color_builder                     = new BackgroundColorBuilder(new BindDecoratorRetriever());
         $this->item_representation_builder = new ItemRepresentationBuilder(
             new AgileDashboard_KanbanItemManager($kanban_item_dao),
             $this->time_info_factory,

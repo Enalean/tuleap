@@ -49,7 +49,7 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\REST\Header;
 use Tuleap\REST\v1\OrderRepresentationBase;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorColorRetriever;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\Tracker\REST\v1\ArtifactLinkUpdater;
 use UserManager;
 
@@ -170,7 +170,7 @@ class ProjectBacklogResource
             $event_manager
         );
 
-        $color_builder = new BackgroundColorBuilder(new BindDecoratorColorRetriever());
+        $color_builder = new BackgroundColorBuilder(new BindDecoratorRetriever());
         $item_factory  = new BacklogItemRepresentationFactory(
             $color_builder,
             $user_manager,

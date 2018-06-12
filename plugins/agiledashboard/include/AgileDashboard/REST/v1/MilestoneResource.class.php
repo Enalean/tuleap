@@ -59,7 +59,7 @@ use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorColorRetriever;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\Tracker\REST\v1\ArtifactLinkUpdater;
 use URLVerification;
 use UserManager;
@@ -1172,7 +1172,7 @@ class MilestoneResource extends AuthenticatedResource {
 
     private function getBacklogItemRepresentationFactory()
     {
-        $color_builder = new BackgroundColorBuilder(new BindDecoratorColorRetriever());
+        $color_builder = new BackgroundColorBuilder(new BindDecoratorRetriever());
         return new BacklogItemRepresentationFactory(
             $color_builder,
             UserManager::instance(),

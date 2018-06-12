@@ -24,19 +24,22 @@ use Cardwall_Semantic_CardFields;
 use PFUser;
 use Tracker_Artifact;
 use Tuleap\Cardwall\Semantic\BackgroundColorSemanticFieldNotFoundException;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorColorRetriever;
+use Tuleap\Tracker\Artifact\Exception\NoChangesetException;
+use Tuleap\Tracker\Artifact\Exception\NoChangesetValueException;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\NoBindDecoratorException;
 
 class BackgroundColorBuilder
 {
-    /** @var BindDecoratorColorRetriever */
-    private $decorator_color_retriever;
+    /** @var BindDecoratorRetriever */
+    private $decorator_retriever;
 
     /**
-     * @param BindDecoratorColorRetriever $decorator_color_retriever
+     * @param BindDecoratorRetriever $decorator_retriever
      */
-    public function __construct(BindDecoratorColorRetriever $decorator_color_retriever)
+    public function __construct(BindDecoratorRetriever $decorator_retriever)
     {
-        $this->decorator_color_retriever = $decorator_color_retriever;
+        $this->decorator_retriever = $decorator_retriever;
     }
 
     public function build(
@@ -63,9 +66,16 @@ class BackgroundColorBuilder
             return '';
         }
 
-        return $this->decorator_color_retriever->getCurrentDecoratorColor(
-            $background_color_field,
-            $artifact
-        );
+        try {
+            $decorator = $this->decorator_retriever->getDecoratorForFirstValue($background_color_field, $artifact);
+
+            return $decorator->tlp_color_name;
+        } catch (NoChangesetException $e) {
+            return '';
+        } catch (NoChangesetValueException $e) {
+            return '';
+        } catch (NoBindDecoratorException $e) {
+            return '';
+        }
     }
 }

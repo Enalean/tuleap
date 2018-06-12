@@ -37,12 +37,12 @@ use Tuleap\Cardwall\AccentColor\AccentColorBuilder;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorColorRetriever;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use URLVerification;
 use UserManager;
 
-class CardsResource {
+class CardsResource
+{
 
     /** @var UserManager */
     private $user_manager;
@@ -65,6 +65,7 @@ class CardsResource {
             $this->formelement_factory
         );
 
+        $bind_decorator_retriever = new BindDecoratorRetriever();
         $this->single_card_builder = new Cardwall_SingleCardBuilder(
             $this->config_factory,
             new Cardwall_CardFields(
@@ -73,8 +74,8 @@ class CardsResource {
             ),
             Tracker_ArtifactFactory::instance(),
             PlanningFactory::build(),
-            new BackgroundColorBuilder(new BindDecoratorColorRetriever()),
-            new AccentColorBuilder($this->formelement_factory, new BindDecoratorRetriever())
+            new BackgroundColorBuilder($bind_decorator_retriever),
+            new AccentColorBuilder($this->formelement_factory, $bind_decorator_retriever)
         );
     }
 

@@ -28,10 +28,12 @@ use Tuleap\Tracker\Artifact\Exception\NoChangesetValueException;
 class BindDecoratorRetriever
 {
     /**
+     * @param Tracker_FormElement_Field_List $field
+     * @param Tracker_Artifact $artifact
+     * @return \Tracker_FormElement_Field_List_BindDecorator
+     * @throws NoBindDecoratorException
      * @throws NoChangesetException
      * @throws NoChangesetValueException
-     * @throws NoBindDecoratorException
-     * @return \Tracker_FormElement_Field_List_BindDecorator
      */
     public function getDecoratorForFirstValue(Tracker_FormElement_Field_List $field, Tracker_Artifact $artifact)
     {
@@ -45,15 +47,17 @@ class BindDecoratorRetriever
             throw new NoChangesetValueException();
         }
 
-        // We might have many values selected in a list field (eg:
-        // multi-selectbox, checkbox). As we want only one color,
-        // arbitrary take the color of the first selected value.
-        $value_id = $values[0]['id'];
+        $first_value_id = $this->getFirstBindValueId($values);
 
         $decorators = $field->getDecorators();
-        if (! isset($decorators[$value_id])) {
+        if (! isset($decorators[$first_value_id])) {
             throw new NoBindDecoratorException();
         }
-        return $decorators[$value_id];
+        return $decorators[$first_value_id];
+    }
+
+    private function getFirstBindValueId(array $values)
+    {
+        return $values[0]['id'];
     }
 }

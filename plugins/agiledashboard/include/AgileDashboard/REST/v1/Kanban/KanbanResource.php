@@ -84,7 +84,7 @@ use Tuleap\REST\JsonDecoder;
 use Tuleap\REST\QueryParameterException;
 use Tuleap\REST\QueryParameterParser;
 use Tuleap\Tracker\Artifact\Exception\FieldValidationException;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorColorRetriever;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\Tracker\REST\v1\ArtifactLinkUpdater;
 use Tuleap\Tracker\REST\v1\ReportArtifactFactory;
 use UserManager;
@@ -233,7 +233,7 @@ class KanbanResource extends AuthenticatedResource
             $this->kanban_item_dao
         );
 
-        $color_builder                     = new BackgroundColorBuilder(new BindDecoratorColorRetriever());
+        $color_builder                     = new BackgroundColorBuilder(new BindDecoratorRetriever());
         $this->item_representation_builder = $item_representation_builder = new ItemRepresentationBuilder(
             $this->kanban_item_manager,
             $this->time_info_factory,
