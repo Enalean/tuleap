@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +19,8 @@
 
 use Tuleap\REST\JsonCast;
 
-class Rest_JsonCastTest extends TuleapTestCase {
+class Rest_JsonCastTest extends TuleapTestCase
+{
 
     public function itDoesNotReturnNullIfValueIsInt() {
         $value = 85;
@@ -67,4 +68,24 @@ class Rest_JsonCastTest extends TuleapTestCase {
         $this->assertNull(JsonCast::toDate($value));
     }
 
+    public function testCastToObjectReturnsObjectWhenValueIsEmpty()
+    {
+        $value = [];
+
+        $this->assertEqual(new stdClass(), JsonCast::toObject($value));
+    }
+
+    public function testCastToObjectPreservesAssociativeArray()
+    {
+        $value = ['key' => 'value'];
+
+        $this->assertEqual(['key' => 'value'], JsonCast::toObject($value));
+    }
+
+    public function testCastToObjectReturnsNulLIfValueIsNull()
+    {
+        $value = null;
+
+        $this->assertNull(JsonCast::toObject($value));
+    }
 }
