@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Cardwall\AccentColor\AccentColor;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColor;
 
 class Cardwall_CardPresenter implements Tracker_CardPresenter
@@ -26,12 +27,12 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter
      * @var Tracker_Artifact
      */
     private $artifact;
-    
+
     /**
      * @var Tracker_Artifact
      */
     private $parent;
-    
+
     /**
      * @var Cardwall_CardFields
      */
@@ -57,7 +58,7 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter
     public function __construct(
         Tracker_Artifact $artifact,
         Cardwall_CardFields $card_fields,
-        $accent_color,
+        AccentColor $accent_color,
         Cardwall_UserPreferences_UserPreferencesDisplayUser $display_preferences,
         $swimline_id,
         array $allowed_children,
@@ -88,7 +89,7 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter
     public function getTitle() {
         return $this->artifact->getTitle();
     }
-    
+
     public function getFields() {
         $diplayed_fields_presenter = array();
         $displayed_fields = $this->card_fields->getFields($this->getArtifact());
@@ -98,11 +99,11 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter
         }
         return $diplayed_fields_presenter;
     }
-    
+
     public function hasFields() {
         return count($this->getFields()) > 0;
     }
-    
+
     /**
      * @see Tracker_CardPresenter
      */
@@ -137,7 +138,7 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter
     public function getArtifact() {
         return $this->artifact;
     }
-    
+
     public function getAncestorId() {
         return $this->parent ? $this->parent->getId() : 0;
     }
@@ -156,15 +157,29 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter
     /**
      * @see Tracker_CardPresenter
      */
-    public function getCssClasses() {
-        return '';
+    public function getCssClasses()
+    {
+        $classes = '';
+        $classes .= (! $this->hasLegacyAccentColor()) ? ' card-accent-' . $this->getAccentColor() : '';
+        $classes .= ($this->getBackgroundColorName()) ? ' card-style-' . $this->getBackgroundColorName() : '';
+
+        return $classes;
     }
 
     /**
      * @see Tracker_CardPresenter::getAccentColor()
      */
-    public function getAccentColor() {
-        return $this->accent_color;
+    public function getAccentColor()
+    {
+        return $this->accent_color->getColor();
+    }
+
+    /**
+     * @see Tracker_CardPresenter::hasLegacyAccentColor()
+     */
+    public function hasLegacyAccentColor()
+    {
+        return $this->accent_color->isLegacyColor();
     }
 
     /**

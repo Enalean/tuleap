@@ -24,6 +24,7 @@
             <directory suffix=".php">../../plugins/pullrequest/include/</directory>
             <directory suffix=".php">../../plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Numeric.class.php</directory>
             <directory suffix=".php">../../plugins/tracker/include/Tracker/XML/Exporter/ChangesetValue/ChangesetValuePermissionsOnArtifactXMLExporter.class.php</directory>
+            <directory suffix=".php">../../plugins/tracker/include/Tracker/FormElement/Field/ListFields</directory>
             <directory suffix=".php">../../plugins/cardwall/include/Cardwall</directory>
         </whitelist>
     </filter>

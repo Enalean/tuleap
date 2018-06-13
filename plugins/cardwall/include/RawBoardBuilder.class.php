@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,15 +17,17 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorColorRetriever;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 
 /**
  * I'm responsible for building Cardwall_Board regardless of it's future use
  */
 
-class Cardwall_RawBoardBuilder {
-
+class Cardwall_RawBoardBuilder
+{
     /**
      * Build a Cardwall_Board taking account of Mapped Fieds
      *
@@ -38,38 +40,48 @@ class Cardwall_RawBoardBuilder {
      * @return Cardwall_Board
      */
     public function buildBoardUsingMappedFields(
-            PFUser $user,
-            Tracker_ArtifactFactory $artifact_factory,
-            Planning_Milestone $milestone,
-            Cardwall_OnTop_Config $config,
-            Cardwall_OnTop_Config_ColumnCollection $columns) {
-
-        $planning            = $milestone->getPlanning();
-        $field_provider      = new Cardwall_OnTop_Config_MappedFieldProvider(
-                                   $config,
-                                   new Cardwall_FieldProviders_SemanticStatusFieldRetriever()
-                               );
-
-        $column_preferences  = new Cardwall_UserPreferences_Autostack_AutostackDashboard($user, $config->getTracker());
-        $column_autostack    = new Cardwall_UserPreferences_UserPreferencesAutostackFactory();
-        $column_autostack->setAutostack($columns, $column_preferences);
-
-        $mapping_collection = $this->getMappingCollection($planning, $columns, $field_provider, $config);
-        $background_color_builder = new BackgroundColorBuilder(new BindDecoratorColorRetriever());
-        $presenter_builder = new Cardwall_CardInCellPresenterBuilder(
-            new Cardwall_CardInCellPresenterFactory($field_provider, $mapping_collection),
-            new Cardwall_CardFields(UserManager::instance(), Tracker_FormElementFactory::instance()),
-            $this->getDisplayPreferences($milestone, $user),
-            $user,
-            $background_color_builder
+        PFUser $user,
+        Tracker_ArtifactFactory $artifact_factory,
+        Planning_Milestone $milestone,
+        Cardwall_OnTop_Config $config,
+        Cardwall_OnTop_Config_ColumnCollection $columns
+    ) {
+        $planning       = $milestone->getPlanning();
+        $field_provider = new Cardwall_OnTop_Config_MappedFieldProvider(
+            $config,
+            new Cardwall_FieldProviders_SemanticStatusFieldRetriever()
         );
 
-        $swimline_factory       = new Cardwall_SwimlineFactory($config, $field_provider);
-        $pane_board_builder     = new Cardwall_PaneBoardBuilder($presenter_builder, $artifact_factory, new AgileDashboard_BacklogItemDao(), $swimline_factory);
-        $board                  = $pane_board_builder->getBoard($user, $milestone->getArtifact(), $columns, $mapping_collection);
+        $column_preferences = new Cardwall_UserPreferences_Autostack_AutostackDashboard($user, $config->getTracker());
+        $column_autostack   = new Cardwall_UserPreferences_UserPreferencesAutostackFactory();
+        $column_autostack->setAutostack($columns, $column_preferences);
+
+        $mapping_collection       = $this->getMappingCollection($planning, $columns, $field_provider, $config);
+        $form_element_factory     = Tracker_FormElementFactory::instance();
+        $background_color_builder = new BackgroundColorBuilder(new BindDecoratorColorRetriever());
+        $accent_color_builder     = new \Tuleap\Cardwall\AccentColor\AccentColorBuilder(
+            $form_element_factory,
+            new BindDecoratorRetriever()
+        );
+        $presenter_builder        = new Cardwall_CardInCellPresenterBuilder(
+            new Cardwall_CardInCellPresenterFactory($field_provider, $mapping_collection),
+            new Cardwall_CardFields(UserManager::instance(), $form_element_factory),
+            $this->getDisplayPreferences($milestone, $user),
+            $user,
+            $background_color_builder,
+            $accent_color_builder
+        );
+
+        $swimline_factory   = new Cardwall_SwimlineFactory($config, $field_provider);
+        $pane_board_builder = new Cardwall_PaneBoardBuilder(
+            $presenter_builder,
+            $artifact_factory,
+            new AgileDashboard_BacklogItemDao(),
+            $swimline_factory
+        );
+        $board              = $pane_board_builder->getBoard($user, $milestone->getArtifact(), $columns, $mapping_collection);
 
         return $board;
-
     }
 
     /**
@@ -118,4 +130,3 @@ class Cardwall_RawBoardBuilder {
         return $indexed_array;
     }
 }
-?>

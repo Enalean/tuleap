@@ -22,6 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Cardwall\AccentColor\AccentColor;
+use Tuleap\Cardwall\AccentColor\AccentColorBuilder;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColor;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\Cardwall\Semantic\BackgroundColorFieldRetriever;
@@ -39,23 +41,27 @@ class Cardwall_SingleCardBuilder
 
     /** @var Tracker_ArtifactFactory */
     private $artifact_factory;
-    /**
-     * @var BackgroundColorFieldRetriever
-     */
+
+    /** @var BackgroundColorFieldRetriever */
     private $background_color_builder;
+
+    /** @var AccentColorBuilder */
+    private $accent_color_builder;
 
     public function __construct(
         Cardwall_OnTop_ConfigFactory $config_factory,
         Cardwall_CardFields $card_fields,
         Tracker_ArtifactFactory $artifact_factory,
         PlanningFactory $planning_factory,
-        BackgroundColorBuilder $background_color_builder
+        BackgroundColorBuilder $background_color_builder,
+        AccentColorBuilder $accent_color_builder
     ) {
         $this->config_factory           = $config_factory;
         $this->card_fields              = $card_fields;
         $this->artifact_factory         = $artifact_factory;
         $this->planning_factory         = $planning_factory;
         $this->background_color_builder = $background_color_builder;
+        $this->accent_color_builder     = $accent_color_builder;
     }
 
     /**
@@ -83,6 +89,7 @@ class Cardwall_SingleCardBuilder
             $card_artifact,
             $user
         );
+        $accent_color = $this->accent_color_builder->build($card_artifact, $user);
 
         $presenter_factory = $this->getCardInCellPresenterFactory($config, $card_artifact, $field_provider, $columns);
 
@@ -92,7 +99,8 @@ class Cardwall_SingleCardBuilder
             $card_artifact,
             $this->card_fields,
             $display_preferences,
-            $background_color
+            $background_color,
+            $accent_color
         );
 
         return new Cardwall_SingleCard(
@@ -113,10 +121,18 @@ class Cardwall_SingleCardBuilder
         Tracker_Artifact $artifact,
         Cardwall_CardFields $card_fields,
         Cardwall_UserPreferences_UserPreferencesDisplayUser $display_preferences,
-        BackgroundColor $background_color
+        BackgroundColor $background_color,
+        AccentColor $accent_color
     ) {
         return $presenter_factory->getCardInCellPresenter(
-            $this->getCardPresenter($user, $artifact, $card_fields, $display_preferences, $background_color)
+            $this->getCardPresenter(
+                $user,
+                $artifact,
+                $card_fields,
+                $display_preferences,
+                $background_color,
+                $accent_color
+            )
         );
     }
 
@@ -128,14 +144,15 @@ class Cardwall_SingleCardBuilder
         Tracker_Artifact $artifact,
         Cardwall_CardFields $card_fields,
         Cardwall_UserPreferences_UserPreferencesDisplayUser $display_preferences,
-        BackgroundColor $background_color
+        BackgroundColor $background_color,
+        AccentColor $accent_color
     ) {
         $parent_artifact = $artifact->getParent($user);
 
         return new Cardwall_CardPresenter(
             $artifact,
             $card_fields,
-            $artifact->getCardAccentColor($user),
+            $accent_color,
             $display_preferences,
             null,
             $artifact->getAllowedChildrenTypesForUser($user),

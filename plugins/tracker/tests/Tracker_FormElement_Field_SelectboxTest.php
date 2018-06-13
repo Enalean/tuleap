@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,74 +20,10 @@
 
 require_once('bootstrap.php');
 
-class Tracker_FormElement_Field_Selectbox_getCurrentDecoratorColorTest extends TuleapTestCase {
-
-    private $changeset_with_no_value_id = 1;
-    private $changeset_with_value_id    = 2;
-
-    private $one_value   = array(array('id' => 123));
-    private $many_values = array(array('id' => 456), array('id' => 123));
-
-    public function setUp() {
-        $this->changeset_with_no_value = mock('Tracker_Artifact_Changeset');
-        stub($this->changeset_with_no_value)->getId()->returns($this->changeset_with_no_value_id);
-
-        $this->changeset_with_value = mock('Tracker_Artifact_Changeset');
-        stub($this->changeset_with_value)->getId()->returns($this->changeset_with_value_id);
-
-
-        $this->artifact_with_value = mock('Tracker_Artifact');
-        stub($this->artifact_with_value)->getLastChangeset()->returns($this->changeset_with_value);
-
-        $this->artifact_with_no_changeset = mock('Tracker_Artifact');
-
-        $this->artifact_with_no_value = mock('Tracker_Artifact');
-        stub($this->artifact_with_no_value)->getLastChangeset()->returns($this->changeset_with_no_value);
-
-        $this->bind_with_no_decorator = mock('Tracker_FormElement_Field_List_Bind_Static');
-        stub($this->bind_with_no_decorator)->getDecorators()->returns(array());
-
-        $red   = stub('Tracker_FormElement_Field_List_BindDecorator')->css()->returns('red');
-        $green = stub('Tracker_FormElement_Field_List_BindDecorator')->css()->returns('green');
-
-        $this->bind_with_decorators = mock('Tracker_FormElement_Field_List_Bind_Static');
-        stub($this->bind_with_decorators)->getDecorators()->returns(array(123 => $red, 456 => $green));
-    }
-
-    public function itReturnsRed() {
-        stub($this->bind_with_decorators)->getChangesetValues($this->changeset_with_value_id)->returns($this->one_value);
-        $selectbox = aSelectBoxField()->withBind($this->bind_with_decorators)->build();
-        $this->assertEqual('red', $selectbox->getCurrentDecoratorColor($this->artifact_with_value));
-    }
-
-    public function itReturnsTheFirstColorFound() {
-        stub($this->bind_with_decorators)->getChangesetValues($this->changeset_with_value_id)->returns($this->many_values);
-        $selectbox = aSelectBoxField()->withBind($this->bind_with_decorators)->build();
-        $this->assertEqual('green', $selectbox->getCurrentDecoratorColor($this->artifact_with_value));
-    }
-
-    public function itReturnsNullWhenThereIsNotAnyDecorator() {
-        stub($this->bind_with_no_decorator)->getChangesetValues($this->changeset_with_value_id)->returns($this->one_value);
-        $selectbox = aSelectBoxField()->withBind($this->bind_with_no_decorator)->build();
-        $this->assertNull($selectbox->getCurrentDecoratorColor($this->artifact_with_value));
-    }
-
-    public function itReturnsNullWhenCurrentChangesetHasNoValue() {
-        $bind = mock('Tracker_FormElement_Field_List_Bind_Static');
-        $selectbox = aSelectBoxField()->withBind($bind)->build();
-        $this->assertNull($selectbox->getCurrentDecoratorColor($this->artifact_with_no_value));
-    }
-
-    public function itReturnsNullWhenArtifactHasNoChangeset() {
-        $selectbox = aSelectBoxField()->build();
-        $this->assertNull($selectbox->getCurrentDecoratorColor($this->artifact_with_no_changeset));
-    }
-}
-
 class Tracker_FormElement_Field_Selectbox_getFieldDataFromSoapValue extends TuleapTestCase {
     private $field;
     private $bind;
-    
+
     public function setUp() {
         parent::setUp();
         $this->bind  = mock('Tracker_FormElement_Field_List_Bind_Static');
@@ -165,7 +101,7 @@ class Tracker_FormElement_Field_Selectbox__getSoapValueTest extends TuleapTestCa
         $name = 'foo';
         $label = 'Foo Bar';
         $this->field = partial_mock('Tracker_FormElement_Field_Selectbox', array('userCanRead'), array($id, $tracker_id, $parent_id, $name, $label, $description, $use_it, $scope, $required, $notifications, $rank));
-        
+
         $this->list_values = array(
             aFieldListStaticValue()->withId(100)->withLabel('None')->build(),
             aFieldListStaticValue()->withId(101)->withLabel('Bla')->build()
