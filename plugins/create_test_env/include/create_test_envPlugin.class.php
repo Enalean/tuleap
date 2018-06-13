@@ -64,6 +64,8 @@ class create_test_envPlugin extends Plugin
 
     public function getHooksAndCallbacks()
     {
+        $this->addHook('cssfile');
+        $this->addHook('javascript_file');
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(CollectRoutesEvent::NAME);
         $this->addHook(BurningParrotCompatiblePageEvent::NAME);
@@ -126,6 +128,28 @@ class create_test_envPlugin extends Plugin
     {
         (new Notifier(new NotificationBotDao()))->notify($text);
     }
+
+    public function cssfile($params)
+    {
+        $assets = new IncludeAssets(
+            __DIR__ . '/../../../src/www/assets/create_test_env/FlamingParrot',
+            '/assets/create_test_env/FlamingParrot'
+        );
+        $css_file_url = $assets->getFileURL('style.css');
+        echo '<link rel="stylesheet" type="text/css" href="' . $css_file_url . '" />';
+    }
+
+    // @codingStandardsIgnoreLine
+    public function javascript_file()
+    {
+        $assets = new IncludeAssets(
+            __DIR__ . '/../../../src/www/assets/create_test_env/scripts',
+            '/assets/create_test_env/scripts'
+        );
+
+        echo $assets->getHTMLSnippet('call-me-back.js') . PHP_EOL;
+    }
+
 
     public function burningParrotGetStylesheets(array $params)
     {
