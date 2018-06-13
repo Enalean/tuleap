@@ -45,11 +45,6 @@ class PullRequestRepresentation extends PullRequestMinimalRepresentation
     const CONFLICT_MERGE       = 'conflict';
     const UNKNOWN_MERGE        = 'unknown-merge-status';
 
-
-    const BUILD_STATUS_UNKNOWN = 'unknown';
-    const BUILD_STATUS_SUCESS  = 'success';
-    const BUILD_STATUS_FAIL    = 'fail';
-
     /**
      * @var string {@type string}
      */
@@ -127,6 +122,8 @@ class PullRequestRepresentation extends PullRequestMinimalRepresentation
         $user_can_merge,
         $user_can_abandon,
         $user_can_update_labels,
+        $last_build_status_name,
+        $last_build_date,
         PullRequestShortStatRepresentation $pr_short_stat_representation
     ) {
         $this->buildMinimal($pull_request, $repository, $repository_dest);
@@ -139,8 +136,8 @@ class PullRequestRepresentation extends PullRequestMinimalRepresentation
         $this->reference_dest = $pull_request->getSha1Dest();
         $this->status         = $this->expandStatusName($pull_request->getStatus());
 
-        $this->last_build_status = $this->expandBuildStatusName($pull_request->getLastBuildStatus());
-        $this->last_build_date   = JsonCast::toDate($pull_request->getLastBuildDate());
+        $this->last_build_status = $last_build_status_name;
+        $this->last_build_date   = JsonCast::toDate($last_build_date);
 
         $this->user_can_update_labels = $user_can_update_labels;
         $this->user_can_merge         = $user_can_merge;
@@ -195,16 +192,5 @@ class PullRequestRepresentation extends PullRequestMinimalRepresentation
         );
 
         return $status_name[$merge_status_acronym];
-    }
-
-    private function expandBuildStatusName($status_acronym)
-    {
-        $status_name = array(
-            PullRequest::BUILD_STATUS_UNKNOWN => self::BUILD_STATUS_UNKNOWN,
-            PullRequest::BUILD_STATUS_SUCCESS => self::BUILD_STATUS_SUCESS,
-            PullRequest::BUILD_STATUS_FAIL    => self::BUILD_STATUS_FAIL
-        );
-
-        return $status_name[$status_acronym];
     }
 }

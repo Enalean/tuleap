@@ -20,20 +20,32 @@
 
 namespace Tuleap\PullRequest\REST\v1;
 
+use Tuleap\Git\CommitStatus\CommitStatusRetriever;
 use Tuleap\PullRequest\Authorization\AccessControlVerifier;
 use Tuleap\PullRequest\GitExec;
 use Tuleap\PullRequest\PullRequest;
 
 class PullRequestRepresentationFactory
 {
+    const BUILD_STATUS_UNKNOWN = 'unknown';
+    const BUILD_STATUS_SUCESS  = 'success';
+    const BUILD_STATUS_FAIL    = 'fail';
+
     /**
      * @var AccessControlVerifier
      */
     private $access_control_verifier;
+    /**
+     * @var CommitStatusRetriever
+     */
+    private $commit_status_retriever;
 
-    public function __construct(AccessControlVerifier $access_control_verifier)
-    {
+    public function __construct(
+        AccessControlVerifier $access_control_verifier,
+        CommitStatusRetriever $commit_status_retriever
+    ) {
         $this->access_control_verifier = $access_control_verifier;
+        $this->commit_status_retriever = $commit_status_retriever;
     }
 
     public function getPullRequestRepresentation(
@@ -56,6 +68,8 @@ class PullRequestRepresentationFactory
 
         $user_can_update_labels = $user_can_merge;
 
+        list($last_build_status_name, $last_build_date) = $this->getLastBuildInformation($pull_request, $repository_dest);
+
         $pull_request_representation = new PullRequestRepresentation();
         $pull_request_representation->build(
             $pull_request,
@@ -64,9 +78,42 @@ class PullRequestRepresentationFactory
             $user_can_merge,
             $user_can_abandon,
             $user_can_update_labels,
+            $last_build_status_name,
+            $last_build_date,
             $short_stat_repres
         );
 
         return $pull_request_representation;
+    }
+
+    private function getLastBuildInformation(PullRequest $pull_request, \GitRepository $repository_destination)
+    {
+        if ($pull_request->getLastBuildDate() !== null) {
+            return [$this->expandDeprecatedBuildStatusName($pull_request->getLastBuildStatus()), $pull_request->getLastBuildDate()];
+        }
+
+        $commit_status = $this->commit_status_retriever->getLastCommitStatus(
+            $repository_destination,
+            $pull_request->getSha1Src()
+        );
+        switch ($commit_status->getStatusName()) {
+            case 'success':
+                return [self::BUILD_STATUS_SUCESS, $commit_status->getDate()->getTimestamp()];
+            case 'failure':
+                return [self::BUILD_STATUS_FAIL, $commit_status->getDate()->getTimestamp()];
+            default:
+                return [self::BUILD_STATUS_UNKNOWN, null];
+        }
+    }
+
+    private function expandDeprecatedBuildStatusName($status_acronym)
+    {
+        $status_name = array(
+            PullRequest::BUILD_STATUS_UNKNOWN => self::BUILD_STATUS_UNKNOWN,
+            PullRequest::BUILD_STATUS_SUCCESS => self::BUILD_STATUS_SUCESS,
+            PullRequest::BUILD_STATUS_FAIL    => self::BUILD_STATUS_FAIL
+        );
+
+        return $status_name[$status_acronym];
     }
 }

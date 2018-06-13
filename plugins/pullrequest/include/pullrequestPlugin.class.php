@@ -419,6 +419,9 @@ class pullrequestPlugin extends Plugin
         }
     }
 
+    /**
+     * @deprecated
+     */
     public function gitRestBuildStatus($params)
     {
         $factory = $this->getPullRequestFactory();

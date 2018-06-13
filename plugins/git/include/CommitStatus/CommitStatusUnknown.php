@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,17 +18,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\PullRequest\Exception;
+namespace Tuleap\Git\CommitStatus;
 
-use Exception;
-
-/**
- * @deprecated
- */
-class InvalidBuildStatusException extends Exception
+final class CommitStatusUnknown implements CommitStatus
 {
+    private $date;
+
     public function __construct()
     {
-        parent::__construct("Invalid build status.");
+        $this->date = new \DateTimeImmutable;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatusName()
+    {
+        return 'unknown';
+    }
+
+    /**
+     * @return \DateTimeImmutable
+     */
+    public function getDate()
+    {
+        return $this->date;
     }
 }

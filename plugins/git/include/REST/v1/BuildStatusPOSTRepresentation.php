@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,9 @@
 
 namespace Tuleap\Git\REST\v1;
 
+/**
+ * @deprecated
+ */
 class BuildStatusPOSTRepresentation
 {
     const BUILD_STATUS_UNKNOWN = 'U';
@@ -46,14 +49,10 @@ class BuildStatusPOSTRepresentation
      */
     public $token;
 
-    public function build($branch, $commit_reference, $status, $token)
-    {
-        $this->branch           = $branch;
-        $this->commit_reference = $commit_reference;
-        $this->status           = $status;
-        $this->token            = $token;
-    }
-
+    /**
+     * @deprecated
+     * @return bool
+     */
     public function isStatusValid()
     {
         return  $this->status == self::BUILD_STATUS_FAIL
