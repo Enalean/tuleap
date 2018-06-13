@@ -81,7 +81,8 @@ class Cardwall_OnTop_ColumnDao extends DataAccessObject {
         return $this->update($sql);
     }
 
-    public function duplicate($from_tracker_id, $to_tracker_id, &$mapping) {
+    public function duplicate($from_tracker_id, $to_tracker_id, &$mapping)
+    {
         $from_tracker_id = $this->da->escapeInt($from_tracker_id);
         $to_tracker_id   = $this->da->escapeInt($to_tracker_id);
         $sql = "SELECT id
@@ -89,15 +90,14 @@ class Cardwall_OnTop_ColumnDao extends DataAccessObject {
                 WHERE tracker_id = $from_tracker_id
                 ORDER BY id ASC";
         $mapping['plugin_cardwall_column_mapping'] = array();
-        $at_least_on_column = false;
         foreach ($this->retrieve($sql) as $row) {
             $from_column_id = $row['id'];
-            $sql = "INSERT INTO plugin_cardwall_on_top_column (tracker_id, label, bg_red, bg_green, bg_blue)
-                    SELECT $to_tracker_id, label, bg_red, bg_green, bg_blue
+            $sql = "INSERT INTO plugin_cardwall_on_top_column (tracker_id, label, bg_red, bg_green, bg_blue, tlp_color_name)
+                    SELECT $to_tracker_id, label, bg_red, bg_green, bg_blue, tlp_color_name
                     FROM plugin_cardwall_on_top_column
                     WHERE id = $from_column_id";
+
             if ($to_column_id = $this->updateAndGetLastId($sql)) {
-                $at_least_on_column = true;
                 $mapping['plugin_cardwall_column_mapping'][$from_column_id] = $to_column_id;
             }
         }
