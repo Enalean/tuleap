@@ -18,6 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+use Tuleap\REST\JsonCast;
+use Tuleap\Tracker\Colorpicker\ColorpickerMountPointPresenter;
 
 class Tracker_FormElement_Field_List_BindDecorator
 {
@@ -111,44 +113,47 @@ class Tracker_FormElement_Field_List_BindDecorator
      * @param boolean $full false if you want only the decoration
      * @return string html
      */
-    public function decorateEdit() {
+    public function decorateEdit($is_used_in_semantics) {
         $html  = '';
         $color = $this->getCurrentColor();
         $id    = 'decorator_'. $this->field_id .'_'. $this->value_id;
-        $html .= self::getColorPickerMountPoint($id, $this->value_id, $color);
+        $html .= self::getColorPickerMountPoint($id, $this->value_id, $color, $is_used_in_semantics);
 
         return $html;
     }
 
-    private static function getColorPickerMountPoint($decorator_id, $value_id, $current_color)
+    private static function getColorPickerMountPoint($decorator_id, $value_id, $current_color, $is_used_in_semantics)
     {
-        $switch_old_palette_label     = dgettext('tuleap-tracker', 'Switch to old colors');
-        $switch_default_palette_label = dgettext('tuleap-tracker', 'Switch to default colors');
-
         $input_name = "bind[decorator][$value_id]";
         $input_id   = $decorator_id . '_field';
 
-        return '
-            <div class="vue-colorpicker-mount-point"
-                data-input-name="'. $input_name .'"
-                data-input-id="'. $input_id .'"
-                data-current-color="'. $current_color . '"
-                data-switch-default-palette-label="' . $switch_default_palette_label . '"
-                data-switch-old-palette-label="' . $switch_old_palette_label . '"
-            ></div>
-        ';
+        $renderer = TemplateRendererFactory::build()->getRenderer(
+            TRACKER_TEMPLATE_DIR  . '/colorpicker/'
+        );
+
+        return $renderer->renderToString(
+            'colorpicker-mount-point',
+            new ColorpickerMountPointPresenter(
+                $current_color,
+                $input_name,
+                $input_id,
+                $is_used_in_semantics
+            )
+        );
     }
 
     /**
      * Display the transparent color and allow the user to edit it
      * @param string $value The value to decorate Don't forget to html-purify.
      * @param boolean $full false if you want only the decoration
+     * @param boolean $is_used_in_semantic True if the field is used in a semantic
      * @return string html
      */
-    public static function noDecoratorEdit($field_id, $value_id) {
+    public static function noDecoratorEdit($field_id, $value_id, $is_used_in_semantics) {
         $html = '';
         $id   = 'decorator_'. $field_id .'_'. $value_id;
-        $html .= self::getColorPickerMountPoint($id, $value_id, null);
+
+        $html .= self::getColorPickerMountPoint($id, $value_id, null, $is_used_in_semantics);
         return $html;
     }
 

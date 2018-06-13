@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Events\IsFieldUsedInASemanticEvent;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindParameters;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
 
@@ -475,10 +476,17 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         $html .= '</span>';
 
         $html .= '<span class="tracker-admin-bindvalue_decorator">';
+
+        $event = new IsFieldUsedInASemanticEvent($this->field);
+
+        EventManager::instance()->processEvent($event);
+
+        $is_used_in_semantics = $event->isUsed();
+
         if (isset($this->decorators[$v->getId()])) {
-            $html .= $this->decorators[$v->getId()]->decorateEdit();
+            $html .= $this->decorators[$v->getId()]->decorateEdit($is_used_in_semantics);
         } else {
-            $html .= Tracker_FormElement_Field_List_BindDecorator::noDecoratorEdit($this->field->id, $v->getId());
+            $html .= Tracker_FormElement_Field_List_BindDecorator::noDecoratorEdit($this->field->id, $v->getId(), $is_used_in_semantics);
         }
         $html .= '</span>';
 

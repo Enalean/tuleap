@@ -29,6 +29,7 @@ use Tuleap\Cardwall\Semantic\BackgroundColorSemanticFactory;
 use Tuleap\Cardwall\Semantic\FieldUsedInSemanticObjectChecker;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Tracker\Events\AllowedFieldTypeChangesRetriever;
+use Tuleap\Tracker\Events\IsFieldUsedInASemanticEvent;
 
 /**
  * CardwallPlugin
@@ -76,6 +77,7 @@ class cardwallPlugin extends Plugin
             $this->addHook(TRACKER_EVENT_SEMANTIC_FROM_XML);
             $this->addHook(TRACKER_EVENT_GET_SEMANTIC_FACTORIES);
             $this->addHook(TRACKER_EVENT_EXPORT_FULL_XML);
+            $this->addHook(IsFieldUsedInASemanticEvent::NAME);
 
             if (defined('AGILEDASHBOARD_BASE_DIR')) {
                 $this->addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE);
@@ -256,6 +258,17 @@ class cardwallPlugin extends Plugin
 
 
         $semantics->add(Cardwall_Semantic_CardFields::load($tracker));
+    }
+
+    public function isFieldUsedInASemanticEvent(IsFieldUsedInASemanticEvent $event)
+    {
+        $checker = new FieldUsedInSemanticObjectChecker(
+            new BackgroundColorDao()
+        );
+
+        $event->setIsUsed(
+            $checker->isUsedInBackgroundColorSemantic($event->getField())
+        );
     }
 
     /**

@@ -19,7 +19,11 @@
 
 <template>
     <div class="colorpicker-switch">
-        <a href="javascript:;" v-on:click="switchPalette">
+        <a v-bind:class="{ 'colorpicker-switch-disabled': isSwitchDisabled }"
+           v-bind:title="getSwitchTitle"
+           v-on:click="switchPalette"
+           href="javascript:;"
+        >
             <i class="icon-random"></i>
             <span v-if="isOldPaletteShown">
                 {{ switchDefaultPaletteLabel }}
@@ -35,13 +39,29 @@
     export default {
         name: "ColorPickerSwitch",
         props: {
-            isOldPaletteShown          : Boolean,
-            switchDefaultPaletteLabel  : String,
-            switchOldPaletteLabel      : String,
+            isOldPaletteShown        : Boolean,
+            switchDefaultPaletteLabel: String,
+            switchOldPaletteLabel    : String,
+            switchDisabledTitle      : String,
+            isSwitchDisabled         : Boolean
+        },
+        computed: {
+            getSwitchTitle() {
+                if (this.isSwitchDisabled) {
+                    return this.switchDisabledTitle
+                }
+
+                return '';
+            }
         },
         methods: {
             switchPalette(event) {
                 event.stopPropagation();
+
+                if (this.isSwitchDisabled) {
+                    return;
+                }
+
                 this.$emit('switch-palette')
             }
         }

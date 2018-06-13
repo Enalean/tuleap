@@ -46,10 +46,13 @@
                 v-on:color-update="setColor"
             />
 
-            <color-picker-switch v-bind:is-old-palette-shown="is_old_palette_shown"
-                v-on:switch-palette="switchPalettes"
+            <color-picker-switch
+                v-bind:is-switch-disabled="is_switch_disabled"
+                v-bind:is-old-palette-shown="is_old_palette_shown"
+                v-bind:switch-disabled-title="switchDisabledTitle"
                 v-bind:switch-default-palette-label="switchDefaultPaletteLabel"
                 v-bind:switch-old-palette-label="switchOldPaletteLabel"
+                v-on:switch-palette="switchPalettes"
             />
         </div>
         <input class="colorpicker-input"
@@ -85,15 +88,21 @@
             inputId                  : String,
             currentColor             : String,
             switchDefaultPaletteLabel: String,
-            switchOldPaletteLabel    : String
+            switchOldPaletteLabel    : String,
+            switchDisabledTitle      : String,
+            isSwitchDisabled         : String
         },
         data() {
-            const show_old_preview = this.currentColor.length === 0 || this.currentColor.includes('#');
+            const is_hexa_color        = this.currentColor.includes('#');
+            const show_old_preview     = this.currentColor.length === 0 || is_hexa_color;
+            const is_switch_disabled   = Boolean(this.isSwitchDisabled);
+            const is_old_palette_shown = is_hexa_color && is_switch_disabled;
 
             return {
-                color               : this.currentColor,
-                is_old_palette_shown: false,
-                show_old_preview
+                color: this.currentColor,
+                is_old_palette_shown,
+                show_old_preview,
+                is_switch_disabled
             };
         },
         computed: {

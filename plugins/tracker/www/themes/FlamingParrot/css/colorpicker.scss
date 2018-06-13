@@ -99,3 +99,16 @@
     font-weight: normal;
     text-align: center;
 }
+
+.colorpicker-switch-disabled {
+    color: #8f8f8f;
+    cursor: not-allowed;
+
+    &:hover,
+    &:link,
+    &:active,
+    &:visited {
+        color: #8f8f8f;
+        text-decoration: none;
+    }
+}
