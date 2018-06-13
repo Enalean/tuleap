@@ -32,6 +32,7 @@
             <color-picker-palette v-if="! is_old_palette_shown"
                 v-on:color-update="setColor"
                 v-bind:current-color="color"
+                v-bind:no-color-label="noColorLabel"
             />
 
 
