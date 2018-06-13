@@ -299,3 +299,11 @@ CREATE TABLE IF NOT EXISTS plugin_git_global_parameters (
 );
 INSERT INTO plugin_git_global_parameters(name, value) VALUES ('authorized_keys_managed', 'tuleap');
 
+CREATE TABLE IF NOT EXISTS plugin_git_commit_status (
+  id INT(11) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  repository_id INT(10) UNSIGNED NOT NULL,
+  commit_reference CHAR(40) NOT NULL,
+  status INT(1) NOT NULL,
+  date INT(11) NOT NULL,
+  INDEX idx_repository_commit(repository_id, commit_reference)
+);

@@ -22,6 +22,10 @@
 namespace Tuleap\Git\REST\v1;
 
 use GitRepositoryFactory;
+use Tuleap\Git\CommitStatus\CommitDoesNotExistException;
+use Tuleap\Git\CommitStatus\CommitStatusCreator;
+use Tuleap\Git\CommitStatus\CommitStatusDAO;
+use Tuleap\Git\CommitStatus\InvalidCommitReferenceException;
 use Tuleap\Git\REST\v1\GitRepositoryRepresentation;
 use Luracast\Restler\RestException;
 use Tuleap\REST\Header;
@@ -230,14 +234,13 @@ class RepositoryResource extends AuthenticatedResource {
     /**
      * Post a build status
      *
-     * Format: { "status": "S|F|U", "branch": "master", "commit_reference": "0deadbeef", "token": "0000"}
+     * <b>This endpoint is deprecated, the route {id}/statuses/{commit_reference} must be used instead.</b>
      *
-     * <pre>
-     * /!\ REST route under construction and subject to changes /!\
-     * </pre>
      * @url POST {id}/build_status
      *
      * @access hybrid
+     *
+     * @deprecated
      *
      * @param int                       $id            Git repository id
      * @param BuildStatusPOSTRepresentation $build_data BuildStatus {@from body} {@type Tuleap\Git\REST\v1\BuildStatusPOSTRepresentation}
@@ -262,12 +265,7 @@ class RepositoryResource extends AuthenticatedResource {
         }
 
         $repo_ci_token = $this->ci_token_manager->getToken($repository);
-
-        if ($repo_ci_token === null) {
-            $repo_ci_token = '';
-        }
-
-        if (! \hash_equals($build_status_data->token, $repo_ci_token)) {
+        if ($repo_ci_token === null || ! \hash_equals($build_status_data->token, $repo_ci_token)) {
             throw new RestException(403, 'Invalid token');
         }
 
@@ -295,6 +293,66 @@ class RepositoryResource extends AuthenticatedResource {
                 'status'           => $build_status_data->status
             )
         );
+    }
+
+    /**
+     * @url OPTIONS {id}/statuses/{commit_reference}
+     *
+     * @param int $id Git repository id
+     * @param string $commit_reference Commit SHA-1
+     */
+    public function optionsCommitStatus($id, $commit_reference)
+    {
+        Header::allowOptionsPost();
+    }
+
+    /**
+     * Post a commit status
+     *
+     * <pre>
+     * /!\ REST route under construction and subject to changes /!\
+     * </pre>
+     * @url POST {id}/statuses/{commit_reference}
+     *
+     * @access hybrid
+     *
+     * @param int $id Git repository id
+     * @param string $commit_reference Commit SHA-1
+     * @param string $state {@choice failure,success} {@from body}
+     * @param string $token {@from body}
+     *
+     * @status 201
+     * @throws 403
+     * @throws 404
+     * @throws 400
+     */
+    public function postCommitStatus($id, $commit_reference, $state, $token)
+    {
+        $repository = $this->repository_factory->getRepositoryById($id);
+
+        if (! $repository) {
+            throw new RestException(404, 'Repository not found.');
+        }
+
+        $repo_ci_token = $this->ci_token_manager->getToken($repository);
+        if ($repo_ci_token === null || ! \hash_equals($token, $repo_ci_token)) {
+            throw new RestException(403, 'Invalid token');
+        }
+
+        $commit_status_creator = new CommitStatusCreator(new CommitStatusDAO);
+
+        try {
+            $commit_status_creator->createCommitStatus(
+                $repository,
+                Git_Exec::buildFromRepository($repository),
+                $commit_reference,
+                $state
+            );
+        } catch (CommitDoesNotExistException $exception) {
+            throw new RestException(404, $exception->getMessage());
+        } catch (InvalidCommitReferenceException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        }
     }
 
     /**

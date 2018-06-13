@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -228,6 +228,9 @@ class Factory
         );
     }
 
+    /**
+     * @deprecated
+     */
     public function updateLastBuildStatus(PullRequest $pull_request, $status, $date)
     {
         if ($status != PullRequest::BUILD_STATUS_FAIL

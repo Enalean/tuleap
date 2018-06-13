@@ -25,6 +25,8 @@ use Luracast\Restler\RestException;
 use Project_AccessException;
 use Project_AccessProjectNotFoundException;
 use ProjectHistoryDao;
+use Tuleap\Git\CommitStatus\CommitStatusDAO;
+use Tuleap\Git\CommitStatus\CommitStatusRetriever;
 use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Label\Label;
@@ -273,7 +275,10 @@ class PullRequestsResource extends AuthenticatedResource
         $repository_src  = $this->getRepository($pull_request->getRepositoryId());
         $repository_dest = $this->getRepository($pull_request->getRepoDestId());
 
-        $pr_representation_factory = new PullRequestRepresentationFactory($this->access_control_verifier);
+        $pr_representation_factory = new PullRequestRepresentationFactory(
+            $this->access_control_verifier,
+            new CommitStatusRetriever(new CommitStatusDAO)
+        );
 
         return $pr_representation_factory->getPullRequestRepresentation(
             $pull_request,
@@ -758,7 +763,10 @@ class PullRequestsResource extends AuthenticatedResource
         }
         $updated_pull_request = $this->pull_request_factory->getPullRequestById($id);
 
-        $pr_representation_factory = new PullRequestRepresentationFactory($this->access_control_verifier);
+        $pr_representation_factory = new PullRequestRepresentationFactory(
+            $this->access_control_verifier,
+            new CommitStatusRetriever(new CommitStatusDAO)
+        );
 
         return $pr_representation_factory->getPullRequestRepresentation(
             $updated_pull_request,

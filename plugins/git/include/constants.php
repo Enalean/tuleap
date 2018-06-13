@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -119,5 +119,7 @@ define('GIT_HOOK_POSTRECEIVE_REF_UPDATE', 'git_hook_post_receive_ref_update');
  *     'branch'           => (Input) The branch being built
  *     'commit_reference' => (Input) The sha1 of the commit being built
  *     'status'           => (Input) The status of the build
+ *
+ * @deprecated
  */
 define('REST_GIT_BUILD_STATUS', 'rest_git_build_status');
