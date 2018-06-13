@@ -25,6 +25,7 @@
 
 require_once(dirname(__FILE__).'/../../constants.php');
 
+use Tuleap\Tracker\Artifact\ArtifactInstrumentation;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetFieldsWithoutRequiredValidationValidator;
 use Tuleap\Tracker\Artifact\PermissionsCache;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
@@ -817,7 +818,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 break;
 
             default:
-                Tuleap\Instrument\Collect::startTiming('tracker.'.$this->getTrackerId().'.artifact.view');
+                ArtifactInstrumentation::increment(ArtifactInstrumentation::TYPE_VIEWED);
                 if ($request->isAjax()) {
                     echo $this->fetchTooltip($current_user);
                 } else {
@@ -831,7 +832,6 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     );
                     $renderer->display($request, $current_user);
                 }
-                Tuleap\Instrument\Collect::endTiming('tracker.'.$this->getTrackerId().'.artifact.view');
                 break;
         }
     }

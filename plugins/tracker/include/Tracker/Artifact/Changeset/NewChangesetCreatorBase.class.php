@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\ArtifactInstrumentation;
 use Tuleap\Tracker\Artifact\Exception\FieldValidationException;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder;
 
@@ -133,6 +134,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
                 $this->changeset_dao->rollBack();
                 throw new Tracker_AfterSaveException();
             }
+            ArtifactInstrumentation::increment(ArtifactInstrumentation::TYPE_UPDATED);
         } catch (Tracker_NoChangeException $exception) {
             $collection = $this->source_of_association_collection_builder->getSourceOfAssociationCollection(
                 $artifact,

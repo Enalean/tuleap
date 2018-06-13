@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,12 +16,20 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-namespace Tuleap\Instrument;
+namespace Tuleap\Tracker\Artifact;
 
-interface StatsdInterface
+class ArtifactInstrumentation
 {
-    public static function increment($key);
-    public static function gauge($key, $value);
+    const METRIC_NAME  = 'tracker_artifacts_total';
+    const TYPE_CREATED = 'created';
+    const TYPE_UPDATED = 'updated';
+    const TYPE_VIEWED  = 'viewed';
+
+    public static function increment($type)
+    {
+        \Tuleap\Instrument\Prometheus\Prometheus::increment(self::METRIC_NAME, 'Total number of artifacts', ['type' => $type]);
+    }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,12 +16,22 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-namespace Tuleap\Instrument;
+namespace Tuleap\Request;
 
-interface StatsdInterface
+class RequestInstrumentation
 {
-    public static function increment($key);
-    public static function gauge($key, $value);
+    const METRIC_NAME = 'http_responses_total';
+
+    public static function increment($code)
+    {
+        \Tuleap\Instrument\Prometheus\Prometheus::increment(self::METRIC_NAME, 'Total number of HTTP request', ['code' => $code, 'router' => 'fastroute']);
+    }
+
+    public static function incrementLegacy()
+    {
+        \Tuleap\Instrument\Prometheus\Prometheus::increment(self::METRIC_NAME, 'Total number of HTTP request', ['code' => 200, 'router' => 'legacy']);
+    }
 }

@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\ArtifactInstrumentation;
 use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
 
 /**
@@ -181,6 +182,7 @@ class Tracker_ArtifactCreator {
         if (!$id) {
             return false;
         }
+        ArtifactInstrumentation::increment(ArtifactInstrumentation::TYPE_CREATED);
 
         $artifact->setId($id);
         return true;

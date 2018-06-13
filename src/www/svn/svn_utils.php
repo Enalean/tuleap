@@ -18,6 +18,7 @@ require_once('common/reference/ReferenceManager.class.php');
 function svn_header($params) {
     global $group_id, $Language, $there_are_specific_permissions;
 
+    \Tuleap\Project\ServiceInstrumentation::increment('svncore');
     Tuleap\Instrument\Collect::increment('service.project.svncore.accessed');
 
     $params['toptab'] = 'svn';

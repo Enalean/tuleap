@@ -30,6 +30,8 @@ use ForgeConfig;
  */
 class Collect implements StatsdInterface
 {
+    const CONFIG_PROMETHEUS_PLATFORM = 'prometheus_platform';
+
     const NAME_SPACE = 'tuleap';
 
     /**
@@ -43,18 +45,6 @@ class Collect implements StatsdInterface
         self::$statsd->increment($key);
     }
 
-    public static function startTiming($key)
-    {
-        self::connect();
-        self::$statsd->startTiming($key);
-    }
-
-    public static function endTiming($key)
-    {
-        self::connect();
-        self::$statsd->endTiming($key);
-    }
-
     public static function gauge($key, $value)
     {
         self::connect();
@@ -64,7 +54,7 @@ class Collect implements StatsdInterface
     private static function connect()
     {
         if (self::$statsd === null) {
-            if (file_exists('/usr/share/php/statsd/autoload.php') && ForgeConfig::get('statsd_server') != false) {
+            if (file_exists('/usr/share/php/statsd/autoload.php') && ForgeConfig::get('statsd_server') != false && ! ForgeConfig::exists(self::CONFIG_PROMETHEUS_PLATFORM)) {
                 require_once('/usr/share/php/statsd/autoload.php');
                 $connection = new \Domnikl\Statsd\Connection\UdpSocket(ForgeConfig::get('statsd_server'), ForgeConfig::get('statsd_port'));
                 $namespace = self::NAME_SPACE;

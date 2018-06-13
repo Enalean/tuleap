@@ -64,12 +64,6 @@ services:
     volumes:
     - db-data:/var/lib/mysql
 
-  graphite:
-    container_name: tuleap-graphite
-    image: hopsoft/graphite-statsd
-    volumes:
-    - graphite-data:/opt/graphite/storage
-
   rabbitmq:
     image: rabbitmq:3.6
     env_file:
@@ -83,14 +77,21 @@ services:
       - redis-data:/data
     command: redis-server --appendonly yes
 
+  prometheus:
+    image: prom/prometheus:v2.3.0
+    volumes:
+      - .metrics_secret.key:/metrics_secret.key
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prom-data:/prometheus
+
 volumes:
   tuleap-data:
   ldap-data:
   gerrit-data:
   db-data:
-  graphite-data:
   rabbitmq-data:
   redis-data:
   realtime-conf:
   realtime-cert:
   reverse-proxy-cert:
+  prom-data:

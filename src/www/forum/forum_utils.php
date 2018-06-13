@@ -20,6 +20,7 @@ require_once('www/news/news_utils.php');
 function forum_header($params) {
     global $HTML,$group_id,$forum_name,$thread_id,$msg_id,$forum_id,$et,$et_cookie,$Language;
 
+    \Tuleap\Project\ServiceInstrumentation::increment('forums');
     Tuleap\Instrument\Collect::increment('service.project.forums.accessed');
     $hp = Codendi_HTMLPurifier::instance(); 
     $uh = new UserHelper();
