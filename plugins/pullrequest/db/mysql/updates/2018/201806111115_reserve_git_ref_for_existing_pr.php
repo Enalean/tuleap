@@ -64,7 +64,6 @@ class b201806111115_reserve_git_ref_for_existing_pr extends ForgeUpgrade_Bucket 
 
     private function reserveReference($pull_request_id, $repository_id, $reference_id)
     {
-        var_dump($repository_id, $reference_id);
         $sql = 'INSERT INTO plugin_pullrequest_git_reference(pr_id , reference_id, repository_dest_id, status)
                 VALUES (?, ?, ?, 1)';
 
