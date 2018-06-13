@@ -42,7 +42,7 @@ plugin_cardwall	search_cardwall_placeholder	Search for: user, title, …
 plugin_cardwall	column_autostack	Auto stack the cards in this column
 plugin_cardwall	cell_stack	Stack cards
 plugin_cardwall	cell_unstack	Expand cards
-plugin_cardwall	semantic_cardFields_label	Cards semantic
+plugin_cardwall	semantic_cardFields_label	Cards semantics
 plugin_cardwall	semantic_cardFields_description	Manage the Fields to be displayed on cards
 plugin_cardwall	semantic_cardFields_no_fields_defined	There aren't any fields added to cards yet.
 plugin_cardwall	semantic_cardFields_fields	The following fields are added to the cards:
