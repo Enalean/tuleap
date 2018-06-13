@@ -54,7 +54,13 @@ class CardsPreviewBuilder
         try {
             $background_field = $semantic_card->getBackgroundColorField();
         } catch (BackgroundColorSemanticFieldNotFoundException $exception) {
-            return [];
+            return [
+                [
+                    'background_color' => '',
+                    'field_id'         => '',
+                    'decorated_value'  => ''
+                ]
+            ];
         }
 
         $colors = [];
