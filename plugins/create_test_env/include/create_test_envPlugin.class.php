@@ -20,6 +20,7 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\BotMattermost\Bot\BotDao;
 use Tuleap\BotMattermost\Bot\BotFactory;
 use Tuleap\CreateTestEnv\NotificationBotDao;
@@ -68,6 +69,8 @@ class create_test_envPlugin extends Plugin
         $this->addHook(BurningParrotCompatiblePageEvent::NAME);
         $this->addHook('site_admin_option_hook');
         $this->addHook(UserConnectionUpdateEvent::NAME);
+        $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
+        $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
 
         return parent::getHooksAndCallbacks();
     }
@@ -122,5 +125,26 @@ class create_test_envPlugin extends Plugin
     private function notify($text)
     {
         (new Notifier(new NotificationBotDao()))->notify($text);
+    }
+
+    public function burningParrotGetStylesheets(array $params)
+    {
+        $assets = new IncludeAssets(
+            __DIR__ . '/../../../src/www/assets/create_test_env/BurningParrot',
+            '/assets/create_test_env/BurningParrot'
+        );
+
+        $variant = $params['variant'];
+        $params['stylesheets'][] = $assets->getFileURL('create-test-env-' . $variant->getName() . '.css');
+    }
+
+    public function burningParrotGetJavascriptFiles(array $params)
+    {
+        $assets = new IncludeAssets(
+            __DIR__ . '/../../../src/www/assets/create_test_env/scripts',
+            '/assets/create_test_env/scripts'
+        );
+
+        $params['javascript_files'][] = $assets->getFileURL('call-me-back.js');
     }
 }

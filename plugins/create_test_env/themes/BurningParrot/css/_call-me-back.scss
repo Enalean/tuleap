@@ -1,0 +1,50 @@
+.call-me-back {
+    position: fixed;
+    z-index: 10000;
+    right: $tlp-double-spacing;
+    bottom: $tlp-double-spacing;
+}
+
+@mixin change-button-color($color) {
+    border-color: $color;
+    background: $color;
+
+    &:hover {
+        border-color: darken($color, 5%);
+        background: darken($color, 5%);
+    }
+
+    &:active,
+    &:focus {
+        border-color: darken($color, 10%);
+        background: darken($color, 10%);
+    }
+}
+
+.call-me-back-button {
+    width: 85px;
+    height: 85px;
+    overflow: visible;
+    border-radius: 50%;
+    box-shadow: 0 3px 9px 0 rgba(0, 0, 0, .29);
+    font-size: 30px;
+
+    @if $tlp-theme-color == $tlp-theme-blue {
+        @include change-button-color($tlp-theme-orange);
+    } @else if $tlp-theme-color == $tlp-theme-green {
+        @include change-button-color($tlp-theme-red);
+    } @else if $tlp-theme-color == $tlp-theme-grey {
+        @include change-button-color($tlp-theme-orange);
+    } @else if $tlp-theme-color == $tlp-theme-orange {
+        @include change-button-color($tlp-theme-blue);
+    } @else if $tlp-theme-color == $tlp-theme-purple {
+        @include change-button-color($tlp-theme-orange);
+    } @else if $tlp-theme-color == $tlp-theme-red {
+        @include change-button-color($tlp-theme-green);
+    }
+
+    > .fa {
+        position: relative;
+        top: -1px;
+    }
+}
