@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,7 +24,8 @@
 
 namespace Tuleap\REST;
 
-class JsonCast {
+class JsonCast
+{
 
     /**
      * Cast a value to int if it's not null
@@ -74,4 +75,20 @@ class JsonCast {
         return null;
     }
 
+    /**
+     * Ensure an empty array is converted to an Object Literal
+     * @return array | object | null
+     */
+    public static function toObject($value)
+    {
+        if (is_null($value)) {
+            return null;
+        }
+
+        if (is_array($value) && empty($value)) {
+            return new \stdClass();
+        }
+
+        return $value;
+    }
 }
