@@ -4,22 +4,25 @@ import 'angular-mocks';
 import BaseController from './execution-with-steps-controller.js';
 
 describe('ExecutionWithStepsController -', () => {
-    let ExecutionWithStepsController;
+    let ExecutionWithStepsController, $scope;
 
     beforeEach(() => {
         angular.mock.module(execution_module);
 
         let $controller;
 
-        angular.mock.inject(function(_$controller_) {
+        angular.mock.inject(function(_$controller_, $rootScope) {
             $controller = _$controller_;
+            $scope = $rootScope.$new();
         });
 
-        ExecutionWithStepsController = $controller(BaseController, {});
+        ExecutionWithStepsController = $controller(BaseController, {
+            $scope
+        });
     });
 
     describe('init() -', () => {
-        it('Given an execution, when the controller inits, then the steps data will be sorted by rank for easier display', () => {
+        it('Given an execution, then the steps data will be sorted by rank for easier display', () => {
             const execution = {
                 id: 802,
                 definition: {
@@ -27,14 +30,12 @@ describe('ExecutionWithStepsController -', () => {
                     steps: [
                         {
                             id: 12,
-                            description:
-                                'apodema Canarsee Onmun toaster Rosamond',
+                            description: 'apodema Canarsee Onmun toaster Rosamond',
                             rank: 9
                         },
                         {
                             id: 44,
-                            description:
-                                'acroamatics tragicness malleate bissextile',
+                            description: 'acroamatics tragicness malleate bissextile',
                             rank: 8
                         }
                     ]
@@ -50,22 +51,22 @@ describe('ExecutionWithStepsController -', () => {
                     }
                 }
             };
+
             ExecutionWithStepsController.execution = execution;
 
             ExecutionWithStepsController.$onInit();
+            $scope.$apply();
 
-            expect(ExecutionWithStepsController.steps).toEqual([
-                {
-                    id: 44,
-                    description: 'acroamatics tragicness malleate bissextile',
-                    rank: 8
-                },
-                {
-                    id: 12,
-                    description: 'apodema Canarsee Onmun toaster Rosamond',
-                    rank: 9
-                }
-            ]);
+            expect(execution.definition.steps[0]).toEqual({
+                id: 44,
+                description: 'acroamatics tragicness malleate bissextile',
+                rank: 8
+            });
+            expect(execution.definition.steps[1]).toEqual({
+                id: 12,
+                description: 'apodema Canarsee Onmun toaster Rosamond',
+                rank: 9
+            });
         });
     });
 });

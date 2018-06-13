@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,6 +21,7 @@
 namespace Tuleap\TestManagement\REST\v1;
 
 use Tuleap\REST\JsonCast;
+use Tuleap\User\REST\UserRepresentation;
 
 class ExecutionRepresentation
 {
@@ -59,7 +60,7 @@ class ExecutionRepresentation
     public $last_update_date;
 
     /**
-     * @var \UserRepresentation
+     * @var UserRepresentation
      */
     public $assigned_to;
 
@@ -98,7 +99,7 @@ class ExecutionRepresentation
         $definition,
         array $linked_bug,
         $time,
-        $steps_results
+        array $steps_results
     ) {
         $this->id               = JsonCast::toInt($artifact_id);
         $this->uri              = self::ROUTE . '/' . $this->id;
@@ -110,6 +111,6 @@ class ExecutionRepresentation
         $this->assigned_to      = $assigned_to;
         $this->time             = $time;
         $this->linked_bugs      = $linked_bug;
-        $this->steps_results    = $steps_results;
+        $this->steps_results    = JsonCast::toObject($steps_results);
     }
 }

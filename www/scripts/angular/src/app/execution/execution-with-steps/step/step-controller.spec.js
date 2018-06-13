@@ -21,6 +21,7 @@ describe('StepController', () => {
         setError,
         resetError,
         updateStatusWithStepResults;
+
     const $element = angular.element('<div></div>');
     const fake_dropdown_object = jasmine.createSpyObj('dropdown', ['hide', 'show']);
     const mockDropdown = jasmine.createSpy('dropdown').and.returnValue(fake_dropdown_object);
@@ -35,7 +36,6 @@ describe('StepController', () => {
 
         updateStatusWithStepResults = jasmine.createSpy('updateStatusWithStepResults');
         rewire$updateStatusWithStepResults(updateStatusWithStepResults);
-
 
         angular.mock.module(execution_module);
 
@@ -74,9 +74,10 @@ describe('StepController', () => {
     });
 
     describe('Status updates', () => {
-        const execution = { id: 79 };
+        let execution;
 
         beforeEach(() => {
+            execution = { id: 79, steps_results: {} };
             spyOn(ExecutionRestService, 'updateStepStatus').and.returnValue($q.when());
             StepController.dropdown = fake_dropdown_object;
             StepController.execution = execution;

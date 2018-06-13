@@ -25,10 +25,20 @@ import {
 } from '../../execution-constants.js';
 
 function updateStatusWithStepResults(execution) {
-    execution.status = computeTestStatusFromStepStatus(Object.values(execution.steps_results));
+    execution.status = computeTestStatusFromStepStatus(
+        execution.definition.steps,
+        Object.values(execution.steps_results)
+    );
 }
 
-function computeTestStatusFromStepStatus(steps_results) {
+function updateStepResults(execution, step_id, status) {
+    if (typeof execution.steps_results[step_id] === 'undefined') {
+        execution.steps_results[step_id] = {};
+    }
+    Object.assign(execution.steps_results[step_id], { step_id, status });
+}
+
+function computeTestStatusFromStepStatus(step_definitions, steps_results) {
     const counts = countStepStatus(steps_results);
     if (counts[FAILED_STATUS] > 0) {
         return FAILED_STATUS;
@@ -40,7 +50,7 @@ function computeTestStatusFromStepStatus(steps_results) {
         return NOT_RUN_STATUS;
     }
 
-    return PASSED_STATUS;
+    return counts[PASSED_STATUS] === step_definitions.length ? PASSED_STATUS : NOT_RUN_STATUS;
 }
 
 function countStepStatus(steps_results) {
@@ -50,4 +60,4 @@ function countStepStatus(steps_results) {
     }, {});
 }
 
-export { updateStatusWithStepResults };
+export { updateStatusWithStepResults, updateStepResults };

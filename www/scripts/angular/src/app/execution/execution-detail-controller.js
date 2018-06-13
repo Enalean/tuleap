@@ -196,7 +196,6 @@ function ExecutionDetailCtrl(
                     $scope.execution.definition.summary = definition.summary;
 
                     updateExecution(definition, old_category);
-                    resetStepsResultsToNotRun(execution);
                 });
 
                 retrieveCurrentExecution();
@@ -312,13 +311,6 @@ function ExecutionDetailCtrl(
                 label: category_updated,
                 executions: [$scope.execution]
             };
-        }
-    }
-
-    function resetStepsResultsToNotRun(execution) {
-        const steps_results = Object.values(execution.steps_results);
-        for (const result of steps_results) {
-            result.status = NOT_RUN_STATUS;
         }
     }
 

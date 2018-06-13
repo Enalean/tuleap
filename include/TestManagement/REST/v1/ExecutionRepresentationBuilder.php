@@ -29,7 +29,7 @@ use Tuleap\TestManagement\Campaign\Execution\DefinitionForExecutionRetriever;
 use Tuleap\TestManagement\Campaign\Execution\ExecutionDao;
 use Tuleap\TestManagement\Campaign\Execution\PaginatedExecutions;
 use Tuleap\TestManagement\ConfigConformanceValidator;
-use Tuleap\TestManagement\Step\Execution\StepResult;
+use Tuleap\TestManagement\REST\v1\Execution\StepsResultsRepresentationBuilder;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 use Tuleap\User\REST\UserRepresentation;
 use UserManager;
@@ -78,6 +78,10 @@ class ExecutionRepresentationBuilder
      * @var DefinitionForExecutionRetriever
      */
     private $definition_retriever;
+    /**
+     * @var StepsResultsRepresentationBuilder
+     */
+    private $steps_results_representation_builder;
 
     public function __construct(
         UserManager $user_manager,
@@ -88,17 +92,19 @@ class ExecutionRepresentationBuilder
         Tracker_ArtifactFactory $artifact_factory,
         RequirementRetriever $requirement_retriever,
         DefinitionForExecutionRetriever $definition_retriever,
-        ExecutionDao $execution_dao
+        ExecutionDao $execution_dao,
+        StepsResultsRepresentationBuilder $steps_results_representation_builder
     ) {
-        $this->user_manager                       = $user_manager;
-        $this->tracker_form_element_factory       = $tracker_form_element_factory;
-        $this->conformance_validator              = $conformance_validator;
-        $this->assigned_to_representation_builder = $assigned_to_representation_builder;
-        $this->artifact_dao                       = $artifact_dao;
-        $this->artifact_factory                   = $artifact_factory;
-        $this->requirement_retriever              = $requirement_retriever;
-        $this->definition_retriever               = $definition_retriever;
-        $this->execution_dao                      = $execution_dao;
+        $this->user_manager                         = $user_manager;
+        $this->tracker_form_element_factory         = $tracker_form_element_factory;
+        $this->conformance_validator                = $conformance_validator;
+        $this->assigned_to_representation_builder   = $assigned_to_representation_builder;
+        $this->artifact_dao                         = $artifact_dao;
+        $this->artifact_factory                     = $artifact_factory;
+        $this->requirement_retriever                = $requirement_retriever;
+        $this->definition_retriever                 = $definition_retriever;
+        $this->execution_dao                        = $execution_dao;
+        $this->steps_results_representation_builder = $steps_results_representation_builder;
     }
 
     /**
@@ -136,7 +142,14 @@ class ExecutionRepresentationBuilder
         array $definitions_changeset_ids
     ) {
         $previous_result_representation = $this->getPreviousResultRepresentationForExecution($user, $execution);
-        $definition_representation      = $this->getDefinitionRepresentationForExecution($user, $execution, $definitions_changeset_ids);
+
+        $definition = $this->definition_retriever->getDefinitionRepresentationForExecution($user, $execution);
+        $definition_representation = $this->getDefinitionRepresentationForExecution(
+            $user,
+            $execution,
+            $definition,
+            $definitions_changeset_ids
+        );
         $execution_representation       = new ExecutionRepresentation();
         $execution_representation->build(
             $execution->getId(),
@@ -148,7 +161,7 @@ class ExecutionRepresentationBuilder
             $definition_representation,
             $this->getLinkedBugsRepresentationForExecution($user, $execution),
             $this->getExecutionTime($user, $execution),
-            $this->getStepsResultsRepresentations($user, $execution)
+            $this->steps_results_representation_builder->build($user, $execution, $definition)
         );
 
         return $execution_representation;
@@ -230,13 +243,9 @@ class ExecutionRepresentationBuilder
     private function getDefinitionRepresentationForExecution(
         PFUser $user,
         Tracker_Artifact $execution,
+        Tracker_Artifact $definition,
         array $definitions_changeset_ids
     ) {
-        $definition = $this->definition_retriever->getDefinitionRepresentationForExecution($user, $execution);
-        if (! $definition) {
-            return null;
-        }
-
         $definition_representation = new DefinitionRepresentation();
         $definition_representation->build(
             $definition,
@@ -338,28 +347,6 @@ class ExecutionRepresentationBuilder
     /**
      * @param PFUser           $user
      * @param Tracker_Artifact $execution
-     *
-     * @return StepResult[]
-     */
-    private function getStepsResultsRepresentations(PFUser $user, Tracker_Artifact $execution)
-    {
-        return array_reduce(
-            $this->getStepsResults($user, $execution),
-            function (array $representations, StepResult $step_result) {
-                $id = $step_result->getStep()->getId();
-
-                $representations[$id] = new StepResultRepresentation();
-                $representations[$id]->build($step_result);
-
-                return $representations;
-            },
-            []
-        );
-    }
-
-    /**
-     * @param PFUser           $user
-     * @param Tracker_Artifact $execution
      * @param  string          $field_name
      *
      * @return null|\Tracker_Artifact_ChangesetValue
@@ -376,22 +363,5 @@ class ExecutionRepresentationBuilder
         }
 
         return $execution->getValue($results_field);
-
     }
-
-    /**
-     * @param PFUser           $user
-     * @param Tracker_Artifact $execution
-     *
-     * @return array|string
-     */
-    private function getStepsResults(PFUser $user, Tracker_Artifact $execution)
-    {
-        $changeset_value = $this->getFieldChangeValue($user, $execution, ExecutionRepresentation::FIELD_STEPS_RESULTS);
-        if (! $changeset_value) {
-            return [];
-        }
-
-        return $changeset_value->getValue();
-}
 }

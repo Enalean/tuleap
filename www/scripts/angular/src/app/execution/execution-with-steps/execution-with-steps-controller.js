@@ -1,14 +1,15 @@
-controller.$inject = [];
+controller.$inject = ['$scope'];
 
-export default function controller() {
+export default function controller($scope) {
     const self = this;
     Object.assign(self, {
-        steps: [],
         $onInit: init
     });
-
     function init() {
-        self.steps = self.execution.definition.steps;
-        self.steps.sort((a, b) => a.rank - b.rank);
+        $scope.$watch(() => self.execution.definition.steps, steps => {
+            if (steps !== undefined) {
+                steps.sort((a, b) => a.rank - b.rank);
+            }
+        })
     }
 }

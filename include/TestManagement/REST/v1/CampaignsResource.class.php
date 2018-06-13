@@ -72,6 +72,8 @@ use Tuleap\TestManagement\Dao;
 use Tuleap\TestManagement\LabelFieldNotFoundException;
 use Tuleap\TestManagement\MilestoneItemsArtifactFactory;
 use Tuleap\TestManagement\RealTime\RealTimeMessageSender;
+use Tuleap\TestManagement\REST\v1\Execution\StepsResultsFilter;
+use Tuleap\TestManagement\REST\v1\Execution\StepsResultsRepresentationBuilder;
 use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
 use Tuleap\Tracker\REST\v1\ArtifactLinkUpdater;
 use UserManager;
@@ -166,6 +168,10 @@ class CampaignsResource
         $definition_retriever  = new DefinitionForExecutionRetriever($this->conformance_validator);
 
         $this->execution_dao                    = new ExecutionDao();
+        $steps_results_representation_builder   = new StepsResultsRepresentationBuilder(
+            $this->formelement_factory,
+            new StepsResultsFilter()
+        );
         $this->execution_representation_builder = new ExecutionRepresentationBuilder(
             $this->user_manager,
             $this->formelement_factory,
@@ -175,7 +181,8 @@ class CampaignsResource
             $this->artifact_factory,
             $requirement_retriever,
             $definition_retriever,
-            $this->execution_dao
+            $this->execution_dao,
+            $steps_results_representation_builder
         );
 
         $campaign_dao = new CampaignDao();
