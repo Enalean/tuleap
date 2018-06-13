@@ -1,5 +1,44 @@
 <h3> {{# dgettext }} tuleap-cardwall | Preview of the card {{/ dgettext }}</h3>
 
+<div class="card-preview-info">
+    {{# dgettext }}
+        tuleap-cardwall |
+        The preview respects the following rules:
+    {{/ dgettext }}
+    <ul>
+        <li>
+            {{# dgettext }}
+                tuleap-cardwall |
+                Card design is the same as Kanban.
+            {{/ dgettext }}
+        </li>
+        <li>
+            {{# dgettext }}
+                tuleap-cardwall |
+                Description and field values are extracted from a random artifact of the tracker.
+            {{/ dgettext }}
+        </li>
+        <li>
+            {{# dgettext }}
+                tuleap-cardwall |
+                Preview is an example, data might not be consistent with the artifact's real data.
+            {{/ dgettext }}
+        </li>
+        <li>
+            {{# dgettext }}
+                tuleap-cardwall |
+                A card will be displayed for each available background color.
+            {{/ dgettext }}
+        </li>
+        <li>
+            {{# dgettext }}
+                tuleap-cardwall |
+                If a color corresponds to multiple values, the preview will display only one card with this background color.
+            {{/ dgettext }}
+        </li>
+    </ul>
+</div>
+
 {{# card_preview }}
     <div class="card-preview card-style-{{ background }}">
         <div class="card-preview-type"></div>

@@ -2,10 +2,16 @@
 msgid "<b>%s</b> field will determine background color."
 msgstr ""
 
+msgid "A card will be displayed for each available background color."
+msgstr ""
+
 msgid "Add a field to the cards"
 msgstr ""
 
 msgid "Background color"
+msgstr ""
+
+msgid "Card design is the same as Kanban."
 msgstr ""
 
 msgid "Choose a field to define card background color"
@@ -14,10 +20,20 @@ msgstr ""
 msgid "Choose a field..."
 msgstr ""
 
+msgid ""
+"Description and field values are extracted from a random artifact of the "
+"tracker."
+msgstr ""
+
 msgid "Field not found"
 msgstr ""
 
 msgid "Fields"
+msgstr ""
+
+msgid ""
+"If a color corresponds to multiple values, the preview will display only one "
+"card with this background color."
 msgstr ""
 
 msgid ""
@@ -32,6 +48,11 @@ msgstr ""
 msgid ""
 "Only static fields with values bound to new color picker can be chosen as "
 "background color"
+msgstr ""
+
+msgid ""
+"Preview is an example, data might not be consistent with the artifact's real "
+"data."
 msgstr ""
 
 msgid "Preview of the card"
@@ -52,6 +73,9 @@ msgid "The field used to determine background color is now %s"
 msgstr ""
 
 msgid "The following fields are added to the cards"
+msgstr ""
+
+msgid "The preview respects the following rules:"
 msgstr ""
 
 msgid "There aren't any fields added to cards yet."
