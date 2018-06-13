@@ -148,6 +148,9 @@ msgid ""
 "24 hours sliding window."
 msgstr ""
 
+msgid "No color"
+msgstr ""
+
 msgid "No element selected."
 msgstr ""
 

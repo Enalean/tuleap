@@ -40,11 +40,15 @@
             />
 
             <!-- Set transparent when clicked -->
-            <old-color-picker-preview v-if="is_old_palette_shown"
-                color
-                class="colorpicker-transparent-preview"
-                v-on:color-update="setColor"
-            />
+            <p v-if="is_old_palette_shown" class="old-color-preview">
+                <old-color-picker-preview
+                    color
+                    class="colorpicker-transparent-preview"
+                    v-on:color-update="setColor"
+                    v-bind:no-color-label="noColorLabel"
+                />
+                {{ noColorLabel }}
+            </p>
 
             <color-picker-switch
                 v-bind:is-switch-disabled="is_switch_disabled"
@@ -90,7 +94,8 @@
             switchDefaultPaletteLabel: String,
             switchOldPaletteLabel    : String,
             switchDisabledTitle      : String,
-            isSwitchDisabled         : String
+            isSwitchDisabled         : String,
+            noColorLabel             : String
         },
         data() {
             const is_hexa_color        = this.currentColor.includes('#');
