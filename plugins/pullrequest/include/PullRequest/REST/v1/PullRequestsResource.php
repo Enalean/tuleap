@@ -191,7 +191,7 @@ class PullRequestsResource extends AuthenticatedResource
 
         $this->user_manager         = UserManager::instance();
         $this->event_manager        = EventManager::instance();
-        $this->pull_request_merger  = new PullRequestMerger($this->git_repository_factory);
+        $this->pull_request_merger  = new PullRequestMerger();
         $this->pull_request_creator = new PullRequestCreator(
             $this->pull_request_factory,
             $pull_request_dao,

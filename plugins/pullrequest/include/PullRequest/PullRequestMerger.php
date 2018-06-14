@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,109 +22,80 @@ namespace Tuleap\PullRequest;
 
 use PFUser;
 use GitRepository;
-use GitRepositoryFactory;
 use Git_Command_Exception;
 use Tuleap\PullRequest\Exception\PullRequestCannotBeMerged;
 use System_Command;
 
 class PullRequestMerger
 {
-
+    const GIT_MERGE_CONFLICT_MARKER = '+<<<<<<<';
     const MERGE_TEMPORARY_SUBFOLDER = 'tuleap-pr';
-
-    /**
-     * @var GitRepositoryFactory
-     */
-    private $git_repository_factory;
-
-
-    public function __construct(
-        GitRepositoryFactory $git_repository_factory
-    )
-    {
-        $this->git_repository_factory = $git_repository_factory;
-    }
 
     public function doMergeIntoDestination(PullRequest $pull_request, GitRepository $repository_dest, PFUser $user)
     {
+        if ((int) $pull_request->getRepoDestId() !== (int) $repository_dest->getId()) {
+            throw new \LogicException('Destination repository ID does not match the one of the PR');
+        }
+
         try {
             $temp_working_dir = $this->getUniqueRandomDirectory();
         } catch (\System_Command_CommandException $exception) {
             throw new PullRequestCannotBeMerged('Temporary directory to merge the pull request can not be created');
         }
-        $executor         = new GitExec($temp_working_dir);
+        $executor = new GitExec($temp_working_dir);
 
         try {
-            $this->tryMerge($pull_request, $pull_request->getSha1Src(), $executor, $user);
+            $executor->sharedCloneAndCheckout($repository_dest->getFullPath(), $pull_request->getBranchDest());
+            $executor->merge($pull_request->getSha1Src(), $user);
             $executor->push(escapeshellarg('gitolite@gl-adm:' . $repository_dest->getPath()) . ' HEAD:' . escapeshellarg($pull_request->getBranchDest()));
         } catch (Git_Command_Exception $exception) {
-            $this->cleanTemporaryRepository($temp_working_dir);
             $exception_message = $exception->getMessage();
             throw new PullRequestCannotBeMerged(
                 "This Pull Request cannot be merged: $exception_message"
             );
+        } finally {
+            $this->cleanTemporaryRepository($temp_working_dir);
         }
-        $this->cleanTemporaryRepository($temp_working_dir);
     }
 
 
-    public function detectMergeabilityStatus(GitExec $git_exec, PullRequest $pull_request, $merge_rev, GitRepository $repository)
-    {
+    public function detectMergeabilityStatus(
+        GitExec $git_exec_destination,
+        $merge_revision,
+        $destination_revision
+    ) {
         try {
-            if ($this->isFastForwardable($git_exec, $pull_request)) {
-                $merge_status = PullRequest::FASTFORWARD_MERGE;
-            } else {
-                $merge_status = $this->detectMergeConflict($pull_request, $merge_rev, $repository);
+            if ($this->isFastForwardable($git_exec_destination, $merge_revision, $destination_revision)) {
+                return PullRequest::FASTFORWARD_MERGE;
             }
+            return $this->detectMergeConflict($git_exec_destination, $merge_revision, $destination_revision);
         } catch (Git_Command_Exception $e) {
-            $merge_status = PullRequest::UNKNOWN_MERGE;
+            return PullRequest::UNKNOWN_MERGE;
         }
-        return $merge_status;
     }
 
-    private function tryMerge($pull_request, $merge_rev, $executor, $user)
+    private function isFastForwardable(GitExec $git_exec, $merge_revision, $destination_revision)
     {
-        $repository_src  = $this->git_repository_factory->getRepositoryById($pull_request->getRepositoryId());
-        $repository_dest = $this->git_repository_factory->getRepositoryById($pull_request->getRepoDestId());
-
-        $executor->cloneAndCheckout($repository_dest->getFullPath(), $pull_request->getBranchDest());
-        $executor->fetch($repository_src->getFullPath(), $pull_request->getBranchSrc());
-        return $executor->merge($merge_rev, $user);
+        return $git_exec->isAncestor($merge_revision, $destination_revision);
     }
 
-    private function isFastForwardable($git_exec, $pr)
+    private function detectMergeConflict(GitExec $git_exec, $merge_revision, $destination_revision)
     {
-        if ($pr->getRepositoryId() != $pr->getRepoDestId()) {
-            $git_exec->fetchRemote($pr->getRepoDestId());
-            $src_ref  = 'refs/heads/' . $pr->getBranchSrc();
-            $dest_ref = 'refs/remotes/' . $pr->getRepoDestId() . '/' . $pr->getBranchDest();
-        } else {
-            $src_ref  = $pr->getBranchSrc();
-            $dest_ref = $pr->getBranchDest();
+        $merge_bases = $git_exec->mergeBase($merge_revision, $destination_revision);
+
+        if (empty($merge_bases)) {
+            return PullRequest::UNKNOWN_MERGE;
         }
-        return $git_exec->isAncestor($src_ref, $dest_ref);
-    }
 
-    private function detectMergeConflict(PullRequest $pull_request, $merge_rev, GitRepository $repository)
-    {
-        $temporary_name = $this->getUniqueRandomDirectory($repository);
-        $executor       = new GitExec($temporary_name);
-        $user           = new PFUser(array('realname' => 'Tuleap Merge Resolver',
-                                           'email'    => 'merger@tuleap.net'));
+        $merge_result_lines = $git_exec->mergeTree($merge_bases[0], $destination_revision, $merge_revision);
 
-        try {
-            $merge_result = $this->tryMerge($pull_request, $merge_rev, $executor, $user);
-            if ($merge_result) {
-                $merge_status = PullRequest::NO_FASTFORWARD_MERGE;
-            } else {
-                $merge_status = PullRequest::UNKNOWN_MERGE;
+        foreach ($merge_result_lines as $merge_result_line) {
+            if (strpos($merge_result_line, self::GIT_MERGE_CONFLICT_MARKER) === 0) {
+                return PullRequest::CONFLICT_MERGE;
             }
-        } catch (Git_Command_Exception $exception) {
-            $merge_status = PullRequest::CONFLICT_MERGE;
         }
 
-        $this->cleanTemporaryRepository($temporary_name);
-        return $merge_status;
+        return PullRequest::NO_FASTFORWARD_MERGE;
     }
 
     /**

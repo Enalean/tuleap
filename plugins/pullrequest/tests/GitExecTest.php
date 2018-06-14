@@ -112,42 +112,6 @@ class GitExecTest extends TuleapTestCase {
         $this->git_exec->getModifiedFiles($sha1_src, $sha1_dest);
     }
 
-    public function itFetchesARemoteBranch() {
-        $remote      = $this->fixture_dir;
-        $branch_name = 'master';
-
-        $result = $this->git_exec->fetch($remote, $branch_name);
-
-        $this->assertTrue($result);
-    }
-
-    public function itThrowsWhileFetchingAnExceptionIfRemoteBranchDoesNotExist() {
-        $remote      = $this->fixture_dir;
-        $branch_name = 'morigeration';
-
-        $this->expectException('Git_Command_Exception');
-
-        $this->git_exec->fetch($remote, $branch_name);
-    }
-
-    public function itFetchesARemoteBranchWithoutHistory() {
-        $remote      = $this->fixture_dir;
-        $branch_name = 'master';
-
-        $result = $this->git_exec->fetchNoHistory($remote, $branch_name);
-
-        $this->assertTrue($result);
-    }
-
-    public function itThrowsWhileFetchingWithoutHistoryAnExceptionIfRemoteBranchDoesNotExist() {
-        $remote      = $this->fixture_dir;
-        $branch_name = 'rond';
-
-        $this->expectException('Git_Command_Exception');
-
-        $this->git_exec->fetchNoHistory($remote, $branch_name);
-    }
-
     public function itReturnsTheBranchNames() {
         system("cd $this->fixture_dir && git checkout --quiet -b dev 2>&1 >/dev/null");
         file_put_contents("$this->fixture_dir/nonprophetic", "jackassness");

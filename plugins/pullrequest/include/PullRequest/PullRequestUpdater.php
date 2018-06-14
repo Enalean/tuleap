@@ -97,17 +97,15 @@ class PullRequestUpdater
         foreach ($prs as $pr) {
             $this->pull_request_factory->updateSourceRev($pr, $new_rev);
 
-            $merge_status = $this->pull_request_merger->detectMergeabilityStatus($git_exec, $pr, $new_rev, $repository);
-            $this->pull_request_factory->updateMergeStatus($pr, $merge_status);
-
             $ancestor_rev = $this->getCommonAncestorRev($git_exec, $pr);
             if ($ancestor_rev != $pr->getSha1Dest()) {
                 $this->pull_request_factory->updateDestRev($pr, $ancestor_rev);
             }
-            $this->updateInlineCommentsWhenSourceChanges($git_exec, $pr, $ancestor_rev, $new_rev);
-            $this->timeline_event_creator->storeUpdateEvent($pr, $user, $new_rev);
 
-            $updated_pr             = new PullRequest(
+            $repository_destination          = $this->git_repository_factory->getRepositoryById($pr->getRepoDestId());
+            $executor_repository_destination = GitExec::buildFromRepository($repository_destination);
+
+            $updated_pr = new PullRequest(
                 $pr->getId(),
                 $pr->getTitle(),
                 $pr->getDescription(),
@@ -124,36 +122,37 @@ class PullRequestUpdater
                 $pr->getStatus(),
                 $pr->getMergeStatus()
             );
-            $repository_destination = $this->git_repository_factory->getRepositoryById($pr->getRepoDestId());
+
             $this->git_pull_request_reference_updater->updatePullRequestReference(
                 $updated_pr,
                 $git_exec,
-                GitExec::buildFromRepository($repository_destination),
+                $executor_repository_destination,
                 $repository_destination
             );
+
+            $merge_status = $this->pull_request_merger->detectMergeabilityStatus($git_exec, $new_rev, $ancestor_rev);
+            $this->pull_request_factory->updateMergeStatus($pr, $merge_status);
+
+            $this->updateInlineCommentsWhenSourceChanges($git_exec, $pr, $ancestor_rev, $new_rev);
+            $this->timeline_event_creator->storeUpdateEvent($pr, $user, $new_rev);
         }
 
         $prs = $this->pull_request_factory->getOpenedByDestinationBranch($repository, $branch_name);
         foreach ($prs as $pr) {
             $pr_repository = $this->git_repository_factory->getRepositoryById($pr->getRepositoryId());
             $pr_git_exec   = new GitExec($pr_repository->getFullPath(), $pr_repository->getFullPath());
-            $merge_status  = $this->pull_request_merger->detectMergeabilityStatus($pr_git_exec, $pr, $pr->getSha1Src(), $pr_repository);
+            $merge_status  = $this->pull_request_merger->detectMergeabilityStatus(
+                $pr_git_exec,
+                $pr->getSha1Src(),
+                $branch_name
+            );
             $this->pull_request_factory->updateMergeStatus($pr, $merge_status);
         }
     }
 
     private function getCommonAncestorRev(GitExec $git_exec, PullRequest $pr)
     {
-        if ($pr->getRepositoryId() != $pr->getRepoDestId()) {
-            $git_exec->fetchRemote($pr->getRepoDestId());
-            $base_ref   = 'refs/heads/' . $pr->getBranchSrc();
-            $merged_ref = 'refs/remotes/' . $pr->getRepoDestId() . '/' . $pr->getBranchDest();
-        } else {
-            $base_ref   = $pr->getBranchSrc();
-            $merged_ref = $pr->getBranchDest();
-        }
-        $ancestor_rev = $git_exec->getCommonAncestor($base_ref, $merged_ref);
-        return $ancestor_rev;
+        return $git_exec->getCommonAncestor($pr->getSha1Src(), $pr->getBranchDest());
     }
 
     private function updateInlineCommentsWhenSourceChanges(GitExec $git_exec, PullRequest $pull_request, $new_dest_rev, $new_src_rev)

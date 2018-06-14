@@ -61,39 +61,12 @@ class GitExec extends Git_Exec
         return $output;
     }
 
-    public function fetch($remote, $branch_name)
-    {
-        $output = array();
-        $remote = escapeshellarg($remote);
-        $branch = escapeshellarg('refs/heads/' . $branch_name);
-
-        return $this->gitCmdWithOutput("fetch $remote $branch", $output);
-    }
-
-    public function fetchNoHistory($remote, $branch_name)
-    {
-        $output = array();
-        $remote = escapeshellarg($remote);
-        $branch = escapeshellarg('refs/heads/' . $branch_name);
-
-        return $this->gitCmdWithOutput("fetch --depth 1 $remote $branch", $output);
-    }
-
-    public function fetchRemote($remote_name)
-    {
-        $remote_name = escapeshellarg($remote_name);
-        $cmd         = "fetch $remote_name";
-
-        $this->execAsGitoliteGroup($cmd, $output);
-        return $output;
-    }
-
-    public function cloneAndCheckout($remote, $branch_name)
+    public function sharedCloneAndCheckout($remote, $branch_name)
     {
         $output = array();
         $remote = escapeshellarg($remote);
         $branch = escapeshellarg($branch_name);
-        $cmd    = "clone -b $branch $remote " . $this->getPath();
+        $cmd    = "clone --shared -b $branch $remote " . $this->getPath();
 
         $retVal = 1;
         $git    = $this->getGitCommand();
@@ -115,6 +88,37 @@ class GitExec extends Git_Exec
 
         $this->setLocalCommiter($user->getRealName(), $user->getEmail());
         return $this->gitCmdWithOutput("merge --no-edit " . $reference, $output);
+    }
+
+    /**
+     * @return array
+     */
+    public function mergeBase($first_commit_reference, $second_commit_reference)
+    {
+        $output = [];
+
+        $first_commit_reference  = escapeshellarg($first_commit_reference);
+        $second_commit_reference = escapeshellarg($second_commit_reference);
+
+        $this->gitCmdWithOutput("merge-base $first_commit_reference $second_commit_reference", $output);
+
+        return $output;
+    }
+
+    /**
+     * @return array
+     */
+    public function mergeTree($merge_base, $first_commit_reference, $second_commit_reference)
+    {
+        $output = [];
+
+        $merge_base              = escapeshellarg($merge_base);
+        $first_commit_reference  = escapeshellarg($first_commit_reference);
+        $second_commit_reference = escapeshellarg($second_commit_reference);
+
+        $this->gitCmdWithOutput("merge-tree $merge_base $second_commit_reference $first_commit_reference", $output);
+
+        return $output;
     }
 
     public function getAllBranchNames()
@@ -168,16 +172,9 @@ class GitExec extends Git_Exec
         $base_ref   = escapeshellarg($base_ref);
         $merged_ref = escapeshellarg($merged_ref);
 
-        $merge_base_cmd    = "merge-base $base_ref $merged_ref";
-        $merge_base_output = array();
-
-        $rev_parse_cmd    = "rev-parse --verify $merged_ref";
-        $rev_parse_output = array();
-
         try {
-            $this->gitCmdWithOutput($merge_base_cmd, $merge_base_output);
-            $this->gitCmdWithOutput($rev_parse_cmd, $rev_parse_output);
-            return $rev_parse_output[0] == $merge_base_output[0];
+            $this->gitCmd("merge-base --is-ancestor $merged_ref $base_ref");
+            return true;
         } catch (Git_Command_Exception $e) {
             return false;
         }
@@ -203,29 +200,6 @@ class GitExec extends Git_Exec
 
         $this->gitCmdWithOutput($cmd, $output);
         return $output;
-    }
-
-    public function addRemote($remote_name, $remote_path)
-    {
-        $remote_name = escapeshellarg($remote_name);
-        $remote_path = escapeshellarg($remote_path);
-        $cmd         = "remote add $remote_name $remote_path";
-
-        $this->execAsGitoliteGroup($cmd, $output);
-        return $output;
-    }
-
-    public function remoteExists($remote_name)
-    {
-        $remote_name = escapeshellarg($remote_name);
-        $cmd         = "remote show $remote_name";
-
-        try {
-            $this->gitCmdWithOutput($cmd, $output);
-        } catch (Git_Command_Exception $e) {
-            return false;
-        }
-        return true;
     }
 
     /**

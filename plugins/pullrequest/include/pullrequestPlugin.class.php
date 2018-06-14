@@ -163,9 +163,7 @@ class pullrequestPlugin extends Plugin
         $event_manager          = EventManager::instance();
         $git_repository_factory = $this->getRepositoryFactory();
 
-        $pull_request_merger = new PullRequestMerger(
-            $git_repository_factory
-        );
+        $pull_request_merger  = new PullRequestMerger();
         $pull_request_creator = new PullRequestCreator(
             $this->getPullRequestFactory(),
             new Dao(),
@@ -363,7 +361,7 @@ class pullrequestPlugin extends Plugin
 
                 $pull_request_updater = new PullRequestUpdater(
                     $this->getPullRequestFactory(),
-                    new PullRequestMerger($this->getRepositoryFactory()),
+                    new PullRequestMerger(),
                     new InlineCommentDao(),
                     new InlineCommentUpdater(),
                     new FileUniDiffBuilder(),
@@ -410,7 +408,7 @@ class pullrequestPlugin extends Plugin
     {
         $pull_request_factory   = $this->getPullRequestFactory();
         $timeline_event_creator = $this->getTimelineEventCreator();
-        $closer                 = new PullRequestCloser($this->getPullRequestFactory(), new PullRequestMerger($this->getRepositoryFactory()));
+        $closer                 = new PullRequestCloser($this->getPullRequestFactory(), new PullRequestMerger());
 
         $prs = $pull_request_factory->getOpenedBySourceBranch($repository, $branch_name);
         foreach ($prs as $pr) {
