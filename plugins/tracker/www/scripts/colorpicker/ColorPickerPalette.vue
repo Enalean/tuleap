@@ -26,18 +26,24 @@
                 v-on:color-update="updateColor"
             />
         </template>
+        <color-picker-no-color-option
+            v-bind:selected-color="currentColor"
+            v-bind:no-color-label="noColorLabel"
+            v-on:color-update="updateColor"/>
     </div>
 </template>
 
 <script>
-    import tlp_colors            from "./new-color-palette.js";
-    import ColorPickerPaletteRow from "./ColorPickerPaletteRow.vue";
+    import tlp_colors               from "./new-color-palette.js";
+    import ColorPickerPaletteRow    from "./ColorPickerPaletteRow.vue";
+    import ColorPickerNoColorOption from "./ColorPickerNoColorOption.vue";
 
     export default {
         name: "ColorPickerPalette",
-        components: { ColorPickerPaletteRow },
+        components: { ColorPickerPaletteRow, ColorPickerNoColorOption },
         props: {
-            currentColor: String
+            currentColor: String,
+            noColorLabel: String
         },
         data() {
             return {
