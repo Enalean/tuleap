@@ -28,21 +28,27 @@ use PHPUnit\Framework\TestCase;
 use PHPUnit_Framework_MockObject_MockObject;
 use Tracker_Artifact;
 use Tracker_FormElement_Field_List;
+use Tracker_FormElement_Field_List_BindDecorator;
 use Tuleap\Cardwall\Semantic\BackgroundColorSemanticFieldNotFoundException;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorColorRetriever;
+use Tuleap\Tracker\Artifact\Exception\NoChangesetException;
+use Tuleap\Tracker\Artifact\Exception\NoChangesetValueException;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\NoBindDecoratorException;
 
 class BackgroundColorBuilderTest extends TestCase
 {
     /** @var BackgroundColorBuilder */
     private $background_color_builder;
     /** @var PHPUnit_Framework_MockObject_MockObject */
-    private $color_retriever;
+    private $decorator_retriever;
     /** @var PHPUnit_Framework_MockObject_MockObject */
     private $current_user;
     /** @var PHPUnit_Framework_MockObject_MockObject */
     private $artifact;
     /** @var PHPUnit_Framework_MockObject_MockObject */
     private $card_fields_semantic;
+    /** @var PHPUnit_Framework_MockObject_MockObject */
+    private $decorator;
     /** @var PHPUnit_Framework_MockObject_MockObject */
     private $field;
 
@@ -53,19 +59,18 @@ class BackgroundColorBuilderTest extends TestCase
         $this->card_fields_semantic = $this->createMock(Cardwall_Semantic_CardFields::class);
         $this->artifact = $this->createMock(Tracker_Artifact::class);
         $this->current_user = $this->createMock(PFUser::class);
-        $this->color_retriever = $this->createMock(BindDecoratorColorRetriever::class);
+        $this->decorator_retriever = $this->createMock(BindDecoratorRetriever::class);
         $this->field = $this->createMock(Tracker_FormElement_Field_List::class);
-        $this->background_color_builder = new BackgroundColorBuilder($this->color_retriever);
+        $this->decorator = $this->createMock(Tracker_FormElement_Field_List_BindDecorator::class);
+        $this->background_color_builder = new BackgroundColorBuilder($this->decorator_retriever);
     }
 
     public function testItBuildsABackgroundColor()
     {
         $this->card_fields_semantic->method('getBackgroundColorField')->willReturn($this->field);
         $this->field->method('userCanRead')->willReturn(true);
-        $this->color_retriever->expects($this->once())->method('getCurrentDecoratorColor')->with(
-            $this->field,
-            $this->artifact
-        )->willReturn('acid-green');
+        $this->decorator_retriever->method('getDecoratorForFirstValue')->willReturn($this->decorator);
+        $this->decorator->tlp_color_name = 'acid-green';
 
         $result = $this->background_color_builder->build(
             $this->card_fields_semantic,
@@ -74,6 +79,58 @@ class BackgroundColorBuilderTest extends TestCase
         );
 
         $this->assertEquals(new BackgroundColor('acid-green'), $result);
+    }
+
+    public function testItBuildsAnEmptyColorWhenNoDecorator()
+    {
+        $this->card_fields_semantic->method('getBackgroundColorField')->willReturn($this->field);
+        $this->field->method('userCanRead')->willReturn(true);
+        $this->decorator_retriever->method('getDecoratorForFirstValue')->willThrowException(
+            new NoBindDecoratorException()
+        );
+
+        $result = $this->background_color_builder->build(
+            $this->card_fields_semantic,
+            $this->artifact,
+            $this->current_user
+        );
+
+        $this->assertEquals(new BackgroundColor(''), $result);
+    }
+
+    public function testItBuildsAnEmptyColorWhenNoChangesetValue()
+    {
+        $this->card_fields_semantic->method('getBackgroundColorField')->willReturn($this->field);
+        $this->field->method('userCanRead')->willReturn(true);
+        $this->decorator_retriever->method('getDecoratorForFirstValue')->willThrowException(
+            new NoChangesetValueException()
+        );
+
+        $result = $this->background_color_builder->build(
+            $this->card_fields_semantic,
+            $this->artifact,
+            $this->current_user
+        );
+
+        $this->assertEquals(new BackgroundColor(''), $result);
+    }
+
+    public function testItBuildsAnEmptyColorWhenNoChangeset()
+    {
+        $this->card_fields_semantic->method('getBackgroundColorField')->willReturn($this->field);
+        $this->field->method('userCanRead')->willReturn(true);
+        $this->decorator_retriever->expects($this->once())->method('getDecoratorForFirstValue')->with(
+            $this->field,
+            $this->artifact
+        )->willThrowException(new NoChangesetException());
+
+        $result = $this->background_color_builder->build(
+            $this->card_fields_semantic,
+            $this->artifact,
+            $this->current_user
+        );
+
+        $this->assertEquals(new BackgroundColor(''), $result);
     }
 
     public function testItBuildsAnEmptyColorWhenTheBackgroundFieldIsNotFound()

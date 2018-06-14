@@ -19,7 +19,6 @@
  */
 
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorColorRetriever;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 
 /**
@@ -58,7 +57,7 @@ class Cardwall_RawBoardBuilder
 
         $mapping_collection       = $this->getMappingCollection($planning, $columns, $field_provider, $config);
         $form_element_factory     = Tracker_FormElementFactory::instance();
-        $background_color_builder = new BackgroundColorBuilder(new BindDecoratorColorRetriever());
+        $background_color_builder = new BackgroundColorBuilder(new BindDecoratorRetriever());
         $accent_color_builder     = new \Tuleap\Cardwall\AccentColor\AccentColorBuilder(
             $form_element_factory,
             new BindDecoratorRetriever()
