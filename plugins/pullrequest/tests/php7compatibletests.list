@@ -2,6 +2,5 @@
 /usr/share/tuleap/plugins/pullrequest/tests/Authorization/AccessControlVerifierTest.php
 /usr/share/tuleap/plugins/pullrequest/tests/Reference/HTMLURLBuilderTest.php
 /usr/share/tuleap/plugins/pullrequest/tests/Reference/ReferenceFactoryTest.php
-/usr/share/tuleap/plugins/pullrequest/tests/PullRequestCloserTest.php
 /usr/share/tuleap/plugins/pullrequest/tests/FileUniDiffBuilderTest.php
 /usr/share/tuleap/plugins/pullrequest/tests/GitExecTest.php
