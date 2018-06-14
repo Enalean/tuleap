@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -146,40 +146,6 @@ class GitExecTest extends TuleapTestCase {
         $this->expectException('Git_Command_Exception');
 
         $this->git_exec->fetchNoHistory($remote, $branch_name);
-    }
-
-    public function itMerges() {
-        system("cd $this->fixture_dir && git checkout --quiet -b dev 2>&1 >/dev/null");
-        file_put_contents("$this->fixture_dir/nonprophetic", "jackassness");
-        $this->git_exec->add("$this->fixture_dir/nonprophetic");
-        $this->git_exec->commit("add nonprophetic");
-        $this->git_exec->checkoutBranch('master');
-
-        $result = $this->git_exec->fastForwardMerge('dev');
-
-        $this->assertTrue($result);
-    }
-
-    public function itThrowsWhileMergingABranchThatDoesNotExist() {
-        $this->expectException('Git_Command_Exception');
-
-        $this->git_exec->fastForwardMerge('dev');
-    }
-
-    public function itThrowsWhileMergingANonFastForwardChange() {
-        system("cd $this->fixture_dir && git checkout --quiet -b dev 2>&1 >/dev/null");
-        file_put_contents("$this->fixture_dir/nonprophetic", "jackassness");
-        $this->git_exec->add("$this->fixture_dir/nonprophetic");
-        $this->git_exec->commit("add nonprophetic");
-
-        $this->git_exec->checkoutBranch('master');
-        file_put_contents("$this->fixture_dir/toto", "baldly");
-        $this->git_exec->add("$this->fixture_dir/toto");
-        $this->git_exec->commit("add toto");
-
-        $this->expectException('Git_Command_Exception');
-
-        $this->git_exec->fastForwardMerge('dev');
     }
 
     public function itReturnsTheBranchNames() {
