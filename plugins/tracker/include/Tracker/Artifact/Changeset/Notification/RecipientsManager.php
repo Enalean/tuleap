@@ -21,11 +21,12 @@
 
 namespace Tuleap\Tracker\Artifact\Changeset\Notification;
 
+use PFUser;
 use Tracker_Artifact_Changeset;
 use Tracker_FormElementFactory;
+use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsRetriever;
 use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
 use UserManager;
-use PFUser;
 
 class RecipientsManager
 {
@@ -41,22 +42,28 @@ class RecipientsManager
      * @var UnsubscribersNotificationDAO
      */
     private $unsubscribers_notification_dao;
+    /**
+     * @var UserNotificationSettingsRetriever
+     */
+    private $notification_settings_retriever;
 
     public function __construct(
         Tracker_FormElementFactory $form_element_factory,
         UserManager $user_manager,
-        UnsubscribersNotificationDAO $unsubscribers_notification_dao
+        UnsubscribersNotificationDAO $unsubscribers_notification_dao,
+        UserNotificationSettingsRetriever $notification_settings_retriever
     ) {
-        $this->form_element_factory           = $form_element_factory;
-        $this->user_manager                   = $user_manager;
-        $this->unsubscribers_notification_dao = $unsubscribers_notification_dao;
+        $this->form_element_factory            = $form_element_factory;
+        $this->user_manager                    = $user_manager;
+        $this->unsubscribers_notification_dao  = $unsubscribers_notification_dao;
+        $this->notification_settings_retriever = $notification_settings_retriever;
     }
 
     /**
      * Get the recipients for notification
      *
      * @param Tracker_Artifact_Changeset $changeset Changeset
-     * @param bool $is_update It is an update, not a new artifact
+     * @param bool                       $is_update It is an update, not a new artifact
      *
      * @return array of [$recipient => $checkPermissions] where $recipient is a usenrame or an email and $checkPermissions is bool.
      */
@@ -82,6 +89,8 @@ class RecipientsManager
         foreach ($recipients as $r) {
             $tablo[$r] = true;
         }
+
+        $this->removeRecipientsWhenTrackerIsInOnlyUpdateMode($changeset, $tablo);
 
         // 3 Get from the global notif
         foreach ($changeset->getTracker()->getRecipients() as $r) {
@@ -118,7 +127,7 @@ class RecipientsManager
     private function userCanReadAtLeastOneChangedField(Tracker_Artifact_Changeset $changeset, PFUser $user)
     {
         foreach ($changeset->getValues() as $field_id => $current_changeset_value) {
-            $field = $this->form_element_factory->getFieldById($field_id);
+            $field             = $this->form_element_factory->getFieldById($field_id);
             $field_is_readable = $field && $field->userCanRead($user);
             $field_has_changed = $current_changeset_value && $current_changeset_value->hasChanged();
             if ($field_is_readable && $field_has_changed) {
@@ -175,5 +184,69 @@ class RecipientsManager
         }
 
         return $user;
+    }
+
+    private function removeRecipientsWhenTrackerIsInOnlyUpdateMode(
+        Tracker_Artifact_Changeset $changeset,
+        array &$recipients
+    ) {
+        if (! $this->isTrackerInStatusUpdateOnlyNotificationsMode($changeset)) {
+            return;
+        }
+
+        if ($this->hasArtifactStatusChange($changeset)) {
+            return;
+        }
+
+        $this->removeUsersWhoAreNotInAllNotificationsMode($changeset, $recipients);
+    }
+
+    /**
+     * @param Tracker_Artifact_Changeset $changeset
+     *
+     * @return bool
+     */
+    private function isTrackerInStatusUpdateOnlyNotificationsMode(Tracker_Artifact_Changeset $changeset)
+    {
+        return (int)$changeset->getTracker()->getNotificationsLevel() === \Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE;
+    }
+
+    /**
+     * @param Tracker_Artifact_Changeset $changeset
+     *
+     * @return bool
+     */
+    private function hasArtifactStatusChange(Tracker_Artifact_Changeset $changeset)
+    {
+        $previous_changeset = $changeset->getArtifact()->getPreviousChangeset($changeset->getId());
+
+        if (! $previous_changeset) {
+            return true;
+        }
+        return $changeset->getArtifact()->getStatusForChangeset($previous_changeset) !== $changeset->getArtifact()->getStatus();
+    }
+
+    /**
+     * @param Tracker_Artifact_Changeset $changeset
+     * @param array                      $recipients
+     *
+     * @return array
+     */
+    private function removeUsersWhoAreNotInAllNotificationsMode(Tracker_Artifact_Changeset $changeset, array &$recipients)
+    {
+        $tracker = $changeset->getTracker();
+
+        foreach ($recipients as $recipient => $is_notification_enabled) {
+            $user                       = $this->getUserFromRecipientName($recipient);
+            $user_notification_settings = $this->notification_settings_retriever->getUserNotificationSettings(
+                $user,
+                $tracker
+            );
+
+            if (! $user_notification_settings->isInNotifyOnEveryChangeMode()) {
+                unset($recipients[$recipient]);
+            }
+        }
+        return $recipients;
     }
 }

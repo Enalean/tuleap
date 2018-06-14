@@ -182,6 +182,12 @@ msgstr ""
 "La sémantique statut ne peut être supprimée car la sémantique fini est "
 "définie."
 
+msgid ""
+"The semantic status cannot de deleted because tracker notifications is set "
+"to \"Status change notifications\"."
+msgstr ""
+"La sémantique statut ne peut être supprimée car la notification des tracker est définie à \"Notifications lors du changement de status \" "
+
 msgid "There is no content <br> you can see"
 msgstr "Il n’y a aucun élément <br> visible"
 

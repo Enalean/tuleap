@@ -1311,17 +1311,10 @@ class AgileDashboardPlugin extends Plugin {
     public function semanticStatusCanBeDeleted(SemanticStatusCanBeDeleted $event)
     {
         $tracker = $event->getTracker();
-        $dao     = new SemanticDoneDao();
 
-        $selected_values = $dao->getSelectedValues($tracker->getId());
-
-        if ($selected_values->rowCount() === 0) {
+        if (! $this->doesTrackerNotificationUseStatusSemantic($tracker) &&
+            ! $this->doesSemanticDoneUsesSemanticStatus($tracker)) {
             $event->semanticIsDeletable();
-        } else {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::WARN,
-                dgettext('tuleap-agiledashboard', 'The semantic status cannot de deleted because the semantic done is defined for this tracker.')
-            );
         }
     }
 
@@ -1626,5 +1619,34 @@ class AgileDashboardPlugin extends Plugin {
         $artifact         = $params['artifact'];
 
         $burnup_cache_dao->deleteArtifactCacheValue($artifact->getId());
+    }
+
+    private function doesTrackerNotificationUseStatusSemantic(Tracker $tracker)
+    {
+        if ($tracker->getNotificationsLevel() !== \Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE) {
+            return false;
+        }
+        $GLOBALS['Response']->addFeedback(
+            Feedback::WARN,
+            dgettext('tuleap-agiledashboard', 'The semantic status cannot de deleted because tracker notifications is set to "Status change notifications".')
+        );
+        return true;
+    }
+
+
+    private function doesSemanticDoneUsesSemanticStatus(Tracker $tracker)
+    {
+        $dao             = new SemanticDoneDao();
+        $selected_values = $dao->getSelectedValues($tracker->getId());
+
+        if ($selected_values->rowCount() === 0) {
+            return false;
+        }
+
+        $GLOBALS['Response']->addFeedback(
+            Feedback::WARN,
+            dgettext('tuleap-agiledashboard', 'The semantic status cannot de deleted because the semantic done is defined for this tracker.')
+        );
+        return true;
     }
 }
