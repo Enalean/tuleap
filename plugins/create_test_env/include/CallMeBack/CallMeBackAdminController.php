@@ -19,40 +19,38 @@
  *
  */
 
-namespace Tuleap\CreateTestEnv;
+namespace Tuleap\CallMeBack;
 
 use HTTPRequest;
-use TemplateRenderer;
+use Feedback;
+use CSRFSynchronizerToken;
 use Tuleap\Admin\AdminPageRenderer;
-use Tuleap\BotMattermost\Bot\BotFactory;
-use Tuleap\BotMattermost\Bot\BotDao;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 
-class NotificationBotIndexController implements DispatchableWithRequest
+class CallMeBackAdminController implements DispatchableWithRequest
 {
     /**
-     * @var BotFactory
+     * @var CallMeBackEmailDao
      */
-    private $bot_factory;
+    private $call_me_back_email_dao;
     /**
-     * @var NotificationBotDao
+     * @var CallMeBackMessageDao
      */
-    private $notification_bot_dao;
+    private $call_me_back_message_dao;
     /**
      * @var AdminPageRenderer
      */
     private $admin_page_renderer;
 
     public function __construct(
-        BotFactory $bot_factory,
-        NotificationBotDao $notification_bot_dao,
+        CallMeBackEmailDao $call_me_back_email_dao,
+        CallMeBackMessageDao $call_me_back_message_dao,
         AdminPageRenderer $admin_page_renderer
     ) {
-
-        $this->bot_factory          = $bot_factory;
-        $this->notification_bot_dao = $notification_bot_dao;
-        $this->admin_page_renderer  = $admin_page_renderer;
+        $this->call_me_back_email_dao   = $call_me_back_email_dao;
+        $this->call_me_back_message_dao = $call_me_back_message_dao;
+        $this->admin_page_renderer      = $admin_page_renderer;
     }
 
     /**
@@ -62,24 +60,37 @@ class NotificationBotIndexController implements DispatchableWithRequest
      * @param BaseLayout $layout
      * @param array $variables
      * @return void
-     * @throws \Tuleap\BotMattermost\Exception\BotNotFoundException
      */
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         if (! $request->getCurrentUser()->isSuperUser()) {
-            $layout->addFeedback(\Feedback::ERROR, dgettext('tuleap-create_test_env', 'You should be site administrator to access this page'));
+            $layout->addFeedback(
+                Feedback::ERROR,
+                dgettext('tuleap-create_test_env', 'You should be site administrator to access this page')
+            );
             $layout->redirect('/');
             return;
         }
 
-        $bots            = $this->bot_factory->getBots();
-        $selected_bot_id = $this->notification_bot_dao->get();
+        $email = $this->call_me_back_email_dao->get();
+
+        $call_me_back_message_rows = $this->call_me_back_message_dao->getAll();
+        $call_me_back_messages     = array();
+        foreach ($call_me_back_message_rows as $row) {
+            $call_me_back_messages[] = new CallMeBackMessage($row['language_id'], $row['message']);
+        }
+
+        $csrf_token = new CSRFSynchronizerToken($request->getFromServer('REQUEST_URI'));
 
         $this->admin_page_renderer->renderANoFramedPresenter(
             dgettext('tuleap-create_test_env', 'Create test environment'),
             __DIR__.'/../../templates',
-            'notification-bot-tab',
-            new NotificationBotPresenter($bots, $selected_bot_id)
+            'call-me-back-tab',
+            new CallMeBackAdminPresenter(
+                $email,
+                $call_me_back_messages,
+                $csrf_token
+            )
         );
     }
 }

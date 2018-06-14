@@ -23,6 +23,10 @@ require_once __DIR__ . '/../vendor/autoload.php';
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\BotMattermost\Bot\BotDao;
 use Tuleap\BotMattermost\Bot\BotFactory;
+use Tuleap\CallMeBack\CallMeBackEmailDao;
+use Tuleap\CallMeBack\CallMeBackMessageDao;
+use Tuleap\CallMeBack\CallMeBackAdminController;
+use Tuleap\CallMeBack\CallMeBackAdminSaveController;
 use Tuleap\CreateTestEnv\NotificationBotDao;
 use Tuleap\CreateTestEnv\NotificationBotIndexController;
 use Tuleap\CreateTestEnv\NotificationBotSaveController;
@@ -92,18 +96,31 @@ class create_test_envPlugin extends Plugin
 
     public function collectRoutesEvent(CollectRoutesEvent $event)
     {
-        $event->getRouteCollector()->get($this->getPluginPath(), function () {
+        $event->getRouteCollector()->get($this->getPluginPath() . '/notification-bot', function () {
             return new NotificationBotIndexController(
                 new BotFactory(new BotDao()),
                 new NotificationBotDao(),
-                new AdminPageRenderer(),
-                TemplateRendererFactory::build()->getRenderer(__DIR__.'/../templates')
+                new AdminPageRenderer()
             );
         });
-        $event->getRouteCollector()->post($this->getPluginPath(), function () {
+        $event->getRouteCollector()->post($this->getPluginPath() . '/notification-bot', function () {
             return new NotificationBotSaveController(
                 new NotificationBotDao(),
                 $this->getPluginPath()
+            );
+        });
+
+        $event->getRouteCollector()->get($this->getPluginPath() . '/call-me-back', function () {
+            return new CallMeBackAdminController(
+                new CallMeBackEmailDao(),
+                new CallMeBackMessageDao(),
+                new AdminPageRenderer()
+            );
+        });
+        $event->getRouteCollector()->post($this->getPluginPath() . '/call-me-back', function () {
+            return new CallMeBackAdminSaveController(
+                new CallMeBackEmailDao(),
+                new CallMeBackMessageDao()
             );
         });
     }
@@ -113,7 +130,7 @@ class create_test_envPlugin extends Plugin
     {
         $params['plugins'][] = [
             'label' => dgettext('tuleap-create_test_env', 'Create test environment'),
-            'href'  => $this->getPluginPath()
+            'href'  => $this->getPluginPath() . '/notification-bot'
         ];
     }
 
@@ -170,5 +187,11 @@ class create_test_envPlugin extends Plugin
         );
 
         $params['javascript_files'][] = $assets->getFileURL('call-me-back.js');
+
+        if (strpos($_SERVER['REQUEST_URI'], '/plugins/create_test_env/call-me-back') === 0) {
+            $params['javascript_files'][] = '/scripts/ckeditor-4.3.2/ckeditor.js';
+            $params['javascript_files'][] = '/scripts/tuleap/tuleap-ckeditor-toolbar.js';
+            $params['javascript_files'][] = $assets->getFileURL('call-me-back-admin.js');
+        }
     }
 }

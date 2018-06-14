@@ -1,7 +1,22 @@
+msgid "An error occurred during the update of the email"
+msgstr ""
+
+msgid "An error occurred during the update of the messages"
+msgstr ""
+
 msgid "Automate creation of test users and environments"
 msgstr ""
 
 msgid "Bot list"
+msgstr ""
+
+msgid "Call me back"
+msgstr ""
+
+msgid "Call me back configuration"
+msgstr ""
+
+msgid "Call me back configuration updated"
 msgstr ""
 
 msgid ""
@@ -9,9 +24,6 @@ msgid ""
 msgstr ""
 
 msgid "Create test environment"
-msgstr ""
-
-msgid "Create test environment - Notification configuration"
 msgstr ""
 
 msgid "Mattermost"
@@ -23,8 +35,20 @@ msgstr ""
 msgid "Mattermost notifications removed"
 msgstr ""
 
+msgid "Message"
+msgstr ""
+
+msgid "Notification bot"
+msgstr ""
+
 msgid "Save"
 msgstr ""
 
+msgid "This is my message"
+msgstr ""
+
 msgid "You should be site administrator to access this page"
+msgstr ""
+
+msgid "jdoe@example.com"
 msgstr ""

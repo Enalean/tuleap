@@ -63,6 +63,6 @@ class NotificationBotSaveController implements DispatchableWithRequest
             $layout->addFeedback(\Feedback::INFO, dgettext('tuleap-create_test_env', 'Mattermost notifications added'));
         }
 
-        $layout->redirect($this->plugin_path);
+        $layout->redirect($this->plugin_path . '/notification-bot');
     }
 }
