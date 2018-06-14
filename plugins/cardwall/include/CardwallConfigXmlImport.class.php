@@ -255,16 +255,38 @@ class CardwallConfigXmlImport {
             $label         = (string)$xml_column[CardwallConfigXml::ATTRIBUTE_COLUMN_LABEL];
             $xml_column_id = (string)$xml_column[CardwallConfigXml::ATTRIBUTE_COLUMN_ID];
 
-            $red   = $this->getColorValueFromXML($xml_column, CardwallConfigXml::ATTRIBUTE_COLUMN_BG_RED, $xml_column_id);
-            $green = $this->getColorValueFromXML($xml_column, CardwallConfigXml::ATTRIBUTE_COLUMN_BG_GREEN, $xml_column_id);
-            $blue  = $this->getColorValueFromXML($xml_column, CardwallConfigXml::ATTRIBUTE_COLUMN_BG_BLUE, $xml_column_id);
+            $red       = $this->getColorValueFromXML($xml_column, CardwallConfigXml::ATTRIBUTE_COLUMN_BG_RED, $xml_column_id);
+            $green     = $this->getColorValueFromXML($xml_column, CardwallConfigXml::ATTRIBUTE_COLUMN_BG_GREEN, $xml_column_id);
+            $blue      = $this->getColorValueFromXML($xml_column, CardwallConfigXml::ATTRIBUTE_COLUMN_BG_BLUE, $xml_column_id);
+            $tlp_color = $this->getTLPColorNameFromXML($xml_column, $xml_column_id);
 
-            $added_column_id = $this->column_dao->createWithcolor($cardwall_tracker_id, $label, $red, $green, $blue);
+            if ($tlp_color) {
+                $added_column_id = $this->column_dao->createWithTLPColor($cardwall_tracker_id, $label, $tlp_color);
+            } else {
+                $added_column_id = $this->column_dao->createWithcolor($cardwall_tracker_id, $label, $red, $green, $blue);
+            }
 
             $column_mapping[$xml_column_id] = $added_column_id;
         }
 
         return $column_mapping;
+    }
+
+    private function getTLPColorNameFromXml(SimpleXMLElement $xml_column, $xml_column_id)
+    {
+        $color_label = CardwallConfigXml::ATTRIBUTE_COLUMN_TLP_COLOR_NAME;
+        $color_name  = $xml_column[ $color_label ];
+
+        if (! $color_name ) {
+            return null;
+        }
+
+        if (strlen($color_name) === 0) {
+            $this->addColorImportErrorFeedback($color_label, $xml_column_id);
+            return null;
+        }
+
+        return $color_name;
     }
 
     private function getColorValueFromXML(SimpleXMLElement $xml_column, $color_label, $xml_column_id) {
@@ -274,17 +296,25 @@ class CardwallConfigXmlImport {
             if ($color_value >= 0 && $color_value <= 255) {
                 return $color_value;
             } else {
-                $GLOBALS['Response']->addFeedback(
-                    Feedback::WARN,
-                    $GLOBALS['Language']->getText(
-                        'plugin_cardwall',
-                        'xml_import_color_error',
-                        array($color_label, $xml_column_id)
-                    )
-                );
+                $this->addColorImportErrorFeedback($color_label, $xml_column_id);
             }
         }
 
         return '';
+    }
+
+    private function addColorImportErrorFeedback($color_label, $xml_column_id)
+    {
+        $GLOBALS['Response']->addFeedback(
+            Feedback::WARN,
+            $GLOBALS['Language']->getText(
+                'plugin_cardwall',
+                'xml_import_color_error',
+                [
+                    $color_label,
+                    $xml_column_id
+                ]
+            )
+        );
     }
 }

@@ -137,8 +137,9 @@ class CardwallConfigXmlExport_ColumnsTest extends TuleapTestCase {
 
     public function itDumpsColumnsAsDefined() {
         stub($this->cardwall_config)->getDashboardColumns()->returns(new Cardwall_OnTop_Config_ColumnCollection(array(
-            new Cardwall_Column(112, "Todo", "red", "", ""),
-            new Cardwall_Column(113, "On going", "rgb(255,255,255)", "")
+            new Cardwall_Column(112, "Todo", "red", ""),
+            new Cardwall_Column(113, "On going", "rgb(255,255,255)", ""),
+            new Cardwall_Column(113, "On going", "fiesta-red", "")
         )));
 
 
@@ -147,13 +148,14 @@ class CardwallConfigXmlExport_ColumnsTest extends TuleapTestCase {
         $this->xml_exporter->export($this->root);
         $column_xml = $this->root->cardwall->trackers->tracker->columns->column;
 
-        $this->assertCount($column_xml, 2);
+        $this->assertCount($column_xml, 3);
     }
 
     public function itDumpsColumnsAsDefinedWithMappings() {
         stub($this->cardwall_config)->getDashboardColumns()->returns(new Cardwall_OnTop_Config_ColumnCollection(array(
-            new Cardwall_Column(112, "Todo", "red", "", ""),
-            new Cardwall_Column(113, "On going", "rgb(255,255,255)", "")
+            new Cardwall_Column(112, "Todo", "red", ""),
+            new Cardwall_Column(113, "On going", "rgb(255,255,255)", ""),
+            new Cardwall_Column(113, "On going", "fiesta-red", "")
         )));
 
         $tracker = stub('Tracker')->getXMLId()->returns('T200');
@@ -174,7 +176,7 @@ class CardwallConfigXmlExport_ColumnsTest extends TuleapTestCase {
         $this->xml_exporter->export($this->root);
 
         $column_xml = $this->root->cardwall->trackers->tracker->columns->column;
-        $this->assertCount($column_xml, 2);
+        $this->assertCount($column_xml, 3);
 
         $mapping_xml = $this->root->cardwall->trackers->tracker->mappings->mapping;
         $this->assertCount($mapping_xml, 1);

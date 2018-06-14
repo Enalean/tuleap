@@ -7,9 +7,7 @@ cardwall = element trackers  {
             element column {
                 attribute id { xsd:string }?,
                 attribute label { xsd:string },
-                attribute bg_red { xsd:long }?,
-                attribute bg_green { xsd:long }?,
-                attribute bg_blue { xsd:long }?
+                (legacy_columns_headers_color | attribute tlp_color_name { xsd:string }?)
             }*
         }?,
 
@@ -28,3 +26,8 @@ cardwall = element trackers  {
         }?
     }*
 }
+
+legacy_columns_headers_color =
+    attribute bg_red { xsd:long }?,
+    attribute bg_green { xsd:long }?,
+    attribute bg_blue { xsd:long }?

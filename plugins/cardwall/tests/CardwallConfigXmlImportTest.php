@@ -26,6 +26,7 @@ class CardwallConfigXmlImportTest extends TuleapTestCase {
     private $enhanced_xml_input;
 
     public function setUp() {
+        parent::setUp();
         $this->default_xml_input = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
             <project>
               <empty_section />
@@ -108,7 +109,7 @@ class CardwallConfigXmlImportTest extends TuleapTestCase {
                             <column id="C1" label="Todo"/>
                             <column id="C2" label="On going" bg_red="255" bg_green="255" bg_blue="240"/>
                             <column id="C3" label="Review"/>
-                            <column id="C4" label="Done"/>
+                            <column id="C4" label="Done" tlp_color_name="fiesta-red"/>
                         </columns>
                         <mappings>
                             <mapping tracker_id="T103" field_id="F1">
@@ -186,13 +187,16 @@ class CardwallConfigXmlImportTest extends TuleapTestCase {
         stub($this->column_dao)->createWithcolor()->returnsAt(0, 20);
         stub($this->column_dao)->createWithcolor()->returnsAt(1, 21);
         stub($this->column_dao)->createWithcolor()->returnsAt(2, 22);
-        stub($this->column_dao)->createWithcolor()->returnsAt(3, 23);
+        stub($this->column_dao)->createWithTLPColor();
 
-        expect($this->column_dao)->createWithcolor()->count(4);
+        expect($this->column_dao)->createWithcolor()->count(3);
+        expect($this->column_dao)->createWithTLPColor()->count(1);
+
         expect($this->column_dao)->createWithcolor(555, 'Todo', '', '', '')->at(0);
         expect($this->column_dao)->createWithcolor(555, 'On going', 255, 255, 240)->at(1);
         expect($this->column_dao)->createWithcolor(555, 'Review', '', '', '')->at(2);
-        expect($this->column_dao)->createWithcolor(555, 'Done', '', '', '')->at(3);
+
+        expect($this->column_dao)->createWithTLPColor(555, 'Done', 'fiesta-red');
 
         $this->cardwall_config_xml_import->import($this->enhanced_xml_input);
     }
@@ -208,7 +212,7 @@ class CardwallConfigXmlImportTest extends TuleapTestCase {
         stub($this->column_dao)->createWithcolor()->returnsAt(0, 20);
         stub($this->column_dao)->createWithcolor()->returnsAt(1, 21);
         stub($this->column_dao)->createWithcolor()->returnsAt(2, 22);
-        stub($this->column_dao)->createWithcolor()->returnsAt(3, 23);
+        stub($this->column_dao)->createWithTLPColor()->returnsAt(0, 23);
 
         expect($this->mapping_field_dao)->create()->count(1);
         expect($this->mapping_field_dao)->create(555, 666, 1)->at(0);

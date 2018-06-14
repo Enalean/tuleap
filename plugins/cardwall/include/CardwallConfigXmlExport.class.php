@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -113,6 +113,11 @@ class CardwallConfigXmlExport {
         $bg_blue  = null;
 
         $bg_colors = $column->getBgcolor();
+
+        if ($column->isBackgroundATLPColor()) {
+            $column_node->addAttribute(CardwallConfigXml::ATTRIBUTE_COLUMN_TLP_COLOR_NAME, $bg_colors);
+            return;
+        }
 
         if ($bg_colors) {
             $regexp  = "/^rgb\((\d{1,3}), (\d{1,3}), (\d{1,3})\)$/";
