@@ -20,6 +20,7 @@
 
 require_once 'bootstrap.php';
 
+use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
 use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\Git\Permissions\FineGrainedPermission;
 use Tuleap\Git\XmlUgroupRetriever;
@@ -136,7 +137,7 @@ class GitXmlImporterTest extends TuleapTestCase {
             mock('Git_Mirror_MirrorDataMapper')
         );
 
-        $gitolite       = new Git_Backend_Gitolite($git_gitolite_driver, $this->logger);
+        $gitolite       = new Git_Backend_Gitolite($git_gitolite_driver, mock(GitoliteAccessURLGenerator::class), $this->logger);
         $this->importer = new GitXmlImporter(
             $this->logger,
             $this->git_manager,

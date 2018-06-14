@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011. All Rights Reserved.
+ * Copyright (c) Enalean, 2011-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -44,7 +44,7 @@ interface Git_Backend_Interface {
      * Return URL to access the respository for remote git commands
      *
      * @param  GitRepository $repository
-     * @return String
+     * @return array
      */
     public function getAccessURL(GitRepository $repository);
 

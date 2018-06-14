@@ -33,6 +33,7 @@ use Tuleap\Git\GerritCanMigrateChecker;
 use Tuleap\Git\GerritServerResourceRestrictor;
 use Tuleap\Git\GitGodObjectWrapper;
 use Tuleap\Git\Gitolite\Gitolite3LogParser;
+use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
 use Tuleap\Git\Gitolite\GitoliteFileLogsDao;
 use Tuleap\Git\Gitolite\SSHKey\AuthorizedKeysFileCreator;
 use Tuleap\Git\Gitolite\SSHKey\DumperFactory;
@@ -716,8 +717,13 @@ class GitPlugin extends Plugin
         return true;
     }
 
-    public function getBackendGitolite() {
-        return new Git_Backend_Gitolite($this->getGitoliteDriver(), $this->getLogger());
+    public function getBackendGitolite()
+    {
+        return new Git_Backend_Gitolite(
+            $this->getGitoliteDriver(),
+            new GitoliteAccessURLGenerator($this->getPluginInfo()),
+            $this->getLogger()
+        );
     }
 
     protected function getChainOfRouters()

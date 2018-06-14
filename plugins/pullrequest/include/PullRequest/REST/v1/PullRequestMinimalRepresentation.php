@@ -22,12 +22,18 @@ namespace Tuleap\PullRequest\REST\v1;
 
 use Codendi_HTMLPurifier;
 use GitRepository;
+use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\REST\JsonCast;
 
 class PullRequestMinimalRepresentation
 {
     const ROUTE = 'pull_requests';
+
+    /**
+     * @var GitoliteAccessURLGenerator
+     */
+    private $gitolite_access_URL_generator;
 
     /**
      * @var int {@type int}
@@ -73,11 +79,15 @@ class PullRequestMinimalRepresentation
      * @var string {@type string}
      */
     public $branch_dest;
-
     /**
      * @var string {@type string}
      */
     public $status;
+
+    public function __construct(GitoliteAccessURLGenerator$gitolite_access_URL_generator)
+    {
+        $this->gitolite_access_URL_generator = $gitolite_access_URL_generator;
+    }
 
     public function buildMinimal(
         PullRequest $pull_request,
@@ -92,10 +102,10 @@ class PullRequestMinimalRepresentation
 
         $this->uri = self::ROUTE . '/' . $this->id;
 
-        $this->repository = new GitRepositoryReference();
+        $this->repository = new GitRepositoryReference($this->gitolite_access_URL_generator);
         $this->repository->build($repository);
 
-        $this->repository_dest = new GitRepositoryReference();
+        $this->repository_dest = new GitRepositoryReference($this->gitolite_access_URL_generator);
         $this->repository_dest->build($repository_dest);
 
         $this->user_id       = JsonCast::toInt($pull_request->getUserId());
