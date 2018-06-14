@@ -27,6 +27,9 @@ msgstr ""
 msgid "Access Logs"
 msgstr ""
 
+msgid "Accessibility"
+msgstr ""
+
 msgid "Add binding"
 msgstr ""
 
@@ -314,6 +317,9 @@ msgid "Emergency"
 msgstr ""
 
 msgid "Empty group"
+msgstr ""
+
+msgid "Enable accessibility mode"
 msgstr ""
 
 msgid "Enabled"
@@ -926,6 +932,12 @@ msgid "This label is used in the project"
 msgstr ""
 
 msgid ""
+"This option displays special patterns on colored cards in Agiledashboard and "
+"Cardwall tracker reports. This helps distinguish between colors and their "
+"variants."
+msgstr ""
+
+msgid ""
 "This permission grants the right to manage platform administration users. "
 "Every single user added here will be a platform administrator."
 msgstr ""
@@ -1031,6 +1043,9 @@ msgid "Users groups"
 msgstr ""
 
 msgid "Users groups bound to this one"
+msgstr ""
+
+msgid "Verify accessiblity mode value"
 msgstr ""
 
 msgid ""
