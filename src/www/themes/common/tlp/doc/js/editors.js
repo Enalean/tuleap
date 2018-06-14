@@ -176,6 +176,16 @@
                 tlp.dropdown(dropdown_trigger);
             }
 
+            var dropdown_trigger = document.getElementById('dropdown-top-example');
+            if (dropdown_trigger) {
+                tlp.dropdown(dropdown_trigger);
+            }
+
+            var dropdown_trigger = document.getElementById('dropdown-top-right-example');
+            if (dropdown_trigger) {
+                tlp.dropdown(dropdown_trigger);
+            }
+
             var dropdown_icon_trigger = document.getElementById('dropdown-icon-right-example');
             if (dropdown_icon_trigger) {
                 tlp.dropdown(dropdown_icon_trigger);
