@@ -83,7 +83,9 @@ trait NotificationsAdminSettingsControllerCommon
             $user_manager,
             new UGroupManager(),
             new GlobalNotificationSubscribersFilter($unsubscribers_notification_dao),
-            new NotificationLevelExtractor()
+            new NotificationLevelExtractor(),
+            new \TrackerDao(),
+            new \ProjectHistoryDao()
         );
     }
 

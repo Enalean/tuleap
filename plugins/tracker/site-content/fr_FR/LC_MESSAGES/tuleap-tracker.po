@@ -138,6 +138,9 @@ msgstr "Configurer les trackers"
 msgid "Confirm deletion"
 msgstr "Confirmer la suppression"
 
+msgid "Default Tuleap notifications"
+msgstr "Notifications par défaut"
+
 msgid ""
 "Default Tuleap notifications (people will get notified when they are "
 "submitter, assignee, commenter or CC)"
@@ -255,6 +258,9 @@ msgid ""
 msgstr ""
 "L'option notifications lors de la mise à jour du statut est en cours de "
 "développement, elle n'est pas prise en compte pour l'instant"
+
+msgid "Status change notifications"
+msgstr "Notifications lors de la mise à jour du statut"
 
 msgid ""
 "Status change notifications (people will get notified when artifact status "

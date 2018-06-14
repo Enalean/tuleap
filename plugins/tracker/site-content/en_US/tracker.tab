@@ -1617,6 +1617,7 @@ project_admin_utils	tracker_date_reminder_before_submittedOn	Unable to add Date 
 project_admin_utils	tracker_date_reminder_duplicated	A Date Reminder with the same params already exists, you should update it
 project_admin_utils	tracker_date_reminder_optgroup_label_ugroup	User groups
 project_admin_utils	tracker_date_reminder_optgroup_label_role	Roles
+project_admin_utils	global_notification_update	Update global notifications for tracker $1.
 plugin_tracker	info_same_ugroups	The selected template set permissions on user groups that seem to have their counterpart in your project: $1 Please note that only group names are verified, membership might be different.
 plugin_tracker	missing_ugroups	The selected template set permissions on user groups that are not defined in your project: $1 Without those groups, some fields might not be usable and some transitions might not work properly. If you create the tracker anyway, we suggest that you subsequently have a look at: <ul><li>Tracker permissions,</li><li>Fields permissions,</li><li>And workflow transitions.</li></ul>
 
