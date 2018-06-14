@@ -22,6 +22,7 @@ require_once 'constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use Tuleap\Git\GitAdditionalActionEvent;
+use Tuleap\Git\MarkTechnicalReference;
 use Tuleap\Git\Permissions\GetProtectedGitReferences;
 use Tuleap\Git\Permissions\ProtectedReferencePermission;
 use Tuleap\Git\PostInitGitRepositoryWithDataEvent;
@@ -94,6 +95,7 @@ class pullrequestPlugin extends Plugin
         $this->addHook(GlyphLocationsCollector::NAME);
         $this->addHook(CanProjectUseLabels::NAME);
         $this->addHook(GetProtectedGitReferences::NAME);
+        $this->addHook(MarkTechnicalReference::NAME);
         $this->addHook(PostInitGitRepositoryWithDataEvent::NAME);
 
         if (defined('GIT_BASE_URL')) {
@@ -589,6 +591,13 @@ class pullrequestPlugin extends Plugin
     public function getProtectedGitReferences(GetProtectedGitReferences $event)
     {
         $event->addProtectedReference(new ProtectedReferencePermission(GitPullRequestReference::PR_NAMESPACE . '*'));
+    }
+
+    public function markTechnicalReference(MarkTechnicalReference $event)
+    {
+        if (strpos($event->getReferenceName(), GitPullRequestReference::PR_NAMESPACE) === 0) {
+            $event->markAsTechnical();
+        }
     }
 
     public function postInitGitRepositoryWithDataEvent(PostInitGitRepositoryWithDataEvent $event)
