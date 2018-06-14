@@ -1253,8 +1253,6 @@ plugin_tracker_admin	clean_confirm_text	<h3>Vous êtes sur le point de supprimer
 plugin_tracker_admin	clean_cancel_deleted	Suppression annulée
 plugin_tracker_admin	invalid_request	La requête n'est pas valide.
 
-plugin_tracker_admin_notification	successfully_updated	Notifications mises à jour avec succès.
-
 plugin_tracker_admin_semantic	semantic_intro	Les outils de suivi étant entièrement paramétrables, vous pourriez vouloir définir à quoi correspond le titre de l'artefact, ou comment considérer si un artefact est ouvert ou fermé. Cette information est utilisée à différents endroits dans l'application pour afficher un lien ou un résumé de l'artefact.
 plugin_tracker_admin_semantic	title_label	Titre
 plugin_tracker_admin_semantic	title_description	Définir le titre d'un artéfact

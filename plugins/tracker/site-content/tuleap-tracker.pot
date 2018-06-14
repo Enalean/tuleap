@@ -208,6 +208,16 @@ msgstr ""
 msgid "Something went wrong."
 msgstr ""
 
+msgid ""
+"Status change notification is under development, this option will not be "
+"taken in account for now."
+msgstr ""
+
+msgid ""
+"Status change notifications (people will get notified when artifact status "
+"is updated)"
+msgstr ""
+
 msgid "Submit"
 msgstr ""
 

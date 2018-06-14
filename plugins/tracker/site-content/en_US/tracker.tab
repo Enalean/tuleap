@@ -1254,8 +1254,6 @@ plugin_tracker_admin	clean_confirm_text	<h3>You are about to delete permanently 
 plugin_tracker_admin	clean_cancel_deleted	Delete canceled
 plugin_tracker_admin	invalid_request	The request is not valid.
 
-plugin_tracker_admin_notification	successfully_updated	Notifications successfully updated.
-
 plugin_tracker_admin_semantic	title_label	Title
 plugin_tracker_admin_semantic	title_description	Define the title of an artifact
 plugin_tracker_admin_semantic	title_long_desc	<p>The <strong>title</strong> summarizes an artifact and will be used in RSS feeds or in the widget MyArtifact.</p>

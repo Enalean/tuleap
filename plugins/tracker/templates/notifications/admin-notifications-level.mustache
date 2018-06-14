@@ -1,4 +1,10 @@
 <h2>{{# dgettext }} tuleap-tracker | Notifications {{/ dgettext }}</h2>
+<p class="alert alert-warning">
+    {{# dgettext }}
+        tuleap-tracker
+        | Status change notification is under development, this option will not be taken in account for now.
+    {{/ dgettext }}
+</p>
 <p>
     {{# dgettext }}
         tuleap-tracker
@@ -19,6 +25,13 @@
     {{# dgettext }}
         tuleap-tracker
         | Default Tuleap notifications (people will get notified when they are submitter, assignee, commenter or CC)
+    {{/ dgettext }}
+</label>
+<label class="radio">
+    <input type="radio" name="notifications_level" value="{{ status_change_value }}" {{# is_status_change }}checked{{/ is_status_change }} />
+    {{# dgettext }}
+        tuleap-tracker
+        | Status change notifications (people will get notified when artifact status is updated)
     {{/ dgettext }}
 </label>
 <input class="btn" type="submit" value="{{# dgettext }} tuleap-tracker | Submit {{/ dgettext }}"/>

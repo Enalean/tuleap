@@ -28,6 +28,7 @@ use Tuleap\Tracker\Notifications\CollectionOfUgroupToBeNotifiedPresenterBuilder;
 use Tuleap\Tracker\Notifications\CollectionOfUserInvolvedInNotificationPresenterBuilder;
 use Tuleap\Tracker\Notifications\GlobalNotificationsAddressesBuilder;
 use Tuleap\Tracker\Notifications\GlobalNotificationSubscribersFilter;
+use Tuleap\Tracker\Notifications\NotificationLevelExtractor;
 use Tuleap\Tracker\Notifications\NotificationListBuilder;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyDao;
 use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
@@ -81,7 +82,8 @@ trait NotificationsAdminSettingsControllerCommon
             new GlobalNotificationsAddressesBuilder(),
             $user_manager,
             new UGroupManager(),
-            new GlobalNotificationSubscribersFilter($unsubscribers_notification_dao)
+            new GlobalNotificationSubscribersFilter($unsubscribers_notification_dao),
+            new NotificationLevelExtractor()
         );
     }
 
