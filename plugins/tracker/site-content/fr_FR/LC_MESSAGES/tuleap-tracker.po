@@ -185,6 +185,9 @@ msgstr ""
 "Nombre maximum d'artéfacts que les utilisateurs peuvent supprimer ou "
 "déplacer depuis l'API REST sur une période de 24 heures."
 
+msgid "No color"
+msgstr "Pas de couleur"
+
 msgid "No element selected."
 msgstr "Aucun élément sélectionné."
 

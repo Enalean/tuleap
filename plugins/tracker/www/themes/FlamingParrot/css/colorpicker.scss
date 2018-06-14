@@ -27,9 +27,13 @@
 }
 
 .colorpicker-transparent-preview {
-    display: block;
-    margin: 10px 10px 5px;
+    margin: 0 5px 0 0;
     cursor: pointer;
+}
+
+.old-color-preview {
+    display: flex;
+    margin: 10px 10px 5px;
 }
 
 .colorpicker-row {
