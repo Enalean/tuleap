@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright Enalean (c) 2013-2016. All rights reserved.
+ * Copyright Enalean (c) 2013-2018. All rights reserved.
  *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
  * owners.
  *
@@ -23,6 +23,7 @@
  */
 
 use Tuleap\Git\Hook\PostReceiveMailSender;
+use Tuleap\Git\MarkTechnicalReference;
 use Tuleap\Git\Webhook\WebhookRequestSender;
 
 /**
@@ -101,15 +102,21 @@ class Git_Hook_PostReceive
             if ($user === null) {
                 $user = new PFUser(array('user_id' => 0));
             }
-            $this->mail_sender->sendMail($repository, $oldrev, $newrev, $refname);
+
+            $technical_reference_event = new MarkTechnicalReference($refname);
+            $this->event_manager->processEvent($technical_reference_event);
+            if (! $technical_reference_event->isATechnicalReference()) {
+                $this->mail_sender->sendMail($repository, $oldrev, $newrev, $refname);
+            }
             $this->executeForRepositoryAndUser($repository, $user, $oldrev, $newrev, $refname);
             $this->processGitWebhooks($repository, $user, $oldrev, $newrev, $refname);
             $this->event_manager->processEvent(GIT_HOOK_POSTRECEIVE_REF_UPDATE, array(
-                'repository' => $repository,
-                'oldrev'     => $oldrev,
-                'newrev'     => $newrev,
-                'refname'    => $refname,
-                'user'       => $user,
+                'repository'                    => $repository,
+                'oldrev'                        => $oldrev,
+                'newrev'                        => $newrev,
+                'refname'                       => $refname,
+                'user'                          => $user,
+                'is_technical_reference_update' => $technical_reference_event->isATechnicalReference()
             ));
 
         }
