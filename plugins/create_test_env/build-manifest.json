@@ -37,9 +37,13 @@
         }
     },
     "gettext-vue": {
-        "call-me-back": {
+        "call-me-back-burning-parrot": {
             "scripts": "scripts/",
-            "po": "scripts/call-me-back/po"
+            "po": "scripts/call-me-back-burning-parrot/po"
+        },
+        "call-me-back-flaming-parrot": {
+            "scripts": "scripts/",
+            "po": "scripts/call-me-back-flaming-parrot/po"
         }
     },
     "components": [

@@ -30,8 +30,9 @@ const assets_dir_path = path.resolve(
 
 const webpack_config = {
     entry: {
-        'call-me-back'      : './call-me-back/src/index.js',
-        'call-me-back-admin': './call-me-back-admin.js'
+        'call-me-back-burning-parrot': './call-me-back-burning-parrot/src/index.js',
+        'call-me-back-flaming-parrot': './call-me-back-flaming-parrot/src/index.js',
+        'call-me-back-admin'         : './call-me-back-admin.js'
     },
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path),
