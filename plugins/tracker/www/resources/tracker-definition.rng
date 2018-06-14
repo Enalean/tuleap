@@ -103,6 +103,7 @@
         <choice>
           <value>0</value>
           <value>1</value>
+          <value>2</value>
         </choice>
       </attribute>
     </optional>
