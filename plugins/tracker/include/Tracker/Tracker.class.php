@@ -35,6 +35,7 @@ use Tuleap\Tracker\Notifications\CollectionOfUserInvolvedInNotificationPresenter
 use Tuleap\Tracker\Notifications\GlobalNotificationsAddressesBuilder;
 use Tuleap\Tracker\Notifications\GlobalNotificationsEmailRetriever;
 use Tuleap\Tracker\Notifications\GlobalNotificationSubscribersFilter;
+use Tuleap\Tracker\Notifications\NotificationLevelExtractor;
 use Tuleap\Tracker\Notifications\NotificationListBuilder;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsDAO;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyDao;
@@ -59,8 +60,9 @@ class Tracker implements Tracker_Dispatchable_Interface
     const PERMISSION_NONE                = 'PLUGIN_TRACKER_NONE';
     const PERMISSION_SUBMITTER_ONLY      = 'PLUGIN_TRACKER_ACCESS_SUBMITTER_ONLY';
 
-    const NOTIFICATIONS_LEVEL_DEFAULT  = 0;
-    const NOTIFICATIONS_LEVEL_DISABLED = 1;
+    const NOTIFICATIONS_LEVEL_DEFAULT       = 0;
+    const NOTIFICATIONS_LEVEL_DISABLED      = 1;
+    const NOTIFICATIONS_LEVEL_STATUS_CHANGE = 2;
 
     const REMAINING_EFFORT_FIELD_NAME = "remaining_effort";
     const ASSIGNED_TO_FIELD_NAME      = "assigned_to";
@@ -2157,7 +2159,8 @@ EOS;
             new GlobalNotificationsAddressesBuilder(),
             UserManager::instance(),
             new UGroupManager(),
-            new GlobalNotificationSubscribersFilter($unsubscribers_notification_dao)
+            new GlobalNotificationSubscribersFilter($unsubscribers_notification_dao),
+            new NotificationLevelExtractor()
         );
     }
 

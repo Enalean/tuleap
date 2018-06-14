@@ -22,6 +22,7 @@
 use Tuleap\Tracker\Notifications\GlobalNotificationsAddressesBuilder;
 use Tuleap\Tracker\Notifications\GlobalNotificationSubscribersFilter;
 use Tuleap\Tracker\Notifications\NotificationCustomisationSettingsPresenter;
+use Tuleap\Tracker\Notifications\NotificationLevelExtractor;
 use Tuleap\Tracker\Notifications\NotificationListBuilder;
 use Tuleap\Tracker\Notifications\PaneNotificationListPresenter;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsDAO;
@@ -67,6 +68,10 @@ class Tracker_NotificationsManager {
      * @var GlobalNotificationSubscribersFilter
      */
     private $subscribers_filter;
+    /**
+     * @var NotificationLevelExtractor
+     */
+    private $notification_level_extractor;
 
     public function __construct(
         $tracker,
@@ -77,7 +82,8 @@ class Tracker_NotificationsManager {
         GlobalNotificationsAddressesBuilder $addresses_builder,
         UserManager $user_manager,
         UGroupManager $ugroup_manager,
-        GlobalNotificationSubscribersFilter $subscribers_filter
+        GlobalNotificationSubscribersFilter $subscribers_filter,
+        NotificationLevelExtractor $notification_level_extractor
     ) {
         $this->tracker                        = $tracker;
         $this->user_to_notify_dao             = $user_to_notify_dao;
@@ -88,6 +94,7 @@ class Tracker_NotificationsManager {
         $this->ugroup_manager                 = $ugroup_manager;
         $this->notification_list_builder      = $notification_list_builder;
         $this->subscribers_filter             = $subscribers_filter;
+        $this->notification_level_extractor   = $notification_level_extractor;
     }
 
     public function displayTrackerAdministratorSettings(HTTPRequest $request, CSRFSynchronizerToken $csrf_token)
@@ -96,17 +103,17 @@ class Tracker_NotificationsManager {
         (new Tracker_DateReminderRenderer($this->tracker))->displayDateReminders($request, $csrf_token);
     }
 
+
+
     public function processUpdate(HTTPRequest $request)
     {
         if ($request->exist('notifications_level')) {
-            if ((int) $this->tracker->getNotificationsLevel() !== (int) $request->get('notifications_level')) {
-                $new_notifications_level = $request->get('notifications_level')
-                    ? Tracker::NOTIFICATIONS_LEVEL_DISABLED
-                    : Tracker::NOTIFICATIONS_LEVEL_DEFAULT;
+            if ((int)$this->tracker->getNotificationsLevel() !== (int)$request->get('notifications_level')) {
+                $new_notifications_level = $this->notification_level_extractor->extractNotificationLevel($request->get('notifications_level'));
                 $this->tracker->setNotificationsLevel($new_notifications_level);
                 $dao = new TrackerDao();
                 if ($dao->save($this->tracker)) {
-                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin_notification', 'successfully_updated'));
+                    $this->addFeedbackCorrectlySaved();
                 }
             }
         }
@@ -255,10 +262,12 @@ class Tracker_NotificationsManager {
         $renderer->renderToPage(
             'admin-notifications-level',
             [
-                'disabled_value' => Tracker::NOTIFICATIONS_LEVEL_DISABLED,
-                'default_value'  => Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
-                'is_default'     => $notifications_level === Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
-                'is_disabled'    => $notifications_level === Tracker::NOTIFICATIONS_LEVEL_DISABLED
+                'disabled_value'      => Tracker::NOTIFICATIONS_LEVEL_DISABLED,
+                'default_value'       => Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
+                'status_change_value' => Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE,
+                'is_default'          => $notifications_level === Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
+                'is_disabled'         => $notifications_level === Tracker::NOTIFICATIONS_LEVEL_DISABLED,
+                'is_status_change'    => $notifications_level === Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE
             ]
         );
     }

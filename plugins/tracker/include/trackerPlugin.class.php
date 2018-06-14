@@ -52,6 +52,7 @@ use Tuleap\Tracker\Notifications\CollectionOfUgroupToBeNotifiedPresenterBuilder;
 use Tuleap\Tracker\Notifications\CollectionOfUserInvolvedInNotificationPresenterBuilder;
 use Tuleap\Tracker\Notifications\GlobalNotificationsAddressesBuilder;
 use Tuleap\Tracker\Notifications\GlobalNotificationSubscribersFilter;
+use Tuleap\Tracker\Notifications\NotificationLevelExtractor;
 use Tuleap\Tracker\Notifications\NotificationListBuilder;
 use Tuleap\Tracker\Notifications\NotificationsForProjectMemberCleaner;
 use Tuleap\Tracker\Notifications\Settings\NotificationsAdminSettingsDisplayController;
@@ -1450,7 +1451,8 @@ class trackerPlugin extends Plugin {
             new GlobalNotificationsAddressesBuilder(),
             UserManager::instance(),
             new UGroupManager(),
-            new GlobalNotificationSubscribersFilter($unsubscribers_notification_dao)
+            new GlobalNotificationSubscribersFilter($unsubscribers_notification_dao),
+            new NotificationLevelExtractor()
         );
     }
 

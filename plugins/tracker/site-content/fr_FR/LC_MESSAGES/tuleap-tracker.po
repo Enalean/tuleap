@@ -249,6 +249,20 @@ msgstr ""
 msgid "Something went wrong."
 msgstr "Quelque chose s'est mal passé."
 
+msgid ""
+"Status change notification is under development, this option will not be "
+"taken in account for now."
+msgstr ""
+"L'option notifications lors de la mise à jour du statut est en cours de "
+"développement, elle n'est pas prise en compte pour l'instant"
+
+msgid ""
+"Status change notifications (people will get notified when artifact status "
+"is updated)"
+msgstr ""
+"Notifications lors de la mise à jour du statut (les gens sont notifiés "
+"lorsque le status de l'artéfact est mis à jour)"
+
 msgid "Submit"
 msgstr "Valider"
 
