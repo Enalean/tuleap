@@ -47,7 +47,9 @@ class b201806061457_migrate_project_approval_forgeconfig extends ForgeUpgrade_Bu
     {
         include($this->getLocalIncPath());
         $variables_in_localinc = get_defined_vars();
-
+        if (! isset($variables_in_localinc['sys_project_approval'])) {
+            return 1;
+        }
         return $variables_in_localinc['sys_project_approval'];
     }
 
