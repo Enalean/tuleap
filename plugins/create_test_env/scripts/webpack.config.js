@@ -36,6 +36,9 @@ const webpack_config = {
     },
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path),
+    externals: {
+        tlp: 'tlp'
+    },
     module: {
         rules: [
             webpack_configurator.configureBabelRule(

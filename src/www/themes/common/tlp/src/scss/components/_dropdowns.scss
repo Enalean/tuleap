@@ -112,7 +112,7 @@ $tlp-dropdown-transition: 75ms ease-out;
         pointer-events: auto;
 
         &.tlp-dropdown-menu-top {
-            transform: translateY(calc(-100% - 10px - #{$tlp-dropdown-arrow-size}));
+            transform: translateY(-100%) translateY(-10px) translateY(-#{$tlp-dropdown-arrow-size});
         }
     }
 }
