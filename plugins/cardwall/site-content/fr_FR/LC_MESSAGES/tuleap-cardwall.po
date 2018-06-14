@@ -17,11 +17,17 @@ msgstr ""
 msgid "<b>%s</b> field will determine background color."
 msgstr "Le champ <b>%s</b> va définir la couleur de fond des cartes."
 
+msgid "A card will be displayed for each available background color."
+msgstr "Pour chaque couleur de fond disponible, une carte sera affichée."
+
 msgid "Add a field to the cards"
 msgstr "Ajouter un champ aux cartes"
 
 msgid "Background color"
 msgstr "Couleur de fond"
+
+msgid "Card design is the same as Kanban."
+msgstr "Le design des cartes est le même que celui de Kanban."
 
 msgid "Choose a field to define card background color"
 msgstr "Choisissez un champ pour définir la couleur de fond des cartes"
@@ -29,11 +35,25 @@ msgstr "Choisissez un champ pour définir la couleur de fond des cartes"
 msgid "Choose a field..."
 msgstr "Coisissez un champ..."
 
+msgid ""
+"Description and field values are extracted from a random artifact of the "
+"tracker."
+msgstr ""
+"La description et la valeur des champs sont extraites d'un artéfact aléatoire "
+"du tracker."
+
 msgid "Field not found"
 msgstr "Champ non trouvé"
 
 msgid "Fields"
 msgstr "Champs"
+
+msgid ""
+"If a color corresponds to multiple values, the preview will display only one "
+"card with this background color."
+msgstr ""
+"Si une couleur correspond à plusieurs valeurs, l'aperçu va afficher seulement "
+"une carte pour ce fond."
 
 msgid ""
 "No field can be chosen for card color background. Only selectbox and "
@@ -54,6 +74,13 @@ msgid ""
 msgstr ""
 "Seuls les champs statiques avec des valeurs liées à la nouvelle palette de "
 "couleur peuvent être choisis comme couleur de fond des cartes"
+
+msgid ""
+"Preview is an example, data might not be consistent with the artifact's real "
+"data."
+msgstr ""
+"L'aperçu est un exemple, les données peuvent être incohérentes avec les "
+"données réelles de l'artéfact."
 
 msgid "Preview of the card"
 msgstr "Aperçu des cartes"
@@ -78,6 +105,9 @@ msgstr ""
 
 msgid "The following fields are added to the cards"
 msgstr "Les champs suivants sont ajoutés aux cartes"
+
+msgid "The preview respects the following rules:"
+msgstr "L'aperçu suit les règles suivantes :"
 
 msgid "There aren't any fields added to cards yet."
 msgstr "Aucun champ n'est ajouté aux cartes pour l'instant"
