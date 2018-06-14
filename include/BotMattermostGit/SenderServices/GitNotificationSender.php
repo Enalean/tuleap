@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -48,6 +48,10 @@ class GitNotificationSender
 
     public function process(array $params)
     {
+        if ($params['is_technical_reference_update']) {
+            return;
+        }
+
         try {
             $message = new Message();
 
