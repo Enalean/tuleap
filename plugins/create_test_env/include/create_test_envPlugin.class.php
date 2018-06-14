@@ -164,7 +164,7 @@ class create_test_envPlugin extends Plugin
             '/assets/create_test_env/scripts'
         );
 
-        echo $assets->getHTMLSnippet('call-me-back.js') . PHP_EOL;
+        echo $assets->getHTMLSnippet('call-me-back-flaming-parrot.js') . PHP_EOL;
     }
 
 
@@ -186,7 +186,7 @@ class create_test_envPlugin extends Plugin
             '/assets/create_test_env/scripts'
         );
 
-        $params['javascript_files'][] = $assets->getFileURL('call-me-back.js');
+        $params['javascript_files'][] = $assets->getFileURL('call-me-back-burning-parrot.js');
 
         if (strpos($_SERVER['REQUEST_URI'], '/plugins/create_test_env/call-me-back') === 0) {
             $params['javascript_files'][] = '/scripts/ckeditor-4.3.2/ckeditor.js';
