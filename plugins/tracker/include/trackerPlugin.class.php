@@ -62,6 +62,7 @@ use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsRetriever;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyDao;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyUpdater;
 use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
+use Tuleap\Tracker\Notifications\UserNotificationOnlyStatusChangeDAO;
 use Tuleap\Tracker\Notifications\UsersToNotifyDao;
 use Tuleap\Tracker\PermissionsPerGroup\ProjectAdminPermissionPerGroupPresenterBuilder;
 use Tuleap\Tracker\ProjectDeletionEvent;
@@ -1628,8 +1629,11 @@ class trackerPlugin extends Plugin {
                     TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR . '/notifications/'),
                     $this->getTrackerFactory(),
                     new TrackerManager,
-                    new UserNotificationSettingsRetriever(new Tracker_GlobalNotificationDao, new UnsubscribersNotificationDAO)
-
+                    new UserNotificationSettingsRetriever(
+                        new Tracker_GlobalNotificationDao,
+                        new UnsubscribersNotificationDAO,
+                        new UserNotificationOnlyStatusChangeDAO
+                    )
                 );
             });
             $r->post('/notifications/my/{id:\d+}/', function () {

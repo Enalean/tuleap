@@ -23,6 +23,7 @@ namespace Tuleap\Tracker\Notifications\Settings;
 use Tracker_GlobalNotificationDao;
 use Tuleap\Tracker\Notifications\GlobalNotification;
 use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
+use Tuleap\Tracker\Notifications\UserNotificationOnlyStatusChangeDAO;
 
 class UserNotificationSettingsRetriever
 {
@@ -34,13 +35,19 @@ class UserNotificationSettingsRetriever
      * @var UnsubscribersNotificationDAO
      */
     private $unsubscribers_notification_dao;
+    /**
+     * @var UserNotificationOnlyStatusChangeDAO
+     */
+    private $only_status_change_dao;
 
     public function __construct(
         Tracker_GlobalNotificationDao $tracker_global_notification_dao,
-        UnsubscribersNotificationDAO $unsubscribers_notification_dao
+        UnsubscribersNotificationDAO $unsubscribers_notification_dao,
+        UserNotificationOnlyStatusChangeDAO $only_status_change_dao
     ) {
         $this->tracker_global_notification_dao = $tracker_global_notification_dao;
         $this->unsubscribers_notification_dao  = $unsubscribers_notification_dao;
+        $this->only_status_change_dao          = $only_status_change_dao;
     }
 
     /**
@@ -52,9 +59,15 @@ class UserNotificationSettingsRetriever
             $user->getId(),
             $tracker->getId()
         );
+
+        $is_only_on_status_update = $this->only_status_change_dao->doesUserIdHaveSubscribeOnlyForStatusChangeNotification(
+            $user->getId(),
+            $tracker->getId()
+        );
+
         $global_notifications = $this->getGlobalNotifications($user, $tracker);
 
-        return new UserNotificationSettings($has_unsubscribed, ...$global_notifications);
+        return new UserNotificationSettings($has_unsubscribed, $is_only_on_status_update, ...$global_notifications);
     }
 
     /**

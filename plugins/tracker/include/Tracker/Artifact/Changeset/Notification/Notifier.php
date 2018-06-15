@@ -124,7 +124,11 @@ class Notifier
                 Tracker_FormElementFactory::instance(),
                 UserManager::instance(),
                 new UnsubscribersNotificationDAO,
-                new UserNotificationSettingsRetriever(new Tracker_GlobalNotificationDao(), new UnsubscribersNotificationDAO()),
+                new UserNotificationSettingsRetriever(
+                    new Tracker_GlobalNotificationDao(),
+                    new UnsubscribersNotificationDAO(),
+                    new UserNotificationOnlyStatusChangeDAO()
+                ),
                 new UserNotificationOnlyStatusChangeDAO()
             ),
             new MailSender(),
