@@ -36,13 +36,19 @@ class NotificationsUserSettingsUpdateController implements DispatchableWithReque
      * @var UserNotificationSettingsDAO
      */
     private $user_notification_settings_dao;
+    /**
+     * @var \ProjectHistoryDao
+     */
+    private $project_history_dao;
 
     public function __construct(
         TrackerFactory $tracker_factory,
-        UserNotificationSettingsDAO $user_notification_settings_dao
+        UserNotificationSettingsDAO $user_notification_settings_dao,
+        \ProjectHistoryDao $project_history_dao
     ) {
         $this->tracker_factory                = $tracker_factory;
         $this->user_notification_settings_dao = $user_notification_settings_dao;
+        $this->project_history_dao            = $project_history_dao;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
@@ -67,23 +73,36 @@ class NotificationsUserSettingsUpdateController implements DispatchableWithReque
 
     private function processUpdate(HTTPRequest $request, BaseLayout $layout, \Tracker $tracker, \PFUser $user)
     {
+        $notification_label = dgettext('plugin-tracker', 'Notify me on all updates of artifacts I\'m involved (assigned, submitter, cc, comment)');
         switch ($request->get('notification-mode')) {
             case 'no-notification':
+                $notification_label = dgettext('plugin-tracker', 'No notifications at all');
                 $this->user_notification_settings_dao->enableNoNotificationAtAllMode($user->getId(), $tracker->getId());
                 break;
             case 'no-global-notification':
+                $notification_label = dgettext('plugin-tracker', 'Notify me on all updates of artifacts I\'m involved (assigned, submitter, cc, comment)');
                 $this->user_notification_settings_dao->enableNoGlobalNotificationMode($user->getId(), $tracker->getId());
                 break;
             case 'notify-me-on-create':
+                $notification_label = dgettext('plugin-tracker', 'Notify me when artifacts are created');
                 $this->user_notification_settings_dao->enableNotifyOnArtifactCreationMode($user->getId(), $tracker->getId());
                 break;
             case 'notify-me-every-change':
+                $notification_label = dgettext('plugin-tracker', 'Notify me on every change');
                 $this->user_notification_settings_dao->enableNotifyOnEveryChangeMode($user->getId(), $tracker->getId());
                 break;
             case 'notify-me-status-change':
+                $notification_label = dgettext('plugin-tracker', 'Notify me on status change');
                 $this->user_notification_settings_dao->enableNotifyOnStatusChangeMode($user->getId(), $tracker->getId());
                 break;
         }
+
+        $this->project_history_dao->groupAddHistory(
+            'user_notification_update',
+            $notification_label,
+            $tracker->getGroupId(),
+            [$user->getName(), $user->getId(), $tracker->getName()]
+        );
 
         $layout->addFeedback(
             \Feedback::INFO,
