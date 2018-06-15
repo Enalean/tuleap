@@ -148,9 +148,6 @@ msgstr ""
 "Notifications par défaut (les gens sont notifiés lorsqu'ils ont soumis, sont "
 "assignés, ont commenté ou sont en CC)"
 
-msgid "Default tracker notifications"
-msgstr "Notifications par défaut de l'outil de suivi"
-
 msgid "Delete"
 msgstr "Supprimer"
 
@@ -217,6 +214,13 @@ msgstr "Notifications"
 
 msgid "Notified people"
 msgstr "Personnes notifiées"
+
+msgid ""
+"Notify me on all updates of artifacts I'm involved (assigned, submitter, cc, "
+"comment)"
+msgstr ""
+"Me notifier pour toutes les mises à jour d'artéfact où je suis impliqué "
+"(assigné, soumis, cc, commentaire)"
 
 msgid "Notify me on every change"
 msgstr "Me notifier à chaque changement"
