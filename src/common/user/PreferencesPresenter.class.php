@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2016. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -71,6 +71,7 @@ class User_PreferencesPresenter {
     public $default_formats;
 
     public $user_language;
+    public $user_has_accessibility_mode;
 
     public function __construct(
         PFUser $user,
@@ -113,7 +114,8 @@ class User_PreferencesPresenter {
         $this->last_svn_token          = $last_svn_token;
         $this->default_formats         = $default_formats;
 
-        $this->user_language = $user->getShortLocale();
+        $this->user_language               = $user->getShortLocale();
+        $this->user_has_accessibility_mode = $user->getPreference(PFUser::ACCESSIBILITY_MODE);
     }
 
     public function generated_svn_token() {

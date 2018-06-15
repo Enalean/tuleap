@@ -90,6 +90,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
 
     const EDITION_DEFAULT_FORMAT = 'user_edition_default_format';
 
+    const ACCESSIBILITY_MODE = 'accessibility_mode';
+
     /**
      * @var array of allowed separators for CSV export
      */

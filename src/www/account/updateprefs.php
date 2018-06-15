@@ -142,6 +142,18 @@ if ($request->existAndNonEmpty(Codendi_Mail_Interface::PREF_FORMAT)) {
         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('account_preferences', 'error_user_tracker_mailformat'));
     }
 }
+
+$form_accessibility_mode = 0;
+if ($request->existAndNonEmpty('form_accessibility_mode')) {
+    if ($request->valid(new Valid_WhiteList('form_accessibility_mode', [0, 1]))) {
+        $form_accessibility_mode = (int) $request->get('form_accessibility_mode');
+    } else {
+        $GLOBALS['Response']->addFeedback(
+            Feedback::ERROR,
+            _('Verify accessiblity mode value')
+        );
+    }
+}
 //
 // Perform the update
 //
@@ -172,6 +184,10 @@ if ($user_theme_variant) {
 
 if ($user_edition_default_format) {
     $user->setPreference(PFUser::EDITION_DEFAULT_FORMAT, $user_edition_default_format);
+}
+
+if (is_int($form_accessibility_mode)) {
+    $user->setPreference(PFUser::ACCESSIBILITY_MODE, $form_accessibility_mode);
 }
 
 //plugins specific preferences

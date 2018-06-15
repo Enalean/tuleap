@@ -162,6 +162,21 @@
             </div>
         </fieldset>
 
+    <fieldset>
+        <h3><i class="icon-eye-close"></i> {{# gettext }}Accessibility{{/ gettext }}</h3>
+        <p>
+            {{# gettext }}This option displays special patterns on colored cards in Agiledashboard and Cardwall tracker reports. This helps distinguish between colors and their variants.{{/ gettext }}
+        </p>
+        <label class="checkbox">
+            <input type="checkbox"
+                   name="form_accessibility_mode"
+                   value="1"
+                   {{# user_has_accessibility_mode }} checked="checked" {{/ user_has_accessibility_mode }}
+            />
+            {{# gettext }}Enable accessibility mode{{/ gettext }}
+        </label>
+    </fieldset>
+
         <fieldset>
             <h3><i class="icon-beaker"></i> {{ lab_features_title }}</h3>
             <p>{{ lab_features_description }}</p>

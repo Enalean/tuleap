@@ -43,6 +43,9 @@ msgstr "Accès"
 msgid "Access Logs"
 msgstr "Journal des accès"
 
+msgid "Accessibility"
+msgstr "Accessibilité"
+
 msgid "Add binding"
 msgstr "Ajouter le lien"
 
@@ -348,6 +351,9 @@ msgstr "Urgent"
 
 msgid "Empty group"
 msgstr "Groupe vide"
+
+msgid "Enable accessibility mode"
+msgstr "Activer le mode d'accessiblilité"
 
 msgid "Enabled"
 msgstr "Actif"
@@ -998,6 +1004,16 @@ msgid "This label is used in the project"
 msgstr "Ce label est utilisé dans le projet"
 
 msgid ""
+"This option displays special patterns on colored cards in Agiledashboard and "
+"Cardwall tracker reports. This helps distinguish between colors and their "
+"variants."
+msgstr ""
+"Cette option affiche des motifs sur les cartes ayant un fond coloré dans "
+"l'Agiledashboard et sur les rapports de type cardwall dans les outils de "
+"suivi. Ceci permet de mieux différencier les couleurs ainsi que leurs "
+"variantes."
+
+msgid ""
 "This permission grants the right to manage platform administration users. "
 "Every single user added here will be a platform administrator."
 msgstr ""
@@ -1113,6 +1129,9 @@ msgstr "Groupes d'utilisateurs"
 
 msgid "Users groups bound to this one"
 msgstr "Groupes liés à celui-ci"
+
+msgid "Verify accessiblity mode value"
+msgstr "Vérifiez la valeur du mode d'accessibilité"
 
 msgid ""
 "We are sorry you caught an error, something meaningful was logged for site "
