@@ -37,4 +37,20 @@
         {{/ dgettext }}
     </label>
 {{/ has_status_semantic_defined }}
-<input class="btn" type="submit" value="{{# dgettext }} tuleap-tracker | Submit {{/ dgettext }}"/>
+
+<p class="notifications-level-force-usage">
+    <label class="checkbox">
+        <input
+            type="checkbox"
+            name="submit_and_force_notifications_level"
+            value="{{ status_change_value }}"
+        />
+        {{# dgettext }}
+            tuleap-tracker
+            | Force notification configuration usage to all users
+        {{/ dgettext }}
+    </label>
+</p>
+
+<input name="submit_notifications_level" class="btn" type="submit"
+       value="{{# dgettext }} tuleap-tracker | Submit {{/ dgettext }}"/>

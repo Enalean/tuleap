@@ -22,6 +22,7 @@
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletorBuilder;
+use Tuleap\Tracker\Artifact\Changeset\Notification\RecipientsManager;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
@@ -37,9 +38,12 @@ use Tuleap\Tracker\Notifications\GlobalNotificationsEmailRetriever;
 use Tuleap\Tracker\Notifications\GlobalNotificationSubscribersFilter;
 use Tuleap\Tracker\Notifications\NotificationLevelExtractor;
 use Tuleap\Tracker\Notifications\NotificationListBuilder;
+use Tuleap\Tracker\Notifications\NotificationsForceUsageUpdater;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsDAO;
+use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsRetriever;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyDao;
 use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
+use Tuleap\Tracker\Notifications\UserNotificationOnlyStatusChangeDAO;
 use Tuleap\Tracker\Notifications\UsersToNotifyDao;
 use Tuleap\Tracker\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
@@ -2167,7 +2171,21 @@ EOS;
             new GlobalNotificationSubscribersFilter($unsubscribers_notification_dao),
             new NotificationLevelExtractor(),
             new \TrackerDao(),
-            new \ProjectHistoryDao()
+            new \ProjectHistoryDao(),
+            new NotificationsForceUsageUpdater(
+                new RecipientsManager(
+                    \Tracker_FormElementFactory::instance(),
+                    UserManager::instance(),
+                    $unsubscribers_notification_dao,
+                    new UserNotificationSettingsRetriever(
+                        new Tracker_GlobalNotificationDao(),
+                        new UnsubscribersNotificationDAO(),
+                        new UserNotificationOnlyStatusChangeDAO()
+                    ),
+                    new UserNotificationOnlyStatusChangeDAO()
+                ),
+                new UserNotificationSettingsDAO()
+            )
         );
     }
 

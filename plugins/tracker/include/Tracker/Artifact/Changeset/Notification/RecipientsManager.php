@@ -271,4 +271,28 @@ class RecipientsManager
             }
         }
     }
+
+    public function getAllRecipientsWhoHaveCustomSettingsForATracker(\Tracker $tracker)
+    {
+        $user_ids_of_tracker_recipients         = $this->extractUserIdFromGlobalNotificationsRecipientList($tracker->getRecipients());
+        $user_ids_of_tracker_unsubscribers      = $this->unsubscribers_notification_dao->searchUserIDHavingUnsubcribedFromNotificationByTrackerID($tracker->getId());
+        $user_ids_if_tracker_status_change_only = $this->user_status_change_only_dao->searchUserIdsHavingSubscribedForTrackerStatusChangedOnly($tracker->getId());
+
+        return array_merge($user_ids_of_tracker_recipients, $user_ids_of_tracker_unsubscribers, $user_ids_if_tracker_status_change_only);
+    }
+
+    private function extractUserIdFromGlobalNotificationsRecipientList(array $recipients)
+    {
+        $user_ids = [];
+        foreach ($recipients as $recipient_list) {
+            foreach ($recipient_list['recipients'] as $recipient) {
+                $user = $this->getUserFromRecipientName($recipient);
+                if ($user) {
+                    $user_ids[] = (int)$user->getId();
+                }
+            }
+        }
+
+        return $user_ids;
+    }
 }

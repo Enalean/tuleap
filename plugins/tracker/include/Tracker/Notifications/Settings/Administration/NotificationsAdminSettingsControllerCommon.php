@@ -24,14 +24,17 @@ use Tracker;
 use Tracker_DateReminderManager;
 use Tracker_NotificationsManager;
 use Tuleap\Request\NotFoundException;
+use Tuleap\Tracker\Artifact\Changeset\Notification\RecipientsManager;
 use Tuleap\Tracker\Notifications\CollectionOfUgroupToBeNotifiedPresenterBuilder;
 use Tuleap\Tracker\Notifications\CollectionOfUserInvolvedInNotificationPresenterBuilder;
 use Tuleap\Tracker\Notifications\GlobalNotificationsAddressesBuilder;
 use Tuleap\Tracker\Notifications\GlobalNotificationSubscribersFilter;
 use Tuleap\Tracker\Notifications\NotificationLevelExtractor;
 use Tuleap\Tracker\Notifications\NotificationListBuilder;
+use Tuleap\Tracker\Notifications\NotificationsForceUsageUpdater;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyDao;
 use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
+use Tuleap\Tracker\Notifications\UserNotificationOnlyStatusChangeDAO;
 use Tuleap\Tracker\Notifications\UsersToNotifyDao;
 use UGroupDao;
 use UGroupManager;
@@ -85,7 +88,21 @@ trait NotificationsAdminSettingsControllerCommon
             new GlobalNotificationSubscribersFilter($unsubscribers_notification_dao),
             new NotificationLevelExtractor(),
             new \TrackerDao(),
-            new \ProjectHistoryDao()
+            new \ProjectHistoryDao(),
+            new NotificationsForceUsageUpdater(
+                new RecipientsManager(
+                    \Tracker_FormElementFactory::instance(),
+                    UserManager::instance(),
+                    new UnsubscribersNotificationDAO,
+                    new UserNotificationSettingsRetriever(
+                        new \Tracker_GlobalNotificationDao(),
+                        new UnsubscribersNotificationDAO(),
+                        new UserNotificationOnlyStatusChangeDAO()
+                    ),
+                    new UserNotificationOnlyStatusChangeDAO()
+                ),
+                new UserNotificationSettingsDAO()
+            )
         );
     }
 

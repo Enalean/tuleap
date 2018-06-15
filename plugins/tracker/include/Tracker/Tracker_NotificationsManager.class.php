@@ -24,6 +24,7 @@ use Tuleap\Tracker\Notifications\GlobalNotificationSubscribersFilter;
 use Tuleap\Tracker\Notifications\NotificationCustomisationSettingsPresenter;
 use Tuleap\Tracker\Notifications\NotificationLevelExtractor;
 use Tuleap\Tracker\Notifications\NotificationListBuilder;
+use Tuleap\Tracker\Notifications\NotificationsForceUsageUpdater;
 use Tuleap\Tracker\Notifications\PaneNotificationListPresenter;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsDAO;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyDao;
@@ -80,6 +81,10 @@ class Tracker_NotificationsManager {
      * @var ProjectHistoryDao
      */
     private $project_history_dao;
+    /**
+     * @var NotificationsForceUsageUpdater
+     */
+    private $force_usage_updater;
 
     public function __construct(
         $tracker,
@@ -93,7 +98,8 @@ class Tracker_NotificationsManager {
         GlobalNotificationSubscribersFilter $subscribers_filter,
         NotificationLevelExtractor $notification_level_extractor,
         TrackerDao $tracker_dao,
-        ProjectHistoryDao $project_history_dao
+        ProjectHistoryDao $project_history_dao,
+        NotificationsForceUsageUpdater $force_usage_updater
     ) {
         $this->tracker                        = $tracker;
         $this->user_to_notify_dao             = $user_to_notify_dao;
@@ -107,6 +113,7 @@ class Tracker_NotificationsManager {
         $this->notification_level_extractor   = $notification_level_extractor;
         $this->tracker_dao                    = $tracker_dao;
         $this->project_history_dao            = $project_history_dao;
+        $this->force_usage_updater            = $force_usage_updater;
     }
 
     public function displayTrackerAdministratorSettings(HTTPRequest $request, CSRFSynchronizerToken $csrf_token)
@@ -115,21 +122,33 @@ class Tracker_NotificationsManager {
         (new Tracker_DateReminderRenderer($this->tracker))->displayDateReminders($request, $csrf_token);
     }
 
-
-
     public function processUpdate(HTTPRequest $request)
     {
         if ($request->exist('notifications_level')) {
             if ((int)$this->tracker->getNotificationsLevel() !== (int)$request->get('notifications_level')) {
                 $new_notifications_level = $this->notification_level_extractor->extractNotificationLevel($request->get('notifications_level'));
+
+                if ($request->exist('submit_and_force_notifications_level')) {
+                    $this->force_usage_updater->forceUserPreferences($this->tracker, $new_notifications_level);
+                }
+
                 $this->tracker->setNotificationsLevel($new_notifications_level);
                 if ($this->tracker_dao->save($this->tracker)) {
-                    $this->project_history_dao->groupAddHistory(
-                        'global_notification_update',
-                        $this->getNotificationLevelLabel($new_notifications_level),
-                        $this->tracker->getGroupId(),
-                        [$this->tracker->getName()]
-                    );
+                    if ($request->exist('submit_and_force_notifications_level')) {
+                        $this->project_history_dao->groupAddHistory(
+                            'global_notification_update_with_force',
+                            $this->getNotificationLevelLabel($new_notifications_level),
+                            $this->tracker->getGroupId(),
+                            [$this->tracker->getName()]
+                        );
+                    } else {
+                        $this->project_history_dao->groupAddHistory(
+                            'global_notification_update',
+                            $this->getNotificationLevelLabel($new_notifications_level),
+                            $this->tracker->getGroupId(),
+                            [$this->tracker->getName()]
+                        );
+                    }
 
                     $this->addFeedbackCorrectlySaved();
                 }

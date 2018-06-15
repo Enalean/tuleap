@@ -528,4 +528,32 @@ class RecipientsManagerTest extends \TuleapTestCase
         );
         return $changeset;
     }
+
+    public function itBuildsAListOfUserIdsFromTheirTrackerNotificationsSettings()
+    {
+        $user_recipients_from_tracker = [
+            [
+                'recipients'        =>
+                    [
+                        'noctali@example.com',
+                        'aquali@example.com'
+                    ],
+                'on_updates'        => false,
+                'check_permissions' => true
+            ]
+        ];
+
+        $tracker = mock(\Tracker::class);
+        stub($tracker)->getRecipients()->returns($user_recipients_from_tracker);
+        stub($this->user_manager)->getUserByEmail('noctali@example.com')->returns(aUser()->withId(101)->build());
+        stub($this->user_manager)->getUserByEmail('aquali@example.com')->returns(aUser()->withId(102)->build());
+
+        stub($this->unsubscribers_notification_dao)->searchUserIDHavingUnsubcribedFromNotificationByTrackerID()->returns([103, 104]);
+
+        stub($this->user_status_change_only_dao)->searchUserIdsHavingSubscribedForTrackerStatusChangedOnly()->returns([105, 106]);
+
+        $all_user_ids = [101, 102, 103, 104, 105, 106];
+
+        $this->assertEqual($all_user_ids, $this->recipients_manager->getAllRecipientsWhoHaveCustomSettingsForATracker($tracker));
+    }
 }

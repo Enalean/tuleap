@@ -127,6 +127,9 @@ msgstr ""
 msgid "Field value cannot be empty"
 msgstr ""
 
+msgid "Force notification configuration usage to all users"
+msgstr ""
+
 #, php-format
 msgid "Group '%s' couldn't be added."
 msgid_plural "Groups '%s' couldn't be added."

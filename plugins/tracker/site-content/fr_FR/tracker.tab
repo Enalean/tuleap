@@ -1618,6 +1618,7 @@ project_admin_utils	tracker_date_reminder_optgroup_label_ugroup	Groupes d'utilis
 project_admin_utils	tracker_date_reminder_optgroup_label_role	Rôles
 project_admin_utils	global_notification_update	Mise à jour des notifications globales pour l'outil de suivi $1.
 project_admin_utils	user_notification_update	L'utilisateur $1($2) a mis à jour la configuration de ses notifications pour l'outil de suivi $3
+project_admin_utils	global_notification_update_with_force	Mise à jour des notifications globales en écrasant les paramètres de notification des utilisateurs pour l'outil de suivi $1.
 plugin_tracker	info_same_ugroups	Le patron sélectionné a des permissions sur des groupes d'utilisateurs qui semblent avoir leur équivalent dans votre projet : $1 Veuillez notez que seulement le nom des groupes est vérifié, les appartenances effectives peuvent être différentes.
 plugin_tracker	missing_ugroups	Le patron sélectionné a des permissions sur des groupes d'utilisateurs qui ne sont pas définis dans votre projet : $1 Sans ces groupes, des champs peuvent être inutilisables et des transitions pourraient ne pas fonctionner correctement. Si vous créez quand même l'outil de suivi, nous vous suggérons de vérifier après coup : <ul><li>Les permissions d'accès à l'outil de suivi,</li><li>Les permissions sur les champs,</li><li>Ainsi que les transitions du workflow.</li></ul>
 
