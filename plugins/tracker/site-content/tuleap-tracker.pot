@@ -113,9 +113,6 @@ msgid ""
 "submitter, assignee, commenter or CC)"
 msgstr ""
 
-msgid "Default tracker notifications"
-msgstr ""
-
 msgid "Delete"
 msgstr ""
 
@@ -179,6 +176,11 @@ msgid "Notifications"
 msgstr ""
 
 msgid "Notified people"
+msgstr ""
+
+msgid ""
+"Notify me on all updates of artifacts I'm involved (assigned, submitter, cc, "
+"comment)"
 msgstr ""
 
 msgid "Notify me on every change"
