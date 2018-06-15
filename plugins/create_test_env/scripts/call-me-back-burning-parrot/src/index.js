@@ -19,7 +19,7 @@
 
 import Vue from 'vue';
 import GetTextPlugin from 'vue-gettext';
-import french_translations from '../po/fr.po';
+import french_translations from '../../po/fr.po';
 import CallMeBack from './CallMeBack.vue';
 
 document.addEventListener('DOMContentLoaded', () => {

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -687,6 +687,7 @@ span.select2-container--tlp-select2-large {
 
     > .tlp-input {
         order: 2;
+        min-width: 0;
         border-radius: 0 $tlp-form-element-border-radius $tlp-form-element-border-radius 0;
     }
 
@@ -730,6 +731,7 @@ span.select2-container--tlp-select2-large {
     > .tlp-input,
     > .tlp-select {
         order: 1;
+        min-width: 0;
         border-radius: $tlp-form-element-border-radius 0 0 $tlp-form-element-border-radius;
     }
 

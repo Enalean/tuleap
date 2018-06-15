@@ -11,3 +11,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.0.8\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Call me back"
+msgstr "Rappelez-moi"
+
+msgid "Call me back on"
+msgstr "Rappelez-moi le"
+
+msgid "Fill this form and we'll call you back."
+msgstr "Remplissez ce formulaire et nous vous rappellerons."
+
+msgid "Phone number"
+msgstr "Téléphone"

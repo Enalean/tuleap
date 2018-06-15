@@ -1,9 +1,11 @@
 @import 'call-me-back-admin';
 
+$call-me-back-offset: 20px;
+
 .call-me-back {
     position: fixed;
-    z-index: 10000;
-    right: $tlp-double-spacing;
+    z-index: 100001;
+    right: $tlp-double-spacing + $call-me-back-offset;
     bottom: $tlp-double-spacing;
 }
 
@@ -24,6 +26,9 @@
 }
 
 .call-me-back-button {
+    position: relative;
+    top: -5px;
+    left: $call-me-back-offset;
     width: 85px;
     height: 85px;
     overflow: visible;
@@ -48,5 +53,54 @@
     > .fa {
         position: relative;
         top: -1px;
+    }
+}
+
+.call-me-back-form {
+    top: 15px;
+    width: 210px;
+    padding: $tlp-spacing;
+
+    > .call-me-back-form-intro {
+        font-size: 14px;
+    }
+
+    .flatpickr-wrapper.static {
+        display: block;
+        order: 2;
+
+        > .flatpickr-input {
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+
+        > .flatpickr-calendar {
+            top: 0;
+            left: 0;
+            transform: translateX(-100%) translateX(-45px) translateY(-43%);
+
+            &::before,
+            &::after {
+                content: '';
+                display: block;
+                position: absolute;
+                top: 50%;
+                left: 100%;
+                width: 0;
+                height: 0;
+                transform: translate(50%, -50%);
+                border: solid transparent;
+                border-width: 10px;
+            }
+
+            &::before {
+                margin: 0 -9px;
+                border-left-color: $tlp-ui-border-normal;
+            }
+
+            &::after {
+                border-left-color: $tlp-ui-white;
+            }
+        }
     }
 }

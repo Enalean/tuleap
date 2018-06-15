@@ -1,0 +1,18 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: easygettext\n"
+"Project-Id-Version: \n"
+
+msgid "Call me back"
+msgstr ""
+
+msgid "Call me back on"
+msgstr ""
+
+msgid "Fill this form and we'll call you back."
+msgstr ""
+
+msgid "Phone number"
+msgstr ""
