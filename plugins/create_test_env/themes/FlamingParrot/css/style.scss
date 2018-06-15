@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-@import "../../../../../src/www/themes/common/css/utils/colors";
-@import "../../../../../src/www/themes/FlamingParrot/css/utils/badge-colors";
+@import '../../../../../src/www/themes/common/css/utils/colors';
+@import '../../../../../src/www/themes/FlamingParrot/css/utils/badge-colors';
 
 @mixin change-button-color($color) {
     border-color: $color;
@@ -40,7 +40,7 @@
     }
 }
 
-@mixin definitions($main, $color-name) {
+@mixin definitions($main, $color-name, $ui-color-danger) {
     .call-me-back {
         position: fixed;
         z-index: 10000;
@@ -76,78 +76,111 @@
             top: -1px;
         }
     }
+
+    .call-me-back-form {
+        box-sizing: border-box;
+        width: 210px;
+        padding: 20px;
+        font-family: 'SourceSansPro', 'Helvetica Neue', Arial, sans-serif;
+
+        > .call-me-back-form-intro {
+            margin: 0 0 20px;
+        }
+
+        > label {
+            color: #666666;
+            font-weight: 600;
+
+            > .icon-asterisk {
+                position: relative;
+                top: -4px;
+                color: $ui-color-danger;
+                font-size: 11px;
+            }
+        }
+
+        > .input-prepend {
+            width: calc(100% - 40px);
+            margin: 0 0 20px;
+        }
+
+        input[type='text'],
+        button {
+            width: 100%;
+        }
+    }
 }
 
 body {
     &.FlamingParrot_Orange {
-        @import "variables-orange";
+        @import 'variables-orange';
 
-        @include definitions($main, $color-name);
+        @include definitions($main, $color-name, $ui-color-danger);
     }
 
     &.FlamingParrot_Blue {
-        @import "variables-blue";
+        @import 'variables-blue';
 
-        @include definitions($main, $color-name);
+        @include definitions($main, $color-name, $ui-color-danger);
     }
 
     &.FlamingParrot_Green {
-        @import "variables-green";
+        @import 'variables-green';
 
-        @include definitions($main, $color-name);
+        @include definitions($main, $color-name, $ui-color-danger);
     }
 
     &.FlamingParrot_BlueGrey {
-        @import "variables-bluegrey";
+        @import 'variables-bluegrey';
 
-        @include definitions($main, $color-name);
+        @include definitions($main, $color-name, $ui-color-danger);
     }
 
     &.FlamingParrot_Purple {
-        @import "variables-purple";
+        @import 'variables-purple';
 
-        @include definitions($main, $color-name);
+        @include definitions($main, $color-name, $ui-color-danger);
     }
 
     &.FlamingParrot_Red {
-        @import "variables-red";
+        @import 'variables-red';
 
-        @include definitions($main, $color-name);
+        @include definitions($main, $color-name, $ui-color-danger);
     }
 
     &.FlamingParrot_DarkOrange {
-        @import "variables-darkorange";
+        @import 'variables-darkorange';
 
-        @include definitions($main, $color-name);
+        @include definitions($main, $color-name, $ui-color-danger);
     }
 
     &.FlamingParrot_DarkBlue {
-        @import "variables-darkblue";
+        @import 'variables-darkblue';
 
-        @include definitions($main, $color-name);
+        @include definitions($main, $color-name, $ui-color-danger);
     }
 
     &.FlamingParrot_DarkGreen {
-        @import "variables-darkgreen";
+        @import 'variables-darkgreen';
 
-        @include definitions($main, $color-name);
+        @include definitions($main, $color-name, $ui-color-danger);
     }
 
     &.FlamingParrot_DarkBlueGrey {
-        @import "variables-darkbluegrey";
+        @import 'variables-darkbluegrey';
 
-        @include definitions($main, $color-name);
+        @include definitions($main, $color-name, $ui-color-danger);
     }
 
     &.FlamingParrot_DarkPurple {
-        @import "variables-darkpurple";
+        @import 'variables-darkpurple';
 
-        @include definitions($main, $color-name);
+        @include definitions($main, $color-name, $ui-color-danger);
     }
 
     &.FlamingParrot_DarkRed {
-        @import "variables-darkred";
+        @import 'variables-darkred';
 
-        @include definitions($main, $color-name);
+        @include definitions($main, $color-name, $ui-color-danger);
     }
 }
