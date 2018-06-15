@@ -43,7 +43,7 @@ class HTTPAccessControl
     /**
      * @var ReplicationHTTPUserAuthenticator
      */
-    private $authenticator;
+    private $replication_http_user_authenticator;
 
     /**
      * @var PermissionsManager
@@ -58,17 +58,20 @@ class HTTPAccessControl
     public function __construct(
         Logger $logger,
         User_LoginManager $login_manager,
-        ReplicationHTTPUserAuthenticator $authenticator,
+        ReplicationHTTPUserAuthenticator $replication_http_user_authenticator,
         PermissionsManager $permissions_manager,
         UserDao $user_dao
     ) {
-        $this->logger              = $logger;
-        $this->login_manager       = $login_manager;
-        $this->authenticator       = $authenticator;
-        $this->permissions_manager = $permissions_manager;
-        $this->user_dao            = $user_dao;
+        $this->logger                              = $logger;
+        $this->login_manager                       = $login_manager;
+        $this->replication_http_user_authenticator = $replication_http_user_authenticator;
+        $this->permissions_manager                 = $permissions_manager;
+        $this->user_dao                            = $user_dao;
     }
 
+    /**
+     * @return null|false|\PFO_User
+     */
     public function getUser(\URLVerification $url_verification, \GitRepository $repository, \Git_URL $url)
     {
         $user = null;
@@ -117,7 +120,7 @@ class HTTPAccessControl
 
     /**
      * @param \GitRepository $repository
-     * @return null|false|\PFO_User
+     * @return false|\PFO_User
      */
     private function authenticate(\GitRepository $repository)
     {
@@ -127,34 +130,34 @@ class HTTPAccessControl
             $_SERVER['PHP_AUTH_PW'] == ''
         ) {
             $this->basicAuthenticationChallenge();
-        } else {
-            $user = null;
-            try {
-                $user = $this->authenticator->authenticate(
-                    $repository,
-                    $_SERVER['PHP_AUTH_USER'],
-                    $_SERVER['PHP_AUTH_PW']
-                );
-
-                $this->logger->debug('LOGGED AS ' . $user->getUnixName());
-            } catch (\Exception $exception) {
-                $this->logger->debug('Replication user not recognized ' . $exception->getMessage());
-            }
-
-            if ($user === null) {
-                try {
-                    $user = $this->login_manager->authenticate($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
-                    $this->logger->debug("LOGGED AS ".$user->getUnixName());
-                    $this->updateLastAccessDateForUser($user);
-                    return $user;
-                } catch (\Exception $exception) {
-                    $this->logger->debug('LOGIN ERROR ' . $exception->getMessage());
-                    $this->basicAuthenticationChallenge();
-                }
-            }
-
-            return false;
         }
+
+        try {
+            $user = $this->replication_http_user_authenticator->authenticate(
+                $repository,
+                $_SERVER['PHP_AUTH_USER'],
+                $_SERVER['PHP_AUTH_PW']
+            );
+
+            $this->logger->debug('LOGGED AS ' . $user->getUnixName());
+            return $user;
+        } catch (\User_InvalidPasswordException $exception) {
+            $this->logger->debug('Replication user not recognized ' . $exception->getMessage());
+        } catch (\Git_RemoteServer_NotFoundException $exception) {
+            $this->logger->debug($exception->getMessage());
+        }
+
+        try {
+            $user = $this->login_manager->authenticate($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
+            $this->logger->debug('LOGGED AS ' . $user->getUnixName());
+            $this->updateLastAccessDateForUser($user);
+            return $user;
+        } catch (\User_LoginException $exception) {
+            $this->logger->debug('LOGIN ERROR ' . $exception->getMessage());
+            $this->basicAuthenticationChallenge();
+        }
+
+        return false;
     }
 
     private function updateLastAccessDateForUser(PFUser $user)
