@@ -1,3 +1,5 @@
+import { getAccessibilityMode } from "../user-accessibility-mode.js";
+
 export default KanbanItemController;
 
 KanbanItemController.$inject = [
@@ -9,6 +11,7 @@ function KanbanItemController(
 ) {
     const self = this;
     Object.assign(self, {
+        user_has_accessibility_mode: getAccessibilityMode(),
         kanban_filter: KanbanFilterValue
     });
 }

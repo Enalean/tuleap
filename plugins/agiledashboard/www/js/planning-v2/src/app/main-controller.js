@@ -1,4 +1,5 @@
 import moment from 'moment';
+import { setAccessibilityMode } from "./user-accessibility-mode.js";
 
 export default MainController;
 
@@ -34,6 +35,7 @@ function MainController(
         SharedPropertiesService.setInitialMilestones(initial_milestones);
         const view_mode = planning_init_data.viewMode;
         SharedPropertiesService.setViewMode(view_mode);
+        setAccessibilityMode(JSON.parse(planning_init_data.userAccessibilityMode));
 
         const language = planning_init_data.language;
         initLocale(language);

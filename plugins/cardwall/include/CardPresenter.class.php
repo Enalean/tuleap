@@ -55,7 +55,13 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter
     /** @var BackgroundColor */
     private $background_color;
 
+    /**
+     * @var bool
+     */
+    public $user_has_accessibility_mode;
+
     public function __construct(
+        PFUser $user,
         Tracker_Artifact $artifact,
         Cardwall_CardFields $card_fields,
         AccentColor $accent_color,
@@ -65,15 +71,16 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter
         BackgroundColor $background_color,
         Tracker_Artifact $parent = null
     ) {
-        $this->artifact            = $artifact;
-        $this->parent              = $parent;
-        $this->details             = $GLOBALS['Language']->getText('plugin_cardwall', 'details');
-        $this->card_fields         = $card_fields;
-        $this->accent_color        = $accent_color;
-        $this->display_preferences = $display_preferences;
-        $this->allowed_children    = $allowed_children;
-        $this->swimline_id         = $swimline_id;
-        $this->background_color    = $background_color;
+        $this->artifact                    = $artifact;
+        $this->parent                      = $parent;
+        $this->details                     = $GLOBALS['Language']->getText('plugin_cardwall', 'details');
+        $this->card_fields                 = $card_fields;
+        $this->accent_color                = $accent_color;
+        $this->display_preferences         = $display_preferences;
+        $this->allowed_children            = $allowed_children;
+        $this->swimline_id                 = $swimline_id;
+        $this->background_color            = $background_color;
+        $this->user_has_accessibility_mode = $user->getPreference(PFUser::ACCESSIBILITY_MODE);
     }
 
     /**

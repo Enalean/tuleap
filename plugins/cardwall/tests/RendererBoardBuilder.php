@@ -1,7 +1,6 @@
 <?php
-
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -86,6 +85,7 @@ class Cardwall_ArtifactNodeTreeProviderTest extends TuleapTestCase {
         $node4 = new Cardwall_CardInCellPresenterNode(
             new Cardwall_CardInCellPresenter(
                 new Cardwall_CardPresenter(
+                    \Mockery::spy(PFUser::class),
                     $artifact4,
                     mock('Cardwall_CardFields'),
                     mock(AccentColor::class),
@@ -100,6 +100,7 @@ class Cardwall_ArtifactNodeTreeProviderTest extends TuleapTestCase {
         $node5 = new Cardwall_CardInCellPresenterNode(
             new Cardwall_CardInCellPresenter(
                 new Cardwall_CardPresenter(
+                    \Mockery::spy(PFUser::class),
                     $artifact5,
                     mock('Cardwall_CardFields'),
                     mock(AccentColor::class),
@@ -114,6 +115,7 @@ class Cardwall_ArtifactNodeTreeProviderTest extends TuleapTestCase {
         $node6 = new Cardwall_CardInCellPresenterNode(
             new Cardwall_CardInCellPresenter(
                 new Cardwall_CardPresenter(
+                    \Mockery::spy(PFUser::class),
                     $artifact6,
                     mock('Cardwall_CardFields'),
                     mock(AccentColor::class),

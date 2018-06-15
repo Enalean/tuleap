@@ -20,6 +20,7 @@
 
 namespace Tuleap\Cardwall\Semantic;
 
+use PFUser;
 use Tracker;
 
 class SemanticCardPresenter
@@ -53,13 +54,19 @@ class SemanticCardPresenter
      */
     public $card_preview;
 
+    /**
+     * @var bool
+     */
+    public $user_has_accessibility_mode;
+
     public function __construct(
         FieldPresenter $fields_presenter,
         BackgroundColorSelectorPresenter $background_color_presenter,
         Tracker $tracker,
         \CSRFSynchronizerToken $token,
         $form_url,
-        array $card_preview
+        array $card_preview,
+        PFUser $user
     ) {
         $this->background_color_presenter = $background_color_presenter;
         $this->fields_presenter           = $fields_presenter;
@@ -73,5 +80,7 @@ class SemanticCardPresenter
                 'func'    => 'admin-semantic'
             ]
         );
+
+        $this->user_has_accessibility_mode = $user->getPreference(PFUser::ACCESSIBILITY_MODE);
     }
 }

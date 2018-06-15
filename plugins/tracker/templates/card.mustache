@@ -8,7 +8,7 @@
         <a href="#" class="toggle-collapse">+</a>
         <div class="card-title">{{getTitle}}</div>
         {{> card-details}}
-        <div class="card-accessibility"></div>
+        {{# user_has_accessibility_mode }}<div class="card-accessibility"></div>{{/ user_has_accessibility_mode }}
     </div>
 </div>
 {{/getCardPresenter}}

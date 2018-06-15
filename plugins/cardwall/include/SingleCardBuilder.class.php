@@ -150,6 +150,7 @@ class Cardwall_SingleCardBuilder
         $parent_artifact = $artifact->getParent($user);
 
         return new Cardwall_CardPresenter(
+            $user,
             $artifact,
             $card_fields,
             $accent_color,
