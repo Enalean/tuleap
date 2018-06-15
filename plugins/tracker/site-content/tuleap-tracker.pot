@@ -105,6 +105,9 @@ msgstr ""
 msgid "Confirm deletion"
 msgstr ""
 
+msgid "Default Tuleap notifications"
+msgstr ""
+
 msgid ""
 "Default Tuleap notifications (people will get notified when they are "
 "submitter, assignee, commenter or CC)"
@@ -211,6 +214,9 @@ msgstr ""
 msgid ""
 "Status change notification is under development, this option will not be "
 "taken in account for now."
+msgstr ""
+
+msgid "Status change notifications"
 msgstr ""
 
 msgid ""

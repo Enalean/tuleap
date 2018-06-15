@@ -72,6 +72,14 @@ class Tracker_NotificationsManager {
      * @var NotificationLevelExtractor
      */
     private $notification_level_extractor;
+    /**
+     * @var TrackerDao
+     */
+    private $tracker_dao;
+    /**
+     * @var ProjectHistoryDao
+     */
+    private $project_history_dao;
 
     public function __construct(
         $tracker,
@@ -83,7 +91,9 @@ class Tracker_NotificationsManager {
         UserManager $user_manager,
         UGroupManager $ugroup_manager,
         GlobalNotificationSubscribersFilter $subscribers_filter,
-        NotificationLevelExtractor $notification_level_extractor
+        NotificationLevelExtractor $notification_level_extractor,
+        TrackerDao $tracker_dao,
+        ProjectHistoryDao $project_history_dao
     ) {
         $this->tracker                        = $tracker;
         $this->user_to_notify_dao             = $user_to_notify_dao;
@@ -95,6 +105,8 @@ class Tracker_NotificationsManager {
         $this->notification_list_builder      = $notification_list_builder;
         $this->subscribers_filter             = $subscribers_filter;
         $this->notification_level_extractor   = $notification_level_extractor;
+        $this->tracker_dao                    = $tracker_dao;
+        $this->project_history_dao            = $project_history_dao;
     }
 
     public function displayTrackerAdministratorSettings(HTTPRequest $request, CSRFSynchronizerToken $csrf_token)
@@ -111,8 +123,14 @@ class Tracker_NotificationsManager {
             if ((int)$this->tracker->getNotificationsLevel() !== (int)$request->get('notifications_level')) {
                 $new_notifications_level = $this->notification_level_extractor->extractNotificationLevel($request->get('notifications_level'));
                 $this->tracker->setNotificationsLevel($new_notifications_level);
-                $dao = new TrackerDao();
-                if ($dao->save($this->tracker)) {
+                if ($this->tracker_dao->save($this->tracker)) {
+                    $this->project_history_dao->groupAddHistory(
+                        'global_notification_update',
+                        $this->getNotificationLevelLabel($new_notifications_level),
+                        $this->tracker->getGroupId(),
+                        [$this->tracker->getName()]
+                    );
+
                     $this->addFeedbackCorrectlySaved();
                 }
             }
@@ -600,5 +618,21 @@ class Tracker_NotificationsManager {
                 'No element selected.'
             )
         );
+    }
+
+
+    private function getNotificationLevelLabel($notification_level)
+    {
+        switch ($notification_level) {
+            case Tracker::NOTIFICATIONS_LEVEL_DISABLED:
+                return dgettext('plugin-tracker', 'No notifications');
+                break;
+            case Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE:
+                return dgettext('plugin-tracker', 'Status change notifications');
+                break;
+            default:
+                return dgettext('plugin-tracker', 'Default Tuleap notifications');
+                break;
+        }
     }
 }

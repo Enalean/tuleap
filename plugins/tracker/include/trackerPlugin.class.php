@@ -1452,7 +1452,9 @@ class trackerPlugin extends Plugin {
             UserManager::instance(),
             new UGroupManager(),
             new GlobalNotificationSubscribersFilter($unsubscribers_notification_dao),
-            new NotificationLevelExtractor()
+            new NotificationLevelExtractor(),
+            new \TrackerDao(),
+            new \ProjectHistoryDao()
         );
     }
 

@@ -76,7 +76,7 @@ class ProjectHistoryDao extends DataAccessObject {
      *
      * @return DataAccessResult
      */
-    function groupAddHistory ($fieldName,$oldValue,$groupId, $args = false) {
+    public function groupAddHistory ($fieldName,$oldValue,$groupId, $args = false) {
         if ($args) {
             $fieldName .= " %% ".implode("||", $args);
         }
@@ -87,8 +87,8 @@ class ProjectHistoryDao extends DataAccessObject {
         $sql= 'insert into '.$this->table_name.'(group_id,field_name,old_value,mod_by,date)
                VALUES ('.$this->da->escapeInt($groupId).' , '.$this->da->quoteSmart($fieldName). ', '.
                $this->da->quoteSmart($oldValue).' , '.$this->da->escapeInt($userId).' , '.$this->da->escapeInt($_SERVER['REQUEST_TIME']).')';
+
         $this->retrieve($sql);
     }
 
 }
-?>
