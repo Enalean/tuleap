@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,6 +26,7 @@ use GitRepositoryFactory;
 use Luracast\Restler\RestException;
 use ProjectManager;
 use ReferenceManager;
+use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
 use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\PullRequest\Authorization\AccessControlVerifier;
@@ -56,6 +57,11 @@ class RepositoryResource
     private $query_to_criterion_converter;
 
     /**
+     * @var GitoliteAccessURLGenerator
+     */
+    private $gitolite_access_URL_generator;
+
+    /**
      * @var Tuleap\PullRequest\Logger
      */
     private $logger;
@@ -75,6 +81,9 @@ class RepositoryResource
             new FineGrainedRetriever(new FineGrainedDao()),
             new \System_Command()
         );
+
+        $git_plugin                          = \PluginFactory::instance()->getPluginByName('git');
+        $this->gitolite_access_URL_generator = new GitoliteAccessURLGenerator($git_plugin->getPluginInfo());
 
         $this->logger = new Logger();
     }
@@ -98,7 +107,7 @@ class RepositoryResource
             $repository_dest = $this->git_repository_factory->getRepositoryById($pull_request->getRepoDestId());
 
             if ($repository_src && $repository_dest) {
-                $pull_request_representation = new PullRequestMinimalRepresentation();
+                $pull_request_representation = new PullRequestMinimalRepresentation($this->gitolite_access_URL_generator);
                 $pull_request_representation->buildMinimal(
                     $pull_request,
                     $repository_src,

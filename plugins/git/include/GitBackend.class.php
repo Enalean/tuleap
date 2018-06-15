@@ -258,7 +258,7 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
      * Return URL to access the respository for remote git commands
      *
      * @param  GitRepository $repository
-     * @return String
+     * @return array
      */
     public function getAccessURL(GitRepository $repository) {
         $serverName  = $_SERVER['SERVER_NAME'];

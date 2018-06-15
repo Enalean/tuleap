@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2011-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,6 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
 
 class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backend_Interface {
 
@@ -49,13 +50,18 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
 
     const PREFIX = "gitolite_";
     /**
-     * Constructor
-     * 
-     * @param Git_GitoliteDriver $driver
+     * @var GitoliteAccessURLGenerator
      */
-    public function __construct(Git_GitoliteDriver $driver, Logger $logger) {
-        $this->driver = $driver;
-        $this->logger = $logger;
+    private $gitolite_access_URL_generator;
+
+    public function __construct(
+        Git_GitoliteDriver $driver,
+        GitoliteAccessURLGenerator $gitolite_access_URL_generator,
+        Logger $logger
+    ) {
+        $this->driver                        = $driver;
+        $this->gitolite_access_URL_generator = $gitolite_access_URL_generator;
+        $this->logger                        = $logger;
     }
 
     /**
@@ -104,44 +110,19 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      * Return URL to access the respository for remote git commands
      *
      * @param  GitRepository $repository
-     * @return String
+     * @return array
      */
     public function getAccessURL(GitRepository $repository) {
         $transports = array();
-        $ssh_transport = $this->getSSHAccessURL($repository);
+        $ssh_transport = $this->gitolite_access_URL_generator->getSSHURL($repository);
         if ($ssh_transport) {
             $transports['ssh'] = $ssh_transport;
         }
-        $http_transport = $this->getHTTPAccessURL($repository);
+        $http_transport = $this->gitolite_access_URL_generator->getHTTPURL($repository);
         if ($http_transport) {
             $transports['http'] = $http_transport;
         }
         return $transports;
-    }
-
-    private function getSSHAccessURL(GitRepository $repository) {
-        $ssh_url = $this->getConfigurationParameter('git_ssh_url');
-        if ($ssh_url === '') {
-            return '';
-        } elseif (! $ssh_url) {
-            $ssh_url = 'ssh://gitolite@'.ForgeConfig::get('sys_default_domain');
-        }
-        return  $ssh_url.'/'.$repository->getProject()->getUnixName().'/'.$repository->getFullName().'.git';
-    }
-
-    public function getHTTPAccessURL(GitRepository $repository) {
-        $http_url = $this->getConfigurationParameter('git_http_url');
-        if ($http_url) {
-            return  $http_url.'/'.$repository->getProject()->getUnixName().'/'.$repository->getFullName().'.git';
-        }
-    }
-
-    private function getConfigurationParameter($key) {
-        $value = $this->getGitPlugin()->getConfigurationParameter($key);
-        if ($value !== false && $value !== null) {
-            $value = str_replace('%server_name%', ForgeConfig::get('sys_default_domain'), $value);
-        }
-        return $value;
     }
 
     /**

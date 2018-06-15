@@ -20,6 +20,8 @@
  */
 
 
+use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
+
 require_once 'bootstrap.php';
 
 abstract class GitRepositoryImplTest extends TuleapTestCase {
@@ -58,7 +60,6 @@ abstract class GitRepositoryImplTest extends TuleapTestCase {
 
 class Git_Backend_Gitolite_isNameValidTest extends GitRepositoryImplTest {
     public function newCreator() {
-        return new Git_Backend_Gitolite(mock('Git_GitoliteDriver'), mock('Logger'));
+        return new Git_Backend_Gitolite(mock('Git_GitoliteDriver'), mock(GitoliteAccessURLGenerator::class), mock('Logger'));
     }
 }
-?>

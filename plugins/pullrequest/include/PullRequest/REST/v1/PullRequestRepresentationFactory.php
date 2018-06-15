@@ -21,9 +21,11 @@
 namespace Tuleap\PullRequest\REST\v1;
 
 use Tuleap\Git\CommitStatus\CommitStatusRetriever;
+use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
 use Tuleap\PullRequest\Authorization\AccessControlVerifier;
 use Tuleap\PullRequest\GitExec;
 use Tuleap\PullRequest\PullRequest;
+use Tuleap\PullRequest\PullRequestWithGitReference;
 
 class PullRequestRepresentationFactory
 {
@@ -39,22 +41,30 @@ class PullRequestRepresentationFactory
      * @var CommitStatusRetriever
      */
     private $commit_status_retriever;
+    /**
+     * @var GitoliteAccessURLGenerator
+     */
+    private $gitolite_access_URL_generator;
 
     public function __construct(
         AccessControlVerifier $access_control_verifier,
-        CommitStatusRetriever $commit_status_retriever
+        CommitStatusRetriever $commit_status_retriever,
+        GitoliteAccessURLGenerator $gitolite_access_URL_generator
     ) {
-        $this->access_control_verifier = $access_control_verifier;
-        $this->commit_status_retriever = $commit_status_retriever;
+        $this->access_control_verifier       = $access_control_verifier;
+        $this->commit_status_retriever       = $commit_status_retriever;
+        $this->gitolite_access_URL_generator = $gitolite_access_URL_generator;
     }
 
     public function getPullRequestRepresentation(
-        PullRequest $pull_request,
+        PullRequestWithGitReference $pull_request_with_git_reference,
         \GitRepository $repository_src,
         \GitRepository $repository_dest,
         GitExec $executor_repository_destination,
         \PFUser $user
     ) {
+        $pull_request = $pull_request_with_git_reference->getPullRequest();
+
         $short_stat        = $executor_repository_destination->getShortStat(
             $pull_request->getSha1Dest(),
             $pull_request->getSha1Src()
@@ -70,11 +80,12 @@ class PullRequestRepresentationFactory
 
         list($last_build_status_name, $last_build_date) = $this->getLastBuildInformation($pull_request, $repository_dest);
 
-        $pull_request_representation = new PullRequestRepresentation();
+        $pull_request_representation = new PullRequestRepresentation($this->gitolite_access_URL_generator);
         $pull_request_representation->build(
             $pull_request,
             $repository_src,
             $repository_dest,
+            $pull_request_with_git_reference->getGitReference(),
             $user_can_merge,
             $user_can_abandon,
             $user_can_update_labels,

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,7 @@
 
 namespace Tuleap\PullRequest\REST\v1;
 
+use Tuleap\PullRequest\GitReference\GitPullRequestReference;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\REST\JsonCast;
 use GitRepository;
@@ -59,6 +60,11 @@ class PullRequestRepresentation extends PullRequestMinimalRepresentation
      * @var string {@type string}
      */
     public $reference_dest;
+
+    /**
+     * @var string
+     */
+    public $head_reference;
 
     /**
      * @var string {@type string}
@@ -119,6 +125,7 @@ class PullRequestRepresentation extends PullRequestMinimalRepresentation
         PullRequest $pull_request,
         GitRepository $repository,
         GitRepository $repository_dest,
+        GitPullRequestReference $git_reference,
         $user_can_merge,
         $user_can_abandon,
         $user_can_update_labels,
@@ -134,6 +141,7 @@ class PullRequestRepresentation extends PullRequestMinimalRepresentation
 
         $this->reference_src  = $pull_request->getSha1Src();
         $this->reference_dest = $pull_request->getSha1Dest();
+        $this->head_reference = $git_reference->getGitHeadReference();
         $this->status         = $this->expandStatusName($pull_request->getStatus());
 
         $this->last_build_status = $last_build_status_name;
