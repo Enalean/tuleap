@@ -33,7 +33,6 @@
             <color-picker-palette v-if="! is_old_palette_shown"
                 v-on:color-update="setColor"
                 v-bind:current-color="color"
-                v-bind:no-color-label="noColorLabel"
             />
 
 
@@ -48,15 +47,15 @@
                     class="colorpicker-transparent-preview"
                     v-on:color-update="setColor"
                 />
-                <span class="old-colorpicker-no-color-label" v-on:click="setColor()">{{ noColorLabel }}</span>
+                <span class="old-colorpicker-no-color-label"
+                      v-on:click="setColor()"
+                      v-translate
+                >No color</span>
             </p>
 
             <color-picker-switch
                 v-bind:is-switch-disabled="is_switch_disabled"
                 v-bind:is-old-palette-shown="is_old_palette_shown"
-                v-bind:switch-disabled-title="switchDisabledTitle"
-                v-bind:switch-default-palette-label="switchDefaultPaletteLabel"
-                v-bind:switch-old-palette-label="switchOldPaletteLabel"
                 v-on:switch-palette="switchPalettes"
             />
         </div>
@@ -92,11 +91,7 @@ export default {
         inputName: String,
         inputId: String,
         currentColor: String,
-        switchDefaultPaletteLabel: String,
-        switchOldPaletteLabel: String,
-        switchDisabledTitle: String,
-        isSwitchDisabled: String,
-        noColorLabel: String
+        isSwitchDisabled: String
     },
     data() {
         const is_hexa_color = this.currentColor.includes("#");

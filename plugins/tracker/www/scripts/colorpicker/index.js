@@ -18,11 +18,24 @@
  */
 
 import Vue from "vue";
+import GetTextPlugin from "vue-gettext";
+import french_translations from "../po/fr.po";
 import ColorPicker from "./ColorPicker.vue";
 
 const ColorPickerComponent = Vue.extend(ColorPicker);
 
-export function createColorPicker(mount_point) {
+export { createColorPicker };
+
+function createColorPicker(mount_point) {
+    Vue.use(GetTextPlugin, {
+        translations: {
+            fr: french_translations.messages
+        },
+        silent: true
+    });
+
+    Vue.config.language = document.body.dataset.userLocale;
+
     new ColorPickerComponent({
         propsData: mount_point.dataset
     }).$mount(mount_point);

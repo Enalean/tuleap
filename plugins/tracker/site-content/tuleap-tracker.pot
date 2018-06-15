@@ -214,9 +214,6 @@ msgstr ""
 msgid "Move artifact"
 msgstr ""
 
-msgid "No color"
-msgstr ""
-
 msgid "No element selected."
 msgstr ""
 
@@ -323,12 +320,6 @@ msgid ""
 msgstr ""
 
 msgid "Suspend notifications"
-msgstr ""
-
-msgid "Switch to default colors"
-msgstr ""
-
-msgid "Switch to old colors"
 msgstr ""
 
 msgid "Target URL:"
@@ -704,11 +695,6 @@ msgstr ""
 msgid ""
 "You can't choose your notifications level for this tracker because tracker "
 "administrator has suspended all notifications."
-msgstr ""
-
-msgid ""
-"You can't switch to old colors because the field is currently being used by "
-"the card background color semantic"
 msgstr ""
 
 msgid "You don't have permissions to see user groups."
