@@ -1,3 +1,5 @@
+import { setAccessibilityMode } from "./user-accessibility-mode.js";
+
 export default MainCtrl;
 
 MainCtrl.$inject = [
@@ -59,5 +61,7 @@ function MainCtrl(
         SharedPropertiesService.setNodeServerVersion("2.0.0");
         const nodejs_server = kanban_init_data.nodejsServer;
         SharedPropertiesService.setNodeServerAddress(nodejs_server);
+
+        setAccessibilityMode(JSON.parse(kanban_init_data.userAccessibilityMode));
     }
 }

@@ -18,7 +18,7 @@
             ></div>
         </div>
 
-        <div class="kanban-item-card-accessibility {{ item.background_color_name }}"></div>
+        <div ng-if="$ctrl.user_has_accessibility_mode" class="kanban-item-card-accessibility {{ item.background_color_name }}"></div>
 
         <span ng-if="column" class="kanban-item-content-clock" title="{{ kanban.getTimeInfo(column, item) }}">
             <i class="fa fa-clock-o"></i>

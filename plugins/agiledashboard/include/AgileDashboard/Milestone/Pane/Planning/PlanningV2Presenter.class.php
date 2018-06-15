@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2014. All rights reserved.
+ * Copyright Enalean (c) 2014 - 2018. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -48,6 +48,9 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter {
     /** @var AgileDashboard_Milestone_PaginatedMilestonesRepresentations */
     public $paginated_milestones_representations;
 
+    /** @var string */
+    public $user_accessibility_mode;
+
     public function __construct(
         PFUser $current_user,
         Project $project,
@@ -64,9 +67,10 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter {
         $this->milestone_representation                = json_encode($milestone_representation);
         $this->paginated_backlog_items_representations = json_encode($paginated_backlog_items_representations);
         $this->paginated_milestones_representations    = json_encode($paginated_milestones_representations);
+        $this->user_accessibility_mode                 = json_encode((bool) $current_user->getPreference(PFUser::ACCESSIBILITY_MODE));
     }
 
-    private function getLanguageAbbreviation($current_user) {
+    private function getLanguageAbbreviation(PFUser $current_user) {
         list($lang, $country) = explode('_', $current_user->getLocale());
 
         return $lang;

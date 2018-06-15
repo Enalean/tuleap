@@ -1,6 +1,7 @@
 import angular            from 'angular';
 import _                  from 'lodash';
 import BacklogFilterValue from '../../backlog-filter-terms.js';
+import { getAccessibilityMode } from "../../user-accessibility-mode.js";
 
 export default BacklogItemDetailsController;
 
@@ -23,6 +24,7 @@ function BacklogItemDetailsController(
 ) {
     const self = this;
     Object.assign(self, {
+        user_has_accessibility_mode: getAccessibilityMode(),
         backlog_filter: BacklogFilterValue,
         showEditModal : EditItemService.showEditModal,
         showAddChildModal,

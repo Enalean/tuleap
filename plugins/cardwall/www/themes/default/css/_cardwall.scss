@@ -669,11 +669,15 @@ body.fullscreen {
 .card-preview-title {
     flex: 1 1 auto;
     display: block;
-    margin: 0 20px 30px 20px;
+    margin: 0 0 30px 20px;
     padding: 10px 10px 10px 0;
     font-size: 16px;
     line-height: 18px;
     word-break: break-all;
+
+    &.card-preview-title-accessibility {
+        margin: 0 20px 30px 20px;
+    }
 }
 
 .card-content-fields {

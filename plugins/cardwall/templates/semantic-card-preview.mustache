@@ -45,8 +45,8 @@
         <div class="card-preview-content-fields">
             <div class="card-preview-content">
                 <span class="card-preview-id">{{ tracker_shortname }} #{{ artifact_id }}</span><i class="far fa-clock card-preview-fa-clock-o"></i>
-                <span class="card-preview-title"> {{ artifact_description }}</span>
-                <div class="card-accessibility"></div>
+                <span class="card-preview-title {{# user_has_accessibility_mode }}card-preview-title-accessibility{{/ user_has_accessibility_mode }}"> {{ artifact_description }}</span>
+                {{# user_has_accessibility_mode }}<div class="card-accessibility"></div>{{/ user_has_accessibility_mode }}
             </div>
             <div class="card-preview-fields card-details">
                 {{# card_preview_details }}

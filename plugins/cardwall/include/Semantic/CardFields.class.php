@@ -191,7 +191,8 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
             $this->tracker,
             $this->getCSRFToken(),
             $this->getUrl(),
-            $card_preview_details
+            $card_preview_details,
+            $current_user
         );
 
         $renderer = TemplateRendererFactory::build()->getRenderer(dirname(CARDWALL_BASE_DIR) . '/templates');

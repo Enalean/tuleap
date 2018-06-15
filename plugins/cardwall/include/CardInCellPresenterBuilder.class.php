@@ -89,6 +89,7 @@ class Cardwall_CardInCellPresenterBuilder
         $background_color     = $this->background_color_builder->build($card_fields_semantic, $artifact, $this->user);
 
         return new Cardwall_CardPresenter(
+            $this->user,
             $artifact,
             $this->card_fields,
             $color,
