@@ -1,15 +1,41 @@
 <div id="pull-request-overview">
     <h3><i class="icon-list"></i> <span translate>Details</span></h3>
+    <div class="pull-request-top-actions">
+        <button class="btn btn-small pull-request-top-actions-edition" ng-click="overview.showEditionForm = true">
+            <i class="icon-edit"></i> {{ ::'Edit message' | translate }}
+        </button>
+        <div class="dropdown pull-request-checkout-dropdown">
+            <button class="btn btn-small dropdown-toggle" type="button" data-toggle="dropdown">
+                <i class="icon-download"></i> {{ ::'Checkout' | translate }} <b class="caret"></b>
+            </button>
+            <div class="dropdown-menu pull-request-checkout-menu"
+                ng-click="$event.stopPropagation()"
+            >
+                <div class="pull-request-checkout-menu-content">
+                    <span class="pull-request-checkout-menu-label" translate>Checkout with</span>
+                    <select class="pull-request-checkout-select"
+                        ng-model="overview.current_checkout_method"
+                    >
+                        <option ng-if="overview.pull_request.repository_dest.clone_ssh_url"
+                            value="ssh"
+                        >SSH</option>
+                        <option ng-if="overview.pull_request.repository_dest.clone_http_url"
+                            value="http"
+                        >HTTPS</option>
+                    </select>
+                </div>
+                <pre class="pull-request-checkout-commands">
+<code class="pull-request-checkout-command">git fetch {{ overview.getCloneUrl(overview.current_checkout_method) }} {{ ::overview.pull_request.head_reference }}</code>
+<code class="pull-request-checkout-command">git checkout FETCH_HEAD</code>
+                </pre>
+            </div>
+        </div>
+    </div>
 
     <div id="pull-request-info" ng-class="{ 'in-edition': overview.showEditionForm }">
         <div class="pull-request-details">
             <div ng-hide="overview.showEditionForm">
-                <div>
-                    <button class="btn btn-mini show-edition" ng-click="overview.showEditionForm = true">
-                        <i class="icon-edit"></i> {{ 'Edit message' | translate }}
-                    </button>
-                    <span ng-bind-html="overview.pull_request.title" class="pull-request-title"></span>
-                </div>
+                <span ng-bind-html="overview.pull_request.title" class="pull-request-title"></span>
                 <blockquote class="pull-request-description" ng-bind-html="overview.pull_request.description"></blockquote>
             </div>
             <form class="pull-request-edition-form" ng-show="overview.showEditionForm">

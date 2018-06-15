@@ -28,7 +28,11 @@ function OverviewController(
         pull_request       : {},
         showEditionForm    : false,
         valid_status_keys  : PullRequestService.valid_status_keys,
+        current_checkout_method: 'ssh',
 
+        getCloneUrl: method => (self.pull_request.repository_dest)
+            ? self.pull_request.repository_dest['clone_' + method + '_url']
+            : '',
         abandon,
         buildStatusIs,
         checkMerge,
@@ -42,6 +46,8 @@ function OverviewController(
 
     SharedPropertiesService.whenReady().then(function() {
         self.pull_request = SharedPropertiesService.getPullRequest();
+
+        self.current_checkout_method = self.pull_request.repository_dest.clone_ssh_url ? 'ssh' : 'http';
 
         self.editionForm.raw_title       = self.pull_request.raw_title;
         self.editionForm.raw_description = self.pull_request.raw_description;

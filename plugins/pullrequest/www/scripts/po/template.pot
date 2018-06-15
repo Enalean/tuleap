@@ -34,6 +34,14 @@ msgstr ""
 msgid "Changes"
 msgstr ""
 
+#: src/app/overview/overview.tpl.html
+msgid "Checkout"
+msgstr ""
+
+#: src/app/overview/overview.tpl.html
+msgid "Checkout with"
+msgstr ""
+
 #: src/app/overview/timeline/timeline.tpl.html
 msgid "Comment"
 msgstr ""
