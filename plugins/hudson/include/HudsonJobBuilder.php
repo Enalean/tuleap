@@ -20,37 +20,40 @@
 
 namespace Tuleap\Hudson;
 
-use Http_ClientException;
+use Http\Client\HttpAsyncClient;
+use Http\Message\RequestFactory;
 use HudsonJobURLFileException;
 use HudsonJobURLFileNotFoundException;
+use Psr\Http\Message\ResponseInterface;
 use SimpleXMLElement;
 
 class HudsonJobBuilder
 {
-    const MAX_BATCH_EXECUTION_TIME = 5;
-
     /**
-     * @var \Http_Client
+     * @var RequestFactory
+     */
+    private $http_request_factory;
+    /**
+     * @var HttpAsyncClient
      */
     private $http_client;
 
-    public function __construct(\Http_Client $http_client)
+
+    public function __construct(RequestFactory $http_request_factory, HttpAsyncClient $http_client)
     {
-        $this->http_client = $http_client;
+        $this->http_request_factory = $http_request_factory;
+        $this->http_client          = $http_client;
     }
 
     /**
      * @return \HudsonJob
-     * @throws Http_ClientException
+     * @throws \Http\Client\Exception
      * @throws HudsonJobURLFileException
      * @throws HudsonJobURLFileNotFoundException
      */
     public function getHudsonJob(MinimalHudsonJob $minimal_hudson_job)
     {
-        return new \HudsonJob(
-            $minimal_hudson_job->getName(),
-            $this->getXMLContent($minimal_hudson_job->getJobUrl())
-        );
+        return $this->getHudsonJobsWithException([$minimal_hudson_job])[0]->getHudsonJob();
     }
 
     /**
@@ -59,22 +62,24 @@ class HudsonJobBuilder
      */
     public function getHudsonJobsWithException(array $minimal_hudson_jobs)
     {
-        $start_time  = time();
-        $hudson_jobs = [];
+        $promises = [];
         foreach ($minimal_hudson_jobs as $id => $minimal_hudson_job) {
-            if ((time() - $start_time) >= self::MAX_BATCH_EXECUTION_TIME) {
-                $hudson_jobs[$id] = new HudsonJobLazyExceptionHandler(
-                    null,
-                    new HudsonJobRetrievalTooLongException(
-                        dgettext('tuleap-hudson', 'Jobs retrieval took too long, this job has been ignored')
-                    )
-                );
-                continue;
-            }
+            $request       = $this->getHTTPRequest($minimal_hudson_job);
+            $promise       = $this->http_client->sendAsyncRequest($request);
+            $promises[$id] = $promise;
+        }
+
+        $hudson_jobs = [];
+        foreach ($promises as $id => $promise) {
             try {
-                $hudson_jobs[$id] = new HudsonJobLazyExceptionHandler($this->getHudsonJob($minimal_hudson_job), null);
-            } catch (\Exception $exception) {
-                $hudson_jobs[$id] = new HudsonJobLazyExceptionHandler(null, $exception);
+                $minimal_hudson_job = $minimal_hudson_jobs[$id];
+                $response           = $promise->wait();
+                $hudson_jobs[$id]   = new HudsonJobLazyExceptionHandler(
+                    new \HudsonJob($minimal_hudson_job->getName(), $this->getXMLContent($minimal_hudson_job, $response)),
+                    null
+                );
+            } catch (\Exception $ex) {
+                $hudson_jobs[$id] = new HudsonJobLazyExceptionHandler(null, $ex);
             }
         }
 
@@ -82,26 +87,28 @@ class HudsonJobBuilder
     }
 
     /**
-     * @return SimpleXMLElement
-     * @throws Http_ClientException
-     * @throws HudsonJobURLFileException
-     * @throws HudsonJobURLFileNotFoundException
+     * @return \Psr\Http\Message\RequestInterface
      */
-    private function getXMLContent($job_url)
+    private function getHTTPRequest(MinimalHudsonJob $minimal_hudson_job)
     {
-        $this->http_client->setOption(CURLOPT_URL, $job_url);
-        $this->http_client->doRequest();
+        $job_url = $minimal_hudson_job->getJobUrl();
+        return $this->http_request_factory->createRequest('GET', $job_url);
+    }
 
-        $xmlstr = $this->http_client->getLastResponse();
-        if ($xmlstr !== false) {
-            $previous_libxml_use_errors = libxml_use_internal_errors(true);
-            $xmlobj = simplexml_load_string($xmlstr);
-            libxml_use_internal_errors($previous_libxml_use_errors);
-            if ($xmlobj !== false) {
-                return $xmlobj;
-            }
-            throw new HudsonJobURLFileException($GLOBALS['Language']->getText('plugin_hudson', 'job_url_file_error', [$job_url]));
+    /**
+     * @return SimpleXMLElement
+     * @throws HudsonJobURLFileException
+     */
+    private function getXMLContent(MinimalHudsonJob $minimal_hudson_job, ResponseInterface $http_response)
+    {
+        $previous_libxml_use_errors = libxml_use_internal_errors(true);
+        $xmlobj                     = simplexml_load_string($http_response->getBody());
+        libxml_use_internal_errors($previous_libxml_use_errors);
+        if ($xmlobj !== false) {
+            return $xmlobj;
         }
-        throw new HudsonJobURLFileNotFoundException($GLOBALS['Language']->getText('plugin_hudson', 'job_url_file_not_found', [$job_url]));
+        throw new HudsonJobURLFileException(
+            $GLOBALS['Language']->getText('plugin_hudson', 'job_url_file_error', [$minimal_hudson_job->getJobUrl()])
+        );
     }
 }

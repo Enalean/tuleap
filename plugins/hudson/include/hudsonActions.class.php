@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Http\HttpClientFactory;
+use Tuleap\Http\MessageFactoryBuilder;
 use Tuleap\Hudson\HudsonJobBuilder;
 
 /**
@@ -39,7 +41,7 @@ class hudsonActions extends Actions {
         $job_url = $request->get('hudson_job_url');
         try {
             $minimal_job_factory = new MinimalHudsonJobFactory();
-            $job_builder         = new HudsonJobBuilder(new Http_Client());
+            $job_builder         = new HudsonJobBuilder(MessageFactoryBuilder::build(), HttpClientFactory::createClient());
             $job                 = $job_builder->getHudsonJob(
                 $minimal_job_factory->getMinimalHudsonJob($job_url, '')
             );

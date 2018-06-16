@@ -18,8 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Hudson;
+namespace Tuleap\Http;
 
-class HudsonJobRetrievalTooLongException extends \Exception
+use Http\Message\MessageFactory\GuzzleMessageFactory;
+
+class MessageFactoryBuilder
 {
+    /**
+     * @return \Http\Message\MessageFactory
+     */
+    public static function build()
+    {
+        return new GuzzleMessageFactory();
+    }
 }
