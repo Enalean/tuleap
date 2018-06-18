@@ -999,3 +999,8 @@ h1, h2, h3 {
 .git-notification-mail-list-submit {
     margin: 15px 0 0;
 }
+
+.git-checkout-command::before {
+    content: '$';
+    margin: 0 1em 0 0;
+}
