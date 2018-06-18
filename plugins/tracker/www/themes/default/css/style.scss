@@ -501,9 +501,13 @@ select.tracker-report-expert-allowed-fields {
 
 .tracker_admin_static_value_hidden {
     background: url('../images/tracker_admin_static_value_hidden.png') top left repeat;
-    opacity: 0.35;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=35)"; /* IE 8 */
-    filter: alpha(opacity=35); /* IE < 8 */
+
+    > .tracker-admin-bindvalue_grip,
+    > .tracker-admin-bindvalue_actions,
+    > .tracker-admin-bindvalue_label,
+    > .tracker-admin-bindvalue_decorator > .dropdown > .dropdown-toggle {
+        opacity: .35;
+    }
 }
 
 .tracker_report_table_pager {
