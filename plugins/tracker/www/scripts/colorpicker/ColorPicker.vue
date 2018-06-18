@@ -102,7 +102,7 @@
             const is_hexa_color        = this.currentColor.includes('#');
             const show_old_preview     = this.currentColor.length === 0 || is_hexa_color;
             const is_switch_disabled   = Boolean(this.isSwitchDisabled);
-            const is_old_palette_shown = is_hexa_color && is_switch_disabled;
+            const is_old_palette_shown = is_hexa_color && ! is_switch_disabled;
 
             return {
                 color: this.currentColor,
