@@ -502,7 +502,7 @@ class Project extends Group implements PFO_Project {
     }
 
     public function projectsMustBeApprovedByAdmin() {
-        return ForgeConfig::get(\ProjectManager::CONFIG_PROJECT_APPROVAL, 1) === 1;
+        return (int) ForgeConfig::get(\ProjectManager::CONFIG_PROJECT_APPROVAL, 1) === 1;
     }
 
     /**
