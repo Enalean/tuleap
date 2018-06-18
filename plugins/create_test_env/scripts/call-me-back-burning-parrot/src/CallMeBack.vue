@@ -19,7 +19,7 @@
 <template>
     <div class="call-me-back tlp-dropdown">
         <button class="call-me-back-button tlp-button-primary tlp-button-large" ref="call_me_back_button">
-            <i class="fa fa-coffee"></i>
+            <i class="fa fa-comments-o"></i>
         </button>
         <form class="call-me-back-form tlp-dropdown-menu tlp-dropdown-menu-top tlp-dropdown-menu-right">
             <p class="call-me-back-form-intro">
