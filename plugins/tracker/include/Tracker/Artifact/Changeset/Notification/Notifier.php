@@ -45,6 +45,7 @@ use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsRetriever;
 use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
+use Tuleap\Tracker\Notifications\UserNotificationOnlyStatusChangeDAO;
 use UserHelper;
 use UserManager;
 use WrapperLogger;
@@ -123,7 +124,8 @@ class Notifier
                 Tracker_FormElementFactory::instance(),
                 UserManager::instance(),
                 new UnsubscribersNotificationDAO,
-                new UserNotificationSettingsRetriever(new Tracker_GlobalNotificationDao(), new UnsubscribersNotificationDAO())
+                new UserNotificationSettingsRetriever(new Tracker_GlobalNotificationDao(), new UnsubscribersNotificationDAO()),
+                new UserNotificationOnlyStatusChangeDAO()
             ),
             new MailSender(),
             new NotifierDao()

@@ -602,6 +602,12 @@ CREATE TABLE IF NOT EXISTS tracker_global_notification_unsubscribers (
     PRIMARY KEY (tracker_id, user_id)
 ) ENGINE=InnoDB;
 
+CREATE TABLE IF NOT EXISTS tracker_only_status_change_notification_subscribers (
+    tracker_id INT(11) NOT NULL,
+    user_id INT(11) NOT NULL,
+    PRIMARY KEY (tracker_id, user_id)
+) ENGINE=InnoDB;
+
 DROP TABLE IF EXISTS    tracker_watcher;
 CREATE TABLE tracker_watcher(
     user_id int(11) NOT NULL default '0',
