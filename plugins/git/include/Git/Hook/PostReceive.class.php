@@ -107,8 +107,8 @@ class Git_Hook_PostReceive
             $this->event_manager->processEvent($technical_reference_event);
             if (! $technical_reference_event->isATechnicalReference()) {
                 $this->mail_sender->sendMail($repository, $oldrev, $newrev, $refname);
+                $this->executeForRepositoryAndUser($repository, $user, $oldrev, $newrev, $refname);
             }
-            $this->executeForRepositoryAndUser($repository, $user, $oldrev, $newrev, $refname);
             $this->processGitWebhooks($repository, $user, $oldrev, $newrev, $refname);
             $this->event_manager->processEvent(GIT_HOOK_POSTRECEIVE_REF_UPDATE, array(
                 'repository'                    => $repository,
