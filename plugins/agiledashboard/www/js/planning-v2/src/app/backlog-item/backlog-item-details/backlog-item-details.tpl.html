@@ -58,7 +58,7 @@
 
     <div class="backlog-item-details-effort-container">
         <span ng-if="details.backlog_item.initial_effort"
-            class="tlp-badge-{{ details.backlog_item.color }}"
+            ng-class="'tlp-badge-' + details.getCardColorName()"
             title="{{::'Initial effort' | translate }}"
             ng-bind-html="(details.backlog_item.initial_effort | tuleapHighlight:details.backlog_filter.terms)"
         ></span>
@@ -104,7 +104,7 @@
     </span>
 </div>
 
-<item-progress color-name="{{ details.backlog_item.color }}"
+<item-progress color-name="{{ details.getCardColorName() }}"
     value="details.backlog_item.remaining_effort"
     max-value="details.backlog_item.initial_effort"
 ></item-progress>
