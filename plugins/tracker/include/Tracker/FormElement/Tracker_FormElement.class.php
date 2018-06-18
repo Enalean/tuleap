@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -892,9 +892,10 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      *
      * @param Tracker $tracker The tracker
      *
+     * @param bool $tracker_is_empty
      * @return void
      */
-    public function afterSaveObject($tracker) {
+    public function afterSaveObject(Tracker $tracker, $tracker_is_empty, $force_absolute_ranking) {
         //do nothing per default
     }
 
@@ -931,11 +932,11 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     /**
      * Hook called after a creation of a formelement
      *
-     * @param array $formElement_data The data used to create the formelement
-     *
+     * @param array $form_element_data
+     * @param bool $tracker_is_empty
      * @return void
      */
-    public function afterCreate($formElement_data) {
+    public function afterCreate(array $form_element_data, $tracker_is_empty) {
     }
 
     /**

@@ -257,13 +257,13 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         );
     }
 
-    public function afterCreate($formElement_data = array())
+    public function afterCreate(array $form_element_data, $tracker_is_empty)
     {
-        $formElement_data['specific_properties']['fast_compute']      = '1';
-        $formElement_data['specific_properties']['target_field_name'] = $this->name;
-        $this->storeProperties($formElement_data['specific_properties']);
+        $form_element_data['specific_properties']['fast_compute']      = '1';
+        $form_element_data['specific_properties']['target_field_name'] = $this->name;
+        $this->storeProperties($form_element_data['specific_properties']);
 
-        parent::afterCreate($formElement_data);
+        parent::afterCreate($form_element_data, $tracker_is_empty);
     }
 
     public function exportPropertiesToXML(&$root)

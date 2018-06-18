@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -56,11 +56,13 @@ class Tracker_SharedFormElementFactoryTest extends TuleapTestCase {
                     'required'          => $originField->isRequired(),
                     'notifications'     => $originField->hasNotifications(),
                     'original_field_id' => $originField->getId(),
-                )
+                ),
+                false,
+                false,
             )
         );
 
-        $decorator->createFormElement($tracker, $formElement_data, $user);
+        $decorator->createFormElement($tracker, $formElement_data, $user, false, false);
     }
 
     public function testUnreadableFieldCannotBeCopied() {
@@ -70,7 +72,7 @@ class Tracker_SharedFormElementFactoryTest extends TuleapTestCase {
         $field->getTracker()->setReturnValue('userCanView', true, array($user));
 
         $this->expectException();
-        $decorator->createFormElement($tracker, array('field_id' => $field->getId()), $user);
+        $decorator->createFormElement($tracker, array('field_id' => $field->getId()), $user, false, false);
     }
 
     public function testFieldInUnaccessibleTrackerCannotBeCopied() {
@@ -80,7 +82,7 @@ class Tracker_SharedFormElementFactoryTest extends TuleapTestCase {
         $field->getTracker()->setReturnValue('userCanView', false, array($user));
 
         $this->expectException();
-        $decorator->createFormElement($tracker, array('field_id' => $field->getId()), $user);
+        $decorator->createFormElement($tracker, array('field_id' => $field->getId()), $user, false, false);
     }
 
     public function testDuplicatesAnyValuesThatAreBoundToTheOriginalField() {
@@ -92,7 +94,7 @@ class Tracker_SharedFormElementFactoryTest extends TuleapTestCase {
         $factory->setReturnValue('createFormElement', $newFieldId);
         $boundValuesFactory->expectOnce('duplicateByReference', 
                 array($originField->getId(), $newFieldId));
-        $decorator->createFormElement($tracker, array('field_id' => $originField->getId()), $user);
+        $decorator->createFormElement($tracker, array('field_id' => $originField->getId()), $user, false, false);
 
     }
 
@@ -139,10 +141,12 @@ class Tracker_SharedFormElementFactoryTest extends TuleapTestCase {
                     'required'          => $originalFieldOfOriginalField->isRequired(),
                     'notifications'     => $originalFieldOfOriginalField->hasNotifications(),
                     'original_field_id' => $originalFieldOfOriginalField->getId(),
-                )
+                ),
+                false,
+                false,
             )
         );
-        $decorator->createFormElement($tracker, $formElement_data, $user);
+        $decorator->createFormElement($tracker, $formElement_data, $user, false, false);
     }
 
     private function GivenAFieldSelectbox($id, $originalField) {
@@ -188,7 +192,7 @@ class Tracker_SharedFormElementFactoryTest extends TuleapTestCase {
         $field->getTracker()->setReturnValue('userCanView', true);
 
         $this->expectException();
-        $decorator->createFormElement($tracker, array('field_id' => $field->getId()), $user);
+        $decorator->createFormElement($tracker, array('field_id' => $field->getId()), $user, false, false);
     }
     
     public function testCreateSharedFieldNotPossibleIfFieldNotStaticSelectbox() {
@@ -198,7 +202,7 @@ class Tracker_SharedFormElementFactoryTest extends TuleapTestCase {
         $field->getTracker()->setReturnValue('userCanView', true);
 
         $this->expectException();
-        $decorator->createFormElement($tracker, array('field_id' => $field->getId()), $user);
+        $decorator->createFormElement($tracker, array('field_id' => $field->getId()), $user, false, false);
     }
     
     private function GivenAFieldString() {

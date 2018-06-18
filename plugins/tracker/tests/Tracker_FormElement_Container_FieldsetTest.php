@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (c) Enalean SAS. 2011 - 2018. All rights reserved
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Codendi.
@@ -88,9 +89,9 @@ class Tracker_FormElement_Container_FieldsetTest extends TuleapTestCase {
         $f->setReturnValue('getFormElements', array($a_formelement));
         $f->setReturnValue('getId', 66);
         
-        $factory->expect('saveObject', array($tracker, $a_formelement, 66));
+        $factory->expect('saveObject', array($tracker, $a_formelement, 66, false, false));
         
-        $f->afterSaveObject($tracker);
+        $f->afterSaveObject($tracker, false, false);
     }
     
     public function testIsDeletableWithFields() {

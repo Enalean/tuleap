@@ -64,7 +64,7 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
         return new ViewAdminBurnupField($element, $used_element);
     }
 
-    public function afterCreate($formElement_data = array())
+    public function afterCreate(array $form_element_data, $tracker_is_empty)
     {
     }
 

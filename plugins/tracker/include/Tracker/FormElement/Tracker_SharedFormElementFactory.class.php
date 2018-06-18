@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -34,7 +34,7 @@ class Tracker_SharedFormElementFactory {
     }
 
     
-    public function createFormElement(Tracker $tracker, array $formElement_data, PFUser $user) {
+    public function createFormElement(Tracker $tracker, array $formElement_data, PFUser $user, $tracker_is_empty, $force_absolute_ranking) {
         $formElement = $this->factory->getFormElementById($formElement_data['field_id']);
         if (!$formElement) {
             $exception_message = $GLOBALS['Language']->getText('plugin_tracker_formelement_exception', 'wrong_field_id', $formElement_data['field_id']);
@@ -45,7 +45,7 @@ class Tracker_SharedFormElementFactory {
         
         $data = $this->populateFormElementDataForASharedField($field);
         $type = $data['type'];
-        $id = $this->factory->createFormElement($tracker, $type, $data);
+        $id = $this->factory->createFormElement($tracker, $type, $data, $tracker_is_empty, $force_absolute_ranking);
         $this->boundValuesFactory->duplicateByReference($field->getId(), $id);
         return $id;
     }

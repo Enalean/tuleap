@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -334,13 +334,14 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
      * Callback called after factory::saveObject. Use this to do post-save actions
      *
      * @param Tracker $tracker The tracker
-     *
+     * @param bool $tracker_is_empty
+     * @param bool $force_absolute_ranking
      * @return void
      */
-    public function afterSaveObject(Tracker $tracker) {
+    public function afterSaveObject(Tracker $tracker, $tracker_is_empty, $force_absolute_ranking) {
         //save sub elements
         foreach ($this->getFormElements() as $elem){
-            $this->getFormElementFactory()->saveObject($tracker, $elem, $this->getId());
+            $this->getFormElementFactory()->saveObject($tracker, $elem, $this->getId(), $tracker_is_empty, $force_absolute_ranking);
         }
     }
     

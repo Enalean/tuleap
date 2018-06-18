@@ -454,7 +454,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function create($type, $tracker_id, $parent_id, $name, $prefix_name, $label, $description, $use_it, $scope, $required, $notifications, $rank, $original_field_id) {
+    public function create($type, $tracker_id, $parent_id, $name, $prefix_name, $label, $description, $use_it, $scope, $required, $notifications, $rank, $original_field_id, $force_absolute_ranking) {
         $type              = $this->da->quoteSmart($type);
         $tracker_id        = $this->da->escapeInt($tracker_id);
         $parent_id         = $this->da->escapeInt($parent_id);
@@ -466,7 +466,11 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
         $scope             = $this->da->quoteSmart($scope);
         $required          = $this->da->escapeInt($required);
         $notifications     = ($notifications ? 1 : "NULL");
-        $rank              = $this->da->escapeInt($this->prepareRanking(0, $parent_id, $rank, 'id', 'parent_id'));
+        if ($force_absolute_ranking) {
+            $rank = (int) $rank;
+        } else {
+            $rank = (int) $this->prepareRanking(0, $parent_id, $rank, 'id', 'parent_id');
+        }
         $original_field_id = $this->da->escapeInt($original_field_id);
 
         $sql = "INSERT INTO $this->table_name (tracker_id, parent_id, name, formElement_type, label, description, scope, required, use_it, rank, notifications, original_field_id) ";

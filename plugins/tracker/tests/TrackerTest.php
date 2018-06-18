@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (c) Enalean SAS, 2011 - 2018. All rights reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Codendi.
@@ -1645,7 +1646,7 @@ class TrackerTest extends TuleapTestCase {
         $data = array('type' => 'string');
 
         list($tracker, $factory, $sharedFactory, $user) = $this->GivenATrackerAndItsFactories();
-        $factory->expectOnce('createFormElement', array($tracker , $data['type'], $data));
+        $factory->expectOnce('createFormElement', array($tracker , $data['type'], $data, false, false));
         $sharedFactory->expectNever('createFormElement');
 
         $tracker->createFormElement($data['type'], $data, $user);
@@ -1656,7 +1657,7 @@ class TrackerTest extends TuleapTestCase {
 
         list($tracker, $factory, $sharedFactory, $user) = $this->GivenATrackerAndItsFactories();
         $factory->expectNever('createFormElement');
-        $sharedFactory->expectOnce('createFormElement', array($tracker , $data, $user));
+        $sharedFactory->expectOnce('createFormElement', array($tracker , $data, $user, false, false));
 
         $tracker->createFormElement($data['type'], $data, $user);
     }

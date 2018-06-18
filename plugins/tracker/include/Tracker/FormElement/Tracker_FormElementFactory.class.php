@@ -1512,7 +1512,7 @@ class Tracker_FormElementFactory {
         );
     }
 
-    public function createFormElement($tracker, $type, $form_element_data) {
+    public function createFormElement(Tracker $tracker, $type, $form_element_data, $tracker_is_empty, $force_absolute_ranking) {
         //Check that the label has been submitted
         if (isset($form_element_data['label']) && trim($form_element_data['label'])) {
             $label       = trim($form_element_data['label']);
@@ -1572,7 +1572,9 @@ class Tracker_FormElementFactory {
                                                      $is_required,
                                                      $notify,
                                                      $rank,
-                                                     $original_field_id)) {
+                                                     $original_field_id,
+                                                     $force_absolute_ranking
+                        )) {
                         //Set permissions
                         if (!array_key_exists($type, array_merge($this->group_classnames, $this->staticfield_classnames))) {
                             $ugroups_permissions = $this->getPermissionsFromFormElementData($id, $form_element_data);
@@ -1600,7 +1602,7 @@ class Tracker_FormElementFactory {
                             }
 
                             //All is done, the field may want to do some things depending on the request
-                            $form_element->afterCreate($form_element_data);
+                            $form_element->afterCreate($form_element_data, $tracker_is_empty);
 
                             return $id;
                         }
@@ -1656,13 +1658,13 @@ class Tracker_FormElementFactory {
      *
      * @return the id of the newly created FormElement
      */
-    public function saveObject($tracker, $form_element, $parent_id) {
+    public function saveObject(Tracker $tracker, $form_element, $parent_id, $tracker_is_empty, $force_absolute_ranking) {
         $form_element_data = $form_element->getFormElementDataForCreation($parent_id);
         $type              = $this->getType($form_element);
 
-        if ($id = $this->createFormElement($tracker, $type, $form_element_data)) {
+        if ($id = $this->createFormElement($tracker, $type, $form_element_data, $tracker_is_empty, $force_absolute_ranking)) {
             $form_element->setId($id);
-            $form_element->afterSaveObject($tracker);
+            $form_element->afterSaveObject($tracker, $tracker_is_empty, $force_absolute_ranking);
         }
         return $id;
     }

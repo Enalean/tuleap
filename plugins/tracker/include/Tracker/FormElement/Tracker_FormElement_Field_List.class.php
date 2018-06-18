@@ -1044,13 +1044,14 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     /**
      * Hook called after a creation of a field
      *
-     * @param array $data The data used to create the field
+     * @param array $form_element_data
+     * @param bool $tracker_is_empty
      */
-    public function afterCreate($formElement_data = [])
+    public function afterCreate(array $form_element_data, $tracker_is_empty)
     {
-        parent::afterCreate();
-        $type      = isset($formElement_data['bind-type']) ? $formElement_data['bind-type'] : '';
-        $bind_data = isset($formElement_data['bind']) ? $formElement_data['bind'] : array();
+        parent::afterCreate($form_element_data, $tracker_is_empty);
+        $type      = isset($form_element_data['bind-type']) ? $form_element_data['bind-type'] : '';
+        $bind_data = isset($form_element_data['bind']) ? $form_element_data['bind'] : array();
 
         $bf = new Tracker_FormElement_Field_List_BindFactory();
         if ($this->bind = $bf->createBind($this, $type, $bind_data)) {
@@ -1111,8 +1112,9 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * Callback called after factory::saveObject. Use this to do post-save actions
      *
      * @param Tracker $tracker The tracker
+     * @param bool $tracker_is_empty
      */
-    public function afterSaveObject($tracker)
+    public function afterSaveObject(Tracker $tracker, $tracker_is_empty, $force_absolute_ranking)
     {
         $bind = $this->getBind();
         $this->getListDao()->save($this->getId(), $this->getBindFactory()->getType($bind));
