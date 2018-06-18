@@ -28,7 +28,8 @@ function BacklogItemDetailsController(
         backlog_filter: BacklogFilterValue,
         showEditModal : EditItemService.showEditModal,
         showAddChildModal,
-        canBeAddedToChildren
+        canBeAddedToChildren,
+        getCardColorName
     });
 
     function showAddChildModal($event, item_type) {
@@ -79,5 +80,11 @@ function BacklogItemDetailsController(
         var child_already_in_children = _.find(self.backlog_item.children.data, { id: child_item_id });
 
         return angular.isUndefined(child_already_in_children);
+    }
+
+    function getCardColorName() {
+        return (self.backlog_item.background_color_name)
+            ? self.backlog_item.background_color_name
+            : self.backlog_item.color;
     }
 }
