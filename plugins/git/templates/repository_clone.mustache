@@ -77,15 +77,17 @@
                 <dt>{{ clone_text }}</dt>
                 <dd>
                     <pre>
-git clone <span class="plugin_git_example_url">{{ get_default_url }}</span> {{ repository_name }}
-cd {{ repository_name }}</pre>
+<code class="git-checkout-command">git clone <span class="plugin_git_example_url">{{ get_default_url }}</span> {{ repository_name }}</code>
+<code class="git-checkout-command">cd {{ repository_name }}</code>
+                    </pre>
                 </dd>
                 <dt>{{ add_remote_text }}</dt>
                 <dd>
                     <pre>
-git remote add {{ repository_name }} <span class="plugin_git_example_url">{{ get_default_url }}</span>
-git fetch {{ repository_name }}
-git checkout -b my-local-tracking-branch {{ repository_name }}/master</pre>
+<code class="git-checkout-command">git remote add {{ repository_name }} <span class="plugin_git_example_url">{{ get_default_url }}</span></code>
+<code class="git-checkout-command">git fetch {{ repository_name }}</code>
+<code class="git-checkout-command">git checkout -b my-local-tracking-branch {{ repository_name }}/master</code>
+                    </pre>
                 </dd>
                 {{{ additional_help_text }}}
             </dl>
