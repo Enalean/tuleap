@@ -42,27 +42,33 @@ $kanban-item-padding-height: 5px;
         }
 
         .kanban-item-content-info-label {
+            flex: unset;
+            width: 65%;
             margin: 0;
             font-size: 14px;
             text-align: left;
         }
 
-        .kanban-item-content-clock {
-            position: relative;
-            right: 0;
-            margin: 0 0 0 5px;
-        }
 
         .extra-card-fields {
             display: none;
         }
 
-        .kanban-item-card-accessibility {
-            position: relative;
-            top: -$kanban-item-padding-height;
-            right: initial;
-            height: calc(100% + #{2 * $kanban-item-padding-height + $expand-collapse-bar-height});
+        .kanban-item-content-info-right {
+            display: flex;
+
+            > .kanban-item-content-clock {
+                margin: 0 0 0 5px;
+            }
+
+            > .kanban-item-card-accessibility {
+                position: relative;
+                top: -$kanban-item-padding-height;
+                right: 15px;
+                height: calc(100% + #{2 * $kanban-item-padding-height + $expand-collapse-bar-height});
+            }
         }
+
     }
 
     @each $color-name, $colors in $tlp-swatch-color-map {
@@ -168,7 +174,7 @@ kanban-item {
 
 .kanban-item-content-info-label {
     flex: 1 1 auto;
-    width: 100%;
+    width: 90%;
     margin: 10px 0;
     overflow: hidden;
     text-align: center;
