@@ -27,18 +27,8 @@ class SemanticVelocityDao extends DataAccessObject
 {
     public function addField($tracker_id, $field_id)
     {
-        $this->getDB()->beginTransaction();
-
-        try {
-            $this->removeField($tracker_id);
-
-            $sql = 'INSERT INTO plugin_velocity_semantic_field(tracker_id, field_id) VALUES (?, ?)';
-            $this->getDB()->run($sql, $tracker_id, $field_id);
-
-            $this->getDB()->commit();
-        } catch (PDOException $ex) {
-            $this->getDB()->rollBack();
-        }
+        $sql = 'REPLACE INTO plugin_velocity_semantic_field(tracker_id, field_id) VALUES (?, ?)';
+        $this->getDB()->run($sql, $tracker_id, $field_id);
     }
 
     public function removeField($tracker_id)
