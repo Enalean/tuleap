@@ -12,6 +12,14 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.0.8\n"
 
+#, php-format
+msgid "%s (%s - %s) wants to be called back on %s."
+msgstr "%s (%s - %s) souhaite être rappelé le %s."
+
+#, php-format
+msgid "%s wants to be called back"
+msgstr "%s souhaite être rappelé"
+
 msgid "An error occurred during the update of the email"
 msgstr "Une erreur est survenue lors de la mise à jour de l’email"
 

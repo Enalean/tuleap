@@ -1,3 +1,11 @@
+#, php-format
+msgid "%s (%s - %s) wants to be called back on %s."
+msgstr ""
+
+#, php-format
+msgid "%s wants to be called back"
+msgstr ""
+
 msgid "An error occurred during the update of the email"
 msgstr ""
 
