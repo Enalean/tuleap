@@ -1,7 +1,6 @@
 import 'angular-socket-io'; // provides btford.socket-io
 import 'angular-locker';
 import jwt from '../jwt/jwt.js';
-import 'angular-moment';
 import 'angular-gettext';
 
 import SocketConfig              from './socket-config.js';
@@ -13,7 +12,6 @@ angular.module('socket', [
     'btford.socket-io',
     'angular-locker',
     jwt,
-    'angularMoment',
     'gettext'
 ])
 .config(SocketConfig)

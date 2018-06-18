@@ -10,9 +10,6 @@ export default KanbanCtrl;
 
 KanbanCtrl.$inject = [
     '$scope',
-    '$sce',
-    'gettextCatalog',
-    'amCalendarFilter',
     'SharedPropertiesService',
     'KanbanService',
     'KanbanItemRestService',
@@ -30,9 +27,6 @@ KanbanCtrl.$inject = [
 
 function KanbanCtrl(
     $scope,
-    $sce,
-    gettextCatalog,
-    amCalendarFilter,
     SharedPropertiesService,
     KanbanService,
     KanbanItemRestService,
@@ -79,8 +73,6 @@ function KanbanCtrl(
         $onInit: init,
         isColumnWipReached,
         userIsAdmin,
-        getTimeInfo,
-        getTimeInfoInArchive,
         createItemInPlace,
         createItemInPlaceInBacklog,
         editKanban,
@@ -440,45 +432,6 @@ function KanbanCtrl(
 
     function userIsAdmin() {
         return SharedPropertiesService.getUserIsAdmin();
-    }
-
-    function getTimeInfo(column, item) {
-        var timeinfo = '';
-
-        if (!column || !item.timeinfo) {
-            return;
-        }
-
-        timeinfo += getTimeInfoEntry(item.timeinfo.kanban, gettextCatalog.getString('In Kanban since:'));
-        timeinfo += "\u000a\u000a";
-        timeinfo += getTimeInfoEntry(item.timeinfo[column.id], gettextCatalog.getString('In column since:'));
-
-        return $sce.trustAsHtml(timeinfo);
-    }
-
-    function getTimeInfoInArchive(item) {
-        var timeinfo = '';
-
-        if (!item.timeinfo) {
-            return;
-        }
-
-        timeinfo += getTimeInfoEntry(item.timeinfo.kanban, gettextCatalog.getString('In Kanban since:'));
-        timeinfo += "\u000a\u000a";
-        timeinfo += getTimeInfoEntry(item.timeinfo.archive, gettextCatalog.getString('In column since:'));
-
-        return $sce.trustAsHtml(timeinfo);
-    }
-
-    function getTimeInfoEntry(entry_date, label) {
-        var timeinfo = '';
-
-        if (entry_date) {
-            timeinfo += label + ' ';
-            timeinfo += amCalendarFilter(entry_date);
-        }
-
-        return timeinfo;
     }
 
     function createItemInPlaceInBacklog(label) {

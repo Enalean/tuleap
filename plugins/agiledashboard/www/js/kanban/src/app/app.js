@@ -5,7 +5,6 @@ import angular_artifact_modal from 'angular-artifact-modal';
 import angular_tlp from 'angular-tlp';
 
 import 'angular-locker';
-import 'angular-moment';
 import 'angular-gettext';
 import 'ng-scrollbar';
 import 'restangular';
@@ -50,7 +49,6 @@ import ColumnWipHeaderDirective            from './kanban-column/column-wip-head
 
 export default angular.module('kanban', [
     'angular-locker',
-    'angularMoment',
     'gettext',
     'ngScrollbar',
     'restangular',

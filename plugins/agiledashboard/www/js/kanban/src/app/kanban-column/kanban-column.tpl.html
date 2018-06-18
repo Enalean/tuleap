@@ -19,7 +19,6 @@
             ng-repeat="item in $ctrl.column.filtered_content track by $id(item)"
             class="kanban-item {{ item.color }}"
             ng-class="{
-                'updating'    : item.updating,
                 'compact-view': item.is_collapsed,
             }"
             id="item_{{ item.id }}"
