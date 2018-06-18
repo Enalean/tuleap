@@ -35,13 +35,6 @@ msgstr "Choisissez un champ pour définir la couleur de fond des cartes"
 msgid "Choose a field..."
 msgstr "Coisissez un champ..."
 
-msgid ""
-"Description and field values are extracted from a random artifact of the "
-"tracker."
-msgstr ""
-"La description et la valeur des champs sont extraites d'un artéfact aléatoire "
-"du tracker."
-
 msgid "Field not found"
 msgstr "Champ non trouvé"
 
@@ -52,8 +45,8 @@ msgid ""
 "If a color corresponds to multiple values, the preview will display only one "
 "card with this background color."
 msgstr ""
-"Si une couleur correspond à plusieurs valeurs, l'aperçu va afficher seulement "
-"une carte pour ce fond."
+"Si une couleur correspond à plusieurs valeurs, l'aperçu va afficher "
+"seulement une carte pour ce fond."
 
 msgid ""
 "No field can be chosen for card color background. Only selectbox and "
@@ -74,13 +67,6 @@ msgid ""
 msgstr ""
 "Seuls les champs statiques avec des valeurs liées à la nouvelle palette de "
 "couleur peuvent être choisis comme couleur de fond des cartes"
-
-msgid ""
-"Preview is an example, data might not be consistent with the artifact's real "
-"data."
-msgstr ""
-"L'aperçu est un exemple, les données peuvent être incohérentes avec les "
-"données réelles de l'artéfact."
 
 msgid "Preview of the card"
 msgstr "Aperçu des cartes"
@@ -114,6 +100,9 @@ msgstr "Aucun champ n'est ajouté aux cartes pour l'instant"
 
 msgid "There is no more field that can be added to the cards."
 msgstr "Il n'y a plus de champs pouveant être ajoutés aux cartes"
+
+msgid "This is an example title"
+msgstr "Ceci est un exemple de titre"
 
 msgid "go back to semantic overview"
 msgstr "retour à l'administration de la sémantique"
