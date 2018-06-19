@@ -1,15 +1,16 @@
 <h2>{{# dgettext }} tuleap-tracker | Notifications {{/ dgettext }}</h2>
-<p class="alert alert-warning">
-    {{# dgettext }}
-        tuleap-tracker
-        | Status change notification is under development, this option will not be taken in account for now.
-    {{/ dgettext }}
-</p>
+{{^ has_status_semantic_defined }}
+    <p class="alert alert-info">
+        {{# dgettext }}
+            tuleap-tracker
+            | You must configure a status semantic if you want to use the "status change notifications" notification level for this tracker.
+        {{/ dgettext }}
+    </p>
+{{/ has_status_semantic_defined }}
 <p>
     {{# dgettext }}
         tuleap-tracker
-        | As a tracker administrator, you can temporarily suspend all the e-mail notifications in this tracker,
-          regardless of the notification settings below.
+        | As a tracker administrator, you can choose the e-mail notifications level in this tracker.
     {{/ dgettext }}
 </p>
 <input type="hidden" name="notifications_level" value="0" />
@@ -17,7 +18,7 @@
     <input type="radio" name="notifications_level" value="{{ disabled_value }}" {{# is_disabled }}checked{{/ is_disabled }} />
     {{# dgettext }}
         tuleap-tracker
-        | No notifications
+        | No notifications (regardless of "Global Email Notification" below)
     {{/ dgettext }}
 </label>
 <label class="radio">
@@ -27,11 +28,13 @@
         | Default Tuleap notifications (people will get notified when they are submitter, assignee, commenter or CC)
     {{/ dgettext }}
 </label>
-<label class="radio">
-    <input type="radio" name="notifications_level" value="{{ status_change_value }}" {{# is_status_change }}checked{{/ is_status_change }} />
-    {{# dgettext }}
-        tuleap-tracker
-        | Status change notifications (people will get notified when artifact status is updated)
-    {{/ dgettext }}
-</label>
+{{# has_status_semantic_defined }}
+    <label class="radio">
+        <input type="radio" name="notifications_level" value="{{ status_change_value }}" {{# is_status_change }}checked{{/ is_status_change }} />
+        {{# dgettext }}
+            tuleap-tracker
+            | Status change notifications (people will get notified when they are submitter, assignee, commenter or CC and artifact status is updated)
+        {{/ dgettext }}
+    </label>
+{{/ has_status_semantic_defined }}
 <input class="btn" type="submit" value="{{# dgettext }} tuleap-tracker | Submit {{/ dgettext }}"/>

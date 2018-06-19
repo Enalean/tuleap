@@ -280,12 +280,13 @@ class Tracker_NotificationsManager {
         $renderer->renderToPage(
             'admin-notifications-level',
             [
-                'disabled_value'      => Tracker::NOTIFICATIONS_LEVEL_DISABLED,
-                'default_value'       => Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
-                'status_change_value' => Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE,
-                'is_default'          => $notifications_level === Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
-                'is_disabled'         => $notifications_level === Tracker::NOTIFICATIONS_LEVEL_DISABLED,
-                'is_status_change'    => $notifications_level === Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE
+                'disabled_value'              => Tracker::NOTIFICATIONS_LEVEL_DISABLED,
+                'default_value'               => Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
+                'status_change_value'         => Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE,
+                'is_default'                  => $notifications_level === Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
+                'is_disabled'                 => $notifications_level === Tracker::NOTIFICATIONS_LEVEL_DISABLED,
+                'is_status_change'            => $notifications_level === Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE,
+                'has_status_semantic_defined' => $this->tracker->hasSemanticsStatus()
             ]
         );
     }

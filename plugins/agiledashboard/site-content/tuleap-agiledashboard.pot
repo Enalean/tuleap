@@ -144,6 +144,11 @@ msgid ""
 "for this tracker."
 msgstr ""
 
+msgid ""
+"The semantic status cannot de deleted because tracker notifications is set "
+"to \"Status change notifications\"."
+msgstr ""
+
 msgid "There is no content <br> you can see"
 msgstr ""
 

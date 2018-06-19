@@ -21,31 +21,33 @@
 
 namespace Tuleap\Tracker\Artifact\Changeset\Notification;
 
-use Logger;
-use Tuleap\Queue\Worker;
-use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
-use WrapperLogger;
-use Tracker;
-use Tracker_FormElementFactory;
-use Tracker_Artifact_Changeset;
-use UserManager;
-use ConfigNotificationAssignedTo;
-use ConfigNotificationAssignedToDao;
-use ForgeConfig;
-use Tracker_Artifact_MailGateway_RecipientFactory;
-use PFUser;
-use Tracker_ArtifactByEmailStatus;
-use Tracker_Artifact;
-use MailManager;
 use BaseLanguage;
-use DateHelper;
-use UserHelper;
 use Codendi_HTMLPurifier;
 use Codendi_Mail_Interface;
-use Tuleap\Queue\QueueFactory;
+use ConfigNotificationAssignedTo;
+use ConfigNotificationAssignedToDao;
+use DateHelper;
 use Exception;
+use ForgeConfig;
+use Logger;
+use MailManager;
+use PFUser;
+use Tracker;
+use Tracker_Artifact;
+use Tracker_Artifact_Changeset;
+use Tracker_Artifact_MailGateway_RecipientFactory;
+use Tracker_ArtifactByEmailStatus;
+use Tracker_FormElementFactory;
+use Tracker_GlobalNotificationDao;
+use Tuleap\Queue\QueueFactory;
+use Tuleap\Queue\Worker;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
+use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsRetriever;
+use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
+use UserHelper;
+use UserManager;
+use WrapperLogger;
 
 class Notifier
 {
@@ -120,7 +122,8 @@ class Notifier
             new RecipientsManager(
                 Tracker_FormElementFactory::instance(),
                 UserManager::instance(),
-                new UnsubscribersNotificationDAO
+                new UnsubscribersNotificationDAO,
+                new UserNotificationSettingsRetriever(new Tracker_GlobalNotificationDao(), new UnsubscribersNotificationDAO())
             ),
             new MailSender(),
             new NotifierDao()
