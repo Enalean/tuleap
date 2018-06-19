@@ -665,6 +665,13 @@ msgid ""
 msgstr ""
 
 msgid ""
+"You can use variables to customize the sender field. The available variables "
+"are %%realname and %%username.\n"
+"    These will be replaced by the full name and username of the user who "
+"updated the artifact."
+msgstr ""
+
+msgid ""
 "You can't choose your notifications level for this tracker because tracker "
 "administrator has suspended all notifications."
 msgstr ""

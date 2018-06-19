@@ -33,10 +33,13 @@ use Logger;
 use MailManager;
 use PFUser;
 use Tracker;
+use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSender;
+use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSenderDao;
+use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSenderFormatter;
+use Tracker_ArtifactByEmailStatus;
 use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_MailGateway_RecipientFactory;
-use Tracker_ArtifactByEmailStatus;
 use Tracker_FormElementFactory;
 use Tracker_GlobalNotificationDao;
 use Tuleap\Queue\QueueFactory;
@@ -53,6 +56,10 @@ use WrapperLogger;
 class Notifier
 {
     const DEFAULT_MAIL_SENDER = 'forge__artifacts';
+    const DEFAULT_SENDER_EXPOSED_FIELDS = [
+        'username' => 'user_name',
+        'realname' => 'realname'
+    ];
 
     /**
      * @var Logger
@@ -87,6 +94,10 @@ class Notifier
      * @var NotifierDao
      */
     private $notifier_dao;
+    /**
+     * @var \ConfigNotificationEmailCustomSender
+     */
+    private $config_notification_custom_sender;
 
     public function __construct(
         Logger $logger,
@@ -96,16 +107,18 @@ class Notifier
         UserHelper $user_helper,
         RecipientsManager $recipients_manager,
         MailSender $mail_sender,
-        NotifierDao $notifier_dao
+        NotifierDao $notifier_dao,
+        ConfigNotificationEmailCustomSender $config_notification_custom_sender
     ) {
-        $this->logger                          = new WrapperLogger($logger, __CLASS__);
-        $this->mail_gateway_config             = $mail_gateway_config;
-        $this->config_notification_assigned_to = $config_notification_assigned_to;
-        $this->recipient_factory               = $recipient_factory;
-        $this->user_helper                     = $user_helper;
-        $this->recipients_manager              = $recipients_manager;
-        $this->mail_sender                     = $mail_sender;
-        $this->notifier_dao                    = $notifier_dao;
+        $this->logger                                   = new WrapperLogger($logger, __CLASS__);
+        $this->mail_gateway_config                      = $mail_gateway_config;
+        $this->config_notification_assigned_to          = $config_notification_assigned_to;
+        $this->recipient_factory                        = $recipient_factory;
+        $this->user_helper                              = $user_helper;
+        $this->recipients_manager                       = $recipients_manager;
+        $this->mail_sender                              = $mail_sender;
+        $this->notifier_dao                             = $notifier_dao;
+        $this->config_notification_custom_sender        = $config_notification_custom_sender;
     }
 
     public static function build(Logger $logger)
@@ -132,7 +145,8 @@ class Notifier
                 new UserNotificationOnlyStatusChangeDAO()
             ),
             new MailSender(),
-            new NotifierDao()
+            new NotifierDao(),
+            new ConfigNotificationEmailCustomSender(new ConfigNotificationEmailCustomSenderDao())
         );
     }
 
@@ -266,7 +280,7 @@ class Notifier
                 $message_id = $this->getMessageId($user, $changeset);
 
                 $messages[$message_id]               = $this->getMessageContent($changeset, $user, $is_update, $check_perms);
-                $messages[$message_id]['from']       = ForgeConfig::get('sys_name') . '<' .$changeset->getArtifact()->getTokenBasedEmailAddress() . '>';
+                $messages[$message_id]['from']       = $this->getSenderName($changeset) . '<' .$changeset->getArtifact()->getTokenBasedEmailAddress() . '>';
                 $messages[$message_id]['message-id'] = $message_id;
                 $messages[$message_id]['headers']    = $headers;
                 $messages[$message_id]['recipients'] = array($user->getEmail());
@@ -274,7 +288,7 @@ class Notifier
                 $headers = array($this->getAnonymousHeaders());
 
                 $messages[$anonymous_mail]               = $this->getMessageContent($changeset, $user, $is_update, $check_perms);
-                $messages[$anonymous_mail]['from']       = $this->getDefaultEmailSenderAddress();
+                $messages[$anonymous_mail]['from']       = $this->getEmailSenderAddress($changeset);
                 $messages[$anonymous_mail]['message-id'] = null;
                 $messages[$anonymous_mail]['headers']    = $headers;
                 $messages[$anonymous_mail]['recipients'] = array($user->getEmail());
@@ -309,10 +323,9 @@ class Notifier
                     $messages[$hash]['recipients'] = array($recipient_mail);
                 }
 
-                $messages[$hash]['from'] = $this->getDefaultEmailSenderAddress();
+                $messages[$hash]['from'] = $this->getEmailSenderAddress($changeset);
             }
         }
-
         return $messages;
     }
 
@@ -327,15 +340,81 @@ class Notifier
         );
     }
 
-    private function getDefaultEmailSenderAddress()
+    /**
+     * @return string
+     * */
+    private function getEmailSenderAddress(Tracker_Artifact_Changeset $changeset)
+    {
+        $address = $this->getDefaultSenderAddress();
+        $name = $this->getSenderName($changeset);
+        return self::getEmailSender($name, $address);
+    }
+
+    /**
+     * @param string $name the display name
+     * @param string $address the email address
+     * @return string
+     * */
+    private static function getEmailSender($name, $address)
+    {
+        return '"' . $name . '" <' . $address . '>';
+    }
+
+    /**
+     * @return string
+     * */
+    private function getDefaultSenderAddress()
     {
         $email_domain = ForgeConfig::get('sys_default_mail_domain');
-
         if (! $email_domain) {
             $email_domain = ForgeConfig::get('sys_default_domain');
         }
+        return self::DEFAULT_MAIL_SENDER.'@'.$email_domain;
+    }
 
-        return ForgeConfig::get('sys_name') . '<' . self::DEFAULT_MAIL_SENDER . '@' . $email_domain . '>';
+    /**
+     * @return string
+     * */
+    private function getDefaultSenderName()
+    {
+        return ForgeConfig::get('sys_name');
+    }
+
+    /**
+     * Looks for the custom sender setting and formats the name accordingly
+     * @param \Tracker_Artifact_Changeset $changeset
+     * @return string containing the formatted name if setting enabled
+     * */
+    private function getSenderName(Tracker_Artifact_Changeset $changeset)
+    {
+        $name = $this->getDefaultSenderName();
+        if ($changeset) {
+            $tracker = $changeset->getTracker();
+            $email_custom_sender = $this->config_notification_custom_sender->getCustomSender($tracker);
+            if ($email_custom_sender['enabled']) {
+                $name = $email_custom_sender['format'];
+                $row = $this->getAppropriateSenderFields($changeset);
+                $cef = new ConfigNotificationEmailCustomSenderFormatter($row);
+                $name = $cef->formatString($name);
+            }
+        }
+        return $name;
+    }
+
+    /**
+     * Get the appropriate fields for putting into the email sender field
+     * @param \Tracker_Artifact_Changeset $changeset
+     * @return array of kv pairs with the applicable fields
+     * */
+    private function getAppropriateSenderFields(Tracker_Artifact_Changeset $changeset)
+    {
+        $fields = array();
+        $user_row = $changeset->getSubmitter()->toRow();
+        $user_fields = self::DEFAULT_SENDER_EXPOSED_FIELDS;
+        foreach ($user_fields as $exposed_field => $internal_field) {
+            $fields[$exposed_field] = $user_row[$internal_field];
+        }
+        return $fields;
     }
 
     private function getMessageId(PFUser $user, Tracker_Artifact_Changeset $changeset)
