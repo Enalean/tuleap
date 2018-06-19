@@ -29,6 +29,10 @@
 .colorpicker-transparent-preview {
     margin: 0 5px 0 0;
     cursor: pointer;
+
+    + .old-colorpicker-no-color-label {
+        cursor: pointer;
+    }
 }
 
 .old-color-preview {
@@ -41,11 +45,11 @@
     text-align: center;
 
     > .colorpicker-circular-color:first-child {
-        margin: 12px 12px 12px 0;
+        margin: 12px 12px 14px 0;
     }
 
     > .colorpicker-circular-color:last-child {
-        margin: 12px 0 12px 12px;
+        margin: 12px 0 14px 12px;
     }
 }
 
@@ -53,6 +57,40 @@
     display: flex;
     align-items: center;
     padding: 0 0 0 12px;
+
+    > .colorpicker-circular-no-color {
+        margin-bottom: 12px;
+        border: 3px solid #d8d8d8;
+        background: linear-gradient(
+                135deg,
+                #ffffff 44%,
+                #d8d8d8 45%,
+                #d8d8d8 55%,
+                #ffffff 56%
+        );
+
+        &.colorpicker-no-color-selected {
+            background: linear-gradient(
+                    135deg,
+                    #ffffff 50%,
+                    #ffffff 50%
+            );
+            color: #d8d8d8;
+        }
+    }
+
+    > .colorpicker-row-no-color-label {
+        display: inline-block;
+        position: relative;
+        top: 1px;
+        color: #787878;
+        font-size: 12px;
+        cursor: pointer;
+
+        &:hover {
+            color: darken(#787878, 20%);
+        }
+    }
 }
 
 .old-colorpicker-palette {
@@ -68,40 +106,11 @@
     cursor: pointer;
 }
 
-.colorpicker-circular-no-color {
-    border: 3px solid #d8d8d8;
-    background: linear-gradient(
-            135deg,
-            #ffffff 44%,
-            #d8d8d8 45%,
-            #d8d8d8 55%,
-            #ffffff 56%
-    );
-
-    &.colorpicker-no-color-selected {
-        background: linear-gradient(
-                135deg,
-                #ffffff 50%,
-                #ffffff 50%
-        );
-        color: #d8d8d8;
-    }
-}
-
-.colorpicker-row-no-color-label {
-    display: inline-block;
-    position: relative;
-    top: 1px;
-    color: #787878;
-    font-size: 12px;
-    cursor: pointer;
-}
-
 .colorpicker-circular-color {
     display: inline-block;
     width: 15px;
     height: 15px;
-    margin: 12px;
+    margin: 12px 12px 14px;
     border-radius: 50%;
     text-align: center;
     vertical-align: middle;

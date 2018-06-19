@@ -23,6 +23,7 @@
            href="javascript:;"
            data-target="#"
            data-toggle="dropdown"
+           v-on:click="showRightPalette"
         >
             <old-color-picker-preview v-if="show_old_preview" v-bind:color="color"/>
             <color-picker-preview v-else v-bind:color="color"/>
@@ -46,9 +47,8 @@
                     color
                     class="colorpicker-transparent-preview"
                     v-on:color-update="setColor"
-                    v-bind:no-color-label="noColorLabel"
                 />
-                {{ noColorLabel }}
+                <span class="old-colorpicker-no-color-label" v-on:click="setColor()">{{ noColorLabel }}</span>
             </p>
 
             <color-picker-switch
@@ -124,6 +124,9 @@
             },
             switchPalettes() {
                 this.is_old_palette_shown = ! this.is_old_palette_shown;
+            },
+            showRightPalette() {
+                this.is_old_palette_shown = this.isHexaColor && ! this.is_switch_disabled;
             }
         }
     }
