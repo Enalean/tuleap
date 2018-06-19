@@ -33,10 +33,14 @@ class b201806061545_add_tlp_color_name_cardwall_column extends ForgeUpgrade_Buck
 
     public function up()
     {
-        $sql = 'ALTER TABLE plugin_cardwall_on_top_column ADD COLUMN tlp_color_name VARCHAR (30) NULL';
+        if (! $this->db->columnNameExists('plugin_cardwall_on_top_column', 'tlp_color_name')) {
+            $sql = 'ALTER TABLE plugin_cardwall_on_top_column ADD COLUMN tlp_color_name VARCHAR (30) NULL';
 
-        if (! $this->db->dbh->exec($sql)) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('plugin_cardwall_on_top_column update failed');
+            $this->db->dbh->exec($sql);
+
+            if (! $this->db->columnNameExists('plugin_cardwall_on_top_column', 'tlp_color_name')) {
+                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('plugin_cardwall_on_top_column update failed');
+            }
         }
     }
 }
