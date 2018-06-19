@@ -87,6 +87,13 @@
                 <p class="text-warning" ng-if="overview.buildStatusIs('unknown')">
                     <i class="icon-warning-sign"></i> <span translate>Unknown</span>
                 </p>
+                <p class="text-warning warning-deprecation-build-status-rest-route"
+                   ng-if="overview.pull_request.build_status_with_deprecated_route">
+                    <i class="icon-warning-sign"></i> <span translate>
+                    Your CI job is using a deprecated REST route to publish the build result and must be updated.
+                    Consult the documentation or the API Explorer for more information.
+                </span>
+                </p>
             </div>
         </div>
     </div>
