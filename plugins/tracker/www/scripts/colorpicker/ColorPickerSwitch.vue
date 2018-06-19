@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <div class="colorpicker-switch">
+    <div class="colorpicker-switch" v-bind:class="{ 'colorpicker-switch-to-old-palette': ! isOldPaletteShown }">
         <a v-bind:class="{ 'colorpicker-switch-disabled': isSwitchDisabled }"
            v-bind:title="getSwitchTitle"
            v-on:click="switchPalette"
