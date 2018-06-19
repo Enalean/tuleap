@@ -65,8 +65,8 @@ class CallMeBackResource extends AuthenticatedResource
     /**
      * Send an email with call me back information
      *
-     * @param string $phone {@from body} User phone number
-     * @param string $date {@from body} Date when user want to be called back
+     * @param string $phone User phone number {@from body} {@type string}
+     * @param string $date  Date when user want to be called back {@from body} {@type date}
      *
      * @access protected
      *
