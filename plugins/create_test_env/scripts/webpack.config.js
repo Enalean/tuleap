@@ -1,7 +1,7 @@
 /*
  * Copyright Enalean (c) 2018. All rights reserved.
  *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
  * owners.
  *
@@ -30,14 +30,20 @@ const assets_dir_path = path.resolve(
 
 const webpack_config = {
     entry: {
-        'call-me-back-burning-parrot': './call-me-back-burning-parrot/src/index.js',
-        'call-me-back-flaming-parrot': './call-me-back-flaming-parrot/src/index.js',
-        'call-me-back-admin'         : './call-me-back-admin.js'
+        'call-me-back-burning-parrot' : './call-me-back-burning-parrot/src/index.js',
+        'call-me-back-flaming-parrot' : './call-me-back-flaming-parrot/src/index.js',
+        'call-me-back-admin'          : './call-me-back-admin.js'
     },
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path),
     externals: {
         tlp: 'tlp'
+    },
+    resolve: {
+        alias: webpack_configurator.extendAliases(
+            {},
+            webpack_configurator.tlp_fetch_alias
+        )
     },
     module: {
         rules: [

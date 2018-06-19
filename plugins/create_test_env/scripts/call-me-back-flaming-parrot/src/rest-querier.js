@@ -17,26 +17,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from 'vue';
-import GetTextPlugin from 'vue-gettext';
-import french_translations from '../../po/fr.po';
-import CallMeBack from './CallMeBack.vue';
-import { Settings } from 'luxon';
+import { post } from 'tlp-fetch';
 
-document.addEventListener('DOMContentLoaded', () => {
-    Vue.use(GetTextPlugin, {
-        translations: {
-            fr: french_translations.messages
-        },
-        silent: true
+export {
+    askToBeCalledBack
+}
+
+function askToBeCalledBack(call_me_back_phone, call_back_me_date) {
+    const headers = {
+        "content-type": "application/json"
+    };
+
+    const body = JSON.stringify({
+        phone: call_me_back_phone,
+        date: call_back_me_date
     });
 
-    const locale = document.body.dataset.userLocale;
-    Vue.config.language    = locale;
-    Settings.defaultLocale = locale.substring(0, 2);
-    const call_me_back = document.createElement('div');
-    document.body.appendChild(call_me_back);
-    const RootComponent = Vue.extend(CallMeBack);
-
-    new RootComponent().$mount(call_me_back);
-});
+    return post('/api/call_me_back', {
+        headers,
+        body
+    });
+}
