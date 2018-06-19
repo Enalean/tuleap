@@ -61,14 +61,13 @@
               </bind>
             </formElement>
             <formElement type="sb" ID="F17455" rank="1">
-              <name>urgency</name>
+              <name>importance</name>
               <label>
-                <![CDATA[ Urgency ]]>
+                <![CDATA[ Importance ]]>
               </label>
               <bind type="static" is_rank_alpha="0">
                 <items>
-                  <item ID="V6932" label="Expedite" is_hidden="0"/>
-                  <item ID="V6933" label="Regular" is_hidden="0"/>
+                  <item ID="V6932" label="High" is_hidden="0"/>
                 </items>
                 <decorators>
                   <decorator REF="V6932" tlp_color_name="fiesta-red"/>
