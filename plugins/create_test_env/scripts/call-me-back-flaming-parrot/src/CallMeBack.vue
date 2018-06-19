@@ -19,7 +19,7 @@
 <template>
     <div class="call-me-back dropup">
         <button class="call-me-back-button dropdown-toggle" data-toggle="dropdown">
-            <i class="icon-coffee"></i>
+            <i class="icon-comments-alt"></i>
         </button>
         <form class="call-me-back-form dropdown-menu pull-right dropup" v-on:click.stop>
             <p class="call-me-back-form-intro">
