@@ -30,7 +30,8 @@ use Tuleap\CallMeBack\CallMeBackAdminSaveController;
 use Tuleap\CreateTestEnv\NotificationBotDao;
 use Tuleap\CreateTestEnv\NotificationBotIndexController;
 use Tuleap\CreateTestEnv\NotificationBotSaveController;
-use Tuleap\CreateTestEnv\REST\ResourcesInjector;
+use Tuleap\CreateTestEnv\REST\ResourcesInjector as CreateTestEnvResourcesInjector;
+use Tuleap\CallMeBack\REST\ResourcesInjector as CallMeBackResourcesInjector;
 use Tuleap\CreateTestEnv\Plugin\PluginInfo;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\BurningParrotCompatiblePageEvent;
@@ -88,8 +89,11 @@ class create_test_envPlugin extends Plugin
 
     public function restResources(array $params)
     {
-        $injector = new ResourcesInjector();
-        $injector->populate($params['restler']);
+        $create_test_env_injector = new CreateTestEnvResourcesInjector();
+        $create_test_env_injector->populate($params['restler']);
+
+        $call_me_back_injector = new CallMeBackResourcesInjector();
+        $call_me_back_injector->populate($params['restler']);
     }
 
     public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event)
