@@ -185,23 +185,27 @@ class create_test_envPlugin extends Plugin
 
     public function cssfile($params)
     {
-        $assets = new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/create_test_env/FlamingParrot',
-            '/assets/create_test_env/FlamingParrot'
-        );
-        $css_file_url = $assets->getFileURL('style.css');
-        echo '<link rel="stylesheet" type="text/css" href="' . $css_file_url . '" />';
+        if ($this->shouldCallMeBackButtonBeDisplayed()) {
+            $assets = new IncludeAssets(
+                __DIR__ . '/../../../src/www/assets/create_test_env/FlamingParrot',
+                '/assets/create_test_env/FlamingParrot'
+            );
+            $css_file_url = $assets->getFileURL('style.css');
+            echo '<link rel="stylesheet" type="text/css" href="' . $css_file_url . '" />';
+        }
     }
 
     // @codingStandardsIgnoreLine
     public function javascript_file()
     {
-        $assets = new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/create_test_env/scripts',
-            '/assets/create_test_env/scripts'
-        );
+        if ($this->shouldCallMeBackButtonBeDisplayed()) {
+            $assets = new IncludeAssets(
+                __DIR__ . '/../../../src/www/assets/create_test_env/scripts',
+                '/assets/create_test_env/scripts'
+            );
 
-        echo $assets->getHTMLSnippet('call-me-back-flaming-parrot.js') . PHP_EOL;
+            echo $assets->getHTMLSnippet('call-me-back-flaming-parrot.js') . PHP_EOL;
+        }
     }
 
 
@@ -223,12 +227,22 @@ class create_test_envPlugin extends Plugin
             '/assets/create_test_env/scripts'
         );
 
-        $params['javascript_files'][] = $assets->getFileURL('call-me-back-burning-parrot.js');
+        if ($this->shouldCallMeBackButtonBeDisplayed()) {
+            $params['javascript_files'][] = $assets->getFileURL('call-me-back-burning-parrot.js');
+        }
 
         if (strpos($_SERVER['REQUEST_URI'], '/plugins/create_test_env/call-me-back') === 0) {
             $params['javascript_files'][] = '/scripts/ckeditor-4.3.2/ckeditor.js';
             $params['javascript_files'][] = '/scripts/tuleap/tuleap-ckeditor-toolbar.js';
             $params['javascript_files'][] = $assets->getFileURL('call-me-back-admin.js');
         }
+    }
+
+    private function shouldCallMeBackButtonBeDisplayed()
+    {
+        $current_user = UserManager::instance()->getCurrentUser();
+
+        return $current_user->isLoggedIn()
+            && $current_user->getPreference('plugin_call_me_back_asked_to_be_called_back') !== '1';
     }
 }
