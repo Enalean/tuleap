@@ -21,5 +21,11 @@ msgstr "Rappelez-moi le"
 msgid "Fill this form and we'll call you back."
 msgstr "Remplissez ce formulaire et nous vous rappellerons."
 
+msgid "Ooops something went wrong. Please try again later."
+msgstr "Oups, il y a eu une erreur. Veuillez réessayer plus tard."
+
 msgid "Phone number"
 msgstr "Téléphone"
+
+msgid "We will call you back on"
+msgstr "Nous vous rappellerons le"

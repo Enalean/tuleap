@@ -6,6 +6,7 @@
   "license": "GPL-2.0+",
   "private": true,
   "dependencies": {
+    "luxon": "^0.5.3",
     "vue": "^2.5.13",
     "vue-gettext": "^2.0.31"
   },
@@ -15,6 +16,6 @@
   "scripts": {
     "build": "rm -rf ../../../src/www/assets/create_test_env/scripts && NODE_ENV=production $npm_package_config_bin/webpack --mode=production",
     "watch": "NODE_ENV=watch $npm_package_config_bin/webpack --watch --mode=development",
-    "extract-gettext-cli": "$npm_package_config_bin/gettext-extract call-me-back-burning-parrot/src/*.vue call-me-back-flaming-parrot/src/*.vue"
+    "extract-gettext-cli": "$npm_package_config_bin/gettext-extract --attribute v-translate call-me-back-burning-parrot/src/*.vue call-me-back-flaming-parrot/src/*.vue"
   }
 }

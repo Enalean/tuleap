@@ -14,5 +14,11 @@ msgstr ""
 msgid "Fill this form and we'll call you back."
 msgstr ""
 
+msgid "Ooops something went wrong. Please try again later."
+msgstr ""
+
 msgid "Phone number"
+msgstr ""
+
+msgid "We will call you back on"
 msgstr ""
