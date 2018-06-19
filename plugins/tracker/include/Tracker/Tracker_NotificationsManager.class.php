@@ -27,6 +27,8 @@ use Tuleap\Tracker\Notifications\NotificationListBuilder;
 use Tuleap\Tracker\Notifications\NotificationsForceUsageUpdater;
 use Tuleap\Tracker\Notifications\PaneNotificationListPresenter;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsDAO;
+use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSender;
+use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSenderDao;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyDao;
 use Tuleap\Tracker\Notifications\UsersToNotifyDao;
 use Tuleap\User\InvalidEntryInAutocompleterCollection;
@@ -167,6 +169,14 @@ class Tracker_NotificationsManager {
             $config_notification_assigned_to->enableAssignedToInSubject($this->tracker);
         } else {
             $config_notification_assigned_to->disableAssignedToInSubject($this->tracker);
+        }
+
+        $config_notification_custom_email_from = new ConfigNotificationEmailCustomSender(new ConfigNotificationEmailCustomSenderDao());
+
+        $email_custom_enabled = $request->get('email-custom-enabled');
+        $email_custom_from = $request->get('email-custom-from');
+        if ($email_custom_from) {
+            $config_notification_custom_email_from->setCustomSender($this->tracker, $email_custom_from, $email_custom_enabled);
         }
 
         $new_global_notification = $request->get('new_global_notification');
@@ -321,12 +331,16 @@ class Tracker_NotificationsManager {
     private function displayAdminNotificationAssignedToMeFlag()
     {
         $config_notification_assigned_to = new ConfigNotificationAssignedTo(new ConfigNotificationAssignedToDao());
+        $config_notification_custom_sender
+            = new ConfigNotificationEmailCustomSender(new ConfigNotificationEmailCustomSenderDao());
         $is_assigned_to_enabled          = $config_notification_assigned_to->isAssignedToSubjectEnabled($this->tracker);
+
+        $custom_email_sender = $config_notification_custom_sender->getCustomSender($this->tracker);
 
         $renderer = $this->getNotificationsRenderer();
         $renderer->renderToPage(
             'admin-subject-customisation',
-            new NotificationCustomisationSettingsPresenter($is_assigned_to_enabled)
+            new NotificationCustomisationSettingsPresenter($is_assigned_to_enabled, $custom_email_sender)
         );
     }
 

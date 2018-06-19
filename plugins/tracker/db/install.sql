@@ -821,6 +821,16 @@ CREATE TABLE plugin_tracker_notification_assigned_to (
     tracker_id INT(11) NOT NULL PRIMARY KEY
 ) ENGINE=InnoDB;
 
+DROP TABLE IF EXISTS plugin_tracker_notification_email_custom_sender_format;
+CREATE TABLE plugin_tracker_notification_email_custom_sender_format(
+                    tracker_id int(11) NOT NULL,
+                    format text,
+                    enabled bool,
+                    PRIMARY KEY (tracker_id),
+                    FOREIGN KEY (tracker_id)
+                        REFERENCES tracker(id)
+                ) ENGINE=InnoDB;
+
 DROP TABLE IF EXISTS plugin_tracker_recently_visited;
 CREATE TABLE plugin_tracker_recently_visited (
     user_id INT(11) NOT NULL,

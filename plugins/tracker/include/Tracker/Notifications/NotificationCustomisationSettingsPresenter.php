@@ -26,12 +26,17 @@ class NotificationCustomisationSettingsPresenter
     public $assign_to_me_enabled;
     public $assign_to_me_description;
     public $submit_changes;
+    public $custom_email_enabled;
+    public $custom_email_content;
 
-    public function __construct($assign_to_me_enabled)
+    public function __construct($assign_to_me_enabled, $custom_email)
     {
         $this->notification_customisation_title = $GLOBALS['Language']->getText('plugin_tracker_include_type', 'notification_customisation_title');
         $this->assign_to_me_enabled             = $assign_to_me_enabled;
         $this->assign_to_me_description         = $GLOBALS['Language']->getText('plugin_tracker_include_type', 'assigned_to_me_description');
         $this->submit_changes                   = $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'submit');
+        $this->custom_sender_description        = $GLOBALS['Language']->getText('plugin_tracker_include_type', 'custom_sender_description');
+        $this->custom_email_enabled             = $custom_email['enabled'];
+        $this->custom_email_content             = $custom_email['format'];
     }
 }

@@ -6,4 +6,10 @@
     <label for="enable-assigned-to-me">{{ assign_to_me_description }}</label>
 </div>
 
+<div class="checkbox">
+    <input type="checkbox" id="enable-email-custom-from" name="email-custom-enabled" {{# custom_email_enabled }}checked{{/ custom_email_enabled }}>
+    <label for="enable-email-custom-from">{{# dgettext }} tuleap-tracker | Enable custom sender fields for email notifications {{/ dgettext }}</label>
+    <input type="text" id="email-custom-from" name="email-custom-from" placeholder="Tuleap" value="{{ custom_email_content }}"></input>
+</div>
+
 <input class="btn" type="submit" value="{{ submit_changes }}">
