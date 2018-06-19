@@ -109,11 +109,11 @@ msgstr ""
 msgid "Go to Kanban"
 msgstr ""
 
-#: src/app/app-kanban-controller.js
+#: src/app/kanban-item/time-info/time-info-component.js
 msgid "In Kanban since:"
 msgstr ""
 
-#: src/app/app-kanban-controller.js
+#: src/app/kanban-item/time-info/time-info-component.js
 msgid "In column since:"
 msgstr ""
 
