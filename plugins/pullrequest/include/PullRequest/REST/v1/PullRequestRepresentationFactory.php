@@ -20,6 +20,7 @@
 
 namespace Tuleap\PullRequest\REST\v1;
 
+use Tuleap\Git\CommitStatus\CommitStatus;
 use Tuleap\Git\CommitStatus\CommitStatusRetriever;
 use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
 use Tuleap\PullRequest\Authorization\AccessControlVerifier;
@@ -99,14 +100,29 @@ class PullRequestRepresentationFactory
 
     private function getLastBuildInformation(PullRequest $pull_request, \GitRepository $repository_destination)
     {
-        if ($pull_request->getLastBuildDate() !== null) {
-            return [$this->expandDeprecatedBuildStatusName($pull_request->getLastBuildStatus()), $pull_request->getLastBuildDate()];
-        }
-
         $commit_status = $this->commit_status_retriever->getLastCommitStatus(
             $repository_destination,
             $pull_request->getSha1Src()
         );
+
+        if ($pull_request->getLastBuildDate() === null) {
+            return $this->convertCommitStatusToBuildStatus($commit_status);
+        }
+
+        switch ($commit_status->getStatusName()) {
+            case 'success':
+            case 'failure':
+                if ($commit_status->getDate()->getTimestamp() > $pull_request->getLastBuildDate()) {
+                    return $this->convertCommitStatusToBuildStatus($commit_status);
+                }
+                return [$this->expandDeprecatedBuildStatusName($pull_request->getLastBuildStatus()), $pull_request->getLastBuildDate()];
+            default:
+                return [self::BUILD_STATUS_UNKNOWN, null];
+        }
+    }
+
+    private function convertCommitStatusToBuildStatus(CommitStatus $commit_status)
+    {
         switch ($commit_status->getStatusName()) {
             case 'success':
                 return [self::BUILD_STATUS_SUCESS, $commit_status->getDate()->getTimestamp()];
