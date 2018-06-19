@@ -112,6 +112,12 @@ class PullRequestRepresentation extends PullRequestMinimalRepresentation
     public $last_build_date;
 
     /**
+     * @var bool
+     * @deprecated
+     */
+    public $build_status_with_deprecated_route;
+
+    /**
      * @var string {@type string}
      */
     public $raw_title;
@@ -131,6 +137,7 @@ class PullRequestRepresentation extends PullRequestMinimalRepresentation
         $user_can_update_labels,
         $last_build_status_name,
         $last_build_date,
+        $build_status_with_deprecated_route,
         PullRequestShortStatRepresentation $pr_short_stat_representation
     ) {
         $this->buildMinimal($pull_request, $repository, $repository_dest);
@@ -144,8 +151,9 @@ class PullRequestRepresentation extends PullRequestMinimalRepresentation
         $this->head_reference = $git_reference->getGitHeadReference();
         $this->status         = $this->expandStatusName($pull_request->getStatus());
 
-        $this->last_build_status = $last_build_status_name;
-        $this->last_build_date   = JsonCast::toDate($last_build_date);
+        $this->last_build_status                  = $last_build_status_name;
+        $this->last_build_date                    = JsonCast::toDate($last_build_date);
+        $this->build_status_with_deprecated_route = JsonCast::toBoolean($build_status_with_deprecated_route);
 
         $this->user_can_update_labels = $user_can_update_labels;
         $this->user_can_merge         = $user_can_merge;

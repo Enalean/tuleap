@@ -121,7 +121,6 @@
 
     > .pull-request-author-date,
     > .pull-request-changes-ci {
-        flex: 0 0 auto;
         transition: opacity 100ms linear;
     }
 
@@ -150,6 +149,18 @@
             transition: opacity 100ms linear;
         }
     }
+}
+
+.pull-request-author-date {
+    flex: 0 0 auto;
+}
+
+.pull-request-changes-ci {
+    flex: 1 1 auto;
+}
+
+.warning-deprecation-build-status-rest-route {
+    white-space: initial;
 }
 
 #pull-request-actions {

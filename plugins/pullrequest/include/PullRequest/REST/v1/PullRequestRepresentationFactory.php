@@ -79,7 +79,7 @@ class PullRequestRepresentationFactory
 
         $user_can_update_labels = $user_can_merge;
 
-        list($last_build_status_name, $last_build_date) = $this->getLastBuildInformation($pull_request, $repository_dest);
+        list($last_build_status_name, $last_build_date, $build_status_deprecated) = $this->getLastBuildInformation($pull_request, $repository_dest);
 
         $pull_request_representation = new PullRequestRepresentation($this->gitolite_access_URL_generator);
         $pull_request_representation->build(
@@ -92,6 +92,7 @@ class PullRequestRepresentationFactory
             $user_can_update_labels,
             $last_build_status_name,
             $last_build_date,
+            $build_status_deprecated,
             $short_stat_repres
         );
 
@@ -115,9 +116,9 @@ class PullRequestRepresentationFactory
                 if ($commit_status->getDate()->getTimestamp() > $pull_request->getLastBuildDate()) {
                     return $this->convertCommitStatusToBuildStatus($commit_status);
                 }
-                return [$this->expandDeprecatedBuildStatusName($pull_request->getLastBuildStatus()), $pull_request->getLastBuildDate()];
+                return [$this->expandDeprecatedBuildStatusName($pull_request->getLastBuildStatus()), $pull_request->getLastBuildDate(), true];
             default:
-                return [self::BUILD_STATUS_UNKNOWN, null];
+                return [self::BUILD_STATUS_UNKNOWN, null, false];
         }
     }
 
@@ -125,11 +126,11 @@ class PullRequestRepresentationFactory
     {
         switch ($commit_status->getStatusName()) {
             case 'success':
-                return [self::BUILD_STATUS_SUCESS, $commit_status->getDate()->getTimestamp()];
+                return [self::BUILD_STATUS_SUCESS, $commit_status->getDate()->getTimestamp(), false];
             case 'failure':
-                return [self::BUILD_STATUS_FAIL, $commit_status->getDate()->getTimestamp()];
+                return [self::BUILD_STATUS_FAIL, $commit_status->getDate()->getTimestamp(), false];
             default:
-                return [self::BUILD_STATUS_UNKNOWN, null];
+                return [self::BUILD_STATUS_UNKNOWN, null, false];
         }
     }
 
