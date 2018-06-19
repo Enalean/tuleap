@@ -779,15 +779,11 @@ class MediaWikiPlugin extends Plugin {
     private function getMediawikiMLEBExtensionManager() {
         return new MediawikiMLEBExtensionManager(
             $this->getMediawikiMigrator(),
-            $this->getMediawikiMLEBExtensionDao(),
+            new \Tuleap\Mediawiki\MediawikiExtensionDAO(),
             $this->getProjectManager(),
             $this->getMediawikiVersionManager(),
             $this->getMediawikiLanguageManager()
         );
-    }
-
-    private function getMediawikiMLEBExtensionDao() {
-        return new MediawikiMLEBExtensionDao();
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean 2015. All rights reserved
+ * Copyright (c) Enalean 2015-2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -23,9 +23,6 @@ class MediawikiMLEBExtensionManager {
     /** @var Mediawiki_Migration_MediawikiMigrator */
     private $migrator;
 
-    /** @var MediawikiMLEBExtensionDao */
-    private $mleb_dao;
-
     /** @var ProjectManager */
     private $project_manager;
 
@@ -34,16 +31,20 @@ class MediawikiMLEBExtensionManager {
 
     /** @var MediawikiLanguageManager */
     private $language_manager;
+    /**
+     * @var \Tuleap\Mediawiki\MediawikiExtensionDAO
+     */
+    private $extension_dao;
 
     public function __construct(
         Mediawiki_Migration_MediawikiMigrator $migrator,
-        MediawikiMLEBExtensionDao $mleb_dao,
+        \Tuleap\Mediawiki\MediawikiExtensionDAO $extension_dao,
         ProjectManager $project_manager,
         MediawikiVersionManager $version_manager,
         MediawikiLanguageManager $language_manager
     ) {
         $this->migrator         = $migrator;
-        $this->mleb_dao         = $mleb_dao;
+        $this->extension_dao    = $extension_dao;
         $this->project_manager  = $project_manager;
         $this->version_manager  = $version_manager;
         $this->language_manager = $language_manager;
@@ -60,14 +61,9 @@ class MediawikiMLEBExtensionManager {
             && $this->language_manager->getUsedLanguageForProject($project);
     }
 
-    private function getMLEBUsageForProject(Project $project) {
-        $row = $this->mleb_dao->getMLEBUsageForProject($project->getID());
-
-        if ($row) {
-            return $row['extension_mleb'];
-        }
-
-        return false;
+    private function getMLEBUsageForProject(Project $project)
+    {
+        return $this->extension_dao->isMLEBActivatedForProjectID($project->getID());
     }
 
     public function activateMLEBForProject(Project $project) {
@@ -79,8 +75,9 @@ class MediawikiMLEBExtensionManager {
         return $this->saveMLEBActivationForProject($project);
     }
 
-    public function saveMLEBActivationForProject(Project $project) {
-        return $this->mleb_dao->saveMLEBActivationForProject($project->getID());
+    public function saveMLEBActivationForProject(Project $project)
+    {
+        return $this->extension_dao->saveMLEBActivationForProjectID($project->getID());
     }
 
     public function activateMLEBForCompatibleProjects(Logger $logger) {
@@ -96,11 +93,14 @@ class MediawikiMLEBExtensionManager {
         $this->migrator->runUpdateScript($project);
     }
 
-    private function getProjectsEligibleToMLEBExtensionActivation() {
-        return $this->mleb_dao->getProjectIdsEligibleToMLEBExtensionActivation()->instanciateWith(array($this, "instantiateProjectFromRow"));
-    }
+    private function getProjectsEligibleToMLEBExtensionActivation()
+    {
+        $projects = [];
 
-    public function instantiateProjectFromRow(array $row) {
-        return $this->project_manager->getProject($row['project_id']);
+        foreach ($this->extension_dao->getProjectIdsEligibleToMLEBExtensionActivation() as $row) {
+            $projects[] = $this->project_manager->getProject($row['project_id']);
+        }
+
+        return $projects;
     }
 }

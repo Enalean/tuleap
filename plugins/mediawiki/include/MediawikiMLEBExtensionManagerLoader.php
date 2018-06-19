@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean 2015 - 2017. All rights reserved
+ * Copyright (c) Enalean 2015 - 2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -18,15 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class MediawikiMLEBExtensionManagerLoader {
+use Tuleap\Mediawiki\MediawikiExtensionDAO;
 
+class MediawikiMLEBExtensionManagerLoader
+{
     /**
      * @return MediawikiMLEBExtensionManager
      */
-    public function getMediawikiMLEBExtensionManager() {
+    public function getMediawikiMLEBExtensionManager()
+    {
         return new MediawikiMLEBExtensionManager(
             new Mediawiki_Migration_MediawikiMigrator(),
-            new MediawikiMLEBExtensionDao(),
+            new MediawikiExtensionDAO(),
             ProjectManager::instance(),
             new MediawikiVersionManager(
                 new MediawikiVersionDao()

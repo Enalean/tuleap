@@ -1,7 +1,7 @@
 <?php
 /*
  * Copyright (C) 2010 Roland Mas, Olaf Lenz
- * Copyright (c) Enalean, 2014 - 2017. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2018. All rights reserved
  *
  * This file is part of Tuleap.
  *
@@ -23,8 +23,11 @@
  *  Mediawiki plugin of Tuleap.
  */
 
+use Tuleap\Mediawiki\MediawikiExtensionDAO;
+use Tuleap\Mediawiki\MediawikiMathExtensionEnabler;
 
 /* C style inclusion guard. Yes, I know. Don’t comment on it. */
+
 if (!isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
 $fusionforge_plugin_mediawiki_LocalSettings_included = true;
 
@@ -631,4 +634,22 @@ if ($mleb_manager->isMLEBExtensionInstalled()){
         require_once $mleb_path."/extensions/UniversalLanguageSelector/UniversalLanguageSelector.php";
         $GLOBALS['wgTranslatePageTranslationULS'] = true;
     }
+}
+
+$mediawiki_math_extension_enabler = new MediawikiMathExtensionEnabler(
+    new MediawikiExtensionDAO(),
+    new Mediawiki_Migration_MediawikiMigrator()
+);
+if ($mediawiki_math_extension_enabler->canPluginBeLoaded($IP, (isset($IS_RUNNING_UPDATE) && $IS_RUNNING_UPDATE), $group)) {
+    /*
+     * SHELL_MAX_ARG_STRLEN should be defined in $IP/includes/Defines.php but for some reasons
+     * it is not the case in our installation. Let's just set it to the default value.
+     */
+    define('SHELL_MAX_ARG_STRLEN', 100000);
+    $wgDefaultUserOptions['math'] = 'png';
+    $wgMathValidModes             = ['png', 'source'];
+    $wgMathDisableTexFilter       = 'never';
+    $wgMathFullRestbaseURL        = false;
+
+    require_once "$IP/extensions/Math/Math.php";
 }
