@@ -118,7 +118,7 @@ class PullRequestRepresentationFactory
                 }
                 return [$this->expandDeprecatedBuildStatusName($pull_request->getLastBuildStatus()), $pull_request->getLastBuildDate(), true];
             default:
-                return [self::BUILD_STATUS_UNKNOWN, null, false];
+                return [$this->expandDeprecatedBuildStatusName($pull_request->getLastBuildStatus()), $pull_request->getLastBuildDate(), true];
         }
     }
 
