@@ -23,6 +23,7 @@ namespace Tuleap\PullRequest\GitReference;
 require_once __DIR__ . '/../bootstrap.php';
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 use Tuleap\PullRequest\Factory;
 use Tuleap\PullRequest\PullRequest;
@@ -31,92 +32,132 @@ class GitPullRequestReferenceBulkConverterTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
+    /**
+     * @var \Mockery\MockInterface
+     */
+    private $dao;
+    /**
+     * @var \Mockery\MockInterface
+     */
+    private $pull_request_ref_updater;
+    /**
+     * @var \Mockery\MockInterface
+     */
+    private $pull_request_factory;
+    /**
+     * @var \Mockery\MockInterface
+     */
+    private $git_repository_factory;
+    /**
+     * @var \Mockery\MockInterface
+     */
+    private $logger;
+
+    protected function setUp()
+    {
+        $this->dao                      = \Mockery::mock(GitPullRequestReferenceDAO::class);
+        $this->pull_request_ref_updater = \Mockery::mock(GitPullRequestReferenceUpdater::class);
+        $this->pull_request_factory     = \Mockery::mock(Factory::class);
+        $this->git_repository_factory   = \Mockery::mock(\GitRepositoryFactory::class);
+        $this->logger                   = \Mockery::mock(\Logger::class);
+
+        \ForgeConfig::store();
+        $tmp_dir = vfsStream::setup();
+        \ForgeConfig::set('tmp_dir', $tmp_dir->url());
+    }
+
+    protected function tearDown()
+    {
+        \ForgeConfig::restore();
+    }
+
     public function testAllPullRequestsWithoutRefsAreConverted()
     {
-        $dao                      = \Mockery::mock(GitPullRequestReferenceDAO::class);
-        $pull_request_ref_updater = \Mockery::mock(GitPullRequestReferenceUpdater::class);
-        $pull_request_factory     = \Mockery::mock(Factory::class);
-        $git_repository_factory   = \Mockery::mock(\GitRepositoryFactory::class);
-        $logger                   = \Mockery::mock(\Logger::class);
-
         $bulk_converter = new GitPullRequestReferenceBulkConverter(
-            $dao,
-            $pull_request_ref_updater,
-            $pull_request_factory,
-            $git_repository_factory,
-            $logger
+            $this->dao,
+            $this->pull_request_ref_updater,
+            $this->pull_request_factory,
+            $this->git_repository_factory,
+            $this->logger
         );
 
-        $dao->shouldReceive('searchPullRequestsByReferenceStatus')->andReturns([['pr1'], ['pr2'], ['pr3']]);
-        $pull_request_factory->shouldReceive('getInstanceFromRow')->andReturns(\Mockery::spy(PullRequest::class));
-        $git_repository_factory->shouldReceive('getRepositoryById')->andReturns(\Mockery::spy(\GitRepository::class));
-        $logger->shouldReceive('debug');
+        $this->dao->shouldReceive('searchPullRequestsByReferenceStatus')->andReturns([['pr1'], ['pr2'], ['pr3']]);
+        $this->pull_request_factory->shouldReceive('getInstanceFromRow')->andReturns(\Mockery::spy(PullRequest::class));
+        $this->git_repository_factory->shouldReceive('getRepositoryById')->andReturns(\Mockery::spy(\GitRepository::class));
+        $this->logger->shouldReceive('debug');
 
-        $pull_request_ref_updater->shouldReceive('updatePullRequestReference')->times(3);
+        $this->pull_request_ref_updater->shouldReceive('updatePullRequestReference')->times(3);
 
         $bulk_converter->convertAllPullRequestsWithoutAGitReference();
     }
 
     public function testPullRequestsWithoutValidGitRepositoryAreMarkedAsBroken()
     {
-        $dao                      = \Mockery::mock(GitPullRequestReferenceDAO::class);
-        $pull_request_ref_updater = \Mockery::mock(GitPullRequestReferenceUpdater::class);
-        $pull_request_factory     = \Mockery::mock(Factory::class);
-        $git_repository_factory   = \Mockery::mock(\GitRepositoryFactory::class);
-        $logger                   = \Mockery::mock(\Logger::class);
-
         $bulk_converter = new GitPullRequestReferenceBulkConverter(
-            $dao,
-            $pull_request_ref_updater,
-            $pull_request_factory,
-            $git_repository_factory,
-            $logger
+            $this->dao,
+            $this->pull_request_ref_updater,
+            $this->pull_request_factory,
+            $this->git_repository_factory,
+            $this->logger
         );
 
-        $dao->shouldReceive('searchPullRequestsByReferenceStatus')->andReturns([['pr1']]);
+        $this->dao->shouldReceive('searchPullRequestsByReferenceStatus')->andReturns([['pr1']]);
         $pull_request = \Mockery::mock(PullRequest::class);
         $pull_request->shouldReceive('getId')->andReturns(1);
         $pull_request->shouldReceive('getRepositoryId')->andReturns(1);
         $pull_request->shouldReceive('getRepoDestId')->andReturns(1);
-        $pull_request_factory->shouldReceive('getInstanceFromRow')->andReturns($pull_request);
-        $git_repository_factory->shouldReceive('getRepositoryById')->andReturns(null);
-        $logger->shouldReceive('debug');
+        $this->pull_request_factory->shouldReceive('getInstanceFromRow')->andReturns($pull_request);
+        $this->git_repository_factory->shouldReceive('getRepositoryById')->andReturns(null);
+        $this->logger->shouldReceive('debug');
 
-        $dao->shouldReceive('updateStatusByPullRequestId')->with(
+        $this->dao->shouldReceive('updateStatusByPullRequestId')->with(
             $pull_request->getId(),
             GitPullRequestReference::STATUS_BROKEN
         );
-        $logger->shouldReceive('error')->once();
+        $this->logger->shouldReceive('error')->once();
 
         $bulk_converter->convertAllPullRequestsWithoutAGitReference();
     }
 
 
-    public function testFailureToSetTheGitReferenceDoesNotInterruptTheWholeConvertion()
+    public function testFailureToSetTheGitReferenceDoesNotInterruptTheWholeConversion()
     {
-        $dao                      = \Mockery::mock(GitPullRequestReferenceDAO::class);
-        $pull_request_ref_updater = \Mockery::mock(GitPullRequestReferenceUpdater::class);
-        $pull_request_factory     = \Mockery::mock(Factory::class);
-        $git_repository_factory   = \Mockery::mock(\GitRepositoryFactory::class);
-        $logger                   = \Mockery::mock(\Logger::class);
-
         $bulk_converter = new GitPullRequestReferenceBulkConverter(
-            $dao,
-            $pull_request_ref_updater,
-            $pull_request_factory,
-            $git_repository_factory,
-            $logger
+            $this->dao,
+            $this->pull_request_ref_updater,
+            $this->pull_request_factory,
+            $this->git_repository_factory,
+            $this->logger
         );
 
-        $dao->shouldReceive('searchPullRequestsByReferenceStatus')->andReturns([['pr1'], ['pr2']]);
-        $pull_request_factory->shouldReceive('getInstanceFromRow')->andReturns(\Mockery::spy(PullRequest::class));
-        $git_repository_factory->shouldReceive('getRepositoryById')->andReturns(\Mockery::spy(\GitRepository::class));
-        $logger->shouldReceive('debug');
+        $this->dao->shouldReceive('searchPullRequestsByReferenceStatus')->andReturns([['pr1'], ['pr2']]);
+        $this->pull_request_factory->shouldReceive('getInstanceFromRow')->andReturns(\Mockery::spy(PullRequest::class));
+        $this->git_repository_factory->shouldReceive('getRepositoryById')->andReturns(\Mockery::spy(\GitRepository::class));
+        $this->logger->shouldReceive('debug');
 
-        $pull_request_ref_updater->shouldReceive('updatePullRequestReference')->times(2)->andThrow(
+        $this->pull_request_ref_updater->shouldReceive('updatePullRequestReference')->times(2)->andThrow(
             \Mockery::mock(\Git_Command_Exception::class)
         );
-        $logger->shouldReceive('error')->times(2);
+        $this->logger->shouldReceive('error')->times(2);
+
+        $bulk_converter->convertAllPullRequestsWithoutAGitReference();
+    }
+
+    public function testBulkConversionIsStoppedWhenStopFileIsFound()
+    {
+        $bulk_converter = new GitPullRequestReferenceBulkConverter(
+            $this->dao,
+            $this->pull_request_ref_updater,
+            $this->pull_request_factory,
+            $this->git_repository_factory,
+            $this->logger
+        );
+
+        $this->dao->shouldReceive('searchPullRequestsByReferenceStatus')->andReturns([['pr1'], ['pr2']]);
+
+        touch(\ForgeConfig::get('tmp_dir') . DIRECTORY_SEPARATOR . GitPullRequestReferenceBulkConverter::STOP_CONVERSION_FILE);
+
+        $this->logger->shouldReceive('info')->once();
 
         $bulk_converter->convertAllPullRequestsWithoutAGitReference();
     }

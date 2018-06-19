@@ -26,6 +26,8 @@ use Tuleap\PullRequest\GitExec;
 
 class GitPullRequestReferenceBulkConverter
 {
+    const STOP_CONVERSION_FILE = 'tuleap_plugin_pullrequest_stop_bulk_convert';
+
     /**
      * @var GitPullRequestReferenceDAO
      */
@@ -65,6 +67,11 @@ class GitPullRequestReferenceBulkConverter
     {
         $pull_request_without_git_ref_rows = $this->dao->searchPullRequestsByReferenceStatus(GitPullRequestReference::STATUS_NOT_YET_CREATED);
         foreach ($pull_request_without_git_ref_rows as $pull_request_without_git_ref_row) {
+            if (file_exists(\ForgeConfig::get('tmp_dir') . DIRECTORY_SEPARATOR . self::STOP_CONVERSION_FILE)) {
+                $this->logger->info('Stop file found, creation of Git reference for existing PR has been stopped');
+                return;
+            }
+
             $pull_request_without_git_ref = $this->pull_request_factory->getInstanceFromRow($pull_request_without_git_ref_row);
             $pull_request_id              = $pull_request_without_git_ref->getId();
 
