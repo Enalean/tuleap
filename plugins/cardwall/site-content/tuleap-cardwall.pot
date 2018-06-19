@@ -20,11 +20,6 @@ msgstr ""
 msgid "Choose a field..."
 msgstr ""
 
-msgid ""
-"Description and field values are extracted from a random artifact of the "
-"tracker."
-msgstr ""
-
 msgid "Field not found"
 msgstr ""
 
@@ -48,11 +43,6 @@ msgstr ""
 msgid ""
 "Only static fields with values bound to new color picker can be chosen as "
 "background color"
-msgstr ""
-
-msgid ""
-"Preview is an example, data might not be consistent with the artifact's real "
-"data."
 msgstr ""
 
 msgid "Preview of the card"
@@ -82,6 +72,9 @@ msgid "There aren't any fields added to cards yet."
 msgstr ""
 
 msgid "There is no more field that can be added to the cards."
+msgstr ""
+
+msgid "This is an example title"
 msgstr ""
 
 msgid "go back to semantic overview"

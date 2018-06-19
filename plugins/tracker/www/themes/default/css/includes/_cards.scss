@@ -78,6 +78,16 @@
     }
 }
 
+@each $color-name, $colors in $tlp-swatch-color-map {
+    .card-type-border-#{$color-name} {
+        flex: 0 0 auto;
+        width: 4px;
+        border-top-left-radius: 2px;
+        border-bottom-left-radius: 2px;
+        background: map-get($colors, 'primary');
+    }
+}
+
 .card-accessibility {
     position: absolute;
     top: 0;

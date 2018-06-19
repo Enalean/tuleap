@@ -325,7 +325,6 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
             $xml_exporter = new CardFieldXmlExporter($background_color_dao);
 
             $single_card_preview_details_builder = new SingleCardPreviewDetailsBuilder(
-                Tracker_ArtifactFactory::instance(),
                 new Cardwall_UserPreferences_UserPreferencesDisplayUser(true)
             );
 
