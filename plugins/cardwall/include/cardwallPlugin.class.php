@@ -209,13 +209,7 @@ class cardwallPlugin extends Plugin
     public function cssfile($params)
     {
         if ($this->canIncludeStylesheets()) {
-            $theme_include_assets = new IncludeAssets(
-                __DIR__ . '/../../../src/www/assets/cardwall/FlamingParrot',
-                '/assets/cardwall/FlamingParrot'
-            );
-            $css_file_url         = $theme_include_assets->getFileURL('style.css');
-
-            echo '<link rel="stylesheet" type="text/css" href="' . $css_file_url . '" />';
+            echo '<link rel="stylesheet" type="text/css" href="' . $this->getCSSURL() . '" />';
         }
     }
 
@@ -223,8 +217,17 @@ class cardwallPlugin extends Plugin
     public function burning_parrot_get_stylesheets(array $params)
     {
         if ($this->canIncludeStylesheets()) {
-            $params['stylesheets'][] = $this->getThemePath().'/css/style.css';
+            $params['stylesheets'][] = $this->getCSSURL();
         }
+    }
+
+    private function getCSSURL()
+    {
+        $theme_include_assets = new IncludeAssets(
+            __DIR__ . '/../../../src/www/assets/cardwall/FlamingParrot',
+            '/assets/cardwall/FlamingParrot'
+        );
+        return $theme_include_assets->getFileURL('style.css');
     }
 
     private function canIncludeStylesheets()
