@@ -22,7 +22,7 @@ class b201805281634_add_column_for_tlp_color_picker  extends ForgeUpgrade_Bucket
 {
     public function description()
     {
-        return 'Add table plugin_tracker_field_list_bind_color';
+        return 'Add table tracker_field_list_bind_decorator';
     }
 
     public function preUp()
@@ -39,7 +39,7 @@ class b201805281634_add_column_for_tlp_color_picker  extends ForgeUpgrade_Bucket
                   MODIFY COLUMN blue TINYINT UNSIGNED NULL
                   ';
 
-        if (! $this->db->dbh->exec($sql)) {
+        if ($this->db->dbh->exec($sql) === false) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('tracker_field_list_bind_decorator update failed');
         }
     }
