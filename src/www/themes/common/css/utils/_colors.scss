@@ -1,40 +1,79 @@
-$swatch-color-names: 'inca-silver', 'chrome-silver', 'fiesta-red', 'teddy-brown', 'clockwork-orange',
-    'red-wine', 'acid-green', 'army-green', 'sherwood-green', 'ocean-turquoise', 'daphne-blue', 'lake-placid-blue',
-    'deep-blue', 'plum-crazy', 'peggy-pink', 'flamingo-pink';
-$swatch-color-primaries: #767676, #a5a5a5, #dc2f2f, #9b6542, #ff9400,
-    #9e1919, #92c71e, #7f9a42, #28c43a, #28c4a0, #0fd8d8, #33c0ea,
-    #2b6cdc, #890de1, #e10dcb, #ff87c4;
+// scss-lint:disable NameFormat
+// Business colors - Primaries
+$inca_silver: #5d5d5d;
+$chrome_silver: #8f8f8f;
+$firemist_silver: #c5c5c5;
+$red_wine: #a10202;
+$fiesta_red: #f02727;
+$coral_pink: #ff8a8a;
+$teddy_brown: #9a600d;
+$clockwork_orange: #f18e06;
+$graffiti_yellow: #ffd300;
+$army_green: #5f8347;
+$neon_green: #6abf1d;
+$acid_green: #b9e45d;
+$sherwood_green: #009465;
+$ocean_turquoise: #28c4a0;
+$surf_green: #75e4bf;
+$deep_blue: #0480bf;
+$lake_placid_blue: #1ebade;
+$daphne_blue: #87dbef;
+$plum_crazy: #7c2db3;
+$ultra_violet: #a44ee1;
+$lilac_purple: #ce91fa;
+$panther_pink: #c42887;
+$peggy_pink: #e560b2;
+$flamingo_pink: #edacd4;
 
-$inca_silver: #767676;
-$chrome_silver: #A5A5A5;
-$fiesta_red: #DC2F2F;
-$teddy_brown: #9B6542;
-$clockwork_orange: #FF9400;
-$red_wine: #9E1919;
-$acid_green: #92C71E;
-$army_green: #7F9A42;
-$sherwood_green: #28C43A;
-$ocean_turquoise: #28C4A0;
-$daphne_blue: #0FD8D8;
-$lake_placid_blue: #33C0EA;
-$deep_blue: #2B6CDC;
-$plum_crazy: #890DE1;
-$peggy_pink: #E10DCB;
-$flamingo_pink: #FF87C4;
+// Business colors - Secondaries
+$inca_silver_secondary: #ededed;
+$chrome_silver_secondary: #f4f4f4;
+$firemist_silver_secondary: #fafafa;
+$red_wine_secondary: #f4dbdb;
+$fiesta_red_secondary: #ffe5e5;
+$coral_pink_secondary: #fff2f2;
+$teddy_brown_secondary: #f8eccc;
+$clockwork_orange_secondary: #fff5db;
+$graffiti_yellow_secondary: #fffbe7;
+$army_green_secondary: #edf3db;
+$neon_green_secondary: #f4f8e9;
+$acid_green_secondary: #f8fbf3;
+$sherwood_green_secondary: #e3f6f0;
+$ocean_turquoise_secondary: #ecfaf6;
+$surf_green_secondary: #f5fffc;
+$deep_blue_secondary: #e1f2fa;
+$lake_placid_blue_secondary: #eef7fb;
+$daphne_blue_secondary: #f4fcff;
+$plum_crazy_secondary: #f1e9f8;
+$ultra_violet_secondary: #f6f3f9;
+$lilac_purple_secondary: #faf7fd;
+$panther_pink_secondary: #feeaf1;
+$peggy_pink_secondary: #fff1f6;
+$flamingo_pink_secondary: #fff7fa;
 
-$inca_silver_secondary: #EEEEEE;
-$chrome_silver_secondary: #FAFAFA;
-$fiesta_red_secondary: #FFDFDF;
-$teddy_brown_secondary: #F9EBE1;
-$clockwork_orange_secondary: #FFF0DC;
-$red_wine_secondary: #F7E8E8;
-$acid_green_secondary: #ECF4D9;
-$army_green_secondary: #E5F2C8;
-$sherwood_green_secondary: #E9FFEB;
-$ocean_turquoise_secondary: #D3FCF2;
-$daphne_blue_secondary: #E3FFFF;
-$lake_placid_blue_secondary: #DFF5FF;
-$deep_blue_secondary: #DEEAFF;
-$plum_crazy_secondary: #F3E2FF;
-$peggy_pink_secondary: #FFE9FD;
-$flamingo_pink_secondary: #FFF2F8;
+$swatch-color-map: (
+    'inca-silver': (primary: $inca_silver, secondary: $inca_silver_secondary),
+    'chrome-silver': (primary: $chrome_silver, secondary: $chrome_silver_secondary),
+    'firemist-silver': (primary: $firemist_silver, secondary: $firemist_silver_secondary),
+    'red-wine': (primary: $red_wine, secondary: $red_wine_secondary),
+    'fiesta-red': (primary: $fiesta_red, secondary: $fiesta_red_secondary),
+    'coral-pink': (primary: $coral_pink, secondary: $coral_pink_secondary),
+    'teddy-brown': (primary: $teddy_brown, secondary: $teddy_brown_secondary),
+    'clockwork-orange': (primary: $clockwork_orange, secondary: $clockwork_orange_secondary),
+    'graffiti-yellow': (primary: $graffiti_yellow, secondary: $graffiti_yellow_secondary),
+    'army-green': (primary: $army_green, secondary: $army_green_secondary),
+    'neon-green': (primary: $neon_green, secondary: $neon_green_secondary),
+    'acid-green': (primary: $acid_green, secondary: $acid_green_secondary),
+    'sherwood-green': (primary: $sherwood_green, secondary: $sherwood_green_secondary),
+    'ocean-turquoise': (primary: $ocean_turquoise, secondary: $ocean_turquoise_secondary),
+    'surf-green': (primary: $surf_green, secondary: $surf_green_secondary),
+    'deep-blue': (primary: $deep_blue, secondary: $deep_blue_secondary),
+    'lake-placid-blue': (primary: $lake_placid_blue, secondary: $lake_placid_blue_secondary),
+    'daphne-blue': (primary: $daphne_blue, secondary: $daphne_blue_secondary),
+    'plum-crazy': (primary: $plum_crazy, secondary: $plum_crazy_secondary),
+    'ultra-violet': (primary: $ultra_violet, secondary: $ultra_violet_secondary),
+    'lilac-purple': (primary: $lilac_purple, secondary: $lilac_purple_secondary),
+    'panther-pink': (primary: $panther_pink, secondary: $panther_pink_secondary),
+    'peggy-pink': (primary: $peggy_pink, secondary: $peggy_pink_secondary),
+    'flamingo-pink': (primary: $flamingo_pink, secondary: $flamingo_pink_secondary)
+);
