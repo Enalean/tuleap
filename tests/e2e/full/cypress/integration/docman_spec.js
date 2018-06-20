@@ -37,7 +37,7 @@ describe("Docman", function() {
         cy.get('[data-test=use_it]').check();
         cy.get('[data-test=admin_create_metadata]').submit();
 
-        cy.visit('/plugins/docman/index.php?group_id=' + this.projects.docman_project_id + '&id=2&action=newDocument');
+        cy.visit('/plugins/docman/index.php?group_id=' + this.projects.docman_project_id + '&id=3&action=newDocument');
         cy.get('#title').type('my document title');
         cy.get('[type="radio"]').check('4');
         cy.get('.cke_wysiwyg_frame').type('my content');
@@ -57,7 +57,7 @@ describe("Docman", function() {
     });
 
     it("create a folder with mandatory properties", function() {
-        cy.visit('/plugins/docman/?group_id=' + this.projects.docman_project_id + '&action=newGlobalDocument&id=2');
+        cy.visit('/plugins/docman/?group_id=' + this.projects.docman_project_id + '&action=newGlobalDocument&id=3');
         cy.get('[data-test=document_type]').select("1");
         cy.get('[data-test=create_document_next]').click();
 
@@ -72,7 +72,7 @@ describe("Docman", function() {
     });
 
     it("create an embed document", function() {
-        cy.visit('/plugins/docman/index.php?group_id=' + this.projects.docman_project_id + '&id=2&action=newDocument');
+        cy.visit('/plugins/docman/index.php?group_id=' + this.projects.docman_project_id + '&id=3&action=newDocument');
         cy.get('#title').type('my document title');
 
 
@@ -88,7 +88,7 @@ describe("Docman", function() {
     });
 
     it("create a new version of a document", function() {
-        cy.visit('/plugins/docman/index.php?group_id=' + this.projects.docman_project_id + '&id=3&action=action_new_version');
+        cy.visit('/plugins/docman/index.php?group_id=' + this.projects.docman_project_id + '&id=4&action=action_new_version');
         cy.get('[data-test=docman_changelog]').type('new version');
 
         cy.get('[data-test=docman_create_new_version]').click();
@@ -97,7 +97,7 @@ describe("Docman", function() {
     });
 
     it("delete a given version of a document", function() {
-        cy.visit('/plugins/docman/?group_id=' + this.projects.docman_project_id + '&action=details&id=3&section=history');
+        cy.visit('/plugins/docman/?group_id=' + this.projects.docman_project_id + '&action=details&id=4&section=history');
         cy.get('[href*="action=confirmDelete"]').first().click();
         cy.get('[name="confirm"]').click();
 
@@ -105,7 +105,7 @@ describe("Docman", function() {
     });
 
    it("throw an error when you try to delete the last version of a document", function() {
-       cy.visit('/plugins/docman/?group_id=' + this.projects.docman_project_id + '&action=details&id=3&section=history');
+       cy.visit('/plugins/docman/?group_id=' + this.projects.docman_project_id + '&action=details&id=4&section=history');
         cy.get('[href*="action=confirmDelete"]').first().click();
         cy.get('[name="confirm"]').click();
 
