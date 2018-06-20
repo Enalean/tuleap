@@ -21,12 +21,16 @@ describe("Docman", function() {
     before(() => {
         cy.clearCookie("__Host-TULEAP_session_hash");
         cy.login();
+
+        cy.loadProjectConfig().then(function() {
+            cy.visit('/plugins/docman/?group_id=' + this.projects.docman_project_id + '&action=details');
+
+            cy.get('[data-test=docman_root_id]').invoke('val').as('root_document_id');
+        });
     });
 
     beforeEach(() => {
         Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
-
-        cy.loadProjectConfig();
     });
 
     context('document properties', function() {
@@ -37,7 +41,7 @@ describe("Docman", function() {
             cy.get('[data-test=use_it]').check();
             cy.get('[data-test=admin_create_metadata]').submit();
 
-            cy.visit('/plugins/docman/index.php?group_id=' + this.projects.docman_project_id + '&id=3&action=newDocument');
+            cy.visit('/plugins/docman/index.php?group_id=' + this.projects.docman_project_id + '&id=' + this.root_document_id + '&action=newDocument');
             cy.get('#title').type('my document title');
             cy.get('[type="radio"]').check('4');
             cy.get('.cke_wysiwyg_frame').type('my content');
@@ -57,12 +61,13 @@ describe("Docman", function() {
         });
 
         it("create a folder with mandatory properties", function() {
-            cy.visit('/plugins/docman/?group_id=' + this.projects.docman_project_id + '&action=newGlobalDocument&id=3');
+            cy.visit('/plugins/docman/?group_id=' + this.projects.docman_project_id + '&action=newGlobalDocument&id=' + this.root_document_id);
             cy.get('[data-test=document_type]').select("1");
             cy.get('[data-test=create_document_next]').click();
 
             cy.get('[data-test=docman_new_item]').contains('my custom property');
         });
+
 
         it("remove a property", function() {
             cy.visit('/plugins/docman/?group_id=' + this.projects.docman_project_id + '&action=admin_metadata');
@@ -73,10 +78,9 @@ describe("Docman", function() {
     });
 
     context('document versioning', function() {
-        it("create an embed document", function() {
-            cy.visit('/plugins/docman/index.php?group_id=' + this.projects.docman_project_id + '&id=3&action=newDocument');
+        it("create an embed document", function () {
+            cy.visit('/plugins/docman/index.php?group_id=' + this.projects.docman_project_id + '&id=' + this.root_document_id + '&action=newDocument');
             cy.get('#title').type('my document title');
-
 
             cy.get('[type="radio"]').check('4');
             cy.window().then(win => {
@@ -87,10 +91,15 @@ describe("Docman", function() {
             cy.get('[data-test=feedback]').contains('Document successfully created.');
             cy.contains('my document title').click();
             cy.get('.docman_embedded_file_content').contains('my content');
+
+            cy.get('[data-test=document_item]').then(($new_document_id) => {
+                console.log($new_document_id.data('test-document-id'));
+                cy.wrap($new_document_id.data('test-document-id')).as('embedded_document_id');
+            });
         });
 
         it("create a new version of a document", function() {
-            cy.visit('/plugins/docman/index.php?group_id=' + this.projects.docman_project_id + '&id=4&action=action_new_version');
+            cy.visit('/plugins/docman/index.php?group_id=' + this.projects.docman_project_id + '&id=' + this.embedded_document_id + '&action=action_new_version');
             cy.get('[data-test=docman_changelog]').type('new version');
 
             cy.get('[data-test=docman_create_new_version]').click();
@@ -99,15 +108,15 @@ describe("Docman", function() {
         });
 
         it("delete a given version of a document", function() {
-            cy.visit('/plugins/docman/?group_id=' + this.projects.docman_project_id + '&action=details&id=4&section=history');
+            cy.visit('/plugins/docman/?group_id=' + this.projects.docman_project_id + '&action=details&id=' + this.embedded_document_id + '&section=history');
             cy.get('[href*="action=confirmDelete"]').first().click();
             cy.get('[name="confirm"]').click();
 
             cy.get('[data-test=feedback]').contains('successfully deleted');
         });
 
-       it("throw an error when you try to delete the last version of a document", function() {
-           cy.visit('/plugins/docman/?group_id=' + this.projects.docman_project_id + '&action=details&id=4&section=history');
+        it("throw an error when you try to delete the last version of a document", function () {
+            cy.visit('/plugins/docman/?group_id=' + this.projects.docman_project_id + '&action=details&id=' + this.embedded_document_id + '&section=history');
             cy.get('[href*="action=confirmDelete"]').first().click();
             cy.get('[name="confirm"]').click();
 
@@ -116,7 +125,7 @@ describe("Docman", function() {
     });
 
     context('folder creation', function() {
-        it("create a folder", function() {
+        it("create a folder", function () {
             cy.visit('/plugins/docman/index.php?group_id=' + this.projects.docman_project_id + '&action=newFolder');
 
             cy.get('#title').type('my folder name');
