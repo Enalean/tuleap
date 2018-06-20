@@ -12,9 +12,8 @@
          ng-if="$ctrl.step.description_format === 'html'"
     ></div>
     <div class="steps-step-description steps-step-description-text"
-         ng-bind="$ctrl.step.description"
          ng-if="$ctrl.step.description_format !== 'html'"
-    ></div>
+    ><p>{{ $ctrl.step.description }}</p></div>
     <div class="tlp-dropdown steps-step-action"
         ng-hide="$ctrl.execution.userCanReloadTestBecauseDefinitionIsUpdated"
     >
