@@ -40,7 +40,7 @@
     }
 }
 
-@mixin definitions($main, $color-name, $ui-color-danger) {
+@mixin definitions($main, $color-name, $ui-color-danger, $ui-color-success) {
     .call-me-back {
         position: fixed;
         z-index: 10000;
@@ -83,117 +83,150 @@
         } @else if $color-name == 'darkred' {
             @include change-button-color(#67af45);
         }
-
-        > .fa {
-            position: relative;
-            top: -1px;
-        }
     }
 
     .call-me-back-form {
         box-sizing: border-box;
-        width: 210px;
+        width: 220px;
         padding: 20px;
         font-family: 'SourceSansPro', 'Helvetica Neue', Arial, sans-serif;
 
-        > .call-me-back-form-intro {
-            margin: 0 0 20px;
-        }
+        > form {
+            margin: 0;
 
-        > label {
-            color: #666666;
-            font-weight: 600;
+            > .call-me-back-form-intro {
+                margin: 0 0 20px;
+            }
 
-            > .icon-asterisk {
-                position: relative;
-                top: -4px;
-                color: $ui-color-danger;
-                font-size: 11px;
+            > .alert-error {
+                padding: 10px;
+                font-size: 14px;
+            }
+
+            > label {
+                color: #666666;
+                font-weight: 600;
+
+                > .icon-asterisk {
+                    position: relative;
+                    top: -4px;
+                    color: $ui-color-danger;
+                    font-size: 11px;
+                }
+            }
+
+            > .input-prepend {
+                width: calc(100% - 40px);
+                margin: 0 0 20px;
+            }
+
+            input[type='text'],
+            button {
+                width: 100%;
             }
         }
+    }
 
-        > .input-prepend {
-            width: calc(100% - 40px);
+    .call-me-back-save-the-date {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        > .icon-thumbs-up-alt {
             margin: 0 0 20px;
+            color: $ui-color-success;
+            font-size: 65px;
         }
 
-        input[type='text'],
-        button {
-            width: 100%;
+        > .call-me-back-save-the-date-text {
+            margin: 0 0 20px;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        > .badge-success {
+            padding: 10px 14px;
+            border: 1px solid $ui-color-success;
+            border-radius: 20px;
+            background: transparent;
+            color: $ui-color-success;
+            font-size: 16px;
+            text-shadow: none;
         }
     }
+
 }
 
 body {
     &.FlamingParrot_Orange {
         @import 'variables-orange';
 
-        @include definitions($main, $color-name, $ui-color-danger);
+        @include definitions($main, $color-name, $ui-color-danger, $ui-color-success);
     }
 
     &.FlamingParrot_Blue {
         @import 'variables-blue';
 
-        @include definitions($main, $color-name, $ui-color-danger);
+        @include definitions($main, $color-name, $ui-color-danger, $ui-color-success);
     }
 
     &.FlamingParrot_Green {
         @import 'variables-green';
 
-        @include definitions($main, $color-name, $ui-color-danger);
+        @include definitions($main, $color-name, $ui-color-danger, $ui-color-success);
     }
 
     &.FlamingParrot_BlueGrey {
         @import 'variables-bluegrey';
 
-        @include definitions($main, $color-name, $ui-color-danger);
+        @include definitions($main, $color-name, $ui-color-danger, $ui-color-success);
     }
 
     &.FlamingParrot_Purple {
         @import 'variables-purple';
 
-        @include definitions($main, $color-name, $ui-color-danger);
+        @include definitions($main, $color-name, $ui-color-danger, $ui-color-success);
     }
 
     &.FlamingParrot_Red {
         @import 'variables-red';
 
-        @include definitions($main, $color-name, $ui-color-danger);
+        @include definitions($main, $color-name, $ui-color-danger, $ui-color-success);
     }
 
     &.FlamingParrot_DarkOrange {
         @import 'variables-darkorange';
 
-        @include definitions($main, $color-name, $ui-color-danger);
+        @include definitions($main, $color-name, $ui-color-danger, $ui-color-success);
     }
 
     &.FlamingParrot_DarkBlue {
         @import 'variables-darkblue';
 
-        @include definitions($main, $color-name, $ui-color-danger);
+        @include definitions($main, $color-name, $ui-color-danger, $ui-color-success);
     }
 
     &.FlamingParrot_DarkGreen {
         @import 'variables-darkgreen';
 
-        @include definitions($main, $color-name, $ui-color-danger);
+        @include definitions($main, $color-name, $ui-color-danger, $ui-color-success);
     }
 
     &.FlamingParrot_DarkBlueGrey {
         @import 'variables-darkbluegrey';
 
-        @include definitions($main, $color-name, $ui-color-danger);
+        @include definitions($main, $color-name, $ui-color-danger, $ui-color-success);
     }
 
     &.FlamingParrot_DarkPurple {
         @import 'variables-darkpurple';
 
-        @include definitions($main, $color-name, $ui-color-danger);
+        @include definitions($main, $color-name, $ui-color-danger, $ui-color-success);
     }
 
     &.FlamingParrot_DarkRed {
         @import 'variables-darkred';
 
-        @include definitions($main, $color-name, $ui-color-danger);
+        @include definitions($main, $color-name, $ui-color-danger, $ui-color-success);
     }
 }

@@ -21,37 +21,101 @@
         <button class="call-me-back-button dropdown-toggle" data-toggle="dropdown">
             <i class="icon-comments-alt"></i>
         </button>
-        <form class="call-me-back-form dropdown-menu pull-right dropup" v-on:click.stop>
-            <p class="call-me-back-form-intro">
-                <translate>Fill this form and we'll call you back.</translate>
-            </p>
-            <label for="call-me-back-phone-number">
-                <translate>Phone number</translate> <i class="icon-asterisk"></i>
-            </label>
-            <div class="input-prepend">
-                <span class="add-on">
-                    <i class="icon-phone"></i>
-                </span>
-                <input type="text" id="call-me-back-phone-number" name="phone" placeholder="+33 0 00 00 00 00">
+        <div class="call-me-back-form dropdown-menu pull-right dropup" v-on:click.stop>
+            <div class="call-me-back-save-the-date" v-if="save_the_date">
+                <i class="icon-thumbs-up-alt"></i>
+                <p class="call-me-back-save-the-date-text" v-translate>
+                    We will call you back on
+                </p>
+                <span class="badge badge-success">{{ call_me_back_formatted_date }}</span>
             </div>
-            <label for="call-me-back-date">
-                <translate>Call me back on</translate> <i class="icon-asterisk"></i>
-            </label>
-            <div class="input-prepend">
-                <span class="add-on">
-                    <i class="icon-calendar"></i>
-                </span>
-                <input type="text" id="call-me-back-date" name="date" placeholder="yyyy-mm-dd">
-            </div>
-            <button type="button" class="btn btn-primary btn-large">
-                <translate>Call me back</translate>
-            </button>
-        </form>
+
+            <form v-else>
+                <p class="call-me-back-form-intro" v-translate>
+                    Fill this form and we'll call you back.
+                </p>
+                <div class="alert alert-error" v-if="error" v-translate>
+                    Ooops something went wrong. Please try again later.
+                </div>
+                <label for="call-me-back-phone-number">
+                    <translate>Phone number</translate> <i class="icon-asterisk"></i>
+                </label>
+                <div class="input-prepend">
+                    <span class="add-on">
+                        <i class="icon-phone"></i>
+                    </span>
+                    <input type="text"
+                        id="call-me-back-phone-number"
+                        name="call_me_back_phone"
+                        placeholder="+33000000000"
+                        v-model="call_me_back_phone"
+                    >
+                </div>
+                <label for="call-me-back-date">
+                    <translate>Call me back on</translate> <i class="icon-asterisk"></i>
+                </label>
+                <div class="input-prepend">
+                    <span class="add-on">
+                        <i class="icon-calendar"></i>
+                    </span>
+                    <input type="text"
+                        id="call-me-back-date"
+                        name="call_me_back_date"
+                        placeholder="yyyy-mm-dd"
+                        v-model="call_me_back_date"
+                    >
+                </div>
+                <button type="button"
+                    class="btn btn-primary btn-large"
+                    v-on:click="callMeBack"
+                    v-bind:disabled="loading"
+                >
+                    <i class="icon-spinner icon-spin" v-if="loading"></i>
+                    <translate>Call me back</translate>
+                </button>
+            </form>
+        </div>
     </div>
 </template>
 
 <script>
+import { askToBeCalledBack } from './rest-querier.js';
+import { DateTime }          from 'luxon';
+
 export default {
-    name: 'CallMeBack'
+    name: 'CallMeBack',
+    data() {
+        return {
+            loading           : false,
+            error             : false,
+            save_the_date     : false,
+            call_me_back_phone: '',
+            call_me_back_date : ''
+        };
+    },
+    computed: {
+        call_me_back_formatted_date() {
+            return DateTime.fromISO(this.call_me_back_date).toLocaleString(DateTime.DATE_FULL);
+        }
+    },
+    methods: {
+        async callMeBack() {
+            this.loading           = true;
+
+            try {
+                await askToBeCalledBack(
+                    this.call_me_back_phone,
+                    this.call_me_back_date
+                );
+
+                this.save_the_date = true;
+            } catch (e) {
+                const { error } = await e.response.json();
+                this.error      = error.code + ' ' + error.message;
+            } finally {
+                this.loading = false;
+            }
+        }
+    }
 };
 </script>

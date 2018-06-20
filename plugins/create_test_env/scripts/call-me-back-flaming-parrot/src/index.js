@@ -21,6 +21,7 @@ import Vue from 'vue';
 import GetTextPlugin from 'vue-gettext';
 import french_translations from '../../po/fr.po';
 import CallMeBack from './CallMeBack.vue';
+import { Settings } from 'luxon';
 
 document.addEventListener('DOMContentLoaded', () => {
     Vue.use(GetTextPlugin, {
@@ -30,8 +31,10 @@ document.addEventListener('DOMContentLoaded', () => {
         silent: true
     });
 
+
     const locale = document.body.dataset.userLocale;
-    Vue.config.language = locale;
+    Vue.config.language    = locale;
+    Settings.defaultLocale = locale.substring(0, 2);
     const call_me_back = document.createElement('div');
     document.body.appendChild(call_me_back);
     const RootComponent = Vue.extend(CallMeBack);
