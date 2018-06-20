@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright Enalean (c) 2011 - 2017. All rights reserved.
+ * Copyright Enalean (c) 2011 - 2018. All rights reserved.
  *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
  * owners.
  *
@@ -116,7 +116,11 @@ class UGroupRouter
                 break;
             case 'update_details':
                 $csrf->check();
-                $this->details_controller->updateDetails($ugroup);
+                try {
+                    $this->details_controller->updateDetails($ugroup);
+                } catch (CannotCreateUGroupException $ex) {
+                    $GLOBALS['Response']->addFeedback(\Feedback::ERROR, $ex->getMessage());
+                }
                 $this->redirect($ugroup);
                 break;
             case 'update_permssions_delegation':
