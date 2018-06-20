@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2013-2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -150,10 +150,11 @@ tuleap.trackers.trigger = Class.create({
         }
 
         function populateTargetFieldValues(field_values) {
-            $H(field_values.values).each(function(field_value) {
-                var option = createOption(field_value.value, "trigger-target-field-value");
-                $('trigger_target_field_value').appendChild(option);
-            })
+            field_values.values.forEach(function (field_value) {
+                $('trigger_target_field_value').appendChild(
+                    createOption(field_value, "trigger-target-field-value")
+                );
+            });
         }
     },
 

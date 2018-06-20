@@ -58,6 +58,7 @@
         "www/scripts/TrackerBinds.js",
         "www/scripts/ReorderColumns.js",
         "www/scripts/TrackerTextboxLists.js",
+        "www/scripts/TrackerAdminFieldWorkflow.js",
         "www/scripts/TrackerArtifact.js",
         "www/scripts/TrackerArtifactEmailActions.js",
         "www/scripts/TrackerArtifactLink.js",
