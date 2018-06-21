@@ -22,7 +22,6 @@
 namespace Tuleap\CallMeBack;
 
 use HTTPRequest;
-use Exception;
 use Feedback;
 use CSRFSynchronizerToken;
 use Tuleap\Layout\BaseLayout;
@@ -69,55 +68,41 @@ class CallMeBackAdminSaveController implements DispatchableWithRequest
         $csrf_token = new CSRFSynchronizerToken($request->getFromServer('REQUEST_URI'));
         $csrf_token->check();
 
-        try {
-            $this->saveEmail($request);
-            $this->saveMessages($request);
+        $this->saveAdminInformation($request, $layout);
 
-            $layout->addFeedback(
-                Feedback::INFO,
-                dgettext('tuleap-create_test_env', 'Call me back configuration updated')
-            );
-        } catch (PDOException $exception) {
-            throw $exception;
-        } catch (Exception $exception) {
-            $layout->addFeedback(
-                Feedback::ERROR,
-                $exception->getMessage()
-            );
-        }
+        $layout->addFeedback(
+            Feedback::INFO,
+            dgettext('tuleap-create_test_env', 'Call me back configuration updated')
+        );
 
         $layout->redirect($request->getFromServer('REQUEST_URI'));
     }
 
-    /**
-     * @var string $email
-     */
-    private function saveEmail(HTTPRequest $request)
+    private function saveAdminInformation(HTTPRequest $request, BaseLayout $layout)
     {
         $email = $request->getValidated('email', 'email');
-
         if (! $email) {
-            throw new Exception(
+            $layout->addFeedback(
+                Feedback::ERROR,
                 dgettext('tuleap-create_test_env', 'An error occurred during the update of the email')
             );
+            return;
         }
-
         $this->call_me_back_email_dao->save($email);
-    }
 
-    /**
-     * @var string[] $messages
-     */
-    private function saveMessages(HTTPRequest $request)
-    {
         $messages = $request->get('messages');
-
-        if (! $messages) {
-            throw new Exception(
+        if (! is_array($messages)) {
+            $layout->addFeedback(
+                Feedback::ERROR,
                 dgettext('tuleap-create_test_env', 'An error occurred during the update of the messages')
             );
+            return;
         }
+        $this->saveMessages($messages);
+    }
 
+    private function saveMessages(array $messages)
+    {
         foreach ($messages as $language_id => $message) {
             $this->call_me_back_message_dao->save($language_id, $message);
         }
