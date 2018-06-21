@@ -75,12 +75,6 @@ class FlamingParrot_Theme extends Layout {
             "FlamingParrot_BlueGrey",
             "FlamingParrot_Purple",
             "FlamingParrot_Red",
-            "FlamingParrot_DarkOrange",
-            "FlamingParrot_DarkBlue",
-            "FlamingParrot_DarkGreen",
-            "FlamingParrot_DarkBlueGrey",
-            "FlamingParrot_DarkPurple",
-            "FlamingParrot_DarkRed"
         );
     }
 
@@ -92,12 +86,6 @@ class FlamingParrot_Theme extends Layout {
             "FlamingParrot_BlueGrey"        => "#5B6C79",
             "FlamingParrot_Purple"          => "#79558A",
             "FlamingParrot_Red"             => "#BD2626",
-            "FlamingParrot_DarkOrange"      => "#D68416",
-            "FlamingParrot_DarkBlue"        => "#137FA8",
-            "FlamingParrot_DarkGreen"       => "#59993B",
-            "FlamingParrot_DarkBlueGrey"    => "#4A5964",
-            "FlamingParrot_DarkPurple"      => "#684D75",
-            "FlamingParrot_DarkRed"         => "#AA1616"
         );
 
         return $array[$theme];

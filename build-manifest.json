@@ -12,16 +12,10 @@
             "files": [
                 "src/www/themes/FlamingParrot/css/print.scss",
                 "src/www/themes/FlamingParrot/css/FlamingParrot_Orange.scss",
-                "src/www/themes/FlamingParrot/css/FlamingParrot_DarkBlue.scss",
-                "src/www/themes/FlamingParrot/css/FlamingParrot_DarkBlueGrey.scss",
                 "src/www/themes/FlamingParrot/css/FlamingParrot_Red.scss",
                 "src/www/themes/FlamingParrot/css/FlamingParrot_Green.scss",
-                "src/www/themes/FlamingParrot/css/FlamingParrot_DarkOrange.scss",
                 "src/www/themes/FlamingParrot/css/FlamingParrot_Blue.scss",
-                "src/www/themes/FlamingParrot/css/FlamingParrot_DarkGreen.scss",
                 "src/www/themes/FlamingParrot/css/FlamingParrot_Purple.scss",
-                "src/www/themes/FlamingParrot/css/FlamingParrot_DarkRed.scss",
-                "src/www/themes/FlamingParrot/css/FlamingParrot_DarkPurple.scss",
                 "src/www/themes/FlamingParrot/css/FlamingParrot_BlueGrey.scss"
             ],
             "watched_includes": ["src/www/themes/FlamingParrot/css/**/_*.scss"],
