@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,61 +19,5 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// Tests are like gods, they can run an infinite time, eat all the memory and kill kittens
-ini_set('max_execution_time', 0);
-ini_set('memory_limit', -1);
-
-require_once dirname(__FILE__) . '/../../plugins/tests/www/tests_common.php';
-require_once(dirname(__FILE__) . '/../../plugins/tests/include/TestsPluginReporter.class.php');
-require_once(dirname(__FILE__) . '/../../plugins/tests/www/TuleapTestSuite.class.php');
-
-// Start
-$options = getopt('x', array('order::'));
-$format  = 'console';
-
-$randomize = false;
-if (isset($options['order'])) {
-    $randomize = (bool)(trim($options['order']) === 'random');
-    foreach ($_SERVER['argv'] as $key => $value) {
-        if ($value === '--order=random') {
-            unset($_SERVER['argv'][$key]);
-        }
-    }
-}
-
-if (isset($options['x'])) {
-    $format = 'checkstyle';
-    foreach ($_SERVER['argv'] as $key => $value) {
-        if ($value === '-x') {
-            unset($_SERVER['argv'][$key]);
-        }
-    }
-}
-
-if ($format == 'checkstyle') {
-    $reporter = TestsPluginReporterFactory::reporter('junit_xml', true);
-} else {
-    $reporter = new ColorTextReporter();
-}
-
-// remove command name from argument list
-array_shift($_SERVER['argv']);
-
-$suite = new TuleapTestSuite($_SERVER['argv']);
-
-if ($randomize) {
-    $suite->randomize();
-}
-
-$status = $suite->run($reporter);
-
-if ($format == 'checkstyle') {
-    $reporter->writeXML('unit_tests_report.xml');
-}
-
-// Return test suite status for usage in git bisect
-if ($status === false) {
-    exit(1);
-} else {
-    exit(0);
-}
+echo 'This legacy test engine cannot be used anymore. Skipping.';
+exit(0);
