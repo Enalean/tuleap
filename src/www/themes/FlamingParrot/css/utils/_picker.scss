@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2014-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,13 +23,6 @@
         @mixin picker($main, $dark-grey) {
             border-left-color: $main;
             border-bottom-color: $dark-grey;
-        }
-
-        @mixin dark-picker($main) {
-            border-left: none;
-            width: 20px;
-            height: 9px;
-            border-bottom: 3px solid $main;
         }
 
         &.FlamingParrot_Orange {
@@ -60,48 +53,6 @@
         &.FlamingParrot_Red {
             @import 'variables-red';
             @include picker($main, $dark-grey);
-        }
-
-        &.FlamingParrot_DarkOrange {
-            @import 'variables-darkorange';
-            @include dark-picker($main);
-        }
-
-        &.FlamingParrot_DarkBlue {
-            @import 'variables-darkblue';
-            @include dark-picker($main);
-        }
-
-        &.FlamingParrot_DarkGreen {
-            @import 'variables-darkgreen';
-            @include dark-picker($main);
-        }
-
-        &.FlamingParrot_DarkBlueGrey {
-            @import 'variables-darkbluegrey';
-            @include dark-picker($main);
-        }
-
-        &.FlamingParrot_DarkPurple {
-            @import 'variables-darkpurple';
-            @include dark-picker($main);
-        }
-
-        &.FlamingParrot_DarkRed {
-            @import 'variables-darkred';
-            @include dark-picker($main);
-        }
-    }
-
-    &.checked > .theme_variant {
-        &.FlamingParrot_DarkOrange,
-        &.FlamingParrot_DarkBlue,
-        &.FlamingParrot_DarkGreen,
-        &.FlamingParrot_DarkBlueGrey,
-        &.FlamingParrot_DarkPurple,
-        &.FlamingParrot_DarkRed {
-            width: 16px;
-            height: 7px;
         }
     }
 }

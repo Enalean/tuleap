@@ -99,34 +99,4 @@ body {
         @import 'variables-red';
         @include definitions($main, $main-background, $light-grey);
     }
-
-    &.FlamingParrot_DarkOrange {
-        @import 'variables-darkorange';
-        @include definitions($main, $main-background, $light-grey);
-    }
-
-    &.FlamingParrot_DarkBlue {
-        @import 'variables-darkblue';
-        @include definitions($main, $main-background, $light-grey);
-    }
-
-    &.FlamingParrot_DarkGreen {
-        @import 'variables-darkgreen';
-        @include definitions($main, $main-background, $light-grey);
-    }
-
-    &.FlamingParrot_DarkBlueGrey {
-        @import 'variables-darkbluegrey';
-        @include definitions($main, $main-background, $light-grey);
-    }
-
-    &.FlamingParrot_DarkPurple {
-        @import 'variables-darkpurple';
-        @include definitions($main, $main-background, $light-grey);
-    }
-
-    &.FlamingParrot_DarkRed {
-        @import 'variables-darkred';
-        @include definitions($main, $main-background, $light-grey);
-    }
 }

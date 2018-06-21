@@ -70,18 +70,6 @@
             @include change-button-color(#f57c13);
         } @else if $color-name == 'red' {
             @include change-button-color(#67af45);
-        } @else if $color-name == 'darkblue' {
-            @include change-button-color(#f57c13);
-        } @else if $color-name == 'darkgreen' {
-            @include change-button-color(#bd2626);
-        } @else if $color-name == 'darkbluegrey' {
-            @include change-button-color(#f57c13);
-        } @else if $color-name == 'darkorange' {
-            @include change-button-color(#1593c4);
-        } @else if $color-name == 'darkpurple' {
-            @include change-button-color(#f57c13);
-        } @else if $color-name == 'darkred' {
-            @include change-button-color(#67af45);
         }
     }
 
@@ -190,42 +178,6 @@ body {
 
     &.FlamingParrot_Red {
         @import 'variables-red';
-
-        @include definitions($main, $color-name, $ui-color-danger, $ui-color-success);
-    }
-
-    &.FlamingParrot_DarkOrange {
-        @import 'variables-darkorange';
-
-        @include definitions($main, $color-name, $ui-color-danger, $ui-color-success);
-    }
-
-    &.FlamingParrot_DarkBlue {
-        @import 'variables-darkblue';
-
-        @include definitions($main, $color-name, $ui-color-danger, $ui-color-success);
-    }
-
-    &.FlamingParrot_DarkGreen {
-        @import 'variables-darkgreen';
-
-        @include definitions($main, $color-name, $ui-color-danger, $ui-color-success);
-    }
-
-    &.FlamingParrot_DarkBlueGrey {
-        @import 'variables-darkbluegrey';
-
-        @include definitions($main, $color-name, $ui-color-danger, $ui-color-success);
-    }
-
-    &.FlamingParrot_DarkPurple {
-        @import 'variables-darkpurple';
-
-        @include definitions($main, $color-name, $ui-color-danger, $ui-color-success);
-    }
-
-    &.FlamingParrot_DarkRed {
-        @import 'variables-darkred';
 
         @include definitions($main, $color-name, $ui-color-danger, $ui-color-success);
     }
