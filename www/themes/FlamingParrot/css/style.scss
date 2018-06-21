@@ -77,34 +77,4 @@ body {
         @import 'variables-red';
         @include definitions($main, $white);
     }
-
-    &.FlamingParrot_DarkOrange {
-        @import 'variables-darkorange';
-        @include definitions($main, $white);
-    }
-
-    &.FlamingParrot_DarkBlue {
-        @import 'variables-darkblue';
-        @include definitions($main, $white);
-    }
-
-    &.FlamingParrot_DarkGreen {
-        @import 'variables-darkgreen';
-        @include definitions($main, $white);
-    }
-
-    &.FlamingParrot_DarkBlueGrey {
-        @import 'variables-darkbluegrey';
-        @include definitions($main, $white);
-    }
-
-    &.FlamingParrot_DarkPurple {
-        @import 'variables-darkpurple';
-        @include definitions($main, $white);
-    }
-
-    &.FlamingParrot_DarkRed {
-        @import 'variables-darkred';
-        @include definitions($main, $white);
-    }
 }
