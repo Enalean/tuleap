@@ -179,7 +179,13 @@ msgstr ""
 msgid "Color"
 msgstr ""
 
+msgid "Comfortable"
+msgstr ""
+
 msgid "Compromised password"
+msgstr ""
+
+msgid "Condensed"
 msgstr ""
 
 msgid "Configure how project creation is controlled by administrators"
@@ -271,6 +277,9 @@ msgid "Description"
 msgstr ""
 
 msgid "Details"
+msgstr ""
+
+msgid "Display density:"
 msgstr ""
 
 msgid "Display in iframe"

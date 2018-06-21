@@ -72,6 +72,9 @@ class User_PreferencesPresenter {
 
     public $user_language;
     public $user_has_accessibility_mode;
+    public $is_condensed;
+    public $display_density_name;
+    public $display_density_condensed;
 
     public function __construct(
         PFUser $user,
@@ -116,6 +119,11 @@ class User_PreferencesPresenter {
 
         $this->user_language               = $user->getShortLocale();
         $this->user_has_accessibility_mode = $user->getPreference(PFUser::ACCESSIBILITY_MODE);
+
+        $this->display_density_name      = PFUser::PREFERENCE_DISPLAY_DENSITY;
+        $this->display_density_condensed = PFUser::DISPLAY_DENSITY_CONDENSED;
+
+        $this->is_condensed = $user->getPreference(PFUser::PREFERENCE_DISPLAY_DENSITY) === PFUser::DISPLAY_DENSITY_CONDENSED;
     }
 
     public function generated_svn_token() {

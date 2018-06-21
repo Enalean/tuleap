@@ -190,6 +190,13 @@ if (is_int($form_accessibility_mode)) {
     $user->setPreference(PFUser::ACCESSIBILITY_MODE, $form_accessibility_mode);
 }
 
+$display_density = $request->get(PFUser::PREFERENCE_DISPLAY_DENSITY);
+if ($display_density === PFUser::DISPLAY_DENSITY_CONDENSED) {
+    $user->setPreference(PFUser::PREFERENCE_DISPLAY_DENSITY, $display_density);
+} else {
+    $user->delPreference(PFUser::PREFERENCE_DISPLAY_DENSITY);
+}
+
 //plugins specific preferences
 $em = EventManager::instance();
 $em->processEvent('update_user_preferences_appearance', array('request' => $request));

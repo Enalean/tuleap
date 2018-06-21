@@ -176,10 +176,15 @@ class HeaderPresenterBuilder
             '/themes/BurningParrot/assets'
         );
 
+        $condensed_suffix = '';
+        if ($this->current_user->getPreference(PFUser::PREFERENCE_DISPLAY_DENSITY) === PFUser::DISPLAY_DENSITY_CONDENSED) {
+            $condensed_suffix = '-condensed';
+        }
+
         $stylesheets = array(
-            '/themes/common/tlp/dist/tlp-'. $color->getName() .'.min.css',
+            '/themes/common/tlp/dist/tlp-'. $color->getName() . $condensed_suffix . '.min.css',
         );
-        $stylesheets[] = $core_burning_parrot_include_assets->getFileURL('burning-parrot-' . $color->getName() . '.css');
+        $stylesheets[] = $core_burning_parrot_include_assets->getFileURL('burning-parrot-' . $color->getName() . $condensed_suffix . '.css');
 
         EventManager::instance()->processEvent(
             Event::BURNING_PARROT_GET_STYLESHEETS,
