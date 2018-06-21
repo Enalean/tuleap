@@ -128,7 +128,7 @@ Summary: Subversion with mod_perl authentication
 Group: Development/Tools
 Version: 1.3
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
-Requires: mod_perl, perl-Digest-SHA, perl(Crypt::Eksblowfish::Bcrypt)
+Requires: mod_perl, perl-Digest-SHA, perl(Crypt::Eksblowfish::Bcrypt), perl(Redis)
 %description core-subversion-modperl
 Provides authentication for Subversion component based on mod_perl rather than
 mod_mysql.

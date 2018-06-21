@@ -37,8 +37,9 @@ use APR::Table ();
 use DBI qw(:sql_types);
 use Net::LDAP;
 use Net::LDAP::Util qw(escape_filter_value);
-use Digest::SHA qw(sha512);
+use Digest::SHA qw(hmac_sha256);
 use Crypt::Eksblowfish::Bcrypt qw(bcrypt);
+use Redis;
 
 my @directives = (
     {
@@ -96,6 +97,16 @@ my @directives = (
     },
     {
         name         => 'TuleapLdapBindPassword',
+        req_override => OR_AUTHCFG,
+        args_how     => TAKE1,
+    },
+    {
+        name         => 'TuleapRedisServer',
+        req_override => OR_AUTHCFG,
+        args_how     => TAKE1,
+    },
+    {
+        name         => 'TuleapRedisPassword',
         req_override => OR_AUTHCFG,
         args_how     => TAKE1,
     },
@@ -164,6 +175,16 @@ sub TuleapLdapBindPassword {
     $self->{TuleapLdapBindPassword} = $arg;
     return;
 }
+sub TuleapRedisServer {
+    my ($self, $parms, $arg) = @_;
+    $self->{TuleapRedisServer} = $arg;
+    return;
+}
+sub TuleapRedisPassword {
+    my ($self, $parms, $arg) = @_;
+    $self->{TuleapRedisPassword} = $arg;
+    return;
+}
 
 sub access_handler {
     my $r = shift;
@@ -195,43 +216,30 @@ sub is_user_allowed {
     my $cfg        = Apache2::Module::get_config(__PACKAGE__, $r->server, $r->per_dir_config);
     my $project_id = $cfg->{TuleapGroupId};
 
-    if (is_user_in_cache($cfg, $username, $user_secret)) {
+    if ($cfg->{TuleapRedisServer}) {
+        return redis_is_user_allowed($r, $cfg, $project_id, $username, $user_secret);
+    }
+    return apr_is_user_allowed($r, $cfg, $project_id, $username, $user_secret);
+}
+
+sub apr_is_user_allowed {
+    my ($r, $cfg, $project_id, $username, $user_secret) = @_;
+
+    if (apr_is_user_in_cache($cfg, $username, $user_secret)) {
         return 1;
     }
 
+    $r->log->notice("[Tuleap.pm][apr] cache miss for $username");
+
     my $dbh = DBI->connect($cfg->{TuleapDSN}, $cfg->{TuleapDbUser}, $cfg->{TuleapDbPass}, { AutoCommit => 0 });
 
-    my $tuleap_username = $username;
-    if ($cfg->{TuleapLdapServers}) {
-        $tuleap_username = get_tuleap_username_from_ldap_uid($dbh, $username);
-    }
-
-    if (! $tuleap_username || ! can_user_access_project($dbh, $project_id, $tuleap_username)) {
-        $dbh->disconnect();
-        return 0;
-    }
-
+    my $tuleap_username = get_tuleap_username($cfg, $dbh, $username);
 
     my $is_user_authenticated = 0;
-    my $token_id              = get_user_token($dbh, $tuleap_username, $user_secret);
-
-    if ($token_id) {
+    if (user_authorization($dbh, $project_id, $tuleap_username) &&
+        user_authentication($r, $cfg, $dbh, $username, $user_secret, $tuleap_username)) {
+        apr_add_user_to_cache($cfg, $username, $user_secret);
         $is_user_authenticated = 1;
-    } else {
-        if ($cfg->{TuleapLdapServers}) {
-            $is_user_authenticated = is_valid_user_ldap($cfg, $username, $user_secret);
-        } else {
-            $is_user_authenticated = is_valid_user_database($dbh, $tuleap_username, $user_secret);
-        }
-    }
-
-    if ($is_user_authenticated) {
-        add_user_to_cache($cfg, $username, $user_secret);
-
-        if ($token_id) {
-            my $ip_address = $r->can('useragent_ip') ? $r->useragent_ip : $r->connection->remote_ip;
-            update_user_token_usage($dbh, $token_id, $ip_address);
-        }
     }
 
     $dbh->disconnect();
@@ -239,7 +247,7 @@ sub is_user_allowed {
     return $is_user_authenticated;
 }
 
-sub is_user_in_cache {
+sub apr_is_user_in_cache {
     my ($cfg, $username, $user_secret) = @_;
 
     if (!$cfg->{TuleapCacheCredsMax}) {
@@ -260,7 +268,7 @@ sub is_user_in_cache {
         return 0;
     }
 
-    my $is_user_in_cache = compare_string_constant_time(hash_user_secret($user_secret), $user_secret_in_cache);
+    my $is_user_in_cache = compare_string_constant_time(hash_user_secret($user_secret, $cfg->{TuleapDbPass}), $user_secret_in_cache);
     if ($is_user_in_cache) {
         $cfg->{TuleapCacheCredsLifetime}->set($username, time())
     }
@@ -268,17 +276,17 @@ sub is_user_in_cache {
     return $is_user_in_cache;
 }
 
-sub add_user_to_cache {
+sub apr_add_user_to_cache {
     my ($cfg, $username, $user_secret) = @_;
     if (!$cfg->{TuleapCacheCredsMax}) {
         return 0;
     }
 
     if ($cfg->{TuleapCacheCredsCount} >= $cfg->{TuleapCacheCredsMax}) {
-        remove_oldest_cache_entry()
+        apr_remove_oldest_cache_entry()
     }
 
-    my $hashed_user_secret = hash_user_secret($user_secret);
+    my $hashed_user_secret = hash_user_secret($user_secret, $cfg->{TuleapDbPass});
     $cfg->{TuleapCacheCreds}->set($username, $hashed_user_secret);
     $cfg->{TuleapCacheCredsLifetime}->set($username, time());
     $cfg->{TuleapCacheCredsCount}++;
@@ -286,7 +294,7 @@ sub add_user_to_cache {
     return;
 }
 
-sub remove_oldest_cache_entry {
+sub apr_remove_oldest_cache_entry {
     my ($cfg)            = @_;
     my $oldest_timestamp = time();
     my $oldest_username;
@@ -307,6 +315,128 @@ sub remove_oldest_cache_entry {
 
     return;
 }
+
+sub redis_is_user_allowed {
+    my ($r, $cfg, $project_id, $username, $user_secret) = @_;
+
+    my $is_user_authenticated = 0;
+    eval {
+        my $redis = Redis->new(server => $cfg->{TuleapRedisServer}, name => 'Tuleap.pm', cnx_timeout => 0.5);
+        if ($cfg->{TuleapRedisPassword}) {
+            $redis->auth($cfg->{TuleapRedisPassword});
+        }
+
+        if (redis_user_authorization($r->log, $cfg, $redis, $username, $project_id) &&
+            redis_user_authentication($r, $cfg, $redis, $username, $user_secret)) {
+            $is_user_authenticated = 1;
+        }
+
+        $redis->quit();
+    };
+    if ($@) {
+        $r->log->warn("Error caught [$@]\n");
+        return 0;
+    }
+    return $is_user_authenticated;
+}
+
+sub redis_user_authorization() {
+    my ($log, $cfg, $redis, $username, $project_id) = @_;
+
+    my $cache_key = "apache_svn_".$username."_".$project_id;
+    my $cache     = $redis->get($cache_key);
+    if (defined $cache) {
+        return $cache;
+    }
+
+    $log->notice("[Tuleap.pm][redis] cache miss authorization for $username in $project_id");
+
+    my $dbh = DBI->connect($cfg->{TuleapDSN}, $cfg->{TuleapDbUser}, $cfg->{TuleapDbPass}, { AutoCommit => 0 });
+    my $tuleap_username = get_tuleap_username($cfg, $dbh, $username);
+
+    my $user_is_authorized_for_project = user_authorization($dbh, $project_id, $tuleap_username);
+    $redis->setex($cache_key, $cfg->{TuleapCacheLifetime}, $user_is_authorized_for_project);
+
+    $dbh->disconnect();
+
+    return $user_is_authorized_for_project;
+}
+
+sub redis_user_authentication() {
+    my ($r, $cfg, $redis, $username, $user_secret) = @_;
+
+    my $user_secret_hashed_for_cache = hash_user_secret($user_secret, $cfg->{TuleapDbPass});
+
+    my $cache_key                    = "apache_svn_".$username;
+    my $user_secret_in_cache         = $redis->get($cache_key);
+    if (defined $user_secret_in_cache) {
+        if (compare_string_constant_time($user_secret_hashed_for_cache, $user_secret_in_cache)) {
+            return 1;
+        }
+        $redis->del($cache_key);
+    }
+
+    $r->log->notice("[Tuleap.pm][redis] cache miss authentication for $username");
+
+    my $dbh = DBI->connect($cfg->{TuleapDSN}, $cfg->{TuleapDbUser}, $cfg->{TuleapDbPass}, { AutoCommit => 0 });
+    my $tuleap_username = get_tuleap_username($cfg, $dbh, $username);
+
+    my $user_authentication_success = 0;
+    if (user_authentication($r, $cfg, $dbh, $username, $user_secret, $tuleap_username)) {
+        $redis->setex($cache_key, $cfg->{TuleapCacheLifetime}, $user_secret_hashed_for_cache);
+        $user_authentication_success = 1;
+    }
+
+    $dbh->disconnect();
+
+    return $user_authentication_success;
+}
+
+sub get_tuleap_username() {
+    my ($cfg, $dbh, $username) = @_;
+
+    my $tuleap_username = $username;
+    if ($cfg->{TuleapLdapServers}) {
+        $tuleap_username = get_tuleap_username_from_ldap_uid($dbh, $username);
+    }
+
+    return $tuleap_username;
+}
+
+sub user_authorization() {
+    my ($dbh, $project_id, $tuleap_username) = @_;
+
+    if (! $tuleap_username || ! can_user_access_project($dbh, $project_id, $tuleap_username)) {
+        return 0;
+    }
+
+    return 1;
+}
+
+sub user_authentication() {
+    my ($r, $cfg, $dbh, $username, $user_secret, $tuleap_username) = @_;
+
+    my $is_user_authenticated = 0;
+    my $token_id              = get_user_token($dbh, $tuleap_username, $user_secret);
+
+    if ($token_id) {
+        $is_user_authenticated = 1;
+    } else {
+        if ($cfg->{TuleapLdapServers}) {
+            $is_user_authenticated = is_valid_user_ldap($cfg, $username, $user_secret);
+        } else {
+            $is_user_authenticated = is_valid_user_database($dbh, $tuleap_username, $user_secret);
+        }
+    }
+
+    if ($is_user_authenticated && $token_id) {
+        my $ip_address = $r->can('useragent_ip') ? $r->useragent_ip : $r->connection->remote_ip;
+        update_user_token_usage($dbh, $token_id, $ip_address);
+    }
+
+    return $is_user_authenticated;
+}
+
 
 sub get_user_token {
     my ($dbh, $username, $user_secret) = @_;
@@ -467,8 +597,9 @@ sub is_valid_user_ldap {
 }
 
 sub hash_user_secret {
-    my ($user_secret)     = @_;
-    return sha512($user_secret);
+    my ($user_secret, $dbauthuser_pw)     = @_;
+
+    return hmac_sha256($user_secret, $dbauthuser_pw);
 }
 
 sub connect_and_bind_ldap {
