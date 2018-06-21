@@ -84,13 +84,14 @@ pipeline {
                     """
                     junit 'results/api-soap/soap_tests.xml'
                 },
-                'Whole distributed platform SVN CLI integration': {
+                'Distributed SVN integration': {
                     dir ('sources') {
                         sh """
-                        tests/e2e/distlp-svn-cli/wrap.sh "$WORKSPACE/results/distlp-integration"
+                        tests/e2e/distlp/wrap.sh "$WORKSPACE/results/distlp-integration"
                         """
                     }
                     junit 'results/distlp-integration/distlp-svn-cli.xml'
+                    junit 'results/distlp-integration/results.xml'
                 },
                 'Check translation files': {
                     dir ('sources/plugins/enalean_licensemanager') {

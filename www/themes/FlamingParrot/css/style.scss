@@ -62,40 +62,4 @@ body {
 
         @include definitions($main, $main-background, $ui-color-success, $ui-color-danger);
     }
-
-    &.FlamingParrot_DarkOrange {
-        @import "variables-darkorange";
-
-        @include definitions($main, $main-background, $ui-color-success, $ui-color-danger);
-    }
-
-    &.FlamingParrot_DarkBlue {
-        @import "variables-darkblue";
-
-        @include definitions($main, $main-background, $ui-color-success, $ui-color-danger);
-    }
-
-    &.FlamingParrot_DarkGreen {
-        @import "variables-darkgreen";
-
-        @include definitions($main, $main-background, $ui-color-success, $ui-color-danger);
-    }
-
-    &.FlamingParrot_DarkBlueGrey {
-        @import "variables-darkbluegrey";
-
-        @include definitions($main, $main-background, $ui-color-success, $ui-color-danger);
-    }
-
-    &.FlamingParrot_DarkPurple {
-        @import "variables-darkpurple";
-
-        @include definitions($main, $main-background, $ui-color-success, $ui-color-danger);
-    }
-
-    &.FlamingParrot_DarkRed {
-        @import "variables-darkred";
-
-        @include definitions($main, $main-background, $ui-color-success, $ui-color-danger);
-    }
 }
