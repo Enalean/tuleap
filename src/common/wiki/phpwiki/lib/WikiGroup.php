@@ -72,7 +72,7 @@ class WikiGroup{
      * $group = &WikiGroup::getGroup();
      * @param object $request The global WikiRequest object -- ignored.
      */ 
-    function WikiGroup($not_current = false) {
+    function __construct($not_current = false) {
     	$this->not_current = $not_current;
         //$this->request =& $GLOBALS['request'];
     }
@@ -408,7 +408,7 @@ class GroupNone extends WikiGroup{
      * Ignores the parameter provided.
      * @param object $request The global WikiRequest object - ignored.
      */ 
-    function GroupNone() {
+    function __construct() {
         //$this->request = &$GLOBALS['request'];
         return;
     }    
@@ -468,7 +468,7 @@ class GroupWikiPage extends WikiGroup{
      * Initializes the three superclass instance variables
      * @param object $request The global WikiRequest object.
      */ 
-    function GroupWikiPage() {
+    function __construct() {
         //$this->request = &$GLOBALS['request'];
         $this->username = $this->_getUserName();
         //$this->username = null;
@@ -604,7 +604,7 @@ class GroupDb extends WikiGroup {
      * 
      * @param object $request The global WikiRequest object. ignored
      */ 
-    function GroupDb() {
+    function __construct() {
     	global $DBAuthParams, $DBParams;
         //$this->request = &$GLOBALS['request'];
         $this->username = $this->_getUserName();
@@ -828,7 +828,7 @@ class GroupFile extends WikiGroup {
      * 
      * @param object $request The global WikiRequest object.
      */ 
-    function GroupFile(){
+    function __construct(){
         //$this->request = &$GLOBALS['request'];
         $this->username = $this->_getUserName();
         //$this->username = null;
@@ -941,7 +941,7 @@ class GroupLdap extends WikiGroup {
      * 
      * @param object $request The global WikiRequest object.
      */ 
-    function GroupLdap(){
+    function __construct(){
         //$this->request = &$GLOBALS['request'];
         $this->username = $this->_getUserName();
         $this->membership = array();

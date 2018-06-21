@@ -49,7 +49,7 @@ extends XmlParser
      *  dialect: "PhpWiki2", "PhpWiki" 
      *  possible more dialects: MediaWiki, kwiki, c2
      */
-    function HtmlParser($dialect = "PhpWiki2", $encoding = '') {
+    function __construct($dialect = "PhpWiki2", $encoding = '') {
     	$classname = "HtmlParser_".$dialect;
         if (class_exists($classname))
             $this->dialect = new $classname;
@@ -57,7 +57,7 @@ extends XmlParser
             trigger_error(sprintf("unknown HtmlParser dialect %s",$dialect),E_USER_ERROR);
         }
         $this->_handlers =& $this->dialect->_handlers;
-        $this->XmlParser($encoding);
+        parent::__construct($encoding);
 	xml_parser_set_option($this->_parser, XML_OPTION_CASE_FOLDING, 0);
 	xml_parser_set_option($this->_parser, XML_OPTION_SKIP_WHITE, 1);
     }
@@ -216,7 +216,7 @@ extends XmlParser
 class HtmlParser_PhpWiki2
 extends HtmlParser 
 {
-    function HtmlParser_PhpWiki2() {
+    function __construct() {
         $this->_handlers = 
             array('html'   => '',
                   'head'   => '',

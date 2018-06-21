@@ -2,7 +2,7 @@
 
 class ArchiveCleaner
 {
-    function ArchiveCleaner ($expire_params) {
+    function __construct ($expire_params) {
         $this->expire_params = $expire_params;
     }
     
@@ -69,7 +69,7 @@ class ArchiveCleaner
  */
 class ArchiveCleaner_Counter
 {
-    function ArchiveCleaner_Counter($params) {
+    function __construct($params) {
 
         if (!empty($params))
             extract($params);

@@ -38,7 +38,7 @@ class IMMucLogManager {
         return $im_plugin;
     }
     
-	public function IMMucLogManager() {
+	public function __construct() {
 		// set the IM plugin controler
         $this->_controler = new IM($this->_getIMPlugin());
     }

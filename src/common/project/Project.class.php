@@ -81,8 +81,8 @@ class Project extends Group implements PFO_Project {
 		basically just call the parent to set up everything
                 and set up services arrays
     */
-    function Project($param) {
-        $this->Group($param);
+    function __construct($param) {
+        parent::__construct($param);
         
         //for right now, just point our prefs array at Group's data array
         //this will change later when we split the project_data table off from groups table

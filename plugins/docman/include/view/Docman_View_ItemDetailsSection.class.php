@@ -31,7 +31,7 @@
     var $url;
     var $hp;
 
-    function Docman_View_ItemDetailsSection(&$item, $url, $id, $title) {
+    function __construct(&$item, $url, $id, $title) {
         $this->id     =  $id;
         $this->title  =  $title;
         $this->item   =& $item;

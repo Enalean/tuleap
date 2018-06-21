@@ -4,7 +4,7 @@ class Docman_View_SOAP_SOAP {
 	
     var $_controller;
 
-    function Docman_View_SOAP_SOAP(&$controller) {
+    function __construct(&$controller) {
         $this->_controller = $controller;
     }
     function display($params = array()) {

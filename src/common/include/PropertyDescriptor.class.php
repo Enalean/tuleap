@@ -28,7 +28,7 @@ class PropertyDescriptor {
     var $name;
     var $value;
     
-    function PropertyDescriptor($name, $value) {
+    function __construct($name, $value) {
         $this->name = $name;
         $this->setValue($value);
     }

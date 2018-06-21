@@ -55,7 +55,7 @@ class ArtifactFieldFactory {
 	 *  @param ArtifactType: the artifact type object
 	 *	@return	boolean	success.
 	 */
-	function ArtifactFieldFactory(&$ArtifactType) {
+	function __construct(&$ArtifactType) {
 	  global $Language;
 		
 		if (!$ArtifactType || !is_object($ArtifactType)) {

@@ -35,7 +35,7 @@
     var $target_field;
     var $source_value;
     
-    function ArtifactRule($id, $group_artifact_id, $source_field, $source_value, $target_field) {
+    function __construct($id, $group_artifact_id, $source_field, $source_value, $target_field) {
         $this->id                = $id;
         $this->group_artifact_id = $group_artifact_id;
         $this->source_field      = $source_field;

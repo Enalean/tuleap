@@ -68,7 +68,7 @@ require_once('common/user/UserManager.class.php');
 class Docman_BuildItemMappingVisitor {
     var $groupId;
 
-    function Docman_BuildItemMappingVisitor($groupId) {
+    function __construct($groupId) {
         $this->groupId = $groupId;
         $this->itemMapping = array();
         $this->dao = null;

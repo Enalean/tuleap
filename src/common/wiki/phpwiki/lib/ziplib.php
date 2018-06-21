@@ -247,7 +247,7 @@ define('ZIP_ENDDIR_MAGIC',   "PK\005\006");
 
 class ZipWriter
 {
-    function ZipWriter ($comment = "", $zipname = "archive.zip") {
+    function __construct ($comment = "", $zipname = "archive.zip") {
         $this->comment = $comment;
         $this->nfiles = 0;
         $this->dir = "";		// "Central directory block"
@@ -378,7 +378,7 @@ class ZipWriter
  */
 class ZipReader
 {
-    function ZipReader ($zipfile) {
+    function __construct ($zipfile) {
         if (!is_string($zipfile)) { // filepointer: File already open
             $this->fp = $zipfile;
             $zipfile = NULL;

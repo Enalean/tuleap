@@ -43,7 +43,7 @@ class WikiEntry {
   /**
    * Constructor
    */
-  function WikiEntry($id=null) {
+  function __construct($id=null) {
     if(empty($id)) {
       $this->id   = 0;
       $this->gid  = 0;

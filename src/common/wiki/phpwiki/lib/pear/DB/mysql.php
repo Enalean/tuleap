@@ -65,9 +65,9 @@ class DB_mysql extends DB_common
      *
      * @access public
      */
-    function DB_mysql()
+    function __construct()
     {
-        $this->DB_common();
+        parent::__construct();
         $this->phptype = 'mysql';
         $this->dbsyntax = 'mysql';
         $this->features = array(

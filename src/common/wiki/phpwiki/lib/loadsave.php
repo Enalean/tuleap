@@ -823,11 +823,11 @@ function LoadZip (&$request, $zipfile, $files = false, $exclude = false) {
 }
 
 class LimitedFileSet extends FileSet {
-    function LimitedFileSet($dirname, $_include, $exclude) {
+    function __construct($dirname, $_include, $exclude) {
         $this->_includefiles = $_include;
         $this->_exclude = $exclude;
         $this->_skiplist = array();
-        parent::FileSet($dirname);
+        parent::__construct($dirname);
     }
 
     function _filenameSelector($fn) {

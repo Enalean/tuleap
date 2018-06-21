@@ -24,7 +24,7 @@ class DbSession
      * @param string $table
      * Name of SQL table containing session data.
      */
-    function DbSession(&$dbh, $table = 'session') {
+    function __construct(&$dbh, $table = 'session') {
         // Check for existing DbSession handler
         $db_type = $dbh->getParam('dbtype');
         if (isa($dbh, 'WikiDB')) {

@@ -23,8 +23,8 @@ require_once('Docman_Controller.class.php');
 require_once('Docman_SOAPActions.class.php');
 class Docman_SOAPController extends Docman_Controller {
 
-    function Docman_SOAPController(&$plugin, $pluginPath, $themePath, &$request) {
-        $this->Docman_Controller($plugin, $pluginPath, $themePath, $request);
+    function __construct(&$plugin, $pluginPath, $themePath, &$request) {
+        parent::__construct($plugin, $pluginPath, $themePath, $request);
     }
 
     /* protected */ function _includeView() {

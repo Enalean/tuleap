@@ -106,7 +106,7 @@ class ArtifactReport {
 	 *
 	 *	@return	boolean	success.
 	 */
-	function ArtifactReport($report_id,$atid) {
+	function __construct($report_id,$atid) {
 		$this->group_artifact_id = $atid;
 		$this->fields = array();
 

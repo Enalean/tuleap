@@ -24,7 +24,7 @@ class Docman_Filter {
     var $value;
     var $md;
 
-    function Docman_Filter($md) {
+    function __construct($md) {
         $this->value = null;
         $this->md = $md;
     }
@@ -102,8 +102,8 @@ class Docman_FilterDate extends Docman_Filter {
     var $field_operator_name;
     var $field_value_name;
 
-    function Docman_FilterDate($md) {
-        parent::Docman_Filter($md);
+    function __construct($md) {
+        parent::__construct($md);
         $this->operator = null;
         if($md !== null) {
             $this->field_operator_name  = $md->getLabel().'_operator';
@@ -211,8 +211,8 @@ extends Docman_FilterDate {
     var $valueStart;
     var $valueEnd;
 
-    function Docman_FilterDateAdvanced($md) {
-        parent::Docman_FilterDate($md);
+    function __construct($md) {
+        parent::__construct($md);
 
         $base = $md->getLabel().'_value';
         $this->fieldNameStart = $base.'_start';
@@ -302,10 +302,10 @@ extends Docman_FilterDate {
  */
 class Docman_FilterList extends Docman_Filter {
 
-    function Docman_FilterList($md) {
+    function __construct($md) {
         $mdFactory = new Docman_MetadataFactory($md->getGroupId());
         $mdFactory->appendMetadataValueList($md, false);
-        parent::Docman_Filter($md);
+        parent::__construct($md);
         $this->setValue(0);
     }
 
@@ -356,8 +356,8 @@ class Docman_FilterList extends Docman_Filter {
 class Docman_FilterListAdvanced 
 extends Docman_FilterList {
 
-    function Docman_FilterListAdvanced($md) {
-        parent::Docman_FilterList($md);
+    function __construct($md) {
+        parent::__construct($md);
         $this->setValue(array());
     }
 
@@ -421,15 +421,15 @@ extends Docman_FilterList {
 * Item type filters
 */
 class Docman_FilterItemTypeAdvanced extends Docman_FilterListAdvanced {
-    function Docman_FilterItemTypeAdvanced($md) {
-        parent::Docman_Filter($md);
+    function __construct($md) {
+        parent::__construct($md);
         $this->setValue(array());
     }
 }
 
 class Docman_FilterItemType extends Docman_FilterList {
-    function Docman_FilterItemType($md) {
-        parent::Docman_Filter($md);
+    function __construct($md) {
+        parent::__construct($md);
         $this->setValue(0);
     }
 }
@@ -439,8 +439,8 @@ class Docman_FilterItemType extends Docman_FilterList {
  */
 class Docman_FilterText extends Docman_Filter {
 
-    function Docman_FilterText($md) {
-        parent::Docman_Filter($md);
+    function __construct($md) {
+        parent::__construct($md);
     }
 
     function initFromRow($row) {
@@ -460,8 +460,8 @@ class Docman_FilterText extends Docman_Filter {
 class Docman_FilterGlobalText extends Docman_FilterText {
     var $dynTextFields;
 
-    function Docman_FilterGlobalText($md, $dynTextFields) {
-        parent::Docman_FilterText($md);
+    function __construct($md, $dynTextFields) {
+        parent::__construct($md);
         $this->dynTextFields = $dynTextFields;
     }
 
@@ -472,8 +472,8 @@ class Docman_FilterGlobalText extends Docman_FilterText {
 
 class Docman_FilterOwner extends Docman_Filter {
 
-    function Docman_FilterOwner($md) {
-        parent::Docman_Filter($md);
+    function __construct($md) {
+        parent::__construct($md);
     }
 
     function initFromRow($row) {

@@ -68,7 +68,7 @@ class Artifact {
      *          ONLY OPTIONAL WHEN YOU PLAN TO IMMEDIATELY CALL ->create()
      *  @return boolean success.
      */
-    function Artifact(&$ArtifactType, $data=false, $checkPerms = true) {
+    function __construct(&$ArtifactType, $data=false, $checkPerms = true) {
       global $Language;
 
         $this->ArtifactType = $ArtifactType;

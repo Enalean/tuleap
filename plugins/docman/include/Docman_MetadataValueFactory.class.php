@@ -41,7 +41,7 @@ class Docman_MetadataValueFactory {
     /**
      * Constructor
      */
-    function Docman_MetadataValueFactory($groupId) {
+    function __construct($groupId) {
         $this->groupId = $groupId;
     }
 

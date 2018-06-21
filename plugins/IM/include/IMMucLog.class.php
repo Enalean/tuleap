@@ -39,7 +39,7 @@ abstract class IMMucLog {
      */
     protected $_message;
     
-    function IMMucLog($date, $nickname, $username, $message) {
+    function __construct($date, $nickname, $username, $message) {
         $this->_date = $date;
         $this->_nickname = $nickname;
         $this->_username = $username;

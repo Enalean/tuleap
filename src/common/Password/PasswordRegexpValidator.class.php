@@ -32,8 +32,8 @@
     /**
     * Constructor
     */
-    function PasswordRegexpValidator($regexp, $description) {
-        $this->PasswordValidator($description);
+    function __construct($regexp, $description) {
+        parent::__construct($description);
         $this->regexp = $regexp;
     }
     

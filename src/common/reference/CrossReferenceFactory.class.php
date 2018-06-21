@@ -35,7 +35,7 @@ class CrossReferenceFactory {
      * Constructor 
      * Note that we need a valid reference parameter 
      */
-    function CrossReferenceFactory($entity_id,$entity_type,$entity_group_id) {
+    function __construct($entity_id,$entity_type,$entity_group_id) {
        $this->entity_id=$entity_id;
        $this->entity_type=$entity_type;
        $this->entity_gid=$entity_group_id;

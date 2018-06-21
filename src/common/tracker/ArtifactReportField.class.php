@@ -46,8 +46,8 @@ class ArtifactReportField extends ArtifactField {
 	 *	@param		
 	 *	@return	boolean	success.
 	 */
-	function ArtifactReportField() {
-		$this->ArtifactField();
+	function __construct() {
+		parent::__construct();
 		return true;
 	}
 	

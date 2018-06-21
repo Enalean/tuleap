@@ -28,8 +28,8 @@ require_once('Docman_View_ParentsTree.class.php');
 class Docman_View_ItemDetailsSectionMove extends Docman_View_ItemDetailsSectionActions {
     
     var $token;
-    function Docman_View_ItemDetailsSectionMove(&$item, $url, &$controller, $params, $token) {
-        parent::Docman_View_ItemDetailsSectionActions($item, $url, false, true, $controller);
+    function __construct(&$item, $url, &$controller, $params, $token) {
+        parent::__construct($item, $url, false, true, $controller);
         $this->params = $params;
         $this->token = $token;
     }

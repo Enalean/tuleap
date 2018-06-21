@@ -34,8 +34,8 @@ require_once(dirname(__FILE__).'/../lib/WikiEntry.class.php');
 class WikiServiceActions extends WikiActions {
   /* private */ var $gid;
 
-  function WikiServiceActions(&$controler, $id) {
-      $this->WikiActions($controler);
+  function __construct(&$controler, $id) {
+      parent::__construct($controler);
     $this->gid = $id;
   }
 

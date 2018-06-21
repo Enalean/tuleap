@@ -146,9 +146,9 @@ class DB_common extends PEAR
     /**
      * Constructor
      */
-    function DB_common()
+    function __construct()
     {
-        $this->PEAR('DB_Error');
+        parent::__construct('DB_Error');
     }
 
     // }}}

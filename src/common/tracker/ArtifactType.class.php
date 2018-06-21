@@ -107,7 +107,7 @@ class ArtifactType {
 	 *  @param	array	The associative array of data.
 	 *	@return boolean	success.
 	 */
-	function ArtifactType(&$Group,$artifact_type_id=false, $arr=false) {
+	function __construct(&$Group,$artifact_type_id=false, $arr=false) {
 	  global $Language;
 
 		if (!$Group || !is_object($Group)) {

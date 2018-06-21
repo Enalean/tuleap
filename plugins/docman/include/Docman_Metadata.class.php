@@ -59,7 +59,7 @@ class Docman_Metadata {
     var $value;
     var $defaultValue;
 
-    function Docman_Metadata() {
+    function __construct() {
         $this->id = null;
         $this->groupId = null;
         $this->name = null;
@@ -356,8 +356,8 @@ class Docman_Metadata {
 class Docman_ListMetadata extends Docman_Metadata {
     var $listOfValue;
 
-    function Docman_ListMetadata() {
-        parent::Docman_Metadata();
+    function __construct() {
+        parent::__construct();
         $this->defaultValue = array();
     }
 

@@ -104,7 +104,7 @@ class ArtifactField {
 	 *  Constructor.
 	 *
 	 */
-	function ArtifactField() {
+	function __construct() {
 	}
 	
 	/**

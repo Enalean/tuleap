@@ -54,7 +54,7 @@ class WikiServiceAdminViews extends WikiViews {
   /**
    * WikiServiceAdminViews - Constructor
    */
-  function WikiServiceAdminViews(&$controler, $id=0) {
+  function __construct(&$controler, $id=0) {
     parent::WikiView($controler, $id);
     $pm = ProjectManager::instance();
     $this->html_params['title']  = $GLOBALS['Language']->getText('wiki_views_wkserviews', 'title', array($pm->getProject($this->gid)->getPublicName()));

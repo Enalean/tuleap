@@ -60,7 +60,7 @@ class FRSPackage {
      */
     var $approve_license;
 
-    function FRSPackage($data_array = null) {
+    function __construct($data_array = null) {
         $this->package_id       = null;
         $this->group_id         = null;
         $this->name             = null;

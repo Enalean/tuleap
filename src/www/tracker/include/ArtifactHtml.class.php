@@ -29,8 +29,8 @@ class ArtifactHtml extends Artifact {
          *  @param $artifact_id integer (primary key from database)
          *  @return true/false
          */
-        function ArtifactHtml(&$ArtifactType,$artifact_id=false) {
-                return $this->Artifact($ArtifactType,$artifact_id);
+        function __construct(&$ArtifactType,$artifact_id=false) {
+                return parent::__construct($ArtifactType,$artifact_id);
         }
 
         /**

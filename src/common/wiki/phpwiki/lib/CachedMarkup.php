@@ -22,7 +22,7 @@ rcs_id('$Id: CachedMarkup.php,v 1.35 2005/04/23 11:18:58 rurban Exp $');
 
 class CacheableMarkup extends XmlContent {
 
-    function CacheableMarkup($content, $basepage) {
+    function __construct($content, $basepage) {
         $this->_basepage = $basepage;
 	$this->_buf = '';
 	$this->_content = array();
@@ -258,7 +258,7 @@ class Cached_Link extends Cached_DynamicContent {
 
 class Cached_WikiLink extends Cached_Link {
 
-    function Cached_WikiLink ($page, $label = false, $anchor = false) {
+    function __construct ($page, $label = false, $anchor = false) {
 	$this->_page = $page;
         if ($anchor)
             $this->_anchor = $anchor;
@@ -316,7 +316,7 @@ class Cached_WikiLink extends Cached_Link {
 
 class Cached_WikiLinkIfKnown extends Cached_WikiLink
 {
-    function Cached_WikiLinkIfKnown ($moniker) {
+    function __construct ($moniker) {
 	$this->_page = $moniker;
     }
 
@@ -327,7 +327,7 @@ class Cached_WikiLinkIfKnown extends Cached_WikiLink
     
 class Cached_PhpwikiURL extends Cached_DynamicContent
 {
-    function Cached_PhpwikiURL ($url, $label) {
+    function __construct ($url, $label) {
 	$this->_url = $url;
         if ($label)
             $this->_label = $label;
@@ -357,7 +357,7 @@ class Cached_PhpwikiURL extends Cached_DynamicContent
     
 class Cached_ExternalLink extends Cached_Link {
 
-    function Cached_ExternalLink($url, $label=false) {
+    function __construct($url, $label=false) {
 	$this->_url = $url;
         if ($label && $label != $url)
             $this->_label = $label;
@@ -397,7 +397,7 @@ class Cached_ExternalLink extends Cached_Link {
 
 class Cached_InterwikiLink extends Cached_ExternalLink {
     
-    function Cached_InterwikiLink($link, $label=false) {
+    function __construct($link, $label=false) {
 	$this->_link = $link;
         if ($label)
             $this->_label = $label;
@@ -444,7 +444,7 @@ class Cached_UserLink extends Cached_WikiLink {
 
 class Cached_PluginInvocation extends Cached_DynamicContent {
 
-    function Cached_PluginInvocation ($pi) {
+    function __construct ($pi) {
 	$this->_pi = $pi;
     }
 

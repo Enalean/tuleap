@@ -36,8 +36,8 @@ class ArtifactRuleValueJavascript extends ArtifactRuleValueView {
 	 *
 	 *  @param $artifact_rule object
 	 */
-	function ArtifactRuleValueJavascript(&$rule) {
-		$this->ArtifactRuleValueView($rule);
+	function __construct(&$rule) {
+		parent::__construct($rule);
 	}
     
     function fetch() {

@@ -134,7 +134,7 @@ class ArtifactXMLExpectation extends SimpleExpectation {
     private $artifact_id;
 
     public function __construct($artifact_id) {
-        parent::SimpleExpectation();
+        parent::__construct();
         $this->artifact_id = $artifact_id;
     }
 

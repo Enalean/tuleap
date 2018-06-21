@@ -32,7 +32,7 @@
          *    Raises an error if you construct MockFunction
          *    @access private
          */
-        function MockFunction() {
+        function __construct() {
             trigger_error('MockFunction only provides static methods',
                 E_USER_ERROR);
         }
@@ -349,9 +349,9 @@
          *    the function is already declared
          *    @param string $function    Name of function being mocked
          */
-        function SimpleMockFunction($function) {
+        function __construct($function) {
             
-            SimpleMock :: SimpleMock();
+            parent :: __construct();
             
             if ( function_exists($function) ) {
                 $this->_generator = new SimpleDeclaredFunctionGenerator($function);
@@ -413,7 +413,7 @@
          *    as they will break SimpleTest, which uses them)
          *    @param string $function    Name of function being mocked
          */
-        function SimpleFunctionGenerator($function) {
+        function __construct($function) {
             $this->_function = $function;
         }
         
@@ -445,9 +445,9 @@
          *    Invokes the _generateTmpFnFname
          *    @param string $function    Name of function being mocked
          */
-        function SimpleDeclaredFunctionGenerator($function) {
+        function __construct($function) {
             
-            SimpleFunctionGenerator::SimpleFunctionGenerator($function);
+            parent::__construct($function);
             $this->_generateTmpFnFname();
             
         }

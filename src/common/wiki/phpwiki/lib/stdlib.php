@@ -504,7 +504,7 @@ function ImgObject($img, $url) {
 class Stack {
 
     // var in php5 deprecated
-    function Stack() {
+    function __construct() {
         $this->items = array();
         $this->size = 0;
     }
@@ -648,7 +648,7 @@ class WikiPageName
      * @param mixed $basename Page name from which to interpret
      * relative or other non-fully-specified page names.
      */
-    function WikiPageName($name, $basename=false, $anchor=false) {
+    function __construct($name, $basename=false, $anchor=false) {
         if (is_string($name)) {
             $this->shortName = $name;
             if (strstr($name, ':')) {
@@ -1419,7 +1419,7 @@ class fileSet {
         }
     }
 
-    function fileSet($directory, $filepattern = false) {
+    function __construct($directory, $filepattern = false) {
         $this->_fileList = array();
         $this->_pattern = $filepattern;
         if ($filepattern)
@@ -1458,7 +1458,7 @@ class fileSet {
 // expands a list containing regex's to its matching entries
 class ListRegexExpand {
     //var $match, $list, $index, $case_sensitive;
-    function ListRegexExpand (&$list, $match, $case_sensitive = true) {
+    function __construct (&$list, $match, $case_sensitive = true) {
     	$this->match = $match;
     	$this->list = &$list;
     	$this->case_sensitive = $case_sensitive;	
@@ -1709,7 +1709,7 @@ class Alert {
      * @param hash $buttons  An array mapping button labels to URLs.
      *    The default is a single "Okay" button pointing to $request->getURLtoSelf().
      */
-    function Alert($head, $body, $buttons=false) {
+    function __construct($head, $body, $buttons=false) {
         if ($buttons === false)
             $buttons = array();
 

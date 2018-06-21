@@ -107,7 +107,7 @@ extends WikiPlugin_RecentChanges
  */
 class RelatedChangesRevisionIterator extends WikiDB_PageRevisionIterator
 {
-    function RelatedChangesRevisionIterator ($revisions, &$dbi, $pagename) {
+    function __construct ($revisions, &$dbi, $pagename) {
         $this->_revisions = $revisions;
         $this->_wikidb = $dbi;
         $page = $dbi->getPage($pagename);

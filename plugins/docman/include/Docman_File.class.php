@@ -25,8 +25,8 @@ require_once('Docman_Document.class.php');
  */
 class Docman_File extends Docman_Document {
     
-    function Docman_File($data = null) {
-        parent::Docman_Document($data);
+    function __construct($data = null) {
+        parent::__construct($data);
     }
     
     var $currentVersion;

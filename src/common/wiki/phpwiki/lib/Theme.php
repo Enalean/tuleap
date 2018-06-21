@@ -193,7 +193,7 @@ class Theme {
     var $HTML_DUMP_SUFFIX = '';
     var $DUMP_MODE = false, $dumped_images, $dumped_css; 
 
-    function Theme ($theme_name = 'default') {
+    function __construct ($theme_name = 'default') {
         $this->_name = $theme_name;
         $this->_themes_dir = NormalizeLocalFileName("themes");
         $this->_path  = defined('PHPWIKI_DIR') ? NormalizeLocalFileName("") : "";
@@ -1224,13 +1224,13 @@ class Button extends HtmlElement {
      * @param $url string The url (href) for the button.
      * @param $class string The CSS class for the button.
      */
-    function Button ($text, $url, $class = false) {
+    function __construct ($text, $url, $class = false) {
         global $request;
         //php5 workaround
         if (check_php_version(5)) {
             $this->_init('a', array('href' => $url));
         } else {
-            $this->__construct('a', array('href' => $url));
+            parent::__construct('a', array('href' => $url));
         }
         if ($class)
             $this->setAttr('class', $class);
@@ -1258,8 +1258,8 @@ class ImageButton extends Button {
      * @param $img_url string URL for button's image.
      * @param $img_attr array Additional attributes for the &lt;img&gt; tag.
      */
-    function ImageButton ($text, $url, $class, $img_url, $img_attr = false) {
-        $this->__construct('a', array('href' => $url));
+    function __construct ($text, $url, $class, $img_url, $img_attr = false) {
+        parent::__construct('a', array('href' => $url));
         if ($class)
             $this->setAttr('class', $class);
         // Google honors this
@@ -1287,8 +1287,8 @@ class SubmitButton extends HtmlElement {
      * @param $name string The name of the form field.
      * @param $class string The CSS class for the button.
      */
-    function SubmitButton ($text, $name = false, $class = false) {
-        $this->__construct('input', array('type' => 'submit',
+    function __construct ($text, $name = false, $class = false) {
+        parent::__construct('input', array('type' => 'submit',
                                           'value' => $text));
         if ($name)
             $this->setAttr('name', $name);
@@ -1311,8 +1311,8 @@ class SubmitImageButton extends SubmitButton {
      * @param $img_url string URL for button's image.
      * @param $img_attr array Additional attributes for the &lt;img&gt; tag.
      */
-    function SubmitImageButton ($text, $name = false, $class = false, $img_url) {
-        $this->__construct('input', array('type'  => 'image',
+    function __construct ($text, $name = false, $class = false, $img_url) {
+        parent::__construct('input', array('type'  => 'image',
                                           'src'   => $img_url,
                                           'value' => $text,
                                           'alt'   => $text));
@@ -1339,7 +1339,7 @@ class SubmitImageButton extends SubmitButton {
  */
 class SidebarBox {
 
-    function SidebarBox($title, $body) {
+    function __construct($title, $body) {
         require_once('lib/WikiPlugin.php');
         $this->title = $title;
         $this->body = $body;
@@ -1358,7 +1358,7 @@ class PluginSidebarBox extends SidebarBox {
 
     var $_plugin, $_args = false, $_basepage = false;
 
-    function PluginSidebarBox($name, $args = false, $basepage = false) {
+    function __construct($name, $args = false, $basepage = false) {
         $loader = new WikiPluginLoader();
         $plugin = $loader->getPlugin($name);
         if (!$plugin) {
@@ -1383,7 +1383,7 @@ class PluginSidebarBox extends SidebarBox {
 
 // Various boxes which are no plugins
 class RelatedLinksBox extends SidebarBox {
-    function RelatedLinksBox($title = false, $body = '', $limit = 20) {
+    function __construct($title = false, $body = '', $limit = 20) {
         global $request;
         $this->title = $title ? $title : _("Related Links");
         $this->body = HTML($body);
@@ -1403,7 +1403,7 @@ class RelatedLinksBox extends SidebarBox {
 }
 
 class RelatedExternalLinksBox extends SidebarBox {
-    function RelatedExternalLinksBox($title = false, $body = '', $limit = 20) {
+    function __construct($title = false, $body = '', $limit = 20) {
         global $request;
         $this->title = $title ? $title : _("External Links");
         $this->body = HTML($body);

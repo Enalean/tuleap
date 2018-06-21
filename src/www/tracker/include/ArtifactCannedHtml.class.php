@@ -20,8 +20,8 @@ class ArtifactCannedHtml extends ArtifactCanned {
 	 *
 	 *  @param $artifact_type - the ArtifactType object embedding this ArtifactCanned sets
 	 */
-	function ArtifactCannedHtml(&$artifact_type) {
-		return $this->ArtifactCanned($artifact_type);
+	function __construct(&$artifact_type) {
+		return parent::__construct($artifact_type);
 	}
 
 	/**

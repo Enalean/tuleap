@@ -2,7 +2,7 @@
 
 class DbaListSet
 {
-    function DbaListSet(&$dbh) {
+    function __construct(&$dbh) {
         $this->_dbh = &$dbh;
     }
 

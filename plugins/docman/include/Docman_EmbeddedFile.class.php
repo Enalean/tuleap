@@ -26,8 +26,8 @@ require_once('Docman_File.class.php');
  */
 class Docman_EmbeddedFile extends Docman_File {
     
-    function Docman_EmbeddedFile($data = null) {
-        parent::Docman_File($data);
+    function __construct($data = null) {
+        parent::__construct($data);
     }
     
     function accept(&$visitor, $params = array()) {

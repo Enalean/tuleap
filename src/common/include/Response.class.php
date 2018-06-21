@@ -39,7 +39,7 @@ class Response {
     /**
     * Constructor
     */
-    public function Response() {
+    public function __construct() {
         $session_id = UserManager::instance()->getCurrentUser()->getSessionId();
         if ($session_id) {
             $dao = $this->getFeedbackDao();

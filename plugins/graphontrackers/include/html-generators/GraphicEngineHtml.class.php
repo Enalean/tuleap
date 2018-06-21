@@ -31,7 +31,7 @@ class graphicEngineHtml {
     
     protected $theme_path;
 
-    function graphicEngineHtml($group_artifact_id,$user_id,$theme_path) {
+    function __construct($group_artifact_id,$user_id,$theme_path) {
         $this->grf = new graphicReportFactory($group_artifact_id,$user_id);
         $this->theme_path = $theme_path;
     }

@@ -15,7 +15,7 @@ extends DbSession
 {
     var $_backend_type = "SQL";
 
-    function DbSession_SQL (&$dbh, $table) {
+    function __construct (&$dbh, $table) {
 
         $this->_dbh = $dbh;
         $this->_table = $table;

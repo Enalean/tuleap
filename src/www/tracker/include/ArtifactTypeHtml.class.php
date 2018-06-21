@@ -34,8 +34,8 @@ class ArtifactTypeHtml extends ArtifactType {
 	 *  @param $Group object
 	 *  @param $artifact_type_id - the id # assigned to this artifact type in the db
 	 */
-	function ArtifactTypeHtml(&$Group,$artifact_type_id=false, $arr=false) {
-		return $this->ArtifactType($Group,$artifact_type_id,$arr);
+	function __construct(&$Group,$artifact_type_id=false, $arr=false) {
+		return parent::__construct($Group,$artifact_type_id,$arr);
 	}
 
     /**

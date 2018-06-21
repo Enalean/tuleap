@@ -29,7 +29,7 @@ extends DbSession
 {
     var $_backend_type = "ADODB";
 
-    function DbSession_ADODB ($dbh, $table) {
+    function __construct ($dbh, $table) {
 
         $this->_dbh = $dbh;
         $this->_table = $table;

@@ -27,7 +27,7 @@ class Docman_MetadataComparator {
     var $srcGo;
     var $dstGo;
 
-    function Docman_MetadataComparator($srcGroupId, $dstGroupId, $themePath) {
+    function __construct($srcGroupId, $dstGroupId, $themePath) {
         $this->docmanIcons = new Docman_Icons($themePath.'/images/ic/');
         $pm = ProjectManager::instance();
         $this->srcGo = $pm->getProject($srcGroupId);

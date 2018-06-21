@@ -15,8 +15,8 @@ if (!defined('RSS_ENCODING'))
  */
 class RssWriter extends XmlElement
 {
-    function RssWriter () {
-        $this->XmlElement('rdf:RDF',
+    function __construct () {
+        parent::__construct('rdf:RDF',
                           array('xmlns' => "http://purl.org/rss/1.0/",
                                 'xmlns:rdf' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'));
 

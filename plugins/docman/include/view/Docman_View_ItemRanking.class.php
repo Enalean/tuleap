@@ -29,7 +29,7 @@ class Docman_View_ItemRanking {
     var $dropDownName;
     var $selectedValue;
 
-    function Docman_View_ItemRanking() {
+    function __construct() {
         $this->selectedValue = 'beginning';
     }
 

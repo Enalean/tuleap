@@ -31,7 +31,7 @@ class TemplateSingleton
   const TEMPLATE     = 2;
   const TEST_PROJECT = 3;
 
-  function TemplateSingleton() {
+  function __construct() {
     $this->update();
   }
 

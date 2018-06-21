@@ -24,7 +24,7 @@ class ReferenceAdministrationActions extends Actions
     
     public function __construct($controler, $view=null)
     {
-        $this->Actions($controler);
+        parent::__construct($controler);
     }
     
     /** Actions **/

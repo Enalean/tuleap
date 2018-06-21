@@ -30,7 +30,7 @@ class Docman_MetadataListOfValuesElement {
     var $rank;
     var $status;
 
-    function Docman_MetadataListOfValuesElement() {
+    function __construct() {
         $this->id = null;
         $this->name = null;
         $this->description = null;

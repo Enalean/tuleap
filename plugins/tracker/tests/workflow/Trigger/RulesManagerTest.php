@@ -416,7 +416,7 @@ class TriggerRuleComparatorExpectaction extends SimpleExpectation {
     private $trigger_rule;
 
     public function __construct(Tracker_Workflow_Trigger_TriggerRule $trigger_rule) {
-        parent::SimpleExpectation();
+        parent::__construct();
         $this->trigger_rule = $trigger_rule;
     }
 

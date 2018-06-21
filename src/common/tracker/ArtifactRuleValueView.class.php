@@ -31,7 +31,7 @@ class ArtifactRuleValueView {
 	 *
 	 *  @param $artifact_rule object
 	 */
-	function ArtifactRuleValueView(&$rule) {
+	function __construct(&$rule) {
 		$this->rule =& $rule;
 	}
     

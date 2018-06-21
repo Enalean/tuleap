@@ -44,9 +44,9 @@ extends Docman_MetadataSqlQueryChunk {
     /**
      *
      */
-    function Docman_SqlReportColumn($column) {
+    function __construct($column) {
         $this->column = $column;
-        parent::Docman_MetadataSqlQueryChunk($column->md);
+        parent::__construct($column->md);
     }
 
     function getOrderBy() {

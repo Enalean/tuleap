@@ -27,7 +27,7 @@ class PluginDescriptor {
     var $version;
     var $description;
     
-    function PluginDescriptor($name = '', $version = '', $description = '') {
+    function __construct($name = '', $version = '', $description = '') {
         $this->name        = $name;
         $this->version     = $version;
         $this->description = $description;

@@ -116,7 +116,7 @@ class Sample
      * constructor
      *
      */
-    function Sample()
+    function __construct()
     {
         $this->year      = null;
         $this->month     = null;
@@ -420,11 +420,11 @@ class SessionSample extends Sample
     /**
      * Constructor
      */
-    function SessionSample()
+    function __construct()
     {
         $this->field = 'time';
         $this->table = 'plugin_statistics_user_session';
-        parent::Sample();
+        parent::__construct();
     }
 }
 
@@ -441,11 +441,11 @@ class UserSample extends Sample
     /**
      * Constructor
      */
-    function UserSample()
+    function __construct()
     {
         $this->field = 'add_date';
         $this->table = 'user';
-        parent::Sample();
+        parent::__construct();
     }  
 }
 
@@ -462,11 +462,11 @@ class ForumSample extends Sample
     /**
      * Constructor
      */
-    function ForumSample()
+    function __construct()
     {
         $this->field = 'date';
         $this->table = 'forum';
-        parent::Sample();
+        parent::__construct();
     }
 }
 
@@ -483,11 +483,11 @@ class FiledSample extends Sample
     /**
      * Constructor
      */
-    function FiledSample()
+    function __construct()
     {
         $this->field = 'time';
         $this->table = 'filedownload_log';
-        parent::Sample();
+        parent::__construct();
     }
 }
 
@@ -504,11 +504,11 @@ class FilerSample extends Sample
     /**
      * Constructor
      */
-    function FilerSample()
+    function __construct()
     {
         $this->field = 'release_time';
         $this->table = 'frs_file';
-        parent::Sample();
+        parent::__construct();
     }
 }
 
@@ -525,11 +525,11 @@ class ProjectSample extends Sample
     /**
      * Constructor
      */
-    function ProjectSample()
+    function __construct()
     {
         $this->field = 'register_time';
         $this->table = 'groups';
-        parent::Sample();
+        parent::__construct();
     }
 }
 
@@ -546,11 +546,11 @@ class WikiSample extends Sample
     /**
      * Constructor
      */
-    function WikiSample()
+    function __construct()
     {
         $this->field = 'time';
         $this->table = 'wiki_log';
-        parent::Sample();
+        parent::__construct();
     }
 }
 
@@ -567,11 +567,11 @@ class OartifactSample extends Sample
     /** 
      * Constructor
      */
-    function OartifactSample()
+    function __construct()
     {
         $this->field = 'open_date';
         $this->table = 'artifact';
-        parent::Sample();
+        parent::__construct();
     }
 }
 
@@ -588,11 +588,11 @@ class CartifactSample extends Sample
     /**
      * Constructor
      */
-    function CartifactSample()
+    function __construct()
     {
         $this->field = 'close_date';
         $this->table = 'artifact';
-        parent::Sample();
+        parent::__construct();
     }
 }
 
@@ -703,7 +703,7 @@ class SampleGraph
      * @param string  $start        the start date
      * @param string  $end          the end date
      */
-    function SampleGraph($graphValues, $selectedData, $filter, $titlePeriod, $advsrch, $year, $month, $start, $end)
+    function __construct($graphValues, $selectedData, $filter, $titlePeriod, $advsrch, $year, $month, $start, $end)
     {
         $this->color        = null;
         $this->graphValues  = $graphValues;
@@ -1034,7 +1034,7 @@ class SampleFactory
     /**
      * Constructor
      */
-    function SampleFactory()
+    function __construct()
     {
         $this->Sample = new SessionSample();        
     }

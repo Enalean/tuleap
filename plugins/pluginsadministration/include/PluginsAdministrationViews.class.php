@@ -46,7 +46,7 @@ class PluginsAdministrationViews extends Views {
      */
     private $plugin_disabler_verifier;
 
-    function PluginsAdministrationViews(&$controler, $view=null) {
+    function __construct(&$controler, $view=null) {
         $this->View($controler, $view);
         $this->plugin_manager           = PluginManager::instance();
         $this->dependency_solver        = new PluginDependencySolver($this->plugin_manager);

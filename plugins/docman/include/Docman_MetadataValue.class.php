@@ -29,7 +29,7 @@ class Docman_MetadataValue {
 
     var $type;
 
-    function Docman_MetadataValue() {
+    function __construct() {
         $this->fieldId = null;
         $this->itemId = null;
 
@@ -82,8 +82,8 @@ class Docman_MetadataValue {
 class Docman_MetadataValueList extends Docman_MetadataValue {
     var $listOfValues;
 
-    function Docman_MetadataValueList() {
-        parent::Docman_MetadataValue();        
+    function __construct() {
+        parent::__construct();        
         $this->listOfValues = null;
     }
 
@@ -115,8 +115,8 @@ class Docman_MetadataValueScalar extends Docman_MetadataValue {
     var $valueDate;
     var $valueString;
 
-    function Docman_MetadataValueScalar() {
-        parent::Docman_MetadataValue();        
+    function __construct() {
+        parent::__construct();        
         $this->valueText = null;
         $this->valueFloat = null;
         $this->valueDate = null;

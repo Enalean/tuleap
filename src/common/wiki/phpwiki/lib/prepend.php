@@ -54,7 +54,7 @@ if (defined('DEBUG') and (DEBUG & 8) and extension_loaded("xdebug")) {
 
 // Used for debugging purposes
 class DebugTimer {
-    function DebugTimer() {
+    function __construct() {
         $this->_start = $this->microtime();
         if (function_exists('posix_times'))
             $this->_times = posix_times();

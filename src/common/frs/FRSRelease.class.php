@@ -82,7 +82,7 @@ class FRSRelease {
      */
     protected $group_id;
 
-    function FRSRelease($data_array = null) {
+    function __construct($data_array = null) {
         $this->release_id       = null;
         $this->package_id       = null;
         $this->name             = null;

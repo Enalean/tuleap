@@ -21,7 +21,7 @@
  */
 
 class Docman_ValidateFilterFactory {
-    function Docman_ValidateFilterFactory() {
+    function __construct() {
         
     }
 
@@ -40,7 +40,7 @@ class Docman_ValidateFilter {
     var $message;
     var $isValid;
     
-    function Docman_ValidateFilter($filter) {
+    function __construct($filter) {
         $this->filter = $filter;
         $this->message = '';
         $this->isValid = null; 
@@ -57,8 +57,8 @@ class Docman_ValidateFilter {
 
 class Docman_ValidateFilterDate extends Docman_ValidateFilter {
 
-    function Docman_ValidateFilterDate($filter) {
-        parent::Docman_ValidateFilter($filter);
+    function __construct($filter) {
+        parent::__construct($filter);
     }
 
     function validate() {

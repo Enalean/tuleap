@@ -332,7 +332,7 @@ function array_diff_assoc_recursive($array1, $array2) {
 class PagePermission {
     var $perm;
 
-    function PagePermission($hash = array()) {
+    function __construct($hash = array()) {
         $this->_group = &$GLOBALS['request']->getGroup();
         if (is_array($hash) and !empty($hash)) {
             $accessTypes = $this->accessTypes();

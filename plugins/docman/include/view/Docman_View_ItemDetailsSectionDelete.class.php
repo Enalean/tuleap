@@ -27,8 +27,8 @@ require_once('Docman_View_ItemDetailsSectionActions.class.php');
 class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectionActions {
     
     var $token;
-    function Docman_View_ItemDetailsSectionDelete(&$item, $url, &$controller, $token) {
-        parent::Docman_View_ItemDetailsSectionActions($item, $url, false, true, $controller);
+    function __construct(&$item, $url, &$controller, $token) {
+        parent::__construct($item, $url, false, true, $controller);
         $this->token = $token;
     }
     function getContent() {

@@ -397,7 +397,7 @@ extends WikiPlugin
 };
 
 class _PageList_Column_customlang extends _PageList_Column {
-    function _PageList_Column_customlang($field, $from_lang, $plugin) {
+    function __construct($field, $from_lang, $plugin) {
         $this->_field = $field;
         $this->_from_lang = $from_lang;
         $this->_plugin =& $plugin;

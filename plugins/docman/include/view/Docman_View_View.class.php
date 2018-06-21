@@ -38,7 +38,7 @@
      */
     var $hp;
 
-    function Docman_View_View(&$controller) {
+    function __construct(&$controller) {
         $this->_controller = $controller;
         $this->hp = Codendi_HTMLPurifier::instance();
         $this->javascript = "";

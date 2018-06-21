@@ -8,7 +8,7 @@ class IM extends Controler {
     
     var $plugin;
     
-    function IM(&$plugin) {
+    function __construct(&$plugin) {
         $this->plugin =& $plugin;
     }
 

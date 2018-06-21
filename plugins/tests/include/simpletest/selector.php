@@ -26,7 +26,7 @@ class SimpleByName {
      *    Stashes the name for later comparison.
      *    @param string $name     Name attribute to match.
      */
-    function SimpleByName($name) {
+    function __construct($name) {
         $this->_name = $name;
     }
 
@@ -57,7 +57,7 @@ class SimpleByLabel {
      *    Stashes the name for later comparison.
      *    @param string $label     Visible text to match.
      */
-    function SimpleByLabel($label) {
+    function __construct($label) {
         $this->_label = $label;
     }
 
@@ -88,7 +88,7 @@ class SimpleById {
      *    Stashes the name for later comparison.
      *    @param string $id     ID atribute to match.
      */
-    function SimpleById($id) {
+    function __construct($id) {
         $this->_id = $id;
     }
 
@@ -115,7 +115,7 @@ class SimpleByLabelOrName {
      *    Stashes the name/label for later comparison.
      *    @param string $label     Visible text to match.
      */
-    function SimpleByLabelOrName($label) {
+    function __construct($label) {
         $this->_label = $label;
     }
 

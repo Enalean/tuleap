@@ -43,7 +43,7 @@ class ArtifactCanned {
 	 *  @param	array	(all fields from artifact_file_user_vw) OR id from database.
 	 *  @return	boolean	success.
 	 */
-	function ArtifactCanned(&$ArtifactType, $data=false) {
+	function __construct(&$ArtifactType, $data=false) {
 	  global $Language;
 
 		//was ArtifactType legit?

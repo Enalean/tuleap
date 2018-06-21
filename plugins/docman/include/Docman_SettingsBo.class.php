@@ -27,7 +27,7 @@ class Docman_SettingsBo {
     var $groupId;
     var $dao;
 
-    function Docman_SettingsBo($groupId) {
+    function __construct($groupId) {
         $this->groupId = $groupId;
         $this->row = null;
         $this->dao = null;

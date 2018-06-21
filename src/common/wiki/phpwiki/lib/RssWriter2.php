@@ -17,7 +17,7 @@ include_once("lib/RssWriter.php");
  */
 class RssWriter2 extends RssWriter
 {
-    function RssWriter2 () {
+    function __construct () {
         $this->XmlElement('rss',
                           array('version' => "2.0"));
 

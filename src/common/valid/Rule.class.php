@@ -100,7 +100,7 @@ extends Rule {
      * @access private
      */
     var $ref;
-    function Rule_Comparator($ref) {
+    function __construct($ref) {
         $this->ref = $ref;
     }
 }
@@ -274,7 +274,7 @@ class Rule_Email
 extends Rule {
     var $separator;
 
-    function Rule_Email($separator = null) {
+    function __construct($separator = null) {
         $this->separator = $separator;
     }
 
@@ -777,7 +777,7 @@ extends Rule {
     var $maxSize;
     var $i18nPageName;
 
-    function Rule_File() {
+    function __construct() {
         $this->maxSize = $GLOBALS['sys_max_size_upload'];
         $this->i18nPageName = 'rule_file';
     }

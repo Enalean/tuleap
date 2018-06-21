@@ -16,7 +16,7 @@
  */
 class XmlContent
 {
-    function XmlContent (/* ... */) {
+    function __construct (/* ... */) {
         $this->_content = array();
         $this->_pushContent_array(func_get_args());
     }
@@ -180,9 +180,9 @@ class XmlContent
  */
 class XmlElement extends XmlContent
 {
-    function XmlElement ($tagname /* , $attr_or_content , ...*/) {
+    function __construct ($tagname /* , $attr_or_content , ...*/) {
         //FIXME: php5 incompatible
-        $this->XmlContent();
+        parent::__construct();
         $this->_init(func_get_args());
     }
 
@@ -414,7 +414,7 @@ class XmlElement extends XmlContent
 };
 
 class RawXml {
-    function RawXml ($xml_text) {
+    function __construct ($xml_text) {
         $this->_xml = $xml_text;
     }
 
@@ -432,7 +432,7 @@ class RawXml {
 }
 
 class FormattedText {
-    function FormattedText ($fs /* , ... */) {
+    function __construct ($fs /* , ... */) {
         if ($fs !== false) {
             $this->_init(func_get_args());
         }

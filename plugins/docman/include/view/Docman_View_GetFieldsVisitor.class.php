@@ -13,7 +13,7 @@ require_once(dirname(__FILE__).'/../Docman_MetadataHtml.class.php');
 class Docman_View_GetFieldsVisitor /* implements Visitor*/ {
     var $mdLabelToSkip;
 
-    function Docman_View_GetFieldsVisitor($mdLabelToSkip = array()) {
+    function __construct($mdLabelToSkip = array()) {
         $this->mdLabelToSkip = $mdLabelToSkip;
     }
 

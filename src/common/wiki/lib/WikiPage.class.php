@@ -52,7 +52,7 @@ class WikiPage {
     /*
      * Constructor
      */
-    function WikiPage($id=0, $pagename='') {
+    function __construct($id=0, $pagename='') {
         $this->empty = null;
 
         if($id != 0) {

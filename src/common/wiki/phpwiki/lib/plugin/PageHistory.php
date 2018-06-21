@@ -27,7 +27,7 @@ require_once('lib/plugin/RecentChanges.php');
 class _PageHistory_PageRevisionIter
 extends WikiDB_PageRevisionIterator
 {
-    function _PageHistory_PageRevisionIter($rev_iter, $params) {
+    function __construct($rev_iter, $params) {
 
         $this->_iter = $rev_iter;
 

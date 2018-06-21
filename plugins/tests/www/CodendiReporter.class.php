@@ -19,7 +19,7 @@ class CodeCoverageInvokerDecorator extends SimpleInvokerDecorator {
         protected $coverage;
 
         function __construct($coverage, $invoker) {
-            $this->SimpleInvokerDecorator($invoker);
+            parent::__construct($invoker);
             $this->coverage = $coverage;
         }
 
@@ -178,7 +178,7 @@ class CodendiJUnitXMLReporter extends JUnitXMLReporter implements iCodeCoverageR
     protected $coverage;
 
     function __construct($coverage) {
-        $this->JUnitXMLReporter();
+        parent::__construct();
         $this->coverage = $coverage;
     }
 
@@ -223,8 +223,8 @@ class ColorTextReporter extends SimpleReporter {
      *    be sent on the first test start.
      *    @access public
      */
-    function ColorTextReporter() {
-        $this->SimpleReporter();
+    function __construct() {
+        parent::__construct();
     }
 
     /**

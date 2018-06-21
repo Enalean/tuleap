@@ -21,7 +21,7 @@
  */
 
 class DatabaseForge extends DataBase{
-	function DatabaseForge($server=false, $user=false, $password=false,
+	function __construct($server=false, $user=false, $password=false,
 			       $dbName=false, $failFunction=false, $flags=0) {
 		global $wgDBtype;
 

@@ -34,7 +34,7 @@ class ReferenceInstance {
      * Constructor 
      * Note that we need a valid reference parameter 
      */
-    function ReferenceInstance($match,$ref,$value) {
+    function __construct($match,$ref,$value) {
         $this->reference = $ref;
         $this->match = $match;
         $this->value = $value;

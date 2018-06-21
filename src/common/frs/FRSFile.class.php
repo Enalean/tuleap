@@ -100,7 +100,7 @@ class FRSFile {
      */
     protected $release;
 
-    function FRSFile($data_array = null) {
+    function __construct($data_array = null) {
         $this->file_id       = null;
         $this->filename     = null;
         $this->filepath     = null;

@@ -23,7 +23,7 @@ class Collection {
     
     /* protected */ var $elements;
     
-    function Collection($initial_array = '') {
+    function __construct($initial_array = '') {
         if (is_array($initial_array)) {
             $this->elements = $initial_array;
         } else {

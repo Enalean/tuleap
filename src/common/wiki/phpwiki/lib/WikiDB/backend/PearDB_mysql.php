@@ -11,8 +11,8 @@ extends WikiDB_backend_PearDB
     /**
      * Constructor.
      */
-    function WikiDB_backend_PearDB_mysql($dbparams) {
-        $this->WikiDB_backend_PearDB($dbparams);
+    function __construct($dbparams) {
+        parent::__construct($dbparams);
         //$this->_serverinfo = $this->_dbh->ServerInfo();
         $row = $this->_dbh->GetOne("SELECT version()");
         if (!DB::isError($row) and !empty($row)) {

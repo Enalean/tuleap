@@ -26,7 +26,7 @@ require_once('Docman_Item.class.php');
  */
 class Docman_Document extends Docman_Item {
     
-    function Docman_Document($data = null) {
+    function __construct($data = null) {
         parent::__construct($data);
     }
     

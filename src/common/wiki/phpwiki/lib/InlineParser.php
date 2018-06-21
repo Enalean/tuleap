@@ -86,7 +86,7 @@ class RegexpSet
      * "(...)".  (Anonymous groups, like "(?:...)", as well as
      * look-ahead and look-behind assertions are okay.)
      */
-    function RegexpSet ($regexps) {
+    function __construct ($regexps) {
         assert($regexps);
         $this->_regexps = array_unique($regexps);
         if (!defined('_INLINE_OPTIMIZATION')) define('_INLINE_OPTIMIZATION',0);
@@ -731,7 +731,7 @@ class InlineTransformer
     var $_regexps = array();
     var $_markup = array();
     
-    function InlineTransformer ($markup_types = false) {
+    function __construct ($markup_types = false) {
         if (!$markup_types) {
             $non_default = false;
             $markup_types = array('escape', 'bracketlink', 'url',
@@ -838,8 +838,8 @@ class InlineTransformer
 
 class LinkTransformer extends InlineTransformer
 {
-    function LinkTransformer () {
-        $this->InlineTransformer(array('escape', 'bracketlink', 'url',
+    function __construct () {
+        parent::__construct(array('escape', 'bracketlink', 'url',
                                        'interwiki', 'wikiword'));
     }
 }

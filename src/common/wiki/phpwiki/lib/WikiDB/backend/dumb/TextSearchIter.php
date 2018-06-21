@@ -4,7 +4,7 @@ rcs_id('$Id: TextSearchIter.php,v 1.7 2005/11/14 22:24:33 rurban Exp $');
 class WikiDB_backend_dumb_TextSearchIter
 extends WikiDB_backend_iterator
 {
-    function WikiDB_backend_dumb_TextSearchIter(&$backend, &$pages, $search, $fulltext=false, 
+    function __construct(&$backend, &$pages, $search, $fulltext=false, 
                                                 $options=array()) 
     {
         $this->_backend = &$backend;

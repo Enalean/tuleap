@@ -51,7 +51,7 @@ class XmlParser {
 
     var $_parser, $root, $current;
 
-    function XmlParser($encoding = '') { //  "ISO-8859-1"
+    function __construct($encoding = '') { //  "ISO-8859-1"
         if ($encoding)
             $this->_parser = xml_parser_create($encoding);
         else

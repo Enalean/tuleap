@@ -25,7 +25,7 @@ class SimpleStickyError {
      *    Sets the error to empty.
      *    @access public
      */
-    function SimpleStickyError() {
+    function __construct() {
         $this->_clearError();
     }
 
@@ -85,8 +85,8 @@ class SimpleSocket extends SimpleStickyError {
      *    @param integer $block_size   Size of chunk to read.
      *    @access public
      */
-    function SimpleSocket($host, $port, $timeout, $block_size = 255) {
-        $this->SimpleStickyError();
+    function __construct($host, $port, $timeout, $block_size = 255) {
+        parent::__construct();
         if (! ($this->_handle = $this->_openSocket($host, $port, $error_number, $error, $timeout))) {
             $this->_setError("Cannot open [$host:$port] with [$error] within [$timeout] seconds");
             return;
@@ -196,8 +196,8 @@ class SimpleSecureSocket extends SimpleSocket {
      *    @param integer $timeout  Connection timeout in seconds.
      *    @access public
      */
-    function SimpleSecureSocket($host, $port, $timeout) {
-        $this->SimpleSocket($host, $port, $timeout);
+    function __construct($host, $port, $timeout) {
+        parent::__construct($host, $port, $timeout);
     }
 
     /**

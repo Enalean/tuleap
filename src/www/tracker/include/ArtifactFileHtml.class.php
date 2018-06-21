@@ -25,8 +25,8 @@ class ArtifactFileHtml extends ArtifactFile {
 	 *  @param $data associative array (all fields from artifact_file_user) OR id from database
 	 *  @return true/false
 	 */
-	function ArtifactFileHtml(&$Artifact, $data=false) {
-		return $this->ArtifactFile($Artifact,$data); 
+	function __construct(&$Artifact, $data=false) {
+		return parent::__construct($Artifact,$data); 
 	}
 
 	/**

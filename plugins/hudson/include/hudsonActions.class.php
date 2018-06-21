@@ -26,8 +26,8 @@ use Tuleap\Hudson\HudsonJobBuilder;
  */
 class hudsonActions extends Actions {
     
-    function hudsonActions(&$controler, $view=null) {
-        $this->Actions($controler);
+    function __construct(&$controler, $view=null) {
+        parent::__construct($controler);
 
         $this->svn_paths_updater = new SVNPathsUpdater();
     }

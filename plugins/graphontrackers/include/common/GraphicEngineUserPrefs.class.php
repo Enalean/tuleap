@@ -38,7 +38,7 @@ class graphicEngineUserPrefs {
 	 * 	@param atid:artifact type id
 	 */
 
-	function graphicEngineUserPrefs($atid) {
+	function __construct($atid) {
 	    $this->atid = $atid;
 	}
 

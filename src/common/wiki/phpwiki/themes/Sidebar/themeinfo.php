@@ -13,8 +13,8 @@ require_once('lib/WikiPlugin.php');
 
 class Theme_Sidebar extends Theme {
 
-    function Theme_Sidebar ($theme_name='Sidebar') {
-        parent::Theme($theme_name);
+    function __construct ($theme_name='Sidebar') {
+        parent::__construct($theme_name);
 
         $this->calendarInit(true);
     }

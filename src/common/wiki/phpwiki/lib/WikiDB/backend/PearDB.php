@@ -10,7 +10,7 @@ extends WikiDB_backend
 {
     var $_dbh;
 
-    function WikiDB_backend_PearDB ($dbparams) {
+    function __construct ($dbparams) {
         // Find and include PEAR's DB.php. maybe we should force our private version again...
         // if DB would have exported its version number, it would be easier.
         @require_once('DB/common.php'); // Either our local pear copy or the system one
@@ -1184,7 +1184,7 @@ extends WikiDB_backend
 class WikiDB_backend_PearDB_generic_iter
 extends WikiDB_backend_iterator
 {
-    function WikiDB_backend_PearDB_generic_iter($backend, $query_result, 
+    function __construct($backend, $query_result, 
                                                 $field_list = NULL) 
     {
         if (DB::isError($query_result)) {

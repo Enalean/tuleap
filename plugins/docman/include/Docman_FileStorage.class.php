@@ -26,7 +26,7 @@ require_once('common/include/lib/PHP_BigFile.class.php');
 class Docman_FileStorage {
     
     var $root;
-    function Docman_FileStorage($root) {
+    function __construct($root) {
         $this->root       = $root;
     }
     

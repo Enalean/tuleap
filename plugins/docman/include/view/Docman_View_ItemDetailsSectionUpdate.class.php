@@ -28,8 +28,8 @@ class Docman_View_ItemDetailsSectionUpdate extends Docman_View_ItemDetailsSectio
     var $validate;
     var $force;
     var $token;
-    function Docman_View_ItemDetailsSectionUpdate(&$item, $url, &$controller, $force, $token) {
-        parent::Docman_View_ItemDetailsSectionActions($item, $url, false, true, $controller);
+    function __construct(&$item, $url, &$controller, $force, $token) {
+        parent::__construct($item, $url, false, true, $controller);
         $this->force = $force;
         $this->token = $token;
     }

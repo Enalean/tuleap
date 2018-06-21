@@ -21,7 +21,7 @@
 
 class Docman_Path {
     var $path;
-    function Docman_Path() {
+    function __construct() {
         $this->path = array();
     }
     function get(&$item) {

@@ -30,7 +30,7 @@ class Docman_CloneItemsVisitor {
     var $_cacheMetadataUsage;
     var $itemMapping;
 
-    function Docman_CloneItemsVisitor($dstGroupId) {
+    function __construct($dstGroupId) {
         $this->dstGroupId = $dstGroupId;
         $this->_cacheMetadataUsage = array();
         $this->itemMapping = array();

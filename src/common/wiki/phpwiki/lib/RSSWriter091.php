@@ -26,7 +26,7 @@ rcs_id('$Id: RSSWriter091.php,v 1.10 2005/08/06 13:06:22 rurban Exp $');
 include_once("lib/RssWriter.php");
 class RSSWriter091 extends RSSWriter
 {
-    function RSSWriter091()
+    function __construct()
     {
         $this->XmlElement('rss', array('version' => "0.91"));
         $this->_items = array();

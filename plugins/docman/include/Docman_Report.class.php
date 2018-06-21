@@ -38,7 +38,7 @@ class Docman_Report {
     var $filters;
     var $columns;
 
-    function Docman_Report() {
+    function __construct() {
         $this->id             = null;
         $this->name           = null;
         $this->title          = null;

@@ -365,7 +365,7 @@ class MathMLNode extends XMLNode
 {
 	function & MathMLNode($id = NULL)
 	{
-		parent::XMLNode($id);
+		parent::__construct($id);
 	}
 	
 	function removeBrackets()
@@ -415,7 +415,7 @@ class ASCIIMathPHP
 	var $_node_arr;
 	var $_node_cntr;
 	
-	function ASCIIMathPHP($symbol_arr,$expr = NULL)
+	function __construct($symbol_arr,$expr = NULL)
 	{
 		$this->_symbol_arr = $symbol_arr;
 		if (isset($expr)) {

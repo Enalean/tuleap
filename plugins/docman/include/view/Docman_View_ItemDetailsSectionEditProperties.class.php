@@ -35,8 +35,8 @@ class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetai
     var $nbDocsImpacted;
     var $nbFoldersImpacted;
 
-    function Docman_View_ItemDetailsSectionEditProperties(&$item, $url, $theme_path, $force, $token, $updateConfirmed, $recurse, $recurseOnDocs) {
-        parent::Docman_View_ItemDetailsSectionProperties($item, $url, $theme_path, true, $force);
+    function __construct(&$item, $url, $theme_path, $force, $token, $updateConfirmed, $recurse, $recurseOnDocs) {
+        parent::__construct($item, $url, $theme_path, true, $force);
         $this->token = $token;
         $this->formName = 'update_metadata';
         $this->subItemsWritable = null;

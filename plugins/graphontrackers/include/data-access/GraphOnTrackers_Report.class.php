@@ -41,7 +41,7 @@ class GraphOnTrackers_Report {
     *     @return null
     */   
      
-    function GraphOnTrackers_Report($report_graphic_id){
+    function __construct($report_graphic_id){
         $this->id = $report_graphic_id;
         $sql = sprintf('SELECT group_id, rg.*
                         FROM plugin_graphontrackers_report_graphic AS rg INNER JOIN artifact_group_list USING (group_artifact_id)

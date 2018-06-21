@@ -110,7 +110,7 @@ class WikiDB {
      * @access private
      * @see open()
      */
-    function WikiDB (&$backend, $dbparams) {
+    function __construct (&$backend, $dbparams) {
         $this->_backend = &$backend;
         // don't do the following with the auth_dsn!
         if (isset($dbparams['auth_dsn'])) return;
@@ -644,7 +644,7 @@ class WikiDB {
  */
 class WikiDB_Page 
 {
-    function WikiDB_Page(&$wikidb, $pagename) {
+    function __construct(&$wikidb, $pagename) {
         $this->_wikidb = &$wikidb;
         $this->_pagename = $pagename;
         if (DEBUG) {
@@ -1467,7 +1467,7 @@ class WikiDB_PageRevision
 {
     //var $_transformedContent = false; // set by WikiDB_Page::save()
     
-    function WikiDB_PageRevision(&$wikidb, $pagename, $version, $versiondata = false) {
+    function __construct(&$wikidb, $pagename, $version, $versiondata = false) {
         $this->_wikidb = &$wikidb;
         $this->_pagename = $pagename;
         $this->_version = $version;
@@ -1788,7 +1788,7 @@ class WikiDB_PageRevision
  */
 class WikiDB_PageIterator
 {
-    function WikiDB_PageIterator(&$wikidb, &$iter, $options=false) {
+    function __construct(&$wikidb, &$iter, $options=false) {
         $this->_iter = $iter; // a WikiDB_backend_iterator
         $this->_wikidb = &$wikidb;
         $this->_options = $options;
@@ -1910,7 +1910,7 @@ class WikiDB_PageIterator
  */
 class WikiDB_PageRevisionIterator
 {
-    function WikiDB_PageRevisionIterator(&$wikidb, &$revisions, $options=false) {
+    function __construct(&$wikidb, &$revisions, $options=false) {
         $this->_revisions = $revisions;
         $this->_wikidb = &$wikidb;
         $this->_options = $options;
@@ -1989,7 +1989,7 @@ class WikiDB_PageRevisionIterator
  */
 class WikiDB_Array_PageIterator
 {
-    function WikiDB_Array_PageIterator($pagenames) {
+    function __construct($pagenames) {
         global $request;
         $this->_dbi = $request->getDbh();
         $this->_pages = $pagenames;
@@ -2012,7 +2012,7 @@ class WikiDB_Array_PageIterator
 
 class WikiDB_Array_generic_iter
 {
-    function WikiDB_Array_generic_iter($result) {
+    function __construct($result) {
         // $result may be either an array or a query result
         if (is_array($result)) {
             $this->_array = $result;
@@ -2051,7 +2051,7 @@ class WikiDB_cache
 {
     // FIXME: beautify versiondata cache.  Cache only limited data?
 
-    function WikiDB_cache (&$backend) {
+    function __construct (&$backend) {
         $this->_backend = &$backend;
 
         $this->_pagedata_cache = array();

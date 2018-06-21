@@ -26,8 +26,8 @@
          *    @param $label        Test name to display.
          *    @public
          */
-        function TestCase($label = false) {
-            $this->SimpleTestCase($label);
+        function __construct($label = false) {
+            parent::__construct($label);
         }
         
         /**

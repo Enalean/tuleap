@@ -25,7 +25,7 @@ require_once 'www/include/help.php';
 
 class hudsonViews extends Views {
 
-    function hudsonViews(&$controler, $view=null) {
+    function __construct(&$controler, $view=null) {
         $this->View($controler, $view);
     }
 

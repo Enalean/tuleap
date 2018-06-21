@@ -33,12 +33,12 @@ extends _PassUser
 
     // This can only be called from _PassUser, because the parent class 
     // sets the auth_dbi and pref methods, before this class is initialized.
-    function _DbPassUser($UserName='',$prefs=false) {
+    function __construct($UserName='',$prefs=false) {
         if (!$this->_prefs) {
             if ($prefs) $this->_prefs = $prefs;
         }
         if (!isset($this->_prefs->_method))
-           _PassUser::_PassUser($UserName);
+           parent::__construct($UserName);
         elseif (!$this->isValidName($UserName)) {
             trigger_error(_("Invalid username."),E_USER_WARNING);
             return false;
