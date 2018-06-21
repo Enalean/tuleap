@@ -1,0 +1,10 @@
+<p>{{ secret }}</p>
+
+<form method="post">
+    {{# csrf_token }}
+        {{> csrf_token_input }}
+    {{/ csrf_token }}
+    <input type="text" name="code">
+    <input type="hidden" name="secret" value="{{ secret }}">
+    <input type="submit">
+</form>

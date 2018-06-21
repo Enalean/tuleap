@@ -1,0 +1,8 @@
+msgid "Add multi-factor authentication support"
+msgstr ""
+
+msgid "Enable two-factor authentication"
+msgstr ""
+
+msgid "Multi-factor authentication"
+msgstr ""
