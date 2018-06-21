@@ -70,6 +70,17 @@
                 </div>
             </div>
             <div class="control-group user-account-group">
+                <label class="control-label user-account-label">{{# gettext }}Display density:{{/ gettext }}</label>
+                <div class="controls">
+                    <select name="{{ display_density_name }}" class="select-user-preferences">
+                        <option value="">{{# gettext }}Comfortable{{/ gettext }}</option>
+                        <option value="{{ display_density_condensed }}" {{# is_condensed }}selected{{/ is_condensed }}>
+                            {{# gettext }}Condensed{{/ gettext }}
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="control-group user-account-group">
                 <label class="control-label user-account-label">{{ language_label }}</label>
                 <div class="controls">
                     <select name="language_id" class="select-user-preferences">
