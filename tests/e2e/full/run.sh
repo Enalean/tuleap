@@ -21,6 +21,8 @@ setup_user() {
         groupadd -g $gid runner
         useradd -g $gid -u $uid -m runner
     fi
+
+    chown -R runner:runner /node_modules/cypress/dist/info.json
 }
 
 is_server_ready() {
@@ -33,8 +35,6 @@ is_server_ready() {
 
 setup_user
 
-su -c 'npm install cypress@^2.1.0 && `npm bin`/cypress verify' -l runner
-
 is_server_ready
 
-su -c '`npm bin`/cypress run --project /tuleap/tests/e2e/full' -l runner
+su -c '/node_modules/.bin/cypress run --project /tuleap/tests/e2e/full' -l runner

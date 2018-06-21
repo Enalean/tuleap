@@ -3,7 +3,9 @@ version: "2"
 services:
   test:
     container_name: ${BUILD_TAG}tuleap_runtests_test-e2e
-    image: cypress/base:6
+    image: tuleap-run-e2e-tests-v2
+    build:
+      context: ./tests/e2e/full/DockerImage
     command: /tuleap/tests/e2e/full/run.sh
     volumes:
       - .:/tuleap
