@@ -33,6 +33,7 @@ use Tuleap\Admin\ProjectCreation\WebhooksUpdateController;
 use Tuleap\Admin\ProjectCreationModerationDisplayController;
 use Tuleap\Admin\ProjectCreationModerationUpdateController;
 use Tuleap\Admin\ProjectTemplatesController;
+use Tuleap\Instrument\MetricsController;
 use Tuleap\Layout\ErrorRendering;
 use Tuleap\Layout\SiteHomepageController;
 use Tuleap\Layout\BaseLayout;
@@ -103,7 +104,9 @@ class FrontRouter
                     }
                     break;
             }
+            RequestInstrumentation::increment(200);
         } catch (NotFoundException $exception) {
+            RequestInstrumentation::increment(404);
             (new ErrorRendering(
                 $request,
                 $this->theme_manager->getBurningParrot($request->getCurrentUser()),
@@ -112,6 +115,7 @@ class FrontRouter
                 $exception->getMessage()
             ))->rendersError();
         } catch (ForbiddenException $exception) {
+            RequestInstrumentation::increment(403);
             (new ErrorRendering(
                 $request,
                 $this->theme_manager->getBurningParrot($request->getCurrentUser()),
@@ -124,6 +128,7 @@ class FrontRouter
             if ($exception->getCode() !== 0) {
                 $code = $exception->getCode();
             }
+            RequestInstrumentation::increment($code);
             (new \BackendLogger())->error('Caught exception', $exception);
             (new ErrorRendering(
                 $request,
@@ -159,6 +164,9 @@ class FrontRouter
             });
             $r->addRoute(['GET', 'POST'], '/projects/{name}[/]', function () {
                 return new \Tuleap\Project\Home();
+            });
+            $r->get('/metrics', function () {
+                return new MetricsController();
             });
             $r->addGroup('/admin', function (FastRoute\RouteCollector $r) {
                 $r->get('/password_policy/', function () {

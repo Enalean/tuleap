@@ -49,8 +49,6 @@ ForgeConfig::loadFromDatabase();
 ForgeConfig::loadFromFile(ForgeConfig::get('rabbitmq_config_file'));
 ForgeConfig::loadFromFile(ForgeConfig::get('redis_config_file'));
 
-Tuleap\Instrument\Collect::startTiming('pre.'.php_sapi_name());
-
 bindtextdomain('tuleap-core', ForgeConfig::get('sys_incdir'));
 textdomain('tuleap-core');
 
@@ -248,6 +246,10 @@ if (!IS_SCRIPT) {
     if (! $current_user->isAnonymous()) {
         header('X-Tuleap-Username: '.$current_user->getUserName());
     }
+
+    if (! defined('FRONT_ROUTER')) {
+        \Tuleap\Request\RequestInstrumentation::incrementLegacy();
+    }
 }
 
 //Check post max size
@@ -262,5 +264,3 @@ if (ForgeConfig::get('DEBUG_MODE')) {
 if ($request->isAjax()) {
     header("Cache-Control: no-store, no-cache, must-revalidate");
 }
-
-Tuleap\Instrument\Collect::endTiming('pre.'.php_sapi_name());

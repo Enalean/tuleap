@@ -19,6 +19,7 @@
  */
 
 define('DISABLE_URL_VERIFICATION', true);
+define('FRONT_ROUTER', true);
 
 require_once 'pre.php';
 

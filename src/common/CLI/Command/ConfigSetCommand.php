@@ -28,6 +28,7 @@ use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Tuleap\Instrument\Collect;
 
 class ConfigSetCommand extends Command
 {
@@ -42,6 +43,7 @@ class ConfigSetCommand extends Command
         \ForgeAccess::ANONYMOUS_CAN_SEE_CONTACT => true,
         \ForgeAccess::ANONYMOUS_CAN_SEE_SITE_HOMEPAGE => true,
         \ForgeAccess::PROJECT_ADMIN_CAN_CHOOSE_VISIBILITY => true,
+        Collect::CONFIG_PROMETHEUS_PLATFORM => true,
     ];
     /**
      * @var ConfigDao
@@ -64,9 +66,6 @@ class ConfigSetCommand extends Command
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $key = $input->getArgument('key');
-        if (! ForgeConfig::exists($key)) {
-            throw new InvalidArgumentException("Invalid key $key");
-        }
 
         if (! $this->keyIsWhitelisted($key)) {
             throw new InvalidArgumentException(self::NAME." only supports a subset of keys:\n* ".implode("\n* ", array_keys($this->white_listed_keys)));

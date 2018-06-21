@@ -511,6 +511,7 @@ class UserManager {
 
             $this->getDao()->storeLoginSuccess($user->getId(), $_SERVER['REQUEST_TIME']);
 
+            \Tuleap\User\LoginInstrumentation::increment('success');
             Tuleap\Instrument\Collect::increment('service.accounts.authentication.password.succeeded');
             return $this->setCurrentUser($user);
 
@@ -535,6 +536,7 @@ class UserManager {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
         }
 
+        \Tuleap\User\LoginInstrumentation::increment('failure');
         Tuleap\Instrument\Collect::increment('service.accounts.authentication.password.failed');
         return $this->setCurrentUser($this->createAnonymousUser());
     }

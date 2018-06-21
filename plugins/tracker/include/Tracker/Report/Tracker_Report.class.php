@@ -766,8 +766,6 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
     }
 
     public function display(Tracker_IDisplayTrackerLayout $layout, $request, $current_user) {
-        Tuleap\Instrument\Collect::startTiming('tracker.'.$this->tracker_id.'.report.'.$this->getId());
-
         $link_artifact_id       = (int)$request->get('link-artifact-id');
         $report_can_be_modified = !$link_artifact_id;
 
@@ -933,7 +931,6 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
             $html .= '</div>';
             echo $html;
 
-            Tuleap\Instrument\Collect::endTiming('tracker.'.$this->tracker_id.'.report.'.$this->getId());
             if ($report_can_be_modified) {
                 $this->getTracker()->displayFooter($layout);
                 exit();

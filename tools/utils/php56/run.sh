@@ -18,3 +18,8 @@ sed -e "s/\$nodejs_server_jwt_private_key = '';/\$nodejs_server_jwt_private_key 
     -e "s/\$nodejs_server = '';/\$nodejs_server = 'tuleap-web.tuleap-aio-dev.docker:443';/" \
     -e "s/\$nodejs_server_int = '';/\$nodejs_server_int = 'realtime';/" \
     -i /etc/tuleap/conf/local.inc
+
+if [ -f /usr/share/tuleap/.metrics_secret.key ]; then
+    cp /usr/share/tuleap/.metrics_secret.key /etc/tuleap/conf/metrics_secret.key
+    chown codendiadm:codendiadm /etc/tuleap/conf/metrics_secret.key
+fi

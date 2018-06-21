@@ -22,7 +22,8 @@
     "nikic/fast-route": "^1.2",
     "embed/embed": "^3.3",
     "michelf/php-markdown": "^1.1",
-    "symfony/console": "^3.4"
+    "symfony/console": "^3.4",
+    "jimdo/prometheus_client_php": "^0.9.1"
   },
   "config": {
     "platform": {

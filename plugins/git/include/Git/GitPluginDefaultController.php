@@ -65,6 +65,7 @@ class GitPluginDefaultController implements DispatchableWithRequest
      */
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
+        \Tuleap\Project\ServiceInstrumentation::increment('git');
         \Tuleap\Instrument\Collect::increment(\GitPlugin::INSTRUMENTATION_KEY);
 
         $this->event_manager->processEvent(

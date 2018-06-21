@@ -117,6 +117,7 @@ class Service {
     }
     
     public function displayHeader($title, $breadcrumbs, $toolbar, $params = array()) {
+        \Tuleap\Project\ServiceInstrumentation::increment(strtolower($this->getShortName()));
         Tuleap\Instrument\Collect::increment('service.project.'.strtolower($this->getShortName()).'.accessed');
 
         $GLOBALS['HTML']->setRenderedThroughService(true);

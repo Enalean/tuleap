@@ -85,6 +85,7 @@ class Home implements Dispatchable
             // otherwise we display the first active service on the list
 
             if ($project->usesService('summary')) {
+                \Tuleap\Project\ServiceInstrumentation::increment('dashboard');
                 Collect::increment('service.project.summary.accessed');
                 $widget_factory = new WidgetFactory(
                     UserManager::instance(),
