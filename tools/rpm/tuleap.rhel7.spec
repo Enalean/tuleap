@@ -132,7 +132,7 @@ This package is integrated with gitolite v3 (new version)
 Summary: Pullrequest management for Tuleap
 Version: @@PLUGIN_PULLREQUEST_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, %{name}-plugin-git
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, %{name}-plugin-git, rh-git29-git
 Group: Development/Tools
 %description plugin-pullrequest
 %{summary}.
