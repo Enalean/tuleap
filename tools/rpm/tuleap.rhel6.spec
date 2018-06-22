@@ -536,6 +536,7 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/dynamic_credentials
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/velocity
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/mfa
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/velocity
 # Remove development tools and utility files
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/composer.json
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/composer.lock
@@ -1010,7 +1011,10 @@ fi
 %{APP_DIR}/src/www/api/VERSION
 %{APP_DIR}/src/www/api/.htaccess
 %{APP_DIR}/src/www/api/reference
-%{APP_DIR}/src/www/assets
+%dir %{APP_DIR}/src/www/assets
+%{APP_DIR}/src/www/assets/*.js
+%{APP_DIR}/src/www/assets/manifest.json
+%{APP_DIR}/src/www/assets/admindelegation
 %{APP_DIR}/src/www/codendi.css
 %{APP_DIR}/src/www/cvs
 %{APP_DIR}/src/www/export
@@ -1241,6 +1245,7 @@ fi
 %files plugin-cardwall
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/cardwall
+%{APP_DIR}/src/www/assets/cardwall
 
 %files plugin-agiledashboard
 %defattr(-,%{APP_USER},%{APP_USER},-)
@@ -1319,6 +1324,7 @@ fi
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/create_test_env
 %attr(00400,root,root) %{_sysconfdir}/sudoers.d/tuleap_plugin_create_test_env
+%{APP_DIR}/src/www/assets/create_test_env
 
 %files api-explorer
 %defattr(-,%{APP_USER},%{APP_USER},-)
