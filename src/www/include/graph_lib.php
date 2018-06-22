@@ -222,7 +222,7 @@ class Graph {
 	 * @param $verts The vertices for the polygon
 	 * @param $color The color you want the polygon to be
 	 */
-	function DrawShadowedPolygon ( $verts, $color, $color ) {
+	function DrawShadowedPolygon ( $verts, $color ) {
 
 		for ( $i = 0; $i < sizeof($verts); $i++ ) {
 			$this->translate( $verts[$i], $verts[$i+1], $verts[$i], $verts[++$i] );
@@ -396,7 +396,7 @@ class Graph {
 			$lasty = $this->data_set[$dataset]['y'][$i];
 
 			if ( $colortwo ) {
-				$this->DrawShadowedPolygon( $verts, $color, $colortwo);
+				$this->DrawShadowedPolygon( $verts, $colortwo );
 			} else {
 				$this->DrawFilledPolygon( $verts, $color );
 			}
