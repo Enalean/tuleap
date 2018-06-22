@@ -102,7 +102,6 @@ function ExecutionListCtrl(
         // ignore the fact that there is no nodejs server
     });
 
-
     function initialization() {
         var toolbar = angular.element('.toolbar');
         if (toolbar) {
@@ -128,6 +127,17 @@ function ExecutionListCtrl(
 
             ExecutionService.updateCampaign($scope.campaign);
         });
+        watchAndSortCategories();
+    }
+
+    function watchAndSortCategories() {
+        $scope.$watch(
+            () => ExecutionService.executions_by_categories_by_campaigns[$scope.campaign_id],
+            categories => {
+                $scope.categories = sortAlphabetically(categories);
+            },
+            true
+        );
     }
 
     function loadExecutions() {
@@ -139,8 +149,6 @@ function ExecutionListCtrl(
 
             ExecutionService.executions_loaded = true;
             ExecutionService.displayPresencesForAllExecutions();
-
-            $scope.categories = sortAlphabetically(ExecutionService.executions_by_categories_by_campaigns[$scope.campaign_id]);
         });
     }
 
