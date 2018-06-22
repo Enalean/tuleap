@@ -19,7 +19,7 @@
     "gulp": "^3.9.1",
     "gulp-header": "^1.8.9",
     "gulp-rename": "^1.2.2",
-    "gulp-sass": "^3.1.0",
+    "gulp-sass": "^4.0.1",
     "gulp-scss-lint": "^0.5.0",
     "run-sequence": "^1.2.2"
   },

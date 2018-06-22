@@ -24,7 +24,7 @@
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.0",
     "gulp-rev": "^7.1.2",
-    "gulp-sass": "^3.1.0",
+    "gulp-sass": "^4.0.1",
     "gulp-scss-lint": "^0.4.0",
     "http-server": "^0.11.1",
     "jasmine-core": "^2.99.1",
