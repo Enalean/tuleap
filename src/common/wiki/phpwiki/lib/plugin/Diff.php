@@ -200,7 +200,7 @@ extends WikiPlugin {
 };
 
 class _HWLDF_WordAccumulator {
-    function _HWLDF_WordAccumulator () {
+    function __construct () {
         $this->_lines = array();
         $this->_line = false;
         $this->_group = false;
@@ -253,12 +253,12 @@ class _HWLDF_WordAccumulator {
 
 class WordLevelDiff extends MappedDiff
 {
-    function WordLevelDiff ($orig_lines, $final_lines) {
+    function __construct ($orig_lines, $final_lines) {
         list ($orig_words, $orig_stripped) = $this->_split($orig_lines);
         list ($final_words, $final_stripped) = $this->_split($final_lines);
 
 
-        $this->MappedDiff($orig_words, $final_words,
+        parent::__construct($orig_words, $final_words,
                           $orig_stripped, $final_stripped);
     }
 
@@ -308,8 +308,8 @@ class WordLevelDiff extends MappedDiff
  */
 class HtmlUnifiedDiffFormatter extends UnifiedDiffFormatter
 {
-    function HtmlUnifiedDiffFormatter($context_lines = 4) {
-        $this->UnifiedDiffFormatter($context_lines);
+    function __construct($context_lines = 4) {
+        parent::__construct($context_lines);
     }
 
     function _start_diff() {
@@ -376,8 +376,8 @@ class HtmlUnifiedDiffFormatter extends UnifiedDiffFormatter
  */
 class TableUnifiedDiffFormatter extends HtmlUnifiedDiffFormatter
 {
-    function TableUnifiedDiffFormatter($context_lines = 4) {
-        $this->HtmlUnifiedDiffFormatter($context_lines);
+    function __construct($context_lines = 4) {
+        parent::__construct($context_lines);
     }
 
     function _start_diff() {

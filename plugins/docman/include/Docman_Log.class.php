@@ -26,7 +26,7 @@ require_once('Docman_ItemFactory.class.php');
  */
 class Docman_Log { /* implements EventListener */
 
-    function Docman_Log() {
+    function __construct() {
         $this->_getDao();
     }
     

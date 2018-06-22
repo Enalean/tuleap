@@ -37,7 +37,7 @@ class Docman_View_ItemTreeUlVisitor /* implements Visitor*/ {
     var $get_class_for_link;
     var $hp;
 
-    function Docman_View_ItemTreeUlVisitor($view, $params = null) {
+    function __construct($view, $params = null) {
         $this->view                = $view;
         $this->get_action_on_icon = new Docman_View_GetActionOnIconVisitor();
         $this->get_class_for_link  = new Docman_View_GetClassForLinkVisitor();

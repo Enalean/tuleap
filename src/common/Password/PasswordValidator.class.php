@@ -28,7 +28,7 @@
     * 
     * @param  description  
     */
-    function PasswordValidator($description) {
+    function __construct($description) {
         $this->description = $description;
     }
     

@@ -51,7 +51,7 @@ class ErrorManager
      * As this is a singleton class, you should never call this.
      * @access private
      */
-    function ErrorManager() {
+    function __construct() {
         $this->_handlers = array();
         $this->_fatal_handler = false;
         $this->_postpone_mask = 0;
@@ -397,7 +397,7 @@ class PhpError {
      * @param $errfile string
      * @param $errline int
      */
-    function PhpError($errno, $errstr, $errfile, $errline) {
+    function __construct($errno, $errstr, $errfile, $errline) {
         $this->errno   = $errno;
         $this->errstr  = $errstr;
         $this->errfile = $errfile;
@@ -534,8 +534,8 @@ class PhpWikiError extends PhpError {
      * @param $errno   int
      * @param $errstr  string
      */
-    function PhpWikiError($errno, $errstr) {
-        $this->PhpError($errno, $errstr, '?', '?');
+    function __construct($errno, $errstr) {
+        parent::__construct($errno, $errstr, '?', '?');
     }
 
     function _getDetail() {
@@ -552,9 +552,9 @@ class PhpWikiError extends PhpError {
  */
 class PhpErrorOnce extends PhpError {
 
-    function PhpErrorOnce($errno, $errstr, $errfile, $errline) {
+    function __construct($errno, $errstr, $errfile, $errline) {
         $this->_count = 1;
-        $this->PhpError($errno, $errstr, $errfile, $errline);
+        parent::__construct($errno, $errstr, $errfile, $errline);
     }
 
     function _sameError($error) {

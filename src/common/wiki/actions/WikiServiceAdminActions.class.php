@@ -41,8 +41,8 @@ class WikiServiceAdminActions extends WikiActions {
    */ 
   var $gid;
 
-  function WikiServiceAdminActions(&$controler ,$id=0) {
-      $this->WikiActions($controler);
+  function __construct(&$controler ,$id=0) {
+      parent::__construct($controler);
     $this->gid = (int) $id;
   }
 

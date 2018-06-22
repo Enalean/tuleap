@@ -25,7 +25,7 @@ require_once('common/collection/Visitor.class.php');
 class Docman_NodeToRootVisitor extends Visitor {
     var $path;
 
-    function Docman_NodeToRootVisitor() {
+    function __construct() {
         $this->path = array();
     }
 

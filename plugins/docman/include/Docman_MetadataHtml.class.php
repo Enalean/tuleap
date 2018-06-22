@@ -73,7 +73,7 @@ class Docman_MetadataHtmlFactory {
 }
 
 class Docman_ValidateMetadataIsNotEmpty extends Docman_Validator {
-    function Docman_ValidateMetadataIsNotEmpty(&$md) {
+    function __construct(&$md) {
         $msg = $GLOBALS['Language']->getText('plugin_docman', 'md_error_empty_gen', array($md->getName()));
         if($md !== null) { 
             $val = $md->getValue();
@@ -88,7 +88,7 @@ class Docman_ValidateMetadataIsNotEmpty extends Docman_Validator {
 }
 
 class Docman_ValidateMetadataListIsNotEmpty extends Docman_Validator {
-    function Docman_ValidateMetadataListIsNotEmpty(&$metadata) {
+    function __construct(&$metadata) {
         $msg = $GLOBALS['Language']->getText('plugin_docman', 'md_error_empty_gen', array($metadata->getName()));
 
         if ($metadata !== null) {
@@ -140,7 +140,7 @@ class Docman_MetadataHtml {
     var $formParams;
     var $hp;
 
-    function Docman_MetadataHtml(&$md, $formParams) {
+    function __construct(&$md, $formParams) {
         $this->md =& $md;
         $this->hp =& Codendi_HTMLPurifier::instance();
         $this->formParams = $formParams; 

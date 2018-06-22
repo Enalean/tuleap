@@ -28,11 +28,11 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
     var $is_moveable;
     var $is_deleteable;
     var $_controller;
-    function Docman_View_ItemDetailsSectionActions(&$item, $url, $is_moveable, $is_deleteable, &$controller) {
+    function __construct(&$item, $url, $is_moveable, $is_deleteable, &$controller) {
         $this->is_moveable   = $is_moveable;
         $this->is_deleteable = $is_deleteable;
         $this->_controller   = $controller;
-        parent::Docman_View_ItemDetailsSection($item, $url, 'actions', $GLOBALS['Language']->getText('plugin_docman','details_actions'));
+        parent::__construct($item, $url, 'actions', $GLOBALS['Language']->getText('plugin_docman','details_actions'));
     }
     function getContent() {
         $folder_or_document = is_a($this->item, 'Docman_Folder') ? 'folder' : 'document';

@@ -25,8 +25,8 @@ require_once('LinkedList.class.php');
  */
 class PrioritizedList extends LinkedList{
     var $priorities;
-    function PrioritizedList($initial_array = '') {
-        $this->LinkedList($initial_array);
+    function __construct($initial_array = '') {
+        parent::__construct($initial_array);
         $this->priorities = array();
         if (count($this->elements)) {
             $this->priorities[] = array_keys(array_fill(0, count($this->elements), 0));

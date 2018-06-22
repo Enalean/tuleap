@@ -83,7 +83,7 @@ class AnchoredRegexpSet
      * "(...)".  (Anonymous groups, like "(?:...)", as well as
      * look-ahead and look-behind assertions are fine.)
      */
-    function AnchoredRegexpSet ($regexps) {
+    function __construct ($regexps) {
         $this->_regexps = $regexps;
         $this->_re = "/((" . join(")|(", $regexps) . "))/Ax";
     }
@@ -152,7 +152,7 @@ class AnchoredRegexpSet
     
 class BlockParser_Input {
 
-    function BlockParser_Input ($text) {
+    function __construct ($text) {
         
         // Expand leading tabs.
         // FIXME: do this better.
@@ -242,7 +242,7 @@ class BlockParser_Input {
 
 class BlockParser_InputSubBlock extends BlockParser_Input
 {
-    function BlockParser_InputSubBlock (&$input, $prefix_re, $initial_prefix = false) {
+    function __construct (&$input, $prefix_re, $initial_prefix = false) {
         $this->_input = &$input;
         $this->_prefix_pat = "/$prefix_re|\\s*\$/Ax";
         $this->_atSpace = false;
@@ -329,7 +329,7 @@ class BlockParser_InputSubBlock extends BlockParser_Input
 
 class Block_HtmlElement extends HtmlElement
 {
-    function Block_HtmlElement($tag /*, ... */) {
+    function __construct($tag /*, ... */) {
         $this->_init(func_get_args());
     }
 
@@ -342,8 +342,8 @@ class Block_HtmlElement extends HtmlElement
 
 class ParsedBlock extends Block_HtmlElement {
     
-    function ParsedBlock (&$input, $tag = 'div', $attr = false) {
-        $this->Block_HtmlElement($tag, $attr);
+    function __construct (&$input, $tag = 'div', $attr = false) {
+        parent::__construct($tag, $attr);
         $this->_initBlockTypes();
         $this->_parse($input);
     }
@@ -425,17 +425,17 @@ class ParsedBlock extends Block_HtmlElement {
 }
 
 class WikiText extends ParsedBlock {
-    function WikiText ($text) {
+    function __construct ($text) {
         $input = new BlockParser_Input($text);
-        $this->ParsedBlock($input);
+        parent::__construct($input);
     }
 }
 
 class SubBlock extends ParsedBlock {
-    function SubBlock (&$input, $indent_re, $initial_indent = false,
+    function __construct (&$input, $indent_re, $initial_indent = false,
                        $tag = 'div', $attr = false) {
         $subinput = new BlockParser_InputSubBlock($input, $indent_re, $initial_indent);
-        $this->ParsedBlock($subinput, $tag, $attr);
+        parent::__construct($subinput, $tag, $attr);
     }
 }
 
@@ -450,9 +450,9 @@ class SubBlock extends ParsedBlock {
  * CSS, you only get "loose" lists.
  */
 class TightSubBlock extends SubBlock {
-    function TightSubBlock (&$input, $indent_re, $initial_indent = false,
+    function __construct (&$input, $indent_re, $initial_indent = false,
                             $tag = 'div', $attr = false) {
-        $this->SubBlock($input, $indent_re, $initial_indent, $tag, $attr);
+        parent::__construct($input, $indent_re, $initial_indent, $tag, $attr);
 
         // If content is a single paragraph, eliminate the paragraph...
         if (count($this->_content) == 1) {
@@ -568,7 +568,7 @@ class Block_dl extends Block_list
 {
     var $_tag = 'dl';
 
-    function Block_dl () {
+    function __construct () {
         $this->_re = '\ {0,4}\S.*(?<!'.ESCAPE_CHAR.'):\s*$';
     }
 
@@ -620,8 +620,8 @@ class Block_table_dl_defn extends XmlContent
     var $nrows;
     var $ncols;
     
-    function Block_table_dl_defn ($term, $defn) {
-        $this->XmlContent();
+    function __construct ($term, $defn) {
+        parent::__construct();
         if (!is_array($defn))
             $defn = $defn->getContent();
 
@@ -766,7 +766,7 @@ class Block_table_dl extends Block_dl
 {
     var $_tag = 'dl-table';     // phony.
 
-    function Block_table_dl() {
+    function __construct() {
         $this->_re = '\ {0,4} (?:\S.*)? (?<!'.ESCAPE_CHAR.') \| \s* $';
     }
 

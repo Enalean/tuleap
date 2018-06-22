@@ -24,9 +24,9 @@ class ArtifactReportHtml extends ArtifactReport {
          *
          *      @return boolean success.
          */
-        function ArtifactReportHtml($report_id,$atid) {
+        function __construct($report_id,$atid) {
         // echo 'ArtifactReportHtml('.$report_id.','.$atid.')';
-                return $this->ArtifactReport($report_id,$atid);
+                return parent::__construct($report_id,$atid);
         }
         
         /**

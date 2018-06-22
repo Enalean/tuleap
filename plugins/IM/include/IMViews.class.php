@@ -35,7 +35,7 @@ class IMViews extends Views {
 
 	protected $iconsPath;
 
-    function IMViews(&$controler, $view=null) {
+    function __construct(&$controler, $view=null) {
         $this->View($controler, $view);
         $this->iconsPath = $controler->getIconPath();
     }

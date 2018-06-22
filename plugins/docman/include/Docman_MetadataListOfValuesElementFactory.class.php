@@ -29,7 +29,7 @@ require_once('Docman_MetadataListOfValuesElementDao.class.php');
 class Docman_MetadataListOfValuesElementFactory {
     var $metadataId;
 
-    function Docman_MetadataListOfValuesElementFactory($metadataId=null) {
+    function __construct($metadataId=null) {
         $this->metadataId = $metadataId;
     }
 

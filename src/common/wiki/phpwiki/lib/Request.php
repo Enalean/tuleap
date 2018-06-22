@@ -30,7 +30,7 @@ if (!function_exists('ob_clean')) {
 
 class Request {
         
-    function Request() {
+    function __construct() {
         $this->_fix_magic_quotes_gpc();
         $this->_fix_multipart_form_data();
         
@@ -529,7 +529,7 @@ class Request {
 }
 
 class Request_SessionVars {
-    function Request_SessionVars() {
+    function __construct() {
         // Prevent cacheing problems with IE 5
         session_cache_limiter('none');
                                         
@@ -632,7 +632,7 @@ class Request_UploadedFile {
         return new Request_UploadedFile($fileinfo);
     }
     
-    function Request_UploadedFile($fileinfo) {
+    function __construct($fileinfo) {
         $this->_info = $fileinfo;
     }
 
@@ -687,7 +687,7 @@ class Request_UploadedFile {
 }
 
 class HTTP_ETag {
-    function HTTP_ETag($val, $is_weak=false) {
+    function __construct($val, $is_weak=false) {
         $this->_val = wikihash($val);
         $this->_weak = $is_weak;
     }
@@ -753,7 +753,7 @@ define ('_HTTP_VAL_MODIFIED', 2); 	// Test failed, content changed
 define ('_HTTP_VAL_FAILED', 3);   	// Precondition failed.
 
 class HTTP_ValidatorSet {
-    function HTTP_ValidatorSet($validators) {
+    function __construct($validators) {
         $this->_mtime = $this->_weak = false;
         $this->_tag = array();
         

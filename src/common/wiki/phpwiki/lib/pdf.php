@@ -43,8 +43,8 @@ class PDF extends FPDF {
     var $U = 0;
     var $HREF = '';
 
-    function PDF ($orientation='P', $unit='mm', $format='A4') {
-        $this->FPDF($orientation,$unit,$format);
+    function __construct ($orientation='P', $unit='mm', $format='A4') {
+        parent::__construct($orientation,$unit,$format);
 	//$this->SetCompression(false);
     }
 

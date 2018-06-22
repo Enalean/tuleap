@@ -62,7 +62,7 @@ class WikiAttachmentRevision {
     /**
      *
      */
-    function WikiAttachmentRevision($gid=null) {
+    function __construct($gid=null) {
         if(is_numeric($gid)) {
             $this->gid = (int) $gid;
             $this->basedir = $GLOBALS['sys_wiki_attachment_data_dir'].'/'.$this->gid;

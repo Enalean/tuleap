@@ -28,8 +28,8 @@ use Tuleap\Mail\MailLogger;
 class Docman_View_ItemDetailsSectionApprovalCreate
 extends Docman_View_ItemDetailsSectionApproval {
 
-    function Docman_View_ItemDetailsSectionApprovalCreate(&$item, $url, $themePath) {
-        parent::Docman_View_ItemDetailsSectionApproval($item, $url, $themePath, null);
+    function __construct(&$item, $url, $themePath) {
+        parent::__construct($item, $url, $themePath, null);
     }
 
     function displayConfirmDelete() {

@@ -60,7 +60,7 @@ class ArtifactFieldSetFactory {
      *	@param	object $ArtifactType The ArtifactType object to which this ArtifactFieldSetFactory is associated
      *	@return	boolean	success.
      */
-    function ArtifactFieldSetFactory($ArtifactType) {
+    function __construct($ArtifactType) {
         if ( $ArtifactType ) {
             if ($ArtifactType->isError()) {
                 $this->setError('ArtifactFieldSetFactory:: '.$ArtifactType->getErrorMessage());

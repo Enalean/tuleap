@@ -20,7 +20,7 @@ class FileFinder
      *
      * @param $path array A list of directories in which to search for files.
      */
-    function FileFinder ($path = false) {
+    function __construct ($path = false) {
         $this->_pathsep = $this->_get_syspath_separator();
         if (!isset($this->_path) and $path === false)
             $path = $this->_get_include_path();
@@ -365,8 +365,8 @@ class PearFileFinder
      * A good set of defaults is provided, so you can probably leave
      * this parameter blank.
      */
-    function PearFileFinder ($path = array()) {
-        $this->FileFinder(array_merge(
+    function __construct ($path = array()) {
+        parent::__construct(array_merge(
                           $path,
                           array('/usr/share/php4',
                                 '/usr/share/php',
@@ -399,7 +399,7 @@ extends FileFinder
     /**
      * Constructor.
      */
-    function LocalizedFileFinder () {
+    function __construct () {
         $this->_pathsep = $this->_get_syspath_separator();
         $include_path = $this->_get_include_path();
         $path = array();
@@ -415,7 +415,7 @@ extends FileFinder
                 }
             }
         }
-        $this->FileFinder(array_merge($path, $include_path));
+        parent::__construct(array_merge($path, $include_path));
     }
 }
 
@@ -436,7 +436,7 @@ extends FileFinder
     /**
      * Constructor.
      */
-    function LocalizedButtonFinder () {
+    function __construct () {
         global $WikiTheme;
         $this->_pathsep = $this->_get_syspath_separator();
         $include_path = $this->_get_include_path();
@@ -456,7 +456,7 @@ extends FileFinder
             }
         }
 
-        $this->FileFinder(array_merge($path, $include_path));
+        parent::__construct(array_merge($path, $include_path));
     }
 }
 

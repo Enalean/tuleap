@@ -124,9 +124,9 @@ extends WikiPlugin
 
 // how many back-/forwardlinks for this page
 class _PageList_Column_ListPages_count extends _PageList_Column {
-    function _PageList_Column_ListPages_count($field, $display, $backwards = false) {
+    function __construct($field, $display, $backwards = false) {
         $this->_direction = $backwards;
-        return $this->_PageList_Column($field, $display, 'center');
+        return parent::__construct($field, $display, 'center');
     }
     function _getValue($page, &$revision_handle) {
         $iter = $page->getLinks($this->_direction);

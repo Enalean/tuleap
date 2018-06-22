@@ -37,7 +37,7 @@ class ArtifactReportFactory {
 	 *
 	 *	@return	boolean	success.
 	 */
-	function ArtifactReportFactory() {
+	function __construct() {
 		return true;
 	}
 	

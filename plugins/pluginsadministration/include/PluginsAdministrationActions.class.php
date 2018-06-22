@@ -35,7 +35,7 @@ class PluginsAdministrationActions extends Actions
     private $plugin_disabler_verifier;
 
     public function __construct(&$controler, $view = null) {
-        $this->Actions($controler);
+        parent::__construct($controler);
         $this->plugin_manager           = PluginManager::instance();
         $this->dependency_solver        = new PluginDependencySolver($this->plugin_manager);
         $plugin_administration          = $this->plugin_manager->getPluginByName('pluginsadministration');

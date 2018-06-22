@@ -45,7 +45,7 @@ class WikiCloner {
    *  @param New project identifier
    *
    */
-  function WikiCloner($template_id=0, $group_id=0) {
+  function __construct($template_id=0, $group_id=0) {
       
     $this->template_id = (int) $template_id;
     $this->group_id = (int) $group_id;

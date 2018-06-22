@@ -26,7 +26,7 @@ require_once('Docman_ItemFactory.class.php');
 class Docman_FolderFactory
 extends Docman_ItemFactory {
     
-    function Docman_FolderFactory($groupId=null) {
+    function __construct($groupId=null) {
         parent::__construct($groupId);
     }
 

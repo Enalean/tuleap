@@ -34,7 +34,7 @@ class CrossReference {
      * Constructor 
      * 
      */
-    function CrossReference($refSourceId, $refSourceGid, $refSourceType, $refSourceKey, $refTargetId, $refTargetGid, $refTargetType, $refTargetKey, $userId) {
+    function __construct($refSourceId, $refSourceGid, $refSourceType, $refSourceKey, $refTargetId, $refTargetGid, $refTargetType, $refTargetKey, $userId) {
        $this->refSourceId=$refSourceId;
        $this->refSourceGid=$refSourceGid;
        $this->refSourceType=$refSourceType;

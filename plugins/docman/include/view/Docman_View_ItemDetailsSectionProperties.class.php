@@ -33,7 +33,7 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
     var $formName;
     var $inheritableMetadataArray;
 
-    function Docman_View_ItemDetailsSectionProperties(&$item, $url, $theme_path, $user_can_write = false, $force = null) {
+    function __construct(&$item, $url, $theme_path, $user_can_write = false, $force = null) {
         $this->user_can_write = $user_can_write;
         $this->force = $force;
         $this->theme_path = $theme_path;
@@ -41,7 +41,7 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
         $this->inheritableMetadataArray = null;
         $id = 'properties';
         $title = $GLOBALS['Language']->getText('plugin_docman','details_properties');
-        parent::Docman_View_ItemDetailsSection($item, $url, $id, $title);
+        parent::__construct($item, $url, $id, $title);
     }
 
     function _getPropertyRow($label, $value) {

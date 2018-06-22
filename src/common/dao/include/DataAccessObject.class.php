@@ -54,13 +54,6 @@ class DataAccessObject {
     /**
      * @deprecated
      */
-    public function DataAccessObject($da = null) {
-        $this->__construct($da);
-    }
-
-    /**
-     * @deprecated
-     */
     public function startTransaction() {
         $this->da->startTransaction();
     }

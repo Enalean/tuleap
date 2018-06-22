@@ -17,7 +17,7 @@ extends _DbPassUser
 {
     var $_authmethod = 'PDODb';
 
-    function _PdoDbPassUser($UserName='', $prefs=false) {
+    function __construct($UserName='', $prefs=false) {
 
         if (!$this->_prefs and isa($this,"_PdoDbPassUser")) {
             if ($prefs) $this->_prefs = $prefs;

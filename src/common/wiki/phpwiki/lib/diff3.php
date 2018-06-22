@@ -13,7 +13,7 @@ require_once('lib/difflib.php');
 class _Diff3_Block {
     var $type = 'diff3';
     
-    function _Diff3_Block ($orig = false, $final1 = false, $final2 = false) {
+    function __construct ($orig = false, $final1 = false, $final2 = false) {
         $this->orig = $orig ? $orig : array();
         $this->final1 = $final1 ? $final1 : array();
         $this->final2 = $final2 ? $final2 : array();
@@ -42,7 +42,7 @@ class _Diff3_Block {
 class _Diff3_CopyBlock extends _Diff3_Block {
     var $type = 'copy';
     
-    function _Diff3_CopyBlock ($lines = false) {
+    function __construct ($lines = false) {
         $this->orig = $lines ? $lines : array();
         $this->final1 = &$this->orig;
         $this->final2 = &$this->orig;
@@ -58,7 +58,7 @@ class _Diff3_CopyBlock extends _Diff3_Block {
 }
 
 class _Diff3_BlockBuilder {
-    function _Diff3_BlockBuilder () {
+    function __construct () {
         $this->_init();
     }
 
@@ -103,7 +103,7 @@ class _Diff3_BlockBuilder {
 
 
 class Diff3 {
-    function Diff3 ($orig, $final1, $final2) {
+    function __construct ($orig, $final1, $final2) {
         $eng = new _DiffEngine;
         $this->ConflictingBlocks = 0;  //Conflict counter
         $this->blocks = $this->__diff3($eng->diff($orig, $final1),

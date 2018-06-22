@@ -27,7 +27,7 @@ class Docman_View_LoveDetails {
     var $md;
     var $hp;
 
-    function Docman_View_LoveDetails($md) {
+    function __construct($md) {
         $this->md = $md;
         $this->hp =& Codendi_HTMLPurifier::instance();
     }

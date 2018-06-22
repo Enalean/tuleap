@@ -30,7 +30,7 @@ class GroupFactory {
 	 *
 	 *	@return	boolean	success.
 	 */
-	function GroupFactory() {
+	function __construct() {
             return true;
 	}
 

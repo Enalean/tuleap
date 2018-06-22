@@ -13,7 +13,7 @@ require_once(dirname(__FILE__).'/../Docman_MetadataHtml.class.php');
 class Docman_MetadataHtmlWiki extends Docman_MetadataHtml {
     var $pagename;
 
-    function Docman_MetadataHtmlWiki($pagename) {
+    function __construct($pagename) {
         $this->pagename = $pagename;
     }
 
@@ -37,7 +37,7 @@ class Docman_MetadataHtmlWiki extends Docman_MetadataHtml {
 class Docman_MetadataHtmlLink extends Docman_MetadataHtml {
     var $link_url;
 
-    function Docman_MetadataHtmlLink($link_url) {
+    function __construct($link_url) {
         $this->link_url = $link_url;
     }
 
@@ -60,7 +60,7 @@ class Docman_MetadataHtmlLink extends Docman_MetadataHtml {
 
 class Docman_MetadataHtmlFile extends Docman_MetadataHtml {
    
-    function Docman_MetadataHtmlFile() {
+    function __construct() {
         
     }
 
@@ -84,7 +84,7 @@ class Docman_MetadataHtmlFile extends Docman_MetadataHtml {
 
 class Docman_MetadataHtmlEmbeddedFile extends Docman_MetadataHtml {
     var $content;
-    function Docman_MetadataHtmlEmbeddedFile($content) {
+    function __construct($content) {
         $this->content = $content;
     }
 
@@ -110,7 +110,7 @@ class Docman_MetadataHtmlEmbeddedFile extends Docman_MetadataHtml {
  */
 class Docman_MetadataHtmlEmpty extends Docman_MetadataHtml {
 
-    function Docman_MetadataHtmlEmpty() {
+    function __construct() {
     }
 
     function getLabel() {

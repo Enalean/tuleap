@@ -9,7 +9,7 @@ require_once('lib/WikiDB.php');
  */
 class WikiDB_SQL extends WikiDB
 {
-    function WikiDB_SQL ($dbparams) {
+    function __construct ($dbparams) {
         $backend = 'PearDB';
         if (is_array($dbparams['dsn']))
             $backend = $dbparams['dsn']['phptype'];
@@ -23,7 +23,7 @@ class WikiDB_SQL extends WikiDB
         include_once ("lib/WikiDB/backend/PearDB_".$backend.".php");
         $backend_class = "WikiDB_backend_PearDB_".$backend;
         $backend = new $backend_class($dbparams);
-        $this->WikiDB($backend, $dbparams);
+        parent::__construct($backend, $dbparams);
     }
     
     function view_dsn ($dsn = false) {

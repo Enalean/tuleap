@@ -18,8 +18,8 @@ require_once dirname(__FILE__).'/../reporter.php';
  */
 class JUnitXMLReporter extends SimpleReporter {
     
-    function JUnitXMLReporter() {
-        $this->SimpleReporter();
+    function __construct() {
+        parent::__construct();
         $this->doc = new DOMDocument();
         $this->doc->loadXML('<testsuite/>');
         $this->root = $this->doc->documentElement;

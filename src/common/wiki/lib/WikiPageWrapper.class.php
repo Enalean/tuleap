@@ -40,7 +40,7 @@ class WikiPageWrapper {
   /* private int    */ var $gid;
 
 
-  function WikiPageWrapper($id=0) {
+  function __construct($id=0) {
     global $sys_server,$sys_dbhost,$sys_dbuser,$sys_dbpasswd,$sys_dbname;
 
     $this->gid = (int) $id;

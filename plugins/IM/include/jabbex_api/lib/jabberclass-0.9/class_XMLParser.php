@@ -39,7 +39,7 @@
 
 class Jabbex_XMLParser {
 
-	function Jabbex_XMLParser() {
+	function __construct() {
 		$this->valid = false;
 	}
 	

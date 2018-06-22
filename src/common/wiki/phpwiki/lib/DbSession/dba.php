@@ -11,7 +11,7 @@ extends DbSession
 {
     var $_backend_type = "dba";
 
-    function DbSession_dba (&$dbh, $table) {
+    function __construct (&$dbh, $table) {
         $this->_dbh = $dbh;
         ini_set('session.save_handler','user');
         session_module_name('user'); // new style

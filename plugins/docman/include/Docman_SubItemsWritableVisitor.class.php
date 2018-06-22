@@ -31,7 +31,7 @@ class Docman_SubItemsWritableVisitor /* implements Visitor */ {
     var $docCounter;
     var $fldCounter;
 
-    function Docman_SubItemsWritableVisitor($groupId, $user) {
+    function __construct($groupId, $user) {
         $this->dpm =& Docman_PermissionsManager::instance($groupId);
         $this->user = $user;
         $this->docIdList = array();

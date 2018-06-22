@@ -68,7 +68,7 @@ class Group {
 	 */
 	private $error_state = false;
 
-	function Group($param) {
+	function __construct($param) {
             //$param can be:
             // - a row from the groups table -> use it
             // - a group_id -> retrieve row from table

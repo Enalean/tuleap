@@ -47,7 +47,7 @@ class Docman_Controller extends Controler {
     var $reportId;
     var $hierarchy;
 
-    function Docman_Controller(&$plugin, $pluginPath, $themePath, &$request) {
+    function __construct(&$plugin, $pluginPath, $themePath, &$request) {
         $this->request        = $request;
         $this->user           = null;
         $this->groupId        = null;

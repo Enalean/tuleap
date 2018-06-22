@@ -42,8 +42,8 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
 	 *
 	 *  @param $artifact_type object
 	 */
-	function ArtifactRulesManagerHtml(&$artifact_type_html, $href = '') {
-		$this->ArtifactRulesManager();
+	function __construct(&$artifact_type_html, $href = '') {
+		parent::__construct();
         $this->artifact_type =& $artifact_type_html;
         $this->href          = $href;
 	}

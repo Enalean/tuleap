@@ -100,7 +100,7 @@ extends _RecentChanges_HtmlFormatter {
  */
 class RecentCommentsRevisionIterator extends WikiDB_PageRevisionIterator
 {
-    function RecentCommentsRevisionIterator ($revisions, &$dbi) {
+    function __construct ($revisions, &$dbi) {
         $this->_revisions = $revisions;
         $this->_wikidb = $dbi;
         $this->_current = 0;

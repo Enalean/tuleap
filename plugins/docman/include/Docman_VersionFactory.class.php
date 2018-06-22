@@ -28,7 +28,7 @@ require_once('Docman_Version.class.php');
  */
 class Docman_VersionFactory {
     
-    function Docman_VersionFactory() {
+    function __construct() {
     }
     
     function create($row) {

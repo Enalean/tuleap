@@ -19,7 +19,7 @@ extends _DbPassUser
  */
 {
     var $_authmethod = 'AdoDb';
-    function _AdoDbPassUser($UserName='',$prefs=false) {
+    function __construct($UserName='',$prefs=false) {
         if (!$this->_prefs and isa($this,"_AdoDbPassUser")) {
             if ($prefs) $this->_prefs = $prefs;
             if (!isset($this->_prefs->_method))

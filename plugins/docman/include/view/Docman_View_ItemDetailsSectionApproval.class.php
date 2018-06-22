@@ -31,8 +31,8 @@ extends Docman_View_ItemDetailsSection {
     var $version;
     var $notificationManager;
 
-    function Docman_View_ItemDetailsSectionApproval(&$item, $url, $themePath, $notificationManager) {
-        parent::Docman_View_ItemDetailsSection($item, $url, 'approval', $GLOBALS['Language']->getText('plugin_docman', 'details_approval'));
+    function __construct(&$item, $url, $themePath, $notificationManager) {
+        parent::__construct($item, $url, 'approval', $GLOBALS['Language']->getText('plugin_docman', 'details_approval'));
 
         $this->themePath = $themePath;
         $this->table = null;

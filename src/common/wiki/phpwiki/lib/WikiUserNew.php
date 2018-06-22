@@ -343,7 +343,7 @@ class _WikiUser
      var $_HomePagehandle = false;
 
     // constructor
-    function _WikiUser($UserName='', $prefs=false) {
+    function __construct($UserName='', $prefs=false) {
 
         $this->_userid = $UserName;
         $this->_HomePagehandle = false;
@@ -747,7 +747,7 @@ extends _AnonUser
     var $_current_method, $_current_index;
 
     // check and prepare the auth and pref methods only once
-    function _PassUser($UserName='', $prefs=false) {
+    function __construct($UserName='', $prefs=false) {
         //global $DBAuthParams, $DBParams;
         if ($UserName) {
             if (!$this->isValidName($UserName))
@@ -1312,7 +1312,7 @@ class _UserPreference
 {
     var $default_value;
 
-    function _UserPreference ($default_value) {
+    function __construct ($default_value) {
         $this->default_value = $default_value;
     }
 
@@ -1357,9 +1357,9 @@ class _UserPreference
 class _UserPreference_numeric
 extends _UserPreference
 {
-    function _UserPreference_numeric ($default, $minval = false,
+    function __construct ($default, $minval = false,
                                       $maxval = false) {
-        $this->_UserPreference((double)$default);
+        parent::__construct((double)$default);
         $this->_minval = (double)$minval;
         $this->_maxval = (double)$maxval;
     }
@@ -1377,8 +1377,8 @@ extends _UserPreference
 class _UserPreference_int
 extends _UserPreference_numeric
 {
-    function _UserPreference_int ($default, $minval = false, $maxval = false) {
-        $this->_UserPreference_numeric((int)$default, (int)$minval, (int)$maxval);
+    function __construct ($default, $minval = false, $maxval = false) {
+        parent::__construct((int)$default, (int)$minval, (int)$maxval);
     }
 
     function sanify ($value) {
@@ -1389,8 +1389,8 @@ extends _UserPreference_numeric
 class _UserPreference_bool
 extends _UserPreference
 {
-    function _UserPreference_bool ($default = false) {
-        $this->_UserPreference((bool)$default);
+    function __construct ($default = false) {
+        parent::__construct((bool)$default);
     }
 
     function sanify ($value) {
@@ -1417,8 +1417,8 @@ extends _UserPreference
 class _UserPreference_language
 extends _UserPreference
 {
-    function _UserPreference_language ($default = DEFAULT_LANGUAGE) {
-        $this->_UserPreference($default);
+    function __construct ($default = DEFAULT_LANGUAGE) {
+        parent::__construct($default);
     }
 
     // FIXME: check for valid locale
@@ -1443,8 +1443,8 @@ extends _UserPreference
 class _UserPreference_theme
 extends _UserPreference
 {
-    function _UserPreference_theme ($default = THEME) {
-        $this->_UserPreference($default);
+    function __construct ($default = THEME) {
+        parent::__construct($default);
     }
 
     function sanify ($value) {
@@ -1692,7 +1692,7 @@ function ValidateMail($email, $noconnect=false) {
  */
 class UserPreferences
 {
-    function UserPreferences($saved_prefs = false) {
+    function __construct($saved_prefs = false) {
         // userid stored too, to ensure the prefs are being loaded for
         // the correct (currently signing in) userid if stored in a
         // cookie.

@@ -39,7 +39,7 @@ class WikiServiceViews extends WikiViews {
   /**
    * WikiServiceViews - Constructor
    */
-  function WikiServiceViews(&$controler, $id=0, $view=null) {
+  function __construct(&$controler, $id=0, $view=null) {
     $this->purifier = Codendi_HTMLPurifier::instance();
     parent::WikiView($controler, $id, $view);
     $pm = ProjectManager::instance();

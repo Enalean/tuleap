@@ -23,7 +23,7 @@
 class DocmanOneFolderIsWriteable /* implements Visitor */ {
     
     var $docman;
-    function DocmanOneFolderIsWriteable(&$docman) {
+    function __construct(&$docman) {
         $this->docman = $docman;
     }
     

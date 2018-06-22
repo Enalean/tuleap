@@ -23,7 +23,7 @@
 require_once 'database.php';
 
 class Docman_SqlFilterFactory {
-    function Docman_SqlFilterFactory() {
+    function __construct() {
         
     }
 
@@ -76,9 +76,9 @@ extends Docman_MetadataSqlQueryChunk {
     var $isRealMetadata;
     var $db;
 
-    function Docman_SqlFilter($filter) {
+    function __construct($filter) {
         $this->filter = $filter;
-        parent::Docman_MetadataSqlQueryChunk($filter->md);
+        parent::__construct($filter->md);
     }
 
     function getFrom() {
@@ -156,8 +156,8 @@ extends Docman_MetadataSqlQueryChunk {
 class Docman_SqlFilterDate 
 extends Docman_SqlFilter {
 
-    function Docman_SqlFilterDate($filter) {
-        parent::Docman_SqlFilter($filter);
+    function __construct($filter) {
+        parent::__construct($filter);
     }
 
     // '<'
@@ -231,8 +231,8 @@ extends Docman_SqlFilter {
 class Docman_SqlFilterDateAdvanced
 extends Docman_SqlFilterDate {
 
-    function Docman_SqlFilterDateAdvanced($filter) {
-        parent::Docman_SqlFilterDate($filter);
+    function __construct($filter) {
+        parent::__construct($filter);
     }
 
     function _getSpecificSearchChunk() {
@@ -275,8 +275,8 @@ extends Docman_SqlFilterDate {
 class Docman_SqlFilterOwner 
 extends Docman_SqlFilter {
 
-    function Docman_SqlFilterOwner($filter) {
-        parent::Docman_SqlFilter($filter);
+    function __construct($filter) {
+        parent::__construct($filter);
         $this->field = 'user.user_name';
     }
 
@@ -296,8 +296,8 @@ extends Docman_SqlFilter {
 class Docman_SqlFilterText 
 extends Docman_SqlFilter {
 
-    function Docman_SqlFilterText($filter) {
-        parent::Docman_SqlFilter($filter);
+    function __construct($filter) {
+        parent::__construct($filter);
     }
     
     function _getSpecificSearchChunk() {
@@ -319,8 +319,8 @@ extends Docman_SqlFilter {
 class Docman_SqlFilterGlobalText
 extends Docman_SqlFilterText {
     
-    function Docman_SqlFilterGlobalText($filter) {
-        parent::Docman_SqlFilterText($filter);
+    function __construct($filter) {
+        parent::__construct($filter);
     }
 
     function getFrom() {
@@ -368,8 +368,8 @@ extends Docman_SqlFilterText {
 class Docman_SqlFilterListAdvanced
 extends Docman_SqlFilter {
 
-    function Docman_SqlFilterListAdvanced($filter) {
-        parent::Docman_SqlFilter($filter);
+    function __construct($filter) {
+        parent::__construct($filter);
     }
 
     function _getSpecificSearchChunk() {

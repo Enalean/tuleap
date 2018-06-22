@@ -31,8 +31,8 @@ class ArtifactRuleValue extends ArtifactRule {
     
     var $target_value;
     
-    function ArtifactRuleValue($id, $group_artifact_id, $source_field, $source_value, $target_field, $target_value) {
-        $this->ArtifactRule($id, $group_artifact_id, $source_field, $source_value, $target_field);
+    function __construct($id, $group_artifact_id, $source_field, $source_value, $target_field, $target_value) {
+        parent::__construct($id, $group_artifact_id, $source_field, $source_value, $target_field);
         $this->target_value = $target_value;
     }
     

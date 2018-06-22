@@ -22,7 +22,7 @@
 
 class Docman_HtmlFilterFactory {
 
-    function Docman_HtmlFilterFactory() {
+    function __construct() {
         
     }
 
@@ -58,7 +58,7 @@ class Docman_HtmlFilter {
     var $filter;
     var $hp;
 
-    function Docman_HtmlFilter($filter) {
+    function __construct($filter) {
         $this->filter = $filter;
         $this->hp =& Codendi_HTMLPurifier::instance();
     }
@@ -105,8 +105,8 @@ class Docman_HtmlFilter {
 
 class Docman_HtmlFilterDate extends Docman_HtmlFilter {
 
-    function Docman_HtmlFilterDate($filter) {
-        parent::Docman_HtmlFilter($filter);
+    function __construct($filter) {
+        parent::__construct($filter);
     }
     
     function _valueSelectorHtml($formName) {
@@ -126,8 +126,8 @@ class Docman_HtmlFilterDate extends Docman_HtmlFilter {
 class Docman_HtmlFilterDateAdvanced 
 extends Docman_HtmlFilterDate {
 
-    function Docman_HtmlFilterDateAdvanced($filter) {
-        parent::Docman_HtmlFilterDate($filter);
+    function __construct($filter) {
+        parent::__construct($filter);
     }
 
     function _valueSelectorHtml($formName) {
@@ -159,8 +159,8 @@ extends Docman_HtmlFilterDate {
 
 class Docman_HtmlFilterList extends Docman_HtmlFilter {
     
-    function Docman_HtmlFilterList($filter) {
-        parent::Docman_HtmlFilter($filter);
+    function __construct($filter) {
+        parent::__construct($filter);
     }
 
     function buildSelectBox($vals, $txts) {
@@ -192,8 +192,8 @@ class Docman_HtmlFilterList extends Docman_HtmlFilter {
 class Docman_HtmlFilterListAdvanced 
 extends Docman_HtmlFilterList {
     
-    function Docman_HtmlFilterListAdvanced($filter) {
-        parent::Docman_HtmlFilterList($filter);
+    function __construct($filter) {
+        parent::__construct($filter);
     }
 
     function buildSelectBox($vals, $txts) {
@@ -206,8 +206,8 @@ extends Docman_HtmlFilterList {
 
 class Docman_HtmlFilterText extends Docman_HtmlFilter {
 
-    function Docman_HtmlFilterText($filter) {
-        parent::Docman_HtmlFilter($filter);
+    function __construct($filter) {
+        parent::__construct($filter);
     }
 
     function _valueSelectorHtml($formName=0) {

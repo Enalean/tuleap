@@ -119,7 +119,7 @@ class CGIFLZW
     var $ClearCode, $EndCode, $Next, $Vals, $Stack, $sp, $Buf, $CurBit, $LastBit, $Done, $LastByte;
 
     // CONSTRUCTOR
-    function CGIFLZW() {
+    function __construct() {
         $this->MAX_LZW_BITS = 12;
         unSet($this->Next);
         unSet($this->Vals);
@@ -320,7 +320,7 @@ class CGIFCOLORTABLE
     var $m_arColors;
 
     // CONSTRUCTOR
-    function CGIFCOLORTABLE() {
+    function __construct() {
         unSet($this->m_nColors);
         unSet($this->m_arColors);
     }
@@ -407,7 +407,7 @@ class CGIFFILEHEADER
     var $m_colorTable;
 
     // CONSTRUCTOR
-    function CGIFFILEHEADER() {
+    function __construct() {
         unSet($this->m_lpVer);
         unSet($this->m_nWidth);
         unSet($this->m_nHeight);
@@ -473,7 +473,7 @@ class CGIFIMAGEHEADER
     var $m_colorTable;
 
     // CONSTRUCTOR
-    function CGIFIMAGEHEADER() {
+    function __construct() {
         unSet($this->m_nLeft);
         unSet($this->m_nTop);
         unSet($this->m_nWidth);
@@ -532,7 +532,7 @@ class CGIFIMAGE
     var $m_data;
     var $m_lzw;
 
-    function CGIFIMAGE() {
+    function __construct() {
         unSet($this->m_disp);
         unSet($this->m_bUser);
         unSet($this->m_bTrans);
@@ -683,7 +683,7 @@ class CGIF
     var $m_bLoaded;
 
     // CONSTRUCTOR
-    function CGIF() {
+    function __construct() {
         $this->m_gfh     = new CGIFFILEHEADER();
         $this->m_img     = new CGIFIMAGE();
         $this->m_lpData  = "";

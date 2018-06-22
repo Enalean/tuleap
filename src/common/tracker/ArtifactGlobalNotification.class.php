@@ -24,7 +24,7 @@ class ArtifactGlobalNotification {
     /**
     * Constructor
     */
-    function ArtifactGlobalNotification($data) {
+    function __construct($data) {
         $this->data = $data;
     }
     function getId() {

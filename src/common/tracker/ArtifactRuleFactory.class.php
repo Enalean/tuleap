@@ -37,7 +37,7 @@ class ArtifactRuleFactory {
     var $RULETYPE_MANDATORY;
     var $RULETYPE_VALUE;
     
-    function ArtifactRuleFactory(&$rules_dao) {
+    function __construct(&$rules_dao) {
         $this->rules_dao         =& $rules_dao;
         $this->rules = array();
         

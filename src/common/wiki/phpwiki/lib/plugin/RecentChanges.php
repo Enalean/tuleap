@@ -26,7 +26,7 @@ class _RecentChanges_Formatter
 {
     var $_absurls = false;
 
-    function _RecentChanges_Formatter ($rc_args) {
+    function __construct ($rc_args) {
         $this->_args = $rc_args;
         $this->_diffargs = array('action' => 'diff');
 
@@ -697,7 +697,7 @@ class NonDeletedRevisionIterator extends WikiDB_PageRevisionIterator
      *
      * @param $revisions object a WikiDB_PageRevisionIterator.
      */
-    function NonDeletedRevisionIterator ($revisions, $check_current_revision = true) {
+    function __construct ($revisions, $check_current_revision = true) {
         $this->_revisions = $revisions;
         $this->_check_current_revision = $check_current_revision;
     }
@@ -871,8 +871,8 @@ extends WikiPlugin
 
 class DayButtonBar extends HtmlElement {
 
-    function DayButtonBar ($plugin_args) {
-        $this->__construct('p', array('class' => 'wiki-rc-action'));
+    function __construct ($plugin_args) {
+        parent::__construct('p', array('class' => 'wiki-rc-action'));
 
         // Display days selection buttons
         extract($plugin_args);

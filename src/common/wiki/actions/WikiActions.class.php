@@ -32,8 +32,8 @@ require_once(dirname(__FILE__).'/../lib/WikiPageWrapper.class.php');
  */
 class WikiActions extends Actions {
   
-    function WikiActions(&$controler) {
-        $this->Actions($controler);
+    function __construct(&$controler) {
+        parent::__construct($controler);
     }
     
   function add_temp_page() {

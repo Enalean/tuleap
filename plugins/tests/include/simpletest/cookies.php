@@ -36,7 +36,7 @@ class SimpleCookie {
      *    @param string $expiry          Expiry date as string.
      *    @param boolean $is_secure      Currently ignored.
      */
-    function SimpleCookie($name, $value = false, $path = false, $expiry = false, $is_secure = false) {
+    function __construct($name, $value = false, $path = false, $expiry = false, $is_secure = false) {
         $this->_host = false;
         $this->_name = $name;
         $this->_value = $value;
@@ -232,7 +232,7 @@ class SimpleCookieJar {
      *    Constructor. Jar starts empty.
      *    @access public
      */
-    function SimpleCookieJar() {
+    function __construct() {
         $this->_cookies = array();
     }
     

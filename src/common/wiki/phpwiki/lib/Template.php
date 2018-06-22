@@ -11,7 +11,7 @@ class Template
     /**
      * name optionally of form "theme/template" to include parent templates in children
      */
-    function Template ($name, &$request, $args = false) {
+    function __construct ($name, &$request, $args = false) {
         global $WikiTheme;
 
         $this->_request =& $request;

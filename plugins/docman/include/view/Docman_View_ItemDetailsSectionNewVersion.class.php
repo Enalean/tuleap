@@ -31,8 +31,8 @@ class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSe
     
     var $force;
     var $token;
-    function Docman_View_ItemDetailsSectionNewVersion(&$item, $url, &$controller, $force, $token) {
-        parent::Docman_View_ItemDetailsSectionActions($item, $url, false, true, $controller);
+    function __construct(&$item, $url, &$controller, $force, $token) {
+        parent::__construct($item, $url, false, true, $controller);
         $this->force    = $force;
         $this->token = $token;
     }

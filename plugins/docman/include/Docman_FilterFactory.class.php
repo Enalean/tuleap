@@ -30,7 +30,7 @@ class Docman_FilterFactory {
     var $dynTextFields;
     var $groupId;
 
-    function Docman_FilterFactory($groupId) {
+    function __construct($groupId) {
         $this->dynTextFields = array();
         $this->groupId = $groupId;
     }

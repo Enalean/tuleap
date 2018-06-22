@@ -16,7 +16,7 @@ extends _DbPassUser
  */
 {
     var $_authmethod = 'PearDb';
-    function _PearDbPassUser($UserName='',$prefs=false) {
+    function __construct($UserName='',$prefs=false) {
         //global $DBAuthParams;
         if (!$this->_prefs and isa($this,"_PearDbPassUser")) {
             if ($prefs) $this->_prefs = $prefs;

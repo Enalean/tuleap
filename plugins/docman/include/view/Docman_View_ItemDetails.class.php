@@ -30,7 +30,7 @@ class Docman_View_ItemDetails {
     var $current_section;
     var $url;
     
-    function Docman_View_ItemDetails(&$item, $url) {
+    function __construct(&$item, $url) {
         $this->item             =& $item;
         $this->url              =  $url;
         $this->current_section  =  null;

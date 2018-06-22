@@ -28,7 +28,7 @@ class Map {
 
     var $elements;
 
-    function Map() {
+    function __construct() {
         $this->elements = array();
     }
 

@@ -70,7 +70,7 @@ class TextSearchQuery {
      * @param $regex string one of 'auto', 'none', 'glob', 'posix', 'pcre', 'sql'
      * @see TextSearchQuery
      */
-    function TextSearchQuery($search_query, $case_exact=false, $regex='auto') {
+    function __construct($search_query, $case_exact=false, $regex='auto') {
         if ($regex == 'none' or !$regex) 
             $this->_regex = 0;
         elseif (defined("TSQ_REGEX_".strtoupper($regex)))
@@ -256,7 +256,7 @@ class NullTextSearchQuery extends TextSearchQuery {
      *
      * @see TextSearchQuery
      */
-    function NullTextSearchQuery() {}
+    function __construct() {}
     function asRegexp()		{ return '/^(?!a)a/x'; }
     function match($string)	{ return false; }
     function getHighlightRegexp() { return ""; }
@@ -313,7 +313,7 @@ extends TextSearchQuery_node
 {
     var $op = "WORD";
     
-    function TextSearchQuery_node_word($word) {
+    function __construct($word) {
         $this->word = $word;
     }
     function regexp() {
@@ -390,7 +390,7 @@ extends TextSearchQuery_node
 {
     var $op = "NOT";
     
-    function TextSearchQuery_node_not($leaf) {
+    function __construct($leaf) {
         $this->leaves = array($leaf);
     }
 
@@ -418,7 +418,7 @@ extends TextSearchQuery_node
 class TextSearchQuery_node_binop
 extends TextSearchQuery_node
 {
-    function TextSearchQuery_node_binop($leaves) {
+    function __construct($leaves) {
         $this->leaves = $leaves;
     }
 
@@ -694,7 +694,7 @@ class TextSearchQuery_Parser
 }
 
 class TextSearchQuery_Lexer {
-    function TextSearchQuery_Lexer ($query_str, $case_exact=false, $regex=TSQ_REGEX_AUTO) {
+    function __construct ($query_str, $case_exact=false, $regex=TSQ_REGEX_AUTO) {
         $this->tokens = $this->tokenize($query_str, $case_exact, $regex);
         $this->pos = 0;
     }

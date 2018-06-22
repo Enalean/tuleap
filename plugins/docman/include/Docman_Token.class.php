@@ -33,7 +33,7 @@ class Docman_Token {
      * This token is stored with the referer.
      * @return the generated 
      */
-    function Docman_Token() {
+    function __construct() {
         $tok     = null;
         $user_id = $this->_getCurrentUserId();
         $referer = $this->_getReferer();

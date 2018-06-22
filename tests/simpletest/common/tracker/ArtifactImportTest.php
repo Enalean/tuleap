@@ -353,7 +353,7 @@ class ArtifactImportTest extends TuleapTestCase {
       $ai->setReturnReference('getUserManager', $um);
       $um->setReturnReference('getUserByUserName', $user);
       
-      $ai->ArtifactImport($at,$aff,'group');
+      $ai->__construct($at,$aff,'group');
      
       $ai->parseFollowUpComments($followup_comments,$parsed_comments,$art_id,true);
       

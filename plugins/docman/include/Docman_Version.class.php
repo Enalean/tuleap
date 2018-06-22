@@ -26,7 +26,7 @@
  */
 class Docman_Version {
     
-    function Docman_Version($data = null) {
+    function __construct($data = null) {
         $this->id        = null;
         $this->authorId  = null;
         $this->itemId    = null;

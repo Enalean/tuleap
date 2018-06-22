@@ -37,28 +37,28 @@ class TokenTest extends TuleapTestCase {
         $t1->allows(['_getReferer' => 'http://codendi.com/?id=1&action=show']);
         $t1->allows(['_getCurrentUserId' => '123']);
         $t1->allows(['_getHTTPRequest' => $http]);
-        $t1->Docman_Token();
+        $t1->__construct();
 
         $t2 = \Mockery::mock(Docman_Token::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $t2->allows(['_getDao' => $dao]);
         $t2->allows(['_getReferer' => 'http://codendi.com/?id=1&action=show']);
         $t2->allows(['_getCurrentUserId' => '123']);
         $t2->allows(['_getHTTPRequest' => $http]);
-        $t2->Docman_Token();
+        $t2->__construct();
 
         $t3 = \Mockery::mock(Docman_Token::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $t3->allows(['_getDao' => $dao]);
         $t3->allows(['_getReferer' => 'http://codendi.com/?id=2&action=show']);
         $t3->allows(['_getCurrentUserId' => '123']);
         $t3->allows(['_getHTTPRequest' => $http]);
-        $t3->Docman_Token();
+        $t3->__construct();
 
         $t4 = \Mockery::mock(Docman_Token::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $t4->allows(['_getDao' => $dao]);
         $t4->allows(['_getReferer' => 'http://codendi.com/?id=1&action=show']);
         $t4->allows(['_getCurrentUserId' => '987']);
         $t4->allows(['_getHTTPRequest' => $http]);
-        $t4->Docman_Token();
+        $t4->__construct();
 
         $this->assertNotEqual($t1->getToken(), $t2->getToken(), 'Same users, same referers, different tokens');
         $this->assertNotEqual($t1->getToken(), $t3->getToken(), 'Different referers, different tokens');
@@ -74,7 +74,7 @@ class TokenTest extends TuleapTestCase {
         $t1->allows(['_getReferer' => 'http://codendi.com/?']);
         $t1->allows(['_getCurrentUserId' => '123']);
         $t1->allows(['_getHTTPRequest' => $http]);
-        $t1->Docman_Token();
+        $t1->__construct();
 
         $this->assertNull($t1->getToken(), 'Without referer, we should have a null token');
 
@@ -84,7 +84,7 @@ class TokenTest extends TuleapTestCase {
         $t2->allows(['_getReferer' => 'http://codendi.com/?id=1&action=show']);
         $t2->allows(['_getCurrentUserId' => '123']);
         $t2->allows(['_getHTTPRequest' => $http]);
-        $t2->Docman_Token();
+        $t2->__construct();
 
         $this->assertNotNull($t2->getToken());
 
@@ -94,7 +94,7 @@ class TokenTest extends TuleapTestCase {
         $t3->allows(['_getReferer' => 'http://codendi.com/?id=1&action=show']);
         $t3->allows(['_getCurrentUserId' => null]);
         $t3->allows(['_getHTTPRequest' => $http]);
-        $t3->Docman_Token();
+        $t3->__construct();
 
         $this->assertNull($t3->getToken(), 'With anonymous user, we should have a null token');
     }
@@ -113,7 +113,7 @@ class TokenTest extends TuleapTestCase {
         $t1->allows(['_getReferer' => $referer]);
         $t1->allows(['_getCurrentUserId' => $user_id]);
         $t1->allows(['_getHTTPRequest' => $http]);
-        $t1->Docman_Token();
+        $t1->__construct();
     }
 
     function testInvalidReferer() {
@@ -126,7 +126,7 @@ class TokenTest extends TuleapTestCase {
             $t->allows(['_getReferer' => 'http://codendi.com/'. $referer]);
             $t->allows(['_getCurrentUserId' => '123']);
             $t->allows(['_getHTTPRequest' => $http]);
-            $t->Docman_Token();
+            $t->__construct();
 
             $this->assertNull($t->getToken(), 'Without valid referer, we should have a null token');
         }
@@ -136,7 +136,7 @@ class TokenTest extends TuleapTestCase {
             $t->allows(['_getReferer' => 'http://codendi.com/'. $referer]);
             $t->allows(['_getCurrentUserId' => '123']);
             $t->allows(['_getHTTPRequest' => $http]);
-            $t->Docman_Token();
+            $t->__construct();
 
             $this->assertNotNull($t->getToken(), "With valid referer, we should'nt have a null token");
         }

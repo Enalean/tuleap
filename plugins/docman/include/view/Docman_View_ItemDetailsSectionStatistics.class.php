@@ -29,12 +29,12 @@ class Docman_View_ItemDetailsSectionStatistics extends Docman_View_ItemDetailsSe
     var $inheritableMetadataArray;
     var $_controller;
 
-    function Docman_View_ItemDetailsSectionStatistics(&$item, $url, $controller) {
+    function __construct(&$item, $url, $controller) {
         $this->_controller = $controller;
         
         $id = 'statistics';
         $title = $GLOBALS['Language']->getText('plugin_docman','details_statistics');
-        parent::Docman_View_ItemDetailsSection($item, $url, $id, $title);
+        parent::__construct($item, $url, $id, $title);
     }
 
     function _getPropertyRow($label, $value) {

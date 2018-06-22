@@ -24,7 +24,7 @@ class Docman_ReportColumn {
     var $md;
     var $sort;
 
-    function Docman_ReportColumn($md) {
+    function __construct($md) {
         $this->md = $md;
         $this->sort = null;
     }
@@ -121,7 +121,7 @@ class Docman_ReportColumn {
 
 class Docman_ReportColumnLocation 
 extends Docman_ReportColumn {
-    function Docman_ReportColumnLocation() {
+    function __construct() {
         $this->sort = null;
     }
 
@@ -164,8 +164,8 @@ extends Docman_ReportColumn {
 
 class Docman_ReportColumnTitle
 extends Docman_ReportColumn {
-    function Docman_ReportColumnTitle($md) {
-        parent::Docman_ReportColumn($md);
+    function __construct($md) {
+        parent::__construct($md);
     }
 
     function getTableBox($item, $view, $params) {
@@ -195,8 +195,8 @@ extends Docman_ReportColumn {
 
 class Docman_ReportColumnList
 extends Docman_ReportColumn {
-    function Docman_ReportColumnList($md) {
-        parent::Docman_ReportColumn($md);
+    function __construct($md) {
+        parent::__construct($md);
     }
 
     function getTableBox($item, $view, $params) {

@@ -102,7 +102,7 @@ class ArtifactImport {
    *
    *      @return boolean success.
    */
-  function ArtifactImport($ath,$art_field_fact,$group) {
+  function __construct($ath,$art_field_fact,$group) {
     $this->ath = $ath;
     $this->art_field_fact = $art_field_fact;
     $this->group = $group;

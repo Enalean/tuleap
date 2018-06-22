@@ -35,7 +35,7 @@ class GraphicReportFactory {
 	* 	@return null
     */ 
     
-    function GraphicReportFactory($group_artifact_id,$user_id){
+    function __construct($group_artifact_id,$user_id){
         $this->group_artifact_id = $group_artifact_id;
         $this->user_id = $user_id;
     }

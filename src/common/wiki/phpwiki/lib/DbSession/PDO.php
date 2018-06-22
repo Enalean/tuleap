@@ -10,7 +10,7 @@ extends DbSession
 {
     var $_backend_type = "PDO";
 
-    function DbSession_PDO ($dbh, $table) {
+    function __construct ($dbh, $table) {
 
         $this->_dbh = $dbh;
         $this->_table = $table;

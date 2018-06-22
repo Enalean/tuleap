@@ -30,7 +30,7 @@ require_once('ArtifactRuleFactory.class.php');
 class ArtifactRulesManager {
 
 
-    function ArtifactRulesManager() {
+    function __construct() {
     }
     
     protected $rules_by_tracker_id;

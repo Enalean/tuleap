@@ -61,7 +61,7 @@
 class _PageList_Column_base {
     var $_tdattr = array();
 
-    function _PageList_Column_base ($default_heading, $align = false) {
+    function __construct ($default_heading, $align = false) {
         $this->_heading = $default_heading;
 
         if ($align) {
@@ -193,8 +193,8 @@ class _PageList_Column_base {
 };
 
 class _PageList_Column extends _PageList_Column_base {
-    function _PageList_Column ($field, $default_heading, $align = false) {
-        $this->_PageList_Column_base($default_heading, $align);
+    function __construct ($field, $default_heading, $align = false) {
+        parent::__construct($default_heading, $align);
 
         $this->_need_rev = substr($field, 0, 4) == 'rev:';
         $this->_iscustom = substr($field, 0, 7) == 'custom:';
@@ -236,9 +236,9 @@ class _PageList_Column extends _PageList_Column_base {
  * And we add a 4th param to get at the parent $pagelist object
  */
 class _PageList_Column_custom extends _PageList_Column {
-    function _PageList_Column_custom($params) {
+    function __construct($params) {
     	$this->_pagelist =& $params[3];
-        $this->_PageList_Column($params[0], $params[1], $params[2]);
+        parent::__construct($params[0], $params[1], $params[2]);
     }
 }
 
@@ -278,8 +278,8 @@ class _PageList_Column_size extends _PageList_Column {
 
 
 class _PageList_Column_bool extends _PageList_Column {
-    function _PageList_Column_bool ($field, $default_heading, $text = 'yes') {
-        $this->_PageList_Column($field, $default_heading, 'center');
+    function __construct ($field, $default_heading, $text = 'yes') {
+        parent::__construct($field, $default_heading, 'center');
         $this->_textIfTrue = $text;
         $this->_textIfFalse = new RawXml('&#8212;'); //mdash
     }
@@ -292,7 +292,7 @@ class _PageList_Column_bool extends _PageList_Column {
 };
 
 class _PageList_Column_checkbox extends _PageList_Column {
-    function _PageList_Column_checkbox ($field, $default_heading, $name='p') {
+    function __construct ($field, $default_heading, $name='p') {
         $this->_name = $name;
         $heading = HTML::input(array('type'  => 'button',
                                      'title' => _("Click to de-/select all pages"),
@@ -301,7 +301,7 @@ class _PageList_Column_checkbox extends _PageList_Column {
                                      'value' => $default_heading,
                                      'onclick' => "flipAll(this.form)"
                                      ));
-        $this->_PageList_Column($field, $heading, 'center');
+        parent::__construct($field, $heading, 'center');
     }
     function _getValue ($pagelist, $page_handle, &$revision_handle) {
         $pagename = $page_handle->getName();
@@ -335,8 +335,8 @@ class _PageList_Column_checkbox extends _PageList_Column {
 };
 
 class _PageList_Column_time extends _PageList_Column {
-    function _PageList_Column_time ($field, $default_heading) {
-        $this->_PageList_Column($field, $default_heading, 'right');
+    function __construct ($field, $default_heading) {
+        parent::__construct($field, $default_heading, 'right');
         global $WikiTheme;
         $this->Theme = &$WikiTheme;
     }
@@ -359,8 +359,8 @@ class _PageList_Column_version extends _PageList_Column {
 // on very large Wikis this will fail if used with AllPages
 // (PHP memory limit exceeded)
 class _PageList_Column_content extends _PageList_Column {
-    function _PageList_Column_content ($field, $default_heading, $align = false) {
-        $this->_PageList_Column($field, $default_heading, $align);
+    function __construct ($field, $default_heading, $align = false) {
+        parent::__construct($field, $default_heading, $align);
         $this->bytes = 50;
         if ($field == 'content') {
             $this->_heading .= sprintf(_(" ... first %d bytes"),
@@ -423,8 +423,8 @@ class _PageList_Column_content extends _PageList_Column {
 };
 
 class _PageList_Column_author extends _PageList_Column {
-    function _PageList_Column_author ($field, $default_heading, $align = false) {
-        _PageList_Column::_PageList_Column($field, $default_heading, $align);
+    function __construct ($field, $default_heading, $align = false) {
+        parent::__construct($field, $default_heading, $align);
         $this->dbi =& $GLOBALS['request']->getDbh();
     }
 
@@ -460,8 +460,8 @@ class _PageList_Column_creator extends _PageList_Column_author {
 class _PageList_Column_pagename extends _PageList_Column_base {
     var $_field = 'pagename';
 
-    function _PageList_Column_pagename () {
-        $this->_PageList_Column_base(_("Page Name"));
+    function __construct () {
+        parent::__construct(_("Page Name"));
         global $request;
         $this->dbi = &$request->getDbh();
     }
@@ -499,7 +499,7 @@ class PageList {
     var $_sortby = array();
     var $_maxlen = 0;
 
-    function PageList ($columns = false, $exclude = false, $options = false) {
+    function __construct ($columns = false, $exclude = false, $options = false) {
         if ($options)
             $this->_options = $options;
 
@@ -1457,7 +1457,7 @@ function flipAll(formObj) {
 class PageList_Selectable
 extends PageList {
 
-    function PageList_Selectable ($columns=false, $exclude=false, $options = false) {
+    function __construct ($columns=false, $exclude=false, $options = false) {
         if ($columns) {
             if (!is_array($columns))
                 $columns = explode(',', $columns);
@@ -1466,7 +1466,7 @@ extends PageList {
         } else {
             $columns = array('checkbox','pagename');
         }
-        $this->PageList($columns, $exclude, $options);
+        parent::__construct($columns, $exclude, $options);
     }
 
     function addPageList ($array) {

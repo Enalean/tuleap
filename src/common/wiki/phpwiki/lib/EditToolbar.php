@@ -14,7 +14,7 @@ rcs_id('$Id: EditToolbar.php,v 1.5 2005/10/29 14:16:17 rurban Exp $');
 
 class EditToolbar {
 
-    function EditToolbar() {
+    function __construct() {
         global $WikiTheme;
 
         $this->tokens = array();

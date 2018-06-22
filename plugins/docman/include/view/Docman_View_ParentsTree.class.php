@@ -10,7 +10,7 @@
 
 class Docman_View_ParentsTree /* implements Visitor*/ {
     var $docman;
-    function Docman_View_ParentsTree(&$docman) {
+    function __construct(&$docman) {
         $this->docman =& $docman;
     }
     

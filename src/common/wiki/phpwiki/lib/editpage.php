@@ -15,7 +15,7 @@ if (USE_HTMLAREA) require_once('lib/htmlarea.php');
 
 class PageEditor
 {
-    function PageEditor (&$request) {
+    function __construct (&$request) {
         $this->request = &$request;
 
         $this->user = $request->getUser();

@@ -26,6 +26,6 @@ class Docman_Sample extends Sample {
     function __construct() {
         $this->field = 'time';
         $this->table = 'plugin_docman_log';
-        parent::Sample();
+        parent::__construct();
     }
 }

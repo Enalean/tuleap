@@ -12,7 +12,7 @@ require_once('lib/WikiDB/backend.php');
 class WikiDB_backend_dumb_MostRecentIter
 extends WikiDB_backend_iterator
 {
-    function WikiDB_backend_dumb_MostRecentIter(&$backend, &$pages, $params) {
+    function __construct(&$backend, &$pages, $params) {
         $limit = false;
         extract($params);
         if ($exclude_major_revisions)

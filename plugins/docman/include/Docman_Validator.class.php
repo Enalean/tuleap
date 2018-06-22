@@ -35,7 +35,7 @@ class Docman_Validator {
     }
 }
 class Docman_ValidatePresenceOf extends Docman_Validator {
-    function Docman_ValidatePresenceOf($data, $field, $msg) {
+    function __construct($data, $field, $msg) {
         if (!$data || !isset($data[$field]) || trim($data[$field]) == '') {
             $this->addError($msg);
         }
@@ -43,7 +43,7 @@ class Docman_ValidatePresenceOf extends Docman_Validator {
 }
 
 class Docman_ValidateValueNotEmpty extends Docman_Validator {
-    function Docman_ValidateValueNotEmpty($value, $msg) {
+    function __construct($value, $msg) {
         if(!$value || $value === null || $value == '') {
             $this->addError($msg);
         }

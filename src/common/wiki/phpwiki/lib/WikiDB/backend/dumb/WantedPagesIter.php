@@ -12,7 +12,7 @@ rcs_id('$Id: WantedPagesIter.php,v 1.1 2004/11/20 17:35:58 rurban Exp $');
 class WikiDB_backend_dumb_WantedPagesIter
 extends WikiDB_backend_iterator
 {
-    function WikiDB_backend_dumb_WantedPagesIter(&$backend, &$all_pages, $exclude='', $sortby=false, $limit=false) {
+    function __construct(&$backend, &$all_pages, $exclude='', $sortby=false, $limit=false) {
         $this->_allpages   = $all_pages;
         $this->_allpages_array   = $all_pages->asArray();
         $this->_backend = &$backend;

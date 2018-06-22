@@ -27,7 +27,7 @@ require_once('Docman_MetadataFactory.class.php');
 class Docman_ReportColumnFactory {
     var $groupId;
 
-    function Docman_ReportColumnFactory($groupId) {
+    function __construct($groupId) {
         $this->groupId = $groupId;
     }
 

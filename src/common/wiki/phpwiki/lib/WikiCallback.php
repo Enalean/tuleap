@@ -86,7 +86,7 @@ class WikiFunctionCb
      * @param $functionName string Name of global function to call.
      * @access public
      */
-    function WikiFunctionCb ($functionName) {
+    function __construct ($functionName) {
         $this->functionName = $functionName;
     }
 
@@ -112,7 +112,7 @@ class WikiMethodCb
      * @param $methodName string Name of method to call.
      * @access public
      */
-    function WikiMethodCb(&$object, $methodName) {
+    function __construct(&$object, $methodName) {
         $this->object = &$object;
         $this->methodName = $methodName;
     }
@@ -171,7 +171,7 @@ class WikiAnonymousCb
      * @see create_function().
      * @access public
      */
-    function WikiAnonymousCb ($args, $code) {
+    function __construct ($args, $code) {
         $this->function = create_function($args, $code);
     }
 

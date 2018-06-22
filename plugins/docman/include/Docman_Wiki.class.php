@@ -26,8 +26,8 @@ require_once('Docman_Document.class.php');
  */
 class Docman_Wiki extends Docman_Document {
     
-    function Docman_Wiki($data = null) {
-        parent::Docman_Document($data);
+    function __construct($data = null) {
+        parent::__construct($data);
     }
     
     var $pagename;

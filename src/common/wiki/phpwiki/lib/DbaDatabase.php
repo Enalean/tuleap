@@ -6,7 +6,7 @@ define('DBA_DATABASE_DEFAULT_TIMEOUT', 5);
 
 class DbaDatabase
 {
-    function DbaDatabase($filename, $mode = false, $handler = 'gdbm') {
+    function __construct($filename, $mode = false, $handler = 'gdbm') {
         $this->_file = $filename;
         $this->_handler = $handler;
         $this->_timeout = DBA_DATABASE_DEFAULT_TIMEOUT;

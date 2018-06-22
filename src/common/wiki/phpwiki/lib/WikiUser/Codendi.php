@@ -23,7 +23,7 @@
 class _CodendiPassUser
 extends _PassUser
 {
-    function _CodendiPassUser($UserName='',$prefs=false) {
+    function __construct($UserName='',$prefs=false) {
         if ($prefs) $this->_prefs = $prefs;
 
         /* Actually, we cannot set preferences here because PhpWiki instanciate
@@ -38,7 +38,7 @@ extends _PassUser
 
         $this->_userid = $UserName;
         if (!isset($this->_prefs->_method))
-           _PassUser::_PassUser($this->_userid);
+           parent::__construct($this->_userid);
 
         switch($this->_userid) {
         case '':
@@ -72,8 +72,8 @@ extends _PassUser
 class CodendiUserPreferences
 extends UserPreferences {
 
-    function CodendiUserPreferences($saved_prefs = false) {
-        $this->UserPreferences($saved_prefs);
+    function __construct($saved_prefs = false) {
+        parent::__construct($saved_prefs);
         //        $this->set('emailVerified', 1);
         //$this->set('email', user_getemail(user_getid()));
     }

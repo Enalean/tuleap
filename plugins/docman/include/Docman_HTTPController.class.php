@@ -26,11 +26,11 @@ require_once('Docman_Controller.class.php');
 require_once('Docman_Actions.class.php');
 class Docman_HTTPController extends Docman_Controller {
 
-    function Docman_HTTPController(&$plugin, $pluginPath, $themePath, $request = null) {
+    function __construct(&$plugin, $pluginPath, $themePath, $request = null) {
         if (!$request) {
             $request = HTTPRequest::instance();
         }
-        $this->Docman_Controller($plugin, $pluginPath, $themePath, $request);
+        parent::__construct($plugin, $pluginPath, $themePath, $request);
     }
 
 

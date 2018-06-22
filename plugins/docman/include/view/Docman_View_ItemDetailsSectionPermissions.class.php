@@ -26,8 +26,8 @@ require_once('Docman_View_ItemDetailsSection.class.php');
 require_once('www/project/admin/permissions.php');
 
 class Docman_View_ItemDetailsSectionPermissions extends Docman_View_ItemDetailsSection {
-    function Docman_View_ItemDetailsSectionPermissions(&$item, $url) {
-        parent::Docman_View_ItemDetailsSection($item, $url, 'permissions', $GLOBALS['Language']->getText('plugin_docman','details_permissions'));
+    function __construct(&$item, $url) {
+        parent::__construct($item, $url, 'permissions', $GLOBALS['Language']->getText('plugin_docman','details_permissions'));
     }
     function getContent() {
         $folder_or_document = is_a($this->item, 'Docman_Folder') ? 'folder' : 'document';

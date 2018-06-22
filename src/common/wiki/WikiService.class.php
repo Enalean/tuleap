@@ -41,7 +41,7 @@ class WikiService extends Controler {
   /**
    * Constructor
    */
-  function WikiService($id) {
+  function __construct($id) {
       global $LANG, $is_wiki_page;
       
       //used so the search box will add the necessary element to the pop-up box

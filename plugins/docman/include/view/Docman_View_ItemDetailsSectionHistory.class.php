@@ -29,8 +29,8 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
 
     public $display_access_logs;
 
-    public function Docman_View_ItemDetailsSectionHistory(&$item, $url, $display_access_logs, &$logger) {
-        parent::Docman_View_ItemDetailsSection($item, $url, 'history', $GLOBALS['Language']->getText('plugin_docman','details_history'));
+    public function __construct(&$item, $url, $display_access_logs, &$logger) {
+        parent::__construct($item, $url, 'history', $GLOBALS['Language']->getText('plugin_docman','details_history'));
         $this->logger = $logger;
         $this->display_access_logs = $display_access_logs;
     }

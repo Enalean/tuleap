@@ -26,8 +26,8 @@ class Docman_Link extends Docman_Document {
 
     private $current_version;
     
-    function Docman_Link($data = null) {
-        parent::Docman_Document($data);
+    function __construct($data = null) {
+        parent::__construct($data);
     }
 
     var $url;

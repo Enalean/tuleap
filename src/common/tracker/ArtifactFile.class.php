@@ -44,7 +44,7 @@ class ArtifactFile {
 	 *  @param	array	(all fields from artifact_file_user_vw) OR id from database.
 	 *  @return	boolean	success.
 	 */
-	function ArtifactFile(&$Artifact, $data=false) {
+	function __construct(&$Artifact, $data=false) {
 	  global $Language;
 
 		//was Artifact legit?

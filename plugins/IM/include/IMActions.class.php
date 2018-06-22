@@ -13,7 +13,7 @@ class IMActions extends Actions{
 	 * @param object $view view of the action
 	 */
     function IMAction(&$controler, $view=null) {
-        $this->Actions($controler);
+        parent::__construct($controler);
 	}
 	
 	// {{{ Actions

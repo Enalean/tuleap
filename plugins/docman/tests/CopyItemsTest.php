@@ -84,7 +84,7 @@ class CopyItemsTest extends TuleapTestCase {
         $dstSettingsBo->shouldReceive('getMetadataUsage')->andReturns(true);
         $cloneItemsVisitor->shouldReceive('_getSettingsBo')->with($dstGroupId)->andReturns($dstSettingsBo);
 
-        $cloneItemsVisitor->Docman_CloneItemsVisitor($dstGroupId);
+        $cloneItemsVisitor->__construct($dstGroupId);
         $cloneItemsVisitor->visitLink($item_to_clone, array(
             'parentId'        => $dest_folder->getId(),
             'srcRootId'       => 66,

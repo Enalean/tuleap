@@ -48,7 +48,7 @@ function mayAccessPage ($access, $pagename) {
 class WikiRequest extends Request {
     // var $_dbi;
 
-    function WikiRequest () {
+    function __construct () {
         $this->_dbi = WikiDB::open($GLOBALS['DBParams']);
          // first mysql request costs [958ms]! [670ms] is mysql_connect()
         
@@ -85,7 +85,7 @@ class WikiRequest extends Request {
 //$x = error_reporting();
 
         $this->version = phpwiki_version();
-        $this->Request(); // [90ms]
+        parent::__construct(); // [90ms]
 
         // Normalize args...
         $this->setArg('pagename', $this->_deducePagename());

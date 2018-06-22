@@ -26,7 +26,7 @@ class ArtifactFieldHtml extends ArtifactField {
      *  Copy constructor
 	 *
 	 */
-	function ArtifactFieldHtml($art_field) {
+	function __construct($art_field) {
 		$this->field_id = $art_field->field_id;
 		$this->field_name = $art_field->field_name;
 		$this->data_type = $art_field->data_type;

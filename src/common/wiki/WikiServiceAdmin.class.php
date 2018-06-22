@@ -36,7 +36,7 @@ require_once(dirname(__FILE__).'/views/WikiServiceAdminViews.class.php');
 class WikiServiceAdmin extends Controler {
   /* private Wiki*/ var $wiki;
   
-  function WikiServiceAdmin($id) {
+  function __construct($id) {
     global $LANG, $is_wiki_page;
     
     //used so the search box will add the necessary element to the pop-up box

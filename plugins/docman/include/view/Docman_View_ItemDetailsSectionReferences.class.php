@@ -26,8 +26,8 @@ require_once('common/reference/ReferenceManager.class.php');
 class Docman_View_ItemDetailsSectionReferences extends Docman_View_ItemDetailsSection {
     
     
-    function Docman_View_ItemDetailsSectionReferences(&$item, $url) {
-        parent::Docman_View_ItemDetailsSection($item, $url, 'references', $GLOBALS['Language']->getText('plugin_docman','details_references'));
+    function __construct(&$item, $url) {
+        parent::__construct($item, $url, 'references', $GLOBALS['Language']->getText('plugin_docman','details_references'));
     }
     
     function getContent() {

@@ -43,7 +43,7 @@ class FRSReleaseFactory {
     var $STATUS_HIDDEN  = FRSRelease::STATUS_HIDDEN;
     private static $instance;
 
-    function FRSReleaseFactory() {
+    function __construct() {
     }
 
     public static function instance(){

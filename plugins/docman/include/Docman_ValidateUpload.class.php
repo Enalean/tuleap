@@ -22,7 +22,7 @@
 require_once('Docman_Validator.class.php');
 
 class Docman_ValidateUpload extends Docman_Validator {
-    function Docman_ValidateUpload(&$request) {
+    function __construct(&$request) {
         if (!$request->exist('upload_content')) {
             $ok = false;
             if (isset($_FILES['file'])) {

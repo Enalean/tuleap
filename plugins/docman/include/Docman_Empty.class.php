@@ -24,8 +24,8 @@ require_once('Docman_Document.class.php');
 
 class Docman_Empty extends Docman_Document {
     
-    function Docman_Empty($data = null) {
-        parent::Docman_Document($data);
+    function __construct($data = null) {
+        parent::__construct($data);
     }
 
     function accept(&$visitor, $params = array()) {

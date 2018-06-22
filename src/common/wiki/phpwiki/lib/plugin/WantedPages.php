@@ -125,9 +125,9 @@ extends WikiPlugin
 
 // which links to the missing page
 class _PageList_Column_WantedPages_wanted extends _PageList_Column {
-    function _PageList_Column_WantedPages_wanted (&$params) {
+    function __construct (&$params) {
         $this->parentobj =& $params[3];
-        $this->_PageList_Column($params[0],$params[1],$params[2]);
+        parent::__construct($params[0],$params[1],$params[2]);
     }
     function _getValue(&$page, $revision_handle) {
     	$html = false;

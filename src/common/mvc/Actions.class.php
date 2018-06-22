@@ -33,7 +33,7 @@
 class Actions {
     
     var $_controler;
-    function Actions(&$controler) {
+    function __construct(&$controler) {
         $this->_controler =& $controler;
     }
     

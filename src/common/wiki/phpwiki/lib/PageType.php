@@ -33,14 +33,14 @@ class TransformedText extends CacheableMarkup {
      * @param string $type_override  For markup of page using a different
      *        pagetype than that specified in its version meta-data.
      */
-    function TransformedText($page, $text, $meta, $type_override=false) {
+    function __construct($page, $text, $meta, $type_override=false) {
     	$pagetype = false;
         if ($type_override)
             $pagetype = $type_override;
         elseif (isset($meta['pagetype']))
             $pagetype = $meta['pagetype'];
 	$this->_type = PageType::GetPageType($pagetype);
-	$this->CacheableMarkup($this->_type->transform($page, $text, $meta),
+	parent::__construct($this->_type->transform($page, $text, $meta),
                                $page->getName());
     }
 
@@ -128,7 +128,7 @@ function getInterwikiMap ($pagetext = false) {
 
 class PageType_interwikimap extends PageType
 {
-    function PageType_interwikimap($pagetext = false) {
+    function __construct($pagetext = false) {
         if (!$pagetext) {
             $dbi = $GLOBALS['request']->getDbh();
             $page = $dbi->getPage(_("InterWikiMap"));
@@ -318,7 +318,7 @@ class PageFormatter {
      * @param WikiDB_Page $page
      * @param hash $meta Version meta-data.
      */
-    function PageFormatter(&$page, $meta) {
+    function __construct(&$page, $meta) {
         $this->_page = $page;
 	$this->_meta = $meta;
 	if (!empty($meta['markup']))
@@ -396,7 +396,7 @@ class PageFormatter_interwikimap extends PageFormatter
 }
 
 class FakePageRevision {
-    function FakePageRevision($meta) {
+    function __construct($meta) {
         $this->_meta = $meta;
     }
 

@@ -66,7 +66,7 @@ class ArtifactFieldSet {
     /**
      *	ArtifactFieldSet - constructor.
      */
-    function ArtifactFieldSet() {
+    function __construct() {
     }
 
     /**

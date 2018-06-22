@@ -42,14 +42,14 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
      */
     private $ugroups_to_be_notified_builder;
 
-    function Docman_View_ItemDetailsSectionNotifications(
+    function __construct(
         &$item,
         $url,
         &$notificationsManager,
         $token,
         CollectionOfUgroupMonitoredItemsBuilder $ugroups_to_be_notified_builder
     ) {
-        parent::Docman_View_ItemDetailsSection(
+        parent::__construct(
             $item,
             $url,
             'notifications',

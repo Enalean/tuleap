@@ -45,7 +45,7 @@ class HttpClient {
     var $redirect_count = 0;
     var $cookie_host = '';
 
-    function HttpClient($host, $port=80) {
+    function __construct($host, $port=80) {
         $this->host = $host;
         $this->port = $port;
     }

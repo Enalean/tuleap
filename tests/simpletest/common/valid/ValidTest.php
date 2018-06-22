@@ -200,7 +200,7 @@ class ValidTest extends TuleapTestCase {
     function testFeedback() {
         $v =& new ValidTestVersion($this);
         // Need to call the constructore manually
-        $v->Valid();
+        $v->__construct();
         $v->expectOnce('addFeedback');
 
         $r =& new MockRule($this);
@@ -214,7 +214,7 @@ class ValidTest extends TuleapTestCase {
     function testFeedbackErrorWhenRequired() {
         $v =& new ValidTestVersion($this);
         // Need to call the constructore manually
-        $v->Valid();
+        $v->__construct();
         $v->required();
         $v->expectOnce('addFeedback', array('error', 'error message'));
 
@@ -229,7 +229,7 @@ class ValidTest extends TuleapTestCase {
     function testFeedbackWarning() {
         $v =& new ValidTestVersion($this);
         // Need to call the constructore manually
-        $v->Valid();
+        $v->__construct();
         $v->expectOnce('addFeedback', array('warning', 'error message'));
 
         $r =& new MockRule($this);
@@ -243,7 +243,7 @@ class ValidTest extends TuleapTestCase {
     function testFeedbackGlobal() {
         $v =& new ValidTestVersion($this);
         // Need to call the constructore manually
-        $v->Valid();
+        $v->__construct();
         $v->expectOnce('addFeedback', array('warning', 'custom message'));
 
         $v->setErrorMessage('custom message');
@@ -265,7 +265,7 @@ class ValidTest extends TuleapTestCase {
     function testFeedbackGlobalWithoutErrors() {
         $v =& new ValidTestVersion($this);
         // Need to call the constructore manually
-        $v->Valid();
+        $v->__construct();
         $v->expectNever('addFeedback');
 
         $v->setErrorMessage('custom message');
