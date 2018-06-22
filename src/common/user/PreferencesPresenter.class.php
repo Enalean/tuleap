@@ -75,6 +75,7 @@ class User_PreferencesPresenter {
     public $is_condensed;
     public $display_density_name;
     public $display_density_condensed;
+    public $has_only_flamingparrot;
 
     public function __construct(
         PFUser $user,
@@ -124,6 +125,14 @@ class User_PreferencesPresenter {
         $this->display_density_condensed = PFUser::DISPLAY_DENSITY_CONDENSED;
 
         $this->is_condensed = $user->getPreference(PFUser::PREFERENCE_DISPLAY_DENSITY) === PFUser::DISPLAY_DENSITY_CONDENSED;
+
+        $this->has_only_flamingparrot = true;
+        foreach ($all_themes as $theme) {
+            if ($theme['theme_name'] !== 'FlamingParrot') {
+                $this->has_only_flamingparrot = false;
+                break;
+            }
+        }
     }
 
     public function generated_svn_token() {
