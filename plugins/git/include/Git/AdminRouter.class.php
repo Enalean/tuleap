@@ -118,7 +118,6 @@ class Git_AdminRouter implements \Tuleap\Request\DispatchableWithRequest
 
     public function process(HTTPRequest $request, \Tuleap\Layout\BaseLayout $layout, array $variables) {
         \Tuleap\Project\ServiceInstrumentation::increment('git');
-        \Tuleap\Instrument\Collect::increment(\GitPlugin::INSTRUMENTATION_KEY);
 
         if (! $request->getCurrentUser()->isSuperUser()) {
             throw new \Tuleap\Request\ForbiddenException();

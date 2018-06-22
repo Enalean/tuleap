@@ -22,13 +22,12 @@
 namespace Tuleap\CLI\Command;
 
 use ConfigDao;
-use ForgeConfig;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Tuleap\Instrument\Collect;
+use Tuleap\Instrument\Prometheus\Prometheus;
 
 class ConfigSetCommand extends Command
 {
@@ -43,7 +42,7 @@ class ConfigSetCommand extends Command
         \ForgeAccess::ANONYMOUS_CAN_SEE_CONTACT => true,
         \ForgeAccess::ANONYMOUS_CAN_SEE_SITE_HOMEPAGE => true,
         \ForgeAccess::PROJECT_ADMIN_CAN_CHOOSE_VISIBILITY => true,
-        Collect::CONFIG_PROMETHEUS_PLATFORM => true,
+        Prometheus::CONFIG_PROMETHEUS_PLATFORM => true,
     ];
     /**
      * @var ConfigDao

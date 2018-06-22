@@ -127,8 +127,6 @@ class UserDashboardController
             );
         }
 
-        \Tuleap\Instrument\Collect::increment('service.my.accessed');
-
         $user_dashboards_presenter = $this->getUserDashboardsPresenter($current_user, $dashboard_id, $user_dashboards);
 
         $title   = $this->getPageTitle($user_dashboards_presenter, $current_user);

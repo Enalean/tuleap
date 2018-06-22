@@ -86,7 +86,6 @@ class Home implements Dispatchable
 
             if ($project->usesService('summary')) {
                 \Tuleap\Project\ServiceInstrumentation::increment('dashboard');
-                Collect::increment('service.project.summary.accessed');
                 $widget_factory = new WidgetFactory(
                     UserManager::instance(),
                     new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),

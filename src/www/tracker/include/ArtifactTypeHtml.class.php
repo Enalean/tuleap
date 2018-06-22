@@ -51,7 +51,6 @@ class ArtifactTypeHtml extends ArtifactType {
         $hp = Codendi_HTMLPurifier::instance();
 
         \Tuleap\Project\ServiceInstrumentation::increment('tv3');
-        Tuleap\Instrument\Collect::increment('service.project.trackerv3.accessed');
 
         $GLOBALS['HTML']->includeJavascriptFile("/scripts/fieldDependencies.js");
         $GLOBALS['HTML']->includeJavascriptFile("/scripts/fieldEditor.js");

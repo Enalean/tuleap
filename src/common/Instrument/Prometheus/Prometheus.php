@@ -26,9 +26,34 @@ use Prometheus\CollectorRegistry;
 
 class Prometheus
 {
+    const CONFIG_PROMETHEUS_PLATFORM = 'prometheus_platform';
+
     private static $registry;
 
+    /**
+     * @param string $name
+     * @param string $help
+     * @param array $labels
+     */
     public static function increment($name, $help, array $labels = [])
+    {
+        list($label_names, $label_values) = self::getLabelsNamesAndValues($labels);
+        self::get()->getOrRegisterCounter('tuleap', $name, $help, $label_names)->inc($label_values);
+    }
+
+    /**
+     * @param string $name
+     * @param string $help
+     * @param float $value
+     * @param array $labels
+     */
+    public static function gaugeSet($name, $help, $value, array $labels = [])
+    {
+        list($label_names, $label_values) = self::getLabelsNamesAndValues($labels);
+        self::get()->getOrRegisterGauge('tuleap', $name, $help, $label_names)->set($value, $label_values);
+    }
+
+    private static function getLabelsNamesAndValues(array $labels)
     {
         $label_names  = [];
         $label_values = [];
@@ -40,13 +65,16 @@ class Prometheus
             $label_names[]  = $label_name;
             $label_values[] = $label_value;
         }
-        self::get()->getOrRegisterCounter('tuleap', $name, $help, $label_names)->inc($label_values);
+
+        return [$label_names, $label_values];
     }
 
     public static function get()
     {
         if (self::$registry === null) {
-            if (class_exists('Redis') && ForgeConfig::exists('redis_server')) {
+            if (class_exists('Redis') &&
+                ForgeConfig::exists('redis_server') &&
+                ForgeConfig::exists(self::CONFIG_PROMETHEUS_PLATFORM)) {
                 \Prometheus\Storage\Redis::setDefaultOptions(
                     [
                         'host'     => ForgeConfig::get('redis_server'),

@@ -92,8 +92,6 @@ if ($user->isLoggedIn()) {
 // Display login page
 //
 
-Tuleap\Instrument\Collect::increment('service.accounts.authentication.password.accessed');
-
 // Display mode
 $pvMode = false;
 if($_cVar['pv'] == 2) {

@@ -40,7 +40,7 @@ function uniformat_date($format, $date) {
 }
 
 function commits_header($params) {
-    Tuleap\Instrument\Collect::increment('service.project.cvs.accessed');
+    \Tuleap\Project\ServiceInstrumentation::increment('cvs');
 
     $params['toptab']='cvs';
     $group_id        = $params['group'];
