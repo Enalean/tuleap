@@ -112,10 +112,12 @@ class UgroupDuplicator
 
     private function duplicateUgroupUsersAndBinding(ProjectUGroup $ugroup, $new_ugroup_id, $new_project_id)
     {
+
+        $this->dao->createBinding($new_project_id, $ugroup->getId(), $new_ugroup_id);
+
         if ($ugroup->isBound()) {
             $this->binding->addBinding($new_ugroup_id, $ugroup->getSourceGroup()->getId());
         } else {
-            $this->dao->createBinding($new_project_id, $ugroup->getId(), $new_ugroup_id);
             $this->ugroup_user_dao->cloneUgroup($ugroup->getId(), $new_ugroup_id);
         }
     }
