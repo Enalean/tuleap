@@ -38,7 +38,8 @@ class OpenGraphPresenter
         if ($description) {
             $this->properties[] = new OpenGraphPropertyPresenter('description', $description);
         }
-        $color = ThemeVariantColor::buildFromVariant(ForgeConfig::get('sys_default_theme_variant'));
+
+        $color = ThemeVariantColor::buildFromDefaultVariant();
         $this->properties[] = new OpenGraphPropertyPresenter(
             'image',
             \HTTPRequest::instance()->getServerUrl() . '/themes/common/images/opengraph/'. $color->getName() .'.png'

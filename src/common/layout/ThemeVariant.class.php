@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -28,12 +28,15 @@ class ThemeVariant {
     /** @var string[] */
     private $allowed;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->default = ForgeConfig::get('sys_default_theme_variant');
-        $this->setAllowedVartiants();
+        $this->setAllowedVariants();
+        $this->adjustDefaultVariantAccordingToAllowedVariants();
     }
 
-    private function setAllowedVartiants() {
+    private function setAllowedVariants()
+    {
         $this->allowed = ForgeConfig::get('sys_available_theme_variants');
         $this->allowed = explode(',', $this->allowed);
         $this->allowed = array_map('trim', $this->allowed);
@@ -47,14 +50,17 @@ class ThemeVariant {
         $this->unsetInvalidThemes();
     }
 
+    private function adjustDefaultVariantAccordingToAllowedVariants()
+    {
+        if (! $this->isAllowed($this->default)) {
+            $this->default = 'FlamingParrot_Orange';
+        }
+    }
+
     public function getVariantForUser(PFUser $user) {
         $variant = $user->getPreference(self::PREFERENCE_NAME);
-        if (! $variant) {
-            return $this->default;
-        }
-
-        if (! $this->isAllowed($variant)) {
-            return $this->default;
+        if (! $variant || ! $this->isAllowed($variant)) {
+            $variant = $this->default;
         }
 
         return $variant;

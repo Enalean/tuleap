@@ -32,6 +32,13 @@ class ThemeVariantColor
         $this->hexa_code = $hexa_code;
     }
 
+    public static function buildFromDefaultVariant()
+    {
+        $theme_variant = new ThemeVariant();
+
+        return self::buildFromVariant($theme_variant);
+    }
+
     public static function buildFromVariant($variant)
     {
         switch ($variant) {
