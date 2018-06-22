@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,7 @@
  */
 
 require_once 'pre.php';
-require_once dirname(__FILE__).'/../include/autoload.php';
+require_once __DIR__ . '/../include/gitPlugin.class.php';
 
 $gitolite_var_path       = $GLOBALS['sys_data_dir'] . '/gitolite';
 $remote_admin_repository = 'gitolite@gl-adm:gitolite-admin';

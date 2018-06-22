@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -146,7 +146,7 @@ class Git_Driver_Gerrit_ProjectCreator {
 
         $name = $driver->getGerritProjectName($repository);
         if ($driver->doesTheProjectExist($gerrit_server, $name)) {
-             throw new Git_Driver_Gerrit_ProjectCreator_ProjectAlreadyexistsException($name, $gerrit_server->getBaseUrl());
+             throw new Git_Driver_Gerrit_ProjectCreator_ProjectAlreadyExistsException($name, $gerrit_server->getBaseUrl());
         }
 
         $migrated_ugroups = $this->membership_manager->createArrayOfGroupsForServer($gerrit_server, $ugroups);
