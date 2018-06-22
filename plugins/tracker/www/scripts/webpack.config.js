@@ -97,8 +97,7 @@ const webpack_config_for_burndown_chart = {
     },
     plugins: [
         manifest_plugin,
-        webpack_configurator.getMomentLocalePlugin(),
-        webpack_configurator.getUglifyJSPlugin()
+        webpack_configurator.getMomentLocalePlugin()
     ]
 };
 
