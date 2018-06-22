@@ -21,7 +21,7 @@
 namespace Tuleap\Enalean\LicenseManager;
 
 use Tuleap\Enalean\LicenseManager\Webhook\UserCounterPayload;
-use Tuleap\Instrument\Collect;
+use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Webhook\Emitter;
 
 class StatusActivityEmitter
@@ -45,9 +45,13 @@ class StatusActivityEmitter
     private function emitToInstrumentationTools(UserCounterPayload $payload)
     {
         foreach ($payload->getPayload()['users'] as $status => $number) {
-            Collect::gauge("license.users.$status", $number);
+            Prometheus::gaugeSet('licence_users', 'Number of users per status', $number, ['status' => $status]);
         }
-        Collect::gauge('license.max_users', $payload->getPayload()['max_users']);
+        Prometheus::gaugeSet(
+            'licence_max_users',
+            'Maximum number of users allowed on the instance',
+            $payload->getPayload()['max_users']
+        );
     }
 
     private function emitWebhook(UserCounterPayload $payload, $webhook_url)
