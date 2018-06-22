@@ -456,11 +456,12 @@ class FPDF
             //Search existing encodings
             $d=0;
             $nb=count($this->diffs);
-            for ($i=1;$i<=$nb;$i++)
+            for ($i=1;$i<=$nb;$i++) {
                 if ($this->diffs[$i]==$diff) {
                     $d=$i;
                     break;
                 }
+            }
             if ($d==0) {
                 $d=$nb+1;
                 $this->diffs[$d]=$diff;
