@@ -494,15 +494,6 @@ $sys_rest_api_over_http = 0;
 // otherwise it might be an injection point for an attacker
 $sys_trusted_proxies = '';
 
-// Configure connection to statsd server
-//
-// Idealy the server would be an IP address (will save a few ms for the DNS resolution)
-// Server ID is optional. It's useful if you want to aggregate several servers on the same
-// statsd server.
-//$statsd_server    = 'graphite.graphite-statsd.docker';
-//$statsd_port      = 8125;
-//$statsd_server_id = 'local';
-
 // When 0 mail sent to everybody can lead to information leak, non projects members can receive mails of private projects
 $sys_mail_secure_mode = 0;
 

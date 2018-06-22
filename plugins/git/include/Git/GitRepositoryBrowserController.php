@@ -80,7 +80,6 @@ class GitRepositoryBrowserController implements DispatchableWithRequest
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         \Tuleap\Project\ServiceInstrumentation::increment('git');
-        \Tuleap\Instrument\Collect::increment(\GitPlugin::INSTRUMENTATION_KEY);
 
         $repository = $this->repository_factory->getByProjectNameAndPath($variables['project_name'], $variables['path'].'.git');
         if (! $repository) {

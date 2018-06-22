@@ -562,7 +562,6 @@ class Docman_Controller extends Controler {
 
     function _dispatch($view, $item, $root, $get_show_view) {
         \Tuleap\Project\ServiceInstrumentation::increment('docman');
-        Tuleap\Instrument\Collect::increment('service.project.plugin_docman.accessed');
         $item_factory = $this->getItemFactory();
         $user         = $this->getUser();
         $dpm          = $this->_getPermissionsManager();

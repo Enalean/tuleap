@@ -24,14 +24,37 @@ namespace Tuleap\Request;
 class RequestInstrumentation
 {
     const METRIC_NAME = 'http_responses_total';
+    const HELP        = 'Total number of HTTP request';
 
     public static function increment($code)
     {
-        \Tuleap\Instrument\Prometheus\Prometheus::increment(self::METRIC_NAME, 'Total number of HTTP request', ['code' => $code, 'router' => 'fastroute']);
+        self::incrementCodeRouter($code, 'fastroute');
     }
 
     public static function incrementLegacy()
     {
-        \Tuleap\Instrument\Prometheus\Prometheus::increment(self::METRIC_NAME, 'Total number of HTTP request', ['code' => 200, 'router' => 'legacy']);
+        self::incrementCodeRouter(200, 'legacy');
+    }
+
+    public static function incrementRest($code)
+    {
+        if ($code === null) {
+            $code = -1;
+        }
+        self::incrementCodeRouter($code, 'rest');
+    }
+
+    /**
+     * Soap will also increment legacy router due to pre.php
+     * It's not worth fixing it.
+     */
+    public static function incrementSoap()
+    {
+        self::incrementCodeRouter(200, 'soap');
+    }
+
+    private static function incrementCodeRouter($code, $router)
+    {
+        \Tuleap\Instrument\Prometheus\Prometheus::increment(self::METRIC_NAME, self::HELP, ['code' => $code, 'router' => $router]);
     }
 }

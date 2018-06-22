@@ -41,14 +41,13 @@ try {
     $gate_keeper = new GateKeeper();
     $gate_keeper->assertAccess(UserManager::instance()->getCurrentUser(), $http_request);
 } catch (Exception $exception) {
+    \Tuleap\Request\RequestInstrumentation::incrementRest(403);
     header("HTTP/1.0 403 Forbidden");
     $GLOBALS['Response']->sendJSON(array(
         'error' => $exception->getMessage()
     ));
     die();
 }
-
-Tuleap\Instrument\Collect::increment('service.api.rest.accessed');
 
 preg_match('/^\/api\/v(\d+)\//', $_SERVER['REQUEST_URI'], $matches);
 $version = floor(file_get_contents(__DIR__ .'/VERSION'));
@@ -101,6 +100,8 @@ $restler->addAuthenticationClass('\\Tuleap\\REST\\TokenAuthentication');
 $restler->addAuthenticationClass('\\Tuleap\\REST\\BasicAuthentication');
 
 $restler->onComplete(function() use ($restler) {
+    \Tuleap\Request\RequestInstrumentation::incrementRest($restler->responseCode);
+
     if ($restler->exception === null || $restler->responseCode !== 500) {
         return;
     }

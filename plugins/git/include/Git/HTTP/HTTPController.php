@@ -116,7 +116,6 @@ class HTTPController implements DispatchableWithRequestNoAuthz
     public function userCanAccess(\URLVerification $url_verification, HTTPRequest $request, array $variables)
     {
         \Tuleap\Project\ServiceInstrumentation::increment('git');
-        \Tuleap\Instrument\Collect::increment(\GitPlugin::INSTRUMENTATION_KEY);
 
         $this->repository = $this->repository_factory->getByProjectNameAndPath(
             $variables['project_name'],

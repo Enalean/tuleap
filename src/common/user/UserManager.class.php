@@ -486,7 +486,6 @@ class UserManager {
      */
     function login($name, $pwd, $allowpending = false) {
         try {
-            Tuleap\Instrument\Collect::increment('service.accounts.authentication.password.attempted');
             $password_expiration_checker = new User_PasswordExpirationChecker();
             $password_handler            = PasswordHandlerFactory::getPasswordHandler();
             $login_manager = new User_LoginManager(
@@ -512,7 +511,6 @@ class UserManager {
             $this->getDao()->storeLoginSuccess($user->getId(), $_SERVER['REQUEST_TIME']);
 
             \Tuleap\User\LoginInstrumentation::increment('success');
-            Tuleap\Instrument\Collect::increment('service.accounts.authentication.password.succeeded');
             return $this->setCurrentUser($user);
 
         } catch (User_InvalidPasswordWithUserException $exception) {
@@ -537,7 +535,6 @@ class UserManager {
         }
 
         \Tuleap\User\LoginInstrumentation::increment('failure');
-        Tuleap\Instrument\Collect::increment('service.accounts.authentication.password.failed');
         return $this->setCurrentUser($this->createAnonymousUser());
     }
 

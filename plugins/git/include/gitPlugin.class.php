@@ -149,8 +149,6 @@ class GitPlugin extends Plugin
 
     private static $FREQUENCIES_GIT_READ = 'git';
 
-    const INSTRUMENTATION_KEY = 'service.project.plugin_git.accessed';
-
     public function __construct($id)
     {
         parent::__construct($id);

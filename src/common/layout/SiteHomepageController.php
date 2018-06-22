@@ -60,8 +60,6 @@ class SiteHomepageController implements DispatchableWithRequest
             'title' => $GLOBALS['Language']->getText('homepage', 'title'),
         );
 
-        \Tuleap\Instrument\Collect::increment('service.homepage.accessed');
-
         $homepage_dao = new \Admin_Homepage_Dao();
         if ($homepage_dao->isStandardHomepageUsed()) {
             $header_params['body_class'] = array('homepage');
