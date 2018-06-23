@@ -147,7 +147,7 @@ Mock::generate('Tracker_Artifact');
 Mock::generate('Tracker_SharedFormElementFactory');
 
 
-class Tracker_FormElement_InterfaceTestVersion extends MockTracker_FormElement_Interface {
+class Tracker_FormElement_InterfaceTestVersion implements Tracker_FormElement_Interface {
     public function exportToXml(
         SimpleXMLElement $root,
         &$xmlMapping,
@@ -155,7 +155,26 @@ class Tracker_FormElement_InterfaceTestVersion extends MockTracker_FormElement_I
         UserXMLExporter $user_xml_exporter
     ) {
         $xmlMapping['F'. $this->getId()] = $this->getId();
-        return parent::exportToXML($root, $xmlMapping, $project_export_context);
+    }
+
+    public function getId()
+    {
+    }
+
+    public function getTracker()
+    {
+    }
+
+    public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user)
+    {
+    }
+
+    public function getPermissionsByUgroupId()
+    {
+    }
+
+    public function isUsed()
+    {
     }
 }
 

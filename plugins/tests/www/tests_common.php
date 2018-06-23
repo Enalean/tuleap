@@ -18,15 +18,7 @@ $include_path = $basedir.'/src/www/include';
 
 ini_set('include_path', ini_get('include_path').':'.$src_path.':'.$include_path);
 
-$local_inc = getenv('TULEAP_LOCAL_INC') ? getenv('TULEAP_LOCAL_INC') : getenv('CODENDI_LOCAL_INC');
-if ( ! $local_inc ) {
-    if (is_file('/etc/tuleap/conf/local.inc')) {
-        $local_inc = '/etc/tuleap/conf/local.inc';
-    } else {
-        $local_inc = '/etc/codendi/conf/local.inc';
-    }
-}
-require($local_inc);
+require_once __DIR__.'/../../../src/etc/local.inc.dist';
 
 // Fix path if needed
 if (isset($GLOBALS['jpgraph_dir'])) {
@@ -35,6 +27,7 @@ if (isset($GLOBALS['jpgraph_dir'])) {
 
 require_once __DIR__.'/../../../src/common/autoload_libs.php';
 require_once __DIR__.'/../../../src/common/autoload.php';
+require_once __DIR__.'/../../../src/common/constants.php';
 
 require_once dirname(__FILE__).'/../include/simpletest/unit_tester.php';
 require_once dirname(__FILE__).'/../include/simpletest/mock_objects.php';

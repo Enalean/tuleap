@@ -18,25 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'bootstrap.php';
+
 class Tracker_MasschangeUpdaterTest extends TuleapTestCase {
 
-    public function setUp() {
-        parent::setUp();
-
-        $GLOBALS['Response'] = mock('Layout');
-    }
-
-    public function tearDown() {
-        $GLOBALS['Response'] = null;
-
-        parent::tearDown();
-    }
-
     public function itUpdatesArtifactsWithoutBeenUnsubscribedFromNotifications() {
-        $tracker        = mock('Tracker');
-        $tracker_report = mock('Tracker_Report');
-        $user           = mock('PFUser');
-        $request        = mock('Codendi_Request');
+        $tracker        = \Mockery::spy(\Tracker::class);
+        $tracker_report = \Mockery::spy(\Tracker_Report::class);
+        $user           = \Mockery::spy(\PFUser::class);
+        $request        = \Mockery::spy(\Codendi_Request::class);
 
         stub($tracker)->userIsAdmin($user)->returns(true);
 
@@ -55,10 +45,10 @@ class Tracker_MasschangeUpdaterTest extends TuleapTestCase {
     }
 
     public function itUpdatesArtifactsAndUserHasBeenUnsubscribedFromNotifications() {
-        $tracker        = mock('Tracker');
-        $tracker_report = mock('Tracker_Report');
-        $user           = mock('PFUser');
-        $request        = mock('Codendi_Request');
+        $tracker        = \Mockery::spy(\Tracker::class);
+        $tracker_report = \Mockery::spy(\Tracker_Report::class);
+        $user           = \Mockery::spy(\PFUser::class);
+        $request        = \Mockery::spy(\Codendi_Request::class);
 
         stub($tracker)->userIsAdmin($user)->returns(true);
 
@@ -69,16 +59,12 @@ class Tracker_MasschangeUpdaterTest extends TuleapTestCase {
         ));
         stub($request)->get('artifact_masschange_followup_comment')->returns('');
 
-        $masschange_updater = partial_mock(
-            'Tracker_MasschangeUpdater',
-            array('getArtifactNotificationSubscriber'),
-            array($tracker, $tracker_report)
-        );
+        $masschange_updater = \Mockery::mock(\Tracker_MasschangeUpdater::class, [$tracker, $tracker_report])->makePartial()->shouldAllowMockingProtectedMethods();
 
-        $notification_subscriber = mock('Tracker_ArtifactNotificationSubscriber');
+        $notification_subscriber = \Mockery::spy(\Tracker_ArtifactNotificationSubscriber::class);
         stub($masschange_updater)->getArtifactNotificationSubscriber()->returns($notification_subscriber);
 
-        $notification_subscriber->expectCallCount('unsubscribeUserWithoutRedirect', 2);
+        $notification_subscriber->shouldReceive('unsubscribeUserWithoutRedirect')->times(2);
         expect($tracker)->updateArtifactsMasschange()->once();
 
         $masschange_updater->updateArtifacts($user, $request);

@@ -24,7 +24,8 @@ class Tracker_Artifact_ProcessAssociateArtifact_Test extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->user = mock('PFUser');
+        $this->setUpGlobalsMockery();
+        $this->user = \Mockery::spy(PFUser::class);
         $this->request = new Codendi_Request(array(
             'func'               => 'associate-artifact-to',
             'linked-artifact-id' => 987));
@@ -35,19 +36,12 @@ class Tracker_Artifact_ProcessAssociateArtifact_Test extends TuleapTestCase {
             'func'               => 'unassociate-artifact-to',
             'linked-artifact-id' => 987));
 
-        $artifact = partial_mock('Tracker_Artifact',
-                array(
-                    'getFormElementFactory',
-                    'getTracker',
-                    'createNewChangeset',
-                    'getUserManager'
-                    )
-                );
+        $artifact = \Mockery::mock(Tracker_Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
-        $user_manager = stub('UserManager')->getCurrentUser()->returns(aUser()->withId(120)->build());
+        $user_manager = mockery_stub(UserManager::class)->getCurrentUser()->returns(aUser()->withId(120)->build());
         stub($artifact)->getUserManager()->returns($user_manager);
 
-        $factory  = mock('Tracker_FormElementFactory');
+        $factory  = \Mockery::spy(Tracker_FormElementFactory::class);
         stub($artifact)->getFormElementFactory()->returns($factory);
 
         $tracker = aTracker()->withProjectId(200)->build();
@@ -70,20 +64,14 @@ class Tracker_Artifact_ProcessAssociateArtifact_Test extends TuleapTestCase {
     }
 
     public function itCreatesANewChangesetWithANewAssociation() {
-        $artifact = partial_mock('Tracker_Artifact',
-            array(
-                'getFormElementFactory',
-                'getTracker',
-                'createNewChangeset',
-                'getUserManager',
-                'getLastChangeset'
-            )
-        );
+        $artifact = \Mockery::mock(Tracker_Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
-        $factory  = mock('Tracker_FormElementFactory');
+        $artifact->shouldReceive('getLastChangeset')->andReturns(null);
+
+        $factory  = \Mockery::spy(Tracker_FormElementFactory::class);
         stub($artifact)->getFormElementFactory()->returns($factory);
 
-        $user_manager = stub('UserManager')->getCurrentUser()->returns(aUser()->withId(120)->build());
+        $user_manager = mockery_stub(UserManager::class)->getCurrentUser()->returns(aUser()->withId(120)->build());
         stub($artifact)->getUserManager()->returns($user_manager);
         stub($artifact)->getTracker()->returns(mock('Tracker'));
 
@@ -93,37 +81,29 @@ class Tracker_Artifact_ProcessAssociateArtifact_Test extends TuleapTestCase {
         $expected_field_data = array($field->getId() => array('new_values' => 987));
         $no_comment = '';
 
-        $artifact->expectOnce('createNewChangeset', array($expected_field_data, $no_comment, $this->user));
+        $artifact->shouldReceive('createNewChangeset')->with($expected_field_data, $no_comment, $this->user)->once();
 
         $artifact->process(mock('TrackerManager'), $this->request, $this->user);
     }
 
     public function itDoesNotCreateANewChangesetWithANewAssociationIfTheLinkAlreadyExists()
     {
-        $artifact = partial_mock('Tracker_Artifact',
-            array(
-                'getFormElementFactory',
-                'getTracker',
-                'createNewChangeset',
-                'getUserManager',
-                'getLastChangeset'
-            )
-        );
+        $artifact = \Mockery::mock(Tracker_Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
-        $factory  = mock('Tracker_FormElementFactory');
+        $factory  = \Mockery::spy(Tracker_FormElementFactory::class);
         stub($artifact)->getFormElementFactory()->returns($factory);
 
-        $user_manager = stub('UserManager')->getCurrentUser()->returns(aUser()->withId(120)->build());
+        $user_manager = mockery_stub(UserManager::class)->getCurrentUser()->returns(aUser()->withId(120)->build());
         stub($artifact)->getUserManager()->returns($user_manager);
         stub($artifact)->getTracker()->returns(mock('Tracker'));
 
         $field = anArtifactLinkField()->withId(1002)->build();
         stub($factory)->getUsedArtifactLinkFields()->returns(array($field));
 
-        $changeset = mock('Tracker_Artifact_Changeset');
+        $changeset = \Mockery::spy(Tracker_Artifact_Changeset::class);
         stub($artifact)->getLastChangeset()->returns($changeset);
 
-        $changeset_value = mock('Tracker_Artifact_ChangesetValue_ArtifactLink');
+        $changeset_value = \Mockery::spy(Tracker_Artifact_ChangesetValue_ArtifactLink::class);
         stub($changeset)->getValue($field)->returns($changeset_value);
         stub($changeset_value)->getArtifactIds()->returns(array(987));
 
@@ -137,21 +117,21 @@ class Tracker_Artifact_ProcessAssociateArtifact_Test extends TuleapTestCase {
 
         $artifact = $this->GivenAnArtifact($tracker);
 
-        $factory  = stub('Tracker_FormElementFactory')->getUsedArtifactLinkFields($tracker)->returns(array());
+        $factory  = mockery_stub(Tracker_FormElementFactory::class)->getUsedArtifactLinkFields($tracker)->returns(array());
         $artifact->setFormElementFactory($factory);
 
-        $artifact->expectNever('createNewChangeset');
-        $GLOBALS['Response']->expectOnce('sendStatusCode', array(400));
-        $GLOBALS['Language']->setReturnValue('getText', 'The destination artifact must have a artifact link field.', array('plugin_tracker', 'must_have_artifact_link_field'));
+        $artifact->shouldReceive('createNewChangeset')->never();
+        $GLOBALS['Response']->shouldReceive('sendStatusCode')->with(400)->once();
+        $GLOBALS['Language']->shouldReceive('getText')->with('plugin_tracker', 'must_have_artifact_link_field')->andReturns('The destination artifact must have a artifact link field.');
         $this->expectFeedback('error', 'The destination artifact must have a artifact link field.');
 
         $artifact->process(mock('TrackerManager'), $this->request, $this->user);
     }
 
     private function GivenAnArtifact($tracker) {
-        $artifact = TestHelper::getPartialMock('Tracker_Artifact', array('createNewChangeset','getUserManager'));
+        $artifact = \Mockery::mock(Tracker_Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
-        $user_manager = stub('UserManager')->getCurrentUser()->returns(aUser()->withId(120)->build());
+        $user_manager = mockery_stub(UserManager::class)->getCurrentUser()->returns(aUser()->withId(120)->build());
         stub($artifact)->getUserManager()->returns($user_manager);
 
         $artifact->setTracker($tracker);

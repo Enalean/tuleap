@@ -31,7 +31,7 @@ class Tracker_Artifact_Changeset_ChangesetDataInitializator_LoadFromOldChangeset
         parent::setUp();
         $this->tracker             = aTracker()->build();
         $this->artifact_builder    = anArtifact()->withTracker($this->tracker);
-        $this->formelement_factory = mock('Tracker_FormElementFactory');
+        $this->formelement_factory = \Mockery::spy(Tracker_FormElementFactory::class);
         stub($this->formelement_factory)->getAllFormElementsForTracker($this->tracker)->returns(array());
         $this->initializator       = new Tracker_Artifact_Changeset_ChangesetDataInitializator($this->formelement_factory);
     }
@@ -39,9 +39,9 @@ class Tracker_Artifact_Changeset_ChangesetDataInitializator_LoadFromOldChangeset
     public function itPreloadsDateFieldsFromPreviousChangeset() {
         $artifact = $this->artifact_builder->withChangesets(
             array(
-                stub('Tracker_Artifact_Changeset')->getValues()->returns(
+                mockery_stub(Tracker_Artifact_Changeset::class)->getValues()->returns(
                     array(
-                        14 => stub('Tracker_Artifact_ChangesetValue_Date')->getValue()->returns('2014-03-12')
+                        14 => mockery_stub(Tracker_Artifact_ChangesetValue_Date::class)->getValue()->returns('2014-03-12')
                     )
                 )
             )
@@ -59,9 +59,9 @@ class Tracker_Artifact_Changeset_ChangesetDataInitializator_LoadFromOldChangeset
     public function itPreloadsListFieldsFromPreviousChangeset() {
         $artifact = $this->artifact_builder->withChangesets(
             array(
-                stub('Tracker_Artifact_Changeset')->getValues()->returns(
+                mockery_stub(Tracker_Artifact_Changeset::class)->getValues()->returns(
                     array(
-                        22 => stub('Tracker_Artifact_ChangesetValue_List')->getValue()->returns('101')
+                        22 => mockery_stub(Tracker_Artifact_ChangesetValue_List::class)->getValue()->returns('101')
                     )
                 )
             )
@@ -79,9 +79,9 @@ class Tracker_Artifact_Changeset_ChangesetDataInitializator_LoadFromOldChangeset
     public function testSubmittedDateFieldsOverridesPreviousChangeset() {
         $artifact = $this->artifact_builder->withChangesets(
             array(
-                stub('Tracker_Artifact_Changeset')->getValues()->returns(
+                mockery_stub(Tracker_Artifact_Changeset::class)->getValues()->returns(
                     array(
-                        14 => stub('Tracker_Artifact_ChangesetValue_Date')->getValue()->returns('2013-07-08')
+                        14 => mockery_stub(Tracker_Artifact_ChangesetValue_Date::class)->getValue()->returns('2013-07-08')
                     )
                 )
             )
@@ -101,9 +101,9 @@ class Tracker_Artifact_Changeset_ChangesetDataInitializator_LoadFromOldChangeset
     public function testSubmittedListFieldsOverridesPreviousChangeset() {
         $artifact = $this->artifact_builder->withChangesets(
             array(
-                stub('Tracker_Artifact_Changeset')->getValues()->returns(
+                mockery_stub(Tracker_Artifact_Changeset::class)->getValues()->returns(
                     array(
-                        22 => stub('Tracker_Artifact_ChangesetValue_Date')->getValue()->returns('101')
+                        22 => mockery_stub(Tracker_Artifact_ChangesetValue_Date::class)->getValue()->returns('101')
                     )
                 )
             )
@@ -134,7 +134,7 @@ class Tracker_Artifact_Changeset_ChangesetDataInitializator_LoadAutomaticValuesT
         $this->artifact_builder    = anArtifact()
             ->withTracker($this->tracker)
             ->withChangesets(array(new Tracker_Artifact_Changeset_Null()));
-        $this->formelement_factory = mock('Tracker_FormElementFactory');
+        $this->formelement_factory = \Mockery::spy(Tracker_FormElementFactory::class);
         $this->initializator       = new Tracker_Artifact_Changeset_ChangesetDataInitializator($this->formelement_factory);
     }
 
@@ -142,7 +142,7 @@ class Tracker_Artifact_Changeset_ChangesetDataInitializator_LoadAutomaticValuesT
         $artifact = $this->artifact_builder->withSubmittedOn('2055-4-99')->build();
         stub($this->formelement_factory)->getAllFormElementsForTracker($this->tracker)->returns(
             array(
-                stub('Tracker_FormElement_Field_SubmittedOn')->getId()->returns(12)
+                mockery_stub(Tracker_FormElement_Field_SubmittedOn::class)->getId()->returns(12)
             )
         );
 
@@ -158,7 +158,7 @@ class Tracker_Artifact_Changeset_ChangesetDataInitializator_LoadAutomaticValuesT
         $artifact = $this->artifact_builder->build();
         stub($this->formelement_factory)->getAllFormElementsForTracker($this->tracker)->returns(
             array(
-                stub('Tracker_FormElement_Field_LastUpdateDate')->getId()->returns(55)
+                mockery_stub(Tracker_FormElement_Field_LastUpdateDate::class)->getId()->returns(55)
             )
         );
 

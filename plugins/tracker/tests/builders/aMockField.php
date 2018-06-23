@@ -17,10 +17,13 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 require_once __DIR__.'/../bootstrap.php';
+
 class MockFieldBuilder {
+
     public function __construct() {
-        $this->field = mock('Tracker_FormElement_Field_SelectBox');
+        $this->field = \Mockery::spy(\Tracker_FormElement_Field_Selectbox::class);
     }
     
     public function withId($id) {
@@ -34,8 +37,8 @@ class MockFieldBuilder {
     }
     
     public function withValueForChangesetId($value_id, $changeset_id) {
-        $bind = mock('Tracker_FormElement_Field_List_Bind_Static');
-        
+        $bind = \Mockery::spy(\Tracker_FormElement_Field_List_Bind_Static::class);
+
         stub($this->field)->getBind()->returns($bind);
         stub($bind)->getChangesetValues($changeset_id)->returns(array(array('id' => $value_id)));
         
@@ -60,4 +63,3 @@ class MockFieldBuilder {
 function aMockField() {
     return new MockFieldBuilder();
 }
-?>

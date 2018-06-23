@@ -19,26 +19,14 @@
 
 require_once __DIR__.'/../../bootstrap.php';
 require_once('common/layout/Layout.class.php');
-Mock::generate('Tracker');
-Mock::generate('Project');
-Mock::generate('Layout');
-Mock::generate('Tracker_FormElement_Field_String');
-Mock::generate('Tracker_FormElementFactory');
 
 class Tracker_FormElement_View_AdminTest extends TuleapTestCase {
     
     public function setUp() {
         parent::setUp();
+        $this->setUpGlobalsMockery();
         $expected_url = TRACKER_BASE_URL .'/?tracker=101&amp;func=admin-formElement-update&amp;formElement=666';
-        $GLOBALS['Language']->setReturnValue(
-            'getText', 
-            'This field is shared from tracker <a href="'. $expected_url .'">Bugs from project Tuleap</a>', 
-            array(
-                'plugin_tracker_include_type', 
-                'field_copied_from', 
-                array('Bugs', 'Tuleap', $expected_url)
-            )
-        );
+        $GLOBALS['Language']->shouldReceive('getText')->with('plugin_tracker_include_type', 'field_copied_from', array('Bugs', 'Tuleap', $expected_url))->andReturns('This field is shared from tracker <a href="'. $expected_url .'">Bugs from project Tuleap</a>');
     }
     
     public function tearDown() {
@@ -54,13 +42,13 @@ class Tracker_FormElement_View_AdminTest extends TuleapTestCase {
     }
 
     public function GivenAnAdminWithOriginalProjectAndTracker($projectName, $trackerName) {
-        $project = new MockProject();
-        $project->setReturnValue('getPublicName', $projectName);
+        $project = \Mockery::spy(\Project::class);
+        $project->shouldReceive('getPublicName')->andReturns($projectName);
         
-        $tracker = new MockTracker();
-        $tracker->setReturnValue('getName', $trackerName);
-        $tracker->setReturnValue('getId', 101);
-        $tracker->setReturnValue('getProject', $project);
+        $tracker = \Mockery::spy(\Tracker::class);
+        $tracker->shouldReceive('getName')->andReturns($trackerName);
+        $tracker->shouldReceive('getId')->andReturns(101);
+        $tracker->shouldReceive('getProject')->andReturns($project);
         
         $original = new FakeFormElement(666, null, null, null, null, null, null, null, null, null, null, null);
         $original->setTracker($tracker);
@@ -78,31 +66,31 @@ class Tracker_FormElement_View_AdminTest extends TuleapTestCase {
     }
     
     private function GivenAnElementWithManyCopies() {
-        $factory = new MockTracker_FormElementFactory();
+        $factory = \Mockery::spy(\Tracker_FormElementFactory::class);
         
-        $project = new MockProject();
-        $project->setReturnValue('getPublicName', 'Project');
+        $project = \Mockery::spy(\Project::class);
+        $project->shouldReceive('getPublicName')->andReturns('Project');
         
         $element = new FakeFormElement(1, null, null, null, null, null, null, null, null, null, null, null);
         $element->setFormElementFactory($factory);
         
-        $tracker1 = new MockTracker();
-        $tracker1->setReturnValue('getId', '123');
-        $tracker1->setReturnValue('getName', 'Canard');
-        $tracker1->setReturnValue('getProject', $project);
+        $tracker1 = \Mockery::spy(\Tracker::class);
+        $tracker1->shouldReceive('getId')->andReturns('123');
+        $tracker1->shouldReceive('getName')->andReturns('Canard');
+        $tracker1->shouldReceive('getProject')->andReturns($project);
         $copy1    = new FakeFormElement(10, null, null, null, null, null, null, null, null, null, null, $element);
         $copy2    = new FakeFormElement(20, null, null, null, null, null, null, null, null, null, null, $element);
         $copy1->setTracker($tracker1);
         $copy2->setTracker($tracker1);
         
-        $tracker3 = new MockTracker();
-        $tracker3->setReturnValue('getId', '124');
-        $tracker3->setReturnValue('getName', 'Saucisse');
-        $tracker3->setReturnValue('getProject', $project);
+        $tracker3 = \Mockery::spy(\Tracker::class);
+        $tracker3->shouldReceive('getId')->andReturns('124');
+        $tracker3->shouldReceive('getName')->andReturns('Saucisse');
+        $tracker3->shouldReceive('getProject')->andReturns($project);
         $copy3    = new FakeFormElement(30, null, null, null, null, null, null, null, null, null, null, $element);
         $copy3->setTracker($tracker3);
         
-        $factory->setReturnValue('getSharedTargets', array($copy1, $copy2, $copy3), array($element));
+        $factory->shouldReceive('getSharedTargets')->with($element)->andReturns(array($copy1, $copy2, $copy3));
         return $element;
     }
 }

@@ -48,8 +48,7 @@ class Tracker_Workflow_Trigger_RulesBuilderDataTest extends TuleapTestCase {
         $target_field = aMockField()->withId($field_id)->build();
         $rules_builder_data = new Tracker_Workflow_Trigger_RulesBuilderData(new ArrayIterator(array($target_field)), array());
 
-        expect($target_field)->fetchFormattedForJson()->once();
-        stub($target_field)->fetchFormattedForJson()->returns('whatever');
+        stub($target_field)->fetchFormattedForJson()->returns('whatever')->once();
 
         $result = $rules_builder_data->fetchFormattedForJson();
         $this->assertCount($result['targets'], 1);
@@ -74,8 +73,7 @@ class Tracker_Workflow_Trigger_RulesBuilderDataTest extends TuleapTestCase {
      public function itHasATriggerTrackerWithAField() {
          $field_id = 693;
          $field = aMockField()->withId($field_id)->build();
-         expect($field)->fetchFormattedForJson()->once();
-         stub($field)->fetchFormattedForJson()->returns('whatever');
+         stub($field)->fetchFormattedForJson()->returns('whatever')->once();
 
          $tracker_id = 90;
          $triggering_field = new Tracker_Workflow_Trigger_RulesBuilderTriggeringFields(

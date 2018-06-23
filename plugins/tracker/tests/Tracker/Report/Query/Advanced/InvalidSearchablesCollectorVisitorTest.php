@@ -85,7 +85,7 @@ class InvalidSearchablesCollectorVisitorTest extends TuleapTestCase
         $this->tracker             = aTracker()->withId(101)->build();
         $this->field_text          = aTextField()->withName('field')->withId(101)->build();
         $this->int_field           = anIntegerField()->withName('int')->withId(102)->build();
-        $this->formelement_factory = mock('Tracker_FormElementFactory');
+        $this->formelement_factory = \Mockery::spy(\Tracker_FormElementFactory::class);
         $this->user                = aUser()->build();
 
         $this->invalid_searchables_collection = new InvalidSearchablesCollection();
@@ -440,8 +440,8 @@ class InvalidSearchablesCollectorVisitorTest extends TuleapTestCase
 
     public function itDelegatesValidationToSubExpressionAndTailInAndExpression()
     {
-        $subexpression = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison');
-        $tail          = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand');
+        $subexpression = \Mockery::spy(\Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison::class);
+        $tail          = \Mockery::spy(\Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand::class);
         $expression    = new AndExpression($subexpression, $tail);
 
         expect($subexpression)->accept($this->collector, $this->parameters)->once();
@@ -452,8 +452,8 @@ class InvalidSearchablesCollectorVisitorTest extends TuleapTestCase
 
     public function itDelegatesValidationToSubExpressionAndTailInOrExpression()
     {
-        $subexpression = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression');
-        $tail          = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand');
+        $subexpression = \Mockery::spy(\Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression::class);
+        $tail          = \Mockery::spy(\Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand::class);
         $expression    = new OrExpression($subexpression, $tail);
 
         expect($subexpression)->accept($this->collector, $this->parameters)->once();
@@ -464,8 +464,8 @@ class InvalidSearchablesCollectorVisitorTest extends TuleapTestCase
 
     public function itDelegatesValidationToOperandAndTailInOrOperand()
     {
-        $operand    = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression');
-        $tail       = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand');
+        $operand    = \Mockery::spy(\Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression::class);
+        $tail       = \Mockery::spy(\Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand::class);
         $expression = new OrOperand($operand, $tail);
 
         expect($operand)->accept($this->collector, $this->parameters)->once();
@@ -476,8 +476,8 @@ class InvalidSearchablesCollectorVisitorTest extends TuleapTestCase
 
     public function itDelegatesValidationToOperandAndTailInAndOperand()
     {
-        $operand    = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison');
-        $tail       = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand');
+        $operand    = \Mockery::spy(\Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison::class);
+        $tail       = \Mockery::spy(\Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand::class);
         $expression = new AndOperand($operand, $tail);
 
         expect($operand)->accept($this->collector, $this->parameters)->once();
@@ -488,7 +488,7 @@ class InvalidSearchablesCollectorVisitorTest extends TuleapTestCase
 
     public function itDelegatesValidationToSubExpressionInAndExpression()
     {
-        $subexpression = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison');
+        $subexpression = \Mockery::spy(\Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison::class);
         $tail          = null;
         $expression    = new AndExpression($subexpression, $tail);
 
@@ -499,7 +499,7 @@ class InvalidSearchablesCollectorVisitorTest extends TuleapTestCase
 
     public function itDelegatesValidationToSubExpressionInOrExpression()
     {
-        $subexpression = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression');
+        $subexpression = \Mockery::spy(\Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression::class);
         $tail          = null;
         $expression    = new OrExpression($subexpression, $tail);
 
@@ -510,7 +510,7 @@ class InvalidSearchablesCollectorVisitorTest extends TuleapTestCase
 
     public function itDelegatesValidationToOperandInOrOperand()
     {
-        $operand    = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression');
+        $operand    = \Mockery::spy(\Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression::class);
         $tail       = null;
         $expression = new OrOperand($operand, $tail);
 
@@ -521,7 +521,7 @@ class InvalidSearchablesCollectorVisitorTest extends TuleapTestCase
 
     public function itDelegatesValidationToOperandInAndOperand()
     {
-        $operand    = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison');
+        $operand    = \Mockery::spy(\Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison::class);
         $tail       = null;
         $expression = new AndOperand($operand, $tail);
 

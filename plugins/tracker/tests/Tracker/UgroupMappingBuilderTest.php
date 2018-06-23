@@ -22,7 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__) .'/../bootstrap.php';
+require_once __DIR__ .'/../bootstrap.php';
 
 class Tracker_UgroupMappingBuilderTest extends TuleapTestCase {
 
@@ -38,21 +38,21 @@ class Tracker_UgroupMappingBuilderTest extends TuleapTestCase {
     protected $tracker_id                 = 101;
 
     public function itBuildsAMappingBasedOnTheNames() {
-        $this->template_ugroup_dev     = stub('ProjectUGroup')->getName()->returns('dev');
-        $this->template_ugroup_support = stub('ProjectUGroup')->getName()->returns('support');
-        $this->template_ugroup_staff   = stub('ProjectUGroup')->getName()->returns('staff');
-        $this->target_ugroup_dev       = stub('ProjectUGroup')->getName()->returns('DEV');
-        $this->target_ugroup_support   = stub('ProjectUGroup')->getName()->returns('support');
-        $this->target_ugroup_client    = stub('ProjectUGroup')->getName()->returns('client');
+        $this->template_ugroup_dev     = mockery_stub(\ProjectUGroup::class)->getName()->returns('dev');
+        $this->template_ugroup_support = mockery_stub(\ProjectUGroup::class)->getName()->returns('support');
+        $this->template_ugroup_staff   = mockery_stub(\ProjectUGroup::class)->getName()->returns('staff');
+        $this->target_ugroup_dev       = mockery_stub(\ProjectUGroup::class)->getName()->returns('DEV');
+        $this->target_ugroup_support   = mockery_stub(\ProjectUGroup::class)->getName()->returns('support');
+        $this->target_ugroup_client    = mockery_stub(\ProjectUGroup::class)->getName()->returns('client');
 
         stub($this->template_ugroup_support)->getId()->returns(1001);
         stub($this->target_ugroup_support)->getId()->returns(1002);
 
-        $template_project            = stub('Project')->getId()->returns(103);
+        $template_project            = mockery_stub(\Project::class)->getId()->returns(103);
         $this->template_tracker      = aTracker()->withProject($template_project)->build();
-        $this->target_project        = stub('Project')->getId()->returns(104);
-        $this->ugroup_manager        = mock('UGroupManager');
-        $this->permissions_retriever = mock('Tracker_UgroupPermissionsGoldenRetriever');
+        $this->target_project        = mockery_stub(\Project::class)->getId()->returns(104);
+        $this->ugroup_manager        = \Mockery::spy(\UGroupManager::class);
+        $this->permissions_retriever = \Mockery::spy(\Tracker_UgroupPermissionsGoldenRetriever::class);
 
         stub($this->permissions_retriever)->getListOfInvolvedStaticUgroups($this->template_tracker)->returns(
             array($this->template_ugroup_dev, $this->template_ugroup_support, $this->template_ugroup_staff)

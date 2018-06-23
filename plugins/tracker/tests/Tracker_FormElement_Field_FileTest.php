@@ -31,9 +31,6 @@ Mock::generate('Tracker_FormElement_Field_Value_FileDao');
 
 Mock::generate('Tracker_FileInfoDao');
 
-require_once('common/dao/include/DataAccessResult.class.php');
-Mock::generate('DataAccessResult');
-
 Mock::generate('Tracker_Artifact');
 
 Mock::generate('Tracker_FileInfo');
@@ -100,14 +97,14 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
     function testGetChangesetValue()
     {
         $value_dao = new MockTracker_FormElement_Field_Value_FileDao();
-        $dar = new MockDataAccessResult();
-        $dar->setReturnValueAt(0, 'current', array('changesetvalue_id' => 123, 'fileinfo_id' => 101));
-        $dar->setReturnValueAt(1, 'current', array('changesetvalue_id' => 123, 'fileinfo_id' => 102));
-        $dar->setReturnValueAt(2, 'current', array('changesetvalue_id' => 123, 'fileinfo_id' => 103));
-        $dar->setReturnValue('valid', true);
-        $dar->setReturnValueAt(3, 'valid', false);
-        
-        $value_dao->setReturnReference('searchById', $dar);
+
+        stub($value_dao)->searchById()->returnsDarFromArray(
+            [
+                array('changesetvalue_id' => 123, 'fileinfo_id' => 101),
+                array('changesetvalue_id' => 123, 'fileinfo_id' => 102),
+                array('changesetvalue_id' => 123, 'fileinfo_id' => 103),
+            ]
+        );
 
         $tracker_file_info_factory = mock('Tracker_FileInfoFactory');
         stub($tracker_file_info_factory)->getById()->returns(mock('Tracker_FileInfo'));

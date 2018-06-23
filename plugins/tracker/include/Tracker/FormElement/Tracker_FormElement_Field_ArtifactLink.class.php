@@ -333,15 +333,17 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         return $this->fetchParentSelector($prefill_parent, $name, $parent_tracker, $current_user, $can_create);
     }
 
-    private function getArtifactLinkIdsOfLastChangeset(Tracker_Artifact $artifact = null) {
-        if ($artifact) {
-            return array_map(array($this, 'getArtifactLinkId'), $this->getChangesetValues($artifact->getLastChangeset()->getId()));
-        }
-        return array();
-    }
+    private function getArtifactLinkIdsOfLastChangeset(Tracker_Artifact $artifact = null)
+    {
+        $link_ids = [];
 
-    private function getArtifactLinkId(Tracker_ArtifactLinkInfo $link_info) {
-        return $link_info->getArtifactId();
+        if ($artifact) {
+            foreach ($this->getChangesetValues($artifact->getLastChangeset()->getId()) as $link_info) {
+                $link_ids[] = $link_info->getArtifactId();
+            }
+        }
+
+        return $link_ids;
     }
 
     /**

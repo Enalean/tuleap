@@ -18,18 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'bootstrap.php';
+
 class Tracker_Artifact_ChangesetJsonFormatterTest extends TuleapTestCase {
 
     public function itHasJsonRepresentation() {
         $timestamp = mktime(1,1,1,9,25,2013);
-        $changeset = partial_mock('Tracker_Artifact_Changeset', array('getChangeContentForJson'), array(
-            15,
-            aMockArtifact()->build(),
-            45,
-            $timestamp,
-            ''
-        ));
-        $template_renderer = mock('TemplateRenderer');
+        $changeset = \Mockery::mock(\Tracker_Artifact_Changeset::class, [15, aMockArtifact()->build(), 45, $timestamp, ''])->makePartial()->shouldAllowMockingProtectedMethods();
+        $template_renderer = \Mockery::spy(\TemplateRenderer::class);
         stub($template_renderer)->renderToString()->returns('body');
 
         $json_formatter = new Tracker_Artifact_ChangesetJsonFormatter($template_renderer);
@@ -46,5 +42,3 @@ class Tracker_Artifact_ChangesetJsonFormatterTest extends TuleapTestCase {
         );
     }
 }
-
-?>

@@ -21,6 +21,7 @@
 
 require_once __DIR__.'/../../src/common/autoload.php';
 require_once __DIR__.'/../../src/common/autoload_libs.php';
+require_once __DIR__.'/../../src/common/constants.php';
 require_once __DIR__.'/SimpleTest11x/TuleapTestCase.php';
 require_once __DIR__.'/SimpleTest11x/TuleapColorTextReporter.php';
 require_once __DIR__.'/SimpleTest11x/TuleapJunitXMLReporter.php';
@@ -37,7 +38,8 @@ date_default_timezone_set('Europe/Paris');
 $basedir      = dirname(dirname(__DIR__));
 $src_path     = $basedir.'/src';
 $include_path = $basedir.'/src/www/include';
-ini_set('include_path', ini_get('include_path').':'.$src_path.':'.$include_path);
+$pear         = '/usr/share/pear';
+ini_set('include_path', implode(':', [$src_path, $include_path, $pear]));
 
 require_once __DIR__.'/../../src/etc/local.inc.dist';
 

@@ -24,61 +24,18 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 
 require_once('bootstrap.php');
-require_once 'common/language/BaseLanguage.class.php';
-
-Mock::generate('BaseLanguage');
-
-Mock::generate('Tracker_Artifact');
-
-Mock::generatePartial(
-    'Tracker_FormElement_Field_ArtifactLink',
-    'Tracker_FormElement_Field_ArtifactLinkTestVersion', 
-    array(
-        'getValueDao', 
-        'isRequired', 
-        'getProperty', 
-        'getProperties',
-        'getDao',
-        'getLastChangesetValue',
-        'getNaturePresenterFactory',
-        'getArtifactFactory'
-    )
-);
-
-Mock::generatePartial(
-    'Tracker_FormElement_Field_ArtifactLink', 
-    'Tracker_FormElement_Field_ArtifactLinkTestVersion_ForImport', 
-    array(
-        'getValueDao',
-        'getArtifactFactory',
-        'getDao'
-    )
-);
-
-Mock::generate('Tracker_Artifact_Changeset');
-
-Mock::generate('Tracker_Artifact_ChangesetValue_ArtifactLink');
-
-Mock::generate('Tracker_FormElement_Field_Value_ArtifactLinkDao');
-
-require_once 'common/dao/include/DataAccessResult.class.php';
-Mock::generate('DataAccessResult');
-
-Mock::generate('Tracker_Valid_Rule_ArtifactId');
-
-require_once 'common/include/Response.class.php';
-Mock::generate('Response');
 
 class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
-        $this->artifact_factory = mock('Tracker_ArtifactFactory');
+        $this->artifact_factory = \Mockery::spy(\Tracker_ArtifactFactory::class);
         Tracker_ArtifactFactory::setInstance($this->artifact_factory);
 
-        $artifact = mock('Tracker_Artifact');
-        $this->changeset = stub('Tracker_Artifact_Changeset')->getArtifact()->returns($artifact);
+        $artifact = \Mockery::spy(\Tracker_Artifact::class);
+        $this->changeset = mockery_stub(\Tracker_Artifact_Changeset::class)->getArtifact()->returns($artifact);
     }
 
     public function tearDown() {
@@ -88,71 +45,67 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
     }
 
     public function testNoDefaultValue() {
-        $field = new Tracker_FormElement_Field_ArtifactLinkTestVersion();
+        $field = \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $field->shouldReceive('getProperty')->andReturn(null);
         $this->assertFalse($field->hasDefaultValue());
     }
 
     function testGetChangesetValue() {
-        $value_dao = new MockTracker_FormElement_Field_Value_ArtifactLinkDao();
-        $dar = new MockDataAccessResult();
-        $dar->setReturnValueAt(0, 'valid', true);
-        $dar->setReturnValueAt(0, 'getRow', array(
-                                                'id' => 123,
-                                                'field_id' => 1,
-                                                'artifact_id' => '999',
-                                                'keyword' => 'bug',
-                                                'group_id' => '102',
-                                                'tracker_id' => '456',
-                                                'nature' => '',
-                                                'last_changeset_id' => '789'));
-        $dar->setReturnValue('getRow', false);
-        $value_dao->setReturnReference('searchById', $dar);
+        $value_dao = \Mockery::spy(\Tracker_FormElement_Field_Value_ArtifactLinkDao::class);
+        stub($value_dao)->searchById()->returnsDar([
+            'id' => 123,
+            'field_id' => 1,
+            'artifact_id' => '999',
+            'keyword' => 'bug',
+            'group_id' => '102',
+            'tracker_id' => '456',
+            'nature' => '',
+            'last_changeset_id' => '789'
+        ]);
         stub($value_dao)->searchReverseLinksById()->returnsEmptyDar();
 
-        $field = new Tracker_FormElement_Field_ArtifactLinkTestVersion();
-        $field->setReturnReference('getValueDao', $value_dao);
+        $field = \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $field->shouldReceive('getValueDao')->andReturns($value_dao);
 
         $this->assertIsA($field->getChangesetValue($this->changeset, 123, false), 'Tracker_Artifact_ChangesetValue_ArtifactLink');
     }
 
     function testGetChangesetValue_doesnt_exist() {
-        $value_dao = new MockTracker_FormElement_Field_Value_ArtifactLinkDao();
-        $dar = new MockDataAccessResult();
-        $dar->setReturnValue('getRow', false);
-        $value_dao->setReturnReference('searchById', $dar);
+        $value_dao = \Mockery::spy(\Tracker_FormElement_Field_Value_ArtifactLinkDao::class);
+        stub($value_dao)->searchById()->returnsEmptyDar();
         stub($value_dao)->searchReverseLinksById()->returnsEmptyDar();
 
-        $field = new Tracker_FormElement_Field_ArtifactLinkTestVersion();
-        $field->setReturnReference('getValueDao', $value_dao);
+        $field = \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $field->shouldReceive('getValueDao')->andReturns($value_dao);
 
         $this->assertNotNull($field->getChangesetValue($this->changeset, 123, false));
     }
 
     function testFetchRawValue() {
-        $f = new Tracker_FormElement_Field_ArtifactLinkTestVersion();
+        $f = \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $art_ids = array('123, 132, 999');
-        $value = new MockTracker_Artifact_ChangesetValue_ArtifactLink();
-        $value->setReturnReference('getArtifactIds', $art_ids);
+        $value = \Mockery::spy(\Tracker_Artifact_ChangesetValue_ArtifactLink::class);
+        $value->shouldReceive('getArtifactIds')->andReturns($art_ids);
         $this->assertEqual($f->fetchRawValue($value), '123, 132, 999');
     }
 
     public function testIsValidRequiredFieldWithExistingValues()
     {
-        $field = new Tracker_FormElement_Field_ArtifactLinkTestVersion();
-        $field->setReturnValue('isRequired', true);
+        $field = \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $field->shouldReceive('isRequired')->andReturns(true);
 
         $ids = array(123);
-        $cv  = new MockTracker_Artifact_ChangesetValue_ArtifactLink();
-        $cv->setReturnReference('getArtifactIds', $ids);
-        $c = new MockTracker_Artifact_Changeset();
-        $c->setReturnReference('getValue', $cv);
+        $cv  = \Mockery::spy(\Tracker_Artifact_ChangesetValue_ArtifactLink::class);
+        $cv->shouldReceive('getArtifactIds')->andReturns($ids);
+        $c = \Mockery::spy(\Tracker_Artifact_Changeset::class);
+        $c->shouldReceive('getValue')->andReturns($cv);
 
-        $artifact = mock('Tracker_Artifact');
-        $tracker  = mock('Tracker');
+        $artifact = \Mockery::spy(\Tracker_Artifact::class);
+        $tracker  = \Mockery::spy(\Tracker::class);
         stub($artifact)->getLastChangeset()->returns($c);
         stub($artifact)->getTracker()->returns($tracker);
 
-        $field->setReturnReference('getLastChangesetValue', $cv);
+        $field->shouldReceive('getLastChangesetValue')->andReturns($cv);
 
         $this->assertTrue($field->isValidRegardingRequiredProperty($artifact, null));  // existing values
         $this->assertFalse($field->isValidRegardingRequiredProperty($artifact, array('new_values' => '', 'removed_values' => '123')));
@@ -160,51 +113,51 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
 
     public function testIsValidRequiredFieldWithoutExistingValues()
     {
-        $field = new Tracker_FormElement_Field_ArtifactLinkTestVersion();
-        $field->setReturnValue('isRequired', true);
+        $field = \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $field->shouldReceive('isRequired')->andReturns(true);
 
         $ids = array();
-        $cv = new MockTracker_Artifact_ChangesetValue_ArtifactLink();
-        $cv->setReturnReference('getArtifactIds', $ids);
-        $c = new MockTracker_Artifact_Changeset();
-        $c->setReturnReference('getValue', $cv);
-        $a = new MockTracker_Artifact();
-        $a->setReturnReference('getLastChangeset', $c);
+        $cv = \Mockery::spy(\Tracker_Artifact_ChangesetValue_ArtifactLink::class);
+        $cv->shouldReceive('getArtifactIds')->andReturns($ids);
+        $c = \Mockery::spy(\Tracker_Artifact_Changeset::class);
+        $c->shouldReceive('getValue')->andReturns($cv);
+        $a = \Mockery::spy(\Tracker_Artifact::class);
+        $a->shouldReceive('getLastChangeset')->andReturns($c);
 
         $this->assertFalse($field->isValidRegardingRequiredProperty($a, array('new_values' => '')));
         $this->assertFalse($field->isValidRegardingRequiredProperty($a, null));
     }
 
     function testSoapAvailableValues() {
-        $f = new Tracker_FormElement_Field_ArtifactLinkTestVersion();
+        $f = \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->assertNull($f->getSoapAvailableValues());
     }
 
     function testIsValid_AddsErrorIfARequiredFieldIsAnArrayWithoutNewValues() {
-        $f = new Tracker_FormElement_Field_ArtifactLinkTestVersion();
-        $f->setReturnValue('isRequired', true);
+        $f = \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $f->shouldReceive('isRequired')->andReturns(true);
 
-        $a = new MockTracker_Artifact();
-        $a->setReturnValue('getLastChangeset', false);
+        $a = \Mockery::spy(\Tracker_Artifact::class);
+        $a->shouldReceive('getLastChangeset')->andReturns(false);
         $this->assertFalse($f->isValidRegardingRequiredProperty($a, array('new_values' => '')));
         $this->assertTrue($f->hasErrors());
 
     }
 
     function testIsValid_AddsErrorIfARequiredFieldValueIsAnEmptyString() {
-        $f = new Tracker_FormElement_Field_ArtifactLinkTestVersion();
-        $f->setReturnValue('isRequired', true);
+        $f = \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $f->shouldReceive('isRequired')->andReturns(true);
 
-        $a = new MockTracker_Artifact();
-        $a->setReturnValue('getLastChangeset', false);
+        $a = \Mockery::spy(\Tracker_Artifact::class);
+        $a->shouldReceive('getLastChangeset')->andReturns(false);
         $this->assertFalse($f->isValidRegardingRequiredProperty($a, ''));
         $this->assertTrue($f->hasErrors());
     }
 
     public function itReturnsAnEmptyListWhenThereAreNoValuesInTheChangeset() {
         $field = anArtifactLinkField()->build();
-        $changeset = new MockTracker_Artifact_Changeset();
-        $changeset->setReturnValue('getValue', null, array($this));
+        $changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
+        $changeset->shouldReceive('getValue')->with($this)->andReturns(null);
         $user = aUser()->build();
 
         $artifacts = $field->getLinkedArtifacts($changeset, $user);
@@ -213,8 +166,8 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
 
     public function itReturnsAnEmptyPaginatedListWhenThereAreNoValuesInTheChangeset() {
         $field = anArtifactLinkField()->build();
-        $changeset = new MockTracker_Artifact_Changeset();
-        $changeset->setReturnValue('getValue', null, array($this));
+        $changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
+        $changeset->shouldReceive('getValue')->with($this)->andReturns(null);
         $user = aUser()->build();
 
         $sliced = $field->getSlicedLinkedArtifacts($changeset, $user, 10, 0);
@@ -225,10 +178,10 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
     public function itCreatesAListOfArtifactsBasedOnTheIdsInTheChangesetField() {
         $user = aUser()->build();
 
-        $artifact_1 = mock('Tracker_Artifact');
+        $artifact_1 = \Mockery::spy(\Tracker_Artifact::class);
         stub($artifact_1)->getId()->returns(123);
         stub($artifact_1)->userCanView()->returns(true);
-        $artifact_2 = mock('Tracker_Artifact');
+        $artifact_2 = \Mockery::spy(\Tracker_Artifact::class);
         stub($artifact_2)->getId()->returns(345);
         stub($artifact_2)->userCanView()->returns(true);
 
@@ -248,10 +201,10 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
     public function itCreatesAPaginatedListOfArtifactsBasedOnTheIdsInTheChangesetField() {
         $user = aUser()->build();
 
-        $artifact_1 = mock('Tracker_Artifact');
+        $artifact_1 = \Mockery::spy(\Tracker_Artifact::class);
         stub($artifact_1)->getId()->returns(123);
         stub($artifact_1)->userCanView()->returns(true);
-        $artifact_2 = mock('Tracker_Artifact');
+        $artifact_2 = \Mockery::spy(\Tracker_Artifact::class);
         stub($artifact_2)->getId()->returns(345);
         stub($artifact_2)->userCanView()->returns(true);
 
@@ -272,10 +225,10 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
     public function itCreatesAFirstPageOfPaginatedListOfArtifactsBasedOnTheIdsInTheChangesetField() {
         $user = aUser()->build();
 
-        $artifact_1 = mock('Tracker_Artifact');
+        $artifact_1 = \Mockery::spy(\Tracker_Artifact::class);
         stub($artifact_1)->getId()->returns(123);
         stub($artifact_1)->userCanView()->returns(true);
-        $artifact_2 = mock('Tracker_Artifact');
+        $artifact_2 = \Mockery::spy(\Tracker_Artifact::class);
         stub($artifact_2)->getId()->returns(345);
         stub($artifact_2)->userCanView()->returns(true);
 
@@ -295,10 +248,10 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
     public function itCreatesASecondPageOfPaginatedListOfArtifactsBasedOnTheIdsInTheChangesetField() {
         $user = aUser()->build();
 
-        $artifact_1 = mock('Tracker_Artifact');
+        $artifact_1 = \Mockery::spy(\Tracker_Artifact::class);
         stub($artifact_1)->getId()->returns(123);
         stub($artifact_1)->userCanView()->returns(true);
-        $artifact_2 = mock('Tracker_Artifact');
+        $artifact_2 = \Mockery::spy(\Tracker_Artifact::class);
         stub($artifact_2)->getId()->returns(345);
         stub($artifact_2)->userCanView()->returns(true);
 
@@ -317,7 +270,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
 
     public function itIgnoresIdsThatDontExist() {
         $user     = aUser()->build();
-        $artifact = mock('Tracker_Artifact');
+        $artifact = \Mockery::spy(\Tracker_Artifact::class);
         stub($artifact)->getId()->returns(123);
         stub($artifact)->userCanView()->returns(true);
 
@@ -334,7 +287,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
 
     public function itIgnoresInPaginatedListIdsThatDontExist() {
         $user     = aUser()->build();
-        $artifact = mock('Tracker_Artifact');
+        $artifact = \Mockery::spy(\Tracker_Artifact::class);
         stub($artifact)->getId()->returns(123);
         stub($artifact)->userCanView()->returns(true);
 
@@ -353,9 +306,9 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
     public function itReturnsOnlyArtifactsAccessibleByGivenUser() {
         $user = aUser()->build();
 
-        $artifact_1 = mock('Tracker_Artifact');
+        $artifact_1 = \Mockery::spy(\Tracker_Artifact::class);
         stub($artifact_1)->getId()->returns(123);
-        $artifact_2 = mock('Tracker_Artifact');
+        $artifact_2 = \Mockery::spy(\Tracker_Artifact::class);
         stub($artifact_2)->getId()->returns(345);
         stub($artifact_2)->userCanView($user)->returns(true);
 
@@ -374,9 +327,9 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
     public function itReturnsOnlyPaginatedArtifactsAccessibleByGivenUser() {
         $user = aUser()->build();
 
-        $artifact_1 = mock('Tracker_Artifact');
+        $artifact_1 = \Mockery::spy(\Tracker_Artifact::class);
         stub($artifact_1)->getId()->returns(123);
-        $artifact_2 = mock('Tracker_Artifact');
+        $artifact_2 = \Mockery::spy(\Tracker_Artifact::class);
         stub($artifact_2)->getId()->returns(345);
         stub($artifact_2)->userCanView($user)->returns(true);
 
@@ -396,9 +349,9 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
     public function itReturnsAFirstPageOfOnlyPaginatedArtifactsAccessibleByGivenUser() {
         $user = aUser()->build();
 
-        $artifact_1 = mock('Tracker_Artifact');
+        $artifact_1 = \Mockery::spy(\Tracker_Artifact::class);
         stub($artifact_1)->getId()->returns(123);
-        $artifact_2 = mock('Tracker_Artifact');
+        $artifact_2 = \Mockery::spy(\Tracker_Artifact::class);
         stub($artifact_2)->getId()->returns(345);
         stub($artifact_2)->userCanView($user)->returns(true);
 
@@ -417,9 +370,9 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
     public function itReturnsASecondPageOfOnlyPaginatedArtifactsAccessibleByGivenUser() {
         $user = aUser()->build();
 
-        $artifact_1 = mock('Tracker_Artifact');
+        $artifact_1 = \Mockery::spy(\Tracker_Artifact::class);
         stub($artifact_1)->getId()->returns(123);
-        $artifact_2 = mock('Tracker_Artifact');
+        $artifact_2 = \Mockery::spy(\Tracker_Artifact::class);
         stub($artifact_2)->getId()->returns(345);
         stub($artifact_2)->userCanView($user)->returns(true);
 
@@ -437,18 +390,18 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
     }
 
     private function GivenAChangesetValueWithArtifactIds($field, $ids) {
-        $changeset_value = new MockTracker_Artifact_ChangesetValue_ArtifactLink();
-        $changeset_value->setReturnValue('getArtifactIds', $ids);
-        $changeset = new MockTracker_Artifact_Changeset();
-        $changeset->setReturnValue('getValue', $changeset_value, array($field));
+        $changeset_value = \Mockery::spy(\Tracker_Artifact_ChangesetValue_ArtifactLink::class);
+        $changeset_value->shouldReceive('getArtifactIds')->andReturns($ids);
+        $changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
+        $changeset->shouldReceive('getValue')->with($field)->andReturns($changeset_value);
         return $changeset;
 
     }
 
     private function GivenAnArtifactFactory($artifacts) {
-        $factory = mock('Tracker_ArtifactFactory');
+        $factory = \Mockery::spy(\Tracker_ArtifactFactory::class);
         foreach ($artifacts as $a) {
-            $factory->setReturnValue('getArtifactById', $a, array($a->getId()));
+            $factory->shouldReceive('getArtifactById')->with($a->getId())->andReturns($a);
         }
         return $factory;
 
@@ -459,10 +412,11 @@ class Tracker_FormElement_Field_ArtifactLink_CatchLinkDirectionTest extends Tule
     
     public function setUp() {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
-        $hierarchy_factory = mock('Tracker_HierarchyFactory');
+        $hierarchy_factory = \Mockery::spy(\Tracker_HierarchyFactory::class);
         Tracker_HierarchyFactory::setInstance($hierarchy_factory);
-        $artifact_factory = mock('Tracker_ArtifactFactory');
+        $artifact_factory = \Mockery::spy(\Tracker_ArtifactFactory::class);
         Tracker_ArtifactFactory::setInstance($artifact_factory);
 
         $tracker        = aTracker()->withId(10)->build();
@@ -480,20 +434,20 @@ class Tracker_FormElement_Field_ArtifactLink_CatchLinkDirectionTest extends Tule
         $this->submitter        = aUser()->build();
         $this->new_changeset_value_id = 66666;
 
-        $this->artifact_123 = mock('Tracker_Artifact');
+        $this->artifact_123 = \Mockery::spy(\Tracker_Artifact::class);
         stub($this->artifact_123)->getId()->returns(123);
         stub($this->artifact_123)->getTracker()->returns($parent_tracker);
         stub($this->artifact_123)->getTrackerId()->returns($parent_tracker->getId());
         stub($this->artifact_123)->getLastChangeset()->returns(
-            stub('Tracker_Artifact_Changeset')->getId()->returns(1231)
+            mockery_stub(\Tracker_Artifact_Changeset::class)->getId()->returns(1231)
         );
 
-        $this->artifact_124 = mock('Tracker_Artifact');
+        $this->artifact_124 = \Mockery::spy(\Tracker_Artifact::class);
         stub($this->artifact_124)->getId()->returns(124);
         stub($this->artifact_124)->getTracker()->returns($tracker);
         stub($this->artifact_124)->getTrackerId()->returns($tracker->getId());
         stub($this->artifact_124)->getLastChangeset()->returns(
-            stub('Tracker_Artifact_Changeset')->getId()->returns(1241)
+            mockery_stub(\Tracker_Artifact_Changeset::class)->getId()->returns(1241)
         );
 
         stub($artifact_factory)->getArtifactById(123)->returns($this->artifact_123);
@@ -501,27 +455,16 @@ class Tracker_FormElement_Field_ArtifactLink_CatchLinkDirectionTest extends Tule
         
         $this->all_artifacts = array($this->artifact_123, $this->artifact_124);
         
-        $this->field = TestHelper::getPartialMock(
-            'Tracker_FormElement_Field_ArtifactLink',
-            array(
-                'getArtifactsFromChangesetValue',
-                'saveValue',
-                'getValueDao',
-                'getChangesetValueDao',
-                'userCanUpdate',
-                'isValid',
-                'getProcessChildrenTriggersCommand'
-            )
-        );
+        $this->field = \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
-        $value_dao = mock('Tracker_FormElement_Field_Value_ArtifactLinkDao');
+        $value_dao = \Mockery::spy(\Tracker_FormElement_Field_Value_ArtifactLinkDao::class);
         stub($this->field)->getValueDao()->returns($value_dao);
-        $changeset_value_dao = stub('Tracker_Artifact_Changeset_ValueDao')->save()->returns($this->new_changeset_value_id);
+        $changeset_value_dao = mockery_stub(\Tracker_Artifact_Changeset_ValueDao::class)->save()->returns($this->new_changeset_value_id);
         stub($this->field)->getChangesetValueDao()->returns($changeset_value_dao);
         stub($this->field)->userCanUpdate()->returns(true);
         stub($this->field)->isValid()->returns(true);
         
-        stub($this->field)->getProcessChildrenTriggersCommand()->returns(mock('Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommand'));
+        stub($this->field)->getProcessChildrenTriggersCommand()->returns(\Mockery::spy(\Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommand::class));
     }
 
     public function tearDown() {
@@ -532,7 +475,7 @@ class Tracker_FormElement_Field_ArtifactLink_CatchLinkDirectionTest extends Tule
     
     public function itPostponeSavesChangesetInSourceArtifact() {
         expect($this->artifact_123)->linkArtifact()->never();
-        
+
         // Then update the artifact with other links
         $remaining_submitted_value = array(
             'new_values' => '123, 124',
@@ -545,12 +488,14 @@ class Tracker_FormElement_Field_ArtifactLink_CatchLinkDirectionTest extends Tule
                 124 => Tracker_ArtifactLinkInfo::buildFromArtifact($this->artifact_124, '')
             )
         );
-        $this->field->expectOnce('saveValue', array($this->modified_artifact, $this->new_changeset_value_id, $remaining_submitted_value, null));
-        
+        $this->field->shouldReceive('saveValue')->with($this->modified_artifact, $this->new_changeset_value_id, $remaining_submitted_value, null)->once();
+
         $this->field->saveNewChangeset($this->modified_artifact, $this->old_changeset, $this->new_changeset_id, $this->submitted_value, $this->submitter);
     }
 
     public function itDoesntFailIfSubmittedValueIsNull() {
+        $this->field->shouldReceive('saveValue')->once();
+
         $this->field->saveNewChangeset($this->modified_artifact, $this->old_changeset, $this->new_changeset_id, null, $this->submitter);
     }
 
@@ -558,8 +503,10 @@ class Tracker_FormElement_Field_ArtifactLink_CatchLinkDirectionTest extends Tule
         expect($this->artifact_123)->linkArtifact($this->modified_artifact_id, $this->submitter)->once();
         stub($this->artifact_123)->linkArtifact()->returns(true);
 
+        $this->field->shouldReceive('saveValue')->once();
+
         $this->field->saveNewChangeset($this->modified_artifact, $this->old_changeset, $this->new_changeset_id, $this->submitted_value, $this->submitter);
-        $this->field->postSaveNewChangeset($this->modified_artifact, $this->submitter, mock('Tracker_Artifact_Changeset'));
+        $this->field->postSaveNewChangeset($this->modified_artifact, $this->submitter, \Mockery::spy(\Tracker_Artifact_Changeset::class));
     }
 }
 
@@ -568,10 +515,10 @@ class Tracker_FormElement_Field_ArtifactLink_postSaveNewChangesetTest extends Tu
     public function itExecutesProcessChildrenTriggersCommand() {
         $artifact           = anArtifact()->build();
         $user               = aUser()->build();
-        $new_changeset      = mock('Tracker_Artifact_Changeset');
+        $new_changeset      = \Mockery::spy(\Tracker_Artifact_Changeset::class);
         $previous_changeset = null;
-        $command            = mock('Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommand');
-        $field              = partial_mock('Tracker_FormElement_Field_ArtifactLink', array('getProcessChildrenTriggersCommand'));
+        $command            = \Mockery::spy(\Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommand::class);
+        $field              = \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class)->makePartial()->shouldAllowMockingProtectedMethods();
         stub($field)->getProcessChildrenTriggersCommand()->returns($command);
 
         expect($command)->execute($artifact, $user, $new_changeset, $previous_changeset)->once();
@@ -583,8 +530,10 @@ class Tracker_FormElement_Field_ArtifactLink_postSaveNewChangesetTest extends Tu
 class Tracker_FormElement_Field_ArtifactLink_AugmentDataFromRequestTest extends TuleapTestCase {
 
     public function setUp() {
+        parent::setUp();
+        $this->setUpGlobalsMockery();
         $this->art_link_id = 555;
-        $this->tracker     = mock('Tracker');
+        $this->tracker     = \Mockery::spy(\Tracker::class);
 
         $this->field = anArtifactLinkField()
                 ->withId($this->art_link_id)
@@ -713,9 +662,11 @@ class Tracker_FormElement_Field_ArtifactLink_getFieldData extends TuleapTestCase
      */
     private $field;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
-        $this->field = partial_mock('Tracker_FormElement_Field_ArtifactLink', array('getChangesetValues'));
+        $this->setUpGlobalsMockery();
+        $this->field = \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
         $this->last_changset_id = 1234;
         $this->artifact = anArtifact()->build();
@@ -723,12 +674,13 @@ class Tracker_FormElement_Field_ArtifactLink_getFieldData extends TuleapTestCase
         $this->artifact->setChangesets(array($last_changeset));
     }
 
-    public function itGetValuesFromArtifactChangesetWhenThereIsAnArtifact() {
-        expect($this->field)->getChangesetValues($this->last_changset_id)->once();
-        stub($this->field)->getChangesetValues()->returns(array());
+    public function itGetValuesFromArtifactChangesetWhenThereIsAnArtifact()
+    {
+        $this->field->shouldReceive('getChangesetValues')->with($this->last_changset_id)->once()->andReturn([]);
 
         $this->field->getFieldData('55', $this->artifact);
     }
+
 
     public function itDoesntFetchValuesWhenNoArtifactGiven() {
         expect($this->field)->getChangesetValues($this->last_changset_id)->never();
@@ -886,10 +838,11 @@ class Tracker_FormElement_Field_ArtifactLink_getFieldData extends TuleapTestCase
 }
 
 class Tracker_FormElement_Field_ArtifactLink_getFieldDataFromSoapValue extends TuleapTestCase {
-    
+
     public function setUp() {
         parent::setUp();
-        $this->field = partial_mock('Tracker_FormElement_Field_ArtifactLink', array('getFieldData'));
+        $this->setUpGlobalsMockery();
+        $this->field = \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class)->makePartial()->shouldAllowMockingProtectedMethods();
     }
 
     public function itPassesArtifactToGetFieldData() {
@@ -903,8 +856,7 @@ class Tracker_FormElement_Field_ArtifactLink_getFieldDataFromSoapValue extends T
             )
         );
 
-        expect($this->field)->getFieldData('55', $artifact)->once();
-        stub($this->field)->getFieldData()->returns('whatever');
+        $this->field->shouldReceive('getFieldData')->with('55', $artifact)->once()->andReturn('whatever');
 
         $this->assertEqual($this->field->getFieldDataFromSoapValue($soap_value, $artifact), 'whatever');
     }

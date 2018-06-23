@@ -36,6 +36,7 @@ class ArtifactAttachmentExporterTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
         $this->archive_path    = $this->getTmpDir() . '/test.zip';
         $this->file01_path     = dirname(__FILE__) . '/_fixtures/file01.txt';
@@ -54,19 +55,19 @@ class ArtifactAttachmentExporterTest extends TuleapTestCase {
 
     public function itAddsFileIntoArchive() {
         $tracker    = aTracker()->build();
-        $file_field = mock('Tracker_FormElement_Field_File');
-        $file_info  = stub('Tracker_FileInfo')->getPath()->returns($this->file01_path);
+        $file_field = \Mockery::spy(\Tracker_FormElement_Field_File::class);
+        $file_info  = mockery_stub(\Tracker_FileInfo::class)->getPath()->returns($this->file01_path);
         stub($file_info)->getId()->returns(1);
 
         $files      = array($file_info);
-        $changeset  = mock('Tracker_Artifact_Changeset');
+        $changeset  = \Mockery::spy(\Tracker_Artifact_Changeset::class);
         $file_value = new Tracker_Artifact_ChangesetValue_File(1, $changeset, $file_field, 1, $files);
         stub($changeset)->getValue($file_field)->returns($file_value);
 
-        $artifact = stub('Tracker_Artifact')->getTracker()->returns($tracker);
+        $artifact = mockery_stub(\Tracker_Artifact::class)->getTracker()->returns($tracker);
         stub($artifact)->getLastChangeset()->returns($changeset);
 
-        $form_element_factory = stub('Tracker_FormElementFactory')->getUsedFileFields($tracker)->returns(
+        $form_element_factory = mockery_stub(\Tracker_FormElementFactory::class)->getUsedFileFields($tracker)->returns(
             array($file_field)
         );
 
