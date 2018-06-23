@@ -29,6 +29,7 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
+use Tuleap\user\PasswordVerifier;
 use UserDao;
 
 class HTTPController implements DispatchableWithRequestNoAuthz
@@ -86,6 +87,7 @@ class HTTPController implements DispatchableWithRequestNoAuthz
             new \User_LoginManager(
                 \EventManager::instance(),
                 \UserManager::instance(),
+                new PasswordVerifier($password_handler),
                 new \User_PasswordExpirationChecker(),
                 $password_handler
             ),

@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletorBuilder;
+use Tuleap\user\PasswordVerifier;
 
 require_once 'pre.php';
 
@@ -53,9 +54,12 @@ if (!isset($password)) {
     echo PHP_EOL;
 }
 
+$password_handler = PasswordHandlerFactory::getPasswordHandler();
+
 $login_manager = new User_LoginManager(
     EventManager::instance(),
     UserManager::instance(),
+    new PasswordVerifier($password_handler),
     new User_PasswordExpirationChecker(),
     PasswordHandlerFactory::getPasswordHandler()
 );

@@ -488,9 +488,10 @@ class UserManager {
         try {
             $password_expiration_checker = new User_PasswordExpirationChecker();
             $password_handler            = PasswordHandlerFactory::getPasswordHandler();
-            $login_manager = new User_LoginManager(
+            $login_manager               = new User_LoginManager(
                 EventManager::instance(),
                 $this,
+                new \Tuleap\user\PasswordVerifier($password_handler),
                 $password_expiration_checker,
                 $password_handler
             );
