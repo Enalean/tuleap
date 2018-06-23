@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,17 +18,5 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/autoload_libs.php');
-require_once (__DIR__ . '/../include/autoload.php');
-
-use Zend\Loader\AutoloaderFactory;
-
-AutoloaderFactory::factory(
-    array(
-        'Zend\Loader\StandardAutoloader' => array(
-            'namespaces' => array(
-                'InoOicClient' => '/usr/share/php/InoOicClient/'
-            )
-        )
-    )
-);
+require_once 'common/autoload_libs.php';
+require_once __DIR__ . '/../include/openidconnectclientPlugin.class.php';

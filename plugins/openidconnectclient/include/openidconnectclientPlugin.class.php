@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -36,6 +36,7 @@ use Tuleap\OpenIDConnectClient\Authentication\Uri\Generator;
 use Tuleap\OpenIDConnectClient\Login\ConnectorPresenterBuilder;
 use Tuleap\OpenIDConnectClient\Login;
 use Tuleap\OpenIDConnectClient\Login\IncoherentDataUniqueProviderException;
+use Tuleap\OpenIDConnectClient\OpenIDConnectClientPluginInfo;
 use Tuleap\OpenIDConnectClient\Provider\EnableUniqueAuthenticationEndpointVerifier;
 use Tuleap\OpenIDConnectClient\Provider\ProviderDao;
 use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
@@ -45,10 +46,10 @@ use Tuleap\OpenIDConnectClient\UserMapping\UserMappingManager;
 use Tuleap\OpenIDConnectClient\UserMapping\UserPreferencesPresenter;
 use Tuleap\OpenIDConnectClient\UserMapping;
 use Tuleap\OpenIDConnectClient\Administration;
-use Zend\Loader\AutoloaderFactory;
 use Tuleap\Admin\AdminPageRenderer;
 
-require_once('constants.php');
+require_once __DIR__ . '/constants.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 class openidconnectclientPlugin extends Plugin {
     public function __construct($id) {
@@ -76,8 +77,9 @@ class openidconnectclientPlugin extends Plugin {
     /**
      * @return OpenIDConnectClientPluginInfo
      */
-    public function getPluginInfo() {
-        if (! is_a($this->pluginInfo, 'OpenIDConnectClientPluginInfo')) {
+    public function getPluginInfo()
+    {
+        if (! $this->pluginInfo instanceof OpenIDConnectClientPluginInfo) {
             $this->pluginInfo = new OpenIDConnectClientPluginInfo($this);
         }
         return $this->pluginInfo;
@@ -127,18 +129,6 @@ class openidconnectclientPlugin extends Plugin {
         );
     }
 
-    private function loadLibrary() {
-        AutoloaderFactory::factory(
-            array(
-                'Zend\Loader\StandardAutoloader' => array(
-                    'namespaces' => array(
-                        'InoOicClient' => '/usr/share/php/InoOicClient/'
-                    )
-                )
-            )
-        );
-    }
-
     /**
      * @return ProviderManager
      */
@@ -176,8 +166,6 @@ class openidconnectclientPlugin extends Plugin {
             );
             return;
         }
-
-        $this->loadLibrary();
 
         $url_generator = new Login\LoginUniqueAuthenticationUrlGenerator(
             $provider_manager,
@@ -236,7 +224,6 @@ class openidconnectclientPlugin extends Plugin {
             );
             return;
         }
-        $this->loadLibrary();
 
         $provider_manager                  = $this->getProviderManager();
         $flow                              = $this->getFlow($provider_manager);
@@ -348,7 +335,6 @@ class openidconnectclientPlugin extends Plugin {
         if(! $this->canPluginAuthenticateUser()) {
             return;
         }
-        $this->loadLibrary();
 
         $user_manager                = UserManager::instance();
         $provider_manager            = $this->getProviderManager();
@@ -420,7 +406,6 @@ class openidconnectclientPlugin extends Plugin {
         if (!$this->canPluginAuthenticateUser()) {
             $GLOBALS['Response']->redirect('/');
         }
-        $this->loadLibrary();
 
         $provider_manager        = $this->getProviderManager();
         $flow                    = $this->getFlow($provider_manager);

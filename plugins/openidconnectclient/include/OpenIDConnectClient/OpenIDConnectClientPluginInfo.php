@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,13 +17,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class OpenIDConnectClientPluginDescriptor extends PluginDescriptor {
-    public function __construct() {
-        parent::__construct(
-            $GLOBALS['Language']->getText('plugin_openidconnectclient', 'descriptor_name'),
-            false,
-            $GLOBALS['Language']->getText('plugin_openidconnectclient', 'descriptor_description')
-        );
-        $this->setVersionFromFile(dirname(__FILE__).'/../VERSION');
+namespace Tuleap\OpenIDConnectClient;
+
+class OpenIDConnectClientPluginInfo extends \PluginInfo
+{
+    public function __construct($plugin)
+    {
+        parent::__construct($plugin);
+        $this->setPluginDescriptor(new OpenIDConnectClientPluginDescriptor());
     }
 }

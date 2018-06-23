@@ -269,7 +269,6 @@ Group: Development/Tools
 Version: @@PLUGIN_OPENIDCONNECTCLIENT_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
-#Requires: php-openid-connect-client
 %description plugin-openidconnectclient
 Connect to Tuleap using an OpenID Connect provider
 
