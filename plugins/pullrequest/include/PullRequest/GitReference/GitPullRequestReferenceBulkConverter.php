@@ -106,6 +106,8 @@ class GitPullRequestReferenceBulkConverter
                 $this->logger->debug("Git reference successfully created for PR #$pull_request_id");
             } catch (\Git_Command_Exception $ex) {
                 $this->logger->error("PR #$pull_request_id marked as broken: " . $ex->getMessage());
+            } catch (GitPullRequestReferenceNotFoundException $ex) {
+                $this->logger->error('Incoherent state found, did you run forgeupgrade?', $ex);
             }
         }
     }

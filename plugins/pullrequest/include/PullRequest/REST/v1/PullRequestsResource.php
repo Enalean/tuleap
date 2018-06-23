@@ -228,12 +228,10 @@ class PullRequestsResource extends AuthenticatedResource
         );
 
         $git_pull_request_reference_dao             = new GitPullRequestReferenceDAO;
-        $git_namespace_availability_checker         = new GitPullRequestReferenceNamespaceAvailabilityChecker;
         $this->git_pull_request_reference_retriever = new GitPullRequestReferenceRetriever($git_pull_request_reference_dao);
         $this->git_pull_request_reference_updater   = new GitPullRequestReferenceUpdater(
             $git_pull_request_reference_dao,
-            new GitPullRequestReferenceCreator($git_pull_request_reference_dao, $git_namespace_availability_checker),
-            $git_namespace_availability_checker
+            new GitPullRequestReferenceNamespaceAvailabilityChecker()
         );
     }
 

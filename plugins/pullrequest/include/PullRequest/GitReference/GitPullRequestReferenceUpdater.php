@@ -31,26 +31,21 @@ class GitPullRequestReferenceUpdater
      */
     private $dao;
     /**
-     * @var GitPullRequestReferenceCreator
-     */
-    private $reference_creator;
-    /**
      * @var GitPullRequestReferenceNamespaceAvailabilityChecker
      */
     private $namespace_availability_checker;
 
     public function __construct(
         GitPullRequestReferenceDAO $dao,
-        GitPullRequestReferenceCreator $reference_creator,
         GitPullRequestReferenceNamespaceAvailabilityChecker $namespace_availability_checker
     ) {
         $this->dao                            = $dao;
-        $this->reference_creator              = $reference_creator;
         $this->namespace_availability_checker = $namespace_availability_checker;
     }
 
     /**
      * @throws \Git_Command_Exception
+     * @throws GitReferenceNotFound
      */
     public function updatePullRequestReference(
         PullRequest $pull_request,
@@ -64,13 +59,7 @@ class GitPullRequestReferenceUpdater
 
         $reference_row = $this->dao->getReferenceByPullRequestId($pull_request->getId());
         if (empty($reference_row)) {
-            $this->reference_creator->createPullRequestReference(
-                $pull_request,
-                $executor_repository_source,
-                $executor_repository_destination,
-                $repository_destination
-            );
-            return;
+            throw new GitReferenceNotFound($pull_request);
         }
         $reference = new GitPullRequestReference($reference_row['reference_id'], $reference_row['status']);
         if (! $reference->isGitReferenceUpdatable()) {
