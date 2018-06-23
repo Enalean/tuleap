@@ -1,5 +1,7 @@
 /usr/share/tuleap/plugins/pullrequest/tests/InlineComment/InlineCommentUpdaterTest.php
+/usr/share/tuleap/plugins/pullrequest/tests/Label/LabeledItemCollectorTest.php
 /usr/share/tuleap/plugins/pullrequest/tests/Authorization/AccessControlVerifierTest.php
+/usr/share/tuleap/plugins/pullrequest/tests/Authorization/PullRequestPermissionCheckerTest.php
 /usr/share/tuleap/plugins/pullrequest/tests/Reference/HTMLURLBuilderTest.php
 /usr/share/tuleap/plugins/pullrequest/tests/Reference/ReferenceFactoryTest.php
 /usr/share/tuleap/plugins/pullrequest/tests/FileUniDiffBuilderTest.php
