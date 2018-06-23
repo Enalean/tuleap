@@ -1,10 +1,6 @@
-/tuleap/plugins/tracker/tests/TrackerXmlImportTest.php
 /tuleap/plugins/tracker/tests/Artifact/XMLImportTest.php
 /tuleap/plugins/tracker/tests/Artifact/Changeset/Notification/RecipientsManagerTest.php
 /tuleap/plugins/tracker/tests/Artifact/Tracker_ArtifactCreatorTest.php
-/tuleap/plugins/tracker/tests/rest/ArtifactsDeletion/ArtifactsDeletionTest.php
-/tuleap/plugins/tracker/tests/rest/XML/ArtifactTest.php
-/tuleap/plugins/tracker/tests/rest/TQL/TQLTest.php
 /tuleap/plugins/tracker/tests/Tracker/Report/Query/Advanced/InvalidFields/ListFieldCheckerWithBindUgroupsTest.php
 /tuleap/plugins/tracker/tests/Tracker/Permission/PermissionRequestTest.php
 /tuleap/plugins/tracker/tests/Tracker/XML/Exporter/ChangesetXMLExporterTest.php
