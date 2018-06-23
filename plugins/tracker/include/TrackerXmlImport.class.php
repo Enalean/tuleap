@@ -289,7 +289,7 @@ class TrackerXmlImport
             )
         );
 
-        EventManager::instance()->processEvent(
+        $this->event_manager->processEvent(
             Event::IMPORT_COMPAT_REF_XML,
             array(
                 'logger'          => $this->logger,
