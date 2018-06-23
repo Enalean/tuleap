@@ -46,7 +46,7 @@ class XMLNode
 	var $_parent_id;
 	var $_parent_node;
 	
-	function & XMLNode($id = NULL)
+	function __construct($id = NULL)
 	{
 		$this->_id = isset($id) ? $id : md5(uniqid(rand(),1));
 		$this->_name = '';
@@ -363,7 +363,7 @@ class XMLNode
 
 class MathMLNode extends XMLNode
 {
-	function & MathMLNode($id = NULL)
+	function __construct($id = NULL)
 	{
 		parent::__construct($id);
 	}

@@ -271,7 +271,7 @@ class Jabber {
 	var $presence_cache = array(); // Initialize presence cache
 
 	// Constructor
-	function Jabber($enable_logging = false) {
+	function __construct($enable_logging = false) {
 		$this->_use_log = $enable_logging;
 		$this->_unique_counter = 0;
 		$this->_log_open();
