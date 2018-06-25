@@ -45,6 +45,6 @@
         }
     },
     "components": [
-        "plugins/git/www/scripts"
+        "www/scripts"
     ]
 }

@@ -32,6 +32,6 @@
         }
     },
     "components": [
-        "plugins/label/www/scripts/"
+        "www/scripts/"
     ]
 }

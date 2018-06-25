@@ -82,6 +82,7 @@ function declare_plugin_tasks(asset_dir) {
             plugin_component_task_name = 'components-' + name;
 
             component_builder.installAndBuildNpmComponents(
+                base_dir,
                 plugin.components,
                 plugin_component_task_name,
                 [clean_js_task_name]

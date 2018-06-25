@@ -44,6 +44,6 @@
         }
     },
     "components": [
-        "plugins/velocity/www/scripts"
+        "www/scripts"
     ]
 }

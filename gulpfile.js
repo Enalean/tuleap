@@ -114,9 +114,9 @@ const fat_combined_files = [
     asset_dir = 'www/assets';
 
 tuleap.declare_plugin_tasks(asset_dir);
-component_builder.installAndBuildNpmComponents(core_build_manifest.components, 'components-core', ['clean-js-core']);
-component_builder.installAndBuildBowerComponents(bower_app_paths, 'bower-apps');
 const base_dir = '.';
+component_builder.installAndBuildNpmComponents(base_dir, core_build_manifest.components, 'components-core', ['clean-js-core']);
+component_builder.installAndBuildBowerComponents(base_dir, bower_app_paths, 'bower-apps');
 sass_builder.cleanAndBuildSass('sass-core-select2', base_dir, select2_scss);
 sass_builder.cleanAndBuildSass('sass-core-themes', base_dir, core_build_manifest);
 sass_builder.lintSass('scss-lint-core-select2', base_dir, select2_scss);

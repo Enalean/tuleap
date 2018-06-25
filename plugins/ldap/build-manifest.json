@@ -27,7 +27,7 @@
         }
     },
     "components": [
-        "plugins/ldap/www/scripts/"
+        "www/scripts/"
     ],
     "gettext-js": {
         "ldap-bindings": {

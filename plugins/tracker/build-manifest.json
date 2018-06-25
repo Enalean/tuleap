@@ -93,7 +93,7 @@
         }
     },
     "components": [
-        "plugins/tracker/grammar/",
-        "plugins/tracker/www/scripts/"
+        "grammar/",
+        "www/scripts/"
     ]
 }

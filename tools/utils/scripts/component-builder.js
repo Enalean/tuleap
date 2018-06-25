@@ -88,10 +88,11 @@ function installBowerComponent(component, dependent_tasks) {
     return task_name;
 }
 
-function installAndBuildNpmComponents(component_paths, components_task_name, dependent_tasks) {
+function installAndBuildNpmComponents(base_dir, component_paths, components_task_name, dependent_tasks) {
     const build_tasks = [];
+    const full_component_paths = component_paths.map(p => path.join(base_dir, p));
 
-    var promise = findComponentsWithPackageAndBuildScript(component_paths).then(function (components) {
+    var promise = findComponentsWithPackageAndBuildScript(full_component_paths).then(function (components) {
         components.forEach(function(component) {
             var install_task_name = installNpmComponent(component);
             var build_task_name   = buildNpmComponent(component, [install_task_name]);
@@ -106,10 +107,11 @@ function installAndBuildNpmComponents(component_paths, components_task_name, dep
     });
 }
 
-function installAndBuildBowerComponents(component_paths, components_task_name, dependent_tasks) {
-    var build_tasks = [];
+function installAndBuildBowerComponents(base_dir, component_paths, components_task_name, dependent_tasks) {
+    const build_tasks = [];
+    const full_component_paths = component_paths.map(p => path.join(base_dir, p));
 
-    var promise = findComponentsWithPackageAndBuildScript(component_paths).then(function (components) {
+    var promise = findComponentsWithPackageAndBuildScript(full_component_paths).then(function (components) {
         components.forEach(function(component) {
             var install_task_name       = installNpmComponent(component);
             var bower_install_task_name = installBowerComponent(component, [install_task_name]);
