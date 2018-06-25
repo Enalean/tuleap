@@ -55,10 +55,10 @@ const webpack_config_for_artifact_modal = {
             // This ensures that dependencies resolve their imported modules in angular-artifact-modal's node_modules
             path.resolve(__dirname, 'node_modules')
         ],
-        alias: {
-            'angular-tlp': path.join(path_to_tlp, 'angular-tlp/index.js'),
-            'tlp-mocks': path.join(path_to_tlp, 'mocks/index.js')
-        }
+        alias: webpack_configurator.extendAliases(
+            {},
+            webpack_configurator.angular_artifact_modal_aliases
+        )
     },
     module: {
         rules: [

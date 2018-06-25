@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,20 +20,20 @@
 import { get } from 'tlp';
 import { sanitize } from 'dompurify';
 import { init as togglerInit } from '../tuleap/toggler.js';
+import { loadTooltips } from '../codendi/Tooltip.js';
 
-export default init;
-
-function init() {
+export default async function init() {
     const widgets = document.querySelectorAll('.dashboard-widget-asynchronous');
 
-    [].forEach.call(widgets, function (widget) {
-        get(widget.dataset.ajaxUrl)
-            .then(response => response.text())
-            .then(function (html) {
-                widget.innerHTML = sanitize(html);
-                widget.classList.remove('dashboard-widget-asynchronous-loading');
-                window.codendi.Tooltip.load(widget);
-                togglerInit(widget);
-            });
-    });
+    for (const widget of widgets) {
+        const response = await get(widget.dataset.ajaxUrl)
+        const html = await response.text();
+
+        widget.innerHTML = sanitize(html);
+        widget.classList.remove(
+            'dashboard-widget-asynchronous-loading'
+        );
+        loadTooltips();
+        togglerInit(widget);
+    }
 }

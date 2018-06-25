@@ -25,7 +25,8 @@ const webpack_config = {
                     'angular-ui-bootstrap-bower/ui-bootstrap-tpls.js',
                 'angular-ui-select': 'ui-select/dist/select.js'
             },
-            webpack_configurator.flaming_parrot_labels_box_aliases
+            webpack_configurator.flaming_parrot_labels_box_aliases,
+            webpack_configurator.tuleap_core_alias
         )
     },
     module: {

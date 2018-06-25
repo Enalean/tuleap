@@ -623,8 +623,6 @@ class AgileDashboardPlugin extends Plugin {
             return;
         }
 
-        $params['javascript_files'][] = '/scripts/codendi/Tooltip.js';
-        $params['javascript_files'][] = '/scripts/codendi/Tooltip-loader.js';
         foreach ($provider->getDependencies() as $javascript) {
             if (isset($javascript['snippet'])) {
                 $GLOBALS['HTML']->includeFooterJavascriptSnippet($javascript['snippet']);
