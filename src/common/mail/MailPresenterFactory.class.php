@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -261,7 +261,8 @@ class MailPresenterFactory {
                 require_once 'www/themes/FlamingParrot/FlamingParrot_Theme.class.php';
             }
 
-            $defaultThemeVariant = ForgeConfig::get('sys_default_theme_variant');
+            $theme_variant       = new ThemeVariant();
+            $defaultThemeVariant = $theme_variant->getDefault();
             $color_logo          = FlamingParrot_Theme::getColorOfCurrentTheme($defaultThemeVariant);
             $color_button        = $color_logo;
         }

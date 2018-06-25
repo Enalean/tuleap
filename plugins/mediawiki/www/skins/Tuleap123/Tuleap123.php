@@ -80,23 +80,12 @@ class SkinTuleap123 extends SkinTemplate {
 
         $bodyAttrs['class'] .= ' has-sidebar ' . $sidebar_state;
 
-        $theme_manager    = new ThemeManager(
-            new BurningParrotCompatiblePageDetector(
-                new CurrentPage(),
-                new Admin_Homepage_Dao()
-            )
-        );
-        $user_theme       = $current_user->getTheme();
-        $prefered_variant = $current_user->getPreference('theme_variant');
-
+        $user_theme = $current_user->getTheme();
         if ($this->hasVariant($user_theme)) {
+            $theme_variant      = new ThemeVariant();
+            $prefered_variant   = $theme_variant->getVariantForUser($current_user);
+
             $bodyAttrs['class'] .= ' ' . $prefered_variant;
-        } elseif (! $theme_manager->isThemeValid($user_theme) && $this->hasVariant(ForgeConfig::get('sys_themedefault'))) {
-            if ($prefered_variant) {
-                $bodyAttrs['class'] .= ' ' . $prefered_variant;
-            } else {
-                $bodyAttrs['class'] .= ' ' . ForgeConfig::get('sys_default_theme_variant');
-            }
         }
     }
 
