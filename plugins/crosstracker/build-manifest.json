@@ -29,7 +29,7 @@
         }
     },
     "components": [
-        "plugins/crosstracker/www/scripts/"
+        "www/scripts/"
     ],
     "gettext-js": {
         "cross-tracker": {

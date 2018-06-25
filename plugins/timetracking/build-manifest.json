@@ -42,6 +42,6 @@
         }
     },
     "components": [
-        "plugins/timetracking/www/scripts"
+        "www/scripts"
     ]
 }

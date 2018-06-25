@@ -26,6 +26,6 @@
         }
     },
     "components": [
-        "plugins/admindelegation/www/scripts"
+        "www/scripts"
     ]
 }

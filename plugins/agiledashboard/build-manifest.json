@@ -78,8 +78,8 @@
         }
     },
     "components": [
-        "plugins/agiledashboard/www/js",
-        "plugins/agiledashboard/www/js/kanban",
-        "plugins/agiledashboard/www/js/planning-v2"
+        "www/js",
+        "www/js/kanban",
+        "www/js/planning-v2"
     ]
 }

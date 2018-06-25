@@ -43,6 +43,6 @@
         }
     },
     "components": [
-        "plugins/create_test_env/scripts/"
+        "scripts/"
     ]
 }

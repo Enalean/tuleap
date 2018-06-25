@@ -52,6 +52,6 @@
         }
     },
     "components": [
-        "plugins/svn/www/scripts"
+        "www/scripts"
     ]
 }
