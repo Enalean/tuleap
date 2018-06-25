@@ -45,10 +45,9 @@
     "raw-loader": "^0.5.1",
     "read-pkg": "2.0.0",
     "run-sequence": "^2.2.1",
-    "uglifyjs-webpack-plugin": "0.4.6",
     "vue-loader": "^15.0.0",
     "vue-template-compiler": "^2.5.16",
-    "webpack": "^4.9.1",
+    "webpack": "^4.12.0",
     "webpack-assets-manifest": "^3.0.1",
     "webpack-cli": "^2.1.4"
   },

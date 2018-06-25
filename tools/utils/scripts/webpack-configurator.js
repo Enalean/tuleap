@@ -21,7 +21,6 @@ const webpack = require('webpack');
 const WebpackAssetsManifest = require('webpack-assets-manifest');
 const AngularGettextPlugin = require('angular-gettext-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const rule_configurations = require('./webpack-rule-configs.js');
 const aliases = require('./webpack-aliases.js');
 
@@ -59,17 +58,12 @@ function getAngularGettextPlugin() {
     });
 }
 
-function getUglifyJSPlugin() {
-    return new UglifyJSPlugin();
-}
-
 const configurator = {
     configureOutput,
     getAngularGettextPlugin,
     getManifestPlugin,
     getMomentLocalePlugin,
-    getVueLoaderPlugin,
-    getUglifyJSPlugin
+    getVueLoaderPlugin
 };
 Object.assign(configurator, rule_configurations, aliases);
 
