@@ -59,9 +59,14 @@ class Cardwall_OnTop_Config_View_ColumnDefinition {
         foreach ($this->config->getDashboardColumns() as $column) {
             $html .= '<th>';
             if ($column->isHeaderATLPColor()) {
-                $html .= '<div class="cardwall-column-header-color cardwall-column-header-color-'. $column->getHeadercolor() . '"></div>';
+                $color = $this->hp->purify($column->getHeadercolor());
+                $html .= '<div class="cardwall-column-header-color cardwall-column-header-color-'. $color . '"></div>';
             } else {
-                $html .= '<div class="cardwall-column-header-color" style="background-color: '. $column->getHeadercolor() .'"></div>';
+                $hexa_color = $column->getHeadercolor();
+                if (preg_match('/^#([a-fA-F0-9]{3}){1,2}$/', $hexa_color) !== 1) {
+                    $hexa_color = '';
+                }
+                $html .= '<div class="cardwall-column-header-color" style="background-color: '. $hexa_color .'"></div>';
             }
 
             $html .= $this->fetchColumnHeader($column);
@@ -216,9 +221,14 @@ class Cardwall_OnTop_Config_View_ColumnDefinition {
 
     private function decorateEdit(Cardwall_Column $column)
     {
-        $current_color = ($column->isHeaderATLPColor())
-            ? $column->getHeadercolor()
-            : ColorHelper::CssRGBToHexa($column->getHeadercolor());
+        if ($column->isHeaderATLPColor()) {
+            $current_color = $column->getHeadercolor();
+        } else {
+            $current_color = ColorHelper::CssRGBToHexa($column->getHeadercolor());
+            if (preg_match('/^#([a-fA-F0-9]{3}){1,2}$/', $current_color) !== 1) {
+                $current_color = '';
+            }
+        }
 
         $input_id   = 'column_'. $column->id .'_field';
         $input_name = "column[$column->id][bgcolor]";
