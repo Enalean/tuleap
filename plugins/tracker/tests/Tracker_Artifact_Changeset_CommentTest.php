@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -100,5 +100,13 @@ class Tracker_Artifact_Changeset_CommentTest extends TuleapTestCase {
 
         $this->assertEqual((string) $changeset_node->comment->body, $escaped_body);
         $this->assertEqual($changeset_node->comment->body['format'], 'html');
+    }
+
+    public function testCheckCommentFormat()
+    {
+        $this->assertIdentical('text', Tracker_Artifact_Changeset_Comment::checkCommentFormat('text'));
+        $this->assertIdentical('html', Tracker_Artifact_Changeset_Comment::checkCommentFormat('html'));
+        $this->assertIdentical('text', Tracker_Artifact_Changeset_Comment::checkCommentFormat('not_valid'));
+        $this->assertIdentical('text', Tracker_Artifact_Changeset_Comment::checkCommentFormat(true));
     }
 }
