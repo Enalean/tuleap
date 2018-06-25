@@ -58,10 +58,10 @@ class Cardwall_OnTop_Config_View_ColumnDefinition {
         $html .= '<td></td>';
         foreach ($this->config->getDashboardColumns() as $column) {
             $html .= '<th>';
-            if ($column->isBackgroundATLPColor()) {
-                $html .= '<div class="cardwall-column-header-color cardwall-column-header-color-'. $column->getBgcolor() . '"></div>';
+            if ($column->isHeaderATLPColor()) {
+                $html .= '<div class="cardwall-column-header-color cardwall-column-header-color-'. $column->getHeadercolor() . '"></div>';
             } else {
-                $html .= '<div class="cardwall-column-header-color" style="background-color: '. $column->getBgcolor() .'"></div>';
+                $html .= '<div class="cardwall-column-header-color" style="background-color: '. $column->getHeadercolor() .'"></div>';
             }
 
             $html .= $this->fetchColumnHeader($column);
@@ -132,7 +132,6 @@ class Cardwall_OnTop_Config_View_ColumnDefinition {
             $html .= '</td>';
         }
         return $html;
-        return;
     }
 
     public function visitTrackerMappingFreestyle($mapping) {
@@ -217,9 +216,9 @@ class Cardwall_OnTop_Config_View_ColumnDefinition {
 
     private function decorateEdit(Cardwall_Column $column)
     {
-        $current_color = ($column->isBackgroundATLPColor())
-            ? $column->getBgcolor()
-            : ColorHelper::CssRGBToHexa($column->getBgcolor());
+        $current_color = ($column->isHeaderATLPColor())
+            ? $column->getHeadercolor()
+            : ColorHelper::CssRGBToHexa($column->getHeadercolor());
 
         $input_id   = 'column_'. $column->id .'_field';
         $input_name = "column[$column->id][bgcolor]";
@@ -237,21 +236,6 @@ class Cardwall_OnTop_Config_View_ColumnDefinition {
                 false
             )
         );
-    }
-
-    private function fetchSquareColor($id, $title, $classname, $img = 'blank16x16.png') {
-        $html = '';
-        $bgcolor = "background-color:$title;";
-
-        $html .= $GLOBALS['HTML']->getImage($img, array(
-            'id'     => $id,
-            'width'  => '16px',
-            'height' => '16px',
-            'style'  => 'margin-left: 5px; border: 1px solid black; vertical-align:middle; '. $bgcolor,
-            'title'  => $title,
-            'class'  => $classname,
-        ));
-        return $html;
     }
 
     protected function fetchAdditionalColumnHeader() {

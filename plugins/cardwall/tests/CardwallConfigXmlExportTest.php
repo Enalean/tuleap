@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -137,9 +137,9 @@ class CardwallConfigXmlExport_ColumnsTest extends TuleapTestCase {
 
     public function itDumpsColumnsAsDefined() {
         stub($this->cardwall_config)->getDashboardColumns()->returns(new Cardwall_OnTop_Config_ColumnCollection(array(
-            new Cardwall_Column(112, "Todo", "red", ""),
-            new Cardwall_Column(113, "On going", "rgb(255,255,255)", ""),
-            new Cardwall_Column(113, "On going", "fiesta-red", "")
+            new Cardwall_Column(112, "Todo", "red"),
+            new Cardwall_Column(113, "On going", "fiesta-red"),
+            new Cardwall_Column(113, "On going", "rgb(255,255,255)")
         )));
 
 
@@ -153,9 +153,9 @@ class CardwallConfigXmlExport_ColumnsTest extends TuleapTestCase {
 
     public function itDumpsColumnsAsDefinedWithMappings() {
         stub($this->cardwall_config)->getDashboardColumns()->returns(new Cardwall_OnTop_Config_ColumnCollection(array(
-            new Cardwall_Column(112, "Todo", "red", ""),
-            new Cardwall_Column(113, "On going", "rgb(255,255,255)", ""),
-            new Cardwall_Column(113, "On going", "fiesta-red", "")
+            new Cardwall_Column(112, "Todo", "red"),
+            new Cardwall_Column(113, "On going", "fiesta-red"),
+            new Cardwall_Column(113, "On going", "rgb(255,255,255)")
         )));
 
         $tracker = stub('Tracker')->getXMLId()->returns('T200');

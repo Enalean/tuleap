@@ -21,12 +21,12 @@
                     {{#columns}}
                         <th class="cardwall-column-header">
                             <div class="cardwall-column-header-color
-                                {{# isBackgroundATLPColor }}
-                                    cardwall-column-header-color-{{ bgcolor }}
-                                {{/ isBackgroundATLPColor }}"
-                                {{^ isBackgroundATLPColor }}
-                                    style="background-color: {{ bgcolor }}"
-                                {{/isBackgroundATLPColor}}
+                                {{# isHeaderATLPColor }}
+                                    cardwall-column-header-color-{{ header_color }}
+                                {{/ isHeaderATLPColor }}"
+                                {{^ isHeaderATLPColor }}
+                                    style="background-color: {{ header_color }}"
+                                {{/isHeaderATLPColor}}
                             ></div>
                             <div class="cardwall-column-header-container">
                                 {{label}}

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -46,14 +46,14 @@ class Cardwall_OnTop_Config_TrackerMappingStatusTest extends TuleapTestCase {
     public function itReturnsAnEmptyLabelWhenThereIsNoValueMapping() {
         $value_mappings = array();
         $mapping = new Cardwall_OnTop_Config_TrackerMappingStatus(mock('Tracker'), array(), $value_mappings, aSelectBoxField()->build());
-        $column = new Cardwall_Column(0, 'whatever', 'white', 'black');
+        $column = new Cardwall_Column(0, 'whatever', 'white');
         $this->assertEqual('', $mapping->getSelectedValueLabel($column));
     }
 
     public function itReturnsAnEmptyLabelWhenThereIsNoMappingForTheGivenColumn() {
         $mapping = new Cardwall_OnTop_Config_TrackerMappingStatus(mock('Tracker'), array(), $this->value_mappings, aSelectBoxField()->build());
-        $column_which_match      = new Cardwall_Column(11, 'Ongoing', 'white', 'black');
-        $column_which_dont_match = new Cardwall_Column(13, 'Ship It', 'white', 'black');
+        $column_which_match      = new Cardwall_Column(11, 'Ongoing', 'white');
+        $column_which_dont_match = new Cardwall_Column(13, 'Ship It', 'white');
         $this->assertEqual('In Progress', $mapping->getSelectedValueLabel($column_which_match));
         $this->assertEqual('', $mapping->getSelectedValueLabel($column_which_dont_match));
         $this->assertEqual('Accept a default value', $mapping->getSelectedValueLabel($column_which_dont_match, 'Accept a default value'));
@@ -62,7 +62,7 @@ class Cardwall_OnTop_Config_TrackerMappingStatusTest extends TuleapTestCase {
     public function itIsMappedToAColumnWhenTheStatusValueMatchColumnMapping() {
         $mapping = new Cardwall_OnTop_Config_TrackerMappingStatus(mock('Tracker'), array(), $this->value_mappings, aSelectBoxField()->build());
 
-        $column = new Cardwall_Column(11, 'Ongoing', '', '');
+        $column = new Cardwall_Column(11, 'Ongoing', '');
 
         $this->assertTrue($mapping->isMappedTo($column, 'In Progress'));
         $this->assertFalse($mapping->isMappedTo($column, 'Ongoing'));
@@ -73,7 +73,7 @@ class Cardwall_OnTop_Config_TrackerMappingStatusTest extends TuleapTestCase {
     public function itIsMappedToAColumnWhenStatusIsNullAndNoneIsMappedToColumn() {
         $mapping = new Cardwall_OnTop_Config_TrackerMappingStatus(mock('Tracker'), array(), $this->value_mappings, aSelectBoxField()->build());
 
-        $column = new Cardwall_Column(10, 'Todo', '', '');
+        $column = new Cardwall_Column(10, 'Todo', '');
 
         $this->assertTrue($mapping->isMappedTo($column, null));
 
@@ -83,9 +83,8 @@ class Cardwall_OnTop_Config_TrackerMappingStatusTest extends TuleapTestCase {
     public function itDoesntMapOnNoneIfItsNotExplicitlyConfigured() {
         $mapping = new Cardwall_OnTop_Config_TrackerMappingStatus(mock('Tracker'), array(), $this->value_mappings, aSelectBoxField()->build());
 
-        $column  = new Cardwall_Column(100, 'None', '', '');
+        $column  = new Cardwall_Column(100, 'None', '');
 
         $this->assertFalse($mapping->isMappedTo($column, null));
     }
 }
-?>
