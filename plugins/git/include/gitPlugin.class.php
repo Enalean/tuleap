@@ -120,7 +120,7 @@ use Tuleap\GitBundle;
 use Tuleap\Request\RestrictedUsersAreHandledByPluginEvent;
 
 require_once 'constants.php';
-require_once 'autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 /**
  * GitPlugin
