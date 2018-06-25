@@ -68,6 +68,10 @@ class Tracker_FormElement_Field_List_BindDecorator
 
     /**
      * Decorate a value.
+     *
+     * @deprecated This function is unsafe, using it for anything new must be carefully
+     * considered and should probably be avoided
+     *
      * @param string $value The value to decorate Don't forget to html-purify.
      * @param boolean $full false if you want only the decoration
      * @return string html
@@ -81,7 +85,7 @@ class Tracker_FormElement_Field_List_BindDecorator
         if (! $this->isUsingOldPalette()) {
             $html .= self::fetchSquareImage('blank16x16.png', [
                 'title' => $value,
-                'class' => 'colorpicker-preview-' . $this->tlp_color_name
+                'class' => \Codendi_HTMLPurifier::instance()->purify('colorpicker-preview-' . $this->tlp_color_name)
             ]);
         } else {
             $html .= self::fetchSquareColor('', $value, '', $this->r, $this->g, $this->b);
@@ -93,17 +97,27 @@ class Tracker_FormElement_Field_List_BindDecorator
         return $html;
     }
 
-    public function decorateSelectOptionWithStyles() {
+    /**
+     * @deprecated This function is unsafe, using it for anything new must be carefully
+     * considered and should probably be avoided
+     */
+    public function decorateSelectOptionWithStyles()
+    {
         if (! $this->isUsingOldPalette()) {
             return [
-                'classes'       => 'select-option-colored-' . $this->tlp_color_name,
+                'classes'       => \Codendi_HTMLPurifier::instance()->purify('select-option-colored-' . $this->tlp_color_name),
                 'inline-styles' => ''
             ];
         }
 
+        $hexa_color = ColorHelper::RGBToHexa($this->r, $this->g, $this->b);
+        if (preg_match('/^#([a-fA-F0-9]{3}){1,2}$/', $hexa_color) !== 1) {
+            $hexa_color = '';
+        }
+
         return [
             'classes'       => '',
-            'inline-styles' => 'border-left: 16px solid '. ColorHelper::RGBToHexa($this->r, $this->g, $this->b) .';'
+            'inline-styles' => 'border-left: 16px solid '. $hexa_color .';'
         ];
     }
 
@@ -162,6 +176,9 @@ class Tracker_FormElement_Field_List_BindDecorator
         $bgcolor = '';
 
         if ($r !== null && $g !== null && $b !== null ) {
+            $r = (int) $r;
+            $g = (int) $g;
+            $b = (int) $b;
             $bgcolor .= "background-color:rgb($r, $g, $b);";
         }
 

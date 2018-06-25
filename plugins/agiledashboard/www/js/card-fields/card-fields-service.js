@@ -102,15 +102,17 @@ function CardFieldsService(
         }
 
         function getValueRenderedWithColor(value, filter_terms) {
-            const { r, g, b } = value.color;
-            const color = `<span class="extra-card-field-color"
-                style="background: rgb(${ r }, ${ g }, ${ b })"></span>`;
+            const r     = parseInt(value.color.r);
+            const g     = parseInt(value.color.g);
+            const b     = parseInt(value.color.b);
+            const color = $sce.getTrustedHtml(`<span class="extra-card-field-color"
+                style="background: rgb(${ r }, ${ g }, ${ b })"></span>`);
 
             return color + highlight(value.label, filter_terms);
         }
 
         function getValueRenderedWithTlpColor({ label, tlp_color }, filter_terms) {
-            const color = `<span class="extra-card-field-color card-field-${ tlp_color }"></span>`;
+            const color = $sce.getTrustedHtml(`<span class="extra-card-field-color card-field-${ tlp_color }"></span>`);
 
             return color + highlight(label, filter_terms);
         }

@@ -94,6 +94,8 @@ class CardsPreviewBuilder
      */
     private function getDecoratedValue(array $decorators, \Tracker_FormElement_Field_List_BindValue $value)
     {
-        return (isset($decorators[$value->getId()])) ? $decorators[$value->getId()]->decorate($value->getLabel()) : $value->getLabel();
+        $label_value = \Codendi_HTMLPurifier::instance()->purify($value->getLabel());
+
+        return (isset($decorators[$value->getId()])) ? $decorators[$value->getId()]->decorate($label_value) : $label_value;
     }
 }
