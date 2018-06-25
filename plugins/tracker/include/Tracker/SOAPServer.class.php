@@ -512,7 +512,7 @@ class Tracker_SOAPServer {
             }
 
             try {
-                $artifact->createNewChangeset($fields_data, $comment, $user, null, true, $comment_format);
+                $artifact->createNewChangeset($fields_data, $comment, $user,  $send_notification = true, $comment_format);
                 return $artifact_id;
             } catch (Tracker_NoChangeException $e) {
                 return $artifact_id;
