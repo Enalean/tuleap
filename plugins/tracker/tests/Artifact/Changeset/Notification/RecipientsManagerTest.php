@@ -22,9 +22,7 @@
 namespace Tuleap\Tracker\Artifact\Changeset\Notification;
 
 use Tracker;
-use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
-use Tracker_Artifact_ChangesetValue_List;
 use Tracker_FormElement_Field_Selectbox;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettings;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsRetriever;
@@ -87,133 +85,96 @@ class RecipientsManagerTest extends \TuleapTestCase
         $field = mock(Tracker_FormElement_Field_Selectbox::class);
         stub($field)->isNotificationsSupported()->returns(true);
         stub($field)->hasNotifications()->returns(true);
-        stub($field)->getRecipients()->returns(array('recipient1'));
+        stub($field)->getRecipients()->returns(['recipient1']);
         stub($field)->userCanRead()->returns(true);
         stub($this->formelement_factory)->getFieldById(1)->returns($field);
 
-        $changeset = mock(Tracker_Artifact_Changeset::class);
-        stub($changeset)->getValues()->returns(array(
-            1 => stub('\Tracker_Artifact_ChangesetValue_List')->hasChanged()->returns(true),
-        ));
-
-        $artifact = stub(Tracker_Artifact::class)->getCommentators()->returns([]);
-        stub($this->unsubscribers_notification_dao)->searchUserIDHavingUnsubcribedFromNotificationByTrackerOrArtifactID()->returns([]);
-        stub($changeset)->getArtifact()->returns(
-            $artifact
-        );
-
-        stub($changeset)->getTracker()->returns(
-            stub('\Tracker')->getRecipients()->returns(array())
-        );
-
-        stub($changeset)->getComment()->returns(
-            stub('\Tracker_Artifact_Changeset_Comment')->hasEmptyBody()->returns(false)
+        $changeset = $this->getAMockedChangeset(
+            true,
+            [],
+            [],
+            'On going',
+            'Review',
+            [],
+            Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
+            false,
+            mock(Tracker_Artifact_Changeset::class)
         );
 
         $this->assertEqual(
-            array('recipient1' => true),
+            ['recipient1' => true],
             $this->recipients_manager->getRecipients($changeset, true)
         );
     }
 
     public function itReturnsRecipientsFromCommentators()
     {
-        $field = mock('\Tracker_FormElement_Field_Date');
-        stub($field)->isNotificationsSupported()->returns(false);
-        stub($field)->userCanRead()->returns(true);
-        stub($this->formelement_factory)->getFieldById(1)->returns($field);
+        $this->mockADateField(false, true);
 
-        $changeset = mock('\Tracker_Artifact_Changeset');
-        stub($changeset)->getValues()->returns(array(
-            1 => stub('\Tracker_Artifact_ChangesetValue_List')->hasChanged()->returns(true),
-        ));
-
-        $artifact = stub('\Tracker_Artifact')->getCommentators()->returns(array('recipient2'));
-        stub($this->unsubscribers_notification_dao)->searchUserIDHavingUnsubcribedFromNotificationByTrackerOrArtifactID()->returns([]);
-        stub($changeset)->getArtifact()->returns(
-            $artifact
-        );
-
-        stub($changeset)->getTracker()->returns(
-            stub('\Tracker')->getRecipients()->returns(array())
-        );
-
-        stub($changeset)->getComment()->returns(
-            stub('\Tracker_Artifact_Changeset_Comment')->hasEmptyBody()->returns(false)
+        $changeset = $this->getAMockedChangeset(
+            true,
+            ['recipient2'],
+            [],
+            'On going',
+            'Review',
+            [],
+            Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
+            false,
+            mock(Tracker_Artifact_Changeset::class)
         );
 
         $this->assertEqual(
-            array('recipient2' => true),
+            ['recipient2' => true],
             $this->recipients_manager->getRecipients($changeset, true)
         );
     }
 
     public function itReturnsRecipientsFromTrackerConfig()
     {
-        $field = mock('\Tracker_FormElement_Field_Date');
-        stub($field)->isNotificationsSupported()->returns(false);
-        stub($field)->userCanRead()->returns(true);
-        stub($this->formelement_factory)->getFieldById(1)->returns($field);
+        $this->mockADateField(false, true);
 
-        $changeset = mock('\Tracker_Artifact_Changeset');
-        stub($changeset)->getValues()->returns(array(
-            1 => stub('\Tracker_Artifact_ChangesetValue_List')->hasChanged()->returns(true),
-        ));
-
-        $artifact = stub('\Tracker_Artifact')->getCommentators()->returns(array());
-        stub($this->unsubscribers_notification_dao)->searchUserIDHavingUnsubcribedFromNotificationByTrackerOrArtifactID()->returns([]);
-        stub($changeset)->getArtifact()->returns(
-            $artifact
-        );
-
-        stub($changeset)->getTracker()->returns(
-            stub('\Tracker')->getRecipients()->returns(array(
-                array(
-                    'on_updates' => true,
+        $changeset = $this->getAMockedChangeset(
+            true,
+            [],
+            [],
+            'On going',
+            'Review',
+            [
+                [
+                    'on_updates'        => true,
                     'check_permissions' => true,
-                    'recipients' => array('recipient3')
-                )
-            ))
-        );
-
-        stub($changeset)->getComment()->returns(
-            stub('\Tracker_Artifact_Changeset_Comment')->hasEmptyBody()->returns(false)
+                    'recipients'        => ['recipient3']
+                ]
+            ],
+            Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
+            false,
+            mock(Tracker_Artifact_Changeset::class)
         );
 
         $this->assertEqual(
-            array('recipient3' => true),
+            ['recipient3' => true],
             $this->recipients_manager->getRecipients($changeset, true)
         );
     }
 
     public function itCleansUserFromRecipientsWhenUserCantReadAtLeastOneChangedField()
     {
-        $field = mock('\Tracker_FormElement_Field_Date');
-        stub($field)->isNotificationsSupported()->returns(false);
-        stub($field)->userCanRead()->returns(false);
-        stub($this->formelement_factory)->getFieldById(1)->returns($field);
+        $this->mockADateField(false, false);
 
-        $changeset = mock('\Tracker_Artifact_Changeset');
-        stub($changeset)->getValues()->returns(array(
-            1 => stub('\Tracker_Artifact_ChangesetValue_List')->hasChanged()->returns(true),
-        ));
-
-        $artifact = stub('\Tracker_Artifact')->getCommentators()->returns(array('recipient2'));
-        stub($this->unsubscribers_notification_dao)->searchUserIDHavingUnsubcribedFromNotificationByTrackerOrArtifactID()->returns([]);
-        stub($changeset)->getArtifact()->returns(
-            $artifact
-        );
-
-        stub($changeset)->getTracker()->returns(
-            stub('\Tracker')->getRecipients()->returns(array())
-        );
-
-        stub($changeset)->getComment()->returns(
-            stub('\Tracker_Artifact_Changeset_Comment')->hasEmptyBody()->returns(true)
+        $changeset = $this->getAMockedChangeset(
+            true,
+            ['recipient2'],
+            [],
+            'On going',
+            'Review',
+            [],
+            Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
+            true,
+            mock(Tracker_Artifact_Changeset::class)
         );
 
         $this->assertEqual(
-            array(),
+            [],
             $this->recipients_manager->getRecipients($changeset, true)
         );
     }
@@ -227,72 +188,50 @@ class RecipientsManagerTest extends \TuleapTestCase
         stub($field)->userCanRead()->returns(true);
         stub($this->formelement_factory)->getFieldById(1)->returns($field);
 
-        $changeset = mock('\Tracker_Artifact_Changeset');
-        stub($changeset)->getValues()->returns(array(
-            1 => stub('\Tracker_Artifact_ChangesetValue_List')->hasChanged()->returns(true),
-        ));
-
-        $artifact = stub('\Tracker_Artifact')->getCommentators()->returns(array('recipient2'));
-        stub($this->unsubscribers_notification_dao)->searchUserIDHavingUnsubcribedFromNotificationByTrackerOrArtifactID()->returns([102]);
-        stub($changeset)->getArtifact()->returns(
-            $artifact
-        );
-
-        stub($changeset)->getTracker()->returns(
-            stub('\Tracker')->getRecipients()->returns(array(
-                array(
-                    'on_updates' => true,
+        $changeset = $this->getAMockedChangeset(
+            true,
+            ['recipient2'],
+            [102],
+            'On going',
+            'Review',
+            [
+                [
+                    'on_updates'        => true,
                     'check_permissions' => true,
-                    'recipients' => array('recipient3')
-                )
-            ))
-        );
-
-        stub($changeset)->getComment()->returns(
-            stub('\Tracker_Artifact_Changeset_Comment')->hasEmptyBody()->returns(false)
+                    'recipients'        => ['recipient3']
+                ]
+            ],
+            Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
+            false,
+            mock(Tracker_Artifact_Changeset::class)
         );
 
         $this->assertEqual(
-            array('recipient1' => true, 'recipient3' => true),
+            ['recipient1' => true, 'recipient3' => true],
             $this->recipients_manager->getRecipients($changeset, true)
         );
     }
 
     public function itDoesNotFilterWhenTrackerIsNotInModeStatusUpdateOnly()
     {
-        $field = mock('\Tracker_FormElement_Field_Date');
-        stub($field)->isNotificationsSupported()->returns(false);
-        stub($field)->userCanRead()->returns(true);
-        stub($this->formelement_factory)->getFieldById(1)->returns($field);
+        $this->mockADateField(false, true);
 
-        $changeset = mock('\Tracker_Artifact_Changeset');
-        stub($changeset)->getValues()->returns(
-            [
-                1 => stub('\Tracker_Artifact_ChangesetValue_List')->hasChanged()->returns(true),
-            ]
-        );
-
-        $artifact = stub('\Tracker_Artifact')->getCommentators()->returns(['recipient3']);
-        stub($this->unsubscribers_notification_dao)->searchUserIDHavingUnsubcribedFromNotificationByTrackerOrArtifactID()->returns([]);
-        stub($changeset)->getArtifact()->returns(
-            $artifact
-        );
-
-        $tracker = Mock(Tracker::class);
-        stub($tracker)->getRecipients()->returns(
+        $changeset = $this->getAMockedChangeset(
+            true,
+            [],
+            [],
+            'On going',
+            'Review',
             [
                 [
                     'on_updates'        => true,
                     'check_permissions' => true,
-                    'recipients'        => []
+                    'recipients'        => ['recipient3']
                 ]
-            ]
-        );
-        stub($tracker)->getNotificationsLevel()->returns(Tracker::NOTIFICATIONS_LEVEL_DEFAULT);
-        stub($changeset)->getTracker()->returns($tracker);
-
-        stub($changeset)->getComment()->returns(
-            stub('\Tracker_Artifact_Changeset_Comment')->hasEmptyBody()->returns(false)
+            ],
+            Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
+            false,
+            mock(Tracker_Artifact_Changeset::class)
         );
 
         $this->assertEqual(
@@ -303,43 +242,24 @@ class RecipientsManagerTest extends \TuleapTestCase
 
     public function itDoesNotFilerWhenStatusChangedAndTrackerIsInStatusChangeOnlyMode()
     {
-        $field = mock('\Tracker_FormElement_Field_Date');
-        stub($field)->isNotificationsSupported()->returns(false);
-        stub($field)->userCanRead()->returns(true);
-        stub($this->formelement_factory)->getFieldById(1)->returns($field);
+        $this->mockADateField(false, true);
 
-        $changeset = mock('\Tracker_Artifact_Changeset');
-        stub($changeset)->getValues()->returns(
-            [
-                1 => stub('\Tracker_Artifact_ChangesetValue_List')->hasChanged()->returns(true),
-            ]
-        );
-
-        $artifact = stub('\Tracker_Artifact')->getCommentators()->returns(['recipient3']);
-        $previous_changeset = mock(Tracker_Artifact_Changeset::class);
-        stub($artifact)->getPreviousChangeset()->returns($previous_changeset);
-        stub($this->unsubscribers_notification_dao)->searchUserIDHavingUnsubcribedFromNotificationByTrackerOrArtifactID()->returns([]);
-        stub($changeset)->getArtifact()->returns(
-            $artifact
-        );
-        stub($artifact)->getStatusForChangeset()->returns('On going');
-        stub($artifact)->getStatus()->returns('Review');
-
-        $tracker = Mock(Tracker::class);
-        stub($tracker)->getRecipients()->returns(
+        $changeset = $this->getAMockedChangeset(
+            true,
+            [],
+            [],
+            'On going',
+            'Review',
             [
                 [
                     'on_updates'        => true,
                     'check_permissions' => true,
-                    'recipients'        => []
+                    'recipients'        => ['recipient3']
                 ]
-            ]
-        );
-        stub($tracker)->getNotificationsLevel()->returns(Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE);
-        stub($changeset)->getTracker()->returns($tracker);
-
-        stub($changeset)->getComment()->returns(
-            stub('\Tracker_Artifact_Changeset_Comment')->hasEmptyBody()->returns(false)
+            ],
+            Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE,
+            false,
+            mock(Tracker_Artifact_Changeset::class)
         );
 
         $this->assertEqual(
@@ -350,45 +270,29 @@ class RecipientsManagerTest extends \TuleapTestCase
 
     public function itDoesNotFilterAtArtifactCreation()
     {
-        $field = mock('\Tracker_FormElement_Field_Date');
-        stub($field)->isNotificationsSupported()->returns(false);
-        stub($field)->userCanRead()->returns(true);
-        stub($this->formelement_factory)->getFieldById(1)->returns($field);
+        $this->mockADateField(false, true);
 
-        $changeset = mock('\Tracker_Artifact_Changeset');
-        stub($changeset)->getValues()->returns(
-            [
-                1 => stub('\Tracker_Artifact_ChangesetValue_List')->hasChanged()->returns(true),
-            ]
-        );
-
-        $artifact = stub('\Tracker_Artifact')->getCommentators()->returns(['recipient3']);
-        stub($artifact)->getPreviousChangeset()->returns(null);
-        stub($this->unsubscribers_notification_dao)->searchUserIDHavingUnsubcribedFromNotificationByTrackerOrArtifactID()->returns([]);
-        stub($changeset)->getArtifact()->returns(
-            $artifact
-        );
-
-        $tracker = Mock(Tracker::class);
-        stub($tracker)->getRecipients()->returns(
+        $changeset = $this->getAMockedChangeset(
+            true,
+            ['recipient3'],
+            [],
+            '',
+            '',
             [
                 [
                     'on_updates'        => true,
                     'check_permissions' => true,
                     'recipients'        => []
                 ]
-            ]
+            ],
+            Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE,
+            false,
+            null
         );
-        stub($tracker)->getNotificationsLevel()->returns(Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE);
-        stub($changeset)->getTracker()->returns($tracker);
 
         $user_notification_settings = mock(UserNotificationSettings::class);
         stub($this->notification_settings_retriever)->getUserNotificationSettings()->returns($user_notification_settings);
         stub($user_notification_settings)->isInNotifyOnEveryChangeMode()->returns(false);
-
-        stub($changeset)->getComment()->returns(
-            stub('\Tracker_Artifact_Changeset_Comment')->hasEmptyBody()->returns(false)
-        );
 
         $this->assertEqual(
             ['recipient3' => true],
@@ -398,48 +302,29 @@ class RecipientsManagerTest extends \TuleapTestCase
 
     public function itDoesNotFilterUsersWhoAreInGlobalNotificationWithNotificationInEveryStatusChangeChecked()
     {
-        $field = mock('\Tracker_FormElement_Field_Date');
-        stub($field)->isNotificationsSupported()->returns(false);
-        stub($field)->userCanRead()->returns(true);
-        stub($this->formelement_factory)->getFieldById(1)->returns($field);
+        $this->mockADateField(false, true);
 
-        $changeset = mock('\Tracker_Artifact_Changeset');
-        stub($changeset)->getValues()->returns(
-            [
-                1 => stub('\Tracker_Artifact_ChangesetValue_List')->hasChanged()->returns(true),
-            ]
-        );
-
-        $artifact = stub('\Tracker_Artifact')->getCommentators()->returns([]);
-        $previous_changeset = mock(Tracker_Artifact_Changeset::class);
-        stub($artifact)->getPreviousChangeset()->returns($previous_changeset);
-        stub($this->unsubscribers_notification_dao)->searchUserIDHavingUnsubcribedFromNotificationByTrackerOrArtifactID()->returns([]);
-        stub($changeset)->getArtifact()->returns(
-            $artifact
-        );
-        stub($artifact)->getStatusForChangeset()->returns('On going');
-        stub($artifact)->getStatus()->returns('On going');
-
-        $tracker = Mock(Tracker::class);
-        stub($tracker)->getRecipients()->returns(
+        $changeset = $this->getAMockedChangeset(
+            true,
+            [],
+            [],
+            'On going',
+            'On going',
             [
                 [
                     'on_updates'        => true,
                     'check_permissions' => true,
                     'recipients'        => ['recipient3']
                 ]
-            ]
+            ],
+            Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE,
+            false,
+            mock(Tracker_Artifact_Changeset::class)
         );
-        stub($tracker)->getNotificationsLevel()->returns(Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE);
-        stub($changeset)->getTracker()->returns($tracker);
 
         $user_notification_settings = mock(UserNotificationSettings::class);
         stub($this->notification_settings_retriever)->getUserNotificationSettings()->returns($user_notification_settings);
         stub($user_notification_settings)->isInNotifyOnEveryChangeMode()->returns(true);
-
-        stub($changeset)->getComment()->returns(
-            stub('\Tracker_Artifact_Changeset_Comment')->hasEmptyBody()->returns(false)
-        );
 
         $this->assertEqual(
             ['recipient3' => true],
@@ -449,10 +334,7 @@ class RecipientsManagerTest extends \TuleapTestCase
 
     public function itFilterUsersWhoAreInGlobalNotification()
     {
-        $field = mock('\Tracker_FormElement_Field_Date');
-        stub($field)->isNotificationsSupported()->returns(false);
-        stub($field)->userCanRead()->returns(true);
-        stub($this->formelement_factory)->getFieldById(1)->returns($field);
+        $this->mockADateField(false, true);
 
         $changeset = mock('\Tracker_Artifact_Changeset');
         stub($changeset)->getValues()->returns(
@@ -500,52 +382,80 @@ class RecipientsManagerTest extends \TuleapTestCase
 
     public function itDoesNotFilterIfNoStatusChangeAndTrackerIsInStatusChangeOnlyAndUserSubscribeAllNotifications()
     {
-        $field = mock('\Tracker_FormElement_Field_Date');
-        stub($field)->isNotificationsSupported()->returns(false);
-        stub($field)->userCanRead()->returns(true);
-        stub($this->formelement_factory)->getFieldById(1)->returns($field);
+        $this->mockADateField(false, true);
 
-        $changeset = mock('\Tracker_Artifact_Changeset');
-        stub($changeset)->getValues()->returns(
-            [
-                1 => stub('\Tracker_Artifact_ChangesetValue_List')->hasChanged()->returns(true),
-            ]
-        );
-
-        $artifact = stub('\Tracker_Artifact')->getCommentators()->returns(['recipient3']);
-        $previous_changeset = mock(Tracker_Artifact_Changeset::class);
-        stub($artifact)->getPreviousChangeset()->returns($previous_changeset);
-        stub($this->unsubscribers_notification_dao)->searchUserIDHavingUnsubcribedFromNotificationByTrackerOrArtifactID()->returns([]);
-        stub($changeset)->getArtifact()->returns(
-            $artifact
-        );
-        stub($artifact)->getStatusForChangeset()->returns('On going');
-        stub($artifact)->getStatus()->returns('On going');
-
-        $tracker = Mock(Tracker::class);
-        stub($tracker)->getRecipients()->returns(
+        $changeset = $this->getAMockedChangeset(
+            true,
+            [],
+            [],
+            'On going',
+            'On going',
             [
                 [
                     'on_updates'        => true,
                     'check_permissions' => true,
-                    'recipients'        => []
+                    'recipients'        => ['recipient3']
                 ]
-            ]
+            ],
+            Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE,
+            false,
+            mock(Tracker_Artifact_Changeset::class)
         );
-        stub($tracker)->getNotificationsLevel()->returns(Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE);
-        stub($changeset)->getTracker()->returns($tracker);
 
         $user_notification_settings = mock(UserNotificationSettings::class);
         stub($this->notification_settings_retriever)->getUserNotificationSettings()->returns($user_notification_settings);
         stub($user_notification_settings)->isInNotifyOnEveryChangeMode()->returns(true);
 
-        stub($changeset)->getComment()->returns(
-            stub('\Tracker_Artifact_Changeset_Comment')->hasEmptyBody()->returns(false)
-        );
-
         $this->assertEqual(
             ['recipient3' => true],
             $this->recipients_manager->getRecipients($changeset, true)
         );
+    }
+
+    private function mockADateField($is_notification_supported, $user_can_read)
+    {
+        $field = mock('\Tracker_FormElement_Field_Date');
+        stub($field)->isNotificationsSupported()->returns($is_notification_supported);
+        stub($field)->userCanRead()->returns($user_can_read);
+        stub($this->formelement_factory)->getFieldById(1)->returns($field);
+    }
+
+    private function getAMockedChangeset(
+        $has_changed,
+        array $artifact_commentators,
+        array $notifications_unsubscribers,
+        $previeous_changeset_status,
+        $artifact_status,
+        array $tracker_recipients,
+        $tracker_notification_level,
+        $has_empty_body,
+        $previous_changeset
+    ) {
+        $changeset = mock('\Tracker_Artifact_Changeset');
+        stub($changeset)->getValues()->returns(
+            [
+                1 => stub('\Tracker_Artifact_ChangesetValue_List')->hasChanged()->returns($has_changed),
+            ]
+        );
+
+        $artifact           = stub('\Tracker_Artifact')->getCommentators()->returns($artifact_commentators);
+        stub($artifact)->getPreviousChangeset()->returns($previous_changeset);
+        stub($this->unsubscribers_notification_dao)->searchUserIDHavingUnsubcribedFromNotificationByTrackerOrArtifactID()->returns($notifications_unsubscribers);
+        stub($changeset)->getArtifact()->returns(
+            $artifact
+        );
+        stub($artifact)->getStatusForChangeset()->returns($previeous_changeset_status);
+        stub($artifact)->getStatus()->returns($artifact_status);
+
+        $tracker = Mock(Tracker::class);
+        stub($tracker)->getRecipients()->returns($tracker_recipients);
+        stub($tracker)->getNotificationsLevel()->returns($tracker_notification_level);
+        stub($changeset)->getTracker()->returns($tracker);
+
+
+        stub($changeset)->getComment()->returns(
+            stub('\Tracker_Artifact_Changeset_Comment')->hasEmptyBody()->returns($has_empty_body)
+        );
+        return $changeset;
     }
 }
