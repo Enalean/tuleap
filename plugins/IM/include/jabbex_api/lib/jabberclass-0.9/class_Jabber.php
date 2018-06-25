@@ -181,26 +181,6 @@ if(!defined('JABBER_LOG_FILE')){
 	define("JABBER_LOG_FILE","/tmp/jabbex_log");
 }
 
-// Make sure we have SHA1 support, one way or another, such that we can
-// perform encrypted logins.
-if (!function_exists('sha1')) {  // PHP v4.3.0+ supports sha1 internally
-
-	if (function_exists('mhash')) { // is the Mhash extension installed?
-
-		// implement the sha1() function using mhash
-		function sha1($str) {
-			return bin2hex(mhash(MHASH_SHA1, $str));
-		}
-
-	} else {
-
-		// implement the sha1() function in native PHP using the SHA1Library class;
-		// this is slow, but it's better than plaintext.
-		require_once(dirname(__FILE__)."/class_SHA1Library.php");
-	}
-	
-}
-
 // Jabber communication class
 class Jabber {
 	var $jid				= "";
