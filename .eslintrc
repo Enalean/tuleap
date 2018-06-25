@@ -1,11 +1,13 @@
 {
     "plugins": [
         "you-dont-need-lodash-underscore",
-        "cypress"
+        "cypress",
+        "prettier"
     ],
     "extends": [
         "eslint:recommended",
-        "plugin:you-dont-need-lodash-underscore/all"
+        "plugin:you-dont-need-lodash-underscore/all",
+        "prettier"
     ],
     "parserOptions": {
         "ecmaVersion": 2018,
@@ -56,7 +58,10 @@
         "no-void": "error",
         "no-with": "error",
         "radix": "error",
-        "require-await": "error"
+        "require-await": "error",
+        "prettier/prettier": ["error", null, {
+            "usePrettierrc": true
+        }]
     },
     "overrides": [
         {
