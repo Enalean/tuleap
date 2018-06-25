@@ -16,32 +16,32 @@
     &.passed {
         background: transparentize($tlp-ui-success, .96);
 
-        > .steps-step-description > .steps-step-expected > i {
-            color: $tlp-ui-success;
+        > .steps-step-description > .steps-step-expected > .steps-step-expected-arrow {
+            fill: $tlp-ui-success;
         }
     }
 
     &.failed {
         background: transparentize($tlp-ui-danger, .96);
 
-        > .steps-step-description > .steps-step-expected > i {
-            color: $tlp-ui-danger;
+        > .steps-step-description > .steps-step-expected > .steps-step-expected-arrow {
+            fill: $tlp-ui-danger;
         }
     }
 
     &.blocked {
         background: transparentize($tlp-ui-info, .96);
 
-        > .steps-step-description > .steps-step-expected > i {
-            color: $tlp-ui-info;
+        > .steps-step-description > .steps-step-expected > .steps-step-expected-arrow {
+            fill: $tlp-ui-info;
         }
     }
 
     &.notrun {
         background: transparent;
 
-        > .steps-step-description > .steps-step-expected > i {
-            color: $tlp-ui-dimmed;
+        > .steps-step-description > .steps-step-expected > .steps-step-expected-arrow {
+            fill: $tlp-ui-dimmed;
         }
     }
 }
@@ -57,6 +57,17 @@
 
 .steps-step-description-text {
     white-space: pre-line;
+}
+
+.steps-step-expected {
+    display: flex;
+    align-items: baseline;
+    margin: $tlp-spacing 0 0 $tlp-spacing;
+
+    > .steps-step-expected-content {
+        flex-grow: 1;
+        margin: 0 0 0 $tlp-half-spacing;
+    }
 }
 
 .steps-step-action {
