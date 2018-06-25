@@ -18,6 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\MFA\Enrollment\EnrollmentDisplayController;
+use Tuleap\MFA\Enrollment\EnrollmentRegisterController;
+
 require_once __DIR__ . '/../vendor/autoload.php';
 
 class mfaPlugin  extends Plugin // @codingStandardsIgnoreLine
@@ -31,6 +34,13 @@ class mfaPlugin  extends Plugin // @codingStandardsIgnoreLine
         bindtextdomain('tuleap-mfa', __DIR__.'/../site-content');
     }
 
+    public function getHooksAndCallbacks()
+    {
+        $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
+
+        return parent::getHooksAndCallbacks();
+    }
+
     public function getPluginInfo()
     {
         if (! $this->pluginInfo) {
@@ -38,5 +48,19 @@ class mfaPlugin  extends Plugin // @codingStandardsIgnoreLine
         }
 
         return $this->pluginInfo;
+    }
+
+    public function collectRoutesEvent(\Tuleap\Request\CollectRoutesEvent $event)
+    {
+        $event->getRouteCollector()->addGroup($this->getPluginPath(), function (FastRoute\RouteCollector $r) {
+            $r->get('/enroll', function () {
+                return new EnrollmentDisplayController(
+                    TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/')
+                );
+            });
+            $r->post('/enroll', function () {
+                return new EnrollmentRegisterController();
+            });
+        });
     }
 }

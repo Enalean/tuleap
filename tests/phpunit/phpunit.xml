@@ -23,6 +23,7 @@
             <directory suffix=".php">../../plugins/create_test_env/include/</directory>
             <directory suffix=".php">../../plugins/timetracking/include/</directory>
             <directory suffix=".php">../../plugins/pullrequest/include/</directory>
+            <directory suffix=".php">../../plugins/mfa/include/</directory>
             <directory suffix=".php">../../plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Numeric.class.php</directory>
             <directory suffix=".php">../../plugins/tracker/include/Tracker/XML/Exporter/ChangesetValue/ChangesetValuePermissionsOnArtifactXMLExporter.class.php</directory>
             <directory suffix=".php">../../plugins/tracker/include/Tracker/FormElement/Field/ListFields</directory>

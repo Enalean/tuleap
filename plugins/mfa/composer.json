@@ -3,5 +3,13 @@
     "psr-4": {
       "Tuleap\\MFA\\": "include/"
     }
+  },
+  "require": {
+    "paragonie/constant_time_encoding": "^1|^2"
+  },
+  "config": {
+    "platform": {
+      "php": "5.6.25"
+    }
   }
 }
