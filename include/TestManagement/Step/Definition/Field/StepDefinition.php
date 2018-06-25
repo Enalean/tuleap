@@ -341,7 +341,11 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
 
         $rule = new \Rule_String();
         foreach ($value['description'] as $key => $submitted_step_description) {
-            if (! $rule->isValid($submitted_step_description)) {
+            if (! isset($value['expected_results'][$key])) {
+                return false;
+            }
+
+            if (! $rule->isValid($submitted_step_description) || ! $rule->isValid($value['expected_results'][$key])) {
                 $GLOBALS['Response']->addFeedback(
                     \Feedback::ERROR,
                     $GLOBALS['Language']->getText(
@@ -354,19 +358,25 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
                 return false;
             }
 
-            if (! isset($value['description_format'][$key])) {
+            if (! $this->isSubmittedFormatValid($value, 'description_format', $key)) {
                 return false;
             }
 
-            if (! in_array(
-                $value['description_format'][$key],
-                [Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT, Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT]
-            )) {
+            if (! $this->isSubmittedFormatValid($value, 'expected_results_format', $key)) {
                 return false;
             }
         }
 
         return true;
+    }
+
+    private function isSubmittedFormatValid($value, $format_key, $key)
+    {
+        return isset($value[$format_key][$key])
+            && in_array(
+                $value[$format_key][$key],
+                [Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT, Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT]
+            );
     }
 
     private function doesUserWantToRemoveAllSteps(array $value)
@@ -394,10 +404,20 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
             if (isset($new_value['description_format'][$key])) {
                 $submitted_description_format = $new_value['description_format'][$key];
             }
+            $submitted_expected_results = '';
+            if (isset($new_value['expected_results'][$key])) {
+                $submitted_expected_results = $new_value['expected_results'][$key];
+            }
+            $submitted_expected_results_format = Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT;
+            if (isset($new_value['expected_results_format'][$key])) {
+                $submitted_expected_results_format = $new_value['expected_results_format'][$key];
+            }
             $submitted_steps[] = new Step(
                 $new_value['id'][$key],
                 $submitted_step_description,
                 $submitted_description_format,
+                $submitted_expected_results,
+                $submitted_expected_results_format,
                 $rank
             );
             $rank++;
@@ -447,7 +467,23 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
             }
             $description_format = $submitted_values['description_format'][$key];
 
-            $steps[] = new Step(0, $description, $description_format, $rank);
+            $expected_results = '';
+            if (isset($submitted_values['expected_results'][$key])) {
+                $expected_results = trim($submitted_values['expected_results'][$key]);
+            }
+            $expected_results_format = '';
+            if (isset($submitted_values['expected_results_format'][$key])) {
+                $expected_results_format = $submitted_values['expected_results_format'][$key];
+            }
+
+            $steps[] = new Step(
+                0,
+                $description,
+                $description_format,
+                $expected_results,
+                $expected_results_format,
+                $rank
+            );
         }
 
         return $steps;
@@ -455,14 +491,17 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
 
     private function extractCrossRefs(Tracker_Artifact $artifact, array $submitted_steps)
     {
-        if (! isset($submitted_steps['description'])) {
+        if (! isset($submitted_steps['description']) && ! isset($submitted_steps['expected_results'])) {
             return true;
         }
 
-        $concatenated_descriptions = implode(PHP_EOL, $submitted_steps['description']);
+        $concatenated_descriptions     = implode(PHP_EOL, $submitted_steps['description']);
+        $concatenated_expected_results = implode(PHP_EOL, $submitted_steps['expected_results']);
+
+        $text = $concatenated_descriptions . PHP_EOL . $concatenated_expected_results;
 
         return ReferenceManager::instance()->extractCrossRef(
-            $concatenated_descriptions,
+            $text,
             $artifact->getId(),
             Tracker_Artifact::REFERENCE_NATURE,
             $this->getTracker()->getGroupID(),
@@ -485,7 +524,14 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         $steps = [];
         $rank  = self::START_RANK;
         foreach ($this->getValueDao()->searchById($value_id) as $row) {
-            $steps[] = new Step($row['id'], $row['description'], $row['description_format'], $rank);
+            $steps[] = new Step(
+                $row['id'],
+                $row['description'],
+                $row['description_format'],
+                $row['expected_results'],
+                $row['expected_results_format'],
+                $rank
+            );
             $rank++;
         }
 
@@ -544,7 +590,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
     private function getEmptyStepPresenter()
     {
         $default_format = $this->getDefaultFormat($this->getCurrentUser());
-        $empty_step     = new Step(0, '', $default_format, 0);
+        $empty_step     = new Step(0, '', $default_format, '', $default_format, 0);
 
         return $this->getStepPresenter($empty_step);
     }

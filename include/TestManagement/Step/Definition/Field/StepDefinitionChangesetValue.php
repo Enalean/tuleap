@@ -85,6 +85,12 @@ class StepDefinitionChangesetValue extends Tracker_Artifact_ChangesetValue
             if ($step->getDescriptionFormat() !== $previous_steps[$key]->getDescriptionFormat()) {
                 return 'changed';
             }
+            if ($step->getExpectedResults() !== $previous_steps[$key]->getExpectedResults()) {
+                return 'changed';
+            }
+            if ($step->getExpectedResultsFormat() !== $previous_steps[$key]->getExpectedResultsFormat()) {
+                return 'changed';
+            }
         }
     }
 

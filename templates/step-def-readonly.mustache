@@ -7,6 +7,12 @@
             <div class="ttm-definition-step-rank">{{ rank }}</div>
             <div class="ttm-definition-step-description">
                 {{{ purified_description }}}
+                {{# purified_expected_results }}
+                    <div class="ttm-definition-step-expected_results">
+                        <h3>{{# dgettext }}tuleap-testmanagement | Expected results{{/ dgettext }}</h3>
+                        {{{ purified_expected_results }}}
+                    </div>
+                {{/ purified_expected_results }}
             </div>
         </div>
     {{/ steps }}

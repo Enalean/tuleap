@@ -38,15 +38,25 @@ class StepDefinitionRepresentation
      */
     public $description_format;
     /**
+     * @var string
+     */
+    public $expected_results;
+    /**
+     * @var string
+     */
+    public $expected_results_format;
+    /**
      * @var int
      */
     public $rank;
 
     public function build(Step $step)
     {
-        $this->id                 = JsonCast::toInt($step->getId());
-        $this->description        = $step->getDescription();
-        $this->description_format = $step->getDescriptionFormat();
-        $this->rank               = JsonCast::toInt($step->getRank());
+        $this->id                      = JsonCast::toInt($step->getId());
+        $this->description             = $step->getDescription();
+        $this->description_format      = $step->getDescriptionFormat();
+        $this->expected_results        = $step->getExpectedResults();
+        $this->expected_results_format = $step->getExpectedResultsFormat();
+        $this->rank                    = JsonCast::toInt($step->getRank());
     }
 }

@@ -53,15 +53,17 @@ class StepDefinitionChangesetValueDao extends Tracker_FormElement_Field_ValueDao
         $changeset_value_id = $this->da->escapeInt($changeset_value_id);
         $values             = [];
         foreach ($steps as $step) {
-            $description        = $this->da->quoteSmart($step->getDescription());
-            $description_format = $this->da->quoteSmart($step->getDescriptionFormat());
-            $rank               = $this->da->escapeInt($step->getRank());
+            $description             = $this->da->quoteSmart($step->getDescription());
+            $description_format      = $this->da->quoteSmart($step->getDescriptionFormat());
+            $expected_results        = $this->da->quoteSmart($step->getExpectedResults());
+            $expected_results_format = $this->da->quoteSmart($step->getExpectedResultsFormat());
+            $rank                    = $this->da->escapeInt($step->getRank());
 
-            $values[] = "($changeset_value_id, $description, $description_format, $rank)";
+            $values[] = "($changeset_value_id, $description, $description_format, $expected_results, $expected_results_format, $rank)";
         }
         if ($values) {
             $values = implode(',', $values);
-            $sql    = "INSERT INTO plugin_testmanagement_changeset_value_stepdef(changeset_value_id, description, description_format, rank)
+            $sql    = "INSERT INTO plugin_testmanagement_changeset_value_stepdef(changeset_value_id, description, description_format, expected_results, expected_results_format, rank)
                     VALUES $values";
 
             return $this->update($sql);
@@ -79,8 +81,8 @@ class StepDefinitionChangesetValueDao extends Tracker_FormElement_Field_ValueDao
     {
         $from = $this->da->escapeInt($from);
         $to   = $this->da->escapeInt($to);
-        $sql  = "INSERT INTO plugin_testmanagement_changeset_value_stepdef(changeset_value_id, description, description_format, rank)
-                SELECT $to, description, description_format, rank
+        $sql  = "INSERT INTO plugin_testmanagement_changeset_value_stepdef(changeset_value_id, description, description_format, expected_results, expected_results_format, rank)
+                SELECT $to, description, description_format, expected_results, expected_results_format, rank
                 FROM plugin_testmanagement_changeset_value_stepdef
                 WHERE changeset_value_id = $from";
 

@@ -47,13 +47,25 @@
                     <i class="icon-trash"></i>
                     <translate>Delete</translate>
                 </button>
-                <textarea
-                    ref="description"
-                    class="ttm-definition-step-description-textarea"
-                    v-bind:id="'field_new_description_' + step.uuid + '_' + fieldId"
-                    v-bind:name="'artifact[' + fieldId + '][description][]'"
-                    rows="4"
-                >{{ step.raw_description }}</textarea>
+                <div>
+                    <textarea
+                        ref="description"
+                        class="ttm-definition-step-description-textarea"
+                        v-bind:id="'field_new_description_' + step.uuid + '_' + fieldId"
+                        v-bind:name="'artifact[' + fieldId + '][description][]'"
+                        rows="4"
+                    >{{ step.raw_description }}</textarea>
+                </div>
+                <div>
+                    <h3 v-translate>Expected results</h3>
+                    <textarea
+                        ref="expected_results"
+                        class="ttm-definition-step-expected-results-textarea"
+                        v-bind:id="'field_new_expected_results_' + step.uuid + '_' + fieldId"
+                        v-bind:name="'artifact[' + fieldId + '][expected_results][]'"
+                        rows="4"
+                    >{{ step.raw_expected_results }}</textarea>
+                </div>
             </div>
         </div>
     </div>
@@ -77,7 +89,8 @@
             deleteStep: Function
         },
         mounted() {
-            this.loadRTE();
+            this.loadRTE('description');
+            this.loadRTE('expected_results');
             this.removeDeletedStepsOnFormSubmission();
         },
         computed: {
@@ -89,8 +102,9 @@
             }
         },
         methods: {
-            loadRTE() {
-                const element = this.$refs.description;
+            loadRTE(field) {
+                const element    = this.$refs[field];
+                const format_key = field + '_format';
 
                 new textarea.RTE(
                     element,
@@ -98,8 +112,8 @@
                         toggle: true,
                         default_in_html: false,
                         id: element.id,
-                        name: 'artifact[' + this.fieldId + '][description_format][]',
-                        htmlFormat: this.step.description_format !== 'text'
+                        name: 'artifact[' + this.fieldId + '][' + format_key + '][]',
+                        htmlFormat: this.step[format_key] !== 'text'
                     }
                 );
             },

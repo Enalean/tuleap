@@ -31,24 +31,38 @@ class StepPresenter
     public $description_format;
     public $purified_description;
     public $rank;
+    public $raw_expected_results;
+    public $expected_results_format;
+    public $purified_expected_results;
 
     public function __construct(Step $step, Project $project)
     {
 
-        $this->id                   = $step->getId();
-        $this->rank                 = $step->getRank();
-        $this->raw_description      = $step->getDescription();
-        $this->description_format   = $step->getDescriptionFormat();
-        $this->purified_description = $this->getPurifiedDescription($step, $project);
+        $this->id                        = $step->getId();
+        $this->rank                      = $step->getRank();
+        $this->raw_description           = $step->getDescription();
+        $this->description_format        = $step->getDescriptionFormat();
+        $this->purified_description      = $this->getPurifiedText(
+            $step->getDescription(),
+            $step->getDescriptionFormat(),
+            $project
+        );
+        $this->raw_expected_results      = $step->getExpectedResults();
+        $this->expected_results_format   = $step->getExpectedResultsFormat();
+        $this->purified_expected_results = $this->getPurifiedText(
+            $step->getExpectedResults(),
+            $step->getExpectedResultsFormat(),
+            $project
+        );
     }
 
-    private function getPurifiedDescription(Step $step, Project $project)
+    private function getPurifiedText($text, $format, Project $project)
     {
         $purifier = Codendi_HTMLPurifier::instance();
-        if ($step->getDescriptionFormat() === Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT) {
-            return $purifier->purifyHTMLWithReferences($step->getDescription(), $project->getID());
+        if ($format === Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT) {
+            return $purifier->purifyHTMLWithReferences($text, $project->getID());
         }
 
-        return $purifier->purifyTextWithReferences($step->getDescription(), $project->getID());
+        return $purifier->purifyTextWithReferences($text, $project->getID());
     }
 }
