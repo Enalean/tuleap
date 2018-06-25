@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,6 +19,8 @@
  */
 
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
+use Tuleap\Tracker\Webhook\WebhookRetriever;
+use Tuleap\Webhook\Emitter;
 
 /**
  * I am a Template Method to create an initial changeset.
@@ -33,9 +35,19 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
         Tracker_FormElementFactory                 $formelement_factory,
         Tracker_Artifact_ChangesetDao              $changeset_dao,
         Tracker_ArtifactFactory                    $artifact_factory,
-        EventManager                               $event_manager
+        EventManager                               $event_manager,
+        Emitter                                    $emitter,
+        WebhookRetriever                           $webhook_retriever
     ) {
-        parent::__construct($fields_validator, $formelement_factory, $artifact_factory, $event_manager);
+        parent::__construct(
+            $fields_validator,
+            $formelement_factory,
+            $artifact_factory,
+            $event_manager,
+            $emitter,
+            $webhook_retriever
+        );
+
         $this->changeset_dao = $changeset_dao;
     }
 
@@ -76,6 +88,7 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
         $artifact->clearChangesets();
 
         $this->event_manager->processEvent(new ArtifactCreated($artifact));
+        $this->emitWebhooks($artifact->getTracker());
 
         return $changeset_id;
     }

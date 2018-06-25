@@ -98,6 +98,7 @@ DROP TABLE IF EXISTS plugin_tracker_projects_unused_artifactlink_types;
 DROP TABLE IF EXISTS plugin_tracker_deleted_artifacts;
 
 DROP TABLE IF EXISTS tracker_report_criteria_comment_value;
+DROP TABLE IF EXISTS plugin_tracker_webhook_url;
 
 DELETE FROM permissions WHERE permission_type LIKE 'PLUGIN_TRACKER_%';
 DELETE FROM permissions_values WHERE permission_type LIKE 'PLUGIN_TRACKER_%';

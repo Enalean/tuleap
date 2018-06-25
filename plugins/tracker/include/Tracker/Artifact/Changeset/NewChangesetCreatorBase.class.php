@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,6 +21,8 @@
 use Tuleap\Tracker\Artifact\ArtifactInstrumentation;
 use Tuleap\Tracker\Artifact\Exception\FieldValidationException;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder;
+use Tuleap\Tracker\Webhook\WebhookRetriever;
+use Tuleap\Webhook\Emitter;
 
 /**
  * I am a Template Method to create a new changeset (update of an artifact)
@@ -45,9 +47,18 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         Tracker_ArtifactFactory $artifact_factory,
         EventManager $event_manager,
         ReferenceManager $reference_manager,
-        SourceOfAssociationCollectionBuilder $source_of_association_collection_builder
+        SourceOfAssociationCollectionBuilder $source_of_association_collection_builder,
+        Emitter $emitter,
+        WebhookRetriever $webhook_retriever
     ) {
-        parent::__construct($fields_validator, $formelement_factory, $artifact_factory, $event_manager);
+        parent::__construct(
+            $fields_validator,
+            $formelement_factory,
+            $artifact_factory,
+            $event_manager,
+            $emitter,
+            $webhook_retriever
+        );
 
         $this->changeset_dao                            = $changeset_dao;
         $this->changeset_comment_dao                    = $changeset_comment_dao;
@@ -159,6 +170,8 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         }
 
         $this->event_manager->processEvent(TRACKER_EVENT_ARTIFACT_POST_UPDATE, array('artifact' => $artifact));
+        $this->emitWebhooks($artifact->getTracker());
+
         return $new_changeset;
     }
 

@@ -860,6 +860,14 @@ CREATE TABLE plugin_tracker_deleted_artifacts(
     PRIMARY KEY (timestamp, user_id)
 ) ENGINE=InnoDB;
 
+DROP TABLE IF EXISTS plugin_tracker_webhook_url;
+CREATE TABLE IF NOT EXISTS plugin_tracker_webhook_url (
+    id int(11) unsigned PRIMARY KEY AUTO_INCREMENT,
+    tracker_id int(11) NOT NULL,
+    url TEXT NOT NULL,
+    INDEX idx_tracker_webhook_url_tracker_id (tracker_id)
+);
+
 -- Enable service for project 100
 INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank)
        VALUES      ( 100, 'plugin_tracker:service_lbl_key', 'plugin_tracker:service_desc_key', 'plugin_tracker', '/plugins/tracker/?group_id=$group_id', 1, 1, 'system', 151);

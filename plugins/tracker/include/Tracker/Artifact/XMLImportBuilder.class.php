@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,6 +24,10 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationDetector;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
 use Tuleap\Tracker\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
+use Tuleap\Tracker\Webhook\WebhookDao;
+use Tuleap\Tracker\Webhook\WebhookRetriever;
+use Tuleap\Tracker\Webhook\WebhookStatusLogger;
+use Tuleap\Webhook\Emitter;
 
 class Tracker_Artifact_XMLImportBuilder {
 
@@ -41,6 +45,12 @@ class Tracker_Artifact_XMLImportBuilder {
         $changeset_dao         = new Tracker_Artifact_ChangesetDao();
         $changeset_comment_dao = new Tracker_Artifact_Changeset_CommentDao();
         $send_notifications    = false;
+        $emitter               = new Emitter(
+            new Http_Client(),
+            new WebhookStatusLogger()
+        );
+
+        $webhook_retriever = new WebhookRetriever(new WebhookDao());
 
         $artifact_creator = new Tracker_ArtifactCreator(
             $artifact_factory,
@@ -50,7 +60,9 @@ class Tracker_Artifact_XMLImportBuilder {
                 $formelement_factory,
                 $changeset_dao,
                 $artifact_factory,
-                EventManager::instance()
+                EventManager::instance(),
+                $emitter,
+                $webhook_retriever
             ),
             $visit_recorder
         );
@@ -71,7 +83,9 @@ class Tracker_Artifact_XMLImportBuilder {
                     )
                 ),
                 Tracker_FormElementFactory::instance()
-            )
+            ),
+            $emitter,
+            $webhook_retriever
         );
 
         return new Tracker_Artifact_XMLImport(

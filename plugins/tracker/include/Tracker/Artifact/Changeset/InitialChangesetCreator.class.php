@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Webhook\WebhookRetriever;
+use Tuleap\Webhook\Emitter;
+
 /**
  * I create an initial changeset
  */
@@ -28,14 +31,18 @@ class Tracker_Artifact_Changeset_InitialChangesetCreator extends Tracker_Artifac
         Tracker_FormElementFactory                                 $formelement_factory,
         Tracker_Artifact_ChangesetDao                              $changeset_dao,
         Tracker_ArtifactFactory                                    $artifact_factory,
-        EventManager                                               $event_manager
+        EventManager                                               $event_manager,
+        Emitter                                                    $emitter,
+        WebhookRetriever                                           $webhook_retriever
     ) {
         parent::__construct(
             $fields_validator,
             $formelement_factory,
             $changeset_dao,
             $artifact_factory,
-            $event_manager
+            $event_manager,
+            $emitter,
+            $webhook_retriever
         );
     }
 
