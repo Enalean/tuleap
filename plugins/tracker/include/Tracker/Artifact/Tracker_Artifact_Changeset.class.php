@@ -839,6 +839,43 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
         return array_filter($values);
     }
 
+    /**
+     * Returns a REST representation with all fields content.
+     * This does not check permissions so use it with caution.
+     *
+     * "A great power comes with a great responsibility"
+     *
+     * @return \Tuleap\Tracker\REST\ChangesetRepresentation
+     */
+    public function getFullRESTValue(PFUser $user)
+    {
+        $comment = $this->getComment();
+        if (! $comment) {
+            $comment = new Tracker_Artifact_Changeset_CommentNull($this);
+        }
+
+        $changeset_representation = new Tuleap\Tracker\REST\ChangesetRepresentation();
+        $changeset_representation->build(
+            $this,
+            $comment,
+            $this->getFullRESTFieldValuesWitoutPermissions($user)
+        );
+
+        return $changeset_representation;
+    }
+
+    private function getFullRESTFieldValuesWitoutPermissions(PFUser $user)
+    {
+        $values = array();
+        $factory = $this->getFormElementFactory();
+
+        foreach ($factory->getUsedFieldsForREST($this->getTracker()) as $field) {
+            $values[] = $field->getRESTValue($user, $this);
+        }
+
+        return array_filter($values);
+    }
+
     private function getEmailForUndefinedSubmitter() {
         if (! $this->getSubmittedBy()) {
             return $this->getEmail();

@@ -20,20 +20,55 @@
 
 namespace Tuleap\Tracker\Webhook;
 
+use PFUser;
+use Tracker_Artifact;
+use Tracker_Artifact_Changeset;
+use Tuleap\User\REST\MinimalUserRepresentation;
 use Tuleap\Webhook\Payload;
 
 class ArtifactPayload implements Payload
 {
 
     /**
+     * @var array
+     */
+    private $payload;
+
+    public function __construct(Tracker_Artifact $artifact, PFUser $user, $action)
+    {
+        $this->payload = $this->buildPayload($artifact, $user, $action);
+    }
+
+    /**
+     * @return array
+     */
+    private function buildPayload(Tracker_Artifact $artifact, PFUser $user, $action)
+    {
+        $last_changeset     = $artifact->getLastChangeset();
+        $previous_changeset = $artifact->getPreviousChangeset($last_changeset->getId());
+
+        $last_changeset_content     = $last_changeset->getFullRESTValue($user);
+        $previous_changeset_content = null;
+        if ($previous_changeset !== null) {
+            $previous_changeset_content = $previous_changeset->getFullRESTValue($user);
+        }
+
+        $user_representation = new MinimalUserRepresentation();
+        $user_representation->build($user);
+
+        return [
+            'action'   => $action,
+            'user'     => $user_representation,
+            'current'  => $last_changeset_content,
+            'previous' => $previous_changeset_content
+        ];
+    }
+
+    /**
      * @return array
      */
     public function getPayload()
     {
-        /*
-         * This is a fake payload here so that we can check in the destination server
-         * that this fake content is sent. This will be replaced by the real payload quickly.
-         */
-        return ['title' => 'This is a payload form an artifact action'];
+        return $this->payload;
     }
 }

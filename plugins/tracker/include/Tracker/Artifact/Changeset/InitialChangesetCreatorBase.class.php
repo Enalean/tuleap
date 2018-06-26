@@ -88,7 +88,7 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
         $artifact->clearChangesets();
 
         $this->event_manager->processEvent(new ArtifactCreated($artifact));
-        $this->emitWebhooks($artifact->getTracker());
+        $this->emitWebhooks($artifact, $submitter, 'create');
 
         return $changeset_id;
     }
