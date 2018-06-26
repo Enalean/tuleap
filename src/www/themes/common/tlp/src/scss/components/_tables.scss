@@ -17,7 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$tlp-table-cell-padding        : 10px;
+$tlp-table-cell-padding: 10px;
+@if $tlp-density == $tlp-density-condensed {
+    $tlp-table-cell-padding: 6px;
+}
+
 $tlp-table-header-background   : #ffffff;
 $tlp-table-row-background-even : #fcfcfc;
 $tlp-table-row-background-odd  : #ffffff;
