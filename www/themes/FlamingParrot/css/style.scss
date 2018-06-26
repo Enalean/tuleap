@@ -1,4 +1,4 @@
-@mixin definitions($main, $white) {
+@mixin definitions($main, $white, $ui-dimmed) {
     .ttm-definition-step,
     .ttm-execution-step {
         display: flex;
@@ -27,6 +27,22 @@
         margin: 0 0 0 10px;
     }
 
+    .ttm-definition-step-expected,
+    .ttm-execution-step-expected {
+        display: flex;
+        align-items: baseline;
+        margin: 20px 0 0 20px;
+    }
+
+    .ttm-execution-step-expected-content {
+        flex-grow: 1;
+        margin: 0 0 0 10px;
+    }
+
+    .ttm-execution-step-expected-arrow {
+        fill: $ui-dimmed;
+    }
+
     .ttm-execution-step-status {
         margin: 0 0 0 20px;
     }
@@ -52,30 +68,30 @@
 
 body {
     @import 'variables-orange';
-    @include definitions($main, $white);
+    @include definitions($main, $white, $grey);
 
     &.FlamingParrot_Blue {
         @import 'variables-blue';
-        @include definitions($main, $white);
+        @include definitions($main, $white, $grey);
     }
 
     &.FlamingParrot_Green {
         @import 'variables-green';
-        @include definitions($main, $white);
+        @include definitions($main, $white, $grey);
     }
 
     &.FlamingParrot_BlueGrey {
         @import 'variables-bluegrey';
-        @include definitions($main, $white);
+        @include definitions($main, $white, $grey);
     }
 
     &.FlamingParrot_Purple {
         @import 'variables-purple';
-        @include definitions($main, $white);
+        @include definitions($main, $white, $grey);
     }
 
     &.FlamingParrot_Red {
         @import 'variables-red';
-        @include definitions($main, $white);
+        @include definitions($main, $white, $grey);
     }
 }

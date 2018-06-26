@@ -28,9 +28,6 @@ msgstr ""
 msgid "Execution result of a step"
 msgstr ""
 
-msgid "Expected results"
-msgstr ""
-
 msgid "Job URL is invalid"
 msgstr ""
 
