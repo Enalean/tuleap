@@ -1639,7 +1639,8 @@ class trackerPlugin extends Plugin {
             $r->post('/notifications/my/{id:\d+}/', function () {
                 return new  \Tuleap\Tracker\Notifications\Settings\NotificationsUserSettingsUpdateController(
                     $this->getTrackerFactory(),
-                    new UserNotificationSettingsDAO
+                    new UserNotificationSettingsDAO,
+                    new ProjectHistoryDao
                 );
             });
         });
