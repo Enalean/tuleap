@@ -17,16 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get, post } from 'tlp';
+import { get, post } from "tlp-fetch";
 
-export {
-    getCallMeBackMessage,
-    askToBeCalledBack
-}
+export { getCallMeBackMessage, askToBeCalledBack };
 
 async function getCallMeBackMessage() {
-    const response = await get('/api/call_me_back/message');
-    const json     = await response.json();
+    const response = await get("/api/call_me_back/message");
+    const json = await response.json();
 
     return json.message;
 }
@@ -41,7 +38,7 @@ function askToBeCalledBack(call_me_back_phone, call_back_me_date) {
         date: call_back_me_date
     });
 
-    return post('/api/call_me_back', {
+    return post("/api/call_me_back", {
         headers,
         body
     });

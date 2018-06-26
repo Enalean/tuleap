@@ -17,7 +17,8 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 <template>
-    <div class="call-me-back dropup">
+    <div class="call-me-back dropup" ref="dropdown">
+        <div class="call-me-back-message" v-if="! dropdown_open && message" v-html="sanitized_message"></div>
         <button class="call-me-back-button dropdown-toggle" data-toggle="dropdown">
             <i class="icon-comments-alt"></i>
         </button>
@@ -79,8 +80,9 @@
 </template>
 
 <script>
-import { askToBeCalledBack } from './rest-querier.js';
-import { DateTime }          from 'luxon';
+import { getCallMeBackMessage, askToBeCalledBack } from '../../call-me-back-rest-querier.js';
+import { DateTime }                                from 'luxon';
+import { sanitize }                                from 'dompurify';
 
 export default {
     name: 'CallMeBack',
@@ -88,7 +90,9 @@ export default {
         return {
             loading           : false,
             error             : false,
+            dropdown_open     : false,
             save_the_date     : false,
+            message           : '',
             call_me_back_phone: '',
             call_me_back_date : ''
         };
@@ -96,11 +100,34 @@ export default {
     computed: {
         call_me_back_formatted_date() {
             return DateTime.fromISO(this.call_me_back_date).toLocaleString(DateTime.DATE_FULL);
+        },
+        sanitized_message() {
+            return sanitize(this.message);
         }
     },
+    mounted() {
+        this.getMessage();
+        this.observeDropdown();
+    },
     methods: {
+        async getMessage() {
+            this.message = await getCallMeBackMessage();
+        },
+        observeDropdown() {
+            const observer = new MutationObserver((mutations) => {
+                for(const mutation of mutations) {
+                    if (mutation.target.classList.contains('open')) {
+                        this.dropdown_open = true;
+                    } else {
+                        this.dropdown_open = false;
+                    }
+                }
+            });
+
+            observer.observe(this.$refs.dropdown, { attributes: true });
+        },
         async callMeBack() {
-            this.loading           = true;
+            this.loading = true;
 
             try {
                 await askToBeCalledBack(
