@@ -20,6 +20,7 @@
 
 namespace Tuleap\Tracker\Notifications\Settings;
 
+use Tracker;
 use Tuleap\Tracker\Notifications\GlobalNotification;
 
 class UserNotificationSettings
@@ -48,15 +49,17 @@ class UserNotificationSettings
     public function __construct(
         $has_unsubscribed,
         $is_only_on_status_update,
+        $tracker_notification_level,
         GlobalNotification ...$global_notifications
     ) {
-        if ($has_unsubscribed) {
+        if ($has_unsubscribed || $tracker_notification_level === Tracker::NOTIFICATIONS_LEVEL_DISABLED) {
             $this->is_in_no_notification_at_all_mode = true;
             return;
         }
 
-        if ($is_only_on_status_update) {
+        if ($is_only_on_status_update || $tracker_notification_level === Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE) {
             $this->is_in_notify_on_status_change_mode = true;
+            return;
         }
 
         if (empty($global_notifications)) {

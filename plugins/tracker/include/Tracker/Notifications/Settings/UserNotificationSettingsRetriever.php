@@ -67,7 +67,12 @@ class UserNotificationSettingsRetriever
 
         $global_notifications = $this->getGlobalNotifications($user, $tracker);
 
-        return new UserNotificationSettings($has_unsubscribed, $is_only_on_status_update, ...$global_notifications);
+        return new UserNotificationSettings(
+            $has_unsubscribed,
+            $is_only_on_status_update,
+            $tracker->getNotificationsLevel(),
+            ...$global_notifications
+        );
     }
 
     /**
