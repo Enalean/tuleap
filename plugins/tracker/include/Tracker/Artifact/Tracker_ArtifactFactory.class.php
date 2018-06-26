@@ -391,12 +391,13 @@ class Tracker_ArtifactFactory {
         $formelement_factory = Tracker_FormElementFactory::instance();
         $fields_validator    = new Tracker_Artifact_Changeset_InitialChangesetFieldsValidator($formelement_factory);
         $visit_recorder      = new VisitRecorder(new RecentlyVisitedDao());
+        $webhook_dao         = new WebhookDao();
         $emitter             = new Emitter(
             new Http_Client(),
-            new WebhookStatusLogger()
+            new WebhookStatusLogger($webhook_dao)
         );
 
-        $webhook_retriever = new WebhookRetriever(new WebhookDao());
+        $webhook_retriever = new WebhookRetriever($webhook_dao);
 
         $changeset_creator = new Tracker_Artifact_Changeset_InitialChangesetCreator(
             $fields_validator,

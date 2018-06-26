@@ -874,6 +874,14 @@ CREATE TABLE IF NOT EXISTS plugin_tracker_webhook_url (
     INDEX idx_tracker_webhook_url_tracker_id (tracker_id)
 );
 
+DROP TABLE IF EXISTS plugin_tracker_webhook_log;
+CREATE TABLE IF NOT EXISTS plugin_tracker_webhook_log (
+    created_on int(11) NOT NULL,
+    webhook_id int(11) unsigned NOT NULL,
+    status TEXT NOT NULL,
+    INDEX idx(webhook_id)
+);
+
 -- Enable service for project 100
 INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank)
        VALUES      ( 100, 'plugin_tracker:service_lbl_key', 'plugin_tracker:service_desc_key', 'plugin_tracker', '/plugins/tracker/?group_id=$group_id', 1, 1, 'system', 151);

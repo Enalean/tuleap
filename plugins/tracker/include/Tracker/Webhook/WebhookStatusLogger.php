@@ -25,8 +25,19 @@ use Tuleap\Webhook\Webhook;
 
 class WebhookStatusLogger implements StatusLogger
 {
+
+    /**
+     * @var WebhookDao
+     */
+    private $dao;
+
+    public function __construct(WebhookDao $dao)
+    {
+        $this->dao = $dao;
+    }
+
     public function log(Webhook $webhook, $status)
     {
-        return;
+        $this->dao->addLog($webhook->getId(), $status);
     }
 }

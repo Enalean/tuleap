@@ -45,12 +45,13 @@ class Tracker_Artifact_XMLImportBuilder {
         $changeset_dao         = new Tracker_Artifact_ChangesetDao();
         $changeset_comment_dao = new Tracker_Artifact_Changeset_CommentDao();
         $send_notifications    = false;
+        $webhook_dao           = new WebhookDao();
         $emitter               = new Emitter(
             new Http_Client(),
-            new WebhookStatusLogger()
+            new WebhookStatusLogger($webhook_dao)
         );
 
-        $webhook_retriever = new WebhookRetriever(new WebhookDao());
+        $webhook_retriever = new WebhookRetriever($webhook_dao);
 
         $artifact_creator = new Tracker_ArtifactCreator(
             $artifact_factory,

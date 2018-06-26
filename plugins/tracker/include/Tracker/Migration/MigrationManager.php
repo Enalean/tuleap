@@ -158,12 +158,13 @@ class Tracker_Migration_MigrationManager {
     }
 
     private function getArtifactCreator(Tracker_Artifact_Changeset_AtGivenDateFieldsValidator $fields_validator, Tracker_Artifact_ChangesetDao $changeset_dao) {
-        $emitter = new Emitter(
+        $webhook_dao = new WebhookDao();
+        $emitter     = new Emitter(
             new Http_Client(),
-            new WebhookStatusLogger()
+            new WebhookStatusLogger($webhook_dao)
         );
 
-        $webhook_retriever = new WebhookRetriever(new WebhookDao());
+        $webhook_retriever = new WebhookRetriever($webhook_dao);
 
         return new Tracker_ArtifactCreator(
             $this->artifact_factory,
@@ -183,12 +184,13 @@ class Tracker_Migration_MigrationManager {
 
     private function getChangesetCreator(Tracker_Artifact_Changeset_AtGivenDateFieldsValidator $fields_validator, Tracker_Artifact_ChangesetDao $changeset_dao) {
         $changeset_comment_dao = new Tracker_Artifact_Changeset_CommentDao();
+        $webhook_dao           = new WebhookDao();
         $emitter               = new Emitter(
             new Http_Client(),
-            new WebhookStatusLogger()
+            new WebhookStatusLogger($webhook_dao)
         );
 
-        $webhook_retriever = new WebhookRetriever(new WebhookDao());
+        $webhook_retriever = new WebhookRetriever($webhook_dao);
 
         return new Tracker_Artifact_Changeset_NewChangesetAtGivenDateCreator(
             $fields_validator,
