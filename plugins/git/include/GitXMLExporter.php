@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,19 +20,20 @@
 
 namespace Tuleap\Git;
 
-use ForgeConfig;
 use Git;
-use GitRepository;
-use Logger;
-use SimpleXMLElement;
-use Project;
+use Git_LogDao;
 use GitPermissionsManager;
+use GitRepository;
+use GitRepositoryFactory;
+use Logger;
+use Project;
+use ProjectUGroup;
+use SimpleXMLElement;
 use System_Command;
 use Tuleap\GitBundle;
 use Tuleap\Project\XML\Export\ArchiveInterface;
 use UGroupManager;
-use ProjectUGroup;
-use GitRepositoryFactory;
+use UserManager;
 
 class GitXmlExporter
 {
@@ -71,6 +72,18 @@ class GitXmlExporter
      * @var GitBundle
      */
     private $git_bundle;
+    /**
+     * @var Git_LogDao
+     */
+    private $git_log_dao;
+    /**
+     * @var UserManager
+     */
+    private $user_manager;
+    /**
+     * @var \UserXMLExporter
+     */
+    private $user_exporter;
 
     public function __construct(
         Project $project,
@@ -79,7 +92,10 @@ class GitXmlExporter
         GitRepositoryFactory $repository_factory,
         Logger $logger,
         System_Command $command,
-        GitBundle $git_bundle
+        GitBundle $git_bundle,
+        Git_LogDao $git_log_dao,
+        UserManager $user_manager,
+        \UserXMLExporter $user_exporter
     ) {
         $this->project            = $project;
         $this->permission_manager = $permission_manager;
@@ -88,6 +104,9 @@ class GitXmlExporter
         $this->logger             = $logger;
         $this->command            = $command;
         $this->git_bundle         = $git_bundle;
+        $this->git_log_dao        = $git_log_dao;
+        $this->user_manager       = $user_manager;
+        $this->user_exporter      = $user_exporter;
     }
 
     public function exportToXml(SimpleXMLElement $xml_content, ArchiveInterface $archive, $temporary_dump_path_on_filesystem)
@@ -140,6 +159,18 @@ class GitXmlExporter
             $root_node = $xml_content->addChild("repository");
             $root_node->addAttribute("name", $repository->getName());
             $root_node->addAttribute("description", $repository->getDescription());
+
+            $row = $this->git_log_dao->getLastPushForRepository($repository->getId());
+            if (! empty($row) && $row['user_id'] !== 0) {
+                $last_push_node    = $root_node->addChild("last-push-date");
+                $user              = $this->user_manager->getUserById($row['user_id']);
+                $this->user_exporter->exportUser($user, $last_push_node, 'user');
+                $last_push_node->addAttribute("push_date", $row["push_date"]);
+                $last_push_node->addAttribute("commits_number", $row["commits_number"]);
+                $last_push_node->addAttribute("refname", $row["refname"]);
+                $last_push_node->addAttribute("operation_type", $row["operation_type"]);
+                $last_push_node->addAttribute("refname_type", $row["refname_type"]);
+            }
 
             $bundle_path = "";
             if ($repository->isInitialized()) {

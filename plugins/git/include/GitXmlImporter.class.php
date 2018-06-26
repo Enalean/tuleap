@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,14 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\XML\PHPCast;
-use Tuleap\Project\XML\Import\ImportConfig;
-use Tuleap\Git\Permissions\FineGrainedUpdater;
-use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
-use Tuleap\Git\Permissions\RegexpFineGrainedEnabler;
 use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\FineGrainedPermissionSaver;
+use Tuleap\Git\Permissions\FineGrainedUpdater;
+use Tuleap\Git\Permissions\RegexpFineGrainedEnabler;
+use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
 use Tuleap\Git\XmlUgroupRetriever;
+use Tuleap\Project\XML\Import\ImportConfig;
+use Tuleap\XML\PHPCast;
+use User\XML\Import\IFindUserFromXMLReference;
 
 class GitXmlImporter
 {
@@ -116,9 +117,13 @@ class GitXmlImporter
     private $xml_ugroup_retriever;
 
     /**
-     * @var XML_RNGValidator
+     * @var GitDao
      */
-    private $rng_validator;
+    private $git_dao;
+    /**
+     * @var \User\XML\Import\IFindUserFromXMLReference
+     */
+    private $user_finder;
 
     public function __construct(
         Logger $logger,
@@ -135,7 +140,9 @@ class GitXmlImporter
         RegexpFineGrainedEnabler $regexp_fine_grained_enabler,
         FineGrainedPermissionFactory $fine_grained_factory,
         FineGrainedPermissionSaver $fine_grained_saver,
-        XmlUgroupRetriever $xml_ugroup_retriever
+        XmlUgroupRetriever $xml_ugroup_retriever,
+        GitDao $git_dao,
+        IFindUserFromXMLReference $user_finder
     ) {
         $this->logger                        = $logger;
         $this->permission_manager            = $permissions_manager;
@@ -152,6 +159,8 @@ class GitXmlImporter
         $this->fine_grained_factory          = $fine_grained_factory;
         $this->fine_grained_saver            = $fine_grained_saver;
         $this->xml_ugroup_retriever          = $xml_ugroup_retriever;
+        $this->git_dao                       = $git_dao;
+        $this->user_finder                   = $user_finder;
     }
 
     /**
@@ -225,6 +234,8 @@ class GitXmlImporter
             $this->importPermissions($project, $repository_xmlnode->permissions, $repository);
             $this->importReferences($configuration, $project, $repository_xmlnode->references, $repository);
         }
+
+        $this->importLastPushDate($repository_xmlnode, $repository);
         $this->system_event_manager->queueProjectsConfigurationUpdate(array($project->getGroupId()));
     }
 
@@ -374,5 +385,23 @@ class GitXmlImporter
                 'configuration'  => $configuration,
             )
         );
+    }
+
+    private function importLastPushDate(SimpleXMLElement $repository_xmlnode, GitRepository $repository)
+    {
+        if (! $repository_xmlnode->{"last-push-date"}) {
+            return;
+        }
+
+        $push_informations = $repository_xmlnode->{"last-push-date"};
+
+        $this->git_dao->logGitPush(
+            $repository->getId(),
+            $this->user_finder->getUser($push_informations->user)->getId(),
+            (int)$push_informations['push_date'],
+            (int)$push_informations['commits_number'],
+            $push_informations['refname'],
+            $push_informations['operation_type'],
+            $push_informations['refname_type']);
     }
 }
