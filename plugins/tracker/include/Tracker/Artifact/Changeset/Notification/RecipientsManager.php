@@ -26,6 +26,7 @@ use Tracker_Artifact_Changeset;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsRetriever;
 use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
+use Tuleap\Tracker\Notifications\UserNotificationOnlyStatusChangeDAO;
 use UserManager;
 
 class RecipientsManager
@@ -46,17 +47,23 @@ class RecipientsManager
      * @var UserNotificationSettingsRetriever
      */
     private $notification_settings_retriever;
+    /**
+     * @var UserNotificationOnlyStatusChangeDAO
+     */
+    private $user_status_change_only_dao;
 
     public function __construct(
         Tracker_FormElementFactory $form_element_factory,
         UserManager $user_manager,
         UnsubscribersNotificationDAO $unsubscribers_notification_dao,
-        UserNotificationSettingsRetriever $notification_settings_retriever
+        UserNotificationSettingsRetriever $notification_settings_retriever,
+        UserNotificationOnlyStatusChangeDAO $user_status_change_only_dao
     ) {
         $this->form_element_factory            = $form_element_factory;
         $this->user_manager                    = $user_manager;
         $this->unsubscribers_notification_dao  = $unsubscribers_notification_dao;
         $this->notification_settings_retriever = $notification_settings_retriever;
+        $this->user_status_change_only_dao     = $user_status_change_only_dao;
     }
 
     /**
@@ -102,6 +109,7 @@ class RecipientsManager
         }
         $this->removeRecipientsThatMayReceiveAnEmptyNotification($changeset, $tablo);
         $this->removeRecipientsThatHaveUnsubcribedFromNotification($changeset, $tablo);
+        $this->removeRecipientsWhenTheyAreInStatusUpdateOnlyMode($changeset, $tablo);
 
         return $tablo;
     }
@@ -247,6 +255,20 @@ class RecipientsManager
                 unset($recipients[$recipient]);
             }
         }
-        return $recipients;
+    }
+
+    private function removeRecipientsWhenTheyAreInStatusUpdateOnlyMode(Tracker_Artifact_Changeset $changeset, array &$recipients)
+    {
+        if ($this->hasArtifactStatusChange($changeset)) {
+            return;
+        }
+
+        foreach ($recipients as $recipient => $is_notification_enabled) {
+            $user = $this->getUserFromRecipientName($recipient);
+
+            if ($this->user_status_change_only_dao->doesUserIdHaveSubscribeOnlyForStatusChangeNotification($user->getId(), $changeset->getTracker()->getId())) {
+                unset($recipients[$recipient]);
+            }
+        }
     }
 }

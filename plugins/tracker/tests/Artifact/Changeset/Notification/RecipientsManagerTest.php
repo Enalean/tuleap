@@ -27,11 +27,16 @@ use Tracker_FormElement_Field_Selectbox;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettings;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsRetriever;
 use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
+use Tuleap\Tracker\Notifications\UserNotificationOnlyStatusChangeDAO;
 
 require_once __DIR__.'/../../../bootstrap.php';
 
 class RecipientsManagerTest extends \TuleapTestCase
 {
+    /**
+     * @var UserNotificationOnlyStatusChangeDAO
+     */
+    private $user_status_change_only_dao;
 
     /**
      * @var UserNotificationSettingsRetriever
@@ -62,11 +67,13 @@ class RecipientsManagerTest extends \TuleapTestCase
         $this->formelement_factory             = mock('\Tracker_FormElementFactory');
         $this->unsubscribers_notification_dao  = mock(UnsubscribersNotificationDAO::class);
         $this->notification_settings_retriever = mock(UserNotificationSettingsRetriever::class);
+        $this->user_status_change_only_dao     = mock(UserNotificationOnlyStatusChangeDAO::class);
         $this->recipients_manager              = new RecipientsManager(
             $this->formelement_factory,
             $this->user_manager,
             $this->unsubscribers_notification_dao,
-            $this->notification_settings_retriever
+            $this->notification_settings_retriever,
+            $this->user_status_change_only_dao
         );
 
         stub($this->user_manager)->getUserByUserName('recipient1')->returns(
@@ -412,6 +419,68 @@ class RecipientsManagerTest extends \TuleapTestCase
         );
     }
 
+    public function itFilterUsersWhoOnlyWantSeeStatusChangeWhenStatusIsNotUpdated()
+    {
+        $this->mockADateField(false, true);
+
+        $changeset = $this->getAMockedChangeset(
+            true,
+            [],
+            [],
+            'On going',
+            'On going',
+            [
+                [
+                    'on_updates'        => true,
+                    'check_permissions' => true,
+                    'recipients'        => ['recipient2', 'recipient3']
+                ]
+            ],
+            Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
+            false,
+            mock(Tracker_Artifact_Changeset::class)
+        );
+
+        stub($this->user_status_change_only_dao)->doesUserIdHaveSubscribeOnlyForStatusChangeNotification(102, 36)->returns(true);
+        stub($this->user_status_change_only_dao)->doesUserIdHaveSubscribeOnlyForStatusChangeNotification(103, 36)->returns(false);
+
+        $this->assertEqual(
+            ['recipient3' => true],
+            $this->recipients_manager->getRecipients($changeset, true)
+        );
+    }
+
+    public function itDoesNotFilterWhenStatusIsUpdated()
+    {
+        $this->mockADateField(false, true);
+
+        $changeset = $this->getAMockedChangeset(
+            true,
+            [],
+            [],
+            'On going',
+            'Review',
+            [
+                [
+                    'on_updates'        => true,
+                    'check_permissions' => true,
+                    'recipients'        => ['recipient2', 'recipient3']
+                ]
+            ],
+            Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
+            false,
+            mock(Tracker_Artifact_Changeset::class)
+        );
+
+        stub($this->user_status_change_only_dao)->doesUserIdHaveSubscribeOnlyForStatusChangeNotification(102, 36)->returns(true);
+        stub($this->user_status_change_only_dao)->doesUserIdHaveSubscribeOnlyForStatusChangeNotification(103, 36)->returns(false);
+
+        $this->assertEqual(
+            ['recipient2' => true, 'recipient3' => true],
+            $this->recipients_manager->getRecipients($changeset, true)
+        );
+    }
+
     private function mockADateField($is_notification_supported, $user_can_read)
     {
         $field = mock('\Tracker_FormElement_Field_Date');
@@ -448,6 +517,7 @@ class RecipientsManagerTest extends \TuleapTestCase
         stub($artifact)->getStatus()->returns($artifact_status);
 
         $tracker = Mock(Tracker::class);
+        stub($tracker)->getId()->returns(36);
         stub($tracker)->getRecipients()->returns($tracker_recipients);
         stub($tracker)->getNotificationsLevel()->returns($tracker_notification_level);
         stub($changeset)->getTracker()->returns($tracker);
