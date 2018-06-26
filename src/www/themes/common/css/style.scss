@@ -465,16 +465,6 @@ tr.boxitemalt:hover {
     padding-bottom: 1em;
 }
 
-/* dynamic fields                                */
-/*************************************************/
-/* Only background-color property is used        */
-/* Only full hexa are allowed                    */
-/* don't use names (purple, red, yellow)         */
-/* don't use half hexa (#FF0000 instead of #F00) */
-.codendi_field_dependencies_highlight_change {
-    /* background-color: #8b4020; */
-}
-
 /* field sets */
 .fieldset_separator {
     text-align: center;
