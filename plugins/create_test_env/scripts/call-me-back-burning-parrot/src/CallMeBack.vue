@@ -18,6 +18,7 @@
   -->
 <template>
     <div class="call-me-back tlp-dropdown">
+        <div class="call-me-back-message" v-if="! dropdown_open && message" v-html="sanitized_message"></div>
         <button class="call-me-back-button tlp-button-primary tlp-button-large" ref="call_me_back_button">
             <i class="fa fa-comments-o"></i>
         </button>
@@ -80,9 +81,10 @@
 </template>
 
 <script>
-import { dropdown, datePicker } from 'tlp';
-import { askToBeCalledBack }    from './rest-querier.js';
-import { DateTime }             from 'luxon';
+import { dropdown, datePicker }                    from 'tlp';
+import { getCallMeBackMessage, askToBeCalledBack } from './rest-querier.js';
+import { DateTime }                                from 'luxon';
+import { sanitize }                                from 'dompurify';
 
 export default {
     name: 'CallMeBack',
@@ -90,7 +92,9 @@ export default {
         return {
             loading           : false,
             error             : false,
+            dropdown_open     : false,
             save_the_date     : false,
+            message           : '',
             call_me_back_phone: '',
             call_me_back_date : ''
         };
@@ -98,15 +102,29 @@ export default {
     computed: {
         call_me_back_formatted_date() {
             return DateTime.fromISO(this.call_me_back_date).toLocaleString(DateTime.DATE_FULL);
+        },
+        sanitized_message() {
+            return sanitize(this.message);
         }
     },
     mounted() {
+        this.getMessage();
         this.bindDropdown();
         this.bindCalendar();
     },
     methods: {
+        async getMessage() {
+            this.message = await getCallMeBackMessage();
+        },
         bindDropdown() {
-            dropdown(this.$refs.call_me_back_button);
+            const call_me_back_dropdown = dropdown(this.$refs.call_me_back_button);
+
+            call_me_back_dropdown.addEventListener('tlp-dropdown-shown', () => {
+                this.dropdown_open = true;
+            });
+            call_me_back_dropdown.addEventListener('tlp-dropdown-hidden', () => {
+                this.dropdown_open = false;
+            });
         },
         bindCalendar() {
             datePicker(
