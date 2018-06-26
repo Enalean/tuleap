@@ -57,6 +57,11 @@ services:
     - ldap
     - db
 
+  jenkins:
+    image: jenkins/jenkins:lts
+    volumes:
+    - jenkins-data:/var/jenkins_home
+
   db:
     image: mysql:5.5
     env_file:
@@ -95,3 +100,4 @@ volumes:
   realtime-cert:
   reverse-proxy-cert:
   prom-data:
+  jenkins-data:
