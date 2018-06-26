@@ -102,10 +102,16 @@ abstract class Tracker_Artifact_Changeset_ChangesetCreatorBase {
         return false;
     }
 
-    protected function emitWebhooks(Tracker $tracker)
+    protected function emitWebhooks(Tracker_Artifact $artifact, PFUser $user, $action)
     {
+        $tracker  = $artifact->getTracker();
         $webhooks = $this->webhook_retriever->getWebhooksForTracker($tracker);
-        $payload  = new \Tuleap\Tracker\Webhook\ArtifactPayload();
+
+        if (count($webhooks) === 0) {
+            return;
+        }
+
+        $payload  = new \Tuleap\Tracker\Webhook\ArtifactPayload($artifact, $user, $action);
         foreach ($webhooks as $webhook) {
             $this->emitter->emit($webhook, $payload);
         }

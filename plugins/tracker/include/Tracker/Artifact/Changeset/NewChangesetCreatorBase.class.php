@@ -170,7 +170,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         }
 
         $this->event_manager->processEvent(TRACKER_EVENT_ARTIFACT_POST_UPDATE, array('artifact' => $artifact));
-        $this->emitWebhooks($artifact->getTracker());
+        $this->emitWebhooks($artifact, $submitter, 'update');
 
         return $new_changeset;
     }
