@@ -2058,7 +2058,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     {
         $emitter = new Emitter(
             new Http_Client(),
-            new WebhookStatusLogger()
+            new WebhookStatusLogger(new WebhookDao())
         );
         return $emitter;
     }
