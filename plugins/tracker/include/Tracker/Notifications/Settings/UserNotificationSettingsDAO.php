@@ -52,6 +52,22 @@ class UserNotificationSettingsDAO extends DataAccessObject
         }
     }
 
+    public function enableNotifyOnStatusChangeMode($user_id, $tracker_id)
+    {
+        $this->getDB()->beginTransaction();
+        try {
+            $this->deleteUserNotificationSettings($user_id, $tracker_id);
+            $this->getDB()->insert(
+                'tracker_only_status_change_notification_subscribers',
+                ['user_id' => $user_id, 'tracker_id' => $tracker_id]
+            );
+            $this->getDB()->commit();
+        } catch (\Exception $ex) {
+            $this->getDB()->rollBack();
+            throw $ex;
+        }
+    }
+
     public function enableNotifyOnArtifactCreationMode($user_id, $tracker_id)
     {
         $this->enableGlobalNotification($user_id, $tracker_id, false);
@@ -89,12 +105,19 @@ class UserNotificationSettingsDAO extends DataAccessObject
     {
         $this->deleteUserFromUnsubscribers($user_id, $tracker_id);
         $this->deleteUserFromGlobalNotification($user_id, $tracker_id);
+        $this->deleteUserFromStatusUpdateOnlyNotification($user_id, $tracker_id);
         $this->cleanUpEmptyGlobalNotification($tracker_id);
     }
 
     private function deleteUserFromUnsubscribers($user_id, $tracker_id)
     {
         $sql = 'DELETE FROM tracker_global_notification_unsubscribers WHERE user_id = ? AND tracker_id = ?';
+        $this->getDB()->run($sql, $user_id, $tracker_id);
+    }
+
+    private function deleteUserFromStatusUpdateOnlyNotification($user_id, $tracker_id)
+    {
+        $sql = 'DELETE FROM tracker_only_status_change_notification_subscribers WHERE user_id = ? AND tracker_id = ?';
         $this->getDB()->run($sql, $user_id, $tracker_id);
     }
 

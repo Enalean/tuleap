@@ -27,6 +27,10 @@ class UserNotificationSettings
     /**
      * @var bool
      */
+    private $is_in_notify_on_status_change_mode = false;
+    /**
+     * @var bool
+     */
     private $is_in_no_notification_at_all_mode = false;
     /**
      * @var bool
@@ -41,11 +45,18 @@ class UserNotificationSettings
      */
     private $is_in_notify_on_every_change_mode = false;
 
-    public function __construct($has_unsubscribed, GlobalNotification ...$global_notifications)
-    {
+    public function __construct(
+        $has_unsubscribed,
+        $is_only_on_status_update,
+        GlobalNotification ...$global_notifications
+    ) {
         if ($has_unsubscribed) {
             $this->is_in_no_notification_at_all_mode = true;
             return;
+        }
+
+        if ($is_only_on_status_update) {
+            $this->is_in_notify_on_status_change_mode = true;
         }
 
         if (empty($global_notifications)) {
@@ -92,5 +103,10 @@ class UserNotificationSettings
     public function isInNotifyOnEveryChangeMode()
     {
         return $this->is_in_notify_on_every_change_mode;
+    }
+
+    public function isInNotifyOnStatusChange()
+    {
+        return $this->is_in_notify_on_status_change_mode;
     }
 }

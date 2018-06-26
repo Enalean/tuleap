@@ -80,6 +80,9 @@ class NotificationsUserSettingsUpdateController implements DispatchableWithReque
             case 'notify-me-every-change':
                 $this->user_notification_settings_dao->enableNotifyOnEveryChangeMode($user->getId(), $tracker->getId());
                 break;
+            case 'notify-me-status-change':
+                $this->user_notification_settings_dao->enableNotifyOnStatusChangeMode($user->getId(), $tracker->getId());
+                break;
         }
 
         $layout->addFeedback(

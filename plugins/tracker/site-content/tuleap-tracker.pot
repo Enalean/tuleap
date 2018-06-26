@@ -188,6 +188,9 @@ msgstr ""
 msgid "Notify me on every change"
 msgstr ""
 
+msgid "Notify me on status change"
+msgstr ""
+
 msgid "Notify me when artifacts are created"
 msgstr ""
 

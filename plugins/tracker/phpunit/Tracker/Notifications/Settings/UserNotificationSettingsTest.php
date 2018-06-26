@@ -32,18 +32,24 @@ class UserNotificationSettingsTest extends TestCase
      */
     public function testNotificationSettingsMode(
         $has_unsubscribed,
+        $is_only_on_status_update,
         array $global_notifications,
         $expected_no_notification_at_all_mode,
         $expected_no_global_notification_mode,
         $expected_notify_on_artifact_creation_mode,
         $expected_notify_on_every_change_mode
     ) {
-        $notification_settings = new UserNotificationSettings($has_unsubscribed, ...$global_notifications);
+        $notification_settings = new UserNotificationSettings(
+            $has_unsubscribed,
+            $is_only_on_status_update,
+            ...$global_notifications
+        );
 
         $this->assertEquals($expected_no_notification_at_all_mode, $notification_settings->isInNoNotificationAtAllMode());
         $this->assertEquals($expected_no_global_notification_mode, $notification_settings->isInNoGlobalNotificationMode());
         $this->assertEquals($expected_notify_on_artifact_creation_mode, $notification_settings->isInNotifyOnArtifactCreationMode());
         $this->assertEquals($expected_notify_on_every_change_mode, $notification_settings->isInNotifyOnEveryChangeMode());
+        $this->assertEquals($is_only_on_status_update, $notification_settings->isInNotifyOnStatusChange());
     }
 
     public function notificationModeProvider()
@@ -54,10 +60,12 @@ class UserNotificationSettingsTest extends TestCase
         $global_notification_all_updates->shouldReceive('isOnAllUpdates')->andReturn(true);
 
         return [
-            [true, [$global_notification], true, false, false, false],
-            [false, [], false, true, false, false],
-            [false, [$global_notification], false, false, true, false],
-            [false, [$global_notification, $global_notification_all_updates], false, false, false, true],
+            [true, false, [$global_notification], true, false, false, false],
+            [false, false, [], false, true, false, false],
+            [false, false, [$global_notification], false, false, true, false],
+            [false, false, [$global_notification, $global_notification_all_updates], false, false, false, true],
+            [false, false, [$global_notification, $global_notification_all_updates], false, false, false, true],
+            [false, true, [], false, true, false, false],
         ];
     }
 }
