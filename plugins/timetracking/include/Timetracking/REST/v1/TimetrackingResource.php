@@ -25,10 +25,7 @@
 namespace Tuleap\Timetracking\REST\v1;
 
 use DateTime;
-use EventManager;
-use Exception;
 use Luracast\Restler\RestException;
-use StandardPasswordHandler;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\JsonDecoder;
@@ -40,8 +37,6 @@ use Tuleap\Timetracking\Admin\TimetrackingUgroupRetriever;
 use Tuleap\Timetracking\Permissions\PermissionsRetriever;
 use Tuleap\Timetracking\Time\TimeDao;
 use Tuleap\Timetracking\Time\TimeRetriever;
-use User_LoginManager;
-use User_PasswordExpirationChecker;
 
 class TimetrackingResource extends AuthenticatedResource
 {
@@ -76,17 +71,7 @@ class TimetrackingResource extends AuthenticatedResource
             )
         );
 
-        $user_manager = \UserManager::instance();
-
-        $this->rest_user_manager = new UserManager(
-            $user_manager,
-            new User_LoginManager(
-                EventManager::instance(),
-                $user_manager,
-                new User_PasswordExpirationChecker(),
-                new StandardPasswordHandler()
-            )
-        );
+        $this->rest_user_manager = UserManager::build();
     }
 
     /**

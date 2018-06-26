@@ -1,6 +1,6 @@
 <?php
 //
-// Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
+// Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
@@ -15,7 +15,7 @@ $csrf    = new CSRFSynchronizerToken('/account/change_pw.php');
 // ###### function register_valid()
 // ###### checks for valid register from form post
 
-function register_valid($user_id, CSRFSynchronizerToken $csrf, EventManager $event_manager, $old_password_required)	{
+function register_valid($user_id, CSRFSynchronizerToken $csrf, $old_password_required)	{
     $request = HTTPRequest::instance();
 
     if (!$request->isPost() || !$request->exist('Update')) {
@@ -31,15 +31,9 @@ function register_valid($user_id, CSRFSynchronizerToken $csrf, EventManager $eve
         return 0;
 	}
 
-    $password_expiration_checker = new User_PasswordExpirationChecker();
-    $password_handler            = PasswordHandlerFactory::getPasswordHandler();
-    $login_manager               = new User_LoginManager(
-        $event_manager,
-        $user_manager,
-        $password_expiration_checker,
-        $password_handler
-    );
-    if ($old_password_required && ! $login_manager->verifyPassword($user, $request->get('form_oldpw'))) {
+    $password_handler  = PasswordHandlerFactory::getPasswordHandler();
+    $password_verifier = new \Tuleap\user\PasswordVerifier($password_handler);
+    if ($old_password_required && ! $password_verifier->verifyPassword($user, $request->get('form_oldpw'))) {
 		$GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('account_change_pw', 'incorrect_old_password'));
 		return 0;
 	}
@@ -67,7 +61,7 @@ function register_valid($user_id, CSRFSynchronizerToken $csrf, EventManager $eve
 		$GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('account_change_pw', 'password_not_match'));
 		return 0;
 	}
-    if ($login_manager->verifyPassword($user, $request->get('form_pw'))) {
+    if ($password_verifier->verifyPassword($user, $request->get('form_pw'))) {
         $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('account_change_pw', 'identical_password'));
         return 0;
     }
@@ -100,7 +94,7 @@ $event_manager->processEvent(
 
 // ###### first check for valid login, if so, congratulate
 $user_id = is_numeric($request->get('user_id')) ? (int)$request->get('user_id') : user_getid();
-if (register_valid($user_id, $csrf, $event_manager, $old_password_required)) {
+if (register_valid($user_id, $csrf, $old_password_required)) {
     $HTML->header(array('title'=>$Language->getText('account_change_pw', 'title_success')));
 ?>
 <p><b><? echo $Language->getText('account_change_pw', 'title_success'); ?></b>

@@ -19,6 +19,7 @@
 
 namespace Tuleap\REST;
 
+use Tuleap\user\PasswordVerifier;
 use User_LoginManager;
 use User_PasswordExpirationChecker;
 use EventManager;
@@ -50,15 +51,17 @@ class UserManager {
     }
 
     public static function build() {
-        $self = __CLASS__;
-        $user_manager = \UserManager::instance();
+        $self             = __CLASS__;
+        $user_manager     = \UserManager::instance();
+        $password_handler = PasswordHandlerFactory::getPasswordHandler();
         return new $self(
             $user_manager,
             new User_LoginManager(
                 EventManager::instance(),
                 $user_manager,
+                new PasswordVerifier($password_handler),
                 new User_PasswordExpirationChecker(),
-                PasswordHandlerFactory::getPasswordHandler()
+                $password_handler
             )
         );
     }

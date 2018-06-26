@@ -23,6 +23,7 @@ use Luracast\Restler\RestException;
 use Tuleap\Token\REST\TokenRepresentation;
 use Tuleap\REST\Header;
 use Exception;
+use Tuleap\user\PasswordVerifier;
 use UserManager;
 use EventManager;
 use User_LoginManager;
@@ -61,11 +62,13 @@ class TokenResource {
      */
     public function post($username, $password) {
         try {
+            $password_handler = PasswordHandlerFactory::getPasswordHandler();
             $user_login = new User_LoginManager(
                 EventManager::instance(),
                 $this->user_manager,
+                new PasswordVerifier($password_handler),
                 new User_PasswordExpirationChecker(),
-                PasswordHandlerFactory::getPasswordHandler()
+                $password_handler
             );
 
             $user  = $user_login->authenticate($username, $password);
