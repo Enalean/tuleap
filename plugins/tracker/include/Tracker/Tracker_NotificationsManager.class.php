@@ -266,9 +266,9 @@ class Tracker_NotificationsManager {
         echo '<fieldset><form id="tracker-admin-notifications-form" method="POST">' . $csrf_token->fetchHTMLInput();
 
         $this->displayAdminNotifications_Toggle();
-        $this->displayAdminNotificationAssignedToMeFlag();
         $this->displayAdminNotifications_Global();
         $this->displayAdminNotificationUnsubcribers();
+        $this->displayAdminNotificationAssignedToMeFlag();
 
         echo '</form></fieldset>';
     }
