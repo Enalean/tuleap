@@ -44,7 +44,11 @@ use Tuleap\Tracker\Notifications\UsersToNotifyDao;
 use Tuleap\Tracker\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\RecentlyVisited\VisitRetriever;
+use Tuleap\Tracker\Webhook\WebhookDao;
+use Tuleap\Tracker\Webhook\WebhookRetriever;
+use Tuleap\Tracker\Webhook\WebhookStatusLogger;
 use Tuleap\Tracker\XML\Updater\FieldChange\FieldChangeComputedXMLUpdater;
+use Tuleap\Webhook\Emitter;
 
 require_once('common/date/DateHelper.class.php');
 require_once('common/widget/Widget_Static.class.php');
@@ -3554,6 +3558,12 @@ EOS;
         $changeset_dao         = new Tracker_Artifact_ChangesetDao();
         $changeset_comment_dao = new Tracker_Artifact_Changeset_CommentDao();
         $send_notifications    = true;
+        $emitter               = new Emitter(
+            new Http_Client(),
+            new WebhookStatusLogger()
+        );
+
+        $webhook_retriever = new WebhookRetriever(new WebhookDao());
 
         $artifact_creator = new Tracker_ArtifactCreator(
             $this->getTrackerArtifactFactory(),
@@ -3563,7 +3573,9 @@ EOS;
                 $this->getFormElementFactory(),
                 $changeset_dao,
                 $this->getTrackerArtifactFactory(),
-                EventManager::instance()
+                EventManager::instance(),
+                $emitter,
+                $webhook_retriever
             ),
             $this->getVisitRecorder()
         );
@@ -3584,7 +3596,9 @@ EOS;
                     )
                 ),
                 Tracker_FormElementFactory::instance()
-            )
+            ),
+            $emitter,
+            $webhook_retriever
         );
 
         return new Tracker_Artifact_XMLImport(

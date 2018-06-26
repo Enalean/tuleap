@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2014 - 2017. All rights reserved.
+ * Copyright Enalean (c) 2014 - 2018. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -28,6 +28,10 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationDetector;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
 use Tuleap\Tracker\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
+use Tuleap\Tracker\Webhook\WebhookDao;
+use Tuleap\Tracker\Webhook\WebhookRetriever;
+use Tuleap\Tracker\Webhook\WebhookStatusLogger;
+use Tuleap\Webhook\Emitter;
 
 class Tracker_Migration_MigrationManager {
 
@@ -154,6 +158,13 @@ class Tracker_Migration_MigrationManager {
     }
 
     private function getArtifactCreator(Tracker_Artifact_Changeset_AtGivenDateFieldsValidator $fields_validator, Tracker_Artifact_ChangesetDao $changeset_dao) {
+        $emitter = new Emitter(
+            new Http_Client(),
+            new WebhookStatusLogger()
+        );
+
+        $webhook_retriever = new WebhookRetriever(new WebhookDao());
+
         return new Tracker_ArtifactCreator(
             $this->artifact_factory,
             $fields_validator,
@@ -162,7 +173,9 @@ class Tracker_Migration_MigrationManager {
                 $this->form_element_factory,
                 $changeset_dao,
                 $this->artifact_factory,
-                EventManager::instance()
+                EventManager::instance(),
+                $emitter,
+                $webhook_retriever
             ),
             new VisitRecorder(new RecentlyVisitedDao())
         );
@@ -170,6 +183,12 @@ class Tracker_Migration_MigrationManager {
 
     private function getChangesetCreator(Tracker_Artifact_Changeset_AtGivenDateFieldsValidator $fields_validator, Tracker_Artifact_ChangesetDao $changeset_dao) {
         $changeset_comment_dao = new Tracker_Artifact_Changeset_CommentDao();
+        $emitter               = new Emitter(
+            new Http_Client(),
+            new WebhookStatusLogger()
+        );
+
+        $webhook_retriever = new WebhookRetriever(new WebhookDao());
 
         return new Tracker_Artifact_Changeset_NewChangesetAtGivenDateCreator(
             $fields_validator,
@@ -187,7 +206,9 @@ class Tracker_Migration_MigrationManager {
                     )
                 ),
                 Tracker_FormElementFactory::instance()
-            )
+            ),
+            $emitter,
+            $webhook_retriever
         );
     }
 

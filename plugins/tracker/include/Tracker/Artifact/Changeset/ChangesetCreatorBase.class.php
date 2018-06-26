@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Tracker\Webhook\WebhookRetriever;
+use Tuleap\Webhook\Emitter;
 
 /**
  * I am a Template Method to create an initial changeset.
@@ -39,17 +42,31 @@ abstract class Tracker_Artifact_Changeset_ChangesetCreatorBase {
     /** @var EventManager */
     protected $event_manager;
 
+    /**
+     * @var Emitter
+     */
+    private $emitter;
+
+    /**
+     * @var WebhookRetriever
+     */
+    private $webhook_retriever;
+
     public function __construct(
         Tracker_Artifact_Changeset_FieldsValidator $fields_validator,
         Tracker_FormElementFactory                 $formelement_factory,
         Tracker_ArtifactFactory                    $artifact_factory,
-        EventManager                               $event_manager
+        EventManager                               $event_manager,
+        Emitter                                    $emitter,
+        WebhookRetriever                           $webhook_retriever
     ) {
         $this->fields_validator    = $fields_validator;
         $this->formelement_factory = $formelement_factory;
         $this->artifact_factory    = $artifact_factory;
         $this->event_manager       = $event_manager;
         $this->field_initializator = new Tracker_Artifact_Changeset_ChangesetDataInitializator($this->formelement_factory);
+        $this->emitter             = $emitter;
+        $this->webhook_retriever   = $webhook_retriever;
     }
 
     /**
@@ -83,5 +100,14 @@ abstract class Tracker_Artifact_Changeset_ChangesetCreatorBase {
         }
 
         return false;
+    }
+
+    protected function emitWebhooks(Tracker $tracker)
+    {
+        $webhooks = $this->webhook_retriever->getWebhooksForTracker($tracker);
+        $payload  = new \Tuleap\Tracker\Webhook\ArtifactPayload();
+        foreach ($webhooks as $webhook) {
+            $this->emitter->emit($webhook, $payload);
+        }
     }
 }

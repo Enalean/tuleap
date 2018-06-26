@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,6 +19,8 @@
  */
 
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder;
+use Tuleap\Tracker\Webhook\WebhookRetriever;
+use Tuleap\Webhook\Emitter;
 
 /**
  * I create a new changeset (update of an artifact) at a given date.
@@ -37,7 +39,9 @@ class Tracker_Artifact_Changeset_NewChangesetAtGivenDateCreator extends Tracker_
         Tracker_ArtifactFactory $artifact_factory,
         EventManager $event_manager,
         ReferenceManager $reference_manager,
-        SourceOfAssociationCollectionBuilder $source_of_association_collection_builder
+        SourceOfAssociationCollectionBuilder $source_of_association_collection_builder,
+        Emitter $emitter,
+        WebhookRetriever $webhook_retriever
     ) {
         parent::__construct(
             $fields_validator,
@@ -47,7 +51,9 @@ class Tracker_Artifact_Changeset_NewChangesetAtGivenDateCreator extends Tracker_
             $artifact_factory,
             $event_manager,
             $reference_manager,
-            $source_of_association_collection_builder
+            $source_of_association_collection_builder,
+            $emitter,
+            $webhook_retriever
         );
     }
 

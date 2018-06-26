@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -37,6 +37,8 @@ Mock::generatePartial(
         'getArtifactFactory',
         'getHierarchyFactory',
         'getWorkflow',
+        'getWebhookEmitter',
+        'getWebhookRetriever'
     )
 );
 
@@ -304,6 +306,9 @@ class Tracker_Artifact_delegatedCreateNewChangesetTest extends Tracker_ArtifactT
         $fields_validator = mock('Tracker_Artifact_Changeset_NewChangesetFieldsValidator');
         stub($fields_validator)->validate()->returns(true);
 
+        $retriever = \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookRetriever::class);
+        $retriever->shouldReceive('getWebhooksForTracker')->once()->andReturn([]);
+
         $creator = new Tracker_Artifact_Changeset_NewChangesetCreator(
             $fields_validator,
             $factory,
@@ -312,7 +317,9 @@ class Tracker_Artifact_delegatedCreateNewChangesetTest extends Tracker_ArtifactT
             $art_factory,
             mock('EventManager'),
             $reference_manager,
-            mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder')
+            mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder'),
+            \Mockery::spy(\Tuleap\Webhook\Emitter::class),
+            $retriever
         );
 
         $creator->create($artifact, $fields_data, $comment, $user, $submitted_on, $send_notification, $comment_format);
@@ -381,6 +388,12 @@ class Tracker_Artifact_delegatedCreateNewChangesetTest extends Tracker_ArtifactT
         $artifact->setReturnReference('getTracker', $tracker);
         $artifact->setReturnValue('getId', 66);
         $artifact->setReturnReference('getLastChangeset', $changeset);
+
+        $retriever = \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookRetriever::class);
+        $retriever->shouldReceive('getWebhooksForTracker')->once()->andReturn([]);
+
+        $artifact->setReturnReference('getWebhookRetriever', $retriever);
+        $artifact->setReturnReference('getWebhookEmitter', \Mockery::spy(\Tuleap\Webhook\Emitter::class));
 
         $workflow = new MockWorkflow();
         $workflow->expectNever('before');
@@ -489,6 +502,12 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $artifact->setReturnReference('getReferenceManager', $reference_manager);
         $artifact->setReturnReference('getArtifactFactory', $art_factory);
         $artifact->setReturnReference('getHierarchyFactory', $hierarchy_factory);
+
+        $retriever = \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookRetriever::class);
+        $retriever->shouldReceive('getWebhooksForTracker')->once()->andReturn([]);
+
+        $artifact->setReturnReference('getWebhookRetriever', $retriever);
+        $artifact->setReturnReference('getWebhookEmitter', \Mockery::spy(\Tuleap\Webhook\Emitter::class));
 
         stub($GLOBALS['Response'])->getFeedbackErrors()->returns(array());
 
@@ -605,6 +624,12 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $artifact->setReturnReference('getArtifactFactory', $art_factory);
         $artifact->setReturnReference('getHierarchyFactory', $hierarchy_factory);
 
+        $retriever = \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookRetriever::class);
+        $retriever->shouldReceive('getWebhooksForTracker')->once()->andReturn([]);
+
+        $artifact->setReturnReference('getWebhookRetriever', $retriever);
+        $artifact->setReturnReference('getWebhookEmitter', \Mockery::spy(\Tuleap\Webhook\Emitter::class));
+
         $workflow = new MockWorkflow_Tracker_ArtifactTest_WorkflowNoPermsOnPostActionFields();
         $workflow->setReturnValue('validate', true);
         $artifact->setReturnValue('getWorkflow', $workflow);
@@ -717,6 +742,12 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $artifact->setReturnReference('getReferenceManager', $reference_manager);
         $artifact->setReturnReference('getArtifactFactory', $art_factory);
         $artifact->setReturnReference('getHierarchyFactory', $hierarchy_factory);
+
+        $retriever = \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookRetriever::class);
+        $retriever->shouldReceive('getWebhooksForTracker')->once()->andReturn([]);
+
+        $artifact->setReturnReference('getWebhookRetriever', $retriever);
+        $artifact->setReturnReference('getWebhookEmitter', \Mockery::spy(\Tuleap\Webhook\Emitter::class));
 
         stub($GLOBALS['Response'])->getFeedbackErrors()->returns(array());
 
@@ -1037,6 +1068,9 @@ class Tracker_Artifact_PostActionsTest extends TuleapTestCase {
 
         $comment_dao = stub('Tracker_Artifact_Changeset_CommentDao')->createNewVersion()->returns(true);
 
+        $retriever = \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookRetriever::class);
+        $retriever->shouldReceive('getWebhooksForTracker')->once()->andReturn([]);
+
         $this->creator = new Tracker_Artifact_Changeset_NewChangesetCreator(
             $fields_validator,
             $factory,
@@ -1045,7 +1079,9 @@ class Tracker_Artifact_PostActionsTest extends TuleapTestCase {
             $this->artifact_factory,
             mock('EventManager'),
             mock('ReferenceManager'),
-            mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder')
+            mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder'),
+            \Mockery::spy(\Tuleap\Webhook\Emitter::class),
+            $retriever
         );
     }
 

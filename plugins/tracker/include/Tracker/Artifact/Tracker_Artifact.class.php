@@ -35,6 +35,10 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
 use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
 use Tuleap\Tracker\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
+use Tuleap\Tracker\Webhook\WebhookDao;
+use Tuleap\Tracker\Webhook\WebhookRetriever;
+use Tuleap\Tracker\Webhook\WebhookStatusLogger;
+use Tuleap\Webhook\Emitter;
 
 class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interface {
     const REST_ROUTE        = 'artifacts';
@@ -2005,6 +2009,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
     private function getNewChangesetCreator(Tracker_Artifact_Changeset_FieldsValidator $fields_validator)
     {
+        $emitter           = $this->getWebhookEmitter();
+        $webhook_retriever = $this->getWebhookRetriever();
+
         $creator = new Tracker_Artifact_Changeset_NewChangesetCreator(
             $fields_validator,
             $this->getFormElementFactory(),
@@ -2013,7 +2020,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             $this->getArtifactFactory(),
             $this->getEventManager(),
             $this->getReferenceManager(),
-            $this->getSourceOfAssociationCollectionBuilder()
+            $this->getSourceOfAssociationCollectionBuilder(),
+            $emitter,
+            $webhook_retriever
         );
 
         return $creator;
@@ -2040,5 +2049,26 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             $types[$linked_artifact_id] = Tracker_FormElement_Field_ArtifactLink::NO_NATURE;
         }
         return $types;
+    }
+
+    /**
+     * @return Emitter
+     */
+    protected function getWebhookEmitter()
+    {
+        $emitter = new Emitter(
+            new Http_Client(),
+            new WebhookStatusLogger()
+        );
+        return $emitter;
+    }
+
+    /**
+     * @return WebhookRetriever
+     */
+    protected function getWebhookRetriever()
+    {
+        $webhook_retriever = new WebhookRetriever(new WebhookDao());
+        return $webhook_retriever;
     }
 }
