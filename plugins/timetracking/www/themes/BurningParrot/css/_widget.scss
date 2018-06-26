@@ -74,3 +74,52 @@
 .timetracking-total-sum {
     white-space: nowrap;
 }
+
+.timetracking-details-modal-artefact-link-top-bottom-spacer {
+    margin: 25px 0;
+}
+
+.timetracking-details-modal-artifact-infos-project-name {
+    color: $tlp-theme-color;
+}
+
+.timetracking-details-link-to-open-modal {
+    color: $tlp-theme-color;
+    cursor: pointer;
+}
+
+.timetracking-details-modal-artifact-infos-container {
+    display: flex;
+}
+
+.timetracking-details-modal-artifact-details {
+    padding: $tlp-spacing;
+}
+
+.timetracking-details-modal-artifact-infos {
+    display: flex;
+    flex-direction: column;
+
+    &:not(:first-child) {
+        margin: 0 0 0 $tlp-double-spacing;
+    }
+
+    > span:first-child {
+        color: $tlp-swatch-inca-silver;
+        font-size: 18px;
+        font-weight: 400;
+    }
+
+    > span:last-child {
+        margin: 7px 0 0;
+    }
+}
+
+.timetracking-details-project-icon {
+    margin: 0 5px 0 0;
+    fill: $tlp-swatch-inca-silver;
+}
+
+.timetracking-details-modal-content {
+    padding: 0;
+}

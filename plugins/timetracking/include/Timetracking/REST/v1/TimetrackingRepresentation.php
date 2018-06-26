@@ -58,6 +58,11 @@ class TimetrackingRepresentation
      */
     public $id;
 
+    /**
+     * @var string
+     */
+    public $step;
+
     public function build(Time $time)
     {
         $this->artifact = $this->getArtifactRepresentation($time);
@@ -65,6 +70,7 @@ class TimetrackingRepresentation
         $this->id       = JsonCast::toInt($time->getId());
         $this->minutes  = JsonCast::toInt($time->getMinutes());
         $this->date     = $time->getDay();
+        $this->step     = $time->getStep();
     }
 
     private function getArtifactRepresentation(Time $time)

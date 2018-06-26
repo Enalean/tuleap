@@ -21,6 +21,18 @@ msgstr "Artéfact"
 msgid "Cancel"
 msgstr "Annuler"
 
+msgid "Close"
+msgstr "Fermer"
+
+msgid "Date"
+msgstr "Date"
+
+msgid "Detailed times"
+msgstr "Détails des temps"
+
+msgid "Details"
+msgstr "Détails"
+
 msgid "From"
 msgstr "Du"
 
@@ -36,10 +48,19 @@ msgstr "Projet"
 msgid "Search"
 msgstr "Rechercher"
 
+msgid "Steps"
+msgstr "Etapes"
+
+msgid "Submission date"
+msgstr "Date de soumission"
+
 msgid "The time is displayed in hours:minutes"
 msgstr "Le temps est affiché en heures:minutes"
 
 msgid "Time"
+msgstr "Temps"
+
+msgid "Times"
 msgstr "Temps"
 
 msgid "To"

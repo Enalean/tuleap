@@ -21,20 +21,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get }                 from 'tlp';
+import { get } from "tlp";
 import { formatDatetimeToISO } from "./time-formatters.js";
 
-export {
-    getTrackedTimes
-};
+export { getTrackedTimes };
 
 async function getTrackedTimes(start_date, end_date, limit, offset) {
     const query = JSON.stringify({
         start_date: formatDatetimeToISO(start_date),
-        end_date  : formatDatetimeToISO(end_date)
+        end_date: formatDatetimeToISO(end_date)
     });
 
-    const response = await get('/api/v1/timetracking', {
+    const response = await get("/api/v1/timetracking", {
         params: {
             limit,
             offset,
@@ -42,7 +40,7 @@ async function getTrackedTimes(start_date, end_date, limit, offset) {
         }
     });
 
-    const total = response.headers.get('X-PAGINATION-SIZE');
+    const total = response.headers.get("X-PAGINATION-SIZE");
     const times = await response.json();
 
     return {

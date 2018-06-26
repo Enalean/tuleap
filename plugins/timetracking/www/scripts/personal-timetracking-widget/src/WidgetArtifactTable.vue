@@ -37,11 +37,12 @@
                             <i class="fa fa-question-circle"></i>
                         </span>
                     </th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-if="! hasDataToDisplay">
-                    <td colspan="3" class="tlp-table-cell-empty">
+                    <td colspan="4" class="tlp-table-cell-empty">
                         {{ empty_state }}
                     </td>
                 </tr>
@@ -55,6 +56,7 @@
                     <th></th>
                     <th></th>
                     <th class="tlp-table-cell-numeric timetracking-total-sum">∑ {{ getFormattedTotalSum() }}</th>
+                    <th></th>
                 </tr>
             </tfoot>
         </table>

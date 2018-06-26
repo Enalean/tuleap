@@ -21,28 +21,34 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Settings } from 'luxon';
+import { Settings } from "luxon";
 
-import {
-    formatMinutes,
-    formatDatetimeToISO
-} from "./time-formatters.js";
+import { formatMinutes, formatDatetimeToISO, formatDateDayMonthYear } from "./time-formatters.js";
 
-describe('Time formatters', () => {
-    describe('formatMinutes', () => {
-        it('Given minutes, When I call this function, Then it should format it in a ISO-compliant format', () => {
+describe("Time formatters", () => {
+    describe("formatMinutes", () => {
+        it("Given minutes, When I call this function, Then it should format it in a ISO-compliant format", () => {
             const minutes = 600;
 
-            expect(formatMinutes(minutes)).toEqual('10:00');
+            expect(formatMinutes(minutes)).toEqual("10:00");
         });
     });
 
-    describe('getISODatetime', () => {
-        it('When I call this method with a string date, then it should return an ISO formatted date', () => {
+    describe("getISODatetime", () => {
+        it("When I call this method with a string date, then it should return an ISO formatted date", () => {
             Settings.defaultZoneName = "Europe/Paris";
-            const formatted_date     = formatDatetimeToISO('2018-01-01');
+            const formatted_date = formatDatetimeToISO("2018-01-01");
 
-            expect(formatted_date).toEqual('2018-01-01T00:00:00+01:00');
+            expect(formatted_date).toEqual("2018-01-01T00:00:00+01:00");
+        });
+    });
+
+    describe("getFormatedDateYearMonthsDay", () => {
+        it("When I call this method with an ISO string date, then it should return a human readable date depending on the user's locale", () => {
+            Settings.defaultZoneName = "Europe/Paris";
+            const formatted_date = formatDateDayMonthYear("2018-11-11T00:00:00+01:00");
+
+            expect(formatted_date).toEqual("11/11/2018");
         });
     });
 });

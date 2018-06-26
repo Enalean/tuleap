@@ -7,6 +7,18 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
+msgid "Close"
+msgstr ""
+
+msgid "Date"
+msgstr ""
+
+msgid "Detailed times"
+msgstr ""
+
+msgid "Details"
+msgstr ""
+
 msgid "From"
 msgstr ""
 
@@ -22,10 +34,19 @@ msgstr ""
 msgid "Search"
 msgstr ""
 
+msgid "Steps"
+msgstr ""
+
+msgid "Submission date"
+msgstr ""
+
 msgid "The time is displayed in hours:minutes"
 msgstr ""
 
 msgid "Time"
+msgstr ""
+
+msgid "Times"
 msgstr ""
 
 msgid "To"
