@@ -380,7 +380,7 @@ function Graph(
                     select('.graph')
                         .append('img')
                         .attrs({
-                            'src': 'scripts/angular/bin/assets/loader.gif',
+                            'src': 'scripts/assets/loader.gif',
                             'class': 'loader loader-node'
                         })
                 );

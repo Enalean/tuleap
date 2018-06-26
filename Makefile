@@ -34,30 +34,28 @@ $(RPM_TMP)/SPECS/%.spec: $(BASE_DIR)/%.spec
 .PHONY: build
 build:
 	cd /build/src && npm install && npm run build && \
-	cd /build/src/plugins/testmanagement/www/scripts/angular && npm install && npm run build
+	cd /build/src/plugins/testmanagement/www/scripts && npm install && npm run build
 
 $(RPM_TMP)/SOURCES/$(NAME_VERSION).tar.gz: build $(RPM_TMP)
 	[ -h $(RPM_TMP)/SOURCES/$(NAME_VERSION) ] || ln -s $(BASE_DIR) $(RPM_TMP)/SOURCES/$(NAME_VERSION)
 	cd $(RPM_TMP)/SOURCES && \
-	    { \
-		    find $(NAME_VERSION)/ \(\
-		    -path $(NAME_VERSION)/tests -o\
-		    -name '*.spec' -o\
-		    -name 'Makefile' -o\
-		    -name 'build-rpm.sh' -o\
-		    -path $(NAME_VERSION)/www/scripts/angular -o\
-		    -name ".git" -o\
-		    -name ".gitignore" -o\
-		    -name ".gitmodules" -o\
-		    -name "*~" -o\
-		    -path "*/.DS_Store"-o\
-		    -path "nbproject"-o\
-		    \)\
-		    -prune -o -print && \
-		    find $(NAME_VERSION)/www/scripts/angular/bin; \
-		} |\
-		 cpio -o -H ustar --quiet |\
-		 gzip > $(RPM_TMP)/SOURCES/$(NAME_VERSION).tar.gz
+	    find $(NAME_VERSION)/ \(\
+	    -path $(NAME_VERSION)/tests -o\
+	    -name '*.spec' -o\
+	    -name 'Makefile' -o\
+	    -name 'build-rpm.sh' -o\
+	    -path $(NAME_VERSION)/www/scripts/angular -o\
+	    -name ".git" -o\
+	    -name ".gitignore" -o\
+	    -name ".gitmodules" -o\
+	    -name "*~" -o\
+	    -path "*/.DS_Store"-o\
+	    -path "nbproject"-o\
+	    \)\
+	    -prune -o -print \
+		|\
+		cpio -o -H ustar --quiet |\
+		gzip > $(RPM_TMP)/SOURCES/$(NAME_VERSION).tar.gz
 
 $(RPM_TMP):
 	@[ -d $@ ] || mkdir -p $@ $@/BUILD $@/RPMS $@/SOURCES $@/SPECS $@/SRPMS $@/TMP

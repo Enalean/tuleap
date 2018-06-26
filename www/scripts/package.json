@@ -7,18 +7,46 @@
   "license": "GPL-2.0+",
   "private": true,
   "dependencies": {
+    "angular": "^1.6.8",
+    "angular-breadcrumb": "~0.3.0",
+    "angular-cookies": "^1.6.8",
+    "angular-gettext": "~1.1.0",
+    "angular-jwt": "~0.0.9",
+    "angular-locker": "~2.0.3",
+    "angular-moment": "^1.0.1",
+    "angular-sanitize": "^1.6.8",
+    "angular-socket-io": "^0.7.0",
+    "angular-ui-router": "^0.3.2",
+    "d3-drag": "^1.2.1",
+    "d3-force": "^1.1.0",
+    "d3-selection": "^1.1.0",
+    "d3-selection-multi": "^1.0.1",
+    "d3-zoom": "^1.6.0",
+    "lodash": "^2.4.2",
+    "moment": "^2.18.1",
+    "restangular": "~1.4.0",
+    "socket.io-client": "^2.0.3",
     "dompurify": "^1.0.4",
     "uuid": "^3.2.1",
     "vue": "^2.5.13",
     "vue-gettext": "^2.0.31"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "angular-mocks": "^1.6.8",
+    "concurrently": "^3.5.0",
+    "gulp": "3.9.1",
+    "gulp-angular-gettext": "^2.2.0",
+    "jquery": "^3.3.1"
+  },
   "config": {
     "bin": "../../../../node_modules/.bin/"
   },
   "scripts": {
-    "build": "NODE_ENV=production $npm_package_config_bin/webpack --mode=production",
-    "watch": "NODE_ENV=watch $npm_package_config_bin/webpack --watch --mode=development",
+    "copy-assets": "mkdir -p ../assets && cp angular/src/assets/* ../assets",
+    "build": "rm -rf ../assets/* && npm run copy-assets && NODE_ENV=production $npm_package_config_bin/webpack --mode=production",
+    "coverage": "rm -rf ./coverage/* && NODE_ENV=coverage $npm_package_config_bin/karma start ./karma.conf.js && $npm_package_config_bin/http-server -os -a 0.0.0.0 -p 9000 coverage/",
+    "test": "NODE_ENV=test $npm_package_config_bin/karma start ./karma.conf.js",
+    "watch": "NODE_ENV=watch concurrently --raw --kill-others 'gulp watch' '$npm_package_config_bin/webpack --watch --mode=development' '$npm_package_config_bin/karma start ./karma.conf.js'",
     "extract-gettext-cli": "$npm_package_config_bin/gettext-extract step-definition-field/*.vue"
   }
 }

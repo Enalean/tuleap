@@ -326,8 +326,8 @@ class testmanagementPlugin extends Plugin
             $params['javascript_files'][] = $ckeditor_path .'ckeditor.js';
 
             $test_management_include_assets = new IncludeAssets(
-                TESTMANAGEMENT_BASE_DIR . '/www/scripts/angular/bin/assets',
-                TESTMANAGEMENT_BASE_URL . '/scripts/angular/bin/assets'
+                TESTMANAGEMENT_BASE_DIR . '/www/assets',
+                TESTMANAGEMENT_BASE_URL . '/assets'
             );
 
             $params['javascript_files'][] = $test_management_include_assets->getFileURL('testmanagement.js');

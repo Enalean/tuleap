@@ -30,8 +30,7 @@
             "includes": [
                 "../../src/www/themes/common/tlp/src/scss",
                 "../../src/www/themes/BurningParrot/css/includes",
-                "../tracker/www/scripts",
-                "www/scripts/angular/node_modules"
+                "../tracker/www/scripts"
             ],
             "watched_includes": [
                 "www/themes/BurningParrot/css/**/_*.scss",
@@ -41,7 +40,6 @@
         }
     },
     "components": [
-        "www/scripts/angular",
         "www/scripts"
     ],
     "gettext-vue": {

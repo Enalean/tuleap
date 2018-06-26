@@ -4,7 +4,7 @@
     <div ng-repeat="error in graph.errors track by $index" class="tlp-alert-danger">{{ error }}</div>
 
     <div id="graph-container">
-        <img ng-if="!graph.graphd3" src="scripts/angular/bin/assets/loader.gif" class="loader loader-graph">
+        <img ng-if="!graph.graphd3" src="scripts/assets/loader.gif" class="loader loader-graph">
 
         <div id="graph-utils">
             <button id="focus-graph" type="button" class="tlp-button-secondary tlp-button-mini" title="{{ 'Focus graph' | translate }}"><i class="fa fa-bullseye tlp-button-icon"></i></button>

@@ -21,28 +21,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const path               = require('path');
-const webpack_config     = require('./webpack.config.js');
-const karma_configurator = require('../../../../../tools/utils/scripts/karma-configurator.js');
+const path = require("path");
+const [webpack_config_for_angular] = require("./webpack.config.js");
+const karma_configurator = require("../../../../tools/utils/scripts/karma-configurator.js");
 
-webpack_config.mode = 'development';
+webpack_config_for_angular.mode = "development";
 
 module.exports = function(config) {
-    const coverage_dir = path.resolve(__dirname, './coverage');
-    const base_config  = karma_configurator.setupBaseKarmaConfig(
+    const coverage_dir = path.resolve(__dirname, "./coverage");
+    const base_config = karma_configurator.setupBaseKarmaConfig(
         config,
-        webpack_config,
+        webpack_config_for_angular,
         coverage_dir
     );
 
     Object.assign(base_config, {
-        files  : [
+        files: [
             karma_configurator.jasmine_promise_matchers_path,
-            'node_modules/jquery/dist/jquery.js',
-            'src/app/app.spec.js'
+            "node_modules/jquery/dist/jquery.js",
+            "angular/src/app/app.spec.js"
         ],
         preprocessors: {
-            'src/app/app.spec.js': ['webpack']
+            "angular/src/app/app.spec.js": ["webpack"]
         }
     });
 
