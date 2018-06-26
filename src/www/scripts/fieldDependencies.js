@@ -259,12 +259,7 @@ document.observe('dom:loaded', function() {
     $H(codendi.trackerv3.rule_forest.trees).each(function (rule_node) {
         rule_node.value.process();
     });
-    
-    //{{{ Look for HIGHLIGHT_STARTCOLOR in current css
-    var codendi_field_dependencies_highlight_change = tuleap.getStyleClassProperty('codendi_field_dependencies_highlight_change', 'backgroundColor');
-    if (codendi_field_dependencies_highlight_change && codendi_field_dependencies_highlight_change != '') {
-        HIGHLIGHT_STARTCOLOR = codendi_field_dependencies_highlight_change;
-    }
+
     var hexChars = "0123456789ABCDEF";
     function Dec2Hex (Dec) { 
         var a = Dec % 16; 
