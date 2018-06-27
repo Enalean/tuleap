@@ -18,6 +18,7 @@
  */
 
 use Tuleap\BurningParrotCompatiblePageEvent;
+use Tuleap\CLI\CLICommandsCollector;
 use Tuleap\Dashboard\User\AtUserCreationDefaultWidgetsCreator;
 use Tuleap\Glyph\GlyphLocation;
 use Tuleap\Glyph\GlyphLocationsCollector;
@@ -63,6 +64,7 @@ use Tuleap\Tracker\Notifications\Settings\NotificationsAdminSettingsDisplayContr
 use Tuleap\Tracker\Notifications\Settings\NotificationsAdminSettingsUpdateController;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsDAO;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsRetriever;
+use Tuleap\Tracker\Notifications\TrackerForceNotificationsLevelCommand;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyDao;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyUpdater;
 use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
@@ -172,6 +174,8 @@ class trackerPlugin extends Plugin {
         $this->addHook(\Tuleap\user\UserAutocompletePostSearchEvent::NAME);
 
         $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
+
+        $this->addHook(CLICommandsCollector::NAME);
     }
 
     public function getHooksAndCallbacks() {
@@ -1458,20 +1462,7 @@ class trackerPlugin extends Plugin {
             new NotificationLevelExtractor(),
             new \TrackerDao(),
             new \ProjectHistoryDao(),
-            new NotificationsForceUsageUpdater(
-                new RecipientsManager(
-                    \Tracker_FormElementFactory::instance(),
-                    UserManager::instance(),
-                    $unsubscribers_notification_dao,
-                    new UserNotificationSettingsRetriever(
-                        new Tracker_GlobalNotificationDao(),
-                        new UnsubscribersNotificationDAO(),
-                        new UserNotificationOnlyStatusChangeDAO()
-                    ),
-                    new UserNotificationOnlyStatusChangeDAO()
-                ),
-                new UserNotificationSettingsDAO()
-            )
+            $this->getForceUsageUpdater()
         );
     }
 
@@ -1660,5 +1651,39 @@ class trackerPlugin extends Plugin {
                 );
             });
         });
+    }
+
+    public function collectCLICommands(CLICommandsCollector $commands_collector)
+    {
+        $commands_collector->addCommand(
+            new TrackerForceNotificationsLevelCommand(
+                $this->getForceUsageUpdater(),
+                ProjectManager::instance(),
+                new NotificationLevelExtractor(),
+                $this->getTrackerFactory(),
+                new TrackerDao()
+            )
+        );
+    }
+
+    /**
+     * @return NotificationsForceUsageUpdater
+     */
+    private function getForceUsageUpdater()
+    {
+        return new NotificationsForceUsageUpdater(
+            new RecipientsManager(
+                Tracker_FormElementFactory::instance(),
+                UserManager::instance(),
+                new UnsubscribersNotificationDAO(),
+                new UserNotificationSettingsRetriever(
+                    new Tracker_GlobalNotificationDao(),
+                    new UnsubscribersNotificationDAO(),
+                    new UserNotificationOnlyStatusChangeDAO()
+                ),
+                new UserNotificationOnlyStatusChangeDAO()
+            ),
+            new UserNotificationSettingsDAO()
+        );
     }
 }

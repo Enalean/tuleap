@@ -73,6 +73,10 @@ class Tracker implements Tracker_Dispatchable_Interface
     const NOTIFICATIONS_LEVEL_DISABLED      = 1;
     const NOTIFICATIONS_LEVEL_STATUS_CHANGE = 2;
 
+    const NOTIFICATIONS_LEVEL_DEFAULT_LABEL       = 'notifications_level_default';
+    const NOTIFICATIONS_LEVEL_DISABLED_LABEL      = 'notifications_level_disabled';
+    const NOTIFICATIONS_LEVEL_STATUS_CHANGE_LABEL = 'notifications_level_status_change';
+
     const REMAINING_EFFORT_FIELD_NAME = "remaining_effort";
     const ASSIGNED_TO_FIELD_NAME      = "assigned_to";
     const IMPEDIMENT_FIELD_NAME       = "impediment";
