@@ -19,6 +19,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Http\Discovery\MessageFactoryDiscovery;
+use Tuleap\Http\HttpClientFactory;
+use Tuleap\Http\MessageFactoryBuilder;
 use Tuleap\Hudson\HudsonJobBuilder;
 
 require_once 'www/include/help.php';
@@ -283,7 +286,7 @@ class hudsonViews extends Views {
             echo '<tbody>';
             $cpt                                   = 1;
             $minimal_job_factory                   = new MinimalHudsonJobFactory();
-            $job_builder                           = new HudsonJobBuilder(new Http_Client());
+            $job_builder                           = new HudsonJobBuilder(MessageFactoryBuilder::build(), HttpClientFactory::createClient());
             $minimal_hudson_jobs                   = [];
             $hudson_jobs_complementary_information = [];
 

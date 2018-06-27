@@ -6,6 +6,3 @@ msgid_plural ""
 "be displayed"
 msgstr[0] ""
 msgstr[1] ""
-
-msgid "Jobs retrieval took too long, this job has been ignored"
-msgstr ""

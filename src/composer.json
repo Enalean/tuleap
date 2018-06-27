@@ -23,7 +23,10 @@
     "embed/embed": "^3.3",
     "michelf/php-markdown": "^1.1",
     "symfony/console": "^3.4",
-    "jimdo/prometheus_client_php": "^0.9.1"
+    "jimdo/prometheus_client_php": "^0.9.1",
+    "php-http/guzzle6-adapter": "^1.1",
+    "php-http/message": "^1.6",
+    "php-http/client-common": "^1.7"
   },
   "config": {
     "platform": {
@@ -37,6 +40,7 @@
     "phpunit/phpunit": "^5",
     "mockery/mockery": "^1.0",
     "simpletest/simpletest": "^1.1",
-    "mikey179/vfsStream": "^1.6"
+    "mikey179/vfsStream": "^1.6",
+    "php-http/mock-client": "^1.1"
   }
 }
