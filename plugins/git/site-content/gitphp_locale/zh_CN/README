@@ -1,0 +1,17 @@
+GitPHP的中文简体语言包由seefan 提供 <seefan@jianel.net>
+
+要安装语言包请进行以下几个步骤:
+
+1. 将 zh_CN 拷贝到 locale 目录下, 那个目录下已经有一个 gitphp.pot 文件.
+   
+2. 打开 include/Resource.class.php ，查找 function LocaleToName.
+   将以上内容加到 switch里:
+   
+   case 'zh_CN':
+     return '中文简体';
+     
+3. 如何你想 GitPHP 预先选中“中文简体”,
+   打开 config/gitphp.conf.php 后加入以下一行内容: 
+
+   $gitphp_conf['locale'] = 'zh_CN';
+     

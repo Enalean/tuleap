@@ -2561,8 +2561,7 @@ class GitPlugin extends Plugin
                     $this->getProjectManager(),
                     $this->getMirrorDataMapper(),
                     $this->getGitPhpAccessLogger(),
-                    $this->getRepoHeader(),
-                    $this->getConfigurationParameter('gitphp_path')
+                    $this->getRepoHeader()
                 );
             });
             $r->addRoute(['GET', 'POST'], '/{path:.*}', function () {

@@ -6,10 +6,6 @@ $git_backup_dir = '/tmp/';
 // Number of weeks displayed in widget last project pushes
 $weeks_number   = 12;
 
-// Allow to define a custom gitphp path (instead of tuleap bundled one).
-// -> mainly used for tests
-$gitphp_path = "/usr/share/gitphp-tuleap";
-
 //
 // Urls
 // By default, only ssh is available for use and you can setup HTTP(s) access

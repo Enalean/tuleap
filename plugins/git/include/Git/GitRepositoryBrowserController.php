@@ -49,22 +49,19 @@ class GitRepositoryBrowserController implements DispatchableWithRequest
      * @var GitViews\ShowRepo\RepoHeader
      */
     private $repo_header;
-    private $gitphp_path;
 
     public function __construct(
         \GitRepositoryFactory $repository_factory,
         \ProjectManager $project_manager,
         \Git_Mirror_MirrorDataMapper $mirror_data_mapper,
         History\GitPhpAccessLogger $access_logger,
-        GitViews\ShowRepo\RepoHeader $repo_header,
-        $gitphp_path
+        GitViews\ShowRepo\RepoHeader $repo_header
     ) {
         $this->repository_factory  = $repository_factory;
         $this->project_manager     = $project_manager;
         $this->mirror_data_mapper  = $mirror_data_mapper;
         $this->access_logger       = $access_logger;
         $this->repo_header         = $repo_header;
-        $this->gitphp_path         = $gitphp_path;
     }
 
     /**
@@ -106,8 +103,7 @@ class GitRepositoryBrowserController implements DispatchableWithRequest
             $repository,
             $request,
             $this->mirror_data_mapper,
-            $this->access_logger,
-            $this->gitphp_path
+            $this->access_logger
         );
 
 
