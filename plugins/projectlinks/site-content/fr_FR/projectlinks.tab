@@ -60,7 +60,7 @@ plugin_plinks	def_link_summary	Lier avec la page de documentation du projet
 # field names & descriptions
 #
 plugin_plinks	dbfn_link_type_id	Type de lien
-plugin_plinks	dbfn_name	Nome
+plugin_plinks	dbfn_name	Nom
 plugin_plinks	dbfn_reverse_name	Nom inverse
 plugin_plinks	dbfn_description	Description
 plugin_plinks	dbfn_uri_plus	Lien (patron)
