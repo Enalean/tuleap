@@ -113,7 +113,6 @@ gulp.task('sass:doc', function() {
             sass({
                 outputStyle: 'compressed'
             })
-            .on('error', sass.logError)
         )
         .pipe(rename({
             suffix: '.min'
@@ -139,7 +138,6 @@ function compressForAGivenColor(color) {
             sass({
                 outputStyle: 'compressed'
             })
-            .on('error', sass.logError)
         )
         .pipe(rename({
             suffix: '.min'
