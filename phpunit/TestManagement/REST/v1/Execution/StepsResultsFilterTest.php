@@ -52,9 +52,9 @@ class StepsResultsFilterTest extends TestCase
 
     public function testItFiltersStepResultsNotInDefinition()
     {
-        $first_step_definition  = new Step(37, 'forecovert', 'text', 1);
-        $second_step_definition = new Step(38, 'qualified', 'text', 2);
-        $third_step_definition  = new Step(39, 'vegetablelike', 'text', 3);
+        $first_step_definition  = new Step(37, 'forecovert', 'text', 'result01', 'text', 1);
+        $second_step_definition = new Step(38, 'qualified', 'text', 'result02', 'text', 2);
+        $third_step_definition  = new Step(39, 'vegetablelike', 'text', 'result03', 'text', 3);
 
         $this->definition_value->expects($this->once())->method('getValue')->willReturn(
             [
@@ -64,9 +64,9 @@ class StepsResultsFilterTest extends TestCase
             ]
         );
 
-        $first_older_step_definition  = new Step(34, 'roundup', 'text', 1);
-        $second_older_step_definition = new Step(35, 'pseudobrotherly', 'text', 2);
-        $third_older_step_definition  = new Step(36, 'pilar', 'html', 3);
+        $first_older_step_definition  = new Step(34, 'roundup', 'text', 'result01', 'text', 1);
+        $second_older_step_definition = new Step(35, 'pseudobrotherly', 'text', 'result02', 'text', 2);
+        $third_older_step_definition  = new Step(36, 'pilar', 'html', 'result03', 'html', 3);
 
         $first_step_result  = new StepResult($first_older_step_definition, 'passed');
         $second_step_result = new StepResult($second_older_step_definition, 'failed');
@@ -87,8 +87,8 @@ class StepsResultsFilterTest extends TestCase
 
     public function testItReturnsAllStepResultsInDefinition()
     {
-        $first_step_definition  = new Step(16, 'alumine', 'html', 1);
-        $second_step_definition = new Step(17, 'semifloating', 'text', 2);
+        $first_step_definition  = new Step(16, 'alumine', 'html', 'result01', 'html', 1);
+        $second_step_definition = new Step(17, 'semifloating', 'text', 'result02', 'text', 2);
 
         $this->definition_value->method('getValue')->willReturn(
             [
