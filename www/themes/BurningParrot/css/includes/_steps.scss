@@ -16,32 +16,56 @@
     &.passed {
         background: transparentize($tlp-ui-success, .96);
 
-        > .steps-step-description > .steps-step-expected > .steps-step-expected-arrow {
-            fill: $tlp-ui-success;
+        > .steps-step-description > .steps-step-expected {
+            > div > .steps-step-expected-title {
+                color: $tlp-ui-success;
+            }
+
+            > .steps-step-expected-arrow {
+                fill: $tlp-ui-success;
+            }
         }
     }
 
     &.failed {
         background: transparentize($tlp-ui-danger, .96);
 
-        > .steps-step-description > .steps-step-expected > .steps-step-expected-arrow {
-            fill: $tlp-ui-danger;
+        > .steps-step-description > .steps-step-expected {
+            > div > .steps-step-expected-title {
+                color: $tlp-ui-danger;
+            }
+
+            > .steps-step-expected-arrow {
+                fill: $tlp-ui-danger;
+            }
         }
     }
 
     &.blocked {
         background: transparentize($tlp-ui-info, .96);
 
-        > .steps-step-description > .steps-step-expected > .steps-step-expected-arrow {
-            fill: $tlp-ui-info;
+        > .steps-step-description > .steps-step-expected {
+            > div > .steps-step-expected-title {
+                color: $tlp-ui-info;
+            }
+
+            > .steps-step-expected-arrow {
+                fill: $tlp-ui-info;
+            }
         }
     }
 
     &.notrun {
         background: transparent;
 
-        > .steps-step-description > .steps-step-expected > .steps-step-expected-arrow {
-            fill: $tlp-ui-dimmed;
+        > .steps-step-description > .steps-step-expected {
+            > div > .steps-step-expected-title {
+                color: $tlp-ui-dimmed;
+            }
+
+            > .steps-step-expected-arrow {
+                fill: $tlp-ui-dimmed;
+            }
         }
     }
 }
@@ -62,12 +86,20 @@
 .steps-step-expected {
     display: flex;
     align-items: baseline;
-    margin: $tlp-spacing 0 0 $tlp-spacing;
+    margin: $tlp-half-spacing 0 0 5px;
 
     > .steps-step-expected-content {
-        flex-grow: 1;
-        margin: 0 0 0 $tlp-half-spacing;
+        margin: 0 0 0 $tlp-spacing;
     }
+}
+
+.steps-step-expected-arrow {
+    margin: 0 5px 0 0;
+}
+
+.steps-step-expected-title {
+    margin: 0 0 10px;
+    font-weight: bold;
 }
 
 .steps-step-action {

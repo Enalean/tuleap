@@ -16,6 +16,11 @@
         border: 1px solid $main;
         border-radius: 10px;
         color: $main;
+
+        &.ttm-execution-step-rank-edition {
+            position: relative;
+            top: 3px;
+        }
     }
 
     .ttm-definition-step-description {
@@ -23,33 +28,59 @@
         margin: 0 0 0 10px;
     }
 
+    .ttm-definition-step-description-action > div {
+        > .rte_format {
+            margin: 0 0 10px;
+
+            > select {
+                margin: 0;
+            }
+        }
+
+        > textarea {
+            margin: 0;
+        }
+    }
+
     .ttm-execution-step-description {
         margin: 0 0 0 10px;
+    }
+
+    .ttm-definition-step-description-format {
+        margin: 0;
     }
 
     .ttm-definition-step-expected,
     .ttm-execution-step-expected {
         display: flex;
         align-items: baseline;
-        margin: 20px 0 0 20px;
+        margin: 10px 0 0 5px;
     }
 
-    .ttm-execution-step-expected-content {
-        flex-grow: 1;
-        margin: 0 0 0 10px;
-    }
-
+    .ttm-definition-step-expected-arrow,
     .ttm-execution-step-expected-arrow {
-        fill: $ui-dimmed;
+        margin: 0 5px 0 0;
+        fill: #333333;
+    }
+
+    .ttm-definition-step-expected-edit {
+        width: 100%;
+    }
+
+    .ttm-definition-step-expected-edit-title {
+        margin: 0 0 10px;
+        font-size: 14px;
+        font-weight: bold;
     }
 
     .ttm-execution-step-status {
         margin: 0 0 0 20px;
     }
 
-    .ttm-definition-step-description-delete {
-        margin: 0 0 0 20px;
-        float: right;
+    .ttm-definition-step-actions {
+        display: flex;
+        justify-content: space-between;
+        margin: 0 0 10px;
     }
 
     .ttm-definition-step-description-deleted {
@@ -62,8 +93,11 @@
 
     .ttm-definition-step-expected-results-textarea,
     .ttm-definition-step-description-textarea {
-        width: calc(100% - 15px);
+        box-sizing: border-box;
+        width: 100%;
+        margin: 0;
     }
+
 }
 
 body {

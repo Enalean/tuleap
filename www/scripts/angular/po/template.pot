@@ -141,6 +141,10 @@ msgstr ""
 msgid "Error while refreshing the list of linked bugs"
 msgstr ""
 
+#: src/app/execution/execution-with-steps/step/step.tpl.html
+msgid "Expected results"
+msgstr ""
+
 #: src/app/execution/execution-detail.tpl.html
 #: src/app/execution/execution-list.tpl.html
 #: src/app/execution/execution-with-steps/step/step.tpl.html

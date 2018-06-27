@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-06-26 19:10+0200\n"
+"PO-Revision-Date: 2018-06-28 15:37+0200\n"
 "Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
 "Language-Team: \n"
 "Language: fr_FR\n"
@@ -54,6 +54,9 @@ msgstr ""
 
 msgid "Execution result of a step"
 msgstr "Résultat d'exécution d'une étape"
+
+msgid "Expected results"
+msgstr "Résultats attendus"
 
 msgid "Job URL is invalid"
 msgstr "L'URL du job n'est pas valide"

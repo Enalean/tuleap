@@ -18,6 +18,12 @@ msgstr "Ajouter une étape"
 msgid "Delete"
 msgstr "Supprimer"
 
+msgid "Expected results"
+msgstr "Résultats attendus"
+
+msgid "Format:"
+msgstr "Format :"
+
 msgid "There isn't any step defined yet. Start by adding one."
 msgstr "Aucune étape n'est définie. Commencez par en ajouter une."
 
