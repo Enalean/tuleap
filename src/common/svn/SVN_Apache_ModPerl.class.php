@@ -58,6 +58,24 @@ class SVN_Apache_ModPerl extends SVN_Apache
         $conf .= '    TuleapGroupId "' . $this->escapeStringForApacheConf($row['group_id']) . '"' . "\n";
         $conf .= '    TuleapCacheCredsMax ' . $maximum_credentials . "\n";
         $conf .= '    TuleapCacheLifetime ' . $lifetime . "\n";
+
+        $conf .= $this->addRedisBlock();
+
+        return $conf;
+    }
+
+    private function addRedisBlock()
+    {
+        $conf = '';
+        $redis_server = trim(ForgeConfig::get('redis_server'));
+        if ($redis_server) {
+            $redis_server .= ':'.trim(ForgeConfig::get('redis_port'));
+            $conf .= '    TuleapRedisServer "' . $this->escapeStringForApacheConf($redis_server) . '"' . "\n";
+        }
+        $redis_password = trim(ForgeConfig::get('redis_password'));
+        if ($redis_password) {
+            $conf .= '    TuleapRedisPassword "' . $this->escapeStringForApacheConf($redis_password) . '"' . "\n";
+        }
         return $conf;
     }
 }
