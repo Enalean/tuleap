@@ -96,6 +96,7 @@ pipeline {
                 'Karma Label plugin': { runKarmaTests('label', 'plugins/label/www/scripts') },
                 'Karma PullRequest plugin': { runKarmaTests('pullrequest', 'plugins/pullrequest/www/scripts') },
                 'Karma CrossTracker plugin': { runKarmaTests('crosstracker', 'plugins/crosstracker/www/scripts') },
+                'Karma TimeTracking plugin': { runKarmaTests('timetracking', 'plugins/timetracking/www/scripts') },
                 'REST CentOS 6 PHP 5.6 Apache 2.4 MySQL 5.6': { runRESTTests('c6-php56-httpd24-mysql56') },
                 'SOAP': {
                     sh """
