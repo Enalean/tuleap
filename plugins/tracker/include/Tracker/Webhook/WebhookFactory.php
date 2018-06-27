@@ -20,6 +20,7 @@
 
 namespace Tuleap\Tracker\Webhook;
 
+use SimpleXMLElement;
 use Tracker;
 
 class WebhookFactory
@@ -38,5 +39,33 @@ class WebhookFactory
     public function duplicateWebhookFromSourceTracker(Tracker $source_tracker, Tracker $tracker)
     {
         $this->dao->duplicateWebhooks($source_tracker->getId(), $tracker->getId());
+    }
+
+    public function saveWebhooks(array $webhooks, $tracker_id)
+    {
+        foreach ($webhooks as $webhook) {
+            $this->dao->save($tracker_id, $webhook->getUrl());
+        }
+    }
+
+    /**
+     * @return Webhook[]
+     */
+    public function getWebhooksFromXML(SimpleXMLElement $webhooks_xml)
+    {
+        $webhooks = [];
+        foreach ($webhooks_xml->webhook as $xml_webhook) {
+            $webhooks[] = $this->getInstance((string) $xml_webhook['url']);
+        }
+
+        return $webhooks;
+    }
+
+    /**
+     * @return Webhook
+     */
+    private function getInstance($url)
+    {
+        return new Webhook(0, 0, $url);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -152,7 +152,8 @@ class TrackerXmlImportTest extends TuleapTestCase {
             $this->ugroup_manager,
             $this->logger,
             \Mockery::spy(Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater::class),
-            \Mockery::spy(Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class)
+            \Mockery::spy(Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class),
+            \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookFactory::class)
         );
 
         $this->tracker_xml_importer = \Mockery::mock(\TrackerXmlImportTestInstance::class, $class_parameters)
@@ -302,7 +303,8 @@ class TrackerXmlImportTest extends TuleapTestCase {
             $this->ugroup_manager,
             \Mockery::spy(Logger::class),
             \Mockery::spy(Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater::class),
-            \Mockery::spy(Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class)
+            \Mockery::spy(Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class),
+            \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookFactory::class)
         );
 
         $tracker_xml_importer = \Mockery::mock(\TrackerXmlImportTestInstance::class, $class_parameters)
@@ -336,7 +338,8 @@ class TrackerXmlImportTest extends TuleapTestCase {
             $this->ugroup_manager,
             \Mockery::spy(Logger::class),
             \Mockery::spy(Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater::class),
-            \Mockery::spy(Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class)
+            \Mockery::spy(Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class),
+            \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookFactory::class)
         );
 
         $tracker_xml_importer = \Mockery::mock(\TrackerXmlImportTestInstance::class, $class_parameters)
@@ -408,7 +411,8 @@ class TrackerXmlImport_WithArtifactsTest extends TuleapTestCase {
             $this->ugroup_manager,
             \Mockery::spy(Logger::class),
             \Mockery::spy(Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater::class),
-            \Mockery::spy(Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class)
+            \Mockery::spy(Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class),
+            \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookFactory::class)
         );
 
         $this->tracker_xml_importer = \Mockery::mock(\TrackerXmlImportTestInstance::class, $class_parameters)
@@ -464,7 +468,8 @@ class TrackerXmlImport_InstanceTest extends TuleapTestCase
             \Mockery::spy(\UGroupManager::class),
             \Mockery::spy(\Logger::class),
             \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater::class),
-            \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class)
+            \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class),
+            \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookFactory::class)
         );
 
         $this->xml_security = new XML_Security();
@@ -537,7 +542,8 @@ XML;
             \Mockery::spy(\UGroupManager::class),
             \Mockery::spy(\Logger::class),
             \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater::class),
-            \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class)
+            \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class),
+            \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookFactory::class)
         );
 
         //create data passed
@@ -766,7 +772,8 @@ class TrackerXmlImport_TriggersTest extends TuleapTestCase {
             \Mockery::spy(\UGroupManager::class),
             \Mockery::spy(\Logger::class),
             \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater::class),
-            \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class)
+            \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class),
+            \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookFactory::class)
         );
 
         $this->project = \Mockery::spy(\Project::class);
@@ -846,7 +853,8 @@ class TrackerXmlImport_PermissionsTest extends TuleapTestCase {
             $this->ugroup_manager,
             \Mockery::spy(\Logger::class),
             \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater::class),
-            \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class)
+            \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class),
+            \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookFactory::class)
         );
 
         $this->group_id = 123;
@@ -945,7 +953,8 @@ class TrackerXmlImport_ArtifactLinkV2Activation extends TuleapTestCase {
             \Mockery::spy(\UGroupManager::class),
             \Mockery::spy(\Logger::class),
             $this->artifact_link_usage_updater,
-            $this->artifact_link_usage_dao
+            $this->artifact_link_usage_dao,
+            \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookFactory::class)
         );
 
         $this->project = aMockProject()->withId(201)->build();
@@ -1108,7 +1117,8 @@ class TrackerXmlImport_Validator extends TuleapTestCase {
             \Mockery::spy(\UGroupManager::class),
             \Mockery::spy(Logger::class),
             \Mockery::spy(Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater::class),
-            \Mockery::spy(Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class)
+            \Mockery::spy(Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class),
+            \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookFactory::class)
         );
 
         $this->tracker_xml_importer = \Mockery::mock(\TrackerXmlImportTestInstance::class, $class_parameters)

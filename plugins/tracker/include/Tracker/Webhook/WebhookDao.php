@@ -51,4 +51,12 @@ class WebhookDao extends DataAccessObject
 
         $this->getDB()->run($sql, $tracker_id, $source_tracker_id);
     }
+
+    public function save($tracker_id, $url)
+    {
+        $this->getDB()->insert('plugin_tracker_webhook_url', [
+            'tracker_id' => $tracker_id,
+            'url'        => $url,
+        ]);
+    }
 }

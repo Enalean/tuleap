@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,6 +21,9 @@
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\Events\XMLImportArtifactLinkTypeCanBeDisabled;
+use Tuleap\Tracker\Webhook\WebhookDao;
+use Tuleap\Tracker\Webhook\WebhookFactory;
+use Tuleap\Tracker\Webhook\WebhookXMLImporter;
 use Tuleap\XML\MappingsRegistry;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\XML\PHPCast;
@@ -99,6 +102,11 @@ class TrackerXmlImport
      */
     private $artifact_links_usage_dao;
 
+    /**
+     * @var WebhookFactory
+     */
+    private $webhook_factory;
+
     public function __construct(
         TrackerFactory $tracker_factory,
         EventManager $event_manager,
@@ -116,7 +124,8 @@ class TrackerXmlImport
         UGroupManager $ugroup_manager,
         Logger $logger,
         ArtifactLinksUsageUpdater $artifact_links_usage_updater,
-        ArtifactLinksUsageDao $artifact_links_usage_dao
+        ArtifactLinksUsageDao $artifact_links_usage_dao,
+        WebhookFactory $webhook_factory
     ) {
         $this->tracker_factory              = $tracker_factory;
         $this->event_manager                = $event_manager;
@@ -135,6 +144,7 @@ class TrackerXmlImport
         $this->logger                       = $logger;
         $this->artifact_links_usage_updater = $artifact_links_usage_updater;
         $this->artifact_links_usage_dao     = $artifact_links_usage_dao;
+        $this->webhook_factory              = $webhook_factory;
     }
 
     /**
@@ -174,7 +184,8 @@ class TrackerXmlImport
             new UGroupManager(),
             new WrapperLogger($logger, 'TrackerXMLImport'),
             $artifact_links_usage_updater,
-            $artifact_links_usage_dao
+            $artifact_links_usage_dao,
+            new WebhookFactory(new WebhookDao())
         );
     }
 
@@ -708,6 +719,11 @@ class TrackerXmlImport
                 $tracker,
                 $project
             );
+        }
+
+        //set webhooks
+        if (isset($xml->webhooks)) {
+            $tracker->webhooks = $this->webhook_factory->getWebhooksFromXML($xml->webhooks);
         }
 
         //set permissions

@@ -109,6 +109,7 @@ class Tracker implements Tracker_Dispatchable_Interface
     public $formElements = array();
     public $reports = array();
     public $workflow;
+    public $webhooks = [];
 
     public function __construct(
         $id,
