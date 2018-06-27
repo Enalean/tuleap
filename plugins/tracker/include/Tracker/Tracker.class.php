@@ -47,6 +47,7 @@ use Tuleap\Tracker\RecentlyVisited\VisitRetriever;
 use Tuleap\Tracker\Webhook\WebhookDao;
 use Tuleap\Tracker\Webhook\WebhookRetriever;
 use Tuleap\Tracker\Webhook\WebhookStatusLogger;
+use Tuleap\Tracker\Webhook\WebhookXMLExporter;
 use Tuleap\Tracker\XML\Updater\FieldChange\FieldChangeComputedXMLUpdater;
 use Tuleap\Webhook\Emitter;
 
@@ -2614,6 +2615,9 @@ EOS;
             $workflow->exportToXML($child, $xmlMapping);
         }
 
+        $webhook_xml_exporter = $this->getWebhookXMLExporter();
+        $webhook_xml_exporter->exportTrackerWebhooksInXML($xmlElem, $this);
+
         // permissions
         $node_perms      = $xmlElem->addChild('permissions');
         $project_ugroups = $this->getProjectUgroups();
@@ -3558,12 +3562,13 @@ EOS;
         $changeset_dao         = new Tracker_Artifact_ChangesetDao();
         $changeset_comment_dao = new Tracker_Artifact_Changeset_CommentDao();
         $send_notifications    = true;
+        $webhook_dao           = new WebhookDao();
         $emitter               = new Emitter(
             new Http_Client(),
-            new WebhookStatusLogger()
+            new WebhookStatusLogger($webhook_dao)
         );
 
-        $webhook_retriever = new WebhookRetriever(new WebhookDao());
+        $webhook_retriever = $this->getWebhookRetriever();
 
         $artifact_creator = new Tracker_ArtifactCreator(
             $this->getTrackerArtifactFactory(),
@@ -3684,5 +3689,25 @@ EOS;
             }
         }
         return false;
+    }
+
+    /**
+     * @return WebhookXMLExporter
+     */
+    protected function getWebhookXMLExporter()
+    {
+        return new WebhookXMLExporter(
+            $this->getWebhookRetriever()
+        );
+    }
+
+    /**
+     * @return WebhookRetriever
+     */
+    private function getWebhookRetriever()
+    {
+        return new WebhookRetriever(
+            new WebhookDao()
+        );
     }
 }

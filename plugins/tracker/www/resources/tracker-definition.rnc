@@ -85,6 +85,12 @@ tracker =
             }?
         }*,
 
+        element webhooks {
+            element webhook {
+                attribute url { xsd:string }
+            }+
+        }*,
+
         element permissions {
             element permission {
                 attribute REF { xsd:IDREF }?,

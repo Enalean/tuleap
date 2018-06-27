@@ -243,6 +243,17 @@
         </optional>
       </element>
     </zeroOrMore>
+    <zeroOrMore>
+      <element name="webhooks">
+        <oneOrMore>
+          <element name="webhook">
+            <attribute name="url">
+              <data type="string"/>
+            </attribute>
+          </element>
+        </oneOrMore>
+      </element>
+    </zeroOrMore>
     <optional>
       <element name="permissions">
         <zeroOrMore>
