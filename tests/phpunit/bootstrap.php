@@ -19,7 +19,7 @@
  *
  */
 
-require_once 'src/common/autoload.php';
+require_once __DIR__.'/../../src/common/autoload.php';
 
 $basedir      = dirname(dirname(__DIR__));
 $src_path     = $basedir.'/src';

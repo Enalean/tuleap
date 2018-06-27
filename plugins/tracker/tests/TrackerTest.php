@@ -55,7 +55,8 @@ Mock::generatePartial('Tracker',
                           'getHierarchyFactory',
                           'getPermissionController',
                           'userCanView',
-                          'getProjectUgroups'
+                          'getProjectUgroups',
+                          'getWebhookXMLExporter'
                       )
 );
 
@@ -1727,9 +1728,12 @@ class Tracker_ExportToXmlTest extends TuleapTestCase {
         $tsm = mock('Tracker_SemanticManager');
         stub($this->tracker)->getTrackerSemanticManager()->returns($tsm);
 
-
         $report_factory = mock('Tracker_ReportFactory');
         stub($this->tracker)->getReportFactory()->returns($report_factory);
+
+        $webhook_xml_exporter = \Mockery::mock(\Tuleap\Tracker\Webhook\WebhookXMLExporter::class);
+        $webhook_xml_exporter->shouldReceive('exportTrackerWebhooksInXML')->once();
+        stub($this->tracker)->getWebhookXMLExporter()->returns($webhook_xml_exporter);
     }
 
     public function testPermissionsExport() {
