@@ -33,4 +33,13 @@ class UserNotificationOnlyStatusChangeDAO extends DataAccessObject
 
         return $this->getDB()->exists($sql, $user_id, $tracker_id);
     }
+
+    public function searchUserIdsHavingSubscribedForTrackerStatusChangedOnly($tracker_id)
+    {
+        $sql = 'SELECT user_id
+                  FROM tracker_only_status_change_notification_subscribers
+                  WHERE tracker_id = ?';
+
+        return $this->getDB()->column($sql, [$tracker_id]);
+    }
 }

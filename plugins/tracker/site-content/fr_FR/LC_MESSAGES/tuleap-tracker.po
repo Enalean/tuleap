@@ -161,6 +161,9 @@ msgstr "Erreur pendant l'analyse de la requête experte"
 msgid "Field value cannot be empty"
 msgstr "La valeur du champ ne peux pas être vide"
 
+msgid "Force notification configuration usage to all users"
+msgstr "Forcer la configuration des notifications à tous les utilisateurs"
+
 #, php-format
 msgid "Group '%s' couldn't be added."
 msgid_plural "Groups '%s' couldn't be added."
@@ -697,11 +700,3 @@ msgid ""
 msgstr ""
 "modifié. (Mais le texte étant trop gros, il nous est impossible de calculer "
 "les différences dans un temps raisonnable.)"
-
-#~ msgid ""
-#~ "Status change notifications (people will get notified when artifact "
-#~ "status is updated)"
-#~ msgstr ""
-#~ "Notifications lors du changement de status (les gens sont notifiés "
-#~ "lorsqu'ils ont soumis, sont assignés, ont commenté ou sont en CC et que "
-#~ "le status de l'artéfact est mis à jour)"

@@ -17,17 +17,17 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Tuleap\Layout\IncludeAssets;
-use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
-use Tuleap\Queue\WorkerEvent;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Dashboard\User\AtUserCreationDefaultWidgetsCreator;
 use Tuleap\Glyph\GlyphLocation;
 use Tuleap\Glyph\GlyphLocationsCollector;
+use Tuleap\Layout\IncludeAssets;
+use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\TemplatePresenter;
 use Tuleap\project\Event\ProjectRegistrationActivateService;
 use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Project\XML\Export\NoArchive;
+use Tuleap\Queue\WorkerEvent;
 use Tuleap\Request\CurrentPage;
 use Tuleap\Service\ServiceCreator;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
@@ -35,6 +35,9 @@ use Tuleap\Tracker\Admin\ArtifactLinksUsageDuplicator;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletor;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionDAO;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionRemover;
+use Tuleap\Tracker\Artifact\Changeset\Notification\AsynchronousSupervisor;
+use Tuleap\Tracker\Artifact\Changeset\Notification\NotifierDao;
+use Tuleap\Tracker\Artifact\Changeset\Notification\RecipientsManager;
 use Tuleap\Tracker\Artifact\LatestHeartbeatsCollector;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
@@ -54,6 +57,7 @@ use Tuleap\Tracker\Notifications\GlobalNotificationsAddressesBuilder;
 use Tuleap\Tracker\Notifications\GlobalNotificationSubscribersFilter;
 use Tuleap\Tracker\Notifications\NotificationLevelExtractor;
 use Tuleap\Tracker\Notifications\NotificationListBuilder;
+use Tuleap\Tracker\Notifications\NotificationsForceUsageUpdater;
 use Tuleap\Tracker\Notifications\NotificationsForProjectMemberCleaner;
 use Tuleap\Tracker\Notifications\Settings\NotificationsAdminSettingsDisplayController;
 use Tuleap\Tracker\Notifications\Settings\NotificationsAdminSettingsUpdateController;
@@ -70,8 +74,6 @@ use Tuleap\Tracker\Reference\ReferenceCreator;
 use Tuleap\Tracker\Service\ServiceActivator;
 use Tuleap\User\History\HistoryRetriever;
 use Tuleap\Widget\Event\GetPublicAreas;
-use Tuleap\Tracker\Artifact\Changeset\Notification\AsynchronousSupervisor;
-use Tuleap\Tracker\Artifact\Changeset\Notification\NotifierDao;
 
 require_once __DIR__ . '/constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -1455,7 +1457,21 @@ class trackerPlugin extends Plugin {
             new GlobalNotificationSubscribersFilter($unsubscribers_notification_dao),
             new NotificationLevelExtractor(),
             new \TrackerDao(),
-            new \ProjectHistoryDao()
+            new \ProjectHistoryDao(),
+            new NotificationsForceUsageUpdater(
+                new RecipientsManager(
+                    \Tracker_FormElementFactory::instance(),
+                    UserManager::instance(),
+                    $unsubscribers_notification_dao,
+                    new UserNotificationSettingsRetriever(
+                        new Tracker_GlobalNotificationDao(),
+                        new UnsubscribersNotificationDAO(),
+                        new UserNotificationOnlyStatusChangeDAO()
+                    ),
+                    new UserNotificationOnlyStatusChangeDAO()
+                ),
+                new UserNotificationSettingsDAO()
+            )
         );
     }
 
