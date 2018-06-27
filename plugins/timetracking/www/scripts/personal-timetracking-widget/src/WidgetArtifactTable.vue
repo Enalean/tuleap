@@ -165,7 +165,7 @@
                     this.total_times = total;
                     this.is_loaded   = true;
                 } catch (error) {
-                    this.showRestError(error);
+                    await this.showRestError(error);
                 }
             },
             async showRestError(rest_error) {

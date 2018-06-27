@@ -21,11 +21,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue                     from 'vue';
-import { tlp, mockFetchError } from 'tlp-mocks';
-import WidgetArtifactTable     from './WidgetArtifactTable.vue';
+import Vue from "vue";
+import { tlp, mockFetchError } from "tlp-mocks";
+import WidgetArtifactTable from "./WidgetArtifactTable.vue";
 
-describe('WidgetArtifactTable', () => {
+describe("WidgetArtifactTable", () => {
     let ArtifactTable;
 
     beforeEach(() => {
@@ -38,39 +38,43 @@ describe('WidgetArtifactTable', () => {
         }).$mount();
     }
 
-    describe('getFormattedTotalSum', () => {
-        it('Given a collection of times aggregated by artifacts, then it should return the formatted sum of all the times\' minutes', () => {
+    describe("getFormattedTotalSum", () => {
+        it("Given a collection of times aggregated by artifacts, then it should return the formatted sum of all the times' minutes", () => {
             const vm = instantiateComponent();
 
-            vm.tracked_times = [[
-                {
-                    artifact: {},
-                    project : {},
-                    minutes : 20
-                }, {
-                    artifact: {},
-                    project : {},
-                    minutes : 20
-                }
-            ], [
-                {
-                    artifact: {},
-                    project : {},
-                    minutes : 20
-                }
-            ]];
+            vm.tracked_times = [
+                [
+                    {
+                        artifact: {},
+                        project: {},
+                        minutes: 20
+                    },
+                    {
+                        artifact: {},
+                        project: {},
+                        minutes: 20
+                    }
+                ],
+                [
+                    {
+                        artifact: {},
+                        project: {},
+                        minutes: 20
+                    }
+                ]
+            ];
 
             const formatted_times = vm.getFormattedTotalSum();
 
-            expect(formatted_times).toEqual('01:00');
+            expect(formatted_times).toEqual("01:00");
         });
     });
 
-    describe('loadTimes - rest errors', () => {
-        it('Given a rest error, When no json error message is received, Then a default message is st up in the component \'s rest_error private property.', async () => {
+    describe("loadTimes - rest errors", () => {
+        it("Given a rest error, When no json error message is received, Then a default message is set up in the component 's rest_error private property.", async () => {
             const vm = instantiateComponent({
                 startDate: "2018-03-08",
-                endDate  : "2018-03-15"
+                endDate: "2018-03-15"
             });
 
             mockFetchError(tlp.get, {});
@@ -81,17 +85,17 @@ describe('WidgetArtifactTable', () => {
             expect(vm.rest_error).toEqual("An error occured");
         });
 
-        it('Given a rest error, When a json error message is received, Then the message is extracted in the component \'s rest_error private property.', async () => {
+        it("Given a rest error, When a json error message is received, Then the message is extracted in the component 's rest_error private property.", async () => {
             const vm = instantiateComponent({
                 startDate: "2018-03-08",
-                endDate  : "2018-03-15"
+                endDate: "2018-03-15"
             });
 
             mockFetchError(tlp.get, {
                 error_json: {
                     error: {
-                        code   : 403,
-                        message: 'Forbidden'
+                        code: 403,
+                        message: "Forbidden"
                     }
                 }
             });
@@ -103,17 +107,17 @@ describe('WidgetArtifactTable', () => {
         });
     });
 
-    describe('loadMore', () => {
-        it('When the query has been modified, then the load more variable are reininitialized', async () => {
+    describe("loadMore", () => {
+        it("When the query has been modified, then the load more variable are reininitialized", async () => {
             const vm = instantiateComponent({
                 startDate: "2018-03-08",
-                endDate  : "2018-03-15"
+                endDate: "2018-03-15"
             });
 
-            vm.pagination_offset    = 100;
+            vm.pagination_offset = 100;
             vm.tracked_times.length = 100;
-            vm.isInReadingMode      = true;
-            vm.hasQueryChanged      = true;
+            vm.isInReadingMode = true;
+            vm.hasQueryChanged = true;
 
             await vm.$nextTick();
 
