@@ -41,4 +41,14 @@ class WebhookDao extends DataAccessObject
 
         $this->getDB()->run($sql, $_SERVER['REQUEST_TIME'], $webhook_id, $status);
     }
+
+    public function duplicateWebhooks($source_tracker_id, $tracker_id)
+    {
+        $sql = 'INSERT INTO plugin_tracker_webhook_url(tracker_id, url)
+                SELECT ?, url
+                FROM plugin_tracker_webhook_url
+                WHERE tracker_id = ?';
+
+        $this->getDB()->run($sql, $tracker_id, $source_tracker_id);
+    }
 }

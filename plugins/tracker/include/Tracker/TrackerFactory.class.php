@@ -17,6 +17,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Tracker\Webhook\WebhookDao;
+use Tuleap\Tracker\Webhook\WebhookFactory;
+
 class TrackerFactory {
 
     const LEGACY_SUFFIX = '_from_tv3';
@@ -482,13 +485,15 @@ class TrackerFactory {
                 $tracker = $this->getTrackerById($id);
 
                 // Process event that tracker is created
-                $em =& EventManager::instance();
+                $em = EventManager::instance();
                 $pref_params = array('atid_source' => $id_template,
                         'atid_dest'   => $id);
                 $em->processEvent('Tracker_created', $pref_params);
                 //Duplicate Permissions
                 $this->duplicatePermissions($id_template, $id, $ugroup_mapping, $field_mapping, $duplicate_type);
 
+                $source_tracker = $this->getTrackerById($id_template);
+                $this->duplicateWebhooks($source_tracker, $tracker);
 
                 $this->postCreateActions($tracker);
 
@@ -500,6 +505,12 @@ class TrackerFactory {
             }
         }
         return false;
+    }
+
+    private function duplicateWebhooks(Tracker $source_tracker, Tracker $tracker)
+    {
+        $factory = new WebhookFactory(new WebhookDao());
+        $factory->duplicateWebhookFromSourceTracker($source_tracker, $tracker);
     }
 
    /**
