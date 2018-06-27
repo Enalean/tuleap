@@ -509,8 +509,15 @@ class TrackerFactory {
 
     private function duplicateWebhooks(Tracker $source_tracker, Tracker $tracker)
     {
-        $factory = new WebhookFactory(new WebhookDao());
-        $factory->duplicateWebhookFromSourceTracker($source_tracker, $tracker);
+        $this->getWebhookFactory()->duplicateWebhookFromSourceTracker($source_tracker, $tracker);
+    }
+
+    /**
+     * @return WebhookFactory
+     */
+    private function getWebhookFactory()
+    {
+        return new WebhookFactory(new WebhookDao());
     }
 
    /**
@@ -767,6 +774,10 @@ class TrackerFactory {
             //create workflow
             if (isset($tracker->workflow)) {
                 WorkflowFactory::instance()->saveObject($tracker->workflow, $trackerDB);
+            }
+
+            if (count($tracker->webhooks) > 0) {
+                $this->getWebhookFactory()->saveWebhooks($tracker->webhooks, $tracker_id);
             }
 
             //tracker permissions
