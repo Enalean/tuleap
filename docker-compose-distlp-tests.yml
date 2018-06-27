@@ -18,7 +18,8 @@ services:
 
   test-cypress:
     container_name: ${BUILD_TAG}tuleap_runtests_test-e2e
-    image: cypress/base:6
+    build:
+      context: ./tests/e2e/DockerImage
     command: /tuleap/tests/e2e/distlp/cypress/run.sh
     volumes:
       - .:/tuleap
