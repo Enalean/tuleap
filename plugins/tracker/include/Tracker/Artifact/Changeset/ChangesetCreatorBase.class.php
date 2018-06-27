@@ -112,8 +112,6 @@ abstract class Tracker_Artifact_Changeset_ChangesetCreatorBase {
         }
 
         $payload  = new \Tuleap\Tracker\Webhook\ArtifactPayload($artifact, $user, $action);
-        foreach ($webhooks as $webhook) {
-            $this->emitter->emit($webhook, $payload);
-        }
+        $this->emitter->emit($payload, ...$webhooks);
     }
 }

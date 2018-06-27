@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,8 +20,9 @@
 
 namespace Tuleap\Git\Webhook;
 
-require_once dirname(__FILE__).'/../../bootstrap.php';
+require_once __DIR__ . '/../../bootstrap.php';
 
+use Tuleap\Webhook\Emitter;
 use TuleapTestCase;
 use UserHelper;
 
@@ -31,8 +32,7 @@ class WebhookRequestSenderTest extends TuleapTestCase
     {
         parent::setUp();
         UserHelper::clearInstance();
-        $user_helper = mock('UserHelper');
-        UserHelper::setInstance($user_helper);
+        UserHelper::setInstance(\Mockery::spy(UserHelper::class));
     }
 
     public function tearDown()
@@ -41,16 +41,16 @@ class WebhookRequestSenderTest extends TuleapTestCase
         parent::tearDown();
     }
 
-    public function itSendsOneRequestPerDefinedHook()
+    public function itSendsWebhooks()
     {
-        $webhook_factory = mock('Tuleap\\Git\\Webhook\\WebhookFactory');
-        $webhook_emitter = mock('Tuleap\\Webhook\\Emitter');
-        $logger          = mock('Logger');
+        $webhook_factory = \Mockery::mock(WebhookFactory::class);
+        $webhook_emitter = \Mockery::mock(Emitter::class);
+        $logger          = \Mockery::mock(\Logger::class);
 
         $sender = new WebhookRequestSender($webhook_emitter, $webhook_factory, $logger);
 
-        $repository = mock('GitRepository');
-        $user       = mock('PFUser');
+        $repository = \Mockery::spy(\GitRepository::class);
+        $user       = \Mockery::spy(\PFUser::class);
         $oldrev     = 'oldrev';
         $newrev     = 'newrev';
         $refname    = 'refs/heads/master';
@@ -58,12 +58,10 @@ class WebhookRequestSenderTest extends TuleapTestCase
         $web_hook_01 = new Webhook(1, 1, 'url_01');
         $web_hook_02 = new Webhook(2, 1, 'url_02');
 
-        stub($webhook_factory)->getWebhooksForRepository()->returns(array(
-            $web_hook_01,
-            $web_hook_02,
-        ));
+        $webhook_factory->shouldReceive('getWebhooksForRepository')->andReturns([$web_hook_01, $web_hook_02]);
 
-        $webhook_emitter->expectCallCount('emit', 2);
+        $webhook_emitter->shouldReceive('emit')->once();
+        $logger->shouldReceive('info')->once();
 
         $sender->sendRequests($repository, $user, $oldrev, $newrev, $refname);
     }

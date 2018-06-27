@@ -13,6 +13,7 @@
             <directory suffix=".php">../../src/common/frs/PermissionsPerGroup</directory>
             <directory suffix=".php">../../src/common/Password/</directory>
             <directory suffix=".php">../../src/common/ForgeAccess/</directory>
+            <directory suffix=".php">../../src/common/Webhook/</directory>
             <directory suffix=".php">../../plugins/pluginsadministration/include</directory>
             <directory suffix=".php">../../plugins/proftpd/include</directory>
             <directory suffix=".php">../../plugins/crosstracker/include</directory>

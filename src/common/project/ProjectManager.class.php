@@ -21,6 +21,8 @@
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
+use Tuleap\Http\HttpClientFactory;
+use Tuleap\Http\MessageFactoryBuilder;
 use Tuleap\Project\Webhook\Log\StatusLogger as WebhookStatusLogger;
 use Tuleap\Project\Webhook\Log\WebhookLoggerDao;
 use Tuleap\Project\Webhook\ProjectCreatedPayload;
@@ -373,12 +375,14 @@ class ProjectManager
     private function launchWebhooksProjectCreated(Project $project)
     {
         $webhook_status_logger   = new WebhookStatusLogger(new WebhookLoggerDao());
-        $webhook_emitter         = new Emitter(new Http_Client(), $webhook_status_logger);
+        $webhook_emitter         = new Emitter(
+            MessageFactoryBuilder::build(),
+            HttpClientFactory::createClient(),
+            $webhook_status_logger
+        );
         $project_created_payload = new ProjectCreatedPayload($project, $_SERVER['REQUEST_TIME']);
         $webhooks                = $this->getProjectWebhooks();
-        foreach ($webhooks as $webhook) {
-            $webhook_emitter->emit($webhook, $project_created_payload);
-        }
+        $webhook_emitter->emit($project_created_payload, ...$webhooks);
     }
 
     public function updateStatus(Project $project, $status)

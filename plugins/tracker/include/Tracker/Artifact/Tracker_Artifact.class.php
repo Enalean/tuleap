@@ -25,6 +25,8 @@
 
 require_once(dirname(__FILE__).'/../../constants.php');
 
+use Tuleap\Http\HttpClientFactory;
+use Tuleap\Http\MessageFactoryBuilder;
 use Tuleap\Tracker\Artifact\ArtifactInstrumentation;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetFieldsWithoutRequiredValidationValidator;
 use Tuleap\Tracker\Artifact\PermissionsCache;
@@ -2057,7 +2059,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     protected function getWebhookEmitter()
     {
         $emitter = new Emitter(
-            new Http_Client(),
+            MessageFactoryBuilder::build(),
+            HttpClientFactory::createClient(),
             new WebhookStatusLogger(new WebhookDao())
         );
         return $emitter;

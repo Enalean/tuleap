@@ -1,6 +1,5 @@
 /usr/share/tuleap/tests/simpletest/SimpleTestSampleTest.php
 /usr/share/tuleap/tests/simpletest/common/Label/REST/LabelsUpdaterTest.php
-/usr/share/tuleap/tests/simpletest/common/Webhook/EmitterTest.php
 /usr/share/tuleap/tests/simpletest/common/include/URLTest.php
 /usr/share/tuleap/tests/simpletest/common/include/SiteCacheTest.php
 /usr/share/tuleap/tests/simpletest/common/include/URLVerificationFactoryTest.php

@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Http\HttpClientFactory;
+use Tuleap\Http\MessageFactoryBuilder;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletorBuilder;
@@ -3587,7 +3589,8 @@ EOS;
         $send_notifications    = true;
         $webhook_dao           = new WebhookDao();
         $emitter               = new Emitter(
-            new Http_Client(),
+            MessageFactoryBuilder::build(),
+            HttpClientFactory::createClient(),
             new WebhookStatusLogger($webhook_dao)
         );
 
