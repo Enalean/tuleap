@@ -25,30 +25,24 @@ use Tuleap\REST\Header;
 use Tuleap\REST\UserManager;
 use Tuleap\REST\AuthenticatedResource;
 use Luracast\Restler\RestException;
-use Tuleap\CallMeBack\CallMeBackEmailNotifier;
-use Tuleap\CallMeBack\CallMeBackEmailDao;
-use Tuleap\CallMeBack\Exception\NotifyException;
+use Tuleap\CallMeBack\CallMeBackMessageDao;
 
-class CallMeBackResource extends AuthenticatedResource
+class CallMeBackMessageResource extends AuthenticatedResource
 {
     /**
      * @var UserManager
      */
     private $rest_user_manager;
-
     /**
-     * @var CallMeBackEmailNotifier
+     * @var CallMeBackMessageDao
      */
-    private $notifier;
+    private $message_dao;
 
     public function __construct()
     {
         $this->rest_user_manager = UserManager::build();
-        $this->notifier          = new CallMeBackEmailNotifier(
-            new CallMeBackEmailDao()
-        );
+        $this->message_dao       = new CallMeBackMessageDao();
     }
-
     /**
      * @url OPTIONS
      */
@@ -58,38 +52,33 @@ class CallMeBackResource extends AuthenticatedResource
     }
 
     /**
-     * Send an email with call me back information
-     *
-     * @param string $phone User phone number {@from body} {@type string}
-     * @param string $date  Date when user want to be called back {@from body} {@type date}
+     * Get message
      *
      * @access protected
      *
-     * @url POST
-     * @status 201
+     * @url GET
      *
      * @throws 403
-     * @throws 500
+     *
+     * @return MessageRepresentation
      */
-    public function post($phone, $date)
+    protected function get()
     {
-        try {
-            $this->checkAccess();
+        $this->checkAccess();
+        $this->sendAllowHeaders();
 
-            $current_user = $this->rest_user_manager->getCurrentUser();
+        $current_user           = $this->rest_user_manager->getCurrentUser();
+        $current_user_locale    = $current_user->getLocale();
+        $message_representation = new MessageRepresentation();
+        $message_content        = $this->message_dao->get($current_user_locale) ?: null;
 
-            $this->notifier->notify($current_user, $phone, $date);
+        $message_representation->build($message_content);
 
-            $current_user->setPreference('plugin_call_me_back_asked_to_be_called_back', '1');
-        } catch (NotifyException $exception) {
-            throw new RestException(500, "Unable to notify the people who will call back");
-        } finally {
-            $this->sendAllowHeaders();
-        }
+        return $message_representation;
     }
 
     private function sendAllowHeaders()
     {
-        Header::allowOptionsPost();
+        Header::allowOptionsGet();
     }
 }
