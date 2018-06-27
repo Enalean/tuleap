@@ -86,7 +86,7 @@ class MailProjectOneStepRegisterPresenter extends MailOutlinePresenter {
     }
 
     public function get_section_three() {
-        return $GLOBALS['Language']->getText('mail_register_project_one_step', 'section_three', array($this->getUrlDocumentationSite()));
+        return $GLOBALS['Language']->getText('mail_register_project_one_step', 'section_three', array($this->getUrlProjectAdministration()));
     }
 
     public function get_section_four() {
