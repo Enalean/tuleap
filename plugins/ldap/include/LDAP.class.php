@@ -534,11 +534,19 @@ class LDAP {
         $lri = false;
         if($this->_connectAndBind()) {
             $name = $this->query_escaper->escapeFilter($name);
-            $filter = '('.$this->ldapParams['grp_cn'].'=*'.$name.'*)';
-            // We only care about Common name
-            $attrs  = array($this->ldapParams['grp_cn']);
+            // Use display name if setting is found. Otherwise, fall back on old hard-coded filter.
+            if (isset($this->ldapParams['tooltip_search_grp'])) {
+                $filter = str_replace("%words%", $name, $this->ldapParams['tooltip_search_grp']);
+            } else {
+                $filter = '('.$this->ldapParams['grp_cn'].'=*'.$name.'*)';
+            }
+            if (isset($this->ldapParams['grp_display_name'])) {
+                $attrs = array($this->ldapParams['grp_cn'], $this->ldapParams['grp_display_name']);
+            } else {
+                $attrs = array($this->ldapParams['grp_cn']);
+            }
             // We want types and values
-            $attrsOnly = 0; 
+            $attrsOnly = 0;
             // Catch errors to detect if there are more results available than
             // the list actually returned (helps to refine the search)
             $this->trapErrors();

@@ -43,7 +43,13 @@ if ($request->valid($vGroupName)) {
     if ($lri !== false) {
         while ($lri->valid()) {
             $lr = $lri->current();
-            $group_list[] = $lr->getCommonName();
+            $common_name = $lr->getCommonName();
+            $display_name = $lr->getGroupDisplayName();
+
+            $group_list[] = array(
+                'id' =>$common_name,
+                'text' =>$display_name
+            );
             $lri->next();
         }
         if ($ldap->getErrno() == LDAP::ERR_SIZELIMIT) {
@@ -52,16 +58,8 @@ if ($request->valid($vGroupName)) {
     }
 }
 
-$json_entries = array();
-foreach ($group_list as $group) {
-    $json_entries[] = array(
-        'id'   => $group,
-        'text' => $group
-    );
-}
-
 $output = array(
-    'results'    => $json_entries,
+    'results'    => $group_list,
     'pagination' => array(
           'more' => $more_results
     )

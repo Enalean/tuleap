@@ -791,9 +791,11 @@ class LdapPlugin extends Plugin {
 
             if ($ldap_group) {
                 $group_name = $ldap_group->getCommonName();
+                $display_name = $ldap_group->getGroupDisplayName();
                 $is_linked  = true;
             } else {
                 $group_name = '';
+                $display_name = '';
                 $is_linked  = false;
             }
 
@@ -803,7 +805,7 @@ class LdapPlugin extends Plugin {
             $mustache_renderer = TemplateRendererFactory::build()->getRenderer(LDAP_TEMPLATE_DIR);
 
             $action_label = ($ldap_group)
-                ? sprintf(dgettext('tuleap-ldap', "Update directory group binding (%s)"), $group_name)
+                ? sprintf(dgettext('tuleap-ldap', "Update directory group binding (%s)"), $display_name)
                 : dgettext('tuleap-ldap', "Set directory group binding");
 
             $modal_button = $mustache_renderer->renderToString(
@@ -821,7 +823,8 @@ class LdapPlugin extends Plugin {
                     $is_linked,
                     $action_label,
                     $collector->getCurrentLocale(),
-                    $collector->getCSRF()
+                    $collector->getCSRF(),
+                    $display_name
                 )
             );
 

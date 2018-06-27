@@ -396,27 +396,43 @@ abstract class LDAP_GroupManager
     }
 
     /**
+     * @return Array of LDAP group attibutes
+     * */
+    private function getLdapGroupAttributes()
+    {
+        $ldap = $this->getLdap();
+        $attrs = $ldap->getDefaultAttributes();
+        if (isset($ldap->getLDAPParams()['grp_display_name'])) {
+            $attrs[] = $ldap->getLDAPParams()['grp_display_name'];
+        }
+        return $attrs;
+    }
+
+    /**
      * Get LDAP group entry corresponding to Group id
      * 
      * @param Integer $id Id of the Group
      * 
      * @return LDAPResult 
      */
-    public function getLdapGroupByGroupId($id) 
+    public function getLdapGroupByGroupId($id)
     {
         $ldapGroup = null;
         $dao = $this->getDao();
         $row = $dao->searchByGroupId($id);
         if ($row !== false) {
             $ldap = $this->getLdap();
-            $groupDef = $ldap->searchDn($row['ldap_group_dn']);
+
+            $attrs = $this->getLdapGroupAttributes();
+
+            $groupDef = $ldap->searchDn($row['ldap_group_dn'], $attrs);
             if ($groupDef && $groupDef->count() == 1) {
                 $ldapGroup = $groupDef->current();
             }
         }
         return $ldapGroup;
     }
-    
+
     /**
      * Save link between Codendi Group and LDAP group
      *

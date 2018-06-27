@@ -42,6 +42,7 @@ class LinkModalContentPresenter
     public $display_name;
     public $action_label;
     public $locale;
+    public $ldap_display_name;
 
     public function __construct(
         $ldap_group_name,
@@ -51,7 +52,8 @@ class LinkModalContentPresenter
         $is_linked,
         $action_label,
         $locale,
-        CSRFSynchronizerToken $csrf_token
+        CSRFSynchronizerToken $csrf_token,
+        $ldap_display_name
     ) {
         $this->ldap_group_name              = $ldap_group_name;
         $this->project_id                   = $project->getID();
@@ -62,5 +64,6 @@ class LinkModalContentPresenter
         $this->display_name                 = NameTranslator::getUserGroupDisplayName(NameTranslator::PROJECT_MEMBERS);
         $this->action_label                 = $action_label;
         $this->locale                       = $locale;
+        $this->ldap_display_name            = $ldap_display_name;
     }
 }

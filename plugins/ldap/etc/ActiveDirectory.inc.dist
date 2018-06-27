@@ -114,6 +114,14 @@ $sys_ldap_grp_oc    = 'group';
 // objectclass that distinguish users
 $sys_ldap_user_oc    = 'person';
 
+// Settings for searching with a directory groups' display name
+
+// Field that indicate the display name
+// $sys_ldap_grp_display_name = "displayname";
+
+// Tooltip hints when searching with displayname
+// $sys_ldap_tooltip_search_grp = "(|(cn=%words%*)(displayname=%words%*))";
+
 // Threshold for users to be suspended
 // On beyond of this value expressed in percentage no users will be suspended
 $sys_ldap_threshold_users_suspension = '';
