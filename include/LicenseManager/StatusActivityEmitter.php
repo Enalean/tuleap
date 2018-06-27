@@ -62,6 +62,6 @@ class StatusActivityEmitter
 
         $webhook = new UserCounterWebhook($webhook_url);
 
-        $this->webhook_emitter->emit($webhook, $payload);
+        $this->webhook_emitter->emit($payload, $webhook);
     }
 }

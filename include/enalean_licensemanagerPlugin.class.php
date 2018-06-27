@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,11 +21,11 @@
 use Tuleap\Admin\Homepage\StatisticsBadgePresenter;
 use Tuleap\Admin\Homepage\StatisticsPresenter;
 use Tuleap\Admin\Homepage\UserCounterDao;
-use Tuleap\Enalean\LicenseManager\LicencesWidget;
 use Tuleap\Enalean\LicenseManager\StatusActivityEmitter;
-use Tuleap\Enalean\LicenseManager\UserCounterWebhook;
 use Tuleap\Enalean\LicenseManager\Webhook\StatusLogger;
 use Tuleap\Enalean\LicenseManager\Webhook\UserCounterPayload;
+use Tuleap\Http\HttpClientFactory;
+use Tuleap\Http\MessageFactoryBuilder;
 use Tuleap\Webhook\Emitter;
 
 require_once 'autoload.php';
@@ -73,7 +73,7 @@ class enalean_licensemanagerPlugin extends Plugin
         }
         $payload = new UserCounterPayload(HTTPRequest::instance(), new UserCounterDao(), $this->getMaxUsers(), $event, $params['user_id']);
 
-        $webhook_emitter = new Emitter(new Http_Client(), new StatusLogger());
+        $webhook_emitter = new Emitter(MessageFactoryBuilder::build(), HttpClientFactory::createClient(), new StatusLogger());
 
         $emitter = new StatusActivityEmitter($webhook_emitter);
         $emitter->emit($payload, $this->getWebhookUrl());
