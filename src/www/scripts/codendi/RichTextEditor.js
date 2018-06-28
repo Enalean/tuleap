@@ -1,21 +1,21 @@
 /**
+ * Copyright (c) Enalean SAS, 2013 - 2018. All rights reserved
  * Copyright (c) STMicroelectronics, 2010. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 var codendi = codendi || { };
@@ -28,7 +28,8 @@ codendi.RTE = Class.create(
                 toolbar: 'tuleap', //basic | full | minimal | tuleap
                 onLoad: Prototype.emptyFunction,
                 toggle: false,
-                default_in_html: true
+                default_in_html: true,
+                autoresize_when_ready: true
             }, options || { });
             
             this.rte = false;
@@ -135,13 +136,19 @@ codendi.RTE = Class.create(
             }.bind(this));
 
             CKEDITOR.on('instanceReady', function (evt) {
-                if (evt.editor === this.rte) {
-                    if (undefined != this.options.full_width && this.options.full_width) {
-                        evt.editor.resize('100%', this.element.getHeight(), true);
+                if (evt.editor !== this.rte) {
+                    return;
+                }
 
-                    } else if (this.element.getWidth() > 0 && (typeof(this.options.no_resize) == 'undefined' || ! this.options.no_resize)) {
-                        evt.editor.resize(this.element.getWidth(), this.element.getHeight(), true);
-                    }
+                if (! this.options.autoresize_when_ready) {
+                    return;
+                }
+
+                if (undefined != this.options.full_width && this.options.full_width) {
+                    evt.editor.resize('100%', this.element.getHeight(), true);
+
+                } else if (this.element.getWidth() > 0 && (typeof(this.options.no_resize) == 'undefined' || ! this.options.no_resize)) {
+                    evt.editor.resize(this.element.getWidth(), this.element.getHeight(), true);
                 }
             }.bind(this));
 
