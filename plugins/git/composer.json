@@ -4,5 +4,9 @@
       "Tuleap\\Git\\": ["include/", "include/Git/"]
     },
     "classmap": ["include/"]
+  },
+  "require": {
+    "smarty/smarty": "^2.6",
+    "geshi/geshi": "^1.0"
   }
 }
