@@ -33,4 +33,18 @@ class NotificationLevelExtractor
 
         return $notification_level;
     }
+
+    public function extractNotificationLevelFromString($notification_level)
+    {
+        if ($notification_level === Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE_LABEL) {
+            return Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE;
+        }
+
+
+        if ($notification_level === Tracker::NOTIFICATIONS_LEVEL_DISABLED_LABEL) {
+            return Tracker::NOTIFICATIONS_LEVEL_DISABLED;
+        }
+
+        return Tracker::NOTIFICATIONS_LEVEL_DEFAULT;
+    }
 }

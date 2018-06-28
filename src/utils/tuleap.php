@@ -42,4 +42,8 @@ $application->add(
     )
 );
 
+$event_manager         = EventManager::instance();
+$CLI_command_collector = new \Tuleap\CLI\CLICommandsCollector($application);
+$event_manager->processEvent($CLI_command_collector);
+
 $application->run();
