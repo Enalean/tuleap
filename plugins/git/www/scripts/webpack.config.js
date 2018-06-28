@@ -26,7 +26,7 @@ const path_to_badge = path.resolve(
     '../../../../src/www/scripts/project/admin/permissions-per-group/'
 );
 
-const webpack_config = {
+const webpack_config_for_permisssions_per_group = {
     entry: {
         'permission-per-group': './permissions-per-group/src/index.js'
     },
@@ -55,4 +55,37 @@ const webpack_config = {
     ]
 };
 
-module.exports = webpack_config;
+const webpack_config_for_repositories = {
+    entry: {
+        'repositories-list': './repositories/src/index.js'
+    },
+    context: path.resolve(__dirname),
+    output: webpack_configurator.configureOutput(assets_dir_path),
+    externals: {
+        tlp: 'tlp'
+    },
+    module: {
+        rules: [
+            webpack_configurator.configureBabelRule(
+                webpack_configurator.babel_options_ie11
+            ),
+            webpack_configurator.rule_easygettext_loader,
+            webpack_configurator.rule_vue_loader
+        ]
+    },
+    plugins: [
+        webpack_configurator.getManifestPlugin(),
+        webpack_configurator.getVueLoaderPlugin()
+    ],
+    resolveLoader: {
+        alias: webpack_configurator.extendAliases(
+            {},
+            webpack_configurator.easygettext_loader_alias
+        )
+    }
+};
+
+module.exports = [
+    webpack_config_for_permisssions_per_group,
+    webpack_config_for_repositories
+];

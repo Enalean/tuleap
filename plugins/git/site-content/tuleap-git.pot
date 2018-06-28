@@ -40,6 +40,9 @@ msgstr ""
 msgid "Git Administrators"
 msgstr ""
 
+msgid "Git repositories"
+msgstr ""
+
 msgid "Git service is disabled."
 msgstr ""
 
@@ -56,6 +59,9 @@ msgid "Notified people"
 msgstr ""
 
 msgid "Permission"
+msgstr ""
+
+msgid "Project not found."
 msgstr ""
 
 msgid "Repository does not exist"
