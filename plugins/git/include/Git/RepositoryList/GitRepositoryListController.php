@@ -68,7 +68,7 @@ class GitRepositoryListController implements \Tuleap\Request\DispatchableWithReq
         $this->displayHeader(dgettext('tuleap-git', 'Git repositories'), $project);
         $renderer = TemplateRendererFactory::build()->getRenderer(GIT_TEMPLATE_DIR);
 
-        $renderer->renderToPage('repositories/repository-list', []);
+        $renderer->renderToPage('repositories/repository-list', new GitRepositoryListPresenter($project));
 
         site_project_footer([]);
     }

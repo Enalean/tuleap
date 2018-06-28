@@ -8,19 +8,25 @@ msgstr ""
 msgid "Add repository"
 msgstr ""
 
+msgid "Administration"
+msgstr ""
+
 msgid "Allowed characters: a-zA-Z0-9/_.-"
 msgstr ""
 
 msgid "Cancel"
 msgstr ""
 
-msgid "Create repository"
+msgid "Fork repositories"
 msgstr ""
 
 msgid "Git repositories"
 msgstr ""
 
 msgid "Project has no Git repositories yet."
+msgstr ""
+
+msgid "Repository list"
 msgstr ""
 
 msgid "Repository name"

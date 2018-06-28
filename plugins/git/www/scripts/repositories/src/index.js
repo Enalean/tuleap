@@ -33,11 +33,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const locale = document.body.dataset.userLocale;
     Vue.config.language = locale;
 
-    const vue_mount_points = document.getElementById("git-repository-list");
+    const vue_mount_point = document.getElementById("git-repository-list");
 
-    if (vue_mount_points) {
-        const rootComponent = Vue.extend(GitRepositoriesList);
+    if (vue_mount_point) {
+        const repositoryList = Vue.extend(GitRepositoriesList);
 
-        new rootComponent().$mount(vue_mount_points);
+        new repositoryList({
+            propsData: { ...vue_mount_point.dataset }
+        }).$mount(vue_mount_point);
     }
 });
