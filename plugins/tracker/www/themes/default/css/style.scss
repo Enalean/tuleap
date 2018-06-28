@@ -1265,6 +1265,12 @@ ul.tracker-form-element-checkbox {
 .tracker-admin-field:hover {
     border: 1px solid #F60;
     background: #FFC;
+
+    > .tracker_formelement_label {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 }
 
 div.tracker-admin-field-controls {
