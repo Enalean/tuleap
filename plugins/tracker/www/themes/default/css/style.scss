@@ -3459,9 +3459,21 @@ td.tracker-unsubscriber-actions {
 }
 
 .tracker-mail-notification-title {
-  margin: 20px 0 0;
+    margin: 20px 0 0;
 }
 
 .notifications-level-force-usage {
     margin: 20px 0;
+}
+
+.tracker-webhooks-list {
+    max-width: 960px;
+}
+
+.tracker-webhooks-desc {
+    margin: 10px 0 20px;
+
+    > .tracker-webhooks-desc-warn {
+        display: block;
+    }
 }

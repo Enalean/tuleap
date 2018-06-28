@@ -48,6 +48,11 @@ class WebhookRetriever
         return $webhooks;
     }
 
+    public function getLogsForWebhook(Webhook $webhook)
+    {
+        return $this->dao->searchLogsForWebhook($webhook->getId());
+    }
+
     /**
      * @return Webhook
      */
