@@ -24,15 +24,15 @@ class GitViews_GitPhpViewer {
      * @var GitRepository
      */
     private $repository;
-
     /**
-     * @var string
+     * @var PFUser
      */
-    private $gitphp_path = '/usr/share/gitphp-tuleap';
+    private $current_user;
 
-    public function __construct(GitRepository $repository)
+    public function __construct(GitRepository $repository, PFUser $current_user)
     {
-        $this->repository  = $repository;
+        $this->repository   = $repository;
+        $this->current_user = $current_user;
     }
 
     public function getContent($is_download)
@@ -100,51 +100,7 @@ class GitViews_GitPhpViewer {
         require_once GITPHP_GITOBJECTDIR . 'GitExe.php';
         require_once GITPHP_GITOBJECTDIR . 'DiffExe.php';
 
-
-        /*
-        * Set the locale based on the user's preference
-        */
-        if ((!isset($_COOKIE[GITPHP_LOCALE_COOKIE])) || empty($_COOKIE[GITPHP_LOCALE_COOKIE])) {
-
-            /*
-             * User's first time here, try by HTTP_ACCEPT_LANGUAGE
-             */
-            if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-                $httpAcceptLang  = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
-                $preferredLocale = GitPHP_Resource::FindPreferredLocale($_SERVER['HTTP_ACCEPT_LANGUAGE']);
-                if (!empty($preferredLocale)) {
-                    //setcookie(GITPHP_LOCALE_COOKIE, $preferredLocale, time()+GITPHP_LOCALE_COOKIE_LIFETIME);
-                    GitPHP_Resource::Instantiate($preferredLocale);
-                }
-            }
-
-            if (!GitPHP_Resource::Instantiated()) {
-                /*
-                 * Create a dummy cookie to prevent browser delay
-                 */
-                //setcookie(GITPHP_LOCALE_COOKIE, 0, time()+GITPHP_LOCALE_COOKIE_LIFETIME);
-            }
-
-        } else {
-            if (isset($_GET['l']) && !empty($_GET['l'])) {
-
-                /*
-                 * User picked something
-                 */
-                //setcookie(GITPHP_LOCALE_COOKIE, $_GET['l'], time()+GITPHP_LOCALE_COOKIE_LIFETIME);
-                GitPHP_Resource::Instantiate($_GET['l']);
-
-            } else {
-                if (isset($_COOKIE[GITPHP_LOCALE_COOKIE]) && !empty($_COOKIE[GITPHP_LOCALE_COOKIE])) {
-
-                    /*
-                     * Returning visitor with a preference
-                     */
-                    GitPHP_Resource::Instantiate($_COOKIE[GITPHP_LOCALE_COOKIE]);
-
-                }
-            }
-        }
+        GitPHP_Resource::Instantiate($this->current_user->getLanguageID());
 
         try {
             /*
