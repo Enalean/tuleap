@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -36,27 +36,21 @@ class GitViews_ShowRepo {
      * @var GitPhpAccessLogger
      */
     private $access_logger;
-    private $gitphp_path;
 
     public function __construct(
         GitRepository $repository,
         HTTPRequest $request,
         Git_Mirror_MirrorDataMapper $mirror_data_mapper,
-        GitPhpAccessLogger $access_logger,
-        $gitphp_path
+        GitPhpAccessLogger $access_logger
     ) {
         $this->repository         = $repository;
         $this->request            = $request;
         $this->mirror_data_mapper = $mirror_data_mapper;
         $this->access_logger      = $access_logger;
-        $this->gitphp_path        = $gitphp_path;
     }
 
     public function display(Git_URL $url) {
-        $git_php_viewer = new GitViews_GitPhpViewer(
-            $this->repository,
-            $this->gitphp_path
-        );
+        $git_php_viewer = new GitViews_GitPhpViewer($this->repository);
         if ($url->isADownload($this->request)) {
             $view = new GitViews_ShowRepo_Download($git_php_viewer);
         } else {

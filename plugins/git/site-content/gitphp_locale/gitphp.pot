@@ -1,0 +1,805 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Christopher Han
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: GitPHP 0.2.4\n"
+"Report-Msgid-Bugs-To: xiphux@gmail.com\n"
+"POT-Creation-Date: 2011-08-25 20:54-0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+# Used as link to and title for page displaying a blob, which is what git calls a single file
+#: templates/tag.tpl
+#: templates/blobdiff.tpl
+#: templates/commit.tpl
+#: templates/taglist.tpl
+#: templates/treelist.tpl
+#: templates/searchfiles.tpl
+#: templates/history.tpl
+#: include/controller/Controller_Blob.class.php:78
+msgid "blob"
+msgstr ""
+
+# Used as link to and title for the file history, which displays all commits that have modified a certain file
+#: templates/commit.tpl
+#: templates/treelist.tpl
+#: templates/searchfiles.tpl
+#: templates/blob.tpl
+#: include/controller/Controller_History.class.php:76
+msgid "history"
+msgstr ""
+
+# Used as title for and link to a list of files in a directory, which git calls a 'tree'
+#: templates/search.tpl
+#: templates/commit.tpl
+#: templates/headlist.tpl
+#: templates/nav.tpl
+#: templates/treelist.tpl
+#: templates/searchfiles.tpl
+#: templates/log.tpl
+#: templates/projectlist.tpl
+#: templates/shortloglist.tpl
+#: include/controller/Controller_Tree.class.php:79
+msgid "tree"
+msgstr ""
+
+# Used as link to download a copy of the files in a given commit
+#: templates/search.tpl
+#: templates/commit.tpl
+#: templates/taglist.tpl
+#: templates/header.tpl
+#: templates/treelist.tpl
+#: templates/projectlist.tpl
+#: templates/shortloglist.tpl
+#: include/controller/Controller_Snapshot.class.php:92
+msgid "snapshot"
+msgstr ""
+
+# Used to label something stored in a git repository where the type of item - tag, blob, etc - isn't known
+#: templates/tag.tpl
+msgid "object"
+msgstr ""
+
+# Used as link to and title for page displaying info about a single commit in the project
+#: templates/tag.tpl
+#: templates/search.tpl
+#: templates/commit.tpl
+#: templates/nav.tpl
+#: templates/taglist.tpl
+#: templates/header.tpl
+#: templates/log.tpl
+#: templates/history.tpl
+#: templates/shortloglist.tpl
+#: include/controller/Controller_Commit.class.php:79
+msgid "commit"
+msgstr ""
+
+# Used as link to and title for page displaying detailed info about a tag
+#: templates/tag.tpl
+#: templates/tagtip.tpl
+#: templates/taglist.tpl
+#: include/controller/Controller_Tag.class.php:79
+msgid "tag"
+msgstr ""
+
+# Used to label the author of the commit, and as a field to search
+# The author is the person who wrote the changes in the commit
+#: templates/tag.tpl
+#: templates/commit.tpl
+#: templates/committip.tpl
+#: templates/header.tpl
+msgid "author"
+msgstr ""
+
+# Used as a link to a plaintext version of a page
+#: templates/blobdiff.tpl
+#: templates/commit.tpl
+#: templates/blame.tpl
+#: templates/treelist.tpl
+#: templates/commitdiff.tpl
+#: templates/blob.tpl
+msgid "plain"
+msgstr ""
+
+# Used as a link to a side-by-side version of a diff
+#: templates/blobdiff.tpl
+#: templates/commitdiff.tpl
+msgid "side by side"
+msgstr ""
+
+# Used as a link to a unified version of a diff
+#: templates/blobdiff.tpl
+#: templates/commitdiff.tpl
+msgid "unified"
+msgstr ""
+
+# Used as a link to the first page in a list of results
+#: templates/search.tpl
+#: templates/searchfiles.tpl
+msgid "first"
+msgstr ""
+
+# Used as a link to the previous page in a list of results
+#: templates/search.tpl
+#: templates/searchfiles.tpl
+#: templates/log.tpl
+#: templates/shortlog.tpl
+msgid "prev"
+msgstr ""
+
+# Used as a link to the next page in a list of results
+#: templates/search.tpl
+#: templates/searchfiles.tpl
+#: templates/log.tpl
+#: templates/shortlog.tpl
+#: templates/shortloglist.tpl
+msgid "next"
+msgstr ""
+
+# Used as link to and title for the full diff of all the changes in a commit
+#: templates/search.tpl
+#: templates/commit.tpl
+#: templates/nav.tpl
+#: templates/log.tpl
+#: templates/history.tpl
+#: templates/shortloglist.tpl
+#: include/controller/Controller_Commitdiff.class.php:85
+msgid "commitdiff"
+msgstr ""
+
+# Used to label the committer of the commit, and as a field to search
+# The committer is the person who put the commit into this project
+#: templates/commit.tpl
+#: templates/committip.tpl
+#: templates/header.tpl
+msgid "committer"
+msgstr ""
+
+# Used to label the parent of this commit
+# The parent is the commit preceding this one in the project history
+#: templates/commit.tpl
+msgid "parent"
+msgstr ""
+
+# Used to indicate the number of files changed in a commit
+# Comes before a list of files
+# %1: the number of files
+#: templates/commit.tpl
+#: templates/commitdiff.tpl
+msgid "%1 file changed:"
+msgid_plural "%1 files changed:"
+msgstr[0] ""
+msgstr[1] ""
+
+# Used to indicate a new object was added with an access mode
+# %1: the type of object
+# %2: the mode
+#: templates/commit.tpl
+msgid "new %1 with mode %2"
+msgstr ""
+
+# Used to indicate a new object was added
+# %1: the type of object
+#: templates/commit.tpl
+msgid "new %1"
+msgstr ""
+
+# Used to indicate an object was deleted
+# %1: the type of object
+#: templates/commit.tpl
+msgid "deleted %1"
+msgstr ""
+
+# Used to indicate a file type changed, including original and new file modes
+# (when both original and new files are regular files)
+# %1: the original file type
+# %2: the new file type
+# %3: the original file mode
+# %4: the new file mode
+#: templates/commit.tpl
+msgid "changed from %1 to %2 mode: %3 -> %4"
+msgstr ""
+
+# Used to indicate a file type changed, with only new file mode
+# (when old file type wasn't a normal file)
+# %1: the original file type
+# %2: the new file type
+# %3: the original file mode
+# %4: the new file mode
+#: templates/commit.tpl
+msgid "changed from %1 to %2 mode: %3"
+msgstr ""
+
+# Used to indicate a file type changed
+# %1: the original file type
+# %2: the new file type
+#: templates/commit.tpl
+msgid "changed from %1 to %2"
+msgstr ""
+
+# Used to indicate a file mode changed
+# %1: the original file mode
+# %2: the new file mode
+#: templates/commit.tpl
+msgid "changed mode: %1 -> %2"
+msgstr ""
+
+# Used to indicate a file mode changed
+# %1: the new file mode
+#: templates/commit.tpl
+msgid "changed mode: %1"
+msgstr ""
+
+# Used to indicate a file mode changed
+#: templates/commit.tpl
+msgid "changed"
+msgstr ""
+
+# Used as link to diff this file version with the previous version
+#: templates/commit.tpl
+msgid "diff"
+msgstr ""
+
+# Used to indicate a file was moved and the file mode changed
+# This string should be HTML safe
+# %1: the old file
+# %2: the similarity as a percent number
+# %3: the new file mode
+#: templates/commit.tpl
+msgid "moved from %1 with %2%% similarity, mode: %3"
+msgstr ""
+
+# Used to indicate a file was moved
+# This string should be HTML safe
+# %1: the old file
+# %2: the similarity as a percent number
+#: templates/commit.tpl
+msgid "moved from %1 with %2%% similarity"
+msgstr ""
+
+# Used as title for and link to the compact log view with one line abbreviated commits
+#: templates/headlist.tpl
+#: templates/nav.tpl
+#: templates/taglist.tpl
+#: templates/title.tpl
+#: templates/projectlist.tpl
+#: include/controller/Controller_Log.class.php:80
+msgid "shortlog"
+msgstr ""
+
+# Used as title for and link to log view with full commit messages
+#: templates/headlist.tpl
+#: templates/nav.tpl
+#: templates/taglist.tpl
+#: templates/projectlist.tpl
+#: include/controller/Controller_Log.class.php:85
+msgid "log"
+msgstr ""
+
+# Used as title for and link to project summary page
+#: templates/nav.tpl
+#: templates/projectlist.tpl
+#: include/controller/Controller_Project.class.php:75
+msgid "summary"
+msgstr ""
+
+# Link back to the list of projects
+#: templates/header.tpl
+#: include/controller/ControllerBase.class.php:257
+#: include/controller/Controller_ProjectList.class.php:94
+msgid "projects"
+msgstr ""
+
+# Used as a search type, to search the contents of files in the project
+#: templates/header.tpl
+#: include/git/Blob.class.php:178
+msgid "file"
+msgstr ""
+
+# Used as title for search page, and also is the label for the search box
+#: templates/header.tpl
+#: include/controller/Controller_Search.class.php:93
+msgid "search"
+msgstr ""
+
+# Used as a link to the HEAD of a project for a log or file
+# (note: HEAD is standard git terminology)
+#: templates/blame.tpl
+#: templates/log.tpl
+#: templates/shortlog.tpl
+#: templates/blob.tpl
+msgid "HEAD"
+msgstr ""
+
+# Used to indicate the last change in a project
+# %1: the timestamp of the latest change
+#: templates/log.tpl
+msgid "Last change %1"
+msgstr ""
+
+# Message displayed when there are no commits in the project to display
+#: templates/log.tpl
+#: templates/projectlist.tpl
+#: templates/shortloglist.tpl
+msgid "No commits"
+msgstr ""
+
+# Used as link to diff this file version with the current file
+#: templates/history.tpl
+msgid "diff to current"
+msgstr ""
+
+# Used as link to and title for page showing all tags in a project
+#: templates/title.tpl
+#: include/controller/Controller_Tags.class.php:76
+msgid "tags"
+msgstr ""
+
+# Used as link to and title for page showing all heads in a project
+#: templates/title.tpl
+#: include/controller/Controller_Heads.class.php:76
+msgid "heads"
+msgstr ""
+
+# Used when diffing a file, to indicate that it's been deleted
+#: templates/commitdiff.tpl
+msgid "(deleted)"
+msgstr ""
+
+# Used when diffing a file, to indicate that it's a new file
+#: templates/commitdiff.tpl
+msgid "(new)"
+msgstr ""
+
+# Used to label the project description
+#: templates/project.tpl
+msgid "description"
+msgstr ""
+
+# Used to label the project owner
+#: templates/project.tpl
+msgid "owner"
+msgstr ""
+
+# Used to label the time the project was last changed
+# (the time of the most recent commit)
+#: templates/project.tpl
+msgid "last change"
+msgstr ""
+
+# Used to label the url that users can use to clone the project
+#: templates/project.tpl
+msgid "clone url"
+msgstr ""
+
+# Used to label the url that users can use to push commits to the project
+#: templates/project.tpl
+msgid "push url"
+msgstr ""
+
+# Used as the header for the project name column
+#: templates/projectlist.tpl
+msgid "Project"
+msgstr ""
+
+# Used as the header for the project description column
+#: templates/projectlist.tpl
+msgid "Description"
+msgstr ""
+
+# Used as the header for the column showing the person that owns the project
+#: templates/projectlist.tpl
+msgid "Owner"
+msgstr ""
+
+# Used as the header for the last change column
+# (how long ago was the last commit)
+#: templates/projectlist.tpl
+msgid "Last Change"
+msgstr ""
+
+# Used as the header for the actions column, which is a list of links users can use to jump to various parts of this project
+#: templates/projectlist.tpl
+msgid "Actions"
+msgstr ""
+
+# Message shown when there were no projects found to display
+#: templates/projectlist.tpl
+msgid "No projects found"
+msgstr ""
+
+# Used as link to and title for page displaying blame info (who last touched what line) in a file
+#: templates/blob.tpl
+#: include/controller/Controller_Blame.class.php:79
+msgid "blame"
+msgstr ""
+
+# Error message when user tries to do an action that requires a project but a project isn't specified
+#: include/controller/Controller_Feed.class.php:45
+#: include/controller/Controller_Tree.class.php:34
+#: include/controller/Controller_Commit.class.php:34
+#: include/controller/Controller_Log.class.php:34
+#: include/controller/Controller_Blame.class.php:34
+#: include/controller/Controller_Snapshot.class.php:49
+#: include/controller/Controller_Blob.class.php:34
+#: include/controller/Controller_Tag.class.php:34
+#: include/controller/Controller_Tags.class.php:34
+#: include/controller/Controller_Project.class.php:33
+#: include/controller/Controller_Commitdiff.class.php:36
+#: include/controller/Controller_Blobdiff.class.php:36
+#: include/controller/Controller_History.class.php:34
+#: include/controller/Controller_Heads.class.php:34
+#: include/controller/Controller_Search.class.php:47
+msgid "Project is required"
+msgstr ""
+
+# Used as the title of the rss controller
+# rss is a standard web feed format
+#: include/controller/Controller_Feed.class.php:91
+msgid "rss"
+msgstr ""
+
+# Used as link to and title for a diff of a single file
+#: include/controller/Controller_Blobdiff.class.php:81
+msgid "blobdiff"
+msgstr ""
+
+# Error message when user tries to access a project that doesn't exist
+# %1$s: the project the user tried to access
+#: include/controller/Controller_Snapshot.class.php:44
+#: include/controller/ControllerBase.class.php:93
+#, php-format
+msgid "Invalid project %1$s"
+msgstr ""
+
+# Used as the title for the opml controller
+# OPML is a standard XML outline format
+#: include/controller/Controller_ProjectList.class.php:84
+msgid "opml"
+msgstr ""
+
+# Used as the title of the project index controller
+#: include/controller/Controller_ProjectList.class.php:89
+msgid "project index"
+msgstr ""
+
+# Error message when a user tries to search but searching has been disabled in the config
+#: include/controller/Controller_Search.class.php:41
+msgid "Search has been disabled"
+msgstr ""
+
+# Error message when a user tries to do a file search but searching files has been disabled in the config
+#: include/controller/Controller_Search.class.php:112
+msgid "File search has been disabled"
+msgstr ""
+
+# Error message when a user's search query is too short
+# %1$d: the minimum number of characters
+#: include/controller/Controller_Search.class.php:118
+#, php-format
+msgid "You must enter search text of at least %1$d character"
+msgid_plural "You must enter search text of at least %1$d characters"
+msgstr[0] ""
+msgstr[1] ""
+
+# Error message when the user enters an unsupported search type
+#: include/controller/Controller_Search.class.php:162
+msgid "Invalid search type"
+msgstr ""
+
+# Error message when a user's search didn't produce any results
+# %1$s: the user's search string
+#: include/controller/Controller_Search.class.php:168
+#, php-format
+msgid "No matches for \"%1$s\""
+msgstr ""
+
+# A type of filesystem object stored in a project
+#: include/git/Blob.class.php:166
+msgid "directory"
+msgstr ""
+
+# A type of filesystem object stored in a project
+#: include/git/Blob.class.php:172
+msgid "symlink"
+msgstr ""
+
+# Used when an object is stored in a project but git doesn't know what type it is
+#: include/git/Blob.class.php:185
+msgid "unknown"
+msgstr ""
+
+# Error message when user specifies a path for a project root or project, but the path given isn't a directory
+# %1$s: the path the user specified
+#: include/git/ProjectListDirectory.class.php:47
+#: include/git/Project.class.php:326
+#, php-format
+msgid "%1$s is not a directory"
+msgstr ""
+
+# Error message when a path specified in the config is not a git repository
+# %1$s: the specified path
+#: include/git/Project.class.php:330
+#, php-format
+msgid "%1$s is not a git repository"
+msgstr ""
+
+# Error message when a path specified is using '..' to break out of the project root (a hack attempt)
+# %1$s: The specified path
+#: include/git/Project.class.php:334
+#, php-format
+msgid "%1$s is attempting directory traversal"
+msgstr ""
+
+# Error message when a path specified is outside of the project root
+# %1$s: The specified path
+#: include/git/Project.class.php:340
+#, php-format
+msgid "%1$s is outside of the projectroot"
+msgstr ""
+
+# Error message when a temporary directory isn't specified in the config
+#: include/git/TmpDir.class.php:136
+msgid "No tmpdir defined"
+msgstr ""
+
+# Error message when the system can't write to the temporary directory
+# %1$s: the temp dir specified
+#: include/git/TmpDir.class.php:142
+#, php-format
+msgid "Specified tmpdir %1$s is not writable"
+msgstr ""
+
+# Error message when the temporary directory specified isn't a directory
+# %1$s: the temp dir specified
+#: include/git/TmpDir.class.php:145
+#, php-format
+msgid "Specified tmpdir %1$s is not a directory"
+msgstr ""
+
+# Error message when the system attempts to create the temporary directory but can't
+# %1$s: the temp dir it's trying to create
+#: include/git/TmpDir.class.php:148
+#, php-format
+msgid "Could not create tmpdir %1$s"
+msgstr ""
+
+# Error message when user tries to specify a file with a list of the projects, but it isn't a file
+# %1$s: the path the user specified
+#: include/git/ProjectListScmManager.class.php:37
+#: include/git/ProjectListFile.class.php:38
+#, php-format
+msgid "%1$s is not a file"
+msgstr ""
+
+# Error message when user tries to specify a file with a list of the projects, but the system can't read the file
+# %1$s: the file the user specified
+#: include/git/ProjectListFile.class.php:57
+#, php-format
+msgid "Failed to open project list file %1$s"
+msgstr ""
+
+# Error message when a hash specified in a URL isn't a valid git hash
+# %1$s: the hash entered
+#: include/git/Pack.class.php:80 include/git/GitObject.class.php:107
+#, php-format
+msgid "Invalid hash %1$s"
+msgstr ""
+
+# Used to represent an age in years
+# %1$d: the number of years
+#: include/smartyplugins/modifier.agestring.php:25
+#, php-format
+msgid "%1$d year ago"
+msgid_plural "%1$d years ago"
+msgstr[0] ""
+msgstr[1] ""
+
+# Used to represent an age in months
+# %1$d: the number of months
+#: include/smartyplugins/modifier.agestring.php:30
+#, php-format
+msgid "%1$d month ago"
+msgid_plural "%1$d months ago"
+msgstr[0] ""
+msgstr[1] ""
+
+# Used to represent an age in weeks
+# %1$d: the number of weeks
+#: include/smartyplugins/modifier.agestring.php:35
+#, php-format
+msgid "%1$d week ago"
+msgid_plural "%1$d weeks ago"
+msgstr[0] ""
+msgstr[1] ""
+
+# Used to represent an age in days
+# %1$d: the number of days
+#: include/smartyplugins/modifier.agestring.php:40
+#, php-format
+msgid "%1$d day ago"
+msgid_plural "%1$d days ago"
+msgstr[0] ""
+msgstr[1] ""
+
+# Used to represent an age in hours
+# %1$d: the number of hours
+#: include/smartyplugins/modifier.agestring.php:45
+#, php-format
+msgid "%1$d hour ago"
+msgid_plural "%1$d hours ago"
+msgstr[0] ""
+msgstr[1] ""
+
+# Used to represent an age in minutes
+# %1$d: the number of minutes
+#: include/smartyplugins/modifier.agestring.php:50
+#, php-format
+msgid "%1$d min ago"
+msgid_plural "%1$d min ago"
+msgstr[0] ""
+msgstr[1] ""
+
+# Used to represent an age in seconds
+# %1$d: the number of seconds
+#: include/smartyplugins/modifier.agestring.php:55
+#, php-format
+msgid "%1$d sec ago"
+msgid_plural "%1$d sec ago"
+msgstr[0] ""
+msgstr[1] ""
+
+# Used to represent a modification time of right now
+#: include/smartyplugins/modifier.agestring.php:59
+msgid "right now"
+msgstr ""
+
+# Error message when user hasn't defined a project root in the config
+# "projectroot" refers to a root directory where the user's git projects are stored
+#: index.php:125
+msgid "A projectroot must be set in the config"
+msgstr ""
+
+# Caption for the rss button for a project
+# rss is a standard web feed format
+#: templates/footer.tpl
+msgid "RSS"
+msgstr ""
+
+# Caption for the OPML button on the project list
+# OPML is a standard XML outline format
+#: templates/footer.tpl
+msgid "OPML"
+msgstr ""
+
+# Caption for the button to get a plaintext list of projects
+#: templates/footer.tpl
+msgid "TXT"
+msgstr ""
+
+# Label for the selected commit, when selecting commits to diff
+#: templates/log.tpl
+#: templates/shortlog.tpl
+msgid "selected"
+msgstr ""
+
+# Link to deselect the currently selected diff
+#: templates/log.tpl
+#: templates/shortlog.tpl
+#: templates/shortloglist.tpl
+msgid "deselect"
+msgstr ""
+
+# Link beside commits - diffs this commit against the currently selected commit
+#: templates/log.tpl
+#: templates/shortloglist.tpl
+msgid "diff with selected"
+msgstr ""
+
+# Link beside commits - selects this commit to be used in a diff
+#: templates/log.tpl
+#: templates/shortloglist.tpl
+msgid "select for diff"
+msgstr ""
+
+# Used as an alternate text on javascript "loading" images
+#: templates/header.tpl
+msgid "Loading…"
+msgstr ""
+
+# Used as a loading message while blame data is being pulled from the server
+#: templates/header.tpl
+msgid "Loading blame data…"
+msgstr ""
+
+# Used as a label by the language selector drop-down box
+#: templates/header.tpl
+msgid "language:"
+msgstr ""
+
+# Used as a button by the language selector drop-down box to set the
+# language to the user's choice
+#: templates/header.tpl
+msgid "set"
+msgstr ""
+
+# Caption for the Atom button for a project
+# Atom is a standard web feed format
+#: templates/footer.tpl
+msgid "Atom"
+msgstr ""
+
+# Used as the title of the Atom controller
+# Atom is a standard web feed format
+#: include/controller/Controller_Feed.class.php:96
+msgid "atom"
+msgstr ""
+
+# Used as an error message when memcache is turned
+# on without the appropriate PHP extension installed
+#: include/cache/Memcache.class.php:103
+msgid ""
+"The Memcached or Memcache PHP extension is required for Memcache support"
+msgstr ""
+
+# Message when searching the project list, and nothing is found
+# %1: the search string entered
+#: templates/header.tpl
+#: templates/projectlist.tpl
+msgid "No matches found for \"%1\""
+msgstr ""
+
+# Label for the field to search the project list
+#: templates/projectlist.tpl
+msgid "Search projects"
+msgstr ""
+
+# Error message displayed when the git executable isn't found or doesn't work
+# %1$s: the git executable the system is trying to run
+# %2$s: the config value the user needs to set to specify the correct path
+#: index.php:133
+#, php-format
+msgid ""
+"Could not run the git executable \"%1$s\".  You may need to set the \"%2$s\" "
+"config value."
+msgstr ""
+
+# Error message displayed when the diff executable isn't found or doesn't work
+# %1$s: the diff executable the system is trying to run
+# %2$s: the config value the user needs to set to specify the correct path
+#: index.php:138
+#, php-format
+msgid ""
+"Could not run the diff executable \"%1$s\".  You may need to set the \"%2$s"
+"\" config value."
+msgstr ""
+
+# Link displayed in commitdiff view, when the user has filtered
+# the display to a single file using the list of changed files.
+# This will go back to showing all files in the commitdiff
+#: templates/commitdiff.tpl
+msgid "(show all)"
+msgstr ""
+
+# Message displayed when diffing two binary files.
+# %1$s: the filename of the first file
+# %2$s: the filename of the second file
+#: include/git/FileDiff.class.php:810
+#, php-format
+msgid "Binary files %1$s and %2$s differ"
+msgstr ""
+
+# Used to label the url of the website of the project
+#: templates/project.tpl
+msgid "website"
+msgstr ""

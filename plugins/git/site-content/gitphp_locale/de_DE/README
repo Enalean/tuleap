@@ -1,0 +1,17 @@
+German Translation for GitPHP by Andy Tandler <tandler@adaptik.de>
+
+To Install the Language you need only few Steps:
+
+1. Copy Directory de_DE into locale, where the File gitphp.pot is located.
+   
+2. Open include/Resource.class.php and search for function LocaleToName.
+   Add this case to the switch:
+   
+   case 'de_DE':
+     return 'Deutsch';
+     
+3. If you want that German is the pre-selected Language in your GitPHP,
+   open config/gitphp.conf.php and add this Line: 
+
+   $gitphp_conf['locale'] = 'de_DE';
+     

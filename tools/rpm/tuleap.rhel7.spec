@@ -121,8 +121,10 @@ Group: Development/Tools
 Version: @@PLUGIN_GIT_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
 AutoReqProv: no
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, rh-git29-git, php-Smarty, gitolite3, gitphp-tuleap >= 0.2.5-15
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, rh-git29-git, gitolite3
 Requires: geshi, php-guzzle-Guzzle, sudo, openssh-server
+Provides: gitphp-tuleap, php-Smarty
+Obsoletes: gitphp-tuleap, php-Smarty
 %description plugin-git
 Integration of git distributed software configuration management tool together
 with Tuleap.
