@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,44 +20,75 @@
 
 namespace Tuleap\Webhook;
 
+use Http\Client\HttpAsyncClient;
+use Http\Message\RequestFactory;
+use Psr\Http\Message\ResponseInterface;
+
 class Emitter
 {
     /**
-     * @var \Http_Client
+     * @var HttpAsyncClient
      */
     private $http_client;
     /**
      * @var StatusLogger
      */
     private $logger;
+    /**
+     * @var RequestFactory
+     */
+    private $http_request_factory;
 
-    public function __construct(\Http_Client $http_client, StatusLogger $status_logger)
-    {
-        $this->http_client = $http_client;
-        $this->logger      = $status_logger;
+    public function __construct(
+        RequestFactory $http_request_factory,
+        HttpAsyncClient $http_client,
+        StatusLogger $status_logger
+    ) {
+        $this->http_request_factory = $http_request_factory;
+        $this->http_client          = $http_client;
+        $this->logger               = $status_logger;
     }
 
-    public function emit(Webhook $webhook, Payload $payload)
+    public function emit(Payload $payload, Webhook ...$webhooks)
     {
-        $this->buildFormURLEncodedRequest($webhook, $payload);
+        $promise_responses = [];
 
-        try {
-            $this->http_client->doRequest();
-            $this->logger->log($webhook, $this->http_client->getStatusCodeAndReasonPhrase());
-        } catch (\Http_ClientException $ex) {
-            $this->logger->log($webhook, $ex->getMessage());
+        foreach ($webhooks as $webhook) {
+            $request          = $this->buildFormURLEncodedRequest($webhook, $payload);
+            $promise_response = $this->http_client->sendAsyncRequest($request);
+
+            $promise_response->then(function (ResponseInterface $response) use ($webhook) {
+                $this->logger->log($webhook, $response->getStatusCode() . ' ' . $response->getReasonPhrase());
+
+                return $response;
+            }, function (\Http\Client\Exception $http_client_exception) use ($webhook) {
+                $error_message = $http_client_exception->getMessage();
+                if ($http_client_exception->getCode() !== 0) {
+                    $error_message = $http_client_exception->getCode() . ' ' . $error_message;
+                }
+                $this->logger->log($webhook, $error_message);
+
+                throw $http_client_exception;
+            });
+
+            $promise_responses[] = $promise_response;
+        }
+
+        foreach ($promise_responses as $promise_response) {
+            $promise_response->wait($unwrap = false);
         }
     }
 
+    /**
+     * @return \Psr\Http\Message\RequestInterface
+     */
     private function buildFormURLEncodedRequest(Webhook $webhook, Payload $payload)
     {
-        $options = array(
-            CURLOPT_URL         => $webhook->getUrl(),
-            CURLOPT_POST        => true,
-            CURLOPT_HEADER      => true,
-            CURLOPT_FAILONERROR => false,
-            CURLOPT_POSTFIELDS  => http_build_query(array('payload' => json_encode($payload->getPayload())))
+        return $this->http_request_factory->createRequest(
+            'POST',
+            $webhook->getUrl(),
+            ['Content-Type' => 'application/x-www-form-urlencoded'],
+            http_build_query(['payload' => json_encode($payload->getPayload())])
         );
-        $this->http_client->addOptions($options);
     }
 }

@@ -22,6 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Http\HttpClientFactory;
+use Tuleap\Http\MessageFactoryBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationDetector;
@@ -160,7 +162,8 @@ class Tracker_Migration_MigrationManager {
     private function getArtifactCreator(Tracker_Artifact_Changeset_AtGivenDateFieldsValidator $fields_validator, Tracker_Artifact_ChangesetDao $changeset_dao) {
         $webhook_dao = new WebhookDao();
         $emitter     = new Emitter(
-            new Http_Client(),
+            MessageFactoryBuilder::build(),
+            HttpClientFactory::createClient(),
             new WebhookStatusLogger($webhook_dao)
         );
 
@@ -186,7 +189,8 @@ class Tracker_Migration_MigrationManager {
         $changeset_comment_dao = new Tracker_Artifact_Changeset_CommentDao();
         $webhook_dao           = new WebhookDao();
         $emitter               = new Emitter(
-            new Http_Client(),
+            MessageFactoryBuilder::build(),
+            HttpClientFactory::createClient(),
             new WebhookStatusLogger($webhook_dao)
         );
 

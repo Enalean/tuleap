@@ -1,7 +1,7 @@
 #!/usr/share/codendi/src/utils/php-launcher.sh
 <?php
 /**
- * Copyright Enalean (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017. All rights reserved.
+ * Copyright Enalean (c) 2011-2018. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -23,6 +23,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Git\Webhook\GitWebhookStatusLogger;
+use Tuleap\Http\HttpClientFactory;
+use Tuleap\Http\MessageFactoryBuilder;
 use Tuleap\Jenkins\JenkinsCSRFCrumbRetriever;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
@@ -91,7 +94,7 @@ $post_receive = new Git_Hook_PostReceive(
     $system_event_manager,
     EventManager::instance(),
     new \Tuleap\Git\Webhook\WebhookRequestSender(
-        new \Tuleap\Webhook\Emitter(new Http_Client(), new \Tuleap\Git\Webhook\GitWebhookStatusLogger($webhook_dao)),
+        new \Tuleap\Webhook\Emitter(MessageFactoryBuilder::build(), HttpClientFactory::createClient(), new GitWebhookStatusLogger($webhook_dao)),
         new \Tuleap\Git\Webhook\WebhookFactory($webhook_dao),
         $logger
     ),

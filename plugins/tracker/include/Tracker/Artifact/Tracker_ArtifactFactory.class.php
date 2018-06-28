@@ -23,6 +23,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Http\HttpClientFactory;
+use Tuleap\Http\MessageFactoryBuilder;
 use Tuleap\Tracker\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Webhook\WebhookDao;
@@ -393,7 +395,8 @@ class Tracker_ArtifactFactory {
         $visit_recorder      = new VisitRecorder(new RecentlyVisitedDao());
         $webhook_dao         = new WebhookDao();
         $emitter             = new Emitter(
-            new Http_Client(),
+            MessageFactoryBuilder::build(),
+            HttpClientFactory::createClient(),
             new WebhookStatusLogger($webhook_dao)
         );
 

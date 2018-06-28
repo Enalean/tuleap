@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -54,9 +54,7 @@ class WebhookRequestSender
     {
         $web_hooks = $this->webhook_factory->getWebhooksForRepository($repository);
         $payload   = new PushPayload($repository, $user, $oldrev, $newrev, $refname);
-        foreach ($web_hooks as $web_hook) {
-            $this->logger->info("Processing webhook at ". $web_hook->getUrl() ." for repository #" . $repository->getId());
-            $this->webhook_emitter->emit($web_hook, $payload);
-        }
+        $this->logger->info('Processing webhooks for repository #' . $repository->getId());
+        $this->webhook_emitter->emit($payload, ...$web_hooks);
     }
 }
