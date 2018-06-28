@@ -10,6 +10,8 @@ else
 DOCKER_COMPOSE_FILE=-f docker-compose.yml
 endif
 
+get_ip_addr = `$(DOCKER_COMPOSE) ps -q $(1) | xargs docker inspect -f '{{.NetworkSettings.Networks.tuleap_default.IPAddress}}'`
+
 SUDO=
 DOCKER=$(SUDO) docker
 DOCKER_COMPOSE=$(SUDO) docker-compose $(DOCKER_COMPOSE_FILE)
@@ -238,6 +240,13 @@ dev-setup: .env deploy-githooks ## Setup environment for Docker Compose (should 
 show-passwords: ## Display passwords generated for Docker Compose environment
 	@$(DOCKER_COMPOSE) exec web cat /data/root/.tuleap_passwd
 
+show-ips: ## Display ips of all running services
+	@$(DOCKER_COMPOSE) ps -q | while read cid; do\
+		name=`docker inspect -f '{{.Name}}' $$cid | sed -e 's/^\/tuleap_\(.*\)_1$$/\1/'`;\
+		ip=`docker inspect -f '{{.NetworkSettings.Networks.tuleap_default.IPAddress}}' $$cid`;\
+		echo "$$ip $$name";\
+	done
+
 dev-forgeupgrade: ## Run forgeupgrade in Docker Compose environment
 	@$(DOCKER_COMPOSE) exec web /usr/lib/forgeupgrade/bin/forgeupgrade --config=/etc/tuleap/forgeupgrade/config.ini update
 
@@ -247,18 +256,14 @@ dev-clear-cache: ## Clear caches in Docker Compose environment
 start-php56 start: ## Start Tuleap web with php56 & nginx
 	@echo "Start Tuleap in PHP 5.6"
 	@$(DOCKER_COMPOSE) -f docker-compose.yml up --build -d reverse-proxy
-	@echo -n "Update tuleap-web.tuleap-aio-dev.docker in /etc/hosts with: "
-	@rp_id=`$(DOCKER_COMPOSE) ps -q reverse-proxy`; \
-	    $(DOCKER) inspect -f '{{.NetworkSettings.Networks.tuleap_default.IPAddress}}' $$rp_id
+	@echo "Update tuleap-web.tuleap-aio-dev.docker in /etc/hosts with: $(call get_ip_addr,reverse-proxy)"
 
 start-distlp:
 	@echo "Start Tuleap with reverse-proxy, backend web and backend svn"
 	-@$(DOCKER_COMPOSE) stop
 	@$(DOCKER_COMPOSE) -f docker-compose-distlp.yml up -d reverse-proxy-distlp
-	@rp_id=`$(DOCKER_COMPOSE) ps -q reverse-proxy-distlp`; \
-	    ip=`$(DOCKER) inspect -f '{{.NetworkSettings.Networks.tuleap_default.IPAddress}}' $$rp_id`; \
-		echo "Add '$$ip tuleap-web.tuleap-aio-dev.docker' to /etc/hosts"; \
-		echo "Ensure $$ip is configured as sys_trusted_proxies in /etc/tuleap/conf/local.inc"
+	@echo "Add '$(call get_ip_addr,reverse-proxy) tuleap-web.tuleap-aio-dev.docker' to /etc/hosts"
+	@echo "Ensure $(call get_ip_addr,reverse-proxy) is configured as sys_trusted_proxies in /etc/tuleap/conf/local.inc"
 	@echo "You can access :"
 	@echo "* Reverse proxy with: docker-compose -f docker-compose.yml -f -f docker-compose-distlp.yml reverse-proxy-distlp bash"
 	@echo "* Backend web with: docker-compose -f docker-compose.yml -f -f docker-compose-distlp.yml backend-web bash"
@@ -268,8 +273,7 @@ start-mailhog: # Start mailhog to catch emails sent by your Tuleap dev platform
 	@echo "Start mailhog to catch emails sent by your Tuleap dev platform"
 	$(DOCKER_COMPOSE) up -d mailhog
 	$(DOCKER_COMPOSE) exec web make -C /usr/share/tuleap deploy-mailhog-conf
-	@mailhogip=`$(DOCKER_COMPOSE) ps -q mailhog | xargs  docker inspect -f '{{.NetworkSettings.Networks.tuleap_default.IPAddress}}'`; \
-		echo "Open your browser at http://$$mailhogip:8025"
+	@echo "Open your browser at http://$(call get_ip_addr,mailhog):8025"
 
 deploy-mailhog-conf:
 	@if ! grep -q -F -e '^relayhost = mailhog:1025' /etc/postfix/main.cf; then \
@@ -287,6 +291,15 @@ env-gerrit: .env
 start-gerrit: env-gerrit
 	@docker-compose up -d gerrit
 	@echo "Gerrit will be available soon at http://`grep GERRIT_SERVER_NAME .env | cut -d= -f2`:8080"
+
+start-jenkins:
+	@$(DOCKER_COMPOSE) up -d jenkins
+	@echo "Jenkins is running at http://$(call get_ip_addr,jenkins):8080"
+	@if $(DOCKER_COMPOSE) exec jenkins test -f /var/jenkins_home/secrets/initialAdminPassword; then \
+		echo "Admin credentials are admin `$(DOCKER_COMPOSE) exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword`"; \
+	else \
+		echo "Admin credentials will be prompted by jenkins during start-up"; \
+	fi
 
 start-all:
 	echo "Start all containers (Web, LDAP, DB, Elasticsearch)"
