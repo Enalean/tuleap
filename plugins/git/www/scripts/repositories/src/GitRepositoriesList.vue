@@ -19,19 +19,40 @@
 
 <template>
     <div class="tlp-framed">
-        <h1>
-            <translate>Git repositories</translate>
-        </h1>
+        <h1 v-translate>Git repositories</h1>
+
+        <button type="button" class="tlp-button-primary" v-on:click="show_modal" data-target="create-repository-modal">
+            <i class="fa fa-plus tlp-button-icon"></i> <translate>Add repository</translate>
+        </button>
+
+        <git-repository-create/>
 
         <div class="empty-page">
-            <p class="empty-page-text">
-                <translate>Project has no Git repositories yet.</translate>
-            </p>
+            <p class="empty-page-text" v-translate>Project has no Git repositories yet.</p>
         </div>
     </div>
 </template>
 <script>
+    import GitRepositoryCreate from './GitRepositoryCreate.vue';
+    import { modal as tlpModal } from 'tlp';
     export default {
-        name: 'GitRepositoriesList'
+        name: 'GitRepositoriesList',
+        components: {
+            GitRepositoryCreate,
+        },
+        data() {
+            return {
+                add_repository_modal: null
+            };
+        },
+        methods: {
+            show_modal() {
+                this.add_repository_modal.toggle();
+            }
+        },
+        mounted() {
+            const modal = document.getElementById("create-repository-modal");
+            this.add_repository_modal = tlpModal(modal);
+        }
     }
 </script>
