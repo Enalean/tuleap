@@ -26,7 +26,8 @@ use Prometheus\CollectorRegistry;
 
 class Prometheus
 {
-    const CONFIG_PROMETHEUS_PLATFORM = 'prometheus_platform';
+    const CONFIG_PROMETHEUS_PLATFORM      = 'prometheus_platform';
+    const CONFIG_PROMETHEUS_NODE_EXPORTER = 'prometheus_node_exporter';
 
     private static $registry;
 
