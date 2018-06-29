@@ -28,53 +28,20 @@ class Util
 	 * @access public
 	 * @static
 	 * @param string $path path to add slash to
-	 * @param $filesystem true if this is a filesystem path (to also check for backslash for windows paths)
 	 * @return string $path with a trailing slash
 	 */
-	public static function AddSlash($path, $filesystem = true)
+	public static function AddSlash($path)
 	{
 		if (empty($path))
 			return $path;
 
 		$end = substr($path, -1);
 
-		if (!(( ($end == '/') || ($end == ':')) || ($filesystem && Util::IsWindows() && ($end == '\\')))) {
-			if (Util::IsWindows() && $filesystem) {
-				$path .= '\\';
-			} else {
-				$path .= '/';
-			}
-		}
+		if (!(( ($end == '/') || ($end == ':')))) {
+            $path .= '/';
+        }
 
 		return $path;
-	}
-
-	/**
-	 * IsWindows
-	 *
-	 * Tests if this is running on windows
-	 *
-	 * @access public
-	 * @static
-	 * @return bool true if on windows
-	 */
-	public static function IsWindows()
-	{
-		return (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN');
-	}
-
-	/**
-	 * Is64Bit
-	 *
-	 * Tests if this is a 64 bit machine
-	 *
-	 * @access public
-	 * @static
-	 * @return bool true if on 64 bit
-	 */
-	public static function Is64Bit()
-	{
-		return (strpos(php_uname('m'), '64') !== false);
 	}
 
 	/**
