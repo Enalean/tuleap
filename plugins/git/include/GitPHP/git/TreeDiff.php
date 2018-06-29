@@ -1,4 +1,7 @@
 <?php
+
+namespace Tuleap\Git\GitPHP;
+
 /**
  * GitPHP Tree Diff
  *
@@ -16,7 +19,7 @@
  * @package GitPHP
  * @subpackage Git
  */
-class GitPHP_TreeDiff implements Iterator
+class TreeDiff implements \Iterator
 {
 	
 	/**
@@ -119,7 +122,7 @@ class GitPHP_TreeDiff implements Iterator
 
 		$this->fileDiffs = array();
 
-		$exe = new GitPHP_GitExe($this->project);
+		$exe = new GitExe($this->project);
 
 		$args = array();
 
@@ -139,8 +142,8 @@ class GitPHP_TreeDiff implements Iterator
 			$trimmed = trim($line);
 			if ((strlen($trimmed) > 0) && (substr_compare($trimmed, ':', 0, 1) === 0)) {
 				try {
-					$this->fileDiffs[] = new GitPHP_FileDiff($this->project, $trimmed);
-				} catch (Exception $e) {
+					$this->fileDiffs[] = new FileDiff($this->project, $trimmed);
+				} catch (\Exception $e) {
 				}
 			}
 		}

@@ -1,4 +1,8 @@
 <?php
+
+
+namespace Tuleap\Git\GitPHP;
+
 /**
  * GitPHP Controller Commit
  *
@@ -9,14 +13,13 @@
  * @package GitPHP
  * @subpackage Controller
  */
-
 /**
  * Commit controller class
  *
  * @package GitPHP
  * @subpackage Controller
  */
-class GitPHP_Controller_Commit extends GitPHP_ControllerBase
+class Controller_Commit extends ControllerBase
 {
 
 	/**
@@ -31,7 +34,7 @@ class GitPHP_Controller_Commit extends GitPHP_ControllerBase
 	{
 		parent::__construct();
 		if (!$this->project) {
-			throw new GitPHP_MessageException(__('Project is required'), true);
+			throw new MessageException(__('Project is required'), true);
 		}
 	}
 
@@ -97,7 +100,7 @@ class GitPHP_Controller_Commit extends GitPHP_ControllerBase
 
 		if (isset($_GET['o']) && ($_GET['o'] == 'jstip')) {
 			$this->params['jstip'] = true;
-			GitPHP_Log::GetInstance()->SetEnabled(false);
+			Log::GetInstance()->SetEnabled(false);
 		}
 	}
 

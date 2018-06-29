@@ -1,4 +1,7 @@
 <?php
+
+namespace Tuleap\Git\GitPHP;
+
 /**
  * GitPHP Diff Exe
  *
@@ -15,7 +18,7 @@
  *
  * Class to handle working with the diff executable
  */
-class GitPHP_DiffExe
+class DiffExe
 {
 	
 	/**
@@ -54,9 +57,9 @@ class GitPHP_DiffExe
 	 */
 	public function __construct()
 	{
-		$binary = GitPHP_Config::GetInstance()->GetValue('diffbin');
+		$binary = Config::GetInstance()->GetValue('diffbin');
 		if (empty($binary)) {
-			$this->binary = GitPHP_DiffExe::DefaultBinary();
+			$this->binary = DiffExe::DefaultBinary();
 		} else {
 			$this->binary = $binary;
 		}
@@ -222,7 +225,7 @@ class GitPHP_DiffExe
 	 */
 	public static function Diff($fromFile = null, $fromName = null, $toFile = null, $toName = null)
 	{
-		$obj = new GitPHP_DiffExe();
+		$obj = new DiffExe();
 		$ret = $obj->Execute($fromFile, $fromName, $toFile, $toName);
 		unset($obj);
 		return $ret;
@@ -239,10 +242,10 @@ class GitPHP_DiffExe
 	 */
 	public static function DefaultBinary()
 	{
-		if (GitPHP_Util::IsWindows()) {
+		if (Util::IsWindows()) {
 			// windows
 
-			if (GitPHP_Util::Is64Bit()) {
+			if (Util::Is64Bit()) {
 				// match x86_64 and x64 (64 bit)
 				// C:\Program Files (x86)\Git\bin\diff.exe
 				return 'C:\\Progra~2\\Git\\bin\\diff.exe';

@@ -1,4 +1,8 @@
 <?php
+
+
+namespace Tuleap\Git\GitPHP;
+
 /**
  * GitPHP Cache
  *
@@ -9,14 +13,13 @@
  * @package GitPHP
  * @subpackage Cache
  */
-
 /**
  * Cache class
  *
  * @package GitPHP
  * @subpackage Cache
  */
-class GitPHP_Cache
+class Cache
 {
 	/**
 	 * Template
@@ -47,10 +50,10 @@ class GitPHP_Cache
 	public static function GetObjectCacheInstance()
 	{
 		if (!self::$objectCacheInstance) {
-			self::$objectCacheInstance = new GitPHP_Cache();
-			if (GitPHP_Config::GetInstance()->GetValue('objectcache', false)) {
+			self::$objectCacheInstance = new Cache();
+			if (Config::GetInstance()->GetValue('objectcache', false)) {
 				self::$objectCacheInstance->SetEnabled(true);
-				self::$objectCacheInstance->SetLifetime(GitPHP_Config::GetInstance()->GetValue('objectcachelifetime', 86400));
+				self::$objectCacheInstance->SetLifetime(Config::GetInstance()->GetValue('objectcachelifetime', 86400));
 			}
 		}
 		return self::$objectCacheInstance;
@@ -169,10 +172,10 @@ class GitPHP_Cache
 		if (!$this->enabled)
 			return false;
 
-		if (!$this->tpl->is_cached(GitPHP_Cache::Template, $key))
+		if (!$this->tpl->is_cached(Cache::Template, $key))
 			return false;
 
-		$data = $this->tpl->fetch(GitPHP_Cache::Template, $key);
+		$data = $this->tpl->fetch(Cache::Template, $key);
 
 		return unserialize($data);
 	}
@@ -206,7 +209,7 @@ class GitPHP_Cache
 		$this->tpl->assign('data', serialize($value));
 
 		// Force it into smarty's cache
-		$tmp = $this->tpl->fetch(GitPHP_Cache::Template, $key);
+		$tmp = $this->tpl->fetch(Cache::Template, $key);
 		unset($tmp);
 
 		if ($lifetime !== null) {
@@ -231,7 +234,7 @@ class GitPHP_Cache
 		if (!$this->enabled)
 			return false;
 
-		return $this->tpl->is_cached(GitPHP_Cache::Template, $key);
+		return $this->tpl->is_cached(Cache::Template, $key);
 	}
 
 	/**
@@ -250,7 +253,7 @@ class GitPHP_Cache
 		if (!$this->enabled)
 			return;
 
-		$this->tpl->clear_cache(GitPHP_Cache::Template, $key);
+		$this->tpl->clear_cache(Cache::Template, $key);
 	}
 
 	/**
@@ -280,21 +283,21 @@ class GitPHP_Cache
 		if ($this->tpl)
 			return;
 
-		$this->tpl = new Smarty;
+		$this->tpl = new \Smarty;
 		$this->tpl->plugins_dir[] = GITPHP_INCLUDEDIR . 'smartyplugins';
 
 		$this->tpl->caching = 2;
 
-		$servers = GitPHP_Config::GetInstance()->GetValue('memcache', null);
+		$servers = Config::GetInstance()->GetValue('memcache', null);
 		if (isset($servers) && is_array($servers) && (count($servers) > 0)) {
-			GitPHP_Memcache::GetInstance()->AddServers($servers);
+			Memcache::GetInstance()->AddServers($servers);
 			require_once(GITPHP_CACHEDIR . 'memcache_cache_handler.php');
 			$this->tpl->cache_handler_func = 'memcache_cache_handler';
 		}
 
 		// Init a dedicated space for templates (copy/paste from ControllerBase).
-		if (GitPHP_Config::GetInstance()->HasKey('smarty_tmp')) {
-		    $smarty_tmp = GitPHP_Config::GetInstance()->GetValue('smarty_tmp');
+		if (Config::GetInstance()->HasKey('smarty_tmp')) {
+		    $smarty_tmp = Config::GetInstance()->GetValue('smarty_tmp');
 		    if (!is_dir($smarty_tmp)) {
 			mkdir($smarty_tmp, 0755, true);
 		    }

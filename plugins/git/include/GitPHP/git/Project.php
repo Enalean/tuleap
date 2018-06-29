@@ -1,4 +1,7 @@
 <?php
+
+namespace Tuleap\Git\GitPHP;
+
 /**
  * GitPHP Project
  *
@@ -16,7 +19,7 @@
  * @package GitPHP
  * @subpackage Git
  */
-class GitPHP_Project
+class Project
 {
 
 /* internal variables {{{1*/
@@ -279,7 +282,7 @@ class GitPHP_Project
 	 */
 	public function __construct($projectRoot, $project)
 	{
-		$this->projectRoot = GitPHP_Util::AddSlash($projectRoot);
+		$this->projectRoot = Util::AddSlash($projectRoot);
 		$this->SetProject($project);
 	}
 
@@ -317,21 +320,21 @@ class GitPHP_Project
 		$fullPath = realpath($path);
 
 		if (!is_dir($fullPath)) {
-			throw new Exception(sprintf(__('%1$s is not a directory'), $project));
+			throw new \Exception(sprintf(__('%1$s is not a directory'), $project));
 		}
 
 		if (!is_file($fullPath . '/HEAD')) {
-			throw new Exception(sprintf(__('%1$s is not a git repository'), $project));
+			throw new \Exception(sprintf(__('%1$s is not a git repository'), $project));
 		}
 
 		if (preg_match('/(^|\/)\.{0,2}(\/|$)/', $project)) {
-			throw new Exception(sprintf(__('%1$s is attempting directory traversal'), $project));
+			throw new \Exception(sprintf(__('%1$s is attempting directory traversal'), $project));
 		}
 
 		$pathPiece = substr($fullPath, 0, strlen($realProjectRoot));
 
 		if ((!is_link($path)) && (strcmp($pathPiece, $realProjectRoot) !== 0)) {
-			throw new Exception(sprintf(__('%1$s is outside of the projectroot'), $project));
+			throw new \Exception(sprintf(__('%1$s is outside of the projectroot'), $project));
 		}
 
 		$this->project = $project;
@@ -355,7 +358,7 @@ class GitPHP_Project
 		if (substr($project, -4) == '.git')
 			$project = substr($project, 0, -4);
 
-		return GitPHP_Util::MakeSlug($project);
+		return Util::MakeSlug($project);
 	}
 
 	/**
@@ -446,7 +449,7 @@ class GitPHP_Project
 		if ($this->cloneUrl !== null)
 			return $this->cloneUrl;
 
-		$cloneurl = GitPHP_Util::AddSlash(GitPHP_Config::GetInstance()->GetValue('cloneurl', ''), false);
+		$cloneurl = Util::AddSlash(Config::GetInstance()->GetValue('cloneurl', ''), false);
 		if (!empty($cloneurl))
 			$cloneurl .= $this->project;
 
@@ -483,7 +486,7 @@ class GitPHP_Project
 		if ($this->pushUrl !== null)
 			return $this->pushUrl;
 
-		$pushurl = GitPHP_Util::AddSlash(GitPHP_Config::GetInstance()->GetValue('pushurl', ''), false);
+		$pushurl = Util::AddSlash(Config::GetInstance()->GetValue('pushurl', ''), false);
 		if (!empty($pushurl))
 			$pushurl .= $this->project;
 
@@ -520,7 +523,7 @@ class GitPHP_Project
 		if ($this->bugUrl != null)
 			return $this->bugUrl;
 
-		return GitPHP_Config::GetInstance()->GetValue('bugurl', '');
+		return Config::GetInstance()->GetValue('bugurl', '');
 	}
 
 	/**
@@ -549,7 +552,7 @@ class GitPHP_Project
 		if ($this->bugPattern != null)
 			return $this->bugPattern;
 
-		return GitPHP_Config::GetInstance()->GetValue('bugpattern', '');
+		return Config::GetInstance()->GetValue('bugpattern', '');
 	}
 
 	/**
@@ -643,7 +646,7 @@ class GitPHP_Project
 	 */
 	private function ReadHeadCommitGit()
 	{
-		$exe = new GitPHP_GitExe($this);
+		$exe = new GitExe($this);
 		$args = array();
 		$args[] = '--verify';
 		$args[] = 'HEAD';
@@ -740,7 +743,7 @@ class GitPHP_Project
 	 */
 	private function ReadEpochGit()
 	{
-		$exe = new GitPHP_GitExe($this);
+		$exe = new GitExe($this);
 
 		$args = array();
 		$args[] = '--format="%(committer)"';
@@ -801,7 +804,7 @@ class GitPHP_Project
 			return $this->compat;
 		}
 
-		return GitPHP_Config::GetInstance()->GetValue('compat', false);
+		return Config::GetInstance()->GetValue('compat', false);
 	}
 
 	/**
@@ -860,11 +863,11 @@ class GitPHP_Project
 
 			if (!isset($this->commitCache[$hash])) {
 				$cacheKey = 'project|' . $this->project . '|commit|' . $hash;
-				$cached = GitPHP_Cache::GetObjectCacheInstance()->Get($cacheKey);
+				$cached = Cache::GetObjectCacheInstance()->Get($cacheKey);
 				if ($cached)
 					$this->commitCache[$hash] = $cached;
 				else
-					$this->commitCache[$hash] = new GitPHP_Commit($this, $hash);
+					$this->commitCache[$hash] = new Commit($this, $hash);
 			}
 
 			return $this->commitCache[$hash];
@@ -937,7 +940,7 @@ class GitPHP_Project
 	 */
 	private function ReadRefListGit()
 	{
-		$exe = new GitPHP_GitExe($this);
+		$exe = new GitExe($this);
 		$args = array();
 		$args[] = '--heads';
 		$args[] = '--tags';
@@ -962,9 +965,9 @@ class GitPHP_Project
 							$this->tags[$key] = $this->LoadTag($regs[3], $regs[1]);
 						}
 					} else if ($regs[2] == 'heads') {
-						$this->heads[$key] = new GitPHP_Head($this, $regs[3], $regs[1]);
+						$this->heads[$key] = new Head($this, $regs[3], $regs[1]);
 					}
-				} catch (Exception $e) {
+				} catch (\Exception $e) {
 				}
 			}
 		}
@@ -993,7 +996,7 @@ class GitPHP_Project
 			$hash = trim(file_get_contents($heads[$i]));
 			if (preg_match('/^[0-9A-Fa-f]{40}$/', $hash)) {
 				$head = substr($key, strlen('refs/heads/'));
-				$this->heads[$key] = new GitPHP_Head($this, $head, $hash);
+				$this->heads[$key] = new Head($this, $head, $hash);
 			}
 		}
 
@@ -1022,7 +1025,7 @@ class GitPHP_Project
 
 				if (preg_match('/^\^([0-9A-Fa-f]{40})$/', $ref, $regs)) {
 					// dereference of previous ref
-					if (($lastRef != null) && ($lastRef instanceof GitPHP_Tag)) {
+					if (($lastRef != null) && ($lastRef instanceof Tag)) {
 						$derefCommit = $this->GetCommit($regs[1]);
 						if ($derefCommit) {
 							$lastRef->SetCommit($derefCommit);
@@ -1042,7 +1045,7 @@ class GitPHP_Project
 						}
 					} else if ($regs[2] == 'heads') {
 						if (!isset($this->heads[$key])) {
-							$this->heads[$key] = new GitPHP_Head($this, $regs[3], $regs[1]);
+							$this->heads[$key] = new Head($this, $regs[3], $regs[1]);
 						}
 					}
 				}
@@ -1117,7 +1120,7 @@ class GitPHP_Project
 	 */
 	private function GetTagsGit($count = 0)
 	{
-		$exe = new GitPHP_GitExe($this);
+		$exe = new GitExe($this);
 		$args = array();
 		$args[] = '--sort=-creatordate';
 		$args[] = '--format="%(refname)"';
@@ -1154,7 +1157,7 @@ class GitPHP_Project
 	private function GetTagsRaw($count = 0)
 	{
 		$tags = $this->tags;
-		usort($tags, array('GitPHP_Tag', 'CompareCreationEpoch'));
+		usort($tags, array(Tag::class, 'CompareCreationEpoch'));
 
 		if (($count > 0) && (count($tags) > $count)) {
 			$tags = array_slice($tags, 0, $count);
@@ -1204,11 +1207,11 @@ class GitPHP_Project
 			return;
 
 		$cacheKey = 'project|' . $this->project . '|tag|' . $tag;
-		$cached = GitPHP_Cache::GetObjectCacheInstance()->Get($cacheKey);
+		$cached = Cache::GetObjectCacheInstance()->Get($cacheKey);
 		if ($cached) {
 			return $cached;
 		} else {
-			return new GitPHP_Tag($this, $tag, $hash);
+			return new Tag($this, $tag, $hash);
 		}
 	}
 
@@ -1248,7 +1251,7 @@ class GitPHP_Project
 	 */
 	private function GetHeadsGit($count = 0)
 	{
-		$exe = new GitPHP_GitExe($this);
+		$exe = new GitExe($this);
 		$args = array();
 		$args[] = '--sort=-committerdate';
 		$args[] = '--format="%(refname)"';
@@ -1285,7 +1288,7 @@ class GitPHP_Project
 	private function GetHeadsRaw($count = 0)
 	{
 		$heads = $this->heads;
-		usort($heads, array('GitPHP_Head', 'CompareAge'));
+		usort($heads, array(Head::class, 'CompareAge'));
 
 		if (($count > 0) && (count($heads) > $count)) {
 			$heads = array_slice($heads, 0, $count);
@@ -1313,7 +1316,7 @@ class GitPHP_Project
 		$key = 'refs/heads/' . $head;
 
 		if (!isset($this->heads[$key])) {
-			$this->heads[$key] = new GitPHP_Head($this, $head);
+			$this->heads[$key] = new Head($this, $head);
 		}
 
 		return $this->heads[$key];
@@ -1352,7 +1355,7 @@ class GitPHP_Project
 	 */
 	public function GetLog($hash, $count = 50, $skip = 0)
 	{
-		if ($this->GetCompat() || ($skip > GitPHP_Config::GetInstance()->GetValue('largeskip', 200)) ) {
+		if ($this->GetCompat() || ($skip > Config::GetInstance()->GetValue('largeskip', 200)) ) {
 			return $this->GetLogGit($hash, $count, $skip);
 		} else {
 			return $this->GetLogRaw($hash, $count, $skip);
@@ -1453,11 +1456,11 @@ class GitPHP_Project
 			return null;
 
 		$cacheKey = 'project|' . $this->project . '|blob|' . $hash;
-		$cached = GitPHP_Cache::GetObjectCacheInstance()->Get($cacheKey);
+		$cached = Cache::GetObjectCacheInstance()->Get($cacheKey);
 		if ($cached)
 			return $cached;
 
-		return new GitPHP_Blob($this, $hash);
+		return new Blob($this, $hash);
 	}
 
 /*}}}2*/
@@ -1478,11 +1481,11 @@ class GitPHP_Project
 			return null;
 
 		$cacheKey = 'project|' . $this->project . '|tree|' . $hash;
-		$cached = GitPHP_Cache::GetObjectCacheInstance()->Get($cacheKey);
+		$cached = Cache::GetObjectCacheInstance()->Get($cacheKey);
 		if ($cached)
 			return $cached;
 
-		return new GitPHP_Tree($this, $hash);
+		return new Tree($this, $hash);
 	}
 
 /*}}}2*/
@@ -1511,16 +1514,16 @@ class GitPHP_Project
 			sscanf($header, "%s %d", $typestr, $size);
 			switch ($typestr) {
 				case 'commit':
-					$type = GitPHP_Pack::OBJ_COMMIT;
+					$type = Pack::OBJ_COMMIT;
 					break;
 				case 'tree':
-					$type = GitPHP_Pack::OBJ_TREE;
+					$type = Pack::OBJ_TREE;
 					break;
 				case 'blob':
-					$type = GitPHP_Pack::OBJ_BLOB;
+					$type = Pack::OBJ_BLOB;
 					break;
 				case 'tag':
-					$type = GitPHP_Pack::OBJ_TAG;
+					$type = Pack::OBJ_TAG;
 					break;
 			}
 			return $data;
@@ -1554,7 +1557,7 @@ class GitPHP_Project
 		if ($dh !== false) {
 			while (($file = readdir($dh)) !== false) {
 				if (preg_match('/^pack-([0-9A-Fa-f]{40})\.idx$/', $file, $regs)) {
-					$this->packs[] = new GitPHP_Pack($this, $regs[1]);
+					$this->packs[] = new Pack($this, $regs[1]);
 				}
 			}
 		}
@@ -1586,7 +1589,7 @@ class GitPHP_Project
 
 		$args = array();
 
-		$exe = new GitPHP_GitExe($this);
+		$exe = new GitExe($this);
 		if ($exe->CanIgnoreRegexpCase())
 			$args[] = '--regexp-ignore-case';
 		unset($exe);
@@ -1621,7 +1624,7 @@ class GitPHP_Project
 
 		$args = array();
 
-		$exe = new GitPHP_GitExe($this);
+		$exe = new GitExe($this);
 		if ($exe->CanIgnoreRegexpCase())
 			$args[] = '--regexp-ignore-case';
 		unset($exe);
@@ -1656,7 +1659,7 @@ class GitPHP_Project
 
 		$args = array();
 
-		$exe = new GitPHP_GitExe($this);
+		$exe = new GitExe($this);
 		if ($exe->CanIgnoreRegexpCase())
 			$args[] = '--regexp-ignore-case';
 		unset($exe);
@@ -1693,7 +1696,7 @@ class GitPHP_Project
 		if ($count < 1)
 			return;
 
-		$exe = new GitPHP_GitExe($this);
+		$exe = new GitExe($this);
 
 		$canSkip = true;
 

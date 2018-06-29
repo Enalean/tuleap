@@ -19,11 +19,11 @@
  */
 function smarty_function_scripturl($params, &$smarty)
 {
-	if (GitPHP_Config::GetInstance()->HasKey('self')) {
-		$selfurl = GitPHP_Config::GetInstance()->GetValue('self');
+	if (Tuleap\Git\GitPHP\Config::GetInstance()->HasKey('self')) {
+		$selfurl = Tuleap\Git\GitPHP\Config::GetInstance()->GetValue('self');
 		if (!empty($selfurl)) {
 			if (substr($selfurl, -4) != '.php') {
-				$selfurl = GitPHP_Util::AddSlash($selfurl);
+				$selfurl = Tuleap\Git\GitPHP\Util::AddSlash($selfurl);
 			}
 			return $selfurl;
 		}

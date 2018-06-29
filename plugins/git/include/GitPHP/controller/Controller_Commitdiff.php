@@ -1,4 +1,8 @@
 <?php
+
+
+namespace Tuleap\Git\GitPHP;
+
 /**
  * GitPHP Controller Commitdiff
  *
@@ -9,14 +13,13 @@
  * @package GitPHP
  * @subpackage Controller
  */
-
 /**
  * Commitdiff controller class
  *
  * @package GitPHP
  * @subpackage Controller
  */
-class GitPHP_Controller_Commitdiff extends GitPHP_Controller_DiffBase
+class Controller_Commitdiff extends Controller_DiffBase
 {
 
 	/**
@@ -31,7 +34,7 @@ class GitPHP_Controller_Commitdiff extends GitPHP_Controller_DiffBase
 	{
 		parent::__construct();
 		if (!$this->project) {
-			throw new GitPHP_MessageException(__('Project is required'), true);
+			throw new MessageException(__('Project is required'), true);
 		}
 	}
 
@@ -140,7 +143,7 @@ class GitPHP_Controller_Commitdiff extends GitPHP_Controller_DiffBase
 			$this->tpl->assign('extrascripts', array('commitdiff'));
 		}
 
-		$treediff = new GitPHP_TreeDiff($this->project, $this->params['hash'], (isset($this->params['hashparent']) ? $this->params['hashparent'] : ''));
+		$treediff = new TreeDiff($this->project, $this->params['hash'], (isset($this->params['hashparent']) ? $this->params['hashparent'] : ''));
 		$this->tpl->assign('treediff', $treediff);
 	}
 

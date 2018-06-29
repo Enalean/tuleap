@@ -1,4 +1,7 @@
 <?php
+
+namespace Tuleap\Git\GitPHP;
+
 /**
  * GitPHP Tag
  *
@@ -16,7 +19,7 @@
  * @package GitPHP
  * @subpackage Git
  */
-class GitPHP_Tag extends GitPHP_Ref
+class Tag extends Ref
 {
 	
 	/**
@@ -168,9 +171,9 @@ class GitPHP_Tag extends GitPHP_Ref
 		}
 
 		if (!$this->commit) {
-			if ($this->object instanceof GitPHP_Commit) {
+			if ($this->object instanceof Commit) {
 				$this->commit = $this->object;
-			} else if ($this->object instanceof GitPHP_Tag) {
+			} else if ($this->object instanceof Tag) {
 				$this->commit = $this->GetProject()->GetCommit($this->GetHash());
 			}
 		}
@@ -349,7 +352,7 @@ class GitPHP_Tag extends GitPHP_Ref
 			$this->ReadDataRaw();
 		}
 
-		GitPHP_Cache::GetObjectCacheInstance()->Set($this->GetCacheKey(), $this);
+		Cache::GetObjectCacheInstance()->Set($this->GetCacheKey(), $this);
 	}
 
 	/**
@@ -361,7 +364,7 @@ class GitPHP_Tag extends GitPHP_Ref
 	 */
 	private function ReadDataGit()
 	{
-		$exe = new GitPHP_GitExe($this->GetProject());
+		$exe = new GitExe($this->GetProject());
 		$args = array();
 		$args[] = '-t';
 		$args[] = escapeshellarg($this->GetHash());
@@ -372,7 +375,7 @@ class GitPHP_Tag extends GitPHP_Ref
 			$this->object = $this->GetProject()->GetCommit($this->GetHash());
 			$this->commit = $this->object;
 			$this->type = 'commit';
-			GitPHP_Cache::GetObjectCacheInstance()->Set($this->GetCacheKey(), $this);
+			Cache::GetObjectCacheInstance()->Set($this->GetCacheKey(), $this);
 			return;
 		}
 
@@ -423,11 +426,11 @@ class GitPHP_Tag extends GitPHP_Ref
 				try {
 					$this->object = $this->GetProject()->GetCommit($objectHash);
 					$this->commit = $this->object;
-				} catch (Exception $e) {
+				} catch (\Exception $e) {
 				}
 				break;
 			case 'tag':
-				$exe = new GitPHP_GitExe($this->GetProject());
+				$exe = new GitExe($this->GetProject());
 				$args = array();
 				$args[] = 'tag';
 				$args[] = escapeshellarg($objectHash);
@@ -461,12 +464,12 @@ class GitPHP_Tag extends GitPHP_Ref
 	{
 		$data = $this->GetProject()->GetObject($this->GetHash(), $type);
 		
-		if ($type == GitPHP_Pack::OBJ_COMMIT) {
+		if ($type == Pack::OBJ_COMMIT) {
 			/* light tag */
 			$this->object = $this->GetProject()->GetCommit($this->GetHash());
 			$this->commit = $this->object;
 			$this->type = 'commit';
-			GitPHP_Cache::GetObjectCacheInstance()->Set($this->GetCacheKey(), $this);
+			Cache::GetObjectCacheInstance()->Set($this->GetCacheKey(), $this);
 			return;
 		}
 
@@ -509,7 +512,7 @@ class GitPHP_Tag extends GitPHP_Ref
 				try {
 					$this->object = $this->GetProject()->GetCommit($objectHash);
 					$this->commit = $this->object;
-				} catch (Exception $e) {
+				} catch (\Exception $e) {
 				}
 				break;
 			case 'tag':
@@ -717,14 +720,14 @@ class GitPHP_Tag extends GitPHP_Ref
 	{
 		$aObj = $a->GetObject();
 		$bObj = $b->GetObject();
-		if (($aObj instanceof GitPHP_Commit) && ($bObj instanceof GitPHP_Commit)) {
-			return GitPHP_Commit::CompareAge($aObj, $bObj);
+		if (($aObj instanceof Commit) && ($bObj instanceof Commit)) {
+			return Commit::CompareAge($aObj, $bObj);
 		}
 
-		if ($aObj instanceof GitPHP_Commit)
+		if ($aObj instanceof Commit)
 			return 1;
 
-		if ($bObj instanceof GitPHP_Commit)
+		if ($bObj instanceof Commit)
 			return -1;
 
 		return strcmp($a->GetName(), $b->GetName());

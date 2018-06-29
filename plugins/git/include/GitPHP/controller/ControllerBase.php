@@ -1,4 +1,8 @@
 <?php
+
+
+namespace Tuleap\Git\GitPHP;
+
 /**
  * GitPHP ControllerBase
  *
@@ -9,7 +13,6 @@
  * @package GitPHP
  * @subpackage Controller
  */
-
 /**
  * ControllerBase class
  *
@@ -17,7 +20,7 @@
  * @subpackage Controller
  * @abstract
  */
-abstract class GitPHP_ControllerBase
+abstract class ControllerBase
 {
 
 	/**
@@ -67,13 +70,13 @@ abstract class GitPHP_ControllerBase
 	 */
 	public function __construct()
 	{
-		$this->tpl = new Smarty;
+		$this->tpl = new \Smarty;
 		$this->tpl->plugins_dir[] = GITPHP_INCLUDEDIR . 'smartyplugins';
 		$this->tpl->template_dir  = __DIR__ . '/../../../templates/gitphp/';
 
 		// Use a dedicated directory for smarty temporary files if needed.
-		if (GitPHP_Config::GetInstance()->HasKey('smarty_tmp')) {
-		    $smarty_tmp = GitPHP_Config::GetInstance()->GetValue('smarty_tmp');
+		if (Config::GetInstance()->HasKey('smarty_tmp')) {
+		    $smarty_tmp = Config::GetInstance()->GetValue('smarty_tmp');
 		    if (!is_dir($smarty_tmp)) {
 			mkdir($smarty_tmp, 0755, true);
 		    }
@@ -91,15 +94,15 @@ abstract class GitPHP_ControllerBase
 		    $this->tpl->cache_dir = $cache;
 		}
 
-		if (GitPHP_Config::GetInstance()->GetValue('cache', false)) {
+		if (Config::GetInstance()->GetValue('cache', false)) {
 			$this->tpl->caching = 2;
-			if (GitPHP_Config::GetInstance()->HasKey('cachelifetime')) {
-				$this->tpl->cache_lifetime = GitPHP_Config::GetInstance()->GetValue('cachelifetime');
+			if (Config::GetInstance()->HasKey('cachelifetime')) {
+				$this->tpl->cache_lifetime = Config::GetInstance()->GetValue('cachelifetime');
 			}
 
-			$servers = GitPHP_Config::GetInstance()->GetValue('memcache', null);
+			$servers = Config::GetInstance()->GetValue('memcache', null);
 			if (isset($servers) && is_array($servers) && (count($servers) > 0)) {
-				GitPHP_Memcache::GetInstance()->AddServers($servers);
+				Memcache::GetInstance()->AddServers($servers);
 				require_once(GITPHP_CACHEDIR . 'memcache_cache_handler.php');
 				$this->tpl->cache_handler_func = 'memcache_cache_handler';
 			}
@@ -107,9 +110,9 @@ abstract class GitPHP_ControllerBase
 		}
 
 		if (isset($_GET['p'])) {
-			$this->project = GitPHP_ProjectList::GetInstance()->GetProject(str_replace(chr(0), '', $_GET['p']));
+			$this->project = ProjectList::GetInstance()->GetProject(str_replace(chr(0), '', $_GET['p']));
 			if (!$this->project) {
-				throw new GitPHP_MessageException(sprintf(__('Invalid project %1$s'), $_GET['p']), true);
+				throw new MessageException(sprintf(__('Invalid project %1$s'), $_GET['p']), true);
 			}
 		}
 
@@ -154,9 +157,9 @@ abstract class GitPHP_ControllerBase
 	 */
 	private function GetCacheKeyPrefix($projectKeys = true)
 	{
-		$cacheKeyPrefix = GitPHP_Resource::GetLocale();
+		$cacheKeyPrefix = Resource::GetLocale();
 
-		$projList = GitPHP_ProjectList::GetInstance();
+		$projList = ProjectList::GetInstance();
 		if ($projList) {
 			$cacheKeyPrefix .= '|' . sha1(serialize($projList->GetConfig())) . '|' . sha1(serialize($projList->GetSettings()));
 			unset($projList);
@@ -264,29 +267,29 @@ abstract class GitPHP_ControllerBase
 
 		$this->tpl->assign('version', $gitphp_version);
 
-		$stylesheet = GitPHP_Config::GetInstance()->GetValue('stylesheet', 'gitphpskin.css');
+		$stylesheet = Config::GetInstance()->GetValue('stylesheet', 'gitphpskin.css');
 		if ($stylesheet == 'gitphp.css') {
 			// backwards compatibility
 			$stylesheet = 'gitphpskin.css';
 		}
 		$this->tpl->assign('stylesheet', preg_replace('/\.css$/', '', $stylesheet));
 
-		$this->tpl->assign('javascript', GitPHP_Config::GetInstance()->GetValue('javascript', true));
-		$this->tpl->assign('pagetitle', GitPHP_Config::GetInstance()->GetValue('title', $gitphp_appstring));
-		$this->tpl->assign('homelink', GitPHP_Config::GetInstance()->GetValue('homelink', __('projects')));
+		$this->tpl->assign('javascript', Config::GetInstance()->GetValue('javascript', true));
+		$this->tpl->assign('pagetitle', Config::GetInstance()->GetValue('title', $gitphp_appstring));
+		$this->tpl->assign('homelink', Config::GetInstance()->GetValue('homelink', __('projects')));
 		$this->tpl->assign('action', $this->GetName());
 		$this->tpl->assign('actionlocal', $this->GetName(true));
 		if ($this->project)
 			$this->tpl->assign('project', $this->project);
-		if (GitPHP_Config::GetInstance()->GetValue('search', true))
+		if (Config::GetInstance()->GetValue('search', true))
 			$this->tpl->assign('enablesearch', true);
-		if (GitPHP_Config::GetInstance()->GetValue('filesearch', true))
+		if (Config::GetInstance()->GetValue('filesearch', true))
 			$this->tpl->assign('filesearch', true);
 		if (isset($this->params['search']))
 			$this->tpl->assign('search', $this->params['search']);
 		if (isset($this->params['searchtype']))
 			$this->tpl->assign('searchtype', $this->params['searchtype']);
-		$this->tpl->assign('currentlocale', GitPHP_Resource::GetLocale());
+		$this->tpl->assign('currentlocale', Resource::GetLocale());
 		//$this->tpl->assign('supportedlocales', GitPHP_Resource::SupportedLocales());
 
 		$getvars = explode('&', $_SERVER['QUERY_STRING']);
@@ -303,7 +306,7 @@ abstract class GitPHP_ControllerBase
 		}
 		$this->tpl->assign('requestvars', $getvarsmapped);
 
-		$this->tpl->assign('snapshotformats', GitPHP_Archive::SupportedFormats());
+		$this->tpl->assign('snapshotformats', Archive::SupportedFormats());
 	}
 
 	/**
@@ -333,7 +336,7 @@ abstract class GitPHP_ControllerBase
 	 */
 	public function Render()
 	{
-		if ((GitPHP_Config::GetInstance()->GetValue('cache', false) == true) && (GitPHP_Config::GetInstance()->GetValue('cacheexpire', true) === true))
+		if ((Config::GetInstance()->GetValue('cache', false) == true) && (Config::GetInstance()->GetValue('cacheexpire', true) === true))
 			$this->CacheExpire();
 
 		if (!$this->tpl->is_cached($this->GetTemplate(), $this->GetFullCacheKey())) {

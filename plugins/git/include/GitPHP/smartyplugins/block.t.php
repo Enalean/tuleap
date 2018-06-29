@@ -94,9 +94,9 @@ function smarty_block_t($params, $text, &$smarty)
 	
 	// use plural if required parameters are set
 	if (isset($count) && isset($plural)) {
-		$text = __n($text, $plural, $count);
+		$text = Tuleap\Git\GitPHP\__n($text, $plural, $count);
 	} else { // use normal
-		$text = __($text);
+		$text = Tuleap\Git\GitPHP\__($text);
 	}
 
 	// run strarg if there are parameters

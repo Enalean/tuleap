@@ -12,7 +12,7 @@
 {foreach from=$tree->GetContents() item=treeitem}
   <tr class="{cycle values="light,dark"}">
     <td class="monospace perms">{$treeitem->GetModeString()|escape}</td>
-    {if $treeitem instanceof GitPHP_Blob}
+    {if $treeitem->isBlob() }
       <td class="filesize">{$treeitem->GetSize()|escape}</td>
       <td></td>
       <td class="list fileName">
@@ -25,7 +25,7 @@
 	 | 
 	<a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob_plain&amp;h={$treeitem->GetHash()|urlencode}&amp;f={$treeitem->GetPath()|urlencode}&amp;noheader=1">{t}plain{/t}</a>
       </td>
-    {elseif $treeitem instanceof GitPHP_Tree}
+    {elseif $treeitem->isTree() }
       <td class="filesize"></td>
       <td class="expander"></td>
       <td class="list fileName">

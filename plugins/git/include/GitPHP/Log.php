@@ -1,4 +1,8 @@
 <?php
+
+
+namespace Tuleap\Git\GitPHP;
+
 /**
  * GitPHP Log
  *
@@ -8,13 +12,12 @@
  * @copyright Copyright (c) 2010 Christopher Han
  * @package GitPHP
  */
-
 /**
  * Logging class
  *
  * @package GitPHP
  */
-class GitPHP_Log
+class Log
 {
 	/**
 	 * instance
@@ -83,7 +86,7 @@ class GitPHP_Log
 	public static function GetInstance()
 	{
 		if (!self::$instance) {
-			self::$instance = new GitPHP_Log();
+			self::$instance = new Log();
 		}
 
 		return self::$instance;
@@ -102,8 +105,8 @@ class GitPHP_Log
 		$this->startTime = microtime(true);
 		$this->startMem = memory_get_usage();
 
-		$this->enabled = GitPHP_Config::GetInstance()->GetValue('debug', false);
-		$this->benchmark = GitPHP_Config::GetInstance()->GetValue('benchmark', false);
+		$this->enabled = Config::GetInstance()->GetValue('debug', false);
+		$this->benchmark = Config::GetInstance()->GetValue('benchmark', false);
 	}
 
 	/**

@@ -1,4 +1,7 @@
 <?php
+
+namespace Tuleap\Git\GitPHP;
+
 /**
  * GitPHP Filesystem Object
  *
@@ -18,7 +21,7 @@
  * @package GitPHP
  * @subpackage Git
  */
-abstract class GitPHP_FilesystemObject extends GitPHP_GitObject
+abstract class FilesystemObject extends GitObject
 {
 
 	/**

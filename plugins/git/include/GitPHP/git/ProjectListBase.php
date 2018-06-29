@@ -1,4 +1,7 @@
 <?php
+
+namespace Tuleap\Git\GitPHP;
+
 /**
  * GitPHP ProjectListBase
  *
@@ -20,7 +23,7 @@ define('GITPHP_SORT_AGE', 'age');
  * @subpackage Git
  * @abstract
  */
-abstract class GitPHP_ProjectListBase implements Iterator
+abstract class ProjectListBase implements \Iterator
 {
 	/**
 	 * projects
@@ -193,11 +196,11 @@ abstract class GitPHP_ProjectListBase implements Iterator
 	{
 		switch ($sortBy) {
 			case GITPHP_SORT_AGE:
-				uasort($this->projects, array('GitPHP_Project', 'CompareAge'));
+				uasort($this->projects, array(Project::class, 'CompareAge'));
 				break;
 			case GITPHP_SORT_PROJECT:
 			default:
-				uasort($this->projects, array('GitPHP_Project', 'CompareProject'));
+				uasort($this->projects, array(Project::class, 'CompareProject'));
 				break;
 		}
 	}

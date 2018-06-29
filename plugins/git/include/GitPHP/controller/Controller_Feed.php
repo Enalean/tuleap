@@ -1,4 +1,7 @@
 <?php
+
+namespace Tuleap\Git\GitPHP;
+
 /**
  * GitPHP Controller Feed
  *
@@ -10,12 +13,10 @@
  * @package GitPHP
  * @subpackage Controller
  */
-
 /**
  * Constant for the number of items to load into the feed
  */
 define('GITPHP_FEED_ITEMS', 150);
-
 /**
  * Constants for the different feed formats
  */
@@ -28,7 +29,7 @@ define('GITPHP_FEED_FORMAT_ATOM', 'atom');
  * @package GitPHP
  * @subpackage Controller
  */
-class GitPHP_Controller_Feed extends GitPHP_ControllerBase
+class Controller_Feed extends ControllerBase
 {
 	/**
 	 * __construct
@@ -42,7 +43,7 @@ class GitPHP_Controller_Feed extends GitPHP_ControllerBase
 	{
 		parent::__construct();
 		if (!$this->project) {
-			throw new GitPHP_MessageException(__('Project is required'), true);
+			throw new MessageException(__('Project is required'), true);
 		}
 	}
 
@@ -108,7 +109,7 @@ class GitPHP_Controller_Feed extends GitPHP_ControllerBase
 	 */
 	protected function ReadQuery()
 	{
-		GitPHP_Log::GetInstance()->SetEnabled(false);
+		Log::GetInstance()->SetEnabled(false);
 	}
 
 	/**
@@ -121,7 +122,7 @@ class GitPHP_Controller_Feed extends GitPHP_ControllerBase
 	protected function LoadHeaders()
 	{
 		if ((!isset($this->params['format'])) || empty($this->params['format'])) {
-			throw new Exception('A feed format is required');
+			throw new \Exception('A feed format is required');
 		}
 
 		if ($this->params['format'] == GITPHP_FEED_FORMAT_RSS) {

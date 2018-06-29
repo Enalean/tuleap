@@ -1,4 +1,7 @@
 <?php
+
+namespace Tuleap\Git\GitPHP;
+
 /**
  * GitPHP Controller Tag
  *
@@ -9,14 +12,13 @@
  * @package GitPHP
  * @subpackage Controller
  */
-
 /**
  * Tag controller class
  *
  * @package GitPHP
  * @subpackage Controller
  */
-class GitPHP_Controller_Tag extends GitPHP_ControllerBase
+class Controller_Tag extends ControllerBase
 {
 
 	/**
@@ -31,7 +33,7 @@ class GitPHP_Controller_Tag extends GitPHP_ControllerBase
 	{
 		parent::__construct();
 		if (!$this->project) {
-			throw new GitPHP_MessageException(__('Project is required'), true);
+			throw new MessageException(__('Project is required'), true);
 		}
 	}
 
@@ -96,7 +98,7 @@ class GitPHP_Controller_Tag extends GitPHP_ControllerBase
 
 		if (isset($_GET['o']) && ($_GET['o'] == 'jstip')) {
 			$this->params['jstip'] = true;
-			GitPHP_Log::GetInstance()->SetEnabled(false);
+			Log::GetInstance()->SetEnabled(false);
 		}
 	}
 

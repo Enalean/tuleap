@@ -1,4 +1,8 @@
 <?php
+
+
+namespace Tuleap\Git\GitPHP;
+
 /**
  * GitPHP Controller Tree
  *
@@ -9,14 +13,13 @@
  * @package GitPHP
  * @subpackage Controller
  */
-
 /**
  * Tree controller class
  *
  * @package GitPHP
  * @subpackage Controller
  */
-class GitPHP_Controller_Tree extends GitPHP_ControllerBase
+class Controller_Tree extends ControllerBase
 {
 
 	/**
@@ -31,7 +34,7 @@ class GitPHP_Controller_Tree extends GitPHP_ControllerBase
 	{
 		parent::__construct();
 		if (!$this->project) {
-			throw new GitPHP_MessageException(__('Project is required'), true);
+			throw new MessageException(__('Project is required'), true);
 		}
 	}
 
@@ -103,7 +106,7 @@ class GitPHP_Controller_Tree extends GitPHP_ControllerBase
 
 		if (isset($_GET['o']) && ($_GET['o'] == 'js')) {
 			$this->params['js'] = true;
-			GitPHP_Log::GetInstance()->SetEnabled(false);
+			Log::GetInstance()->SetEnabled(false);
 		}
 	}
 
@@ -118,7 +121,7 @@ class GitPHP_Controller_Tree extends GitPHP_ControllerBase
 	{
 		if (!isset($this->params['hashbase'])) {
 			// TODO: write a lookup for hash (tree) -> hashbase (commithash) and remove this
-			throw new Exception('Hashbase is required');
+			throw new \Exception('Hashbase is required');
 		}
 
 		$commit = $this->project->GetCommit($this->params['hashbase']);

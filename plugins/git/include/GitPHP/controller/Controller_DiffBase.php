@@ -1,4 +1,7 @@
 <?php
+
+namespace Tuleap\Git\GitPHP;
+
 /**
  * GitPHP Controller DiffBase
  *
@@ -9,31 +12,26 @@
  * @package GitPHP
  * @subpackage Controller
  */
-
-
 /**
  * Constants for diff modes
  */
 define('GITPHP_DIFF_UNIFIED', 1);
 define('GITPHP_DIFF_SIDEBYSIDE', 2);
-
 /**
  * Constant of the diff mode cookie in the user's browser
  */
 define('GITPHP_DIFF_MODE_COOKIE', 'GitPHPDiffMode');
-
 /**
  * Diff mode cookie lifetime
  */
 define('GITPHP_DIFF_MODE_COOKIE_LIFETIME', 60*60*24*365);           // 1 year
-
 /**
  * DiffBase controller class
  *
  * @package GitPHP
  * @subpackage Controller
  */
-abstract class GitPHP_Controller_DiffBase extends GitPHP_ControllerBase
+abstract class Controller_DiffBase extends ControllerBase
 {
 	
 	/**
@@ -104,7 +102,7 @@ abstract class GitPHP_Controller_DiffBase extends GitPHP_ControllerBase
 	protected function LoadHeaders()
 	{
 		if (isset($this->params['plain']) && ($this->params['plain'] === true)) {
-			GitPHP_Log::GetInstance()->SetEnabled(false);
+			Log::GetInstance()->SetEnabled(false);
 			$this->headers[] = 'Content-type: text/plain; charset=UTF-8';
 		}
 	}

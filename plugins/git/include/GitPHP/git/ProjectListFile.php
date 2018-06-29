@@ -1,4 +1,7 @@
 <?php
+
+namespace Tuleap\Git\GitPHP;
+
 /**
  * GitPHP ProjectListFile
  *
@@ -16,7 +19,7 @@
  * @package GitPHP
  * @subpackage Git
  */
-class GitPHP_ProjectListFile extends GitPHP_ProjectListBase
+class ProjectListFile extends ProjectListBase
 {
 
 	/**
@@ -25,13 +28,13 @@ class GitPHP_ProjectListFile extends GitPHP_ProjectListBase
 	 * constructor
 	 *
 	 * @param string $projectFile file to read
-	 * @throws Exception if parameter is not a readable file
+	 * @throws \Exception if parameter is not a readable file
 	 * @access public
 	 */
 	public function __construct($projectFile)
 	{
 		if (!(is_string($projectFile) && is_file($projectFile))) {
-			throw new Exception(sprintf(__('%1$s is not a file'), $projectFile));
+			throw new \Exception(sprintf(__('%1$s is not a file'), $projectFile));
 		}
 
 		$this->projectConfig = $projectFile;
@@ -50,22 +53,22 @@ class GitPHP_ProjectListFile extends GitPHP_ProjectListBase
 	protected function PopulateProjects()
 	{
 		if (!($fp = fopen($this->projectConfig, 'r'))) {
-			throw new Exception(sprintf(__('Failed to open project list file %1$s'), $this->projectConfig));
+			throw new \Exception(sprintf(__('Failed to open project list file %1$s'), $this->projectConfig));
 		}
 
-		$projectRoot = GitPHP_Util::AddSlash(GitPHP_Config::GetInstance()->GetValue('projectroot'));
+		$projectRoot = Util::AddSlash(Config::GetInstance()->GetValue('projectroot'));
 
 		while (!feof($fp) && ($line = fgets($fp))) {
 			if (preg_match('/^([^\s]+)(\s.+)?$/', $line, $regs)) {
 				if (is_file($projectRoot . $regs[1] . '/HEAD')) {
 					try {
-						$projObj = new GitPHP_Project($projectRoot, $regs[1]);
+						$projObj = new Project($projectRoot, $regs[1]);
 						$this->projects[$regs[1]] = $projObj;
-					} catch (Exception $e) {
-						GitPHP_Log::GetInstance()->Log($e->getMessage());
+					} catch (\Exception $e) {
+						Log::GetInstance()->Log($e->getMessage());
 					}
 				} else {
-					GitPHP_Log::GetInstance()->Log(sprintf('%1$s is not a git project', $projectRoot . $regs[1]));
+					Log::GetInstance()->Log(sprintf('%1$s is not a git project', $projectRoot . $regs[1]));
 				}
 			}
 		}

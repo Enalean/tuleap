@@ -1,4 +1,7 @@
 <?php
+
+namespace Tuleap\Git\GitPHP;
+
 /**
  * GitPHP ProjectListArray
  *
@@ -16,7 +19,7 @@
  * @package GitPHP
  * @subpackage Git
  */
-class GitPHP_ProjectListArray extends GitPHP_ProjectListBase
+class ProjectListArray extends ProjectListBase
 {
 
 	/**
@@ -25,13 +28,13 @@ class GitPHP_ProjectListArray extends GitPHP_ProjectListBase
 	 * constructor
 	 *
 	 * @param mixed $projectArray array to read
-	 * @throws Exception if parameter is not an array
+	 * @throws \Exception if parameter is not an array
 	 * @access public
 	 */
 	public function __construct($projectArray)
 	{
 		if (!is_array($projectArray)) {
-			throw new Exception('An array of projects is required');
+			throw new \Exception('An array of projects is required');
 		}
 
 		$this->projectConfig = $projectArray;
@@ -49,29 +52,29 @@ class GitPHP_ProjectListArray extends GitPHP_ProjectListBase
 	 */
 	protected function PopulateProjects()
 	{
-		$projectRoot = GitPHP_Util::AddSlash(GitPHP_Config::GetInstance()->GetValue('projectroot'));
+		$projectRoot = Util::AddSlash(Config::GetInstance()->GetValue('projectroot'));
 
 		foreach ($this->projectConfig as $proj => $projData) {
 			try {
 				if (is_string($projData)) {
 					// Just flat array of project paths
-					$projObj = new GitPHP_Project($projectRoot, $projData);
+					$projObj = new Project($projectRoot, $projData);
 					$this->projects[$projData] = $projObj;
 				} else if (is_array($projData)) {
 					if (is_string($proj) && !empty($proj)) {
 						// Project key pointing to data array
-						$projObj = new GitPHP_Project($projectRoot, $proj);
+						$projObj = new Project($projectRoot, $proj);
 						$this->projects[$proj] = $projObj;
 						$this->ApplyProjectSettings($proj, $projData);
 					} else if (isset($projData['project'])) {
 						// List of data arrays with projects inside
-						$projObj = new GitPHP_Project($projectRoot, $projData['project']);
+						$projObj = new Project($projectRoot, $projData['project']);
 						$this->projects[$projData['project']] = $projObj;
 						$this->ApplyProjectSettings(null, $projData);
 					}
 				}
-			} catch (Exception $e) {
-				GitPHP_Log::GetInstance()->Log($e->getMessage());
+			} catch (\Exception $e) {
+				Log::GetInstance()->Log($e->getMessage());
 			}
 		}
 	}

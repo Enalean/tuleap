@@ -16,7 +16,7 @@
 		{foreach from=$pathobject->GetPathTree() item=pathtreepiece}
 			<a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=tree&amp;hb={$pathobjectcommit->GetHash()|urlencode}&amp;h={$pathtreepiece->GetHash()|urlencode}&amp;f={$pathtreepiece->GetPath()|urlencode}"><strong>{$pathtreepiece->GetName()|escape}</strong></a> /
 		{/foreach}
-		{if $pathobject instanceof GitPHP_Blob}
+		{if $pathobject->isBlob() }
 			{if $target == 'blobplain'}
 				<a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob_plain&amp;h={$pathobject->GetHash()|urlencode}&amp;hb={$pathobjectcommit->GetHash()|urlencode}&amp;f={$pathobject->GetPath()|urlencode}&amp;noheader=1"><strong>{$pathobject->GetName()|escape}</strong></a>
 			{elseif $target == 'blob'}

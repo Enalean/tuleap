@@ -19,6 +19,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Git\GitPHP\Config;
+use Tuleap\Git\GitPHP\Controller;
+use Tuleap\Git\GitPHP\Controller_Message;
+use Tuleap\Git\GitPHP\DiffExe;
+use Tuleap\Git\GitPHP\GitExe;
+use Tuleap\Git\GitPHP\Log;
+use Tuleap\Git\GitPHP\MessageException;
+use Tuleap\Git\GitPHP\ProjectList;
+use Tuleap\Git\GitPHP\Resource;
+
 class GitViews_GitPhpViewer {
     /**
      * @var GitRepository
@@ -100,46 +110,46 @@ class GitViews_GitPhpViewer {
         require_once GITPHP_GITOBJECTDIR . 'GitExe.php';
         require_once GITPHP_GITOBJECTDIR . 'DiffExe.php';
 
-        GitPHP_Resource::Instantiate($this->current_user->getLanguageID());
+        Resource::Instantiate($this->current_user->getLanguageID());
 
         try {
             /*
              * Configuration
              */
-            GitPHP_Config::GetInstance()->LoadConfig(GITPHP_CONFIGDIR . 'gitphp.conf.php');
+            Config::GetInstance()->LoadConfig(GITPHP_CONFIGDIR . 'gitphp.conf.php');
 
             /*
              * Use the default language in the config if user has no preference
              * with en_US as the fallback
              */
-            if (!GitPHP_Resource::Instantiated()) {
-                GitPHP_Resource::Instantiate(GitPHP_Config::GetInstance()->GetValue('locale', 'en_US'));
+            if (! Resource::Instantiated()) {
+                 Resource::Instantiate( Config::GetInstance()->GetValue('locale', 'en_US'));
             }
 
             /*
              * Debug
              */
-            if (GitPHP_Log::GetInstance()->GetEnabled()) {
-                GitPHP_Log::GetInstance()->SetStartTime(GITPHP_START_TIME);
-                GitPHP_Log::GetInstance()->SetStartMemory(GITPHP_START_MEM);
+            if (Log::GetInstance()->GetEnabled()) {
+                Log::GetInstance()->SetStartTime(GITPHP_START_TIME);
+                Log::GetInstance()->SetStartMemory(GITPHP_START_MEM);
             }
 
-            if (!GitPHP_Config::GetInstance()->GetValue('projectroot', null)) {
-                throw new GitPHP_MessageException(__('A projectroot must be set in the config'), true, 500);
+            if (! Config::GetInstance()->GetValue('projectroot', null)) {
+                throw new MessageException(Tuleap\Git\GitPHP\__('A projectroot must be set in the config'), true, 500);
             }
 
             /*
              * Check for required executables
              */
-            $exe = new GitPHP_GitExe(null);
+            $exe = new GitExe(null);
             if (!$exe->Valid()) {
-                throw new GitPHP_MessageException(sprintf(__('Could not run the git executable "%1$s".  You may need to set the "%2$s" config value.'),
+                throw new MessageException(sprintf(Tuleap\Git\GitPHP\__('Could not run the git executable "%1$s".  You may need to set the "%2$s" config value.'),
                     $exe->GetBinary(), 'gitbin'), true, 500);
             }
             if (!function_exists('xdiff_string_diff')) {
-                $exe = new GitPHP_DiffExe();
+                $exe = new DiffExe();
                 if (!$exe->Valid()) {
-                    throw new GitPHP_MessageException(sprintf(__('Could not run the diff executable "%1$s".  You may need to set the "%2$s" config value.'),
+                    throw new MessageException(sprintf(Tuleap\Git\GitPHP\__('Could not run the diff executable "%1$s".  You may need to set the "%2$s" config value.'),
                         $exe->GetBinary(), 'diffbin'), true, 500);
                 }
             }
@@ -149,12 +159,12 @@ class GitViews_GitPhpViewer {
              * Project list
              */
             if (file_exists(GITPHP_CONFIGDIR . 'projects.conf.php')) {
-                GitPHP_ProjectList::Instantiate(GITPHP_CONFIGDIR . 'projects.conf.php', false);
+                ProjectList::Instantiate(GITPHP_CONFIGDIR . 'projects.conf.php', false);
             } else {
-                GitPHP_ProjectList::Instantiate(GITPHP_CONFIGDIR . 'gitphp.conf.php', true);
+                ProjectList::Instantiate(GITPHP_CONFIGDIR . 'gitphp.conf.php', true);
             }
 
-            $controller = GitPHP_Controller::GetController((isset($_GET['a']) ? $_GET['a'] : null));
+            $controller = Controller::GetController((isset($_GET['a']) ? $_GET['a'] : null));
             if ($controller) {
                 $controller->RenderHeaders();
                 $controller->Render();
@@ -162,21 +172,21 @@ class GitViews_GitPhpViewer {
 
         } catch (Exception $e) {
 
-            if (GitPHP_Config::GetInstance()->GetValue('debug', false)) {
+            if (Config::GetInstance()->GetValue('debug', false)) {
                 throw $e;
             }
 
-            if (!GitPHP_Resource::Instantiated()) {
+            if (! Resource::Instantiated()) {
                 /*
                  * In case an error was thrown before instantiating
                  * the resource manager
                  */
-                GitPHP_Resource::Instantiate('en_US');
+                Resource::Instantiate('en_US');
             }
 
-            $controller = new GitPHP_Controller_Message();
+            $controller = new Controller_Message();
             $controller->SetParam('message', $e->getMessage());
-            if ($e instanceof GitPHP_MessageException) {
+            if ($e instanceof MessageException) {
                 $controller->SetParam('error', $e->Error);
                 $controller->SetParam('statuscode', $e->StatusCode);
             } else {
@@ -187,8 +197,8 @@ class GitViews_GitPhpViewer {
 
         }
 
-        if (GitPHP_Log::GetInstance()->GetEnabled()) {
-            $entries = GitPHP_Log::GetInstance()->GetEntries();
+        if (Log::GetInstance()->GetEnabled()) {
+            $entries = Log::GetInstance()->GetEntries();
             foreach ($entries as $logline) {
                 echo "<br />\n" . $logline;
             }

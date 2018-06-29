@@ -1,4 +1,7 @@
 <?php
+
+namespace Tuleap\Git\GitPHP;
+
 /**
  * GitPHP Resource
  *
@@ -16,7 +19,7 @@
  *
  * @package GitPHP
  */
-class GitPHP_Resource
+class Resource
 {
 	
 	/**
@@ -98,12 +101,12 @@ class GitPHP_Resource
 
 		$reader = null;
 		if (!(($locale == 'en_US') || ($locale == 'en'))) {
-			$reader = new FileReader(GITPHP_LOCALEDIR . $locale . '/gitphp.mo');
+			$reader = new \FileReader(GITPHP_LOCALEDIR . $locale . '/gitphp.mo');
 			if (!$reader)
 				return false;
 		}
 
-		self::$instance = new gettext_reader($reader);
+		self::$instance = new \gettext_reader($reader);
 		self::$currentLocale = $locale;
 		return true;
 	}
@@ -119,8 +122,8 @@ class GitPHP_Resource
  */
 function __($str)
 {
-	if (GitPHP_Resource::Instantiated())
-		return GitPHP_Resource::GetInstance()->translate($str);
+	if (Resource::Instantiated())
+		return Resource::GetInstance()->translate($str);
 	return $str;
 }
 
@@ -134,8 +137,8 @@ function __($str)
  */
 function __n($singular, $plural, $count)
 {
-	if (GitPHP_Resource::Instantiated())
-		return GitPHP_Resource::GetInstance()->ngettext($singular, $plural, $count);
+	if (Resource::Instantiated())
+		return Resource::GetInstance()->ngettext($singular, $plural, $count);
 	if ($count > 1)
 		return $plural;
 	return $singular;

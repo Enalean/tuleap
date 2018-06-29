@@ -1,4 +1,7 @@
 <?php
+
+namespace Tuleap\Git\GitPHP;
+
 /**
  * GitPHP ProjectList
  *
@@ -16,7 +19,7 @@
  * @package GitPHP
  * @subpackage Git
  */
-class GitPHP_ProjectList
+class ProjectList
 {
 
 	/**
@@ -64,16 +67,16 @@ class GitPHP_ProjectList
 		if (!empty($file) && is_file($file) && include($file)) {
 			if (isset($git_projects)) {
 				if (is_string($git_projects)) {
-					if (function_exists('simplexml_load_file') && GitPHP_ProjectListScmManager::IsSCMManager($git_projects)) {
-						self::$instance = new GitPHP_ProjectListScmManager($git_projects);
+					if (function_exists('simplexml_load_file') && ProjectListScmManager::IsSCMManager($git_projects)) {
+						self::$instance = new ProjectListScmManager($git_projects);
 					} else {
-						self::$instance = new GitPHP_ProjectListFile($git_projects);
+						self::$instance = new ProjectListFile($git_projects);
 					}
 				} else if (is_array($git_projects)) {
 					if ($legacy) {
-						self::$instance = new GitPHP_ProjectListArrayLegacy($git_projects);
+						self::$instance = new ProjectListArrayLegacy($git_projects);
 					} else {
-						self::$instance = new GitPHP_ProjectListArray($git_projects);
+						self::$instance = new ProjectListArray($git_projects);
 					}
 				}
 			}
@@ -81,7 +84,7 @@ class GitPHP_ProjectList
 
 		if (!self::$instance) {
 
-			self::$instance = new GitPHP_ProjectListDirectory(GitPHP_Config::GetInstance()->GetValue('projectroot'));
+			self::$instance = new ProjectListDirectory(Config::GetInstance()->GetValue('projectroot'));
 		}
 
 		if (isset($git_projects_settings) && !$legacy)
