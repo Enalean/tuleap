@@ -74,6 +74,9 @@ use Tuleap\Tracker\PermissionsPerGroup\ProjectAdminPermissionPerGroupPresenterBu
 use Tuleap\Tracker\ProjectDeletionEvent;
 use Tuleap\Tracker\Reference\ReferenceCreator;
 use Tuleap\Tracker\Service\ServiceActivator;
+use Tuleap\Tracker\Webhook\Actions\WebhookDeleteController;
+use Tuleap\Tracker\Webhook\WebhookDao;
+use Tuleap\Tracker\Webhook\WebhookRetriever;
 use Tuleap\User\History\HistoryRetriever;
 use Tuleap\Widget\Event\GetPublicAreas;
 
@@ -692,7 +695,9 @@ class trackerPlugin extends Plugin {
     {
         $request_uri = $_SERVER['REQUEST_URI'];
         if (strpos($request_uri, $this->getPluginPath()) === 0 &&
-            strpos($request_uri, $this->getPluginPath().'/notifications/') !== 0) {
+            strpos($request_uri, $this->getPluginPath().'/notifications/') !== 0 &&
+            strpos($request_uri, $this->getPluginPath().'/webhooks/') !== 0
+        ) {
             $params['url_verification'] = new Tracker_URLVerification();
         }
     }
@@ -1648,6 +1653,14 @@ class trackerPlugin extends Plugin {
                     $this->getTrackerFactory(),
                     new UserNotificationSettingsDAO,
                     new ProjectHistoryDao
+                );
+            });
+
+            $r->post('/webhooks/delete', function () {
+                return new WebhookDeleteController(
+                    new WebhookRetriever(new WebhookDao()),
+                    TrackerFactory::instance(),
+                    new WebhookDao()
                 );
             });
         });

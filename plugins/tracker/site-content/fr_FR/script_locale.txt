@@ -85,3 +85,6 @@ codendi.locales['nature_column_editor'] = {
     cancel                   : 'Annuler',
     save                     : 'Enregistrer'
 };
+codendi.locales['tracker_webhooks'] = {
+    title: 'Attendez une minute…'
+};

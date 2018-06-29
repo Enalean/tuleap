@@ -234,6 +234,9 @@ msgid ""
 "the tracker hierarchy."
 msgstr ""
 
+msgid "Remove"
+msgstr ""
+
 msgid "Renderer id"
 msgstr ""
 
@@ -590,6 +593,9 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
+msgid "Webhook sucessfully deleted"
+msgstr ""
+
 msgid "Webhooks"
 msgstr ""
 
@@ -599,6 +605,9 @@ msgstr ""
 msgid ""
 "You are about to remove the user from the unsubscriber list. Please confirm "
 "your action."
+msgstr ""
+
+msgid "You are about to remove the webhook. Please confirm your action."
 msgstr ""
 
 msgid "You can choose the notification mode you wish for this tracker."

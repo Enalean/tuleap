@@ -1,55 +1,69 @@
-<h3>{{# dgettext }} tuleap-tracker | Webhooks {{/ dgettext }}</h3>
+<div id="tracker-webhooks">
+    <h3>{{# dgettext }} tuleap-tracker | Webhooks {{/ dgettext }}</h3>
 
-<p class="tracker-webhooks-desc">
-    {{# dgettext }} tuleap-tracker | You can define several webhooks that will be processed after each artifact creation and updates. {{/ dgettext }}
-    <span class="tracker-webhooks-desc-warn text-warning">
+    <p class="tracker-webhooks-desc">
+        {{# dgettext }} tuleap-tracker | You can define several webhooks that will be processed after each artifact creation and updates. {{/ dgettext }}
+        <span class="tracker-webhooks-desc-warn text-warning">
         <i class="icon-warning-sign"></i> {{# dgettext }} tuleap-tracker | Be careful, all the artifact content is sent in the payload without permission checks. {{/ dgettext }}
     </span>
-</p>
+    </p>
 
-<table class="table tracker-webhooks-list">
-    <thead>
-    <tr>
-        <th>{{# dgettext }} tuleap-tracker | URL {{/ dgettext }}</th>
-        <th>{{# dgettext }} tuleap-tracker | Last push {{/ dgettext }}</th>
-        <th></th>
-    </tr>
-    </thead>
-    <tbody>
-    {{# webhook_presenters }}
+    <table class="table tracker-webhooks-list">
+        <thead>
         <tr>
-            <td>{{ webhook_url }}</td>
-            <td class="last-push">
-            {{# last_log }}
-                    {{# status_ok }}
-                        <span class="text-success" title="{{ status_message }}">
+            <th>{{# dgettext }} tuleap-tracker | URL {{/ dgettext }}</th>
+            <th>{{# dgettext }} tuleap-tracker | Last push {{/ dgettext }}</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {{# webhook_presenters }}
+            <tr>
+                <td>{{ webhook_url }}</td>
+                <td class="last-push">
+                    {{# last_log }}
+                        {{# status_ok }}
+                            <span class="text-success" title="{{ status_message }}">
                             <i class="icon-ok-sign"></i> {{ status_message }}
                          </span>
-                    {{/ status_ok }}
+                        {{/ status_ok }}
 
-                    {{^ status_ok }}
-                        <span class="text-warning" title="{{ status_message }}">
+                        {{^ status_ok }}
+                            <span class="text-warning" title="{{ status_message }}">
                             <i class="icon-warning-sign"></i> {{ status_message }}
                          </span>
-                    {{/ status_ok }}
-            {{/ last_log }}
-            </td>
-            <td class="action-buttons">
-                <a role="button" data-toggle="modal" href="#modal-logs-{{ webhook_id }}">
-                    <i class="icon-list"></i> {{# dgettext }} tuleap-tracker | Logs {{/ dgettext }}
-                </a>
+                        {{/ status_ok }}
+                    {{/ last_log }}
+                </td>
+                <td class="action-buttons">
+                    <a role="button" data-toggle="modal" href="#modal-logs-{{ webhook_id }}">
+                        <i class="icon-list"></i> {{# dgettext }} tuleap-tracker | Logs {{/ dgettext }}
+                    </a>
 
-                {{> modal-logs }}
-            </td>
-        </tr>
-    {{/ webhook_presenters }}
+                    <a href="javascript:;"
+                       class="remove-tracker-webhook"
+                       data-toggle="popover"
+                       data-trigger="click"
+                       data-placement="left"
+                       data-html="true"
+                       data-popover-id="remove-{{ webhook_id }}-popover"
+                    >
+                        <i class="icon-trash"></i> {{# dgettext }} tuleap-tracker | Remove {{/ dgettext }}
+                    </a>
 
-    {{^ webhook_presenters }}
-        <tr>
-            <td class="table-cell-empty" colspan="3">
-            {{# dgettext }} tuleap-tracker | No webhooks defined {{/ dgettext }}
-            </td>
-        </tr>
-    {{/ webhook_presenters }}
-    </tbody>
-</table>
+                    {{> modal-logs }}
+                    {{> popover-remove-webhook }}
+                </td>
+            </tr>
+        {{/ webhook_presenters }}
+
+        {{^ webhook_presenters }}
+            <tr>
+                <td class="table-cell-empty" colspan="3">
+                    {{# dgettext }} tuleap-tracker | No webhooks defined {{/ dgettext }}
+                </td>
+            </tr>
+        {{/ webhook_presenters }}
+        </tbody>
+    </table>
+</div>

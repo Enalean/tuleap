@@ -21,7 +21,6 @@
 namespace Tuleap\Tracker\Webhook;
 
 use Tracker;
-use Tuleap\Tracker\Webhook\Webhook;
 
 class WebhookRetriever
 {
@@ -46,6 +45,19 @@ class WebhookRetriever
         }
 
         return $webhooks;
+    }
+
+    /**
+     * @return null|Webhook
+     */
+    public function getWebhookById($webhook_id)
+    {
+        $web_hook_row = $this->dao->searchWebhookById($webhook_id);
+        if (empty($web_hook_row)) {
+            return null;
+        }
+
+        return $this->instantiateFromRow($web_hook_row);
     }
 
     public function getLogsForWebhook(Webhook $webhook)
