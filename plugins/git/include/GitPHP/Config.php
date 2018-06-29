@@ -55,7 +55,7 @@ class Config
 	 *
 	 * @access public
 	 * @static
-	 * @return mixed instance of config class
+	 * @return self instance of config class
 	 */
 	public static function GetInstance()
 	{
@@ -113,8 +113,6 @@ class Config
 	 * Gets a config value
 	 *
 	 * @access public
-	 * @param $key config key to fetch
-	 * @param $default default config value to return
 	 * @return mixed config value
 	 */
 	public function GetValue($key, $default = null)
