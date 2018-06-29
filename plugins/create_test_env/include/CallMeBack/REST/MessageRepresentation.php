@@ -2,8 +2,6 @@
 /**
  * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
- * This file is a part of Tuleap.
- *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -15,17 +13,19 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
+ * along with Tuleap; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
 namespace Tuleap\CallMeBack\REST;
 
-class ResourcesInjector
+class MessageRepresentation
 {
-    public function populate(\Luracast\Restler\Restler $restler)
+    /** @var string */
+    public $message;
+
+    public function build($message)
     {
-        $restler->addAPIClass(CallMeBackResource::class, 'call_me_back');
-        $restler->addAPIClass(CallMeBackMessageResource::class, 'call_me_back/message');
+        $this->message = $message;
     }
 }

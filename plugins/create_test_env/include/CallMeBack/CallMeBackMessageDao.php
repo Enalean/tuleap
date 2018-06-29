@@ -31,6 +31,12 @@ class CallMeBackMessageDao extends DataAccessObject
         return $this->getDB()->run('SELECT * FROM plugin_callmeback_messages');
     }
 
+    public function get($language_id)
+    {
+        $sql = 'SELECT message FROM plugin_callmeback_messages WHERE language_id = ?';
+        return $this->getDB()->single($sql, [$language_id]);
+    }
+
     /**
      * @var string $language_id
      * @var string $message
