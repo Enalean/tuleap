@@ -131,6 +131,9 @@ msgstr "Annuler"
 msgid "Check permissions?"
 msgstr "Vérifier les permissions ?"
 
+msgid "Close"
+msgstr "Fermer"
+
 msgid "Comment"
 msgstr "Commentaire"
 
@@ -189,6 +192,12 @@ msgstr "Limite"
 msgid "Limit successfully updated."
 msgstr "Limite mise à jour avec succès."
 
+msgid "Logs"
+msgstr "Historique"
+
+msgid "Logs for %s"
+msgstr "Historique pour %s"
+
 msgid "Mail configuration"
 msgstr "Configuration des e-mail"
 
@@ -204,6 +213,9 @@ msgstr "Pas de couleur"
 
 msgid "No element selected."
 msgstr "Aucun élément sélectionné."
+
+msgid "No logs yet"
+msgstr "Pas encore d'historique"
 
 msgid "No notification set"
 msgstr "Aucune notification n'a été définie"
@@ -268,6 +280,9 @@ msgstr ""
 
 msgid "Renderer id"
 msgstr "Id du rendu"
+
+msgid "Return type"
+msgstr "Retour"
 
 msgid "Save"
 msgstr "Sauvegarder"
@@ -605,6 +620,9 @@ msgstr "La valeur '%s' n’existe pas pour le champ liste ‘%s’."
 
 msgid "This template does not use trackers"
 msgstr "Ce patron n'utilise pas les trackers"
+
+msgid "Time"
+msgstr "Date"
 
 msgid "Tracker"
 msgstr "Tracker"

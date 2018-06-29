@@ -34,7 +34,13 @@
                     {{/ status_ok }}
             {{/ last_log }}
             </td>
-            <td class="action-buttons"></td>
+            <td class="action-buttons">
+                <a role="button" data-toggle="modal" href="#modal-logs-{{ webhook_id }}">
+                    <i class="icon-list"></i> {{# dgettext }} tuleap-tracker | Logs {{/ dgettext }}
+                </a>
+
+                {{> modal-logs }}
+            </td>
         </tr>
     {{/ webhook_presenters }}
 

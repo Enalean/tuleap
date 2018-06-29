@@ -3477,3 +3477,50 @@ td.tracker-unsubscriber-actions {
         display: block;
     }
 }
+
+.tracker-webhooks-jobs-list {
+    > tbody {
+        font-size: 12px;
+
+        > tr:first-child > td {
+            white-space: nowrap;
+        }
+
+        > tr > td:last-child {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            max-width: 383px;
+            width: 100%;
+        }
+    }
+}
+
+.modal-tracker-webhooks {
+    > .modal-header {
+      border-bottom: 2px solid #888888;
+
+        > .close {
+          margin-left: 10px;
+        }
+
+        > h3 {
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
+    }
+
+    .modal-body {
+
+        > p:first-child {
+          margin-bottom: 30px;
+        }
+
+        input[type=url] {
+          width: 100%;
+          height: 30px;
+          box-sizing: border-box;
+        }
+    }
+}

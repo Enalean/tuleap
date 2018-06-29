@@ -1,0 +1,54 @@
+<div id="modal-logs-{{ webhook_id }}"
+    class="modal hide fade modal-tracker-webhooks"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="modal-logs-title"
+    aria-hidden="true"
+>
+    <div class="modal-header">
+        <a role="button" class="close" data-dismiss="modal">×</a>
+        <h3 id="modal-logs-title">{{# dgettext }} tuleap-tracker | Logs for %s | {{ webhook_url }} {{/ dgettext }}</h3>
+    </div>
+
+    <div class="modal-body">
+        <table class="table tracker-webhooks-jobs-list">
+            <thead>
+                <tr>
+                    <th>{{# dgettext }} tuleap-tracker | Time {{/ dgettext }}</th>
+                    <th>{{# dgettext }} tuleap-tracker | Return type {{/ dgettext }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{# all_log }}
+                    <tr>
+                       <td>{{ time }}</td>
+                       <td>
+                           {{# status_ok }}
+                            <span class="text-success" title="{{ status_message }}">
+                               <i class="icon-ok-sign"></i> {{ status_message }}
+                            </span>
+                           {{/ status_ok }}
+
+                           {{^ status_ok }}
+                            <span class="text-warning" title="{{ status_message }}">
+                                <i class="icon-warning-sign"></i> {{ status_message }}
+                            </span>
+                           {{/ status_ok }}
+                       </td>
+                    </tr>
+                {{/ all_log }}
+                {{^ all_log }}
+                    <tr>
+                        <td class="table-cell-empty" colspan="2">
+                        {{# dgettext }} tuleap-tracker | No logs yet {{/ dgettext }}
+                        </td>
+                    </tr>
+                {{/ all_log }}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn" data-dismiss="modal" aria-hidden="true">{{# dgettext }} tuleap-tracker | Close {{/ dgettext }}</button>
+    </div>
+</div>
