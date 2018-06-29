@@ -246,7 +246,8 @@ CREATE TABLE tracker_field_list_bind_static_value(
     rank INT(11) NOT NULL,
     is_hidden TINYINT(1) NOT NULL,
     original_value_id INT(11) NOT NULL DEFAULT '0',
-    INDEX field_id_idx(field_id)
+    INDEX field_id_idx(field_id),
+    INDEX idx_original_value_id (original_value_id, id)
 ) ENGINE=InnoDB AUTO_INCREMENT=101;
 
 CREATE TABLE IF NOT EXISTS tracker_field_burndown (

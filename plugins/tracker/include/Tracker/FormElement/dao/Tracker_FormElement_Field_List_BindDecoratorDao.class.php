@@ -56,7 +56,23 @@ class Tracker_FormElement_Field_List_BindDecoratorDao extends DataAccessObject
         }
     }
 
-    public function save($field_id, $value_id, $red, $green, $blue) {
+    public function save($field_id, $value_id, $red, $green, $blue)
+    {
+        $field_id  = $this->da->escapeInt($field_id);
+        $value_id  = $this->da->escapeInt($value_id);
+        $red       = $this->da->escapeInt($red);
+        $green     = $this->da->escapeInt($green);
+        $blue      = $this->da->escapeInt($blue);
+
+        $sql = "INSERT INTO $this->table_name (field_id, value_id, red, green, blue, tlp_color_name)
+            SELECT field_id, id, $red, $green, $blue, null
+            FROM tracker_field_list_bind_static_value
+            WHERE original_value_id = $value_id OR id = $value_id";
+        return $this->update($sql);
+    }
+
+    public function updateColor($field_id, $value_id, $red, $green, $blue)
+    {
         $field_id  = $this->da->escapeInt($field_id);
         $value_id  = $this->da->escapeInt($value_id);
         $red       = $this->da->escapeInt($red);
@@ -71,6 +87,17 @@ class Tracker_FormElement_Field_List_BindDecoratorDao extends DataAccessObject
     }
 
     public function saveTlpColor($value_id, $tlp_color)
+    {
+        $tlp_color = $this->da->quoteSmart($tlp_color);
+
+        $sql = "INSERT INTO $this->table_name (field_id, value_id, red, green, blue, tlp_color_name)
+            SELECT field_id, id, null, null, null, $tlp_color
+            FROM tracker_field_list_bind_static_value
+            WHERE original_value_id = $value_id OR id = $value_id";
+        return $this->update($sql);
+    }
+
+    public function updateTlpColor($value_id, $tlp_color)
     {
         $tlp_color = $this->da->quoteSmart($tlp_color);
 

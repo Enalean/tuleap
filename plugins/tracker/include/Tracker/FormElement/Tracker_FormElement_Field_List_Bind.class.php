@@ -42,7 +42,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements
 
     protected $default_values;
     /**
-     * @var Tracker_FormElement_Field_List_BindDecorator
+     * @var Tracker_FormElement_Field_List_BindDecorator[]
      */
     protected $decorators;
 
@@ -452,7 +452,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements
         if (isset($params['decorator'])) {
             foreach ($params['decorator'] as $value_id => $hexacolor) {
                 if ($hexacolor) {
-                    Tracker_FormElement_Field_List_BindDecorator::save($this->field->getId(), $value_id, $hexacolor);
+                    Tracker_FormElement_Field_List_BindDecorator::update($this->field->getId(), $value_id, $hexacolor);
                 } else {
                     Tracker_FormElement_Field_List_BindDecorator::delete($this->field->getId(), $value_id);
                 }

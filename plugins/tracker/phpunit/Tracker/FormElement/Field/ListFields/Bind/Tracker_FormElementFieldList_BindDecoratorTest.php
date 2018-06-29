@@ -28,11 +28,6 @@ require_once __DIR__ . '/../../../../../bootstrap.php';
 
 class Tracker_FormElementFieldList_BindDecoratorTest extends TestCase // @codingStandardsIgnoreLine
 {
-    public function setUp()
-    {
-        parent::setUp();
-    }
-
     public function testItExportOldPaletteColor()
     {
         $decorator = new Tracker_FormElement_Field_List_BindDecorator(101, 1, 255, 255, 255, null);
@@ -53,5 +48,17 @@ class Tracker_FormElementFieldList_BindDecoratorTest extends TestCase // @coding
 
         $attr = $root->decorator->attributes();
         $this->assertEquals((string)$attr->tlp_color_name, 'inca-silver');
+    }
+
+    public function testIsUsingOldPaletteWithLegacyColorComingFromXMLImport()
+    {
+        $decorator = new Tracker_FormElement_Field_List_BindDecorator(101, 1, 255, 255, 255, '');
+        $this->assertTrue($decorator->isUsingOldPalette());
+    }
+
+    public function testIsUsingOldPaletteWithNoColorComingFromXMLImport()
+    {
+        $decorator = new Tracker_FormElement_Field_List_BindDecorator(101, 1, 0, 0, 0, 'inca-silver');
+        $this->assertFalse($decorator->isUsingOldPalette());
     }
 }

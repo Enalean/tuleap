@@ -227,6 +227,18 @@ class Tracker_FormElement_Field_List_BindDecorator
         $dao->save($field_id, $value_id, $r, $g, $b);
     }
 
+    public static function update($field_id, $value_id, $color)
+    {
+        $dao = new Tracker_FormElement_Field_List_BindDecoratorDao();
+
+        if (! self::isHexaColor($color)) {
+            return $dao->updateTlpColor($value_id, $color);
+        }
+
+        list($r, $g, $b) = ColorHelper::HexaToRGB($color);
+        $dao->updateColor($field_id, $value_id, $r, $g, $b);
+    }
+
     /**
      * Delete a decorator
      */
@@ -277,7 +289,17 @@ class Tracker_FormElement_Field_List_BindDecorator
 
     public function isUsingOldPalette()
     {
-        return $this->tlp_color_name === null && $this->r !== null && $this->g !== null && $this->b !== null;
+        return ! $this->isTlpColorNamedDefined() && $this->isLegacyColorDefined();
+    }
+
+    private function isTlpColorNamedDefined()
+    {
+        return (string) $this->tlp_color_name !== '';
+    }
+
+    private function isLegacyColorDefined()
+    {
+        return $this->r !== null && $this->g !== null && $this->b !== null;
     }
 
     public function getCurrentColor()
