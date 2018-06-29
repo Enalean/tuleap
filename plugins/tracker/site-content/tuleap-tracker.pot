@@ -79,6 +79,11 @@ msgid ""
 msgstr ""
 
 msgid ""
+"Be careful, all the artifact content is sent in the payload without "
+"permission checks."
+msgstr ""
+
+msgid ""
 "Be careful: An artifact deletion is an action hardly reversible. Choose "
 "wisely."
 msgstr ""
@@ -139,6 +144,9 @@ msgstr[1] ""
 msgid "Hierarchy"
 msgstr ""
 
+msgid "Last push"
+msgstr ""
+
 msgid "Limit"
 msgstr ""
 
@@ -172,6 +180,9 @@ msgid "No notifications at all"
 msgstr ""
 
 msgid "No users have unsubscribed."
+msgstr ""
+
+msgid "No webhooks defined"
 msgstr ""
 
 msgid "Notification successfully deleted."
@@ -521,6 +532,9 @@ msgstr ""
 msgid "Trackers"
 msgstr ""
 
+msgid "URL"
+msgstr ""
+
 msgid "Unsubscribe a user"
 msgstr ""
 
@@ -558,6 +572,9 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
+msgid "Webhooks"
+msgstr ""
+
 msgid "You are about to remove the notification. Please confirm your action."
 msgstr ""
 
@@ -567,6 +584,11 @@ msgid ""
 msgstr ""
 
 msgid "You can choose the notification mode you wish for this tracker."
+msgstr ""
+
+msgid ""
+"You can define several webhooks that will be processed after each artifact "
+"creation and updates."
 msgstr ""
 
 msgid ""

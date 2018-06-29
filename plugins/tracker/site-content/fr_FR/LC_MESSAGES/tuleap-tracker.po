@@ -108,6 +108,13 @@ msgstr ""
 "soumission (et éventuellement de modification) d'artefacts."
 
 msgid ""
+"Be careful, all the artifact content is sent in the payload without "
+"permission checks."
+msgstr ""
+"Attention, tout le contenu de l'artéfact est envoyé dans le payload sans "
+"prise en compte des permissions."
+
+msgid ""
 "Be careful: An artifact deletion is an action hardly reversible. Choose "
 "wisely."
 msgstr ""
@@ -173,6 +180,9 @@ msgstr[1] "Les groupes '%s' n'ont pas pu être ajoutés"
 msgid "Hierarchy"
 msgstr "Hiérarchie"
 
+msgid "Last push"
+msgstr "Dernier push"
+
 msgid "Limit"
 msgstr "Limite"
 
@@ -211,6 +221,9 @@ msgstr "Aucune notification"
 
 msgid "No users have unsubscribed."
 msgstr "Aucun utilisateur ne s'est désabonné."
+
+msgid "No webhooks defined"
+msgstr "Aucun webhook n'est défini"
 
 msgid "Notification successfully deleted."
 msgstr "La notification a été supprimée"
@@ -614,6 +627,9 @@ msgstr "Le service tracker est désactivé."
 msgid "Trackers"
 msgstr "Trackers"
 
+msgid "URL"
+msgstr "URL"
+
 msgid "Unsubscribe a user"
 msgstr "Désabonner un utilisateur"
 
@@ -657,6 +673,9 @@ msgstr[1] ""
 "fait référence. Merci de vous référer à la documentation pour les "
 "comparaisons autorisées."
 
+msgid "Webhooks"
+msgstr "Webhooks"
+
 msgid "You are about to remove the notification. Please confirm your action."
 msgstr ""
 "Vous êtes sur le point de supprimer la notification. Merci de confirmer "
@@ -673,6 +692,13 @@ msgid "You can choose the notification mode you wish for this tracker."
 msgstr ""
 "Vous pouvez sélectionner le mode de notification que vous préférez pour ce "
 "tracker."
+
+msgid ""
+"You can define several webhooks that will be processed after each artifact "
+"creation and updates."
+msgstr ""
+"Vous pouvez définir plusieurs webhooks qui seront envoyé après chaque "
+"création et édition d'artéfact."
 
 msgid ""
 "You can't switch to old colors because the field is currently being used by "

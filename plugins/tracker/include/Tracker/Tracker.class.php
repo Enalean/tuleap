@@ -50,6 +50,7 @@ use Tuleap\Tracker\Notifications\UsersToNotifyDao;
 use Tuleap\Tracker\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\RecentlyVisited\VisitRetriever;
+use Tuleap\Tracker\Webhook\Actions\AdminWebhooks;
 use Tuleap\Tracker\Webhook\WebhookDao;
 use Tuleap\Tracker\Webhook\WebhookRetriever;
 use Tuleap\Tracker\Webhook\WebhookStatusLogger;
@@ -699,6 +700,15 @@ class Tracker implements Tracker_Dispatchable_Interface
             case Workflow::FUNC_ADMIN_DELETE_TRIGGER:
                 if ($this->userIsAdmin($current_user)) {
                     $this->getWorkflowManager()->process($layout, $request, $current_user);
+                } else {
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
+                }
+                break;
+            case AdminWebhooks::FUNC_ADMIN_WEBHOOKS:
+                if ($this->userIsAdmin($current_user)) {
+                    $admin_webhook = new AdminWebhooks($this, $this->getWebhookRetriever());
+                    $admin_webhook->process($layout, $request, $current_user);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());

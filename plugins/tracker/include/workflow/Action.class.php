@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,14 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Webhook\Actions\AdminWebhooks;
+
 /**
  * Base class to manage action that can be done on a workflow
  */
 abstract class Tracker_Workflow_Action {
 
-    const PANE_RULES       = 'rules';
-    const PANE_TRANSITIONS = 'transitions';
+    const PANE_RULES                  = 'rules';
+    const PANE_TRANSITIONS            = 'transitions';
     const PANE_CROSS_TRACKER_TRIGGERS = 'triggers';
+    const PANE_WEBHOOKS               = 'webhooks';
 
     /** @var Tracker */
     protected $tracker;
@@ -34,7 +37,8 @@ abstract class Tracker_Workflow_Action {
         $this->tracker = $tracker;
     }
 
-    protected function displayHeader($engine) {
+    protected function displayHeader(Tracker_IDisplayTrackerLayout $engine)
+    {
         $this->tracker->displayAdminItemHeader($engine, 'editworkflow');
 
         echo '<div class="tabbable">';
@@ -70,10 +74,15 @@ abstract class Tracker_Workflow_Action {
                 'func'  => Workflow::FUNC_ADMIN_CROSS_TRACKER_TRIGGERS,
                 'title' => $GLOBALS['Language']->getText('workflow_admin', 'tab_triggers'),
             ),
+            self::PANE_WEBHOOKS => [
+                'func'  => AdminWebhooks::FUNC_ADMIN_WEBHOOKS,
+                'title' => dgettext('tuleap-tracker', "Webhooks"),
+            ]
         );
     }
 
-    protected function displayFooter($engine) {
+    protected function displayFooter(Tracker_IDisplayTrackerLayout $engine)
+    {
         echo '</div>';
         echo '</div>';
         $this->tracker->displayFooter($engine);
@@ -89,4 +98,3 @@ abstract class Tracker_Workflow_Action {
      */
     public abstract function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user);
 }
-?>
