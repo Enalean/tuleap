@@ -52,14 +52,15 @@ class StepDefinitionChangesetValueDao extends Tracker_FormElement_Field_ValueDao
     {
         $changeset_value_id = $this->da->escapeInt($changeset_value_id);
         $values             = [];
+        $rank               = 1;
         foreach ($steps as $step) {
             $description             = $this->da->quoteSmart($step->getDescription());
             $description_format      = $this->da->quoteSmart($step->getDescriptionFormat());
             $expected_results        = $this->da->quoteSmart($step->getExpectedResults());
             $expected_results_format = $this->da->quoteSmart($step->getExpectedResultsFormat());
-            $rank                    = $this->da->escapeInt($step->getRank());
 
             $values[] = "($changeset_value_id, $description, $description_format, $expected_results, $expected_results_format, $rank)";
+            $rank++;
         }
         if ($values) {
             $values = implode(',', $values);
