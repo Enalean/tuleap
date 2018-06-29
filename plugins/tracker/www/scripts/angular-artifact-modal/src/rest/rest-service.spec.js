@@ -298,11 +298,15 @@ describe("rest-service", () => {
 
             await RestService.uploadAdditionalChunk(9, "rmNcNnltd", 4);
 
-            expect(tlp.put).toHaveBeenCalledWith('/api/v1/artifact_temporary_files/9',
-                JSON.stringify({
+            expect(tlp.put).toHaveBeenCalledWith("/api/v1/artifact_temporary_files/9", {
+                headers: {
+                    "content-type": "application/json"
+                },
+                body: JSON.stringify({
                     content: "rmNcNnltd",
-                    offset : 4
-                }));
+                    offset: 4
+                })
+            });
         });
     });
 

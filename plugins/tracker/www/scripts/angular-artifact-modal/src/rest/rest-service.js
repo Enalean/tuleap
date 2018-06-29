@@ -165,13 +165,15 @@ async function uploadTemporaryFile(file_to_upload, description) {
 }
 
 function uploadAdditionalChunk(temporary_file_id, chunk, chunk_offset) {
-    const params = JSON.stringify({
+    const body = JSON.stringify({
         content: chunk,
-        offset : chunk_offset
+        offset: chunk_offset
     });
 
-    return put(`/api/v1/artifact_temporary_files/${ temporary_file_id }`, params)
-        .catch(errorHandler);
+    return put(`/api/v1/artifact_temporary_files/${temporary_file_id}`, {
+        headers,
+        body
+    }).catch(errorHandler);
 }
 
 function getUserPreference(user_id, preference_key) {
