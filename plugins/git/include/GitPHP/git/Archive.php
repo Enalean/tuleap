@@ -1,4 +1,7 @@
 <?php
+
+namespace Tuleap\Git\GitPHP;
+
 /**
  * GitPHP Archive
  *
@@ -9,20 +12,17 @@
  * @package GitPHP
  * @subpackage Git
  */
-
-
 define('GITPHP_COMPRESS_TAR', 'tar');
 define('GITPHP_COMPRESS_BZ2', 'tbz2');
 define('GITPHP_COMPRESS_GZ', 'tgz');
 define('GITPHP_COMPRESS_ZIP', 'zip');
-
 /**
  * Archive class
  *
  * @package GitPHP
  * @subpackage Git
  */
-class GitPHP_Archive
+class Archive
 {
 	/**
 	 * gitObject
@@ -174,8 +174,8 @@ class GitPHP_Archive
 	public function SetObject($object)
 	{
 		// Archive only works for commits and trees
-		if (($object != null) && (!(($object instanceof GitPHP_Commit) || ($object instanceof GitPHP_Tree)))) {
-			throw new Exception('Invalid source object for archive');
+		if (($object != null) && (!(($object instanceof Commit) || ($object instanceof Tree)))) {
+			throw new \Exception('Invalid source object for archive');
 		}
 
 		$this->gitObject = $object;
@@ -223,7 +223,7 @@ class GitPHP_Archive
 	 */
 	public function GetExtension()
 	{
-		return GitPHP_Archive::FormatToExtension($this->format);
+		return Archive::FormatToExtension($this->format);
 	}
 
 	/**
@@ -243,7 +243,7 @@ class GitPHP_Archive
 		$fname = $this->GetProject()->GetSlug();
 
 		if (!empty($this->path)) {
-			$fname .= '-' . GitPHP_Util::MakeSlug($this->path);
+			$fname .= '-' . Util::MakeSlug($this->path);
 		}
 
 		$fname .= '.' . $this->GetExtension();
@@ -346,14 +346,14 @@ class GitPHP_Archive
 	{
 		if (!$this->gitObject)
 		{
-			throw new Exception('Invalid object for archive');
+			throw new \Exception('Invalid object for archive');
 		}
 
 		if ($this->handle) {
 			return true;
 		}
 
-		$exe = new GitPHP_GitExe($this->GetProject());
+		$exe = new GitExe($this->GetProject());
 
 		$args = array();
 
@@ -381,7 +381,7 @@ class GitPHP_Archive
 
 			$this->tempfile = tempnam(sys_get_temp_dir(), "GitPHP");
 
-			$compress = GitPHP_Config::GetInstance()->GetValue('compresslevel');
+			$compress = Config::GetInstance()->GetValue('compresslevel');
 
 			$mode = 'wb';
 			if (is_int($compress) && ($compress >= 1) && ($compress <= 9))
@@ -457,7 +457,7 @@ class GitPHP_Archive
 		$data = fread($this->handle, $size);
 
 		if ($this->format == GITPHP_COMPRESS_BZ2) {
-			$data = bzcompress($data, GitPHP_Config::GetInstance()->GetValue('compresslevel', 4));
+			$data = bzcompress($data, Config::GetInstance()->GetValue('compresslevel', 4));
 		}
 
 		return $data;
@@ -504,16 +504,16 @@ class GitPHP_Archive
 	{
 		$formats = array();
 
-		$formats[GITPHP_COMPRESS_TAR] = GitPHP_Archive::FormatToExtension(GITPHP_COMPRESS_TAR);
+		$formats[GITPHP_COMPRESS_TAR] = Archive::FormatToExtension(GITPHP_COMPRESS_TAR);
 		
 		// TODO check for git > 1.4.3 for zip
-		$formats[GITPHP_COMPRESS_ZIP] = GitPHP_Archive::FormatToExtension(GITPHP_COMPRESS_ZIP);
+		$formats[GITPHP_COMPRESS_ZIP] = Archive::FormatToExtension(GITPHP_COMPRESS_ZIP);
 
 		if (function_exists('bzcompress'))
-			$formats[GITPHP_COMPRESS_BZ2] = GitPHP_Archive::FormatToExtension(GITPHP_COMPRESS_BZ2);
+			$formats[GITPHP_COMPRESS_BZ2] = Archive::FormatToExtension(GITPHP_COMPRESS_BZ2);
 
 		if (function_exists('gzencode'))
-			$formats[GITPHP_COMPRESS_GZ] = GitPHP_Archive::FormatToExtension(GITPHP_COMPRESS_GZ);
+			$formats[GITPHP_COMPRESS_GZ] = Archive::FormatToExtension(GITPHP_COMPRESS_GZ);
 
 		return $formats;
 	}

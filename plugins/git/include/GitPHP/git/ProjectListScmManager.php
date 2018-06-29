@@ -1,4 +1,7 @@
 <?php
+
+namespace Tuleap\Git\GitPHP;
+
 /**
  * GitPHP ProjectListScmManager
  *
@@ -16,7 +19,7 @@
  * @package GitPHP
  * @subpackage Git
  */
-class GitPHP_ProjectListScmManager extends GitPHP_ProjectListBase
+class ProjectListScmManager extends ProjectListBase
 {
 	/**
 	 * __construct
@@ -24,13 +27,13 @@ class GitPHP_ProjectListScmManager extends GitPHP_ProjectListBase
 	 * constructor
 	 *
 	 * @param string $projectFile file to read
-	 * @throws Exception if parameter is not a readable file
+	 * @throws \Exception if parameter is not a readable file
 	 * @access public
 	 */
 	public function __construct($projectFile)
 	{
 		if (!(is_string($projectFile) && is_file($projectFile))) {
-			throw new Exception(sprintf(__('%1$s is not a file'), $projectFile));
+			throw new \Exception(sprintf(__('%1$s is not a file'), $projectFile));
 		}
 
 		$this->projectConfig = $projectFile;
@@ -48,7 +51,7 @@ class GitPHP_ProjectListScmManager extends GitPHP_ProjectListBase
 	 */
 	protected function PopulateProjects()
 	{
-		$projectRoot = GitPHP_Util::AddSlash(GitPHP_Config::GetInstance()->GetValue('projectroot'));
+		$projectRoot = Util::AddSlash(Config::GetInstance()->GetValue('projectroot'));
 
 		$use_errors = libxml_use_internal_errors(true);
 
@@ -58,18 +61,18 @@ class GitPHP_ProjectListScmManager extends GitPHP_ProjectListBase
 		libxml_use_internal_errors($use_errors);
 
 		if (!$xml) {
-			throw new Exception(sprintf('Could not load SCM manager config %1$s', $this->projectConfig));
+			throw new \Exception(sprintf('Could not load SCM manager config %1$s', $this->projectConfig));
 		}
 
 		foreach ($xml->repositories->repository as $repository) {
 
 			if ($repository->type != 'git') {
-				GitPHP_Log::GetInstance()->Log(sprintf('%1$s is not a git project', $repository->name));
+				Log::GetInstance()->Log(sprintf('%1$s is not a git project', $repository->name));
 				continue;
 			}
 
 			if ($repository->public != 'true') {
-				GitPHP_Log::GetInstance()->Log(sprintf('%1$s is not public', $repository->name));
+				Log::GetInstance()->Log(sprintf('%1$s is not public', $repository->name));
 				continue;
 			}
 
@@ -79,13 +82,13 @@ class GitPHP_ProjectListScmManager extends GitPHP_ProjectListBase
 
 			if (is_file($projectRoot . $projName . '/HEAD')) {
 				try {
-					$projObj = new GitPHP_Project($projectRoot, $projName);
+					$projObj = new Project($projectRoot, $projName);
 					$this->projects[$projName] = $projObj;
-				} catch (Exception $e) {
-					GitPHP_Log::GetInstance()->Log($e->getMessage());
+				} catch (\Exception $e) {
+					Log::GetInstance()->Log($e->getMessage());
 				}
 			} else {
-				GitPHP_Log::GetInstance()->Log(sprintf('%1$s is not a git project', $projName));
+				Log::GetInstance()->Log(sprintf('%1$s is not a git project', $projName));
 			}
 		}
 	}

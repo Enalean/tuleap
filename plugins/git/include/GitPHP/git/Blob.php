@@ -1,4 +1,7 @@
 <?php
+
+namespace Tuleap\Git\GitPHP;
+
 /**
  * GitPHP Blob
  *
@@ -9,14 +12,13 @@
  * @package GitPHP
  * @subpackage Git
  */
-
 /**
  * Commit class
  *
  * @package GitPHP
  * @subpackage Git
  */
-class GitPHP_Blob extends GitPHP_FilesystemObject
+class Blob extends FilesystemObject implements GitObjectType
 {
 
 	/**
@@ -130,7 +132,7 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 		$this->dataRead = true;
 
 		if ($this->GetProject()->GetCompat()) {
-			$exe = new GitPHP_GitExe($this->GetProject());
+			$exe = new GitExe($this->GetProject());
 
 			$args = array();
 			$args[] = 'blob';
@@ -141,7 +143,7 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 			$this->data = $this->GetProject()->GetObject($this->hash);
 		}
 
-		GitPHP_Cache::GetObjectCacheInstance()->Set($this->GetCacheKey(), $this);
+		Cache::GetObjectCacheInstance()->Set($this->GetCacheKey(), $this);
 	}
 
 	/**
@@ -285,9 +287,9 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 
 		$mime = '';
 
-		$magicdb = GitPHP_Config::GetInstance()->GetValue('magicdb', null);
+		$magicdb = Config::GetInstance()->GetValue('magicdb', null);
 		if (empty($magicdb)) {
-			if (GitPHP_Util::IsWindows()) {
+			if (Util::IsWindows()) {
 				$magicdb = 'C:\\wamp\\php\\extras\\magic';
 			} else {
 				$magicdb = '/usr/share/misc/magic';
@@ -318,7 +320,7 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 	 */
 	private function FileMime_File()
 	{
-		if (GitPHP_Util::IsWindows()) {
+		if (Util::IsWindows()) {
 			return '';
 		}
 
@@ -414,7 +416,7 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 	{
 		$this->historyRead = true;
 
-		$exe = new GitPHP_GitExe($this->GetProject());
+		$exe = new GitExe($this->GetProject());
 		
 		$args = array();
 		if (isset($this->commit))
@@ -438,10 +440,10 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 				$commit = $this->GetProject()->GetCommit($regs[1]);
 			} else if ($commit) {
 				try {
-					$history = new GitPHP_FileDiff($this->GetProject(), $line);
+					$history = new FileDiff($this->GetProject(), $line);
 					$history->SetCommit($commit);
 					$this->history[] = $history;
-				} catch (Exception $e) {
+				} catch (\Exception $e) {
 				}
 				unset ($commit);
 			}
@@ -475,7 +477,7 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 	{
 		$this->blameRead = true;
 
-		$exe = new GitPHP_GitExe($this->GetProject());
+		$exe = new GitExe($this->GetProject());
 
 		$args = array();
 		$args[] = '-s';
@@ -534,4 +536,16 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 		return $key;
 	}
 
+    public function isTree()
+    {
+        return false;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isBlob()
+    {
+        return  true;
+    }
 }

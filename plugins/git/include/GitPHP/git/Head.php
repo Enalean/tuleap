@@ -1,4 +1,7 @@
 <?php
+
+namespace Tuleap\Git\GitPHP;
+
 /**
  * GitPHP Head
  *
@@ -16,7 +19,7 @@
  * @package GitPHP
  * @subpackage Git
  */
-class GitPHP_Head extends GitPHP_Ref
+class Head extends Ref
 {
 
 	/**
@@ -38,7 +41,7 @@ class GitPHP_Head extends GitPHP_Ref
 	 * @param string $head head name
 	 * @param string $headHash head hash
 	 * @return mixed head object
-	 * @throws Exception exception on invalid head or hash
+	 * @throws \Exception exception on invalid head or hash
 	 */
 	public function __construct($project, $head, $headHash = '')
 	{
@@ -77,7 +80,7 @@ class GitPHP_Head extends GitPHP_Ref
 	{
 		$aObj = $a->GetCommit();
 		$bObj = $b->GetCommit();
-		return GitPHP_Commit::CompareAge($aObj, $bObj);
+		return Commit::CompareAge($aObj, $bObj);
 	}
 
 }

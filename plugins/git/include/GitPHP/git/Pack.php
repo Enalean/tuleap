@@ -1,4 +1,7 @@
 <?php
+
+namespace Tuleap\Git\GitPHP;
+
 /**
  * GitPHP Pack
  *
@@ -17,7 +20,7 @@
  * @package GitPHP
  * @subpackage Git
  */
-class GitPHP_Pack
+class Pack
 {
 
 	const OBJ_COMMIT = 1;
@@ -72,21 +75,21 @@ class GitPHP_Pack
 	 * @param mixed $project the project
 	 * @param string $hash pack hash
 	 * @return mixed pack object
-	 * @throws Exception exception on invalid hash
+	 * @throws \Exception exception on invalid hash
 	 */
 	public function __construct($project, $hash)
 	{
 		if (!(preg_match('/[0-9A-Fa-f]{40}/', $hash))) {
-			throw new Exception(sprintf(__('Invalid hash %1$s'), $hash));
+			throw new \Exception(sprintf(__('Invalid hash %1$s'), $hash));
 		}
 		$this->hash = $hash;
 		$this->project = $project;
 
 		if (!file_exists($project->GetPath() . '/objects/pack/pack-' . $hash . '.idx')) {
-			throw new Exception('Pack index does not exist');
+			throw new \Exception('Pack index does not exist');
 		}
 		if (!file_exists($project->GetPath() . '/objects/pack/pack-' . $hash . '.pack')) {
-			throw new Exception('Pack file does not exist');
+			throw new \Exception('Pack file does not exist');
 		}
 	}
 
@@ -154,7 +157,7 @@ class GitPHP_Pack
 
 		$magic = fread($index, 4);
 		if ($magic == "\xFFtOc") {
-			$version = GitPHP_Pack::fuint32($index);
+			$version = Pack::fuint32($index);
 			if ($version == 2) {
 				$offset = $this->SearchIndexV2($index, $hash);
 			}
@@ -205,7 +208,7 @@ class GitPHP_Pack
 			$mid = ($low + $high) >> 1;
 			fseek($index, 4*256 + 24*$mid);
 
-			$off = GitPHP_Pack::fuint32($index);
+			$off = Pack::fuint32($index);
 			$binName = fread($index, 20);
 			$name = bin2hex($binName);
 
@@ -260,7 +263,7 @@ class GitPHP_Pack
 		 * get the object count from fanout[255]
 		 */
 		fseek($index, 8 + 4*255);
-		$objectCount = GitPHP_Pack::fuint32($index);
+		$objectCount = Pack::fuint32($index);
 
 		/*
 		 * binary search for the index of the hash in the sha listing
@@ -293,9 +296,9 @@ class GitPHP_Pack
 		 * get the offset from the same index in the offset table
 		 */
 		fseek($index, 8 + 4*256 + 24*$objectCount + 4*$objIndex);
-		$offset = GitPHP_Pack::fuint32($index);
+		$offset = Pack::fuint32($index);
 		if ($offset & 0x80000000) {
-			throw new Exception('64-bit offsets not implemented');
+			throw new \Exception('64-bit offsets not implemented');
 		}
 		return $offset;
 	}
@@ -324,11 +327,11 @@ class GitPHP_Pack
 		if ($binaryHash{0} == "\x00") {
 			$low = 0;
 			fseek($index, $offset);
-			$high = GitPHP_Pack::fuint32($index);
+			$high = Pack::fuint32($index);
 		} else {
 			fseek($index, $offset + (ord($binaryHash{0}) - 1) * 4);
-			$low = GitPHP_Pack::fuint32($index);
-			$high = GitPHP_Pack::fuint32($index);
+			$low = Pack::fuint32($index);
+			$high = Pack::fuint32($index);
 		}
 		return array($low, $high);
 	}
@@ -354,11 +357,11 @@ class GitPHP_Pack
 		flock($pack, LOCK_SH);
 
 		$magic = fread($pack, 4);
-		$version = GitPHP_Pack::fuint32($pack);
+		$version = Pack::fuint32($pack);
 		if ($magic != 'PACK' || $version != 2) {
 			flock($pack, LOCK_UN);
 			fclose($pack);
-			throw new Exception('Unsupported pack format');
+			throw new \Exception('Unsupported pack format');
 		}
 
 		list($type, $data) = $this->UnpackObject($pack, $offset);
@@ -398,12 +401,12 @@ class GitPHP_Pack
 			$size |= (($c & 0x7f) << $i);
 		}
 
-		if ($type == GitPHP_Pack::OBJ_COMMIT || $type == GitPHP_Pack::OBJ_TREE || $type == GitPHP_Pack::OBJ_BLOB || $type == GitPHP_Pack::OBJ_TAG) {
+		if ($type == Pack::OBJ_COMMIT || $type == Pack::OBJ_TREE || $type == Pack::OBJ_BLOB || $type == Pack::OBJ_TAG) {
 			/*
 			 * regular gzipped object data
 			 */
 			return array($type, gzuncompress(fread($pack, $size+512), $size));
-		} else if ($type == GitPHP_Pack::OBJ_OFS_DELTA) {
+		} else if ($type == Pack::OBJ_OFS_DELTA) {
 			/*
 			 * delta of an object at offset
 			 */
@@ -437,10 +440,10 @@ class GitPHP_Pack
 				 * read base object at offset and apply delta to it
 				 */
 				list($type, $base) = $this->UnpackObject($pack, $baseOffset);
-				$data = GitPHP_Pack::ApplyDelta($delta, $base);
+				$data = Pack::ApplyDelta($delta, $base);
 				return array($type, $data);
 			}
-		} else if ($type == GitPHP_Pack::OBJ_REF_DELTA) {
+		} else if ($type == Pack::OBJ_REF_DELTA) {
 			/*
 			 * delta of object with hash
 			 */
@@ -458,7 +461,7 @@ class GitPHP_Pack
 			 */
 			$delta = gzuncompress(fread($pack, $size + 512), $size);
 
-			$data = GitPHP_Pack::ApplyDelta($delta, $base);
+			$data = Pack::ApplyDelta($delta, $base);
 
 			return array($type, $data);
 		}
@@ -483,8 +486,8 @@ class GitPHP_Pack
 		 * algorithm from patch-delta.c
 		 */
 		$pos = 0;
-		$baseSize = GitPHP_Pack::ParseVarInt($delta, $pos);
-		$resultSize = GitPHP_Pack::ParseVarInt($delta, $pos);
+		$baseSize = Pack::ParseVarInt($delta, $pos);
+		$resultSize = Pack::ParseVarInt($delta, $pos);
 
 		$data = '';
 		$deltalen = strlen($delta);
@@ -564,6 +567,6 @@ class GitPHP_Pack
 	 */
 	private static function fuint32($handle)
 	{
-		return GitPHP_Pack::uint32(fread($handle, 4));
+		return Pack::uint32(fread($handle, 4));
 	}
 }

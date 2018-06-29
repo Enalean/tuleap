@@ -1,4 +1,8 @@
 <?php
+
+
+namespace Tuleap\Git\GitPHP;
+
 /**
  * GitPHP Config
  *
@@ -8,13 +12,12 @@
  * @copyright Copyright (c) 2010 Christopher Han
  * @package GitPHP
  */
-
 /**
  * Config class
  *
  * @package GitPHP
  */
-class GitPHP_Config
+class Config
 {
 	
 	/**
@@ -57,7 +60,7 @@ class GitPHP_Config
 	public static function GetInstance()
 	{
 		if (!self::$instance) {
-			self::$instance = new GitPHP_Config();
+			self::$instance = new Config();
 		}
 		return self::$instance;
 	}
@@ -78,11 +81,11 @@ class GitPHP_Config
 		global $gitphp_version, $gitphp_appstring;
 
 		if (!is_file($configFile)) {
-			throw new GitPHP_MessageException('Could not load config file ' . $configFile, true, 500);
+			throw new MessageException('Could not load config file ' . $configFile, true, 500);
 		}
 
 		if (!include($configFile)) {
-			throw new GitPHP_MessageException('Could not read config file ' . $configFile, true, 500);
+			throw new MessageException('Could not read config file ' . $configFile, true, 500);
 		}
 
 		if (isset($gitphp_conf) && is_array($gitphp_conf))

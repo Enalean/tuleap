@@ -1,4 +1,8 @@
 <?php
+
+
+namespace Tuleap\Git\GitPHP;
+
 /**
  * GitPHP Controller ProjectList
  *
@@ -9,14 +13,13 @@
  * @package GitPHP
  * @subpackage Controller
  */
-
 /**
  * ProjectList controller class
  *
  * @package GitPHP
  * @subpackage Controller
  */
-class GitPHP_Controller_ProjectList extends GitPHP_ControllerBase
+class Controller_ProjectList extends ControllerBase
 {
 
 	/**
@@ -124,11 +127,11 @@ class GitPHP_Controller_ProjectList extends GitPHP_ControllerBase
 	{
 		if (isset($this->params['opml']) && ($this->params['opml'] === true)) {
 			$this->headers[] = "Content-type: text/xml; charset=UTF-8";
-			GitPHP_Log::GetInstance()->SetEnabled(false);
+			Log::GetInstance()->SetEnabled(false);
 		} else if (isset($this->params['txt']) && ($this->params['txt'] === true)) {
 			$this->headers[] = "Content-type: text/plain; charset=utf-8";
 			$this->headers[] = "Content-Disposition: inline; filename=\"index.aux\"";
-			GitPHP_Log::GetInstance()->SetEnabled(false);
+			Log::GetInstance()->SetEnabled(false);
 		}
 	}
 
@@ -143,7 +146,7 @@ class GitPHP_Controller_ProjectList extends GitPHP_ControllerBase
 	{
 		$this->tpl->assign('order', $this->params['order']);
 		
-		$projectList = GitPHP_ProjectList::GetInstance();
+		$projectList = ProjectList::GetInstance();
 		$projectList->Sort($this->params['order']);
 
 		if ((empty($this->params['opml']) || ($this->params['opml'] !== true)) &&

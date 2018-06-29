@@ -1,4 +1,7 @@
 <?php
+
+namespace Tuleap\Git\GitPHP;
+
 /**
  * GitPHP GitExe
  *
@@ -33,7 +36,7 @@ define('GIT_DIFF','diff');
  * @package GitPHP
  * @subpackage Git
  */
-class GitPHP_GitExe
+class GitExe
 {
 	/**
 	 * project
@@ -64,9 +67,9 @@ class GitPHP_GitExe
 	 */
 	public function __construct($project = null)
 	{
-		$binary = GitPHP_Config::GetInstance()->GetValue('gitbin');
+		$binary = Config::GetInstance()->GetValue('gitbin');
 		if (empty($binary)) {
-			$this->binary = GitPHP_GitExe::DefaultBinary();
+			$this->binary = GitExe::DefaultBinary();
 		} else {
 			$this->binary = $binary;
 		}
@@ -99,11 +102,11 @@ class GitPHP_GitExe
 	{
 		$fullCommand = $this->CreateCommand($command, $args);
 
-		GitPHP_Log::GetInstance()->Log('Begin executing "' . $fullCommand . '"');
+		Log::GetInstance()->Log('Begin executing "' . $fullCommand . '"');
 
 		$ret = shell_exec($fullCommand);
 
-		GitPHP_Log::GetInstance()->Log('Finish executing "' . $fullCommand . '"' .
+		Log::GetInstance()->Log('Finish executing "' . $fullCommand . '"' .
 			"\nwith result: " . $ret);
 
 		return $ret;
@@ -282,10 +285,10 @@ class GitPHP_GitExe
 	 */
 	public static function DefaultBinary()
 	{
-		if (GitPHP_Util::IsWindows()) {
+		if (Util::IsWindows()) {
 			// windows
 
-			if (GitPHP_Util::Is64Bit()) {
+			if (Util::Is64Bit()) {
 				// match x86_64 and x64 (64 bit)
 				// C:\Program Files (x86)\Git\bin\git.exe
 				return 'C:\\Progra~2\\Git\\bin\\git.exe';

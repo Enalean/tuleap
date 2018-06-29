@@ -1,4 +1,7 @@
 <?php
+
+namespace Tuleap\Git\GitPHP;
+
 /**
  * GitPHP Tmp Dir
  *
@@ -20,7 +23,7 @@
  * @package GitPHP
  * @subpackage Git
  */
-class GitPHP_TmpDir
+class TmpDir
 {
 	
 	/**
@@ -63,7 +66,7 @@ class GitPHP_TmpDir
 	public static function GetInstance()
 	{
 		if (!self::$instance) {
-			self::$instance = new GitPHP_TmpDir();
+			self::$instance = new TmpDir();
 		}
 		return self::$instance;
 	}
@@ -107,14 +110,14 @@ class GitPHP_TmpDir
 
 		if (empty($tmpdir)) {
 			// ultimate default - should never get this far
-			if (GitPHP_Util::IsWindows()) {
+			if (Util::IsWindows()) {
 				$tmpdir = 'C:\\Windows\\Temp';
 			} else {
 				$tmpdir = '/tmp';
 			}
 		}
 
-		return GitPHP_Util::AddSlash(realpath($tmpdir));
+		return Util::AddSlash(realpath($tmpdir));
 	}
 
 	/**
@@ -126,26 +129,26 @@ class GitPHP_TmpDir
 	 */
 	public function __construct()
 	{
-		$this->dir = GitPHP_Util::AddSlash(GitPHP_Config::GetInstance()->GetValue('gittmp'));
+		$this->dir = Util::AddSlash(Config::GetInstance()->GetValue('gittmp'));
 
 		if (empty($this->dir)) {
-			$this->dir = GitPHP_TmpDir::SystemTmpDir();
+			$this->dir = TmpDir::SystemTmpDir();
 		}
 
 		if (empty($this->dir)) {
-			throw new Exception(__('No tmpdir defined'));
+			throw new \Exception(__('No tmpdir defined'));
 		}
 
 		if (file_exists($this->dir)) {
 			if (is_dir($this->dir)) {
 				if (!is_writeable($this->dir)) {
-					throw new Exception(sprintf(__('Specified tmpdir %1$s is not writable'), $this->dir));
+					throw new \Exception(sprintf(__('Specified tmpdir %1$s is not writable'), $this->dir));
 				}
 			} else {
-				throw new Exception(sprintf(__('Specified tmpdir %1$s is not a directory'), $this->dir));
+				throw new \Exception(sprintf(__('Specified tmpdir %1$s is not a directory'), $this->dir));
 			}
 		} else if (!mkdir($this->dir, 0700)) {
-			throw new Exception(sprintf(__('Could not create tmpdir %1$s'), $this->dir));
+			throw new \Exception(sprintf(__('Could not create tmpdir %1$s'), $this->dir));
 		}
 	}
 

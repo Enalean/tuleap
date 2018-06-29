@@ -1,4 +1,9 @@
 <?php
+
+namespace Tuleap\Git\GitPHP;
+
+use Exception;
+
 /**
  * GitPHP Message exception
  *
@@ -14,7 +19,7 @@
  *
  * @package GitPHP
  */
-class GitPHP_MessageException extends Exception
+class MessageException extends Exception
 {
 
 	public $Error;

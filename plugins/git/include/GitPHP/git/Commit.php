@@ -1,4 +1,7 @@
 <?php
+
+namespace Tuleap\Git\GitPHP;
+
 /**
  * GitPHP Commit
  *
@@ -16,7 +19,7 @@
  * @package GitPHP
  * @subpackage Git
  */
-class GitPHP_Commit extends GitPHP_GitObject
+class Commit extends GitObject
 {
 
 	/**
@@ -199,7 +202,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 	 * @param mixed $project the project
 	 * @param string $hash object hash
 	 * @return mixed git object
-	 * @throws Exception exception on invalid hash
+	 * @throws \Exception exception on invalid hash
 	 */
 	public function __construct($project, $hash)
 	{
@@ -539,7 +542,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 		if ($this->GetProject()->GetCompat()) {
 
 			/* get data from git_rev_list */
-			$exe = new GitPHP_GitExe($this->GetProject());
+			$exe = new GitExe($this->GetProject());
 			$args = array();
 			$args[] = '--header';
 			$args[] = '--parents';
@@ -581,13 +584,13 @@ class GitPHP_Commit extends GitPHP_GitObject
 						$tree->SetCommit($this);
 						$this->tree = $tree;
 					}
-				} catch (Exception $e) {
+				} catch (\Exception $e) {
 				}
 			} else if ($header && preg_match('/^parent ([0-9a-fA-F]{40})$/', $line, $regs)) {
 				/* Parent */
 				try {
 					$this->parents[] = $this->GetProject()->GetCommit($regs[1]);
-				} catch (Exception $e) {
+				} catch (\Exception $e) {
 				}
 			} else if ($header && preg_match('/^author (.*) ([0-9]+) (.*)$/', $line, $regs)) {
 				/* author data */
@@ -612,7 +615,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 			}
 		}
 
-		GitPHP_Cache::GetObjectCacheInstance()->Set($this->GetCacheKey(), $this);
+		Cache::GetObjectCacheInstance()->Set($this->GetCacheKey(), $this);
 	}
 
 	/**
@@ -690,7 +693,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 	{
 		$this->containingTagRead = true;
 
-		$exe = new GitPHP_GitExe($this->GetProject());
+		$exe = new GitExe($this->GetProject());
 		$args = array();
 		$args[] = '--tags';
 		$args[] = escapeshellarg($this->hash);
@@ -705,7 +708,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 			}
 		}
 
-		GitPHP_Cache::GetObjectCacheInstance()->Set($this->GetCacheKey(), $this);
+		Cache::GetObjectCacheInstance()->Set($this->GetCacheKey(), $this);
 	}
 
 	/**
@@ -718,7 +721,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 	 */
 	public function DiffToParent()
 	{
-		return new GitPHP_TreeDiff($this->GetProject(), $this->hash);
+		return new TreeDiff($this->GetProject(), $this->hash);
 	}
 
 	/**
@@ -766,7 +769,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 			$this->ReadHashPathsRaw($this->GetTree());
 		}
 
-		GitPHP_Cache::GetObjectCacheInstance()->Set($this->GetCacheKey(), $this);
+		Cache::GetObjectCacheInstance()->Set($this->GetCacheKey(), $this);
 	}
 
 	/**
@@ -778,7 +781,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 	 */
 	private function ReadHashPathsGit()
 	{
-		$exe = new GitPHP_GitExe($this->GetProject());
+		$exe = new GitExe($this->GetProject());
 
 		$args = array();
 		$args[] = '--full-name';
@@ -818,11 +821,11 @@ class GitPHP_Commit extends GitPHP_GitObject
 		$contents = $tree->GetContents();
 
 		foreach ($contents as $obj) {
-			if ($obj instanceof GitPHP_Blob) {
+			if ($obj instanceof Blob) {
 				$hash = $obj->GetHash();
 				$path = $obj->GetPath();
 				$this->blobPaths[trim($path)] = $hash;
-			} else if ($obj instanceof GitPHP_Tree) {
+			} else if ($obj instanceof Tree) {
 				$hash = $obj->GetHash();
 				$path = $obj->GetPath();
 				$this->treePaths[trim($path)] = $hash;
@@ -885,7 +888,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 		if (empty($pattern))
 			return;
 
-		$exe = new GitPHP_GitExe($this->GetProject());
+		$exe = new GitExe($this->GetProject());
 
 		$args = array();
 		$args[] = '-I';

@@ -1,4 +1,7 @@
 <?php
+
+namespace Tuleap\Git\GitPHP;
+
 /**
  * GitPHP Controller
  *
@@ -9,14 +12,13 @@
  * @package GitPHP
  * @subpackage Controller
  */
-
 /**
  * Controller
  *
  * @package GitPHP
  * @subpackage Controller
  */
-class GitPHP_Controller
+class Controller
 {
 
 	/**
@@ -35,80 +37,80 @@ class GitPHP_Controller
 
 		switch ($action) {
 			case 'search':
-				$controller = new GitPHP_Controller_Search();
+				$controller = new Controller_Search();
 				break;
 			case 'commitdiff':
 			case 'commitdiff_plain':
-				$controller = new GitPHP_Controller_Commitdiff();
+				$controller = new Controller_Commitdiff();
 				if ($action === 'commitdiff_plain')
 					$controller->SetParam('plain', true);
 				break;
 			case 'blobdiff':
 			case 'blobdiff_plain':
-				$controller = new GitPHP_Controller_Blobdiff();
+				$controller = new Controller_Blobdiff();
 				if ($action === 'blobdiff_plain')
 					$controller->SetParam('plain', true);
 				break;
 			case 'history':
-				$controller = new GitPHP_Controller_History();
+				$controller = new Controller_History();
 				break;
 			case 'shortlog':
 			case 'log':
-				$controller = new GitPHP_Controller_Log();
+				$controller = new Controller_Log();
 				if ($action === 'shortlog')
 					$controller->SetParam('short', true);
 				break;
 			case 'snapshot':
-				$controller = new GitPHP_Controller_Snapshot();
+				$controller = new Controller_Snapshot();
 				break;
 			case 'tree':
-				$controller = new GitPHP_Controller_Tree();
+				$controller = new Controller_Tree();
 				break;
 			case 'tag':
-				$controller = new GitPHP_Controller_Tag();
+				$controller = new Controller_Tag();
 				break;
 			case 'tags':
-				$controller = new GitPHP_Controller_Tags();
+				$controller = new Controller_Tags();
 				break;
 			case 'heads':
-				$controller = new GitPHP_Controller_Heads();
+				$controller = new Controller_Heads();
 				break;
 			case 'blame':
-				$controller = new GitPHP_Controller_Blame();
+				$controller = new Controller_Blame();
 				break;
 			case 'blob':
 			case 'blob_plain':	
-				$controller = new GitPHP_Controller_Blob();
+				$controller = new Controller_Blob();
 				if ($action === 'blob_plain')
 					$controller->SetParam('plain', true);
 				break;
 			case 'atom':
 			case 'rss':
-				$controller = new GitPHP_Controller_Feed();
+				$controller = new Controller_Feed();
 				if ($action == 'rss')
 					$controller->SetParam('format', GITPHP_FEED_FORMAT_RSS);
 				else if ($action == 'atom')
 					$controller->SetParam('format', GITPHP_FEED_FORMAT_ATOM);
 				break;
 			case 'commit':
-				$controller = new GitPHP_Controller_Commit();
+				$controller = new Controller_Commit();
 				break;
 			case 'summary':
-				$controller = new GitPHP_Controller_Project();
+				$controller = new Controller_Project();
 				break;
 			case 'project_index':
-				$controller = new GitPHP_Controller_ProjectList();
+				$controller = new Controller_ProjectList();
 				$controller->SetParam('txt', true);
 				break;
 			case 'opml':
-				$controller = new GitPHP_Controller_ProjectList();
+				$controller = new Controller_ProjectList();
 				$controller->SetParam('opml', true);
 				break;
 			default:
 				if (isset($_GET['p'])) {
-					$controller = new GitPHP_Controller_Project();
+					$controller = new Controller_Project();
 				} else {
-					$controller = new GitPHP_Controller_ProjectList();
+					$controller = new Controller_ProjectList();
 				}
 		}
 

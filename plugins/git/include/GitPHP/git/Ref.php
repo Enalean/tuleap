@@ -1,4 +1,7 @@
 <?php
+
+namespace Tuleap\Git\GitPHP;
+
 /**
  * GitPHP Ref
  *
@@ -16,7 +19,7 @@
  * @package GitPHP
  * @subpackage Git
  */
-abstract class GitPHP_Ref extends GitPHP_GitObject
+abstract class Ref extends GitObject
 {
 	
 	/**
@@ -86,7 +89,7 @@ abstract class GitPHP_Ref extends GitPHP_GitObject
 	 */
 	protected function FindHash()
 	{
-		$exe = new GitPHP_GitExe($this->GetProject());
+		$exe = new GitExe($this->GetProject());
 		$args = array();
 		$args[] = '--hash';
 		$args[] = '--verify';
@@ -94,7 +97,7 @@ abstract class GitPHP_Ref extends GitPHP_GitObject
 		$hash = trim($exe->Execute(GIT_SHOW_REF, $args));
 
 		if (empty($hash))
-			throw new Exception('Invalid ref ' . $this->GetRefPath());
+			throw new \Exception('Invalid ref ' . $this->GetRefPath());
 
 		$this->SetHash($hash);
 	}

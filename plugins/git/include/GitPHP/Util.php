@@ -1,4 +1,8 @@
 <?php
+
+
+namespace Tuleap\Git\GitPHP;
+
 /**
  * GitPHP Util
  *
@@ -8,13 +12,12 @@
  * @copyright Copyright (c) 2010 Christopher Han
  * @package GitPHP
  */
-
 /**
  * Util class
  *
  * @package GitPHP
  */
-class GitPHP_Util
+class Util
 {
 
 	/**
@@ -35,8 +38,8 @@ class GitPHP_Util
 
 		$end = substr($path, -1);
 
-		if (!(( ($end == '/') || ($end == ':')) || ($filesystem && GitPHP_Util::IsWindows() && ($end == '\\')))) {
-			if (GitPHP_Util::IsWindows() && $filesystem) {
+		if (!(( ($end == '/') || ($end == ':')) || ($filesystem && Util::IsWindows() && ($end == '\\')))) {
+			if (Util::IsWindows() && $filesystem) {
 				$path .= '\\';
 			} else {
 				$path .= '/';

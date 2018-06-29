@@ -1,4 +1,7 @@
 <?php
+
+namespace Tuleap\Git\GitPHP;
+
 /**
  * GitPHP Tree
  *
@@ -16,7 +19,7 @@
  * @package GitPHP
  * @subpackage Git
  */
-class GitPHP_Tree extends GitPHP_FilesystemObject
+class Tree extends FilesystemObject implements GitObjectType
 {
 
 	/**
@@ -117,7 +120,7 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 			$this->ReadContentsRaw();
 		}
 
-		GitPHP_Cache::GetObjectCacheInstance()->Set($this->GetCacheKey(), $this);
+		Cache::GetObjectCacheInstance()->Set($this->GetCacheKey(), $this);
 	}
 
 	/**
@@ -129,7 +132,7 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 	 */
 	private function ReadContentsGit()
 	{
-		$exe = new GitPHP_GitExe($this->GetProject());
+		$exe = new GitExe($this->GetProject());
 
 		$args = array();
 		$args[] = '--full-name';
@@ -249,9 +252,9 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 			$data['mode'] = $obj->GetMode();
 			$data['path'] = $obj->GetPath();
 
-			if ($obj instanceof GitPHP_Tree) {
+			if ($obj instanceof Tree) {
 				$data['type'] = 'tree';
-			} else if ($obj instanceof GitPHP_Blob) {
+			} else if ($obj instanceof Blob) {
 				$data['type'] = 'blob';
 				$data['size'] = $obj->GetSize();
 			}
@@ -345,4 +348,13 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 		return $key;
 	}
 
+    public function isTree()
+    {
+        return true;
+    }
+
+    public function isBlob()
+    {
+        return false;
+    }
 }

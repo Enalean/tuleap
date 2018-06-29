@@ -1,4 +1,7 @@
 <?php
+
+namespace Tuleap\Git\GitPHP;
+
 /**
  * GitPHP Controller Blobdiff
  *
@@ -9,14 +12,13 @@
  * @package GitPHP
  * @subpackage Controller
  */
-
 /**
  * Blobdiff controller class
  *
  * @package GitPHP
  * @subpackage Controller
  */
-class GitPHP_Controller_Blobdiff extends GitPHP_Controller_DiffBase
+class Controller_Blobdiff extends Controller_DiffBase
 {
 
 	/**
@@ -31,7 +33,7 @@ class GitPHP_Controller_Blobdiff extends GitPHP_Controller_DiffBase
 	{
 		parent::__construct();
 		if (!$this->project) {
-			throw new GitPHP_MessageException(__('Project is required'), true);
+			throw new MessageException(__('Project is required'), true);
 		}
 	}
 
@@ -114,7 +116,7 @@ class GitPHP_Controller_Blobdiff extends GitPHP_Controller_DiffBase
 		if (isset($this->params['file']))
 			$this->tpl->assign('file', $this->params['file']);
 
-		$filediff = new GitPHP_FileDiff($this->project, $this->params['hashparent'], $this->params['hash']);
+		$filediff = new FileDiff($this->project, $this->params['hashparent'], $this->params['hash']);
 		$this->tpl->assign('filediff', $filediff);
 
 		if (isset($this->params['plain']) && ($this->params['plain'] === true)) {

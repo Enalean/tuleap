@@ -1,4 +1,8 @@
 <?php
+
+
+namespace Tuleap\Git\GitPHP;
+
 /**
  * GitPHP Controller Message
  *
@@ -9,14 +13,13 @@
  * @package GitPHP
  * @subpackage Controller
  */
-
 /**
  * Message controller class
  * 
  * @package GitPHP
  * @subpackage Controller
  */
-class GitPHP_Controller_Message extends GitPHP_ControllerBase
+class Controller_Message extends ControllerBase
 {
 	/**
 	 * __construct
@@ -30,7 +33,7 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 	{
 		try {
 			parent::__construct();
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 		}
 	}
 

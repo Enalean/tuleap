@@ -1,4 +1,8 @@
 <?php
+
+
+namespace Tuleap\Git\GitPHP;
+
 /**
  * GitPHP Controller Blob
  *
@@ -10,13 +14,16 @@
  * @subpackage Controller
  */
 
+use GeSHi;
+
+
 /**
  * Blob controller class
  *
  * @package GitPHP
  * @subpackage Controller
  */
-class GitPHP_Controller_Blob extends GitPHP_ControllerBase
+class Controller_Blob extends ControllerBase
 {
 
 	/**
@@ -31,7 +38,7 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 	{
 		parent::__construct();
 		if (!$this->project) {
-			throw new GitPHP_MessageException(__('Project is required'), true);
+			throw new MessageException(__('Project is required'), true);
 		}
 	}
 
@@ -111,7 +118,7 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 	{
 		if (isset($this->params['plain']) && $this->params['plain']) {
 
-			GitPHP_Log::GetInstance()->SetEnabled(false);
+			Log::GetInstance()->SetEnabled(false);
 
 			// XXX: Nasty hack to cache headers
 			if (!$this->tpl->is_cached('blobheaders.tpl', $this->GetFullCacheKey())) {
@@ -123,7 +130,7 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 				$headers = array();
 
 				$mime = null;
-				if (GitPHP_Config::GetInstance()->GetValue('filemimetype', true)) {
+				if (Config::GetInstance()->GetValue('filemimetype', true)) {
 					if ((!isset($this->params['hash'])) && (isset($this->params['file']))) {
 						$commit = $this->project->GetCommit($this->params['hashbase']);
 						$this->params['hash'] = $commit->PathToHash($this->params['file']);
@@ -183,7 +190,7 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 
 		$this->tpl->assign('tree', $commit->GetTree());
 
-		if (GitPHP_Config::GetInstance()->GetValue('filemimetype', true)) {
+		if (Config::GetInstance()->GetValue('filemimetype', true)) {
 			$mime = $blob->FileMime();
 			if ($mime) {
 				$mimetype = strtok($mime, '/');
@@ -198,26 +205,24 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 
 		$this->tpl->assign('extrascripts', array('blame'));
 
-		if (GitPHP_Config::GetInstance()->GetValue('geshi', true)) {
-			if (class_exists('GeSHi')) {
-				$geshi = new GeSHi("",'php');
-				if ($geshi) {
-					$lang = $geshi->get_language_name_from_extension(substr(strrchr($blob->GetName(),'.'),1));
-					if (!empty($lang)) {
-						$geshi->enable_classes();
-						$geshi->enable_strict_mode(GESHI_MAYBE);
-						$geshi->set_source($blob->GetData());
-						$geshi->set_language($lang);
-						$geshi->set_header_type(GESHI_HEADER_PRE_TABLE);
-						$geshi->enable_line_numbers(GESHI_NORMAL_LINE_NUMBERS);
-						$geshi->set_overall_id('blobData');
-						$this->tpl->assign('geshiout', $geshi->parse_code());
-						$this->tpl->assign('extracss', $geshi->get_stylesheet());
-						$this->tpl->assign('geshi', true);
-						return;
-					}
-				}
-			}
+		if (Config::GetInstance()->GetValue('geshi', true)) {
+            $geshi = new GeSHi("",'php');
+            if ($geshi) {
+                $lang = $geshi->get_language_name_from_extension(substr(strrchr($blob->GetName(),'.'),1));
+                if (!empty($lang)) {
+                    $geshi->enable_classes();
+                    $geshi->enable_strict_mode(GESHI_MAYBE);
+                    $geshi->set_source($blob->GetData());
+                    $geshi->set_language($lang);
+                    $geshi->set_header_type(GESHI_HEADER_PRE_TABLE);
+                    $geshi->enable_line_numbers(GESHI_NORMAL_LINE_NUMBERS);
+                    $geshi->set_overall_id('blobData');
+                    $this->tpl->assign('geshiout', $geshi->parse_code());
+                    $this->tpl->assign('extracss', $geshi->get_stylesheet());
+                    $this->tpl->assign('geshi', true);
+                    return;
+                }
+            }
 		}
 
 		$this->tpl->assign('bloblines', $blob->GetData(true));

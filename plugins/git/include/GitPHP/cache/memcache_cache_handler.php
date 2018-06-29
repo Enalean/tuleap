@@ -1,4 +1,7 @@
 <?php
+
+namespace Tuleap\Git\GitPHP;
+
 /**
  * memcache_cache_handler
  *
@@ -29,7 +32,7 @@ define('MEMCACHE_OBJECT_MAP', 'memcache_objectmap');
  */
 function memcache_cache_handler($action, &$smarty_obj, &$cache_content, $tpl_file = null, $cache_id = null, $compile_id = null, $exp_time = null)
 {
-	$memObj = GitPHP_Memcache::GetInstance();
+	$memObj = Memcache::GetInstance();
 
 	$namespace = getenv('SERVER_NAME') . '_gitphp_';
 

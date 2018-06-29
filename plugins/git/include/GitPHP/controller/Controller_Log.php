@@ -1,4 +1,8 @@
 <?php
+
+
+namespace Tuleap\Git\GitPHP;
+
 /**
  * GitPHP Controller Log
  *
@@ -9,14 +13,13 @@
  * @package GitPHP
  * @subpackage Controller
  */
-
 /**
  * Log controller class
  *
  * @package GitPHP
  * @subpackage Controller
  */
-class GitPHP_Controller_Log extends GitPHP_ControllerBase
+class Controller_Log extends ControllerBase
 {
 
 	/**
@@ -31,7 +34,7 @@ class GitPHP_Controller_Log extends GitPHP_ControllerBase
 	{
 		parent::__construct();
 		if (!$this->project) {
-			throw new GitPHP_MessageException(__('Project is required'), true);
+			throw new MessageException(__('Project is required'), true);
 		}
 	}
 

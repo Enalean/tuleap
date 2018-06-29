@@ -1,4 +1,7 @@
 <?php
+
+namespace Tuleap\Git\GitPHP;
+
 /**
  * GitPHP File Diff
  *
@@ -16,7 +19,7 @@
  * @package GitPHP
  * @subpackage Git
  */
-class GitPHP_FileDiff
+class FileDiff
 {
 	/**
 	 * diffInfoRead
@@ -190,7 +193,7 @@ class GitPHP_FileDiff
 	 * @param string $fromHash source hash, can also be a diff-tree info line
 	 * @param string $toHash target hash, required if $fromHash is a hash
 	 * @return mixed FileDiff object
-	 * @throws Exception on invalid parameters
+	 * @throws \Exception on invalid parameters
 	 */
 	public function __construct($project, $fromHash, $toHash = '')
 	{
@@ -200,7 +203,7 @@ class GitPHP_FileDiff
 			return;
 
 		if (!(preg_match('/^[0-9a-fA-F]{40}$/', $fromHash) && preg_match('/^[0-9a-fA-F]{40}$/', $toHash))) {
-			throw new Exception('Invalid parameters for FileDiff');
+			throw new \Exception('Invalid parameters for FileDiff');
 		}
 
 		$this->fromHash = $fromHash;
@@ -456,7 +459,7 @@ class GitPHP_FileDiff
 		if (!$this->diffInfoRead)
 			$this->ReadDiffInfo();
 
-		return GitPHP_Blob::FileType($this->fromMode, $local);
+		return Blob::FileType($this->fromMode, $local);
 	}
 
 	/**
@@ -473,7 +476,7 @@ class GitPHP_FileDiff
 		if (!$this->diffInfoRead)
 			$this->ReadDiffInfo();
 
-		return GitPHP_Blob::FileType($this->toMode, $local);
+		return Blob::FileType($this->toMode, $local);
 	}
 
 	/**
@@ -575,7 +578,7 @@ class GitPHP_FileDiff
 
 		} else {
 
-			$tmpdir = GitPHP_TmpDir::GetInstance();
+			$tmpdir = TmpDir::GetInstance();
 
 			$pid = 0;
 			if (function_exists('posix_getpid'))
@@ -619,7 +622,7 @@ class GitPHP_FileDiff
 				}
 			}
 
-			$this->diffData = GitPHP_DiffExe::Diff((empty($fromTmpFile) ? null : escapeshellarg($tmpdir->GetDir() . $fromTmpFile)), $fromName, (empty($toTmpFile) ? null : escapeshellarg($tmpdir->GetDir() . $toTmpFile)), $toName);
+			$this->diffData = DiffExe::Diff((empty($fromTmpFile) ? null : escapeshellarg($tmpdir->GetDir() . $fromTmpFile)), $fromName, (empty($toTmpFile) ? null : escapeshellarg($tmpdir->GetDir() . $toTmpFile)), $toName);
 
 			if (!empty($fromTmpFile)) {
 				$tmpdir->RemoveFile($fromTmpFile);
@@ -658,7 +661,7 @@ class GitPHP_FileDiff
 
 		$this->diffDataSplitRead = true;
 
-		$exe = new GitPHP_GitExe($this->project);
+		$exe = new GitExe($this->project);
 
 		$fromBlob = $this->GetFromBlob();
 		$blob = $fromBlob->GetData(true);

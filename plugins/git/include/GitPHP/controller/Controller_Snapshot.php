@@ -1,4 +1,8 @@
 <?php
+
+
+namespace Tuleap\Git\GitPHP;
+
 /**
  * GitPHP Controller Snapshot
  *
@@ -9,14 +13,13 @@
  * @package GitPHP
  * @subpackage Controller
  */
-
 /**
  * Snapshot controller class
  *
  * @package GitPHP
  * @subpackage Controller
  */
-class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
+class Controller_Snapshot extends ControllerBase
 {
 
 	/**
@@ -39,14 +42,14 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 	public function __construct()
 	{
 		if (isset($_GET['p'])) {
-			$this->project = GitPHP_ProjectList::GetInstance()->GetProject(str_replace(chr(0), '', $_GET['p']));
+			$this->project = ProjectList::GetInstance()->GetProject(str_replace(chr(0), '', $_GET['p']));
 			if (!$this->project) {
-				throw new GitPHP_MessageException(sprintf(__('Invalid project %1$s'), $_GET['p']), true);
+				throw new MessageException(sprintf(__('Invalid project %1$s'), $_GET['p']), true);
 			}
 		}
 
 		if (!$this->project) {
-			throw new GitPHP_MessageException(__('Project is required'), true);
+			throw new MessageException(__('Project is required'), true);
 		}
 
 		$this->ReadQuery();
@@ -109,9 +112,9 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 		if (isset($_GET['fmt']))
 			$this->params['format'] = $_GET['fmt'];
 		else
-			$this->params['format'] = GitPHP_Config::GetInstance()->GetValue('compressformat', GITPHP_COMPRESS_ZIP);
+			$this->params['format'] = Config::GetInstance()->GetValue('compressformat', GITPHP_COMPRESS_ZIP);
 
-		GitPHP_Log::GetInstance()->SetEnabled(false);
+		Log::GetInstance()->SetEnabled(false);
 	}
 
 	/**
@@ -123,7 +126,7 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 	 */
 	protected function LoadHeaders()
 	{
-		$this->archive = new GitPHP_Archive($this->project, null, $this->params['format'], (isset($this->params['path']) ? $this->params['path'] : ''), (isset($this->params['prefix']) ? $this->params['prefix'] : ''));
+		$this->archive = new Archive($this->project, null, $this->params['format'], (isset($this->params['path']) ? $this->params['path'] : ''), (isset($this->params['prefix']) ? $this->params['prefix'] : ''));
 
 		switch ($this->archive->GetFormat()) {
 			case GITPHP_COMPRESS_TAR:
@@ -139,7 +142,7 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 				$this->headers[] = 'Content-Type: application/x-zip';
 				break;
 			default:
-				throw new Exception('Unknown compression type');
+				throw new \Exception('Unknown compression type');
 		}
 
 		$this->headers[] = 'Content-Disposition: attachment; filename=' . $this->archive->GetFilename();
@@ -176,7 +179,7 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 	{
 		$this->LoadData();
 
-		$cache = GitPHP_Config::GetInstance()->GetValue('cache', false);
+		$cache = Config::GetInstance()->GetValue('cache', false);
 		$cachehandle = false;
 		$cachefile = '';
 		if ($cache && is_dir(GITPHP_CACHE)) {
