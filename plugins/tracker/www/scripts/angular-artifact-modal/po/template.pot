@@ -16,6 +16,14 @@ msgstr ""
 msgid "Add another file"
 msgstr ""
 
+#: src/tuleap-artifact-modal-controller.js
+msgid "An error occured while saving the artifact. Please check your network connection."
+msgstr ""
+
+#: src/tuleap-artifact-modal-controller.js
+msgid "An error occured while uploading this file: {{ file_name }}. Please check your network connection."
+msgstr ""
+
 #: src/tuleap-artifact-modal-fields/computed-field/computed-field.tpl.html
 msgid "Auto-compute"
 msgstr ""
@@ -138,6 +146,10 @@ msgstr ""
 
 #: src/tuleap-artifact-modal.tpl.html
 msgid "The artifact will be linked to {{ modal.parent.title }}."
+msgstr ""
+
+#: src/tuleap-artifact-modal-controller.js
+msgid "You exceeded your current file upload quota. Please remove existing temporary files or wait until they are cleaned up."
 msgstr ""
 
 #: src/quota-display/quota-display.tpl.html

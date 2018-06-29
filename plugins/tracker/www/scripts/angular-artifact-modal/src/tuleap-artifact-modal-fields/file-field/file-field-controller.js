@@ -1,16 +1,15 @@
-import _ from 'lodash';
+import { isUndefined, remove } from "lodash";
 
 export default FileFieldController;
 
 FileFieldController.$inject = [];
 
 function FileFieldController() {
-    var self = this;
-    _.extend(self, {
-        addTemporaryFileInput  : addTemporaryFileInput,
-        onFileLoaded           : onFileLoaded,
-        resetTemporaryFileInput: resetTemporaryFileInput,
-        toggleMarkedForRemoval : toggleMarkedForRemoval
+    const self = this;
+    Object.assign(self, {
+        addTemporaryFileInput,
+        resetTemporaryFileInput,
+        toggleMarkedForRemoval
     });
 
     function addTemporaryFileInput() {
@@ -18,7 +17,7 @@ function FileFieldController() {
     }
 
     function resetTemporaryFileInput(index) {
-        if (_.isUndefined(self.value_model.temporary_files[index])) {
+        if (isUndefined(self.value_model.temporary_files[index])) {
             return;
         }
 
@@ -28,29 +27,16 @@ function FileFieldController() {
         };
     }
 
-    function onFileLoaded(
-        ProgressEvent,
-        FileReader,
-        File,
-        FileList,
-        FileModels,
-        FileModel
-    ) {
-        if (FileModel.filetype === "") {
-            FileModel.filetype = "application/octet-stream";
-        }
-    }
-
     function toggleMarkedForRemoval(file, index) {
         if (file.marked_for_removal) {
             return unmarkFileForRemoval(file, index);
-        } else {
-            return markFileForRemoval(file);
         }
+
+        return markFileForRemoval(file);
     }
 
     function markFileForRemoval(file_to_mark) {
-        _.remove(self.value_model.value, function(id) {
+        remove(self.value_model.value, function(id) {
             return id === file_to_mark.id;
         });
 

@@ -16,8 +16,12 @@ import {
 } from './rest/rest-service.js';
 import {
     rewire$getAllFileFields,
-    restore as restoreFile
+    restore as restoreFileDetector
 } from './tuleap-artifact-modal-fields/file-field/file-field-detector.js';
+import {
+    rewire$uploadAllTemporaryFiles,
+    restore as restoreFileUpload
+} from "./tuleap-artifact-modal-fields/file-field/file-uploader.js";
 
 describe("TuleapArtifactModalController", () => {
     let $scope,
@@ -29,13 +33,13 @@ describe("TuleapArtifactModalController", () => {
         TuleapArtifactModalValidateService,
         TuleapArtifactModalFieldDependenciesService,
         TuleapArtifactModalLoading,
-        TuleapArtifactModalFileUploadService,
         mockCallback,
         isInCreationMode,
         getFollowupsComments,
         createArtifact,
         editArtifact,
-        getAllFileFields;
+        getAllFileFields,
+        uploadAllTemporaryFiles;
 
     beforeEach(() => {
         angular.mock.module(artifact_modal_module, function($provide) {
@@ -51,12 +55,6 @@ describe("TuleapArtifactModalController", () => {
 
                 return $delegate;
             });
-
-            $provide.decorator('TuleapArtifactModalFileUploadService', function($delegate) {
-                spyOn($delegate, "uploadAllTemporaryFiles");
-
-                return $delegate;
-            });
         });
 
         angular.mock.inject(function(
@@ -66,14 +64,12 @@ describe("TuleapArtifactModalController", () => {
             _$timeout_,
             _TuleapArtifactModalValidateService_,
             _TuleapArtifactModalFieldDependenciesService_,
-            _TuleapArtifactModalLoading_,
-            _TuleapArtifactModalFileUploadService_
+            _TuleapArtifactModalLoading_
         ) {
             $q = _$q_;
             TuleapArtifactModalValidateService          = _TuleapArtifactModalValidateService_;
             TuleapArtifactModalFieldDependenciesService = _TuleapArtifactModalFieldDependenciesService_;
             TuleapArtifactModalLoading                  = _TuleapArtifactModalLoading_;
-            TuleapArtifactModalFileUploadService        = _TuleapArtifactModalFileUploadService_;
 
             tlp_modal = jasmine.createSpyObj('tlp_modal', [
                 'hide'
@@ -98,7 +94,6 @@ describe("TuleapArtifactModalController", () => {
                 TuleapArtifactModalValidateService,
                 TuleapArtifactModalLoading,
                 TuleapArtifactModalFieldDependenciesService,
-                TuleapArtifactModalFileUploadService,
                 displayItemCallback: mockCallback
             };
         });
@@ -119,12 +114,15 @@ describe("TuleapArtifactModalController", () => {
         rewire$editArtifact(editArtifact);
         getAllFileFields = jasmine.createSpy("getAllFileFields");
         rewire$getAllFileFields(getAllFileFields);
+        uploadAllTemporaryFiles = jasmine.createSpy("uploadAllTemporaryFiles");
+        rewire$uploadAllTemporaryFiles(uploadAllTemporaryFiles);
     });
 
     afterEach(() => {
         restoreCreationMode();
         restoreRest();
-        restoreFile();
+        restoreFileDetector();
+        restoreFileUpload();
     });
 
     describe("init() -", function() {
@@ -240,7 +238,7 @@ describe("TuleapArtifactModalController", () => {
             };
             var first_upload  = $q.defer();
             var second_upload = $q.defer();
-            TuleapArtifactModalFileUploadService.uploadAllTemporaryFiles.and.callFake(temporary_files => {
+            uploadAllTemporaryFiles.and.callFake(temporary_files => {
                 switch (temporary_files[0].description) {
                     case "one":
                         return first_upload.promise;
@@ -260,8 +258,8 @@ describe("TuleapArtifactModalController", () => {
             edit_request.resolve({ id: 144 });
             $scope.$apply();
 
-            expect(TuleapArtifactModalFileUploadService.uploadAllTemporaryFiles).toHaveBeenCalledWith(first_field_temporary_files);
-            expect(TuleapArtifactModalFileUploadService.uploadAllTemporaryFiles).toHaveBeenCalledWith(second_field_temporary_files);
+            expect(uploadAllTemporaryFiles).toHaveBeenCalledWith(first_field_temporary_files);
+            expect(uploadAllTemporaryFiles).toHaveBeenCalledWith(second_field_temporary_files);
             expect(first_file_field_value.value).toEqual([66, 47]);
             expect(second_file_field_value.value).toEqual([71]);
         });

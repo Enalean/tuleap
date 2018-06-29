@@ -186,35 +186,6 @@ describe("rest-service", () => {
                 })
             });
         });
-
-        it("When I create an artifact and the server responds an error with data, then the service's error will be set with the data's code and message and a promise will be rejected", async () => {
-            const error_json = {
-                error: {
-                    code   : 400,
-                    message: "Bad Request: error: Le champ I want to (i_want_to) est obligatoire."
-                }
-            };
-            mockFetchError(tlp.post, { error_json });
-
-            await RestService.createArtifact().then(
-                () => Promise.reject(new Error("Promise should be rejected")),
-                () => {
-                    expect(setError).toHaveBeenCalledWith("Bad Request: error: Le champ I want to (i_want_to) est obligatoire.");
-                });
-        });
-
-        it("Given the server didn't respond, when I create an artifact, then the service's error will be set with the HTTP error code and message and a promise will be rejected", async () => {
-            mockFetchError(tlp.post, {
-                status    : 404,
-                statusText: 'Not Found'
-            });
-
-            await RestService.createArtifact().then(
-                () => Promise.reject(new Error("Promise should be rejected")),
-                () => {
-                    expect(setError).toHaveBeenCalledWith("404 Not Found");
-                });
-        });
     });
 
     describe("getFollowupsComments() -", () => {
@@ -261,34 +232,33 @@ describe("rest-service", () => {
     });
 
     describe("uploadTemporaryFile() -", () => {
-        it("Given a file object with a filename, a filetype and a chunks array and given a description, when I upload a new temporary file, then a promise will be resolved with the new temporary file's id", async () => {
+        it("Given a file name, a file type and a first chunk and given a description, when I upload a new temporary file, then a promise will be resolved with the new temporary file's id", async () => {
             mockFetchSuccess(tlp.post, { return_json: { id: 4 } });
 
-            const file_to_upload = {
-                filename: "bitterheartedness",
-                filetype: "image/png",
-                chunks  : [
-                    "FwnCeTwZcgBOiH"
-                ]
-            };
+            const file_name = "bitterheartedness";
+            const file_type = "image/png";
+            const first_chunk = "FwnCeTwZcgBOiH";
             const description = "bullboat metrosteresis classicality";
 
-            const file_upload = await RestService.uploadTemporaryFile(file_to_upload, description);
+            const file_upload = await RestService.uploadTemporaryFile(
+                file_name,
+                file_type,
+                first_chunk,
+                description
+            );
 
             expect(file_upload).toEqual(4);
-            expect(tlp.post).toHaveBeenCalledWith('/api/v1/artifact_temporary_files',
-                {
-                    headers: {
-                        'content-type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        name       : "bitterheartedness",
-                        mimetype   : "image/png",
-                        content    : "FwnCeTwZcgBOiH",
-                        description: "bullboat metrosteresis classicality"
-                    })
-                }
-            );
+            expect(tlp.post).toHaveBeenCalledWith("/api/v1/artifact_temporary_files", {
+                headers: {
+                    "content-type": "application/json"
+                },
+                body: JSON.stringify({
+                    name: "bitterheartedness",
+                    mimetype: "image/png",
+                    content: "FwnCeTwZcgBOiH",
+                    description: "bullboat metrosteresis classicality"
+                })
+            });
         });
     });
 
@@ -361,42 +331,6 @@ describe("rest-service", () => {
                     comment: followup_comment
                 })
             });
-        });
-
-        it("Given an artifact id and an array of fields containing their id and selected value, when I edit an artifact with a comment, then the field values will be sent using the edit REST route and a promise will be resolved with the edited artifact's id", async () => {
-            const followup_comment = {
-                value: 'This is <b>my</b> comment',
-                format: 'html'
-            };
-            const field_values = [
-                { field_id: 47, value: "unpensionableness" },
-                { field_id: 71, bind_value_ids: [726, 332] }
-            ];
-            mockFetchSuccess(tlp.put, {
-                return_json: {
-                    values: field_values,
-                    comment: followup_comment
-                }
-            });
-
-            const artifact_edition = await RestService.editArtifact(8354, field_values, followup_comment);
-
-            expect(artifact_edition).toEqual({
-                id: 8354
-            });
-        });
-
-        it("Given the server didn't respond, when I edit an artifact, then the service's error will be set with the HTTP error code and message and a promise will be rejected", async () => {
-            mockFetchError(tlp.put, {
-                status    : 404,
-                statusText: 'Not Found'
-            });
-
-            await RestService.editArtifact(6144).then(
-                () => Promise.reject(new Error("Promise should be rejected")),
-                () => {
-                    expect(setError).toHaveBeenCalledWith("404 Not Found");
-                });
         });
     });
 

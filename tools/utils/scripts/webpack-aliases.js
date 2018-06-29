@@ -63,12 +63,17 @@ const easygettext_loader_alias = {
     'easygettext-loader': path.resolve(__dirname, './easygettext-loader.js')
 }
 
+const node_streams_alias = {
+    "readable-stream": "readable-stream/readable-browser.js"
+};
+
 const angular_artifact_modal_aliases = Object.assign(
     {},
     angular_artifact_modal_alias,
     angular_tlp_alias,
     tlp_mocks_alias,
-    tuleap_core_alias
+    tuleap_core_alias,
+    node_streams_alias
 );
 
 function extendAliases(...aliases) {

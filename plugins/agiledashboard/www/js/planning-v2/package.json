@@ -18,7 +18,8 @@
     "lodash": "2.4.0",
     "moment": "^2.18.1",
     "restangular": "1.4.0",
-    "sprintf-js": "^1.1.1"
+    "sprintf-js": "^1.1.1",
+    "striptags": "^2.2.1"
   },
   "devDependencies": {
     "angular-mocks": "^1.6.9",

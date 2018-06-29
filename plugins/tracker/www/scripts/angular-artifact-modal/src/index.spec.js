@@ -15,7 +15,6 @@ import './tuleap-artifact-modal-fields/computed-field/computed-field-validate-se
 import './tuleap-artifact-modal-fields/file-field/file-field-controller.spec.js';
 import './tuleap-artifact-modal-fields/file-field/file-field-detector.spec.js';
 import './tuleap-artifact-modal-fields/file-field/file-upload-rules-state.spec.js';
-import './tuleap-artifact-modal-fields/file-field/file-upload-service.spec.js';
 import './tuleap-artifact-modal-fields/link-field/link-field-controller.spec.js';
 import './tuleap-artifact-modal-fields/link-field/link-field-service.spec.js';
 import './tuleap-artifact-modal-fields/open-list-field/open-list-field-validate-service.spec.js';

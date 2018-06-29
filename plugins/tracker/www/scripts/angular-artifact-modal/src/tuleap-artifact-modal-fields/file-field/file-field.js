@@ -1,18 +1,12 @@
-import angular       from 'angular';
-import base64_upload from 'angular-base64-upload';
-import filter        from 'angular-filter';
+import angular from "angular";
+import filter from "angular-filter";
 
-import 'angular-gettext';
+import "angular-gettext";
 
-import FileFieldDirective   from './file-field-directive.js';
-import FileUploadService    from './file-upload-service.js';
+import FileFieldDirective from "./file-field-directive.js";
+import FileInputDirective from "./file-input-directive.js";
 
-angular.module('tuleap-artifact-modal-file-field', [
-    filter,
-    'gettext',
-    base64_upload
-])
-.directive('tuleapArtifactModalFileField', FileFieldDirective)
-.service('TuleapArtifactModalFileUploadService', FileUploadService);
-
-export default 'tuleap-artifact-modal-file-field';
+export default angular
+    .module("tuleap-artifact-modal-file-field", [filter, "gettext"])
+    .directive("tuleapArtifactModalFileField", FileFieldDirective)
+    .directive("tuleapArtifactModalFileInput", FileInputDirective).name;

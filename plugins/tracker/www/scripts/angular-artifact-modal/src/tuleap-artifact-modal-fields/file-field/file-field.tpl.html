@@ -44,11 +44,10 @@
 
 <div ng-repeat="file_upload in file_field.value_model.temporary_files" class="tuleap-artifact-modal-field-file-new-file">
     <input type="file"
+        tuleap-artifact-modal-file-input
         ng-model="file_upload.file"
         ng-disabled="file_field.isDisabled()"
         ng-required="{{ file_field.field.required }}"
-        onload="file_field.onFileLoaded"
-        base-sixty-four-input
     >
     <div class="tuleap-artifact-modal-field-file-new-file-description">
         <input type="text"
