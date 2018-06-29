@@ -83,8 +83,10 @@ class AdminWebhooks extends Tracker_Workflow_Action
             }
 
             $webhook_presenters[] = [
+                'webhook_id'  => $webhook->getId(),
                 'webhook_url' => $webhook->getUrl(),
                 'last_log'    => $last_log,
+                'all_log'     => $logs,
             ];
         }
 

@@ -97,6 +97,9 @@ msgstr ""
 msgid "Check permissions?"
 msgstr ""
 
+msgid "Close"
+msgstr ""
+
 msgid "Comment"
 msgstr ""
 
@@ -153,6 +156,12 @@ msgstr ""
 msgid "Limit successfully updated."
 msgstr ""
 
+msgid "Logs"
+msgstr ""
+
+msgid "Logs for %s"
+msgstr ""
+
 msgid "Mail configuration"
 msgstr ""
 
@@ -165,6 +174,9 @@ msgid "No color"
 msgstr ""
 
 msgid "No element selected."
+msgstr ""
+
+msgid "No logs yet"
 msgstr ""
 
 msgid "No notification set"
@@ -223,6 +235,9 @@ msgid ""
 msgstr ""
 
 msgid "Renderer id"
+msgstr ""
+
+msgid "Return type"
 msgstr ""
 
 msgid "Save"
@@ -511,6 +526,9 @@ msgid "The value '%s' doesn't exist for the list field '%s'."
 msgstr ""
 
 msgid "This template does not use trackers"
+msgstr ""
+
+msgid "Time"
 msgstr ""
 
 msgid "Tracker"
