@@ -15,13 +15,12 @@ const webpack_config_for_angular = {
         jquery: "jQuery"
     },
     resolve: {
-        modules: [
-            // This ensures that dependencies resolve their imported modules in testmanagement's node_modules
-            path.resolve(__dirname, "node_modules"),
-            "node_modules"
-        ],
         alias: webpack_configurator.extendAliases(
-            {},
+            {
+                // angular-tlp
+                angular$: path.resolve(__dirname, "node_modules/angular"),
+                "angular-mocks$": path.resolve(__dirname, "node_modules/angular-mocks")
+            },
             webpack_configurator.angular_artifact_modal_aliases
         )
     },
