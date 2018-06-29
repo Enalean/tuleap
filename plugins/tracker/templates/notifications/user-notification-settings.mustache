@@ -1,37 +1,47 @@
 <div id="content">
     <h3>Notification settings</h3>
-    <p>
-        {{# dgettext }} tuleap-tracker | You can choose the notification mode you wish for this tracker. {{/ dgettext }}
-    </p>
-    <form method="post">
-        {{# csrf_token }}
-            {{> csrf_token_input }}
-        {{/ csrf_token }}
-        <label class="radio" for="no-notification-mode">
-            <input type="radio" id="no-notification-mode" name="notification-mode" value="no-notification"
-                {{# is_in_no_notification_at_all_mode }} checked {{/ is_in_no_notification_at_all_mode }}>
-            {{# dgettext }} tuleap-tracker | No notifications at all {{/ dgettext }}
-        </label>
-        <label class="radio" for="no-global-notification-mode">
-            <input type="radio" id="no-global-notification-mode" name="notification-mode" value="no-global-notification"
-                {{# is_in_no_global_notification_mode }} checked {{/ is_in_no_global_notification_mode }}>
-            {{# dgettext }} tuleap-tracker | Notify me on all updates of artifacts I'm involved (assigned, submitter, cc, comment) {{/ dgettext }}
-        </label>
-        <label class="radio" for="notify-me-on-create-mode">
-            <input type="radio" id="notify-me-on-create-mode" name="notification-mode" value="notify-me-on-create"
-                {{# is_in_notify_on_artifact_creation_mode }} checked {{/ is_in_notify_on_artifact_creation_mode }}>
-            {{# dgettext }} tuleap-tracker | Notify me when artifacts are created {{/ dgettext }}
-        </label>
-        <label class="radio" for="notify-me-every-change-mode">
-            <input type="radio" id="notify-me-every-change-mode" name="notification-mode" value="notify-me-every-change"
-                {{# is_in_notify_on_every_change_mode }} checked {{/ is_in_notify_on_every_change_mode }}>
-            {{# dgettext }} tuleap-tracker | Notify me on every change {{/ dgettext }}
-        </label>
-        <label class="radio" for="notify-me-every-status-mode">
-            <input type="radio" id="notify-me-every-status-mode" name="notification-mode" value="notify-me-status-change"
-                {{# is_in_notify_on_status_change_mode }} checked {{/ is_in_notify_on_status_change_mode }}>
-            {{# dgettext }} tuleap-tracker | Notify me on status change {{/ dgettext }}
-        </label>
-        <input class="btn" value="{{# dgettext }} tuleap-tracker | Submit Changes {{/ dgettext }}" type="submit">
-    </form>
+    {{# are_global_notifications_suspended }}
+        <p class="alert alert-info">
+            {{# dgettext }}
+                tuleap-tracker |
+                You can't choose your notifications level for this tracker because tracker administrator has suspended all notifications.
+            {{/ dgettext }}
+        </p>
+    {{/ are_global_notifications_suspended }}
+    {{^ are_global_notifications_suspended }}
+        <p>
+            {{# dgettext }} tuleap-tracker | You can choose the notification mode you wish for this tracker. {{/ dgettext }}
+        </p>
+        <form method="post">
+            {{# csrf_token }}
+                {{> csrf_token_input }}
+            {{/ csrf_token }}
+            <label class="radio" for="no-notification-mode">
+                <input type="radio" id="no-notification-mode" name="notification-mode" value="no-notification"
+                    {{# is_in_no_notification_at_all_mode }} checked {{/ is_in_no_notification_at_all_mode }}>
+                {{# dgettext }} tuleap-tracker | No notifications at all {{/ dgettext }}
+            </label>
+            <label class="radio" for="no-global-notification-mode">
+                <input type="radio" id="no-global-notification-mode" name="notification-mode" value="no-global-notification"
+                    {{# is_in_no_global_notification_mode }} checked {{/ is_in_no_global_notification_mode }}>
+                {{# dgettext }} tuleap-tracker | Notify me on all updates of artifacts I'm involved (assigned, submitter, cc, comment) {{/ dgettext }}
+            </label>
+            <label class="radio" for="notify-me-on-create-mode">
+                <input type="radio" id="notify-me-on-create-mode" name="notification-mode" value="notify-me-on-create"
+                    {{# is_in_notify_on_artifact_creation_mode }} checked {{/ is_in_notify_on_artifact_creation_mode }}>
+                {{# dgettext }} tuleap-tracker | Notify me when artifacts are created {{/ dgettext }}
+            </label>
+            <label class="radio" for="notify-me-every-change-mode">
+                <input type="radio" id="notify-me-every-change-mode" name="notification-mode" value="notify-me-every-change"
+                    {{# is_in_notify_on_every_change_mode }} checked {{/ is_in_notify_on_every_change_mode }}>
+                {{# dgettext }} tuleap-tracker | Notify me on every change {{/ dgettext }}
+            </label>
+            <label class="radio" for="notify-me-every-status-mode">
+                <input type="radio" id="notify-me-every-status-mode" name="notification-mode" value="notify-me-status-change"
+                    {{# is_in_notify_on_status_change_mode }} checked {{/ is_in_notify_on_status_change_mode }}>
+                {{# dgettext }} tuleap-tracker | Notify me on status change {{/ dgettext }}
+            </label>
+            <input class="btn" value="{{# dgettext }} tuleap-tracker | Submit Changes {{/ dgettext }}" type="submit">
+        </form>
+    {{/ are_global_notifications_suspended }}
 </div>

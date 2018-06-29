@@ -22,6 +22,7 @@ namespace Tuleap\Tracker\Notifications\Settings;
 
 use HTTPRequest;
 use TemplateRenderer;
+use Tracker;
 use TrackerFactory;
 use TrackerManager;
 use Tuleap\Layout\BaseLayout;
@@ -86,11 +87,13 @@ class NotificationsUserSettingsDisplayController implements DispatchableWithRequ
                ['title' => dgettext('tuleap-tracker', 'Email Notifications Settings'), 'url' => $current_uri]
             ]
         );
+
         $this->template_renderer->renderToPage(
             'user-notification-settings',
             new UserNotificationSettingsPresenter(
                 new \CSRFSynchronizerToken($current_uri),
-                $user_notification_settings
+                $user_notification_settings,
+                $tracker->getNotificationsLevel() === Tracker::NOTIFICATIONS_LEVEL_DISABLED
             )
         );
     }
