@@ -32,12 +32,19 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
-    const locale = document.body.dataset.userLocale;
+    const locale           = document.body.dataset.userLocale;
+    const short_locale     = locale.substring(0, 2);
     Vue.config.language    = locale;
-    Settings.defaultLocale = locale.substring(0, 2);
-    const call_me_back = document.createElement('div');
+    Settings.defaultLocale = short_locale;
+
+    const call_me_back     = document.createElement('div');
+
     document.body.appendChild(call_me_back);
     const RootComponent = Vue.extend(CallMeBack);
 
-    new RootComponent().$mount(call_me_back);
+    new RootComponent({
+        propsData: {
+            locale: short_locale
+        }
+    }).$mount(call_me_back);
 });
