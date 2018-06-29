@@ -44,6 +44,12 @@
             "po": "www/scripts/permissions-per-group/po"
         }
     },
+    "gettext-vue": {
+        "git-repositories": {
+            "scripts": "www/scripts/repositories/src",
+            "po": "www/scripts/repositories/po"
+        }
+    },
     "components": [
         "www/scripts"
     ]

@@ -85,6 +85,10 @@ class Git_URL {
 
     /** @var string */
     private $query_string = '';
+    /**
+     * @var Project
+     */
+    private $project;
 
     public function __construct(
         ProjectManager $project_manager,
@@ -108,6 +112,10 @@ class Git_URL {
      * @return Project|null
      */
     public function getProject() {
+        if ($this->project) {
+            return $this->project;
+        }
+
         if (! $this->repository) {
             if (! preg_match($this->standard_index_pattern, $this->uri, $matches)) {
                 return null;
@@ -137,6 +145,12 @@ class Git_URL {
         if (! preg_match($this->friendly_url_pattern, $this->uri, $this->matches)) {
             return;
         }
+
+        $this->project = $this->project_manager->getProjectByCaseInsensitiveUnixName($this->matches['project_name']);
+        if (! $this->project) {
+            return;
+        }
+
 
         $this->repository = $this->repository_factory->getByProjectNameAndPath(
             $this->matches['project_name'],

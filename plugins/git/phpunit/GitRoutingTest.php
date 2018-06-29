@@ -32,6 +32,7 @@ use Logger;
 use PermissionsManager;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Git\History\GitPhpAccessLogger;
+use Tuleap\Git\RepositoryList\GitRepositoryListController;
 use Tuleap\Request\CollectRoutesEvent;
 use FastRoute;
 use Mockery;
@@ -99,6 +100,22 @@ class GitRoutingTest extends TestCase
     public function testFriendlyURLs($method, $uri)
     {
         $this->runTestOnURL($method, $uri, FastRoute\Dispatcher::FOUND, GitRepositoryBrowserController::class);
+    }
+
+    public function friendlyProjectURLsProvider()
+    {
+        return [
+            ['GET', '/plugins/git/gpig/'],
+            ['GET', '/plugins/git/gpig']
+        ];
+    }
+
+    /**
+     * @dataProvider friendlyProjectURLsProvider
+     */
+    public function testFriendlyProjectURLs($method, $uri)
+    {
+        $this->runTestOnURL($method, $uri, FastRoute\Dispatcher::FOUND, GitRepositoryListController::class);
     }
 
     public function legacyGitGodControllerURLsProvider()

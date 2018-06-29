@@ -98,6 +98,7 @@ use Tuleap\Git\Repository\Settings\WebhookAddController;
 use Tuleap\Git\Repository\Settings\WebhookDeleteController;
 use Tuleap\Git\Repository\Settings\WebhookEditController;
 use Tuleap\Git\Repository\Settings\WebhookRouter;
+use Tuleap\Git\RepositoryList\GitRepositoryListController;
 use Tuleap\Git\RestrictedGerritServerDao;
 use Tuleap\Git\Webhook\WebhookDao;
 use Tuleap\Git\XmlUgroupRetriever;
@@ -323,7 +324,8 @@ class GitPlugin extends Plugin
 
     public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event)
     {
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath().'/admin/') === 0) {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath().'/admin/') === 0
+            || $this->isAMigratedGitViewPage()) {
             $event->setIsInBurningParrotCompatiblePage();
         }
     }
@@ -409,14 +411,11 @@ class GitPlugin extends Plugin
                 $params['javascript_files'][] = '/scripts/tuleap/manage-allowed-projects-on-resource.js';
             } else if (strpos($_SERVER['REQUEST_URI'], 'gitolite_config')) {
                 $params['javascript_files'][] = GIT_BASE_URL . '/scripts/admin-gitolite.js';
+            } else if ($this->isAMigratedGitViewPage()) {
+                $params['javascript_files'][] =  $this->getIncludeAssets()->getFileURL('repositories-list.js');
             }
         } else if ($this->isInProjectAdminPermissionPerGroup()) {
-            $include_assets = new IncludeAssets(
-                GIT_BASE_DIR . '/../www/assets',
-                $this->getPluginPath() . '/assets'
-            );
-
-            $params['javascript_files'][] = $include_assets->getFileURL('permission-per-group.js');
+            $params['javascript_files'][] =  $this->getIncludeAssets()->getFileURL('permission-per-group.js');
         }
     }
 
@@ -2389,7 +2388,7 @@ class GitPlugin extends Plugin
 
     private function canIncludeStylesheets()
     {
-        return strpos($_SERVER['REQUEST_URI'], '/plugins/git') === 0
+        return $this->isAMigratedGitViewPage()
             || strpos($_SERVER['REQUEST_URI'], '/my/') === 0
             || strpos($_SERVER['REQUEST_URI'], '/projects/') === 0;
     }
@@ -2555,6 +2554,10 @@ class GitPlugin extends Plugin
                     $this->getUserDao()
                 );
             });
+            $r->get(
+                '/{project_name:[A-z0-9-]+}[/]', function() {
+                return new GitRepositoryListController($this->getProjectManager(), $this->getRepositoryFactory());
+            });
             $r->addRoute(['GET', 'POST'], '/{project_name}/{path:.*}', function () {
                 return new \Tuleap\Git\GitRepositoryBrowserController(
                     $this->getRepositoryFactory(),
@@ -2573,5 +2576,25 @@ class GitPlugin extends Plugin
                 );
             });
         });
+    }
+
+    /**
+     * @return bool
+     */
+    private function isAMigratedGitViewPage()
+    {
+        return preg_match('#^/plugins/git/[^/]+/$#', $_SERVER['REQUEST_URI']);
+    }
+
+    /**
+     * @return IncludeAssets
+     */
+    private function getIncludeAssets()
+    {
+        $include_assets = new IncludeAssets(
+            GIT_BASE_DIR . '/../www/assets',
+            $this->getPluginPath() . '/assets'
+        );
+        return $include_assets;
     }
 }
