@@ -24,7 +24,7 @@ namespace Tuleap\Project;
 use CSRFSynchronizerToken;
 use ProjectManager;
 use HTTPRequest;
-use Tuleap\Request\Dispatchable;
+use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\NotFoundException;
 use UserManager;
 use EventManager;
@@ -53,16 +53,14 @@ use Tuleap\Dashboard\Widget\WidgetDashboardController;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Widget\WidgetFactory;
 
-class Home implements Dispatchable
+class Home implements DispatchableWithRequest
 {
     /**
      * @param array $args
      * @throws NotFoundException
      */
-    public function process(array $args)
+    public function process(HTTPRequest $request, \Tuleap\Layout\BaseLayout $layout, array $args)
     {
-        $request = HTTPRequest::instance();
-
         $project = ProjectManager::instance()->getProjectFromAutocompleter($args['name']);
         if ($project && !$project->isError()) {
             $group_id = $project->getId();

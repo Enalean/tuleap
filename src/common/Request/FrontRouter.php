@@ -21,50 +21,42 @@
 
 namespace Tuleap\Request;
 
-use EventManager;
 use FastRoute;
 use HTTPRequest;
-use ThemeManager;
-use Tuleap\Admin\ProjectCreation\ProjectCategoriesDisplayController;
-use Tuleap\Admin\ProjectCreation\ProjectFieldsDisplayController;
-use Tuleap\Admin\ProjectCreation\ProjectFieldsUpdateController;
-use Tuleap\Admin\ProjectCreation\WebhooksDisplayController;
-use Tuleap\Admin\ProjectCreation\WebhooksUpdateController;
-use Tuleap\Admin\ProjectCreationModerationDisplayController;
-use Tuleap\Admin\ProjectCreationModerationUpdateController;
-use Tuleap\Admin\ProjectTemplatesController;
-use Tuleap\Instrument\MetricsController;
+use Logger;
 use Tuleap\Layout\ErrorRendering;
-use Tuleap\Layout\SiteHomepageController;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Password\Administration\PasswordPolicyDisplayController;
-use Tuleap\Password\Administration\PasswordPolicyUpdateController;
-use Tuleap\Password\Configuration\PasswordConfigurationDAO;
-use Tuleap\Password\Configuration\PasswordConfigurationRetriever;
-use Tuleap\Password\Configuration\PasswordConfigurationSaver;
-use Tuleap\Trove\TroveCatListController;
 use URLVerificationFactory;
 
 class FrontRouter
 {
     /**
-     * @var EventManager
-     */
-    private $event_manager;
-    /**
-     * @var ThemeManager
-     */
-    private $theme_manager;
-    /**
      * @var URLVerificationFactory
      */
     private $url_verification_factory;
+    /**
+     * @var RouteCollector
+     */
+    private $route_collector;
+    /**
+     * @var Logger
+     */
+    private $logger;
+    /**
+     * @var ErrorRendering
+     */
+    private $error_rendering;
 
-    public function __construct(EventManager $event_manager, ThemeManager $theme_manager, URLVerificationFactory $url_verification_factory)
-    {
-        $this->event_manager            = $event_manager;
-        $this->theme_manager            = $theme_manager;
+    public function __construct(
+        RouteCollector $route_collector,
+        URLVerificationFactory $url_verification_factory,
+        Logger $logger,
+        ErrorRendering $error_rendering
+    ) {
+        $this->route_collector          = $route_collector;
         $this->url_verification_factory = $url_verification_factory;
+        $this->logger                   = $logger;
+        $this->error_rendering          = $error_rendering;
     }
 
     public function route(HTTPRequest $request, BaseLayout $layout)
@@ -91,9 +83,7 @@ class FrontRouter
                         } else {
                             $url_verification->assertValidUrl($_SERVER, $request);
 
-                            if ($handler instanceof Dispatchable) {
-                                $handler->process($route_info[2]);
-                            } elseif ($handler instanceof DispatchableWithRequest) {
+                            if ($handler instanceof DispatchableWithRequest) {
                                 $handler->process($request, $layout, $route_info[2]);
                             } else {
                                 throw new \RuntimeException('No valid handler associated to route');
@@ -107,36 +97,24 @@ class FrontRouter
             RequestInstrumentation::increment(200);
         } catch (NotFoundException $exception) {
             RequestInstrumentation::increment(404);
-            (new ErrorRendering(
-                $request,
-                $this->theme_manager->getBurningParrot($request->getCurrentUser()),
-                404,
-                _('Not found'),
-                $exception->getMessage()
-            ))->rendersError();
+            $this->error_rendering->rendersError($request, 404, _('Not found'), $exception->getMessage());
         } catch (ForbiddenException $exception) {
             RequestInstrumentation::increment(403);
-            (new ErrorRendering(
-                $request,
-                $this->theme_manager->getBurningParrot($request->getCurrentUser()),
-                403,
-                _('Forbidden'),
-                $exception->getMessage()
-            ))->rendersError();
+            $this->error_rendering->rendersError($request, 403, _('Forbidden'), $exception->getMessage());
         } catch (\Exception $exception) {
             $code = 500;
             if ($exception->getCode() !== 0) {
                 $code = $exception->getCode();
             }
             RequestInstrumentation::increment($code);
-            (new \BackendLogger())->error('Caught exception', $exception);
-            (new ErrorRendering(
+            $this->logger->error('Caught exception', $exception);
+            $this->error_rendering->rendersErrorWithException(
                 $request,
-                $this->theme_manager->getBurningParrot($request->getCurrentUser()),
                 $code,
                 _('Internal server error'),
-                _('We are sorry you caught an error, something meaningful was logged for site administrators. You may want got get in touch with them.')
-            ))->rendersErrorWithException($exception);
+                _('We are sorry you caught an error, something meaningful was logged for site administrators. You may want got get in touch with them.'),
+                $exception
+            );
         }
     }
 
@@ -159,59 +137,7 @@ class FrontRouter
     private function getDispatcher()
     {
         return FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) {
-            $r->get('/', function () {
-                return new SiteHomepageController();
-            });
-            $r->addRoute(['GET', 'POST'], '/projects/{name}[/]', function () {
-                return new \Tuleap\Project\Home();
-            });
-            $r->get('/metrics', function () {
-                return new MetricsController();
-            });
-            $r->addGroup('/admin', function (FastRoute\RouteCollector $r) {
-                $r->get('/password_policy/', function () {
-                    return new PasswordPolicyDisplayController(
-                        new \Tuleap\Admin\AdminPageRenderer,
-                        \TemplateRendererFactory::build(),
-                        new PasswordConfigurationRetriever(new PasswordConfigurationDAO)
-                    );
-                });
-                $r->post('/password_policy/', function () {
-                    return new PasswordPolicyUpdateController(
-                        new PasswordConfigurationSaver(new PasswordConfigurationDAO)
-                    );
-                });
-                $r->get('/project-creation/moderation', function () {
-                    return new ProjectCreationModerationDisplayController();
-                });
-                $r->post('/project-creation/moderation', function () {
-                    return new ProjectCreationModerationUpdateController();
-                });
-                $r->get('/project-creation/templates', function () {
-                    return new ProjectTemplatesController();
-                });
-                $r->get('/project-creation/webhooks', function () {
-                    return new WebhooksDisplayController();
-                });
-                $r->post('/project-creation/webhooks', function () {
-                    return new WebhooksUpdateController();
-                });
-                $r->get('/project-creation/fields', function () {
-                    return new ProjectFieldsDisplayController();
-                });
-                $r->post('/project-creation/fields', function () {
-                    return new ProjectFieldsUpdateController();
-                });
-                $r->get('/project-creation/categories', function () {
-                    return new ProjectCategoriesDisplayController();
-                });
-                $r->post('/project-creation/categories', function () {
-                    return new TroveCatListController();
-                });
-            });
-
-            $collect_routes = new CollectRoutesEvent($r);
-            $this->event_manager->processEvent($collect_routes);
+            $this->route_collector->collect($r);
         });
     }
 }

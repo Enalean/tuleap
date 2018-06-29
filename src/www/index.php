@@ -18,10 +18,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Layout\ErrorRendering;
+use Tuleap\Request\FrontRouter;
+use Tuleap\Request\RouteCollector;
+
 define('DISABLE_URL_VERIFICATION', true);
 define('FRONT_ROUTER', true);
 
 require_once 'pre.php';
 
-$router = new \Tuleap\Request\FrontRouter($event_manager, $theme_manager, new URLVerificationFactory($event_manager));
+$router = new FrontRouter(
+    new RouteCollector($event_manager),
+    new URLVerificationFactory($event_manager),
+    new BackendLogger(),
+    new ErrorRendering($theme_manager->getBurningParrot($request->getCurrentUser()))
+);
 $router->route($request, $HTML);
