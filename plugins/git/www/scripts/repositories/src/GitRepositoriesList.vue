@@ -19,14 +19,11 @@
 
 <template>
     <div>
-        <git-breadcrumbs v-bind:repositories-administration-url="repositoriesAdministrationUrl"
-                         v-bind:repository-list-url="repositoryListUrl"
-                         v-bind:repositories-fork-url="repositoriesForkUrl"
-        />
+        <git-breadcrumbs />
         <div class="tlp-framed">
             <h1 v-translate>Git repositories</h1>
 
-            <button type="button" class="tlp-button-primary" v-on:click="show_modal"
+            <button type="button" class="tlp-button-primary git-repository-list-create-repository-button" v-on:click="show_modal"
                     data-target="create-repository-modal">
                 <i class="fa fa-plus tlp-button-icon"></i>
                 <translate>Add repository</translate>
@@ -34,7 +31,11 @@
 
             <git-repository-create/>
 
-            <div class="empty-page">
+            <git-repository v-for="repository in repositories"
+                            v-bind:repository="repository"
+                            v-bind:key="repository.id"/>
+
+            <div class="empty-page" v-if="has_no_repositories">
                 <p class="empty-page-text" v-translate>Project has no Git repositories yet.</p>
             </div>
         </div>
@@ -43,32 +44,42 @@
 <script>
     import GitRepositoryCreate from './GitRepositoryCreate.vue';
     import GitBreadcrumbs from './GitBreadcrumbs.vue';
+    import GitRepository from './GitRepository.vue';
+    import {getRepositoryList} from './rest-querier.js';
     import {modal as tlpModal} from 'tlp';
+    import {getProjectId} from "./repository-list-presenter.js";
 
     export default {
         name: 'GitRepositoriesList',
-        props: {
-            repositoriesAdministrationUrl: String,
-            repositoryListUrl: String,
-            repositoriesForkUrl: String
-        },
         components: {
+            GitRepository,
             GitRepositoryCreate,
             GitBreadcrumbs
         },
         data() {
             return {
-                add_repository_modal: null
+                add_repository_modal: null,
+                repositories: []
             };
         },
         methods: {
             show_modal() {
                 this.add_repository_modal.toggle();
+            },
+            async getRepositories() {
+                this.repositories = await getRepositoryList(getProjectId());
             }
         },
         mounted() {
             const modal = document.getElementById("create-repository-modal");
             this.add_repository_modal = tlpModal(modal);
-        }
+
+            this.getRepositories();
+        },
+        computed: {
+            has_no_repositories() {
+                return this.repositories.length === 0;
+            }
+        },
     }
 </script>

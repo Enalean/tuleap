@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,25 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.git-repository-create-modal-body {
-    height: auto;
-}
+import { recursiveGet } from "tlp";
 
-.git-repository-list-create-repository-button {
-    margin: 0 0 $tlp-spacing;
-}
+export { getRepositoryList };
 
-.git-repository-card-header {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-}
+async function getRepositoryList(project_id) {
+    let repository_list = await recursiveGet("/api/projects/" + project_id + "/git", {
+        params: {
+            limit: 50,
+            offset: 0
+        },
+        getRepositoryList
+    });
 
-.git-repository-card-title {
-    color: $tlp-theme-color;
-    text-transform: none;
-}
-
-.git-repository-card-description {
-    color: $tlp-ui-dimmed;
+    return repository_list[0].repositories;
 }

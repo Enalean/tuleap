@@ -21,6 +21,8 @@ import Vue from "vue";
 import GetTextPlugin from "vue-gettext";
 import french_translations from "../po/fr.po";
 import GitRepositoriesList from "./GitRepositoriesList.vue";
+import { setUrls } from "./breadcrumb-presenter.js";
+import { setProjectId } from "./repository-list-presenter.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     Vue.use(GetTextPlugin, {
@@ -33,13 +35,21 @@ document.addEventListener("DOMContentLoaded", () => {
     const locale = document.body.dataset.userLocale;
     Vue.config.language = locale;
 
-    const vue_mount_point = document.getElementById("git-repository-list");
+    const rootComponent = document.getElementById("git-repository-list");
 
-    if (vue_mount_point) {
+    if (rootComponent) {
         const repositoryList = Vue.extend(GitRepositoriesList);
 
-        new repositoryList({
-            propsData: { ...vue_mount_point.dataset }
-        }).$mount(vue_mount_point);
+        const {
+            repositoriesAdministrationUrl,
+            repositoryListUrl,
+            repositoriesForkUrl,
+            projectId
+        } = rootComponent.dataset;
+
+        setUrls(repositoriesAdministrationUrl, repositoryListUrl, repositoriesForkUrl);
+        setProjectId(projectId);
+
+        new repositoryList().$mount(rootComponent);
     }
 });

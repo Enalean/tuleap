@@ -24,6 +24,9 @@ msgstr "Caractères autorisés : a-zA-Z0-9/_.-"
 msgid "Cancel"
 msgstr "Annuler"
 
+msgid "Empty description"
+msgstr "Description vide"
+
 msgid "Fork repositories"
 msgstr "Fork de dépôts Git"
 
