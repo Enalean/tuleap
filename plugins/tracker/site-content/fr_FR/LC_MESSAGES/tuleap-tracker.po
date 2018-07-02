@@ -3,14 +3,14 @@ msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
-"Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
+"Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: \n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.8.7.1\n"
+"X-Generator: Poedit 2.0.8\n"
 
 #, php-format
 msgid "%s has been created"
@@ -175,6 +175,9 @@ msgstr "Supprimer"
 msgid "Edit"
 msgstr "Éditer"
 
+msgid "Edit webhook"
+msgstr "Éditer un webhook"
+
 msgid "Email Notifications Settings"
 msgstr "Options de notification"
 
@@ -303,6 +306,9 @@ msgstr "Retour"
 
 msgid "Save"
 msgstr "Sauvegarder"
+
+msgid "Save webhook"
+msgstr "Sauvegarder le webhook"
 
 msgid ""
 "Some selected values was not saved because they are used in another semantic."
@@ -629,6 +635,9 @@ msgstr ""
 "Le rapport a été trié sur cette colonne. Cette colonne ne permet cependant "
 "pas le tri. Le tri a donc été ignoré. Veuillez choisir une autre colonne."
 
+msgid "The submitted URL is not valid."
+msgstr "L'URL soumise n'est pas valide."
+
 #, php-format
 msgid "The text field '%s' cannot be compared to MYSELF()."
 msgstr "Le champ texte '%s' ne peut pas être comparé à MYSELF()."
@@ -729,6 +738,9 @@ msgstr "Le webhook a été créé"
 
 msgid "Webhook sucessfully deleted"
 msgstr "Le webhook a été supprimé"
+
+msgid "Webhook sucessfully updated"
+msgstr "Le webhook a été mis à jour"
 
 msgid "Webhooks"
 msgstr "Webhooks"

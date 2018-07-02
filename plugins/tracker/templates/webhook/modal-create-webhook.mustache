@@ -10,7 +10,9 @@
         <h3 id="modal-create-webhook-title">{{# dgettext }} tuleap-tracker | Add webhook {{/ dgettext }}</h3>
     </div>
     <form method="post" action="/plugins/tracker/webhooks/create">
-        <input type="hidden" name="challenge" value="{{ csrf_token }}" />
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
         <input type="hidden" name="tracker_id" value="{{ tracker_id }}" />
 
         <div class="modal-body">

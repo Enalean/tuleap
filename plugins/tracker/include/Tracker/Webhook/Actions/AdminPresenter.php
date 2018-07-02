@@ -32,7 +32,7 @@ class AdminPresenter
     public $webhook_presenters;
 
     /**
-     * @var string
+     * @var CSRFSynchronizerToken
      */
     public $csrf_token;
 
@@ -44,7 +44,7 @@ class AdminPresenter
     public function __construct(array $webhook_presenters, CSRFSynchronizerToken $csrf, Tracker $tracker)
     {
         $this->webhook_presenters = $webhook_presenters;
-        $this->csrf_token         = $csrf->getToken();
+        $this->csrf_token         = $csrf;
         $this->tracker_id         = $tracker->getId();
     }
 }
