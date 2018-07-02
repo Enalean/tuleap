@@ -10,7 +10,7 @@
     }
   ],
   "require": {
-    "paragonie/random_compat": "^2.0",
+    "paragonie/random_compat": "<9.99",
     "mustache/mustache": "dev-feature/strict-variables",
     "ezyang/htmlpurifier": "dev-master#89b3fe431e422fd06ce71ced8cfbd5a56c22b344",
     "firebase/php-jwt": "^5.0.0",
