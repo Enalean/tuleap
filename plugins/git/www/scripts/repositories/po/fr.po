@@ -30,6 +30,9 @@ msgstr "Description vide"
 msgid "Fork repositories"
 msgstr "Fork de dépôts Git"
 
+msgid "Git plugin is not activated"
+msgstr "Le plugin Git est désactivé"
+
 msgid "Git repositories"
 msgstr "Dépôts Git"
 
@@ -41,6 +44,9 @@ msgstr "Liste des dépôts"
 
 msgid "Repository name"
 msgstr "Nom du dépôt"
+
+msgid "Something went wrong, please check your network connection"
+msgstr "Quelque chose s'est mal passé, merci de vérifer votre connexion réseau"
 
 msgid "max length is 255"
 msgstr "longueur maximale 255"

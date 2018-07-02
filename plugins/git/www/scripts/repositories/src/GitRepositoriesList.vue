@@ -29,57 +29,80 @@
                 <translate>Add repository</translate>
             </button>
 
+            <div class="git-repository-list-loading" v-if="is_loading"></div>
+
+            <div v-if="error.length > 0" class="tlp-alert-danger">
+                {{ error }}
+            </div>
+
             <git-repository-create/>
 
-            <git-repository v-for="repository in repositories"
-                            v-bind:repository="repository"
-                            v-bind:key="repository.id"/>
+            <div class="git-repository-list" v-if="! is_loading">
+                <git-repository v-for="repository in repositories"
+                                v-bind:repository="repository"
+                                v-bind:key="repository.id"/>
+            </div>
 
-            <div class="empty-page" v-if="has_no_repositories">
+            <div class="empty-page" v-if="show_empty_state">
                 <p class="empty-page-text" v-translate>Project has no Git repositories yet.</p>
             </div>
         </div>
     </div>
 </template>
 <script>
-    import GitRepositoryCreate from './GitRepositoryCreate.vue';
-    import GitBreadcrumbs from './GitBreadcrumbs.vue';
-    import GitRepository from './GitRepository.vue';
-    import {getRepositoryList} from './rest-querier.js';
-    import {modal as tlpModal} from 'tlp';
-    import {getProjectId} from "./repository-list-presenter.js";
+import GitRepositoryCreate from "./GitRepositoryCreate.vue";
+import GitBreadcrumbs from "./GitBreadcrumbs.vue";
+import GitRepository from "./GitRepository.vue";
+import { getRepositoryList } from "./rest-querier.js";
+import { modal as tlpModal } from "tlp";
+import { getProjectId } from "./repository-list-presenter.js";
 
-    export default {
-        name: 'GitRepositoriesList',
-        components: {
-            GitRepository,
-            GitRepositoryCreate,
-            GitBreadcrumbs
+export default {
+    name: "GitRepositoriesList",
+    components: {
+        GitRepository,
+        GitRepositoryCreate,
+        GitBreadcrumbs
+    },
+    data() {
+        return {
+            add_repository_modal: null,
+            repositories: [],
+            is_loading: true,
+            error: ""
+        };
+    },
+    methods: {
+        show_modal() {
+            this.add_repository_modal.toggle();
         },
-        data() {
-            return {
-                add_repository_modal: null,
-                repositories: []
-            };
-        },
-        methods: {
-            show_modal() {
-                this.add_repository_modal.toggle();
-            },
-            async getRepositories() {
+        async getRepositories() {
+            try {
                 this.repositories = await getRepositoryList(getProjectId());
+            } catch (e) {
+                const { error } = await e.response.json();
+                if (Number.parseInt(error.code, 10) === 404) {
+                    this.error = this.$gettext("Git plugin is not activated");
+                } else {
+                    this.error = this.$gettext(
+                        "Something went wrong, please check your network connection"
+                    );
+                }
+            } finally {
+                this.is_loading = false;
             }
-        },
-        mounted() {
-            const modal = document.getElementById("create-repository-modal");
-            this.add_repository_modal = tlpModal(modal);
+        }
+    },
+    mounted() {
+        const modal = document.getElementById("create-repository-modal");
+        this.add_repository_modal = tlpModal(modal);
 
-            this.getRepositories();
-        },
-        computed: {
-            has_no_repositories() {
-                return this.repositories.length === 0;
-            }
-        },
+        this.getRepositories();
+    },
+    computed: {
+        show_empty_state() {
+            return this.repositories.length === 0 && !this.is_loading && !this.error;
+        }
     }
+};
 </script>

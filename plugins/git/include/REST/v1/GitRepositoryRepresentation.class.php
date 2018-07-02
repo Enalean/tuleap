@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,9 +21,9 @@
 
 namespace Tuleap\Git\REST\v1;
 
-use Tuleap\REST\v1\GitRepositoryRepresentationBase;
-use Tuleap\REST\JsonCast;
 use GitRepository;
+use Tuleap\REST\JsonCast;
+use Tuleap\REST\v1\GitRepositoryRepresentationBase;
 
 class GitRepositoryRepresentation extends GitRepositoryRepresentationBase {
 
@@ -34,5 +34,7 @@ class GitRepositoryRepresentation extends GitRepositoryRepresentationBase {
         $this->path        = $repository->getPath();
         $this->description = $repository->getDescription();
         $this->server      = $server_representation;
+        $this->html_url    = GIT_BASE_URL . '/' . urlencode($repository->getProject()->getUnixNameLowerCase()) . "/"
+            . urlencode($repository->getName());
     }
 }

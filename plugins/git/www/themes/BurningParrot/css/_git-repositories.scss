@@ -25,6 +25,36 @@
     margin: 0 0 $tlp-spacing;
 }
 
+.git-repository-card-link:hover {
+    text-decoration: none;
+}
+
+.git-repository-list {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.git-repository-card {
+    flex: 1 1 48%;
+    min-width: 500px;
+    max-height: 100%;
+    margin: 0 $tlp-spacing $tlp-spacing 0;
+    border: 1px solid $tlp-swatch-firemist-silver;
+    cursor: pointer;
+}
+
+.git-repository-card:hover {
+    border: 1px solid $tlp-theme-color;
+    text-decoration: none;
+}
+
+.git-repository-list-loading {
+    width: 250px;
+    height: 200px;
+    margin: 0 auto;
+    background: url('/themes/BurningParrot/images/spinner.gif') no-repeat center center;
+}
+
 .git-repository-card-header {
     display: flex;
     flex-direction: row;
@@ -34,8 +64,12 @@
 .git-repository-card-title {
     color: $tlp-theme-color;
     text-transform: none;
+    word-break: break-all;
 }
 
 .git-repository-card-description {
-    color: $tlp-ui-dimmed;
+    overflow: hidden;
+    color: $tlp-swatch-firemist-silver;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
