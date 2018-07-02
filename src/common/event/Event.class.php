@@ -933,6 +933,9 @@ class Event {
      *
      * Expected result:
      *  'project_id' => int
+     *
+     * @deprecated
+     * @see \Tuleap\Request\DispatchableWithProject
      */
     const GET_PROJECTID_FROM_URL = 'get_projectid_from_url';
 

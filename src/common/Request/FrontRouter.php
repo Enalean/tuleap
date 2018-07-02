@@ -81,7 +81,14 @@ class FrontRouter
                                 throw new ForbiddenException();
                             }
                         } else {
-                            $url_verification->assertValidUrl($_SERVER, $request);
+                            $project = null;
+                            if ($handler instanceof DispatchableWithProject) {
+                                $project = $handler->getProject($request, $route_info[2]);
+                                if (! $project instanceof \Project) {
+                                    throw new \RuntimeException('DispatchableWithProject::getProject must return a project, null received');
+                                }
+                            }
+                            $url_verification->assertValidUrl($_SERVER, $request, $project);
 
                             if ($handler instanceof DispatchableWithRequest) {
                                 $handler->process($request, $layout, $route_info[2]);
