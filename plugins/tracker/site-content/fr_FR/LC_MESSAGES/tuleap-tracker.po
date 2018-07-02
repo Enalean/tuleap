@@ -156,6 +156,9 @@ msgstr ""
 "Notifications par défaut (les gens sont notifiés lorsqu'ils ont soumis, sont "
 "assignés, ont commenté ou sont en CC)"
 
+msgid "Default notifications"
+msgstr "Notifications par défaut"
+
 msgid "Delete"
 msgstr "Supprimer"
 
@@ -164,6 +167,12 @@ msgstr "Éditer"
 
 msgid "Email Notifications Settings"
 msgstr "Options de notification"
+
+msgid "Enable notifications"
+msgstr "Activer les notifications"
+
+msgid "Enable notifications for this tracker"
+msgstr "Activer les notifications pour cet outil de suivi"
 
 msgid "Error during parsing expert query"
 msgstr "Erreur pendant l'analyse de la requête experte"
@@ -222,11 +231,6 @@ msgstr "Aucune notification n'a été définie"
 
 msgid "No notifications"
 msgstr "Aucune notification n'a été définie"
-
-msgid "No notifications (regardless of \"Global Email Notification\" below)"
-msgstr ""
-"Aucune notification (quels que soient les \"Notification e-mail globale\" ci-"
-"dessous)"
 
 msgid "No notifications at all"
 msgstr "Aucune notification"
@@ -314,6 +318,19 @@ msgstr "Valider"
 
 msgid "Submit Changes"
 msgstr "Valider"
+
+msgid "Suspend all notifications"
+msgstr "Suspendre toutes les notifications"
+
+msgid ""
+"Suspend all notifications, regardless of user preferences and regardless of "
+"\"Global Email Notifications\" below."
+msgstr ""
+"Désactiver les notifications quelles que soient les préférences utilisateur "
+"et les \"Notification e-mail globale\" ci-dessous."
+
+msgid "Suspend notifications"
+msgstr "Suspendre les notification"
 
 msgid "Switch to default colors"
 msgstr "Passer aux couleurs par défaut"
@@ -728,6 +745,13 @@ msgid ""
 msgstr ""
 "Vous pouvez définir plusieurs webhooks qui seront envoyé après chaque "
 "création et édition d'artéfact."
+
+msgid ""
+"You can't choose your notifications level for this tracker because tracker "
+"administrator has suspended all notifications."
+msgstr ""
+"Vous ne pouvez pas choisir votre mode de notification pour cet outil de "
+"suivi parce que l'administrateur a suspendu toutes les notifications."
 
 msgid ""
 "You can't switch to old colors because the field is currently being used by "

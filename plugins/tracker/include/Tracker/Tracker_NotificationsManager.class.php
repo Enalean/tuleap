@@ -124,9 +124,15 @@ class Tracker_NotificationsManager {
 
     public function processUpdate(HTTPRequest $request)
     {
-        if ($request->exist('notifications_level')) {
-            if ((int)$this->tracker->getNotificationsLevel() !== (int)$request->get('notifications_level')) {
-                $new_notifications_level = $this->notification_level_extractor->extractNotificationLevel($request->get('notifications_level'));
+        if ($request->exist('notifications_level') || $request->exist('disable_notifications') || $request->exist('enable_notifications')) {
+            if ((int)$this->tracker->getNotificationsLevel() !== (int)$request->get('notifications_level') || $request->exist('disable_notifications')) {
+                if ($request->exist('disable_notifications')) {
+                    $new_notifications_level = Tracker::NOTIFICATIONS_LEVEL_DISABLED;
+                } else if ($request->exist('enable_notifications')) {
+                    $new_notifications_level = Tracker::NOTIFICATIONS_LEVEL_DEFAULT;
+                } else {
+                    $new_notifications_level = $this->notification_level_extractor->extractNotificationLevel($request->get('notifications_level'));
+                }
 
                 if ($request->exist('submit_and_force_notifications_level')) {
                     $this->force_usage_updater->forceUserPreferences($this->tracker, $new_notifications_level);
@@ -285,8 +291,10 @@ class Tracker_NotificationsManager {
         echo '<fieldset><form id="tracker-admin-notifications-form" method="POST">' . $csrf_token->fetchHTMLInput();
 
         $this->displayAdminNotifications_Toggle();
-        $this->displayAdminNotifications_Global();
-        $this->displayAdminNotificationUnsubcribers();
+        if ($this->tracker->getNotificationsLevel() !== Tracker::NOTIFICATIONS_LEVEL_DISABLED) {
+            $this->displayAdminNotifications_Global();
+            $this->displayAdminNotificationUnsubcribers();
+        }
         $this->displayAdminNotificationAssignedToMeFlag();
 
         echo '</form></fieldset>';

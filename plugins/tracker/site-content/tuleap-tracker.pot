@@ -120,6 +120,9 @@ msgid ""
 "submitter, assignee, commenter or CC)"
 msgstr ""
 
+msgid "Default notifications"
+msgstr ""
+
 msgid "Delete"
 msgstr ""
 
@@ -127,6 +130,12 @@ msgid "Edit"
 msgstr ""
 
 msgid "Email Notifications Settings"
+msgstr ""
+
+msgid "Enable notifications"
+msgstr ""
+
+msgid "Enable notifications for this tracker"
 msgstr ""
 
 msgid "Error during parsing expert query"
@@ -183,9 +192,6 @@ msgid "No notification set"
 msgstr ""
 
 msgid "No notifications"
-msgstr ""
-
-msgid "No notifications (regardless of \"Global Email Notification\" below)"
 msgstr ""
 
 msgid "No notifications at all"
@@ -265,6 +271,17 @@ msgid "Submit"
 msgstr ""
 
 msgid "Submit Changes"
+msgstr ""
+
+msgid "Suspend all notifications"
+msgstr ""
+
+msgid ""
+"Suspend all notifications, regardless of user preferences and regardless of "
+"\"Global Email Notifications\" below."
+msgstr ""
+
+msgid "Suspend notifications"
 msgstr ""
 
 msgid "Switch to default colors"
@@ -616,6 +633,11 @@ msgstr ""
 msgid ""
 "You can define several webhooks that will be processed after each artifact "
 "creation and updates."
+msgstr ""
+
+msgid ""
+"You can't choose your notifications level for this tracker because tracker "
+"administrator has suspended all notifications."
 msgstr ""
 
 msgid ""

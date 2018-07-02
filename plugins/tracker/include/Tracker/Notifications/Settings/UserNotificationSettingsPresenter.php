@@ -46,10 +46,15 @@ class UserNotificationSettingsPresenter
      * @var bool
      */
     public $is_in_notify_on_status_change_mode;
+    /**
+     * @var bool
+     */
+    public $are_global_notifications_suspended;
 
     public function __construct(
         \CSRFSynchronizerToken $csrf_token,
-        UserNotificationSettings $user_notification_settings
+        UserNotificationSettings $user_notification_settings,
+        $are_global_notifications_suspended
     ) {
         $this->csrf_token                             = $csrf_token;
         $this->is_in_no_notification_at_all_mode      = $user_notification_settings->isInNoNotificationAtAllMode();
@@ -57,5 +62,6 @@ class UserNotificationSettingsPresenter
         $this->is_in_notify_on_artifact_creation_mode = $user_notification_settings->isInNotifyOnArtifactCreationMode();
         $this->is_in_notify_on_every_change_mode      = $user_notification_settings->isInNotifyOnEveryChangeMode();
         $this->is_in_notify_on_status_change_mode     = $user_notification_settings->isInNotifyOnStatusChange();
+        $this->are_global_notifications_suspended     = $are_global_notifications_suspended;
     }
 }
