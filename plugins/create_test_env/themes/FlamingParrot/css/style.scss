@@ -19,6 +19,16 @@
 @import '../../../../../src/www/themes/common/css/utils/colors';
 @import '../../../../../src/www/themes/FlamingParrot/css/utils/badge-colors';
 
+@mixin message-colors($color) {
+    border: 1px solid $color;
+    color: $color;
+
+    a {
+        color: $color;
+        text-decoration: underline;
+    }
+}
+
 @mixin change-button-color($color) {
     border-color: $color;
     background: $color;
@@ -46,9 +56,52 @@
         z-index: 10000;
         right: 40px;
         bottom: 40px;
+        font-family: 'SourceSansPro', 'Helvetica Neue', Arial, sans-serif;
+    }
+
+    .call-me-back-message {
+        position: absolute;
+        top: 5px;
+        left: 50%;
+        box-sizing: border-box;
+        width: 150px;
+        padding: 20px;
+        transform: translateX(-50%) translateY(-100%);
+        border-radius: 3px;
+        background: transparentize(#ffffff, .2);
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 22px;
+        text-align: center;
+        cursor: default;
+
+        @if $color-name == 'blue' {
+            @include message-colors(#f57c13);
+        } @else if $color-name == 'green' {
+            @include message-colors(#bd2626);
+        } @else if $color-name == 'bluegrey' {
+            @include message-colors(#f57c13);
+        } @else if $color-name == 'orange' {
+            @include message-colors(#1593c4);
+        } @else if $color-name == 'purple' {
+            @include message-colors(#f57c13);
+        } @else if $color-name == 'red' {
+            @include message-colors(#67af45);
+        }
+
+        > p {
+            font-size: 14px;
+            line-height: 22px;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
     }
 
     .call-me-back-button {
+        position: relative;
+        z-index: 10001;
         width: 85px;
         height: 85px;
         overflow: visible;
@@ -77,7 +130,6 @@
         box-sizing: border-box;
         width: 220px;
         padding: 20px;
-        font-family: 'SourceSansPro', 'Helvetica Neue', Arial, sans-serif;
 
         > form {
             margin: 0;

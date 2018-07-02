@@ -82,7 +82,7 @@
 
 <script>
 import { dropdown, datePicker }                    from 'tlp';
-import { getCallMeBackMessage, askToBeCalledBack } from './rest-querier.js';
+import { getCallMeBackMessage, askToBeCalledBack } from '../../call-me-back-rest-querier.js';
 import { DateTime }                                from 'luxon';
 import { sanitize }                                from 'dompurify';
 
