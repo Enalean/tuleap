@@ -180,9 +180,8 @@ Version: @@PLUGIN_GIT_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
 AutoReqProv: no
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, git > 1.7.4, gitolite = 2.3.1
-Requires: geshi, php-guzzle-Guzzle, sudo
-Provides: tuleap-plugin-git = %{version}, gitphp-tuleap, php-Smarty
-Obsoletes: gitphp-tuleap, php-Smarty
+Requires: php-guzzle-Guzzle, sudo
+Provides: tuleap-plugin-git = %{version}
 Conflicts: tuleap-plugin-git-gitolite3
 %description plugin-git
 Integration of git distributed software configuration management tool together
@@ -196,9 +195,8 @@ Version: @@PLUGIN_GIT_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
 AutoReqProv: no
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, rh-git29-git, gitolite3
-Requires: geshi, php-guzzle-Guzzle, sudo
-Provides: tuleap-plugin-git = %{version}, gitphp-tuleap, php-Smarty
-Obsoletes: gitphp-tuleap, php-Smarty
+Requires: php-guzzle-Guzzle, sudo
+Provides: tuleap-plugin-git = %{version}
 Conflicts: tuleap-plugin-git
 %description plugin-git-gitolite3
 Integration of git distributed software configuration management tool together
