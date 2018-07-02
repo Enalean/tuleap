@@ -424,7 +424,7 @@ class RepositoryResource extends AuthenticatedResource {
         }
 
 
-        $this->getRepository($user, $repository->getId());
+        return $this->get($repository->getId());
     }
 
     /**
