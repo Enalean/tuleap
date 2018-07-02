@@ -9,6 +9,7 @@
         "plugin:you-dont-need-lodash-underscore/all",
         "prettier"
     ],
+    "parser": "vue-eslint-parser",
     "parserOptions": {
         "ecmaVersion": 2018,
         "sourceType": "module"
@@ -78,11 +79,8 @@
         },
         {
             "files": [
-                "build.config.js",
-                "Gruntfile.js",
                 "gulpfile.js",
                 "karma.conf.js",
-                "karma.config.js",
                 "plugins/tracker/grammar/",
                 "tools/**/*.js",
                 "webpack.config.js"

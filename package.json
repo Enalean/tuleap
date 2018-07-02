@@ -48,6 +48,7 @@
     "raw-loader": "^0.5.1",
     "read-pkg": "2.0.0",
     "run-sequence": "^2.2.1",
+    "vue-eslint-parser": "^2.0.3",
     "vue-loader": "^15.0.0",
     "vue-template-compiler": "^2.5.16",
     "webpack": "^4.12.0",
