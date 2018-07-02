@@ -829,7 +829,7 @@ class ArtifactsResource extends AuthenticatedResource {
 
         return new MoveArtifact(
             $this->artifacts_deletion_manager,
-            $builder->build($children_collector, $file_path_xml_exporter, $user, $user_xml_exporter, false),
+            $builder->build($children_collector, $file_path_xml_exporter, $user, $user_xml_exporter, true),
             new Tracker_XML_Updater_ChangesetXMLUpdater(
                 $visitor,
                 $this->formelement_factory
