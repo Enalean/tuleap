@@ -34,6 +34,15 @@ class WebhookDao extends DataAccessObject
         return $this->getDB()->run($sql, $tracker_id);
     }
 
+    public function searchWebhookById($webhook_id)
+    {
+        $sql = 'SELECT *
+                FROM plugin_tracker_webhook_url
+                WHERE id = ?';
+
+        return $this->getDB()->row($sql, $webhook_id);
+    }
+
     public function searchLogsForWebhook($webhook_id)
     {
         $sql = 'SELECT *
@@ -69,5 +78,23 @@ class WebhookDao extends DataAccessObject
             'tracker_id' => $tracker_id,
             'url'        => $url,
         ]);
+    }
+
+    public function delete($webhook_id)
+    {
+        $this->getDB()->beginTransaction();
+
+        try {
+            $delete_logs    = "DELETE FROM plugin_tracker_webhook_log WHERE webhook_id = ?";
+            $delete_webhook = "DELETE FROM plugin_tracker_webhook_url WHERE id = ?";
+
+            $this->getDB()->run($delete_logs, $webhook_id);
+            $this->getDB()->run($delete_webhook, $webhook_id);
+        } catch (\PDOException $exception) {
+            $this->getDB()->rollBack();
+            throw $exception;
+        }
+
+        $this->getDB()->commit();
     }
 }

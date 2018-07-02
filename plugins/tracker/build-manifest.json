@@ -80,7 +80,8 @@
         "www/scripts/CopyArtifact.js",
         "www/scripts/tracker-report-nature-column.js",
         "www/scripts/tracker-admin-notifications.js",
-        "www/scripts/tracker-admin-notifications-popover.js"
+        "www/scripts/tracker-admin-notifications-popover.js",
+        "www/scripts/tracker-webhooks.js"
     ],
     "gettext-js": {
         "burndown-chart": {

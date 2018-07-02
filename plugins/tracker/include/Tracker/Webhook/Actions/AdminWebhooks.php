@@ -22,6 +22,7 @@
 namespace Tuleap\Tracker\Webhook\Actions;
 
 use Codendi_Request;
+use CSRFSynchronizerToken;
 use PFUser;
 use TemplateRendererFactory;
 use Tracker;
@@ -61,12 +62,28 @@ class AdminWebhooks extends Tracker_Workflow_Action
     {
         $this->displayHeader($layout);
 
-        $presenter = new AdminPresenter($this->getWebhookPresenters());
+        $presenter = new AdminPresenter(
+            $this->getWebhookPresenters(),
+            $this->getCSRFSynchronizerToken()
+        );
 
         $renderer  = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR . '/webhook');
         $renderer->renderToPage('administration', $presenter);
 
         $this->displayFooter($layout);
+    }
+
+    /**
+     * @return CSRFSynchronizerToken
+     */
+    private function getCSRFSynchronizerToken()
+    {
+        $url = '/plugins/tracker/?' . http_build_query([
+            "func"    => "admin-webhooks",
+            "tracker" => $this->tracker->getId()
+        ]);
+
+        return new CSRFSynchronizerToken($url);
     }
 
     /**

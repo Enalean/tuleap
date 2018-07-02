@@ -3466,8 +3466,26 @@ td.tracker-unsubscriber-actions {
     margin: 20px 0;
 }
 
-.tracker-webhooks-list {
-    max-width: 960px;
+#tracker-webhooks {
+    > .popover {
+        h3 {
+            border: 0;
+            background: #da5353;
+            color: #ffffff;
+        }
+
+        form {
+            margin: 0;
+
+            .remove-tracker-webhooks-confirm-actions {
+                text-align: right;
+            }
+        }
+
+        p {
+            font-size: 13px;
+        }
+    }
 }
 
 .tracker-webhooks-desc {
@@ -3478,49 +3496,90 @@ td.tracker-unsubscriber-actions {
     }
 }
 
-.tracker-webhooks-jobs-list {
-    > tbody {
-        font-size: 12px;
+.tracker-webhooks-list {
+    max-width: 960px;
 
-        > tr:first-child > td {
-            white-space: nowrap;
-        }
+    > thead > tr > th,
+    > tbody > tr > td {
+        vertical-align: middle;
+        white-space: nowrap;
 
-        > tr > td:last-child {
+        &:first-child {
+            width: 100%;
+            max-width: 430px;
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
-            max-width: 383px;
-            width: 100%;
+        }
+
+        &.last-push {
+            max-width: 200px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        &.action-buttons {
+            > a {
+                margin: 0 5px;
+
+                &:hover,
+                &:focus {
+                    text-decoration: none;
+                    opacity: .8;
+                }
+            }
         }
     }
 }
 
 .modal-tracker-webhooks {
     > .modal-header {
-      border-bottom: 2px solid #888888;
+        border-bottom: 2px solid #888888;
 
         > .close {
-          margin-left: 10px;
+            margin-left: 10px;
         }
 
         > h3 {
-          overflow: hidden;
-          white-space: nowrap;
-          text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
         }
     }
 
     .modal-body {
 
         > p:first-child {
-          margin-bottom: 30px;
+            margin-bottom: 30px;
         }
 
         input[type=url] {
-          width: 100%;
-          height: 30px;
-          box-sizing: border-box;
+            width: 100%;
+            height: 30px;
+            box-sizing: border-box;
+        }
+
+        > .tracker-webhooks-all-logs {
+            > tbody {
+                font-size: 12px;
+
+                > tr:first-child > td {
+                    white-space: nowrap;
+                }
+
+                > tr > td:last-child {
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                    max-width: 383px;
+                    width: 100%;
+                }
+            }
         }
     }
+}
+
+.remove-tracker-webhooks-popover {
+    display: none;
 }

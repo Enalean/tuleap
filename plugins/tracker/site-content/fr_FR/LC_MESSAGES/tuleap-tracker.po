@@ -278,6 +278,9 @@ msgstr ""
 "Merci d'activer le lien entre artéfacts \"_is_child\" afin de pouvoir "
 "définir une hiérarchie entre outils de suivi."
 
+msgid "Remove"
+msgstr "Enlever"
+
 msgid "Renderer id"
 msgstr "Id du rendu"
 
@@ -691,6 +694,9 @@ msgstr[1] ""
 "fait référence. Merci de vous référer à la documentation pour les "
 "comparaisons autorisées."
 
+msgid "Webhook sucessfully deleted"
+msgstr "Le webhook a été supprimé"
+
 msgid "Webhooks"
 msgstr "Webhooks"
 
@@ -705,6 +711,11 @@ msgid ""
 msgstr ""
 "Vous êtes sur le point de supprimer l'utilisateur de la liste des "
 "désabonnements.Merci de confirmer votre action."
+
+msgid "You are about to remove the webhook. Please confirm your action."
+msgstr ""
+"Vous êtes sur le point de supprimer le webhook. Veuillez confirmer la "
+"suppression."
 
 msgid "You can choose the notification mode you wish for this tracker."
 msgstr ""
