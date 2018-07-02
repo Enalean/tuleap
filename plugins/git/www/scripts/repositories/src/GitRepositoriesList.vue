@@ -18,27 +18,43 @@
   -->
 
 <template>
-    <div class="tlp-framed">
-        <h1 v-translate>Git repositories</h1>
+    <div>
+        <git-breadcrumbs v-bind:repositories-administration-url="repositoriesAdministrationUrl"
+                         v-bind:repository-list-url="repositoryListUrl"
+                         v-bind:repositories-fork-url="repositoriesForkUrl"
+        />
+        <div class="tlp-framed">
+            <h1 v-translate>Git repositories</h1>
 
-        <button type="button" class="tlp-button-primary" v-on:click="show_modal" data-target="create-repository-modal">
-            <i class="fa fa-plus tlp-button-icon"></i> <translate>Add repository</translate>
-        </button>
+            <button type="button" class="tlp-button-primary" v-on:click="show_modal"
+                    data-target="create-repository-modal">
+                <i class="fa fa-plus tlp-button-icon"></i>
+                <translate>Add repository</translate>
+            </button>
 
-        <git-repository-create/>
+            <git-repository-create/>
 
-        <div class="empty-page">
-            <p class="empty-page-text" v-translate>Project has no Git repositories yet.</p>
+            <div class="empty-page">
+                <p class="empty-page-text" v-translate>Project has no Git repositories yet.</p>
+            </div>
         </div>
     </div>
 </template>
 <script>
     import GitRepositoryCreate from './GitRepositoryCreate.vue';
-    import { modal as tlpModal } from 'tlp';
+    import GitBreadcrumbs from './GitBreadcrumbs.vue';
+    import {modal as tlpModal} from 'tlp';
+
     export default {
         name: 'GitRepositoriesList',
+        props: {
+            repositoriesAdministrationUrl: String,
+            repositoryListUrl: String,
+            repositoriesForkUrl: String
+        },
         components: {
             GitRepositoryCreate,
+            GitBreadcrumbs
         },
         data() {
             return {
