@@ -47,31 +47,20 @@ class GitViews_GitPhpViewer {
 
     public function getContent($is_download)
     {
-        ob_start();
-        $this->getView($is_download);
-        return ob_get_clean();
-    }
-
-    private function getView($is_download) {
         if ( empty($_REQUEST['a']) )  {
             $_REQUEST['a'] = 'summary';
         }
         set_time_limit(300);
-        $_GET['a'] = $_REQUEST['a'];
-        $_REQUEST['group_id']      = $this->repository->getProjectId();
-        $_REQUEST['repo_id']       = $this->repository->getId();
-        $_REQUEST['repo_name']     = $this->repository->getFullName();
-        $_GET['p']                 = $_REQUEST['repo_name'].'.git';
-        $_REQUEST['repo_path']     = $this->repository->getPath();
-        $_REQUEST['project_dir']   = $this->repository->getProject()->getUnixName();
-        $_REQUEST['git_root_path'] = $this->repository->getGitRootPath();
-        $_REQUEST['action']        = 'view';
+        $_GET['a']            = $_REQUEST['a'];
+        $_REQUEST['group_id'] = $this->repository->getProjectId();
+        $_GET['p']            = $this->repository->getFullName() . '.git';
+        $_REQUEST['action']   = 'view';
         $this->preSanitizeRequestForGitphp();
         if (! $is_download) {
             echo '<div id="gitphp" class="plugin_git_gitphp">';
         }
 
-        $this->executeIndex();
+        $this->displayGitPHP();
 
         if (! $is_download) {
             echo '</div>';
@@ -87,7 +76,7 @@ class GitViews_GitPhpViewer {
         }
     }
 
-    private function executeIndex()
+    private function displayGitPHP()
     {
         define('GITPHP_START_TIME', microtime(true));
         define('GITPHP_START_MEM', memory_get_usage());
@@ -99,7 +88,6 @@ class GitViews_GitPhpViewer {
         define('GITPHP_LOCALEDIR', __DIR__ . '/../../site-content/gitphp_locale/');
 
         define('GITPHP_BASEDIR', GITPHP_INCLUDEDIR);
-        define('GITPHP_CONFIGDIR', GIT_BASE_DIR .'/../etc/');
 
         require_once GITPHP_INCLUDEDIR . 'Resource.php';
 
@@ -113,11 +101,7 @@ class GitViews_GitPhpViewer {
         Resource::Instantiate($this->current_user->getLanguageID());
 
         try {
-            /*
-             * Configuration
-             */
-            Config::GetInstance()->LoadConfig(GITPHP_CONFIGDIR . 'gitphp.conf.php');
-
+            $this->setupGitPHPConfiguration();
             /*
              * Use the default language in the config if user has no preference
              * with en_US as the fallback
@@ -158,11 +142,7 @@ class GitViews_GitPhpViewer {
             /*
              * Project list
              */
-            if (file_exists(GITPHP_CONFIGDIR . 'projects.conf.php')) {
-                ProjectList::Instantiate(GITPHP_CONFIGDIR . 'projects.conf.php', false);
-            } else {
-                ProjectList::Instantiate(GITPHP_CONFIGDIR . 'gitphp.conf.php', true);
-            }
+            ProjectList::Instantiate(null, true);
 
             $controller = Controller::GetController((isset($_GET['a']) ? $_GET['a'] : null));
             if ($controller) {
@@ -203,5 +183,28 @@ class GitViews_GitPhpViewer {
                 echo "<br />\n" . $logline;
             }
         }
+    }
+
+    private function setupGitPHPConfiguration()
+    {
+        $config = Config::GetInstance();
+        $config->SetValue('stylesheet', '');
+        $config->SetValue('projectroot', $this->repository->getGitRootPath() . $this->repository->getProject()->getUnixName() . '/');
+        $config->SetValue('gitbin', '/usr/bin/git');
+        $config->SetValue('diffbin', '/usr/bin/diff');
+        $config->SetValue('gittmp', '/tmp/');
+        $config->SetValue('title', 'Tuleap');
+        $config->SetValue('compressformat', GITPHP_COMPRESS_BZ2);
+        $config->SetValue('compresslevel', 9);
+        $config->SetValue('geshi', true);
+        $config->SetValue('filemimetype', true);
+        $config->SetValue('magicdb', '/usr/share/misc/magic.mgc');
+        $config->SetValue('search', true);
+        $config->SetValue('filesearch', false);
+        $config->SetValue('debug', false);
+        $config->SetValue('cache', false);
+        $config->SetValue('cacheexpire', false);
+        $config->SetValue('cachelifetime', 3600);
+        $config->SetValue('smarty_tmp', '/tmp/gitphp-tuleap/smarty');
     }
 }
