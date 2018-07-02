@@ -1,6 +1,5 @@
-import _ from 'lodash';
 import { isInCreationMode } from './modal-creation-mode-state.js';
-import { hasError, getErrorMessage } from './rest/rest-error-state.js';
+import { setError, hasError, getErrorMessage } from "./rest/rest-error-state.js";
 import {
     createArtifact,
     editArtifact,
@@ -11,20 +10,21 @@ import {
     isThereAtLeastOneFileField
 } from './tuleap-artifact-modal-fields/file-field/file-field-detector.js';
 import { loadTooltips } from 'tuleap-core/codendi/Tooltip.js';
+import { uploadAllTemporaryFiles } from "./tuleap-artifact-modal-fields/file-field/file-uploader.js";
 
 export default ArtifactModalController;
 
 ArtifactModalController.$inject = [
-    '$q',
-    '$scope',
-    '$timeout',
-    'modal_instance',
-    'modal_model',
-    'displayItemCallback',
-    'TuleapArtifactModalValidateService',
-    'TuleapArtifactModalLoading',
-    'TuleapArtifactModalFieldDependenciesService',
-    'TuleapArtifactModalFileUploadService'
+    "$q",
+    "$scope",
+    "$timeout",
+    "modal_instance",
+    "modal_model",
+    "gettextCatalog",
+    "displayItemCallback",
+    "TuleapArtifactModalValidateService",
+    "TuleapArtifactModalLoading",
+    "TuleapArtifactModalFieldDependenciesService"
 ];
 
 function ArtifactModalController(
@@ -33,11 +33,11 @@ function ArtifactModalController(
     $timeout,
     modal_instance,
     modal_model,
+    gettextCatalog,
     displayItemCallback,
     TuleapArtifactModalValidateService,
     TuleapArtifactModalLoading,
-    TuleapArtifactModalFieldDependenciesService,
-    TuleapArtifactModalFileUploadService
+    TuleapArtifactModalFieldDependenciesService
 ) {
     const self  = this,
         user_id = modal_model.user_id;
@@ -164,46 +164,90 @@ function ArtifactModalController(
     function submit() {
         TuleapArtifactModalLoading.loading = true;
 
-        uploadAllFileFields().then(function() {
-            var validated_values = TuleapArtifactModalValidateService.validateArtifactFieldsValues(self.values, isInCreationMode());
+        uploadAllFileFields()
+            .then(function() {
+                var validated_values = TuleapArtifactModalValidateService.validateArtifactFieldsValues(
+                    self.values,
+                    isInCreationMode()
+                );
 
-            var promise;
-            if (isInCreationMode()) {
-                promise = createArtifact(modal_model.tracker_id, validated_values);
-            } else {
-                promise = editArtifact(modal_model.artifact_id, validated_values, self.followup_comment);
-            }
+                var promise;
+                if (isInCreationMode()) {
+                    promise = createArtifact(modal_model.tracker_id, validated_values);
+                } else {
+                    promise = editArtifact(
+                        modal_model.artifact_id,
+                        validated_values,
+                        self.followup_comment
+                    );
+                }
 
-            return $q.when(promise);
-        }).then(function(new_artifact) {
-            modal_instance.tlp_modal.hide();
+                return $q.when(promise);
+            })
+            .then(function(new_artifact) {
+                modal_instance.tlp_modal.hide();
 
-            return displayItemCallback(new_artifact.id);
-        }).catch(function() {
-            // Do nothing
-            // This catch is required since angular 1.6, but the error is already handled and displayed by the REST service
-        }).finally(function() {
-            TuleapArtifactModalLoading.loading = false;
-        });
+                return displayItemCallback(new_artifact.id);
+            })
+            .catch(() => {
+                if (hasError()) {
+                    return;
+                }
+                setError(
+                    gettextCatalog.getString(
+                        "An error occured while saving the artifact. Please check your network connection."
+                    )
+                );
+            })
+            .finally(function() {
+                TuleapArtifactModalLoading.loading = false;
+            });
     }
 
     function uploadAllFileFields() {
-        const promises = getAllFileFields(Object.values(self.values)).map(
-            file_field_value => uploadFileField(file_field_value)
+        const promises = getAllFileFields(Object.values(self.values)).map(file_field_value =>
+            uploadFileField(file_field_value)
         );
 
         return $q.all(promises);
     }
 
     function uploadFileField(file_field_value) {
-        var promise = TuleapArtifactModalFileUploadService.uploadAllTemporaryFiles(file_field_value.temporary_files)
-            .then(function(temporary_files_ids) {
-                var uploaded_files_ids = _.compact(temporary_files_ids);
+        const promise = $q.when(uploadAllTemporaryFiles(file_field_value.temporary_files)).then(
+            temporary_files_ids => {
+                const uploaded_files_ids = temporary_files_ids.filter(id => Number.isInteger(id));
 
                 file_field_value.value = file_field_value.value.concat(uploaded_files_ids);
-            });
+            },
+            error => {
+                if (isUploadQuotaExceeded(error)) {
+                    setError(
+                        gettextCatalog.getString(
+                            "You exceeded your current file upload quota. Please remove existing temporary files or wait until they are cleaned up."
+                        )
+                    );
+                    throw error;
+                }
+
+                const { file_name } = error;
+                setError(
+                    gettextCatalog.getString(
+                        "An error occured while uploading this file: {{ file_name }}. Please check your network connection.",
+                        { file_name }
+                    )
+                );
+                throw error;
+            }
+        );
 
         return promise;
+    }
+    function isUploadQuotaExceeded(error) {
+        return (
+            error.code === 406 &&
+            error.hasOwnProperty("message") &&
+            error.message.includes("You exceeded your quota")
+        );
     }
 
     function isDisabled(field) {

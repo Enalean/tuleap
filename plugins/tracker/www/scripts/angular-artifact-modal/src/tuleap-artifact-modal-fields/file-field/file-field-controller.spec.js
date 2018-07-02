@@ -92,25 +92,6 @@ describe("TuleapArtifactModalFileFieldController", function() {
         });
     });
 
-    describe("onFileLoaded() -", function() {
-        it("Given a file model object that didn't have any filetype property (e.g. a 'Changelog' file), when the file is loaded then the model object's filetype property will be set to 'application/octet-stream' as a default mimetype", function() {
-            var file_model = {
-                filetype: ""
-            };
-
-            TuleapArtifactModalFileFieldController.onFileLoaded(
-                undefined,
-                undefined,
-                undefined,
-                undefined,
-                undefined,
-                file_model
-            );
-
-            expect(file_model.filetype).toEqual("application/octet-stream");
-        });
-    });
-
     describe("toggleMarkedForRemoval() -", function() {
         it("Given a file object that was marked for removal and an index, when I toggle the mark for removal on the file, then the file will no longer be marked for removal and its id will be inserted at the given index in the value_model object's value array", function() {
             TuleapArtifactModalFileFieldController.value_model.value = [84, 71, 42];

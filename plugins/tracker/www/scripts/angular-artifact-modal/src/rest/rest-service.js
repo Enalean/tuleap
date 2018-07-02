@@ -75,41 +75,33 @@ async function getAllOpenParentArtifacts(tracker_id, limit, offset) {
 }
 
 async function createArtifact(tracker_id, field_values) {
-    const body  = JSON.stringify({
+    const body = JSON.stringify({
         tracker: {
             id: tracker_id
         },
         values: field_values
     });
 
-    try {
-        const response = await post('/api/v1/artifacts', {
-            headers,
-            body
-        });
-        const { id } = await responseHandler(response);
-        return { id };
-    } catch (error) {
-        return errorHandler(error);
-    }
+    const response = await post("/api/v1/artifacts", {
+        headers,
+        body
+    });
+    const { id } = await responseHandler(response);
+    return { id };
 }
 
 async function editArtifact(artifact_id, field_values, followup_comment) {
-    const body  = JSON.stringify({
-        values : field_values,
+    const body = JSON.stringify({
+        values: field_values,
         comment: followup_comment
     });
 
-    try {
-        await put(`/api/v1/artifacts/${ artifact_id }`, {
-            headers,
-            body
-        });
-        resetError();
-        return { id: artifact_id };
-    } catch (error) {
-        return errorHandler(error);
-    }
+    await put(`/api/v1/artifacts/${artifact_id}`, {
+        headers,
+        body
+    });
+    resetError();
+    return { id: artifact_id };
 }
 
 async function searchUsers(query) {
@@ -144,16 +136,16 @@ async function getFollowupsComments(artifact_id, limit, offset, order) {
     }
 }
 
-async function uploadTemporaryFile(file_to_upload, description) {
-    const body  = JSON.stringify({
-        name    : file_to_upload.filename,
-        mimetype: file_to_upload.filetype,
-        content : file_to_upload.chunks[0],
+async function uploadTemporaryFile(file_name, file_type, first_chunk, description) {
+    const body = JSON.stringify({
+        name: file_name,
+        mimetype: file_type,
+        content: first_chunk,
         description
     });
 
     try {
-        const response = await post('/api/v1/artifact_temporary_files', {
+        const response = await post("/api/v1/artifact_temporary_files", {
             headers,
             body
         });
@@ -224,8 +216,8 @@ async function errorHandler(error) {
     const error_json = await error.response.json();
     if (error_json !== undefined && error_json.error && error_json.error.message) {
         setError(error_json.error.message);
-        return Promise.reject();
+        return Promise.reject(error_json.error);
     }
-    setError(error.response.status + ' ' + error.response.statusText);
-    return Promise.reject();
+    setError(error.response.status + " " + error.response.statusText);
+    return Promise.reject(error);
 }

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: AgileDashboard Planning\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-01-17 11:55+0100\n"
+"PO-Revision-Date: 2018-06-29 13:45+0200\n"
 "Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/test-188/language/"
 "fr/)\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.3\n"
+"X-Generator: Poedit 2.0.8\n"
 
 #: src/tuleap-artifact-modal-fields/computed-field/computed-field.tpl.html
 msgid "(auto-computed)"
@@ -27,6 +27,22 @@ msgstr "Ajouter un nouveau commentaire"
 #: src/tuleap-artifact-modal-fields/file-field/file-field.tpl.html
 msgid "Add another file"
 msgstr "Ajouter un autre fichier"
+
+#: src/tuleap-artifact-modal-controller.js
+msgid ""
+"An error occured while saving the artifact. Please check your network "
+"connection."
+msgstr ""
+"Une erreur s'est produite pendant la sauvegarde de cet artéfact. Vérifiez "
+"votre connexion au réseau."
+
+#: src/tuleap-artifact-modal-controller.js
+msgid ""
+"An error occured while uploading this file: {{ file_name }}. Please check "
+"your network connection."
+msgstr ""
+"Une erreur s'est produite pendant le téléversement de ce fichier : "
+"{{ file_name }}. Vérifiez votre connexion au réseau."
 
 #: src/tuleap-artifact-modal-fields/computed-field/computed-field.tpl.html
 msgid "Auto-compute"
@@ -156,6 +172,15 @@ msgstr "Taille : {{ file.size | byteFmt: 2 }}"
 #: src/tuleap-artifact-modal.tpl.html
 msgid "The artifact will be linked to {{ modal.parent.title }}."
 msgstr "L'artefact sera lié à  {{ modal.parent.title }}."
+
+#: src/tuleap-artifact-modal-controller.js
+msgid ""
+"You exceeded your current file upload quota. Please remove existing "
+"temporary files or wait until they are cleaned up."
+msgstr ""
+"Vous avez dépassé votre quota actuel de téléversement de fichiers. Veuillez "
+"supprimer des fichiers temporaires existants ou attendre jusqu'à ce qu'ils "
+"soient nettoyés."
 
 #: src/quota-display/quota-display.tpl.html
 msgid ""
