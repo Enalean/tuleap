@@ -9,6 +9,50 @@ $call-me-back-offset: 20px;
     bottom: $tlp-double-spacing;
 }
 
+@mixin message-colors($color) {
+    border: 1px solid $color;
+    color: $color;
+
+    a {
+        color: $color;
+        text-decoration: underline;
+    }
+}
+
+.call-me-back-message {
+    position: absolute;
+    left: -15px;
+    width: 150px;
+    padding: $tlp-spacing;
+    transform: translateY(-100%);
+    border-radius: 3px;
+    background: transparentize($tlp-ui-white, .2);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 22px;
+    text-align: center;
+    cursor: default;
+
+    @if $tlp-theme-color == $tlp-theme-blue {
+        @include message-colors($tlp-theme-orange);
+    } @else if $tlp-theme-color == $tlp-theme-green {
+        @include message-colors($tlp-theme-red);
+    } @else if $tlp-theme-color == $tlp-theme-grey {
+        @include message-colors($tlp-theme-orange);
+    } @else if $tlp-theme-color == $tlp-theme-orange {
+        @include message-colors($tlp-theme-blue);
+    } @else if $tlp-theme-color == $tlp-theme-purple {
+        @include message-colors($tlp-theme-orange);
+    } @else if $tlp-theme-color == $tlp-theme-red {
+        @include message-colors($tlp-theme-green);
+    }
+
+    > p {
+        font-size: 14px;
+        line-height: 22px;
+    }
+}
+
 @mixin change-button-color($color) {
     border-color: $color;
     background: $color;
