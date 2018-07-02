@@ -5,8 +5,30 @@ msgstr ""
 "Generated-By: easygettext\n"
 "Project-Id-Version: \n"
 
+msgid "Add repository"
+msgstr ""
+
+msgid "Allowed characters: a-zA-Z0-9/_.-"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid "Create repository"
+msgstr ""
+
 msgid "Git repositories"
 msgstr ""
 
 msgid "Project has no Git repositories yet."
+msgstr ""
+
+msgid "Repository name"
+msgstr ""
+
+msgid "max length is 255"
+msgstr ""
+
+msgid ""
+"no slashes at the beginning or the end, it also must not finish with \".git"
 msgstr ""

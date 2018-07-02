@@ -12,8 +12,28 @@ msgstr ""
 "X-Generator: Poedit 2.0.8\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid "Add repository"
+msgstr "Ajouter un dépôt"
+
+msgid "Allowed characters: a-zA-Z0-9/_.-"
+msgstr "Caractères autorisés : a-zA-Z0-9/_.-"
+
+msgid "Cancel"
+msgstr "Annuler"
+
 msgid "Git repositories"
 msgstr "Dépôts Git"
 
 msgid "Project has no Git repositories yet."
 msgstr "Le projet n'a aucun dépôt Git pour l'instant"
+
+msgid "Repository name"
+msgstr "Nom du dépôt"
+
+msgid "max length is 255"
+msgstr "longueur maximale 255"
+
+msgid ""
+"no slashes at the beginning or the end, it also must not finish with \".git"
+msgstr ""
+"pas de slashes au début ou à la fin, ça ne doit aussi pas finir avec \".git"

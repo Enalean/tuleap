@@ -18,6 +18,6 @@
   "scripts": {
     "build": "NODE_ENV=production $npm_package_config_bin/webpack --mode=production",
     "watch": "NODE_ENV=watch $npm_package_config_bin/webpack --watch --mode=development",
-    "extract-gettext-cli": "$npm_package_config_bin/gettext-extract repositories/src/*.vue"
+    "extract-gettext-cli": "$npm_package_config_bin/gettext-extract  --attribute v-translate repositories/src/*.vue"
   }
 }
