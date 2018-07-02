@@ -22,6 +22,7 @@
 namespace Tuleap\Tracker\Webhook\Actions;
 
 use CSRFSynchronizerToken;
+use Tracker;
 
 class AdminPresenter
 {
@@ -35,9 +36,15 @@ class AdminPresenter
      */
     public $csrf_token;
 
-    public function __construct(array $webhook_presenters, CSRFSynchronizerToken $csrf)
+    /**
+     * @var int
+     */
+    public $tracker_id;
+
+    public function __construct(array $webhook_presenters, CSRFSynchronizerToken $csrf, Tracker $tracker)
     {
         $this->webhook_presenters = $webhook_presenters;
         $this->csrf_token         = $csrf->getToken();
+        $this->tracker_id         = $tracker->getId();
     }
 }

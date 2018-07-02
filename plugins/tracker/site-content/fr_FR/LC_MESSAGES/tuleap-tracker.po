@@ -45,8 +45,18 @@ msgstr ""
 msgid "Add a new %s"
 msgstr "Ajouter un nouveau %s"
 
+msgid ""
+"Add a target which will be called everytime an artifact is created or "
+"updated. The URL will be called using HTTP POST method."
+msgstr ""
+"Ajoutez une URL cible qui sera appelée à chaque création et mise à jour "
+"d'artéfact. Cette URL sera appelée avec HTTP POST."
+
 msgid "Add notification"
 msgstr "Ajouter une notification"
+
+msgid "Add webhook"
+msgstr "Ajouter un Webhook"
 
 msgid ""
 "After artifact edition, all the disabled types used will be cleared without "
@@ -337,6 +347,9 @@ msgstr "Passer aux couleurs par défaut"
 
 msgid "Switch to old colors"
 msgstr "Passer aux anciennes couleurs"
+
+msgid "Target URL:"
+msgstr "URL cible :"
 
 msgid "That tracker does not exist."
 msgstr "Cet outil de suivi n'existe pas."
@@ -711,6 +724,9 @@ msgstr[1] ""
 "fait référence. Merci de vous référer à la documentation pour les "
 "comparaisons autorisées."
 
+msgid "Webhook sucessfully created"
+msgstr "Le webhook a été créé"
+
 msgid "Webhook sucessfully deleted"
 msgstr "Le webhook a été supprimé"
 
@@ -743,7 +759,7 @@ msgid ""
 "You can define several webhooks that will be processed after each artifact "
 "creation and updates."
 msgstr ""
-"Vous pouvez définir plusieurs webhooks qui seront envoyé après chaque "
+"Vous pouvez définir plusieurs webhooks qui seront envoyés après chaque "
 "création et édition d'artéfact."
 
 msgid ""

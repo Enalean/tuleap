@@ -74,6 +74,7 @@ use Tuleap\Tracker\PermissionsPerGroup\ProjectAdminPermissionPerGroupPresenterBu
 use Tuleap\Tracker\ProjectDeletionEvent;
 use Tuleap\Tracker\Reference\ReferenceCreator;
 use Tuleap\Tracker\Service\ServiceActivator;
+use Tuleap\Tracker\Webhook\Actions\WebhookCreateController;
 use Tuleap\Tracker\Webhook\Actions\WebhookDeleteController;
 use Tuleap\Tracker\Webhook\WebhookDao;
 use Tuleap\Tracker\Webhook\WebhookRetriever;
@@ -1659,8 +1660,15 @@ class trackerPlugin extends Plugin {
             $r->post('/webhooks/delete', function () {
                 return new WebhookDeleteController(
                     new WebhookRetriever(new WebhookDao()),
-                    TrackerFactory::instance(),
+                    $this->getTrackerFactory(),
                     new WebhookDao()
+                );
+            });
+
+            $r->post('/webhooks/create', function () {
+                return new WebhookCreateController(
+                    new WebhookDao(),
+                    $this->getTrackerFactory()
                 );
             });
         });
