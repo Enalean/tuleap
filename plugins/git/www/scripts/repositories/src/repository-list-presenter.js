@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,25 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.git-repository-create-modal-body {
-    height: auto;
+export { getProjectId, setProjectId };
+
+let project_id;
+
+function setProjectId(id) {
+    project_id = id;
 }
 
-.git-repository-list-create-repository-button {
-    margin: 0 0 $tlp-spacing;
-}
-
-.git-repository-card-header {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-}
-
-.git-repository-card-title {
-    color: $tlp-theme-color;
-    text-transform: none;
-}
-
-.git-repository-card-description {
-    color: $tlp-ui-dimmed;
+function getProjectId() {
+    return project_id;
 }

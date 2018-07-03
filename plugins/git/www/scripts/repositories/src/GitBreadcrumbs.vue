@@ -22,7 +22,7 @@
         <div class="breadcrumb-switchable breadcrumb-item">
             <a
                     class="breadcrumb-link"
-                    v-bind:href="repositoryListUrl"
+                    v-bind:href="repository_list_url"
                     v-bind:title="repositories_title"
             >
                 <i class="breadcrumb-link-icon fa fa-fw icon-fixed-width fa-table icon-table"></i>
@@ -31,14 +31,14 @@
             <nav class="breadcrumb-switch-menu">
                 <span class="breadcrumb-dropdown-item">
                     <a class="breadcrumb-dropdown-link"
-                       v-bind:href="repositoriesAdministrationUrl"
+                       v-bind:href="repository_admin_url"
                        v-bind:title="administration_tilte">
                        <i class="fa fa-cog fa-fw"></i> <translate>Administration</translate>
                     </a>
                 </span>
                 <span class="breadcrumb-dropdown-item">
                     <a class="breadcrumb-dropdown-link"
-                       v-bind:href="repositoriesForkUrl"
+                       v-bind:href="repository_fork_url"
                        v-bind:title="fork_title">
                        <i class="fa fa-code-fork fa-fw"></i> <translate>Fork repositories</translate>
                     </a>
@@ -48,13 +48,10 @@
     </nav>
 </template>
 <script>
+    import { getAdministrationUrl, getForkRepositoriesUrl, getRepositoryListUrl } from './breadcrumb-presenter.js'
+
     export default {
         name: 'GitBreadcrumbs',
-        props: {
-            repositoriesAdministrationUrl: String,
-            repositoryListUrl: String,
-            repositoriesForkUrl: String
-        },
         computed: {
             repositories_title() {
                 return this.$gettext("Repository list");
@@ -64,6 +61,15 @@
             },
             fork_title() {
                 return this.$gettext("Fork repositories");
+            },
+            repository_list_url() {
+                return getRepositoryListUrl();
+            },
+            repository_admin_url() {
+                return getAdministrationUrl();
+            },
+            repository_fork_url() {
+                return getForkRepositoriesUrl();
             }
         }
     }

@@ -17,6 +17,9 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
+msgid "Empty description"
+msgstr ""
+
 msgid "Fork repositories"
 msgstr ""
 

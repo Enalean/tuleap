@@ -25,6 +25,7 @@ class GitRepositoryListPresenter
     public $repositories_administration_url;
     public $repositories_fork_url;
     public $repositories_list_url;
+    public $project_id;
 
     public function __construct(\Project $project)
     {
@@ -42,5 +43,6 @@ class GitRepositoryListPresenter
         );
 
         $this->repositories_list_url = GIT_BASE_URL . "/" . urlencode($project->getUnixNameLowerCase()) . "/";
+        $this->project_id            = $project->getID();
     }
 }

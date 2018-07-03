@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,25 +17,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.git-repository-create-modal-body {
-    height: auto;
+export { setUrls, getAdministrationUrl, getRepositoryListUrl, getForkRepositoriesUrl };
+
+let administration_url, repository_list_url, fork_repositories_url;
+
+function setUrls(admin_url, repositories_url, fork_url) {
+    administration_url = admin_url;
+    repository_list_url = repositories_url;
+    fork_repositories_url = fork_url;
 }
 
-.git-repository-list-create-repository-button {
-    margin: 0 0 $tlp-spacing;
+function getAdministrationUrl() {
+    return administration_url;
 }
 
-.git-repository-card-header {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+function getRepositoryListUrl() {
+    return repository_list_url;
 }
 
-.git-repository-card-title {
-    color: $tlp-theme-color;
-    text-transform: none;
-}
-
-.git-repository-card-description {
-    color: $tlp-ui-dimmed;
+function getForkRepositoriesUrl() {
+    return fork_repositories_url;
 }
