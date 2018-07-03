@@ -27,10 +27,10 @@ use Tracker_Artifact;
 use Tracker_Artifact_PriorityManager;
 use Tracker_Artifact_XMLImport;
 use Tracker_XML_Exporter_ArtifactXMLExporter;
-use Tracker_XML_Updater_ChangesetXMLUpdater;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionManager;
 use Tuleap\Tracker\Exception\MoveArtifactNotDoneException;
 use Tuleap\Tracker\Exception\MoveArtifactSemanticsMissingException;
+use Tuleap\Tracker\XML\Updater\MoveChangesetXMLUpdater;
 
 class MoveArtifact
 {
@@ -46,7 +46,7 @@ class MoveArtifact
     private $xml_exporter;
 
     /**
-     * @var Tracker_XML_Updater_ChangesetXMLUpdater
+     * @var MoveChangesetXMLUpdater
      */
     private $xml_updater;
 
@@ -68,7 +68,7 @@ class MoveArtifact
     public function __construct(
         ArtifactsDeletionManager $artifacts_deletion_manager,
         Tracker_XML_Exporter_ArtifactXMLExporter $xml_exporter,
-        Tracker_XML_Updater_ChangesetXMLUpdater $xml_updater,
+        MoveChangesetXMLUpdater $xml_updater,
         Tracker_Artifact_XMLImport $xml_import,
         Tracker_Artifact_PriorityManager $artifact_priority_manager,
         MoveSemanticChecker $move_semantic_checker
@@ -106,7 +106,7 @@ class MoveArtifact
         $global_rank = $this->artifact_priority_manager->getGlobalRank($artifact->getId());
         $limit       = $this->artifacts_deletion_manager->deleteArtifactBeforeMoveOperation($artifact, $user);
 
-        $this->xml_updater->updateForMoveAction(
+        $this->xml_updater->update(
             $source_tracker,
             $target_tracker,
             $xml_artifacts->artifact,

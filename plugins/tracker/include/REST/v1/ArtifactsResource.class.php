@@ -29,17 +29,6 @@ use Tracker_Artifact_XMLImportBuilder;
 use Tracker_XML_Exporter_ArtifactXMLExporterBuilder;
 use Tracker_XML_Exporter_LocalAbsoluteFilePathXMLExporter;
 use Tracker_XML_Exporter_NullChildrenCollector;
-use Tracker_XML_Updater_ChangesetXMLUpdater;
-use Tracker_XML_Updater_FieldChange_FieldChangeDateXMLUpdater;
-use Tracker_XML_Updater_FieldChange_FieldChangeFloatXMLUpdater;
-use Tracker_XML_Updater_FieldChange_FieldChangeIntegerXMLUpdater;
-use Tracker_XML_Updater_FieldChange_FieldChangeListXMLUpdater;
-use Tracker_XML_Updater_FieldChange_FieldChangeOpenListXMLUpdater;
-use Tracker_XML_Updater_FieldChange_FieldChangePermissionsOnArtifactXMLUpdater;
-use Tracker_XML_Updater_FieldChange_FieldChangeStringXMLUpdater;
-use Tracker_XML_Updater_FieldChange_FieldChangeTextXMLUpdater;
-use Tracker_XML_Updater_FieldChange_FieldChangeUnknownXMLUpdater;
-use Tracker_XML_Updater_FieldChangeXMLUpdaterVisitor;
 use Tuleap\REST\JsonDecoder;
 use \Tuleap\REST\ProjectAuthorization;
 use \Tuleap\REST\Header;
@@ -62,11 +51,9 @@ use Tuleap\Tracker\Artifact\ArtifactsDeletion\DeletionOfArtifactsIsNotAllowedExc
 use Tuleap\Tracker\Exception\MoveArtifactNotDoneException;
 use Tuleap\Tracker\Exception\MoveArtifactSemanticsMissingException;
 use Tuleap\Tracker\Exception\SemanticTitleNotDefinedException;
-use Tuleap\Tracker\REST\Artifact\ArtifactBatchQueryConverter;
-use Tuleap\Tracker\REST\Artifact\MalformedArtifactBatchQueryConverterException;
 use Tuleap\Tracker\REST\Artifact\MovedArtifactValueBuilder;
 use Tuleap\Tracker\REST\v1\Event\ArtifactPartialUpdate;
-use Tuleap\Tracker\XML\Updater\FieldChange\FieldChangeComputedXMLUpdater;
+use Tuleap\Tracker\XML\Updater\MoveChangesetXMLUpdater;
 use \UserManager;
 use \PFUser;
 use \Tracker_REST_Artifact_ArtifactRepresentationBuilder;
@@ -807,19 +794,6 @@ class ArtifactsResource extends AuthenticatedResource {
         $children_collector     = new Tracker_XML_Exporter_NullChildrenCollector();
         $file_path_xml_exporter = new Tracker_XML_Exporter_LocalAbsoluteFilePathXMLExporter();
 
-        $visitor = new Tracker_XML_Updater_FieldChangeXMLUpdaterVisitor(
-            new Tracker_XML_Updater_FieldChange_FieldChangeDateXMLUpdater(),
-            new Tracker_XML_Updater_FieldChange_FieldChangeFloatXMLUpdater(),
-            new Tracker_XML_Updater_FieldChange_FieldChangeIntegerXMLUpdater(),
-            new Tracker_XML_Updater_FieldChange_FieldChangeTextXMLUpdater(),
-            new Tracker_XML_Updater_FieldChange_FieldChangeStringXMLUpdater(),
-            new Tracker_XML_Updater_FieldChange_FieldChangePermissionsOnArtifactXMLUpdater(),
-            new Tracker_XML_Updater_FieldChange_FieldChangeListXMLUpdater(),
-            new Tracker_XML_Updater_FieldChange_FieldChangeOpenListXMLUpdater(),
-            new FieldChangeComputedXMLUpdater(),
-            new Tracker_XML_Updater_FieldChange_FieldChangeUnknownXMLUpdater()
-        );
-
         $user_xml_exporter = new UserXMLExporter(
             $this->user_manager,
             new UserXMLExportedCollection(new XML_RNGValidator(), new XML_SimpleXMLCDATAFactory())
@@ -830,10 +804,7 @@ class ArtifactsResource extends AuthenticatedResource {
         return new MoveArtifact(
             $this->artifacts_deletion_manager,
             $builder->build($children_collector, $file_path_xml_exporter, $user, $user_xml_exporter, true),
-            new Tracker_XML_Updater_ChangesetXMLUpdater(
-                $visitor,
-                $this->formelement_factory
-            ),
+            new MoveChangesetXMLUpdater(),
             $xml_import_builder->build(
                 new XMLImportHelper($this->user_manager),
                 new Log_NoopLogger()
