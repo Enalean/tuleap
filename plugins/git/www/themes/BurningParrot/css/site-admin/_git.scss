@@ -1,0 +1,153 @@
+@import 'gitolite';
+
+.form-element-group {
+    display: flex;
+
+    > .form-element-item:not(:last-child) {
+        margin-right: $tlp-spacing * 2;
+    }
+
+    > .form-element-item:not(:first-child) {
+        flex: 0 0 auto;
+    }
+
+    > .form-element-item:first-child {
+        flex: 1 1 auto;
+    }
+}
+
+/* -------------------- MIRROR ---------------------- */
+
+.mirror-global-action-container {
+    margin: 0 0 $tlp-spacing;
+}
+
+.mirror-info {
+    display: flex;
+}
+
+.mirror-info-two {
+    margin: 0 0 0 ($tlp-spacing * 2);
+}
+
+.mirror-info-two-ssh-key {
+    word-break: break-all;
+}
+
+.mirror-info-two-ssh-key-icon {
+    margin: 0 5px;
+}
+
+.mirror-action-container {
+    display: flex;
+    flex: 0 1 auto;
+    justify-content: center;
+}
+
+.mirror-action {
+    display: flex;
+    align-items: center;
+}
+
+.mirror-action-delete-button,
+.mirror-action-restrict-button {
+    margin: 0 0 0 ($tlp-spacing / 2);
+}
+
+.mirror-configuration {
+    line-height: 30px;
+}
+
+.mirror-repo-list-for-project:not(:last-child) {
+    margin: 0 0 $tlp-spacing;
+}
+
+.mirror-repo-list-for-project-reponame {
+    width: 100%;
+}
+
+
+/* -------------------- GERRIT ---------------------- */
+
+.add-gerrit-server-button {
+    margin-bottom: $tlp-spacing;
+}
+
+#gerrit-servers-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.gerrit-server-info-row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 0 $tlp-spacing;
+
+    &:last-child {
+        margin: 0;
+    }
+
+    > .tlp-property {
+        margin: 0 $tlp-double-spacing 0 0;
+    }
+}
+
+.git-info-two-ssh-key {
+    word-break: break-all;
+}
+
+.git-info-two-ssh-key-icon {
+    margin: 0 5px 0 0;
+}
+
+.gerrit-server-action-container {
+    display: flex;
+    flex: 0 1 auto;
+    justify-content: center;
+}
+
+.gerrit-server-action {
+    display: flex;
+    align-items: center;
+
+    .action-item {
+        margin-right: 10px;
+    }
+}
+
+.gerrit-action-restrict-button {
+    margin: 0 ($tlp-spacing / 2) 0 0;
+}
+
+/* -------------------- WIDGETS ---------------------- */
+
+.widget-last-git-pushes-details {
+    margin: $tlp-half-spacing $tlp-spacing;
+    font-size: 14px;
+}
+
+.widget-last-git-pushes-repository {
+    margin: 0 0 5px $tlp-spacing;
+}
+
+.widget-last-git-pushes-project {
+    margin: 0 0 $tlp-spacing;
+}
+
+/* -------------------- MEDIA QUERIES ---------------------- */
+
+@media screen and (max-width: 1300px) {
+    .tlp-pane {
+        flex-direction: column;
+    }
+
+    .mirror-action-container {
+        align-items: flex-end;
+        border-top: 1px solid $tlp-ui-border-light;
+    }
+
+    .gerrit-server-action-container {
+        align-items: flex-end;
+        border-top: 1px solid $tlp-ui-border-light;
+    }
+}
