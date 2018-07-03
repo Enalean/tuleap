@@ -3,7 +3,9 @@
         <p>{{# dgettext }} tuleap-tracker | You are about to remove the webhook. Please confirm your action. {{/ dgettext }}</p>
 
         <input type="hidden" name="webhook_id" value="{{ webhook_id }}" />
-        <input type="hidden" name="challenge" value="{{ csrf_token }}" />
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
 
         <div class="remove-tracker-webhooks-confirm-actions">
             <button type="button" class="btn btn-small btn-default dismiss-popover">{{# dgettext }} tuleap-tracker | Cancel {{/ dgettext }}</button>

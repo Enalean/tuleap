@@ -54,6 +54,15 @@ class WebhookDao extends DataAccessObject
         return $this->getDB()->run($sql, $webhook_id);
     }
 
+    public function edit($webhook_id, $webhook_url)
+    {
+        return $this->getDB()->update(
+            'plugin_tracker_webhook_url',
+            [ 'url' => $webhook_url ],
+            [ 'id' => $webhook_id ]
+        );
+    }
+
     public function addLog($webhook_id, $status)
     {
         $sql = 'INSERT INTO plugin_tracker_webhook_log(created_on, webhook_id, status)

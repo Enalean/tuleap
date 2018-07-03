@@ -48,7 +48,9 @@
                     <a role="button" data-toggle="modal" href="#modal-logs-{{ webhook_id }}">
                         <i class="icon-list"></i> {{# dgettext }} tuleap-tracker | Logs {{/ dgettext }}
                     </a>
-
+                    <a role="button" data-toggle="modal" href="#modal-edit-webhook-{{ webhook_id }}">
+                        <i class="icon-edit"></i> {{# dgettext }} tuleap-tracker | Edit {{/ dgettext }}
+                    </a>
                     <a href="javascript:;"
                        class="remove-tracker-webhook"
                        data-toggle="popover"
@@ -78,3 +80,7 @@
 </div>
 
 {{> modal-create-webhook }}
+
+{{# webhook_presenters }}
+    {{> modal-edit-webhook }}
+{{/ webhook_presenters }}

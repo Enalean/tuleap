@@ -76,6 +76,7 @@ use Tuleap\Tracker\Reference\ReferenceCreator;
 use Tuleap\Tracker\Service\ServiceActivator;
 use Tuleap\Tracker\Webhook\Actions\WebhookCreateController;
 use Tuleap\Tracker\Webhook\Actions\WebhookDeleteController;
+use Tuleap\Tracker\Webhook\Actions\WebhookEditController;
 use Tuleap\Tracker\Webhook\WebhookDao;
 use Tuleap\Tracker\Webhook\WebhookRetriever;
 use Tuleap\User\History\HistoryRetriever;
@@ -1671,6 +1672,17 @@ class trackerPlugin extends Plugin {
                     $this->getTrackerFactory()
                 );
             });
+
+            $r->post(
+                '/webhooks/edit',
+                function () {
+                    return new WebhookEditController(
+                        new WebhookRetriever(new WebhookDao()),
+                        TrackerFactory::instance(),
+                        new WebhookDao()
+                    );
+            }
+            );
         });
     }
 

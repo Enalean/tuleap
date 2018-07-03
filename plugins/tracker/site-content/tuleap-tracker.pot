@@ -137,6 +137,9 @@ msgstr ""
 msgid "Edit"
 msgstr ""
 
+msgid "Edit webhook"
+msgstr ""
+
 msgid "Email Notifications Settings"
 msgstr ""
 
@@ -258,6 +261,9 @@ msgid "Return type"
 msgstr ""
 
 msgid "Save"
+msgstr ""
+
+msgid "Save webhook"
 msgstr ""
 
 msgid ""
@@ -534,6 +540,9 @@ msgid ""
 "sort a report, the sort has been ignored. Please choose another column."
 msgstr ""
 
+msgid "The submitted URL is not valid."
+msgstr ""
+
 #, php-format
 msgid "The text field '%s' cannot be compared to MYSELF()."
 msgstr ""
@@ -625,6 +634,9 @@ msgid "Webhook sucessfully created"
 msgstr ""
 
 msgid "Webhook sucessfully deleted"
+msgstr ""
+
+msgid "Webhook sucessfully updated"
 msgstr ""
 
 msgid "Webhooks"
