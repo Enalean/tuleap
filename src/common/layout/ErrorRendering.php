@@ -27,30 +27,24 @@ use Tuleap\Theme\BurningParrot\BurningParrotTheme;
 class ErrorRendering
 {
     /**
-     * @var HTTPRequest
-     */
-    private $request;
-    /**
      * @var BaseLayout
      */
     private $layout;
-    private $http_code;
     private $presenter = [];
 
-    public function __construct(HTTPRequest $request, BurningParrotTheme $layout, $http_code, $title, $message)
+    public function __construct(BurningParrotTheme $layout)
     {
-        $this->request              = $request;
-        $this->layout               = $layout;
-        $this->http_code            = (int) $http_code;
-        $this->presenter['title']   = $title;
-        $this->presenter['message'] = $message;
+        $this->layout = $layout;
     }
 
-    public function rendersError()
+    public function rendersError(HTTPRequest $request, $http_code, $title, $message)
     {
-        http_response_code($this->http_code);
+        $this->presenter['title']   = $title;
+        $this->presenter['message'] = $message;
 
-        if ($this->request->isAjax()) {
+        http_response_code((int) $http_code);
+
+        if ($request->isAjax()) {
             return;
         }
 
@@ -66,11 +60,11 @@ class ErrorRendering
         $this->layout->footer([]);
     }
 
-    public function rendersErrorWithException(\Exception $exception)
+    public function rendersErrorWithException(HTTPRequest $request, $http_code, $title, $message, \Exception $exception)
     {
         if (isset($exception->xdebug_message) && ini_get('display_errors') === '1') {
             $this->presenter['xdebug_message'] = $exception->xdebug_message;
         }
-        $this->rendersError();
+        $this->rendersError($request, $http_code, $title, $message);
     }
 }

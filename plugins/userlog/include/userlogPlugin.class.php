@@ -31,7 +31,7 @@ use Tuleap\Userlog\UserLogRouter;
 
 require_once 'constants.php';
 
-class userlogPlugin extends Plugin implements \Tuleap\Request\Dispatchable
+class userlogPlugin extends Plugin implements \Tuleap\Request\DispatchableWithRequest
 {
 
     function __construct($id)
@@ -111,10 +111,8 @@ class userlogPlugin extends Plugin implements \Tuleap\Request\Dispatchable
         }
     }
 
-    public function process(array $variables)
+    public function process(HTTPRequest $request, \Tuleap\Layout\BaseLayout $layout, array $variables)
     {
-        $request = HTTPRequest::instance();
-
         $router = new UserLogRouter(
             new UserLogExporter(new UserLogBuilder(new UserLogDao(), UserManager::instance())),
             new UserLogManager(new AdminPageRenderer(), UserManager::instance())

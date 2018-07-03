@@ -36,7 +36,7 @@
  * </pre>
  */
 
-require_once('common/constants.php');
+require_once __DIR__.'/../constants.php';
 
 class Codendi_HTMLPurifier {
     private static $allowed_schemes = array(
