@@ -24,8 +24,4 @@ use Exception;
 
 class MoveArtifactSemanticsMissingException extends Exception
 {
-    public function __construct()
-    {
-        parent::__construct('Both trackers must have either the title semantic or the description semantic defined.');
-    }
 }

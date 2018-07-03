@@ -86,7 +86,7 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic {
     /**
      * The (numeric) field used for initial_effort semantic
      *
-     * @return Tracker_FormElement_Field_Text The (numeric) field used for initial_effort semantic, or null if no field
+     * @return Tracker_FormElement_Field The (numeric) field used for initial_effort semantic, or null if no field
      */
     public function getField() {
         return $this->initial_effort_field;

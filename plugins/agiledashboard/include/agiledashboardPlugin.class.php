@@ -40,6 +40,7 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\Planning\PlanningJavascriptDependenciesProvider;
 use Tuleap\AgileDashboard\RealTime\RealTimeArtifactMessageController;
 use Tuleap\AgileDashboard\Semantic\Dao\SemanticDoneDao;
+use Tuleap\AgileDashboard\Semantic\MoveSemanticChecker;
 use Tuleap\AgileDashboard\Semantic\SemanticDone;
 use Tuleap\AgileDashboard\Semantic\SemanticDoneFactory;
 use Tuleap\AgileDashboard\Semantic\SemanticDoneValueChecker;
@@ -60,6 +61,7 @@ use Tuleap\RealTime\NodeJSClient;
 use Tuleap\Request\CurrentPage;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 use Tuleap\Tracker\Artifact\Event\ArtifactsReordered;
+use Tuleap\Tracker\Events\MoveArtifactCheckExternalSemantics;
 use Tuleap\Tracker\FormElement\Event\MessageFetcherAdditionalWarnings;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\CanValueBeHiddenStatementsCollection;
 use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
@@ -161,6 +163,7 @@ class AgileDashboardPlugin extends Plugin {
             $this->addHook(Event::IMPORT_XML_PROJECT_TRACKER_DONE);
             $this->addHook(PermissionPerGroupPaneCollector::NAME);
             $this->addHook(TRACKER_EVENT_ARTIFACT_DELETE);
+            $this->addHook(MoveArtifactCheckExternalSemantics::NAME);
         }
 
         if (defined('CARDWALL_BASE_URL')) {
@@ -1631,7 +1634,6 @@ class AgileDashboardPlugin extends Plugin {
         return true;
     }
 
-
     private function doesSemanticDoneUsesSemanticStatus(Tracker $tracker)
     {
         $dao             = new SemanticDoneDao();
@@ -1646,5 +1648,19 @@ class AgileDashboardPlugin extends Plugin {
             dgettext('tuleap-agiledashboard', 'The semantic status cannot de deleted because the semantic done is defined for this tracker.')
         );
         return true;
+    }
+
+    public function moveArtifactCheckExternalSemantics(MoveArtifactCheckExternalSemantics $event)
+    {
+        $event->setVisitedByPlugin();
+
+        $move_semantic_checker = new MoveSemanticChecker(
+            $this->getSemanticInitialEffortFactory(),
+            $this->getFormElementFactory()
+        );
+
+        if ($move_semantic_checker->areSemanticsAligned($event->getSourceTracker(), $event->getTargetTracker())) {
+            $event->setExternalSemanticAligned();
+        }
     }
 }

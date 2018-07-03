@@ -23,6 +23,7 @@ namespace Tuleap\Tracker\Action;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Tracker\Events\MoveArtifactCheckExternalSemantics;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
@@ -39,7 +40,8 @@ class MoveSemanticCheckerTest extends TestCase
     {
         parent::setUp();
 
-        $this->checker = new MoveSemanticChecker();
+        $this->event_manager = Mockery::spy(\EventManager::class);
+        $this->checker       = new MoveSemanticChecker($this->event_manager);
 
         $this->source_tracker = Mockery::mock(\Tracker::class);
         $this->target_tracker = Mockery::mock(\Tracker::class);
@@ -163,5 +165,65 @@ class MoveSemanticCheckerTest extends TestCase
         ]);
 
         $this->assertFalse($this->checker->areSemanticsAligned($this->source_tracker, $this->target_tracker));
+    }
+
+    public function testExternalSemanticsAreNotCheckedIfNotReturnedByOtherPlugin()
+    {
+        $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function (MoveArtifactCheckExternalSemantics $event) {
+            return true;
+        }));
+
+        $this->source_tracker->shouldReceive([
+            'hasSemanticsTitle'       => false,
+            'hasSemanticsDescription' => false,
+        ]);
+
+        $this->target_tracker->shouldReceive([
+            'hasSemanticsTitle'       => true,
+            'hasSemanticsDescription' => true,
+        ]);
+
+        $this->assertFalse($this->checker->areSemanticsAligned($this->source_tracker, $this->target_tracker));
+    }
+
+    public function testSemanticsAreNotAlignedIfBothTrackerAndExternalSemanticsAreNotAligne()
+    {
+        $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function (MoveArtifactCheckExternalSemantics $event) {
+            $event->setVisitedByPlugin();
+            return true;
+        }));
+
+        $this->source_tracker->shouldReceive([
+            'hasSemanticsTitle'       => false,
+            'hasSemanticsDescription' => false,
+        ]);
+
+        $this->target_tracker->shouldReceive([
+            'hasSemanticsTitle'       => true,
+            'hasSemanticsDescription' => true,
+        ]);
+
+        $this->assertFalse($this->checker->areSemanticsAligned($this->source_tracker, $this->target_tracker));
+    }
+
+    public function testSemanticsAreAlignedIfExternalSemanticsAreAlignedAndNotTrackerSemantics()
+    {
+        $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function (MoveArtifactCheckExternalSemantics $event) {
+            $event->setVisitedByPlugin();
+            $event->setExternalSemanticAligned();
+            return true;
+        }));
+
+        $this->source_tracker->shouldReceive([
+            'hasSemanticsTitle'       => false,
+            'hasSemanticsDescription' => false,
+        ]);
+
+        $this->target_tracker->shouldReceive([
+            'hasSemanticsTitle'       => true,
+            'hasSemanticsDescription' => true,
+        ]);
+
+        $this->assertTrue($this->checker->areSemanticsAligned($this->source_tracker, $this->target_tracker));
     }
 }
