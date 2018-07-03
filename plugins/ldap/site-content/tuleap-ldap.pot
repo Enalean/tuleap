@@ -21,7 +21,19 @@ msgstr ""
 msgid "If you choose to synchronize with a group from the directory, it will:"
 msgstr ""
 
+msgid "LDAP Sync Results"
+msgstr ""
+
+msgid "LDAP Sync Results for %projectName%"
+msgstr ""
+
 msgid "Link with Enterprise Directory Group"
+msgstr ""
+
+msgid "No users were added"
+msgstr ""
+
+msgid "No users were removed"
 msgstr ""
 
 msgid "Please select a LDAP group."
@@ -53,4 +65,10 @@ msgstr ""
 
 #, php-format
 msgid "Update directory group binding (%s)"
+msgstr ""
+
+msgid "Users added"
+msgstr ""
+
+msgid "Users removed"
 msgstr ""

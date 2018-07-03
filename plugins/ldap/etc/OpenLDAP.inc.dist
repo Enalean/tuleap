@@ -89,6 +89,9 @@ $sys_ldap_user_management = 1;
 // Doesn't work yet with only works with OpenLDAP compatible directories yet.
 $sys_ldap_grp_enabled   = 1;
 
+// Enabled email notifications for project admins after each project sync
+$sys_ldap_grp_sync_admin_notifications_enabled = "0";
+
 // Specific DN where the user groups are
 $sys_ldap_grp_dn        = 'ou=groups,dc=example,dc=com';
 

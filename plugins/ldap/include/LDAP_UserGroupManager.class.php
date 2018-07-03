@@ -51,9 +51,10 @@ class LDAP_UserGroupManager extends LDAP_GroupManager
         LDAP_UserManager $ldap_user_manager,
         LDAP_UserGroupDao $dao,
         ProjectManager $project_manager,
-        Logger $logger
+        Logger $logger,
+        \Tuleap\LDAP\GroupSyncNotificationsManager $notifications_manager
     ) {
-        parent::__construct($ldap, $ldap_user_manager);
+        parent::__construct($ldap, $ldap_user_manager, $project_manager, $notifications_manager);
 
         $this->project_manager = $project_manager;
         $this->logger          = $logger;
