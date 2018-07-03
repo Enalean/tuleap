@@ -23,6 +23,9 @@ msgstr ""
 msgid "Fork repositories"
 msgstr ""
 
+msgid "Git plugin is not activated"
+msgstr ""
+
 msgid "Git repositories"
 msgstr ""
 
@@ -33,6 +36,9 @@ msgid "Repository list"
 msgstr ""
 
 msgid "Repository name"
+msgstr ""
+
+msgid "Something went wrong, please check your network connection"
 msgstr ""
 
 msgid "max length is 255"

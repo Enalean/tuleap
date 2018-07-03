@@ -18,28 +18,33 @@
   -->
 
 <template>
-    <section class="tlp-pane">
+    <section class="tlp-pane git-repository-card">
         <div class="tlp-pane-container">
-            <div class="tlp-pane-header git-repository-card-header">
-                <h1 class="tlp-pane-title git-repository-card-title">{{ repository.name }}</h1>
-            </div>
-            <section class="tlp-pane-section git-repository-card-description">
-                <p v-if="hasRepositoryDescription">{{ repository.description }}</p>
-                <p v-else v-translate>Empty description</p>
-            </section>
+            <a v-bind:href="repository.html_url" class="git-repository-card-link">
+                <div class="tlp-pane-header git-repository-card-header">
+                    <h1 class="tlp-pane-title git-repository-card-title">{{ repository.name }}</h1>
+                </div>
+                <section class="tlp-pane-section">
+                    <p v-if="hasRepositoryDescription" class="git-repository-card-description">{{ repository.description }}</p>
+                    <p v-else v-translate class="git-repository-card-description">Empty description</p>
+                </section>
+            </a>
+
         </div>
     </section>
 </template>
 <script>
-    const DEFAULT_DESCRIPTION = "-- Default description --";
+const DEFAULT_DESCRIPTION = "-- Default description --";
 
-    export default {
-        name: 'GitRepository',
-        props:  [ 'repository' ],
-        computed: {
-            hasRepositoryDescription() {
-                return this.repository.description !== DEFAULT_DESCRIPTION;
-            }
+export default {
+    name: "GitRepository",
+    props: {
+        repository: Object
+    },
+    computed: {
+        hasRepositoryDescription() {
+            return this.repository.description !== DEFAULT_DESCRIPTION;
         }
     }
+};
 </script>
