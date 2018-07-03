@@ -57,6 +57,16 @@
         right: 40px;
         bottom: 40px;
         font-family: 'SourceSansPro', 'Helvetica Neue', Arial, sans-serif;
+
+        + .bootstrap-datetimepicker-widget {
+            z-index: 10001;
+            transform: translate(-30px, -32px);
+
+            &:before,
+            &:after {
+                display: none;
+            }
+        }
     }
 
     .call-me-back-message {
@@ -158,6 +168,10 @@
             > .input-prepend {
                 width: calc(100% - 40px);
                 margin: 0 0 20px;
+            }
+
+            .icon-calendar {
+                cursor: pointer;
             }
 
             input[type='text'],

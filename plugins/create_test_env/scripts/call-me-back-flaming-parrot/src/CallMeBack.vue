@@ -55,13 +55,14 @@
                 <label for="call-me-back-date">
                     <translate>Call me back on</translate> <i class="icon-asterisk"></i>
                 </label>
-                <div class="input-prepend">
+                <div class="input-prepend" ref="form_element_date">
                     <span class="add-on">
                         <i class="icon-calendar"></i>
                     </span>
                     <input type="text"
                         id="call-me-back-date"
                         name="call_me_back_date"
+                        data-format="yyyy-MM-dd"
                         placeholder="yyyy-mm-dd"
                         v-model="call_me_back_date"
                     >
@@ -86,6 +87,9 @@ import { sanitize }                                from 'dompurify';
 
 export default {
     name: 'CallMeBack',
+    props: {
+        locale: String
+    },
     data() {
         return {
             loading           : false,
@@ -108,6 +112,7 @@ export default {
     mounted() {
         this.getMessage();
         this.observeDropdown();
+        this.bindCalendar();
     },
     methods: {
         async getMessage() {
@@ -125,6 +130,12 @@ export default {
             });
 
             observer.observe(this.$refs.dropdown, { attributes: true });
+        },
+        bindCalendar() {
+            jQuery(this.$refs.form_element_date).datetimepicker({
+                 language: this.locale,
+                 pickTime: false
+            })
         },
         async callMeBack() {
             this.loading = true;
