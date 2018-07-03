@@ -23,23 +23,42 @@ namespace Tuleap\Instrument\Prometheus;
 
 use ForgeConfig;
 use Prometheus\CollectorRegistry;
+use Prometheus\RenderTextFormat;
 
 class Prometheus
 {
     const CONFIG_PROMETHEUS_PLATFORM      = 'prometheus_platform';
     const CONFIG_PROMETHEUS_NODE_EXPORTER = 'prometheus_node_exporter';
 
-    private static $registry;
+    private $registry;
+
+    /**
+     * @var Prometheus
+     */
+    private static $instance;
+
+    public function __construct(CollectorRegistry $registry)
+    {
+        $this->registry = $registry;
+    }
+
+    public static function instance()
+    {
+        if (self::$instance === null) {
+            self::$instance = new self(self::getCollectorRegistry());
+        }
+        return self::$instance;
+    }
 
     /**
      * @param string $name
      * @param string $help
      * @param array $labels
      */
-    public static function increment($name, $help, array $labels = [])
+    public function increment($name, $help, array $labels = [])
     {
-        list($label_names, $label_values) = self::getLabelsNamesAndValues($labels);
-        self::get()->getOrRegisterCounter('tuleap', $name, $help, $label_names)->inc($label_values);
+        list($label_names, $label_values) = $this->getLabelsNamesAndValues($labels);
+        $this->registry->getOrRegisterCounter('tuleap', $name, $help, $label_names)->inc($label_values);
     }
 
     /**
@@ -48,13 +67,13 @@ class Prometheus
      * @param float $value
      * @param array $labels
      */
-    public static function gaugeSet($name, $help, $value, array $labels = [])
+    public function gaugeSet($name, $help, $value, array $labels = [])
     {
-        list($label_names, $label_values) = self::getLabelsNamesAndValues($labels);
-        self::get()->getOrRegisterGauge('tuleap', $name, $help, $label_names)->set($value, $label_values);
+        list($label_names, $label_values) = $this->getLabelsNamesAndValues($labels);
+        $this->registry->getOrRegisterGauge('tuleap', $name, $help, $label_names)->set($value, $label_values);
     }
 
-    private static function getLabelsNamesAndValues(array $labels)
+    private function getLabelsNamesAndValues(array $labels)
     {
         $label_names  = [];
         $label_values = [];
@@ -70,25 +89,40 @@ class Prometheus
         return [$label_names, $label_values];
     }
 
-    public static function get()
+    public function renderText()
     {
-        if (self::$registry === null) {
-            if (class_exists('Redis') &&
-                ForgeConfig::exists('redis_server') &&
-                ForgeConfig::exists(self::CONFIG_PROMETHEUS_PLATFORM)) {
-                \Prometheus\Storage\Redis::setDefaultOptions(
-                    [
-                        'host'     => ForgeConfig::get('redis_server'),
-                        'port'     => ForgeConfig::get('redis_port'),
-                        'password' => ForgeConfig::get('redis_password'),
-                    ]
-                );
-                $adapter = new \Prometheus\Storage\Redis();
-            } else {
-                $adapter = new \Prometheus\Storage\InMemory();
-            }
-            self::$registry = new CollectorRegistry($adapter);
+        $renderer = new RenderTextFormat();
+        return $renderer->render($this->registry->getMetricFamilySamples());
+    }
+
+    private static function getCollectorRegistry()
+    {
+        if (class_exists('Redis') &&
+            ForgeConfig::exists('redis_server') &&
+            ForgeConfig::exists(self::CONFIG_PROMETHEUS_PLATFORM)) {
+            \Prometheus\Storage\Redis::setDefaultOptions(
+                [
+                    'host'     => ForgeConfig::get('redis_server'),
+                    'port'     => ForgeConfig::get('redis_port'),
+                    'password' => ForgeConfig::get('redis_password'),
+                ]
+            );
+            $adapter = new \Prometheus\Storage\Redis();
+        } else {
+            $adapter = new \Prometheus\Storage\InMemory();
         }
-        return self::$registry;
+        return new CollectorRegistry($adapter);
+    }
+
+    /**
+     * @return Prometheus
+     */
+    public static function getInMemory()
+    {
+        return new self(
+            new CollectorRegistry(
+                new \Prometheus\Storage\InMemory()
+            )
+        );
     }
 }

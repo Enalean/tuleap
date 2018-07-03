@@ -19,14 +19,16 @@
  *
  */
 
-namespace Tuleap\User;
+namespace Tuleap\Instrument\Metrics;
 
-class LoginInstrumentation
+use Tuleap\DB\DataAccessObject;
+
+class MetricsCollectorDao extends DataAccessObject
 {
-    const METRIC_NAME = 'authentication_total';
 
-    public static function increment($type)
+    public function getProjectsByStatus()
     {
-        \Tuleap\Instrument\Prometheus\Prometheus::instance()->increment(self::METRIC_NAME, 'Total number of authentication events', ['type' => $type]);
+        $sql = 'SELECT status, count(*) as nb FROM groups WHERE status IN ("A", "P", "D") GROUP BY status';
+        return $this->getDB()->run($sql);
     }
 }
