@@ -1,6 +1,6 @@
 #!/bin/bash
 # eslint pre-commit hook for git
-readonly COMMIT_INTRODUCING_ESLINT='a06b5597d4b37647912556b5b8a767173c29bf7b'
+readonly COMMIT_INTRODUCING_ESLINT='4a834d6976632b5ea535547172d95830dd5fc319'
 readonly TMP_STAGING_DIR=$(mktemp -d)
 readonly ESLINT_CONFIG_FILE='.eslintrc'
 readonly PRETTIER_CONFIG_FILE='.prettierrc'
@@ -11,7 +11,7 @@ cleanup_temporary_directory() {
 trap cleanup_temporary_directory EXIT
 
 get_list_of_files() {
-    git diff --cached --name-only --diff-filter=ACMRTUXB | grep \.js$
+    git diff --cached --name-only --diff-filter=ACMRTUXB | grep -E '\.(js|vue)$'
 }
 
 get_initial_commit() {

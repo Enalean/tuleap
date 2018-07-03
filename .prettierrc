@@ -1,5 +1,4 @@
 {
-    "parser": "babylon",
     "printWidth": 100,
     "useTabs": false,
     "tabWidth": 4,
