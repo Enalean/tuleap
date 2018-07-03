@@ -29,10 +29,8 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
-use Tuleap\Tracker\Webhook\Webhook;
 use Tuleap\Tracker\Webhook\WebhookDao;
 use Tuleap\Tracker\Webhook\WebhookRetriever;
-use Valid_HTTPURI;
 
 class WebhookEditController implements DispatchableWithRequest
 {
@@ -51,11 +49,21 @@ class WebhookEditController implements DispatchableWithRequest
      */
     private $dao;
 
-    public function __construct(WebhookRetriever $retriever, TrackerFactory $tracker_factory, WebhookDao $dao)
-    {
+    /**
+     * @var WebhookURLValidator
+     */
+    private $validator;
+
+    public function __construct(
+        WebhookRetriever $retriever,
+        TrackerFactory $tracker_factory,
+        WebhookDao $dao,
+        WebhookURLValidator $validator
+    ) {
         $this->retriever       = $retriever;
         $this->tracker_factory = $tracker_factory;
         $this->dao             = $dao;
+        $this->validator       = $validator;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
@@ -77,7 +85,7 @@ class WebhookEditController implements DispatchableWithRequest
         }
 
         $redirect_url = $this->getAdminWebhooksURL($tracker);
-        $webhook_url  = $this->getValidURL($request, $layout, $redirect_url);
+        $webhook_url  = $this->validator->getValidURL($request, $layout, $redirect_url);
 
         $user = $request->getCurrentUser();
         if (! $tracker->userIsAdmin($user)) {
@@ -113,21 +121,5 @@ class WebhookEditController implements DispatchableWithRequest
                 "tracker" => $tracker->getId()
             ]
         );
-    }
-
-    private function getValidURL(HTTPRequest $request, BaseLayout $layout, $redirect_url)
-    {
-        $valid_url = new Valid_HTTPURI('webhook_url');
-        $valid_url->required();
-
-        if (! $request->valid($valid_url)) {
-            $layout->addFeedback(
-                Feedback::ERROR,
-                dgettext('tuleap-tracker', 'The submitted URL is not valid.')
-            );
-            $layout->redirect($redirect_url);
-        }
-
-        return $request->get('webhook_url');
     }
 }
