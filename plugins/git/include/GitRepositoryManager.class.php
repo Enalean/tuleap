@@ -21,6 +21,7 @@
 use Tuleap\Git\Permissions\FineGrainedPermissionReplicator;
 use Tuleap\Git\Permissions\HistoryValueFormatter;
 use Tuleap\Git\PostInitGitRepositoryWithDataEvent;
+use Tuleap\Git\Repository\GitRepositoryNameIsInvalidException;
 
 require_once 'PathJoinUtil.php';
 
@@ -128,9 +129,18 @@ class GitRepositoryManager {
         }
     }
 
+    /**
+     * @param GitRepository        $repository
+     * @param GitRepositoryCreator $creator
+     *
+     * @throws GitDaoException
+     * @throws GitRepositoryAlreadyExistsException
+     * @throws GitRepositoryNameIsInvalidException
+     */
     private function initRepository(GitRepository $repository, GitRepositoryCreator $creator) {
         if (!$creator->isNameValid($repository->getName())) {
-            throw new Exception($GLOBALS['Language']->getText(
+            throw new GitRepositoryNameIsInvalidException(
+                $GLOBALS['Language']->getText(
                 'plugin_git',
                 'actions_input_format_error',
                 array($creator->getAllowedCharsInNamePattern(), GitDao::REPO_NAME_MAX_LENGTH)
@@ -144,12 +154,16 @@ class GitRepositoryManager {
     }
 
     /**
-     * Create a new GitRepository through its backend
+     * @param GitRepository        $repository
+     * @param GitRepositoryCreator $creator
+     * @param array                $mirror_ids
      *
-     * @param  GitRepository $repository
-     * @throws Exception
+     * @throws GitDaoException
+     * @throws GitRepositoryAlreadyExistsException
+     * @throws GitRepositoryNameIsInvalidException
      */
-    public function create(GitRepository $repository, GitRepositoryCreator $creator, array $mirror_ids) {
+    public function create(GitRepository $repository, GitRepositoryCreator $creator, array $mirror_ids)
+    {
         $this->initRepository($repository, $creator);
 
         if ($mirror_ids) {
@@ -159,6 +173,15 @@ class GitRepositoryManager {
         $this->git_system_event_manager->queueRepositoryUpdate($repository);
     }
 
+    /**
+     * @param GitRepository        $repository
+     * @param GitRepositoryCreator $creator
+     * @param                      $bundle_path
+     *
+     * @throws GitDaoException
+     * @throws GitRepositoryAlreadyExistsException
+     * @throws GitRepositoryNameIsInvalidException
+     */
     public function createFromBundle(GitRepository $repository, GitRepositoryCreator $creator, $bundle_path) {
         $this->initRepository($repository, $creator);
 
@@ -253,9 +276,17 @@ class GitRepositoryManager {
         $clone->setId($id);
     }
 
-    private function assertRepositoryNameNotAlreadyUsed(GitRepository $repository) {
+    /**
+     * @param GitRepository $repository
+     *
+     * @throws GitRepositoryAlreadyExistsException
+     */
+    private function assertRepositoryNameNotAlreadyUsed(GitRepository $repository)
+    {
         if ($this->isRepositoryNameAlreadyUsed($repository)) {
-            throw new Exception($GLOBALS['Language']->getText('plugin_git', 'actions_create_repo_exists', array($repository->getName())));
+            throw new GitRepositoryAlreadyExistsException(
+                $GLOBALS['Language']->getText('plugin_git', 'actions_create_repo_exists', [$repository->getName()])
+            );
         }
     }
 

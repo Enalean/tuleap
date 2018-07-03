@@ -751,16 +751,8 @@ class GitPlugin extends Plugin
     private function getCreateRepositoryController()
     {
         return new CreateRepositoryController(
-            $this->getRepositoryFactory(),
-            $this->getBackendGitolite(),
-            $this->getMirrorDataMapper(),
-            $this->getRepositoryManager(),
-            $this->getGitPermissionsManager(),
-            $this->getFineGrainedPermissionReplicator(),
-            new ProjectHistoryDao(),
-            $this->getHistoryValueFormatter(),
-            $this->getCITokenManager(),
-            $this->getGitRepositoryUrlManager()
+            $this->getGitRepositoryUrlManager(),
+            $this->getRepositoryCreator()
         );
     }
 
@@ -2604,5 +2596,23 @@ class GitPlugin extends Plugin
     private function isASiteAdministrationPage()
     {
         return strpos($_SERVER['REQUEST_URI'], $this->getPluginPath() . '/admin/') === 0;
+    }
+
+    /**
+     * @return \Tuleap\Git\Repository\RepositoryCreator
+     */
+    private function getRepositoryCreator()
+    {
+        return new \Tuleap\Git\Repository\RepositoryCreator(
+            $this->getRepositoryFactory(),
+            $this->getBackendGitolite(),
+            $this->getMirrorDataMapper(),
+            $this->getRepositoryManager(),
+            $this->getGitPermissionsManager(),
+            $this->getFineGrainedPermissionReplicator(),
+            new ProjectHistoryDao(),
+            $this->getHistoryValueFormatter(),
+            $this->getCITokenManager()
+        );
     }
 }
