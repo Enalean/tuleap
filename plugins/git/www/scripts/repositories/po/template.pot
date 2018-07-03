@@ -29,6 +29,9 @@ msgstr ""
 msgid "Git repositories"
 msgstr ""
 
+msgid "Go to repository administration"
+msgstr ""
+
 msgid "Project has no Git repositories yet."
 msgstr ""
 

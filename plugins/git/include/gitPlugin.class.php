@@ -2554,7 +2554,11 @@ class GitPlugin extends Plugin
             });
             $r->get(
                 '/{project_name:[A-z0-9-]+}[/]', function() {
-                return new GitRepositoryListController($this->getProjectManager(), $this->getRepositoryFactory());
+                return new GitRepositoryListController(
+                    $this->getProjectManager(),
+                    $this->getRepositoryFactory(),
+                    $this->getGitPermissionsManager()
+                );
             });
             $r->addRoute(['GET', 'POST'], '/{project_name}/{path:.*}', function () {
                 return new \Tuleap\Git\GitRepositoryBrowserController(

@@ -23,18 +23,25 @@
             <a v-bind:href="repository.html_url" class="git-repository-card-link">
                 <div class="tlp-pane-header git-repository-card-header">
                     <h1 class="tlp-pane-title git-repository-card-title">{{ repository.name }}</h1>
+                    <a v-if="is_admin"
+                       v-bind:href="repository_admin_url"
+                       class="git-repository-card-admin-link"
+                    >
+                        <i class="fa fa-cog" v-bind:title="administration_link_title"></i>
+                    </a>
                 </div>
                 <section class="tlp-pane-section">
                     <p v-if="hasRepositoryDescription" class="git-repository-card-description">{{ repository.description }}</p>
                     <p v-else v-translate class="git-repository-card-description">Empty description</p>
                 </section>
             </a>
-
         </div>
     </section>
 </template>
 <script>
 const DEFAULT_DESCRIPTION = "-- Default description --";
+
+import { getProjectId, getUserIsAdmin } from "./repository-list-presenter.js";
 
 export default {
     name: "GitRepository",
@@ -44,6 +51,17 @@ export default {
     computed: {
         hasRepositoryDescription() {
             return this.repository.description !== DEFAULT_DESCRIPTION;
+        },
+        repository_admin_url() {
+            return `/plugins/git/?action=repo_management&group_id=${getProjectId()}&repo_id=${
+                this.repository.id
+            }`;
+        },
+        is_admin() {
+            return getUserIsAdmin();
+        },
+        administration_link_title() {
+            return this.$gettext("Go to repository administration");
         }
     }
 };

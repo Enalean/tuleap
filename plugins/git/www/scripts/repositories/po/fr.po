@@ -36,6 +36,9 @@ msgstr "Le plugin Git est désactivé"
 msgid "Git repositories"
 msgstr "Dépôts Git"
 
+msgid "Go to repository administration"
+msgstr "Aller à l'administration du dépôt"
+
 msgid "Project has no Git repositories yet."
 msgstr "Le projet n'a aucun dépôt Git pour l'instant"
 
