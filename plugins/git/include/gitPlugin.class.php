@@ -377,9 +377,16 @@ class GitPlugin extends Plugin
 
     public function burning_parrot_get_stylesheets(array $params)
     {
-        if ($this->canIncludeStylesheets()) {
-            $variant = $params['variant'];
-            $params['stylesheets'][] = $this->getThemePath() .'/css/style-'. $variant->getName() .'.css';
+        $burning_parrot_assets = new IncludeAssets(
+            __DIR__ . '/../www/themes/BurningParrot/assets',
+            GIT_BASE_URL . '/themes/BurningParrot/assets'
+        );
+
+        $variant = $params['variant'];
+        if ($this->isASiteAdministrationPage()) {
+            $params['stylesheets'][] = $burning_parrot_assets->getFileURL('site-admin-' . $variant->getName() . '.css');
+        } else if ($this->canIncludeStylesheets()) {
+            $params['stylesheets'][] = $burning_parrot_assets->getFileURL('git-' . $variant->getName() . '.css');
         }
     }
 
@@ -2387,8 +2394,7 @@ class GitPlugin extends Plugin
 
     private function canIncludeStylesheets()
     {
-        return $this->isASiteAdministrationPage()
-            || $this->isAMigratedGitViewPage()
+        return $this->isAMigratedGitViewPage()
             || strpos($_SERVER['REQUEST_URI'], '/my/') === 0
             || strpos($_SERVER['REQUEST_URI'], '/projects/') === 0;
     }
