@@ -30,7 +30,6 @@ use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Tracker\Webhook\WebhookDao;
-use Tuleap\Tracker\Webhook\WebhookFactory;
 
 class WebhookCreateController implements DispatchableWithRequest
 {
@@ -45,12 +44,19 @@ class WebhookCreateController implements DispatchableWithRequest
      */
     private $webhook_dao;
 
+    /**
+     * @var WebhookURLValidator
+     */
+    private $validator;
+
     public function __construct(
         WebhookDao $webhook_dao,
-        TrackerFactory $tracker_factory
+        TrackerFactory $tracker_factory,
+        WebhookURLValidator $validator
     ) {
         $this->tracker_factory = $tracker_factory;
         $this->webhook_dao     = $webhook_dao;
+        $this->validator       = $validator;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
@@ -66,6 +72,9 @@ class WebhookCreateController implements DispatchableWithRequest
         if (! $tracker) {
             throw new NotFoundException();
         }
+
+        $redirect_url = $this->getAdminWebhooksURL($tracker);
+        $webhook_url  = $this->validator->getValidURL($request, $layout, $redirect_url);
 
         $user = $request->getCurrentUser();
         if (! $tracker->userIsAdmin($user)) {
