@@ -94,32 +94,20 @@ class AdminWebhooks extends Tracker_Workflow_Action
     {
         $webhook_presenters = [];
         foreach ($this->retriever->getWebhooksForTracker($this->tracker) as $webhook) {
-            $logs     = $this->getLogsForWebhook($webhook);
-            $last_log = null;
-            if (count($logs) > 0) {
-                $last_log = $logs[0];
-            }
-
-            $webhook_presenters[] = [
-                'webhook_id'  => $webhook->getId(),
-                'webhook_url' => $webhook->getUrl(),
-                'last_log'    => $last_log,
-                'all_log'     => $logs,
-            ];
+            $webhook_presenters[] = new WebhookPresenter($webhook, $this->getLogsForWebhook($webhook));
         }
 
         return $webhook_presenters;
     }
 
+    /**
+     * @return WebhookLogPresenter[]
+     */
     private function getLogsForWebhook(Webhook $webhook)
     {
         $logs = array();
         foreach ($this->retriever->getLogsForWebhook($webhook) as $row) {
-            $logs[] = [
-                'time'           => format_date($GLOBALS['Language']->getText('system', 'datefmt'), $row['created_on']),
-                'status_message' => $row['status'],
-                'status_ok'      => $row['status']{0} === '2',
-            ];
+            $logs[] = new WebhookLogPresenter($row['created_on'], $row['status']);
         }
 
         return $logs;
