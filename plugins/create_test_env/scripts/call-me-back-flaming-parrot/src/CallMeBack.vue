@@ -84,6 +84,7 @@
 import { getCallMeBackMessage, askToBeCalledBack } from '../../call-me-back-rest-querier.js';
 import { DateTime }                                from 'luxon';
 import { sanitize }                                from 'dompurify';
+import jQuery                                      from "jquery";
 
 export default {
     name: 'CallMeBack',
