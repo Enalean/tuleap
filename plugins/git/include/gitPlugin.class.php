@@ -324,8 +324,7 @@ class GitPlugin extends Plugin
 
     public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event)
     {
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath().'/admin/') === 0
-            || $this->isAMigratedGitViewPage()) {
+        if ($this->isASiteAdministrationPage() || $this->isAMigratedGitViewPage()) {
             $event->setIsInBurningParrotCompatiblePage();
         }
     }
@@ -2388,7 +2387,8 @@ class GitPlugin extends Plugin
 
     private function canIncludeStylesheets()
     {
-        return $this->isAMigratedGitViewPage()
+        return $this->isASiteAdministrationPage()
+            || $this->isAMigratedGitViewPage()
             || strpos($_SERVER['REQUEST_URI'], '/my/') === 0
             || strpos($_SERVER['REQUEST_URI'], '/projects/') === 0;
     }
@@ -2596,5 +2596,13 @@ class GitPlugin extends Plugin
             $this->getPluginPath() . '/assets'
         );
         return $include_assets;
+    }
+
+    /**
+     * @return bool
+     */
+    private function isASiteAdministrationPage()
+    {
+        return strpos($_SERVER['REQUEST_URI'], $this->getPluginPath() . '/admin/') === 0;
     }
 }
