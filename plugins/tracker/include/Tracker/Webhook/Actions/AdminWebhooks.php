@@ -64,7 +64,8 @@ class AdminWebhooks extends Tracker_Workflow_Action
 
         $presenter = new AdminPresenter(
             $this->getWebhookPresenters(),
-            $this->getCSRFSynchronizerToken()
+            $this->getCSRFSynchronizerToken(),
+            $this->tracker
         );
 
         $renderer  = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR . '/webhook');

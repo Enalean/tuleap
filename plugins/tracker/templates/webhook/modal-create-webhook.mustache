@@ -1,0 +1,30 @@
+<div id="modal-create-webhook"
+     class="modal hide fade modal-tracker-webhooks"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="modal-webhook-title"
+     aria-hidden="true"
+>
+    <div class="modal-header">
+        <a role="button" class="close" data-dismiss="modal">×</a>
+        <h3 id="modal-create-webhook-title">{{# dgettext }} tuleap-tracker | Add webhook {{/ dgettext }}</h3>
+    </div>
+    <form method="post" action="/plugins/tracker/webhooks/create">
+        <input type="hidden" name="challenge" value="{{ csrf_token }}" />
+        <input type="hidden" name="tracker_id" value="{{ tracker_id }}" />
+
+        <div class="modal-body">
+
+            <p>{{# dgettext }} tuleap-tracker | Add a target which will be called everytime an artifact is created or updated. The URL will be called using HTTP POST method. {{/ dgettext }}</p>
+            <p>
+                <label for="webhook-url">{{# dgettext }} tuleap-tracker | Target URL: {{/ dgettext }}</label>
+                <input type="url" id="webhook-url" name="webhook_url" value="" placeholder="https://example.com/webhook" required pattern="https?://.+" />
+            </p>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn" data-dismiss="modal" aria-hidden="true">{{# dgettext }} tuleap-tracker | Cancel {{/ dgettext }}</button>
+            <input type="submit" class="btn btn-primary" value="{{# dgettext }} tuleap-tracker | Add webhook {{/ dgettext }}">
+        </div>
+    </form>
+</div>

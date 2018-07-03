@@ -8,6 +8,15 @@
     </span>
     </p>
 
+    <button
+        type="button"
+        class="btn btn-primary create-tracker-webhook-btn"
+        data-toggle="modal"
+        href="#modal-create-webhook"
+    >
+        <i class="icon-plus"></i> {{# dgettext }} tuleap-tracker | Add webhook {{/ dgettext }}
+    </button>
+
     <table class="table tracker-webhooks-list">
         <thead>
         <tr>
@@ -67,3 +76,5 @@
         </tbody>
     </table>
 </div>
+
+{{> modal-create-webhook }}

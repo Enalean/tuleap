@@ -29,7 +29,15 @@ msgstr ""
 msgid "Add a new %s"
 msgstr ""
 
+msgid ""
+"Add a target which will be called everytime an artifact is created or "
+"updated. The URL will be called using HTTP POST method."
+msgstr ""
+
 msgid "Add notification"
+msgstr ""
+
+msgid "Add webhook"
 msgstr ""
 
 msgid ""
@@ -288,6 +296,9 @@ msgid "Switch to default colors"
 msgstr ""
 
 msgid "Switch to old colors"
+msgstr ""
+
+msgid "Target URL:"
 msgstr ""
 
 msgid "That tracker does not exist."
@@ -609,6 +620,9 @@ msgid_plural ""
 "the documentation for the allowed comparisons."
 msgstr[0] ""
 msgstr[1] ""
+
+msgid "Webhook sucessfully created"
+msgstr ""
 
 msgid "Webhook sucessfully deleted"
 msgstr ""
