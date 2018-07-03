@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_XML_Updater_ChangesetXMLUpdater {
+class Tracker_XML_Updater_ChangesetXMLUpdater
+{
 
     /**
      * @var Tracker_FormElementFactory
@@ -61,168 +62,10 @@ class Tracker_XML_Updater_ChangesetXMLUpdater {
         }
     }
 
-    public function updateForMoveAction(
-        Tracker $source_tracker,
-        Tracker $target_tracker,
-        SimpleXMLElement $artifact_xml,
-        PFUser $submitted_by,
-        $submitted_on
-    ) {
-        $artifact_xml['tracker_id'] = $target_tracker->getId();
-
-        $this->parseChangesetNodes($source_tracker, $target_tracker, $artifact_xml, $submitted_by, $submitted_on);
-    }
-
     private function addSubmittedInformation(SimpleXMLElement $changeset_xml, PFUser $user, $submitted_on)
     {
         $changeset_xml->submitted_on           = date('c', $submitted_on);
         $changeset_xml->submitted_by           = $user->getId();
         $changeset_xml->submitted_by['format'] = 'id';
-    }
-
-    /**
-     * Parse the SimpleXMLElement changeset nodes to prepare the move action.
-     *
-     * The parse is done in reverse order to be able to delete a SimpleXMLElement without any issues.
-     */
-    private function parseChangesetNodes(
-        Tracker $source_tracker,
-        Tracker $target_tracker,
-        SimpleXMLElement $artifact_xml,
-        PFUser $submitted_by,
-        $submitted_on
-    ) {
-        $last_index = count($artifact_xml->changeset) - 1;
-        for ($index = $last_index; $index >= 0; $index--) {
-            $this->parseFieldChangeNodesInReverseOrder(
-                $source_tracker,
-                $target_tracker,
-                $artifact_xml->changeset[$index]
-            );
-
-            if ($this->isChangesetNodeDeletable($artifact_xml, $index)) {
-                $this->deleteChangesetNode($artifact_xml, $index);
-            }
-
-            if ($index === 0) {
-                $this->addSubmittedInformation($artifact_xml->changeset[$index], $submitted_by, $submitted_on);
-            }
-        }
-    }
-
-    /**
-     * @return bool
-     */
-    private function isChangesetNodeDeletable(SimpleXMLElement $artifact_xml, $index)
-    {
-        return count($artifact_xml->changeset[$index]->field_change) === 0 &&
-            count($artifact_xml->changeset[$index]->comments) === 0 &&
-            $index > 0;
-    }
-
-    /**
-     * Parse the SimpleXMLElement field_change nodes to prepare the move action.
-     *
-     * The parse is done in reverse order to be able to delete a SimpleXMLElement without any issues.
-     */
-    private function parseFieldChangeNodesInReverseOrder(
-        Tracker $source_tracker,
-        Tracker $target_tracker,
-        SimpleXMLElement $changeset_xml
-    ) {
-        $target_title_field       = $target_tracker->getTitleField();
-        $target_description_field = $target_tracker->getDescriptionField();
-
-        $this->deleteEmptyCommentsNode($changeset_xml);
-
-        $last_index = count($changeset_xml->field_change) - 1;
-        for ($index = $last_index; $index >= 0; $index--) {
-            if ($target_title_field &&
-                $this->isFieldChangeCorrespondingToTitleSemanticField($changeset_xml, $source_tracker, $index)
-            ) {
-                $this->useTargetTrackerFieldName($changeset_xml, $target_title_field, $index);
-            } elseif ($target_description_field &&
-                $this->isFieldChangeCorrespondingToDescriptionSemanticField($changeset_xml, $source_tracker, $index)
-            ) {
-                $this->useTargetTrackerFieldName($changeset_xml, $target_description_field, $index);
-            } else {
-                $this->deleteFieldChangeNode($changeset_xml, $index);
-            }
-        }
-    }
-
-    private function deleteChangesetNode(SimpleXMLElement $artifact_xml, $index)
-    {
-        unset($artifact_xml->changeset[$index]);
-    }
-
-    private function deleteFieldChangeNode(SimpleXMLElement $changeset_xml, $index)
-    {
-        unset($changeset_xml->field_change[$index]);
-    }
-
-    private function deleteEmptyCommentsNode(SimpleXMLElement $changeset_xml)
-    {
-        $this->deleteEmptyCommentNodes($changeset_xml->comments);
-
-        if (count($changeset_xml->comments->comment) === 0) {
-            unset($changeset_xml->comments);
-        }
-    }
-
-    private function deleteEmptyCommentNodes(SimpleXMLElement $comments_xml)
-    {
-        $last_index = count($comments_xml->comment) - 1;
-        for ($index = $last_index; $index >= 0; $index--) {
-            if ((string) $comments_xml->comment[$index]->body === '') {
-                unset($comments_xml->comment[$index]);
-            }
-        }
-    }
-
-    private function isFieldChangeCorrespondingToTitleSemanticField(
-        SimpleXMLElement $changeset_xml,
-        Tracker $source_tracker,
-        $index
-    ) {
-        $source_title_field = $source_tracker->getTitleField();
-        if ($source_title_field && $this->isFieldChangeCorrespondingToField($changeset_xml, $source_title_field, $index)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    private function isFieldChangeCorrespondingToDescriptionSemanticField(
-        SimpleXMLElement $changeset_xml,
-        Tracker $source_tracker,
-        $index
-    ) {
-        $source_description_field = $source_tracker->getDescriptionField();
-        if ($source_description_field &&
-            $this->isFieldChangeCorrespondingToField($changeset_xml, $source_description_field, $index)
-        ) {
-            return true;
-        }
-
-        return false;
-    }
-
-    private function isFieldChangeCorrespondingToField(
-        SimpleXMLElement $changeset_xml,
-        Tracker_FormElement_Field $source_field,
-        $index
-    ) {
-        $field_change = $changeset_xml->field_change[$index];
-
-        return (string)$field_change['field_name'] === $source_field->getName();
-    }
-
-    private function useTargetTrackerFieldName(
-        SimpleXMLElement $changeset_xml,
-        Tracker_FormElement_Field $target_field,
-        $index
-    ) {
-        $changeset_xml->field_change[$index]['field_name'] = $target_field->getName();
     }
 }
