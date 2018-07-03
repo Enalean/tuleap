@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,14 +21,16 @@
 
 namespace Tuleap\Git\REST\v1;
 
-use PFUser;
-use Tuleap\Git\REST\v1\GitRepositoryRepresentation;
-use GitPermissionsManager;
-use GitRepository;
+use DateTime;
+use Git_LogDao;
 use Git_RemoteServer_GerritServerFactory;
 use Git_RemoteServer_NotFoundException;
+use GitPermissionsManager;
+use GitRepository;
+use PFUser;
 
-class RepositoryRepresentationBuilder {
+class RepositoryRepresentationBuilder
+{
 
     /**
      * @var Git_RemoteServer_GerritServerFactory
@@ -40,29 +42,41 @@ class RepositoryRepresentationBuilder {
      */
     private $permissions_manger;
 
+    /**
+     * @var Git_LogDao
+     */
+    private $log_dao;
+
     public function __construct(
         GitPermissionsManager $permissions_manger,
-        Git_RemoteServer_GerritServerFactory $gerrit_server_factory
+        Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
+        Git_LogDao $log_dao
     ) {
         $this->permissions_manger    = $permissions_manger;
         $this->gerrit_server_factory = $gerrit_server_factory;
+        $this->log_dao               = $log_dao;
     }
 
     /**
      *
      * @param PFUser $user
      * @param GitRepository $repository
-     * @param type $fields
+     * @param string $fields
      *
      * @return GitRepositoryRepresentation
      */
-    public function build(PFUser $user, GitRepository $repository, $fields) {
+    public function build(PFUser $user, GitRepository $repository, $fields)
+    {
         $server_representation = $this->getGerritServerRepresentation($repository);
 
         $repository_representation = new GitRepositoryRepresentation();
-        $repository_representation->build($repository, $server_representation);
+        $last_update_date          = $this->getLastUpdateDate($repository);
+        $repository_representation->build($repository, $server_representation, $last_update_date);
 
-        if ($fields == GitRepositoryRepresentation::FIELDS_ALL && $this->permissions_manger->userIsGitAdmin($user, $repository->getProject())) {
+        if ($fields == GitRepositoryRepresentation::FIELDS_ALL && $this->permissions_manger->userIsGitAdmin(
+            $user,
+            $repository->getProject()
+        )) {
             $permission_representation = new GitRepositoryPermissionRepresentation();
             $permission_representation->build($repository);
 
@@ -90,5 +104,19 @@ class RepositoryRepresentationBuilder {
         } catch (Git_RemoteServer_NotFoundException $ex) {
             return null;
         }
+    }
+
+    /**
+     * @param GitRepository $repository
+     * @return string
+     */
+    private function getLastUpdateDate(GitRepository $repository)
+    {
+        $last_push = $this->log_dao->getLastPushForRepository($repository->getId());
+        if (! $last_push['push_date']) {
+            $creation_date = new DateTime($repository->getCreationDate());
+            return $creation_date->getTimestamp();
+        }
+        return $last_push['push_date'];
     }
 }

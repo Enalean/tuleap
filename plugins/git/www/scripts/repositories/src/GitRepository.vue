@@ -22,16 +22,26 @@
         <div class="tlp-pane-container">
             <a v-bind:href="repository.html_url" class="git-repository-card-link">
                 <div class="tlp-pane-header git-repository-card-header">
-                    <h1 class="tlp-pane-title git-repository-card-title">{{ repository.name }}</h1>
-                    <a v-if="is_admin"
-                       v-bind:href="repository_admin_url"
-                       class="git-repository-card-admin-link"
-                    >
-                        <i class="fa fa-cog" v-bind:title="administration_link_title"></i>
-                    </a>
+                    <div class="git-repository-card-header-line">
+                        <h1 class="tlp-pane-title git-repository-card-title">
+                            {{ repository.name }}
+                        </h1>
+                        <a v-if="is_admin"
+                           v-bind:href="repository_admin_url"
+                           class="git-repository-card-admin-link"
+                        >
+                            <i class="fa fa-cog" v-bind:title="administration_link_title"></i>
+                        </a>
+                    </div>
+                    <div class="git-repository-card-last-update">
+                        <i class="fa fa-clock-o"></i>
+                        <translate>Last update %{ formatted_last_update_date }</translate>
+                    </div>
                 </div>
                 <section class="tlp-pane-section">
-                    <p v-if="hasRepositoryDescription" class="git-repository-card-description">{{ repository.description }}</p>
+                    <p v-if="hasRepositoryDescription" class="git-repository-card-description">
+                        {{ repository.description }}
+                    </p>
                     <p v-else v-translate class="git-repository-card-description">Empty description</p>
                 </section>
             </a>
@@ -41,7 +51,8 @@
 <script>
 const DEFAULT_DESCRIPTION = "-- Default description --";
 
-import { getProjectId, getUserIsAdmin } from "./repository-list-presenter.js";
+import TimeAgo from "javascript-time-ago";
+import { getProjectId, getUserIsAdmin, getDashCasedLocale } from "./repository-list-presenter.js";
 
 export default {
     name: "GitRepository",
@@ -62,6 +73,11 @@ export default {
         },
         administration_link_title() {
             return this.$gettext("Go to repository administration");
+        },
+        formatted_last_update_date() {
+            const date = new Date(this.repository.last_update_date);
+            const time_ago = new TimeAgo(getDashCasedLocale());
+            return time_ago.format(date);
         }
     }
 };

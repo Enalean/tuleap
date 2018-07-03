@@ -18,8 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-class GitRepositoryFactory {
+class GitRepositoryFactory
+{
     /**
      * @var GitDao
      */
@@ -111,12 +111,19 @@ class GitRepositoryFactory {
         return $repositories;
     }
 
-    public function getPagninatedRepositoriesUserCanSee(Project $project, PFuser $user, $scope, $limit, $offset) {
-        $repositories = array();
+    /**
+     * @param Project $project
+     * @param PFuser $user
+     * @param int $limit
+     * @param int $offset
+     * @return GitRepository[]
+     */
+    public function getPaginatedRepositoriesUserCanSee(Project $project, PFuser $user, $scope, $limit, $offset)
+    {
+        $repositories    = [];
         $repository_list = $this->dao->getPaginatedOpenRepositories($project->getID(), $scope, $limit, $offset);
         foreach ($repository_list as $row) {
-            $repository = new GitRepository();
-            $this->dao->hydrateRepositoryObject($repository, $row);
+            $repository = $this->getRepositoryFromRow($row);
             if ($repository->userCanRead($user)) {
                 $repositories[] = $repository;
             }

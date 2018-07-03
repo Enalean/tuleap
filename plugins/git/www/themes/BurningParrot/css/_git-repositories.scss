@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+// Git repository list
+
 .git-repository-list-empty-image {
     stroke: mix($tlp-ui-white, $tlp-theme-color, 70%);
 }
@@ -33,14 +35,19 @@
     margin: 0 0 $tlp-spacing;
 }
 
-.git-repository-card-link:hover {
-    text-decoration: none;
-}
-
 .git-repository-list {
     display: flex;
     flex-wrap: wrap;
 }
+
+.git-repository-list-loading {
+    width: 250px;
+    height: 200px;
+    margin: 0 auto;
+    background: url('/themes/BurningParrot/images/spinner.gif') no-repeat center center;
+}
+
+// Git repository card
 
 .git-repository-card {
     width: calc(50% - #{$tlp-half-spacing});
@@ -57,16 +64,28 @@
     border: 1px solid $tlp-theme-color;
 }
 
-.git-repository-list-loading {
-    width: 250px;
-    height: 200px;
-    margin: 0 auto;
-    background: url('/themes/BurningParrot/images/spinner.gif') no-repeat center center;
+@media screen and (max-width: 1200px) {
+    .git-repository-card {
+        width: 100%;
+        margin: 0 0 $tlp-spacing;
+
+        &:nth-child(2n) {
+            margin: 0 0 $tlp-spacing;
+        }
+    }
+}
+
+.git-repository-card-link:hover {
+    text-decoration: none;
 }
 
 .git-repository-card-header {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+}
+
+.git-repository-card-header-line {
+    display: flex;
     justify-content: space-between;
 }
 
@@ -74,6 +93,12 @@
     color: $tlp-theme-color;
     text-transform: none;
     word-break: break-all;
+}
+
+.git-repository-card-last-update {
+    margin: $tlp-half-spacing 0 0;
+    color: transparentize($tlp-ui-dimmed, .5);
+    font-size: 14px;
 }
 
 .git-repository-card-description {
@@ -89,15 +114,4 @@
 
 .git-repository-card-admin-link:hover {
     color: $tlp-theme-color;
-}
-
-@media screen and (max-width: 1200px) {
-    .git-repository-card {
-        width: 100%;
-        margin: 0 0 $tlp-spacing;
-
-        &:nth-child(2n) {
-            margin: 0 0 $tlp-spacing;
-        }
-    }
 }
