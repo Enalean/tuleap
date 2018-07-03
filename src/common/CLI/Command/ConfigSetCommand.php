@@ -43,6 +43,7 @@ class ConfigSetCommand extends Command
         \ForgeAccess::ANONYMOUS_CAN_SEE_SITE_HOMEPAGE => true,
         \ForgeAccess::PROJECT_ADMIN_CAN_CHOOSE_VISIBILITY => true,
         Prometheus::CONFIG_PROMETHEUS_PLATFORM => true,
+        Prometheus::CONFIG_PROMETHEUS_NODE_EXPORTER => true,
     ];
     /**
      * @var ConfigDao

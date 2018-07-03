@@ -24,6 +24,9 @@ namespace Tuleap\Instrument;
 use ForgeConfig;
 use HTTPRequest;
 use Prometheus\RenderTextFormat;
+use Tuleap\Http\HttpClientFactory;
+use Tuleap\Http\MessageFactoryBuilder;
+use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 use Tuleap\Request\ForbiddenException;
@@ -44,13 +47,37 @@ class MetricsController implements DispatchableWithRequestNoAuthz
      */
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
-        $registry = Prometheus\Prometheus::get();
+        header('Content-type: ' . RenderTextFormat::MIME_TYPE);
+
+        echo $this->getTuleapMetrics();
+        echo $this->getNodeExporterMetrics();
+    }
+
+    private function getTuleapMetrics()
+    {
+        $registry = Prometheus::get();
 
         $renderer = new RenderTextFormat();
         $result = $renderer->render($registry->getMetricFamilySamples());
 
-        header('Content-type: ' . RenderTextFormat::MIME_TYPE);
         echo $result;
+    }
+
+    private function getNodeExporterMetrics()
+    {
+        try {
+            $node_exporter_url = ForgeConfig::get(Prometheus::CONFIG_PROMETHEUS_NODE_EXPORTER, '');
+            if ($node_exporter_url === '') {
+                return '';
+            }
+            $request_factory = MessageFactoryBuilder::build();
+            $http_client = HttpClientFactory::createClient();
+            $request = $request_factory->createRequest('GET', $node_exporter_url);
+            $response = $http_client->sendRequest($request);
+            return (string) $response->getBody();
+        } catch (\Exception $exception) {
+            return '';
+        }
     }
 
     /**
