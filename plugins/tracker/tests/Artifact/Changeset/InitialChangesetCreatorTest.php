@@ -54,7 +54,7 @@ class Tracker_Artifact_Changeset_InitialChangesetCreator_BaseTest extends Tuleap
         $fields_validator = mock('Tracker_Artifact_Changeset_InitialChangesetFieldsValidator');
         stub($fields_validator)->validate()->returns(true);
 
-        $this->retriever = \Mockery::mock(\Tuleap\Tracker\Webhook\WebhookRetriever::class);
+        $this->webhook_factory = \Mockery::mock(\Tuleap\Tracker\Webhook\WebhookFactory::class);
 
         $this->creator   = new Tracker_Artifact_Changeset_InitialChangesetCreator(
             $fields_validator,
@@ -63,7 +63,7 @@ class Tracker_Artifact_Changeset_InitialChangesetCreator_BaseTest extends Tuleap
             $this->artifact_factory,
             mock('EventManager'),
             \Mockery::spy(\Tuleap\Webhook\Emitter::class),
-            $this->retriever
+            $this->webhook_factory
         );
 
         $this->submitted_on = $_SERVER['REQUEST_TIME'];
@@ -80,7 +80,7 @@ class Tracker_Artifact_Changeset_InitialChangesetCreator_WorkflowTest extends Tr
         stub($this->changeset_dao)->create()->returns(5667);
         stub($this->artifact_factory)->save()->returns(true);
         expect($this->workflow)->after($this->fields_data, new IsAExpectation('Tracker_Artifact_Changeset'), null)->once();
-        $this->retriever->shouldReceive('getWebhooksForTracker')->once()->andReturn([]);
+        $this->webhook_factory->shouldReceive('getWebhooksForTracker')->once()->andReturn([]);
 
         $this->creator->create($this->artifact, $this->fields_data, $this->submitter, $this->submitted_on);
     }
@@ -88,7 +88,7 @@ class Tracker_Artifact_Changeset_InitialChangesetCreator_WorkflowTest extends Tr
     public function itDoesNotCallTheAfterMethodOnWorkflowWhenSaveOfInitialChangesetFails() {
         stub($this->changeset_dao)->create()->returns(false);
         expect($this->workflow)->after()->never();
-        $this->retriever->shouldReceive('getWebhooksForTracker')->never();
+        $this->webhook_factory->shouldReceive('getWebhooksForTracker')->never();
 
         $this->creator->create($this->artifact, $this->fields_data, $this->submitter, $this->submitted_on);
     }
@@ -97,7 +97,7 @@ class Tracker_Artifact_Changeset_InitialChangesetCreator_WorkflowTest extends Tr
         stub($this->changeset_dao)->create()->returns(true);
         stub($this->artifact_factory)->save()->returns(false);
         expect($this->workflow)->after()->never();
-        $this->retriever->shouldReceive('getWebhooksForTracker')->once()->andReturn([]);
+        $this->webhook_factory->shouldReceive('getWebhooksForTracker')->once()->andReturn([]);
 
         $this->creator->create($this->artifact, $this->fields_data, $this->submitter, $this->submitted_on);
     }
@@ -115,7 +115,7 @@ class Tracker_Artifact_Changeset_InitialChangesetCreator_DefaultValueTest extend
         parent::setUp();
 
         stub($this->changeset_dao)->create()->returns(true);
-        $this->retriever->shouldReceive('getWebhooksForTracker')->once()->andReturn([]);
+        $this->webhook_factory->shouldReceive('getWebhooksForTracker')->once()->andReturn([]);
     }
 
     protected function getFields() {

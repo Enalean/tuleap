@@ -31,15 +31,16 @@ use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Tracker\Webhook\Webhook;
 use Tuleap\Tracker\Webhook\WebhookDao;
-use Tuleap\Tracker\Webhook\WebhookRetriever;
+use Tuleap\Tracker\Webhook\WebhookFactory;
+use Tuleap\Tracker\Webhook\WebhookLogsRetriever;
 
 class WebhookDeleteController implements DispatchableWithRequest
 {
 
     /**
-     * @var WebhookRetriever
+     * @var WebhookFactory
      */
-    private $retriever;
+    private $webhook_factory;
 
     /**
      * @var TrackerFactory
@@ -50,9 +51,9 @@ class WebhookDeleteController implements DispatchableWithRequest
      */
     private $dao;
 
-    public function __construct(WebhookRetriever $retriever, TrackerFactory $tracker_factory, WebhookDao $dao)
+    public function __construct(WebhookFactory $webhook_factory, TrackerFactory $tracker_factory, WebhookDao $dao)
     {
-        $this->retriever       = $retriever;
+        $this->webhook_factory = $webhook_factory;
         $this->tracker_factory = $tracker_factory;
         $this->dao             = $dao;
     }
@@ -64,7 +65,7 @@ class WebhookDeleteController implements DispatchableWithRequest
             $layout->redirect('/');
         }
 
-        $webhook = $this->retriever->getWebhookById($webhook_id);
+        $webhook = $this->webhook_factory->getWebhookById($webhook_id);
         if (! $webhook) {
             throw new NotFoundException();
         }

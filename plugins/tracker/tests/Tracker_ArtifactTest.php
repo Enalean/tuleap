@@ -38,7 +38,7 @@ Mock::generatePartial(
         'getHierarchyFactory',
         'getWorkflow',
         'getWebhookEmitter',
-        'getWebhookRetriever'
+        'getWebhookFactory'
     )
 );
 
@@ -306,8 +306,8 @@ class Tracker_Artifact_delegatedCreateNewChangesetTest extends Tracker_ArtifactT
         $fields_validator = mock('Tracker_Artifact_Changeset_NewChangesetFieldsValidator');
         stub($fields_validator)->validate()->returns(true);
 
-        $retriever = \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookRetriever::class);
-        $retriever->shouldReceive('getWebhooksForTracker')->once()->andReturn([]);
+        $webhook_factory = \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookFactory::class);
+        $webhook_factory->shouldReceive('getWebhooksForTracker')->once()->andReturn([]);
 
         $creator = new Tracker_Artifact_Changeset_NewChangesetCreator(
             $fields_validator,
@@ -319,7 +319,7 @@ class Tracker_Artifact_delegatedCreateNewChangesetTest extends Tracker_ArtifactT
             $reference_manager,
             mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder'),
             \Mockery::spy(\Tuleap\Webhook\Emitter::class),
-            $retriever
+            $webhook_factory
         );
 
         $creator->create($artifact, $fields_data, $comment, $user, $submitted_on, $send_notification, $comment_format);
@@ -389,10 +389,10 @@ class Tracker_Artifact_delegatedCreateNewChangesetTest extends Tracker_ArtifactT
         $artifact->setReturnValue('getId', 66);
         $artifact->setReturnReference('getLastChangeset', $changeset);
 
-        $retriever = \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookRetriever::class);
-        $retriever->shouldReceive('getWebhooksForTracker')->once()->andReturn([]);
+        $webhook_factory = \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookFactory::class);
+        $webhook_factory->shouldReceive('getWebhooksForTracker')->once()->andReturn([]);
 
-        $artifact->setReturnReference('getWebhookRetriever', $retriever);
+        $artifact->setReturnReference('getWebhookFactory', $webhook_factory);
         $artifact->setReturnReference('getWebhookEmitter', \Mockery::spy(\Tuleap\Webhook\Emitter::class));
 
         $workflow = new MockWorkflow();
@@ -503,10 +503,10 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $artifact->setReturnReference('getArtifactFactory', $art_factory);
         $artifact->setReturnReference('getHierarchyFactory', $hierarchy_factory);
 
-        $retriever = \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookRetriever::class);
-        $retriever->shouldReceive('getWebhooksForTracker')->once()->andReturn([]);
+        $webhook_factory = \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookFactory::class);
+        $webhook_factory->shouldReceive('getWebhooksForTracker')->once()->andReturn([]);
 
-        $artifact->setReturnReference('getWebhookRetriever', $retriever);
+        $artifact->setReturnReference('getWebhookFactory', $webhook_factory);
         $artifact->setReturnReference('getWebhookEmitter', \Mockery::spy(\Tuleap\Webhook\Emitter::class));
 
         stub($GLOBALS['Response'])->getFeedbackErrors()->returns(array());
@@ -624,10 +624,10 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $artifact->setReturnReference('getArtifactFactory', $art_factory);
         $artifact->setReturnReference('getHierarchyFactory', $hierarchy_factory);
 
-        $retriever = \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookRetriever::class);
-        $retriever->shouldReceive('getWebhooksForTracker')->once()->andReturn([]);
+        $webhook_factory = \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookFactory::class);
+        $webhook_factory->shouldReceive('getWebhooksForTracker')->once()->andReturn([]);
 
-        $artifact->setReturnReference('getWebhookRetriever', $retriever);
+        $artifact->setReturnReference('getWebhookFactory', $webhook_factory);
         $artifact->setReturnReference('getWebhookEmitter', \Mockery::spy(\Tuleap\Webhook\Emitter::class));
 
         $workflow = new MockWorkflow_Tracker_ArtifactTest_WorkflowNoPermsOnPostActionFields();
@@ -743,10 +743,10 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $artifact->setReturnReference('getArtifactFactory', $art_factory);
         $artifact->setReturnReference('getHierarchyFactory', $hierarchy_factory);
 
-        $retriever = \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookRetriever::class);
-        $retriever->shouldReceive('getWebhooksForTracker')->once()->andReturn([]);
+        $webhook_factory = \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookFactory::class);
+        $webhook_factory->shouldReceive('getWebhooksForTracker')->once()->andReturn([]);
 
-        $artifact->setReturnReference('getWebhookRetriever', $retriever);
+        $artifact->setReturnReference('getWebhookFactory', $webhook_factory);
         $artifact->setReturnReference('getWebhookEmitter', \Mockery::spy(\Tuleap\Webhook\Emitter::class));
 
         stub($GLOBALS['Response'])->getFeedbackErrors()->returns(array());
@@ -1068,8 +1068,8 @@ class Tracker_Artifact_PostActionsTest extends TuleapTestCase {
 
         $comment_dao = stub('Tracker_Artifact_Changeset_CommentDao')->createNewVersion()->returns(true);
 
-        $retriever = \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookRetriever::class);
-        $retriever->shouldReceive('getWebhooksForTracker')->once()->andReturn([]);
+        $webhook_factory = \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookFactory::class);
+        $webhook_factory->shouldReceive('getWebhooksForTracker')->once()->andReturn([]);
 
         $this->creator = new Tracker_Artifact_Changeset_NewChangesetCreator(
             $fields_validator,
@@ -1081,7 +1081,7 @@ class Tracker_Artifact_PostActionsTest extends TuleapTestCase {
             mock('ReferenceManager'),
             mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder'),
             \Mockery::spy(\Tuleap\Webhook\Emitter::class),
-            $retriever
+            $webhook_factory
         );
     }
 

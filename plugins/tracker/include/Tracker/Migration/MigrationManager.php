@@ -31,7 +31,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
 use Tuleap\Tracker\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Webhook\WebhookDao;
-use Tuleap\Tracker\Webhook\WebhookRetriever;
+use Tuleap\Tracker\Webhook\WebhookFactory;
 use Tuleap\Tracker\Webhook\WebhookStatusLogger;
 use Tuleap\Webhook\Emitter;
 
@@ -167,7 +167,7 @@ class Tracker_Migration_MigrationManager {
             new WebhookStatusLogger($webhook_dao)
         );
 
-        $webhook_retriever = new WebhookRetriever($webhook_dao);
+        $webhook_factory = new WebhookFactory($webhook_dao);
 
         return new Tracker_ArtifactCreator(
             $this->artifact_factory,
@@ -179,7 +179,7 @@ class Tracker_Migration_MigrationManager {
                 $this->artifact_factory,
                 EventManager::instance(),
                 $emitter,
-                $webhook_retriever
+                $webhook_factory
             ),
             new VisitRecorder(new RecentlyVisitedDao())
         );
@@ -194,7 +194,7 @@ class Tracker_Migration_MigrationManager {
             new WebhookStatusLogger($webhook_dao)
         );
 
-        $webhook_retriever = new WebhookRetriever($webhook_dao);
+        $webhook_factory = new WebhookFactory($webhook_dao);
 
         return new Tracker_Artifact_Changeset_NewChangesetAtGivenDateCreator(
             $fields_validator,
@@ -214,7 +214,7 @@ class Tracker_Migration_MigrationManager {
                 Tracker_FormElementFactory::instance()
             ),
             $emitter,
-            $webhook_retriever
+            $webhook_factory
         );
     }
 

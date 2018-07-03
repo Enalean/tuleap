@@ -27,7 +27,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
 use Tuleap\Tracker\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Webhook\WebhookDao;
-use Tuleap\Tracker\Webhook\WebhookRetriever;
+use Tuleap\Tracker\Webhook\WebhookFactory;
 use Tuleap\Tracker\Webhook\WebhookStatusLogger;
 use Tuleap\Webhook\Emitter;
 
@@ -54,7 +54,7 @@ class Tracker_Artifact_XMLImportBuilder {
             new WebhookStatusLogger($webhook_dao)
         );
 
-        $webhook_retriever = new WebhookRetriever($webhook_dao);
+        $webhook_factory = new WebhookFactory($webhook_dao);
 
         $artifact_creator = new Tracker_ArtifactCreator(
             $artifact_factory,
@@ -66,7 +66,7 @@ class Tracker_Artifact_XMLImportBuilder {
                 $artifact_factory,
                 EventManager::instance(),
                 $emitter,
-                $webhook_retriever
+                $webhook_factory
             ),
             $visit_recorder
         );
@@ -89,7 +89,7 @@ class Tracker_Artifact_XMLImportBuilder {
                 Tracker_FormElementFactory::instance()
             ),
             $emitter,
-            $webhook_retriever
+            $webhook_factory
         );
 
         return new Tracker_Artifact_XMLImport(

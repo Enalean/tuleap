@@ -62,10 +62,44 @@ class WebhookFactory
     }
 
     /**
+     * @return Webhook[]
+     */
+    public function getWebhooksForTracker(Tracker $tracker)
+    {
+        $webhooks = [];
+        foreach ($this->dao->searchWebhooksForTracker($tracker->getId()) as $web_hook_row) {
+            $webhooks[] = $this->instantiateFromRow($web_hook_row);
+        }
+
+        return $webhooks;
+    }
+
+    /**
+     * @return null|Webhook
+     */
+    public function getWebhookById($webhook_id)
+    {
+        $web_hook_row = $this->dao->searchWebhookById($webhook_id);
+        if (empty($web_hook_row)) {
+            return null;
+        }
+
+        return $this->instantiateFromRow($web_hook_row);
+    }
+
+    /**
      * @return Webhook
      */
     private function getInstance($url)
     {
         return new Webhook(0, 0, $url);
+    }
+
+    /**
+     * @return Webhook
+     */
+    private function instantiateFromRow(array $row)
+    {
+        return new Webhook($row['id'], $row['tracker_id'], $row['url']);
     }
 }

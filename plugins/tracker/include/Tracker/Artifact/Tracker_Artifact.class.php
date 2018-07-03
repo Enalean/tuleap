@@ -38,7 +38,7 @@ use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
 use Tuleap\Tracker\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Webhook\WebhookDao;
-use Tuleap\Tracker\Webhook\WebhookRetriever;
+use Tuleap\Tracker\Webhook\WebhookFactory;
 use Tuleap\Tracker\Webhook\WebhookStatusLogger;
 use Tuleap\Webhook\Emitter;
 
@@ -2011,8 +2011,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
     private function getNewChangesetCreator(Tracker_Artifact_Changeset_FieldsValidator $fields_validator)
     {
-        $emitter           = $this->getWebhookEmitter();
-        $webhook_retriever = $this->getWebhookRetriever();
+        $emitter         = $this->getWebhookEmitter();
+        $webhook_factory = $this->getWebhookFactory();
 
         $creator = new Tracker_Artifact_Changeset_NewChangesetCreator(
             $fields_validator,
@@ -2024,7 +2024,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             $this->getReferenceManager(),
             $this->getSourceOfAssociationCollectionBuilder(),
             $emitter,
-            $webhook_retriever
+            $webhook_factory
         );
 
         return $creator;
@@ -2067,11 +2067,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     }
 
     /**
-     * @return WebhookRetriever
+     * @return WebhookFactory
      */
-    protected function getWebhookRetriever()
+    protected function getWebhookFactory()
     {
-        $webhook_retriever = new WebhookRetriever(new WebhookDao());
-        return $webhook_retriever;
+        return new WebhookFactory(new WebhookDao());
     }
 }

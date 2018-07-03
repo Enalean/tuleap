@@ -28,7 +28,7 @@ use Tuleap\Http\MessageFactoryBuilder;
 use Tuleap\Tracker\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Webhook\WebhookDao;
-use Tuleap\Tracker\Webhook\WebhookRetriever;
+use Tuleap\Tracker\Webhook\WebhookFactory;
 use Tuleap\Tracker\Webhook\WebhookStatusLogger;
 use Tuleap\Webhook\Emitter;
 
@@ -400,7 +400,7 @@ class Tracker_ArtifactFactory {
             new WebhookStatusLogger($webhook_dao)
         );
 
-        $webhook_retriever = new WebhookRetriever($webhook_dao);
+        $webhook_factory = new WebhookFactory($webhook_dao);
 
         $changeset_creator = new Tracker_Artifact_Changeset_InitialChangesetCreator(
             $fields_validator,
@@ -409,7 +409,7 @@ class Tracker_ArtifactFactory {
             $this,
             EventManager::instance(),
             $emitter,
-            $webhook_retriever
+            $webhook_factory
         );
         $creator = new Tracker_ArtifactCreator($this, $fields_validator, $changeset_creator, $visit_recorder);
 
