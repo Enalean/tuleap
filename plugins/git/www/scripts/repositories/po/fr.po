@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
-"Last-Translator: Marie Ange Garnier <marie-ange.garnier@enalean.com>\n"
+"Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: \n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -42,9 +42,6 @@ msgstr "Dépôts Git"
 msgid "Go to repository administration"
 msgstr "Aller à l'administration du dépôt"
 
-msgid "Project has no Git repositories yet."
-msgstr "Le projet n'a aucun dépôt Git pour l'instant"
-
 msgid "Project not found"
 msgstr "Projet non trouvé"
 
@@ -66,6 +63,9 @@ msgstr ""
 
 msgid "Something went wrong, please check your network connection"
 msgstr "Quelque chose s'est mal passé, merci de vérifer votre connexion réseau"
+
+msgid "There are no repositories in this project"
+msgstr "Il n'y a aucun dépôt dans ce projet"
 
 msgid ""
 "You don't have permission to create Git repositories as you are not Git "

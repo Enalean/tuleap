@@ -17,6 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+.git-repository-list-empty-image {
+    stroke: mix($tlp-ui-white, $tlp-theme-color, 70%);
+}
+
+.git-repository-list-empty-rect {
+    fill: mix($tlp-ui-white, $tlp-theme-color, 70%);
+}
+
 .git-repository-create-modal-body {
     height: auto;
 }

@@ -24,10 +24,9 @@
             <h1 v-translate>Git repositories</h1>
 
             <button type="button"
-                    class="tlp-button-primary git-repository-list-create-repository-button"
-                    v-on:click="show_modal"
-                    v-if="is_admin"
-                    data-target="create-repository-modal"
+                class="tlp-button-primary git-repository-list-create-repository-button"
+                v-if="is_admin"
+                v-on:click="showModal()"
             >
                 <i class="fa fa-plus tlp-button-icon"></i>
                 <translate>Add repository</translate>
@@ -39,7 +38,7 @@
                 {{ error }}
             </div>
 
-            <git-repository-create/>
+            <git-repository-create ref="create_modal"/>
 
             <div class="git-repository-list" v-if="! is_loading">
                 <git-repository v-for="repository in repositories"
@@ -48,17 +47,45 @@
             </div>
 
             <div class="empty-page" v-if="show_empty_state">
-                <p class="empty-page-text" v-translate>Project has no Git repositories yet.</p>
+                <svg class="empty-page-icon git-repository-list-empty-image"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="70"
+                    height="80"
+                    viewBox="0 0 70 80"
+                >
+                    <g fill="none" fill-rule="evenodd">
+                        <rect width="64.72" height="74.72" x="2.64" y="2.64" stroke-width="5.28" rx="3.96"/>
+                        <rect class="git-repository-list-empty-rect" width="7.292" height="7.273" x="10.208" y="11.636"/>
+                        <rect class="git-repository-list-empty-rect" width="7.292" height="7.273" x="10.208" y="27.636"/>
+                        <rect class="git-repository-list-empty-rect" width="7.292" height="7.273" x="10.208" y="43.636"/>
+                        <rect class="git-repository-list-empty-rect" width="7.292" height="7.273" x="10.208" y="59.636"/>
+                        <g stroke-width="3.024" transform="translate(26 15)">
+                            <path stroke-linecap="square" d="M6.28571429 11.2060041L6.28571429 39.1304348M26.2857143 19.5652174C25.8215873 24.5967868 22.3930159 27.8576564 16 29.3478261 9.93503221 31.2749039 6.88741316 34.5357734 6.85714286 39.1304348"/>
+                            <ellipse cx="6.286" cy="5.978" rx="4.774" ry="4.466"/>
+                            <ellipse cx="25.714" cy="14.674" rx="4.774" ry="4.466"/>
+                            <ellipse cx="6.286" cy="44.022" rx="4.774" ry="4.466"/>
+                        </g>
+                    </g>
+                </svg>
+                <p class="empty-page-text" v-translate>There are no repositories in this project</p>
+                <button type="button"
+                    class="tlp-button-primary"
+                    v-if="is_admin"
+                    v-on:click="showModal()"
+                >
+                    <i class="fa fa-plus tlp-button-icon"></i>
+                    <translate>Add repository</translate>
+                </button>
             </div>
         </div>
     </div>
 </template>
 <script>
+import { modal as tlpModal } from "tlp";
 import GitRepositoryCreate from "./GitRepositoryCreate.vue";
 import GitBreadcrumbs from "./GitBreadcrumbs.vue";
 import GitRepository from "./GitRepository.vue";
 import { getRepositoryList } from "./rest-querier.js";
-import { modal as tlpModal } from "tlp";
 import { getProjectId, getUserIsAdmin } from "./repository-list-presenter.js";
 
 export default {
@@ -77,7 +104,7 @@ export default {
         };
     },
     methods: {
-        show_modal() {
+        showModal() {
             this.add_repository_modal.toggle();
         },
         async getRepositories() {
@@ -98,8 +125,7 @@ export default {
         }
     },
     mounted() {
-        const modal = document.getElementById("create-repository-modal");
-        this.add_repository_modal = tlpModal(modal);
+        this.add_repository_modal = tlpModal(this.$refs.create_modal.$el);
 
         this.getRepositories();
     },
@@ -108,7 +134,7 @@ export default {
             return this.repositories.length === 0 && !this.is_loading && !this.error;
         },
         is_admin() {
-            return getUserIsAdmin()
+            return getUserIsAdmin();
         }
     }
 };
