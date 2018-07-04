@@ -29,22 +29,28 @@ use Tracker;
 use Tracker_IDisplayTrackerLayout;
 use Tracker_Workflow_Action;
 use Tuleap\Tracker\Webhook\Webhook;
-use Tuleap\Tracker\Webhook\WebhookRetriever;
+use Tuleap\Tracker\Webhook\WebhookFactory;
+use Tuleap\Tracker\Webhook\WebhookLogsRetriever;
 
 class AdminWebhooks extends Tracker_Workflow_Action
 {
     const FUNC_ADMIN_WEBHOOKS = 'admin-webhooks';
 
     /**
-     * @var WebhookRetriever
+     * @var WebhookFactory
      */
-    private $retriever;
+    private $webhook_factory;
+    /**
+     * @var WebhookLogsRetriever
+     */
+    private $logs_retriever;
 
-    public function __construct(Tracker $tracker, WebhookRetriever $retriever)
+    public function __construct(Tracker $tracker, WebhookFactory $webhook_factory, WebhookLogsRetriever $logs_retriever)
     {
         parent::__construct($tracker);
 
-        $this->retriever = $retriever;
+        $this->webhook_factory = $webhook_factory;
+        $this->logs_retriever  = $logs_retriever;
     }
 
     /**
@@ -93,7 +99,7 @@ class AdminWebhooks extends Tracker_Workflow_Action
     private function getWebhookPresenters()
     {
         $webhook_presenters = [];
-        foreach ($this->retriever->getWebhooksForTracker($this->tracker) as $webhook) {
+        foreach ($this->webhook_factory->getWebhooksForTracker($this->tracker) as $webhook) {
             $webhook_presenters[] = new WebhookPresenter($webhook, $this->getLogsForWebhook($webhook));
         }
 
@@ -106,7 +112,7 @@ class AdminWebhooks extends Tracker_Workflow_Action
     private function getLogsForWebhook(Webhook $webhook)
     {
         $logs = array();
-        foreach ($this->retriever->getLogsForWebhook($webhook) as $row) {
+        foreach ($this->logs_retriever->getLogsForWebhook($webhook) as $row) {
             $logs[] = new WebhookLogPresenter($row['created_on'], $row['status']);
         }
 

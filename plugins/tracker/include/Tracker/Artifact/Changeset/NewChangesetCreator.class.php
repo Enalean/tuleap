@@ -19,7 +19,7 @@
  */
 
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder;
-use Tuleap\Tracker\Webhook\WebhookRetriever;
+use Tuleap\Tracker\Webhook\WebhookFactory;
 use Tuleap\Webhook\Emitter;
 
 /**
@@ -37,7 +37,7 @@ class Tracker_Artifact_Changeset_NewChangesetCreator extends Tracker_Artifact_Ch
         ReferenceManager $reference_manager,
         SourceOfAssociationCollectionBuilder $source_of_association_collection_builder,
         Emitter $emitter,
-        WebhookRetriever $webhook_retriever
+        WebhookFactory $webhook_factory
     ) {
         parent::__construct(
             $fields_validator,
@@ -49,7 +49,7 @@ class Tracker_Artifact_Changeset_NewChangesetCreator extends Tracker_Artifact_Ch
             $reference_manager,
             $source_of_association_collection_builder,
             $emitter,
-            $webhook_retriever
+            $webhook_factory
         );
     }
 

@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\Webhook\WebhookRetriever;
+use Tuleap\Tracker\Webhook\WebhookFactory;
 use Tuleap\Webhook\Emitter;
 
 /**
@@ -48,9 +48,9 @@ abstract class Tracker_Artifact_Changeset_ChangesetCreatorBase {
     private $emitter;
 
     /**
-     * @var WebhookRetriever
+     * @var WebhookFactory
      */
-    private $webhook_retriever;
+    private $webhook_factory;
 
     public function __construct(
         Tracker_Artifact_Changeset_FieldsValidator $fields_validator,
@@ -58,7 +58,7 @@ abstract class Tracker_Artifact_Changeset_ChangesetCreatorBase {
         Tracker_ArtifactFactory                    $artifact_factory,
         EventManager                               $event_manager,
         Emitter                                    $emitter,
-        WebhookRetriever                           $webhook_retriever
+        WebhookFactory                             $webhook_factory
     ) {
         $this->fields_validator    = $fields_validator;
         $this->formelement_factory = $formelement_factory;
@@ -66,7 +66,7 @@ abstract class Tracker_Artifact_Changeset_ChangesetCreatorBase {
         $this->event_manager       = $event_manager;
         $this->field_initializator = new Tracker_Artifact_Changeset_ChangesetDataInitializator($this->formelement_factory);
         $this->emitter             = $emitter;
-        $this->webhook_retriever   = $webhook_retriever;
+        $this->webhook_factory     = $webhook_factory;
     }
 
     /**
@@ -105,7 +105,7 @@ abstract class Tracker_Artifact_Changeset_ChangesetCreatorBase {
     protected function emitWebhooks(Tracker_Artifact $artifact, PFUser $user, $action)
     {
         $tracker  = $artifact->getTracker();
-        $webhooks = $this->webhook_retriever->getWebhooksForTracker($tracker);
+        $webhooks = $this->webhook_factory->getWebhooksForTracker($tracker);
 
         if (count($webhooks) === 0) {
             return;

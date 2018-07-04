@@ -21,7 +21,7 @@
 use Tuleap\Tracker\Artifact\ArtifactInstrumentation;
 use Tuleap\Tracker\Artifact\Exception\FieldValidationException;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder;
-use Tuleap\Tracker\Webhook\WebhookRetriever;
+use Tuleap\Tracker\Webhook\WebhookFactory;
 use Tuleap\Webhook\Emitter;
 
 /**
@@ -49,7 +49,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         ReferenceManager $reference_manager,
         SourceOfAssociationCollectionBuilder $source_of_association_collection_builder,
         Emitter $emitter,
-        WebhookRetriever $webhook_retriever
+        WebhookFactory $webhook_factory
     ) {
         parent::__construct(
             $fields_validator,
@@ -57,7 +57,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
             $artifact_factory,
             $event_manager,
             $emitter,
-            $webhook_retriever
+            $webhook_factory
         );
 
         $this->changeset_dao                            = $changeset_dao;

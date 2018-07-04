@@ -27,18 +27,18 @@ class WebhookXMLExporter
 {
 
     /**
-     * @var WebhookRetriever
+     * @var WebhookFactory
      */
-    private $retriever;
+    private $webhook_factory;
 
-    public function __construct(WebhookRetriever $retriever)
+    public function __construct(WebhookFactory $webhook_factory)
     {
-        $this->retriever = $retriever;
+        $this->webhook_factory = $webhook_factory;
     }
 
     public function exportTrackerWebhooksInXML(SimpleXMLElement $tracker_xml, Tracker $tracker)
     {
-        $tracker_webhooks = $this->retriever->getWebhooksForTracker($tracker);
+        $tracker_webhooks = $this->webhook_factory->getWebhooksForTracker($tracker);
 
         if (count($tracker_webhooks) === 0) {
             return;

@@ -52,7 +52,8 @@ use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\RecentlyVisited\VisitRetriever;
 use Tuleap\Tracker\Webhook\Actions\AdminWebhooks;
 use Tuleap\Tracker\Webhook\WebhookDao;
-use Tuleap\Tracker\Webhook\WebhookRetriever;
+use Tuleap\Tracker\Webhook\WebhookFactory;
+use Tuleap\Tracker\Webhook\WebhookLogsRetriever;
 use Tuleap\Tracker\Webhook\WebhookStatusLogger;
 use Tuleap\Tracker\Webhook\WebhookXMLExporter;
 use Tuleap\Tracker\XML\Updater\FieldChange\FieldChangeComputedXMLUpdater;
@@ -707,7 +708,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                 break;
             case AdminWebhooks::FUNC_ADMIN_WEBHOOKS:
                 if ($this->userIsAdmin($current_user)) {
-                    $admin_webhook = new AdminWebhooks($this, $this->getWebhookRetriever());
+                    $admin_webhook = new AdminWebhooks($this, $this->getWebhookFactory(), $this->getWebhookLogsRetriever());
                     $admin_webhook->process($layout, $request, $current_user);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
@@ -3604,7 +3605,7 @@ EOS;
             new WebhookStatusLogger($webhook_dao)
         );
 
-        $webhook_retriever = $this->getWebhookRetriever();
+        $webhook_retriever = $this->getWebhookFactory();
 
         $artifact_creator = new Tracker_ArtifactCreator(
             $this->getTrackerArtifactFactory(),
@@ -3733,16 +3734,26 @@ EOS;
     protected function getWebhookXMLExporter()
     {
         return new WebhookXMLExporter(
-            $this->getWebhookRetriever()
+            $this->getWebhookFactory()
         );
     }
 
     /**
-     * @return WebhookRetriever
+     * @return WebhookFactory
      */
-    private function getWebhookRetriever()
+    private function getWebhookFactory()
     {
-        return new WebhookRetriever(
+        return new WebhookFactory(
+            new WebhookDao()
+        );
+    }
+
+    /**
+     * @return WebhookLogsRetriever
+     */
+    private function getWebhookLogsRetriever()
+    {
+        return new WebhookLogsRetriever(
             new WebhookDao()
         );
     }

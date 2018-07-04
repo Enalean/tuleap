@@ -79,7 +79,7 @@ use Tuleap\Tracker\Webhook\Actions\WebhookDeleteController;
 use Tuleap\Tracker\Webhook\Actions\WebhookEditController;
 use Tuleap\Tracker\Webhook\Actions\WebhookURLValidator;
 use Tuleap\Tracker\Webhook\WebhookDao;
-use Tuleap\Tracker\Webhook\WebhookRetriever;
+use Tuleap\Tracker\Webhook\WebhookFactory;
 use Tuleap\User\History\HistoryRetriever;
 use Tuleap\Widget\Event\GetPublicAreas;
 
@@ -1661,7 +1661,7 @@ class trackerPlugin extends Plugin {
 
             $r->post('/webhooks/delete', function () {
                 return new WebhookDeleteController(
-                    new WebhookRetriever(new WebhookDao()),
+                    new WebhookFactory(new WebhookDao()),
                     $this->getTrackerFactory(),
                     new WebhookDao()
                 );
@@ -1679,7 +1679,7 @@ class trackerPlugin extends Plugin {
                 '/webhooks/edit',
                 function () {
                     return new WebhookEditController(
-                        new WebhookRetriever(new WebhookDao()),
+                        new WebhookFactory(new WebhookDao()),
                         TrackerFactory::instance(),
                         new WebhookDao(),
                         new WebhookURLValidator()

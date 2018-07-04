@@ -30,15 +30,15 @@ use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Tracker\Webhook\WebhookDao;
-use Tuleap\Tracker\Webhook\WebhookRetriever;
+use Tuleap\Tracker\Webhook\WebhookFactory;
 
 class WebhookEditController implements DispatchableWithRequest
 {
 
     /**
-     * @var WebhookRetriever
+     * @var WebhookFactory
      */
-    private $retriever;
+    private $webhook_factory;
 
     /**
      * @var TrackerFactory
@@ -55,12 +55,12 @@ class WebhookEditController implements DispatchableWithRequest
     private $validator;
 
     public function __construct(
-        WebhookRetriever $retriever,
+        WebhookFactory $webhook_factory,
         TrackerFactory $tracker_factory,
         WebhookDao $dao,
         WebhookURLValidator $validator
     ) {
-        $this->retriever       = $retriever;
+        $this->webhook_factory = $webhook_factory;
         $this->tracker_factory = $tracker_factory;
         $this->dao             = $dao;
         $this->validator       = $validator;
@@ -74,7 +74,7 @@ class WebhookEditController implements DispatchableWithRequest
             $layout->redirect('/');
         }
 
-        $webhook = $this->retriever->getWebhookById($webhook_id);
+        $webhook = $this->webhook_factory->getWebhookById($webhook_id);
         if (! $webhook) {
             throw new NotFoundException();
         }

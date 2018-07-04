@@ -38,8 +38,8 @@ class WebhookXMLExporterTest extends TestCase
     {
         parent::setUp();
 
-        $this->retriever = \Mockery::mock(WebhookRetriever::class);
-        $this->exporter  = new WebhookXMLExporter($this->retriever);
+        $this->webhook_factory = \Mockery::mock(WebhookFactory::class);
+        $this->exporter  = new WebhookXMLExporter($this->webhook_factory);
 
         $this->tracker   = \Mockery::mock(\Tracker::class);
     }
@@ -47,7 +47,7 @@ class WebhookXMLExporterTest extends TestCase
     public function testItDoesNothingIfNoWebhookDefinedForTracker()
     {
         $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker/>');
-        $this->retriever->shouldReceive('getWebhooksForTracker')->with($this->tracker)->once()->andReturn([]);
+        $this->webhook_factory->shouldReceive('getWebhooksForTracker')->with($this->tracker)->once()->andReturn([]);
 
         $this->exporter->exportTrackerWebhooksInXML($xml, $this->tracker);
 
@@ -57,7 +57,7 @@ class WebhookXMLExporterTest extends TestCase
     public function testItExportWebhooksDefinedForTracker()
     {
         $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker/>');
-        $this->retriever->shouldReceive('getWebhooksForTracker')->with($this->tracker)->once()->andReturn([
+        $this->webhook_factory->shouldReceive('getWebhooksForTracker')->with($this->tracker)->once()->andReturn([
             new Webhook(1, 1, 'https://example.com/01'),
             new Webhook(2, 1, 'https://example.com/02'),
         ]);

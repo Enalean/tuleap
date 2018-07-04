@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\Webhook\WebhookRetriever;
+use Tuleap\Tracker\Webhook\WebhookFactory;
 use Tuleap\Webhook\Emitter;
 
 /**
@@ -33,7 +33,7 @@ class Tracker_Artifact_Changeset_InitialChangesetCreator extends Tracker_Artifac
         Tracker_ArtifactFactory                                    $artifact_factory,
         EventManager                                               $event_manager,
         Emitter                                                    $emitter,
-        WebhookRetriever                                           $webhook_retriever
+        WebhookFactory                                             $webhook_factory
     ) {
         parent::__construct(
             $fields_validator,
@@ -42,7 +42,7 @@ class Tracker_Artifact_Changeset_InitialChangesetCreator extends Tracker_Artifac
             $artifact_factory,
             $event_manager,
             $emitter,
-            $webhook_retriever
+            $webhook_factory
         );
     }
 
