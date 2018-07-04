@@ -20,6 +20,7 @@
 
 namespace Tuleap\Tracker\XML\Updater;
 
+use EventManager;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
@@ -27,6 +28,8 @@ use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tracker;
 use Tracker_FormElement_Field;
+use Tuleap\Tracker\Events\MoveArtifactGetExternalSemanticTargetField;
+use Tuleap\Tracker\Events\MoveArtifactParseFieldChangeNodes;
 
 require_once __DIR__.'/../../../bootstrap.php';
 
@@ -45,8 +48,9 @@ class MoveChangesetXMLUpdaterTest extends TestCase
 
         $this->user          = Mockery::mock(PFUser::class);
         $this->tracker       = Mockery::mock(Tracker::class);
+        $this->event_manager = Mockery::mock(EventManager::class);
 
-        $this->updater = new MoveChangesetXMLUpdater();
+        $this->updater = new MoveChangesetXMLUpdater($this->event_manager);
 
         $this->user->shouldReceive('getId')->andReturn(101);
     }
@@ -82,6 +86,13 @@ class MoveChangesetXMLUpdaterTest extends TestCase
         $source_title_field->shouldReceive('getName')->andReturn('summary');
         $source_title_field->shouldReceive('getId')->andReturn(1001);
 
+        $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function (MoveArtifactGetExternalSemanticTargetField $event) {
+            return true;
+        }));
+        $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function (MoveArtifactParseFieldChangeNodes $event) {
+            return true;
+        }));
+
         $time = time();
         $this->updater->update($this->tracker, $target_tracker, $artifact_xml, $this->user, $time);
 
@@ -94,7 +105,7 @@ class MoveChangesetXMLUpdaterTest extends TestCase
         $this->assertEquals((string)$artifact_xml->changeset->field_change[0]->value, 'Initial summary value');
     }
 
-    public function testItUpdatesTheDescriptionFieldChangeTagsInMoveAction()
+    public function testItUpdatesTheDescriptionFieldChangeTags()
     {
         $source_description_field = Mockery::mock(Tracker_FormElement_Field::class);
         $target_description_field = Mockery::mock(Tracker_FormElement_Field::class);
@@ -137,6 +148,13 @@ class MoveChangesetXMLUpdaterTest extends TestCase
         $target_description_field->shouldReceive('getName')->andReturn('v2desc');
         $source_description_field->shouldReceive('getName')->andReturn('desc');
 
+        $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function (MoveArtifactGetExternalSemanticTargetField $event) {
+            return true;
+        }));
+        $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function (MoveArtifactParseFieldChangeNodes $event) {
+            return true;
+        }));
+
         $time = time();
         $this->updater->update($this->tracker, $target_tracker, $artifact_xml, $this->user, $time);
 
@@ -145,10 +163,10 @@ class MoveChangesetXMLUpdaterTest extends TestCase
         $this->assertEquals((int)$artifact_xml->changeset[0]->submitted_by, 101);
 
         $this->assertEquals(count($artifact_xml->changeset), 2);
-        $this->assertEquals($artifact_xml->changeset[0]->field_change[0]['field_name'], 'v2desc');
+        $this->assertEquals((string)$artifact_xml->changeset[0]->field_change[0]['field_name'], 'v2desc');
         $this->assertEquals((string)$artifact_xml->changeset[0]->field_change[0]->value, '<p><strong>Description</strong></p>');
         $this->assertEquals((string)$artifact_xml->changeset[0]->field_change[0]->value['format'], 'html');
-        $this->assertEquals($artifact_xml->changeset[1]->field_change[0]['field_name'], 'v2desc');
+        $this->assertEquals((string)$artifact_xml->changeset[1]->field_change[0]['field_name'], 'v2desc');
         $this->assertEquals((string)$artifact_xml->changeset[1]->field_change[0]->value, '<p><strong>Description v2</strong></p>');
         $this->assertEquals((string)$artifact_xml->changeset[1]->field_change[0]->value['format'], 'html');
     }
@@ -203,6 +221,13 @@ class MoveChangesetXMLUpdaterTest extends TestCase
         $target_tracker->shouldReceive('getId')->andReturn(201);
         $target_description_field->shouldReceive('getName')->andReturn('v2desc');
         $source_description_field->shouldReceive('getName')->andReturn('desc');
+
+        $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function (MoveArtifactGetExternalSemanticTargetField $event) {
+            return true;
+        }));
+        $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function (MoveArtifactParseFieldChangeNodes $event) {
+            return true;
+        }));
 
         $this->updater->update($this->tracker, $target_tracker, $artifact_xml, $this->user, time());
 
@@ -261,6 +286,13 @@ class MoveChangesetXMLUpdaterTest extends TestCase
         $target_description_field->shouldReceive('getName')->andReturn('v2desc');
         $source_description_field->shouldReceive('getName')->andReturn('desc');
 
+        $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function (MoveArtifactGetExternalSemanticTargetField $event) {
+            return true;
+        }));
+        $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function (MoveArtifactParseFieldChangeNodes $event) {
+            return true;
+        }));
+
         $time = time();
         $this->updater->update($this->tracker, $target_tracker, $artifact_xml, $this->user, $time);
 
@@ -270,11 +302,44 @@ class MoveChangesetXMLUpdaterTest extends TestCase
 
         $this->assertEquals(count($artifact_xml->changeset), 3);
         $this->assertNull($artifact_xml->changeset[0]->field_change[0]);
-        $this->assertEquals($artifact_xml->changeset[1]->field_change[0]['field_name'], 'v2desc');
+        $this->assertEquals((string)$artifact_xml->changeset[1]->field_change[0]['field_name'], 'v2desc');
         $this->assertEquals((string)$artifact_xml->changeset[1]->field_change[0]->value, '<p><strong>Description</strong></p>');
         $this->assertEquals((string)$artifact_xml->changeset[1]->field_change[0]->value['format'], 'html');
-        $this->assertEquals($artifact_xml->changeset[2]->field_change[0]['field_name'], 'v2desc');
+        $this->assertEquals((string)$artifact_xml->changeset[2]->field_change[0]['field_name'], 'v2desc');
         $this->assertEquals((string)$artifact_xml->changeset[2]->field_change[0]->value, '<p><strong>Description v2</strong></p>');
         $this->assertEquals((string)$artifact_xml->changeset[2]->field_change[0]->value['format'], 'html');
+    }
+
+    public function testItAsksForExternalPluginsIfThereIsAnExternalFieldSemantic()
+    {
+        $target_tracker = Mockery::mock(Tracker::class);
+
+        $artifact_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>'
+            . '<artifact>'
+            . '  <changeset>'
+            . '    <submitted_on>2014</submitted_on>'
+            . '    <submitted_by>123</submitted_by>'
+            . '    <field_change field_name="effort">'
+            . '      <value>125</value>'
+            . '    </field_change>'
+            . '  </changeset>'
+            . '</artifact>');
+
+        $target_tracker->shouldReceive('getId')->andReturn(201);
+        $target_tracker->shouldReceive('getTitleField')->andReturn(null);
+        $target_tracker->shouldReceive('getDescriptionField')->andReturn(null);
+
+        $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function (MoveArtifactGetExternalSemanticTargetField $event) {
+            $target_external_semantic_field = Mockery::mock(Tracker_FormElement_Field::class);
+            $event->setField($target_external_semantic_field);
+            return true;
+        }))->once();
+        $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function (MoveArtifactParseFieldChangeNodes $event) {
+            $event->setModifiedByPlugin();
+            return true;
+        }))->once();
+
+        $time = time();
+        $this->updater->update($this->tracker, $target_tracker, $artifact_xml, $this->user, $time);
     }
 }

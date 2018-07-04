@@ -804,7 +804,7 @@ class ArtifactsResource extends AuthenticatedResource {
         return new MoveArtifact(
             $this->artifacts_deletion_manager,
             $builder->build($children_collector, $file_path_xml_exporter, $user, $user_xml_exporter, true),
-            new MoveChangesetXMLUpdater(),
+            new MoveChangesetXMLUpdater($this->event_manager),
             $xml_import_builder->build(
                 new XMLImportHelper($this->user_manager),
                 new Log_NoopLogger()

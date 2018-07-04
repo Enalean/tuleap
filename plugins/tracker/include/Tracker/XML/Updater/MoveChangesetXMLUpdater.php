@@ -20,13 +20,26 @@
 
 namespace Tuleap\Tracker\XML\Updater;
 
+use EventManager;
 use PFUser;
 use SimpleXMLElement;
 use Tracker;
 use Tracker_FormElement_Field;
+use Tuleap\Tracker\Events\MoveArtifactGetExternalSemanticTargetField;
+use Tuleap\Tracker\Events\MoveArtifactParseFieldChangeNodes;
 
 class MoveChangesetXMLUpdater
 {
+
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
+
+    public function __construct(EventManager $event_manager)
+    {
+        $this->event_manager = $event_manager;
+    }
 
     public function update(
         Tracker $source_tracker,
@@ -97,22 +110,35 @@ class MoveChangesetXMLUpdater
         Tracker $target_tracker,
         SimpleXMLElement $changeset_xml
     ) {
-        $target_title_field       = $target_tracker->getTitleField();
-        $target_description_field = $target_tracker->getDescriptionField();
+        $target_title_field             = $target_tracker->getTitleField();
+        $target_description_field       = $target_tracker->getDescriptionField();
+        $external_semantic_target_field = $this->getExternalSemanticTargetField($source_tracker, $target_tracker);
 
         $this->deleteEmptyCommentsNode($changeset_xml);
 
         $last_index = count($changeset_xml->field_change) - 1;
         for ($index = $last_index; $index >= 0; $index--) {
+            $modified = false;
             if ($target_title_field &&
                 $this->isFieldChangeCorrespondingToTitleSemanticField($changeset_xml, $source_tracker, $index)
             ) {
                 $this->useTargetTrackerFieldName($changeset_xml, $target_title_field, $index);
+                continue;
             } elseif ($target_description_field &&
                 $this->isFieldChangeCorrespondingToDescriptionSemanticField($changeset_xml, $source_tracker, $index)
             ) {
                 $this->useTargetTrackerFieldName($changeset_xml, $target_description_field, $index);
-            } else {
+                continue;
+            } elseif ($external_semantic_target_field) {
+                $modified = $this->parseFieldChangeNodesForExternalSemantics(
+                    $source_tracker,
+                    $target_tracker,
+                    $changeset_xml,
+                    $index
+                );
+            }
+
+            if ($modified === false) {
                 $this->deleteFieldChangeNode($changeset_xml, $index);
             }
         }
@@ -191,5 +217,31 @@ class MoveChangesetXMLUpdater
         $index
     ) {
         $changeset_xml->field_change[$index]['field_name'] = $target_field->getName();
+    }
+
+    /**
+     * @return null|Tracker_FormElement_Field
+     */
+    private function getExternalSemanticTargetField(Tracker $source_tracker, Tracker $target_tracker)
+    {
+        $event = new MoveArtifactGetExternalSemanticTargetField($source_tracker, $target_tracker);
+        $this->event_manager->processEvent($event);
+
+        return $event->getField();
+    }
+
+    /**
+     * @return bool
+     */
+    private function parseFieldChangeNodesForExternalSemantics(
+        Tracker $source_tracker,
+        Tracker $target_tracker,
+        SimpleXMLElement $changeset_xml,
+        $index
+    ) {
+        $event = new MoveArtifactParseFieldChangeNodes($source_tracker, $target_tracker, $changeset_xml, $index);
+        $this->event_manager->processEvent($event);
+
+        return $event->isModifiedByPlugin();
     }
 }

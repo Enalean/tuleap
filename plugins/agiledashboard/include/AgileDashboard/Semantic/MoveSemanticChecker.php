@@ -64,6 +64,7 @@ class MoveSemanticChecker
         Tracker_FormElement_Field $target_initiel_effort_field
     ) {
         return $this->form_element_factory->getType($source_initial_effort_field) ===
-            $this->form_element_factory->getType($target_initiel_effort_field);
+            $this->form_element_factory->getType($target_initiel_effort_field) &&
+            in_array($this->form_element_factory->getType($source_initial_effort_field), ['int', 'float', 'computed']);
     }
 }

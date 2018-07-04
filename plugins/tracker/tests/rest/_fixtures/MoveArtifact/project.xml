@@ -183,94 +183,9 @@
           <properties hint="Type in a search term"/>
           <bind type="static" is_rank_alpha="0"/>
         </formElement>
-        <formElement type="sb" ID="F107" rank="261" use_it="0">
-          <name>status_id</name>
-          <label>Status</label>
-          <description>Artifact Status</description>
-          <bind type="static" is_rank_alpha="0">
-            <items>
-              <item ID="F107-V0" label="Open" is_hidden="0">
-                <description>The artifact has been submitted</description>
-              </item>
-              <item ID="F107-V1" label="Closed" is_hidden="0">
-                <description>The artifact is no longer active. See the Resolution field for details on how it was resolved.</description>
-              </item>
-            </items>
-          </bind>
-        </formElement>
-        <formElement type="sb" ID="F108" rank="285" use_it="0">
-          <name>category_id</name>
-          <label>Category</label>
-          <description>Generally correspond to high level modules or functionalities of your software (e.g. User interface, Configuration Manager, Scheduler, Memory Manager...)</description>
-          <bind type="static" is_rank_alpha="0"/>
-        </formElement>
-        <formElement type="sb" ID="F109" rank="288" use_it="0">
-          <name>severity</name>
-          <label>Priority</label>
-          <description>How quickly the artifact must be completed</description>
-          <bind type="static" is_rank_alpha="0">
-            <items>
-              <item ID="F109-V0" label="1 - Lowest" is_hidden="0"/>
-              <item ID="F109-V1" label="2" is_hidden="0"/>
-              <item ID="F109-V2" label="3" is_hidden="0"/>
-              <item ID="F109-V3" label="4" is_hidden="0"/>
-              <item ID="F109-V4" label="5 - Medium" is_hidden="0"/>
-              <item ID="F109-V5" label="6" is_hidden="0"/>
-              <item ID="F109-V6" label="7" is_hidden="0"/>
-              <item ID="F109-V7" label="8" is_hidden="0"/>
-              <item ID="F109-V8" label="9 - Highest" is_hidden="0"/>
-            </items>
-            <decorators>
-              <decorator REF="F109-V0" r="255" g="255" b="204"/>
-              <decorator REF="F109-V1" r="255" g="255" b="102"/>
-              <decorator REF="F109-V2" r="255" g="204" b="0"/>
-              <decorator REF="F109-V3" r="255" g="153" b="0"/>
-              <decorator REF="F109-V4" r="255" g="102" b="0"/>
-              <decorator REF="F109-V5" r="255" g="51" b="0"/>
-              <decorator REF="F109-V6" r="204" g="51" b="0"/>
-              <decorator REF="F109-V7" r="153" g="0" b="0"/>
-              <decorator REF="F109-V8" r="51" g="0" b="0"/>
-            </decorators>
-          </bind>
-        </formElement>
-        <formElement type="sb" ID="F110" rank="292" use_it="0">
-          <name>stage</name>
-          <label>Stage</label>
-          <description>Stage in the life cycle of the artifact</description>
-          <bind type="static" is_rank_alpha="0">
-            <items>
-              <item ID="F110-V0" label="New" is_hidden="0">
-                <description>The artifact has just been submitted</description>
-              </item>
-              <item ID="F110-V1" label="Analyzed" is_hidden="0">
-                <description>The cause of the artifact has been identified and documented</description>
-              </item>
-              <item ID="F110-V2" label="Accepted" is_hidden="0">
-                <description>The artifact will be worked on.</description>
-              </item>
-              <item ID="F110-V3" label="Under Implementation" is_hidden="0">
-                <description>The artifact is being worked on.</description>
-              </item>
-              <item ID="F110-V4" label="Ready for Review" is_hidden="0">
-                <description>Updated/Created non-software work product (e.g. documentation) is ready for review and approval.</description>
-              </item>
-              <item ID="F110-V5" label="Ready for Test" is_hidden="0">
-                <description>Updated/Created software is ready to be included in the next build</description>
-              </item>
-              <item ID="F110-V6" label="In Test" is_hidden="0">
-                <description>Updated/Created software is in the build and is ready to enter the test phase</description>
-              </item>
-              <item ID="F110-V7" label="Approved" is_hidden="0">
-                <description>The artifact fix has been succesfully tested. It is approved and awaiting release.</description>
-              </item>
-              <item ID="F110-V8" label="Declined" is_hidden="0">
-                <description>The artifact was not accepted.</description>
-              </item>
-              <item ID="F110-V9" label="Done" is_hidden="0">
-                <description>The artifact is closed.</description>
-              </item>
-            </items>
-          </bind>
+        <formElement type="computed" ID="F111" rank="250">
+          <name>initial</name>
+          <label><![CDATA[initial]]></label>
         </formElement>
       </formElements>
       <semantics>
@@ -311,6 +226,12 @@
         <semantic type="plugin_cardwall_card_fields">
           <field REF="F94"/>
           <field REF="F98"/>
+        </semantic>
+        <semantic type="initial_effort">
+          <shortname>initial_effort</shortname>
+          <label>Effort Estimé</label>
+          <description>Définir l'effort estimé d'un artéfact</description>
+          <field REF="F111"/>
         </semantic>
       </semantics>
       <rules>
@@ -359,6 +280,9 @@
         <permission scope="field" REF="F100" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
         <permission scope="field" REF="F100" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
         <permission scope="field" REF="F102" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F111" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F111" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F111" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
       </permissions>
       <artifacts>
         <artifact id="1">
@@ -374,6 +298,9 @@
             </field_change>
             <field_change field_name="status" type="list" bind="static">
               <value format="id">173</value>
+            </field_change>
+            <field_change field_name="initial" type="computed">
+              <is_autocomputed>1</is_autocomputed>
             </field_change>
           </changeset>
           <changeset>
@@ -403,6 +330,9 @@
             <field_change field_name="summary_1" type="string">
               <value><![CDATA[To be moved v2]]></value>
             </field_change>
+            <field_change field_name="initial" type="computed">
+              <manual_value><![CDATA[25]]></manual_value>
+            </field_change>
           </changeset>
         </artifact>
       </artifacts>
@@ -424,6 +354,10 @@
           <label><![CDATA[desc]]></label>
           <properties rows="10" cols="50"/>
         </formElement>
+        <formElement type="computed" ID="F18645" rank="2">
+          <name>initialv2</name>
+          <label><![CDATA[initialv2]]></label>
+        </formElement>
       </formElements>
       <semantics>
         <semantic type="title">
@@ -440,6 +374,12 @@
         </semantic>
         <semantic type="tooltip"/>
         <semantic type="plugin_cardwall_card_fields"/>
+        <semantic type="initial_effort">
+          <shortname>initial_effort</shortname>
+          <label>Effort Estimé</label>
+          <description>Définir l'effort estimé d'un artéfact</description>
+          <field REF="F18645"/>
+        </semantic>
       </semantics>
       <rules>
         <date_rules/>
@@ -467,6 +407,9 @@
         <permission scope="field" REF="F18644" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
         <permission scope="field" REF="F18644" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
         <permission scope="field" REF="F18644" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F18645" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F18645" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F18645" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
       </permissions>
     </tracker>
   </trackers>
