@@ -21,13 +21,7 @@
 
 use Tuleap\Request\RestrictedUsersAreHandledByPluginEvent;
 
-require_once('common/user/User.class.php');
 Mock::generate('PFUser');
-require_once('common/project/Project.class.php');
-Mock::generate('Project');
-require_once('common/project/ProjectManager.class.php');
-Mock::generate('ProjectManager');
-require_once('common/include/URLVerification.class.php');
 
 Mock::generatepartial('URLVerification',
                       'URLVerificationTestVersion2',
@@ -35,51 +29,6 @@ Mock::generatepartial('URLVerification',
                             'getProjectManager',
                             'userCanAccessProject',
                             'exitError'));
-
-Mock::generatePartial(
-    'URLVerification',
-    'URLVerificationTestVersion3',
-    array('isException',
-          'verifyProtocol',
-          'verifyRequest',
-          'getUrlChunks',
-          'checkRestrictedAccess',
-          'checkPrivateAccess',
-          'getRedirectionURL',
-          'header',
-          'checkNotActiveProject')
-);
-
-Mock::generatePartial(
-    'URLVerification',
-    'URLVerificationTestVersion4',
-    array('isException',
-          'verifyProtocol',
-          'verifyRequest',
-          'getUrlChunks',
-          'checkRestrictedAccess',
-          'checkPrivateAccess',
-          'getRedirectionURL',
-          'header',
-          'checkNotActiveProject',
-          'getUrl')
-);
-
-require_once('common/event/EventManager.class.php');
-Mock::generate('EventManager');
-
-class MockEM4Anonymous extends MockEventManager {
-   function processEvent($event, $params) {
-       foreach(parent::processEvent($event, $params) as $key => $value) {
-           $params[$key] = $value;
-       }
-   }
-}
-
-require_once('common/language/BaseLanguage.class.php');
-Mock::generate('BaseLanguage');
-
-Mock::generate('URL');
 
 class URLVerificationBaseTest extends TuleapTestCase {
 
@@ -125,8 +74,13 @@ class URLVerificationTest extends URLVerificationBaseTest {
 
     function testIsScriptAllowedForAnonymous() {
         $urlVerification = partial_mock('URLVerification', array('getCurrentUser', 'getEventManager'));
-        $em = new MockEM4Anonymous($this);
-        $em->setReturnValue('processEvent', array('anonymous_allowed' => false));
+
+        $em = Mockery::mock(EventManager::class);
+        $em->shouldReceive('processEvent')->with(Mockery::any(), Mockery::on(function (array $params) {
+            $params['anonymous_allowed'] = false;
+            return true;
+        }));
+
         $urlVerification->setReturnValue('getEventManager', $em);
         $GLOBALS['Language']->setReturnValue('getContent', $this->fixtures.'/empty.txt');
 
@@ -174,8 +128,11 @@ class URLVerificationTest extends URLVerificationBaseTest {
 
     function testIsScriptAllowedForAnonymousFromHook() {
         $urlVerification = partial_mock('URLVerification', array('getCurrentUser', 'getEventManager'));
-        $em = new MockEM4Anonymous($this);
-        $em->setReturnValue('processEvent', array('anonymous_allowed' => true));
+        $em = Mockery::mock(EventManager::class);
+        $em->shouldReceive('processEvent')->with(Mockery::any(), Mockery::on(function (array $params) {
+            $params['anonymous_allowed'] = true;
+            return true;
+        }));
         $urlVerification->setReturnValue('getEventManager', $em);
         $GLOBALS['Language']->setReturnValue('getContent', $this->fixtures.'/empty.txt');
 
@@ -401,124 +358,6 @@ class URLVerification_RedirectionTests extends URLVerificationBaseTest {
         $this->assertEqual($urlVerification->getRedirectionURL($this->request, $server), '/project.php');
     }
 
-    function testAssertValidUrlWithException() {
-        $urlVerification = new URLVerificationTestVersion3($this);
-        $urlVerification->setReturnValue('isException', true);
-
-        $urlVerification->expectNever('header');
-        $server = array();
-        $urlVerification->assertValidUrl($server, $this->request);
-    }
-
-    function testAssertValidUrlWithNoRedirection() {
-        $urlVerification = new URLVerificationTestVersion4($this);
-
-        stub($urlVerification)->getUrl()->returns(mock('URL'));
-
-        $urlVerification->setReturnValue('isException', false);
-        $urlVerification->setReturnValue('getUrlChunks', null);
-
-        $urlVerification->expectNever('header');
-        $server = array(
-            'REQUEST_URI' => '/'
-        );
-        $urlVerification->assertValidUrl($server, $this->request);
-    }
-
-    function testAssertValidUrlWithRedirection() {
-        $urlVerification = new URLVerificationTestVersion4($this);
-
-        stub($urlVerification)->getUrl()->returns(mock('URL'));
-
-        $urlVerification->setReturnValue('isException', false);
-        $urlVerification->setReturnValue('getUrlChunks', array('protocol' => 'https', 'host' => 'secure.example.com'));
-
-        $urlVerification->expectOnce('header');
-        $server = array(
-            'REQUEST_URI' => '/'
-        );
-        $urlVerification->assertValidUrl($server, $this->request);
-    }
-
-    function testCheckNotActiveProjectApi() {
-        $urlVerification = partial_mock('URLVerification', array('getProjectManager', 'exitError', 'displayRestrictedUserError', 'displayPrivateProjectError'));
-        $GLOBALS['group_id'] = 1;
-        $project = new MockProject();
-        $projectManager = new MockProjectManager();
-        $projectManager->setReturnValue('getProject', $project);
-        $urlVerification->setReturnValue('getProjectManager', $projectManager);
-
-        $urlVerification->expectNever('exitError');
-        $urlVerification->expectNever('displayRestrictedUserError');
-        $urlVerification->expectNever('displayPrivateProjectError');
-
-        $urlVerification->assertValidUrl(array('SCRIPT_NAME' => '/api/'), $this->request);
-    }
-
-    function testCheckNotActiveProjectError() {
-        $urlVerification = partial_mock('URLVerification', array('getProjectManager', 'exitError', 'displayRestrictedUserError', 'displayPrivateProjectError'));
-        $GLOBALS['group_id'] = 1;
-        $project = new MockProject();
-        stub($project)->isActive()->returns(false);
-        stub($project)->isPublic()->returns(true);
-        $projectManager = new MockProjectManager();
-        $projectManager->setReturnValue('getProject', $project);
-        $urlVerification->setReturnValue('getProjectManager', $projectManager);
-
-        $urlVerification->expectOnce('exitError');
-        $urlVerification->expectNever('displayRestrictedUserError');
-        $urlVerification->expectNever('displayPrivateProjectError');
-
-        $urlVerification->assertValidUrl(array('SCRIPT_NAME' => '/some_service/?group_id=1', 'REQUEST_URI' => '/some_service/?group_id=1'), $this->request);
-    }
-
-    function testCheckNotActiveProjectNoError() {
-        $urlVerification = partial_mock('URLVerification', array('getProjectManager', 'exitError', 'displayRestrictedUserError', 'displayPrivateProjectError'));
-        $GLOBALS['group_id'] = 1;
-        $project = new MockProject();
-        stub($project)->isPublic()->returns(true);
-        stub($project)->isActive()->returns(true);
-        $projectManager = new MockProjectManager();
-        $projectManager->setReturnValue('getProject', $project);
-        $urlVerification->setReturnValue('getProjectManager', $projectManager);
-
-        $urlVerification->expectNever('exitError');
-        $urlVerification->expectNever('displayRestrictedUserError');
-        $urlVerification->expectNever('displayPrivateProjectError');
-
-        $urlVerification->assertValidUrl(array('SCRIPT_NAME' => '/some_service/?group_id=1', 'REQUEST_URI' => '/some_service/?group_id=1'), $this->request);
-    }
-
-    function testUserCanAccessPrivateShouldLetUserPassWhenNotInAProject() {
-        $urlVerification = TestHelper::getPartialMock('URLVerification', array('getProjectManager', 'exitError', 'displayRestrictedUserError', 'displayPrivateProjectError', 'getUrl'));
-
-        stub($urlVerification)->getUrl()->returns(mock('URL'));
-
-        $urlVerification->expectNever('exitError');
-        $urlVerification->expectNever('displayRestrictedUserError');
-        $urlVerification->expectNever('displayPrivateProjectError');
-
-        $urlVerification->assertValidUrl(array('SCRIPT_NAME' => '/stuff', 'REQUEST_URI' => '/stuff'), $this->request);
-    }
-
-    function testUserCanAccessPrivateShouldLetUserPassWhenProjectIsPublic() {
-        $urlVerification = TestHelper::getPartialMock('URLVerification', array('getProjectManager', 'exitError', 'displayRestrictedUserError', 'displayPrivateProjectError'));
-        $GLOBALS['group_id'] = 120;
-        $project = new MockProject();
-        $project->setReturnValue('isError', false);
-        $project->setReturnValue('isActive', true);
-        $project->setReturnValue('isPublic', true);
-        $projectManager = new MockProjectManager();
-        $projectManager->setReturnValue('getProject', $project);
-        $urlVerification->setReturnValue('getProjectManager', $projectManager);
-
-        $urlVerification->expectNever('exitError');
-        $urlVerification->expectNever('displayRestrictedUserError');
-        $urlVerification->expectNever('displayPrivateProjectError');
-
-        $urlVerification->assertValidUrl(array('SCRIPT_NAME' => '/stuff', 'REQUEST_URI' => '/stuff'), $this->request);
-    }
-
     function testRestrictedUserCanAccessSearchOnTracker() {
         $_REQUEST['type_of_search'] = 'tracker';
         $urlVerification = TestHelper::getPartialMock('URLVerification', array('getUrl', 'getCurrentUser', 'displayRestrictedUserError'));
@@ -543,10 +382,11 @@ class URLVerification_RedirectionTests extends URLVerificationBaseTest {
 
     function testRestrictedUserCanNotAccessSearchOnPeople() {
         $_REQUEST['type_of_search'] = 'people';
+
         $urlVerification = TestHelper::getPartialMock('URLVerification', array('getUrl', 'getCurrentUser', 'displayRestrictedUserError'));
         $GLOBALS['group_id'] = 120;
 
-        $urlVerification->setReturnValue('getUrl', '/search/');
+        $urlVerification->setReturnValue('getUrl', Mockery::mock(URL::class));
 
         $user = new MockPFUser();
         $user->setReturnValue('isRestricted', true);
@@ -568,7 +408,7 @@ class URLVerification_RedirectionTests extends URLVerificationBaseTest {
         $urlVerification = TestHelper::getPartialMock('URLVerification', array('getUrl', 'getCurrentUser', 'displayRestrictedUserError'));
         $GLOBALS['group_id'] = 120;
 
-        $urlVerification->setReturnValue('getUrl', '/search/');
+        $urlVerification->setReturnValue('getUrl', Mockery::mock(URL::class));
 
         $user = new MockPFUser();
         $user->setReturnValue('isRestricted', true);
@@ -590,7 +430,7 @@ class URLVerification_RedirectionTests extends URLVerificationBaseTest {
         $urlVerification = TestHelper::getPartialMock('URLVerification', array('getUrl', 'getCurrentUser', 'displayRestrictedUserError'));
         $GLOBALS['group_id'] = 120;
 
-        $urlVerification->setReturnValue('getUrl', '/search/');
+        $urlVerification->setReturnValue('getUrl', Mockery::mock(URL::class));
 
         $user = new MockPFUser();
         $user->setReturnValue('isRestricted', true);
@@ -611,7 +451,7 @@ class URLVerification_RedirectionTests extends URLVerificationBaseTest {
     {
         $user = Mockery::spy(PFUser::class);
 
-        $url_verification = Mockery::mock(TestURL_VERIFACTION::class)->makePartial();
+        $url_verification = Mockery::mock(URLVerification::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
         $url = Mockery::mock(URL::class);
         $url->shouldReceive('getGroupIdFromUrl')->andReturn(101);
@@ -674,12 +514,6 @@ class URLVerification_RedirectionTests extends URLVerificationBaseTest {
         } else {
             unset($_SERVER['REQUEST_URI']);
         }
-    }
-}
-
-class TestURL_VERIFACTION extends URLVerification {
-    public function restrictedUserCanAccessUrl($user, $url, $request_uri) {
-        return parent::restrictedUserCanAccessUrl($user, $url, $request_uri);
     }
 }
 

@@ -53,7 +53,6 @@ class FrontRouterTest extends TestCase
         $this->logger  = Mockery::mock(\Logger::class);
         $this->error_rendering = Mockery::mock(ErrorRendering::class);
 
-
         $this->router = new FrontRouter(
             $this->route_collector,
             $this->url_verification_factory,
@@ -133,7 +132,7 @@ class FrontRouterTest extends TestCase
         $handler->shouldReceive('process')->with($this->request, $this->layout, [])->once();
 
         $url_verification = Mockery::mock(\URLVerification::class);
-        $url_verification->shouldReceive('assertValidUrl')->with(Mockery::any(), $this->request)->once();
+        $url_verification->shouldReceive('assertValidUrl')->with(Mockery::any(), $this->request, null)->once();
         $this->url_verification_factory->shouldReceive('getURLVerification')->andReturn($url_verification);
 
         $this->route_collector->shouldReceive('collect')->with(Mockery::on(function (FastRoute\RouteCollector $r) use ($handler) {
@@ -155,7 +154,66 @@ class FrontRouterTest extends TestCase
         $handler = new \stdClass();
 
         $url_verification = Mockery::mock(\URLVerification::class);
-        $url_verification->shouldReceive('assertValidUrl')->with(Mockery::any(), $this->request)->once();
+        $url_verification->shouldReceive('assertValidUrl')->with(Mockery::any(), $this->request, null)->once();
+        $this->url_verification_factory->shouldReceive('getURLVerification')->andReturn($url_verification);
+
+        $this->route_collector->shouldReceive('collect')->with(Mockery::on(function (FastRoute\RouteCollector $r) use ($handler) {
+            $r->get('/stuff', function () use ($handler) {
+                return $handler;
+            });
+            return true;
+        }));
+
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_SERVER['REQUEST_URI']    = '/stuff';
+
+        $this->logger->shouldReceive('error')->once();
+        $this->error_rendering->shouldReceive('rendersErrorWithException')->once()->with(
+            Mockery::any(),
+            500,
+            Mockery::any(),
+            Mockery::any(),
+            Mockery::any()
+        );
+
+        $this->router->route($this->request, $this->layout);
+    }
+
+    public function testItDispatchWithProject()
+    {
+        $handler = \Mockery::mock(DispatchableWithRequest::class.', '.DispatchableWithProject::class);
+        $handler->shouldReceive('process')->with($this->request, $this->layout, [])->once();
+
+        $project = \Mockery::mock(\Project::class);
+        $handler->shouldReceive('getProject')->andReturn($project);
+
+        $url_verification = Mockery::mock(\URLVerification::class);
+        $url_verification->shouldReceive('assertValidUrl')->with(Mockery::any(), $this->request, $project)->once();
+        $this->url_verification_factory->shouldReceive('getURLVerification')->andReturn($url_verification);
+
+        $this->route_collector->shouldReceive('collect')->with(Mockery::on(function (FastRoute\RouteCollector $r) use ($handler) {
+            $r->get('/stuff', function () use ($handler) {
+                return $handler;
+            });
+            return true;
+        }));
+
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_SERVER['REQUEST_URI']    = '/stuff';
+
+        $this->router->route($this->request, $this->layout);
+    }
+
+
+    public function testItRaisesAnErrorWhenDispatchWithProjectWithoutProject()
+    {
+        $handler = \Mockery::mock(DispatchableWithRequest::class.', '.DispatchableWithProject::class);
+        $handler->shouldReceive('process')->never();
+
+        $handler->shouldReceive('getProject')->andReturn(null);
+
+        $url_verification = Mockery::mock(\URLVerification::class);
+        $url_verification->shouldReceive('assertValidUrl')->never();
         $this->url_verification_factory->shouldReceive('getURLVerification')->andReturn($url_verification);
 
         $this->route_collector->shouldReceive('collect')->with(Mockery::on(function (FastRoute\RouteCollector $r) use ($handler) {

@@ -24,9 +24,9 @@ use HTTPRequest;
 use Project;
 use TemplateRendererFactory;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Request\NotFoundException;
+use Tuleap\Request;
 
-class GitRepositoryListController implements \Tuleap\Request\DispatchableWithRequest
+class GitRepositoryListController implements Request\DispatchableWithRequest, Request\DispatchableWithProject
 {
 
     /**
@@ -41,6 +41,10 @@ class GitRepositoryListController implements \Tuleap\Request\DispatchableWithReq
      * @var \GitPermissionsManager
      */
     private $git_permissions_manager;
+    /**
+     * @var Project
+     */
+    private $project;
 
     public function __construct(
         \ProjectManager $project_manager,
@@ -53,33 +57,43 @@ class GitRepositoryListController implements \Tuleap\Request\DispatchableWithReq
     }
 
     /**
+     * @param HTTPRequest $request
+     * @param array $variables
+     *
+     * @throws Request\NotFoundException
+     *
+     * @return null|Project
+     */
+    public function getProject(HTTPRequest $request, array $variables)
+    {
+        $this->project = $this->project_manager->getProjectByCaseInsensitiveUnixName($variables['project_name']);
+        if (! $this->project || $this->project->isError()) {
+            throw new Request\NotFoundException(dgettext("tuleap-git", "Project not found."));
+        }
+        return $this->project;
+    }
+
+    /**
      * Is able to process a request routed by FrontRouter
      *
      * @param HTTPRequest $request
      * @param BaseLayout  $layout
      * @param array       $variables
      *
-     * @throws NotFoundException
      * @return void
      */
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         \Tuleap\Project\ServiceInstrumentation::increment('git');
 
-        $project = $this->project_manager->getProjectByCaseInsensitiveUnixName($variables['project_name']);
-
-        if (! $project) {
-            throw new \Tuleap\Request\NotFoundException(dgettext("tuleap-git", "Project not found."));
-        }
-
-        $this->displayHeader(dgettext('tuleap-git', 'Git repositories'), $project);
+        $this->displayHeader(dgettext('tuleap-git', 'Git repositories'), $this->project);
         $renderer = TemplateRendererFactory::build()->getRenderer(GIT_TEMPLATE_DIR);
 
         $renderer->renderToPage(
             'repositories/repository-list',
             new GitRepositoryListPresenter(
-                $project,
-                $this->git_permissions_manager->userIsGitAdmin($request->getCurrentUser(), $project)
+                $this->project,
+                $this->git_permissions_manager->userIsGitAdmin($request->getCurrentUser(), $this->project)
             )
         );
 

@@ -253,8 +253,8 @@ class URLVerification {
         $user = $this->getCurrentUser();
         if ($user->isRestricted()) {
             $url = $this->getUrl();
-            if (!$this->restrictedUserCanAccessUrl($user, $url, $server['REQUEST_URI'])) {
-                $this->displayRestrictedUserError($url);
+            if (!$this->restrictedUserCanAccessUrl($user, $url, $server['REQUEST_URI'], null)) {
+                $this->displayRestrictedUserError($url, $user);
             }
         }
     }
@@ -267,14 +267,18 @@ class URLVerification {
      * @param String $request_uri
      * @return Boolean False if user not allowed to see the content
      */
-    protected function restrictedUserCanAccessUrl($user, $url, $request_uri) {
+    protected function restrictedUserCanAccessUrl($user, $url, $request_uri, Project $project = null) {
         // This assume that we already checked that project is accessible to restricted prior to function call.
         // Hence, summary page is ALWAYS accessible
         if (strpos($request_uri, '/projects/') !== false) {
             return true;
         }
 
-        $group_id =  (isset($GLOBALS['group_id'])) ? $GLOBALS['group_id'] : $url->getGroupIdFromUrl($request_uri);
+        if ($project !== null) {
+            $group_id = $project->getID();
+        } else {
+            $group_id =  (isset($GLOBALS['group_id'])) ? $GLOBALS['group_id'] : $url->getGroupIdFromUrl($request_uri);
+        }
 
         // Make sure the URI starts with a single slash
         $req_uri='/'.trim($request_uri, "/");
@@ -432,9 +436,9 @@ class URLVerification {
      * 
      * @return void
      */
-    function displayRestrictedUserError($url) {
+    function displayRestrictedUserError(URL $url, PFUser $user, Project $project = null) {
         $error = new Error_PermissionDenied_RestrictedUser($url);
-        $error->buildInterface();
+        $error->buildInterface($user, $project);
         exit;
     }
     
@@ -445,10 +449,10 @@ class URLVerification {
      * 
      * @return void
      */
-    function displayPrivateProjectError($url) {
+    function displayPrivateProjectError(URL $url, PFUser $user, Project $project = null) {
         $GLOBALS['Response']->send401UnauthorizedHeader();
         $sendMail = new Error_PermissionDenied_PrivateProject($url);
-        $sendMail->buildInterface();
+        $sendMail->buildInterface($user, $project);
         exit;
     }
 
@@ -465,7 +469,7 @@ class URLVerification {
      *
      * @return void
      */
-    public function assertValidUrl($server, HTTPRequest $request) {
+    public function assertValidUrl($server, HTTPRequest $request, Project $project = null) {
         if (!$this->isException($server)) {
             $this->verifyProtocol($request);
             $this->verifyRequest($server);
@@ -483,19 +487,30 @@ class URLVerification {
                     $password_expiration_checker->checkPasswordLifetime($user);
                 }
 
-                $group_id = (isset($GLOBALS['group_id'])) ? $GLOBALS['group_id'] : $url->getGroupIdFromUrl($server['REQUEST_URI']);
-                if ($group_id) {
-                    $project = $this->getProjectManager()->getProject($group_id);
+                if (! $project) {
+                    $group_id = (isset($GLOBALS['group_id'])) ? $GLOBALS['group_id'] : $url->getGroupIdFromUrl($server['REQUEST_URI']);
+                    if ($group_id) {
+                        $project = $this->getProjectManager()->getProject($group_id);
+                    }
+                }
+                if ($project) {
                     $this->userCanAccessProject($user, $project);
                 } else {
                     $this->checkRestrictedAccess($server);
                 }
+
                 return true;
 
             } catch (Project_AccessRestrictedException $exception) {
-                $this->displayRestrictedUserError($url);
+                if (! isset($project)) {
+                    $project = null;
+                }
+                $this->displayRestrictedUserError($url, $user, $project);
             } catch (Project_AccessPrivateException $exception) {
-                $this->displayPrivateProjectError($url);
+                if (! isset($project)) {
+                    $project = null;
+                }
+                $this->displayPrivateProjectError($url, $user, $project);
             } catch (Project_AccessProjectNotFoundException $exception) {
                 $this->exitError(
                     $GLOBALS['Language']->getText('include_html','g_not_exist'),
@@ -546,8 +561,8 @@ class URLVerification {
         } elseif ($this->getPermissionsOverriderManager()->doesOverriderAllowUserToAccessProject($user, $project)) {
             return true;
         } elseif ($user->isRestricted()) {
-            if ( ! $project->allowsRestricted() || ! $this->restrictedUserCanAccessUrl($user, $this->getUrl(),
-                    $_SERVER['REQUEST_URI'])) {
+            if ( ! $project->allowsRestricted() ||
+                ! $this->restrictedUserCanAccessUrl($user, $this->getUrl(), $_SERVER['REQUEST_URI'], $project)) {
                 throw new Project_AccessRestrictedException();
             }
             return true;

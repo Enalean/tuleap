@@ -146,12 +146,6 @@ class Git_URL {
             return;
         }
 
-        $this->project = $this->project_manager->getProjectByCaseInsensitiveUnixName($this->matches['project_name']);
-        if (! $this->project) {
-            return;
-        }
-
-
         $this->repository = $this->repository_factory->getByProjectNameAndPath(
             $this->matches['project_name'],
             $this->matches['path'].'.git'
