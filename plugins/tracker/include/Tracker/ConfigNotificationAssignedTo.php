@@ -34,7 +34,7 @@ class ConfigNotificationAssignedTo {
      */
     public function isAssignedToSubjectEnabled(Tracker $tracker) {
         $row = $this->dao->searchConfigurationAssignedTo($tracker->getId())->getRow();
-        return $row !== false && $row !== null;
+        return $row !== false;
     }
 
     public function enableAssignedToInSubject(Tracker $tracker)

@@ -143,13 +143,19 @@ final class CompatPDODataAccessResult implements LegacyDataAccessResultInterface
     public function current()
     {
         if ($this->result_iterator === null) {
-            return -1;
-        }
-        if ($this->instance_callback) {
-            return call_user_func_array($this->instance_callback, array($this->result_iterator->current()));
+            return false;
         }
 
-        return $this->result_iterator->current();
+        $row = false;
+        if ($this->result_iterator->current() !== null) {
+            $row = $this->result_iterator->current();
+        }
+
+        if ($this->instance_callback) {
+            return call_user_func_array($this->instance_callback, array($row));
+        }
+
+        return $row;
     }
 
     /**
