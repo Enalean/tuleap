@@ -24,6 +24,9 @@ msgstr "Caractères autorisés : a-zA-Z0-9/_.-"
 msgid "Cancel"
 msgstr "Annuler"
 
+msgid "Close"
+msgstr "Fermer"
+
 msgid "Empty description"
 msgstr "Description vide"
 
@@ -42,14 +45,33 @@ msgstr "Aller à l'administration du dépôt"
 msgid "Project has no Git repositories yet."
 msgstr "Le projet n'a aucun dépôt Git pour l'instant"
 
+msgid "Project not found"
+msgstr "Projet non trouvé"
+
 msgid "Repository list"
 msgstr "Liste des dépôts"
 
 msgid "Repository name"
 msgstr "Nom du dépôt"
 
+msgid ""
+"Repository name is not well formatted or is already used. Allowed "
+"characters: a-zA-Z0-9/_.- and max length is 255, no slashes at the beginning "
+"or the end, it also must not finish with \".git\"."
+msgstr ""
+"Le nom du dépôt n'est pas correct ou est déjà utilisé. Caractères "
+"autorisés : a-zA-Z0-9/_.-, la longueur maximale est de 255 caractères, pas "
+"de slash au début ou à la fin, le nom ne doit pas finir avec \".git\" non "
+"plus."
+
 msgid "Something went wrong, please check your network connection"
 msgstr "Quelque chose s'est mal passé, merci de vérifer votre connexion réseau"
+
+msgid ""
+"You don't have permission to create Git repositories as you are not Git "
+"administrator."
+msgstr "Vous n'avez pas la permission de créer de dépôts git comme vous n'êtes pas"
+" administrateur du service Git."
 
 msgid "max length is 255"
 msgstr "longueur maximale 255"
@@ -57,4 +79,4 @@ msgstr "longueur maximale 255"
 msgid ""
 "no slashes at the beginning or the end, it also must not finish with \".git"
 msgstr ""
-"pas de slashes au début ou à la fin, ça ne doit aussi pas finir avec \".git"
+"pas de slashes au début ou à la fin, le nom ne doit aussi pas finir avec \".git"

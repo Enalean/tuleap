@@ -17,6 +17,9 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
+msgid "Close"
+msgstr ""
+
 msgid "Empty description"
 msgstr ""
 
@@ -35,13 +38,27 @@ msgstr ""
 msgid "Project has no Git repositories yet."
 msgstr ""
 
+msgid "Project not found"
+msgstr ""
+
 msgid "Repository list"
 msgstr ""
 
 msgid "Repository name"
 msgstr ""
 
+msgid ""
+"Repository name is not well formatted or is already used. Allowed "
+"characters: a-zA-Z0-9/_.- and max length is 255, no slashes at the beginning "
+"or the end, it also must not finish with \".git\"."
+msgstr ""
+
 msgid "Something went wrong, please check your network connection"
+msgstr ""
+
+msgid ""
+"You don't have permission to create Git repositories as you are not Git "
+"administrator."
 msgstr ""
 
 msgid "max length is 255"

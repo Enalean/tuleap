@@ -23,8 +23,12 @@
         <div class="tlp-framed">
             <h1 v-translate>Git repositories</h1>
 
-            <button type="button" class="tlp-button-primary git-repository-list-create-repository-button" v-on:click="show_modal"
-                    data-target="create-repository-modal">
+            <button type="button"
+                    class="tlp-button-primary git-repository-list-create-repository-button"
+                    v-on:click="show_modal"
+                    v-if="is_admin"
+                    data-target="create-repository-modal"
+            >
                 <i class="fa fa-plus tlp-button-icon"></i>
                 <translate>Add repository</translate>
             </button>
@@ -55,7 +59,7 @@ import GitBreadcrumbs from "./GitBreadcrumbs.vue";
 import GitRepository from "./GitRepository.vue";
 import { getRepositoryList } from "./rest-querier.js";
 import { modal as tlpModal } from "tlp";
-import { getProjectId } from "./repository-list-presenter.js";
+import { getProjectId, getUserIsAdmin } from "./repository-list-presenter.js";
 
 export default {
     name: "GitRepositoriesList",
@@ -102,6 +106,9 @@ export default {
     computed: {
         show_empty_state() {
             return this.repositories.length === 0 && !this.is_loading && !this.error;
+        },
+        is_admin() {
+            return getUserIsAdmin()
         }
     }
 };
