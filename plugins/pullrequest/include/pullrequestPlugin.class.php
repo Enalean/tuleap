@@ -358,9 +358,6 @@ class pullrequestPlugin extends Plugin
             if ($new_rev == '0000000000000000000000000000000000000000') {
                 $this->abandonFromSourceBranch($user, $repository, $branch_name);
             } else {
-                $git_reference_dao                  = new GitPullRequestReferenceDAO;
-                $git_namespace_availability_checker = new GitPullRequestReferenceNamespaceAvailabilityChecker;
-
                 $pull_request_updater = new PullRequestUpdater(
                     $this->getPullRequestFactory(),
                     new PullRequestMerger(),
@@ -370,9 +367,8 @@ class pullrequestPlugin extends Plugin
                     $this->getTimelineEventCreator(),
                     $this->getRepositoryFactory(),
                     new GitPullRequestReferenceUpdater(
-                        $git_reference_dao,
-                        new GitPullRequestReferenceCreator($git_reference_dao, $git_namespace_availability_checker),
-                        $git_namespace_availability_checker
+                        new GitPullRequestReferenceDAO(),
+                        new GitPullRequestReferenceNamespaceAvailabilityChecker()
                     )
                 );
                 $pull_request_updater->updatePullRequests($user, $git_exec, $repository, $branch_name, $new_rev);
@@ -607,14 +603,12 @@ class pullrequestPlugin extends Plugin
 
     public function dailyExecution()
     {
-        $pull_request_git_reference_dao            = new GitPullRequestReferenceDAO;
-        $git_namespace_availability_checker        = new GitPullRequestReferenceNamespaceAvailabilityChecker;
+        $pull_request_git_reference_dao            = new GitPullRequestReferenceDAO();
         $pull_request_git_reference_bulk_converter = new GitPullRequestReferenceBulkConverter(
             $pull_request_git_reference_dao,
             new GitPullRequestReferenceUpdater(
                 $pull_request_git_reference_dao,
-                new GitPullRequestReferenceCreator($pull_request_git_reference_dao, $git_namespace_availability_checker),
-                $git_namespace_availability_checker
+                new GitPullRequestReferenceNamespaceAvailabilityChecker()
             ),
             $this->getPullRequestFactory(),
             $this->getRepositoryFactory(),
