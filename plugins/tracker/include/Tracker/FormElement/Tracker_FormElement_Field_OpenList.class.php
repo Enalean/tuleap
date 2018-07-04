@@ -634,6 +634,17 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
     }
 
     /**
+     * Get the "from" statement to retrieve field values
+     * You can join on artifact AS a, tracker_changeset AS c
+     * which tables used to retrieve the last changeset of matching artifacts.
+     * @return string
+     */
+    public function getQueryFromWithDecorator()
+    {
+        return $this->getBind()->getQueryFromWithDecorator('tracker_changeset_value_openlist');
+    }
+
+    /**
      * Get the "where" statement to allow search with this field
      *
      * @see getCriteriaFrom
