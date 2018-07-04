@@ -24,6 +24,9 @@ export { getRepositoryList };
 async function getRepositoryList(project_id) {
     let repository_list = await recursiveGet("/api/projects/" + project_id + "/git", {
         params: {
+            query: JSON.stringify({
+                scope: "project"
+            }),
             limit: 50,
             offset: 0
         },

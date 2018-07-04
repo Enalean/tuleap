@@ -702,8 +702,20 @@ class GitDao extends \Tuleap\DB\DataAccessObject
         return true;
     }
 
-    public function getPaginatedOpenRepositories($project_id, $limit, $offset)
+    public function getPaginatedOpenRepositories($project_id, $scope, $limit, $offset)
     {
+        if ($scope) {
+            $sql = 'SELECT *
+                FROM plugin_git
+                WHERE repository_deletion_date IS NULL
+                AND project_id = ?
+                AND repository_scope = ?
+                LIMIT ?
+                OFFSET ?';
+
+            return $this->getDB()->run($sql, $project_id, $scope, $limit, $offset);
+        }
+
         $sql = 'SELECT *
                 FROM plugin_git
                 WHERE repository_deletion_date IS NULL
