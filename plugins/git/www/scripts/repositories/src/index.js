@@ -22,7 +22,7 @@ import GetTextPlugin from "vue-gettext";
 import french_translations from "../po/fr.po";
 import GitRepositoriesList from "./GitRepositoriesList.vue";
 import { setUrls } from "./breadcrumb-presenter.js";
-import { setProjectId } from "./repository-list-presenter.js";
+import { setProjectId, setUserIsAdmin } from "./repository-list-presenter.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     Vue.use(GetTextPlugin, {
@@ -44,11 +44,13 @@ document.addEventListener("DOMContentLoaded", () => {
             repositoriesAdministrationUrl,
             repositoryListUrl,
             repositoriesForkUrl,
-            projectId
+            projectId,
+            isAdmin
         } = rootComponent.dataset;
 
         setUrls(repositoriesAdministrationUrl, repositoryListUrl, repositoriesForkUrl);
         setProjectId(projectId);
+        setUserIsAdmin(isAdmin);
 
         new repositoryList().$mount(rootComponent);
     }

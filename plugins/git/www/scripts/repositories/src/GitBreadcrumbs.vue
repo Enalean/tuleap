@@ -29,10 +29,10 @@
                 <translate>Git repositories</translate>
             </a>
             <nav class="breadcrumb-switch-menu">
-                <span class="breadcrumb-dropdown-item">
+                <span class="breadcrumb-dropdown-item" v-if="is_admin">
                     <a class="breadcrumb-dropdown-link"
                        v-bind:href="repository_admin_url"
-                       v-bind:title="administration_tilte">
+                       v-bind:title="administration_title">
                        <i class="fa fa-cog fa-fw"></i> <translate>Administration</translate>
                     </a>
                 </span>
@@ -48,29 +48,37 @@
     </nav>
 </template>
 <script>
-    import { getAdministrationUrl, getForkRepositoriesUrl, getRepositoryListUrl } from './breadcrumb-presenter.js'
+import {
+    getAdministrationUrl,
+    getForkRepositoriesUrl,
+    getRepositoryListUrl
+} from "./breadcrumb-presenter.js";
+import { getUserIsAdmin } from "./repository-list-presenter";
 
-    export default {
-        name: 'GitBreadcrumbs',
-        computed: {
-            repositories_title() {
-                return this.$gettext("Repository list");
-            },
-            administration_tilte() {
-                return this.$gettext("Administration");
-            },
-            fork_title() {
-                return this.$gettext("Fork repositories");
-            },
-            repository_list_url() {
-                return getRepositoryListUrl();
-            },
-            repository_admin_url() {
-                return getAdministrationUrl();
-            },
-            repository_fork_url() {
-                return getForkRepositoriesUrl();
-            }
+export default {
+    name: "GitBreadcrumbs",
+    computed: {
+        repositories_title() {
+            return this.$gettext("Repository list");
+        },
+        administration_title() {
+            return this.$gettext("Administration");
+        },
+        fork_title() {
+            return this.$gettext("Fork repositories");
+        },
+        repository_list_url() {
+            return getRepositoryListUrl();
+        },
+        repository_admin_url() {
+            return getAdministrationUrl();
+        },
+        repository_fork_url() {
+            return getForkRepositoriesUrl();
+        },
+        is_admin() {
+            return getUserIsAdmin();
         }
     }
+};
 </script>

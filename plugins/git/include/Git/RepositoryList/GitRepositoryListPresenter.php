@@ -26,8 +26,12 @@ class GitRepositoryListPresenter
     public $repositories_fork_url;
     public $repositories_list_url;
     public $project_id;
+    /**
+     * @var bool
+     */
+    public $is_admin;
 
-    public function __construct(\Project $project)
+    public function __construct(\Project $project, $is_git_administrator)
     {
         $this->repositories_administration_url = GIT_BASE_URL . "/?" . http_build_query(
             [
@@ -44,5 +48,6 @@ class GitRepositoryListPresenter
 
         $this->repositories_list_url = GIT_BASE_URL . "/" . urlencode($project->getUnixNameLowerCase()) . "/";
         $this->project_id            = $project->getID();
+        $this->is_admin              = $is_git_administrator;
     }
 }

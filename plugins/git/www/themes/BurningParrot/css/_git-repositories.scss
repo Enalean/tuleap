@@ -39,13 +39,11 @@
     min-width: 500px;
     max-height: 100%;
     margin: 0 $tlp-spacing $tlp-spacing 0;
-    border: 1px solid $tlp-swatch-firemist-silver;
     cursor: pointer;
 }
 
 .git-repository-card:hover {
     border: 1px solid $tlp-theme-color;
-    text-decoration: none;
 }
 
 .git-repository-list-loading {
@@ -69,7 +67,15 @@
 
 .git-repository-card-description {
     overflow: hidden;
-    color: $tlp-swatch-firemist-silver;
+    color: transparentize($tlp-ui-dimmed, .5);
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.git-repository-card-admin-link {
+    color: transparentize($tlp-ui-dimmed, .5);
+}
+
+.git-repository-card-admin-link:hover {
+    color: $tlp-theme-color;
 }

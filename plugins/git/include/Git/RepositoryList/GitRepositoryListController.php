@@ -24,7 +24,6 @@ use HTTPRequest;
 use Project;
 use TemplateRendererFactory;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 
 class GitRepositoryListController implements \Tuleap\Request\DispatchableWithRequest
@@ -38,11 +37,19 @@ class GitRepositoryListController implements \Tuleap\Request\DispatchableWithReq
      * @var \GitRepositoryFactory
      */
     private $repository_factory;
+    /**
+     * @var \GitPermissionsManager
+     */
+    private $git_permissions_manager;
 
-    public function __construct(\ProjectManager $project_manager, \GitRepositoryFactory $repository_factory)
-    {
-        $this->project_manager = $project_manager;
-        $this->repository_factory = $repository_factory;
+    public function __construct(
+        \ProjectManager $project_manager,
+        \GitRepositoryFactory $repository_factory,
+        \GitPermissionsManager $git_permissions_manager
+    ) {
+        $this->project_manager         = $project_manager;
+        $this->repository_factory      = $repository_factory;
+        $this->git_permissions_manager = $git_permissions_manager;
     }
 
     /**
@@ -68,7 +75,13 @@ class GitRepositoryListController implements \Tuleap\Request\DispatchableWithReq
         $this->displayHeader(dgettext('tuleap-git', 'Git repositories'), $project);
         $renderer = TemplateRendererFactory::build()->getRenderer(GIT_TEMPLATE_DIR);
 
-        $renderer->renderToPage('repositories/repository-list', new GitRepositoryListPresenter($project));
+        $renderer->renderToPage(
+            'repositories/repository-list',
+            new GitRepositoryListPresenter(
+                $project,
+                $this->git_permissions_manager->userIsGitAdmin($request->getCurrentUser(), $project)
+            )
+        );
 
         site_project_footer([]);
     }
