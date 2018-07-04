@@ -101,6 +101,27 @@ class ChangesetValueComputedXMLExporterTest extends \TuleapTestCase
         $this->assertFalse(isset($field_change->is_autocomputed));
     }
 
+    public function itExportsLastChangesetAsAManualValueInArchiveModeIfLastChangesetSwitchToManualValue()
+    {
+        $exporter                 = new ChangesetValueComputedXMLExporter($this->user, true);
+        $changeset_value          = new ChangesetValueComputed(2, $this->changeset, $this->field, true, 1.5, true);
+        $previous_changeset       = mock(Tracker_Artifact_Changeset::class);
+        $previous_changeset_value = new ChangesetValueComputed(1, $this->changeset, $this->field, true, null, false);
+
+        stub($this->artifact)->getLastChangeset()->returns($this->changeset);
+        stub($this->artifact)->getPreviousChangeset()->returns($previous_changeset);
+        stub($this->artifact)->getChangesets()->returns([$previous_changeset, $this->changeset]);
+        stub($this->changeset)->getValue()->returns($changeset_value);
+        stub($previous_changeset)->getValue()->returns($previous_changeset_value);
+        stub($this->field)->getComputedValue()->returns(1.5);
+
+        $exporter->export($this->artifact_xml, $this->changeset_value_xml, $this->artifact, $changeset_value);
+
+        $field_change = $this->changeset_value_xml->field_change;
+        $this->assertEqual($field_change->manual_value, 1.5);
+        $this->assertFalse(isset($field_change->is_autocomputed));
+    }
+
     public function itOnlyExportsLastChangesetAsAManualValueInArchiveMode()
     {
         $current_changeset = mock(Tracker_Artifact_Changeset::class);
