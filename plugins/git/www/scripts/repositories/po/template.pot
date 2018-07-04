@@ -35,9 +35,6 @@ msgstr ""
 msgid "Go to repository administration"
 msgstr ""
 
-msgid "Project has no Git repositories yet."
-msgstr ""
-
 msgid "Project not found"
 msgstr ""
 
@@ -54,6 +51,9 @@ msgid ""
 msgstr ""
 
 msgid "Something went wrong, please check your network connection"
+msgstr ""
+
+msgid "There are no repositories in this project"
 msgstr ""
 
 msgid ""

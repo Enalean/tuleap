@@ -53,7 +53,7 @@
             >
             <p class="tlp-text-info">
                 <i class="fa fa-info-circle"></i> {{ repositoryPattern }}
-                {{ repositoryMaxLenght }}
+                {{ repositoryMaxLength }}
                 {{ repositoryRules }}
             </p>
         </div>
@@ -91,7 +91,7 @@ export default {
         repositoryPattern() {
             return this.$gettext("Allowed characters: a-zA-Z0-9/_.-");
         },
-        repositoryMaxLenght() {
+        repositoryMaxLength() {
             return this.$gettext("max length is 255");
         },
         repositoryRules() {
@@ -101,7 +101,7 @@ export default {
         },
         closeLabel() {
             return this.$gettext("Close");
-        },
+        }
     },
     methods: {
         async createRepository() {
@@ -116,7 +116,9 @@ export default {
                         'Repository name is not well formatted or is already used. Allowed characters: a-zA-Z0-9/_.- and max length is 255, no slashes at the beginning or the end, it also must not finish with ".git".'
                     );
                 } else if (error_code === 401) {
-                    this.error = this.$gettext("You don't have permission to create Git repositories as you are not Git administrator.");
+                    this.error = this.$gettext(
+                        "You don't have permission to create Git repositories as you are not Git administrator."
+                    );
                 } else if (error_code === 404) {
                     this.error = this.$gettext("Project not found");
                 } else {
@@ -129,5 +131,5 @@ export default {
             }
         }
     }
-}
+};
 </script>
