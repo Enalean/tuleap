@@ -38,6 +38,9 @@ msgstr ""
 msgid "Last update %{ formatted_last_update_date }"
 msgstr ""
 
+msgid "No repository name matching your query has been found."
+msgstr ""
+
 msgid "Project not found"
 msgstr ""
 
