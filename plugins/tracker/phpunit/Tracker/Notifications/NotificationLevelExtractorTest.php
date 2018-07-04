@@ -22,32 +22,78 @@ namespace Tuleap\Tracker\Notifications;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
+use HTTPRequest;
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tracker;
 
 class NotificationLevelExtractorTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     public function testItReturnsDefaultValueWhenValueIsNotAPossibleValueForNotificationLevel()
     {
+        $request = Mockery::mock(HTTPRequest::class);
+        $request->shouldReceive('exist')->with('disable_notifications')->once()->andReturn(false);
+        $request->shouldReceive('exist')->with('enable_notifications')->once()->andReturn(false);
+        $request->shouldReceive('get')->with('notifications_level')->once()->andReturn('900');
+
         $notification_level_extractor = new NotificationLevelExtractor();
-        $notification = $notification_level_extractor->extractNotificationLevel(900);
+        $notification = $notification_level_extractor->extractNotificationLevel($request);
 
         $this->assertEquals(Tracker::NOTIFICATIONS_LEVEL_DEFAULT, $notification);
     }
 
-    public function testItReturnsDefaultValueWhenDefaultValueIsProvide()
+    public function testItReturnsDefaultValueWhenDefaultValueIsProvided()
     {
+        $request = Mockery::mock(HTTPRequest::class);
+        $request->shouldReceive('exist')->with('disable_notifications')->once()->andReturn(false);
+        $request->shouldReceive('exist')->with('enable_notifications')->once()->andReturn(false);
+        $request->shouldReceive('get')->with('notifications_level')->once()->andReturn(Tracker::NOTIFICATIONS_LEVEL_DEFAULT);
+
         $notification_level_extractor = new NotificationLevelExtractor();
-        $notification = $notification_level_extractor->extractNotificationLevel(Tracker::NOTIFICATIONS_LEVEL_DEFAULT);
+        $notification = $notification_level_extractor->extractNotificationLevel($request);
 
         $this->assertEquals(Tracker::NOTIFICATIONS_LEVEL_DEFAULT, $notification);
     }
 
-    public function testItReturnsNotificationLevelWhenCorrectValueIsProvided()
+    public function testItReturnsNotificationLevelWhenStatusChangeValueIsProvided()
     {
+        $request = Mockery::mock(HTTPRequest::class);
+        $request->shouldReceive('exist')->with('disable_notifications')->once()->andReturn(false);
+        $request->shouldReceive('exist')->with('enable_notifications')->once()->andReturn(false);
+        $request->shouldReceive('get')->with('notifications_level')->once()->andReturn(Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE);
+
         $notification_level_extractor = new NotificationLevelExtractor();
-        $notification = $notification_level_extractor->extractNotificationLevel(Tracker::NOTIFICATIONS_LEVEL_DISABLED);
+        $notification = $notification_level_extractor->extractNotificationLevel($request);
+
+        $this->assertEquals(Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE, $notification);
+    }
+
+    public function testItReturnsNotificationLevelDisabledWhenProvidedInRequest()
+    {
+        $request = Mockery::mock(HTTPRequest::class);
+        $request->shouldReceive('exist')->with('disable_notifications')->once()->andReturn(true);
+        $request->shouldReceive('exist')->with('enable_notifications')->never();
+        $request->shouldReceive('get')->with('notifications_level')->never();
+
+        $notification_level_extractor = new NotificationLevelExtractor();
+        $notification = $notification_level_extractor->extractNotificationLevel($request);
 
         $this->assertEquals(Tracker::NOTIFICATIONS_LEVEL_DISABLED, $notification);
+    }
+
+    public function testItReturnsNotificationDefaultLevelWhenNotificationAreEnabled()
+    {
+        $request = Mockery::mock(HTTPRequest::class);
+        $request->shouldReceive('exist')->with('disable_notifications')->once()->andReturn(false);
+        $request->shouldReceive('exist')->with('enable_notifications')->once()->andReturn(true);
+        $request->shouldReceive('get')->with('notifications_level')->never();
+
+        $notification_level_extractor = new NotificationLevelExtractor();
+        $notification = $notification_level_extractor->extractNotificationLevel($request);
+
+        $this->assertEquals(Tracker::NOTIFICATIONS_LEVEL_DEFAULT, $notification);
     }
 }

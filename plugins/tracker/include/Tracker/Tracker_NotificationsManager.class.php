@@ -124,41 +124,8 @@ class Tracker_NotificationsManager {
 
     public function processUpdate(HTTPRequest $request)
     {
-        if ($request->exist('notifications_level') || $request->exist('disable_notifications') || $request->exist('enable_notifications')) {
-            if ((int)$this->tracker->getNotificationsLevel() !== (int)$request->get('notifications_level') || $request->exist('disable_notifications')) {
-                if ($request->exist('disable_notifications')) {
-                    $new_notifications_level = Tracker::NOTIFICATIONS_LEVEL_DISABLED;
-                } else if ($request->exist('enable_notifications')) {
-                    $new_notifications_level = Tracker::NOTIFICATIONS_LEVEL_DEFAULT;
-                } else {
-                    $new_notifications_level = $this->notification_level_extractor->extractNotificationLevel($request->get('notifications_level'));
-                }
-
-                if ($request->exist('submit_and_force_notifications_level')) {
-                    $this->force_usage_updater->forceUserPreferences($this->tracker, $new_notifications_level);
-                }
-
-                $this->tracker->setNotificationsLevel($new_notifications_level);
-                if ($this->tracker_dao->save($this->tracker)) {
-                    if ($request->exist('submit_and_force_notifications_level')) {
-                        $this->project_history_dao->groupAddHistory(
-                            'global_notification_update_with_force',
-                            $this->getNotificationLevelLabel($new_notifications_level),
-                            $this->tracker->getGroupId(),
-                            [$this->tracker->getName()]
-                        );
-                    } else {
-                        $this->project_history_dao->groupAddHistory(
-                            'global_notification_update',
-                            $this->getNotificationLevelLabel($new_notifications_level),
-                            $this->tracker->getGroupId(),
-                            [$this->tracker->getName()]
-                        );
-                    }
-
-                    $this->addFeedbackCorrectlySaved();
-                }
-            }
+        if ($this->requestProvidesNewNotificationLevel($request)) {
+            $this->updateNotificationLevel($request);
         }
 
         $config_notification_assigned_to = new ConfigNotificationAssignedTo(new ConfigNotificationAssignedToDao());
@@ -662,5 +629,58 @@ class Tracker_NotificationsManager {
                 return dgettext('plugin-tracker', 'Default Tuleap notifications');
                 break;
         }
+    }
+
+    /**
+     * @param HTTPRequest $request
+     */
+    private function updateNotificationLevel(HTTPRequest $request)
+    {
+        if (! $this->notificationLevelMustBeUpdated($request)) {
+            return;
+        }
+
+        $new_notifications_level = $this->notification_level_extractor->extractNotificationLevel($request);
+
+        if ($request->exist('submit_and_force_notifications_level')) {
+            $this->force_usage_updater->forceUserPreferences($this->tracker, $new_notifications_level);
+        }
+
+        $this->tracker->setNotificationsLevel($new_notifications_level);
+        if ($this->tracker_dao->save($this->tracker)) {
+            if ($request->exist('submit_and_force_notifications_level')) {
+                $this->project_history_dao->groupAddHistory(
+                    'global_notification_update_with_force',
+                    $this->getNotificationLevelLabel($new_notifications_level),
+                    $this->tracker->getGroupId(),
+                    [$this->tracker->getName()]
+                );
+            } else {
+                $this->project_history_dao->groupAddHistory(
+                    'global_notification_update',
+                    $this->getNotificationLevelLabel($new_notifications_level),
+                    $this->tracker->getGroupId(),
+                    [$this->tracker->getName()]
+                );
+            }
+
+            $this->addFeedbackCorrectlySaved();
+        }
+    }
+
+    private function notificationLevelMustBeUpdated(HTTPRequest $request)
+    {
+        return ((int)$this->tracker->getNotificationsLevel() !== (int)$request->get('notifications_level')) ||
+            $request->exist('disable_notifications');
+    }
+
+    /**
+     * @return bool
+     */
+    private function requestProvidesNewNotificationLevel(HTTPRequest $request)
+    {
+        return $request->exist('notifications_level') ||
+            $request->exist('disable_notifications') ||
+            $request->exist('enable_notifications');
     }
 }
