@@ -20,16 +20,35 @@
 
 namespace Tuleap\Tracker\Action;
 
+use EventManager;
 use Tracker;
+use Tuleap\Tracker\Events\MoveArtifactCheckExternalSemantics;
 
 class MoveSemanticChecker
 {
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
+
+    public function __construct(EventManager $event_manager)
+    {
+        $this->event_manager = $event_manager;
+    }
+
     public function areSemanticsAligned(Tracker $source_tracker, Tracker $target_tracker)
     {
         if (($source_tracker->hasSemanticsTitle() && $target_tracker->hasSemanticsTitle()) ||
             ($source_tracker->hasSemanticsDescription() && $target_tracker->hasSemanticsDescription())
         ) {
             return true;
+        }
+
+        $event = new MoveArtifactCheckExternalSemantics($source_tracker, $target_tracker);
+        $this->event_manager->processEvent($event);
+
+        if ($event->wasVisitedByPlugin()) {
+            return $event->areExternalSemanticAligned();
         }
 
         return false;

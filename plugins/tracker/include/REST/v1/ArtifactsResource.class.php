@@ -708,7 +708,7 @@ class ArtifactsResource extends AuthenticatedResource {
      * <ul>
      * <li>User must be admin of both source and target trackers in order to be able to move an artifact.</li>
      * <li>Artifact must not be linked to a FRS release.</li>
-     * <li>Both trackers must have the title and description semantic aligned
+     * <li>Both trackers must have the title semantic, the description semantic and the initial effort semantic aligned
      * (traget tracker must have at least one semantic used in source tracker)
      * </li>
      * </ul>
@@ -771,7 +771,7 @@ class ArtifactsResource extends AuthenticatedResource {
             throw new RestException(500, $exception->getMessage());
         } catch (MoveArtifactSemanticsMissingException $exception) {
             $remaining_deletions = $this->getRemainingNumberOfDeletion($user, $limit);
-            throw new RestException(400, $exception->getMessage());
+            throw new RestException(400, 'Both trackers must have at least the title semantic, the description semantic or the initial effort semantic defined.');
         } finally {
             Header::sendRateLimitHeaders($limit, $remaining_deletions);
             $this->sendAllowHeadersForArtifact();
@@ -815,7 +815,9 @@ class ArtifactsResource extends AuthenticatedResource {
                 $this->user_manager,
                 $this->artifact_factory
             ),
-            new MoveSemanticChecker()
+            new MoveSemanticChecker(
+                $this->event_manager
+            )
         );
     }
 
