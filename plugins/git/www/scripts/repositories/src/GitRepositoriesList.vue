@@ -23,18 +23,25 @@
         <div class="tlp-framed">
             <h1><translate>Git repositories</translate></h1>
 
-            <div class="repository-list-actions">
+            <div class="git-repository-list-actions">
                 <button type="button"
                         class="tlp-button-primary git-repository-list-create-repository-button"
-                        v-if="is_admin"
+                        v-if="show_create_repository_button"
                         v-on:click="showModal()"
                 >
                     <i class="fa fa-plus tlp-button-icon"></i>
                     <translate>Add repository</translate>
                 </button>
 
+                <select v-if="are_there_personal_repositories" class="tlp-select tlp-select-adjusted">
+                    <option selected>{{ project_repositories_label }}</option>
+                    <option v-for="owner in sorted_repositories_owners" v-bind:key="owner.id">{{ owner.display_name }}</option>
+                </select>
+
+                <div class="git-repository-list-actions-spacer"></div>
+
                 <input
-                    class="tlp-search repository-list-filter-input"
+                    class="tlp-search"
                     autocomplete="off"
                     v-bind:placeholder="filter_placeholder"
                     type="search"
@@ -91,7 +98,7 @@
                     </svg>
                     <p class="empty-page-text" v-translate>There are no repositories in this project</p>
                     <button type="button"
-                            class="tlp-button-primary"
+                            class="tlp-button-primary tlp-button-large"
                             v-if="is_admin"
                             v-on:click="showModal()"
                     >
@@ -109,7 +116,7 @@ import GitRepositoryCreate from "./GitRepositoryCreate.vue";
 import GitBreadcrumbs from "./GitBreadcrumbs.vue";
 import GitRepository from "./GitRepository.vue";
 import { getRepositoryList } from "./rest-querier.js";
-import { getProjectId, getUserIsAdmin } from "./repository-list-presenter.js";
+import { getProjectId, getUserIsAdmin, getRepositoriesOwners } from "./repository-list-presenter.js";
 
 export default {
     name: "GitRepositoriesList",
@@ -164,6 +171,9 @@ export default {
         this.getRepositories();
     },
     computed: {
+        show_create_repository_button() {
+            return this.is_admin && this.repositories.length !== 0 && !this.is_loading_initial && !this.error;
+        },
         show_empty_state() {
             return this.repositories.length === 0 && !this.is_loading_initial && !this.error;
         },
@@ -183,6 +193,17 @@ export default {
         },
         show_spinner() {
             return this.is_loading_initial || this.is_loading_next;
+        },
+        are_there_personal_repositories() {
+            return getRepositoriesOwners().length > 0;
+        },
+        sorted_repositories_owners() {
+            return getRepositoriesOwners().sort(function (user_a, user_b) {
+                return user_a.display_name.localeCompare(user_b.display_name);
+            });
+        },
+        project_repositories_label() {
+            return this.$gettext('Project repositories');
         }
     }
 };

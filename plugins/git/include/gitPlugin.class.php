@@ -99,6 +99,7 @@ use Tuleap\Git\Repository\Settings\WebhookDeleteController;
 use Tuleap\Git\Repository\Settings\WebhookEditController;
 use Tuleap\Git\Repository\Settings\WebhookRouter;
 use Tuleap\Git\RepositoryList\GitRepositoryListController;
+use Tuleap\Git\RepositoryList\ListPresenterBuilder;
 use Tuleap\Git\RestrictedGerritServerDao;
 use Tuleap\Git\Webhook\WebhookDao;
 use Tuleap\Git\XmlUgroupRetriever;
@@ -1832,7 +1833,10 @@ class GitPlugin extends Plugin
         return new GitRepositoryFactory($this->getGitDao(), ProjectManager::instance());
     }
 
-    private function getGitDao() {
+    /**
+     * @protected for testing purpose
+     */
+    protected function getGitDao() {
         return new GitDao();
     }
 
@@ -2559,7 +2563,11 @@ class GitPlugin extends Plugin
                 return new GitRepositoryListController(
                     $this->getProjectManager(),
                     $this->getRepositoryFactory(),
-                    $this->getGitPermissionsManager(),
+                    new ListPresenterBuilder(
+                        $this->getGitPermissionsManager(),
+                        $this->getGitDao(),
+                        UserManager::instance()
+                    ),
                     $this->getIncludeAssets()
                 );
             });

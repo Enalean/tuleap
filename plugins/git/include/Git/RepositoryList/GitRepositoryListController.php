@@ -24,8 +24,8 @@ use HTTPRequest;
 use Project;
 use TemplateRendererFactory;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\CssAsset;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request;
 
 class GitRepositoryListController implements Request\DispatchableWithRequest, Request\DispatchableWithProject, Request\DispatchableWithBurningParrot
@@ -40,10 +40,6 @@ class GitRepositoryListController implements Request\DispatchableWithRequest, Re
      */
     private $repository_factory;
     /**
-     * @var \GitPermissionsManager
-     */
-    private $git_permissions_manager;
-    /**
      * @var Project
      */
     private $project;
@@ -51,22 +47,26 @@ class GitRepositoryListController implements Request\DispatchableWithRequest, Re
      * @var IncludeAssets
      */
     private $include_assets;
+    /**
+     * @var ListPresenterBuilder
+     */
+    private $list_presenter_builder;
 
     public function __construct(
         \ProjectManager $project_manager,
         \GitRepositoryFactory $repository_factory,
-        \GitPermissionsManager $git_permissions_manager,
+        ListPresenterBuilder $list_presenter_builder,
         IncludeAssets $include_assets
     ) {
-        $this->project_manager         = $project_manager;
-        $this->repository_factory      = $repository_factory;
-        $this->git_permissions_manager = $git_permissions_manager;
-        $this->include_assets     = $include_assets;
+        $this->project_manager        = $project_manager;
+        $this->repository_factory     = $repository_factory;
+        $this->list_presenter_builder = $list_presenter_builder;
+        $this->include_assets         = $include_assets;
     }
 
     /**
      * @param HTTPRequest $request
-     * @param array $variables
+     * @param array       $variables
      *
      * @throws Request\NotFoundException
      *
@@ -78,6 +78,7 @@ class GitRepositoryListController implements Request\DispatchableWithRequest, Re
         if (! $this->project || $this->project->isError()) {
             throw new Request\NotFoundException(dgettext("tuleap-git", "Project not found."));
         }
+
         return $this->project;
     }
 
@@ -110,10 +111,7 @@ class GitRepositoryListController implements Request\DispatchableWithRequest, Re
 
         $renderer->renderToPage(
             'repositories/repository-list',
-            new GitRepositoryListPresenter(
-                $this->project,
-                $this->git_permissions_manager->userIsGitAdmin($request->getCurrentUser(), $this->project)
-            )
+            $this->list_presenter_builder->build($this->project, $request->getCurrentUser())
         );
 
         site_project_footer([]);

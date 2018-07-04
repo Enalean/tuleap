@@ -30,8 +30,10 @@ class GitRepositoryListPresenter
      * @var bool
      */
     public $is_admin;
+    /** @var string */
+    public $json_encoded_repositories_owners;
 
-    public function __construct(\Project $project, $is_git_administrator)
+    public function __construct(\Project $project, $is_git_administrator, array $repositories_owners)
     {
         $this->repositories_administration_url = GIT_BASE_URL . "/?" . http_build_query(
             [
@@ -39,7 +41,8 @@ class GitRepositoryListPresenter
                 "action"   => "admin"
             ]
         );
-        $this->repositories_fork_url           = GIT_BASE_URL . "/?" . http_build_query(
+
+        $this->repositories_fork_url = GIT_BASE_URL . "/?" . http_build_query(
             [
                 "group_id" => $project->getId(),
                 "action"   => "fork_repositories"
@@ -49,5 +52,7 @@ class GitRepositoryListPresenter
         $this->repositories_list_url = GIT_BASE_URL . "/" . urlencode($project->getUnixNameLowerCase()) . "/";
         $this->project_id            = $project->getID();
         $this->is_admin              = $is_git_administrator;
+
+        $this->json_encoded_repositories_owners = json_encode($repositories_owners);
     }
 }
