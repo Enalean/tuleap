@@ -1015,6 +1015,7 @@ class Event {
      *     'limit'           => int
      *     'offset'          => int
      *     'fields'          => String
+     *     'query'           => String
      *     'total_git_repo'  => int
      */
     const REST_PROJECT_GET_GIT = 'rest_project_get_git';

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -72,6 +72,14 @@ class QueryParameterParser
         return $parameter_content;
     }
 
+    /**
+     * @param string $query
+     * @param string $parameter_name
+     *
+     * @return mixed
+     * @throws Exceptions\InvalidJsonException
+     * @throws MissingMandatoryParameterException
+     */
     private function getParameterContent($query, $parameter_name)
     {
         $query = trim($query);
@@ -84,6 +92,15 @@ class QueryParameterParser
         return $json_query[$parameter_name];
     }
 
+    /**
+     * @param string $query
+     * @param string $parameter_name
+     *
+     * @return string
+     * @throws Exceptions\InvalidJsonException
+     * @throws InvalidParameterTypeException
+     * @throws MissingMandatoryParameterException
+     */
     public function getString($query, $parameter_name)
     {
         $parameter_content = $this->getParameterContent($query, $parameter_name);

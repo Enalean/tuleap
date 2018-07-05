@@ -111,9 +111,9 @@ class GitRepositoryFactory {
         return $repositories;
     }
 
-    public function getPagninatedRepositoriesUserCanSee(Project $project, PFuser $user, $limit, $offset) {
+    public function getPagninatedRepositoriesUserCanSee(Project $project, PFuser $user, $scope, $limit, $offset) {
         $repositories = array();
-        $repository_list = $this->dao->getPaginatedOpenRepositories($project->getID(), $limit, $offset);
+        $repository_list = $this->dao->getPaginatedOpenRepositories($project->getID(), $scope, $limit, $offset);
         foreach ($repository_list as $row) {
             $repository = new GitRepository();
             $this->dao->hydrateRepositoryObject($repository, $row);

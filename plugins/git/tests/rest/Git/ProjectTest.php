@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2017. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -20,20 +20,23 @@
 
 namespace Git;
 
-use REST_TestDataBuilder;
 use Tuleap\Git\REST\TestBase;
 
-require_once dirname(__FILE__).'/../bootstrap.php';
+require_once __DIR__ . '/../bootstrap.php';
 
 /**
  * @group GitTests
  */
-class ProjectTest extends TestBase {
+class ProjectTest extends TestBase
+{
 
-    public function testGetGitRepositories() {
-        $response  = $this->getResponse($this->client->get(
-            'projects/'.$this->git_project_id.'/git'
-        ));
+    public function testGetGitRepositories()
+    {
+        $response = $this->getResponse(
+            $this->client->get(
+                'projects/' . $this->git_project_id . '/git'
+            )
+        );
 
         $repositories_response = $response->json();
         $repositories          = $repositories_response['repositories'];
@@ -44,5 +47,35 @@ class ProjectTest extends TestBase {
         $this->assertArrayHasKey('id', $repository);
         $this->assertEquals($repository['name'], 'repo01');
         $this->assertEquals($repository['description'], 'Git repository');
+    }
+
+    public function testScopeProject()
+    {
+        $query    = urlencode(json_encode(["scope" => "project"]));
+        $response = $this->getResponse(
+            $this->client->get(
+                'projects/' . $this->git_project_id . '/git?query=' . $query
+            )
+        );
+
+        $repositories_response = $response->json();
+        $repositories          = $repositories_response['repositories'];
+
+        $this->assertCount(1, $repositories);
+    }
+
+    public function testScopeIndividual()
+    {
+        $query    = urlencode(json_encode(["scope" => "individual"]));
+        $response = $this->getResponse(
+            $this->client->get(
+                'projects/' . $this->git_project_id . '/git?query=' . $query
+            )
+        );
+
+        $repositories_response = $response->json();
+        $repositories          = $repositories_response['repositories'];
+
+        $this->assertCount(0, $repositories);
     }
 }

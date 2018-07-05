@@ -19,6 +19,25 @@
 
 namespace Tuleap\Project\REST\v1;
 
+use Event;
+use EventManager;
+use Luracast\Restler\RestException;
+use PaginatedWikiPagesFactory;
+use PFUser;
+use Project;
+use Project_InvalidFullName_Exception;
+use Project_InvalidShortName_Exception;
+use ProjectCreator;
+use ProjectManager;
+use ProjectUGroup;
+use ReferenceManager;
+use Tuleap\Dashboard\Project\ProjectDashboardDao;
+use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;
+use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
+use Tuleap\Dashboard\Widget\DashboardWidgetDao;
+use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
+use Tuleap\FRS\FRSPermissionCreator;
+use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\Label\Label;
 use Tuleap\Label\PaginatedCollectionsOfLabelsBuilder;
 use Tuleap\Label\REST\LabelRepresentation;
@@ -30,49 +49,30 @@ use Tuleap\Project\ProjectRegistrationDisabledException;
 use Tuleap\Project\REST\HeartbeatsRepresentation;
 use Tuleap\Project\REST\ProjectRepresentation;
 use Tuleap\Project\REST\UserGroupRepresentation;
-use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;
-use Tuleap\Dashboard\Project\ProjectDashboardDao;
-use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
-use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
-use Tuleap\Dashboard\Widget\DashboardWidgetDao;
+use Tuleap\Project\UgroupDuplicator;
+use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Event\ProjectGetSvn;
 use Tuleap\REST\Event\ProjectOptionsSvn;
-use Tuleap\REST\v1\GitRepositoryRepresentationBase;
-use Tuleap\REST\v1\PhpWikiPageRepresentation;
-use Tuleap\REST\v1\OrderRepresentationBase;
-use Tuleap\REST\v1\MilestoneRepresentationBase;
-use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\Header;
 use Tuleap\REST\JsonDecoder;
+use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\ResourcesInjector;
-use Tuleap\REST\AuthenticatedResource;
-use Tuleap\Project\UgroupDuplicator;
-use Tuleap\FRS\FRSPermissionCreator;
-use Tuleap\FRS\FRSPermissionDao;
+use Tuleap\REST\v1\GitRepositoryRepresentationBase;
+use Tuleap\REST\v1\MilestoneRepresentationBase;
+use Tuleap\REST\v1\OrderRepresentationBase;
+use Tuleap\REST\v1\PhpWikiPageRepresentation;
 use Tuleap\Service\ServiceCreator;
 use Tuleap\Widget\WidgetFactory;
-use User_ForgeUserGroupPermissionsManager;
-use User_ForgeUserGroupPermissionsDao;
 use UGroupBinding;
-use UGroupUserDao;
 use UGroupDao;
-use ReferenceManager;
-use ProjectManager;
-use ProjectCreator;
-use UserManager;
-use PFUser;
-use Project;
-use Project_InvalidFullName_Exception;
-use Project_InvalidShortName_Exception;
-use EventManager;
-use Event;
-use ProjectUGroup;
 use UGroupManager;
+use UGroupUserDao;
 use URLVerification;
-use Luracast\Restler\RestException;
-use PaginatedWikiPagesFactory;
-use WikiDao;
+use User_ForgeUserGroupPermissionsDao;
+use User_ForgeUserGroupPermissionsManager;
+use UserManager;
 use Wiki;
+use WikiDao;
 
 /**
  * Wrapper for project related REST methods
@@ -1075,20 +1075,30 @@ class ProjectResource extends AuthenticatedResource {
      * ]
      * </pre>
      * <br>
+     * You can use <code>query</code> parameter in order to filter results. Currently you can only filter on scope.
+     * { "scope": "project" } will return only project repositories, { "scope": "individual" } will return only forked
+     * repositories. By default, all repositories are returned.
      *
-     * @url GET {id}/git
+     * @url    GET {id}/git
      * @access hybrid
      *
-     * @param int $id        Id of the project
-     * @param int $limit     Number of elements displayed per page {@from path}
-     * @param int $offset    Position of the first element to display {@from path}
+     * @param int    $id     Id of the project
+     * @param int    $limit  Number of elements displayed per page {@from path}
+     * @param int    $offset Position of the first element to display {@from path}
      * @param string $fields Whether you want to fetch permissions or just repository info {@from path}{@choice basic,all}
+     * @param string $query  Filter repositories {@from path}
      *
      * @return array {@type Tuleap\REST\v1\GitRepositoryRepresentationBase}
      *
-     * @throws 404
+     * @throws RestException
      */
-    public function getGit($id, $limit = 10, $offset = 0, $fields = GitRepositoryRepresentationBase::FIELDS_BASIC) {
+    public function getGit(
+        $id,
+        $limit = 10,
+        $offset = 0,
+        $fields = GitRepositoryRepresentationBase::FIELDS_BASIC,
+        $query = ''
+    ) {
         $this->checkAccess();
 
         $project                = $this->getProjectForUser($id);
@@ -1104,6 +1114,7 @@ class ProjectResource extends AuthenticatedResource {
                 'limit'          => $limit,
                 'offset'         => $offset,
                 'fields'         => $fields,
+                'query'          => $query,
                 'total_git_repo' => &$total_git_repositories
             )
         );

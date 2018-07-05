@@ -119,6 +119,8 @@ use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerProjectAdmin;
 use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Project\HierarchyDisplayer;
 use Tuleap\Request\RestrictedUsersAreHandledByPluginEvent;
+use Tuleap\REST\JsonDecoder;
+use Tuleap\REST\QueryParameterParser;
 
 require_once 'constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -2130,15 +2132,20 @@ class GitPlugin extends Plugin
 
     public function rest_project_get_git($params) {
         $class            = "Tuleap\\Git\\REST\\".$params['version']."\\ProjectResource";
-        $project_resource = new $class($this->getRepositoryFactory(), $this->getRESTRepositoryRepresentationBuilder($params['version']));
         $project          = $params['project'];
+        $project_resource = new $class(
+            $this->getRepositoryFactory(),
+            $this->getRESTRepositoryRepresentationBuilder($params['version']),
+            new QueryParameterParser(new JsonDecoder())
+        );
 
         $params['result'] = $project_resource->getGit(
             $project,
             $this->getCurrentUser(),
             $params['limit'],
             $params['offset'],
-            $params['fields']
+            $params['fields'],
+            $params['query']
         );
 
         $params['total_git_repo'] = count($this->getRepositoryFactory()->getAllRepositories($project));
