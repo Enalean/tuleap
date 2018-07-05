@@ -26,6 +26,7 @@ use Tuleap\Enalean\LicenseManager\Webhook\StatusLogger;
 use Tuleap\Enalean\LicenseManager\Webhook\UserCounterPayload;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\MessageFactoryBuilder;
+use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Webhook\Emitter;
 
 require_once 'autoload.php';
@@ -75,7 +76,7 @@ class enalean_licensemanagerPlugin extends Plugin
 
         $webhook_emitter = new Emitter(MessageFactoryBuilder::build(), HttpClientFactory::createClient(), new StatusLogger());
 
-        $emitter = new StatusActivityEmitter($webhook_emitter);
+        $emitter = new StatusActivityEmitter($webhook_emitter,  Prometheus::instance());
         $emitter->emit($payload, $this->getWebhookUrl());
     }
 

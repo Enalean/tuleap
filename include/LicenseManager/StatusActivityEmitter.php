@@ -30,10 +30,15 @@ class StatusActivityEmitter
      * @var Emitter
      */
     private $webhook_emitter;
+    /**
+     * @var Prometheus
+     */
+    private $prometheus;
 
-    public function __construct(Emitter $webhook_emitter)
+    public function __construct(Emitter $webhook_emitter, Prometheus $prometheus)
     {
         $this->webhook_emitter = $webhook_emitter;
+        $this->prometheus      = $prometheus;
     }
 
     public function emit(UserCounterPayload $payload, $webhook_url)
@@ -44,10 +49,7 @@ class StatusActivityEmitter
 
     private function emitToInstrumentationTools(UserCounterPayload $payload)
     {
-        foreach ($payload->getPayload()['users'] as $status => $number) {
-            Prometheus::gaugeSet('licence_users', 'Number of users per status', $number, ['status' => $status]);
-        }
-        Prometheus::gaugeSet(
+        $this->prometheus->gaugeSet(
             'licence_max_users',
             'Maximum number of users allowed on the instance',
             $payload->getPayload()['max_users']
