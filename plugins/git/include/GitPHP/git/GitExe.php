@@ -285,22 +285,7 @@ class GitExe
 	 */
 	public static function DefaultBinary()
 	{
-		if (Util::IsWindows()) {
-			// windows
-
-			if (Util::Is64Bit()) {
-				// match x86_64 and x64 (64 bit)
-				// C:\Program Files (x86)\Git\bin\git.exe
-				return 'C:\\Progra~2\\Git\\bin\\git.exe';
-			} else {
-				// 32 bit
-				// C:\Program Files\Git\bin\git.exe
-				return 'C:\\Progra~1\\Git\\bin\\git.exe';
-			}
-		} else {
-			// *nix, just use PATH
-			return 'git';
-		}
-	}
+        return 'git';
+    }
 
 }

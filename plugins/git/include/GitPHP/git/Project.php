@@ -449,7 +449,7 @@ class Project
 		if ($this->cloneUrl !== null)
 			return $this->cloneUrl;
 
-		$cloneurl = Util::AddSlash(Config::GetInstance()->GetValue('cloneurl', ''), false);
+		$cloneurl = Util::AddSlash(Config::GetInstance()->GetValue('cloneurl', ''));
 		if (!empty($cloneurl))
 			$cloneurl .= $this->project;
 
@@ -486,7 +486,7 @@ class Project
 		if ($this->pushUrl !== null)
 			return $this->pushUrl;
 
-		$pushurl = Util::AddSlash(Config::GetInstance()->GetValue('pushurl', ''), false);
+		$pushurl = Util::AddSlash(Config::GetInstance()->GetValue('pushurl', ''));
 		if (!empty($pushurl))
 			$pushurl .= $this->project;
 

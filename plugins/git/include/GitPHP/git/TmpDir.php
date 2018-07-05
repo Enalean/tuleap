@@ -109,13 +109,8 @@ class TmpDir
 		}
 
 		if (empty($tmpdir)) {
-			// ultimate default - should never get this far
-			if (Util::IsWindows()) {
-				$tmpdir = 'C:\\Windows\\Temp';
-			} else {
-				$tmpdir = '/tmp';
-			}
-		}
+            $tmpdir = '/tmp';
+        }
 
 		return Util::AddSlash(realpath($tmpdir));
 	}

@@ -289,12 +289,8 @@ class Blob extends FilesystemObject implements GitObjectType
 
 		$magicdb = Config::GetInstance()->GetValue('magicdb', null);
 		if (empty($magicdb)) {
-			if (Util::IsWindows()) {
-				$magicdb = 'C:\\wamp\\php\\extras\\magic';
-			} else {
-				$magicdb = '/usr/share/misc/magic';
-			}
-		}
+            $magicdb = '/usr/share/misc/magic';
+        }
 
 		$finfo = @finfo_open(FILEINFO_MIME, $magicdb);
 		if ($finfo) {
@@ -320,10 +316,6 @@ class Blob extends FilesystemObject implements GitObjectType
 	 */
 	private function FileMime_File()
 	{
-		if (Util::IsWindows()) {
-			return '';
-		}
-
 		if (!$this->dataRead)
 			$this->ReadData();
 
