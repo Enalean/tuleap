@@ -145,40 +145,4 @@ abstract class GitObject
 
 		$this->projectReferenced = false;
 	}
-
-	/**
-	 * __sleep
-	 *
-	 * Called to prepare the object for serialization
-	 *
-	 * @access public
-	 * @return array list of properties to serialize
-	 */
-	public function __sleep()
-	{
-		if (!$this->projectReferenced)
-			$this->ReferenceProject();
-
-		return array('project', 'hash', 'projectReferenced');
-	}
-
-	/**
-	 * GetCacheKey
-	 *
-	 * Gets the cache key to use for this object
-	 *
-	 * @access public
-	 * @return string cache key
-	 */
-	public function GetCacheKey()
-	{
-		$projKey = 'project|';
-		if ($this->projectReferenced)
-			$projKey .= $this->project;
-		else
-			$projKey .= $this->project->GetProject();
-
-		return $projKey;
-	}
-
 }

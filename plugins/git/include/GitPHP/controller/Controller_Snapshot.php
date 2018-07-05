@@ -59,19 +59,6 @@ class Controller_Snapshot extends ControllerBase
 	}
 
 	/**
-	 * GetCacheKey
-	 *
-	 * Gets the cache key for this controller
-	 *
-	 * @access protected
-	 * @return string cache key
-	 */
-	protected function GetCacheKey()
-	{
-		return (isset($this->params['hash']) ? $this->params['hash'] : '') . '|' . (isset($this->params['path']) ? $this->params['path'] : '') . '|' . (isset($this->params['prefix']) ? $this->params['prefix'] : '') . '|' . $this->params['format'];
-	}
-
-	/**
 	 * GetName
 	 *
 	 * Gets the name of this controller's action
@@ -170,55 +157,15 @@ class Controller_Snapshot extends ControllerBase
 	{
 		$this->LoadData();
 
-		$cache = Config::GetInstance()->GetValue('cache', false);
-		$cachehandle = false;
-		$cachefile = '';
-		if ($cache && is_dir(GITPHP_CACHE)) {
-			$key = ($this->archive->GetObject() ? $this->archive->GetObject()->GetHash() : '') . '|' . (isset($this->params['path']) ? $this->params['path'] : '') . '|' . (isset($this->params['prefix']) ? $this->params['prefix'] : '');
-			$cachefile = sha1($key) . '-' . $this->archive->GetFilename();
-			$cachedfilepath = GITPHP_CACHE . $cachefile;
-
-			if (file_exists($cachedfilepath)) {
-				// read cached file
-				$cachehandle = fopen($cachedfilepath, 'rb');
-				if ($cachehandle) {
-					while (!feof($cachehandle)) {
-						print fread($cachehandle, 1048576);
-						flush();
-					}
-					fclose($cachehandle);
-					return;
-				}
-			}
-		}
-
 		if ($this->archive->Open()) {
-
-			$tmpcachefile = '';
-
-			if ($cache && !empty($cachefile)) {
-				// write cached file too
-				$tmpcachefile = 'tmp-' . $cachefile;
-				$cachehandle = fopen(GITPHP_CACHE . $tmpcachefile, 'wb');
-			}
 
 			while (($data = $this->archive->Read()) !== false) {
 
 				print $data;
 				flush();
 
-				if ($cache && $cachehandle) {
-					fwrite($cachehandle, $data);
-				}
-
 			}
 			$this->archive->Close();
-
-			if ($cachehandle) {
-				fclose($cachehandle);
-				sleep(1);
-				rename(GITPHP_CACHE . $tmpcachefile, GITPHP_CACHE . $cachefile);
-			}
 		}
 	}
 

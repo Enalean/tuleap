@@ -55,23 +55,6 @@ class Controller_Commitdiff extends Controller_DiffBase
 	}
 
 	/**
-	 * GetCacheKey
-	 *
-	 * Gets the cache key for this controller
-	 *
-	 * @access protected
-	 * @return string cache key
-	 */
-	protected function GetCacheKey()
-	{
-		$key = (isset($this->params['hash']) ? $this->params['hash'] : '')
-		. '|' . (isset($this->params['hashparent']) ? $this->params['hashparent'] : '')
-		. '|' . (isset($this->params['sidebyside']) && ($this->params['sidebyside'] === true) ? '1' : '');
-
-		return $key;
-	}
-
-	/**
 	 * GetName
 	 *
 	 * Gets the name of this controller's action

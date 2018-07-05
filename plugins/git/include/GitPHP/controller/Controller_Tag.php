@@ -54,19 +54,6 @@ class Controller_Tag extends ControllerBase
 	}
 
 	/**
-	 * GetCacheKey
-	 *
-	 * Gets the cache key for this controller
-	 *
-	 * @access protected
-	 * @return string cache key
-	 */
-	protected function GetCacheKey()
-	{
-		return isset($this->params['hash']) ? sha1($this->params['hash']) : '';
-	}
-
-	/**
 	 * GetName
 	 *
 	 * Gets the name of this controller's action

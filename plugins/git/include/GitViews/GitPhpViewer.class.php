@@ -77,7 +77,6 @@ class GitViews_GitPhpViewer {
         define('GITPHP_INCLUDEDIR', __DIR__ . '/../GitPHP/');
         define('GITPHP_GITOBJECTDIR', GITPHP_INCLUDEDIR . 'git/');
         define('GITPHP_CONTROLLERDIR', GITPHP_INCLUDEDIR . 'controller/');
-        define('GITPHP_CACHEDIR', GITPHP_INCLUDEDIR . 'cache/');
         define('GITPHP_LOCALEDIR', __DIR__ . '/../../site-content/gitphp_locale/');
 
         define('GITPHP_BASEDIR', GITPHP_INCLUDEDIR);
@@ -187,9 +186,6 @@ class GitViews_GitPhpViewer {
         $config->SetValue('search', true);
         $config->SetValue('filesearch', false);
         $config->SetValue('debug', false);
-        $config->SetValue('cache', false);
-        $config->SetValue('cacheexpire', false);
-        $config->SetValue('cachelifetime', 3600);
         $config->SetValue('smarty_tmp', '/tmp/gitphp-tuleap/smarty');
     }
 }

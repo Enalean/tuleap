@@ -119,8 +119,6 @@ class Tree extends FilesystemObject implements GitObjectType
 		} else {
 			$this->ReadContentsRaw();
 		}
-
-		Cache::GetObjectCacheInstance()->Set($this->GetCacheKey(), $this);
 	}
 
 	/**
@@ -310,42 +308,6 @@ class Tree extends FilesystemObject implements GitObjectType
 		}
 
 		$this->contentsReferenced = false;
-	}
-
-	/**
-	 * __sleep
-	 *
-	 * Called to prepare the object for serialization
-	 *
-	 * @access public
-	 * @return array list of properties to serialize
-	 */
-	public function __sleep()
-	{
-		if (!$this->contentsReferenced)
-			$this->ReferenceContents();
-
-		$properties = array('contents', 'contentsRead', 'contentsReferenced');
-		return array_merge($properties, parent::__sleep());
-	}
-
-	/**
-	 * GetCacheKey
-	 *
-	 * Gets the cache key to use for this object
-	 *
-	 * @access public
-	 * @return string cache key
-	 */
-	public function GetCacheKey()
-	{
-		$key = parent::GetCacheKey();
-		if (!empty($key))
-			$key .= '|';
-
-		$key .= 'tree|' . $this->hash;
-
-		return $key;
 	}
 
     public function isTree()

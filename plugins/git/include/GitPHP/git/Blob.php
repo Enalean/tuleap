@@ -142,8 +142,6 @@ class Blob extends FilesystemObject implements GitObjectType
 		} else {
 			$this->data = $this->GetProject()->GetObject($this->hash);
 		}
-
-		Cache::GetObjectCacheInstance()->Set($this->GetCacheKey(), $this);
 	}
 
 	/**
@@ -492,40 +490,6 @@ class Blob extends FilesystemObject implements GitObjectType
 				}
 			}
 		}
-	}
-
-	/**
-	 * __sleep
-	 *
-	 * Called to prepare the object for serialization
-	 *
-	 * @access public
-	 * @return array list of properties to serialize
-	 */
-	public function __sleep()
-	{
-		$properties = array('data', 'dataRead');
-
-		return array_merge($properties, parent::__sleep());
-	}
-
-	/**
-	 * GetCacheKey
-	 *
-	 * Gets the cache key to use for this object
-	 *
-	 * @access public
-	 * @return string cache key
-	 */
-	public function GetCacheKey()
-	{
-		$key = parent::GetCacheKey();
-		if (!empty($key))
-			$key .= '|';
-
-		$key .= 'blob|' . $this->hash;
-
-		return $key;
 	}
 
     public function isTree()

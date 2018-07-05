@@ -94,21 +94,6 @@ abstract class ControllerBase
 		    $this->tpl->cache_dir = $cache;
 		}
 
-		if (Config::GetInstance()->GetValue('cache', false)) {
-			$this->tpl->caching = 2;
-			if (Config::GetInstance()->HasKey('cachelifetime')) {
-				$this->tpl->cache_lifetime = Config::GetInstance()->GetValue('cachelifetime');
-			}
-
-			$servers = Config::GetInstance()->GetValue('memcache', null);
-			if (isset($servers) && is_array($servers) && (count($servers) > 0)) {
-				Memcache::GetInstance()->AddServers($servers);
-				require_once(GITPHP_CACHEDIR . 'memcache_cache_handler.php');
-				$this->tpl->cache_handler_func = 'memcache_cache_handler';
-			}
-
-		}
-
         $this->project = ProjectList::GetInstance()->GetProject();
 
 		if (isset($_GET['s']))
@@ -129,17 +114,6 @@ abstract class ControllerBase
 	 * @return string template filename
 	 */
 	protected abstract function GetTemplate();
-
-	/**
-	 * GetCacheKey
-	 *
-	 * Gets the cache key for this controller
-	 *
-	 * @access protected
-	 * @abstract
-	 * @return string cache key
-	 */
-	protected abstract function GetCacheKey();
 
 	/**
 	 * GetName
