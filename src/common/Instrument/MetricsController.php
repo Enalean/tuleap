@@ -26,6 +26,7 @@ use HTTPRequest;
 use Prometheus\RenderTextFormat;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\MessageFactoryBuilder;
+use Tuleap\Instrument\Metrics\MetricsCollector;
 use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
@@ -50,17 +51,23 @@ class MetricsController implements DispatchableWithRequestNoAuthz
         header('Content-type: ' . RenderTextFormat::MIME_TYPE);
 
         echo $this->getTuleapMetrics();
+        echo $this->getTuleapComputedMetrics();
         echo $this->getNodeExporterMetrics();
     }
 
     private function getTuleapMetrics()
     {
-        $registry = Prometheus::get();
+        echo Prometheus::instance()->renderText();
+    }
 
-        $renderer = new RenderTextFormat();
-        $result = $renderer->render($registry->getMetricFamilySamples());
+    private function getTuleapComputedMetrics()
+    {
+        $prometheus = Prometheus::getInMemory();
+        $collector  = MetricsCollector::build($prometheus);
 
-        echo $result;
+        $collector->collect();
+
+        return $prometheus->renderText();
     }
 
     private function getNodeExporterMetrics()

@@ -55,6 +55,6 @@ class RequestInstrumentation
 
     private static function incrementCodeRouter($code, $router)
     {
-        \Tuleap\Instrument\Prometheus\Prometheus::increment(self::METRIC_NAME, self::HELP, ['code' => $code, 'router' => $router]);
+        \Tuleap\Instrument\Prometheus\Prometheus::instance()->increment(self::METRIC_NAME, self::HELP, ['code' => $code, 'router' => $router]);
     }
 }

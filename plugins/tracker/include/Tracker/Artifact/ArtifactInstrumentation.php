@@ -30,6 +30,6 @@ class ArtifactInstrumentation
 
     public static function increment($type)
     {
-        \Tuleap\Instrument\Prometheus\Prometheus::increment(self::METRIC_NAME, 'Total number of artifacts', ['type' => $type]);
+        \Tuleap\Instrument\Prometheus\Prometheus::instance()->increment(self::METRIC_NAME, 'Total number of artifacts', ['type' => $type]);
     }
 }
