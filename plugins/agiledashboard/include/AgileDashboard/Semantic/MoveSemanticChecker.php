@@ -61,10 +61,9 @@ class MoveSemanticChecker
 
     private function areFieldsTypeAligned(
         Tracker_FormElement_Field $source_initial_effort_field,
-        Tracker_FormElement_Field $target_initiel_effort_field
+        Tracker_FormElement_Field $target_initial_effort_field
     ) {
         return $this->form_element_factory->getType($source_initial_effort_field) ===
-            $this->form_element_factory->getType($target_initiel_effort_field) &&
-            in_array($this->form_element_factory->getType($source_initial_effort_field), ['int', 'float', 'computed']);
+            $this->form_element_factory->getType($target_initial_effort_field);
     }
 }

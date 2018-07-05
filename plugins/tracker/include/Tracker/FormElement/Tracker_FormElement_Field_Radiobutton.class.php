@@ -122,12 +122,4 @@ class Tracker_FormElement_Field_Radiobutton extends Tracker_FormElement_Field_Se
     public function accept(Tracker_FormElement_FieldVisitor $visitor) {
         return $visitor->visitRadiobutton($this);
     }
-
-    public function getDefaultValue() {
-        $default_array = $this->getBind()->getDefaultValues();
-        if (! $default_array) {
-            return array(Tracker_FormElement_Field_List_Bind::NONE_VALUE);
-        }
-        return array_keys($default_array);
-    }
 }

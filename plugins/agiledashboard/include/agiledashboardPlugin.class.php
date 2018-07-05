@@ -67,6 +67,7 @@ use Tuleap\Tracker\Events\MoveArtifactGetExternalSemanticTargetField;
 use Tuleap\Tracker\Events\MoveArtifactParseFieldChangeNodes;
 use Tuleap\Tracker\FormElement\Event\MessageFetcherAdditionalWarnings;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\CanValueBeHiddenStatementsCollection;
+use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
 use Tuleap\Tracker\Report\Event\TrackerReportDeleted;
 use Tuleap\Tracker\Report\Event\TrackerReportSetToPrivate;
@@ -1683,7 +1684,12 @@ class AgileDashboardPlugin extends Plugin {
             return;
         }
 
-        $updater = new MoveChangesetXMLUpdater($this->getSemanticInitialEffortFactory());
+        $updater = new MoveChangesetXMLUpdater(
+            $this->getSemanticInitialEffortFactory(),
+            $this->getFormElementFactory(),
+            new FieldValueMatcher()
+        );
+
         if ($updater->parseFieldChangeNodesAtGivenIndex(
             $event->getSourceTracker(),
             $event->getTargetTracker(),

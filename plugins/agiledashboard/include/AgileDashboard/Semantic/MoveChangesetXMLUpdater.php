@@ -24,6 +24,8 @@ use AgileDashboard_Semantic_InitialEffortFactory;
 use SimpleXMLElement;
 use Tracker;
 use Tracker_FormElement_Field;
+use Tracker_FormElementFactory;
+use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 
 class MoveChangesetXMLUpdater
 {
@@ -32,9 +34,24 @@ class MoveChangesetXMLUpdater
      */
     private $initial_effort_factory;
 
-    public function __construct(AgileDashboard_Semantic_InitialEffortFactory $initial_effort_factory)
-    {
-        $this->initial_effort_factory = $initial_effort_factory;
+    /**
+     * @var Tracker_FormElementFactory
+     */
+    private $tracker_form_element_factory;
+
+    /**
+     * @var FieldValueMatcher
+     */
+    private $field_value_matcher;
+
+    public function __construct(
+        AgileDashboard_Semantic_InitialEffortFactory $initial_effort_factory,
+        Tracker_FormElementFactory $tracker_form_element_factory,
+        FieldValueMatcher $field_value_matcher
+    ) {
+        $this->initial_effort_factory       = $initial_effort_factory;
+        $this->tracker_form_element_factory = $tracker_form_element_factory;
+        $this->field_value_matcher          = $field_value_matcher;
     }
 
     /**
@@ -48,11 +65,12 @@ class MoveChangesetXMLUpdater
     ) {
         $source_initial_effort_field = $this->initial_effort_factory->getByTracker($source_tracker)->getField();
         $target_initial_effort_field = $this->initial_effort_factory->getByTracker($target_tracker)->getField();
+        $field_change                = $changeset_xml->field_change[$index];
 
         if ($target_initial_effort_field &&
-            $this->isFieldChangeCorrespondingToTitleSemanticField($changeset_xml, $source_initial_effort_field, $index)
+            $this->isFieldChangeCorrespondingToTitleSemanticField($field_change, $source_initial_effort_field)
         ) {
-            $this->useTargetTrackerFieldName($changeset_xml, $target_initial_effort_field, $index);
+            $this->updateFieldChangeNode($field_change, $source_initial_effort_field, $target_initial_effort_field);
             return true;
         }
 
@@ -60,20 +78,53 @@ class MoveChangesetXMLUpdater
     }
 
     private function isFieldChangeCorrespondingToTitleSemanticField(
-        SimpleXMLElement $changeset_xml,
-        Tracker_FormElement_Field $source_field,
-        $index
+        SimpleXMLElement $field_change,
+        Tracker_FormElement_Field $source_field
     ) {
-        $field_change = $changeset_xml->field_change[$index];
-
         return (string)$field_change['field_name'] === $source_field->getName();
     }
 
-    private function useTargetTrackerFieldName(
-        SimpleXMLElement $changeset_xml,
-        Tracker_FormElement_Field $target_field,
-        $index
+    private function updateFieldChangeNode(
+        SimpleXMLElement $field_change,
+        Tracker_FormElement_Field $source_initial_effort_field,
+        Tracker_FormElement_Field $target_initial_effort_field
     ) {
-        $changeset_xml->field_change[$index]['field_name'] = $target_field->getName();
+        $this->useTargetTrackerFieldName($field_change, $target_initial_effort_field);
+
+        if ($this->areFieldsLists($source_initial_effort_field, $target_initial_effort_field)) {
+            $this->updateValue($field_change, $source_initial_effort_field, $target_initial_effort_field);
+        }
+    }
+
+    private function useTargetTrackerFieldName(
+        SimpleXMLElement $field_change,
+        Tracker_FormElement_Field $target_field
+    ) {
+        $field_change['field_name'] = $target_field->getName();
+    }
+
+    private function updateValue(
+        SimpleXMLElement $field_change,
+        Tracker_FormElement_Field $source_initial_effort_field,
+        Tracker_FormElement_Field $target_initial_effort_field
+    ) {
+        $xml_value = (int) $field_change->value;
+
+        $value = $this->field_value_matcher->getMatchingValueByDuckTyping(
+            $source_initial_effort_field,
+            $target_initial_effort_field,
+            $xml_value
+        );
+
+        $field_change->value = (int) $value;
+    }
+
+    private function areFieldsLists(
+        Tracker_FormElement_Field $source_initial_effort_field,
+        Tracker_FormElement_Field $target_initial_effort_field
+    ) {
+        return $this->tracker_form_element_factory->getType($source_initial_effort_field) ===
+            $this->tracker_form_element_factory->getType($target_initial_effort_field) &&
+            in_array($this->tracker_form_element_factory->getType($source_initial_effort_field), ['sb', 'rb']);
     }
 }

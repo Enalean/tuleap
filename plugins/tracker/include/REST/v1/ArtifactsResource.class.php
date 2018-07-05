@@ -712,6 +712,14 @@ class ArtifactsResource extends AuthenticatedResource {
      * (traget tracker must have at least one semantic used in source tracker)
      * </li>
      * </ul>
+     * <br/>
+     * <br/>
+     * Values for list fields (initial effort) are retrieved with duck typing:
+     * <ul>
+     * <li>Values are checked without taking into account the case</li>
+     * <li>The first value matching the label is returned</li>
+     * <li>If no corresponding value found, the default value is returned</li>
+     * </ul>
      *
      * @url PATCH {id}
      *
