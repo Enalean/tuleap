@@ -22,14 +22,17 @@ require_once 'common/plugin/Plugin.class.php';
 require_once 'constants.php';
 require_once 'autoload.php';
 
+use Tuleap\Cardwall\AccentColor\AccentColorBuilder;
 use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
 use Tuleap\Cardwall\AllowedFieldRetriever;
+use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\Cardwall\Semantic\BackgroundColorDao;
 use Tuleap\Cardwall\Semantic\BackgroundColorSemanticFactory;
 use Tuleap\Cardwall\Semantic\FieldUsedInSemanticObjectChecker;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Tracker\Events\AllowedFieldTypeChangesRetriever;
 use Tuleap\Tracker\Events\IsFieldUsedInASemanticEvent;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 
 /**
  * CardwallPlugin
@@ -584,6 +587,7 @@ class cardwallPlugin extends Plugin
                 break;
 
             case 'get-card':
+                $bind_decorator_retriever = new BindDecoratorRetriever();
                 try {
                     $single_card_builder = new Cardwall_SingleCardBuilder(
                         $this->getConfigFactory(),
@@ -592,7 +596,9 @@ class cardwallPlugin extends Plugin
                             Tracker_FormElementFactory::instance()
                         ),
                         Tracker_ArtifactFactory::instance(),
-                        PlanningFactory::build()
+                        PlanningFactory::build(),
+                        new BackgroundColorBuilder($bind_decorator_retriever),
+                        new AccentColorBuilder(Tracker_FormElementFactory::instance(), $bind_decorator_retriever)
                     );
                     $controller = new Cardwall_CardController(
                         $request,
