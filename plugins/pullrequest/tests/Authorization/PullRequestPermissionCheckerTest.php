@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -74,6 +74,7 @@ class PullRequestPermissionCheckerTest extends \TuleapTestCase
     public function itLetsExceptionBubbleUpWhenUserHasNotAccessToProject()
     {
         stub($this->git_repository_factory)->getRepositoryById()->returns($this->repository);
+        stub($this->repository)->getProject()->returns(\Mockery::mock(\Project::class));
         stub($this->url_verification)->userCanAccessProject()->throws(new Project_AccessPrivateException());
 
         $permission_checker = $this->instantiatePermissionChecker();
@@ -86,6 +87,7 @@ class PullRequestPermissionCheckerTest extends \TuleapTestCase
     public function itLetsExceptionBubbleUpWhenProjectIsNotFound()
     {
         stub($this->git_repository_factory)->getRepositoryById()->returns($this->repository);
+        stub($this->repository)->getProject()->returns(\Mockery::mock(\Project::class));
         stub($this->url_verification)->userCanAccessProject()->throws(new Project_AccessProjectNotFoundException());
 
         $permission_checker = $this->instantiatePermissionChecker();
@@ -98,6 +100,7 @@ class PullRequestPermissionCheckerTest extends \TuleapTestCase
     public function itThrowsWhenUserCannotReadGitRepo()
     {
         stub($this->repository)->userCanRead($this->user)->returns(false);
+        stub($this->repository)->getProject()->returns(\Mockery::mock(\Project::class));
         stub($this->git_repository_factory)->getRepositoryById()->returns($this->repository);
 
         $permission_checker = $this->instantiatePermissionChecker();
