@@ -164,7 +164,8 @@ class RepositoryResource extends AuthenticatedResource {
 
         $this->representation_builder = new RepositoryRepresentationBuilder(
             $this->git_permission_manager,
-            $this->gerrit_server_factory
+            $this->gerrit_server_factory,
+            new \Git_LogDao()
         );
 
         $project_history_dao     = new ProjectHistoryDao();

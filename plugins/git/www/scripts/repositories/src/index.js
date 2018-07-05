@@ -19,10 +19,14 @@
 
 import Vue from "vue";
 import GetTextPlugin from "vue-gettext";
+import TimeAgo from "javascript-time-ago";
+import time_ago_english from "javascript-time-ago/locale/en";
+import time_ago_french from "javascript-time-ago/locale/fr";
+
 import french_translations from "../po/fr.po";
 import GitRepositoriesList from "./GitRepositoriesList.vue";
 import { setUrls } from "./breadcrumb-presenter.js";
-import { setProjectId, setUserIsAdmin } from "./repository-list-presenter.js";
+import { build as buildRepositoryListPresenter } from "./repository-list-presenter.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     Vue.use(GetTextPlugin, {
@@ -34,6 +38,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const locale = document.body.dataset.userLocale;
     Vue.config.language = locale;
+    TimeAgo.locale(time_ago_english);
+    TimeAgo.locale(time_ago_french);
 
     const rootComponent = document.getElementById("git-repository-list");
 
@@ -49,8 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
         } = rootComponent.dataset;
 
         setUrls(repositoriesAdministrationUrl, repositoryListUrl, repositoriesForkUrl);
-        setProjectId(projectId);
-        setUserIsAdmin(isAdmin);
+        buildRepositoryListPresenter(projectId, isAdmin, locale);
 
         new repositoryList().$mount(rootComponent);
     }

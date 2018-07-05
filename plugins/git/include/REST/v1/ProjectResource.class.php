@@ -65,6 +65,16 @@ class ProjectResource
         $this->query_parameter_parser      = $query_parameter_parser;
     }
 
+    /**
+     * @param Project $project
+     * @param PFUser $user
+     * @param int $limit
+     * @param int $offset
+     * @param string $fields
+     * @param string $query
+     * @return GitRepositoryRepresentation[]
+     * @throws RestException
+     */
     public function getGit(Project $project, PFUser $user, $limit, $offset, $fields, $query)
     {
         $scope = '';
@@ -83,7 +93,7 @@ class ProjectResource
         }
 
         $results          = [];
-        $git_repositories = $this->repository_factory->getPagninatedRepositoriesUserCanSee(
+        $git_repositories = $this->repository_factory->getPaginatedRepositoriesUserCanSee(
             $project,
             $user,
             $scope,

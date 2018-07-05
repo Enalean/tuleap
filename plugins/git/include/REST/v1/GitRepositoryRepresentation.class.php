@@ -25,9 +25,15 @@ use GitRepository;
 use Tuleap\REST\JsonCast;
 use Tuleap\REST\v1\GitRepositoryRepresentationBase;
 
-class GitRepositoryRepresentation extends GitRepositoryRepresentationBase {
-
-    public function build(GitRepository $repository, $server_representation) {
+class GitRepositoryRepresentation extends GitRepositoryRepresentationBase
+{
+    /**
+     * @param GitRepository $repository
+     * @param $server_representation
+     * @param string $last_update_date
+     */
+    public function build(GitRepository $repository, $server_representation, $last_update_date)
+    {
         $this->id          = JsonCast::toInt($repository->getId());
         $this->uri         = self::ROUTE . '/' . $this->id;
         $this->name        = $repository->getName();
@@ -36,5 +42,6 @@ class GitRepositoryRepresentation extends GitRepositoryRepresentationBase {
         $this->server      = $server_representation;
         $this->html_url    = GIT_BASE_URL . '/' . urlencode($repository->getProject()->getUnixNameLowerCase()) . "/"
             . urlencode($repository->getName());
+        $this->last_update_date = JsonCast::toDate($last_update_date);
     }
 }
