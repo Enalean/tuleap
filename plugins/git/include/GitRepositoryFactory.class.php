@@ -114,20 +114,35 @@ class GitRepositoryFactory
     /**
      * @param Project $project
      * @param PFuser $user
+     * @param string $scope
+     * @param int $owner_id
      * @param int $limit
      * @param int $offset
      * @return GitRepository[]
      */
-    public function getPaginatedRepositoriesUserCanSee(Project $project, PFuser $user, $scope, $limit, $offset)
-    {
+    public function getPaginatedRepositoriesUserCanSee(
+        Project $project,
+        PFuser $user,
+        $scope,
+        $owner_id,
+        $limit,
+        $offset
+    ) {
         $repositories    = [];
-        $repository_list = $this->dao->getPaginatedOpenRepositories($project->getID(), $scope, $limit, $offset);
+        $repository_list = $this->dao->getPaginatedOpenRepositories(
+            $project->getID(),
+            $scope,
+            $owner_id,
+            $limit,
+            $offset
+        );
         foreach ($repository_list as $row) {
             $repository = $this->getRepositoryFromRow($row);
             if ($repository->userCanRead($user)) {
                 $repositories[] = $repository;
             }
         }
+
         return $repositories;
     }
 

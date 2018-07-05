@@ -67,25 +67,20 @@ class ProjectResource
 
     /**
      * @param Project $project
-     * @param PFUser $user
-     * @param int $limit
-     * @param int $offset
-     * @param string $fields
-     * @param string $query
+     * @param PFUser  $user
+     * @param int     $limit
+     * @param int     $offset
+     * @param string  $fields
+     * @param string  $query
+     *
      * @return GitRepositoryRepresentation[]
      * @throws RestException
      */
     public function getGit(Project $project, PFUser $user, $limit, $offset, $fields, $query)
     {
-        $scope = '';
         try {
-            $requested_scope = $this->query_parameter_parser->getString($query, 'scope');
-            if (! in_array($requested_scope, array_keys(self::SCOPES_REPRESENTATIONS))) {
-                throw new RestException(400, 'Invalid value supplied for scope. Expected: "project" or "individual".');
-            }
-            $scope = self::SCOPES_REPRESENTATIONS[$requested_scope];
-        } catch (MissingMandatoryParameterException $e) {
-            // no scope are provided, skip it
+            $scope    = $this->getScopeFromQueryParameter($query);
+            $owner_id = $this->getOwnerIdFromQueryParameter($query);
         } catch (QueryParameterException $e) {
             throw new RestException(400, $e->getMessage());
         } catch (InvalidJsonException $e) {
@@ -97,6 +92,7 @@ class ProjectResource
             $project,
             $user,
             $scope,
+            $owner_id,
             $limit,
             $offset
         );
@@ -108,5 +104,44 @@ class ProjectResource
         return [
             'repositories' => $results
         ];
+    }
+
+    /**
+     * @param string $query
+     *
+     * @return string mixed
+     * @throws InvalidJsonException
+     * @throws \Tuleap\REST\InvalidParameterTypeException
+     * @throws RestException
+     */
+    private function getScopeFromQueryParameter($query)
+    {
+        try {
+            $requested_scope = $this->query_parameter_parser->getString($query, 'scope');
+            if (! in_array($requested_scope, array_keys(self::SCOPES_REPRESENTATIONS))) {
+                throw new RestException(400, 'Invalid value supplied for scope. Expected: "project" or "individual".');
+            }
+            $scope = self::SCOPES_REPRESENTATIONS[$requested_scope];
+
+            return $scope;
+        } catch (MissingMandatoryParameterException $e) {
+            // no scope is provided, skip it
+        }
+    }
+
+    /**
+     * @param string $query
+     *
+     * @return string mixed
+     * @throws QueryParameterException
+     * @throws InvalidJsonException
+     */
+    private function getOwnerIdFromQueryParameter($query)
+    {
+        try {
+            return $this->query_parameter_parser->getInt($query, 'owner_id');
+        } catch (MissingMandatoryParameterException $e) {
+            // no owner_id is provided, skip it
+        }
     }
 }

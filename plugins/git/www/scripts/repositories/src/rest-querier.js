@@ -19,7 +19,28 @@
 
 import { post, recursiveGet } from "tlp";
 
-export { getRepositoryList, postRepository };
+export { getRepositoryList, getForkedRepositoryList, postRepository };
+
+function buildCollectionCallback(displayCallback) {
+    return ({ repositories }) => {
+        displayCallback(repositories);
+        return repositories;
+    };
+}
+
+function getForkedRepositoryList(project_id, owner_id, displayCallback) {
+    return recursiveGet("/api/projects/" + project_id + "/git", {
+        params: {
+            query: JSON.stringify({
+                scope: "individual",
+                owner_id: Number.parseInt(owner_id, 10)
+            }),
+            limit: 50,
+            offset: 0
+        },
+        getCollectionCallback: buildCollectionCallback(displayCallback)
+    });
+}
 
 function getRepositoryList(project_id, displayCallback) {
     return recursiveGet("/api/projects/" + project_id + "/git", {
@@ -30,10 +51,7 @@ function getRepositoryList(project_id, displayCallback) {
             limit: 50,
             offset: 0
         },
-        getCollectionCallback: ({ repositories }) => {
-            displayCallback(repositories);
-            return repositories;
-        }
+        getCollectionCallback: buildCollectionCallback(displayCallback)
     });
 }
 

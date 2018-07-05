@@ -702,28 +702,34 @@ class GitDao extends \Tuleap\DB\DataAccessObject
         return true;
     }
 
-    public function getPaginatedOpenRepositories($project_id, $scope, $limit, $offset)
+    public function getPaginatedOpenRepositories($project_id, $scope, $owner_id, $limit, $offset)
     {
+        $additional_where_statement = '';
+        $parameters                 = [$project_id];
         if ($scope) {
-            $sql = 'SELECT *
-                FROM plugin_git
-                WHERE repository_deletion_date IS NULL
-                AND project_id = ?
-                AND repository_scope = ?
-                LIMIT ?
-                OFFSET ?';
+            $additional_where_statement .= ' AND repository_scope = ? ';
 
-            return $this->getDB()->run($sql, $project_id, $scope, $limit, $offset);
+            $parameters[] = $scope;
         }
 
-        $sql = 'SELECT *
+        if ($owner_id) {
+            $additional_where_statement .= ' AND repository_creation_user_id = ? ';
+
+            $parameters[] = $owner_id;
+        }
+
+        $parameters[] = $limit;
+        $parameters[] = $offset;
+
+        $sql = "SELECT *
                 FROM plugin_git
                 WHERE repository_deletion_date IS NULL
                 AND project_id = ?
+                $additional_where_statement
                 LIMIT ?
-                OFFSET ?';
+                OFFSET ?";
 
-        return $this->getDB()->run($sql, $project_id, $limit, $offset);
+        return $this->getDB()->safeQuery($sql, $parameters);
     }
 
     public function getUGroupsByRepositoryPermissions($repository_id, $permission_type)

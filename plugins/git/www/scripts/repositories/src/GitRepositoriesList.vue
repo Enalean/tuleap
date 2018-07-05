@@ -33,9 +33,17 @@
                     <translate>Add repository</translate>
                 </button>
 
-                <select v-if="are_there_personal_repositories" class="tlp-select tlp-select-adjusted">
-                    <option selected>{{ project_repositories_label }}</option>
-                    <option v-for="owner in sorted_repositories_owners" v-bind:key="owner.id">{{ owner.display_name }}</option>
+                <select v-if="are_there_personal_repositories"
+                        class="tlp-select tlp-select-adjusted"
+                        v-on:change="changeRepositories()"
+                        v-model="selected_owner_id"
+                >
+                    <option value="">{{ project_repositories_label }}</option>
+                    <option v-for="owner in sorted_repositories_owners"
+                            v-bind:key="owner.id"
+                            v-bind:value="owner.id">
+                        {{ owner.display_name }}
+                    </option>
                 </select>
 
                 <div class="git-repository-list-actions-spacer"></div>
@@ -111,11 +119,13 @@
     </div>
 </template>
 <script>
+const PROJECT_KEY = 'project';
+
 import { modal as tlpModal } from "tlp";
 import GitRepositoryCreate from "./GitRepositoryCreate.vue";
 import GitBreadcrumbs from "./GitBreadcrumbs.vue";
 import GitRepository from "./GitRepository.vue";
-import { getRepositoryList } from "./rest-querier.js";
+import { getRepositoryList, getForkedRepositoryList } from "./rest-querier.js";
 import { getProjectId, getUserIsAdmin, getRepositoriesOwners } from "./repository-list-presenter.js";
 
 export default {
@@ -133,30 +143,68 @@ export default {
             repository_filter: "",
             is_loading_initial: true,
             is_loading_next: true,
-            error: ""
+            error: "",
+            selected_owner_id: '',
+            cached_repositories: {}
         };
     },
     methods: {
         showModal() {
             this.add_repository_modal.toggle();
         },
-        async getRepositories() {
+        async getProjectRepositories() {
             try {
                 this.repositories = await getRepositoryList(getProjectId(), repositories => {
                     this.filtered_repositories.push(...repositories);
                     this.is_loading_initial = false;
                 });
             } catch (e) {
-                const { error } = await e.response.json();
-                if (Number.parseInt(error.code, 10) === 404) {
-                    this.error = this.$gettext("Git plugin is not activated");
-                } else {
-                    this.error = this.$gettext(
-                        "Something went wrong, please check your network connection"
-                    );
-                }
+                this.handleGetRepositoryListError(e);
             } finally {
                 this.is_loading_next = false;
+                this.cached_repositories[PROJECT_KEY] = this.repositories;
+            }
+        },
+        async getForkedRepositories(owner_id) {
+            if (this.cached_repositories.hasOwnProperty(owner_id)) {
+                this.repositories = this.cached_repositories[owner_id];
+                this.filtered_repositories.push(...this.repositories);
+                return;
+            }
+
+            this.is_loading_initial = true;
+            this.is_loading_next    = true;
+            try {
+                this.repositories = await getForkedRepositoryList(getProjectId(), owner_id, repositories => {
+                        this.filtered_repositories.push(...repositories);
+                        this.is_loading_initial = false;
+                    });
+            } catch (e) {
+                this.handleGetRepositoryListError(e);
+            } finally {
+                this.is_loading_next = false;
+                this.cached_repositories[owner_id] = this.repositories;
+            }
+        },
+        changeRepositories() {
+            this.repositories = [];
+            this.filtered_repositories = [];
+
+            if (this.selected_owner_id) {
+                this.getForkedRepositories(this.selected_owner_id);
+            } else {
+                this.repositories = this.cached_repositories[PROJECT_KEY];
+                this.filtered_repositories.push(...this.repositories);
+            }
+        },
+        async handleGetRepositoryListError(e) {
+            const { error } = await e.response.json();
+            if (Number.parseInt(error.code, 10) === 404) {
+                this.error = this.$gettext("Git plugin is not activated");
+            } else {
+                this.error = this.$gettext(
+                    "Something went wrong, please check your network connection"
+                );
             }
         },
         filterRepositories() {
@@ -168,7 +216,7 @@ export default {
     mounted() {
         this.add_repository_modal = tlpModal(this.$refs.create_modal.$el);
 
-        this.getRepositories();
+        this.getProjectRepositories();
     },
     computed: {
         show_create_repository_button() {

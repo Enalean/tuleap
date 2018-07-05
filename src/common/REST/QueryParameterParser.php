@@ -59,8 +59,11 @@ class QueryParameterParser
     /**
      * @param string $query
      * @param string $parameter_name
+     *
      * @return int
-     * @throws QueryParameterException
+     * @throws MissingMandatoryParameterException
+     * @throws Exceptions\InvalidJsonException
+     * @throws InvalidParameterTypeException
      */
     public function getInt($query, $parameter_name)
     {
