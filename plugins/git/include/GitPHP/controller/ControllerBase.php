@@ -109,12 +109,7 @@ abstract class ControllerBase
 
 		}
 
-		if (isset($_GET['p'])) {
-			$this->project = ProjectList::GetInstance()->GetProject(str_replace(chr(0), '', $_GET['p']));
-			if (!$this->project) {
-				throw new MessageException(sprintf(__('Invalid project %1$s'), $_GET['p']), true);
-			}
-		}
+        $this->project = ProjectList::GetInstance()->GetProject();
 
 		if (isset($_GET['s']))
 			$this->params['search'] = $_GET['s'];
@@ -145,51 +140,6 @@ abstract class ControllerBase
 	 * @return string cache key
 	 */
 	protected abstract function GetCacheKey();
-
-	/**
-	 * GetCacheKeyPrefix
-	 *
-	 * Get the prefix for all cache keys
-	 *
-	 * @access private
-	 * @param string $projectKeys include project-specific key pieces
-	 * @return string cache key prefix
-	 */
-	private function GetCacheKeyPrefix($projectKeys = true)
-	{
-		$cacheKeyPrefix = Resource::GetLocale();
-
-		$projList = ProjectList::GetInstance();
-		if ($projList) {
-			$cacheKeyPrefix .= '|' . sha1(serialize($projList->GetConfig())) . '|' . sha1(serialize($projList->GetSettings()));
-			unset($projList);
-		}
-		if ($this->project && $projectKeys) {
-			$cacheKeyPrefix .= '|' . sha1($this->project->GetProject());
-		}
-		
-		return $cacheKeyPrefix;
-	}
-
-	/** 
-	 * GetFullCacheKey
-	 *
-	 * Get the full cache key
-	 *
-	 * @access protected
-	 * @return string full cache key
-	 */
-	protected function GetFullCacheKey()
-	{
-		$cacheKey = $this->GetCacheKeyPrefix();
-
-		$subCacheKey = $this->GetCacheKey();
-
-		if (!empty($subCacheKey))
-			$cacheKey .= '|' . $subCacheKey;
-
-		return $cacheKey;
-	}
 
 	/**
 	 * GetName
@@ -336,44 +286,11 @@ abstract class ControllerBase
 	 */
 	public function Render()
 	{
-		if ((Config::GetInstance()->GetValue('cache', false) == true) && (Config::GetInstance()->GetValue('cacheexpire', true) === true))
-			$this->CacheExpire();
+        $this->tpl->clear_all_assign();
+        $this->LoadCommonData();
+        $this->LoadData();
 
-		if (!$this->tpl->is_cached($this->GetTemplate(), $this->GetFullCacheKey())) {
-			$this->tpl->clear_all_assign();
-			$this->LoadCommonData();
-			$this->LoadData();
-		}
-
-		$this->tpl->display($this->GetTemplate(), $this->GetFullCacheKey());
-	}
-
-	/**
-	 * CacheExpire
-	 *
-	 * Expires the cache
-	 *
-	 * @access public
-	 * @param boolean $expireAll expire the whole cache
-	 */
-	public function CacheExpire($expireAll = false)
-	{
-		if ($expireAll) {
-			$this->tpl->clear_all_cache();
-			return;
-		}
-
-		if (!$this->project)
-			return;
-
-		$epoch = $this->project->GetEpoch();
-		if (empty($epoch))
-			return;
-
-		$age = $this->project->GetAge();
-
-		$this->tpl->clear_cache(null, $this->GetCacheKeyPrefix(), null, $age);
-		$this->tpl->clear_cache('projectlist.tpl', $this->GetCacheKeyPrefix(false), null, $age);
+        $this->tpl->display($this->GetTemplate());
 	}
 
 }

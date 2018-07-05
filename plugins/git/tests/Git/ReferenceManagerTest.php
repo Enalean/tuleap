@@ -61,16 +61,6 @@ class Git_ReferenceManagerTest extends TuleapTestCase {
         $this->git_reference_manager->getReference($this->project, Git::REFERENCE_KEYWORD, 'rantanplan/469eaa9');
     }
 
-    public function itSetsTheProjectInTheLink() {
-        $myid = $mykeyword = $mydescription = $mylink = $myscope = $myservice_short_name = $nature = $myis_active = $mygroup_id = 0;
-        $reference = new Reference($myid,$mykeyword,$mydescription,$mylink,$myscope,$myservice_short_name,$nature,$myis_active,$mygroup_id);
-        stub($this->repository_factory)->getRepositoryByPath()->returns($this->repository);
-        stub($this->reference_manager)->loadReferenceFromKeywordAndNumArgs()->returns($reference);
-
-        $this->git_reference_manager->getReference($this->project, Git::REFERENCE_KEYWORD, 'rantanplan/469eaa9');
-        $this->assertPattern('/\&p=rantanplan$/', $reference->getLink());
-    }
-
     public function itReturnsTheReference() {
         $reference = mock('Reference');
         stub($this->repository_factory)->getRepositoryByPath()->returns($this->repository);

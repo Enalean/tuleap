@@ -47,14 +47,7 @@ class GitViews_GitPhpViewer {
 
     public function getContent($is_download)
     {
-        if ( empty($_REQUEST['a']) )  {
-            $_REQUEST['a'] = 'summary';
-        }
         set_time_limit(300);
-        $_GET['a']            = $_REQUEST['a'];
-        $_REQUEST['group_id'] = $this->repository->getProjectId();
-        $_GET['p']            = $this->repository->getFullName() . '.git';
-        $_REQUEST['action']   = 'view';
         $this->preSanitizeRequestForGitphp();
         if (! $is_download) {
             echo '<div id="gitphp" class="plugin_git_gitphp">';
@@ -118,10 +111,6 @@ class GitViews_GitPhpViewer {
                 Log::GetInstance()->SetStartMemory(GITPHP_START_MEM);
             }
 
-            if (! Config::GetInstance()->GetValue('projectroot', null)) {
-                throw new MessageException(Tuleap\Git\GitPHP\__('A projectroot must be set in the config'), true, 500);
-            }
-
             /*
              * Check for required executables
              */
@@ -139,10 +128,7 @@ class GitViews_GitPhpViewer {
             }
             unset($exe);
 
-            /*
-             * Project list
-             */
-            ProjectList::Instantiate(null, true);
+            ProjectList::Instantiate($this->repository);
 
             $controller = Controller::GetController((isset($_GET['a']) ? $_GET['a'] : null));
             if ($controller) {
@@ -189,7 +175,6 @@ class GitViews_GitPhpViewer {
     {
         $config = Config::GetInstance();
         $config->SetValue('stylesheet', '');
-        $config->SetValue('projectroot', $this->repository->getGitRootPath() . $this->repository->getProject()->getUnixName() . '/');
         $config->SetValue('gitbin', '/usr/bin/git');
         $config->SetValue('diffbin', '/usr/bin/diff');
         $config->SetValue('gittmp', '/tmp/');

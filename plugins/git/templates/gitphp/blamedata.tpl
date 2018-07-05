@@ -12,7 +12,7 @@
     {if $opened}</div>{/if}
     <div class="{cycle values="light,dark"}">
     {assign var=opened value=true}
-    <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=commit&amp;h={$blamecommit->GetHash()|urlencode}" title="{$blamecommit->GetTitle()|htmlspecialchars}" class="commitTip"&noheader=1>{$blamecommit->GetAuthorEpoch()|date_format:"%Y-%m-%d %H:%M:%S"}</a>
+    <a href="{$SCRIPT_NAME}?a=commit&amp;h={$blamecommit->GetHash()|urlencode}" title="{$blamecommit->GetTitle()|htmlspecialchars}" class="commitTip"&noheader=1>{$blamecommit->GetAuthorEpoch()|date_format:"%Y-%m-%d %H:%M:%S"}</a>
     {$blamecommit->GetAuthorName()|escape}
   {/if}
   <br />

@@ -120,41 +120,35 @@ class Controller_Blob extends ControllerBase
 
 			Log::GetInstance()->SetEnabled(false);
 
-			// XXX: Nasty hack to cache headers
-			if (!$this->tpl->is_cached('blobheaders.tpl', $this->GetFullCacheKey())) {
-				if (isset($this->params['file']))
-					$saveas = $this->params['file'];
-				else
-					$saveas = $this->params['hash'] . ".txt";
+            if (isset($this->params['file']))
+                $saveas = $this->params['file'];
+            else
+                $saveas = $this->params['hash'] . ".txt";
 
-				$headers = array();
+            $headers = array();
 
-				$mime = null;
-				if (Config::GetInstance()->GetValue('filemimetype', true)) {
-					if ((!isset($this->params['hash'])) && (isset($this->params['file']))) {
-						$commit = $this->project->GetCommit($this->params['hashbase']);
-						$this->params['hash'] = $commit->PathToHash($this->params['file']);
-					}
+            $mime = null;
+            if (Config::GetInstance()->GetValue('filemimetype', true)) {
+                if ((!isset($this->params['hash'])) && (isset($this->params['file']))) {
+                    $commit = $this->project->GetCommit($this->params['hashbase']);
+                    $this->params['hash'] = $commit->PathToHash($this->params['file']);
+                }
 
-					$blob = $this->project->GetBlob($this->params['hash']);
-					$blob->SetPath($this->params['file']);
+                $blob = $this->project->GetBlob($this->params['hash']);
+                $blob->SetPath($this->params['file']);
 
-					$mime = $blob->FileMime();
-				}
+                $mime = $blob->FileMime();
+            }
 
-				if ($mime)
-					$headers[] = "Content-type: " . $mime;
-				else
-					$headers[] = "Content-type: text/plain; charset=UTF-8";
+            if ($mime)
+                $headers[] = "Content-type: " . $mime;
+            else
+                $headers[] = "Content-type: text/plain; charset=UTF-8";
 
-				$headers[] = "Content-disposition: attachment; filename=\"" . $saveas . "\"";
-				$headers[] = "X-Content-Type-Options: nosniff";
+            $headers[] = "Content-disposition: attachment; filename=\"" . $saveas . "\"";
+            $headers[] = "X-Content-Type-Options: nosniff";
 
-				$this->tpl->assign("blobheaders", serialize($headers));
-			}
-			$out = $this->tpl->fetch('blobheaders.tpl', $this->GetFullCacheKey());
-
-			$this->headers = unserialize($out);
+			$this->headers = $headers;
 		}
 
 	}

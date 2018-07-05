@@ -1,5 +1,27 @@
 <?php
 
+/**
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) 2010 Christopher Han
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+// phpcs:ignoreFile
+
 namespace Tuleap\Git\GitPHP;
 
 /**
@@ -63,9 +85,6 @@ class Controller
 			case 'snapshot':
 				$controller = new Controller_Snapshot();
 				break;
-			case 'tree':
-				$controller = new Controller_Tree();
-				break;
 			case 'tag':
 				$controller = new Controller_Tag();
 				break;
@@ -98,20 +117,9 @@ class Controller
 			case 'summary':
 				$controller = new Controller_Project();
 				break;
-			case 'project_index':
-				$controller = new Controller_ProjectList();
-				$controller->SetParam('txt', true);
-				break;
-			case 'opml':
-				$controller = new Controller_ProjectList();
-				$controller->SetParam('opml', true);
-				break;
+            case 'tree':
 			default:
-				if (isset($_GET['p'])) {
-					$controller = new Controller_Project();
-				} else {
-					$controller = new Controller_ProjectList();
-				}
+                $controller = new Controller_Tree();
 		}
 
 		return $controller;
