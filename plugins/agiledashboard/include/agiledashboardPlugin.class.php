@@ -40,6 +40,7 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\Planning\PlanningJavascriptDependenciesProvider;
 use Tuleap\AgileDashboard\RealTime\RealTimeArtifactMessageController;
 use Tuleap\AgileDashboard\Semantic\Dao\SemanticDoneDao;
+use Tuleap\AgileDashboard\Semantic\MoveChangesetXMLUpdater;
 use Tuleap\AgileDashboard\Semantic\MoveSemanticChecker;
 use Tuleap\AgileDashboard\Semantic\SemanticDone;
 use Tuleap\AgileDashboard\Semantic\SemanticDoneFactory;
@@ -62,6 +63,8 @@ use Tuleap\Request\CurrentPage;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 use Tuleap\Tracker\Artifact\Event\ArtifactsReordered;
 use Tuleap\Tracker\Events\MoveArtifactCheckExternalSemantics;
+use Tuleap\Tracker\Events\MoveArtifactGetExternalSemanticTargetField;
+use Tuleap\Tracker\Events\MoveArtifactParseFieldChangeNodes;
 use Tuleap\Tracker\FormElement\Event\MessageFetcherAdditionalWarnings;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\CanValueBeHiddenStatementsCollection;
 use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
@@ -164,6 +167,8 @@ class AgileDashboardPlugin extends Plugin {
             $this->addHook(PermissionPerGroupPaneCollector::NAME);
             $this->addHook(TRACKER_EVENT_ARTIFACT_DELETE);
             $this->addHook(MoveArtifactCheckExternalSemantics::NAME);
+            $this->addHook(MoveArtifactGetExternalSemanticTargetField::NAME);
+            $this->addHook(MoveArtifactParseFieldChangeNodes::NAME);
         }
 
         if (defined('CARDWALL_BASE_URL')) {
@@ -1654,13 +1659,49 @@ class AgileDashboardPlugin extends Plugin {
     {
         $event->setVisitedByPlugin();
 
-        $move_semantic_checker = new MoveSemanticChecker(
-            $this->getSemanticInitialEffortFactory(),
-            $this->getFormElementFactory()
-        );
-
+        $move_semantic_checker = $this->getMoveSemanticChecker();
         if ($move_semantic_checker->areSemanticsAligned($event->getSourceTracker(), $event->getTargetTracker())) {
             $event->setExternalSemanticAligned();
         }
+    }
+
+    public function moveArtifactGetExternalSemanticTargetField(MoveArtifactGetExternalSemanticTargetField $event)
+    {
+        $move_semantic_checker = $this->getMoveSemanticChecker();
+        if (! $move_semantic_checker->areSemanticsAligned($event->getSourceTracker(), $event->getTargetTracker())) {
+            return;
+        }
+
+        $target_initial_effort = $this->getSemanticInitialEffortFactory()->getByTracker($event->getTargetTracker());
+        $event->setField($target_initial_effort->getField());
+    }
+
+    public function moveArtifactParseFieldChangeNodes(MoveArtifactParseFieldChangeNodes $event)
+    {
+        $move_semantic_checker = $this->getMoveSemanticChecker();
+        if (! $move_semantic_checker->areSemanticsAligned($event->getSourceTracker(), $event->getTargetTracker())) {
+            return;
+        }
+
+        $updater = new MoveChangesetXMLUpdater($this->getSemanticInitialEffortFactory());
+        if ($updater->parseFieldChangeNodesAtGivenIndex(
+            $event->getSourceTracker(),
+            $event->getTargetTracker(),
+            $event->getChangesetXml(),
+            $event->getIndex())
+        ) {
+            $event->setModifiedByPlugin();
+        }
+    }
+
+    /**
+     * @return MoveSemanticChecker
+     */
+    private function getMoveSemanticChecker()
+    {
+        return new MoveSemanticChecker(
+            $this->getSemanticInitialEffortFactory(),
+            $this->getFormElementFactory()
+        );
     }
 }

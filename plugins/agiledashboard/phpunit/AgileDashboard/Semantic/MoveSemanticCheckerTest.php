@@ -110,4 +110,32 @@ class MoveSemanticCheckerTest extends TestCase
 
         $this->assertFalse($this->checker->areSemanticsAligned($this->source_tracker, $this->target_tracker));
     }
+
+    public function testSemanticAreNotAlignedIfBothFieldsAreSelectboxes()
+    {
+        $this->source_semantic->shouldReceive('getField')->andReturn($this->source_initial_effort_field);
+        $this->target_semantic->shouldReceive('getField')->andReturn($this->target_initial_effort_field);
+
+        $this->initial_effort_factory->shouldReceive('getByTracker')->with($this->source_tracker)->andReturn($this->source_semantic);
+        $this->initial_effort_factory->shouldReceive('getByTracker')->with($this->target_tracker)->andReturn($this->target_semantic);
+
+        $this->form_element_factory->shouldReceive('getType')->with($this->source_initial_effort_field)->andReturn('sb');
+        $this->form_element_factory->shouldReceive('getType')->with($this->target_initial_effort_field)->andReturn('sb');
+
+        $this->assertFalse($this->checker->areSemanticsAligned($this->source_tracker, $this->target_tracker));
+    }
+
+    public function testSemanticAreNotAlignedIfBothFieldsAreRadioButtons()
+    {
+        $this->source_semantic->shouldReceive('getField')->andReturn($this->source_initial_effort_field);
+        $this->target_semantic->shouldReceive('getField')->andReturn($this->target_initial_effort_field);
+
+        $this->initial_effort_factory->shouldReceive('getByTracker')->with($this->source_tracker)->andReturn($this->source_semantic);
+        $this->initial_effort_factory->shouldReceive('getByTracker')->with($this->target_tracker)->andReturn($this->target_semantic);
+
+        $this->form_element_factory->shouldReceive('getType')->with($this->source_initial_effort_field)->andReturn('rb');
+        $this->form_element_factory->shouldReceive('getType')->with($this->target_initial_effort_field)->andReturn('rb');
+
+        $this->assertFalse($this->checker->areSemanticsAligned($this->source_tracker, $this->target_tracker));
+    }
 }
