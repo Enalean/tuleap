@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,28 +16,29 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-use Tuleap\BurningParrotCompatiblePageDetector;
-use Tuleap\Layout\ErrorRendering;
-use Tuleap\Request\CurrentPage;
-use Tuleap\Request\FrontRouter;
-use Tuleap\Request\RouteCollector;
+namespace Tuleap\Layout;
 
-define('FRONT_ROUTER', true);
+use ThemeVariantColor;
 
-require_once __DIR__.'/include/pre.php';
+class CssAsset
+{
+    /**
+     * @var IncludeAssets
+     */
+    private $include_assets;
+    private $name;
 
-$router = new FrontRouter(
-    new RouteCollector($event_manager),
-    new URLVerificationFactory($event_manager),
-    new BackendLogger(),
-    new ErrorRendering(),
-    new ThemeManager(
-        new BurningParrotCompatiblePageDetector(
-            new CurrentPage(),
-            new Admin_Homepage_Dao()
-        )
-    )
-);
-$router->route($request);
+    public function __construct(IncludeAssets $include_assets, $name)
+    {
+        $this->include_assets = $include_assets;
+        $this->name = $name;
+    }
+
+    public function getFileURL(ThemeVariantColor $color)
+    {
+        return $this->include_assets->getFileURL($this->name.'-'.$color->getName().'.css');
+    }
+}

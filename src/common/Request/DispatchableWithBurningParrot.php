@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,28 +16,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-use Tuleap\BurningParrotCompatiblePageDetector;
-use Tuleap\Layout\ErrorRendering;
-use Tuleap\Request\CurrentPage;
-use Tuleap\Request\FrontRouter;
-use Tuleap\Request\RouteCollector;
+namespace Tuleap\Request;
 
-define('FRONT_ROUTER', true);
-
-require_once __DIR__.'/include/pre.php';
-
-$router = new FrontRouter(
-    new RouteCollector($event_manager),
-    new URLVerificationFactory($event_manager),
-    new BackendLogger(),
-    new ErrorRendering(),
-    new ThemeManager(
-        new BurningParrotCompatiblePageDetector(
-            new CurrentPage(),
-            new Admin_Homepage_Dao()
-        )
-    )
-);
-$router->route($request);
+/**
+ * Your controller should implement this interface if it should render a BurningParrot page
+ */
+interface DispatchableWithBurningParrot
+{
+}

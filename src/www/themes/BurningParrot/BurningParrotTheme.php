@@ -115,7 +115,8 @@ class BurningParrotTheme extends BaseLayout
             $url_redirect,
             $this->toolbar,
             $breadcrumbs,
-            $this->getMOTD()
+            $this->getMOTD(),
+            $this->css_assets
         );
 
         $this->renderer->renderToPage('header', $header_presenter);

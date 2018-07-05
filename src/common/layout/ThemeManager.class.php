@@ -54,12 +54,11 @@ class ThemeManager
 
     /**
      * @param PFUser $current_user
-     * @return bool|mixed
+     * @return \Tuleap\Theme\BurningParrot\BurningParrotTheme
      */
     public function getBurningParrot(PFUser $current_user)
     {
-        include_once __DIR__.'/../../www/themes/BurningParrot/autoload.php';
-        return new \Tuleap\Theme\BurningParrot\BurningParrotTheme('/themes/'.self::$BURNING_PARROT, $current_user);
+        return $this->getStandardTheme($current_user, self::$BURNING_PARROT);
     }
 
     private function getFirstValidTheme(PFUser $current_user, array $theme_names)

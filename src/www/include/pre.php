@@ -221,13 +221,15 @@ $event_manager->processEvent(
 */
 date_default_timezone_set(TimezoneRetriever::getUserTimezone($current_user));
 
-$theme_manager = new ThemeManager(
-    new BurningParrotCompatiblePageDetector(
-        new CurrentPage(),
-        new Admin_Homepage_Dao()
-    )
-);
-$HTML = $theme_manager->getTheme($current_user);
+if (! defined('FRONT_ROUTER')) {
+    $theme_manager = new ThemeManager(
+        new BurningParrotCompatiblePageDetector(
+            new CurrentPage(),
+            new Admin_Homepage_Dao()
+        )
+    );
+    $HTML = $theme_manager->getTheme($current_user);
+}
 
 // Check if anonymous user is allowed to browse the site
 // Bypass the test for:
@@ -237,18 +239,16 @@ $HTML = $theme_manager->getTheme($current_user);
 // Check URL for valid hostname and valid protocol
 
 if (!IS_SCRIPT) {
-    if (! defined('DISABLE_URL_VERIFICATION')) {
+    if (! defined('FRONT_ROUTER')) {
         $urlVerifFactory = new URLVerificationFactory($event_manager);
         $urlVerif = $urlVerifFactory->getURLVerification($_SERVER);
         $urlVerif->assertValidUrl($_SERVER, $request);
+
+        \Tuleap\Request\RequestInstrumentation::incrementLegacy();
     }
 
     if (! $current_user->isAnonymous()) {
         header('X-Tuleap-Username: '.$current_user->getUserName());
-    }
-
-    if (! defined('FRONT_ROUTER')) {
-        \Tuleap\Request\RequestInstrumentation::incrementLegacy();
     }
 }
 

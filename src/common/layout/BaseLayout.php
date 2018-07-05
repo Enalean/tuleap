@@ -83,6 +83,11 @@ abstract class BaseLayout extends Response
      */
     protected $uri_sanitizer;
 
+    /**
+     * @var string[]
+     */
+    protected $css_assets = [];
+
     public function __construct($root)
     {
         parent::__construct();
@@ -101,6 +106,11 @@ abstract class BaseLayout extends Response
     abstract public function displayStaticWidget(Widget_Static $widget);
     abstract public function includeCalendarScripts();
     abstract protected function getUser();
+
+    public function addCssAsset(CssAsset $asset)
+    {
+        $this->css_assets[] = $asset;
+    }
 
     /**
      * Build an img tag

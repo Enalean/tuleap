@@ -27,6 +27,7 @@ use EventManager;
 use ThemeVariant;
 use ThemeVariantColor;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\SidebarPresenter;
 use Tuleap\Theme\BurningParrot\Navbar\PresenterBuilder as NavbarPresenterBuilder;
 use URLRedirect;
@@ -61,6 +62,9 @@ class HeaderPresenterBuilder
     /** @var CurrentProjectNavbarInfoPresenter */
     private $current_project_navbar_info_presenter;
 
+    /** @var CssAsset[] */
+    private $css_assets;
+
     public function build(
         NavbarPresenterBuilder $navbar_presenter_builder,
         HTTPRequest $request,
@@ -76,7 +80,8 @@ class HeaderPresenterBuilder
         URLRedirect $url_redirect,
         array $toolbar,
         array $breadcrumbs,
-        $motd
+        $motd,
+        array $css_assets
     ) {
         $this->navbar_presenter_builder              = $navbar_presenter_builder;
         $this->request                               = $request;
@@ -87,6 +92,7 @@ class HeaderPresenterBuilder
         $this->main_classes                          = $main_classes;
         $this->sidebar                               = $sidebar;
         $this->current_project_navbar_info_presenter = $current_project_navbar_info_presenter;
+        $this->css_assets                            = $css_assets;
 
         $color = $this->getMainColor();
 
@@ -185,6 +191,10 @@ class HeaderPresenterBuilder
             '/themes/common/tlp/dist/tlp-'. $color->getName() . $condensed_suffix . '.min.css',
         );
         $stylesheets[] = $core_burning_parrot_include_assets->getFileURL('burning-parrot-' . $color->getName() . $condensed_suffix . '.css');
+
+        foreach ($this->css_assets as $css_asset) {
+            $stylesheets[] = $css_asset->getFileURL($color);
+        }
 
         EventManager::instance()->processEvent(
             Event::BURNING_PARROT_GET_STYLESHEETS,

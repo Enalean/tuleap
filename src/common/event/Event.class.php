@@ -1240,6 +1240,8 @@ class Event {
      * Parameters:
      *    - variant: ThemeVariantColor Theme variant color
      *    - stylesheets: String[] css paths to be added
+     *
+     * @deprecated
      */
     const BURNING_PARROT_GET_STYLESHEETS = 'burning_parrot_get_stylesheets';
 
@@ -1248,6 +1250,8 @@ class Event {
      *
      * Parameters:
      *    - javascript_files: String[] js paths to be added
+     *
+     * @deprecated
      */
     const BURNING_PARROT_GET_JAVASCRIPT_FILES = 'burning_parrot_get_javascript_files';
 

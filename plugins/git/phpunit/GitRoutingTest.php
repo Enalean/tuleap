@@ -33,6 +33,7 @@ use PermissionsManager;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Git\History\GitPhpAccessLogger;
 use Tuleap\Git\RepositoryList\GitRepositoryListController;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\CollectRoutesEvent;
 use FastRoute;
 use Mockery;
@@ -149,6 +150,7 @@ class GitRoutingTest extends TestCase
                 'getGitPermissionsManager'  => \Mockery::mock(GitPermissionsManager::class),
                 'getUserDao'                => \Mockery::mock(UserDao::class),
                 'getConfigurationParameter' => 'foo',
+                'getIncludeAssets'          => \Mockery::mock(IncludeAssets::class),
             ]);
 
             $event = new CollectRoutesEvent($route_collector);

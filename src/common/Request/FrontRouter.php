@@ -24,8 +24,10 @@ namespace Tuleap\Request;
 use FastRoute;
 use HTTPRequest;
 use Logger;
-use Tuleap\Layout\ErrorRendering;
+use ThemeManager;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\ErrorRendering;
+use Tuleap\Theme\BurningParrot\BurningParrotTheme;
 use URLVerificationFactory;
 
 class FrontRouter
@@ -46,20 +48,26 @@ class FrontRouter
      * @var ErrorRendering
      */
     private $error_rendering;
+    /**
+     * @var ThemeManager
+     */
+    private $theme_manager;
 
     public function __construct(
         RouteCollector $route_collector,
         URLVerificationFactory $url_verification_factory,
         Logger $logger,
-        ErrorRendering $error_rendering
+        ErrorRendering $error_rendering,
+        ThemeManager $theme_manager
     ) {
         $this->route_collector          = $route_collector;
         $this->url_verification_factory = $url_verification_factory;
         $this->logger                   = $logger;
         $this->error_rendering          = $error_rendering;
+        $this->theme_manager            = $theme_manager;
     }
 
-    public function route(HTTPRequest $request, BaseLayout $layout)
+    public function route(HTTPRequest $request)
     {
         try {
             $route_info = $this->getRouteInfo();
@@ -73,6 +81,14 @@ class FrontRouter
                 case FastRoute\Dispatcher::FOUND:
                     if (is_callable($route_info[1])) {
                         $handler = $route_info[1]();
+
+                        if ($handler instanceof DispatchableWithBurningParrot) {
+                            $layout = $this->getBurningParrotTheme($request);
+                        } else {
+                            $layout = $this->theme_manager->getTheme($request->getCurrentUser());
+                        }
+                        $GLOBALS['HTML'] = $layout;
+
                         $url_verification = $this->url_verification_factory->getURLVerification($_SERVER);
                         if ($handler instanceof DispatchableWithRequestNoAuthz) {
                             if ($handler->userCanAccess($url_verification, $request, $route_info[2])) {
@@ -104,10 +120,22 @@ class FrontRouter
             RequestInstrumentation::increment(200);
         } catch (NotFoundException $exception) {
             RequestInstrumentation::increment(404);
-            $this->error_rendering->rendersError($request, 404, _('Not found'), $exception->getMessage());
+            $this->error_rendering->rendersError(
+                $this->getBurningParrotTheme($request),
+                $request,
+                404,
+                _('Not found'),
+                $exception->getMessage()
+            );
         } catch (ForbiddenException $exception) {
             RequestInstrumentation::increment(403);
-            $this->error_rendering->rendersError($request, 403, _('Forbidden'), $exception->getMessage());
+            $this->error_rendering->rendersError(
+                $this->getBurningParrotTheme($request),
+                $request,
+                403,
+                _('Forbidden'),
+                $exception->getMessage()
+            );
         } catch (\Exception $exception) {
             $code = 500;
             if ($exception->getCode() !== 0) {
@@ -116,6 +144,7 @@ class FrontRouter
             RequestInstrumentation::increment($code);
             $this->logger->error('Caught exception', $exception);
             $this->error_rendering->rendersErrorWithException(
+                $this->getBurningParrotTheme($request),
                 $request,
                 $code,
                 _('Internal server error'),
@@ -123,6 +152,11 @@ class FrontRouter
                 $exception
             );
         }
+    }
+
+    private function getBurningParrotTheme(HTTPRequest $request)
+    {
+        return $this->theme_manager->getBurningParrot($request->getCurrentUser());
     }
 
     private function getRouteInfo()
