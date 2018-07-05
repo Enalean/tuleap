@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -34,7 +34,6 @@ use Git_RemoteServer_NotFoundException;
 use Git_SystemEventManager;
 use GitBackendLogger;
 use GitDao;
-use GitDaoException;
 use GitPermissionsManager;
 use GitRepoNotFoundException;
 use GitRepoNotReadableException;
@@ -134,6 +133,7 @@ class RepositoryResource extends AuthenticatedResource {
         $git_dao               = new GitDao();
         $this->project_manager = ProjectManager::instance();
         $this->user_manager    = UserManager::instance();
+        $event_manager         = EventManager::instance();
 
         $this->repository_factory = new GitRepositoryFactory(
             $git_dao,
@@ -165,7 +165,8 @@ class RepositoryResource extends AuthenticatedResource {
         $this->representation_builder = new RepositoryRepresentationBuilder(
             $this->git_permission_manager,
             $this->gerrit_server_factory,
-            new \Git_LogDao()
+            new \Git_LogDao(),
+            $event_manager
         );
 
         $project_history_dao     = new ProjectHistoryDao();
@@ -277,7 +278,7 @@ class RepositoryResource extends AuthenticatedResource {
                 $fine_grained_replicator,
                 $project_history_dao,
                 $history_value_formatter,
-                EventManager::instance()
+                $event_manager
             ),
             $this->git_permission_manager,
             $fine_grained_replicator,

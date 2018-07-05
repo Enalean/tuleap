@@ -32,16 +32,17 @@ class GitRepositoryRepresentation extends GitRepositoryRepresentationBase
      * @param $server_representation
      * @param string $last_update_date
      */
-    public function build(GitRepository $repository, $server_representation, $last_update_date)
+    public function build(GitRepository $repository, $server_representation, $last_update_date, array $additional_information)
     {
-        $this->id          = JsonCast::toInt($repository->getId());
-        $this->uri         = self::ROUTE . '/' . $this->id;
-        $this->name        = $repository->getName();
-        $this->path        = $repository->getPath();
-        $this->description = $repository->getDescription();
-        $this->server      = $server_representation;
-        $this->html_url    = GIT_BASE_URL . '/' . urlencode($repository->getProject()->getUnixNameLowerCase()) . "/"
+        $this->id                     = JsonCast::toInt($repository->getId());
+        $this->uri                    = self::ROUTE . '/' . $this->id;
+        $this->name                   = $repository->getName();
+        $this->path                   = $repository->getPath();
+        $this->description            = $repository->getDescription();
+        $this->server                 = $server_representation;
+        $this->html_url               = GIT_BASE_URL . '/' . urlencode($repository->getProject()->getUnixNameLowerCase()) . "/"
             . urlencode($repository->getName());
-        $this->last_update_date = JsonCast::toDate($last_update_date);
+        $this->last_update_date       = JsonCast::toDate($last_update_date);
+        $this->additional_information = $additional_information;
     }
 }

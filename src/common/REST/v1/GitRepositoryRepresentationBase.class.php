@@ -72,4 +72,9 @@ class GitRepositoryRepresentationBase
      * @var string
      */
     public $html_url;
+
+    /**
+     * @var array
+     */
+    public $additional_information;
 }

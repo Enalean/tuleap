@@ -48,6 +48,13 @@ class Dao extends DataAccessObject
         return $this->getDB()->row($sql, $repo_src_id, $sha1_src, $repo_dest_id, $sha1_dest);
     }
 
+    public function searchNbOfOpenedPullRequestsForRepositoryId($repository_id)
+    {
+        $sql = 'SELECT count(*) AS open_pr FROM plugin_pullrequest_review
+                WHERE (repository_id= ? OR repo_dest_id = ?) AND status= ?';
+        return $this->getDB()->single($sql, [$repository_id, $repository_id, PullRequest::STATUS_REVIEW]);
+    }
+
     public function searchOpenedBySourceBranch($repository_id, $branch_name)
     {
         $sql = 'SELECT * FROM plugin_pullrequest_review
