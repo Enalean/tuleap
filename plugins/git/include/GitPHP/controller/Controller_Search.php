@@ -67,19 +67,6 @@ class Controller_Search extends ControllerBase
 	}
 
 	/**
-	 * GetCacheKey
-	 *
-	 * Gets the cache key for this controller
-	 *
-	 * @access protected
-	 * @return string cache key
-	 */
-	protected function GetCacheKey()
-	{
-		return (isset($this->params['hash']) ? $this->params['hash'] : '') . '|' . (isset($this->params['searchtype']) ? sha1($this->params['searchtype']) : '') . '|' . (isset($this->params['search']) ? sha1($this->params['search']) : '') . '|' . (isset($this->params['page']) ? $this->params['page'] : 0);
-	}
-
-	/**
 	 * GetName
 	 *
 	 * Gets the name of this controller's action

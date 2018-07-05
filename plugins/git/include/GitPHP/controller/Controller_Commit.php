@@ -55,19 +55,6 @@ class Controller_Commit extends ControllerBase
 	}
 
 	/**
-	 * GetCacheKey
-	 *
-	 * Gets the cache key for this controller
-	 *
-	 * @access protected
-	 * @return string cache key
-	 */
-	protected function GetCacheKey()
-	{
-		return $this->params['hash'];
-	}
-
-	/**
 	 * GetName
 	 *
 	 * Gets the name of this controller's action

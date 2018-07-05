@@ -51,19 +51,6 @@ class Controller_Message extends ControllerBase
 	}
 
 	/**
-	 * GetCacheKey
-	 *
-	 * Gets the cache key for this controller
-	 *
-	 * @access protected
-	 * @return string cache key
-	 */
-	protected function GetCacheKey()
-	{
-		return sha1($this->params['message']) . '|' . ($this->params['error'] ? '1' : '0');;
-	}
-
-	/**
 	 * GetName
 	 *
 	 * Gets the name of this controller's action

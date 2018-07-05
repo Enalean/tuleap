@@ -153,20 +153,4 @@ abstract class Ref extends GitObject
 	{
 		return $this->GetProject()->GetPath() . '/' . $this->GetRefPath();
 	}
-
-	/**
-	 * __sleep
-	 *
-	 * Called to prepare the object for serialization
-	 *
-	 * @access public
-	 * @return array list of properties to serialize
-	 */
-	public function __sleep()
-	{
-		$properties = array('refName', 'refDir');
-
-		return array_merge($properties, parent::__sleep());
-	}
-
 }

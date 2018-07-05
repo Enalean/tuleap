@@ -351,8 +351,6 @@ class Tag extends Ref
 		} else {
 			$this->ReadDataRaw();
 		}
-
-		Cache::GetObjectCacheInstance()->Set($this->GetCacheKey(), $this);
 	}
 
 	/**
@@ -375,7 +373,6 @@ class Tag extends Ref
 			$this->object = $this->GetProject()->GetCommit($this->GetHash());
 			$this->commit = $this->object;
 			$this->type = 'commit';
-			Cache::GetObjectCacheInstance()->Set($this->GetCacheKey(), $this);
 			return;
 		}
 
@@ -469,7 +466,6 @@ class Tag extends Ref
 			$this->object = $this->GetProject()->GetCommit($this->GetHash());
 			$this->commit = $this->object;
 			$this->type = 'commit';
-			Cache::GetObjectCacheInstance()->Set($this->GetCacheKey(), $this);
 			return;
 		}
 
@@ -638,45 +634,6 @@ class Tag extends Ref
 		$this->commit = $this->GetProject()->GetCommit($this->commit);
 
 		$this->commitReferenced = false;
-	}
-
-	/**
-	 * __sleep
-	 *
-	 * Called to prepare the object for serialization
-	 *
-	 * @access public
-	 * @return array list of properties to serialize
-	 */
-	public function __sleep()
-	{
-		if (!$this->objectReferenced)
-			$this->ReferenceObject();
-
-		if (!$this->commitReferenced)
-			$this->ReferenceCommit();
-
-		$properties = array('dataRead', 'object', 'commit', 'type', 'tagger', 'taggerEpoch', 'taggerTimezone', 'comment', 'objectReferenced', 'commitReferenced');
-		return array_merge($properties, parent::__sleep());
-	}
-
-	/**
-	 * GetCacheKey
-	 *
-	 * Gets the cache key to use for this object
-	 *
-	 * @access public
-	 * @return string cache key
-	 */
-	public function GetCacheKey()
-	{
-		$key = parent::GetCacheKey();
-		if (!empty($key))
-			$key .= '|';
-
-		$key .= 'tag|' . $this->refName;
-		
-		return $key;
 	}
 
 	/**

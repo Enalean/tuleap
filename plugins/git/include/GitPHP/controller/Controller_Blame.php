@@ -57,19 +57,6 @@ class Controller_Blame extends ControllerBase
 	}
 
 	/**
-	 * GetCacheKey
-	 *
-	 * Gets the cache key for this controller
-	 *
-	 * @access protected
-	 * @return string cache key
-	 */
-	protected function GetCacheKey()
-	{
-		return (isset($this->params['hashbase']) ? $this->params['hashbase'] : '') . '|' . (isset($this->params['hash']) ? $this->params['hash'] : '') . '|' . (isset($this->params['file']) ? sha1($this->params['file']) : '');
-	}
-
-	/**
 	 * GetName
 	 *
 	 * Gets the name of this controller's action

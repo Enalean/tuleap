@@ -823,11 +823,6 @@ class Project
 		if (preg_match('/[0-9a-f]{40}/i', $hash)) {
 
 			if (!isset($this->commitCache[$hash])) {
-				$cacheKey = 'project|' . $this->project . '|commit|' . $hash;
-				$cached = Cache::GetObjectCacheInstance()->Get($cacheKey);
-				if ($cached)
-					$this->commitCache[$hash] = $cached;
-				else
 					$this->commitCache[$hash] = new Commit($this, $hash);
 			}
 
@@ -1167,13 +1162,7 @@ class Project
 		if (empty($tag))
 			return;
 
-		$cacheKey = 'project|' . $this->project . '|tag|' . $tag;
-		$cached = Cache::GetObjectCacheInstance()->Get($cacheKey);
-		if ($cached) {
-			return $cached;
-		} else {
-			return new Tag($this, $tag, $hash);
-		}
+		return new Tag($this, $tag, $hash);
 	}
 
 /*}}}2*/
@@ -1416,11 +1405,6 @@ class Project
 		if (empty($hash))
 			return null;
 
-		$cacheKey = 'project|' . $this->project . '|blob|' . $hash;
-		$cached = Cache::GetObjectCacheInstance()->Get($cacheKey);
-		if ($cached)
-			return $cached;
-
 		return new Blob($this, $hash);
 	}
 
@@ -1440,11 +1424,6 @@ class Project
 	{
 		if (empty($hash))
 			return null;
-
-		$cacheKey = 'project|' . $this->project . '|tree|' . $hash;
-		$cached = Cache::GetObjectCacheInstance()->Get($cacheKey);
-		if ($cached)
-			return $cached;
 
 		return new Tree($this, $hash);
 	}

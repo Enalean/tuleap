@@ -54,19 +54,6 @@ class Controller_Blobdiff extends Controller_DiffBase
 	}
 
 	/**
-	 * GetCacheKey
-	 *
-	 * Gets the cache key for this controller
-	 *
-	 * @access protected
-	 * @return string cache key
-	 */
-	protected function GetCacheKey()
-	{
-		return (isset($this->params['hashbase']) ? $this->params['hashbase'] : '') . '|' . (isset($this->params['hash']) ? $this->params['hash'] : '') . '|' . (isset($this->params['hashparent']) ? $this->params['hashparent'] : '') . '|' . (isset($this->params['file']) ? sha1($this->params['file']) : '') . '|' . (isset($this->params['sidebyside']) && ($this->params['sidebyside'] === true) ? '1' : '');
-	}
-
-	/**
 	 * GetName
 	 *
 	 * Gets the name of this controller's action

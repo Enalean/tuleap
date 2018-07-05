@@ -52,19 +52,6 @@ class Controller_Heads extends ControllerBase
 	}
 
 	/**
-	 * GetCacheKey
-	 *
-	 * Gets the cache key for this controller
-	 *
-	 * @access protected
-	 * @return string cache key
-	 */
-	protected function GetCacheKey()
-	{
-		return '';
-	}
-
-	/**
 	 * GetName
 	 *
 	 * Gets the name of this controller's action

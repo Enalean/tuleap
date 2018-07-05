@@ -614,8 +614,6 @@ class Commit extends GitObject
 				}
 			}
 		}
-
-		Cache::GetObjectCacheInstance()->Set($this->GetCacheKey(), $this);
 	}
 
 	/**
@@ -707,8 +705,6 @@ class Commit extends GitObject
 				}
 			}
 		}
-
-		Cache::GetObjectCacheInstance()->Set($this->GetCacheKey(), $this);
 	}
 
 	/**
@@ -768,8 +764,6 @@ class Commit extends GitObject
 		} else {
 			$this->ReadHashPathsRaw($this->GetTree());
 		}
-
-		Cache::GetObjectCacheInstance()->Set($this->GetCacheKey(), $this);
 	}
 
 	/**
@@ -1037,45 +1031,6 @@ class Commit extends GitObject
 			$this->tree->SetCommit($this);
 
 		$this->treeReferenced = false;
-	}
-
-	/**
-	 * __sleep
-	 *
-	 * Called to prepare the object for serialization
-	 *
-	 * @access public
-	 * @return array list of properties to serialize
-	 */
-	public function __sleep()
-	{
-		if (!$this->parentsReferenced)
-			$this->ReferenceParents();
-
-		if (!$this->treeReferenced)
-			$this->ReferenceTree();
-
-		$properties = array('dataRead', 'parents', 'tree', 'author', 'authorEpoch', 'authorTimezone', 'committer', 'committerEpoch', 'committerTimezone', 'title', 'comment', 'readTree', 'blobPaths', 'treePaths', 'hashPathsRead', 'parentsReferenced', 'treeReferenced');
-		return array_merge($properties, parent::__sleep());
-	}
-
-	/**
-	 * GetCacheKey
-	 *
-	 * Gets the cache key to use for this object
-	 *
-	 * @access public
-	 * @return string cache key
-	 */
-	public function GetCacheKey()
-	{
-		$key = parent::GetCacheKey();
-		if (!empty($key))
-			$key .= '|';
-
-		$key .= 'commit|' . $this->hash;
-
-		return $key;
 	}
 
 	/**
