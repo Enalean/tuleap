@@ -97,14 +97,14 @@ class ChangesetValueComputedXMLExporter extends Tracker_XML_Exporter_ChangesetVa
 
         if ($number_of_changeset === 1 ||
             ($number_of_changeset > 1 && ! $changeset_value->isManualValue()) ||
-            $this->previousChangesetIsInAutocomputeAndLastChangesetInManualValue($artifact, $changeset_value, $number_of_changeset)
+            $this->previousChangesetIsNotInManualValue($artifact, $changeset_value, $number_of_changeset)
         ) {
             $field_change = $this->createFieldChangeTag($changeset_xml, $changeset_value);
             $this->exportManualValue($field_change, $this->getLastComputedValue($artifact, $changeset_value));
         }
     }
 
-    private function previousChangesetIsInAutocomputeAndLastChangesetInManualValue(
+    private function previousChangesetIsNotInManualValue(
         Tracker_Artifact $artifact,
         Tracker_Artifact_ChangesetValue $changeset_value,
         $number_of_changeset
@@ -112,12 +112,16 @@ class ChangesetValueComputedXMLExporter extends Tracker_XML_Exporter_ChangesetVa
         $previous_changeset = $artifact->getPreviousChangeset($changeset_value->getChangeset()->getId());
 
         if (! $previous_changeset) {
-            return false;
+            return true;
         }
 
         $previous_changeset_value = $previous_changeset->getValue($changeset_value->getField());
 
-        return $number_of_changeset > 1 && ! $previous_changeset_value->isManualValue() && $changeset_value->isManualValue();
+        if (! $previous_changeset_value) {
+            return true;
+        }
+
+        return $number_of_changeset > 1 && ! $previous_changeset_value->isManualValue();
     }
 
     private function exportInGlobalContext(
