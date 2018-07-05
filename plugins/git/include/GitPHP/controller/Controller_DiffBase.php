@@ -102,7 +102,6 @@ abstract class Controller_DiffBase extends ControllerBase
 	protected function LoadHeaders()
 	{
 		if (isset($this->params['plain']) && ($this->params['plain'] === true)) {
-			Log::GetInstance()->SetEnabled(false);
 			$this->headers[] = 'Content-type: text/plain; charset=UTF-8';
 		}
 	}

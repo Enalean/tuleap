@@ -102,14 +102,7 @@ class GitExe
 	{
 		$fullCommand = $this->CreateCommand($command, $args);
 
-		Log::GetInstance()->Log('Begin executing "' . $fullCommand . '"');
-
-		$ret = shell_exec($fullCommand);
-
-		Log::GetInstance()->Log('Finish executing "' . $fullCommand . '"' .
-			"\nwith result: " . $ret);
-
-		return $ret;
+		return shell_exec($fullCommand);
 	}
 
 	/**

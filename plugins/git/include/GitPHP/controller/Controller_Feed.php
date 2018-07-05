@@ -96,7 +96,6 @@ class Controller_Feed extends ControllerBase
 	 */
 	protected function ReadQuery()
 	{
-		Log::GetInstance()->SetEnabled(false);
 	}
 
 	/**

@@ -93,7 +93,6 @@ class Controller_Tree extends ControllerBase
 
 		if (isset($_GET['o']) && ($_GET['o'] == 'js')) {
 			$this->params['js'] = true;
-			Log::GetInstance()->SetEnabled(false);
 		}
 	}
 

@@ -24,7 +24,6 @@ use Tuleap\Git\GitPHP\Controller;
 use Tuleap\Git\GitPHP\Controller_Message;
 use Tuleap\Git\GitPHP\DiffExe;
 use Tuleap\Git\GitPHP\GitExe;
-use Tuleap\Git\GitPHP\Log;
 use Tuleap\Git\GitPHP\MessageException;
 use Tuleap\Git\GitPHP\ProjectList;
 use Tuleap\Git\GitPHP\Resource;
@@ -71,9 +70,6 @@ class GitViews_GitPhpViewer {
 
     private function displayGitPHP()
     {
-        define('GITPHP_START_TIME', microtime(true));
-        define('GITPHP_START_MEM', memory_get_usage());
-
         define('GITPHP_INCLUDEDIR', __DIR__ . '/../GitPHP/');
         define('GITPHP_GITOBJECTDIR', GITPHP_INCLUDEDIR . 'git/');
         define('GITPHP_CONTROLLERDIR', GITPHP_INCLUDEDIR . 'controller/');
@@ -103,14 +99,6 @@ class GitViews_GitPhpViewer {
             }
 
             /*
-             * Debug
-             */
-            if (Log::GetInstance()->GetEnabled()) {
-                Log::GetInstance()->SetStartTime(GITPHP_START_TIME);
-                Log::GetInstance()->SetStartMemory(GITPHP_START_MEM);
-            }
-
-            /*
              * Check for required executables
              */
             $exe = new GitExe(null);
@@ -136,11 +124,6 @@ class GitViews_GitPhpViewer {
             }
 
         } catch (Exception $e) {
-
-            if (Config::GetInstance()->GetValue('debug', false)) {
-                throw $e;
-            }
-
             if (! Resource::Instantiated()) {
                 /*
                  * In case an error was thrown before instantiating
@@ -161,13 +144,6 @@ class GitViews_GitPhpViewer {
             $controller->Render();
 
         }
-
-        if (Log::GetInstance()->GetEnabled()) {
-            $entries = Log::GetInstance()->GetEntries();
-            foreach ($entries as $logline) {
-                echo "<br />\n" . $logline;
-            }
-        }
     }
 
     private function setupGitPHPConfiguration()
@@ -185,7 +161,6 @@ class GitViews_GitPhpViewer {
         $config->SetValue('magicdb', '/usr/share/misc/magic.mgc');
         $config->SetValue('search', true);
         $config->SetValue('filesearch', false);
-        $config->SetValue('debug', false);
         $config->SetValue('smarty_tmp', '/tmp/gitphp-tuleap/smarty');
     }
 }
