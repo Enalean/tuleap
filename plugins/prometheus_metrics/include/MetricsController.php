@@ -19,14 +19,13 @@
  *
  */
 
-namespace Tuleap\Instrument;
+namespace Tuleap\PrometheusMetrics;
 
 use ForgeConfig;
 use HTTPRequest;
 use Prometheus\RenderTextFormat;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\MessageFactoryBuilder;
-use Tuleap\Instrument\Metrics\MetricsCollector;
 use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
@@ -35,6 +34,13 @@ use Tuleap\Request\NotFoundException;
 
 class MetricsController implements DispatchableWithRequestNoAuthz
 {
+
+    private $config_dir_root;
+
+    public function __construct($config_dir_root)
+    {
+        $this->config_dir_root = $config_dir_root;
+    }
 
     /**
      * Is able to process a request routed by FrontRouter
@@ -119,7 +125,7 @@ class MetricsController implements DispatchableWithRequestNoAuthz
 
     private function getSecret()
     {
-        $path = ForgeConfig::get('sys_custom_dir').'/conf/metrics_secret.key';
+        $path = $this->config_dir_root.'/metrics_secret.key';
         if (! file_exists($path)) {
             throw new \RuntimeException('Configuration not complete. Admin should define a metrics_secret.key');
         }
