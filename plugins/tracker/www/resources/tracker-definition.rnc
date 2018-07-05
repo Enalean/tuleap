@@ -179,7 +179,7 @@ tracker =
             element items {
                 element item {
                     attribute ID { xsd:ID }?,
-                    attribute label { xsd:string },
+                    attribute label { non_empty_string },
                     attribute is_hidden { "0" | "1" }?,
                     element description { xsd:string }?
                 }*

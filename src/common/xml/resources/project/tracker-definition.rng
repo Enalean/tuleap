@@ -512,7 +512,7 @@
                 </attribute>
               </optional>
               <attribute name="label">
-                <data type="string"/>
+                <ref name="non_empty_string"/>
               </attribute>
               <optional>
                 <attribute name="is_hidden">
