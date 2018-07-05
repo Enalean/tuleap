@@ -19,11 +19,11 @@
    {include file='nav.tpl' current='commitdiff' logcommit=$commit treecommit=$commit}
    <br />
    {if $sidebyside}
-   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=commitdiff&amp;h={$commit->GetHash()|urlencode}{if $hashparent}&amp;hp={$hashparent|urlencode}{/if}&amp;o=unified">{t}unified{/t}</a>
+   <a href="{$SCRIPT_NAME}?a=commitdiff&amp;h={$commit->GetHash()|urlencode}{if $hashparent}&amp;hp={$hashparent|urlencode}{/if}&amp;o=unified">{t}unified{/t}</a>
    {else}
-   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=commitdiff&amp;h={$commit->GetHash()|urlencode}{if $hashparent}&amp;hp={$hashparent}{/if}&amp;o=sidebyside">{t}side by side{/t}</a>
+   <a href="{$SCRIPT_NAME}?a=commitdiff&amp;h={$commit->GetHash()|urlencode}{if $hashparent}&amp;hp={$hashparent}{/if}&amp;o=sidebyside">{t}side by side{/t}</a>
    {/if}
-   | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=commitdiff_plain&amp;h={$commit->GetHash()|urlencode}{if $hashparent}&amp;hp={$hashparent|urlencode}{/if}&noheader=1">{t}plain{/t}</a>
+   | <a href="{$SCRIPT_NAME}?a=commitdiff_plain&amp;h={$commit->GetHash()|urlencode}{if $hashparent}&amp;hp={$hashparent|urlencode}{/if}&noheader=1">{t}plain{/t}</a>
  </div>
 
  {include file='title.tpl' titlecommit=$commit}
@@ -123,7 +123,7 @@
      <div class="diff_info">
      {if ($filediff->GetStatus() == 'D') || ($filediff->GetStatus() == 'M')}
        {assign var=localfromtype value=$filediff->GetFromFileType(1)}
-       {$localfromtype}:<a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob&amp;h={$filediff->GetFromHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}{if $filediff->GetFromFile()}&amp;f={$filediff->GetFromFile()|urlencode}{/if}">{if $filediff->GetFromFile()}a/{$filediff->GetFromFile()|escape}{else}{$filediff->GetFromHash()|escape}{/if}</a>
+       {$localfromtype}:<a href="{$SCRIPT_NAME}?a=blob&amp;h={$filediff->GetFromHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}{if $filediff->GetFromFile()}&amp;f={$filediff->GetFromFile()|urlencode}{/if}">{if $filediff->GetFromFile()}a/{$filediff->GetFromFile()|escape}{else}{$filediff->GetFromHash()|escape}{/if}</a>
        {if $filediff->GetStatus() == 'D'}
          {t}(deleted){/t}
        {/if}
@@ -135,7 +135,7 @@
 
      {if ($filediff->GetStatus() == 'A') || ($filediff->GetStatus() == 'M')}
        {assign var=localtotype value=$filediff->GetToFileType(1)}
-       {$localtotype}:<a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob&amp;h={$filediff->GetToHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}{if $filediff->GetToFile()}&amp;f={$filediff->GetToFile()|urlencode}{/if}">{if $filediff->GetToFile()}b/{$filediff->GetToFile()|escape}{else}{$filediff->GetToHash()|escape}{/if}</a>
+       {$localtotype}:<a href="{$SCRIPT_NAME}?a=blob&amp;h={$filediff->GetToHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}{if $filediff->GetToFile()}&amp;f={$filediff->GetToFile()|urlencode}{/if}">{if $filediff->GetToFile()}b/{$filediff->GetToFile()|escape}{else}{$filediff->GetToHash()|escape}{/if}</a>
 
        {if $filediff->GetStatus() == 'A'}
          {t}(new){/t}

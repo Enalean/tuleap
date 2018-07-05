@@ -17,9 +17,9 @@
  {assign var=objtype value=$tag->GetType()}
  <div class="title">
    {if $objtype == 'blob'}
-   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob&amp;h={$object->GetHash()|urlencode}" class="title">{$tag->GetName()|escape}</a>
+   <a href="{$SCRIPT_NAME}?a=blob&amp;h={$object->GetHash()|urlencode}" class="title">{$tag->GetName()|escape}</a>
    {else}
-   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=commit&amp;h={$object->GetHash()|urlencode}" class="title">{$tag->GetName()|escape}</a>
+   <a href="{$SCRIPT_NAME}?a=commit&amp;h={$object->GetHash()|urlencode}" class="title">{$tag->GetName()|escape}</a>
    {/if}
  </div>
  <div class="title_text">
@@ -27,14 +27,14 @@
      <tr>
        <td>{t}object{/t}</td>
        {if $objtype == 'commit'}
-         <td class="monospace"><a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=commit&amp;h={$object->GetHash()|urlencode}" class="list">{$object->GetHash()|escape}</a></td>
-         <td class="link"><a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=commit&amp;h={$object->GetHash()|urlencode}">{t}commit{/t}</a></td>
+         <td class="monospace"><a href="{$SCRIPT_NAME}?a=commit&amp;h={$object->GetHash()|urlencode}" class="list">{$object->GetHash()|escape}</a></td>
+         <td class="link"><a href="{$SCRIPT_NAME}?a=commit&amp;h={$object->GetHash()|urlencode}">{t}commit{/t}</a></td>
        {elseif $objtype == 'tag'}
-         <td class="monospace"><a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=tag&amp;h={$object->GetName()|urlencode}" class="list">{$object->GetHash()|escape}</a></td>
-         <td class="link"><a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=tag&amp;h={$object->GetName()|urlencode}">{t}tag{/t}</a></td>
+         <td class="monospace"><a href="{$SCRIPT_NAME}?a=tag&amp;h={$object->GetName()|urlencode}" class="list">{$object->GetHash()|escape}</a></td>
+         <td class="link"><a href="{$SCRIPT_NAME}?a=tag&amp;h={$object->GetName()|urlencode}">{t}tag{/t}</a></td>
        {elseif $objtype == 'blob'}
-         <td class="monospace"><a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob&amp;h={$object->GetHash()|urlencode}" class="list">{$object->GetHash()|escape}</a></td>
-         <td class="link"><a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob&amp;h={$object->GetHash()|urlencode}">{t}blob{/t}</a></td>
+         <td class="monospace"><a href="{$SCRIPT_NAME}?a=blob&amp;h={$object->GetHash()|urlencode}" class="list">{$object->GetHash()|escape}</a></td>
+         <td class="link"><a href="{$SCRIPT_NAME}?a=blob&amp;h={$object->GetHash()|urlencode}">{t}blob{/t}</a></td>
        {/if}
      </tr>
      {if $tag->GetTagger()|escape}

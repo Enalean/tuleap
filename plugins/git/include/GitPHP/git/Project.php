@@ -87,15 +87,6 @@ class Project
 
 /*}}}2*/
 
-	/**
-	 * category
-	 *
-	 * Stores the category internally
-	 *
-	 * @access protected
-	 */
-	protected $category = '';
-
 /* epoch internal variables {{{2*/
 
 	/**
@@ -403,36 +394,6 @@ class Project
 	{
 		return file_exists($this->GetPath() . '/git-daemon-export-ok');
 	}
-
-/* category accessors {{{2*/
-
-	/**
-	 * GetCategory
-	 *
-	 * Gets the project's category
-	 *
-	 * @access public
-	 * @return string category
-	 */
-	public function GetCategory()
-	{
-		return $this->category;
-	}
-
-	/**
-	 * SetCategory
-	 *
-	 * Sets the project's category
-	 *
-	 * @access public
-	 * @param string $category category
-	 */
-	public function SetCategory($category)
-	{
-		$this->category = $category;
-	}
-
-/*}}}2*/
 
 /* clone url accessors {{{2*/
 
@@ -1729,51 +1690,4 @@ class Project
 	}
 
 /*}}}1*/
-
-/* static utilities {{{1*/
-
-	/**
-	 * CompareProject
-	 *
-	 * Compares two projects by project name
-	 *
-	 * @access public
-	 * @static
-	 * @param mixed $a first project
-	 * @param mixed $b second project
-	 * @return integer comparison result
-	 */
-	public static function CompareProject($a, $b)
-	{
-		$catCmp = strcmp($a->GetCategory(), $b->GetCategory());
-		if ($catCmp !== 0)
-			return $catCmp;
-
-		return strcmp($a->GetProject(), $b->GetProject());
-	}
-
-	/**
-	 * CompareAge
-	 *
-	 * Compares two projects by age
-	 *
-	 * @access public
-	 * @static
-	 * @param mixed $a first project
-	 * @param mixed $b second project
-	 * @return integer comparison result
-	 */
-	public static function CompareAge($a, $b)
-	{
-		$catCmp = strcmp($a->GetCategory(), $b->GetCategory());
-		if ($catCmp !== 0)
-			return $catCmp;
-
-		if ($a->GetAge() === $b->GetAge())
-			return 0;
-		return ($a->GetAge() < $b->GetAge() ? -1 : 1);
-	}
-
-/*}}}1*/
-
 }

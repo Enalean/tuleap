@@ -33,14 +33,13 @@
       <!-- <a href="index.php">{if $homelink}{$homelink}{else}{t}projects{/t}{/if}</a> / -->
       &gt;
       {if $project}
-        <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=summary">{$project->GetProject()|escape}</a>
+        <a href="{$SCRIPT_NAME}?a=summary">{$project->GetProject()|escape}</a>
         {if $actionlocal}
            / {$actionlocal}
         {/if}
         {if $enablesearch}
           <form method="get" action="{$SCRIPT_NAME}" enctype="application/x-www-form-urlencoded">
             <div class="search">
-              <input type="hidden" name="p" value="{$project->GetProject()|escape}" />
               <input type="hidden" name="a" value="search" />
               <input type ="hidden" name="h" value="{if $commit}{$commit->GetHash()|escape}{else}HEAD{/if}" />
               <select name="st">

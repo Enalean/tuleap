@@ -18,35 +18,35 @@
            <td><em>{if $tagcommit}{$tagcommit->GetAge()|agestring|escape}{else}{$tag->GetAge()|agestring|escape}{/if}</em></td>
            <td>
 	   {if $objtype == 'commit'}
-		   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=commit&amp;h={$object->GetHash()|urlencode}" class="list"><strong>{$tag->GetName()|escape}</strong></a>
+		   <a href="{$SCRIPT_NAME}?a=commit&amp;h={$object->GetHash()|urlencode}" class="list"><strong>{$tag->GetName()|escape}</strong></a>
 	   {elseif $objtype == 'tag'}
-		   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=tag&amp;h={$tag->GetName()|urlencode}" class="list"><strong>{$tag->GetName()|escape}</strong></a>
+		   <a href="{$SCRIPT_NAME}?a=tag&amp;h={$tag->GetName()|urlencode}" class="list"><strong>{$tag->GetName()|escape}</strong></a>
 	   {elseif $objtype == 'blob'}
-		   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=tag&amp;h={$tag->GetName()|urlencode}" class="list"><strong>{$tag->GetName()|escape}</strong></a>
+		   <a href="{$SCRIPT_NAME}?a=tag&amp;h={$tag->GetName()|urlencode}" class="list"><strong>{$tag->GetName()|escape}</strong></a>
 	   {/if}
 	   </td>
            <td>
 	     {assign var=comment value=$tag->GetComment()}
              {if count($comment) > 0}
-               <a class="list {if !$tag->LightTag()}tagTip{/if}" href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=tag&amp;h={$tag->GetName()|urlencode}">{$comment[0]|escape}</a>
+               <a class="list {if !$tag->LightTag()}tagTip{/if}" href="{$SCRIPT_NAME}?a=tag&amp;h={$tag->GetName()|urlencode}">{$comment[0]|escape}</a>
              {/if}
            </td>
            <td class="link">
              {if !$tag->LightTag()}
-   	       <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=tag&amp;h={$tag->GetName()|urlencode}">{t}tag{/t}</a> |
+               <a href="{$SCRIPT_NAME}?a=tag&amp;h={$tag->GetName()|urlencode}">{t}tag{/t}</a> |
              {/if}
 	     {if $objtype == 'blob'}
-		<a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob&amp;h={$object->GetHash()|urlencode}">{t}blob{/t}</a>
+		<a href="{$SCRIPT_NAME}?a=blob&amp;h={$object->GetHash()|urlencode}">{t}blob{/t}</a>
 	     {else}
-             <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=commit&amp;h={$tagcommit->GetHash()|urlencode}">{t}commit{/t}</a>
-	      | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=shortlog&amp;h={$tagcommit->GetHash()|urlencode}">{t}shortlog{/t}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=log&amp;h={$tagcommit->GetHash()|urlencode}">{t}log{/t}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=snapshot&amp;h={$tagcommit->GetHash()|urlencode}&amp;noheader=1" class="snapshotTip">{t}snapshot{/t}</a>
+             <a href="{$SCRIPT_NAME}?a=commit&amp;h={$tagcommit->GetHash()|urlencode}">{t}commit{/t}</a>
+	      | <a href="{$SCRIPT_NAME}?a=shortlog&amp;h={$tagcommit->GetHash()|urlencode}">{t}shortlog{/t}</a> | <a href="{$SCRIPT_NAME}?a=log&amp;h={$tagcommit->GetHash()|urlencode}">{t}log{/t}</a> | <a href="{$SCRIPT_NAME}?a=snapshot&amp;h={$tagcommit->GetHash()|urlencode}&amp;noheader=1" class="snapshotTip">{t}snapshot{/t}</a>
 	      {/if}
            </td>
        </tr>
      {/foreach}
      {if $hasmoretags}
        <tr>
-         <td><a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=tags">&hellip;</a></td>
+         <td><a href="{$SCRIPT_NAME}?a=tags">&hellip;</a></td>
        </tr>
      {/if}
    </table>

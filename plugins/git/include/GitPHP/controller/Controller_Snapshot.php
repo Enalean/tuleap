@@ -41,16 +41,7 @@ class Controller_Snapshot extends ControllerBase
 	 */
 	public function __construct()
 	{
-		if (isset($_GET['p'])) {
-			$this->project = ProjectList::GetInstance()->GetProject(str_replace(chr(0), '', $_GET['p']));
-			if (!$this->project) {
-				throw new MessageException(sprintf(__('Invalid project %1$s'), $_GET['p']), true);
-			}
-		}
-
-		if (!$this->project) {
-			throw new MessageException(__('Project is required'), true);
-		}
+        $this->project = ProjectList::GetInstance()->GetProject();
 
 		$this->ReadQuery();
 	}

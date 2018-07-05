@@ -12,19 +12,19 @@
   {include file='nav.tpl' logcommit=$commit treecommit=$commit}
   <br />
   {if $page > 0}
-    <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=search&amp;h={$commit->GetHash()|urlencode}&amp;s={$search|urlencode}&amp;st={$searchtype|urlencode}">{t}first{/t}</a>
+    <a href="{$SCRIPT_NAME}?a=search&amp;h={$commit->GetHash()|urlencode}&amp;s={$search|urlencode}&amp;st={$searchtype|urlencode}">{t}first{/t}</a>
   {else}
     {t}first{/t}
   {/if}
     &sdot; 
   {if $page > 0}
-    <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=search&amp;h={$commit->GetHash()|urlencode}&amp;s={$search|urlencode}&amp;st={$searchtype|urlencode}{if $page > 1}&amp;pg={$page-1}{/if}" accesskey="p" title="Alt-p">{t}prev{/t}</a>
+    <a href="{$SCRIPT_NAME}?a=search&amp;h={$commit->GetHash()|urlencode}&amp;s={$search|urlencode}&amp;st={$searchtype|urlencode}{if $page > 1}&amp;pg={$page-1}{/if}" accesskey="p" title="Alt-p">{t}prev{/t}</a>
   {else}
     {t}prev{/t}
   {/if}
     &sdot; 
   {if $hasmore}
-    <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=search&amp;h={$commit->GetHash()|urlencode}&amp;s={$search|urlencode}&amp;st={$searchtype|urlencode}&amp;pg={$page+1}" accesskey="n" title="Alt-n">{t}next{/t}</a>
+    <a href="{$SCRIPT_NAME}?a=search&amp;h={$commit->GetHash()|urlencode}&amp;s={$search|urlencode}&amp;st={$searchtype|urlencode}&amp;pg={$page+1}" accesskey="n" title="Alt-n">{t}next{/t}</a>
   {else}
     {t}next{/t}
   {/if}
@@ -49,7 +49,7 @@
 	  {/if}
         </em>
       </td>
-      <td><a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=commit&amp;h={$result->GetHash()|urlencode}" class="list commitTip" {if strlen($result->GetTitle()) > 50}title="{$result->GetTitle()|htmlspecialchars}"{/if}><strong>{$result->GetTitle(50)|htmlspecialchars}</strong>
+      <td><a href="{$SCRIPT_NAME}?a=commit&amp;h={$result->GetHash()|urlencode}" class="list commitTip" {if strlen($result->GetTitle()) > 50}title="{$result->GetTitle()|htmlspecialchars}"{/if}><strong>{$result->GetTitle(50)|htmlspecialchars}</strong>
       {if $searchtype == 'commit'}
         {foreach from=$result->SearchComment($search) item=line name=match}
           <br />{$line|highlight:$search:50:htmlspecialchars}
@@ -57,14 +57,14 @@
       {/if}
       </td>
       {assign var=resulttree value=$result->GetTree()}
-      <td class="link"><a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=commit&amp;h={$result->GetHash()}">{t}commit{/t}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=commitdiff&amp;h={$result->GetHash()}">{t}commitdiff{/t}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=tree&amp;h={$resulttree->GetHash()|urlencode}&amp;hb={$result->GetHash()|urlencode}">{t}tree{/t}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=snapshot&amp;h={$result->GetHash()|urlencode}&amp;noheader=1" class="snapshotTip">{t}snapshot{/t}</a>
+      <td class="link"><a href="{$SCRIPT_NAME}?a=commit&amp;h={$result->GetHash()}">{t}commit{/t}</a> | <a href="{$SCRIPT_NAME}?a=commitdiff&amp;h={$result->GetHash()}">{t}commitdiff{/t}</a> | <a href="{$SCRIPT_NAME}?a=tree&amp;h={$resulttree->GetHash()|urlencode}&amp;hb={$result->GetHash()|urlencode}">{t}tree{/t}</a> | <a href="{$SCRIPT_NAME}?a=snapshot&amp;h={$result->GetHash()|urlencode}&amp;noheader=1" class="snapshotTip">{t}snapshot{/t}</a>
       </td>
     </tr>
   {/foreach}
 
   {if $hasmore}
     <tr>
-      <td><a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=search&amp;h={$commit->GetHash()|urlencode}&amp;s={$search|urlencode}&amp;st={$searchtype|urlencode}&amp;pg={$page+1}" title="Alt-n">{t}next{/t}</a></td>
+      <td><a href="{$SCRIPT_NAME}?a=search&amp;h={$commit->GetHash()|urlencode}&amp;s={$search|urlencode}&amp;st={$searchtype|urlencode}&amp;pg={$page+1}" title="Alt-n">{t}next{/t}</a></td>
     </tr>
   {/if}
 </table>

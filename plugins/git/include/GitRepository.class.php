@@ -613,7 +613,7 @@ class GitRepository implements DVCSRepository {
     public function getDiffLink(Git_GitRepositoryUrlManager $url_manager, $revision_hash) {
         $url  = HTTPRequest::instance()->getServerUrl();
         $url .= $url_manager->getRepositoryBaseUrl($this);
-        $url .= '?p='.$this->getName().'.git&a=commitdiff&h=' . $revision_hash;
+        $url .= '?a=commitdiff&h=' . $revision_hash;
 
         return $url;
     }

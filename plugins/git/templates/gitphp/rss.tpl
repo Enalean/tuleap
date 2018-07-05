@@ -8,7 +8,7 @@
 <rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>{$project->GetProject()}</title>
-    <link>{scripturl}?p={$project->GetProject()|urlencode}&amp;a=summary</link>
+    <link>{scripturl}?a=summary</link>
     <description>{$project->GetProject()} log</description>
     <language>en</language>
 
@@ -17,8 +17,8 @@
         <title>{$logitem->GetCommitterEpoch()|date_format:"%d %b %R"} - {$logitem->GetTitle()|escape:'html'}</title>
         <author>{$logitem->GetAuthor()|escape:'html'}</author>
         <pubDate>{$logitem->GetCommitterEpoch()|date_format:"%a, %d %b %Y %H:%M:%S %z"}</pubDate>
-        <guid isPermaLink="true">{scripturl}?p={$project->GetProject()|urlencode}&amp;a=commit&amp;h={$logitem->GetHash()|urlencode}</guid>
-        <link>{scripturl}?p={$project->GetProject()|urlencode}&amp;a=commit&amp;h={$logitem->GetHash()|urlencode}</link>
+        <guid isPermaLink="true">{scripturl}?a=commit&amp;h={$logitem->GetHash()|urlencode}</guid>
+        <link>{scripturl}?a=commit&amp;h={$logitem->GetHash()|urlencode}</link>
         <description>{$logitem->GetTitle()|escape:'html'}</description>
         <content:encoded>
           <![CDATA[

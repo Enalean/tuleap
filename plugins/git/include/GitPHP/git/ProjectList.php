@@ -1,4 +1,25 @@
 <?php
+/**
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) 2010 Christopher Han
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+// phpcs:ignoreFile
 
 namespace Tuleap\Git\GitPHP;
 
@@ -52,43 +73,16 @@ class ProjectList
 	 *
 	 * Instantiates the singleton instance
 	 *
-	 * @access private
 	 * @static
-	 * @param string $file config file with git projects
-	 * @param boolean $legacy true if this is the legacy project config
-	 * @throws Exception if there was an error reading the file
+	 * @throws \Exception
 	 */
-	public static function Instantiate($file = null, $legacy = false)
+	public static function Instantiate(\GitRepository $repository)
 	{
-		if (self::$instance)
-			return;
+		if (self::$instance !== null) {
+            return;
+        }
 
-
-		if (!empty($file) && is_file($file) && include($file)) {
-			if (isset($git_projects)) {
-				if (is_string($git_projects)) {
-					if (function_exists('simplexml_load_file') && ProjectListScmManager::IsSCMManager($git_projects)) {
-						self::$instance = new ProjectListScmManager($git_projects);
-					} else {
-						self::$instance = new ProjectListFile($git_projects);
-					}
-				} else if (is_array($git_projects)) {
-					if ($legacy) {
-						self::$instance = new ProjectListArrayLegacy($git_projects);
-					} else {
-						self::$instance = new ProjectListArray($git_projects);
-					}
-				}
-			}
-		}
-
-		if (!self::$instance) {
-
-			self::$instance = new ProjectListDirectory(Config::GetInstance()->GetValue('projectroot'));
-		}
-
-		if (isset($git_projects_settings) && !$legacy)
-			self::$instance->ApplySettings($git_projects_settings);
+        self::$instance = new ProjectProvider($repository);
 	}
 
 }
