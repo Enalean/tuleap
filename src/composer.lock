@@ -776,24 +776,24 @@
         },
         {
             "name": "paragonie/easydb",
-            "version": "v1.3.1",
+            "version": "v1.6.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/easydb.git",
-                "reference": "5f9c842a9ffa7c433967a91adc4c00ac4e4bc449"
+                "reference": "dcabf9d00c28a102a1cffdd01e1adaf3a58bc20f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/easydb/zipball/5f9c842a9ffa7c433967a91adc4c00ac4e4bc449",
-                "reference": "5f9c842a9ffa7c433967a91adc4c00ac4e4bc449",
+                "url": "https://api.github.com/repos/paragonie/easydb/zipball/dcabf9d00c28a102a1cffdd01e1adaf3a58bc20f",
+                "reference": "dcabf9d00c28a102a1cffdd01e1adaf3a58bc20f",
                 "shasum": ""
             },
             "require": {
-                "ext-pdo": "*"
+                "ext-pdo": "*",
+                "php": "^5.5|^7"
             },
             "require-dev": {
-                "phpunit/phpunit": "^5",
-                "spatie/7to5": "^1.0",
+                "phpunit/phpunit": "^4|^5",
                 "squizlabs/php_codesniffer": "^2.7"
             },
             "type": "library",
@@ -817,6 +817,11 @@
                     "name": "Woody Gilk",
                     "homepage": "https://github.com/shadowhand",
                     "role": "Contributor"
+                },
+                {
+                    "name": "SignpostMarv",
+                    "homepage": "https://github.com/SignpostMarv",
+                    "role": "Contributor"
                 }
             ],
             "description": "Easy-to-use database abstraction",
@@ -826,7 +831,7 @@
                 "security",
                 "sql"
             ],
-            "time": "2017-05-10T13:21:55+00:00"
+            "time": "2018-06-14T17:14:21+00:00"
         },
         {
             "name": "paragonie/random_compat",
