@@ -22,6 +22,7 @@
      aria-labelledby="create-repository-modal-title"
      id="create-repository-modal"
      class="tlp-modal"
+     ref="create_modal"
 >
     <div class="tlp-modal-header">
         <h1 class="tlp-modal-title" id="create-repository-modal-title">
@@ -75,6 +76,7 @@
 <script>
 import { postRepository } from "../api/rest-querier.js";
 import { getProjectId } from "../repository-list-presenter.js";
+import { modal as tlpModal } from "tlp";
 
 export default {
     name: "GitRepositoryCreate",
@@ -83,6 +85,9 @@ export default {
             error: "",
             repository_name: ""
         };
+    },
+    mounted() {
+        this.$store.commit("setAddRepositoryModal", tlpModal(this.$refs.create_modal));
     },
     computed: {
         placeholder() {

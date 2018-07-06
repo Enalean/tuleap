@@ -17,28 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
-import Vuex from "vuex";
-import mutations from "./mutations.js";
-import * as getters from "./getters.js";
-import * as actions from "./actions.js";
-import { ERROR_TYPE_NO_ERROR, PROJECT_KEY } from "../constants.js";
+export const ERROR_TYPE_NO_ERROR = 0;
+export const ERROR_TYPE_UNKNOWN_ERROR = 1;
+export const ERROR_TYPE_NO_GIT = 2;
 
-Vue.use(Vuex);
-
-const state = {
-    repositories_for_owner: {},
-    filter: "",
-    selected_owner_id: PROJECT_KEY,
-    error_message_type: ERROR_TYPE_NO_ERROR,
-    is_loading_initial: true,
-    is_loading_next: true,
-    add_repository_modal: null
-};
-
-export default new Vuex.Store({
-    state,
-    getters,
-    mutations,
-    actions
-});
+export const PROJECT_KEY = "project";

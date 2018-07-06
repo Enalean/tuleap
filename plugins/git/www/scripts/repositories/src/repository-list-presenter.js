@@ -26,7 +26,7 @@ let repositories_owners = [];
 
 function build(project_id, is_user_administrator, user_locale, owners) {
     current_project_id = project_id;
-    is_administrator = is_user_administrator;
+    is_administrator = Boolean(is_user_administrator);
     locale = user_locale;
     repositories_owners = owners;
 }
