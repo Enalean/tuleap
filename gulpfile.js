@@ -66,7 +66,6 @@ const fat_combined_files = [
         'src/www/scripts/tuleap/tuleap-modal.js',
         'src/www/scripts/tuleap/tuleap-tours.js',
         'src/www/scripts/tuleap/tuleap-standard-homepage.js',
-        'src/www/scripts/placeholder/jquery.placeholder.js',
         'src/www/scripts/tuleap/datetimepicker.js',
         'src/www/scripts/tuleap/svn.js',
         'src/www/scripts/tuleap/trovecat.js',
