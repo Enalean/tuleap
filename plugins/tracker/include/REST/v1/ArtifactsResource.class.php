@@ -49,7 +49,7 @@ use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionLimitReachedExcep
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionManager;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\DeletionOfArtifactsIsNotAllowedException;
 use Tuleap\Tracker\Exception\MoveArtifactNotDoneException;
-use Tuleap\Tracker\Exception\MoveArtifactSemanticsMissingException;
+use Tuleap\Tracker\Exception\MoveArtifactSemanticsException;
 use Tuleap\Tracker\Exception\SemanticTitleNotDefinedException;
 use Tuleap\Tracker\REST\Artifact\MovedArtifactValueBuilder;
 use Tuleap\Tracker\REST\v1\Event\ArtifactPartialUpdate;
@@ -777,9 +777,9 @@ class ArtifactsResource extends AuthenticatedResource {
         } catch (MoveArtifactNotDoneException $exception) {
             $remaining_deletions = $this->getRemainingNumberOfDeletion($user, $limit);
             throw new RestException(500, $exception->getMessage());
-        } catch (MoveArtifactSemanticsMissingException $exception) {
+        } catch (MoveArtifactSemanticsException $exception) {
             $remaining_deletions = $this->getRemainingNumberOfDeletion($user, $limit);
-            throw new RestException(400, 'Both trackers must have at least the title semantic, the description semantic or the initial effort semantic defined.');
+            throw new RestException(400, $exception->getMessage());
         } finally {
             Header::sendRateLimitHeaders($limit, $remaining_deletions);
             $this->sendAllowHeadersForArtifact();

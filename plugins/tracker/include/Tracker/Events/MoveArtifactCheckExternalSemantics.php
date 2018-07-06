@@ -43,6 +43,11 @@ class MoveArtifactCheckExternalSemantics implements Dispatchable
     private $are_external_semantic_aligned = false;
 
     /**
+     * @var array
+     */
+    private $external_semantics_checked = [];
+
+    /**
      * @var bool
      */
     private $visited_by_plugin = false;
@@ -93,5 +98,21 @@ class MoveArtifactCheckExternalSemantics implements Dispatchable
     public function setVisitedByPlugin()
     {
         $this->visited_by_plugin = true;
+    }
+
+    /**
+     * @return array
+     */
+    public function getExternalSemanticsChecked()
+    {
+        return $this->external_semantics_checked;
+    }
+
+    /**
+     * @param string $external_semantics_checked
+     */
+    public function setExternalSemanticsChecked($external_semantics_checked)
+    {
+        $this->external_semantics_checked[] = $external_semantics_checked;
     }
 }

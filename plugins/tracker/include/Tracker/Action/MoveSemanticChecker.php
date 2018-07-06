@@ -23,6 +23,7 @@ namespace Tuleap\Tracker\Action;
 use EventManager;
 use Tracker;
 use Tuleap\Tracker\Events\MoveArtifactCheckExternalSemantics;
+use Tuleap\Tracker\Exception\MoveArtifactSemanticsException;
 
 class MoveSemanticChecker
 {
@@ -31,12 +32,21 @@ class MoveSemanticChecker
      */
     private $event_manager;
 
+    /**
+     * @var array
+     */
+    private $semantic_checked = ['title', 'description'];
+
     public function __construct(EventManager $event_manager)
     {
         $this->event_manager = $event_manager;
     }
 
-    public function areSemanticsAligned(Tracker $source_tracker, Tracker $target_tracker)
+    /**
+     * @return bool
+     * @throws MoveArtifactSemanticsException
+     */
+    public function checkSemanticsAreAligned(Tracker $source_tracker, Tracker $target_tracker)
     {
         if (($source_tracker->hasSemanticsTitle() && $target_tracker->hasSemanticsTitle()) ||
             ($source_tracker->hasSemanticsDescription() && $target_tracker->hasSemanticsDescription())
@@ -47,10 +57,22 @@ class MoveSemanticChecker
         $event = new MoveArtifactCheckExternalSemantics($source_tracker, $target_tracker);
         $this->event_manager->processEvent($event);
 
-        if ($event->wasVisitedByPlugin()) {
-            return $event->areExternalSemanticAligned();
+        $external_semantics_checked = $event->getExternalSemanticsChecked();
+        if ($event->wasVisitedByPlugin() && $event->areExternalSemanticAligned()) {
+            return true;
         }
 
-        return false;
+        $this->throwException($external_semantics_checked);
+    }
+
+    /**
+     * @throws MoveArtifactSemanticsException
+     */
+    private function throwException(array $external_semantics_checked)
+    {
+        $all_checked_semantics = array_merge($this->semantic_checked, $external_semantics_checked);
+        throw new MoveArtifactSemanticsException(
+            "Both trackers must have at least one of the following semantic defined: " . implode(', ', $all_checked_semantics)
+        );
     }
 }

@@ -59,7 +59,7 @@ class MoveSemanticCheckerTest extends TestCase
             'hasSemanticsDescription' => true,
         ]);
 
-        $this->assertTrue($this->checker->areSemanticsAligned($this->source_tracker, $this->target_tracker));
+        $this->assertTrue($this->checker->checkSemanticsAreAligned($this->source_tracker, $this->target_tracker));
     }
 
     public function testSemanticAreAlignedIfBothTrackersHaveOnlyTitleSemantic()
@@ -74,7 +74,7 @@ class MoveSemanticCheckerTest extends TestCase
             'hasSemanticsDescription' => false,
         ]);
 
-        $this->assertTrue($this->checker->areSemanticsAligned($this->source_tracker, $this->target_tracker));
+        $this->assertTrue($this->checker->checkSemanticsAreAligned($this->source_tracker, $this->target_tracker));
     }
 
     public function testSemanticAreAlignedIfBothTrackersHaveOnlyDescriptionSemantic()
@@ -89,7 +89,7 @@ class MoveSemanticCheckerTest extends TestCase
             'hasSemanticsDescription' => true,
         ]);
 
-        $this->assertTrue($this->checker->areSemanticsAligned($this->source_tracker, $this->target_tracker));
+        $this->assertTrue($this->checker->checkSemanticsAreAligned($this->source_tracker, $this->target_tracker));
     }
 
     public function testSemanticAreAlignedIfSourceTrackersHasBothSemanticsAndTargetHasOnlyTitleSemantic()
@@ -104,7 +104,7 @@ class MoveSemanticCheckerTest extends TestCase
             'hasSemanticsDescription' => false,
         ]);
 
-        $this->assertTrue($this->checker->areSemanticsAligned($this->source_tracker, $this->target_tracker));
+        $this->assertTrue($this->checker->checkSemanticsAreAligned($this->source_tracker, $this->target_tracker));
     }
 
     public function testSemanticAreAlignedIfSourceTrackersHasBothSemanticsAndTargetHasOnlyDescriptionSemantic()
@@ -119,9 +119,12 @@ class MoveSemanticCheckerTest extends TestCase
             'hasSemanticsDescription' => true,
         ]);
 
-        $this->assertTrue($this->checker->areSemanticsAligned($this->source_tracker, $this->target_tracker));
+        $this->assertTrue($this->checker->checkSemanticsAreAligned($this->source_tracker, $this->target_tracker));
     }
 
+    /**
+     * @expectedException \Tuleap\Tracker\Exception\MoveArtifactSemanticsException
+     */
     public function testSemanticAreNotAlignedIfSourceTrackerHasDescriptionAndTargetHasTitle()
     {
         $this->source_tracker->shouldReceive([
@@ -134,9 +137,12 @@ class MoveSemanticCheckerTest extends TestCase
             'hasSemanticsDescription' => false,
         ]);
 
-        $this->assertFalse($this->checker->areSemanticsAligned($this->source_tracker, $this->target_tracker));
+        $this->checker->checkSemanticsAreAligned($this->source_tracker, $this->target_tracker);
     }
 
+    /**
+     * @expectedException \Tuleap\Tracker\Exception\MoveArtifactSemanticsException
+     */
     public function testSemanticAreNotAlignedIfSourceTrackerHasTitleAndTargetHasDescription()
     {
         $this->source_tracker->shouldReceive([
@@ -149,9 +155,12 @@ class MoveSemanticCheckerTest extends TestCase
             'hasSemanticsDescription' => true,
         ]);
 
-        $this->assertFalse($this->checker->areSemanticsAligned($this->source_tracker, $this->target_tracker));
+        $this->checker->checkSemanticsAreAligned($this->source_tracker, $this->target_tracker);
     }
 
+    /**
+     * @expectedException \Tuleap\Tracker\Exception\MoveArtifactSemanticsException
+     */
     public function testSemanticAreNotAlignedIfSourceTrackerHasNoSemantic()
     {
         $this->source_tracker->shouldReceive([
@@ -164,9 +173,12 @@ class MoveSemanticCheckerTest extends TestCase
             'hasSemanticsDescription' => true,
         ]);
 
-        $this->assertFalse($this->checker->areSemanticsAligned($this->source_tracker, $this->target_tracker));
+        $this->checker->checkSemanticsAreAligned($this->source_tracker, $this->target_tracker);
     }
 
+    /**
+     * @expectedException \Tuleap\Tracker\Exception\MoveArtifactSemanticsException
+     */
     public function testExternalSemanticsAreNotCheckedIfNotReturnedByOtherPlugin()
     {
         $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function (MoveArtifactCheckExternalSemantics $event) {
@@ -183,9 +195,12 @@ class MoveSemanticCheckerTest extends TestCase
             'hasSemanticsDescription' => true,
         ]);
 
-        $this->assertFalse($this->checker->areSemanticsAligned($this->source_tracker, $this->target_tracker));
+        $this->checker->checkSemanticsAreAligned($this->source_tracker, $this->target_tracker);
     }
 
+    /**
+     * @expectedException \Tuleap\Tracker\Exception\MoveArtifactSemanticsException
+     */
     public function testSemanticsAreNotAlignedIfBothTrackerAndExternalSemanticsAreNotAligne()
     {
         $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function (MoveArtifactCheckExternalSemantics $event) {
@@ -203,7 +218,7 @@ class MoveSemanticCheckerTest extends TestCase
             'hasSemanticsDescription' => true,
         ]);
 
-        $this->assertFalse($this->checker->areSemanticsAligned($this->source_tracker, $this->target_tracker));
+        $this->checker->checkSemanticsAreAligned($this->source_tracker, $this->target_tracker);
     }
 
     public function testSemanticsAreAlignedIfExternalSemanticsAreAlignedAndNotTrackerSemantics()
@@ -224,6 +239,6 @@ class MoveSemanticCheckerTest extends TestCase
             'hasSemanticsDescription' => true,
         ]);
 
-        $this->assertTrue($this->checker->areSemanticsAligned($this->source_tracker, $this->target_tracker));
+        $this->assertTrue($this->checker->checkSemanticsAreAligned($this->source_tracker, $this->target_tracker));
     }
 }

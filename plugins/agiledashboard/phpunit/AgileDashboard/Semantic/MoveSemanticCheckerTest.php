@@ -72,9 +72,12 @@ class MoveSemanticCheckerTest extends TestCase
         $this->form_element_factory->shouldReceive('getType')->with($this->source_initial_effort_field)->andReturn('int');
         $this->form_element_factory->shouldReceive('getType')->with($this->target_initial_effort_field)->andReturn('int');
 
-        $this->assertTrue($this->checker->areSemanticsAligned($this->source_tracker, $this->target_tracker));
+        $this->assertTrue($this->checker->checkSemanticsAreAligned($this->source_tracker, $this->target_tracker));
     }
 
+    /**
+     * @expectedException \Tuleap\Tracker\Exception\MoveArtifactSemanticsException
+     */
     public function testSemanticAreNotAlignedIfBothTrackersHaveInitialEffortSemanticAndFieldDontHaveTheSameType()
     {
         $this->source_semantic->shouldReceive('getField')->andReturn($this->source_initial_effort_field);
@@ -86,7 +89,7 @@ class MoveSemanticCheckerTest extends TestCase
         $this->form_element_factory->shouldReceive('getType')->with($this->source_initial_effort_field)->andReturn('float');
         $this->form_element_factory->shouldReceive('getType')->with($this->target_initial_effort_field)->andReturn('int');
 
-        $this->assertFalse($this->checker->areSemanticsAligned($this->source_tracker, $this->target_tracker));
+        $this->checker->checkSemanticsAreAligned($this->source_tracker, $this->target_tracker);
     }
 
     public function testSemanticAreNotAlignedIfBothTrackersDoNotHaveTheSemanticDefined()
@@ -97,7 +100,7 @@ class MoveSemanticCheckerTest extends TestCase
         $this->initial_effort_factory->shouldReceive('getByTracker')->with($this->source_tracker)->andReturn($this->source_semantic);
         $this->initial_effort_factory->shouldReceive('getByTracker')->with($this->target_tracker)->andReturn($this->target_semantic);
 
-        $this->assertFalse($this->checker->areSemanticsAligned($this->source_tracker, $this->target_tracker));
+        $this->assertFalse($this->checker->checkSemanticsAreAligned($this->source_tracker, $this->target_tracker));
     }
 
     public function testSemanticAreNotAlignedIfOneTrackersDoesNotHaveTheSemanticDefined()
@@ -108,6 +111,6 @@ class MoveSemanticCheckerTest extends TestCase
         $this->initial_effort_factory->shouldReceive('getByTracker')->with($this->source_tracker)->andReturn($this->source_semantic);
         $this->initial_effort_factory->shouldReceive('getByTracker')->with($this->target_tracker)->andReturn($this->target_semantic);
 
-        $this->assertFalse($this->checker->areSemanticsAligned($this->source_tracker, $this->target_tracker));
+        $this->assertFalse($this->checker->checkSemanticsAreAligned($this->source_tracker, $this->target_tracker));
     }
 }
