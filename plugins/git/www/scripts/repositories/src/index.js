@@ -24,7 +24,7 @@ import time_ago_english from "javascript-time-ago/locale/en";
 import time_ago_french from "javascript-time-ago/locale/fr";
 
 import french_translations from "../po/fr.po";
-import GitRepositoriesList from "./GitRepositoriesList.vue";
+import GitRepositoriesList from "./components/GitRepositoriesList.vue";
 import { setUrls } from "./breadcrumb-presenter.js";
 import { build as buildRepositoryListPresenter } from "./repository-list-presenter.js";
 
