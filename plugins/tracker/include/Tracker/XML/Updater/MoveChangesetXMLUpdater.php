@@ -25,8 +25,10 @@ use PFUser;
 use SimpleXMLElement;
 use Tracker;
 use Tracker_FormElement_Field;
+use Tuleap\Tracker\Action\MoveStatusSemanticChecker;
 use Tuleap\Tracker\Events\MoveArtifactGetExternalSemanticTargetField;
 use Tuleap\Tracker\Events\MoveArtifactParseFieldChangeNodes;
+use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 
 class MoveChangesetXMLUpdater
 {
@@ -36,9 +38,24 @@ class MoveChangesetXMLUpdater
      */
     private $event_manager;
 
-    public function __construct(EventManager $event_manager)
-    {
-        $this->event_manager = $event_manager;
+    /**
+     * @var FieldValueMatcher
+     */
+    private $field_value_matcher;
+
+    /**
+     * @var MoveStatusSemanticChecker
+     */
+    private $status_semantic_checker;
+
+    public function __construct(
+        EventManager $event_manager,
+        FieldValueMatcher $field_value_matcher,
+        MoveStatusSemanticChecker $status_semantic_checker
+    ) {
+        $this->event_manager           = $event_manager;
+        $this->field_value_matcher     = $field_value_matcher;
+        $this->status_semantic_checker = $status_semantic_checker;
     }
 
     public function update(
@@ -112,7 +129,14 @@ class MoveChangesetXMLUpdater
     ) {
         $target_title_field             = $target_tracker->getTitleField();
         $target_description_field       = $target_tracker->getDescriptionField();
+        $target_status_field            = $target_tracker->getStatusField();
+        $source_status_field            = $source_tracker->getStatusField();
         $external_semantic_target_field = $this->getExternalSemanticTargetField($source_tracker, $target_tracker);
+
+        $status_semantic_can_be_moved = $this->status_semantic_checker->canSemanticBeMoved(
+            $source_tracker,
+            $target_tracker
+        );
 
         $this->deleteEmptyCommentsNode($changeset_xml);
 
@@ -128,6 +152,12 @@ class MoveChangesetXMLUpdater
                 $this->isFieldChangeCorrespondingToDescriptionSemanticField($changeset_xml, $source_tracker, $index)
             ) {
                 $this->useTargetTrackerFieldName($changeset_xml, $target_description_field, $index);
+                continue;
+            } elseif ($status_semantic_can_be_moved &&
+                $this->isFieldChangeCorrespondingToStatusSemanticField($changeset_xml, $source_status_field, $index)
+            ) {
+                $this->useTargetTrackerFieldName($changeset_xml, $target_status_field, $index);
+                $this->updateValue($changeset_xml, $source_status_field, $target_status_field, $index);
                 continue;
             } elseif ($external_semantic_target_field) {
                 $modified = $this->parseFieldChangeNodesForExternalSemantics(
@@ -201,6 +231,14 @@ class MoveChangesetXMLUpdater
         return false;
     }
 
+    private function isFieldChangeCorrespondingToStatusSemanticField(
+        SimpleXMLElement $changeset_xml,
+        Tracker_FormElement_Field $source_status_field,
+        $index
+    ) {
+        return $this->isFieldChangeCorrespondingToField($changeset_xml, $source_status_field, $index);
+    }
+
     private function isFieldChangeCorrespondingToField(
         SimpleXMLElement $changeset_xml,
         Tracker_FormElement_Field $source_field,
@@ -217,6 +255,27 @@ class MoveChangesetXMLUpdater
         $index
     ) {
         $changeset_xml->field_change[$index]['field_name'] = $target_field->getName();
+    }
+
+    private function updateValue(
+        SimpleXMLElement $changeset_xml,
+        Tracker_FormElement_Field $source_status_field,
+        Tracker_FormElement_Field $target_status_field,
+        $index
+    ) {
+        $xml_value = (int) $changeset_xml->field_change[$index]->value;
+
+        if ($xml_value === 0) {
+            return;
+        }
+
+        $value = $this->field_value_matcher->getMatchingValueByDuckTyping(
+            $source_status_field,
+            $target_status_field,
+            $xml_value
+        );
+
+        $changeset_xml->field_change[$index]->value = (int) $value;
     }
 
     /**
