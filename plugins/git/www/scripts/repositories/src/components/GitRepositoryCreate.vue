@@ -51,6 +51,7 @@
                        pattern="[a-zA-Z0-9/_.-]{1,255}"
                        maxlength="255"
                        v-bind:title="repository_pattern"
+                       data-test="create_repository_name"
                 >
                 <p class="tlp-text-info">
                     <i class="fa fa-info-circle"></i>
@@ -69,6 +70,7 @@
                     class="tlp-button-primary tlp-modal-action"
                     v-bind:disabled="is_loading"
                     v-on:click="createRepository()"
+                    data-test="create_repository"
             >
                 <i class="fa fa-plus tlp-button-icon"
                     v-bind:class="{'fa-spin fa-spinner': is_loading}"

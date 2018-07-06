@@ -23,7 +23,9 @@
             <a v-bind:href="repository.html_url" class="git-repository-card-link">
                 <div class="tlp-pane-header git-repository-card-header">
                     <div class="git-repository-card-header-line">
-                        <h1 class="tlp-pane-title git-repository-card-title">
+                        <h1 class="tlp-pane-title git-repository-card-title"
+                            data-test="repository_name"
+                        >
                             {{ name_with_path }}
                         </h1>
                         <div class="git-repository-links-spacer"></div>

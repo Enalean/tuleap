@@ -46,6 +46,7 @@
                     class="tlp-button-primary tlp-button-large"
                     v-if="is_admin"
                     v-on:click="showAddRepositoryModal()"
+                    data-test="empty_state_create_repository"
             >
                 <i class="fa fa-plus tlp-button-icon"></i>
                 <translate>Add repository</translate>
