@@ -47,6 +47,15 @@
     background: url('/themes/BurningParrot/images/spinner.gif') no-repeat center center;
 }
 
+.repository-list-actions {
+    display: flex;
+    margin: 0 0 $tlp-spacing;
+
+    > .repository-list-filter-input {
+        margin-left: auto;
+    }
+}
+
 // Git repository card
 
 .git-repository-card {

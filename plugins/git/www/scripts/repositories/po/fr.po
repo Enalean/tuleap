@@ -45,6 +45,9 @@ msgstr "Aller à l'administration du dépôt"
 msgid "Last update %{ formatted_last_update_date }"
 msgstr "Dernière mise à jour %{ formatted_last_update_date }"
 
+msgid "No repository name matching your query has been found."
+msgstr "Aucun nom de dépôt ne correspond à votre recherche."
+
 msgid "Project not found"
 msgstr "Projet non trouvé"
 
