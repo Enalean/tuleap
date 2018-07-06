@@ -83,7 +83,8 @@ class GitViews_ShowRepo_Content {
 
     private function isATreePage()
     {
-        return $this->request->get(self::PAGE_TYPE) === self::PAGE_TYPE_TREE;
+        return ! $this->request->exist(self::PAGE_TYPE) ||
+            $this->request->get(self::PAGE_TYPE) === self::PAGE_TYPE_TREE;
     }
 
     private function getMarkdownFilesDiv()
