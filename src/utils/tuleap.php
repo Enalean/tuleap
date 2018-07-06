@@ -25,6 +25,7 @@ use Tuleap\CLI\Command\ConfigGetCommand;
 use Tuleap\CLI\Command\ConfigSetCommand;
 use Tuleap\CLI\Command\UserPasswordCommand;
 use Tuleap\Password\PasswordSanityChecker;
+use Tuleap\CLI\Command\ImportProjectXMLCommand;
 
 $application = new Application();
 $application->add(
@@ -40,6 +41,9 @@ $application->add(
     new ConfigSetCommand(
         new ConfigDao()
     )
+);
+$application->add(
+    new ImportProjectXMLCommand()
 );
 
 $event_manager         = EventManager::instance();
