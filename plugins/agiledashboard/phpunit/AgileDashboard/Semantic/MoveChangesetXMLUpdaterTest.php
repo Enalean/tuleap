@@ -154,4 +154,34 @@ class MoveChangesetXMLUpdaterTest extends TestCase
         $this->assertEquals((string) $changeset_xml->field_change[$index]['field_name'], 'effort_v2');
         $this->assertEquals((int) $changeset_xml->field_change[$index]->value, 201);
     }
+
+    public function testItDoesNotAddNoneValueIfSourceInitialEffortListFieldDoesNotHaveValue()
+    {
+        $changeset_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>'
+            . '  <changeset>'
+            . '    <submitted_on>2014</submitted_on>'
+            . '    <submitted_by>123</submitted_by>'
+            . '    <field_change field_name="effort">'
+            . '      <value/>'
+            . '    </field_change>'
+            . '  </changeset>');
+
+        $source_initial_effort_field = Mockery::mock(Tracker_FormElement_Field_List::class);
+        $target_initial_effort_field = Mockery::mock(Tracker_FormElement_Field_List::class);
+        $source_initial_effort_field->shouldReceive('getName')->andReturn('effort');
+        $target_initial_effort_field->shouldReceive('getName')->andReturn('effort_v2');
+
+        $this->source_initial_effort_semantic->shouldReceive('getField')->andReturn($source_initial_effort_field);
+        $this->target_initial_effort_semantic->shouldReceive('getField')->andReturn($target_initial_effort_field);
+        $this->form_element_factory->shouldReceive('getType')->with($source_initial_effort_field)->andReturn('sb');
+        $this->form_element_factory->shouldReceive('getType')->with($target_initial_effort_field)->andReturn('sb');
+
+        $this->field_value_matcher->shouldReceive('getMatchingValueByDuckTyping')->never();
+
+        $index = 0;
+        $this->updater->parseFieldChangeNodesAtGivenIndex($this->source_tracker, $this->target_tracker, $changeset_xml, $index);
+
+        $this->assertEquals((string) $changeset_xml->field_change[$index]['field_name'], 'effort_v2');
+        $this->assertEquals((int) $changeset_xml->field_change[$index]->value, 0);
+    }
 }
