@@ -115,6 +115,8 @@ class Git_AdminGerritController {
                     $presenter     = $this->getManageAllowedProjectsPresenter($request);
                     $template_path = ForgeConfig::get('codendi_dir') . '/src/templates/resource_restrictor';
 
+                    $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tuleap/manage-allowed-projects-on-resource.js');
+
                     $this->admin_page_renderer->renderAPresenter(
                         $title,
                         $template_path,
@@ -144,6 +146,10 @@ class Git_AdminGerritController {
             $this->csrf,
             $this->getListOfGerritServersPresenters()
         );
+
+        $GLOBALS['HTML']->includeFooterJavascriptFile(GIT_BASE_URL . '/scripts/modal-add-gerrit-server.js');
+        $GLOBALS['HTML']->includeFooterJavascriptFile(GIT_BASE_URL . '/scripts/modal-delete-gerrit-server.js');
+        $GLOBALS['HTML']->includeFooterJavascriptFile(GIT_BASE_URL . '/scripts/modal-edit-gerrit-server.js');
 
         $this->admin_page_renderer->renderANoFramedPresenter(
             $title,

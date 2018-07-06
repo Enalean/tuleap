@@ -87,7 +87,7 @@ class FrontRouter
                         } else {
                             $layout = $this->theme_manager->getTheme($request->getCurrentUser());
                         }
-                        $GLOBALS['HTML'] = $layout;
+                        $GLOBALS['HTML'] = $GLOBALS['Response'] = $layout;
 
                         $url_verification = $this->url_verification_factory->getURLVerification($_SERVER);
                         if ($handler instanceof DispatchableWithRequestNoAuthz) {

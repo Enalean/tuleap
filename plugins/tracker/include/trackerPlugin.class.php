@@ -23,6 +23,7 @@ use Tuleap\Dashboard\User\AtUserCreationDefaultWidgetsCreator;
 use Tuleap\Glyph\GlyphLocation;
 use Tuleap\Glyph\GlyphLocationsCollector;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupDisplayEvent;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\TemplatePresenter;
 use Tuleap\project\Event\ProjectRegistrationActivateService;
@@ -160,6 +161,7 @@ class trackerPlugin extends Plugin {
         $this->addHook(BurningParrotCompatiblePageEvent::NAME);
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
+        $this->addHook(PermissionPerGroupDisplayEvent::NAME);
         $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
         $this->addHook(User_ForgeUserGroupPermissionsFactory::GET_PERMISSION_DELEGATION);
 
@@ -350,22 +352,16 @@ class trackerPlugin extends Plugin {
         if ($this->isInTrackerGlobalAdmin()) {
             $params['javascript_files'][] = $this->getPluginPath() .'/scripts/global-admin.js';
         }
-
-        if ($this->isInPermissionsPerGroupProjectAdmin()) {
-            $include_assets = new IncludeAssets(
-                TRACKER_BASE_DIR . '/../www/assets',
-                $this->getPluginPath() . '/assets'
-            );
-
-            $GLOBALS['HTML']->includeFooterJavascriptFile(
-                $include_assets->getFileURL('tracker-permissions-per-group.js')
-            );
-        }
     }
 
-    private function isInPermissionsPerGroupProjectAdmin()
+    public function permissionPerGroupDisplayEvent(PermissionPerGroupDisplayEvent $event)
     {
-        return strpos($_SERVER['REQUEST_URI'], '/project/admin/permission_per_group') === 0;
+        $include_assets = new IncludeAssets(
+            TRACKER_BASE_DIR . '/../www/assets',
+            $this->getPluginPath() . '/assets'
+        );
+
+        $event->addJavascript($include_assets->getFileURL('tracker-permissions-per-group.js'));
     }
 
     /**

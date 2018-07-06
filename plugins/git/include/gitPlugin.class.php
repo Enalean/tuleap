@@ -111,6 +111,7 @@ use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
 use Tuleap\project\Admin\Navigation\NavigationDropdownQuickLinksCollector;
+use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupDisplayEvent;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRepresentationBuilder;
@@ -255,15 +256,13 @@ class GitPlugin extends Plugin
 
         $this->addHook('codendi_daily_start');
 
-        $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
-        $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
+        $this->addHook(PermissionPerGroupDisplayEvent::NAME);
 
         $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
     }
 
     public function getHooksAndCallbacks()
     {
-        $this->addHook(BurningParrotCompatiblePageEvent::NAME);
         $this->addHook(GlyphLocationsCollector::NAME);
         $this->addHook(HeartbeatsEntryCollection::NAME);
         $this->addHook(HierarchyDisplayer::NAME);
@@ -325,13 +324,6 @@ class GitPlugin extends Plugin
         );
     }
 
-    public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event)
-    {
-        if ($this->isASiteAdministrationPage()) {
-            $event->setIsInBurningParrotCompatiblePage();
-        }
-    }
-
     public function getPluginInfo() {
         if (!is_a($this->pluginInfo, 'GitPluginInfo')) {
             $this->pluginInfo = new GitPluginInfo($this);
@@ -378,19 +370,6 @@ class GitPlugin extends Plugin
         }
     }
 
-    public function burning_parrot_get_stylesheets(array $params)
-    {
-        $burning_parrot_assets = new IncludeAssets(
-            __DIR__ . '/../www/themes/BurningParrot/assets',
-            GIT_BASE_URL . '/themes/BurningParrot/assets'
-        );
-
-        $variant = $params['variant'];
-        if ($this->isASiteAdministrationPage()) {
-            $params['stylesheets'][] = $burning_parrot_assets->getFileURL('site-admin-' . $variant->getName() . '.css');
-        }
-    }
-
     public function jsFile($params) {
         // Only show the javascript if we're actually in the Git pages.
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
@@ -402,31 +381,9 @@ class GitPlugin extends Plugin
         }
     }
 
-    public function burning_parrot_get_javascript_files(array $params)
+    public function permissionPerGroupDisplayEvent(PermissionPerGroupDisplayEvent $event)
     {
-        if (strpos($_SERVER['REQUEST_URI'], GIT_BASE_URL) === 0) {
-            if (strpos($_SERVER['REQUEST_URI'], 'gerrit_servers_admin')) {
-                $params['javascript_files'][] = GIT_BASE_URL . '/scripts/modal-add-gerrit-server.js';
-                $params['javascript_files'][] = GIT_BASE_URL . '/scripts/modal-delete-gerrit-server.js';
-                $params['javascript_files'][] = GIT_BASE_URL . '/scripts/modal-edit-gerrit-server.js';
-            } else if (strpos($_SERVER['REQUEST_URI'], 'mirrors_admin')) {
-                $params['javascript_files'][] = GIT_BASE_URL . '/scripts/modal-add-mirror.js';
-                $params['javascript_files'][] = GIT_BASE_URL . '/scripts/modal-mirror-configuration.js';
-            } else if (strpos($_SERVER['REQUEST_URI'], 'mirrors_restriction')) {
-                $params['javascript_files'][] = '/scripts/tuleap/manage-allowed-projects-on-resource.js';
-            } else if (strpos($_SERVER['REQUEST_URI'], 'gerrit_servers_restriction')) {
-                $params['javascript_files'][] = '/scripts/tuleap/manage-allowed-projects-on-resource.js';
-            } else if (strpos($_SERVER['REQUEST_URI'], 'gitolite_config')) {
-                $params['javascript_files'][] = GIT_BASE_URL . '/scripts/admin-gitolite.js';
-            }
-        } else if ($this->isInProjectAdminPermissionPerGroup()) {
-            $params['javascript_files'][] =  $this->getIncludeAssets()->getFileURL('permission-per-group.js');
-        }
-    }
-
-    private function isInProjectAdminPermissionPerGroup()
-    {
-        return strpos($_SERVER['REQUEST_URI'], '/project/admin/permission_per_group') === 0;
+        $event->addJavascript($this->getIncludeAssets()->getFileURL('permission-per-group.js'));
     }
 
     public function javascript($params) {
@@ -2603,14 +2560,6 @@ class GitPlugin extends Plugin
             $this->getPluginPath() . '/assets'
         );
         return $include_assets;
-    }
-
-    /**
-     * @return bool
-     */
-    private function isASiteAdministrationPage()
-    {
-        return strpos($_SERVER['REQUEST_URI'], $this->getPluginPath() . '/admin/') === 0;
     }
 
     /**

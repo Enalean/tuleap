@@ -76,6 +76,7 @@ class FrontRouterTest extends TestCase
         unset($_SERVER['REQUEST_METHOD']);
         unset($_SERVER['REQUEST_URI']);
         unset($GLOBALS['HTML']);
+        unset($GLOBALS['Response']);
         parent::tearDown();
     }
 
