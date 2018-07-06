@@ -50,9 +50,7 @@
 
    {if $hasmorerevs}
      <tr>
-     {if $source == 'summary'}
-       <td><a href="{$SCRIPT_NAME}?a=shortlog">&hellip;</a></td>
-     {else if $source == 'shortlog'}
+     {if $source == 'shortlog'}
        <td><a href="{$SCRIPT_NAME}?a=shortlog&amp;h={$commit->GetHash()|urlencode}&amp;pg={$page+1|urlencode}{if $mark}&amp;m={$mark->GetHash()|urlencode}{/if}" title="Alt-n">{t}next{/t}</a></td>
      {/if}
      </tr>

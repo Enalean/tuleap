@@ -8,7 +8,7 @@
 <rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>{$project->GetProject()}</title>
-    <link>{scripturl}?a=summary</link>
+    <link>{scripturl}?a=tree</link>
     <description>{$project->GetProject()} log</description>
     <language>en</language>
 

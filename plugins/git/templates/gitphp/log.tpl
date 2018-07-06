@@ -84,7 +84,7 @@
    </div>
  {foreachelse}
    <div class="title">
-     <a href="{$SCRIPT_NAME}?a=summary" class="title">&nbsp</a>
+     <a href="{$SCRIPT_NAME}?a=tree" class="title">&nbsp</a>
    </div>
    <div class="page_body">
      {if $commit}

@@ -9,7 +9,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
   <title>{$project->GetProject()|escape}</title>
   <subtitle type="text">{$project->GetProject()|escape} log</subtitle>
-  <link href="{scripturl}?a=summary&amp;noheader=1"/>
+  <link href="{scripturl}?a=tree&amp;noheader=1"/>
   <link rel="self" href="{scripturl}?a=atom&amp;noheader=1"/>
   <id>{scripturl}</id>
   {if $log}

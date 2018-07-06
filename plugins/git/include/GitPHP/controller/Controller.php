@@ -114,9 +114,6 @@ class Controller
 			case 'commit':
 				$controller = new Controller_Commit();
 				break;
-			case 'summary':
-				$controller = new Controller_Project();
-				break;
             case 'tree':
 			default:
                 $controller = new Controller_Tree();

@@ -13,7 +13,7 @@
    <br /><br />
  </div>
 
-{include file='title.tpl' target='summary'}
+{include file='title.tpl' target='tree'}
  
  {* Display tags *}
 
