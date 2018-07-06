@@ -21,6 +21,7 @@
 
 namespace Tuleap\Git;
 
+use GitPlugin;
 use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithProject;
@@ -94,7 +95,10 @@ class GitRepositoryBrowserController implements DispatchableWithRequest, Dispatc
      */
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
-        \Tuleap\Project\ServiceInstrumentation::increment('git');
+        $project = $this->getProject($request, $variables);
+        if (! $project->usesService(gitPlugin::SERVICE_SHORTNAME)) {
+            throw new NotFoundException(dgettext("tuleap-git", "Git service is disabled."));
+        }
 
         $repository = $this->repository_factory->getByProjectNameAndPath($variables['project_name'], $variables['path'].'.git');
         if (! $repository) {
@@ -106,6 +110,8 @@ class GitRepositoryBrowserController implements DispatchableWithRequest, Dispatc
         }
 
         $this->redirectOutdatedActions($request, $layout);
+
+        \Tuleap\Project\ServiceInstrumentation::increment('git');
 
         $url = new \Git_URL(
             $this->project_manager,

@@ -21,6 +21,7 @@
 
 namespace Tuleap\Git;
 
+use GitPlugin;
 use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
@@ -52,6 +53,10 @@ class GitLegacyURLRedirectController implements DispatchableWithRequest
      */
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
+        if (! $request->getProject()->usesService(gitPlugin::SERVICE_SHORTNAME)) {
+            throw new NotFoundException(dgettext("tuleap-git", "Git service is disabled."));
+        }
+
         $repository = $this->repository_factory->getRepositoryById($variables['repository_id']);
         if (! $repository) {
             throw new NotFoundException();
