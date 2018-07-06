@@ -9,12 +9,6 @@
  * @subpackage Template
  *}
 
-   {if $current=='summary'}
-     {t}summary{/t}
-   {else}
-     <a href="{$SCRIPT_NAME}?a=summary">{t}summary{/t}</a>
-   {/if}
-   | 
    {if $current=='shortlog' || !$commit}
      {t}shortlog{/t}
    {else}

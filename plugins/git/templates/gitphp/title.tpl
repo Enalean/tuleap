@@ -20,8 +20,8 @@
 		{/if}
 		{include file='refbadges.tpl' commit=$titlecommit}
 	{else}
-		{if $target == 'summary'}
-			<a href="{$SCRIPT_NAME}?a=summary" class="title">&nbsp;</a>
+		{if $target == 'tree'}
+			<a href="{$SCRIPT_NAME}?a=tree" class="title">&nbsp;</a>
 		{elseif $target == 'shortlog'}
 			{if $disablelink}
 			  {t}shortlog{/t}

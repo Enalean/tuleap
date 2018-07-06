@@ -33,7 +33,7 @@
       <!-- <a href="index.php">{if $homelink}{$homelink}{else}{t}projects{/t}{/if}</a> / -->
       &gt;
       {if $project}
-        <a href="{$SCRIPT_NAME}?a=summary">{$project->GetProject()|escape}</a>
+        <a href="{$SCRIPT_NAME}?a=tree">{$project->GetProject()|escape}</a>
         {if $actionlocal}
            / {$actionlocal}
         {/if}

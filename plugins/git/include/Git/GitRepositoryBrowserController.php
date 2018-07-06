@@ -87,6 +87,8 @@ class GitRepositoryBrowserController implements DispatchableWithRequest
             throw new ForbiddenException();
         }
 
+        $this->redirectOutdatedActions($request, $layout);
+
         $url = new \Git_URL(
             $this->project_manager,
             $this->repository_factory,
@@ -132,5 +134,23 @@ class GitRepositoryBrowserController implements DispatchableWithRequest
         foreach ($url_parameters as $key => $value) {
             $request->set($key, $value);
         }
+    }
+
+    private function redirectOutdatedActions(HTTPRequest $request, \Response $response)
+    {
+        $parsed_url = parse_url($request->getFromServer('REQUEST_URI'));
+
+        if (! isset($parsed_url['query'])) {
+            return;
+        }
+
+        parse_str($parsed_url['query'], $query_parameters);
+
+        if (! isset($query_parameters['a']) || $query_parameters['a'] !== 'summary') {
+            return;
+        }
+
+        $query_parameters['a'] = 'tree';
+        $response->permanentRedirect($parsed_url['path'] . '?' . http_build_query($query_parameters));
     }
 }
