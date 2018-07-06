@@ -143,6 +143,9 @@ msgstr ""
 msgid "Email Notifications Settings"
 msgstr ""
 
+msgid "Enable custom sender fields for email notifications"
+msgstr ""
+
 msgid "Enable notifications"
 msgstr ""
 

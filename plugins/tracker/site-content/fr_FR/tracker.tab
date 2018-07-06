@@ -574,6 +574,7 @@ plugin_tracker_include_type	toggle_notif_warn	L'administrateur de l'outi de suiv
 plugin_tracker_include_type	notification_customisation_title	Personnalisation du sujet de l'email
 plugin_tracker_include_type	assigned_to_me	Assigné à moi même
 plugin_tracker_include_type	assigned_to_me_description	Inclure un marqueur [Assigné à moi même] dans le sujet pour les personnes étant assignées à l'artefact
+plugin_tracker_include_type	custom_sender_description	Permettre la personnalisation des champs émetteurs pour les notifications per e-mail
 plugin_tracker_include_type	global_mail_notif	Notification e-mail globale
 plugin_tracker_include_type	perso_mail_notif	Notification e-mail personnelle
 plugin_tracker_include_type	users_to_watch	Utilisateurs à suivre

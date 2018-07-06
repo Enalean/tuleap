@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.8\n"
+"X-Generator: Poedit 2.0.6\n"
 
 #, php-format
 msgid "%s has been created"
@@ -180,6 +180,12 @@ msgstr "Éditer un webhook"
 
 msgid "Email Notifications Settings"
 msgstr "Options de notification"
+
+#, fuzzy
+msgid "Enable custom sender fields for email notifications"
+msgstr ""
+"Permettre la personnalisation des champs émetteurs pour les notifications "
+"per e-mail"
 
 msgid "Enable notifications"
 msgstr "Activer les notifications"
