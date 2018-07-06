@@ -17,8 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// Git repository list
-
 .git-repository-list-empty-image {
     stroke: mix($tlp-ui-white, $tlp-theme-color, 70%);
 }
@@ -32,7 +30,7 @@
 }
 
 .git-repository-list-create-repository-button {
-    margin: 0 0 $tlp-spacing;
+    margin: 0 $tlp-spacing 0 0;
 }
 
 .git-repository-list {
@@ -47,16 +45,15 @@
     background: url('/themes/BurningParrot/images/spinner.gif') no-repeat center center;
 }
 
-.repository-list-actions {
+.git-repository-list-actions {
     display: flex;
     margin: 0 0 $tlp-spacing;
-
-    > .repository-list-filter-input {
-        margin-left: auto;
-    }
 }
 
-// Git repository card
+.git-repository-list-actions-spacer {
+    flex: 1;
+    min-width: 20px;
+}
 
 .git-repository-card {
     width: calc(50% - #{$tlp-half-spacing});

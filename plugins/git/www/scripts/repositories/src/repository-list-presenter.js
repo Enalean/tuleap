@@ -17,16 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export { build, getProjectId, getUserIsAdmin, getDashCasedLocale };
+export { build, getProjectId, getUserIsAdmin, getDashCasedLocale, getRepositoriesOwners };
 
 let current_project_id;
 let is_administrator = false;
 let locale;
+let repositories_owners = [];
 
-function build(project_id, is_user_administrator, user_locale) {
+function build(project_id, is_user_administrator, user_locale, owners) {
     current_project_id = project_id;
     is_administrator = is_user_administrator;
     locale = user_locale;
+    repositories_owners = owners;
 }
 
 function getProjectId() {
@@ -39,4 +41,8 @@ function getUserIsAdmin() {
 
 function getDashCasedLocale() {
     return locale.replace(/_/g, "-");
+}
+
+function getRepositoriesOwners() {
+    return repositories_owners;
 }

@@ -51,11 +51,12 @@ document.addEventListener("DOMContentLoaded", () => {
             repositoryListUrl,
             repositoriesForkUrl,
             projectId,
-            isAdmin
+            isAdmin,
+            repositoriesOwners
         } = rootComponent.dataset;
 
         setUrls(repositoriesAdministrationUrl, repositoryListUrl, repositoriesForkUrl);
-        buildRepositoryListPresenter(projectId, isAdmin, locale);
+        buildRepositoryListPresenter(projectId, isAdmin, locale, JSON.parse(repositoriesOwners));
 
         new repositoryList().$mount(rootComponent);
     }

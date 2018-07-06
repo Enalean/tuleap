@@ -25,6 +25,7 @@ require_once __DIR__.'/bootstrap.php';
 
 use Git_Mirror_MirrorDataMapper;
 use Git_RemoteServer_GerritServerFactory;
+use GitDao;
 use GitPermissionsManager;
 use GitPlugin;
 use GitRepositoryFactory;
@@ -149,6 +150,7 @@ class GitRoutingTest extends TestCase
                 'getGitPhpAccessLogger'     => \Mockery::mock(GitPhpAccessLogger::class),
                 'getGitPermissionsManager'  => \Mockery::mock(GitPermissionsManager::class),
                 'getUserDao'                => \Mockery::mock(UserDao::class),
+                'getGitDao'                 => \Mockery::mock(GitDao::class),
                 'getConfigurationParameter' => 'foo',
                 'getIncludeAssets'          => \Mockery::mock(IncludeAssets::class),
             ]);
