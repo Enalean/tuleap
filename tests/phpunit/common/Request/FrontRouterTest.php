@@ -26,6 +26,7 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\Layout\BaseLayout;
 use FastRoute;
 use Tuleap\Layout\ErrorRendering;
+use Tuleap\Theme\BurningParrot\BurningParrotTheme;
 
 class FrontRouterTest extends TestCase
 {
@@ -41,6 +42,8 @@ class FrontRouterTest extends TestCase
     private $layout;
     private $logger;
     private $error_rendering;
+    private $theme_manager;
+    private $burning_parrot;
 
     public function setUp()
     {
@@ -52,12 +55,19 @@ class FrontRouterTest extends TestCase
         $this->layout  = Mockery::mock(BaseLayout::class);
         $this->logger  = Mockery::mock(\Logger::class);
         $this->error_rendering = Mockery::mock(ErrorRendering::class);
+        $this->theme_manager = Mockery::mock(\ThemeManager::class);
+        $this->burning_parrot = Mockery::mock(BurningParrotTheme::class);
+
+        $this->request->shouldReceive('getCurrentUser')->andReturn(Mockery::mock(\PFUser::class));
+        $this->theme_manager->shouldReceive('getBurningParrot')->andReturn($this->burning_parrot);
+        $this->theme_manager->shouldReceive('getTheme')->andReturn($this->layout);
 
         $this->router = new FrontRouter(
             $this->route_collector,
             $this->url_verification_factory,
             $this->logger,
-            $this->error_rendering
+            $this->error_rendering,
+            $this->theme_manager
         );
     }
 
@@ -65,6 +75,7 @@ class FrontRouterTest extends TestCase
     {
         unset($_SERVER['REQUEST_METHOD']);
         unset($_SERVER['REQUEST_URI']);
+        unset($GLOBALS['HTML']);
         parent::tearDown();
     }
 
@@ -74,7 +85,7 @@ class FrontRouterTest extends TestCase
         $_SERVER['REQUEST_URI']    = '/stuff';
 
         $this->route_collector->shouldReceive('collect');
-        $this->error_rendering->shouldReceive('rendersError')->once()->with(Mockery::any(), 404, Mockery::any(), Mockery::any());
+        $this->error_rendering->shouldReceive('rendersError')->once()->with(Mockery::any(), Mockery::any(), 404, Mockery::any(), Mockery::any());
 
         $this->router->route($this->request, $this->layout);
     }
@@ -117,7 +128,7 @@ class FrontRouterTest extends TestCase
             return true;
         }));
 
-        $this->error_rendering->shouldReceive('rendersError')->once()->with(Mockery::any(), 403, Mockery::any(), Mockery::any());
+        $this->error_rendering->shouldReceive('rendersError')->once()->with(Mockery::any(), Mockery::any(), 403, Mockery::any(), Mockery::any());
 
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['REQUEST_URI']    = '/stuff';
@@ -148,7 +159,6 @@ class FrontRouterTest extends TestCase
         $this->router->route($this->request, $this->layout);
     }
 
-
     public function testItRaisesAnErrorWhenHandlerIsUnknown()
     {
         $handler = new \stdClass();
@@ -169,6 +179,7 @@ class FrontRouterTest extends TestCase
 
         $this->logger->shouldReceive('error')->once();
         $this->error_rendering->shouldReceive('rendersErrorWithException')->once()->with(
+            Mockery::any(),
             Mockery::any(),
             500,
             Mockery::any(),
@@ -229,6 +240,7 @@ class FrontRouterTest extends TestCase
         $this->logger->shouldReceive('error')->once();
         $this->error_rendering->shouldReceive('rendersErrorWithException')->once()->with(
             Mockery::any(),
+            Mockery::any(),
             500,
             Mockery::any(),
             Mockery::any(),
@@ -236,5 +248,28 @@ class FrontRouterTest extends TestCase
         );
 
         $this->router->route($this->request, $this->layout);
+    }
+
+    public function testItProvidesABurningParrotThemeWhenControllerAskForIt()
+    {
+        $handler = \Mockery::mock(DispatchableWithRequest::class.', '.DispatchableWithBurningParrot::class);
+
+        $handler->shouldReceive('process')->with($this->request, $this->burning_parrot, [])->once();
+
+        $url_verification = Mockery::mock(\URLVerification::class);
+        $url_verification->shouldReceive('assertValidUrl');
+        $this->url_verification_factory->shouldReceive('getURLVerification')->andReturn($url_verification);
+
+        $this->route_collector->shouldReceive('collect')->with(Mockery::on(function (FastRoute\RouteCollector $r) use ($handler) {
+            $r->get('/stuff', function () use ($handler) {
+                return $handler;
+            });
+            return true;
+        }));
+
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_SERVER['REQUEST_URI']    = '/stuff';
+
+        $this->router->route($this->request);
     }
 }

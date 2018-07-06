@@ -326,7 +326,7 @@ class GitPlugin extends Plugin
 
     public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event)
     {
-        if ($this->isASiteAdministrationPage() || $this->isAMigratedGitViewPage()) {
+        if ($this->isASiteAdministrationPage()) {
             $event->setIsInBurningParrotCompatiblePage();
         }
     }
@@ -387,8 +387,6 @@ class GitPlugin extends Plugin
         $variant = $params['variant'];
         if ($this->isASiteAdministrationPage()) {
             $params['stylesheets'][] = $burning_parrot_assets->getFileURL('site-admin-' . $variant->getName() . '.css');
-        } else if ($this->canIncludeStylesheets()) {
-            $params['stylesheets'][] = $burning_parrot_assets->getFileURL('git-' . $variant->getName() . '.css');
         }
     }
 
@@ -419,8 +417,6 @@ class GitPlugin extends Plugin
                 $params['javascript_files'][] = '/scripts/tuleap/manage-allowed-projects-on-resource.js';
             } else if (strpos($_SERVER['REQUEST_URI'], 'gitolite_config')) {
                 $params['javascript_files'][] = GIT_BASE_URL . '/scripts/admin-gitolite.js';
-            } else if ($this->isAMigratedGitViewPage()) {
-                $params['javascript_files'][] =  $this->getIncludeAssets()->getFileURL('repositories-list.js');
             }
         } else if ($this->isInProjectAdminPermissionPerGroup()) {
             $params['javascript_files'][] =  $this->getIncludeAssets()->getFileURL('permission-per-group.js');
@@ -2394,8 +2390,7 @@ class GitPlugin extends Plugin
 
     private function canIncludeStylesheets()
     {
-        return $this->isAMigratedGitViewPage()
-            || strpos($_SERVER['REQUEST_URI'], '/my/') === 0
+        return strpos($_SERVER['REQUEST_URI'], '/my/') === 0
             || strpos($_SERVER['REQUEST_URI'], '/projects/') === 0;
     }
 
@@ -2560,12 +2555,12 @@ class GitPlugin extends Plugin
                     $this->getUserDao()
                 );
             });
-            $r->get(
-                '/{project_name:[A-z0-9-]+}[/]', function() {
+            $r->get('/{project_name:[A-z0-9-]+}[/]', function() {
                 return new GitRepositoryListController(
                     $this->getProjectManager(),
                     $this->getRepositoryFactory(),
-                    $this->getGitPermissionsManager()
+                    $this->getGitPermissionsManager(),
+                    $this->getIncludeAssets()
                 );
             });
             $r->addRoute(['GET', 'POST'], '/{project_name}/{path:.*}', function () {
@@ -2589,17 +2584,11 @@ class GitPlugin extends Plugin
     }
 
     /**
-     * @return bool
-     */
-    private function isAMigratedGitViewPage()
-    {
-        return preg_match('#^/plugins/git/[^/]+/$#', $_SERVER['REQUEST_URI']);
-    }
-
-    /**
+     *
+     * @access protected for test purpose
      * @return IncludeAssets
      */
-    private function getIncludeAssets()
+    protected function getIncludeAssets()
     {
         $include_assets = new IncludeAssets(
             GIT_BASE_DIR . '/../www/assets',

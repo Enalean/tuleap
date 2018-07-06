@@ -24,9 +24,11 @@ use HTTPRequest;
 use Project;
 use TemplateRendererFactory;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\CssAsset;
 use Tuleap\Request;
 
-class GitRepositoryListController implements Request\DispatchableWithRequest, Request\DispatchableWithProject
+class GitRepositoryListController implements Request\DispatchableWithRequest, Request\DispatchableWithProject, Request\DispatchableWithBurningParrot
 {
 
     /**
@@ -45,15 +47,21 @@ class GitRepositoryListController implements Request\DispatchableWithRequest, Re
      * @var Project
      */
     private $project;
+    /**
+     * @var IncludeAssets
+     */
+    private $include_assets;
 
     public function __construct(
         \ProjectManager $project_manager,
         \GitRepositoryFactory $repository_factory,
-        \GitPermissionsManager $git_permissions_manager
+        \GitPermissionsManager $git_permissions_manager,
+        IncludeAssets $include_assets
     ) {
         $this->project_manager         = $project_manager;
         $this->repository_factory      = $repository_factory;
         $this->git_permissions_manager = $git_permissions_manager;
+        $this->include_assets     = $include_assets;
     }
 
     /**
@@ -86,6 +94,17 @@ class GitRepositoryListController implements Request\DispatchableWithRequest, Re
     {
         \Tuleap\Project\ServiceInstrumentation::increment('git');
 
+        $layout->addCssAsset(
+            new CssAsset(
+                new IncludeAssets(
+                    __DIR__ . '/../../../www/themes/BurningParrot/assets',
+                    GIT_BASE_URL . '/themes/BurningParrot/assets'
+                ),
+                'git'
+            )
+        );
+
+        $layout->includeFooterJavascriptFile($this->include_assets->getFileURL('repositories-list.js'));
         $this->displayHeader(dgettext('tuleap-git', 'Git repositories'), $this->project);
         $renderer = TemplateRendererFactory::build()->getRenderer(GIT_TEMPLATE_DIR);
 

@@ -26,18 +26,9 @@ use Tuleap\Theme\BurningParrot\BurningParrotTheme;
 
 class ErrorRendering
 {
-    /**
-     * @var BaseLayout
-     */
-    private $layout;
     private $presenter = [];
 
-    public function __construct(BurningParrotTheme $layout)
-    {
-        $this->layout = $layout;
-    }
-
-    public function rendersError(HTTPRequest $request, $http_code, $title, $message)
+    public function rendersError(BurningParrotTheme $layout, HTTPRequest $request, $http_code, $title, $message)
     {
         $this->presenter['title']   = $title;
         $this->presenter['message'] = $message;
@@ -48,7 +39,7 @@ class ErrorRendering
             return;
         }
 
-        $this->layout->header(
+        $layout->header(
             [
                 'title'        => $this->presenter['title'],
                 'main_classes' => ['tlp-framed'],
@@ -57,14 +48,14 @@ class ErrorRendering
 
         $renderer = \TemplateRendererFactory::build()->getRenderer(__DIR__.'/../../templates/common');
         $renderer->renderToPage('http_error', $this->presenter);
-        $this->layout->footer([]);
+        $layout->footer([]);
     }
 
-    public function rendersErrorWithException(HTTPRequest $request, $http_code, $title, $message, \Exception $exception)
+    public function rendersErrorWithException(BurningParrotTheme $layout, HTTPRequest $request, $http_code, $title, $message, \Exception $exception)
     {
         if (isset($exception->xdebug_message) && ini_get('display_errors') === '1') {
             $this->presenter['xdebug_message'] = $exception->xdebug_message;
         }
-        $this->rendersError($request, $http_code, $title, $message);
+        $this->rendersError($layout, $request, $http_code, $title, $message);
     }
 }
