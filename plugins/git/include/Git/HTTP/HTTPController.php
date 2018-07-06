@@ -22,17 +22,19 @@
 namespace Tuleap\Git\HTTP;
 
 use HTTPRequest;
+use Project;
 use Tuleap\Git\Gerrit\ReplicationHTTPUserAuthenticator;
 use Tuleap\Git\Gitolite\VersionDetector;
 use Tuleap\Git\RemoteServer\Gerrit\HttpUserValidator;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 use Tuleap\user\PasswordVerifier;
 use UserDao;
 
-class HTTPController implements DispatchableWithRequestNoAuthz
+class HTTPController implements DispatchableWithRequestNoAuthz, DispatchableWithProject
 {
 
     /**
@@ -103,6 +105,25 @@ class HTTPController implements DispatchableWithRequestNoAuthz
         $this->http_command_factory = new \Git_HTTP_CommandFactory(
             new VersionDetector()
         );
+    }
+
+    /**
+     * Return the project that corresponds to current URI
+     *
+     * @param \HTTPRequest $request
+     * @param array $variables
+     *
+     * @return Project
+     * @throws NotFoundException
+     */
+    public function getProject(\HTTPRequest $request, array $variables)
+    {
+        $project = $this->project_manager->getProjectByCaseInsensitiveUnixName($variables['project_name']);
+        if (! $project || $project->isError()) {
+            throw new NotFoundException(dgettext("tuleap-git", "Project not found."));
+        }
+
+        return $project;
     }
 
     /**

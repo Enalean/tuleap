@@ -23,11 +23,13 @@ namespace Tuleap\Git;
 
 use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
+use Tuleap\Request\Project;
 
-class GitRepositoryBrowserController implements DispatchableWithRequest
+class GitRepositoryBrowserController implements DispatchableWithRequest, DispatchableWithProject
 {
     /**
      * @var \GitRepositoryFactory
@@ -62,6 +64,22 @@ class GitRepositoryBrowserController implements DispatchableWithRequest
         $this->mirror_data_mapper  = $mirror_data_mapper;
         $this->access_logger       = $access_logger;
         $this->repo_header         = $repo_header;
+    }
+
+    /**
+     * @param HTTPRequest $request
+     * @param array $variables
+     * @return \Project
+     * @throws NotFoundException
+     */
+    public function getProject(\HTTPRequest $request, array $variables)
+    {
+        $project = $this->project_manager->getProjectByCaseInsensitiveUnixName($variables['project_name']);
+        if (! $project || $project->isError()) {
+            throw new NotFoundException(dgettext("tuleap-git", "Project not found."));
+        }
+
+        return $project;
     }
 
     /**
