@@ -51,7 +51,7 @@ class CodendiDataAccess extends DataAccess {
     public static function instance()
     {
         if (self::$_instance === null) {
-            if (ForgeConfig::get('enable_experimental_compat_pdo_mode')) {
+            if (! ForgeConfig::get('fallback_to_deprecated_mysql_api')) {
                 self::$_instance = new CompatPDODataAccess(DBFactory::getMainTuleapDB());
             } else {
                 self::$_instance = self::getDataAccessUsingOriginalMySQLDriverInstance();

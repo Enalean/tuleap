@@ -39,7 +39,7 @@ class IMDataAccess extends DataAccess {
             $credentials = new DataAccessCredentials($im_dbhost, $im_dbuser, $im_dbpasswd, $im_dbname);
 
 
-            if (ForgeConfig::get('enable_experimental_compat_pdo_mode')) {
+            if (! ForgeConfig::get('fallback_to_deprecated_mysql_api')) {
                 $db                     = Factory::create(
                     'mysql:host=' . $credentials->getHost() . ';dbname=' . $credentials->getDatabaseName(),
                     $im_dbuser,
