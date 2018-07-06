@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -248,14 +248,18 @@
         return $js;
     }
 
-    function getItemMenu(&$item, $params, $bc = false) {
-        
+    function getItemMenu(&$item, $params, $bc = false)
+    {
         $docman_icons = $this->_getDocmanIcons($params);
-        
+
         $html = '';
         $html .= '<span class="docman_item_options">';
-        $html .= '<a title="'. $GLOBALS['Language']->getText('plugin_docman', 'tooltip_show_actions') .'" href="'. $params['default_url'] .'&amp;action=details&amp;id='. $item->getId() .'" id="docman_item_show_menu_'. $item->getId() .'">';
-        $html .= '<img src="'. $docman_icons->getActionIcon('popup') .'" class="docman_item_icon" />';
+        $html .= '<a data-test="document_item" title="' . $GLOBALS['Language']->getText('plugin_docman', 'tooltip_show_actions') . '"
+            href="' . $params['default_url'] . '&amp;action=details&amp;id=' . $item->getId() . '"
+            id="docman_item_show_menu_' . $item->getId() . '"
+            data-test-document-id="' . $item->getId() . '"
+            >';
+        $html .= '<img src="' . $docman_icons->getActionIcon('popup') . '" class="docman_item_icon" />';
         $html .= '</a>';
         $html .= '</span>';
         return $html;
