@@ -29,6 +29,7 @@ use Tracker_Artifact_XMLImport;
 use Tracker_XML_Exporter_ArtifactXMLExporter;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionManager;
 use Tuleap\Tracker\Exception\MoveArtifactNotDoneException;
+use Tuleap\Tracker\Exception\MoveArtifactSemanticsException;
 use Tuleap\Tracker\Exception\MoveArtifactSemanticsMissingException;
 use Tuleap\Tracker\XML\Updater\MoveChangesetXMLUpdater;
 
@@ -85,16 +86,18 @@ class MoveArtifact
      * @throws \Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionLimitReachedException
      * @throws \Tuleap\Tracker\Artifact\ArtifactsDeletion\DeletionOfArtifactsIsNotAllowedException
      * @throws MoveArtifactNotDoneException
-     * @throws MoveArtifactSemanticsMissingException
+     * @throws MoveArtifactSemanticsException
      */
     public function move(Tracker_Artifact $artifact, Tracker $target_tracker, PFUser $user)
     {
         $this->artifact_priority_manager->startTransaction();
 
         $source_tracker = $artifact->getTracker();
-        if (! $this->move_semantic_checker->areSemanticsAligned($source_tracker, $target_tracker)) {
+        try {
+            $this->move_semantic_checker->checkSemanticsAreAligned($source_tracker, $target_tracker);
+        } catch (MoveArtifactSemanticsException $exception) {
             $this->artifact_priority_manager->rollback();
-            throw new MoveArtifactSemanticsMissingException();
+            throw $exception;
         }
 
         $xml_artifacts = $this->getXMLRootNode();

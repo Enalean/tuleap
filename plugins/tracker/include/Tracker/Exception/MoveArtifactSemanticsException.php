@@ -22,6 +22,10 @@ namespace Tuleap\Tracker\Exception;
 
 use Exception;
 
-class MoveArtifactSemanticsMissingException extends Exception
+class MoveArtifactSemanticsException extends Exception
 {
+    public function __construct($message)
+    {
+        parent::__construct($message);
+    }
 }

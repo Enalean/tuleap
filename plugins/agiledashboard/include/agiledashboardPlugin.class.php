@@ -65,6 +65,7 @@ use Tuleap\Tracker\Artifact\Event\ArtifactsReordered;
 use Tuleap\Tracker\Events\MoveArtifactCheckExternalSemantics;
 use Tuleap\Tracker\Events\MoveArtifactGetExternalSemanticTargetField;
 use Tuleap\Tracker\Events\MoveArtifactParseFieldChangeNodes;
+use Tuleap\Tracker\Exception\MoveArtifactSemanticsException;
 use Tuleap\Tracker\FormElement\Event\MessageFetcherAdditionalWarnings;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\CanValueBeHiddenStatementsCollection;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
@@ -1656,20 +1657,27 @@ class AgileDashboardPlugin extends Plugin {
         return true;
     }
 
+    /**
+     * @throws MoveArtifactSemanticsException
+     */
     public function moveArtifactCheckExternalSemantics(MoveArtifactCheckExternalSemantics $event)
     {
         $event->setVisitedByPlugin();
+        $event->setExternalSemanticsChecked('initial_effort');
 
-        $move_semantic_checker = $this->getMoveSemanticChecker();
-        if ($move_semantic_checker->areSemanticsAligned($event->getSourceTracker(), $event->getTargetTracker())) {
-            $event->setExternalSemanticAligned();
+        try {
+            $aligned = $this->getMoveSemanticChecker()->checkSemanticsAreAligned($event->getSourceTracker(), $event->getTargetTracker());
+            if ($aligned) {
+                $event->setExternalSemanticAligned();
+            }
+        } catch (MoveArtifactSemanticsException $exception) {
+            throw $exception;
         }
     }
 
     public function moveArtifactGetExternalSemanticTargetField(MoveArtifactGetExternalSemanticTargetField $event)
     {
-        $move_semantic_checker = $this->getMoveSemanticChecker();
-        if (! $move_semantic_checker->areSemanticsAligned($event->getSourceTracker(), $event->getTargetTracker())) {
+        if (! $this->areSemanticsAligned($event->getSourceTracker(), $event->getTargetTracker())) {
             return;
         }
 
@@ -1679,8 +1687,7 @@ class AgileDashboardPlugin extends Plugin {
 
     public function moveArtifactParseFieldChangeNodes(MoveArtifactParseFieldChangeNodes $event)
     {
-        $move_semantic_checker = $this->getMoveSemanticChecker();
-        if (! $move_semantic_checker->areSemanticsAligned($event->getSourceTracker(), $event->getTargetTracker())) {
+        if (! $this->areSemanticsAligned($event->getSourceTracker(), $event->getTargetTracker())) {
             return;
         }
 
@@ -1697,6 +1704,18 @@ class AgileDashboardPlugin extends Plugin {
             $event->getIndex())
         ) {
             $event->setModifiedByPlugin();
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    private function areSemanticsAligned(Tracker $source_tracker, Tracker $target_tracker)
+    {
+        try {
+            return $this->getMoveSemanticChecker()->checkSemanticsAreAligned($source_tracker, $target_tracker);
+        } catch (MoveArtifactSemanticsException $exception) {
+            return false;
         }
     }
 
