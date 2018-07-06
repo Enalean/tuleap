@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -64,7 +64,11 @@ class GitMarkdownFile {
     }
 
     private function getReadmeFile($node, $commit_sha1) {
-        $files_list          = $this->git_exec->lsTree($commit_sha1, $node);
+        try {
+            $files_list          = $this->git_exec->lsTree($commit_sha1, $node);
+        } catch (Git_Command_Exception $ex) {
+            return false;
+        }
         $path                = preg_quote($node, DIRECTORY_SEPARATOR);
         $markdown_files_list = array_values(
             preg_grep('/^'. $path .'readme\.(markdown|mdown|mkdn|md|mkd|mdwn|mdtxt|mdtext|text)$/i', $files_list)

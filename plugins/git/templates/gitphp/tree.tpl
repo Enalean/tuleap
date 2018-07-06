@@ -15,13 +15,19 @@
 
  {include file='title.tpl' titlecommit=$commit}
 
- {include file='path.tpl' pathobject=$tree target='tree'}
- 
+{if $commit}
+    {include file='path.tpl' pathobject=$tree target='tree'}
+{/if}
+
  <div class="page_body">
-   {* List files *}
-<table cellspacing="0" class="treeTable">
-     {include file='treelist.tpl'}
-</table>
+     {if $commit}
+         {* List files *}
+         <table cellspacing="0" class="treeTable">
+             {include file='treelist.tpl'}
+         </table>
+     {else}
+         <em>{t}No commits{/t}</em>
+     {/if}
  </div>
 
  {include file='footer.tpl'}
