@@ -21,8 +21,8 @@ import { post, recursiveGet } from "tlp";
 
 export { getRepositoryList, postRepository };
 
-async function getRepositoryList(project_id) {
-    let repository_list = await recursiveGet("/api/projects/" + project_id + "/git", {
+function getRepositoryList(project_id, displayCallback) {
+    return recursiveGet("/api/projects/" + project_id + "/git", {
         params: {
             query: JSON.stringify({
                 scope: "project"
@@ -30,10 +30,11 @@ async function getRepositoryList(project_id) {
             limit: 50,
             offset: 0
         },
-        getRepositoryList
+        getCollectionCallback: ({ repositories }) => {
+            displayCallback(repositories);
+            return repositories;
+        }
     });
-
-    return repository_list[0].repositories;
 }
 
 async function postRepository(project_id, repository_name) {

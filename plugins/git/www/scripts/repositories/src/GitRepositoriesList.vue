@@ -45,20 +45,20 @@
                 >
             </div>
 
-            <div class="git-repository-list-loading" v-if="is_loading"></div>
-
             <div v-if="error.length > 0" class="tlp-alert-danger">
                 {{ error }}
             </div>
 
             <git-repository-create ref="create_modal"/>
 
-            <div class="git-repository-list" v-if="! is_loading">
+            <div class="git-repository-list" v-if="! is_loading_initial">
                 <git-repository v-for="repository in filtered_repositories"
                                 v-bind:repository="repository"
                                 v-bind:key="repository.id"
                 />
             </div>
+
+            <div class="git-repository-list-loading" v-if="show_spinner"></div>
 
             <div class="empty-page" v-if="show_empty_state || show_filter_empty_state">
                 <div class="empty-page-text"
@@ -123,9 +123,10 @@ export default {
             add_repository_modal: null,
             filtered_repositories: [],
             repositories: [],
-            is_loading: true,
-            error: "",
-            repository_filter:""
+            repository_filter: "",
+            is_loading_initial: true,
+            is_loading_next: true,
+            error: ""
         };
     },
     methods: {
@@ -134,8 +135,10 @@ export default {
         },
         async getRepositories() {
             try {
-                this.repositories = await getRepositoryList(getProjectId());
-                this.filtered_repositories = [...this.repositories];
+                this.repositories = await getRepositoryList(getProjectId(), repositories => {
+                    this.filtered_repositories.push(...repositories);
+                    this.is_loading_initial = false;
+                });
             } catch (e) {
                 const { error } = await e.response.json();
                 if (Number.parseInt(error.code, 10) === 404) {
@@ -146,11 +149,11 @@ export default {
                     );
                 }
             } finally {
-                this.is_loading = false;
+                this.is_loading_next = false;
             }
         },
         filterRepositories() {
-            this.filtered_repositories = this.repositories.filter((repository) => {
+            this.filtered_repositories = this.repositories.filter(repository => {
                 return repository.name.toLowerCase().includes(this.repository_filter.toLowerCase());
             });
         }
@@ -162,16 +165,24 @@ export default {
     },
     computed: {
         show_empty_state() {
-            return this.repositories.length === 0 && !this.is_loading && !this.error;
+            return this.repositories.length === 0 && !this.is_loading_initial && !this.error;
         },
         show_filter_empty_state() {
-            return this.repositories.length > 0 && this.filtered_repositories.length === 0 && !this.is_loading && !this.error;
+            return (
+                this.repositories.length > 0 &&
+                this.filtered_repositories.length === 0 &&
+                !this.is_loading_initial &&
+                !this.error
+            );
         },
         is_admin() {
             return getUserIsAdmin();
         },
         filter_placeholder() {
             return this.$gettext("Repository name");
+        },
+        show_spinner() {
+            return this.is_loading_initial || this.is_loading_next;
         }
     }
 };
