@@ -127,7 +127,7 @@ register_project_one_step	description_container_title	Description du projet
 register_project_one_step	description_container_full_name	Nom complet
 register_project_one_step	description_container_full_name_help	entre 3 et 40 caractères
 register_project_one_step	description_container_short_name	Nom court
-register_project_one_step	description_container_short_name_help	entre 3 et 30 caractères (seulement alpha-numériques et des tirets). Doiit commencer par une lettre. Espaces non autorisés.
+register_project_one_step	description_container_short_name_help	entre 3 et 30 caractères (seulement alpha-numériques et des tirets). Doit commencer par une lettre. Espaces non autorisés.
 register_project_one_step	description_container_short_name_label	Le nom court est un nom technique utilisé dans de nombreuses URL et références (notamment dans l'URL du projet and répertoires de code source).
 
 register_project_one_step	description_container_short_description	Courte description du projet
