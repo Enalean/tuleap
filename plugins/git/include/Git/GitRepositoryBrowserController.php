@@ -146,11 +146,21 @@ class GitRepositoryBrowserController implements DispatchableWithRequest
 
         parse_str($parsed_url['query'], $query_parameters);
 
-        if (! isset($query_parameters['a']) || $query_parameters['a'] !== 'summary') {
+        if (! isset($query_parameters['a'])) {
             return;
         }
 
-        $query_parameters['a'] = 'tree';
+        switch ($query_parameters['a']) {
+            case 'summary':
+                $query_parameters['a'] = 'tree';
+                break;
+            case 'log':
+                $query_parameters['a'] = 'shortlog';
+                break;
+            default:
+                return;
+        }
+
         $response->permanentRedirect($parsed_url['path'] . '?' . http_build_query($query_parameters));
     }
 }

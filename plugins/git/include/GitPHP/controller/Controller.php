@@ -77,10 +77,7 @@ class Controller
 				$controller = new Controller_History();
 				break;
 			case 'shortlog':
-			case 'log':
 				$controller = new Controller_Log();
-				if ($action === 'shortlog')
-					$controller->SetParam('short', true);
 				break;
 			case 'snapshot':
 				$controller = new Controller_Snapshot();

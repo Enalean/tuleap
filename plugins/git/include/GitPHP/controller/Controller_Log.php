@@ -48,10 +48,7 @@ class Controller_Log extends ControllerBase
 	 */
 	protected function GetTemplate()
 	{
-		if (isset($this->params['short']) && ($this->params['short'] === true)) {
-			return 'shortlog.tpl';
-		}
-		return 'log.tpl';
+        return 'shortlog.tpl';
 	}
 
 	/**
@@ -65,16 +62,10 @@ class Controller_Log extends ControllerBase
 	 */
 	public function GetName($local = false)
 	{
-		if (isset($this->params['short']) && ($this->params['short'] === true)) {
-			if ($local) {
-				return __('shortlog');
-			}
-			return 'shortlog';
-		}
-		if ($local) {
-			return __('log');
-		}
-		return 'log';
+        if ($local) {
+            return __('log');
+        }
+        return 'log';
 	}
 
 	/**

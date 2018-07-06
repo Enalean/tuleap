@@ -10,17 +10,11 @@
  *}
 
    {if $current=='shortlog' || !$commit}
-     {t}shortlog{/t}
-   {else}
-     <a href="{$SCRIPT_NAME}?a=shortlog{if $logcommit}&amp;h={$logcommit->GetHash()|urlencode}{/if}{if $logmark}&amp;m={$logmark->GetHash()|urlencode}{/if}">{t}shortlog{/t}</a>
-   {/if}
-   | 
-   {if $current=='log' || !$commit}
      {t}log{/t}
    {else}
-     <a href="{$SCRIPT_NAME}?a=log{if $logcommit}&amp;h={$logcommit->GetHash()|urlencode}{/if}{if $logmark}&amp;m={$logmark->GetHash()|urlencode}{/if}">{t}log{/t}</a>
+     <a href="{$SCRIPT_NAME}?a=shortlog{if $logcommit}&amp;h={$logcommit->GetHash()|urlencode}{/if}{if $logmark}&amp;m={$logmark->GetHash()|urlencode}{/if}">{t}log{/t}</a>
    {/if}
-   | 
+   |
    {if $current=='commit' || !$commit}
      {t}commit{/t}
    {else}
