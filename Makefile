@@ -21,7 +21,7 @@ AUTOLOAD_EXCLUDES=^tests|^template
 .DEFAULT_GOAL := help
 
 help:
-	@grep -E '^[a-zA-Z0-9_-\ ]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+	@grep -E '^[a-zA-Z0-9_\-\ ]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 	@echo "(Other less used targets are available, open Makefile for details)"
 
 #
@@ -128,7 +128,7 @@ restart-services: redeploy-nginx ## Restart nginx, apache and fpm
 generate-po: ## Generate translatable strings
 	@tools/utils/generate-po.php `pwd`
 
-generate-mo: ## Compile tranlated strings into binary format
+generate-mo: ## Compile translated strings into binary format
 	@tools/utils/generate-mo.sh `pwd`
 
 tests_rest: ## Run all REST tests
@@ -136,6 +136,12 @@ tests_rest: ## Run all REST tests
 
 tests_soap: ## Run all SOAP tests
 	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap --mount type=tmpfs,destination=/tmp enalean/tuleap-test-soap:3
+
+tests_cypress: ## Run Cypress tests
+	@tests/e2e/full/wrap.sh
+
+tests_cypress_dev: ## Start cypress container to launch tests manually
+	@tests/e2e/full/wrap_for_dev_context.sh
 
 tests_rest_setup: ## Start REST tests container to launch tests manually
 	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap --mount type=tmpfs,destination=/tmp -w /usr/share/tuleap enalean/tuleap-test-rest:c6-php56-httpd24-mysql56 bash

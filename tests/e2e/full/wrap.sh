@@ -6,7 +6,7 @@
 set -euxo pipefail
 
 MAX_TEST_EXECUTION_TIME='30m'
-DOCKERCOMPOSE="docker-compose -f docker-compose-e2e-full-tests.yml -p e2e-tests-${BUILD_TAG}"
+DOCKERCOMPOSE="docker-compose -f docker-compose-e2e-full-tests.yml -p e2e-tests-${BUILD_TAG:-'dev'}"
 
 test_results_folder='./test_results_e2e_full'
 if [ "$#" -eq "1" ]; then
