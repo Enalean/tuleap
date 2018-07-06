@@ -1075,9 +1075,16 @@ class ProjectResource extends AuthenticatedResource {
      * ]
      * </pre>
      * <br>
-     * You can use <code>query</code> parameter in order to filter results. Currently you can only filter on scope.
-     * { "scope": "project" } will return only project repositories, { "scope": "individual" } will return only forked
-     * repositories. By default, all repositories are returned.
+     * You can use <code>query</code> parameter in order to filter results. Currently you can only filter on scope or
+     * owner_id. By default, all repositories are returned.
+     * <br>
+     * { "scope": "project" } will return only project repositories.
+     * <br>
+     * { "scope": "individual" } will return only forked repositories.
+     * <br>
+     * { "owner_id": 123 } will return all repositories created by user with id 123.
+     * <br>
+     * { "scope": "individual", "owner_id": 123 } will return all repositories forked by user with id 123.
      *
      * @url    GET {id}/git
      * @access hybrid
