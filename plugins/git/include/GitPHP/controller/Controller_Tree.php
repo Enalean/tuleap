@@ -48,9 +48,6 @@ class Controller_Tree extends ControllerBase
 	 */
 	protected function GetTemplate()
 	{
-		if (isset($this->params['js']) && $this->params['js']) {
-			return 'treelist.tpl';
-		}
 		return 'tree.tpl';
 	}
 
@@ -90,10 +87,6 @@ class Controller_Tree extends ControllerBase
 		if (!(isset($this->params['hashbase']) || isset($this->params['hash']))) {
 			$this->params['hashbase'] = 'HEAD';
 		}
-
-		if (isset($_GET['o']) && ($_GET['o'] == 'js')) {
-			$this->params['js'] = true;
-		}
 	}
 
 	/**
@@ -114,6 +107,10 @@ class Controller_Tree extends ControllerBase
 
 		$this->tpl->assign('commit', $commit);
 
+		if ($commit === null) {
+		    return;
+        }
+
 		if (!isset($this->params['hash'])) {
 			if (isset($this->params['file'])) {
 				$this->params['hash'] = $commit->PathToHash($this->params['file']);
@@ -130,8 +127,6 @@ class Controller_Tree extends ControllerBase
 			$tree->SetPath($this->params['file']);
 		}
 		$this->tpl->assign('tree', $tree);
-
-		$this->tpl->assign('extrascripts', array('tree'));
 	}
 
 }

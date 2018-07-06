@@ -39,7 +39,7 @@
      <a href="{$SCRIPT_NAME}?a=commitdiff&amp;h={$commit->GetHash()|urlencode}">{t}commitdiff{/t}</a>
    {/if}
    | 
-   {if $current=='tree' || !$commit}
+   {if $current=='tree'}
      {t}tree{/t}
    {else}
      <a href="{$SCRIPT_NAME}?a=tree{if $treecommit}&amp;hb={$treecommit->GetHash()|urlencode}{/if}{if $tree}&amp;h={$tree->GetHash()|urlencode}{/if}">{t}tree{/t}</a>
