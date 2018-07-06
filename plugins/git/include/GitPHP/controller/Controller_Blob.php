@@ -105,8 +105,6 @@ class Controller_Blob extends ControllerBase
 	{
 		if (isset($this->params['plain']) && $this->params['plain']) {
 
-			Log::GetInstance()->SetEnabled(false);
-
             if (isset($this->params['file']))
                 $saveas = $this->params['file'];
             else

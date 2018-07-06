@@ -91,8 +91,6 @@ class Controller_Snapshot extends ControllerBase
 			$this->params['format'] = $_GET['fmt'];
 		else
 			$this->params['format'] = Config::GetInstance()->GetValue('compressformat', GITPHP_COMPRESS_ZIP);
-
-		Log::GetInstance()->SetEnabled(false);
 	}
 
 	/**

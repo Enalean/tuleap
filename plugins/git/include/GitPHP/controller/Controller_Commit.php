@@ -87,7 +87,6 @@ class Controller_Commit extends ControllerBase
 
 		if (isset($_GET['o']) && ($_GET['o'] == 'jstip')) {
 			$this->params['jstip'] = true;
-			Log::GetInstance()->SetEnabled(false);
 		}
 	}
 
