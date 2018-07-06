@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Codendi.
@@ -95,7 +95,7 @@ class Tracker_FormElement_Field_ListTypes_GetDefaultValueTest extends TuleapTest
         $field = partial_mock('Tracker_FormElement_Field_Radiobutton', array('getBind'));
         stub($field)->getBind()->returns($this->bind);
 
-        $this->assertEqual($field->getDefaultValue(), array(300));
+        $this->assertEqual($field->getDefaultValue(), 300);
     }
 
     public function testRadioWithMultipleValues() {
@@ -104,7 +104,7 @@ class Tracker_FormElement_Field_ListTypes_GetDefaultValueTest extends TuleapTest
         $field = partial_mock('Tracker_FormElement_Field_Radiobutton', array('getBind'));
         stub($field)->getBind()->returns($this->bind);
 
-        $this->assertEqual($field->getDefaultValue(), array(300, 200));
+        $this->assertEqual($field->getDefaultValue(), Tracker_FormElement_Field_List_Bind::NONE_VALUE);
     }
 
     public function testRadioWithNoValue() {
@@ -113,7 +113,7 @@ class Tracker_FormElement_Field_ListTypes_GetDefaultValueTest extends TuleapTest
         $field = partial_mock('Tracker_FormElement_Field_Radiobutton', array('getBind'));
         stub($field)->getBind()->returns($this->bind);
 
-        $this->assertEqual($field->getDefaultValue(), array(Tracker_FormElement_Field_List_Bind::NONE_VALUE));
+        $this->assertEqual($field->getDefaultValue(), Tracker_FormElement_Field_List_Bind::NONE_VALUE);
     }
 
     public function testCheckboxWithOneValue() {
