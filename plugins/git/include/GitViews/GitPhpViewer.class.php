@@ -47,7 +47,6 @@ class GitViews_GitPhpViewer {
     public function getContent($is_download)
     {
         set_time_limit(300);
-        $this->preSanitizeRequestForGitphp();
         if (! $is_download) {
             echo '<div id="gitphp" class="plugin_git_gitphp">';
         }
@@ -56,15 +55,6 @@ class GitViews_GitPhpViewer {
 
         if (! $is_download) {
             echo '</div>';
-        }
-    }
-
-    private function preSanitizeRequestForGitphp() {
-        $hp = Codendi_HTMLPurifier::instance();
-        foreach(array('h', 'hb', 'hp') as $parameter) {
-            if (isset($_REQUEST[$parameter])) {
-                $_GET[$parameter] = $hp->purify($_REQUEST[$parameter]);
-            }
         }
     }
 
