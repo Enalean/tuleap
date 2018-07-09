@@ -60,9 +60,6 @@ class RouteCollector
         $r->addRoute(['GET', 'POST'], '/projects/{name}[/]', function () {
             return new \Tuleap\Project\Home();
         });
-        $r->get('/metrics', function () {
-            return new MetricsController();
-        });
         $r->addGroup('/admin', function (FastRoute\RouteCollector $r) {
             $r->get('/password_policy/', function () {
                 return new PasswordPolicyDisplayController(

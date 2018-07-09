@@ -449,6 +449,7 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/dynamic_credentials
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/velocity
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/mfa
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/prometheus_metrics
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/velocity
 # Remove development tools and utility files
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/composer.json

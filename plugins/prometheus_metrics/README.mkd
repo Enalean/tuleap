@@ -1,0 +1,8 @@
+# Prometheus metrics
+
+This plugin exposes a new URL /metrics (https://tuleap.example.com/metrics) with informations about Tuleap internals
+like number of artifact viewed, created, updated. Those data are meant to be consumed by [prometheus](http://prometheus.io/)
+and displayed with nice graphs with [grafana](http://grafana.com/).
+
+To access your end-point you must create a file `/etc/tuleap/plugins/prometheus_metrics/etc/metrics_secret.key` with
+at least 16 chars, this will be used as a password for the user "metrics".

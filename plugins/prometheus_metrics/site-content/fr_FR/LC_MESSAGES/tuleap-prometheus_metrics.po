@@ -1,0 +1,18 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: fr_FR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.0.6\n"
+
+msgid "Exposes tuleap instrumentation for prometheus consumption"
+msgstr "Expose les métriques Tuleap pour être consomés par Prometheus"
+
+msgid "Prometheus metrics end point"
+msgstr "Point d'entrée Prometheus"

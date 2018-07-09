@@ -19,7 +19,7 @@
  *
  */
 
-namespace Tuleap\Instrument\Metrics;
+namespace Tuleap\PrometheusMetrics;
 
 use Tuleap\DB\DataAccessObject;
 
