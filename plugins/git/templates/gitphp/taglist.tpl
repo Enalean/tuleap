@@ -39,7 +39,7 @@
 		<a href="{$SCRIPT_NAME}?a=blob&amp;h={$object->GetHash()|urlencode}">{t}blob{/t}</a>
 	     {else}
              <a href="{$SCRIPT_NAME}?a=commit&amp;h={$tagcommit->GetHash()|urlencode}">{t}commit{/t}</a>
-	      | <a href="{$SCRIPT_NAME}?a=shortlog&amp;h={$tagcommit->GetHash()|urlencode}">{t}shortlog{/t}</a> | <a href="{$SCRIPT_NAME}?a=log&amp;h={$tagcommit->GetHash()|urlencode}">{t}log{/t}</a> | <a href="{$SCRIPT_NAME}?a=snapshot&amp;h={$tagcommit->GetHash()|urlencode}&amp;noheader=1" class="snapshotTip">{t}snapshot{/t}</a>
+	      | <a href="{$SCRIPT_NAME}?a=shortlog&amp;h={$tagcommit->GetHash()|urlencode}">{t}log{/t}</a> | <a href="{$SCRIPT_NAME}?a=snapshot&amp;h={$tagcommit->GetHash()|urlencode}&amp;noheader=1" class="snapshotTip">{t}snapshot{/t}</a>
 	      {/if}
            </td>
        </tr>

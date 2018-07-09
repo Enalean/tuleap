@@ -24,9 +24,9 @@
 			<a href="{$SCRIPT_NAME}?a=tree" class="title">&nbsp;</a>
 		{elseif $target == 'shortlog'}
 			{if $disablelink}
-			  {t}shortlog{/t}
+			  {t}log{/t}
 			{else}
-			  <a href="{$SCRIPT_NAME}?a=shortlog" class="title">{t}shortlog{/t}</a>
+			  <a href="{$SCRIPT_NAME}?a=shortlog" class="title">{t}log{/t}</a>
 			{/if}
 		{elseif $target == 'tags'}
 			{if $disablelink}
