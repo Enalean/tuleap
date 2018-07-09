@@ -80,7 +80,7 @@ class ConsoleLogger implements Logger
             case Logger::INFO:
                 return '<info>' . OutputFormatter::escape($message) . '</info>';
             case Logger::WARN:
-                return '<fg=yellow>' . OutputFormatter::escape($message) . '</fg>';
+                return '<fg=yellow>' . OutputFormatter::escape($message) . '</>';
             case Logger::ERROR:
                 return '<error>' . OutputFormatter::escape($message) . '</error>';
             default:
