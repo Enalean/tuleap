@@ -25,7 +25,7 @@ use Tracker;
 use Tuleap\Tracker\Events\MoveArtifactCheckExternalSemantics;
 use Tuleap\Tracker\Exception\MoveArtifactSemanticsException;
 
-class MoveSemanticChecker
+class BeforeMoveArtifact
 {
     /**
      * @var EventManager
@@ -51,7 +51,7 @@ class MoveSemanticChecker
      * @return bool
      * @throws MoveArtifactSemanticsException
      */
-    public function checkSemanticsAreAligned(Tracker $source_tracker, Tracker $target_tracker)
+    public function artifactCanBeMoved(Tracker $source_tracker, Tracker $target_tracker)
     {
         if ($this->areTitleSemanticsAligned($source_tracker, $target_tracker) ||
             $this->areDescriptionSemanticsAligned($source_tracker, $target_tracker) ||
