@@ -23,9 +23,9 @@ namespace Tuleap\Tracker\Action;
 use Tracker;
 use Tracker_FormElementFactory;
 
-class MoveStatusSemanticChecker extends MoveSemanticChecker
+class MoveDescriptionSemanticChecker extends MoveSemanticChecker
 {
-    const STATUS_SEMANTIC_LABEL = 'status';
+    const DESCRIPTION_SEMANTIC_LABEL = 'description';
 
     public function __construct(Tracker_FormElementFactory $form_element_factory)
     {
@@ -37,7 +37,7 @@ class MoveStatusSemanticChecker extends MoveSemanticChecker
      */
     public function areBothSemanticsDefined(Tracker $source_tracker, Tracker $target_tracker)
     {
-        return $source_tracker->hasSemanticsStatus() && $target_tracker->hasSemanticsStatus();
+        return $source_tracker->hasSemanticsDescription() && $target_tracker->hasSemanticsDescription();
     }
 
     /**
@@ -45,11 +45,11 @@ class MoveStatusSemanticChecker extends MoveSemanticChecker
      */
     public function doesBothSemanticFieldHaveTheSameType(Tracker $source_tracker, Tracker $target_tracker)
     {
-        $source_tracker_status_field = $source_tracker->getStatusField();
-        $target_tracker_status_field = $target_tracker->getStatusField();
+        $source_tracker_description_field = $source_tracker->getDescriptionField();
+        $target_tracker_description_field = $target_tracker->getDescriptionField();
 
-        return $this->form_element_factory->getType($source_tracker_status_field) ===
-            $this->form_element_factory->getType($target_tracker_status_field);
+        return $this->form_element_factory->getType($source_tracker_description_field) ===
+            $this->form_element_factory->getType($target_tracker_description_field);
     }
 
     /**
@@ -57,6 +57,6 @@ class MoveStatusSemanticChecker extends MoveSemanticChecker
      */
     public function getSemanticName()
     {
-        return self::STATUS_SEMANTIC_LABEL;
+        return self::DESCRIPTION_SEMANTIC_LABEL;
     }
 }
