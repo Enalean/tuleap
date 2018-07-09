@@ -71,7 +71,7 @@ extends WikiPlugin
                                     array("ENABLE_USER_NEW","ALLOW_ANON_USER",
                                           "ALLOW_ANON_EDIT","ALLOW_BOGO_LOGIN",
                                           "REQUIRE_SIGNIN_BEFORE_EDIT","ALLOW_USER_PASSWORDS",
-                                          "PASSWORD_LENGTH_MINIMUM","USE_DB_SESSION"))));
+                                          "PASSWORD_LENGTH_MINIMUM"))));
         if ((defined('ALLOW_LDAP_LOGIN') && ALLOW_LDAP_LOGIN) or in_array("LDAP",$GLOBALS['USER_AUTH_ORDER']))
             $table->pushContent($this->_showhash("LDAP DEFINES", 
                                                  $this->_buildConstHash(array("LDAP_AUTH_HOST","LDAP_BASE_DN"))));
@@ -86,16 +86,6 @@ extends WikiPlugin
                                     $this->_buildConstHash(array("GROUP_METHOD","AUTH_GROUP_FILE","GROUP_LDAP_QUERY"))));
         $table->pushContent($this->_showhash("\$USER_AUTH_ORDER[]", $GLOBALS['USER_AUTH_ORDER']));
         $table->pushContent($this->_showhash("USER_AUTH_POLICY", array("USER_AUTH_POLICY"=>USER_AUTH_POLICY)));
-        $DBParams = $GLOBALS['DBParams'];
-        $DBParams['dsn'] = class_exists('WikiDB_SQL') ? WikiDB_SQL::view_dsn($DBParams['dsn']) : '';
-        $table->pushContent($this->_showhash("\$DBParams[]", $DBParams));
-        $DBAuthParams = $GLOBALS['DBAuthParams'];
-        if (isset($DBAuthParams['auth_dsn']) and class_exists('WikiDB_SQL'))
-            $DBAuthParams['auth_dsn'] = WikiDB_SQL::view_dsn($DBAuthParams['auth_dsn']);
-        else
-            $DBAuthParams['auth_dsn'] = '';
-        unset($DBAuthParams['dummy']);
-        $table->pushContent($this->_showhash("\$DBAuthParams[]", $DBAuthParams));
         $html->pushContent($table);
         $html->pushContent(HTML(HTML::h3(fmt("Personal Auth Settings for '%s'", $userid))));
         if (!$user) {

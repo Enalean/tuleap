@@ -131,8 +131,7 @@ function IniConfig($file) {
          'ALLOW_USER_LOGIN', 'ALLOW_LDAP_LOGIN', 'ALLOW_IMAP_LOGIN',
          'WARN_NONPUBLIC_INTERWIKIMAP', 'USE_PATH_INFO',
          'DISABLE_HTTP_REDIRECT',
-         'BLOG_EMPTY_DEFAULT_PREFIX', 'DATABASE_PERSISTENT',
-         'ENABLE_DISCUSSION_LINK'
+         'BLOG_EMPTY_DEFAULT_PREFIX', 'ENABLE_DISCUSSION_LINK'
          );
 
     $rs = @parse_ini_file($file);
@@ -190,7 +189,7 @@ function IniConfig($file) {
         
         // calculate them later: old or dynamic constants
         if (!array_key_exists($item, $rs) and
-            in_array($item, array('USE_PATH_INFO', 'USE_DB_SESSION',
+            in_array($item, array('USE_PATH_INFO',
                                   'ALLOW_HTTP_AUTH_LOGIN', 'ALLOW_LDAP_LOGIN',
                                   'ALLOW_IMAP_LOGIN', 'ALLOW_USER_LOGIN',
                                   'REQUIRE_SIGNIN_BEFORE_EDIT',
@@ -214,62 +213,6 @@ function IniConfig($file) {
             define($item, true);
         }
         unset($rs[$item]);
-    }
-    unset($item);
-
-    // Database
-    global $DBParams;
-    foreach (array('DATABASE_TYPE' 	=> 'dbtype',
-    		   'DATABASE_DSN'  	=> 'dsn',
-    		   'DATABASE_SESSION_TABLE' => 'db_session_table',
-    		   'DATABASE_DBA_HANDLER'   => 'dba_handler',
-    	           'DATABASE_DIRECTORY' => 'directory',
-    	           'DATABASE_TIMEOUT'   => 'timeout',
-    	           'DATABASE_PREFIX'    => 'prefix')
-             as $item => $k)
-    {
-        if (defined($item)) {
-            $DBParams[$k] = constant($item);
-            unset($rs[$item]);
-        } elseif (array_key_exists($item, $rs)) {
-            $DBParams[$k] = $rs[$item];
-            define($item, $rs[$item]);
-            unset($rs[$item]);
-        } elseif (array_key_exists($item, $rsdef)) {
-            $DBParams[$k] = $rsdef[$item];
-            define($item, $rsdef[$item]);
-            unset($rsdef[$item]);
-        }
-    }
-    if (!in_array(DATABASE_TYPE, array('SQL','ADODB','PDO','dba','file','cvs')))
-        trigger_error(sprintf("Invalid DATABASE_TYPE=%s. Choose one of %s", 
-                              DATABASE_TYPE, "SQL,ADODB,PDO,dba,file,cvs"), 
-                      E_USER_ERROR);
-    if (DATABASE_TYPE == 'PDO') {
-        if (!check_php_version(5))
-            trigger_error("Invalid DATABASE_TYPE=PDO. PDO requires at least php-5.0!", 
-                          E_USER_ERROR);
-        // try to load it dynamically (unix only)
-        if (!loadPhpExtension("pdo")) {
-            echo $GLOBALS['php_errormsg'], "<br>\n";
-            trigger_error(sprintf("dl() problem: Required extension '%s' could not be loaded!",
-                                  "pdo"),
-                          E_USER_ERROR);
-        }
-    }
-        
-    // USE_DB_SESSION default logic:
-    if (!defined('USE_DB_SESSION')) {
-        if ($DBParams['db_session_table']
-            and in_array($DBParams['dbtype'], array('SQL','ADODB','PDO'))) {
-            define('USE_DB_SESSION', true);
-        } elseif ($DBParams['dbtype'] == 'dba' and check_php_version(4,1,2)) {
-            define('USE_DB_SESSION', true); // Depends on db handler as well. 
-            				    // BerkeleyDB on older php has problems 
-            				    // with multiple db handles.
-        } else {
-            define('USE_DB_SESSION', false);
-        }
     }
     unset($item); unset($k); 
 
@@ -298,39 +241,6 @@ function IniConfig($file) {
                                                      $rs['USER_AUTH_ORDER']);
         else 
             $GLOBALS['USER_AUTH_ORDER'] = array("PersonalPage");
-
-    // Now it's the external DB authentication stuff's turn
-    if (in_array('Db', $GLOBALS['USER_AUTH_ORDER']) && empty($rs['DBAUTH_AUTH_DSN'])) {
-        $rs['DBAUTH_AUTH_DSN'] = $DBParams['dsn'];
-    }
-    
-    global $DBAuthParams;
-    $DBAP_MAP = array('DBAUTH_AUTH_DSN' => 'auth_dsn',
-                      'DBAUTH_AUTH_CHECK' => 'auth_check',
-                      'DBAUTH_AUTH_USER_EXISTS' => 'auth_user_exists',
-                      'DBAUTH_AUTH_CRYPT_METHOD' => 'auth_crypt_method',
-                      'DBAUTH_AUTH_UPDATE' => 'auth_update',
-                      'DBAUTH_AUTH_CREATE' => 'auth_create',
-                      'DBAUTH_PREF_SELECT' => 'pref_select',
-                      'DBAUTH_PREF_INSERT' => 'pref_insert',
-                      'DBAUTH_PREF_UPDATE' => 'pref_update',
-                      'DBAUTH_IS_MEMBER' => 'is_member',
-                      'DBAUTH_GROUP_MEMBERS' => 'group_members',
-                      'DBAUTH_USER_GROUPS' => 'user_groups'
-                      );
-    foreach ($DBAP_MAP as $rskey => $apkey) {
-        if (defined($rskey)) {
-            $DBAuthParams[$apkey] = constant($rskey);
-        } elseif (isset($rs[$rskey])) {
-            $DBAuthParams[$apkey] = $rs[$rskey];
-            define($rskey, $rs[$rskey]);
-        } elseif (isset($rsdef[$rskey])) {
-            $DBAuthParams[$apkey] = $rsdef[$rskey];
-            define($rskey, $rsdef[$rskey]);
-        }
-        unset($rs[$rskey]);
-    }
-    unset($rskey); unset($apkey);
 
     // optional values will be set to '' to simplify the logic.
     foreach ($_IC_OPTIONAL_VALUE as $item) {
@@ -550,14 +460,6 @@ function fixup_static_configs($file) {
         }
     }
 
-    if (defined('USE_DB_SESSION') and USE_DB_SESSION) {
-        if (! $DBParams['db_session_table'] ) {
-            $DBParams['db_session_table'] = @$DBParams['prefix'] . 'session';
-            trigger_error(sprintf("DATABASE_SESSION_TABLE configuration set to %s.", 
-                                  $DBParams['db_session_table']),
-                          E_USER_ERROR);
-        }
-    }
     // legacy:
     if (!defined('ENABLE_USER_NEW')) define('ENABLE_USER_NEW',true);
     if (!defined('ALLOW_USER_LOGIN'))

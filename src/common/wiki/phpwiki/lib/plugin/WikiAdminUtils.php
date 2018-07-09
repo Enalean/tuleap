@@ -181,18 +181,6 @@ extends WikiPlugin
     function _do_convert_cached_html(&$request, $args) {
         
 	return $this->disabled("This action is blocked by administrator. Sorry for the inconvenience !");
-        require_once("lib/upgrade.php");
-        $dbh = $request->_dbi;
-        _upgrade_db_init($dbh);
-
-        $count = _upgrade_cached_html($dbh, false);
-
-        if (!$count)
-            return _("No old _cached_html pagedata found.");
-        else {
-            return HTML(fmt("Converted successfully %d pages", $count),
-                        HTML::div(array('align'=>'left'), $list));
-        }
     }
 
 

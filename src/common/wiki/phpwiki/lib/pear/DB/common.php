@@ -590,7 +590,7 @@ class DB_common extends PEAR
      *
      * <samp>DB_PORTABILITY_LOWERCASE</samp>
      * convert names of tables and fields to lower case when using
-     * <kbd>get*()</kbd>, <kbd>fetch*()</kbd> and <kbd>tableInfo()</kbd>
+     * <kbd>get*()</kbd>, <kbd>fetch*()</kbd>
      *
      * This mode gets automatically turned on in the following databases
      * if the deprecated option <var>optimize</var> gets set to
@@ -1785,139 +1785,6 @@ class DB_common extends PEAR
      */
     function dropSequence($seq_name)
     {
-        return $this->raiseError(DB_ERROR_NOT_CAPABLE);
-    }
-
-    // }}}
-    // {{{ tableInfo()
-
-    /**
-     * Returns information about a table or a result set
-     *
-     * The format of the resulting array depends on which <var>$mode</var>
-     * you select.  The sample output below is based on this query:
-     * <pre>
-     *    SELECT tblFoo.fldID, tblFoo.fldPhone, tblBar.fldId
-     *    FROM tblFoo
-     *    JOIN tblBar ON tblFoo.fldId = tblBar.fldId
-     * </pre>
-     *
-     * <ul>
-     * <li>
-     *
-     * <kbd>null</kbd> (default)
-     *   <pre>
-     *   [0] => Array (
-     *       [table] => tblFoo
-     *       [name] => fldId
-     *       [type] => int
-     *       [len] => 11
-     *       [flags] => primary_key not_null
-     *   )
-     *   [1] => Array (
-     *       [table] => tblFoo
-     *       [name] => fldPhone
-     *       [type] => string
-     *       [len] => 20
-     *       [flags] =>
-     *   )
-     *   [2] => Array (
-     *       [table] => tblBar
-     *       [name] => fldId
-     *       [type] => int
-     *       [len] => 11
-     *       [flags] => primary_key not_null
-     *   )
-     *   </pre>
-     *
-     * </li><li>
-     *
-     * <kbd>DB_TABLEINFO_ORDER</kbd>
-     *
-     *   <p>In addition to the information found in the default output,
-     *   a notation of the number of columns is provided by the
-     *   <samp>num_fields</samp> element while the <samp>order</samp>
-     *   element provides an array with the column names as the keys and
-     *   their location index number (corresponding to the keys in the
-     *   the default output) as the values.</p>
-     *
-     *   <p>If a result set has identical field names, the last one is
-     *   used.</p>
-     *
-     *   <pre>
-     *   [num_fields] => 3
-     *   [order] => Array (
-     *       [fldId] => 2
-     *       [fldTrans] => 1
-     *   )
-     *   </pre>
-     *
-     * </li><li>
-     *
-     * <kbd>DB_TABLEINFO_ORDERTABLE</kbd>
-     *
-     *   <p>Similar to <kbd>DB_TABLEINFO_ORDER</kbd> but adds more
-     *   dimensions to the array in which the table names are keys and
-     *   the field names are sub-keys.  This is helpful for queries that
-     *   join tables which have identical field names.</p>
-     *
-     *   <pre>
-     *   [num_fields] => 3
-     *   [ordertable] => Array (
-     *       [tblFoo] => Array (
-     *           [fldId] => 0
-     *           [fldPhone] => 1
-     *       )
-     *       [tblBar] => Array (
-     *           [fldId] => 2
-     *       )
-     *   )
-     *   </pre>
-     *
-     * </li>
-     * </ul>
-     *
-     * The <samp>flags</samp> element contains a space separated list
-     * of extra information about the field.  This data is inconsistent
-     * between DBMS's due to the way each DBMS works.
-     *   + <samp>primary_key</samp>
-     *   + <samp>unique_key</samp>
-     *   + <samp>multiple_key</samp>
-     *   + <samp>not_null</samp>
-     *
-     * Most DBMS's only provide the <samp>table</samp> and <samp>flags</samp>
-     * elements if <var>$result</var> is a table name.  The following DBMS's
-     * provide full information from queries:
-     *   + fbsql
-     *   + mysql
-     *
-     * If the 'portability' option has <samp>DB_PORTABILITY_LOWERCASE</samp>
-     * turned on, the names of tables and fields will be lowercased.
-     *
-     * @param object|string  $result  DB_result object from a query or a
-     *                                string containing the name of a table.
-     *                                While this also accepts a query result
-     *                                resource identifier, this behavior is
-     *                                deprecated.
-     * @param int  $mode   either unused or one of the tableInfo modes:
-     *                     <kbd>DB_TABLEINFO_ORDERTABLE</kbd>,
-     *                     <kbd>DB_TABLEINFO_ORDER</kbd> or
-     *                     <kbd>DB_TABLEINFO_FULL</kbd> (which does both).
-     *                     These are bitwise, so the first two can be
-     *                     combined using <kbd>|</kbd>.
-     * @return array  an associative array with the information requested.
-     *                If something goes wrong an error object is returned.
-     *
-     * @see DB_common::setOption()
-     * @access public
-     */
-    function tableInfo($result, $mode = null)
-    {
-        /*
-         * If the DB_<driver> class has a tableInfo() method, that one
-         * overrides this one.  But, if the driver doesn't have one,
-         * this method runs and tells users about that fact.
-         */
         return $this->raiseError(DB_ERROR_NOT_CAPABLE);
     }
 

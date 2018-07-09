@@ -48,59 +48,12 @@ class WikiDB {
      * arguments to determine the proper subclass of WikiDB to
      * instantiate, and then it instantiates it.
      *
-     * @access public
-     *
-     * @param hash $dbparams Database configuration parameters.
-     * Some pertinent paramters are:
-     * <dl>
-     * <dt> dbtype
-     * <dd> The back-end type.  Current supported types are:
-     *   <dl>
-     *   <dt> SQL
-     *     <dd> Generic SQL backend based on the PEAR/DB database abstraction
-     *       library. (More stable and conservative)
-     *   <dt> ADODB
-     *     <dd> Another generic SQL backend. (More current features are tested here. Much faster)
-     *   <dt> dba
-     *     <dd> Dba based backend. The default and by far the fastest.
-     *   <dt> cvs
-     *     <dd> 
-     *   <dt> file
-     *     <dd> flat files
-     *   </dl>
-     *
-     * <dt> dsn
-     * <dd> (Used by the SQL and ADODB backends.)
-     *      The DSN specifying which database to connect to.
-     *
-     * <dt> prefix
-     * <dd> Prefix to be prepended to database tables (and file names).
-     *
-     * <dt> directory
-     * <dd> (Used by the dba backend.)
-     *      Which directory db files reside in.
-     *
-     * <dt> timeout
-     * <dd> Used only by the dba backend so far. 
-     *      And: When optimizing mysql it closes timed out mysql processes.
-     *      otherwise only used for dba: Timeout in seconds for opening (and 
-     *      obtaining lock) on the dbm file.
-     *
-     * <dt> dba_handler
-     * <dd> (Used by the dba backend.)
-     *
-     *      Which dba handler to use. Good choices are probably either
-     *      'gdbm' or 'db2'.
-     * </dl>
-     *
      * @return WikiDB A WikiDB object.
      **/
-    function open ($dbparams) {
-        $dbtype = $dbparams{'dbtype'};
-        include_once("lib/WikiDB/$dbtype.php");
-				
-        $class = 'WikiDB_' . $dbtype;
-        return new $class ($dbparams);
+    public static function open ()
+    {
+        include_once __DIR__ . '/WikiDB/SQL.php';
+        return new WikiDB_SQL();
     }
 
 
@@ -110,10 +63,8 @@ class WikiDB {
      * @access private
      * @see open()
      */
-    function __construct (&$backend, $dbparams) {
+    function __construct (&$backend) {
         $this->_backend = &$backend;
-        // don't do the following with the auth_dsn!
-        if (isset($dbparams['auth_dsn'])) return;
         
         $this->_cache = new WikiDB_cache($backend);
         if (!empty($GLOBALS['request'])) $GLOBALS['request']->_dbi = $this;
@@ -897,18 +848,6 @@ class WikiDB_Page
 	$newrevision = $this->createRevision($version, $wikitext, $meta, $links);
 	if ($newrevision and !WIKIDB_NOCACHE_MARKUP)
             $this->set('_cached_html', $formatted->pack());
-
-	// FIXME: probably should have some global state information
-	// in the backend to control when to optimize.
-        //
-        // We're doing this here rather than in createRevision because
-        // postgres can't optimize while locked.
-        if ((DEBUG & _DEBUG_SQL) or (time() % 5 == 0)) {
-            if ($backend->optimize()){
-                // Codendi: don't show this message...
-                //trigger_error(_("Optimizing database"), E_USER_NOTICE);
-            }
-        }
 
         /* Generate notification emails? */
         if (ENABLE_EMAIL_NOTIFIFICATION && isa($newrevision, 'WikiDB_PageRevision')) {

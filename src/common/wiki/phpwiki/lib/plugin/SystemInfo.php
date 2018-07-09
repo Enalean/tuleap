@@ -84,39 +84,6 @@ extends WikiPluginCached
                      );
     }
     */
-
-    function database() {
-        global $request;
-        $s  = "DATABASE_TYPE: " . DATABASE_TYPE . ", ";
-        switch (DATABASE_TYPE) {
-        case 'SQL':     // pear
-        case 'ADODB':
-        case 'PDO':
-            $dsn = DATABASE_DSN;
-            $s .= "DATABASE BACKEND:" . " ";
-            $s .= (DATABASE_TYPE == 'SQL') ? 'PearDB' : 'ADODB';
-            if (preg_match('/^(\w+):/', $dsn, $m)) {
-                $backend = $m[1];
-                $s .= " $backend, ";
-            }
-            $s .= "DATABASE_PREFIX: \"".DATABASE_PREFIX."\", ";
-            break;
-        case 'dba':
-            $s .= "DATABASE_DBA_HANDLER: ".DATABASE_DBA_HANDLER.", ";
-            $s .= "DATABASE_DIRECTORY: \"".DATABASE_DIRECTORY."\", ";
-            break;
-        case 'cvs':
-            $s .= "DATABASE_DIRECTORY: \"".DATABASE_DIRECTORY."\", ";
-            // $s .= "cvs stuff: , ";
-            break;
-        case 'flatfile':
-            $s .= "DATABASE_DIRECTORY: ".DATABASE_DIRECTORY.", ";
-            break;
-        }
-        // hack: suppress error when using sql, so no timeout
-        @$s .= "DATABASE_TIMEOUT: " . DATABASE_TIMEOUT . ", ";
-        return $s;
-    }
     function cachestats() {
         global $request;
         if (! defined('USECACHE') or !USECACHE)
@@ -309,7 +276,7 @@ extends WikiPluginCached
         elseif (method_exists($this, $arg)) // any defined SystemInfo->method()
             return call_user_func_array(array(&$this, $arg), '');
         elseif (defined($arg) && // any defined constant
-                !in_array($arg,array('ADMIN_PASSWD','DATABASE_DSN','DBAUTH_AUTH_DSN')))
+                !in_array($arg,array('ADMIN_PASSWD','DBAUTH_AUTH_DSN')))
             return constant($arg);
         else
             return $this->error(sprintf(_("unknown argument '%s' to SystemInfo"), $arg));
@@ -338,7 +305,6 @@ extends WikiPluginCached
         if (in_array('all', $allargs) || in_array('table', $allargs)) {
             $allargs = array('appname'          => _("Application name"),
                              'version'          => _("PhpWiki engine version"),
-                             'database'         => _("Database"),
                              'cachestats'       => _("Cache statistics"),
                              'pagestats'        => _("Page statistics"),
                              //'linkstats'        => _("Link statistics"),

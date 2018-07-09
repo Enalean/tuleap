@@ -49,7 +49,7 @@ class WikiRequest extends Request {
     // var $_dbi;
 
     function __construct () {
-        $this->_dbi = WikiDB::open($GLOBALS['DBParams']);
+        $this->_dbi = WikiDB::open();
          // first mysql request costs [958ms]! [670ms] is mysql_connect()
         
         if (in_array('File', $this->_dbi->getAuthParam('USER_AUTH_ORDER'))) {
@@ -74,12 +74,6 @@ class WikiRequest extends Request {
             }
             unset($method);
         }
-        if (USE_DB_SESSION) {
-            include_once('lib/DbSession.php');
-            $dbi =& $this->_dbi;
-            $this->_dbsession = new DbSession($dbi, $dbi->getParam('prefix') 
-                                              . $dbi->getParam('db_session_table'));
-        }
 
 // Fixme: Does pear reset the error mask to 1? We have to find the culprit
 //$x = error_reporting();
@@ -90,13 +84,6 @@ class WikiRequest extends Request {
         // Normalize args...
         $this->setArg('pagename', $this->_deducePagename());
         $this->setArg('action', $this->_deduceAction());
-
-        if ((DEBUG & _DEBUG_SQL) or (time() % 50 == 0)) {
-            if ($this->_dbi->_backend->optimize()) {
-                // Codendi: don't show this message...
-                //trigger_error(_("Optimizing database"), E_USER_NOTICE);
-            }
-        }
 
         // Restore auth state. This doesn't check for proper authorization!
         $userid = $this->_deduceUsername();	
@@ -1103,8 +1090,7 @@ function validateSessionPath() {
 }
 
 function main () {
-    if ( !USE_DB_SESSION )
-        validateSessionPath();
+    validateSessionPath();
 
     global $request;
     if ((DEBUG & _DEBUG_APD) and extension_loaded("apd"))
