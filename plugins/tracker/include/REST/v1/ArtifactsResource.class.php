@@ -39,7 +39,7 @@ use \Tracker_Artifact;
 use Tuleap\REST\QueryParameterException;
 use Tuleap\REST\QueryParameterParser;
 use Tuleap\Tracker\Action\MoveArtifact;
-use Tuleap\Tracker\Action\MoveSemanticChecker;
+use Tuleap\Tracker\Action\BeforeMoveArtifact;
 use Tuleap\Tracker\Action\MoveStatusSemanticChecker;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfig;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigDAO;
@@ -831,7 +831,7 @@ class ArtifactsResource extends AuthenticatedResource {
                 $this->user_manager,
                 $this->artifact_factory
             ),
-            new MoveSemanticChecker(
+            new BeforeMoveArtifact(
                 $this->event_manager,
                 $status_semantic_checker
             )

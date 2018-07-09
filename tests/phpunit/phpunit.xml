@@ -29,7 +29,7 @@
             <directory suffix=".php">../../plugins/tracker/include/Tracker/XML/Exporter/ChangesetValue/ChangesetValuePermissionsOnArtifactXMLExporter.class.php</directory>
             <directory suffix=".php">../../plugins/tracker/include/Tracker/FormElement/Field/ListFields</directory>
             <directory suffix=".php">../../plugins/tracker/include/Tracker/XML/Updater/MoveChangesetXMLUpdater.php</directory>
-            <directory suffix=".php">../../plugins/tracker/include/Tracker/Action/MoveSemanticChecker.php</directory>
+            <directory suffix=".php">../../plugins/tracker/include/Tracker/Action/BeforeMoveArtifact.php</directory>
             <directory suffix=".php">../../plugins/tracker/include/Tracker/Action/MoveStatusSemanticChecker.php</directory>
             <directory suffix=".php">../../plugins/tracker/include/Tracker/FormElement/Field/ListFields/FieldValueMatcher.php</directory>
             <directory suffix=".php">../../plugins/cardwall/include/Cardwall</directory>

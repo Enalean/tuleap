@@ -62,9 +62,9 @@ class MoveArtifact
     private $artifact_priority_manager;
 
     /**
-     * @var MoveSemanticChecker
+     * @var BeforeMoveArtifact
      */
-    private $move_semantic_checker;
+    private $before_move_artifact;
 
     public function __construct(
         ArtifactsDeletionManager $artifacts_deletion_manager,
@@ -72,14 +72,14 @@ class MoveArtifact
         MoveChangesetXMLUpdater $xml_updater,
         Tracker_Artifact_XMLImport $xml_import,
         Tracker_Artifact_PriorityManager $artifact_priority_manager,
-        MoveSemanticChecker $move_semantic_checker
+        BeforeMoveArtifact $before_move_artifact
     ) {
         $this->artifacts_deletion_manager = $artifacts_deletion_manager;
         $this->xml_exporter               = $xml_exporter;
         $this->xml_updater                = $xml_updater;
         $this->xml_import                 = $xml_import;
         $this->artifact_priority_manager  = $artifact_priority_manager;
-        $this->move_semantic_checker      = $move_semantic_checker;
+        $this->before_move_artifact       = $before_move_artifact;
     }
 
     /**
@@ -94,7 +94,7 @@ class MoveArtifact
 
         $source_tracker = $artifact->getTracker();
         try {
-            $this->move_semantic_checker->checkSemanticsAreAligned($source_tracker, $target_tracker);
+            $this->before_move_artifact->artifactCanBeMoved($source_tracker, $target_tracker);
         } catch (MoveArtifactSemanticsException $exception) {
             $this->artifact_priority_manager->rollback();
             throw $exception;
