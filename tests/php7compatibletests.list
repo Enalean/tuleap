@@ -120,7 +120,6 @@
 /usr/share/tuleap/tests/simpletest/common/date/DateHelperTest.php
 /usr/share/tuleap/tests/simpletest/common/date/TimeIntervalTest.php
 /usr/share/tuleap/tests/simpletest/common/plugin/PluginTest.php
-/usr/share/tuleap/tests/simpletest/common/plugin/PluginProxyTest.php
 /usr/share/tuleap/tests/simpletest/common/plugin/PluginFactoryTest.php
 /usr/share/tuleap/tests/simpletest/common/plugin/PluginDependencySolverTest.php
 /usr/share/tuleap/tests/simpletest/common/Config/ConfigTest.php
