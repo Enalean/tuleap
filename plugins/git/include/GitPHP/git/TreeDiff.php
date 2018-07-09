@@ -137,7 +137,7 @@ class TreeDiff implements \Iterator
 
 		$args[] = escapeshellarg($this->toHash);
 
-		$diffTreeLines = explode("\n", $exe->Execute(GIT_DIFF_TREE, $args));
+		$diffTreeLines = explode("\n", $exe->Execute(GitExe::DIFF_TREE, $args));
 		foreach ($diffTreeLines as $line) {
 			$trimmed = trim($line);
 			if ((strlen($trimmed) > 0) && (substr_compare($trimmed, ':', 0, 1) === 0)) {

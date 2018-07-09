@@ -670,7 +670,7 @@ class FileDiff
 		if (function_exists('xdiff_string_diff')) {
 			$diffLines = explode("\n", $this->GetXDiff(0, false));
 		} else {
-			$diffLines = explode("\n", $exe->Execute(GIT_DIFF,
+			$diffLines = explode("\n", $exe->Execute(GitExe::DIFF,
 				array("-U0", escapeshellarg($this->fromHash),
 					escapeshellarg($this->toHash))));
 		}

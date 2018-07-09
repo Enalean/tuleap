@@ -71,7 +71,7 @@ abstract class ControllerBase
 	public function __construct()
 	{
 		$this->tpl = new \Smarty;
-		$this->tpl->plugins_dir[] = GITPHP_INCLUDEDIR . 'smartyplugins';
+		$this->tpl->plugins_dir[] = __DIR__ . '/../smartyplugins';
 		$this->tpl->template_dir  = __DIR__ . '/../../../templates/gitphp/';
 
 		// Use a dedicated directory for smarty temporary files if needed.

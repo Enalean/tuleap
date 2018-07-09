@@ -138,7 +138,7 @@ class Tree extends FilesystemObject implements GitObjectType
 		$args[] = '-t';
 		$args[] = escapeshellarg($this->hash);
 		
-		$lines = explode("\n", $exe->Execute(GIT_LS_TREE, $args));
+		$lines = explode("\n", $exe->Execute(GitExe::LS_TREE, $args));
 
 		foreach ($lines as $line) {
 			if (preg_match("/^([0-9]+) (.+) ([0-9a-fA-F]{40})(\s+[0-9]+|\s+-)?\t(.+)$/", $line, $regs)) {

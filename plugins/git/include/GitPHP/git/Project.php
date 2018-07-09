@@ -611,7 +611,7 @@ class Project
 		$args = array();
 		$args[] = '--verify';
 		$args[] = 'HEAD';
-		$this->head = trim($exe->Execute(GIT_REV_PARSE, $args));
+		$this->head = trim($exe->Execute(GitExe::REV_PARSE, $args));
 	}
 
 	/**
@@ -712,7 +712,7 @@ class Project
 		$args[] = '--count=1';
 		$args[] = 'refs/heads';
 
-		$epochstr = trim($exe->Execute(GIT_FOR_EACH_REF, $args));
+		$epochstr = trim($exe->Execute(GitExe::FOR_EACH_REF, $args));
 
 		if (preg_match('/ (\d+) [-+][01]\d\d\d$/', $epochstr, $regs)) {
 			$this->epoch = $regs[1];
@@ -901,7 +901,7 @@ class Project
 		$args[] = '--heads';
 		$args[] = '--tags';
 		$args[] = '--dereference';
-		$ret = $exe->Execute(GIT_SHOW_REF, $args);
+		$ret = $exe->Execute(GitExe::SHOW_REF, $args);
 		unset($exe);
 
 		$lines = explode("\n", $ret);
@@ -1085,7 +1085,7 @@ class Project
 		}
 		$args[] = '--';
 		$args[] = 'refs/tags';
-		$ret = $exe->Execute(GIT_FOR_EACH_REF, $args);
+		$ret = $exe->Execute(GitExe::FOR_EACH_REF, $args);
 		unset($exe);
 
 		$lines = explode("\n", $ret);
@@ -1210,7 +1210,7 @@ class Project
 		}
 		$args[] = '--';
 		$args[] = 'refs/heads';
-		$ret = $exe->Execute(GIT_FOR_EACH_REF, $args);
+		$ret = $exe->Execute(GitExe::FOR_EACH_REF, $args);
 		unset($exe);
 
 		$lines = explode("\n", $ret);
@@ -1633,7 +1633,7 @@ class Project
 
 		$args[] = $hash;
 
-		$revlist = explode("\n", $exe->Execute(GIT_REV_LIST, $args));
+		$revlist = explode("\n", $exe->Execute(GitExe::REV_LIST, $args));
 
 		if (!$revlist[count($revlist)-1]) {
 			/* the last newline creates a null entry */

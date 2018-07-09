@@ -14,23 +14,6 @@ namespace Tuleap\Git\GitPHP;
  */
 
 /**
- * Constants for git commands
- */
-define('GIT_CAT_FILE','cat-file');
-define('GIT_DIFF_TREE','diff-tree');
-define('GIT_LS_TREE','ls-tree');
-define('GIT_REV_LIST','rev-list');
-define('GIT_REV_PARSE','rev-parse');
-define('GIT_SHOW_REF','show-ref');
-define('GIT_ARCHIVE','archive');
-define('GIT_GREP','grep');
-define('GIT_BLAME','blame');
-define('GIT_NAME_REV','name-rev');
-define('GIT_FOR_EACH_REF','for-each-ref');
-define('GIT_CONFIG','config');
-define('GIT_DIFF','diff');
-
-/**
  * Git Executable class
  *
  * @package GitPHP
@@ -38,6 +21,19 @@ define('GIT_DIFF','diff');
  */
 class GitExe
 {
+    const CAT_FILE     = 'cat-file';
+    const DIFF_TREE    = 'diff-tree';
+    const LS_TREE      = 'ls-tree';
+    const REV_LIST     = 'rev-list';
+    const REV_PARSE    = 'rev-parse';
+    const SHOW_REF     = 'show-ref';
+    const ARCHIVE      = 'archive';
+    const GREP         = 'grep';
+    const BLAME        = 'blame';
+    const NAME_REV     = 'name-rev';
+    const FOR_EACH_REF = 'for-each-ref';
+    const DIFF         = 'diff';
+
 	/**
 	 * project
 	 *

@@ -104,9 +104,9 @@ class Controller
 			case 'rss':
 				$controller = new Controller_Feed();
 				if ($action == 'rss')
-					$controller->SetParam('format', GITPHP_FEED_FORMAT_RSS);
+					$controller->SetParam('format', Controller_Feed::FEED_FORMAT_RSS);
 				else if ($action == 'atom')
-					$controller->SetParam('format', GITPHP_FEED_FORMAT_ATOM);
+					$controller->SetParam('format', Controller_Feed::FEED_FORMAT_ATOM);
 				break;
 			case 'commit':
 				$controller = new Controller_Commit();
