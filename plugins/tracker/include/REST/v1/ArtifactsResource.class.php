@@ -40,6 +40,7 @@ use Tuleap\REST\QueryParameterException;
 use Tuleap\REST\QueryParameterParser;
 use Tuleap\Tracker\Action\MoveArtifact;
 use Tuleap\Tracker\Action\MoveSemanticChecker;
+use Tuleap\Tracker\Action\MoveStatusSemanticChecker;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfig;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigDAO;
 use Tuleap\Tracker\Admin\ArtifactsDeletion\UserDeletionRetriever;
@@ -51,6 +52,7 @@ use Tuleap\Tracker\Artifact\ArtifactsDeletion\DeletionOfArtifactsIsNotAllowedExc
 use Tuleap\Tracker\Exception\MoveArtifactNotDoneException;
 use Tuleap\Tracker\Exception\MoveArtifactSemanticsException;
 use Tuleap\Tracker\Exception\SemanticTitleNotDefinedException;
+use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 use Tuleap\Tracker\REST\Artifact\MovedArtifactValueBuilder;
 use Tuleap\Tracker\REST\v1\Event\ArtifactPartialUpdate;
 use Tuleap\Tracker\XML\Updater\MoveChangesetXMLUpdater;
@@ -692,6 +694,8 @@ class ArtifactsResource extends AuthenticatedResource {
      * <li> Submitted on date </li>
      * <li> Semantic title</li>
      * <li> Semantic descprition</li>
+     * <li> Semantic status</li>
+     * <li> Semantic initial effort</li>
      * </ul>
      *
      * <br/>
@@ -708,13 +712,13 @@ class ArtifactsResource extends AuthenticatedResource {
      * <ul>
      * <li>User must be admin of both source and target trackers in order to be able to move an artifact.</li>
      * <li>Artifact must not be linked to a FRS release.</li>
-     * <li>Both trackers must have the title semantic, the description semantic and the initial effort semantic aligned
+     * <li>Both trackers must have the title semantic, the description semantic, the status semantic and the initial effort semantic aligned
      * (traget tracker must have at least one semantic used in source tracker)
      * </li>
      * </ul>
      * <br/>
      * <br/>
-     * Values for list fields (initial effort) are retrieved with duck typing:
+     * Values for list fields (status and initial effort) are retrieved with duck typing:
      * <ul>
      * <li>Values are checked without taking into account the case</li>
      * <li>The first value matching the label is returned</li>
@@ -809,10 +813,14 @@ class ArtifactsResource extends AuthenticatedResource {
 
         $xml_import_builder = new Tracker_Artifact_XMLImportBuilder();
 
+        $status_semantic_checker = new MoveStatusSemanticChecker(
+            $this->formelement_factory
+        );
+
         return new MoveArtifact(
             $this->artifacts_deletion_manager,
             $builder->build($children_collector, $file_path_xml_exporter, $user, $user_xml_exporter, true),
-            new MoveChangesetXMLUpdater($this->event_manager),
+            new MoveChangesetXMLUpdater($this->event_manager, new FieldValueMatcher(), $status_semantic_checker),
             $xml_import_builder->build(
                 new XMLImportHelper($this->user_manager),
                 new Log_NoopLogger()
@@ -824,7 +832,8 @@ class ArtifactsResource extends AuthenticatedResource {
                 $this->artifact_factory
             ),
             new MoveSemanticChecker(
-                $this->event_manager
+                $this->event_manager,
+                $status_semantic_checker
             )
         );
     }

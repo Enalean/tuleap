@@ -35,11 +35,16 @@ class MoveSemanticChecker
     /**
      * @var array
      */
-    private $semantic_checked = ['title', 'description'];
+    private $semantic_checked = ['title', 'description', MoveStatusSemanticChecker::STATUS_SEMANTIC_LABEL];
+    /**
+     * @var MoveStatusSemanticChecker
+     */
+    private $status_semantic_checker;
 
-    public function __construct(EventManager $event_manager)
+    public function __construct(EventManager $event_manager, MoveStatusSemanticChecker $status_semantic_checker)
     {
-        $this->event_manager = $event_manager;
+        $this->event_manager           = $event_manager;
+        $this->status_semantic_checker = $status_semantic_checker;
     }
 
     /**
@@ -48,8 +53,9 @@ class MoveSemanticChecker
      */
     public function checkSemanticsAreAligned(Tracker $source_tracker, Tracker $target_tracker)
     {
-        if (($source_tracker->hasSemanticsTitle() && $target_tracker->hasSemanticsTitle()) ||
-            ($source_tracker->hasSemanticsDescription() && $target_tracker->hasSemanticsDescription())
+        if ($this->areTitleSemanticsAligned($source_tracker, $target_tracker) ||
+            $this->areDescriptionSemanticsAligned($source_tracker, $target_tracker) ||
+            $this->arestatusSemanticsAligned($source_tracker, $target_tracker)
         ) {
             return true;
         }
@@ -63,6 +69,33 @@ class MoveSemanticChecker
         }
 
         $this->throwException($external_semantics_checked);
+    }
+
+    private function areTitleSemanticsAligned(Tracker $source_tracker, Tracker $target_tracker)
+    {
+        return $source_tracker->hasSemanticsTitle() && $target_tracker->hasSemanticsTitle();
+    }
+
+    private function areDescriptionSemanticsAligned(Tracker $source_tracker, Tracker $target_tracker)
+    {
+        return $source_tracker->hasSemanticsDescription() && $target_tracker->hasSemanticsDescription();
+    }
+
+    /**
+     * @return bool
+     * @throws MoveArtifactSemanticsException
+     */
+    private function areStatusSemanticsAligned(Tracker $source_tracker, Tracker $target_tracker)
+    {
+        if (! $this->status_semantic_checker->areBothSemanticsDefined($source_tracker, $target_tracker)) {
+            return false;
+        }
+
+        if (! $this->status_semantic_checker->doesBothTrackerStatusFieldHaveTheSameType($source_tracker, $target_tracker)) {
+            throw new MoveArtifactSemanticsException("Both status fields must have the same type.");
+        }
+
+        return true;
     }
 
     /**

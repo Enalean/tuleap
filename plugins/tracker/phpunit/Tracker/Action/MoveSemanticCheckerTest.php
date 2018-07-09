@@ -23,6 +23,7 @@ namespace Tuleap\Tracker\Action;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tracker_FormElement_Field;
 use Tuleap\Tracker\Events\MoveArtifactCheckExternalSemantics;
 
 require_once __DIR__ . '/../../bootstrap.php';
@@ -40,8 +41,9 @@ class MoveSemanticCheckerTest extends TestCase
     {
         parent::setUp();
 
-        $this->event_manager = Mockery::spy(\EventManager::class);
-        $this->checker       = new MoveSemanticChecker($this->event_manager);
+        $this->event_manager           = Mockery::spy(\EventManager::class);
+        $this->status_semantic_checker = Mockery::spy(MoveStatusSemanticChecker::class);
+        $this->checker                 = new MoveSemanticChecker($this->event_manager, $this->status_semantic_checker);
 
         $this->source_tracker = Mockery::mock(\Tracker::class);
         $this->target_tracker = Mockery::mock(\Tracker::class);
@@ -240,5 +242,92 @@ class MoveSemanticCheckerTest extends TestCase
         ]);
 
         $this->assertTrue($this->checker->checkSemanticsAreAligned($this->source_tracker, $this->target_tracker));
+    }
+
+    public function testSemanticAreAlignedIfBothTrackersHaveOnlyStatusSemanticWithFieldsOfSameType()
+    {
+        $this->source_tracker->shouldReceive([
+            'hasSemanticsTitle'       => false,
+            'hasSemanticsDescription' => false,
+        ]);
+
+        $this->target_tracker->shouldReceive([
+            'hasSemanticsTitle'       => false,
+            'hasSemanticsDescription' => false,
+        ]);
+
+
+
+        $this->status_semantic_checker
+            ->shouldReceive('areBothSemanticsDefined')
+            ->with($this->source_tracker, $this->target_tracker)
+            ->once()
+            ->andReturns(true);
+
+        $this->status_semantic_checker
+            ->shouldReceive('doesBothTrackerStatusFieldHaveTheSameType')
+            ->with($this->source_tracker, $this->target_tracker)
+            ->once()
+            ->andReturns(true);
+
+        $this->assertTrue($this->checker->checkSemanticsAreAligned($this->source_tracker, $this->target_tracker));
+    }
+
+    /**
+     * @expectedException \Tuleap\Tracker\Exception\MoveArtifactSemanticsException
+     */
+    public function testSemanticAreNotAlignedIfBothTrackersHaveOnlyStatusSemanticWithFieldsWithDifferentTypes()
+    {
+        $this->source_tracker->shouldReceive([
+            'hasSemanticsTitle'       => false,
+            'hasSemanticsDescription' => false,
+        ]);
+
+        $this->target_tracker->shouldReceive([
+            'hasSemanticsTitle'       => false,
+            'hasSemanticsDescription' => false,
+        ]);
+
+        $this->status_semantic_checker
+            ->shouldReceive('areBothSemanticsDefined')
+            ->with($this->source_tracker, $this->target_tracker)
+            ->once()
+            ->andReturns(true);
+
+        $this->status_semantic_checker
+            ->shouldReceive('doesBothTrackerStatusFieldHaveTheSameType')
+            ->with($this->source_tracker, $this->target_tracker)
+            ->once()
+            ->andReturns(false);
+
+        $this->checker->checkSemanticsAreAligned($this->source_tracker, $this->target_tracker);
+    }
+
+    /**
+     * @expectedException \Tuleap\Tracker\Exception\MoveArtifactSemanticsException
+     */
+    public function testSemanticAreNotAlignedIfOneTrackersDoesNotHaveStatusSemantic()
+    {
+        $this->source_tracker->shouldReceive([
+            'hasSemanticsTitle'       => false,
+            'hasSemanticsDescription' => false,
+        ]);
+
+        $this->target_tracker->shouldReceive([
+            'hasSemanticsTitle'       => false,
+            'hasSemanticsDescription' => false,
+        ]);
+
+        $this->status_semantic_checker
+            ->shouldReceive('areBothSemanticsDefined')
+            ->with($this->source_tracker, $this->target_tracker)
+            ->once()
+            ->andReturns(false);
+
+        $this->status_semantic_checker
+            ->shouldReceive('doesBothTrackerStatusFieldHaveTheSameType')
+            ->never();
+
+        $this->checker->checkSemanticsAreAligned($this->source_tracker, $this->target_tracker);
     }
 }
