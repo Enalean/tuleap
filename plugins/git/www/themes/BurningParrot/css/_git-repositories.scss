@@ -50,7 +50,8 @@
     margin: 0 0 $tlp-spacing;
 }
 
-.git-repository-list-actions-spacer {
+.git-repository-list-actions-spacer,
+.git-repository-links-spacer {
     flex: 1;
     min-width: 20px;
 }
@@ -92,7 +93,6 @@
 
 .git-repository-card-header-line {
     display: flex;
-    justify-content: space-between;
 }
 
 .git-repository-card-title {
@@ -114,7 +114,17 @@
     white-space: nowrap;
 }
 
+.git-pullrequest-badge {
+    margin: 0 $tlp-spacing;
+    background-color: $tlp-theme-color;
+}
+
+.git-pullrequest-badge-link {
+    color: $tlp-ui-white;
+}
+
 .git-repository-card-admin-link {
+    margin: 5px 0 0;
     color: transparentize($tlp-ui-dimmed, .5);
 }
 

@@ -22,19 +22,27 @@ require_once 'constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use Tuleap\Git\GitAdditionalActionEvent;
+use Tuleap\Git\GitRepositoryDeletionEvent;
 use Tuleap\Git\MarkTechnicalReference;
 use Tuleap\Git\Permissions\GetProtectedGitReferences;
 use Tuleap\Git\Permissions\ProtectedReferencePermission;
 use Tuleap\Git\PostInitGitRepositoryWithDataEvent;
+use Tuleap\Git\Repository\AdditionalInformationRepresentationRetriever;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Glyph\GlyphLocation;
 use Tuleap\Glyph\GlyphLocationsCollector;
 use Tuleap\Label\CanProjectUseLabels;
 use Tuleap\Label\CollectionOfLabelableDao;
-use Tuleap\Git\GitRepositoryDeletionEvent;
 use Tuleap\Label\LabeledItemCollection;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\PullRequest\AdditionalActionsPresenter;
+use Tuleap\PullRequest\AdditionalHelpTextPresenter;
+use Tuleap\PullRequest\AdditionalInfoPresenter;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
+use Tuleap\PullRequest\Dao as PullRequestDao;
+use Tuleap\PullRequest\Factory;
+use Tuleap\PullRequest\FileUniDiffBuilder;
+use Tuleap\PullRequest\GitExec;
 use Tuleap\PullRequest\GitReference\GitPullRequestReference;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceBulkConverter;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceCreator;
@@ -42,32 +50,25 @@ use Tuleap\PullRequest\GitReference\GitPullRequestReferenceDAO;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceNamespaceAvailabilityChecker;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceRemover;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceUpdater;
+use Tuleap\PullRequest\InlineComment\Dao as InlineCommentDao;
+use Tuleap\PullRequest\InlineComment\InlineCommentUpdater;
 use Tuleap\PullRequest\Label\LabeledItemCollector;
 use Tuleap\PullRequest\Label\PullRequestLabelDao;
 use Tuleap\PullRequest\Logger;
-use Tuleap\PullRequest\Reference\HTMLURLBuilder;
-use Tuleap\PullRequest\Router;
-use Tuleap\PullRequest\PullRequestCreator;
-use Tuleap\PullRequest\REST\ResourcesInjector;
 use Tuleap\PullRequest\PluginInfo;
-use Tuleap\PullRequest\GitExec;
-use Tuleap\PullRequest\AdditionalInfoPresenter;
-use Tuleap\PullRequest\AdditionalActionsPresenter;
-use Tuleap\PullRequest\AdditionalHelpTextPresenter;
-use Tuleap\PullRequest\PullRequestPresenter;
-use Tuleap\PullRequest\Factory;
-use Tuleap\PullRequest\Dao;
-use Tuleap\PullRequest\PullRequestUpdater;
-use Tuleap\PullRequest\PullRequestMerger;
 use Tuleap\PullRequest\PullRequestCloser;
-use Tuleap\PullRequest\FileUniDiffBuilder;
-use Tuleap\PullRequest\InlineComment\InlineCommentUpdater;
-use Tuleap\PullRequest\InlineComment\Dao as InlineCommentDao;
-use Tuleap\PullRequest\Timeline\Dao as TimelineDao;
-use Tuleap\PullRequest\Timeline\TimelineEventCreator;
-use Tuleap\PullRequest\Reference\ReferenceFactory;
+use Tuleap\PullRequest\PullRequestCreator;
+use Tuleap\PullRequest\PullRequestMerger;
+use Tuleap\PullRequest\PullRequestPresenter;
+use Tuleap\PullRequest\PullRequestUpdater;
+use Tuleap\PullRequest\Reference\HTMLURLBuilder;
 use Tuleap\PullRequest\Reference\ProjectReferenceRetriever;
 use Tuleap\PullRequest\Reference\ReferenceDao;
+use Tuleap\PullRequest\Reference\ReferenceFactory;
+use Tuleap\PullRequest\REST\ResourcesInjector;
+use Tuleap\PullRequest\Router;
+use Tuleap\PullRequest\Timeline\Dao as TimelineDao;
+use Tuleap\PullRequest\Timeline\TimelineEventCreator;
 use Tuleap\PullRequest\Tooltip\Presenter;
 
 class pullrequestPlugin extends Plugin
@@ -112,6 +113,7 @@ class pullrequestPlugin extends Plugin
             $this->addHook(REST_GIT_BUILD_STATUS, 'gitRestBuildStatus');
             $this->addHook(GitRepositoryDeletionEvent::NAME);
             $this->addHook(GitAdditionalActionEvent::NAME);
+            $this->addHook(AdditionalInformationRepresentationRetriever::NAME);
         }
     }
 
@@ -168,7 +170,7 @@ class pullrequestPlugin extends Plugin
         $pull_request_merger  = new PullRequestMerger();
         $pull_request_creator = new PullRequestCreator(
             $this->getPullRequestFactory(),
-            new Dao(),
+            new PullRequestDao(),
             $pull_request_merger,
             $event_manager,
             new GitPullRequestReferenceCreator(
@@ -441,7 +443,7 @@ class pullrequestPlugin extends Plugin
 
     private function getPullRequestFactory()
     {
-        return new Factory(new Dao(), ReferenceManager::instance());
+        return new Factory(new PullRequestDao(), ReferenceManager::instance());
     }
 
     private function getRepositoryFactory()
@@ -538,7 +540,7 @@ class pullrequestPlugin extends Plugin
 
     public function gitRepositoryDeletion(GitRepositoryDeletionEvent $event)
     {
-        $dao = new Dao();
+        $dao = new PullRequestDao();
         $dao->deleteAllPullRequestsOfRepository($event->getRepository()->getId());
     }
 
@@ -615,5 +617,13 @@ class pullrequestPlugin extends Plugin
             new Logger()
         );
         $pull_request_git_reference_bulk_converter->convertAllPullRequestsWithoutAGitReference();
+    }
+
+    public function additionalInformationRepresentationRetriever(AdditionalInformationRepresentationRetriever $event)
+    {
+        $dao       = new PullRequestDao();
+        $opened_pullrequest = $dao->searchNbOfOpenedPullRequestsForRepositoryId($event->getRepository()->getId());
+
+        $event->addInformation("opened_pull_requests", $opened_pullrequest);
     }
 }

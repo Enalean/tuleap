@@ -26,6 +26,11 @@
                         <h1 class="tlp-pane-title git-repository-card-title">
                             {{ repository.name }}
                         </h1>
+                        <div class="git-repository-links-spacer"></div>
+                        <pull-request-badge
+                            v-bind:number-pull-request="Number.parseInt(repository.additional_information.opened_pull_requests, 10)"
+                            v-bind:repository-id="repository.id"
+                        />
                         <a v-if="is_admin"
                            v-bind:href="repository_admin_url"
                            class="git-repository-card-admin-link"
@@ -53,9 +58,13 @@ const DEFAULT_DESCRIPTION = "-- Default description --";
 
 import TimeAgo from "javascript-time-ago";
 import { getProjectId, getUserIsAdmin, getDashCasedLocale } from "./repository-list-presenter.js";
+import PullRequestBadge from "./PullRequestBadge.vue";
 
 export default {
     name: "GitRepository",
+    components: {
+        PullRequestBadge
+    },
     props: {
         repository: Object
     },

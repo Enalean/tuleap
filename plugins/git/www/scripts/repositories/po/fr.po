@@ -12,6 +12,11 @@ msgstr ""
 "X-Generator: Poedit 1.8.7.1\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid "%{ numberPullRequest } pull request"
+msgid_plural "%{ numberPullRequest } pull requests"
+msgstr[0] "%{ numberPullRequest } pull request"
+msgstr[1] "%{ numberPullRequest } pull requests"
+
 msgid "Add repository"
 msgstr "Ajouter un dépôt"
 

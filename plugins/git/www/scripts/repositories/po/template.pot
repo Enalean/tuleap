@@ -5,6 +5,11 @@ msgstr ""
 "Generated-By: easygettext\n"
 "Project-Id-Version: \n"
 
+msgid "%{ numberPullRequest } pull request"
+msgid_plural "%{ numberPullRequest } pull requests"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Add repository"
 msgstr ""
 

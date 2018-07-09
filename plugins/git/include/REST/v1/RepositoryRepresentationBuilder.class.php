@@ -28,6 +28,7 @@ use Git_RemoteServer_NotFoundException;
 use GitPermissionsManager;
 use GitRepository;
 use PFUser;
+use Tuleap\Git\Repository\AdditionalInformationRepresentationRetriever;
 
 class RepositoryRepresentationBuilder
 {
@@ -46,15 +47,21 @@ class RepositoryRepresentationBuilder
      * @var Git_LogDao
      */
     private $log_dao;
+    /**
+     * @var \EventManager
+     */
+    private $event_manager;
 
     public function __construct(
         GitPermissionsManager $permissions_manger,
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
-        Git_LogDao $log_dao
+        Git_LogDao $log_dao,
+        \EventManager $event_manager
     ) {
         $this->permissions_manger    = $permissions_manger;
         $this->gerrit_server_factory = $gerrit_server_factory;
         $this->log_dao               = $log_dao;
+        $this->event_manager         = $event_manager;
     }
 
     /**
@@ -69,9 +76,17 @@ class RepositoryRepresentationBuilder
     {
         $server_representation = $this->getGerritServerRepresentation($repository);
 
+        $additional_information = new AdditionalInformationRepresentationRetriever($repository);
+        $this->event_manager->processEvent($additional_information);
+
         $repository_representation = new GitRepositoryRepresentation();
         $last_update_date          = $this->getLastUpdateDate($repository);
-        $repository_representation->build($repository, $server_representation, $last_update_date);
+        $repository_representation->build(
+            $repository,
+            $server_representation,
+            $last_update_date,
+            $additional_information->getAdditionalInformation()
+        );
 
         if ($fields == GitRepositoryRepresentation::FIELDS_ALL && $this->permissions_manger->userIsGitAdmin(
             $user,
