@@ -76,10 +76,6 @@ class Config
 	 */
 	public function LoadConfig($configFile)
 	{
-		// backwards compatibility for people who have been
-		// making use of these variables in their title
-		global $gitphp_version, $gitphp_appstring;
-
 		if (!is_file($configFile)) {
 			throw new MessageException('Could not load config file ' . $configFile, true, 500);
 		}
