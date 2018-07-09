@@ -21,35 +21,17 @@
 namespace Tuleap\Tracker\Action;
 
 use Tracker;
-use Tracker_FormElementFactory;
 
-class MoveStatusSemanticChecker extends MoveSemanticChecker
+class MoveTitleSemanticChecker extends MoveSemanticChecker
 {
-    const STATUS_SEMANTIC_LABEL = 'status';
-
-    public function __construct(Tracker_FormElementFactory $form_element_factory)
-    {
-        $this->form_element_factory = $form_element_factory;
-    }
+    const TITLE_SEMANTIC_LABEL = 'title';
 
     /**
      * @return bool
      */
     public function areBothSemanticsDefined(Tracker $source_tracker, Tracker $target_tracker)
     {
-        return $source_tracker->hasSemanticsStatus() && $target_tracker->hasSemanticsStatus();
-    }
-
-    /**
-     * @return bool
-     */
-    public function doesBothSemanticFieldHaveTheSameType(Tracker $source_tracker, Tracker $target_tracker)
-    {
-        $source_tracker_status_field = $source_tracker->getStatusField();
-        $target_tracker_status_field = $target_tracker->getStatusField();
-
-        return $this->form_element_factory->getType($source_tracker_status_field) ===
-            $this->form_element_factory->getType($target_tracker_status_field);
+        return $source_tracker->hasSemanticsTitle() && $target_tracker->hasSemanticsTitle();
     }
 
     /**
@@ -57,6 +39,6 @@ class MoveStatusSemanticChecker extends MoveSemanticChecker
      */
     public function getSemanticName()
     {
-        return self::STATUS_SEMANTIC_LABEL;
+        return self::TITLE_SEMANTIC_LABEL;
     }
 }

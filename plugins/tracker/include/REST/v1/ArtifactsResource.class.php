@@ -40,7 +40,9 @@ use Tuleap\REST\QueryParameterException;
 use Tuleap\REST\QueryParameterParser;
 use Tuleap\Tracker\Action\MoveArtifact;
 use Tuleap\Tracker\Action\BeforeMoveArtifact;
+use Tuleap\Tracker\Action\MoveDescriptionSemanticChecker;
 use Tuleap\Tracker\Action\MoveStatusSemanticChecker;
+use Tuleap\Tracker\Action\MoveTitleSemanticChecker;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfig;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigDAO;
 use Tuleap\Tracker\Admin\ArtifactsDeletion\UserDeletionRetriever;
@@ -813,6 +815,11 @@ class ArtifactsResource extends AuthenticatedResource {
 
         $xml_import_builder = new Tracker_Artifact_XMLImportBuilder();
 
+        $title_semantic_checker       = new MoveTitleSemanticChecker();
+        $description_semantic_checker = new MoveDescriptionSemanticChecker(
+            $this->formelement_factory
+        );
+
         $status_semantic_checker = new MoveStatusSemanticChecker(
             $this->formelement_factory
         );
@@ -820,7 +827,13 @@ class ArtifactsResource extends AuthenticatedResource {
         return new MoveArtifact(
             $this->artifacts_deletion_manager,
             $builder->build($children_collector, $file_path_xml_exporter, $user, $user_xml_exporter, true),
-            new MoveChangesetXMLUpdater($this->event_manager, new FieldValueMatcher(), $status_semantic_checker),
+            new MoveChangesetXMLUpdater(
+                $this->event_manager,
+                new FieldValueMatcher(),
+                $title_semantic_checker,
+                $description_semantic_checker,
+                $status_semantic_checker
+            ),
             $xml_import_builder->build(
                 new XMLImportHelper($this->user_manager),
                 new Log_NoopLogger()
@@ -833,6 +846,8 @@ class ArtifactsResource extends AuthenticatedResource {
             ),
             new BeforeMoveArtifact(
                 $this->event_manager,
+                $title_semantic_checker,
+                $description_semantic_checker,
                 $status_semantic_checker
             )
         );

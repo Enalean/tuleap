@@ -25,7 +25,9 @@ use PFUser;
 use SimpleXMLElement;
 use Tracker;
 use Tracker_FormElement_Field;
+use Tuleap\Tracker\Action\MoveDescriptionSemanticChecker;
 use Tuleap\Tracker\Action\MoveStatusSemanticChecker;
+use Tuleap\Tracker\Action\MoveTitleSemanticChecker;
 use Tuleap\Tracker\Events\MoveArtifactGetExternalSemanticTargetField;
 use Tuleap\Tracker\Events\MoveArtifactParseFieldChangeNodes;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
@@ -48,14 +50,28 @@ class MoveChangesetXMLUpdater
      */
     private $status_semantic_checker;
 
+    /**
+     * @var MoveTitleSemanticChecker
+     */
+    private $title_semantic_checker;
+
+    /**
+     * @var MoveDescriptionSemanticChecker
+     */
+    private $description_semantic_checker;
+
     public function __construct(
         EventManager $event_manager,
         FieldValueMatcher $field_value_matcher,
+        MoveTitleSemanticChecker $title_semantic_checker,
+        MoveDescriptionSemanticChecker $description_semantic_checker,
         MoveStatusSemanticChecker $status_semantic_checker
     ) {
         $this->event_manager           = $event_manager;
         $this->field_value_matcher     = $field_value_matcher;
         $this->status_semantic_checker = $status_semantic_checker;
+        $this->title_semantic_checker  = $title_semantic_checker;
+        $this->description_semantic_checker = $description_semantic_checker;
     }
 
     public function update(
@@ -127,28 +143,38 @@ class MoveChangesetXMLUpdater
         Tracker $target_tracker,
         SimpleXMLElement $changeset_xml
     ) {
+        $title_semantic_can_be_moved = $this->title_semantic_checker->areSemanticsAligned(
+            $source_tracker,
+            $target_tracker
+        );
+
+        $description_semantic_can_be_moved = $this->description_semantic_checker->areSemanticsAligned(
+            $source_tracker,
+            $target_tracker
+        );
+
+        $status_semantic_can_be_moved = $this->status_semantic_checker->areSemanticsAligned(
+            $source_tracker,
+            $target_tracker
+        );
+
         $target_title_field             = $target_tracker->getTitleField();
         $target_description_field       = $target_tracker->getDescriptionField();
         $target_status_field            = $target_tracker->getStatusField();
         $source_status_field            = $source_tracker->getStatusField();
         $external_semantic_target_field = $this->getExternalSemanticTargetField($source_tracker, $target_tracker);
 
-        $status_semantic_can_be_moved = $this->status_semantic_checker->canSemanticBeMoved(
-            $source_tracker,
-            $target_tracker
-        );
-
         $this->deleteEmptyCommentsNode($changeset_xml);
 
         $last_index = count($changeset_xml->field_change) - 1;
         for ($index = $last_index; $index >= 0; $index--) {
             $modified = false;
-            if ($target_title_field &&
+            if ($title_semantic_can_be_moved &&
                 $this->isFieldChangeCorrespondingToTitleSemanticField($changeset_xml, $source_tracker, $index)
             ) {
                 $this->useTargetTrackerFieldName($changeset_xml, $target_title_field, $index);
                 continue;
-            } elseif ($target_description_field &&
+            } elseif ($description_semantic_can_be_moved &&
                 $this->isFieldChangeCorrespondingToDescriptionSemanticField($changeset_xml, $source_tracker, $index)
             ) {
                 $this->useTargetTrackerFieldName($changeset_xml, $target_description_field, $index);

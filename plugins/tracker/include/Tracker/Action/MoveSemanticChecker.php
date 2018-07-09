@@ -21,42 +21,33 @@
 namespace Tuleap\Tracker\Action;
 
 use Tracker;
-use Tracker_FormElementFactory;
 
-class MoveStatusSemanticChecker extends MoveSemanticChecker
+abstract class MoveSemanticChecker
 {
-    const STATUS_SEMANTIC_LABEL = 'status';
-
-    public function __construct(Tracker_FormElementFactory $form_element_factory)
-    {
-        $this->form_element_factory = $form_element_factory;
-    }
+    /**
+     * @return string
+     */
+    abstract public function getSemanticName();
 
     /**
      * @return bool
      */
-    public function areBothSemanticsDefined(Tracker $source_tracker, Tracker $target_tracker)
-    {
-        return $source_tracker->hasSemanticsStatus() && $target_tracker->hasSemanticsStatus();
-    }
+    abstract public function areBothSemanticsDefined(Tracker $source_tracker, Tracker $target_tracker);
 
     /**
      * @return bool
      */
     public function doesBothSemanticFieldHaveTheSameType(Tracker $source_tracker, Tracker $target_tracker)
     {
-        $source_tracker_status_field = $source_tracker->getStatusField();
-        $target_tracker_status_field = $target_tracker->getStatusField();
-
-        return $this->form_element_factory->getType($source_tracker_status_field) ===
-            $this->form_element_factory->getType($target_tracker_status_field);
+        return true;
     }
 
     /**
-     * @return string
+     * @return bool
      */
-    public function getSemanticName()
+    public function areSemanticsAligned(Tracker $source_tracker, Tracker $target_tracker)
     {
-        return self::STATUS_SEMANTIC_LABEL;
+        return $this->areBothSemanticsDefined($source_tracker, $target_tracker) &&
+            $this->doesBothSemanticFieldHaveTheSameType($source_tracker, $target_tracker);
     }
 }

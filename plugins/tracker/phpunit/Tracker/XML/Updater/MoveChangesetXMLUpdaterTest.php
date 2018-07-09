@@ -29,7 +29,9 @@ use SimpleXMLElement;
 use Tracker;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List;
+use Tuleap\Tracker\Action\MoveDescriptionSemanticChecker;
 use Tuleap\Tracker\Action\MoveStatusSemanticChecker;
+use Tuleap\Tracker\Action\MoveTitleSemanticChecker;
 use Tuleap\Tracker\Events\MoveArtifactGetExternalSemanticTargetField;
 use Tuleap\Tracker\Events\MoveArtifactParseFieldChangeNodes;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
@@ -49,15 +51,19 @@ class MoveChangesetXMLUpdaterTest extends TestCase
     {
         parent::setUp();
 
-        $this->user                    = Mockery::mock(PFUser::class);
-        $this->tracker                 = Mockery::mock(Tracker::class);
-        $this->event_manager           = Mockery::mock(EventManager::class);
-        $this->value_matcher           = Mockery::mock(FieldValueMatcher::class);
-        $this->status_semantic_checker = Mockery::mock(MoveStatusSemanticChecker::class);
+        $this->user                         = Mockery::mock(PFUser::class);
+        $this->tracker                      = Mockery::mock(Tracker::class);
+        $this->event_manager                = Mockery::mock(EventManager::class);
+        $this->value_matcher                = Mockery::mock(FieldValueMatcher::class);
+        $this->title_semantic_checker       = Mockery::mock(MoveTitleSemanticChecker::class);
+        $this->description_semantic_checker = Mockery::mock(MoveDescriptionSemanticChecker::class);
+        $this->status_semantic_checker      = Mockery::mock(MoveStatusSemanticChecker::class);
 
         $this->updater = new MoveChangesetXMLUpdater(
             $this->event_manager,
             $this->value_matcher,
+            $this->title_semantic_checker,
+            $this->description_semantic_checker,
             $this->status_semantic_checker
         );
 
@@ -99,8 +105,18 @@ class MoveChangesetXMLUpdaterTest extends TestCase
         $source_title_field->shouldReceive('getName')->andReturn('summary');
         $source_title_field->shouldReceive('getId')->andReturn(1001);
 
+        $this->title_semantic_checker
+            ->shouldReceive('areSemanticsAligned')
+            ->with($this->tracker, $target_tracker)
+            ->andReturns(true);
+
+        $this->description_semantic_checker
+            ->shouldReceive('areSemanticsAligned')
+            ->with($this->tracker, $target_tracker)
+            ->andReturns(false);
+
         $this->status_semantic_checker
-            ->shouldReceive('canSemanticBeMoved')
+            ->shouldReceive('areSemanticsAligned')
             ->with($this->tracker, $target_tracker)
             ->andReturns(false);
 
@@ -170,8 +186,18 @@ class MoveChangesetXMLUpdaterTest extends TestCase
         $target_description_field->shouldReceive('getName')->andReturn('v2desc');
         $source_description_field->shouldReceive('getName')->andReturn('desc');
 
+        $this->title_semantic_checker
+            ->shouldReceive('areSemanticsAligned')
+            ->with($this->tracker, $target_tracker)
+            ->andReturns(false);
+
+        $this->description_semantic_checker
+            ->shouldReceive('areSemanticsAligned')
+            ->with($this->tracker, $target_tracker)
+            ->andReturns(true);
+
         $this->status_semantic_checker
-            ->shouldReceive('canSemanticBeMoved')
+            ->shouldReceive('areSemanticsAligned')
             ->with($this->tracker, $target_tracker)
             ->andReturns(false);
 
@@ -245,8 +271,18 @@ class MoveChangesetXMLUpdaterTest extends TestCase
         $source_status_field->shouldReceive('getName')->andReturn('status');
         $target_status_field->shouldReceive('getName')->andReturn('V2status');
 
+        $this->title_semantic_checker
+            ->shouldReceive('areSemanticsAligned')
+            ->with($this->tracker, $target_tracker)
+            ->andReturns(false);
+
+        $this->description_semantic_checker
+            ->shouldReceive('areSemanticsAligned')
+            ->with($this->tracker, $target_tracker)
+            ->andReturns(false);
+
         $this->status_semantic_checker
-            ->shouldReceive('canSemanticBeMoved')
+            ->shouldReceive('areSemanticsAligned')
             ->with($this->tracker, $target_tracker)
             ->andReturns(true);
 
@@ -336,8 +372,18 @@ class MoveChangesetXMLUpdaterTest extends TestCase
         $target_description_field->shouldReceive('getName')->andReturn('v2desc');
         $source_description_field->shouldReceive('getName')->andReturn('desc');
 
+        $this->title_semantic_checker
+            ->shouldReceive('areSemanticsAligned')
+            ->with($this->tracker, $target_tracker)
+            ->andReturns(false);
+
+        $this->description_semantic_checker
+            ->shouldReceive('areSemanticsAligned')
+            ->with($this->tracker, $target_tracker)
+            ->andReturns(false);
+
         $this->status_semantic_checker
-            ->shouldReceive('canSemanticBeMoved')
+            ->shouldReceive('areSemanticsAligned')
             ->with($this->tracker, $target_tracker)
             ->andReturns(false);
 
@@ -409,8 +455,18 @@ class MoveChangesetXMLUpdaterTest extends TestCase
         $target_description_field->shouldReceive('getName')->andReturn('v2desc');
         $source_description_field->shouldReceive('getName')->andReturn('desc');
 
+        $this->title_semantic_checker
+            ->shouldReceive('areSemanticsAligned')
+            ->with($this->tracker, $target_tracker)
+            ->andReturns(false);
+
+        $this->description_semantic_checker
+            ->shouldReceive('areSemanticsAligned')
+            ->with($this->tracker, $target_tracker)
+            ->andReturns(true);
+
         $this->status_semantic_checker
-            ->shouldReceive('canSemanticBeMoved')
+            ->shouldReceive('areSemanticsAligned')
             ->with($this->tracker, $target_tracker)
             ->andReturns(false);
 
@@ -460,8 +516,18 @@ class MoveChangesetXMLUpdaterTest extends TestCase
 
         $this->tracker->shouldReceive('getStatusField')->andReturn(null);
 
+        $this->title_semantic_checker
+            ->shouldReceive('areSemanticsAligned')
+            ->with($this->tracker, $target_tracker)
+            ->andReturns(false);
+
+        $this->description_semantic_checker
+            ->shouldReceive('areSemanticsAligned')
+            ->with($this->tracker, $target_tracker)
+            ->andReturns(false);
+
         $this->status_semantic_checker
-            ->shouldReceive('canSemanticBeMoved')
+            ->shouldReceive('areSemanticsAligned')
             ->with($this->tracker, $target_tracker)
             ->andReturns(false);
 
