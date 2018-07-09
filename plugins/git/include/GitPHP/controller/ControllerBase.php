@@ -207,8 +207,6 @@ abstract class ControllerBase
 			$this->tpl->assign('project', $this->project);
 		if (Config::GetInstance()->GetValue('search', true))
 			$this->tpl->assign('enablesearch', true);
-		if (Config::GetInstance()->GetValue('filesearch', true))
-			$this->tpl->assign('filesearch', true);
 		if (isset($this->params['search']))
 			$this->tpl->assign('search', $this->params['search']);
 		if (isset($this->params['searchtype']))

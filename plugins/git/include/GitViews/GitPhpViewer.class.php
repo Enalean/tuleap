@@ -160,7 +160,6 @@ class GitViews_GitPhpViewer {
         $config->SetValue('filemimetype', true);
         $config->SetValue('magicdb', '/usr/share/misc/magic.mgc');
         $config->SetValue('search', true);
-        $config->SetValue('filesearch', false);
         $config->SetValue('smarty_tmp', '/tmp/gitphp-tuleap/smarty');
     }
 }
