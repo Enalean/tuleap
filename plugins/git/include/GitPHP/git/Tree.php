@@ -134,8 +134,7 @@ class Tree extends FilesystemObject implements GitObjectType
 
 		$args = array();
 		$args[] = '--full-name';
-		if ($exe->CanShowSizeInTree())
-			$args[] = '-l';
+        $args[] = '-l';
 		$args[] = '-t';
 		$args[] = escapeshellarg($this->hash);
 		
