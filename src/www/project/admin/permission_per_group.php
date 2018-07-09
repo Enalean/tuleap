@@ -28,6 +28,7 @@ use Tuleap\FRS\PermissionsPerGroup\PermissionPerTypeExtractor;
 use Tuleap\News\Admin\PermissionsPerGroup\NewsPermissionPerGroupPaneBuilder;
 use Tuleap\PHPWiki\PermissionsPerGroup\PHPWikiPermissionPerGroupPaneBuilder;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
+use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupDisplayEvent;
 use Tuleap\Project\Admin\PermissionsPerGroup\PanesPermissionPerGroupBuilder;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupBuilder;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPresenter;
@@ -43,8 +44,10 @@ session_require(array('group' => $group_id, 'admin_flags' => 'A'));
 $project_manager = ProjectManager::instance();
 $project         = $project_manager->getProject($group_id);
 
-$title = _('Permissions per group');
+$event_manager = EventManager::instance();
+$event_manager->processEvent(new PermissionPerGroupDisplayEvent($GLOBALS['HTML']));
 
+$title = _('Permissions per group');
 $navigation_displayer = new HeaderNavigationDisplayer();
 $navigation_displayer->displayBurningParrotNavigation($title, $project, 'permissions');
 
@@ -54,7 +57,7 @@ $presenter_builder = new PermissionPerGroupBuilder($ugroup_manager);
 $groups            = $presenter_builder->buildUGroup($project, $request);
 
 $additional_panes_builder = new PanesPermissionPerGroupBuilder(
-    EventManager::instance(),
+    $event_manager,
     new PaneCollector(
         new PermissionPerGroupFRSServicePresenterBuilder(
             new PermissionPerTypeExtractor(

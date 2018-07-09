@@ -57,6 +57,7 @@ use Tuleap\AgileDashboard\Widget\WidgetKanbanRetriever;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupDisplayEvent;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\RealTime\NodeJSClient;
 use Tuleap\Request\CurrentPage;
@@ -151,6 +152,7 @@ class AgileDashboardPlugin extends Plugin {
             $this->addHook(Tracker_Artifact_EditRenderer::EVENT_ADD_VIEW_IN_COLLECTION);
             $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
             $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
+            $this->addHook(PermissionPerGroupDisplayEvent::NAME);
             $this->addHook(BurningParrotCompatiblePageEvent::NAME);
             $this->addHook(CanValueBeHiddenStatementsCollection::NAME);
             $this->addHook(SemanticStatusGetDisabledValues::NAME);
@@ -619,15 +621,6 @@ class AgileDashboardPlugin extends Plugin {
             return;
         }
 
-        if ($this->isInPermissionsPerGroupProjectAdmin()) {
-            $include_assets = new IncludeAssets(
-                AGILEDASHBOARD_BASE_DIR . '/../www/assets',
-                $this->getPluginPath() . '/assets'
-            );
-
-            $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('permission-per-group.js'));
-        }
-
         $provider = $this->getJavascriptDependenciesProvider();
         if ($provider === null) {
             return;
@@ -640,6 +633,16 @@ class AgileDashboardPlugin extends Plugin {
                 $params['javascript_files'][] = $javascript['file'];
             }
         }
+    }
+
+    public function permissionPerGroupDisplayEvent(PermissionPerGroupDisplayEvent $event)
+    {
+        $include_assets = new IncludeAssets(
+            AGILEDASHBOARD_BASE_DIR . '/../www/assets',
+            $this->getPluginPath() . '/assets'
+        );
+
+        $event->addJavascript($include_assets->getFileURL('permission-per-group.js'));
     }
 
     /**
@@ -1580,11 +1583,6 @@ class AgileDashboardPlugin extends Plugin {
         return $this->isAnAgiledashboardRequest()
             && $request->get('action') === DetailsPaneInfo::ACTION
             && $request->get('pane') === DetailsPaneInfo::IDENTIFIER;
-    }
-
-    private function isInPermissionsPerGroupProjectAdmin()
-    {
-        return strpos($_SERVER['REQUEST_URI'], '/project/admin/permission_per_group') === 0;
     }
 
     /**

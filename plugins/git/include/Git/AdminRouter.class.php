@@ -27,11 +27,13 @@ use Tuleap\Git\Permissions\RegexpFineGrainedEnabler;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Git\GerritServerResourceRestrictor;
 use Tuleap\Git\RemoteServer\Gerrit\Restrictor;
+use Tuleap\Layout\CssAsset;
+use Tuleap\Layout\IncludeAssets;
 
 /**
  * This routes site admin part of Git
  */
-class Git_AdminRouter implements \Tuleap\Request\DispatchableWithRequest
+class Git_AdminRouter implements \Tuleap\Request\DispatchableWithRequest, \Tuleap\Request\DispatchableWithBurningParrot
 {
     /** @var Git_RemoteServer_GerritServerFactory */
     private $gerrit_server_factory;
@@ -125,6 +127,17 @@ class Git_AdminRouter implements \Tuleap\Request\DispatchableWithRequest
         $controller = $this->getControllerFromRequest($request);
 
         $controller->process($request);
+
+        $layout->addCssAsset(
+            new CssAsset(
+                new IncludeAssets(
+                    __DIR__ . '/../../www/themes/BurningParrot/assets',
+                    GIT_BASE_URL . '/themes/BurningParrot/assets'
+                ),
+                'site-admin'
+            )
+        );
+
         $controller->display($request);
     }
 

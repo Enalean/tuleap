@@ -132,6 +132,8 @@ class Git_AdminGitoliteConfig {
         $title    = $GLOBALS['Language']->getText('plugin_git', 'descriptor_name');
         $template_path = dirname(GIT_BASE_DIR).'/templates';
 
+        $GLOBALS['HTML']->includeFooterJavascriptFile(GIT_BASE_URL . '/scripts/admin-gitolite.js');
+
         $admin_presenter = new Git_AdminGitoliteConfigPresenter(
             $title,
             $this->csrf,

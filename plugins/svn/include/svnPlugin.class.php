@@ -27,6 +27,7 @@ use Tuleap\Httpd\PostRotateEvent;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
 use Tuleap\project\Admin\Navigation\NavigationDropdownQuickLinksCollector;
+use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupDisplayEvent;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRetriever;
@@ -177,7 +178,7 @@ class SvnPlugin extends Plugin
         $this->addHook(PermissionPerGroupPaneCollector::NAME);
 
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
-        $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
+        $this->addHook(PermissionPerGroupDisplayEvent::NAME);
 
         $this->addHook(PostRotateEvent::NAME);
     }
@@ -1152,21 +1153,14 @@ class SvnPlugin extends Plugin
     }
 
 
-    public function burning_parrot_get_javascript_files(array $params)
+    public function permissionPerGroupDisplayEvent(PermissionPerGroupDisplayEvent $event)
     {
-        if ($this->isInProjectAdmin()) {
-            $include_assets = new IncludeAssets(
-                SVN_BASE_DIR . '/../www/assets',
-                $this->getPluginPath() . '/assets'
-            );
+        $include_assets = new IncludeAssets(
+            SVN_BASE_DIR . '/../www/assets',
+            $this->getPluginPath() . '/assets'
+        );
 
-            $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('permission-per-group.js'));
-        }
-    }
-
-    private function isInProjectAdmin()
-    {
-        return strpos($_SERVER['REQUEST_URI'], '/project/admin/permission_per_group') === 0;
+        $event->addJavascript($include_assets->getFileURL('permission-per-group.js'));
     }
 
     public function httpdPostRotate(PostRotateEvent $event)

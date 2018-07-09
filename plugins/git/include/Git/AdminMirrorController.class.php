@@ -83,13 +83,19 @@ class Git_AdminMirrorController {
         $template_path = dirname(GIT_BASE_DIR).'/templates';
         $presenter     = null;
 
+
         switch ($request->get('action')) {
             case 'manage-allowed-projects':
+                $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tuleap/manage-allowed-projects-on-resource.js');
+
                 $presenter     = $this->getManageAllowedProjectsPresenter($request);
                 $template_path = ForgeConfig::get('codendi_dir') . '/src/templates/resource_restrictor';
                 $this->renderAPresenter($title, $template_path, $presenter);
                 break;
             default:
+                $GLOBALS['HTML']->includeFooterJavascriptFile(GIT_BASE_URL . '/scripts/modal-add-mirror.js');
+                $GLOBALS['HTML']->includeFooterJavascriptFile(GIT_BASE_URL . '/scripts/modal-mirror-configuration.js');
+
                 $presenter = $this->getAllMirrorsPresenter($title);
                 $this->renderANoFramedPresenter($title, $template_path, $presenter);
                 break;
