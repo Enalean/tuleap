@@ -1529,11 +1529,7 @@ class Project
 
 		$args = array();
 
-		$exe = new GitExe($this);
-		if ($exe->CanIgnoreRegexpCase())
-			$args[] = '--regexp-ignore-case';
-		unset($exe);
-
+        $args[] = '--regexp-ignore-case';
 		$args[] = '--grep=' . escapeshellarg($pattern);
 
 		$ret = $this->RevList($hash, $count, $skip, $args);
@@ -1564,11 +1560,7 @@ class Project
 
 		$args = array();
 
-		$exe = new GitExe($this);
-		if ($exe->CanIgnoreRegexpCase())
-			$args[] = '--regexp-ignore-case';
-		unset($exe);
-
+        $args[] = '--regexp-ignore-case';
 		$args[] = '--author=' . escapeshellarg($pattern);
 
 		$ret = $this->RevList($hash, $count, $skip, $args);
@@ -1599,11 +1591,7 @@ class Project
 
 		$args = array();
 
-		$exe = new GitExe($this);
-		if ($exe->CanIgnoreRegexpCase())
-			$args[] = '--regexp-ignore-case';
-		unset($exe);
-
+        $args[] = '--regexp-ignore-case';
 		$args[] = '--committer=' . escapeshellarg($pattern);
 
 		$ret = $this->RevList($hash, $count, $skip, $args);
@@ -1638,19 +1626,10 @@ class Project
 
 		$exe = new GitExe($this);
 
-		$canSkip = true;
-
-		if ($skip > 0)
-			$canSkip = $exe->CanSkip();
-
-		if ($canSkip) {
-			$args[] = '--max-count=' . escapeshellarg($count);
-			if ($skip > 0) {
-				$args[] = '--skip=' . escapeshellarg($skip);
-			}
-		} else {
-			$args[] = '--max-count=' . escapeshellarg($count + $skip);
-		}
+        $args[] = '--max-count=' . escapeshellarg($count);
+        if ($skip > 0) {
+            $args[] = '--skip=' . escapeshellarg($skip);
+        }
 
 		$args[] = $hash;
 
@@ -1659,10 +1638,6 @@ class Project
 		if (!$revlist[count($revlist)-1]) {
 			/* the last newline creates a null entry */
 			array_splice($revlist, -1, 1);
-		}
-
-		if (($skip > 0) && (!$exe->CanSkip())) {
-			return array_slice($revlist, $skip, $count);
 		}
 
 		return $revlist;

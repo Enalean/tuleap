@@ -69,7 +69,7 @@ class GitExec extends Git_Exec
         $cmd    = "clone --shared -b $branch $remote " . $this->getPath();
 
         $retVal = 1;
-        $git    = $this->getGitCommand();
+        $git    = self::getGitCommand();
 
         // --work-tree --git-dir does not play well with git clone repo path
         exec("$git $cmd 2>&1", $output, $retVal);
@@ -244,7 +244,7 @@ class GitExec extends Git_Exec
     {
         $retVal   = 1;
         $as_group = 'sg - gitolite -c ';
-        $git      = $this->getGitCommand() . ' --work-tree=' . escapeshellarg($this->getPath()) . ' --git-dir=' . escapeshellarg($this->getGitDir());
+        $git      = self::getGitCommand() . ' --work-tree=' . escapeshellarg($this->getPath()) . ' --git-dir=' . escapeshellarg($this->getGitDir());
 
         exec("$as_group '$git $cmd' 2>&1", $output, $retVal);
 

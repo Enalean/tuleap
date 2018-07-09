@@ -28,7 +28,7 @@ class Git_Exec {
 
     private $work_tree;
     private $git_dir;
-    private $git_cmd = 'git';
+    private $git_cmd;
 
     /**
      * @param String $work_tree The git repository path where we should operate
@@ -40,9 +40,7 @@ class Git_Exec {
         } else {
             $this->git_dir = $git_dir;
         }
-        if (self::isGit29Installed()) {
-            $this->git_cmd = self::GIT29_PATH.'/usr/bin/git';
-        }
+        $this->git_cmd = self::getGitCommand();
     }
 
     public static function buildFromRepository(GitRepository $repository)
@@ -319,8 +317,12 @@ class Git_Exec {
         return $this->work_tree;
     }
 
-    public function getGitCommand() {
-        return $this->git_cmd;
+    public static function getGitCommand()
+    {
+        if (self::isGit29Installed()) {
+            return self::GIT29_PATH . '/usr/bin/git';
+        }
+        return 'git';
     }
 
     public function getGitDir() {

@@ -23,7 +23,6 @@ use Tuleap\Git\GitPHP\Config;
 use Tuleap\Git\GitPHP\Controller;
 use Tuleap\Git\GitPHP\Controller_Message;
 use Tuleap\Git\GitPHP\DiffExe;
-use Tuleap\Git\GitPHP\GitExe;
 use Tuleap\Git\GitPHP\MessageException;
 use Tuleap\Git\GitPHP\ProjectList;
 use Tuleap\Git\GitPHP\Resource;
@@ -101,11 +100,6 @@ class GitViews_GitPhpViewer {
             /*
              * Check for required executables
              */
-            $exe = new GitExe(null);
-            if (!$exe->Valid()) {
-                throw new MessageException(sprintf(Tuleap\Git\GitPHP\__('Could not run the git executable "%1$s".  You may need to set the "%2$s" config value.'),
-                    $exe->GetBinary(), 'gitbin'), true, 500);
-            }
             if (!function_exists('xdiff_string_diff')) {
                 $exe = new DiffExe();
                 if (!$exe->Valid()) {
@@ -150,7 +144,6 @@ class GitViews_GitPhpViewer {
     {
         $config = Config::GetInstance();
         $config->SetValue('stylesheet', '');
-        $config->SetValue('gitbin', '/usr/bin/git');
         $config->SetValue('diffbin', '/usr/bin/diff');
         $config->SetValue('gittmp', '/tmp/');
         $config->SetValue('title', 'Tuleap');
