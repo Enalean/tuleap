@@ -187,10 +187,6 @@ abstract class ControllerBase
 	 */
 	private function LoadCommonData()
 	{
-		global $gitphp_version, $gitphp_appstring;
-
-		$this->tpl->assign('version', $gitphp_version);
-
 		$stylesheet = Config::GetInstance()->GetValue('stylesheet', 'gitphpskin.css');
 		if ($stylesheet == 'gitphp.css') {
 			// backwards compatibility
@@ -199,7 +195,6 @@ abstract class ControllerBase
 		$this->tpl->assign('stylesheet', preg_replace('/\.css$/', '', $stylesheet));
 
 		$this->tpl->assign('javascript', Config::GetInstance()->GetValue('javascript', true));
-		$this->tpl->assign('pagetitle', Config::GetInstance()->GetValue('title', $gitphp_appstring));
 		$this->tpl->assign('homelink', Config::GetInstance()->GetValue('homelink', __('projects')));
 		$this->tpl->assign('action', $this->GetName());
 		$this->tpl->assign('actionlocal', $this->GetName(true));
