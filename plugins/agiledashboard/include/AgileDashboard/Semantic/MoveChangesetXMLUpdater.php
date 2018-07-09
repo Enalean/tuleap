@@ -110,6 +110,10 @@ class MoveChangesetXMLUpdater
     ) {
         $xml_value = (int) $field_change->value;
 
+        if ($xml_value === 0) {
+            return;
+        }
+
         $value = $this->field_value_matcher->getMatchingValueByDuckTyping(
             $source_initial_effort_field,
             $target_initial_effort_field,
