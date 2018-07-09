@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -85,10 +85,6 @@ class Git_URL {
 
     /** @var string */
     private $query_string = '';
-    /**
-     * @var Project
-     */
-    private $project;
 
     public function __construct(
         ProjectManager $project_manager,
@@ -106,25 +102,6 @@ class Git_URL {
         if (! $this->is_friendly && ! $this->is_standard) {
             $this->setIsSmartHTTP();
         }
-    }
-
-    /**
-     * @return Project|null
-     */
-    public function getProject() {
-        if ($this->project) {
-            return $this->project;
-        }
-
-        if (! $this->repository) {
-            if (! preg_match($this->standard_index_pattern, $this->uri, $matches)) {
-                return null;
-            }
-
-            return $this->project_manager->getProject($matches['project_id']);
-        }
-
-        return $this->repository->getProject();
     }
 
     /**

@@ -228,7 +228,6 @@ class GitPlugin extends Plugin
         $this->addHook(Event::MANAGE_THIRD_PARTY_APPS, 'manage_third_party_apps');
 
         $this->addHook(Event::REGISTER_PROJECT_CREATION);
-        $this->addHook(Event::GET_PROJECTID_FROM_URL);
         $this->addHook(RestrictedUsersAreHandledByPluginEvent::NAME);
         $this->addHook(Event::GET_SERVICES_ALLOWED_FOR_RESTRICTED);
         $this->addHook(Event::PROJECT_ACCESS_CHANGE);
@@ -1980,22 +1979,6 @@ class GitPlugin extends Plugin
             $this->getRegexpFineGrainedRetriever(),
             $this->getPatternValidator()
         );
-    }
-
-    /** @see Event::GET_PROJECTID_FROM_URL */
-    public function get_projectid_from_url($params) {
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            $url = new Git_URL(
-                ProjectManager::instance(),
-                $this->getRepositoryFactory(),
-                $_SERVER['REQUEST_URI']
-            );
-
-            $project = $url->getProject();
-            if ($project && ! $project->isError()) {
-                $params['project_id'] = $url->getProject()->getId();
-            }
-        }
     }
 
     /**

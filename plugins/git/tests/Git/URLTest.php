@@ -89,12 +89,6 @@ class Git_URL_GitSmartHTTPTest extends Git_URLTest {
         $this->assertEqual($url->getRepository(), $this->goldfish_repository);
     }
 
-    public function itRetrievesTheProject() {
-        $url = $this->getUrl('/plugins/git/gpig/device/generic/goldfish/info/refs?service=git-upload-pack');
-
-        $this->assertEqual($url->getProject(), $this->gpig_project);
-    }
-
     public function itGeneratesPathInfoForInfoRefs() {
         $url = $this->getUrl('/plugins/git/gpig/device/generic/goldfish/info/refs?service=git-upload-pack');
         $this->assertEqual($url->getPathInfo(), '/gpig/device/generic/goldfish.git/info/refs');
