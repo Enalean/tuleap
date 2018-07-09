@@ -71,20 +71,6 @@ class Resource
 	}
 
 	/**
-	 * GetLocale
-	 *
-	 * Gets the currently instantiated locale
-	 *
-	 * @access public
-	 * @static
-	 * @return string locale identifier
-	 */
-	public static function GetLocale()
-	{
-		return self::$currentLocale;
-	}
-
-	/**
 	 * Instantiate
 	 *
 	 * Instantiates the singleton instance

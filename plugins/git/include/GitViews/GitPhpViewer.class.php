@@ -133,7 +133,6 @@ class GitViews_GitPhpViewer {
     private function setupGitPHPConfiguration()
     {
         $config = Config::GetInstance();
-        $config->SetValue('stylesheet', '');
         $config->SetValue('diffbin', '/usr/bin/diff');
         $config->SetValue('gittmp', '/tmp/');
         $config->SetValue('title', 'Tuleap');

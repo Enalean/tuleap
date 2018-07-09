@@ -187,15 +187,6 @@ abstract class ControllerBase
 	 */
 	private function LoadCommonData()
 	{
-		$stylesheet = Config::GetInstance()->GetValue('stylesheet', 'gitphpskin.css');
-		if ($stylesheet == 'gitphp.css') {
-			// backwards compatibility
-			$stylesheet = 'gitphpskin.css';
-		}
-		$this->tpl->assign('stylesheet', preg_replace('/\.css$/', '', $stylesheet));
-
-		$this->tpl->assign('javascript', Config::GetInstance()->GetValue('javascript', true));
-		$this->tpl->assign('homelink', Config::GetInstance()->GetValue('homelink', __('projects')));
 		$this->tpl->assign('action', $this->GetName());
 		$this->tpl->assign('actionlocal', $this->GetName(true));
 		if ($this->project)
@@ -206,22 +197,6 @@ abstract class ControllerBase
 			$this->tpl->assign('search', $this->params['search']);
 		if (isset($this->params['searchtype']))
 			$this->tpl->assign('searchtype', $this->params['searchtype']);
-		$this->tpl->assign('currentlocale', Resource::GetLocale());
-		//$this->tpl->assign('supportedlocales', GitPHP_Resource::SupportedLocales());
-
-		$getvars = explode('&', $_SERVER['QUERY_STRING']);
-		$getvarsmapped = array();
-		foreach ($getvars as $varstr) {
-			$eqpos = strpos($varstr, '=');
-			if ($eqpos > 0) {
-				$var = substr($varstr, 0, $eqpos);
-				$val = substr($varstr, $eqpos + 1);
-				if (!(empty($var) || empty($val))) {
-					$getvarsmapped[$var] = urldecode($val);
-				}
-			}
-		}
-		$this->tpl->assign('requestvars', $getvarsmapped);
 
 		$this->tpl->assign('snapshotformats', Archive::SupportedFormats());
 	}
