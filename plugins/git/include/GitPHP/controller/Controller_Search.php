@@ -18,7 +18,6 @@ namespace Tuleap\Git\GitPHP;
 define('GITPHP_SEARCH_COMMIT', 'commit');
 define('GITPHP_SEARCH_AUTHOR', 'author');
 define('GITPHP_SEARCH_COMMITTER', 'committer');
-define('GITPHP_SEARCH_FILE', 'file');
 /**
  * Search controller class
  *
@@ -60,9 +59,6 @@ class Controller_Search extends ControllerBase
 	 */
 	protected function GetTemplate()
 	{
-		if ($this->params['searchtype'] == GITPHP_SEARCH_FILE) {
-			return 'searchfiles.tpl';
-		}
 		return 'search.tpl';
 	}
 
@@ -92,15 +88,9 @@ class Controller_Search extends ControllerBase
 	 */
 	protected function ReadQuery()
 	{
-		if (!isset($this->params['searchtype']))
-			$this->params['searchtype'] = GITPHP_SEARCH_COMMIT;
-
-		if ($this->params['searchtype'] == GITPHP_SEARCH_FILE) {
-			if (! Config::GetInstance()->GetValue('filesearch', true)) {
-				throw new  MessageException(__('File search has been disabled'), true);
-			}
-
-		}
+		if (!isset($this->params['searchtype'])) {
+            $this->params['searchtype'] = GITPHP_SEARCH_COMMIT;
+        }
 
 		if ((!isset($this->params['search'])) || (strlen($this->params['search']) < 2)) {
 			throw new  MessageException(sprintf(__n('You must enter search text of at least %1$d character', 'You must enter search text of at least %1$d characters', 2), 2), true);
@@ -142,9 +132,6 @@ class Controller_Search extends ControllerBase
 
 				case GITPHP_SEARCH_COMMITTER:
 					$results = $this->project->SearchCommitter($this->params['search'], $co->GetHash(), 101, ($this->params['page'] * 100));
-					break;
-				case GITPHP_SEARCH_FILE:
-					$results = $co->SearchFiles($this->params['search'], 101, ($this->params['page'] * 100));
 					break;
 				default:
 					throw new MessageException(__('Invalid search type'));

@@ -46,9 +46,6 @@
                 <option {if $searchtype == 'commit'}selected="selected"{/if} value="commit">{t}commit{/t}</option>
                 <option {if $searchtype == 'author'}selected="selected"{/if} value="author">{t}author{/t}</option>
                 <option {if $searchtype == 'committer'}selected="selected"{/if} value="committer">{t}committer{/t}</option>
-                {if $filesearch}
-                  <option {if $searchtype == 'file'}selected="selected"{/if} value="file">{t}file{/t}</option>
-                {/if}
               </select> {t}search{/t}: <input type="text" name="s" {if $search}value="{$search|escape}"{/if} />
             </div>
           </form>
