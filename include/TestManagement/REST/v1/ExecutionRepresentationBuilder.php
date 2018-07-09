@@ -26,6 +26,7 @@ use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use Tuleap\TestManagement\ArtifactDao;
 use Tuleap\TestManagement\Campaign\Execution\DefinitionForExecutionRetriever;
+use Tuleap\TestManagement\Campaign\Execution\DefinitionNotFoundException;
 use Tuleap\TestManagement\Campaign\Execution\ExecutionDao;
 use Tuleap\TestManagement\Campaign\Execution\PaginatedExecutions;
 use Tuleap\TestManagement\ConfigConformanceValidator;
@@ -109,6 +110,7 @@ class ExecutionRepresentationBuilder
 
     /**
      * @return \Tuleap\TestManagement\REST\v1\SlicedExecutionRepresentations
+     * @throws DefinitionNotFoundException
      */
     public function getPaginatedExecutionsRepresentationsForCampaign(
         PFUser $user,
@@ -124,7 +126,11 @@ class ExecutionRepresentationBuilder
     }
 
     /**
+     * @param PFUser           $user
+     * @param Tracker_Artifact $execution
+     *
      * @return \Tuleap\TestManagement\REST\v1\ExecutionRepresentation
+     * @throws DefinitionNotFoundException
      */
     public function getExecutionRepresentation(PFUser $user, Tracker_Artifact $execution)
     {
@@ -134,7 +140,12 @@ class ExecutionRepresentationBuilder
     }
 
     /**
+     * @param PFUser           $user
+     * @param Tracker_Artifact $execution
+     * @param array            $definitions_changeset_ids
+     *
      * @return \Tuleap\TestManagement\REST\v1\ExecutionRepresentation
+     * @throws DefinitionNotFoundException
      */
     private function getExecutionRepresentationWithSpecificChangesetForDefinition(
         PFUser $user,
@@ -150,7 +161,7 @@ class ExecutionRepresentationBuilder
             $definition,
             $definitions_changeset_ids
         );
-        $execution_representation       = new ExecutionRepresentation();
+        $execution_representation = new ExecutionRepresentation();
         $execution_representation->build(
             $execution->getId(),
             $execution->getStatus(),
@@ -163,7 +174,6 @@ class ExecutionRepresentationBuilder
             $this->getExecutionTime($user, $execution),
             $this->steps_results_representation_builder->build($user, $execution, $definition)
         );
-
         return $execution_representation;
     }
 
@@ -172,6 +182,7 @@ class ExecutionRepresentationBuilder
      * @param PaginatedExecutions $executions
      *
      * @return array
+     * @throws DefinitionNotFoundException
      */
     private function getListOfRepresentations(PFUser $user, PaginatedExecutions $executions)
     {

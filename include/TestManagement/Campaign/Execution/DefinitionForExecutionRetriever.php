@@ -37,10 +37,11 @@ class DefinitionForExecutionRetriever
     }
 
     /**
-     * @param PFUser           $user
+     * @param PFUser $user
      * @param Tracker_Artifact $execution
      *
-     * @return null|Tracker_Artifact
+     * @return Tracker_Artifact
+     * @throws DefinitionNotFoundException
      */
     public function getDefinitionRepresentationForExecution(
         PFUser $user,
@@ -53,6 +54,6 @@ class DefinitionForExecutionRetriever
             }
         }
 
-        return null;
+        throw new DefinitionNotFoundException($execution);
     }
 }

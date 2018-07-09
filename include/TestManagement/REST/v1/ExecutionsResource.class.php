@@ -43,6 +43,7 @@ use Tuleap\REST\ProjectAuthorization;
 use Tuleap\TestManagement\ArtifactDao;
 use Tuleap\TestManagement\ArtifactFactory;
 use Tuleap\TestManagement\Campaign\Execution\DefinitionForExecutionRetriever;
+use Tuleap\TestManagement\Campaign\Execution\DefinitionNotFoundException;
 use Tuleap\TestManagement\Campaign\Execution\ExecutionDao;
 use Tuleap\TestManagement\Config;
 use Tuleap\TestManagement\ConfigConformanceValidator;
@@ -226,7 +227,8 @@ class ExecutionsResource
      *
      * @param int $id Id of the execution
      * @return ExecutionRepresentation
-     * @throws RestException
+     * @throws 400
+     * @throws 404
      */
     protected function getId($id)
     {
@@ -239,7 +241,7 @@ class ExecutionsResource
             throw new RestException(404);
         }
 
-        return $this->execution_representation_builder->getExecutionRepresentation($user, $artifact);
+        return $this->getExecutionRepresentation($user, $artifact);
     }
 
     /**
@@ -289,11 +291,9 @@ class ExecutionsResource
             throw new RestException(500, $exception->getMessage());
         }
 
-        $execution_representation = $this->execution_representation_builder->getExecutionRepresentation($user, $artifact_reference->getArtifact());
-
         $this->sendAllowHeadersForExecutionPost($artifact_reference->getArtifact());
 
-        return $execution_representation;
+        return $this->getExecutionRepresentation($user, $artifact_reference->getArtifact());
     }
 
     /**
@@ -366,7 +366,7 @@ class ExecutionsResource
 
         $this->sendAllowHeadersForExecutionPut($artifact);
 
-        return $this->execution_representation_builder->getExecutionRepresentation($user, $artifact);
+        return $this->getExecutionRepresentation($user, $artifact);
     }
 
     /**
@@ -677,14 +677,30 @@ class ExecutionsResource
      */
     private function getDefinitionOfExecution(PFUser $user, Tracker_Artifact $execution_artifact)
     {
-        $definition_artifact = $this->definition_retriever->getDefinitionRepresentationForExecution(
-            $user,
-            $execution_artifact
-        );
-        if (! $definition_artifact) {
-            throw new RestException(500, 'The execution is not linked to a definition');
-        }
 
-        return $definition_artifact;
-}
+        try {
+            return $this->definition_retriever->getDefinitionRepresentationForExecution(
+                $user,
+                $execution_artifact
+            );
+        } catch (DefinitionNotFoundException $e) {
+            throw new RestException(400, 'The execution is not linked to a definition');
+        }
+    }
+
+    /**
+     * @param PFUser           $user
+     * @param Tracker_Artifact $artifact
+     *
+     * @return ExecutionRepresentation
+     * @throws RestException
+     */
+    private function getExecutionRepresentation($user, $artifact)
+    {
+        try {
+            return $this->execution_representation_builder->getExecutionRepresentation($user, $artifact);
+        } catch (DefinitionNotFoundException $e) {
+            throw new RestException(400, 'The execution is not linked to a definition');
+        }
+    }
 }

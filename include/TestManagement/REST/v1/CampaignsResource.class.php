@@ -64,6 +64,7 @@ use Tuleap\TestManagement\Campaign\CampaignDao;
 use Tuleap\TestManagement\Campaign\CampaignRetriever;
 use Tuleap\TestManagement\Campaign\CampaignSaver;
 use Tuleap\TestManagement\Campaign\Execution\DefinitionForExecutionRetriever;
+use Tuleap\TestManagement\Campaign\Execution\DefinitionNotFoundException;
 use Tuleap\TestManagement\Campaign\Execution\ExecutionDao;
 use Tuleap\TestManagement\Campaign\JobConfiguration;
 use Tuleap\TestManagement\Config;
@@ -329,6 +330,7 @@ class CampaignsResource
      * @param int $offset Position of the first element to display {@from path}
      *
      * @return array {@type Tuleap\TestManagement\REST\v1\ExecutionRepresentation}
+     * @throws 400
      */
     protected function getExecutions($id, $limit = 10, $offset = 0)
     {
@@ -338,14 +340,19 @@ class CampaignsResource
         $campaign = $this->getCampaignUserCanRead($user, $id);
         $artifact = $campaign->getArtifact();
 
-        $execution_representations = $this->execution_representation_builder
-            ->getPaginatedExecutionsRepresentationsForCampaign(
-                $user,
-                $artifact,
-                $this->config->getTestExecutionTrackerId($artifact->getTracker()->getProject()),
-                $limit,
-                $offset
-            );
+        try {
+            $execution_representations = $this->execution_representation_builder
+                ->getPaginatedExecutionsRepresentationsForCampaign(
+                    $user,
+                    $artifact,
+                    $this->config->getTestExecutionTrackerId($artifact->getTracker()->getProject()),
+                    $limit,
+                    $offset
+                );
+        } catch (DefinitionNotFoundException $e) {
+            $execution_id = $e->getExecutionArtifact()->getId();
+            throw new RestException(400, "The execution with id $execution_id is not linked to a definition");
+        }
 
         $this->sendPaginationHeaders($limit, $offset, $execution_representations->getTotalSize());
 
@@ -366,6 +373,7 @@ class CampaignsResource
      *
      * @return array {@type Tuleap\TestManagement\REST\v1\ExecutionRepresentation}
      * @throws RestException
+     * @throws 400
      */
     protected function patchExecutions($id, $uuid, $definition_ids_to_add, $execution_ids_to_remove)
     {
@@ -412,16 +420,21 @@ class CampaignsResource
 
         $this->sendAllowHeadersForExecutionsList($artifact);
 
-        $limit                     = 10;
-        $offset                    = 0;
-        $execution_representations =
-            $this->execution_representation_builder->getPaginatedExecutionsRepresentationsForCampaign(
-                $user,
-                $artifact,
-                $this->config->getTestExecutionTrackerId($project),
-                $limit,
-                $offset
-            );
+        $limit  = 10;
+        $offset = 0;
+        try {
+            $execution_representations =
+                $this->execution_representation_builder->getPaginatedExecutionsRepresentationsForCampaign(
+                    $user,
+                    $artifact,
+                    $this->config->getTestExecutionTrackerId($project),
+                    $limit,
+                    $offset
+                );
+        } catch (DefinitionNotFoundException $e) {
+            $execution_id = $e->getExecutionArtifact()->getId();
+            throw new RestException(400, "The execution with id $execution_id is not linked to a definition");
+        }
 
         $this->sendPaginationHeaders($limit, $offset, $execution_representations->getTotalSize());
 
