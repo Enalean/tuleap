@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,7 +24,7 @@ $mwdata_path = "/var/lib/codendi/mediawiki";
 $mw_dbtype = "mysql";
 $projects_path = "/var/lib/codendi/mediawiki/projects";
 $config_path = "/etc/codendi";
-$src_path = "/usr/share/mediawiki-tuleap";
+$src_path = "/usr/share/mediawiki-tuleap-123";
 $mw_style_path = '/plugins/mediawiki/www/skins';
 $enable_compatibility_view = false;
 $extension_mleb_path = "/usr/share/mediawiki-mleb-tuleap";

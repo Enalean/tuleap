@@ -51,9 +51,5 @@ if(isset($GLOBALS['TULEAP_MW_PROJECT'])) {
     $wiki_name = $uri[4];
 }
 
-if (file_exists('/usr/share/mediawiki-tuleap-123') && $dao->isMediawiki123(MediawikiSiteAdminResourceRestrictor::RESOURCE_ID, $wiki_name)) {
-    $mediawikipath = '/usr/share/mediawiki-tuleap-123';
-} else {
-    $mediawikipath = '/usr/share/mediawiki-tuleap';
-}
-$IP = $mediawikipath;
+$mediawikipath = '/usr/share/mediawiki-tuleap-123';
+$IP            = $mediawikipath;
