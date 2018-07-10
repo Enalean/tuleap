@@ -22,7 +22,7 @@ namespace Tuleap\Tracker\Action;
 
 use EventManager;
 use Tracker;
-use Tuleap\Tracker\Events\MoveArtifactCheckExternalSemantics;
+use Tuleap\Tracker\Events\MoveArtifactGetExternalSemanticCheckers;
 use Tuleap\Tracker\Exception\MoveArtifactSemanticsException;
 
 class BeforeMoveArtifact
@@ -56,7 +56,11 @@ class BeforeMoveArtifact
      */
     public function artifactCanBeMoved(Tracker $source_tracker, Tracker $target_tracker)
     {
-        foreach ($this->semantic_checkers as $semantic_checker) {
+        $event = new MoveArtifactGetExternalSemanticCheckers();
+        $this->event_manager->processEvent($event);
+
+        $all_semantic_checkers = array_merge($this->semantic_checkers, $event->getExternalSemanticsCheckers());
+        foreach ($all_semantic_checkers as $semantic_checker) {
             $semantic_name            = $semantic_checker->getSemanticName();
             $this->semantic_checked[] = $semantic_name;
 
@@ -73,25 +77,8 @@ class BeforeMoveArtifact
             }
         }
 
-        $event = new MoveArtifactCheckExternalSemantics($source_tracker, $target_tracker);
-        $this->event_manager->processEvent($event);
-
-        $external_semantics_checked = $event->getExternalSemanticsChecked();
-        if ($event->wasVisitedByPlugin() && $event->areExternalSemanticAligned()) {
-            return true;
-        }
-
-        $this->throwException($external_semantics_checked);
-    }
-
-    /**
-     * @throws MoveArtifactSemanticsException
-     */
-    private function throwException(array $external_semantics_checked)
-    {
-        $all_checked_semantics = array_merge($this->semantic_checked, $external_semantics_checked);
         throw new MoveArtifactSemanticsException(
-            "Both trackers must have at least one of the following semantic defined: " . implode(', ', $all_checked_semantics)
+            "Both trackers must have at least one of the following semantic defined: " . implode(', ', $this->semantic_checked)
         );
     }
 }

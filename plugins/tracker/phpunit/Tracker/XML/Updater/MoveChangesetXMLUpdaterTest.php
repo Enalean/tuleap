@@ -30,9 +30,10 @@ use Tracker;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List;
 use Tuleap\Tracker\Action\MoveDescriptionSemanticChecker;
+use Tuleap\Tracker\Action\MoveSemanticChecker;
 use Tuleap\Tracker\Action\MoveStatusSemanticChecker;
 use Tuleap\Tracker\Action\MoveTitleSemanticChecker;
-use Tuleap\Tracker\Events\MoveArtifactGetExternalSemanticTargetField;
+use Tuleap\Tracker\Events\MoveArtifactGetExternalSemanticCheckers;
 use Tuleap\Tracker\Events\MoveArtifactParseFieldChangeNodes;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 
@@ -120,7 +121,7 @@ class MoveChangesetXMLUpdaterTest extends TestCase
             ->with($this->tracker, $target_tracker)
             ->andReturns(false);
 
-        $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function (MoveArtifactGetExternalSemanticTargetField $event) {
+        $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function (MoveArtifactGetExternalSemanticCheckers $event) {
             return true;
         }));
         $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function (MoveArtifactParseFieldChangeNodes $event) {
@@ -201,7 +202,7 @@ class MoveChangesetXMLUpdaterTest extends TestCase
             ->with($this->tracker, $target_tracker)
             ->andReturns(false);
 
-        $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function (MoveArtifactGetExternalSemanticTargetField $event) {
+        $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function (MoveArtifactGetExternalSemanticCheckers $event) {
             return true;
         }));
         $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function (MoveArtifactParseFieldChangeNodes $event) {
@@ -296,7 +297,7 @@ class MoveChangesetXMLUpdaterTest extends TestCase
             ->with($source_status_field, $target_status_field, 105)
             ->andReturn(205);
 
-        $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function (MoveArtifactGetExternalSemanticTargetField $event) {
+        $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function (MoveArtifactGetExternalSemanticCheckers $event) {
             return true;
         }));
         $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function (MoveArtifactParseFieldChangeNodes $event) {
@@ -387,7 +388,7 @@ class MoveChangesetXMLUpdaterTest extends TestCase
             ->with($this->tracker, $target_tracker)
             ->andReturns(false);
 
-        $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function (MoveArtifactGetExternalSemanticTargetField $event) {
+        $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function (MoveArtifactGetExternalSemanticCheckers $event) {
             return true;
         }));
         $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function (MoveArtifactParseFieldChangeNodes $event) {
@@ -470,7 +471,7 @@ class MoveChangesetXMLUpdaterTest extends TestCase
             ->with($this->tracker, $target_tracker)
             ->andReturns(false);
 
-        $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function (MoveArtifactGetExternalSemanticTargetField $event) {
+        $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function (MoveArtifactGetExternalSemanticCheckers $event) {
             return true;
         }));
         $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function (MoveArtifactParseFieldChangeNodes $event) {
@@ -531,9 +532,16 @@ class MoveChangesetXMLUpdaterTest extends TestCase
             ->with($this->tracker, $target_tracker)
             ->andReturns(false);
 
-        $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function (MoveArtifactGetExternalSemanticTargetField $event) {
-            $target_external_semantic_field = Mockery::mock(Tracker_FormElement_Field::class);
-            $event->setField($target_external_semantic_field);
+        $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function (MoveArtifactGetExternalSemanticCheckers $event) {
+            $checker = Mockery::mock(MoveSemanticChecker::class);
+            $checker->shouldReceive([
+                'areBothSemanticsDefined'              => true,
+                'doesBothSemanticFieldHaveTheSameType' => true,
+                'areSemanticsAligned'                  => true,
+                'getSemanticName'                      => 'whatever',
+            ]);
+
+            $event->addExternalSemanticsChecker($checker);
             return true;
         }))->once();
         $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function (MoveArtifactParseFieldChangeNodes $event) {
