@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__) .'/bootstrap.php';
+require_once __DIR__ .'/bootstrap.php';
 
 class CardwallConfigXmlExportTest extends TuleapTestCase {
 
@@ -33,33 +33,36 @@ class CardwallConfigXmlExportTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
-        $this->project  = stub('Project')->getId()->returns(140);
+        $this->project  = mockery_stub(\Project::class)->getID()->returns(140);
         $this->tracker1 = aTracker()->withId(214)->build();
         $this->tracker2 = aTracker()->withId(614)->build();
         $this->root     = new SimpleXMLElement('<projects/>');
 
-        $this->cardwall_config  = stub('Cardwall_OnTop_Config')->isEnabled()->returns(false);
-        $this->cardwall_config2 = stub('Cardwall_OnTop_Config')->isEnabled()->returns(true);
+        $this->cardwall_config  = mockery_stub(\Cardwall_OnTop_Config::class)->isEnabled()->returns(false);
+        $this->cardwall_config2 = mockery_stub(\Cardwall_OnTop_Config::class)->isEnabled()->returns(true);
 
-        $this->tracker_factory = stub('TrackerFactory')->getTrackersByGroupId(140)->returns(array(214 => $this->tracker1, 614 => $this->tracker2));
-        TrackerFactory::setInstance($this->tracker_factory);
+        $this->tracker_factory = mockery_stub(\TrackerFactory::class)->getTrackersByGroupId(140)->returns(
+            array(214 => $this->tracker1, 614 => $this->tracker2)
+        );
 
-        $this->config_factory = mock('Cardwall_OnTop_ConfigFactory');
-        stub($this->config_factory)->getOnTopConfig($this->tracker1)->returns($this->cardwall_config);
-        stub($this->config_factory)->getOnTopConfig($this->tracker2)->returns($this->cardwall_config2);
+        $this->config_factory = \Mockery::spy(\Cardwall_OnTop_ConfigFactory::class);
+        $this->xml_validator  = \Mockery::spy(\XML_RNGValidator::class);
 
-        $this->xml_validator = mock('XML_RNGValidator');
-
-        $this->xml_exporter = new CardwallConfigXmlExport($this->project, $this->tracker_factory, $this->config_factory, $this->xml_validator);
+        $this->xml_exporter = new CardwallConfigXmlExport(
+            $this->project,
+            $this->tracker_factory,
+            $this->config_factory,
+            $this->xml_validator
+        );
     }
 
-    public function tearDown() {
-        TrackerFactory::clearInstance();
-        parent::tearDown();
-    }
+    public function itReturnsTheGoodRootXmlWithTrackers()
+    {
+        $this->config_factory->shouldReceive('getOnTopConfig')->with($this->tracker1)->once()->andReturn($this->cardwall_config);
+        $this->config_factory->shouldReceive('getOnTopConfig')->with($this->tracker2)->once()->andReturn($this->cardwall_config2);
 
-    public function itReturnsTheGoodRootXmlWithTrackers() {
         $this->xml_exporter->export($this->root);
         $attributes = $this->root->cardwall->trackers->tracker->attributes();
         $this->assertEqual(count($this->root->cardwall->trackers->children()), 1);
@@ -67,9 +70,9 @@ class CardwallConfigXmlExportTest extends TuleapTestCase {
     }
 
      public function itReturnsTheGoodRootXmlWithoutTrackers() {
-        $cardwall_config       = stub('Cardwall_OnTop_Config')->isEnabled()->returns(false);
-        $cardwall_config2      = stub('Cardwall_OnTop_Config')->isEnabled()->returns(false);
-        $this->config_factory2 = mock('Cardwall_OnTop_ConfigFactory');
+        $cardwall_config       = mockery_stub(\Cardwall_OnTop_Config::class)->isEnabled()->returns(false);
+        $cardwall_config2      = mockery_stub(\Cardwall_OnTop_Config::class)->isEnabled()->returns(false);
+        $this->config_factory2 = \Mockery::spy(\Cardwall_OnTop_ConfigFactory::class);
 
         stub($this->config_factory2)->getOnTopConfig($this->tracker1)->returns($cardwall_config);
         stub($this->config_factory2)->getOnTopConfig($this->tracker2)->returns($cardwall_config2);
@@ -80,17 +83,13 @@ class CardwallConfigXmlExportTest extends TuleapTestCase {
         $this->assertEqual(count($this->root->cardwall->trackers->children()), 0);
     }
 
-    public function itCallsGetOnTopConfigMethodForEachTracker() {
-        $this->config_factory->expectCallCount('getOnTopConfig', 2);
-        $this->cardwall_config->expectCallCount('isEnabled', 1);
-        $this->cardwall_config2->expectCallCount('isEnabled', 1);
-        $this->xml_exporter->export($this->root);
-    }
-
     public function itThrowsAnExceptionIfXmlGeneratedIsNotValid() {
+        $this->config_factory->shouldReceive('getOnTopConfig')->with($this->tracker1)->once()->andReturn($this->cardwall_config);
+        $this->config_factory->shouldReceive('getOnTopConfig')->with($this->tracker2)->once()->andReturn($this->cardwall_config2);
+
         $this->expectException();
 
-        $xml_validator = stub('XML_RNGValidator')->validate()->throws(new XML_ParseException('', array(), array()));
+        $xml_validator = mockery_stub(\XML_RNGValidator::class)->validate()->throws(new XML_ParseException('', array(), array()));
         $xml_exporter  = new CardwallConfigXmlExport($this->project, $this->tracker_factory, $this->config_factory, $xml_validator);
         $xml_exporter->export(new SimpleXMLElement('<empty/>'));
     }
@@ -109,20 +108,21 @@ class CardwallConfigXmlExport_ColumnsTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
-        $this->project  = stub('Project')->getId()->returns(140);
+        $this->project  = mockery_stub(\Project::class)->getID()->returns(140);
         $this->tracker1 = aTracker()->withId(214)->build();
         $this->root     = new SimpleXMLElement('<projects/>');
 
-        $this->cardwall_config = mock('Cardwall_OnTop_Config');
+        $this->cardwall_config = \Mockery::spy(\Cardwall_OnTop_Config::class);
         stub($this->cardwall_config)->isEnabled()->returns(true);
 
-        $this->tracker_factory = stub('TrackerFactory')->getTrackersByGroupId(140)->returns(array(214 => $this->tracker1));
+        $this->tracker_factory = mockery_stub(\TrackerFactory::class)->getTrackersByGroupId(140)->returns(array(214 => $this->tracker1));
 
-        $this->config_factory = mock('Cardwall_OnTop_ConfigFactory');
+        $this->config_factory = \Mockery::spy(\Cardwall_OnTop_ConfigFactory::class);
         stub($this->config_factory)->getOnTopConfig($this->tracker1)->returns($this->cardwall_config);
 
-        $this->xml_validator = mock('XML_RNGValidator');
+        $this->xml_validator = \Mockery::spy(\XML_RNGValidator::class);
 
         $this->xml_exporter = new CardwallConfigXmlExport($this->project, $this->tracker_factory, $this->config_factory, $this->xml_validator);
     }
@@ -158,14 +158,14 @@ class CardwallConfigXmlExport_ColumnsTest extends TuleapTestCase {
             new Cardwall_Column(113, "On going", "rgb(255,255,255)")
         )));
 
-        $tracker = stub('Tracker')->getXMLId()->returns('T200');
-        $field   = stub('Tracker_FormElement_Field_List')->getXMLId()->returns('F201');
+        $tracker = mockery_stub(\Tracker::class)->getXMLId()->returns('T200');
+        $field   = mockery_stub(\Tracker_FormElement_Field_List::class)->getXMLId()->returns('F201');
 
-        $value_mapping = mock('Cardwall_OnTop_Config_ValueMapping');
+        $value_mapping = \Mockery::spy(\Cardwall_OnTop_Config_ValueMapping::class);
         stub($value_mapping)->getXMLValueId()->returns('V304');
         stub($value_mapping)->getColumnId()->returns(4);
 
-        $mapping = mock('Cardwall_OnTop_Config_TrackerMappingFreestyle');
+        $mapping = \Mockery::spy(\Cardwall_OnTop_Config_TrackerMappingFreestyle::class);
         stub($mapping)->getTracker()->returns($tracker);
         stub($mapping)->getField()->returns($field);
         stub($mapping)->getValueMappings()->returns(array($value_mapping));

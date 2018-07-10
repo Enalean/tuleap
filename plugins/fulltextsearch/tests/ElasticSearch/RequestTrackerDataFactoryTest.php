@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__) .'/../../include/autoload.php';
+require_once __DIR__ .'/../../include/autoload.php';
 require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
 class RequestTrackerDataFactory_TrackerMappingTest extends TuleapTestCase {
@@ -28,28 +28,29 @@ class RequestTrackerDataFactory_TrackerMappingTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
-        $text_field = mock('Tracker_FormElement_Field_Text');
+        $text_field = \Mockery::spy(\Tracker_FormElement_Field_Text::class);
         stub($text_field)->getName()->returns('title');
         stub($text_field)->getId()->returns(1001);
 
-        $date_field = mock('Tracker_FormElement_Field_Date');
+        $date_field = \Mockery::spy(\Tracker_FormElement_Field_Date::class);
         stub($date_field)->getName()->returns('my date');
 
-        $lud_field = mock('Tracker_FormElement_Field_LastUpdateDate');
+        $lud_field = \Mockery::spy(\Tracker_FormElement_Field_LastUpdateDate::class);
         stub($lud_field)->getName()->returns('last updated');
 
-        $sub_on_field = mock('Tracker_FormElement_Field_SubmittedOn');
+        $sub_on_field = \Mockery::spy(\Tracker_FormElement_Field_SubmittedOn::class);
         stub($sub_on_field)->getName()->returns('sub on');
 
-        $form_element_factory = mock('Tracker_FormElementFactory');
+        $form_element_factory = \Mockery::spy(\Tracker_FormElementFactory::class);
         stub($form_element_factory)->getUsedTextFields()->returns(array($text_field));
         stub($form_element_factory)->getUsedCustomDateFields()->returns(array($date_field));
         stub($form_element_factory)->getCoreDateFields()->returns(array($lud_field, $sub_on_field));
 
         $this->tracker      = aTracker()->withId(455)->build();
         $this->data_factory = new ElasticSearch_1_2_RequestTrackerDataFactory(
-            new ElasticSearch_1_2_ArtifactPropertiesExtractor($form_element_factory, mock('Tracker_Permission_PermissionsSerializer'))
+            new ElasticSearch_1_2_ArtifactPropertiesExtractor($form_element_factory, \Mockery::spy(\Tracker_Permission_PermissionsSerializer::class))
         );
     }
 
@@ -160,30 +161,31 @@ abstract class RequestTrackerDataFactory_ArtifactBaseFormatting extends TuleapTe
 
     public function setUp() {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
-        $text_field = mock('Tracker_FormElement_Field_Text');
+        $text_field = \Mockery::spy(\Tracker_FormElement_Field_Text::class);
         stub($text_field)->getName()->returns('title');
         stub($text_field)->getId()->returns(1001);
 
-        $date_field = mock('Tracker_FormElement_Field_Date');
+        $date_field = \Mockery::spy(\Tracker_FormElement_Field_Date::class);
         stub($date_field)->getName()->returns('my date');
 
-        $lud_field = mock('Tracker_FormElement_Field_LastUpdateDate');
+        $lud_field = \Mockery::spy(\Tracker_FormElement_Field_LastUpdateDate::class);
         stub($lud_field)->getName()->returns('last updated');
 
-        $sub_on_field = mock('Tracker_FormElement_Field_SubmittedOn');
+        $sub_on_field = \Mockery::spy(\Tracker_FormElement_Field_SubmittedOn::class);
         stub($sub_on_field)->getName()->returns('sub on');
 
-        $last_changeset = mock('Tracker_Artifact_Changeset');
+        $last_changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
         stub($last_changeset)->getId()->returns(12561);
         stub($last_changeset)->getSubmittedOn()->returns(4523558);
 
         stub($last_changeset)->getValue($text_field)->returns(
-            stub('Tracker_Artifact_ChangesetValue_Text')->getValue()->returns('abc')
+            mockery_stub(\Tracker_Artifact_ChangesetValue_Text::class)->getValue()->returns('abc')
         );
 
         stub($last_changeset)->getValue($date_field)->returns(
-            stub('Tracker_Artifact_ChangesetValue_Date')->getTimestamp()->returns(1024586545)
+            mockery_stub(\Tracker_Artifact_ChangesetValue_Date::class)->getTimestamp()->returns(1024586545)
         );
 
         $this->tracker  = aTracker()->withId(455)->withProjectId(112)->build();
@@ -194,12 +196,12 @@ abstract class RequestTrackerDataFactory_ArtifactBaseFormatting extends TuleapTe
             ->withSubmittedOn(1256684)
             ->build();
 
-        $permissions_serializer = mock('Tracker_Permission_PermissionsSerializer');
+        $permissions_serializer = \Mockery::spy(\Tracker_Permission_PermissionsSerializer::class);
 
         stub($permissions_serializer)->getLiteralizedUserGroupsThatCanViewTracker($this->artifact)->returns('@site_active, @project_members');
         stub($permissions_serializer)->getLiteralizedUserGroupsThatCanViewArtifact($this->artifact)->returns('@ug_114, @project_members');
 
-        $form_element_factory = mock('Tracker_FormElementFactory');
+        $form_element_factory = \Mockery::spy(\Tracker_FormElementFactory::class);
         stub($form_element_factory)->getUsedTextFields()->returns(array($text_field));
         stub($form_element_factory)->getUsedCustomDateFields()->returns(array($date_field));
         stub($form_element_factory)->getCoreDateFields()->returns(array($lud_field, $sub_on_field));
@@ -299,13 +301,14 @@ class RequestTrackerDataFactory_ArtifactFollowupCommentsFormattingTest extends R
 
     public function setUp() {
         parent::setUp();
+        $this->setUpGlobalsMockery();
         $this->artifact_builder = anArtifact()
             ->withId(44)
             ->withTracker($this->tracker);
     }
 
     public function itPushNoComment() {
-        $last_changeset = mock('Tracker_Artifact_Changeset');
+        $last_changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
         stub($last_changeset)->getId()->returns(12561);
         stub($last_changeset)->getSubmittedOn()->returns(1410265950);
         stub($last_changeset)->getSubmittedBy()->returns(667);
@@ -325,7 +328,7 @@ class RequestTrackerDataFactory_ArtifactFollowupCommentsFormattingTest extends R
     }
 
     public function itPushedOneComment() {
-        $last_changeset = mock('Tracker_Artifact_Changeset');
+        $last_changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
         stub($last_changeset)->getId()->returns(12561);
         stub($last_changeset)->getSubmittedOn()->returns(1410265950);
         stub($last_changeset)->getSubmittedBy()->returns(667);

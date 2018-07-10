@@ -27,7 +27,7 @@ use \AgileDashboard_Milestone_Backlog_Backlog;
 use \AgileDashboard_BacklogItemPresenter;
 use \AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection;
 
-require_once dirname(__FILE__).'/../../../../bootstrap.php';
+require_once __DIR__.'/../../../../bootstrap.php';
 
 class MilestoneResourceValidatorTest extends TuleapTestCase {
 
@@ -36,31 +36,34 @@ class MilestoneResourceValidatorTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
         $this->ids                            = array(102, 174);
-        $parent_milestone                     = stub('Planning_Milestone')->getArtifact()->returns(anArtifact()->withId(101)->build());
-        $this->milestone                      = stub('Planning_Milestone')->getParent()->returns($parent_milestone);
-        $this->user                           = mock('PFUser');
-        $backlog                              = mock('AgileDashboard_Milestone_Backlog_Backlog');
-        $planning                             = stub('Planning')->getId()->returns(3);
+        $parent_milestone                     = mockery_stub(\Planning_Milestone::class)->getArtifact()->returns(anArtifact()->withId(101)->build());
+        $this->milestone                      = mockery_stub(\Planning_Milestone::class)->getParent()->returns($parent_milestone);
+        $this->user                           = \Mockery::spy(\PFUser::class);
+        $self_backlog                         = \Mockery::spy(\AgileDashboard_Milestone_Backlog_Backlog::class);
+        $backlog                              = \Mockery::spy(\AgileDashboard_Milestone_Backlog_Backlog::class);
+        $planning                             = mockery_stub(\Planning::class)->getId()->returns(3);
         $this->artifact1                      = anArtifact()->withId(102)->withTrackerId(555)->build();
         $this->artifact2                      = anArtifact()->withId(174)->withTrackerId(666)->build();
-        $this->unplanned_item                 = stub('AgileDashboard_BacklogItemPresenter')->id()->returns(102);
-        $this->todo_item                      = stub('AgileDashboard_BacklogItemPresenter')->id()->returns(174);
+        $this->unplanned_item                 = mockery_stub(\AgileDashboard_BacklogItemPresenter::class)->id()->returns(102);
+        $this->todo_item                      = mockery_stub(\AgileDashboard_BacklogItemPresenter::class)->id()->returns(174);
         $this->unplanned_collection           = new AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection();
         $this->done_collection                = new AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection();
         $this->todo_collection                = new AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection();
-        $this->planning_factory               = mock('PlanningFactory');
-        $this->tracker_artifact_factory       = mock('Tracker_ArtifactFactory');
-        $tracker_form_element_factory         = mock('Tracker_FormElementFactory');
-        $backlog_factory                      = mock('AgileDashboard_Milestone_Backlog_BacklogFactory');
-        $milestone_factory                    = mock('Planning_MilestoneFactory');
-        $backlog_row_collection_factory       = mock('AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory');
+        $this->planning_factory               = \Mockery::spy(\PlanningFactory::class);
+        $this->tracker_artifact_factory       = \Mockery::spy(\Tracker_ArtifactFactory::class);
+        $tracker_form_element_factory         = \Mockery::spy(\Tracker_FormElementFactory::class);
+        $backlog_factory                      = \Mockery::spy(\AgileDashboard_Milestone_Backlog_BacklogFactory::class);
+        $milestone_factory                    = \Mockery::spy(\Planning_MilestoneFactory::class);
+        $backlog_row_collection_factory       = \Mockery::spy(\AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory::class);
 
         stub($this->unplanned_item)->getArtifact()->returns($this->artifact1);
         stub($this->todo_item)->getArtifact()->returns($this->artifact2);
         stub($this->milestone)->getPlanning()->returns($planning);
-        stub($backlog_factory)->getSelfBacklog($this->milestone)->returns($backlog);
+        stub($backlog_factory)->getSelfBacklog($this->milestone)->returns($self_backlog);
+        stub($backlog_factory)->getBacklog()->returns($backlog);
         stub($backlog_row_collection_factory)->getDoneCollection()->returns($this->done_collection);
         stub($backlog_row_collection_factory)->getTodoCollection()->returns($this->todo_collection);
         stub($backlog_row_collection_factory)->getUnplannedOpenCollection()->returns($this->unplanned_collection);
@@ -72,7 +75,7 @@ class MilestoneResourceValidatorTest extends TuleapTestCase {
             $backlog_factory,
             $milestone_factory,
             $backlog_row_collection_factory,
-            mock('Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker')
+            \Mockery::spy(\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker::class)
         );
     }
 
@@ -142,8 +145,9 @@ class MilestoneResourceValidator_PatchAddRemoveTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
-        $this->user                         = mock('PFUser');
+        $this->user                         = \Mockery::spy(\PFUser::class);
         $this->artifact = aMockArtifact()->withLinkedArtifacts(
             array(
                 anArtifact()->withId(112)->build(),
@@ -153,7 +157,7 @@ class MilestoneResourceValidator_PatchAddRemoveTest extends TuleapTestCase {
             )
         )->build();
         $this->milestone = aMilestone()->withArtifact($this->artifact)->build();
-        $this->milestone_resource_validator = partial_mock('Tuleap\AgileDashboard\REST\v1\MilestoneResourceValidator', array('validateArtifactsFromBodyContentWithClosedItems'));
+        $this->milestone_resource_validator = \Mockery::mock(\Tuleap\AgileDashboard\REST\v1\MilestoneResourceValidator::class)->makePartial()->shouldAllowMockingProtectedMethods();
     }
 
     public function itAllowsToRemoveFromContentWhenRemovedIdsArePartOfLinkedArtifacts() {
@@ -185,8 +189,11 @@ class MilestoneResourceValidator_PatchAddRemoveTest extends TuleapTestCase {
     }
 
     public function itForbidsToAddArtifactsThatAreNotValidForContent() {
-        expect($this->milestone_resource_validator)->validateArtifactsFromBodyContentWithClosedItems(array(210), $this->milestone, $this->user)->once();
-        stub($this->milestone_resource_validator)->validateArtifactsFromBodyContentWithClosedItems()->throws(new \Exception());
+        stub($this->milestone_resource_validator)->validateArtifactsFromBodyContentWithClosedItems(
+            array(210),
+            $this->milestone,
+            $this->user
+        )->once()->throws(new \Exception());
 
         $this->expectException();
 
@@ -194,6 +201,8 @@ class MilestoneResourceValidator_PatchAddRemoveTest extends TuleapTestCase {
     }
 
     public function itReturnsTheAddedIdsPlusTheExistingOne() {
+        $this->milestone_resource_validator->shouldReceive('validateArtifactsFromBodyContentWithClosedItems')->andReturn(null);
+
         $this->assertEqual(
             $this->milestone_resource_validator->getValidatedArtifactsIdsToAddOrRemoveFromContent($this->user, $this->milestone, null, array(210)),
             array(112, 113, 114, 115, 210)
@@ -201,6 +210,8 @@ class MilestoneResourceValidator_PatchAddRemoveTest extends TuleapTestCase {
     }
 
     public function itAllowsToAddAndRemoveInSameTime() {
+        $this->milestone_resource_validator->shouldReceive('validateArtifactsFromBodyContentWithClosedItems')->andReturn(null);
+
         $this->assertEqual(
             $this->milestone_resource_validator->getValidatedArtifactsIdsToAddOrRemoveFromContent($this->user, $this->milestone, array(113, 115), array(210)),
             array(112, 114, 210)
@@ -208,6 +219,8 @@ class MilestoneResourceValidator_PatchAddRemoveTest extends TuleapTestCase {
     }
 
     public function itSkipsWhenAnElementIsAddedAndRemovedAtSameTime() {
+        $this->milestone_resource_validator->shouldReceive('validateArtifactsFromBodyContentWithClosedItems')->andReturn(null);
+
         $this->assertEqual(
             $this->milestone_resource_validator->getValidatedArtifactsIdsToAddOrRemoveFromContent($this->user, $this->milestone, array(114, 113), array(113, 210)),
             array(112, 113, 115, 210)
@@ -215,6 +228,8 @@ class MilestoneResourceValidator_PatchAddRemoveTest extends TuleapTestCase {
     }
 
     public function itDoesntAddAnElementAlreadyInContent() {
+        $this->milestone_resource_validator->shouldReceive('validateArtifactsFromBodyContentWithClosedItems')->andReturn(null);
+
         $this->assertEqual(
             $this->milestone_resource_validator->getValidatedArtifactsIdsToAddOrRemoveFromContent($this->user, $this->milestone, null, array(113)),
             array(112, 113, 114, 115)

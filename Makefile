@@ -250,7 +250,12 @@ simpletest11x-56: ## Run SimpleTest 1.1.x with PHP 5.6 tests in CLI
 	/tuleap/plugins/archivedeleteditems/tests \
 	/tuleap/plugins/admindelegation/tests \
 	/tuleap/plugins/webdav/tests \
-
+	/tuleap/plugins/git/tests \
+	/tuleap/plugins/svn/tests \
+	/tuleap/plugins/mediawiki/tests \
+	/tuleap/plugins/fulltextsearch/tests \
+	/tuleap/plugins/cardwall/tests \
+	/tuleap/plugins/agiledashboard/tests \
 
 bash-web: ## Give a bash on web container
 	@docker exec -e COLUMNS="`tput cols`" -e LINES="`tput lines`" -ti `docker-compose ps -q web` bash

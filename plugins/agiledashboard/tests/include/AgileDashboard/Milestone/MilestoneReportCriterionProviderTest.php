@@ -17,15 +17,16 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once dirname(__FILE__).'/../../../bootstrap.php';
+require_once __DIR__.'/../../../bootstrap.php';
 
 class AgileDashboard_Milestone_MilestoneReportCriterionProviderTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
+        $this->setUpGlobalsMockery();
         $this->task_tracker          = aTracker()->withId('task')->build();
-        $this->options_provider      = mock('AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider');
-        $this->milestone_id_provider = mock('AgileDashboard_Milestone_SelectedMilestoneProvider');
+        $this->options_provider      = \Mockery::spy(\AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider::class);
+        $this->milestone_id_provider = \Mockery::spy(\AgileDashboard_Milestone_SelectedMilestoneProvider::class);
 
         $this->user = aUser()->build();
 

@@ -30,6 +30,7 @@ class ArtifactParentsSelectorEventListenerTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
+        $this->setUpGlobalsMockery();
         '
                               epic
          ┕ sprint ───────≫   ┕ story
@@ -40,9 +41,9 @@ class ArtifactParentsSelectorEventListenerTest extends TuleapTestCase {
         $this->story_tracker   = aTracker()->withName('story_tracker')->build();
 
         $this->user    = aUser()->build();
-        $this->request = mock('Codendi_Request');
+        $this->request = \Mockery::spy(\Codendi_Request::class);
 
-        $this->artifact_factory  = mock('Tracker_ArtifactFactory');
+        $this->artifact_factory  = \Mockery::spy(\Tracker_ArtifactFactory::class);
 
         $this->sprint   = $this->getArtifact($this->sprint_id,  $this->sprint_tracker);
         $this->epic     = $this->getArtifact($this->epic_id,    $this->epic_tracker);
@@ -50,7 +51,7 @@ class ArtifactParentsSelectorEventListenerTest extends TuleapTestCase {
 
         stub($GLOBALS['Language'])->getText('plugin_agiledashboard', 'available', 'epic_tracker')->returns('Available epic_tracker');
 
-        $this->selector = mock('Planning_ArtifactParentsSelector');
+        $this->selector = \Mockery::spy(\Planning_ArtifactParentsSelector::class);
         stub($this->selector)->getPossibleParents($this->epic_tracker, $this->sprint, $this->user)->returns(array($this->epic, $this->epic2));
         stub($this->selector)->getPossibleParents($this->epic_tracker, $this->epic2, $this->user)->returns(array($this->epic2));
 
@@ -59,7 +60,9 @@ class ArtifactParentsSelectorEventListenerTest extends TuleapTestCase {
     }
 
     private function getArtifact($id, Tracker $tracker) {
-        $artifact  = aMockArtifact()->withId($id)->withTracker($tracker)->build();
+        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact->shouldReceive('getId')->andReturn($id);
+        $artifact->shouldReceive('getTracker')->andReturn($tracker);
         stub($this->artifact_factory)->getArtifactById($id)->returns($artifact);
         return $artifact;
     }

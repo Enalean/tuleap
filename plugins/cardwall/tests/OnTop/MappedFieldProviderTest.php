@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright (c) Enalean, 2012. All Rights Reserved.
  *
@@ -18,29 +17,27 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once dirname(__FILE__) .'/../bootstrap.php';
+require_once __DIR__ .'/../bootstrap.php';
 
 class Cardwall_OnTop_MappedFieldProviderTest extends TuleapTestCase {
     
     public function itProvidesTheStatusFieldIfNoMapping() {
-        $tracker  = mock('Tracker');
-        $artifact = aMockArtifact()->withTracker($tracker)->build();
-        
-        $status_field = mock('Tracker_FormElement_Field_OpenList');
-        $status_retriever = stub('Cardwall_FieldProviders_SemanticStatusFieldRetriever')->getField()->returns($status_field);
-        $provider = new Cardwall_OnTop_Config_MappedFieldProvider(mock('Cardwall_OnTop_Config'), $status_retriever);
+        $tracker  = \Mockery::spy(\Tracker::class);
+
+        $status_field = \Mockery::spy(\Tracker_FormElement_Field_OpenList::class);
+        $status_retriever = mockery_stub(\Cardwall_FieldProviders_SemanticStatusFieldRetriever::class)->getField()->returns($status_field);
+        $provider = new Cardwall_OnTop_Config_MappedFieldProvider(\Mockery::spy(\Cardwall_OnTop_Config::class), $status_retriever);
         
         $this->assertEqual($status_field, $provider->getField($tracker));
     }
     
     public function itProvidesTheMappedFieldIfThereIsAMapping() {
         $tracker  = aTracker()->build();
-        $artifact = aMockArtifact()->withTracker($tracker)->build();
-        
-        $mapped_field = mock('Tracker_FormElement_Field_OpenList');
-        $status_retriever = mock('Cardwall_FieldProviders_SemanticStatusFieldRetriever');
-        $mapping = stub('Cardwall_OnTop_Config_TrackerMapping')->getField()->returns($mapped_field);
-        $config = stub('Cardwall_OnTop_Config')->getMappingFor($tracker)->returns($mapping);
+
+        $mapped_field = \Mockery::spy(\Tracker_FormElement_Field_OpenList::class);
+        $status_retriever = \Mockery::spy(\Cardwall_FieldProviders_SemanticStatusFieldRetriever::class);
+        $mapping = mockery_stub(\Cardwall_OnTop_Config_TrackerMapping::class)->getField()->returns($mapped_field);
+        $config = mockery_stub(\Cardwall_OnTop_Config::class)->getMappingFor($tracker)->returns($mapping);
         $provider = new Cardwall_OnTop_Config_MappedFieldProvider($config, $status_retriever);
         
         $this->assertEqual($mapped_field, $provider->getField($tracker));
@@ -48,18 +45,13 @@ class Cardwall_OnTop_MappedFieldProviderTest extends TuleapTestCase {
     
     public function itReturnsNullIfThereIsACustomMappingButNoFieldChoosenYet() {
         $tracker  = aTracker()->build();
-        $artifact = aMockArtifact()->withTracker($tracker)->build();
-        
-        $status_field = mock('Tracker_FormElement_Field_OpenList');
-        $status_retriever = stub('Cardwall_FieldProviders_SemanticStatusFieldRetriever')->getField()->returns($status_field);
-        $mapping = stub('Cardwall_OnTop_Config_TrackerMapping')->getField()->returns(null);
-        $config = stub('Cardwall_OnTop_Config')->getMappingFor($tracker)->returns($mapping);
+
+        $status_field = \Mockery::spy(\Tracker_FormElement_Field_OpenList::class);
+        $status_retriever = mockery_stub(\Cardwall_FieldProviders_SemanticStatusFieldRetriever::class)->getField()->returns($status_field);
+        $mapping = mockery_stub(\Cardwall_OnTop_Config_TrackerMapping::class)->getField()->returns(null);
+        $config = mockery_stub(\Cardwall_OnTop_Config::class)->getMappingFor($tracker)->returns($mapping);
         $provider = new Cardwall_OnTop_Config_MappedFieldProvider($config, $status_retriever);
         
         $this->assertEqual(null, $provider->getField($tracker));
     }
-    
 }
-
-
-?>

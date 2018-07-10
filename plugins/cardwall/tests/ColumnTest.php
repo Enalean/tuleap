@@ -19,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__) .'/bootstrap.php';
+require_once __DIR__ .'/bootstrap.php';
 
 class Cardwall_Column_isInColumnTest extends TuleapTestCase {
 
@@ -27,18 +27,21 @@ class Cardwall_Column_isInColumnTest extends TuleapTestCase {
     //TODO move this to the configTest file
     public function setUp() {
         parent::setUp();
-        $tracker = aMockTracker()->withId(33)->build();
-        $swimline_tracker = aMockTracker()->build();
-        $this->artifact = mock('Tracker_Artifact');
+        $this->setUpGlobalsMockery();
+        $tracker = aMockeryTracker()->withId(33)->build();
+        $this->artifact = \Mockery::spy(\Tracker_Artifact::class);
         $changset = new Tracker_Artifact_Changeset_Null();
         stub($this->artifact)->getTracker()->returns($tracker);
         stub($this->artifact)->getLastChangeset()->returns($changset);
 
-        $this->field = mock('Tracker_FormElement_Field_MultiSelectbox');
-        $this->field_provider = stub('Cardwall_FieldProviders_IProvideFieldGivenAnArtifact')->getField($tracker)->returns($this->field);
-        $dao = mock('Cardwall_OnTop_Dao');
-        $column_factory = mock('Cardwall_OnTop_Config_ColumnFactory');
-        $tracker_mapping_factory = mock('Cardwall_OnTop_Config_TrackerMappingFactory');
+        $this->field = \Mockery::spy(\Tracker_FormElement_Field_MultiSelectbox::class);
+        $this->field_provider = mockery_stub(\Cardwall_FieldProviders_IProvideFieldGivenAnArtifact::class)->getField($tracker)->returns($this->field);
+        $dao = \Mockery::spy(\Cardwall_OnTop_Dao::class);
+        $column_factory = \Mockery::spy(\Cardwall_OnTop_Config_ColumnFactory::class);
+        $tracker_mapping_factory = \Mockery::spy(\Cardwall_OnTop_Config_TrackerMappingFactory::class);
+
+        $column_factory->shouldReceive('getDashboardColumns')->with($tracker)->andReturn(new Cardwall_OnTop_Config_ColumnCollection());
+
         $this->config = new Cardwall_OnTop_Config($tracker, $dao, $column_factory, $tracker_mapping_factory);
     }
 
@@ -95,6 +98,7 @@ class Cardwall_Column_canContainStatusTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
         $id = 100;
         $label = $header_color = 'whatever';

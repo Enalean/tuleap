@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,7 +19,7 @@
  */
 
 
-require_once dirname(__FILE__) .'/../include/autoload.php';
+require_once __DIR__ .'/../include/autoload.php';
 require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
 class FullTextSearchTrackerActions_DefineMappingTest extends TuleapTestCase {
@@ -33,9 +33,10 @@ class FullTextSearchTrackerActions_DefineMappingTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->client               = mock('FullTextSearch_IIndexDocuments');
-        $this->tracker_data_factory = mock('ElasticSearch_1_2_RequestTrackerDataFactory');
-        $this->logger               = mock('Logger');
+        $this->setUpGlobalsMockery();
+        $this->client               = \Mockery::spy(\FullTextSearch_IIndexDocuments::class);
+        $this->tracker_data_factory = \Mockery::spy(\ElasticSearch_1_2_RequestTrackerDataFactory::class);
+        $this->logger               = \Mockery::spy(\Logger::class);
         $this->tracker              = aTracker()->withId(455)->build();
         $this->artifact             = anArtifact()->withTracker($this->tracker)->build();
         $this->actions              = new FullTextSearchTrackerActions($this->client, $this->tracker_data_factory, $this->logger);
@@ -55,7 +56,7 @@ class FullTextSearchTrackerActions_DefineMappingTest extends TuleapTestCase {
         stub($this->tracker_data_factory)->getTrackerMapping($this->tracker)->returns(array('dat result'));
 
         expect($this->logger)->debug()->count(2);
-        expect($this->logger)->debug('[Tracker] Elasticsearch set mapping for tracker #455')->at(0);
+        expect($this->logger)->debug('[Tracker] Elasticsearch set mapping for tracker #455');
 
         $this->actions->indexArtifactUpdate($this->artifact);
     }
@@ -80,9 +81,10 @@ class FullTextSearchTrackerActions_PushArtifactBaseTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->client               = mock('FullTextSearch_IIndexDocuments');
-        $this->tracker_data_factory = mock('ElasticSearch_1_2_RequestTrackerDataFactory');
-        $this->logger               = mock('Logger');
+        $this->setUpGlobalsMockery();
+        $this->client               = \Mockery::spy(\FullTextSearch_IIndexDocuments::class);
+        $this->tracker_data_factory = \Mockery::spy(\ElasticSearch_1_2_RequestTrackerDataFactory::class);
+        $this->logger               = \Mockery::spy(\Logger::class);
         $this->tracker              = aTracker()->withId(455)->build();
         $this->artifact             = anArtifact()->withId(44)->withTracker($this->tracker)->build();
         $this->actions              = new FullTextSearchTrackerActions($this->client, $this->tracker_data_factory, $this->logger);
