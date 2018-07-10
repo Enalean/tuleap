@@ -59,22 +59,6 @@ class GitViews_GitPhpViewer {
 
     private function displayGitPHP()
     {
-        define('GITPHP_INCLUDEDIR', __DIR__ . '/../GitPHP/');
-        define('GITPHP_GITOBJECTDIR', GITPHP_INCLUDEDIR . 'git/');
-        define('GITPHP_CONTROLLERDIR', GITPHP_INCLUDEDIR . 'controller/');
-        define('GITPHP_LOCALEDIR', __DIR__ . '/../../site-content/gitphp_locale/');
-
-        define('GITPHP_BASEDIR', GITPHP_INCLUDEDIR);
-
-        require_once GITPHP_INCLUDEDIR . 'Resource.php';
-
-        // Need this include for the compression constants used in the config file
-        require_once GITPHP_GITOBJECTDIR . 'Archive.php';
-
-        // Test these executables early
-        require_once GITPHP_GITOBJECTDIR . 'GitExe.php';
-        require_once GITPHP_GITOBJECTDIR . 'DiffExe.php';
-
         Resource::Instantiate($this->current_user->getLanguageID());
 
         try {
@@ -136,7 +120,7 @@ class GitViews_GitPhpViewer {
         $config->SetValue('diffbin', '/usr/bin/diff');
         $config->SetValue('gittmp', '/tmp/');
         $config->SetValue('title', 'Tuleap');
-        $config->SetValue('compressformat', GITPHP_COMPRESS_BZ2);
+        $config->SetValue('compressformat', \Tuleap\Git\GitPHP\Archive::COMPRESS_BZ2);
         $config->SetValue('compresslevel', 9);
         $config->SetValue('geshi', true);
         $config->SetValue('filemimetype', true);

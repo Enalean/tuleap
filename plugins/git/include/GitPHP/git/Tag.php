@@ -366,7 +366,7 @@ class Tag extends Ref
 		$args = array();
 		$args[] = '-t';
 		$args[] = escapeshellarg($this->GetHash());
-		$ret = trim($exe->Execute(GIT_CAT_FILE, $args));
+		$ret = trim($exe->Execute(GitExe::CAT_FILE, $args));
 		
 		if ($ret === 'commit') {
 			/* light tag */
@@ -380,7 +380,7 @@ class Tag extends Ref
 		$args = array();
 		$args[] = 'tag';
 		$args[] = escapeshellarg($this->GetName());
-		$ret = $exe->Execute(GIT_CAT_FILE, $args);
+		$ret = $exe->Execute(GitExe::CAT_FILE, $args);
 		unset($exe);
 
 		$lines = explode("\n", $ret);
@@ -431,7 +431,7 @@ class Tag extends Ref
 				$args = array();
 				$args[] = 'tag';
 				$args[] = escapeshellarg($objectHash);
-				$ret = $exe->Execute(GIT_CAT_FILE, $args);
+				$ret = $exe->Execute(GitExe::CAT_FILE, $args);
 				unset($exe);
 				$lines = explode("\n", $ret);
 				foreach ($lines as $i => $line) {

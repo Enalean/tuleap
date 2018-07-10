@@ -138,7 +138,7 @@ class Blob extends FilesystemObject implements GitObjectType
 			$args[] = 'blob';
 			$args[] = escapeshellarg($this->hash);
 
-			$this->data = $exe->Execute(GIT_CAT_FILE, $args);
+			$this->data = $exe->Execute(GitExe::CAT_FILE, $args);
 		} else {
 			$this->data = $this->GetProject()->GetObject($this->hash);
 		}
@@ -416,13 +416,13 @@ class Blob extends FilesystemObject implements GitObjectType
 		$args[] = '|';
 		$args[] = $exe->GetBinary();
 		$args[] = '--git-dir=' . escapeshellarg($this->GetProject()->GetPath());
-		$args[] = GIT_DIFF_TREE;
+		$args[] = GitExe::DIFF_TREE;
 		$args[] = '-r';
 		$args[] = '--stdin';
 		$args[] = '--';
 		$args[] = escapeshellarg($this->GetPath());
 		
-		$historylines = explode("\n", $exe->Execute(GIT_REV_LIST, $args));
+		$historylines = explode("\n", $exe->Execute(GitExe::REV_LIST, $args));
 
 		$commit = null;
 		foreach ($historylines as $line) {
@@ -479,7 +479,7 @@ class Blob extends FilesystemObject implements GitObjectType
 		$args[] = '--';
 		$args[] = escapeshellarg($this->GetPath());
 
-		$blamelines = explode("\n", $exe->Execute(GIT_BLAME, $args));
+		$blamelines = explode("\n", $exe->Execute(GitExe::BLAME, $args));
 
 		$lastcommit = '';
 		foreach ($blamelines as $line) {

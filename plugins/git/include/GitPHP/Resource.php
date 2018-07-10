@@ -87,7 +87,7 @@ class Resource
 
 		$reader = null;
 		if (!(($locale == 'en_US') || ($locale == 'en'))) {
-			$reader = new \FileReader(GITPHP_LOCALEDIR . $locale . '/gitphp.mo');
+			$reader = new \FileReader(__DIR__ . '/../../site-content/gitphp_locale/' . $locale . '/gitphp.mo');
 			if (!$reader)
 				return false;
 		}

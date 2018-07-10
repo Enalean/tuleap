@@ -13,12 +13,6 @@ namespace Tuleap\Git\GitPHP;
  * @subpackage Controller
  */
 /**
- * Constants for the various search types
- */
-define('GITPHP_SEARCH_COMMIT', 'commit');
-define('GITPHP_SEARCH_AUTHOR', 'author');
-define('GITPHP_SEARCH_COMMITTER', 'committer');
-/**
  * Search controller class
  *
  * @package GitPHP
@@ -26,6 +20,9 @@ define('GITPHP_SEARCH_COMMITTER', 'committer');
  */
 class Controller_Search extends ControllerBase
 {
+    const SEARCH_COMMIT    = 'commit';
+    const SEARCH_AUTHOR    = 'author';
+    const SEARCH_COMMITTER = 'committer';
 
 	/**
 	 * __construct
@@ -89,7 +86,7 @@ class Controller_Search extends ControllerBase
 	protected function ReadQuery()
 	{
 		if (!isset($this->params['searchtype'])) {
-            $this->params['searchtype'] = GITPHP_SEARCH_COMMIT;
+            $this->params['searchtype'] = self::SEARCH_COMMIT;
         }
 
 		if ((!isset($this->params['search'])) || (strlen($this->params['search']) < 2)) {
@@ -122,15 +119,15 @@ class Controller_Search extends ControllerBase
 		if ($co) {
 			switch ($this->params['searchtype']) {
 
-				case GITPHP_SEARCH_COMMIT:
+				case self::SEARCH_COMMIT:
 					$results = $this->project->SearchCommit($this->params['search'], $co->GetHash(), 101, ($this->params['page'] * 100));
 					break;
 
-				case GITPHP_SEARCH_AUTHOR:
+				case self::SEARCH_AUTHOR:
 					$results = $this->project->SearchAuthor($this->params['search'], $co->GetHash(), 101, ($this->params['page'] * 100));
 					break;
 
-				case GITPHP_SEARCH_COMMITTER:
+				case self::SEARCH_COMMITTER:
 					$results = $this->project->SearchCommitter($this->params['search'], $co->GetHash(), 101, ($this->params['page'] * 100));
 					break;
 				default:

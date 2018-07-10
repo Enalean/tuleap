@@ -12,10 +12,6 @@ namespace Tuleap\Git\GitPHP;
  * @package GitPHP
  * @subpackage Git
  */
-define('GITPHP_COMPRESS_TAR', 'tar');
-define('GITPHP_COMPRESS_BZ2', 'tbz2');
-define('GITPHP_COMPRESS_GZ', 'tgz');
-define('GITPHP_COMPRESS_ZIP', 'zip');
 /**
  * Archive class
  *
@@ -24,6 +20,11 @@ define('GITPHP_COMPRESS_ZIP', 'zip');
  */
 class Archive
 {
+    const COMPRESS_TAR = 'tar';
+    const COMPRESS_BZ2 = 'tbz2';
+    const COMPRESS_GZ  = 'tgz';
+    const COMPRESS_ZIP = 'zip';
+
 	/**
 	 * gitObject
 	 *
@@ -106,7 +107,7 @@ class Archive
 	 * @param integer $format the format for the archive
 	 * @return mixed git archive
 	 */
-	public function __construct($project, $gitObject, $format = GITPHP_FORMAT_ZIP, $path = '', $prefix = '')
+	public function __construct($project, $gitObject, $format = self::COMPRESS_ZIP, $path = '', $prefix = '')
 	{
 		$this->SetProject($project);
 		$this->SetObject($gitObject);
@@ -138,13 +139,13 @@ class Archive
 	 */
 	public function SetFormat($format)
 	{
-		if ((($format == GITPHP_COMPRESS_BZ2) && (!function_exists('bzcompress'))) ||
-		    (($format == GITPHP_COMPRESS_GZ) && (!function_exists('gzencode')))) {
+		if ((($format == self::COMPRESS_BZ2) && (!function_exists('bzcompress'))) ||
+		    (($format == self::COMPRESS_GZ) && (!function_exists('gzencode')))) {
 		    /*
 		     * Trying to set a format but doesn't have the appropriate
 		     * compression function, fall back to tar
 		     */
-		    $format = GITPHP_COMPRESS_TAR;
+		    $format = self::COMPRESS_TAR;
 		}
 
 		$this->format = $format;
@@ -358,12 +359,12 @@ class Archive
 		$args = array();
 
 		switch ($this->format) {
-			case GITPHP_COMPRESS_ZIP:
+			case self::COMPRESS_ZIP:
 				$args[] = '--format=zip';
 				break;
-			case GITPHP_COMPRESS_TAR:
-			case GITPHP_COMPRESS_BZ2:
-			case GITPHP_COMPRESS_GZ:
+            case self::COMPRESS_TAR:
+			case self::COMPRESS_BZ2:
+			case self::COMPRESS_GZ:
 				$args[] = '--format=tar';
 				break;
 		}
@@ -371,10 +372,10 @@ class Archive
 		$args[] = '--prefix=' . escapeshellarg($this->GetPrefix());
 		$args[] = escapeshellarg($this->gitObject->GetHash());
 
-		$this->handle = $exe->Open(GIT_ARCHIVE, $args);
+		$this->handle = $exe->Open(GitExe::ARCHIVE, $args);
 		unset($exe);
 
-		if ($this->format == GITPHP_COMPRESS_GZ) {
+		if ($this->format === self::COMPRESS_GZ) {
 			// hack to get around the fact that gzip files
 			// can't be compressed on the fly and the php zlib stream
 			// doesn't seem to daisy chain with any non-file streams
@@ -420,7 +421,7 @@ class Archive
 			return true;
 		}
 
-		if ($this->format == GITPHP_COMPRESS_GZ) {
+		if ($this->format === self::COMPRESS_GZ) {
 			fclose($this->handle);
 			if (!empty($this->tempfile)) {
 				unlink($this->tempfile);
@@ -456,7 +457,7 @@ class Archive
 
 		$data = fread($this->handle, $size);
 
-		if ($this->format == GITPHP_COMPRESS_BZ2) {
+		if ($this->format === self::COMPRESS_BZ2) {
 			$data = bzcompress($data, Config::GetInstance()->GetValue('compresslevel', 4));
 		}
 
@@ -476,16 +477,16 @@ class Archive
 	public static function FormatToExtension($format)
 	{
 		switch ($format) {
-			case GITPHP_COMPRESS_TAR:
+            case self::COMPRESS_TAR:
 				return 'tar';
 				break;
-			case GITPHP_COMPRESS_BZ2:
+			case self::COMPRESS_BZ2:
 				return 'tar.bz2';
 				break;
-			case GITPHP_COMPRESS_GZ:
+			case self::COMPRESS_GZ:
 				return 'tar.gz';
 				break;
-			case GITPHP_COMPRESS_ZIP:
+			case self::COMPRESS_ZIP:
 				return 'zip';
 				break;
 		}
@@ -504,16 +505,18 @@ class Archive
 	{
 		$formats = array();
 
-		$formats[GITPHP_COMPRESS_TAR] = Archive::FormatToExtension(GITPHP_COMPRESS_TAR);
+		$formats[self::COMPRESS_TAR] = self::FormatToExtension(self::COMPRESS_TAR);
 		
 		// TODO check for git > 1.4.3 for zip
-		$formats[GITPHP_COMPRESS_ZIP] = Archive::FormatToExtension(GITPHP_COMPRESS_ZIP);
+		$formats[self::COMPRESS_ZIP] = self::FormatToExtension(self::COMPRESS_ZIP);
 
-		if (function_exists('bzcompress'))
-			$formats[GITPHP_COMPRESS_BZ2] = Archive::FormatToExtension(GITPHP_COMPRESS_BZ2);
+		if (function_exists('bzcompress')) {
+            $formats[self::COMPRESS_BZ2] = self::FormatToExtension(self::COMPRESS_BZ2);
+        }
 
-		if (function_exists('gzencode'))
-			$formats[GITPHP_COMPRESS_GZ] = Archive::FormatToExtension(GITPHP_COMPRESS_GZ);
+		if (function_exists('gzencode')) {
+            $formats[self::COMPRESS_GZ] = self::FormatToExtension(self::COMPRESS_GZ);
+        }
 
 		return $formats;
 	}

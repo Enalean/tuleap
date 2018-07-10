@@ -90,7 +90,7 @@ class Controller_Snapshot extends ControllerBase
 		if (isset($_GET['fmt']))
 			$this->params['format'] = $_GET['fmt'];
 		else
-			$this->params['format'] = Config::GetInstance()->GetValue('compressformat', GITPHP_COMPRESS_ZIP);
+			$this->params['format'] = Config::GetInstance()->GetValue('compressformat', Archive::COMPRESS_ZIP);
 	}
 
 	/**
@@ -105,16 +105,16 @@ class Controller_Snapshot extends ControllerBase
 		$this->archive = new Archive($this->project, null, $this->params['format'], (isset($this->params['path']) ? $this->params['path'] : ''), (isset($this->params['prefix']) ? $this->params['prefix'] : ''));
 
 		switch ($this->archive->GetFormat()) {
-			case GITPHP_COMPRESS_TAR:
+			case Archive::COMPRESS_TAR:
 				$this->headers[] = 'Content-Type: application/x-tar';
 				break;
-			case GITPHP_COMPRESS_BZ2:
+			case Archive::COMPRESS_BZ2:
 				$this->headers[] = 'Content-Type: application/x-bzip2';
 				break;
-			case GITPHP_COMPRESS_GZ:
+			case Archive::COMPRESS_GZ:
 				$this->headers[] = 'Content-Type: application/x-gzip';
 				break;
-			case GITPHP_COMPRESS_ZIP:
+			case Archive::COMPRESS_ZIP:
 				$this->headers[] = 'Content-Type: application/x-zip';
 				break;
 			default:

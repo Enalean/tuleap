@@ -13,15 +13,6 @@ namespace Tuleap\Git\GitPHP;
  * @package GitPHP
  * @subpackage Controller
  */
-/**
- * Constant for the number of items to load into the feed
- */
-define('GITPHP_FEED_ITEMS', 150);
-/**
- * Constants for the different feed formats
- */
-define('GITPHP_FEED_FORMAT_RSS', 'rss');
-define('GITPHP_FEED_FORMAT_ATOM', 'atom');
 
 /**
  * Feed controller class
@@ -31,6 +22,10 @@ define('GITPHP_FEED_FORMAT_ATOM', 'atom');
  */
 class Controller_Feed extends ControllerBase
 {
+    const FEED_ITEMS       = 150;
+    const FEED_FORMAT_RSS  = 'rss';
+    const FEED_FORMAT_ATOM = 'atom';
+
 	/**
 	 * __construct
 	 *
@@ -57,10 +52,12 @@ class Controller_Feed extends ControllerBase
 	 */
 	protected function GetTemplate()
 	{
-		if ($this->params['format'] == GITPHP_FEED_FORMAT_RSS)
-			return 'rss.tpl';
-		else if ($this->params['format'] == GITPHP_FEED_FORMAT_ATOM)
-			return 'atom.tpl';
+		if ($this->params['format'] === self::FEED_FORMAT_RSS) {
+            return 'rss.tpl';
+        }
+		else if ($this->params['format'] === self::FEED_FORMAT_ATOM) {
+            return 'atom.tpl';
+        }
 	}
 
 	/**
@@ -74,12 +71,12 @@ class Controller_Feed extends ControllerBase
 	 */
 	public function GetName($local = false)
 	{
-		if ($this->params['format'] == GITPHP_FEED_FORMAT_RSS) {
+		if ($this->params['format'] === self::FEED_FORMAT_RSS) {
 			if ($local)
 				return __('rss');
 			else
 				return 'rss';
-		} else if ($this->params['format'] == GITPHP_FEED_FORMAT_ATOM) {
+		} else if ($this->params['format'] === self::FEED_FORMAT_ATOM) {
 			if ($local)
 				return __('atom');
 			else
@@ -111,9 +108,9 @@ class Controller_Feed extends ControllerBase
 			throw new \Exception('A feed format is required');
 		}
 
-		if ($this->params['format'] == GITPHP_FEED_FORMAT_RSS) {
+		if ($this->params['format'] === self::FEED_FORMAT_RSS) {
 			$this->headers[] = "Content-type: text/xml; charset=UTF-8";
-		} else if ($this->params['format'] == GITPHP_FEED_FORMAT_ATOM) {
+		} else if ($this->params['format'] === self::FEED_FORMAT_ATOM) {
 			$this->headers[] = "Content-type: application/atom+xml; charset=UTF-8";
 		}
 	}
@@ -127,7 +124,7 @@ class Controller_Feed extends ControllerBase
 	 */
 	protected function LoadData()
 	{
-		$log = $this->project->GetLog('HEAD', GITPHP_FEED_ITEMS);
+		$log = $this->project->GetLog('HEAD', self::FEED_ITEMS);
 
 		$entries = count($log);
 
