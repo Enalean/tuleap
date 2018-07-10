@@ -518,24 +518,31 @@ class RepositoryResource extends AuthenticatedResource {
      * <pre>
      * /!\ REST route under construction and subject to changes /!\
      * </pre>
-     * @url POST {id}/statuses/{commit_reference}
+     * @url    POST {id_or_path}/statuses/{commit_reference}
      *
      * @access hybrid
      *
-     * @param int $id Git repository id
+     * @param string $id_or_path       Git repository id or Git repository path
      * @param string $commit_reference Commit SHA-1
-     * @param string $state {@choice failure,success} {@from body}
-     * @param string $token {@from body}
+     * @param string $state            {@choice failure,success} {@from body}
+     * @param string $token            {@from body}
      *
      * @status 201
      * @throws 403
      * @throws 404
      * @throws 400
      */
-    public function postCommitStatus($id, $commit_reference, $state, $token)
+    public function postCommitStatus($id_or_path, $commit_reference, $state, $token)
     {
-        $repository = $this->repository_factory->getRepositoryById($id);
-
+        if (ctype_digit($id_or_path)) {
+            $repository = $this->repository_factory->getRepositoryById((int)$id_or_path);
+        } else {
+            preg_match("/(.+?)\/(.+)/", $id_or_path, $path);
+            if (count($path) !== 3) {
+                throw new RestException(400, 'Bad repository path format');
+            }
+            $repository = $this->repository_factory->getByProjectNameAndPath($path[1], $path[2]);
+        }
         if (! $repository) {
             throw new RestException(404, 'Repository not found.');
         }
