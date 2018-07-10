@@ -9,56 +9,6 @@ class WikiDB_backend_PearDB_mysql
 extends WikiDB_backend_PearDB
 {
     /**
-     * Constructor.
-     */
-    function __construct($dbparams) {
-        parent::__construct($dbparams);
-        //$this->_serverinfo = $this->_dbh->ServerInfo();
-        $row = $this->_dbh->GetOne("SELECT version()");
-        if (!DB::isError($row) and !empty($row)) {
-            $arr = explode('.',$row);
-            $this->_serverinfo['version'] = (string)(($arr[0] * 100) + $arr[1]) . 
-                                            "." . (integer)$arr[2];
-            if ($this->_serverinfo['version'] < 323.0) {
-                // Older MySQL's don't have CASE WHEN ... END
-                $this->_expressions['maxmajor'] = "MAX(IF(minor_edit=0,version,0))";
-                $this->_expressions['maxminor'] = "MAX(IF(minor_edit<>0,version,0))";
-            }
-            // esp. needed for utf databases
-            if ($this->_serverinfo['version'] > 401.0) {
-                global $charset;
-                $aliases = array('iso-8859-1' => 'latin1',
-                                 'utf-8'      => 'utf8');
-                //http://dev.mysql.com/doc/mysql/en/charset-connection.html
-                if (isset($aliases[strtolower($charset)])) {
-                    // mysql needs special unusual names and doesn't resolve aliases
-                    mysql_query("SET NAMES '". $aliases[$charset] . "'");
-                } else {
-                    mysql_query("SET NAMES '$charset'");
-                }
-            }
-        }
-    }
-    
-    /**
-     * Kill timed out processes. ( so far only called on about every 50-th save. )
-     */
-    function _timeout() {
-    	if (empty($this->_dbparams['timeout'])) return;
-	$result = mysql_query("SHOW processlist");
-	while ($row = mysql_fetch_array($result)) { 
-	    if ($row["db"] == $this->_dbh->dsn['database']
-	        and $row["User"] == $this->_dbh->dsn['username']
-	        and $row["Time"] > $this->_dbparams['timeout']
-	        and $row["Command"] == "Sleep") 
-            {
-	            $process_id = $row["Id"]; 
-	            mysql_query("KILL $process_id");
-	    }
-	}
-    }
-
-    /**
      * Create a new revision of a page.
      */
     function set_versiondata($pagename, $version, $data) {
@@ -164,22 +114,6 @@ extends WikiDB_backend_PearDB
                     . ( $pageid ? " AND $recent_tbl.id=$pageid" : ""));
     }
     */
-   
-    /**
-     * Pack tables.
-     */
-    function optimize() {
-        if(DATABASE_AUTO_OPTIMIZE) {        
-            $dbh = &$this->_dbh;
-	       $this->_timeout();
-            foreach ($this->_table_names as $table) {
-                $dbh->query("OPTIMIZE TABLE $table");
-            }
-            return 1;
-        }else {
-            return 0;
-        }
-    }
 
     /**
      * Lock tables.

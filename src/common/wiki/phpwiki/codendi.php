@@ -25,8 +25,7 @@ function display_remove_button($pagename) {
 }
 
 function codendi_main () {
-    if ( !USE_DB_SESSION )
-        validateSessionPath();
+    validateSessionPath();
 
     global $request;
     if ((DEBUG & _DEBUG_APD) and extension_loaded("apd"))

@@ -431,12 +431,6 @@ class WikiDB_backend
     }
 
     /**
-     * Optimize the database.
-     */
-    function optimize() {
-    }
-
-    /**
      * Check database integrity.
      *
      * This should check the validity of the internal structure of the database.

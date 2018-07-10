@@ -9,34 +9,11 @@ require_once('lib/WikiDB.php');
  */
 class WikiDB_SQL extends WikiDB
 {
-    function __construct ($dbparams) {
-        $backend = 'PearDB';
-        if (is_array($dbparams['dsn']))
-            $backend = $dbparams['dsn']['phptype'];
-        elseif (preg_match('/^(\w+):/', $dbparams['dsn'], $m))
-            $backend = $m[1];
-	if ($backend == 'postgres7') { // ADODB cross-compatiblity hack (for unit testing)
-	    $backend = 'pgsql';
-	    if (is_string($dbparams['dsn']))
-		$dbparams['dsn'] = $backend . ':' . substr($dbparams['dsn'], 10);
-	}
-        include_once ("lib/WikiDB/backend/PearDB_".$backend.".php");
-        $backend_class = "WikiDB_backend_PearDB_".$backend;
-        $backend = new $backend_class($dbparams);
-        parent::__construct($backend, $dbparams);
-    }
-    
-    function view_dsn ($dsn = false) {
-        if (!$dsn)
-            $dsninfo = DB::parseDSN($GLOBALS['DBParams']['dsn']);
-        else
-            $dsninfo = DB::parseDSN($dsn);
-        return sprintf("%s://%s:<not displayed>@%s/%s",
-                       $dsninfo['phptype'],
-                       $dsninfo['username'],
-                       $dsninfo['hostspec'],
-                       $dsninfo['database']
-                       );
+    public function __construct ()
+    {
+        include_once __DIR__ . '/backend/PearDB_mysql.php';
+        $backend = new WikiDB_backend_PearDB_mysql();
+        parent::__construct($backend);
     }
 
     
