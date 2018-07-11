@@ -2,7 +2,7 @@
 
 /**
   * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-  * Copyright (c) Enalean, 2011-2017. All Rights Reserved.
+  * Copyright (c) Enalean, 2011-2018. All Rights Reserved.
   *
   * This file is a part of Tuleap.
   *
@@ -1026,17 +1026,7 @@ class Git extends PluginController {
                 break;
             #LIST
             default:
-                $user_id = null;
-                $valid_url   = new Valid_UInt('user');
-                $valid_url->required();
-
-                if($this->request->valid($valid_url)) {
-                    $user_id = $this->request->get('user');
-                    $this->addData(array('user' => $user_id));
-                }
-
-                $this->addAction( 'getProjectRepositoryList', array($this->groupId, $user_id) );
-                $this->addView('index');
+                $GLOBALS['Response']->permanentRedirect('/plugins/git/' . urlencode($this->project->getUnixNameLowerCase()) ."/");
 
                 break;
         }
