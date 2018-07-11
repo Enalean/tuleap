@@ -1,0 +1,99 @@
+/*
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import { getForkedRepositoryList, getRepositoryList } from "../api/rest-querier.js";
+import { getProjectId } from "../repository-list-presenter.js";
+import { ERROR_TYPE_UNKNOWN_ERROR, ERROR_TYPE_NO_GIT, PROJECT_KEY } from "../constants";
+
+export const showAddRepositoryModal = ({ state }) => {
+    state.add_repository_modal.toggle();
+};
+
+export const changeRepositories = (context, new_owner_id) => {
+    context.commit("setSelectedOwnerId", new_owner_id);
+    context.commit("setFilter", "");
+
+    if (context.getters.areRepositoriesAlreadyLoadedForCurrentOwner) {
+        return;
+    }
+
+    if (new_owner_id === PROJECT_KEY) {
+        getProjectRepositories(context.commit);
+    } else {
+        getForkedRepositories(context);
+    }
+};
+
+function getProjectRepositories(commit) {
+    getAsyncRepositoryList(commit, async () => {
+        await getRepositoryList(getProjectId(), storeRetrievedRepositories(commit));
+    });
+}
+
+function getForkedRepositories(context) {
+    getAsyncRepositoryList(context.commit, async () => {
+        await getForkedRepositoryList(
+            getProjectId(),
+            context.state.selected_owner_id,
+            storeRetrievedRepositories(context.commit)
+        );
+    });
+}
+
+function storeRetrievedRepositories(commit) {
+    return function(repositories) {
+        commit("pushRepositoriesForCurrentOwner", repositories);
+        commit("setIsLoadingInitial", false);
+    };
+}
+
+async function getAsyncRepositoryList(commit, getAsyncListCallback) {
+    commit("setIsLoadingInitial", true);
+    commit("setIsLoadingNext", true);
+    try {
+        await getAsyncListCallback();
+    } catch (e) {
+        await handleGetRepositoryListError(e, commit);
+    } finally {
+        commit("setIsLoadingNext", false);
+    }
+}
+
+async function handleGetRepositoryListError(e, commit) {
+    let error_code;
+
+    if (!e.response) {
+        throw e;
+    }
+
+    try {
+        const { error } = await e.response.json();
+        error_code = Number.parseInt(error.code, 10);
+    } catch (e) {
+        commit("setErrorMessageType", ERROR_TYPE_UNKNOWN_ERROR);
+        throw e;
+    }
+
+    if (error_code === 404) {
+        commit("setErrorMessageType", ERROR_TYPE_NO_GIT);
+    } else {
+        commit("setErrorMessageType", ERROR_TYPE_UNKNOWN_ERROR);
+        throw e;
+    }
+}
