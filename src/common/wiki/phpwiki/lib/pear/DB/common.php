@@ -1083,7 +1083,8 @@ class DB_common extends PEAR
      *
      * @access private
      */
-    function modifyQuery($query) {
+    protected function modifyQuery($query)
+    {
         return $query;
     }
 
@@ -1603,22 +1604,6 @@ class DB_common extends PEAR
             return $tmp;
         }
         return $results;
-    }
-
-    // }}}
-    // {{{ autoCommit()
-
-    /**
-     * enable automatic Commit
-     *
-     * @param boolean $onoff
-     * @return mixed DB_Error
-     *
-     * @access public
-     */
-    function autoCommit($onoff=false)
-    {
-        return $this->raiseError(DB_ERROR_NOT_CAPABLE);
     }
 
     // }}}

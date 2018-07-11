@@ -261,9 +261,13 @@ class DB
 {
     public static function connect()
     {
-        include_once __DIR__ . '/DB/mysql.php';
-
-        $obj = new DB_mysql();
+        if (! ForgeConfig::get('fallback_to_deprecated_mysql_api')) {
+            include_once __DIR__ . '/DB/mysql_pdo.php';
+            $obj = new DB_mysql_pdo();
+        } else {
+            include_once __DIR__ . '/DB/mysql.php';
+            $obj = new DB_mysql();
+        }
 
         $err = $obj->connect();
         if (DB::isError($err)) {
@@ -338,7 +342,7 @@ class DB
      *
      * @return boolean whether $query is a data manipulation query
      */
-    function isManip($query)
+    public static function isManip($query)
     {
         $manips = 'INSERT|UPDATE|DELETE|LOAD DATA|'.'REPLACE|CREATE|DROP|'.
                   'ALTER|GRANT|REVOKE|'.'LOCK|UNLOCK';
