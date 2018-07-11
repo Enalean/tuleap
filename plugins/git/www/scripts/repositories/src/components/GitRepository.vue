@@ -24,7 +24,7 @@
                 <div class="tlp-pane-header git-repository-card-header">
                     <div class="git-repository-card-header-line">
                         <h1 class="tlp-pane-title git-repository-card-title">
-                            {{ repository.name }}
+                            {{ name_with_path }}
                         </h1>
                         <div class="git-repository-links-spacer"></div>
                         <pull-request-badge
@@ -39,7 +39,7 @@
                         </a>
                     </div>
                     <div class="git-repository-card-last-update">
-                        <i class="fa fa-clock-o"></i>
+                        <i class="fa fa-clock-o git-repository-card-last-update-icon"></i>
                         <translate>Last update %{ formatted_last_update_date }</translate>
                     </div>
                 </div>
@@ -90,6 +90,19 @@ export default {
         },
         number_pull_requests() {
             return Number.parseInt(this.repository.additional_information.opened_pull_requests, 10);
+        },
+        name_with_path() {
+            return this.repository.path
+                .split("/")
+                .filter((part, index) => index > 0)
+                .map((part, index, split_parts) => {
+                    if (index === split_parts.length - 1) {
+                        return part.replace(".git", "");
+                    }
+
+                    return part;
+                })
+                .join("/");
         }
     }
 };

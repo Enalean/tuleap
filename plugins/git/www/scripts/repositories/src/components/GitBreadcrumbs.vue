@@ -20,12 +20,11 @@
 <template>
     <nav class="breadcrumb">
         <div class="breadcrumb-switchable breadcrumb-item">
-            <a
-                    class="breadcrumb-link"
-                    v-bind:href="repository_list_url"
-                    v-bind:title="repositories_title"
+            <a class="breadcrumb-link"
+                v-bind:href="repository_list_url"
+                v-bind:title="repositories_title"
             >
-                <i class="breadcrumb-link-icon fa fa-fw icon-fixed-width fa-table icon-table"></i>
+                <i class="breadcrumb-link-icon fa fa-fw tuleap-services-plugin_git"></i>
                 <translate>Git repositories</translate>
             </a>
             <nav class="breadcrumb-switch-menu">

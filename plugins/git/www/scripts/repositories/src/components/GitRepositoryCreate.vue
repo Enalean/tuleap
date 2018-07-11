@@ -65,7 +65,11 @@
             >
                 <translate>Cancel</translate>
             </button>
-            <button type="submit" class="tlp-button-primary tlp-modal-action" v-on:click="createRepository()">
+            <button type="submit"
+                    class="tlp-button-primary tlp-modal-action"
+                    v-bind:disabled="is_loading"
+                    v-on:click="createRepository()"
+            >
                 <i class="fa fa-plus tlp-button-icon"
                     v-bind:class="{'fa-spin fa-spinner': is_loading}"
                 ></i>
