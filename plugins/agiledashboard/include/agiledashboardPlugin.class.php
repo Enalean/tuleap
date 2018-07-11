@@ -1674,7 +1674,7 @@ class AgileDashboardPlugin extends Plugin {
         $updater = new MoveChangesetXMLUpdater(
             $this->getSemanticInitialEffortFactory(),
             $this->getFormElementFactory(),
-            new FieldValueMatcher()
+            new FieldValueMatcher(new XMLImportHelper(UserManager::instance()))
         );
 
         if ($updater->parseFieldChangeNodesAtGivenIndex(

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -20,7 +20,10 @@
  */
  
 
-class Tracker_Semantic_Contributor extends Tracker_Semantic {
+class Tracker_Semantic_Contributor extends Tracker_Semantic
+{
+
+    const CONTRIBUTOR_SEMANTIC_SHORTNAME = 'contributor';
 
     /**
      * @var Tracker_FormElement_Field_List
@@ -43,8 +46,9 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic {
      *
      * @return string
      */
-    public function getShortName() {
-        return 'contributor';
+    public function getShortName()
+    {
+        return self::CONTRIBUTOR_SEMANTIC_SHORTNAME;
     }
     
     /**

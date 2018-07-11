@@ -20,10 +20,22 @@
 
 namespace Tuleap\Tracker\FormElement\Field\ListFields;
 
+use SimpleXMLElement;
 use Tracker_FormElement_Field_List;
+use User\XML\Import\IFindUserFromXMLReference;
 
 class FieldValueMatcher
 {
+
+    /**
+     * @var IFindUserFromXMLReference
+     */
+    private $user_finder;
+
+    public function __construct(IFindUserFromXMLReference $user_finder)
+    {
+        $this->user_finder = $user_finder;
+    }
 
     public function getMatchingValueByDuckTyping(
         Tracker_FormElement_Field_List $source_field,
@@ -44,5 +56,12 @@ class FieldValueMatcher
         }
 
         return $target_field->getDefaultValue();
+    }
+
+    public function isSourceUserValueMathingATargetUserValue(Tracker_FormElement_Field_list $target_contributor_field, SimpleXMLElement $value)
+    {
+        $user = $this->user_finder->getUser($value);
+
+        return ! $user->isAnonymous() && $target_contributor_field->checkValueExists($user->getId());
     }
 }

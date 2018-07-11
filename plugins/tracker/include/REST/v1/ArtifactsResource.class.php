@@ -26,6 +26,7 @@ use Tracker_Artifact_PriorityDao;
 use Tracker_Artifact_PriorityHistoryDao;
 use Tracker_Artifact_PriorityManager;
 use Tracker_Artifact_XMLImportBuilder;
+use Tracker_Semantic_ContributorFactory;
 use Tracker_XML_Exporter_ArtifactXMLExporterBuilder;
 use Tracker_XML_Exporter_LocalAbsoluteFilePathXMLExporter;
 use Tracker_XML_Exporter_NullChildrenCollector;
@@ -41,6 +42,7 @@ use Tuleap\REST\QueryParameterParser;
 use Tuleap\Tracker\Action\MoveArtifact;
 use Tuleap\Tracker\Action\BeforeMoveArtifact;
 use Tuleap\Tracker\Action\MoveDescriptionSemanticChecker;
+use Tuleap\Tracker\Action\MoveContributorSemanticChecker;
 use Tuleap\Tracker\Action\MoveStatusSemanticChecker;
 use Tuleap\Tracker\Action\MoveTitleSemanticChecker;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfig;
@@ -714,7 +716,7 @@ class ArtifactsResource extends AuthenticatedResource {
      * <ul>
      * <li>User must be admin of both source and target trackers in order to be able to move an artifact.</li>
      * <li>Artifact must not be linked to a FRS release.</li>
-     * <li>Both trackers must have the title semantic, the description semantic, the status semantic and the initial effort semantic aligned
+     * <li>Both trackers must have the title semantic, the description semantic, the status semantic, the contributor semantic and the initial effort semantic aligned
      * (traget tracker must have at least one semantic used in source tracker)
      * </li>
      * </ul>
@@ -726,6 +728,11 @@ class ArtifactsResource extends AuthenticatedResource {
      * <li>The first value matching the label is returned</li>
      * <li>If no corresponding value found, the default value is returned</li>
      * </ul>
+     * <br/>
+     * <br/>
+     * Values for list fields bound to users (contributor) are are moved "as much as possible".
+     * <br/>
+     * If a user is not part of the target group, he is silently ignored..
      *
      * @url PATCH {id}
      *
@@ -814,28 +821,26 @@ class ArtifactsResource extends AuthenticatedResource {
         );
 
         $xml_import_builder = new Tracker_Artifact_XMLImportBuilder();
+        $user_finder        = new XMLImportHelper($this->user_manager);
 
         $title_semantic_checker       = new MoveTitleSemanticChecker();
-        $description_semantic_checker = new MoveDescriptionSemanticChecker(
-            $this->formelement_factory
-        );
-
-        $status_semantic_checker = new MoveStatusSemanticChecker(
-            $this->formelement_factory
-        );
+        $description_semantic_checker = new MoveDescriptionSemanticChecker($this->formelement_factory);
+        $status_semantic_checker      = new MoveStatusSemanticChecker($this->formelement_factory);
+        $contributor_semantic_checker = new MoveContributorSemanticChecker($this->formelement_factory);
 
         return new MoveArtifact(
             $this->artifacts_deletion_manager,
             $builder->build($children_collector, $file_path_xml_exporter, $user, $user_xml_exporter, true),
             new MoveChangesetXMLUpdater(
                 $this->event_manager,
-                new FieldValueMatcher(),
+                new FieldValueMatcher($user_finder),
                 $title_semantic_checker,
                 $description_semantic_checker,
-                $status_semantic_checker
+                $status_semantic_checker,
+                $contributor_semantic_checker
             ),
             $xml_import_builder->build(
-                new XMLImportHelper($this->user_manager),
+                $user_finder,
                 new Log_NoopLogger()
             ),
             new Tracker_Artifact_PriorityManager(
@@ -848,7 +853,8 @@ class ArtifactsResource extends AuthenticatedResource {
                 $this->event_manager,
                 $title_semantic_checker,
                 $description_semantic_checker,
-                $status_semantic_checker
+                $status_semantic_checker,
+                $contributor_semantic_checker
             )
         );
     }

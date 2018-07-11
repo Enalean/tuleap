@@ -14,4 +14,11 @@
   <email><![CDATA[test_user_2@example.com]]></email>
   <ldapid></ldapid>
  </user>
+ <user>
+  <id>104</id>
+  <username>rest_api_tester_3</username>
+  <realname><![CDATA[]]></realname>
+  <email><![CDATA[test_user_3@example.com]]></email>
+  <ldapid></ldapid>
+ </user>
 </users>

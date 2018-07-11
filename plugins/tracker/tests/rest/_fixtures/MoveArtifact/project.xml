@@ -8,6 +8,7 @@
     <ugroup name="project_members" description="">
       <members>
         <member format="username">rest_api_tester_1</member>
+        <member format="username">rest_api_tester_3</member>
       </members>
     </ugroup>
     <ugroup name="project_admins" description="">
@@ -161,28 +162,6 @@
             </formElement>
           </formElements>
         </formElement>
-        <formElement type="file" ID="F103" rank="80" use_it="0">
-          <name>attachment</name>
-          <label>Attachments</label>
-        </formElement>
-        <formElement type="text" ID="F104" rank="175" use_it="0">
-          <name>details</name>
-          <label>Original Submission</label>
-          <description>A full description of the artifact</description>
-          <properties rows="7" cols="60"/>
-        </formElement>
-        <formElement type="string" ID="F105" rank="204" use_it="0" required="1">
-          <name>summary</name>
-          <label>Summary</label>
-          <description>One line description of the artifact</description>
-          <properties maxchars="150" size="60"/>
-        </formElement>
-        <formElement type="tbl" ID="F106" rank="233" use_it="0">
-          <name>cc</name>
-          <label>CC</label>
-          <properties hint="Type in a search term"/>
-          <bind type="static" is_rank_alpha="0"/>
-        </formElement>
         <formElement type="computed" ID="F111" rank="250">
           <name>initial</name>
           <label><![CDATA[initial]]></label>
@@ -302,6 +281,9 @@
             <field_change field_name="initial" type="computed">
               <is_autocomputed>1</is_autocomputed>
             </field_change>
+            <field_change field_name="assigned_to" type="list" bind="users">
+              <value format="username">rest_api_tester_3</value>
+            </field_change>
           </changeset>
           <changeset>
             <submitted_by format="username">rest_api_tester_1</submitted_by>
@@ -370,7 +352,17 @@
               <item ID="V1770" label="Canceled" is_hidden="0"/>
             </items>
           </bind>
-        </formElement>
+        </formElement><formElement type="msb" ID="F18647" rank="0">
+        <name>contrib</name>
+        <label>Contributors</label>
+        <description>Who is in charge of solving the artifact</description>
+        <properties size="7"/>
+        <bind type="users">
+          <items>
+            <item label="group_members"/>
+          </items>
+        </bind>
+      </formElement>
       </formElements>
       <semantics>
         <semantic type="title">
@@ -403,6 +395,12 @@
           <label>Effort Estimé</label>
           <description>Définir l'effort estimé d'un artéfact</description>
           <field REF="F18645"/>
+        </semantic>
+        <semantic type="contributor">
+          <shortname>contributor</shortname>
+          <label>Contributor/assignee</label>
+          <description>Define the contributor/assignee of an artifact</description>
+          <field REF="F18647"/>
         </semantic>
       </semantics>
       <rules>
@@ -437,6 +435,9 @@
         <permission scope="field" REF="F18646" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
         <permission scope="field" REF="F18646" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
         <permission scope="field" REF="F18646" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F18647" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F18647" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F18647" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
       </permissions>
     </tracker>
   </trackers>

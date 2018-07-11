@@ -1371,7 +1371,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     /**
      * @return bool
      */
-    protected function checkValueExists($value_id) {
+    public function checkValueExists($value_id)
+    {
         return $this->getBind()->isExistingValue($value_id) ||
                $value_id == Tracker_FormElement_Field_List::NONE_VALUE ||
                $value_id == Tracker_FormElement_Field_List::NOT_INDICATED_VALUE;

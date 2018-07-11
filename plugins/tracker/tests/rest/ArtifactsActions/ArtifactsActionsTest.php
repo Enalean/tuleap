@@ -24,6 +24,7 @@
 
 namespace Tuleap\Tracker\Tests\REST\ArtifactsActions;
 
+use REST_TestDataBuilder;
 use Tuleap\Tracker\Tests\REST\TrackerBase;
 
 require_once __DIR__.'/../bootstrap.php';
@@ -64,12 +65,14 @@ class ArtifactsActionsTest extends TrackerBase
         $this->assertEquals($artifact_response->getStatusCode(), 200);
         $artifact_json = $artifact_response->json();
 
-        $this->assertEquals($artifact_json['submitted_by_user']['username'], \REST_TestDataBuilder::TEST_USER_2_NAME);
+        $this->assertEquals($artifact_json['submitted_by_user']['username'], REST_TestDataBuilder::TEST_USER_2_NAME);
         $this->assertEquals($artifact_json['tracker']['id'], $this->move_tracker_id);
         $this->assertEquals($artifact_json['values_by_field']['title']['value'], "To be moved v2");
         $this->assertEquals($artifact_json['values_by_field']['desc']['value'], "Artifact that will be moved in another tracker");
         $this->assertEquals($artifact_json['values_by_field']['initialv2']['manual_value'], 25);
         $this->assertEquals($artifact_json['status'], 'On going');
+        $this->assertEquals(count($artifact_json['assignees']), 1);
+        $this->assertEquals((int) $artifact_json['assignees'][0]["id"], REST_TestDataBuilder::TEST_USER_3_ID);
 
         $changeset_response = $this->getResponse(
             $this->client->get("artifacts/$artifact_id/changesets?fields=comments&limit=5")
