@@ -80,7 +80,7 @@ setup_database() {
 load_project() {
     base_dir=$1
 
-    /usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/src/utils/import_project_xml.php \
+    /usr/share/tuleap/src/utils/tuleap import-project-xml \
         -u admin \
         -i $base_dir \
         -m $base_dir/user_map.csv

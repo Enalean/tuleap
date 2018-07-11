@@ -1,4 +1,4 @@
-#!/usr/share/codendi/src/utils/php-launcher.sh
+#!/usr/share/tuleap/src/utils/php-launcher.sh
 <?php
 /**
  * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
@@ -33,10 +33,15 @@ $application->setDefaultCommand($import_project_xml_command->getName(), $is_sing
 
 $console_output = new ConsoleOutput();
 
-if (in_array('-n', $_SERVER['argv'])) {
-    $console_output->writeln("<fg=yellow;options=bold>Warning : Option '-n' isn't longer supported. Replace by '-s' or '--name'</>");
-    $_SERVER['argv'] = array_map( function ($val) { if ($val === "-n") return "-s"; else return $val; } , $_SERVER['argv'] );
-} else {
-    $console_output->writeln('<fg=yellow;options=bold>Please use tuleap import-project-xml -u < username > -m < mapping > -i < archive > -p < project > ... </>');
+$argv = $_SERVER['argv'];
+
+foreach ($argv as $index => $value) {
+    if ($value === '-n') {
+        $console_output->writeln("<fg=yellow;options=bold>Warning : Option '-n' isn't longer supported. Replace by '-s' or '--name'</>");
+        unset ($argv[$index]);
+        $argv[] = '-s';
+    }
 }
-$application->run(new ArgvInput(), $console_output);
+$console_output->writeln('<fg=yellow;options=bold>Please use tuleap import-project-xml -u < username > -m < mapping > -i < archive > -p < project > ... </>');
+
+$application->run(new ArgvInput($argv), $console_output);

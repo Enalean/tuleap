@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright (c) Enalean, 2017. All Rights Reserved.
+# Copyright (c) Enalean, 2017-2018. All Rights Reserved.
 #
 # This file is a part of Tuleap.
 #
@@ -36,7 +36,7 @@ cp -r /usr/share/tuleap/tools/utils/setup_templates/scrum/* "$import_archive"
     /usr/share/tuleap/plugins/agiledashboard/resources/scrum_dashboard_template.xml \
     "$import_archive/project.xml"
 
-/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/src/utils/import_project_xml.php \
+/usr/share/tuleap/src/utils/tuleap import-project-xml \
     -u admin \
     --type=template \
     -i "$import_archive" \
