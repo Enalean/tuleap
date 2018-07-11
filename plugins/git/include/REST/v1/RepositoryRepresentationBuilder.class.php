@@ -57,6 +57,7 @@ class RepositoryRepresentationBuilder
      * @var array
      */
     private $last_push_date;
+    private $remote_server;
 
     public function __construct(
         GitPermissionsManager $permissions_manger,
@@ -79,20 +80,39 @@ class RepositoryRepresentationBuilder
     public function buildWithList(PFUser $user, array $repositories, $fields)
     {
         if (count($repositories) > 0) {
-            $this->cacheLastAccessDate($repositories);
+            $this->cacheRepositoriesMetadata($repositories);
             foreach ($repositories as $repository) {
                 yield $this->build($user, $repository, $fields);
             }
         }
     }
 
-    private function cacheLastAccessDate(array $repositories)
+    private function cacheRepositoriesMetadata(array $repositories)
     {
-        $repo_ids = array_map(function (GitRepository $repository) {
-            $this->last_push_date[$repository->getId()] = -1;
-            return $repository->getId();
-        }, $repositories);
+        $repo_ids = array_map(
+            function (GitRepository $repository) {
+                $this->last_push_date[$repository->getId()] = -1;
+                $this->remote_server[$repository->getRemoteServerId()] = -1;
+                return $repository->getId();
+            },
+            $repositories
+        );
 
+        $this->cacheGerritServers();
+        $this->cacheLastAccessDates($repo_ids);
+    }
+
+    private function cacheGerritServers()
+    {
+        if (count($this->remote_server) > 0) {
+            foreach ($this->gerrit_server_factory->getServers() as $remote) {
+                $this->remote_server[$remote->getId()] = $remote;
+            }
+        }
+    }
+
+    private function cacheLastAccessDates(array $repo_ids)
+    {
         foreach ($this->log_dao->getLastPushForRepositories($repo_ids) as $row) {
             $this->last_push_date[$row['repository_id']] = $row['push_date'];
         }
@@ -142,6 +162,12 @@ class RepositoryRepresentationBuilder
         $remote_server_id = $repository->getRemoteServerId();
         if (! $remote_server_id) {
             return null;
+        }
+
+        if ($this->remote_server[$remote_server_id]) {
+            $server_representation = new GerritServerRepresentation();
+            $server_representation->build($this->remote_server[$remote_server_id]);
+            return $server_representation;
         }
 
         try {
