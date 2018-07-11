@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -50,16 +50,5 @@ class MediawikiSiteAdminResourceRestrictorDao extends RestrictedResourceDao {
 
     public function unsetResourceRestricted($resource_id) {
         return false;
-    }
-
-    public function isMediawiki123($resource_id, $wikiname) {
-        $resource_id = $this->da->escapeInt($resource_id);
-        $wikiname    = $this->da->quoteSmart($wikiname);
-        $sql = "SELECT 1
-                FROM plugin_mediawiki_site_restricted_features mwf
-                  JOIN groups g ON (g.group_id = mwf.project_id)
-                WHERE mwf.feature = $resource_id
-                  AND g.unix_group_name = $wikiname";
-        return $this->retrieve($sql)->count() > 0;
     }
 }

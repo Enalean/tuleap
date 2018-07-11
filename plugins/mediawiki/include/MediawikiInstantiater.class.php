@@ -134,30 +134,12 @@ class MediaWikiInstantiater {
             return false;
         } else {
             $this->createDirectory();
-            $this->createDatabase($this->getMediawikiPath());
-            if ($this->isMediawiki123()) {
-                $this->version_manager->saveVersionForProject($this->project, MediawikiVersionManager::MEDIAWIKI_123_VERSION);
-                $this->mleb_manager->activateMLEBForProject($this->project);
-                $this->resource_restrictor->allowProject($this->project);
-            } else {
-                $this->version_manager->saveVersionForProject($this->project, MediawikiVersionManager::MEDIAWIKI_120_VERSION);
-            }
+            $this->createDatabase(self::MW_123_PATH);
+            $this->version_manager->saveVersionForProject($this->project, MediawikiVersionManager::MEDIAWIKI_123_VERSION);
+            $this->mleb_manager->activateMLEBForProject($this->project);
+            $this->resource_restrictor->allowProject($this->project);
             return true;
         }
-    }
-
-    private function getMediawikiPath() {
-        if ($this->isMediawiki123()) {
-            return self::MW_123_PATH;
-        }
-        return forge_get_config('src_path', 'mediawiki');
-    }
-
-    private function isMediawiki123() {
-        if (file_exists(self::MW_123_PATH)) {
-            return true;
-        }
-        return false;
     }
 
     /**
@@ -392,4 +374,3 @@ class MediaWikiInstantiater {
         return $ugroups;
     }
 }
-?>
