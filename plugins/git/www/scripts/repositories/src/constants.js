@@ -22,3 +22,6 @@ export const ERROR_TYPE_UNKNOWN_ERROR = 1;
 export const ERROR_TYPE_NO_GIT = 2;
 
 export const PROJECT_KEY = "project";
+
+export const REPOSITORIES_SORTED_BY_LAST_UPDATE = "last_update";
+export const REPOSITORIES_SORTED_BY_PATH = "path";

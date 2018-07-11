@@ -25,7 +25,8 @@
             <action-bar />
             <error-message />
             <git-repository-create />
-            <repository-list />
+            <folder-repository-list v-if="isFolderDisplayMode" />
+            <repository-list v-else />
             <repository-list-spinner />
             <filter-empty-state />
             <no-repository-empty-state />
@@ -33,6 +34,7 @@
     </div>
 </template>
 <script>
+import { mapGetters } from "vuex";
 import store from "../store/index.js";
 import GitRepositoryCreate from "./GitRepositoryCreate.vue";
 import FilterEmptyState from "./FilterEmptyState.vue";
@@ -42,6 +44,7 @@ import ActionBar from "./ActionBar.vue";
 import RepositoryList from "./RepositoryList.vue";
 import ErrorMessage from "./ErrorMessage.vue";
 import RepositoryListSpinner from "./RepositoryListSpinner.vue";
+import FolderRepositoryList from "./folders/FolderRepositoryList.vue";
 import { PROJECT_KEY } from "../constants.js";
 
 export default {
@@ -55,7 +58,11 @@ export default {
         FilterEmptyState,
         GitRepositoryCreate,
         GitBreadcrumbs,
-        RepositoryListSpinner
+        RepositoryListSpinner,
+        FolderRepositoryList
+    },
+    computed: {
+        ...mapGetters(["isFolderDisplayMode"])
     },
     mounted() {
         this.$store.dispatch("changeRepositories", PROJECT_KEY);

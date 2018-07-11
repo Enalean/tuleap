@@ -33,6 +33,8 @@
 
         <div class="git-repository-list-actions-spacer"></div>
 
+        <display-mode-switcher />
+
         <list-filter />
     </div>
 </template>
@@ -40,11 +42,12 @@
 import { mapGetters, mapActions } from "vuex";
 import ListFilter from "./ActionBar/ListFilter.vue";
 import SelectOwner from "./ActionBar/SelectOwner.vue";
+import DisplayModeSwitcher from "./ActionBar/DisplayModeSwitcher.vue";
 import { getUserIsAdmin } from "../repository-list-presenter.js";
 
 export default {
     name: "ActionBar",
-    components: { SelectOwner, ListFilter },
+    components: { SelectOwner, ListFilter, DisplayModeSwitcher },
     methods: {
         ...mapActions(["showAddRepositoryModal"])
     },

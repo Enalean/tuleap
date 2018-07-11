@@ -72,6 +72,12 @@ msgstr ""
 msgid "Something went wrong, please check your network connection"
 msgstr ""
 
+msgid "Sort repositories alphabetically"
+msgstr ""
+
+msgid "Sort repositories by their last update date"
+msgstr ""
+
 msgid "There are no repositories in this project"
 msgstr ""
 

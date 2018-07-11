@@ -22,7 +22,11 @@ import Vuex from "vuex";
 import mutations from "./mutations.js";
 import * as getters from "./getters.js";
 import * as actions from "./actions.js";
-import { ERROR_TYPE_NO_ERROR, PROJECT_KEY } from "../constants.js";
+import {
+    REPOSITORIES_SORTED_BY_LAST_UPDATE,
+    ERROR_TYPE_NO_ERROR,
+    PROJECT_KEY
+} from "../constants.js";
 
 Vue.use(Vuex);
 
@@ -33,7 +37,8 @@ const state = {
     error_message_type: ERROR_TYPE_NO_ERROR,
     is_loading_initial: true,
     is_loading_next: true,
-    add_repository_modal: null
+    add_repository_modal: null,
+    display_mode: REPOSITORIES_SORTED_BY_LAST_UPDATE
 };
 
 export default new Vuex.Store({

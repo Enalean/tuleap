@@ -20,7 +20,7 @@
 <template>
     <div class="git-repository-list" v-if="! is_loading_initial">
         <git-repository
-            v-for="repository in filteredRepositories"
+            v-for="repository in filteredRepositoriesByLastUpdateDate"
             v-bind:repository="repository"
             v-bind:key="repository.id"
         />
@@ -35,7 +35,7 @@ export default {
     components: { GitRepository },
     computed: {
         ...mapState(["is_loading_initial"]),
-        ...mapGetters(["filteredRepositories"])
+        ...mapGetters(["filteredRepositoriesByLastUpdateDate"])
     }
 };
 </script>

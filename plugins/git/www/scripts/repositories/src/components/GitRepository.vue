@@ -18,16 +18,18 @@
   -->
 
 <template>
-    <section class="tlp-pane git-repository-card">
+    <section class="tlp-pane git-repository-card"
+             v-bind:class="{ 'git-repository-card-two-columns': ! isFolderDisplayMode }"
+    >
         <div class="tlp-pane-container">
-            <a v-bind:href="name_with_path" class="git-repository-card-link">
+            <a v-bind:href="normalized_path" class="git-repository-card-link">
                 <div class="tlp-pane-header git-repository-card-header">
                     <div class="git-repository-card-header-line">
-                        <h1 class="tlp-pane-title git-repository-card-title"
+                        <h2 class="tlp-pane-title git-repository-card-title"
                             data-test="repository_name"
                         >
-                            {{ name_with_path }}
-                        </h1>
+                            {{ repository_label }}
+                        </h2>
                         <div class="git-repository-links-spacer"></div>
                         <pull-request-badge
                             v-bind:number-pull-request="number_pull_requests"
@@ -58,6 +60,7 @@
 <script>
 const DEFAULT_DESCRIPTION = "-- Default description --";
 
+import { mapGetters } from "vuex";
 import TimeAgo from "javascript-time-ago";
 import { getProjectId, getUserIsAdmin, getDashCasedLocale } from "../repository-list-presenter.js";
 import PullRequestBadge from "./PullRequestBadge.vue";
@@ -93,19 +96,21 @@ export default {
         number_pull_requests() {
             return Number.parseInt(this.repository.additional_information.opened_pull_requests, 10);
         },
-        name_with_path() {
-            return this.repository.path
-                .split("/")
-                .filter((part, index) => index > 0)
-                .map((part, index, split_parts) => {
-                    if (index === split_parts.length - 1) {
-                        return part.replace(".git", "");
-                    }
+        repository_label() {
+            if (this.isFolderDisplayMode) {
+                return this.repository.label;
+            }
 
-                    return part;
-                })
-                .join("/");
-        }
+            return this.normalized_path;
+        },
+        normalized_path() {
+            if (this.repository.path_without_project !== "") {
+                return this.repository.path_without_project + "/" + this.repository.label;
+            }
+
+            return this.repository.label;
+        },
+        ...mapGetters(["isFolderDisplayMode"])
     }
 };
 </script>
