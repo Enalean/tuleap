@@ -9,24 +9,12 @@ plugin_git	title	Git
 plugin_git	service_lbl_key	Git
 plugin_git	service_desc_key	Git
 
-plugin_git	help_reference_title	Intialiser un dépôt
-plugin_git	help_init_reference	<li>cd mysources</li><li>git init</li><li>touch README (par exemple)</li><li>git add README</li><li>git commit -m 'initial commit'</li><li>git push &lt;url_du_dépôt&gt; master</li>
-plugin_git	help_init_reference_msg	Le dépôt n'a pas encore été initialisé, ceci est nécessaire pour permettre aux utilisateurs de le cloner
-plugin_git	help_create_reference_title	Créer une réference
-plugin_git	help_create_reference	<li>Une référence est un dépôt principal qui peut être cloné sur le serveur Tuleap (ex: développement d'une fonctionnalité) et aussi cloné localement par les membres du projet pour leur développements.</li>
-plugin_git	help_link	Aide
-plugin_git	help_tree	<li>La liste des dépôt est hiérarchique.</li><li>Les références sont les racines tandis que les clones (forks) sont présentés décalés sous leur dépôt parent.</li><li>Chaque dépôt est un lien vers un page de détail et d'adminstration.</li>
-plugin_git	help_fork	<li>Un fork est le clone d'une référence ou d'un fork.</li><li>Il est accessible en lecture et écriture pour tous les membres d'un projet.</li><li>Il peut être utilisé comme le dépôt pour le développement d'une fonctionnalité.</li>
-
 plugin_git	info_access_title	Accès aux dépôts Git
 plugin_git	info_access_content	les dépôts sont accessibles via l'url ci-dessous, dans laquelle REPO_NAME doit être remplacé par le nom du dépôt.<br /> Pour tout problème de permissions contactez l'administrateur du site.
 
 plugin_git	bread_crumb_home	Liste des dépôts
 plugin_git	bread_crumb_help	Aide
 plugin_git	bread_crumb_admin	Admin
-
-plugin_git	tree_title_available_repo	Dépôts du projet
-plugin_git	tree_msg_no_available_repo	Aucun dépôt trouvé
 
 plugin_git	admin_reference_creation_title	Création d'une référence
 plugin_git	admin_reference_creation_input_name	Nom :
