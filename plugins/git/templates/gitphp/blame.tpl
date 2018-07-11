@@ -47,7 +47,7 @@
 	    </td>
 	    <td class="author">
 	      {if $blamecommit}
-	        {$blamecommit->GetAuthor()}
+	        {$blamecommit->GetAuthor()|escape}
 	      {/if}
 	    </td>
 	    <td class="num"><a id="l{$smarty.foreach.blob.iteration}" href="#l{$smarty.foreach.blob.iteration}" class="linenr"&noheader=1>{$smarty.foreach.blob.iteration}</a></td>
