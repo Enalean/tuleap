@@ -52,8 +52,8 @@ export default {
             get() {
                 return this.$store.state.selected_owner_id;
             },
-            async set(value) {
-                await this.$store.dispatch("changeRepositories", value);
+            set(value) {
+                this.$store.dispatch("changeRepositories", value);
             }
         },
         project_key() {

@@ -19,6 +19,11 @@ msgstr ""
 msgid "Allowed characters: a-zA-Z0-9/_.-"
 msgstr ""
 
+msgid ""
+"Allowed characters: a-zA-Z0-9/_.- and max length is 255, no slashes at the "
+"beginning or the end, it also must not finish with \".git\"."
+msgstr ""
+
 msgid "Cancel"
 msgstr ""
 
@@ -73,11 +78,4 @@ msgstr ""
 msgid ""
 "You don't have permission to create Git repositories as you are not Git "
 "administrator."
-msgstr ""
-
-msgid "max length is 255"
-msgstr ""
-
-msgid ""
-"no slashes at the beginning or the end, it also must not finish with \".git"
 msgstr ""

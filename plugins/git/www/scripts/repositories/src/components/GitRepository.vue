@@ -28,7 +28,7 @@
                         </h1>
                         <div class="git-repository-links-spacer"></div>
                         <pull-request-badge
-                            v-bind:number-pull-request="Number.parseInt(repository.additional_information.opened_pull_requests, 10)"
+                            v-bind:number-pull-request="number_pull_requests"
                             v-bind:repository-id="repository.id"
                         />
                         <a v-if="is_admin"
@@ -87,6 +87,9 @@ export default {
             const date = new Date(this.repository.last_update_date);
             const time_ago = new TimeAgo(getDashCasedLocale());
             return time_ago.format(date);
+        },
+        number_pull_requests() {
+            return Number.parseInt(this.repository.additional_information.opened_pull_requests, 10);
         }
     }
 };

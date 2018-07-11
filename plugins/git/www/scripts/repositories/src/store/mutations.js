@@ -23,13 +23,6 @@ export default {
     setSelectedOwnerId(state, selected_owner_id) {
         state.selected_owner_id = selected_owner_id;
     },
-    setRepositoriesForCurrentOwner(state, repositories) {
-        /*
-            To mutate an object and benefit from vue's reactivity,
-            we have to use Vue.set, instead of direct assignment
-         */
-        Vue.set(state.repositories_for_owner, state.selected_owner_id, repositories);
-    },
     pushRepositoriesForCurrentOwner(state, repositories) {
         if (typeof state.repositories_for_owner[state.selected_owner_id] === "undefined") {
             Vue.set(state.repositories_for_owner, state.selected_owner_id, []);

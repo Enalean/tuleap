@@ -67,14 +67,9 @@ export default {
             return getUserIsAdmin();
         },
         show_empty_state() {
-            return (
-                !this.is_there_at_least_one_repository && this.is_initial_loading_done_without_error
-            );
+            return !this.isThereAtLeastOneRepository && this.isInitialLoadingDoneWithoutError;
         },
-        ...mapGetters({
-            is_there_at_least_one_repository: "isThereAtLeastOneRepository",
-            is_initial_loading_done_without_error: "isInitialLoadingDoneWithoutError"
-        })
+        ...mapGetters(["isThereAtLeastOneRepository", "isInitialLoadingDoneWithoutError"])
     }
 };
 </script>

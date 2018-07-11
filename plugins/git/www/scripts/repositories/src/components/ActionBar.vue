@@ -49,16 +49,9 @@ export default {
     },
     computed: {
         show_create_repository_button() {
-            return (
-                getUserIsAdmin() &&
-                this.is_there_at_least_one_repository &&
-                this.is_initial_loading_done_without_error
-            );
+            return getUserIsAdmin() && this.isThereAtLeastOneRepository;
         },
-        ...mapGetters({
-            is_there_at_least_one_repository: "isThereAtLeastOneRepository",
-            is_initial_loading_done_without_error: "isInitialLoadingDoneWithoutError"
-        })
+        ...mapGetters(["isThereAtLeastOneRepository"])
     }
 };
 </script>

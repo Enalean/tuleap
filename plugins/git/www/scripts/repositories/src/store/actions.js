@@ -34,42 +34,25 @@ export const changeRepositories = (context, new_owner_id) => {
     }
 
     if (new_owner_id === PROJECT_KEY) {
-        getProjectRepositories(context.commit);
+        const getProjectRepositories = callback => getRepositoryList(getProjectId(), callback);
+        getAsyncRepositoryList(context.commit, getProjectRepositories);
     } else {
-        getForkedRepositories(context);
+        const getForkedRepositories = callback =>
+            getForkedRepositoryList(getProjectId(), context.state.selected_owner_id, callback);
+        getAsyncRepositoryList(context.commit, getForkedRepositories);
     }
 };
 
-function getProjectRepositories(commit) {
-    getAsyncRepositoryList(commit, async () => {
-        await getRepositoryList(getProjectId(), storeRetrievedRepositories(commit));
-    });
-}
-
-function getForkedRepositories(context) {
-    getAsyncRepositoryList(context.commit, async () => {
-        await getForkedRepositoryList(
-            getProjectId(),
-            context.state.selected_owner_id,
-            storeRetrievedRepositories(context.commit)
-        );
-    });
-}
-
-function storeRetrievedRepositories(commit) {
-    return function(repositories) {
-        commit("pushRepositoriesForCurrentOwner", repositories);
-        commit("setIsLoadingInitial", false);
-    };
-}
-
-async function getAsyncRepositoryList(commit, getAsyncListCallback) {
+function getAsyncRepositoryList(commit, getRepositories) {
     commit("setIsLoadingInitial", true);
     commit("setIsLoadingNext", true);
     try {
-        await getAsyncListCallback();
+        return getRepositories(repositories => {
+            commit("pushRepositoriesForCurrentOwner", repositories);
+            commit("setIsLoadingInitial", false);
+        });
     } catch (e) {
-        await handleGetRepositoryListError(e, commit);
+        return handleGetRepositoryListError(e, commit);
     } finally {
         commit("setIsLoadingNext", false);
     }
