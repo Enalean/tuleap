@@ -53,7 +53,6 @@ class DB_mysql extends DB_common
     var $prepare_types = array();
     var $num_rows = array();
     var $transaction_opcount = 0;
-    var $autocommit = true;
     var $fetchmode = DB_FETCHMODE_ORDERED; /* Default fetch mode */
     var $_db = false;
 
@@ -144,19 +143,8 @@ class DB_mysql extends DB_common
      */
     function simpleQuery($query)
     {
-        $ismanip = DB::isManip($query);
         $this->last_query = $query;
         $query = $this->modifyQuery($query);
-        if (!$this->autocommit && $ismanip) {
-            if ($this->transaction_opcount == 0) {
-                $result = @mysql_query('SET AUTOCOMMIT=0', $this->connection);
-                $result = @mysql_query('BEGIN', $this->connection);
-                if (!$result) {
-                    return $this->mysqlRaiseError();
-                }
-            }
-            $this->transaction_opcount++;
-        }
         $result = @mysql_query($query, $this->connection);
         if (!$result) {
             return $this->mysqlRaiseError();
@@ -316,20 +304,6 @@ class DB_mysql extends DB_common
     }
 
     // }}}
-    // {{{ autoCommit()
-
-    /**
-     * Enable/disable automatic commits
-     */
-    function autoCommit($onoff = false)
-    {
-        // XXX if $this->transaction_opcount > 0, we should probably
-        // issue a warning here.
-        $this->autocommit = $onoff ? true : false;
-        return DB_OK;
-    }
-
-    // }}}
     // {{{ commit()
 
     /**
@@ -339,7 +313,6 @@ class DB_mysql extends DB_common
     {
         if ($this->transaction_opcount > 0) {
             $result = @mysql_query('COMMIT', $this->connection);
-            $result = @mysql_query('SET AUTOCOMMIT=1', $this->connection);
             $this->transaction_opcount = 0;
             if (!$result) {
                 return $this->mysqlRaiseError();
@@ -358,7 +331,6 @@ class DB_mysql extends DB_common
     {
         if ($this->transaction_opcount > 0) {
             $result = @mysql_query('ROLLBACK', $this->connection);
-            $result = @mysql_query('SET AUTOCOMMIT=1', $this->connection);
             $this->transaction_opcount = 0;
             if (!$result) {
                 return $this->mysqlRaiseError();
@@ -642,7 +614,7 @@ class DB_mysql extends DB_common
     // }}}
     // {{{ modifyQuery()
 
-    function modifyQuery($query)
+    protected function modifyQuery($query)
     {
         if ($this->options['portability'] & DB_PORTABILITY_DELETE_COUNT) {
             // "DELETE FROM table" gives 0 affected rows in MySQL.
