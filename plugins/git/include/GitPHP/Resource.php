@@ -12,8 +12,6 @@ namespace Tuleap\Git\GitPHP;
  * @package GitPHP
  */
 
-// phpcs:ignoreFile
-
 /**
  * Resource factory class
  *
@@ -21,82 +19,82 @@ namespace Tuleap\Git\GitPHP;
  */
 class Resource
 {
-	
-	/**
-	 * instance
-	 *
-	 * Stores the singleton instance of the resource provider
-	 *
-	 * @access protected
-	 * @static
-	 */
-	protected static $instance = null;
 
-	/**
-	 * currentLocale
-	 *
-	 * Stores the currently instantiated locale identifier
-	 *
-	 * @access protected
-	 * @static
-	 */
-	protected static $currentLocale = '';
+    /**
+     * instance
+     *
+     * Stores the singleton instance of the resource provider
+     *
+     * @access protected
+     * @static
+     */
+    protected static $instance = null;
 
-	/**
-	 * GetInstance
-	 *
-	 * Returns the singleton instance
-	 *
-	 * @access public
-	 * @static
-	 * @return mixed instance of resource class
-	 */
-	public static function GetInstance()
-	{
-		return self::$instance;
-	}
+    /**
+     * currentLocale
+     *
+     * Stores the currently instantiated locale identifier
+     *
+     * @access protected
+     * @static
+     */
+    protected static $currentLocale = '';
 
-	/**
-	 * Instantiated
-	 *
-	 * Tests if the resource provider has been instantiated
-	 *
-	 * @access public
-	 * @static
-	 * @return boolean true if resource provider is instantiated
-	 */
-	public static function Instantiated()
-	{
-		return (self::$instance !== null);
-	}
+    /**
+     * GetInstance
+     *
+     * Returns the singleton instance
+     *
+     * @access public
+     * @static
+     * @return mixed instance of resource class
+     */
+    public static function GetInstance() // @codingStandardsIgnoreLine
+    {
+        return self::$instance;
+    }
 
-	/**
-	 * Instantiate
-	 *
-	 * Instantiates the singleton instance
-	 *
-	 * @access public
-	 * @static
-	 * @param string $locale locale to instantiate
-	 * @return boolean true if resource provider was instantiated successfully
-	 */
-	public static function Instantiate($locale)
-	{
-		self::$instance = null;
-		self::$currentLocale = '';
+    /**
+     * Instantiated
+     *
+     * Tests if the resource provider has been instantiated
+     *
+     * @access public
+     * @static
+     * @return boolean true if resource provider is instantiated
+     */
+    public static function Instantiated() // @codingStandardsIgnoreLine
+    {
+        return (self::$instance !== null);
+    }
 
-		$reader = null;
-		if (!(($locale == 'en_US') || ($locale == 'en'))) {
-			$reader = new \FileReader(__DIR__ . '/../../site-content/gitphp_locale/' . $locale . '/gitphp.mo');
-			if (!$reader)
-				return false;
-		}
+    /**
+     * Instantiate
+     *
+     * Instantiates the singleton instance
+     *
+     * @access public
+     * @static
+     * @param string $locale locale to instantiate
+     * @return boolean true if resource provider was instantiated successfully
+     */
+    public static function Instantiate($locale) // @codingStandardsIgnoreLine
+    {
+        self::$instance = null;
+        self::$currentLocale = '';
 
-		self::$instance = new \gettext_reader($reader);
-		self::$currentLocale = $locale;
-		return true;
-	}
+        $reader = null;
+        if (!(($locale == 'en_US') || ($locale == 'en'))) {
+            $reader = new \FileReader(__DIR__ . '/../../site-content/gitphp_locale/' . $locale . '/gitphp.mo');
+            if (!$reader) {
+                return false;
+            }
+        }
 
+        self::$instance = new \gettext_reader($reader);
+        self::$currentLocale = $locale;
+        return true;
+    }
 }
 
 
@@ -108,9 +106,10 @@ class Resource
  */
 function __($str)
 {
-	if (Resource::Instantiated())
-		return Resource::GetInstance()->translate($str);
-	return $str;
+    if (Resource::Instantiated()) {
+        return Resource::GetInstance()->translate($str);
+    }
+    return $str;
 }
 
 /**
@@ -123,10 +122,11 @@ function __($str)
  */
 function __n($singular, $plural, $count)
 {
-	if (Resource::Instantiated())
-		return Resource::GetInstance()->ngettext($singular, $plural, $count);
-	if ($count > 1)
-		return $plural;
-	return $singular;
+    if (Resource::Instantiated()) {
+        return Resource::GetInstance()->ngettext($singular, $plural, $count);
+    }
+    if ($count > 1) {
+        return $plural;
+    }
+    return $singular;
 }
-

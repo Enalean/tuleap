@@ -32,7 +32,7 @@ class ProjectProvider
         $this->project = new Project($project_root, $project_path);
     }
 
-    public function GetProject()
+    public function GetProject() // @codingStandardsIgnoreLine
     {
         return $this->project;
     }

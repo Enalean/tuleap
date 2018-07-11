@@ -19,24 +19,23 @@
  */
 function smarty_function_scripturl($params, &$smarty)
 {
-	if (Tuleap\Git\GitPHP\Config::GetInstance()->HasKey('self')) {
-		$selfurl = Tuleap\Git\GitPHP\Config::GetInstance()->GetValue('self');
-		if (!empty($selfurl)) {
-			if (substr($selfurl, -4) != '.php') {
-				$selfurl = Tuleap\Git\GitPHP\Util::AddSlash($selfurl);
-			}
-			return $selfurl;
-		}
-	}
+    if (Tuleap\Git\GitPHP\Config::GetInstance()->HasKey('self')) {
+        $selfurl = Tuleap\Git\GitPHP\Config::GetInstance()->GetValue('self');
+        if (!empty($selfurl)) {
+            if (substr($selfurl, -4) != '.php') {
+                $selfurl = Tuleap\Git\GitPHP\Util::AddSlash($selfurl);
+            }
+            return $selfurl;
+        }
+    }
 
-	if (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on'))
-		$scriptstr = 'https://';
-	else
-		$scriptstr = 'http://';
+    if (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on')) {
+        $scriptstr = 'https://';
+    } else {
+        $scriptstr = 'http://';
+    }
 
-	$scriptstr .= $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'];
+    $scriptstr .= $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'];
 
-	return $scriptstr;
+    return $scriptstr;
 }
-
-?>

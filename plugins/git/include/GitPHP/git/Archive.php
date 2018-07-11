@@ -25,500 +25,502 @@ class Archive
     const COMPRESS_GZ  = 'tgz';
     const COMPRESS_ZIP = 'zip';
 
-	/**
-	 * gitObject
-	 *
-	 * Stores the object for this archive internally
-	 *
-	 * @access protected
-	 */
-	protected $gitObject = null;
+    /**
+     * gitObject
+     *
+     * Stores the object for this archive internally
+     *
+     * @access protected
+     */
+    protected $gitObject = null;
 
-	/**
-	 * project
-	 *
-	 * Stores the project for this archive internally
-	 *
-	 * @access protected
-	 */
-	protected $project = null;
+    /**
+     * project
+     *
+     * Stores the project for this archive internally
+     *
+     * @access protected
+     */
+    protected $project = null;
 
-	/**
-	 * format
-	 *
-	 * Stores the archive format internally
-	 *
-	 * @access protected
-	 */
-	protected $format;
+    /**
+     * format
+     *
+     * Stores the archive format internally
+     *
+     * @access protected
+     */
+    protected $format;
 
-	/**
-	 * fileName
-	 *
-	 * Stores the archive filename internally
-	 *
-	 * @access protected
-	 */
-	protected $fileName = '';
+    /**
+     * fileName
+     *
+     * Stores the archive filename internally
+     *
+     * @access protected
+     */
+    protected $fileName = '';
 
-	/**
-	 * path
-	 *
-	 * Stores the archive path internally
-	 *
-	 * @access protected
-	 */
-	protected $path = '';
+    /**
+     * path
+     *
+     * Stores the archive path internally
+     *
+     * @access protected
+     */
+    protected $path = '';
 
-	/**
-	 * prefix
-	 *
-	 * Stores the archive prefix internally
-	 *
-	 * @access protected
-	 */
-	protected $prefix = '';
+    /**
+     * prefix
+     *
+     * Stores the archive prefix internally
+     *
+     * @access protected
+     */
+    protected $prefix = '';
 
-	/**
-	 * handle
-	 *
-	 * Stores the process handle
-	 *
-	 * @access protected
-	 */
-	protected $handle = false;
+    /**
+     * handle
+     *
+     * Stores the process handle
+     *
+     * @access protected
+     */
+    protected $handle = false;
 
-	/**
-	 * tempfile
-	 *
-	 * Stores the temp file name
-	 *
-	 * @access protected
-	 */
-	protected $tempfile = '';
+    /**
+     * tempfile
+     *
+     * Stores the temp file name
+     *
+     * @access protected
+     */
+    protected $tempfile = '';
 
-	/**
-	 * __construct
-	 *
-	 * Instantiates object
-	 *
-	 * @access public
-	 * @param mixed $gitObject the object
-	 * @param integer $format the format for the archive
-	 * @return mixed git archive
-	 */
-	public function __construct($project, $gitObject, $format = self::COMPRESS_ZIP, $path = '', $prefix = '')
-	{
-		$this->SetProject($project);
-		$this->SetObject($gitObject);
-		$this->SetFormat($format);
-		$this->SetPath($path);
-		$this->SetPrefix($prefix);
-	}
+    /**
+     * __construct
+     *
+     * Instantiates object
+     *
+     * @access public
+     * @param mixed $gitObject the object
+     * @param integer $format the format for the archive
+     * @return mixed git archive
+     */
+    public function __construct($project, $gitObject, $format = self::COMPRESS_ZIP, $path = '', $prefix = '')
+    {
+        $this->SetProject($project);
+        $this->SetObject($gitObject);
+        $this->SetFormat($format);
+        $this->SetPath($path);
+        $this->SetPrefix($prefix);
+    }
 
-	/**
-	 * GetFormat
-	 *
-	 * Gets the archive format
-	 *
-	 * @access public
-	 * @return integer archive format
-	 */
-	public function GetFormat()
-	{
-		return $this->format;
-	}
+    /**
+     * GetFormat
+     *
+     * Gets the archive format
+     *
+     * @access public
+     * @return integer archive format
+     */
+    public function GetFormat() // @codingStandardsIgnoreLine
+    {
+        return $this->format;
+    }
 
-	/**
-	 * SetFormat
-	 *
-	 * Sets the archive format
-	 *
-	 * @access public
-	 * @param integer $format archive format
-	 */
-	public function SetFormat($format)
-	{
-		if ((($format == self::COMPRESS_BZ2) && (!function_exists('bzcompress'))) ||
-		    (($format == self::COMPRESS_GZ) && (!function_exists('gzencode')))) {
-		    /*
-		     * Trying to set a format but doesn't have the appropriate
-		     * compression function, fall back to tar
-		     */
-		    $format = self::COMPRESS_TAR;
-		}
+    /**
+     * SetFormat
+     *
+     * Sets the archive format
+     *
+     * @access public
+     * @param integer $format archive format
+     */
+    public function SetFormat($format) // @codingStandardsIgnoreLine
+    {
+        if ((($format == self::COMPRESS_BZ2) && (!function_exists('bzcompress'))) ||
+            (($format == self::COMPRESS_GZ) && (!function_exists('gzencode')))) {
+            /*
+             * Trying to set a format but doesn't have the appropriate
+             * compression function, fall back to tar
+             */
+            $format = self::COMPRESS_TAR;
+        }
 
-		$this->format = $format;
-	}
+        $this->format = $format;
+    }
 
-	/**
-	 * GetObject
-	 *
-	 * Gets the object for this archive
-	 *
-	 * @access public
-	 * @return mixed the git object
-	 */
-	public function GetObject()
-	{
-		return $this->gitObject;
-	}
+    /**
+     * GetObject
+     *
+     * Gets the object for this archive
+     *
+     * @access public
+     * @return mixed the git object
+     */
+    public function GetObject() // @codingStandardsIgnoreLine
+    {
+        return $this->gitObject;
+    }
 
-	/**
-	 * SetObject
-	 *
-	 * Sets the object for this archive
-	 *
-	 * @access public
-	 * @param mixed $object the git object
-	 */
-	public function SetObject($object)
-	{
-		// Archive only works for commits and trees
-		if (($object != null) && (!(($object instanceof Commit) || ($object instanceof Tree)))) {
-			throw new \Exception('Invalid source object for archive');
-		}
+    /**
+     * SetObject
+     *
+     * Sets the object for this archive
+     *
+     * @access public
+     * @param mixed $object the git object
+     */
+    public function SetObject($object) // @codingStandardsIgnoreLine
+    {
+        // Archive only works for commits and trees
+        if (($object != null) && (!(($object instanceof Commit) || ($object instanceof Tree)))) {
+            throw new \Exception('Invalid source object for archive');
+        }
 
-		$this->gitObject = $object;
-	}
+        $this->gitObject = $object;
+    }
 
-	/**
-	 * GetProject
-	 *
-	 * Gets the project for this archive
-	 *
-	 * @access public
-	 * @return mixed the project
-	 */
-	public function GetProject()
-	{
-		if ($this->project)
-			return $this->project;
+    /**
+     * GetProject
+     *
+     * Gets the project for this archive
+     *
+     * @access public
+     * @return mixed the project
+     */
+    public function GetProject() // @codingStandardsIgnoreLine
+    {
+        if ($this->project) {
+            return $this->project;
+        }
 
-		if ($this->gitObject)
-			return $this->gitObject->GetProject();
+        if ($this->gitObject) {
+            return $this->gitObject->GetProject();
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	/**
-	 * SetProject
-	 *
-	 * Sets the project for this archive
-	 *
-	 * @access public
-	 * @param mixed $project the project
-	 */
-	public function SetProject($project)
-	{
-		$this->project = $project;
-	}
+    /**
+     * SetProject
+     *
+     * Sets the project for this archive
+     *
+     * @access public
+     * @param mixed $project the project
+     */
+    public function SetProject($project) // @codingStandardsIgnoreLine
+    {
+        $this->project = $project;
+    }
 
-	/**
-	 * GetExtension
-	 *
-	 * Gets the extension to use for this archive
-	 *
-	 * @access public
-	 * @return string extension for the archive
-	 */
-	public function GetExtension()
-	{
-		return Archive::FormatToExtension($this->format);
-	}
+    /**
+     * GetExtension
+     *
+     * Gets the extension to use for this archive
+     *
+     * @access public
+     * @return string extension for the archive
+     */
+    public function GetExtension() // @codingStandardsIgnoreLine
+    {
+        return Archive::FormatToExtension($this->format);
+    }
 
-	/**
-	 * GetFilename
-	 *
-	 * Gets the filename for this archive
-	 *
-	 * @access public
-	 * @return string filename
-	 */
-	public function GetFilename()
-	{
-		if (!empty($this->fileName)) {
-			return $this->fileName;
-		}
+    /**
+     * GetFilename
+     *
+     * Gets the filename for this archive
+     *
+     * @access public
+     * @return string filename
+     */
+    public function GetFilename() // @codingStandardsIgnoreLine
+    {
+        if (!empty($this->fileName)) {
+            return $this->fileName;
+        }
 
-		$fname = $this->GetProject()->GetSlug();
+        $fname = $this->GetProject()->GetSlug();
 
-		if (!empty($this->path)) {
-			$fname .= '-' . Util::MakeSlug($this->path);
-		}
+        if (!empty($this->path)) {
+            $fname .= '-' . Util::MakeSlug($this->path);
+        }
 
-		$fname .= '.' . $this->GetExtension();
+        $fname .= '.' . $this->GetExtension();
 
-		return $fname;
-	}
+        return $fname;
+    }
 
-	/**
-	 * SetFilename
-	 *
-	 * Sets the filename for this archive
-	 *
-	 * @access public
-	 * @param string $name filename
-	 */
-	public function SetFilename($name = '')
-	{
-		$this->fileName = $name;
-	}
+    /**
+     * SetFilename
+     *
+     * Sets the filename for this archive
+     *
+     * @access public
+     * @param string $name filename
+     */
+    public function SetFilename($name = '') // @codingStandardsIgnoreLine
+    {
+        $this->fileName = $name;
+    }
 
-	/**
-	 * GetPath
-	 *
-	 * Gets the path to restrict this archive to
-	 *
-	 * @access public
-	 * @return string path
-	 */
-	public function GetPath()
-	{
-		return $this->path;
-	}
+    /**
+     * GetPath
+     *
+     * Gets the path to restrict this archive to
+     *
+     * @access public
+     * @return string path
+     */
+    public function GetPath() // @codingStandardsIgnoreLine
+    {
+        return $this->path;
+    }
 
-	/**
-	 * SetPath
-	 *
-	 * Sets the path to restrict this archive to
-	 *
-	 * @access public
-	 * @param string $path path to restrict
-	 */
-	public function SetPath($path = '')
-	{
-		$this->path = $path;
-	}
+    /**
+     * SetPath
+     *
+     * Sets the path to restrict this archive to
+     *
+     * @access public
+     * @param string $path path to restrict
+     */
+    public function SetPath($path = '') // @codingStandardsIgnoreLine
+    {
+        $this->path = $path;
+    }
 
-	/**
-	 * GetPrefix
-	 *
-	 * Gets the directory prefix to use for files in this archive
-	 *
-	 * @access public
-	 * @return string prefix
-	 */
-	public function GetPrefix()
-	{
-		if (!empty($this->prefix)) {
-			return $this->prefix;
-		}
+    /**
+     * GetPrefix
+     *
+     * Gets the directory prefix to use for files in this archive
+     *
+     * @access public
+     * @return string prefix
+     */
+    public function GetPrefix() // @codingStandardsIgnoreLine
+    {
+        if (!empty($this->prefix)) {
+            return $this->prefix;
+        }
 
-		$pfx = $this->GetProject()->GetSlug() . '/';
+        $pfx = $this->GetProject()->GetSlug() . '/';
 
-		if (!empty($this->path))
-			$pfx .= $this->path . '/';
+        if (!empty($this->path)) {
+            $pfx .= $this->path . '/';
+        }
 
-		return $pfx;
-	}
+        return $pfx;
+    }
 
-	/**
-	 * SetPrefix
-	 *
-	 * Sets the directory prefix to use for files in this archive
-	 *
-	 * @access public
-	 * @param string $prefix prefix to use
-	 */
-	public function SetPrefix($prefix = '')
-	{
-		if (empty($prefix)) {
-			$this->prefix = $prefix;
-			return;
-		}
+    /**
+     * SetPrefix
+     *
+     * Sets the directory prefix to use for files in this archive
+     *
+     * @access public
+     * @param string $prefix prefix to use
+     */
+    public function SetPrefix($prefix = '') // @codingStandardsIgnoreLine
+    {
+        if (empty($prefix)) {
+            $this->prefix = $prefix;
+            return;
+        }
 
-		if (substr($prefix, -1) != '/') {
-			$prefix .= '/';
-		}
+        if (substr($prefix, -1) != '/') {
+            $prefix .= '/';
+        }
 
-		$this->prefix = $prefix;
-	}
+        $this->prefix = $prefix;
+    }
 
-	/**
-	 * Open
-	 *
-	 * Opens a descriptor for reading archive data
-	 *
-	 * @access public
-	 * @return boolean true on success
-	 */
-	public function Open()
-	{
-		if (!$this->gitObject)
-		{
-			throw new \Exception('Invalid object for archive');
-		}
+    /**
+     * Open
+     *
+     * Opens a descriptor for reading archive data
+     *
+     * @access public
+     * @return boolean true on success
+     */
+    public function Open() // @codingStandardsIgnoreLine
+    {
+        if (!$this->gitObject) {
+            throw new \Exception('Invalid object for archive');
+        }
 
-		if ($this->handle) {
-			return true;
-		}
+        if ($this->handle) {
+            return true;
+        }
 
-		$exe = new GitExe($this->GetProject());
+        $exe = new GitExe($this->GetProject());
 
-		$args = array();
+        $args = array();
 
-		switch ($this->format) {
-			case self::COMPRESS_ZIP:
-				$args[] = '--format=zip';
-				break;
+        switch ($this->format) {
+            case self::COMPRESS_ZIP:
+                $args[] = '--format=zip';
+                break;
             case self::COMPRESS_TAR:
-			case self::COMPRESS_BZ2:
-			case self::COMPRESS_GZ:
-				$args[] = '--format=tar';
-				break;
-		}
+            case self::COMPRESS_BZ2:
+            case self::COMPRESS_GZ:
+                $args[] = '--format=tar';
+                break;
+        }
 
-		$args[] = '--prefix=' . escapeshellarg($this->GetPrefix());
-		$args[] = escapeshellarg($this->gitObject->GetHash());
+        $args[] = '--prefix=' . escapeshellarg($this->GetPrefix());
+        $args[] = escapeshellarg($this->gitObject->GetHash());
 
-		$this->handle = $exe->Open(GitExe::ARCHIVE, $args);
-		unset($exe);
+        $this->handle = $exe->Open(GitExe::ARCHIVE, $args);
+        unset($exe);
 
-		if ($this->format === self::COMPRESS_GZ) {
-			// hack to get around the fact that gzip files
-			// can't be compressed on the fly and the php zlib stream
-			// doesn't seem to daisy chain with any non-file streams
+        if ($this->format === self::COMPRESS_GZ) {
+            // hack to get around the fact that gzip files
+            // can't be compressed on the fly and the php zlib stream
+            // doesn't seem to daisy chain with any non-file streams
 
-			$this->tempfile = tempnam(sys_get_temp_dir(), "GitPHP");
+            $this->tempfile = tempnam(sys_get_temp_dir(), "GitPHP");
 
-			$compress = Config::GetInstance()->GetValue('compresslevel');
+            $compress = Config::GetInstance()->GetValue('compresslevel');
 
-			$mode = 'wb';
-			if (is_int($compress) && ($compress >= 1) && ($compress <= 9))
-				$mode .= $compress;
+            $mode = 'wb';
+            if (is_int($compress) && ($compress >= 1) && ($compress <= 9)) {
+                $mode .= $compress;
+            }
 
-			$temphandle = gzopen($this->tempfile, $mode);
-			if ($temphandle) {
-				while (!feof($this->handle)) {
-					gzwrite($temphandle, fread($this->handle, 1048576));
-				}
-				gzclose($temphandle);
+            $temphandle = gzopen($this->tempfile, $mode);
+            if ($temphandle) {
+                while (!feof($this->handle)) {
+                    gzwrite($temphandle, fread($this->handle, 1048576));
+                }
+                gzclose($temphandle);
 
-				$temphandle = fopen($this->tempfile, 'rb');
-			}
-			
-			if ($this->handle) {
-				pclose($this->handle);
-			}
-			$this->handle = $temphandle;
-		}
+                $temphandle = fopen($this->tempfile, 'rb');
+            }
 
-		return ($this->handle !== false);
-	}
+            if ($this->handle) {
+                pclose($this->handle);
+            }
+            $this->handle = $temphandle;
+        }
 
-	/**
-	 * Close
-	 *
-	 * Close the archive data descriptor
-	 *
-	 * @access public
-	 * @return boolean true on success
-	 */
-	public function Close()
-	{
-		if (!$this->handle) {
-			return true;
-		}
+        return ($this->handle !== false);
+    }
 
-		if ($this->format === self::COMPRESS_GZ) {
-			fclose($this->handle);
-			if (!empty($this->tempfile)) {
-				unlink($this->tempfile);
-				$this->tempfile = '';
-			}
-		} else {
-			pclose($this->handle);
-		}
+    /**
+     * Close
+     *
+     * Close the archive data descriptor
+     *
+     * @access public
+     * @return boolean true on success
+     */
+    public function Close() // @codingStandardsIgnoreLine
+    {
+        if (!$this->handle) {
+            return true;
+        }
 
-		$this->handle = null;
-		
-		return true;
-	}
+        if ($this->format === self::COMPRESS_GZ) {
+            fclose($this->handle);
+            if (!empty($this->tempfile)) {
+                unlink($this->tempfile);
+                $this->tempfile = '';
+            }
+        } else {
+            pclose($this->handle);
+        }
 
-	/**
-	 * Read
-	 *
-	 * Read a chunk of the archive data
-	 *
-	 * @access public
-	 * @param int $size size of data to read
-	 * @return string archive data
-	 */
-	public function Read($size = 1048576)
-	{
-		if (!$this->handle) {
-			return false;
-		}
+        $this->handle = null;
 
-		if (feof($this->handle)) {
-			return false;
-		}
+        return true;
+    }
 
-		$data = fread($this->handle, $size);
+    /**
+     * Read
+     *
+     * Read a chunk of the archive data
+     *
+     * @access public
+     * @param int $size size of data to read
+     * @return string archive data
+     */
+    public function Read($size = 1048576) // @codingStandardsIgnoreLine
+    {
+        if (!$this->handle) {
+            return false;
+        }
 
-		if ($this->format === self::COMPRESS_BZ2) {
-			$data = bzcompress($data, Config::GetInstance()->GetValue('compresslevel', 4));
-		}
+        if (feof($this->handle)) {
+            return false;
+        }
 
-		return $data;
-	}
+        $data = fread($this->handle, $size);
 
-	/**
-	 * FormatToExtension
-	 *
-	 * Gets the extension to use for a particular format
-	 *
-	 * @access public
-	 * @static
-	 * @param string $format format to get extension for
-	 * @return string file extension
-	 */
-	public static function FormatToExtension($format)
-	{
-		switch ($format) {
+        if ($this->format === self::COMPRESS_BZ2) {
+            $data = bzcompress($data, Config::GetInstance()->GetValue('compresslevel', 4));
+        }
+
+        return $data;
+    }
+
+    /**
+     * FormatToExtension
+     *
+     * Gets the extension to use for a particular format
+     *
+     * @access public
+     * @static
+     * @param string $format format to get extension for
+     * @return string file extension
+     */
+    public static function FormatToExtension($format) // @codingStandardsIgnoreLine
+    {
+        switch ($format) {
             case self::COMPRESS_TAR:
-				return 'tar';
-				break;
-			case self::COMPRESS_BZ2:
-				return 'tar.bz2';
-				break;
-			case self::COMPRESS_GZ:
-				return 'tar.gz';
-				break;
-			case self::COMPRESS_ZIP:
-				return 'zip';
-				break;
-		}
-	}
+                return 'tar';
+                break;
+            case self::COMPRESS_BZ2:
+                return 'tar.bz2';
+                break;
+            case self::COMPRESS_GZ:
+                return 'tar.gz';
+                break;
+            case self::COMPRESS_ZIP:
+                return 'zip';
+                break;
+        }
+    }
 
-	/**
-	 * SupportedFormats
-	 *
-	 * Gets the supported formats for the archiver
-	 *
-	 * @access public
-	 * @static
-	 * @return array array of formats mapped to extensions
-	 */
-	public static function SupportedFormats()
-	{
-		$formats = array();
+    /**
+     * SupportedFormats
+     *
+     * Gets the supported formats for the archiver
+     *
+     * @access public
+     * @static
+     * @return array array of formats mapped to extensions
+     */
+    public static function SupportedFormats() // @codingStandardsIgnoreLine
+    {
+        $formats = array();
 
-		$formats[self::COMPRESS_TAR] = self::FormatToExtension(self::COMPRESS_TAR);
-		
-		// TODO check for git > 1.4.3 for zip
-		$formats[self::COMPRESS_ZIP] = self::FormatToExtension(self::COMPRESS_ZIP);
+        $formats[self::COMPRESS_TAR] = self::FormatToExtension(self::COMPRESS_TAR);
 
-		if (function_exists('bzcompress')) {
+        // TODO check for git > 1.4.3 for zip
+        $formats[self::COMPRESS_ZIP] = self::FormatToExtension(self::COMPRESS_ZIP);
+
+        if (function_exists('bzcompress')) {
             $formats[self::COMPRESS_BZ2] = self::FormatToExtension(self::COMPRESS_BZ2);
         }
 
-		if (function_exists('gzencode')) {
+        if (function_exists('gzencode')) {
             $formats[self::COMPRESS_GZ] = self::FormatToExtension(self::COMPRESS_GZ);
         }
 
-		return $formats;
-	}
-
+        return $formats;
+    }
 }

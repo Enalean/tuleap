@@ -34,106 +34,106 @@ class GitExe
     const FOR_EACH_REF = 'for-each-ref';
     const DIFF         = 'diff';
 
-	/**
-	 * project
-	 *
-	 * Stores the project internally
-	 *
-	 * @access protected
-	 */
-	protected $project;
+    /**
+     * project
+     *
+     * Stores the project internally
+     *
+     * @access protected
+     */
+    protected $project;
 
-	/**
-	 * bin
-	 *
-	 * Stores the binary path internally
-	 *
-	 * @access protected
-	 */
-	protected $binary;
+    /**
+     * bin
+     *
+     * Stores the binary path internally
+     *
+     * @access protected
+     */
+    protected $binary;
 
-	public function __construct($project = null)
-	{
-		$this->binary = \Git_Exec::getGitCommand();
+    public function __construct($project = null)
+    {
+        $this->binary = \Git_Exec::getGitCommand();
 
-		$this->SetProject($project);
-	}
+        $this->SetProject($project);
+    }
 
-	/**
-	 * SetProject
-	 *
-	 * Sets the project for this executable
-	 *
-	 * @param mixed $project project to set
-	 */
-	public function SetProject($project = null)
-	{
-		$this->project = $project;
-	}
+    /**
+     * SetProject
+     *
+     * Sets the project for this executable
+     *
+     * @param mixed $project project to set
+     */
+    public function SetProject($project = null) // @codingStandardsIgnoreLine
+    {
+        $this->project = $project;
+    }
 
-	/**
-	 * Execute
-	 *
-	 * Executes a command
-	 *
-	 * @param string $command the command to execute
-	 * @param array $args arguments
-	 * @return string result of command
-	 */
-	public function Execute($command, $args)
-	{
-		$fullCommand = $this->CreateCommand($command, $args);
+    /**
+     * Execute
+     *
+     * Executes a command
+     *
+     * @param string $command the command to execute
+     * @param array $args arguments
+     * @return string result of command
+     */
+    public function Execute($command, $args) // @codingStandardsIgnoreLine
+    {
+        $fullCommand = $this->CreateCommand($command, $args);
 
-		return shell_exec($fullCommand);
-	}
+        return shell_exec($fullCommand);
+    }
 
-	/**
-	 * Open
-	 *
-	 * Opens a resource to a command
-	 *
-	 * @param string $command the command to execute
-	 * @param array $args arguments
-	 * @return resource process handle
-	 */
-	public function Open($command, $args, $mode = 'r')
-	{
-		$fullCommand = $this->CreateCommand($command, $args);
+    /**
+     * Open
+     *
+     * Opens a resource to a command
+     *
+     * @param string $command the command to execute
+     * @param array $args arguments
+     * @return resource process handle
+     */
+    public function Open($command, $args, $mode = 'r') // @codingStandardsIgnoreLine
+    {
+        $fullCommand = $this->CreateCommand($command, $args);
 
-		return popen($fullCommand, $mode);
-	}
+        return popen($fullCommand, $mode);
+    }
 
-	/**
-	 * BuildCommand
-	 *
-	 * Creates a command
-	 *
-	 * @access protected
-	 *
-	 * @param string $command the command to execute
-	 * @param array $args arguments
-	 * @return string result of command
-	 */
-	protected function CreateCommand($command, $args)
-	{
-		$gitDir = '';
-		if ($this->project) {
-			$gitDir = '--git-dir=' . $this->project->GetPath();
-		}
-		
-		return $this->binary . ' ' . $gitDir . ' ' . $command . ' ' . implode(' ', $args);
-	}
+    /**
+     * BuildCommand
+     *
+     * Creates a command
+     *
+     * @access protected
+     *
+     * @param string $command the command to execute
+     * @param array $args arguments
+     * @return string result of command
+     */
+    protected function CreateCommand($command, $args) // @codingStandardsIgnoreLine
+    {
+        $gitDir = '';
+        if ($this->project) {
+            $gitDir = '--git-dir=' . $this->project->GetPath();
+        }
 
-	/**
-	 * GetBinary
-	 *
-	 * Gets the binary for this executable
-	 *
-	 * @return string binary
-	 * @access public
-	 */
-	public function GetBinary()
-	{
-		return $this->binary;
-	}
+        return $this->binary . ' ' . $gitDir . ' ' . $command . ' ' . implode(' ', $args);
+    }
+
+    /**
+     * GetBinary
+     *
+     * Gets the binary for this executable
+     *
+     * @return string binary
+     * @access public
+     */
+    public function GetBinary() // @codingStandardsIgnoreLine
+    {
+        return $this->binary;
+    }
 }

@@ -16,99 +16,101 @@ namespace Tuleap\Git\GitPHP;
 
 use GeSHi;
 
-
 /**
  * Blob controller class
  *
  * @package GitPHP
  * @subpackage Controller
  */
-class Controller_Blob extends ControllerBase
+class Controller_Blob extends ControllerBase // @codingStandardsIgnoreLine
 {
 
-	/**
-	 * __construct
-	 *
-	 * Constructor
-	 *
-	 * @access public
-	 * @return controller
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		if (!$this->project) {
-			throw new MessageException(__('Project is required'), true);
-		}
-	}
+    /**
+     * __construct
+     *
+     * Constructor
+     *
+     * @access public
+     * @return controller
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        if (!$this->project) {
+            throw new MessageException(__('Project is required'), true);
+        }
+    }
 
-	/**
-	 * GetTemplate
-	 *
-	 * Gets the template for this controller
-	 *
-	 * @access protected
-	 * @return string template filename
-	 */
-	protected function GetTemplate()
-	{
-		if (isset($this->params['plain']) && $this->params['plain'])
-			return 'blobplain.tpl';
-		return 'blob.tpl';
-	}
+    /**
+     * GetTemplate
+     *
+     * Gets the template for this controller
+     *
+     * @access protected
+     * @return string template filename
+     */
+    protected function GetTemplate() // @codingStandardsIgnoreLine
+    {
+        if (isset($this->params['plain']) && $this->params['plain']) {
+            return 'blobplain.tpl';
+        }
+        return 'blob.tpl';
+    }
 
-	/**
-	 * GetName
-	 *
-	 * Gets the name of this controller's action
-	 *
-	 * @access public
-	 * @param boolean $local true if caller wants the localized action name
-	 * @return string action name
-	 */
-	public function GetName($local = false)
-	{
-		if ($local) {
-			return __('blob');
-		}
-		return 'blob';
-	}
+    /**
+     * GetName
+     *
+     * Gets the name of this controller's action
+     *
+     * @access public
+     * @param boolean $local true if caller wants the localized action name
+     * @return string action name
+     */
+    public function GetName($local = false) // @codingStandardsIgnoreLine
+    {
+        if ($local) {
+            return __('blob');
+        }
+        return 'blob';
+    }
 
-	/**
-	 * ReadQuery
-	 *
-	 * Read query into parameters
-	 *
-	 * @access protected
-	 */
-	protected function ReadQuery()
-	{
-		if (isset($_GET['hb']))
-			$this->params['hashbase'] = $_GET['hb'];
-		else
-			$this->params['hashbase'] = 'HEAD';
-		if (isset($_GET['f']))
-			$this->params['file'] = $_GET['f'];
-		if (isset($_GET['h'])) {
-			$this->params['hash'] = $_GET['h'];
-		}
-	}
+    /**
+     * ReadQuery
+     *
+     * Read query into parameters
+     *
+     * @access protected
+     */
+    protected function ReadQuery() // @codingStandardsIgnoreLine
+    {
+        if (isset($_GET['hb'])) {
+            $this->params['hashbase'] = $_GET['hb'];
+        } else {
+            $this->params['hashbase'] = 'HEAD';
+        }
+        if (isset($_GET['f'])) {
+            $this->params['file'] = $_GET['f'];
+        }
+        if (isset($_GET['h'])) {
+            $this->params['hash'] = $_GET['h'];
+        }
+    }
 
-	/**
-	 * LoadHeaders
-	 *
-	 * Loads headers for this template
-	 *
-	 * @access protected
-	 */
-	protected function LoadHeaders()
-	{
-		if (isset($this->params['plain']) && $this->params['plain']) {
-
-            if (isset($this->params['file']))
+    /**
+     * LoadHeaders
+     *
+     * Loads headers for this template
+     *
+     * @access protected
+     */
+    protected function LoadHeaders() // @codingStandardsIgnoreLine
+    {
+        if (isset($this->params['plain']) && $this->params['plain']) {
+            if (isset($this->params['file'])) {
                 $saveas = $this->params['file'];
-            else
+            } else {
                 $saveas = $this->params['hash'] . ".txt";
+            }
 
             $headers = array();
 
@@ -125,69 +127,70 @@ class Controller_Blob extends ControllerBase
                 $mime = $blob->FileMime();
             }
 
-            if ($mime)
+            if ($mime) {
                 $headers[] = "Content-type: " . $mime;
-            else
+            } else {
                 $headers[] = "Content-type: text/plain; charset=UTF-8";
+            }
 
             $headers[] = "Content-disposition: attachment; filename=\"" . $saveas . "\"";
             $headers[] = "X-Content-Type-Options: nosniff";
 
-			$this->headers = $headers;
-		}
+            $this->headers = $headers;
+        }
+    }
 
-	}
+    /**
+     * LoadData
+     *
+     * Loads data for this template
+     *
+     * @access protected
+     */
+    protected function LoadData() // @codingStandardsIgnoreLine
+    {
+        $commit = $this->project->GetCommit($this->params['hashbase']);
+        $this->tpl->assign('commit', $commit);
 
-	/**
-	 * LoadData
-	 *
-	 * Loads data for this template
-	 *
-	 * @access protected
-	 */
-	protected function LoadData()
-	{
-		$commit = $this->project->GetCommit($this->params['hashbase']);
-		$this->tpl->assign('commit', $commit);
+        if ((!isset($this->params['hash'])) && (isset($this->params['file']))) {
+            $this->params['hash'] = $commit->PathToHash($this->params['file']);
+        }
 
-		if ((!isset($this->params['hash'])) && (isset($this->params['file']))) {
-			$this->params['hash'] = $commit->PathToHash($this->params['file']);
-		}
+        $blob = $this->project->GetBlob($this->params['hash']);
+        if (!empty($this->params['file'])) {
+            $blob->SetPath($this->params['file']);
+        }
+        $blob->SetCommit($commit);
+        $this->tpl->assign('blob', $blob);
 
-		$blob = $this->project->GetBlob($this->params['hash']);
-		if (!empty($this->params['file']))
-			$blob->SetPath($this->params['file']);
-		$blob->SetCommit($commit);
-		$this->tpl->assign('blob', $blob);
+        if (isset($this->params['plain']) && $this->params['plain']) {
+            return;
+        }
 
-		if (isset($this->params['plain']) && $this->params['plain']) {
-			return;
-		}
+        $head = $this->project->GetHeadCommit();
+        $this->tpl->assign('head', $head);
 
-		$head = $this->project->GetHeadCommit();
-		$this->tpl->assign('head', $head);
+        $this->tpl->assign('tree', $commit->GetTree());
 
-		$this->tpl->assign('tree', $commit->GetTree());
+        if (Config::GetInstance()->GetValue('filemimetype', true)) {
+            $mime = $blob->FileMime();
+            if ($mime) {
+                $mimetype = strtok($mime, '/');
+                if ($mimetype == 'image') {
+                    $this->tpl->assign('datatag', true);
+                    $this->tpl->assign('mime', $mime);
+                    $this->tpl->assign('data', base64_encode($blob->GetData()));
+                    return;
+                }
+            }
+        }
 
-		if (Config::GetInstance()->GetValue('filemimetype', true)) {
-			$mime = $blob->FileMime();
-			if ($mime) {
-				$mimetype = strtok($mime, '/');
-				if ($mimetype == 'image') {
-					$this->tpl->assign('datatag', true);
-					$this->tpl->assign('mime', $mime);
-					$this->tpl->assign('data', base64_encode($blob->GetData()));
-					return;
-				}
-			}
-		}
+        $this->tpl->assign('extrascripts', array('blame'));
 
-		$this->tpl->assign('extrascripts', array('blame'));
-
-		if (Config::GetInstance()->GetValue('geshi', true)) {
-            $geshi = new GeSHi("",'php');
+        if (Config::GetInstance()->GetValue('geshi', true)) {
+            $geshi = new GeSHi("", 'php');
             if ($geshi) {
-                $lang = $geshi->get_language_name_from_extension(substr(strrchr($blob->GetName(),'.'),1));
+                $lang = $geshi->get_language_name_from_extension(substr(strrchr($blob->GetName(), '.'), 1));
                 if (!empty($lang)) {
                     $geshi->enable_classes();
                     $geshi->enable_strict_mode(GESHI_MAYBE);
@@ -202,9 +205,8 @@ class Controller_Blob extends ControllerBase
                     return;
                 }
             }
-		}
+        }
 
-		$this->tpl->assign('bloblines', $blob->GetData(true));
-	}
-
+        $this->tpl->assign('bloblines', $blob->GetData(true));
+    }
 }
