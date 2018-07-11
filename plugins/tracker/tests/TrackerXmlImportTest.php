@@ -153,7 +153,8 @@ class TrackerXmlImportTest extends TuleapTestCase {
             $this->logger,
             \Mockery::spy(Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater::class),
             \Mockery::spy(Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class),
-            \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookFactory::class)
+            \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookFactory::class),
+            \Mockery::spy(\Tuleap\Tracker\TrackerXMLFieldMappingFromExistingTracker::class)
         );
 
         $this->tracker_xml_importer = \Mockery::mock(\TrackerXmlImportTestInstance::class, $class_parameters)
@@ -304,7 +305,8 @@ class TrackerXmlImportTest extends TuleapTestCase {
             \Mockery::spy(Logger::class),
             \Mockery::spy(Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater::class),
             \Mockery::spy(Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class),
-            \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookFactory::class)
+            \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookFactory::class),
+            \Mockery::spy(\Tuleap\Tracker\TrackerXMLFieldMappingFromExistingTracker::class)
         );
 
         $tracker_xml_importer = \Mockery::mock(\TrackerXmlImportTestInstance::class, $class_parameters)
@@ -339,7 +341,8 @@ class TrackerXmlImportTest extends TuleapTestCase {
             \Mockery::spy(Logger::class),
             \Mockery::spy(Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater::class),
             \Mockery::spy(Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class),
-            \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookFactory::class)
+            \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookFactory::class),
+            \Mockery::spy(\Tuleap\Tracker\TrackerXMLFieldMappingFromExistingTracker::class)
         );
 
         $tracker_xml_importer = \Mockery::mock(\TrackerXmlImportTestInstance::class, $class_parameters)
@@ -412,7 +415,8 @@ class TrackerXmlImport_WithArtifactsTest extends TuleapTestCase {
             \Mockery::spy(Logger::class),
             \Mockery::spy(Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater::class),
             \Mockery::spy(Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class),
-            \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookFactory::class)
+            \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookFactory::class),
+            \Mockery::spy(\Tuleap\Tracker\TrackerXMLFieldMappingFromExistingTracker::class)
         );
 
         $this->tracker_xml_importer = \Mockery::mock(\TrackerXmlImportTestInstance::class, $class_parameters)
@@ -429,6 +433,19 @@ class TrackerXmlImport_WithArtifactsTest extends TuleapTestCase {
         $this->xml_import->shouldReceive('importBareArtifactsFromXML')->once()->andReturn([]);
         $this->xml_import->shouldReceive('importArtifactChangesFromXML')->once();
 
+        $this->tracker_xml_importer->import(
+            $this->configuration,
+            $this->project,
+            $this->xml_input,
+            $this->mapping_registery,
+            $this->extraction_path
+        );
+    }
+
+    public function itImportsUpdatedArtifacts() {
+        stub($this->tracker_xml_importer)->updateFromXML()->returns($this->tracker);
+        $this->xml_import->shouldReceive('importBareArtifactsFromXML')->andReturn([]);
+        $this->configuration->setUpdate(true);
         $this->tracker_xml_importer->import(
             $this->configuration,
             $this->project,
@@ -469,7 +486,8 @@ class TrackerXmlImport_InstanceTest extends TuleapTestCase
             \Mockery::spy(\Logger::class),
             \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater::class),
             \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class),
-            \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookFactory::class)
+            \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookFactory::class),
+            \Mockery::spy(\Tuleap\Tracker\TrackerXMLFieldMappingFromExistingTracker::class)
         );
 
         $this->xml_security = new XML_Security();
@@ -543,7 +561,8 @@ XML;
             \Mockery::spy(\Logger::class),
             \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater::class),
             \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class),
-            \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookFactory::class)
+            \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookFactory::class),
+            \Mockery::spy(\Tuleap\Tracker\TrackerXMLFieldMappingFromExistingTracker::class)
         );
 
         //create data passed
@@ -773,7 +792,8 @@ class TrackerXmlImport_TriggersTest extends TuleapTestCase {
             \Mockery::spy(\Logger::class),
             \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater::class),
             \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class),
-            \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookFactory::class)
+            \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookFactory::class),
+            \Mockery::spy(\Tuleap\Tracker\TrackerXMLFieldMappingFromExistingTracker::class)
         );
 
         $this->project = \Mockery::spy(\Project::class);
@@ -854,7 +874,8 @@ class TrackerXmlImport_PermissionsTest extends TuleapTestCase {
             \Mockery::spy(\Logger::class),
             \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater::class),
             \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class),
-            \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookFactory::class)
+            \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookFactory::class),
+            \Mockery::spy(\Tuleap\Tracker\TrackerXMLFieldMappingFromExistingTracker::class)
         );
 
         $this->group_id = 123;
@@ -954,7 +975,8 @@ class TrackerXmlImport_ArtifactLinkV2Activation extends TuleapTestCase {
             \Mockery::spy(\Logger::class),
             $this->artifact_link_usage_updater,
             $this->artifact_link_usage_dao,
-            \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookFactory::class)
+            \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookFactory::class),
+            \Mockery::spy(\Tuleap\Tracker\TrackerXMLFieldMappingFromExistingTracker::class)
         );
 
         $this->project = aMockProject()->withId(201)->build();
@@ -1118,7 +1140,8 @@ class TrackerXmlImport_Validator extends TuleapTestCase {
             \Mockery::spy(Logger::class),
             \Mockery::spy(Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater::class),
             \Mockery::spy(Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class),
-            \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookFactory::class)
+            \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookFactory::class),
+            \Mockery::spy(\Tuleap\Tracker\TrackerXMLFieldMappingFromExistingTracker::class)
         );
 
         $this->tracker_xml_importer = \Mockery::mock(\TrackerXmlImportTestInstance::class, $class_parameters)

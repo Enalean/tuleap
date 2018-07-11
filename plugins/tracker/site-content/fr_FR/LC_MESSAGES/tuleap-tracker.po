@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.0.9\n"
 
 #, php-format
 msgid "%s has been created"
@@ -655,6 +655,14 @@ msgstr "Le champ texte '%s' ne peut pas être comparé à NOW()."
 msgid "The text field '%s' cannot be compared to OPEN()."
 msgstr "Le champ texte '%s' ne peut pas être comparé à OPEN()."
 
+#, php-format
+msgid ""
+"The tracker '%s' cannot be updated because it doesn't exist. Try again "
+"without \"--update\""
+msgstr ""
+"L'outil de suivi '%s' ne peut pas être mis à jour parce qu'il n'existe pas. "
+"Réessayez sans l'option '--update'"
+
 msgid "The tracker hierarchy cannot be defined."
 msgstr "La hiérarchie entre outils de suivi ne peut être définie."
 
@@ -785,10 +793,10 @@ msgid ""
 "    These will be replaced by the full name and username of the user who "
 "updated the artifact."
 msgstr ""
-"Vous pouvez utiliser des variables pour personnaliser le champ "
-"expéditeur. Les variables disponibles sont %%realname et %%username.\n"
-"    Celles-ci seront remplacées par le nom complet et le nom d'utilisateur de "
-"la personne qui a mis uà jour l'artefact."
+"Vous pouvez utiliser des variables pour personnaliser le champ expéditeur. "
+"Les variables disponibles sont %%realname et %%username.\n"
+"    Celles-ci seront remplacées par le nom complet et le nom d'utilisateur "
+"de la personne qui a mis uà jour l'artefact."
 
 msgid ""
 "You can't choose your notifications level for this tracker because tracker "

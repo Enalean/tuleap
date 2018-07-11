@@ -92,7 +92,7 @@ plugin_tracker_import	upload_file	Télécharger le fichier&nbsp;:
 plugin_tracker_import	file_upload_instructions	(La taille maximum du fichier est de $1 Mb. Le fichier doit être encodé en UTF-8)
 plugin_tracker_import	submit_info	Charger les artefacts
 plugin_tracker_import	send_notifications	Envoyer les notifications&nbsp;:
-plugin_tracker_import	cannot_create	Le tracker '$1' ne peut être créé
+plugin_tracker_import	cannot_create	Le tracker '$1' ne peut être créé. Utilisez l'option '--update' pour mettre à jour un tracker.
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/index.php
