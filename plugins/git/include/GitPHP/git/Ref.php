@@ -21,136 +21,138 @@ namespace Tuleap\Git\GitPHP;
  */
 abstract class Ref extends GitObject
 {
-	
-	/**
-	 * refName
-	 *
-	 * Stores the ref name
-	 *
-	 * @access protected
-	 */
-	protected $refName;
 
-	/**
-	 * refDir
-	 *
-	 * Stores the ref directory
-	 *
-	 * @access protected
-	 */
-	protected $refDir;
+    /**
+     * refName
+     *
+     * Stores the ref name
+     *
+     * @access protected
+     */
+    protected $refName;
 
-	/**
-	 * __construct
-	 *
-	 * Instantiates ref
-	 *
-	 * @access public
-	 * @param mixed $project the project
-	 * @param string $refDir the ref directory
-	 * @param string $refName the ref name
-	 * @param string $refHash the ref hash
-	 * @throws Exception if not a valid ref
-	 * @return mixed git ref
-	 */
-	public function __construct($project, $refDir, $refName, $refHash = '')
-	{
-		$this->project = $project;
-		$this->refDir = $refDir;
-		$this->refName = $refName;
-		if (!empty($refHash)) {
-			$this->SetHash($refHash);
-		}
-	}
+    /**
+     * refDir
+     *
+     * Stores the ref directory
+     *
+     * @access protected
+     */
+    protected $refDir;
 
-	/**
-	 * GetHash
-	 *
-	 * Gets the hash for this ref (overrides base)
-	 *
-	 * @access public
-	 * @return string object hash
-	 */
-	public function GetHash()
-	{
-		if (empty($this->hash))
-			$this->FindHash();
+    /**
+     * __construct
+     *
+     * Instantiates ref
+     *
+     * @access public
+     * @param mixed $project the project
+     * @param string $refDir the ref directory
+     * @param string $refName the ref name
+     * @param string $refHash the ref hash
+     * @throws Exception if not a valid ref
+     * @return mixed git ref
+     */
+    public function __construct($project, $refDir, $refName, $refHash = '')
+    {
+        $this->project = $project;
+        $this->refDir = $refDir;
+        $this->refName = $refName;
+        if (!empty($refHash)) {
+            $this->SetHash($refHash);
+        }
+    }
 
-		return parent::GetHash();
-	}
+    /**
+     * GetHash
+     *
+     * Gets the hash for this ref (overrides base)
+     *
+     * @access public
+     * @return string object hash
+     */
+    public function GetHash() // @codingStandardsIgnoreLine
+    {
+        if (empty($this->hash)) {
+            $this->FindHash();
+        }
 
-	/**
-	 * FindHash
-	 *
-	 * Looks up the hash for the ref
-	 *
-	 * @access protected
-	 * @throws Exception if hash is not found
-	 */
-	protected function FindHash()
-	{
-		$exe = new GitExe($this->GetProject());
-		$args = array();
-		$args[] = '--hash';
-		$args[] = '--verify';
-		$args[] = escapeshellarg($this->GetRefPath());
-		$hash = trim($exe->Execute(GitExe::SHOW_REF, $args));
+        return parent::GetHash();
+    }
 
-		if (empty($hash))
-			throw new \Exception('Invalid ref ' . $this->GetRefPath());
+    /**
+     * FindHash
+     *
+     * Looks up the hash for the ref
+     *
+     * @access protected
+     * @throws Exception if hash is not found
+     */
+    protected function FindHash() // @codingStandardsIgnoreLine
+    {
+        $exe = new GitExe($this->GetProject());
+        $args = array();
+        $args[] = '--hash';
+        $args[] = '--verify';
+        $args[] = escapeshellarg($this->GetRefPath());
+        $hash = trim($exe->Execute(GitExe::SHOW_REF, $args));
 
-		$this->SetHash($hash);
-	}
+        if (empty($hash)) {
+            throw new \Exception('Invalid ref ' . $this->GetRefPath());
+        }
 
-	/**
-	 * GetName
-	 *
-	 * Gets the ref name
-	 *
-	 * @access public
-	 * @return string ref name
-	 */
-	public function GetName()
-	{
-		return $this->refName;
-	}
+        $this->SetHash($hash);
+    }
 
-	/**
-	 * GetDirectory
-	 *
-	 * Gets the ref directory
-	 *
-	 * @access public
-	 * @return string ref directory
-	 */
-	public function GetDirectory()
-	{
-		return $this->refDir;
-	}
+    /**
+     * GetName
+     *
+     * Gets the ref name
+     *
+     * @access public
+     * @return string ref name
+     */
+    public function GetName() // @codingStandardsIgnoreLine
+    {
+        return $this->refName;
+    }
 
-	/**
-	 * GetRefPath
-	 *
-	 * Gets the path to the ref within the project
-	 *
-	 * @access public
-	 * @return string ref path
-	 */
-	public function GetRefPath()
-	{
-		return 'refs/' . $this->refDir . '/' . $this->refName;
-	}
+    /**
+     * GetDirectory
+     *
+     * Gets the ref directory
+     *
+     * @access public
+     * @return string ref directory
+     */
+    public function GetDirectory() // @codingStandardsIgnoreLine
+    {
+        return $this->refDir;
+    }
 
-	/**
-	 * GetFullPath
-	 *
-	 * Gets the path to the ref including the project path
-	 *
-	 * @access public
-	 * @return string full ref path
-	 */
-	public function GetFullPath()
-	{
-		return $this->GetProject()->GetPath() . '/' . $this->GetRefPath();
-	}
+    /**
+     * GetRefPath
+     *
+     * Gets the path to the ref within the project
+     *
+     * @access public
+     * @return string ref path
+     */
+    public function GetRefPath() // @codingStandardsIgnoreLine
+    {
+        return 'refs/' . $this->refDir . '/' . $this->refName;
+    }
+
+    /**
+     * GetFullPath
+     *
+     * Gets the path to the ref including the project path
+     *
+     * @access public
+     * @return string full ref path
+     */
+    public function GetFullPath() // @codingStandardsIgnoreLine
+    {
+        return $this->GetProject()->GetPath() . '/' . $this->GetRefPath();
+    }
 }

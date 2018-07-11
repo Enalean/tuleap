@@ -21,271 +21,279 @@ namespace Tuleap\Git\GitPHP;
  */
 class TreeDiff implements \Iterator
 {
-	
-	/**
-	 * fromHash
-	 *
-	 * Stores the from hash
-	 *
-	 * @access protected
-	 */
-	protected $fromHash;
 
-	/**
-	 * toHash
-	 *
-	 * Stores the to hash
-	 *
-	 * @access protected
-	 */
-	protected $toHash;
+    /**
+     * fromHash
+     *
+     * Stores the from hash
+     *
+     * @access protected
+     */
+    protected $fromHash;
 
-	/**
-	 * renames
-	 *
-	 * Stores whether to detect renames
-	 *
-	 * @access protected
-	 */
-	protected $renames;
+    /**
+     * toHash
+     *
+     * Stores the to hash
+     *
+     * @access protected
+     */
+    protected $toHash;
 
-	/**
-	 * project
-	 *
-	 * Stores the project
-	 *
-	 * @access protected
-	 */
-	protected $project;
+    /**
+     * renames
+     *
+     * Stores whether to detect renames
+     *
+     * @access protected
+     */
+    protected $renames;
 
-	/**
-	 * fileDiffs
-	 *
-	 * Stores the individual file diffs
-	 *
-	 * @access protected
-	 */
-	protected $fileDiffs = array();
+    /**
+     * project
+     *
+     * Stores the project
+     *
+     * @access protected
+     */
+    protected $project;
 
-	/**
-	 * dataRead
-	 *
-	 * Stores whether data has been read
-	 *
-	 * @access protected
-	 */
-	protected $dataRead = false;
+    /**
+     * fileDiffs
+     *
+     * Stores the individual file diffs
+     *
+     * @access protected
+     */
+    protected $fileDiffs = array();
 
-	/**
-	 * __construct
-	 *
-	 * Constructor
-	 *
-	 * @access public
-	 * @param mixed $project project
-	 * @param string $toHash to commit hash
-	 * @param string $fromHash from commit hash
-	 * @param boolean $renames whether to detect file renames
-	 * @return mixed TreeDiff object
-	 * @throws Exception exception on invalid parameters
-	 */
-	public function __construct($project, $toHash, $fromHash = '', $renames = false)
-	{
-		$this->project = $project;
+    /**
+     * dataRead
+     *
+     * Stores whether data has been read
+     *
+     * @access protected
+     */
+    protected $dataRead = false;
 
-		$toCommit = $this->project->GetCommit($toHash);
-		$this->toHash = $toHash;
+    /**
+     * __construct
+     *
+     * Constructor
+     *
+     * @access public
+     * @param mixed $project project
+     * @param string $toHash to commit hash
+     * @param string $fromHash from commit hash
+     * @param boolean $renames whether to detect file renames
+     * @return mixed TreeDiff object
+     * @throws Exception exception on invalid parameters
+     */
+    public function __construct($project, $toHash, $fromHash = '', $renames = false)
+    {
+        $this->project = $project;
 
-		if (empty($fromHash)) {
-			$parent = $toCommit->GetParent();
-			if ($parent) {
-				$this->fromHash = $parent->GetHash();
-			}
-		} else {
-			$fromCommit = $this->project->GetCommit($fromHash);
-			$this->fromHash = $fromHash;
-		}
+        $toCommit = $this->project->GetCommit($toHash);
+        $this->toHash = $toHash;
 
-		$this->renames = $renames;
-	}
+        if (empty($fromHash)) {
+            $parent = $toCommit->GetParent();
+            if ($parent) {
+                $this->fromHash = $parent->GetHash();
+            }
+        } else {
+            $fromCommit = $this->project->GetCommit($fromHash);
+            $this->fromHash = $fromHash;
+        }
 
-	/**
-	 * ReadData
-	 *
-	 * Reads the tree diff data
-	 *
-	 * @access private
-	 */
-	private function ReadData()
-	{
-		$this->dataRead = true;
+        $this->renames = $renames;
+    }
 
-		$this->fileDiffs = array();
+    /**
+     * ReadData
+     *
+     * Reads the tree diff data
+     *
+     * @access private
+     */
+    private function ReadData() // @codingStandardsIgnoreLine
+    {
+        $this->dataRead = true;
 
-		$exe = new GitExe($this->project);
+        $this->fileDiffs = array();
 
-		$args = array();
+        $exe = new GitExe($this->project);
 
-		$args[] = '-r';
-		if ($this->renames)
-			$args[] = '-M';
+        $args = array();
 
-		if (empty($this->fromHash))
-			$args[] = '--root';
-		else
-			$args[] = escapeshellarg($this->fromHash);
+        $args[] = '-r';
+        if ($this->renames) {
+            $args[] = '-M';
+        }
 
-		$args[] = escapeshellarg($this->toHash);
+        if (empty($this->fromHash)) {
+            $args[] = '--root';
+        } else {
+            $args[] = escapeshellarg($this->fromHash);
+        }
 
-		$diffTreeLines = explode("\n", $exe->Execute(GitExe::DIFF_TREE, $args));
-		foreach ($diffTreeLines as $line) {
-			$trimmed = trim($line);
-			if ((strlen($trimmed) > 0) && (substr_compare($trimmed, ':', 0, 1) === 0)) {
-				try {
-					$this->fileDiffs[] = new FileDiff($this->project, $trimmed);
-				} catch (\Exception $e) {
-				}
-			}
-		}
+        $args[] = escapeshellarg($this->toHash);
 
-		unset($exe);
-	}
+        $diffTreeLines = explode("\n", $exe->Execute(GitExe::DIFF_TREE, $args));
+        foreach ($diffTreeLines as $line) {
+            $trimmed = trim($line);
+            if ((strlen($trimmed) > 0) && (substr_compare($trimmed, ':', 0, 1) === 0)) {
+                try {
+                    $this->fileDiffs[] = new FileDiff($this->project, $trimmed);
+                } catch (\Exception $e) {
+                }
+            }
+        }
 
-	/**
-	 * GetFromHash
-	 *
-	 * Gets the from hash for this treediff
-	 *
-	 * @access public
-	 * @return string from hash
-	 */
-	public function GetFromHash()
-	{
-		return $this->fromHash;
-	}
+        unset($exe);
+    }
 
-	/**
-	 * GetToHash
-	 *
-	 * Gets the to hash for this treediff
-	 *
-	 * @access public
-	 * @return string to hash
-	 */
-	public function GetToHash()
-	{
-		return $this->toHash;
-	}
+    /**
+     * GetFromHash
+     *
+     * Gets the from hash for this treediff
+     *
+     * @access public
+     * @return string from hash
+     */
+    public function GetFromHash() // @codingStandardsIgnoreLine
+    {
+        return $this->fromHash;
+    }
 
-	/**
-	 * GetRenames
-	 *
-	 * Get whether this treediff is set to detect renames
-	 *
-	 * @access public
-	 * @return boolean true if renames will be detected
-	 */
-	public function GetRenames()
-	{
-		return $this->renames;
-	}
+    /**
+     * GetToHash
+     *
+     * Gets the to hash for this treediff
+     *
+     * @access public
+     * @return string to hash
+     */
+    public function GetToHash() // @codingStandardsIgnoreLine
+    {
+        return $this->toHash;
+    }
 
-	/**
-	 * SetRenames
-	 *
-	 * Set whether this treediff is set to detect renames
-	 *
-	 * @access public
-	 * @param boolean $renames whether to detect renames
-	 */
-	public function SetRenames($renames)
-	{
-		if ($renames == $this->renames)
-			return;
+    /**
+     * GetRenames
+     *
+     * Get whether this treediff is set to detect renames
+     *
+     * @access public
+     * @return boolean true if renames will be detected
+     */
+    public function GetRenames() // @codingStandardsIgnoreLine
+    {
+        return $this->renames;
+    }
 
-		$this->renames = $renames;
-		$this->dataRead = false;
-	}
+    /**
+     * SetRenames
+     *
+     * Set whether this treediff is set to detect renames
+     *
+     * @access public
+     * @param boolean $renames whether to detect renames
+     */
+    public function SetRenames($renames) // @codingStandardsIgnoreLine
+    {
+        if ($renames == $this->renames) {
+            return;
+        }
 
-	/**
-	 * rewind
-	 *
-	 * Rewinds the iterator
-	 */
-	function rewind()
-	{
-		if (!$this->dataRead)
-			$this->ReadData();
+        $this->renames = $renames;
+        $this->dataRead = false;
+    }
 
-		return reset($this->fileDiffs);
-	}
+    /**
+     * rewind
+     *
+     * Rewinds the iterator
+     */
+    public function rewind()
+    {
+        if (!$this->dataRead) {
+            $this->ReadData();
+        }
 
-	/**
-	 * current
-	 *
-	 * Returns the current element in the array
-	 */
-	function current()
-	{
-		if (!$this->dataRead)
-			$this->ReadData();
+        return reset($this->fileDiffs);
+    }
 
-		return current($this->fileDiffs);
-	}
+    /**
+     * current
+     *
+     * Returns the current element in the array
+     */
+    public function current()
+    {
+        if (!$this->dataRead) {
+            $this->ReadData();
+        }
 
-	/**
-	 * key
-	 *
-	 * Returns the current key
-	 */
-	function key()
-	{
-		if (!$this->dataRead)
-			$this->ReadData();
+        return current($this->fileDiffs);
+    }
 
-		return key($this->fileDiffs);
-	}
+    /**
+     * key
+     *
+     * Returns the current key
+     */
+    public function key()
+    {
+        if (!$this->dataRead) {
+            $this->ReadData();
+        }
 
-	/**
-	 * next
-	 *
-	 * Advance the pointer
-	 */
-	function next()
-	{
-		if (!$this->dataRead)
-			$this->ReadData();
+        return key($this->fileDiffs);
+    }
 
-		return next($this->fileDiffs);
-	}
+    /**
+     * next
+     *
+     * Advance the pointer
+     */
+    public function next()
+    {
+        if (!$this->dataRead) {
+            $this->ReadData();
+        }
 
-	/**
-	 * valid
-	 *
-	 * Test for a valid pointer
-	 */
-	function valid()
-	{
-		if (!$this->dataRead)
-			$this->ReadData();
+        return next($this->fileDiffs);
+    }
 
-		return key($this->fileDiffs) !== null;
-	}
+    /**
+     * valid
+     *
+     * Test for a valid pointer
+     */
+    public function valid()
+    {
+        if (!$this->dataRead) {
+            $this->ReadData();
+        }
 
-	/**
-	 * Count
-	 *
-	 * Gets the number of file changes in this treediff
-	 *
-	 * @access public
-	 * @return integer count of file changes
-	 */
-	public function Count()
-	{
-		if (!$this->dataRead)
-			$this->ReadData();
+        return key($this->fileDiffs) !== null;
+    }
 
-		return count($this->fileDiffs);
-	}
+    /**
+     * Count
+     *
+     * Gets the number of file changes in this treediff
+     *
+     * @access public
+     * @return integer count of file changes
+     */
+    public function Count() // @codingStandardsIgnoreLine
+    {
+        if (!$this->dataRead) {
+            $this->ReadData();
+        }
 
+        return count($this->fileDiffs);
+    }
 }

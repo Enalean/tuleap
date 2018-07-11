@@ -20,49 +20,49 @@ namespace Tuleap\Git\GitPHP;
 class Util
 {
 
-	/**
-	 * AddSlash
-	 *
-	 * Adds a trailing slash to a directory path if necessary
-	 *
-	 * @access public
-	 * @static
-	 * @param string $path path to add slash to
-	 * @return string $path with a trailing slash
-	 */
-	public static function AddSlash($path)
-	{
-		if (empty($path))
-			return $path;
+    /**
+     * AddSlash
+     *
+     * Adds a trailing slash to a directory path if necessary
+     *
+     * @access public
+     * @static
+     * @param string $path path to add slash to
+     * @return string $path with a trailing slash
+     */
+    public static function AddSlash($path) // @codingStandardsIgnoreLine
+    {
+        if (empty($path)) {
+            return $path;
+        }
 
-		$end = substr($path, -1);
+        $end = substr($path, -1);
 
-		if (!(( ($end == '/') || ($end == ':')))) {
+        if (!(( ($end == '/') || ($end == ':')))) {
             $path .= '/';
         }
 
-		return $path;
-	}
+        return $path;
+    }
 
-	/**
-	 * MakeSlug
-	 *
-	 * Turn a string into a filename-friendly slug
-	 *
-	 * @access public
-	 * @param string $str string to slugify
-	 * @static
-	 * @return string slug
-	 */
-	public static function MakeSlug($str)
-	{
-		$from = array(
-			'/'
-		);
-		$to = array(
-			'-'
-		);
-		return str_replace($from, $to, $str);
-	}
-
+    /**
+     * MakeSlug
+     *
+     * Turn a string into a filename-friendly slug
+     *
+     * @access public
+     * @param string $str string to slugify
+     * @static
+     * @return string slug
+     */
+    public static function MakeSlug($str) // @codingStandardsIgnoreLine
+    {
+        $from = array(
+            '/'
+        );
+        $to = array(
+            '-'
+        );
+        return str_replace($from, $to, $str);
+    }
 }

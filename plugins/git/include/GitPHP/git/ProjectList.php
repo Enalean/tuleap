@@ -19,8 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// phpcs:ignoreFile
-
 namespace Tuleap\Git\GitPHP;
 
 /**
@@ -43,47 +41,45 @@ namespace Tuleap\Git\GitPHP;
 class ProjectList
 {
 
-	/**
-	 * instance
-	 *
-	 * Stores the singleton instance of the projectlist
-	 *
-	 * @access protected
-	 * @static
-	 */
-	protected static $instance = null;
+    /**
+     * instance
+     *
+     * Stores the singleton instance of the projectlist
+     *
+     * @access protected
+     * @static
+     */
+    protected static $instance = null;
 
-	/**
-	 * GetInstance
-	 *
-	 * Returns the singleton instance
-	 *
-	 * @access public
-	 * @static
-	 * @return mixed instance of projectlist
-	 * @throws Exception if projectlist has not been instantiated yet
-	 */
-	public static function GetInstance()
-	{
-		return self::$instance;
-	}
+    /**
+     * GetInstance
+     *
+     * Returns the singleton instance
+     *
+     * @access public
+     * @static
+     * @return mixed instance of projectlist
+     * @throws Exception if projectlist has not been instantiated yet
+     */
+    public static function GetInstance() // @codingStandardsIgnoreLine
+    {
+        return self::$instance;
+    }
 
-	/**
-	 * Instantiate
-	 *
-	 * Instantiates the singleton instance
-	 *
-	 * @static
-	 * @throws \Exception
-	 */
-	public static function Instantiate(\GitRepository $repository)
-	{
-		if (self::$instance !== null) {
+    /**
+     * Instantiate
+     *
+     * Instantiates the singleton instance
+     *
+     * @static
+     * @throws \Exception
+     */
+    public static function Instantiate(\GitRepository $repository) // @codingStandardsIgnoreLine
+    {
+        if (self::$instance !== null) {
             return;
         }
 
         self::$instance = new ProjectProvider($repository);
-	}
-
+    }
 }
-

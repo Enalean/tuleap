@@ -18,67 +18,64 @@ namespace Tuleap\Git\GitPHP;
  * @package GitPHP
  * @subpackage Controller
  */
-abstract class Controller_DiffBase extends ControllerBase
+abstract class Controller_DiffBase extends ControllerBase // @codingStandardsIgnoreLine
 {
     const DIFF_UNIFIED    = 1;
     const DIFF_SIDEBYSIDE = 2;
 
-	/**
-	 * ReadQuery
-	 *
-	 * Read query into parameters
-	 *
-	 * @access protected
-	 */
-	protected function ReadQuery()
-	{
-		if (!isset($this->params['plain']) || $this->params['plain'] != true) {
+    /**
+     * ReadQuery
+     *
+     * Read query into parameters
+     *
+     * @access protected
+     */
+    protected function ReadQuery() // @codingStandardsIgnoreLine
+    {
+        if (!isset($this->params['plain']) || $this->params['plain'] != true) {
+            if ($this->DiffMode(isset($_GET['o']) ? $_GET['o'] : '') == self::DIFF_SIDEBYSIDE) {
+                $this->params['sidebyside'] = true;
+            }
+        }
+    }
 
-			if ($this->DiffMode(isset($_GET['o']) ? $_GET['o'] : '') == self::DIFF_SIDEBYSIDE) {
-				$this->params['sidebyside'] = true;
-			}
+    /**
+     * DiffMode
+     *
+     * Determines the diff mode to use
+     *
+     * @param string $overrideMode mode overridden by the user
+     * @access protected
+     */
+    protected function DiffMode($overrideMode = '') // @codingStandardsIgnoreLine
+    {
+        $mode = self::DIFF_UNIFIED; // default
 
-		}
-	}
+        if (!empty($overrideMode)) {
+            /*
+             * User is choosing a new mode
+             */
+            if ($overrideMode == 'sidebyside') {
+                $mode = self::DIFF_SIDEBYSIDE;
+            } elseif ($overrideMode == 'unified') {
+                $mode = self::DIFF_UNIFIED;
+            }
+        }
 
-	/**
-	 * DiffMode
-	 *
-	 * Determines the diff mode to use
-	 *
-	 * @param string $overrideMode mode overridden by the user
-	 * @access protected
-	 */
-	protected function DiffMode($overrideMode = '')
-	{
-		$mode = self::DIFF_UNIFIED;	// default
+        return $mode;
+    }
 
-		if (!empty($overrideMode)) {
-			/*
-			 * User is choosing a new mode
-			 */
-			if ($overrideMode == 'sidebyside') {
-				$mode = self::DIFF_SIDEBYSIDE;
-			} else if ($overrideMode == 'unified') {
-				$mode = self::DIFF_UNIFIED;
-			}
-		}
-
-		return $mode;
-	}
-
-	/**
-	 * LoadHeaders
-	 *
-	 * Loads headers for this template
-	 *
-	 * @access protected
-	 */
-	protected function LoadHeaders()
-	{
-		if (isset($this->params['plain']) && ($this->params['plain'] === true)) {
-			$this->headers[] = 'Content-type: text/plain; charset=UTF-8';
-		}
-	}
-
+    /**
+     * LoadHeaders
+     *
+     * Loads headers for this template
+     *
+     * @access protected
+     */
+    protected function LoadHeaders() // @codingStandardsIgnoreLine
+    {
+        if (isset($this->params['plain']) && ($this->params['plain'] === true)) {
+            $this->headers[] = 'Content-type: text/plain; charset=UTF-8';
+        }
+    }
 }

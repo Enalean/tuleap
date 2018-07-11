@@ -19,114 +19,116 @@ namespace Tuleap\Git\GitPHP;
  * @package GitPHP
  * @subpackage Controller
  */
-class Controller_Tree extends ControllerBase
+class Controller_Tree extends ControllerBase // @codingStandardsIgnoreLine
 {
 
-	/**
-	 * __construct
-	 *
-	 * Constructor
-	 *
-	 * @access public
-	 * @return controller
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		if (!$this->project) {
-			throw new MessageException(__('Project is required'), true);
-		}
-	}
+    /**
+     * __construct
+     *
+     * Constructor
+     *
+     * @access public
+     * @return controller
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        if (!$this->project) {
+            throw new MessageException(__('Project is required'), true);
+        }
+    }
 
-	/**
-	 * GetTemplate
-	 *
-	 * Gets the template for this controller
-	 *
-	 * @access protected
-	 * @return string template filename
-	 */
-	protected function GetTemplate()
-	{
-		return 'tree.tpl';
-	}
+    /**
+     * GetTemplate
+     *
+     * Gets the template for this controller
+     *
+     * @access protected
+     * @return string template filename
+     */
+    protected function GetTemplate() // @codingStandardsIgnoreLine
+    {
+        return 'tree.tpl';
+    }
 
-	/**
-	 * GetName
-	 *
-	 * Gets the name of this controller's action
-	 *
-	 * @access public
-	 * @param boolean $local true if caller wants the localized action name
-	 * @return string action name
-	 */
-	public function GetName($local = false)
-	{
-		if ($local) {
-			return __('tree');
-		}
-		return 'tree';
-	}
+    /**
+     * GetName
+     *
+     * Gets the name of this controller's action
+     *
+     * @access public
+     * @param boolean $local true if caller wants the localized action name
+     * @return string action name
+     */
+    public function GetName($local = false) // @codingStandardsIgnoreLine
+    {
+        if ($local) {
+            return __('tree');
+        }
+        return 'tree';
+    }
 
-	/**
-	 * ReadQuery
-	 *
-	 * Read query into parameters
-	 *
-	 * @access protected
-	 */
-	protected function ReadQuery()
-	{
-		if (isset($_GET['f']))
-			$this->params['file'] = $_GET['f'];
-		if (isset($_GET['h']))
-			$this->params['hash'] = $_GET['h'];
-		if (isset($_GET['hb']))
-			$this->params['hashbase'] = $_GET['hb'];
-
-		if (!(isset($this->params['hashbase']) || isset($this->params['hash']))) {
-			$this->params['hashbase'] = 'HEAD';
-		}
-	}
-
-	/**
-	 * LoadData
-	 *
-	 * Loads data for this template
-	 *
-	 * @access protected
-	 */
-	protected function LoadData()
-	{
-		if (!isset($this->params['hashbase'])) {
-			// TODO: write a lookup for hash (tree) -> hashbase (commithash) and remove this
-			throw new \Exception('Hashbase is required');
-		}
-
-		$commit = $this->project->GetCommit($this->params['hashbase']);
-
-		$this->tpl->assign('commit', $commit);
-
-		if ($commit === null) {
-		    return;
+    /**
+     * ReadQuery
+     *
+     * Read query into parameters
+     *
+     * @access protected
+     */
+    protected function ReadQuery() // @codingStandardsIgnoreLine
+    {
+        if (isset($_GET['f'])) {
+            $this->params['file'] = $_GET['f'];
+        }
+        if (isset($_GET['h'])) {
+            $this->params['hash'] = $_GET['h'];
+        }
+        if (isset($_GET['hb'])) {
+            $this->params['hashbase'] = $_GET['hb'];
         }
 
-		if (!isset($this->params['hash'])) {
-			if (isset($this->params['file'])) {
-				$this->params['hash'] = $commit->PathToHash($this->params['file']);
-			} else {
-				$this->params['hash'] = $commit->GetTree()->GetHash();
-			}
-		}
+        if (!(isset($this->params['hashbase']) || isset($this->params['hash']))) {
+            $this->params['hashbase'] = 'HEAD';
+        }
+    }
 
-		$tree = $this->project->GetTree($this->params['hash']);
-		if (!$tree->GetCommit()) {
-			$tree->SetCommit($commit);
-		}
-		if (isset($this->params['file'])) {
-			$tree->SetPath($this->params['file']);
-		}
-		$this->tpl->assign('tree', $tree);
-	}
+    /**
+     * LoadData
+     *
+     * Loads data for this template
+     *
+     * @access protected
+     */
+    protected function LoadData() // @codingStandardsIgnoreLine
+    {
+        if (!isset($this->params['hashbase'])) {
+            // TODO: write a lookup for hash (tree) -> hashbase (commithash) and remove this
+            throw new \Exception('Hashbase is required');
+        }
 
+        $commit = $this->project->GetCommit($this->params['hashbase']);
+
+        $this->tpl->assign('commit', $commit);
+
+        if ($commit === null) {
+            return;
+        }
+
+        if (!isset($this->params['hash'])) {
+            if (isset($this->params['file'])) {
+                $this->params['hash'] = $commit->PathToHash($this->params['file']);
+            } else {
+                $this->params['hash'] = $commit->GetTree()->GetHash();
+            }
+        }
+
+        $tree = $this->project->GetTree($this->params['hash']);
+        if (!$tree->GetCommit()) {
+            $tree->SetCommit($commit);
+        }
+        if (isset($this->params['file'])) {
+            $tree->SetPath($this->params['file']);
+        }
+        $this->tpl->assign('tree', $tree);
+    }
 }
