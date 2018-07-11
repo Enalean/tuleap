@@ -3,6 +3,11 @@
 
 class JabbeXInstaller {
 
+    /**
+     * @var PDO
+     */
+    private $pdo;
+
 	private $argc; // Command line ...
 	private $argv; // ... arguments.
 
@@ -15,15 +20,19 @@ class JabbeXInstaller {
 		$this->argv = $argv;
 	}
 	
-	function _db_connect($username, $pwd, $url, $port = null, $db){
-		if(!$port) $port = "3306";
-		mysql_connect($url.":".$port, $username, $pwd) or die(mysql_error());
-		mysql_select_db($db) or die(mysql_error());
+	function _db_connect($username, $pwd, $url, $port = null, $db)
+    {
+		if(! $port) {
+		    $port = "3306";
+        }
 
+        $this->pdo = new PDO("mysql:host=$url;port=$port;dbname=$db;charset=utf8mb4", $username, $pwd);
+        $this->pdo->setAttribute(\PDO::ATTR_EMULATE_PREPARES, false);
+        $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 	}
 
-	function _db_close(){
-		mysql_close();
+	function _db_close()
+    {
 	}
 
 	function get_mode(){
@@ -582,8 +591,9 @@ class JabbeXInstaller {
 		$this->_db_connect($this->arguments["USER_OF_DB"],$this->arguments["PWD_OF_DB"],$this->arguments["OF_DB_HOST"],$this->arguments["OF_DB_PORT"],$this->arguments["OF_DB_NAME"]);
 		
 		$query = "SELECT * FROM `ofProperty` WHERE `name` LIKE '$property'";
-		$result = mysql_query($query) or die('ERROR: Unable to query DB.\n');
-		return mysql_fetch_array($result);
+        $statement = $this->pdo->query($query);
+
+        return $statement->fetch();
 		
 	}
 
@@ -595,11 +605,11 @@ class JabbeXInstaller {
 		
 		if( ! $this->_property_exists($property) ){
 			$query = "INSERT INTO `openfire`.`ofProperty` (`name`, `propValue`) VALUES ('$property', '$value')";
-			mysql_query($query) or die('ERROR: Unable to insert property '.$property.' into the Openfire\'s DB.\n');
+            $this->pdo->exec($query);
 		}
 		else{
 			$query = "UPDATE `openfire`.`ofProperty` SET `propValue` = '$value' WHERE `ofProperty`.`name` = '$property'";
-			mysql_query($query) or die('ERROR: Unable to update property '.$property.' in the Openfire\'s DB.\n');
+            $this->pdo->exec($query);
 		}
 	}
 
@@ -611,8 +621,8 @@ class JabbeXInstaller {
 		$this->_db_connect($this->arguments["USER_OF_DB"],$this->arguments["PWD_OF_DB"],$this->arguments["OF_DB_HOST"],$this->arguments["OF_DB_PORT"],$this->arguments["OF_DB_NAME"]);
 		
 		$query = "SELECT * FROM `ofMucServiceProp` WHERE `serviceID` = 1 AND `name` LIKE '$property'";
-		$result = mysql_query($query) or die('ERROR: Unable to query DB.\n');
-		return mysql_fetch_array($result);
+        $statement = $this->pdo->query($query);
+        return $statement->fetch();
 		
 	}
 
@@ -624,11 +634,11 @@ class JabbeXInstaller {
 		
 		if( ! $this->_muc_property_exists($property) ){
 			$query = "INSERT INTO `openfire`.`ofMucServiceProp` (`serviceID`, `name`, `propValue`) VALUES (1, '$property', '$value')";
-			mysql_query($query) or die('ERROR: Unable to insert property '.$property.' into the Openfire\'s DB.\n');
+            $this->pdo->exec($query);
 		}
 		else{
 			$query = "UPDATE `openfire`.`ofMucServiceProp` SET `propValue` = '$value' WHERE `serviceID` = 1 AND `ofMucServiceProp`.`name` = '$property'";
-			mysql_query($query) or die('ERROR: Unable to update property '.$property.' in the Openfire\'s DB.\n');
+            $this->pdo->exec($query);
 		}
 	}
 	
