@@ -58,25 +58,25 @@ class Git_AdminMAllowedProjectsPresenter {
     }
 
     public function restricted_resource_action() {
-        return '/plugins/git/admin/?view=mirrors_restriction&action=set-mirror-restriction&mirror_id=' . $this->mirror->id;
+        return GIT_SITE_ADMIN_BASE_URL . '?view=mirrors_restriction&action=set-mirror-restriction&mirror_id=' . $this->mirror->id;
     }
 
     public function restricted_resource_action_csrf() {
-        $csrf = new CSRFSynchronizerToken('/plugins/git/admin/?view=mirrors_restriction&action=set-mirror-restriction&mirror_id=' . $this->mirror->id);
+        $csrf = new CSRFSynchronizerToken(GIT_SITE_ADMIN_BASE_URL . '?view=mirrors_restriction&action=set-mirror-restriction&mirror_id=' . $this->mirror->id);
         return $csrf->fetchHTMLInput();
     }
 
     public function update_allowed_projects_action() {
-        return '/plugins/git/admin/?view=mirrors_restriction&action=update-allowed-project-list&mirror_id=' . $this->mirror->id;
+        return GIT_SITE_ADMIN_BASE_URL . '?view=mirrors_restriction&action=update-allowed-project-list&mirror_id=' . $this->mirror->id;
     }
 
     public function update_allowed_projects_action_csrf() {
-        $csrf = new CSRFSynchronizerToken('/plugins/git/admin/?view=mirrors_restriction&action=update-allowed-project-list&mirror_id=' . $this->mirror->id);
+        $csrf = new CSRFSynchronizerToken(GIT_SITE_ADMIN_BASE_URL . '?view=mirrors_restriction&action=update-allowed-project-list&mirror_id=' . $this->mirror->id);
         return $csrf->fetchHTMLInput();
     }
 
     public function resource_allowed_project_back_link() {
-        return '/plugins/git/admin/?pane=mirrors_admin';
+        return GIT_SITE_ADMIN_BASE_URL . '?pane=mirrors_admin';
     }
 
     public function resource_allowed_project_back_link_title() {

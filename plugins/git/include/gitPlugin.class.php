@@ -319,7 +319,7 @@ class GitPlugin extends Plugin
     {
         $params['plugins'][] = array(
             'label' => $GLOBALS['Language']->getText('plugin_git', 'descriptor_name'),
-            'href'  => $this->getPluginPath() . '/admin/index.php'
+            'href'  => GIT_SITE_ADMIN_BASE_URL
         );
     }
 
@@ -742,7 +742,7 @@ class GitPlugin extends Plugin
 
         return new Git_AdminRouter(
             $this->getGerritServerFactory(),
-            new CSRFSynchronizerToken('/plugins/git/admin/'),
+            new CSRFSynchronizerToken(GIT_SITE_ADMIN_BASE_URL),
             $this->getMirrorDataMapper(),
             new Git_MirrorResourceRestrictor(
                 new Git_RestrictedMirrorDao(),
@@ -2481,10 +2481,14 @@ class GitPlugin extends Plugin
 
     public function collectRoutesEvent(\Tuleap\Request\CollectRoutesEvent $event)
     {
-        $event->getRouteCollector()->addGroup(GIT_BASE_URL, function (FastRoute\RouteCollector $r) {
-            $r->addRoute(['GET', 'POST'], '/admin[/[index.php]]', function () {
+        $event->getRouteCollector()->addGroup(GIT_SITE_ADMIN_BASE_URL, function (FastRoute\RouteCollector $r) {
+            $r->addRoute(
+                ['GET', 'POST'], '[/]', function() {
                 return $this->getAdminRouter();
             });
+        });
+
+        $event->getRouteCollector()->addGroup(GIT_BASE_URL, function (FastRoute\RouteCollector $r) {
             $r->addRoute(['GET'], '/index.php/{project_id:\d+}/view/{repository_id:\d+}/[{args}]', function () {
                 return new \Tuleap\Git\GitLegacyURLRedirectController(
                     $this->getRepositoryFactory()

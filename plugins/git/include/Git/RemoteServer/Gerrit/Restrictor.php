@@ -63,14 +63,14 @@ class Restrictor
         $gerrit_server = $this->getGerritServerFromRequest($request);
 
         $this->checkSynchronizerToken(
-            '/plugins/git/admin/?view=gerrit_servers_restriction&action=set-gerrit-server-restriction&gerrit_server_id=' .
+            GIT_SITE_ADMIN_BASE_URL . '?view=gerrit_servers_restriction&action=set-gerrit-server-restriction&gerrit_server_id=' .
             urlencode($gerrit_server->getId())
         );
 
         $this->restrictGerritServer($request, $gerrit_server);
 
         $GLOBALS['Response']->redirect(
-            '/plugins/git/admin/?view=gerrit_servers_restriction&action=manage-allowed-projects&gerrit_server_id=' .
+            GIT_SITE_ADMIN_BASE_URL . '?view=gerrit_servers_restriction&action=manage-allowed-projects&gerrit_server_id=' .
             urlencode($gerrit_server->getId())
         );
     }
@@ -113,7 +113,7 @@ class Restrictor
             $GLOBALS['Language']->getText('plugin_git', 'gerrit_servers_id_does_not_exist')
         );
 
-        $GLOBALS['Response']->redirect('/plugins/git/admin/?pane=gerrit_servers_admin');
+        $GLOBALS['Response']->redirect(GIT_SITE_ADMIN_BASE_URL . '?pane=gerrit_servers_admin');
     }
 
     private function checkSynchronizerToken($url)
@@ -151,7 +151,7 @@ class Restrictor
         }
 
         $GLOBALS['Response']->redirect(
-            '/plugins/git/admin/?view=gerrit_servers_restriction&action=manage-allowed-projects&gerrit_server_id=' .
+            GIT_SITE_ADMIN_BASE_URL . '?view=gerrit_servers_restriction&action=manage-allowed-projects&gerrit_server_id=' .
             urlencode($gerrit_server->getId())
         );
     }

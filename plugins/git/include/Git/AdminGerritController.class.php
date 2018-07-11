@@ -86,7 +86,7 @@ class Git_AdminGerritController {
         $request_gerrit_server = $request->params;
         $this->csrf->check();
         $this->addServer($request_gerrit_server);
-        $GLOBALS['Response']->redirect('/plugins/git/admin/?pane=gerrit_servers_admin');
+        $GLOBALS['Response']->redirect(GIT_SITE_ADMIN_BASE_URL . '?pane=gerrit_servers_admin');
     }
 
     private function deleteGerritServer($request)
@@ -94,16 +94,14 @@ class Git_AdminGerritController {
         $request_gerrit_server = $request->params;
         $this->csrf->check();
         $this->deleteServer($request_gerrit_server);
-        $GLOBALS['Response']->redirect('/plugins/git/admin/?pane=gerrit_servers_admin');
+        $GLOBALS['Response']->redirect(GIT_SITE_ADMIN_BASE_URL . '?pane=gerrit_servers_admin');
     }
 
     private function updateGerritServer(Codendi_Request $request) {
         $request_gerrit_server = $request->params;
         $this->csrf->check();
-        if ($this->updateServer($request_gerrit_server) === true)
-        {
-            $GLOBALS['Response']->redirect('/plugins/git/admin/?pane=gerrit_servers_admin');
-        }
+        $this->updateServer($request_gerrit_server);
+        $GLOBALS['Response']->redirect(GIT_SITE_ADMIN_BASE_URL . '?pane=gerrit_servers_admin');
     }
 
     public function display(Codendi_Request $request) {

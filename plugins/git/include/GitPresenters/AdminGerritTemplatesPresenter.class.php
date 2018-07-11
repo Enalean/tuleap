@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2015. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -18,9 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class GitPresenters_AdminGerritTemplatesPresenter extends GitPresenters_AdminPresenter {
-
-    const SITE_ADMIN_URL = '/plugins/git/admin/';
+class GitPresenters_AdminGerritTemplatesPresenter extends GitPresenters_AdminPresenter
+{
 
     /**
      * List of repositories belonging to the project
@@ -150,8 +149,9 @@ class GitPresenters_AdminGerritTemplatesPresenter extends GitPresenters_AdminPre
         return $GLOBALS['Language']->getText('plugin_git', 'view_admin_template_from_scratch_text');
     }
 
-    public function no_gerrit_servers() {
-        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_no_gerrit_server', array(self::SITE_ADMIN_URL));
+    public function no_gerrit_servers()
+    {
+        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_no_gerrit_server', [GIT_SITE_ADMIN_BASE_URL]);
     }
 
     public function delete_label() {
