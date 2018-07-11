@@ -37,6 +37,12 @@ class Plugin implements PFO_Plugin {
     /** @var bool */
     private $is_custom = false;
 
+    /** @var bool */
+    private $is_resricted;
+
+    /** @var string */
+    private $name;
+
     protected $filesystem_path = '';
 
     const SCOPE_SYSTEM  = 0;
@@ -93,9 +99,16 @@ class Plugin implements PFO_Plugin {
     }
 
     protected function addServiceForProject(Project $project, array &$services) {
-        if ($this->isAllowed($project->getID())) {
+        if ($this->is_resricted !== null && $this->is_resricted === false) {
+            $services[] = $this->getServiceShortname();
+        } elseif ($this->isAllowed($project->getID())) {
             $services[] = $this->getServiceShortname();
         }
+    }
+
+    public function setIsRestricted($is_restricted)
+    {
+        $this->is_resricted = $is_restricted;
     }
 
     public function getId() {
@@ -254,11 +267,19 @@ class Plugin implements PFO_Plugin {
         return $this->filesystem_path;
     }
 
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
     /**
      * @return string the short name of the plugin (docman, tracker, …)
      */
     public function getName() {
-        return $this->_getPluginManager()->getNameForPlugin($this);
+        if (! isset($this->name)) {
+            $this->name = $this->_getPluginManager()->getNameForPlugin($this);
+        }
+        return $this->name;
     }
 
     /**

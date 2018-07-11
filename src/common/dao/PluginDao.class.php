@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -110,4 +110,9 @@ class PluginDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    public function getAvailablePluginsWithoutOrder()
+    {
+        $sql = 'SELECT * FROM plugin WHERE available = 1';
+        return $this->retrieve($sql);
+    }
 }

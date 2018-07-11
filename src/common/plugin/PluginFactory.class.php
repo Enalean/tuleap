@@ -262,6 +262,12 @@ class PluginFactory {
     function getAvailablePlugins() {
          return $this->_getAvailableOrUnavailablePlugins('available', 1);
     }
+
+    public function getAvailablePluginsWithoutOrder()
+    {
+        return $this->plugin_dao->getAvailablePluginsWithoutOrder();
+    }
+
     /**
      * @return array of all plugins
      */

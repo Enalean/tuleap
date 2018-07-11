@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -35,10 +35,28 @@ class PluginProxy {
     private $listener = array();
 
     private $recall_event = array();
+    /**
+     * @var string
+     */
+    private $name;
+    /**
+     * @var bool
+     */
+    private $is_restricted;
 
-    public function __construct($class_name, $id) {
+    /**
+     * PluginProxy constructor.
+     * @param string $class_name
+     * @param int $id
+     * @param \Tuleap\Plugin\PluginProxyInjectedData[] $injected_data
+     */
+    public function __construct($class_name, $id, array $injected_data) {
         $this->class_name = $class_name;
         $this->id = $id;
+        if (isset($injected_data[$id])) {
+            $this->name = $injected_data[$id]->getName();
+            $this->is_restricted = $injected_data[$id]->getIsRestricted();
+        }
     }
 
     public function addListener($event, $callback, $recall_event) {
@@ -69,10 +87,19 @@ class PluginProxy {
     private function getPlugin() {
         if ($this->plugin === null) {
             $this->plugin = $this->instanciatePlugin($this->class_name, $this->id);
+            if ($this->name !== null) {
+                $this->plugin->setName($this->name);
+                $this->plugin->setIsRestricted($this->is_restricted);
+            }
         }
         return $this->plugin;
     }
 
+    /**
+     * @param $class
+     * @param $id
+     * @return Plugin
+     */
     private function instanciatePlugin($class, $id) {
         return new $class($id);
     }

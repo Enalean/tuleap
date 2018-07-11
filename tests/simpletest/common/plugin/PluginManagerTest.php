@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -244,6 +244,9 @@ class PluginManager_LoadPluginTest extends TuleapTestCase {
         stub($this->plugin_factory)->getAvailablePlugins()->returns(
             array($plugin)
         );
+        stub($this->plugin_factory)->getAvailablePluginsWithoutOrder()->returns([
+            [ 'id' => 1, 'name' => 'dat-plugin', 'prj_restricted' => 0 ]
+        ]);
         stub($this->plugin_factory)->getClassName()->returns('DatPlugin');
         stub($this->plugin_factory)->getClassPath()->returns(dirname(__FILE__).'/_fixtures/DatPlugin.php');
     }

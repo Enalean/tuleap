@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean SAS, 2015 - 2017. All rights reserved
+ * Copyright (c) Enalean SAS, 2015 - 2018. All rights reserved
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Markdown\ContentInterpretor;
+use Tuleap\Plugin\PluginProxyInjectedData;
 
 /**
  * PluginManager
@@ -92,13 +93,23 @@ class PluginManager {
     }
 
     public function loadPlugins() {
+        $injected_data = $this->getPluginsInjectedData();
         foreach ($this->getHooksCache() as $plugin) {
             $this->loadPluginFiles($plugin['path']);
-            $proxy = new PluginProxy($plugin['class'], $plugin['id']);
+            $proxy = new PluginProxy($plugin['class'], $plugin['id'], $injected_data);
             foreach ($plugin['hooks'] as $hook) {
                 $this->addListener($hook, $proxy);
             }
         }
+    }
+
+    private function getPluginsInjectedData()
+    {
+        $injected_data = [];
+        foreach ($this->plugin_factory->getAvailablePluginsWithoutOrder() as $row) {
+            $injected_data[$row['id']] = new PluginProxyInjectedData($row);
+        }
+        return $injected_data;
     }
 
     private function loadPluginFiles($path)
