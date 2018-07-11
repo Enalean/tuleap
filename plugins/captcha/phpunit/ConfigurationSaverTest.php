@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,40 +20,47 @@
 
 namespace Tuleap\Captcha;
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+
 require_once __DIR__ . '/bootstrap.php';
 
-class ConfigurationSaverTest extends \TuleapTestCase
+class ConfigurationSaverTest extends TestCase
 {
-    public function itSavesKeys()
+    use MockeryPHPUnitIntegration;
+
+    public function testKeysAreSaved()
     {
-        $dao = mock('\\Tuleap\\Captcha\\DataAccessObject');
-        stub($dao)->save()->returns(true);
+        $dao = \Mockery::mock(DataAccessObject::class);
+        $dao->shouldReceive('save')->with('valid_site_key', 'valid_secret_key')->once()->andReturns(true);
 
         $saver = new ConfigurationSaver($dao);
 
-        $dao->expectOnce('save', array('valid_site_key', 'valid_secret_key'));
         $saver->save('valid_site_key', 'valid_secret_key');
     }
 
-    public function itRejectsInvalidKeys()
+    /**
+     * @expectedException \Tuleap\Captcha\ConfigurationMalformedDataException
+     */
+    public function testInvalidKeysAreRejected()
     {
-        $dao = mock('\\Tuleap\\Captcha\\DataAccessObject');
+        $dao = \Mockery::mock(DataAccessObject::class);
 
         $saver = new ConfigurationSaver($dao);
 
-        $this->expectException('\\Tuleap\\Captcha\\ConfigurationMalformedDataException');
         $saver->save(false, false);
     }
 
-    public function itDoesNotSilentUnsuccessfulSave()
+    /**
+     * @expectedException \Tuleap\Captcha\ConfigurationDataAccessException
+     */
+    public function testUnsuccessfulSaveIsNoSilent()
     {
-        $dao = mock('\\Tuleap\\Captcha\\DataAccessObject');
-        stub($dao)->save()->returns(false);
+        $dao = \Mockery::mock(DataAccessObject::class);
+        $dao->shouldReceive('save')->andReturns(false)->once();
 
         $saver = new ConfigurationSaver($dao);
 
-        $dao->expectOnce('save', array('valid_site_key', 'valid_secret_key'));
-        $this->expectException('\\Tuleap\\Captcha\\ConfigurationDataAccessException');
         $saver->save('valid_site_key', 'valid_secret_key');
     }
 }
