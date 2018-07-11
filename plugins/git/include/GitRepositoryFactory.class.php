@@ -82,6 +82,11 @@ class GitRepositoryFactory
         return $repository;
     }
 
+    public function countAllRepositories(Project $project)
+    {
+        return $this->dao->countProjectRepositories($project->getID());
+    }
+
     /**
      * Return all git repositories of a project (gitshell, gitolite, personal forks)
      *
